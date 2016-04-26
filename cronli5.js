@@ -305,18 +305,18 @@
       cronPattern.weekday;
   }
 
-  function cronify(cronable) {
+
+  function cronify(cronable) { // eslint-disable-line complexity
     return {
       second:  cronable.second || cronable[0] || '0',
-      minute:  cronable.minute || cronable[1],
-      hour:    cronable.hour   || cronable[2],
-      date:    cronable.date   || cronable[3],
-      month:   cronable.month  || cronable[4],
-      weekday: cronable.weeday || cronable[5],
+      minute:  cronable.minute || cronable[1] || cronable.second ? '*' : '0',
+      hour:    cronable.hour   || cronable[2] || '*',
+      date:    cronable.date   || cronable[3] || '*',
+      month:   cronable.month  || cronable[4] || '*',
+      weekday: cronable.weeday || cronable[5] || '*',
     };
   }
 
-  // Export
   /* global define */
   if (typeof define === 'function' && define.amd) {
     define([], function() {

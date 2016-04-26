@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 
 describe('Invalid arrays:', function() {
   describe('[]', function() {
-    it('should throw on the empty array', function() {
+    it('should throw an error', function() {
       expect(cronli5.bind(null, [])).to.throw(Error);
     });
 
