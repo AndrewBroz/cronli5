@@ -12,6 +12,7 @@ interpretation of a cron pattern in a Node or in a browser environment. If you
 need to display when the next run will happen or need that value as a date,
 use [`prettycron`][prettycron] instead.
 
+
 ## Installation
 
 Install using npm:
@@ -27,6 +28,7 @@ Browser:
 ```
 <script src="cronli5.min.js" type="text/javascript"></script>
 ```
+
 
 ## Usage
 
@@ -50,16 +52,16 @@ Import as an ESNext module:
 import cronli5 from 'cronli5';
 ```
 
-Programmatic usage:
+Programmatic usage (ES5):
 ```
 // Cron patterns can be represented as strings
-let cronString = '* * * * *';
+var cronString = '* * * * *';
 
 // Cron patterns can be represented as arrays of cron fields
-let cronArray = ['*', '*', '*', '*', '*'];
+var cronArray = ['*', '*', '*', '*', '*'];
 
 // Cron patterns can be represented as objects
-let cronObject = {
+var cronObject = {
   minute: '*',
   hour: '*',
   date: '*',
@@ -67,13 +69,14 @@ let cronObject = {
   weekday: '*',
 };
 
-let expectedOutput = 'every minute';
+var expectedOutput = 'every minute';
 
 // All of the examples above are equivalent
 expect(cronli5(cronString)).to.equal(expectedOutput);
 expect(cronli5(cronArray)).to.equal(expectedOutput);
 expect(cronli5(cronObject)).to.equal(expectedOutput);
 ```
+
 
 ## About
 
@@ -84,17 +87,21 @@ some background.
 
 `cronli5` was partially inspired by [`prettycron`][prettycron], which itself
 is based on code from [a gist by dunse][dunse]. However, I wasn't fully
-satisfied with the human readable output, and didn't need the `moment`
+satisfied with the human readable output. I also didn't need the `moment`
 and `later` dependencies, since my project only needed the cron to English
 output. This library tries to render as many cron patterns in as direct
-and idiomatic English as possible. `cronli5` was written from scratch. It
-does not share any code with [`prettycron`][prettycron] or with any other
-project. Any resemblance to other code, running or not, is purely coincidental.
+and idiomatic English as possible. It has no production dependencies.
+
+`cronli5` was written from scratch in ES5. It does not share any code with
+[`prettycron`][prettycron] or with any other project. Any resemblance to other
+code, running or not, is purely coincidental.
 
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
 [prettycron]: https://github.com/azza-bazoo/prettycron
 
+
+## License
 
 > Copyright (c) 2016 Andrew Broz
 > 

@@ -235,6 +235,8 @@
 
     lookup[number] = name;
     lookup[abbr] = name;
+
+    return lookup;
   }
 
   // Add values [abbr, name] at an index to the weekdays lookup.
@@ -245,6 +247,8 @@
 
     lookup[number] = name;
     lookup[abbr] = name;
+
+    return lookup;
   }
 
   // Take a cron pattern as, a cron pattern string, an array of cron fields, a
@@ -285,7 +289,7 @@
           cronPattern = cronPattern.toString();
         }
 
-        cronPattern.split(/\W+/);
+        cronPattern = cronPattern.split(/\s+/);
       }
     }
     catch (e) {
@@ -316,12 +320,12 @@
     };
   }
 
-  // Export in the browser (or browser-like environments).
-  if (window) {
-    window.cronli5 = cronli5;
-  }
-  // Export in Node (or Node-like environments).
+  // Export in Node (or in a Node-like environment).
   if (process) {
     module.exports = cronli5;
+  }
+  // Export in a browser (or in a browser-like environment).
+  else if (window) {
+    window.cronli5 = cronli5;
   }
 }());
