@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright (c) 2016 Andrew Broz
+ * cronli5: Copyright (c) 2016 Andrew Broz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -34,7 +34,7 @@
     'seven',
     'eight',
     'nine',
-    'ten',
+    'ten'
   ];
 
   // Look up a month name by number or by abbreviation.
@@ -50,7 +50,7 @@
     ['SEP', 'September'],
     ['OCT', 'October'  ],
     ['NOV', 'November' ],
-    ['DEC', 'December' ],
+    ['DEC', 'December' ]
   ].reduce(addMonthToLookup, {});
 
   // Look up a week name by number or by abbreviation.
@@ -61,13 +61,13 @@
     ['WED', 'Wednesday'],
     ['THU', 'Thursday' ],
     ['FRI', 'Friday'   ],
-    ['SAT', 'Saturday' ],
+    ['SAT', 'Saturday' ]
   ].reduce(addWeekdayToLookup, {});
 
   // A cron pattern to English interpreter.
   function cronli5(cronPattern, options) {
     cronPattern = parseCronPattern(cronPattern);
-  };
+  }
 
   // Second field.
   function interpretSeconds(cronPattern) {
@@ -92,7 +92,7 @@
     if (interval > 1) {
       result += getNumber(interval) + ' seconds';
     }
-    else if (inteval == 1 || interval == 0) {
+    else if (interval == 1 || interval == 0) {
       result += 'second'
     }
 
@@ -146,7 +146,7 @@
     if (interval > 1) {
       result += getNumber(interval) + ' seconds';
     }
-    else if (inteval == 1 || interval == 0) {
+    else if (interval == 1 || interval == 0) {
       result += 'second'
     }
 
@@ -269,9 +269,9 @@
         second:  cronPattern.second || '0',
         minute:  cronPattern.minute,
         hour:    cronPattern.hour,
-        date:    cronPattern.date,
-        month:   cronPattern.month,
-        weekday: cronPattern.weekday,
+        date:    cronPattern.date || '*',
+        month:   cronPattern.month || '*',
+        weekday: cronPattern.weekday || '*'
       };
     }
 
@@ -309,7 +309,7 @@
       hour:    cronPattern[2],
       date:    cronPattern[3],
       month:   cronPattern[4],
-      weekday: cronPattern[5],
+      weekday: cronPattern[5]
     };
   }
 

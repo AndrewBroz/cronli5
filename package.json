@@ -3,17 +3,23 @@
   "version": "0.0.0-beta.0",
   "description": "Cron Like I'm Five: A Cron Pattern to English Interpreter",
   "main": "cronli5.js",
+  "bin": "cli.js",
   "scripts": {
     "build": "uglifyjs cronli5.js -o conli5.min.js -c -m --comments",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint cronli5.js",
+    "test": "npm run lint && mocha test"
   },
   "keywords": [
     "cron",
     "crontab"
   ],
-  "author": "Andrew Broz",
+  "author": "Andrew Broz <andrew.broz@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.8.0",
+    "mocha": "^2.4.5",
+    "npm": "^3.8.7",
     "uglify-js": "^2.6.2"
   }
 }
