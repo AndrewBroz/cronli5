@@ -7,7 +7,7 @@
   "scripts": {
     "build": "uglifyjs cronli5.js -o conli5.min.js -c -m --comments",
     "lint": "eslint cronli5.js",
-    "test": "mocha tests"
+    "test": "mocha --recursive"
   },
   "keywords": [
     "cron",

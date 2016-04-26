@@ -20,6 +20,7 @@
         ],
         "callback-return": "error",
         "camelcase": "error",
+        "comma-dangle": "off",
         "comma-spacing": [
             "error",
             {

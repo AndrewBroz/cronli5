@@ -32,7 +32,7 @@ Browser:
 
 As a command line tool:
 ```
-HAL-9000:~ Dave$ cronli5 * * * * *
+$ cronli5 * * * * *
 
 Runs every minute.
 ```
