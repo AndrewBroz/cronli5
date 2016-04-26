@@ -1,9 +1,10 @@
 {
   "name": "cronli5",
-  "version": "1.0.0",
+  "version": "0.0.0-beta.0",
   "description": "Cron Like I'm Five: A Cron Pattern to English Interpreter",
   "main": "cronli5.js",
   "scripts": {
+    "build": "uglifyjs cronli5.js -o conli5.min.js -c -m --comments",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -11,5 +12,8 @@
     "crontab"
   ],
   "author": "Andrew Broz",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^2.6.2"
+  }
 }
