@@ -257,7 +257,7 @@
         'cronli5 expects a non-empty cron pattern as the first argument.');
     }
 
-    // Return if this is already a cron-like object (seconds are optional).
+    // Return if this is already a cron-like object.
     if (
       cronPattern.minute &&
       cronPattern.hour &&
@@ -266,12 +266,15 @@
       cronPattern.weekday
     ) {
       return {
+        // The `second` field is optional.
         second:  cronPattern.second || '0',
         minute:  cronPattern.minute,
         hour:    cronPattern.hour,
-        date:    cronPattern.date || '*',
-        month:   cronPattern.month || '*',
-        weekday: cronPattern.weekday || '*'
+        date:    cronPattern.date,
+        month:   cronPattern.month,
+        weekday: cronPattern.weekday,
+        // The `year` field is optional.
+        year:    cronPattern.year
       };
     }
 
