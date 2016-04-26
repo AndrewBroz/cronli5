@@ -1,0 +1,15 @@
+{
+  "name": "cronli5",
+  "version": "1.0.0",
+  "description": "Cron Like I'm Five: A Cron Pattern to English Interpreter",
+  "main": "cronli5.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cron",
+    "crontab"
+  ],
+  "author": "Andrew Broz",
+  "license": "MIT"
+}
