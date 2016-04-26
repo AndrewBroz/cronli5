@@ -1,6 +1,6 @@
 /**
  * @license
- * cronli5: Copyright (c) 2016 Andrew Broz
+ * Copyright (c) 2016 Andrew Broz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -21,7 +21,7 @@
  * IN THE SOFTWARE.
  */
 
-(function() {
+(function(root) {
   // Use English number names for the integers zero through ten.
   var numbers = [
     'zero',
@@ -65,7 +65,7 @@
   ].reduce(addWeekdayToLookup, {});
 
   // A cron pattern to English interpreter.
-  function cronli5(cronPattern, options) {
+  function cronli5(cronPattern) {
     cronPattern = parseCronPattern(cronPattern);
   }
 
@@ -262,24 +262,8 @@
     }
 
     // Return if this is already a cron-like object.
-    if (
-      cronPattern.minute &&
-      cronPattern.hour &&
-      cronPattern.date &&
-      cronPattern.month &&
-      cronPattern.weekday
-    ) {
-      return {
-        // The `second` field is optional.
-        second:  cronPattern.second || '0',
-        minute:  cronPattern.minute,
-        hour:    cronPattern.hour,
-        date:    cronPattern.date,
-        month:   cronPattern.month,
-        weekday: cronPattern.weekday,
-        // The `year` field is optional.
-        year:    cronPattern.year
-      };
+    if (isCronLike(cronPattern)) {
+      return cronify(cronPattern);
     }
 
     // Try to parse the argument as a string and split fields on whitespace.
@@ -310,22 +294,38 @@
     }
 
     // Return a cron-like object.
+    return cronify(cronPattern);
+  }
+
+  function isCronLike(cronPattern) {
+    return cronPattern.minute &&
+      cronPattern.hour &&
+      cronPattern.date &&
+      cronPattern.month &&
+      cronPattern.weekday;
+  }
+
+  function cronify(cronable) {
     return {
-      second:  cronPattern[0],
-      minute:  cronPattern[1],
-      hour:    cronPattern[2],
-      date:    cronPattern[3],
-      month:   cronPattern[4],
-      weekday: cronPattern[5]
+      second:  cronable.second || cronable[0] || '0',
+      minute:  cronable.minute || cronable[1],
+      hour:    cronable.hour   || cronable[2],
+      date:    cronable.date   || cronable[3],
+      month:   cronable.month  || cronable[4],
+      weekday: cronable.weeday || cronable[5]
     };
   }
 
-  // Export in Node (or in a Node-like environment).
-  if (process) {
+  /* global define */
+  if (typeof define === 'function' && define.amd) {
+    define([], function() {
+      return cronli5;
+    });
+  }
+  else if (typeof exports === 'object') {
     module.exports = cronli5;
   }
-  // Export in a browser (or in a browser-like environment).
-  else if (window) {
-    window.cronli5 = cronli5;
+  else {
+    root.cronli5 = cronli5;
   }
-}());
+}(this));

@@ -12,7 +12,6 @@ interpretation of a cron pattern in a Node or in a browser environment. If you
 need to display when the next run will happen or need that value as a date,
 use [`prettycron`][prettycron] instead.
 
-
 ## Installation
 
 Install using npm:
@@ -28,7 +27,6 @@ Browser:
 ```
 <script src="cronli5.min.js" type="text/javascript"></script>
 ```
-
 
 ## Usage
 
@@ -77,7 +75,6 @@ expect(cronli5(cronArray)).to.equal(expectedOutput);
 expect(cronli5(cronObject)).to.equal(expectedOutput);
 ```
 
-
 ## About
 
 The project name is a reference to the internet term [explain like I'm five
@@ -96,29 +93,13 @@ and idiomatic English as possible. It has no production dependencies.
 [`prettycron`][prettycron] or with any other project. Any resemblance to other
 code, running or not, is purely coincidental.
 
-[dunse]: https://gist.github.com/dunse/3714957
-[eli5]: https://www.reddit.com/r/explainlikeimfive/
-[prettycron]: https://github.com/azza-bazoo/prettycron
-
-
 ## License
 
-> Copyright (c) 2016 Andrew Broz
-> 
-> Permission is hereby granted, free of charge, to any person obtaining a copy
-> of this software and associated documentation files (the "Software"), to
-> deal in the Software without restriction, including without limitation the
-> rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-> sell copies of the Software, and to permit persons to whom the Software is
-> furnished to do so, subject to the following conditions:
-> 
-> The above copyright notice and this permission notice shall be included in
-> all copies or substantial portions of the Software.
-> 
-> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-> IN THE SOFTWARE.
+[MIT][mit], Copyright (c) 2016 [Andrew Broz][abroz]
+
+
+[abroz]: https://github.com/abroz
+[dunse]: https://gist.github.com/dunse/3714957
+[eli5]: https://www.reddit.com/r/explainlikeimfive/
+[mit]: https://opensource.org/licenses/MIT
+[prettycron]: https://github.com/azza-bazoo/prettycron

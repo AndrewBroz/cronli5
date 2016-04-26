@@ -11,7 +11,7 @@ describe('Cron Like I\'m Five (cronli5)', function() {
 
   describe('Bad input:', function() {
     describe('Empty input', function() {
-      describe('no input', function() {
+      describe('undefined', function() {
         it('should throw an error when there is no input', function() {
           expect(cronli5).to.throw(Error);
         });
@@ -55,6 +55,12 @@ describe('Cron Like I\'m Five (cronli5)', function() {
         });
       });
     });
+
+    describe('Invalid cron strings', function() {});
+
+    describe('Invalid cron arrays', function() {});
+
+    describe('Invalid cron objects', function() {});
   });
 
   describe('Simple valid patterns', function() {
@@ -84,9 +90,7 @@ describe('Cron Like I\'m Five (cronli5)', function() {
       });
     });
 
-    describe('5-element arrays', function() {
-
-    });
+    describe('5-element arrays', function() {});
 
     describe('6-part strings', function() {
       describe('"* * * * * *"', function() {
@@ -114,7 +118,6 @@ describe('Cron Like I\'m Five (cronli5)', function() {
       });
     });
 
-    describe('6-element arrays', function() {
-    });
+    describe('6-element arrays', function() {});
   });
 });
