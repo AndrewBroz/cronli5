@@ -1,53 +1,27 @@
-/* global describe it */
-var cronli5 = require('../..');
+var explain = require('../..').explain;
 var expect = require('chai').expect;
 
 describe('Simple valid cron-like objects:', function() {
-  describe('{ "second": "*" }', function() {
-    var cronObject = {second: '*'};
+  equal({second: '*'}, 'every second');
 
-    it('should return a string', function() {
-      expect(cronli5(cronObject)).to.be.a('string');
-    });
+  equal({minute: '*'}, 'every minute');
 
-    it('should not be an empty string', function() {
-      expect(cronli5(cronObject)).to.not.be.empty;
-    });
-
-    it('should be "every second"', function() {
-      expect(cronli5(cronObject)).to.equal('every second');
-    });
-  });
-
-  describe('{ "minute": "*" }', function() {
-    var cronObject = {minute: '*'};
-
-    it('should return a string', function() {
-      expect(cronli5(cronObject)).to.be.a('string');
-    });
-
-    it('should not be an empty string', function() {
-      expect(cronli5(cronObject)).to.not.be.empty;
-    });
-
-    it('should be "every minute"', function() {
-      expect(cronli5(cronObject)).to.equal('every minute');
-    });
-  });
-
-  describe('{ "hour": "*" }', function() {
-    var cronObject = {hour: '*'};
-
-    it('should return a string', function() {
-      expect(cronli5(cronObject)).to.be.a('string');
-    });
-
-    it('should not be an empty string', function() {
-      expect(cronli5(cronObject)).to.not.be.empty;
-    });
-
-    it('should be "every hour"', function() {
-      expect(cronli5(cronObject)).to.equal('every hour');
-    });
-  });
+  equal({hour: '*'}, 'every hour');
 });
+
+// Check that the output matches the input for a given cron object.
+function equal(cronObject, expected) {
+  describe(JSON.stringify(cronObject), function() {
+    it('should return a string', function() {
+      expect(explain(cronObject)).to.be.an('string');
+    });
+
+    it('should not be an empty object', function() {
+      expect(explain(cronObject)).to.not.be.empty;
+    });
+
+    it('should be "' + expected + '"', function() {
+      expect(explain(cronObject)).to.equal(expected);
+    });
+  });
+}

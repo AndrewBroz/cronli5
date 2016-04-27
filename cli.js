@@ -3,14 +3,14 @@
 //
 // Example: `cronli5 * * * * *` (prints "Will run every minute.")
 var args = process.argv.slice(2);
-var cronli5 = require('cronli5');
+var explain = require('cronli5').explain;
 
 if (args.length === 1) {
   args = args[0];
 }
 
 try {
-  console.log('Will run ' + cronli5(args) + '.');
+  console.log('Will run ' + explain(args) + '.');
 }
 catch (e) {
   console.error('Problem parsing the cron pattern provided: ', e.message);

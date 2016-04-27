@@ -1,5 +1,4 @@
-Cron Like I'm Five (cronli5): A Cron Pattern to English Interpreter
-===================================================================
+# Cron Like I'm Five (cronli5): A Cron Pattern to English Interpreter
 
 Generate English language descriptions of schedules from cron patterns.
 Accepts classic (five-part) cron patterns, or extended (six-part) cron
@@ -8,9 +7,7 @@ standard allowed values and the following operators: asterisks (`*`), commas
 (`,`), hyphens (`-`), and slashes (`/`).
 
 `cronli5` is a good library to use if you need to display an English language
-interpretation of a cron pattern in a Node or in a browser environment. If you
-need to display when the next run will happen or need that value as a date,
-use [`prettycron`][prettycron] instead.
+interpretation of a cron pattern in a Node or in a browser environment.
 
 ## Installation
 
@@ -38,16 +35,16 @@ Runs every minute.
 ```
 
 Including `cronli5.min.js` in a script tage will expose `cronli5` as a global
-function.
+object.
 
 Import with require:
 ```
-var cronli5 = require('cronli5');
+var explain = require('cronli5').explain;
 ```
 
 Import as an ESNext module:
 ```
-import cronli5 from 'cronli5';
+import { explain } from 'cronli5';
 ```
 
 Programmatic usage (ES5):
@@ -69,10 +66,9 @@ var cronObject = {
 
 var expectedOutput = 'every minute';
 
-// All of the examples above are equivalent
-expect(cronli5(cronString)).to.equal(expectedOutput);
-expect(cronli5(cronArray)).to.equal(expectedOutput);
-expect(cronli5(cronObject)).to.equal(expectedOutput);
+expect(explain(cronString)).to.equal(expectedOutput);
+expect(explain(cronArray)).to.equal(expectedOutput);
+expect(explain(cronObject)).to.equal(expectedOutput);
 ```
 
 ## About
@@ -83,23 +79,23 @@ layman-accessible summary of a text that may be hard to understand without
 some background.
 
 `cronli5` was partially inspired by [`prettycron`][prettycron], which itself
-is based on code from [a gist by dunse][dunse]. However, I wasn't fully
-satisfied with the human readable output. I also didn't need the `moment`
-and `later` dependencies, since my project only needed the cron to English
-output. This library tries to render as many cron patterns in as direct
-and idiomatic English as possible. It has no production dependencies.
+is based on code from [a gist by dunse][dunse]. Although `prettycron` was
+close to meeting my needs, I wasn't fully satisfied with the output and was
+limited by the lack of support for extended cron patterns. `cronli5` tries to
+render as many cron patterns in as direct and idiomatic English as possible.
 
-`cronli5` was written from scratch in ES5. It does not share any code with
-[`prettycron`][prettycron] or with any other project. Any resemblance to other
-code, running or not, is purely coincidental.
+`cronli5` was written from scratch. Other than dependencies, its source does
+not borrow code, in whole or in part, from [`prettycron`][prettycron], Stack
+Overflow, or any other project. Any resemblance to other code, good or bad, is
+purely coincidental.
 
 ## License
 
-[MIT][mit], Copyright (c) 2016 [Andrew Broz][abroz]
-
+*[MIT License][license]*
+_Copyright (c) 2016 [Andrew Broz][abroz]_
 
 [abroz]: https://github.com/abroz
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
-[mit]: https://opensource.org/licenses/MIT
+[license]: ./LICENSE.md
 [prettycron]: https://github.com/azza-bazoo/prettycron

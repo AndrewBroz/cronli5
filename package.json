@@ -6,14 +6,18 @@
   "bin": "cli.js",
   "scripts": {
     "build": "uglifyjs cronli5.js -o conli5.min.js -c -m --comments",
-    "lint": "eslint cronli5.js",
-    "test": "mocha --recursive"
+    "lint": "eslint cronli5.js --fix",
+    "test": "mocha"
   },
   "keywords": [
     "cron",
     "crontab"
   ],
-  "author": "Andrew Broz <andrew.broz@gmail.com>",
+  "author": {
+    "name": "Andrew Broz",
+    "email": "andrew.broz@gmail.com",
+    "url": "https://github.com/abroz"
+  },
   "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",

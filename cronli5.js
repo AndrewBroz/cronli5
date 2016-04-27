@@ -34,46 +34,105 @@
     'seven',
     'eight',
     'nine',
-    'ten',
+    'ten'
   ];
 
   // Look up a month name by number or by abbreviation.
-  var months = [
-    ['JAN', 'January'  ],
-    ['FEB', 'February' ],
-    ['MAR', 'March'    ],
-    ['APR', 'April'    ],
-    ['MAY', 'May'      ],
-    ['JUN', 'June'     ],
-    ['JUL', 'July'     ],
-    ['AUG', 'August'   ],
-    ['SEP', 'September'],
-    ['OCT', 'October'  ],
-    ['NOV', 'November' ],
-    ['DEC', 'December' ],
-  ].reduce(addMonthToLookup, {});
+  var months = {
+    '1':  'January',
+    JAN:  'January',
+    '2':  'February',
+    FEB:  'February',
+    '3':  'March',
+    MAR:  'March',
+    '4':  'April',
+    APR:  'April',
+    '5':  'May',
+    MAY:  'May',
+    '6':  'June',
+    JUN:  'June',
+    '7':  'July',
+    JUL:  'July',
+    '8':  'August',
+    AUG:  'August',
+    '9':  'September',
+    SEP:  'September',
+    '10': 'October',
+    OCT:  'October',
+    '11': 'November',
+    NOV:  'November',
+    '12': 'December',
+    DEC:  'December'
+  };
 
   // Look up a week name by number or by abbreviation.
-  var weekdays = [
-    ['SUN', 'Sunday'   ],
-    ['MON', 'Monday'   ],
-    ['TUE', 'Tuesday'  ],
-    ['WED', 'Wednesday'],
-    ['THU', 'Thursday' ],
-    ['FRI', 'Friday'   ],
-    ['SAT', 'Saturday' ],
-  ].reduce(addWeekdayToLookup, {});
+  var weekdays = {
+    '0': 'Sunday',
+    SUN: 'Sunday',
+    '1': 'Monday',
+    MON: 'Monday',
+    '2': 'Tuesday',
+    TUE: 'Tuesday',
+    '3': 'Wednesday',
+    WED: 'Wednesday',
+    '4': 'Thursday',
+    THU: 'Thursday',
+    '5': 'Friday',
+    FRI: 'Friday',
+    '6': 'Saturday',
+    SAT: 'Saturday'
+  };
 
   // A cron pattern to English interpreter.
-  function cronli5(cronPattern) {
+  function explainCron(cronPattern, options) {
     cronPattern = parseCronPattern(cronPattern);
+
+    return interpretSeconds(cronPattern) + ' ' +
+      interpretMinutes(cronPattern) + ' ' +
+      interpretHours(cronPattern) + ' ' +
+      interpretDates(cronPattern) + ' ' +
+      interpretMonths(cronPattern) + ' ' +
+      interpretWeekdays(cronPattern);
   }
+
+  // Describe the next run time.
+  function nextCron(cronPattern, options) {}
 
   // Second field.
   function interpretSeconds(cronPattern) {
-    return interpretRepeatingSeconds(cronPattern.second) ||
-      interpretMultipleSeconds(cronPattern.second) ||
-      interpretSingleSecond(cronPattern.second);
+    var secondField = cronPattern.second;
+
+    return interpretRangeOfSeconds(secondField) ||
+      interpretRepeatingSeconds(secondField) ||
+      interpretMultipleSeconds(secondField) ||
+      interpretSingleSecond(secondField);
+  }
+
+  function interpretRangeOfSeconds(secondField) {
+    if (!secondField.includes('-')) {
+      // Not a range pattern.
+      return;
+    }
+
+    var result = 'every second between ';
+
+    secondField = secondField.split('-');
+
+    var start = secondField[0];
+    var interval = secondField[1];
+
+    if (interval > 1) {
+      result += getNumber(interval) + ' seconds';
+    }
+    else if (interval == 1 || interval == 0) {
+      result += 'second'
+    }
+
+    if (start !== '*' && start !== '0') {
+      result += ' past second ' + getNumber(start);
+    }
+
+    return result;
   }
 
   function interpretRepeatingSeconds(secondField) {
@@ -118,6 +177,10 @@
   function interpretSingleSecond(secondField) {
     if (secondField === '*') {
       return 'every second';
+    }
+
+    if (secondField === '0') {
+      return '';
     }
 
     return 'on second ' + getNumber(secondField);
@@ -174,6 +237,10 @@
       return 'every minute';
     }
 
+    if (minuteField === '0') {
+      return '';
+    }
+
     return 'on minute ' + getNumber(minuteField);
   }
 
@@ -220,35 +287,13 @@
     if (n >= 12) {
       return n - 12 || n + ':00 pm';
     }
+
     if (n >= 0) {
       return +n || 12 + ':00 am';
     }
+
     throw new Error(
       'Tried to interpret "' + JSON.stringify(n) + '" as an hour and failed.');
-  }
-
-  // Add values [abbr, name] at an index to the months lookup.
-  function addMonthToLookup(lookup, values, index) {
-    var number = (index + 1).toString();
-    var abbr = values[0];
-    var name = values[1];
-
-    lookup[number] = name;
-    lookup[abbr] = name;
-
-    return lookup;
-  }
-
-  // Add values [abbr, name] at an index to the weekdays lookup.
-  function addWeekdayToLookup(lookup, values, index) {
-    var number = index.toString();
-    var abbr = values[0];
-    var name = values[1];
-
-    lookup[number] = name;
-    lookup[abbr] = name;
-
-    return lookup;
   }
 
   // Take a cron pattern as, a cron pattern string, an array of cron fields, a
@@ -298,14 +343,13 @@
   }
 
   function isCronLike(cronPattern) {
-    return cronPattern.minute &&
-      cronPattern.hour &&
-      cronPattern.date &&
-      cronPattern.month &&
-      cronPattern.weekday;
+    return cronPattern.second ||
+      cronPattern.minute ||
+      cronPattern.hour;
   }
 
-
+  // Return a populated cron-like object from another cron-like object or an
+  // array that looks like a cron pattern.
   function cronify(cronable) { // eslint-disable-line complexity
     return {
       second:  cronable.second || cronable[0] || '0',
@@ -313,9 +357,15 @@
       hour:    cronable.hour   || cronable[2] || '*',
       date:    cronable.date   || cronable[3] || '*',
       month:   cronable.month  || cronable[4] || '*',
-      weekday: cronable.weeday || cronable[5] || '*',
+      weekday: cronable.weeday || cronable[5] || '*'
     };
   }
+
+  // Export cronli5
+  var cronli5 = {
+    explain: explainCron,
+    next: nextCron
+  };
 
   /* global define */
   if (typeof define === 'function' && define.amd) {

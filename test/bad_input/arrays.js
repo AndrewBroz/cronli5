@@ -1,16 +1,15 @@
-/* global describe it */
-var cronli5 = require('../..');
+var explain = require('../..').explain;
 var expect = require('chai').expect;
+var errors = require('../error-types');
 
 describe('Invalid arrays:', function() {
   describe('[]', function() {
     it('should throw an error', function() {
-      expect(cronli5.bind(null, [])).to.throw(Error);
+      expect(explain.bind(null, [])).to.throw(Error);
     });
 
     it('should throw an "expects a five or six-part cron" error', function() {
-      expect(cronli5.bind(null, [])).to.throw(
-        'cronli5 expects a five or six-part cron pattern.');
+      expect(explain.bind(null, [])).to.throw(errors.length);
     });
   });
 });

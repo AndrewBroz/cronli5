@@ -20,7 +20,7 @@
         ],
         "callback-return": "error",
         "camelcase": "error",
-        "comma-dangle": "off",
+        "comma-dangle": "error",
         "comma-spacing": [
             "error",
             {
@@ -98,6 +98,7 @@
         "no-extra-bind": "error",
         "no-extra-label": "error",
         "no-extra-parens": "error",
+        "no-extra-semi": "error",
         "no-floating-decimal": "error",
         "no-implicit-globals": "error",
         "no-implied-eval": "error",
@@ -182,7 +183,7 @@
         "radix": "error",
         "require-jsdoc": "off",
         "require-yield": "error",
-        "semi": "off",
+        "semi": "error",
         "semi-spacing": "error",
         "sort-imports": "error",
         "sort-vars": "error",
