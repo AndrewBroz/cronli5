@@ -53,7 +53,12 @@
   ];
 
   // Ordianl suffixes.
-  var suffixes = ['th', 'st', 'nd', 'rd'];
+  var suffixes = [
+    'th',
+    'st',
+    'nd',
+    'rd'
+  ];
 
   // English month names.
   var monthNames = [
@@ -218,9 +223,23 @@
 
   // Minute field.
   function interpretMinutes(cronPattern) {
-    return interpretRepeatingMinutes(cronPattern.minute) ||
-      interpretMultipleMinutes(cronPattern.minute) ||
+    return interpretMultipleMinutes(cronPattern.minute) ||
+      interpretRepeatingMinutes(cronPattern.minute) ||
       interpretSingleMinute(cronPattern.minute);
+  }
+
+  function interpretMultipleMinutes(minuteField) {
+    if (!minuteField.includes(',')) {
+      // Not a multiple minute pattern.
+      return;
+    }
+
+    minuteField = minuteField.split(',');
+
+    return 'on minutes ' +
+      minuteField.slice(0, -1).map(getNumber).join(', ') +
+      ' and ' +
+      getNumber(minuteField.slice(-1)[0]);
   }
 
   function interpretRepeatingMinutes(secondField) {
@@ -250,18 +269,6 @@
     return result;
   }
 
-  function interpretMultipleMinutes(minuteField) {
-    if (!minuteField.includes(',')) {
-      // Not a multiple minute pattern.
-      return;
-    }
-
-    return 'on minutes ' +
-      minuteField.slice(0, -1).map(getNumber).join(', ') +
-      ' and ' +
-      getNumber(minuteField.slice(-1)[0]);
-  }
-
   function interpretSingleMinute(minuteField) {
     if (minuteField === '*') {
       return 'every minute';
@@ -276,9 +283,50 @@
 
   // Hour field.
   function interpretHours(cronPattern) {
-    var hourField = cronPattern.hour;
+    return interpretMultipleHours(cronPattern.hour) ||
+      interpretRepeatingHours(cronPattern.hour) ||
+      interpretSingleHour(cronPattern.hour);
+  }
 
-    return
+  function interpretMultipleHours(hourField) {
+    if (!hourField.includes(',')) {
+      // Not a multiple minute pattern.
+      return;
+    }
+
+    hourField = hourField.split(',');
+
+    return 'on hours ' +
+      hourField.slice(0, -1).map(getNumber).join(', ') +
+      ' and ' +
+      getNumber(hourField.slice(-1)[0]);
+  }
+
+  function interpretRepeatingHours(hourField) {
+    if (!hourField.includes('/')) {
+      // Not a repeating interval pattern.
+      return;
+    }
+
+    var result = 'every ';
+
+    hourField = hourField.split('/');
+
+    var start = hourField[0];
+    var interval = hourField[1];
+
+    if (interval > 1) {
+      result += getNumber(interval) + ' hours';
+    }
+    else if (interval == 1 || interval == 0) {
+      result += 'hour';
+    }
+
+    if (start !== '*' && start !== '0') {
+      result += ' past hour ' + getNumber(start);
+    }
+
+    return result;
   }
 
   function interpretSingleHour(hourField) {
@@ -289,24 +337,19 @@
     return 'at ' + getHour(hourField);
   }
 
-  // Times (from hour, minute, and second fields).
-  function interpretTimes(cronPattern) {
-
-  }
-
   // Date field.
   function interpretDates(cronPattern) {
-    var dateField = cronPattern.date;
+    return getOrdinal(cronPattern);
   }
 
   // Month field.
   function interpretMonths(cronPattern) {
-    var monthField = cronPattern.month;
+    return getMonth(cronPattern.month);
   }
 
   // Weekday field.
   function interpretWeekdays(cronPattern) {
-    var weekdayField = cronPattern.weekday;
+    return getWeekday(cronPattern.weekday);
   }
 
   // Turn a simple hour field into 12-hour representation.
@@ -335,17 +378,27 @@
 
   // Get suffixed ordinals from integers.
   function ordinalize(n) {
-    var N = Math.abs(n);
+    var m = Math.abs(n);
+    var suffix = suffixes[m];
 
-    return n + suffixes[N] || suffixes[(N % 100 - 20) % 10] || suffixes[0];
+    if (!suffix) {
+      m = (m % 100 - 20) % 10;
+      suffix = suffixes[m];
+    }
+
+    if (!suffix) {
+      suffix = suffixes[0];
+    }
+
+    return n + suffix;
   }
 
-  // Get English month names from a number or an abbreviation.
+  // Get English month names from a number or from an abbreviation.
   function getMonth(m) {
     return monthNames[m] || monthAbbreviations[m];
   }
 
-  // Get English weekday names from a number or an abbreviation.
+  // Get English weekday names from a number or from an abbreviation.
   function getWeekday(d) {
     return weekdayNames[d] || weekdayAbbreviations[d];
   }
@@ -388,6 +441,7 @@
     throw new Error('`cronli5` was passed an unexpected type.');
   }
 
+  // Turn a cronable array into a cron-like object.
   function cronifyArray(cronlikeArray, options) {
     if (cronlikeArray.length > 6) {
       throw new Error('`cronli5` expects a five or six-part cron pattern.');
@@ -407,6 +461,7 @@
     };
   }
 
+  // Turn an object that's already cron-like into a populated cron-like object.
   function cronifyObject(cronlikeObject) {
     if (
       !cronlikeObject.second &&
@@ -429,6 +484,7 @@
     };
   }
 
+  // Turn a string into a cron-like object.
   function cronifyString(cronString, options) {
     var cronlikeArray = cronString.split(/\s+/);
 
@@ -437,14 +493,17 @@
 
   /* global define */
   if (typeof define === 'function' && define.amd) {
+    // Export in AMD.
     define([], function() {
       return cronli5;
     });
   }
   else if (typeof exports === 'object') {
+    // Export in Node.js.
     module.exports = cronli5;
   }
   else {
+    // Export in the browser.
     root.cronli5 = cronli5;
   }
 }(this));
