@@ -125,7 +125,7 @@
       result += getNumber(interval) + ' seconds';
     }
     else if (interval == 1 || interval == 0) {
-      result += 'second'
+      result += 'second';
     }
 
     if (start !== '*' && start !== '0') {
@@ -152,7 +152,7 @@
       result += getNumber(interval) + ' seconds';
     }
     else if (interval == 1 || interval == 0) {
-      result += 'second'
+      result += 'second';
     }
 
     if (start !== '*' && start !== '0') {
@@ -210,7 +210,7 @@
       result += getNumber(interval) + ' seconds';
     }
     else if (interval == 1 || interval == 0) {
-      result += 'second'
+      result += 'second';
     }
 
     if (start !== '*' && start !== '0') {
@@ -301,63 +301,73 @@
   // cron-like object), or a stringable object that evaluates to a cron pattern
   // string. Returns a cron-like object.
   function parseCronPattern(cronPattern) {
-    if (!cronPattern) {
+    var isArray = cronPattern instanceof Array;
+
+    // Throw if null or empty.
+    if (!cronPattern || isArray && cronPattern.length === 0) {
       throw new Error(
         'cronli5 expects a non-empty cron pattern as the first argument.');
     }
 
-    // Return if this is already a cron-like object.
-    if (isCronLike(cronPattern)) {
-      return cronify(cronPattern);
+    if (isArray) {
+      return cronifyArray(cronPattern);
     }
 
-    // Try to parse the argument as a string and split fields on whitespace.
-    try {
-      if (!(cronPattern instanceof Array)) {
-        if (typeof cronPattern !== 'string') {
-          cronPattern = cronPattern.toString();
-        }
-
-        cronPattern = cronPattern.split(/\s+/);
-      }
-    }
-    catch (e) {
-      throw new Error(
-        'cronli5 was passed an argument with no `toString` method.');
+    if (typeof cronPattern === 'object') {
+      return cronifyObject(cronPattern);
     }
 
-    // Check the array length.
-    var length = cronPattern.length;
+    if (typeof cronPattern === 'string') {
+      return cronifyString(cronPattern);
+    }
+  }
 
-    if (length !== 5 && length !== 6) {
+  function cronifyString(cronString) {
+    var cronlikeArray = cronString.split(/\s+/);
+
+    return cronifyArray(cronlikeArray);
+  }
+
+  function cronifyArray(cronlikeArray) {
+    // Check that the length makes sense.
+    if (cronlikeArray.length > 6) {
       throw new Error('cronli5 expects a five or six-part cron pattern.');
     }
 
-    // Normalize to a six-part pattern.
-    if (length === 5) {
-      cronPattern.unshift('0');
+    // Normalize to pattern that includes seconds.
+    if (cronlikeArray.length < 6) {
+      cronlikeArray.unshift('0');
     }
 
-    // Return a cron-like object.
-    return cronify(cronPattern);
-  }
-
-  function isCronLike(cronPattern) {
-    return cronPattern.second ||
-      cronPattern.minute ||
-      cronPattern.hour;
-  }
-
-  // Return a populated cron-like object from another cron-like object or an
-  // array that looks like a cron pattern.
-  function cronify(cronable) { // eslint-disable-line complexity
     return {
-      second:  cronable.second || cronable[0] || '0',
-      minute:  cronable.minute || cronable[1] || cronable.second ? '*' : '0',
-      hour:    cronable.hour   || cronable[2] || '*',
-      date:    cronable.date   || cronable[3] || '*',
-      month:   cronable.month  || cronable[4] || '*',
-      weekday: cronable.weeday || cronable[5] || '*'
+      second:  cronlikeArray[0] || '0',
+      minute:  cronlikeArray[1] || '*',
+      hour:    cronlikeArray[2] || '*',
+      date:    cronlikeArray[3] || '*',
+      month:   cronlikeArray[4] || '*',
+      weekday: cronlikeArray[5] || '*'
+    };
+  }
+
+  function cronifyObject(cronlikeObject) {
+    if (
+      !cronlikeObject.second &&
+      !cronlikeObject.minute &&
+      !cronlikeObject.hour
+    ) {
+      throw new Error(
+        '`cronli5` expects that any object to be interpreted as a cron ' +
+        'pattern have at least one of the following properties: `second`, ' +
+        '`minute`, or `hour`');
+    }
+
+    return {
+      second:  cronlikeObject.second || '0',
+      minute:  cronlikeObject.minute || cronlikeObject.second ? '*' : '0',
+      hour:    cronlikeObject.hour   || '*',
+      date:    cronlikeObject.date   || '*',
+      month:   cronlikeObject.month  || '*',
+      weekday: cronlikeObject.weeday || '*'
     };
   }
 
