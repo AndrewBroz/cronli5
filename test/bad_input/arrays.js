@@ -1,4 +1,4 @@
-var explain = require('../..').explain;
+var cronli5 = require('../..');
 var expect = require('chai').expect;
 var errors = require('../error-types');
 
@@ -39,11 +39,11 @@ describe('Invalid arrays:', function() {
 function throws(badArray, errorText) {
   describe(JSON.stringify(badArray), function() {
     it('should throw an error', function() {
-      expect(explain.bind(null, badArray)).to.throw(Error);
+      expect(cronli5.bind(null, badArray)).to.throw(Error);
     });
 
     it('should throw "' + errorText + '".', function() {
-      expect(explain.bind(null, [])).to.throw(errorText);
+      expect(cronli5.bind(null, badArray)).to.throw(errorText);
     });
   });
 }

@@ -1,135 +1,59 @@
-var explain = require('../..').explain;
+var cronli5 = require('../..');
 var expect = require('chai').expect;
 var errors = require('../error-types');
 
 describe('Invalid types:', function() {
-  describe('undefined', function() {
-    it('should throw an error', function() {
-      expect(explain).to.throw(Error);
-    });
+  throws(undefined, errors.empty); // eslint-disable-line no-undefined
 
-    it('should throw a "non-empty cron pattern" error', function() {
-      expect(explain).to.throw(errors.empty);
-    });
-  });
-
-  describe('null', function() {
-    it('should throw an error', function() {
-      expect(explain.bind(null, null)).to.throw(Error);
-    });
-
-    it('should throw a "non-empty cron pattern" error', function() {
-      expect(explain.bind(null, null)).to.throw(errors.empty);
-    });
-  });
+  throws(null, errors.empty);
 
   describe('booleans', function() {
-    describe('true', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, true)).to.throw(Error);
-      });
-    });
+    throws(true);
 
-    describe('false', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, false)).to.throw(Error);
-      });
-
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, false)).to.throw(errors.empty);
-      });
-    });
+    throws(false);
   });
 
   describe('integers', function() {
-    describe('0', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, 0)).to.throw(Error);
-      });
+    throws(0);
 
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, 0)).to.throw(errors.empty);
-      });
-    });
+    throws(1);
 
-    describe('1', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, 1)).to.throw(Error);
-      });
+    throws(-1);
 
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, 0)).to.throw(errors.empty);
-      });
-    });
+    throws(12345);
 
-    describe('-1', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, -1)).to.throw(Error);
-      });
+    throws(123456);
 
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, 0)).to.throw(errors.empty);
-      });
-    });
+    throws(-1234);
 
-    describe('12345', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, 12345)).to.throw(Error);
-      });
+    throws(-12345);
 
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, 0)).to.throw(errors.empty);
-      });
-    });
+    throws(NaN);
 
-    describe('123456', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, 123456)).to.throw(Error);
-      });
+    throws(Infinity);
 
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, 0)).to.throw(errors.empty);
-      });
-    });
-
-    describe('-1234', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, -1234)).to.throw(Error);
-      });
-
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, 0)).to.throw(errors.empty);
-      });
-    });
-
-    describe('-12345', function() {
-      it('should throw an error', function() {
-        expect(explain.bind(null, -12345)).to.throw(Error);
-      });
-
-      it('should throw a "non-empty cron pattern" error', function() {
-        expect(explain.bind(null, 0)).to.throw(errors.empty);
-      });
-    });
+    throws(-Infinity);
   });
 
   describe('Date', function() {
-    it('should throw an error', function() {
-      expect(explain.bind(null, new Date())).to.throw(Error);
-    });
-
-    it('should throw a "non-empty cron pattern" error', function() {
-      expect(explain.bind(null, 0)).to.throw(errors.empty);
-    });
+    throws(new Date());
   });
 
   describe('Error', function() {
-    it('should throw an error', function() {
-      expect(explain.bind(null, new Error())).to.throw(Error);
-    });
-
-    it('should throw a "non-empty cron pattern" error', function() {
-      expect(explain.bind(null, 0)).to.throw(errors.empty);
-    });
+    throws(new Error());
   });
 });
+
+function throws(badType, errorText) {
+  describe(JSON.stringify(badType), function() {
+    it('should throw an error', function() {
+      expect(cronli5.bind(null, badType)).to.throw(Error);
+    });
+
+    if (errorText) {
+      it('should throw "' + errorText + '".', function() {
+        expect(cronli5.bind(null, badType)).to.throw(errorText);
+      });
+    }
+  });
+}

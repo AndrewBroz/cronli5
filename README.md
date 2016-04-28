@@ -7,7 +7,9 @@ standard allowed values and the following operators: asterisks (`*`), commas
 (`,`), hyphens (`-`), and slashes (`/`).
 
 `cronli5` is a good library to use if you need to display an English language
-interpretation of a cron pattern in a Node or in a browser environment.
+interpretation of a cron pattern in a Node or in a browser environment. If you
+need to do other things with cron patterns, consider a library like [Later.js]
+[later]. [prettycron][prettycron] may also meet your needs as an interpreter.
 
 ## Installation
 
@@ -20,10 +22,14 @@ npm install -g cronli5
 npm install --save cronli5
 ```
 
-Browser:
+Browser (script tag):
 ```
 <script src="cronli5.min.js" type="text/javascript"></script>
 ```
+
+When included in a script tag, the `cronli5` function will be available as a
+global in the scripts that follow. _Unsolicited advice: rather than doing this,consider using a bundler like [Browserify][browserify], [Rollup][rollup], or
+[Webpack][webpack] and `include` or `require` instead. See below._
 
 ## Usage
 
@@ -39,12 +45,12 @@ object.
 
 Import with require:
 ```
-var explain = require('cronli5').explain;
+var cronli5 = require('cronli5');
 ```
 
 Import as an ESNext module:
 ```
-import { explain } from 'cronli5';
+import cronli5 from 'cronli5';
 ```
 
 Programmatic usage (ES5):
@@ -73,21 +79,23 @@ expect(explain(cronObject)).to.equal(expectedOutput);
 
 ## About
 
-The project name is a reference to the internet term [explain like I'm five
-(abbr. ELI5)][eli5], which is a request for a friendly, simplified, and
-layman-accessible summary of a text that may be hard to understand without
+The project name is a reference to the internet term [Explain Like I'm Five
+(_abbr._ ELI5)][eli5], which is a request for a friendly, simplified, and
+layman-accessible summary of material that may be hard to understand without
 some background.
 
 `cronli5` was partially inspired by [`prettycron`][prettycron], which itself
-is based on code from [a gist by dunse][dunse]. Although `prettycron` was
+is based on code from [a gist by dunse][dunse]. Although prettycron was
 close to meeting my needs, I wasn't fully satisfied with the output and was
 limited by the lack of support for extended cron patterns. `cronli5` tries to
 render as many cron patterns in as direct and idiomatic English as possible.
+Doing so involved lots of special cases and even more unit tests, but the
+output is easier to read.
 
-`cronli5` was written from scratch. Other than dependencies, its source does
-not borrow code, in whole or in part, from [`prettycron`][prettycron], Stack
-Overflow, or any other project. Any resemblance to other code, good or bad, is
-purely coincidental.
+`cronli5` was written from scratch and has no production dependencies. Its
+source does not borrow code, in whole or in part, from [prettycron]
+[prettycron], [Stack Overflow answers][stackoverflow], or any other project.
+Any resemblance to other code, living or dead, is purely coincidental.
 
 ## License
 
@@ -95,7 +103,12 @@ purely coincidental.
 _Copyright (c) 2016 [Andrew Broz][abroz]_
 
 [abroz]: https://github.com/abroz
+[browserify]: http://browserify.org/
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
+[later]: https://bunkat.github.io/later/
 [license]: ./LICENSE.md
 [prettycron]: https://github.com/azza-bazoo/prettycron
+[rollup]: http://rollupjs.org/
+[stackoverflow]: https://stackoverflow.com/
+[webpack]: https://webpack.github.io/

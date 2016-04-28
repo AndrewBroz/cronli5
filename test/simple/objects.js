@@ -1,4 +1,4 @@
-var explain = require('../..').explain;
+var cronli5 = require('../..');
 var expect = require('chai').expect;
 
 describe('Simple valid cron-like objects:', function() {
@@ -33,15 +33,15 @@ describe('Simple valid cron-like objects:', function() {
 function equal(cronObject, expected) {
   describe(JSON.stringify(cronObject), function() {
     it('should return a string', function() {
-      expect(explain(cronObject)).to.be.an('string');
+      expect(cronli5(cronObject)).to.be.an('string');
     });
 
     it('should not be an empty object', function() {
-      expect(explain(cronObject)).to.not.be.empty;
+      expect(cronli5(cronObject)).to.not.be.empty;
     });
 
     it('should be "' + expected + '"', function() {
-      expect(explain(cronObject)).to.equal(expected);
+      expect(cronli5(cronObject)).to.equal(expected);
     });
   });
 }

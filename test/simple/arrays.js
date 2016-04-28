@@ -1,4 +1,4 @@
-var explain = require('../..').explain;
+var cronli5 = require('../..');
 var expect = require('chai').expect;
 
 describe('Simple valid arrays:', function() {
@@ -51,15 +51,15 @@ describe('Simple valid arrays:', function() {
 function equal(cronString, expected) {
   describe('"' + cronString + '"', function() {
     it('should return a string', function() {
-      expect(explain(cronString)).to.be.a('string');
+      expect(cronli5(cronString)).to.be.a('string');
     });
 
     it('should not be an empty string', function() {
-      expect(explain(cronString)).to.not.be.empty;
+      expect(cronli5(cronString)).to.not.be.empty;
     });
 
     it('should be "' + expected + '"', function() {
-      expect(explain(cronString)).to.equal(expected);
+      expect(cronli5(cronString)).to.equal(expected);
     });
   });
 }

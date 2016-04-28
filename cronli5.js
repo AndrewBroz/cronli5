@@ -22,7 +22,7 @@
  */
 
 (function(root) {
-  // Use English number names for the integers zero through ten.
+  // English number names for the integers zero through ten.
   var numbers = [
     'zero',
     'one',
@@ -37,55 +37,88 @@
     'ten'
   ];
 
-  // Look up a month name by number or by abbreviation.
-  var months = {
-    '1':  'January',
-    JAN:  'January',
-    '2':  'February',
-    FEB:  'February',
-    '3':  'March',
-    MAR:  'March',
-    '4':  'April',
-    APR:  'April',
-    '5':  'May',
-    MAY:  'May',
-    '6':  'June',
-    JUN:  'June',
-    '7':  'July',
-    JUL:  'July',
-    '8':  'August',
-    AUG:  'August',
-    '9':  'September',
-    SEP:  'September',
-    '10': 'October',
-    OCT:  'October',
-    '11': 'November',
-    NOV:  'November',
-    '12': 'December',
-    DEC:  'December'
+  // English ordinal names for the integers zero through ten.
+  var ordinals = [
+    null,
+    'first',
+    'second',
+    'third',
+    'fourth',
+    'fifth',
+    'sixth',
+    'seventh',
+    'eighth',
+    'ninth',
+    'tenth'
+  ];
+
+  // Ordianl suffixes.
+  var suffixes = ['th', 'st', 'nd', 'rd'];
+
+  // English month names.
+  var monthNames = [
+    null,
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  // English weekday names.
+  var weekdayNames = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
+
+  // Month names by abbreviation.
+  var monthAbbreviations = {
+    JAN:  monthNames[1],
+    FEB:  monthNames[2],
+    MAR:  monthNames[3],
+    APR:  monthNames[4],
+    MAY:  monthNames[5],
+    JUN:  monthNames[6],
+    JUL:  monthNames[7],
+    AUG:  monthNames[8],
+    SEP:  monthNames[9],
+    OCT:  monthNames[10],
+    NOV:  monthNames[11],
+    DEC:  monthNames[12]
   };
 
-  // Look up a week name by number or by abbreviation.
-  var weekdays = {
-    '0': 'Sunday',
-    SUN: 'Sunday',
-    '1': 'Monday',
-    MON: 'Monday',
-    '2': 'Tuesday',
-    TUE: 'Tuesday',
-    '3': 'Wednesday',
-    WED: 'Wednesday',
-    '4': 'Thursday',
-    THU: 'Thursday',
-    '5': 'Friday',
-    FRI: 'Friday',
-    '6': 'Saturday',
-    SAT: 'Saturday'
+  // Weekday name by abbreviation.
+  var weekdayAbbreviations = {
+    SUN: weekdayNames[0],
+    MON: weekdayNames[1],
+    TUE: weekdayNames[2],
+    WED: weekdayNames[3],
+    THU: weekdayNames[4],
+    FRI: weekdayNames[5],
+    SAT: weekdayNames[6]
   };
 
   // A cron pattern to English interpreter.
-  function explainCron(cronPattern, options) {
-    cronPattern = parseCronPattern(cronPattern);
+  //
+  // NOTE: `options` includes:
+  // - second (boolean): always treat the first value as a second
+  // - year (boolean): parse with year
+  function cronli5(cronPattern, options) {
+    options = parseOptions(options);
+
+    cronPattern = parseCronPattern(cronPattern, options);
 
     return interpretSeconds(cronPattern) + ' ' +
       interpretMinutes(cronPattern) + ' ' +
@@ -94,9 +127,6 @@
       interpretMonths(cronPattern) + ' ' +
       interpretWeekdays(cronPattern);
   }
-
-  // Describe the next run time.
-  function nextCron(cronPattern, options) {}
 
   // Second field.
   function interpretSeconds(cronPattern) {
@@ -247,6 +277,8 @@
   // Hour field.
   function interpretHours(cronPattern) {
     var hourField = cronPattern.hour;
+
+    return
   }
 
   function interpretSingleHour(hourField) {
@@ -277,40 +309,72 @@
     var weekdayField = cronPattern.weekday;
   }
 
-  // Use English number names for the integers zero through ten.
-  function getNumber(n) {
-    numbers[n] || n;
-  }
-
   // Turn a simple hour field into 12-hour representation.
   function getHour(n) {
     if (n >= 12) {
-      return n - 12 || n + ':00 pm';
+      return n - 12 || n + ':00 PM';
     }
 
     if (n >= 0) {
-      return +n || 12 + ':00 am';
+      return +n || 12 + ':00 AM';
     }
 
     throw new Error(
       'Tried to interpret "' + JSON.stringify(n) + '" as an hour and failed.');
   }
 
+  // Get English number names for the integers zero through ten.
+  function getNumber(n) {
+    return numbers[n] || n;
+  }
+
+  // Get English ordinals from integers.
+  function getOrdinal(n) {
+    return ordinals[n] || ordinalize(n);
+  }
+
+  // Get suffixed ordinals from integers.
+  function ordinalize(n) {
+    var N = Math.abs(n);
+
+    return n + suffixes[N] || suffixes[(N % 100 - 20) % 10] || suffixes[0];
+  }
+
+  // Get English month names from a number or an abbreviation.
+  function getMonth(m) {
+    return monthNames[m] || monthAbbreviations[m];
+  }
+
+  // Get English weekday names from a number or an abbreviation.
+  function getWeekday(d) {
+    return weekdayNames[d] || weekdayAbbreviations[d];
+  }
+
+  // Return a parsed options object.
+  function parseOptions(options) {
+    options = options || {};
+
+    return {
+      second: !!options.second,
+      year: !!options.year
+    };
+  }
+
   // Take a cron pattern as, a cron pattern string, an array of cron fields, a
   // cron-like object (see the final return statement for the format of a
   // cron-like object), or a stringable object that evaluates to a cron pattern
   // string. Returns a cron-like object.
-  function parseCronPattern(cronPattern) {
+  function parseCronPattern(cronPattern, options) {
     var isArray = cronPattern instanceof Array;
 
     // Throw if null or empty.
     if (!cronPattern || isArray && cronPattern.length === 0) {
       throw new Error(
-        'cronli5 expects a non-empty cron pattern as the first argument.');
+        '`cronli5` expects a non-empty cron pattern as the first argument.');
     }
 
     if (isArray) {
-      return cronifyArray(cronPattern);
+      return cronifyArray(cronPattern, options);
     }
 
     if (typeof cronPattern === 'object') {
@@ -318,24 +382,18 @@
     }
 
     if (typeof cronPattern === 'string') {
-      return cronifyString(cronPattern);
+      return cronifyString(cronPattern, options);
     }
+
+    throw new Error('`cronli5` was passed an unexpected type.');
   }
 
-  function cronifyString(cronString) {
-    var cronlikeArray = cronString.split(/\s+/);
-
-    return cronifyArray(cronlikeArray);
-  }
-
-  function cronifyArray(cronlikeArray) {
-    // Check that the length makes sense.
+  function cronifyArray(cronlikeArray, options) {
     if (cronlikeArray.length > 6) {
-      throw new Error('cronli5 expects a five or six-part cron pattern.');
+      throw new Error('`cronli5` expects a five or six-part cron pattern.');
     }
 
-    // Normalize to pattern that includes seconds.
-    if (cronlikeArray.length < 6) {
+    if (!options.second && cronlikeArray.length < 6) {
       cronlikeArray.unshift('0');
     }
 
@@ -356,7 +414,7 @@
       !cronlikeObject.hour
     ) {
       throw new Error(
-        '`cronli5` expects that any object to be interpreted as a cron ' +
+        '`cronli5` expects that any object being interpreted as a cron ' +
         'pattern have at least one of the following properties: `second`, ' +
         '`minute`, or `hour`');
     }
@@ -371,11 +429,11 @@
     };
   }
 
-  // Export cronli5
-  var cronli5 = {
-    explain: explainCron,
-    next: nextCron
-  };
+  function cronifyString(cronString, options) {
+    var cronlikeArray = cronString.split(/\s+/);
+
+    return cronifyArray(cronlikeArray, options);
+  }
 
   /* global define */
   if (typeof define === 'function' && define.amd) {
