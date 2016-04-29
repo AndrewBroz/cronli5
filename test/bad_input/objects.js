@@ -1,24 +1,22 @@
-var cronli5 = require('../..');
-var expect = require('chai').expect;
-var errors = require('../error-types');
+var runner = require('./error-runner');
+var errors = require('./error-types');
 
 describe('Invalid objects:', function() {
-  throws({}, errors.missingProps);
+  runner.run([{}], errors.missingProps);
 
-  invalidFields('second');
+  var fieldNames = [
+    'second',
+    'minute',
+    'hour',
+    'date',
+    'month',
+    'weekday'
+  ];
 
-  invalidFields('minute');
-
-  invalidFields('hour');
-
-  invalidFields('date');
-
-  invalidFields('month');
-
-  invalidFields('weekday');
+  fieldNames.forEach(checkInvalidFields);
 });
 
-function invalidFields(fieldName) {
+function checkInvalidFields(fieldName) {
   var invalidFieldValues = [
     ':(', '&', '/', '//', ',', ',,', '-', '--', '60', 60, '-1', -1, NaN, 'cat',
     'BOB', '^', true, new Date(), new Error()
@@ -28,19 +26,7 @@ function invalidFields(fieldName) {
     invalidFieldValues.forEach(function(value) {
       var cronObject = cronFactory(fieldName, value);
 
-      throws(cronObject, errors.invalidField);
-    });
-  });
-}
-
-function throws(badObject, errorText) {
-  describe(JSON.stringify(badObject), function() {
-    it('should throw an error', function() {
-      expect(cronli5.bind(null, badObject)).to.throw(Error);
-    });
-
-    it('should throw "' + errorText + '".', function() {
-      expect(cronli5.bind(null, badObject)).to.throw(errorText);
+      runner.run([cronObject], errors.invalidField);
     });
   });
 }

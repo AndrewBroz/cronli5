@@ -1,59 +1,33 @@
-var cronli5 = require('../..');
-var expect = require('chai').expect;
-var errors = require('../error-types');
+var runner = require('./error-runner');
+var errors = require('./error-types');
 
 describe('Invalid types:', function() {
-  throws(undefined, errors.empty); // eslint-disable-line no-undefined
-
-  throws(null, errors.empty);
+  runner.run([undefined, null], errors.empty); // eslint-disable-line no-undefined
 
   describe('booleans', function() {
-    throws(true);
-
-    throws(false);
+    runner.run([true, false]);
   });
 
   describe('integers', function() {
-    throws(0);
-
-    throws(1);
-
-    throws(-1);
-
-    throws(12345);
-
-    throws(123456);
-
-    throws(-1234);
-
-    throws(-12345);
-
-    throws(NaN);
-
-    throws(Infinity);
-
-    throws(-Infinity);
+    runner.run([
+      0,
+      1,
+      -1,
+      12345,
+      123456,
+      -1234,
+      -12345,
+      NaN,
+      Infinity,
+      -Infinity
+    ]);
   });
 
   describe('Date', function() {
-    throws(new Date());
+    runner.run([new Date()]);
   });
 
   describe('Error', function() {
-    throws(new Error());
+    runner.run([new Error()]);
   });
 });
-
-function throws(badType, errorText) {
-  describe(JSON.stringify(badType), function() {
-    it('should throw an error', function() {
-      expect(cronli5.bind(null, badType)).to.throw(Error);
-    });
-
-    if (errorText) {
-      it('should throw "' + errorText + '".', function() {
-        expect(cronli5.bind(null, badType)).to.throw(errorText);
-      });
-    }
-  });
-}
