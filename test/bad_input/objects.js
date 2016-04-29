@@ -1,8 +1,8 @@
-var runner = require('./error-runner');
+var run = require('../runner').error;
 var errors = require('./error-types');
 
 describe('Invalid objects:', function() {
-  runner.run([{}], errors.missingProps);
+  run([{}], errors.missingProps);
 
   var fieldNames = [
     'second',
@@ -26,7 +26,7 @@ function checkInvalidFields(fieldName) {
     invalidFieldValues.forEach(function(value) {
       var cronObject = cronFactory(fieldName, value);
 
-      runner.run([cronObject], errors.invalidField);
+      run([cronObject], errors.invalidField);
     });
   });
 }

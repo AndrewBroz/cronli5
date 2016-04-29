@@ -1,15 +1,15 @@
-var runner = require('./error-runner');
+var run = require('../runner').error;
 var errors = require('./error-types');
 
 describe('Invalid types:', function() {
-  runner.run([undefined, null], errors.empty); // eslint-disable-line no-undefined
+  run([undefined, null], errors.empty); // eslint-disable-line no-undefined
 
   describe('booleans', function() {
-    runner.run([true, false]);
+    run([true, false]);
   });
 
   describe('integers', function() {
-    runner.run([
+    run([
       0,
       1,
       -1,
@@ -24,10 +24,10 @@ describe('Invalid types:', function() {
   });
 
   describe('Date', function() {
-    runner.run([new Date()]);
+    run([new Date()]);
   });
 
   describe('Error', function() {
-    runner.run([new Error()]);
+    run([new Error()]);
   });
 });

@@ -1,8 +1,8 @@
-var runner = require('./error-runner');
+var run = require('../runner').error;
 var errors = require('./error-types');
 
 describe('Invalid arrays:', function() {
-  runner.run([
+  run([
     [[],                                  errors.empty ],
     [['*', '*', '*', '*', '*', '*', '*'], errors.length]
   ]);
@@ -24,7 +24,7 @@ describe('Invalid arrays:', function() {
     ['*', '*', '*', new Error('*'), '*', '*']
   ];
 
-  runner.run(wrap(invalidFieldArrays), errors.invalidField);
+  run(wrap(invalidFieldArrays), errors.invalidField);
 });
 
 function wrap(arr) {
