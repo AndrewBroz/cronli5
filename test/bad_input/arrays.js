@@ -3,7 +3,7 @@ var errors = require('./error-types');
 
 describe('Invalid arrays:', function() {
   run([
-    [[],                                  errors.empty ],
+    [[], errors.empty ],
     [['*', '*', '*', '*', '*', '*', '*'], errors.length]
   ]);
 
