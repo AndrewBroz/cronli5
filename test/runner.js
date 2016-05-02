@@ -27,7 +27,7 @@ module.exports = {
 
 // Check that the output matches the input for a given cron pattern.
 function equal(cronable, expected) {
-  describe('"' + cronable + '"', function() {
+  describe(JSON.stringify(cronable), function() {
     it('should return a string', function() {
       expect(cronli5(cronable)).to.be.a('string');
     });
