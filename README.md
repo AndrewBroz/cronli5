@@ -64,25 +64,25 @@ import cronli5 from 'cronli5';
 Programmatic usage (ES5):
 ```
 // Cron patterns can be represented as strings
-var cronString = '* * * * *';
+var cronString = '*/5 * * * *';
 
 // Cron patterns can be represented as arrays of cron fields
-var cronArray = ['*', '*', '*', '*', '*'];
+var cronArray = ['*/5', '*', '*', '*', '*'];
 
 // Cron patterns can be represented as objects
 var cronObject = {
-  minute: '*',
+  minute: '*/5',
   hour: '*',
   date: '*',
   month: '*',
   weekday: '*',
 };
 
-var expectedOutput = 'every minute';
+var expectedOutput = 'every five minutes';
 
-expect(explain(cronString)).to.equal(expectedOutput);
-expect(explain(cronArray)).to.equal(expectedOutput);
-expect(explain(cronObject)).to.equal(expectedOutput);
+expect(cronli5(cronString)).to.equal(expectedOutput);
+expect(cronli5(cronArray)).to.equal(expectedOutput);
+expect(cronli5(cronObject)).to.equal(expectedOutput);
 ```
 
 ## About
@@ -97,8 +97,6 @@ is based on code from [a gist by dunse][dunse]. Although prettycron was
 close to meeting my needs, I wasn't fully satisfied with the output and was
 limited by the lack of support for extended cron patterns. `cronli5` tries to
 render as many cron patterns in as direct and idiomatic English as possible.
-Doing so involved lots of special cases and even more unit tests, but the
-output is easier to read.
 
 `cronli5` was written from scratch and has no production dependencies. Its
 source does not borrow code, in whole or in part, from [prettycron]
