@@ -1,6 +1,6 @@
 {
   "name": "cronli5",
-  "version": "0.0.0-beta.2",
+  "version": "0.0.0-beta.3",
   "description": "Cron Like I'm Five: A Cron to English Utility",
   "repository": {
     "type": "git",
