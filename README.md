@@ -43,7 +43,7 @@ global in the scripts that follow. _Unsolicited advice: rather than doing this,c
 
 As a command line tool:
 ```
-$ cronli5 * * * * *
+$ cronli5 "* * * * *"
 
 Runs every minute.
 ```
