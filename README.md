@@ -2,6 +2,8 @@
 > ## DISCLAIMER: IN PROGRESS
 > This is a work in progress, and does not yet work generically. Do not use
 > until this disclaimer has been removed.
+> 
+> If you need something like this now, use [prettycron][prettycron].
 
 # Cron Like I'm Five (cronli5): A Cron Pattern to English Interpreter
 
@@ -14,7 +16,8 @@ standard allowed values and the following operators: asterisks (`*`), commas
 `cronli5` is a good library to use if you need to display an English language
 interpretation of a cron pattern in a Node or in a browser environment. If you
 need to do other things with cron patterns, consider a library like [Later.js]
-[later]. [prettycron][prettycron] may also meet your needs as an interpreter.
+[later]. If you want an alternative to `cronli5`, [prettycron][prettycron] may
+also meet your needs as an interpreter.
 
 ## Installation
 
