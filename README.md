@@ -1,3 +1,8 @@
+
+> # DISCLAIMER: IN PROGRESS
+> This is a work in progress, and does not yet work generically. Do not use
+> until this disclaimer has been removed.
+
 # Cron Like I'm Five (cronli5): A Cron Pattern to English Interpreter
 
 Generate English language descriptions of schedules from cron patterns.
