@@ -285,15 +285,9 @@
 
   // Hour field.
   function interpretHours(cronPattern) {
-    var prefix = interpretWeekdays(cronPattern) || '';
-
-    if (prefix) {
-      prefix = 'every ' + prefix + ' ';
-    }
-
     return interpretMultipleHours(cronPattern) ||
       interpretRepeatingHours(cronPattern) ||
-      prefix + interpretSingleHour(cronPattern);
+      interpretSingleHour(cronPattern);
   }
 
   function interpretMultipleHours(cronPattern) {
@@ -348,7 +342,13 @@
       return 'every hour';
     }
 
-    return 'at ' + getHour(hourField);
+    var prefix = interpretWeekdays(cronPattern) || '';
+
+    if (prefix) {
+      prefix = 'every ' + prefix + ' ';
+    }
+
+    return prefix + 'at ' + getHour(hourField);
   }
 
   // Date field.
