@@ -90,22 +90,24 @@
 
   // Month names by abbreviation.
   var monthAbbreviations = {
-    JAN:  monthNames[1],
-    FEB:  monthNames[2],
-    MAR:  monthNames[3],
-    APR:  monthNames[4],
-    MAY:  monthNames[5],
-    JUN:  monthNames[6],
-    JUL:  monthNames[7],
-    AUG:  monthNames[8],
-    SEP:  monthNames[9],
-    OCT:  monthNames[10],
-    NOV:  monthNames[11],
-    DEC:  monthNames[12]
+    '*': 'month',
+    JAN: monthNames[1],
+    FEB: monthNames[2],
+    MAR: monthNames[3],
+    APR: monthNames[4],
+    MAY: monthNames[5],
+    JUN: monthNames[6],
+    JUL: monthNames[7],
+    AUG: monthNames[8],
+    SEP: monthNames[9],
+    OCT: monthNames[10],
+    NOV: monthNames[11],
+    DEC: monthNames[12]
   };
 
   // Weekday name by abbreviation.
   var weekdayAbbreviations = {
+    '*': 'day',
     SUN: weekdayNames[0],
     MON: weekdayNames[1],
     TUE: weekdayNames[2],
@@ -256,14 +258,14 @@
     var interval = secondField[1];
 
     if (interval > 1) {
-      result += getNumber(interval) + ' seconds';
+      result += getNumber(interval) + ' minutes';
     }
     else if (interval == 1 || interval == 0) {
-      result += 'second';
+      result += 'minute';
     }
 
     if (start !== '*' && start !== '0') {
-      result += ' past second ' + getNumber(start);
+      result += ' past minute ' + getNumber(start);
     }
 
     return result;
@@ -283,12 +285,20 @@
 
   // Hour field.
   function interpretHours(cronPattern) {
-    return interpretMultipleHours(cronPattern.hour) ||
-      interpretRepeatingHours(cronPattern.hour) ||
-      interpretSingleHour(cronPattern.hour);
+    var prefix = interpretWeekdays(cronPattern) || '';
+
+    if (prefix) {
+      prefix = 'every ' + prefix + ' ';
+    }
+
+    return interpretMultipleHours(cronPattern) ||
+      interpretRepeatingHours(cronPattern) ||
+      prefix + interpretSingleHour(cronPattern);
   }
 
-  function interpretMultipleHours(hourField) {
+  function interpretMultipleHours(cronPattern) {
+    var hourField = cronPattern.hour;
+
     if (!hourField.includes(',')) {
       // Not a multiple minute pattern.
       return;
@@ -302,18 +312,18 @@
       getNumber(hourField.slice(-1)[0]);
   }
 
-  function interpretRepeatingHours(hourField) {
+  function interpretRepeatingHours(cronPattern) {
+    var hourField = cronPattern.hour;
+
     if (!hourField.includes('/')) {
       // Not a repeating interval pattern.
       return;
     }
 
-    var result = 'every ';
-
     hourField = hourField.split('/');
 
-    var start = hourField[0];
     var interval = hourField[1];
+    var result = 'every ';
 
     if (interval > 1) {
       result += getNumber(interval) + ' hours';
@@ -322,6 +332,8 @@
       result += 'hour';
     }
 
+    var start = hourField[0];
+
     if (start !== '*' && start !== '0') {
       result += ' past hour ' + getNumber(start);
     }
@@ -329,7 +341,9 @@
     return result;
   }
 
-  function interpretSingleHour(hourField) {
+  function interpretSingleHour(cronPattern) {
+    var hourField = cronPattern.hour;
+
     if (hourField === '*') {
       return 'every hour';
     }
@@ -349,17 +363,17 @@
 
   // Weekday field.
   function interpretWeekdays(cronPattern) {
-    return getWeekday(cronPattern.weekday);
+    return 'every ' + getWeekday(cronPattern.weekday);
   }
 
   // Turn a simple hour field into 12-hour representation.
   function getHour(n) {
     if (n >= 12) {
-      return n - 12 || n + ':00 PM';
+      return (n - 12 || n) + ':00 PM';
     }
 
     if (n >= 0) {
-      return +n || 12 + ':00 AM';
+      return (+n || 12) + ':00 AM';
     }
 
     throw new Error(
@@ -373,21 +387,17 @@
 
   // Get English ordinals from integers.
   function getOrdinal(n) {
-    return ordinals[n] || ordinalize(n);
+    return ordinals[n] || getSuffixedOrdinal(n);
   }
 
   // Get suffixed ordinals from integers.
-  function ordinalize(n) {
+  function getSuffixedOrdinal(n) {
     var m = Math.abs(n);
     var suffix = suffixes[m];
 
     if (!suffix) {
       m = (m % 100 - 20) % 10;
-      suffix = suffixes[m];
-    }
-
-    if (!suffix) {
-      suffix = suffixes[0];
+      suffix = suffixes[m] || suffixes[0];
     }
 
     return n + suffix;
@@ -462,11 +472,11 @@
   }
 
   // Turn an object that's already cron-like into a populated cron-like object.
-  function cronifyObject(cronlikeObject) {
+  function cronifyObject(cronable) {
     if (
-      !cronlikeObject.second &&
-      !cronlikeObject.minute &&
-      !cronlikeObject.hour
+      !cronable.second &&
+      !cronable.minute &&
+      !cronable.hour
     ) {
       throw new Error(
         '`cronli5` expects that any object being interpreted as a cron ' +
@@ -474,13 +484,16 @@
         '`minute`, or `hour`');
     }
 
+    var defaultMinute = cronable.second ? '*' : '0';
+    var defaultHour = cronable.second || cronable.minute ? '*' : '0';
+
     return {
-      second:  cronlikeObject.second || '0',
-      minute:  cronlikeObject.minute || cronlikeObject.second ? '*' : '0',
-      hour:    cronlikeObject.hour   || '*',
-      date:    cronlikeObject.date   || '*',
-      month:   cronlikeObject.month  || '*',
-      weekday: cronlikeObject.weeday || '*'
+      second:  cronable.second || '0',
+      minute:  cronable.minute || defaultMinute,
+      hour:    cronable.hour   || defaultHour,
+      date:    cronable.date   || '*',
+      month:   cronable.month  || '*',
+      weekday: cronable.weeday || '*'
     };
   }
 

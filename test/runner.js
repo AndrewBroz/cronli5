@@ -1,6 +1,7 @@
 var cronli5 = require('..');
 var expect = require('chai').expect;
 
+// Runner
 module.exports = {
   run: function runEqualityTests(tests, defaultExpected) {
     tests.forEach(function(values) {
@@ -21,7 +22,7 @@ module.exports = {
 
       throwsError(badInput, errorText);
     });
-  }
+  },
 };
 
 // Check that the output matches the input for a given cron pattern.
@@ -29,10 +30,6 @@ function equal(cronable, expected) {
   describe('"' + cronable + '"', function() {
     it('should return a string', function() {
       expect(cronli5(cronable)).to.be.a('string');
-    });
-
-    it('should not be an empty string', function() {
-      expect(cronli5(cronable)).to.not.be.empty;
     });
 
     it('should be "' + expected + '"', function() {

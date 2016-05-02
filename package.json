@@ -6,7 +6,7 @@
   "bin": "cli.js",
   "scripts": {
     "build": "uglifyjs cronli5.js -o conli5.min.js -c -m --comments",
-    "lint": "eslint cronli5.js --fix",
+    "lint": "eslint cronli5.js test --fix",
     "test": "npm run lint && mocha"
   },
   "keywords": [

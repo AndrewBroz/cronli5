@@ -9,7 +9,7 @@ describe('Simple valid arrays:', function() {
       [['5', '*', '*', '*', '*'], 'five minutes past the hour, every hour'],
       [['10', '*', '*', '*', '*'], 'ten minutes past the hour, every hour' ],
       [['15', '*', '*', '*', '*'], '15 minutes past the hour, every hour' ],
-      [['30', '*', '*', '*', '*'], '30 minutes past the hour, every hour' ]
+      [['30', '*', '*', '*', '*'], '30 minutes past the hour, every hour' ],
     ]);
   });
 
@@ -27,7 +27,7 @@ describe('Simple valid arrays:', function() {
       [['0', '5', '*', '*', '*', '*'], 'five minutes past the hour, every hour' ],
       [['0', '10', '*', '*', '*', '*'], 'ten minutes past the hour, every hour' ],
       [['0', '15', '*', '*', '*', '*'], '15 minutes past the hour, every hour' ],
-      [['0', '30', '*', '*', '*', '*'], '30 minutes past the hour, every hour' ]
+      [['0', '30', '*', '*', '*', '*'], '30 minutes past the hour, every hour' ],
     ]);
   });
 });

@@ -1,5 +1,3 @@
 --recursive
 test/baseline
-test/bad_input
-test/simple
-test/complex
+test/basic

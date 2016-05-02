@@ -5,7 +5,7 @@ describe('Invalid types:', function() {
   run([undefined, null], errors.empty); // eslint-disable-line no-undefined
 
   describe('booleans', function() {
-    run([true, false]);
+    run([true, false], errors.badType);
   });
 
   describe('integers', function() {
@@ -20,14 +20,14 @@ describe('Invalid types:', function() {
       NaN,
       Infinity,
       -Infinity
-    ]);
+    ], errors.badType);
   });
 
   describe('Date', function() {
-    run([new Date()]);
+    run([new Date()], errors.missingProps);
   });
 
   describe('Error', function() {
-    run([new Error()]);
+    run([new Error()], errors.missingProps);
   });
 });

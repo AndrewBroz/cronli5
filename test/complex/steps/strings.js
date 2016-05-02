@@ -1,6 +1,6 @@
 var run = require('../../runner').run;
 
-describe('Simple valid strings:', function() {
+describe('Valid strings with steps:', function() {
   describe('5-part strings', function() {
     run([
       ['*/2 * * * *', 'every two minutes'],

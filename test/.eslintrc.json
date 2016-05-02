@@ -3,6 +3,7 @@
         "mocha": true
     },
     "rules": {
+        "comma-dangle": "off",
         "max-len": ["error", 120],
         "no-multi-spaces": "error"
     }
