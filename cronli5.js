@@ -505,7 +505,7 @@
       hour:    cronable.hour   || defaultHour,
       date:    cronable.date   || '*',
       month:   cronable.month  || '*',
-      weekday: cronable.weeday || '*'
+      weekday: cronable.weekday || '*'
     };
   }
 
