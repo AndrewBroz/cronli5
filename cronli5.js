@@ -363,6 +363,18 @@
 
   // Weekday field.
   function interpretWeekdays(cronPattern) {
+    var weekdayField = cronPattern.weekday;
+
+    if (weekdayField.includes('-')) {
+      return weekdayField.split('-').map(getWeekday).join('-');
+    }
+    else if (weekdayField.includes(',')) {
+      weekdayField = weekdayField.split(',').map(getWeekday);
+
+      return weekdayField.slice(0, -1).join(', ') + ', and ' +
+        weekdayField[weekdayField.length - 1];
+    }
+
     return getWeekday(cronPattern.weekday);
   }
 
