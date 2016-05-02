@@ -3,6 +3,12 @@
  */
 
 (function(root) {
+  // Option flags
+  var HH = false;
+  var SECOND = false;
+  var SHORT = false;
+  var YEAR = false;
+
   // English number names for the integers zero through ten.
   var numbers = [
     'zero',
@@ -44,34 +50,34 @@
   // English month names.
   var monthNames = [
     null,
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
+    ['January', 'Jan'],
+    ['February', 'Feb'],
+    ['March', 'Mar'],
+    ['April', 'Apr'],
+    ['May', 'May'],
+    ['June', 'Jun'],
+    ['July', 'Jul'],
+    ['August', 'Aug'],
+    ['September', 'Sep'],
+    ['October', 'Oct'],
+    ['November', 'Nov'],
+    ['December', 'Dec']
   ];
 
   // English weekday names.
   var weekdayNames = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
+    ['Sunday', 'Sun'],
+    ['Monday', 'Mon'],
+    ['Tuesday', 'Tue'],
+    ['Wednesday', 'Wed'],
+    ['Thursday', 'Thu'],
+    ['Friday', 'Fri'],
+    ['Saturday', 'Sat']
   ];
 
   // Month names by abbreviation.
   var monthAbbreviations = {
-    '*': 'month',
+    '*': ['month', 'month'],
     JAN: monthNames[1],
     FEB: monthNames[2],
     MAR: monthNames[3],
@@ -88,7 +94,7 @@
 
   // Weekday name by abbreviation.
   var weekdayAbbreviations = {
-    '*': 'day',
+    '*': ['day', 'day'],
     SUN: weekdayNames[0],
     MON: weekdayNames[1],
     TUE: weekdayNames[2],
@@ -100,13 +106,15 @@
 
   // A cron pattern to English interpreter.
   //
-  // NOTE: `options` includes:
+  // NOTE: `options` include:
+  // - short (boolean): use shorthand and numeric representations
+  // - hh (boolean): use zero-padded 24-hour time
   // - second (boolean): always treat the first value as a second
   // - year (boolean): parse with year
   function cronli5(cronPattern, options) {
-    options = parseOptions(options);
+    setOptions(options);
 
-    cronPattern = parseCronPattern(cronPattern, options);
+    cronPattern = parseCronPattern(cronPattern);
 
     return interpretSeconds(cronPattern) ||
       interpretMinutes(cronPattern) ||
@@ -114,6 +122,98 @@
       interpretDates(cronPattern) + ' ' +
       interpretMonths(cronPattern) + ' ' +
       interpretWeekdays(cronPattern);
+  }
+
+  // Set option flags.
+  function setOptions(options) {
+    options = options || {};
+
+    HH = !!options.hh;
+    SECOND = !!options.second;
+    SHORT = !!options.short;
+    YEAR = !!options.year;
+  }
+
+  // Take a cron pattern as, a cron pattern string, an array of cron fields, a
+  // cron-like object (see the final return statement for the format of a
+  // cron-like object), or a stringable object that evaluates to a cron pattern
+  // string. Returns a cron-like object.
+  function parseCronPattern(cronPattern) {
+    var isArray = cronPattern instanceof Array;
+
+    // Throw if null or empty.
+    if (!cronPattern || isArray && cronPattern.length === 0) {
+      throw new Error(
+        '`cronli5` expects a non-empty cron pattern as the first argument.');
+    }
+
+    if (isArray) {
+      return cronifyArray(cronPattern);
+    }
+
+    if (typeof cronPattern === 'object') {
+      return cronifyObject(cronPattern);
+    }
+
+    if (typeof cronPattern === 'string') {
+      return cronifyString(cronPattern);
+    }
+
+    throw new Error('`cronli5` was passed an unexpected type.');
+  }
+
+  // Turn a cronable array into a cron-like object.
+  function cronifyArray(cronlikeArray) {
+    var max = YEAR ? 7 : 6;
+
+    if (cronlikeArray.length > max) {
+      throw new Error('`cronli5` was passed a cron pattern with more than ' +
+        getNumber(max) + ' fields.');
+    }
+
+    if (!SECOND && cronlikeArray.length < max) {
+      cronlikeArray.unshift('0');
+    }
+
+    return {
+      second:  cronlikeArray[0] || '0',
+      minute:  cronlikeArray[1] || '*',
+      hour:    cronlikeArray[2] || '*',
+      date:    cronlikeArray[3] || '*',
+      month:   cronlikeArray[4] || '*',
+      weekday: cronlikeArray[5] || '*',
+      year:    cronlikeArray[6] || '*'
+    };
+  }
+
+  // Turn an object that's already cron-like into a populated cron-like object.
+  function cronifyObject(cronable) { // eslint-disable-line complexity
+    if (!cronable.second && !cronable.minute && !cronable.hour) {
+      throw new Error(
+        '`cronli5` expects that any object being interpreted as a cron ' +
+        'pattern have at least one of the following properties: `second`, ' +
+        '`minute`, or `hour`');
+    }
+
+    var defaultMinute = cronable.second ? '*' : '0';
+    var defaultHour = cronable.second || cronable.minute ? '*' : '0';
+
+    return {
+      second:  cronable.second  || '0',
+      minute:  cronable.minute  || defaultMinute,
+      hour:    cronable.hour    || defaultHour,
+      date:    cronable.date    || '*',
+      month:   cronable.month   || '*',
+      weekday: cronable.weekday || '*',
+      year:    cronable.year    || '*'
+    };
+  }
+
+  // Turn a string into a cron-like object.
+  function cronifyString(cronString) {
+    var cronlikeArray = cronString.split(/\s+/);
+
+    return cronifyArray(cronlikeArray);
   }
 
   // Second field.
@@ -317,9 +417,7 @@
   }
 
   function interpretSingleHour(cronPattern) {
-    var hourField = cronPattern.hour;
-
-    if (hourField === '*') {
+    if (cronPattern.hour === '*') {
       return 'every hour';
     }
 
@@ -329,7 +427,7 @@
       prefix = 'every ' + prefix + ' ';
     }
 
-    return prefix + 'at ' + getHour(hourField);
+    return prefix + 'at ' + getHour(cronPattern.hour);
   }
 
   // Date field.
@@ -360,26 +458,38 @@
   }
 
   // Turn a simple hour field into 12-hour representation.
-  function getHour(n) {
-    if (n >= 12) {
-      return (n - 12 || n) + ':00 PM';
+  function getHour(h) {
+    if (HH) {
+      return pad(h) + ':00';
     }
 
-    if (n >= 0) {
-      return (+n || 12) + ':00 AM';
+    if (h >= 12) {
+      return (h - 12 || h) + ':00 PM';
     }
 
-    throw new Error(
-      'Tried to interpret "' + JSON.stringify(n) + '" as an hour and failed.');
+    if (h >= 0) {
+      return (+h || 12) + ':00 AM';
+    }
+
+    throw new Error('Tried to interpret "' + JSON.stringify(h) +
+      '" as an hour and failed.');
   }
 
   // Get English number names for the integers zero through ten.
   function getNumber(n) {
+    if (SHORT) {
+      return n;
+    }
+
     return numbers[n] || n;
   }
 
   // Get English ordinals from integers.
   function getOrdinal(n) {
+    if (SHORT) {
+      return getSuffixedOrdinal(n);
+    }
+
     return ordinals[n] || getSuffixedOrdinal(n);
   }
 
@@ -398,103 +508,27 @@
 
   // Get English month names from a number or from an abbreviation.
   function getMonth(m) {
-    return monthNames[m] || monthAbbreviations[m];
+    var month = monthNames[m] || monthAbbreviations[m];
+
+    return month && month[SHORT ? 1 : 0];
   }
 
   // Get English weekday names from a number or from an abbreviation.
   function getWeekday(d) {
-    return weekdayNames[d] || weekdayAbbreviations[d];
+    var weekday = weekdayNames[d] || weekdayAbbreviations[d];
+
+    return weekday && weekday[SHORT ? 1 : 0];
   }
 
-  // Return a parsed options object.
-  function parseOptions(options) {
-    options = options || {};
+  // Stringify and add a zero pad to integers.
+  function pad(n) {
+    n = '' + n;
 
-    return {
-      second: !!options.second,
-      year: !!options.year
-    };
-  }
-
-  // Take a cron pattern as, a cron pattern string, an array of cron fields, a
-  // cron-like object (see the final return statement for the format of a
-  // cron-like object), or a stringable object that evaluates to a cron pattern
-  // string. Returns a cron-like object.
-  function parseCronPattern(cronPattern, options) {
-    var isArray = cronPattern instanceof Array;
-
-    // Throw if null or empty.
-    if (!cronPattern || isArray && cronPattern.length === 0) {
-      throw new Error(
-        '`cronli5` expects a non-empty cron pattern as the first argument.');
+    if (n.length < 2) {
+      n = '0' + n;
     }
 
-    if (isArray) {
-      return cronifyArray(cronPattern, options);
-    }
-
-    if (typeof cronPattern === 'object') {
-      return cronifyObject(cronPattern);
-    }
-
-    if (typeof cronPattern === 'string') {
-      return cronifyString(cronPattern, options);
-    }
-
-    throw new Error('`cronli5` was passed an unexpected type.');
-  }
-
-  // Turn a cronable array into a cron-like object.
-  function cronifyArray(cronlikeArray, options) {
-    if (cronlikeArray.length > 6) {
-      throw new Error('`cronli5` expects a five or six-part cron pattern.');
-    }
-
-    if (!options.second && cronlikeArray.length < 6) {
-      cronlikeArray.unshift('0');
-    }
-
-    return {
-      second:  cronlikeArray[0] || '0',
-      minute:  cronlikeArray[1] || '*',
-      hour:    cronlikeArray[2] || '*',
-      date:    cronlikeArray[3] || '*',
-      month:   cronlikeArray[4] || '*',
-      weekday: cronlikeArray[5] || '*'
-    };
-  }
-
-  // Turn an object that's already cron-like into a populated cron-like object.
-  function cronifyObject(cronable) {
-    if (
-      !cronable.second &&
-      !cronable.minute &&
-      !cronable.hour
-    ) {
-      throw new Error(
-        '`cronli5` expects that any object being interpreted as a cron ' +
-        'pattern have at least one of the following properties: `second`, ' +
-        '`minute`, or `hour`');
-    }
-
-    var defaultMinute = cronable.second ? '*' : '0';
-    var defaultHour = cronable.second || cronable.minute ? '*' : '0';
-
-    return {
-      second:  cronable.second || '0',
-      minute:  cronable.minute || defaultMinute,
-      hour:    cronable.hour   || defaultHour,
-      date:    cronable.date   || '*',
-      month:   cronable.month  || '*',
-      weekday: cronable.weekday || '*'
-    };
-  }
-
-  // Turn a string into a cron-like object.
-  function cronifyString(cronString, options) {
-    var cronlikeArray = cronString.split(/\s+/);
-
-    return cronifyArray(cronlikeArray, options);
+    return n;
   }
 
   /* global define */

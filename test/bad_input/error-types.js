@@ -1,5 +1,5 @@
 module.exports = {
-  length: 'expects a five or six-part cron pattern.',
+  length: 'was passed a cron pattern with more than',
   empty: 'expects a non-empty cron pattern as the first argument.',
   invalidField: 'invalid field',
   badType: 'passed an unexpected type',
