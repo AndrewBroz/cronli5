@@ -1,7 +1,11 @@
 {
   "name": "cronli5",
   "version": "0.0.0-beta.0",
-  "description": "Cron Like I'm Five: A Cron Pattern to English Interpreter",
+  "description": "Cron Like I'm Five: A Cron to English Utility",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abroz/cronli5.git"
+  },
   "main": "cronli5.js",
   "bin": "cli.js",
   "scripts": {

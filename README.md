@@ -5,7 +5,7 @@
 > 
 > If you need something like this now, use [prettycron][prettycron].
 
-# Cron Like I'm Five (cronli5): A Cron Pattern to English Interpreter
+# Cron Like I'm Five: A Cron to English Utility
 
 Generate English language descriptions of schedules from cron patterns.
 Accepts classic (five-part) cron patterns, or extended (six-part) cron
