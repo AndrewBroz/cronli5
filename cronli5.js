@@ -127,9 +127,9 @@
 
     cronPattern = parseCronPattern(cronPattern, options);
 
-    return interpretSeconds(cronPattern) + ' ' +
-      interpretMinutes(cronPattern) + ' ' +
-      interpretHours(cronPattern) + ' ' +
+    return interpretSeconds(cronPattern) ||
+      interpretMinutes(cronPattern) ||
+      interpretHours(cronPattern) ||
       interpretDates(cronPattern) + ' ' +
       interpretMonths(cronPattern) + ' ' +
       interpretWeekdays(cronPattern);
@@ -363,7 +363,7 @@
 
   // Weekday field.
   function interpretWeekdays(cronPattern) {
-    return 'every ' + getWeekday(cronPattern.weekday);
+    return getWeekday(cronPattern.weekday);
   }
 
   // Turn a simple hour field into 12-hour representation.
