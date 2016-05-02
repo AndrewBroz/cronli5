@@ -1,9 +1,8 @@
-
 > ## DISCLAIMER: IN PROGRESS
-> This is a work in progress, and does not yet work generically. Do not use
-> until this disclaimer has been removed.
 > 
-> If you need something like this now, use [prettycron][prettycron].
+> This is a work in progress and does not yet work in all intended cases. Do
+> not use until this disclaimer has been removed. If you need something like
+> this now, use [prettycron][prettycron].
 
 # Cron Like I'm Five: A Cron to English Utility
 
