@@ -1,7 +1,9 @@
+#! /usr/bin/env node
+
 // Need to sanity check a pattern before you schedule something? The cronli5
 // cli tool will take a pattern and print a description in English.
 //
-// Example: `cronli5 * * * * *` (prints "Will run every minute.")
+// Example: `cronli5 * * * * *` (prints "Runs every minute.")
 var explain = require('./cronli5');
 var pattern = process.argv.slice(2);
 
