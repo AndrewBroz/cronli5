@@ -86,6 +86,29 @@ expect(cronli5(cronArray)).to.equal(expectedOutput);
 expect(cronli5(cronObject)).to.equal(expectedOutput);
 ```
 
+## Options
+
+The `cronli5` function takes an `options` object as its second parameter with
+several boolean flag properties supported:
+* `ampm` &mdash; Default `true`: Use 12-hour time if `true`, 24-hour time if
+`false`.
+* `short` &mdash; Default `false`. Use abbreviatted forms if `true`.
+* `seconds` &mdash; Default `false`. Always treat the first field of strings
+and of arrays as the second field if `true`.
+* `years` &mdash; Default `false`. Treat six field string or array patterns as
+if the last field is the year field if `true`.
+
+## On Timezones
+
+`cronli5` always describes the pattern in whatever timezone the cron pattern
+is being run. This utility does not, nor does it ever intend to, deal with
+timezone conversions because, firstly, that functionality would require some
+non-trivial dependencies (like [moment][moment] with [moment-timezone]
+[moment-timezone]) to even approximate correctness and, secondly, the output
+_would still be wrong anyways_ because [timezones are problematic][timezones].
+To be accurate, associate the description with a timezone (e.g.
+America/Phoenix).
+
 ## About
 
 The project name is a reference to the phrase [Explain Like I'm Five (ELI5)]
@@ -114,7 +137,10 @@ _Copyright &copy; 2016 [Andrew Broz][abroz]_
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
 [later]: https://bunkat.github.io/later/
 [license]: ./LICENSE.md
+[moment]: http://momentjs.com/
+[moment-timezone]: http://momentjs.com/timezone/
 [prettycron]: https://github.com/azza-bazoo/prettycron
 [rollup]: http://rollupjs.org/
 [stackoverflow]: https://stackoverflow.com/
+[timezones]: https://www.w3.org/TR/timezone/
 [webpack]: https://webpack.github.io/
