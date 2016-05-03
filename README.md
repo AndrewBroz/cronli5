@@ -49,9 +49,6 @@ $ cronli5 "* * * * *"
 Runs every minute.
 ```
 
-Including `cronli5.min.js` in a script tag will expose `cronli5` as a global
-object.
-
 Import with require:
 ```
 var cronli5 = require('cronli5');
@@ -99,7 +96,27 @@ and of arrays as the `second` field if `true`.
 if the last field is the `year` field if `true`. Otherwise, treats the first
 field of a six field patten as the `second` field.
 
-## On Timezones
+```
+import cronli5 from 'cronli5';
+
+let longOptions = {
+  ampm: true,
+  short: false,
+};
+
+let shortOptions = {
+  ampm: false,
+  short: true,
+};
+
+let longDescription = cronli5(`30 13 * * MON-FRI`, longOptions);
+let shortDescription = cronli5(`30 13 * * MON-FRI`, shortOptions);
+
+expect(longDescription).to.equal('every Monday-Friday at 1:30 PM');
+expect(shortDescription).to.equal('every Mon-Fri at 13:30');
+```
+
+## Note on Timezones
 
 `cronli5` always describes the pattern in whatever timezone the cron pattern
 is being run. This utility does not, nor does it ever intend to, deal with
