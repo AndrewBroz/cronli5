@@ -231,7 +231,7 @@
   }
 
   function interpretRangeOfSeconds(secondField) {
-    if (!secondField.includes('-')) {
+    if (!includes(secondField, '-')) {
       // Not a range pattern.
       return;
     }
@@ -258,7 +258,7 @@
   }
 
   function interpretRepeatingSeconds(secondField) {
-    if (!secondField.includes('/')) {
+    if (!includes(secondField, '/')) {
       // Not a repeating interval pattern.
       return;
     }
@@ -285,7 +285,7 @@
   }
 
   function interpretMultipleSeconds(secondField) {
-    if (!secondField.includes(',')) {
+    if (!includes(secondField, ',')) {
       // Not a multiple second pattern.
       return;
     }
@@ -316,7 +316,7 @@
   }
 
   function interpretMultipleMinutes(minuteField) {
-    if (!minuteField.includes(',')) {
+    if (!includes(minuteField, ',')) {
       // Not a multiple minute pattern.
       return;
     }
@@ -330,7 +330,7 @@
   }
 
   function interpretRepeatingMinutes(secondField) {
-    if (!secondField.includes('/')) {
+    if (!includes(secondField, '/')) {
       // Not a repeating interval pattern.
       return;
     }
@@ -378,7 +378,7 @@
   function interpretMultipleHours(cronPattern) {
     var hourField = cronPattern.hour;
 
-    if (!hourField.includes(',')) {
+    if (!includes(hourField, ',')) {
       // Not a multiple minute pattern.
       return;
     }
@@ -394,7 +394,7 @@
   function interpretRepeatingHours(cronPattern) {
     var hourField = cronPattern.hour;
 
-    if (!hourField.includes('/')) {
+    if (!includes(hourField, '/')) {
       // Not a repeating interval pattern.
       return;
     }
@@ -448,10 +448,10 @@
   function interpretWeekdays(cronPattern) {
     var weekdayField = cronPattern.weekday;
 
-    if (weekdayField.includes('-')) {
+    if (includes(weekdayField, '-')) {
       return weekdayField.split('-').map(getWeekday).join('-');
     }
-    else if (weekdayField.includes(',')) {
+    else if (includes(weekdayField, ',')) {
       weekdayField = weekdayField.split(',').map(getWeekday);
 
       return weekdayField.slice(0, -1).join(', ') + ', and ' +
@@ -533,6 +533,12 @@
     }
 
     return n;
+  }
+
+  function includes(str, sub) {
+    str += '';
+
+    return str.indexOf(sub) !== -1;
   }
 
   /* global define */
