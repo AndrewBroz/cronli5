@@ -107,12 +107,12 @@
   // A cron pattern to English interpreter.
   //
   // `options` include:
-  // - short (boolean):
-  //     use shorthand and numeric representations
   // - hh (boolean):
   //     use zero-padded 24-hour time
   // - seconds (boolean):
   //     always treat the first value in a string or array as a second
+  // - short (boolean):
+  //     use shorthand and numeric representations
   // - year (boolean):
   //     parse with year
   function cronli5(cronPattern, options) {
