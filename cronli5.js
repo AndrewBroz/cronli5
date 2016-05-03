@@ -7,7 +7,7 @@
   var HH = false;
   var SECONDS = false;
   var SHORT = false;
-  var YEAR = false;
+  var YEARS = false;
 
   // English number names for the integers zero through ten.
   var numbers = [
@@ -135,7 +135,7 @@
     HH = !!options.hh;
     SECONDS = !!options.seconds;
     SHORT = !!options.short;
-    YEAR = !!options.year;
+    YEARS = !!options.years;
   }
 
   // Take a cron pattern as, a cron pattern string, an array of cron fields, a
@@ -168,7 +168,7 @@
 
   // Turn a cronable array into a cron-like object.
   function cronifyArray(cronlikeArray) {
-    var max = YEAR ? 7 : 6;
+    var max = YEARS ? 7 : 6;
 
     if (cronlikeArray.length > max) {
       throw new Error('`cronli5` was passed a cron pattern with more than ' +

@@ -1,3 +1,4 @@
 --recursive
 test/baseline
 test/basic
+test/simple
