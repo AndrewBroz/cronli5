@@ -1,7 +1,7 @@
 var run = require('../runner').run;
 
 describe('24-hour option:', function() {
-  var options = {hh: true};
+  var options = {ampm: false};
 
   run([
     ['0 12 * * *', 'every day at 12:00', options],

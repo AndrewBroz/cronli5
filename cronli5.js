@@ -3,8 +3,8 @@
  */
 
 (function(root) {
-  // Option flags
-  var HH = false;
+  // Options flags.
+  var AMPM = true;
   var SECONDS = false;
   var SHORT = false;
   var YEARS = false;
@@ -107,8 +107,8 @@
   // A cron pattern to English interpreter.
   //
   // `options` include:
-  // - hh (boolean):
-  //     use zero-padded 24-hour time
+  // - ampm (boolean):
+  //     use AM/PM instead of zero-padded 24-hour time
   // - seconds (boolean):
   //     always treat the first value in a string or array as a second
   // - short (boolean):
@@ -132,7 +132,7 @@
   function setOptions(options) {
     options = options || {};
 
-    HH = !!options.hh;
+    AMPM = typeof options.ampm === 'boolean' ? options.ampm : true;
     SECONDS = !!options.seconds;
     SHORT = !!options.short;
     YEARS = !!options.years;
@@ -463,7 +463,7 @@
 
   // Turn a simple hour field into 12-hour representation.
   function getHour(h) {
-    if (HH) {
+    if (!AMPM) {
       return pad(h) + ':00';
     }
 
