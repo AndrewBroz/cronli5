@@ -117,9 +117,10 @@ summary of material that may be hard to understand without some background.
 
 `cronli5` was partially inspired by [`prettycron`][prettycron], which itself
 is based on code from [a gist by dunse][dunse]. Although `prettycron` was
-close to meeting my needs, I wasn't fully satisfied with the output and was
-limited by the lack of support for extended cron patterns. `cronli5` tries to
-render as many cron patterns in as direct and idiomatic English as possible.
+close to meeting my needs, I wasn't fully satisfied with the output. `cronli5`
+tries to render as many cron patterns in as direct and as idiomatic English as
+possible. Test cases that describe where it fails to do so, and which prescribe
+an *obviously better* description, would be greatly appreciated.
 
 `cronli5` was written from scratch and has no production dependencies. Its
 source does not borrow code, in whole or in part, from [prettycron]
