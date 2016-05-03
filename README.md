@@ -88,15 +88,16 @@ expect(cronli5(cronObject)).to.equal(expectedOutput);
 
 ## Options
 
-The `cronli5` function takes an `options` object as its second parameter with
+The `cronli5` function takes an `options` object as its 2nd parameter with
 several boolean flag properties supported:
-* `ampm` &mdash; Default `true`: Use 12-hour time if `true`, 24-hour time if
-`false`.
+
+* `ampm` &mdash; Default `true`. Use 24-hour time if `false`.
 * `short` &mdash; Default `false`. Use abbreviatted forms if `true`.
 * `seconds` &mdash; Default `false`. Always treat the first field of strings
-and of arrays as the second field if `true`.
+and of arrays as the `second` field if `true`.
 * `years` &mdash; Default `false`. Treat six field string or array patterns as
-if the last field is the year field if `true`.
+if the last field is the `year` field if `true`. Otherwise, treats the first
+field of a six field patten as the `second` field.
 
 ## On Timezones
 
@@ -120,14 +121,12 @@ is based on code from [a gist by dunse][dunse]. Although `prettycron` was
 close to meeting my needs, I wasn't fully satisfied with the output. `cronli5`
 tries to render as many cron patterns in as direct and as idiomatic English as
 possible. Test cases that describe where it fails to do so and which prescribe
-an *obviously better** description would be greatly appreciated.
+an obviously better description would be greatly appreciated.
 
 `cronli5` was written from scratch and has no production dependencies. Its
 source does not borrow code, in whole or in part, from [prettycron]
 [prettycron], [Stack Overflow answers][stackoverflow], or any other project.
 Any resemblance to other code, living or dead, is purely coincidental.
-
-\* Obviously better _to me_.
 
 ## License
 
