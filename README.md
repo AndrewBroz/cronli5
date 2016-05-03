@@ -35,19 +35,21 @@ Browser (script tag):
 ```
 
 When included in a script tag, the `cronli5` function will be available as a
-global in the scripts that follow. _Unsolicited advice: rather than doing this,consider using a bundler like [Browserify][browserify], [Rollup][rollup], or
-[Webpack][webpack] and `include` or `require` instead. See below._
+global in the scripts that follow.  
+_Unsolicited advice: rather than including
+`cronli5` in its own script tag, consider using a bundler like [Browserify]
+[browserify], [Rollup][rollup], or [Webpack][webpack] and `include` or
+`require` instead. See below._
 
 ## Usage
 
 As a command line tool:
 ```
 $ cronli5 "* * * * *"
-
 Runs every minute.
 ```
 
-Including `cronli5.min.js` in a script tage will expose `cronli5` as a global
+Including `cronli5.min.js` in a script tag will expose `cronli5` as a global
 object.
 
 Import with require:
