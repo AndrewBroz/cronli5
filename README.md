@@ -1,7 +1,7 @@
 > ## DISCLAIMER: IN PROGRESS
 > 
-> This is a work in progress and does not yet work in all intended cases. Do
-> not use until this disclaimer has been removed. If you need something like
+> This is a work in progress and does not yet work in all intended cases. DO
+> NOT USE until this discalimer has been removed. If you need something like
 > this now, use [prettycron][prettycron].
 
 # Cron Like I'm Five: A Cron to English Utility
@@ -86,13 +86,12 @@ expect(cronli5(cronObject)).to.equal(expectedOutput);
 
 ## About
 
-The project name is a reference to the internet term [Explain Like I'm Five
-(_abbr._ ELI5)][eli5], which is a request for a friendly, simplified, and
-layman-accessible summary of material that may be hard to understand without
-some background.
+The project name is a reference to the phrase [Explain Like I'm Five (ELI5)]
+[eli5], which is used to ask for a friendly, simplified, and layman-accessible
+summary of material that may be hard to understand without some background.
 
 `cronli5` was partially inspired by [`prettycron`][prettycron], which itself
-is based on code from [a gist by dunse][dunse]. Although prettycron was
+is based on code from [a gist by dunse][dunse]. Although `prettycron` was
 close to meeting my needs, I wasn't fully satisfied with the output and was
 limited by the lack of support for extended cron patterns. `cronli5` tries to
 render as many cron patterns in as direct and idiomatic English as possible.
@@ -104,8 +103,8 @@ Any resemblance to other code, living or dead, is purely coincidental.
 
 ## License
 
-*[MIT License][license]*
-_Copyright (c) 2016 [Andrew Broz][abroz]_
+*[MIT License][license]*  
+_Copyright &copy; 2016 [Andrew Broz][abroz]_
 
 [abroz]: https://github.com/abroz
 [browserify]: http://browserify.org/

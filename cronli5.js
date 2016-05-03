@@ -5,7 +5,7 @@
 (function(root) {
   // Option flags
   var HH = false;
-  var SECOND = false;
+  var SECONDS = false;
   var SHORT = false;
   var YEAR = false;
 
@@ -106,11 +106,15 @@
 
   // A cron pattern to English interpreter.
   //
-  // NOTE: `options` include:
-  // - short (boolean): use shorthand and numeric representations
-  // - hh (boolean): use zero-padded 24-hour time
-  // - second (boolean): always treat the first value as a second
-  // - year (boolean): parse with year
+  // `options` include:
+  // - short (boolean):
+  //     use shorthand and numeric representations
+  // - hh (boolean):
+  //     use zero-padded 24-hour time
+  // - seconds (boolean):
+  //     always treat the first value in a string or array as a second
+  // - year (boolean):
+  //     parse with year
   function cronli5(cronPattern, options) {
     setOptions(options);
 
@@ -129,7 +133,7 @@
     options = options || {};
 
     HH = !!options.hh;
-    SECOND = !!options.second;
+    SECONDS = !!options.seconds;
     SHORT = !!options.short;
     YEAR = !!options.year;
   }
@@ -171,7 +175,7 @@
         getNumber(max) + ' fields.');
     }
 
-    if (!SECOND && cronlikeArray.length < max) {
+    if (!SECONDS && cronlikeArray.length < max) {
       cronlikeArray.unshift('0');
     }
 
