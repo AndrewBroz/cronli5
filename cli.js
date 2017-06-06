@@ -4,7 +4,7 @@
 // cli tool will take a pattern and print a description in English.
 //
 // Example: `cronli5 * * * * *` (prints "Runs every minute.")
-var explain = require('./cronli5');
+var humanize = require('./cronli5');
 var pattern = process.argv.slice(2);
 
 if (pattern.length === 1) {
@@ -12,7 +12,7 @@ if (pattern.length === 1) {
 }
 
 try {
-  console.log('Runs ' + explain(pattern) + '.');
+  console.log('Runs ' + humanize(pattern) + '.');
 }
 catch (e) {
   console.error('Problem parsing the cron pattern provided: ', e.message);

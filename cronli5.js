@@ -120,12 +120,16 @@
 
     cronPattern = parseCronPattern(cronPattern);
 
-    return interpretSeconds(cronPattern) ||
-      interpretMinutes(cronPattern) ||
-      interpretHours(cronPattern) ||
-      interpretDates(cronPattern) + ' ' +
-      interpretMonths(cronPattern) + ' ' +
-      interpretWeekdays(cronPattern);
+    return interpretSeconds(cronPattern)
+        || interpretMinutes(cronPattern)
+        || interpretHours(cronPattern)
+        || interpretRest(cronPattern);
+  }
+
+  function interpretRest(cronPattern) {
+    return interpretDates(cronPattern) + ' '
+         + interpretMonths(cronPattern) + ' '
+         + interpretWeekdays(cronPattern);
   }
 
   // Set option flags.
@@ -385,10 +389,10 @@
 
     hourField = hourField.split(',');
 
-    return 'on hours ' +
-      hourField.slice(0, -1).map(getNumber).join(', ') +
-      ' and ' +
-      getNumber(hourField.slice(-1)[0]);
+    return 'on hours '
+         + hourField.slice(0, -1).map(getNumber).join(', ')
+         + ' and '
+         + getNumber(hourField.slice(-1)[0]);
   }
 
   function interpretRepeatingHours(cronPattern) {

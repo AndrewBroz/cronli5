@@ -22,11 +22,11 @@ also meet your needs as an interpreter.
 
 Install using npm:
 ```
-# If you plan to use the cli:
-npm install -g cronli5
-
 # For a Node project:
 npm install --save cronli5
+
+# If you plan to use the cli:
+npm install -g cronli5
 ```
 
 Browser (script tag):
@@ -39,15 +39,9 @@ global in the scripts that follow.
 _Unsolicited advice: rather than including
 `cronli5` in its own script tag, consider using a bundler like [Browserify]
 [browserify], [Rollup][rollup], or [Webpack][webpack] and `include` or
-`require` instead. See below._
+`require` instead. See [below][#usage]._
 
 ## Usage
-
-As a command line tool:
-```
-$ cronli5 "* * * * *"
-Runs every minute.
-```
 
 Import with require:
 ```
@@ -83,6 +77,12 @@ expect(cronli5(cronArray)).to.equal(expectedOutput);
 expect(cronli5(cronObject)).to.equal(expectedOutput);
 ```
 
+As a command line tool:
+```
+$ cronli5 "*/5 * * * *"
+Runs every five minutes.
+```
+
 ## Options
 
 The `cronli5` function takes an `options` object as its 2nd parameter with
@@ -116,16 +116,27 @@ expect(longDescription).to.equal('every Monday-Friday at 1:30 PM');
 expect(shortDescription).to.equal('every Mon-Fri at 13:30');
 ```
 
+## Description Accuracy
+
+Sometimes minimizing verbosity results in ambiguities. For example, "every two
+minutes" could reasonably refer to two _behaviorally distinct_ cron patterns
+with minute accuracy: `*/2 * * * *` and `1/2 * * * *` (and 120 behaviorally
+distinct cron patterns with second accuracy). As a tradeoff, this library does
+not qualify cases that begin on the first second, minute, or hour of the
+corresponding minute, hour, or day. So `*/3 * * * *` will be "every three
+minutes", while `2/3 * * * *` will be "every three minutes from two minutes
+past the hour".
+
 ## Note on Timezones
 
-`cronli5` always describes the pattern in whatever timezone the cron pattern
-is being run. This utility does not, nor does it ever intend to, deal with
-timezone conversions because, firstly, that functionality would require some
-non-trivial dependencies (like [moment][moment] with [moment-timezone]
-[moment-timezone]) to even approximate correctness and, secondly, the output
-_would still be wrong anyways_ because [timezones are problematic][timezones].
-To be accurate, associate the description with a timezone (e.g.
-America/Phoenix).
+`cronli5` always describes cron patterns with respect to whatever system
+timezone the cron pattern is being run in. This utility does not, nor does it
+ever intend to, deal with timezone conversions. That functionality would
+require some non-trivial dependencies like [moment-timezone][moment-timezone]
+and [moment][moment] to even approximate correctness and the output _could
+still be wrong anyways_ because [timezones are problematic][timezones].
+Associate the description with a timezone (e.g. America/Phoenix) when there is
+the possibility for confusion.
 
 ## About
 

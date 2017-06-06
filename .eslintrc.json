@@ -168,7 +168,7 @@
             "error",
             "always"
         ],
-        "operator-linebreak": "error",
+        "operator-linebreak": "off",
         "padded-blocks": "off",
         "prefer-const": "error",
         "prefer-reflect": "error",
