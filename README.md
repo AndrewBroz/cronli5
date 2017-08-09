@@ -2,7 +2,7 @@
 > 
 > This is a work in progress and does not yet work in all intended cases. DO
 > NOT USE until this discalimer has been removed. If you need something like
-> this now, use [prettycron][prettycron].
+> this now, use [prettycron].
 
 # Cron Like I'm Five: A Cron to English Utility
 
@@ -14,9 +14,9 @@ standard allowed values and the following operators: asterisks (`*`), commas
 
 `cronli5` is a good library to use if you need to display an English language
 interpretation of a cron pattern in a Node or in a browser environment. If you
-need to do other things with cron patterns, consider a library like [Later.js]
-[later]. If you want an alternative to `cronli5`, [prettycron][prettycron] may
-also meet your needs as an interpreter.
+need to do other things with cron patterns, consider a library like
+[Later.js][later]. If you want an alternative to `cronli5`, [prettycron]
+may also meet your needs.
 
 ## Installation
 
@@ -36,10 +36,9 @@ Browser (script tag):
 
 When included in a script tag, the `cronli5` function will be available as a
 global in the scripts that follow.  
-_Unsolicited advice: rather than including
-`cronli5` in its own script tag, consider using a bundler like [Browserify]
-[browserify], [Rollup][rollup], or [Webpack][webpack] and `include` or
-`require` instead. See [below][#usage]._
+_Unsolicited advice: rather than including `cronli5` in its own script tag,
+consider using a bundler like [Browserify][browserify], [Rollup][rollup], or
+[Webpack][webpack] and `include` or `require` instead. See [below](#usage)._
 
 ## Usage
 
@@ -132,17 +131,17 @@ past the hour".
 `cronli5` always describes cron patterns with respect to whatever system
 timezone the cron pattern is being run in. This utility does not, nor does it
 ever intend to, deal with timezone conversions. That functionality would
-require some non-trivial dependencies like [moment-timezone][moment-timezone]
-and [moment][moment] to even approximate correctness and the output _could
-still be wrong anyways_ because [timezones are problematic][timezones].
-Associate the description with a timezone (e.g. America/Phoenix) when there is
-the possibility for confusion.
+require some non-trivial dependencies like [moment-timezone] and [moment]
+to even approximate correctness and the output _could still be wrong anyways_
+because [timezones are problematic][timezones]. Associate the displayed
+description with a timezone (e.g. America/Phoenix) when there is the
+possibility for confusion.
 
 ## About
 
-The project name is a reference to the phrase [Explain Like I'm Five (ELI5)]
-[eli5], which is used to ask for a friendly, simplified, and layman-accessible
-summary of material that may be hard to understand without some background.
+The project name is a reference to the phrase [Explain Like I'm Five (ELI5)][eli5],
+which is used to ask for a friendly, simplified, and layman-accessible summary of
+material that may be hard to understand without some background.
 
 `cronli5` was partially inspired by [`prettycron`][prettycron], which itself
 is based on code from [a gist by dunse][dunse]. Although `prettycron` was
@@ -152,8 +151,8 @@ possible. Test cases that describe where it fails to do so and which prescribe
 an obviously better description would be greatly appreciated.
 
 `cronli5` was written from scratch and has no production dependencies. Its
-source does not borrow code, in whole or in part, from [prettycron]
-[prettycron], [Stack Overflow answers][stackoverflow], or any other project.
+source does not borrow code, in whole or in part, from [prettycron],
+[Stack Overflow answers][stackoverflow], or any other project.
 Any resemblance to other code, living or dead, is purely coincidental.
 
 ## License
