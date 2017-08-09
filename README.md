@@ -158,7 +158,7 @@ Any resemblance to other code, living or dead, is purely coincidental.
 ## License
 
 *[MIT License][license]*  
-_Copyright &copy; 2016 [Andrew Broz][abroz]_
+_Copyright &copy; 2017 [Andrew Broz][abroz]_
 
 [abroz]: https://github.com/abroz
 [browserify]: http://browserify.org/
