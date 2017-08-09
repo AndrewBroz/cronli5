@@ -98,18 +98,17 @@ field of a six field patten as the `second` field.
 ```
 import cronli5 from 'cronli5';
 
-let longOptions = {
+const weekdaysAt1330 = '30 13 * * MON-FRI';
+
+const longDescription = cronli5(weekdaysAt1330, {
   ampm: true,
   short: false,
-};
+});
 
-let shortOptions = {
+const shortDescription = cronli5(weekdaysAt1330, {
   ampm: false,
   short: true,
-};
-
-let longDescription = cronli5(`30 13 * * MON-FRI`, longOptions);
-let shortDescription = cronli5(`30 13 * * MON-FRI`, shortOptions);
+});
 
 expect(longDescription).to.equal('every Monday-Friday at 1:30 PM');
 expect(shortDescription).to.equal('every Mon-Fri at 13:30');
