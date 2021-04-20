@@ -1,4 +1,4 @@
-> ## DISCLAIMER: IN PROGRESS
+> ## DISCLAIMER: UNMAINTAINED
 > 
 > This is a work in progress and does not yet work in all intended cases. DO
 > NOT USE until this discalimer has been removed. If you need something like
@@ -157,9 +157,9 @@ Any resemblance to other code, living or dead, is purely coincidental.
 ## License
 
 *[MIT License][license]*  
-_Copyright &copy; 2017 [Andrew Broz][abroz]_
+_Copyright &copy; 2021 [Andrew Broz][andrewbroz]_
 
-[abroz]: https://github.com/abroz
+[andrewbroz]: https://github.com/andrewbroz
 [browserify]: http://browserify.org/
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
