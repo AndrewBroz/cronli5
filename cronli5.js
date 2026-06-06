@@ -1,5 +1,5 @@
 /**
- * @license MIT, Copyright (c) 2016 Andrew Broz
+ * @license MIT, Copyright (c) 2026 Andrew Broz
  */
 
 (function(root) {
@@ -104,6 +104,28 @@
     SAT: weekdayNames[6]
   };
 
+  // Allowed numeric ranges (and name tables, where applicable) per field.
+  var fieldSpecs = {
+    second: {max: 59, min: 0},
+    minute: {max: 59, min: 0},
+    hour: {max: 23, min: 0},
+    date: {max: 31, min: 1},
+    month: {max: 12, min: 1, names: monthAbbreviations},
+    weekday: {max: 6, min: 0, names: weekdayAbbreviations},
+    year: {max: 9999, min: 1970}
+  };
+
+  // The order in which fields are validated.
+  var fieldOrder = [
+    'second',
+    'minute',
+    'hour',
+    'date',
+    'month',
+    'weekday',
+    'year'
+  ];
+
   // A cron pattern to English interpreter.
   //
   // `options` include:
@@ -119,6 +141,8 @@
     setOptions(options);
 
     cronPattern = parseCronPattern(cronPattern);
+
+    validateCronPattern(cronPattern);
 
     return interpretSeconds(cronPattern)
         || interpretMinutes(cronPattern)
@@ -148,9 +172,13 @@
   // string. Returns a cron-like object.
   function parseCronPattern(cronPattern) {
     var isArray = cronPattern instanceof Array;
+    var isEmpty = cronPattern === null ||
+      typeof cronPattern === 'undefined' ||
+      cronPattern === '' ||
+      isArray && cronPattern.length === 0;
 
     // Throw if null or empty.
-    if (!cronPattern || isArray && cronPattern.length === 0) {
+    if (isEmpty) {
       throw new Error(
         '`cronli5` expects a non-empty cron pattern as the first argument.');
     }
@@ -203,18 +231,27 @@
         '`minute`, or `hour`');
     }
 
-    var defaultMinute = cronable.second ? '*' : '0';
-    var defaultHour = cronable.second || cronable.minute ? '*' : '0';
+    var hasSecond = typeof cronable.second !== 'undefined';
+    var hasMinute = typeof cronable.minute !== 'undefined';
+    var defaultMinute = hasSecond ? '*' : '0';
+    var defaultHour = hasSecond || hasMinute ? '*' : '0';
 
     return {
-      second:  cronable.second  || '0',
-      minute:  cronable.minute  || defaultMinute,
-      hour:    cronable.hour    || defaultHour,
-      date:    cronable.date    || '*',
-      month:   cronable.month   || '*',
-      weekday: cronable.weekday || '*',
-      year:    cronable.year    || '*'
+      second:  pick(cronable.second, '0'),
+      minute:  pick(cronable.minute, defaultMinute),
+      hour:    pick(cronable.hour, defaultHour),
+      date:    pick(cronable.date, '*'),
+      month:   pick(cronable.month, '*'),
+      weekday: pick(cronable.weekday, '*'),
+      year:    pick(cronable.year, '*')
     };
+  }
+
+  // Return a provided field value, or a fallback when the value is absent.
+  // Unlike `||`, this preserves falsy-but-present values (e.g. `0`, `NaN`)
+  // so that they can be flagged as invalid during validation.
+  function pick(value, fallback) {
+    return typeof value === 'undefined' ? fallback : value;
   }
 
   // Turn a string into a cron-like object.
@@ -224,6 +261,105 @@
     return cronifyArray(cronlikeArray);
   }
 
+  // Validate every field of a cron-like object, throwing on the first
+  // invalid value encountered.
+  function validateCronPattern(cronPattern) {
+    fieldOrder.forEach(function validate(field) {
+      validateField(cronPattern[field], fieldSpecs[field], field);
+    });
+
+    return cronPattern;
+  }
+
+  // A field value must be a string or number resolving to '*' or to a
+  // comma-separated list of valid segments.
+  function validateField(value, spec, field) {
+    if (typeof value !== 'string' && typeof value !== 'number') {
+      throwInvalidField(value, field);
+    }
+
+    var stringValue = '' + value;
+
+    if (stringValue === '*') {
+      return;
+    }
+
+    stringValue.split(',').forEach(function check(segment) {
+      if (!isValidSegment(segment, spec)) {
+        throwInvalidField(segment, field);
+      }
+    });
+  }
+
+  // A segment is a step (`*/5`, `2/3`), a range (`1-5`, `MON-FRI`), or a
+  // single value (`30`, `FRI`).
+  function isValidSegment(segment, spec) {
+    if (includes(segment, '/')) {
+      return isValidStep(segment, spec);
+    }
+
+    if (includes(segment, '-')) {
+      return isValidRange(segment, spec);
+    }
+
+    return isValidSingle(segment, spec);
+  }
+
+  // A step is `<start>/<interval>` where start is `*`, a single, or a range
+  // and interval is a positive integer.
+  function isValidStep(segment, spec) {
+    var parts = segment.split('/');
+
+    if (parts.length !== 2 || !isNonNegativeInteger(parts[1]) ||
+        +parts[1] < 1) {
+      return false;
+    }
+
+    return parts[0] === '*' || isValidSingle(parts[0], spec) ||
+      isValidRange(parts[0], spec);
+  }
+
+  // A range is `<start>-<end>` where both ends are valid singles.
+  function isValidRange(segment, spec) {
+    var parts = segment.split('-');
+
+    if (parts.length !== 2) {
+      return false;
+    }
+
+    return isValidSingle(parts[0], spec) && isValidSingle(parts[1], spec);
+  }
+
+  // A single value is an in-range integer or a recognized name.
+  function isValidSingle(value, spec) {
+    if (value === '*') {
+      return false;
+    }
+
+    if (isNonNegativeInteger(value)) {
+      return +value >= spec.min && +value <= spec.max;
+    }
+
+    if (spec.names) {
+      return Boolean(spec.names[value.toUpperCase()]);
+    }
+
+    return false;
+  }
+
+  // Whether a string consists solely of digits.
+  function isNonNegativeInteger(value) {
+    var digits = /^\d+$/;
+
+    return digits.test(value);
+  }
+
+  // Throw a descriptive error for an invalid field value.
+  function throwInvalidField(value, field) {
+    throw new Error('`cronli5` was passed an invalid field value "' +
+      value + '" for the ' + field + ' field.');
+  }
+
   // Second field.
   function interpretSeconds(cronPattern) {
     var secondField = cronPattern.second;
@@ -231,7 +367,7 @@
     return interpretRangeOfSeconds(secondField) ||
       interpretRepeatingSeconds(secondField) ||
       interpretMultipleSeconds(secondField) ||
-      interpretSingleSecond(secondField);
+      interpretSingleSecond(cronPattern);
   }
 
   function interpretRangeOfSeconds(secondField) {
@@ -294,13 +430,17 @@
       return;
     }
 
+    secondField = secondField.split(',');
+
     return 'on seconds ' +
       secondField.slice(0, -1).map(getNumber).join(', ') +
       ' and ' +
       getNumber(secondField.slice(-1)[0]);
   }
 
-  function interpretSingleSecond(secondField) {
+  function interpretSingleSecond(cronPattern) {
+    var secondField = cronPattern.second;
+
     if (secondField === '*') {
       return 'every second';
     }
@@ -309,14 +449,24 @@
       return '';
     }
 
-    return 'on second ' + getNumber(secondField);
+    // A specific second only stands on its own when the minute is a
+    // wildcard. Otherwise the more significant minute field anchors the
+    // description.
+    if (cronPattern.minute !== '*') {
+      return;
+    }
+
+    var unit = +secondField === 1 ? 'second' : 'seconds';
+
+    return getNumber(secondField) + ' ' + unit +
+      ' past the minute, every minute';
   }
 
   // Minute field.
   function interpretMinutes(cronPattern) {
     return interpretMultipleMinutes(cronPattern.minute) ||
       interpretRepeatingMinutes(cronPattern.minute) ||
-      interpretSingleMinute(cronPattern.minute);
+      interpretSingleMinute(cronPattern);
   }
 
   function interpretMultipleMinutes(minuteField) {
@@ -360,16 +510,34 @@
     return result;
   }
 
-  function interpretSingleMinute(minuteField) {
+  function interpretSingleMinute(cronPattern) {
+    var minuteField = cronPattern.minute;
+
     if (minuteField === '*') {
-      return 'every minute';
+      // Only describe "every minute" when the hour is also a wildcard;
+      // otherwise defer to the hour field.
+      if (cronPattern.hour === '*') {
+        return 'every minute';
+      }
+
+      return;
     }
 
     if (minuteField === '0') {
       return '';
     }
 
-    return 'on minute ' + getNumber(minuteField);
+    // A specific minute only stands on its own when the hour is a wildcard.
+    // Otherwise the hour field anchors the description and folds the minute
+    // into the time.
+    if (cronPattern.hour !== '*') {
+      return;
+    }
+
+    var unit = +minuteField === 1 ? 'minute' : 'minutes';
+
+    return getNumber(minuteField) + ' ' + unit +
+      ' past the hour, every hour';
   }
 
   // Hour field.
@@ -429,13 +597,32 @@
       return 'every hour';
     }
 
-    var prefix = interpretWeekdays(cronPattern) || '';
+    return interpretDayQualifier(cronPattern) +
+      'at ' + getTime(cronPattern.hour, cronPattern.minute);
+  }
 
-    if (prefix) {
-      prefix = 'every ' + prefix + ' ';
+  // Build the day-level qualifier that precedes a specific time, e.g.
+  // "every day ", "every Friday ", or "on January 13th ".
+  function interpretDayQualifier(cronPattern) {
+    if (cronPattern.date !== '*' || cronPattern.month !== '*') {
+      var qualifier = 'on';
+
+      if (cronPattern.month !== '*') {
+        qualifier += ' ' + getMonth(cronPattern.month);
+      }
+
+      if (cronPattern.date !== '*') {
+        qualifier += ' ' + getOrdinal(cronPattern.date);
+      }
+
+      return qualifier + ' ';
     }
 
-    return prefix + 'at ' + getHour(cronPattern.hour);
+    if (cronPattern.weekday !== '*') {
+      return 'every ' + interpretWeekdays(cronPattern) + ' ';
+    }
+
+    return 'every day ';
   }
 
   // Date field.
@@ -465,22 +652,25 @@
     return getWeekday(cronPattern.weekday);
   }
 
-  // Turn a simple hour field into 12-hour representation.
-  function getHour(h) {
+  // Turn an hour field (and optional minute field) into a clock time, e.g.
+  // "3:45 PM" with AM/PM, or "15:45" in 24-hour mode.
+  function getTime(h, m) {
+    if (isNaN(h)) {
+      throw new Error('Tried to interpret "' + JSON.stringify(h) +
+        '" as an hour and failed.');
+    }
+
+    if (m === '*' || typeof m === 'undefined' || m === null) {
+      m = 0;
+    }
+
     if (!AMPM) {
-      return pad(h) + ':00';
+      return pad(h) + ':' + pad(m);
     }
 
-    if (h >= 12) {
-      return (h - 12 || h) + ':00 PM';
-    }
+    var period = h < 12 ? 'AM' : 'PM';
 
-    if (h >= 0) {
-      return (+h || 12) + ':00 AM';
-    }
-
-    throw new Error('Tried to interpret "' + JSON.stringify(h) +
-      '" as an hour and failed.');
+    return (h % 12 || 12) + ':' + pad(m) + ' ' + period;
   }
 
   // Get English number names for the integers zero through ten.

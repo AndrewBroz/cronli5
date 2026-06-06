@@ -1,4 +1,5 @@
 --recursive
+test/bad_input
 test/baseline
 test/basic
 test/options
