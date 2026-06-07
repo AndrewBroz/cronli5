@@ -133,6 +133,12 @@ function cronli5(cronPattern, options) {
 // " on the 13th", " in January", or " on January 13th". Returns an empty
 // string when no date, month, or weekday is set.
 function trailingQualifier(cronPattern, opts) {
+  // Standard cron fires when day-of-month OR day-of-week matches, when both
+  // are restricted.
+  if (cronPattern.date !== '*' && cronPattern.weekday !== '*') {
+    return ' ' + interpretDateOrWeekday(cronPattern, opts);
+  }
+
   if (cronPattern.date !== '*') {
     if (cronPattern.month !== '*') {
       return ' on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
@@ -517,13 +523,9 @@ function interpretMinuteFrequency(cronPattern, opts) {
 
     phrase += ' from ' + getTime(bounds[0], 0, opts) + ' through ' +
       getTime(bounds[1], 0, opts);
-
-    if (cronPattern.weekday !== '*') {
-      phrase += ' on ' + interpretWeekdays(cronPattern, opts);
-    }
   }
 
-  return phrase;
+  return phrase + trailingQualifier(cronPattern, opts);
 }
 
 function interpretRangeOfMinutes(cronPattern, opts) {
@@ -613,14 +615,10 @@ function interpretRangeOfHours(cronPattern, opts) {
   const bounds = hourField.split('-');
   const window = 'from ' + getTime(bounds[0], 0, opts) +
     ' through ' + getTime(bounds[1], 0, opts);
-  let phrase =
+  const phrase =
     interpretRangeMinuteLead(cronPattern.minute, opts) + ' ' + window;
 
-  if (cronPattern.weekday !== '*') {
-    phrase += ' on ' + interpretWeekdays(cronPattern, opts);
-  }
-
-  return phrase;
+  return phrase + trailingQualifier(cronPattern, opts);
 }
 
 // Lead phrase for a minute field within an hour range. On-the-hour (or a
@@ -823,6 +821,12 @@ function enumerateValues(field) {
 // "every day ", "every Friday ", "on January 13th ", "on the 1st and 15th ",
 // or "every day in June and December ".
 function interpretDayQualifier(cronPattern, opts) {
+  // Standard cron fires when day-of-month OR day-of-week matches, when both
+  // are restricted.
+  if (cronPattern.date !== '*' && cronPattern.weekday !== '*') {
+    return interpretDateOrWeekday(cronPattern, opts) + ' ';
+  }
+
   if (cronPattern.date !== '*') {
     if (cronPattern.month !== '*') {
       return 'on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
@@ -842,6 +846,23 @@ function interpretDayQualifier(cronPattern, opts) {
   }
 
   return 'every day ';
+}
+
+// Compose the "day-of-month or day-of-week" phrase used when both fields are
+// restricted (specified as non-wildcard values). Cron fires when either is a
+// match. A restricted month scopes both the day of month and the day of week.
+function interpretDateOrWeekday(cronPattern, opts) {
+  const ordinals = interpretDateOrdinals(cronPattern.date);
+  const weekdays = interpretWeekdays(cronPattern, opts);
+
+  if (cronPattern.month !== '*') {
+    const month = interpretMonthNames(cronPattern.month, opts);
+
+    return 'on ' + month + ' ' + ordinals + ' or on ' + weekdays +
+      ' in ' + month;
+  }
+
+  return 'on the ' + ordinals + ' or on ' + weekdays;
 }
 
 // Render a date field (single, list, or range) as suffixed ordinals.
