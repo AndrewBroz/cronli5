@@ -1,4 +1,4 @@
-var run = require('../runner').run;
+import {run} from '../runner.js';
 
 describe('Simple valid arrays:', function() {
   describe('5-part arrays', function() {

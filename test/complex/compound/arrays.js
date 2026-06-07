@@ -1,4 +1,4 @@
-var run = require('../../runner').run;
+import {run} from '../../runner.js';
 
 describe('Valid compound arrays:', function() {
   describe('already-supported combinations', function() {

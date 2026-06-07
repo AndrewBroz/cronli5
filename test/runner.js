@@ -1,31 +1,32 @@
-var cronli5 = require('..');
-var expect = require('chai').expect;
+import chai from 'chai';
+import cronli5 from '../src/cronli5.js';
+
+const {expect} = chai;
 
 // Runner
-module.exports = {
-  run: function runEqualityTests(tests, defaultExpected) {
-    tests.forEach(function(values) {
-      var cronable = values[0];
-      var expected = values[1] || defaultExpected;
-      var options = values[2];
+export function run(tests, defaultExpected) {
+  tests.forEach(function(values) {
+    var cronable = values[0];
+    var expected = values[1] || defaultExpected;
+    var options = values[2];
 
-      equal(cronable, expected, options);
-    });
-  },
-  error: function runErrorTests(tests, defaultErrorText) {
-    tests.forEach(function(inputAndError) {
-      if (!(inputAndError instanceof Array)) {
-        inputAndError = [inputAndError];
-      }
+    equal(cronable, expected, options);
+  });
+}
 
-      var badInput = inputAndError[0];
-      var errorText = inputAndError[1] || defaultErrorText;
-      var options = inputAndError[2];
+export function error(tests, defaultErrorText) {
+  tests.forEach(function(inputAndError) {
+    if (!(inputAndError instanceof Array)) {
+      inputAndError = [inputAndError];
+    }
 
-      throwsError(badInput, errorText, options);
-    });
-  }
-};
+    var badInput = inputAndError[0];
+    var errorText = inputAndError[1] || defaultErrorText;
+    var options = inputAndError[2];
+
+    throwsError(badInput, errorText, options);
+  });
+}
 
 // Stable, always-string suite title (JSON.stringify(undefined) is undefined).
 function title(value) {

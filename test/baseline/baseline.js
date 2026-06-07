@@ -1,5 +1,7 @@
-var cronli5 = require('../..');
-var expect = require('chai').expect;
+import chai from 'chai';
+import cronli5 from '../../src/cronli5.js';
+
+const {expect} = chai;
 
 describe('Baseline properties:', function() {
   describe('cronli5', function() {

@@ -4,7 +4,8 @@
 // cli tool will take a pattern and print a description in English.
 //
 // Example: `cronli5 * * * * *` (prints "Runs every minute.")
-var humanize = require('./cronli5');
+import humanize from './src/cronli5.js';
+
 var pattern = process.argv.slice(2);
 
 if (pattern.length === 1) {

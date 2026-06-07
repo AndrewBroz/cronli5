@@ -1,5 +1,5 @@
-var run = require('../runner').error;
-var errors = require('./error-types');
+import errors from './error-types.js';
+import {error as run} from '../runner.js';
 
 describe('Invalid strings:', function() {
   run([

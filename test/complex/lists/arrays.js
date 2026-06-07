@@ -1,4 +1,4 @@
-var run = require('../../runner').run;
+import {run} from '../../runner.js';
 
 describe('Valid arrays with lists:', function() {
   describe('second lists', function() {

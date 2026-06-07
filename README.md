@@ -166,6 +166,31 @@ because [timezones are problematic][timezones]. Associate the displayed
 description with a timezone (e.g. America/Phoenix) when there is the
 possibility for confusion.
 
+## Module Formats and Types
+
+`cronli5` is authored as an ES module in `src/` and published with dual builds
+so it works everywhere:
+
+* **ESM** (`import cronli5 from 'cronli5'`) resolves to `dist/cronli5.js`.
+* **CommonJS** (`const cronli5 = require('cronli5')`) resolves to
+`dist/cronli5.cjs`.
+* **Browser** (`<script src="cronli5.min.js">`) exposes a global `cronli5`.
+
+TypeScript type definitions ship in `cronli5.d.ts` and are picked up
+automatically — no `@types` package required.
+
+## Development
+
+The library has no runtime dependencies; the toolchain (ESLint, Mocha, Chai,
+esbuild) lives in `devDependencies`.
+
+```
+npm install      # install dev dependencies
+npm test         # run the Mocha test suite (runs against src/, no build needed)
+npm run lint     # lint source and tests with ESLint
+npm run build    # emit dist/ (ESM + CJS) and the minified browser global
+```
+
 ## About
 
 The project name is a reference to the phrase [Explain Like I'm Five (ELI5)][eli5],
@@ -187,7 +212,7 @@ Any resemblance to other code, living or dead, is purely coincidental.
 ## License
 
 *[MIT License][license]*  
-_Copyright &copy; 2021 [Andrew Broz][andrewbroz]_
+_Copyright &copy; 2026 [Andrew Brož][andrewbroz]_
 
 [andrewbroz]: https://github.com/andrewbroz
 [browserify]: http://browserify.org/

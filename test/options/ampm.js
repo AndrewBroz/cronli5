@@ -1,4 +1,4 @@
-var run = require('../runner').run;
+import {run} from '../runner.js';
 
 describe('24-hour option:', function() {
   var options = {ampm: false};

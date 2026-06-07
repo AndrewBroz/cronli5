@@ -1,4 +1,4 @@
-var run = require('../../runner').run;
+import {run} from '../../runner.js';
 
 describe('Valid strings with steps:', function() {
   describe('5-part strings', function() {

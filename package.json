@@ -6,13 +6,36 @@
     "type": "git",
     "url": "https://github.com/abroz/cronli5.git"
   },
-  "main": "cronli5.js",
+  "type": "module",
+  "main": "./dist/cronli5.cjs",
+  "module": "./dist/cronli5.js",
+  "types": "./cronli5.d.ts",
+  "browser": "./cronli5.min.js",
+  "exports": {
+    ".": {
+      "types": "./cronli5.d.ts",
+      "import": "./dist/cronli5.js",
+      "require": "./dist/cronli5.cjs"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": "cli.js",
+  "files": [
+    "dist",
+    "src",
+    "cli.js",
+    "cronli5.min.js",
+    "cronli5.d.ts",
+    "README.md",
+    "LICENSE.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
-    "build": "esbuild cronli5.js --minify --legal-comments=inline --outfile=cronli5.min.js",
-    "lint": "eslint cronli5.js test",
-    "lint:fix": "eslint cronli5.js test --fix",
-    "test": "mocha"
+    "build": "node scripts/build.mjs",
+    "lint": "eslint src test cli.js eslint.config.js scripts",
+    "lint:fix": "eslint src test cli.js eslint.config.js scripts --fix",
+    "test": "mocha",
+    "prepublishOnly": "npm run lint && npm run build && npm test"
   },
   "engines": {
     "node": ">=18"
@@ -22,7 +45,7 @@
     "crontab"
   ],
   "author": {
-    "name": "Andrew Broz",
+    "name": "Andrew Brož",
     "email": "andrew.broz@gmail.com",
     "url": "https://github.com/abroz"
   },
@@ -31,9 +54,13 @@
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.15.0",
     "chai": "^4.5.0",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.25.0",
     "eslint": "^9.15.0",
     "globals": "^15.12.0",
     "mocha": "^11.0.1"
+  },
+  "overrides": {
+    "diff": "^9.0.0",
+    "serialize-javascript": "^7.0.5"
   }
 }

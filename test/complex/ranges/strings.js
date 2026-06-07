@@ -1,4 +1,4 @@
-var run = require('../../runner').run;
+import {run} from '../../runner.js';
 
 // TDD spec (currently failing): desired behavior for hyphenated range
 // patterns. Conventions:

@@ -1,4 +1,4 @@
-var run = require('../../runner').run;
+import {run} from '../../runner.js';
 
 // TDD spec (partly failing): desired behavior when several fields are
 // non-trivial at once. Conventions:
