@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/cronli5.svg)](https://www.npmjs.com/package/cronli5)
 [![types included](https://img.shields.io/npm/types/cronli5.svg)](./cronli5.d.ts)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/cronli5)](https://bundlephobia.com/package/cronli5)
-[![license](https://img.shields.io/npm/l/cronli5.svg)](./LICENSE.md)
+[![license](https://img.shields.io/github/license/andrewbroz/cronli5.svg)](./LICENSE.md)
 
 Generate English language descriptions of schedules from cron patterns.
 Accepts classic (five-part) cron patterns, or extended (six-part) cron
