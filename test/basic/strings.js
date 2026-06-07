@@ -22,13 +22,13 @@ describe('Common strings:', function() {
       ['0 13 * * FRI', 'every Friday at 1:00 PM'],
       ['0 2 * * MON-FRI', 'every Monday-Friday at 2:00 AM'],
       ['0 15 * * TUE', 'every Tuesday at 3:00 PM'],
-      ['0 14 * * MON,WED,FRI', 'every Monday, Wednesday, and Friday at 2:00 PM'],
+      ['0 14 * * MON,WED,FRI', 'every Monday, Wednesday and Friday at 2:00 PM'],
       ['0 23 * * THU', 'every Thursday at 11:00 PM'],
       ['0 6 * * SAT', 'every Saturday at 6:00 AM'],
       ['0 13 * * 5', 'every Friday at 1:00 PM'],
       ['0 2 * * 1-5', 'every Monday-Friday at 2:00 AM'],
       ['0 15 * * 2', 'every Tuesday at 3:00 PM'],
-      ['0 14 * * 1,3,5', 'every Monday, Wednesday, and Friday at 2:00 PM'],
+      ['0 14 * * 1,3,5', 'every Monday, Wednesday and Friday at 2:00 PM'],
       ['0 23 * * 4', 'every Thursday at 11:00 PM'],
       ['0 6 * * 6', 'every Saturday at 6:00 AM']
     ]);
@@ -62,13 +62,13 @@ describe('Common strings:', function() {
       ['0 0 13 * * FRI', 'every Friday at 1:00 PM'],
       ['0 0 2 * * MON-FRI', 'every Monday-Friday at 2:00 AM'],
       ['0 0 15 * * TUE', 'every Tuesday at 3:00 PM'],
-      ['0 0 14 * * MON,WED,FRI', 'every Monday, Wednesday, and Friday at 2:00 PM'],
+      ['0 0 14 * * MON,WED,FRI', 'every Monday, Wednesday and Friday at 2:00 PM'],
       ['0 0 23 * * THU', 'every Thursday at 11:00 PM'],
       ['0 0 6 * * SAT', 'every Saturday at 6:00 AM'],
       ['0 0 13 * * 5', 'every Friday at 1:00 PM'],
       ['0 0 2 * * 1-5', 'every Monday-Friday at 2:00 AM'],
       ['0 0 15 * * 2', 'every Tuesday at 3:00 PM'],
-      ['0 0 14 * * 1,3,5', 'every Monday, Wednesday, and Friday at 2:00 PM'],
+      ['0 0 14 * * 1,3,5', 'every Monday, Wednesday and Friday at 2:00 PM'],
       ['0 0 23 * * 4', 'every Thursday at 11:00 PM'],
       ['0 0 6 * * 6', 'every Saturday at 6:00 AM']
     ]);

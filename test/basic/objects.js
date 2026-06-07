@@ -28,13 +28,13 @@ describe('Common objects:', function() {
     [{hour: '13', weekday: 'FRI'}, 'every Friday at 1:00 PM'],
     [{hour: '2', weekday: 'MON-FRI'}, 'every Monday-Friday at 2:00 AM'],
     [{hour: '15', weekday: 'TUE'}, 'every Tuesday at 3:00 PM'],
-    [{hour: '14', weekday: 'MON,WED,FRI'}, 'every Monday, Wednesday, and Friday at 2:00 PM'],
+    [{hour: '14', weekday: 'MON,WED,FRI'}, 'every Monday, Wednesday and Friday at 2:00 PM'],
     [{hour: '23', weekday: 'THU'}, 'every Thursday at 11:00 PM'],
     [{hour: '6', weekday: 'SAT'}, 'every Saturday at 6:00 AM'],
     [{hour: '13', weekday: '5'}, 'every Friday at 1:00 PM'],
     [{hour: '2', weekday: '1-5'}, 'every Monday-Friday at 2:00 AM'],
     [{hour: '15', weekday: '2'}, 'every Tuesday at 3:00 PM'],
-    [{hour: '14', weekday: '1,3,5'}, 'every Monday, Wednesday, and Friday at 2:00 PM'],
+    [{hour: '14', weekday: '1,3,5'}, 'every Monday, Wednesday and Friday at 2:00 PM'],
     [{hour: '23', weekday: '4'}, 'every Thursday at 11:00 PM'],
     [{hour: '6', weekday: '6'}, 'every Saturday at 6:00 AM']
   ];

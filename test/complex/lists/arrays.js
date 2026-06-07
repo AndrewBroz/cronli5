@@ -53,9 +53,9 @@ describe('Valid arrays with lists:', function() {
   describe('weekday lists', function() {
     run([
       [['0', '14', '*', '*', 'MON,WED,FRI'],
-        'every Monday, Wednesday, and Friday at 2:00 PM'],
+        'every Monday, Wednesday and Friday at 2:00 PM'],
       [['0', '14', '*', '*', '1,3,5'],
-        'every Monday, Wednesday, and Friday at 2:00 PM']
+        'every Monday, Wednesday and Friday at 2:00 PM']
     ]);
   });
 });

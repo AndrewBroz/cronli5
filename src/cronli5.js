@@ -82,14 +82,42 @@ const weekdayAbbreviations = {
   SAT: weekdayNames[6]
 };
 
+// Weekday index by abbreviation, used to resolve named step bounds.
+const weekdayNumbers = {
+  SUN: 0,
+  MON: 1,
+  TUE: 2,
+  WED: 3,
+  THU: 4,
+  FRI: 5,
+  SAT: 6
+};
+
+// Month number by abbreviation, used to resolve named step bounds.
+const monthNumbers = {
+  JAN: 1,
+  FEB: 2,
+  MAR: 3,
+  APR: 4,
+  MAY: 5,
+  JUN: 6,
+  JUL: 7,
+  AUG: 8,
+  SEP: 9,
+  OCT: 10,
+  NOV: 11,
+  DEC: 12
+};
+
 // Allowed numeric ranges (and name tables, where applicable) per field.
 const fieldSpecs = {
   second: {max: 59, min: 0},
   minute: {max: 59, min: 0},
   hour: {max: 23, min: 0},
   date: {max: 31, min: 1},
-  month: {max: 12, min: 1, names: monthAbbreviations},
-  weekday: {max: 7, min: 0, names: weekdayAbbreviations},
+  month: {max: 12, min: 1, names: monthAbbreviations, numbers: monthNumbers},
+  weekday: {max: 7, min: 0, names: weekdayAbbreviations,
+    numbers: weekdayNumbers},
   year: {max: 9999, min: 1970}
 };
 
@@ -140,6 +168,16 @@ function trailingQualifier(cronPattern, opts) {
   }
 
   if (cronPattern.date !== '*') {
+    if (isOpenStep(cronPattern.date)) {
+      return ' on ' + interpretStepDates(cronPattern.date) +
+        monthScope(cronPattern, opts);
+    }
+
+    if (isOpenStep(cronPattern.month)) {
+      return ' on the ' + interpretDateOrdinals(cronPattern.date) +
+        monthScope(cronPattern, opts);
+    }
+
     if (cronPattern.month !== '*') {
       return ' on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
         interpretDateOrdinals(cronPattern.date);
@@ -380,7 +418,8 @@ function isValidStep(segment, spec) {
     isValidRange(parts[0], spec);
 }
 
-// A range is `<start>-<end>` where both ends are valid singles.
+// A range is `<start>-<end>` where both ends are valid singles and the start
+// is not greater than the end (cron does not support wrap-around ranges).
 function isValidRange(segment, spec) {
   const parts = segment.split('-');
 
@@ -388,7 +427,12 @@ function isValidRange(segment, spec) {
     return false;
   }
 
-  return isValidSingle(parts[0], spec) && isValidSingle(parts[1], spec);
+  if (!isValidSingle(parts[0], spec) || !isValidSingle(parts[1], spec)) {
+    return false;
+  }
+
+  return toFieldNumber(parts[0], spec.numbers) <=
+    toFieldNumber(parts[1], spec.numbers);
 }
 
 // A single value is an in-range integer or a recognized name.
@@ -523,6 +567,11 @@ function interpretMinuteFrequency(cronPattern, opts) {
 
     phrase += ' from ' + getTime(bounds[0], 0, opts) + ' through ' +
       getTime(bounds[1], 0, opts);
+  }
+  else if (isSingleValue(cronPattern.hour)) {
+    // A specific hour confines the cadence to that hour's window.
+    phrase += ' from ' + getTime(cronPattern.hour, 0, opts) + ' through ' +
+      getTime(cronPattern.hour, 59, opts);
   }
 
   return phrase + trailingQualifier(cronPattern, opts);
@@ -771,6 +820,43 @@ function getOccurrences(start, interval, max) {
   return occurrences;
 }
 
+// Resolve a numeric or named field token (e.g. '5' or 'FRI') to its number.
+function toFieldNumber(token, numberMap) {
+  return isNonNegativeInteger(token) ? +token : numberMap[token.toUpperCase()];
+}
+
+// List the values a step fires on for a day-level field. The start may be a
+// wildcard (`*`, begins at `min`), a single value, or a range (`a-b`), and
+// range bounds may be names resolved via `numberMap`.
+function enumerateStep(field, min, max, numberMap) {
+  const parts = field.split('/');
+  const interval = +parts[1];
+
+  if (includes(parts[0], '-')) {
+    const bounds = parts[0].split('-');
+
+    return getOccurrences(toFieldNumber(bounds[0], numberMap), interval,
+      toFieldNumber(bounds[1], numberMap));
+  }
+
+  const start = parts[0] === '*' ? min : toFieldNumber(parts[0], numberMap);
+
+  return getOccurrences(start, interval, max);
+}
+
+// Whether a field is an "open" step (start is `*` or a single value, not a
+// bounded range). Open steps read as a frequency rather than an enumeration.
+function isOpenStep(field) {
+  return includes(field, '/') && !includes(field, '-');
+}
+
+// Whether a field is a single concrete value (not a wildcard, list, range, or
+// step).
+function isSingleValue(field) {
+  return field !== '*' && !includes(field, ',') &&
+    !includes(field, '-') && !includes(field, '/');
+}
+
 // Join a list with commas and a terminal "and".
 function joinList(items) {
   if (items.length <= 1) {
@@ -828,6 +914,16 @@ function interpretDayQualifier(cronPattern, opts) {
   }
 
   if (cronPattern.date !== '*') {
+    if (isOpenStep(cronPattern.date)) {
+      return interpretStepDates(cronPattern.date) +
+        monthScope(cronPattern, opts) + ' ';
+    }
+
+    if (isOpenStep(cronPattern.month)) {
+      return 'on the ' + interpretDateOrdinals(cronPattern.date) +
+        monthScope(cronPattern, opts) + ' ';
+    }
+
     if (cronPattern.month !== '*') {
       return 'on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
         interpretDateOrdinals(cronPattern.date) + ' ';
@@ -852,8 +948,14 @@ function interpretDayQualifier(cronPattern, opts) {
 // restricted (specified as non-wildcard values). Cron fires when either is a
 // match. A restricted month scopes both the day of month and the day of week.
 function interpretDateOrWeekday(cronPattern, opts) {
-  const ordinals = interpretDateOrdinals(cronPattern.date);
   const weekdays = interpretWeekdays(cronPattern, opts);
+
+  if (isOpenStep(cronPattern.date)) {
+    return interpretStepDates(cronPattern.date) +
+      monthScope(cronPattern, opts) + ' or on ' + weekdays;
+  }
+
+  const ordinals = interpretDateOrdinals(cronPattern.date);
 
   if (cronPattern.month !== '*') {
     const month = interpretMonthNames(cronPattern.month, opts);
@@ -865,8 +967,41 @@ function interpretDateOrWeekday(cronPattern, opts) {
   return 'on the ' + ordinals + ' or on ' + weekdays;
 }
 
-// Render a date field (single, list, or range) as suffixed ordinals.
+// A trailing " in <month>" scope, or an empty string when the month is a
+// wildcard. Used to scope an open day-of-month step to a specific month.
+function monthScope(cronPattern, opts) {
+  if (cronPattern.month === '*') {
+    return '';
+  }
+
+  return ' in ' + interpretMonthNames(cronPattern.month, opts);
+}
+
+// Frequency phrase for an open day-of-month step, e.g. "every other day of
+// the month" or "every 3rd day of the month from the 5th".
+function interpretStepDates(dateField) {
+  const parts = dateField.split('/');
+  const interval = +parts[1];
+  const start = parts[0];
+  const cadence = interval === 2 ?
+    'every other' :
+    'every ' + getOrdinal(interval);
+  let phrase = cadence + ' day of the month';
+
+  if (start !== '*' && start !== '1') {
+    phrase += ' from the ' + getOrdinal(start);
+  }
+
+  return phrase;
+}
+
+// Render a date field (single, list, range, or bounded step) as suffixed
+// ordinals. Open steps are handled separately as a frequency phrase.
 function interpretDateOrdinals(dateField) {
+  if (includes(dateField, '/')) {
+    return joinList(enumerateStep(dateField, 1, 31).map(toOrdinal));
+  }
+
   if (includes(dateField, '-')) {
     const bounds = dateField.split('-');
 
@@ -876,8 +1011,20 @@ function interpretDateOrdinals(dateField) {
   return joinList(dateField.split(',').map(toOrdinal));
 }
 
-// Render a month field (single, list, or range) as names.
+// Render a month field (single, list, range, or bounded step) as names. Open
+// steps are handled separately as a frequency phrase.
 function interpretMonthNames(monthField, opts) {
+  if (isOpenStep(monthField)) {
+    return interpretStepMonths(monthField, opts);
+  }
+
+  if (includes(monthField, '/')) {
+    return joinList(enumerateStep(monthField, 1, 12, monthNumbers)
+      .map(function(value) {
+        return getMonth(value, opts);
+      }));
+  }
+
   if (includes(monthField, '-')) {
     const bounds = monthField.split('-');
 
@@ -890,6 +1037,23 @@ function interpretMonthNames(monthField, opts) {
   }));
 }
 
+// Frequency phrase for an open month step, e.g. "every other month" or
+// "every 3rd month from February".
+function interpretStepMonths(monthField, opts) {
+  const parts = monthField.split('/');
+  const interval = +parts[1];
+  const start = parts[0];
+  let phrase = interval === 2 ?
+    'every other month' :
+    'every ' + getOrdinal(interval) + ' month';
+
+  if (start !== '*' && start !== '1') {
+    phrase += ' from ' + getMonth(start, opts);
+  }
+
+  return phrase;
+}
+
 // `map`-safe wrapper that ignores the index/array arguments.
 function toOrdinal(value) {
   return getOrdinal(value);
@@ -897,7 +1061,14 @@ function toOrdinal(value) {
 
 // Weekday field.
 function interpretWeekdays(cronPattern, opts) {
-  let weekdayField = cronPattern.weekday;
+  const weekdayField = cronPattern.weekday;
+
+  if (includes(weekdayField, '/')) {
+    return joinList(enumerateStep(weekdayField, 0, 6, weekdayNumbers)
+      .map(function(value) {
+        return getWeekday(value, opts);
+      }));
+  }
 
   if (includes(weekdayField, '-')) {
     return weekdayField.split('-').map(function(value) {
@@ -906,15 +1077,12 @@ function interpretWeekdays(cronPattern, opts) {
   }
 
   if (includes(weekdayField, ',')) {
-    weekdayField = weekdayField.split(',').map(function(value) {
+    return joinList(weekdayField.split(',').map(function(value) {
       return getWeekday(value, opts);
-    });
-
-    return weekdayField.slice(0, -1).join(', ') + ', and ' +
-      weekdayField[weekdayField.length - 1];
+    }));
   }
 
-  return getWeekday(cronPattern.weekday, opts);
+  return getWeekday(weekdayField, opts);
 }
 
 // Turn an hour field (and optional minute field) into a clock time, e.g.

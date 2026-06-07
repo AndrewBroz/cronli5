@@ -30,11 +30,11 @@ describe('Valid objects with lists:', function() {
     ],
     [
       {hour: '14', weekday: 'MON,WED,FRI'},
-      'every Monday, Wednesday, and Friday at 2:00 PM'
+      'every Monday, Wednesday and Friday at 2:00 PM'
     ],
     [
       {hour: '14', weekday: '1,3,5'},
-      'every Monday, Wednesday, and Friday at 2:00 PM'
+      'every Monday, Wednesday and Friday at 2:00 PM'
     ]
   ];
 
