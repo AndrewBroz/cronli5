@@ -8,8 +8,8 @@ describe('Valid strings with steps:', function() {
       ['*/3 * * * *', 'every three minutes'],
       ['0/3 * * * *', 'every three minutes'],
       ['2/3 * * * *', 'every three minutes from two minutes past the hour'],
-      ['*/4 * * * *', 'every four minutes past the hour'],
-      ['0/4 * * * *', 'every four minutes past the hour'],
+      ['*/4 * * * *', 'every four minutes'],
+      ['0/4 * * * *', 'every four minutes'],
       ['*/5 * * * *', 'every five minutes'],
       ['0/5 * * * *', 'every five minutes'],
       ['*/7 * * * *', 'every seven minutes past the hour'],
@@ -23,7 +23,7 @@ describe('Valid strings with steps:', function() {
       ['*/31 * * * *', 'at zero and 31 minutes past the hour'],
       ['0 */2 * * *', 'every two hours'],
       ['0 */3 * * *', 'every three hours'],
-      ['0 2/3 * * * *', 'every three hours from 2:00 AM'],
+      ['0 2/3 * * *', 'every three hours from 2:00 AM'],
       ['0 */5 * * *', 'every five hours from midnight'],
       ['0 */7 * * *', 'every seven hours from midnight'],
       ['0 */8 * * *', 'every eight hours'],
@@ -36,7 +36,14 @@ describe('Valid strings with steps:', function() {
 
   describe('6-part strings', function() {
     run([
-      ['* * * * * *', 'every second']
+      ['* * * * * *', 'every second'],
+      ['*/2 * * * * *', 'every two seconds'],
+      ['*/7 * * * * *', 'every seven seconds past the minute'],
+      ['*/30 * * * * *', 'every 30 seconds'],
+      ['0 */2 * * * *', 'every two minutes'],
+      ['0 */4 * * * *', 'every four minutes'],
+      ['0 0 */3 * * *', 'every three hours'],
+      ['0 0 */5 * * *', 'every five hours from midnight']
     ]);
   });
 });

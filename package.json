@@ -1,6 +1,6 @@
 {
   "name": "cronli5",
-  "version": "0.0.0-beta.6",
+  "version": "0.1.0",
   "description": "Cron Like I'm Five: A Cron to English Utility",
   "repository": {
     "type": "git",
@@ -10,8 +10,9 @@
   "bin": "cli.js",
   "scripts": {
     "build": "uglifyjs cronli5.js -o cronli5.min.js -c -m --comments",
-    "lint": "eslint cronli5.js test --fix",
-    "test": "npm run lint && mocha"
+    "lint": "eslint cronli5.js test",
+    "lint:fix": "eslint cronli5.js test --fix",
+    "test": "mocha"
   },
   "keywords": [
     "cron",

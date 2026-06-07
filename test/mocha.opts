@@ -2,5 +2,6 @@
 test/bad_input
 test/baseline
 test/basic
+test/complex
 test/options
 test/simple

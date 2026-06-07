@@ -24,22 +24,7 @@
     'ten'
   ];
 
-  // English ordinal names for the integers zero through ten.
-  var ordinals = [
-    null,
-    'first',
-    'second',
-    'third',
-    'fourth',
-    'fifth',
-    'sixth',
-    'seventh',
-    'eighth',
-    'ninth',
-    'tenth'
-  ];
-
-  // Ordianl suffixes.
+  // Ordinal suffixes.
   var suffixes = [
     'th',
     'st',
@@ -144,16 +129,90 @@
 
     validateCronPattern(cronPattern);
 
-    return interpretSeconds(cronPattern)
+    var description = interpretSeconds(cronPattern)
         || interpretMinutes(cronPattern)
-        || interpretHours(cronPattern)
-        || interpretRest(cronPattern);
+        || interpretHours(cronPattern);
+
+    return applyYear(description, cronPattern);
   }
 
-  function interpretRest(cronPattern) {
-    return interpretDates(cronPattern) + ' '
-         + interpretMonths(cronPattern) + ' '
-         + interpretWeekdays(cronPattern);
+  // A trailing day-level qualifier for bare frequencies, e.g. " on Monday",
+  // " on the 13th", " in January", or " on January 13th". Returns an empty
+  // string when no date, month, or weekday is set.
+  function trailingQualifier(cronPattern) {
+    if (cronPattern.date !== '*') {
+      if (cronPattern.month !== '*') {
+        return ' on ' + interpretMonthNames(cronPattern.month) + ' ' +
+          interpretDateOrdinals(cronPattern.date);
+      }
+
+      return ' on the ' + interpretDateOrdinals(cronPattern.date);
+    }
+
+    if (cronPattern.month !== '*') {
+      return ' in ' + interpretMonthNames(cronPattern.month);
+    }
+
+    if (cronPattern.weekday !== '*') {
+      return ' on ' + interpretWeekdays(cronPattern);
+    }
+
+    return '';
+  }
+
+  // Append or fold the year field into a finished description. The year is
+  // only rendered when the `years` option is enabled and a specific year is
+  // set. A single year reads naturally folded into a specific calendar date
+  // ("on January 1st, 2030 at noon"); otherwise it trails the description
+  // ("every Friday at 1:00 PM in 2030").
+  function applyYear(description, cronPattern) {
+    var yearField = '' + cronPattern.year;
+
+    if (!YEARS || yearField === '*') {
+      return description;
+    }
+
+    if (includes(yearField, '/')) {
+      return description + ' ' + interpretStepYears(yearField);
+    }
+
+    var label = interpretYearLabel(yearField);
+
+    if (!includes(yearField, '-') && !includes(yearField, ',') &&
+        cronPattern.date !== '*' && includes(description, ' at ')) {
+      return description.replace(' at ', ', ' + label + ' at ');
+    }
+
+    return description + ' in ' + label;
+  }
+
+  // Turn a single year, a range, or a list into a noun phrase.
+  function interpretYearLabel(yearField) {
+    if (includes(yearField, ',')) {
+      return joinList(yearField.split(','));
+    }
+
+    return yearField;
+  }
+
+  // Describe a repeating year step, e.g. "every two years" or, with a start,
+  // "every two years from 2030".
+  function interpretStepYears(yearField) {
+    var parts = yearField.split('/');
+    var interval = +parts[1];
+    var start = parts[0];
+
+    if (interval <= 1) {
+      return 'every year';
+    }
+
+    var phrase = 'every ' + getNumber(interval) + ' years';
+
+    if (start !== '*' && start !== '0') {
+      phrase += ' from ' + start;
+    }
+
+    return phrase;
   }
 
   // Set option flags.
@@ -362,39 +421,29 @@
 
   // Second field.
   function interpretSeconds(cronPattern) {
-    var secondField = cronPattern.second;
-
-    return interpretRangeOfSeconds(secondField) ||
-      interpretRepeatingSeconds(secondField) ||
-      interpretMultipleSeconds(secondField) ||
+    return interpretRangeOfSeconds(cronPattern) ||
+      interpretRepeatingSeconds(cronPattern.second) ||
+      interpretMultipleSeconds(cronPattern) ||
       interpretSingleSecond(cronPattern);
   }
 
-  function interpretRangeOfSeconds(secondField) {
+  function interpretRangeOfSeconds(cronPattern) {
+    var secondField = cronPattern.second;
+
     if (!includes(secondField, '-')) {
       // Not a range pattern.
       return;
     }
 
-    var result = 'every second between ';
-
-    secondField = secondField.split('-');
-
-    var start = secondField[0];
-    var interval = secondField[1];
-
-    if (interval > 1) {
-      result += getNumber(interval) + ' seconds';
-    }
-    else if (interval == 1 || interval == 0) {
-      result += 'second';
+    // A second range only stands on its own when the minute is a wildcard.
+    if (cronPattern.minute !== '*') {
+      return;
     }
 
-    if (start !== '*' && start !== '0') {
-      result += ' past second ' + getNumber(start);
-    }
+    var bounds = secondField.split('-');
 
-    return result;
+    return 'every second from ' + getNumber(bounds[0]) + ' through ' +
+      getNumber(bounds[1]) + ' past the minute';
   }
 
   function interpretRepeatingSeconds(secondField) {
@@ -403,46 +452,30 @@
       return;
     }
 
-    var result = 'every ';
-
-    secondField = secondField.split('/');
-
-    var start = secondField[0];
-    var interval = secondField[1];
-
-    if (interval > 1) {
-      result += getNumber(interval) + ' seconds';
-    }
-    else if (interval == 1 || interval == 0) {
-      result += 'second';
-    }
-
-    if (start !== '*' && start !== '0') {
-      result += ' past second ' + getNumber(start);
-    }
-
-    return result;
+    return interpretStepCycle60(secondField, 'second', 'minute');
   }
 
-  function interpretMultipleSeconds(secondField) {
+  function interpretMultipleSeconds(cronPattern) {
+    var secondField = cronPattern.second;
+
     if (!includes(secondField, ',')) {
       // Not a multiple second pattern.
       return;
     }
 
-    secondField = secondField.split(',');
+    // A second list only stands on its own when the minute is a wildcard.
+    if (cronPattern.minute !== '*') {
+      return;
+    }
 
-    return 'on seconds ' +
-      secondField.slice(0, -1).map(getNumber).join(', ') +
-      ' and ' +
-      getNumber(secondField.slice(-1)[0]);
+    return listPastThe(secondField.split(','), 'second', 'minute');
   }
 
   function interpretSingleSecond(cronPattern) {
     var secondField = cronPattern.second;
 
     if (secondField === '*') {
-      return 'every second';
+      return 'every second' + trailingQualifier(cronPattern);
     }
 
     if (secondField === '0') {
@@ -464,50 +497,73 @@
 
   // Minute field.
   function interpretMinutes(cronPattern) {
-    return interpretMultipleMinutes(cronPattern.minute) ||
-      interpretRepeatingMinutes(cronPattern.minute) ||
+    return interpretMinuteFrequency(cronPattern) ||
+      interpretRangeOfMinutes(cronPattern) ||
+      interpretMultipleMinutes(cronPattern) ||
       interpretSingleMinute(cronPattern);
   }
 
-  function interpretMultipleMinutes(minuteField) {
+  // A repeating minute step. When the hour field is a range the cadence is
+  // qualified by the active window, e.g. "every 15 minutes from 9:00 AM
+  // through 5:00 PM", optionally trailing the weekday.
+  function interpretMinuteFrequency(cronPattern) {
+    var minuteField = cronPattern.minute;
+
+    if (!includes(minuteField, '/')) {
+      // Not a repeating interval pattern.
+      return;
+    }
+
+    var phrase = interpretStepCycle60(minuteField, 'minute', 'hour');
+
+    if (includes(cronPattern.hour, '-')) {
+      var bounds = cronPattern.hour.split('-');
+
+      phrase += ' from ' + getTime(bounds[0], 0) + ' through ' +
+        getTime(bounds[1], 0);
+
+      if (cronPattern.weekday !== '*') {
+        phrase += ' on ' + interpretWeekdays(cronPattern);
+      }
+    }
+
+    return phrase;
+  }
+
+  function interpretRangeOfMinutes(cronPattern) {
+    var minuteField = cronPattern.minute;
+
+    if (!includes(minuteField, '-')) {
+      // Not a range pattern.
+      return;
+    }
+
+    // A minute range only stands on its own when the hour is a wildcard.
+    if (cronPattern.hour !== '*') {
+      return;
+    }
+
+    var bounds = minuteField.split('-');
+
+    return 'every minute from ' + getNumber(bounds[0]) + ' through ' +
+      getNumber(bounds[1]) + ' past the hour';
+  }
+
+  function interpretMultipleMinutes(cronPattern) {
+    var minuteField = cronPattern.minute;
+
     if (!includes(minuteField, ',')) {
       // Not a multiple minute pattern.
       return;
     }
 
-    minuteField = minuteField.split(',');
-
-    return 'on minutes ' +
-      minuteField.slice(0, -1).map(getNumber).join(', ') +
-      ' and ' +
-      getNumber(minuteField.slice(-1)[0]);
-  }
-
-  function interpretRepeatingMinutes(secondField) {
-    if (!includes(secondField, '/')) {
-      // Not a repeating interval pattern.
+    // A minute list only stands on its own when the hour is a wildcard;
+    // otherwise the hours expand it into a set of clock times.
+    if (cronPattern.hour !== '*') {
       return;
     }
 
-    var result = 'every ';
-
-    secondField = secondField.split('/');
-
-    var start = secondField[0];
-    var interval = secondField[1];
-
-    if (interval > 1) {
-      result += getNumber(interval) + ' minutes';
-    }
-    else if (interval == 1 || interval == 0) {
-      result += 'minute';
-    }
-
-    if (start !== '*' && start !== '0') {
-      result += ' past minute ' + getNumber(start);
-    }
-
-    return result;
+    return listPastThe(minuteField.split(','), 'minute', 'hour');
   }
 
   function interpretSingleMinute(cronPattern) {
@@ -517,7 +573,7 @@
       // Only describe "every minute" when the hour is also a wildcard;
       // otherwise defer to the hour field.
       if (cronPattern.hour === '*') {
-        return 'every minute';
+        return 'every minute' + trailingQualifier(cronPattern);
       }
 
       return;
@@ -542,25 +598,45 @@
 
   // Hour field.
   function interpretHours(cronPattern) {
-    return interpretMultipleHours(cronPattern) ||
+    return interpretRangeOfHours(cronPattern) ||
       interpretRepeatingHours(cronPattern) ||
-      interpretSingleHour(cronPattern);
+      interpretClockTimes(cronPattern);
   }
 
-  function interpretMultipleHours(cronPattern) {
+  // An hour range fires within a window. On the hour it reads "every hour from
+  // 9:00 AM through 5:00 PM"; a specific minute (or minute list) anchors it as
+  // "at 30 minutes past the hour from 9:00 AM through 5:00 PM".
+  function interpretRangeOfHours(cronPattern) {
     var hourField = cronPattern.hour;
 
-    if (!includes(hourField, ',')) {
-      // Not a multiple minute pattern.
+    if (!includes(hourField, '-')) {
+      // Not a range pattern.
       return;
     }
 
-    hourField = hourField.split(',');
+    var bounds = hourField.split('-');
+    var window = 'from ' + getTime(bounds[0], 0) +
+      ' through ' + getTime(bounds[1], 0);
+    var phrase = interpretRangeMinuteLead(cronPattern.minute) + ' ' + window;
 
-    return 'on hours '
-         + hourField.slice(0, -1).map(getNumber).join(', ')
-         + ' and '
-         + getNumber(hourField.slice(-1)[0]);
+    if (cronPattern.weekday !== '*') {
+      phrase += ' on ' + interpretWeekdays(cronPattern);
+    }
+
+    return phrase;
+  }
+
+  // Lead phrase for a minute field within an hour range. On-the-hour (or a
+  // non-discrete minute) reads "every hour"; otherwise the minutes anchor it.
+  function interpretRangeMinuteLead(minuteField) {
+    minuteField = '' + minuteField;
+
+    if (minuteField === '*' || minuteField === '0' ||
+        includes(minuteField, '-') || includes(minuteField, '/')) {
+      return 'every hour';
+    }
+
+    return listPastThe(minuteField.split(','), 'minute', 'hour');
   }
 
   function interpretRepeatingHours(cronPattern) {
@@ -571,51 +647,169 @@
       return;
     }
 
-    hourField = hourField.split('/');
-
-    var interval = hourField[1];
-    var result = 'every ';
-
-    if (interval > 1) {
-      result += getNumber(interval) + ' hours';
-    }
-    else if (interval == 1 || interval == 0) {
-      result += 'hour';
-    }
-
-    var start = hourField[0];
-
-    if (start !== '*' && start !== '0') {
-      result += ' past hour ' + getNumber(start);
-    }
-
-    return result;
+    return interpretStepHours(hourField);
   }
 
-  function interpretSingleHour(cronPattern) {
-    if (cronPattern.hour === '*') {
+  // Interpret a `start/interval` step for a field that cycles every 60 units
+  // (seconds and minutes). `unit` is the singular noun and `anchor` is the
+  // larger unit the values are counted against.
+  function interpretStepCycle60(field, unit, anchor) {
+    var parts = field.split('/');
+    var interval = +parts[1];
+    var start = parts[0] === '*' ? 0 : +parts[0];
+
+    if (interval <= 1) {
+      return 'every ' + unit;
+    }
+
+    var occurrences = getOccurrences(start, interval, 59);
+
+    if (start !== 0) {
+      if (occurrences.length <= 3) {
+        return listPastThe(occurrences, unit, anchor);
+      }
+
+      return 'every ' + getNumber(interval) + ' ' + unit + 's from ' +
+        getNumber(start) + ' ' + unit + 's past the ' + anchor;
+    }
+
+    // A step reads as a natural cadence ("every N minutes") only when it
+    // divides the cycle evenly, mirroring the hour field's `24 % n` rule.
+    if (60 % interval === 0) {
+      return 'every ' + getNumber(interval) + ' ' + unit + 's';
+    }
+
+    if (occurrences.length <= 2) {
+      return listPastThe(occurrences, unit, anchor);
+    }
+
+    return 'every ' + getNumber(interval) + ' ' + unit + 's past the ' + anchor;
+  }
+
+  // Interpret a `start/interval` step for the hour field (cycles every 24).
+  function interpretStepHours(field) {
+    var parts = field.split('/');
+    var interval = +parts[1];
+    var start = parts[0] === '*' ? 0 : +parts[0];
+
+    if (interval <= 1) {
       return 'every hour';
     }
 
-    return interpretDayQualifier(cronPattern) +
-      'at ' + getTime(cronPattern.hour, cronPattern.minute);
+    var occurrences = getOccurrences(start, interval, 23);
+
+    if (start === 0 && 24 % interval === 0) {
+      return 'every ' + getNumber(interval) + ' hours';
+    }
+
+    if (occurrences.length <= 3) {
+      return listHourTimes(occurrences);
+    }
+
+    if (start === 0) {
+      return 'every ' + getNumber(interval) + ' hours from midnight';
+    }
+
+    return 'every ' + getNumber(interval) + ' hours from ' + getTime(start, 0);
+  }
+
+  // Enumerate fire values as "at A, B and C <unit>s past the <anchor>".
+  function listPastThe(occurrences, unit, anchor) {
+    return 'at ' + joinList(occurrences.map(getNumber)) + ' ' + unit +
+      's past the ' + anchor;
+  }
+
+  // Enumerate fire hours as "at T1 and T2 ...", dropping a leading midnight
+  // when there are more than two times.
+  function listHourTimes(occurrences) {
+    var hours = occurrences;
+
+    if (hours.length > 2 && hours[0] === 0) {
+      hours = hours.slice(1);
+    }
+
+    return 'at ' + joinList(hours.map(toHourTime));
+  }
+
+  // Format an hour value as a clock time (ignoring extra `map` arguments).
+  function toHourTime(hour) {
+    return getTime(hour, 0);
+  }
+
+  // List the values a `start/interval` step fires on within [0, max].
+  function getOccurrences(start, interval, max) {
+    var occurrences = [];
+    var value = start;
+
+    while (value <= max) {
+      occurrences.push(value);
+      value += interval;
+    }
+
+    return occurrences;
+  }
+
+  // Join a list with commas and a terminal "and".
+  function joinList(items) {
+    if (items.length <= 1) {
+      return items.join('');
+    }
+
+    if (items.length === 2) {
+      return items[0] + ' and ' + items[1];
+    }
+
+    return items.slice(0, -1).join(', ') + ' and ' + items[items.length - 1];
+  }
+
+  // Expand a discrete set of hours and minutes into clock times prefixed by a
+  // day-level qualifier, e.g. "every day at 9:00 AM and 9:30 AM" or "on the
+  // 1st at 2:15 PM".
+  function interpretClockTimes(cronPattern) {
+    if (cronPattern.hour === '*') {
+      return 'every hour' + trailingQualifier(cronPattern);
+    }
+
+    var hours = enumerateValues(cronPattern.hour);
+    var minutes = enumerateValues(cronPattern.minute);
+    var times = [];
+
+    hours.forEach(function(h) {
+      minutes.forEach(function(m) {
+        times.push(getTime(h, m));
+      });
+    });
+
+    return interpretDayQualifier(cronPattern) + 'at ' + joinList(times);
+  }
+
+  // Enumerate a discrete field (single value or comma list) as numbers. A
+  // wildcard or any non-discrete form collapses to the top of the unit (0).
+  function enumerateValues(field) {
+    field = '' + field;
+
+    if (field === '*' || includes(field, '-') || includes(field, '/')) {
+      return [0];
+    }
+
+    return field.split(',').map(Number);
   }
 
   // Build the day-level qualifier that precedes a specific time, e.g.
-  // "every day ", "every Friday ", or "on January 13th ".
+  // "every day ", "every Friday ", "on January 13th ", "on the 1st and 15th ",
+  // or "every day in June and December ".
   function interpretDayQualifier(cronPattern) {
-    if (cronPattern.date !== '*' || cronPattern.month !== '*') {
-      var qualifier = 'on';
-
+    if (cronPattern.date !== '*') {
       if (cronPattern.month !== '*') {
-        qualifier += ' ' + getMonth(cronPattern.month);
+        return 'on ' + interpretMonthNames(cronPattern.month) + ' ' +
+          interpretDateOrdinals(cronPattern.date) + ' ';
       }
 
-      if (cronPattern.date !== '*') {
-        qualifier += ' ' + getOrdinal(cronPattern.date);
-      }
+      return 'on the ' + interpretDateOrdinals(cronPattern.date) + ' ';
+    }
 
-      return qualifier + ' ';
+    if (cronPattern.month !== '*') {
+      return 'every day in ' + interpretMonthNames(cronPattern.month) + ' ';
     }
 
     if (cronPattern.weekday !== '*') {
@@ -625,14 +819,35 @@
     return 'every day ';
   }
 
-  // Date field.
-  function interpretDates(cronPattern) {
-    return getOrdinal(cronPattern);
+  // Render a date field (single, list, or range) as suffixed ordinals.
+  function interpretDateOrdinals(dateField) {
+    if (includes(dateField, '-')) {
+      var bounds = dateField.split('-');
+
+      return getOrdinal(bounds[0]) + ' through ' + getOrdinal(bounds[1]);
+    }
+
+    return joinList(dateField.split(',').map(toOrdinal));
   }
 
-  // Month field.
-  function interpretMonths(cronPattern) {
-    return getMonth(cronPattern.month);
+  // Render a month field (single, list, or range) as names.
+  function interpretMonthNames(monthField) {
+    if (includes(monthField, '-')) {
+      var bounds = monthField.split('-');
+
+      return getMonth(bounds[0]) + ' through ' + getMonth(bounds[1]);
+    }
+
+    return joinList(monthField.split(',').map(toMonthName));
+  }
+
+  // `map`-safe wrappers that ignore the index/array arguments.
+  function toOrdinal(value) {
+    return getOrdinal(value);
+  }
+
+  function toMonthName(value) {
+    return getMonth(value);
   }
 
   // Weekday field.
@@ -682,13 +897,10 @@
     return numbers[n] || n;
   }
 
-  // Get English ordinals from integers.
+  // Get English ordinals from integers. Dates always use the suffixed numeric
+  // form (1st, 2nd, ... 31st) for consistency.
   function getOrdinal(n) {
-    if (SHORT) {
-      return getSuffixedOrdinal(n);
-    }
-
-    return ordinals[n] || getSuffixedOrdinal(n);
+    return getSuffixedOrdinal(n);
   }
 
   // Get suffixed ordinals from integers.

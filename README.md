@@ -1,9 +1,3 @@
-> ## DISCLAIMER: UNMAINTAINED
-> 
-> This is a work in progress and does not yet work in all intended cases. DO
-> NOT USE until this discalimer has been removed. If you need something like
-> this now, use [prettycron].
-
 # Cron Like I'm Five: A Cron to English Utility
 
 Generate English language descriptions of schedules from cron patterns.
@@ -93,7 +87,10 @@ several boolean flag properties supported:
 and of arrays as the `second` field if `true`.
 * `years` &mdash; Default `false`. Treat six field string or array patterns as
 if the last field is the `year` field if `true`. Otherwise, treats the first
-field of a six field patten as the `second` field.
+field of a six field patten as the `second` field. When a specific year is
+given, it is folded into a specific calendar date (`'on January 1st, 2030 at
+12:00 PM'`) or otherwise trails the description (`'every Friday at 1:00 PM in
+2030'`).
 
 ```
 import cronli5 from 'cronli5';
@@ -112,6 +109,39 @@ const shortDescription = cronli5(weekdaysAt1330, {
 
 expect(longDescription).to.equal('every Monday-Friday at 1:30 PM');
 expect(shortDescription).to.equal('every Mon-Fri at 13:30');
+```
+
+## Output Examples
+
+`cronli5` renders single values, lists (`,`), ranges (`-`), and steps (`/`),
+and composes multiple fields into a single idiomatic phrase.
+
+Lists are join serially without an Oxford comma (`'A, B and C'`). Dates always use
+suffixed numeric ordinals (`1st`, `2nd`, ... `31st`).
+
+```
+// Single values and steps
+cronli5('*/5 * * * *');     // 'every five minutes'
+cronli5('0 9 * * MON');     // 'every Monday at 9:00 AM'
+
+// Lists
+cronli5('5,10,15 * * * * *'); // 'at five, ten and 15 seconds past the minute'
+cronli5('0 9,17 * * *');      // 'every day at 9:00 AM and 5:00 PM'
+cronli5('0 0 1,15 * *');      // 'on the 1st and 15th at 12:00 AM'
+cronli5('0 12 * 6,12 *');     // 'every day in June and December at 12:00 PM'
+
+// Ranges
+cronli5('0-29 * * * *'); // 'every minute from zero through 29 past the hour'
+cronli5('0 9-17 * * *');  // 'every hour from 9:00 AM through 5:00 PM'
+cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at 12:00 AM'
+
+// Compound patterns
+cronli5('0,30 9 * * *');   // 'every day at 9:00 AM and 9:30 AM'
+cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9:00 AM through 5:00 PM'
+cronli5('30 9-17 * * *');
+// 'at 30 minutes past the hour from 9:00 AM through 5:00 PM'
+cronli5('0 12 1 1 *');     // 'on January 1st at 12:00 PM'
+cronli5('0 * 13 * *');     // 'every hour on the 13th'
 ```
 
 ## Description Accuracy
