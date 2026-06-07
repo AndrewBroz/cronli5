@@ -24,12 +24,17 @@ module.exports = {
 
       throwsError(badInput, errorText, options);
     });
-  },
+  }
 };
+
+// Stable, always-string suite title (JSON.stringify(undefined) is undefined).
+function title(value) {
+  return JSON.stringify(value) + '';
+}
 
 // Check that the output matches the input for a given cron pattern.
 function equal(cronable, expected, options) {
-  describe(JSON.stringify(cronable), function() {
+  describe(title(cronable), function() {
     it('should be "' + expected + '"', function() {
       expect(cronli5(cronable, options)).to.equal(expected);
     });
@@ -38,7 +43,7 @@ function equal(cronable, expected, options) {
 
 // Check that bad input throws the expected error.
 function throwsError(badInput, errorText, options) {
-  describe(JSON.stringify(badInput), function() {
+  describe(title(badInput), function() {
     it('should throw an error', function() {
       expect(cronli5.bind(null, badInput, options)).to.throw(Error);
     });

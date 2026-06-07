@@ -30,7 +30,7 @@ describe('Common strings:', function() {
       ['0 15 * * 2', 'every Tuesday at 3:00 PM'],
       ['0 14 * * 1,3,5', 'every Monday, Wednesday, and Friday at 2:00 PM'],
       ['0 23 * * 4', 'every Thursday at 11:00 PM'],
-      ['0 6 * * 6', 'every Saturday at 6:00 AM'],
+      ['0 6 * * 6', 'every Saturday at 6:00 AM']
     ]);
   });
 
@@ -70,7 +70,7 @@ describe('Common strings:', function() {
       ['0 0 15 * * 2', 'every Tuesday at 3:00 PM'],
       ['0 0 14 * * 1,3,5', 'every Monday, Wednesday, and Friday at 2:00 PM'],
       ['0 0 23 * * 4', 'every Thursday at 11:00 PM'],
-      ['0 0 6 * * 6', 'every Saturday at 6:00 AM'],
+      ['0 0 6 * * 6', 'every Saturday at 6:00 AM']
     ]);
   });
 });

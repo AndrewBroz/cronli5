@@ -18,6 +18,6 @@ describe('Simple valid cron-like objects:', function() {
     [{hour: '5'}, 'every day at 5:00 AM'],
     [{hour: '12', weekday:'TUE'}, 'every Tuesday at 12:00 PM'],
     [{minute: 45, hour: 15, weekday:'FRI'}, 'every Friday at 3:45 PM'],
-    [{hour: 9, date: '13', month: 'JAN'}, 'on January 13th at 9:00 AM'],
+    [{hour: 9, date: '13', month: 'JAN'}, 'on January 13th at 9:00 AM']
   ]);
 });

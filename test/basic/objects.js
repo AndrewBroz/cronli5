@@ -36,7 +36,7 @@ describe('Common objects:', function() {
     [{hour: '15', weekday: '2'}, 'every Tuesday at 3:00 PM'],
     [{hour: '14', weekday: '1,3,5'}, 'every Monday, Wednesday, and Friday at 2:00 PM'],
     [{hour: '23', weekday: '4'}, 'every Thursday at 11:00 PM'],
-    [{hour: '6', weekday: '6'}, 'every Saturday at 6:00 AM'],
+    [{hour: '6', weekday: '6'}, 'every Saturday at 6:00 AM']
   ];
 
   describe('Partial cron objects', function() {
@@ -52,7 +52,7 @@ function populateCronObjects(tests) {
   return tests.map(function(values) {
     return [
       populateCron(values[0]),
-      values[1],
+      values[1]
     ];
   });
 }
@@ -64,7 +64,7 @@ function populateCron(obj) {
     hour: obj.hour || (obj.minute || obj.second ? '*' : '0'),
     date: obj.date || '*',
     month: obj.month || '*',
-    weekday: obj.weekday || '*',
+    weekday: obj.weekday || '*'
   };
 }
 

@@ -9,10 +9,13 @@
   "main": "cronli5.js",
   "bin": "cli.js",
   "scripts": {
-    "build": "uglifyjs cronli5.js -o cronli5.min.js -c -m --comments",
+    "build": "esbuild cronli5.js --minify --legal-comments=inline --outfile=cronli5.min.js",
     "lint": "eslint cronli5.js test",
     "lint:fix": "eslint cronli5.js test --fix",
     "test": "mocha"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [
     "cron",
@@ -25,9 +28,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "^2.8.0",
-    "mocha": "^2.4.5",
-    "uglify-js": "^2.6.2"
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.15.0",
+    "chai": "^4.5.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0",
+    "mocha": "^11.0.1"
   }
 }

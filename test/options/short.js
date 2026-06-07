@@ -22,6 +22,6 @@ describe('Short option:', function() {
     ['0 2 * * 1-5', 'every Mon-Fri at 2:00 AM', options],
     ['0 14 * * 1,3,5', 'every Mon, Wed, and Fri at 2:00 PM', options],
     ['0 23 * * 4', 'every Thu at 11:00 PM', options],
-    ['0 6 * * 6', 'every Sat at 6:00 AM', options],
+    ['0 6 * * 6', 'every Sat at 6:00 AM', options]
   ]);
 });

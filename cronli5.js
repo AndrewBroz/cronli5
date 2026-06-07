@@ -282,7 +282,7 @@
   }
 
   // Turn an object that's already cron-like into a populated cron-like object.
-  function cronifyObject(cronable) { // eslint-disable-line complexity
+  function cronifyObject(cronable) {
     if (!cronable.second && !cronable.minute && !cronable.hour) {
       throw new Error(
         '`cronli5` expects that any object being interpreted as a cron ' +
@@ -962,4 +962,4 @@
     // Export in the browser.
     root.cronli5 = cronli5;
   }
-}(this));
+}(this)); // eslint-disable-line no-invalid-this
