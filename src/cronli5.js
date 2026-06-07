@@ -89,7 +89,7 @@ const fieldSpecs = {
   hour: {max: 23, min: 0},
   date: {max: 31, min: 1},
   month: {max: 12, min: 1, names: monthAbbreviations},
-  weekday: {max: 6, min: 0, names: weekdayAbbreviations},
+  weekday: {max: 7, min: 0, names: weekdayAbbreviations},
   year: {max: 9999, min: 1970}
 };
 
@@ -426,8 +426,8 @@ function interpretSeconds(cronPattern, opts) {
 function interpretRangeOfSeconds(cronPattern, opts) {
   const secondField = cronPattern.second;
 
-  if (!includes(secondField, '-')) {
-    // Not a range pattern.
+  if (!includes(secondField, '-') || includes(secondField, '/')) {
+    // Not a plain range pattern (steps are handled separately).
     return;
   }
 
@@ -529,8 +529,8 @@ function interpretMinuteFrequency(cronPattern, opts) {
 function interpretRangeOfMinutes(cronPattern, opts) {
   const minuteField = cronPattern.minute;
 
-  if (!includes(minuteField, '-')) {
-    // Not a range pattern.
+  if (!includes(minuteField, '-') || includes(minuteField, '/')) {
+    // Not a plain range pattern (steps are handled separately).
     return;
   }
 
@@ -605,8 +605,8 @@ function interpretHours(cronPattern, opts) {
 function interpretRangeOfHours(cronPattern, opts) {
   const hourField = cronPattern.hour;
 
-  if (!includes(hourField, '-')) {
-    // Not a range pattern.
+  if (!includes(hourField, '-') || includes(hourField, '/')) {
+    // Not a plain range pattern (steps are handled separately).
     return;
   }
 
@@ -653,6 +653,20 @@ function interpretRepeatingHours(cronPattern, opts) {
 function interpretStepCycle60(field, unit, anchor, opts) {
   const parts = field.split('/');
   const interval = +parts[1];
+
+  // A bounded start (`a-b/n`) applies the interval within the range.
+  if (includes(parts[0], '-')) {
+    const bounds = parts[0].split('-');
+
+    if (interval <= 1) {
+      return 'every ' + unit + ' from ' + getNumber(+bounds[0], opts) +
+        ' through ' + getNumber(+bounds[1], opts) + ' past the ' + anchor;
+    }
+
+    return listPastThe(getOccurrences(+bounds[0], interval, +bounds[1]),
+      unit, anchor, opts);
+  }
+
   const start = parts[0] === '*' ? 0 : +parts[0];
 
   if (interval <= 1) {
@@ -688,6 +702,15 @@ function interpretStepCycle60(field, unit, anchor, opts) {
 function interpretStepHours(field, opts) {
   const parts = field.split('/');
   const interval = +parts[1];
+
+  // A bounded start (`a-b/n`) applies the interval within the range.
+  if (includes(parts[0], '-')) {
+    const bounds = parts[0].split('-');
+
+    return listHourTimes(getOccurrences(+bounds[0], interval, +bounds[1]),
+      opts);
+  }
+
   const start = parts[0] === '*' ? 0 : +parts[0];
 
   if (interval <= 1) {
@@ -929,9 +952,11 @@ function getMonth(m, opts) {
   return month && month[opts.short ? 1 : 0];
 }
 
-// Get English weekday names from a number or from an abbreviation.
+// Get English weekday names from a number or from an abbreviation. Standard
+// cron treats `7` as Sunday (the same as `0`), so it is normalized here.
 function getWeekday(d, opts) {
-  const weekday = weekdayNames[d] || weekdayAbbreviations[d];
+  const day = d === 7 || d === '7' ? 0 : d;
+  const weekday = weekdayNames[day] || weekdayAbbreviations[day];
 
   return weekday && weekday[opts.short ? 1 : 0];
 }
