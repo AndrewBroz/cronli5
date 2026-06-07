@@ -1,7 +1,6 @@
 import {run} from '../../runner.js';
 
-// TDD spec (currently failing): desired behavior for hyphenated range
-// patterns. Conventions:
+// Behavior spec for hyphenated range patterns. Conventions:
 // - Inclusive numeric ranges read "from <start> through <end>".
 // - Second/minute ranges anchor with "past the minute/hour".
 // - Hour ranges (at minute 0) expand to "every hour from <time> through

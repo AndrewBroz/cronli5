@@ -17,13 +17,19 @@ First non-beta release.
   `every hour on January 13th`).
 - Dual **ESM** and **CommonJS** builds plus a minified **browser** global, an
   `exports` map, and bundled **TypeScript** type definitions (`cronli5.d.ts`).
-- Continuous integration (GitHub Actions) across Node 18/20/22.
+- Continuous integration (GitHub Actions) across Node 18/20/22, with a
+  coverage gate.
+- Code coverage via **c8** with enforced thresholds (`npm run coverage`).
+- Property-based tests (**fast-check**), smoke tests against the built
+  ESM/CJS artifacts, and type tests (**tsd**, `npm run test:types`).
 
 ### Changed
 
 - Source is now authored as an ES module in `src/` and bundled with esbuild.
 - Date descriptions always use suffixed numeric ordinals (`1st`, `2nd`, ...).
 - Modernized the toolchain: ESLint 9 (flat config), Mocha 11, Chai 4.
+- Enforced explicit ESLint budgets for cyclomatic `complexity`, `max-depth`,
+  and `max-params` as regression guards.
 
 ### Fixed
 

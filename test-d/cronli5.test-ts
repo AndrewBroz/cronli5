@@ -1,0 +1,33 @@
+import {expectType, expectError, expectAssignable} from 'tsd';
+import cronli5, {Cronli5Options, CronPattern, CronPatternObject} from '..';
+
+// The default export is a function returning a string.
+expectType<string>(cronli5('* * * * *'));
+expectType<string>(cronli5('* * * * *', {ampm: false}));
+expectType<string>(cronli5(['*/5', '*', '*', '*', '*']));
+expectType<string>(cronli5({minute: '*/5'}));
+expectType<string>(cronli5({second: 0, minute: 30, hour: 9}));
+
+// All three pattern shapes are assignable to CronPattern.
+expectAssignable<CronPattern>('* * * * *');
+expectAssignable<CronPattern>(['*', '*', '*', '*', '*']);
+expectAssignable<CronPattern>({minute: '*/5'});
+expectAssignable<CronPatternObject>({hour: 9, weekday: 'MON-FRI'});
+
+// Options are all optional booleans.
+expectAssignable<Cronli5Options>({});
+expectAssignable<Cronli5Options>({
+  ampm: true,
+  short: false,
+  seconds: false,
+  years: true
+});
+
+// The pattern argument is required.
+expectError(cronli5());
+
+// Unknown option keys are rejected.
+expectError<Cronli5Options>({nope: true});
+
+// Numbers are not valid patterns.
+expectError(cronli5(42));

@@ -1,7 +1,6 @@
 import {run} from '../../runner.js';
 
-// TDD spec (currently failing): desired behavior for comma-separated list
-// patterns. Conventions:
+// Behavior spec for comma-separated list patterns. Conventions:
 // - Lists join as "A, B and C" (serial, no Oxford comma), matching the
 //   existing numeric-field style; weekday lists keep their established
 //   Oxford-comma form.

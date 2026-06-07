@@ -1,10 +1,37 @@
 # Cron Like I'm Five: A Cron to English Utility
 
+[![CI](https://github.com/andrewbroz/cronli5/actions/workflows/ci.yml/badge.svg)](https://github.com/andrewbroz/cronli5/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/cronli5.svg)](https://www.npmjs.com/package/cronli5)
+[![types included](https://img.shields.io/npm/types/cronli5.svg)](./cronli5.d.ts)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/cronli5)](https://bundlephobia.com/package/cronli5)
+[![license](https://img.shields.io/npm/l/cronli5.svg)](./LICENSE.md)
+
 Generate English language descriptions of schedules from cron patterns.
 Accepts classic (five-part) cron patterns, or extended (six-part) cron
 patterns, where the first field is assumed to refer to seconds. Accepts the
 standard allowed values and the following operators: asterisks (`*`), commas
 (`,`), hyphens (`-`), and slashes (`/`).
+
+- **Zero runtime dependencies** &mdash; tiny and safe to drop into any project.
+- **Runs anywhere** &mdash; ships ESM, CommonJS, and a browser global.
+- **Typed** &mdash; bundled TypeScript definitions, no `@types` needed.
+- **Flexible input** &mdash; accepts strings, arrays, or objects.
+- **Idiomatic output** &mdash; composes lists, ranges, and steps into natural
+  English.
+
+## Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Options](#options)
+- [Output Examples](#output-examples)
+- [Description Accuracy](#description-accuracy)
+- [Limitations](#limitations)
+- [Note on Timezones](#note-on-timezones)
+- [Module Formats and Types](#module-formats-and-types)
+- [Development](#development)
+- [About](#about)
+- [License](#license)
 
 `cronli5` is a good library to use if you need to display an English language
 interpretation of a cron pattern in a Node or in a browser environment. If you
@@ -23,92 +50,79 @@ npm install --save cronli5
 npm install -g cronli5
 ```
 
-Browser (script tag):
-```
-<script src="cronli5.min.js" type="text/javascript"></script>
+Browser (script tag) via a CDN:
+```html
+<script src="https://unpkg.com/cronli5"></script>
+<!-- or: https://cdn.jsdelivr.net/npm/cronli5 -->
 ```
 
 When included in a script tag, the `cronli5` function will be available as a
 global in the scripts that follow.  
 _Unsolicited advice: rather than including `cronli5` in its own script tag,
-consider using a bundler like [Browserify][browserify], [Rollup][rollup], or
-[Webpack][webpack] and `include` or `require` instead. See [below](#usage)._
+consider using a bundler like [Rollup][rollup], [esbuild][esbuild], or
+[Webpack][webpack] and `import` instead. See [below](#usage)._
 
 ## Usage
 
-Import with require:
-```
-var cronli5 = require('cronli5');
-```
-
-Import as an ESNext module:
-```
+Import as an ES module:
+```js
 import cronli5 from 'cronli5';
 ```
 
-Programmatic usage (ES5):
+Or with CommonJS `require`:
+```js
+const cronli5 = require('cronli5');
 ```
-// Cron patterns can be represented as strings
-var cronString = '*/5 * * * *';
 
-// Cron patterns can be represented as arrays of cron fields
-var cronArray = ['*/5', '*', '*', '*', '*'];
+A cron pattern can be a string, an array of fields, or an object. All three
+forms below describe the same schedule:
+```js
+cronli5('*/5 * * * *');                 // 'every five minutes'
+cronli5(['*/5', '*', '*', '*', '*']);   // 'every five minutes'
+cronli5({ minute: '*/5' });             // 'every five minutes'
+```
 
-// Cron patterns can be represented as objects
-var cronObject = {
-  minute: '*/5',
-  hour: '*',
-  date: '*',
-  month: '*',
-  weekday: '*',
-};
+TypeScript types are bundled, so usage is fully typed out of the box:
+```ts
+import cronli5, { type Cronli5Options } from 'cronli5';
 
-var expectedOutput = 'every five minutes';
-
-expect(cronli5(cronString)).to.equal(expectedOutput);
-expect(cronli5(cronArray)).to.equal(expectedOutput);
-expect(cronli5(cronObject)).to.equal(expectedOutput);
+const options: Cronli5Options = { ampm: false };
+const description: string = cronli5('30 13 * * MON-FRI', options);
+// 'every Monday-Friday at 13:30'
 ```
 
 As a command line tool:
-```
+```bash
 $ cronli5 "*/5 * * * *"
 Runs every five minutes.
 ```
 
 ## Options
 
-The `cronli5` function takes an `options` object as its 2nd parameter with
-several boolean flag properties supported:
+The `cronli5` function takes an `options` object as its 2nd parameter. All
+properties are boolean flags:
 
-* `ampm` &mdash; Default `true`. Use 24-hour time if `false`.
-* `short` &mdash; Default `false`. Use abbreviatted forms if `true`.
-* `seconds` &mdash; Default `false`. Always treat the first field of strings
-and of arrays as the `second` field if `true`.
-* `years` &mdash; Default `false`. Treat six field string or array patterns as
-if the last field is the `year` field if `true`. Otherwise, treats the first
-field of a six field patten as the `second` field. When a specific year is
-given, it is folded into a specific calendar date (`'on January 1st, 2030 at
-12:00 PM'`) or otherwise trails the description (`'every Friday at 1:00 PM in
-2030'`).
+| Option | Default | Description |
+| --- | --- | --- |
+| `ampm` | `true` | Use a 12-hour clock with AM/PM. Set `false` for 24-hour time. |
+| `short` | `false` | Use abbreviated month and weekday names (e.g. `Mon-Fri`). |
+| `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
+| `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. |
 
-```
+When a specific year is given, it is folded into a specific calendar date
+(`'on January 1st, 2030 at 12:00 PM'`) or otherwise trails the description
+(`'every Friday at 1:00 PM in 2030'`).
+
+```js
 import cronli5 from 'cronli5';
 
 const weekdaysAt1330 = '30 13 * * MON-FRI';
 
-const longDescription = cronli5(weekdaysAt1330, {
-  ampm: true,
-  short: false,
-});
+cronli5(weekdaysAt1330, { ampm: true, short: false });
+// 'every Monday-Friday at 1:30 PM'
 
-const shortDescription = cronli5(weekdaysAt1330, {
-  ampm: false,
-  short: true,
-});
-
-expect(longDescription).to.equal('every Monday-Friday at 1:30 PM');
-expect(shortDescription).to.equal('every Mon-Fri at 13:30');
+cronli5(weekdaysAt1330, { ampm: false, short: true });
+// 'every Mon-Fri at 13:30'
 ```
 
 ## Output Examples
@@ -116,10 +130,10 @@ expect(shortDescription).to.equal('every Mon-Fri at 13:30');
 `cronli5` renders single values, lists (`,`), ranges (`-`), and steps (`/`),
 and composes multiple fields into a single idiomatic phrase.
 
-Lists are join serially without an Oxford comma (`'A, B and C'`). Dates always use
-suffixed numeric ordinals (`1st`, `2nd`, ... `31st`).
+Lists are joined serially without an Oxford comma (`'A, B and C'`). Dates always
+use suffixed numeric ordinals (`1st`, `2nd`, ... `31st`).
 
-```
+```js
 // Single values and steps
 cronli5('*/5 * * * *');     // 'every five minutes'
 cronli5('0 9 * * MON');     // 'every Monday at 9:00 AM'
@@ -155,6 +169,13 @@ corresponding minute, hour, or day. So `*/3 * * * *` will be "every three
 minutes", while `2/3 * * * *` will be "every three minutes from two minutes
 past the hour".
 
+## Limitations
+
+* **Nickname macros are not supported.** Shorthand patterns such as `@daily`,
+  `@hourly`, or `@reboot` are rejected as invalid input. Expand them to their
+  field form (e.g. `0 0 * * *`) before calling `cronli5`.
+* **No timezone conversion.** See the note below.
+
 ## Note on Timezones
 
 `cronli5` always describes cron patterns with respect to whatever system
@@ -182,13 +203,14 @@ automatically — no `@types` package required.
 ## Development
 
 The library has no runtime dependencies; the toolchain (ESLint, Mocha, Chai,
-esbuild) lives in `devDependencies`.
+c8, esbuild) lives in `devDependencies`.
 
-```
-npm install      # install dev dependencies
-npm test         # run the Mocha test suite (runs against src/, no build needed)
-npm run lint     # lint source and tests with ESLint
-npm run build    # emit dist/ (ESM + CJS) and the minified browser global
+```bash
+npm install       # install dev dependencies
+npm test          # run the Mocha test suite (runs against src/, no build needed)
+npm run coverage  # run tests with c8 coverage and enforce thresholds
+npm run lint      # lint source and tests with ESLint
+npm run build     # emit dist/ (ESM + CJS) and the minified browser global
 ```
 
 ## About
@@ -204,18 +226,13 @@ tries to render as many cron patterns in as direct and as idiomatic English as
 possible. Test cases that describe where it fails to do so and which prescribe
 an obviously better description would be greatly appreciated.
 
-`cronli5` was written from scratch and has no production dependencies. Its
-source does not borrow code, in whole or in part, from [prettycron],
-[Stack Overflow answers][stackoverflow], or any other project.
-Any resemblance to other code, living or dead, is purely coincidental.
-
 ## License
 
 *[MIT License][license]*  
 _Copyright &copy; 2026 [Andrew Brož][andrewbroz]_
 
 [andrewbroz]: https://github.com/andrewbroz
-[browserify]: http://browserify.org/
+[esbuild]: https://esbuild.github.io/
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
 [later]: https://bunkat.github.io/later/

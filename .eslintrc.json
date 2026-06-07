@@ -32,7 +32,10 @@
             "error",
             "last"
         ],
-        "complexity": "error",
+        "complexity": [
+            "error",
+            12
+        ],
         "computed-property-spacing": [
             "error",
             "never"
@@ -66,10 +69,16 @@
             "unix"
         ],
         "lines-around-comment": "error",
-        "max-depth": "error",
+        "max-depth": [
+            "error",
+            4
+        ],
         "max-len": "error",
         "max-nested-callbacks": "error",
-        "max-params": "error",
+        "max-params": [
+            "error",
+            4
+        ],
         "max-statements": "off",
         "max-statements-per-line": "off",
         "new-cap": "error",

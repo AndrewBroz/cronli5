@@ -1,7 +1,6 @@
 import {run} from '../../runner.js';
 
-// TDD spec (partly failing): desired behavior when several fields are
-// non-trivial at once. Conventions:
+// Behavior spec for when several fields are non-trivial at once. Conventions:
 // - A list/range of minutes combined with specific hour(s) expands into the
 //   full set of clock times, e.g. "every day at 9:00 AM and 9:30 AM".
 // - A frequency (step) combined with an hour range trails with the active
