@@ -2,12 +2,6 @@
  * @license MIT, Copyright (c) 2026 Andrew Brož
  */
 
-// Options flags.
-let AMPM = true;
-let SECONDS = false;
-let SHORT = false;
-let YEARS = false;
-
 // English number names for the integers zero through ten.
 const numbers = [
   'zero',
@@ -122,26 +116,26 @@ const fieldOrder = [
 // - year (boolean):
 //     parse with year
 function cronli5(cronPattern, options) {
-  setOptions(options);
+  const opts = normalizeOptions(options);
 
-  cronPattern = parseCronPattern(cronPattern);
+  cronPattern = parseCronPattern(cronPattern, opts);
 
   validateCronPattern(cronPattern);
 
-  const description = interpretSeconds(cronPattern)
-      || interpretMinutes(cronPattern)
-      || interpretHours(cronPattern);
+  const description = interpretSeconds(cronPattern, opts)
+      || interpretMinutes(cronPattern, opts)
+      || interpretHours(cronPattern, opts);
 
-  return applyYear(description, cronPattern);
+  return applyYear(description, cronPattern, opts);
 }
 
 // A trailing day-level qualifier for bare frequencies, e.g. " on Monday",
 // " on the 13th", " in January", or " on January 13th". Returns an empty
 // string when no date, month, or weekday is set.
-function trailingQualifier(cronPattern) {
+function trailingQualifier(cronPattern, opts) {
   if (cronPattern.date !== '*') {
     if (cronPattern.month !== '*') {
-      return ' on ' + interpretMonthNames(cronPattern.month) + ' ' +
+      return ' on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
         interpretDateOrdinals(cronPattern.date);
     }
 
@@ -149,11 +143,11 @@ function trailingQualifier(cronPattern) {
   }
 
   if (cronPattern.month !== '*') {
-    return ' in ' + interpretMonthNames(cronPattern.month);
+    return ' in ' + interpretMonthNames(cronPattern.month, opts);
   }
 
   if (cronPattern.weekday !== '*') {
-    return ' on ' + interpretWeekdays(cronPattern);
+    return ' on ' + interpretWeekdays(cronPattern, opts);
   }
 
   return '';
@@ -164,15 +158,15 @@ function trailingQualifier(cronPattern) {
 // set. A single year reads naturally folded into a specific calendar date
 // ("on January 1st, 2030 at noon"); otherwise it trails the description
 // ("every Friday at 1:00 PM in 2030").
-function applyYear(description, cronPattern) {
+function applyYear(description, cronPattern, opts) {
   const yearField = '' + cronPattern.year;
 
-  if (!YEARS || yearField === '*') {
+  if (!opts.years || yearField === '*') {
     return description;
   }
 
   if (includes(yearField, '/')) {
-    return description + ' ' + interpretStepYears(yearField);
+    return description + ' ' + interpretStepYears(yearField, opts);
   }
 
   const label = interpretYearLabel(yearField);
@@ -196,7 +190,7 @@ function interpretYearLabel(yearField) {
 
 // Describe a repeating year step, e.g. "every two years" or, with a start,
 // "every two years from 2030".
-function interpretStepYears(yearField) {
+function interpretStepYears(yearField, opts) {
   const parts = yearField.split('/');
   const interval = +parts[1];
   const start = parts[0];
@@ -205,7 +199,7 @@ function interpretStepYears(yearField) {
     return 'every year';
   }
 
-  let phrase = 'every ' + getNumber(interval) + ' years';
+  let phrase = 'every ' + getNumber(interval, opts) + ' years';
 
   if (start !== '*' && start !== '0') {
     phrase += ' from ' + start;
@@ -214,21 +208,24 @@ function interpretStepYears(yearField) {
   return phrase;
 }
 
-// Set option flags.
-function setOptions(options) {
+// Normalize raw user options into a complete options object that is threaded
+// through interpretation instead of relying on shared module-level state.
+function normalizeOptions(options) {
   options = options || {};
 
-  AMPM = typeof options.ampm === 'boolean' ? options.ampm : true;
-  SECONDS = !!options.seconds;
-  SHORT = !!options.short;
-  YEARS = !!options.years;
+  return {
+    ampm: typeof options.ampm === 'boolean' ? options.ampm : true,
+    seconds: !!options.seconds,
+    short: !!options.short,
+    years: !!options.years
+  };
 }
 
 // Take a cron pattern as, a cron pattern string, an array of cron fields, a
 // cron-like object (see the final return statement for the format of a
 // cron-like object), or a stringable object that evaluates to a cron pattern
 // string. Returns a cron-like object.
-function parseCronPattern(cronPattern) {
+function parseCronPattern(cronPattern, opts) {
   const isArray = cronPattern instanceof Array;
   const isEmpty = cronPattern === null ||
     typeof cronPattern === 'undefined' ||
@@ -242,7 +239,7 @@ function parseCronPattern(cronPattern) {
   }
 
   if (isArray) {
-    return cronifyArray(cronPattern);
+    return cronifyArray(cronPattern, opts);
   }
 
   if (typeof cronPattern === 'object') {
@@ -250,22 +247,22 @@ function parseCronPattern(cronPattern) {
   }
 
   if (typeof cronPattern === 'string') {
-    return cronifyString(cronPattern);
+    return cronifyString(cronPattern, opts);
   }
 
   throw new Error('`cronli5` was passed an unexpected type.');
 }
 
 // Turn a cronable array into a cron-like object.
-function cronifyArray(cronlikeArray) {
-  const max = YEARS ? 7 : 6;
+function cronifyArray(cronlikeArray, opts) {
+  const max = opts.years ? 7 : 6;
 
   if (cronlikeArray.length > max) {
     throw new Error('`cronli5` was passed a cron pattern with more than ' +
-      getNumber(max) + ' fields.');
+      getNumber(max, opts) + ' fields.');
   }
 
-  if (!SECONDS && cronlikeArray.length < max) {
+  if (!opts.seconds && cronlikeArray.length < max) {
     cronlikeArray.unshift('0');
   }
 
@@ -313,10 +310,10 @@ function pick(value, fallback) {
 }
 
 // Turn a string into a cron-like object.
-function cronifyString(cronString) {
+function cronifyString(cronString, opts) {
   const cronlikeArray = cronString.split(/\s+/);
 
-  return cronifyArray(cronlikeArray);
+  return cronifyArray(cronlikeArray, opts);
 }
 
 // Validate every field of a cron-like object, throwing on the first
@@ -419,14 +416,14 @@ function throwInvalidField(value, field) {
 }
 
 // Second field.
-function interpretSeconds(cronPattern) {
-  return interpretRangeOfSeconds(cronPattern) ||
-    interpretRepeatingSeconds(cronPattern.second) ||
-    interpretMultipleSeconds(cronPattern) ||
-    interpretSingleSecond(cronPattern);
+function interpretSeconds(cronPattern, opts) {
+  return interpretRangeOfSeconds(cronPattern, opts) ||
+    interpretRepeatingSeconds(cronPattern.second, opts) ||
+    interpretMultipleSeconds(cronPattern, opts) ||
+    interpretSingleSecond(cronPattern, opts);
 }
 
-function interpretRangeOfSeconds(cronPattern) {
+function interpretRangeOfSeconds(cronPattern, opts) {
   const secondField = cronPattern.second;
 
   if (!includes(secondField, '-')) {
@@ -441,20 +438,20 @@ function interpretRangeOfSeconds(cronPattern) {
 
   const bounds = secondField.split('-');
 
-  return 'every second from ' + getNumber(bounds[0]) + ' through ' +
-    getNumber(bounds[1]) + ' past the minute';
+  return 'every second from ' + getNumber(bounds[0], opts) + ' through ' +
+    getNumber(bounds[1], opts) + ' past the minute';
 }
 
-function interpretRepeatingSeconds(secondField) {
+function interpretRepeatingSeconds(secondField, opts) {
   if (!includes(secondField, '/')) {
     // Not a repeating interval pattern.
     return;
   }
 
-  return interpretStepCycle60(secondField, 'second', 'minute');
+  return interpretStepCycle60(secondField, 'second', 'minute', opts);
 }
 
-function interpretMultipleSeconds(cronPattern) {
+function interpretMultipleSeconds(cronPattern, opts) {
   const secondField = cronPattern.second;
 
   if (!includes(secondField, ',')) {
@@ -467,14 +464,14 @@ function interpretMultipleSeconds(cronPattern) {
     return;
   }
 
-  return listPastThe(secondField.split(','), 'second', 'minute');
+  return listPastThe(secondField.split(','), 'second', 'minute', opts);
 }
 
-function interpretSingleSecond(cronPattern) {
+function interpretSingleSecond(cronPattern, opts) {
   const secondField = cronPattern.second;
 
   if (secondField === '*') {
-    return 'every second' + trailingQualifier(cronPattern);
+    return 'every second' + trailingQualifier(cronPattern, opts);
   }
 
   if (secondField === '0') {
@@ -490,22 +487,22 @@ function interpretSingleSecond(cronPattern) {
 
   const unit = +secondField === 1 ? 'second' : 'seconds';
 
-  return getNumber(secondField) + ' ' + unit +
+  return getNumber(secondField, opts) + ' ' + unit +
     ' past the minute, every minute';
 }
 
 // Minute field.
-function interpretMinutes(cronPattern) {
-  return interpretMinuteFrequency(cronPattern) ||
-    interpretRangeOfMinutes(cronPattern) ||
-    interpretMultipleMinutes(cronPattern) ||
-    interpretSingleMinute(cronPattern);
+function interpretMinutes(cronPattern, opts) {
+  return interpretMinuteFrequency(cronPattern, opts) ||
+    interpretRangeOfMinutes(cronPattern, opts) ||
+    interpretMultipleMinutes(cronPattern, opts) ||
+    interpretSingleMinute(cronPattern, opts);
 }
 
 // A repeating minute step. When the hour field is a range the cadence is
 // qualified by the active window, e.g. "every 15 minutes from 9:00 AM
 // through 5:00 PM", optionally trailing the weekday.
-function interpretMinuteFrequency(cronPattern) {
+function interpretMinuteFrequency(cronPattern, opts) {
   const minuteField = cronPattern.minute;
 
   if (!includes(minuteField, '/')) {
@@ -513,23 +510,23 @@ function interpretMinuteFrequency(cronPattern) {
     return;
   }
 
-  let phrase = interpretStepCycle60(minuteField, 'minute', 'hour');
+  let phrase = interpretStepCycle60(minuteField, 'minute', 'hour', opts);
 
   if (includes(cronPattern.hour, '-')) {
     const bounds = cronPattern.hour.split('-');
 
-    phrase += ' from ' + getTime(bounds[0], 0) + ' through ' +
-      getTime(bounds[1], 0);
+    phrase += ' from ' + getTime(bounds[0], 0, opts) + ' through ' +
+      getTime(bounds[1], 0, opts);
 
     if (cronPattern.weekday !== '*') {
-      phrase += ' on ' + interpretWeekdays(cronPattern);
+      phrase += ' on ' + interpretWeekdays(cronPattern, opts);
     }
   }
 
   return phrase;
 }
 
-function interpretRangeOfMinutes(cronPattern) {
+function interpretRangeOfMinutes(cronPattern, opts) {
   const minuteField = cronPattern.minute;
 
   if (!includes(minuteField, '-')) {
@@ -544,11 +541,11 @@ function interpretRangeOfMinutes(cronPattern) {
 
   const bounds = minuteField.split('-');
 
-  return 'every minute from ' + getNumber(bounds[0]) + ' through ' +
-    getNumber(bounds[1]) + ' past the hour';
+  return 'every minute from ' + getNumber(bounds[0], opts) + ' through ' +
+    getNumber(bounds[1], opts) + ' past the hour';
 }
 
-function interpretMultipleMinutes(cronPattern) {
+function interpretMultipleMinutes(cronPattern, opts) {
   const minuteField = cronPattern.minute;
 
   if (!includes(minuteField, ',')) {
@@ -562,17 +559,17 @@ function interpretMultipleMinutes(cronPattern) {
     return;
   }
 
-  return listPastThe(minuteField.split(','), 'minute', 'hour');
+  return listPastThe(minuteField.split(','), 'minute', 'hour', opts);
 }
 
-function interpretSingleMinute(cronPattern) {
+function interpretSingleMinute(cronPattern, opts) {
   const minuteField = cronPattern.minute;
 
   if (minuteField === '*') {
     // Only describe "every minute" when the hour is also a wildcard;
     // otherwise defer to the hour field.
     if (cronPattern.hour === '*') {
-      return 'every minute' + trailingQualifier(cronPattern);
+      return 'every minute' + trailingQualifier(cronPattern, opts);
     }
 
     return;
@@ -591,21 +588,21 @@ function interpretSingleMinute(cronPattern) {
 
   const unit = +minuteField === 1 ? 'minute' : 'minutes';
 
-  return getNumber(minuteField) + ' ' + unit +
+  return getNumber(minuteField, opts) + ' ' + unit +
     ' past the hour, every hour';
 }
 
 // Hour field.
-function interpretHours(cronPattern) {
-  return interpretRangeOfHours(cronPattern) ||
-    interpretRepeatingHours(cronPattern) ||
-    interpretClockTimes(cronPattern);
+function interpretHours(cronPattern, opts) {
+  return interpretRangeOfHours(cronPattern, opts) ||
+    interpretRepeatingHours(cronPattern, opts) ||
+    interpretClockTimes(cronPattern, opts);
 }
 
 // An hour range fires within a window. On the hour it reads "every hour from
 // 9:00 AM through 5:00 PM"; a specific minute (or minute list) anchors it as
 // "at 30 minutes past the hour from 9:00 AM through 5:00 PM".
-function interpretRangeOfHours(cronPattern) {
+function interpretRangeOfHours(cronPattern, opts) {
   const hourField = cronPattern.hour;
 
   if (!includes(hourField, '-')) {
@@ -614,12 +611,13 @@ function interpretRangeOfHours(cronPattern) {
   }
 
   const bounds = hourField.split('-');
-  const window = 'from ' + getTime(bounds[0], 0) +
-    ' through ' + getTime(bounds[1], 0);
-  let phrase = interpretRangeMinuteLead(cronPattern.minute) + ' ' + window;
+  const window = 'from ' + getTime(bounds[0], 0, opts) +
+    ' through ' + getTime(bounds[1], 0, opts);
+  let phrase =
+    interpretRangeMinuteLead(cronPattern.minute, opts) + ' ' + window;
 
   if (cronPattern.weekday !== '*') {
-    phrase += ' on ' + interpretWeekdays(cronPattern);
+    phrase += ' on ' + interpretWeekdays(cronPattern, opts);
   }
 
   return phrase;
@@ -627,7 +625,7 @@ function interpretRangeOfHours(cronPattern) {
 
 // Lead phrase for a minute field within an hour range. On-the-hour (or a
 // non-discrete minute) reads "every hour"; otherwise the minutes anchor it.
-function interpretRangeMinuteLead(minuteField) {
+function interpretRangeMinuteLead(minuteField, opts) {
   minuteField = '' + minuteField;
 
   if (minuteField === '*' || minuteField === '0' ||
@@ -635,10 +633,10 @@ function interpretRangeMinuteLead(minuteField) {
     return 'every hour';
   }
 
-  return listPastThe(minuteField.split(','), 'minute', 'hour');
+  return listPastThe(minuteField.split(','), 'minute', 'hour', opts);
 }
 
-function interpretRepeatingHours(cronPattern) {
+function interpretRepeatingHours(cronPattern, opts) {
   const hourField = cronPattern.hour;
 
   if (!includes(hourField, '/')) {
@@ -646,13 +644,13 @@ function interpretRepeatingHours(cronPattern) {
     return;
   }
 
-  return interpretStepHours(hourField);
+  return interpretStepHours(hourField, opts);
 }
 
 // Interpret a `start/interval` step for a field that cycles every 60 units
 // (seconds and minutes). `unit` is the singular noun and `anchor` is the
 // larger unit the values are counted against.
-function interpretStepCycle60(field, unit, anchor) {
+function interpretStepCycle60(field, unit, anchor, opts) {
   const parts = field.split('/');
   const interval = +parts[1];
   const start = parts[0] === '*' ? 0 : +parts[0];
@@ -665,28 +663,29 @@ function interpretStepCycle60(field, unit, anchor) {
 
   if (start !== 0) {
     if (occurrences.length <= 3) {
-      return listPastThe(occurrences, unit, anchor);
+      return listPastThe(occurrences, unit, anchor, opts);
     }
 
-    return 'every ' + getNumber(interval) + ' ' + unit + 's from ' +
-      getNumber(start) + ' ' + unit + 's past the ' + anchor;
+    return 'every ' + getNumber(interval, opts) + ' ' + unit + 's from ' +
+      getNumber(start, opts) + ' ' + unit + 's past the ' + anchor;
   }
 
   // A step reads as a natural cadence ("every N minutes") only when it
   // divides the cycle evenly, mirroring the hour field's `24 % n` rule.
   if (60 % interval === 0) {
-    return 'every ' + getNumber(interval) + ' ' + unit + 's';
+    return 'every ' + getNumber(interval, opts) + ' ' + unit + 's';
   }
 
   if (occurrences.length <= 2) {
-    return listPastThe(occurrences, unit, anchor);
+    return listPastThe(occurrences, unit, anchor, opts);
   }
 
-  return 'every ' + getNumber(interval) + ' ' + unit + 's past the ' + anchor;
+  return 'every ' + getNumber(interval, opts) + ' ' + unit +
+    's past the ' + anchor;
 }
 
 // Interpret a `start/interval` step for the hour field (cycles every 24).
-function interpretStepHours(field) {
+function interpretStepHours(field, opts) {
   const parts = field.split('/');
   const interval = +parts[1];
   const start = parts[0] === '*' ? 0 : +parts[0];
@@ -698,41 +697,44 @@ function interpretStepHours(field) {
   const occurrences = getOccurrences(start, interval, 23);
 
   if (start === 0 && 24 % interval === 0) {
-    return 'every ' + getNumber(interval) + ' hours';
+    return 'every ' + getNumber(interval, opts) + ' hours';
   }
 
   if (occurrences.length <= 3) {
-    return listHourTimes(occurrences);
+    return listHourTimes(occurrences, opts);
   }
 
   if (start === 0) {
-    return 'every ' + getNumber(interval) + ' hours from midnight';
+    return 'every ' + getNumber(interval, opts) + ' hours from midnight';
   }
 
-  return 'every ' + getNumber(interval) + ' hours from ' + getTime(start, 0);
+  return 'every ' + getNumber(interval, opts) + ' hours from ' +
+    getTime(start, 0, opts);
 }
 
 // Enumerate fire values as "at A, B and C <unit>s past the <anchor>".
-function listPastThe(occurrences, unit, anchor) {
-  return 'at ' + joinList(occurrences.map(getNumber)) + ' ' + unit +
-    's past the ' + anchor;
+function listPastThe(occurrences, unit, anchor, opts) {
+  const values = occurrences.map(function(value) {
+    return getNumber(value, opts);
+  });
+
+  return 'at ' + joinList(values) + ' ' + unit + 's past the ' + anchor;
 }
 
 // Enumerate fire hours as "at T1 and T2 ...", dropping a leading midnight
 // when there are more than two times.
-function listHourTimes(occurrences) {
+function listHourTimes(occurrences, opts) {
   let hours = occurrences;
 
   if (hours.length > 2 && hours[0] === 0) {
     hours = hours.slice(1);
   }
 
-  return 'at ' + joinList(hours.map(toHourTime));
-}
+  const times = hours.map(function(hour) {
+    return getTime(hour, 0, opts);
+  });
 
-// Format an hour value as a clock time (ignoring extra `map` arguments).
-function toHourTime(hour) {
-  return getTime(hour, 0);
+  return 'at ' + joinList(times);
 }
 
 // List the values a `start/interval` step fires on within [0, max].
@@ -764,9 +766,9 @@ function joinList(items) {
 // Expand a discrete set of hours and minutes into clock times prefixed by a
 // day-level qualifier, e.g. "every day at 9:00 AM and 9:30 AM" or "on the
 // 1st at 2:15 PM".
-function interpretClockTimes(cronPattern) {
+function interpretClockTimes(cronPattern, opts) {
   if (cronPattern.hour === '*') {
-    return 'every hour' + trailingQualifier(cronPattern);
+    return 'every hour' + trailingQualifier(cronPattern, opts);
   }
 
   const hours = enumerateValues(cronPattern.hour);
@@ -775,11 +777,11 @@ function interpretClockTimes(cronPattern) {
 
   hours.forEach(function(h) {
     minutes.forEach(function(m) {
-      times.push(getTime(h, m));
+      times.push(getTime(h, m, opts));
     });
   });
 
-  return interpretDayQualifier(cronPattern) + 'at ' + joinList(times);
+  return interpretDayQualifier(cronPattern, opts) + 'at ' + joinList(times);
 }
 
 // Enumerate a discrete field (single value or comma list) as numbers. A
@@ -797,10 +799,10 @@ function enumerateValues(field) {
 // Build the day-level qualifier that precedes a specific time, e.g.
 // "every day ", "every Friday ", "on January 13th ", "on the 1st and 15th ",
 // or "every day in June and December ".
-function interpretDayQualifier(cronPattern) {
+function interpretDayQualifier(cronPattern, opts) {
   if (cronPattern.date !== '*') {
     if (cronPattern.month !== '*') {
-      return 'on ' + interpretMonthNames(cronPattern.month) + ' ' +
+      return 'on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
         interpretDateOrdinals(cronPattern.date) + ' ';
     }
 
@@ -808,11 +810,12 @@ function interpretDayQualifier(cronPattern) {
   }
 
   if (cronPattern.month !== '*') {
-    return 'every day in ' + interpretMonthNames(cronPattern.month) + ' ';
+    return 'every day in ' +
+      interpretMonthNames(cronPattern.month, opts) + ' ';
   }
 
   if (cronPattern.weekday !== '*') {
-    return 'every ' + interpretWeekdays(cronPattern) + ' ';
+    return 'every ' + interpretWeekdays(cronPattern, opts) + ' ';
   }
 
   return 'every day ';
@@ -830,46 +833,49 @@ function interpretDateOrdinals(dateField) {
 }
 
 // Render a month field (single, list, or range) as names.
-function interpretMonthNames(monthField) {
+function interpretMonthNames(monthField, opts) {
   if (includes(monthField, '-')) {
     const bounds = monthField.split('-');
 
-    return getMonth(bounds[0]) + ' through ' + getMonth(bounds[1]);
+    return getMonth(bounds[0], opts) + ' through ' +
+      getMonth(bounds[1], opts);
   }
 
-  return joinList(monthField.split(',').map(toMonthName));
+  return joinList(monthField.split(',').map(function(value) {
+    return getMonth(value, opts);
+  }));
 }
 
-// `map`-safe wrappers that ignore the index/array arguments.
+// `map`-safe wrapper that ignores the index/array arguments.
 function toOrdinal(value) {
   return getOrdinal(value);
 }
 
-function toMonthName(value) {
-  return getMonth(value);
-}
-
 // Weekday field.
-function interpretWeekdays(cronPattern) {
+function interpretWeekdays(cronPattern, opts) {
   let weekdayField = cronPattern.weekday;
 
   if (includes(weekdayField, '-')) {
-    return weekdayField.split('-').map(getWeekday).join('-');
+    return weekdayField.split('-').map(function(value) {
+      return getWeekday(value, opts);
+    }).join('-');
   }
 
   if (includes(weekdayField, ',')) {
-    weekdayField = weekdayField.split(',').map(getWeekday);
+    weekdayField = weekdayField.split(',').map(function(value) {
+      return getWeekday(value, opts);
+    });
 
     return weekdayField.slice(0, -1).join(', ') + ', and ' +
       weekdayField[weekdayField.length - 1];
   }
 
-  return getWeekday(cronPattern.weekday);
+  return getWeekday(cronPattern.weekday, opts);
 }
 
 // Turn an hour field (and optional minute field) into a clock time, e.g.
 // "3:45 PM" with AM/PM, or "15:45" in 24-hour mode.
-function getTime(h, m) {
+function getTime(h, m, opts) {
   if (isNaN(h)) {
     throw new Error('Tried to interpret "' + JSON.stringify(h) +
       '" as an hour and failed.');
@@ -879,7 +885,7 @@ function getTime(h, m) {
     m = 0;
   }
 
-  if (!AMPM) {
+  if (!opts.ampm) {
     return pad(h) + ':' + pad(m);
   }
 
@@ -889,8 +895,8 @@ function getTime(h, m) {
 }
 
 // Get English number names for the integers zero through ten.
-function getNumber(n) {
-  if (SHORT) {
+function getNumber(n, opts) {
+  if (opts.short) {
     return n;
   }
 
@@ -917,17 +923,17 @@ function getSuffixedOrdinal(n) {
 }
 
 // Get English month names from a number or from an abbreviation.
-function getMonth(m) {
+function getMonth(m, opts) {
   const month = monthNames[m] || monthAbbreviations[m];
 
-  return month && month[SHORT ? 1 : 0];
+  return month && month[opts.short ? 1 : 0];
 }
 
 // Get English weekday names from a number or from an abbreviation.
-function getWeekday(d) {
+function getWeekday(d, opts) {
   const weekday = weekdayNames[d] || weekdayAbbreviations[d];
 
-  return weekday && weekday[SHORT ? 1 : 0];
+  return weekday && weekday[opts.short ? 1 : 0];
 }
 
 // Stringify and add a zero pad to integers.
