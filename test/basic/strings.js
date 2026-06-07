@@ -1,7 +1,7 @@
 import {run} from '../runner.js';
 
 describe('Common strings:', function() {
-  describe('5-part stings', function() {
+  describe('5-part strings', function() {
     run([
       ['* * * * *', 'every minute'],
       ['*/2 * * * *', 'every two minutes'],
@@ -34,7 +34,7 @@ describe('Common strings:', function() {
     ]);
   });
 
-  describe('6-part stings', function() {
+  describe('6-part strings', function() {
     run([
       ['* * * * * *', 'every second'],
       ['*/2 * * * * *', 'every two seconds'],

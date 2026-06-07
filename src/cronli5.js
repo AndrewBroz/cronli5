@@ -856,7 +856,8 @@ function interpretWeekdays(cronPattern) {
   if (includes(weekdayField, '-')) {
     return weekdayField.split('-').map(getWeekday).join('-');
   }
-  else if (includes(weekdayField, ',')) {
+
+  if (includes(weekdayField, ',')) {
     weekdayField = weekdayField.split(',').map(getWeekday);
 
     return weekdayField.slice(0, -1).join(', ') + ', and ' +

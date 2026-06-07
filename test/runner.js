@@ -6,9 +6,9 @@ const {expect} = chai;
 // Runner
 export function run(tests, defaultExpected) {
   tests.forEach(function(values) {
-    var cronable = values[0];
-    var expected = values[1] || defaultExpected;
-    var options = values[2];
+    const cronable = values[0];
+    const expected = values[1] || defaultExpected;
+    const options = values[2];
 
     equal(cronable, expected, options);
   });
@@ -20,9 +20,9 @@ export function error(tests, defaultErrorText) {
       inputAndError = [inputAndError];
     }
 
-    var badInput = inputAndError[0];
-    var errorText = inputAndError[1] || defaultErrorText;
-    var options = inputAndError[2];
+    const badInput = inputAndError[0];
+    const errorText = inputAndError[1] || defaultErrorText;
+    const options = inputAndError[2];
 
     throwsError(badInput, errorText, options);
   });
