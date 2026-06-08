@@ -6,6 +6,12 @@
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/cronli5)](https://bundlephobia.com/package/cronli5)
 [![license](https://img.shields.io/github/license/andrewbroz/cronli5.svg)](./LICENSE.md)
 
+> [!IMPORTANT]
+> `cronli5` was written in 2017, with minor updates in 2026. It is no
+> longer under active development. For most use cases today, [`cRonstrue`][cronstrue]
+> is a better option, and what I'd recommend. It's actively maintained, has i18n
+> support, and handles a wider range of patterns correctly.
+
 Generate English language descriptions of schedules from cron patterns.
 Accepts classic (five-part) cron patterns, or extended (six-part) cron
 patterns, where the first field is assumed to refer to seconds. Accepts the
@@ -35,9 +41,10 @@ standard allowed values and the following operators: asterisks (`*`), commas
 
 `cronli5` is a good library to use if you need to display an English language
 interpretation of a cron pattern in a Node or in a browser environment. If you
-need to do other things with cron patterns, consider a library like
-[Later.js][later]. If you want an alternative to `cronli5`, [prettycron]
-may also meet your needs.
+need to do other things with cron patterns, such as scheduling or computing
+future run times, consider a library like [`@breejs/later`][later]. If you want
+an alternative to `cronli5`, [`cRonstrue`][cronstrue] is a well-maintained,
+actively developed option with internationalization support.
 
 ## Installation
 
@@ -235,7 +242,8 @@ _Copyright &copy; 2026 [Andrew Brož][andrewbroz]_
 [esbuild]: https://esbuild.github.io/
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
-[later]: https://bunkat.github.io/later/
+[cronstrue]: https://github.com/bradymholt/cRonstrue
+[later]: https://github.com/breejs/later
 [license]: ./LICENSE.md
 [moment]: http://momentjs.com/
 [moment-timezone]: http://momentjs.com/timezone/
