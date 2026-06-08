@@ -27,7 +27,7 @@ describe('Valid strings with steps:', function() {
       ['0 */5 * * *', 'every five hours from midnight'],
       ['0 */7 * * *', 'every seven hours from midnight'],
       ['0 */8 * * *', 'every eight hours'],
-      ['0 */10 * * *', 'at 10:00 AM and 8:00 PM'],
+      ['0 */10 * * *', 'at 12:00 AM, 10:00 AM and 8:00 PM'],
       ['0 */12 * * *', 'every 12 hours'],
       ['0 */17 * * *', 'at 12:00 AM and 5:00 PM'],
       ['0 */20 * * *', 'at 12:00 AM and 8:00 PM']

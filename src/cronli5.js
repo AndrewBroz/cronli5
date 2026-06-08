@@ -505,9 +505,10 @@ function throwInvalidField(value, field) {
 // Second field.
 function interpretSeconds(cronPattern, opts) {
   return interpretRangeOfSeconds(cronPattern, opts) ||
-    interpretRepeatingSeconds(cronPattern.second, opts) ||
+    interpretRepeatingSeconds(cronPattern, opts) ||
     interpretMultipleSeconds(cronPattern, opts) ||
-    interpretSingleSecond(cronPattern, opts);
+    interpretSingleSecond(cronPattern, opts) ||
+    interpretSecondsWithinMinute(cronPattern, opts);
 }
 
 function interpretRangeOfSeconds(cronPattern, opts) {
@@ -529,9 +530,17 @@ function interpretRangeOfSeconds(cronPattern, opts) {
     getNumber(bounds[1], opts) + ' past the minute';
 }
 
-function interpretRepeatingSeconds(secondField, opts) {
+function interpretRepeatingSeconds(cronPattern, opts) {
+  const secondField = cronPattern.second;
+
   if (!includes(secondField, '/')) {
     // Not a repeating interval pattern.
+    return;
+  }
+
+  // A repeating second only stands on its own when the minute is a wildcard;
+  // otherwise the specific minute anchors the description.
+  if (cronPattern.minute !== '*') {
     return;
   }
 
@@ -578,17 +587,123 @@ function interpretSingleSecond(cronPattern, opts) {
     ' past the minute, every minute';
 }
 
+// A meaningful second combined with a single specific minute (and an open
+// hour). A single second folds into the minute anchor ("30 minutes and 15
+// seconds past the hour, every hour"); a list, range, or step leads with its
+// own clause ("at 5 and 10 seconds past the minute, 30 minutes past the hour,
+// every hour"). Without this the second would be silently dropped.
+function interpretSecondsWithinMinute(cronPattern, opts) {
+  const secondField = '' + cronPattern.second;
+  const minuteField = '' + cronPattern.minute;
+
+  if (cronPattern.hour !== '*' || !isSingleValue(minuteField) ||
+      secondField === '*' || secondField === '0') {
+    return;
+  }
+
+  const minuteWord = getNumber(minuteField, opts);
+  const minuteUnit = +minuteField === 1 ? 'minute' : 'minutes';
+
+  if (isSingleValue(secondField)) {
+    const secondUnit = +secondField === 1 ? 'second' : 'seconds';
+
+    return minuteWord + ' ' + minuteUnit + ' and ' +
+      getNumber(secondField, opts) + ' ' + secondUnit +
+      ' past the hour, every hour';
+  }
+
+  return secondsLeadClause(secondField, opts) + ', ' + minuteWord + ' ' +
+    minuteUnit + ' past the hour, every hour';
+}
+
+// The leading clause describing a non-single second field relative to the
+// minute, e.g. "at 5 and 10 seconds past the minute" or "every second from
+// zero through 30 past the minute".
+function secondsLeadClause(secondField, opts) {
+  if (includes(secondField, '/')) {
+    return interpretStepCycle60(secondField, 'second', 'minute', opts);
+  }
+
+  if (includes(secondField, '-')) {
+    const bounds = secondField.split('-');
+
+    return 'every second from ' + getNumber(bounds[0], opts) + ' through ' +
+      getNumber(bounds[1], opts) + ' past the minute';
+  }
+
+  return listPastThe(secondField.split(','), 'second', 'minute', opts);
+}
+
 // Minute field.
 function interpretMinutes(cronPattern, opts) {
   return interpretMinuteFrequency(cronPattern, opts) ||
+    interpretMinuteSpanInHour(cronPattern, opts) ||
+    interpretMinuteRangeAcrossHours(cronPattern, opts) ||
     interpretRangeOfMinutes(cronPattern, opts) ||
     interpretMultipleMinutes(cronPattern, opts) ||
     interpretSingleMinute(cronPattern, opts);
 }
 
-// A repeating minute step. When the hour field is a range the cadence is
-// qualified by the active window, e.g. "every 15 minutes from 9:00 AM
-// through 5:00 PM", optionally trailing the weekday.
+// A plain minute range combined with a discrete hour list fires every minute
+// within that window during each listed hour, e.g. "every minute from zero
+// through 30 past the hour, at 9:00 AM and 5:00 PM". Without this the minute
+// range would collapse and only the clock hours would survive.
+function interpretMinuteRangeAcrossHours(cronPattern, opts) {
+  const minuteField = '' + cronPattern.minute;
+  const hourField = '' + cronPattern.hour;
+
+  if (!includes(minuteField, '-') || includes(minuteField, '/') ||
+      !includes(hourField, ',')) {
+    return;
+  }
+
+  const bounds = minuteField.split('-');
+
+  return 'every minute from ' + getNumber(bounds[0], opts) + ' through ' +
+    getNumber(bounds[1], opts) + ' past the hour, at ' +
+    hourTimesList(hourField, opts) + trailingQualifier(cronPattern, opts);
+}
+
+// A minute wildcard or plain range under a single specific hour fires every
+// minute within a window inside that hour, e.g. "every minute from 9:00 AM
+// through 9:29 AM". Without this the description would collapse to a single
+// clock time and silently drop the minute field.
+function interpretMinuteSpanInHour(cronPattern, opts) {
+  if (!isSingleValue(cronPattern.hour)) {
+    return;
+  }
+
+  const span = minuteSpan('' + cronPattern.minute);
+
+  if (!span) {
+    return;
+  }
+
+  return 'every minute from ' + getTime(cronPattern.hour, span[0], opts) +
+    ' through ' + getTime(cronPattern.hour, span[1], opts) +
+    trailingQualifier(cronPattern, opts);
+}
+
+// The [low, high] minute window a field spans, or null when the field is a
+// single value, list, or step (which do not describe a continuous window).
+function minuteSpan(minuteField) {
+  if (minuteField === '*') {
+    return [0, 59];
+  }
+
+  if (includes(minuteField, '-') && !includes(minuteField, '/')) {
+    const bounds = minuteField.split('-');
+
+    return [+bounds[0], +bounds[1]];
+  }
+
+  return null;
+}
+
+// A repeating minute step. When the hour field is restricted the cadence is
+// qualified by the active window(s): a range or single hour trails with
+// "from 9:00 AM through 5:00 PM", an hour list with "during the 9:00 AM and
+// 5:00 PM hours", and an hour step with its own trailing clause.
 function interpretMinuteFrequency(cronPattern, opts) {
   const minuteField = cronPattern.minute;
 
@@ -610,8 +725,27 @@ function interpretMinuteFrequency(cronPattern, opts) {
     phrase += ' from ' + getTime(cronPattern.hour, 0, opts) + ' through ' +
       getTime(cronPattern.hour, 59, opts);
   }
+  else if (includes(cronPattern.hour, ',')) {
+    // An hour list confines the cadence to each listed hour's window.
+    phrase += ' during the ' + hourTimesList(cronPattern.hour, opts) +
+      ' hours';
+  }
+  else if (isOpenStep(cronPattern.hour)) {
+    // An hour step rides alongside the minute cadence.
+    phrase += ', ' + interpretStepHours(cronPattern.hour, opts);
+  }
 
   return phrase + trailingQualifier(cronPattern, opts);
+}
+
+// Render a comma-separated hour list as a joined list of clock times, e.g.
+// "9:00 AM and 5:00 PM".
+function hourTimesList(hourField, opts) {
+  const times = hourField.split(',').map(function(hour) {
+    return getTime(hour, 0, opts);
+  });
+
+  return joinList(times);
 }
 
 function interpretRangeOfMinutes(cronPattern, opts) {
@@ -689,7 +823,8 @@ function interpretHours(cronPattern, opts) {
 
 // An hour range fires within a window. On the hour it reads "every hour from
 // 9:00 AM through 5:00 PM"; a specific minute (or minute list) anchors it as
-// "at 30 minutes past the hour from 9:00 AM through 5:00 PM".
+// "at 30 minutes past the hour from 9:00 AM through 5:00 PM". A minute
+// wildcard or range fires every minute, so it reads "every minute from ...".
 function interpretRangeOfHours(cronPattern, opts) {
   const hourField = cronPattern.hour;
 
@@ -698,22 +833,40 @@ function interpretRangeOfHours(cronPattern, opts) {
     return;
   }
 
+  const minuteField = '' + cronPattern.minute;
   const bounds = hourField.split('-');
+
+  // A minute wildcard fires every minute across the whole window, which ends
+  // at :59 of the final hour.
+  if (minuteField === '*') {
+    return 'every minute from ' + getTime(bounds[0], 0, opts) +
+      ' through ' + getTime(bounds[1], 59, opts) +
+      trailingQualifier(cronPattern, opts);
+  }
+
+  // A minute range fires every minute within that window during each hour.
+  if (includes(minuteField, '-')) {
+    const minuteBounds = minuteField.split('-');
+
+    return 'every minute from ' + getNumber(minuteBounds[0], opts) +
+      ' through ' + getNumber(minuteBounds[1], opts) +
+      ' past the hour, from ' + getTime(bounds[0], 0, opts) + ' through ' +
+      getTime(bounds[1], 0, opts) + trailingQualifier(cronPattern, opts);
+  }
+
   const window = 'from ' + getTime(bounds[0], 0, opts) +
     ' through ' + getTime(bounds[1], 0, opts);
   const phrase =
-    interpretRangeMinuteLead(cronPattern.minute, opts) + ' ' + window;
+    interpretRangeMinuteLead(minuteField, opts) + ' ' + window;
 
   return phrase + trailingQualifier(cronPattern, opts);
 }
 
-// Lead phrase for a minute field within an hour range. On-the-hour (or a
-// non-discrete minute) reads "every hour"; otherwise the minutes anchor it.
+// Lead phrase for a minute field within an hour range. A minute wildcard and
+// range are handled by the caller; on-the-hour reads "every hour"; otherwise
+// the minute list anchors it.
 function interpretRangeMinuteLead(minuteField, opts) {
-  minuteField = '' + minuteField;
-
-  if (minuteField === '*' || minuteField === '0' ||
-      includes(minuteField, '-') || includes(minuteField, '/')) {
+  if (minuteField === '0') {
     return 'every hour';
   }
 
@@ -828,16 +981,9 @@ function listPastThe(occurrences, unit, anchor, opts) {
   return 'at ' + joinList(values) + ' ' + unit + 's past the ' + anchor;
 }
 
-// Enumerate fire hours as "at T1 and T2 ...", dropping a leading midnight
-// when there are more than two times.
+// Enumerate fire hours as "at T1 and T2 ...".
 function listHourTimes(occurrences, opts) {
-  let hours = occurrences;
-
-  if (hours.length > 2 && hours[0] === 0) {
-    hours = hours.slice(1);
-  }
-
-  const times = hours.map(function(hour) {
+  const times = occurrences.map(function(hour) {
     return getTime(hour, 0, opts);
   });
 
@@ -917,15 +1063,26 @@ function interpretClockTimes(cronPattern, opts) {
 
   const hours = enumerateValues(cronPattern.hour);
   const minutes = enumerateValues(cronPattern.minute);
+  const second = clockSecond(cronPattern.second);
   const times = [];
 
   hours.forEach(function(h) {
     minutes.forEach(function(m) {
-      times.push(getTime(h, m, opts));
+      times.push(getTime(h, m, opts, second));
     });
   });
 
   return interpretDayQualifier(cronPattern, opts) + 'at ' + joinList(times);
+}
+
+// A single specific non-zero second to fold into a clock time (e.g. "9:00:15
+// AM"), or undefined when the second is zero, a wildcard, or non-discrete.
+function clockSecond(secondField) {
+  secondField = '' + secondField;
+
+  if (isSingleValue(secondField) && secondField !== '0') {
+    return +secondField;
+  }
 }
 
 // Enumerate a discrete field (single value or comma list) as numbers. A
@@ -1124,7 +1281,7 @@ function interpretWeekdays(cronPattern, opts) {
 
 // Turn an hour field (and optional minute field) into a clock time, e.g.
 // "3:45 PM" with AM/PM, or "15:45" in 24-hour mode.
-function getTime(h, m, opts) {
+function getTime(h, m, opts, s) {
   if (isNaN(h)) {
     throw new Error('Tried to interpret "' + JSON.stringify(h) +
       '" as an hour and failed.');
@@ -1134,13 +1291,16 @@ function getTime(h, m, opts) {
     m = 0;
   }
 
+  // Seconds are only shown when a specific non-zero value is supplied.
+  const seconds = typeof s === 'number' && s > 0 ? ':' + pad(s) : '';
+
   if (!opts.ampm) {
-    return pad(h) + ':' + pad(m);
+    return pad(h) + ':' + pad(m) + seconds;
   }
 
   const period = h < 12 ? 'AM' : 'PM';
 
-  return (h % 12 || 12) + ':' + pad(m) + ' ' + period;
+  return (h % 12 || 12) + ':' + pad(m) + seconds + ' ' + period;
 }
 
 // Get English number names for the integers zero through ten.

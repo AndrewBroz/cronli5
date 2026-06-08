@@ -26,7 +26,7 @@ describe('Valid objects with steps:', function() {
     [{hour: '*/5'}, 'every five hours from midnight'],
     [{hour: '*/7'}, 'every seven hours from midnight'],
     [{hour: '*/8'}, 'every eight hours'],
-    [{hour: '*/10'}, 'at 10:00 AM and 8:00 PM'],
+    [{hour: '*/10'}, 'at 12:00 AM, 10:00 AM and 8:00 PM'],
     [{hour: '*/12'}, 'every 12 hours'],
     [{hour: '*/17'}, 'at 12:00 AM and 5:00 PM'],
     [{hour: '*/20'}, 'at 12:00 AM and 8:00 PM']

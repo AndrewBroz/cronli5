@@ -1,36 +1,18 @@
 import {run} from '../../runner.js';
 
-// Behavior spec for patterns where a lower-order field would describe itself
-// in isolation, but a more significant field is also set and takes over the
-// description. The lower field "defers" rather than producing a fragment.
-// Conventions:
-// - A second range/list/value with a specific minute defers to the minute,
-//   which anchors as "<n> minutes past the hour, every hour".
-// - A minute range or wildcard with a specific hour defers to the hour,
-//   which anchors the clock time.
-// - A minute range combined with an hour list still expands to clock times,
-//   anchoring each at the top of the minute.
+// Behavior spec for patterns where a lower-order field folds into a more
+// significant field rather than producing its own fragment. A single specific
+// minute under a single specific hour folds into that hour's clock time
+// instead of standing alone as "<n> minutes past the hour".
+// (Seconds under a specific minute compose rather than defer; see
+// seconds-within-minute.js. A minute span or range under specific hours
+// composes too; see minute-span-in-hour.js and minute-range-across-hours.js.)
 
-describe('Compound patterns that defer to a higher field:', function() {
-  describe('seconds deferring to a specific minute', function() {
+describe('Compound patterns that fold into a higher field:', function() {
+  describe('a single minute folds into a specific hour', function() {
     run([
-      ['0-30 30 * * * *', '30 minutes past the hour, every hour'],
-      ['5,10 30 * * * *', '30 minutes past the hour, every hour'],
-      ['15 30 * * * *', '30 minutes past the hour, every hour']
-    ]);
-  });
-
-  describe('minutes deferring to a specific hour', function() {
-    run([
-      ['0-29 9 * * *', 'every day at 9:00 AM'],
-      ['* 9 * * *', 'every day at 9:00 AM'],
-      ['* 0 * * *', 'every day at 12:00 AM']
-    ]);
-  });
-
-  describe('minute range expanded across an hour list', function() {
-    run([
-      ['0-30 9,17 * * *', 'every day at 9:00 AM and 5:00 PM']
+      ['30 9 * * *', 'every day at 9:30 AM'],
+      ['15 14 * * *', 'every day at 2:15 PM']
     ]);
   });
 });

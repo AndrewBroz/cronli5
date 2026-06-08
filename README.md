@@ -9,8 +9,8 @@
 > [!IMPORTANT]
 > `cronli5` was written in 2017, with minor updates in 2026. It is no
 > longer under active development. For most use cases today, [`cRonstrue`][cronstrue]
-> is a better option, and what I'd recommend. It's actively maintained, has i18n
-> support, and handles a wider range of patterns correctly.
+> is a better option, and what I'd recommend. cRonstrue is actively maintained, has
+> i18n support, and handles a wider range of patterns correctly.
 
 Generate English language descriptions of schedules from cron patterns.
 Accepts classic (five-part) cron patterns, or extended (six-part) cron
