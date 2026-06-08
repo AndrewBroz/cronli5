@@ -1,19 +1,13 @@
 import errors from './error-types.js';
 import {error as run} from '../runner.js';
 
-describe('Unsupported nickname macros:', function() {
-  // Documents the current contract: shorthand "@" macros are not expanded and
-  // are rejected as invalid field values. See README "Limitations".
+describe('Unrecognized nickname macros:', function() {
+  // Recognized macros are handled in test/basic/macros.js. Anything else
+  // beginning with `@` is rejected outright.
   run([
-    '@yearly',
-    '@annually',
-    '@monthly',
-    '@weekly',
-    '@daily',
-    '@midnight',
-    '@hourly',
-    '@reboot'
-  ], errors.invalidField);
+    ['@frequently', 'does not recognize'],
+    ['@', 'does not recognize']
+  ]);
 });
 
 describe('Invalid ranges with wildcard bounds:', function() {

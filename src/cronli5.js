@@ -132,6 +132,18 @@ const fieldOrder = [
   'year'
 ];
 
+// Nickname macros (e.g. `@daily`) expand to their five-field equivalents.
+// `@reboot` has no time schedule and so is intentionally omitted.
+const macros = {
+  '@annually': '0 0 1 1 *',
+  '@yearly':   '0 0 1 1 *',
+  '@monthly':  '0 0 1 * *',
+  '@weekly':   '0 0 * * 0',
+  '@daily':    '0 0 * * *',
+  '@midnight': '0 0 * * *',
+  '@hourly':   '0 * * * *'
+};
+
 // A cron pattern to English interpreter.
 //
 // `options` include:
@@ -145,6 +157,12 @@ const fieldOrder = [
 //     parse with year
 function cronli5(cronPattern, options) {
   const opts = normalizeOptions(options);
+
+  // `@reboot` runs on startup and has no field schedule to interpret.
+  if (typeof cronPattern === 'string' &&
+      cronPattern.trim().toLowerCase() === '@reboot') {
+    return 'at system startup';
+  }
 
   cronPattern = parseCronPattern(cronPattern, opts);
 
@@ -355,9 +373,28 @@ function pick(value, fallback) {
 
 // Turn a string into a cron-like object.
 function cronifyString(cronString, opts) {
-  const cronlikeArray = cronString.split(/\s+/);
+  const cronlikeArray = expandMacro(cronString).split(/\s+/);
 
   return cronifyArray(cronlikeArray, opts);
+}
+
+// Expand a recognized nickname macro (e.g. `@daily`) into its equivalent
+// cron string, leaving any other string untouched. `@reboot` has no field
+// schedule and is handled directly in `cronli5`, before this point.
+function expandMacro(cronString) {
+  const trimmed = cronString.trim();
+
+  if (trimmed.charAt(0) !== '@') {
+    return cronString;
+  }
+
+  const macro = trimmed.toLowerCase();
+
+  if (Object.hasOwn(macros, macro)) {
+    return macros[macro];
+  }
+
+  throw new Error('`cronli5` does not recognize the macro `' + trimmed + '`.');
 }
 
 // Validate every field of a cron-like object, throwing on the first

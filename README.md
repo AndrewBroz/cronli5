@@ -178,9 +178,6 @@ past the hour".
 
 ## Limitations
 
-* **Nickname macros are not supported.** Shorthand patterns such as `@daily`,
-  `@hourly`, or `@reboot` are rejected as invalid input. Expand them to their
-  field form (e.g. `0 0 * * *`) before calling `cronli5`.
 * **No timezone conversion.** See the note below.
 
 ## Note on Timezones
