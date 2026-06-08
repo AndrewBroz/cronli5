@@ -43,9 +43,12 @@ const patterns = new Map();
 for (const file of walk(testDir)) {
   const source = readFileSync(file, 'utf8');
   const group = relative(testDir, file).split('/')[0];
-  let match;
 
-  while ((match = CRON_RE.exec(source)) !== null) {
+  for (
+    let match = CRON_RE.exec(source);
+    match !== null;
+    match = CRON_RE.exec(source)
+  ) {
     const pattern = match[2];
 
     if (!patterns.has(pattern)) {
@@ -59,7 +62,7 @@ function describe(fn, pattern) {
     return {ok: true, text: fn(pattern)};
   }
   catch (error) {
-    const message = String((error && error.message) || error);
+    const message = String(error && error.message || error);
 
     return {ok: false, text: 'ERROR: ' + message.split('\n')[0]};
   }
@@ -69,15 +72,13 @@ function describe(fn, pattern) {
 const byGroup = new Map();
 
 for (const [pattern, group] of patterns) {
-  if (only && !pattern.includes(only)) {
-    continue;
-  }
+  if (!only || pattern.includes(only)) {
+    if (!byGroup.has(group)) {
+      byGroup.set(group, []);
+    }
 
-  if (!byGroup.has(group)) {
-    byGroup.set(group, []);
+    byGroup.get(group).push(pattern);
   }
-
-  byGroup.get(group).push(pattern);
 }
 
 let total = 0;
@@ -88,18 +89,18 @@ for (const [group, list] of [...byGroup].sort()) {
   console.log('\n\n=== ' + group + ' (' + list.length + ') ===');
 
   for (const pattern of list.sort()) {
-    total++;
+    total += 1;
     const ours = describe(cronli5, pattern);
     const theirs = describe(function(p) {
       return cronstrue.toString(p, {throwExceptionOnParseError: true});
     }, pattern);
 
     if (!ours.ok) {
-      cronli5Errors++;
+      cronli5Errors += 1;
     }
 
     if (!theirs.ok) {
-      cronstrueErrors++;
+      cronstrueErrors += 1;
     }
 
     console.log('\n' + pattern);
