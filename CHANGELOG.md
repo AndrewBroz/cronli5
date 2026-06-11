@@ -22,6 +22,19 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   silently dropped.
 - Property-based tests covering mixed-list fields, asserting interpretation
   never throws or leaks `NaN`/`undefined` for valid patterns.
+- A `lenient` option: invalid input returns the fallback description
+  `'an unrecognizable cron pattern'` instead of throwing, making `cronli5`
+  safe to embed in UIs that render arbitrary user crontabs.
+- Input normalization: list segments are described in ascending fire order
+  (`17,9` reads "at 9:00 AM and 5:00 PM"), duplicate segments collapse, and
+  degenerate ranges (`9-9`) read as their single value.
+
+### Changed
+
+- Hour windows now end at the **last actual fire** instead of the top of the
+  final hour: `*/15 9-17 * * *` reads "every 15 minutes from 9:00 AM through
+  5:45 PM" (previously "through 5:00 PM"), and `*/15 9 * * *` reads "through
+  9:45 AM" (previously "through 9:59 AM").
 
 ### Fixed
 

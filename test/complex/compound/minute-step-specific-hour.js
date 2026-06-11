@@ -9,25 +9,25 @@ describe('Minute step within a specific hour:', function() {
   describe('basic', function() {
     run([
       ['*/15 9 * * *',
-        'every 15 minutes from 9:00 AM through 9:59 AM'],
+        'every 15 minutes from 9:00 AM through 9:45 AM'],
       ['*/30 9 * * *',
-        'every 30 minutes from 9:00 AM through 9:59 AM'],
+        'every 30 minutes from 9:00 AM through 9:30 AM'],
       ['*/15 0 * * *',
-        'every 15 minutes from 12:00 AM through 12:59 AM']
+        'every 15 minutes from 12:00 AM through 12:45 AM']
     ]);
   });
 
   describe('with a day qualifier', function() {
     run([
       ['*/15 9 * * MON',
-        'every 15 minutes from 9:00 AM through 9:59 AM on Monday']
+        'every 15 minutes from 9:00 AM through 9:45 AM on Monday']
     ]);
   });
 
   describe('24-hour option', function() {
     run([
       ['*/15 9 * * *',
-        'every 15 minutes from 09:00 through 09:59', {ampm: false}]
+        'every 15 minutes from 09:00 through 09:45', {ampm: false}]
     ]);
   });
 });

@@ -15,7 +15,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
         'every 15 seconds, at zero and 30 minutes past the hour'],
       ['*/15 30 9-17 * * *',
         'every 15 seconds, at 30 minutes past the hour ' +
-        'from 9:00 AM through 5:00 PM']
+        'from 9:00 AM through 5:30 PM']
     ]);
   });
 

@@ -24,7 +24,7 @@ describe('Hour-range and frequency day qualifiers:', function() {
       ['*/15 * * * MON', 'every 15 minutes on Monday'],
       ['*/15 * 13 * *', 'every 15 minutes on the 13th'],
       ['*/15 9-17 13 * *',
-        'every 15 minutes from 9:00 AM through 5:00 PM on the 13th']
+        'every 15 minutes from 9:00 AM through 5:45 PM on the 13th']
     ]);
   });
 });

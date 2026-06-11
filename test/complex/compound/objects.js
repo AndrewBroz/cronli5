@@ -21,24 +21,24 @@ describe('Valid compound objects:', function() {
     ],
     [
       {minute: '*/15', hour: '9-17'},
-      'every 15 minutes from 9:00 AM through 5:00 PM'
+      'every 15 minutes from 9:00 AM through 5:45 PM'
     ],
     [
       {minute: '*/15', hour: '9-17', weekday: 'MON-FRI'},
-      'every 15 minutes from 9:00 AM through 5:00 PM on Monday-Friday'
+      'every 15 minutes from 9:00 AM through 5:45 PM on Monday-Friday'
     ],
     [{hour: '9-17'}, 'every hour from 9:00 AM through 5:00 PM'],
     [
       {minute: '30', hour: '9-17'},
-      'at 30 minutes past the hour from 9:00 AM through 5:00 PM'
+      'at 30 minutes past the hour from 9:00 AM through 5:30 PM'
     ],
     [
       {minute: '0,30', hour: '9-17'},
-      'at zero and 30 minutes past the hour from 9:00 AM through 5:00 PM'
+      'at zero and 30 minutes past the hour from 9:00 AM through 5:30 PM'
     ],
     [
       {minute: '15', hour: '9-17', weekday: 'MON-FRI'},
-      'at 15 minutes past the hour from 9:00 AM through 5:00 PM ' +
+      'at 15 minutes past the hour from 9:00 AM through 5:15 PM ' +
         'on Monday-Friday'
     ],
     [{hour: '12', date: '1', month: '1'}, 'on January 1st at 12:00 PM'],

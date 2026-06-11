@@ -17,7 +17,7 @@ describe('Lists mixing values with ranges or steps:', function() {
         'at 9:00 AM and 5:00 PM'],
       ['0-10,30 9-17 * * *',
         'at zero through ten and 30 minutes past the hour ' +
-        'from 9:00 AM through 5:00 PM']
+        'from 9:00 AM through 5:30 PM']
     ]);
   });
 
@@ -63,7 +63,7 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 0 * 1,6/3 *',
         'every day in January, June, September and December at 12:00 AM'],
       ['0 0 * * 1-5,0',
-        'every Monday-Friday and Sunday at 12:00 AM']
+        'every Sunday and Monday-Friday at 12:00 AM']
     ]);
   });
 });

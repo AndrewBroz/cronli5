@@ -158,6 +158,22 @@ const macros = {
 function cronli5(cronPattern, options) {
   const opts = normalizeOptions(options);
 
+  if (!opts.lenient) {
+    return interpretCronPattern(cronPattern, opts);
+  }
+
+  // Lenient mode never throws: unparseable input yields a fixed fallback
+  // description instead, so arbitrary user crontabs are safe to render.
+  try {
+    return interpretCronPattern(cronPattern, opts);
+  }
+  catch {
+    return 'an unrecognizable cron pattern';
+  }
+}
+
+// Parse, validate, normalize, and describe a cron pattern.
+function interpretCronPattern(cronPattern, opts) {
   // `@reboot` runs on startup and has no field schedule to interpret.
   if (typeof cronPattern === 'string' &&
       cronPattern.trim().toLowerCase() === '@reboot') {
@@ -167,6 +183,7 @@ function cronli5(cronPattern, options) {
   cronPattern = parseCronPattern(cronPattern, opts);
 
   validateCronPattern(cronPattern);
+  normalizeCronPattern(cronPattern);
 
   const description = interpretSeconds(cronPattern, opts)
       || interpretMinutes(cronPattern, opts)
@@ -277,6 +294,7 @@ function normalizeOptions(options) {
 
   return {
     ampm: typeof options.ampm === 'boolean' ? options.ampm : true,
+    lenient: !!options.lenient,
     seconds: !!options.seconds,
     short: !!options.short,
     years: !!options.years
@@ -405,6 +423,65 @@ function validateCronPattern(cronPattern) {
   });
 
   return cronPattern;
+}
+
+// Normalize a validated cron-like object in place so the interpreters face
+// canonical shapes: degenerate ranges (`9-9`) collapse to single values,
+// duplicate list segments drop, and list segments sort into ascending fire
+// order (so `17,9` reads "9:00 AM and 5:00 PM", not the reverse). The
+// described schedule is identical; only the English reads better.
+function normalizeCronPattern(cronPattern) {
+  fieldOrder.forEach(function normalize(field) {
+    cronPattern[field] = normalizeField(cronPattern[field],
+      fieldSpecs[field]);
+  });
+
+  return cronPattern;
+}
+
+// Canonicalize a single validated field value to a string.
+function normalizeField(value, spec) {
+  const stringValue = '' + value;
+
+  if (stringValue === '*') {
+    return stringValue;
+  }
+
+  const segments = stringValue.split(',').map(function canonical(segment) {
+    return collapseDegenerateRange(segment, spec);
+  });
+
+  return segments.filter(function unique(segment, index) {
+    return segments.indexOf(segment) === index;
+  }).sort(function ascending(a, b) {
+    return firstFire(a, spec) - firstFire(b, spec);
+  }).join(',');
+}
+
+// A degenerate range (`9-9`) fires once, so it reads as its single value.
+// A stepped degenerate range (`9-9/5`) likewise fires only at its start.
+function collapseDegenerateRange(segment, spec) {
+  const start = segment.split('/')[0];
+
+  if (!includes(start, '-')) {
+    return segment;
+  }
+
+  const bounds = start.split('-');
+
+  if (toFieldNumber(bounds[0], spec.numbers) !==
+      toFieldNumber(bounds[1], spec.numbers)) {
+    return segment;
+  }
+
+  return bounds[0];
+}
+
+// The first value a segment fires on, used to order list segments.
+function firstFire(segment, spec) {
+  const start = segment.split('/')[0].split('-')[0];
+
+  return start === '*' ? spec.min : toFieldNumber(start, spec.numbers);
 }
 
 // A field value must be a string or number resolving to '*' or to a
@@ -760,6 +837,33 @@ function interpretMinuteSpanAcrossHourStep(cronPattern, opts) {
     trailingQualifier(cronPattern, opts);
 }
 
+// The last minute a minute field fires on within an hour. Hour windows end
+// at the final fire, so `*/15` over `9-17` reads "through 5:45 PM" rather
+// than overstating (":59") or understating (":00") the window.
+function lastMinuteFire(minuteField) {
+  minuteField = '' + minuteField;
+
+  if (minuteField === '*') {
+    return 59;
+  }
+
+  const fires = minuteField.split(',').map(function lastIn(segment) {
+    if (includes(segment, '/')) {
+      const occurrences = enumerateStep(segment, 0, 59);
+
+      return occurrences[occurrences.length - 1];
+    }
+
+    if (includes(segment, '-')) {
+      return +segment.split('-')[1];
+    }
+
+    return +segment;
+  });
+
+  return Math.max(...fires);
+}
+
 // Lead phrase for a plain minute range: "every minute from <a> through <b>
 // past the hour".
 function minuteRangeLead(minuteField, opts) {
@@ -829,12 +933,12 @@ function interpretMinuteFrequency(cronPattern, opts) {
     const bounds = hourField.split('-');
 
     phrase += ' from ' + getTime(bounds[0], 0, opts) + ' through ' +
-      getTime(bounds[1], 0, opts);
+      getTime(bounds[1], lastMinuteFire(minuteField), opts);
   }
   else if (isSingleValue(hourField)) {
     // A specific hour confines the cadence to that hour's window.
     phrase += ' from ' + getTime(hourField, 0, opts) + ' through ' +
-      getTime(hourField, 59, opts);
+      getTime(hourField, lastMinuteFire(minuteField), opts);
   }
   else if (includes(hourField, '/')) {
     // An hour step rides alongside the minute cadence.
@@ -949,11 +1053,12 @@ function interpretRangeOfHours(cronPattern, opts) {
   if (isPlainRange(minuteField)) {
     return minuteRangeLead(minuteField, opts) +
       ', from ' + getTime(bounds[0], 0, opts) + ' through ' +
-      getTime(bounds[1], 0, opts) + trailingQualifier(cronPattern, opts);
+      getTime(bounds[1], lastMinuteFire(minuteField), opts) +
+      trailingQualifier(cronPattern, opts);
   }
 
   const window = 'from ' + getTime(bounds[0], 0, opts) +
-    ' through ' + getTime(bounds[1], 0, opts);
+    ' through ' + getTime(bounds[1], lastMinuteFire(minuteField), opts);
   const phrase =
     interpretRangeMinuteLead(minuteField, opts) + ' ' + window;
 

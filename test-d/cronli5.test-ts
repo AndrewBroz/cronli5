@@ -18,6 +18,7 @@ expectAssignable<CronPatternObject>({hour: 9, weekday: 'MON-FRI'});
 expectAssignable<Cronli5Options>({});
 expectAssignable<Cronli5Options>({
   ampm: true,
+  lenient: false,
   short: false,
   seconds: false,
   years: true

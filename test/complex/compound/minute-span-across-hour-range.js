@@ -16,7 +16,7 @@ describe('Minute span across an hour range:', function() {
     run([
       ['0-30 9-17 * * *',
         'every minute from zero through 30 past the hour, ' +
-        'from 9:00 AM through 5:00 PM']
+        'from 9:00 AM through 5:30 PM']
     ]);
   });
 
@@ -25,7 +25,7 @@ describe('Minute span across an hour range:', function() {
       ['* 9-17 * * MON', 'every minute from 9:00 AM through 5:59 PM on Monday'],
       ['0-30 9-17 * * MON-FRI',
         'every minute from zero through 30 past the hour, ' +
-        'from 9:00 AM through 5:00 PM on Monday-Friday']
+        'from 9:00 AM through 5:30 PM on Monday-Friday']
     ]);
   });
 

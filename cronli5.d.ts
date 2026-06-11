@@ -4,6 +4,11 @@
 export interface Cronli5Options {
   /** Use 12-hour clock with AM/PM. Defaults to `true`; `false` uses 24-hour. */
   ampm?: boolean;
+  /**
+   * Never throw: invalid input returns a fallback description instead.
+   * Defaults to `false`.
+   */
+  lenient?: boolean;
   /** Use abbreviated month/weekday names. Defaults to `false`. */
   short?: boolean;
   /** Treat the first field of strings/arrays as seconds. Defaults to `false`. */

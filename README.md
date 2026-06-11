@@ -112,6 +112,7 @@ properties are boolean flags:
 | Option | Default | Description |
 | --- | --- | --- |
 | `ampm` | `true` | Use a 12-hour clock with AM/PM. Set `false` for 24-hour time. |
+| `lenient` | `false` | Never throw: invalid input returns the fallback description `'an unrecognizable cron pattern'` instead. Useful when rendering arbitrary user crontabs. |
 | `short` | `false` | Use abbreviated month and weekday names (e.g. `Mon-Fri`). |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. |
@@ -175,10 +176,6 @@ not qualify cases that begin on the first second, minute, or hour of the
 corresponding minute, hour, or day. So `*/3 * * * *` will be "every three
 minutes", while `2/3 * * * *` will be "every three minutes from two minutes
 past the hour".
-
-## Limitations
-
-* **No timezone conversion.** See the note below.
 
 ## Note on Timezones
 
