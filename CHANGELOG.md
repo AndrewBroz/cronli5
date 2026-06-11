@@ -70,6 +70,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `undefined` or garbled bounds.
 - A weekday combined with a month (e.g. `0 0 * 6 MON`) no longer drops the
   weekday: it reads "every Monday in June at 12:00 AM".
+- Interval-one steps normalize to their equivalent range, fixing inaccurate
+  or garbled output in every field: `1/1 * * * *` read "every minute"
+  though minute :00 is excluded (now "every minute from one through 59 past
+  the hour"), `0 1/1 * * *` read "every hour" though hour 0 is excluded
+  (now "every hour from 1:00 AM through 11:00 PM"), and `0 0 2/1 * *` read
+  "every 1st day of the month from the 2nd" (now "on the 2nd through 31st").
+- Offset steps starting at one are no longer ungrammatical: `1/3 * * * *`
+  reads "every three minutes from one minute past the hour" (was "one
+  minutes").
 
 ## [0.1.0]
 

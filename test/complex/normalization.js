@@ -34,4 +34,27 @@ describe('Input normalization:', function() {
       ['30-30 9 * * *', 'every day at 9:30 AM']
     ]);
   });
+
+  describe('interval-one steps read as their range', function() {
+    run([
+      // `1/1` fires at minutes 1-59 and skips :00, so "every minute"
+      // would overstate it.
+      ['1/1 * * * *', 'every minute from one through 59 past the hour'],
+      ['1/1 * * * * *', 'every second from one through 59 past the minute'],
+      ['0/1 * * * *', 'every minute'],
+      ['*/1 * * * *', 'every minute'],
+      ['5-30/1 * * * *', 'every minute from five through 30 past the hour'],
+      ['0 1/1 * * *', 'every hour from 1:00 AM through 11:00 PM'],
+      ['0 0 2/1 * *', 'on the 2nd through 31st at 12:00 AM'],
+      ['0 0 * 3/1 *', 'every day in March through December at 12:00 AM'],
+      ['0 0 * * 1/1', 'every Monday-Saturday at 12:00 AM']
+    ]);
+  });
+
+  describe('offset steps qualify their start grammatically', function() {
+    run([
+      ['1/3 * * * *', 'every three minutes from one minute past the hour'],
+      ['2/3 * * * *', 'every three minutes from two minutes past the hour']
+    ]);
+  });
 });

@@ -111,16 +111,18 @@ const monthNumbers = {
 
 // Allowed numeric ranges (and name tables, where applicable) per field.
 // Cyclic fields wrap, so a reversed range (`22-2`) is a meaningful
-// wrap-around window there; the year field does not wrap.
+// wrap-around window there; the year field does not wrap. `top` is the last
+// value a step enumerates to — for weekdays it is Saturday (6), below the
+// validation `max` of 7, which is Sunday again.
 const fieldSpecs = {
-  second: {cyclic: true, max: 59, min: 0},
-  minute: {cyclic: true, max: 59, min: 0},
-  hour: {cyclic: true, max: 23, min: 0},
-  date: {cyclic: true, max: 31, min: 1},
+  second: {cyclic: true, max: 59, min: 0, top: 59},
+  minute: {cyclic: true, max: 59, min: 0, top: 59},
+  hour: {cyclic: true, max: 23, min: 0, top: 23},
+  date: {cyclic: true, max: 31, min: 1, top: 31},
   month: {cyclic: true, max: 12, min: 1, names: monthAbbreviations,
-    numbers: monthNumbers},
+    numbers: monthNumbers, top: 12},
   weekday: {cyclic: true, max: 7, min: 0, names: weekdayAbbreviations,
-    numbers: weekdayNumbers},
+    numbers: weekdayNumbers, top: 6},
   year: {max: 9999, min: 1970}
 };
 
@@ -537,14 +539,42 @@ function normalizeField(value, spec) {
   }
 
   const segments = stringValue.split(',').map(function canonical(segment) {
-    return collapseDegenerateRange(segment, spec);
+    return collapseDegenerateRange(collapseUnitStep(segment, spec), spec);
   });
+
+  // A full-cycle segment covers the whole field.
+  if (segments.indexOf('*') !== -1) {
+    return '*';
+  }
 
   return segments.filter(function unique(segment, index) {
     return segments.indexOf(segment) === index;
   }).sort(function ascending(a, b) {
     return firstFire(a, spec) - firstFire(b, spec);
   }).join(',');
+}
+
+// An interval-one step enumerates every value from its start, so it reads
+// as the equivalent range: `1/1` is `1-59` and `5-30/1` is `5-30`. A start
+// at the bottom of the cycle covers the whole field (`0/1` is `*`).
+function collapseUnitStep(segment, spec) {
+  const parts = segment.split('/');
+
+  if (!spec.cyclic || parts.length !== 2 || +parts[1] !== 1) {
+    return segment;
+  }
+
+  const start = parts[0];
+
+  if (includes(start, '-')) {
+    return start;
+  }
+
+  if (start === '*' || toFieldNumber(start, spec.numbers) === spec.min) {
+    return '*';
+  }
+
+  return start + '-' + spec.top;
 }
 
 // A degenerate range (`9-9`) fires once, so it reads as its single value.
@@ -1272,7 +1302,8 @@ function interpretStepCycle60(field, unit, anchor, opts) {
     }
 
     return 'every ' + getNumber(interval, opts) + ' ' + unit + 's from ' +
-      getNumber(start, opts) + ' ' + unit + 's past the ' + anchor;
+      getNumber(start, opts) + ' ' +
+      (start === 1 ? unit : unit + 's') + ' past the ' + anchor;
   }
 
   // A step reads as a natural cadence ("every N minutes") only when it

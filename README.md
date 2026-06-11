@@ -223,7 +223,7 @@ cronstrue 3.14.0 &mdash; rerun it to refresh:
 | `1 1 * * * *` | one minute and one second past the hour, every hour | At 1 seconds past the minute, at 1 minutes past the hour |
 | `0 9-9 * * *` | every day at 9:00 AM | Every hour, between 09:00 AM and 09:00 AM |
 | `59 23 31 12 5` | on December 31st or on Friday in December at 11:59 PM | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
-| `1/1 * * * *` | every minute | Every 1 minutes, starting at 1 minutes past the hour |
+| `1/1 * * * *` | every minute from one through 59 past the hour | Every 1 minutes, starting at 1 minutes past the hour |
 | `5-* * * * *` | *error: 'cronli5' was passed an invalid field value "5-*" for the minute field.* | Minutes 5 through * past the hour |
 
 The last rows show where assembling per-field fragments gets brittle:
