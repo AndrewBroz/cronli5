@@ -156,8 +156,9 @@ const macros = {
 //     always treat the first value in a string or array as a second
 // - short (boolean):
 //     use shorthand and numeric representations
-// - year (boolean):
-//     parse with year
+// - years (boolean):
+//     read the trailing field of a six-field pattern as a year (seven-field
+//     patterns always parse seconds first and year last)
 function cronli5(cronPattern, options) {
   const opts = normalizeOptions(options);
 
@@ -297,15 +298,14 @@ function quartzWeekdayPhrase(weekdayField, opts) {
   }
 }
 
-// Append or fold the year field into a finished description. The year is
-// only rendered when the `years` option is enabled and a specific year is
-// set. A single year reads naturally folded into a specific calendar date
-// ("on January 1st, 2030 at noon"); otherwise it trails the description
-// ("every Friday at 1:00 PM in 2030").
+// Append or fold the year field into a finished description. An explicitly
+// supplied year is always rendered. A single year reads naturally folded
+// into a specific calendar date ("on January 1st, 2030 at noon"); otherwise
+// it trails the description ("every Friday at 1:00 PM in 2030").
 function applyYear(description, cronPattern, opts) {
   const yearField = '' + cronPattern.year;
 
-  if (!opts.years || yearField === '*') {
+  if (yearField === '*') {
     return description;
   }
 
@@ -398,16 +398,17 @@ function parseCronPattern(cronPattern, opts) {
   throw new Error('`cronli5` was passed an unexpected type.');
 }
 
-// Turn a cronable array into a cron-like object.
+// Turn a cronable array into a cron-like object. A seven-field pattern is
+// unambiguous (seconds first, year last); six fields default to seconds
+// first, with the `years` option reading the trailing field as a year
+// instead.
 function cronifyArray(cronlikeArray, opts) {
-  const max = opts.years ? 7 : 6;
-
-  if (cronlikeArray.length > max) {
+  if (cronlikeArray.length > 7) {
     throw new Error('`cronli5` was passed a cron pattern with more than ' +
-      getNumber(max, opts) + ' fields.');
+      getNumber(7, opts) + ' fields.');
   }
 
-  if (!opts.seconds && cronlikeArray.length < max) {
+  if (!opts.seconds && cronlikeArray.length < (opts.years ? 7 : 6)) {
     cronlikeArray.unshift('0');
   }
 

@@ -13,7 +13,12 @@ export interface Cronli5Options {
   short?: boolean;
   /** Treat the first field of strings/arrays as seconds. Defaults to `false`. */
   seconds?: boolean;
-  /** Treat a trailing six-field value as a year. Defaults to `false`. */
+  /**
+   * Read the trailing field of a six-field pattern as a year instead of
+   * treating the first field as seconds. Seven-field patterns are
+   * unambiguous (seconds first, year last) and need no option. Defaults to
+   * `false`.
+   */
   years?: boolean;
 }
 

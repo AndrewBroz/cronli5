@@ -4,7 +4,7 @@ import {error as run} from '../runner.js';
 describe('Invalid arrays:', function() {
   run([
     [[], errors.empty ],
-    [['*', '*', '*', '*', '*', '*', '*'], errors.length]
+    [['*', '*', '*', '*', '*', '*', '*', '*'], errors.length]
   ]);
 
   var invalidFieldArrays = [

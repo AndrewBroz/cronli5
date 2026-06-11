@@ -40,6 +40,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A head-to-head cronli5 vs. cRonstrue section in the README with a
   generated output table (`scripts/comparison-table.mjs`), plus a full
   architectural comparison in `docs/cronstrue-comparison.md`.
+- **Seven-field (Quartz-style) patterns** parse without any option: seven
+  fields are unambiguous (`second minute hour date month weekday year`), so
+  `'0 0 12 1 1 * 2030'` reads "on January 1st, 2030 at 12:00 PM". The
+  `years` option remains as the six-field disambiguator.
+- An explicitly supplied year is now always described: object input with a
+  `year` property (e.g. `{hour: 9, year: 2030}`) previously validated the
+  year and then silently dropped it from the description.
 
 ### Changed
 

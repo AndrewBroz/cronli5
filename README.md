@@ -7,8 +7,9 @@
 [![license](https://img.shields.io/github/license/andrewbroz/cronli5.svg)](./LICENSE.md)
 
 Generate English language descriptions of schedules from cron patterns.
-Accepts classic (five-part) cron patterns, or extended (six-part) cron
-patterns, where the first field is assumed to refer to seconds. Accepts the
+Accepts classic (five-part) cron patterns, extended (six-part) cron
+patterns, where the first field is assumed to refer to seconds, and full
+seven-part (Quartz-style) patterns with a trailing year. Accepts the
 standard allowed values and the following operators: asterisks (`*`), commas
 (`,`), hyphens (`-`), and slashes (`/`). Ranges in cyclic fields may wrap
 around (`22-2` is an overnight window; `FRI-MON` is a long weekend).
@@ -116,11 +117,17 @@ properties are boolean flags:
 | `lenient` | `false` | Never throw: invalid input returns the fallback description `'an unrecognizable cron pattern'` instead. Useful when rendering arbitrary user crontabs. |
 | `short` | `false` | Use abbreviated month and weekday names (e.g. `Mon-Fri`). |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
-| `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. |
+| `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |
 
-When a specific year is given, it is folded into a specific calendar date
-(`'on January 1st, 2030 at 12:00 PM'`) or otherwise trails the description
-(`'every Friday at 1:00 PM in 2030'`).
+When a specific year is given &mdash; via a seven-field pattern, an object's
+`year` property, or a six-field pattern with `years: true` &mdash; it is
+folded into a specific calendar date (`'on January 1st, 2030 at 12:00 PM'`)
+or otherwise trails the description (`'every Friday at 1:00 PM in 2030'`).
+
+```js
+cronli5('0 0 12 1 1 * 2030');  // 'on January 1st, 2030 at 12:00 PM'
+cronli5({ hour: 9, year: 2030 }); // 'every day at 9:00 AM in 2030'
+```
 
 ```js
 import cronli5 from 'cronli5';
