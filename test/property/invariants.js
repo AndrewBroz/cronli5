@@ -26,6 +26,26 @@ function field(min, max) {
   );
 }
 
+// An arbitrary that produces a single valid field like `field`, but whose
+// comma lists may also mix in range and step segments (e.g. `0-30,45` or
+// `9,17/2`), which are valid cron and have crashed interpretation before.
+function mixedField(min, max) {
+  const int = fc.integer({min, max});
+  const single = int.map(String);
+  const range = fc.tuple(int, int).map(function(pair) {
+    return Math.min(pair[0], pair[1]) + '-' + Math.max(pair[0], pair[1]);
+  });
+  const step = fc.tuple(int, fc.integer({min: 1, max})).map(function(pair) {
+    return pair[0] + '/' + pair[1];
+  });
+  const segment = fc.oneof(single, range, step);
+
+  return fc.array(segment, {minLength: 2, maxLength: 3}).map(
+    function(segments) {
+      return segments.join(',');
+    });
+}
+
 // A five-field cron pattern as an array of field strings.
 const fields = fc.tuple(
   field(0, 59),
@@ -35,6 +55,15 @@ const fields = fc.tuple(
   field(0, 6)
 );
 
+// A five-field cron pattern whose fields may all be mixed lists.
+const mixedFields = fc.tuple(
+  mixedField(0, 59),
+  mixedField(0, 23),
+  mixedField(1, 31),
+  mixedField(1, 12),
+  mixedField(0, 6)
+);
+
 describe('Property: any valid cron pattern', function() {
   it('produces a non-empty string and never throws', function() {
     fc.assert(fc.property(fields, function(parts) {
@@ -42,6 +71,16 @@ describe('Property: any valid cron pattern', function() {
 
       expect(description).to.be.a('string');
       expect(description.trim()).to.have.length.above(0);
+    }), {numRuns: 500});
+  });
+
+  it('handles mixed lists without crashing or leaking NaN', function() {
+    fc.assert(fc.property(mixedFields, function(parts) {
+      const description = cronli5(parts.join(' '));
+
+      expect(description).to.be.a('string');
+      expect(description.trim()).to.have.length.above(0);
+      expect(description).to.not.match(/NaN|undefined/);
     }), {numRuns: 500});
   });
 
