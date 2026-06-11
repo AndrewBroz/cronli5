@@ -16,7 +16,10 @@ Generate English language descriptions of schedules from cron patterns.
 Accepts classic (five-part) cron patterns, or extended (six-part) cron
 patterns, where the first field is assumed to refer to seconds. Accepts the
 standard allowed values and the following operators: asterisks (`*`), commas
-(`,`), hyphens (`-`), and slashes (`/`).
+(`,`), hyphens (`-`), and slashes (`/`). Quartz-style tokens are also
+supported in the date and weekday fields: `L` (last day, or `5L` for the
+last Friday), `W` (nearest weekday, e.g. `15W`), `#` (nth weekday, e.g.
+`1#2` for the second Monday), and `?` (no specific value).
 
 - **Zero runtime dependencies** &mdash; tiny and safe to drop into any project.
 - **Runs anywhere** &mdash; ships ESM, CommonJS, and a browser global.
@@ -159,11 +162,17 @@ cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at 12:00 AM'
 
 // Compound patterns
 cronli5('0,30 9 * * *');   // 'every day at 9:00 AM and 9:30 AM'
-cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9:00 AM through 5:00 PM'
+cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9:00 AM through 5:45 PM'
 cronli5('30 9-17 * * *');
-// 'at 30 minutes past the hour from 9:00 AM through 5:00 PM'
+// 'at 30 minutes past the hour from 9:00 AM through 5:30 PM'
 cronli5('0 12 1 1 *');     // 'on January 1st at 12:00 PM'
 cronli5('0 * 13 * *');     // 'every hour on the 13th'
+
+// Quartz tokens
+cronli5('0 0 L * *');      // 'on the last day of the month at 12:00 AM'
+cronli5('0 0 * * 5L');     // 'on the last Friday of the month at 12:00 AM'
+cronli5('0 0 * * 1#2');    // 'on the second Monday of the month at 12:00 AM'
+cronli5('0 0 15W * *');    // 'on the weekday nearest the 15th at 12:00 AM'
 ```
 
 ## Description Accuracy

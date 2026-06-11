@@ -28,6 +28,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Input normalization: list segments are described in ascending fire order
   (`17,9` reads "at 9:00 AM and 5:00 PM"), duplicate segments collapse, and
   degenerate ranges (`9-9`) read as their single value.
+- **Quartz-style tokens** in the date and weekday fields: `L` ("on the last
+  day of the month"), `L-n` ("five days before the last day of the month"),
+  `LW`/`WL` ("on the last weekday of the month"), `nW` ("on the weekday
+  nearest the 15th"), `nL` ("on the last Friday of the month"), `n#m` ("on
+  the second Monday of the month"), and `?` (no specific value).
 
 ### Changed
 
@@ -49,6 +54,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   qualifier (e.g. `on Monday`).
 - Month, date, and weekday lists containing ranges or steps no longer render
   `undefined` or garbled bounds.
+- A weekday combined with a month (e.g. `0 0 * 6 MON`) no longer drops the
+  weekday: it reads "every Monday in June at 12:00 AM".
 
 ## [0.1.0]
 

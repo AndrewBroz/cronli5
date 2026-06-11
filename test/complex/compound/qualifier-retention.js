@@ -25,6 +25,13 @@ describe('Day qualifiers on second and minute anchors:', function() {
     ]);
   });
 
+  describe('weekday combined with a month', function() {
+    run([
+      ['0 0 * 6 MON', 'every Monday in June at 12:00 AM'],
+      ['*/15 * * 6 MON', 'every 15 minutes on Monday in June']
+    ]);
+  });
+
   describe('seconds within a minute', function() {
     run([
       ['15 30 * * * MON',

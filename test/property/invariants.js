@@ -55,13 +55,20 @@ const fields = fc.tuple(
   field(0, 6)
 );
 
-// A five-field cron pattern whose fields may all be mixed lists.
+// A five-field cron pattern whose fields may all be mixed lists, and whose
+// date/weekday fields may be Quartz tokens.
 const mixedFields = fc.tuple(
   mixedField(0, 59),
   mixedField(0, 23),
-  mixedField(1, 31),
+  fc.oneof(
+    mixedField(1, 31),
+    fc.constantFrom('L', 'LW', 'WL', 'L-1', 'L-30', '1W', '31W', '?')
+  ),
   mixedField(1, 12),
-  mixedField(0, 6)
+  fc.oneof(
+    mixedField(0, 6),
+    fc.constantFrom('5L', 'FRIL', '0L', '1#2', 'MON#5', 'L', '?')
+  )
 );
 
 describe('Property: any valid cron pattern', function() {

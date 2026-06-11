@@ -182,6 +182,7 @@ function interpretCronPattern(cronPattern, opts) {
 
   cronPattern = parseCronPattern(cronPattern, opts);
 
+  applyQuartzAliases(cronPattern);
   validateCronPattern(cronPattern);
   normalizeCronPattern(cronPattern);
 
@@ -203,6 +204,12 @@ function trailingQualifier(cronPattern, opts) {
   }
 
   if (cronPattern.date !== '*') {
+    const quartzDate = quartzDatePhrase(cronPattern.date, opts);
+
+    if (quartzDate) {
+      return ' ' + quartzDate + monthScope(cronPattern, opts);
+    }
+
     if (isOpenStep(cronPattern.date)) {
       return ' on ' + interpretStepDates(cronPattern.date) +
         monthScope(cronPattern, opts);
@@ -221,15 +228,70 @@ function trailingQualifier(cronPattern, opts) {
     return ' on the ' + interpretDateOrdinals(cronPattern.date);
   }
 
+  // A weekday qualifier, optionally scoped to a month ("on Monday in June").
+  if (cronPattern.weekday !== '*') {
+    const weekdays = quartzWeekdayPhrase(cronPattern.weekday, opts) ||
+      'on ' + interpretWeekdays(cronPattern, opts);
+
+    return ' ' + weekdays + monthScope(cronPattern, opts);
+  }
+
   if (cronPattern.month !== '*') {
     return ' in ' + interpretMonthNames(cronPattern.month, opts);
   }
 
-  if (cronPattern.weekday !== '*') {
-    return ' on ' + interpretWeekdays(cronPattern, opts);
+  return '';
+}
+
+// English ordinals for Quartz `#` weekday occurrences (1-5).
+const nthWeekdayNames = [null, 'first', 'second', 'third', 'fourth', 'fifth'];
+
+// The day-qualifier phrase for a Quartz date field (e.g. "on the last day
+// of the month"), or undefined when the field is not a Quartz form.
+function quartzDatePhrase(dateField, opts) {
+  dateField = '' + dateField;
+
+  if (dateField === 'L') {
+    return 'on the last day of the month';
   }
 
-  return '';
+  if (dateField === 'LW' || dateField === 'WL') {
+    return 'on the last weekday of the month';
+  }
+
+  const offset = (/^L-(\d{1,2})$/).exec(dateField);
+
+  if (offset) {
+    const unit = +offset[1] === 1 ? 'day' : 'days';
+
+    return getNumber(+offset[1], opts) + ' ' + unit +
+      ' before the last day of the month';
+  }
+
+  const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(dateField);
+
+  if (nearest) {
+    return 'on the weekday nearest the ' +
+      getOrdinal(nearest[1] || nearest[2]);
+  }
+}
+
+// The day-qualifier phrase for a Quartz weekday field (e.g. "on the last
+// Friday of the month"), or undefined when the field is not a Quartz form.
+function quartzWeekdayPhrase(weekdayField, opts) {
+  weekdayField = '' + weekdayField;
+
+  const parts = weekdayField.split('#');
+
+  if (parts.length === 2) {
+    return 'on the ' + nthWeekdayNames[+parts[1]] + ' ' +
+      getWeekday(parts[0], opts) + ' of the month';
+  }
+
+  if (weekdayField !== 'L' && (/L$/).test(weekdayField)) {
+    return 'on the last ' +
+      getWeekday(weekdayField.slice(0, -1), opts) + ' of the month';
+  }
 }
 
 // Append or fold the year field into a finished description. The year is
@@ -425,6 +487,22 @@ function validateCronPattern(cronPattern) {
   return cronPattern;
 }
 
+// Quartz aliases: `?` reads "no specific value" (equivalent to `*`) in the
+// date and weekday fields, and a bare `L` weekday means Saturday.
+function applyQuartzAliases(cronPattern) {
+  if ('' + cronPattern.date === '?') {
+    cronPattern.date = '*';
+  }
+
+  if ('' + cronPattern.weekday === '?') {
+    cronPattern.weekday = '*';
+  }
+
+  if ('' + cronPattern.weekday === 'L') {
+    cronPattern.weekday = '6';
+  }
+}
+
 // Normalize a validated cron-like object in place so the interpreters face
 // canonical shapes: degenerate ranges (`9-9`) collapse to single values,
 // duplicate list segments drop, and list segments sort into ascending fire
@@ -432,8 +510,15 @@ function validateCronPattern(cronPattern) {
 // described schedule is identical; only the English reads better.
 function normalizeCronPattern(cronPattern) {
   fieldOrder.forEach(function normalize(field) {
-    cronPattern[field] = normalizeField(cronPattern[field],
-      fieldSpecs[field]);
+    const value = '' + cronPattern[field];
+
+    // Quartz tokens are already canonical single values.
+    if (field === 'date' && isQuartzDate(value) ||
+        field === 'weekday' && isQuartzWeekday(value, fieldSpecs[field])) {
+      return;
+    }
+
+    cronPattern[field] = normalizeField(value, fieldSpecs[field]);
   });
 
   return cronPattern;
@@ -484,8 +569,9 @@ function firstFire(segment, spec) {
   return start === '*' ? spec.min : toFieldNumber(start, spec.numbers);
 }
 
-// A field value must be a string or number resolving to '*' or to a
-// comma-separated list of valid segments.
+// A field value must be a string or number resolving to '*', to a Quartz
+// token (date and weekday fields only), or to a comma-separated list of
+// valid segments.
 function validateField(value, spec, field) {
   if (typeof value !== 'string' && typeof value !== 'number') {
     throwInvalidField(value, field);
@@ -497,11 +583,59 @@ function validateField(value, spec, field) {
     return;
   }
 
+  // Quartz tokens stand alone as the whole field value.
+  if (field === 'date' && isQuartzDate(stringValue) ||
+      field === 'weekday' && isQuartzWeekday(stringValue, spec)) {
+    return;
+  }
+
   stringValue.split(',').forEach(function check(segment) {
     if (!isValidSegment(segment, spec)) {
       throwInvalidField(segment, field);
     }
   });
+}
+
+// Quartz day-of-month forms: `L` (last day), `LW`/`WL` (last weekday),
+// `L-n` (n days before the last day, 1-30), and `nW`/`Wn` (the weekday
+// nearest day n). Quartz allows these only as the whole field value.
+function isQuartzDate(value) {
+  if (value === 'L' || value === 'LW' || value === 'WL') {
+    return true;
+  }
+
+  const offset = (/^L-(\d{1,2})$/).exec(value);
+
+  if (offset) {
+    return +offset[1] >= 1 && +offset[1] <= 30;
+  }
+
+  const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(value);
+
+  if (nearest) {
+    const day = +(nearest[1] || nearest[2]);
+
+    return day >= 1 && day <= 31;
+  }
+
+  return false;
+}
+
+// Quartz day-of-week forms: `nL` (the last <weekday> of the month) and
+// `n#m` (the mth <weekday> of the month, m 1-5), where n may be a number
+// or a name. A bare `L` is aliased to Saturday before validation.
+function isQuartzWeekday(value, spec) {
+  if (value !== 'L' && (/L$/).test(value)) {
+    return isValidSingle(value.slice(0, -1), spec);
+  }
+
+  const parts = value.split('#');
+
+  if (parts.length === 2) {
+    return isValidSingle(parts[0], spec) && (/^[1-5]$/).test(parts[1]);
+  }
+
+  return false;
 }
 
 // A segment is a step (`*/5`, `2/3`), a range (`1-5`, `MON-FRI`), or a
@@ -1374,6 +1508,12 @@ function interpretDayQualifier(cronPattern, opts) {
   }
 
   if (cronPattern.date !== '*') {
+    const quartzDate = quartzDatePhrase(cronPattern.date, opts);
+
+    if (quartzDate) {
+      return quartzDate + monthScope(cronPattern, opts) + ' ';
+    }
+
     if (isOpenStep(cronPattern.date)) {
       return interpretStepDates(cronPattern.date) +
         monthScope(cronPattern, opts) + ' ';
@@ -1392,13 +1532,22 @@ function interpretDayQualifier(cronPattern, opts) {
     return 'on the ' + interpretDateOrdinals(cronPattern.date) + ' ';
   }
 
+  // A weekday qualifier, optionally scoped to a month ("every Monday in
+  // June").
+  if (cronPattern.weekday !== '*') {
+    const quartzWeekday = quartzWeekdayPhrase(cronPattern.weekday, opts);
+
+    if (quartzWeekday) {
+      return quartzWeekday + monthScope(cronPattern, opts) + ' ';
+    }
+
+    return 'every ' + interpretWeekdays(cronPattern, opts) +
+      monthScope(cronPattern, opts) + ' ';
+  }
+
   if (cronPattern.month !== '*') {
     return 'every day in ' +
       interpretMonthNames(cronPattern.month, opts) + ' ';
-  }
-
-  if (cronPattern.weekday !== '*') {
-    return 'every ' + interpretWeekdays(cronPattern, opts) + ' ';
   }
 
   return 'every day ';
@@ -1408,11 +1557,17 @@ function interpretDayQualifier(cronPattern, opts) {
 // restricted (specified as non-wildcard values). Cron fires when either is a
 // match. A restricted month scopes both the day of month and the day of week.
 function interpretDateOrWeekday(cronPattern, opts) {
-  const weekdays = interpretWeekdays(cronPattern, opts);
+  const weekdayPart = quartzWeekdayPhrase(cronPattern.weekday, opts) ||
+    'on ' + interpretWeekdays(cronPattern, opts);
+  const quartzDate = quartzDatePhrase(cronPattern.date, opts);
+
+  if (quartzDate) {
+    return quartzDate + monthScope(cronPattern, opts) + ' or ' + weekdayPart;
+  }
 
   if (isOpenStep(cronPattern.date)) {
     return interpretStepDates(cronPattern.date) +
-      monthScope(cronPattern, opts) + ' or on ' + weekdays;
+      monthScope(cronPattern, opts) + ' or ' + weekdayPart;
   }
 
   const ordinals = interpretDateOrdinals(cronPattern.date);
@@ -1420,11 +1575,11 @@ function interpretDateOrWeekday(cronPattern, opts) {
   if (cronPattern.month !== '*') {
     const month = interpretMonthNames(cronPattern.month, opts);
 
-    return 'on ' + month + ' ' + ordinals + ' or on ' + weekdays +
+    return 'on ' + month + ' ' + ordinals + ' or ' + weekdayPart +
       ' in ' + month;
   }
 
-  return 'on the ' + ordinals + ' or on ' + weekdays;
+  return 'on the ' + ordinals + ' or ' + weekdayPart;
 }
 
 // A trailing " in <month>" scope, or an empty string when the month is a
