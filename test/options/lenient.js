@@ -17,7 +17,7 @@ describe('Lenient option:', function() {
 
   describe('invalid input returns the fallback description', function() {
     run([
-      ['30-10 * * * *', FALLBACK, {lenient: true}],
+      ['5-1/2 * * * *', FALLBACK, {lenient: true}],
       ['61 * * * *', FALLBACK, {lenient: true}],
       ['not cron', FALLBACK, {lenient: true}],
       ['', FALLBACK, {lenient: true}],

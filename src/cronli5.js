@@ -110,13 +110,16 @@ const monthNumbers = {
 };
 
 // Allowed numeric ranges (and name tables, where applicable) per field.
+// Cyclic fields wrap, so a reversed range (`22-2`) is a meaningful
+// wrap-around window there; the year field does not wrap.
 const fieldSpecs = {
-  second: {max: 59, min: 0},
-  minute: {max: 59, min: 0},
-  hour: {max: 23, min: 0},
-  date: {max: 31, min: 1},
-  month: {max: 12, min: 1, names: monthAbbreviations, numbers: monthNumbers},
-  weekday: {max: 7, min: 0, names: weekdayAbbreviations,
+  second: {cyclic: true, max: 59, min: 0},
+  minute: {cyclic: true, max: 59, min: 0},
+  hour: {cyclic: true, max: 23, min: 0},
+  date: {cyclic: true, max: 31, min: 1},
+  month: {cyclic: true, max: 12, min: 1, names: monthAbbreviations,
+    numbers: monthNumbers},
+  weekday: {cyclic: true, max: 7, min: 0, names: weekdayAbbreviations,
     numbers: weekdayNumbers},
   year: {max: 9999, min: 1970}
 };
@@ -663,12 +666,14 @@ function isValidStep(segment, spec) {
   }
 
   return parts[0] === '*' || isValidSingle(parts[0], spec) ||
-    isValidRange(parts[0], spec);
+    isValidRange(parts[0], spec, true);
 }
 
-// A range is `<start>-<end>` where both ends are valid singles and the start
-// is not greater than the end (cron does not support wrap-around ranges).
-function isValidRange(segment, spec) {
+// A range is `<start>-<end>` where both ends are valid singles. A reversed
+// range wraps around the cycle (`22-2` is an overnight window) and is
+// allowed in cyclic fields, but not where ordering is structural: inside
+// step bounds (`requireOrdered`) or in the non-cyclic year field.
+function isValidRange(segment, spec, requireOrdered) {
   const parts = segment.split('-');
 
   if (parts.length !== 2) {
@@ -677,6 +682,10 @@ function isValidRange(segment, spec) {
 
   if (!isValidSingle(parts[0], spec) || !isValidSingle(parts[1], spec)) {
     return false;
+  }
+
+  if (spec.cyclic && !requireOrdered) {
+    return true;
   }
 
   return toFieldNumber(parts[0], spec.numbers) <=
@@ -989,7 +998,10 @@ function lastMinuteFire(minuteField) {
     }
 
     if (includes(segment, '-')) {
-      return +segment.split('-')[1];
+      const bounds = segment.split('-');
+
+      // A wrap-around minute range reaches the top of the cycle.
+      return +bounds[0] <= +bounds[1] ? +bounds[1] : 59;
     }
 
     return +segment;
@@ -1028,7 +1040,8 @@ function interpretMinuteSpanInHour(cronPattern, opts) {
 }
 
 // The [low, high] minute window a field spans, or null when the field is a
-// single value, list, or step (which do not describe a continuous window).
+// single value, list, step, or wrap-around range (which do not describe a
+// continuous window within one hour).
 function minuteSpan(minuteField) {
   if (minuteField === '*') {
     return [0, 59];
@@ -1037,7 +1050,9 @@ function minuteSpan(minuteField) {
   if (isPlainRange(minuteField)) {
     const bounds = minuteField.split('-');
 
-    return [+bounds[0], +bounds[1]];
+    if (+bounds[0] <= +bounds[1]) {
+      return [+bounds[0], +bounds[1]];
+    }
   }
 
   return null;
@@ -1354,7 +1369,15 @@ function enumerateHours(hourField) {
     else if (includes(segment, '-')) {
       const bounds = segment.split('-');
 
-      hours.push(...getOccurrences(+bounds[0], 1, +bounds[1]));
+      if (+bounds[0] <= +bounds[1]) {
+        hours.push(...getOccurrences(+bounds[0], 1, +bounds[1]));
+      }
+      else {
+        // A wrap-around range runs to the end of the cycle and resumes
+        // from the start.
+        hours.push(...getOccurrences(+bounds[0], 1, 23));
+        hours.push(...getOccurrences(0, 1, +bounds[1]));
+      }
     }
     else {
       hours.push(+segment);

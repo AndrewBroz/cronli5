@@ -33,6 +33,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `LW`/`WL` ("on the last weekday of the month"), `nW` ("on the weekday
   nearest the 15th"), `nL` ("on the last Friday of the month"), `n#m` ("on
   the second Monday of the month"), and `?` (no specific value).
+- **Wrap-around ranges** in cyclic fields: `0 22-2 * * *` reads "every hour
+  from 10:00 PM through 2:00 AM", `FRI-MON` reads "Friday-Monday", and
+  `11-2` reads "November through February". Reversed ranges remain invalid
+  where the cycle metaphor breaks down: step bounds and the year field.
+- A head-to-head cronli5 vs. cRonstrue section in the README with a
+  generated output table (`scripts/comparison-table.mjs`), plus a full
+  architectural comparison in `docs/cronstrue-comparison.md`.
 
 ### Changed
 
