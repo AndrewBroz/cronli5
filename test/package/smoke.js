@@ -28,7 +28,7 @@ describe('Built package artifacts:', function() {
     const esm = (await import('../../dist/cronli5.js')).default;
 
     expect(esm).to.be.a('function');
-    expect(esm('0 9 * * MON')).to.equal('every Monday at 9:00 AM');
+    expect(esm('0 9 * * MON')).to.equal('every Monday at 9 a.m.');
   });
 
   it('both builds agree with the source implementation', async function() {

@@ -8,21 +8,21 @@ import {run} from '../../runner.js';
 describe('Minute span within a specific hour:', function() {
   describe('wildcard minute', function() {
     run([
-      ['* 9 * * *', 'every minute from 9:00 AM through 9:59 AM'],
-      ['* 0 * * *', 'every minute from 12:00 AM through 12:59 AM']
+      ['* 9 * * *', 'every minute from 9 a.m. through 9:59 a.m.'],
+      ['* 0 * * *', 'every minute from midnight through 12:59 a.m.']
     ]);
   });
 
   describe('minute range', function() {
     run([
-      ['0-29 9 * * *', 'every minute from 9:00 AM through 9:29 AM'],
-      ['0-30 17 * * *', 'every minute from 5:00 PM through 5:30 PM']
+      ['0-29 9 * * *', 'every minute from 9 a.m. through 9:29 a.m.'],
+      ['0-30 17 * * *', 'every minute from 5 p.m. through 5:30 p.m.']
     ]);
   });
 
   describe('with a day qualifier', function() {
     run([
-      ['* 9 * * MON', 'every minute from 9:00 AM through 9:59 AM on Monday']
+      ['* 9 * * MON', 'every minute from 9 a.m. through 9:59 a.m. on Monday']
     ]);
   });
 

@@ -12,14 +12,14 @@ describe('Minute span across an hour step:', function() {
         'every minute from zero through 30 past the hour, every two hours'],
       ['0-30 9-17/2 * * *',
         'every minute from zero through 30 past the hour, ' +
-        'at 9:00 AM, 11:00 AM, 1:00 PM, 3:00 PM and 5:00 PM']
+        'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
     ]);
   });
 
   describe('wildcard minute', function() {
     run([
       ['* */2 * * *', 'every minute, every two hours'],
-      ['* */10 * * *', 'every minute, at 12:00 AM, 10:00 AM and 8:00 PM']
+      ['* */10 * * *', 'every minute, at midnight, 10 a.m., and 8 p.m.']
     ]);
   });
 

@@ -9,9 +9,9 @@ describe('Minute step across multiple hours:', function() {
   describe('hour list', function() {
     run([
       ['*/15 9,17 * * *',
-        'every 15 minutes during the 9:00 AM and 5:00 PM hours'],
+        'every 15 minutes during the 9 a.m. and 5 p.m. hours'],
       ['*/30 0,12 * * *',
-        'every 30 minutes during the 12:00 AM and 12:00 PM hours']
+        'every 30 minutes during the midnight and noon hours']
     ]);
   });
 
@@ -19,14 +19,14 @@ describe('Minute step across multiple hours:', function() {
     run([
       ['*/15 */2 * * *', 'every 15 minutes, every two hours'],
       ['*/15 */10 * * *',
-        'every 15 minutes, at 12:00 AM, 10:00 AM and 8:00 PM']
+        'every 15 minutes, at midnight, 10 a.m., and 8 p.m.']
     ]);
   });
 
   describe('with a day qualifier', function() {
     run([
       ['*/15 9,17 * * MON-FRI',
-        'every 15 minutes during the 9:00 AM and 5:00 PM hours ' +
+        'every 15 minutes during the 9 a.m. and 5 p.m. hours ' +
         'on Monday through Friday']
     ]);
   });

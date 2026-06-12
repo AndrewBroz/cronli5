@@ -8,28 +8,28 @@ describe('Weekday step patterns:', function() {
   describe('wildcard start', function() {
     run([
       ['0 0 * * */2',
-        'every Sunday, Tuesday, Thursday and Saturday at 12:00 AM']
+        'every Sunday, Tuesday, Thursday, and Saturday at midnight']
     ]);
   });
 
   describe('range start (numeric and named)', function() {
     run([
-      ['0 0 * * 1-5/2', 'every Monday, Wednesday and Friday at 12:00 AM'],
+      ['0 0 * * 1-5/2', 'every Monday, Wednesday, and Friday at midnight'],
       ['0 0 * * MON-FRI/2',
-        'every Monday, Wednesday and Friday at 12:00 AM']
+        'every Monday, Wednesday, and Friday at midnight']
     ]);
   });
 
   describe('single start', function() {
     run([
-      ['0 0 * * 1/2', 'every Monday, Wednesday and Friday at 12:00 AM']
+      ['0 0 * * 1/2', 'every Monday, Wednesday, and Friday at midnight']
     ]);
   });
 
   describe('as a trailing qualifier', function() {
     run([
       ['0 * * * */2',
-        'every hour on Sunday, Tuesday, Thursday and Saturday']
+        'every hour on Sunday, Tuesday, Thursday, and Saturday']
     ]);
   });
 });

@@ -28,7 +28,7 @@ function field(min, max) {
 
 // An arbitrary that produces a single valid field like `field`, but whose
 // comma lists may also mix in range and step segments (e.g. `0-30,45` or
-// `9,17/2`), which are valid cron and have crashed interpretation before.
+// `9,17/2`), which are valid cron, and have crashed interpretation before.
 // Ranges may be reversed (wrap-around), which cyclic fields accept.
 function mixedField(min, max) {
   const int = fc.integer({min, max});

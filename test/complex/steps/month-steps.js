@@ -8,23 +8,23 @@ import {run} from '../../runner.js';
 describe('Month step patterns:', function() {
   describe('open step (frequency phrasing)', function() {
     run([
-      ['0 0 * */3 *', 'every day in every 3rd month at 12:00 AM'],
-      ['0 0 * */2 *', 'every day in every other month at 12:00 AM'],
+      ['0 0 * */3 *', 'every day in every 3rd month at midnight'],
+      ['0 0 * */2 *', 'every day in every other month at midnight'],
       ['0 0 * 2/3 *',
-        'every day in every 3rd month from February at 12:00 AM']
+        'every day in every 3rd month from February at midnight']
     ]);
   });
 
   describe('bounded range (enumerated)', function() {
     run([
-      ['0 0 * 1-6/2 *', 'every day in January, March and May at 12:00 AM']
+      ['0 0 * 1-6/2 *', 'every day in January, March, and May at midnight']
     ]);
   });
 
   describe('with a specific date', function() {
     run([
-      ['0 0 13 */3 *', 'on the 13th in every 3rd month at 12:00 AM'],
-      ['0 0 13 1-6/2 *', 'on January, March and May 13th at 12:00 AM']
+      ['0 0 13 */3 *', 'on the 13th in every 3rd month at midnight'],
+      ['0 0 13 1-6/2 *', 'on January, March, and May 13 at midnight']
     ]);
   });
 

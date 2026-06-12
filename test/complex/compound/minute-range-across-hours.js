@@ -9,10 +9,10 @@ describe('Minute range across an hour list:', function() {
     run([
       ['0-30 9,17 * * *',
         'every minute from zero through 30 past the hour, ' +
-        'at 9:00 AM and 5:00 PM'],
+        'at 9 a.m. and 5 p.m.'],
       ['0-15 0,12 * * *',
         'every minute from zero through 15 past the hour, ' +
-        'at 12:00 AM and 12:00 PM']
+        'at midnight and noon']
     ]);
   });
 
@@ -20,7 +20,7 @@ describe('Minute range across an hour list:', function() {
     run([
       ['0-30 9,17 * * MON',
         'every minute from zero through 30 past the hour, ' +
-        'at 9:00 AM and 5:00 PM on Monday']
+        'at 9 a.m. and 5 p.m. on Monday']
     ]);
   });
 

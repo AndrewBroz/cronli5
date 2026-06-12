@@ -10,7 +10,7 @@ const FALLBACK = 'an unrecognizable cron pattern';
 describe('Lenient option:', function() {
   describe('valid input is unaffected', function() {
     run([
-      ['30 9 * * *', 'every day at 9:30 AM', {lenient: true}],
+      ['30 9 * * *', 'every day at 9:30 a.m.', {lenient: true}],
       ['*/15 * * * *', 'every 15 minutes', {lenient: true}]
     ]);
   });

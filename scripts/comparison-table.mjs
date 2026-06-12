@@ -109,10 +109,11 @@ if (process.argv.includes('--check')) {
   if (updated !== current) {
     console.error('docs/cronli5-vs-cronstrue.md is stale; ' +
       'run `npm run compare` to regenerate.');
-    process.exit(1);
+    process.exitCode = 1;
   }
-
-  console.log('docs/cronli5-vs-cronstrue.md is up to date.');
+  else {
+    console.log('docs/cronli5-vs-cronstrue.md is up to date.');
+  }
 }
 else {
   writeFileSync(docUrl, updated);

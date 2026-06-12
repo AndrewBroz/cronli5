@@ -9,16 +9,16 @@ describe('Minute wildcard across an hour list:', function() {
   describe('basic', function() {
     run([
       ['* 9,17 * * *',
-        'every minute during the 9:00 AM and 5:00 PM hours'],
+        'every minute during the 9 a.m. and 5 p.m. hours'],
       ['* 0,12 * * *',
-        'every minute during the 12:00 AM and 12:00 PM hours']
+        'every minute during the midnight and noon hours']
     ]);
   });
 
   describe('with a day qualifier', function() {
     run([
       ['* 9,17 * * MON',
-        'every minute during the 9:00 AM and 5:00 PM hours on Monday']
+        'every minute during the 9 a.m. and 5 p.m. hours on Monday']
     ]);
   });
 

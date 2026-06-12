@@ -137,6 +137,51 @@ const fieldOrder = [
   'year'
 ];
 
+// Style tables for the `dialect` option. `us` follows the Chicago Manual of
+// Style; `uk` follows the Guardian style guide; `house` is cronli5's legacy
+// voice. Each supplies the meridiem forms ("a.m." vs closed-up "am"), the
+// hour separator (":" vs "."), the 12:00 words, the range connective, the
+// serial-comma rule, whether dates read day-first ("1 January" vs
+// "January 1"), and whether month-day dates take ordinals ("January 1st").
+const dialects = {
+  uk: {
+    am: 'am',
+    closeUp: true,
+    dayFirst: true,
+    midday: 'midday',
+    midnight: 'midnight',
+    ordinals: false,
+    pm: 'pm',
+    sep: '.',
+    serialComma: false,
+    through: ' to '
+  },
+  us: {
+    am: 'a.m.',
+    closeUp: false,
+    dayFirst: false,
+    midday: 'noon',
+    midnight: 'midnight',
+    ordinals: false,
+    pm: 'p.m.',
+    sep: ':',
+    serialComma: true,
+    through: ' through '
+  },
+  house: {
+    am: 'AM',
+    closeUp: false,
+    dayFirst: false,
+    midday: 'noon',
+    midnight: 'midnight',
+    ordinals: true,
+    pm: 'PM',
+    sep: ':',
+    serialComma: true,
+    through: ' - '
+  }
+};
+
 // Nickname macros (e.g. `@daily`) expand to their five-field equivalents.
 // `@reboot` has no time schedule and so is intentionally omitted.
 const macros = {
@@ -154,10 +199,16 @@ const macros = {
 // `options` include:
 // - ampm (boolean):
 //     use AM/PM instead of zero-padded 24-hour time
+// - dialect ('us' | 'uk' | 'house' | object):
+//     'us' (default) follows the Chicago Manual of Style; 'uk' follows the
+//     Guardian style guide; 'house' is the legacy cronli5 voice; an object
+//     defines a custom style over the US defaults (see docs/dialects.md)
+// - lenient (boolean):
+//     never throw; invalid input returns a fallback description
 // - seconds (boolean):
 //     always treat the first value in a string or array as a second
 // - short (boolean):
-//     use shorthand and numeric representations
+//     use shorthand, numeric representations, and hyphenated ranges
 // - years (boolean):
 //     read the trailing field of a six-field pattern as a year (seven-field
 //     patterns always parse seconds first and year last)
@@ -247,8 +298,7 @@ function dayQualifier(cronPattern, opts, words) {
     }
 
     if (cronPattern.month !== '*') {
-      return 'on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
-        interpretDateOrdinals(cronPattern.date, opts);
+      return 'on ' + monthDatePhrase(cronPattern, opts);
     }
 
     return 'on the ' + interpretDateOrdinals(cronPattern.date, opts);
@@ -330,20 +380,24 @@ function applyYear(description, cronPattern, opts) {
     return description + ' ' + interpretStepYears(yearField, opts);
   }
 
-  const label = interpretYearLabel(yearField);
+  const label = interpretYearLabel(yearField, opts);
 
   if (!includes(yearField, '-') && !includes(yearField, ',') &&
       cronPattern.date !== '*' && includes(description, ' at ')) {
-    return description.replace(' at ', ', ' + label + ' at ');
+    // US dates take a comma before the year ("January 1, 2030"); UK dates
+    // do not ("1 January 2030").
+    const yearGlue = opts.style.dayFirst ? ' ' : ', ';
+
+    return description.replace(' at ', yearGlue + label + ' at ');
   }
 
   return description + ' in ' + label;
 }
 
 // Turn a single year, a range, or a list into a noun phrase.
-function interpretYearLabel(yearField) {
+function interpretYearLabel(yearField, opts) {
   if (includes(yearField, ',')) {
-    return joinList(yearField.split(','));
+    return joinList(yearField.split(','), opts);
   }
 
   return yearField;
@@ -379,8 +433,20 @@ function normalizeOptions(options) {
     lenient: !!options.lenient,
     seconds: !!options.seconds,
     short: !!options.short,
+    style: resolveDialect(options.dialect),
     years: !!options.years
   };
+}
+
+// Resolve the `dialect` option to a style table. Named dialects ('us',
+// 'uk', 'house') look up their table; a custom object defines its own
+// style, with any omitted fields inheriting the US (Chicago) defaults.
+function resolveDialect(dialect) {
+  if (typeof dialect === 'object' && dialect !== null) {
+    return {...dialects.us, ...dialect};
+  }
+
+  return dialects[dialect] || dialects.us;
 }
 
 // Take a cron pattern as, a cron pattern string, an array of cron fields, a
@@ -1099,7 +1165,7 @@ function hourTimesList(hourField, opts) {
 function hourSegmentTimes(hourField, minute, second, opts) {
   return renderSegments(hourField, fieldSpecs.hour, function time(value) {
     return getTime(value, minute, opts, second);
-  }, through(opts));
+  }, opts);
 }
 
 function interpretRangeOfMinutes(cronPattern, opts) {
@@ -1315,7 +1381,8 @@ function listPastThe(occurrences, unit, anchor, opts) {
     return getNumber(value, opts);
   });
 
-  return 'at ' + joinList(values) + ' ' + unit + 's past the ' + anchor;
+  return 'at ' + joinList(values, opts) + ' ' + unit + 's past the ' +
+    anchor;
 }
 
 // Render hours as a joined list of clock times, e.g. "9:00 AM and 5:00 PM".
@@ -1324,7 +1391,7 @@ function hourTimes(hours, opts) {
     return getTime(hour, 0, opts);
   });
 
-  return joinList(times);
+  return joinList(times, opts);
 }
 
 // Enumerate fire hours as "at T1 and T2 ...".
@@ -1440,8 +1507,10 @@ function unique(items) {
   return Array.from(new Set(items));
 }
 
-// Join a list with commas and a terminal "and".
-function joinList(items) {
+// Join a list with commas and a terminal "and". The US dialect (Chicago)
+// adds a serial comma before the "and" in lists of three or more; the UK
+// dialect (Guardian) does not. Pairs never take one.
+function joinList(items, opts) {
   if (items.length <= 1) {
     return items.join('');
   }
@@ -1450,7 +1519,9 @@ function joinList(items) {
     return items[0] + ' and ' + items[1];
   }
 
-  return items.slice(0, -1).join(', ') + ' and ' + items[items.length - 1];
+  const and = opts.style.serialComma ? ', and ' : ' and ';
+
+  return items.slice(0, -1).join(', ') + and + items[items.length - 1];
 }
 
 // Expand a discrete set of hours and minutes into clock times prefixed by a
@@ -1477,7 +1548,8 @@ function interpretClockTimes(cronPattern, opts) {
     });
   });
 
-  return interpretDayQualifier(cronPattern, opts) + 'at ' + joinList(times);
+  return interpretDayQualifier(cronPattern, opts) + 'at ' +
+    joinList(times, opts);
 }
 
 // Compact form for a clock-time set past the enumeration cap. A single
@@ -1544,16 +1616,29 @@ function interpretDateOrWeekday(cronPattern, opts) {
       monthScope(cronPattern, opts) + ' or ' + weekdayPart;
   }
 
-  const ordinals = interpretDateOrdinals(cronPattern.date, opts);
-
   if (cronPattern.month !== '*') {
-    const month = interpretMonthNames(cronPattern.month, opts);
-
-    return 'on ' + month + ' ' + ordinals + ' or ' + weekdayPart +
-      ' in ' + month;
+    return 'on ' + monthDatePhrase(cronPattern, opts) + ' or ' +
+      weekdayPart + ' in ' + interpretMonthNames(cronPattern.month, opts);
   }
 
-  return 'on the ' + ordinals + ' or ' + weekdayPart;
+  return 'on the ' + interpretDateOrdinals(cronPattern.date, opts) +
+    ' or ' + weekdayPart;
+}
+
+// A calendar date with its month, in the dialect's order and day form:
+// cardinal "January 1" for US (Chicago) and "1 January" for UK (Guardian),
+// or ordinal "January 1st" for dialects that set `ordinals`.
+function monthDatePhrase(cronPattern, opts) {
+  const month = interpretMonthNames(cronPattern.month, opts);
+  const days = renderSegments(cronPattern.date, fieldSpecs.date,
+    opts.style.ordinals ? getOrdinal : cardinalDay, opts);
+
+  return opts.style.dayFirst ? days + ' ' + month : month + ' ' + days;
+}
+
+// Render a day-of-month as a plain cardinal number.
+function cardinalDay(value) {
+  return '' + value;
 }
 
 // A trailing " in <month>" scope, or an empty string when the month is a
@@ -1584,10 +1669,10 @@ function interpretStepDates(dateField) {
   return phrase;
 }
 
-// Render a day-level field's comma segments with `render`, expanding step
-// segments into their fire values (bounded by the field's spec) and joining
-// range bounds with `rangeJoin`.
-function renderSegments(field, spec, render, rangeJoin) {
+// Render a field's comma segments with `render`, expanding step segments
+// into their fire values (bounded by the field's spec) and joining range
+// bounds with the mode's `through` connective.
+function renderSegments(field, spec, render, opts) {
   const pieces = [];
 
   field.split(',').forEach(function expand(segment) {
@@ -1596,22 +1681,21 @@ function renderSegments(field, spec, render, rangeJoin) {
         .map(render));
     }
     else if (includes(segment, '-')) {
-      pieces.push(segment.split('-').map(render).join(rangeJoin));
+      pieces.push(segment.split('-').map(render).join(through(opts)));
     }
     else {
       pieces.push(render(segment));
     }
   });
 
-  return joinList(pieces);
+  return joinList(pieces, opts);
 }
 
 // Render a date field (single, list, range, or bounded step) as suffixed
 // ordinals. List segments may themselves be ranges or steps. Open steps are
 // handled separately as a frequency phrase.
 function interpretDateOrdinals(dateField, opts) {
-  return renderSegments(dateField, fieldSpecs.date, getOrdinal,
-    through(opts));
+  return renderSegments(dateField, fieldSpecs.date, getOrdinal, opts);
 }
 
 // Render a month field (single, list, range, or bounded step) as names. List
@@ -1625,7 +1709,7 @@ function interpretMonthNames(monthField, opts) {
   return renderSegments(monthField, fieldSpecs.month,
     function render(value) {
       return getMonth(value, opts);
-    }, through(opts));
+    }, opts);
 }
 
 // Frequency phrase for an open month step, e.g. "every other month" or
@@ -1650,11 +1734,14 @@ function interpretWeekdays(cronPattern, opts) {
   return renderSegments(cronPattern.weekday, fieldSpecs.weekday,
     function render(value) {
       return getWeekday(value, opts);
-    }, through(opts));
+    }, opts);
 }
 
-// Turn an hour field (and optional minute field) into a clock time, e.g.
-// "3:45 PM" with AM/PM, or "15:45" in 24-hour mode.
+// Turn an hour (and minute, and optional second) into a clock time in the
+// dialect's style: "3:45 p.m." / "9 a.m." / "noon" for US (Chicago),
+// "3.45pm" / "9am" / "midday" for UK (Guardian), or "15:45" / "15.45" in
+// 24-hour mode. On-the-hour times drop their minutes; exact 12:00 reads as
+// a word.
 function getTime(h, m, opts, s) {
   if (isNaN(h)) {
     throw new Error('Tried to interpret "' + JSON.stringify(h) +
@@ -1662,15 +1749,43 @@ function getTime(h, m, opts, s) {
   }
 
   // Seconds are only shown when a specific non-zero value is supplied.
-  const seconds = typeof s === 'number' && s > 0 ? ':' + pad(s) : '';
+  const second = typeof s === 'number' && s > 0 ? s : 0;
 
   if (!opts.ampm) {
-    return pad(h) + ':' + pad(m) + seconds;
+    return pad(h) + opts.style.sep + pad(m) +
+      (second ? opts.style.sep + pad(second) : '');
   }
 
-  const period = h < 12 ? 'AM' : 'PM';
+  return twelveHourTime(h, m, second, opts);
+}
 
-  return (h % 12 || 12) + ':' + pad(m) + seconds + ' ' + period;
+// The 12-hour form of a clock time: "9:30 a.m.", "9 a.m." on the hour, or
+// a word for exact 12:00. A `second` of 0 is omitted.
+function twelveHourTime(h, m, second, opts) {
+  const style = opts.style;
+
+  if (+m === 0 && !second) {
+    if (+h === 0) {
+      return style.midnight;
+    }
+
+    if (+h === 12) {
+      return style.midday;
+    }
+  }
+
+  let time = '' + (h % 12 || 12);
+
+  if (+m !== 0 || second) {
+    time += style.sep + pad(m);
+  }
+
+  if (second) {
+    time += style.sep + pad(second);
+  }
+
+  return time + (style.closeUp ? '' : ' ') +
+    (h < 12 ? style.am : style.pm);
 }
 
 // Get English number names for the integers zero through ten.
@@ -1688,10 +1803,11 @@ function pluralize(value, unit) {
   return +value === 1 ? unit : unit + 's';
 }
 
-// The range connective between two bounds: prose " through " normally, a
-// compact hyphen with the `short` option ("Mon-Fri", "9:00 AM-5:45 PM").
+// The range connective between two bounds: the dialect's prose form
+// (" through " or " to ") normally, a compact hyphen with the `short`
+// option ("Mon-Fri", "9:30 a.m.-5:45 p.m.").
 function through(opts) {
-  return opts.short ? '-' : ' through ';
+  return opts.short ? '-' : opts.style.through;
 }
 
 // Get suffixed ordinals from integers (1st, 2nd, ... 31st). Dates always

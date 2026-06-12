@@ -7,22 +7,22 @@ import {run} from '../../runner.js';
 describe('Second folded into a clock time:', function() {
   describe('basic', function() {
     run([
-      ['15 0 9 * * *', 'every day at 9:00:15 AM'],
-      ['15 30 9 * * *', 'every day at 9:30:15 AM'],
-      ['5 0 9 * * *', 'every day at 9:00:05 AM'],
-      ['0 0 9 * * *', 'every day at 9:00 AM']
+      ['15 0 9 * * *', 'every day at 9:00:15 a.m.'],
+      ['15 30 9 * * *', 'every day at 9:30:15 a.m.'],
+      ['5 0 9 * * *', 'every day at 9:00:05 a.m.'],
+      ['0 0 9 * * *', 'every day at 9 a.m.']
     ]);
   });
 
   describe('across an hour list', function() {
     run([
-      ['30 0 9,17 * * *', 'every day at 9:00:30 AM and 5:00:30 PM']
+      ['30 0 9,17 * * *', 'every day at 9:00:30 a.m. and 5:00:30 p.m.']
     ]);
   });
 
   describe('with a day qualifier', function() {
     run([
-      ['15 0 9 * * MON', 'every Monday at 9:00:15 AM']
+      ['15 0 9 * * MON', 'every Monday at 9:00:15 a.m.']
     ]);
   });
 

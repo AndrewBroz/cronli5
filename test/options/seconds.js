@@ -14,6 +14,6 @@ describe('Seconds option:', function() {
     ['0 * * * *', 'every minute', options],
     ['0 30 * * *', '30 minutes past the hour, every hour', options],
     ['0 0 * * *', 'every hour', options],
-    ['0 0 12 * *', 'every day at 12:00 PM', options]
+    ['0 0 12 * *', 'every day at noon', options]
   ]);
 });

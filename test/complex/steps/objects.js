@@ -16,20 +16,20 @@ describe('Valid objects with steps:', function() {
     [{minute: '*/10'}, 'every ten minutes'],
     [{minute: '*/17'}, 'every 17 minutes past the hour'],
     [{minute: '*/20'}, 'every 20 minutes'],
-    [{minute: '17/20'}, 'at 17, 37 and 57 minutes past the hour'],
+    [{minute: '17/20'}, 'at 17, 37, and 57 minutes past the hour'],
     [{minute: '*/21'}, 'every 21 minutes past the hour'],
     [{minute: '*/30'}, 'every 30 minutes'],
     [{minute: '*/31'}, 'at zero and 31 minutes past the hour'],
     [{hour: '*/2'}, 'every two hours'],
     [{hour: '*/3'}, 'every three hours'],
-    [{hour: '2/3'}, 'every three hours from 2:00 AM'],
+    [{hour: '2/3'}, 'every three hours from 2 a.m.'],
     [{hour: '*/5'}, 'every five hours from midnight'],
     [{hour: '*/7'}, 'every seven hours from midnight'],
     [{hour: '*/8'}, 'every eight hours'],
-    [{hour: '*/10'}, 'at 12:00 AM, 10:00 AM and 8:00 PM'],
+    [{hour: '*/10'}, 'at midnight, 10 a.m., and 8 p.m.'],
     [{hour: '*/12'}, 'every 12 hours'],
-    [{hour: '*/17'}, 'at 12:00 AM and 5:00 PM'],
-    [{hour: '*/20'}, 'at 12:00 AM and 8:00 PM']
+    [{hour: '*/17'}, 'at midnight and 5 p.m.'],
+    [{hour: '*/20'}, 'at midnight and 8 p.m.']
   ];
 
   describe('Partial cron objects', function() {

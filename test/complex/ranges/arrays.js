@@ -22,32 +22,32 @@ describe('Valid arrays with ranges:', function() {
   describe('hour ranges', function() {
     run([
       [['0', '9-17', '*', '*', '*'],
-        'every hour from 9:00 AM through 5:00 PM'],
+        'every hour from 9 a.m. through 5 p.m.'],
       [['0', '0-5', '*', '*', '*'],
-        'every hour from 12:00 AM through 5:00 AM']
+        'every hour from midnight through 5 a.m.']
     ]);
   });
 
   describe('date ranges', function() {
     run([
-      [['0', '0', '1-15', '*', '*'], 'on the 1st through 15th at 12:00 AM'],
-      [['0', '0', '10-20', '*', '*'], 'on the 10th through 20th at 12:00 AM']
+      [['0', '0', '1-15', '*', '*'], 'on the 1st through 15th at midnight'],
+      [['0', '0', '10-20', '*', '*'], 'on the 10th through 20th at midnight']
     ]);
   });
 
   describe('month ranges', function() {
     run([
       [['0', '12', '*', '6-8', '*'],
-        'every day in June through August at 12:00 PM'],
+        'every day in June through August at noon'],
       [['0', '12', '*', 'JAN-MAR', '*'],
-        'every day in January through March at 12:00 PM']
+        'every day in January through March at noon']
     ]);
   });
 
   describe('weekday ranges', function() {
     run([
-      [['0', '9', '*', '*', 'MON-FRI'], 'every Monday through Friday at 9:00 AM'],
-      [['0', '9', '*', '*', '1-5'], 'every Monday through Friday at 9:00 AM']
+      [['0', '9', '*', '*', 'MON-FRI'], 'every Monday through Friday at 9 a.m.'],
+      [['0', '9', '*', '*', '1-5'], 'every Monday through Friday at 9 a.m.']
     ]);
   });
 });

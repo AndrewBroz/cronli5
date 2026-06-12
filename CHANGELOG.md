@@ -14,19 +14,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   list segments expand into clock times, and date/month/weekday list segments
   render as ordinals, names, or weekday spans.
 - A minute wildcard or plain range now composes with an **hour list**
-  (`every minute during the 9:00 AM and 5:00 PM hours`) and an **hour step**
+  (`every minute during the 9 a.m. and 5 p.m. hours`) and an **hour step**
   (`every minute from zero through 30 past the hour, every two hours`)
   instead of collapsing to the bare hour description.
 - A meaningful second under a restricted minute or hour now **leads with its
-  own clause** (`every 15 seconds, every day at 9:30 AM`) instead of being
+  own clause** (`every 15 seconds, every day at 9:30 a.m.`) instead of being
   silently dropped.
 - Property-based tests covering mixed-list fields, asserting interpretation
   never throws or leaks `NaN`/`undefined` for valid patterns.
 - A `lenient` option: invalid input returns the fallback description
   `'an unrecognizable cron pattern'` instead of throwing, making `cronli5`
   safe to embed in UIs that render arbitrary user crontabs.
+- A `dialect` option anchored to named style guides. `'us'` (the default)
+  follows the Chicago Manual of Style; `'uk'` follows the Guardian style
+  guide: `cronli5('30 9 * * MON-FRI', {dialect: 'uk'})` reads "every Monday
+  to Friday at 9.30am", with no serial comma, "to" ranges, closed-up
+  full-point times, "midday"/"midnight", and day-first dates ("1 January").
+  `'house'` preserves cronli5's legacy voice ("9:30 AM", "Monday - Friday",
+  ordinal dates like "January 1st") on a Chicago base, and a custom style
+  object may be passed directly, with omitted fields inheriting the US
+  defaults (`{dialect: {through: ' until '}}`). The full style-field
+  reference lives in `docs/dialects.md`.
 - Input normalization: list segments are described in ascending fire order
-  (`17,9` reads "at 9:00 AM and 5:00 PM"), duplicate segments collapse, and
+  (`17,9` reads "at 9 a.m. and 5 p.m."), duplicate segments collapse, and
   degenerate ranges (`9-9`) read as their single value.
 - **Quartz-style tokens** in the date and weekday fields: `L` ("on the last
   day of the month"), `L-n` ("five days before the last day of the month"),
@@ -34,7 +44,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   nearest the 15th"), `nL` ("on the last Friday of the month"), `n#m` ("on
   the second Monday of the month"), and `?` (no specific value).
 - **Wrap-around ranges** in cyclic fields: `0 22-2 * * *` reads "every hour
-  from 10:00 PM through 2:00 AM", `FRI-MON` reads "Friday-Monday", and
+  from 10 p.m. through 2 a.m.", `FRI-MON` reads "Friday-Monday", and
   `11-2` reads "November through February". Reversed ranges remain invalid
   where the cycle metaphor breaks down: step bounds and the year field.
 - A head-to-head cronli5 vs. cRonstrue comparison:
@@ -45,7 +55,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the README links to both.
 - **Seven-field (Quartz-style) patterns** parse without any option: seven
   fields are unambiguous (`second minute hour date month weekday year`), so
-  `'0 0 12 1 1 * 2030'` reads "on January 1st, 2030 at 12:00 PM". The
+  `'0 0 12 1 1 * 2030'` reads "on January 1, 2030 at noon". The
   `years` option remains as the six-field disambiguator.
 - An explicitly supplied year is now always described: object input with a
   `year` property (e.g. `{hour: 9, year: 2030}`) previously validated the
@@ -53,15 +63,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Default output now adheres to the **Chicago Manual of Style**: serial
+  commas in lists of three or more ("9 a.m., noon, and 5 p.m."), lowercase
+  dotted meridiems ("9:30 a.m.", previously "9:30 AM"), on-the-hour times
+  without minutes ("9 a.m.", previously "9:00 AM"), "noon" and "midnight"
+  for exact 12:00, and cardinal month-day dates ("January 1", previously
+  "January 1st"). Bare days of the month keep their ordinals ("on the 1st
+  and 15th").
 - Hour windows now end at the **last actual fire** instead of the top of the
-  final hour: `*/15 9-17 * * *` reads "every 15 minutes from 9:00 AM through
-  5:45 PM" (previously "through 5:00 PM"), and `*/15 9 * * *` reads "through
-  9:45 AM" (previously "through 9:59 AM").
+  final hour: `*/15 9-17 * * *` reads "every 15 minutes from 9 a.m. through
+  5:45 p.m." (previously "through 5 p.m."), and `*/15 9 * * *` reads "through
+  9:45 a.m." (previously "through 9:59 a.m.").
 - Weekday ranges read as prose: `MON-FRI` is "every Monday through Friday"
   (previously "every Monday-Friday").
 - The `short` option now compacts ranges consistently: every "A through B"
   becomes "A-B" (`Mon-Fri` as before, and now also `Jan-Mar`, `1st-5th`,
-  `0-30` in minute lists, and clock-time windows like `9:00 AM-5:45 PM`).
+  `0-30` in minute lists, and clock-time windows like `9 a.m.-5:45 p.m.`).
   Previously short mode abbreviated names but left "through" in place for
   every field except weekdays.
 
@@ -79,26 +96,26 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Month, date, and weekday lists containing ranges or steps no longer render
   `undefined` or garbled bounds.
 - A weekday combined with a month (e.g. `0 0 * 6 MON`) no longer drops the
-  weekday: it reads "every Monday in June at 12:00 AM".
+  weekday: it reads "every Monday in June at midnight".
 - Interval-one steps normalize to their equivalent range, fixing inaccurate
   or garbled output in every field: `1/1 * * * *` read "every minute"
   though minute :00 is excluded (now "every minute from one through 59 past
   the hour"), `0 1/1 * * *` read "every hour" though hour 0 is excluded
-  (now "every hour from 1:00 AM through 11:00 PM"), and `0 0 2/1 * *` read
+  (now "every hour from 1 a.m. through 11 p.m."), and `0 0 2/1 * *` read
   "every 1st day of the month from the 2nd" (now "on the 2nd through 31st").
 - Offset steps starting at one are no longer ungrammatical: `1/3 * * * *`
   reads "every three minutes from one minute past the hour" (was "one
   minutes").
 - A discrete minute under an hour step is no longer dropped: `5 */6 * * *`
-  reads "every day at 12:05 AM, 6:05 AM, 12:05 PM and 6:05 PM" (previously
+  reads "every day at 12:05 a.m., 6:05 a.m., 12:05 p.m., and 6:05 p.m." (previously
   "every six hours", and bounded steps even displayed ":00" times for jobs
   firing at :05).
 - Clock-time enumeration is capped at six times. Beyond the cap, a single
   minute folds into per-segment hour windows (`30 9-20,22 * * *` reads
-  "every day at 9:30 AM through 8:30 PM and 10:30 PM") and a minute list
+  "every day at 9:30 a.m. through 8:30 p.m. and 10:30 p.m.") and a minute list
   leads with its own clause instead of cross-multiplying into a wall of
   times (`0,30 8-18/2 * * *` reads "at zero and 30 minutes past the hour,
-  at 8:00 AM, 10:00 AM, ..." — six times, not twelve).
+  at 8 a.m., 10 a.m., ..." — six times, not twelve).
 
 ## [0.1.0]
 
@@ -108,9 +125,9 @@ First non-beta release.
 
 - Idiomatic descriptions for **lists** (`,`), **ranges** (`-`), and **compound**
   patterns that combine multiple non-trivial fields (e.g.
-  `at 30 minutes past the hour from 9:00 AM through 5:00 PM`).
+  `at 30 minutes past the hour from 9 a.m. through 5 p.m.`).
 - Trailing day qualifiers for bare frequencies (e.g. `every minute on Monday`,
-  `every hour on January 13th`).
+  `every hour on January 13`).
 - Dual **ESM** and **CommonJS** builds plus a minified **browser** global, an
   `exports` map, and bundled **TypeScript** type definitions (`cronli5.d.ts`).
 - Continuous integration (GitHub Actions) across Node 18/20/22, with a

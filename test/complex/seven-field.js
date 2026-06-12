@@ -8,35 +8,35 @@ import {run} from '../runner.js';
 describe('Seven-field patterns:', function() {
   describe('strings', function() {
     run([
-      ['0 30 9 * * * 2030', 'every day at 9:30 AM in 2030'],
-      ['0 0 12 1 1 * 2030', 'on January 1st, 2030 at 12:00 PM'],
+      ['0 30 9 * * * 2030', 'every day at 9:30 a.m. in 2030'],
+      ['0 0 12 1 1 * 2030', 'on January 1, 2030 at noon'],
       ['0 0 12 25 12 * 2030-2035',
-        'on December 25th at 12:00 PM in 2030-2035'],
-      ['0 0 12 1 1 * */2', 'on January 1st at 12:00 PM every two years'],
+        'on December 25 at noon in 2030-2035'],
+      ['0 0 12 1 1 * */2', 'on January 1 at noon every two years'],
       ['*/15 30 9 * * * 2030',
-        'every 15 seconds, every day at 9:30 AM in 2030'],
-      ['0 30 9 * * * *', 'every day at 9:30 AM']
+        'every 15 seconds, every day at 9:30 a.m. in 2030'],
+      ['0 30 9 * * * *', 'every day at 9:30 a.m.']
     ]);
   });
 
   describe('arrays', function() {
     run([
       [['0', '30', '9', '*', '*', '*', '2030'],
-        'every day at 9:30 AM in 2030']
+        'every day at 9:30 a.m. in 2030']
     ]);
   });
 
   describe('objects with a year', function() {
     run([
       [{minute: '30', hour: '9', year: '2030'},
-        'every day at 9:30 AM in 2030'],
-      [{minute: '30', hour: '9', year: '*'}, 'every day at 9:30 AM']
+        'every day at 9:30 a.m. in 2030'],
+      [{minute: '30', hour: '9', year: '*'}, 'every day at 9:30 a.m.']
     ]);
   });
 
   describe('the years option still disambiguates six fields', function() {
     run([
-      ['0 9 * * * 2030', 'every day at 9:00 AM in 2030', {years: true}],
+      ['0 9 * * * 2030', 'every day at 9 a.m. in 2030', {years: true}],
       ['30 9 * * * *', 'nine minutes and 30 seconds past the hour, ' +
         'every hour']
     ]);

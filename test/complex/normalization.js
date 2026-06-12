@@ -9,29 +9,29 @@ import {run} from '../runner.js';
 describe('Input normalization:', function() {
   describe('lists sort into fire order', function() {
     run([
-      ['0 17,9 * * *', 'every day at 9:00 AM and 5:00 PM'],
+      ['0 17,9 * * *', 'every day at 9 a.m. and 5 p.m.'],
       ['45,15,30 * * * *',
-        'at 15, 30 and 45 minutes past the hour'],
+        'at 15, 30, and 45 minutes past the hour'],
       ['30-40,10 * * * *',
         'at ten and 30 through 40 minutes past the hour'],
       ['30,15 * * * * *', 'at 15 and 30 seconds past the minute'],
-      ['0 0 * * FRI,MON', 'every Monday and Friday at 12:00 AM'],
-      ['0 0 * SEP,MAR *', 'every day in March and September at 12:00 AM'],
-      ['0 0 15,1 * *', 'on the 1st and 15th at 12:00 AM']
+      ['0 0 * * FRI,MON', 'every Monday and Friday at midnight'],
+      ['0 0 * SEP,MAR *', 'every day in March and September at midnight'],
+      ['0 0 15,1 * *', 'on the 1st and 15th at midnight']
     ]);
   });
 
   describe('duplicate segments collapse', function() {
     run([
       ['5,5 * * * *', 'five minutes past the hour, every hour'],
-      ['0 9,9,17 * * *', 'every day at 9:00 AM and 5:00 PM']
+      ['0 9,9,17 * * *', 'every day at 9 a.m. and 5 p.m.']
     ]);
   });
 
   describe('degenerate ranges read as single values', function() {
     run([
-      ['0 9-9 * * *', 'every day at 9:00 AM'],
-      ['30-30 9 * * *', 'every day at 9:30 AM']
+      ['0 9-9 * * *', 'every day at 9 a.m.'],
+      ['30-30 9 * * *', 'every day at 9:30 a.m.']
     ]);
   });
 
@@ -44,10 +44,10 @@ describe('Input normalization:', function() {
       ['0/1 * * * *', 'every minute'],
       ['*/1 * * * *', 'every minute'],
       ['5-30/1 * * * *', 'every minute from five through 30 past the hour'],
-      ['0 1/1 * * *', 'every hour from 1:00 AM through 11:00 PM'],
-      ['0 0 2/1 * *', 'on the 2nd through 31st at 12:00 AM'],
-      ['0 0 * 3/1 *', 'every day in March through December at 12:00 AM'],
-      ['0 0 * * 1/1', 'every Monday through Saturday at 12:00 AM']
+      ['0 1/1 * * *', 'every hour from 1 a.m. through 11 p.m.'],
+      ['0 0 2/1 * *', 'on the 2nd through 31st at midnight'],
+      ['0 0 * 3/1 *', 'every day in March through December at midnight'],
+      ['0 0 * * 1/1', 'every Monday through Saturday at midnight']
     ]);
   });
 

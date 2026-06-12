@@ -14,10 +14,11 @@ expectAssignable<CronPattern>(['*', '*', '*', '*', '*']);
 expectAssignable<CronPattern>({minute: '*/5'});
 expectAssignable<CronPatternObject>({hour: 9, weekday: 'MON-FRI'});
 
-// Options are all optional booleans.
+// Options are all optional.
 expectAssignable<Cronli5Options>({});
 expectAssignable<Cronli5Options>({
   ampm: true,
+  dialect: 'uk',
   lenient: false,
   short: false,
   seconds: false,
@@ -29,6 +30,18 @@ expectError(cronli5());
 
 // Unknown option keys are rejected.
 expectError<Cronli5Options>({nope: true});
+
+// Unknown dialects are rejected.
+expectError<Cronli5Options>({dialect: 'fr'});
+
+// Named and custom-object dialects are accepted; unknown style fields are
+// rejected.
+expectAssignable<Cronli5Options>({dialect: 'house'});
+expectAssignable<Cronli5Options>({dialect: {through: ' until '}});
+expectAssignable<Cronli5Options>({
+  dialect: {am: 'am', closeUp: true, ordinals: true, serialComma: false}
+});
+expectError<Cronli5Options>({dialect: {nope: true}});
 
 // Numbers are not valid patterns.
 expectError(cronli5(42));

@@ -10,7 +10,7 @@ describe('24-hour option:', function() {
     ['0 13 * * FRI', 'every Friday at 13:00', options],
     ['0 2 * * MON-FRI', 'every Monday through Friday at 02:00', options],
     ['0 15 * * TUE', 'every Tuesday at 15:00', options],
-    ['0 14 * * MON,WED,FRI', 'every Monday, Wednesday and Friday at 14:00', options],
+    ['0 14 * * MON,WED,FRI', 'every Monday, Wednesday, and Friday at 14:00', options],
     ['0 23 * * THU', 'every Thursday at 23:00', options],
     ['0 6 * * SAT', 'every Saturday at 06:00', options]
   ]);

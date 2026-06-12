@@ -11,8 +11,8 @@ import {run} from '../../runner.js';
 describe('Compound patterns that fold into a higher field:', function() {
   describe('a single minute folds into a specific hour', function() {
     run([
-      ['30 9 * * *', 'every day at 9:30 AM'],
-      ['15 14 * * *', 'every day at 2:15 PM']
+      ['30 9 * * *', 'every day at 9:30 a.m.'],
+      ['15 14 * * *', 'every day at 2:15 p.m.']
     ]);
   });
 });

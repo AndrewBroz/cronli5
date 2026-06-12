@@ -108,25 +108,25 @@ Runs every five minutes.
 
 ## Options
 
-The `cronli5` function takes an `options` object as its 2nd parameter. All
-properties are boolean flags:
+The `cronli5` function takes an `options` object as its 2nd parameter:
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `ampm` | `true` | Use a 12-hour clock with AM/PM. Set `false` for 24-hour time. |
+| `ampm` | `true` | Use a 12-hour clock. Set `false` for 24-hour time. |
+| `dialect` | `'us'` | The English style. `'us'` follows the [Chicago Manual of Style][chicago]: serial commas, `through` ranges, `9 a.m.`/`5:30 p.m.` times, `noon`/`midnight`, and `January 1` dates. `'uk'` follows the [Guardian style guide][guardian]: no serial comma, `to` ranges, `9am`/`5.30pm` times, `midday`/`midnight`, and `1 January` dates. `'house'` is cronli5's legacy voice (`9:30 AM`, `Monday - Friday`). A custom object defines your own style. See [docs/dialects.md](./docs/dialects.md). |
 | `lenient` | `false` | Never throw: invalid input returns the fallback description `'an unrecognizable cron pattern'` instead. Useful when rendering arbitrary user crontabs. |
-| `short` | `false` | Compact output: abbreviated month and weekday names, and hyphenated ranges everywhere `through` would appear (`Mon-Fri`, `Jan-Mar`, `1st-5th`, `9:00 AM-5:45 PM`). |
+| `short` | `false` | Compact output: abbreviated month and weekday names, and hyphenated ranges everywhere `through`/`to` would appear (`Mon-Fri`, `Jan-Mar`, `1st-5th`, `9 a.m.-5:45 p.m.`). |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |
 
 When a specific year is given &mdash; via a seven-field pattern, an object's
 `year` property, or a six-field pattern with `years: true` &mdash; it is
-folded into a specific calendar date (`'on January 1st, 2030 at 12:00 PM'`)
-or otherwise trails the description (`'every Friday at 1:00 PM in 2030'`).
+folded into a specific calendar date (`'on January 1, 2030 at noon'`)
+or otherwise trails the description (`'every Friday at 1 p.m. in 2030'`).
 
 ```js
-cronli5('0 0 12 1 1 * 2030');  // 'on January 1st, 2030 at 12:00 PM'
-cronli5({ hour: 9, year: 2030 }); // 'every day at 9:00 AM in 2030'
+cronli5('0 0 12 1 1 * 2030');  // 'on January 1, 2030 at noon'
+cronli5({ hour: 9, year: 2030 }); // 'every day at 9 a.m. in 2030'
 ```
 
 ```js
@@ -135,10 +135,13 @@ import cronli5 from 'cronli5';
 const weekdaysAt1330 = '30 13 * * MON-FRI';
 
 cronli5(weekdaysAt1330, { ampm: true, short: false });
-// 'every Monday through Friday at 1:30 PM'
+// 'every Monday through Friday at 1:30 p.m.'
 
 cronli5(weekdaysAt1330, { ampm: false, short: true });
 // 'every Mon-Fri at 13:30'
+
+cronli5(weekdaysAt1330, { dialect: 'uk' });
+// 'every Monday to Friday at 1.30pm'
 ```
 
 ## Output Examples
@@ -146,40 +149,42 @@ cronli5(weekdaysAt1330, { ampm: false, short: true });
 `cronli5` renders single values, lists (`,`), ranges (`-`), and steps (`/`),
 and composes multiple fields into a single idiomatic phrase.
 
-Lists are joined serially without an Oxford comma (`'A, B and C'`). Dates always
-use suffixed numeric ordinals (`1st`, `2nd`, ... `31st`).
+Output follows the Chicago Manual of Style by default (serial commas,
+`9 a.m.` times, `noon`/`midnight`, cardinal month-day dates) &mdash; see the
+[`dialect`](#options) option for Guardian-style British English. Bare days
+of the month use suffixed ordinals (`on the 1st and 15th`).
 
 ```js
 // Single values and steps
 cronli5('*/5 * * * *');     // 'every five minutes'
-cronli5('0 9 * * MON');     // 'every Monday at 9:00 AM'
+cronli5('0 9 * * MON');     // 'every Monday at 9 a.m.'
 
 // Lists
-cronli5('5,10,15 * * * * *'); // 'at five, ten and 15 seconds past the minute'
-cronli5('0 9,17 * * *');      // 'every day at 9:00 AM and 5:00 PM'
-cronli5('0 0 1,15 * *');      // 'on the 1st and 15th at 12:00 AM'
-cronli5('0 12 * 6,12 *');     // 'every day in June and December at 12:00 PM'
+cronli5('5,10,15 * * * * *'); // 'at five, ten, and 15 seconds past the minute'
+cronli5('0 9,17 * * *');      // 'every day at 9 a.m. and 5 p.m.'
+cronli5('0 0 1,15 * *');      // 'on the 1st and 15th at midnight'
+cronli5('0 12 * 6,12 *');     // 'every day in June and December at noon'
 
 // Ranges (wrap-around ranges describe overnight and weekend windows)
 cronli5('0-29 * * * *'); // 'every minute from zero through 29 past the hour'
-cronli5('0 9-17 * * *');  // 'every hour from 9:00 AM through 5:00 PM'
-cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at 12:00 AM'
-cronli5('0 22-2 * * *');  // 'every hour from 10:00 PM through 2:00 AM'
-cronli5('0 0 * * FRI-MON'); // 'every Friday through Monday at 12:00 AM'
+cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m.'
+cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at midnight'
+cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m.'
+cronli5('0 0 * * FRI-MON'); // 'every Friday through Monday at midnight'
 
 // Compound patterns
-cronli5('0,30 9 * * *');   // 'every day at 9:00 AM and 9:30 AM'
-cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9:00 AM through 5:45 PM'
+cronli5('0,30 9 * * *');   // 'every day at 9 a.m. and 9:30 a.m.'
+cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m.'
 cronli5('30 9-17 * * *');
-// 'at 30 minutes past the hour from 9:00 AM through 5:30 PM'
-cronli5('0 12 1 1 *');     // 'on January 1st at 12:00 PM'
+// 'at 30 minutes past the hour from 9 a.m. through 5:30 p.m.'
+cronli5('0 12 1 1 *');     // 'on January 1 at noon'
 cronli5('0 * 13 * *');     // 'every hour on the 13th'
 
 // Quartz tokens
-cronli5('0 0 L * *');      // 'on the last day of the month at 12:00 AM'
-cronli5('0 0 * * 5L');     // 'on the last Friday of the month at 12:00 AM'
-cronli5('0 0 * * 1#2');    // 'on the second Monday of the month at 12:00 AM'
-cronli5('0 0 15W * *');    // 'on the weekday nearest the 15th at 12:00 AM'
+cronli5('0 0 L * *');      // 'on the last day of the month at midnight'
+cronli5('0 0 * * 5L');     // 'on the last Friday of the month at midnight'
+cronli5('0 0 * * 1#2');    // 'on the second Monday of the month at midnight'
+cronli5('0 0 15W * *');    // 'on the weekday nearest the 15th at midnight'
 ```
 
 ## cronli5 vs. cRonstrue
@@ -192,10 +197,10 @@ than English, use cRonstrue.
 
 ```js
 cronli5('5,10 30 9 * * MON');
-// 'at five and ten seconds past the minute, every Monday at 9:30 AM'
+// 'at five and ten seconds past the minute, every Monday at 9:30 a.m.'
 
 // cRonstrue: 'At 5 and 10 seconds past the minute, at 30 minutes past
-//             the hour, at 09:00 AM, only on Monday'
+//             the hour, at 09 a.m., only on Monday'
 ```
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
@@ -274,7 +279,9 @@ _Copyright &copy; 2026 [Andrew Brož][andrewbroz]_
 [esbuild]: https://esbuild.github.io/
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
+[chicago]: https://www.chicagomanualofstyle.org/
 [cronstrue]: https://github.com/bradymholt/cRonstrue
+[guardian]: https://www.theguardian.com/guardian-observer-style-guide-a
 [later]: https://github.com/breejs/later
 [license]: ./LICENSE.md
 [moment]: http://momentjs.com/

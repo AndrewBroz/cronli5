@@ -8,12 +8,12 @@ import {run} from '../runner.js';
 describe('Wrap-around ranges:', function() {
   describe('hours wrap across midnight', function() {
     run([
-      ['0 22-2 * * *', 'every hour from 10:00 PM through 2:00 AM'],
-      ['* 22-2 * * *', 'every minute from 10:00 PM through 2:59 AM'],
-      ['*/15 22-2 * * *', 'every 15 minutes from 10:00 PM through 2:45 AM'],
+      ['0 22-2 * * *', 'every hour from 10 p.m. through 2 a.m.'],
+      ['* 22-2 * * *', 'every minute from 10 p.m. through 2:59 a.m.'],
+      ['*/15 22-2 * * *', 'every 15 minutes from 10 p.m. through 2:45 a.m.'],
       ['0-30 22-2 * * *',
         'every minute from zero through 30 past the hour, ' +
-        'from 10:00 PM through 2:30 AM']
+        'from 10 p.m. through 2:30 a.m.']
     ]);
   });
 
@@ -21,26 +21,26 @@ describe('Wrap-around ranges:', function() {
     run([
       ['30-10 * * * *', 'every minute from 30 through ten past the hour'],
       ['50-10 9 * * *',
-        'every minute from 50 through ten past the hour, at 9:00 AM'],
+        'every minute from 50 through ten past the hour, at 9 a.m.'],
       ['50-10 * * * * *', 'every second from 50 through ten past the minute']
     ]);
   });
 
   describe('day-level fields wrap', function() {
     run([
-      ['0 0 20-5 * *', 'on the 20th through 5th at 12:00 AM'],
-      ['0 0 * * FRI-MON', 'every Friday through Monday at 12:00 AM'],
+      ['0 0 20-5 * *', 'on the 20th through 5th at midnight'],
+      ['0 0 * * FRI-MON', 'every Friday through Monday at midnight'],
       ['0 12 * 11-2 *',
-        'every day in November through February at 12:00 PM'],
-      ['0 0 1 DEC-JAN *', 'on December through January 1st at 12:00 AM']
+        'every day in November through February at noon'],
+      ['0 0 1 DEC-JAN *', 'on December through January 1 at midnight']
     ]);
   });
 
   describe('hour lists containing a wrapping range', function() {
     run([
       ['0 22-2,12 * * *',
-        'every day at 12:00 PM, 10:00 PM, 11:00 PM, ' +
-        '12:00 AM, 1:00 AM and 2:00 AM']
+        'every day at noon, 10 p.m., 11 p.m., ' +
+        'midnight, 1 a.m., and 2 a.m.']
     ]);
   });
 

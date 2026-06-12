@@ -15,9 +15,9 @@ describe('Simple valid cron-like objects:', function() {
     [{minute: '15'}, '15 minutes past the hour, every hour'],
     [{minute: '30'}, '30 minutes past the hour, every hour'],
     [{hour: '*'}, 'every hour'],
-    [{hour: '5'}, 'every day at 5:00 AM'],
-    [{hour: '12', weekday:'TUE'}, 'every Tuesday at 12:00 PM'],
-    [{minute: 45, hour: 15, weekday:'FRI'}, 'every Friday at 3:45 PM'],
-    [{hour: 9, date: '13', month: 'JAN'}, 'on January 13th at 9:00 AM']
+    [{hour: '5'}, 'every day at 5 a.m.'],
+    [{hour: '12', weekday:'TUE'}, 'every Tuesday at noon'],
+    [{minute: 45, hour: 15, weekday:'FRI'}, 'every Friday at 3:45 p.m.'],
+    [{hour: 9, date: '13', month: 'JAN'}, 'on January 13 at 9 a.m.']
   ]);
 });
