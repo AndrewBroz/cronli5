@@ -2,7 +2,7 @@
 
 `cronli5` writes its descriptions in a configurable English style, set with
 the `dialect` option. Two dialects are anchored to named style guides, one
-preserves cronli5's legacy voice, and a custom object lets you define your
+is a house style, and a custom object lets you define your
 own.
 
 ```js
