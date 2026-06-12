@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {execSync} from 'node:child_process';
+import {execFileSync} from 'node:child_process';
 import {existsSync} from 'node:fs';
 import {createRequire} from 'node:module';
 
@@ -12,8 +12,9 @@ describe('Built package artifacts:', function() {
   before(function() {
     this.timeout(30000); // eslint-disable-line no-invalid-this
 
-    if (!existsSync('dist/cronli5.cjs') || !existsSync('dist/cronli5.js')) {
-      execSync('npm run build', {stdio: 'ignore'});
+    if (!existsSync('dist/cronli5.cjs') || !existsSync('dist/cronli5.js') ||
+        !existsSync('dist/lang/es.cjs') || !existsSync('dist/lang/es.js')) {
+      execFileSync('npm', ['run', 'build'], {stdio: 'ignore'});
     }
   });
 
@@ -37,5 +38,31 @@ describe('Built package artifacts:', function() {
     const pattern = '30 13 * * MON-FRI';
 
     expect(cjs(pattern)).to.equal(esm(pattern));
+  });
+
+  it('CommonJS language build is require-able and plugs into `lang`',
+    function() {
+      const cjs = require('../../dist/cronli5.cjs');
+      const es = require('../../dist/lang/es.cjs');
+
+      expect(es.describe).to.be.a('function');
+      expect(es.fallback).to.be.a('string');
+      expect(cjs('*/5 * * * *', {lang: es})).to.equal('cada cinco minutos');
+    });
+
+  it('ESM language build exposes the module as the default export',
+    async function() {
+      const esm = (await import('../../dist/cronli5.js')).default;
+      const es = (await import('../../dist/lang/es.js')).default;
+
+      expect(esm('0 9 * * MON', {lang: es}))
+        .to.equal('todos los lunes a las 9 de la mañana');
+    });
+
+  it('every language under src/lang has both built artifacts', function() {
+    for (const code of ['en', 'es', 'fi']) {
+      expect(existsSync(`dist/lang/${code}.js`), `${code} ESM`).to.be.true;
+      expect(existsSync(`dist/lang/${code}.cjs`), `${code} CJS`).to.be.true;
+    }
   });
 });

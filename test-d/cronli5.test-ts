@@ -1,5 +1,6 @@
 import {expectType, expectError, expectAssignable} from 'tsd';
 import cronli5, {Cronli5Options, CronPattern, CronPatternObject} from '..';
+import es from '../lang';
 
 // The default export is a function returning a string.
 expectType<string>(cronli5('* * * * *'));
@@ -45,3 +46,8 @@ expectError<Cronli5Options>({dialect: {nope: true}});
 
 // Numbers are not valid patterns.
 expectError(cronli5(42));
+
+// A language module (the shape every `cronli5/lang/<code>` subpath
+// declares) is assignable to the `lang` option.
+expectAssignable<Cronli5Options>({lang: es});
+expectType<string>(cronli5('* * * * *', {lang: es}));

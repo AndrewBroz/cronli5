@@ -1,12 +1,16 @@
 # i18n Design: A Language-Independent Core with Generated, Reviewed Languages
 
-*Status: design accepted; migration steps 1–3 (§7) are implemented — the
+*Status: design accepted; migration steps 1–4 (§7) are implemented — the
 core/`lang/en` split, the `plan` IR consumed by a pure English renderer,
-and the Spanish pilot (`src/lang/es/`, `test/lang/es/` with corpus,
-minimal pairs, notes, and review log; `{lang: es}` via the new `lang`
-option and `cronli5/lang/es` subpath export). The pilot required ZERO core
-changes — the IR contract held. Next: the agglutinative stress test
-(step 4, Finnish or Basque).*
+the Spanish pilot, and the Finnish agglutinative stress test
+(`src/lang/fi/`, `test/lang/fi/`, the `cronli5/lang/fi` subpath). Both
+non-English languages required ZERO core changes — the IR contract held
+through gendered agreement (es) and case-construction ranges (fi).
+Finnish confirmed §5's prediction that `through` cannot be a connective
+string (ranges are stored case pairs or SFS dash notation, chosen per
+construction inside the module) and inverted one guess: enumerated clock
+times are cheap in Finnish (caseless `klo` digits), so it enumerates
+where this doc predicted window phrasing. Next: breadth (step 5).*
 
 ## 1. The inverted assumption
 
@@ -141,7 +145,8 @@ test/
       REVIEW.md               # review log, corpus-hash stamped
   property/                   # shared invariants, parameterized by lang
 scripts/
-  comparison-table.mjs        # gains --lang, compares vs cronstrue locale
+  comparison-table.mjs        # also fills docs/lang/<code>.md tables
+                              # against the matching cronstrue locale
   review-lang.mjs             # builds the review packet (§4)
 ```
 
@@ -213,14 +218,14 @@ Consequences of the languages-as-values model:
 * **Install size grows ~30 KB of source per language** (the package
   ships `src/`); negligible against the 1.5 MB cronstrue installs.
 
-Packaging gaps to close before a multi-language release:
+Packaging status:
 
-1. `./lang/<code>` subpaths today expose only `import` conditions
-   pointing at `src/` — add built per-language artifacts
-   (`dist/lang/<code>.js` + `.cjs`) so `require('cronli5/lang/es')`
-   works, mirroring the dual-build main entry.
-2. Add a `types` condition per language subpath (a shared
-   `Cronli5Language` declaration suffices).
+1. **Done.** `./lang/<code>` subpaths serve built dual artifacts
+   (`dist/lang/<code>.js` + `.cjs`, emitted per directory found under
+   `src/lang/`), so `require('cronli5/lang/es')` works, mirroring the
+   dual-build main entry.
+2. **Done.** Each language subpath carries a `types` condition pointing
+   at a shared `Cronli5Language` declaration (`lang.d.ts`).
 3. The browser global stays English-only; per-language IIFE bundles are
    cheap to emit from the same build script if ever requested.
 

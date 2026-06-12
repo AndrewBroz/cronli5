@@ -3,20 +3,28 @@
 [`cRonstrue`][cronstrue] is the most widely used cron-description library,
 and a good one. This page compares the two libraries' *output* so you can
 pick by taste; the architectural and philosophical deep dive lives in
-[cronstrue-comparison.md](./cronstrue-comparison.md).
+[i18n-design.md](./i18n-design.md), whose architecture is in large part
+a response to cRonstrue's template-per-locale design.
 
 The short version of the trade:
 
-* **Voice.** `cronli5` writes one flowing English sentence and folds fields
-  into each other; cRonstrue assembles per-field fragments joined by commas.
-  The fragment style is what makes cRonstrue translatable into its **39
-  locales** &mdash; if you need any language other than English, use
-  cRonstrue.
+* **Voice.** `cronli5` writes one flowing sentence and folds fields into
+  each other; cRonstrue assembles per-field fragments joined by commas.
+* **Languages.** The fragment style is what makes cRonstrue translatable
+  into its **39 locales** via per-locale string tables. `cronli5` takes
+  the opposite trade: each language is a **full renderer** (English,
+  Spanish, Finnish so far &mdash; see [docs/lang/](./lang/)), so output reads
+  like the language, but breadth grows one reviewed module at a time. If
+  you need a language `cronli5` doesn't ship, use cRonstrue; each
+  language doc carries a generated side-by-side table against the
+  matching cRonstrue locale.
 * **Validation.** `cronli5` validates strictly and throws named errors (opt
   out with the `lenient` option); cRonstrue describes whatever parses,
   including some malformed input.
-* **Footprint.** `cronli5` is ~4.7&nbsp;KB gzipped with no dependencies;
-  cRonstrue is ~6&nbsp;KB (English) or ~50&nbsp;KB+ with all locales.
+* **Footprint.** `cronli5` is ~6.3&nbsp;KB gzipped with no dependencies,
+  plus ~3.3&nbsp;KB gzipped per imported language; cRonstrue is
+  ~6&nbsp;KB (English) or ~50&nbsp;KB+ with all locales, and its
+  documented i18n entry bundles all 39.
 
 Both tables below are generated from live library output by
 [`scripts/comparison-table.mjs`](../scripts/comparison-table.mjs) &mdash;
