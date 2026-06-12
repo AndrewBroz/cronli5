@@ -13,7 +13,7 @@ describe('Weekday seven (Sunday):', function() {
 
   describe('within a range', function() {
     run([
-      ['0 0 * * 5-7', 'every Friday-Sunday at 12:00 AM']
+      ['0 0 * * 5-7', 'every Friday through Sunday at 12:00 AM']
     ]);
   });
 });

@@ -9,7 +9,10 @@ export interface Cronli5Options {
    * Defaults to `false`.
    */
   lenient?: boolean;
-  /** Use abbreviated month/weekday names. Defaults to `false`. */
+  /**
+   * Compact output: abbreviated month/weekday names and hyphenated ranges
+   * ("Mon-Fri", "9:00 AM-5:45 PM"). Defaults to `false`.
+   */
   short?: boolean;
   /** Treat the first field of strings/arrays as seconds. Defaults to `false`. */
   seconds?: boolean;

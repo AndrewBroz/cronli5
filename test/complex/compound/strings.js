@@ -5,15 +5,15 @@ import {run} from '../../runner.js';
 //   full set of clock times, e.g. "every day at 9:00 AM and 9:30 AM".
 // - A frequency (step) combined with an hour range trails with the active
 //   window, e.g. "every 15 minutes from 9:00 AM through 5:45 PM".
-// - Time-anchored descriptions lead with the weekday ("every Monday-Friday
-//   at ..."); frequency descriptions trail with it ("... on Monday-Friday").
+// - Time-anchored descriptions lead with the weekday ("every Monday through Friday
+//   at ..."); frequency descriptions trail with it ("... on Monday through Friday").
 // - A specific date with a month reads "on <Month> <ordinal> at <time>".
 
 describe('Valid compound strings:', function() {
   describe('already-supported combinations', function() {
     run([
-      ['30 9 * * MON-FRI', 'every Monday-Friday at 9:30 AM'],
-      ['0 22 * * 1-5', 'every Monday-Friday at 10:00 PM'],
+      ['30 9 * * MON-FRI', 'every Monday through Friday at 9:30 AM'],
+      ['0 22 * * 1-5', 'every Monday through Friday at 10:00 PM'],
       ['0 0 25 12 *', 'on December 25th at 12:00 AM']
     ]);
   });
@@ -28,7 +28,7 @@ describe('Valid compound strings:', function() {
   describe('minute list/range with specific hours', function() {
     run([
       ['0,30 9 * * *', 'every day at 9:00 AM and 9:30 AM'],
-      ['0,30 9 * * MON-FRI', 'every Monday-Friday at 9:00 AM and 9:30 AM'],
+      ['0,30 9 * * MON-FRI', 'every Monday through Friday at 9:00 AM and 9:30 AM'],
       [
         '0,30 9,17 * * *',
         'every day at 9:00 AM, 9:30 AM, 5:00 PM and 5:30 PM'
@@ -41,7 +41,7 @@ describe('Valid compound strings:', function() {
       ['*/15 9-17 * * *', 'every 15 minutes from 9:00 AM through 5:45 PM'],
       [
         '*/15 9-17 * * MON-FRI',
-        'every 15 minutes from 9:00 AM through 5:45 PM on Monday-Friday'
+        'every 15 minutes from 9:00 AM through 5:45 PM on Monday through Friday'
       ]
     ]);
   });
@@ -60,7 +60,7 @@ describe('Valid compound strings:', function() {
       [
         '15 9-17 * * MON-FRI',
         'at 15 minutes past the hour from 9:00 AM through 5:15 PM ' +
-          'on Monday-Friday'
+          'on Monday through Friday'
       ]
     ]);
   });
@@ -79,7 +79,7 @@ describe('Valid compound strings:', function() {
     run([
       ['* * * * MON', 'every minute on Monday'],
       ['0 * * * MON', 'every hour on Monday'],
-      ['* * * * MON-FRI', 'every minute on Monday-Friday'],
+      ['* * * * MON-FRI', 'every minute on Monday through Friday'],
       ['* * 13 * *', 'every minute on the 13th'],
       ['0 * 13 * *', 'every hour on the 13th'],
       ['0 * * 1 *', 'every hour in January'],

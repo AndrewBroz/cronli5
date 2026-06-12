@@ -63,7 +63,7 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 0 * 1,6/3 *',
         'every day in January, June, September and December at 12:00 AM'],
       ['0 0 * * 1-5,0',
-        'every Sunday and Monday-Friday at 12:00 AM']
+        'every Sunday and Monday through Friday at 12:00 AM']
     ]);
   });
 });

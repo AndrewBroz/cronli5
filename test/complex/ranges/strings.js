@@ -8,7 +8,7 @@ import {run} from '../../runner.js';
 // - Date ranges read "on the <ordinal> through <ordinal>" using suffixed
 //   numeric ordinals (1st, 2nd, ... 31st); month ranges read
 //   "in <month> through <month>".
-// - Weekday ranges keep their established "Monday-Friday" form.
+// - Weekday ranges keep their established "Monday through Friday" form.
 
 describe('Valid strings with ranges:', function() {
   describe('second ranges', function() {
@@ -48,8 +48,8 @@ describe('Valid strings with ranges:', function() {
 
   describe('weekday ranges', function() {
     run([
-      ['0 9 * * MON-FRI', 'every Monday-Friday at 9:00 AM'],
-      ['0 9 * * 1-5', 'every Monday-Friday at 9:00 AM']
+      ['0 9 * * MON-FRI', 'every Monday through Friday at 9:00 AM'],
+      ['0 9 * * 1-5', 'every Monday through Friday at 9:00 AM']
     ]);
   });
 });

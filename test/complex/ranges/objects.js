@@ -18,8 +18,8 @@ describe('Valid objects with ranges:', function() {
       {hour: '12', month: 'JAN-MAR'},
       'every day in January through March at 12:00 PM'
     ],
-    [{hour: '9', weekday: 'MON-FRI'}, 'every Monday-Friday at 9:00 AM'],
-    [{hour: '9', weekday: '1-5'}, 'every Monday-Friday at 9:00 AM']
+    [{hour: '9', weekday: 'MON-FRI'}, 'every Monday through Friday at 9:00 AM'],
+    [{hour: '9', weekday: '1-5'}, 'every Monday through Friday at 9:00 AM']
   ];
 
   describe('Partial cron objects', function() {

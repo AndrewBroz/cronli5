@@ -47,7 +47,7 @@ describe('Input normalization:', function() {
       ['0 1/1 * * *', 'every hour from 1:00 AM through 11:00 PM'],
       ['0 0 2/1 * *', 'on the 2nd through 31st at 12:00 AM'],
       ['0 0 * 3/1 *', 'every day in March through December at 12:00 AM'],
-      ['0 0 * * 1/1', 'every Monday-Saturday at 12:00 AM']
+      ['0 0 * * 1/1', 'every Monday through Saturday at 12:00 AM']
     ]);
   });
 

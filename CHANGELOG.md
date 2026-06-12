@@ -57,6 +57,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   final hour: `*/15 9-17 * * *` reads "every 15 minutes from 9:00 AM through
   5:45 PM" (previously "through 5:00 PM"), and `*/15 9 * * *` reads "through
   9:45 AM" (previously "through 9:59 AM").
+- Weekday ranges read as prose: `MON-FRI` is "every Monday through Friday"
+  (previously "every Monday-Friday").
+- The `short` option now compacts ranges consistently: every "A through B"
+  becomes "A-B" (`Mon-Fri` as before, and now also `Jan-Mar`, `1st-5th`,
+  `0-30` in minute lists, and clock-time windows like `9:00 AM-5:45 PM`).
+  Previously short mode abbreviated names but left "through" in place for
+  every field except weekdays.
 
 ### Fixed
 
@@ -86,6 +93,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   reads "every day at 12:05 AM, 6:05 AM, 12:05 PM and 6:05 PM" (previously
   "every six hours", and bounded steps even displayed ":00" times for jobs
   firing at :05).
+- Clock-time enumeration is capped at six times. Beyond the cap, a single
+  minute folds into per-segment hour windows (`30 9-20,22 * * *` reads
+  "every day at 9:30 AM through 8:30 PM and 10:30 PM") and a minute list
+  leads with its own clause instead of cross-multiplying into a wall of
+  times (`0,30 8-18/2 * * *` reads "at zero and 30 minutes past the hour,
+  at 8:00 AM, 10:00 AM, ..." — six times, not twelve).
 
 ## [0.1.0]
 

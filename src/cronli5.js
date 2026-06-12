@@ -242,16 +242,16 @@ function dayQualifier(cronPattern, opts, words) {
     }
 
     if (isOpenStep(cronPattern.month)) {
-      return 'on the ' + interpretDateOrdinals(cronPattern.date) +
+      return 'on the ' + interpretDateOrdinals(cronPattern.date, opts) +
         monthScope(cronPattern, opts);
     }
 
     if (cronPattern.month !== '*') {
       return 'on ' + interpretMonthNames(cronPattern.month, opts) + ' ' +
-        interpretDateOrdinals(cronPattern.date);
+        interpretDateOrdinals(cronPattern.date, opts);
     }
 
-    return 'on the ' + interpretDateOrdinals(cronPattern.date);
+    return 'on the ' + interpretDateOrdinals(cronPattern.date, opts);
   }
 
   // A weekday qualifier, optionally scoped to a month ("on Monday in June").
@@ -891,8 +891,8 @@ function secondsLeadClause(secondField, opts) {
   if (isPlainRange(secondField)) {
     const bounds = secondField.split('-');
 
-    return 'every second from ' + getNumber(bounds[0], opts) + ' through ' +
-      getNumber(bounds[1], opts) + ' past the minute';
+    return 'every second from ' + getNumber(bounds[0], opts) +
+      through(opts) + getNumber(bounds[1], opts) + ' past the minute';
   }
 
   if (isSingleValue(secondField)) {
@@ -976,7 +976,7 @@ function interpretMinuteSpanAcrossHourStep(cronPattern, opts) {
 // at the top of the first hour and close at the minute field's last fire
 // within the final hour.
 function hourWindow(startHour, endHour, minuteField, opts) {
-  return 'from ' + getTime(startHour, 0, opts) + ' through ' +
+  return 'from ' + getTime(startHour, 0, opts) + through(opts) +
     getTime(endHour, lastMinuteFire(minuteField), opts);
 }
 
@@ -996,7 +996,7 @@ function lastMinuteFire(minuteField) {
 function minuteRangeLead(minuteField, opts) {
   const bounds = minuteField.split('-');
 
-  return 'every minute from ' + getNumber(bounds[0], opts) + ' through ' +
+  return 'every minute from ' + getNumber(bounds[0], opts) + through(opts) +
     getNumber(bounds[1], opts) + ' past the hour';
 }
 
@@ -1016,7 +1016,7 @@ function interpretMinuteSpanInHour(cronPattern, opts) {
   }
 
   return 'every minute from ' + getTime(cronPattern.hour, span[0], opts) +
-    ' through ' + getTime(cronPattern.hour, span[1], opts) +
+    through(opts) + getTime(cronPattern.hour, span[1], opts) +
     trailingQualifier(cronPattern, opts);
 }
 
@@ -1076,10 +1076,30 @@ function interpretMinuteFrequency(cronPattern, opts) {
   return phrase + trailingQualifier(cronPattern, opts);
 }
 
+// Enumerating more clock times than this reads as a wall of text, so
+// longer expansions compact into per-segment windows instead.
+const maxClockTimes = 6;
+
 // Render an hour field's fire hours as a joined list of clock times, e.g.
-// "9:00 AM and 5:00 PM", expanding range and step segments.
+// "9:00 AM and 5:00 PM", expanding range and step segments. Expansions
+// past the cap render segment by segment ("9:00 AM through 8:00 PM").
 function hourTimesList(hourField, opts) {
-  return hourTimes(enumerateFires(hourField, 0, 23), opts);
+  const hours = enumerateFires(hourField, 0, 23);
+
+  if (hours.length <= maxClockTimes) {
+    return hourTimes(hours, opts);
+  }
+
+  return hourSegmentTimes(hourField, 0, null, opts);
+}
+
+// Clock times for an hour field rendered segment by segment, so ranges read
+// as windows ("9:30 AM through 8:30 PM") rather than an enumeration. The
+// minute (and optional second) fold into each time.
+function hourSegmentTimes(hourField, minute, second, opts) {
+  return renderSegments(hourField, fieldSpecs.hour, function time(value) {
+    return getTime(value, minute, opts, second);
+  }, through(opts));
 }
 
 function interpretRangeOfMinutes(cronPattern, opts) {
@@ -1288,7 +1308,7 @@ function listPastThe(occurrences, unit, anchor, opts) {
     if (isPlainRange(value)) {
       const bounds = value.split('-');
 
-      return getNumber(bounds[0], opts) + ' through ' +
+      return getNumber(bounds[0], opts) + through(opts) +
         getNumber(bounds[1], opts);
     }
 
@@ -1444,6 +1464,11 @@ function interpretClockTimes(cronPattern, opts) {
   const hours = enumerateFires(cronPattern.hour, 0, 23);
   const minutes = enumerateValues(cronPattern.minute);
   const second = clockSecond(cronPattern.second);
+
+  if (hours.length * minutes.length > maxClockTimes) {
+    return interpretCompactClockTimes(cronPattern, minutes, second, opts);
+  }
+
   const times = [];
 
   hours.forEach(function(h) {
@@ -1453,6 +1478,28 @@ function interpretClockTimes(cronPattern, opts) {
   });
 
   return interpretDayQualifier(cronPattern, opts) + 'at ' + joinList(times);
+}
+
+// Compact form for a clock-time set past the enumeration cap. A single
+// minute folds into per-segment hour windows ("every day at 9:30 AM through
+// 8:30 PM"); a minute list leads with its own clause instead of
+// cross-multiplying into a wall of times.
+function interpretCompactClockTimes(cronPattern, minutes, second, opts) {
+  if (minutes.length === 1) {
+    return interpretDayQualifier(cronPattern, opts) + 'at ' +
+      hourSegmentTimes(cronPattern.hour, minutes[0], second, opts);
+  }
+
+  const phrase =
+    listPastThe(cronPattern.minute.split(','), 'minute', 'hour', opts) +
+    ', at ' + hourSegmentTimes(cronPattern.hour, 0, null, opts) +
+    trailingQualifier(cronPattern, opts);
+
+  // A single non-zero second cannot fold into the per-minute clause, so it
+  // leads with its own.
+  return second ?
+    secondsLeadClause(cronPattern.second, opts) + ', ' + phrase :
+    phrase;
 }
 
 // A single specific non-zero second to fold into a clock time (e.g. "9:00:15
@@ -1497,7 +1544,7 @@ function interpretDateOrWeekday(cronPattern, opts) {
       monthScope(cronPattern, opts) + ' or ' + weekdayPart;
   }
 
-  const ordinals = interpretDateOrdinals(cronPattern.date);
+  const ordinals = interpretDateOrdinals(cronPattern.date, opts);
 
   if (cronPattern.month !== '*') {
     const month = interpretMonthNames(cronPattern.month, opts);
@@ -1562,8 +1609,9 @@ function renderSegments(field, spec, render, rangeJoin) {
 // Render a date field (single, list, range, or bounded step) as suffixed
 // ordinals. List segments may themselves be ranges or steps. Open steps are
 // handled separately as a frequency phrase.
-function interpretDateOrdinals(dateField) {
-  return renderSegments(dateField, fieldSpecs.date, getOrdinal, ' through ');
+function interpretDateOrdinals(dateField, opts) {
+  return renderSegments(dateField, fieldSpecs.date, getOrdinal,
+    through(opts));
 }
 
 // Render a month field (single, list, range, or bounded step) as names. List
@@ -1577,7 +1625,7 @@ function interpretMonthNames(monthField, opts) {
   return renderSegments(monthField, fieldSpecs.month,
     function render(value) {
       return getMonth(value, opts);
-    }, ' through ');
+    }, through(opts));
 }
 
 // Frequency phrase for an open month step, e.g. "every other month" or
@@ -1597,13 +1645,12 @@ function interpretStepMonths(monthField, opts) {
   return phrase;
 }
 
-// Weekday field. List segments may themselves be ranges or steps. Weekday
-// ranges read in their compact "Monday-Friday" form.
+// Weekday field. List segments may themselves be ranges or steps.
 function interpretWeekdays(cronPattern, opts) {
   return renderSegments(cronPattern.weekday, fieldSpecs.weekday,
     function render(value) {
       return getWeekday(value, opts);
-    }, '-');
+    }, through(opts));
 }
 
 // Turn an hour field (and optional minute field) into a clock time, e.g.
@@ -1639,6 +1686,12 @@ function getNumber(n, opts) {
 // otherwise.
 function pluralize(value, unit) {
   return +value === 1 ? unit : unit + 's';
+}
+
+// The range connective between two bounds: prose " through " normally, a
+// compact hyphen with the `short` option ("Mon-Fri", "9:00 AM-5:45 PM").
+function through(opts) {
+  return opts.short ? '-' : ' through ';
 }
 
 // Get suffixed ordinals from integers (1st, 2nd, ... 31st). Dates always

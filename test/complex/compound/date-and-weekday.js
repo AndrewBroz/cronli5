@@ -11,7 +11,7 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
     run([
       ['0 0 13 * 5', 'on the 13th or on Friday at 12:00 AM'],
       ['0 0 13 * FRI', 'on the 13th or on Friday at 12:00 AM'],
-      ['0 0 13 * MON-FRI', 'on the 13th or on Monday-Friday at 12:00 AM'],
+      ['0 0 13 * MON-FRI', 'on the 13th or on Monday through Friday at 12:00 AM'],
       ['0 0 1,15 * 5', 'on the 1st and 15th or on Friday at 12:00 AM'],
       ['0 0 13 6 5', 'on June 13th or on Friday in June at 12:00 AM']
     ]);

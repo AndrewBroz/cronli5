@@ -41,9 +41,11 @@ const tables = {
     '*/15 30 9-17 * * MON-FRI',
     '15 30 9 * * MON',
     '45 17,9 0 * * *',
-    // Lists, wrap-around ranges, and Quartz tokens expand concretely.
+    // Lists, wrap-around ranges, and Quartz tokens expand concretely —
+    // capped, so long expansions read as windows instead of walls of times.
     '0-30 9,17-19 * * *',
     '0 22-2,12 * * *',
+    '0 9-20,22 * * *',
     '* 9,12,17 * * MON-FRI',
     '30 9 15W 6 *',
     // Dates fold; degenerate and unit-step shapes normalize.

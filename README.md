@@ -97,7 +97,7 @@ import cronli5, { type Cronli5Options } from 'cronli5';
 
 const options: Cronli5Options = { ampm: false };
 const description: string = cronli5('30 13 * * MON-FRI', options);
-// 'every Monday-Friday at 13:30'
+// 'every Monday through Friday at 13:30'
 ```
 
 As a command line tool:
@@ -115,7 +115,7 @@ properties are boolean flags:
 | --- | --- | --- |
 | `ampm` | `true` | Use a 12-hour clock with AM/PM. Set `false` for 24-hour time. |
 | `lenient` | `false` | Never throw: invalid input returns the fallback description `'an unrecognizable cron pattern'` instead. Useful when rendering arbitrary user crontabs. |
-| `short` | `false` | Use abbreviated month and weekday names (e.g. `Mon-Fri`). |
+| `short` | `false` | Compact output: abbreviated month and weekday names, and hyphenated ranges everywhere `through` would appear (`Mon-Fri`, `Jan-Mar`, `1st-5th`, `9:00 AM-5:45 PM`). |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |
 
@@ -135,7 +135,7 @@ import cronli5 from 'cronli5';
 const weekdaysAt1330 = '30 13 * * MON-FRI';
 
 cronli5(weekdaysAt1330, { ampm: true, short: false });
-// 'every Monday-Friday at 1:30 PM'
+// 'every Monday through Friday at 1:30 PM'
 
 cronli5(weekdaysAt1330, { ampm: false, short: true });
 // 'every Mon-Fri at 13:30'
@@ -165,7 +165,7 @@ cronli5('0-29 * * * *'); // 'every minute from zero through 29 past the hour'
 cronli5('0 9-17 * * *');  // 'every hour from 9:00 AM through 5:00 PM'
 cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at 12:00 AM'
 cronli5('0 22-2 * * *');  // 'every hour from 10:00 PM through 2:00 AM'
-cronli5('0 0 * * FRI-MON'); // 'every Friday-Monday at 12:00 AM'
+cronli5('0 0 * * FRI-MON'); // 'every Friday through Monday at 12:00 AM'
 
 // Compound patterns
 cronli5('0,30 9 * * *');   // 'every day at 9:00 AM and 9:30 AM'

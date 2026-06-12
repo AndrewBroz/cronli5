@@ -24,4 +24,24 @@ describe('Short option:', function() {
     ['0 23 * * 4', 'every Thu at 11:00 PM', options],
     ['0 6 * * 6', 'every Sat at 6:00 AM', options]
   ]);
+
+  // The short flag compacts every "A through B" range to "A-B": weekday,
+  // month, and date ranges, value ranges within lists, and clock-time
+  // windows.
+  describe('ranges compact with hyphens', function() {
+    run([
+      ['0 0 1 JAN-MAR *', 'on Jan-Mar 1st at 12:00 AM', options],
+      ['0 12 * 11-2 *', 'every day in Nov-Feb at 12:00 PM', options],
+      ['0 0 1-5 * *', 'on the 1st-5th at 12:00 AM', options],
+      ['0 0 13 * 1-5', 'on the 13th or on Mon-Fri at 12:00 AM', options],
+      ['0 0 * * FRI-MON', 'every Fri-Mon at 12:00 AM', options],
+      ['0-29 * * * *', 'every minute from 0-29 past the hour', options],
+      ['0-30,45 9 * * *',
+        'at 0-30 and 45 minutes past the hour, at 9:00 AM', options],
+      ['*/15 9-17 * * *', 'every 15 minutes from 9:00 AM-5:45 PM', options],
+      ['* 9 * * *', 'every minute from 9:00 AM-9:59 AM', options],
+      ['30 9-20,22 * * *',
+        'every day at 9:30 AM-8:30 PM and 10:30 PM', options]
+    ]);
+  });
 });

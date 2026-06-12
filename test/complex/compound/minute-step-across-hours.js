@@ -27,7 +27,7 @@ describe('Minute step across multiple hours:', function() {
     run([
       ['*/15 9,17 * * MON-FRI',
         'every 15 minutes during the 9:00 AM and 5:00 PM hours ' +
-        'on Monday-Friday']
+        'on Monday through Friday']
     ]);
   });
 

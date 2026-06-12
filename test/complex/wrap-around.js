@@ -29,7 +29,7 @@ describe('Wrap-around ranges:', function() {
   describe('day-level fields wrap', function() {
     run([
       ['0 0 20-5 * *', 'on the 20th through 5th at 12:00 AM'],
-      ['0 0 * * FRI-MON', 'every Friday-Monday at 12:00 AM'],
+      ['0 0 * * FRI-MON', 'every Friday through Monday at 12:00 AM'],
       ['0 12 * 11-2 *',
         'every day in November through February at 12:00 PM'],
       ['0 0 1 DEC-JAN *', 'on December through January 1st at 12:00 AM']

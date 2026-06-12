@@ -46,8 +46,8 @@ describe('Valid arrays with ranges:', function() {
 
   describe('weekday ranges', function() {
     run([
-      [['0', '9', '*', '*', 'MON-FRI'], 'every Monday-Friday at 9:00 AM'],
-      [['0', '9', '*', '*', '1-5'], 'every Monday-Friday at 9:00 AM']
+      [['0', '9', '*', '*', 'MON-FRI'], 'every Monday through Friday at 9:00 AM'],
+      [['0', '9', '*', '*', '1-5'], 'every Monday through Friday at 9:00 AM']
     ]);
   });
 });
