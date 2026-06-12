@@ -106,13 +106,13 @@ const current = readFileSync(docUrl, 'utf8');
 const updated = Object.keys(tables).reduce(inject, current);
 
 if (process.argv.includes('--check')) {
-  if (updated !== current) {
+  if (updated === current) {
+    console.log('docs/cronli5-vs-cronstrue.md is up to date.');
+  }
+  else {
     console.error('docs/cronli5-vs-cronstrue.md is stale; ' +
       'run `npm run compare` to regenerate.');
     process.exitCode = 1;
-  }
-  else {
-    console.log('docs/cronli5-vs-cronstrue.md is up to date.');
   }
 }
 else {
