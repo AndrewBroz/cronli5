@@ -30,7 +30,7 @@ describe('Short option:', function() {
   // windows.
   describe('ranges compact with hyphens', function() {
     run([
-      ['0 0 1 JAN-MAR *', 'on Jan-Mar 1 at midnight', options],
+      ['0 0 1 JAN-MAR *', 'on the 1st in Jan-Mar at midnight', options],
       ['0 12 * 11-2 *', 'every day in Nov-Feb at noon', options],
       ['0 0 1-5 * *', 'on the 1st-5th at midnight', options],
       ['0 0 13 * 1-5', 'on the 13th or on Mon-Fri at midnight', options],

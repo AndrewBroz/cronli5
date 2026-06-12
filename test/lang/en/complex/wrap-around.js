@@ -32,7 +32,7 @@ describe('Wrap-around ranges:', function() {
       ['0 0 * * FRI-MON', 'every Friday through Monday at midnight'],
       ['0 12 * 11-2 *',
         'every day in November through February at noon'],
-      ['0 0 1 DEC-JAN *', 'on December through January 1 at midnight']
+      ['0 0 1 DEC-JAN *', 'on the 1st in December through January at midnight']
     ]);
   });
 

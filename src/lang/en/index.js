@@ -463,19 +463,19 @@ function numberWords(fires, opts) {
 }
 
 // Render classified segments as words: singles as numbers, ranges as
-// "<a> through <b>" pairs, step segments as their raw token.
+// "<a> through <b>" pairs, step segments as their enumerated fires.
 function segmentWords(segments, opts) {
-  return segments.map(function word(segment) {
+  return segments.flatMap(function word(segment) {
     if (segment.kind === 'range') {
-      return getNumber(segment.bounds[0], opts) + through(opts) +
-        getNumber(segment.bounds[1], opts);
+      return [getNumber(segment.bounds[0], opts) + through(opts) +
+        getNumber(segment.bounds[1], opts)];
     }
 
     if (segment.kind === 'step') {
-      return segment.startToken + '/' + segment.interval;
+      return numberWords(segment.fires, opts);
     }
 
-    return getNumber(segment.value, opts);
+    return [getNumber(segment.value, opts)];
   });
 }
 
@@ -617,7 +617,7 @@ function datePhrase(ir, opts, words) {
     return words.stepDate + stepDates(pattern.date) + monthScope(ir, opts);
   }
 
-  if (isOpenStep(pattern.month)) {
+  if (pattern.month !== '*' && !monthFoldsIntoDate(ir)) {
     return 'on the ' + dateOrdinals(ir, opts) + monthScope(ir, opts);
   }
 
@@ -626,6 +626,19 @@ function datePhrase(ir, opts, words) {
   }
 
   return 'on the ' + dateOrdinals(ir, opts);
+}
+
+// Whether the month can fold into a calendar date ("on June 1"): flat
+// name lists (singles, or steps enumerating into names) read naturally
+// before the day. A range garbles the fold — "on June through September
+// 1" parses as "(June) through (September 1)" — and an open step is a
+// frequency phrase; both scope the date instead ("on the 1st in June
+// through September").
+function monthFoldsIntoDate(ir) {
+  return !isOpenStep(ir.pattern.month) &&
+    ir.analyses.segments.month.every(function flat(segment) {
+      return segment.kind !== 'range';
+    });
 }
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
@@ -646,12 +659,13 @@ function dateOrWeekday(ir, opts) {
       weekdayPart;
   }
 
-  if (pattern.month !== '*') {
+  if (pattern.month !== '*' && monthFoldsIntoDate(ir)) {
     return 'on ' + monthDatePhrase(ir, opts) + ' or ' + weekdayPart +
       ' in ' + monthName(ir, opts);
   }
 
-  return 'on the ' + dateOrdinals(ir, opts) + ' or ' + weekdayPart;
+  return 'on the ' + dateOrdinals(ir, opts) + ' or ' + weekdayPart +
+    monthScope(ir, opts);
 }
 
 // The day-qualifier phrase for a Quartz date field (e.g. "on the last day

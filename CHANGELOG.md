@@ -79,7 +79,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   ("todos los lunes a las 9:30 de la mañana", "el 25 de diciembre de 2030
   al mediodía"), selected per call via the new `lang` option
   (`cronli5(pattern, {lang: es})`). Ships with a reviewed corpus, minimal
-  pairs, language notes, and a review log under `test/lang/es/`.
+  pairs, language notes, and a review log under `test/lang/es/`, hardened
+  against the full English pattern set plus a hazard-hour matrix via the
+  new review-packet generator (`scripts/review-lang.mjs`). Spanish month
+  ranges read with repeated prepositions where folding would garden-path
+  ("el 1 de cada mes, de junio a septiembre"; "en enero y de marzo a
+  junio"), and step segments in month/weekday lists flatten into their
+  fires ("todos los domingos, lunes, miércoles y viernes").
 - Description-strategy selection now lives in the core as a semantic IR:
   `analyze()` classifies field shapes and segments, precomputes windows
   and enumerations, and selects the plan; the English module is a pure
@@ -106,6 +112,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- A month **range** no longer folds into a calendar date: `0 0 1 6-9 *`
+  reads "on the 1st in June through September" (previously "on June
+  through September 1", which parses as "(June) through (September 1)").
+  Single months and flat name lists still fold ("on June 1", "on June and
+  December 1"). With both a date and a weekday, the month scopes the whole
+  alternation once: "on the 1st or on Friday in June through September".
+- Minute and second lists containing **step segments** enumerate the
+  step's fires instead of leaking the raw token: `5,30-40/5 * * * *`
+  reads "at five, 30, 35, and 40 minutes past the hour" (previously
+  "at five and 30-40/5 minutes past the hour"), matching how standalone
+  bounded steps and date lists already read.
 - Hour lists containing range or step segments (e.g. `0-30 9,17-19 * * *`)
   no longer throw.
 - Minute lists containing a range under a specific hour (e.g.

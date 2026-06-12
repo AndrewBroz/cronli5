@@ -66,4 +66,32 @@ describe('Lists mixing values with ranges or steps:', function() {
         'every Sunday and Monday through Friday at midnight']
     ]);
   });
+
+  describe('minute or second list containing a step', function() {
+    run([
+      ['5,30-40/5 * * * *',
+        'at five, 30, 35, and 40 minutes past the hour'],
+      ['0,10-58/12 * * * *',
+        'at zero, ten, 22, 34, 46, and 58 minutes past the hour'],
+      ['5,30-40/5 * * * * *',
+        'at five, 30, 35, and 40 seconds past the minute']
+    ]);
+  });
+
+  describe('specific dates under a non-single month', function() {
+    run([
+      ['0 0 1 6-9 *',
+        'on the 1st in June through September at midnight'],
+      ['0 0 1,15 6-9 *',
+        'on the 1st and 15th in June through September at midnight'],
+      ['0 0 1-15 6-9 *',
+        'on the 1st through 15th in June through September at midnight'],
+      ['0 0 1 1,3-6 *',
+        'on the 1st in January and March through June at midnight'],
+      ['0 0 1 1-11/3 *',
+        'on January, April, July, and October 1 at midnight'],
+      ['0 0 1 6-9 FRI',
+        'on the 1st or on Friday in June through September at midnight']
+    ]);
+  });
 });

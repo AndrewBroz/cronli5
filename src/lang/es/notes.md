@@ -32,15 +32,20 @@ es-ES (full-point times, 24h-leaning) vs es-419 (a. m./p. m. forms;
 
 ## Known trade-offs
 
-* Month/weekday lists containing step segments read as nested lists
-  ("de enero y junio, septiembre y diciembre") — grammatical but clunky.
 * `short` only switches spelled numbers to digits; Spanish name
   abbreviations (lun., mié.) are not yet implemented.
-* A single date under a month range reads "el 1 de diciembre a enero" —
-  awkward, but exactly parallel to English's "on December through
-  January 1". Both languages fold the date into the month phrase; fixing
-  it would be a core re-plan, not a language fix.
-* Minute/second lists containing step segments keep the raw token
-  ("en los minutos 5 y 30-40/5") — parity with English ("at five and
-  30-40/5 minutes past the hour"). Calendar dates expand instead
-  ("los días 1, 4, 7, 10 y 13"), also matching English.
+
+## Resolved awkwardness (kept as design notes)
+
+* A month **range** never folds into another phrase: "el 1 de junio a
+  septiembre" parses as "(el 1 de junio) a septiembre". Dates scope it
+  instead ("el 1 de cada mes, de junio a septiembre"), mixed lists repeat
+  the preposition per piece ("en enero y de marzo a junio"), and a scope
+  after "del mes" sets off with a comma ("el último día del mes, de junio
+  a septiembre"). English applies the same no-fold rule ("on the 1st in
+  June through September").
+* Step segments inside lists always flatten into their fires — months
+  ("de enero, junio, septiembre y diciembre"), weekdays ("todos los
+  domingos, lunes, miércoles y viernes"), dates, minutes, and seconds
+  ("en los minutos 5, 30, 35 y 40") — in both languages. No raw step
+  token ever reaches the output.

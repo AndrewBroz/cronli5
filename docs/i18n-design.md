@@ -165,6 +165,65 @@ Encapsulation rules:
 * **Core API stays frozen-ish**: `cronli5(pattern, options)` with
   `options.lang` defaulting to the bundled English module.
 
+### 3.1 Distribution and size (measured, June 2026)
+
+How cronstrue ships its 39 locales, for contrast:
+
+1. **`cronstrue`** (main entry): English only, **22.0 KB** minified.
+2. **`cronstrue/i18n`**: every locale webpacked into one UMD bundle,
+   **182.2 KB** minified (~4.7 KB marginal per locale) — and this is the
+   entry its README steers Node users to, so a consumer wanting one
+   second language typically carries all 39.
+3. **`cronstrue/locales/<code>`**: individual UMD packs (es: 4.9 KB
+   minified) that `require('cronstrue')` and **self-register by side
+   effect** into a shared factory, selected by string key
+   (`{locale: 'es'}`). Pay-per-locale, but via global mutation, and the
+   string key means a typo fails at runtime.
+
+A cronstrue locale is small because it is a string table (~3.6 KB of
+source, 30–60 template slots) consumed by one shared template engine —
+the very architecture §1 rejects, and the reason its output reads like
+filled templates.
+
+cronli5's measured equivalents:
+
+| Artifact                          | Minified | Gzipped |
+| --------------------------------- | -------- | ------- |
+| Main entry (core + English)       | 18.5 KB  | 6.3 KB  |
+| Core alone                        | 8.6 KB   | —       |
+| One language renderer (en or es)  | 10.0 KB  | 3.3 KB  |
+
+Consequences of the languages-as-values model:
+
+* **The default entry never grows.** Adding a language adds a directory
+  the main bundle never imports. Ten more languages leave
+  `import cronli5 from 'cronli5'` at 18.5 KB.
+* **Consumers pay per import, structurally.** `cronli5/lang/es` is a
+  plain value with no registry and no side effects; a bundler includes
+  exactly the languages the app imports. There is deliberately no
+  "all languages" entry to become the documented default, because
+  cronstrue shows where that leads.
+* **A cronli5 language costs ~2× a cronstrue locale on the wire**
+  (10 KB vs ~4.7 KB minified marginal; 3.3 KB gzipped). That is the
+  price of a full renderer per language instead of a string table, and
+  it is bounded: each language imports only its own dialect table, never
+  the core or another language (es duplicates ~1–2 KB of helpers like
+  `joinList` rather than coupling to en — duplication is the cheaper
+  debt here).
+* **Install size grows ~30 KB of source per language** (the package
+  ships `src/`); negligible against the 1.5 MB cronstrue installs.
+
+Packaging gaps to close before a multi-language release:
+
+1. `./lang/<code>` subpaths today expose only `import` conditions
+   pointing at `src/` — add built per-language artifacts
+   (`dist/lang/<code>.js` + `.cjs`) so `require('cronli5/lang/es')`
+   works, mirroring the dual-build main entry.
+2. Add a `types` condition per language subpath (a shared
+   `Cronli5Language` declaration suffices).
+3. The browser global stays English-only; per-language IIFE bundles are
+   cheap to emit from the same build script if ever requested.
+
 ## 4. The LLM review pass
 
 The review pass replaces the native-speaker bottleneck. It is designed as

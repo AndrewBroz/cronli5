@@ -76,7 +76,30 @@ describe('Español (es):', function() {
       ['0 12 * 6,12 *',
         'todos los días de junio y diciembre al mediodía'],
       ['0 12 * 11-2 *',
-        'todos los días de noviembre a febrero al mediodía']
+        'todos los días de noviembre a febrero al mediodía'],
+      ['0 12 * 1,3-6 *',
+        'todos los días de enero y de marzo a junio al mediodía'],
+      ['0 0 1 6-9 *',
+        'el 1 de cada mes, de junio a septiembre a medianoche'],
+      ['0 0 1,15 6-9 *',
+        'los días 1 y 15 de cada mes, de junio a septiembre a medianoche'],
+      ['0 0 1-15 6-9 *',
+        'del 1 al 15 de cada mes, de junio a septiembre a medianoche'],
+      ['0 0 1 12-1 *',
+        'el 1 de cada mes, de diciembre a enero a medianoche'],
+      ['0 0 1 1,3-6 *',
+        'el 1 de cada mes, de enero y de marzo a junio a medianoche'],
+      ['0 0 1 1-11/3 *',
+        'el 1 de enero, abril, julio y octubre a medianoche'],
+      ['0 0 1 6-9 FRI',
+        'el 1 de cada mes o los viernes, de junio a septiembre ' +
+        'a medianoche'],
+      ['0 0 L 6-9 *',
+        'el último día del mes, de junio a septiembre a medianoche'],
+      ['0 0 */2 6-9 *',
+        'cada dos días del mes, de junio a septiembre a medianoche'],
+      ['0 12 * 6-9 MON',
+        'todos los lunes, de junio a septiembre al mediodía']
     ]);
   });
 
@@ -247,11 +270,13 @@ describe('Español (es):', function() {
         'cada 15 minutos el 13 de cada mes o los viernes'],
       ['*/15 * * 6 *', 'cada 15 minutos en junio'],
       ['0 12 * * 0,1/2',
-        'los domingos y los lunes, miércoles y viernes al mediodía'],
+        'todos los domingos, lunes, miércoles y viernes al mediodía'],
       ['0 12 * 1,6/3 *',
-        'todos los días de enero y junio, septiembre y diciembre ' +
+        'todos los días de enero, junio, septiembre y diciembre ' +
         'al mediodía'],
-      ['0,30/15 * * * *', 'en los minutos 0 y 30/15 de cada hora'],
+      ['0,30/15 * * * *', 'en los minutos 0, 30 y 45 de cada hora'],
+      ['5,30-40/5 * * * *',
+        'en los minutos 5, 30, 35 y 40 de cada hora'],
       ['*/5 * * * *', 'cada 5 minutos', {short: true}],
       ['0 12 * * 7', 'todos los domingos al mediodía'],
       ['5 9 * * *', 'todos los días a las 9:05 de la mañana']

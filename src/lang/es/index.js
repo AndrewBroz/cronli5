@@ -607,7 +607,7 @@ function leadingQualifier(ir, opts) {
   }
 
   if (pattern.month !== '*') {
-    return 'todos los días de ' + monthList(ir) + ' ';
+    return 'todos los días ' + monthPhrase(ir, 'de ') + ' ';
   }
 
   return 'todos los días ';
@@ -631,15 +631,22 @@ function trailingQualifier(ir, opts) {
   }
 
   if (pattern.month !== '*') {
-    return ' en ' + monthList(ir);
+    return ' ' + monthPhrase(ir, 'en ');
   }
 
   return '';
 }
 
 // "el 31 de diciembre o los viernes de diciembre": cron fires when either
-// the date or the weekday matches.
+// the date or the weekday matches. A ranged month cannot fold into either
+// half, so one scope trails the whole alternation ("el 1 de cada mes o
+// los viernes, de junio a septiembre").
 function dateOrWeekday(ir, opts) {
+  if (monthRanged(ir)) {
+    return dateClause(ir, opts, ' de cada mes') + ' o ' +
+      weekdayQualifier(ir, opts, '') + ', ' + monthPhrase(ir, 'de ');
+  }
+
   return datePhrase(ir, opts) + ' o ' + weekdayQualifier(ir, opts, '') +
     monthScope(ir);
 }
@@ -649,19 +656,28 @@ function dateOrWeekday(ir, opts) {
 // joins the date ("el 25 de diciembre de 2030").
 function datePhrase(ir, opts) {
   const pattern = ir.pattern;
+
+  if (quartzDatePhrase(pattern.date) || isOpenStep(pattern.date)) {
+    return dateClause(ir, opts, '') + monthScope(ir);
+  }
+
+  return dateClause(ir, opts, dateMonthPart(ir));
+}
+
+// The date words with a caller-chosen month part. Quartz phrases and open
+// steps are self-contained and ignore the month part.
+function dateClause(ir, opts, monthPart) {
+  const pattern = ir.pattern;
   const quartz = quartzDatePhrase(pattern.date);
 
   if (quartz) {
-    return quartz + monthScope(ir);
+    return quartz;
   }
 
   if (isOpenStep(pattern.date)) {
-    return stepDates(pattern.date, opts) + monthScope(ir);
+    return stepDates(pattern.date, opts);
   }
 
-  const monthPart = pattern.month === '*' ?
-    ' de cada mes' :
-    ' de ' + monthList(ir);
   const segments = ir.analyses.segments.date;
 
   if (segments.length === 1 && segments[0].kind === 'range') {
@@ -673,8 +689,33 @@ function datePhrase(ir, opts) {
     return 'el ' + segments[0].value + monthPart + foldedYear(ir);
   }
 
-  return 'los días ' + joinList(dateWords(segments)) + monthPart +
+  return 'los días ' + joinList(segmentWords(segments)) + monthPart +
     foldedYear(ir);
+}
+
+// Whether the month field contains a range segment.
+function monthRanged(ir) {
+  return ir.pattern.month !== '*' &&
+    ir.analyses.segments.month.some(function range(segment) {
+      return segment.kind === 'range';
+    });
+}
+
+// The month attached to a calendar date. Single months and flat name
+// lists fold in ("el 1 de junio y diciembre"), but a range cannot —
+// "el 1 de junio a septiembre" parses as "(el 1 de junio) a septiembre" —
+// so it scopes the date instead ("el 1 de cada mes, de junio a
+// septiembre").
+function dateMonthPart(ir) {
+  if (ir.pattern.month === '*') {
+    return ' de cada mes';
+  }
+
+  if (monthRanged(ir)) {
+    return ' de cada mes, ' + monthPhrase(ir, 'de ');
+  }
+
+  return ' ' + monthPhrase(ir, 'de ');
 }
 
 // "de 2030" when a single year can fold into a calendar date.
@@ -741,25 +782,7 @@ function weekdayQualifier(ir, opts, todos) {
     return quartz;
   }
 
-  const pieces = ir.analyses.segments.weekday.map(function name(segment) {
-    if (segment.kind === 'range') {
-      return 'de ' + weekdayName(segment.bounds[0]) + ' a ' +
-        weekdayName(segment.bounds[1]);
-    }
-
-    if (segment.kind === 'step') {
-      return 'los ' + joinList(segment.fires.map(pluralWeekday));
-    }
-
-    return null;
-  });
-
-  // A single plain range stands alone: "de lunes a viernes".
-  if (pieces.length === 1 && pieces[0]) {
-    return pieces[0];
-  }
-
-  const segments = ir.analyses.segments.weekday;
+  const segments = flattenSteps(ir.analyses.segments.weekday);
   const allSingles = segments.every(function single(segment) {
     return segment.kind === 'single';
   });
@@ -771,36 +794,76 @@ function weekdayQualifier(ir, opts, todos) {
       }));
   }
 
+  // A single plain range stands alone: "de lunes a viernes".
+  if (segments.length === 1) {
+    return weekdayRange(segments[0]);
+  }
+
   // Mixed lists: each piece carries its own form.
-  return joinList(segments.map(function name(segment, index) {
-    return pieces[index] || 'los ' + pluralWeekday(segment.value);
+  return joinList(segments.map(function name(segment) {
+    return segment.kind === 'range' ?
+      weekdayRange(segment) :
+      'los ' + pluralWeekday(segment.value);
   }));
 }
 
-// "de junio y diciembre" month names, ranges as "de noviembre a febrero".
-function monthList(ir) {
-  return joinList(ir.analyses.segments.month.map(function name(segment) {
+// "de lunes a viernes".
+function weekdayRange(segment) {
+  return 'de ' + weekdayName(segment.bounds[0]) + ' a ' +
+    weekdayName(segment.bounds[1]);
+}
+
+// Expand step segments into their fires as singles: a raw step token or a
+// nested sub-list garbles a name list, while the flat fires read
+// naturally ("los domingos, lunes, miércoles y viernes").
+function flattenSteps(segments) {
+  return segments.flatMap(function flat(segment) {
+    return segment.kind === 'step' ?
+      segment.fires.map(function single(value) {
+        return {kind: 'single', value};
+      }) :
+      [segment];
+  });
+}
+
+// The month qualifier with its preposition. Plain name lists distribute
+// the caller's preposition ("de junio y diciembre", "en enero y julio");
+// step segments flatten into their fires. A range always reads "de X a Y"
+// as one unit, so in mixed lists every piece repeats its preposition
+// ("en enero y de marzo a junio") — a bare "enero y marzo a junio" parses
+// as "(enero y marzo) a junio".
+function monthPhrase(ir, lead) {
+  const segments = flattenSteps(ir.analyses.segments.month);
+  const ranged = segments.some(function range(segment) {
+    return segment.kind === 'range';
+  });
+
+  if (!ranged) {
+    return lead + joinList(segments.map(function name(segment) {
+      return monthName(segment.value);
+    }));
+  }
+
+  return joinList(segments.map(function name(segment) {
     if (segment.kind === 'range') {
-      return monthName(segment.bounds[0]) + ' a ' +
+      return 'de ' + monthName(segment.bounds[0]) + ' a ' +
         monthName(segment.bounds[1]);
     }
 
-    if (segment.kind === 'step') {
-      return joinList(segment.fires.map(monthName));
-    }
-
-    return monthName(segment.value);
+    return lead + monthName(segment.value);
   }));
 }
 
 // A trailing " de <month>" scope on weekday qualifiers ("los lunes de
-// junio").
+// junio"). A ranged scope sets off with a comma ("el último día del mes,
+// de junio a septiembre") — gluing "de junio" after "del mes"
+// garden-paths.
 function monthScope(ir) {
   if (ir.pattern.month === '*') {
     return '';
   }
 
-  return ' de ' + monthList(ir);
+  return (monthRanged(ir) ? ', ' : ' ') + monthPhrase(ir, 'de ');
 }
 
 // Open day-of-month steps: "cada 2 días del mes (desde el 5)".
@@ -862,29 +925,19 @@ function stepYears(yearField, opts) {
 
 // --- Words. ---
 
-// Calendar-date list segments: a step expands into its fires ("los días
-// 1, 4 y 7") — a raw step token reads as noise in a date.
-function dateWords(segments) {
-  return segments.flatMap(function word(segment) {
-    return segment.kind === 'step' ?
-      wordList(segment.fires) :
-      segmentWords([segment]);
-  });
-}
-
 // Render classified segments as words: ranges as "5 a 10" pairs, steps as
-// their raw token.
+// their enumerated fires.
 function segmentWords(segments) {
-  return segments.map(function word(segment) {
+  return segments.flatMap(function word(segment) {
     if (segment.kind === 'range') {
-      return segment.bounds[0] + ' a ' + segment.bounds[1];
+      return [segment.bounds[0] + ' a ' + segment.bounds[1]];
     }
 
     if (segment.kind === 'step') {
-      return segment.startToken + '/' + segment.interval;
+      return wordList(segment.fires);
     }
 
-    return segment.value;
+    return [segment.value];
   });
 }
 

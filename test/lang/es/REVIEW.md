@@ -54,11 +54,12 @@ as the outstanding gate before any release.
    entries added (bounded step, step-in-list, month-scoped step). Month
    and weekday step segments were verified unaffected (they already
    expanded).
-2. **Accepted (recorded in notes.md):** "el 1 de diciembre a enero" is
-   awkward but exactly parallel to English's "on December through
-   January 1" — a core re-plan, not a language fix.
-3. **Accepted (recorded in notes.md):** raw step tokens in minute/second
-   lists ("en los minutos 5 y 30-40/5") are parity with English.
+2. **Initially accepted, then fixed (see the follow-up below):** "el 1 de
+   diciembre a enero" — awkward in parallel with English's "on December
+   through January 1".
+3. **Initially accepted, then fixed (see the follow-up below):** raw step
+   tokens in minute/second lists ("en los minutos 5 y 30-40/5"), parity
+   with English.
 
 Everything else was clean across all 18 plan kinds: article agreement
 ("a la 1"/"a las 2") at every hazard hour, day-period boundaries,
@@ -69,3 +70,29 @@ Quartz phrases, and the per-hour-window re-strategy.
 
 Verdict: **hardened** — the corpus-sweep method generalizes to any
 language (run `scripts/review-lang.mjs <code>`).
+
+## 2026-06-12 — awkwardness elimination (follow-up)
+
+* Corpus: `corpus.js` ec2c8e876599 · `pairs.js` 2ec71e8c449a
+
+Policy change: no awkward output is accepted in any language. The two
+findings "accepted as English parity" above were fixed at the right
+altitude — in both languages:
+
+1. **Month ranges never fold.** "el 1 de junio a septiembre" / "on June
+   through September 1" → "el 1 de cada mes, de junio a septiembre" /
+   "on the 1st in June through September". Mixed month lists repeat the
+   preposition ("en enero y de marzo a junio"); a ranged scope after
+   "del mes" sets off with a comma ("el último día del mes, de junio a
+   septiembre"); the date-or-weekday alternation shares one trailing
+   scope ("el 1 de cada mes o los viernes, de junio a septiembre").
+2. **Step segments in lists always flatten into fires.** Minutes/seconds
+   ("en los minutos 5, 30, 35 y 40" / "at five, 30, 35, and 40 minutes
+   past the hour"), months ("de enero, junio, septiembre y diciembre" —
+   previously a nested list), weekdays ("todos los domingos, lunes,
+   miércoles y viernes").
+
+Both fixed TDD-style (12 new/updated Spanish corpus entries, 10
+new/updated English expectations) and re-verified against the
+regenerated review packet: the only packet rows that changed are the
+targeted fixes.
