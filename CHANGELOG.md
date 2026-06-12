@@ -63,6 +63,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Internal restructure toward i18n (see `docs/i18n-design.md`): the
+  language-independent core (parsing, validation, normalization, semantic
+  analysis) now lives in `src/core/`, and all English — phrases, dialect
+  tables, names, time formatting — lives in `src/lang/en/`. The public API
+  and every description are unchanged; the only output difference is that
+  the too-many-fields error message no longer varies with the `short`
+  option.
+- Description-strategy selection now lives in the core as a semantic IR:
+  `analyze()` classifies field shapes and segments, precomputes windows
+  and enumerations, and selects the plan; the English module is a pure
+  plan renderer whose only input is the IR. Covered by a dedicated IR
+  spec (`test/core/analyze.js`); every description is unchanged.
 - Default output now adheres to the **Chicago Manual of Style**: serial
   commas in lists of three or more ("9 a.m., noon, and 5 p.m."), lowercase
   dotted meridiems ("9:30 a.m.", previously "9:30 AM"), on-the-hour times
