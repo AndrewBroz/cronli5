@@ -34,6 +34,7 @@
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
+    "compare": "node scripts/comparison-table.mjs",
     "lint": "eslint src test cli.js eslint.config.js scripts",
     "lint:fix": "eslint src test cli.js eslint.config.js scripts --fix",
     "test": "mocha",

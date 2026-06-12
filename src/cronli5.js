@@ -1201,6 +1201,12 @@ function interpretRepeatingHours(cronPattern, opts) {
     return;
   }
 
+  // A non-zero discrete minute folds into enumerated clock times instead
+  // ("at 12:05 AM and 12:05 PM"); the bare cadence would drop it.
+  if (cronPattern.minute !== '0') {
+    return;
+  }
+
   return interpretStepHours(hourField, opts);
 }
 

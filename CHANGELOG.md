@@ -37,9 +37,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   from 10:00 PM through 2:00 AM", `FRI-MON` reads "Friday-Monday", and
   `11-2` reads "November through February". Reversed ranges remain invalid
   where the cycle metaphor breaks down: step bounds and the year field.
-- A head-to-head cronli5 vs. cRonstrue section in the README with a
-  generated output table (`scripts/comparison-table.mjs`), plus a full
-  architectural comparison in `docs/cronstrue-comparison.md`.
+- A head-to-head cronli5 vs. cRonstrue comparison:
+  `docs/cronli5-vs-cronstrue.md` carries two generated output tables
+  (everyday patterns, and compound patterns where the gap is widest),
+  regenerated in place by `npm run compare` (with a `--check` mode for CI);
+  `docs/cronstrue-comparison.md` holds the full architectural comparison;
+  the README links to both.
 - **Seven-field (Quartz-style) patterns** parse without any option: seven
   fields are unambiguous (`second minute hour date month weekday year`), so
   `'0 0 12 1 1 * 2030'` reads "on January 1st, 2030 at 12:00 PM". The
@@ -79,6 +82,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Offset steps starting at one are no longer ungrammatical: `1/3 * * * *`
   reads "every three minutes from one minute past the hour" (was "one
   minutes").
+- A discrete minute under an hour step is no longer dropped: `5 */6 * * *`
+  reads "every day at 12:05 AM, 6:05 AM, 12:05 PM and 6:05 PM" (previously
+  "every six hours", and bounded steps even displayed ":00" times for jobs
+  firing at :05).
 
 ## [0.1.0]
 
