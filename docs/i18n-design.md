@@ -1,11 +1,12 @@
 # i18n Design: A Language-Independent Core with Generated, Reviewed Languages
 
-*Status: design accepted; migration steps 1 and 2 (§7) are implemented —
-the core (`src/core/`) and English module (`src/lang/en/`) are split,
-strategy selection lives in core `analyze()` as the `plan`, and the
-English module consumes only the IR (its sole import is its own dialect
-table). Output is behavior-identical throughout. Next: the Spanish pilot
-(step 3).*
+*Status: design accepted; migration steps 1–3 (§7) are implemented — the
+core/`lang/en` split, the `plan` IR consumed by a pure English renderer,
+and the Spanish pilot (`src/lang/es/`, `test/lang/es/` with corpus,
+minimal pairs, notes, and review log; `{lang: es}` via the new `lang`
+option and `cronli5/lang/es` subpath export). The pilot required ZERO core
+changes — the IR contract held. Next: the agglutinative stress test
+(step 4, Finnish or Basque).*
 
 ## 1. The inverted assumption
 

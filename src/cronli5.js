@@ -24,19 +24,22 @@
 //     patterns always parse seconds first and year last)
 
 import {analyze, prepare} from './core/index.js';
-import lang from './lang/en/index.js';
+import en from './lang/en/index.js';
 
 function cronli5(cronPattern, options) {
+  // A language module is a value (docs/i18n-design.md §3); English is the
+  // bundled default.
+  const lang = options && options.lang || en;
   const opts = lang.options(options);
 
   if (!opts.lenient) {
-    return interpretCronPattern(cronPattern, opts);
+    return interpretCronPattern(cronPattern, opts, lang);
   }
 
   // Lenient mode never throws: unparseable input yields a fixed fallback
   // description instead, so arbitrary user crontabs are safe to render.
   try {
-    return interpretCronPattern(cronPattern, opts);
+    return interpretCronPattern(cronPattern, opts, lang);
   }
   catch {
     return lang.fallback;
@@ -45,7 +48,7 @@ function cronli5(cronPattern, options) {
 
 // Prepare (parse, validate, normalize), analyze, and describe a cron
 // pattern.
-function interpretCronPattern(cronPattern, opts) {
+function interpretCronPattern(cronPattern, opts, lang) {
   // `@reboot` runs on startup and has no field schedule to interpret.
   if (typeof cronPattern === 'string' &&
       cronPattern.trim().toLowerCase() === '@reboot') {

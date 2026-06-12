@@ -17,6 +17,12 @@
       "import": "./dist/cronli5.js",
       "require": "./dist/cronli5.cjs"
     },
+    "./lang/en": {
+      "import": "./src/lang/en/index.js"
+    },
+    "./lang/es": {
+      "import": "./src/lang/es/index.js"
+    },
     "./package.json": "./package.json"
   },
   "bin": {

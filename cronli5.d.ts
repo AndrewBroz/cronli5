@@ -26,6 +26,17 @@ export interface Cronli5Dialect {
 }
 
 /**
+ * A language module: a renderer over the semantic IR plus the
+ * language-owned strings and option normalization.
+ */
+export interface Cronli5Language {
+  describe(ir: unknown, opts: unknown): string;
+  fallback: string;
+  options(options?: Cronli5Options): unknown;
+  reboot: string;
+}
+
+/**
  * Option flags accepted as the second argument to `cronli5`.
  */
 export interface Cronli5Options {
@@ -41,6 +52,11 @@ export interface Cronli5Options {
    * a custom style.
    */
   dialect?: 'house' | 'uk' | 'us' | Cronli5Dialect;
+  /**
+   * A language module (e.g. `import es from 'cronli5/lang/es'`). Defaults
+   * to the bundled English module. See docs/i18n-design.md.
+   */
+  lang?: Cronli5Language;
   /**
    * Never throw: invalid input returns a fallback description instead.
    * Defaults to `false`.

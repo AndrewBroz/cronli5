@@ -70,6 +70,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   and every description are unchanged; the only output difference is that
   the too-many-fields error message no longer varies with the `short`
   option.
+- The test tree mirrors the i18n architecture: English's expectation suite
+  is a language corpus like any other (`test/lang/en/`), validation and
+  error tests live with the core (`test/core/`), and `test/property/`
+  holds the shared invariants.
+- **Spanish** (`cronli5/lang/es`), the i18n pilot: a full natural-Spanish
+  renderer over the semantic IR, anchored to RAE/FundéuRAE conventions
+  ("todos los lunes a las 9:30 de la mañana", "el 25 de diciembre de 2030
+  al mediodía"), selected per call via the new `lang` option
+  (`cronli5(pattern, {lang: es})`). Ships with a reviewed corpus, minimal
+  pairs, language notes, and a review log under `test/lang/es/`.
 - Description-strategy selection now lives in the core as a semantic IR:
   `analyze()` classifies field shapes and segments, precomputes windows
   and enumerations, and selects the plan; the English module is a pure
