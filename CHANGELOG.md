@@ -197,7 +197,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   alternation once: "on the 1st or on Friday in June through September".
 - Minute and second lists containing **step segments** enumerate the
   step's fires instead of leaking the raw token: `5,30-40/5 * * * *`
-  reads "at five, 30, 35, and 40 minutes past the hour" (previously
+  reads "at 5, 30, 35, and 40 minutes past the hour" (previously
   "at five and 30-40/5 minutes past the hour"), matching how standalone
   bounded steps and date lists already read.
 - Hour lists containing range or step segments (e.g. `0-30 9,17-19 * * *`)
@@ -227,11 +227,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   "every six hours", and bounded steps even displayed ":00" times for jobs
   firing at :05).
 - Clock-time enumeration is capped at six times. Beyond the cap, a single
-  minute folds into per-segment hour windows (`30 9-20,22 * * *` reads
-  "every day at 9:30 a.m. through 8:30 p.m. and 10:30 p.m.") and a minute list
-  leads with its own clause instead of cross-multiplying into a wall of
-  times (`0,30 8-18/2 * * *` reads "at zero and 30 minutes past the hour,
-  at 8 a.m., 10 a.m., ..." — six times, not twelve).
+  minute folds into a compact hour phrase and a minute list leads with its
+  own clause instead of cross-multiplying into a wall of times
+  (`0,30 8-18/2 * * *` reads "at 0 and 30 minutes past the hour, at 8
+  a.m., 10 a.m., ..." — six times, not twelve).
 
 ## [0.1.0]
 

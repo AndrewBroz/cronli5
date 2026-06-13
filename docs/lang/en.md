@@ -52,10 +52,11 @@ in [dialects.md](../dialects.md).
   September 1" garden-paths. Single months and flat name lists still
   fold ("on June 1", "on June and December 1").
 * Step segments inside lists always enumerate their fires
-  (`5,30-40/5` → "at five, 30, 35, and 40 minutes past the hour"); no
+  (`5,30-40/5` → "at 5, 30, 35, and 40 minutes past the hour"); no
   raw cron token reaches the output.
-* Clock-time enumeration is capped at six; beyond the cap, output folds
-  into windows ("at 9:30 a.m. through 8:30 p.m. and 10:30 p.m.").
+* Clock-time enumeration is capped at six; beyond the cap a contiguous
+  hour range reads with the hour-range frame
+  (`0 9-20,22` → "every hour from 9 a.m. through 8 p.m. and at 10 p.m.").
 
 ## cronli5 vs. cRonstrue (en locale)
 
