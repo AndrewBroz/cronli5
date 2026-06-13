@@ -85,3 +85,33 @@ Finnish idiom calls flagged for a future cross-family or native pass —
 the `jokaisen tunnin minuutilla 30` anchored-minute construction,
 keskiyöllä/keskipäivällä only standalone, and the per-hour-window
 re-strategy — remain open.
+
+## 2026-06-13 — anchored minutes use the "kohdalla" mark form
+
+* Corpus: `corpus.js` 145dcec6fa24 · `pairs.js` cf0ebee8795e
+
+Resolves the open idiom item flagged above. The adessive anchored-minute
+construction ("jokaisen tunnin minuutilla 30", "minuuteilla 0 ja 30",
+"sekunneilla 5 ja 10") was an English calque ("at minute 30") — flagged
+independently by a native-roleplay review pass AND corroborated by
+cRonstrue's human Finnish locale, which renders these as "30 minuuttia
+yli" / "5 ja 10 sekunnin jälkeen", not the adessive.
+
+Replaced with the **`kohdalla` mark form** throughout:
+"joka tunti 30 minuutin kohdalla", "joka tunti 0 ja 30 minuutin
+kohdalla", "joka minuutti 15 sekunnin kohdalla", compound "joka tunti 30
+minuutin ja 15 sekunnin kohdalla", and bare "0–30 minuutin kohdalla klo
+9–17" when a specific hour clause follows. The elative step-offset form
+("jokaisen tunnin minuutista 1 alkaen") was left as-is — it is a
+different construction and out of this fix's scope.
+
+The exact target strings were produced by the review pass and verified
+to match the implementation on 12 representative patterns before the
+corpus was updated.
+
+**Still same-family.** The wording choice `kohdalla` (the review's pick)
+over `yli` (cRonstrue's human locale) is itself an unverified
+same-family call. The native-review packet (tmp/) now ships the new
+output and asks a real Finnish speaker to confirm `kohdalla` vs `yli`.
+The other two idiom items — keskiyöllä/keskipäivällä only standalone,
+and the per-hour-window re-strategy — remain open for that pass.

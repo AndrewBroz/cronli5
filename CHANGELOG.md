@@ -103,6 +103,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   padded. Finnish deliberately does **not** pad the hour (`klo 9.30`,
   `klo 9–17`), per SFS 4175, where the hour is written without a leading
   zero and only the minute pads.
+- Finnish anchored minutes/seconds use the **`kohdalla` mark form**:
+  `30 * * * *` reads `joka tunti 30 minuutin kohdalla` (was the calque
+  `jokaisen tunnin minuutilla 30`), `15 * * * * *` reads `joka minuutti
+  15 sekunnin kohdalla`. The old adessive form was flagged as an English
+  calque by an independent review and corroborated by cRonstrue's human
+  Finnish locale.
 - Spanish weekday qualifiers drop the redundant `todos`: `0 9 * * MON`
   reads `los lunes a las 09:00` (was `todos los lunes…`). The plural
   definite article `los lunes` already means "every Monday" in Spanish,

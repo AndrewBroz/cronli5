@@ -42,11 +42,15 @@ constructions.
   case endings make even mixed lists unambiguous with no extra
   punctuation.
 * Frequencies use the genitive + `välein` construction
-  (`viiden minuutin välein`), and anchored minutes put the case on the
-  unit noun with the digit in apposition
-  (`jokaisen tunnin minuuteilla 0 ja 30`) — digits never inflect.
+  (`viiden minuutin välein`). A specific minute or second reads as a
+  position mark with `kohdalla` ("at the N-mark"):
+  `joka tunti 30 minuutin kohdalla` ("at the 30-minute mark of every
+  hour"), `joka minuutti 15 sekunnin kohdalla`, the two combined as
+  `joka tunti 30 minuutin ja 15 sekunnin kohdalla`. When a specific hour
+  clause follows, the `joka tunti` drops: `0–30 minuutin kohdalla klo
+  9–17`.
 * Dash ranges replace the case-pair construction wherever digits
-  appear: `klo 9.00–17.45`, `minuuteilla 0–30`, `kuukauden 1.–15.
+  appear: `klo 9.00–17.45`, `0–30 minuutin kohdalla`, `kuukauden 1.–15.
   päivänä`. Per SFS 4175 the hour is never zero-padded (`klo 9`,
   `klo 9–17`); only the minute and second pad.
 
@@ -78,8 +82,8 @@ date-or-weekday `tai` alternation).
 | `0 12 1 1 *` | tammikuun 1. päivänä keskipäivällä | Klo 12:00, kuukauden 1 päivä, vain tammikuu |
 | `0 12 * 11-2 *` | joka päivä marraskuusta helmikuuhun keskipäivällä | Klo 12:00, marraskuu - helmikuu |
 | `0 0 * * 5L` | kuukauden viimeisenä perjantaina keskiyöllä | Klo 00:00, kuukauden viimeinen perjantai |
-| `5,10 30 9 * * MON` | jokaisen minuutin sekunneilla 5 ja 10, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
-| `1/1 * * * *` | jokaisen tunnin minuuteilla 1–59 | Joka 1. minuutti, alkaen 1 minuuttia yli |
+| `5,10 30 9 * * MON` | joka minuutti 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
+| `1/1 * * * *` | joka tunti 1–59 minuutin kohdalla | Joka 1. minuutti, alkaen 1 minuuttia yli |
 | `0 9 * * WED-FRI` | keskiviikosta perjantaihin klo 9 | Klo 09:00, keskiviikko - perjantai |
 | `0 0 13 * FRI` | kuukauden 13. päivänä tai perjantaisin keskiyöllä | Klo 00:00, kuukauden 13 päivä, ja edelleen perjantai |
 <!-- END GENERATED: comparison -->

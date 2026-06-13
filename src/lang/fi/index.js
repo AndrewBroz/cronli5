@@ -116,26 +116,35 @@ const weekdayTokens = {
   SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
 };
 
-// Unit form tables for the anchored-minute/second constructions: the
-// case lands on the unit noun, the digit stays in apposition.
+// Unit form tables for the anchored-minute/second constructions.
+// `mark` is the frequency for the "N minuutin kohdalla" ("at the
+// N-minute mark") form; `anchor` is the possessive for the elative
+// offset form ("jokaisen tunnin minuutista 1 alkaen").
 const units = {
   minute: {
-    ade: 'minuutilla',
-    adePl: 'minuuteilla',
+    mark: 'joka tunti',
     anchor: 'jokaisen tunnin',
     ela: 'minuutista',
     gen: 'minuutin',
     restart: 'tasatunnista alkaen'
   },
   second: {
-    ade: 'sekunnilla',
-    adePl: 'sekunneilla',
+    mark: 'joka minuutti',
     anchor: 'jokaisen minuutin',
     ela: 'sekunnista',
     gen: 'sekunnin',
     restart: 'joka minuutti'
   }
 };
+
+// "joka tunti 30 minuutin kohdalla" (with the mark) or "30 minuutin
+// kohdalla" (bare, when a specific hour clause follows). `values` is the
+// already-joined digit string ("30", "0 ja 30", "0–29").
+function atMarks(values, unit, withMark) {
+  const tail = values + ' ' + unit.gen + ' kohdalla';
+
+  return withMark ? unit.mark + ' ' + tail : tail;
+}
 
 // Normalize raw user options. Written Finnish is 24-hour only, so the
 // `ampm` option is ignored (see notes.md).
@@ -173,23 +182,24 @@ function renderStandaloneSeconds(ir, plan, opts) {
 }
 
 function renderSecondPastMinute(ir, plan, opts) {
-  return units.second.anchor + ' sekunnilla ' + ir.pattern.second +
+  return atMarks(ir.pattern.second, units.second, true) +
     trailingQualifier(ir, opts);
 }
 
 // A meaningful second combined with a single specific minute (and an
-// open hour): a single second folds into the minute anchor; a list,
+// open hour): a single second folds into one shared "kohdalla"; a list,
 // range, or step leads with its own clause.
 function renderSecondsWithinMinute(ir, plan, opts) {
   const minuteField = ir.pattern.minute;
 
   if (plan.singleSecond) {
-    return 'jokaisen tunnin minuutilla ' + minuteField +
-      ' ja sekunnilla ' + ir.pattern.second + trailingQualifier(ir, opts);
+    return units.minute.mark + ' ' + minuteField + ' ' +
+      units.minute.gen + ' ja ' + ir.pattern.second + ' ' +
+      units.second.gen + ' kohdalla' + trailingQualifier(ir, opts);
   }
 
-  return secondsLeadClause(ir, opts) + ' jokaisen tunnin minuutilla ' +
-    minuteField + trailingQualifier(ir, opts);
+  return secondsLeadClause(ir, opts) + ', ' +
+    atMarks(minuteField, units.minute, true) + trailingQualifier(ir, opts);
 }
 
 function renderComposeSeconds(ir, plan, opts) {
@@ -210,11 +220,11 @@ function secondsLeadClause(ir, opts) {
   }
 
   if (shape === 'single') {
-    return units.second.anchor + ' sekunnilla ' + secondField;
+    return atMarks(secondField, units.second, true);
   }
 
-  return units.second.anchor + ' sekunneilla ' +
-    joinList(segmentWords(ir.analyses.segments.second));
+  return atMarks(joinList(segmentWords(ir.analyses.segments.second)),
+    units.second, true);
 }
 
 // --- Minute renderers. ---
@@ -224,7 +234,7 @@ function renderEveryMinute(ir, plan, opts) {
 }
 
 function renderSingleMinute(ir, plan, opts) {
-  return units.minute.anchor + ' minuutilla ' + ir.pattern.minute +
+  return atMarks(ir.pattern.minute, units.minute, true) +
     trailingQualifier(ir, opts);
 }
 
@@ -236,17 +246,18 @@ function renderMultipleMinutes(ir, plan, opts) {
   return minutesList(ir) + trailingQualifier(ir, opts);
 }
 
-// "jokaisen tunnin minuuteilla 0, 15 ja 30" (or a dash range).
+// "joka tunti 0, 15 ja 30 minuutin kohdalla" (or a dash range).
 function minutesList(ir) {
-  return units.minute.anchor + ' minuuteilla ' +
-    joinList(segmentWords(ir.analyses.segments.minute));
+  return atMarks(joinList(segmentWords(ir.analyses.segments.minute)),
+    units.minute, true);
 }
 
-// The bare minute words, for clauses where specific hours make the
-// "jokaisen tunnin" anchor contradictory: "minuuteilla 0–30".
+// The bare minute mark, for clauses where a specific hour follows and
+// the "joka tunti" frequency would be redundant: "0–30 minuutin
+// kohdalla".
 function bareMinutes(ir) {
-  return 'minuuteilla ' +
-    joinList(segmentWords(ir.analyses.segments.minute));
+  return atMarks(joinList(segmentWords(ir.analyses.segments.minute)),
+    units.minute, false);
 }
 
 // A repeating minute step, qualified by the active hour window(s).
@@ -352,7 +363,7 @@ function renderHourRange(ir, plan, opts) {
 
   // A single minute makes both window ends exact fires ("klo 9.30–17.30").
   if (ir.shapes.minute === 'single') {
-    return units.minute.anchor + ' minuutilla ' + ir.pattern.minute + ' ' +
+    return atMarks(ir.pattern.minute, units.minute, false) + ' ' +
       kloRange({hour: plan.from, minute: +ir.pattern.minute},
         {hour: plan.to, minute: plan.last}, opts) +
       trailingQualifier(ir, opts);
@@ -429,12 +440,11 @@ const renderers = {
 
 // --- Step phrases. ---
 
-// "viiden minuutin välein", "jokaisen tunnin minuuteilla 0 ja 31", or
+// "viiden minuutin välein", "joka tunti 0 ja 31 minuutin kohdalla", or
 // "kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen".
 function stepCycle60(segment, unit, opts) {
   if (segment.startToken.indexOf('-') !== -1) {
-    return unit.anchor + ' ' + unit.adePl + ' ' +
-      joinList(wordList(segment.fires));
+    return atMarks(joinList(wordList(segment.fires)), unit, true);
   }
 
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
@@ -443,8 +453,7 @@ function stepCycle60(segment, unit, opts) {
 
   if (start !== 0) {
     if (segment.fires.length <= 3) {
-      return unit.anchor + ' ' + unit.adePl + ' ' +
-        joinList(wordList(segment.fires));
+      return atMarks(joinList(wordList(segment.fires)), unit, true);
     }
 
     return cadence + ' ' + unit.anchor + ' ' + unit.ela + ' ' + start +
@@ -456,8 +465,7 @@ function stepCycle60(segment, unit, opts) {
   }
 
   if (segment.fires.length <= 2) {
-    return unit.anchor + ' ' + unit.adePl + ' ' +
-      joinList(wordList(segment.fires));
+    return atMarks(joinList(wordList(segment.fires)), unit, true);
   }
 
   return cadence + ' ' + unit.restart;

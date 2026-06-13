@@ -55,11 +55,18 @@ case constructions.
 
 * Every N units: genitive + `välein` (`viiden minuutin välein`,
   `15 sekunnin välein`).
-* Anchored minutes/seconds: case on the **unit noun**, digit in
-  apposition — `jokaisen tunnin minuutilla 30`, `minuuteilla 0 ja 30`,
-  `sekunnilla 1`. This sidesteps numeral inflection wholesale.
+* Anchored minutes/seconds: the **`kohdalla` mark form** — `joka tunti
+  30 minuutin kohdalla`, `joka minuutti 15 sekunnin kohdalla`, combined
+  `joka tunti 30 minuutin ja 15 sekunnin kohdalla`; the `joka tunti`
+  drops when a specific hour clause follows (`0–30 minuutin kohdalla klo
+  9–17`). This replaced an earlier adessive calque (`minuutilla 30`),
+  which a native-roleplay review and cRonstrue's human Finnish locale
+  both flagged as unidiomatic; `kohdalla` ("at the mark of") is the
+  native timeline anchor and keeps the digit uninflected. The exact
+  word `kohdalla` vs cRonstrue's `yli` ("past") is the one open item for
+  a true native pass (see REVIEW.md).
 * Ranges: en-dash per SFS 4175 wherever digits appear
-  (`klo 9.00–17.45`, `minuuteilla 0–30`, `1.–15. päivänä`); the case
+  (`klo 9.00–17.45`, `0–30 minuutin kohdalla`, `1.–15. päivänä`); the case
   pair only where names force it (`maanantaista perjantaihin`,
   `kesäkuusta syyskuuhun`). The design doc predicted "kello 9:stä
   17:ään"; the dash is the *written-standard* alternative that avoids
