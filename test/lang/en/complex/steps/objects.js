@@ -26,10 +26,10 @@ describe('Valid objects with steps:', function() {
     [{hour: '*/5'}, 'every five hours from midnight'],
     [{hour: '*/7'}, 'every seven hours from midnight'],
     [{hour: '*/8'}, 'every eight hours'],
-    [{hour: '*/10'}, 'at midnight, 10 a.m., and 8 p.m.'],
+    [{hour: '*/10'}, 'at 12 a.m., 10 a.m., and 8 p.m.'],
     [{hour: '*/12'}, 'every 12 hours'],
-    [{hour: '*/17'}, 'at midnight and 5 p.m.'],
-    [{hour: '*/20'}, 'at midnight and 8 p.m.']
+    [{hour: '*/17'}, 'at 12 a.m. and 5 p.m.'],
+    [{hour: '*/20'}, 'at 12 a.m. and 8 p.m.']
   ];
 
   describe('Partial cron objects', function() {

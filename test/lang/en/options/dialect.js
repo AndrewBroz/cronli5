@@ -11,7 +11,7 @@ import {run} from '../../../runner.js';
 describe('Dialect option:', function() {
   describe('us (default): Chicago style', function() {
     run([
-      ['0 9,12,17 * * *', 'every day at 9 a.m., noon, and 5 p.m.'],
+      ['0 9,12,17 * * *', 'every day at 9 a.m., 12 p.m., and 5 p.m.'],
       ['30 9 * * MON-FRI', 'every Monday through Friday at 9:30 a.m.'],
       ['0 0 * * *', 'every day at midnight'],
       ['0 12 1 1 *', 'on January 1 at noon'],
@@ -30,7 +30,7 @@ describe('Dialect option:', function() {
     var house = {dialect: 'house'};
 
     run([
-      ['0 9,12,17 * * *', 'every day at 9 AM, noon, and 5 PM', house],
+      ['0 9,12,17 * * *', 'every day at 9 AM, 12 PM, and 5 PM', house],
       ['30 9 * * MON-FRI', 'every Monday - Friday at 9:30 AM', house],
       ['0 12 1 1 *', 'on January 1st at noon', house],
       ['0 12 1,15 6 *', 'on June 1st and 15th at noon', house],
@@ -49,7 +49,7 @@ describe('Dialect option:', function() {
       ['*/15 9-17 * * *',
         'every 15 minutes from 9 a.m. until 5:45 p.m.',
         {dialect: {through: ' until '}}],
-      ['0 9,12,17 * * *', 'every day at 9am, noon and 5pm',
+      ['0 9,12,17 * * *', 'every day at 9am, 12pm and 5pm',
         {dialect: {am: 'am', closeUp: true, pm: 'pm', serialComma: false}}],
       ['0 12 1 1 *', 'on 1 January at 12 o\'clock',
         {dialect: {dayFirst: true, midday: '12 o\'clock'}}],
@@ -64,7 +64,7 @@ describe('Dialect option:', function() {
     var uk = {dialect: 'uk'};
 
     run([
-      ['0 9,12,17 * * *', 'every day at 9am, midday and 5pm', uk],
+      ['0 9,12,17 * * *', 'every day at 9am, 12pm and 5pm', uk],
       ['30 9 * * MON-FRI', 'every Monday to Friday at 9.30am', uk],
       ['0 0 * * *', 'every day at midnight', uk],
       ['0 12 1 1 *', 'on 1 January at midday', uk],

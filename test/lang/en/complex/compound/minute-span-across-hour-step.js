@@ -19,7 +19,7 @@ describe('Minute span across an hour step:', function() {
   describe('wildcard minute', function() {
     run([
       ['* */2 * * *', 'every minute, every two hours'],
-      ['* */10 * * *', 'every minute, at midnight, 10 a.m., and 8 p.m.']
+      ['* */10 * * *', 'every minute, at 12 a.m., 10 a.m., and 8 p.m.']
     ]);
   });
 

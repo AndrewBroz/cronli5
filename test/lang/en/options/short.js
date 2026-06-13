@@ -41,7 +41,7 @@ describe('Short option:', function() {
       ['*/15 9-17 * * *', 'every 15 minutes from 9 a.m.-5:45 p.m.', options],
       ['* 9 * * *', 'every minute from 9 a.m.-9:59 a.m.', options],
       ['30 9-20,22 * * *',
-        'every day at 9:30 a.m.-8:30 p.m. and 10:30 p.m.', options]
+        'at 30 minutes past the hour from 9 a.m.-8:30 p.m. and at 10:30 p.m.', options]
     ]);
   });
 });

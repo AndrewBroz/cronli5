@@ -19,7 +19,7 @@ describe('Discrete minutes under an hour step:', function() {
   describe('minute list', function() {
     run([
       ['0,30 8-18/4 * * *',
-        'every day at 8 a.m., 8:30 a.m., noon, 12:30 p.m., ' +
+        'every day at 8 a.m., 8:30 a.m., 12 p.m., 12:30 p.m., ' +
         '4 p.m., and 4:30 p.m.']
     ]);
   });

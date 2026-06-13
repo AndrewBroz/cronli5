@@ -30,10 +30,10 @@ describe('Valid arrays with steps:', function() {
       [['0', '*/5', '*', '*', '*'], 'every five hours from midnight'],
       [['0', '*/7', '*', '*', '*'], 'every seven hours from midnight'],
       [['0', '*/8', '*', '*', '*'], 'every eight hours'],
-      [['0', '*/10', '*', '*', '*'], 'at midnight, 10 a.m., and 8 p.m.'],
+      [['0', '*/10', '*', '*', '*'], 'at 12 a.m., 10 a.m., and 8 p.m.'],
       [['0', '*/12', '*', '*', '*'], 'every 12 hours'],
-      [['0', '*/17', '*', '*', '*'], 'at midnight and 5 p.m.'],
-      [['0', '*/20', '*', '*', '*'], 'at midnight and 8 p.m.']
+      [['0', '*/17', '*', '*', '*'], 'at 12 a.m. and 5 p.m.'],
+      [['0', '*/20', '*', '*', '*'], 'at 12 a.m. and 8 p.m.']
     ]);
   });
 

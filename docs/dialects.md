@@ -36,7 +36,7 @@ Side by side:
 
 | Pattern | `'us'` | `'uk'` | `'house'` |
 | --- | --- | --- | --- |
-| `0 9,12,17 * * *` | every day at 9 a.m., noon, and 5 p.m. | every day at 9am, midday and 5pm | every day at 9 AM, noon, and 5 PM |
+| `0 9,12,17 * * *` | every day at 9 a.m., 12 p.m., and 5 p.m. | every day at 9am, 12pm and 5pm | every day at 9 AM, 12 PM, and 5 PM |
 | `30 9 * * MON-FRI` | every Monday through Friday at 9:30 a.m. | every Monday to Friday at 9.30am | every Monday - Friday at 9:30 AM |
 | `0 12 1 1 *` | on January 1 at noon | on 1 January at midday | on January 1st at noon |
 | `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5:45 p.m. | every 15 minutes from 9am to 5.45pm | every 15 minutes from 9 AM - 5:45 PM |
@@ -69,7 +69,7 @@ cronli5('*/15 9-17 * * *', { dialect: { through: ' until ' } });
 cronli5('0 9,12,17 * * *', {
   dialect: { am: 'am', closeUp: true, pm: 'pm', serialComma: false }
 });
-// 'every day at 9am, noon and 5pm'
+// 'every day at 9am, 12pm and 5pm'
 ```
 
 The full field reference (all optional; defaults shown are the `'us'`

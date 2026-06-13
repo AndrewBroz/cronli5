@@ -34,7 +34,7 @@ describe('Valid strings with lists:', function() {
     run([
       ['0 9,17 * * *', 'every day at 9 a.m. and 5 p.m.'],
       ['0 0,12 * * *', 'every day at midnight and noon'],
-      ['0 9,12,17 * * *', 'every day at 9 a.m., noon, and 5 p.m.']
+      ['0 9,12,17 * * *', 'every day at 9 a.m., 12 p.m., and 5 p.m.']
     ]);
   });
 

@@ -164,6 +164,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- A contiguous hour range with extra discrete hours now reads with the
+  hour-range frame instead of an ambiguous clock-time span:
+  `0 9-20,22 * * *` reads "every hour from 9 a.m. through 8 p.m. and at
+  10 p.m." (was "every day at 9 a.m. through 8 p.m. and 10 p.m.", where
+  the trailing "and 10 p.m." could read as part of the span). This mirrors
+  the existing pure-range rendering (`0 9-17 * * *` → "every hour from 9
+  a.m. through 5 p.m."); the per-minute (`30 9-20,22` → "at 30 minutes
+  past the hour from 9 a.m. through 8:30 p.m. and at 10:30 p.m.") and
+  multiple-range (`0 9-12,14-20` → "every hour from 9 a.m. through noon
+  and from 2 p.m. through 8 p.m.") forms follow the same frame.
+- Clock-time lists no longer mix the words "noon"/"midnight" with numeral
+  times: `0 22-2,12 * * *` reads "every day at 12 p.m., 10 p.m., 11 p.m.,
+  12 a.m., 1 a.m., and 2 a.m." (was "noon, ..., midnight, ..."), the same
+  consistency rule the number series follows. A list that is only
+  noon/midnight keeps the words (`0 0,12 * * *` → "midnight and noon"),
+  as does a single time (`0 12 * * *` → "every day at noon").
 - English minute and second number series are now internally consistent
   in their number style: when any value in a list or range exceeds ten,
   the whole series uses numerals instead of mixing spelled words with

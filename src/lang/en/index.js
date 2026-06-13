@@ -247,21 +247,19 @@ function renderMinuteSpanInHour(ir, plan, opts) {
 // A minute window combined with discrete hours fires within that window
 // during each hour.
 function renderMinutesAcrossHours(ir, plan, opts) {
-  const times = hourTimesFromPlan(ir, plan.times, opts);
-
   if (plan.form === 'wildcard') {
-    return 'every minute during the ' + times + ' hours' +
+    return 'every minute during the ' +
+      hourTimesFromPlan(ir, plan.times, opts, false) + ' hours' +
       trailingQualifier(ir, opts);
   }
 
-  if (plan.form === 'range') {
-    return minuteRangeLead(ir.pattern.minute, opts) + ', at ' + times +
-      trailingQualifier(ir, opts);
-  }
+  const times = hourTimesFromPlan(ir, plan.times, opts, true);
+  const lead = plan.form === 'range' ?
+    minuteRangeLead(ir.pattern.minute, opts) :
+    listPastThe(segmentWords(ir.analyses.segments.minute, opts),
+      'minute', 'hour', opts);
 
-  // A list containing ranges reads as discrete spans.
-  return listPastThe(segmentWords(ir.analyses.segments.minute, opts),
-    'minute', 'hour', opts) + ', at ' + times + trailingQualifier(ir, opts);
+  return lead + ', at ' + times + trailingQualifier(ir, opts);
 }
 
 // A minute wildcard or plain range under an hour step; the hour cadence
@@ -337,8 +335,9 @@ function hourWindow(window, opts) {
 // Expand a discrete set of hours and minutes into clock times prefixed by
 // a day-level qualifier, e.g. "every day at 9 a.m. and 9:30 a.m.".
 function renderClockTimes(ir, plan, opts) {
+  const plain = mixedTwelve(plan.times);
   const times = plan.times.map(function clock(time) {
-    return getTime(time.hour, time.minute, opts, time.second);
+    return getTime(time.hour, time.minute, opts, time.second, plain);
   });
 
   return interpretDayQualifier(ir, opts) + 'at ' + joinList(times, opts);
@@ -349,14 +348,24 @@ function renderClockTimes(ir, plan, opts) {
 // own clause instead of cross-multiplying into a wall of times.
 function renderCompactClockTimes(ir, plan, opts) {
   if (plan.fold) {
+    const hasRange = ir.analyses.segments.hour.some(function range(segment) {
+      return segment.kind === 'range';
+    });
+
+    // A contiguous hour range reads with the hour-range frame ("every
+    // hour from X through Y"), not a clock-time span ("at X through Y").
+    if (hasRange && !ir.analyses.clockSecond) {
+      return foldedHourWindows(ir, plan, opts) + trailingQualifier(ir, opts);
+    }
+
     return interpretDayQualifier(ir, opts) + 'at ' +
-      hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
+      hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts, true);
   }
 
   const phrase =
     listPastThe(segmentWords(ir.analyses.segments.minute, opts),
       'minute', 'hour', opts) +
-    ', at ' + hourSegmentTimes(ir, 0, null, opts) +
+    ', at ' + hourSegmentTimes(ir, 0, null, opts, true) +
     trailingQualifier(ir, opts);
 
   // A single non-zero second cannot fold into the per-minute clause, so it
@@ -364,6 +373,39 @@ function renderCompactClockTimes(ir, plan, opts) {
   return ir.analyses.clockSecond ?
     secondsLeadClause(ir, opts) + ', ' + phrase :
     phrase;
+}
+
+// A folded hour field that includes a contiguous range reads with the
+// hour-range frame: a shared minute lead ("every hour" / "at 30 minutes
+// past the hour"), each range as a "from X through Y" window, and any
+// non-contiguous hours appended as "and at Z".
+function foldedHourWindows(ir, plan, opts) {
+  const minute = plan.minute;
+  const windows = [];
+  const singles = [];
+
+  ir.analyses.segments.hour.forEach(function classify(segment) {
+    if (segment.kind === 'range') {
+      windows.push('from ' + getTime(segment.bounds[0], 0, opts) +
+        through(opts) + getTime(segment.bounds[1], minute, opts));
+    }
+    else if (segment.kind === 'step') {
+      singles.push(...segment.fires);
+    }
+    else {
+      singles.push(+segment.value);
+    }
+  });
+
+  let phrase = rangeMinuteLead(ir, opts) + ' ' + joinList(windows, opts);
+
+  if (singles.length) {
+    phrase += ' and at ' + joinList(singles.map(function time(hour) {
+      return getTime(hour, minute, opts);
+    }), opts);
+  }
+
+  return phrase;
 }
 
 // The plan dispatch table.
@@ -506,47 +548,97 @@ function listPastThe(words, unit, anchor, opts) {
     anchor;
 }
 
+// A clock time reads as a word ("noon"/"midnight") only at exact 12:00 or
+// 0:00 with no minute or second.
+function wordTime(hour, minute, second) {
+  return (+hour === 0 || +hour === 12) && +minute === 0 &&
+    !(typeof second === 'number' && second > 0);
+}
+
+// Whether a clock-time list mixes a noon/midnight word with a numeral
+// time. When it does, the words are suppressed so the list stays in one
+// style ("12 a.m., 1 a.m." not "midnight, 1 a.m.").
+function mixedTwelve(entries) {
+  const words = entries.filter(function word(e) {
+    return wordTime(e.hour, e.minute, e.second);
+  });
+
+  return words.length > 0 && words.length < entries.length;
+}
+
 // Render hours as a joined list of clock times, e.g. "9 a.m. and 5 p.m.".
 function hourTimes(hours, opts) {
+  const plain = mixedTwelve(hours.map(function entry(hour) {
+    return {hour, minute: 0};
+  }));
   const times = hours.map(function clock(hour) {
-    return getTime(hour, 0, opts);
+    return getTime(hour, 0, opts, undefined, plain);
   });
 
   return joinList(times, opts);
 }
 
 // The hour times accompanying a window phrase: enumerated fires up to the
-// cap, segment rendering past it (decided by the core).
-function hourTimesFromPlan(ir, times, opts) {
+// cap, segment rendering past it (decided by the core). `atContext` marks
+// an "at <times>" frame (vs "during the <times> hours").
+function hourTimesFromPlan(ir, times, opts, atContext) {
   if (times.kind === 'fires') {
     return hourTimes(times.fires, opts);
   }
 
-  return hourSegmentTimes(ir, 0, null, opts);
+  return hourSegmentTimes(ir, 0, null, opts, atContext);
 }
 
 // Clock times for the hour field rendered segment by segment, so ranges
 // read as windows ("9:30 a.m. through 8:30 p.m.") rather than an
 // enumeration. The minute (and optional second) fold into each time.
-function hourSegmentTimes(ir, minute, second, opts) {
+function hourSegmentTimes(ir, minute, second, opts, atContext) {
+  const segments = ir.analyses.segments.hour;
+  const plain = mixedTwelve(segments.flatMap(function entries(segment) {
+    const hours = segment.kind === 'range' ? segment.bounds :
+      segment.kind === 'step' ? segment.fires : [segment.value];
+
+    return hours.map(function entry(hour) {
+      return {hour: +hour, minute, second};
+    });
+  }));
   const pieces = [];
 
-  ir.analyses.segments.hour.forEach(function clock(segment) {
+  segments.forEach(function clock(segment) {
     if (segment.kind === 'step') {
       pieces.push(...segment.fires.map(function time(hour) {
-        return getTime(hour, minute, opts, second);
+        return getTime(hour, minute, opts, second, plain);
       }));
     }
     else if (segment.kind === 'range') {
-      pieces.push(getTime(segment.bounds[0], minute, opts, second) +
-        through(opts) + getTime(segment.bounds[1], minute, opts, second));
+      pieces.push(getTime(segment.bounds[0], minute, opts, second, plain) +
+        through(opts) +
+        getTime(segment.bounds[1], minute, opts, second, plain));
     }
     else {
-      pieces.push(getTime(segment.value, minute, opts, second));
+      pieces.push(getTime(segment.value, minute, opts, second, plain));
     }
   });
 
-  return joinList(pieces, opts);
+  return joinList(disambiguateTimes(pieces, segments, atContext), opts);
+}
+
+// In an "at" frame, a discrete time after a "<a> through <b>" window can
+// read as part of the window. When a range is present, prefix every
+// trailing piece with "at" to break that reading ("...through 8 p.m. and
+// at 10 p.m.").
+function disambiguateTimes(pieces, segments, atContext) {
+  const hasRange = segments.some(function range(segment) {
+    return segment.kind === 'range';
+  });
+
+  if (!atContext || !hasRange) {
+    return pieces;
+  }
+
+  return pieces.map(function at(piece, index) {
+    return index === 0 ? piece : 'at ' + piece;
+  });
 }
 
 // Join a list with commas and a terminal "and". The US dialect (Chicago)
@@ -913,7 +1005,7 @@ function stepYears(yearField, opts) {
 // dialect's style: "3:45 p.m." / "9 a.m." / "noon" for US (Chicago),
 // "3.45pm" / "9am" / "midday" for UK (Guardian), or "15:45" / "15.45" in
 // 24-hour mode.
-function getTime(h, m, opts, s) {
+function getTime(h, m, opts, s, plain) {
   // Seconds are only shown when a specific non-zero value is supplied.
   const second = typeof s === 'number' && s > 0 ? s : 0;
 
@@ -922,15 +1014,17 @@ function getTime(h, m, opts, s) {
       (second ? opts.style.sep + pad(second) : '');
   }
 
-  return twelveHourTime(h, m, second, opts);
+  return twelveHourTime(h, m, second, opts, plain);
 }
 
 // The 12-hour form of a clock time: "9:30 a.m.", "9 a.m." on the hour, or
-// a word for exact 12:00. A `second` of 0 is omitted.
-function twelveHourTime(h, m, second, opts) {
+// a word for exact 12:00. A `second` of 0 is omitted. `plain` suppresses
+// the noon/midnight words (forcing "12 p.m."/"12 a.m.") so a mixed list
+// stays in one number style.
+function twelveHourTime(h, m, second, opts, plain) {
   const style = opts.style;
 
-  if (+m === 0 && !second) {
+  if (!plain && +m === 0 && !second) {
     if (+h === 0) {
       return style.midnight;
     }

@@ -39,8 +39,8 @@ describe('Wrap-around ranges:', function() {
   describe('hour lists containing a wrapping range', function() {
     run([
       ['0 22-2,12 * * *',
-        'every day at noon, 10 p.m., 11 p.m., ' +
-        'midnight, 1 a.m., and 2 a.m.']
+        'every day at 12 p.m., 10 p.m., 11 p.m., ' +
+        '12 a.m., 1 a.m., and 2 a.m.']
     ]);
   });
 

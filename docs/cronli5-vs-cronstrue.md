@@ -73,9 +73,9 @@ inputs, but the seams show: stacked comma clauses, grammatical slips
 | `15 30 9 * * MON` | every Monday at 9:30:15 a.m. | At 09:30:15 AM, only on Monday |
 | `45 17,9 0 * * *` | every day at 12:09:45 a.m. and 12:17:45 a.m. | At 45 seconds past the minute, at 9 and 17 minutes past the hour, at 12:00 AM |
 | `0-30 9,17-19 * * *` | every minute from 0 through 30 past the hour, at 9 a.m., 5 p.m., 6 p.m., and 7 p.m. | Minutes 0 through 30 past the hour, at 09:00 AM and 05:00 PM through 07:59 PM |
-| `0 22-2,12 * * *` | every day at noon, 10 p.m., 11 p.m., midnight, 1 a.m., and 2 a.m. | Every hour, at 10:00 PM through 02:00 AM and 12:00 PM |
-| `0 9-20,22 * * *` | every day at 9 a.m. through 8 p.m. and 10 p.m. | Every hour, at 09:00 AM through 08:00 PM and 10:00 PM |
-| `* 9,12,17 * * MON-FRI` | every minute during the 9 a.m., noon, and 5 p.m. hours on Monday through Friday | Every minute, at 09:00 AM, 12:00 PM, and 05:00 PM, Monday through Friday |
+| `0 22-2,12 * * *` | every day at 12 p.m., 10 p.m., 11 p.m., 12 a.m., 1 a.m., and 2 a.m. | Every hour, at 10:00 PM through 02:00 AM and 12:00 PM |
+| `0 9-20,22 * * *` | every hour from 9 a.m. through 8 p.m. and at 10 p.m. | Every hour, at 09:00 AM through 08:00 PM and 10:00 PM |
+| `* 9,12,17 * * MON-FRI` | every minute during the 9 a.m., 12 p.m., and 5 p.m. hours on Monday through Friday | Every minute, at 09:00 AM, 12:00 PM, and 05:00 PM, Monday through Friday |
 | `30 9 15W 6 *` | on the weekday nearest the 15th in June at 9:30 a.m. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
 | `0 0 29 2 *` | on February 29 at midnight | At 12:00 AM, on day 29 of the month, only in February |
 | `0 9-9 * * *` | every day at 9 a.m. | Every hour, between 09:00 AM and 09:00 AM |

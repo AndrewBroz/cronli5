@@ -13,7 +13,7 @@ describe('Valid objects with lists:', function() {
     [{minute: '0,15,30,45'}, 'at 0, 15, 30, and 45 minutes past the hour'],
     [{hour: '9,17'}, 'every day at 9 a.m. and 5 p.m.'],
     [{hour: '0,12'}, 'every day at midnight and noon'],
-    [{hour: '9,12,17'}, 'every day at 9 a.m., noon, and 5 p.m.'],
+    [{hour: '9,12,17'}, 'every day at 9 a.m., 12 p.m., and 5 p.m.'],
     [{hour: '0', date: '1,15'}, 'on the 1st and 15th at midnight'],
     [{hour: '0', date: '1,15,31'}, 'on the 1st, 15th, and 31st at midnight'],
     [

@@ -19,7 +19,7 @@ describe('Minute step across multiple hours:', function() {
     run([
       ['*/15 */2 * * *', 'every 15 minutes, every two hours'],
       ['*/15 */10 * * *',
-        'every 15 minutes, at midnight, 10 a.m., and 8 p.m.']
+        'every 15 minutes, at 12 a.m., 10 a.m., and 8 p.m.']
     ]);
   });
 
