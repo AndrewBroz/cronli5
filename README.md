@@ -6,19 +6,18 @@
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/cronli5)](https://bundlephobia.com/package/cronli5)
 [![license](https://img.shields.io/github/license/andrewbroz/cronli5.svg)](./LICENSE.md)
 
-Generate plain-language descriptions of schedules from cron patterns &mdash;
-English by default, with [Spanish and Finnish](#languages) available as
-importable language modules.
-Accepts classic (five-part) cron patterns, extended (six-part) cron
-patterns, where the first field is assumed to refer to seconds, and full
-seven-part (Quartz-style) patterns with a trailing year. Accepts the
-standard allowed values and the following operators: asterisks (`*`), commas
-(`,`), hyphens (`-`), and slashes (`/`). Ranges in cyclic fields may wrap
-around (`22-2` is an overnight window; `FRI-MON` is a long weekend).
-Quartz-style tokens are also supported in the date and weekday fields: `L`
-(last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`),
-`#` (nth weekday, e.g. `1#2` for the second Monday), and `?` (no specific
-value).
+Generate plain-language descriptions of schedules from cron patterns.
+English is the default language, with [Spanish and Finnish](#languages)
+available as importable language modules. Accepts classic (five-part)
+cron patterns, extended (six-part) cron patterns, where the first field
+is assumed to refer to seconds, and full seven-part (Quartz-style) patterns
+with a trailing year. Accepts the standard allowed values and the following
+operators: asterisks (`*`), commas (`,`), hyphens (`-`), and slashes (`/`).
+Ranges in cyclic fields may wrap around (`22-2` is an overnight window;
+`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the
+date and weekday fields: `L` (last day, or `5L` for the last Friday), `W`
+(nearest weekday, e.g. `15W`), `#` (nth weekday, e.g. `1#2` for the second
+Monday), and `?` (no specific value).
 
 - **Zero runtime dependencies** &mdash; tiny and safe to drop into any project.
 - **Runs anywhere** &mdash; ships ESM, CommonJS, and a browser global.
@@ -150,10 +149,8 @@ cronli5(weekdaysAt1330, { dialect: 'uk' });
 ## Languages
 
 English is the default. Other languages are full renderers over the same
-language-independent core &mdash; each owns its words, grammar, and style
-anchors, so output reads like the language rather than a filled-in
-template. A language ships as its own module and is selected per call
-with the `lang` option; if you never import it, it never reaches your
+language-independent core. A language ships as its own module and is selected
+per call with the `lang` option. If you never import it, it never reaches your
 bundle (each language adds about 3.3&nbsp;KB gzipped).
 
 ```js
@@ -178,17 +175,13 @@ docs below.
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
 
 Each language doc includes a generated side-by-side table against the
-matching cRonstrue locale. The architecture &mdash; a semantic core, languages
-as values, and an LLM-reviewed corpus per language &mdash; is described in
+matching cRonstrue locale. The architecture is described in
 [docs/i18n-design.md](./docs/i18n-design.md).
 
 ## Output Examples
 
-`cronli5` renders single values, lists (`,`), ranges (`-`), and steps (`/`),
-and composes multiple fields into a single idiomatic phrase.
-
 Output follows the Chicago Manual of Style by default (serial commas,
-`9 a.m.` times, `noon`/`midnight`, cardinal month-day dates) &mdash; see the
+`9 a.m.` times, `noon`/`midnight`, cardinal month-day dates). See the
 [`dialect`](#options) option for Guardian-style British English. Bare days
 of the month use suffixed ordinals (`on the 1st and 15th`).
 
@@ -268,7 +261,7 @@ possibility for confusion.
 
 ## Module Formats and Types
 
-`cronli5` is authored as an ES module in `src/` and published with dual builds
+`cronli5` is authored as an ES module in `src/`. It is published with dual builds
 so it works everywhere:
 
 * **ESM** (`import cronli5 from 'cronli5'`) resolves to `dist/cronli5.js`.
@@ -281,12 +274,12 @@ Language subpaths (`cronli5/lang/en`, `cronli5/lang/es`, `cronli5/lang/fi`)
 ship the same dual ESM + CJS builds under `dist/lang/`.
 
 TypeScript type definitions ship in `cronli5.d.ts` (and `lang.d.ts` for the
-language subpaths) and are picked up automatically — no `@types` package
+language subpaths) and are picked up automatically: no `@types` package
 required.
 
 ## Development
 
-The library has no runtime dependencies; the toolchain (ESLint, Mocha, Chai,
+The library has no runtime dependencies. The toolchain (ESLint, Mocha, Chai,
 c8, esbuild) lives in `devDependencies`.
 
 ```bash
@@ -307,9 +300,9 @@ material that may be hard to understand without some background.
 is based on code from [a gist by dunse][dunse]. Although `prettycron` was
 close to meeting my needs, I wasn't fully satisfied with the output. `cronli5`
 tries to render as many cron patterns in as direct and as idiomatic language
-as possible &mdash; in every language it ships. Test cases that describe where it
+as possible in every target language. Test cases that describe where it
 fails to do so and which prescribe an obviously better description would be
-greatly appreciated.
+greatly appreciated. Native speakers of target languages are the best.
 
 ## License
 
