@@ -9,9 +9,9 @@ describe('Minute span across an hour step:', function() {
   describe('minute range', function() {
     run([
       ['0-30 */2 * * *',
-        'every minute from zero through 30 past the hour, every two hours'],
+        'every minute from 0 through 30 past the hour, every two hours'],
       ['0-30 9-17/2 * * *',
-        'every minute from zero through 30 past the hour, ' +
+        'every minute from 0 through 30 past the hour, ' +
         'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
     ]);
   });
@@ -26,7 +26,7 @@ describe('Minute span across an hour step:', function() {
   describe('with a day qualifier', function() {
     run([
       ['0-30 */2 * * MON',
-        'every minute from zero through 30 past the hour, ' +
+        'every minute from 0 through 30 past the hour, ' +
         'every two hours on Monday']
     ]);
   });

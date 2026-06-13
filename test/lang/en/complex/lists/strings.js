@@ -4,7 +4,9 @@ import {run} from '../../../../runner.js';
 // - Lists join as "A, B, and C" (serial, no Oxford comma), matching the
 //   existing numeric-field style; weekday lists keep their established
 //   Oxford-comma form.
-// - Numeric values follow `getNumber` (words for 0-10, digits above).
+// - Numeric values follow `getNumber` (words for 0-10, digits above),
+//   but a minute/second series is consistent: if any value exceeds ten,
+//   the whole series uses digits ("0 through 29", not "zero through 29").
 // - Second/minute lists read "at <values> seconds/minutes past the
 //   minute/hour".
 // - Hour lists expand into a list of clock times.
@@ -14,17 +16,17 @@ import {run} from '../../../../runner.js';
 describe('Valid strings with lists:', function() {
   describe('second lists', function() {
     run([
-      ['0,30 * * * * *', 'at zero and 30 seconds past the minute'],
-      ['5,10,15 * * * * *', 'at five, ten, and 15 seconds past the minute'],
-      ['0,15,30,45 * * * * *', 'at zero, 15, 30, and 45 seconds past the minute']
+      ['0,30 * * * * *', 'at 0 and 30 seconds past the minute'],
+      ['5,10,15 * * * * *', 'at 5, 10, and 15 seconds past the minute'],
+      ['0,15,30,45 * * * * *', 'at 0, 15, 30, and 45 seconds past the minute']
     ]);
   });
 
   describe('minute lists', function() {
     run([
-      ['0,30 * * * *', 'at zero and 30 minutes past the hour'],
+      ['0,30 * * * *', 'at 0 and 30 minutes past the hour'],
       ['1,2,3 * * * *', 'at one, two, and three minutes past the hour'],
-      ['0,15,30,45 * * * *', 'at zero, 15, 30, and 45 minutes past the hour']
+      ['0,15,30,45 * * * *', 'at 0, 15, 30, and 45 minutes past the hour']
     ]);
   });
 

@@ -31,10 +31,10 @@ describe('Clock-time enumeration cap:', function() {
   describe('a minute list leads with its own clause', function() {
     run([
       ['0,30 8-18/2 * * *',
-        'at zero and 30 minutes past the hour, at 8 a.m., 10 a.m., ' +
+        'at 0 and 30 minutes past the hour, at 8 a.m., 10 a.m., ' +
         'noon, 2 p.m., 4 p.m., and 6 p.m.'],
       ['0,15,30,45 9,17 * * MON',
-        'at zero, 15, 30, and 45 minutes past the hour, ' +
+        'at 0, 15, 30, and 45 minutes past the hour, ' +
         'at 9 a.m. and 5 p.m. on Monday']
     ]);
   });
@@ -45,7 +45,7 @@ describe('Clock-time enumeration cap:', function() {
         'every day at 9:30:15 a.m. through 8:30:15 p.m. and 10:30:15 p.m.'],
       ['15 0,30 8,10,12,14 * * *',
         'at 15 seconds past the minute, ' +
-        'at zero and 30 minutes past the hour, ' +
+        'at 0 and 30 minutes past the hour, ' +
         'at 8 a.m., 10 a.m., noon, and 2 p.m.']
     ]);
   });
@@ -56,7 +56,7 @@ describe('Clock-time enumeration cap:', function() {
         'every 15 minutes during the ' +
         '9 a.m. through 8 p.m. and 10 p.m. hours'],
       ['0-30 9-20,22 * * *',
-        'every minute from zero through 30 past the hour, ' +
+        'every minute from 0 through 30 past the hour, ' +
         'at 9 a.m. through 8 p.m. and 10 p.m.']
     ]);
   });

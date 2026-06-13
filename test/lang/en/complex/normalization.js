@@ -13,7 +13,7 @@ describe('Input normalization:', function() {
       ['45,15,30 * * * *',
         'at 15, 30, and 45 minutes past the hour'],
       ['30-40,10 * * * *',
-        'at ten and 30 through 40 minutes past the hour'],
+        'at 10 and 30 through 40 minutes past the hour'],
       ['30,15 * * * * *', 'at 15 and 30 seconds past the minute'],
       ['0 0 * * FRI,MON', 'every Monday and Friday at midnight'],
       ['0 0 * SEP,MAR *', 'every day in March and September at midnight'],
@@ -39,11 +39,11 @@ describe('Input normalization:', function() {
     run([
       // `1/1` fires at minutes 1-59 and skips :00, so "every minute"
       // would overstate it.
-      ['1/1 * * * *', 'every minute from one through 59 past the hour'],
-      ['1/1 * * * * *', 'every second from one through 59 past the minute'],
+      ['1/1 * * * *', 'every minute from 1 through 59 past the hour'],
+      ['1/1 * * * * *', 'every second from 1 through 59 past the minute'],
       ['0/1 * * * *', 'every minute'],
       ['*/1 * * * *', 'every minute'],
-      ['5-30/1 * * * *', 'every minute from five through 30 past the hour'],
+      ['5-30/1 * * * *', 'every minute from 5 through 30 past the hour'],
       ['0 1/1 * * *', 'every hour from 1 a.m. through 11 p.m.'],
       ['0 0 2/1 * *', 'on the 2nd through 31st at midnight'],
       ['0 0 * 3/1 *', 'every day in March through December at midnight'],

@@ -12,7 +12,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
     run([
       ['*/15 30 9 * * *', 'every 15 seconds, every day at 9:30 a.m.'],
       ['*/15 0,30 * * * *',
-        'every 15 seconds, at zero and 30 minutes past the hour'],
+        'every 15 seconds, at 0 and 30 minutes past the hour'],
       ['*/15 30 9-17 * * *',
         'every 15 seconds, at 30 minutes past the hour ' +
         'from 9 a.m. through 5:30 p.m.']
@@ -24,7 +24,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['5,10 30 9 * * *',
         'at five and ten seconds past the minute, every day at 9:30 a.m.'],
       ['0-30 30 9 * * *',
-        'every second from zero through 30 past the minute, ' +
+        'every second from 0 through 30 past the minute, ' +
         'every day at 9:30 a.m.']
     ]);
   });
@@ -40,10 +40,10 @@ describe('Seconds composed with the rest of the pattern:', function() {
     run([
       ['15 0,30 * * * *',
         'at 15 seconds past the minute, ' +
-        'at zero and 30 minutes past the hour'],
+        'at 0 and 30 minutes past the hour'],
       ['15 0-30 * * * *',
         'at 15 seconds past the minute, ' +
-        'every minute from zero through 30 past the hour']
+        'every minute from 0 through 30 past the hour']
     ]);
   });
 

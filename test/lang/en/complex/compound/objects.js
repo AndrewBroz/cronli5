@@ -34,7 +34,7 @@ describe('Valid compound objects:', function() {
     ],
     [
       {minute: '0,30', hour: '9-17'},
-      'at zero and 30 minutes past the hour from 9 a.m. through 5:30 p.m.'
+      'at 0 and 30 minutes past the hour from 9 a.m. through 5:30 p.m.'
     ],
     [
       {minute: '15', hour: '9-17', weekday: 'MON-FRI'},

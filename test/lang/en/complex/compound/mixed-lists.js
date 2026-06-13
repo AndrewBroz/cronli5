@@ -9,14 +9,14 @@ describe('Lists mixing values with ranges or steps:', function() {
   describe('minute list containing a range', function() {
     run([
       ['5-10,20 * * * *',
-        'at five through ten and 20 minutes past the hour'],
+        'at 5 through 10 and 20 minutes past the hour'],
       ['0-30,45 9 * * *',
-        'at zero through 30 and 45 minutes past the hour, at 9 a.m.'],
+        'at 0 through 30 and 45 minutes past the hour, at 9 a.m.'],
       ['5-10,20 9,17 * * *',
-        'at five through ten and 20 minutes past the hour, ' +
+        'at 5 through 10 and 20 minutes past the hour, ' +
         'at 9 a.m. and 5 p.m.'],
       ['0-10,30 9-17 * * *',
-        'at zero through ten and 30 minutes past the hour ' +
+        'at 0 through 10 and 30 minutes past the hour ' +
         'from 9 a.m. through 5:30 p.m.']
     ]);
   });
@@ -24,9 +24,9 @@ describe('Lists mixing values with ranges or steps:', function() {
   describe('second list containing a range', function() {
     run([
       ['0-30,45 * * * * *',
-        'at zero through 30 and 45 seconds past the minute'],
+        'at 0 through 30 and 45 seconds past the minute'],
       ['5-10,20 30 * * * *',
-        'at five through ten and 20 seconds past the minute, ' +
+        'at 5 through 10 and 20 seconds past the minute, ' +
         '30 minutes past the hour, every hour']
     ]);
   });
@@ -38,7 +38,7 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 9,17/2 * * *',
         'every day at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m.'],
       ['0-30 9,17-19 * * *',
-        'every minute from zero through 30 past the hour, ' +
+        'every minute from 0 through 30 past the hour, ' +
         'at 9 a.m., 5 p.m., 6 p.m., and 7 p.m.'],
       ['*/15 9,17/2 * * *',
         'every 15 minutes during the ' +
@@ -70,11 +70,11 @@ describe('Lists mixing values with ranges or steps:', function() {
   describe('minute or second list containing a step', function() {
     run([
       ['5,30-40/5 * * * *',
-        'at five, 30, 35, and 40 minutes past the hour'],
+        'at 5, 30, 35, and 40 minutes past the hour'],
       ['0,10-58/12 * * * *',
-        'at zero, ten, 22, 34, 46, and 58 minutes past the hour'],
+        'at 0, 10, 22, 34, 46, and 58 minutes past the hour'],
       ['5,30-40/5 * * * * *',
-        'at five, 30, 35, and 40 seconds past the minute']
+        'at 5, 30, 35, and 40 seconds past the minute']
     ]);
   });
 

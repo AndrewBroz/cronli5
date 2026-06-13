@@ -176,9 +176,10 @@ function secondsLeadClause(ir, opts) {
 
   if (shape === 'range') {
     const bounds = secondField.split('-');
+    const num = seriesNumber(bounds, opts);
 
-    return 'every second from ' + getNumber(bounds[0], opts) +
-      through(opts) + getNumber(bounds[1], opts) + ' past the minute';
+    return 'every second from ' + num(bounds[0]) +
+      through(opts) + num(bounds[1]) + ' past the minute';
   }
 
   if (shape === 'single') {
@@ -278,9 +279,10 @@ function renderMinuteSpanAcrossHourStep(ir, plan, opts) {
 // past the hour".
 function minuteRangeLead(minuteField, opts) {
   const bounds = minuteField.split('-');
+  const num = seriesNumber(bounds, opts);
 
-  return 'every minute from ' + getNumber(bounds[0], opts) + through(opts) +
-    getNumber(bounds[1], opts) + ' past the hour';
+  return 'every minute from ' + num(bounds[0]) + through(opts) +
+    num(bounds[1]) + ' past the hour';
 }
 
 // --- Hour renderers. ---
@@ -455,27 +457,46 @@ function stepHours(segment, opts) {
 
 // --- List and segment phrasing. ---
 
-// Render numeric fire values as number words.
+// Chicago number style for a series: if any value crosses the spell-out
+// boundary (greater than ten), render the whole series as numerals;
+// otherwise spell each per getNumber. Keeps "five through ten" spelled
+// but makes "0 through 29" all-numeral instead of "zero through 29".
+function seriesNumber(values, opts) {
+  if (values.some(function big(v) { return +v > 10; })) {
+    return function digit(n) { return '' + n; };
+  }
+
+  return function spell(n) { return getNumber(n, opts); };
+}
+
+// Render numeric fire values as number words, consistent across the set.
 function numberWords(fires, opts) {
-  return fires.map(function word(value) {
-    return getNumber(value, opts);
-  });
+  return fires.map(seriesNumber(fires, opts));
 }
 
 // Render classified segments as words: singles as numbers, ranges as
-// "<a> through <b>" pairs, step segments as their enumerated fires.
+// "<a> through <b>" pairs, step segments as their enumerated fires. The
+// whole field shares one number style (all spelled or all numerals).
 function segmentWords(segments, opts) {
+  const values = segments.flatMap(function collect(segment) {
+    if (segment.kind === 'range') {
+      return segment.bounds;
+    }
+
+    return segment.kind === 'step' ? segment.fires : [segment.value];
+  });
+  const num = seriesNumber(values, opts);
+
   return segments.flatMap(function word(segment) {
     if (segment.kind === 'range') {
-      return [getNumber(segment.bounds[0], opts) + through(opts) +
-        getNumber(segment.bounds[1], opts)];
+      return [num(segment.bounds[0]) + through(opts) + num(segment.bounds[1])];
     }
 
     if (segment.kind === 'step') {
-      return numberWords(segment.fires, opts);
+      return segment.fires.map(num);
     }
 
-    return [getNumber(segment.value, opts)];
+    return [num(segment.value)];
   });
 }
 

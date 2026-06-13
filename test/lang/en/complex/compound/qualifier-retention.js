@@ -9,8 +9,8 @@ describe('Day qualifiers on second and minute anchors:', function() {
     run([
       ['0 30 * * * MON', '30 minutes past the hour, every hour on Monday'],
       ['0-30 * * * MON',
-        'every minute from zero through 30 past the hour on Monday'],
-      ['0,30 * * * MON', 'at zero and 30 minutes past the hour on Monday']
+        'every minute from 0 through 30 past the hour on Monday'],
+      ['0,30 * * * MON', 'at 0 and 30 minutes past the hour on Monday']
     ]);
   });
 
@@ -19,7 +19,7 @@ describe('Day qualifiers on second and minute anchors:', function() {
       ['15 * * * * MON', '15 seconds past the minute, every minute on Monday'],
       ['*/15 * * * * MON', 'every 15 seconds on Monday'],
       ['0-30 * * * * MON',
-        'every second from zero through 30 past the minute on Monday'],
+        'every second from 0 through 30 past the minute on Monday'],
       ['5,10 * * * * MON',
         'at five and ten seconds past the minute on Monday']
     ]);

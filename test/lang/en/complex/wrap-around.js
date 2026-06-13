@@ -12,17 +12,17 @@ describe('Wrap-around ranges:', function() {
       ['* 22-2 * * *', 'every minute from 10 p.m. through 2:59 a.m.'],
       ['*/15 22-2 * * *', 'every 15 minutes from 10 p.m. through 2:45 a.m.'],
       ['0-30 22-2 * * *',
-        'every minute from zero through 30 past the hour, ' +
+        'every minute from 0 through 30 past the hour, ' +
         'from 10 p.m. through 2:30 a.m.']
     ]);
   });
 
   describe('minutes and seconds wrap within their cycle', function() {
     run([
-      ['30-10 * * * *', 'every minute from 30 through ten past the hour'],
+      ['30-10 * * * *', 'every minute from 30 through 10 past the hour'],
       ['50-10 9 * * *',
-        'every minute from 50 through ten past the hour, at 9 a.m.'],
-      ['50-10 * * * * *', 'every second from 50 through ten past the minute']
+        'every minute from 50 through 10 past the hour, at 9 a.m.'],
+      ['50-10 * * * * *', 'every second from 50 through 10 past the minute']
     ]);
   });
 

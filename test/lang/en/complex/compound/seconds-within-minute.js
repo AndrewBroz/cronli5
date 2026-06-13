@@ -19,7 +19,7 @@ describe('Seconds combined with a specific minute:', function() {
         'at five and ten seconds past the minute, ' +
         '30 minutes past the hour, every hour'],
       ['0-30 30 * * * *',
-        'every second from zero through 30 past the minute, ' +
+        'every second from 0 through 30 past the minute, ' +
         '30 minutes past the hour, every hour'],
       ['*/15 30 * * * *',
         'every 15 seconds, 30 minutes past the hour, every hour']

@@ -19,7 +19,7 @@ describe('Valid objects with steps:', function() {
     [{minute: '17/20'}, 'at 17, 37, and 57 minutes past the hour'],
     [{minute: '*/21'}, 'every 21 minutes past the hour'],
     [{minute: '*/30'}, 'every 30 minutes'],
-    [{minute: '*/31'}, 'at zero and 31 minutes past the hour'],
+    [{minute: '*/31'}, 'at 0 and 31 minutes past the hour'],
     [{hour: '*/2'}, 'every two hours'],
     [{hour: '*/3'}, 'every three hours'],
     [{hour: '2/3'}, 'every three hours from 2 a.m.'],

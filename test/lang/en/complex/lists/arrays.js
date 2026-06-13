@@ -4,21 +4,21 @@ describe('Valid arrays with lists:', function() {
   describe('second lists', function() {
     run([
       [['0,30', '*', '*', '*', '*', '*'],
-        'at zero and 30 seconds past the minute'],
+        'at 0 and 30 seconds past the minute'],
       [['5,10,15', '*', '*', '*', '*', '*'],
-        'at five, ten, and 15 seconds past the minute'],
+        'at 5, 10, and 15 seconds past the minute'],
       [['0,15,30,45', '*', '*', '*', '*', '*'],
-        'at zero, 15, 30, and 45 seconds past the minute']
+        'at 0, 15, 30, and 45 seconds past the minute']
     ]);
   });
 
   describe('minute lists', function() {
     run([
-      [['0,30', '*', '*', '*', '*'], 'at zero and 30 minutes past the hour'],
+      [['0,30', '*', '*', '*', '*'], 'at 0 and 30 minutes past the hour'],
       [['1,2,3', '*', '*', '*', '*'],
         'at one, two, and three minutes past the hour'],
       [['0,15,30,45', '*', '*', '*', '*'],
-        'at zero, 15, 30, and 45 minutes past the hour']
+        'at 0, 15, 30, and 45 minutes past the hour']
     ]);
   });
 

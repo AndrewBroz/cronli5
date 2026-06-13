@@ -164,6 +164,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- English minute and second number series are now internally consistent
+  in their number style: when any value in a list or range exceeds ten,
+  the whole series uses numerals instead of mixing spelled words with
+  digits. `0-29 * * * *` reads "every minute from 0 through 29 past the
+  hour" (was "from zero through 29"), and `5,10,15 * * * * *` reads "at
+  5, 10, and 15 seconds past the minute" (was "five, ten, and 15"). All-
+  small series stay spelled ("at five and ten seconds"), as do single
+  values ("30 minutes past the hour"). This follows the Chicago rule the
+  default dialect already targets.
 - A month **range** no longer folds into a calendar date: `0 0 1 6-9 *`
   reads "on the 1st in June through September" (previously "on June
   through September 1", which parses as "(June) through (September 1)").

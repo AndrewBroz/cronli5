@@ -72,7 +72,7 @@ describe('Dialect option:', function() {
       ['0 0 12 25 12 * 2030', 'on 25 December 2030 at midday', uk],
       ['15 30 9 * * *', 'every day at 9.30.15am', uk],
       ['*/15 9-17 * * *', 'every 15 minutes from 9am to 5.45pm', uk],
-      ['0-29 * * * *', 'every minute from zero to 29 past the hour', uk],
+      ['0-29 * * * *', 'every minute from 0 to 29 past the hour', uk],
       ['0 0 1-15 * *', 'on the 1st to 15th at midnight', uk],
       ['0 22-2 * * *', 'every hour from 10pm to 2am', uk],
       ['0 17 * * *', 'every day at 17.00', {ampm: false, dialect: 'uk'}],

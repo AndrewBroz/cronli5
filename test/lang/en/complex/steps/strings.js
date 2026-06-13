@@ -20,7 +20,7 @@ describe('Valid strings with steps:', function() {
       ['17/20 * * * *', 'at 17, 37, and 57 minutes past the hour'],
       ['*/21 * * * *', 'every 21 minutes past the hour'],
       ['*/30 * * * *', 'every 30 minutes'],
-      ['*/31 * * * *', 'at zero and 31 minutes past the hour'],
+      ['*/31 * * * *', 'at 0 and 31 minutes past the hour'],
       ['0 */2 * * *', 'every two hours'],
       ['0 */3 * * *', 'every three hours'],
       ['0 2/3 * * *', 'every three hours from 2 a.m.'],

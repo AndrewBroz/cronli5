@@ -2,15 +2,15 @@ import {run} from '../../../../runner.js';
 
 describe('Valid objects with lists:', function() {
   var tests = [
-    [{second: '0,30'}, 'at zero and 30 seconds past the minute'],
-    [{second: '5,10,15'}, 'at five, ten, and 15 seconds past the minute'],
+    [{second: '0,30'}, 'at 0 and 30 seconds past the minute'],
+    [{second: '5,10,15'}, 'at 5, 10, and 15 seconds past the minute'],
     [
       {second: '0,15,30,45'},
-      'at zero, 15, 30, and 45 seconds past the minute'
+      'at 0, 15, 30, and 45 seconds past the minute'
     ],
-    [{minute: '0,30'}, 'at zero and 30 minutes past the hour'],
+    [{minute: '0,30'}, 'at 0 and 30 minutes past the hour'],
     [{minute: '1,2,3'}, 'at one, two, and three minutes past the hour'],
-    [{minute: '0,15,30,45'}, 'at zero, 15, 30, and 45 minutes past the hour'],
+    [{minute: '0,15,30,45'}, 'at 0, 15, 30, and 45 minutes past the hour'],
     [{hour: '9,17'}, 'every day at 9 a.m. and 5 p.m.'],
     [{hour: '0,12'}, 'every day at midnight and noon'],
     [{hour: '9,12,17'}, 'every day at 9 a.m., noon, and 5 p.m.'],

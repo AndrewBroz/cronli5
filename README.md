@@ -198,13 +198,13 @@ cronli5('*/5 * * * *');     // 'every five minutes'
 cronli5('0 9 * * MON');     // 'every Monday at 9 a.m.'
 
 // Lists
-cronli5('5,10,15 * * * * *'); // 'at five, ten, and 15 seconds past the minute'
+cronli5('5,10,15 * * * * *'); // 'at 5, 10, and 15 seconds past the minute'
 cronli5('0 9,17 * * *');      // 'every day at 9 a.m. and 5 p.m.'
 cronli5('0 0 1,15 * *');      // 'on the 1st and 15th at midnight'
 cronli5('0 12 * 6,12 *');     // 'every day in June and December at noon'
 
 // Ranges (wrap-around ranges describe overnight and weekend windows)
-cronli5('0-29 * * * *'); // 'every minute from zero through 29 past the hour'
+cronli5('0-29 * * * *'); // 'every minute from 0 through 29 past the hour'
 cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m.'
 cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at midnight'
 cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m.'

@@ -4,16 +4,16 @@ describe('Valid arrays with ranges:', function() {
   describe('second ranges', function() {
     run([
       [['0-30', '*', '*', '*', '*', '*'],
-        'every second from zero through 30 past the minute'],
+        'every second from 0 through 30 past the minute'],
       [['10-20', '*', '*', '*', '*', '*'],
-        'every second from ten through 20 past the minute']
+        'every second from 10 through 20 past the minute']
     ]);
   });
 
   describe('minute ranges', function() {
     run([
       [['0-29', '*', '*', '*', '*'],
-        'every minute from zero through 29 past the hour'],
+        'every minute from 0 through 29 past the hour'],
       [['1-5', '*', '*', '*', '*'],
         'every minute from one through five past the hour']
     ]);
