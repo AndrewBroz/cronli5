@@ -8,3 +8,6 @@ cronli5.min.js
 # Test coverage output.
 coverage
 .nyc_output
+
+# Scratch output (review packets, generated tables for human review).
+tmp

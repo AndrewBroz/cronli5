@@ -6,12 +6,16 @@ const {expect} = chai;
 
 // The Spanish corpus: the reviewed expectation suite that makes the module
 // trustworthy (docs/i18n-design.md §2.4). Each entry is exact output.
+//
+// Spanish defaults to the 24-hour clock (RAE). Blocks whose expectations
+// exercise the 12-hour day-period forms pass `{ampm: true}` as the shared
+// option; a per-entry option object still overrides it.
 
-function run(cases) {
+function run(cases, shared) {
   cases.forEach(function each(values) {
     const pattern = values[0];
     const expected = values[1];
-    const options = {...values[2] || {}, lang: es};
+    const options = {...shared || {}, ...values[2] || {}, lang: es};
 
     describe(JSON.stringify(pattern), function() {
       it('se lee "' + expected + '"', function() {
@@ -20,6 +24,9 @@ function run(cases) {
     });
   });
 }
+
+// 12-hour day-period blocks pass this shared option.
+const ampm = {ampm: true};
 
 describe('Español (es):', function() {
   describe('frecuencias básicas', function() {
@@ -34,7 +41,22 @@ describe('Español (es):', function() {
     ]);
   });
 
-  describe('horas del día', function() {
+  describe('horas del día (reloj de 24 horas, por defecto)', function() {
+    run([
+      ['0 9 * * *', 'todos los días a las 09:00'],
+      ['30 9 * * *', 'todos los días a las 09:30'],
+      ['30 17 * * *', 'todos los días a las 17:30'],
+      ['0 0 * * *', 'todos los días a las 00:00'],
+      ['0 12 * * *', 'todos los días a las 12:00'],
+      ['0 1 * * *', 'todos los días a la 01:00'],
+      ['0 13 * * *', 'todos los días a las 13:00'],
+      ['0 9,17 * * *', 'todos los días a las 09:00 y a las 17:00'],
+      ['0 22-2 * * *', 'cada hora de las 22:00 a las 02:00'],
+      ['* 1 * * *', 'cada minuto de la 01:00 a la 01:59']
+    ]);
+  });
+
+  describe('horas del día (reloj de 12 horas)', function() {
     run([
       ['0 12 * * *', 'todos los días al mediodía'],
       ['0 0 * * *', 'todos los días a medianoche'],
@@ -44,21 +66,20 @@ describe('Español (es):', function() {
       ['0 1 * * *', 'todos los días a la 1 de la madrugada'],
       ['0 22 * * *', 'todos los días a las 10 de la noche'],
       ['0 9,17 * * *',
-        'todos los días a las 9 de la mañana y a las 5 de la tarde'],
-      ['30 17 * * *', 'todos los días a las 17:30', {ampm: false}]
-    ]);
+        'todos los días a las 9 de la mañana y a las 5 de la tarde']
+    ], ampm);
   });
 
   describe('días de la semana', function() {
     run([
-      ['0 9 * * MON', 'todos los lunes a las 9 de la mañana'],
+      ['0 9 * * MON', 'los lunes a las 9 de la mañana'],
       ['30 9 * * MON-FRI', 'de lunes a viernes a las 9:30 de la mañana'],
       ['0 14 * * 1,3,5',
-        'todos los lunes, miércoles y viernes a las 2 de la tarde'],
+        'los lunes, miércoles y viernes a las 2 de la tarde'],
       ['*/15 * * * MON', 'cada 15 minutos los lunes'],
       ['*/15 * * * MON-FRI', 'cada 15 minutos de lunes a viernes'],
       ['0 0 * * FRI-MON', 'de viernes a lunes a medianoche']
-    ]);
+    ], ampm);
   });
 
   describe('fechas y meses', function() {
@@ -99,8 +120,8 @@ describe('Español (es):', function() {
       ['0 0 */2 6-9 *',
         'cada dos días del mes, de junio a septiembre a medianoche'],
       ['0 12 * 6-9 MON',
-        'todos los lunes, de junio a septiembre al mediodía']
-    ]);
+        'los lunes, de junio a septiembre al mediodía']
+    ], ampm);
   });
 
   describe('minutos y segundos anclados', function() {
@@ -136,7 +157,7 @@ describe('Español (es):', function() {
         'a las 9 de la mañana y a las 5 de la tarde'],
       ['0-30 */2 * * *',
         'cada minuto del 0 al 30 de cada hora, cada dos horas']
-    ]);
+    ], ampm);
   });
 
   describe('segundos compuestos', function() {
@@ -144,7 +165,7 @@ describe('Español (es):', function() {
       ['*/15 30 9 * * *',
         'cada 15 segundos, todos los días a las 9:30 de la mañana'],
       ['15 30 9 * * *', 'todos los días a las 9:30:15 de la mañana']
-    ]);
+    ], ampm);
   });
 
   describe('fichas Quartz', function() {
@@ -153,14 +174,14 @@ describe('Español (es):', function() {
       ['0 0 * * 5L', 'el último viernes del mes a medianoche'],
       ['0 0 * * 1#2', 'el segundo lunes del mes a medianoche'],
       ['0 0 15W * *', 'el día laborable más cercano al 15 a medianoche']
-    ]);
+    ], ampm);
   });
 
   describe('años', function() {
     run([
       ['0 0 12 25 12 * 2030', 'el 25 de diciembre de 2030 al mediodía'],
       ['0 0 9 * * * 2030', 'todos los días a las 9 de la mañana en 2030']
-    ]);
+    ], ampm);
   });
 
   describe('fecha o día de la semana', function() {
@@ -168,7 +189,7 @@ describe('Español (es):', function() {
       ['59 23 31 12 5',
         'el 31 de diciembre o los viernes de diciembre ' +
         'a las 11:59 de la noche']
-    ]);
+    ], ampm);
   });
 
   describe('pasos con desfase y acotados', function() {
@@ -187,7 +208,7 @@ describe('Español (es):', function() {
       ['* */2 * * *', 'cada minuto, cada dos horas'],
       ['0 12 */2 * *', 'cada dos días del mes al mediodía'],
       ['0 12 5/3 * *', 'cada tres días del mes desde el 5 al mediodía']
-    ]);
+    ], ampm);
   });
 
   describe('segundos independientes y compuestos', function() {
@@ -198,7 +219,7 @@ describe('Español (es):', function() {
         'cada 15 segundos, en el minuto 30 de cada hora'],
       ['* 30 9 * * *',
         'cada segundo, todos los días a las 9:30 de la mañana']
-    ]);
+    ], ampm);
   });
 
   describe('formas compactas y listas mixtas', function() {
@@ -218,7 +239,7 @@ describe('Español (es):', function() {
       ['0 0 * * 1-5,0',
         'los domingos y de lunes a viernes a medianoche'],
       ['50-10 * * * *', 'cada minuto del 50 al 10 de cada hora']
-    ]);
+    ], ampm);
   });
 
   describe('más fichas Quartz y años', function() {
@@ -237,7 +258,7 @@ describe('Español (es):', function() {
       ['0 0 12 1 1 * */1', 'el 1 de enero al mediodía cada año'],
       ['0 0 12 1 1 * 2030/2',
         'el 1 de enero al mediodía cada dos años desde 2030']
-    ]);
+    ], ampm);
   });
 
   describe('cobertura de ramas', function() {
@@ -264,13 +285,13 @@ describe('Español (es):', function() {
         'mañana, del mediodía a las 12:59 de la tarde, de las 3 a las ' +
         '3:59 de la tarde, de las 6 a las 6:59 de la tarde y de las 9 ' +
         'a las 9:59 de la noche'],
-      ['*/15 9-17 * * *', 'cada 15 minutos de las 9:00 a las 17:45',
+      ['*/15 9-17 * * *', 'cada 15 minutos de las 09:00 a las 17:45',
         {ampm: false}],
       ['*/15 * 13 * 5',
         'cada 15 minutos el 13 de cada mes o los viernes'],
       ['*/15 * * 6 *', 'cada 15 minutos en junio'],
       ['0 12 * * 0,1/2',
-        'todos los domingos, lunes, miércoles y viernes al mediodía'],
+        'los domingos, lunes, miércoles y viernes al mediodía'],
       ['0 12 * 1,6/3 *',
         'todos los días de enero, junio, septiembre y diciembre ' +
         'al mediodía'],
@@ -278,15 +299,14 @@ describe('Español (es):', function() {
       ['5,30-40/5 * * * *',
         'en los minutos 5, 30, 35 y 40 de cada hora'],
       ['*/5 * * * *', 'cada 5 minutos', {short: true}],
-      ['0 12 * * 7', 'todos los domingos al mediodía'],
+      ['0 12 * * 7', 'los domingos al mediodía'],
       ['5 9 * * *', 'todos los días a las 9:05 de la mañana']
-    ]);
+    ], ampm);
   });
 
   describe('dialecto personalizado', function() {
     run([
-      ['30 17 * * *', 'todos los días a las 17.30',
-        {ampm: false, dialect: {sep: '.'}}]
+      ['30 17 * * *', 'todos los días a las 17.30', {dialect: {sep: '.'}}]
     ]);
   });
 

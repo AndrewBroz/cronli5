@@ -88,8 +88,9 @@ const languages = [
   {code: 'en', extras: [], lang: en},
   {
     code: 'es',
-    // "a la 1" singular article; sábados takes a plural -s.
-    extras: ['0 13 * * *', '0 12 * * SAT'],
+    // Singular "a la 1" article even on the 24-hour clock; sábados takes
+    // a plural -s.
+    extras: ['0 1 * * *', '0 12 * * SAT'],
     lang: es
   },
   {

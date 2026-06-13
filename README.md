@@ -114,7 +114,7 @@ The `cronli5` function takes an `options` object as its 2nd parameter:
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `ampm` | `true` | Use a 12-hour clock. Set `false` for 24-hour time. |
+| `ampm` | `true` (English) | Use a 12-hour clock. Set `false` for 24-hour time. The default is language-specific: English is 12-hour; Spanish and Finnish default to 24-hour (Finnish is 24-hour only). |
 | `dialect` | `'us'` | The English style. `'us'` follows the [Chicago Manual of Style][chicago]: serial commas, `through` ranges, `9 a.m.`/`5:30 p.m.` times, `noon`/`midnight`, and `January 1` dates. `'uk'` follows the [Guardian style guide][guardian]: no serial comma, `to` ranges, `9am`/`5.30pm` times, `midday`/`midnight`, and `1 January` dates. `'house'` is cronli5's legacy voice (`9:30 AM`, `Monday - Friday`). A custom object defines your own style. See [docs/dialects.md](./docs/dialects.md). |
 | `lang` | English | A language module, e.g. `import es from 'cronli5/lang/es'`. Each language owns its words, conventions, and dialects &mdash; see [Languages](#languages). |
 | `lenient` | `false` | Never throw: invalid input returns the language's fallback description (`'an unrecognizable cron pattern'`) instead. Useful when rendering arbitrary user crontabs. |
@@ -162,9 +162,14 @@ import es from 'cronli5/lang/es';
 import fi from 'cronli5/lang/fi';
 
 cronli5('30 9 * * MON-FRI');             // 'every Monday through Friday at 9:30 a.m.'
-cronli5('30 9 * * MON-FRI', {lang: es}); // 'de lunes a viernes a las 9:30 de la mañana'
+cronli5('30 9 * * MON-FRI', {lang: es}); // 'de lunes a viernes a las 09:30'
 cronli5('30 9 * * MON-FRI', {lang: fi}); // 'maanantaista perjantaihin klo 9.30'
 ```
+
+Each language carries its own conventions and defaults — Spanish and
+Finnish default to the 24-hour clock, for instance (Spanish takes
+`{ampm: true}` for 12-hour times with day periods). See the per-language
+docs below.
 
 | Language | Module | Anchors | Doc |
 | --- | --- | --- | --- |

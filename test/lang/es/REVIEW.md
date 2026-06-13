@@ -96,3 +96,47 @@ Both fixed TDD-style (12 new/updated Spanish corpus entries, 10
 new/updated English expectations) and re-verified against the
 regenerated review packet: the only packet rows that changed are the
 targeted fixes.
+
+## 2026-06-13 — 24-hour clock default
+
+* Corpus: `corpus.js` fc4c53e04bfb · `pairs.js` 0b8feee7011f
+
+Spanish now defaults to the **24-hour clock** (RAE: written Spanish, and
+es-ES in particular, is predominantly 24-hour). `{ampm: true}` opts into
+the 12-hour clock with day periods, which the corpus and minimal pairs
+still cover in full — the day-period blocks now pass `{ampm: true}` as a
+shared option, and new blocks assert the 24-hour default ("a las 9:30",
+"a las 0:00", "a las 12:00").
+
+One finding, fixed TDD-style: the 24-hour path hard-coded the plural
+article, so one o'clock rendered "a las 1:00". One o'clock takes the
+singular article on both clocks; it now reads "a la 1:00" (and "de la
+1:00 a la 1:59" in ranges), matching the 12-hour "a la 1 de la tarde".
+Verified that hour 13 stays plural ("a las 13:00").
+
+## 2026-06-13 — zero-padded 24-hour hours
+
+* Corpus: `corpus.js` c934bddcb59a · `pairs.js` 4cc64b661e04
+
+24-hour clock times now zero-pad the hour to two digits, matching the
+already-padded minutes and the library's English 24-hour output: "a las
+09:00", "a las 00:00", "a la 01:00", "de las 09:00 a las 17:45". The
+12-hour clock (`{ampm: true}`) is unchanged ("a las 9 de la mañana").
+The singular article still keys off the hour value, so one o'clock is
+"a la 01:00".
+
+## 2026-06-13 — drop "todos" from weekday qualifiers
+
+* Corpus: `corpus.js` adc7443798c2 · `pairs.js` d74b20795dcb
+
+The leading weekday qualifier dropped its "todos" prefix: "0 9 * * MON"
+now reads "los lunes a las 09:00" (was "todos los lunes a las 09:00").
+Rationale: in Spanish the plural definite article "los lunes" already
+means "every Monday" (habitual), so "todos" is redundant emphasis — and
+the module already omitted it in the other four weekday contexts (range
+"de lunes a viernes", trailing "cada 15 minutos los lunes", and the
+date-or-weekday "o los viernes"). This removes that inconsistency.
+
+"todos los días" is unchanged: there "los días" alone does not mean
+"every day", so the "todos" is obligatory, not stylistic. Verified the
+weekday `todos` parameter is fully removed (no caller passes it).

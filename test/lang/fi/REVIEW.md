@@ -64,3 +64,24 @@ digits), so the module enumerates happily where the design doc guessed
 it would prefer windows.
 
 Verdict: **approved for pilot**, cross-family review outstanding.
+
+## 2026-06-13 — hours stay unpadded (SFS 4175)
+
+* Corpus: `corpus.js` 8b4d58cb9c33 · `pairs.js` cf0ebee8795e
+
+**Decision, do not re-pad.** Clock hours were briefly zero-padded for
+cross-language consistency with the Spanish change ("klo 09.30",
+"klo 09–17"), then reverted: per SFS 4175 / Kielitoimisto, written
+Finnish writes the hour without a leading zero and pads only the minute
+and second — `klo 9.30`, `klo 9`, `klo 9–17`, `klo 0, 10 ja 20`,
+`klo 1 alkaen`. Padding a bare hour ("klo 09") reads as stilted in
+Finnish, even though it is correct for Spanish and English. The renderer
+and corpus are byte-identical to the pre-padding state.
+
+Confirmed by the project owner, who reviews Spanish but not Finnish;
+this is one of the idiom calls a native catch would otherwise own (see
+the analogous Spanish "todos" decision in es/REVIEW.md). The other
+Finnish idiom calls flagged for a future cross-family or native pass —
+the `jokaisen tunnin minuutilla 30` anchored-minute construction,
+keskiyöllä/keskipäivällä only standalone, and the per-hour-window
+re-strategy — remain open.

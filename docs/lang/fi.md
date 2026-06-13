@@ -21,8 +21,9 @@ words, so the renderer owns the morphology outright.
 ## Style anchors
 
 Anchored to **Kielitoimiston ohjepankki** (Institute for the Languages
-of Finland) and **SFS 4175**: `klo 9.30` with the period separator,
-en-dash ranges (`klo 9.00–17.45`), ordinal days with a period
+of Finland) and **SFS 4175**: `klo 9.30` with the period separator —
+the hour is written without a leading zero, the minute always two digits
+— en-dash ranges (`klo 9.00–17.45`), ordinal days with a period
 (`13. päivänä`), and numbers 1–10 spelled out in inflecting
 constructions.
 
@@ -30,7 +31,7 @@ constructions.
 
 * **24-hour only.** Written Finnish has no a.m./p.m.; the `ampm` option
   is ignored. Exact 12:00 and 0:00 read as words standalone
-  (`keskipäivällä`, `keskiyöllä`); time lists keep uniform digits
+  (`keskipäivällä`, `keskiyöllä`); time lists read as plain `klo` digits
   (`klo 0, 10 ja 20`).
 * Weekday ranges are elative–illative case pairs:
   `maanantaista perjantaihin`, with consonant gradation where the word
@@ -46,7 +47,8 @@ constructions.
   (`jokaisen tunnin minuuteilla 0 ja 30`) — digits never inflect.
 * Dash ranges replace the case-pair construction wherever digits
   appear: `klo 9.00–17.45`, `minuuteilla 0–30`, `kuukauden 1.–15.
-  päivänä`.
+  päivänä`. Per SFS 4175 the hour is never zero-padded (`klo 9`,
+  `klo 9–17`); only the minute and second pad.
 
 ## Dialects
 

@@ -56,7 +56,7 @@ describe('Built package artifacts:', function() {
       const es = (await import('../../dist/lang/es.js')).default;
 
       expect(esm('0 9 * * MON', {lang: es}))
-        .to.equal('todos los lunes a las 9 de la mañana');
+        .to.equal('los lunes a las 09:00');
     });
 
   it('every language under src/lang has both built artifacts', function() {

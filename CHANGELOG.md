@@ -90,6 +90,25 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Spanish now defaults to the 24-hour clock** (`a las 09:30`,
+  `a las 17:00`), matching RAE convention for written Spanish. Pass
+  `{ampm: true}` for the previous 12-hour behavior with day periods
+  (`a las 9:30 de la mañana`, `al mediodía`, `a medianoche`). As part of
+  the change, one o'clock now keeps its singular article on the 24-hour
+  clock as well (`a la 01:00`, not `a las 1:00`). English stays 12-hour
+  by default; Finnish was already 24-hour only.
+- **Spanish 24-hour clock times now zero-pad the hour**, like the
+  minutes already did: `a las 09:00` (was `a las 9:00`), `a la 01:00`.
+  This matches English 24-hour output (`ampm: false`), which already
+  padded. Finnish deliberately does **not** pad the hour (`klo 9.30`,
+  `klo 9–17`), per SFS 4175, where the hour is written without a leading
+  zero and only the minute pads.
+- Spanish weekday qualifiers drop the redundant `todos`: `0 9 * * MON`
+  reads `los lunes a las 09:00` (was `todos los lunes…`). The plural
+  definite article `los lunes` already means "every Monday" in Spanish,
+  and the other weekday forms (ranges, trailing, date-or-weekday) already
+  omitted it. `todos los días` is unchanged, since `los días` alone does
+  not mean "every day".
 - Internal restructure toward i18n (see `docs/i18n-design.md`): the
   language-independent core (parsing, validation, normalization, semantic
   analysis) now lives in `src/core/`, and all English — phrases, dialect

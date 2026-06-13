@@ -11,17 +11,19 @@ case constructions.
   Kotus) — clock notation, ordinal periods, number spelling in running
   text.
 * SFS 4175 (numbers and marks in Finnish typesetting) — `klo 9.30` with
-  the period separator, en-dash ranges (`klo 9.00–17.45`).
+  the period separator (hour unpadded, minute two digits), en-dash ranges
+  (`klo 9.00–17.45`).
 
 ## Clock
 
 * 24-hour only. Written Finnish has no a.m./p.m.; the `ampm` option is
   ignored (normalized to false) and documented as such.
-* `klo 9.30`; on the hour `klo 9`; with seconds `klo 9.30.15`. The
-  default separator is the standard period; `{dialect: {sep: ':'}}`
-  gives the common informal colon.
+* `klo 9.30`; on the hour `klo 9`; with seconds `klo 9.30.15`. Per SFS
+  4175 the hour is never zero-padded; only the minute and second pad to
+  two digits. The default separator is the standard period;
+  `{dialect: {sep: ':'}}` gives the common informal colon.
 * Exact 12:00 → `keskipäivällä`, exact 0:00 → `keskiyöllä` (adessive),
-  **standalone only**: time lists use uniform `klo` digits
+  **standalone only**: time lists use plain `klo` digits
   (`klo 0, 10 ja 20`) — mixing case-marked nouns into a digit list reads
   worse than the schedule-style uniform notation.
 * The `klo` construction takes no case ending — the single biggest
@@ -63,8 +65,9 @@ case constructions.
   17:ään"; the dash is the *written-standard* alternative that avoids
   inflecting digits, and is the better schedule register.
 * Step offsets: postposed `alkaen` with a caseless or noun-marked
-  anchor — `klo 15 alkaen`, `keskiyöstä alkaen`, `minuutista 1 alkaen`,
-  `5. päivästä alkaen`, `helmikuusta alkaen`.
+  anchor — `klo 15 alkaen`, `klo 1 alkaen` (hour unpadded),
+  `keskiyöstä alkaen`, `minuutista 1 alkaen`, `5. päivästä alkaen`,
+  `helmikuusta alkaen`.
 * Open day/month steps: `joka toinen päivä`,
   `joka kolmannen kuukauden 1. päivänä` (genitive chain instead of
   English's "in every 3rd month" scope).

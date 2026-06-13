@@ -73,7 +73,9 @@ function normalizeOptions(options) {
   options = options || {};
 
   return {
-    ampm: typeof options.ampm === 'boolean' ? options.ampm : true,
+    // Written Spanish uses the 24-hour clock by default (RAE); `ampm:
+    // true` opts into 12-hour times with day periods.
+    ampm: typeof options.ampm === 'boolean' ? options.ampm : false,
     lenient: !!options.lenient,
     seconds: !!options.seconds,
     short: !!options.short,
@@ -531,7 +533,12 @@ function timePhrase(hour, minute, second, opts) {
   const showSeconds = typeof second === 'number' && second > 0 ? second : 0;
 
   if (!opts.ampm) {
-    return 'las ' + hour + opts.style.sep + pad(minute) +
+    // One o'clock takes the singular article ("la 01:00") even on the
+    // 24-hour clock; every other hour is plural ("las 13:00"). Hours are
+    // zero-padded to two digits, like the minutes.
+    const article = +hour === 1 ? 'la ' : 'las ';
+
+    return article + pad(hour) + opts.style.sep + pad(minute) +
       (showSeconds ? opts.style.sep + pad(showSeconds) : '');
   }
 
@@ -603,7 +610,7 @@ function leadingQualifier(ir, opts) {
   }
 
   if (pattern.weekday !== '*') {
-    return weekdayQualifier(ir, opts, 'todos ') + monthScope(ir) + ' ';
+    return weekdayQualifier(ir, opts) + monthScope(ir) + ' ';
   }
 
   if (pattern.month !== '*') {
@@ -627,7 +634,7 @@ function trailingQualifier(ir, opts) {
   }
 
   if (pattern.weekday !== '*') {
-    return ' ' + weekdayQualifier(ir, opts, '') + monthScope(ir);
+    return ' ' + weekdayQualifier(ir, opts) + monthScope(ir);
   }
 
   if (pattern.month !== '*') {
@@ -644,10 +651,10 @@ function trailingQualifier(ir, opts) {
 function dateOrWeekday(ir, opts) {
   if (monthRanged(ir)) {
     return dateClause(ir, opts, ' de cada mes') + ' o ' +
-      weekdayQualifier(ir, opts, '') + ', ' + monthPhrase(ir, 'de ');
+      weekdayQualifier(ir, opts) + ', ' + monthPhrase(ir, 'de ');
   }
 
-  return datePhrase(ir, opts) + ' o ' + weekdayQualifier(ir, opts, '') +
+  return datePhrase(ir, opts) + ' o ' + weekdayQualifier(ir, opts) +
     monthScope(ir);
 }
 
@@ -773,9 +780,10 @@ function quartzWeekdayPhrase(weekdayField) {
 }
 
 // The weekday qualifier: "los lunes", "de lunes a viernes", "los lunes,
-// miércoles y viernes". `todos` prefixes the article form when leading
-// ("todos los lunes").
-function weekdayQualifier(ir, opts, todos) {
+// miércoles y viernes". No "todos" prefix: the plural definite article
+// ("los lunes") already conveys "every Monday" in Spanish, unlike "todos
+// los días", where "los días" alone does not mean "every day".
+function weekdayQualifier(ir, opts) {
   const quartz = quartzWeekdayPhrase(ir.pattern.weekday);
 
   if (quartz) {
@@ -788,7 +796,7 @@ function weekdayQualifier(ir, opts, todos) {
   });
 
   if (allSingles) {
-    return todos + 'los ' +
+    return 'los ' +
       joinList(segments.map(function name(segment) {
         return pluralWeekday(segment.value);
       }));
