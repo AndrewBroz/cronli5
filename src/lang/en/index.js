@@ -3,6 +3,7 @@
 // the core stays semantic, and this module's only input is the IR.
 // See docs/i18n-design.md.
 
+import {clockDigits, numeral} from '../../core/format.js';
 import {resolveDialect} from './dialects.js';
 
 // English number names for the integers zero through ten.
@@ -1010,8 +1011,7 @@ function getTime(h, m, opts, s, plain) {
   const second = typeof s === 'number' && s > 0 ? s : 0;
 
   if (!opts.ampm) {
-    return pad(h) + opts.style.sep + pad(m) +
-      (second ? opts.style.sep + pad(second) : '');
+    return clockDigits(h, m, second, {pad: true, sep: opts.style.sep});
   }
 
   return twelveHourTime(h, m, second, opts, plain);
@@ -1034,15 +1034,8 @@ function twelveHourTime(h, m, second, opts, plain) {
     }
   }
 
-  let time = '' + (h % 12 || 12);
-
-  if (+m !== 0 || second) {
-    time += style.sep + pad(m);
-  }
-
-  if (second) {
-    time += style.sep + pad(second);
-  }
+  const time = clockDigits(h % 12 || 12, m, second,
+    {lean: true, sep: style.sep});
 
   return time + (style.closeUp ? '' : ' ') +
     (h < 12 ? style.am : style.pm);
@@ -1050,11 +1043,7 @@ function twelveHourTime(h, m, second, opts, plain) {
 
 // Get English number names for the integers zero through ten.
 function getNumber(n, opts) {
-  if (opts.short) {
-    return n;
-  }
-
-  return numbers[n] || n;
+  return numeral(n, numbers, opts);
 }
 
 // Singular or plural unit noun for a count: "minute" for 1, "minutes"
@@ -1099,17 +1088,6 @@ function getWeekday(d, opts) {
   const weekday = weekdayNames[day] || weekdayAbbreviations[day];
 
   return weekday && weekday[opts.short ? 1 : 0];
-}
-
-// Stringify and add a zero pad to integers.
-function pad(n) {
-  n = '' + n;
-
-  if (n.length < 2) {
-    n = '0' + n;
-  }
-
-  return n;
 }
 
 // The English language module: the IR renderer plus the language-owned

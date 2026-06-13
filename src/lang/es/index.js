@@ -8,6 +8,7 @@
 // different shape than the plan hint (e.g. wildcard minutes over hour
 // lists render as per-hour windows).
 
+import {clockDigits, numeral} from '../../core/format.js';
 import {resolveDialect} from './dialects.js';
 
 // Spanish number names for the integers zero through ten.
@@ -538,8 +539,8 @@ function timePhrase(hour, minute, second, opts) {
     // zero-padded to two digits, like the minutes.
     const article = +hour === 1 ? 'la ' : 'las ';
 
-    return article + pad(hour) + opts.style.sep + pad(minute) +
-      (showSeconds ? opts.style.sep + pad(showSeconds) : '');
+    return article +
+      clockDigits(hour, minute, showSeconds, {pad: true, sep: opts.style.sep});
   }
 
   return twelveHourPhrase(hour, minute, showSeconds, opts);
@@ -558,15 +559,8 @@ function twelveHourPhrase(hour, minute, second, opts) {
   }
 
   const display = hour % 12 || 12;
-  let time = (display === 1 ? 'la ' : 'las ') + display;
-
-  if (+minute !== 0 || second) {
-    time += opts.style.sep + pad(minute);
-  }
-
-  if (second) {
-    time += opts.style.sep + pad(second);
-  }
+  const time = (display === 1 ? 'la ' : 'las ') +
+    clockDigits(display, minute, second, {lean: true, sep: opts.style.sep});
 
   return time + ' ' + dayPeriod(hour, opts);
 }
@@ -973,11 +967,7 @@ function joinList(items) {
 // Spell the integers zero through ten ("cada cinco minutos"); digits
 // otherwise, and always with `short`.
 function numero(n, opts) {
-  if (opts.short) {
-    return n;
-  }
-
-  return numeros[n] || n;
+  return numeral(n, numeros, opts);
 }
 
 // A weekday name from a number or a cron token.
@@ -1006,17 +996,6 @@ function monthName(token) {
 function isOpenStep(field) {
   return field.indexOf('/') !== -1 && field.indexOf('-') === -1 &&
     field.indexOf(',') === -1;
-}
-
-// Zero-pad to two digits.
-function pad(n) {
-  n = '' + n;
-
-  if (n.length < 2) {
-    n = '0' + n;
-  }
-
-  return n;
 }
 
 // The Spanish language module: the IR renderer plus the language-owned

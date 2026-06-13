@@ -9,6 +9,7 @@
 // takes no case, and SFS dash ranges ("klo 9.00–17.45") replace the
 // case-pair construction wherever digits appear.
 
+import {clockDigits, numeral} from '../../core/format.js';
 import {resolveDialect} from './dialects.js';
 
 // Genitive numerals for the "N <unit>in välein" construction, spelled
@@ -601,8 +602,8 @@ function rangeDigits(from, to, opts) {
 
 // "9.00" — a range end always shows its minutes so both sides match.
 function paddedDigits(time, opts) {
-  return time.hour + opts.style.sep + pad(time.minute) +
-    (time.second ? opts.style.sep + pad(time.second) : '');
+  return clockDigits(time.hour, time.minute, time.second,
+    {sep: opts.style.sep});
 }
 
 // A standalone time: "keskiyöllä", "keskipäivällä", or "klo 9.30".
@@ -623,12 +624,7 @@ function timeWord(hour, minute, second, opts) {
 // The digit form joined into klo lists: "9", "9.30", or "9.30.15".
 // Lists keep uniform digits (no keskiyö words; see notes.md).
 function timeDigits(hour, minute, second, opts) {
-  if (!minute && !second) {
-    return '' + hour;
-  }
-
-  return hour + opts.style.sep + pad(minute) +
-    (second ? opts.style.sep + pad(second) : '');
+  return clockDigits(hour, minute, second, {lean: true, sep: opts.style.sep});
 }
 
 // --- Day-level qualifiers. ---
@@ -1017,11 +1013,7 @@ function wordList(fires) {
 // The genitive numeral for "N <unit>in välein": spelled through ten,
 // digits above (and always digits with `short`).
 function genitive(n, opts) {
-  if (!opts.short && n <= 10) {
-    return genitives[n];
-  }
-
-  return '' + n;
+  return numeral(n, genitives, opts);
 }
 
 // The nominative ordinal for "joka <N>. päivä": spelled through ten,
@@ -1051,17 +1043,6 @@ function joinList(items) {
   }
 
   return items.slice(0, -1).join(', ') + ' ja ' + items[items.length - 1];
-}
-
-// Zero-pad to two digits.
-function pad(n) {
-  n = '' + n;
-
-  if (n.length < 2) {
-    n = '0' + n;
-  }
-
-  return n;
 }
 
 // The Finnish language module: the IR renderer plus the language-owned
