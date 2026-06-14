@@ -24,17 +24,16 @@ while BCP-47 `uk` is Ukrainian.
 
 ## Quirks and trade-offs
 
-* On-the-hour times drop minutes ("9 a.m."), per both anchors; minutes
-  return when seconds show ("9:00:15 a.m.").
+* On-the-hour times drop minutes ("9 a.m.") unless displaying seconds
+  ("9:00:15 a.m.").
 * Bare days of the month keep ordinals ("on the 1st and 15th") in all
-  dialects; only month-day dates follow the cardinal/ordinal dialect rule.
+  dialects. Only month-day dates follow the cardinal/ordinal dialect rule.
 * Day-of-month with day-of-week renders cron's *either* semantics as "or"
   ("on December 31 or on Friday").
-* Pairs never take a serial comma, in any dialect.
-* The UK seconds form extends Guardian's dot convention ("9.30.15am");
-  the guide itself does not specify seconds.
-* Clock-time enumeration caps at six (core policy); beyond it, windows
-  render per segment ("9:30 a.m. through 8:30 p.m.").
+* The UK seconds form extends the Guardian's dot convention ("9.30.15am"),
+  although the guide itself does not specify a format for seconds.
+* Clock-time enumeration caps at six. Beyond that, windows render per
+  segment ("9:30 a.m. through 8:30 p.m.").
 
 ## Minimal pairs (candidates for pairs.js when the corpus splits)
 
