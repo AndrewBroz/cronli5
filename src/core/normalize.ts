@@ -3,12 +3,14 @@
 // degenerate ranges and unit steps collapsed.
 
 import {fieldOrder, fieldSpecs} from './specs.js';
+import type {CronLike, FieldSpec} from './specs.js';
+import type {Pattern} from './ir.js';
 import {includes, toFieldNumber, unique} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
 // Quartz aliases: `?` reads "no specific value" (equivalent to `*`) in the
 // date and weekday fields, and a bare `L` weekday means Saturday.
-function applyQuartzAliases(cronPattern) {
+function applyQuartzAliases(cronPattern: CronLike): void {
   fieldOrder.forEach(function apply(field) {
     const aliases = fieldSpecs[field].aliases;
     const alias = aliases && aliases['' + cronPattern[field]];
@@ -26,7 +28,7 @@ function applyQuartzAliases(cronPattern) {
 // described schedule is identical; only the English reads better.
 // After this pass every field is a canonical string, so the interpreters
 // never need to coerce.
-function normalizeCronPattern(cronPattern) {
+function normalizeCronPattern(cronPattern: CronLike): Pattern {
   fieldOrder.forEach(function normalize(field) {
     const value = '' + cronPattern[field];
 
@@ -41,11 +43,12 @@ function normalizeCronPattern(cronPattern) {
     cronPattern[field] = normalizeField(value, fieldSpecs[field]);
   });
 
-  return cronPattern;
+  // Every field is now a canonical string.
+  return cronPattern as Pattern;
 }
 
 // Canonicalize a single validated field value to a string.
-function normalizeField(value, spec) {
+function normalizeField(value: string, spec: FieldSpec): string {
   const stringValue = '' + value;
 
   if (stringValue === '*') {
@@ -69,7 +72,7 @@ function normalizeField(value, spec) {
 // An interval-one step enumerates every value from its start, so it reads
 // as the equivalent range: `1/1` is `1-59` and `5-30/1` is `5-30`. A start
 // at the bottom of the cycle covers the whole field (`0/1` is `*`).
-function collapseUnitStep(segment, spec) {
+function collapseUnitStep(segment: string, spec: FieldSpec): string {
   const parts = segment.split('/');
 
   if (!spec.cyclic || parts.length !== 2 || +parts[1] !== 1) {
@@ -91,7 +94,7 @@ function collapseUnitStep(segment, spec) {
 
 // A degenerate range (`9-9`) fires once, so it reads as its single value.
 // A stepped degenerate range (`9-9/5`) likewise fires only at its start.
-function collapseDegenerateRange(segment, spec) {
+function collapseDegenerateRange(segment: string, spec: FieldSpec): string {
   const start = segment.split('/')[0];
 
   if (!includes(start, '-')) {
@@ -109,7 +112,7 @@ function collapseDegenerateRange(segment, spec) {
 }
 
 // The first value a segment fires on, used to order list segments.
-function firstFire(segment, spec) {
+function firstFire(segment: string, spec: FieldSpec): number {
   const start = segment.split('/')[0].split('-')[0];
 
   return start === '*' ? spec.min : toFieldNumber(start, spec.numbers);

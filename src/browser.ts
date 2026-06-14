@@ -3,7 +3,7 @@
 import cronli5 from './cronli5.js';
 
 if (typeof globalThis !== 'undefined') {
-  globalThis.cronli5 = cronli5;
+  Object.assign(globalThis, {cronli5});
 }
 
 export default cronli5;

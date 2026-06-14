@@ -6,7 +6,7 @@ import * as esbuild from 'esbuild';
 import {readdirSync} from 'node:fs';
 
 const shared = {
-  entryPoints: ['src/cronli5.js'],
+  entryPoints: ['src/cronli5.ts'],
   bundle: true,
   logLevel: 'info'
 };
@@ -32,7 +32,7 @@ await esbuild.build({
 
 // Minified browser global (`<script>` usage exposes `window.cronli5`).
 await esbuild.build({
-  entryPoints: ['src/browser.js'],
+  entryPoints: ['src/browser.ts'],
   bundle: true,
   format: 'iife',
   minify: true,
@@ -44,7 +44,7 @@ await esbuild.build({
 // `./lang/<code>` subpath exports.
 for (const code of readdirSync('src/lang')) {
   const language = {
-    entryPoints: [`src/lang/${code}/index.js`],
+    entryPoints: [`src/lang/${code}/index.ts`],
     bundle: true,
     logLevel: 'info'
   };

@@ -7,6 +7,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import {Linter} from 'eslint';
 import {FlatCompat} from '@eslint/eslintrc';
+import tseslint from 'typescript-eslint';
 
 const legacy = JSON.parse(
   readFileSync(new URL('./.eslintrc.json', import.meta.url), 'utf8')
@@ -113,6 +114,30 @@ export default [
     // line; wrapping them hurts readability of the input/output pairs.
     rules: {
       'max-len': 'off'
+    }
+  },
+  {
+    // TypeScript source: parse type syntax, and hand the rules that TS owns
+    // (or that misfire on type syntax) to their type-aware equivalents.
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: tseslint.parser
+    },
+    plugins: {'@typescript-eslint': tseslint.plugin},
+    rules: {
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'error',
+      'no-shadow': 'off',
+      '@typescript-eslint/no-shadow': 'error',
+      'no-use-before-define': 'off',
+      'no-redeclare': 'off',
+      'init-declarations': 'off',
+      'default-param-last': 'off',
+      'no-invalid-this': 'off',
+      // Separating `import type` from a value import of the same module is
+      // idiomatic TypeScript, not the redundancy this rule guards against.
+      'no-duplicate-imports': 'off'
     }
   }
 ];

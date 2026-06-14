@@ -7,7 +7,7 @@
 // dependency is the core, never a sibling language (docs/i18n-design.md).
 
 // Zero-pad a number to two digits.
-function pad(n) {
+function pad(n: number | string): string {
   n = '' + n;
 
   return n.length < 2 ? '0' + n : n;
@@ -16,7 +16,11 @@ function pad(n) {
 // A number spelled from a words table, or the bare digit when the value
 // is outside the table or the `short` option asks for digits. The table
 // (the actual words) belongs to the language; only the lookup is shared.
-function numeral(n, words, opts) {
+function numeral(
+  n: number,
+  words: {[index: number]: string | null},
+  opts: {short: boolean}
+): string | number {
   return opts.short ? n : words[n] || n;
 }
 
@@ -30,7 +34,10 @@ function numeral(n, words, opts) {
 // The second is shown only when non-zero. Everything *around* the digits
 // — articles, am/pm, day periods, "klo", noon/midnight — is the
 // language's own and stays in the language module.
-function clockDigits(time, {sep, pad: padHour, lean}) {
+function clockDigits(
+  time: {hour: number; minute: number; second?: number},
+  {sep, pad: padHour, lean}: {sep: string; pad?: boolean; lean?: boolean}
+): string {
   const head = padHour ? pad(time.hour) : '' + time.hour;
 
   if (lean && !time.minute && !time.second) {

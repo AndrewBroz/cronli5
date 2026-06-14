@@ -9,7 +9,58 @@
 // lists render as per-hour windows).
 
 import {clockDigits, numeral} from '../../core/format.js';
+import type {Cronli5Options} from '../../../cronli5.js';
+import type {
+  Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
+  Segment
+} from '../../core/ir.js';
 import {resolveDialect} from './dialects.js';
+
+// The erased renderer signature the dispatch table maps to.
+type Renderer = (ir: IR, plan: PlanNode, opts: NormalizedOptions) => string;
+
+// A `step` segment, narrowed from the discriminated `Segment` union.
+type StepSegment = Extract<Segment, {kind: 'step'}>;
+
+// One end of a clock-time range. The second is optional and may be absent
+// (top-of-hour windows) or a folded clock second.
+type ClockEnd = {hour: number; minute: number; second?: number | null};
+
+// A name token: a cron name or numeric string from a segment, or a numeric
+// fire that `flattenSteps` expands a step into.
+type NameToken = string | number;
+
+// A flattened name segment. `flattenSteps` turns step segments into single
+// segments whose `value` is a numeric fire, so a single's value here may be
+// a number as well as a `Segment`'s string token; ranges keep their bounds.
+type NameSegment =
+  | {kind: 'single'; value: NameToken}
+  | {kind: 'range'; bounds: [string, string]};
+
+// The range and single arms of a flattened name segment.
+type RangeNameSegment = Extract<NameSegment, {kind: 'range'}>;
+type SingleNameSegment = Extract<NameSegment, {kind: 'single'}>;
+
+// The first (and only) segment of a step field. The plan only routes here
+// for step shapes, whose segments list is present and step-kinded; this
+// asserts what the analysis guarantees but the type cannot express.
+function stepSegment(segments: Segment[] | null): StepSegment {
+  return (segments as Segment[])[0] as StepSegment;
+}
+
+// The hour field's classified segments. Callers reach here only for hour
+// shapes the analysis segmented, so the list is present; the type permits
+// null (wildcard/quartz) that these paths never carry.
+function hourSegments(ir: IR): Segment[] {
+  return ir.analyses.segments.hour as Segment[];
+}
+
+// A field's classified segments. Callers reach a segment list only when the
+// field is non-wildcard and non-quartz, where the analysis always produced
+// one; the type's null (those two shapes) is unreachable on these paths.
+function fieldSegments(ir: IR, field: Field): Segment[] {
+  return ir.analyses.segments[field] as Segment[];
+}
 
 // Spanish number names for the integers zero through ten.
 const numeros = [
@@ -57,11 +108,11 @@ const weekdayNames = [
 
 // Cron token vocabulary (JAN..DEC, SUN..SAT) is part of cron syntax; map
 // it to Spanish names.
-const monthTokens = {
+const monthTokens: {[token: string]: number} = {
   JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
   JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
 };
-const weekdayTokens = {
+const weekdayTokens: {[token: string]: number} = {
   SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
 };
 
@@ -70,7 +121,7 @@ const nthWeekdayNames =
   [null, 'primer', 'segundo', 'tercer', 'cuarto', 'quinto'];
 
 // Normalize raw user options.
-function normalizeOptions(options) {
+function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
   options = options || {};
 
   return {
@@ -86,26 +137,41 @@ function normalizeOptions(options) {
 }
 
 // Render an analyzed cron pattern (the IR) as Spanish.
-function describe(ir, opts) {
+function describe(ir: IR, opts: NormalizedOptions): string {
   return applyYear(render(ir, ir.plan, opts), ir, opts);
 }
 
 // Render one plan node. `composeSeconds` recurses with its `rest` plan.
-function render(ir, plan, opts) {
-  return renderers[plan.kind](ir, plan, opts);
+function render(ir: IR, plan: PlanNode, opts: NormalizedOptions): string {
+  // Each renderer narrows `plan` to its own `kind`; the dispatch table is
+  // keyed by that discriminant, so the union-to-specific match is sound but
+  // not expressible without a cast.
+  return (renderers[plan.kind] as Renderer)(ir, plan, opts);
 }
 
 // --- Seconds renderers. ---
 
-function renderEverySecond(ir, plan, opts) {
+function renderEverySecond(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'everySecond'}>,
+  opts: NormalizedOptions
+): string {
   return 'cada segundo' + trailingQualifier(ir, opts);
 }
 
-function renderStandaloneSeconds(ir, plan, opts) {
+function renderStandaloneSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'standaloneSeconds'}>,
+  opts: NormalizedOptions
+): string {
   return secondsLeadClause(ir, opts) + trailingQualifier(ir, opts);
 }
 
-function renderSecondPastMinute(ir, plan, opts) {
+function renderSecondPastMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'secondPastMinute'}>,
+  opts: NormalizedOptions
+): string {
   return 'en el segundo ' + ir.pattern.second + ' de cada minuto' +
     trailingQualifier(ir, opts);
 }
@@ -113,7 +179,11 @@ function renderSecondPastMinute(ir, plan, opts) {
 // A meaningful second combined with a single specific minute (and an open
 // hour): a single second folds into the minute anchor; a list, range, or
 // step leads with its own clause.
-function renderSecondsWithinMinute(ir, plan, opts) {
+function renderSecondsWithinMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'secondsWithinMinute'}>,
+  opts: NormalizedOptions
+): string {
   const minuteField = ir.pattern.minute;
 
   if (plan.singleSecond) {
@@ -125,12 +195,16 @@ function renderSecondsWithinMinute(ir, plan, opts) {
     ' de cada hora' + trailingQualifier(ir, opts);
 }
 
-function renderComposeSeconds(ir, plan, opts) {
+function renderComposeSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
+  opts: NormalizedOptions
+): string {
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
 }
 
 // The leading clause describing a second field relative to the minute.
-function secondsLeadClause(ir, opts) {
+function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
   const secondField = ir.pattern.second;
   const shape = ir.shapes.second;
 
@@ -139,7 +213,7 @@ function secondsLeadClause(ir, opts) {
   }
 
   if (shape === 'step') {
-    return stepCycle60(ir.analyses.segments.second[0], 'segundo',
+    return stepCycle60(stepSegment(ir.analyses.segments.second), 'segundo',
       'minuto', opts);
   }
 
@@ -155,37 +229,53 @@ function secondsLeadClause(ir, opts) {
   }
 
   return 'en los segundos ' +
-    joinList(segmentWords(ir.analyses.segments.second)) +
+    joinList(segmentWords(fieldSegments(ir, 'second'))) +
     ' de cada minuto';
 }
 
 // --- Minute renderers. ---
 
-function renderEveryMinute(ir, plan, opts) {
+function renderEveryMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'everyMinute'}>,
+  opts: NormalizedOptions
+): string {
   return 'cada minuto' + trailingQualifier(ir, opts);
 }
 
-function renderSingleMinute(ir, plan, opts) {
+function renderSingleMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'singleMinute'}>,
+  opts: NormalizedOptions
+): string {
   return 'en el minuto ' + ir.pattern.minute + ' de cada hora' +
     trailingQualifier(ir, opts);
 }
 
-function renderRangeOfMinutes(ir, plan, opts) {
+function renderRangeOfMinutes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'rangeOfMinutes'}>,
+  opts: NormalizedOptions
+): string {
   return minuteRangeLead(ir.pattern.minute) + trailingQualifier(ir, opts);
 }
 
-function renderMultipleMinutes(ir, plan, opts) {
+function renderMultipleMinutes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'multipleMinutes'}>,
+  opts: NormalizedOptions
+): string {
   return minutesList(ir) + trailingQualifier(ir, opts);
 }
 
 // "en los minutos 5, 10 y 30 de cada hora".
-function minutesList(ir) {
+function minutesList(ir: IR): string {
   return 'en los minutos ' +
-    joinList(segmentWords(ir.analyses.segments.minute)) + ' de cada hora';
+    joinList(segmentWords(fieldSegments(ir, 'minute'))) + ' de cada hora';
 }
 
 // "cada minuto del 0 al 30 de cada hora".
-function minuteRangeLead(minuteField) {
+function minuteRangeLead(minuteField: string): string {
   const bounds = minuteField.split('-');
 
   return 'cada minuto del ' + bounds[0] + ' al ' + bounds[1] +
@@ -193,8 +283,12 @@ function minuteRangeLead(minuteField) {
 }
 
 // A repeating minute step, qualified by the active hour window(s).
-function renderMinuteFrequency(ir, plan, opts) {
-  let phrase = stepCycle60(ir.analyses.segments.minute[0], 'minuto',
+function renderMinuteFrequency(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minuteFrequency'}>,
+  opts: NormalizedOptions
+): string {
+  let phrase = stepCycle60(stepSegment(ir.analyses.segments.minute), 'minuto',
     'hora', opts);
 
   if (plan.hours.kind === 'during') {
@@ -204,14 +298,18 @@ function renderMinuteFrequency(ir, plan, opts) {
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    phrase += ', ' + stepHours(ir.analyses.segments.hour[0], opts);
+    phrase += ', ' + stepHours(stepSegment(ir.analyses.segments.hour), opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
 }
 
 // "cada minuto de las 9:00 a las 9:29 de la mañana".
-function renderMinuteSpanInHour(ir, plan, opts) {
+function renderMinuteSpanInHour(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
+  opts: NormalizedOptions
+): string {
   return 'cada minuto ' +
     timeRange({hour: plan.hour, minute: plan.span[0]},
       {hour: plan.hour, minute: plan.span[1]}, opts) +
@@ -221,7 +319,11 @@ function renderMinuteSpanInHour(ir, plan, opts) {
 // A minute window under discrete hours. Spanish re-strategizes the
 // wildcard form: rather than "during the X hours", each hour reads as its
 // own window ("de las 9:00 a las 9:59").
-function renderMinutesAcrossHours(ir, plan, opts) {
+function renderMinutesAcrossHours(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minutesAcrossHours'}>,
+  opts: NormalizedOptions
+): string {
   if (plan.form === 'wildcard') {
     return 'cada minuto ' + hourWindowsFromTimes(ir, plan.times, opts) +
       trailingQualifier(ir, opts);
@@ -235,22 +337,34 @@ function renderMinutesAcrossHours(ir, plan, opts) {
     trailingQualifier(ir, opts);
 }
 
-function renderMinuteSpanAcrossHourStep(ir, plan, opts) {
+function renderMinuteSpanAcrossHourStep(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>,
+  opts: NormalizedOptions
+): string {
   const lead = plan.form === 'wildcard' ?
     'cada minuto' :
     minuteRangeLead(ir.pattern.minute);
 
-  return lead + ', ' + stepHours(ir.analyses.segments.hour[0], opts) +
+  return lead + ', ' + stepHours(stepSegment(ir.analyses.segments.hour), opts) +
     trailingQualifier(ir, opts);
 }
 
 // --- Hour renderers. ---
 
-function renderEveryHour(ir, plan, opts) {
+function renderEveryHour(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'everyHour'}>,
+  opts: NormalizedOptions
+): string {
   return 'cada hora' + trailingQualifier(ir, opts);
 }
 
-function renderHourRange(ir, plan, opts) {
+function renderHourRange(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'hourRange'}>,
+  opts: NormalizedOptions
+): string {
   const window = hourWindow(plan, opts);
 
   if (plan.minuteForm === 'wildcard') {
@@ -275,20 +389,31 @@ function renderHourRange(ir, plan, opts) {
   return lead + ', ' + window + trailingQualifier(ir, opts);
 }
 
-function renderHourStep(ir, plan, opts) {
-  return stepHours(ir.analyses.segments.hour[0], opts) +
+function renderHourStep(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'hourStep'}>,
+  opts: NormalizedOptions
+): string {
+  return stepHours(stepSegment(ir.analyses.segments.hour), opts) +
     trailingQualifier(ir, opts);
 }
 
 // "de las 9:00 a las 17:45": a window from the top of the first hour to
 // the minute field's last fire within the final hour.
-function hourWindow(window, opts) {
+function hourWindow(
+  window: {from: number; to: number; last: number},
+  opts: NormalizedOptions
+): string {
   return timeRange({hour: window.from, minute: 0},
     {hour: window.to, minute: window.last}, opts);
 }
 
 // "todos los días a las 9:30 y a las 17:00".
-function renderClockTimes(ir, plan, opts) {
+function renderClockTimes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'clockTimes'}>,
+  opts: NormalizedOptions
+): string {
   const times = plan.times.map(function clock(time) {
     return atTime(timePhrase(time.hour, time.minute, time.second, opts));
   });
@@ -298,7 +423,11 @@ function renderClockTimes(ir, plan, opts) {
 
 // Compact form past the enumeration cap: a single minute folds into
 // per-segment hour windows; a minute list leads with its own clause.
-function renderCompactClockTimes(ir, plan, opts) {
+function renderCompactClockTimes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'compactClockTimes'}>,
+  opts: NormalizedOptions
+): string {
   if (plan.fold) {
     return leadingQualifier(ir, opts) +
       hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
@@ -338,7 +467,12 @@ const renderers = {
 
 // "cada 15 minutos", "en los minutos 5, 20 y 35 de cada hora", or
 // "cada 15 minutos a partir del minuto 5 de cada hora".
-function stepCycle60(segment, unit, anchor, opts) {
+function stepCycle60(
+  segment: StepSegment,
+  unit: string,
+  anchor: string,
+  opts: NormalizedOptions
+): string {
   if (segment.startToken.indexOf('-') !== -1) {
     return 'en los ' + unit + 's ' + joinList(wordList(segment.fires)) +
       ' de cada ' + anchor;
@@ -372,7 +506,7 @@ function stepCycle60(segment, unit, anchor, opts) {
 
 // "cada seis horas", "a las 9:00, a las 11:00 y a la 1:00", or "cada
 // cinco horas a partir de las 2:00".
-function stepHours(segment, opts) {
+function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
   if (segment.startToken.indexOf('-') !== -1) {
     return joinList(atTimes(segment.fires, opts));
   }
@@ -399,7 +533,7 @@ function stepHours(segment, opts) {
 // --- Hour-time phrasing. ---
 
 // "a las 9:00" / "a la 1:00" / "al mediodía" for each fire hour.
-function atTimes(hours, opts) {
+function atTimes(hours: number[], opts: NormalizedOptions): string[] {
   return hours.map(function each(hour) {
     return atTime(timePhrase(hour, 0, null, opts));
   });
@@ -407,7 +541,11 @@ function atTimes(hours, opts) {
 
 // The hour times accompanying a lead clause: "a las 9:00 y a las 17:00",
 // with long expansions rendered segment by segment.
-function atHourTimes(ir, times, opts) {
+function atHourTimes(
+  ir: IR,
+  times: HourTimesPlan,
+  opts: NormalizedOptions
+): string {
   if (times.kind === 'fires') {
     return joinList(atTimes(times.fires, opts));
   }
@@ -418,14 +556,18 @@ function atHourTimes(ir, times, opts) {
 // Each fire hour as its own one-hour window: "de las 9:00 a las 9:59 y de
 // las 17:00 a las 17:59". Spanish prefers this to the English "during the
 // 9 a.m. and 5 p.m. hours" shape.
-function hourWindowsFromTimes(ir, times, opts) {
+function hourWindowsFromTimes(
+  ir: IR,
+  times: HourTimesPlan,
+  opts: NormalizedOptions
+): string {
   if (times.kind === 'fires') {
     return joinList(times.fires.map(function window(hour) {
       return hourAsWindow(hour, opts);
     }));
   }
 
-  return joinList(ir.analyses.segments.hour.map(function window(segment) {
+  return joinList(hourSegments(ir).map(function window(segment) {
     if (segment.kind === 'range') {
       return timeRange({hour: +segment.bounds[0], minute: 0},
         {hour: +segment.bounds[1], minute: 59}, opts);
@@ -444,10 +586,15 @@ function hourWindowsFromTimes(ir, times, opts) {
 // Clock times for the hour field rendered segment by segment, the minute
 // (and optional second) folded into each: "de las 9:30 a las 20:30 y a
 // las 22:30".
-function hourSegmentTimes(ir, minute, second, opts) {
-  const pieces = [];
+function hourSegmentTimes(
+  ir: IR,
+  minute: number,
+  second: number | null | undefined,
+  opts: NormalizedOptions
+): string {
+  const pieces: string[] = [];
 
-  ir.analyses.segments.hour.forEach(function clock(segment) {
+  hourSegments(ir).forEach(function clock(segment) {
     if (segment.kind === 'step') {
       pieces.push(...segment.fires.map(function each(hour) {
         return atTime(timePhrase(hour, minute, second, opts));
@@ -471,7 +618,11 @@ function hourSegmentTimes(ir, minute, second, opts) {
 // A time range, "de las 9:00 a las 5:45 de la tarde", between two
 // `{hour, minute, second}` ends. When both ends share a day period it is
 // said once, at the end.
-function timeRange(from, to, opts) {
+function timeRange(
+  from: ClockEnd,
+  to: ClockEnd,
+  opts: NormalizedOptions
+): string {
   const fromPhrase = timePhrase(from.hour, from.minute, from.second, opts);
   const toPhrase = timePhrase(to.hour, to.minute, to.second, opts);
   const fromPeriod = dayPeriod(from.hour, opts);
@@ -487,17 +638,17 @@ function timeRange(from, to, opts) {
 }
 
 // A one-hour window, "de las 9:00 a las 9:59".
-function hourAsWindow(hour, opts) {
+function hourAsWindow(hour: number, opts: NormalizedOptions): string {
   return timeRange({hour, minute: 0}, {hour, minute: 59}, opts);
 }
 
 // Drop a shared day period from the first end of a range.
-function stripPeriod(phrase, period) {
+function stripPeriod(phrase: string, period: string): string {
   return phrase.slice(0, -(period.length + 1));
 }
 
 // "a las 9:30" / "a la 1:00" / "al mediodía" / "a medianoche".
-function atTime(phrase) {
+function atTime(phrase: string): string {
   if (phrase === 'mediodía') {
     return 'al mediodía';
   }
@@ -510,7 +661,7 @@ function atTime(phrase) {
 }
 
 // "de las 9:30" / "del mediodía" / "de medianoche".
-function fromTime(phrase) {
+function fromTime(phrase: string): string {
   if (phrase === 'mediodía') {
     return 'del mediodía';
   }
@@ -523,14 +674,19 @@ function fromTime(phrase) {
 }
 
 // "a las 17:45" as the closing end of a range.
-function toTime(phrase) {
+function toTime(phrase: string): string {
   return atTime(phrase);
 }
 
 // A clock time with its article: "las 9:30 de la mañana", "la 1 de la
 // tarde", "mediodía", or "las 17:45" in 24-hour mode. On-the-hour times
 // drop their minutes; exact 12:00 reads as a word.
-function timePhrase(hour, minute, second, opts) {
+function timePhrase(
+  hour: number,
+  minute: number,
+  second: number | null | undefined,
+  opts: NormalizedOptions
+): string {
   const showSeconds = typeof second === 'number' && second > 0 ? second : 0;
 
   if (!opts.ampm) {
@@ -548,7 +704,12 @@ function timePhrase(hour, minute, second, opts) {
 }
 
 // The 12-hour phrase with its article and day period.
-function twelveHourPhrase(hour, minute, second, opts) {
+function twelveHourPhrase(
+  hour: number,
+  minute: number,
+  second: number,
+  opts: NormalizedOptions
+): string {
   if (+minute === 0 && !second) {
     if (+hour === 0) {
       return 'medianoche';
@@ -570,7 +731,7 @@ function twelveHourPhrase(hour, minute, second, opts) {
 // The Spanish day period for an hour: "de la madrugada" (1-5), "de la
 // mañana" (6-11), "de la tarde" (12-19), or "de la noche" (20-23 and
 // midnight's hour). Empty in 24-hour mode.
-function dayPeriod(hour, opts) {
+function dayPeriod(hour: number, opts: NormalizedOptions): string {
   if (!opts.ampm) {
     return '';
   }
@@ -594,7 +755,7 @@ function dayPeriod(hour, opts) {
 
 // The qualifier that precedes clock times: "todos los días ", "todos los
 // lunes ", "el 13 de cada mes ", "de lunes a viernes ".
-function leadingQualifier(ir, opts) {
+function leadingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
   if (pattern.date !== '*' && pattern.weekday !== '*') {
@@ -618,7 +779,7 @@ function leadingQualifier(ir, opts) {
 
 // The qualifier trailing a frequency: " los lunes", " en junio", " el 13
 // de cada mes". Empty when no day-level field is set.
-function trailingQualifier(ir, opts) {
+function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
   if (pattern.date !== '*' && pattern.weekday !== '*') {
@@ -644,7 +805,7 @@ function trailingQualifier(ir, opts) {
 // the date or the weekday matches. A ranged month cannot fold into either
 // half, so one scope trails the whole alternation ("el 1 de cada mes o
 // los viernes, de junio a septiembre").
-function dateOrWeekday(ir, opts) {
+function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   if (monthRanged(ir)) {
     return dateClause(ir, ' de cada mes', opts) + ' o ' +
       weekdayQualifier(ir) + ', ' + monthPhrase(ir, 'de ');
@@ -657,7 +818,7 @@ function dateOrWeekday(ir, opts) {
 // The date qualifier: "el 13 de junio", "los días 1 y 15 de cada mes",
 // "del 1 al 15 de cada mes", or a Quartz phrase. A foldable single year
 // joins the date ("el 25 de diciembre de 2030").
-function datePhrase(ir, opts) {
+function datePhrase(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
   if (quartzDatePhrase(pattern.date) || isOpenStep(pattern.date)) {
@@ -669,7 +830,11 @@ function datePhrase(ir, opts) {
 
 // The date words with a caller-chosen month part. Quartz phrases and open
 // steps are self-contained and ignore the month part.
-function dateClause(ir, monthPart, opts) {
+function dateClause(
+  ir: IR,
+  monthPart: string,
+  opts: NormalizedOptions
+): string {
   const pattern = ir.pattern;
   const quartz = quartzDatePhrase(pattern.date);
 
@@ -681,7 +846,7 @@ function dateClause(ir, monthPart, opts) {
     return stepDates(pattern.date, opts);
   }
 
-  const segments = ir.analyses.segments.date;
+  const segments = fieldSegments(ir, 'date');
 
   if (segments.length === 1 && segments[0].kind === 'range') {
     return 'del ' + segments[0].bounds[0] + ' al ' +
@@ -697,9 +862,9 @@ function dateClause(ir, monthPart, opts) {
 }
 
 // Whether the month field contains a range segment.
-function monthRanged(ir) {
+function monthRanged(ir: IR): boolean {
   return ir.pattern.month !== '*' &&
-    ir.analyses.segments.month.some(function range(segment) {
+    fieldSegments(ir, 'month').some(function range(segment) {
       return segment.kind === 'range';
     });
 }
@@ -709,7 +874,7 @@ function monthRanged(ir) {
 // "el 1 de junio a septiembre" parses as "(el 1 de junio) a septiembre" —
 // so it scopes the date instead ("el 1 de cada mes, de junio a
 // septiembre").
-function dateMonthPart(ir) {
+function dateMonthPart(ir: IR): string {
   if (ir.pattern.month === '*') {
     return ' de cada mes';
   }
@@ -722,7 +887,7 @@ function dateMonthPart(ir) {
 }
 
 // "de 2030" when a single year can fold into a calendar date.
-function foldedYear(ir) {
+function foldedYear(ir: IR): string {
   const yearField = ir.pattern.year;
 
   if (yearField === '*' || yearField.indexOf('/') !== -1 ||
@@ -734,7 +899,7 @@ function foldedYear(ir) {
 }
 
 // The Quartz date phrases.
-function quartzDatePhrase(dateField) {
+function quartzDatePhrase(dateField: string): string | undefined {
   if (dateField === 'L') {
     return 'el último día del mes';
   }
@@ -761,7 +926,7 @@ function quartzDatePhrase(dateField) {
 
 // The Quartz weekday phrases: "el último viernes del mes", "el segundo
 // lunes del mes".
-function quartzWeekdayPhrase(weekdayField) {
+function quartzWeekdayPhrase(weekdayField: string): string | undefined {
   const parts = weekdayField.split('#');
 
   if (parts.length === 2) {
@@ -779,28 +944,30 @@ function quartzWeekdayPhrase(weekdayField) {
 // miércoles y viernes". No "todos" prefix: the plural definite article
 // ("los lunes") already conveys "every Monday" in Spanish, unlike "todos
 // los días", where "los días" alone does not mean "every day".
-function weekdayQualifier(ir) {
+function weekdayQualifier(ir: IR): string {
   const quartz = quartzWeekdayPhrase(ir.pattern.weekday);
 
   if (quartz) {
     return quartz;
   }
 
-  const segments = flattenSteps(ir.analyses.segments.weekday);
+  const segments = flattenSteps(fieldSegments(ir, 'weekday'));
   const allSingles = segments.every(function single(segment) {
     return segment.kind === 'single';
   });
 
   if (allSingles) {
+    // Every segment is a single here, so each carries a `value`.
     return 'los ' +
       joinList(segments.map(function name(segment) {
-        return pluralWeekday(segment.value);
+        return pluralWeekday((segment as SingleNameSegment).value);
       }));
   }
 
-  // A single plain range stands alone: "de lunes a viernes".
+  // A single plain range stands alone: "de lunes a viernes". Reaching here
+  // means not all-singles with a single segment, i.e. a lone range.
   if (segments.length === 1) {
-    return weekdayRange(segments[0]);
+    return weekdayRange(segments[0] as RangeNameSegment);
   }
 
   // Mixed lists: each piece carries its own form.
@@ -812,7 +979,7 @@ function weekdayQualifier(ir) {
 }
 
 // "de lunes a viernes".
-function weekdayRange(segment) {
+function weekdayRange(segment: RangeNameSegment): string {
   return 'de ' + weekdayName(segment.bounds[0]) + ' a ' +
     weekdayName(segment.bounds[1]);
 }
@@ -820,10 +987,10 @@ function weekdayRange(segment) {
 // Expand step segments into their fires as singles: a raw step token or a
 // nested sub-list garbles a name list, while the flat fires read
 // naturally ("los domingos, lunes, miércoles y viernes").
-function flattenSteps(segments) {
-  return segments.flatMap(function flat(segment) {
+function flattenSteps(segments: Segment[]): NameSegment[] {
+  return segments.flatMap(function flat(segment): NameSegment[] {
     return segment.kind === 'step' ?
-      segment.fires.map(function single(value) {
+      segment.fires.map(function single(value): NameSegment {
         return {kind: 'single', value};
       }) :
       [segment];
@@ -836,15 +1003,16 @@ function flattenSteps(segments) {
 // as one unit, so in mixed lists every piece repeats its preposition
 // ("en enero y de marzo a junio") — a bare "enero y marzo a junio" parses
 // as "(enero y marzo) a junio".
-function monthPhrase(ir, lead) {
-  const segments = flattenSteps(ir.analyses.segments.month);
+function monthPhrase(ir: IR, lead: string): string {
+  const segments = flattenSteps(fieldSegments(ir, 'month'));
   const ranged = segments.some(function range(segment) {
     return segment.kind === 'range';
   });
 
   if (!ranged) {
+    // No ranges remain, so every segment is a single with a `value`.
     return lead + joinList(segments.map(function name(segment) {
-      return monthName(segment.value);
+      return monthName((segment as SingleNameSegment).value);
     }));
   }
 
@@ -862,7 +1030,7 @@ function monthPhrase(ir, lead) {
 // junio"). A ranged scope sets off with a comma ("el último día del mes,
 // de junio a septiembre") — gluing "de junio" after "del mes"
 // garden-paths.
-function monthScope(ir) {
+function monthScope(ir: IR): string {
   if (ir.pattern.month === '*') {
     return '';
   }
@@ -871,7 +1039,7 @@ function monthScope(ir) {
 }
 
 // Open day-of-month steps: "cada 2 días del mes (desde el 5)".
-function stepDates(dateField, opts) {
+function stepDates(dateField: string, opts: NormalizedOptions): string {
   const parts = dateField.split('/');
   let phrase = 'cada ' + numero(+parts[1], opts) + ' días del mes';
 
@@ -886,7 +1054,11 @@ function stepDates(dateField, opts) {
 
 // Append the year when it has not folded into a calendar date: "en 2030",
 // "en 2030, 2031 y 2032", "cada dos años desde 2030".
-function applyYear(description, ir, opts) {
+function applyYear(
+  description: string,
+  ir: IR,
+  opts: NormalizedOptions
+): string {
   const yearField = ir.pattern.year;
 
   if (yearField === '*') {
@@ -910,7 +1082,7 @@ function applyYear(description, ir, opts) {
 }
 
 // "cada dos años (desde 2030)".
-function stepYears(yearField, opts) {
+function stepYears(yearField: string, opts: NormalizedOptions): string {
   const parts = yearField.split('/');
   const interval = +parts[1];
 
@@ -931,7 +1103,7 @@ function stepYears(yearField, opts) {
 
 // Render classified segments as words: ranges as "5 a 10" pairs, steps as
 // their enumerated fires.
-function segmentWords(segments) {
+function segmentWords(segments: Segment[]): string[] {
   return segments.flatMap(function word(segment) {
     if (segment.kind === 'range') {
       return [segment.bounds[0] + ' a ' + segment.bounds[1]];
@@ -946,7 +1118,7 @@ function segmentWords(segments) {
 }
 
 // Numeric fire values as digits.
-function wordList(fires) {
+function wordList(fires: number[]): string[] {
   return fires.map(function digit(value) {
     return '' + value;
   });
@@ -954,7 +1126,7 @@ function wordList(fires) {
 
 // Join a list with commas and a terminal "y". Spanish never takes a comma
 // before "y" in enumerations (RAE).
-function joinList(items) {
+function joinList(items: string[]): string {
   if (items.length <= 1) {
     return items.join('');
   }
@@ -968,43 +1140,51 @@ function joinList(items) {
 
 // Spell the integers zero through ten ("cada cinco minutos"); digits
 // otherwise, and always with `short`.
-function numero(n, opts) {
+function numero(n: number, opts: NormalizedOptions): string | number {
   return numeral(n, numeros, opts);
 }
 
 // A weekday name from a number or a cron token.
-function weekdayName(token) {
+function weekdayName(token: NameToken): string {
   if (token === '7' || token === 7) {
     return weekdayNames[0];
   }
 
-  return weekdayNames[token] || weekdayNames[weekdayTokens[token]];
+  // `token` may be a numeric (string or number) field index or a cron name;
+  // the numeric path indexes the name array, the name path the token map.
+  return weekdayNames[token as number] ||
+    weekdayNames[weekdayTokens[token as string]];
 }
 
 // The plural weekday form: días ending in -s are invariant ("los lunes");
 // sábado and domingo take -s ("los sábados").
-function pluralWeekday(token) {
+function pluralWeekday(token: NameToken): string {
   const name = weekdayName(token);
 
   return name.endsWith('s') ? name : name + 's';
 }
 
 // A month name from a number or a cron token.
-function monthName(token) {
-  return monthNames[token] || monthNames[monthTokens[token]];
+function monthName(token: NameToken): string {
+  // As with weekdays: a numeric index hits the name array, a cron name the
+  // token map. The name array has a leading null hole for the 1-based index.
+  return (monthNames[token as number] ||
+    monthNames[monthTokens[token as string]]) as string;
 }
 
 // Whether a canonical field value is an open step (`*/n` or `a/n`).
-function isOpenStep(field) {
+function isOpenStep(field: string): boolean {
   return field.indexOf('/') !== -1 && field.indexOf('-') === -1 &&
     field.indexOf(',') === -1;
 }
 
 // The Spanish language module: the IR renderer plus the language-owned
 // strings and option normalization.
-export default {
+const es: Language = {
   describe,
   fallback: 'un patrón cron irreconocible',
   options: normalizeOptions,
   reboot: 'al arrancar el sistema'
 };
+
+export default es;

@@ -4,7 +4,30 @@
 // See docs/i18n-design.md.
 
 import {clockDigits, numeral} from '../../core/format.js';
+import type {Cronli5Options} from '../../../cronli5.js';
+import type {
+  HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
+} from '../../core/ir.js';
 import {resolveDialect} from './dialects.js';
+
+// The plan node of a given kind: the discriminated-union member a renderer
+// for that kind receives.
+type PlanOf<K extends PlanNode['kind']> = Extract<PlanNode, {kind: K}>;
+
+// A step segment of a classified field (carries `fires`/`interval`/
+// `startToken`). The plan only routes step-shaped fields to the step
+// phrasing, where the first segment is always a step segment.
+type StepSegment = Extract<Segment, {kind: 'step'}>;
+
+// A clock-time entry assembled for rendering. Hour/minute/second arrive as
+// numbers or as raw field tokens (a range bound or single value is a
+// string); `plain` suppresses the noon/midnight words.
+interface TimeEntry {
+  hour: number | string;
+  minute: number | string;
+  second?: number | string | null;
+  plain?: boolean;
+}
 
 // English number names for the integers zero through ten.
 const numbers = [
@@ -29,8 +52,8 @@ const suffixes = [
   'rd'
 ];
 
-// English month names.
-const monthNames = [
+// English month names. Index 0 is a null hole so months index by 1-12.
+const monthNames: ([string, string] | null)[] = [
   null,
   ['January', 'Jan'],
   ['February', 'Feb'],
@@ -47,7 +70,7 @@ const monthNames = [
 ];
 
 // English weekday names.
-const weekdayNames = [
+const weekdayNames: [string, string][] = [
   ['Sunday', 'Sun'],
   ['Monday', 'Mon'],
   ['Tuesday', 'Tue'],
@@ -58,7 +81,7 @@ const weekdayNames = [
 ];
 
 // Month names by abbreviation.
-const monthAbbreviations = {
+const monthAbbreviations: Record<string, [string, string] | null> = {
   JAN: monthNames[1],
   FEB: monthNames[2],
   MAR: monthNames[3],
@@ -74,7 +97,7 @@ const monthAbbreviations = {
 };
 
 // Weekday name by abbreviation.
-const weekdayAbbreviations = {
+const weekdayAbbreviations: Record<string, [string, string]> = {
   SUN: weekdayNames[0],
   MON: weekdayNames[1],
   TUE: weekdayNames[2],
@@ -84,12 +107,14 @@ const weekdayAbbreviations = {
   SAT: weekdayNames[6]
 };
 
-// English ordinals for Quartz `#` weekday occurrences (1-5).
-const nthWeekdayNames = [null, 'first', 'second', 'third', 'fourth', 'fifth'];
+// English ordinals for Quartz `#` weekday occurrences (1-5). Index 0 is a
+// null hole so occurrences index by 1-5.
+const nthWeekdayNames: (string | null)[] =
+  [null, 'first', 'second', 'third', 'fourth', 'fifth'];
 
 // Normalize raw user options into a complete options object that is
 // threaded through rendering instead of relying on shared state.
-function normalizeOptions(options) {
+function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
   options = options || {};
 
   return {
@@ -103,26 +128,35 @@ function normalizeOptions(options) {
 }
 
 // Render an analyzed cron pattern (the IR) as English.
-function describe(ir, opts) {
+function describe(ir: IR, opts: NormalizedOptions): string {
   return applyYear(render(ir, ir.plan, opts), ir, opts);
 }
 
 // Render one plan node. `composeSeconds` recurses with its `rest` plan.
-function render(ir, plan, opts) {
-  return renderers[plan.kind](ir, plan, opts);
+function render(ir: IR, plan: PlanNode, opts: NormalizedOptions): string {
+  // The dispatch table keys each renderer to its own plan kind; the lookup
+  // by `plan.kind` cannot prove the node matches the renderer's narrowed
+  // parameter, so the call is made through a kind-agnostic signature.
+  const renderer = renderers[plan.kind] as
+    (ir: IR, plan: PlanNode, opts: NormalizedOptions) => string;
+
+  return renderer(ir, plan, opts);
 }
 
 // --- Seconds renderers. ---
 
-function renderEverySecond(ir, plan, opts) {
+function renderEverySecond(ir: IR, plan: PlanOf<'everySecond'>,
+  opts: NormalizedOptions): string {
   return 'every second' + trailingQualifier(ir, opts);
 }
 
-function renderStandaloneSeconds(ir, plan, opts) {
+function renderStandaloneSeconds(ir: IR, plan: PlanOf<'standaloneSeconds'>,
+  opts: NormalizedOptions): string {
   return secondsLeadClause(ir, opts) + trailingQualifier(ir, opts);
 }
 
-function renderSecondPastMinute(ir, plan, opts) {
+function renderSecondPastMinute(ir: IR, plan: PlanOf<'secondPastMinute'>,
+  opts: NormalizedOptions): string {
   const secondField = ir.pattern.second;
 
   return getNumber(secondField, opts) + ' ' +
@@ -134,7 +168,8 @@ function renderSecondPastMinute(ir, plan, opts) {
 // hour). A single second folds into the minute anchor ("30 minutes and 15
 // seconds past the hour, every hour"); a list, range, or step leads with
 // its own clause.
-function renderSecondsWithinMinute(ir, plan, opts) {
+function renderSecondsWithinMinute(ir: IR, plan: PlanOf<'secondsWithinMinute'>,
+  opts: NormalizedOptions): string {
   const minuteField = ir.pattern.minute;
   const minuteWord = getNumber(minuteField, opts);
   const minuteUnit = pluralize(minuteField, 'minute');
@@ -155,14 +190,15 @@ function renderSecondsWithinMinute(ir, plan, opts) {
 // A meaningful second under minute/hour shapes the earlier strategies
 // deferred on: the second leads with its own clause and the rest of the
 // pattern follows.
-function renderComposeSeconds(ir, plan, opts) {
+function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
+  opts: NormalizedOptions): string {
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
 }
 
 // The leading clause describing a second field relative to the minute,
 // e.g. "at 5 and 10 seconds past the minute" or "every second from zero
 // through 30 past the minute".
-function secondsLeadClause(ir, opts) {
+function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
   const secondField = ir.pattern.second;
   const shape = ir.shapes.second;
 
@@ -171,8 +207,10 @@ function secondsLeadClause(ir, opts) {
   }
 
   if (shape === 'step') {
-    return stepCycle60(ir.analyses.segments.second[0], 'second', 'minute',
-      opts);
+    // The plan reached this clause only for a stepped second field, whose
+    // first segment is always a step segment.
+    return stepCycle60(ir.analyses.segments.second![0] as StepSegment,
+      'second', 'minute', opts);
   }
 
   if (shape === 'range') {
@@ -188,17 +226,20 @@ function secondsLeadClause(ir, opts) {
       pluralize(secondField, 'second') + ' past the minute';
   }
 
-  return listPastThe(segmentWords(ir.analyses.segments.second, opts),
+  // A non-wildcard second under the list/step path always has segments.
+  return listPastThe(segmentWords(ir.analyses.segments.second!, opts),
     'second', 'minute', opts);
 }
 
 // --- Minute renderers. ---
 
-function renderEveryMinute(ir, plan, opts) {
+function renderEveryMinute(ir: IR, plan: PlanOf<'everyMinute'>,
+  opts: NormalizedOptions): string {
   return 'every minute' + trailingQualifier(ir, opts);
 }
 
-function renderSingleMinute(ir, plan, opts) {
+function renderSingleMinute(ir: IR, plan: PlanOf<'singleMinute'>,
+  opts: NormalizedOptions): string {
   const minuteField = ir.pattern.minute;
 
   return getNumber(minuteField, opts) + ' ' +
@@ -206,20 +247,27 @@ function renderSingleMinute(ir, plan, opts) {
     ' past the hour, every hour' + trailingQualifier(ir, opts);
 }
 
-function renderRangeOfMinutes(ir, plan, opts) {
+function renderRangeOfMinutes(ir: IR, plan: PlanOf<'rangeOfMinutes'>,
+  opts: NormalizedOptions): string {
   return minuteRangeLead(ir.pattern.minute, opts) +
     trailingQualifier(ir, opts);
 }
 
-function renderMultipleMinutes(ir, plan, opts) {
-  return listPastThe(segmentWords(ir.analyses.segments.minute, opts),
+function renderMultipleMinutes(ir: IR, plan: PlanOf<'multipleMinutes'>,
+  opts: NormalizedOptions): string {
+  // A multiple-minutes plan is selected only for a minute list, which has
+  // segments.
+  return listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
     'minute', 'hour', opts) + trailingQualifier(ir, opts);
 }
 
 // A repeating minute step, qualified by the active hour window(s).
-function renderMinuteFrequency(ir, plan, opts) {
-  let phrase = stepCycle60(ir.analyses.segments.minute[0], 'minute', 'hour',
-    opts);
+function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
+  opts: NormalizedOptions): string {
+  // A minute-frequency plan is selected only for a stepped minute field,
+  // which has segments.
+  let phrase = stepCycle60(ir.analyses.segments.minute![0] as StepSegment,
+    'minute', 'hour', opts);
 
   if (plan.hours.kind === 'during') {
     // An hour list confines the cadence to each listed hour's window.
@@ -230,8 +278,10 @@ function renderMinuteFrequency(ir, plan, opts) {
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    // An hour step rides alongside the minute cadence.
-    phrase += ', ' + stepHours(ir.analyses.segments.hour[0], opts);
+    // An hour step rides alongside the minute cadence; a stepped hour
+    // field's first segment is a step segment.
+    phrase += ', ' + stepHours(ir.analyses.segments.hour![0] as StepSegment,
+      opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
@@ -239,7 +289,8 @@ function renderMinuteFrequency(ir, plan, opts) {
 
 // A minute wildcard or plain range under a single specific hour fires
 // every minute within a window inside that hour.
-function renderMinuteSpanInHour(ir, plan, opts) {
+function renderMinuteSpanInHour(ir: IR, plan: PlanOf<'minuteSpanInHour'>,
+  opts: NormalizedOptions): string {
   return 'every minute from ' +
     getTime({hour: plan.hour, minute: plan.span[0]}, opts) +
     through(opts) + getTime({hour: plan.hour, minute: plan.span[1]}, opts) +
@@ -248,7 +299,8 @@ function renderMinuteSpanInHour(ir, plan, opts) {
 
 // A minute window combined with discrete hours fires within that window
 // during each hour.
-function renderMinutesAcrossHours(ir, plan, opts) {
+function renderMinutesAcrossHours(ir: IR, plan: PlanOf<'minutesAcrossHours'>,
+  opts: NormalizedOptions): string {
   if (plan.form === 'wildcard') {
     return 'every minute during the ' +
       hourTimesFromPlan(ir, plan.times, false, opts) + ' hours' +
@@ -258,7 +310,8 @@ function renderMinutesAcrossHours(ir, plan, opts) {
   const times = hourTimesFromPlan(ir, plan.times, true, opts);
   const lead = plan.form === 'range' ?
     minuteRangeLead(ir.pattern.minute, opts) :
-    listPastThe(segmentWords(ir.analyses.segments.minute, opts),
+    // The 'list' form is a minute list, which has segments.
+    listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
       'minute', 'hour', opts);
 
   return lead + ', at ' + times + trailingQualifier(ir, opts);
@@ -266,18 +319,22 @@ function renderMinutesAcrossHours(ir, plan, opts) {
 
 // A minute wildcard or plain range under an hour step; the hour cadence
 // trails as its own clause.
-function renderMinuteSpanAcrossHourStep(ir, plan, opts) {
+function renderMinuteSpanAcrossHourStep(ir: IR,
+  plan: PlanOf<'minuteSpanAcrossHourStep'>, opts: NormalizedOptions): string {
   const lead = plan.form === 'wildcard' ?
     'every minute' :
     minuteRangeLead(ir.pattern.minute, opts);
 
-  return lead + ', ' + stepHours(ir.analyses.segments.hour[0], opts) +
-    trailingQualifier(ir, opts);
+  // This plan is reached only under a stepped hour field, whose first
+  // segment is a step segment.
+  return lead + ', ' + stepHours(ir.analyses.segments.hour![0] as StepSegment,
+    opts) + trailingQualifier(ir, opts);
 }
 
 // Lead phrase for a plain minute range: "every minute from <a> through <b>
 // past the hour".
-function minuteRangeLead(minuteField, opts) {
+function minuteRangeLead(minuteField: string,
+  opts: NormalizedOptions): string {
   const bounds = minuteField.split('-');
   const num = seriesNumber(bounds, opts);
 
@@ -287,14 +344,16 @@ function minuteRangeLead(minuteField, opts) {
 
 // --- Hour renderers. ---
 
-function renderEveryHour(ir, plan, opts) {
+function renderEveryHour(ir: IR, plan: PlanOf<'everyHour'>,
+  opts: NormalizedOptions): string {
   return 'every hour' + trailingQualifier(ir, opts);
 }
 
 // An hour range fires within a window: on the hour it reads "every hour
 // from 9 a.m. through 5 p.m."; a minute wildcard or range fires every
 // minute; a discrete minute anchors as a lead clause.
-function renderHourRange(ir, plan, opts) {
+function renderHourRange(ir: IR, plan: PlanOf<'hourRange'>,
+  opts: NormalizedOptions): string {
   const window = hourWindow(plan, opts);
 
   if (plan.minuteForm === 'wildcard') {
@@ -312,31 +371,37 @@ function renderHourRange(ir, plan, opts) {
 
 // Lead phrase for a discrete minute within an hour range: on-the-hour
 // reads "every hour"; otherwise the minute list anchors it.
-function rangeMinuteLead(ir, opts) {
+function rangeMinuteLead(ir: IR, opts: NormalizedOptions): string {
   if (ir.pattern.minute === '0') {
     return 'every hour';
   }
 
-  return listPastThe(segmentWords(ir.analyses.segments.minute, opts),
+  // A non-"0" minute here is a discrete list, which has segments.
+  return listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
     'minute', 'hour', opts);
 }
 
-function renderHourStep(ir, plan, opts) {
-  return stepHours(ir.analyses.segments.hour[0], opts) +
+function renderHourStep(ir: IR, plan: PlanOf<'hourStep'>,
+  opts: NormalizedOptions): string {
+  // An hour-step plan is selected only for a stepped hour field, whose
+  // first segment is a step segment.
+  return stepHours(ir.analyses.segments.hour![0] as StepSegment, opts) +
     trailingQualifier(ir, opts);
 }
 
 // An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m.". Windows
 // open at the top of the first hour and close at the minute field's last
 // fire within the final hour.
-function hourWindow(window, opts) {
+function hourWindow(window: {from: number; to: number; last: number},
+  opts: NormalizedOptions): string {
   return 'from ' + getTime({hour: window.from, minute: 0}, opts) +
     through(opts) + getTime({hour: window.to, minute: window.last}, opts);
 }
 
 // Expand a discrete set of hours and minutes into clock times prefixed by
 // a day-level qualifier, e.g. "every day at 9 a.m. and 9:30 a.m.".
-function renderClockTimes(ir, plan, opts) {
+function renderClockTimes(ir: IR, plan: PlanOf<'clockTimes'>,
+  opts: NormalizedOptions): string {
   const plain = mixedTwelve(plan.times);
   const times = plan.times.map(function clock(time) {
     return getTime({
@@ -353,9 +418,12 @@ function renderClockTimes(ir, plan, opts) {
 // Compact form for a clock-time set past the enumeration cap. A single
 // minute folds into per-segment hour windows; a minute list leads with its
 // own clause instead of cross-multiplying into a wall of times.
-function renderCompactClockTimes(ir, plan, opts) {
+function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
+  opts: NormalizedOptions): string {
   if (plan.fold) {
-    const hasRange = ir.analyses.segments.hour.some(function range(segment) {
+    // A compact clock-time plan is reached only for discrete hours, which
+    // have segments.
+    const hasRange = ir.analyses.segments.hour!.some(function range(segment) {
       return segment.kind === 'range';
     });
 
@@ -372,7 +440,8 @@ function renderCompactClockTimes(ir, plan, opts) {
   }
 
   const phrase =
-    listPastThe(segmentWords(ir.analyses.segments.minute, opts),
+    // The non-fold branch is a minute list, which has segments.
+    listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
       'minute', 'hour', opts) +
     ', at ' + hourSegmentTimes(ir, {minute: 0, second: null}, true, opts) +
     trailingQualifier(ir, opts);
@@ -388,12 +457,15 @@ function renderCompactClockTimes(ir, plan, opts) {
 // hour-range frame: a shared minute lead ("every hour" / "at 30 minutes
 // past the hour"), each range as a "from X through Y" window, and any
 // non-contiguous hours appended as "and at Z".
-function foldedHourWindows(ir, plan, opts) {
+function foldedHourWindows(ir: IR, plan: PlanOf<'compactClockTimes'>,
+  opts: NormalizedOptions): string {
   const minute = plan.minute;
-  const windows = [];
-  const singles = [];
+  const windows: string[] = [];
+  const singles: number[] = [];
 
-  ir.analyses.segments.hour.forEach(function classify(segment) {
+  // Reached only via the fold branch under discrete hours, which have
+  // segments.
+  ir.analyses.segments.hour!.forEach(function classify(segment) {
     if (segment.kind === 'range') {
       windows.push('from ' + getTime({hour: segment.bounds[0], minute: 0},
         opts) + through(opts) +
@@ -446,7 +518,8 @@ const renderers = {
 // units (seconds and minutes). `unit` is the singular noun and `anchor` is
 // the larger unit the values are counted against. Interval-one steps never
 // arrive here: normalization collapses them to ranges or `*`.
-function stepCycle60(segment, unit, anchor, opts) {
+function stepCycle60(segment: StepSegment, unit: string,
+  anchor: string, opts: NormalizedOptions): string {
   // A bounded start (`a-b/n`) applies the interval within the range.
   if (segment.startToken.indexOf('-') !== -1) {
     return listPastThe(numberWords(segment.fires, opts), unit, anchor, opts);
@@ -482,7 +555,7 @@ function stepCycle60(segment, unit, anchor, opts) {
 
 // Phrase a `start/interval` step segment for the hour field (cycles every
 // 24). Interval-one steps never arrive here.
-function stepHours(segment, opts) {
+function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
   // A bounded start (`a-b/n`) applies the interval within the range.
   if (segment.startToken.indexOf('-') !== -1) {
     return 'at ' + hourTimes(segment.fires, opts);
@@ -513,7 +586,8 @@ function stepHours(segment, opts) {
 // boundary (greater than ten), render the whole series as numerals;
 // otherwise spell each per getNumber. Keeps "five through ten" spelled
 // but makes "0 through 29" all-numeral instead of "zero through 29".
-function seriesNumber(values, opts) {
+function seriesNumber(values: (number | string)[], opts: NormalizedOptions):
+  (n: number | string) => string | number {
   const anyBig = values.some(function big(v) {
     return +v > 10;
   });
@@ -524,15 +598,18 @@ function seriesNumber(values, opts) {
 }
 
 // Render numeric fire values as number words, consistent across the set.
-function numberWords(fires, opts) {
+function numberWords(fires: number[],
+  opts: NormalizedOptions): (string | number)[] {
   return fires.map(seriesNumber(fires, opts));
 }
 
 // Render classified segments as words: singles as numbers, ranges as
 // "<a> through <b>" pairs, step segments as their enumerated fires. The
 // whole field shares one number style (all spelled or all numerals).
-function segmentWords(segments, opts) {
-  const values = segments.flatMap(function collect(segment) {
+function segmentWords(segments: Segment[],
+  opts: NormalizedOptions): (string | number)[] {
+  const values = segments.flatMap(function collect(segment):
+    (string | number)[] {
     if (segment.kind === 'range') {
       return segment.bounds;
     }
@@ -555,14 +632,16 @@ function segmentWords(segments, opts) {
 }
 
 // Enumerate fire words as "at A, B and C <unit>s past the <anchor>".
-function listPastThe(words, unit, anchor, opts) {
+function listPastThe(words: (string | number)[], unit: string, anchor: string,
+  opts: NormalizedOptions): string {
   return 'at ' + joinList(words, opts) + ' ' + unit + 's past the ' +
     anchor;
 }
 
 // A clock time reads as a word ("noon"/"midnight") only at exact 12:00 or
 // 0:00 with no minute or second.
-function wordTime(hour, minute, second) {
+function wordTime(hour: number | string, minute: number | string,
+  second?: number | string | null): boolean {
   return (+hour === 0 || +hour === 12) && +minute === 0 &&
     !(typeof second === 'number' && second > 0);
 }
@@ -570,7 +649,7 @@ function wordTime(hour, minute, second) {
 // Whether a clock-time list mixes a noon/midnight word with a numeral
 // time. When it does, the words are suppressed so the list stays in one
 // style ("12 a.m., 1 a.m." not "midnight, 1 a.m.").
-function mixedTwelve(entries) {
+function mixedTwelve(entries: TimeEntry[]): boolean {
   const words = entries.filter(function word(e) {
     return wordTime(e.hour, e.minute, e.second);
   });
@@ -579,7 +658,7 @@ function mixedTwelve(entries) {
 }
 
 // Render hours as a joined list of clock times, e.g. "9 a.m. and 5 p.m.".
-function hourTimes(hours, opts) {
+function hourTimes(hours: number[], opts: NormalizedOptions): string {
   const plain = mixedTwelve(hours.map(function entry(hour) {
     return {hour, minute: 0};
   }));
@@ -593,7 +672,8 @@ function hourTimes(hours, opts) {
 // The hour times accompanying a window phrase: enumerated fires up to the
 // cap, segment rendering past it (decided by the core). `atContext` marks
 // an "at <times>" frame (vs "during the <times> hours").
-function hourTimesFromPlan(ir, times, atContext, opts) {
+function hourTimesFromPlan(ir: IR, times: HourTimesPlan, atContext: boolean,
+  opts: NormalizedOptions): string {
   if (times.kind === 'fires') {
     return hourTimes(times.fires, opts);
   }
@@ -603,7 +683,7 @@ function hourTimesFromPlan(ir, times, atContext, opts) {
 
 // The hour values an hour segment covers: a range's bounds, a step's
 // fires, or a single value.
-function segmentHours(segment) {
+function segmentHours(segment: Segment): (string | number)[] {
   if (segment.kind === 'range') {
     return segment.bounds;
   }
@@ -614,15 +694,19 @@ function segmentHours(segment) {
 // Clock times for the hour field rendered segment by segment, so ranges
 // read as windows ("9:30 a.m. through 8:30 p.m.") rather than an
 // enumeration. The minute (and optional second) fold into each time.
-function hourSegmentTimes(ir, fold, atContext, opts) {
+function hourSegmentTimes(ir: IR,
+  fold: {minute: number | string; second: number | null | undefined},
+  atContext: boolean, opts: NormalizedOptions): string {
   const {minute, second} = fold;
-  const segments = ir.analyses.segments.hour;
+  // Hour-segment rendering is reached only under discrete hours, which have
+  // segments.
+  const segments = ir.analyses.segments.hour!;
   const plain = mixedTwelve(segments.flatMap(function entries(segment) {
     return segmentHours(segment).map(function entry(hour) {
       return {hour: +hour, minute, second};
     });
   }));
-  const pieces = [];
+  const pieces: string[] = [];
 
   segments.forEach(function clock(segment) {
     if (segment.kind === 'step') {
@@ -648,7 +732,8 @@ function hourSegmentTimes(ir, fold, atContext, opts) {
 // read as part of the window. When a range is present, prefix every
 // trailing piece with "at" to break that reading ("...through 8 p.m. and
 // at 10 p.m.").
-function disambiguateTimes(pieces, segments, atContext) {
+function disambiguateTimes(pieces: string[], segments: Segment[],
+  atContext: boolean): string[] {
   const hasRange = segments.some(function range(segment) {
     return segment.kind === 'range';
   });
@@ -665,7 +750,8 @@ function disambiguateTimes(pieces, segments, atContext) {
 // Join a list with commas and a terminal "and". The US dialect (Chicago)
 // adds a serial comma before the "and" in lists of three or more; the UK
 // dialect (Guardian) does not. Pairs never take one.
-function joinList(items, opts) {
+function joinList(items: (string | number)[],
+  opts: NormalizedOptions): string {
   if (items.length <= 1) {
     return items.join('');
   }
@@ -684,8 +770,17 @@ function joinList(items, opts) {
 // Connective words for the two day-qualifier positions. The trailing form
 // follows a frequency ("every 15 minutes on Monday"); the leading form
 // precedes a clock time ("every Monday at 9 a.m.").
-const trailingWords = {all: '', month: 'in ', stepDate: 'on ', weekday: 'on '};
-const leadingWords = {
+// The connectives a day-qualifier position supplies for each shape.
+interface QualifierWords {
+  all: string;
+  month: string;
+  stepDate: string;
+  weekday: string;
+}
+
+const trailingWords: QualifierWords =
+  {all: '', month: 'in ', stepDate: 'on ', weekday: 'on '};
+const leadingWords: QualifierWords = {
   all: 'every day',
   month: 'every day in ',
   stepDate: '',
@@ -694,7 +789,7 @@ const leadingWords = {
 
 // A trailing day-level qualifier for bare frequencies, e.g. " on Monday".
 // Returns an empty string when no date, month, or weekday is set.
-function trailingQualifier(ir, opts) {
+function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
   const phrase = dayQualifier(ir, trailingWords, opts);
 
   return phrase && ' ' + phrase;
@@ -702,14 +797,15 @@ function trailingQualifier(ir, opts) {
 
 // Build the day-level qualifier that precedes a specific time, e.g.
 // "every day ", "every Friday ", or "on January 13 ".
-function interpretDayQualifier(ir, opts) {
+function interpretDayQualifier(ir: IR, opts: NormalizedOptions): string {
   return dayQualifier(ir, leadingWords, opts) + ' ';
 }
 
 // The day-level qualifier phrase (date, month, and weekday), or
 // `words.all` when all three are wildcards. `words` supplies the
 // connectives that differ between the trailing and leading positions.
-function dayQualifier(ir, words, opts) {
+function dayQualifier(ir: IR, words: QualifierWords,
+  opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
   // Standard cron fires when day-of-month OR day-of-week matches, when
@@ -739,7 +835,8 @@ function dayQualifier(ir, words, opts) {
 }
 
 // The date portion of a day qualifier (the weekday is a wildcard).
-function datePhrase(ir, words, opts) {
+function datePhrase(ir: IR, words: QualifierWords,
+  opts: NormalizedOptions): string {
   const pattern = ir.pattern;
   const quartzDate = quartzDatePhrase(pattern.date, opts);
 
@@ -768,9 +865,10 @@ function datePhrase(ir, words, opts) {
 // 1" parses as "(June) through (September 1)" — and an open step is a
 // frequency phrase; both scope the date instead ("on the 1st in June
 // through September").
-function monthFoldsIntoDate(ir) {
+function monthFoldsIntoDate(ir: IR): boolean {
   return !isOpenStep(ir.pattern.month) &&
-    ir.analyses.segments.month.every(function flat(segment) {
+    // Reached only with a restricted month, which has segments.
+    ir.analyses.segments.month!.every(function flat(segment) {
       return segment.kind !== 'range';
     });
 }
@@ -778,7 +876,7 @@ function monthFoldsIntoDate(ir) {
 // Compose the "day-of-month or day-of-week" phrase used when both fields
 // are restricted: cron fires when either is a match. A restricted month
 // scopes both.
-function dateOrWeekday(ir, opts) {
+function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
   const weekdayPart = quartzWeekdayPhrase(pattern.weekday, opts) ||
     'on ' + weekdayPhrase(ir, opts);
@@ -804,7 +902,8 @@ function dateOrWeekday(ir, opts) {
 
 // The day-qualifier phrase for a Quartz date field (e.g. "on the last day
 // of the month"), or undefined when the field is not a Quartz form.
-function quartzDatePhrase(dateField, opts) {
+function quartzDatePhrase(dateField: string,
+  opts: NormalizedOptions): string | undefined {
   if (dateField === 'L') {
     return 'on the last day of the month';
   }
@@ -830,7 +929,8 @@ function quartzDatePhrase(dateField, opts) {
 
 // The day-qualifier phrase for a Quartz weekday field (e.g. "on the last
 // Friday of the month"), or undefined when the field is not a Quartz form.
-function quartzWeekdayPhrase(weekdayField, opts) {
+function quartzWeekdayPhrase(weekdayField: string,
+  opts: NormalizedOptions): string | undefined {
   const parts = weekdayField.split('#');
 
   if (parts.length === 2) {
@@ -848,22 +948,24 @@ function quartzWeekdayPhrase(weekdayField, opts) {
 // A calendar date with its month, in the dialect's order and day form:
 // cardinal "January 1" / "1 January", or ordinal "January 1st" for
 // dialects that set `ordinals`.
-function monthDatePhrase(ir, opts) {
+function monthDatePhrase(ir: IR, opts: NormalizedOptions): string {
   const month = monthName(ir, opts);
-  const days = renderSegments(ir.analyses.segments.date,
+  // A month-day phrase is reached only with a restricted date, which has
+  // segments.
+  const days = renderSegments(ir.analyses.segments.date!,
     opts.style.ordinals ? getOrdinal : cardinalDay, opts);
 
   return opts.style.dayFirst ? days + ' ' + month : month + ' ' + days;
 }
 
 // Render a day-of-month as a plain cardinal number.
-function cardinalDay(value) {
+function cardinalDay(value: number | string): string {
   return '' + value;
 }
 
 // A trailing " in <month>" scope, or an empty string when the month is a
 // wildcard.
-function monthScope(ir, opts) {
+function monthScope(ir: IR, opts: NormalizedOptions): string {
   if (ir.pattern.month === '*') {
     return '';
   }
@@ -873,7 +975,7 @@ function monthScope(ir, opts) {
 
 // Frequency phrase for an open day-of-month step, e.g. "every other day of
 // the month" or "every 3rd day of the month from the 5th".
-function stepDates(dateField) {
+function stepDates(dateField: string): string {
   const parts = dateField.split('/');
   const interval = +parts[1];
   const start = parts[0];
@@ -891,26 +993,28 @@ function stepDates(dateField) {
 
 // Render the date field's segments as suffixed ordinals. Open steps are
 // handled separately as a frequency phrase.
-function dateOrdinals(ir, opts) {
-  return renderSegments(ir.analyses.segments.date, getOrdinal, opts);
+function dateOrdinals(ir: IR, opts: NormalizedOptions): string {
+  // Reached only with a restricted date, which has segments.
+  return renderSegments(ir.analyses.segments.date!, getOrdinal, opts);
 }
 
 // Render the month field as names. Open steps read as a frequency phrase.
-function monthName(ir, opts) {
+function monthName(ir: IR, opts: NormalizedOptions): string {
   const monthField = ir.pattern.month;
 
   if (isOpenStep(monthField)) {
     return stepMonths(monthField, opts);
   }
 
-  return renderSegments(ir.analyses.segments.month, function name(value) {
+  // A non-open-step restricted month has segments.
+  return renderSegments(ir.analyses.segments.month!, function name(value) {
     return getMonth(value, opts);
   }, opts);
 }
 
 // Frequency phrase for an open month step, e.g. "every other month" or
 // "every 3rd month from February".
-function stepMonths(monthField, opts) {
+function stepMonths(monthField: string, opts: NormalizedOptions): string {
   const parts = monthField.split('/');
   const interval = +parts[1];
   const start = parts[0];
@@ -927,8 +1031,9 @@ function stepMonths(monthField, opts) {
 
 // Render the weekday field as names. Ranges read in their connective form
 // ("Monday through Friday", or "Mon-Fri" with `short`).
-function weekdayPhrase(ir, opts) {
-  return renderSegments(ir.analyses.segments.weekday, function name(value) {
+function weekdayPhrase(ir: IR, opts: NormalizedOptions): string {
+  // Reached only with a restricted weekday, which has segments.
+  return renderSegments(ir.analyses.segments.weekday!, function name(value) {
     return getWeekday(value, opts);
   }, opts);
 }
@@ -936,8 +1041,10 @@ function weekdayPhrase(ir, opts) {
 // Render classified field segments with `word`, expanding step segments
 // into their enumerated fires and joining range bounds with the dialect's
 // `through` connective.
-function renderSegments(segments, word, opts) {
-  const pieces = [];
+function renderSegments(segments: Segment[],
+  word: (value: number | string) => string,
+  opts: NormalizedOptions): string {
+  const pieces: string[] = [];
 
   segments.forEach(function expand(segment) {
     if (segment.kind === 'step') {
@@ -957,7 +1064,7 @@ function renderSegments(segments, word, opts) {
 // Whether a canonical field value is an "open" step (`*/n` or `a/n`, not a
 // bounded range or a list). Open steps read as a frequency rather than an
 // enumeration.
-function isOpenStep(field) {
+function isOpenStep(field: string): boolean {
   return field.indexOf('/') !== -1 && field.indexOf('-') === -1 &&
     field.indexOf(',') === -1;
 }
@@ -966,7 +1073,8 @@ function isOpenStep(field) {
 
 // Append or fold the year field into a finished description. An
 // explicitly supplied year is always rendered.
-function applyYear(description, ir, opts) {
+function applyYear(description: string, ir: IR,
+  opts: NormalizedOptions): string {
   const yearField = ir.pattern.year;
 
   if (yearField === '*') {
@@ -992,7 +1100,7 @@ function applyYear(description, ir, opts) {
 }
 
 // Turn a single year, a range, or a list into a noun phrase.
-function yearLabel(yearField, opts) {
+function yearLabel(yearField: string, opts: NormalizedOptions): string {
   if (yearField.indexOf(',') !== -1) {
     return joinList(yearField.split(','), opts);
   }
@@ -1002,7 +1110,7 @@ function yearLabel(yearField, opts) {
 
 // Describe a repeating year step, e.g. "every two years" or, with a
 // start, "every two years from 2030".
-function stepYears(yearField, opts) {
+function stepYears(yearField: string, opts: NormalizedOptions): string {
   const parts = yearField.split('/');
   const interval = +parts[1];
   const start = parts[0];
@@ -1026,7 +1134,7 @@ function stepYears(yearField, opts) {
 // dialect's style: "3:45 p.m." / "9 a.m." / "noon" for US (Chicago),
 // "3.45pm" / "9am" / "midday" for UK (Guardian), or "15:45" / "15.45" in
 // 24-hour mode.
-function getTime(time, opts) {
+function getTime(time: TimeEntry, opts: NormalizedOptions): string {
   const {hour, minute, plain} = time;
   // Seconds are only shown when a specific non-zero value is supplied.
   const second = typeof time.second === 'number' && time.second > 0 ?
@@ -1034,8 +1142,12 @@ function getTime(time, opts) {
     0;
 
   if (!opts.ampm) {
-    return clockDigits({hour, minute, second},
-      {pad: true, sep: opts.style.sep});
+    // Hour/minute arrive as numbers or raw field tokens (a range bound or
+    // single value is a string); `clockDigits` types them as numbers but
+    // `pad` stringifies either form to the same digits. Cast to keep the
+    // value byte-identical rather than coercing it.
+    return clockDigits({hour: hour as number, minute: minute as number,
+      second}, {pad: true, sep: opts.style.sep});
   }
 
   return twelveHourTime({hour, minute, second, plain}, opts);
@@ -1045,7 +1157,11 @@ function getTime(time, opts) {
 // a word for exact 12:00. A `second` of 0 is omitted. `plain` suppresses
 // the noon/midnight words (forcing "12 p.m."/"12 a.m.") so a mixed list
 // stays in one number style.
-function twelveHourTime(time, opts) {
+function twelveHourTime(
+  time: {hour: number | string; minute: number | string; second: number;
+    plain?: boolean},
+  opts: NormalizedOptions
+): string {
   const {hour, minute, second, plain} = time;
   const style = opts.style;
 
@@ -1059,35 +1175,42 @@ function twelveHourTime(time, opts) {
     }
   }
 
-  const digits = clockDigits({hour: hour % 12 || 12, minute, second},
+  // `hour`/`minute` may be raw field tokens; the arithmetic below coerces
+  // them numerically, matching `clockDigits`. Cast for the modulo/compare.
+  const digits = clockDigits(
+    {hour: (hour as number) % 12 || 12, minute: minute as number, second},
     {lean: true, sep: style.sep});
 
   return digits + (style.closeUp ? '' : ' ') +
-    (hour < 12 ? style.am : style.pm);
+    ((hour as number) < 12 ? style.am : style.pm);
 }
 
 // Get English number names for the integers zero through ten.
-function getNumber(n, opts) {
-  return numeral(n, numbers, opts);
+function getNumber(n: number | string,
+  opts: NormalizedOptions): string | number {
+  // `numeral` types its value as a number but only looks it up in / spells
+  // it from the words table, which works the same for a numeric string.
+  return numeral(n as number, numbers, opts);
 }
 
 // Singular or plural unit noun for a count: "minute" for 1, "minutes"
 // otherwise.
-function pluralize(value, unit) {
+function pluralize(value: number | string, unit: string): string {
   return +value === 1 ? unit : unit + 's';
 }
 
 // The range connective between two bounds: the dialect's prose form
 // (" through " or " to ") normally, a compact hyphen with the `short`
 // option.
-function through(opts) {
+function through(opts: NormalizedOptions): string {
   return opts.short ? '-' : opts.style.through;
 }
 
 // Get suffixed ordinals from integers (1st, 2nd, ... 31st). Dates always
 // use the suffixed numeric form for consistency.
-function getOrdinal(n) {
-  let m = Math.abs(n);
+function getOrdinal(n: number | string): string {
+  // `n` may be a numeric string (a field token); `Math.abs` coerces it.
+  let m = Math.abs(n as number);
   let suffix = suffixes[m];
 
   if (!suffix) {
@@ -1099,27 +1222,37 @@ function getOrdinal(n) {
 }
 
 // Get English month names from a number or from an abbreviation.
-function getMonth(m, opts) {
-  const month = monthNames[m] || monthAbbreviations[m];
+function getMonth(m: number | string, opts: NormalizedOptions): string {
+  // `m` is a month number (indexing `monthNames`) or an abbreviation token
+  // (indexing `monthAbbreviations`); the unmatched table yields undefined.
+  const month = monthNames[m as number] || monthAbbreviations[m];
 
-  return month && month[opts.short ? 1 : 0];
+  // A valid month always resolves to a name pair, so the guarded lookup is
+  // a string; the cast keeps the original null-guard expression intact.
+  return (month && month[opts.short ? 1 : 0]) as string;
 }
 
 // Get English weekday names from a number or from an abbreviation.
 // Standard cron treats `7` as Sunday (the same as `0`), so it is
 // normalized here.
-function getWeekday(d, opts) {
+function getWeekday(d: number | string, opts: NormalizedOptions): string {
   const day = d === 7 || d === '7' ? 0 : d;
-  const weekday = weekdayNames[day] || weekdayAbbreviations[day];
+  // `day` is a weekday number (indexing `weekdayNames`) or an abbreviation
+  // token (indexing `weekdayAbbreviations`).
+  const weekday = weekdayNames[day as number] || weekdayAbbreviations[day];
 
-  return weekday && weekday[opts.short ? 1 : 0];
+  // A valid weekday always resolves to a name pair; the cast keeps the
+  // original null-guard expression intact.
+  return (weekday && weekday[opts.short ? 1 : 0]) as string;
 }
 
 // The English language module: the IR renderer plus the language-owned
 // strings and option normalization.
-export default {
+const en: Language = {
   describe,
   fallback: 'an unrecognizable cron pattern',
   options: normalizeOptions,
   reboot: 'at system startup'
 };
+
+export default en;

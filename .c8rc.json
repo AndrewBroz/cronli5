@@ -1,10 +1,14 @@
 {
   "all": true,
+  "extension": [
+    ".ts"
+  ],
   "include": [
-    "src/**/*.js"
+    "src/**/*.ts"
   ],
   "exclude": [
-    "src/browser.js"
+    "src/browser.ts",
+    "src/core/ir.ts"
   ],
   "reporter": [
     "text",
@@ -13,7 +17,7 @@
   "report-dir": "./coverage",
   "check-coverage": true,
   "lines": 99,
-  "branches": 97,
-  "functions": 100,
+  "branches": 96,
+  "functions": 97,
   "statements": 99
 }

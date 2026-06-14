@@ -2,9 +2,9 @@
  * @license MIT, Copyright (c) 2026 Andrew Brož
  */
 
-// A cron pattern to English interpreter. The language-independent core
-// (parsing, validation, normalization, analysis) lives in ./core; the
-// English renderer lives in ./lang/en. See docs/i18n-design.md.
+// A cron pattern to plain language interpreter. The language-independent
+// code (parsing, validation, normalization, analysis) is in ./core.
+// Language-specific renderers live in ./lang. See docs/i18n-design.md.
 //
 // `options` include:
 // - ampm (boolean):
@@ -24,13 +24,16 @@
 //     patterns always parse seconds first and year last)
 
 import {analyze, prepare} from './core/index.js';
+import type {NormalizedOptions} from './core/ir.js';
+import type {CronPattern, Cronli5Language, Cronli5Options}
+  from '../cronli5.js';
 import en from './lang/en/index.js';
 
-function cronli5(cronPattern, options) {
+function cronli5(cronPattern: CronPattern, options?: Cronli5Options): string {
   // A language module is a value (docs/i18n-design.md §3); English is the
   // bundled default.
   const lang = options && options.lang || en;
-  const opts = lang.options(options);
+  const opts = lang.options(options) as NormalizedOptions;
 
   if (!opts.lenient) {
     return interpretCronPattern(cronPattern, lang, opts);
@@ -48,7 +51,11 @@ function cronli5(cronPattern, options) {
 
 // Prepare (parse, validate, normalize), analyze, and describe a cron
 // pattern.
-function interpretCronPattern(cronPattern, lang, opts) {
+function interpretCronPattern(
+  cronPattern: CronPattern,
+  lang: Cronli5Language,
+  opts: NormalizedOptions
+): string {
   // `@reboot` runs on startup and has no field schedule to interpret.
   if (typeof cronPattern === 'string' &&
       cronPattern.trim().toLowerCase() === '@reboot') {

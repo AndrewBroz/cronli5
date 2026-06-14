@@ -1,8 +1,27 @@
 // Field specifications, macros, and core policy constants — the
 // language-independent facts about cron itself.
 
+import type {Field} from './ir.js';
+
+/**
+ * A parsed but not-yet-canonical cron pattern: every field present, values
+ * still as the caller gave them (string or number) until normalization
+ * settles them to canonical strings (a `Pattern`).
+ */
+export type CronLike = Record<Field, string | number>;
+
+/** The validation/enumeration facts about one cron field. */
+export interface FieldSpec {
+  min: number;
+  max: number;
+  cyclic?: boolean;
+  top?: number;
+  aliases?: {[token: string]: string};
+  numbers?: {[name: string]: number};
+}
+
 // Weekday index by abbreviation, used to resolve named step bounds.
-const weekdayNumbers = {
+const weekdayNumbers: Record<string, number> = {
   SUN: 0,
   MON: 1,
   TUE: 2,
@@ -13,7 +32,7 @@ const weekdayNumbers = {
 };
 
 // Month number by abbreviation, used to resolve named step bounds.
-const monthNumbers = {
+const monthNumbers: Record<string, number> = {
   JAN: 1,
   FEB: 2,
   MAR: 3,
@@ -33,7 +52,7 @@ const monthNumbers = {
 // wrap-around window there; the year field does not wrap. `top` is the last
 // value a step enumerates to — for weekdays it is Saturday (6), below the
 // validation `max` of 7, which is Sunday again.
-const fieldSpecs = {
+const fieldSpecs: Record<Field, FieldSpec> = {
   second: {cyclic: true, max: 59, min: 0, top: 59},
   minute: {cyclic: true, max: 59, min: 0, top: 59},
   hour: {cyclic: true, max: 23, min: 0, top: 23},
@@ -45,7 +64,7 @@ const fieldSpecs = {
 };
 
 // The order in which fields are validated.
-const fieldOrder = [
+const fieldOrder: Field[] = [
   'second',
   'minute',
   'hour',
@@ -57,7 +76,7 @@ const fieldOrder = [
 
 // Nickname macros (e.g. `@daily`) expand to their five-field equivalents.
 // `@reboot` has no time schedule and so is intentionally omitted.
-const macros = {
+const macros: Record<string, string> = {
   '@annually': '0 0 1 1 *',
   '@yearly':   '0 0 1 1 *',
   '@monthly':  '0 0 1 * *',

@@ -4,13 +4,22 @@
 // words (docs/i18n-design.md §2.2).
 
 import {fieldOrder, fieldSpecs, maxClockTimes} from './specs.js';
+import type {FieldSpec} from './specs.js';
+import type {
+  Analyses, ClockTime, Field, HourTimesPlan, HoursPlan, IR, Pattern,
+  PlanNode, Segment, Shape, Shapes
+} from './ir.js';
 import {includes, toFieldNumber, unique} from './util.js';
 import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
   from './shapes.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
 // List the values a `start/interval` step fires on within [0, max].
-function getOccurrences(start, interval, max) {
+function getOccurrences(
+  start: number,
+  interval: number,
+  max: number
+): number[] {
   const occurrences = [];
   let value = start;
 
@@ -25,7 +34,12 @@ function getOccurrences(start, interval, max) {
 // List the values a step fires on for a day-level field. The start may be a
 // wildcard (`*`, begins at `min`), a single value, or a range (`a-b`), and
 // range bounds may be names resolved via `numberMap`.
-function enumerateStep(field, min, max, numberMap) {
+function enumerateStep(
+  field: string,
+  min: number,
+  max: number,
+  numberMap?: {[name: string]: number}
+): number[] {
   const parts = field.split('/');
   const interval = +parts[1];
 
@@ -44,8 +58,8 @@ function enumerateStep(field, min, max, numberMap) {
 // Enumerate the values a field fires on within [min, max], expanding list
 // segments that are ranges (wrap-aware) or steps (e.g. "9,17-19" or
 // "9,17/2").
-function enumerateFires(field, min, max) {
-  const fires = [];
+function enumerateFires(field: string, min: number, max: number): number[] {
+  const fires: number[] = [];
 
   field.split(',').forEach(function expand(segment) {
     if (includes(segment, '/')) {
@@ -74,7 +88,7 @@ function enumerateFires(field, min, max) {
 
 // Enumerate a discrete field (single value or comma list) as numbers. A
 // wildcard or any non-discrete form collapses to the top of the unit (0).
-function enumerateValues(field) {
+function enumerateValues(field: string): number[] {
   if (!isDiscreteList(field)) {
     return [0];
   }
@@ -85,7 +99,7 @@ function enumerateValues(field) {
 // The [low, high] minute window a field spans, or null when the field is a
 // single value, list, step, or wrap-around range (which do not describe a
 // continuous window within one hour).
-function minuteSpan(minuteField) {
+function minuteSpan(minuteField: string): [number, number] | null {
   if (minuteField === '*') {
     return [0, 59];
   }
@@ -104,7 +118,7 @@ function minuteSpan(minuteField) {
 // The last minute a minute field fires on within an hour. Hour windows end
 // at the final fire, so `*/15` over `9-17` reads "through 5:45 PM" rather
 // than overstating (":59") or understating (":00") the window.
-function lastMinuteFire(minuteField) {
+function lastMinuteFire(minuteField: string): number {
   if (minuteField === '*') {
     return 59;
   }
@@ -114,14 +128,14 @@ function lastMinuteFire(minuteField) {
 
 // A single specific non-zero second to fold into a clock time (e.g. "9:00:15
 // AM"), or undefined when the second is zero, a wildcard, or non-discrete.
-function clockSecond(secondField) {
+function clockSecond(secondField: string): number | undefined {
   if (isSingleValue(secondField) && secondField !== '0') {
     return +secondField;
   }
 }
 // Classify a canonical field value's shape. Lists win over their segment
 // kinds (`5-30/2` is a step; `0,5/2` is a list).
-function fieldShape(value, field) {
+function fieldShape(value: string, field: Field): Shape {
   if (value === '*') {
     return 'wildcard';
   }
@@ -150,17 +164,24 @@ function fieldShape(value, field) {
 // token, ranges keep their raw bound tokens (names included), and steps
 // carry their enumerated fires. Wildcard and Quartz fields have no
 // segments.
-function fieldSegments(value, shape, spec) {
+function fieldSegments(
+  value: string,
+  shape: Shape,
+  spec: FieldSpec
+): Segment[] | null {
   if (shape === 'wildcard' || shape === 'quartz') {
     return null;
   }
 
-  return value.split(',').map(function classify(segment) {
+  return value.split(',').map(function classify(segment): Segment {
     if (includes(segment, '/')) {
       const parts = segment.split('/');
 
       return {
-        fires: enumerateStep(segment, spec.min, spec.top, spec.numbers),
+        // Only the named/cyclic fields are segmented this way; `top` is
+        // always present for them (year has no segmentable step form).
+        fires: enumerateStep(segment, spec.min, spec.top as number,
+          spec.numbers),
         interval: +parts[1],
         kind: 'step',
         startToken: parts[0]
@@ -168,7 +189,7 @@ function fieldSegments(value, shape, spec) {
     }
 
     if (includes(segment, '-')) {
-      return {bounds: segment.split('-'), kind: 'range'};
+      return {bounds: segment.split('-') as [string, string], kind: 'range'};
     }
 
     return {kind: 'single', value: segment};
@@ -177,9 +198,9 @@ function fieldSegments(value, shape, spec) {
 
 // Analyze a prepared (parsed, validated, normalized) cron pattern into the
 // IR a language module renders from.
-function analyze(pattern) {
-  const shapes = {};
-  const segments = {};
+function analyze(pattern: Pattern): IR {
+  const shapes = {} as Shapes;
+  const segments = {} as Analyses['segments'];
 
   fieldOrder.forEach(function classify(field) {
     shapes[field] = fieldShape(pattern[field], field);
@@ -204,7 +225,11 @@ function analyze(pattern) {
 
 // Select the description strategy. The selection mirrors the interpreter
 // chain ordering exactly; renderers must not re-derive it.
-function buildPlan(pattern, shapes, analyses) {
+function buildPlan(
+  pattern: Pattern,
+  shapes: Shapes,
+  analyses: Analyses
+): PlanNode {
   if (pattern.second !== '0') {
     const seconds = planSeconds(pattern, shapes, analyses);
 
@@ -219,7 +244,11 @@ function buildPlan(pattern, shapes, analyses) {
 
 // Seconds strategies, or null when the second folds into the clock time
 // downstream (a single second under discrete minutes and hours).
-function planSeconds(pattern, shapes, analyses) {
+function planSeconds(
+  pattern: Pattern,
+  shapes: Shapes,
+  analyses: Analyses
+): PlanNode | null {
   const standalone = planStandaloneSeconds(pattern, shapes);
 
   if (standalone) {
@@ -250,7 +279,10 @@ function planSeconds(pattern, shapes, analyses) {
 }
 
 // Second shapes that stand on their own over a wildcard minute.
-function planStandaloneSeconds(pattern, shapes) {
+function planStandaloneSeconds(
+  pattern: Pattern,
+  shapes: Shapes
+): PlanNode | null {
   if (pattern.minute !== '*') {
     return null;
   }
@@ -268,7 +300,11 @@ function planStandaloneSeconds(pattern, shapes) {
 
 // Minute strategies, in the interpreter-chain order, or null to defer to
 // the hour strategies.
-function planMinutes(pattern, shapes, analyses) {
+function planMinutes(
+  pattern: Pattern,
+  shapes: Shapes,
+  analyses: Analyses
+): PlanNode | undefined {
   if (shapes.minute === 'step') {
     return {
       hours: planFrequencyHours(pattern, shapes, analyses),
@@ -304,7 +340,11 @@ function planMinutes(pattern, shapes, analyses) {
 }
 
 // The hour qualification accompanying a minute-step cadence.
-function planFrequencyHours(pattern, shapes, analyses) {
+function planFrequencyHours(
+  pattern: Pattern,
+  shapes: Shapes,
+  analyses: Analyses
+): HoursPlan {
   if (shapes.hour === 'list') {
     return {kind: 'during', times: hourTimesPlan(pattern.hour)};
   }
@@ -338,7 +378,10 @@ function planFrequencyHours(pattern, shapes, analyses) {
 
 // A minute window (wildcard, plain range, or list containing ranges) under
 // discrete hours, or null when the shapes do not match.
-function planMinutesAcrossHours(pattern, shapes) {
+function planMinutesAcrossHours(
+  pattern: Pattern,
+  shapes: Shapes
+): PlanNode | null {
   if (!isDiscreteHours(pattern.hour)) {
     return null;
   }
@@ -365,7 +408,10 @@ function planMinutesAcrossHours(pattern, shapes) {
 }
 
 // Minute strategies that only stand on their own under a wildcard hour.
-function planMinutesUnderOpenHour(pattern, shapes) {
+function planMinutesUnderOpenHour(
+  pattern: Pattern,
+  shapes: Shapes
+): PlanNode | undefined {
   if (shapes.minute === 'range') {
     return {kind: 'rangeOfMinutes'};
   }
@@ -384,10 +430,14 @@ function planMinutesUnderOpenHour(pattern, shapes) {
 }
 
 // Hour strategies: the chain's last resort always produces a plan.
-function planHours(pattern, shapes, analyses) {
+function planHours(
+  pattern: Pattern,
+  shapes: Shapes,
+  analyses: Analyses
+): PlanNode {
   if (shapes.hour === 'range') {
     const bounds = pattern.hour.split('-');
-    let minuteForm = 'lead';
+    let minuteForm: 'lead' | 'wildcard' | 'range' = 'lead';
 
     if (pattern.minute === '*') {
       minuteForm = 'wildcard';
@@ -419,7 +469,7 @@ function planHours(pattern, shapes, analyses) {
 // Enumerated clock times up to the cap; past it, a compact form (a single
 // minute folds into hour-segment windows; a minute list leads with its own
 // clause).
-function planClockTimes(pattern, analyses) {
+function planClockTimes(pattern: Pattern, analyses: Analyses): PlanNode {
   const hours = enumerateFires(pattern.hour, 0, 23);
   const minutes = enumerateValues(pattern.minute);
 
@@ -431,7 +481,7 @@ function planClockTimes(pattern, analyses) {
     };
   }
 
-  const times = [];
+  const times: ClockTime[] = [];
 
   hours.forEach(function eachHour(hour) {
     minutes.forEach(function eachMinute(minute) {
@@ -444,7 +494,7 @@ function planClockTimes(pattern, analyses) {
 
 // The hour times accompanying a window phrase: enumerated fires up to the
 // cap, segment rendering past it.
-function hourTimesPlan(hourField) {
+function hourTimesPlan(hourField: string): HourTimesPlan {
   const fires = enumerateFires(hourField, 0, 23);
 
   if (fires.length <= maxClockTimes) {

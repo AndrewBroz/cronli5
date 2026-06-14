@@ -1,12 +1,18 @@
 // Parse cron input (string, array, or object) into a cron-like object.
 
 import {macros} from './specs.js';
+import type {CronLike} from './specs.js';
+import type {NormalizedOptions} from './ir.js';
+import type {CronPattern, CronPatternObject} from '../../cronli5.js';
 
 // Take a cron pattern as, a cron pattern string, an array of cron fields, a
 // cron-like object (see the final return statement for the format of a
 // cron-like object), or a stringable object that evaluates to a cron pattern
 // string. Returns a cron-like object.
-function parseCronPattern(cronPattern, opts) {
+function parseCronPattern(
+  cronPattern: CronPattern,
+  opts: NormalizedOptions
+): CronLike {
   const isArray = cronPattern instanceof Array;
   const isEmpty = cronPattern === null ||
     typeof cronPattern === 'undefined' ||
@@ -38,7 +44,10 @@ function parseCronPattern(cronPattern, opts) {
 // unambiguous (seconds first, year last); six fields default to seconds
 // first, with the `years` option reading the trailing field as a year
 // instead.
-function cronifyArray(cronlikeArray, opts) {
+function cronifyArray(
+  cronlikeArray: Array<string | number>,
+  opts: NormalizedOptions
+): CronLike {
   if (cronlikeArray.length > 7) {
     // Error messages are English for now (docs/i18n-design.md §8).
     throw new Error(
@@ -61,7 +70,7 @@ function cronifyArray(cronlikeArray, opts) {
 }
 
 // Turn an object that's already cron-like into a populated cron-like object.
-function cronifyObject(cronable) {
+function cronifyObject(cronable: CronPatternObject): CronLike {
   if (!cronable.second && !cronable.minute && !cronable.hour) {
     throw new Error(
       '`cronli5` expects that any object being interpreted as a cron ' +
@@ -88,12 +97,15 @@ function cronifyObject(cronable) {
 // Return a provided field value, or a fallback when the value is absent.
 // Unlike `||`, this preserves falsy-but-present values (e.g. `0`, `NaN`)
 // so that they can be flagged as invalid during validation.
-function pick(value, fallback) {
+function pick(
+  value: string | number | undefined,
+  fallback: string
+): string | number {
   return typeof value === 'undefined' ? fallback : value;
 }
 
 // Turn a string into a cron-like object.
-function cronifyString(cronString, opts) {
+function cronifyString(cronString: string, opts: NormalizedOptions): CronLike {
   const cronlikeArray = expandMacro(cronString).split(/\s+/);
 
   return cronifyArray(cronlikeArray, opts);
@@ -102,7 +114,7 @@ function cronifyString(cronString, opts) {
 // Expand a recognized nickname macro (e.g. `@daily`) into its equivalent
 // cron string, leaving any other string untouched. `@reboot` has no field
 // schedule and is handled directly in `cronli5`, before this point.
-function expandMacro(cronString) {
+function expandMacro(cronString: string): string {
   const trimmed = cronString.trim();
 
   if (trimmed.charAt(0) !== '@') {

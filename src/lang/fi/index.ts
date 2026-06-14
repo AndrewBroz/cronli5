@@ -11,10 +11,63 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {resolveDialect} from './dialects.js';
+import type {
+  ClockTime, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
+  Segment
+} from '../../core/ir.js';
+import type {Cronli5Options} from '../../../cronli5.js';
+
+// A step segment, the only Segment variant carrying `startToken`,
+// `interval`, and `fires`.
+type StepSegment = Extract<Segment, {kind: 'step'}>;
+
+// A segment after step-flattening: an original range/single, or a synthetic
+// single whose `value` is a raw fire number rather than a token string.
+type FlatSegment =
+  | Extract<Segment, {kind: 'range'}>
+  | {kind: 'single'; value: string | number};
+
+// An hour window: the shared `{from, to, last}` shape of the `window`
+// HoursPlan and the `hourRange` PlanNode that `hourWindow` reads.
+interface HourWindow {
+  from: number;
+  to: number;
+  last: number;
+}
+
+// The first segment of a step field, narrowed to its step variant. Step
+// shapes always classify their (single) segment as a step.
+function stepSegment(segments: Segment[]): StepSegment {
+  return segments[0] as StepSegment;
+}
+
+// A `{hour, minute, second?}` time end for the digit/range helpers.
+interface TimeParts {
+  hour: number;
+  minute: number;
+  second?: number | null;
+}
+
+// One of the inflected weekday forms stored per day.
+interface WeekdayForms {
+  ela: string;
+  ess: string;
+  ill: string;
+  isin: string;
+}
+
+// A unit's form table for the anchored-minute/second constructions.
+interface UnitForms {
+  mark: string;
+  anchor: string;
+  ela: string;
+  gen: string;
+  restart: string;
+}
 
 // Genitive numerals for the "N <unit>in välein" construction, spelled
 // 1-10 per Kotus, digits above.
-const genitives = [
+const genitives: (string | null)[] = [
   null,
   'yhden',
   'kahden',
@@ -29,7 +82,7 @@ const genitives = [
 ];
 
 // Nominative ordinals for "joka <N>. päivä" constructions.
-const ordinals = [
+const ordinals: (string | null)[] = [
   null,
   null,
   'toinen',
@@ -44,7 +97,7 @@ const ordinals = [
 ];
 
 // Genitive ordinals for "joka <N>:nnen kuukauden" chains.
-const ordinalGenitives = [
+const ordinalGenitives: (string | null)[] = [
   null,
   null,
   'toisen',
@@ -59,7 +112,7 @@ const ordinalGenitives = [
 ];
 
 // Essive ordinals for Quartz `n#m` occurrences (1-5).
-const nthWeekdayNames = [
+const nthWeekdayNames: (string | null)[] = [
   null,
   'ensimmäisenä',
   'toisena',
@@ -71,7 +124,7 @@ const nthWeekdayNames = [
 // Weekdays as stored inflected forms (SUN..SAT): distributive -isin,
 // elative, illative, and essive. Consonant gradation (keskiviikko →
 // keskiviikosta) makes stem+suffix logic wrong; store the forms.
-const weekdays = [
+const weekdays: WeekdayForms[] = [
   {ela: 'sunnuntaista', ess: 'sunnuntaina', ill: 'sunnuntaihin',
     isin: 'sunnuntaisin'},
   {ela: 'maanantaista', ess: 'maanantaina', ill: 'maanantaihin',
@@ -91,7 +144,7 @@ const weekdays = [
 // Month stems; every month ends in -kuu, so the case forms are uniformly
 // regular: -kuussa (inessive), -kuusta (elative), -kuuhun (illative),
 // -kuun (genitive).
-const monthStems = [
+const monthStems: (string | null)[] = [
   null,
   'tammi',
   'helmi',
@@ -109,11 +162,11 @@ const monthStems = [
 
 // Cron token vocabulary (JAN..DEC, SUN..SAT) is part of cron syntax; map
 // it to field numbers.
-const monthTokens = {
+const monthTokens: {[token: string]: number} = {
   JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
   JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
 };
-const weekdayTokens = {
+const weekdayTokens: {[token: string]: number} = {
   SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
 };
 
@@ -121,7 +174,7 @@ const weekdayTokens = {
 // `mark` is the frequency for the "N minuutin kohdalla" ("at the
 // N-minute mark") form; `anchor` is the possessive for the elative
 // offset form ("jokaisen tunnin minuutista 1 alkaen").
-const units = {
+const units: {minute: UnitForms; second: UnitForms} = {
   minute: {
     mark: 'joka tunti',
     anchor: 'jokaisen tunnin',
@@ -141,7 +194,7 @@ const units = {
 // "joka tunti 30 minuutin kohdalla" (with the mark) or "30 minuutin
 // kohdalla" (bare, when a specific hour clause follows). `values` is the
 // already-joined digit string ("30", "0 ja 30", "0–29").
-function atMarks(values, unit, withMark) {
+function atMarks(values: string, unit: UnitForms, withMark: boolean): string {
   const tail = values + ' ' + unit.gen + ' kohdalla';
 
   return withMark ? unit.mark + ' ' + tail : tail;
@@ -149,7 +202,7 @@ function atMarks(values, unit, withMark) {
 
 // Normalize raw user options. Written Finnish is 24-hour only, so the
 // `ampm` option is ignored (see notes.md).
-function normalizeOptions(options) {
+function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
   options = options || {};
 
   return {
@@ -163,26 +216,44 @@ function normalizeOptions(options) {
 }
 
 // Render an analyzed cron pattern (the IR) as Finnish.
-function describe(ir, opts) {
+function describe(ir: IR, opts: NormalizedOptions): string {
   return applyYear(render(ir, ir.plan, opts), ir, opts);
 }
 
 // Render one plan node. `composeSeconds` recurses with its `rest` plan.
-function render(ir, plan, opts) {
-  return renderers[plan.kind](ir, plan, opts);
+function render(ir: IR, plan: PlanNode, opts: NormalizedOptions): string {
+  // The renderers map each handles one `kind`; the dispatch indexes the
+  // union, which TypeScript cannot narrow per-key, so the lookup is cast
+  // to a renderer accepting this node's plan.
+  const renderer = renderers[plan.kind] as
+    (ir: IR, plan: PlanNode, opts: NormalizedOptions) => string;
+
+  return renderer(ir, plan, opts);
 }
 
 // --- Seconds renderers. ---
 
-function renderEverySecond(ir, plan, opts) {
+function renderEverySecond(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'everySecond'}>,
+  opts: NormalizedOptions
+): string {
   return 'joka sekunti' + trailingQualifier(ir, opts);
 }
 
-function renderStandaloneSeconds(ir, plan, opts) {
+function renderStandaloneSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'standaloneSeconds'}>,
+  opts: NormalizedOptions
+): string {
   return secondsLeadClause(ir, opts) + trailingQualifier(ir, opts);
 }
 
-function renderSecondPastMinute(ir, plan, opts) {
+function renderSecondPastMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'secondPastMinute'}>,
+  opts: NormalizedOptions
+): string {
   return atMarks(ir.pattern.second, units.second, true) +
     trailingQualifier(ir, opts);
 }
@@ -190,7 +261,11 @@ function renderSecondPastMinute(ir, plan, opts) {
 // A meaningful second combined with a single specific minute (and an
 // open hour): a single second folds into one shared "kohdalla"; a list,
 // range, or step leads with its own clause.
-function renderSecondsWithinMinute(ir, plan, opts) {
+function renderSecondsWithinMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'secondsWithinMinute'}>,
+  opts: NormalizedOptions
+): string {
   const minuteField = ir.pattern.minute;
 
   if (plan.singleSecond) {
@@ -203,12 +278,16 @@ function renderSecondsWithinMinute(ir, plan, opts) {
     atMarks(minuteField, units.minute, true) + trailingQualifier(ir, opts);
 }
 
-function renderComposeSeconds(ir, plan, opts) {
+function renderComposeSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
+  opts: NormalizedOptions
+): string {
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
 }
 
 // The leading clause describing a second field relative to the minute.
-function secondsLeadClause(ir, opts) {
+function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
   const secondField = ir.pattern.second;
   const shape = ir.shapes.second;
 
@@ -217,54 +296,77 @@ function secondsLeadClause(ir, opts) {
   }
 
   if (shape === 'step') {
-    return stepCycle60(ir.analyses.segments.second[0], units.second, opts);
+    // A step shape always has segments whose first is a step segment.
+    return stepCycle60(stepSegment(ir.analyses.segments.second!),
+      units.second, opts);
   }
 
   if (shape === 'single') {
     return atMarks(secondField, units.second, true);
   }
 
-  return atMarks(joinList(segmentWords(ir.analyses.segments.second)),
+  return atMarks(joinList(segmentWords(ir.analyses.segments.second!)),
     units.second, true);
 }
 
 // --- Minute renderers. ---
 
-function renderEveryMinute(ir, plan, opts) {
+function renderEveryMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'everyMinute'}>,
+  opts: NormalizedOptions
+): string {
   return 'joka minuutti' + trailingQualifier(ir, opts);
 }
 
-function renderSingleMinute(ir, plan, opts) {
+function renderSingleMinute(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'singleMinute'}>,
+  opts: NormalizedOptions
+): string {
   return atMarks(ir.pattern.minute, units.minute, true) +
     trailingQualifier(ir, opts);
 }
 
-function renderRangeOfMinutes(ir, plan, opts) {
+function renderRangeOfMinutes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'rangeOfMinutes'}>,
+  opts: NormalizedOptions
+): string {
   return minutesList(ir) + trailingQualifier(ir, opts);
 }
 
-function renderMultipleMinutes(ir, plan, opts) {
+function renderMultipleMinutes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'multipleMinutes'}>,
+  opts: NormalizedOptions
+): string {
   return minutesList(ir) + trailingQualifier(ir, opts);
 }
 
 // "joka tunti 0, 15 ja 30 minuutin kohdalla" (or a dash range).
-function minutesList(ir) {
-  return atMarks(joinList(segmentWords(ir.analyses.segments.minute)),
+function minutesList(ir: IR): string {
+  return atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
     units.minute, true);
 }
 
 // The bare minute mark, for clauses where a specific hour follows and
 // the "joka tunti" frequency would be redundant: "0–30 minuutin
 // kohdalla".
-function bareMinutes(ir) {
-  return atMarks(joinList(segmentWords(ir.analyses.segments.minute)),
+function bareMinutes(ir: IR): string {
+  return atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
     units.minute, false);
 }
 
 // A repeating minute step, qualified by the active hour window(s).
-function renderMinuteFrequency(ir, plan, opts) {
-  let phrase = stepCycle60(ir.analyses.segments.minute[0], units.minute,
-    opts);
+function renderMinuteFrequency(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minuteFrequency'}>,
+  opts: NormalizedOptions
+): string {
+  // A minute-step plan's first minute segment is always a step segment.
+  let phrase = stepCycle60(stepSegment(ir.analyses.segments.minute!),
+    units.minute, opts);
 
   if (plan.hours.kind === 'during') {
     phrase += ' ' + hourWindowsFromTimes(ir, plan.hours.times, opts);
@@ -273,14 +375,18 @@ function renderMinuteFrequency(ir, plan, opts) {
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    phrase += hourStepTail(ir.analyses.segments.hour[0], opts);
+    phrase += hourStepTail(stepSegment(ir.analyses.segments.hour!), opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
 }
 
 // "joka minuutti klo 9.00–9.59".
-function renderMinuteSpanInHour(ir, plan, opts) {
+function renderMinuteSpanInHour(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
+  opts: NormalizedOptions
+): string {
   return 'joka minuutti ' +
     kloRange({hour: plan.hour, minute: plan.span[0]},
       {hour: plan.hour, minute: plan.span[1]}, opts) +
@@ -290,7 +396,11 @@ function renderMinuteSpanInHour(ir, plan, opts) {
 // A minute window under discrete hours. Like Spanish, the wildcard form
 // re-strategizes to per-hour windows; restricted minutes drop the
 // "jokaisen tunnin" anchor, which the specific hours would contradict.
-function renderMinutesAcrossHours(ir, plan, opts) {
+function renderMinutesAcrossHours(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minutesAcrossHours'}>,
+  opts: NormalizedOptions
+): string {
   if (plan.form === 'wildcard') {
     return 'joka minuutti ' + hourWindowsFromTimes(ir, plan.times, opts) +
       trailingQualifier(ir, opts);
@@ -300,8 +410,13 @@ function renderMinutesAcrossHours(ir, plan, opts) {
     trailingQualifier(ir, opts);
 }
 
-function renderMinuteSpanAcrossHourStep(ir, plan, opts) {
-  const segment = ir.analyses.segments.hour[0];
+function renderMinuteSpanAcrossHourStep(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>,
+  opts: NormalizedOptions
+): string {
+  // An hour-step plan's first hour segment is always a step segment.
+  const segment = stepSegment(ir.analyses.segments.hour!);
 
   // A wildcard span always sets the step off with a comma ("joka
   // minuutti, joka toinen tunti"); a restricted span joins a plain step
@@ -317,12 +432,13 @@ function renderMinuteSpanAcrossHourStep(ir, plan, opts) {
 
 // Whether an hour step reads as the plain "joka toinen tunti" form: a
 // wildcard start whose interval divides the day.
-function plainHourStep(segment) {
+function plainHourStep(segment: StepSegment): boolean {
   return segment.startToken === '*' && 24 % segment.interval === 0;
 }
 
 // The step phrase itself, in whichever form applies.
-function plainOrFullHourStep(segment, opts) {
+function plainOrFullHourStep(segment: StepSegment, opts: NormalizedOptions):
+  string {
   if (plainHourStep(segment)) {
     return 'joka ' + ordinal(segment.interval, opts) + ' tunti';
   }
@@ -333,7 +449,7 @@ function plainOrFullHourStep(segment, opts) {
 // The hour-step tail of a minute clause. A plain dividing step joins
 // with a space ("minuuteilla 0–30 joka toinen tunti") to avoid stacking
 // two väleins; anything else sets off with a comma.
-function hourStepTail(segment, opts) {
+function hourStepTail(segment: StepSegment, opts: NormalizedOptions): string {
   const sep = plainHourStep(segment) ? ' ' : ', ';
 
   return sep + plainOrFullHourStep(segment, opts);
@@ -341,11 +457,19 @@ function hourStepTail(segment, opts) {
 
 // --- Hour renderers. ---
 
-function renderEveryHour(ir, plan, opts) {
+function renderEveryHour(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'everyHour'}>,
+  opts: NormalizedOptions
+): string {
   return 'joka tunti' + trailingQualifier(ir, opts);
 }
 
-function renderHourRange(ir, plan, opts) {
+function renderHourRange(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'hourRange'}>,
+  opts: NormalizedOptions
+): string {
   const window = hourWindow(plan, opts);
 
   if (plan.minuteForm === 'wildcard') {
@@ -373,20 +497,28 @@ function renderHourRange(ir, plan, opts) {
   return minutesList(ir) + ' ' + window + trailingQualifier(ir, opts);
 }
 
-function renderHourStep(ir, plan, opts) {
-  return stepHours(ir.analyses.segments.hour[0], opts) +
+function renderHourStep(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'hourStep'}>,
+  opts: NormalizedOptions
+): string {
+  return stepHours(stepSegment(ir.analyses.segments.hour!), opts) +
     trailingQualifier(ir, opts);
 }
 
 // "klo 9.00–17.45": a window from the top of the first hour to the
 // minute field's last fire within the final hour.
-function hourWindow(window, opts) {
+function hourWindow(window: HourWindow, opts: NormalizedOptions): string {
   return kloRange({hour: window.from, minute: 0},
     {hour: window.to, minute: window.last}, opts);
 }
 
 // "joka päivä klo 9.30 ja 17.30".
-function renderClockTimes(ir, plan, opts) {
+function renderClockTimes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'clockTimes'}>,
+  opts: NormalizedOptions
+): string {
   if (plan.times.length === 1) {
     const time = plan.times[0];
 
@@ -394,7 +526,7 @@ function renderClockTimes(ir, plan, opts) {
       timeWord(time.hour, time.minute, time.second, opts);
   }
 
-  const digits = plan.times.map(function clock(time) {
+  const digits = plan.times.map(function clock(time: ClockTime) {
     return timeDigits(time.hour, time.minute, time.second, opts);
   });
 
@@ -403,7 +535,11 @@ function renderClockTimes(ir, plan, opts) {
 
 // Compact form past the enumeration cap: a single minute folds into
 // per-segment hour windows; a minute list leads with its own clause.
-function renderCompactClockTimes(ir, plan, opts) {
+function renderCompactClockTimes(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'compactClockTimes'}>,
+  opts: NormalizedOptions
+): string {
   if (plan.fold) {
     return leadingQualifier(ir, opts) +
       hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
@@ -443,7 +579,11 @@ const renderers = {
 
 // "viiden minuutin välein", "joka tunti 0 ja 31 minuutin kohdalla", or
 // "kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen".
-function stepCycle60(segment, unit, opts) {
+function stepCycle60(
+  segment: StepSegment,
+  unit: UnitForms,
+  opts: NormalizedOptions
+): string {
   if (segment.startToken.indexOf('-') !== -1) {
     return atMarks(joinList(wordList(segment.fires)), unit, true);
   }
@@ -474,7 +614,7 @@ function stepCycle60(segment, unit, opts) {
 
 // "kahden tunnin välein", "klo 0, 10 ja 20", or "viiden tunnin välein
 // klo 1 alkaen".
-function stepHours(segment, opts) {
+function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
   if (segment.startToken.indexOf('-') !== -1) {
     return kloList(segment.fires, opts);
   }
@@ -501,19 +641,23 @@ function stepHours(segment, opts) {
 // --- Hour-time phrasing. ---
 
 // On-the-hour fires as one klo phrase: "klo 0, 10 ja 20".
-function kloList(hours, opts) {
+function kloList(hours: number[], opts: NormalizedOptions): string {
   if (hours.length === 1) {
     return timeWord(hours[0], 0, null, opts);
   }
 
-  return 'klo ' + joinList(hours.map(function digitsOf(hour) {
+  return 'klo ' + joinList(hours.map(function digitsOf(hour: number) {
     return timeDigits(hour, 0, null, opts);
   }));
 }
 
 // The hour times accompanying a lead clause, with long expansions
 // rendered segment by segment.
-function kloFromTimes(ir, times, opts) {
+function kloFromTimes(
+  ir: IR,
+  times: HourTimesPlan,
+  opts: NormalizedOptions
+): string {
   if (times.kind === 'fires') {
     return kloList(times.fires, opts);
   }
@@ -524,22 +668,26 @@ function kloFromTimes(ir, times, opts) {
 // Each fire hour as its own one-hour dash window under a single klo:
 // "klo 9.00–9.59 ja 17.00–17.59". Finnish prefers this to the English
 // "during the 9 a.m. and 5 p.m. hours" shape.
-function hourWindowsFromTimes(ir, times, opts) {
+function hourWindowsFromTimes(
+  ir: IR,
+  times: HourTimesPlan,
+  opts: NormalizedOptions
+): string {
   if (times.kind === 'fires') {
-    return 'klo ' + joinList(times.fires.map(function window(hour) {
+    return 'klo ' + joinList(times.fires.map(function window(hour: number) {
       return hourWindowDigits(hour, opts);
     }));
   }
 
-  const pieces = [];
+  const pieces: string[] = [];
 
-  ir.analyses.segments.hour.forEach(function window(segment) {
+  ir.analyses.segments.hour!.forEach(function window(segment: Segment) {
     if (segment.kind === 'range') {
       pieces.push(rangeDigits({hour: +segment.bounds[0], minute: 0},
         {hour: +segment.bounds[1], minute: 59}, opts));
     }
     else if (segment.kind === 'step') {
-      pieces.push(...segment.fires.map(function each(hour) {
+      pieces.push(...segment.fires.map(function each(hour: number) {
         return hourWindowDigits(hour, opts);
       }));
     }
@@ -552,19 +700,24 @@ function hourWindowsFromTimes(ir, times, opts) {
 }
 
 // "9.00–9.59": one hour as a dash window, in digits.
-function hourWindowDigits(hour, opts) {
+function hourWindowDigits(hour: number, opts: NormalizedOptions): string {
   return rangeDigits({hour, minute: 0}, {hour, minute: 59}, opts);
 }
 
 // Clock times for the hour field rendered segment by segment under one
 // klo, the minute (and optional second) folded into each:
 // "klo 9.30–20.30 ja 22.30".
-function hourSegmentTimes(ir, minute, second, opts) {
-  const pieces = [];
+function hourSegmentTimes(
+  ir: IR,
+  minute: number,
+  second: number | null | undefined,
+  opts: NormalizedOptions
+): string {
+  const pieces: string[] = [];
 
-  ir.analyses.segments.hour.forEach(function clock(segment) {
+  ir.analyses.segments.hour!.forEach(function clock(segment: Segment) {
     if (segment.kind === 'step') {
-      pieces.push(...segment.fires.map(function each(hour) {
+      pieces.push(...segment.fires.map(function each(hour: number) {
         return timeDigits(hour, minute, second, opts);
       }));
     }
@@ -585,12 +738,20 @@ function hourSegmentTimes(ir, minute, second, opts) {
 
 // "klo 9.00–17.45" between two `{hour, minute, second}` ends; both ends
 // on the hour read bare ("klo 9–17") per SFS 4175.
-function kloRange(from, to, opts) {
+function kloRange(
+  from: TimeParts,
+  to: TimeParts,
+  opts: NormalizedOptions
+): string {
   return 'klo ' + rangeDigits(from, to, opts);
 }
 
 // The dash-range digits, without the klo.
-function rangeDigits(from, to, opts) {
+function rangeDigits(
+  from: TimeParts,
+  to: TimeParts,
+  opts: NormalizedOptions
+): string {
   const bare = !from.minute && !from.second && !to.minute && !to.second;
 
   if (bare) {
@@ -601,12 +762,20 @@ function rangeDigits(from, to, opts) {
 }
 
 // "9.00" — a range end always shows its minutes so both sides match.
-function paddedDigits(time, opts) {
-  return clockDigits(time, {sep: opts.style.sep});
+function paddedDigits(time: TimeParts, opts: NormalizedOptions): string {
+  // `clockDigits` reads a non-null second; the null/undefined holes here
+  // are falsy and drop out the same way.
+  return clockDigits(time as {hour: number; minute: number; second?: number},
+    {sep: opts.style.sep});
 }
 
 // A standalone time: "keskiyöllä", "keskipäivällä", or "klo 9.30".
-function timeWord(hour, minute, second, opts) {
+function timeWord(
+  hour: number,
+  minute: number,
+  second: number | null | undefined,
+  opts: NormalizedOptions
+): string {
   if (!minute && !second) {
     if (+hour === 0) {
       return 'keskiyöllä';
@@ -622,8 +791,15 @@ function timeWord(hour, minute, second, opts) {
 
 // The digit form joined into klo lists: "9", "9.30", or "9.30.15".
 // Lists keep uniform digits (no keskiyö words; see notes.md).
-function timeDigits(hour, minute, second, opts) {
-  return clockDigits({hour, minute, second},
+function timeDigits(
+  hour: number,
+  minute: number,
+  second: number | null | undefined,
+  opts: NormalizedOptions
+): string {
+  // `clockDigits` reads a non-null second; null/undefined holes are falsy
+  // and render as no second, the same as runtime.
+  return clockDigits({hour, minute, second: second as number | undefined},
     {lean: true, sep: opts.style.sep});
 }
 
@@ -631,7 +807,7 @@ function timeDigits(hour, minute, second, opts) {
 
 // The qualifier that precedes clock times: "joka päivä ",
 // "maanantaisin ", "kuukauden 13. päivänä ".
-function leadingQualifier(ir, opts) {
+function leadingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
   if (pattern.date !== '*' && pattern.weekday !== '*') {
@@ -655,7 +831,7 @@ function leadingQualifier(ir, opts) {
 
 // The qualifier trailing a frequency: " maanantaisin", " kesäkuussa",
 // " kuukauden 13. päivänä". Empty when no day-level field is set.
-function trailingQualifier(ir, opts) {
+function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
   if (pattern.date !== '*' && pattern.weekday !== '*') {
@@ -681,7 +857,7 @@ function trailingQualifier(ir, opts) {
 // date or the weekday matches. A ranged month scopes the whole
 // alternation once ("kuukauden 1. päivänä tai perjantaisin kesäkuusta
 // syyskuuhun") — the case endings need no comma.
-function dateOrWeekday(ir, opts) {
+function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   if (monthRanged(ir)) {
     return monthAnchor(ir, opts) + ' ' + dateWords(ir) + ' päivänä tai ' +
       weekdayQualifier(ir) + ' ' + monthPhrase(ir);
@@ -694,16 +870,16 @@ function dateOrWeekday(ir, opts) {
 // The weekday qualifier: distributive lists ("maanantaisin,
 // keskiviikkoisin ja perjantaisin") and elative–illative ranges
 // ("maanantaista perjantaihin"). Step segments flatten into their fires.
-function weekdayQualifier(ir) {
+function weekdayQualifier(ir: IR): string {
   const quartz = quartzWeekdayPhrase(ir.pattern.weekday);
 
   if (quartz) {
     return quartz;
   }
 
-  const segments = flattenSteps(ir.analyses.segments.weekday);
+  const segments = flattenSteps(ir.analyses.segments.weekday!);
 
-  return joinList(segments.map(function piece(segment) {
+  return joinList(segments.map(function piece(segment: FlatSegment) {
     if (segment.kind === 'range') {
       return weekdays[weekdayNumber(segment.bounds[0])].ela + ' ' +
         weekdays[weekdayNumber(segment.bounds[1])].ill;
@@ -716,10 +892,10 @@ function weekdayQualifier(ir) {
 // The month qualifier: inessive names ("kesäkuussa ja joulukuussa") and
 // elative–illative ranges ("kesäkuusta syyskuuhun"). The case endings
 // keep mixed lists unambiguous with no preposition bookkeeping.
-function monthPhrase(ir) {
-  const segments = flattenSteps(ir.analyses.segments.month);
+function monthPhrase(ir: IR): string {
+  const segments = flattenSteps(ir.analyses.segments.month!);
 
-  return joinList(segments.map(function piece(segment) {
+  return joinList(segments.map(function piece(segment: FlatSegment) {
     if (segment.kind === 'range') {
       return monthStems[monthNumber(segment.bounds[0])] + 'kuusta ' +
         monthStems[monthNumber(segment.bounds[1])] + 'kuuhun';
@@ -731,7 +907,7 @@ function monthPhrase(ir) {
 
 // A trailing month scope on weekday qualifiers ("maanantaisin
 // kesäkuussa").
-function monthScope(ir) {
+function monthScope(ir: IR): string {
   if (ir.pattern.month === '*') {
     return '';
   }
@@ -741,10 +917,10 @@ function monthScope(ir) {
 
 // Expand step segments into their fires as singles: the flat fires read
 // naturally where a raw token or nested list would not.
-function flattenSteps(segments) {
-  return segments.flatMap(function flat(segment) {
+function flattenSteps(segments: Segment[]): FlatSegment[] {
+  return segments.flatMap(function flat(segment): FlatSegment[] {
     return segment.kind === 'step' ?
-      segment.fires.map(function single(value) {
+      segment.fires.map(function single(value): FlatSegment {
         return {kind: 'single', value};
       }) :
       [segment];
@@ -754,7 +930,7 @@ function flattenSteps(segments) {
 // The date qualifier: "kuukauden 13. päivänä", "tammikuun 1. päivänä",
 // "joka kolmannen kuukauden 1. päivänä", or a Quartz phrase. A foldable
 // single year joins the date ("joulukuun 25. päivänä vuonna 2030").
-function datePhrase(ir, opts) {
+function datePhrase(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
   const quartz = quartzDatePhrase(pattern.date);
 
@@ -773,7 +949,7 @@ function datePhrase(ir, opts) {
 // " helmikuusta alkaen" trailing the date words when an open month step
 // starts past January (Finnish word order puts the start marker after
 // the whole date phrase, not inside the genitive chain).
-function monthStepStart(monthField) {
+function monthStepStart(monthField: string): string {
   if (!isOpenStep(monthField)) {
     return '';
   }
@@ -791,7 +967,7 @@ function monthStepStart(monthField) {
 // "tammikuun", "kesäkuun ja joulukuun", or "joka kolmannen kuukauden". A
 // ranged month cannot take the genitive, so it scopes the date from
 // behind instead (rangedMonthScope).
-function monthAnchor(ir, opts) {
+function monthAnchor(ir: IR, opts: NormalizedOptions): string {
   const monthField = ir.pattern.month;
 
   if (monthField === '*' || monthRanged(ir)) {
@@ -802,36 +978,41 @@ function monthAnchor(ir, opts) {
     return stepMonths(monthField, opts);
   }
 
-  const segments = flattenSteps(ir.analyses.segments.month);
+  const segments = flattenSteps(ir.analyses.segments.month!);
 
-  return joinList(segments.map(function genitiveOf(segment) {
-    return monthStems[monthNumber(segment.value)] + 'kuun';
+  return joinList(segments.map(function genitiveOf(segment: FlatSegment) {
+    // The anchor branch is only reached for non-ranged months, so every
+    // flattened segment here is a single.
+    const single = segment as Extract<FlatSegment, {kind: 'single'}>;
+
+    return monthStems[monthNumber(single.value)] + 'kuun';
   }));
 }
 
 // " kesäkuusta syyskuuhun" trailing a date under a ranged month.
-function rangedMonthScope(ir) {
+function rangedMonthScope(ir: IR): string {
   return monthRanged(ir) ? ' ' + monthPhrase(ir) : '';
 }
 
 // Whether the month field contains a range segment.
-function monthRanged(ir) {
+function monthRanged(ir: IR): boolean {
   return ir.pattern.month !== '*' &&
-    ir.analyses.segments.month.some(function range(segment) {
+    ir.analyses.segments.month!.some(function range(segment: Segment) {
       return segment.kind === 'range';
     });
 }
 
 // The day-of-month words: "13.", "1. ja 15.", "1.–15.", with step
 // segments expanded into their fires.
-function dateWords(ir) {
-  return joinList(ir.analyses.segments.date.flatMap(function word(segment) {
+function dateWords(ir: IR): string {
+  return joinList(ir.analyses.segments.date!.flatMap(
+    function word(segment: Segment): string[] {
     if (segment.kind === 'range') {
       return [segment.bounds[0] + '.–' + segment.bounds[1] + '.'];
     }
 
     if (segment.kind === 'step') {
-      return segment.fires.map(function each(value) {
+      return segment.fires.map(function each(value: number) {
         return value + '.';
       });
     }
@@ -842,7 +1023,7 @@ function dateWords(ir) {
 
 // Open day-of-month steps: "joka toinen päivä",
 // "joka kolmas päivä 5. päivästä alkaen".
-function stepDates(dateField, opts) {
+function stepDates(dateField: string, opts: NormalizedOptions): string {
   const parts = dateField.split('/');
   let phrase = 'joka ' + ordinal(+parts[1], opts) + ' päivä';
 
@@ -856,13 +1037,13 @@ function stepDates(dateField, opts) {
 // Open month steps under a date, as a genitive chain:
 // "joka kolmannen kuukauden". An offset start trails the date words
 // (monthStepStart).
-function stepMonths(monthField, opts) {
+function stepMonths(monthField: string, opts: NormalizedOptions): string {
   return 'joka ' + ordinalGenitive(+monthField.split('/')[1], opts) +
     ' kuukauden';
 }
 
 // The Quartz date phrases.
-function quartzDatePhrase(dateField) {
+function quartzDatePhrase(dateField: string): string | undefined {
   if (dateField === 'L') {
     return 'kuukauden viimeisenä päivänä';
   }
@@ -889,7 +1070,7 @@ function quartzDatePhrase(dateField) {
 
 // The Quartz weekday phrases: "kuukauden viimeisenä perjantaina",
 // "kuukauden toisena maanantaina".
-function quartzWeekdayPhrase(weekdayField) {
+function quartzWeekdayPhrase(weekdayField: string): string | undefined {
   const parts = weekdayField.split('#');
 
   if (parts.length === 2) {
@@ -904,7 +1085,7 @@ function quartzWeekdayPhrase(weekdayField) {
 }
 
 // Resolve a weekday token or number to its table index.
-function weekdayNumber(token) {
+function weekdayNumber(token: string | number): number {
   if (token in weekdayTokens) {
     return weekdayTokens[token];
   }
@@ -913,7 +1094,7 @@ function weekdayNumber(token) {
 }
 
 // Resolve a month token or number to its table index.
-function monthNumber(token) {
+function monthNumber(token: string | number): number {
   return monthTokens[token] || +token;
 }
 
@@ -921,7 +1102,11 @@ function monthNumber(token) {
 
 // Append or fold the year field. An explicitly supplied year is always
 // rendered.
-function applyYear(description, ir, opts) {
+function applyYear(
+  description: string,
+  ir: IR,
+  opts: NormalizedOptions
+): string {
   const yearField = ir.pattern.year;
 
   if (yearField === '*') {
@@ -951,7 +1136,7 @@ function applyYear(description, ir, opts) {
 
 // "joka vuosi", "joka toinen vuosi", "joka kolmas vuosi vuodesta 2030
 // alkaen".
-function stepYears(yearField, opts) {
+function stepYears(yearField: string, opts: NormalizedOptions): string {
   const parts = yearField.split('/');
   const interval = +parts[1];
   let phrase = interval === 1 ?
@@ -966,7 +1151,7 @@ function stepYears(yearField, opts) {
 }
 
 // " vuonna 2030" when a single year can fold into a calendar date.
-function foldedYear(ir) {
+function foldedYear(ir: IR): string {
   const yearField = ir.pattern.year;
 
   if (yearField === '*' || yearField.indexOf('/') !== -1 ||
@@ -981,8 +1166,8 @@ function foldedYear(ir) {
 
 // Render classified segments as digit words: ranges as dash pairs, steps
 // as their enumerated fires.
-function segmentWords(segments) {
-  return segments.flatMap(function word(segment) {
+function segmentWords(segments: Segment[]): string[] {
+  return segments.flatMap(function word(segment: Segment): string[] {
     if (segment.kind === 'range') {
       return [segment.bounds[0] + '–' + segment.bounds[1]];
     }
@@ -998,27 +1183,27 @@ function segmentWords(segments) {
 // Whether a canonical field value is an "open" step (`*/n` or `a/n`, not
 // a bounded range or a list). Open steps read as a frequency rather than
 // an enumeration.
-function isOpenStep(field) {
+function isOpenStep(field: string): boolean {
   return field.indexOf('/') !== -1 && field.indexOf('-') === -1 &&
     field.indexOf(',') === -1;
 }
 
 // Numeric fire values as digits.
-function wordList(fires) {
-  return fires.map(function digit(value) {
+function wordList(fires: number[]): string[] {
+  return fires.map(function digit(value: number) {
     return '' + value;
   });
 }
 
 // The genitive numeral for "N <unit>in välein": spelled through ten,
 // digits above (and always digits with `short`).
-function genitive(n, opts) {
+function genitive(n: number, opts: NormalizedOptions): string | number {
   return numeral(n, genitives, opts);
 }
 
 // The nominative ordinal for "joka <N>. päivä": spelled through ten,
 // digits with a period above (and with `short`).
-function ordinal(n, opts) {
+function ordinal(n: number, opts: NormalizedOptions): string | null {
   if (!opts.short && n <= 10) {
     return ordinals[n];
   }
@@ -1027,7 +1212,7 @@ function ordinal(n, opts) {
 }
 
 // The genitive ordinal for "joka <N>:nnen kuukauden" chains.
-function ordinalGenitive(n, opts) {
+function ordinalGenitive(n: number, opts: NormalizedOptions): string | null {
   if (!opts.short && n <= 10) {
     return ordinalGenitives[n];
   }
@@ -1037,7 +1222,7 @@ function ordinalGenitive(n, opts) {
 
 // Join a list with commas and a terminal "ja". Finnish takes no comma
 // before "ja" in enumerations.
-function joinList(items) {
+function joinList(items: string[]): string {
   if (items.length <= 1) {
     return items.join('');
   }
@@ -1047,9 +1232,11 @@ function joinList(items) {
 
 // The Finnish language module: the IR renderer plus the language-owned
 // strings and option normalization.
-export default {
+const fi: Language = {
   describe,
   fallback: 'tunnistamaton cron-lauseke',
   options: normalizeOptions,
   reboot: 'järjestelmän käynnistyessä'
 };
+
+export default fi;

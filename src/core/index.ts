@@ -4,20 +4,21 @@
 // See docs/i18n-design.md.
 
 import {applyQuartzAliases, normalizeCronPattern} from './normalize.js';
+import type {NormalizedOptions, Pattern} from './ir.js';
 import {parseCronPattern} from './parse.js';
+import type {CronPattern} from '../../cronli5.js';
 import {validateCronPattern} from './validate.js';
 
 // Parse, alias, validate, and normalize cron input into a canonical
 // cron-like object of string fields, ready for semantic analysis and
 // rendering.
-function prepare(cronPattern, opts) {
+function prepare(cronPattern: CronPattern, opts: NormalizedOptions): Pattern {
   const pattern = parseCronPattern(cronPattern, opts);
 
   applyQuartzAliases(pattern);
   validateCronPattern(pattern);
-  normalizeCronPattern(pattern);
 
-  return pattern;
+  return normalizeCronPattern(pattern);
 }
 
 export {prepare};
