@@ -6,18 +6,11 @@
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/cronli5)](https://bundlephobia.com/package/cronli5)
 [![license](https://img.shields.io/github/license/andrewbroz/cronli5.svg)](./LICENSE.md)
 
-Generate plain-language descriptions of schedules from cron patterns.
-English is the default language, with [Spanish and Finnish](#languages)
-available as importable language modules. Accepts classic (five-part)
-cron patterns, extended (six-part) cron patterns, where the first field
-is assumed to refer to seconds, and full seven-part (Quartz-style) patterns
-with a trailing year. Accepts the standard allowed values and the following
-operators: asterisks (`*`), commas (`,`), hyphens (`-`), and slashes (`/`).
-Ranges in cyclic fields may wrap around (`22-2` is an overnight window;
-`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the
-date and weekday fields: `L` (last day, or `5L` for the last Friday), `W`
-(nearest weekday, e.g. `15W`), `#` (nth weekday, e.g. `1#2` for the second
-Monday), and `?` (no specific value).
+## Overview
+
+Cron Like I'm Five (`cronli5`) generates plain-language, idiomatically
+rendered descriptions of schedules from cron patterns in
+[several languages](#languages).
 
 - **Zero runtime dependencies** &mdash; tiny and safe to drop into any project.
 - **Runs anywhere** &mdash; ships ESM, CommonJS, and a browser global.
@@ -28,9 +21,21 @@ Monday), and `?` (no specific value).
 - **Multilingual** &mdash; each language is a full renderer, not a filled
   template, shipped as its own module (`cronli5/lang/es`); you bundle
   only the languages you import.
+- **Input Formats** &mdash;  Accepts classic (five-part) cron patterns, extended
+  (six-part) cron patterns, where the first field is assumed to refer to seconds,
+  and full seven-part (Quartz-style) patterns with a trailing year. See [Input Formats](#input-formats) for details.
+
+`cronli5` is a good library to use if you need to display a natural-language
+interpretation of a cron pattern in a Node or in a browser environment. If you
+need to do other things with cron patterns, such as scheduling or computing
+future run times, consider a library like [`@breejs/later`][later]. The main
+alternative for descriptions is [`cRonstrue`][cronstrue] &mdash; see the
+[head-to-head comparison](#cronli5-vs-cronstrue) below for how the two differ
+and which to pick.
 
 ## Contents
 
+- [Overview](#overview)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Options](#options)
@@ -43,14 +48,6 @@ Monday), and `?` (no specific value).
 - [Development](#development)
 - [About](#about)
 - [License](#license)
-
-`cronli5` is a good library to use if you need to display a natural-language
-interpretation of a cron pattern in a Node or in a browser environment. If you
-need to do other things with cron patterns, such as scheduling or computing
-future run times, consider a library like [`@breejs/later`][later]. The main
-alternative for descriptions is [`cRonstrue`][cronstrue] &mdash; see the
-[head-to-head comparison](#cronli5-vs-cronstrue) below for how the two differ
-and which to pick.
 
 ## Installation
 
@@ -106,6 +103,28 @@ As a command line tool:
 $ cronli5 "*/5 * * * *"
 Runs every five minutes.
 ```
+
+## Input Formats
+
+`cronli5` accepts classic (five-part) cron patterns, extended (six-part) cron
+patterns, where the first field is assumed to refer to seconds, and full seven-part
+(Quartz-style) patterns with a trailing year.
+
+It accepts the standard allowed values and the following operators:
+- asterisks (`*`)
+- commas (`,`)
+- hyphens (`-`)
+- slashes (`/`).
+
+### Cron Aliases
+
+`@daily` and other cron aliases are supported.
+
+### Extended Format Support
+
+Ranges in cyclic fields may wrap around (`22-2` is an overnight window, and
+`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the date and weekday fields: `L` (last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`), `#` (nth weekday, e.g. `1#2` for the second Monday), and `?` (no specific
+value).
 
 ## Options
 
