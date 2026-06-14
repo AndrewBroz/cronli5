@@ -15,7 +15,7 @@ import type {
   ClockTime, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
   Segment
 } from '../../core/ir.js';
-import type {Cronli5Options} from '../../../cronli5.js';
+import type {Cronli5Options} from '../../types.js';
 
 // A step segment, the only Segment variant carrying `startToken`,
 // `interval`, and `fires`.

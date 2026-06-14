@@ -9,7 +9,7 @@
 // lists render as per-hour windows).
 
 import {clockDigits, numeral} from '../../core/format.js';
-import type {Cronli5Options} from '../../../cronli5.js';
+import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
   Segment

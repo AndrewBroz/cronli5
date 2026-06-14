@@ -11,3 +11,5 @@ coverage
 
 # Scratch output (review packets, generated tables for human review).
 tmp
+# Generated type declarations.
+types

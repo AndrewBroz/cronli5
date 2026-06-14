@@ -2,7 +2,7 @@
 // default `es` style is anchored to the RAE's Diccionario panhispánico de
 // dudas and FundéuRAE recommendations (see notes.md). Custom objects merge
 // over the `es` defaults.
-import type {Cronli5Options} from '../../../cronli5.js';
+import type {Cronli5Options} from '../../types.js';
 import type {DialectStyle} from '../../core/ir.js';
 
 const dialects: {[name: string]: DialectStyle} = {

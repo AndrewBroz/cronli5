@@ -1,9 +1,10 @@
 // An Intermediate Representation (`IR`) is the semantic contract between
-// the core and a language renderer. The core (parse → validate → normalize → analyze)
-// produces an IR, then a language module renders it to prose. These shapes
-// are what any new language module interacts with. See docs/i18n-design.md.
+// the core and a language renderer. The core (parse → validate →
+// normalize → analyze) produces an IR, then a language module renders it to
+// prose. These shapes are what any new language module interacts with. See
+// docs/i18n-design.md.
 
-import type {Cronli5Options} from '../../cronli5.js';
+import type {Cronli5Options} from '../types.js';
 
 /** A cron field name, in canonical order. */
 export type Field =

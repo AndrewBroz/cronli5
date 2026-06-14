@@ -1,6 +1,6 @@
 import {expectType, expectError, expectAssignable} from 'tsd';
 import cronli5, {Cronli5Options, CronPattern, CronPatternObject} from '..';
-import es from '../lang';
+import es from '../types/lang/es/index.js';
 
 // The default export is a function returning a string.
 expectType<string>(cronli5('* * * * *'));

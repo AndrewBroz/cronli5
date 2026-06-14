@@ -1,7 +1,7 @@
 // English dialect style tables. Dialect names are language-scoped: en's
 // 'uk' means British English (BCP-47 'uk' is Ukrainian).
 
-import type {Cronli5Dialect} from '../../../cronli5.js';
+import type {Cronli5Dialect} from '../../types.js';
 import type {DialectStyle} from '../../core/ir.js';
 
 // Style tables for the `dialect` option. `us` follows the Chicago Manual of

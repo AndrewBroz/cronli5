@@ -4,7 +4,7 @@
 // See docs/i18n-design.md.
 
 import {clockDigits, numeral} from '../../core/format.js';
-import type {Cronli5Options} from '../../../cronli5.js';
+import type {Cronli5Options} from '../../types.js';
 import type {
   HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
 } from '../../core/ir.js';

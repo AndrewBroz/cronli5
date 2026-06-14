@@ -6,7 +6,7 @@
 import {applyQuartzAliases, normalizeCronPattern} from './normalize.js';
 import type {NormalizedOptions, Pattern} from './ir.js';
 import {parseCronPattern} from './parse.js';
-import type {CronPattern} from '../../cronli5.js';
+import type {CronPattern} from '../types.js';
 import {validateCronPattern} from './validate.js';
 
 // Parse, alias, validate, and normalize cron input into a canonical

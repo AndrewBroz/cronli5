@@ -26,7 +26,7 @@
 import {analyze, prepare} from './core/index.js';
 import type {NormalizedOptions} from './core/ir.js';
 import type {CronPattern, Cronli5Language, Cronli5Options}
-  from '../cronli5.js';
+  from './types.js';
 import en from './lang/en/index.js';
 
 function cronli5(cronPattern: CronPattern, options?: Cronli5Options): string {
@@ -66,3 +66,7 @@ function interpretCronPattern(
 }
 
 export default cronli5;
+export type {
+  Cronli5Dialect, Cronli5Language, Cronli5Options, CronPattern,
+  CronPatternObject
+} from './types.js';

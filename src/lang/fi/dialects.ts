@@ -3,7 +3,7 @@
 // notes.md). Custom objects merge over the `fi` defaults.
 
 import type {DialectStyle} from '../../core/ir.js';
-import type {Cronli5Options} from '../../../cronli5.js';
+import type {Cronli5Options} from '../../types.js';
 
 const dialects = {
   fi: {

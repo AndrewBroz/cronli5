@@ -3,7 +3,7 @@
 import {macros} from './specs.js';
 import type {CronLike} from './specs.js';
 import type {NormalizedOptions} from './ir.js';
-import type {CronPattern, CronPatternObject} from '../../cronli5.js';
+import type {CronPattern, CronPatternObject} from '../types.js';
 
 // Take a cron pattern as, a cron pattern string, an array of cron fields, a
 // cron-like object (see the final return statement for the format of a
