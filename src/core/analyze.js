@@ -1,7 +1,7 @@
 // Semantic analysis of canonical fields: fire enumeration, windows, shape
 // classification, and description-strategy selection (the `plan`). The
-// resulting IR is descriptive — numbers, enumerations, windows — never
-// phrasing; language modules own all words (docs/i18n-design.md §2.2).
+// resulting IR is descriptive. Language modules handle rendering into
+// words (docs/i18n-design.md §2.2).
 
 import {fieldOrder, fieldSpecs, maxClockTimes} from './specs.js';
 import {includes, toFieldNumber, unique} from './util.js';
