@@ -62,8 +62,8 @@ A custom style object merges over it: `{dialect: {sep: '.'}}` gives
 ## cronli5 vs. cRonstrue (es locale)
 
 Generated from live output by
-[`scripts/comparison-table.mjs`](../../scripts/comparison-table.mjs)
-(`npm run compare`). The first twelve rows are the shared cross-language
+[`scripts/docs.mjs`](../../scripts/docs.mjs)
+(`npm run docs`). The first twelve rows are the shared cross-language
 set, identical in every language doc; the last two exercise
 Spanish-specific grammar (the singular `a la 01:00` article that survives
 on the 24-hour clock, and the `sábados` plural).

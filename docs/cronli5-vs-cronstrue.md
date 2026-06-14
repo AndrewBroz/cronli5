@@ -27,15 +27,15 @@ The short version of the trade:
   documented i18n entry bundles all 39.
 
 Both tables below are generated from live library output by
-[`scripts/comparison-table.mjs`](../scripts/comparison-table.mjs) &mdash;
-run `npm run compare` to refresh them after a change, or
-`npm run compare -- --check` to verify they are current.
+[`scripts/docs.mjs`](../scripts/docs.mjs) &mdash;
+run `npm run docs` to refresh all generated documentation after a change,
+or `npm run docs -- --check` (which CI runs) to verify it is current.
 
 ## Everyday patterns
 
-For common crontab lines the two libraries agree on meaning and differ only
-in voice: sentence case, zero-padded hours, spelled-out small numbers, and
-where the day qualifier sits.
+For common crontab lines the two libraries mostly agree on meaning and differ
+in voice. A few edge cases are dramatically different (see the comparison for
+`0 12 1 1 *`).
 
 <!-- BEGIN GENERATED: basic -->
 | Pattern | cronli5 | cRonstrue 3.14.0 |
@@ -56,14 +56,14 @@ where the day qualifier sits.
 
 ## Where cronli5 shines
 
-The gap widens on compound patterns &mdash; multiple non-trivial fields at
-once. `cronli5` folds seconds into clock times, expands hour lists and
-wrap-around ranges into concrete times (capped at six, beyond which long
-expansions read as windows like "9:00 AM through 8:00 PM"), normalizes
-unsorted input, collapses degenerate shapes, and renders cron's day-of-month
-*or* day-of-week semantics as "or". Fragment assembly handles the same
-inputs, but the seams show: stacked comma clauses, grammatical slips
-("1 minutes"), and an "and" where cron fires on *either*.
+`cronli5` behaves differently from cRonstrue in compound patterns. It folds seconds
+into clock times, expands hour lists and wrap-around ranges into concrete
+times (capped at six, beyond which long expansions read as windows like
+"9:00 AM through 8:00 PM"), normalizes unsorted input, collapses degenerate
+shapes, and renders cron's day-of-month *or* day-of-week semantics as "or".
+Fragment assembly handles the same inputs, but cases like stacked comma
+clauses, grammatical slips ("1 minutes"), and an "and" where cron fires on *either*
+are handled more fluently and accurately `cronli5`.
 
 <!-- BEGIN GENERATED: showcase -->
 | Pattern | cronli5 | cRonstrue 3.14.0 |

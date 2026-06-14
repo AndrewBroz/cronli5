@@ -63,8 +63,8 @@ A custom style object merges over it: `{dialect: {sep: ':'}}` gives
 ## cronli5 vs. cRonstrue (fi locale)
 
 Generated from live output by
-[`scripts/comparison-table.mjs`](../../scripts/comparison-table.mjs)
-(`npm run compare`). The first twelve rows are the shared cross-language
+[`scripts/docs.mjs`](../../scripts/docs.mjs)
+(`npm run docs`). The first twelve rows are the shared cross-language
 set, identical in every language doc; the last two exercise
 Finnish-specific grammar (consonant gradation in `keskiviikosta`, the
 date-or-weekday `tai` alternation).

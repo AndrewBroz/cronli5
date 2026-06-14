@@ -20,8 +20,9 @@ function numeral(n, words, opts) {
   return opts.short ? n : words[n] || n;
 }
 
-// A numeric clock time assembled from its parts: "09:00", "9.30", "9",
-// "9:00:15". The two axes that vary between languages and clock forms:
+// A numeric clock time assembled from a `{hour, minute, second}` time and
+// a format: "09:00", "9.30", "9", "9:00:15". The two format axes that vary
+// between languages and clock forms:
 //   - `pad` zero-pads the hour ("09" vs "9").
 //   - `lean` drops the minute entirely when it (and the second) are zero,
 //     the "9" in "9 a.m." or the "klo 9" form; otherwise the minute is
@@ -29,14 +30,15 @@ function numeral(n, words, opts) {
 // The second is shown only when non-zero. Everything *around* the digits
 // — articles, am/pm, day periods, "klo", noon/midnight — is the
 // language's own and stays in the language module.
-function clockDigits(hour, minute, second, {sep, pad: padHour, lean}) {
-  const head = padHour ? pad(hour) : '' + hour;
+function clockDigits(time, {sep, pad: padHour, lean}) {
+  const head = padHour ? pad(time.hour) : '' + time.hour;
 
-  if (lean && !minute && !second) {
+  if (lean && !time.minute && !time.second) {
     return head;
   }
 
-  return head + sep + pad(minute) + (second ? sep + pad(second) : '');
+  return head + sep + pad(time.minute) +
+    (time.second ? sep + pad(time.second) : '');
 }
 
 export {clockDigits, numeral, pad};

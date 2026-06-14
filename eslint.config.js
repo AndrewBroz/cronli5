@@ -28,11 +28,67 @@ const supportedRules = Object.fromEntries(
   })
 );
 
+// Local rule: parameter-tail conventions, so call sites stay uniform and
+// feature work can't reintroduce the signature drift that crept in when
+// flags got appended after `opts`. Two tied conventions:
+//   - A callback (`cb`) is control flow, not data, and reads cleanly only
+//     as a trailing function literal — so it must come last.
+//   - The render-options bag (`opts`) is last among the *data* parameters:
+//     the final parameter, or second-to-last when a callback trails it.
+function isCallback(param) {
+  return param.type === 'Identifier' &&
+    (param.name === 'cb' || param.name === 'callback');
+}
+
+const paramTailOrder = {
+  meta: {
+    type: 'suggestion',
+    docs: {description: 'require the `…, opts, cb` parameter-tail order'},
+    schema: []
+  },
+  create(context) {
+    function check(node) {
+      const params = node.params;
+      const lastIndex = params.length - 1;
+      const trailingCallback = lastIndex >= 0 && isCallback(params[lastIndex]);
+      const optsIndex = trailingCallback ? lastIndex - 1 : lastIndex;
+
+      params.forEach(function each(param, index) {
+        if (isCallback(param) && index !== lastIndex) {
+          context.report({
+            node: param,
+            message: 'A callback parameter must come last.'
+          });
+        }
+
+        if (param.type === 'Identifier' && param.name === 'opts' &&
+            index !== optsIndex) {
+          context.report({
+            node: param,
+            message: 'The `opts` parameter must come last, ' +
+              'before any trailing callback.'
+          });
+        }
+      });
+    }
+
+    return {
+      ArrowFunctionExpression: check,
+      FunctionDeclaration: check,
+      FunctionExpression: check
+    };
+  }
+};
+
 export default [
   ...compat.config({
     extends: legacy.extends,
     rules: supportedRules
   }),
+  {
+    plugins: {local: {rules: {'param-tail-order': paramTailOrder}}},
+    rules: {'local/param-tail-order': 'error'}
+  },
   {
     languageOptions: {
       globals: {

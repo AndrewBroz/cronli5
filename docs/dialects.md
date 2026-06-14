@@ -34,6 +34,7 @@ cronli5('30 9 * * MON-FRI', { dialect: { through: ' until ' } });
 
 Side by side:
 
+<!-- BEGIN GENERATED: dialects -->
 | Pattern | `'us'` | `'uk'` | `'house'` |
 | --- | --- | --- | --- |
 | `0 9,12,17 * * *` | every day at 9 a.m., 12 p.m., and 5 p.m. | every day at 9am, 12pm and 5pm | every day at 9 AM, 12 PM, and 5 PM |
@@ -41,6 +42,7 @@ Side by side:
 | `0 12 1 1 *` | on January 1 at noon | on 1 January at midday | on January 1st at noon |
 | `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5:45 p.m. | every 15 minutes from 9am to 5.45pm | every 15 minutes from 9 AM - 5:45 PM |
 | `0 0 12 25 12 * 2030` | on December 25, 2030 at noon | on 25 December 2030 at midday | on December 25th, 2030 at noon |
+<!-- END GENERATED: dialects -->
 
 Style conventions shared by every dialect:
 

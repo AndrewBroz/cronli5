@@ -540,7 +540,8 @@ function timePhrase(hour, minute, second, opts) {
     const article = +hour === 1 ? 'la ' : 'las ';
 
     return article +
-      clockDigits(hour, minute, showSeconds, {pad: true, sep: opts.style.sep});
+      clockDigits({hour, minute, second: showSeconds},
+        {pad: true, sep: opts.style.sep});
   }
 
   return twelveHourPhrase(hour, minute, showSeconds, opts);
@@ -560,7 +561,8 @@ function twelveHourPhrase(hour, minute, second, opts) {
 
   const display = hour % 12 || 12;
   const time = (display === 1 ? 'la ' : 'las ') +
-    clockDigits(display, minute, second, {lean: true, sep: opts.style.sep});
+    clockDigits({hour: display, minute, second},
+      {lean: true, sep: opts.style.sep});
 
   return time + ' ' + dayPeriod(hour, opts);
 }
@@ -604,7 +606,7 @@ function leadingQualifier(ir, opts) {
   }
 
   if (pattern.weekday !== '*') {
-    return weekdayQualifier(ir, opts) + monthScope(ir) + ' ';
+    return weekdayQualifier(ir) + monthScope(ir) + ' ';
   }
 
   if (pattern.month !== '*') {
@@ -628,7 +630,7 @@ function trailingQualifier(ir, opts) {
   }
 
   if (pattern.weekday !== '*') {
-    return ' ' + weekdayQualifier(ir, opts) + monthScope(ir);
+    return ' ' + weekdayQualifier(ir) + monthScope(ir);
   }
 
   if (pattern.month !== '*') {
@@ -644,11 +646,11 @@ function trailingQualifier(ir, opts) {
 // los viernes, de junio a septiembre").
 function dateOrWeekday(ir, opts) {
   if (monthRanged(ir)) {
-    return dateClause(ir, opts, ' de cada mes') + ' o ' +
-      weekdayQualifier(ir, opts) + ', ' + monthPhrase(ir, 'de ');
+    return dateClause(ir, ' de cada mes', opts) + ' o ' +
+      weekdayQualifier(ir) + ', ' + monthPhrase(ir, 'de ');
   }
 
-  return datePhrase(ir, opts) + ' o ' + weekdayQualifier(ir, opts) +
+  return datePhrase(ir, opts) + ' o ' + weekdayQualifier(ir) +
     monthScope(ir);
 }
 
@@ -659,15 +661,15 @@ function datePhrase(ir, opts) {
   const pattern = ir.pattern;
 
   if (quartzDatePhrase(pattern.date) || isOpenStep(pattern.date)) {
-    return dateClause(ir, opts, '') + monthScope(ir);
+    return dateClause(ir, '', opts) + monthScope(ir);
   }
 
-  return dateClause(ir, opts, dateMonthPart(ir));
+  return dateClause(ir, dateMonthPart(ir), opts);
 }
 
 // The date words with a caller-chosen month part. Quartz phrases and open
 // steps are self-contained and ignore the month part.
-function dateClause(ir, opts, monthPart) {
+function dateClause(ir, monthPart, opts) {
   const pattern = ir.pattern;
   const quartz = quartzDatePhrase(pattern.date);
 
@@ -777,7 +779,7 @@ function quartzWeekdayPhrase(weekdayField) {
 // miércoles y viernes". No "todos" prefix: the plural definite article
 // ("los lunes") already conveys "every Monday" in Spanish, unlike "todos
 // los días", where "los días" alone does not mean "every day".
-function weekdayQualifier(ir, opts) {
+function weekdayQualifier(ir) {
   const quartz = quartzWeekdayPhrase(ir.pattern.weekday);
 
   if (quartz) {

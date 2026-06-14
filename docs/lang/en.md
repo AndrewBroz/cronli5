@@ -61,8 +61,8 @@ in [dialects.md](../dialects.md).
 ## cronli5 vs. cRonstrue (en locale)
 
 Generated from live output by
-[`scripts/comparison-table.mjs`](../../scripts/comparison-table.mjs)
-(`npm run compare`). The first twelve rows are the shared cross-language
+[`scripts/docs.mjs`](../../scripts/docs.mjs)
+(`npm run docs`). The first twelve rows are the shared cross-language
 set, identical in every language doc. The full English head-to-head with
 many more rows lives in
 [cronli5-vs-cronstrue.md](../cronli5-vs-cronstrue.md).

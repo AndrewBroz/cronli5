@@ -23,6 +23,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test:types
+      - name: Generated docs are current
+        run: npm run docs -- --check
       - run: npm run build
       - run: npm test
       - name: Coverage (with thresholds)

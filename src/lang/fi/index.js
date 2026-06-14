@@ -602,8 +602,7 @@ function rangeDigits(from, to, opts) {
 
 // "9.00" — a range end always shows its minutes so both sides match.
 function paddedDigits(time, opts) {
-  return clockDigits(time.hour, time.minute, time.second,
-    {sep: opts.style.sep});
+  return clockDigits(time, {sep: opts.style.sep});
 }
 
 // A standalone time: "keskiyöllä", "keskipäivällä", or "klo 9.30".
@@ -624,7 +623,8 @@ function timeWord(hour, minute, second, opts) {
 // The digit form joined into klo lists: "9", "9.30", or "9.30.15".
 // Lists keep uniform digits (no keskiyö words; see notes.md).
 function timeDigits(hour, minute, second, opts) {
-  return clockDigits(hour, minute, second, {lean: true, sep: opts.style.sep});
+  return clockDigits({hour, minute, second},
+    {lean: true, sep: opts.style.sep});
 }
 
 // --- Day-level qualifiers. ---

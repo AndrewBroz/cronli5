@@ -12,10 +12,10 @@ describe('Built package artifacts:', function() {
   before(function() {
     this.timeout(30000); // eslint-disable-line no-invalid-this
 
-    if (!existsSync('dist/cronli5.cjs') || !existsSync('dist/cronli5.js') ||
-        !existsSync('dist/lang/es.cjs') || !existsSync('dist/lang/es.js')) {
-      execFileSync('npm', ['run', 'build'], {stdio: 'ignore'});
-    }
+    // Always rebuild so these tests can never pass against a stale `dist/`
+    // — the build is fast and this is the only way to make the smoke
+    // tests trustworthy without remembering to run `npm run build`.
+    execFileSync('npm', ['run', 'build'], {stdio: 'ignore'});
   });
 
   it('CommonJS build is require-able and returns the function', function() {

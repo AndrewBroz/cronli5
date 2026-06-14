@@ -33,13 +33,13 @@ function cronli5(cronPattern, options) {
   const opts = lang.options(options);
 
   if (!opts.lenient) {
-    return interpretCronPattern(cronPattern, opts, lang);
+    return interpretCronPattern(cronPattern, lang, opts);
   }
 
   // Lenient mode never throws: unparseable input yields a fixed fallback
   // description instead, so arbitrary user crontabs are safe to render.
   try {
-    return interpretCronPattern(cronPattern, opts, lang);
+    return interpretCronPattern(cronPattern, lang, opts);
   }
   catch {
     return lang.fallback;
@@ -48,7 +48,7 @@ function cronli5(cronPattern, options) {
 
 // Prepare (parse, validate, normalize), analyze, and describe a cron
 // pattern.
-function interpretCronPattern(cronPattern, opts, lang) {
+function interpretCronPattern(cronPattern, lang, opts) {
   // `@reboot` runs on startup and has no field schedule to interpret.
   if (typeof cronPattern === 'string' &&
       cronPattern.trim().toLowerCase() === '@reboot') {
