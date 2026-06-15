@@ -310,6 +310,27 @@ describe('Español (es):', function() {
     ]);
   });
 
+  // Regional dialects. Each sets its own defaults: Mexico/US lean 12-hour,
+  // US writes the English AM/PM meridiem, Argentina uses "." and an "h"
+  // suffix. Spain (es-ES) is the RAE-anchored 24-hour default.
+  describe('dialectos regionales', function() {
+    run([
+      // es-MX: 12-hour by default, day-period descriptors.
+      ['30 9 * * *', 'todos los días a las 9:30 de la mañana',
+        {dialect: 'es-MX'}],
+      ['30 14 * * *', 'todos los días a las 2:30 de la tarde',
+        {dialect: 'es-MX'}],
+      // es-US: 12-hour with the English AM/PM meridiem (no "de la").
+      ['30 9 * * *', 'todos los días a las 9:30 AM', {dialect: 'es-US'}],
+      ['0 22 * * *', 'todos los días a las 10 PM', {dialect: 'es-US'}],
+      // es-AR: 24-hour, "." separator, and the Argentine "h" suffix.
+      ['30 14 * * *', 'todos los días a las 14.30 h', {dialect: 'es-AR'}],
+      ['30 9 * * *', 'todos los días a las 09.30 h', {dialect: 'es-AR'}],
+      // es-ES: the RAE-anchored 24-hour default (same as neutral `es`).
+      ['30 9 * * *', 'todos los días a las 09:30', {dialect: 'es-ES'}]
+    ]);
+  });
+
   describe('casos especiales', function() {
     it('describe @reboot', function() {
       expect(cronli5('@reboot', {lang: es}))

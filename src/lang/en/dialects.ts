@@ -2,7 +2,7 @@
 // `uk` is a deprecated alias for it, freed because BCP-47 `uk` is the
 // Ukrainian language code (now a `cronli5/lang/uk` module).
 
-import type {Cronli5Dialect} from '../../types.js';
+import type {Cronli5Options} from '../../types.js';
 import type {DialectStyle} from '../../core/ir.js';
 
 // Style tables for the `dialect` option. `us` follows the Chicago Manual of
@@ -11,7 +11,7 @@ import type {DialectStyle} from '../../core/ir.js';
 // hour separator (":" vs "."), the 12:00 words, the range connective, the
 // serial-comma rule, whether dates read day-first ("1 January" vs
 // "January 1"), and whether month-day dates take ordinals ("January 1st").
-const dialects: Record<'gb' | 'us' | 'house', DialectStyle> = {
+const dialects: {[name: string]: DialectStyle} = {
   gb: {
     am: 'am',
     closeUp: true,
@@ -55,14 +55,16 @@ const dialects: Record<'gb' | 'us' | 'house', DialectStyle> = {
 // with any omitted fields inheriting the US (Chicago) defaults. The legacy
 // 'uk' name resolves to 'gb'.
 function resolveDialect(
-  dialect?: 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect
+  dialect?: Cronli5Options['dialect']
 ): DialectStyle {
   if (typeof dialect === 'object' && dialect !== null) {
     return {...dialects.us, ...dialect};
   }
 
+  // The legacy 'uk' name resolves to 'gb'; a name another language owns
+  // (or any unknown string) falls back to the US default.
   const name = dialect === 'uk' ? 'gb' : dialect;
 
-  return name && dialects[name] || dialects.us;
+  return dialects[name as string] || dialects.us;
 }
 export {resolveDialect};

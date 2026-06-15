@@ -40,10 +40,10 @@ export interface Cronli5Dialect {
 }
 
 /**
- * A language module: a renderer over the semantic IR plus the
+ * A language module is a renderer over the semantic IR plus the
  * language-owned strings and option normalization. The `describe`/`options`
  * payloads are the module's internal `IR`/options shapes (see
- * `core/ir.ts`); they are intentionally opaque at this public boundary,
+ * `core/ir.ts`). They are intentionally opaque at this public boundary,
  * which a caller passes to `cronli5` via the `lang` option but never invokes
  * directly.
  */
@@ -63,15 +63,16 @@ export interface Cronli5Options {
   ampm?: boolean;
 
   /**
-   * English dialect. `'us'` (default) follows the Chicago Manual of Style:
-   * serial commas, "through" ranges, "9 a.m." times, "noon"/"midnight",
-   * "January 1" dates. `'gb'` follows the Guardian style guide: no serial
-   * comma, "to" ranges, "9am"/"5.30pm" times, "midday"/"midnight",
-   * "1 January" dates. `'house'` is cronli5's legacy voice ("9:30 AM",
-   * "Monday - Friday") on a Chicago base. A `Cronli5Dialect` object defines
-   * a custom style. (`'uk'` is a deprecated alias for `'gb'`.)
+   * Dialect, **scoped to the chosen language**. English: `'us'` (default,
+   * Chicago Manual of Style), `'gb'` (Guardian style guide), `'house'`
+   * (cronli5's legacy voice on a Chicago base); `'uk'` is a deprecated alias
+   * for `'gb'`. Spanish: `'es-ES'` (RAE/default), `'es-MX'` (12-hour),
+   * `'es-US'` (12-hour, English AM/PM), `'es-AR'` (24-hour, `.` + `h`
+   * suffix). A `Cronli5Dialect` object defines a custom style. A name another
+   * language owns falls back to the current language's default.
    */
-  dialect?: 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect;
+  dialect?: 'es-AR' | 'es-ES' | 'es-MX' | 'es-US'
+    | 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect;
 
   /**
    * A language module (e.g. `import es from 'cronli5/lang/es'`). Defaults

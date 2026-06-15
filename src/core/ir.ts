@@ -100,7 +100,7 @@ export interface IR {
   plan: PlanNode;
 }
 
-/** A resolved style table — every dialect field filled in. */
+/** A resolved style table. */
 export interface DialectStyle {
   am: string;
   closeUp: boolean;
@@ -114,20 +114,25 @@ export interface DialectStyle {
   through: string;
 }
 
-/** Options after a language module's `options()` has normalized them. */
-export interface NormalizedOptions {
+/**
+ * Options after a language module's `options()` has normalized them. `Style`
+ * is the language's specific style options. English's `DialectStyle` has
+ * `serialComma`/`through`/`ordinals`; Spanish's has a meridiem form and an
+ * `h` suffix.
+ */
+export interface NormalizedOptions<Style = DialectStyle> {
   ampm: boolean;
   lenient: boolean;
   seconds: boolean;
   short: boolean;
-  style: DialectStyle;
+  style: Style;
   years: boolean;
 }
 
 /** The interface every language module's default export implements. */
-export interface Language {
-  describe(ir: IR, opts: NormalizedOptions): string;
+export interface Language<Style = DialectStyle> {
+  describe(ir: IR, opts: NormalizedOptions<Style>): string;
   fallback: string;
-  options(options?: Cronli5Options): NormalizedOptions;
+  options(options?: Cronli5Options): NormalizedOptions<Style>;
   reboot: string;
 }

@@ -38,6 +38,11 @@ expectError<Cronli5Options>({dialect: 'fr'});
 // Named and custom-object dialects are accepted; unknown style fields are
 // rejected.
 expectAssignable<Cronli5Options>({dialect: 'house'});
+// Spanish regional dialects are accepted (names are language-scoped).
+expectAssignable<Cronli5Options>({dialect: 'es-MX'});
+expectAssignable<Cronli5Options>({dialect: 'es-US'});
+expectAssignable<Cronli5Options>({dialect: 'es-AR'});
+expectAssignable<Cronli5Options>({dialect: 'es-ES'});
 expectAssignable<Cronli5Options>({dialect: {through: ' until '}});
 expectAssignable<Cronli5Options>({
   dialect: {am: 'am', closeUp: true, ordinals: true, serialComma: false}

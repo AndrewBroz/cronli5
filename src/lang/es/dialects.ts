@@ -3,18 +3,50 @@
 // dudas and FundéuRAE recommendations (see notes.md). Custom objects merge
 // over the `es` defaults.
 import type {Cronli5Options} from '../../types.js';
-import type {DialectStyle} from '../../core/ir.js';
 
-const dialects: {[name: string]: DialectStyle} = {
-  es: {
-    // Separator between hours, minutes, and seconds. FundéuRAE accepts
-    // both ":" and "."; the colon is the panhispanic default.
-    sep: ':'
-  } as DialectStyle
+/**
+ * Spanish's own resolved style shape has a separator,
+ * clock default, meridiem form, and `h` suffix.
+ */
+export interface SpanishStyle {
+  // Clock default: false renders 24-hour times (RAE/Spain), true renders
+  // 12-hour times. An explicit `{ampm}` option still overrides this.
+  ampm: boolean;
+  // Append an "h" after a 24-hour clock time ("a las 14.30 h"), as is
+  // common in the Southern Cone (Argentina).
+  hSuffix: boolean;
+  // How a 12-hour time names its half of the day: 'descriptors' for the
+  // panhispanic "de la mañana/tarde/noche", 'english' for the AM/PM
+  // meridiem common in US Spanish.
+  meridiem: 'descriptors' | 'english';
+  // Separator between hours, minutes, and seconds. FundéuRAE accepts both
+  // ":" and "."; the colon is the panhispanic default.
+  sep: string;
+}
+
+// The panhispanic default, anchored to RAE/FundéuRAE: 24-hour, colon.
+const es: SpanishStyle = {
+  ampm: false,
+  hSuffix: false,
+  meridiem: 'descriptors',
+  sep: ':'
+};
+
+const dialects: {[name: string]: SpanishStyle} = {
+  es,
+  // Spain is the RAE-anchored default; named explicitly so it is a
+  // recognized choice and has a home if it ever diverges.
+  'es-ES': es,
+  // Mexico leans 12-hour in everyday writing.
+  'es-MX': {...es, ampm: true},
+  // US Spanish leans 12-hour and writes the English AM/PM meridiem.
+  'es-US': {...es, ampm: true, meridiem: 'english'},
+  // Argentina: 24-hour with "." and a trailing "h".
+  'es-AR': {...es, hSuffix: true, sep: '.'}
 };
 
 // Resolve the `dialect` option to a style table.
-function resolveDialect(dialect: Cronli5Options['dialect']): DialectStyle {
+function resolveDialect(dialect: Cronli5Options['dialect']): SpanishStyle {
   if (typeof dialect === 'object' && dialect !== null) {
     return {...dialects.es, ...dialect};
   }
