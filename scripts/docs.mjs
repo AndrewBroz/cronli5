@@ -27,43 +27,17 @@ import cronstrueI18n from 'cronstrue/i18n.js';
 import en from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
+import {dialectPatterns, languagePatterns, tables} from './patterns.mjs';
+import {statusTable} from './status.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
   new URL('../node_modules/cronstrue/package.json', import.meta.url),
   'utf8')).version;
 
-const tables = {
-  basic: [
-    '* * * * *', '*/5 * * * *', '0 12 * * *', '30 9 * * MON-FRI',
-    '0 9,17 * * *', '0 9-17 * * *', '0-29 * * * *', '0 0 1,15 * *',
-    '0 12 1 1 *', '@daily', '*/30 * * * * *', '0 0 * * 5L'
-  ],
-  showcase: [
-    '5,10 30 9 * * MON', '*/15 30 9-17 * * MON-FRI', '15 30 9 * * MON',
-    '45 17,9 0 * * *', '0-30 9,17-19 * * *', '0 22-2,12 * * *',
-    '0 9-20,22 * * *', '* 9,12,17 * * MON-FRI', '30 9 15W 6 *',
-    '0 0 29 2 *', '0 9-9 * * *', '1/1 * * * *', '1 1 * * * *',
-    '59 23 31 12 5'
-  ]
-};
-
-// The shared cross-language set, plus per-language grammar rows.
-const languagePatterns = [
-  '*/5 * * * *', '0 0 * * *', '30 9 * * MON-FRI', '0 9,17 * * *',
-  '0 22-2 * * *', '*/15 9-17 * * *', '0 0 1,15 * *', '0 12 1 1 *',
-  '0 12 * 11-2 *', '0 0 * * 5L', '5,10 30 9 * * MON', '1/1 * * * *'
-];
-
 const languages = [
   {code: 'en', extras: [], lang: en},
   {code: 'es', extras: ['0 1 * * *', '0 12 * * SAT'], lang: es},
   {code: 'fi', extras: ['0 9 * * WED-FRI', '0 0 13 * FRI'], lang: fi}
-];
-
-// Patterns that exercise the US/UK/house dialect axes.
-const dialectPatterns = [
-  '0 9,12,17 * * *', '30 9 * * MON-FRI', '0 12 1 1 *',
-  '*/15 9-17 * * *', '0 0 12 25 12 * 2030'
 ];
 
 function describe(fn, pattern) {
@@ -209,6 +183,7 @@ function rewriteExamples(text) {
 }
 
 const tableJobs = {
+  'README.md': {'language-status': statusTable()},
   'docs/cronli5-vs-cronstrue.md': {
     basic: renderEnglishTable(tables.basic),
     showcase: renderEnglishTable(tables.showcase)
