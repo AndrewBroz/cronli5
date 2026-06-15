@@ -81,6 +81,11 @@
         ],
         "max-statements": "off",
         "max-statements-per-line": "off",
+        "multiline-comment-style": [
+            "error",
+            "separate-lines",
+            { "checkJSDoc": false }
+        ],
         "new-cap": "error",
         "new-parens": "error",
         "newline-after-var": [

@@ -96,6 +96,9 @@ Naturalness can't be unit-tested. Two passes:
 - **Generated, never hand-edited** — the docs tables, inline doc examples,
   and the published `.d.ts` are all generated. Run `npm run docs` after a
   behavior change; CI rejects drift.
+- **Comments** — `//` for prose; `/** */` is reserved for JSDoc on exported
+  declarations (types and the public API), where it powers editor tooltips.
+  The `multiline-comment-style` rule forbids multi-line prose block comments.
 
 ## Before opening a PR
 
