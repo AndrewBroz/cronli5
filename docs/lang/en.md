@@ -35,7 +35,7 @@ with the `dialect` option:
 | Dialect | Anchor | Sample |
 | --- | --- | --- |
 | `'us'` (default) | Chicago Manual of Style | every Monday through Friday at 9:30 a.m. |
-| `'uk'` | Guardian style guide | every Monday to Friday at 9.30am |
+| `'gb'` | Guardian style guide | every Monday to Friday at 9.30am |
 | `'house'` | cronli5's legacy voice | every Monday - Friday at 9:30 AM |
 
 A custom object merges over the US defaults

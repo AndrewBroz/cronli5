@@ -53,8 +53,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `'an unrecognizable cron pattern'` instead of throwing, making `cronli5`
   safe to embed in UIs that render arbitrary user crontabs.
 - A `dialect` option anchored to named style guides. `'us'` (the default)
-  follows the Chicago Manual of Style; `'uk'` follows the Guardian style
-  guide: `cronli5('30 9 * * MON-FRI', {dialect: 'uk'})` reads "every Monday
+  follows the Chicago Manual of Style; `'gb'` follows the Guardian style
+  guide: `cronli5('30 9 * * MON-FRI', {dialect: 'gb'})` reads "every Monday
   to Friday at 9.30am", with no serial comma, "to" ranges, closed-up
   full-point times, "midday"/"midnight", and day-first dates ("1 January").
   `'house'` preserves cronli5's legacy voice ("9:30 AM", "Monday - Friday",

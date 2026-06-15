@@ -189,7 +189,7 @@ docs below.
 
 | Language | Module | Anchors | Doc |
 | --- | --- | --- | --- |
-| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'uk'` dialect) | [docs/lang/en.md](./docs/lang/en.md) |
+| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'gb'` dialect) | [docs/lang/en.md](./docs/lang/en.md) |
 | Spanish | `cronli5/lang/es` | RAE / FundéuRAE | [docs/lang/es.md](./docs/lang/es.md) |
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
 

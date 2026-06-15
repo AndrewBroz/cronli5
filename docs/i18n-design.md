@@ -164,10 +164,7 @@ Encapsulation rules:
   table with its own schema, anchored to named authorities (en: Chicago /
   Guardian; fr: Imprimerie nationale / OQLF for fr-CA; de: Duden; zh:
   simplified/traditional plus regional conventions; ar: Eastern vs Western
-  numerals). Note the naming collision we already created: BCP-47 `uk` is
-  *Ukrainian*, while en's `'uk'` dialect is British English. Harmless —
-  dialect names live inside a language — but the docs must say "language
-  codes are BCP-47; dialect names are language-local" explicitly.
+  numerals).
 * **Core API stays frozen-ish**: `cronli5(pattern, options)` with
   `options.lang` defaulting to the bundled English module.
 
