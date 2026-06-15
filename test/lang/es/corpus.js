@@ -306,13 +306,18 @@ describe('Español (es):', function() {
 
   describe('dialecto personalizado', function() {
     run([
-      ['30 17 * * *', 'todos los días a las 17.30', {dialect: {sep: '.'}}]
+      ['30 17 * * *', 'todos los días a las 17.30', {dialect: {sep: '.'}}],
+      // The "h" suffix is opt-in via a custom style (it is not a dialect
+      // default — the native panel found it reads as formal, not natural).
+      ['0 9 * * *', 'todos los días a las 09:00 h', {dialect: {hSuffix: true}}],
+      ['30 14 * * *', 'todos los días a las 14.30 h',
+        {dialect: {hSuffix: true, sep: '.'}}]
     ]);
   });
 
-  // Regional dialects. Each sets its own defaults: Mexico/US lean 12-hour,
-  // US writes the English AM/PM meridiem, Argentina uses "." and an "h"
-  // suffix. Spain (es-ES) is the RAE-anchored 24-hour default.
+  // Regional dialects (cross-family panel attested, 2026-06-15): Mexico and
+  // US lean 12-hour, US writes the English AM/PM meridiem; Spain (es-ES) is
+  // the RAE-anchored 24-hour default.
   describe('dialectos regionales', function() {
     run([
       // es-MX: 12-hour by default, day-period descriptors.
@@ -323,9 +328,6 @@ describe('Español (es):', function() {
       // es-US: 12-hour with the English AM/PM meridiem (no "de la").
       ['30 9 * * *', 'todos los días a las 9:30 AM', {dialect: 'es-US'}],
       ['0 22 * * *', 'todos los días a las 10 PM', {dialect: 'es-US'}],
-      // es-AR: 24-hour, "." separator, and the Argentine "h" suffix.
-      ['30 14 * * *', 'todos los días a las 14.30 h', {dialect: 'es-AR'}],
-      ['30 9 * * *', 'todos los días a las 09.30 h', {dialect: 'es-AR'}],
       // es-ES: the RAE-anchored 24-hour default (same as neutral `es`).
       ['30 9 * * *', 'todos los días a las 09:30', {dialect: 'es-ES'}]
     ]);

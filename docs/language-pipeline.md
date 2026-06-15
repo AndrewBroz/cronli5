@@ -127,7 +127,8 @@ change:
   range, a time, a date, noon/midnight. The curated `dialectPatterns` set in
   `scripts/patterns.mjs` is exactly this.
 - **Personas anchor to the region/style** (a Guardian-style British writer for
-  `gb`; a Latin-American speaker for a future `es-419`), not just the language.
+  `gb`; a Mexican or US-Latino speaker for `es-MX`/`es-US`), not just the
+  language — `panel.mjs` keys these off its `DIALECT_NAMES` map.
 
 Dialects sit on a spectrum that sets how much review each needs:
 
@@ -135,9 +136,9 @@ Dialects sit on a spectrum that sets how much review each needs:
   oracle; reviewable by the panel and a region-fluent human.
 - **Internal** (`house`, and custom `Cronli5Dialect` objects) — self-defined,
   no external norm; *correct by construction*, needing consistency not a panel.
-- **Regional** (future `es-419`, `de-AT` with *Jänner*) — carry lexical, not
-  just typographic, variation; closest to sub-languages and needing the
-  fullest treatment with region-fluent humans.
+- **Regional** (shipped `es-MX`/`es-US`; future `de-AT` with *Jänner*) — carry
+  clock/meridiem or lexical variation, not just typography; closest to
+  sub-languages and needing the fullest treatment with region-fluent humans.
 
 **Status is per `(language, dialect)` pair.** The same stable/beta rule
 applies. English's `us`, `gb`, and `house` are all **stable** (`us` Chicago +
@@ -145,6 +146,32 @@ maintainer-native; `gb` reviewed by the maintainer, a competent UK-English
 reader; `house` stable by construction). A machine-built dialect ships **beta**
 until human-reviewed, exactly like a language.
 
-**Dependency:** non-English dialects need the parked `DialectStyle`
-generalization first (today `DialectStyle` is English-shaped; `es`/`fi` set
-only `sep`). English dialects can use the dialect panel today.
+**Running the dialect panel.** `panel.mjs` takes a `--dialect` flag:
+
+```sh
+node --import tsx scripts/panel.mjs es --dialect=es-MX        # Gemma half
+# spawn the Claude half as region-native judges → tmp/claude-es-MX.json
+node --import tsx scripts/panel.mjs es --dialect=es-MX \
+  --judges=tmp/claude-es-MX.json                              # re-aggregate
+```
+
+It renders `cronli5(pattern, {dialect})`, draws baselines and a judge from the
+region (`DIALECT_NAMES`) over the clock-time `DIALECT_PATTERNS`, and writes
+`tmp/panel-<dialect>.json`. Each language now owns its style shape
+(`NormalizedOptions<Style>`; `SpanishStyle` for `es`), so the `DialectStyle`
+generalization this once depended on is **done** — a new dialect is a style
+table plus a renderer branch, not new machinery.
+
+**A regional dialect must clear the *native* panel — or be dropped.** `es-MX`
+and `es-US` passed 9/9. `es-AR` did **not**: Argentine judges found its `.`+`h`
+form (`14.30 h`) formal/Iberian, and its *natural* form collapsed onto the
+neutral 24-hour base — a dialect that reads unnatural **or** is indistinct from
+its base is not worth shipping. A rejected-but-useful mechanism survives only
+as an opt-in custom-style field (Spanish kept `hSuffix` for `{dialect:
+{hSuffix: true}}`). This is the dialect form of "document the hard residue
+rather than paper over it."
+
+**Status rows.** A dialect whose status matches its language is recorded under
+`status.json`'s `dialects` map but gets **no separate table row** — the
+language row covers it. A diverging dialect (a beta dialect of a stable
+language, say) gets its own row via `status.mjs`.

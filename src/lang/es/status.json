@@ -2,5 +2,17 @@
   "name": "Spanish",
   "status": "beta",
   "humanReview": "maintainer (informal); formal pilot pending",
-  "crossFamilyReview": "gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15)"
+  "crossFamilyReview": "gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15)",
+  "dialects": {
+    "es-MX": {
+      "status": "beta",
+      "humanReview": null,
+      "crossFamilyReview": "gemma4:31b-cloud + Claude panel — 9/9 (2026-06-15)"
+    },
+    "es-US": {
+      "status": "beta",
+      "humanReview": null,
+      "crossFamilyReview": "gemma4:31b-cloud + Claude panel — 9/9 (2026-06-15)"
+    }
+  }
 }

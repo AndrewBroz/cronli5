@@ -17,6 +17,12 @@ export interface Cronli5Dialect {
   /** Day-first dates (`'1 January'`) instead of month-first. */
   dayFirst?: boolean;
 
+  /**
+   * Spanish only: append an `h` after a 24-hour time (`'a las 14.30 h'`).
+   * Off by default; opt in for an Argentine/formal style.
+   */
+  hSuffix?: boolean;
+
   /** The word for exactly 12:00 p.m., e.g. `'noon'` or `'midday'`. */
   midday?: string;
 
@@ -67,11 +73,11 @@ export interface Cronli5Options {
    * Chicago Manual of Style), `'gb'` (Guardian style guide), `'house'`
    * (cronli5's legacy voice on a Chicago base); `'uk'` is a deprecated alias
    * for `'gb'`. Spanish: `'es-ES'` (RAE/default), `'es-MX'` (12-hour),
-   * `'es-US'` (12-hour, English AM/PM), `'es-AR'` (24-hour, `.` + `h`
-   * suffix). A `Cronli5Dialect` object defines a custom style. A name another
-   * language owns falls back to the current language's default.
+   * `'es-US'` (12-hour, English AM/PM). A `Cronli5Dialect` object defines a
+   * custom style. A name another language owns falls back to the current
+   * language's default.
    */
-  dialect?: 'es-AR' | 'es-ES' | 'es-MX' | 'es-US'
+  dialect?: 'es-ES' | 'es-MX' | 'es-US'
     | 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect;
 
   /**

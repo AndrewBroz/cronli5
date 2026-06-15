@@ -20,6 +20,22 @@ import {spanningSet} from './spanning-set.mjs';
 
 const MODULES = {es, fi};
 const NAMES = {es: 'Spanish', fi: 'Finnish'};
+
+// Regional varieties for the dialect-aware panel; the persona prompts use
+// these so baselines and judges phrase and judge as that region's speakers.
+const DIALECT_NAMES = {
+  'es-ES': 'Spanish (Spain)',
+  'es-MX': 'Mexican Spanish',
+  'es-US': 'US Spanish'
+};
+
+// Clock-time patterns that exercise where the dialects diverge; the rest of
+// the spanning set renders identically across dialects.
+const DIALECT_PATTERNS = [
+  '0 9 * * *', '30 9 * * *', '0 14 * * *', '30 14 * * *', '0 22 * * *',
+  '0 0 * * *', '0 12 * * *', '30 14 * * 1-5', '0 8,20 * * *'
+];
+
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const NATURAL_BAR = 4;
 
@@ -58,11 +74,14 @@ function cronstrueText(pattern, code) {
 
 // The candidate field for one pattern: cronli5, cRonstrue, and one Gemma
 // baseline per persona (the baselines render the *meaning* afresh).
-async function buildField(code, pattern) {
+async function buildField(code, pattern, dialect) {
   const meaning = cronli5(pattern);
-  const name = NAMES[code];
+  const name = dialect ? DIALECT_NAMES[dialect] : NAMES[code];
+  const opts = dialect
+    ? {lang: MODULES[code], dialect}
+    : {lang: MODULES[code]};
   const field = [
-    {src: 'cronli5', text: cronli5(pattern, {lang: MODULES[code]})}
+    {src: 'cronli5', text: cronli5(pattern, opts)}
   ];
   const their = cronstrueText(pattern, code);
 
@@ -154,10 +173,11 @@ function aggregate(item, verdicts) {
 }
 
 // Build + judge one pattern with the Gemma half of the panel.
-async function reviewPattern(code, pattern) {
-  const {meaning, field} = await buildField(code, pattern);
+async function reviewPattern(code, pattern, dialect) {
+  const {meaning, field} = await buildField(code, pattern, dialect);
   const {slate, key} = anonymize(field);
-  const verdict = await gemmaJudge(meaning, slate, NAMES[code], JUDGE_PERSONA)
+  const name = dialect ? DIALECT_NAMES[dialect] : NAMES[code];
+  const verdict = await gemmaJudge(meaning, slate, name, JUDGE_PERSONA)
     .catch(() => null);
   const verdicts = verdict ? [verdict] : [];
 
@@ -165,13 +185,14 @@ async function reviewPattern(code, pattern) {
     result: aggregate({pattern, slate, key}, verdicts)};
 }
 
-async function run(code, limit) {
-  const patterns = limit ? spanningSet.slice(0, limit) : spanningSet;
+async function run(code, limit, dialect) {
+  const base = dialect ? DIALECT_PATTERNS : spanningSet;
+  const patterns = limit ? base.slice(0, limit) : base;
   const items = [];
   let passes = 0;
 
   for (const pattern of patterns) {
-    const {item, result} = await reviewPattern(code, pattern);
+    const {item, result} = await reviewPattern(code, pattern, dialect);
 
     items.push(item);
     passes += result.pass ? 1 : 0;
@@ -186,17 +207,20 @@ async function run(code, limit) {
   }
 
   mkdirSync('tmp', {recursive: true});
-  writeFileSync('tmp/panel-' + code + '.json', JSON.stringify(items, null, 2));
+  const tag = dialect || code;
+
+  writeFileSync('tmp/panel-' + tag + '.json', JSON.stringify(items, null, 2));
   console.log('\nGemma-half: ' + passes + '/' + patterns.length +
-    ' patterns pass. Slates → tmp/panel-' + code +
+    ' patterns pass. Slates → tmp/panel-' + tag +
     '.json (add Claude judges, then re-aggregate).');
 }
 
 // Re-aggregate with the Claude half folded in. Reads the slates written by a
 // prior run and a judges file keyed by pattern ({pattern: [verdict, ...]}),
 // combines them with the stored Gemma verdicts, and prints the final gate.
-function aggregateWithJudges(code, judgesPath) {
-  const items = JSON.parse(readFileSync('tmp/panel-' + code + '.json', 'utf8'));
+function aggregateWithJudges(code, judgesPath, dialect) {
+  const tag = dialect || code;
+  const items = JSON.parse(readFileSync('tmp/panel-' + tag + '.json', 'utf8'));
   const judges = JSON.parse(readFileSync(judgesPath, 'utf8'));
   let passes = 0;
 
@@ -228,15 +252,18 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const limit = limitArg ? Number(limitArg.slice('--limit='.length)) : 0;
 
   if (!MODULES[code]) {
-    throw new Error('usage: panel.mjs <es|fi> [--limit=N] [--judges=FILE]');
+    throw new Error('usage: panel.mjs <es|fi> [--limit=N] [--judges=FILE] ' +
+      '[--dialect=es-MX]');
   }
 
   const judgesArg = process.argv.find((a) => a.startsWith('--judges='));
+  const dialectArg = process.argv.find((a) => a.startsWith('--dialect='));
+  const dialect = dialectArg ? dialectArg.slice('--dialect='.length) : '';
 
   if (judgesArg) {
-    aggregateWithJudges(code, judgesArg.slice('--judges='.length));
+    aggregateWithJudges(code, judgesArg.slice('--judges='.length), dialect);
   }
   else {
-    await run(code, limit);
+    await run(code, limit, dialect);
   }
 }

@@ -108,6 +108,27 @@ never mistakable for a stable, human-blessed corpus:
 `npm run docs` regenerates the README review-status table from the
 `status.json` files; the new language appears as **beta** automatically.
 
+## 8. Dialects (only if the language has regional variants)
+
+A dialect is a style variant *within* the language (e.g. Spanish `es-MX`,
+`es-US`). The language owns its style shape (`NormalizedOptions<Style>` — e.g.
+`SpanishStyle`), so a dialect is a row in the language's `dialects.ts` table
+plus a renderer branch, not new machinery. Attest each with the **dialect
+panel**:
+
+- `node --import tsx scripts/panel.mjs <code> --dialect=<id>` — the Gemma half,
+  with region-native baselines and judge (add the variety to `DIALECT_NAMES`)
+  over the clock-time `DIALECT_PATTERNS`. Writes `tmp/panel-<id>.json`.
+- Spawn the Claude half as **region-native** personas (a Mexican speaker, not a
+  generic one); re-aggregate with `--judges=tmp/claude-<id>.json --dialect=<id>`.
+- Same beta gate, test-first for fixes. **Drop a dialect the native panel
+  rejects** — if it reads unnatural *or* collapses onto the neutral base it is
+  not worth shipping (Spanish's `es-AR` was dropped this way; its `hSuffix`
+  survives only as an opt-in `{dialect: {hSuffix: true}}` custom field).
+- Record each attested dialect under `status.json`'s `dialects` map; one
+  matching the language's status gets no separate table row. See
+  `docs/language-pipeline.md` → Dialects.
+
 ## Guardrails
 
 - **Never** set `status: "stable"` from this skill — that is a human-review
@@ -116,5 +137,7 @@ never mistakable for a stable, human-blessed corpus:
   baseline line. The `panel.mjs` baselines are Gemma's, so the Claude judges
   are clean on them; if you add Claude baselines, exclude that persona's own
   line from its judging.
-- **Cost:** the panel is ~6 panelists × spanning items × 2 steps. Subset to
-  failing patterns when iterating.
+- **Cost:** the Gemma half serializes (~3 calls/pattern: 2 baselines + 1
+  judge) and is the slow part — run it in the background. The Claude half is 3
+  judges in parallel. Subset with `--limit` (or to failing patterns) when
+  iterating.

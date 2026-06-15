@@ -12,8 +12,7 @@ export interface SpanishStyle {
   // Clock default: false renders 24-hour times (RAE/Spain), true renders
   // 12-hour times. An explicit `{ampm}` option still overrides this.
   ampm: boolean;
-  // Append an "h" after a 24-hour clock time ("a las 14.30 h"), as is
-  // common in the Southern Cone (Argentina).
+  // Append an "h" after a 24-hour clock time ("a las 14.30 h").
   hSuffix: boolean;
   // How a 12-hour time names its half of the day: 'descriptors' for the
   // panhispanic "de la mañana/tarde/noche", 'english' for the AM/PM
@@ -40,9 +39,7 @@ const dialects: {[name: string]: SpanishStyle} = {
   // Mexico leans 12-hour in everyday writing.
   'es-MX': {...es, ampm: true},
   // US Spanish leans 12-hour and writes the English AM/PM meridiem.
-  'es-US': {...es, ampm: true, meridiem: 'english'},
-  // Argentina: 24-hour with "." and a trailing "h".
-  'es-AR': {...es, hSuffix: true, sep: '.'}
+  'es-US': {...es, ampm: true, meridiem: 'english'}
 };
 
 // Resolve the `dialect` option to a style table.
