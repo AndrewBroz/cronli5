@@ -74,7 +74,7 @@ on the 24-hour clock, and the `sábados` plural).
 | `*/5 * * * *` | cada cinco minutos | Cada 5 minutos |
 | `0 0 * * *` | todos los días a las 00:00 | A las 00:00 |
 | `30 9 * * MON-FRI` | de lunes a viernes a las 09:30 | A las 09:30, de lunes a viernes |
-| `0 9,17 * * *` | todos los días a las 09:00 y a las 17:00 | A las 09:00 y 17:00 |
+| `0 9,17 * * *` | todos los días a las 09:00 y 17:00 | A las 09:00 y 17:00 |
 | `0 22-2 * * *` | cada hora de las 22:00 a las 02:00 | Cada hora, entre las 22:00 y las 02:00 |
 | `*/15 9-17 * * *` | cada 15 minutos de las 09:00 a las 17:45 | Cada 15 minutos, entre las 09:00 y las 17:59 |
 | `0 0 1,15 * *` | los días 1 y 15 de cada mes a las 00:00 | A las 00:00, el día 1 y 15 del mes |

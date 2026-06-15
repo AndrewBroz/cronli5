@@ -93,12 +93,12 @@ function dialectCell(pattern, dialect) {
   }, pattern);
 }
 
-const dialectHeader = '| Pattern | `\'us\'` | `\'uk\'` | `\'house\'` |';
+const dialectHeader = '| Pattern | `\'us\'` | `\'gb\'` | `\'house\'` |';
 
 function renderDialectTable() {
   const rows = dialectPatterns.map(function compare(pattern) {
     return '| `' + pattern + '` | ' + dialectCell(pattern, 'us') + ' | ' +
-      dialectCell(pattern, 'uk') + ' | ' + dialectCell(pattern, 'house') +
+      dialectCell(pattern, 'gb') + ' | ' + dialectCell(pattern, 'house') +
       ' |';
   });
 

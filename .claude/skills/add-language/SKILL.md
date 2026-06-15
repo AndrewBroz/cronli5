@@ -50,11 +50,14 @@ item's slate**. Give it ONLY the lettered candidates and the English meaning —
 never the key, never which letter is cronli5. Prompt shape:
 
 > You are {persona} of {language}, judging {language} descriptions of
-> schedules — blind (you are not told which tool produced which). For each
-> item, score every lettered candidate: `natural` (0–5), `correct`
-> (true/false against the stated meaning), a brief `note`, and pick the
-> `best`. Reply JSON only:
-> `{"<pattern>":{"A":{"natural":0,"correct":true,"note":"…"},…,"best":"X"},…}`
+> schedules — blind (you are not told which tool produced which). Every
+> candidate is a lowercase sentence fragment meant to be embedded
+> mid-sentence (like the English meaning); do NOT penalize missing
+> capitalization or a final period — judge only wording, naturalness, and
+> accuracy. For each item, score every lettered candidate: `natural` (0–5),
+> `correct` (true/false against the stated meaning), a brief `note`, and pick
+> the `best`. Reply JSON only:
+> `{"<pattern>":{"A":{"natural":0,"correct":true,"note":"…"},…,"best":"X"}}`
 
 Collect the three persona outputs into `tmp/claude-<code>.json` keyed by
 pattern: `{"<pattern>": [persona1, persona2, persona3]}`.

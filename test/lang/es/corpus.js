@@ -50,7 +50,7 @@ describe('Español (es):', function() {
       ['0 12 * * *', 'todos los días a las 12:00'],
       ['0 1 * * *', 'todos los días a la 01:00'],
       ['0 13 * * *', 'todos los días a las 13:00'],
-      ['0 9,17 * * *', 'todos los días a las 09:00 y a las 17:00'],
+      ['0 9,17 * * *', 'todos los días a las 09:00 y 17:00'],
       ['0 22-2 * * *', 'cada hora de las 22:00 a las 02:00'],
       ['* 1 * * *', 'cada minuto de la 01:00 a la 01:59']
     ]);
@@ -66,7 +66,7 @@ describe('Español (es):', function() {
       ['0 1 * * *', 'todos los días a la 1 de la madrugada'],
       ['0 22 * * *', 'todos los días a las 10 de la noche'],
       ['0 9,17 * * *',
-        'todos los días a las 9 de la mañana y a las 5 de la tarde']
+        'todos los días a las 9 de la mañana y 5 de la tarde']
     ], ampm);
   });
 
@@ -153,10 +153,10 @@ describe('Español (es):', function() {
         'cada minuto de las 9 a las 9:59 de la mañana ' +
         'y de las 5 a las 5:59 de la tarde'],
       ['0-30 9,17 * * *',
-        'cada minuto del 0 al 30 de cada hora, ' +
-        'a las 9 de la mañana y a las 5 de la tarde'],
+        'cada minuto del 0 al 30, ' +
+        'a las 9 de la mañana y 5 de la tarde'],
       ['0-30 */2 * * *',
-        'cada minuto del 0 al 30 de cada hora, cada dos horas']
+        'cada minuto del 0 al 30, cada dos horas']
     ], ampm);
   });
 
@@ -225,7 +225,7 @@ describe('Español (es):', function() {
   describe('formas compactas y listas mixtas', function() {
     run([
       ['30 9-20,22 * * *',
-        'todos los días de las 9:30 de la mañana a las 8:30 de la noche ' +
+        'cada hora de las 9:30 de la mañana a las 8:30 de la noche ' +
         'y a las 10:30 de la noche'],
       ['0,30 8-18/2 * * *',
         'en los minutos 0 y 30 de cada hora, a las 8 de la mañana, ' +
@@ -272,12 +272,12 @@ describe('Español (es):', function() {
       ['* 0-5 * * *',
         'cada minuto de medianoche a las 5:59 de la madrugada'],
       ['0-30 9-17 * * *',
-        'cada minuto del 0 al 30 de cada hora, ' +
+        'cada minuto del 0 al 30, ' +
         'de las 9 de la mañana a las 5:30 de la tarde'],
       ['0 */9 * * *',
         'a medianoche, a las 9 de la mañana y a las 6 de la tarde'],
       ['0-30 9-20,22 * * *',
-        'cada minuto del 0 al 30 de cada hora, ' +
+        'cada minuto del 0 al 30, ' +
         'de las 9 de la mañana a las 8 de la noche y a las 10 de la noche'],
       ['* 1,6/3 * * *',
         'cada minuto de la 1 a la 1:59 de la madrugada y ' +

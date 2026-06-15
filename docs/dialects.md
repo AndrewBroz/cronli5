@@ -9,7 +9,7 @@ own.
 cronli5('30 9 * * MON-FRI');
 // 'every Monday through Friday at 9:30 a.m.'      (us — the default)
 
-cronli5('30 9 * * MON-FRI', { dialect: 'uk' });
+cronli5('30 9 * * MON-FRI', { dialect: 'gb' });
 // 'every Monday to Friday at 9.30am'
 
 cronli5('30 9 * * MON-FRI', { dialect: 'house' });
@@ -21,7 +21,7 @@ cronli5('30 9 * * MON-FRI', { dialect: { through: ' until ' } });
 
 ## Named dialects
 
-| | `'us'` (default) | `'uk'` | `'house'` |
+| | `'us'` (default) | `'gb'` | `'house'` |
 | --- | --- | --- | --- |
 | Anchor | [Chicago Manual of Style][chicago] | [Guardian style guide][guardian] | cronli5's legacy voice |
 | Serial comma | yes ("A, B, and C") | no ("A, B and C") | yes |
@@ -35,7 +35,7 @@ cronli5('30 9 * * MON-FRI', { dialect: { through: ' until ' } });
 Side by side:
 
 <!-- BEGIN GENERATED: dialects -->
-| Pattern | `'us'` | `'uk'` | `'house'` |
+| Pattern | `'us'` | `'gb'` | `'house'` |
 | --- | --- | --- | --- |
 | `0 9,12,17 * * *` | every day at 9 a.m., 12 p.m., and 5 p.m. | every day at 9am, 12pm and 5pm | every day at 9 AM, 12 PM, and 5 PM |
 | `30 9 * * MON-FRI` | every Monday through Friday at 9:30 a.m. | every Monday to Friday at 9.30am | every Monday - Friday at 9:30 AM |
@@ -43,6 +43,9 @@ Side by side:
 | `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5:45 p.m. | every 15 minutes from 9am to 5.45pm | every 15 minutes from 9 AM - 5:45 PM |
 | `0 0 12 25 12 * 2030` | on December 25, 2030 at noon | on 25 December 2030 at midday | on December 25th, 2030 at noon |
 <!-- END GENERATED: dialects -->
+
+`'uk'` is a deprecated alias for `'gb'`, renamed because the BCP-47 code
+`uk` is the Ukrainian language (`cronli5/lang/uk`), not British English.
 
 Style conventions shared by every dialect:
 
@@ -97,7 +100,7 @@ values):
   time style still applies (`'every Mon-Fri at 2 AM'` with `'house'`).
 * **`ampm: false`** switches to padded 24-hour times. The meridiem and
   12:00-word fields are unused; the dialect's `sep` still applies
-  (`'17:00'` for `'us'`, `'17.00'` for `'uk'`).
+  (`'17:00'` for `'us'`, `'17.00'` for `'gb'`).
 
 [chicago]: https://www.chicagomanualofstyle.org/
 [guardian]: https://www.theguardian.com/guardian-observer-style-guide-a

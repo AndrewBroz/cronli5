@@ -7,9 +7,10 @@ The reference module; the behavior spec in `test/` is its corpus.
 * **`us` dialect (default)**: [Chicago Manual of Style](https://www.chicagomanualofstyle.org/) —
   serial commas, "through" ranges, "9 a.m." (lowercase, periods, no :00 on
   the hour), "noon"/"midnight", cardinal month-day dates ("January 1").
-* **`uk` dialect**: [Guardian style guide](https://www.theguardian.com/guardian-observer-style-guide-a) —
+* **`gb` dialect**: [Guardian style guide](https://www.theguardian.com/guardian-observer-style-guide-a) —
   no serial comma, "to" ranges, "9am"/"5.30pm" (closed up, full-point
-  separator), "midday"/"midnight", day-first dates ("1 January").
+  separator), "midday"/"midnight", day-first dates ("1 January"). (`uk` is a
+  deprecated alias.)
 * **`house` dialect**: cronli5's legacy voice ("9:30 AM", "Monday - Friday",
   ordinal dates "January 1st") on a Chicago base.
 
@@ -18,9 +19,9 @@ for the field reference.
 
 ## Dialect axes
 
-`us` / `uk` / `house`, plus user-defined objects. Note the namespace rule:
-dialect names are language-scoped — en's `'uk'` means British English,
-while BCP-47 `uk` is Ukrainian.
+`us` / `gb` / `house`, plus user-defined objects. The British dialect is
+`gb`, not `uk`: BCP-47 `uk` is the Ukrainian language (`cronli5/lang/uk`),
+so `uk` is kept only as a deprecated alias for `gb`.
 
 ## Quirks and trade-offs
 

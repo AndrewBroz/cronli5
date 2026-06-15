@@ -90,6 +90,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **The English `'uk'` dialect was renamed to `'gb'`.** BCP-47 reserves
+  `uk` for the Ukrainian language, so the British-English style now uses the
+  ISO-3166 country code `'gb'`. `{ dialect: 'uk' }` still works as a
+  deprecated alias for `'gb'` and will be removed in a future release.
+
 - **Spanish now defaults to the 24-hour clock** (`a las 09:30`,
   `a las 17:00`), matching RAE convention for written Spanish. Pass
   `{ampm: true}` for the previous 12-hour behavior with day periods

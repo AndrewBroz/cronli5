@@ -1,6 +1,6 @@
-// The public type surface: option flags, dialect overrides, and the
+// Public types: option flags, dialect overrides, and the
 // accepted pattern shapes. The shipped declaration files are generated from
-// this module plus the typed source (`npm run types`) — never hand-edited.
+// this module plus the typed source (`npm run types`).
 
 /**
  * A custom style table for the `dialect` option. Omitted fields inherit
@@ -65,13 +65,13 @@ export interface Cronli5Options {
   /**
    * English dialect. `'us'` (default) follows the Chicago Manual of Style:
    * serial commas, "through" ranges, "9 a.m." times, "noon"/"midnight",
-   * "January 1" dates. `'uk'` follows the Guardian style guide: no serial
+   * "January 1" dates. `'gb'` follows the Guardian style guide: no serial
    * comma, "to" ranges, "9am"/"5.30pm" times, "midday"/"midnight",
    * "1 January" dates. `'house'` is cronli5's legacy voice ("9:30 AM",
    * "Monday - Friday") on a Chicago base. A `Cronli5Dialect` object defines
-   * a custom style.
+   * a custom style. (`'uk'` is a deprecated alias for `'gb'`.)
    */
-  dialect?: 'house' | 'uk' | 'us' | Cronli5Dialect;
+  dialect?: 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect;
 
   /**
    * A language module (e.g. `import es from 'cronli5/lang/es'`). Defaults

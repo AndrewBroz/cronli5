@@ -25,11 +25,17 @@ const NATURAL_BAR = 4;
 const CORRECT_BAR = 0.8;
 
 // The reviewer personas, shared by the baseline and judge steps.
-const PERSONAS = [
-  'an everyday native speaker (naturalness)',
-  'a meticulous copy editor (grammar and register)',
-  'a precise technical writer (correctness and ambiguity)'
+// The cross-family model account serves one model at a time, so every Gemma
+// call serializes. Keep Gemma's footprint small — a couple of baselines and
+// a single combined judge — and let the parallel Claude half (added by the
+// skill via --judges) carry the panel's statistical weight.
+const BASELINE_PERSONAS = [
+  'an everyday native speaker',
+  'a meticulous copy editor'
 ];
+const JUDGE_PERSONA =
+  'a fluent native speaker and careful editor weighing naturalness, grammar, ' +
+  'and accuracy';
 
 // The cRonstrue locale rendering, or null when it cannot parse the pattern.
 function cronstrueText(pattern, code) {
@@ -56,7 +62,7 @@ async function buildField(code, pattern) {
     field.push({src: 'cronstrue', text: their});
   }
 
-  const baselines = await Promise.all(PERSONAS.map((persona) =>
+  const baselines = await Promise.all(BASELINE_PERSONAS.map((persona) =>
     ask('You are ' + persona + ' of ' + name + '. In natural ' + name +
       ', describe this schedule in one line. Reply with ONLY the ' +
       'description. Schedule (English): "' + meaning + '"')));
@@ -89,9 +95,13 @@ function gemmaJudge(meaning, slate, name, persona) {
 
   return askJson('You are ' + persona + ' of ' + name + ', judging ' + name +
     ' descriptions of a schedule. The schedule means (English, ' +
-    'authoritative): "' + meaning + '".\nCandidates:\n' + lines +
-    '\nFor EACH letter reply JSON only: {"A":{"natural":0,"correct":true,' +
-    '"note":"<brief critique or fix>"},...,"best":"X"}. natural is 0-5.');
+    'authoritative): "' + meaning + '". Every candidate is a lowercase ' +
+    'sentence fragment meant to be embedded mid-sentence (like the English ' +
+    'meaning); do NOT penalize missing capitalization or a final period — ' +
+    'judge only the wording, naturalness, and accuracy.\nCandidates:\n' +
+    lines + '\nFor EACH letter reply JSON only: {"A":{"natural":0,' +
+    '"correct":true,"note":"<brief critique or fix>"},...,"best":"X"}. ' +
+    'natural is 0-5.');
 }
 
 function median(nums) {
@@ -138,9 +148,9 @@ function aggregate(item, verdicts) {
 async function reviewPattern(code, pattern) {
   const {meaning, field} = await buildField(code, pattern);
   const {slate, key} = anonymize(field);
-  const verdicts = (await Promise.all(PERSONAS.map((persona) =>
-    gemmaJudge(meaning, slate, NAMES[code], persona).catch(() => null))))
-    .filter(Boolean);
+  const verdict = await gemmaJudge(meaning, slate, NAMES[code], JUDGE_PERSONA)
+    .catch(() => null);
+  const verdicts = verdict ? [verdict] : [];
 
   return {item: {pattern, meaning, slate, key, gemmaVerdicts: verdicts},
     result: aggregate({pattern, slate, key}, verdicts)};

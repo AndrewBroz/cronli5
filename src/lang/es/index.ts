@@ -257,7 +257,8 @@ function renderRangeOfMinutes(
   plan: Extract<PlanNode, {kind: 'rangeOfMinutes'}>,
   opts: NormalizedOptions
 ): string {
-  return minuteRangeLead(ir.pattern.minute) + trailingQualifier(ir, opts);
+  return minuteRangeLead(ir.pattern.minute) + ' de cada hora' +
+    trailingQualifier(ir, opts);
 }
 
 function renderMultipleMinutes(
@@ -274,12 +275,13 @@ function minutesList(ir: IR): string {
     joinList(segmentWords(fieldSegments(ir, 'minute'))) + ' de cada hora';
 }
 
-// "cada minuto del 0 al 30 de cada hora".
+// "cada minuto del 0 al 30". The standalone renderer adds "de cada hora";
+// when an hour qualifier follows ("..., a las 09:00", "..., cada dos
+// horas") it would contradict, so it is not baked in here.
 function minuteRangeLead(minuteField: string): string {
   const bounds = minuteField.split('-');
 
-  return 'cada minuto del ' + bounds[0] + ' al ' + bounds[1] +
-    ' de cada hora';
+  return 'cada minuto del ' + bounds[0] + ' al ' + bounds[1];
 }
 
 // A repeating minute step, qualified by the active hour window(s).
@@ -414,11 +416,30 @@ function renderClockTimes(
   plan: Extract<PlanNode, {kind: 'clockTimes'}>,
   opts: NormalizedOptions
 ): string {
-  const times = plan.times.map(function clock(time) {
+  const phrases = plan.times.map(function clock(time) {
     return atTime(timePhrase(time.hour, time.minute, time.second, opts));
   });
 
-  return leadingQualifier(ir, opts) + joinList(times);
+  return leadingQualifier(ir, opts) + collapseAtTimes(phrases);
+}
+
+// Collapse "a las 12:00, a las 22:00, ..." to "a las 12:00, 22:00, ...":
+// the preposition is said once for a plain list. A single time keeps its
+// own article ("a la 01:00"), and a list with a worded time ("al mediodía",
+// "a medianoche") keeps the per-item form so each reads correctly.
+function collapseAtTimes(phrases: string[]): string {
+  const prefix = /^a las |^a la /;
+  const articled = phrases.every(function each(phrase) {
+    return prefix.test(phrase);
+  });
+
+  if (phrases.length < 2 || !articled) {
+    return joinList(phrases);
+  }
+
+  return 'a las ' + joinList(phrases.map(function bare(phrase) {
+    return phrase.replace(prefix, '');
+  }));
 }
 
 // Compact form past the enumeration cap: a single minute folds into
@@ -429,6 +450,18 @@ function renderCompactClockTimes(
   opts: NormalizedOptions
 ): string {
   if (plan.fold) {
+    const ranged = hourSegments(ir).some(function range(segment) {
+      return segment.kind === 'range';
+    });
+
+    // A folded contiguous hour range reads with the hourly cadence ("cada
+    // hora de las 9:00 a las 20:00 y a las 22:00"), not "todos los días".
+    if (ranged && !ir.analyses.clockSecond) {
+      return 'cada hora ' +
+        hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts) +
+        trailingQualifier(ir, opts);
+    }
+
     return leadingQualifier(ir, opts) +
       hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
   }
@@ -547,7 +580,7 @@ function atHourTimes(
   opts: NormalizedOptions
 ): string {
   if (times.kind === 'fires') {
-    return joinList(atTimes(times.fires, opts));
+    return collapseAtTimes(atTimes(times.fires, opts));
   }
 
   return hourSegmentTimes(ir, 0, null, opts);

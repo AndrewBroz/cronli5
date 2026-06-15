@@ -9,10 +9,11 @@
 // `options` include:
 // - ampm (boolean):
 //     use AM/PM instead of zero-padded 24-hour time
-// - dialect ('us' | 'uk' | 'house' | object):
-//     'us' (default) follows the Chicago Manual of Style; 'uk' follows the
+// - dialect ('us' | 'gb' | 'house' | object):
+//     'us' (default) follows the Chicago Manual of Style; 'gb' follows the
 //     Guardian style guide; 'house' is the legacy cronli5 voice; an object
-//     defines a custom style over the US defaults (see docs/dialects.md)
+//     defines a custom style over the US defaults (see docs/dialects.md).
+//     'uk' is a deprecated alias for 'gb'
 // - lenient (boolean):
 //     never throw; invalid input returns a fallback description
 // - seconds (boolean):

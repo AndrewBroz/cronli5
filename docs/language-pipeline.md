@@ -103,7 +103,7 @@ module from **beta → stable**. The panel pipeline is what makes a language
 
 ## Dialects
 
-A dialect is a style variation *within* a language (English ships `us`, `uk`,
+A dialect is a style variation *within* a language (English ships `us`, `gb`,
 `house`, plus custom objects). The pipeline applies as a *re-parameterization*
 — review `cronli5(pattern, {dialect})` instead of `{lang}` — but three things
 change:
@@ -117,11 +117,11 @@ change:
   range, a time, a date, noon/midnight. The curated `dialectPatterns` set in
   `scripts/patterns.mjs` is exactly this.
 - **Personas anchor to the region/style** (a Guardian-style British writer for
-  `uk`; a Latin-American speaker for a future `es-419`), not just the language.
+  `gb`; a Latin-American speaker for a future `es-419`), not just the language.
 
 Dialects sit on a spectrum that sets how much review each needs:
 
-- **Anchored-style** (`us`→Chicago, `uk`→Guardian) — an external guide is the
+- **Anchored-style** (`us`→Chicago, `gb`→Guardian) — an external guide is the
   oracle; reviewable by the panel and a region-fluent human.
 - **Internal** (`house`, and custom `Cronli5Dialect` objects) — self-defined,
   no external norm; *correct by construction*, needing consistency not a panel.
@@ -130,8 +130,8 @@ Dialects sit on a spectrum that sets how much review each needs:
   fullest treatment with region-fluent humans.
 
 **Status is per `(language, dialect)` pair.** The same stable/beta rule
-applies. English's `us`, `uk`, and `house` are all **stable** (`us` Chicago +
-maintainer-native; `uk` reviewed by the maintainer, a competent UK-English
+applies. English's `us`, `gb`, and `house` are all **stable** (`us` Chicago +
+maintainer-native; `gb` reviewed by the maintainer, a competent UK-English
 reader; `house` stable by construction). A machine-built dialect ships **beta**
 until human-reviewed, exactly like a language.
 

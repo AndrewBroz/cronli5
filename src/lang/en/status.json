@@ -4,7 +4,7 @@
   "humanReview": "maintainer (native)",
   "crossFamilyReview": null,
   "dialects": {
-    "uk": {
+    "gb": {
       "anchor": "Guardian style guide",
       "status": "stable",
       "humanReview": "maintainer (UK-English)",
