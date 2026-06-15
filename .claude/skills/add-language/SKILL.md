@@ -39,9 +39,10 @@ with zero errors before reviewing.
 Three sub-steps:
 
 **a. Gemma half.** `node --import tsx scripts/panel.mjs <code>` — assembles the
-anonymized, shuffled slates (cronli5 + cRonstrue locale + Gemma baselines),
-runs the three Gemma judge personas, and writes the slates to
-`tmp/panel-<code>.json`.
+anonymized, shuffled slates (cronli5 + cRonstrue locale + 2 Gemma baselines),
+runs the single Gemma judge, and writes the slates to `tmp/panel-<code>.json`.
+(Gemma is kept to one judge because the account serves one model at a time and
+serializes; the parallel Claude judges carry the panel weight.)
 
 **b. Claude half.** Read `tmp/panel-<code>.json`. For each of the three
 personas — *everyday native speaker*, *meticulous editor*, *precise technical
@@ -66,15 +67,22 @@ pattern: `{"<pattern>": [persona1, persona2, persona3]}`.
 --judges=tmp/claude-<code>.json` — folds both halves, applies the beta gate
 per pattern, and prints `PASS`/`FAIL` plus the clustered `fixes` for failures.
 
-## 4. Beta gate + iterate
+## 4. Beta gate + iterate (test-first)
 
-A pattern passes when cronli5's **median naturalness ≥ 4**, **≥ 80% "correct"**,
-and it **ranks at or above** the blind field (baseline/cRonstrue). For
-failures, apply the printed clustered fixes to the renderer and re-run step 3
-on the failing patterns only (use `--limit` while iterating to save calls).
-Repeat until the whole spanning set passes — or until the renderer is as good
-as the baselines and the residue is genuinely hard compound semantics, which
-you **document** rather than paper over.
+A pattern passes when cronli5's **median naturalness ≥ 4**, **enough judges
+call it correct** — the gate tolerates one dissenter, scaled to the panel size
+(`correctBar(n)` = `(n−1)/n`, capped at 0.8; for the 4-judge panel that's 3 of
+4) — and it **ranks at or above** the blind field (baseline/cRonstrue).
+
+For a failure, fix it **test-first**: from the clustered `fixes` and the
+baselines, decide the intended output, write it into
+`test/lang/<code>/corpus.js`, run the tests and **watch it fail**, then fix the
+renderer until it passes. Never edit the renderer first and update the corpus
+to match — the corpus is the spec, not a transcript of the code's output. Then
+re-run step 3 on the failing patterns only (`--limit`) until the spanning set
+passes — or until the renderer is as good as the baselines and the residue is
+genuinely hard compound semantics, which you **document** rather than paper
+over.
 
 ## 5. Write the corpus — provisional ("fool's gold")
 

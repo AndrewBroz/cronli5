@@ -21,15 +21,20 @@ see [../CONTRIBUTING.md](../CONTRIBUTING.md). For the architecture, see
 
 ## The panel
 
-The unit of judgment is a **blind persona panel**: **3 personas × 2 families
-= 6 panelists**, used for both the baseline and the judge step.
+The unit of judgment is a **blind, cross-family persona panel** — diverse
+reviewer personas across two model families, none aware of provenance.
 
 - **Personas** (each catches a different failure mode):
   - *everyday native speaker* — naturalness ("would a person say this?")
   - *meticulous editor* — grammar, agreement, register
   - *precise/technical communicator* — correctness, ambiguity
 - **Families**: **Claude** (fresh `Agent` sub-agents) and **Gemma**
-  (`gemma4:31b-cloud` via Ollama Cloud, called through `scripts/llm.mjs`).
+  (`gemma4:31b-cloud` via Ollama Cloud, through `scripts/llm.mjs`).
+- **Composition (cost-tuned).** Gemma's account serves one model at a time,
+  so every Gemma call serializes; the panel therefore runs a **single Gemma
+  judge** plus **3 Claude judges** (4 voters) and **2 Gemma baselines**,
+  letting the parallel Claude side carry the statistical weight. The judge
+  count is what the gate is calibrated to.
 - **Blind**: each panelist is a fresh, stateless instance, told only its
   persona and the target language — no provenance, no sight of cronli5 /
   cRonstrue / other panelists.
@@ -54,17 +59,22 @@ The unit of judgment is a **blind persona panel**: **3 personas × 2 families
    an **anonymized, shuffled slate** of candidate renderings: cronli5's output,
    cRonstrue's locale output, and the baseline field. Labels are stripped,
    the order is shuffled, and the key is held by the orchestrator and hidden
-   from judges. Each of the 6 blind panelists scores **every** candidate
-   (naturalness 0–5, correct bool, best pick, and qualitative feedback) without
-   knowing which is which. **De-anonymize against the key** afterward and read
-   cronli5's standing.
+   from judges. Each blind judge scores **every** candidate (naturalness 0–5,
+   correct bool, best pick, and qualitative feedback) without knowing which is
+   which. **De-anonymize against the key** afterward and read cronli5's
+   standing.
 5. **Beta gate** — two parts:
-   - *absolute*: per item, median naturalness ≥ 4 **and** ≥ 5/6 "correct";
+   - *absolute*: per item, median naturalness ≥ 4 **and** enough judges call it
+     correct — the gate tolerates one dissenter, **scaled to the panel size**
+     (`correctBar(n)` = `(n−1)/n`, capped at 0.8; for the 4-judge panel, 3 of
+     4). A panel exists to *outvote* an outlier, so a lone wrong or
+     hallucinated vote must not fail a verified-correct rendering;
    - *relative*: cronli5 ranks **at or above** the baseline/cRonstrue on most
      items ("indistinguishable from or better than a fluent model's blind
      attempt").
-   Failures surface the **clustered fixes**; apply them to the renderer and
-   re-run the failing items only.
+   Failures surface the **clustered fixes**; fix them **test-first** (write the
+   intended output into the corpus, watch it fail, then fix the renderer — see
+   CONTRIBUTING.md) and re-run the failing items only.
 6. **Corpus + `status.json`** — `corpus.js` is the settled outputs;
    `src/lang/<code>/status.json` records `status: "beta"`, the judge summary,
    and `PlanNode`-kind coverage.
@@ -75,10 +85,10 @@ The unit of judgment is a **blind persona panel**: **3 personas × 2 families
 
 ## Aggregation
 
-Per item, across the 6 panelists: **naturalness = median**, **correct = vote
-fraction**, **fixes = clustered** (a *consensus fix* when a majority
-converge), **relative = cronli5's mean rank** in the slate plus its win-rate
-versus the baseline median and versus cRonstrue.
+Per item, across the judges: **naturalness = median**, **correct = vote
+fraction** (gate: `correctBar(n)`), **fixes = clustered** (a *consensus fix*
+when a majority converge), **relative = cronli5's mean rank** in the slate plus
+its win-rate versus the baseline median and versus cRonstrue.
 
 ## Caveats
 

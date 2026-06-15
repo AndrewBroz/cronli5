@@ -2,5 +2,5 @@
   "name": "Spanish",
   "status": "beta",
   "humanReview": "maintainer (informal); formal pilot pending",
-  "crossFamilyReview": null
+  "crossFamilyReview": "gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15)"
 }

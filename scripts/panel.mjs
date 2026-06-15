@@ -22,7 +22,15 @@ const MODULES = {es, fi};
 const NAMES = {es: 'Spanish', fi: 'Finnish'};
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const NATURAL_BAR = 4;
-const CORRECT_BAR = 0.8;
+
+// The fraction of judges that must call a rendering correct, scaled to the
+// panel size so the gate is never pinned to a fixed count. A panel exists to
+// outvote outliers, so it tolerates one dissenter — (judges - 1) / judges —
+// capped at 0.8 so a large panel still allows ~20% to dissent. An unjudged
+// item (no judges) cannot pass.
+function correctBar(judges) {
+  return judges < 1 ? 1 : Math.min((judges - 1) / judges, 0.8);
+}
 
 // The reviewer personas, shared by the baseline and judge steps.
 // The cross-family model account serves one model at a time, so every Gemma
@@ -140,7 +148,8 @@ function aggregate(item, verdicts) {
     stats,
     rank,
     candidates: item.slate.length,
-    pass: mine.natural >= NATURAL_BAR && mine.correct >= CORRECT_BAR
+    pass: mine.natural >= NATURAL_BAR &&
+      mine.correct >= correctBar(verdicts.length)
   };
 }
 

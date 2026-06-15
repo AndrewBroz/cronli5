@@ -161,7 +161,7 @@ cronli5(weekdaysAt1330, { ampm: true, short: false });
 cronli5(weekdaysAt1330, { ampm: false, short: true });
 // 'every Mon-Fri at 13:30'
 
-cronli5(weekdaysAt1330, { dialect: 'uk' });
+cronli5(weekdaysAt1330, { dialect: 'gb' });
 // 'every Monday to Friday at 1.30pm'
 ```
 
@@ -203,7 +203,7 @@ until a human review cycle is completed. See
 | Language | Status | Human review | Cross-family review |
 | --- | --- | --- | --- |
 | English | stable | maintainer (native) | — |
-| Spanish | beta | maintainer (informal); formal pilot pending | — |
+| Spanish | beta | maintainer (informal); formal pilot pending | gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15) |
 | Finnish | beta | — | — |
 <!-- END GENERATED: language-status -->
 

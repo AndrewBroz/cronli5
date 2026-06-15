@@ -86,6 +86,34 @@ Naturalness can't be unit-tested. Two passes:
   or model. Claude judges share a bias, so this is the only way to vouch
   for quality in a language the maintainers don't speak natively.
 
+## Fixing a bug (test-first)
+
+The corpus is the spec, so a fix starts in the corpus, not the renderer:
+
+1. Decide the **intended** output (for a language module, the wording a fluent
+   speaker would bless).
+2. Put it in `test/lang/<code>/corpus.js` — a new entry, or correcting an
+   existing one — and **run the tests and watch it fail.**
+3. Fix the renderer until that test passes.
+
+Never edit the renderer first and then update the corpus to match its new
+output: that makes the code grade itself and can enshrine a subtly-wrong fix.
+The intended output, not the code's actual output, is the source of truth.
+
+**Expanding the test surface.** Two different surfaces grow under different
+rules:
+
+- The **corpus** (`test/lang/<code>/corpus.js`) is the full regression suite —
+  cheap, so **every** bug earns a pinned entry, and new behavior earns
+  coverage. Grow it freely.
+- The **review spanning set** (`scripts/spanning-set.mjs`) is what the
+  cross-family panel reads, and the panel is slow, so keep it a *minimal*
+  spanning set. Add to it only when (a) `spanning-set.mjs` reports an
+  uncovered `PlanNode` kind or a linguistic feature is unexercised, or (b) a
+  *naturalness* defect appears in a pattern shape the set doesn't represent —
+  add one representative so future panels catch the class. A plain
+  *correctness* bug needs only a corpus regression test, not a panel re-run.
+
 ## Conventions (enforced by the linter)
 
 - **`opts` is the last parameter** of any function that takes it (a callback,

@@ -45,6 +45,12 @@ Each language's golden outputs are in `test/lang/<code>/corpus.js` — the oracl
 a renderer must reproduce. It is **hand-written and reviewed, never generated**;
 generating it would only prove the code agrees with itself.
 
+**Bug fixes are test-first.** When a defect is found, write the *intended*
+output into the corpus first (a failing test), run it, watch it fail, *then*
+fix the renderer until it passes. Never edit the renderer first and update the
+corpus to match its new output — that lets the code grade itself and can
+enshrine a subtly-wrong fix. The corpus is the spec; the renderer chases it.
+
 ## Languages ship as beta, then graduate
 
 A language is **beta** (model-validated by the cross-family review panel) until
