@@ -2,5 +2,5 @@
   "name": "German",
   "status": "beta",
   "humanReview": null,
-  "crossFamilyReview": "gemma4:31b-cloud + Claude panel — 30/34; findings fixed test-first (2026-06-16)"
+  "crossFamilyReview": "gemma4:31b-cloud + 3 Claude judges — 34/34 after findings fixed test-first and re-attested (2026-06-16)"
 }
