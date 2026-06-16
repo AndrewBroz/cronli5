@@ -1,57 +1,46 @@
 # i18n Design: A Language-Independent Core with Generated, Reviewed Languages
 
-*Status: design accepted; migration steps 1–4 (§7) are implemented — the
-core/`lang/en` split, the `plan` IR consumed by a pure English renderer,
-the Spanish pilot, and the Finnish agglutinative stress test
-(`src/lang/fi/`, `test/lang/fi/`, the `cronli5/lang/fi` subpath). Both
-non-English languages required ZERO core changes — the IR contract held
-through gendered agreement (es) and case-construction ranges (fi).
-Finnish confirmed §5's prediction that `through` cannot be a connective
-string (ranges are stored case pairs or SFS dash notation, chosen per
-construction inside the module) and inverted one guess: enumerated clock
-times are cheap in Finnish (caseless `klo` digits), so it enumerates
-where this doc predicted window phrasing. Next: breadth (step 5).*
-
 ## 1. The inverted assumption
 
-cRonstrue handles i18n with a template engine: every locale fills in ~120
-format strings, and the engine assembles them into fragment chains. That
-architecture optimized for **cost of writing** — a locale file is a weekend
-of work — and it bought 39 locales. The permanent price is that every
-language is clamped to English's sentence structure, which is why localized
-cRonstrue reads like translated English, and why English cRonstrue itself
-reads like a template.
+i18n designs typically use a template-based engine. Templates are optimized
+for human labor cost and specialist availability. Templates require a
+localization expert per language, but don't require a programmer. For
+generating system messages like error messages and app copy, this approach
+works very well. In the case of cron patterns, where cases are complex,
+templates are a poor fit. A templated approach result in unnatural,
+stitched-together sentences.
 
-Generative coding inverts the economics. Writing a full, fluent describer
-for a new language now costs roughly what the locale file used to. The
-scarce resource is no longer authoring effort but **verification effort**:
-knowing the Polish plurals are right, that the Basque suffixes harmonize,
-that the Arabic noun after 15 is singular accusative. So the architecture
-should minimize the *verification* surface, not the authoring surface.
+This tradeoff was worthwhile to address a bottleneck of effort and expertise;
+a library could acquire human-generated outputs for a wide variety of
+languages at a manageable effort level. Even if the resulting outputs were
+stilted and inflected by the base language that determined the template
+categories (English), the outputs would be technically correct (mostly).
 
-cronli5 already owns the assets that matter for that: a ~1,300-case
-behavior spec, property invariants, normalization that canonicalizes input
-before any language sees it, and a comparison harness against cRonstrue —
-which, with 39 locales, is a free adversarial reference for nearly every
-language we would add.
+Generative coding inverts the economics. Writing a fluent cron describer
+for a new language now costs roughly what writing a locale file used to.
+LLMs for language can also be used to do a first pass validation of the
+outputs for correctness and fluency. Human localization effort can then
+move to verification of outputs, and be used where it matters most — for
+style and the identification of edge cases.
 
 ## 2. Architecture
 
-Three layers, per the A-lite + B decision:
+The architecture uses a layered approach with a language-independent core
+and language-specific renderers.
 
 ```
-parse → validate → normalize → analyze            (core: language-independent)
+parse → validate → normalize → analyze              (core: lang-independent)
                                   │
                                   ▼
-                          semantic description     (the IR: thin, descriptive)
+                          semantic description      (thin, descriptive IR)
                                   │
                                   ▼
-                     lang/<code> renderer + styles  (language: owns ALL words)
+                     lang/<code> renderer + styles  (language-specific)
                                   │
-                     corpus + invariants + reviews  (the contract: evidence)
+                     corpus + invariants + reviews  (the contract)
 ```
 
-### 2.1 The core (language-independent)
+### 2.1 The Core (language-independent)
 
 Everything that is true about a cron pattern regardless of language:
 
@@ -65,10 +54,15 @@ Everything that is true about a cron pattern regardless of language:
 * A **plan**: which description strategy the core suggests (clock times,
   frequency-with-window, span, composition, Quartz qualifier, …).
 
-### 2.2 The IR (thin and descriptive, never prescriptive)
+### 2.2 The Intermediate Representation (IR)
 
-The IR carries *what fires* and *what the core would say*, never *how to
-say it*:
+The intermediate representation (IR) carries information about the shape of
+a cron pattern (but not how to say it). An IR is an object that contains the
+`pattern` object and other generalizable analyses of the pattern including:
+
+* `shapes`: The shape of each field (e.g., `step`, `range`, `list`, `all`, `none`)
+* `analyses`: The results of semantic analysis (e.g., `hourFires`, `lastMinuteFire`, `foldsToClockTime`, `capExceeded`)
+* `plan`: The plan for describing the pattern (e.g., `kind`, `unit`, `interval`, `window`, `qualifier`)
 
 ```js
 {
@@ -82,44 +76,44 @@ say it*:
 }
 ```
 
-The critical rule, learned from cRonstrue's mistake: **strategy choice is
-itself language-dependent.** Whether a window reads better enumerated or as
-a range depends on the grammar doing the work (§5). So `plan` is a *hint*
-backed by English-bred heuristics; a language module may consume it
+Strategy choice is language-dependent. Whether a window reads better enumerated
+or as a range depends on the grammar and style of a given language doing the
+work (§5). As such,  when writing a module, treat the `plan` as a *hint* based
+on heuristics from other languages. A language module may consume it
 directly (the common case) or re-plan from `pattern` + `analyses` when its
-grammar demands. If the IR ever encodes sentence shape — fragment order,
-connective slots — we have rebuilt cRonstrue with extra steps.
+grammar demands. The IR should not encode sentence shape like fragment order
+or connective slots.
 
-Semantic fixes (a fold bug, a cap policy change, a new Quartz token) land
-once, in the core. Wording fixes land in one language. The boundary test:
-*if a change must touch more than one language module, it belonged in the
-core.*
+Semantic fixes (a fold bug, a cap policy change, a new Quartz token) go
+in the core. Wording fixes are language-specific. Current test: If a change must
+touch more than one language module, it belonged in the core.
 
-### 2.3 The language module (owns all words)
+_NOTE:_ We may consider grouping language modules into families in the future, but
+for now, each language is its own module.
+
+### 2.3 The Language Module
 
 A language module is a renderer plus its own style system. Nothing
-linguistic survives in the core — today's `pluralize`, `joinList`,
+linguistic survives in the core. Features like `pluralize`, `joinList`,
 `through`, `getTime`, ordinals, number words, qualifier placement, and the
-dialect tables are all English module internals (§5 shows why each one is
-an anglicism in disguise).
+dialect tables are all specific to a language module's internals.
 
-### 2.4 The contract (corpus as evidence)
+See [Language Plural Rules](plurals) for an example of why this is the case.
 
-What makes a language module *trustworthy* is not its code shape but its
-evidence. Each module ships:
+### 2.4 The Contract
 
-1. **A corpus**: the translated expectation suite, pattern → exact output,
-   covering the same behavior matrix as English plus the language's own
-   minimal pairs (§6).
-2. **Invariants**: the shared property suite (never throws, never leaks
-   `NaN`/`undefined`/untranslated tokens, deterministic, ≤ cap), plus
-   language-specific properties (e.g. "a count of 22–24 in Polish must
-   take the *few* form").
+Module development should be driven by a diverse collection of correct examples,
+using TDD to validate that the module behaves correctly for all cases. New edge
+cases should be captured as a test first, then implemented. For each language
+module, we expect:
+
+1. **A corpus**: the translated expectation suite relating a pattern to an
+  exact output.
+2. **Invariants**: the shared property suite, plus language-specific properties.
 3. **A review log**: machine-assisted review verdicts, hash-stamped to the
-   corpus they reviewed (§4).
+  corpus they reviewed.
 4. **Notes**: the language's anchor style guide(s), dialect axes, and known
-   trade-offs — the per-language analogue of our Chicago/Guardian
-   decision.
+  trade-offs.
 
 ## 3. Project structure
 
@@ -170,25 +164,7 @@ Encapsulation rules:
 
 ### 3.1 Distribution and size (measured, June 2026)
 
-How cronstrue ships its 39 locales, for contrast:
-
-1. **`cronstrue`** (main entry): English only, **22.0 KB** minified.
-2. **`cronstrue/i18n`**: every locale webpacked into one UMD bundle,
-   **182.2 KB** minified (~4.7 KB marginal per locale) — and this is the
-   entry its README steers Node users to, so a consumer wanting one
-   second language typically carries all 39.
-3. **`cronstrue/locales/<code>`**: individual UMD packs (es: 4.9 KB
-   minified) that `require('cronstrue')` and **self-register by side
-   effect** into a shared factory, selected by string key
-   (`{locale: 'es'}`). Pay-per-locale, but via global mutation, and the
-   string key means a typo fails at runtime.
-
-A cronstrue locale is small because it is a string table (~3.6 KB of
-source, 30–60 template slots) consumed by one shared template engine —
-the very architecture §1 rejects, and the reason its output reads like
-filled templates.
-
-cronli5's measured equivalents:
+cronli5's sizes:
 
 | Artifact                          | Minified | Gzipped |
 | --------------------------------- | -------- | ------- |
@@ -198,23 +174,9 @@ cronli5's measured equivalents:
 
 Consequences of the languages-as-values model:
 
-* **The default entry never grows.** Adding a language adds a directory
-  the main bundle never imports. Ten more languages leave
-  `import cronli5 from 'cronli5'` at 18.5 KB.
-* **Consumers pay per import, structurally.** `cronli5/lang/es` is a
-  plain value with no registry and no side effects; a bundler includes
-  exactly the languages the app imports. There is deliberately no
-  "all languages" entry to become the documented default, because
-  cronstrue shows where that leads.
-* **A cronli5 language costs ~2× a cronstrue locale on the wire**
-  (10 KB vs ~4.7 KB minified marginal; 3.3 KB gzipped). That is the
-  price of a full renderer per language instead of a string table, and
-  it is bounded: each language imports only its own dialect table, never
-  the core or another language (es duplicates ~1–2 KB of helpers like
-  `joinList` rather than coupling to en — duplication is the cheaper
-  debt here).
-* **Install size grows ~30 KB of source per language** (the package
-  ships `src/`); negligible against the 1.5 MB cronstrue installs.
+* The main bundle doesn't import language files except for the default English.
+* Each additional language is a plain value with no registry and no side effects.
+  The bundler includes only the languages the app imports.
 
 Packaging status:
 
@@ -224,62 +186,53 @@ Packaging status:
    dual-build main entry.
 2. **Done.** Each language subpath carries a `types` condition pointing
    at a shared `Cronli5Language` declaration (`lang.d.ts`).
-3. The browser global stays English-only; per-language IIFE bundles are
-   cheap to emit from the same build script if ever requested.
 
 ## 4. The LLM review pass
 
-The review pass replaces the native-speaker bottleneck. It is designed as
-distinct passes with distinct failure modes, because "LLM, is this good
-Spanish?" is too weak a question.
+The LLM review pass allows for beta builds without a native-speaker
+bottleneck. It is designed as distinct passes to address distinct
+failure modes of LLM-based evaluation:
 
 **Pass 1 — Grammar and agreement (editor pass).** The model receives the
 corpus (pattern, output) plus the language's notes, acting as a copy
-editor against the named anchor guide. The rubric demands *cited,
-row-level corrections* ("row 41: `каждые 21 минута` → `каждую 21 минуту`;
-21 takes the singular-agreeing form"), not holistic scores. Vague approval
-is treated as a failed review.
+editor against the named anchor guide. The rubric demands cited,
+row-level corrections, not holistic scores. Vague approval is treated as
+a failed review.
 
 **Pass 2 — Semantic fidelity (round-trip pass).** The model receives only
-the *descriptions* and converts each back into cron fields; a script
-compares fire-sets mechanically. This is the strongest pass because it is
-objective: no judgment of style, just "does the Hungarian sentence still
-mean `*/15 9-17 * * MON-FRI`?" It catches dropped qualifiers, inverted
-ranges, and meridiem mistakes — the bug classes this project has been
-killing all along — in every language uniformly.
+the descriptions and converts each back into cron fields. A script
+compares sets mechanically. This is a binary pass because correctness is
+objective. This pass catches bugs likedropped qualifiers, inverted
+ranges, and meridiem mistakes.
 
 **Pass 3 — Idiom and register (translationese pass).** The model compares
-our output against the cRonstrue locale side-by-side table (generated by
-`docs.mjs`) and flags stilted phrasing — the test is
-"would a native describer say this, or is this English wearing a coat?"
+our output against cRonstrue locales in a side-by-side table (generated by
+`docs.mjs`) and flags stilted phrasing. The test is if a native speaker
+would write this.
 
 **Pass 4 — Minimal pairs (the language's own trap list).** Each language's
-`pairs.js` encodes its known hazards as targeted probes: Polish 22–24
+`pairs.js` encodes its known hazards as targeted probes, e.g. Polish 22–24
 *few*-forms, Arabic dual and 11+ singular, French `1er` vs `2`, Basque
-suffix harmony. These run as ordinary tests forever; the review pass only
-has to get them right once.
+suffix harmony. These run as ordinary tests.
 
-Mechanics and honesty:
+Mechanics:
 
-* Reviews are **offline, recorded artifacts**, not CI API calls:
-  `scripts/review-lang.mjs <code>` emits a review packet; verdicts land in
-  `REVIEW.md` stamped with the corpus hash. CI's gate is mechanical: tests
-  green, invariants green, review log current for this corpus hash.
-* Use a *different model family* for review than was used for generation
-  where practical; same-model review inherits same-model blind spots.
+* Reviews are offline, recorded artifacts. `scripts/review-lang.mjs <code>`
+  emits a review packet. Verdicts land in `REVIEW.md` with the corpus hash.
+  This CI is gated on tests and invariants passing, and a current review
+  log for this corpus hash.
+* Use a mix of model families for review. Same-model review inherits
+  same-model biases.
 * The corpus diff is the unit of re-review. A core semantic change that
-  ripples into 40 corpus lines triggers a diff-scoped review, not a full
-  one.
-* Limits, stated plainly: LLM review is strong on grammar, agreement, and
-  semantics (passes 1–2), weaker on register and regional naturalness
-  (pass 3). The architecture loses nothing if a human native speaker later
-  audits a corpus — the artifact they would review already exists.
+  ripples into 40 corpus lines triggers a diff-scoped review.
+* _Limitations:_ LLM review is strong on grammar, agreement, and
+  semantics (passes 1–2), but weaker on register and regional naturalness
+  (pass 3).
 
-## 5. What the thirteen languages teach the design
+## 5. Implications of a language audit on design
 
 Each language below names the feature that breaks a naive design and the
-requirement it imposes. This section is the *reason* the core must stay
-semantic.
+requirement it imposes.
 
 | Language | Breaking feature | Design requirement |
 | --- | --- | --- |
@@ -297,72 +250,45 @@ semantic.
 | Arabic | six plural categories incl. dual; 3–10 reverse gender agreement; 11+ takes the **singular**; RTL with embedded LTR digits | the full CLDR plural axis; bidi isolation when interpolating times; numeral-system dialect axis (٩:٣٠) |
 | Hebrew | dual word-forms ("שעתיים" = two hours, one word); reverse gender on numbers; RTL | number+unit may fuse into a single lexical item |
 
-Cross-cutting conclusions:
+Conclusions:
 
-1. **Every "style field" we built for English is an anglicism.** `am`/`pm`
-   → an hour-band period table (Mandarin). `through` → a construction
-   (Finnish). `ordinals` → a per-value rule (French). `serialComma` →
-   list-joining is per-language entirely (Mandarin 、). `pluralize(n,
-   unit)` → `unitForm(n, unit, construction)` with CLDR categories
-   (Arabic, the Slavs). So the core exposes *no* style schema; each
-   language defines its own, the way en's dialect table will become
-   en-internal.
-2. **Strategy is language-dependent, confirmed.** Enumerated clock times
+1. **Style fields are language-specific.** The core should not expose a
+   style schema. Each language defines its own.
+2. **Strategy is language-dependent.** E.g. Enumerated clock times
    are cheap in Mandarin (compact, no agreement) and expensive in Finnish
-   (every time inflects); a Finnish module may prefer window phrasing
-   where English enumerates. The cap policy stays core (it is about
+   (every time inflects). The cap policy should be in core (it is about
    cognitive load), but the *threshold and fallback shape* should be
    overridable per language.
-3. **Normalization pays for itself thirteen times.** Sorted, deduped,
-   canonical fields mean no language module ever handles `17,9` or `1/1`;
-   the hardest-won semantics stay write-once.
-4. **RTL is a rendering concern but a *testing* requirement**: Arabic and
+3. **Normalization is a core feature.** Sorted, deduped, canonical fields mean
+  no language module ever has to custom handle cases like `17,9` or `1/1`.
+4. **RTL is a rendering concern AND a testing requirement.** Arabic and
    Hebrew corpora must assert bidi-safe output around LTR digit runs, and
    the review packet must render (not just diff) RTL strings.
 
-## 6. General language guidelines (the contribution checklist)
+## 6. General language guidelines
 
-Every `lang/<code>/notes.md` must answer, before the corpus is reviewed:
+Every `lang/<code>/notes.md` must answer these questions:
 
-* **Anchors**: which style guide(s) govern, and which dialect axes exist
-  (es-ES/es-MX, zh-CN/zh-TW, ar numeral systems, pt-PT/pt-BR someday).
-* **Clock**: 12h or 24h default; day-period system; separator; words for
-  exactly 12:00; on-the-hour conventions.
-* **Numbers**: spell-out threshold; ordinal system; numeral script.
-* **Agreement**: plural categories used (CLDR); gender/case government in
-  the "every N units" and "N units past the X" constructions.
+* **Anchors**: which style guide(s) to use and which dialect axes exist
+  (es-ES/es-MX, zh-CN/zh-TW, ar numeral systems, pt-PT/pt-BR).
+* **Clock**: 12h or 24h default, day-period system, separator, words for
+  special times of day (midday, midnight), on-the-hour conventions.
+* **Numbers**: spell-out threshold, ordinal system, numeral script.
+* **Agreement**: for languages that use agreement, plural categories,
+  gender/case government in "every N units" and "N units past the X"
+  constructions.
 * **Dates**: order, day form (cardinal/ordinal/mixed), month inflection.
 * **Constructions**: how ranges, lists, and from–to windows are built;
   qualifier position (the prefix/trailing split is English word order, not
   a universal).
-* **Traps**: the minimal pairs that become `pairs.js`.
+* **Traps**: the minimal pairs for `pairs.js`.
 
-## 7. Migration plan (via C)
-
-1. **Freeze and split.** Extract `src/lang/en/` and `src/core/` with
-   byte-identical output — the existing ~1,300 tests are the proof. The
-   en module initially imports core helpers directly (approach C); the IR
-   exists but is thin.
-2. **Harden the seam.** Move strategy selection into `analyze()` (the
-   `plan`), make en consume the IR. Anywhere en still reaches into core
-   internals is a seam bug; fix until the only import is the IR.
-3. **Pilot Spanish.** Closest cousin with real agreement; exercises
-   gendered units, "a la(s)" time articles, dialect axes, and the full
-   review pipeline (§4) end to end. Everything the pilot forces us to
-   change in *core* is recorded — that churn is the real design review of
-   this document.
-4. **Stress-test with Finnish or Basque** before declaring the contract
-   stable. If the seam survives agglutination, it survives anything on
-   the list.
-5. **Then breadth is cheap**: generate module + corpus, run invariants,
-   run the review passes, ship a directory.
-
-## 8. Open questions
+## 7. Open questions
 
 * **Cap policy ownership**: core constant, language override, or both
   (core default + language multiplier)?
-* **`lenient` fallback string** is English; it must come from the language
-  module — which makes even the error path part of the corpus.
+* **`lenient` fallback string** must come from the language
+  module, which makes even the error path part of the corpus.
 * **Review model recording**: how much provenance belongs in `REVIEW.md`
   (model, version, prompt hash?) for reviews to be auditable later.
 * **Number-spelling in `short` mode** interacts with numeral scripts
@@ -373,3 +299,4 @@ Every `lang/<code>/notes.md` must answer, before the corpus is reviewed:
 
 [chicago]: https://www.chicagomanualofstyle.org/
 [guardian]: https://www.theguardian.com/guardian-observer-style-guide-a
+[plurals]: https://www.unicode.org/cldr/charts/48/supplemental/language_plural_rules.html

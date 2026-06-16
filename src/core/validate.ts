@@ -1,5 +1,5 @@
-// Validate a cron-like object against the field specifications, including
-// Quartz tokens and wrap-around range rules.
+// Loosely alidate a cron-like object against the field specifications,
+// including Quartz tokens and wrap-around range rules.
 
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';

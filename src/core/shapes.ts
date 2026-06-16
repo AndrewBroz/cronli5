@@ -30,7 +30,7 @@ function isDiscreteList(field: string): boolean {
   return field !== '*' && !includes(field, '-') && !includes(field, '/');
 }
 
-// Whether the hour field is discrete — a single value or a list (possibly
+// Whether the hour field is discrete, a single value or a list (possibly
 // containing range/step segments), rather than a wildcard, plain range, or
 // plain step. Discrete hours expand into clock times.
 function isDiscreteHours(hourField: string): boolean {

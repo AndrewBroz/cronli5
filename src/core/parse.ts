@@ -5,7 +5,7 @@ import type {CronLike} from './specs.js';
 import type {NormalizedOptions} from './ir.js';
 import type {CronPattern, CronPatternObject} from '../types.js';
 
-// Take a cron pattern as, a cron pattern string, an array of cron fields, a
+// Take a cron pattern as a cron pattern string, an array of cron fields, a
 // cron-like object (see the final return statement for the format of a
 // cron-like object), or a stringable object that evaluates to a cron pattern
 // string. Returns a cron-like object.
@@ -41,8 +41,8 @@ function parseCronPattern(
 }
 
 // Turn a cronable array into a cron-like object. A seven-field pattern is
-// unambiguous (seconds first, year last); six fields default to seconds
-// first, with the `years` option reading the trailing field as a year
+// unambiguous (seconds first, year last). Six fields default to seconds
+// first. With the `years` option it reads the trailing field as a year
 // instead.
 function cronifyArray(
   cronlikeArray: Array<string | number>,

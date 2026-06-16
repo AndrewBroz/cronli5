@@ -12,24 +12,26 @@ Cron Like I'm Five (`cronli5`) generates plain-language, idiomatically
 rendered descriptions of schedules from cron patterns in
 [several languages](#languages).
 
-- **Zero runtime dependencies** &mdash; tiny and safe to drop into any project.
-- **Runs anywhere** &mdash; ships ESM, CommonJS, and a browser global.
-- **Typed** &mdash; bundled TypeScript definitions, no `@types` needed.
-- **Flexible input** &mdash; accepts strings, arrays, or objects.
-- **Idiomatic output** &mdash; composes lists, ranges, and steps into natural
+- **Zero runtime dependencies.** Tiny and safe to drop into any project.
+- **Runs anywhere.** Ships ESM, CommonJS, and a browser global.
+- **Typed.** Bundled TypeScript definitions, no `@types` needed.
+- **Flexible input.** Accepts strings, arrays, or objects.
+- **Idiomatic output.** Composes lists, ranges, and steps into natural
   sentences, not comma-joined fragments.
-- **Multilingual** &mdash; each language is a full renderer, not a filled
-  template, shipped as its own module (`cronli5/lang/es`); you bundle
-  only the languages you import.
-- **Input Formats** &mdash;  Accepts classic (five-part) cron patterns, extended
+- **Multilingual.** Each language is a full renderer shipped as its own
+  module (`cronli5/lang/es`). You bundle only the languages you import.
+- **Input Formats.** Accepts classic (five-part) cron patterns, extended
   (six-part) cron patterns, where the first field is assumed to refer to seconds,
   and full seven-part (Quartz-style) patterns with a trailing year. See [Input Formats](#input-formats) for details.
 
 `cronli5` is a good library to use if you need to display a natural-language
 interpretation of a cron pattern in a Node or in a browser environment. If you
 need to do other things with cron patterns, such as scheduling or computing
-future run times, consider a library like [`@breejs/later`][later]. The main
-alternative for descriptions is [`cRonstrue`][cronstrue] &mdash; see the
+future run times, consider a library like [`@breejs/later`][later].
+
+### Alternatives
+
+The main alternative for descriptions is [`cRonstrue`][cronstrue]. See the
 [head-to-head comparison](#cronli5-vs-cronstrue) below for how the two differ
 and which to pick.
 

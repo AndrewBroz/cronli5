@@ -22,7 +22,7 @@ function toFieldNumber(
   numberMap?: {[name: string]: number}
 ): number {
   // A non-numeric token is always a name, and only the named fields (month,
-  // weekday) reach here — they always carry a `numberMap`.
+  // weekday) reach here. They always have an associated `numberMap`.
   return isNonNegativeInteger(token) ? +token : numberMap![token.toUpperCase()];
 }
 export {includes, isNonNegativeInteger, toFieldNumber, unique};

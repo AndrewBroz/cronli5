@@ -1,5 +1,4 @@
-// Field specifications, macros, and core policy constants — the
-// language-independent facts about cron itself.
+// Field specifications, macros, and core policy constants.
 
 import type {Field} from './ir.js';
 
@@ -49,8 +48,8 @@ const monthNumbers: Record<string, number> = {
 
 // Allowed numeric ranges (and name tables, where applicable) per field.
 // Cyclic fields wrap, so a reversed range (`22-2`) is a meaningful
-// wrap-around window there; the year field does not wrap. `top` is the last
-// value a step enumerates to — for weekdays it is Saturday (6), below the
+// wrap-around window. The year field does not wrap. `top` is the last
+// value a step enumerates to: for weekdays it is Saturday (6), below the
 // validation `max` of 7, which is Sunday again.
 const fieldSpecs: Record<Field, FieldSpec> = {
   second: {cyclic: true, max: 59, min: 0, top: 59},
