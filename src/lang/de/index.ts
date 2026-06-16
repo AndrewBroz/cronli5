@@ -177,53 +177,51 @@ function quartzDate(field: string): string | null {
   return null;
 }
 
-// German month names, 1-based (a null hole at index 0).
-const monthNames = [
-  null, 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
-  'August', 'September', 'Oktober', 'November', 'Dezember'
-];
-
-// Cron month tokens (part of cron syntax), mapped to indices.
+// Cron month tokens (part of cron syntax), mapped to indices. The month names
+// themselves are dialect-scoped and resolved from `opts.style.months`.
 const monthTokens: {[token: string]: number} = {
   JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
   JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
 };
 
-function monthName(token: NameToken): string {
-  return (monthNames[token as number] ||
-    monthNames[monthTokens[token as string]]) as string;
+type Months = GermanStyle['months'];
+
+function monthName(token: NameToken, months: Months): string {
+  return (months[token as number] ||
+    months[monthTokens[token as string]]) as string;
 }
 
 // "von Juni bis August".
-function monthRange(bounds: [string, string]): string {
-  return 'von ' + monthName(bounds[0]) + ' bis ' + monthName(bounds[1]);
+function monthRange(bounds: [string, string], months: Months): string {
+  return 'von ' + monthName(bounds[0], months) + ' bis ' +
+    monthName(bounds[1], months);
 }
 
 // Bare month names: "Januar", "Januar und Juli", "von Juni bis August".
-function monthNamesList(ir: IR): string {
+function monthNamesList(ir: IR, months: Months): string {
   return joinList(flattenSteps(fieldSegments(ir, 'month'))
     .map(function name(segment): string {
       return segment.kind === 'range' ?
-        monthRange(segment.bounds) :
-        monthName(segment.value);
+        monthRange(segment.bounds, months) :
+        monthName(segment.value, months);
     }));
 }
 
 // The month qualifier: "im Januar", "im Januar und Juli", "von Juni bis
 // August". A lone range carries its own "von … bis"; names take "im".
-function monthClause(ir: IR): string {
+function monthClause(ir: IR, months: Months): string {
   const segments = flattenSteps(fieldSegments(ir, 'month'));
 
   if (segments.length === 1 && segments[0].kind === 'range') {
-    return monthRange(segments[0].bounds);
+    return monthRange(segments[0].bounds, months);
   }
 
-  return 'im ' + monthNamesList(ir);
+  return 'im ' + monthNamesList(ir, months);
 }
 
 // The month appended after a weekday: " im Januar" or "".
-function monthScope(ir: IR): string {
-  return ir.pattern.month === '*' ? '' : ' ' + monthClause(ir);
+function monthScope(ir: IR, months: Months): string {
+  return ir.pattern.month === '*' ? '' : ' ' + monthClause(ir, months);
 }
 
 // A day-of-month ordinal: a numeral with a period ("1.").
@@ -253,10 +251,12 @@ function dateClauseBare(ir: IR): string {
 }
 
 // The date qualifier, with a month appended bare ("am 1. Januar").
-function datePhrase(ir: IR): string {
+function datePhrase(ir: IR, months: Months): string {
   const clause = dateClauseBare(ir);
 
-  return ir.pattern.month === '*' ? clause : clause + ' ' + monthNamesList(ir);
+  return ir.pattern.month === '*' ?
+    clause :
+    clause + ' ' + monthNamesList(ir, months);
 }
 
 // A bare clock time: "9" on the hour, "14:30", or "0:00:30" with a second.
@@ -641,7 +641,7 @@ const renderers = {
 
 // The weekday/day/month frame. Date and weekday together are cron's OR case,
 // not yet built.
-function qualifier(ir: IR): string {
+function qualifier(ir: IR, months: Months): string {
   const {date, month, weekday} = ir.pattern;
 
   // Date and weekday together are cron's OR: "am 31. oder freitags". Either
@@ -650,21 +650,22 @@ function qualifier(ir: IR): string {
     const datePart = quartzDate(date) || dateClauseBare(ir);
     const weekdayPart = quartzWeekday(weekday) || weekdayQualifier(ir);
 
-    return datePart + ' oder ' + weekdayPart + monthScope(ir);
+    return datePart + ' oder ' + weekdayPart + monthScope(ir, months);
   }
 
   if (weekday !== '*') {
-    return (quartzWeekday(weekday) || weekdayQualifier(ir)) + monthScope(ir);
+    return (quartzWeekday(weekday) || weekdayQualifier(ir)) +
+      monthScope(ir, months);
   }
 
   if (date !== '*') {
     const quartz = quartzDate(date);
 
-    return quartz ? quartz + monthScope(ir) : datePhrase(ir);
+    return quartz ? quartz + monthScope(ir, months) : datePhrase(ir, months);
   }
 
   if (month !== '*') {
-    return monthClause(ir);
+    return monthClause(ir, months);
   }
 
   return '';
@@ -730,7 +731,7 @@ function applyYear(description: string, ir: IR): string {
 
 function describe(ir: IR, opts: Opts): string {
   const core = render(ir, ir.plan, opts);
-  const qual = qualifier(ir);
+  const qual = qualifier(ir, opts.style.months);
   let base = core;
 
   if (qual) {

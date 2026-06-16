@@ -278,12 +278,14 @@ function planSeconds(
   };
 }
 
-// Second shapes that stand on their own over a wildcard minute.
+// Second shapes that stand on their own over a wildcard minute and hour. A
+// restricted hour must defer to the compose path so the hour window survives
+// (a standalone second carries no hour, so it would silently drop it).
 function planStandaloneSeconds(
   pattern: Pattern,
   shapes: Shapes
 ): PlanNode | null {
-  if (pattern.minute !== '*') {
+  if (pattern.minute !== '*' || pattern.hour !== '*') {
     return null;
   }
 

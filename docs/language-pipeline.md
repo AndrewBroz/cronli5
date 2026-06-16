@@ -136,7 +136,7 @@ Dialects sit on a spectrum that sets how much review each needs:
   oracle; reviewable by the panel and a region-fluent human.
 - **Internal** (`house`, and custom `Cronli5Dialect` objects) — self-defined,
   no external norm; *correct by construction*, needing consistency not a panel.
-- **Regional** (shipped `es-MX`/`es-US`; future `de-AT` with *Jänner*) — carry
+- **Regional** (shipped `es-MX`/`es-US`, `de-AT` with *Jänner*) — carry
   clock/meridiem or lexical variation, not just typography; closest to
   sub-languages and needing the fullest treatment with region-fluent humans.
 

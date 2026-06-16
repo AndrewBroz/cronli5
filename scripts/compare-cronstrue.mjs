@@ -4,7 +4,8 @@
 // eyeballing *semantic quality*: are we saying the right thing, and where does
 // cronstrue read better (or worse)?
 //
-// Usage: node scripts/compare-cronstrue.mjs [--only=<substr>] [--diffs]
+// Usage: node --import tsx scripts/compare-cronstrue.mjs [--only=<substr>]
+// [--diffs] (the `tsx` loader is required since the move to TypeScript source).
 //   --only=<substr>  only show patterns containing <substr>
 //   --diffs          (reserved) reserved for future filtering
 

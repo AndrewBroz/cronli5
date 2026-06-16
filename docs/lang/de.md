@@ -55,8 +55,10 @@ comma; ranges use `von … bis …`.
 ## Dialects
 
 The default `de` style uses the colon separator (`9:30`). A custom style
-object merges over it: `{dialect: {sep: '.'}}` gives `9.30`. Regional
-month names (Austrian `Jänner`) are a future dialect axis.
+object merges over it: `{dialect: {sep: '.'}}` gives `9.30`. Regional month
+names are a style axis: `{dialect: 'de-AT'}` names January `Jänner` (Austrian);
+`de-DE` and `de-CH` use the standard names. `{dialect: {months: […]}}`
+overrides the table directly.
 
 ## cronli5 vs. cRonstrue (de locale)
 

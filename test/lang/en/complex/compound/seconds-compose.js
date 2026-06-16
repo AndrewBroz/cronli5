@@ -52,4 +52,30 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['*/15 30 9 * * MON', 'every 15 seconds, every Monday at 9:30 a.m.']
     ]);
   });
+
+  // A wildcard minute under a restricted hour: the second leads and the hour
+  // window follows, so the hour is never dropped (it once collapsed to a bare
+  // "every second"). The wildcard-minute window reads "every minute ...".
+  describe('wildcard minute under a restricted hour', function() {
+    run([
+      ['* * 9 * * *',
+        'every second, every minute from 9 a.m. through 9:59 a.m.'],
+      ['* * 9 1 * *',
+        'every second, every minute from 9 a.m. through 9:59 a.m. ' +
+        'on the 1st'],
+      ['* * 9-17 * * *',
+        'every second, every minute from 9 a.m. through 5:59 p.m.'],
+      ['* * 9,17 * * *',
+        'every second, every minute during the 9 a.m. and 5 p.m. hours'],
+      ['* * */2 * * *', 'every second, every minute, every two hours'],
+      ['5 * 9 * * *',
+        'at five seconds past the minute, ' +
+        'every minute from 9 a.m. through 9:59 a.m.'],
+      ['0-30 * 9 * * *',
+        'every second from 0 through 30 past the minute, ' +
+        'every minute from 9 a.m. through 9:59 a.m.'],
+      ['*/15 * 9-17 * * *',
+        'every 15 seconds, every minute from 9 a.m. through 5:59 p.m.']
+    ]);
+  });
 });

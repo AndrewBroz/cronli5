@@ -3,7 +3,8 @@
 // scan cronli5 against the matching cRonstrue locale per language.
 //
 // Writes tmp/review-trilingual.md under the project (gitignored).
-// Usage: node scripts/review-trilingual.mjs
+// Usage: node --import tsx scripts/review-trilingual.mjs (the `tsx` loader is
+// required since the move to TypeScript source).
 
 import {mkdirSync, readFileSync, writeFileSync} from 'node:fs';
 import cronli5 from '../src/cronli5.js';

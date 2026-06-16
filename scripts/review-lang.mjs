@@ -4,7 +4,8 @@
 // the cronstrue locale, cluster by plan kind and output template, and emit
 // one representative per distinct template for row-cited review.
 //
-// Usage: node scripts/review-lang.mjs es > /tmp/review-es.md
+// Usage: node --import tsx scripts/review-lang.mjs es > /tmp/review-es.md (the
+// `tsx` loader is required since the move to TypeScript source).
 
 import {readFileSync, readdirSync, statSync} from 'node:fs';
 import {join} from 'node:path';

@@ -95,10 +95,6 @@ without the `tsx` artifact.
   18 `PlanNode` kinds each language's corpus exercises. Needs the corpora to
   export their pattern lists; today only `spanning-set.mjs` reports kind
   coverage, and only globally.
-- **`tsx` loader for the ad-hoc review scripts** — `review-lang.mjs`,
-  `compare-cronstrue.mjs`, and `review-trilingual.mjs` still need the `node
-  --import tsx` invocation applied post-migration, as `docs.mjs` / `panel.mjs`
-  already have.
 - **Per-language custom-dialect object typing** — the public `Cronli5Dialect`
   object is English-shaped (`am` / `pm` / `through` / …). A custom `{dialect:
   {…}}` for Spanish only cleanly accepts the *shared* fields (`sep`,
@@ -106,14 +102,6 @@ without the `tsx` artifact.
   meridiem}` for `es`) would need the public type generalized the way
   `NormalizedOptions<Style>` already is internally. Named dialects (`es-MX`, …)
   cover the common case, so this is low priority.
-- **Core: `everySecond`/`everyMinute` drops a constrained hour** — `analyze`
-  collapses `* * 9 * * *` (every second *of hour 9*) to the `everySecond`
-  plan, losing the hour; every language inherits it (`npm run fuzz es` and
-  `fuzz de` both flag `* * 9 1 * *` → "every second on the 1st", hour 9 gone).
-  It is a core analysis bug, not a renderer one, so the fix belongs in
-  `analyze` and must be re-reviewed against the `en`/`es` corpora. Surfaced by
-  the value-presence fuzz check.
-
 ## Wider automated review coverage
 
 **Status:** Ambition — the panel reviews a deliberately small set today;

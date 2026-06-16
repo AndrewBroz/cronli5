@@ -10,9 +10,10 @@ the code stays terse.
 - **Dialect axes:** `de-DE` (default), `de-AT` (Austrian — *Jänner* for
   January, *Feber* informally for February), `de-CH` (Swiss — `ß`→`ss`, which
   schedule prose rarely surfaces). Saturday is *Samstag* (standard/south) vs
-  *Sonnabend* (northeast) — use *Samstag*. Only the month-name divergence
-  (`Jänner`) is worth a dialect today; it is the canonical driver for expanding
-  `GermanStyle` beyond `sep`.
+  *Sonnabend* (northeast) — use *Samstag*. **Built:** `GermanStyle.months`
+  carries the month table; `de-AT` overrides January to *Jänner* (the standard
+  written register skips informal *Feber*), `de-CH` is output-identical to
+  `de-DE`. A custom `{dialect: {months: […]}}` overrides the table directly.
 
 ## Clock
 

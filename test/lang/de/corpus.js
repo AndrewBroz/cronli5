@@ -238,6 +238,14 @@ describe('Deutsch (de):', function() {
       ['0 9 1 * 5L', 'am 1. oder am letzten Freitag des Monats um 9 Uhr'],
       // A wildcard second composed with a clock time.
       ['* 0 9 * * *', 'jede Sekunde, um 9 Uhr'],
+      // A wildcard minute under a restricted hour: the hour window must
+      // survive (it once collapsed to a bare "jede Sekunde"). Fuzzer-found.
+      ['* * 9 * * *', 'jede Sekunde, jede Minute von 9:00 bis 9:59 Uhr'],
+      ['*/15 * 9-17 * * *',
+        'alle 15 Sekunden, jede Minute von 9 bis 17:59 Uhr'],
+      ['0-30 * 9 * * *',
+        'in den Sekunden 0 bis 30 jeder Minute, ' +
+        'jede Minute von 9:00 bis 9:59 Uhr'],
       // during-hours given as segments (a range must not collapse to its
       // start), found by the fuzzer.
       ['*/15 9-20,22 * * *',
@@ -255,7 +263,14 @@ describe('Deutsch (de):', function() {
 
   describe('Dialekt', function() {
     run([
-      ['30 14 * * *', 'täglich um 14.30 Uhr', {dialect: {sep: '.'}}]
+      ['30 14 * * *', 'täglich um 14.30 Uhr', {dialect: {sep: '.'}}],
+      // de-AT: Austrian German names January "Jänner".
+      ['0 0 1 1 *', 'am 1. Jänner um Mitternacht', {dialect: 'de-AT'}],
+      ['0 0 * 1,7 *', 'im Jänner und Juli um Mitternacht', {dialect: 'de-AT'}],
+      ['0 0 * 1-3 *', 'von Jänner bis März um Mitternacht', {dialect: 'de-AT'}],
+      // de-CH: Swiss German keeps the standard month names (its ß→ss
+      // divergence never surfaces in schedule prose); same as de-DE here.
+      ['0 0 1 1 *', 'am 1. Januar um Mitternacht', {dialect: 'de-CH'}]
     ]);
   });
 });

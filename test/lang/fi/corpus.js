@@ -200,6 +200,12 @@ describe('Suomi (fi):', function() {
   describe('harvinaiset muodot', function() {
     run([
       ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
+      // A wildcard minute under a restricted hour: the hour window must
+      // survive (it once collapsed to a bare "joka sekunti"). Fuzzer-found.
+      ['* * 9 * * *', 'joka sekunti, joka minuutti klo 9.00–9.59'],
+      ['*/15 * 9-17 * * *', '15 sekunnin välein, joka minuutti klo 9.00–17.59'],
+      ['0-30 * 9 * * *',
+        'joka minuutti 0–30 sekunnin kohdalla, joka minuutti klo 9.00–9.59'],
       ['5 0,30 * * * *',
         'joka minuutti 5 sekunnin kohdalla, ' +
         'joka tunti 0 ja 30 minuutin kohdalla'],

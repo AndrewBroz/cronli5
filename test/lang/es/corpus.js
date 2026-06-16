@@ -218,7 +218,17 @@ describe('Español (es):', function() {
       ['*/15 30 * * * *',
         'cada 15 segundos, en el minuto 30 de cada hora'],
       ['* 30 9 * * *',
-        'cada segundo, todos los días a las 9:30 de la mañana']
+        'cada segundo, todos los días a las 9:30 de la mañana'],
+      // A wildcard minute under a restricted hour: the hour window must
+      // survive (it once collapsed to a bare "cada segundo"). Fuzzer-found.
+      ['* * 9 * * *',
+        'cada segundo, cada minuto de las 9 a las 9:59 de la mañana'],
+      ['*/15 * 9-17 * * *',
+        'cada 15 segundos, cada minuto de las 9 de la mañana ' +
+        'a las 5:59 de la tarde'],
+      ['0-30 * 9 * * *',
+        'cada segundo del 0 al 30 de cada minuto, ' +
+        'cada minuto de las 9 a las 9:59 de la mañana']
     ], ampm);
   });
 
