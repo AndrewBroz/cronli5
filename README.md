@@ -204,6 +204,7 @@ until a human review cycle is completed. See
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status | Human review | Cross-family review |
 | --- | --- | --- | --- |
+| German | beta | — | gemma4:31b-cloud + Claude panel — 30/34; findings fixed test-first (2026-06-16) |
 | English | stable | maintainer (native) | — |
 | Spanish | beta | maintainer (informal); formal pilot pending | gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15) |
 | Finnish | beta | — | — |

@@ -1,0 +1,6 @@
+{
+  "name": "German",
+  "status": "beta",
+  "humanReview": null,
+  "crossFamilyReview": "gemma4:31b-cloud + Claude panel — 30/34; findings fixed test-first (2026-06-16)"
+}

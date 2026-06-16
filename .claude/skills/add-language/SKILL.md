@@ -34,6 +34,29 @@ Dispatch on `ir.plan.kind`, typed against `ir.ts`; use `core/format.ts` for
 mechanical digits and own everything linguistic. `npm run typecheck` must pass
 with zero errors before reviewing.
 
+## 2.5. Fuzz for completeness (necessary, not sufficient)
+
+`npm run fuzz <code>` renders a broad combinatorial pattern set and reports
+three classes of defect the one-per-kind spanning set misses:
+
+- **THROWS** — the renderer crashed on a valid pattern. Must be **0** (a
+  language module must satisfy "never throws").
+- **DEGENERATE** — `undefined`/`NaN`/empty/garbage/doubled-word/stray-space
+  output. Must be **0**.
+- **MISSING VALUE** — a salient field value that does not surface in the
+  output: the clearest sign an output is *fudged* (a dropped or collapsed
+  field) rather than correct. "No throws" does **not** prove this; a renderer
+  can emit plausible-looking wrong output. Drive this to **0**, or — if a flag
+  is a *core* limitation (the same `npm run fuzz es` flags it too, e.g. the
+  `everySecond` plan dropping an hour) — confirm parity with `es` and record
+  it, do not paper over it in the renderer.
+
+Fix every finding **test-first** (pin the intended output, watch it fail, fix
+the renderer). Then read the sampled output shapes (`--samples=N`) to eyeball
+that the non-throwing outputs read sanely. This is *necessary, not sufficient*:
+it proves no crashes and no degenerate/dropped output; semantic correctness is
+still the panel's job.
+
 ## 3. Double-blind judge panel (the gate)
 
 Three sub-steps:

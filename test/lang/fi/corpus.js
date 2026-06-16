@@ -127,7 +127,12 @@ describe('Suomi (fi):', function() {
       ['0 0 15W * *',
         'arkipäivänä lähinnä kuukauden 15. päivää keskiyöllä'],
       ['0 0 * * 5L', 'kuukauden viimeisenä perjantaina keskiyöllä'],
-      ['0 0 * * MON#2', 'kuukauden toisena maanantaina keskiyöllä']
+      ['0 0 * * MON#2', 'kuukauden toisena maanantaina keskiyöllä'],
+      // A Quartz date OR'd with a weekday under a ranged month (fuzzer-found
+      // crash: the ranged-month branch assumed the date had segments).
+      ['0 0 L 6-8 MON',
+        'kuukauden viimeisenä päivänä tai maanantaisin kesäkuusta ' +
+        'elokuuhun keskiyöllä']
     ]);
   });
 

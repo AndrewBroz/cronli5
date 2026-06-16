@@ -859,8 +859,12 @@ function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
 // syyskuuhun") — the case endings need no comma.
 function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   if (monthRanged(ir)) {
-    return monthAnchor(ir, opts) + ' ' + dateWords(ir) + ' päivänä tai ' +
-      weekdayQualifier(ir) + ' ' + monthPhrase(ir);
+    // A Quartz date (no segments) carries its own phrase; otherwise build
+    // the "Nth päivänä" date clause.
+    const date = quartzDatePhrase(ir.pattern.date) ||
+      monthAnchor(ir, opts) + ' ' + dateWords(ir) + ' päivänä';
+
+    return date + ' tai ' + weekdayQualifier(ir) + ' ' + monthPhrase(ir);
   }
 
   return datePhrase(ir, opts) + ' tai ' + weekdayQualifier(ir) +

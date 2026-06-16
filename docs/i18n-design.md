@@ -119,16 +119,17 @@ module, we expect:
 
 ```
 src/
+  cronli5.ts                  # cronli5(pattern, opts) — binds default lang
   core/                       # language-independent
-    parse.js validate.js normalize.js analyze.js
-    index.js                  # cronli5(pattern, opts) — binds default lang
+    parse.ts validate.ts normalize.ts analyze.ts
+    index.ts                  # the semantic toolkit lang modules import
   lang/
     en/
-      index.js                # render(ir, opts) — today's interpreters
-      dialects.js             # us / uk / house style tables (en-scoped)
+      index.ts                # render(ir, opts) — today's interpreters
+      dialects.ts             # us / gb / house style tables (en-scoped)
       notes.md                # anchors: Chicago, Guardian; en quirks
     es/                       # ...same shape per language
-      index.js  dialects.js  notes.md
+      index.ts  dialects.ts  notes.md
 test/
   core/                       # parsing/validation/normalization/analysis
   lang/
@@ -149,11 +150,10 @@ Encapsulation rules:
 
 * **A language is one directory.** A contribution adds `src/lang/<code>/`
   and `test/lang/<code>/` and touches nothing else (a one-line registry
-  entry at most). Reviewable as a unit; deletable as a unit.
+  entry at most). Reviewable as a unit, deletable as a unit.
 * **Languages are values.** `import es from 'cronli5/lang/es'` via subpath
   exports; `cronli5(pattern, {lang: es})`. English-only users pay zero
-  bytes for other languages — the anti-182KB-bundle property. The
-  already-shipped custom-dialect-object API is the seed of this pattern.
+  bytes for other languages.
 * **Dialects are language-scoped.** Each language defines its own dialect
   table with its own schema, anchored to named authorities (en: Chicago /
   Guardian; fr: Imprimerie nationale / OQLF for fr-CA; de: Duden; zh:

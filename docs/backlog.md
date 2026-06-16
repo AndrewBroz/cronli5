@@ -60,3 +60,93 @@ phrasings, LLM eval-set curation, style/tone compliance.
 **The seam (NOT parked).** `corpus.js` + `status.json` + an import/export
 adapter is the contract between cronli5 and any review tool. The automated
 path needs it too, so it gets locked now; the human UI plugs into it later.
+
+## Coverage tooling — source-accurate function/branch gating
+
+**Status:** Deferred — a documented tradeoff of the TypeScript migration, not
+a regression.
+
+**Problem.** `npm run coverage` (c8 over `tsx`) reports accurate line/statement
+coverage (gated at 99 in `.c8rc.json`) but **undercounts function/branch by
+~2–3 points**: esbuild's source maps (via `tsx`) blur function/branch
+boundaries — e.g. `analyze.ts` reports ~81% functions for fully-exercised code
+that was only *annotated*. Thresholds were relaxed to functions 97 / branches
+96 to absorb the artifact; the true numbers are ~100/99. It is an artifact, not
+a gap — proven because Monocart re-maps the *identical* run to true 100%.
+
+**Options (to restore true-100% function/branch gating):**
+
+- **Monocart** (`monocart-coverage-reports` / `mcr`) — TS-aware, re-maps
+  accurately. But `c8 --experimental-monocart` *ignores* `--check-coverage`
+  (reports but won't gate), and standalone `mcr` needs `entryFilter` /
+  `sourceFilter` tuning and showed unreliable threshold/summary semantics in
+  testing.
+- **Vitest** — accurate built-in V8/Istanbul coverage with source maps; the
+  cleaner path **if** we accept switching the test runner off mocha.
+- **Node's native test runner + V8 coverage**, or building to JS before
+  instrumenting, are also worth evaluating.
+
+**Done when** function/branch thresholds are back at ~100/99 and gated in CI
+without the `tsx` artifact.
+
+## Other deferred items
+
+- **Per-language `PlanNode` coverage in the status table** — show which of the
+  18 `PlanNode` kinds each language's corpus exercises. Needs the corpora to
+  export their pattern lists; today only `spanning-set.mjs` reports kind
+  coverage, and only globally.
+- **`tsx` loader for the ad-hoc review scripts** — `review-lang.mjs`,
+  `compare-cronstrue.mjs`, and `review-trilingual.mjs` still need the `node
+  --import tsx` invocation applied post-migration, as `docs.mjs` / `panel.mjs`
+  already have.
+- **Per-language custom-dialect object typing** — the public `Cronli5Dialect`
+  object is English-shaped (`am` / `pm` / `through` / …). A custom `{dialect:
+  {…}}` for Spanish only cleanly accepts the *shared* fields (`sep`,
+  `hSuffix`); a fully-typed per-language custom-style object (e.g. `{ampm,
+  meridiem}` for `es`) would need the public type generalized the way
+  `NormalizedOptions<Style>` already is internally. Named dialects (`es-MX`, …)
+  cover the common case, so this is low priority.
+- **Core: `everySecond`/`everyMinute` drops a constrained hour** — `analyze`
+  collapses `* * 9 * * *` (every second *of hour 9*) to the `everySecond`
+  plan, losing the hour; every language inherits it (`npm run fuzz es` and
+  `fuzz de` both flag `* * 9 1 * *` → "every second on the 1st", hour 9 gone).
+  It is a core analysis bug, not a renderer one, so the fix belongs in
+  `analyze` and must be re-reviewed against the `en`/`es` corpora. Surfaced by
+  the value-presence fuzz check.
+
+## Wider automated review coverage
+
+**Status:** Ambition — the panel reviews a deliberately small set today;
+broadening it is the next lever on automated quality. A first slice is **built**:
+`scripts/fuzz-lang.mjs` (`npm run fuzz <code>`) sweeps a broad combinatorial set
+and flags crashes, degenerate output, and **dropped/collapsed field values** (a
+mechanical "is this output fudged?" check). It already caught four real German
+bugs — range hours collapsing to their start, a clock second silently dropped —
+that "renders the spanning set" missed. The round-trip and panel layers below
+are the remaining work.
+
+**Problem.** The cross-family panel runs over a curated **spanning set**
+(`scripts/spanning-set.mjs` — ~34 patterns, one per `PlanNode` kind; the
+dialect set is 9 clock-time patterns). It is minimal by design: Gemma
+serializes, so breadth is expensive. But naturalness and correctness defects
+hide in the **long tail of pattern shapes** the spanning set doesn't represent
+(unusual lists, nested ranges, compound qualifiers, second-level folds), and a
+one-per-kind set can't catch within-kind variation.
+
+**Idea.** Drive automated review over a much wider pattern range, **bootstrapped
+from the English test suite** (`test/lang/en/`, organized basic / simple /
+complex / options — the repo's broadest, already-reviewed pattern collection).
+De-duplicate by IR shape and feed them in as review inputs; the en corpus
+already encodes the breadth of real cron shapes worth covering.
+
+**The split it forces.** The naturalness panel is expensive; a wide set needs a
+cheaper bulk pass. Pair it with the **round-trip correctness check** (designed
+in `i18n-design.md` §4 Pass 2, not yet built — render → parse the description
+back to cron → compare field-sets mechanically): objective, cheap, and scales
+to thousands of patterns. The natural shape is two-tier — round-trip
+correctness over the *wide* extracted set, the naturalness panel over a
+*representative sample* (one per shape cluster).
+
+**Done when** automated review spans a representative cross-section of real
+pattern shapes sourced from the en corpus, not just the hand-curated spanning
+set, and reports which shapes it covered (no silent gaps).

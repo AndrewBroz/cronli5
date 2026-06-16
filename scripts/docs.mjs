@@ -24,6 +24,7 @@ import {readFileSync, writeFileSync} from 'node:fs';
 import cronli5 from '../src/cronli5.js';
 import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
+import de from '../src/lang/de/index.js';
 import en from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
@@ -35,6 +36,7 @@ const cronstrueVersion = JSON.parse(readFileSync(
   'utf8')).version;
 
 const languages = [
+  {code: 'de', extras: ['0 0 1 */3 *', '*/45 * * * *'], lang: de},
   {code: 'en', extras: [], lang: en},
   {code: 'es', extras: ['0 1 * * *', '0 12 * * SAT'], lang: es},
   {code: 'fi', extras: ['0 9 * * WED-FRI', '0 0 13 * FRI'], lang: fi}
@@ -199,7 +201,7 @@ for (const language of languages) {
 
 const docs = [
   'README.md', 'docs/cronli5-vs-cronstrue.md', 'docs/dialects.md',
-  'docs/lang/en.md', 'docs/lang/es.md', 'docs/lang/fi.md'
+  ...languages.map((language) => 'docs/lang/' + language.code + '.md')
 ];
 
 const check = process.argv.includes('--check');
