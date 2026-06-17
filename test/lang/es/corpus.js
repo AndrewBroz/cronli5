@@ -276,7 +276,15 @@ describe('Español (es):', function() {
       ['15 0,30 * * * *',
         'en el segundo 15 de cada minuto, ' +
         'en los minutos 0 y 30 de cada hora'],
-      ['*/15 */2 * * *', 'cada 15 minutos, cada dos horas'],
+      // A clean hour step confines the cadence to every Nth hour, not a
+      // second, conflicting cadence ("cada dos horas").
+      ['*/15 */2 * * *', 'cada 15 minutos en cada segunda hora'],
+      // An uneven or bounded hour step lists its active hours as windows.
+      ['*/20 9-17/2 * * *',
+        'cada 20 minutos de las 09:00 a las 09:59, ' +
+        'de las 11:00 a las 11:59, de las 13:00 a las 13:59, ' +
+        'de las 15:00 a las 15:59 y de las 17:00 a las 17:59',
+        {ampm: false}],
       ['* 9-17 * * *',
         'cada minuto de las 9 de la mañana a las 5:59 de la tarde'],
       ['* 0-5 * * *',

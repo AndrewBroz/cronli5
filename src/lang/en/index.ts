@@ -278,10 +278,12 @@ function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    // An hour step rides alongside the minute cadence; a stepped hour
-    // field's first segment is a step segment.
-    phrase += ', ' + stepHours(ir.analyses.segments.hour![0] as StepSegment,
-      opts);
+    // The plan carries a step only for a clean step (dividing the day), which
+    // confines the cadence to every Nth hour; a stepped hour field's first
+    // segment is a step segment.
+    const interval = (ir.analyses.segments.hour![0] as StepSegment).interval;
+
+    phrase += ' during every ' + getOrdinal(interval) + ' hour';
   }
 
   return phrase + trailingQualifier(ir, opts);

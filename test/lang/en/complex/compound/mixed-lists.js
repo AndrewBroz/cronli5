@@ -49,8 +49,8 @@ describe('Lists mixing values with ranges or steps:', function() {
   describe('bounded hour step under a minute step', function() {
     run([
       ['*/15 9-17/2 * * *',
-        'every 15 minutes, ' +
-        'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+        'every 15 minutes during the ' +
+        '9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours']
     ]);
   });
 

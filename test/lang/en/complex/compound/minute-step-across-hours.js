@@ -2,8 +2,10 @@ import {run} from '../../../../runner.js';
 
 // Behavior spec for a minute step combined with an hour list or hour step.
 // The step previously dropped the hour entirely ("every 15 minutes"); it must
-// confine the cadence: an hour list reads "during the <times> hours" and an
-// hour step trails alongside as its own clause.
+// confine the cadence so it never reads as a second, conflicting frequency.
+// An hour list reads "during the <times> hours"; a clean hour step (dividing
+// the day) reads "during every <Nth> hour"; an uneven or bounded step lists
+// its active hours the same way as a list.
 
 describe('Minute step across multiple hours:', function() {
   describe('hour list', function() {
@@ -15,11 +17,21 @@ describe('Minute step across multiple hours:', function() {
     ]);
   });
 
-  describe('hour step', function() {
+  describe('clean hour step (confined to every Nth hour)', function() {
     run([
-      ['*/15 */2 * * *', 'every 15 minutes, every two hours'],
+      ['*/15 */2 * * *', 'every 15 minutes during every 2nd hour'],
+      ['*/15 */3 * * *', 'every 15 minutes during every 3rd hour'],
+      ['*/15 */4 * * *', 'every 15 minutes during every 4th hour']
+    ]);
+  });
+
+  describe('uneven or bounded hour step (lists its hours)', function() {
+    run([
       ['*/15 */10 * * *',
-        'every 15 minutes, at 12 a.m., 10 a.m., and 8 p.m.']
+        'every 15 minutes during the 12 a.m., 10 a.m., and 8 p.m. hours'],
+      ['*/20 9-17/2 * * *',
+        'every 20 minutes during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., ' +
+        'and 5 p.m. hours']
     ]);
   });
 

@@ -123,6 +123,13 @@ const weekdayTokens: {[token: string]: number} = {
 const nthWeekdayNames =
   [null, 'primer', 'segundo', 'tercer', 'cuarto', 'quinto'];
 
+// Feminine ordinals for "en cada N-ésima hora" — the clean hour-step intervals
+// that divide the 24-hour day.
+const stepOrdinals: {[interval: number]: string} = {
+  2: 'segunda', 3: 'tercera', 4: 'cuarta', 6: 'sexta', 8: 'octava',
+  12: 'duodécima'
+};
+
 // Normalize raw user options.
 function normalizeOptions(options?: Cronli5Options): Opts {
   options = options || {};
@@ -304,7 +311,11 @@ function renderMinuteFrequency(
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    phrase += ', ' + stepHours(stepSegment(ir.analyses.segments.hour), opts);
+    // The plan carries a step only for a clean step (dividing the day):
+    // confine the cadence to every Nth hour ("en cada segunda hora").
+    const interval = stepSegment(ir.analyses.segments.hour).interval;
+
+    phrase += ' en cada ' + stepOrdinals[interval] + ' hora';
   }
 
   return phrase + trailingQualifier(ir, opts);

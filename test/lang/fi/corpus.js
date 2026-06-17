@@ -174,7 +174,13 @@ describe('Suomi (fi):', function() {
       ['0-30 */2 * * *', '0–30 minuutin kohdalla joka toinen tunti'],
       ['* */2 * * *', 'joka minuutti, joka toinen tunti'],
       ['* */10 * * *', 'joka minuutti, klo 0, 10 ja 20'],
-      ['*/15 */2 * * *', '15 minuutin välein joka toinen tunti'],
+      // A clean hour step confines the cadence to every Nth hour, not a
+      // second, conflicting cadence ("joka toinen tunti").
+      ['*/15 */2 * * *', '15 minuutin välein joka toisen tunnin aikana'],
+      // An uneven or bounded hour step lists its active hours as windows.
+      ['*/20 9-17/2 * * *',
+        '20 minuutin välein klo 9.00–9.59, 11.00–11.59, ' +
+        '13.00–13.59, 15.00–15.59 ja 17.00–17.59'],
       ['0 */2 * * *', 'kahden tunnin välein'],
       ['0 */5 * * *', 'viiden tunnin välein keskiyöstä alkaen'],
       ['0 */10 * * *', 'klo 0, 10 ja 20'],

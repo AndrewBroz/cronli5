@@ -372,7 +372,14 @@ function planFrequencyHours(
   }
 
   if (shapes.hour === 'step') {
-    return {kind: 'step'};
+    // A clean unbounded step (0, N, 2N, … dividing 24) confines the cadence to
+    // "every Nth hour"; an uneven or bounded step lists its hours as windows,
+    // so the cadence is never read as a second, conflicting frequency.
+    const [start, step] = pattern.hour.split('/');
+
+    return (start === '*' || start === '0') && 24 % +step === 0 ?
+      {kind: 'step'} :
+      {kind: 'during', times: hourTimesPlan(pattern.hour)};
   }
 
   return {kind: 'none'};

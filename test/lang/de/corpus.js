@@ -219,7 +219,23 @@ describe('Deutsch (de):', function() {
       // minuteFrequency across discrete hours (each a full hour) / a step.
       ['*/15 9,17 * * *',
         'alle 15 Minuten von 9 bis 9:59 Uhr und von 17 bis 17:59 Uhr'],
-      ['*/20 9-17/2 * * *', 'alle 20 Minuten, um 9, 11, 13, 15 und 17 Uhr'],
+      // A bounded hour step lists its hours as windows (the cadence fills each
+      // active hour), so it never reads as a second, conflicting frequency.
+      ['*/20 9-17/2 * * *',
+        'alle 20 Minuten von 9 bis 9:59 Uhr, von 11 bis 11:59 Uhr, ' +
+        'von 13 bis 13:59 Uhr, von 15 bis 15:59 Uhr und von 17 bis 17:59 Uhr'],
+      // A clean (unbounded) hour step confines the cadence to every Nth hour,
+      // not a juxtaposed second cadence ("alle 2 Stunden").
+      ['*/15 */2 * * *', 'alle 15 Minuten in jeder zweiten Stunde'],
+      ['*/15 */3 * * *', 'alle 15 Minuten in jeder dritten Stunde'],
+      // An uneven hour step lists its active hours as windows.
+      ['*/15 */5 * * *',
+        'alle 15 Minuten von 0 bis 0:59 Uhr, von 5 bis 5:59 Uhr, ' +
+        'von 10 bis 10:59 Uhr, von 15 bis 15:59 Uhr und von 20 bis 20:59 Uhr'],
+      // The same clean hour step composed with a second clause.
+      ['0-10 */15 */2 L * *',
+        'in den Sekunden 0 bis 10 jeder Minute, ' +
+        'alle 15 Minuten in jeder zweiten Stunde am letzten Tag des Monats'],
       // Uneven minute step within a window.
       ['*/45 9-17 * * *',
         'in den Minuten 0 und 45 jeder Stunde, von 9 bis 17:45 Uhr'],

@@ -134,6 +134,13 @@ const weekdayNouns = [
 // Ordinals for Quartz "#n" occurrences (1-5).
 const ordinals = ['', 'ersten', 'zweiten', 'dritten', 'vierten', 'fünften'];
 
+// Dative ordinals for "in jeder N-ten Stunde" — the clean hour-step intervals
+// that divide the 24-hour day.
+const stepOrdinals: {[interval: number]: string} = {
+  2: 'zweiten', 3: 'dritten', 4: 'vierten', 6: 'sechsten', 8: 'achten',
+  12: 'zwölften'
+};
+
 function weekdayNoun(token: string): string {
   if (token === '7') {
     return weekdayNouns[0];
@@ -511,16 +518,11 @@ function renderMinuteSpanAcrossHourStep(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>
 ): string {
-  const segment = stepSegment(ir.analyses.segments.hour);
   const lead = plan.form === 'wildcard' ?
     'jede Minute' :
     countedPhrase(ir, 'minute', 'Minute', 'Minuten');
-  // A clean hour step is a cadence ("alle 2 Stunden"); an uneven one lists.
-  const hours = cleanStep(segment, 24) ?
-    everyN(segment.interval, UNITS.hour) :
-    atHours(segment.fires);
 
-  return lead + ', ' + hours;
+  return lead + ', ' + hourStepPhrase(ir);
 }
 
 // Compact minutes across discrete hours: "in den Minuten 5 und 10, um 9, 17,
@@ -572,15 +574,20 @@ function renderMinuteFrequency(
   }
 
   if (plan.hours.kind === 'step') {
-    return base + ', ' + atHours(stepSegment(ir.analyses.segments.hour).fires);
+    // The plan carries a step only for a clean step (dividing the day):
+    // confine the cadence to every Nth hour ("in jeder zweiten Stunde").
+    const interval = stepSegment(ir.analyses.segments.hour).interval;
+
+    return base + ' in jeder ' + stepOrdinals[interval] + ' Stunde';
   }
 
   return base;
 }
 
-// A repeating hour step: "alle 6 Stunden", or its discrete fires when uneven:
-// "um 0, 5, 10, 15 und 20 Uhr".
-function renderHourStep(ir: IR): string {
+// A stepped hour field as a phrase: the cadence when clean ("alle 6 Stunden"),
+// else its discrete fires when uneven or bounded ("um 0, 5, 10, 15 und 20
+// Uhr"). Shared by the bare hour step and the minute-step compositions.
+function hourStepPhrase(ir: IR): string {
   const segment = stepSegment(ir.analyses.segments.hour);
 
   return cleanStep(segment, 24) ?
@@ -626,7 +633,7 @@ const renderers = {
   everyMinute: renderEveryMinute,
   everySecond: renderEverySecond,
   hourRange: renderHourRange,
-  hourStep: renderHourStep,
+  hourStep: hourStepPhrase,
   minuteFrequency: renderMinuteFrequency,
   minuteSpanAcrossHourStep: renderMinuteSpanAcrossHourStep,
   minuteSpanInHour: renderMinuteSpanInHour,

@@ -375,7 +375,12 @@ function renderMinuteFrequency(
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    phrase += hourStepTail(stepSegment(ir.analyses.segments.hour!), opts);
+    // The plan carries a step only for a clean step (dividing the day):
+    // confine the cadence to every Nth hour ("joka toisen tunnin aikana"),
+    // never a second, conflicting cadence.
+    const interval = stepSegment(ir.analyses.segments.hour!).interval;
+
+    phrase += ' joka ' + ordinalGenitive(interval, opts) + ' tunnin aikana';
   }
 
   return phrase + trailingQualifier(ir, opts);
