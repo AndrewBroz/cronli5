@@ -192,7 +192,11 @@ describe('Suomi (fi):', function() {
       ['0 */5 * * *', 'viiden tunnin välein keskiyöstä alkaen'],
       ['0 */10 * * *', 'klo 0, 10 ja 20'],
       ['0 3/7 * * *', 'klo 3, 10 ja 17'],
-      ['0 1/5 * * *', 'viiden tunnin välein klo 1 alkaen'],
+      // "alkaen" governs the elative, so the start hour takes the -stä/-sta
+      // suffix by vowel harmony ("klo 1:stä", "klo 13:sta").
+      ['0 1/5 * * *', 'viiden tunnin välein klo 1:stä alkaen'],
+      ['0 11/2 * * *', 'kahden tunnin välein klo 11:stä alkaen'],
+      ['0 13/3 * * *', 'kolmen tunnin välein klo 13:sta alkaen'],
       ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 ja 22.30'],
       ['0,30 8-18/2 * * *',
         'joka tunti 0 ja 30 minuutin kohdalla, klo 8, 10, 12, 14, 16 ' +
@@ -230,7 +234,7 @@ describe('Suomi (fi):', function() {
         'joka tunti 0 ja 30 minuutin kohdalla klo 9.00–17.30'],
       ['0 9-17/2 * * *', 'klo 9, 11, 13, 15 ja 17'],
       ['0-30 1/6 * * *',
-        '0–30 minuutin kohdalla, kuuden tunnin välein klo 1 alkaen'],
+        '0–30 minuutin kohdalla, kuuden tunnin välein klo 1:stä alkaen'],
       ['* 8-18,22 * * *',
         'joka minuutti klo 8.00–18.59 ja 22.00–22.59'],
       ['5-10 1,3,5,7,9,11,13 * * *',

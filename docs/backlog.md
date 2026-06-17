@@ -91,12 +91,6 @@ without the `tsx` artifact.
 
 ## Other deferred items
 
-- **Finnish bare hour-step `alkaen` case** — `stepHours` renders an offset bare
-  hour step as "klo N alkaen" (e.g. `0 1/5` → "viiden tunnin välein klo 1
-  alkaen"). `alkaen` governs the elative, so it should read "klo N:stä alkaen",
-  matching the offset-stride confinement (`everyNthHour` already does this via
-  `hourElatives`). The bare step's start can be 0–23, so it needs the elative
-  table extended past 11 (12–23 vowel harmony) before sharing the helper.
 - **Per-language `PlanNode` coverage in the status table** — show which of the
   18 `PlanNode` kinds each language's corpus exercises. Needs the corpora to
   export their pattern lists; today only `spanning-set.mjs` reports kind

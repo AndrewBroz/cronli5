@@ -453,12 +453,15 @@ function plainOrFullHourStep(segment: StepSegment, opts: NormalizedOptions):
   return stepHours(segment, opts);
 }
 
-// Elative-case clock hours for "kello N:stä alkaen" ("alkaen" governs the
-// elative); the -stä/-sta suffix follows each numeral's vowel harmony. Index
-// covers the offset starts a step can take (1 through interval-1, max 11).
+// Elative-case clock hours for "klo N:stä alkaen" ("alkaen" governs the
+// elative); the -stä/-sta suffix follows the vowel harmony of the numeral's
+// last spoken element. Covers every start hour a step can take (0–23); 0 uses
+// the worded "keskiyöstä" instead, so its slot is unused.
 const hourElatives: (string | null)[] = [
   null, '1:stä', '2:sta', '3:sta', '4:stä', '5:stä', '6:sta', '7:stä',
-  '8:sta', '9:stä', '10:stä', '11:stä'
+  '8:sta', '9:stä', '10:stä', '11:stä', '12:sta', '13:sta', '14:stä',
+  '15:stä', '16:sta', '17:stä', '18:sta', '19:stä', '20:stä', '21:stä',
+  '22:sta', '23:sta'
 ];
 
 // Confine a cadence to a clean hour stride: "joka toisen tunnin aikana", with
@@ -660,7 +663,7 @@ function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
     return cadence + ' keskiyöstä alkaen';
   }
 
-  return cadence + ' klo ' + start + ' alkaen';
+  return cadence + ' klo ' + hourElatives[start] + ' alkaen';
 }
 
 // --- Hour-time phrasing. ---
