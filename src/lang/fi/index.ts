@@ -471,7 +471,11 @@ function everyNthHour(segment: StepSegment, opts: NormalizedOptions): string {
     ' tunnin aikana';
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
 
-  return start === 0 ? base : base + ' kello ' + hourElatives[start] + ' alkaen';
+  if (start === 0) {
+    return base;
+  }
+
+  return base + ' kello ' + hourElatives[start] + ' alkaen';
 }
 
 // The hour-step tail of a minute clause. A plain dividing step joins

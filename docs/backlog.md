@@ -110,8 +110,18 @@ broadening it is the next lever on automated quality. A first slice is **built**
 and flags crashes, degenerate output, and **dropped/collapsed field values** (a
 mechanical "is this output fudged?" check). It already caught four real German
 bugs — range hours collapsing to their start, a clock second silently dropped —
-that "renders the spanning set" missed. The round-trip and panel layers below
-are the remaining work.
+that "renders the spanning set" missed. A second slice is **built**:
+`scripts/roundtrip.mjs` samples the fuzz pattern space **deduped by English
+output shape** (one representative per distinct template — the wide set), then
+for each renders the English description, asks the cross-family model to recover
+a cron from it, and compares the two crons by **expanded per-field value sets**
+(a mechanical, exact verdict; the model is only the reverse parser). It
+partitions results into *verified* (round-trips exactly), *needs-review*
+(differs — a candidate bug), and *day-or* (both date and weekday set — cron's OR
+case, which the back-translator recovers unreliably, segregated as model noise).
+Quartz operators (L/W/#) have no simple value set and are skipped. This is the
+objective bulk pass; the naturalness panel then only needs a representative
+sample. The panel-over-clusters layer is the remaining work.
 
 **Problem.** The cross-family panel runs over a curated **spanning set**
 (`scripts/spanning-set.mjs` — ~34 patterns, one per `PlanNode` kind; the

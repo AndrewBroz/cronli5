@@ -351,10 +351,10 @@ function cleanHourStride(hourField: string): boolean {
 }
 
 // A minute wildcard or plain range under a stepped hour. A wildcard minute is
-// a cadence: a clean stride (dividing the day) confines it to every Nth hour, an
-// uneven or bounded step lists its active hours like any discrete set — so the
-// cadence is never read as a second, conflicting frequency. A plain range is a
-// per-hour window keyed to the step.
+// a cadence: a clean stride (dividing the day) confines it to every Nth hour;
+// an uneven or bounded step lists its active hours like any discrete set — so
+// the cadence is never read as a second, conflicting frequency. A plain range
+// is a per-hour window keyed to the step.
 function planMinuteUnderHourStep(
   pattern: Pattern,
   shapes: Shapes

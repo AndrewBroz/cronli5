@@ -19,6 +19,26 @@ see [../CONTRIBUTING.md](../CONTRIBUTING.md). For the architecture, see
   two model families and several reviewer personas, none aware of provenance.
 - **Clear status labels:** Beta is model-validated; stable requires human review.
 
+## Mechanical checks (run first, no human or judge)
+
+Two cheap, wide passes run before the panel and catch whole classes of defect
+the curated spanning set misses — so the expensive panel only sees a
+representative sample:
+
+- **Fuzz** — `node --import tsx scripts/fuzz-lang.mjs <code>` (`npm run fuzz`).
+  Sweeps a broad combinatorial pattern set and flags throws, degenerate output,
+  and dropped/collapsed field values (the "is the output fudged?" check).
+- **Round-trip** — `node --import tsx scripts/roundtrip.mjs [--limit=N]`.
+  Samples the fuzz space deduped by English output shape, recovers a cron from
+  each description via the cross-family model, and compares the two crons by
+  expanded per-field value sets (mechanical, exact). Partitions into *verified*,
+  *needs-review*, and *day-or* (cron's OR case, segregated as model noise). The
+  objective bulk correctness pass — `i18n-design.md` §4 Pass 2.
+
+When you change a renderer's wording, also re-judge the affected patterns with
+`scripts/panel-targeted.mjs` — the corpus tests only confirm the output didn't
+change, not that the *new* wording is good.
+
 ## The panel
 
 The unit of judgment is a **blind, cross-family persona panel** — diverse
