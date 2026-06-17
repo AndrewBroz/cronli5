@@ -378,9 +378,8 @@ function renderMinuteFrequency(
     // The plan carries a step only for a clean step (dividing the day):
     // confine the cadence to every Nth hour ("joka toisen tunnin aikana"),
     // never a second, conflicting cadence.
-    const interval = stepSegment(ir.analyses.segments.hour!).interval;
-
-    phrase += ' joka ' + ordinalGenitive(interval, opts) + ' tunnin aikana';
+    phrase += ' ' +
+      everyNthHour(stepSegment(ir.analyses.segments.hour!), opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
@@ -426,8 +425,11 @@ function renderMinuteSpanAcrossHourStep(
   // A wildcard span always sets the step off with a comma ("joka
   // minuutti, joka toinen tunti"); a restricted span joins a plain step
   // directly ("minuuteilla 0–30 joka toinen tunti").
+  // A wildcard minute (a cadence) is reached only for a clean step and is
+  // confined to every Nth hour; a restricted span is a per-hour window whose
+  // recurrence joins as a plain step.
   if (plan.form === 'wildcard') {
-    return 'joka minuutti, ' + plainOrFullHourStep(segment, opts) +
+    return 'joka minuutti ' + everyNthHour(segment, opts) +
       trailingQualifier(ir, opts);
   }
 
@@ -449,6 +451,24 @@ function plainOrFullHourStep(segment: StepSegment, opts: NormalizedOptions):
   }
 
   return stepHours(segment, opts);
+}
+
+// Elative-case clock hours for "kello N:stä alkaen" ("alkaen" governs the
+// elative); the -stä/-sta suffix follows each numeral's vowel harmony. Index
+// covers the offset starts a step can take (1 through interval-1, max 11).
+const hourElatives: (string | null)[] = [
+  null, '1:stä', '2:sta', '3:sta', '4:stä', '5:stä', '6:sta', '7:stä',
+  '8:sta', '9:stä', '10:stä', '11:stä'
+];
+
+// Confine a cadence to a clean hour stride: "joka toisen tunnin aikana", with
+// the start named when not midnight ("…kello 1:stä alkaen" for an odd stride).
+function everyNthHour(segment: StepSegment, opts: NormalizedOptions): string {
+  const base = 'joka ' + ordinalGenitive(segment.interval, opts) +
+    ' tunnin aikana';
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+  return start === 0 ? base : base + ' kello ' + hourElatives[start] + ' alkaen';
 }
 
 // The hour-step tail of a minute clause. A plain dividing step joins

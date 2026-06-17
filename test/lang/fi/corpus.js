@@ -172,11 +172,18 @@ describe('Suomi (fi):', function() {
       ['* 9,17 * * *', 'joka minuutti klo 9.00–9.59 ja 17.00–17.59'],
       ['0-30 9,17 * * *', '0–30 minuutin kohdalla klo 9 ja 17'],
       ['0-30 */2 * * *', '0–30 minuutin kohdalla joka toinen tunti'],
-      ['* */2 * * *', 'joka minuutti, joka toinen tunti'],
-      ['* */10 * * *', 'joka minuutti, klo 0, 10 ja 20'],
+      ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
+      ['* */10 * * *',
+        'joka minuutti klo 0.00–0.59, 10.00–10.59 ja 20.00–20.59'],
       // A clean hour step confines the cadence to every Nth hour, not a
       // second, conflicting cadence ("joka toinen tunti").
       ['*/15 */2 * * *', '15 minuutin välein joka toisen tunnin aikana'],
+      // An offset stride keeps the confinement and names its start.
+      ['*/15 1/2 * * *',
+        '15 minuutin välein joka toisen tunnin aikana kello 1:stä alkaen'],
+      ['*/15 1/3 * * *',
+        '15 minuutin välein joka kolmannen tunnin aikana kello 1:stä alkaen'],
+      ['* 1/2 * * *', 'joka minuutti joka toisen tunnin aikana kello 1:stä alkaen'],
       // An uneven or bounded hour step lists its active hours as windows.
       ['*/20 9-17/2 * * *',
         '20 minuutin välein klo 9.00–9.59, 11.00–11.59, ' +

@@ -1,9 +1,10 @@
 import {run} from '../../../../runner.js';
 
 // Behavior spec for a minute wildcard or plain range combined with an hour
-// step. The minute window must not collapse to the bare hour cadence: it
-// leads, and the hour step trails as its own clause, mirroring the
-// minute-step phrasing ("every 15 minutes, every two hours").
+// step. A wildcard minute is a cadence and must be confined to the active
+// hours ("during every other hour" for a clean step, else the hour list), never
+// juxtaposed with a second cadence. A plain range is a per-hour window whose
+// recurrence trails as its own clause ("…, every two hours").
 
 describe('Minute span across an hour step:', function() {
   describe('minute range', function() {
@@ -16,10 +17,13 @@ describe('Minute span across an hour step:', function() {
     ]);
   });
 
-  describe('wildcard minute', function() {
+  describe('wildcard minute (confined to the active hours)', function() {
     run([
-      ['* */2 * * *', 'every minute, every two hours'],
-      ['* */10 * * *', 'every minute, at 12 a.m., 10 a.m., and 8 p.m.']
+      ['* */2 * * *', 'every minute during every other hour'],
+      ['* */3 * * *', 'every minute during every third hour'],
+      ['* 1/2 * * *', 'every minute during every other hour starting at 1 a.m.'],
+      ['* */10 * * *',
+        'every minute during the 12 a.m., 10 a.m., and 8 p.m. hours']
     ]);
   });
 

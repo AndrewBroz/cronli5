@@ -123,13 +123,6 @@ const weekdayTokens: {[token: string]: number} = {
 const nthWeekdayNames =
   [null, 'primer', 'segundo', 'tercer', 'cuarto', 'quinto'];
 
-// Feminine ordinals for "en cada N-ésima hora" — the clean hour-step intervals
-// that divide the 24-hour day.
-const stepOrdinals: {[interval: number]: string} = {
-  2: 'segunda', 3: 'tercera', 4: 'cuarta', 6: 'sexta', 8: 'octava',
-  12: 'duodécima'
-};
-
 // Normalize raw user options.
 function normalizeOptions(options?: Cronli5Options): Opts {
   options = options || {};
@@ -295,6 +288,30 @@ function minuteRangeLead(minuteField: string): string {
   return 'cada minuto del ' + bounds[0] + ' al ' + bounds[1];
 }
 
+// Whether the hour field is a single step, which es renders as a confinement
+// phrase rather than a window list.
+function singleHourStep(segments: Segment[] | null): boolean {
+  return segments !== null && segments.length === 1 &&
+    segments[0].kind === 'step';
+}
+
+// A single hour step as a confinement. A stride of two over the whole day
+// reads idiomatically as the even ("las horas pares") or odd ("impares")
+// hours; any other step names its active hours, which pins the schedule
+// precisely (a panel found ordinal/colloquial forms imprecise).
+function stepHourSpan(segment: StepSegment): string {
+  const bounded = segment.startToken.indexOf('-') !== -1;
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+  if (segment.interval === 2 && !bounded && start <= 1) {
+    return start === 0 ?
+      'durante las horas pares' :
+      'durante las horas impares';
+  }
+
+  return 'durante las horas de las ' + joinList(segment.fires.map(String));
+}
+
 // A repeating minute step, qualified by the active hour window(s).
 function renderMinuteFrequency(
   ir: IR,
@@ -305,17 +322,19 @@ function renderMinuteFrequency(
     'hora', opts);
 
   if (plan.hours.kind === 'during') {
-    phrase += ' ' + hourWindowsFromTimes(ir, plan.hours.times, opts);
+    // An offset step (e.g. 1/2) arrives here; a single step reads as a
+    // confinement, not the verbose window list.
+    phrase += singleHourStep(ir.analyses.segments.hour) ?
+      ', ' + stepHourSpan(stepSegment(ir.analyses.segments.hour)) :
+      ' ' + hourSpanFromTimes(ir, plan.hours.times, opts);
   }
   else if (plan.hours.kind === 'window') {
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    // The plan carries a step only for a clean step (dividing the day):
-    // confine the cadence to every Nth hour ("en cada segunda hora").
-    const interval = stepSegment(ir.analyses.segments.hour).interval;
-
-    phrase += ' en cada ' + stepOrdinals[interval] + ' hora';
+    // A clean stride is a confinement ("las horas pares", or the active-hour
+    // list), never a juxtaposed cadence ("cada dos horas").
+    phrase += ', ' + stepHourSpan(stepSegment(ir.analyses.segments.hour));
   }
 
   return phrase + trailingQualifier(ir, opts);
@@ -342,7 +361,13 @@ function renderMinutesAcrossHours(
   opts: Opts
 ): string {
   if (plan.form === 'wildcard') {
-    return 'cada minuto ' + hourWindowsFromTimes(ir, plan.times, opts) +
+    if (singleHourStep(ir.analyses.segments.hour)) {
+      return 'cada minuto, ' +
+        stepHourSpan(stepSegment(ir.analyses.segments.hour)) +
+        trailingQualifier(ir, opts);
+    }
+
+    return 'cada minuto ' + hourSpanFromTimes(ir, plan.times, opts) +
       trailingQualifier(ir, opts);
   }
 
@@ -359,11 +384,16 @@ function renderMinuteSpanAcrossHourStep(
   plan: Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>,
   opts: Opts
 ): string {
-  const lead = plan.form === 'wildcard' ?
-    'cada minuto' :
-    minuteRangeLead(ir.pattern.minute);
+  const segment = stepSegment(ir.analyses.segments.hour);
 
-  return lead + ', ' + stepHours(stepSegment(ir.analyses.segments.hour), opts) +
+  // A wildcard minute (a cadence) is reached only for a clean stride and is
+  // confined; a plain range is a per-hour window keyed to the step.
+  if (plan.form === 'wildcard') {
+    return 'cada minuto, ' + stepHourSpan(segment) +
+      trailingQualifier(ir, opts);
+  }
+
+  return minuteRangeLead(ir.pattern.minute) + ', ' + stepHours(segment, opts) +
     trailingQualifier(ir, opts);
 }
 
@@ -599,6 +629,17 @@ function atHourTimes(
   }
 
   return hourSegmentTimes(ir, 0, null, opts);
+}
+
+// The active hours of a confined cadence: a few hours read as windows; many
+// read better as a compact list ("durante las horas de las 9, 11, 13, 15 y
+// 17") than as a sprawl of windows.
+function hourSpanFromTimes(ir: IR, times: HourTimesPlan, opts: Opts): string {
+  if (times.kind === 'fires' && times.fires.length > 3) {
+    return 'durante las horas de las ' + joinList(times.fires.map(String));
+  }
+
+  return hourWindowsFromTimes(ir, times, opts);
 }
 
 // Each fire hour as its own one-hour window: "de las 9:00 a las 9:59 y de

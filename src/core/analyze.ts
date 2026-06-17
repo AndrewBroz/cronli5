@@ -328,17 +328,53 @@ function planMinutes(
     return acrossHours;
   }
 
-  if (shapes.hour === 'step' &&
-      (pattern.minute === '*' || shapes.minute === 'range')) {
-    return {
-      form: pattern.minute === '*' ? 'wildcard' : 'range',
-      kind: 'minuteSpanAcrossHourStep'
-    };
+  const underStep = planMinuteUnderHourStep(pattern, shapes);
+
+  if (underStep) {
+    return underStep;
   }
 
   if (pattern.hour === '*') {
     return planMinutesUnderOpenHour(pattern, shapes);
   }
+}
+
+// Whether an hour step is a clean stride over the whole day: unbounded, an
+// even divisor of 24, and starting within the first interval — so its fires
+// wrap uniformly (every Nth hour). Offsets like 1/2 qualify; bounded (9-17/2)
+// and uneven (*/5) steps do not, and list their hours instead.
+function cleanHourStride(hourField: string): boolean {
+  const [start, step] = hourField.split('/');
+  const startHour = start === '*' ? 0 : +start;
+
+  return start.indexOf('-') === -1 && 24 % +step === 0 && startHour < +step;
+}
+
+// A minute wildcard or plain range under a stepped hour. A wildcard minute is
+// a cadence: a clean stride (dividing the day) confines it to every Nth hour, an
+// uneven or bounded step lists its active hours like any discrete set — so the
+// cadence is never read as a second, conflicting frequency. A plain range is a
+// per-hour window keyed to the step.
+function planMinuteUnderHourStep(
+  pattern: Pattern,
+  shapes: Shapes
+): PlanNode | null {
+  if (shapes.hour !== 'step') {
+    return null;
+  }
+
+  if (pattern.minute === '*') {
+    return cleanHourStride(pattern.hour) ?
+      {form: 'wildcard', kind: 'minuteSpanAcrossHourStep'} :
+      {form: 'wildcard', kind: 'minutesAcrossHours',
+        times: hourTimesPlan(pattern.hour)};
+  }
+
+  if (shapes.minute === 'range') {
+    return {form: 'range', kind: 'minuteSpanAcrossHourStep'};
+  }
+
+  return null;
 }
 
 // The hour qualification accompanying a minute-step cadence.
@@ -372,12 +408,10 @@ function planFrequencyHours(
   }
 
   if (shapes.hour === 'step') {
-    // A clean unbounded step (0, N, 2N, … dividing 24) confines the cadence to
-    // "every Nth hour"; an uneven or bounded step lists its hours as windows,
-    // so the cadence is never read as a second, conflicting frequency.
-    const [start, step] = pattern.hour.split('/');
-
-    return (start === '*' || start === '0') && 24 % +step === 0 ?
+    // A clean stride (dividing 24) confines the cadence to "every Nth hour";
+    // an uneven or bounded step lists its hours as windows, so the cadence is
+    // never read as a second, conflicting frequency.
+    return cleanHourStride(pattern.hour) ?
       {kind: 'step'} :
       {kind: 'during', times: hourTimesPlan(pattern.hour)};
   }

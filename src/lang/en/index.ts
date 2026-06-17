@@ -278,12 +278,11 @@ function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    // The plan carries a step only for a clean step (dividing the day), which
-    // confines the cadence to every Nth hour; a stepped hour field's first
-    // segment is a step segment.
-    const interval = (ir.analyses.segments.hour![0] as StepSegment).interval;
-
-    phrase += ' during every ' + getOrdinal(interval) + ' hour';
+    // The plan carries a step only for a clean stride (dividing the day),
+    // which confines the cadence to every Nth hour; a stepped hour field's
+    // first segment is a step segment.
+    phrase += ' ' +
+      everyNthHour(ir.analyses.segments.hour![0] as StepSegment, opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
@@ -319,18 +318,39 @@ function renderMinutesAcrossHours(ir: IR, plan: PlanOf<'minutesAcrossHours'>,
   return lead + ', at ' + times + trailingQualifier(ir, opts);
 }
 
-// A minute wildcard or plain range under an hour step; the hour cadence
-// trails as its own clause.
+// Spelled ordinals for "during every Nth hour" — the clean hour-step
+// intervals that divide the day. N=2 reads idiomatically as "every other".
+const stepOrdinals: Record<number, string> = {
+  2: 'other', 3: 'third', 4: 'fourth', 6: 'sixth', 8: 'eighth', 12: 'twelfth'
+};
+
+// Confine a cadence to a clean hour stride: "during every other hour", with
+// the start named when it is not midnight ("…from 1 a.m." for an odd stride).
+function everyNthHour(segment: StepSegment, opts: NormalizedOptions): string {
+  const base = 'during every ' + stepOrdinals[segment.interval] + ' hour';
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+  return start === 0 ?
+    base :
+    base + ' starting at ' + getTime({hour: start, minute: 0}, opts);
+}
+
+// A minute wildcard or plain range under an hour step. A wildcard minute (a
+// cadence) is reached only for a clean step and is confined to every Nth hour;
+// a plain range is a per-hour window whose recurrence trails as its own clause.
 function renderMinuteSpanAcrossHourStep(ir: IR,
   plan: PlanOf<'minuteSpanAcrossHourStep'>, opts: NormalizedOptions): string {
-  const lead = plan.form === 'wildcard' ?
-    'every minute' :
-    minuteRangeLead(ir.pattern.minute, opts);
-
   // This plan is reached only under a stepped hour field, whose first
   // segment is a step segment.
-  return lead + ', ' + stepHours(ir.analyses.segments.hour![0] as StepSegment,
-    opts) + trailingQualifier(ir, opts);
+  const segment = ir.analyses.segments.hour![0] as StepSegment;
+
+  if (plan.form === 'wildcard') {
+    return 'every minute ' + everyNthHour(segment, opts) +
+      trailingQualifier(ir, opts);
+  }
+
+  return minuteRangeLead(ir.pattern.minute, opts) + ', ' +
+    stepHours(segment, opts) + trailingQualifier(ir, opts);
 }
 
 // Lead phrase for a plain minute range: "every minute from <a> through <b>

@@ -19,9 +19,20 @@ describe('Minute step across multiple hours:', function() {
 
   describe('clean hour step (confined to every Nth hour)', function() {
     run([
-      ['*/15 */2 * * *', 'every 15 minutes during every 2nd hour'],
-      ['*/15 */3 * * *', 'every 15 minutes during every 3rd hour'],
-      ['*/15 */4 * * *', 'every 15 minutes during every 4th hour']
+      ['*/15 */2 * * *', 'every 15 minutes during every other hour'],
+      ['*/15 */3 * * *', 'every 15 minutes during every third hour'],
+      ['*/15 */4 * * *', 'every 15 minutes during every fourth hour']
+    ]);
+  });
+
+  describe('offset clean stride (confined, with a start anchor)', function() {
+    run([
+      ['*/15 1/2 * * *',
+        'every 15 minutes during every other hour starting at 1 a.m.'],
+      ['*/15 1/3 * * *',
+        'every 15 minutes during every third hour starting at 1 a.m.'],
+      ['*/15 2/4 * * *',
+        'every 15 minutes during every fourth hour starting at 2 a.m.']
     ]);
   });
 

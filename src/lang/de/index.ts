@@ -141,6 +141,15 @@ const stepOrdinals: {[interval: number]: string} = {
   12: 'zwölften'
 };
 
+// Confine a cadence to a clean hour stride: "in jeder zweiten Stunde", with
+// the start named when it is not midnight ("…ab 1 Uhr" for an odd stride).
+function everyNthHour(segment: StepSegment): string {
+  const base = 'in jeder ' + stepOrdinals[segment.interval] + ' Stunde';
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+  return start === 0 ? base : base + ' ab ' + start + ' Uhr';
+}
+
 function weekdayNoun(token: string): string {
   if (token === '7') {
     return weekdayNouns[0];
@@ -425,6 +434,19 @@ function duringWindows(ir: IR, times: HourTimesPlan, sep: string): string[] {
   });
 }
 
+// The "during" hours of a confined cadence: a few hours read as windows ("von
+// 9 bis 9:59 Uhr und …"); many read better as a compact list ("in den Stunden
+// von 9, 11, 13, 15 und 17 Uhr") instead of sprawling windows.
+function duringHours(ir: IR, times: HourTimesPlan, sep: string): string {
+  const windows = duringWindows(ir, times, sep);
+
+  if (windows.length <= 3 || times.kind !== 'fires') {
+    return joinList(windows);
+  }
+
+  return 'in den Stunden von ' + joinList(times.fires.map(String)) + ' Uhr';
+}
+
 // --- Renderers. ---
 //
 // Renderers return the bare clause; the leading qualifier (weekday/day/month)
@@ -502,7 +524,7 @@ function renderMinutesAcrossHours(
 
   // The wildcard form means every minute *during* each hour: render windows.
   if (plan.form === 'wildcard') {
-    return 'jede Minute ' + joinList(duringWindows(ir, plan.times, sep));
+    return 'jede Minute ' + duringHours(ir, plan.times, sep);
   }
 
   const hours = plan.times.kind === 'fires' ?
@@ -512,17 +534,21 @@ function renderMinutesAcrossHours(
   return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' + hours;
 }
 
-// A minute clause across a stepped hour range: "in den Minuten 0 bis 30, um
-// 9, 11, 13, 15 und 17 Uhr".
+// A minute clause across a stepped hour range. A wildcard minute (a cadence)
+// is reached only for a clean step and is confined to every Nth hour ("jede
+// Minute in jeder zweiten Stunde"); a plain range is a per-hour window whose
+// recurrence trails ("in den Minuten 0 bis 30, alle 2 Stunden").
 function renderMinuteSpanAcrossHourStep(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>
 ): string {
-  const lead = plan.form === 'wildcard' ?
-    'jede Minute' :
-    countedPhrase(ir, 'minute', 'Minute', 'Minuten');
+  if (plan.form === 'wildcard') {
+    return 'jede Minute ' +
+      everyNthHour(stepSegment(ir.analyses.segments.hour));
+  }
 
-  return lead + ', ' + hourStepPhrase(ir);
+  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' +
+    hourStepPhrase(ir);
 }
 
 // Compact minutes across discrete hours: "in den Minuten 5 und 10, um 9, 17,
@@ -570,15 +596,14 @@ function renderMinuteFrequency(
   }
 
   if (plan.hours.kind === 'during') {
-    return base + ' ' + joinList(duringWindows(ir, plan.hours.times, sep));
+    return base + ' ' + duringHours(ir, plan.hours.times, sep);
   }
 
   if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean step (dividing the day):
     // confine the cadence to every Nth hour ("in jeder zweiten Stunde").
-    const interval = stepSegment(ir.analyses.segments.hour).interval;
-
-    return base + ' in jeder ' + stepOrdinals[interval] + ' Stunde';
+    return base + ' ' +
+      everyNthHour(stepSegment(ir.analyses.segments.hour));
   }
 
   return base;

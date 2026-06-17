@@ -205,7 +205,7 @@ describe('Español (es):', function() {
       ['0 8-18/4 * * *',
         'a las 8 de la mañana, al mediodía y a las 4 de la tarde'],
       ['0 0/7 * * *', 'cada siete horas desde medianoche'],
-      ['* */2 * * *', 'cada minuto, cada dos horas'],
+      ['* */2 * * *', 'cada minuto, durante las horas pares'],
       ['0 12 */2 * *', 'cada dos días del mes al mediodía'],
       ['0 12 5/3 * *', 'cada tres días del mes desde el 5 al mediodía']
     ], ampm);
@@ -276,15 +276,17 @@ describe('Español (es):', function() {
       ['15 0,30 * * * *',
         'en el segundo 15 de cada minuto, ' +
         'en los minutos 0 y 30 de cada hora'],
-      // A clean hour step confines the cadence to every Nth hour, not a
-      // second, conflicting cadence ("cada dos horas").
-      ['*/15 */2 * * *', 'cada 15 minutos en cada segunda hora'],
-      // An uneven or bounded hour step lists its active hours as windows.
+      // A stride of two over the whole day reads as the even/odd hours; any
+      // other step names its active hours, which pins the schedule precisely
+      // (a panel found ordinal/colloquial forms imprecise).
+      ['*/15 */2 * * *', 'cada 15 minutos, durante las horas pares'],
+      ['*/15 1/2 * * *', 'cada 15 minutos, durante las horas impares'],
+      ['*/15 */3 * * *',
+        'cada 15 minutos, durante las horas de las 0, 3, 6, 9, 12, 15, 18 y 21'],
+      ['*/15 1/3 * * *',
+        'cada 15 minutos, durante las horas de las 1, 4, 7, 10, 13, 16, 19 y 22'],
       ['*/20 9-17/2 * * *',
-        'cada 20 minutos de las 09:00 a las 09:59, ' +
-        'de las 11:00 a las 11:59, de las 13:00 a las 13:59, ' +
-        'de las 15:00 a las 15:59 y de las 17:00 a las 17:59',
-        {ampm: false}],
+        'cada 20 minutos, durante las horas de las 9, 11, 13, 15 y 17'],
       ['* 9-17 * * *',
         'cada minuto de las 9 de la mañana a las 5:59 de la tarde'],
       ['* 0-5 * * *',
