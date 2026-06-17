@@ -35,6 +35,13 @@ representative sample:
   *needs-review*, and *day-or* (cron's OR case, segregated as model noise). The
   objective bulk correctness pass — `i18n-design.md` §4 Pass 2.
 
+The panel below also runs **wide**, above the spanning set: `panel.mjs <code>
+--wide[=N]` reviews a shape-deduped sample of the fuzz space (one representative
+per output shape) instead of the curated set. Same two-phase flow — its Gemma
+half is a cheap pre-filter; adding `--judges` folds in the Claude half for the
+full 4-judge verdict. The single-Gemma pre-pass over the long tail is noisy
+(complex OR/Quartz patterns over-flag); the 4-judge median is what decides.
+
 When you change a renderer's wording, also re-judge the affected patterns with
 `scripts/panel-targeted.mjs` — the corpus tests only confirm the output didn't
 change, not that the *new* wording is good.

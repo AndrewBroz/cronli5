@@ -17,6 +17,7 @@ import de from '../src/lang/de/index.js';
 import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
 import {ask, askJson} from './llm.mjs';
+import {sampleShapes, spread} from './sample.mjs';
 import {spanningSet} from './spanning-set.mjs';
 
 const MODULES = {de, es, fi};
@@ -186,9 +187,39 @@ async function reviewPattern(code, pattern, dialect) {
     result: aggregate({pattern, slate, key}, verdicts)};
 }
 
-async function run(code, limit, dialect) {
+// The pattern set under review: a wide shape-deduped sample (--wide), a
+// dialect's clock-time set, or the curated spanning set.
+function basePatterns(code, dialect, wide, limit) {
+  if (wide) {
+    return spread(sampleShapes(MODULES[code]), wide);
+  }
+
   const base = dialect ? DIALECT_PATTERNS : spanningSet;
-  const patterns = limit ? base.slice(0, limit) : base;
+
+  return limit ? base.slice(0, limit) : base;
+}
+
+// Where a run's slates are written / re-read; the wide run gets its own tag so
+// it never clobbers the spanning-set or dialect slates.
+function panelTag(code, dialect, wide) {
+  if (wide) {
+    return code + '-wide';
+  }
+
+  return dialect || code;
+}
+
+// The --wide sample size: the given N, a default when bare, or 0 when absent.
+function parseWide(arg) {
+  if (!arg) {
+    return 0;
+  }
+
+  return arg === '--wide' ? 40 : Number(arg.slice('--wide='.length));
+}
+
+async function run(code, limit, dialect, wide) {
+  const patterns = basePatterns(code, dialect, wide, limit);
   const items = [];
   let passes = 0;
 
@@ -208,7 +239,7 @@ async function run(code, limit, dialect) {
   }
 
   mkdirSync('tmp', {recursive: true});
-  const tag = dialect || code;
+  const tag = panelTag(code, dialect, wide);
 
   writeFileSync('tmp/panel-' + tag + '.json', JSON.stringify(items, null, 2));
   console.log('\nGemma-half: ' + passes + '/' + patterns.length +
@@ -219,8 +250,8 @@ async function run(code, limit, dialect) {
 // Re-aggregate with the Claude half folded in. Reads the slates written by a
 // prior run and a judges file keyed by pattern ({pattern: [verdict, ...]}),
 // combines them with the stored Gemma verdicts, and prints the final gate.
-function aggregateWithJudges(code, judgesPath, dialect) {
-  const tag = dialect || code;
+function aggregateWithJudges(code, judgesPath, dialect, wide) {
+  const tag = panelTag(code, dialect, wide);
   const items = JSON.parse(readFileSync('tmp/panel-' + tag + '.json', 'utf8'));
   const judges = JSON.parse(readFileSync(judgesPath, 'utf8'));
   let passes = 0;
@@ -254,17 +285,21 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
 
   if (!MODULES[code]) {
     throw new Error('usage: panel.mjs <es|fi> [--limit=N] [--judges=FILE] ' +
-      '[--dialect=es-MX]');
+      '[--dialect=es-MX] [--wide[=N]]');
   }
 
   const judgesArg = process.argv.find((a) => a.startsWith('--judges='));
   const dialectArg = process.argv.find((a) => a.startsWith('--dialect='));
   const dialect = dialectArg ? dialectArg.slice('--dialect='.length) : '';
+  const wideArg = process.argv.find((a) => a === '--wide' ||
+    a.startsWith('--wide='));
+  const wide = parseWide(wideArg);
 
   if (judgesArg) {
-    aggregateWithJudges(code, judgesArg.slice('--judges='.length), dialect);
+    aggregateWithJudges(code, judgesArg.slice('--judges='.length), dialect,
+      wide);
   }
   else {
-    await run(code, limit, dialect);
+    await run(code, limit, dialect, wide);
   }
 }

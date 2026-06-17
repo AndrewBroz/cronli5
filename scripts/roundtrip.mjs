@@ -12,8 +12,8 @@
 // Usage: node --import tsx scripts/roundtrip.mjs [--limit=N]
 
 import {pathToFileURL} from 'node:url';
-import {patterns} from './fuzz-lang.mjs';
 import {askJson} from './llm.mjs';
+import {sampleShapes, spread} from './sample.mjs';
 import {enumerateFires} from '../src/core/analyze.js';
 import cronli5 from '../src/cronli5.js';
 import en from '../src/lang/en/index.js';
@@ -112,25 +112,6 @@ async function backTranslate(description) {
   return typeof result.cron === 'string' ? result.cron : null;
 }
 
-// One pattern per distinct English output shape: the representative wide set.
-function sampleShapes() {
-  const byShape = new Map();
-
-  patterns().forEach(function shape(pattern) {
-    const description = render(pattern);
-
-    if (description) {
-      const key = description.replace(/\d+/gu, 'N');
-
-      if (!byShape.has(key)) {
-        byShape.set(key, pattern);
-      }
-    }
-  });
-
-  return [...byShape.values()];
-}
-
 function render(pattern) {
   try {
     return cronli5(pattern, {lang: en});
@@ -140,25 +121,8 @@ function render(pattern) {
   }
 }
 
-// Evenly-spaced picks across the shape list — a diverse spread, not the
-// clustered first N (deterministic, so runs are reproducible).
-function spread(items, count) {
-  if (!count || count >= items.length) {
-    return items;
-  }
-
-  const stride = items.length / count;
-  const out = [];
-
-  for (let i = 0; i < count; i += 1) {
-    out.push(items[Math.floor(i * stride)]);
-  }
-
-  return out;
-}
-
 async function main(limit) {
-  const shapes = sampleShapes();
+  const shapes = sampleShapes(en);
   const chosen = spread(shapes, limit);
   const checkable = chosen
     .map((pattern) => ({pattern, original: expandCron(pattern)}))
@@ -216,7 +180,7 @@ function show(heading, items) {
   }
 }
 
-export {cronsEqual, expandCron, sampleShapes};
+export {cronsEqual, expandCron};
 
 if (process.argv[1] &&
     import.meta.url === pathToFileURL(process.argv[1]).href) {

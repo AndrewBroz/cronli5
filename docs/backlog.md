@@ -121,7 +121,18 @@ partitions results into *verified* (round-trips exactly), *needs-review*
 case, which the back-translator recovers unreliably, segregated as model noise).
 Quartz operators (L/W/#) have no simple value set and are skipped. This is the
 objective bulk pass; the naturalness panel then only needs a representative
-sample. The panel-over-clusters layer is the remaining work.
+sample. A third slice is **built**: `panel.mjs <code> --wide[=N]` runs the full
+two-phase cross-family panel (Gemma half + Claude judges via `--judges`) over a
+shape-deduped sample of the fuzz space (`scripts/sample.mjs` — one
+representative per output shape) instead of the curated spanning set. The Gemma
+half alone is a cheap, noisy pre-filter (complex OR/Quartz patterns over-flag on
+a single judge); the **4-judge median** decides, and it re-calibrates the
+single-judge noise (a pattern the Gemma half failed passed on the full panel).
+It already surfaced real long-tail items the spanning set never reaches (e.g. de
+rendering `*/3` month as enumerated months vs the en cadence form). Remaining:
+source the wide set from the **en corpus** as well (more realistic shapes than
+the combinatorial fuzz set), and emit a coverage report (which IR kinds/shapes
+the sample touched).
 
 **Problem.** The cross-family panel runs over a curated **spanning set**
 (`scripts/spanning-set.mjs` — ~34 patterns, one per `PlanNode` kind; the
