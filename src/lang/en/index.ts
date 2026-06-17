@@ -1274,7 +1274,8 @@ const en: Language = {
   describe,
   fallback: 'an unrecognizable cron pattern',
   options: normalizeOptions,
-  reboot: 'at system startup'
+  reboot: 'at system startup',
+  sentence: (description) => 'Runs ' + description + '.'
 };
 
 export default en;

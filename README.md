@@ -104,6 +104,10 @@ As a command line tool:
 ```bash
 $ cronli5 "*/5 * * * *"
 Runs every five minutes.
+
+# Other languages with --lang (de, es, fi):
+$ cronli5 --lang de "0 0 * * *"
+Läuft täglich um Mitternacht.
 ```
 
 ## Input Formats

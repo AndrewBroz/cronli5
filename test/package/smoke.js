@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {execFileSync} from 'node:child_process';
-import {existsSync} from 'node:fs';
+import {existsSync, readdirSync} from 'node:fs';
 import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -60,9 +60,59 @@ describe('Built package artifacts:', function() {
     });
 
   it('every language under src/lang has both built artifacts', function() {
-    for (const code of ['en', 'es', 'fi']) {
+    const langs = readdirSync('src/lang', {withFileTypes: true})
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
+
+    expect(langs.length).to.be.greaterThan(0);
+
+    for (const code of langs) {
       expect(existsSync(`dist/lang/${code}.js`), `${code} ESM`).to.be.true;
       expect(existsSync(`dist/lang/${code}.cjs`), `${code} CJS`).to.be.true;
     }
+  });
+
+  // The `cronli5` binary runs against the built dist (not the TypeScript src),
+  // so a plain `node` invocation works as published.
+  describe('the cronli5 CLI:', function() {
+    function cli(...args) {
+      return execFileSync('node', ['cli.js', ...args],
+        {encoding: 'utf8'}).trim();
+    }
+
+    it('prints an English description by default', function() {
+      expect(cli('*/5 * * * *')).to.equal('Runs every five minutes.');
+    });
+
+    it('localizes the full sentence with --lang <code>', function() {
+      expect(cli('--lang', 'de', '0 0 * * *'))
+        .to.equal('Läuft täglich um Mitternacht.');
+    });
+
+    it('accepts the --lang=<code> form', function() {
+      expect(cli('--lang=es', '0 9 * * MON'))
+        .to.equal('Se ejecuta los lunes a las 09:00.');
+    });
+
+    it('wraps the sentence in each language (fi)', function() {
+      expect(cli('--lang=fi', '* * * * *'))
+        .to.equal('Suoritetaan joka minuutti.');
+    });
+
+    it('errors clearly on an unknown language', function() {
+      let stderr = '';
+
+      try {
+        execFileSync('node', ['cli.js', '--lang', 'xx', '* * * * *'],
+          {encoding: 'utf8', stdio: 'pipe'});
+      }
+      catch (error) {
+        stderr = error.stderr;
+      }
+
+      // The available list is derived from the built languages (sorted), not
+      // hardcoded, so it never drifts when a language is added.
+      expect(stderr).to.match(/Unknown language: xx \(available: de, en, es, fi\)/u);
+    });
   });
 });

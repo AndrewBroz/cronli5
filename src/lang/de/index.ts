@@ -782,7 +782,8 @@ const de: Language<GermanStyle> = {
   describe,
   fallback: 'ein unlesbares Cron-Muster',
   options: normalizeOptions,
-  reboot: 'beim Systemstart'
+  reboot: 'beim Systemstart',
+  sentence: (description) => 'Läuft ' + description + '.'
 };
 
 export default de;

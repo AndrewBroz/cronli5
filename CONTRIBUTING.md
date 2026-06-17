@@ -41,7 +41,8 @@ const xx: Language = {
   describe,            // (ir: IR, opts: NormalizedOptions) => string
   fallback: '…',       // shown for unparseable input in lenient mode
   options: normalizeOptions,  // (options?) => NormalizedOptions
-  reboot: '…'          // the phrase for `@reboot`
+  reboot: '…',         // the phrase for `@reboot`
+  sentence: (d) => '…' + d + '.'  // wrap a fragment as a complete sentence
 };
 
 export default xx;

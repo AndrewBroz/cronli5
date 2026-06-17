@@ -1272,7 +1272,8 @@ const fi: Language = {
   describe,
   fallback: 'tunnistamaton cron-lauseke',
   options: normalizeOptions,
-  reboot: 'järjestelmän käynnistyessä'
+  reboot: 'järjestelmän käynnistyessä',
+  sentence: (description) => 'Suoritetaan ' + description + '.'
 };
 
 export default fi;

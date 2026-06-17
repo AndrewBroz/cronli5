@@ -18,7 +18,8 @@ platform in `docs/backlog.md`). Read first:
 ## 0. Scaffold
 
 Create `src/lang/<code>/index.ts` and `dialects.ts` implementing the
-`Language` interface (`describe`, `options`, `fallback`, `reboot`), modelled on
+`Language` interface (`describe`, `options`, `fallback`, `reboot`, `sentence`),
+modelled on
 `src/lang/en/`. Add a `./lang/<code>` entry to `package.json` `exports`
 (mirror `./lang/es`). Register the module in `scripts/panel.mjs` (`MODULES`
 and `NAMES`, plus the import) so the panel can render it.

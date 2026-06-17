@@ -1285,7 +1285,8 @@ const es: Language<SpanishStyle> = {
   describe,
   fallback: 'un patrón cron irreconocible',
   options: normalizeOptions,
-  reboot: 'al arrancar el sistema'
+  reboot: 'al arrancar el sistema',
+  sentence: (description) => 'Se ejecuta ' + description + '.'
 };
 
 export default es;

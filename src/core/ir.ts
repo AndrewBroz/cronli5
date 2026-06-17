@@ -135,4 +135,7 @@ export interface Language<Style = DialectStyle> {
   fallback: string;
   options(options?: Cronli5Options): NormalizedOptions<Style>;
   reboot: string;
+  // Wrap a rendered description into a complete standalone sentence (the CLI
+  // form); each language owns its lead verb and punctuation.
+  sentence(description: string): string;
 }
