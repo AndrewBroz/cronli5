@@ -88,6 +88,36 @@ function renderLanguageTable(language) {
     ' locale) |', rows);
 }
 
+// cRonstrue's description, via the i18n build for a locale (the default build
+// for English, matching the head-to-head locale tables).
+function cronstrueFor(code, pattern) {
+  if (code === 'en') {
+    return cronstrue.toString(pattern);
+  }
+
+  return cronstrueI18n.toString(pattern, {locale: code});
+}
+
+// One compound pattern, every language side by side against its cRonstrue
+// locale — the head-to-head that shows folding vs. per-field assembly at a
+// glance.
+const headToHead = '5,10 30 9 * * MON';
+const languageNames = {
+  de: 'German', en: 'English', es: 'Spanish', fi: 'Finnish'
+};
+
+function renderHeadToHead() {
+  const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
+  const rows = ['en', 'de', 'es', 'fi'].map(function row(code) {
+    return '| ' + languageNames[code] + ' | ' +
+      describe((p) => cronli5(p, {lang: byCode[code].lang}), headToHead) +
+      ' | ' + describe((p) => cronstrueFor(code, p), headToHead) + ' |';
+  });
+
+  return tableFrom('| Language | cronli5 | cRonstrue ' + cronstrueVersion +
+    ' |', rows);
+}
+
 // One cell of the dialect table; `'us'` is the default (no dialect option).
 function dialectCell(pattern, dialect) {
   return describe(function render(p) {
@@ -185,7 +215,10 @@ function rewriteExamples(text) {
 }
 
 const tableJobs = {
-  'README.md': {'language-status': statusTable()},
+  'README.md': {
+    'cronstrue-head-to-head': renderHeadToHead(),
+    'language-status': statusTable()
+  },
   'docs/cronli5-vs-cronstrue.md': {
     basic: renderEnglishTable(tables.basic),
     showcase: renderEnglishTable(tables.showcase)

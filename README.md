@@ -29,11 +29,9 @@ interpretation of a cron pattern in a Node or in a browser environment. If you
 need to do other things with cron patterns, such as scheduling or computing
 future run times, consider a library like [`@breejs/later`][later].
 
-### Alternatives
-
-The main alternative for descriptions is [`cRonstrue`][cronstrue]. See the
-[head-to-head comparison](#cronli5-vs-cronstrue) below for how the two differ
-and which to pick.
+*Alternatives:* The main alternative for descriptions is [`cRonstrue`][cronstrue].
+See the [head-to-head comparison](#cronli5-vs-cronstrue) below for how the two
+differ and which to pick.
 
 ## Contents
 
@@ -264,19 +262,21 @@ cronli5('0 0 15W * *');    // 'on the weekday nearest the 15th at midnight'
 [`cRonstrue`][cronstrue] is the most widely used cron-description library, but
 it differs from `cronli5` in philosophy. `cronli5` writes one flowing sentence
 and does additional validation; its languages are full renderers
-([three so far](#languages)). cRonstrue assembles per-field fragments from
-translated templates, which is how it covers 39 locales. For comparison:
+([four so far](#languages)). cRonstrue assembles per-field fragments from
+translated templates, which is how it covers 39 locales. The same compound
+pattern &mdash; `5,10 30 9 * * MON` &mdash; in every language:
 
-```js
-cronli5('5,10 30 9 * * MON');
-// 'at five and ten seconds past the minute, every Monday at 9:30 a.m.'
-
-// cRonstrue: 'At 5 and 10 seconds past the minute, at 30 minutes past
-//             the hour, at 09 a.m., only on Monday'
-```
+<!-- BEGIN GENERATED: cronstrue-head-to-head -->
+| Language | cronli5 | cRonstrue 3.14.0 |
+| --- | --- | --- |
+| English | at five and ten seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| German | in den Sekunden 5 und 10 jeder Minute, um 9:30 Uhr montags | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
+| Spanish | en los segundos 5 y 10 de cada minuto, los lunes a las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
+| Finnish | joka minuutti 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
+<!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
-generated side-by-side output tables.
+more generated side-by-side output tables.
 
 ## Description Accuracy
 
@@ -324,12 +324,17 @@ The library has no runtime dependencies. The toolchain (ESLint, Mocha, Chai,
 c8, esbuild) lives in `devDependencies`.
 
 ```bash
-npm install       # install dev dependencies
+npm install       # install dev dependencies (also wires the git hooks)
 npm test          # run the Mocha test suite (runs against src/, no build needed)
 npm run coverage  # run tests with c8 coverage and enforce thresholds
 npm run lint      # lint source and tests with ESLint
 npm run build     # emit dist/ (ESM + CJS) and the minified browser global
+npm run verify    # the full CI gate: lint, types, tests, coverage, docs, build
 ```
+
+A `pre-push` git hook runs `npm run verify` so a push only lands when the full
+gate is green. It is wired automatically on `npm install` (via `core.hooksPath
+→ .githooks/`); bypass it in an emergency with `git push --no-verify`.
 
 ## About
 

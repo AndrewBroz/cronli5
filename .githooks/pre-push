@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Run the full CI gate before a push. Mirrors the "Before you finish" sequence
+# in CLAUDE.md and the checks in .github/workflows/ci.yml, so a green push is a
+# green CI. Wired via core.hooksPath = .githooks (see scripts/install-hooks.mjs,
+# run by `npm install`).
+#
+# Emergency bypass: git push --no-verify
+
+echo "pre-push: running npm run verify (use --no-verify to skip)…"
+npm run verify
