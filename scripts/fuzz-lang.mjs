@@ -35,7 +35,8 @@ function product(lists) {
 }
 
 // The broad set: the 5-field cross product, plus a seconds sweep (6-field)
-// with the day fields open.
+// with the day fields open. Exported so other tools can reuse the same
+// generated pattern space.
 function patterns() {
   const {second, minute, hour, date, month, weekday} = FORMS;
   const five = product([minute, hour, date, month, weekday])
@@ -165,7 +166,11 @@ async function main(code, samples) {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+export {patterns};
+
+// Run only when invoked directly (argv[1] is absent when imported via -e).
+if (process.argv[1] &&
+    import.meta.url === pathToFileURL(process.argv[1]).href) {
   const code = process.argv[2];
   const samplesArg = process.argv.find((arg) => arg.startsWith('--samples='));
   const samples = samplesArg ?
