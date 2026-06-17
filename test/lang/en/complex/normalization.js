@@ -57,4 +57,19 @@ describe('Input normalization:', function() {
       ['2/3 * * * *', 'every three minutes from two minutes past the hour']
     ]);
   });
+
+  describe('steps that fire once read as their single value', function() {
+    run([
+      // A step whose interval overshoots the field before a second fire
+      // enumerates only its start, so `1/24` is `1` and `*/24` is `0`.
+      ['*/15 1/24 * * *', 'every 15 minutes from 1 a.m. through 1:45 a.m.'],
+      ['* */24 * * *', 'every minute from midnight through 12:59 a.m.'],
+      ['0 */24 * * *', 'every day at midnight'],
+      ['0 1/24 * * *', 'every day at 1 a.m.'],
+      ['*/60 * * * *', 'every hour'],
+      ['0 0 1/31 * *', 'on the 1st at midnight'],
+      ['0 0 1 1/12 *', 'on January 1 at midnight'],
+      ['0 0 * * */7', 'every Sunday at midnight']
+    ]);
+  });
 });

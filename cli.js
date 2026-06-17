@@ -35,19 +35,31 @@ if (fragment) {
 
 const flag = args.findIndex((a) => a === '--lang' || a.startsWith('--lang='));
 let code = '';
+let missingLang = false;
 
 if (flag !== -1) {
   const arg = args[flag];
   const inline = arg.indexOf('=') !== -1;
 
-  code = inline ? arg.slice('--lang='.length) : args[flag + 1];
-  args.splice(flag, inline ? 1 : 2);
+  // A bare `--lang` as the final argument has no value to consume; treat that
+  // as an error rather than silently falling back to English.
+  if (!inline && flag === args.length - 1) {
+    missingLang = true;
+  }
+  else {
+    code = inline ? arg.slice('--lang='.length) : args[flag + 1];
+    args.splice(flag, inline ? 1 : 2);
+  }
 }
 
 const pattern = args.length === 1 ? args[0] : args;
 const requested = code || 'en';
 
-if (availableLanguages().includes(requested)) {
+if (missingLang) {
+  console.error('Missing language value for --lang');
+  process.exitCode = 1;
+}
+else if (availableLanguages().includes(requested)) {
   emit(pattern, (await import('./dist/lang/' + requested + '.js')).default);
 }
 else {
@@ -66,5 +78,6 @@ function emit(cronPattern, language) {
   catch (error) {
     console.error('Problem parsing the cron pattern provided: ',
       error.message);
+    process.exitCode = 1;
   }
 }

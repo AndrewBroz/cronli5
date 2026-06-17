@@ -80,6 +80,19 @@ describe('Built package artifacts:', function() {
         {encoding: 'utf8'}).trim();
     }
 
+    // Run the CLI expecting failure, returning the exit status and stderr.
+    function cliFail(...args) {
+      try {
+        execFileSync('node', ['cli.js', ...args],
+          {encoding: 'utf8', stdio: 'pipe'});
+
+        return {status: 0, stderr: ''};
+      }
+      catch (error) {
+        return {status: error.status, stderr: error.stderr};
+      }
+    }
+
     it('prints an English description by default', function() {
       expect(cli('*/5 * * * *')).to.equal('Runs every five minutes.');
     });
@@ -119,6 +132,24 @@ describe('Built package artifacts:', function() {
       // The available list is derived from the built languages (sorted), not
       // hardcoded, so it never drifts when a language is added.
       expect(stderr).to.match(/Unknown language: xx \(available: de, en, es, fi\)/u);
+    });
+
+    it('exits non-zero on an invalid cron pattern', function() {
+      const result = cliFail('not a cron pattern');
+
+      expect(result.status).to.not.equal(0);
+      expect(result.stderr).to.match(/Problem parsing/u);
+    });
+
+    it('exits non-zero when given no pattern', function() {
+      expect(cliFail().status).to.not.equal(0);
+    });
+
+    it('errors when --lang is given without a value', function() {
+      const result = cliFail('0 0 * * *', '--lang');
+
+      expect(result.status).to.not.equal(0);
+      expect(result.stderr).to.match(/--lang/u);
     });
   });
 });

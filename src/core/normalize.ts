@@ -56,7 +56,8 @@ function normalizeField(value: string, spec: FieldSpec): string {
   }
 
   const segments = stringValue.split(',').map(function canonical(segment) {
-    return collapseDegenerateRange(collapseUnitStep(segment, spec), spec);
+    return collapseDegenerateRange(
+      collapseOnceStep(collapseUnitStep(segment, spec), spec), spec);
   });
 
   // A full-cycle segment covers the whole field.
@@ -90,6 +91,28 @@ function collapseUnitStep(segment: string, spec: FieldSpec): string {
   }
 
   return start + '-' + spec.top;
+}
+
+// A step whose interval overshoots the field before a second fire enumerates
+// only its start, so it reads as that single value: `*/24` is `0` and `1/24`
+// is `1` (the next hour, 24 or 25, is out of range). Bounded steps (`9-17/24`)
+// and the non-cyclic year field are left alone.
+function collapseOnceStep(segment: string, spec: FieldSpec): string {
+  const parts = segment.split('/');
+
+  if (!spec.cyclic || typeof spec.top !== 'number' || parts.length !== 2 ||
+      includes(parts[0], '-')) {
+    return segment;
+  }
+
+  const start = parts[0];
+  const first = start === '*' ? spec.min : toFieldNumber(start, spec.numbers);
+
+  if (first + +parts[1] <= spec.top) {
+    return segment;
+  }
+
+  return start === '*' ? '' + spec.min : start;
 }
 
 // A degenerate range (`9-9`) fires once, so it reads as its single value.
