@@ -99,6 +99,12 @@ describe('Built package artifacts:', function() {
         .to.equal('Suoritetaan joka minuutti.');
     });
 
+    it('prints the bare fragment with --fragment', function() {
+      expect(cli('--fragment', '*/5 * * * *')).to.equal('every five minutes');
+      expect(cli('--lang', 'de', '--fragment', '0 0 * * *'))
+        .to.equal('täglich um Mitternacht');
+    });
+
     it('errors clearly on an unknown language', function() {
       let stderr = '';
 

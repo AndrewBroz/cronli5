@@ -16,6 +16,9 @@
 //     'uk' is a deprecated alias for 'gb'
 // - lenient (boolean):
 //     never throw; invalid input returns a fallback description
+// - sentence (boolean):
+//     return a complete sentence ("Runs every day at midnight.") instead of
+//     the embeddable fragment; wraps a schedule and @reboot, not the fallback
 // - seconds (boolean):
 //     always treat the first value in a string or array as a second
 // - short (boolean):
@@ -37,17 +40,30 @@ function cronli5(cronPattern: CronPattern, options?: Cronli5Options): string {
   const opts = lang.options(options) as NormalizedOptions;
 
   if (!opts.lenient) {
-    return interpretCronPattern(cronPattern, lang, opts);
+    return present(
+      interpretCronPattern(cronPattern, lang, opts), lang, options);
   }
 
   // Lenient mode never throws: unparseable input yields a fixed fallback
-  // description instead, so arbitrary user crontabs are safe to render.
+  // description instead, so arbitrary user crontabs are safe to render. The
+  // fallback is an error string, not a schedule, so it is never wrapped.
   try {
-    return interpretCronPattern(cronPattern, lang, opts);
+    return present(
+      interpretCronPattern(cronPattern, lang, opts), lang, options);
   }
   catch {
     return lang.fallback;
   }
+}
+
+// With the `sentence` option, wrap a schedule (or `@reboot`) description as the
+// language's complete sentence; otherwise return the embeddable fragment.
+function present(
+  description: string,
+  lang: Cronli5Language,
+  options?: Cronli5Options
+): string {
+  return options && options.sentence ? lang.sentence(description) : description;
 }
 
 // Prepare (parse, validate, normalize), analyze, and describe a cron

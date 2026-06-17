@@ -58,6 +58,7 @@ export interface Cronli5Language {
   fallback: string;
   options(options?: Cronli5Options): any;
   reboot: string;
+  sentence(description: string): string;
 }
 
 /**
@@ -91,6 +92,14 @@ export interface Cronli5Options {
    * Defaults to `false`.
    */
   lenient?: boolean;
+
+  /**
+   * Return a complete standalone sentence (`'Runs every day at midnight.'`)
+   * instead of the embeddable fragment (`'every day at midnight'`). Each
+   * language supplies its own wrapping. Wraps a schedule and `@reboot`, but
+   * not the lenient `fallback`. Defaults to `false`.
+   */
+  sentence?: boolean;
 
   /**
    * Compact output: abbreviated month/weekday names and hyphenated ranges

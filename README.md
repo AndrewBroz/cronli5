@@ -106,6 +106,10 @@ Runs every five minutes.
 # Other languages with --lang (de, es, fi):
 $ cronli5 --lang de "0 0 * * *"
 Läuft täglich um Mitternacht.
+
+# --fragment prints the bare, embeddable fragment instead of a sentence:
+$ cronli5 --fragment "*/5 * * * *"
+every five minutes
 ```
 
 ## Input Formats
@@ -140,6 +144,7 @@ The `cronli5` function takes an `options` object as its 2nd parameter:
 | `dialect` | `'us'` | The English style. `'us'` follows the [Chicago Manual of Style][chicago]: serial commas, `through` ranges, `9 a.m.`/`5:30 p.m.` times, `noon`/`midnight`, and `January 1` dates. `'gb'` follows the [Guardian style guide][guardian]: no serial comma, `to` ranges, `9am`/`5.30pm` times, `midday`/`midnight`, and `1 January` dates. `'house'` is cronli5's legacy voice (`9:30 AM`, `Monday - Friday`). A custom object defines your own style. (`'uk'` is a deprecated alias for `'gb'`.) See [docs/dialects.md](./docs/dialects.md). |
 | `lang` | English | A language module, e.g. `import es from 'cronli5/lang/es'`. Each language owns its words, conventions, and dialects &mdash; see [Languages](#languages). |
 | `lenient` | `false` | Never throw: invalid input returns the language's fallback description (`'an unrecognizable cron pattern'`) instead. Useful when rendering arbitrary user crontabs. |
+| `sentence` | `false` | Return a complete standalone sentence (`'Runs every day at midnight.'`, `'Läuft täglich um Mitternacht.'`) instead of the embeddable fragment. Each language supplies its own wrapping. Wraps a schedule and `@reboot`, but not the lenient `fallback`. |
 | `short` | `false` | Compact output: abbreviated month and weekday names, and hyphenated ranges everywhere `through`/`to` would appear (`Mon-Fri`, `Jan-Mar`, `1st-5th`, `9 a.m.-5:45 p.m.`). |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |

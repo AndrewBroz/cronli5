@@ -1,11 +1,13 @@
 #! /usr/bin/env node
 
 // Need to sanity check a pattern before you schedule something? The cronli5
-// CLI takes a cron pattern and prints a plain-language description. English by
+// CLI takes a cron pattern and prints a plain-language description: a complete
+// sentence by default, or the bare fragment with --fragment. English by
 // default; pass --lang <code> (de, es, fi) for another language.
 //
-//   cronli5 '* * * * *'             → Runs every minute.
-//   cronli5 --lang de '0 0 * * *'   → täglich um Mitternacht
+//   cronli5 '* * * * *'                → Runs every minute.
+//   cronli5 --lang de '0 0 * * *'      → Läuft täglich um Mitternacht.
+//   cronli5 --fragment '0 0 * * *'     → every day at midnight
 //
 // It runs against the built dist/, so a plain `node` invocation works as
 // published; in a source checkout, run `npm run build` first.
@@ -21,9 +23,16 @@ function availableLanguages() {
     .sort();
 }
 
-// Pull an optional `--lang <code>` or `--lang=<code>` out of the args; whatever
-// remains is the cron pattern.
+// Pull the optional flags out of the args; whatever remains is the cron
+// pattern. --fragment prints the bare fragment instead of a full sentence.
 const args = process.argv.slice(2);
+const fragmentAt = args.indexOf('--fragment');
+const fragment = fragmentAt !== -1;
+
+if (fragment) {
+  args.splice(fragmentAt, 1);
+}
+
 const flag = args.findIndex((a) => a === '--lang' || a.startsWith('--lang='));
 let code = '';
 
@@ -47,10 +56,12 @@ else {
   process.exitCode = 1;
 }
 
-// Print the schedule as the language's own complete sentence.
+// Print the schedule: a complete sentence by default, the bare fragment under
+// --fragment. The sentence wrapping is the library's own (the `sentence`
+// option), so the CLI stays a thin shell over the API.
 function emit(cronPattern, language) {
   try {
-    console.log(language.sentence(humanize(cronPattern, {lang: language})));
+    console.log(humanize(cronPattern, {lang: language, sentence: !fragment}));
   }
   catch (error) {
     console.error('Problem parsing the cron pattern provided: ',
