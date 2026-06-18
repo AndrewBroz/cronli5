@@ -9,14 +9,19 @@
 // set and are skipped. It complements the naturalness panel: this scales to
 // the long tail without a human, leaving the panel a representative sample.
 //
-// Usage: node --import tsx scripts/roundtrip.mjs [--limit=N]
+// Usage: node --import tsx scripts/roundtrip.mjs [--lang=CODE] [--limit=N]
 
 import {pathToFileURL} from 'node:url';
 import {askJson} from './llm.mjs';
 import {sampleShapes, spread} from './sample.mjs';
 import {enumerateFires} from '../src/core/analyze.js';
 import cronli5 from '../src/cronli5.js';
+import de from '../src/lang/de/index.js';
 import en from '../src/lang/en/index.js';
+import es from '../src/lang/es/index.js';
+import fi from '../src/lang/fi/index.js';
+
+const LANGS = {de, en, es, fi};
 
 const MONTHS = {
   JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
@@ -100,7 +105,8 @@ function cronsEqual(a, b) {
 
 // Ask the cross-family model to recover a cron expression from a description.
 async function backTranslate(description) {
-  const prompt = 'Convert this recurring-schedule description into one ' +
+  const prompt = 'Convert this recurring-schedule description (which may be ' +
+    'in English, Spanish, German, or Finnish) into one ' +
     'standard cron expression. Use field order "minute hour day-of-month ' +
     'month day-of-week", or prepend a seconds field if the description ' +
     'mentions seconds. When the description gives both a day-of-month and a ' +
@@ -112,17 +118,17 @@ async function backTranslate(description) {
   return typeof result.cron === 'string' ? result.cron : null;
 }
 
-function render(pattern) {
+function render(pattern, lang) {
   try {
-    return cronli5(pattern, {lang: en});
+    return cronli5(pattern, {lang});
   }
   catch {
     return null;
   }
 }
 
-async function main(limit) {
-  const shapes = sampleShapes(en);
+async function main(lang, limit) {
+  const shapes = sampleShapes(lang);
   const chosen = spread(shapes, limit);
   const checkable = chosen
     .map((pattern) => ({pattern, original: expandCron(pattern)}))
@@ -130,7 +136,7 @@ async function main(limit) {
   const mismatches = [];
 
   for (const {pattern, original} of checkable) {
-    const description = render(pattern);
+    const description = render(pattern, lang);
     const recovered = await backTranslate(description);
     const parsed = recovered ? expandCron(recovered) : null;
     const ok = parsed && cronsEqual(original, parsed);
@@ -186,6 +192,17 @@ if (process.argv[1] &&
     import.meta.url === pathToFileURL(process.argv[1]).href) {
   const limitArg = process.argv.find((arg) => arg.startsWith('--limit='));
   const limit = limitArg ? Number(limitArg.slice('--limit='.length)) : 0;
+  const langArg = process.argv.find((arg) => arg.startsWith('--lang='));
+  const code = langArg ? langArg.slice('--lang='.length) : 'en';
+  const lang = LANGS[code];
 
-  await main(limit);
+  if (lang) {
+    console.log('Round-trip check for: ' + code);
+    await main(lang, limit);
+  }
+  else {
+    console.error('Unknown language: ' + code +
+      ' (available: ' + Object.keys(LANGS).join(', ') + ')');
+    process.exitCode = 1;
+  }
 }

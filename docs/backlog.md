@@ -4,6 +4,46 @@ Designed-but-parked features — captured so the thinking isn't lost, but not
 actively pursued. Current development is **automated-only** (see
 [i18n-design.md](./i18n-design.md) and CONTRIBUTING.md for the active path).
 
+## Open rendering findings
+
+Concrete defects from the code review and the wide objective sweep
+(`roundtrip.mjs` over all four languages). The sweep found no meaning-drift
+bugs. Everything found is grammar/naturalness/consistency.
+
+**The per-language defects are recorded as `describe.skip` tests** in each
+corpus (`test/lang/{de,es,fi}/corpus.js`, "Known issues / Bekannte offene
+Fehler / Errores conocidos / Tunnetut virheet"). Each asserts the defect's
+invariant and currently fails when enabled, so fixing one is: un-skip
+(`skip → describe`), watch it go red, fix the renderer, watch it pass — the
+test-first loop, with the contract living in the corpus where it belongs.
+Exact beta-language wording is deliberately left to C (panel-validated), so
+those tests assert the invariant (e.g. "no `am vom`") rather than a full string.
+
+**Fixed this session (kept for traceability):**
+
+- `*/24`/`1/24`-style steps that fire once leaked `undefined`/spurious
+  cadences — fixed at the root in `normalize.ts` (`collapseOnceStep`).
+- CLI exited `0` on parse failure / no args — now sets `process.exitCode`.
+- CLI `--lang` with no value silently used English — now an error.
+
+**The design crux of C — cadence vs. enumeration, lift the decision into the
+IR.** Whether a stepped field reads as a cadence or an enumeration is decided
+independently per renderer, and they disagree: `0 0 */2 * *` → en/es/fi cadence
+but **de enumerates** "am 1., 3., … 31."; `0 0 * */3 *` → **en** cadence but
+de/es/fi enumerate; `0 0 1/2 * * *` → de enumerates the hours while en/es/fi
+keep the cadence; and de mislabels a multi-hour step as "stündlich" (`5 */2` →
+"stündlich um 0:05, 2:05, …"). No language is internally consistent. A
+`cadence`/`start` flag on the step segment in `core` (mirroring
+`cleanHourStride`) would let renderers supply only words and never diverge —
+this is the single highest-leverage fix, subsuming most of the skipped tests.
+
+**Minor / low priority (not yet captured as tests):**
+
+- CLI whitespace `--lang ' '` → "Unknown language:   (available …)" with a
+  blank-looking code.
+- The lenient `catch {}` in `cronli5.ts` swallows *every* exception, so a
+  genuine renderer bug on a valid pattern masquerades as the fallback string.
+
 ## Human-in-the-loop language review platform
 
 **Status:** Parked — it has long feedback loops (real fluent reviewers,

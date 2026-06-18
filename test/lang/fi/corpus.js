@@ -262,3 +262,14 @@ describe('Suomi (fi):', function() {
     ]);
   });
 });
+
+// Tunnetut, vielä korjaamattomat virheet (katselmus + laaja pyyhkäisy;
+// docs/backlog.md, "Open rendering findings"). Ohitetaan vaiheeseen C asti:
+// poista skip (skip → describe) ja korjaa.
+describe.skip('Tunnetut virheet (vaihe C):', function() {
+  it('ei johda harhaan sanalla "joka minuutti", kun minuutti on kiinteä',
+    function() {
+      expect(cronli5('30 5 9-17 * * *', {lang: fi}))
+        .to.not.include('joka minuutti');
+    });
+});

@@ -292,3 +292,31 @@ describe('Deutsch (de):', function() {
     ]);
   });
 });
+
+// Bekannte, noch offene Fehler (Code-Review + Wide-Sweep; docs/backlog.md,
+// "Open rendering findings"). Übersprungen bis Schritt C: wieder aktivieren
+// (skip → describe) und beheben. Geprüft wird die Fehler-Invariante, nicht der
+// exakte Wortlaut — der wird in C per Panel festgelegt.
+describe.skip('Bekannte offene Fehler (Schritt C):', function() {
+  it('keine doppelte Präposition "am vom" bei Bereich in Liste', function() {
+    expect(cronli5('0 0 1-5,10 * *', {lang: de})).to.not.include('am vom');
+  });
+
+  it('klebt den Monatsbereich nicht direkt an "am 1."', function() {
+    expect(cronli5('0 0 1 6-8 *', {lang: de}))
+      .to.not.include('am 1. von Juni');
+  });
+
+  it('verschluckt die Sekunde im kompakten Uhrzeit-Pfad nicht', function() {
+    expect(cronli5('30 5,10 9,17,19,21,23 * * *', {lang: de, seconds: true}))
+      .to.include('Sekunde 30');
+  });
+
+  it('nennt einen Mehr-Stunden-Schritt nicht "stündlich"', function() {
+    expect(cronli5('5 */2 * * *', {lang: de})).to.not.include('stündlich');
+  });
+
+  it('liest den Tages-Schritt als Kadenz, nicht als Aufzählung', function() {
+    expect(cronli5('0 0 */2 * *', {lang: de})).to.not.include('29.');
+  });
+});

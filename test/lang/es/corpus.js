@@ -365,3 +365,20 @@ describe('Español (es):', function() {
     });
   });
 });
+
+// Errores conocidos, aún sin corregir (revisión + barrido amplio;
+// docs/backlog.md, "Open rendering findings"). Omitidos hasta el paso C:
+// reactivar (skip → describe) y corregir.
+describe.skip('Errores conocidos (paso C):', function() {
+  it('usa "a la" singular para la una en una lista', function() {
+    expect(cronli5('0 1,13 * * *', {lang: es}))
+      .to.equal('todos los días a la 01:00 y a las 13:00');
+    expect(cronli5('0 1,13 * * *', {lang: es, ampm}))
+      .to.equal('todos los días a la 1 de la madrugada y a la 1 de la tarde');
+  });
+
+  it('usa el reloj del dialecto en la lista de horas, no 24 h', function() {
+    expect(cronli5('*/15 14,18,20,22 * * *', {dialect: 'es-MX', lang: es}))
+      .to.not.include('las 14');
+  });
+});
