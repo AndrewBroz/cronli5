@@ -79,7 +79,13 @@ function interpretCronPattern(
     return lang.reboot;
   }
 
-  return lang.describe(analyze(prepare(cronPattern, opts)), opts);
+  // Analyze into the neutral content + the core's suggested plan, then let the
+  // language optionally override the strategy before rendering. A language
+  // without a `strategy` hook renders the core's suggestion unchanged.
+  const ir = analyze(prepare(cronPattern, opts));
+  const plan = lang.strategy ? lang.strategy(ir, ir.plan) : ir.plan;
+
+  return lang.describe({...ir, plan}, opts);
 }
 
 export default cronli5;

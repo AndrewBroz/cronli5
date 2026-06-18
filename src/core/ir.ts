@@ -92,12 +92,26 @@ export interface Analyses {
   segments: Record<Field, Segment[] | null>;
 }
 
-/** The semantic intermediate representation a language renders. */
-export interface IR {
+/**
+ * The neutral content plan: the language-independent facts about a pattern,
+ * carrying no phrasing decision. `analyze` produces this; `selectStrategy`
+ * reads it to suggest a `plan`. The phrasing strategy is deliberately *not*
+ * part of the neutral content (docs/i18n-design.md §2.2).
+ */
+export interface Content {
   pattern: Pattern;
   shapes: Shapes;
   analyses: Analyses;
-  plan: PlanNode;
+}
+
+/**
+ * The semantic intermediate representation a language renders: the neutral
+ * `Content` plus the selected `plan`. A language may widen `plan` with its
+ * own `Extra` strategy kinds via `Language.strategy`; by default there are
+ * none, so `IR` is the neutral content with a core `PlanNode`.
+ */
+export interface IR<Extra extends {kind: string} = never> extends Content {
+  plan: PlanNode | Extra;
 }
 
 /** A resolved style table. */
@@ -129,13 +143,25 @@ export interface NormalizedOptions<Style = DialectStyle> {
   years: boolean;
 }
 
-/** The interface every language module's default export implements. */
-export interface Language<Style = DialectStyle> {
-  describe(ir: IR, opts: NormalizedOptions<Style>): string;
+/**
+ * The interface every language module's default export implements. `Extra`
+ * lets a language add its own strategy kinds (default: none), which its
+ * `strategy` override emits and its `describe` renders.
+ */
+export interface Language<
+  Style = DialectStyle,
+  Extra extends {kind: string} = never
+> {
+  describe(ir: IR<Extra>, opts: NormalizedOptions<Style>): string;
   fallback: string;
   options(options?: Cronli5Options): NormalizedOptions<Style>;
   reboot: string;
   // Wrap a rendered description into a complete standalone sentence (the CLI
   // form); each language owns its lead verb and punctuation.
   sentence(description: string): string;
+  // Optionally override the core's suggested strategy. Receives the neutral
+  // `content` and the core's suggestion (`base`), so overriding is a thin
+  // remap, not a re-derivation. Omitted by languages that accept the core's
+  // choice (all of en/de/es/fi today).
+  strategy?(content: Content, base: PlanNode): PlanNode | Extra;
 }
