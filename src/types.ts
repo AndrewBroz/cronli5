@@ -59,6 +59,9 @@ export interface Cronli5Language {
   options(options?: Cronli5Options): any;
   reboot: string;
   sentence(description: string): string;
+  // Optional strategy override (see `core/ir.ts` `Language.strategy`). Opaque
+  // at this public boundary, like `describe`/`options`.
+  strategy?(content: any, base: any): any;
 }
 
 /**

@@ -6,7 +6,7 @@
 import {fieldOrder, fieldSpecs, maxClockTimes} from './specs.js';
 import type {FieldSpec} from './specs.js';
 import type {
-  Analyses, ClockTime, Field, HourTimesPlan, HoursPlan, IR, Pattern,
+  Analyses, ClockTime, Content, Field, HourTimesPlan, HoursPlan, IR, Pattern,
   PlanNode, Segment, Shape, Shapes
 } from './ir.js';
 import {includes, toFieldNumber, unique} from './util.js';
@@ -215,21 +215,19 @@ function analyze(pattern: Pattern): IR {
     segments
   };
 
-  return {
-    analyses,
-    pattern,
-    plan: buildPlan(pattern, shapes, analyses),
-    shapes
-  };
+  const content: Content = {analyses, pattern, shapes};
+
+  return {...content, plan: selectStrategy(content)};
 }
 
-// Select the description strategy. The selection mirrors the interpreter
-// chain ordering exactly; renderers must not re-derive it.
-function buildPlan(
-  pattern: Pattern,
-  shapes: Shapes,
-  analyses: Analyses
-): PlanNode {
+// Select the description strategy from the neutral content. This is the
+// core's *suggestion*: a language may override it via `Language.strategy`
+// without re-deriving it (the content-plan / overridable-strategy split).
+// The selection mirrors the interpreter chain ordering exactly; renderers
+// must not re-derive it.
+function selectStrategy(content: Content): PlanNode {
+  const {analyses, pattern, shapes} = content;
+
   if (pattern.second !== '0') {
     const seconds = planSeconds(pattern, shapes, analyses);
 
@@ -548,4 +546,4 @@ function hourTimesPlan(hourField: string): HourTimesPlan {
 }
 
 export {analyze, clockSecond, enumerateFires, enumerateStep,
-  enumerateValues, getOccurrences, lastMinuteFire, minuteSpan};
+  enumerateValues, getOccurrences, lastMinuteFire, minuteSpan, selectStrategy};
