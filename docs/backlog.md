@@ -13,11 +13,20 @@ bugs. Everything found is grammar/naturalness/consistency.
 **The per-language defects are recorded as `describe.skip` tests** in each
 corpus (`test/lang/{de,es,fi}/corpus.js`, "Known issues / Bekannte offene
 Fehler / Errores conocidos / Tunnetut virheet"). Each asserts the defect's
-invariant and currently fails when enabled, so fixing one is: un-skip
-(`skip → describe`), watch it go red, fix the renderer, watch it pass — the
-test-first loop, with the contract living in the corpus where it belongs.
-Exact beta-language wording is deliberately left to C (panel-validated), so
-those tests assert the invariant (e.g. "no `am vom`") rather than a full string.
+invariant and fails when enabled, so fixing one is: un-skip (`skip →
+describe`), watch it go red, fix the renderer, watch it pass — the test-first
+loop, with the contract living in the corpus. Exact beta-language wording is
+panel-validated (each fix below was checked against the cross-family model).
+
+**C progress: 7 of 8 fixed, 1 remains.** Fixed (un-skipped, passing): es "a la"
+vs "a las" article in a time list; de "am vom" double preposition; de month
+range no longer folds onto the date ("am 1., von Juni bis August"); de seconds
+no longer dropped in the compact path; de multi-hour step no longer "stündlich"
+(now "täglich"); fi no false "joka minuutti" when the minute is fixed; es
+24-hour numbers under 12-hour dialects now read in the dialect clock with day
+periods ("de las 2 de la tarde …"). Each corrected its same-bug corpus
+entries, all cross-family validated. **Still `skip`ped (1):** de day-step
+enumeration → the IR cadence flag below (beta-only; en stays frozen).
 
 **Fixed this session (kept for traceability):**
 

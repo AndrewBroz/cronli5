@@ -82,7 +82,7 @@ date-or-weekday `tai` alternation).
 | `0 12 1 1 *` | tammikuun 1. päivänä keskipäivällä | Klo 12:00, kuukauden 1 päivä, vain tammikuu |
 | `0 12 * 11-2 *` | joka päivä marraskuusta helmikuuhun keskipäivällä | Klo 12:00, marraskuu - helmikuu |
 | `0 0 * * 5L` | kuukauden viimeisenä perjantaina keskiyöllä | Klo 00:00, kuukauden viimeinen perjantai |
-| `5,10 30 9 * * MON` | joka minuutti 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
+| `5,10 30 9 * * MON` | 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
 | `1/1 * * * *` | joka tunti 1–59 minuutin kohdalla | Joka 1. minuutti, alkaen 1 minuuttia yli |
 | `0 9 * * WED-FRI` | keskiviikosta perjantaihin klo 9 | Klo 09:00, keskiviikko - perjantai |
 | `0 0 13 * FRI` | kuukauden 13. päivänä tai perjantaisin keskiyöllä | Klo 00:00, kuukauden 13 päivä, ja edelleen perjantai |

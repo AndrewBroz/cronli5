@@ -301,12 +301,16 @@ function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
       units.second, opts);
   }
 
+  // The "joka minuutti" frequency mark is true only when the minute is open;
+  // with a fixed minute the second fires within those minutes, not every one.
+  const marked = ir.pattern.minute === '*';
+
   if (shape === 'single') {
-    return atMarks(secondField, units.second, true);
+    return atMarks(secondField, units.second, marked);
   }
 
   return atMarks(joinList(segmentWords(ir.analyses.segments.second!)),
-    units.second, true);
+    units.second, marked);
 }
 
 // --- Minute renderers. ---

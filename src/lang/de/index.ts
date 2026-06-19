@@ -251,7 +251,7 @@ function dateRange(bounds: [string, string]): string {
 }
 
 // The bare date clause, without a month: "am 1.", "am 1. und 15.", "vom 1.
-// bis zum 5.".
+// bis zum 5.", "vom 1. bis zum 5. und am 10.".
 function dateClauseBare(ir: IR): string {
   const segments = flattenSteps(fieldSegments(ir, 'date'));
 
@@ -259,19 +259,37 @@ function dateClauseBare(ir: IR): string {
     return dateRange(segments[0].bounds);
   }
 
-  return 'am ' + joinList(segments.map(function day(segment): string {
+  // A list of plain days shares one "am"; once a range is mixed in, each
+  // segment carries its own preposition so the range's "vom … bis zum …"
+  // never collides with a leading "am" ("am vom 1. …").
+  if (segments.every((segment) => segment.kind !== 'range')) {
+    return 'am ' + joinList(segments.map(function day(segment): string {
+      return ordinalDay(segment.value);
+    }));
+  }
+
+  return joinList(segments.map(function day(segment): string {
     return segment.kind === 'range' ?
       dateRange(segment.bounds) :
-      ordinalDay(segment.value);
+      'am ' + ordinalDay(segment.value);
   }));
 }
 
-// The date qualifier, with a month appended bare ("am 1. Januar").
+// The date qualifier with its month. Month names fold bare onto the date
+// ("am 1. Januar", "am 1. Januar und Juli"); a month range cannot, so it
+// trails as a scoped clause after a comma ("am 1., von Juni bis August").
 function datePhrase(ir: IR, months: Months): string {
   const clause = dateClauseBare(ir);
 
-  return ir.pattern.month === '*' ?
-    clause :
+  if (ir.pattern.month === '*') {
+    return clause;
+  }
+
+  const monthRanged = flattenSteps(fieldSegments(ir, 'month'))
+    .some((segment) => segment.kind === 'range');
+
+  return monthRanged ?
+    clause + ', ' + monthClause(ir, months) :
     clause + ' ' + monthNamesList(ir, months);
 }
 
@@ -552,7 +570,10 @@ function renderMinuteSpanAcrossHourStep(
 }
 
 // Compact minutes across discrete hours: "in den Minuten 5 und 10, um 9, 17,
-// 19, 21 und 23 Uhr". The folded sub-case is not built yet.
+// 19, 21 und 23 Uhr". The folded sub-case (a single minute) frames on the
+// hours: a contiguous range is hourly ("stündlich von 9 bis 20 Uhr"); a step
+// or list is a daily enumeration of its times ("täglich um 0:05, 2:05, …"),
+// never hourly.
 function renderCompactClockTimes(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'compactClockTimes'}>,
@@ -561,7 +582,10 @@ function renderCompactClockTimes(
   const sep = opts.style.sep;
 
   if (plan.fold) {
-    return 'stündlich ' +
+    const hourly = fieldSegments(ir, 'hour')
+      .some((segment) => segment.kind === 'range');
+
+    return (hourly ? 'stündlich ' : 'täglich ') +
       joinList(hourSegmentParts(ir, plan.minute, ir.analyses.clockSecond, sep));
   }
 
@@ -571,7 +595,14 @@ function renderCompactClockTimes(
     joinList(hourSegmentParts(ir, 0, 0, sep)) :
     atHours(hourFires(ir));
 
-  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' + hours;
+  // A folded second has no single clock time to attach to here, so it leads
+  // as its own clause ("in Sekunde 30, ..."). It is the bare second (not
+  // secondsLead's "… jeder Minute") because the minutes are constrained.
+  const lead = ir.analyses.clockSecond ?
+    countedPhrase(ir, 'second', 'Sekunde', 'Sekunden') + ', ' : '';
+
+  return lead +
+    countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' + hours;
 }
 
 // A repeating minute step, optionally within an hour window: "alle 5

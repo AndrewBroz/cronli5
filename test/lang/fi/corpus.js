@@ -223,9 +223,10 @@ describe('Suomi (fi):', function() {
       ['*/15 * 9-17 * * *', '15 sekunnin välein, joka minuutti klo 9.00–17.59'],
       ['0-30 * 9 * * *',
         'joka minuutti 0–30 sekunnin kohdalla, joka minuutti klo 9.00–9.59'],
+      // Minute is fixed (0, 30), so the second is not "joka minuutti" — it
+      // fires within those minutes (cross-family validated).
       ['5 0,30 * * * *',
-        'joka minuutti 5 sekunnin kohdalla, ' +
-        'joka tunti 0 ja 30 minuutin kohdalla'],
+        '5 sekunnin kohdalla, joka tunti 0 ja 30 minuutin kohdalla'],
       ['30-40/5 * * * * *', 'joka minuutti 30, 35 ja 40 sekunnin kohdalla'],
       ['40/15 * * * *', 'joka tunti 40 ja 55 minuutin kohdalla'],
       ['* 9-17 * * *', 'joka minuutti klo 9.00–17.59'],
@@ -266,7 +267,7 @@ describe('Suomi (fi):', function() {
 // Tunnetut, vielä korjaamattomat virheet (katselmus + laaja pyyhkäisy;
 // docs/backlog.md, "Open rendering findings"). Ohitetaan vaiheeseen C asti:
 // poista skip (skip → describe) ja korjaa.
-describe.skip('Tunnetut virheet (vaihe C):', function() {
+describe('Tunnetut virheet (vaihe C):', function() {
   it('ei johda harhaan sanalla "joka minuutti", kun minuutti on kiinteä',
     function() {
       expect(cronli5('30 5 9-17 * * *', {lang: fi}))

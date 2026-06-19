@@ -281,12 +281,19 @@ describe('Español (es):', function() {
       // (a panel found ordinal/colloquial forms imprecise).
       ['*/15 */2 * * *', 'cada 15 minutos, durante las horas pares'],
       ['*/15 1/2 * * *', 'cada 15 minutos, durante las horas impares'],
+      // 12-hour dialect: active hours grouped by day period, each period named
+      // once, noon/midnight as their own markers (cross-family validated).
       ['*/15 */3 * * *',
-        'cada 15 minutos, durante las horas de las 0, 3, 6, 9, 12, 15, 18 y 21'],
+        'cada 15 minutos, durante las horas de medianoche, de las 3 de la ' +
+        'madrugada, de las 6 y 9 de la mañana, del mediodía, de las 3 y 6 ' +
+        'de la tarde y de las 9 de la noche'],
       ['*/15 1/3 * * *',
-        'cada 15 minutos, durante las horas de las 1, 4, 7, 10, 13, 16, 19 y 22'],
+        'cada 15 minutos, durante las horas de la 1 y las 4 de la ' +
+        'madrugada, de las 7 y 10 de la mañana, de la 1, las 4 y las 7 de ' +
+        'la tarde y de las 10 de la noche'],
       ['*/20 9-17/2 * * *',
-        'cada 20 minutos, durante las horas de las 9, 11, 13, 15 y 17'],
+        'cada 20 minutos, durante las horas de las 9 y 11 de la mañana y ' +
+        'de la 1, las 3 y las 5 de la tarde'],
       ['* 9-17 * * *',
         'cada minuto de las 9 de la mañana a las 5:59 de la tarde'],
       ['* 0-5 * * *',
@@ -369,11 +376,11 @@ describe('Español (es):', function() {
 // Errores conocidos, aún sin corregir (revisión + barrido amplio;
 // docs/backlog.md, "Open rendering findings"). Omitidos hasta el paso C:
 // reactivar (skip → describe) y corregir.
-describe.skip('Errores conocidos (paso C):', function() {
+describe('Errores conocidos (paso C):', function() {
   it('usa "a la" singular para la una en una lista', function() {
     expect(cronli5('0 1,13 * * *', {lang: es}))
       .to.equal('todos los días a la 01:00 y a las 13:00');
-    expect(cronli5('0 1,13 * * *', {lang: es, ampm}))
+    expect(cronli5('0 1,13 * * *', {lang: es, ...ampm}))
       .to.equal('todos los días a la 1 de la madrugada y a la 1 de la tarde');
   });
 

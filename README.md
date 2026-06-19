@@ -277,7 +277,7 @@ pattern &mdash; `5,10 30 9 * * MON` &mdash; in every language:
 | English | at five and ten seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | German | in den Sekunden 5 und 10 jeder Minute, um 9:30 Uhr montags | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | Spanish | en los segundos 5 y 10 de cada minuto, los lunes a las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
-| Finnish | joka minuutti 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
+| Finnish | 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for

@@ -299,7 +299,7 @@ function singleHourStep(segments: Segment[] | null): boolean {
 // reads idiomatically as the even ("las horas pares") or odd ("impares")
 // hours; any other step names its active hours, which pins the schedule
 // precisely (a panel found ordinal/colloquial forms imprecise).
-function stepHourSpan(segment: StepSegment): string {
+function stepHourSpan(segment: StepSegment, opts: Opts): string {
   const bounded = segment.startToken.indexOf('-') !== -1;
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
 
@@ -309,7 +309,71 @@ function stepHourSpan(segment: StepSegment): string {
       'durante las horas impares';
   }
 
-  return 'durante las horas de las ' + joinList(segment.fires.map(String));
+  return 'durante las horas ' + hourSpanList(segment.fires, opts);
+}
+
+// The active hours of a confined cadence, dialect-aware. The 24-hour clock
+// shares one article over bare numbers ("de las 14, 18, 20 y 22"). The
+// 12-hour clock groups the hours by day period, naming each period once
+// ("de las 9 y 11 de la mañana y de la 1, las 3 y las 5 de la tarde"); noon
+// and midnight stand alone as "del mediodía" / "de medianoche".
+function hourSpanList(fires: number[], opts: Opts): string {
+  if (!opts.ampm) {
+    return 'de las ' + joinList(fires.map(String));
+  }
+
+  return joinList(hourPeriodGroups(fires, opts));
+}
+
+// The day period a 12-hour clock appends to an hour: the AM/PM mark for US
+// Spanish, otherwise the day-period descriptor ("de la mañana").
+function hourPeriod(hour: number, opts: Opts): string {
+  return opts.style.meridiem === 'english' ?
+    meridiemMark(hour) :
+    dayPeriod(hour, opts);
+}
+
+// Fire hours as per-period phrases: consecutive hours sharing a day period
+// fold under it once ("de las 9 y 11 de la mañana"); noon and midnight are
+// their own markers ("del mediodía", "de medianoche").
+function hourPeriodGroups(fires: number[], opts: Opts): string[] {
+  const groups: {hours: number[]; period: string}[] = [];
+
+  fires.forEach(function place(hour): void {
+    const period = hour === 0 || hour === 12 ? '' : hourPeriod(hour, opts);
+    const last = groups[groups.length - 1];
+
+    if (period !== '' && last && last.period === period) {
+      last.hours.push(hour);
+    }
+    else {
+      groups.push({hours: [hour], period});
+    }
+  });
+
+  return groups.map(function phrase(group): string {
+    if (group.period === '') {
+      return fromTime(timePhrase(group.hours[0], 0, null, opts));
+    }
+
+    return 'de ' + spanHours(group.hours) + ' ' + group.period;
+  });
+}
+
+// The hours of one period: "las 9 y 11" when all take the plural article,
+// "la 1, las 3 y las 5" when a one-o'clock mixes in.
+function spanHours(hours: number[]): string {
+  const display = hours.map(function twelve(hour): number {
+    return hour % 12 || 12;
+  });
+
+  if (display.indexOf(1) === -1) {
+    return 'las ' + joinList(display.map(String));
+  }
+
+  return joinList(display.map(function article(hour): string {
+    return (hour === 1 ? 'la ' : 'las ') + hour;
+  }));
 }
 
 // A repeating minute step, qualified by the active hour window(s).
@@ -325,7 +389,7 @@ function renderMinuteFrequency(
     // An offset step (e.g. 1/2) arrives here; a single step reads as a
     // confinement, not the verbose window list.
     phrase += singleHourStep(ir.analyses.segments.hour) ?
-      ', ' + stepHourSpan(stepSegment(ir.analyses.segments.hour)) :
+      ', ' + stepHourSpan(stepSegment(ir.analyses.segments.hour), opts) :
       ' ' + hourSpanFromTimes(ir, plan.hours.times, opts);
   }
   else if (plan.hours.kind === 'window') {
@@ -334,7 +398,7 @@ function renderMinuteFrequency(
   else if (plan.hours.kind === 'step') {
     // A clean stride is a confinement ("las horas pares", or the active-hour
     // list), never a juxtaposed cadence ("cada dos horas").
-    phrase += ', ' + stepHourSpan(stepSegment(ir.analyses.segments.hour));
+    phrase += ', ' + stepHourSpan(stepSegment(ir.analyses.segments.hour), opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
@@ -363,7 +427,7 @@ function renderMinutesAcrossHours(
   if (plan.form === 'wildcard') {
     if (singleHourStep(ir.analyses.segments.hour)) {
       return 'cada minuto, ' +
-        stepHourSpan(stepSegment(ir.analyses.segments.hour)) +
+        stepHourSpan(stepSegment(ir.analyses.segments.hour), opts) +
         trailingQualifier(ir, opts);
     }
 
@@ -389,7 +453,7 @@ function renderMinuteSpanAcrossHourStep(
   // A wildcard minute (a cadence) is reached only for a clean stride and is
   // confined; a plain range is a per-hour window keyed to the step.
   if (plan.form === 'wildcard') {
-    return 'cada minuto, ' + stepHourSpan(segment) +
+    return 'cada minuto, ' + stepHourSpan(segment, opts) +
       trailingQualifier(ir, opts);
   }
 
@@ -469,21 +533,22 @@ function renderClockTimes(
 }
 
 // Collapse "a las 12:00, a las 22:00, ..." to "a las 12:00, 22:00, ...":
-// the preposition is said once for a plain list. A single time keeps its
-// own article ("a la 01:00"), and a list with a worded time ("al mediodía",
-// "a medianoche") keeps the per-item form so each reads correctly.
+// the preposition is said once for a plain list. Only a list whose times all
+// take the plural "a las" collapses; a one-o'clock ("a la 1:00") or a worded
+// time ("al mediodía", "a medianoche") keeps the per-item article, so a mixed
+// list reads "a la 1:00 y a las 13:00", each correct.
 function collapseAtTimes(phrases: string[]): string {
-  const prefix = /^a las |^a la /;
-  const articled = phrases.every(function each(phrase) {
-    return prefix.test(phrase);
+  const article = 'a las ';
+  const allPlural = phrases.every(function each(phrase) {
+    return phrase.startsWith(article);
   });
 
-  if (phrases.length < 2 || !articled) {
+  if (phrases.length < 2 || !allPlural) {
     return joinList(phrases);
   }
 
-  return 'a las ' + joinList(phrases.map(function bare(phrase) {
-    return phrase.replace(prefix, '');
+  return article + joinList(phrases.map(function bare(phrase) {
+    return phrase.slice(article.length);
   }));
 }
 
@@ -636,7 +701,7 @@ function atHourTimes(
 // 17") than as a sprawl of windows.
 function hourSpanFromTimes(ir: IR, times: HourTimesPlan, opts: Opts): string {
   if (times.kind === 'fires' && times.fires.length > 3) {
-    return 'durante las horas de las ' + joinList(times.fires.map(String));
+    return 'durante las horas ' + hourSpanList(times.fires, opts);
   }
 
   return hourWindowsFromTimes(ir, times, opts);
