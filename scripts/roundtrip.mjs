@@ -2,12 +2,10 @@
 // pattern space (docs/i18n-design.md §4 Pass 2). For each pattern it renders
 // the English description, asks the cross-family model to recover a cron
 // expression from that description, and compares the two crons by their
-// expanded per-field value sets — a mechanical, objective verdict. A clear,
-// correct description round-trips to the same schedule; a mismatch flags a
-// pattern whose prose is unclear or wrong (the model is the reverse parser,
-// but the comparison is exact). Quartz operators (L/W/#) have no simple value
-// set and are skipped. It complements the naturalness panel: this scales to
-// the long tail without a human, leaving the panel a representative sample.
+// expanded per-field value sets. A clear, correct description round-trips to
+// the same schedule; a mismatch flags a pattern whose prose is unclear or
+// wrong (the model is the reverse parser, but the comparison is exact). Quartz
+// operators (L/W/#) have no simple value set and are skipped.
 //
 // Usage: node --import tsx scripts/roundtrip.mjs [--lang=CODE] [--limit=N]
 

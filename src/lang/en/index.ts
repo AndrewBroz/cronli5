@@ -881,14 +881,14 @@ function datePhrase(ir: IR, words: QualifierWords,
   return 'on the ' + dateOrdinals(ir, opts);
 }
 
-// Whether the month can fold into a calendar date ("on June 1"): flat
-// name lists (singles, or steps enumerating into names) read naturally
-// before the day. A range garbles the fold — "on June through September
-// 1" parses as "(June) through (September 1)" — and an open step is a
-// frequency phrase; both scope the date instead ("on the 1st in June
-// through September").
+// Whether the month can fold into a calendar date ("on June 1"): flat name
+// lists (singles, or steps enumerating into names) read naturally before the
+// day. A range garbles the fold — "on June through September 1" parses as
+// "(June) through (September 1)" — and the "every odd/even-numbered month"
+// frequency phrase has no name to place before the date; both scope the date
+// instead ("on the 1st in June through September").
 function monthFoldsIntoDate(ir: IR): boolean {
-  return !isOpenStep(ir.pattern.month) &&
+  return !oddEvenMonth(ir.pattern.month) &&
     // Reached only with a restricted month, which has segments.
     ir.analyses.segments.month!.every(function flat(segment) {
       return segment.kind !== 'range';
@@ -1020,35 +1020,44 @@ function dateOrdinals(ir: IR, opts: NormalizedOptions): string {
   return renderSegments(ir.analyses.segments.date!, getOrdinal, opts);
 }
 
-// Render the month field as names. Open steps read as a frequency phrase.
+// Render the month field as names. There are few, named months, so a step
+// enumerates them ("January, April, July, and October") rather than reading as
+// a frequency — except interval 2, which reads as "every odd/even-numbered
+// month".
 function monthName(ir: IR, opts: NormalizedOptions): string {
-  const monthField = ir.pattern.month;
+  const oddEven = oddEvenMonth(ir.pattern.month);
 
-  if (isOpenStep(monthField)) {
-    return stepMonths(monthField, opts);
+  if (oddEven) {
+    return oddEven;
   }
 
-  // A non-open-step restricted month has segments.
+  // A restricted month has segments; open steps of interval 3+ enumerate their
+  // fires here too.
   return renderSegments(ir.analyses.segments.month!, function name(value) {
     return getMonth(value, opts);
   }, opts);
 }
 
-// Frequency phrase for an open month step, e.g. "every other month" or
-// "every 3rd month from February".
-function stepMonths(monthField: string, opts: NormalizedOptions): string {
-  const parts = monthField.split('/');
-  const interval = +parts[1];
-  const start = parts[0];
-  let phrase = interval === 2 ?
-    'every other month' :
-    'every ' + getOrdinal(interval) + ' month';
-
-  if (start !== '*' && start !== '1') {
-    phrase += ' from ' + getMonth(start, opts);
+// An interval-2 month step covering a full parity set reads as "every
+// odd/even-numbered month" — the only month cadence, since the parity
+// disambiguates the start. `*/2` and `1/2` are the odd months, `2/2` the even;
+// any other start is a partial set that enumerates instead. Null otherwise.
+function oddEvenMonth(monthField: string): string | null {
+  if (!isOpenStep(monthField)) {
+    return null;
   }
 
-  return phrase;
+  const [start, step] = monthField.split('/');
+
+  if (+step !== 2) {
+    return null;
+  }
+
+  if (start === '*' || start === '1') {
+    return 'every odd-numbered month';
+  }
+
+  return start === '2' ? 'every even-numbered month' : null;
 }
 
 // Render the weekday field as names. Ranges read in their connective form
