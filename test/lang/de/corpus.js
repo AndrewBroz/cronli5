@@ -291,6 +291,13 @@ describe('Deutsch (de):', function() {
       ['0 0 1 1 *', 'am 1. Januar um Mitternacht', {dialect: 'de-CH'}]
     ]);
   });
+
+  describe('Sonderfälle', function() {
+    run([
+      ['@reboot', 'beim Systemstart'],
+      ['kein Cron', 'ein unlesbares Cron-Muster', {lenient: true}]
+    ]);
+  });
 });
 
 // Bekannte, noch offene Fehler (Code-Review + Wide-Sweep; docs/backlog.md,
