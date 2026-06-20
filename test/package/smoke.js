@@ -131,7 +131,8 @@ describe('Built package artifacts:', function() {
 
       // The available list is derived from the built languages (sorted), not
       // hardcoded, so it never drifts when a language is added.
-      expect(stderr).to.match(/Unknown language: xx \(available: de, en, es, fi\)/u);
+      expect(stderr)
+        .to.match(/Unknown language: xx \(available: de, en, es, fi, zh\)/u);
     });
 
     it('exits non-zero on an invalid cron pattern', function() {

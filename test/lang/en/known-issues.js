@@ -55,4 +55,13 @@ describe.skip('Known issues (pending fix):', function() {
     expect(cronli5('0 0 13 1,4,7,10 *', {dialect: 'gb'}))
       .to.not.match(/^on \d+ \w+,/u);
   });
+
+  // A year range renders with a raw hyphen ("in 2030-2035") instead of the
+  // dialect's range connective ("2030 through 2035") that every other field
+  // uses — the year field skips it.
+  it('renders a year range with the through connective, not a hyphen',
+    function() {
+      expect(cronli5('0 0 1 1 * 2030-2035', {years: true}))
+        .to.not.match(/\d-\d/u);
+    });
 });

@@ -1,0 +1,7 @@
+{
+  "name": "Chinese (Mandarin, Simplified)",
+  "status": "scaffold",
+  "humanReview": null,
+  "crossFamilyReview": null,
+  "note": "Scaffold — corpus authored, renderer not yet conformant. The style contract (src/lang/zh/notes.md) was settled by a blind 3-persona Sonnet style panel (2026-06-20), and a panel-grounded BETA/PROVISIONAL corpus spanning the full committed core set (test/core/core-set.json, 275 entries) was authored via an author/audit/fix workflow and pinned in test/lang/zh/corpus.js as the test-first contract. The scaffold renderer currently FAILS ~258/275 of it (it predates the panel rulings — e.g. emits 午夜/中午/一刻 where the corpus requires 凌晨0点/正午/15分). Remaining before beta: TDD the renderer to chase the corpus (watch fail -> fix -> green), drive `npm run fuzz zh` to 0, then run the core coverage gate (zh is scaffold-exempt until then) and the full gate. Ships nothing until the beta gate passes."
+}

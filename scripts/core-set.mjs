@@ -172,9 +172,15 @@ function cellOf(pattern, opts) {
 }
 
 function corpusCell(pattern) {
-  const fields = pattern.trim().split(/\s+/u).length;
+  // A trailing 4-digit token is a year field, not a weekday — so a 6-token
+  // pattern like "0 0 1 1 * 2030" is minute..weekday + year (no seconds), and a
+  // 7-token one adds seconds. Without this, the year is parsed as a weekday,
+  // analyze throws, and the cell collapses to an uncoverable null.
+  const tokens = pattern.trim().split(/\s+/u);
+  const years = (/\d{4}/u).test(tokens[tokens.length - 1]);
+  const seconds = years ? tokens.length >= 7 : tokens.length >= 6;
 
-  return cellOf(pattern, {seconds: fields >= 6, years: false});
+  return cellOf(pattern, {seconds, years});
 }
 
 function coreCells(coreSet) {

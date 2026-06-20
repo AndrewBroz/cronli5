@@ -83,6 +83,12 @@ must leave all other en output byte-identical (the corpus is the guard).
   step-enumeration change); surfaced testing that change. The day must attach
   unambiguously to the full month list. May generalize to other day-first
   dialects.
+- **Year range uses a raw hyphen, not the `through` connective.**
+  `0 0 1 1 * 2030-2035` (years) → "…in **2030-2035**" where every other field's
+  range reads "…through…" ("on the 1st through 5th"). The year field skips the
+  dialect range rendering (`applyYear`/`yearLabel`). Surfaced verifying that
+  year *lists* don't throw (they don't — that earlier claim was a 6-field
+  parsing artifact, the year landing in the weekday slot).
 
 **Minor / low priority (not yet captured as tests):**
 
