@@ -215,7 +215,7 @@ until a human review cycle is completed. See
 | English | stable | maintainer (native) | — |
 | Spanish | beta | maintainer (informal); formal pilot pending | gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15) |
 | Finnish | beta | — | — |
-| Chinese (Mandarin, Simplified) | scaffold | — | — |
+| Chinese (Mandarin, Simplified) | beta | — | blind Sonnet style panel + author/audit workflow (2026-06-20) |
 <!-- END GENERATED: language-status -->
 
 

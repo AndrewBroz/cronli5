@@ -9,8 +9,7 @@
   "exclude": [
     "src/browser.ts",
     "src/core/ir.ts",
-    "src/types.ts",
-    "src/lang/zh/**"
+    "src/types.ts"
   ],
   "reporter": [
     "text",

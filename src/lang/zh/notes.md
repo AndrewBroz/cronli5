@@ -61,6 +61,34 @@ reason it is being rebuilt.
 6. **Default clock → 24h** (14点), 2/3 (editor+technical); 12-hour day-period
    (下午2点) stays behind the `ampm` flag. Matches the original proposal.
 
+## Canonical composition decisions (renderer, 2026-06-20)
+
+Settled while building the renderer to the panel-grounded corpus; the BETA
+corpus was converged to these for style coherence (LLM-authoring noise removed,
+every field value preserved — `npm run fuzz zh` is clean):
+
+- **Odd/even month** (`*/2` month) → **每个奇数月 / 每个偶数月** (one canonical
+  spelling; `每奇数月`/`每逢奇数月` retired). Other month steps enumerate with a
+  shared trailing 月 (`1、4、7、10月`); month list/step join with 、, never 和.
+- **OR (`dom`+`dow`)**: cron applies a restricted `month` to BOTH sides of the
+  union, so a restricted month **leads** the union with a comma and scopes it —
+  `6月，1日或每周五`, `每个奇数月，每2天或周日、二、四、六` — never `6月1日或每周五`,
+  which reads as Fridays year-round (a meaning regression). With a wildcard month
+  there is nothing to scope, so the date side carries its own (`每月`/`本月`) lead
+  (`每月1日或周日、二、四、六`). A weekday list in an OR drops the recurrence 每; a
+  single weekday and a range keep it; a quartz date/weekday goes bare under the
+  leading month (`1月，1日或最后一个周五`).
+- **Confinement** uses the 在…之间 frame (hour range) or 在A、B…，(hour list);
+  no redundant 时段内/这两个小时内.
+- **Comma/lead-trail** is plan-specific: a bare minute frequency trails its
+  qualifier (`每5分钟，每周一`); an hour-confined frequency and a compact clock
+  list lead it; an hour step leads a weekday/month/date-cadence qualifier and
+  trails an explicit-day or quartz date.
+- **Quartz** with a month prefix takes no 的 (`1月最后一天`); a quartz weekday in
+  an OR anchors to 本月. **Non-divisor hour step** that wraps reads
+  `从凌晨0点起，每5小时`; one firing ≤2× reads as clock times (`凌晨0点和13点`).
+  **Year** range/list → `2030年至2032年` / `2030年、2035年`.
+
 ## Flag plan
 
 | flag | values | default | effect |
