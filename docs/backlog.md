@@ -50,32 +50,29 @@ this is the single highest-leverage fix, subsuming most of the skipped tests.
 in `test/lang/en/known-issues.js` (`describe.skip`); en stays frozen, so a fix
 must leave all other en output byte-identical (the corpus is the guard).
 
-- **`minute = 0` under a seconds wildcard drops the confinement** (a real bug).
-  `* 0 * * * * *` fires every second but only during the `:00` minute (60/hr),
-  yet renders "every second, every hour" — indistinguishable from the
-  continuous `* * * * * * *` ("every second", 3600/hr) and colliding with the
-  once-per-hour `0 0 * * * * *` ("every hour"). `minute = 1` is fine ("…one
-  minute past the hour, every hour"); only `minute = 0`'s bare "every hour"
-  frame fails to carry "during minute 0" beneath a finer cadence.
+- **Under a seconds wildcard, coarser fields must *confine* (with "of"), not
+  juxtapose a second cadence** (a real bug; the dominant en defect). A leading
+  "every second" makes every coarser restriction a confinement joined by *of* —
+  never a second "every …" frequency, and never a redundant one. Today the
+  renderer juxtaposes: `* 0 * * * *` → "every second, **every hour**" (drops the
+  `:00`-minute confinement — indistinguishable from the continuous `* * * * * *`);
+  `* 1 * * * *` → "…, **one minute past the hour**, every hour"; `* */2 * * * *`
+  → "…, **every two minutes**"; `* * 0 * * *` → "…, **every minute** from
+  midnight…" (redundant); and the stepped year `* * * * * * */2` → "**every two
+  years**". Intended: confine with *of* — `every second of minute :00 of every
+  hour`, `… of every other minute`, `… of the midnight hour`, `… in every other
+  year` — dropping the juxtaposed/redundant cadence; range bounds read
+  exclusively ("from 9 a.m. **until** 6 p.m."). The *of* confinement marker is
+  universal, not seconds-only: any leading cadence confines a coarser cadence
+  with *of* (`0 * */2 * * *` → "every minute **of** every other hour", not
+  "during every other hour"). The one exception is an *enumerated* hour list,
+  which keeps *during* ("during the 9 a.m., 11 a.m., … hours"). The exact
+  intended strings for the core set are pinned in `test/lang/en/core-set.js`.
 - **Trailing weekday is singular** ("on Monday" → "on Mondays") — a bug class,
   English-only: es/de/fi already mark recurrence ("los lunes", "montags",
   "maanantaisin"). Affects every pattern where a weekday trails a frequency or
   time. Pluralize the single and list forms; leave the range idiom ("Monday
   through Friday") and the leading "every Monday" alone.
-- **Stepped minute and year don't confine, unlike hour and month** (a real
-  bug). A field stepped coarser than the leading cadence is a confinement: the
-  hour reads "every second … **during** every other hour" and the month "… **in**
-  every other month". But the neighbours fall back to a juxtaposed second
-  cadence — `* */2 * * * * *` → "every second, **every two minutes**" and
-  `* * * * * * */2` → "every second **every two years**". The year form's
-  missing comma is a *symptom* of this wrong (cadence) framing, not a separate
-  bug. Fix: confine to "during every other minute" / "in every other year",
-  mirroring the hour and month.
-- (Lower, redundancy not error) **seconds + hour** stacks two cadences:
-  `* * 0 * * * *` → "every second, every minute from midnight through 12:59
-  a.m." — the "every minute" is redundant under "every second"; the
-  juxtaposed-cadence smell, and inconsistent with the date/month/weekday
-  qualifier which collapses to "every second on the 1st".
 - **gb day-first multi-month fold is a garden-path.** `0 0 13 1,4,7,10 *` with
   `{dialect: 'gb'}` → "on **13 January, April, July and October** at midnight" —
   reads as if the 13 attaches only to January, not the whole list. Pre-existing

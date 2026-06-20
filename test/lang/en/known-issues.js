@@ -11,12 +11,15 @@ const {expect} = chai;
 // final wording (which is chosen when the fix lands).
 describe.skip('Known issues (pending fix):', function() {
 
-  // `* 0 * * * * *` fires every second but only during the :00 minute (60/hr),
-  // yet renders "every second, every hour" — indistinguishable from the
-  // continuous `* * * * * * *` ("every second", 3600/hr). The minute-0
-  // confinement must be expressed.
-  it('expresses the minute-0 confinement under a seconds wildcard', function() {
-    expect(cronli5('* 0 * * * * *')).to.match(/minute|on the hour/u);
+  // Under a seconds wildcard the leading "every second" makes every coarser
+  // field a confinement joined by "of" (… of minute :00 of every hour, … of
+  // every other minute, … of the midnight hour) — never a juxtaposed or
+  // redundant second cadence ("every second, every hour"/"every two minutes").
+  // The exact intended strings are in core-set.js; this guards the root-cause
+  // invariant across the minute-0 / fixed / range / step family.
+  it('confines coarser fields with "of" under a seconds wildcard', function() {
+    ['* 0 * * * * *', '* 1 * * * * *', '* */2 * * * * *', '* * 0 * * * *']
+      .forEach((p) => expect(cronli5(p), p).to.match(/ of /u));
   });
 
   // A trailing weekday qualifier is recurring, so it reads plural ("on
@@ -31,17 +34,10 @@ describe.skip('Known issues (pending fix):', function() {
       .to.match(/on Mondays and Wednesdays\b/u);
   });
 
-  // A stepped field coarser than the leading cadence is a confinement, like
-  // the hour ("every second … during every other hour") and the month ("…in
-  // every other month"). But the minute and year fields fall back to a
-  // juxtaposed cadence ("every two minutes", "every two years"), which reads
-  // as a second, conflicting frequency. The year form also drops the comma the
-  // minute form has — a symptom of the same wrong framing, not a separate bug.
-  it('confines a stepped minute under a finer cadence, like the hour field',
-    function() {
-      expect(cronli5('* */2 * * * * *')).to.match(/every other minute/u);
-    });
-
+  // A stepped year coarser than the leading cadence is a confinement, like the
+  // month ("…in every other month"), but falls back to a juxtaposed cadence
+  // ("every second every two years") and drops the comma the minute form has.
+  // (The stepped-minute case is covered by the seconds-confinement test above.)
   it('confines a stepped year under a finer cadence, like the month field',
     function() {
       expect(cronli5('* * * * * * */2')).to.match(/every other year/u);

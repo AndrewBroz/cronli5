@@ -65,13 +65,53 @@ describe.skip('English core-set corrections:', function() {
     ]);
   });
 
-  // [c0011–c0020]
+  // [c0011–c0020] seconds wildcard, minute fixed/range, hours fixed/range/list.
   describe('batch 2 refinements - seconds in minutes:', function() {
     run([
+      ['* 0 */2 * * *', 'every second of minute :00 of every other hour'],
       ['* 0 0 * * *', 'every second of minute :00 at midnight'],
+      ['* 0 9,11,13,15,17,19,21 * * *',
+        'every second of minute :00 during the 9 a.m., 11 a.m., 1 p.m., ' +
+        '3 p.m., 5 p.m., 7 p.m., and 9 p.m. hours'],
+      ['* 0 9-17 * * *',
+        'every second of minute :00 from 9 a.m. until 6 p.m.'],
+      ['* 0-30 * * * *',
+        'every second of minutes :00 through :30 of every hour'],
       ['* 0-30 */2 * * *',
-        'every second of minutes :00 through :30 past the hour, every ' +
-        'other hour']
+        'every second of minutes :00 through :30 of every ' +
+        'other hour'],
+      ['* 0-30 9,17 * * *',
+        'every second of minutes :00 through :30 during the ' +
+        '9 a.m. and 5 p.m. hours'],
+      ['* 0-30 9-17 * * *',
+        'every second of minutes :00 through :30 from 9 a.m. until 6 p.m.'],
+      ['* 5,30 * * * *', 'every second of minutes :05 and :30 of every hour']
+    ]);
+  });
+
+  // [c0021–c0030] seconds/sub-minute family + minute-leading cadences; the
+  // during→of confinement convention applies globally.
+  describe('batch 3 - minute-leading & second-step:', function() {
+    run([
+      ['* 5,30 */2 * * *',
+        'every second of minutes :05 and :30 of every other hour'],
+      ['*/15 0 * * * *', 'every 15 seconds of minute :00 of every hour'],
+      ['0 * */2 * * *', 'every minute of every other hour'],
+      ['0 * 0 * * *', 'every minute of the midnight hour'],
+      ['0 * 9-17 * * *', 'every minute from 9 a.m. until 6 p.m.'],
+      ['0 */2 */2 * * *', 'every two minutes of every other hour']
+    ]);
+  });
+
+  // [c0031–c0040] minute cadence + day qualifiers. Trailing single/list
+  // weekdays pluralize ("on Mondays"); weekday RANGES keep the singular idiom
+  // ("on Monday through Friday" — panel-confirmed). A single hour-0 confinement
+  // under a sub-hour cadence spans the hour ("from midnight until 1 a.m.").
+  describe('batch 4 - minute cadence + day qualifiers:', function() {
+    run([
+      ['0 */2 0 * * *', 'every two minutes from midnight until 1 a.m.'],
+      ['0 */5 * * * 1', 'every five minutes on Mondays'],
+      ['0 */5 * 1 * 5', 'every five minutes on the 1st or on Fridays']
     ]);
   });
 });
