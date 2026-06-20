@@ -92,6 +92,17 @@ must leave all other en output byte-identical (the corpus is the guard).
   a.m./p.m.-ending time in sentence form (the CLI form); the bare fragment is
   fine. Surfaced reviewing the core-set English in sentence form. Pinned in
   `test/lang/en/core-set.js` (sentence-form rows).
+- **A quartz "… of the month" repeats the month under an explicit month
+  qualifier.** `0 0 * */2 5L` → "on the last Friday **of the month** in every
+  odd-numbered **month** at midnight" — "of the month" is redundant once a month
+  is named, so it should drop: "the last Friday in every odd-numbered month". A
+  ~27-entry class (`5L`/`L` × restricted month). Clean for a single month ("…in
+  January") or the distributive `every odd/even` month; a month **range** ("…in
+  January through March") needs care, since dropping "of the month" can read as
+  one Friday in the span rather than per-month; and the **OR** cases (`… or on
+  the last Friday of the month`) are really the month-not-scoping-the-union bug
+  (the en analogue of the zh OR fix), not a redundancy. c0086 pinned in
+  `test/lang/en/core-set.js`; the range and OR sub-classes are open.
 
 **Minor / low priority (not yet captured as tests):**
 
