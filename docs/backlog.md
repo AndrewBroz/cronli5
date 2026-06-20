@@ -89,6 +89,12 @@ must leave all other en output byte-identical (the corpus is the guard).
   dialect range rendering (`applyYear`/`yearLabel`). Surfaced verifying that
   year *lists* don't throw (they don't — that earlier claim was a 6-field
   parsing artifact, the year landing in the weekday slot).
+- **Sentence form doubles the period after an `a.m.`/`p.m.` ending.** `sentence`
+  appends `.` to a fragment that already ends in the abbreviation's period:
+  `0 9 * * *` `{sentence: true}` → "Runs every day at 9 a.m.**..**". Affects every
+  a.m./p.m.-ending time in sentence form (the CLI form); the bare fragment is
+  fine. Surfaced reviewing the core-set English in sentence form. Pinned in
+  `test/lang/en/core-set.js` (sentence-form rows).
 
 **Minor / low priority (not yet captured as tests):**
 
