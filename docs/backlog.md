@@ -103,6 +103,14 @@ must leave all other en output byte-identical (the corpus is the guard).
   the last Friday of the month`) are really the month-not-scoping-the-union bug
   (the en analogue of the zh OR fix), not a redundancy. c0086 pinned in
   `test/lang/en/core-set.js`; the range and OR sub-classes are open.
+- **A minute/second *list* spells small values instead of using digits.**
+  `4,6,9 * * * *` → "at **four, six, and nine** minutes past the hour" and the
+  `30 5,10 …` family → "at **five and ten** minutes past the hour". A list names
+  clock *positions*, which take digits (cf. `5,17,42` → "5, 17, and 42"); only a
+  cadence *count* spells small numbers ("every **seven** minutes"). Fix: digits
+  for minute/second list positions regardless of magnitude. Surfaced by the
+  automated stance-review; pinned across c0216–c0225, c0239 in
+  `test/lang/en/core-set.js`.
 
 **Minor / low priority (not yet captured as tests):**
 
