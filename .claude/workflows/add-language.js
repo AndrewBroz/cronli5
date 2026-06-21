@@ -18,6 +18,7 @@ const a = (typeof args === 'string' ? JSON.parse(args) : args) || {}
 const CODE = a.code
 const NAME = a.name || CODE
 const MODE = a.mode || 'new' // 'new' | 'rewrite-test'
+const STOP = a.stopAfter || null // e.g. 'corpus' — halt for inspection (stage 1)
 const ROOT = '/Users/andrewbroz/Code/personal/cronli5'
 const PLAYBOOK = `${ROOT}/.claude/skills/add-language/playbook.json`
 const CORESET = `${ROOT}/test/core/core-set.json`
@@ -61,6 +62,17 @@ const REPORT = {
 const TRAPS = { type: 'object', additionalProperties: false, required: ['traps'], properties: { traps: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['id', 'summary'], properties: { id: { type: 'string' }, summary: { type: 'string' } } } } } }
 const ADVGEN = { type: 'object', additionalProperties: false, required: ['patterns'], properties: { patterns: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['cron'], properties: { cron: { type: 'string' }, opts: { type: 'string' } } } } } }
 const JUDGE = { type: 'object', additionalProperties: false, required: ['winner'], properties: { winner: { type: 'string' }, note: { type: 'string' } } }
+const EVALR = { type: 'object', additionalProperties: false, required: ['holdoutPass', 'holdoutTotal', 'lines', 'disables'], properties: { holdoutPass: { type: 'number' }, holdoutTotal: { type: 'number' }, lines: { type: 'number' }, disables: { type: 'number' }, dupPct: { type: 'number' }, complexity: { type: 'number' } } }
+const CONTESTED = { type: 'object', additionalProperties: false, required: ['contested'], properties: { contested: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['id', 'question', 'candidates'], properties: { id: { type: 'string' }, question: { type: 'string' }, candidates: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['label', 'example'], properties: { label: { type: 'string' }, example: { type: 'string' } } } } } } } } }
+const CONVVOTE = { type: 'object', additionalProperties: false, required: ['best'], properties: { best: { type: 'string' }, reason: { type: 'string' } } }
+const RECONCILE = { type: 'object', additionalProperties: false, required: ['agreedCount', 'contested'], properties: { agreedCount: { type: 'number' }, contested: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['pattern', 'candidates'], properties: { pattern: { type: 'string' }, meaning: { type: 'string' }, candidates: { type: 'array', items: { type: 'string' } }, flags: { type: 'string' } } } } } }
+const pickMajority = (arr) => {
+  const m = {}
+  let best = arr[0]
+  let bc = 0
+  for (const s of arr) { m[s] = (m[s] || 0) + 1; if (m[s] > bc) { bc = m[s]; best = s } }
+  return best
+}
 
 // ===================================================== CONVENTIONS + CORPUS
 // BOTH modes author conventions + a corpus. rewrite-test is a TRUE clean-room:
@@ -78,21 +90,104 @@ const cleanRoom = isTest
   : ''
 
 phase('Conventions')
-let conventions = await agent(`Design the ${NAME} (${CODE}) rendering conventions — the style contract the corpus is authored against. Read the playbook ${PLAYBOOK} (universal traps) and core set ${CORESET}. Decide numerals, clock (12/24h, day periods), date/weekday/month forms, list/range connectives, recurrence marking, and — critically — how this grammar RESOLVES each universal trap (union-connective, shared-qualifier-scope, confinement-vs-juxtaposition, range-boundary, recurrence-marking, redundancy, numeral-register, sentence-wrapper-punctuation, cardinality-rendering). Traps must be RESOLVED, not inherited. Mark genuinely-contested judgments with 2-3 candidate phrasings. Write the decided conventions to ${NOTES} (create the dir). Return the contested decisions.${cleanRoom}`,
-  { label: 'conventions', phase: 'Conventions', model: 'sonnet' })
+// Draft → blind-panel the contested REGISTER choices → finalize. The panel is
+// the missing pressure: without it the clean-room agent silently picks a
+// defensible-but-wrong default (e.g. 24-hour clock for English) and the whole
+// corpus inherits it. Register conventions (clock, idioms, framing) are
+// language-specific and NOT in the playbook — so they must be panelled here.
+const draft = await agent(`Draft the ${NAME} (${CODE}) rendering conventions — the style contract the corpus is authored against. Read the playbook ${PLAYBOOK} (universal traps) and core set ${CORESET}. Decide numerals, date/weekday/month forms, list/range connectives, recurrence marking, and how this grammar RESOLVES each universal trap (union-connective, shared-qualifier-scope, confinement-vs-juxtaposition, range-boundary, recurrence-marking, redundancy, numeral-register, sentence-wrapper-punctuation, cardinality-rendering) — traps must be RESOLVED. Write a DRAFT to ${NOTES} (create the dir). CRUCIALLY, surface EVERY genuinely-contested REGISTER choice as a contested decision with 2-4 candidates, each with a concrete example sentence: clock format (12-hour a.m./p.m. vs 24-hour), the midnight/noon idiom vs 0:00/12:00, whether a daily schedule leads with an "every day"-type frame, interval phrasing (every two X vs every other X), the union connective, AND — as a SEPARATE decision from the range connective — the range-BOUNDARY convention: inclusive last-fire ("from 9 a.m. through 5:55 p.m.", names the literal last firing time) vs exclusive window ("from 9 a.m. until 6 p.m.", drops last-fire arithmetic). Return the contested decisions.${cleanRoom}`,
+  { label: 'conventions:draft', phase: 'Conventions', model: 'sonnet', schema: CONTESTED })
 
+const decided = await parallel((draft?.contested || []).map((d) => () =>
+  parallel(PERSONAS.map((p) => () =>
+    agent(`You are ${p} of ${NAME}, judging BLIND — this is a COMPREHENSION test, NOT a beauty contest. CHOICE: ${d.question}\nCandidates:\n${d.candidates.map((c) => `- ${c.label}: "${c.example}"`).join('\n')}\nSTEP 1 (decisive): would an ordinary reader who sees ONLY a candidate conclude the schedule's TRUE meaning with NO misreading? In particular a day-union MUST read as "runs on BOTH sets of days" — any candidate a reader could take as "one or the other" (alternative / pick-one) is ELIMINATED, however natural it sounds. STEP 2: among the survivors only, pick the most natural. Reply: best = the surviving candidate's label, and a one-line reason naming any misreading you eliminated.`,
+      { label: `conv:${d.id}`, phase: 'Conventions', model: 'sonnet', schema: CONVVOTE })))
+    .then((vs) => ({id: d.id, question: d.question, votes: vs.filter(Boolean).map((v) => v.best)}))))
+
+let conventions = await agent(`Finalize the ${NAME} (${CODE}) conventions in ${NOTES}. For each contested register choice, ADOPT the candidate the blind panel preferred (majority best-vote): ${JSON.stringify(decided.filter(Boolean))}. Rewrite ${NOTES} so every register choice reflects the panel verdict (keep the trap resolutions and everything else). Report the final clock format, idioms, framing, and connectives chosen.`,
+  { label: 'conventions:finalize', phase: 'Conventions', model: 'sonnet' })
+
+// CORPUS-DISCOVERY LOOP. The corpus is the spec, so we DISCOVER a good one
+// instead of authoring-and-trusting: (1) three INDEPENDENT clean-room authorings;
+// (2) mechanical detectors kill objective errors (dropped field values,
+// unresolved traps, inconsistent phrasing); (3) cross-version DISAGREEMENTS
+// surface the judgment calls nobody thought to panel + the ambiguous entries;
+// (4) panel those blind; (5) assemble + final-lint. This replaces a human
+// reading the spec.
 phase('Corpus')
-let corpusNote = await agent(`Author the ${NAME} (${CODE}) corpus at ${CORPUS}, spanning the full core set ${CORESET} (every cell + value class + variant + macro + @reboot + lenient). For each pattern's SCHEDULE MEANING (which days/times it fires) analyze the core IR — run \`node --import tsx -e\` importing src/core to inspect the parsed schedule — do NOT lift wording from any existing renderer. STYLE each entry per the conventions in ${NOTES} and the playbook traps, so every entry is trap-RESOLVED (the DOM/DOW union uses the resolved predicate-frame; boundary ranges use the resolved window; trailing recurring days are marked; no stranded shared qualifier). NEVER drop a field value. Mirror the structure of test/lang/de/corpus.js. Self-audit against every playbook trap and fix. Report entry count.${cleanRoom}`,
-  { label: 'corpus', phase: 'Corpus', model: 'sonnet' })
+const dir = `${ROOT}/test/lang/${CODE}-rebuild`
+await parallel(['a', 'b', 'c'].map((v) => () =>
+  agent(`Author ${NAME} (${CODE}) corpus VARIANT ${v} at ${dir}/corpus-${v}.js, spanning the full core set ${CORESET} (every cell + value class + variant + macro + @reboot + lenient). For each pattern's MEANING, analyze the core IR (run \`node --import tsx -e\` importing src/core) to see which days/times it fires — never lift wording from any existing renderer. STYLE per the PANELLED conventions ${NOTES} and the playbook traps ${PLAYBOOK}: DOM/DOW union → condition-frame "whenever the day is X or Y"; hour-range → the boundary form chosen in ${NOTES}; trailing recurring days marked; shared qualifier fronted; NO cadence redundant under a finer one (no "every minute" under "every second"); a given field phrased identically across every entry that contains it. NEVER drop a field value. Author INDEPENDENTLY — do NOT read the other variants. Mirror test/lang/de/corpus.js structure. Report entry count.${cleanRoom}`,
+    { label: `corpus:${v}`, phase: 'Corpus', model: 'sonnet' })))
 
-// ============================================================ RENDERER (TDD)
+const reconcile = await agent(`Reconcile the three ${NAME} corpus variants (${dir}/corpus-a.js, -b.js, -c.js). Write and run a node script from ${ROOT} that, keyed by core-set pattern: (1) DIFF — compare the expected string across a/b/c; AGREED = all three identical, CONTESTED = any differ. (2) FIELD-COVERAGE — assert every non-wildcard field value surfaces in the prose (flag MISSING-VALUE). (3) TRAP-LINTS on the strings — every DOM/DOW union uses "whenever the day is … or …"; every hour-range uses the ${NOTES} boundary form; no cadence redundant under a finer one; each field renders identically across the entries containing it. Return agreedCount and the CONTESTED list (cap 40): for each give the pattern, its IR meaning, the three candidate strings, and any detector flags. A detector-flagged-but-agreed entry is ALSO contested (all three made the same mistake).`,
+  { label: 'reconcile', phase: 'Corpus', model: 'sonnet', schema: RECONCILE })
+
+const resolved = await parallel((reconcile?.contested || []).slice(0, 40).map((c) => () =>
+  parallel(PERSONAS.map((p) => () =>
+    agent(`You are ${p} of ${NAME}, judging BLIND — a COMPREHENSION test. The schedule MEANS: ${c.meaning || c.pattern}.\nCandidates:\n${(c.candidates || []).map((s, i) => `${i + 1}. "${s}"`).join('\n')}\nSTEP 1 (decisive): ELIMINATE any candidate an ordinary reader could MISread — conclude a different meaning than the stated one (e.g. read a day-union as "one or the other" when the job fires on BOTH; misjudge a window's span). A misread-able form is out, however natural. STEP 2: among the survivors pick the most natural; if none survive, give an improved rendering that cannot be misread. ${c.flags ? 'Detector flags: ' + c.flags + '\n' : ''}Reply: best = the exact chosen text, plus a one-line reason.`,
+      { label: `corpus-panel:${c.pattern}`, phase: 'Corpus', model: 'sonnet', schema: CONVVOTE })))
+    .then((vs) => ({pattern: c.pattern, winner: pickMajority(vs.filter(Boolean).map((v) => v.best))}))))
+
+const corpusNote = await agent(`Assemble the canonical ${NAME} corpus at ${CORPUS} from the three variants in ${dir}: for AGREED patterns use the agreed string; for these reconciled patterns use the panel-chosen string: ${JSON.stringify((resolved || []).filter(Boolean))}. Mirror test/lang/de/corpus.js structure. Then RE-RUN the detector suite (field-coverage + trap-lints) on the FINAL ${CORPUS} and fix any residual flag. Delete the variant files corpus-a/b/c.js. Report final entry count and whether detectors are clean.`,
+  { label: 'assemble', phase: 'Corpus', model: 'sonnet' })
+
+// Stage gate: halt after the corpus so a human can inspect its quality before
+// committing to the expensive pressured renderer build (the corpus is the spec;
+// a wrong corpus poisons everything downstream).
+if (STOP === 'corpus') {
+  return {stoppedAfter: 'corpus', mode: MODE, code: CODE, corpus: CORPUS, conventions, corpusNote}
+}
+
+// ===================================================== RENDERER — pressured
+// The corpus is split into a TRAIN set the builders TDD against and a HELD-OUT
+// set they never see; held-out pass-rate is the Occam pressure — only a
+// general/compact renderer passes patterns it never trained on. Each round
+// spawns 3 independent variants under the form pressures (zero eslint-disable,
+// cognitive-complexity + jscpd-duplication budgets), we Pareto-select
+// (held-out-correct, then simplest), and the winner seeds the next round. The
+// LLM is a strong variation operator, so a couple of rounds suffice.
 phase('Renderer')
-const buildPrompt = isTest
-  ? `CLEAN-ROOM RENDERER REBUILD — acceptance test. Write a complete cronli5 ${NAME} renderer at ${SRC}/ (index.ts + dialects.ts) implementing the Language interface in ${IR}. You may read ONLY: ${IR}, the core helpers it imports (src/core/format.ts, util.ts, specs.ts), the FRESH trap-resolved corpus ${CORPUS}, the conventions ${NOTES}, and the playbook ${PLAYBOOK}. You are STRICTLY FORBIDDEN from reading ${original}/ (the original renderer) or ${ROOT}/test/lang/${CODE}/ (the original corpus) or any other src/lang/* module — this is a from-scratch test of the pipeline. Wire a temporary test importing your ${CODE}-rebuild module against ${CORPUS}, and iterate test-first until every row passes (the corpus is trap-resolved, so green means your renderer resolves the traps). Keep \`npm run typecheck\` and eslint green for your module. Report pass/total and any rows you could not satisfy.`
-  : `Build the ${NAME} (${CODE}) renderer at ${SRC}/index.ts implementing the Language interface in ${IR}, modelled on src/lang/en/index.ts. TDD it against ${CORPUS} until every row passes; keep typecheck + eslint green. Report pass/total.`
-const build = await agent(buildPrompt,
-  { label: `renderer:${CODE}`, phase: 'Renderer', model: 'sonnet', schema: REPORT })
-log(`renderer build: ${build?.summary || 'no report'}`)
+const TRAIN = `${ROOT}/test/lang/${CODE}-rebuild/train.js`
+const HOLDOUT = `${ROOT}/test/lang/${CODE}-rebuild/holdout.js`
+await agent(`Partition the trap-resolved corpus ${CORPUS} into two runnable test files: ${TRAIN} (~85% of entries) and ${HOLDOUT} (~15%), STRATIFIED so the held-out set samples across every cell / value-class / variant / macro (not a contiguous tail) — it is the generalization probe. Copy each entry verbatim (pattern, expected, opts); both files run like the corpus. Report the two counts.`,
+  { label: 'split', phase: 'Renderer', model: 'sonnet' })
+
+const priorClause = isTest
+  ? `STRICTLY FORBIDDEN to read: ${original}/ (original renderer), ${ROOT}/test/lang/${CODE}/ (original corpus), ${HOLDOUT} (the held-out set), and any other src/lang/* module — this is clean-room.`
+  : `Model the architecture on src/lang/en/index.ts (inherit its plan-kind dispatch skeleton and helper decomposition; supply ${NAME}'s own words). Do NOT read ${HOLDOUT}.`
+const VARIANTS = ['a', 'b', 'c']
+const ROUNDS = 2
+let winner = null
+let buildSummary = 'no variant'
+for (let r = 1; r <= ROUNDS; r++) {
+  const seedLine = winner
+    ? `Start from the current best variant at ${winner} (copy it into your dir), then IMPROVE it: raise held-out generality and REDUCE cognitive complexity and duplication without regressing TRAIN.`
+    : `Build from scratch.`
+  const built = await parallel(VARIANTS.map((v) => () => {
+    const dir = `${ROOT}/src/lang/${CODE}-rebuild-r${r}${v}`
+    return agent(`Pressured ${NAME} (${CODE}) renderer build — round ${r}, variant ${v}. Write a complete renderer at ${dir}/ (index.ts + dialects.ts) implementing the Language interface in ${IR}. ${seedLine} You may read: ${IR}, the core helpers (src/core/format.ts, util.ts, specs.ts), the TRAIN set ${TRAIN}, the conventions ${NOTES}, the playbook ${PLAYBOOK}. ${priorClause} TDD against ${TRAIN} until green. THEN, with TRAIN frozen as the guard (any regression = revert), satisfy these FORM PRESSURES: (1) ZERO \`eslint-disable\` anywhere — reduce cognitive complexity, never suppress it; (2) minimize copy-paste / near-duplicate logic across plan-node kinds (share helpers); (3) keep functions within the eslint complexity rule. You MAY break-then-repass TRAIN to consolidate. Keep typecheck + eslint (no disables) green. Report train pass/total and final line count.`,
+      { label: `build:r${r}${v}`, phase: 'Renderer', model: 'sonnet', schema: REPORT })
+      .then((rep) => ({ v, dir, rep }))
+  }))
+  const evals = await parallel(built.filter((b) => b && b.rep).map((b) => () =>
+    agent(`Evaluate the ${NAME} renderer variant at ${b.dir}. Via bash from ${ROOT}: (1) run it against the HELD-OUT set ${HOLDOUT} (it never trained on these) — report holdoutPass / holdoutTotal; (2) count \`eslint-disable\` occurrences in the module (disables); (3) total lines of index.ts + dialects.ts; (4) jscpd or AST-clone duplication percent (dupPct); (5) max cognitive complexity across functions (complexity). Numbers only.`,
+      { label: `eval:r${r}${b.v}`, phase: 'Renderer', model: 'sonnet', schema: EVALR })
+      .then((e) => ({...b, eval: e}))))
+  const ranked = evals.filter((e) => e && e.eval && e.eval.disables === 0)
+    .sort((x, y) => (y.eval.holdoutPass - x.eval.holdoutPass) ||
+      (x.eval.lines - y.eval.lines) || ((x.eval.dupPct || 0) - (y.eval.dupPct || 0)))
+  const top = ranked[0] || evals.filter(Boolean)[0]
+  if (top) {
+    winner = top.dir
+    buildSummary = `round ${r}: held-out ${top.eval?.holdoutPass}/${top.eval?.holdoutTotal}, ${top.eval?.lines} lines, ${top.eval?.disables} disables, ${top.eval?.dupPct ?? '?'}% dup`
+  }
+  log(`Renderer ${buildSummary}`)
+}
+await agent(`Copy the winning ${NAME} variant module from ${winner} to ${SRC} (replace it), via bash from ${ROOT} (e.g. rm -rf ${SRC} && cp -r ${winner} ${SRC}). Confirm ${SRC}/index.ts exists. Report done.`,
+  { label: 'promote-winner', phase: 'Renderer', model: 'sonnet' })
+const build = { summary: buildSummary }
+log(`renderer build: ${buildSummary}`)
 
 // ============================================================ CRITICS
 phase('Critique')

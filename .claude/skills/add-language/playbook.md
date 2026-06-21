@@ -131,6 +131,21 @@ notation; numerals-in-lists; year-range `through`; double-period guard.
      the language that surfaced it. Keep them trap-shaped (question + how to
      resolve), not answer-shaped. -->
 
+- *(2026-06-21, en)* **`plan-kind-phrase-consistency`** — a renderer that
+  branches on *which plan kind selected a field value* (e.g., DOM step renders
+  as "odd days" under `hourStep` but "odd-numbered days" under `clockTimes`)
+  will produce two different surface forms for the same semantic concept. The
+  plan kind is an artefact of how the scheduler detected the dominant rhythm; it
+  carries no meaning about the field value itself. *Question:* does your renderer
+  ever choose a phrase for a date/time field based on the enclosing plan kind
+  rather than on the field's own value? *Resolve:* each field's surface form must
+  be derived solely from its own parsed value — step count, explicit list,
+  range boundaries — never from the plan context that surrounds it. A shared
+  helper per field (e.g., `renderDomStep(count)`) enforces this mechanically.
+  *Detector:* for every stepped/listed date field, assert the rendered phrase is
+  identical across all plan kinds that include that field — fuzz or enumerate
+  sibling patterns and diff the day-qualifier substring.
+
 - *(2026-06-21, en)* **`garden-path-trailing-day-qualifier`** — when a day
   qualifier ("on the 1st", "on Mondays", "on June 1") trails a time-window
   phrase ("from 9 a.m. through 5 p.m.", "until 6 p.m."), readers parse the
