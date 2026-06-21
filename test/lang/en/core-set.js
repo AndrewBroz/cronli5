@@ -207,95 +207,224 @@ describe.skip('English core-set corrections:', function() {
     ]);
   });
 
-  // [c0081–c0090] midnight clock points with leading weekday/month qualifiers
-  // are otherwise correct. c0086: a quartz "of the month" is redundant under an
-  // explicit (distributive) month qualifier and drops. Month-range and OR
-  // sub-classes are open (see docs/backlog.md).
-  describe('batch 9 - quartz "of the month" redundancy:', function() {
+  // Quartz/date "of the month" is redundant under an explicit month and
+  // drops; a month range reads "of each month from X through Y". (non-OR)
+  describe('redundancy - of the month under an explicit month:', function() {
     run([
       ['0 0 * */2 5L',
         'on the last Friday in every odd-numbered month at midnight'],
       ['0 0 * 1 5L', 'on the last Friday in January at midnight'],
       ['0 0 L */2 *',
         'on the last day in every odd-numbered month at midnight'],
-      ['0 0 L 1 *', 'on the last day in January at midnight']
-    ]);
-  });
-
-  // [quartz × restricted month] month-range and OR cases. PANEL-VALIDATED
-  // (blind Sonnet ×3, unanimous): an OR restates the month on BOTH sides — the
-  // lead-the-month form was judged INCORRECT (the post-"or" side dangles and
-  // reads year-round). A month-range quartz reads "… of each month from X
-  // through Y"; single/distributive months drop the bare "of the month".
-  describe('quartz month-scope (restate the month per or-side):', function() {
-    run([
+      ['0 0 L 1 *', 'on the last day in January at midnight'],
       ['0 0 * 1-3 5L',
         'on the last Friday of each month from January through March at ' +
         'midnight'],
       ['0 0 L 1-3 *',
         'on the last day of each month from January through March at ' +
         'midnight'],
+      ['0 0 */2 */2 *',
+        'every other day in every odd-numbered month at midnight'],
+      ['0 0 */2 1 *', 'every other day in January at midnight'],
+      ['0 0 */2 1-3 *',
+        'every other day of each month from January through March at ' +
+        'midnight']
+    ]);
+  });
+
+  // Trailing weekday pluralizes; an hour-range cadence uses the until-window.
+  // (non-OR + cadence-OR; the 30 5,10 … time clauses are live — weekday fix only.)
+  describe('trailing weekday plural + until-window:', function() {
+    run([
+      ['0 0 */2 * * 1', 'every two hours on Mondays'],
+      ['0 0 */2 1 * 5', 'every two hours on the 1st or on Fridays'],
+      ['0 0 */2 1 6 5', 'every two hours on June 1 or on Fridays in June'],
+      ['0 0 9-17 * * 1', 'every hour from 9 a.m. until 6 p.m. on Mondays'],
+      ['0 0 9-17 1 * 5',
+        'every hour from 9 a.m. until 6 p.m. on the 1st or on Fridays'],
+      ['0 0 9-17 1 6 5',
+        'every hour from 9 a.m. until 6 p.m. on June 1 or on Fridays in ' +
+        'June'],
+      ['30 5,10 9,17,19,21,23 * * 1',
+        'at 30 seconds past the minute, at five and ten minutes past the ' +
+        'hour, at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. on Mondays'],
+      ['30 5,10 9,17,19,21,23 1 * 5',
+        'at 30 seconds past the minute, at five and ten minutes past the ' +
+        'hour, at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. on the 1st or ' +
+        'on Fridays'],
+      ['30 5,10 9,17,19,21,23 1 6 5',
+        'at 30 seconds past the minute, at five and ten minutes past the ' +
+        'hour, at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. on June 1 or ' +
+        'on Fridays in June']
+    ]);
+  });
+
+  // OR + (restricted) month, clock-point: PANEL-VALIDATED committed front-frame
+  // — lead "[in <month>] at midnight", state the union once, drop "of the
+  // month", pluralize the weekday. A trailing time would strand onto one or-arm;
+  // fronting it scopes both.
+  describe('OR committed-frame (panel-validated):', function() {
+    run([
+      ['0 0 */2 * */2',
+        'at midnight on every other day or on Sundays, Tuesdays, Thursdays, ' +
+        'and Saturdays'],
+      ['0 0 */2 * 0', 'at midnight on every other day or on Sundays'],
+      ['0 0 */2 * 1-5',
+        'at midnight on every other day or on Monday through Friday'],
+      ['0 0 */2 * 5L', 'at midnight on every other day or on the last Friday'],
+      ['0 0 */2 */2 */2',
+        'in every odd-numbered month at midnight on every other day or on ' +
+        'Sundays, Tuesdays, Thursdays, and Saturdays'],
+      ['0 0 */2 */2 0',
+        'in every odd-numbered month at midnight on every other day or on ' +
+        'Sundays'],
+      ['0 0 */2 */2 1-5',
+        'in every odd-numbered month at midnight on every other day or on ' +
+        'Monday through Friday'],
       ['0 0 */2 */2 5L',
-        'on every other day in every odd-numbered month or on the last ' +
-        'Friday in every odd-numbered month at midnight'],
+        'in every odd-numbered month at midnight on every other day or on ' +
+        'the last Friday'],
+      ['0 0 */2 1 */2',
+        'in January at midnight on every other day or on Sundays, Tuesdays, ' +
+        'Thursdays, and Saturdays'],
+      ['0 0 */2 1 0',
+        'in January at midnight on every other day or on Sundays'],
+      ['0 0 */2 1 1-5',
+        'in January at midnight on every other day or on Monday through ' +
+        'Friday'],
       ['0 0 */2 1 5L',
-        'on every other day in January or on the last Friday in January at ' +
-        'midnight'],
+        'in January at midnight on every other day or on the last Friday'],
+      ['0 0 */2 1-3 */2',
+        'in January through March at midnight on every other day or on ' +
+        'Sundays, Tuesdays, Thursdays, and Saturdays'],
+      ['0 0 */2 1-3 0',
+        'in January through March at midnight on every other day or on ' +
+        'Sundays'],
+      ['0 0 */2 1-3 1-5',
+        'in January through March at midnight on every other day or on ' +
+        'Monday through Friday'],
       ['0 0 */2 1-3 5L',
-        'on every other day in January through March or on the last Friday ' +
-        'in January through March at midnight'],
+        'in January through March at midnight on every other day or on the ' +
+        'last Friday'],
+      ['0 0 1 * */2',
+        'at midnight on the 1st or on Sundays, Tuesdays, Thursdays, and ' +
+        'Saturdays'],
+      ['0 0 1 * 0', 'at midnight on the 1st or on Sundays'],
+      ['0 0 1 * 1-5', 'at midnight on the 1st or on Monday through Friday'],
+      ['0 0 1 * 5L', 'at midnight on the 1st or on the last Friday'],
+      ['0 0 1 */2 */2',
+        'in every odd-numbered month at midnight on the 1st or on Sundays, ' +
+        'Tuesdays, Thursdays, and Saturdays'],
+      ['0 0 1 */2 0',
+        'in every odd-numbered month at midnight on the 1st or on Sundays'],
+      ['0 0 1 */2 1-5',
+        'in every odd-numbered month at midnight on the 1st or on Monday ' +
+        'through Friday'],
       ['0 0 1 */2 5L',
-        'on the 1st in every odd-numbered month or on the last Friday in ' +
-        'every odd-numbered month at midnight'],
-      ['0 0 1 1 5L',
-        'on January 1 or on the last Friday in January at midnight'],
+        'in every odd-numbered month at midnight on the 1st or on the last ' +
+        'Friday'],
+      ['0 0 1 1 * */2',
+        'at 1 a.m. on the 1st or on Sundays, Tuesdays, Thursdays, and ' +
+        'Saturdays'],
+      ['0 0 1 1 */2',
+        'in January at midnight on the 1st or on Sundays, Tuesdays, ' +
+        'Thursdays, and Saturdays'],
+      ['0 0 1 1 0', 'in January at midnight on the 1st or on Sundays'],
+      ['0 0 1 1 1-5',
+        'in January at midnight on the 1st or on Monday through Friday'],
+      ['0 0 1 1 5L', 'in January at midnight on the 1st or on the last Friday'],
+      ['0 0 1 1-3 */2',
+        'in January through March at midnight on the 1st or on Sundays, ' +
+        'Tuesdays, Thursdays, and Saturdays'],
+      ['0 0 1 1-3 0',
+        'in January through March at midnight on the 1st or on Sundays'],
+      ['0 0 1 1-3 1-5',
+        'in January through March at midnight on the 1st or on Monday ' +
+        'through Friday'],
       ['0 0 1 1-3 5L',
-        'on the 1st in January through March or on the last Friday in ' +
-        'January through March at midnight'],
+        'in January through March at midnight on the 1st or on the last ' +
+        'Friday'],
+      ['0 0 1-15 * */2',
+        'at midnight on the 1st through 15th or on Sundays, Tuesdays, ' +
+        'Thursdays, and Saturdays'],
+      ['0 0 1-15 * 0', 'at midnight on the 1st through 15th or on Sundays'],
+      ['0 0 1-15 * 1-5',
+        'at midnight on the 1st through 15th or on Monday through Friday'],
+      ['0 0 1-15 * 5L',
+        'at midnight on the 1st through 15th or on the last Friday'],
+      ['0 0 1-15 */2 */2',
+        'in every odd-numbered month at midnight on the 1st through 15th or ' +
+        'on Sundays, Tuesdays, Thursdays, and Saturdays'],
+      ['0 0 1-15 */2 0',
+        'in every odd-numbered month at midnight on the 1st through 15th or ' +
+        'on Sundays'],
+      ['0 0 1-15 */2 1-5',
+        'in every odd-numbered month at midnight on the 1st through 15th or ' +
+        'on Monday through Friday'],
       ['0 0 1-15 */2 5L',
-        'on the 1st through 15th in every odd-numbered month or on the last ' +
-        'Friday in every odd-numbered month at midnight'],
+        'in every odd-numbered month at midnight on the 1st through 15th or ' +
+        'on the last Friday'],
+      ['0 0 1-15 1 */2',
+        'in January at midnight on the 1st through 15th or on Sundays, ' +
+        'Tuesdays, Thursdays, and Saturdays'],
+      ['0 0 1-15 1 0',
+        'in January at midnight on the 1st through 15th or on Sundays'],
+      ['0 0 1-15 1 1-5',
+        'in January at midnight on the 1st through 15th or on Monday ' +
+        'through Friday'],
       ['0 0 1-15 1 5L',
-        'on January 1 through 15 or on the last Friday in January at ' +
-        'midnight'],
+        'in January at midnight on the 1st through 15th or on the last ' +
+        'Friday'],
+      ['0 0 1-15 1-3 */2',
+        'in January through March at midnight on the 1st through 15th or on ' +
+        'Sundays, Tuesdays, Thursdays, and Saturdays'],
+      ['0 0 1-15 1-3 0',
+        'in January through March at midnight on the 1st through 15th or on ' +
+        'Sundays'],
+      ['0 0 1-15 1-3 1-5',
+        'in January through March at midnight on the 1st through 15th or on ' +
+        'Monday through Friday'],
       ['0 0 1-15 1-3 5L',
-        'on the 1st through 15th in January through March or on the last ' +
-        'Friday in January through March at midnight'],
+        'in January through March at midnight on the 1st through 15th or on ' +
+        'the last Friday'],
+      ['0 0 L * */2',
+        'at midnight on the last day or on Sundays, Tuesdays, Thursdays, ' +
+        'and Saturdays'],
+      ['0 0 L * 0', 'at midnight on the last day or on Sundays'],
+      ['0 0 L * 1-5',
+        'at midnight on the last day or on Monday through Friday'],
+      ['0 0 L * 5L', 'at midnight on the last day or on the last Friday'],
       ['0 0 L */2 */2',
-        'on the last day in every odd-numbered month or on Sunday, Tuesday, ' +
-        'Thursday, and Saturday in every odd-numbered month at midnight'],
+        'in every odd-numbered month at midnight on the last day or on ' +
+        'Sundays, Tuesdays, Thursdays, and Saturdays'],
       ['0 0 L */2 0',
-        'on the last day in every odd-numbered month or on Sunday in every ' +
-        'odd-numbered month at midnight'],
+        'in every odd-numbered month at midnight on the last day or on ' +
+        'Sundays'],
       ['0 0 L */2 1-5',
-        'on the last day in every odd-numbered month or on Monday through ' +
-        'Friday in every odd-numbered month at midnight'],
+        'in every odd-numbered month at midnight on the last day or on ' +
+        'Monday through Friday'],
       ['0 0 L */2 5L',
-        'on the last day in every odd-numbered month or on the last Friday ' +
-        'in every odd-numbered month at midnight'],
+        'in every odd-numbered month at midnight on the last day or on the ' +
+        'last Friday'],
       ['0 0 L 1 */2',
-        'on the last day in January or on Sunday, Tuesday, Thursday, and ' +
-        'Saturday in January at midnight'],
-      ['0 0 L 1 0',
-        'on the last day in January or on Sunday in January at midnight'],
+        'in January at midnight on the last day or on Sundays, Tuesdays, ' +
+        'Thursdays, and Saturdays'],
+      ['0 0 L 1 0', 'in January at midnight on the last day or on Sundays'],
       ['0 0 L 1 1-5',
-        'on the last day in January or on Monday through Friday in January ' +
-        'at midnight'],
+        'in January at midnight on the last day or on Monday through Friday'],
       ['0 0 L 1 5L',
-        'on the last day in January or on the last Friday in January at ' +
-        'midnight'],
+        'in January at midnight on the last day or on the last Friday'],
       ['0 0 L 1-3 */2',
-        'on the last day in January through March or on Sunday, Tuesday, ' +
-        'Thursday, and Saturday in January through March at midnight'],
+        'in January through March at midnight on the last day or on ' +
+        'Sundays, Tuesdays, Thursdays, and Saturdays'],
       ['0 0 L 1-3 0',
-        'on the last day in January through March or on Sunday in January ' +
-        'through March at midnight'],
+        'in January through March at midnight on the last day or on Sundays'],
       ['0 0 L 1-3 1-5',
-        'on the last day in January through March or on Monday through ' +
-        'Friday in January through March at midnight'],
+        'in January through March at midnight on the last day or on Monday ' +
+        'through Friday'],
       ['0 0 L 1-3 5L',
-        'on the last day in January through March or on the last Friday in ' +
-        'January through March at midnight']
+        'in January through March at midnight on the last day or on the ' +
+        'last Friday']
     ]);
   });
 });
