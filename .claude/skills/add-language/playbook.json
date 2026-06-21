@@ -1,0 +1,59 @@
+{
+  "generated": "scripts/playbook.mjs from playbook.md",
+  "traps": [
+    {
+      "id": "union-connective",
+      "summary": "cron's DOM/DOW is an inclusive UNION (fires if either matches). The naive connective is a trap in *both* directions: \"on the 1st **or** on Fridays\" reads as *alternative* (pick one); \"on the 1st **and** on Fridays\" reads as *intersection* (only the 1st that is a Friday). English resolved it by reframing to a **predicate over one variable** — \"whenever the day **is** the 1st or a Friday\" — which makes `or` a logical disjunction everyone reads as union. *Panel:* present `or`, `and`, and a predicate-frame; judge `readsAsUnion` for naive/logical/technical. Topic-prominent and non-Indo-European languages will need a different construction — do not port the English frame."
+    },
+    {
+      "id": "shared-qualifier-scope",
+      "summary": "a qualifier shared across an OR or a list (a month over both day-arms; a time over both) **strands onto one arm** if it trails. A *trailing* `at midnight`/`of the month`/`in June` binds to the last arm only. *Resolve:* front the shared qualifier so it scopes the whole union, or restate it on each arm. *Detector:* `both-side scope` — split the output at the union joiner; every arm must carry (or inherit by leading frame) the shared qualifier."
+    },
+    {
+      "id": "confinement-vs-juxtaposition",
+      "summary": "under a leading fine cadence (\"every second\"), a coarser restricted field is a CONFINEMENT, not a second juxtaposed cadence. \"every second, every hour\" (juxtaposed) loses the confinement; the fix marks it as subordinate (\"every second of every hour / of minute :00\"). *Panel + detector:* a coarser field must never read as an independent frequency under a finer one."
+    },
+    {
+      "id": "redundancy",
+      "summary": "any word that earns nothing: a repeated locative (\"the last Friday **of the month** in January\"), a cadence implied by a finer one (\"every minute\" under \"every second\"), a restated scope. Hunt and drop."
+    },
+    {
+      "id": "range-boundary",
+      "summary": "a range fired at the boundary needs ONE consistent convention: the exclusive window (\"from 9 a.m. until 6 p.m.\") reads cleaner than the inclusive last-fire (\"through 5:59 p.m.\" / a spelled-out \"5:55 p.m.\") and drops a whole branch of last-fire arithmetic. Pick one; apply everywhere."
+    },
+    {
+      "id": "recurrence-marking",
+      "summary": "a trailing recurring day is plural/marked (\"on Mondays\", not \"on Monday\"); a *range* idiom and a *leading* form may stay singular (\"Monday through Friday\", \"every Monday\"). Languages mark recurrence differently (plural, a particle, a prefix) — panel which positions take it."
+    },
+    {
+      "id": "numeral-register",
+      "summary": "a count vs a position can want different forms (English: cadence count spells small numbers, \"every five minutes\"; a list *position* uses digits, \"at 5 and 10 minutes past\"). Decide per role, keep consistent."
+    },
+    {
+      "id": "sentence-wrapper-punctuation",
+      "summary": "the standalone-sentence wrapper must not collide with a fragment that already ends in an abbreviation's period (\"…9 a.m.\" + \".\" → \"9 a.m..\"). Guard at the wrapper."
+    },
+    {
+      "id": "cardinality-rendering",
+      "summary": "a stepped/listed field reads as a cadence (\"every other month\") or an enumeration (\"January, April, July, October\") depending on the field's cardinality and the language's idiom; lift the cadence-vs-enumeration choice so renderers never diverge (see docs/backlog.md \"cadence vs enumeration\")."
+    }
+  ],
+  "detectors": [
+    "fuzz",
+    "roundtrip",
+    "both-side scope",
+    "core coverage"
+  ],
+  "lessons": [
+    {
+      "date": "2026-06-21",
+      "lang": "en",
+      "text": "**`garden-path-trailing-day-qualifier`** — when a day qualifier (\"on the 1st\", \"on Mondays\", \"on June 1\") trails a time-window phrase (\"from 9 a.m. through 5 p.m.\", \"until 6 p.m.\"), readers parse the day qualifier as attaching to the nearest preceding noun — the endpoint time — rather than to the whole clause. \"every hour from 9 a.m. through 5 p.m. on the 1st\" reads as [from 9 a.m.] through [5 p.m. on the 1st], implying the window spans across days. *Question:* does a trailing day qualifier after a window phrase attach to the window endpoint or to the whole clause? *Resolve:* front the day qualifier before the window so it unambiguously governs the entire sentence — \"on the 1st, every hour from 9 a.m. through 5 p.m.\" — or insert a comma before the trailing \"on\" as a weaker guard. This is distinct from `shared-qualifier-scope` (which is about OR arms not inheriting a shared qualifier); here the issue is syntactic attachment of a PP to the nearest preceding NP even in a non-union context. *Detector:* for every pattern with an hour-range or time-window AND a restricted date/weekday, assert the day qualifier appears before the window phrase in the output."
+    },
+    {
+      "date": "2026-06-21",
+      "lang": "en",
+      "text": "Seeded from the English review + condition-frame investigation. The `union-connective` resolution (predicate-frame) and the comprehension-panel-not-preference-vote principle are the two highest-value findings — both were invisible until a naive reader and a logical reader were asked the SAME meaning question and disagreed."
+    }
+  ]
+}

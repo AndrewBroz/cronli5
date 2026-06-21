@@ -13,3 +13,6 @@ coverage
 tmp
 # Generated type declarations.
 types
+
+# Transient git worktrees created by the add-language workflow.
+.claude/worktrees
