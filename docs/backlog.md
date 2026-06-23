@@ -221,7 +221,7 @@ without the `tsx` artifact.
 
 The coverage theory, harness design, and the a-priori vs a-posteriori
 distinction behind this section are written up in
-[corpus-methodology.md](./corpus-methodology.md); the calibrated cell counts
+[corpus-methodology.md](../tooling/docs/corpus-methodology.md); the calibrated cell counts
 (46 time-plan, ~30–40 qualifier, ~120–150 total) and the first concrete
 coverage debt (11 uncovered `composeSeconds.rest` cells) come from its stage-2
 scan.

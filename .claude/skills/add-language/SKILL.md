@@ -73,4 +73,4 @@ is sound. Run it after changing the workflow or the playbook.
 The old manual step-list and the **cross-family / Gemma panel** are gone: Gemma
 was a serializing bottleneck that made results *worse*, and the multi-judge
 Sonnet persona panel re-calibrates its noise far better. `scripts/panel.mjs` and
-`scripts/llm.mjs` are legacy. See [docs/language-pipeline.md](../../../docs/language-pipeline.md).
+`scripts/llm.mjs` are legacy. See [tooling/docs/language-pipeline.md](../../../tooling/docs/language-pipeline.md).

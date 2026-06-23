@@ -9,7 +9,7 @@ const {expect} = chai;
 // for cosmetic style coherence), NOT human-reviewed. "Fool's gold": useful for
 // pinning regressions, not a verified oracle. The style contract it is authored
 // against is src/lang/zh/notes.md. Spans the committed core set
-// (test/core/core-set.json). See docs/language-pipeline.md and status.json.
+// (test/core/core-set.json). See tooling/docs/language-pipeline.md and status.json.
 
 function run(cases) {
   cases.forEach(function each(values) {

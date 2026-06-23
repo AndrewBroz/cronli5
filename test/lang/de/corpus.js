@@ -6,7 +6,7 @@ const {expect} = chai;
 
 // BETA / PROVISIONAL corpus — model-validated (cross-family review panel),
 // NOT human-reviewed. "Fool's gold": useful for pinning regressions, not a
-// verified oracle. See docs/language-pipeline.md. The "every" forms are the
+// verified oracle. See tooling/docs/language-pipeline.md. The "every" forms are the
 // design crux: "jede <unit>" agrees with gender at interval 1; "alle N
 // <units>" is invariant for interval > 1 (see notes.md).
 

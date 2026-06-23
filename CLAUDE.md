@@ -57,7 +57,7 @@ A language may be **experimental** (model-drafted, not yet validated by the
 cross-family review panel), **beta** (model-validated by that panel), or
 **stable** (graduated by a fluent human); `src/lang/<code>/status.json` records
 the status. The pipeline is in
-[docs/language-pipeline.md](docs/language-pipeline.md), the contributor guide in
+[tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md), the contributor guide in
 [CONTRIBUTING.md](CONTRIBUTING.md), the automation in
 `.claude/skills/add-language/`.
 

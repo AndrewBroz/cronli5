@@ -3,9 +3,9 @@
 This describes an automated, no-human-in-the-loop pipeline to develop a
 language module to beta (model-validated). Reaching stable requires
 human-review. The human-review platform to facilitate this is designed
-and parked in [backlog.md](./backlog.md). For the contributor's-eye view,
-see [../CONTRIBUTING.md](../CONTRIBUTING.md). For the architecture, see
-[i18n-design.md](./i18n-design.md).
+and parked in [backlog.md](../../docs/backlog.md). For the contributor's-eye view,
+see [../../CONTRIBUTING.md](../../CONTRIBUTING.md). For the architecture, see
+[i18n-design.md](../../docs/i18n-design.md).
 
 ## Principles
 
@@ -133,7 +133,7 @@ its win-rate versus the baseline median and versus cRonstrue.
 
 ## Graduation to stable
 
-The parked **human-review platform** ([backlog.md](./backlog.md)) replaces the
+The parked **human-review platform** ([backlog.md](../../docs/backlog.md)) replaces the
 panel's proxy judgment with fluent humans; their reviewed corpus graduates a
 module from **beta → stable**. The panel pipeline is what makes a language
 *shippable* in the meantime, honestly labelled.

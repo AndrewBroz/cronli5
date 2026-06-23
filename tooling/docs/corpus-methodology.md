@@ -74,13 +74,13 @@ how they currently surface in the code; a-priori defines them independently, and
 the code's `PlanNode`/branches are its *approximation*.
 
 **Input grid** (the generator) — `Field (7) × Shape (6) × boundary-value-class`,
-from [`shapes.ts`](../src/core/shapes.ts) × [`specs.ts`](../src/core/specs.ts)
+from [`shapes.ts`](../../src/core/shapes.ts) × [`specs.ts`](../../src/core/specs.ts)
 plus a declared boundary layer (noon/midnight, the one-o'clock article, weekday
 `0`/`7`, the `*/2` vs `*/3` confinement boundary, the degenerate fires-once
 step). This is the **simple slice** — the hand-method tables, made exhaustive.
 
 **Output lattices** (the distinctions) — two, from
-[`ir.ts`](../src/core/ir.ts):
+[`ir.ts`](../../src/core/ir.ts):
 
 - **Time-plan lattice** — the `PlanNode` union, where a cell is `kind × its
   discriminant sub-fields`, not just `kind`: `minuteFrequency.hours.kind` (5),
@@ -207,7 +207,7 @@ a-priori class. Three mechanisms:
    combination**; the input cross-product is the generator.
 3. **Branch coverage** — full branch coverage of `analyze.ts` + each renderer is
    the ground truth the lattice approximates. (This is why the parked
-   `tsx`-coverage artifact in [backlog.md](./backlog.md) must be fixed — it is
+   `tsx`-coverage artifact in [backlog.md](../../docs/backlog.md) must be fixed — it is
    the floor's enforcement mechanism, not polish.)
 
 ### Calibration (stage-2 scan, current code)
