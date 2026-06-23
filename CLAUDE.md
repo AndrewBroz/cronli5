@@ -51,6 +51,13 @@ fix the renderer until it passes. Never edit the renderer first and update the
 corpus to match its new output — that lets the code grade itself and can
 enshrine a subtly-wrong fix. The corpus is the spec; the renderer chases it.
 
+Pipeline-generated corpora are **candidates**, not the contract: the
+add-language pipeline drafts a corpus under `tooling/experiments/` as a beta
+seed, but it becomes a shipped `test/lang/<code>/corpus.js` only after human
+review (the same gate that graduates a language past experimental). The
+"never generated" rule governs the *shipped* oracle, not the pipeline's
+working drafts.
+
 ## Languages ship as beta, then graduate
 
 A language may be **experimental** (model-drafted, not yet validated by the
