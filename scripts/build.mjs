@@ -3,7 +3,7 @@
 // source has no dependencies, so bundling is effectively a format/minify
 // pass over a single file.
 import * as esbuild from 'esbuild';
-import {existsSync, readdirSync} from 'node:fs';
+import {existsSync, readdirSync, rmSync} from 'node:fs';
 
 const shared = {
   entryPoints: ['src/cronli5.ts'],
@@ -14,6 +14,10 @@ const shared = {
 // The footer unwraps the ESM default export so that `require()` returns
 // it directly rather than `{ default }`.
 const unwrapDefault = {js: 'module.exports = module.exports.default;'};
+
+// Start from a clean dist/ so outputs from deleted or renamed language dirs
+// (removed experiments, say) never linger and ship via the package.
+rmSync('dist', {recursive: true, force: true});
 
 // ESM (for `import`).
 await esbuild.build({
