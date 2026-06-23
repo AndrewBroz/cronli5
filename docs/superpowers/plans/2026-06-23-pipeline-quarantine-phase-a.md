@@ -92,23 +92,32 @@ Expected: tests pass; no `en-rebuild` describe blocks appear in the run.
 
 ---
 
-### Task 2: Close the `zh` documentation gap
+### Task 2: Close the `zh` documentation gap (and relabel zh as experimental)
 
-`zh` ships (package exports, `src/lang/zh`, beta `status.json`) but is missing
-from `scripts/docs.mjs`'s `languages` array, so no `docs/lang/zh.md` is
-generated and the README undersells it. cronstrue's Chinese locale is `zh_CN`
-(not `zh`), so the entry needs a decoupled cronstrue locale.
+`zh` ships (package exports, `src/lang/zh`, `status.json`) but is missing from
+`scripts/docs.mjs`'s `languages` array, so no `docs/lang/zh.md` is generated and
+the README undersells it. cronstrue's Chinese locale is `zh_CN` (not `zh`), so
+the entry needs a decoupled cronstrue locale. Separately, `zh` is currently
+labelled **beta**, but by the project's own definition (CLAUDE.md) beta means
+*cross-family* panel validation — zh only had a same-family blind Sonnet panel,
+so it is relabelled **experimental** (a new pre-beta tier). The README Languages
+table is also missing the **German** row; add it here too.
 
 **Files:**
 - Modify: `scripts/docs.mjs` (import at line 30 area; `languages` array
   lines 38-43; `renderLanguageTable` lines 76-90)
 - Create: `docs/lang/zh.md`
-- Modify: `README.md` (CLI comment ~line 104; Languages table ~lines 213-216)
+- Modify: `src/lang/zh/status.json` (status → `experimental`)
+- Modify: `CLAUDE.md:54-61` (add the experimental tier to the status vocabulary)
+- Modify: `README.md` (CLI comment ~line 104; Languages table ~lines 213-216 —
+  add German and Chinese rows; the generated status block is rewritten by
+  `npm run docs`)
 
 **Interfaces:**
 - Produces: `docs/lang/zh.md` (a generated comparison doc, like the other
   per-language docs); a `zh` entry in `docs.mjs`'s `languages` with shape
-  `{code, extras, lang, cronstrueLocale?}`.
+  `{code, extras, lang, cronstrueLocale?}`; a third status tier
+  `experimental` alongside `beta`/`stable`.
 
 - [ ] **Step 1: Add the `zh` import to `scripts/docs.mjs`**
 
@@ -194,8 +203,9 @@ import zh from 'cronli5/lang/zh';
 cronli5('30 9 * * MON-FRI', {lang: zh}); // '每周一至周五9点30分'
 ```
 
-> **Beta.** This language is model-validated, not yet verified by a fluent
-> human reviewer. See [Language Review Status](../../README.md#language-review-status).
+> **Experimental.** This language is model-drafted and not yet validated to
+> beta; it is a rebuild candidate for the language pipeline. See
+> [Language Review Status](../../README.md#language-review-status).
 
 ## Style anchors
 
@@ -239,14 +249,44 @@ output. Its expectation suite is the corpus under
 against is [`src/lang/zh/notes.md`](../../src/lang/zh/notes.md).
 ```
 
-- [ ] **Step 5: Regenerate docs and confirm the zh comparison table fills**
+- [ ] **Step 5: Relabel zh as experimental in `src/lang/zh/status.json`**
+
+Replace the entire contents of `src/lang/zh/status.json` with:
+```json
+{
+  "name": "Chinese (Mandarin, Simplified)",
+  "status": "experimental",
+  "humanReview": null,
+  "crossFamilyReview": null,
+  "note": "EXPERIMENTAL — model-drafted, not validated to beta. The style contract was settled by a blind 3-persona same-family Sonnet panel (src/lang/zh/notes.md), not the cross-family panel beta requires, and the corpus was machine-authored then converged to the renderer's canonical forms (`npm run fuzz zh` is clean: 0 throws / degenerate / missing-value). zh is a rebuild candidate for the automated language pipeline; it advances toward beta/stable only on stronger validation and fluent-human review."
+}
+```
+
+- [ ] **Step 6: Add the `experimental` tier to CLAUDE.md's status vocabulary**
+
+Change `CLAUDE.md:56-58`:
+```
+A language is **beta** (model-validated by the cross-family review panel) until
+a fluent human graduates it to **stable**; `src/lang/<code>/status.json` records
+the status. The pipeline is in
+```
+to:
+```
+A language may be **experimental** (model-drafted, not yet validated by the
+cross-family review panel), **beta** (model-validated by that panel), or
+**stable** (graduated by a fluent human); `src/lang/<code>/status.json` records
+the status. The pipeline is in
+```
+
+- [ ] **Step 7: Regenerate docs and confirm the zh comparison table fills**
 
 Run:
 ```bash
 npm run docs
 ```
-Expected: prints `Updated docs/lang/zh.md.` (and possibly nothing else). Then
-confirm the generated block is non-empty and uses Chinese output:
+Expected: prints `Updated docs/lang/zh.md.` and `Updated README.md.` (the
+README status block now shows Chinese as `experimental`). Then confirm the
+generated comparison block is non-empty and uses Chinese output:
 ```bash
 sed -n '/BEGIN GENERATED: comparison/,/END GENERATED: comparison/p' docs/lang/zh.md | head -8
 ```
@@ -254,7 +294,7 @@ Expected: a markdown table whose `cronli5 (zh)` column is Chinese (e.g.
 `每天凌晨0点`) and whose cRonstrue column is `zh_CN` Chinese (e.g. `在上午 12:00`),
 NOT English fallback text.
 
-- [ ] **Step 6: Update the README CLI comment**
+- [ ] **Step 8: Update the README CLI comment**
 
 In `README.md`, the CLI usage block lists only `de, es, fi`.
 
@@ -267,14 +307,25 @@ to:
 # Other languages with --lang (de, es, fi, zh):
 ```
 
-- [ ] **Step 7: Add the Chinese row to the README Languages table**
+- [ ] **Step 9: Add the German and Chinese rows to the README Languages table**
 
 In `README.md`, the hand-written Languages table (the one with the
 `| Language | Module | Anchors | Doc |` header, NOT the generated
-`language-status` block) lists English, Spanish, Finnish. Add a Chinese row
-after the Finnish row.
+`language-status` block) lists English, Spanish, Finnish — missing German and
+Chinese. Add a German row after the English row, and a Chinese row after the
+Finnish row.
 
-Change:
+First change the English row:
+```
+| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'gb'` dialect) | [docs/lang/en.md](./docs/lang/en.md) |
+```
+to:
+```
+| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'gb'` dialect) | [docs/lang/en.md](./docs/lang/en.md) |
+| German | `cronli5/lang/de` | Duden (`de-AT`/`de-CH` dialects) | [docs/lang/de.md](./docs/lang/de.md) |
+```
+
+Then change the Finnish row:
 ```
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
 ```
@@ -284,23 +335,40 @@ to:
 | Chinese (Mandarin) | `cronli5/lang/zh` | Simplified (`zh-Hans`) default; Traditional (`zh-Hant`) | [docs/lang/zh.md](./docs/lang/zh.md) |
 ```
 
-- [ ] **Step 8: Verify docs check, lint, and a focused docs re-run all pass**
+Then update the "### Language Review Status" legend so the new tier is
+explained. Change:
+```
+*Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by a cross-family review panel and shipped with a beta label
+until a human review cycle is completed. See
+```
+to:
+```
+*Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by a cross-family review panel and shipped with a beta label
+until a human review cycle is completed. *Experimental* languages are
+model-drafted and not yet validated by that panel. See
+```
+
+- [ ] **Step 10: Verify docs check and lint pass**
 
 Run:
 ```bash
 npm run docs -- --check && npm run lint
 ```
-Expected: docs check reports no stale docs (exit 0); lint passes.
+Expected: docs check reports no stale docs (exit 0); lint passes. If the docs
+check flags README as stale, run `npm run docs` once more (the status block must
+reflect the experimental relabel) and re-run the check.
 
-- [ ] **Step 9: Commit**
+- [ ] **Step 11: Commit**
 
 ```bash
-git add scripts/docs.mjs docs/lang/zh.md README.md
-git commit -m "Generate zh language doc and list zh in README
+git add scripts/docs.mjs docs/lang/zh.md README.md src/lang/zh/status.json CLAUDE.md
+git commit -m "Generate zh language doc; relabel zh experimental; list de+zh in README
 
-Add zh to scripts/docs.mjs (with cronstrueLocale zh_CN, since cronstrue has
-no bare 'zh' locale), scaffold docs/lang/zh.md, and add zh to the README
-language list and CLI usage line.
+Add zh to scripts/docs.mjs (with cronstrueLocale zh_CN, since cronstrue has no
+bare 'zh' locale) and scaffold docs/lang/zh.md. Relabel zh from beta to a new
+experimental tier (only same-family Sonnet validation, not the cross-family
+panel beta requires) in status.json and CLAUDE.md. Add the missing German and
+Chinese rows to the README language table and the zh CLI usage hint.
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```
