@@ -46,6 +46,21 @@
   ],
   "lessons": [
     {
+      "date": "2026-06-22",
+      "lang": "en",
+      "text": "**`range-wrap-through-zero`** — when an exclusive upper bound is computed arithmetically and wraps through zero (e.g., hour 23 + 1 mod 24 = 0, displayed as midnight), the prose shows a chronologically *earlier* time as the endpoint than the last actual fire (\"from 1 a.m. until midnight\" implies wrapping back through the night). The existing `range-boundary` trap covers the inclusive-vs-exclusive choice but not this case. *Question:* if your renderer ever displays the arithmetic exclusive end, does it guard for wrap- through-zero and substitute the inclusive last-fire time instead? *Resolve:* when the exclusive-end value is at or below the start value (in a forward-only field like hours), switch to inclusive last-fire display (\"from 1 a.m. through 11 p.m.\") or rephrase as \"from X onwards\". Apply consistently to all stepped and range fields that can wrap. *Detector:* for every hour-range pattern whose exclusive end wraps, assert the endpoint in the output is not ≤ the start time expressed as a clock value."
+    },
+    {
+      "date": "2026-06-22",
+      "lang": "en",
+      "text": "**`bare-juxtaposition-ambiguity`** — when a DOM ordinal (or any positional value) is followed directly by its scope qualifier without a preposition, the qualifier is PP-attachment-ambiguous: it reads as appositive to the preceding value rather than as an independent scope phrase. \"on the 1st January through March\" has two parses — [on the 1st January] [through March] (British date reading + trailing extent) vs. [on the 1st] [January through March] (intended). Sibling renderer paths that include a preposition (\"of every other month\") prove the bug is a dropped `of`/`in`, not an unsolvable ambiguity. *Question:* does your renderer ever juxtapose a DOM/value and its scope qualifier without a preposition? *Resolve:* insert the correct preposition (\"of\", \"in\", \"from\") between the value and its qualifier; or front the qualifier so the ordinal trails (\"in January through March, on the 1st\"). *Detector:* grep the corpus for ordinal-month adjacency (e.g., `\\d+(st|nd|rd|th)\\s+[A-Z]`); every hit should carry a preposition between the ordinal and the month name."
+    },
+    {
+      "date": "2026-06-22",
+      "lang": "en",
+      "text": "**`garden-path-trailing-day-qualifier` — list extension** — the 2026-06-21 entry's detector covers hour-range / window phrases (\"for every pattern with an hour-range or time-window\"). The same garden-path stranding occurs when a day qualifier trails a *listed* hour enumeration: \"at 5 and 10 minutes and 30 seconds past 9 a.m., 5 p.m., 7 p.m., 9 p.m. and 11 p.m. **on Mondays**\" — \"on Mondays\" syntactically attaches to \"11 p.m.\" before the reader can reparse it as governing the whole set. *Extend the detector:* also assert that when the hour field is a multi-item list AND a date/weekday qualifier is present, the qualifier appears before the \"past …\" or listed-hours phrase in the output. The window path and the list path must apply the same fronting rule."
+    },
+    {
       "date": "2026-06-21",
       "lang": "en",
       "text": "**`plan-kind-phrase-consistency`** — a renderer that branches on *which plan kind selected a field value* (e.g., DOM step renders as \"odd days\" under `hourStep` but \"odd-numbered days\" under `clockTimes`) will produce two different surface forms for the same semantic concept. The plan kind is an artefact of how the scheduler detected the dominant rhythm; it carries no meaning about the field value itself. *Question:* does your renderer ever choose a phrase for a date/time field based on the enclosing plan kind rather than on the field's own value? *Resolve:* each field's surface form must be derived solely from its own parsed value — step count, explicit list, range boundaries — never from the plan context that surrounds it. A shared helper per field (e.g., `renderDomStep(count)`) enforces this mechanically. *Detector:* for every stepped/listed date field, assert the rendered phrase is identical across all plan kinds that include that field — fuzz or enumerate sibling patterns and diff the day-qualifier substring."
