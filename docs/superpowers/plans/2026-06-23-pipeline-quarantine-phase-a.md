@@ -417,8 +417,11 @@ in the package contents.
 
 - [ ] **Step 4: Commit**
 
+The `git rm --cached` in Step 2 already staged the removal; do NOT `git add -A`
+(the repo has unrelated pre-existing working-tree changes that must stay
+unstaged). Commit the staged removal directly:
+
 ```bash
-git add -A
 git commit -m "Untrack cronli5.min.js (build artifact, matches .gitignore)
 
 It is gitignored like dist/ and types/ but was tracked; untrack it so it is a
