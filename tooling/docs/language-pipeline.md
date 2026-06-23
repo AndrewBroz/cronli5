@@ -28,12 +28,13 @@ representative sample:
 - **Fuzz** — `node --import tsx scripts/fuzz-lang.mjs <code>` (`npm run fuzz`).
   Sweeps a broad combinatorial pattern set and flags throws, degenerate output,
   and dropped/collapsed field values (the "is the output fudged?" check).
-- **Round-trip** — `node --import tsx scripts/roundtrip.mjs [--limit=N]`.
-  Samples the fuzz space deduped by English output shape, recovers a cron from
-  each description via the cross-family model, and compares the two crons by
-  expanded per-field value sets (mechanical, exact). Partitions into *verified*,
-  *needs-review*, and *day-or* (cron's OR case, segregated as model noise). The
-  objective bulk correctness pass — `i18n-design.md` §4 Pass 2.
+- **Round-trip** — a Verify-phase check in the workflow. It samples the fuzz
+  space deduped by output shape and renders each; a **blind Claude agent**
+  recovers a cron from each description (prose only — never the source pattern),
+  and `tooling/scripts/roundtrip.mjs` compares the two crons by expanded
+  per-field value sets (mechanical, exact). Partitions into *verified*,
+  *needs-review*, and *day-or* (cron's OR case, segregated as model noise).
+  Advisory bulk comprehension pass — `i18n-design.md` §4 Pass 2.
 
 The panel below also runs **wide**, above the spanning set: `panel.mjs <code>
 --wide[=N]` reviews a shape-deduped sample of the fuzz space (one representative
