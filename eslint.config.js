@@ -82,6 +82,7 @@ const paramTailOrder = {
 };
 
 export default [
+  {ignores: ['tooling/scripts/archive/**']},
   ...compat.config({
     extends: legacy.extends,
     rules: supportedRules
