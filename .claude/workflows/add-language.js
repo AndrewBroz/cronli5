@@ -66,6 +66,7 @@ const EVALR = { type: 'object', additionalProperties: false, required: ['holdout
 const CONTESTED = { type: 'object', additionalProperties: false, required: ['contested'], properties: { contested: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['id', 'question', 'candidates'], properties: { id: { type: 'string' }, question: { type: 'string' }, candidates: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['label', 'example'], properties: { label: { type: 'string' }, example: { type: 'string' } } } } } } } } }
 const CONVVOTE = { type: 'object', additionalProperties: false, required: ['best'], properties: { best: { type: 'string' }, reason: { type: 'string' } } }
 const RECONCILE = { type: 'object', additionalProperties: false, required: ['agreedCount', 'contested'], properties: { agreedCount: { type: 'number' }, contested: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['pattern', 'candidates'], properties: { pattern: { type: 'string' }, meaning: { type: 'string' }, candidates: { type: 'array', items: { type: 'string' } }, flags: { type: 'string' } } } } } }
+const ROUNDTRIP = { type: 'object', additionalProperties: false, required: ['checked', 'verified', 'needsReview'], properties: { checked: { type: 'number' }, verified: { type: 'number' }, needsReview: { type: 'number' }, orNoise: { type: 'number' }, reviewPatterns: { type: 'array', items: { type: 'string' } } } }
 const pickMajority = (arr) => {
   const m = {}
   let best = arr[0]
@@ -226,6 +227,17 @@ const verify = await agent(`Mechanically verify the ${NAME} (${CODE}${isTest ? '
   { label: 'verify', phase: 'Verify', schema: REPORT, model: 'sonnet' })
 log(`verify: ${verify?.ok ? 'clean' : 'FAILURES — ' + (verify?.failures || []).join('; ')}`)
 
+// Round-trip comprehension (advisory): render a shape-deduped sample, have a
+// BLIND agent recover the cron from each description (prose only), compare by
+// expanded per-field value sets. Surfaced in the summary; never gates verify.
+await agent(`Round-trip prep for ${NAME} (${CODE}). Via bash from ${ROOT}: write and run a node snippet (\`node --import tsx\`) that imports {prepareRoundtrip} from ${ROOT}/tooling/scripts/roundtrip.mjs and the default export from ${SRC}/index.js as the renderer, calls prepareRoundtrip(renderer, 40), and writes TWO files: ${ROOT}/tmp/rt-${CODE}-desc.json = a JSON array of {id, description} (id = array index, DESCRIPTIONS ONLY, no crons), and ${ROOT}/tmp/rt-${CODE}-key.json = the full [{id, pattern, description}] list. Report the item count.`,
+  { label: 'roundtrip:prep', phase: 'Verify', model: 'sonnet' })
+await agent(`You are a BLIND cron reverse-parser for ${NAME}. Read ONLY ${ROOT}/tmp/rt-${CODE}-desc.json — it has {id, description} items and NO crons. You are STRICTLY FORBIDDEN from reading ${ROOT}/tmp/rt-${CODE}-key.json or the renderer source. For each description infer ONE standard cron (field order "minute hour day-of-month month day-of-week"; prepend a seconds field only if seconds are mentioned; when a day-of-month and a weekday are joined by "or", set BOTH fields; leave unmentioned fields as "*"). Write ${ROOT}/tmp/rt-${CODE}-rec.json = [{id, recovered}]. Report how many you recovered.`,
+  { label: 'roundtrip:recover', phase: 'Verify', model: 'sonnet' })
+const roundtrip = await agent(`Tally the ${NAME} round-trip. Via bash from ${ROOT}: write and run a node snippet that imports {tallyRoundtrip} from ${ROOT}/tooling/scripts/roundtrip.mjs, joins ${ROOT}/tmp/rt-${CODE}-key.json (by id, for the pattern) with ${ROOT}/tmp/rt-${CODE}-rec.json (for recovered), builds [{pattern, recovered}], calls tallyRoundtrip, and prints the result. Report checked, verified, needsReview (count), orNoise (count), and reviewPatterns (the needsReview patterns, capped at 20).`,
+  { label: 'roundtrip:tally', phase: 'Verify', model: 'sonnet', schema: ROUNDTRIP })
+log(`roundtrip: ${roundtrip?.verified}/${roundtrip?.checked} verified, ${roundtrip?.needsReview} needs-review, ${roundtrip?.orNoise ?? 0} day-or noise (advisory)`)
+
 // ============================================================ ADVERSARIAL JUDGE
 let judgeResult = null
 if (isTest) {
@@ -258,6 +270,7 @@ return {
   critics: allFlags.length,
   trapPanels: { pass: trapPanels.length - trapFails.length, total: trapPanels.length, failed: trapFails.map((t) => t.trap) },
   verify: verify?.ok ? 'clean' : verify?.failures,
+  roundtrip: roundtrip ? { checked: roundtrip.checked, verified: roundtrip.verified, needsReview: roundtrip.needsReview, reviewPatterns: roundtrip.reviewPatterns || [] } : null,
   adversarialJudge: judgeResult,
   playbook: lesson,
   conventions, corpusNote
