@@ -15,9 +15,11 @@ const shared = {
 // it directly rather than `{ default }`.
 const unwrapDefault = {js: 'module.exports = module.exports.default;'};
 
-// Start from a clean dist/ so outputs from deleted or renamed language dirs
-// (removed experiments, say) never linger and ship via the package.
+// Start from clean output dirs so artifacts from deleted or renamed language
+// dirs (removed experiments, say) never linger and ship via the package. tsc
+// (run by `npm run build` right after this) regenerates types/ from scratch.
 rmSync('dist', {recursive: true, force: true});
+rmSync('types', {recursive: true, force: true});
 
 // ESM (for `import`).
 await esbuild.build({
