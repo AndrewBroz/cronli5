@@ -3,7 +3,7 @@
 // source has no dependencies, so bundling is effectively a format/minify
 // pass over a single file.
 import * as esbuild from 'esbuild';
-import {readdirSync} from 'node:fs';
+import {existsSync, readdirSync} from 'node:fs';
 
 const shared = {
   entryPoints: ['src/cronli5.ts'],
@@ -43,22 +43,26 @@ await esbuild.build({
 // Language modules: dual builds per language, served by the
 // `./lang/<code>` subpath exports.
 for (const code of readdirSync('src/lang')) {
-  const language = {
-    entryPoints: [`src/lang/${code}/index.ts`],
-    bundle: true,
-    logLevel: 'info'
-  };
+  // Only build shipped languages — those with a status.json marker. This
+  // skips stray/experiment dirs so they never enter the published build.
+  if (existsSync(`src/lang/${code}/status.json`)) {
+    const language = {
+      entryPoints: [`src/lang/${code}/index.ts`],
+      bundle: true,
+      logLevel: 'info'
+    };
 
-  await esbuild.build({
-    ...language,
-    format: 'esm',
-    outfile: `dist/lang/${code}.js`
-  });
+    await esbuild.build({
+      ...language,
+      format: 'esm',
+      outfile: `dist/lang/${code}.js`
+    });
 
-  await esbuild.build({
-    ...language,
-    format: 'cjs',
-    outfile: `dist/lang/${code}.cjs`,
-    footer: unwrapDefault
-  });
+    await esbuild.build({
+      ...language,
+      format: 'cjs',
+      outfile: `dist/lang/${code}.cjs`,
+      footer: unwrapDefault
+    });
+  }
 }
