@@ -1,7 +1,7 @@
 // The review-status table is generated from each module's status.json so the
 // stable/beta labelling stays current and public. Reused by docs.mjs, so
 // `npm run docs` keeps it current and `--check` gates drift. See
-// docs/language-pipeline.md.
+// tooling/docs/language-pipeline.md.
 //
 // Each status.json carries the language's headline status (its default
 // dialect) and review evidence, plus an optional `dialects` map of

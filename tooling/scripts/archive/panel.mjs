@@ -7,7 +7,7 @@
 // The Claude half of the panel needs the `Agent` tool, which only the skill
 // orchestrator can call: the slates are written to `tmp/panel-<code>.json`
 // so the skill can run Claude judges on the same blind slates and fold their
-// verdicts into `aggregate()`. See docs/language-pipeline.md.
+// verdicts into `aggregate()`. See tooling/docs/language-pipeline.md.
 
 import {pathToFileURL} from 'node:url';
 import {mkdirSync, readFileSync, writeFileSync} from 'node:fs';

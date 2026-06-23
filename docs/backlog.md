@@ -228,12 +228,12 @@ scan.
 
 **Status:** Ambition — the panel reviews a deliberately small set today;
 broadening it is the next lever on automated quality. A first slice is **built**:
-`scripts/fuzz-lang.mjs` (`npm run fuzz <code>`) sweeps a broad combinatorial set
+`tooling/scripts/fuzz-lang.mjs` (`npm run fuzz <code>`) sweeps a broad combinatorial set
 and flags crashes, degenerate output, and **dropped/collapsed field values** (a
 mechanical "is this output fudged?" check). It already caught four real German
 bugs — range hours collapsing to their start, a clock second silently dropped —
 that "renders the spanning set" missed. A second slice is **built**:
-`scripts/roundtrip.mjs` samples the fuzz pattern space **deduped by English
+`tooling/scripts/roundtrip.mjs` samples the fuzz pattern space **deduped by English
 output shape** (one representative per distinct template — the wide set), then
 for each renders the English description, asks the cross-family model to recover
 a cron from it, and compares the two crons by **expanded per-field value sets**
@@ -245,7 +245,7 @@ Quartz operators (L/W/#) have no simple value set and are skipped. This is the
 objective bulk pass; the naturalness panel then only needs a representative
 sample. A third slice is **built**: `panel.mjs <code> --wide[=N]` runs the full
 two-phase cross-family panel (Gemma half + Claude judges via `--judges`) over a
-shape-deduped sample of the fuzz space (`scripts/sample.mjs` — one
+shape-deduped sample of the fuzz space (`tooling/scripts/sample.mjs` — one
 representative per output shape) instead of the curated spanning set. The Gemma
 half alone is a cheap, noisy pre-filter (complex OR/Quartz patterns over-flag on
 a single judge); the **4-judge median** decides, and it re-calibrates the
@@ -257,7 +257,7 @@ the combinatorial fuzz set), and emit a coverage report (which IR kinds/shapes
 the sample touched).
 
 **Problem.** The cross-family panel runs over a curated **spanning set**
-(`scripts/spanning-set.mjs` — ~34 patterns, one per `PlanNode` kind; the
+(`tooling/scripts/spanning-set.mjs` — ~34 patterns, one per `PlanNode` kind; the
 dialect set is 9 clock-time patterns). It is minimal by design: Gemma
 serializes, so breadth is expensive. But naturalness and correctness defects
 hide in the **long tail of pattern shapes** the spanning set doesn't represent

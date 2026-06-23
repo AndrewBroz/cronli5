@@ -107,7 +107,7 @@ rules:
 - The **corpus** (`test/lang/<code>/corpus.js`) is the full regression suite —
   cheap, so **every** bug earns a pinned entry, and new behavior earns
   coverage. Grow it freely.
-- The **review spanning set** (`scripts/spanning-set.mjs`) is what the
+- The **review spanning set** (`tooling/scripts/spanning-set.mjs`) is what the
   cross-family panel reads, and the panel is slow, so keep it a *minimal*
   spanning set. Add to it only when (a) `spanning-set.mjs` reports an
   uncovered `PlanNode` kind or a linguistic feature is unexercised, or (b) a

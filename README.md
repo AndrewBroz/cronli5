@@ -209,7 +209,7 @@ docs below.
 *Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by a cross-family review panel and shipped with a beta label
 until a human review cycle is completed. *Experimental* languages are
 model-drafted and not yet validated by that panel. See
-[docs/language-pipeline.md](./tooling/docs/language-pipeline.md).
+[tooling/docs/language-pipeline.md](./tooling/docs/language-pipeline.md).
 
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status | Human review | Cross-family review |
