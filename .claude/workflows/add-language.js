@@ -30,7 +30,7 @@ if (!CODE) {
 
 // The clean-room rebuild target for the acceptance test.
 const isTest = MODE === 'rewrite-test'
-const SRC = isTest ? `${ROOT}/src/lang/${CODE}-rebuild` : `${ROOT}/src/lang/${CODE}`
+const SRC = isTest ? `${ROOT}/tooling/experiments/${CODE}-rebuild` : `${ROOT}/src/lang/${CODE}`
 const original = isTest ? `${ROOT}/src/lang/${CODE}` : null
 
 const PERSONAS = [
@@ -82,7 +82,7 @@ const pickMajority = (arr) => {
 // which the judge then measures. (Reusing the original corpus, as the first
 // cut did, only clones the original's defects — a meaningless test.)
 const CORPUS = isTest
-  ? `${ROOT}/test/lang/${CODE}-rebuild/corpus.js`
+  ? `${ROOT}/tooling/experiments/${CODE}-rebuild/corpus.js`
   : `${ROOT}/test/lang/${CODE}/corpus.js`
 const NOTES = isTest ? `${SRC}/notes.md` : `${ROOT}/src/lang/${CODE}/notes.md`
 const cleanRoom = isTest
@@ -115,7 +115,7 @@ let conventions = await agent(`Finalize the ${NAME} (${CODE}) conventions in ${N
 // (4) panel those blind; (5) assemble + final-lint. This replaces a human
 // reading the spec.
 phase('Corpus')
-const dir = `${ROOT}/test/lang/${CODE}-rebuild`
+const dir = `${ROOT}/tooling/experiments/${CODE}-rebuild`
 await parallel(['a', 'b', 'c'].map((v) => () =>
   agent(`Author ${NAME} (${CODE}) corpus VARIANT ${v} at ${dir}/corpus-${v}.js, spanning the full core set ${CORESET} (every cell + value class + variant + macro + @reboot + lenient). For each pattern's MEANING, analyze the core IR (run \`node --import tsx -e\` importing src/core) to see which days/times it fires — never lift wording from any existing renderer. STYLE per the PANELLED conventions ${NOTES} and the playbook traps ${PLAYBOOK}: DOM/DOW union → condition-frame "whenever the day is X or Y"; hour-range → the boundary form chosen in ${NOTES}; trailing recurring days marked; shared qualifier fronted; NO cadence redundant under a finer one (no "every minute" under "every second"); a given field phrased identically across every entry that contains it. NEVER drop a field value. Author INDEPENDENTLY — do NOT read the other variants. Mirror test/lang/de/corpus.js structure. Report entry count.${cleanRoom}`,
     { label: `corpus:${v}`, phase: 'Corpus', model: 'sonnet' })))
@@ -148,8 +148,8 @@ if (STOP === 'corpus') {
 // (held-out-correct, then simplest), and the winner seeds the next round. The
 // LLM is a strong variation operator, so a couple of rounds suffice.
 phase('Renderer')
-const TRAIN = `${ROOT}/test/lang/${CODE}-rebuild/train.js`
-const HOLDOUT = `${ROOT}/test/lang/${CODE}-rebuild/holdout.js`
+const TRAIN = `${ROOT}/tooling/experiments/${CODE}-rebuild/train.js`
+const HOLDOUT = `${ROOT}/tooling/experiments/${CODE}-rebuild/holdout.js`
 await agent(`Partition the trap-resolved corpus ${CORPUS} into two runnable test files: ${TRAIN} (~85% of entries) and ${HOLDOUT} (~15%), STRATIFIED so the held-out set samples across every cell / value-class / variant / macro (not a contiguous tail) — it is the generalization probe. Copy each entry verbatim (pattern, expected, opts); both files run like the corpus. Report the two counts.`,
   { label: 'split', phase: 'Renderer', model: 'sonnet' })
 
@@ -165,7 +165,7 @@ for (let r = 1; r <= ROUNDS; r++) {
     ? `Start from the current best variant at ${winner} (copy it into your dir), then IMPROVE it: raise held-out generality and REDUCE cognitive complexity and duplication without regressing TRAIN.`
     : `Build from scratch.`
   const built = await parallel(VARIANTS.map((v) => () => {
-    const dir = `${ROOT}/src/lang/${CODE}-rebuild-r${r}${v}`
+    const dir = `${ROOT}/tooling/experiments/${CODE}-rebuild-r${r}${v}`
     return agent(`Pressured ${NAME} (${CODE}) renderer build — round ${r}, variant ${v}. Write a complete renderer at ${dir}/ (index.ts + dialects.ts) implementing the Language interface in ${IR}. ${seedLine} You may read: ${IR}, the core helpers (src/core/format.ts, util.ts, specs.ts), the TRAIN set ${TRAIN}, the conventions ${NOTES}, the playbook ${PLAYBOOK}. ${priorClause} TDD against ${TRAIN} until green. THEN, with TRAIN frozen as the guard (any regression = revert), satisfy these FORM PRESSURES: (1) ZERO \`eslint-disable\` anywhere — reduce cognitive complexity, never suppress it; (2) minimize copy-paste / near-duplicate logic across plan-node kinds (share helpers); (3) keep functions within the eslint complexity rule. You MAY break-then-repass TRAIN to consolidate. Keep typecheck + eslint (no disables) green. Report train pass/total and final line count.`,
       { label: `build:r${r}${v}`, phase: 'Renderer', model: 'sonnet', schema: REPORT })
       .then((rep) => ({ v, dir, rep }))
@@ -249,7 +249,7 @@ if (isTest) {
 
 // ============================================================ PLAYBOOK UPDATE
 phase('Playbook')
-const lesson = await agent(`Review this ${NAME} run for any GENUINELY NEW UNIVERSAL lesson — a trap or method insight that would help the NEXT, unrelated language (not a restatement of ${NAME}'s specific answer). Flags: ${JSON.stringify(allFlags.slice(0, 20))}. Trap failures: ${JSON.stringify(trapFails.map((t) => t.trap))}. If there is one, append a dated bullet (newest-first) to the "Appended lessons" section of ${ROOT}/.claude/skills/add-language/playbook.md, trap-shaped (question + how to resolve), then run \`node --import tsx ${ROOT}/scripts/playbook.mjs\` to re-derive the json. If nothing is genuinely new, do nothing. Report what you appended (or "nothing new").`,
+const lesson = await agent(`Review this ${NAME} run for any GENUINELY NEW UNIVERSAL lesson — a trap or method insight that would help the NEXT, unrelated language (not a restatement of ${NAME}'s specific answer). Flags: ${JSON.stringify(allFlags.slice(0, 20))}. Trap failures: ${JSON.stringify(trapFails.map((t) => t.trap))}. If there is one, append a dated bullet (newest-first) to the "Appended lessons" section of ${ROOT}/.claude/skills/add-language/playbook.md, trap-shaped (question + how to resolve), then run \`node --import tsx ${ROOT}/tooling/scripts/playbook.mjs\` to re-derive the json. If nothing is genuinely new, do nothing. Report what you appended (or "nothing new").`,
   { label: 'playbook:update', phase: 'Playbook', model: 'sonnet' })
 
 return {

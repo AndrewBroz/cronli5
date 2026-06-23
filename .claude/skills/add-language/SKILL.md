@@ -44,7 +44,7 @@ It ships the language to **beta** (`status.json`) on its own.
 [`playbook.md`](playbook.md) is the source of truth — the universal traps (e.g.
 the DOM/DOW `union-connective`, `shared-qualifier-scope`,
 `confinement-vs-juxtaposition`), the detectors, the panel protocol, and the
-accumulated lessons. `node --import tsx scripts/playbook.mjs` derives
+accumulated lessons. `node --import tsx tooling/scripts/playbook.mjs` derives
 `playbook.json` (what the workflow reads). Edit the **md**, never the json. An
 entry belongs there only if it would help the *next, unrelated* language — a
 trap and its comprehension-question, never one language's specific answer.
@@ -72,5 +72,5 @@ is sound. Run it after changing the workflow or the playbook.
 
 The old manual step-list and the **cross-family / Gemma panel** are gone: Gemma
 was a serializing bottleneck that made results *worse*, and the multi-judge
-Sonnet persona panel re-calibrates its noise far better. `scripts/panel.mjs` and
-`scripts/llm.mjs` are legacy. See [tooling/docs/language-pipeline.md](../../../tooling/docs/language-pipeline.md).
+Sonnet persona panel re-calibrates its noise far better. `tooling/scripts/archive/panel.mjs` and
+`tooling/scripts/archive/llm.mjs` are legacy. See [tooling/docs/language-pipeline.md](../../../tooling/docs/language-pipeline.md).
