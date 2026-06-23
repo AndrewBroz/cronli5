@@ -3,8 +3,8 @@
 // spread for a budget-limited subset. Used by panel.mjs (--wide) and
 // roundtrip.mjs to drive review beyond the curated spanning set.
 
-import {patterns} from './fuzz-lang.mjs';
-import cronli5 from '../src/cronli5.js';
+import {patterns} from '../../scripts/fuzz-lang.mjs';
+import cronli5 from '../../src/cronli5.js';
 
 // One pattern per distinct output shape in `lang` — abstracting digits, so two
 // patterns differing only in their numbers collapse to one representative.

@@ -10,14 +10,14 @@
 // Usage: node --import tsx scripts/roundtrip.mjs [--lang=CODE] [--limit=N]
 
 import {pathToFileURL} from 'node:url';
-import {askJson} from './llm.mjs';
+import {askJson} from './archive/llm.mjs';
 import {sampleShapes, spread} from './sample.mjs';
-import {enumerateFires} from '../src/core/analyze.js';
-import cronli5 from '../src/cronli5.js';
-import de from '../src/lang/de/index.js';
-import en from '../src/lang/en/index.js';
-import es from '../src/lang/es/index.js';
-import fi from '../src/lang/fi/index.js';
+import {enumerateFires} from '../../src/core/analyze.js';
+import cronli5 from '../../src/cronli5.js';
+import de from '../../src/lang/de/index.js';
+import en from '../../src/lang/en/index.js';
+import es from '../../src/lang/es/index.js';
+import fi from '../../src/lang/fi/index.js';
 
 const LANGS = {de, en, es, fi};
 

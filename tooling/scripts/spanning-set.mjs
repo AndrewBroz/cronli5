@@ -5,9 +5,9 @@
 // strategies. Run directly to print the coverage report.
 
 import {pathToFileURL} from 'node:url';
-import {analyze, prepare} from '../src/core/index.js';
-import en from '../src/lang/en/index.js';
-import {tables} from './patterns.mjs';
+import {analyze, prepare} from '../../src/core/index.js';
+import en from '../../src/lang/en/index.js';
+import {tables} from '../../scripts/patterns.mjs';
 
 // Breadth fillers: the curated docs sets don't exercise every rendering
 // strategy, so these top up the uncovered PlanNode kinds (verified by the
@@ -61,7 +61,8 @@ function coverage() {
 
 export {coverage, planKinds, PLAN_KINDS, spanningSet};
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] &&
+    import.meta.url === pathToFileURL(process.argv[1]).href) {
   const {missing} = coverage();
 
   console.log('Spanning set: ' + spanningSet.length + ' patterns (' +

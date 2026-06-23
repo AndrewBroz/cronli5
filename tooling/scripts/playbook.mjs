@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {dirname, join} from 'node:path';
 
 const dir = dirname(fileURLToPath(import.meta.url));
-const base = join(dir, '..', '.claude', 'skills', 'add-language');
+const base = join(dir, '..', '..', '.claude', 'skills', 'add-language');
 const md = readFileSync(join(base, 'playbook.md'), 'utf8');
 
 const parts = md.split(/\n## /u);

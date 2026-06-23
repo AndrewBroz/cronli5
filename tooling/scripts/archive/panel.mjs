@@ -11,14 +11,14 @@
 
 import {pathToFileURL} from 'node:url';
 import {mkdirSync, readFileSync, writeFileSync} from 'node:fs';
-import cronli5 from '../src/cronli5.js';
+import cronli5 from '../../../src/cronli5.js';
 import cronstrueI18n from 'cronstrue/i18n.js';
-import de from '../src/lang/de/index.js';
-import es from '../src/lang/es/index.js';
-import fi from '../src/lang/fi/index.js';
+import de from '../../../src/lang/de/index.js';
+import es from '../../../src/lang/es/index.js';
+import fi from '../../../src/lang/fi/index.js';
 import {ask, askJson} from './llm.mjs';
-import {sampleShapes, spread} from './sample.mjs';
-import {spanningSet} from './spanning-set.mjs';
+import {sampleShapes, spread} from '../sample.mjs';
+import {spanningSet} from '../spanning-set.mjs';
 
 const MODULES = {de, es, fi};
 const NAMES = {de: 'German', es: 'Spanish', fi: 'Finnish'};
