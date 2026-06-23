@@ -1,138 +1,185 @@
-# Design: Extract the language-generation pipeline into its own repo
+# Design: Quarantine the language-generation pipeline in-repo
 
 **Date:** 2026-06-23
 **Status:** Approved (design); implementation plan pending
+**Supersedes:** an earlier draft of this file that proposed a separate
+`cronli5-lang-pipeline` repo with a clone→PR hand-off. An independent Opus
+review showed that model serves the "ship a new language" case but breaks the
+**rebuild-and-compare research workflow** (see "Why not a separate repo (yet)").
 
 ## Problem
 
 cronli5 is a small published npm library (cron → plain-language). Layered into
-the *same repo* is an elaborate, self-improving "add a language" AI pipeline
+the same repo is an elaborate, self-improving "add a language" AI pipeline
 (Claude Code skill + workflow + playbook + supporting scripts), plus the
-throwaway artifacts those runs leave behind. The tooling now rivals the library
-in footprint and leaks into the library's own gates:
+artifacts its runs produce. Two distinct problems:
 
-- `scripts/build.mjs` builds every dir under `src/lang/`, and `mocha`'s
-  `test/**/*.js` glob runs every test dir — so the untracked `en-rebuild*`
-  experiment dirs get built and tested locally, polluting `npm run verify`.
-- The pipeline docs (`language-pipeline.md`, `corpus-methodology.md`) outweigh
-  the library docs; `tmp/` holds ~50 scratch files; a stale 12 MB worktree sits
-  in `.claude/worktrees/`.
-- Legacy Gemma-era scripts (`llm.mjs`, `panel.mjs`, `panel-targeted.mjs`,
-  `roundtrip.mjs`) remain after the "retire Gemma panel" change.
+1. **The pipeline leaks into the library's own gates.** `scripts/build.mjs`
+   builds every dir under `src/lang/`, and `mocha`'s `test/**/*.js` glob runs
+   every test dir — so the `en-rebuild*` experiment dirs get built and tested
+   locally, polluting `npm run verify`. `tmp/` holds ~50 scratch files; a stale
+   12 MB worktree sits in `.claude/worktrees/`.
+2. **The pipeline's research output has no proper home.** Its `rewrite-test`
+   mode generates *multiple candidate renderers + corpora* and judges them
+   against an incumbent renderer — but today it writes them straight into
+   `src/lang/` and `test/lang/` (that's what `en-rebuild*` is). The artifacts
+   and the judgment are the deliverable, yet they sit in the shipped source
+   tree with no quarantine.
+
+## The research purpose (why this matters)
+
+A core reason the pipeline exists is a research question: **can a fully
+automated, clean-room rebuild of an existing beta language (notably `zh`,
+Chinese, still beta/unstable) match or beat the current renderer?** The
+`rewrite-test` mode (`.claude/workflows/add-language.js`) produces 6+ candidate
+modules (2 rounds × 3 variants) plus candidate corpora, and a **Judge phase**
+that renders the incumbent (`src/lang/<code>`) and the candidates side-by-side
+to blind-compare them. The comparison verdict is the deliverable — it is **not**
+a PR. Any design must let these artifacts **persist next to the incumbent for a
+human to inspect and diff**.
 
 ## Goals
 
-1. Publish a lean cronli5 library: only what builds, tests, documents, and
-   ships the package.
-2. Extract the generative pipeline into its own repo (`cronli5-lang-pipeline`)
-   that can evolve on a separate cadence and is reusable (copy-paste-adapt) for
-   future corpus-driven generation projects.
-3. Lose no validated capability in the move; preserve retired code rather than
-   delete it where it carries methodology history.
+1. Keep the *published package* lean (controlled by `package.json` `files`, not
+   repo membership) and keep `npm run verify` free of experiment/pipeline noise.
+2. Quarantine the pipeline and its artifacts into a clearly separated in-repo
+   area so they cannot leak into build/test/package gates.
+3. Preserve the rebuild-and-compare research harness intact, with a real home
+   for candidate artifacts and judgments next to the incumbent renderers.
+4. Lose no validated capability; preserve retired code rather than delete it.
 
 ## Non-goals
 
-- Making the pipeline domain-generic (a generic harness + thin adapter). The
-  extracted tool stays **cronli5-aware**.
-- Broad pipeline redesign/improvement. Out of scope here; this extraction is
-  the enabler for that later work. The only in-scope pipeline change is
-  rewiring `roundtrip` off Gemma (see below).
+- **A separate repo / domain-generic harness — deferred, not rejected.** Once
+  the evaluation-artifact layout has proven itself in-tree, graduating the
+  pipeline to its own product (and/or making it domain-generic) is a future
+  project. We don't pre-commit to it before learning what its artifact API
+  needs to be.
+- **Broad pipeline redesign.** Out of scope. The `roundtrip` rewire (below) is
+  split into its own change, not bundled here.
 
-## Key decisions (from brainstorming)
+## Why not a separate repo (yet)
 
-- **Mechanism:** separate repo, cronli5-aware (not monorepo, not generic).
-- **Hand-off model:** the tool **clones cronli5, generates on a branch, runs
-  cronli5's own gates inside the clone, and opens a PR.** It reads the contract
-  (`src/core/ir.ts`) and oracle (`test/core/core-set.json`) from the clone;
-  experiments live only in ephemeral clones, never in cronli5's tree.
-- **Legacy scripts:** archived, not deleted (except where regenerable). The
-  Gemma cluster is preserved in the tool repo under a well-named dir.
-- **roundtrip:** rewired to use Claude `agent()` instead of Gemma and kept as a
-  real Verify-phase check (its named role in the current workflow is not
-  actually wired).
-- **Experiments:** the `en-rebuild*` dirs are deleted (untracked, regenerable).
+The earlier separate-repo + clone→PR design optimized for shipping new
+languages and broke the dominant research use case:
 
-## Inventory
+- A clone→generate→PR→discard flow has **nowhere to put** 6+ candidates or the
+  comparison verdict — and discards them with the clone.
+- The Judge phase needs the **incumbent renderer** as a baseline; that lives in
+  cronli5, and the result must flow back as a *report*, not a PR.
+- It introduced cross-repo coupling, contract version-skew, runtime cross-repo
+  imports, and a non-atomic playbook↔core-set co-evolution. **In-repo
+  quarantine removes all of these** (one tree, live `ir.ts`/`core-set.json`,
+  single-PR co-evolution, instant dogfooding loop).
 
-### Moves to `cronli5-lang-pipeline`
+## Layout
 
-| Path | Notes |
-| --- | --- |
-| `.claude/skills/add-language/` | SKILL.md, `playbook.md`, `playbook.json` — the self-improving memory lives with the tool |
-| `.claude/workflows/add-language.js` | orchestrator |
-| `docs/language-pipeline.md`, `docs/corpus-methodology.md` | methodology docs |
-| `scripts/playbook.mjs` | md → json transform (pipeline-only) |
-| `scripts/sample.mjs`, `scripts/spanning-set.mjs` | pipeline supports (only `panel`/`roundtrip` import them) |
-| `scripts/roundtrip.mjs` | **rewired on Claude `agent()`**, wired into Verify |
-| `scripts/archive/{llm,panel,panel-targeted}.mjs` | retired Gemma cross-family cluster, preserved with a README |
+The published package is unaffected — `package.json` `files` already lists only
+`dist`, `types`, `src`, `cli.js`, `cronli5.min.js`, and the docs, so nothing
+under `tooling/` ships.
 
-### Stays in cronli5 (library + validation target)
+```
+tooling/
+  scripts/                pipeline-only scripts
+    playbook.mjs          md → json transform
+    sample.mjs            fuzz-space sampler (pipeline-only)
+    spanning-set.mjs      coverage spanning set (imports ../../scripts/patterns.mjs)
+    roundtrip.mjs         rewired onto Claude (see separate change)
+    archive/              retired Gemma cross-family cluster, with README
+      llm.mjs  panel.mjs  panel-targeted.mjs
+  docs/                   language-pipeline.md, corpus-methodology.md
+  experiments/            HOME for rebuild/compare artifacts
+    <code>-<run>/         candidate renderers + corpora + tests + judge tally
+```
+
+The Claude Code **skill and workflow stay under `.claude/`** — that's their
+required discovery location. `.claude/skills/add-language/playbook.{md,json}`
+stays with the skill (it's the self-improving memory the skill reads).
+
+### Stays at top level (library + library-essential tooling)
 
 - All `src/`, `cli.js`, `test/`; contract `src/core/ir.ts`; oracle
   `test/core/core-set.json`.
-- Essential scripts: `build.mjs`, `docs.mjs`, `fuzz-lang.mjs`, `core-set.mjs`,
-  `patterns.mjs`, `status.mjs`, `install-hooks.mjs`.
-- Standalone review scripts (operate on shipped renderers, no LLM):
-  `compare-cronstrue.mjs`, `review-trilingual.mjs`, `review-lang.mjs`.
+- `scripts/`: `build.mjs`, `docs.mjs`, `fuzz-lang.mjs`, `core-set.mjs`,
+  `patterns.mjs`, `status.mjs`, `install-hooks.mjs`, plus the standalone review
+  scripts `compare-cronstrue.mjs`, `review-trilingual.mjs`, `review-lang.mjs`
+  (operate on shipped renderers, no LLM).
 - Library docs: `i18n-design.md`, `dialects.md`, `cronli5-vs-cronstrue.md`,
   `docs/lang/*`.
 
-### Deleted from cronli5
+### Deleted / swept
 
-- `src/lang/en-rebuild*` and `test/lang/en-rebuild*` (untracked, regenerable).
+- `src/lang/en-rebuild*` and `test/lang/en-rebuild*` — deleted (untracked; the
+  author intends to regenerate better runs once the pipeline is improved). The
+  new `tooling/experiments/` is the home for future runs.
 - `tmp/` scratch contents; the stale `.claude/worktrees/wf_*` worktree.
 
-## Coupling points (documented, not eliminated)
+## Keeping experiments out of the gates
 
-1. `spanning-set.mjs` (moved) imports `patterns.mjs` (stayed) — resolves via the
-   clone at runtime.
-2. `roundtrip.mjs` (moved) imports cronli5 `src/core` — resolves via the clone.
-3. Shared "spec" surfaces: `core-set.json` is **owned by cronli5**; `playbook.*`
-   is **owned by the tool**. No file is co-owned.
+Two complementary mechanisms so experiments can never leak again:
 
-## Run flow (tool side)
+1. **Location:** all experiment artifacts (renderer + corpus + tests) live under
+   `tooling/experiments/`, which is outside both `src/lang/` (build scan) and
+   `test/**` (mocha glob). This alone fixes the leakage.
+2. **Safety net:** gate `scripts/build.mjs`'s `readdirSync('src/lang')` on the
+   presence of `status.json` (mirrors `scripts/status.mjs`), so any stray dir
+   under `src/lang/` without a status marker is skipped by the build.
 
-```
-clone cronli5 → read ir.ts + core-set.json
-  → generate src/lang/<code> + test/lang/<code> on a branch
-  → run cronli5 gates in the clone: lint, typecheck, test, fuzz,
-    roundtrip (Claude), docs --check
-  → open PR back to cronli5
-```
+## Reconciling generated corpora with CLAUDE.md
+
+CLAUDE.md states the corpus is "hand-written and reviewed, never generated."
+The pipeline generates corpora — an apparent contradiction. Resolution:
+
+- Generated corpora are **candidates** and live only under
+  `tooling/experiments/`. They are explicitly provisional.
+- Promotion of a candidate to the shipped `test/lang/<code>/corpus.js` is a
+  **human-reviewed graduation step** (consistent with "languages ship beta,
+  then a fluent human graduates them").
+- Update CLAUDE.md to say this plainly: the "never generated" rule governs the
+  *shipped* corpus; pipeline output is a reviewed seed, not the contract.
 
 ## Work phases (for the implementation plan)
 
-The two halves are independent; cronli5 cleanup can land first.
-
-**Phase A — cronli5 cleanup (in-repo, no new repo needed):**
+**Phase A — cleanup + gate safety (ship first; independent, low-risk):**
 - A1. Delete `en-rebuild*` dirs (src + test).
 - A2. Sweep `tmp/`; remove stale `.claude/worktrees/wf_*`.
 - A3. Fix `zh` docs gap: add `zh` to `docs.mjs` `languages`, regenerate
   `docs/lang/zh.md`, update README language list + CLI usage line.
-- A4. Resolve `cronli5.min.js` tracked-but-ignored drift: **untrack it**
-  (`git rm --cached cronli5.min.js`) to match `.gitignore` and the already-
-  untracked `dist/`/`types/` artifacts; confirm `npm run build` still emits it
-  and `files`/publish still ship it.
-- A5. Harden discovery so future experiments can't leak: gate `build.mjs` and
-  the test glob on presence of `status.json` (mirrors `status.mjs`).
+- A4. Untrack `cronli5.min.js` (`git rm --cached`) to match `.gitignore` and the
+  already-untracked `dist/`/`types/`; confirm build still emits it and publish
+  still ships it.
+- A5. Gate `build.mjs` on `status.json` presence (the safety net above).
 
-**Phase B — pipeline extraction (new repo):**
-- B1. Scaffold `cronli5-lang-pipeline` (thin `package.json`, dir layout above).
-- B2. Move skill, workflow, pipeline docs, `playbook.*`, `playbook.mjs`,
-  `sample.mjs`, `spanning-set.mjs`.
-- B3. Archive Gemma cluster under `scripts/archive/` with a README.
-- B4. Rewire `roundtrip.mjs` onto Claude `agent()`; wire it into the Verify
-  phase; fix the stale `roundtrip` references.
-- B5. Implement the clone → generate → gate → PR flow.
-- B6. Remove the moved files from cronli5; update `CONTRIBUTING.md` and any
-  cronli5 docs that point at the pipeline to reference the new repo.
+**Phase B — quarantine the pipeline (in-repo reorg):**
+- B1. Create the `tooling/` structure.
+- B2. Move pipeline-only scripts (`playbook.mjs`, `sample.mjs`,
+  `spanning-set.mjs`) into `tooling/scripts/`; fix their relative imports
+  (`spanning-set.mjs` → `../../scripts/patterns.mjs`). Archive the Gemma cluster
+  (`llm.mjs`, `panel.mjs`, `panel-targeted.mjs`) under `tooling/scripts/archive/`
+  with a README explaining the retired cross-family path.
+- B3. Move pipeline docs to `tooling/docs/`; update references in
+  `CONTRIBUTING.md`, `CLAUDE.md`, and any cross-links.
+- B4. Update the workflow so `rewrite-test` writes candidates (renderers +
+  corpora + tests) under `tooling/experiments/<code>-<run>/` instead of
+  `src/lang/` and `test/lang/`; ensure the Judge phase still reads the incumbent
+  from `src/lang/<code>` and the candidates from `tooling/experiments/`.
+- B5. Reconcile the generated-corpus rule in CLAUDE.md (section above).
+
+**Phase C — `roundtrip` rewire (separate change, own acceptance evidence):**
+- C1. Port `roundtrip.mjs` off Gemma onto Claude `agent()`; wire it into the
+  Verify phase; calibrate an acceptance bar (target pass-rate / acceptable
+  needs-review partition) and record the evidence. Not bundled into B.
 
 ## Success criteria
 
-- `npm run verify` in cronli5 is clean with no experiment/pipeline noise.
-- cronli5 repo contains only library + library-essential tooling + standalone
-  review scripts.
-- The tool repo can run end-to-end against a cronli5 clone and open a PR that
-  passes cronli5 CI, with `roundtrip` running on Claude (no Gemma/Ollama
-  dependency).
-- No validated capability lost; retired code preserved in `scripts/archive/`.
+- `npm run verify` is clean with no experiment/pipeline noise; a stray dir under
+  `src/lang/` without `status.json` is skipped by the build.
+- The published package contains only library + essential files (verified via
+  `npm pack --dry-run`); nothing under `tooling/` ships.
+- A `zh` (or `en`) rebuild run produces candidates + a judge tally under
+  `tooling/experiments/`, readable alongside the incumbent `src/lang/<code>`
+  for human diffing — the research workflow works end-to-end.
+- No validated capability lost; retired Gemma code preserved under
+  `tooling/scripts/archive/`.
+- `roundtrip` (Phase C) runs on Claude with no Gemma/Ollama dependency, landed
+  as its own change with its own evidence.
