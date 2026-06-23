@@ -1,7 +1,7 @@
 {
   "name": "Chinese (Mandarin, Simplified)",
-  "status": "beta",
+  "status": "experimental",
   "humanReview": null,
-  "crossFamilyReview": "blind Sonnet style panel + author/audit workflow (2026-06-20)",
-  "note": "BETA — model-validated, not human-reviewed. Style contract settled by a blind 3-persona Sonnet style panel (src/lang/zh/notes.md); a panel-grounded corpus spanning the full committed core set (test/core/core-set.json, 275 entries) was authored via an author/audit/fix workflow, then the renderer was built test-first to it and the corpus converged to the renderer's canonical forms for the residual LLM-authoring noise (every field value preserved — `npm run fuzz zh` is clean: 0 throws / degenerate / missing-value). Graduates to stable only on fluent-human review."
+  "crossFamilyReview": null,
+  "note": "EXPERIMENTAL — model-drafted, not validated to beta. The style contract was settled by a blind 3-persona same-family Sonnet panel (src/lang/zh/notes.md), not the cross-family panel beta requires, and the corpus was machine-authored then converged to the renderer's canonical forms (`npm run fuzz zh` is clean: 0 throws / degenerate / missing-value). zh is a rebuild candidate for the automated language pipeline; it advances toward beta/stable only on stronger validation and fluent-human review."
 }

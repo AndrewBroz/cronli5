@@ -103,7 +103,7 @@ As a command line tool:
 $ cronli5 "*/5 * * * *"
 Runs every five minutes.
 
-# Other languages with --lang (de, es, fi):
+# Other languages with --lang (de, es, fi, zh):
 $ cronli5 --lang de "0 0 * * *"
 Läuft täglich um Mitternacht.
 
@@ -199,13 +199,16 @@ docs below.
 | Language | Module | Anchors | Doc |
 | --- | --- | --- | --- |
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'gb'` dialect) | [docs/lang/en.md](./docs/lang/en.md) |
+| German | `cronli5/lang/de` | Duden (`de-AT`/`de-CH` dialects) | [docs/lang/de.md](./docs/lang/de.md) |
 | Spanish | `cronli5/lang/es` | RAE / FundéuRAE | [docs/lang/es.md](./docs/lang/es.md) |
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
+| Chinese (Mandarin) | `cronli5/lang/zh` | Simplified (`zh-Hans`) default; Traditional (`zh-Hant`) | [docs/lang/zh.md](./docs/lang/zh.md) |
 
 ### Language Review Status
 
 *Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by a cross-family review panel and shipped with a beta label
-until a human review cycle is completed. See
+until a human review cycle is completed. *Experimental* languages are
+model-drafted and not yet validated by that panel. See
 [docs/language-pipeline.md](./docs/language-pipeline.md).
 
 <!-- BEGIN GENERATED: language-status -->
@@ -215,7 +218,7 @@ until a human review cycle is completed. See
 | English | stable | maintainer (native) | — |
 | Spanish | beta | maintainer (informal); formal pilot pending | gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15) |
 | Finnish | beta | — | — |
-| Chinese (Mandarin, Simplified) | beta | — | blind Sonnet style panel + author/audit workflow (2026-06-20) |
+| Chinese (Mandarin, Simplified) | experimental | — | — |
 <!-- END GENERATED: language-status -->
 
 

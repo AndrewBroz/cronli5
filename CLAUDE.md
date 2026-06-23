@@ -53,8 +53,9 @@ enshrine a subtly-wrong fix. The corpus is the spec; the renderer chases it.
 
 ## Languages ship as beta, then graduate
 
-A language is **beta** (model-validated by the cross-family review panel) until
-a fluent human graduates it to **stable**; `src/lang/<code>/status.json` records
+A language may be **experimental** (model-drafted, not yet validated by the
+cross-family review panel), **beta** (model-validated by that panel), or
+**stable** (graduated by a fluent human); `src/lang/<code>/status.json` records
 the status. The pipeline is in
 [docs/language-pipeline.md](docs/language-pipeline.md), the contributor guide in
 [CONTRIBUTING.md](CONTRIBUTING.md), the automation in

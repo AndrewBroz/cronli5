@@ -28,6 +28,7 @@ import de from '../src/lang/de/index.js';
 import en from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
+import zh from '../src/lang/zh/index.js';
 import {dialectPatterns, languagePatterns, tables} from './patterns.mjs';
 import {statusTable} from './status.mjs';
 
@@ -39,7 +40,8 @@ const languages = [
   {code: 'de', extras: ['0 0 1 */3 *', '*/45 * * * *'], lang: de},
   {code: 'en', extras: [], lang: en},
   {code: 'es', extras: ['0 1 * * *', '0 12 * * SAT'], lang: es},
-  {code: 'fi', extras: ['0 9 * * WED-FRI', '0 0 13 * FRI'], lang: fi}
+  {code: 'fi', extras: ['0 9 * * WED-FRI', '0 0 13 * FRI'], lang: fi},
+  {code: 'zh', extras: [], lang: zh, cronstrueLocale: 'zh_CN'}
 ];
 
 function describe(fn, pattern) {
@@ -79,13 +81,14 @@ function renderLanguageTable(language) {
       return '| `' + pattern + '` | ' + describe(function ours(p) {
         return cronli5(p, {lang: language.lang});
       }, pattern) + ' | ' + describe(function their(p) {
-        return cronstrueI18n.toString(p, {locale: language.code});
+        return cronstrueI18n.toString(p,
+          {locale: language.cronstrueLocale || language.code});
       }, pattern) + ' |';
     });
 
   return tableFrom('| Pattern | cronli5 (' + language.code +
-    ') | cRonstrue ' + cronstrueVersion + ' (' + language.code +
-    ' locale) |', rows);
+    ') | cRonstrue ' + cronstrueVersion + ' (' +
+    (language.cronstrueLocale || language.code) + ' locale) |', rows);
 }
 
 // cRonstrue's description, via the i18n build for a locale (the default build
