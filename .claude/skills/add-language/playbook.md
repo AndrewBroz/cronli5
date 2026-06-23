@@ -2,7 +2,7 @@
   PLAYBOOK — the self-improving memory of the language pipeline.
 
   SOURCE OF TRUTH. Human-authored markdown; `node --import tsx
-  scripts/playbook.mjs` derives playbook.json, which the add-language workflow
+  tooling/scripts/playbook.mjs` derives playbook.json, which the add-language workflow
   reads. Each language run CONSUMES the universal traps below (panels them in
   its own grammar) and APPENDS any genuinely new universal lesson it finds.
 
@@ -87,8 +87,7 @@ diverged on almost all of them), but the QUESTION recurs everywhere.
 
 - **fuzz** — `npm run fuzz <code>`: 0 THROWS / DEGENERATE / MISSING-VALUE across
   ~50k patterns. MISSING-VALUE is the truth serum for "fudged" output.
-- **roundtrip** — `scripts/roundtrip.mjs`: render → recover cron from the prose
-  (cross-family model as reverse parser) → compare field-sets. Objective
+- **roundtrip** — `tooling/scripts/roundtrip.mjs`: render → a blind Claude agent recovers the cron from the prose (Verify phase) → compare by expanded value sets. Objective
   meaning check at scale.
 - **both-side scope** — for every OR (both day fields set) with a restricted
   shared qualifier, assert each arm carries the qualifier. Catches the strand.

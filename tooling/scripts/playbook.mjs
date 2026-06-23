@@ -1,6 +1,7 @@
 // Derive playbook.json from the human-authored playbook.md (source of truth).
 // The add-language workflow reads the json to know which universal traps to
-// panel and which detectors to run. Run: node --import tsx scripts/playbook.mjs
+// panel and which detectors to run. Run:
+// node --import tsx tooling/scripts/playbook.mjs
 import {readFileSync, writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname, join} from 'node:path';
@@ -42,7 +43,7 @@ const lessons = bullets(sec('Appended lessons')).map(function lesson(b) {
 }).filter(Boolean);
 
 const json = {
-  generated: 'scripts/playbook.mjs from playbook.md',
+  generated: 'tooling/scripts/playbook.mjs from playbook.md',
   traps, detectors, lessons
 };
 

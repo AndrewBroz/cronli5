@@ -1,5 +1,5 @@
 {
-  "generated": "scripts/playbook.mjs from playbook.md",
+  "generated": "tooling/scripts/playbook.mjs from playbook.md",
   "traps": [
     {
       "id": "union-connective",
