@@ -11,5 +11,4 @@ panels run inside the workflow (see `tooling/docs/language-pipeline.md`).
 - `panel-targeted.mjs` — `panel.mjs` over a targeted pattern subset.
 
 They are excluded from `npm run lint` and are not wired into any current
-pipeline. `roundtrip.mjs` (one level up) still imports `archive/llm.mjs`
-until Phase C rewires it onto Claude.
+pipeline. Nothing outside this directory imports them.

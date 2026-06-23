@@ -1,25 +1,16 @@
-// Round-trip correctness check over a wide, shape-deduped slice of the fuzz
-// pattern space (docs/i18n-design.md §4 Pass 2). For each pattern it renders
-// the English description, asks the cross-family model to recover a cron
-// expression from that description, and compares the two crons by their
-// expanded per-field value sets. A clear, correct description round-trips to
-// the same schedule; a mismatch flags a pattern whose prose is unclear or
-// wrong (the model is the reverse parser, but the comparison is exact). Quartz
-// operators (L/W/#) have no simple value set and are skipped.
-//
-// Usage: node --import tsx scripts/roundtrip.mjs [--lang=CODE] [--limit=N]
+// Round-trip comprehension helpers for the add-language pipeline. The Verify
+// phase renders a wide, shape-deduped slice of the fuzz space, has a Claude
+// agent recover a cron from each description BLIND (prose only), and compares
+// the recovered schedule to the original by expanded per-field value sets. A
+// clear, correct description round-trips to the same schedule; a mismatch
+// flags prose that is unclear or wrong. The agent is the reverse parser; the
+// comparison here is exact. Quartz operators (L/W/#) have no value set and
+// are skipped. Driven by .claude/workflows/add-language.js — no standalone
+// CLI, no model client of its own.
 
-import {pathToFileURL} from 'node:url';
-import {askJson} from './archive/llm.mjs';
 import {sampleShapes, spread} from './sample.mjs';
 import {enumerateFires} from '../../src/core/analyze.js';
 import cronli5 from '../../src/cronli5.js';
-import de from '../../src/lang/de/index.js';
-import en from '../../src/lang/en/index.js';
-import es from '../../src/lang/es/index.js';
-import fi from '../../src/lang/fi/index.js';
-
-const LANGS = {de, en, es, fi};
 
 const MONTHS = {
   JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
@@ -101,19 +92,14 @@ function cronsEqual(a, b) {
   return FIELDS.every((field) => sameSet(a[field], b[field]));
 }
 
-// Ask the cross-family model to recover a cron expression from a description.
-async function backTranslate(description) {
-  const prompt = 'Convert this recurring-schedule description (which may be ' +
-    'in English, Spanish, German, or Finnish) into one ' +
-    'standard cron expression. Use field order "minute hour day-of-month ' +
-    'month day-of-week", or prepend a seconds field if the description ' +
-    'mentions seconds. When the description gives both a day-of-month and a ' +
-    'weekday joined by "or", set both fields (cron fires when either ' +
-    'matches); otherwise leave unmentioned fields as "*". Reply JSON only: ' +
-    '{"cron": "<expression>"}.\n\nDescription: ' + description;
-  const result = await askJson(prompt).catch(() => ({}));
+// Whether both day-of-month and day-of-week are restricted — cron's OR case,
+// which the back-translator recovers unreliably, so its mismatches are mostly
+// model noise rather than rendering bugs.
+function bothDays(pattern) {
+  const raw = pattern.trim().split(/\s+/u);
+  const fields = raw.length >= 6 ? raw.slice(0, 6) : ['0', ...raw];
 
-  return typeof result.cron === 'string' ? result.cron : null;
+  return fields[3] !== '*' && fields[5] !== '*';
 }
 
 function render(pattern, lang) {
@@ -125,82 +111,49 @@ function render(pattern, lang) {
   }
 }
 
-async function main(lang, limit) {
-  const shapes = sampleShapes(lang);
-  const chosen = spread(shapes, limit);
-  const checkable = chosen
-    .map((pattern) => ({pattern, original: expandCron(pattern)}))
-    .filter((item) => item.original);
-  const mismatches = [];
+// Sampled, rendered, checkable items for one renderer: each {pattern,
+// description}. Quartz / non-expandable patterns are dropped (no value set
+// to compare), as are null renders. The caller shows ONLY `description` to
+// the blind recovery step.
+function prepareRoundtrip(lang, limit) {
+  const chosen = spread(sampleShapes(lang), limit);
 
-  for (const {pattern, original} of checkable) {
-    const description = render(pattern, lang);
-    const recovered = await backTranslate(description);
+  return chosen
+    .filter((pattern) => expandCron(pattern))
+    .map((pattern) => ({pattern, description: render(pattern, lang)}))
+    .filter((item) => item.description);
+}
+
+// Tally recovered crons against their originals. `recoveries` is
+// [{pattern, recovered}]; the cron OR-case (both date and weekday set) is
+// partitioned out as model-noisy rather than counted as a defect.
+function tallyRoundtrip(recoveries) {
+  const verified = [];
+  const needsReview = [];
+  const orNoise = [];
+
+  for (const {pattern, recovered} of recoveries) {
+    const original = expandCron(pattern);
     const parsed = recovered ? expandCron(recovered) : null;
     const ok = parsed && cronsEqual(original, parsed);
 
-    if (!ok) {
-      mismatches.push({
-        description, pattern, recovered, orCase: bothDays(pattern)
-      });
+    if (ok) {
+      verified.push(pattern);
+    }
+    else if (bothDays(pattern)) {
+      orNoise.push({pattern, recovered});
+    }
+    else {
+      needsReview.push({pattern, recovered});
     }
   }
 
-  report(shapes.length, chosen.length, checkable.length, mismatches);
+  return {
+    checked: recoveries.length,
+    verified: verified.length,
+    needsReview,
+    orNoise
+  };
 }
 
-// Whether both day-of-month and day-of-week are restricted — cron's OR case,
-// which the back-translator recovers unreliably, so its mismatches are mostly
-// model noise rather than rendering bugs.
-function bothDays(pattern) {
-  const raw = pattern.trim().split(/\s+/u);
-  const fields = raw.length >= 6 ? raw.slice(0, 6) : ['0', ...raw];
-
-  return fields[3] !== '*' && fields[5] !== '*';
-}
-
-function report(total, sampled, checked, mismatches) {
-  const review = mismatches.filter((item) => !item.orCase);
-  const orNoise = mismatches.filter((item) => item.orCase);
-
-  console.log(total + ' distinct output shapes; sampled ' + sampled +
-    ', checked ' + checked + ' (Quartz skipped).');
-  console.log('verified ' + (checked - mismatches.length) +
-    ', needs-review ' + review.length +
-    ', day-or (model-noisy) ' + orNoise.length);
-
-  show('NEEDS REVIEW (back-translation differed)', review);
-  show('DAY-OR (both date and weekday set — usually model noise)', orNoise);
-}
-
-function show(heading, items) {
-  if (items.length) {
-    console.log('\n=== ' + heading + ' ===');
-    items.forEach(function each(item) {
-      console.log('\n  [' + item.pattern + ']');
-      console.log('    cronli5:   ' + item.description);
-      console.log('    recovered: ' + (item.recovered || '(no cron)'));
-    });
-  }
-}
-
-export {cronsEqual, expandCron};
-
-if (process.argv[1] &&
-    import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const limitArg = process.argv.find((arg) => arg.startsWith('--limit='));
-  const limit = limitArg ? Number(limitArg.slice('--limit='.length)) : 0;
-  const langArg = process.argv.find((arg) => arg.startsWith('--lang='));
-  const code = langArg ? langArg.slice('--lang='.length) : 'en';
-  const lang = LANGS[code];
-
-  if (lang) {
-    console.log('Round-trip check for: ' + code);
-    await main(lang, limit);
-  }
-  else {
-    console.error('Unknown language: ' + code +
-      ' (available: ' + Object.keys(LANGS).join(', ') + ')');
-    process.exitCode = 1;
-  }
-}
+export {bothDays, cronsEqual, expandCron, prepareRoundtrip, tallyRoundtrip};
