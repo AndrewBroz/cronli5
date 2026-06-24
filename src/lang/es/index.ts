@@ -519,6 +519,42 @@ function hourWindow(
     {hour: window.to, minute: window.last}, opts);
 }
 
+// Whether the IR is a restricted-month single-DOM + single-DOW union —
+// the condition for RULE E. The month must be restricted (not wildcard),
+// both date and weekday must be a single token each so that `el día N`
+// and `un <weekday>` are well-formed. Wildcard-month OR, multi-date, and
+// multi-weekday shapes are left on the existing path.
+function restrictedMonthUnion(ir: IR): boolean {
+  return ir.pattern.month !== '*' &&
+    ir.shapes.date === 'single' &&
+    ir.shapes.weekday === 'single';
+}
+
+// RULE E: the month phrase that leads the shared frame.
+// Single month → `en diciembre`; range → `de junio a septiembre`.
+function ruleEMonthPhrase(ir: IR): string {
+  return monthPhrase(ir, monthRanged(ir) ? 'de ' : 'en ');
+}
+
+// RULE E: the DOM arm under a fronted month — `el día N` (drops the
+// generic month that `dateClause` would otherwise append).
+// `restrictedMonthUnion` guarantees a single-segment single date here.
+function ruleEDateArm(ir: IR): string {
+  const segment = fieldSegments(ir, 'date')[0];
+
+  return 'el día ' + (segment as Extract<Segment, {kind: 'single'}>).value;
+}
+
+// RULE E: the DOW arm in the `ya sea … o` frame — singular indefinite
+// `un viernes`. `restrictedMonthUnion` guarantees a single-token weekday
+// at this call site.
+function ruleEDowArm(ir: IR): string {
+  const segments = flattenSteps(fieldSegments(ir, 'weekday'));
+  const segment = segments[0] as SingleNameSegment;
+
+  return 'un ' + weekdayName(segment.value);
+}
+
 // "todos los días a las 9:30 y a las 17:00".
 function renderClockTimes(
   ir: IR,
@@ -528,6 +564,14 @@ function renderClockTimes(
   const phrases = plan.times.map(function clock(time) {
     return atTime(timePhrase(time.hour, time.minute, time.second, opts));
   });
+
+  // RULE E: restricted-month OR union — front the shared month + time,
+  // put the DOM/DOW union last with `ya sea … o …`.
+  if (restrictedMonthUnion(ir)) {
+    return ruleEMonthPhrase(ir) + ' ' +
+      collapseAtTimes(phrases) +
+      ', ya sea ' + ruleEDateArm(ir) + ' o ' + ruleEDowArm(ir);
+  }
 
   return leadingQualifier(ir, opts) + collapseAtTimes(phrases);
 }

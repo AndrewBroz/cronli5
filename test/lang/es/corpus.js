@@ -115,8 +115,7 @@ describe('Español (es):', function() {
       ['0 0 1 1-11/3 *',
         'el 1 de enero, abril, julio y octubre a medianoche'],
       ['0 0 1 6-9 FRI',
-        'el 1 de cada mes o los viernes, de junio a septiembre ' +
-        'a medianoche'],
+        'de junio a septiembre a medianoche, ya sea el día 1 o un viernes'],
       ['0 0 L 6-9 *',
         'el último día del mes, de junio a septiembre a medianoche'],
       ['0 0 */2 6-9 *',
@@ -190,8 +189,10 @@ describe('Español (es):', function() {
   describe('fecha o día de la semana', function() {
     run([
       ['59 23 31 12 5',
-        'el 31 de diciembre o los viernes de diciembre ' +
-        'a las 11:59 de la noche']
+        'en diciembre a las 11:59 de la noche, ya sea el día 31 o un viernes'],
+      ['59 23 31 12 5',
+        'en diciembre a las 23:59, ya sea el día 31 o un viernes',
+        {ampm: false}]
     ], ampm);
   });
 
@@ -330,7 +331,15 @@ describe('Español (es):', function() {
         'en los minutos 5, 30, 35 y 40 de cada hora'],
       ['*/5 * * * *', 'cada 5 minutos', {short: true}],
       ['0 12 * * 7', 'los domingos al mediodía'],
-      ['5 9 * * *', 'todos los días a las 9:05 de la mañana']
+      ['5 9 * * *', 'todos los días a las 9:05 de la mañana'],
+      // Non-RULE-E restricted-month OR union: multi-token weekday bypasses
+      // the ya-sea frame and keeps the old dateOrWeekday path.
+      ['0 12 1 6-9 MON-FRI',
+        'el 1 de cada mes o de lunes a viernes, de junio a septiembre ' +
+        'al mediodía'],
+      // Single restricted month + weekday (no date): exercises monthScope
+      // with a non-ranged month.
+      ['0 9 * 6 MON', 'los lunes de junio a las 9 de la mañana']
     ], ampm);
   });
 
