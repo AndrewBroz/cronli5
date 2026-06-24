@@ -204,7 +204,7 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
 ): string {
-  // F1: seconds list + fixed clock time — nest the seconds into the clock time
+  // Seconds list + fixed clock time: nest the seconds into the clock time
   // with genitive "de las HH:MM" instead of "de cada minuto"; the minute is
   // fixed so "de cada minuto" is misleading. Single seconds already fold into
   // the time in the clockTimes renderer; step seconds keep their own clause.
@@ -219,8 +219,8 @@ function renderComposeSeconds(
       secondsPhrase + ' de ' + timeStr;
   }
 
-  // F2: second-step + fixed minute + hour range + weekday — anchor the cadence
-  // to the minute after the weekday + hour-range frame.
+  // Second-step + fixed minute + hour range + weekday: anchor the cadence to
+  // the minute after the weekday + hour-range frame.
   if (plan.rest.kind === 'hourRange' && ir.shapes.second === 'step' &&
       ir.pattern.weekday !== '*') {
     const restNode = plan.rest;
@@ -548,36 +548,35 @@ function hourWindow(
     {hour: window.to, minute: window.last}, opts);
 }
 
-// Whether the IR is a restricted-month single-DOM + single-DOW union —
-// the condition for RULE E. The month must be restricted (not wildcard),
-// both date and weekday must be a single token each so that `el día N`
-// and `un <weekday>` are well-formed. Wildcard-month OR, multi-date, and
-// multi-weekday shapes are left on the existing path.
+// Whether the IR is a restricted-month single-DOM + single-DOW union. The
+// month must be restricted (not wildcard), both date and weekday must be a
+// single token each so that `el día N` and `un <weekday>` are well-formed.
+// Wildcard-month OR, multi-date, and multi-weekday shapes are left on the
+// existing path.
 function restrictedMonthUnion(ir: IR): boolean {
   return ir.pattern.month !== '*' &&
     ir.shapes.date === 'single' &&
     ir.shapes.weekday === 'single';
 }
 
-// RULE E: the month phrase that leads the shared frame.
+// The month phrase that leads the shared frame of a restricted-month union.
 // Single month → `en diciembre`; range → `de junio a septiembre`.
-function ruleEMonthPhrase(ir: IR): string {
+function unionMonthLead(ir: IR): string {
   return monthPhrase(ir, monthRanged(ir) ? 'de ' : 'en ');
 }
 
-// RULE E: the DOM arm under a fronted month — `el día N` (drops the
-// generic month that `dateClause` would otherwise append).
-// `restrictedMonthUnion` guarantees a single-segment single date here.
-function ruleEDateArm(ir: IR): string {
+// The DOM arm under a fronted month — `el día N` (drops the generic month
+// that `dateClause` would otherwise append). `restrictedMonthUnion`
+// guarantees a single-segment single date here.
+function unionDateArm(ir: IR): string {
   const segment = fieldSegments(ir, 'date')[0];
 
   return 'el día ' + (segment as Extract<Segment, {kind: 'single'}>).value;
 }
 
-// RULE E: the DOW arm in the `ya sea … o` frame — singular indefinite
-// `un viernes`. `restrictedMonthUnion` guarantees a single-token weekday
-// at this call site.
-function ruleEDowArm(ir: IR): string {
+// The DOW arm in the `ya sea … o` frame — singular indefinite `un viernes`.
+// `restrictedMonthUnion` guarantees a single-token weekday at this call site.
+function unionWeekdayArm(ir: IR): string {
   const segments = flattenSteps(fieldSegments(ir, 'weekday'));
   const segment = segments[0] as SingleNameSegment;
 
@@ -594,12 +593,12 @@ function renderClockTimes(
     return atTime(timePhrase(time.hour, time.minute, time.second, opts));
   });
 
-  // RULE E: restricted-month OR union — front the shared month + time,
-  // put the DOM/DOW union last with `ya sea … o …`.
+  // Restricted-month OR union: front the shared month + time, put the
+  // DOM/DOW union last with `ya sea … o …`.
   if (restrictedMonthUnion(ir)) {
-    return ruleEMonthPhrase(ir) + ' ' +
+    return unionMonthLead(ir) + ' ' +
       collapseAtTimes(phrases) +
-      ', ya sea ' + ruleEDateArm(ir) + ' o ' + ruleEDowArm(ir);
+      ', ya sea ' + unionDateArm(ir) + ' o ' + unionWeekdayArm(ir);
   }
 
   return leadingQualifier(ir, opts) + collapseAtTimes(phrases);

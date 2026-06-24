@@ -133,15 +133,15 @@ describe('Español (es):', function() {
       ['15 * * * * *', 'en el segundo 15 de cada minuto'],
       ['15 30 * * * *', 'en el minuto 30 y el segundo 15 de cada hora'],
       ['1 1 * * * *', 'en el minuto 1 y el segundo 1 de cada hora'],
-      // F1: seconds list + fixed clock time — nest seconds into the time with
+      // Seconds list + fixed clock time: nest seconds into the time with
       // genitive "de las HH:MM"; never "de cada minuto" when the minute is fixed.
       ['5,10 30 9 * * MON', 'los lunes, en los segundos 5 y 10 de las 09:30'],
-      // F1 guard: wildcard minute keeps "de cada minuto".
+      // Guard: wildcard minute keeps "de cada minuto".
       // (5,10 * * * * * is already covered in segundos independientes y compuestos)
-      // F2: second-step + fixed minute + hour range + weekday — anchor cadence.
+      // Second-step + fixed minute + hour range + weekday: anchor cadence to the minute.
       ['*/15 30 9-17 * * MON-FRI',
         'de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30'],
-      // F3: minute window confined to specific hours → restrictive "solo".
+      // Minute window confined to specific hours.
       ['0-30 9,17-19 * * *',
         'cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00']
     ]);
@@ -340,8 +340,8 @@ describe('Español (es):', function() {
       ['*/5 * * * *', 'cada 5 minutos', {short: true}],
       ['0 12 * * 7', 'los domingos al mediodía'],
       ['5 9 * * *', 'todos los días a las 9:05 de la mañana'],
-      // Non-RULE-E restricted-month OR union: multi-token weekday bypasses
-      // the ya-sea frame and keeps the old dateOrWeekday path.
+      // Restricted-month OR union with multi-token weekday: bypasses the
+      // ya-sea frame and keeps the dateOrWeekday path.
       ['0 12 1 6-9 MON-FRI',
         'el 1 de cada mes o de lunes a viernes, de junio a septiembre ' +
         'al mediodía'],

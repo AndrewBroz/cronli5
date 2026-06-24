@@ -215,31 +215,32 @@ function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
   };
 }
 
-// Whether both the date and weekday are restricted AND the month is
-// restricted — the trigger for RULE A (OR-scope compound rendering).
-function ruleAApplies(ir: IR): boolean {
+// A restricted-month date-or-weekday union: both the date and weekday are
+// restricted AND the month is restricted. When true, the month leads so it
+// scopes both arms, and the joko…tai union comes last.
+function restrictedMonthUnion(ir: IR): boolean {
   return ir.pattern.date !== '*' && ir.pattern.weekday !== '*' &&
     ir.pattern.month !== '*';
 }
 
-// The DOM arm of a RULE A joko…tai union. Under a fronted month an
-// ordinary date drops the generic "kuukauden" anchor; a Quartz date
+// The DOM arm of a restricted-month joko…tai union. Under a fronted month
+// an ordinary date drops the generic "kuukauden" anchor; a Quartz date
 // keeps its idiom unchanged.
-function ruleADomArm(ir: IR): string {
+function unionDateArm(ir: IR): string {
   return quartzDatePhrase(ir.pattern.date) ||
     dateWords(ir) + ' päivänä';
 }
 
 // Render an analyzed cron pattern (the IR) as Finnish.
 function describe(ir: IR, opts: NormalizedOptions): string {
-  // RULE A: restricted-month OR-scope — front the month, follow with the
-  // shared time, then emit joko…tai with the union last.
-  if (ruleAApplies(ir)) {
+  // A restricted-month date-or-weekday union: the month leads so it scopes
+  // both arms, then the joko…tai union comes last.
+  if (restrictedMonthUnion(ir)) {
     const timePart = render(ir, ir.plan, opts);
 
     return applyYear(
       monthPhrase(ir) + ' ' + timePart +
-        ' joko ' + ruleADomArm(ir) + ' tai ' + weekdayQualifier(ir),
+        ' joko ' + unionDateArm(ir) + ' tai ' + weekdayQualifier(ir),
       ir,
       opts
     );
@@ -311,16 +312,16 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: NormalizedOptions
 ): string {
-  // RULE B: when the rest is a minute-step cadence, the step leads and the
-  // second anchor follows after a comma (the comma marks the granularity
-  // boundary between the two levels, not a flat list). Build:
+  // When the rest is a minute-step cadence, the step leads and the second
+  // anchor follows after a comma (the comma marks the granularity boundary
+  // between the two levels, not a flat list). Build:
   // "[step phrase], [seconds][hour clause][trailing qualifier]".
   //
   // The minute-frequency phrase is reconstructed directly here so the hour
   // clause can be interleaved between the step and the second anchor without
-  // duplicating the full renderMinuteFrequency logic. The RULE D/C reorder
+  // duplicating the full renderMinuteFrequency logic. The hours-first reorder
   // that applies inside renderMinuteFrequency is intentionally NOT applied
-  // here (RULE B only; the panel validated the step-leads form).
+  // here (the step-leads form is the correct shape for this construction).
   if (plan.rest.kind === 'minuteFrequency') {
     const freq = plan.rest as Extract<PlanNode, {kind: 'minuteFrequency'}>;
     const seg = stepSegment(ir.analyses.segments.minute!);
@@ -422,8 +423,9 @@ function bareMinutes(ir: IR): string {
 }
 
 // Whether a minute step renders as an anchored "kohdalla" clause rather
-// than a "välein" step. Used to decide RULE D (strip per-hour windows)
-// and RULE C (hours-first reorder). The thresholds (fires.length ≤ 3, ≤ 2)
+// than a "välein" step. Used to decide whether to strip per-hour windows
+// (redundant when the step enumerates its fires as a kohdalla list) and
+// whether to reorder to hours-first. The thresholds (fires.length ≤ 3, ≤ 2)
 // mirror the `atMarks` / `stepCycle60` kohdalla thresholds — keep in sync.
 function minuteStepIsAnchored(segment: StepSegment): boolean {
   if (segment.startToken.indexOf('-') !== -1) {
@@ -444,8 +446,9 @@ function minuteStepIsAnchored(segment: StepSegment): boolean {
 }
 
 // Whether the hour segments contain a range+isolated pattern (at least one
-// range segment AND at least one single), which blocks RULE C reorder but
-// triggers RULE E (sekä klo) in bare-hour context.
+// range segment AND at least one single). This pattern blocks the hours-first
+// reorder and instead uses sekä klo to join the isolated value in bare-hour
+// context.
 function hoursAreRangeIsolated(segments: Segment[]): boolean {
   let hasRange = false;
   let hasSingle = false;
@@ -462,16 +465,18 @@ function hoursAreRangeIsolated(segments: Segment[]): boolean {
   return hasRange && hasSingle;
 }
 
-// The hours-first clause for RULE C: "klo <hours> aina minuuttien <spec>
-// kohdalla" (plural genitive "minuuttien"; replaces leading "joka tunti").
+// The hours-first clause: "klo <hours> aina minuuttien <spec> kohdalla"
+// (plural genitive "minuuttien"; replaces the leading "joka tunti"). Used
+// when a range or multi-point minute list over enumerated hours renders
+// hours-first.
 function hoursFirstMinutes(hoursStr: string, ir: IR): string {
   return hoursStr + ' aina minuuttien ' +
     joinList(segmentWords(ir.analyses.segments.minute!)) + ' kohdalla';
 }
 
-// Hour segment times for RULE E: a range+isolated hour joins with
-// "sekä klo" rather than "ja", marking the isolated value as discrete.
-// Used in bare-hour context only.
+// Hour segment times for a range+isolated pattern: joins the isolated hour
+// with "sekä klo" rather than "ja", marking it as discrete rather than a
+// range extension. Used in bare-hour context only.
 function hourSegmentTimesWithSeka(
   ir: IR,
   minute: number,
@@ -504,9 +509,9 @@ function renderMinuteFrequency(
   const seg = stepSegment(ir.analyses.segments.minute!);
 
   if (plan.hours.kind === 'during') {
-    // RULE D: when the step renders as anchored ("kohdalla"), the per-hour
-    // windows are redundant — use bare clock hours instead. Then RULE C
-    // reorders to hours-first: "klo <hours> aina minuuttien <spec> kohdalla".
+    // When the step renders as anchored ("kohdalla"), the per-hour windows
+    // are redundant — use bare clock hours instead, then reorder to
+    // hours-first: "klo <hours> aina minuuttien <spec> kohdalla".
     if (minuteStepIsAnchored(seg)) {
       const bareHours = kloFromTimes(ir, plan.hours.times, opts);
 
@@ -546,10 +551,10 @@ function renderMinuteSpanInHour(
 // A minute window under discrete hours. Like Spanish, the wildcard form
 // re-strategizes to per-hour windows; restricted minutes drop the
 // "jokaisen tunnin" anchor, which the specific hours would contradict.
-// RULE C: a range or multi-point list over enumerated hours renders
-// hours-first ("klo <hours> aina minuuttien <spec> kohdalla").
-// RULE E exception: a range+isolated hour compound keeps minute-FIRST and
-// joins the isolated hour with "sekä klo" (mirrors renderCompactClockTimes).
+// A range or multi-point list over enumerated hours renders hours-first
+// ("klo <hours> aina minuuttien <spec> kohdalla"); a range+isolated hour
+// compound instead keeps minute-first and joins the isolated hour with
+// "sekä klo" (mirrors renderCompactClockTimes).
 function renderMinutesAcrossHours(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minutesAcrossHours'}>,
@@ -560,14 +565,14 @@ function renderMinutesAcrossHours(
       trailingQualifier(ir, opts);
   }
 
-  // RULE E: range+isolated hours — minute-first, bare minutes, sekä klo.
+  // Range+isolated hours: minute-first, bare minutes, sekä klo.
   if (hoursAreRangeIsolated(ir.analyses.segments.hour!)) {
     return bareMinutes(ir) + ' ' +
       hourSegmentTimesWithSeka(ir, 0, null, opts) +
       trailingQualifier(ir, opts);
   }
 
-  // RULE C: range or multi-value list (≥2 points) over enumerated hours →
+  // Range or multi-value list (≥2 points) over enumerated hours →
   // hours-first. A single anchored minute stays minute-first (clock already
   // shows it).
   const hoursStr = kloFromTimes(ir, plan.times, opts);
@@ -594,9 +599,9 @@ function renderMinuteSpanAcrossHourStep(
       trailingQualifier(ir, opts);
   }
 
-  // RULE C: a bounded range-step (e.g. 9-17/2) whose fires enumerate as a
-  // klo-digit list renders hours-first. A clean or offset unbounded step
-  // (e.g. 1/6, */2) keeps minute-first with its step phrase.
+  // A bounded range-step (e.g. 9-17/2) whose fires enumerate as a klo-digit
+  // list renders hours-first. A clean or offset unbounded step (e.g. 1/6,
+  // */2) keeps minute-first with its step phrase.
   if (segment.startToken.indexOf('-') !== -1) {
     const hoursStr = kloList(segment.fires, opts);
 
@@ -678,7 +683,7 @@ function renderHourRange(
     return 'joka minuutti ' + window + trailingQualifier(ir, opts);
   }
 
-  // RULE C: a minute range over a single hour range renders hours-first
+  // A minute range over a single hour range renders hours-first
   // ("klo 9.00–17.30 aina minuuttien 0–30 kohdalla").
   if (plan.minuteForm === 'range') {
     return hoursFirstMinutes(window, ir) + trailingQualifier(ir, opts);
@@ -698,8 +703,8 @@ function renderHourRange(
       trailingQualifier(ir, opts);
   }
 
-  // RULE C: a minute list (≥2 values) over a single hour range renders
-  // hours-first ("klo 9.00–17.30 aina minuuttien 0 ja 30 kohdalla").
+  // A minute list (≥2 values) over a single hour range renders hours-first
+  // ("klo 9.00–17.30 aina minuuttien 0 ja 30 kohdalla").
   return hoursFirstMinutes(window, ir) + trailingQualifier(ir, opts);
 }
 
@@ -741,8 +746,8 @@ function renderClockTimes(
 
 // Compact form past the enumeration cap: a single minute folds into
 // per-segment hour windows; a minute list leads with its own clause.
-// RULE C: a minute list over enumerated (non-range+isolated) hours renders
-// hours-first. RULE E: a range+isolated hour pattern joins with "sekä klo".
+// A minute list over enumerated (non-range+isolated) hours renders
+// hours-first; a range+isolated hour pattern joins with "sekä klo".
 function renderCompactClockTimes(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'compactClockTimes'}>,
@@ -750,10 +755,10 @@ function renderCompactClockTimes(
 ): string {
   const hourSegs = ir.analyses.segments.hour!;
 
-  // RULE E: range+isolated hours — join the isolated hour with "sekä klo"
-  // to stop it reading as a range extension. For the folded path (single
-  // minute folded into clock ranges) use the leading-qualifier form;
-  // for the non-folded path use bare-minutes-first with a trailing qualifier.
+  // Range+isolated hours: join the isolated hour with "sekä klo" to stop it
+  // reading as a range extension. For the folded path (single minute folded
+  // into clock ranges) use the leading-qualifier form; for the non-folded
+  // path use bare-minutes-first with a trailing qualifier.
   if (hoursAreRangeIsolated(hourSegs)) {
     if (plan.fold) {
       return leadingQualifier(ir, opts) +
@@ -775,8 +780,8 @@ function renderCompactClockTimes(
       hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
   }
 
-  // RULE C: a minute list over purely enumerated hours (step fires, all
-  // singles) — hours-first, drop "joka tunti".
+  // A minute list over purely enumerated hours (step fires, all singles) —
+  // hours-first, drop "joka tunti".
   const hoursStr = hourSegmentTimes(ir, 0, null, opts);
   const phrase = hoursFirstMinutes(hoursStr, ir) +
     trailingQualifier(ir, opts);
@@ -1043,9 +1048,10 @@ function timeDigits(
 function leadingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
-  // RULE A assembles the full compound in describe(); suppress the qualifier
-  // here so render() returns only the time/frequency part.
-  if (ruleAApplies(ir)) {
+  // When a restricted-month union is active, describe() assembles the full
+  // compound; suppress the qualifier here so render() returns only the
+  // time/frequency part.
+  if (restrictedMonthUnion(ir)) {
     return '';
   }
 
@@ -1073,9 +1079,10 @@ function leadingQualifier(ir: IR, opts: NormalizedOptions): string {
 function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
-  // RULE A assembles the full compound in describe(); suppress the qualifier
-  // here so render() returns only the time/frequency part.
-  if (ruleAApplies(ir)) {
+  // When a restricted-month union is active, describe() assembles the full
+  // compound; suppress the qualifier here so render() returns only the
+  // time/frequency part.
+  if (restrictedMonthUnion(ir)) {
     return '';
   }
 
@@ -1100,7 +1107,7 @@ function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
 
 // "kuukauden 13. päivänä tai perjantaisin": cron fires when either the
 // date or the weekday matches. Only reachable when date≠* AND weekday≠*
-// AND month=* (RULE A handles the restricted-month case in describe()),
+// AND month=* (the restricted-month union is handled in describe()),
 // so monthScope always returns '' here.
 function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   return datePhrase(ir, opts) + ' tai ' + weekdayQualifier(ir) +

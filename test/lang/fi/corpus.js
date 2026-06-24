@@ -97,7 +97,7 @@ describe('Suomi (fi):', function() {
         'joulukuun 25. päivänä vuonna 2030 keskipäivällä'],
       ['0 0 13 * FRI',
         'kuukauden 13. päivänä tai perjantaisin keskiyöllä'],
-      // RULE A: restricted-month OR-scope — month leads, time follows, joko…tai union last.
+      // Restricted-month date-or-weekday union: month leads, time follows, joko…tai union last.
       ['0 0 1 1 MON',
         'tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin'],
       ['0 0 1 6-9 FRI',
@@ -105,15 +105,15 @@ describe('Suomi (fi):', function() {
       ['5 9-17 1,15 6-8 MON-FRI',
         'kesäkuusta elokuuhun 5 minuutin kohdalla klo 9.05–17.05 ' +
         'joko 1. ja 15. päivänä tai maanantaista perjantaihin'],
-      // cluster-3: month-list case — inessive list fronts the union.
+      // Month-list case: inessive list fronts the union.
       ['5 */5 1 1,7 MON',
         'tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 ' +
         'joko 1. päivänä tai maanantaisin'],
-      // cluster-2 + RULES D+C: bare hours, hours-first reorder, OR-scope.
+      // Anchored minute step: bare hours, hours-first reorder, OR-scope.
       ['*/45 */5 1-5 6 MON-FRI',
         'kesäkuussa klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla ' +
         'joko 1.–5. päivänä tai maanantaista perjantaihin'],
-      // RULE A + E: minute-first (range+isolated hours), sekä klo.
+      // Range+isolated hours under a restricted-month union: minute-first, sekä klo.
       ['5,10,30 9-20,22 1 1 MON',
         'tammikuussa 5, 10 ja 30 minuutin kohdalla klo 9–20 sekä klo 22 ' +
         'joko 1. päivänä tai maanantaisin']
@@ -149,7 +149,7 @@ describe('Suomi (fi):', function() {
       ['0 0 * * MON#2', 'kuukauden toisena maanantaina keskiyöllä'],
       // A Quartz date OR'd with a weekday under a ranged month (fuzzer-found
       // crash: the ranged-month branch assumed the date had segments).
-      // RULE A applies: restricted month fronts + joko…tai union last.
+      // Restricted month fronts + joko…tai union last.
       ['0 0 L 6-8 MON',
         'kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä ' +
         'tai maanantaisin']
@@ -191,7 +191,7 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
       ['* 9,17 * * *', 'joka minuutti klo 9.00–9.59 ja 17.00–17.59'],
       ['0-30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 0–30 kohdalla'],
-      // RULE C/E: minute range over range+isolated hours → minute-first, sekä klo.
+      // Minute range over range+isolated hours: minute-first, sekä klo.
       ['0-30 9-20,22 * * *', '0–30 minuutin kohdalla klo 9–20 sekä klo 22'],
       ['0-30 */2 * * *', '0–30 minuutin kohdalla joka toinen tunti'],
       ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
@@ -219,7 +219,7 @@ describe('Suomi (fi):', function() {
       ['0 1/5 * * *', 'viiden tunnin välein klo 1:stä alkaen'],
       ['0 11/2 * * *', 'kahden tunnin välein klo 11:stä alkaen'],
       ['0 13/3 * * *', 'kolmen tunnin välein klo 13:sta alkaen'],
-      // RULE E: pure-hour range+isolated enumeration uses sekä klo (non-window).
+      // Pure-hour range+isolated enumeration: sekä klo joins the isolated value (non-window).
       ['0 9-20,22 * * *', 'joka päivä klo 9–20 sekä klo 22'],
       ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 sekä klo 22.30'],
       ['0,30 8-18/2 * * *',
@@ -234,12 +234,12 @@ describe('Suomi (fi):', function() {
       ['0 * * * MON', 'joka tunti maanantaisin'],
       ['*/15 * 13 * 5',
         '15 minuutin välein kuukauden 13. päivänä tai perjantaisin'],
-      // RULE C: level reorder — hours-first for anchored minute range/list
-      // over enumerated hours. SAT,SUN + ranged month included.
+      // Hours-first reorder: anchored minute range/list over enumerated hours.
+      // SAT,SUN + ranged month included.
       ['0-30 9-17/2 * 6-8 SAT,SUN',
         'klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla ' +
         'sunnuntaisin ja lauantaisin kesäkuusta elokuuhun'],
-      // RULES D+C: bare hours + hours-first for anchored step over list hours.
+      // Anchored step over list hours: bare hours + hours-first reorder.
       ['*/45 9,17 * 12 SAT,SUN',
         'klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla ' +
         'sunnuntaisin ja lauantaisin joulukuussa']
@@ -248,7 +248,7 @@ describe('Suomi (fi):', function() {
 
   describe('harvinaiset muodot', function() {
     run([
-      // RULE B: minute step leads its within-firing second anchor (comma separates).
+      // Minute step leads its within-firing second anchor (comma separates).
       ['5,30 */15 9,17 1,15 * *',
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
         'klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä'],
