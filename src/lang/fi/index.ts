@@ -215,8 +215,36 @@ function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
   };
 }
 
+// Whether both the date and weekday are restricted AND the month is
+// restricted — the trigger for RULE A (OR-scope compound rendering).
+function ruleAApplies(ir: IR): boolean {
+  return ir.pattern.date !== '*' && ir.pattern.weekday !== '*' &&
+    ir.pattern.month !== '*';
+}
+
+// The DOM arm of a RULE A joko…tai union. Under a fronted month an
+// ordinary date drops the generic "kuukauden" anchor; a Quartz date
+// keeps its idiom unchanged.
+function ruleADomArm(ir: IR): string {
+  return quartzDatePhrase(ir.pattern.date) ||
+    dateWords(ir) + ' päivänä';
+}
+
 // Render an analyzed cron pattern (the IR) as Finnish.
 function describe(ir: IR, opts: NormalizedOptions): string {
+  // RULE A: restricted-month OR-scope — front the month, follow with the
+  // shared time, then emit joko…tai with the union last.
+  if (ruleAApplies(ir)) {
+    const timePart = render(ir, ir.plan, opts);
+
+    return applyYear(
+      monthPhrase(ir) + ' ' + timePart +
+        ' joko ' + ruleADomArm(ir) + ' tai ' + weekdayQualifier(ir),
+      ir,
+      opts
+    );
+  }
+
   return applyYear(render(ir, ir.plan, opts), ir, opts);
 }
 
@@ -846,6 +874,12 @@ function timeDigits(
 function leadingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
 
+  // RULE A assembles the full compound in describe(); suppress the qualifier
+  // here so render() returns only the time/frequency part.
+  if (ruleAApplies(ir)) {
+    return '';
+  }
+
   if (pattern.date !== '*' && pattern.weekday !== '*') {
     return dateOrWeekday(ir, opts) + ' ';
   }
@@ -869,6 +903,12 @@ function leadingQualifier(ir: IR, opts: NormalizedOptions): string {
 // " kuukauden 13. päivänä". Empty when no day-level field is set.
 function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
+
+  // RULE A assembles the full compound in describe(); suppress the qualifier
+  // here so render() returns only the time/frequency part.
+  if (ruleAApplies(ir)) {
+    return '';
+  }
 
   if (pattern.date !== '*' && pattern.weekday !== '*') {
     return ' ' + dateOrWeekday(ir, opts);

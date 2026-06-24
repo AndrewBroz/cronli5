@@ -97,9 +97,18 @@ describe('Suomi (fi):', function() {
         'joulukuun 25. päivänä vuonna 2030 keskipäivällä'],
       ['0 0 13 * FRI',
         'kuukauden 13. päivänä tai perjantaisin keskiyöllä'],
+      // RULE A: restricted-month OR-scope — month leads, time follows, joko…tai union last.
+      ['0 0 1 1 MON',
+        'tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin'],
       ['0 0 1 6-9 FRI',
-        'kuukauden 1. päivänä tai perjantaisin kesäkuusta syyskuuhun ' +
-        'keskiyöllä']
+        'kesäkuusta syyskuuhun keskiyöllä joko 1. päivänä tai perjantaisin'],
+      ['5 9-17 1,15 6-8 MON-FRI',
+        'kesäkuusta elokuuhun 5 minuutin kohdalla klo 9.05–17.05 ' +
+        'joko 1. ja 15. päivänä tai maanantaista perjantaihin'],
+      // cluster-3: month-list case — inessive list fronts the union.
+      ['5 */5 1 1,7 MON',
+        'tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 ' +
+        'joko 1. päivänä tai maanantaisin']
     ]);
   });
 
@@ -130,9 +139,10 @@ describe('Suomi (fi):', function() {
       ['0 0 * * MON#2', 'kuukauden toisena maanantaina keskiyöllä'],
       // A Quartz date OR'd with a weekday under a ranged month (fuzzer-found
       // crash: the ranged-month branch assumed the date had segments).
+      // RULE A applies: restricted month fronts + joko…tai union last.
       ['0 0 L 6-8 MON',
-        'kuukauden viimeisenä päivänä tai maanantaisin kesäkuusta ' +
-        'elokuuhun keskiyöllä']
+        'kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä ' +
+        'tai maanantaisin']
     ]);
   });
 
