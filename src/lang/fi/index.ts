@@ -311,6 +311,37 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: NormalizedOptions
 ): string {
+  // RULE B: when the rest is a minute-step cadence, the step leads and the
+  // second anchor follows after a comma (the comma marks the granularity
+  // boundary between the two levels, not a flat list). Build:
+  // "[step phrase], [seconds][hour clause][trailing qualifier]".
+  //
+  // The minute-frequency phrase is reconstructed directly here so the hour
+  // clause can be interleaved between the step and the second anchor without
+  // duplicating the full renderMinuteFrequency logic. The RULE D/C reorder
+  // that applies inside renderMinuteFrequency is intentionally NOT applied
+  // here (RULE B only; the panel validated the step-leads form).
+  if (plan.rest.kind === 'minuteFrequency') {
+    const freq = plan.rest as Extract<PlanNode, {kind: 'minuteFrequency'}>;
+    const seg = stepSegment(ir.analyses.segments.minute!);
+    const stepPhrase = stepCycle60(seg, units.minute, opts);
+    let hourClause = '';
+
+    if (freq.hours.kind === 'during' && !minuteStepIsAnchored(seg)) {
+      hourClause = ' ' + hourWindowsFromTimes(ir, freq.hours.times, opts);
+    }
+    else if (freq.hours.kind === 'window') {
+      hourClause = ' ' + hourWindow(freq.hours, opts);
+    }
+    else if (freq.hours.kind === 'step') {
+      hourClause = ' ' +
+        everyNthHour(stepSegment(ir.analyses.segments.hour!), opts);
+    }
+
+    return stepPhrase + ', ' + secondsLeadClause(ir, opts) +
+      hourClause + trailingQualifier(ir, opts);
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
 }
 
@@ -390,26 +421,108 @@ function bareMinutes(ir: IR): string {
     units.minute, false);
 }
 
+// Whether a minute step renders as an anchored "kohdalla" clause rather
+// than a "välein" step. Used to decide RULE D (strip per-hour windows)
+// and RULE C (hours-first reorder).
+function minuteStepIsAnchored(segment: StepSegment): boolean {
+  if (segment.startToken.indexOf('-') !== -1) {
+    return true;
+  }
+
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+  if (start !== 0 && segment.fires.length <= 3) {
+    return true;
+  }
+
+  if (start === 0 && 60 % segment.interval === 0) {
+    return false;
+  }
+
+  return segment.fires.length <= 2;
+}
+
+// Whether the hour segments contain a range+isolated pattern (at least one
+// range segment AND at least one single), which blocks RULE C reorder but
+// triggers RULE E (sekä klo) in bare-hour context.
+function hoursAreRangeIsolated(segments: Segment[]): boolean {
+  let hasRange = false;
+  let hasSingle = false;
+
+  for (const seg of segments) {
+    if (seg.kind === 'range') {
+      hasRange = true;
+    }
+    else if (seg.kind === 'single') {
+      hasSingle = true;
+    }
+  }
+
+  return hasRange && hasSingle;
+}
+
+// The hours-first clause for RULE C: "klo <hours> aina minuuttien <spec>
+// kohdalla" (plural genitive "minuuttien"; replaces leading "joka tunti").
+function hoursFirstMinutes(hoursStr: string, ir: IR): string {
+  return hoursStr + ' aina minuuttien ' +
+    joinList(segmentWords(ir.analyses.segments.minute!)) + ' kohdalla';
+}
+
+// Hour segment times for RULE E: a range+isolated hour joins with
+// "sekä klo" rather than "ja", marking the isolated value as discrete.
+// Used in bare-hour context only.
+function hourSegmentTimesWithSeka(
+  ir: IR,
+  minute: number,
+  second: number | null | undefined,
+  opts: NormalizedOptions
+): string {
+  const pieces: string[] = [];
+
+  ir.analyses.segments.hour!.forEach(function clock(segment: Segment) {
+    if (segment.kind === 'range') {
+      pieces.push(rangeDigits(
+        {hour: +segment.bounds[0], minute, second},
+        {hour: +segment.bounds[1], minute, second}, opts));
+    }
+    else if (segment.kind === 'single') {
+      pieces.push(timeDigits(+segment.value, minute, second, opts));
+    }
+  });
+
+  return 'klo ' + pieces.slice(0, -1).join(', ') +
+    ' sekä klo ' + pieces[pieces.length - 1];
+}
+
 // A repeating minute step, qualified by the active hour window(s).
 function renderMinuteFrequency(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteFrequency'}>,
   opts: NormalizedOptions
 ): string {
-  // A minute-step plan's first minute segment is always a step segment.
-  let phrase = stepCycle60(stepSegment(ir.analyses.segments.minute!),
-    units.minute, opts);
+  const seg = stepSegment(ir.analyses.segments.minute!);
 
   if (plan.hours.kind === 'during') {
-    phrase += ' ' + hourWindowsFromTimes(ir, plan.hours.times, opts);
+    // RULE D: when the step renders as anchored ("kohdalla"), the per-hour
+    // windows are redundant — use bare clock hours instead. Then RULE C
+    // reorders to hours-first: "klo <hours> aina minuuttien <spec> kohdalla".
+    if (minuteStepIsAnchored(seg)) {
+      const bareHours = kloFromTimes(ir, plan.hours.times, opts);
+
+      return hoursFirstMinutes(bareHours, ir) + trailingQualifier(ir, opts);
+    }
+
+    return stepCycle60(seg, units.minute, opts) + ' ' +
+      hourWindowsFromTimes(ir, plan.hours.times, opts) +
+      trailingQualifier(ir, opts);
   }
-  else if (plan.hours.kind === 'window') {
+
+  let phrase = stepCycle60(seg, units.minute, opts);
+
+  if (plan.hours.kind === 'window') {
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    // The plan carries a step only for a clean step (dividing the day):
-    // confine the cadence to every Nth hour ("joka toisen tunnin aikana"),
-    // never a second, conflicting cadence.
     phrase += ' ' +
       everyNthHour(stepSegment(ir.analyses.segments.hour!), opts);
   }
@@ -432,6 +545,8 @@ function renderMinuteSpanInHour(
 // A minute window under discrete hours. Like Spanish, the wildcard form
 // re-strategizes to per-hour windows; restricted minutes drop the
 // "jokaisen tunnin" anchor, which the specific hours would contradict.
+// RULE C: a range or multi-point list over enumerated hours renders
+// hours-first ("klo <hours> aina minuuttien <spec> kohdalla").
 function renderMinutesAcrossHours(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minutesAcrossHours'}>,
@@ -442,8 +557,12 @@ function renderMinutesAcrossHours(
       trailingQualifier(ir, opts);
   }
 
-  return bareMinutes(ir) + ' ' + kloFromTimes(ir, plan.times, opts) +
-    trailingQualifier(ir, opts);
+  // RULE C: range or multi-value list (≥2 points) over enumerated hours →
+  // hours-first. A single anchored minute stays minute-first (clock already
+  // shows it).
+  const hoursStr = kloFromTimes(ir, plan.times, opts);
+
+  return hoursFirstMinutes(hoursStr, ir) + trailingQualifier(ir, opts);
 }
 
 function renderMinuteSpanAcrossHourStep(
@@ -463,6 +582,15 @@ function renderMinuteSpanAcrossHourStep(
   if (plan.form === 'wildcard') {
     return 'joka minuutti ' + everyNthHour(segment, opts) +
       trailingQualifier(ir, opts);
+  }
+
+  // RULE C: a bounded range-step (e.g. 9-17/2) whose fires enumerate as a
+  // klo-digit list renders hours-first. A clean or offset unbounded step
+  // (e.g. 1/6, */2) keeps minute-first with its step phrase.
+  if (segment.startToken.indexOf('-') !== -1) {
+    const hoursStr = kloList(segment.fires, opts);
+
+    return hoursFirstMinutes(hoursStr, ir) + trailingQualifier(ir, opts);
   }
 
   return bareMinutes(ir) + hourStepTail(segment, opts) +
@@ -540,8 +668,10 @@ function renderHourRange(
     return 'joka minuutti ' + window + trailingQualifier(ir, opts);
   }
 
+  // RULE C: a minute range over a single hour range renders hours-first
+  // ("klo 9.00–17.30 aina minuuttien 0–30 kohdalla").
   if (plan.minuteForm === 'range') {
-    return bareMinutes(ir) + ' ' + window + trailingQualifier(ir, opts);
+    return hoursFirstMinutes(window, ir) + trailingQualifier(ir, opts);
   }
 
   // On the hour the window joins directly ("joka tunti klo 9–17"); a
@@ -558,7 +688,9 @@ function renderHourRange(
       trailingQualifier(ir, opts);
   }
 
-  return minutesList(ir) + ' ' + window + trailingQualifier(ir, opts);
+  // RULE C: a minute list (≥2 values) over a single hour range renders
+  // hours-first ("klo 9.00–17.30 aina minuuttien 0 ja 30 kohdalla").
+  return hoursFirstMinutes(window, ir) + trailingQualifier(ir, opts);
 }
 
 function renderHourStep(
@@ -599,6 +731,8 @@ function renderClockTimes(
 
 // Compact form past the enumeration cap: a single minute folds into
 // per-segment hour windows; a minute list leads with its own clause.
+// RULE C: a minute list over enumerated (non-range+isolated) hours renders
+// hours-first. RULE E: a range+isolated hour pattern joins with "sekä klo".
 function renderCompactClockTimes(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'compactClockTimes'}>,
@@ -609,8 +743,24 @@ function renderCompactClockTimes(
       hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
   }
 
-  const phrase = minutesList(ir) + ', ' +
-    hourSegmentTimes(ir, 0, null, opts) + trailingQualifier(ir, opts);
+  const hourSegs = ir.analyses.segments.hour!;
+
+  // RULE E: range+isolated hours — minute-first, bare minutes, sekä klo.
+  if (hoursAreRangeIsolated(hourSegs)) {
+    const phrase = bareMinutes(ir) + ' ' +
+      hourSegmentTimesWithSeka(ir, 0, null, opts) +
+      trailingQualifier(ir, opts);
+
+    return ir.analyses.clockSecond ?
+      secondsLeadClause(ir, opts) + ', ' + phrase :
+      phrase;
+  }
+
+  // RULE C: a minute list over purely enumerated hours (step fires, all
+  // singles) — hours-first, drop "joka tunti".
+  const hoursStr = hourSegmentTimes(ir, 0, null, opts);
+  const phrase = hoursFirstMinutes(hoursStr, ir) +
+    trailingQualifier(ir, opts);
 
   return ir.analyses.clockSecond ?
     secondsLeadClause(ir, opts) + ', ' + phrase :

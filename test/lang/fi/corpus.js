@@ -108,6 +108,14 @@ describe('Suomi (fi):', function() {
       // cluster-3: month-list case — inessive list fronts the union.
       ['5 */5 1 1,7 MON',
         'tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 ' +
+        'joko 1. päivänä tai maanantaisin'],
+      // cluster-2 + RULES D+C: bare hours, hours-first reorder, OR-scope.
+      ['*/45 */5 1-5 6 MON-FRI',
+        'kesäkuussa klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla ' +
+        'joko 1.–5. päivänä tai maanantaista perjantaihin'],
+      // RULE A + E: minute-first (range+isolated hours), sekä klo.
+      ['5,10,30 9-20,22 1 1 MON',
+        'tammikuussa 5, 10 ja 30 minuutin kohdalla klo 9–20 sekä klo 22 ' +
         'joko 1. päivänä tai maanantaisin']
     ]);
   });
@@ -180,7 +188,7 @@ describe('Suomi (fi):', function() {
       ['*/15 9-17 * * MON-FRI',
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
       ['* 9,17 * * *', 'joka minuutti klo 9.00–9.59 ja 17.00–17.59'],
-      ['0-30 9,17 * * *', '0–30 minuutin kohdalla klo 9 ja 17'],
+      ['0-30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 0–30 kohdalla'],
       ['0-30 */2 * * *', '0–30 minuutin kohdalla joka toinen tunti'],
       ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
       ['* */10 * * *',
@@ -209,8 +217,7 @@ describe('Suomi (fi):', function() {
       ['0 13/3 * * *', 'kolmen tunnin välein klo 13:sta alkaen'],
       ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 ja 22.30'],
       ['0,30 8-18/2 * * *',
-        'joka tunti 0 ja 30 minuutin kohdalla, klo 8, 10, 12, 14, 16 ' +
-        'ja 18'],
+        'klo 8, 10, 12, 14, 16 ja 18 aina minuuttien 0 ja 30 kohdalla'],
       ['*/15 30 9 * * *', '15 sekunnin välein, joka päivä klo 9.30'],
       ['1 1 * * * *', 'joka tunti 1 minuutin ja 1 sekunnin kohdalla'],
       ['*/15 * * * MON', '15 minuutin välein maanantaisin'],
@@ -220,12 +227,25 @@ describe('Suomi (fi):', function() {
       ['* * * * MON', 'joka minuutti maanantaisin'],
       ['0 * * * MON', 'joka tunti maanantaisin'],
       ['*/15 * 13 * 5',
-        '15 minuutin välein kuukauden 13. päivänä tai perjantaisin']
+        '15 minuutin välein kuukauden 13. päivänä tai perjantaisin'],
+      // RULE C: level reorder — hours-first for anchored minute range/list
+      // over enumerated hours. SAT,SUN + ranged month included.
+      ['0-30 9-17/2 * 6-8 SAT,SUN',
+        'klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla ' +
+        'sunnuntaisin ja lauantaisin kesäkuusta elokuuhun'],
+      // RULES D+C: bare hours + hours-first for anchored step over list hours.
+      ['*/45 9,17 * 12 SAT,SUN',
+        'klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla ' +
+        'sunnuntaisin ja lauantaisin joulukuussa']
     ]);
   });
 
   describe('harvinaiset muodot', function() {
     run([
+      // RULE B: minute step leads its within-firing second anchor (comma separates).
+      ['5,30 */15 9,17 1,15 * *',
+        '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
+        'klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä'],
       ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "joka sekunti"). Fuzzer-found.
@@ -240,16 +260,16 @@ describe('Suomi (fi):', function() {
       ['30-40/5 * * * * *', 'joka minuutti 30, 35 ja 40 sekunnin kohdalla'],
       ['40/15 * * * *', 'joka tunti 40 ja 55 minuutin kohdalla'],
       ['* 9-17 * * *', 'joka minuutti klo 9.00–17.59'],
-      ['0-30 9-17 * * *', '0–30 minuutin kohdalla klo 9.00–17.30'],
+      ['0-30 9-17 * * *', 'klo 9.00–17.30 aina minuuttien 0–30 kohdalla'],
       ['0,30 9-17 * * *',
-        'joka tunti 0 ja 30 minuutin kohdalla klo 9.00–17.30'],
+        'klo 9.00–17.30 aina minuuttien 0 ja 30 kohdalla'],
       ['0 9-17/2 * * *', 'klo 9, 11, 13, 15 ja 17'],
       ['0-30 1/6 * * *',
         '0–30 minuutin kohdalla, kuuden tunnin välein klo 1:stä alkaen'],
       ['* 8-18,22 * * *',
         'joka minuutti klo 8.00–18.59 ja 22.00–22.59'],
       ['5-10 1,3,5,7,9,11,13 * * *',
-        '5–10 minuutin kohdalla klo 1, 3, 5, 7, 9, 11 ja 13'],
+        'klo 1, 3, 5, 7, 9, 11 ja 13 aina minuuttien 5–10 kohdalla'],
       ['0 9 * * 7', 'sunnuntaisin klo 9'],
       ['0 0 12 1 1 * 2030-2032',
         'tammikuun 1. päivänä keskipäivällä vuosina 2030–2032'],

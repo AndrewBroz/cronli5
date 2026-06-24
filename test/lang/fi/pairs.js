@@ -60,4 +60,18 @@ describe('Suomi (fi) — minimiparit:', function() {
     reads('0 0 */2 * *', 'joka toinen päivä keskiyöllä');
     reads('0 */2 * * *', 'kahden tunnin välein');
   });
+
+  // RULE B: minute step leads, second anchor follows — across different
+  // hour-clause kinds.
+  describe('RULE B sekuntiankkuri eri tuntimuodoilla', function() {
+    reads('5 */15 9-17 * * *',
+      '15 minuutin välein, 5 sekunnin kohdalla klo 9.00–17.45');
+    reads('5 */15 */2 * * *',
+      '15 minuutin välein, 5 sekunnin kohdalla joka toisen tunnin aikana');
+  });
+
+  // RULE D: anchored minute step with non-zero start fires.length ≤ 3.
+  describe('RULE D ankkuroitu minuuttiaskel: alkuarvo ≠ 0, ≤ 3 lähtöä', function() {
+    reads('5/30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 5 ja 35 kohdalla');
+  });
 });
