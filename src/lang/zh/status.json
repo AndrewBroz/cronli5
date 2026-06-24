@@ -2,6 +2,6 @@
   "name": "Chinese (Mandarin, Simplified)",
   "status": "experimental",
   "humanReview": null,
-  "crossFamilyReview": null,
+  "modelReview": null,
   "note": "EXPERIMENTAL — model-drafted, not validated to beta. The style contract was settled by a blind 3-persona same-family Sonnet panel (src/lang/zh/notes.md), not the cross-family panel beta requires, and the corpus was machine-authored then converged to the renderer's canonical forms (`npm run fuzz zh` is clean: 0 throws / degenerate / missing-value). zh is a rebuild candidate for the automated language pipeline; it advances toward beta/stable only on stronger validation and fluent-human review."
 }

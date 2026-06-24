@@ -2,19 +2,19 @@
   "name": "English",
   "status": "stable",
   "humanReview": "maintainer (native)",
-  "crossFamilyReview": null,
+  "modelReview": null,
   "dialects": {
     "gb": {
       "anchor": "Guardian style guide",
       "status": "stable",
       "humanReview": "maintainer (UK-English)",
-      "crossFamilyReview": null
+      "modelReview": null
     },
     "house": {
       "anchor": "cronli5 house style",
       "status": "stable",
       "humanReview": "by construction (self-defined)",
-      "crossFamilyReview": null
+      "modelReview": null
     }
   }
 }

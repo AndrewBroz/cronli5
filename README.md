@@ -206,13 +206,13 @@ docs below.
 
 ### Language Review Status
 
-*Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by a cross-family review panel and shipped with a beta label
+*Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by the blind Sonnet persona panel and shipped with a beta label
 until a human review cycle is completed. *Experimental* languages are
 model-drafted and not yet validated by that panel. See
 [tooling/docs/language-pipeline.md](./tooling/docs/language-pipeline.md).
 
 <!-- BEGIN GENERATED: language-status -->
-| Language | Status | Human review | Cross-family review |
+| Language | Status | Human review | Model review |
 | --- | --- | --- | --- |
 | German | beta | — | gemma4:31b-cloud + 3 Claude judges — 34/34 after findings fixed test-first and re-attested (2026-06-16) |
 | English | stable | maintainer (native) | — |

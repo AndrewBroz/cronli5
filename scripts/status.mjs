@@ -29,7 +29,7 @@ function languageStatuses() {
 // One markdown row of status and review evidence for a reviewed unit.
 function row(label, unit) {
   return '| ' + label + ' | ' + unit.status + ' | ' +
-    (unit.humanReview || '—') + ' | ' + (unit.crossFamilyReview || '—') + ' |';
+    (unit.humanReview || '—') + ' | ' + (unit.modelReview || '—') + ' |';
 }
 
 // A markdown table of each language's status, with a sub-row for any dialect
@@ -49,7 +49,7 @@ function statusTable() {
     }
   }
 
-  return ['| Language | Status | Human review | Cross-family review |',
+  return ['| Language | Status | Human review | Model review |',
     '| --- | --- | --- | --- |', ...rows].join('\n');
 }
 

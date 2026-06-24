@@ -2,17 +2,17 @@
   "name": "German",
   "status": "beta",
   "humanReview": null,
-  "crossFamilyReview": "gemma4:31b-cloud + 3 Claude judges — 34/34 after findings fixed test-first and re-attested (2026-06-16)",
+  "modelReview": "gemma4:31b-cloud + 3 Claude judges — 34/34 after findings fixed test-first and re-attested (2026-06-16)",
   "dialects": {
     "de-AT": {
       "status": "beta",
       "humanReview": null,
-      "crossFamilyReview": "inherits de (34/34); sole divergence is the Duden-standard lexeme \"Jänner\" for January, covered by corpus tests — no separate naturalness panel"
+      "modelReview": "inherits de (34/34); sole divergence is the Duden-standard lexeme \"Jänner\" for January, covered by corpus tests — no separate naturalness panel"
     },
     "de-CH": {
       "status": "beta",
       "humanReview": null,
-      "crossFamilyReview": "inherits de (34/34); output-identical to de-DE (the ß→ss divergence never surfaces in schedule prose)"
+      "modelReview": "inherits de (34/34); output-identical to de-DE (the ß→ss divergence never surfaces in schedule prose)"
     }
   }
 }

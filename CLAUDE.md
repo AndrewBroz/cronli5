@@ -61,7 +61,7 @@ working drafts.
 ## Languages ship as beta, then graduate
 
 A language may be **experimental** (model-drafted, not yet validated by the
-cross-family review panel), **beta** (model-validated by that panel), or
+blind Sonnet persona panel), **beta** (model-validated by that panel), or
 **stable** (graduated by a fluent human); `src/lang/<code>/status.json` records
 the status. The pipeline is in
 [tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md), the contributor guide in
