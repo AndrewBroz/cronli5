@@ -146,11 +146,26 @@ function describe(ir: IR, opts: Opts): string {
 }
 
 // Render one plan node. `composeSeconds` recurses with its `rest` plan.
+// When BOTH date and weekday are restricted (a date-OR-weekday union), the
+// result is wrapped in the unified `[month] [time], ya sea <DOM> o <DOW>`
+// frame regardless of arm shapes or month type.
 function render(ir: IR, plan: PlanNode, opts: Opts): string {
   // Each renderer narrows `plan` to its own `kind`; the dispatch table is
   // keyed by that discriminant, so the union-to-specific match is sound but
   // not expressible without a cast.
-  return (renderers[plan.kind] as Renderer)(ir, plan, opts);
+  const phrase = (renderers[plan.kind] as Renderer)(ir, plan, opts);
+
+  if (!isDateWeekdayUnion(ir)) {
+    return phrase;
+  }
+
+  // The time/frequency phrase arrives from the renderer with no day qualifier
+  // (leadingQualifier and trailingQualifier both return '' for union patterns).
+  // Front the shared month (possibly with a trailing comma for enumerations),
+  // then append the union correlative last.
+  const lead = unionMonthLeadFull(ir);
+
+  return (lead ? lead + ' ' : '') + phrase + unionYaseaSuffix(ir, opts);
 }
 
 // --- Seconds renderers. ---
@@ -548,39 +563,103 @@ function hourWindow(
     {hour: window.to, minute: window.last}, opts);
 }
 
-// Whether the IR is a restricted-month single-DOM + single-DOW union. The
-// month must be restricted (not wildcard), both date and weekday must be a
-// single token each so that `el día N` and `un <weekday>` are well-formed.
-// Wildcard-month OR, multi-date, and multi-weekday shapes are left on the
-// existing path.
-function restrictedMonthUnion(ir: IR): boolean {
-  return ir.pattern.month !== '*' &&
-    ir.shapes.date === 'single' &&
-    ir.shapes.weekday === 'single';
+// Whether BOTH the date and weekday fields are restricted (not '*'): cron
+// fires when either condition matches, making this a date-OR-weekday union.
+function isDateWeekdayUnion(ir: IR): boolean {
+  return ir.pattern.date !== '*' && ir.pattern.weekday !== '*';
 }
 
-// The month phrase that leads the shared frame of a restricted-month union.
-// Single month → `en diciembre`; range → `de junio a septiembre`.
-function unionMonthLead(ir: IR): string {
-  return monthPhrase(ir, monthRanged(ir) ? 'de ' : 'en ');
+// The month lead for the unified union frame, with a trailing comma appended
+// when the lead is a heavy enumeration (≥2 non-range months), per RAE.
+// Single month → `en enero`; range → `de enero a marzo`;
+// step/enumeration (≥2 flattened singles) → `en enero, marzo, …, y noviembre,`.
+// Wildcard month → '' (omit; frame starts with the time).
+function unionMonthLeadFull(ir: IR): string {
+  if (ir.pattern.month === '*') {
+    return '';
+  }
+
+  const lead = monthPhrase(ir, monthRanged(ir) ? 'de ' : 'en ');
+  const segments = flattenSteps(fieldSegments(ir, 'month'));
+  const isEnumeration = !monthRanged(ir) && segments.length >= 2;
+
+  return isEnumeration ? lead + ',' : lead;
 }
 
-// The DOM arm under a fronted month — `el día N` (drops the generic month
-// that `dateClause` would otherwise append). `restrictedMonthUnion`
-// guarantees a single-segment single date here.
-function unionDateArm(ir: IR): string {
-  const segment = fieldSegments(ir, 'date')[0];
+// The DOM arm for the union frame — month-less, driven by the date shape.
+// Quartz and open-step forms are self-contained; ranges use `del N al M del
+// mes`; a single date reads `el día N` under a restricted month (month is in
+// the lead) or `el N de cada mes` under a wildcard month.
+function domArm(ir: IR, opts: Opts): string {
+  const date = ir.pattern.date;
+  const quartz = quartzDatePhrase(date);
 
-  return 'el día ' + (segment as Extract<Segment, {kind: 'single'}>).value;
+  if (quartz) {
+    return quartz;
+  }
+
+  if (isOpenStep(date)) {
+    return stepDates(date, opts);
+  }
+
+  const segments = fieldSegments(ir, 'date');
+
+  if (segments.length === 1 && segments[0].kind === 'range') {
+    return 'del ' + segments[0].bounds[0] + ' al ' +
+      segments[0].bounds[1] + ' del mes';
+  }
+
+  if (segments.length === 1 && segments[0].kind === 'single') {
+    return ir.pattern.month === '*' ?
+      'el ' + segments[0].value + ' de cada mes' :
+      'el día ' + segments[0].value;
+  }
+
+  return 'los días ' + joinList(segmentWords(segments)) + ' del mes';
 }
 
-// The DOW arm in the `ya sea … o` frame — singular indefinite `un viernes`.
-// `restrictedMonthUnion` guarantees a single-token weekday at this call site.
-function unionWeekdayArm(ir: IR): string {
+// The DOW arm for the union frame — month-less, driven by the weekday shape.
+// Quartz forms are self-contained; a single weekday reads `cualquier <name>`;
+// all other forms use the same phrasing as the standalone weekday qualifier
+// (range → `de lunes a viernes`; list/step → `los domingos, …`).
+function dowArm(ir: IR): string {
+  const quartz = quartzWeekdayPhrase(ir.pattern.weekday);
+
+  if (quartz) {
+    return quartz;
+  }
+
   const segments = flattenSteps(fieldSegments(ir, 'weekday'));
-  const segment = segments[0] as SingleNameSegment;
+  const allSingles = segments.every(function single(segment) {
+    return segment.kind === 'single';
+  });
 
-  return 'un ' + weekdayName(segment.value);
+  if (allSingles && segments.length === 1) {
+    return 'cualquier ' +
+      weekdayName((segments[0] as SingleNameSegment).value);
+  }
+
+  if (allSingles) {
+    return 'los ' +
+      joinList(segments.map(function name(segment) {
+        return pluralWeekday((segment as SingleNameSegment).value);
+      }));
+  }
+
+  if (segments.length === 1) {
+    return weekdayRange(segments[0] as RangeNameSegment);
+  }
+
+  return joinList(segments.map(function name(segment) {
+    return segment.kind === 'range' ?
+      weekdayRange(segment) :
+      'los ' + pluralWeekday(segment.value);
+  }));
+}
+
+// The `, ya sea <DOM> o <DOW>` correlative suffix for the union frame.
+function unionYaseaSuffix(ir: IR, opts: Opts): string {
+  return ', ya sea ' + domArm(ir, opts) + ' o ' + dowArm(ir);
 }
 
 // "todos los días a las 9:30 y a las 17:00".
@@ -592,14 +671,6 @@ function renderClockTimes(
   const phrases = plan.times.map(function clock(time) {
     return atTime(timePhrase(time.hour, time.minute, time.second, opts));
   });
-
-  // Restricted-month OR union: front the shared month + time, put the
-  // DOM/DOW union last with `ya sea … o …`.
-  if (restrictedMonthUnion(ir)) {
-    return unionMonthLead(ir) + ' ' +
-      collapseAtTimes(phrases) +
-      ', ya sea ' + unionDateArm(ir) + ' o ' + unionWeekdayArm(ir);
-  }
 
   return leadingQualifier(ir, opts) + collapseAtTimes(phrases);
 }
@@ -1011,11 +1082,13 @@ function dayPeriod(hour: number, opts: Opts): string {
 
 // The qualifier that precedes clock times: "todos los días ", "todos los
 // lunes ", "el 13 de cada mes ", "de lunes a viernes ".
+// Date-OR-weekday unions skip this entirely — the unified frame in `render`
+// handles the month lead and day-level suffix.
 function leadingQualifier(ir: IR, opts: Opts): string {
   const pattern = ir.pattern;
 
   if (pattern.date !== '*' && pattern.weekday !== '*') {
-    return dateOrWeekday(ir, opts) + ' ';
+    return '';
   }
 
   if (pattern.date !== '*') {
@@ -1035,11 +1108,13 @@ function leadingQualifier(ir: IR, opts: Opts): string {
 
 // The qualifier trailing a frequency: " los lunes", " en junio", " el 13
 // de cada mes". Empty when no day-level field is set.
+// Date-OR-weekday unions skip this entirely — the unified frame in `render`
+// handles the month lead and day-level suffix.
 function trailingQualifier(ir: IR, opts: Opts): string {
   const pattern = ir.pattern;
 
   if (pattern.date !== '*' && pattern.weekday !== '*') {
-    return ' ' + dateOrWeekday(ir, opts);
+    return '';
   }
 
   if (pattern.date !== '*') {
@@ -1055,20 +1130,6 @@ function trailingQualifier(ir: IR, opts: Opts): string {
   }
 
   return '';
-}
-
-// "el 31 de diciembre o los viernes de diciembre": cron fires when either
-// the date or the weekday matches. A ranged month cannot fold into either
-// half, so one scope trails the whole alternation ("el 1 de cada mes o
-// los viernes, de junio a septiembre").
-function dateOrWeekday(ir: IR, opts: Opts): string {
-  if (monthRanged(ir)) {
-    return dateClause(ir, ' de cada mes', opts) + ' o ' +
-      weekdayQualifier(ir) + ', ' + monthPhrase(ir, 'de ');
-  }
-
-  return datePhrase(ir, opts) + ' o ' + weekdayQualifier(ir) +
-    monthScope(ir);
 }
 
 // The date qualifier: "el 13 de junio", "los días 1 y 15 de cada mes",

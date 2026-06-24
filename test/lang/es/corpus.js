@@ -115,7 +115,7 @@ describe('Español (es):', function() {
       ['0 0 1 1-11/3 *',
         'el 1 de enero, abril, julio y octubre a medianoche'],
       ['0 0 1 6-9 FRI',
-        'de junio a septiembre a medianoche, ya sea el día 1 o un viernes'],
+        'de junio a septiembre a medianoche, ya sea el día 1 o cualquier viernes'],
       ['0 0 L 6-9 *',
         'el último día del mes, de junio a septiembre a medianoche'],
       ['0 0 */2 6-9 *',
@@ -197,13 +197,46 @@ describe('Español (es):', function() {
   });
 
   describe('fecha o día de la semana', function() {
+    // 12-hour entries (ampm: true shared).
     run([
+      // Single month, single DOM, single DOW.
       ['59 23 31 12 5',
-        'en diciembre a las 11:59 de la noche, ya sea el día 31 o un viernes'],
+        'en diciembre a las 11:59 de la noche, ya sea el día 31 o cualquier viernes'],
       ['59 23 31 12 5',
-        'en diciembre a las 23:59, ya sea el día 31 o un viernes',
+        'en diciembre a las 23:59, ya sea el día 31 o cualquier viernes',
         {ampm: false}]
     ], ampm);
+
+    // 24-hour entries (default clock; no ampm override).
+    run([
+      // Single month — el día N arm.
+      ['0 0 1 1 0', 'en enero a las 00:00, ya sea el día 1 o cualquier domingo'],
+      // Wildcard month — el N de cada mes arm.
+      ['0 0 1 * 5L', 'a las 00:00, ya sea el 1 de cada mes o el último viernes del mes'],
+      // Wildcard month, step DOM, step DOW.
+      ['0 0 */2 * */2',
+        'a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados'],
+      // Enumeration/step months (≥2): month lead with trailing comma.
+      ['0 0 */2 */2 */2',
+        'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
+        'ya sea cada dos días del mes o los domingos, martes, jueves y sábados'],
+      ['0 0 L */2 */2',
+        'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
+        'ya sea el último día del mes o los domingos, martes, jueves y sábados'],
+      // Range month (no trailing comma).
+      ['0 0 1-15 1-3 */2',
+        'de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los domingos, martes, jueves y sábados'],
+      ['0 0 1 1-3 0',
+        'de enero a marzo a las 00:00, ya sea el día 1 o cualquier domingo'],
+      // Frequency + wildcard month.
+      ['*/5 */2 1 * 5',
+        'cada cinco minutos, durante las horas pares, ya sea el 1 de cada mes o cualquier viernes'],
+      // Mixed weekday arm (range + single): exercises the mixed-list dow branch.
+      ['0 0 1 * 0,1-5',
+        'a las 00:00, ya sea el 1 de cada mes o los domingos y de lunes a viernes'],
+      ['0 0 1 6-9 0,1-5',
+        'de junio a septiembre a las 00:00, ya sea el día 1 o los domingos y de lunes a viernes']
+    ]);
   });
 
   describe('pasos con desfase y acotados', function() {
@@ -327,7 +360,7 @@ describe('Español (es):', function() {
       ['*/15 9-17 * * *', 'cada 15 minutos de las 09:00 a las 17:45',
         {ampm: false}],
       ['*/15 * 13 * 5',
-        'cada 15 minutos el 13 de cada mes o los viernes'],
+        'cada 15 minutos, ya sea el 13 de cada mes o cualquier viernes'],
       ['*/15 * * 6 *', 'cada 15 minutos en junio'],
       ['0 12 * * 0,1/2',
         'los domingos, lunes, miércoles y viernes al mediodía'],
@@ -340,11 +373,10 @@ describe('Español (es):', function() {
       ['*/5 * * * *', 'cada 5 minutos', {short: true}],
       ['0 12 * * 7', 'los domingos al mediodía'],
       ['5 9 * * *', 'todos los días a las 9:05 de la mañana'],
-      // Restricted-month OR union with multi-token weekday: bypasses the
-      // ya-sea frame and keeps the dateOrWeekday path.
+      // Restricted-month OR union with a range weekday: now uses the unified
+      // ya-sea frame with month fronted once and month-less arms.
       ['0 12 1 6-9 MON-FRI',
-        'el 1 de cada mes o de lunes a viernes, de junio a septiembre ' +
-        'al mediodía'],
+        'de junio a septiembre al mediodía, ya sea el día 1 o de lunes a viernes'],
       // Single restricted month + weekday (no date): exercises monthScope
       // with a non-ranged month.
       ['0 9 * 6 MON', 'los lunes de junio a las 9 de la mañana']
