@@ -423,14 +423,6 @@ function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
   const {rest} = plan as Extract<PlanNode, {kind: 'composeSeconds'}>;
   const restText = render(ir, rest, opts);
 
-  if (rest.kind === 'everyHour') {
-    return sec + '，每小时';
-  }
-
-  if (rest.kind === 'hourStep') {
-    return sec + '，' + restText;
-  }
-
   if ((rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') &&
     isDaily(ir)) {
     return '每天' + restText + sec;
