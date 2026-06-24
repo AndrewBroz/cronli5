@@ -18,6 +18,8 @@ Finnish was the architecture's agglutinative stress test: ranges,
 distributives, and date anchors are case constructions, not connective
 words, so the renderer owns the morphology outright.
 
+**Experimental.** Round-trips correctly, but the blind model panel found the compound/OR ("tai"-rakenne) phrasing not yet idiomatic; pending a fix and re-review. See [Language Review Status](../../README.md#language-review-status).
+
 ## Style anchors
 
 Anchored to **Kielitoimiston ohjepankki** (Institute for the Languages

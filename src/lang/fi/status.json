@@ -1,6 +1,7 @@
 {
   "name": "Finnish",
-  "status": "beta",
+  "status": "experimental",
   "humanReview": null,
-  "modelReview": null
+  "modelReview": "blind 3-persona Sonnet panel + round-trip comprehension over the spanning set (17 patterns, 2026-06-24): round-trip 17/17 correct, but naturalness misses the beta bar — overall median 4 with 8/17 items at or below 3 (two at 2); all three personas flag the compound day-of-month/day-of-week/month \"tai\"-rakenne for scope ambiguity and stacked-qualifier awkwardness.",
+  "note": "EXPERIMENTAL — correct but not consistently idiomatic on compound schedules. The renderer round-trips every spanning-set pattern (the meaning is right), but the blind Sonnet panel found a systematic naturalness defect in the OR/compound \"tai\"-rakenne and in stacked month-weekday-hour qualifiers. Re-promote to beta after the compound-rendering fix and a re-review."
 }

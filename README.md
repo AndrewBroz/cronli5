@@ -217,7 +217,7 @@ model-drafted and not yet validated by that panel. See
 | German | beta | — | gemma4:31b-cloud + 3 Claude judges — 34/34 after findings fixed test-first and re-attested (2026-06-16) |
 | English | stable | maintainer (native) | — |
 | Spanish | beta | maintainer (informal); formal pilot pending | gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15) |
-| Finnish | beta | — | — |
+| Finnish | experimental | — | blind 3-persona Sonnet panel + round-trip comprehension over the spanning set (17 patterns, 2026-06-24): round-trip 17/17 correct, but naturalness misses the beta bar — overall median 4 with 8/17 items at or below 3 (two at 2); all three personas flag the compound day-of-month/day-of-week/month "tai"-rakenne for scope ambiguity and stacked-qualifier awkwardness. |
 | Chinese (Mandarin, Simplified) | beta | — | blind 3-persona Sonnet style panel + author/audit corpus workflow (2026-06-20); npm run fuzz zh clean (0 throws / degenerate / missing-value) |
 <!-- END GENERATED: language-status -->
 

@@ -112,6 +112,10 @@ must leave all other en output byte-identical (the corpus is the guard).
   automated stance-review; pinned across c0216–c0225, c0239 in
   `test/lang/en/core-set.js`.
 
+**Per-language follow-ups:**
+
+- **fi compound/OR "tai"-rakenne + stacked-qualifier naturalness.** The blind Sonnet panel (17-pattern spanning set, 2026-06-24) found a systematic naturalness defect in the compound day-of-month/day-of-week/month "tai"-rakenne and in stacked month-weekday-hour qualifiers (8/17 items ≤3, two at 2; all three personas flagged it). Fix the compound rendering, then re-run the blind panel + round-trip review and re-promote fi from experimental to beta.
+
 **Minor / low priority (not yet captured as tests):**
 
 - CLI whitespace `--lang ' '` → "Unknown language:   (available …)" with a
