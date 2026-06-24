@@ -269,10 +269,13 @@ function planSeconds(
     return null;
   }
 
+  // The second makes the cadence sub-minute, so a minute of 0 is a real
+  // restriction that must be stated, not absorbed into an hourly idiom (which
+  // would silently drop it). Route minute 0 to the minute-explicit forms.
   return {
     kind: 'composeSeconds',
-    rest: planMinutes(pattern, shapes, analyses) ||
-      planHours(pattern, shapes, analyses)
+    rest: planMinutes(pattern, shapes, analyses, true) ||
+      planHours(pattern, shapes, analyses, true)
   };
 }
 
@@ -303,7 +306,8 @@ function planStandaloneSeconds(
 function planMinutes(
   pattern: Pattern,
   shapes: Shapes,
-  analyses: Analyses
+  analyses: Analyses,
+  subMinuteSecond = false
 ): PlanNode | undefined {
   if (shapes.minute === 'step') {
     return {
@@ -333,7 +337,7 @@ function planMinutes(
   }
 
   if (pattern.hour === '*') {
-    return planMinutesUnderOpenHour(pattern, shapes);
+    return planMinutesUnderOpenHour(pattern, shapes, subMinuteSecond);
   }
 }
 
@@ -451,7 +455,8 @@ function planMinutesAcrossHours(
 // Minute strategies that only stand on their own under a wildcard hour.
 function planMinutesUnderOpenHour(
   pattern: Pattern,
-  shapes: Shapes
+  shapes: Shapes,
+  subMinuteSecond: boolean
 ): PlanNode | undefined {
   if (shapes.minute === 'range') {
     return {kind: 'rangeOfMinutes'};
@@ -465,18 +470,26 @@ function planMinutesUnderOpenHour(
     return {kind: 'everyMinute'};
   }
 
-  if (pattern.minute !== '0') {
+  // Minute 0 normally defers to "every hour" so a standalone `0 * * * *`
+  // stays terse; under a sub-minute second it must be stated, so name it.
+  if (pattern.minute !== '0' || subMinuteSecond) {
     return {kind: 'singleMinute'};
   }
 }
 
-// Hour strategies: the chain's last resort always produces a plan.
+// Hour strategies: the chain's last resort always produces a plan. Under a
+// sub-minute second a minute of 0 is a real restriction, so the absorbing
+// idioms (hour range, hour step, every hour) are skipped for it and the hour
+// is enumerated as clock times instead, stating the :00.
 function planHours(
   pattern: Pattern,
   shapes: Shapes,
-  analyses: Analyses
+  analyses: Analyses,
+  subMinuteSecond = false
 ): PlanNode {
-  if (shapes.hour === 'range') {
+  const absorbsMinuteZero = subMinuteSecond && pattern.minute === '0';
+
+  if (shapes.hour === 'range' && !absorbsMinuteZero) {
     const bounds = pattern.hour.split('-');
     let minuteForm: 'lead' | 'wildcard' | 'range' = 'lead';
 
@@ -496,25 +509,33 @@ function planHours(
     };
   }
 
-  if (shapes.hour === 'step' && pattern.minute === '0') {
+  if (shapes.hour === 'step' && pattern.minute === '0' && !subMinuteSecond) {
     return {kind: 'hourStep'};
   }
 
-  if (pattern.hour === '*') {
+  if (pattern.hour === '*' && !absorbsMinuteZero) {
     return {kind: 'everyHour'};
   }
 
-  return planClockTimes(pattern, analyses);
+  // When minute 0 must be stated, enumerate the on-the-hour times explicitly:
+  // the compact fold of a contiguous hour range would otherwise restate the
+  // hour-range idiom ("every hour from X through Y") and re-drop the :00.
+  return planClockTimes(pattern, analyses, absorbsMinuteZero);
 }
 
 // Enumerated clock times up to the cap; past it, a compact form (a single
 // minute folds into hour-segment windows; a minute list leads with its own
-// clause).
-function planClockTimes(pattern: Pattern, analyses: Analyses): PlanNode {
+// clause). `enumerate` forces the explicit list past the cap, used when a
+// minute restriction must be named rather than folded into an hour idiom.
+function planClockTimes(
+  pattern: Pattern,
+  analyses: Analyses,
+  enumerate = false
+): PlanNode {
   const hours = enumerateFires(pattern.hour, 0, 23);
   const minutes = enumerateValues(pattern.minute);
 
-  if (hours.length * minutes.length > maxClockTimes) {
+  if (!enumerate && hours.length * minutes.length > maxClockTimes) {
     return {
       fold: minutes.length === 1,
       kind: 'compactClockTimes',

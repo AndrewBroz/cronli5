@@ -253,6 +253,12 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
         'klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä'],
       ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
+      // Minute 0 under a sub-minute second must be stated, not absorbed into
+      // an hourly idiom ("joka tunti" / "kahden tunnin välein" / a klo 9–17
+      // window) that silently drops the :00.
+      ['* 0 * * * *', 'joka sekunti, joka tunti 0 minuutin kohdalla'],
+      ['* 0 9-17 * * *',
+        'joka sekunti, joka päivä klo 9, 10, 11, 12, 13, 14, 15, 16 ja 17'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "joka sekunti"). Fuzzer-found.
       ['* * 9 * * *', 'joka sekunti, joka minuutti klo 9.00–9.59'],

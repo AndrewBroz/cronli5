@@ -334,6 +334,14 @@ describe('Español (es):', function() {
         'cada 15 segundos, en el minuto 30 de cada hora'],
       ['* 30 9 * * *',
         'cada segundo, todos los días a las 9:30 de la mañana'],
+      // Minute 0 under a sub-minute second must be stated, not absorbed into
+      // an hourly idiom ("cada hora" / "cada dos horas" / a 9-a-17 window)
+      // that silently drops the :00.
+      ['* 0 * * * *', 'cada segundo, en el minuto 0 de cada hora'],
+      ['* 0 9-17 * * *',
+        'cada segundo, todos los días a las 9, 10 y 11 de la mañana, ' +
+        'al mediodía, y a la 1, a las 2, a las 3, a las 4 y a las 5 ' +
+        'de la tarde'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "cada segundo"). Fuzzer-found.
       ['* * 9 * * *',

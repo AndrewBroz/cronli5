@@ -256,6 +256,12 @@ describe('Deutsch (de):', function() {
       ['0 9 1 * 5L', 'am 1. oder am letzten Freitag des Monats um 9 Uhr'],
       // A wildcard second composed with a clock time.
       ['* 0 9 * * *', 'jede Sekunde, um 9 Uhr'],
+      // Minute 0 under a sub-minute second must be stated, not absorbed into
+      // an hourly idiom ("jede Stunde" / "alle 2 Stunden" / a 9-bis-17 window)
+      // that silently drops the :00.
+      ['* 0 * * * *', 'jede Sekunde, in Minute 0 jeder Stunde'],
+      ['* 0 9-17 * * *',
+        'jede Sekunde, um 9, 10, 11, 12, 13, 14, 15, 16 und 17 Uhr'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "jede Sekunde"). Fuzzer-found.
       ['* * 9 * * *', 'jede Sekunde, jede Minute von 9:00 bis 9:59 Uhr'],

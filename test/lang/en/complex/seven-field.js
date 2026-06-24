@@ -41,4 +41,18 @@ describe('Seven-field patterns:', function() {
         'every hour']
     ]);
   });
+
+  // A minute of 0 under a sub-minute second is a real restriction: it must be
+  // stated, not absorbed into an hourly idiom ("every hour" / "every two
+  // hours" / a 9-through-17 range) that silently drops it.
+  describe('minute 0 stated under a sub-minute second', function() {
+    run([
+      ['* 0 * * * *', 'every second, zero minutes past the hour, every hour'],
+      ['* 0 * * * * 2013',
+        'every second, zero minutes past the hour, every hour in 2013'],
+      ['* 0 9-17 * * *',
+        'every second, every day at 9 a.m., 10 a.m., 11 a.m., 12 p.m., ' +
+        '1 p.m., 2 p.m., 3 p.m., 4 p.m., and 5 p.m.']
+    ]);
+  });
 });

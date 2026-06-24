@@ -48,6 +48,24 @@ function patterns() {
   return [...five, ...six];
 }
 
+// A targeted invariant the digit-sweep cannot see: under a sub-minute second,
+// a minute of 0 is a real restriction and must be STATED, not absorbed into a
+// coarser hourly idiom. The sweep generates these shapes, but `missingValue`
+// exempts 0 (it legitimately renders as a word, a dropped :00, or implicit
+// on-the-hour times), so the dropped-minute-0 bug slipped through. The
+// second=0 sibling renders the legitimate hourly idiom for minute 0; the
+// sub-minute-second form must add an explicit minute-0 clause to it, never
+// reduce to it. (Holds for a restricted hour, where the fixed form enumerates
+// distinct clock times rather than restating the hour idiom; a wildcard hour's
+// minute-0 clause can legitimately share the bare "every hour" tail, so it is
+// pinned by the corpus instead.)
+function minuteZeroStated() {
+  return [
+    {hour: '9-17', minute0: '* 0 9-17 * * *', second0: '0 0 9-17 * * *'},
+    {hour: '*/2', minute0: '* 0 */2 * * *', second0: '0 0 */2 * * *'}
+  ];
+}
+
 // Obvious garbage in an output.
 function degenerate(output) {
   if (!output || !output.trim()) {
@@ -144,6 +162,24 @@ function report(label, byKey) {
   keys.forEach((key) => console.log('  [' + key + ']  ' + byKey[key]));
 }
 
+// Run the targeted minute-0 invariant against a language. Each restricted-hour
+// case must NOT collapse back to its absorbing second=0 sibling.
+function checkMinuteZero(lang) {
+  const failures = {};
+
+  minuteZeroStated().forEach(function each({hour, minute0, second0}) {
+    const stated = cronli5(minute0, {lang});
+    const absorbed = cronli5(second0, {lang});
+
+    if (stated.includes(absorbed)) {
+      note(failures, 'hour ' + hour, minute0 + ' -> ' + stated +
+        ' (absorbs the minute 0 idiom "' + absorbed + '")');
+    }
+  });
+
+  return failures;
+}
+
 async function main(code, samples) {
   const lang = (await import('../src/lang/' + code + '/index.js')).default;
   const sink = {throwsBy: {}, degenBy: {}, missingBy: {}, templates: new Map()};
@@ -157,6 +193,7 @@ async function main(code, samples) {
   report('THROWS', sink.throwsBy);
   report('DEGENERATE', sink.degenBy);
   report('MISSING VALUE', sink.missingBy);
+  report('DROPPED MINUTE 0', checkMinuteZero(lang));
   console.log('\ntried ' + tried + ', distinct output shapes ' +
     sink.templates.size);
 
