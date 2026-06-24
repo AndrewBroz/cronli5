@@ -423,7 +423,8 @@ function bareMinutes(ir: IR): string {
 
 // Whether a minute step renders as an anchored "kohdalla" clause rather
 // than a "välein" step. Used to decide RULE D (strip per-hour windows)
-// and RULE C (hours-first reorder).
+// and RULE C (hours-first reorder). The thresholds (fires.length ≤ 3, ≤ 2)
+// mirror the `atMarks` / `stepCycle60` kohdalla thresholds — keep in sync.
 function minuteStepIsAnchored(segment: StepSegment): boolean {
   if (segment.startToken.indexOf('-') !== -1) {
     return true;
@@ -547,6 +548,8 @@ function renderMinuteSpanInHour(
 // "jokaisen tunnin" anchor, which the specific hours would contradict.
 // RULE C: a range or multi-point list over enumerated hours renders
 // hours-first ("klo <hours> aina minuuttien <spec> kohdalla").
+// RULE E exception: a range+isolated hour compound keeps minute-FIRST and
+// joins the isolated hour with "sekä klo" (mirrors renderCompactClockTimes).
 function renderMinutesAcrossHours(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minutesAcrossHours'}>,
@@ -554,6 +557,13 @@ function renderMinutesAcrossHours(
 ): string {
   if (plan.form === 'wildcard') {
     return 'joka minuutti ' + hourWindowsFromTimes(ir, plan.times, opts) +
+      trailingQualifier(ir, opts);
+  }
+
+  // RULE E: range+isolated hours — minute-first, bare minutes, sekä klo.
+  if (hoursAreRangeIsolated(ir.analyses.segments.hour!)) {
+    return bareMinutes(ir) + ' ' +
+      hourSegmentTimesWithSeka(ir, 0, null, opts) +
       trailingQualifier(ir, opts);
   }
 
@@ -1080,19 +1090,10 @@ function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
 }
 
 // "kuukauden 13. päivänä tai perjantaisin": cron fires when either the
-// date or the weekday matches. A ranged month scopes the whole
-// alternation once ("kuukauden 1. päivänä tai perjantaisin kesäkuusta
-// syyskuuhun") — the case endings need no comma.
+// date or the weekday matches. Only reachable when date≠* AND weekday≠*
+// AND month=* (RULE A handles the restricted-month case in describe()),
+// so monthScope always returns '' here.
 function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
-  if (monthRanged(ir)) {
-    // A Quartz date (no segments) carries its own phrase; otherwise build
-    // the "Nth päivänä" date clause.
-    const date = quartzDatePhrase(ir.pattern.date) ||
-      monthAnchor(ir, opts) + ' ' + dateWords(ir) + ' päivänä';
-
-    return date + ' tai ' + weekdayQualifier(ir) + ' ' + monthPhrase(ir);
-  }
-
   return datePhrase(ir, opts) + ' tai ' + weekdayQualifier(ir) +
     monthScope(ir);
 }

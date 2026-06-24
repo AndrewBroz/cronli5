@@ -189,6 +189,8 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
       ['* 9,17 * * *', 'joka minuutti klo 9.00–9.59 ja 17.00–17.59'],
       ['0-30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 0–30 kohdalla'],
+      // RULE C/E: minute range over range+isolated hours → minute-first, sekä klo.
+      ['0-30 9-20,22 * * *', '0–30 minuutin kohdalla klo 9–20 sekä klo 22'],
       ['0-30 */2 * * *', '0–30 minuutin kohdalla joka toinen tunti'],
       ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
       ['* */10 * * *',
