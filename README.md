@@ -208,7 +208,7 @@ docs below.
 
 *Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by the blind Sonnet persona panel and shipped with a beta label
 until a human review cycle is completed. *Experimental* languages are
-model-drafted and not yet validated by that panel. See
+model-drafted and not yet validated to beta by that panel. See
 [tooling/docs/language-pipeline.md](./tooling/docs/language-pipeline.md).
 
 <!-- BEGIN GENERATED: language-status -->

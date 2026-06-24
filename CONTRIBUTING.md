@@ -83,9 +83,10 @@ Naturalness can't be unit-tested. Two passes:
 - **Double-blind vs cRonstrue's locale** — `node --import tsx
   scripts/review-lang.mjs` (the review scripts need the `tsx` loader since
   the migration to TypeScript source).
-- **Cross-family review** — have the output judged by a *non-Claude* reader
-  or model. Claude judges share a bias, so this is the only way to vouch
-  for quality in a language the maintainers don't speak natively.
+- **Blind Sonnet persona panel** — three Sonnet personas (everyday native
+  speaker, copy-editor, technical communicator) blind-judge naturalness and
+  comprehension over the spanning set with no knowledge of the renderer's
+  provenance. Critics surface what to fix; detectors guarantee coverage.
 
 ## Fixing a bug (test-first)
 
@@ -108,7 +109,7 @@ rules:
   cheap, so **every** bug earns a pinned entry, and new behavior earns
   coverage. Grow it freely.
 - The **review spanning set** (`tooling/scripts/spanning-set.mjs`) is what the
-  cross-family panel reads, and the panel is slow, so keep it a *minimal*
+  blind Sonnet persona panel reads, and the panel is slow, so keep it a *minimal*
   spanning set. Add to it only when (a) `spanning-set.mjs` reports an
   uncovered `PlanNode` kind or a linguistic feature is unexercised, or (b) a
   *naturalness* defect appears in a pattern shape the set doesn't represent —
@@ -143,5 +144,6 @@ npm run docs -- --check   # generated docs are current
 npm run build       # dual ESM/CJS + the type tree
 ```
 
-A new language is ready to merge when its corpus is reviewed by a fluent
-speaker, it passes a cross-family review, and the full gate is green.
+A new language merges as **beta** when it passes the blind Sonnet persona
+panel and the full gate is green. A fluent-speaker review is what graduates
+it from beta to **stable**.
