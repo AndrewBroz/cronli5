@@ -6,6 +6,32 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.1]
+
+### Fixed
+
+- A minute of `0` is no longer dropped when a sub-minute second makes the
+  cadence sub-minute. `* 0 * * * *` now reads "every second, zero minutes past
+  the hour, every hour" (was "every second, every hour", which described every
+  second of *every* minute, losing the minute-0 restriction). The bug affected
+  the wildcard-second + minute-0 combination over the every-hour, hour-range,
+  and hour-step idioms, in all five languages; fuzz coverage was added for the
+  shape so it cannot silently regress.
+
+### Changed
+
+- A minute **list or range** within an **hour range** now closes on the bare
+  hour, with the minutes stated separately: `2,3,4 9-17 * * *` reads "at 2, 3,
+  and 4 minutes past the hour from 9 a.m. through 5 p.m." (was "through 5:04
+  p.m.", which glued the last fire's minute onto the bound and read as a
+  misleading continuous span). Single-minute (`30 9-17 * * *` → "through 5:30
+  p.m.") and wildcard (`* 9-17 * * *` → "through 5:59 p.m.") bounds are
+  unchanged. All five languages.
+
+## [0.1.0]
+
+First non-beta release.
+
 ### Added
 
 - **Per-language documentation** under `docs/lang/` (`en.md`, `es.md`,
@@ -34,7 +60,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `ampm` option is ignored. Ships with a reviewed corpus, minimal
   pairs, language notes, and a review log under `test/lang/fi/`.
   Like Spanish, Finnish required zero core changes.
-
 - Descriptions for **lists containing range or step segments** (e.g.
   `0-30,45` or `9,17-19`) in every field. Minute and second lists read their
   spans discretely (`at five through ten and 20 minutes past the hour`), hour
@@ -87,6 +112,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - An explicitly supplied year is now always described: object input with a
   `year` property (e.g. `{hour: 9, year: 2030}`) previously validated the
   year and then silently dropped it from the description.
+- Idiomatic descriptions for **lists** (`,`), **ranges** (`-`), and **compound**
+  patterns that combine multiple non-trivial fields (e.g.
+  `at 30 minutes past the hour from 9 a.m. through 5 p.m.`).
+- Trailing day qualifiers for bare frequencies (e.g. `every minute on Monday`,
+  `every hour on January 13`).
+- Dual **ESM** and **CommonJS** builds plus a minified **browser** global, an
+  `exports` map, and bundled **TypeScript** type definitions (`cronli5.d.ts`).
+- Continuous integration (GitHub Actions) across Node 18/20/22, with a
+  coverage gate.
+- Code coverage via **c8** with enforced thresholds (`npm run coverage`).
+- Property-based tests (**fast-check**), smoke tests against the built
+  ESM/CJS artifacts, and type tests (**tsd**, `npm run test:types`).
 
 ### Changed
 
@@ -94,7 +131,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `uk` for the Ukrainian language, so the British-English style now uses the
   ISO-3166 country code `'gb'`. `{ dialect: 'uk' }` still works as a
   deprecated alias for `'gb'` and will be removed in a future release.
-
 - **Spanish now defaults to the 24-hour clock** (`a las 09:30`,
   `a las 17:00`), matching RAE convention for written Spanish. Pass
   `{ampm: true}` for the previous 12-hour behavior with day periods
@@ -166,6 +202,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `0-30` in minute lists, and clock-time windows like `9 a.m.-5:45 p.m.`).
   Previously short mode abbreviated names but left "through" in place for
   every field except weekdays.
+- Source is now authored as an ES module in `src/` and bundled with esbuild.
+- Date descriptions always use suffixed numeric ordinals (`1st`, `2nd`, ...).
+- Modernized the toolchain: ESLint 9 (flat config), Mocha 11, Chai 4.
+- Enforced explicit ESLint budgets for cyclomatic `complexity`, `max-depth`,
+  and `max-params` as regression guards.
 
 ### Fixed
 
@@ -236,36 +277,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   own clause instead of cross-multiplying into a wall of times
   (`0,30 8-18/2 * * *` reads "at 0 and 30 minutes past the hour, at 8
   a.m., 10 a.m., ..." — six times, not twelve).
-
-## [0.1.0]
-
-First non-beta release.
-
-### Added
-
-- Idiomatic descriptions for **lists** (`,`), **ranges** (`-`), and **compound**
-  patterns that combine multiple non-trivial fields (e.g.
-  `at 30 minutes past the hour from 9 a.m. through 5 p.m.`).
-- Trailing day qualifiers for bare frequencies (e.g. `every minute on Monday`,
-  `every hour on January 13`).
-- Dual **ESM** and **CommonJS** builds plus a minified **browser** global, an
-  `exports` map, and bundled **TypeScript** type definitions (`cronli5.d.ts`).
-- Continuous integration (GitHub Actions) across Node 18/20/22, with a
-  coverage gate.
-- Code coverage via **c8** with enforced thresholds (`npm run coverage`).
-- Property-based tests (**fast-check**), smoke tests against the built
-  ESM/CJS artifacts, and type tests (**tsd**, `npm run test:types`).
-
-### Changed
-
-- Source is now authored as an ES module in `src/` and bundled with esbuild.
-- Date descriptions always use suffixed numeric ordinals (`1st`, `2nd`, ...).
-- Modernized the toolchain: ESLint 9 (flat config), Mocha 11, Chai 4.
-- Enforced explicit ESLint budgets for cyclomatic `complexity`, `max-depth`,
-  and `max-params` as regression guards.
-
-### Fixed
-
 - Weekday/date/month-only patterns no longer drop their qualifier.
 - A specific minute within an hour range is no longer dropped.
 
