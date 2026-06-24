@@ -22,9 +22,9 @@
 - Full local gate before done:
   `npm run lint && npm run typecheck && npm run test:types && npm test && npm run coverage && npm run docs -- --check && npm run build`
 
-## Out of scope / flagged for a separate decision
+## fi review (now in scope — Task 5)
 
-- **`fi` is `beta` with no recorded review** (`humanReview: null`, no panel evidence). Under the new definition that is anomalous, but re-adjudicating `fi`'s status is a separate call — this plan does NOT change `fi`'s status. (Noted for the owner.)
+- **`fi` is `beta` with no recorded review** (`humanReview: null`, no panel evidence). Under the new definition that is anomalous, so Task 5 gives it a *proper* review — the pipeline's own method (blind Sonnet persona panel + round-trip comprehension) — and records an honest, data-driven verdict. fi keeps beta only if it clears the beta bar; otherwise the findings are recorded and its status is set to match reality.
 
 ---
 
@@ -257,6 +257,67 @@ git commit -m "Align corpus-methodology + backlog with the Sonnet-only pipeline
 Relabel the corpus subjective tier to the blind Sonnet persona panel; rewrite
 backlog's present-tense Gemma/panel.mjs tooling notes to current reality while
 preserving the past-tense historical records.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
+```
+
+---
+
+### Task 5: Give fi a proper blind review and record an honest verdict
+
+fi is `beta` with no recorded review. Run the pipeline's review method over a representative sample of fi's output and record a data-driven verdict. **The outcome is not predetermined** — fi keeps beta only if it clears the bar; if the panel surfaces real defects, record them and set the status to match (do NOT force a pass, and do NOT silently overhaul the renderer — defects beyond trivial become a flagged follow-up).
+
+This task is **controller-orchestrated** (like the workflow's panels): the blind judgments come from separate, independent persona agents, not one implementer role-playing several — that is what makes them blind. A final small write-step records the verdict.
+
+**Files:**
+- Modify: `src/lang/fi/status.json` (`modelReview`, and `status` only if the verdict warrants)
+
+**Method:**
+
+- [ ] **Step 1: Build the review set (deterministic, no provenance leak)**
+
+Render fi over the curated spanning set (one pattern per `PlanNode` kind crossed with complexity). Via bash:
+```bash
+node --import tsx -e "
+import {prepareRoundtrip} from './tooling/scripts/roundtrip.mjs';
+import fi from './src/lang/fi/index.js';
+const items = prepareRoundtrip(fi, 40);
+import('node:fs').then(fs => fs.writeFileSync('tmp/fi-review.json', JSON.stringify(items, null, 2)));
+console.log(items.length + ' items');
+"
+```
+This yields `[{pattern, description}]` (fi's output), filtered to expandable patterns.
+
+- [ ] **Step 2: Correctness — round-trip comprehension (blind)**
+
+Reuse the Phase C round-trip: a BLIND agent recovers a cron from each fi description (prose only), then `tallyRoundtrip` compares to the source by expanded value sets. Report `verified / needsReview / orNoise` and the needs-review patterns. (Controller dispatches the blind recover agent + a bash tally, exactly as the Verify phase does.)
+
+- [ ] **Step 3: Naturalness — blind 3-persona Sonnet panel**
+
+Dispatch THREE independent blind agents — *everyday Finnish speaker*, *meticulous copy-editor*, *precise/technical communicator* — each given the fi outputs (with the neutral schedule meaning, no other renderer's prose, no provenance) and asked to score each item naturalness 0–5 and flag anything unidiomatic or wrong, in Finnish. Aggregate: per-item median naturalness; collect flagged items.
+
+- [ ] **Step 4: Aggregate to a verdict against the beta bar**
+
+Beta bar: median naturalness ≥ 4 across items AND round-trip correctness clean (no genuine non-OR mismatch) AND no clustered correctness defect from the personas. Decide: **PASS** (fi clears beta) or **FAIL** (real defects).
+
+- [ ] **Step 5: Record the verdict in fi/status.json**
+
+- If PASS: set `modelReview` to a dated summary, e.g. `"blind 3-persona Sonnet panel + round-trip comprehension over the spanning set — median naturalness N/5, round-trip M/M verified (2026-06-24)"`; keep `status: "beta"`.
+- If FAIL: set `modelReview` to a dated summary naming the defect clusters; set `status` to `"experimental"` and add a `note` listing the findings (these become a flagged follow-up — do NOT fix the renderer in this task beyond noting them).
+
+Then regenerate and verify:
+```bash
+npm run docs -- --check && npm run lint && echo OK
+```
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/lang/fi/status.json README.md
+git commit -m "Record fi's first proper review verdict
+
+Blind 3-persona Sonnet panel + round-trip comprehension over the spanning set.
+<PASS: keep beta with evidence | FAIL: demote to experimental + log findings>.
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```
