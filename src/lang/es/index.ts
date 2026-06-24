@@ -672,27 +672,57 @@ function renderClockTimes(
     return atTime(timePhrase(time.hour, time.minute, time.second, opts));
   });
 
-  return leadingQualifier(ir, opts) + collapseAtTimes(phrases);
+  return leadingQualifier(ir, opts) + groupClockTimesByArticle(phrases);
 }
 
-// Collapse "a las 12:00, a las 22:00, ..." to "a las 12:00, 22:00, ...":
-// the preposition is said once for a plain list. Only a list whose times all
-// take the plural "a las" collapses; a one-o'clock ("a la 1:00") or a worded
-// time ("al mediodía", "a medianoche") keeps the per-item article, so a mixed
-// list reads "a la 1:00 y a las 13:00", each correct.
-function collapseAtTimes(phrases: string[]): string {
-  const article = 'a las ';
-  const allPlural = phrases.every(function each(phrase) {
-    return phrase.startsWith(article);
-  });
-
-  if (phrases.length < 2 || !allPlural) {
+// Group clock-time phrases by article: a-la times first, then a-las times,
+// each group under one prefix. All-'a las' collapses to a single prefix
+// (unchanged). When the 'a las' group has exactly two items the groups join
+// with a comma to avoid a double 'y'. All-'a la' and phrases that are neither
+// article form fall back to a plain list (existing per-item behaviour).
+function groupClockTimesByArticle(phrases: string[]): string {
+  if (phrases.length < 2) {
     return joinList(phrases);
   }
 
-  return article + joinList(phrases.map(function bare(phrase) {
-    return phrase.slice(article.length);
-  }));
+  const singular = 'a la ';
+  const plural = 'a las ';
+
+  const laItems: string[] = [];
+  const lasItems: string[] = [];
+
+  for (const phrase of phrases) {
+    if (phrase.startsWith(plural)) {
+      lasItems.push(phrase.slice(plural.length));
+    }
+    else if (phrase.startsWith(singular)) {
+      laItems.push(phrase.slice(singular.length));
+    }
+    else {
+      // Non-article phrase (al mediodía, a medianoche): plain list fallback.
+      return joinList(phrases);
+    }
+  }
+
+  // All 'a las': one prefix for the whole list.
+  if (laItems.length === 0) {
+    return plural + joinList(lasItems);
+  }
+
+  // All 'a la': each keeps its own prefix (12-h case where 01:00 and 13:00
+  // both read as "a la" preserves the per-item form).
+  if (lasItems.length === 0) {
+    return joinList(phrases);
+  }
+
+  // Mixed: 'a la' group first, then 'a las' group.
+  const laPart = singular + joinList(laItems);
+  const lasPart = plural + joinList(lasItems);
+  // Comma connector when the 'a las' group has exactly two items, to avoid
+  // a double 'y' ('… y a las 02:00 y 03:00' → '… , a las 02:00 y 03:00').
+  const connector = lasItems.length === 2 ? ', ' : ' y ';
+
+  return laPart + connector + lasPart;
 }
 
 // Compact form past the enumeration cap: a single minute folds into
@@ -794,7 +824,7 @@ function stepCycle60(
 // cinco horas a partir de las 2:00".
 function stepHours(segment: StepSegment, opts: Opts): string {
   if (segment.startToken.indexOf('-') !== -1) {
-    return joinList(atTimes(segment.fires, opts));
+    return groupClockTimesByArticle(atTimes(segment.fires, opts));
   }
 
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
@@ -805,7 +835,7 @@ function stepHours(segment: StepSegment, opts: Opts): string {
   }
 
   if (segment.fires.length <= 3) {
-    return joinList(atTimes(segment.fires, opts));
+    return groupClockTimesByArticle(atTimes(segment.fires, opts));
   }
 
   if (start === 0) {
@@ -833,7 +863,7 @@ function atHourTimes(
   opts: Opts
 ): string {
   if (times.kind === 'fires') {
-    return collapseAtTimes(atTimes(times.fires, opts));
+    return groupClockTimesByArticle(atTimes(times.fires, opts));
   }
 
   return hourSegmentTimes(ir, 0, null, opts);
@@ -925,7 +955,7 @@ function hourSegmentTimes(
     return joinList(pieces.slice(0, lastIdx)) + ' y también ' + pieces[lastIdx];
   }
 
-  return joinList(pieces);
+  return groupClockTimesByArticle(pieces);
 }
 
 // --- Times. ---

@@ -51,6 +51,15 @@ describe('Español (es):', function() {
       ['0 1 * * *', 'todos los días a la 01:00'],
       ['0 13 * * *', 'todos los días a las 13:00'],
       ['0 9,17 * * *', 'todos los días a las 09:00 y 17:00'],
+      // Mixed article: 1-o'clock (a la) followed by other hours (a las).
+      // la-group first, then las-group; comma connector when las has exactly 2.
+      ['0 1,13 * * *', 'todos los días a la 01:00 y a las 13:00'],
+      ['0 1,6,11,16,21 * * *',
+        'todos los días a la 01:00 y a las 06:00, 11:00, 16:00 y 21:00'],
+      ['0 1,2,3 * * *', 'todos los días a la 01:00, a las 02:00 y 03:00'],
+      ['30 1,5,13 * * *', 'todos los días a la 01:30, a las 05:30 y 13:30'],
+      ['0 22-2,12 * * *',
+        'todos los días a la 01:00 y a las 12:00, 22:00, 23:00, 00:00 y 02:00'],
       ['0 22-2 * * *', 'cada hora de las 22:00 a las 02:00'],
       ['0 9-20,22 * * *',
         'cada hora de las 09:00 a las 20:00 y también a las 22:00'],
@@ -235,7 +244,11 @@ describe('Español (es):', function() {
       ['0 0 1 * 0,1-5',
         'a las 00:00, ya sea el 1 de cada mes o los domingos y de lunes a viernes'],
       ['0 0 1 6-9 0,1-5',
-        'de junio a septiembre a las 00:00, ya sea el día 1 o los domingos y de lunes a viernes']
+        'de junio a septiembre a las 00:00, ya sea el día 1 o los domingos y de lunes a viernes'],
+      // Step hour with 1-o'clock fire: group by article in the union frame.
+      ['5 1/5 1 1,7 MON',
+        'en enero y julio, a la 01:05 y a las 06:05, 11:05, 16:05 y 21:05, ' +
+        'ya sea el día 1 o cualquier lunes']
     ]);
   });
 
