@@ -10,8 +10,8 @@ import zh from 'cronli5/lang/zh';
 cronli5('30 9 * * MON-FRI', {lang: zh}); // '每周一至周五9点30分'
 ```
 
-> **Experimental.** This language is model-drafted and not yet validated to
-> beta; it is a rebuild candidate for the language pipeline. See
+> **Beta.** Model-validated by a blind Sonnet persona panel, not yet verified
+> by a fluent human reviewer. See
 > [Language Review Status](../../README.md#language-review-status).
 
 ## Style anchors

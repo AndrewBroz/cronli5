@@ -218,7 +218,7 @@ model-drafted and not yet validated by that panel. See
 | English | stable | maintainer (native) | — |
 | Spanish | beta | maintainer (informal); formal pilot pending | gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15) |
 | Finnish | beta | — | — |
-| Chinese (Mandarin, Simplified) | experimental | — | — |
+| Chinese (Mandarin, Simplified) | beta | — | blind 3-persona Sonnet style panel + author/audit corpus workflow (2026-06-20); npm run fuzz zh clean (0 throws / degenerate / missing-value) |
 <!-- END GENERATED: language-status -->
 
 

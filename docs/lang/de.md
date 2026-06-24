@@ -18,7 +18,7 @@ German is a full natural-German renderer over the language-independent
 core, not a translated template set. English-only users pay zero bytes
 for it — the module is only in your bundle if you import it.
 
-**Beta:** model-validated by the cross-family review panel, not yet
+**Beta:** model-validated by the blind model panel, not yet
 human-verified. See [the review status table](../../README.md).
 
 ## Style anchors
