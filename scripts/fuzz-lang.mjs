@@ -3,7 +3,8 @@
 // never throws and emits no degenerate output (undefined/NaN/empty/garbage/
 // doubled words/dropped values) across the long tail that the one-per-kind
 // spanning set misses. It does NOT prove semantic correctness — that is the
-// cross-family panel's job. Run it before attestation, and read the sampled
+// panel and round-trip review's job. Run it before attestation, and read the
+// sampled
 // output shapes to confirm the non-throwing outputs are not fudged.
 //
 // Usage: node --import tsx scripts/fuzz-lang.mjs <code> [--samples=N]
