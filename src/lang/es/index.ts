@@ -191,7 +191,7 @@ function renderSecondsWithinMinute(
   const minuteField = ir.pattern.minute;
 
   if (plan.singleSecond) {
-    return 'en el minuto ' + minuteField + ' y segundo ' +
+    return 'en el minuto ' + minuteField + ' y el segundo ' +
       ir.pattern.second + ' de cada hora' + trailingQualifier(ir, opts);
   }
 
@@ -738,31 +738,49 @@ function hourWindowsFromTimes(
 }
 
 // Clock times for the hour field rendered segment by segment, the minute
-// (and optional second) folded into each: "de las 9:30 a las 20:30 y a
-// las 22:30".
+// (and optional second) folded into each: "de las 9:30 a las 20:30 y también
+// a las 22:30" when an isolated point-time follows a range.
 function hourSegmentTimes(
   ir: IR,
   minute: number,
   second: number | null | undefined,
   opts: Opts
 ): string {
+  // Track whether each piece came from a range (true) or a point (false).
   const pieces: string[] = [];
+  const fromRange: boolean[] = [];
 
   hourSegments(ir).forEach(function clock(segment) {
     if (segment.kind === 'step') {
-      pieces.push(...segment.fires.map(function each(hour) {
-        return atTime(timePhrase(hour, minute, second, opts));
-      }));
+      segment.fires.forEach(function each(hour) {
+        pieces.push(atTime(timePhrase(hour, minute, second, opts)));
+        fromRange.push(false);
+      });
     }
     else if (segment.kind === 'range') {
       pieces.push(timeRange(
         {hour: +segment.bounds[0], minute, second},
         {hour: +segment.bounds[1], minute, second}, opts));
+      fromRange.push(true);
     }
     else {
       pieces.push(atTime(timePhrase(+segment.value, minute, second, opts)));
+      fromRange.push(false);
     }
   });
+
+  // When the last piece is an isolated point-time that follows a range,
+  // join it with "y también" so it is not read as the range extending.
+  const lastIdx = pieces.length - 1;
+  const hasRange = fromRange.some(function ranged(r) {
+    return r;
+  });
+  const lastIsPoint = lastIdx >= 1 && !fromRange[lastIdx] &&
+    fromRange[lastIdx - 1];
+
+  if (hasRange && lastIsPoint) {
+    return joinList(pieces.slice(0, lastIdx)) + ' y también ' + pieces[lastIdx];
+  }
 
   return joinList(pieces);
 }

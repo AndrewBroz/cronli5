@@ -52,6 +52,8 @@ describe('Español (es):', function() {
       ['0 13 * * *', 'todos los días a las 13:00'],
       ['0 9,17 * * *', 'todos los días a las 09:00 y 17:00'],
       ['0 22-2 * * *', 'cada hora de las 22:00 a las 02:00'],
+      ['0 9-20,22 * * *',
+        'cada hora de las 09:00 a las 20:00 y también a las 22:00'],
       ['* 1 * * *', 'cada minuto de la 01:00 a la 01:59']
     ]);
   });
@@ -130,7 +132,8 @@ describe('Español (es):', function() {
       ['0,30 * * * *', 'en los minutos 0 y 30 de cada hora'],
       ['0-29 * * * *', 'cada minuto del 0 al 29 de cada hora'],
       ['15 * * * * *', 'en el segundo 15 de cada minuto'],
-      ['15 30 * * * *', 'en el minuto 30 y segundo 15 de cada hora']
+      ['15 30 * * * *', 'en el minuto 30 y el segundo 15 de cada hora'],
+      ['1 1 * * * *', 'en el minuto 1 y el segundo 1 de cada hora']
     ]);
   });
 
@@ -236,7 +239,7 @@ describe('Español (es):', function() {
     run([
       ['30 9-20,22 * * *',
         'cada hora de las 9:30 de la mañana a las 8:30 de la noche ' +
-        'y a las 10:30 de la noche'],
+        'y también a las 10:30 de la noche'],
       ['0,30 8-18/2 * * *',
         'en los minutos 0 y 30 de cada hora, a las 8 de la mañana, ' +
         'a las 10 de la mañana, al mediodía, a las 2 de la tarde, ' +
@@ -305,7 +308,7 @@ describe('Español (es):', function() {
         'a medianoche, a las 9 de la mañana y a las 6 de la tarde'],
       ['0-30 9-20,22 * * *',
         'cada minuto del 0 al 30, ' +
-        'de las 9 de la mañana a las 8 de la noche y a las 10 de la noche'],
+        'de las 9 de la mañana a las 8 de la noche y también a las 10 de la noche'],
       ['* 1,6/3 * * *',
         'cada minuto de la 1 a la 1:59 de la madrugada y ' +
         'de las 6 a las 6:59 de la mañana, de las 9 a las 9:59 de la ' +
