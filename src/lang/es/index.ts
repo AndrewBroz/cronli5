@@ -219,19 +219,24 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
 ): string {
-  // Seconds list + fixed clock time: nest the seconds into the clock time
+  // Seconds list + fixed clock time: nest the seconds into the clock time(s)
   // with genitive "de las HH:MM" instead of "de cada minuto"; the minute is
   // fixed so "de cada minuto" is misleading. Single seconds already fold into
   // the time in the clockTimes renderer; step seconds keep their own clause.
   if (plan.rest.kind === 'clockTimes' && ir.shapes.second === 'list') {
-    const time = plan.rest.times[0];
-    const timeStr = timePhrase(time.hour, time.minute, null, opts);
+    const clockPhrases = plan.rest.times.map(function clock(time) {
+      return atTime(timePhrase(time.hour, time.minute, null, opts));
+    });
+    const grouped = groupClockTimesByArticle(clockPhrases);
+    // Strip the leading "a " prefix from the grouped result so the caller can
+    // prepend "de " to produce the genitive form "de las 09:00 y 17:00".
+    const clockList = grouped.startsWith('a ') ? grouped.slice(2) : grouped;
     const secondsPhrase = 'en los segundos ' +
       joinList(segmentWords(fieldSegments(ir, 'second')));
     const dayFrame = trailingQualifier(ir, opts);
 
     return (dayFrame ? dayFrame.trimStart() + ', ' : '') +
-      secondsPhrase + ' de ' + timeStr;
+      secondsPhrase + ' de ' + clockList;
   }
 
   // Second-step + fixed minute + hour range + weekday: anchor the cadence to

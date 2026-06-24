@@ -201,7 +201,13 @@ describe('Español (es):', function() {
         'de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30'],
       // Minute window confined to specific hours.
       ['0-30 9,17-19 * * *',
-        'cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00']
+        'cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00'],
+      // Seconds list + multi-time clock list: seconds must nest into ALL clock
+      // times, not just the first. Fuzzer-found (dropped times bug).
+      ['5,30 0 9,17 1 * *',
+        'el 1 de cada mes, en los segundos 5 y 30 de las 09:00 y 17:00'],
+      ['5,30 5,10,30 0 1 * *',
+        'el 1 de cada mes, en los segundos 5 y 30 de las 00:05, 00:10 y 00:30']
     ]);
   });
 
