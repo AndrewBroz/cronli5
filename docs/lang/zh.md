@@ -12,7 +12,7 @@ cronli5('30 9 * * MON-FRI', {lang: zh}); // '每周一至周五9点30分'
 
 > **Beta.** Model-validated by a blind Sonnet persona panel, not yet verified
 > by a fluent human reviewer. See
-> [Language Review Status](../../README.md#language-review-status).
+> [language review status](../language-status.md).
 
 ## Style anchors
 

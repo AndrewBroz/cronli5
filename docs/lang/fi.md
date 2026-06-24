@@ -22,7 +22,7 @@ words, so the renderer owns the morphology outright.
 > by a fluent human reviewer. The compound "tai"-rakenne defects that once held
 > it back are fixed and re-reviewed (round-trip-clean); remaining sub-ideal
 > items are SFS 4175-correct or inherent to expressing cron precisely in
-> Finnish. See [Language Review Status](../../README.md#language-review-status).
+> Finnish. See [language review status](../language-status.md).
 
 ## Style anchors
 

@@ -204,22 +204,23 @@ docs below.
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
 | Chinese (Mandarin) | `cronli5/lang/zh` | Simplified (`zh-Hans`) default; Traditional (`zh-Hant`) | [docs/lang/zh.md](./docs/lang/zh.md) |
 
-### Language Review Status
+### Language maturity
 
-*Stable* languages are verified by a fluent human reviewer. *Beta* languages are model-validated by the blind Sonnet persona panel and shipped with a beta label
-until a human review cycle is completed. *Experimental* languages are
-model-drafted and not yet validated to beta by that panel. See
-[tooling/docs/language-pipeline.md](./tooling/docs/language-pipeline.md).
+Languages ship as **experimental** → **beta** → **stable** (model-drafted →
+model-validated by a blind persona panel → verified by a fluent human):
 
 <!-- BEGIN GENERATED: language-status -->
-| Language | Status | Human review | Model review |
-| --- | --- | --- | --- |
-| German | beta | — | gemma4:31b-cloud + 3 Claude judges — 34/34 after findings fixed test-first and re-attested (2026-06-16) |
-| English | stable | maintainer (native) | — |
-| Spanish | beta | maintainer (informal); formal pilot pending | gemma4:31b-cloud + Claude panel — 34/34 (2026-06-15) |
-| Finnish | beta | — | blind 3-persona Sonnet panel + round-trip over the spanning set (34 patterns, 2026-06-24). Round-trip clean (meaning preserved). The compound-schedule defects that caused the earlier demotion are fixed and panel-confirmed correct: OR-scope fronts the month+time and brackets the union with joko…tai, plus double-month, genitive month-list, mixed cadence, level reorder, sekä klo for range+isolated hours, and the natural Quartz nearest-weekday word order. 27/34 items at median naturalness ≥ 4; the remaining items are not fixable defects — clock-with-seconds notation klo 9.30.15 is SFS 4175-correct (a panel false-negative), and the cron OR-semantics and the kohdalla minute-anchor register are inherent limits of expressing cron precisely in Finnish (no better form than kohdalla, which was chosen over an adessive calque and matches cronstrue's human locale's intent). |
-| Chinese (Mandarin, Simplified) | beta | — | blind 3-persona Sonnet style panel + author/audit corpus workflow (2026-06-20); npm run fuzz zh clean (0 throws / degenerate / missing-value) |
+| Language | Status |
+| --- | --- |
+| German | beta |
+| English | stable |
+| Spanish | beta |
+| Finnish | beta |
+| Chinese (Mandarin, Simplified) | beta |
 <!-- END GENERATED: language-status -->
+
+For the review evidence behind each status, see
+[docs/language-status.md](./docs/language-status.md).
 
 
 Each language doc includes a generated side-by-side table against the

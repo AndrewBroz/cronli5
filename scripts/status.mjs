@@ -53,4 +53,24 @@ function statusTable() {
     '| --- | --- | --- | --- |', ...rows].join('\n');
 }
 
-export {languageStatuses, statusTable};
+// A concise at-a-glance table — just each language's status tier — for the
+// README, whose scope is a user intro. The full review evidence (human/model
+// columns) lives in docs/language-status.md via statusTable().
+function statusSummary() {
+  const rows = [];
+
+  for (const lang of languageStatuses()) {
+    rows.push('| ' + lang.name + ' | ' + lang.status + ' |');
+
+    for (const [id, dialect] of Object.entries(lang.dialects || {})) {
+      if (dialect.status !== lang.status) {
+        rows.push('| ' + lang.name + ' (`' + id + '`) | ' +
+          dialect.status + ' |');
+      }
+    }
+  }
+
+  return ['| Language | Status |', '| --- | --- |', ...rows].join('\n');
+}
+
+export {languageStatuses, statusSummary, statusTable};

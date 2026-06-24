@@ -30,7 +30,7 @@ import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
 import zh from '../src/lang/zh/index.js';
 import {dialectPatterns, languagePatterns, tables} from './patterns.mjs';
-import {statusTable} from './status.mjs';
+import {statusSummary, statusTable} from './status.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
   new URL('../node_modules/cronstrue/package.json', import.meta.url),
@@ -220,8 +220,9 @@ function rewriteExamples(text) {
 const tableJobs = {
   'README.md': {
     'cronstrue-head-to-head': renderHeadToHead(),
-    'language-status': statusTable()
+    'language-status': statusSummary()
   },
+  'docs/language-status.md': {'language-status-detail': statusTable()},
   'docs/cronli5-vs-cronstrue.md': {
     basic: renderEnglishTable(tables.basic),
     showcase: renderEnglishTable(tables.showcase)
@@ -236,7 +237,8 @@ for (const language of languages) {
 }
 
 const docs = [
-  'README.md', 'docs/cronli5-vs-cronstrue.md', 'docs/dialects.md',
+  'README.md', 'docs/language-status.md', 'docs/cronli5-vs-cronstrue.md',
+  'docs/dialects.md',
   ...languages.map((language) => 'docs/lang/' + language.code + '.md')
 ];
 
