@@ -122,7 +122,7 @@ must leave all other en output byte-identical (the corpus is the guard).
 ## Human-in-the-loop language review platform
 
 **Status:** Parked — it has long feedback loops (real fluent reviewers,
-async). The automated path (a cross-family model as judge + baseline, with
+async). The automated path (blind Sonnet persona panel as judge + baseline, with
 languages shipping as **beta**) is being pursued first; this platform is how
 a beta language graduates to **stable**.
 
@@ -150,7 +150,7 @@ static file:
   agree, no open flag.
 - *Per module:* the spanning set is 100% settled (every `PlanNode` kind ×
   grammatical feature has an approved item), the renderer reproduces every
-  settled item, a cross-family review passed, and the gates are green.
+  settled item, a blind Sonnet panel review passed, and the gates are green.
   Versioned — new cron features or a re-review reopen it.
 
 **Build vs. adopt: adopt.** This is a solved category; a bespoke review app
@@ -235,34 +235,34 @@ bugs — range hours collapsing to their start, a clock second silently dropped 
 that "renders the spanning set" missed. A second slice is **built**:
 `tooling/scripts/roundtrip.mjs` samples the fuzz pattern space **deduped by English
 output shape** (one representative per distinct template — the wide set), then
-for each renders the English description, asks the cross-family model to recover
-a cron from it, and compares the two crons by **expanded per-field value sets**
-(a mechanical, exact verdict; the model is only the reverse parser). It
+for each renders the target-language description and has a blind Claude agent
+recover a cron from it, comparing the two crons by **expanded per-field value
+sets** (a mechanical, exact verdict; the agent is only the reverse parser). It
 partitions results into *verified* (round-trips exactly), *needs-review*
 (differs — a candidate bug), and *day-or* (both date and weekday set — cron's OR
 case, which the back-translator recovers unreliably, segregated as model noise).
-Quartz operators (L/W/#) have no simple value set and are skipped. This is the
-objective bulk pass; the naturalness panel then only needs a representative
-sample. A third slice is **built**: `panel.mjs <code> --wide[=N]` runs the full
-two-phase cross-family panel (Gemma half + Claude judges via `--judges`) over a
-shape-deduped sample of the fuzz space (`tooling/scripts/sample.mjs` — one
-representative per output shape) instead of the curated spanning set. The Gemma
-half alone is a cheap, noisy pre-filter (complex OR/Quartz patterns over-flag on
-a single judge); the **4-judge median** decides, and it re-calibrates the
-single-judge noise (a pattern the Gemma half failed passed on the full panel).
-It already surfaced real long-tail items the spanning set never reaches (e.g. de
-rendering `*/3` month as enumerated months vs the en cadence form). Remaining:
-source the wide set from the **en corpus** as well (more realistic shapes than
-the combinatorial fuzz set), and emit a coverage report (which IR kinds/shapes
-the sample touched).
+Quartz operators (L/W/#) have no simple value set and are skipped. It is driven
+by the add-language workflow (`tooling/scripts/roundtrip.mjs` is a library with
+no standalone CLI or model client). This is the objective bulk pass; the blind
+Sonnet persona panel then only needs a representative sample. A third slice is
+**parked (tooling superseded)**: the wide naturalness pass over a shape-deduped
+fuzz sample (one representative per output shape, via `tooling/scripts/sample.mjs`)
+has been attempted but the scripts that ran it (`panel.mjs --wide`, the
+cross-family Gemma panel) are archived under `tooling/scripts/archive/` and no
+longer wired into the pipeline. It already surfaced real long-tail items the
+spanning set never reaches (e.g. de rendering `*/3` month as enumerated months
+vs the en cadence form). The equivalent wide-pass naturalness check using the
+current blind Sonnet persona panel (run inside the workflow) remains to be built.
+Remaining: source the wide set from the **en corpus** as well (more realistic
+shapes than the combinatorial fuzz set), and emit a coverage report (which IR
+kinds/shapes the sample touched).
 
-**Problem.** The cross-family panel runs over a curated **spanning set**
+**Problem.** The blind Sonnet persona panel runs over a curated **spanning set**
 (`tooling/scripts/spanning-set.mjs` — ~34 patterns, one per `PlanNode` kind; the
-dialect set is 9 clock-time patterns). It is minimal by design: Gemma
-serializes, so breadth is expensive. But naturalness and correctness defects
-hide in the **long tail of pattern shapes** the spanning set doesn't represent
-(unusual lists, nested ranges, compound qualifiers, second-level folds), and a
-one-per-kind set can't catch within-kind variation.
+dialect set is 9 clock-time patterns). It is minimal by design. But naturalness
+and correctness defects hide in the **long tail of pattern shapes** the spanning
+set doesn't represent (unusual lists, nested ranges, compound qualifiers,
+second-level folds), and a one-per-kind set can't catch within-kind variation.
 
 **Idea.** Drive automated review over a much wider pattern range, **bootstrapped
 from the English test suite** (`test/lang/en/`, organized basic / simple /

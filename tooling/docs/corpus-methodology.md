@@ -25,7 +25,7 @@ and never owns the control flow.
 
 Two properties stay strictly orthogonal: **coverage** (every cell exercised —
 computed, gated) and **correctness** (every cell's output approved — beta:
-cross-family panel; stable: a fluent human).
+blind Sonnet persona panel; stable: a fluent human).
 
 ## A-priori coverage: the method of record
 
@@ -240,9 +240,9 @@ stateful framework or TMS earns its place only in the human graduation loop.
    cross-site consistency.
 4. **Objective tier** *(LLM node)* — roundtrip each representative: render →
    back-translate → exact per-field value-set compare. Scales; unfudgeable.
-5. **Subjective tier** *(cross-family panel)* — blind slates over the
+5. **Subjective tier** *(blind Sonnet persona panel)* — blind slates over the
    shape-deduped representatives **+ every objective failure + every minimal-pair
-   contrast**. Fixed personas, ≥2 model families, median/vote.
+   contrast**. Fixed Sonnet personas, independent blind runs, majority/vote.
 6. **Coverage gate** *(CI)* — red build if any cell lacks an approved entry; any
    a-priori class conflates/leaks; branch coverage < 100%; a cross-site invariant
    fails; or an approved entry's output drifted.
@@ -252,7 +252,7 @@ stateful framework or TMS earns its place only in the human graduation loop.
    it, kept off the automated track.
 
 Stages 1–3 and 6 are pure deterministic code; stages 4–5 are the irreducibly
-linguistic work, structured (objective first, blind, cross-family,
+linguistic work, structured (objective first, blind, Sonnet-persona panel,
 refutation-framed) so a lazy or biased single model cannot pass anything.
 Laziness has no surface to land on: the model never owns the loop and never
 decides coverage.
