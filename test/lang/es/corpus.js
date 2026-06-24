@@ -94,7 +94,19 @@ describe('Español (es):', function() {
         'todos los días a las 2 de la madrugada y de la tarde, y 6 de la tarde'],
       // Guard: the two 3s are NOT adjacent (9 de la mañana sits between them).
       ['0 3,9,15 * * *',
-        'todos los días a las 3 de la madrugada, 9 de la mañana y 3 de la tarde']
+        'todos los días a las 3 de la madrugada, 9 de la mañana y 3 de la tarde'],
+      // All-'a la': collapse to one shared prefix (same as all-'a las').
+      ['0,30 1 * * *',
+        'todos los días a la 1 de la madrugada y 1:30 de la madrugada'],
+      // Merged unit MID-list → RAE coma ante y (3+ items in joinWithPeriodMergeRule).
+      ['0 2,3,15,18 * * *',
+        'todos los días a las 2 de la madrugada, 3 de la madrugada y de la tarde, y 6 de la tarde'],
+      // ≥3-item plain list, no merge.
+      ['0 9,15,21 * * *',
+        'todos los días a las 9 de la mañana, 3 de la tarde y 9 de la noche'],
+      // Mañana/noche merge pair.
+      ['0 11,23 * * *',
+        'todos los días a las 11 de la mañana y de la noche']
     ], ampm);
   });
 
@@ -433,6 +445,9 @@ describe('Español (es):', function() {
       ['30 9 * * *', 'todos los días a las 9:30 de la mañana',
         {dialect: 'es-MX'}],
       ['30 14 * * *', 'todos los días a las 2:30 de la tarde',
+        {dialect: 'es-MX'}],
+      // es-MX default 12h: elision fires without explicit ampm option.
+      ['0 1,13 * * *', 'todos los días a la 1 de la madrugada y de la tarde',
         {dialect: 'es-MX'}],
       // es-US: 12-hour with the English AM/PM meridiem (no "de la").
       ['30 9 * * *', 'todos los días a las 9:30 AM', {dialect: 'es-US'}],

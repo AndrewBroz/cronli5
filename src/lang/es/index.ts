@@ -758,10 +758,10 @@ function joinWithPeriodMergeRule(items: string[]): string {
 }
 
 // Group clock-time phrases by article: a-la times first, then a-las times,
-// each group under one prefix. All-'a las' collapses to a single prefix
-// (unchanged). When the 'a las' group has exactly two items the groups join
-// with a comma to avoid a double 'y'. All-'a la' and phrases that are neither
-// article form fall back to a plain list (existing per-item behaviour).
+// each group under one prefix. All-'a las' and all-'a la' each collapse to a
+// single prefix. When the 'a las' group has exactly two items the groups join
+// with a comma to avoid a double 'y'. Phrases that are neither article form
+// fall back to a plain list (existing per-item behaviour).
 //
 // 12-hour day-period elision: within each group, adjacent items that share
 // the same clock value but differ only in their "de la <period>" tail are
@@ -793,21 +793,15 @@ function groupClockTimesByArticle(phrases: string[]): string {
 
   const mergedLaItems = mergeAdjacentSameValuePeriods(laItems);
   const mergedLasItems = mergeAdjacentSameValuePeriods(lasItems);
-  const laWasMerged = mergedLaItems.length < laItems.length;
 
   // All 'a las': one prefix for the whole list.
   if (laItems.length === 0) {
     return plural + joinWithPeriodMergeRule(mergedLasItems);
   }
 
-  // All 'a la': when a merge collapsed items, use the shared prefix with
-  // the merged list; otherwise keep the per-item form (each "a la X …").
+  // All 'a la': one shared prefix, matching the all-'a las' behaviour.
   if (lasItems.length === 0) {
-    if (laWasMerged) {
-      return singular + joinWithPeriodMergeRule(mergedLaItems);
-    }
-
-    return joinList(phrases);
+    return singular + joinWithPeriodMergeRule(mergedLaItems);
   }
 
   // Mixed: 'a la' group first, then 'a las' group.
