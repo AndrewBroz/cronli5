@@ -9,6 +9,7 @@
 // CLI, no model client of its own.
 
 import {sampleShapes, spread} from './sample.mjs';
+import {spanningSet} from './spanning-set.mjs';
 import {enumerateFires} from '../../src/core/analyze.js';
 import cronli5 from '../../src/cronli5.js';
 
@@ -124,6 +125,17 @@ function prepareRoundtrip(lang, limit) {
     .filter((item) => item.description);
 }
 
+// The curated review substrate: every spanning-set pattern (one per PlanNode
+// kind, crossed with complexity) rendered with `lang`. This is the panel's
+// input — it guarantees PlanNode-kind coverage, unlike the shape-deduped fuzz
+// sample prepareRoundtrip draws. Quartz patterns are included (the naturalness
+// panel rates them); tallyRoundtrip skips them for the correctness comparison.
+function prepareReview(lang) {
+  return spanningSet
+    .map((pattern) => ({pattern, description: render(pattern, lang)}))
+    .filter((item) => item.description);
+}
+
 // Tally recovered crons against their originals. `recoveries` is
 // [{pattern, recovered}]; the cron OR-case (both date and weekday set) is
 // partitioned out as model-noisy rather than counted as a defect.
@@ -131,29 +143,40 @@ function tallyRoundtrip(recoveries) {
   const verified = [];
   const needsReview = [];
   const orNoise = [];
+  const skipped = [];
 
   for (const {pattern, recovered} of recoveries) {
     const original = expandCron(pattern);
-    const parsed = recovered ? expandCron(recovered) : null;
-    const ok = parsed && cronsEqual(original, parsed);
 
-    if (ok) {
-      verified.push(pattern);
-    }
-    else if (bothDays(pattern)) {
-      orNoise.push({pattern, recovered});
+    if (original) {
+      const parsed = recovered ? expandCron(recovered) : null;
+      const ok = parsed && cronsEqual(original, parsed);
+
+      if (ok) {
+        verified.push(pattern);
+      }
+      else if (bothDays(pattern)) {
+        orNoise.push({pattern, recovered});
+      }
+      else {
+        needsReview.push({pattern, recovered});
+      }
     }
     else {
-      needsReview.push({pattern, recovered});
+      skipped.push(pattern);
     }
   }
 
   return {
-    checked: recoveries.length,
+    checked: recoveries.length - skipped.length,
     verified: verified.length,
     needsReview,
-    orNoise
+    orNoise,
+    skipped
   };
 }
 
-export {bothDays, cronsEqual, expandCron, prepareRoundtrip, tallyRoundtrip};
+export {
+  bothDays, cronsEqual, expandCron,
+  prepareReview, prepareRoundtrip, tallyRoundtrip
+};
