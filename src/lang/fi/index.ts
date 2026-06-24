@@ -686,7 +686,7 @@ function renderHourRange(
   plan: Extract<PlanNode, {kind: 'hourRange'}>,
   opts: NormalizedOptions
 ): string {
-  const window = hourWindow(plan, opts);
+  const window = hourWindow(boundedWindow(plan), opts);
 
   if (plan.minuteForm === 'wildcard') {
     return 'joka minuutti ' + window + trailingQualifier(ir, opts);
@@ -724,6 +724,16 @@ function renderHourStep(
 ): string {
   return stepHours(stepSegment(ir.analyses.segments.hour!), opts) +
     trailingQualifier(ir, opts);
+}
+
+// The hour-range plan as a window whose closing minute honors `boundMinute`:
+// a bare close (`null`) lands on the top of the final hour (minute 0), so
+// `kloRange` renders the bare "klo 9–17" form, with the minutes stated
+// separately; a single fire or wildcard names an exact closing minute.
+function boundedWindow(
+  plan: Extract<PlanNode, {kind: 'hourRange'}>
+): HourWindow {
+  return {from: plan.from, last: plan.boundMinute ?? 0, to: plan.to};
 }
 
 // "klo 9.00–17.45": a window from the top of the first hour to the

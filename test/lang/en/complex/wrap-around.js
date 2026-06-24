@@ -13,7 +13,7 @@ describe('Wrap-around ranges:', function() {
       ['*/15 22-2 * * *', 'every 15 minutes from 10 p.m. through 2:45 a.m.'],
       ['0-30 22-2 * * *',
         'every minute from 0 through 30 past the hour, ' +
-        'from 10 p.m. through 2:30 a.m.']
+        'from 10 p.m. through 2 a.m.']
     ]);
   });
 

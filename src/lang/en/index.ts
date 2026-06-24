@@ -376,7 +376,7 @@ function renderEveryHour(ir: IR, plan: PlanOf<'everyHour'>,
 // minute; a discrete minute anchors as a lead clause.
 function renderHourRange(ir: IR, plan: PlanOf<'hourRange'>,
   opts: NormalizedOptions): string {
-  const window = hourWindow(plan, opts);
+  const window = hourWindow(boundedWindow(plan), opts);
 
   if (plan.minuteForm === 'wildcard') {
     return 'every minute ' + window + trailingQualifier(ir, opts);
@@ -409,6 +409,14 @@ function renderHourStep(ir: IR, plan: PlanOf<'hourStep'>,
   // first segment is a step segment.
   return stepHours(ir.analyses.segments.hour![0] as StepSegment, opts) +
     trailingQualifier(ir, opts);
+}
+
+// The hour-range plan as a window whose closing minute honors `boundMinute`:
+// a bare close (`null`) lands on the top of the final hour (`:00`), matching
+// the minute-0 baseline, with the minutes stated separately elsewhere.
+function boundedWindow(plan: PlanOf<'hourRange'>):
+  {from: number; to: number; last: number} {
+  return {from: plan.from, last: plan.boundMinute ?? 0, to: plan.to};
 }
 
 // An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m.". Windows

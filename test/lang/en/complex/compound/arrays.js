@@ -42,7 +42,7 @@ describe('Valid compound arrays:', function() {
       [['30', '9-17', '*', '*', '*'],
         'at 30 minutes past the hour from 9 a.m. through 5:30 p.m.'],
       [['0,30', '9-17', '*', '*', '*'],
-        'at 0 and 30 minutes past the hour from 9 a.m. through 5:30 p.m.'],
+        'at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m.'],
       [['15', '9-17', '*', '*', 'MON-FRI'],
         'at 15 minutes past the hour from 9 a.m. through 5:15 p.m. ' +
           'on Monday through Friday']

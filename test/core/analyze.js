@@ -95,7 +95,8 @@ describe('Core analyze:', function() {
       expect(ir('30 * * * *').plan.kind).to.equal('singleMinute');
       expect(ir('0 * * * *').plan.kind).to.equal('everyHour');
       expect(ir('30 9-17 * * *').plan).to.deep.equal(
-        {from: 9, kind: 'hourRange', last: 30, minuteForm: 'lead', to: 17});
+        {boundMinute: 30, from: 9, kind: 'hourRange', last: 30,
+          minuteForm: 'lead', to: 17});
       expect(ir('0 */6 * * *').plan.kind).to.equal('hourStep');
     });
 

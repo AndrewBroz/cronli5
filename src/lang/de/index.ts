@@ -657,7 +657,11 @@ function renderHourRange(
   plan: Extract<PlanNode, {kind: 'hourRange'}>,
   opts: Opts
 ): string {
-  const window = hourWindow(plan.from, plan.to, plan.last, opts.style.sep);
+  // A bare close (`boundMinute` null) lands on the top of the final hour
+  // (minute 0), matching the minute-0 baseline, with the minutes stated
+  // separately; a single fire or wildcard names an exact closing minute.
+  const window = hourWindow(plan.from, plan.to, plan.boundMinute ?? 0,
+    opts.style.sep);
 
   if (plan.minuteForm === 'wildcard') {
     return 'jede Minute ' + window;

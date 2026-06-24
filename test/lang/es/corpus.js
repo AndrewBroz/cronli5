@@ -422,7 +422,7 @@ describe('Español (es):', function() {
       ['* 0-5 * * *',
         'cada minuto de medianoche a las 5:59 de la madrugada'],
       ['0-30 9-17 * * *',
-        'cada minuto del 0 al 30, de las 9 de la mañana a las 5:30 de la tarde'],
+        'cada minuto del 0 al 30, de las 9 de la mañana a las 5 de la tarde'],
       ['0 */9 * * *',
         'a medianoche, a las 9 de la mañana y a las 6 de la tarde'],
       ['0-30 9-20,22 * * *',

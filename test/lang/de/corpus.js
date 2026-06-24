@@ -190,7 +190,7 @@ describe('Deutsch (de):', function() {
     run([
       ['30 9-17 * * *', 'in Minute 30 jeder Stunde, von 9 bis 17:30 Uhr'],
       ['15,45 9-17 * * *',
-        'in den Minuten 15 und 45 jeder Stunde, von 9 bis 17:45 Uhr'],
+        'in den Minuten 15 und 45 jeder Stunde, von 9 bis 17 Uhr'],
       ['0 9-20,22 * * *', 'stündlich von 9 bis 20 Uhr und um 22 Uhr'],
       ['0 9 1 * MON', 'am 1. oder montags um 9 Uhr'],
       ['59 23 31 12 5', 'am 31. oder freitags im Dezember um 23:59 Uhr'],
@@ -243,7 +243,7 @@ describe('Deutsch (de):', function() {
         'in den Minuten 0 und 45 jeder Stunde, von 9 bis 17:45 Uhr'],
       // hourRange with a minute range.
       ['0-30 9-17 * * *',
-        'in den Minuten 0 bis 30 jeder Stunde, von 9 bis 17:30 Uhr'],
+        'in den Minuten 0 bis 30 jeder Stunde, von 9 bis 17 Uhr'],
       // minutesAcrossHours over hour segments (range + single).
       ['0-30 9-20,22 * * *',
         'in den Minuten 0 bis 30, von 9 bis 20 Uhr und um 22 Uhr'],

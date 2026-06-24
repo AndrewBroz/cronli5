@@ -78,6 +78,12 @@ export type PlanNode =
       from: number;
       to: number;
       last: number;
+      // The minute to show on the closing bound, or `null` to close on the
+      // bare hour with the minutes stated separately. A single fire or a
+      // wildcard names an exact closing minute (the fire, or `:59`); a minute
+      // list or range would otherwise glue its last fire onto the bound and
+      // read as a continuous span, so it closes bare instead.
+      boundMinute: number | null;
       minuteForm: 'lead' | 'wildcard' | 'range';
     }
   | {kind: 'hourStep'}

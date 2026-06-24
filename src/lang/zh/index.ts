@@ -466,10 +466,12 @@ function composeSecondsCadence(ir: IR): string {
 }
 
 // Listed/ranged minute: "每小时<minutes>，每秒", confined by any hour frame.
+// A minute list or range under an hour range closes on the bare hour frame
+// ("在9点至17点之间"), stating its minutes separately, rather than gluing its
+// last fire onto the window end ("…17点30分") and reading as a continuous span.
 function composeSecondsListed(ir: IR): string {
   const sec = secondClause(ir);
   const minutes = '每小时' + valueList(fieldSegments(ir, 'minute'), '分');
-  const minuteSegs = fieldSegments(ir, 'minute');
 
   if (ir.shapes.hour === 'wildcard') {
     return minutes + '，' + sec;
@@ -478,16 +480,6 @@ function composeSecondsListed(ir: IR): string {
   if (isHourCadence(ir)) {
     return cadence(stepSegment(ir, 'hour').interval, UNITS.hour) + '，' +
       minutes + '，' + sec;
-  }
-
-  // A minute range under an hour range folds into the window end ("…17点30分").
-  if (ir.shapes.hour === 'range' && minuteSegs.length === 1 &&
-    minuteSegs[0].kind === 'range') {
-    const [from, to] = (fieldSegments(ir, 'hour')[0] as
-      Extract<Segment, {kind: 'range'}>).bounds;
-
-    return '在' + hourWord(+from) + '至' + to + '点' +
-      minuteSegs[0].bounds[1] + '分之间，' + sec;
   }
 
   return hourFrame(ir) + minutes + '，' + sec;

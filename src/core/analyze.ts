@@ -490,23 +490,7 @@ function planHours(
   const absorbsMinuteZero = subMinuteSecond && pattern.minute === '0';
 
   if (shapes.hour === 'range' && !absorbsMinuteZero) {
-    const bounds = pattern.hour.split('-');
-    let minuteForm: 'lead' | 'wildcard' | 'range' = 'lead';
-
-    if (pattern.minute === '*') {
-      minuteForm = 'wildcard';
-    }
-    else if (shapes.minute === 'range') {
-      minuteForm = 'range';
-    }
-
-    return {
-      from: +bounds[0],
-      kind: 'hourRange',
-      last: analyses.lastMinuteFire,
-      minuteForm,
-      to: +bounds[1]
-    };
+    return planHourRange(pattern, shapes, analyses);
   }
 
   if (shapes.hour === 'step' && pattern.minute === '0' && !subMinuteSecond) {
@@ -521,6 +505,39 @@ function planHours(
   // the compact fold of a contiguous hour range would otherwise restate the
   // hour-range idiom ("every hour from X through Y") and re-drop the :00.
   return planClockTimes(pattern, analyses, absorbsMinuteZero);
+}
+
+// The hour-range plan: a window from the first hour through the last. The
+// minute clause leads (a single fire or a list), fires every minute (a range),
+// or fills the window (a wildcard). A multi-valued minute (list or range)
+// closes the window on the bare hour, stating its minutes separately; a single
+// fire or a wildcard names an exact closing minute (its fire, or the wildcard's
+// last :59) — otherwise the glued last fire reads as a continuous span.
+function planHourRange(
+  pattern: Pattern,
+  shapes: Shapes,
+  analyses: Analyses
+): PlanNode {
+  const bounds = pattern.hour.split('-');
+  let minuteForm: 'lead' | 'wildcard' | 'range' = 'lead';
+
+  if (pattern.minute === '*') {
+    minuteForm = 'wildcard';
+  }
+  else if (shapes.minute === 'range') {
+    minuteForm = 'range';
+  }
+
+  const multiValued = shapes.minute === 'range' || shapes.minute === 'list';
+
+  return {
+    boundMinute: multiValued ? null : analyses.lastMinuteFire,
+    from: +bounds[0],
+    kind: 'hourRange',
+    last: analyses.lastMinuteFire,
+    minuteForm,
+    to: +bounds[1]
+  };
 }
 
 // Enumerated clock times up to the cap; past it, a compact form (a single
