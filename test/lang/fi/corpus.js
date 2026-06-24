@@ -165,7 +165,7 @@ describe('Suomi (fi):', function() {
       ['5,30-40/5 * * * *',
         'joka tunti 5, 30, 35 ja 40 minuutin kohdalla'],
       ['*/31 * * * *', 'joka tunti 0 ja 31 minuutin kohdalla'],
-      ['*/17 * * * *', '17 minuutin välein tasatunnista alkaen'],
+      ['*/17 * * * *', 'joka tunti 0, 17, 34 ja 51 minuutin kohdalla'],
       ['1/3 * * * *',
         'kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen'],
       ['15 * * * * *', 'joka minuutti 15 sekunnin kohdalla'],
@@ -174,7 +174,8 @@ describe('Suomi (fi):', function() {
       ['15 30 * * * *', 'joka tunti 30 minuutin ja 15 sekunnin kohdalla'],
       ['*/15 30 * * * *',
         '15 sekunnin välein, joka tunti 30 minuutin kohdalla'],
-      ['*/7 * * * * *', 'seitsemän sekunnin välein joka minuutti']
+      ['*/7 * * * * *',
+        'joka minuutti 0, 7, 14, 21, 28, 35, 42, 49 ja 56 sekunnin kohdalla']
     ]);
   });
 
@@ -187,6 +188,11 @@ describe('Suomi (fi):', function() {
       ['30 9-17 * * *', '30 minuutin kohdalla klo 9.30–17.30'],
       ['*/15 9,17 * * *',
         '15 minuutin välein klo 9.00–9.59 ja 17.00–17.59'],
+      // A uniform offset stride with many fires keeps the cadence form (not
+      // an anchored list) even under restricted hours.
+      ['2/3 9,17 * * *',
+        'kolmen minuutin välein jokaisen tunnin minuutista 2 alkaen ' +
+        'klo 9.00–9.59 ja 17.00–17.59'],
       ['*/15 9-17 * * MON-FRI',
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
       ['* 9,17 * * *', 'joka minuutti klo 9.00–9.59 ja 17.00–17.59'],
@@ -211,14 +217,18 @@ describe('Suomi (fi):', function() {
         '20 minuutin välein klo 9.00–9.59, 11.00–11.59, ' +
         '13.00–13.59, 15.00–15.59 ja 17.00–17.59'],
       ['0 */2 * * *', 'kahden tunnin välein'],
-      ['0 */5 * * *', 'viiden tunnin välein keskiyöstä alkaen'],
-      ['0 */10 * * *', 'klo 0, 10 ja 20'],
-      ['0 3/7 * * *', 'klo 3, 10 ja 17'],
-      // "alkaen" governs the elative, so the start hour takes the -stä/-sta
-      // suffix by vowel harmony ("klo 1:stä", "klo 13:sta").
-      ['0 1/5 * * *', 'viiden tunnin välein klo 1:stä alkaen'],
-      ['0 11/2 * * *', 'kahden tunnin välein klo 11:stä alkaen'],
-      ['0 13/3 * * *', 'kolmen tunnin välein klo 13:sta alkaen'],
+      ['0 */5 * * *', 'joka päivä klo 0, 5, 10, 15 ja 20'],
+      ['0 */10 * * *', 'joka päivä klo 0, 10 ja 20'],
+      ['0 3/7 * * *', 'joka päivä klo 3, 10 ja 17'],
+      ['0 1/5 * * *', 'joka päivä klo 1, 6, 11, 16 ja 21'],
+      ['0 11/2 * * *', 'joka päivä klo 11, 13, 15, 17, 19, 21 ja 23'],
+      ['0 13/3 * * *', 'joka päivä klo 13, 16, 19 ja 22'],
+      // Uniform offset strides (interval divides the cycle, start within the
+      // first interval) keep the cadence form: a short minute/hour stride
+      // lists its fires, a longer one names interval + start.
+      ['17/20 * * * *', 'joka tunti 17, 37 ja 57 minuutin kohdalla'],
+      ['0 8/12 * * *', 'klo 8 ja 20'],
+      ['0 2/3 * * *', 'kolmen tunnin välein klo 2:sta alkaen'],
       // Pure-hour range+isolated enumeration: sekä klo joins the isolated value (non-window).
       ['0 9-20,22 * * *', 'joka päivä klo 9–20 sekä klo 22'],
       ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 sekä klo 22.30'],
@@ -239,9 +249,13 @@ describe('Suomi (fi):', function() {
       ['0-30 9-17/2 * 6-8 SAT,SUN',
         'klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla ' +
         'sunnuntaisin ja lauantaisin kesäkuusta elokuuhun'],
-      // Anchored step over list hours: bare hours + hours-first reorder.
+      // Uneven step over list hours: enumerates into clock times.
       ['*/45 9,17 * 12 SAT,SUN',
-        'klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla ' +
+        'sunnuntaisin ja lauantaisin joulukuussa klo 9, 9.45, 17 ja 17.45'],
+      // A uniform offset step that fires few times stays an anchored kohdalla
+      // list, so the hours-first reorder applies (hours lead, minutes follow).
+      ['17/20 9,17 * 12 SAT,SUN',
+        'klo 9 ja 17 aina minuuttien 17, 37 ja 57 kohdalla ' +
         'sunnuntaisin ja lauantaisin joulukuussa']
     ]);
   });
@@ -265,12 +279,18 @@ describe('Suomi (fi):', function() {
       // A wildcard second over a minute-step + hour-list: the hour restriction
       // must survive (it once dropped to "joka tunti"). Fuzzer-found.
       ['* */45 9,17 1 * *',
-        'joka sekunti, klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla ' +
-        'kuukauden 1. päivänä'],
+        'joka sekunti, kuukauden 1. päivänä klo 9, 9.45, 17 ja 17.45'],
       // A fixed second over the same anchored minute-step + hour-list: hours
       // must likewise survive (same dropped-hours bug). Fuzzer-found.
       ['30 */45 9,17 1 * *',
-        'klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla, ' +
+        'kuukauden 1. päivänä klo 9.00.30, 9.45.30, 17.00.30 ja 17.45.30'],
+      // A uniform offset step that stays anchored under a second: the
+      // hours-first reorder leads, then the minute anchors and second clause.
+      ['* 17/20 9,17 1 * *',
+        'joka sekunti, klo 9 ja 17 aina minuuttien 17, 37 ja 57 kohdalla ' +
+        'kuukauden 1. päivänä'],
+      ['30 17/20 9,17 1 * *',
+        'klo 9 ja 17 aina minuuttien 17, 37 ja 57 kohdalla, ' +
         '30 sekunnin kohdalla kuukauden 1. päivänä'],
       ['*/15 * 9-17 * * *', '15 sekunnin välein, joka minuutti klo 9.00–17.59'],
       ['0-30 * 9 * * *',

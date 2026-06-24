@@ -62,7 +62,6 @@ interface UnitForms {
   anchor: string;
   ela: string;
   gen: string;
-  restart: string;
 }
 
 // Genitive numerals for the "N <unit>in välein" construction, spelled
@@ -179,15 +178,13 @@ const units: {minute: UnitForms; second: UnitForms} = {
     mark: 'joka tunti',
     anchor: 'jokaisen tunnin',
     ela: 'minuutista',
-    gen: 'minuutin',
-    restart: 'tasatunnista alkaen'
+    gen: 'minuutin'
   },
   second: {
     mark: 'joka minuutti',
     anchor: 'jokaisen minuutin',
     ela: 'sekunnista',
-    gen: 'sekunnin',
-    restart: 'joka minuutti'
+    gen: 'sekunnin'
   }
 };
 
@@ -858,15 +855,9 @@ function stepCycle60(
       ' alkaen';
   }
 
-  if (60 % interval === 0) {
-    return cadence;
-  }
-
-  if (segment.fires.length <= 2) {
-    return atMarks(joinList(wordList(segment.fires)), unit, true);
-  }
-
-  return cadence + ' ' + unit.restart;
+  // A clean stride from the top of the cycle is the bare cadence. (An uneven
+  // stride is rewritten to its fires upstream and never reaches here.)
+  return cadence;
 }
 
 // "kahden tunnin välein", "klo 0, 10 ja 20", or "viiden tunnin välein
@@ -880,16 +871,14 @@ function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
   const interval = segment.interval;
   const cadence = genitive(interval, opts) + ' tunnin välein';
 
-  if (start === 0 && 24 % interval === 0) {
+  // A clean stride from midnight is the bare cadence. (An uneven stride is
+  // rewritten to its fires upstream and never reaches here.)
+  if (start === 0) {
     return cadence;
   }
 
   if (segment.fires.length <= 3) {
     return kloList(segment.fires, opts);
-  }
-
-  if (start === 0) {
-    return cadence + ' keskiyöstä alkaen';
   }
 
   return cadence + ' klo ' + hourElatives[start] + ' alkaen';

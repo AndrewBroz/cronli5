@@ -323,8 +323,9 @@ function renderHourRange(ir: IR, plan: PlanNode): string {
     range.last + '分之间，每分钟';
 }
 
-// A stepped hour field: "每2小时", or "从凌晨0点起，每5小时" when the step does not
-// divide 24 (the cadence wraps), or its discrete fires as clock words.
+// A stepped hour field: "每2小时", or its two fires as clock words when the
+// stride fires only twice. An uneven stride (one that does not divide 24) is
+// rewritten to its fire list upstream and never reaches here.
 function renderHourStep(ir: IR): string {
   const segment = stepSegment(ir, 'hour');
 
@@ -332,14 +333,9 @@ function renderHourStep(ir: IR): string {
     return hourList(ir);
   }
 
-  // A step that fires only twice reads as two clock times ("凌晨0点和13点").
+  // A step that fires only twice reads as two clock times ("凌晨0点和正午").
   if (segment.fires.length <= 2) {
     return joinAnd(segment.fires.map(hourWord));
-  }
-
-  if (24 % segment.interval !== 0) {
-    return '从' + hourWord(segment.fires[0]) + '起，' +
-      cadence(segment.interval, UNITS.hour);
   }
 
   return cadence(segment.interval, UNITS.hour);

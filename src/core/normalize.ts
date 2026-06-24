@@ -4,9 +4,19 @@
 
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
-import type {Pattern} from './ir.js';
+import type {Field, Pattern} from './ir.js';
 import {includes, toFieldNumber, unique} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
+
+// The fixed-cycle time fields: their step intervals are measured against a
+// closed cycle (60 seconds, 60 minutes, 24 hours), so a step is a true
+// "every N" cadence only when it tiles that cycle. The calendar fields
+// (date/month/weekday) have variable cycles and keep their step form.
+const timeFieldCycle: Partial<Record<Field, number>> = {
+  hour: 24,
+  minute: 60,
+  second: 60
+};
 
 // Quartz aliases: `?` reads "no specific value" (equivalent to `*`) in the
 // date and weekday fields, and a bare `L` weekday means Saturday.
@@ -40,7 +50,7 @@ function normalizeCronPattern(cronPattern: CronLike): Pattern {
       return;
     }
 
-    cronPattern[field] = normalizeField(value, fieldSpecs[field]);
+    cronPattern[field] = normalizeField(value, field, fieldSpecs[field]);
   });
 
   // Every field is now a canonical string.
@@ -48,17 +58,20 @@ function normalizeCronPattern(cronPattern: CronLike): Pattern {
 }
 
 // Canonicalize a single validated field value to a string.
-function normalizeField(value: string, spec: FieldSpec): string {
+function normalizeField(value: string, field: Field, spec: FieldSpec): string {
   const stringValue = '' + value;
 
   if (stringValue === '*') {
     return stringValue;
   }
 
+  const cycle = timeFieldCycle[field];
   const segments = stringValue.split(',').map(function canonical(segment) {
-    return collapseDegenerateRange(
-      collapseOnceStep(collapseUnitStep(segment, spec), spec), spec);
-  });
+    return enumerateNonUniformStep(
+      collapseDegenerateRange(
+        collapseOnceStep(collapseUnitStep(segment, spec), spec), spec),
+      spec, cycle);
+  }).join(',').split(',');
 
   // A full-cycle segment covers the whole field.
   if (segments.indexOf('*') !== -1) {
@@ -113,6 +126,41 @@ function collapseOnceStep(segment: string, spec: FieldSpec): string {
   }
 
   return start === '*' ? '' + spec.min : start;
+}
+
+// An unbounded step in a fixed-cycle time field is a true "every N" cadence
+// only when it tiles the cycle: the interval divides it evenly and the start
+// falls within the first interval (`*/15`, `5/6`). A step that fails either
+// test fires at irregular points within the cycle, so it reads as the literal
+// list of those fires (`*/7` is `0,7,14,…`), the same as if it were written
+// out. Calendar fields (no `cycle`), bounded steps (`9-17/2`, a per-window
+// stride), and non-step segments are left untouched.
+function enumerateNonUniformStep(
+  segment: string,
+  spec: FieldSpec,
+  cycle: number | undefined
+): string {
+  const parts = segment.split('/');
+
+  if (typeof cycle !== 'number' || parts.length !== 2 ||
+      includes(parts[0], '-')) {
+    return segment;
+  }
+
+  const interval = +parts[1];
+  const start = parts[0] === '*' ? spec.min : toFieldNumber(parts[0]);
+
+  if (cycle % interval === 0 && start < interval) {
+    return segment;
+  }
+
+  const fires = [];
+
+  for (let value = start; value <= (spec.top as number); value += interval) {
+    fires.push(value);
+  }
+
+  return fires.join(',');
 }
 
 // A degenerate range (`9-9`) fires once, so it reads as its single value.

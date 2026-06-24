@@ -547,7 +547,10 @@ const renderers = {
 // Phrase a `start/interval` step segment for a field that cycles every 60
 // units (seconds and minutes). `unit` is the singular noun and `anchor` is
 // the larger unit the values are counted against. Interval-one steps never
-// arrive here: normalization collapses them to ranges or `*`.
+// arrive here: normalization collapses them to ranges or `*`. Nor do uneven
+// steps that fail to tile the cycle: normalization rewrites those to the
+// literal list of their fires, so only a clean cadence (interval dividing
+// 60, start within the first interval) reaches a step renderer.
 function stepCycle60(segment: StepSegment, unit: string,
   anchor: string, opts: NormalizedOptions): string {
   // A bounded start (`a-b/n`) applies the interval within the range.
@@ -559,6 +562,8 @@ function stepCycle60(segment: StepSegment, unit: string,
   const interval = segment.interval;
 
   if (start !== 0) {
+    // A short offset cadence lists its fires; a longer one names the
+    // interval and its starting offset ("every six minutes from five …").
     if (segment.fires.length <= 3) {
       return listPastThe(numberWords(segment.fires, opts), unit, anchor,
         opts);
@@ -569,18 +574,8 @@ function stepCycle60(segment: StepSegment, unit: string,
       ' past the ' + anchor;
   }
 
-  // A step reads as a natural cadence ("every N minutes") only when it
-  // divides the cycle evenly, mirroring the hour field's `24 % n` rule.
-  if (60 % interval === 0) {
-    return 'every ' + getNumber(interval, opts) + ' ' + unit + 's';
-  }
-
-  if (segment.fires.length <= 2) {
-    return listPastThe(numberWords(segment.fires, opts), unit, anchor, opts);
-  }
-
-  return 'every ' + getNumber(interval, opts) + ' ' + unit +
-    's past the ' + anchor;
+  // A clean stride from the top of the cycle is the bare cadence.
+  return 'every ' + getNumber(interval, opts) + ' ' + unit + 's';
 }
 
 // Phrase a `start/interval` step segment for the hour field (cycles every
@@ -594,16 +589,16 @@ function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
   const interval = segment.interval;
 
-  if (start === 0 && 24 % interval === 0) {
+  // A clean stride from midnight is the bare cadence. (An uneven stride is
+  // rewritten to its fires upstream and never reaches here.)
+  if (start === 0) {
     return 'every ' + getNumber(interval, opts) + ' hours';
   }
 
+  // A short offset cadence lists its fires; a longer one names the interval
+  // and its start ("every three hours from 2 a.m.").
   if (segment.fires.length <= 3) {
     return 'at ' + hourTimes(segment.fires, opts);
-  }
-
-  if (start === 0) {
-    return 'every ' + getNumber(interval, opts) + ' hours from midnight';
   }
 
   return 'every ' + getNumber(interval, opts) + ' hours from ' +

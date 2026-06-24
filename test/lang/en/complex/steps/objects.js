@@ -3,7 +3,10 @@ import {run} from '../../../../runner.js';
 describe('Valid objects with steps:', function() {
   var tests = [
     [{second: '*/2'}, 'every two seconds'],
-    [{second: '*/7'}, 'every seven seconds past the minute'],
+    [
+      {second: '*/7'},
+      'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 seconds past the minute'
+    ],
     [{second: '*/30'}, 'every 30 seconds'],
     [{minute: '*/2'}, 'every two minutes'],
     [{minute: '0/2'}, 'every two minutes'],
@@ -12,24 +15,30 @@ describe('Valid objects with steps:', function() {
     [{minute: '*/4'}, 'every four minutes'],
     [{minute: '0/4'}, 'every four minutes'],
     [{minute: '*/5'}, 'every five minutes'],
-    [{minute: '*/7'}, 'every seven minutes past the hour'],
+    [
+      {minute: '*/7'},
+      'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour'
+    ],
     [{minute: '*/10'}, 'every ten minutes'],
-    [{minute: '*/17'}, 'every 17 minutes past the hour'],
+    [{minute: '*/17'}, 'at 0, 17, 34, and 51 minutes past the hour'],
     [{minute: '*/20'}, 'every 20 minutes'],
     [{minute: '17/20'}, 'at 17, 37, and 57 minutes past the hour'],
-    [{minute: '*/21'}, 'every 21 minutes past the hour'],
+    [{minute: '*/21'}, 'at 0, 21, and 42 minutes past the hour'],
     [{minute: '*/30'}, 'every 30 minutes'],
     [{minute: '*/31'}, 'at 0 and 31 minutes past the hour'],
     [{hour: '*/2'}, 'every two hours'],
     [{hour: '*/3'}, 'every three hours'],
     [{hour: '2/3'}, 'every three hours from 2 a.m.'],
-    [{hour: '*/5'}, 'every five hours from midnight'],
-    [{hour: '*/7'}, 'every seven hours from midnight'],
+    [
+      {hour: '*/5'},
+      'every day at 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m.'
+    ],
+    [{hour: '*/7'}, 'every day at 12 a.m., 7 a.m., 2 p.m., and 9 p.m.'],
     [{hour: '*/8'}, 'every eight hours'],
-    [{hour: '*/10'}, 'at 12 a.m., 10 a.m., and 8 p.m.'],
+    [{hour: '*/10'}, 'every day at 12 a.m., 10 a.m., and 8 p.m.'],
     [{hour: '*/12'}, 'every 12 hours'],
-    [{hour: '*/17'}, 'at 12 a.m. and 5 p.m.'],
-    [{hour: '*/20'}, 'at 12 a.m. and 8 p.m.']
+    [{hour: '*/17'}, 'every day at 12 a.m. and 5 p.m.'],
+    [{hour: '*/20'}, 'every day at 12 a.m. and 8 p.m.']
   ];
 
   describe('Partial cron objects', function() {

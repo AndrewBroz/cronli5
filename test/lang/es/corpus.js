@@ -313,16 +313,33 @@ describe('Español (es):', function() {
         'cada 15 minutos a partir del minuto 5 de cada hora'],
       ['40/15 * * * *', 'en los minutos 40 y 55 de cada hora'],
       ['0-30/10 * * * *', 'en los minutos 0, 10, 20 y 30 de cada hora'],
-      ['*/7 * * * *', 'cada siete minutos de cada hora'],
+      ['*/7 * * * *',
+        'en los minutos 0, 7, 14, 21, 28, 35, 42, 49 y 56 de cada hora'],
       ['*/35 * * * *', 'en los minutos 0 y 35 de cada hora'],
       ['0 2/5 * * *',
-        'cada cinco horas a partir de las 2 de la madrugada'],
+        'todos los días a las 2 de la madrugada, a las 7 de la mañana, ' +
+        'al mediodía, a las 5 de la tarde y a las 10 de la noche'],
       ['0 8-18/4 * * *',
         'a las 8 de la mañana, al mediodía y a las 4 de la tarde'],
-      ['0 0/7 * * *', 'cada siete horas desde medianoche'],
+      ['0 0/7 * * *',
+        'todos los días a medianoche, a las 7 de la mañana, ' +
+        'a las 2 de la tarde y a las 9 de la noche'],
       ['* */2 * * *', 'cada minuto, durante las horas pares'],
       ['0 12 */2 * *', 'cada dos días del mes al mediodía'],
-      ['0 12 5/3 * *', 'cada tres días del mes desde el 5 al mediodía']
+      ['0 12 5/3 * *', 'cada tres días del mes desde el 5 al mediodía'],
+      // Uniform steps that start off the top of the cycle keep the cadence
+      // form (interval divides the cycle, start within the first interval): a
+      // short one lists its fires, a longer one names interval + start.
+      ['17/20 * * * *', 'en los minutos 17, 37 y 57 de cada hora'],
+      ['0 8/12 * * *', 'a las 8 de la mañana y 8 de la noche'],
+      ['0 2/3 * * *', 'cada tres horas a partir de las 2 de la madrugada'],
+      // A uniform step segment beside a range, rendered as per-hour windows.
+      ['* 2/4,18-20 * * *',
+        'cada minuto de las 2 a las 2:59 de la madrugada, ' +
+        'de las 6 a las 6:59 de la mañana, de las 10 a las 10:59 de la ' +
+        'mañana, de las 2 a las 2:59 de la tarde, de las 6 a las 6:59 de la ' +
+        'tarde y de las 10 a las 10:59 de la noche y de las 6 de la tarde a ' +
+        'las 8:59 de la noche']
     ], ampm);
   });
 
@@ -424,11 +441,12 @@ describe('Español (es):', function() {
       ['0-30 9-17 * * *',
         'cada minuto del 0 al 30, de las 9 de la mañana a las 5 de la tarde'],
       ['0 */9 * * *',
-        'a medianoche, a las 9 de la mañana y a las 6 de la tarde'],
+        'todos los días a medianoche, a las 9 de la mañana y ' +
+        'a las 6 de la tarde'],
       ['0-30 9-20,22 * * *',
         'cada minuto del 0 al 30, de las 9 de la mañana a las 8 de la noche y también a las 10 de la noche'],
       ['* 1,6/3 * * *',
-        'cada minuto de la 1 a la 1:59 de la madrugada y ' +
+        'cada minuto de la 1 a la 1:59 de la madrugada, ' +
         'de las 6 a las 6:59 de la mañana, de las 9 a las 9:59 de la ' +
         'mañana, del mediodía a las 12:59 de la tarde, de las 3 a las ' +
         '3:59 de la tarde, de las 6 a las 6:59 de la tarde y de las 9 ' +

@@ -1015,17 +1015,9 @@ function stepCycle60(
       unit + ' ' + start + ' de cada ' + anchor;
   }
 
-  if (60 % interval === 0) {
-    return 'cada ' + numero(interval, opts) + ' ' + unit + 's';
-  }
-
-  if (segment.fires.length <= 2) {
-    return 'en los ' + unit + 's ' + joinList(wordList(segment.fires)) +
-      ' de cada ' + anchor;
-  }
-
-  return 'cada ' + numero(interval, opts) + ' ' + unit + 's de cada ' +
-    anchor;
+  // A clean stride from the top of the cycle is the bare cadence. (An uneven
+  // stride is rewritten to its fires upstream and never reaches here.)
+  return 'cada ' + numero(interval, opts) + ' ' + unit + 's';
 }
 
 // "cada seis horas", "a las 9:00, a las 11:00 y a la 1:00", or "cada
@@ -1038,16 +1030,14 @@ function stepHours(segment: StepSegment, opts: Opts): string {
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
   const interval = segment.interval;
 
-  if (start === 0 && 24 % interval === 0) {
+  // A clean stride from midnight is the bare cadence. (An uneven stride is
+  // rewritten to its fires upstream and never reaches here.)
+  if (start === 0) {
     return 'cada ' + numero(interval, opts) + ' horas';
   }
 
   if (segment.fires.length <= 3) {
     return groupClockTimesByArticle(atTimes(segment.fires, opts));
-  }
-
-  if (start === 0) {
-    return 'cada ' + numero(interval, opts) + ' horas desde medianoche';
   }
 
   return 'cada ' + numero(interval, opts) + ' horas a partir de ' +
