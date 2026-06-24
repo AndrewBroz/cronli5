@@ -18,7 +18,11 @@ Finnish was the architecture's agglutinative stress test: ranges,
 distributives, and date anchors are case constructions, not connective
 words, so the renderer owns the morphology outright.
 
-**Experimental.** Round-trips correctly, but the blind model panel found the compound/OR ("tai"-rakenne) phrasing not yet idiomatic; pending a fix and re-review. See [Language Review Status](../../README.md#language-review-status).
+> **Beta.** Model-validated by a blind Sonnet persona panel, not yet verified
+> by a fluent human reviewer. The compound "tai"-rakenne defects that once held
+> it back are fixed and re-reviewed (round-trip-clean); remaining sub-ideal
+> items are SFS 4175-correct or inherent to expressing cron precisely in
+> Finnish. See [Language Review Status](../../README.md#language-review-status).
 
 ## Style anchors
 
