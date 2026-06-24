@@ -468,12 +468,7 @@ function renderMinutesAcrossHours(
     minuteRangeLead(ir.pattern.minute) :
     minutesList(ir);
 
-  // F3: a minute window confined to specific clock hours (list — not a step)
-  // reads as restrictive; mark it with "solo" so it is not parsed as a
-  // separate additive trigger.
-  const soloPrefix = plan.form === 'range' ? 'solo ' : '';
-
-  return lead + ', ' + soloPrefix + atHourTimes(ir, plan.times, opts) +
+  return lead + ', ' + atHourTimes(ir, plan.times, opts) +
     trailingQualifier(ir, opts);
 }
 
@@ -516,11 +511,8 @@ function renderHourRange(
     return 'cada minuto ' + window + trailingQualifier(ir, opts);
   }
 
-  // F3: a minute window (range) confined to a specific hour range reads as
-  // restrictive; mark it with "solo" so the hours clause is not parsed as a
-  // separate additive trigger or an extended cross-hour range.
   if (plan.minuteForm === 'range') {
-    return minuteRangeLead(ir.pattern.minute) + ', solo ' + window +
+    return minuteRangeLead(ir.pattern.minute) + ', ' + window +
       trailingQualifier(ir, opts);
   }
 
