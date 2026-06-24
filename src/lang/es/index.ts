@@ -672,106 +672,212 @@ function renderClockTimes(
     return atTime(timePhrase(time.hour, time.minute, time.second, opts));
   });
 
-  return leadingQualifier(ir, opts) + groupClockTimesByArticle(phrases);
+  return leadingQualifier(ir, opts) + groupClockTimes(phrases);
 }
 
-// Merge ADJACENT stripped items that share the same clock value but differ
-// only in their "de la <period>" tail (12-hour clock). Only items
-// immediately next to each other merge; non-adjacent same-value items are
-// left untouched. Three or more consecutive same-value periods chain with
-// repeated " y de la ":
-//   ['1 de la madrugada', '1 de la tarde']
-//     → ['1 de la madrugada y de la tarde']
-//   ['2 de la mañana', '2 de la tarde', '3 de la noche']
-//     → ['2 de la mañana y de la tarde', '3 de la noche']
-function mergeAdjacentSameValuePeriods(items: string[]): string[] {
-  // Pattern: "<clock-value> de la <period>", where <clock-value> is a
-  // digit string (possibly with colon-minutes, e.g. "1:30").
-  const periodPattern = /^(.+) de la (.+)$/u;
-  const merged: string[] = [];
+// Group a chronological run of "a la(s) …" clock phrases. The 12-hour clock
+// carries day periods ("de la <period>"), which group chronologically by
+// period; the 24-hour clock has none, so it falls through to article-grouping.
+function groupClockTimes(phrases: string[]): string {
+  if (phrases.length < 2) {
+    return joinList(phrases);
+  }
+
+  return phrases.some(carriesDayPeriod) ?
+    groupClockTimesByDayPeriod(phrases) :
+    groupClockTimesByArticle(phrases);
+}
+
+// Whether a clock phrase carries a 12-hour day period ("a las 9 de la
+// mañana"); 24-hour phrases ("a las 09:00") never do.
+function carriesDayPeriod(phrase: string): boolean {
+  return phrase.includes(' de la ');
+}
+
+// One parsed 12-hour clock clause. A period clause keeps its article, its
+// (chronological) values, and the day period named once; mediodía/medianoche
+// are special clauses carried verbatim.
+type PeriodValue = {article: 'la' | 'las'; value: string};
+type ClockClause =
+  | {kind: 'period'; period: string; values: PeriodValue[]}
+  | {kind: 'special'; text: string};
+
+// Parse one "a la(s) <value> de la <period>" phrase into its parts.
+const periodPhrasePattern = /^a (la|las) (.+) (de la .+)$/u;
+
+// Group 12-hour clock phrases by day period, chronologically, never
+// reordering. Consecutive times in the same period fold into one clause that
+// names the period once; the article is shared when all values agree on it and
+// repeated per value otherwise. Two consecutive single-value clauses that
+// share a value elide to "a la(s) <value> de la <p1> y de la <p2>". Clauses
+// join in order, the RAE coma ante "y" (", y ") set before any clause that
+// carries an internal " y ".
+function groupClockTimesByDayPeriod(phrases: string[]): string {
+  const runs = collectPeriodRuns(phrases);
+  const elided = elideSharedSingleValues(runs);
+  const rendered = elided.map(renderPeriodRun);
+
+  return joinPeriodClauses(rendered);
+}
+
+// Fold the chronological phrases into period runs: consecutive period clauses
+// sharing a day period merge their values; specials break a run and stand
+// alone.
+function collectPeriodRuns(phrases: string[]): ClockClause[] {
+  const runs: ClockClause[] = [];
+
+  phrases.forEach(function place(phrase): void {
+    const match = periodPhrasePattern.exec(phrase);
+
+    if (!match) {
+      runs.push({kind: 'special', text: phrase});
+
+      return;
+    }
+
+    const article = match[1] as 'la' | 'las';
+    const value = match[2];
+    const period = match[3];
+    const last = runs[runs.length - 1];
+
+    if (last && last.kind === 'period' && last.period === period) {
+      last.values.push({article, value});
+    }
+    else {
+      runs.push({kind: 'period', period, values: [{article, value}]});
+    }
+  });
+
+  return runs;
+}
+
+// One rendered clause plus whether it carries an internal " y " (a multi-value
+// run or an elided clause), which governs the RAE coma ante "y" at the join.
+type RenderedClause = {text: string; hasInternalY: boolean};
+
+// Render one period run as "a <article> <value> de la <period>", factoring the
+// period once. A shared article is named once; a mixed article (a one-o'clock
+// among others) repeats "a <article>" per value.
+function renderPeriodRun(clause: ClockClause): RenderedClause {
+  if (clause.kind === 'special') {
+    return {text: clause.text, hasInternalY: false};
+  }
+
+  const {period, values} = clause;
+
+  if (values.length === 1) {
+    const tail = elidedTail(clause);
+
+    return {
+      hasInternalY: tail !== '',
+      text: 'a ' + values[0].article + ' ' + values[0].value + ' ' + period +
+        tail
+    };
+  }
+
+  const sharedArticle = values.every(function same(entry): boolean {
+    return entry.article === values[0].article;
+  });
+  const parts = sharedArticle ?
+    values.map(function bare(entry): string {
+      return entry.value;
+    }) :
+    values.map(function articled(entry): string {
+      return 'a ' + entry.article + ' ' + entry.value;
+    });
+  const lead = sharedArticle ? 'a ' + values[0].article + ' ' : '';
+
+  return {hasInternalY: true, text: lead + joinList(parts) + ' ' + period};
+}
+
+// Elide two consecutive single-value clauses that share a clock value into one
+// clause naming each period once: "a la 1 de la madrugada y de la tarde".
+// Three or more chain with repeated " y <period>". Only consecutive lone
+// values merge; the chronological order is never disturbed.
+function elideSharedSingleValues(runs: ClockClause[]): ClockClause[] {
+  const merged: ClockClause[] = [];
   let i = 0;
 
-  while (i < items.length) {
-    const m = periodPattern.exec(items[i]);
-    const clockValue = m ? m[1] : null;
-    let combinedItem = items[i];
+  while (i < runs.length) {
+    const run = runs[i];
+    const value = loneValue(run);
+    let combined = run;
     let j = i + 1;
 
-    // Absorb consecutive items that share the same clock value.
-    if (clockValue !== null) {
-      while (j < items.length) {
-        const nextM = periodPattern.exec(items[j]);
-
-        if (nextM && nextM[1] === clockValue) {
-          combinedItem += ' y de la ' + nextM[2];
-          j += 1;
-        }
-        else {
-          break;
-        }
+    if (value !== null) {
+      while (j < runs.length && loneValue(runs[j]) === value) {
+        combined = appendPeriod(combined as ElidableClause,
+          (runs[j] as ElidableClause).period);
+        j += 1;
       }
     }
 
-    merged.push(combinedItem);
+    merged.push(combined);
     i = j;
   }
 
   return merged;
 }
 
-// Whether a stripped group item is a merged period unit — i.e. it contains
-// the " y de la " conjunction inserted by mergeAdjacentSameValuePeriods.
-function isMergedPeriodItem(item: string): boolean {
-  return item.includes(' y de la ');
+// A single-value period clause, the only shape the elision merges.
+type ElidableClause = Extract<ClockClause, {kind: 'period'}>;
+
+// The lone clock value of a single-value period clause, else null.
+function loneValue(clause: ClockClause): string | null {
+  return clause.kind === 'period' && clause.values.length === 1 ?
+    clause.values[0].value :
+    null;
 }
 
-// Join a list of (possibly merged) group items. Uses the RAE *coma ante
-// "y"* — ", y " — before any item that directly follows a merged unit,
-// because the merged unit already contains "y" and a bare " y " would
-// create a double "y" reading. Otherwise uses ordinary list joining.
-function joinWithPeriodMergeRule(items: string[]): string {
-  if (items.length <= 1) {
-    return items.join('');
+// Chain another period onto an elided clause: its value stays, the extra
+// period rides along under " y <period>".
+type ElidedClause = ElidableClause & {tailPeriods: string[]};
+
+function appendPeriod(clause: ElidableClause, period: string): ElidedClause {
+  const elided = clause as ElidedClause;
+  const tailPeriods = (elided.tailPeriods || []).concat(period);
+
+  return {...clause, tailPeriods};
+}
+
+// Render the elided-clause tail periods, or the empty string for a plain
+// clause. Reuses renderPeriodRun for the single-value head, then appends each
+// " y <period>".
+function elidedTail(clause: ClockClause): string {
+  const tail = (clause as ElidedClause).tailPeriods;
+
+  if (!tail || tail.length === 0) {
+    return '';
   }
 
-  // Two items: the only separator is either ' y ' or ', y '.
-  if (items.length === 2) {
-    const sep = isMergedPeriodItem(items[0]) ? ', y ' : ' y ';
+  return tail.map(function chain(period): string {
+    return ' y ' + period;
+  }).join('');
+}
 
-    return items[0] + sep + items[1];
+// Join rendered period clauses in chronological order. The terminal " y "
+// becomes the RAE coma ante "y" — ", y " — when the last clause carries an
+// internal " y " (a multi-value run or an elided clause).
+function joinPeriodClauses(clauses: RenderedClause[]): string {
+  if (clauses.length === 1) {
+    return clauses[0].text;
   }
 
-  // Three or more: build with comma separators; the last separator may be
-  // ', y ' (when the penultimate item is a merged unit) or ' y ' otherwise.
-  const allButLast = items.slice(0, -1);
-  const last = items[items.length - 1];
-  const lastSep = isMergedPeriodItem(allButLast[allButLast.length - 1]) ?
-    ', y ' :
-    ' y ';
-  const leadParts = allButLast.map(function part(item, idx): string {
-    const isLast = idx === allButLast.length - 1;
-
-    return isLast ? item : item + ',';
+  const last = clauses[clauses.length - 1];
+  const lead = clauses.slice(0, -1).map(function text(clause): string {
+    return clause.text;
   });
+  const separator = last.hasInternalY ? ', y ' : ' y ';
 
-  return leadParts.join(' ') + lastSep + last;
+  return lead.join(', ') + separator + last.text;
 }
 
-// Group clock-time phrases by article: a-la times first, then a-las times,
-// each group under one prefix. All-'a las' and all-'a la' each collapse to a
-// single prefix. When the 'a las' group has exactly two items the groups join
-// with a comma to avoid a double 'y'. Phrases that are neither article form
-// fall back to a plain list (existing per-item behaviour).
-//
-// 12-hour day-period elision: within each group, adjacent items that share
-// the same clock value but differ only in their "de la <period>" tail are
-// factored — "1 de la madrugada, 1 de la tarde" → "1 de la madrugada y de
-// la tarde". The RAE coma ante "y" separates a merged unit from the next item.
+// Group clock-time phrases by article (24-hour clock): a-la times first, then
+// a-las times, each under one prefix. All-'a las' and all-'a la' each collapse
+// to a single prefix. When the 'a las' group has exactly two items the groups
+// join with a comma to avoid a double 'y'. The 24-hour clock has no day
+// periods, so every phrase is one article form.
 function groupClockTimesByArticle(phrases: string[]): string {
-  if (phrases.length < 2) {
-    return joinList(phrases);
-  }
-
   const singular = 'a la ';
   const plural = 'a las ';
 
@@ -791,37 +897,24 @@ function groupClockTimesByArticle(phrases: string[]): string {
     }
   }
 
-  const mergedLaItems = mergeAdjacentSameValuePeriods(laItems);
-  const mergedLasItems = mergeAdjacentSameValuePeriods(lasItems);
-
   // All 'a las': one prefix for the whole list.
   if (laItems.length === 0) {
-    return plural + joinWithPeriodMergeRule(mergedLasItems);
+    return plural + joinList(lasItems);
   }
 
   // All 'a la': one shared prefix, matching the all-'a las' behaviour.
   if (lasItems.length === 0) {
-    return singular + joinWithPeriodMergeRule(mergedLaItems);
+    return singular + joinList(laItems);
   }
 
-  // Mixed: 'a la' group first, then 'a las' group.
-  const laPart = singular + joinWithPeriodMergeRule(mergedLaItems);
-  const lasPart = plural + joinWithPeriodMergeRule(mergedLasItems);
-  // Connector between the two groups. The RAE coma ante "y" — ", y " — is
-  // obligatory when the preceding element already contains "y":
-  //   • last 'a la' item is a merged period unit ("de la tarde y de la noche").
-  // A plain comma — ", " — prevents a double "y" when the join would land
-  // between two list-ending "y"s:
-  //   • 'a la' group has two or more items ("… y X de la tarde, a las …")
-  //   • 'a las' group has exactly two items ("…, a las X y Y").
-  // Otherwise " y " joins the two groups.
-  const lastLaItem = mergedLaItems[mergedLaItems.length - 1];
-  const lastLaIsMerged = isMergedPeriodItem(lastLaItem);
-  const doubleY = mergedLaItems.length >= 2 || mergedLasItems.length === 2;
-  // Three-way choice: merged unit → ', y '; double-y → ', '; plain → ' y '.
-  // Split across two assignments to satisfy the no-nested-ternary rule.
-  const connectorBase = doubleY ? ', ' : ' y ';
-  const connector = lastLaIsMerged ? ', y ' : connectorBase;
+  // Mixed: 'a la' group first, then 'a las' group. A plain comma — ", " —
+  // prevents a double "y" when the join would land between two list-ending
+  // "y"s: the 'a la' group has two or more items, or the 'a las' group has
+  // exactly two. Otherwise " y " joins the two groups.
+  const laPart = singular + joinList(laItems);
+  const lasPart = plural + joinList(lasItems);
+  const doubleY = laItems.length >= 2 || lasItems.length === 2;
+  const connector = doubleY ? ', ' : ' y ';
 
   return laPart + connector + lasPart;
 }

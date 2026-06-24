@@ -76,37 +76,57 @@ describe('Español (es):', function() {
       ['0 13 * * *', 'todos los días a la 1 de la tarde'],
       ['0 1 * * *', 'todos los días a la 1 de la madrugada'],
       ['0 22 * * *', 'todos los días a las 10 de la noche'],
+      // Two periods, one value each: article repeated per period (no factoring
+      // across periods), chronological order preserved.
       ['0 9,17 * * *',
-        'todos los días a las 9 de la mañana y 5 de la tarde'],
-      // Same clock value (1) in madrugada and tarde: factor the value.
+        'todos los días a las 9 de la mañana y a las 5 de la tarde'],
+      // Three periods, one value each: article repeated per period.
       ['0 1,9,13 * * *',
-        'todos los días a la 1 de la madrugada y de la tarde, ' +
-        'y a las 9 de la mañana'],
-      // Adjacent same-value pairs across both articles.
+        'todos los días a la 1 de la madrugada, a las 9 de la mañana y ' +
+        'a la 1 de la tarde'],
+      // Elision: two CONSECUTIVE single-value clauses sharing a value factor
+      // the value, naming each period once.
       ['0 1,13 * * *',
         'todos los días a la 1 de la madrugada y de la tarde'],
       ['0 2,14 * * *',
         'todos los días a las 2 de la madrugada y de la tarde'],
       ['30 1,13 * * *',
         'todos los días a la 1:30 de la madrugada y de la tarde'],
-      // Merged unit followed by a further item: RAE coma ante 'y'.
+      // A multi-value period clause (internal 'y') followed by nothing here;
+      // the madrugada single then a 2-value tarde run. RAE coma ante 'y'
+      // before the clause carrying an internal 'y'.
       ['0 2,14,18 * * *',
-        'todos los días a las 2 de la madrugada y de la tarde, y 6 de la tarde'],
-      // Guard: the two 3s are NOT adjacent (9 de la mañana sits between them).
-      ['0 3,9,15 * * *',
-        'todos los días a las 3 de la madrugada, 9 de la mañana y 3 de la tarde'],
-      // All-'a la': collapse to one shared prefix (same as all-'a las').
-      ['0,30 1 * * *',
-        'todos los días a la 1 de la madrugada y 1:30 de la madrugada'],
-      // Merged unit MID-list → RAE coma ante y (3+ items in joinWithPeriodMergeRule).
+        'todos los días a las 2 de la madrugada, y a las 2 y 6 de la tarde'],
+      // Two multi-value period clauses: each names its period once, article
+      // shared within the run; coma ante 'y' before the second (internal 'y').
       ['0 2,3,15,18 * * *',
-        'todos los días a las 2 de la madrugada, 3 de la madrugada y de la tarde, y 6 de la tarde'],
-      // ≥3-item plain list, no merge.
+        'todos los días a las 2 y 3 de la madrugada, y a las 3 y 6 de la tarde'],
+      // No consecutive same-value clauses: article repeated per period.
+      ['0 3,9,15 * * *',
+        'todos los días a las 3 de la madrugada, a las 9 de la mañana y ' +
+        'a las 3 de la tarde'],
+      // One period (madrugada), two values, shared article: value elision is
+      // for the SINGLE-value case only; multi-value runs name the period once
+      // and keep both values.
+      ['0,30 1 * * *',
+        'todos los días a la 1 y 1:30 de la madrugada'],
+      // Three single-value clauses across three periods, no elision.
       ['0 9,15,21 * * *',
-        'todos los días a las 9 de la mañana, 3 de la tarde y 9 de la noche'],
-      // Mañana/noche merge pair.
+        'todos los días a las 9 de la mañana, a las 3 de la tarde y ' +
+        'a las 9 de la noche'],
+      // Elision pair across mañana/noche.
       ['0 11,23 * * *',
-        'todos los días a las 11 de la mañana y de la noche']
+        'todos los días a las 11 de la mañana y de la noche'],
+      // Mixed article WITHIN one period (1 → 'a la', 2 → 'a las'): the period
+      // is named once, the article repeats per value.
+      ['0 13,14 * * *',
+        'todos los días a la 1 y a las 2 de la tarde'],
+      ['0 1,2 * * *',
+        'todos los días a la 1 y a las 2 de la madrugada'],
+      // Mediodía is its own clause; the following multi-value tarde run carries
+      // an internal 'y', so the join uses the RAE coma ante 'y'.
+      ['0 12,13,14 * * *',
+        'todos los días al mediodía, y a la 1 y a las 2 de la tarde']
     ], ampm);
   });
 
