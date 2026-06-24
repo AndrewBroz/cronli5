@@ -675,11 +675,98 @@ function renderClockTimes(
   return leadingQualifier(ir, opts) + groupClockTimesByArticle(phrases);
 }
 
+// Merge ADJACENT stripped items that share the same clock value but differ
+// only in their "de la <period>" tail (12-hour clock). Only items
+// immediately next to each other merge; non-adjacent same-value items are
+// left untouched. Three or more consecutive same-value periods chain with
+// repeated " y de la ":
+//   ['1 de la madrugada', '1 de la tarde']
+//     → ['1 de la madrugada y de la tarde']
+//   ['2 de la mañana', '2 de la tarde', '3 de la noche']
+//     → ['2 de la mañana y de la tarde', '3 de la noche']
+function mergeAdjacentSameValuePeriods(items: string[]): string[] {
+  // Pattern: "<clock-value> de la <period>", where <clock-value> is a
+  // digit string (possibly with colon-minutes, e.g. "1:30").
+  const periodPattern = /^(.+) de la (.+)$/u;
+  const merged: string[] = [];
+  let i = 0;
+
+  while (i < items.length) {
+    const m = periodPattern.exec(items[i]);
+    const clockValue = m ? m[1] : null;
+    let combinedItem = items[i];
+    let j = i + 1;
+
+    // Absorb consecutive items that share the same clock value.
+    if (clockValue !== null) {
+      while (j < items.length) {
+        const nextM = periodPattern.exec(items[j]);
+
+        if (nextM && nextM[1] === clockValue) {
+          combinedItem += ' y de la ' + nextM[2];
+          j += 1;
+        }
+        else {
+          break;
+        }
+      }
+    }
+
+    merged.push(combinedItem);
+    i = j;
+  }
+
+  return merged;
+}
+
+// Whether a stripped group item is a merged period unit — i.e. it contains
+// the " y de la " conjunction inserted by mergeAdjacentSameValuePeriods.
+function isMergedPeriodItem(item: string): boolean {
+  return item.includes(' y de la ');
+}
+
+// Join a list of (possibly merged) group items. Uses the RAE *coma ante
+// "y"* — ", y " — before any item that directly follows a merged unit,
+// because the merged unit already contains "y" and a bare " y " would
+// create a double "y" reading. Otherwise uses ordinary list joining.
+function joinWithPeriodMergeRule(items: string[]): string {
+  if (items.length <= 1) {
+    return items.join('');
+  }
+
+  // Two items: the only separator is either ' y ' or ', y '.
+  if (items.length === 2) {
+    const sep = isMergedPeriodItem(items[0]) ? ', y ' : ' y ';
+
+    return items[0] + sep + items[1];
+  }
+
+  // Three or more: build with comma separators; the last separator may be
+  // ', y ' (when the penultimate item is a merged unit) or ' y ' otherwise.
+  const allButLast = items.slice(0, -1);
+  const last = items[items.length - 1];
+  const lastSep = isMergedPeriodItem(allButLast[allButLast.length - 1]) ?
+    ', y ' :
+    ' y ';
+  const leadParts = allButLast.map(function part(item, idx): string {
+    const isLast = idx === allButLast.length - 1;
+
+    return isLast ? item : item + ',';
+  });
+
+  return leadParts.join(' ') + lastSep + last;
+}
+
 // Group clock-time phrases by article: a-la times first, then a-las times,
 // each group under one prefix. All-'a las' collapses to a single prefix
 // (unchanged). When the 'a las' group has exactly two items the groups join
 // with a comma to avoid a double 'y'. All-'a la' and phrases that are neither
 // article form fall back to a plain list (existing per-item behaviour).
+//
+// 12-hour day-period elision: within each group, adjacent items that share
+// the same clock value but differ only in their "de la <period>" tail are
+// factored — "1 de la madrugada, 1 de la tarde" → "1 de la madrugada y de
+// la tarde". The RAE coma ante "y" separates a merged unit from the next item.
 function groupClockTimesByArticle(phrases: string[]): string {
   if (phrases.length < 2) {
     return joinList(phrases);
@@ -704,25 +791,43 @@ function groupClockTimesByArticle(phrases: string[]): string {
     }
   }
 
+  const mergedLaItems = mergeAdjacentSameValuePeriods(laItems);
+  const mergedLasItems = mergeAdjacentSameValuePeriods(lasItems);
+  const laWasMerged = mergedLaItems.length < laItems.length;
+
   // All 'a las': one prefix for the whole list.
   if (laItems.length === 0) {
-    return plural + joinList(lasItems);
+    return plural + joinWithPeriodMergeRule(mergedLasItems);
   }
 
-  // All 'a la': each keeps its own prefix (12-h case where 01:00 and 13:00
-  // both read as "a la" preserves the per-item form).
+  // All 'a la': when a merge collapsed items, use the shared prefix with
+  // the merged list; otherwise keep the per-item form (each "a la X …").
   if (lasItems.length === 0) {
+    if (laWasMerged) {
+      return singular + joinWithPeriodMergeRule(mergedLaItems);
+    }
+
     return joinList(phrases);
   }
 
   // Mixed: 'a la' group first, then 'a las' group.
-  const laPart = singular + joinList(laItems);
-  const lasPart = plural + joinList(lasItems);
-  // Comma connector when a group adjacent to the join already ends in a list
-  // 'y' — a two-item 'a las' group ('… y a las 02:00 y 03:00') or a 'a la'
-  // group of two or more ('… y 1 de la tarde y a las …') — to avoid a double 'y'.
-  const connector =
-    laItems.length >= 2 || lasItems.length === 2 ? ', ' : ' y ';
+  const laPart = singular + joinWithPeriodMergeRule(mergedLaItems);
+  const lasPart = plural + joinWithPeriodMergeRule(mergedLasItems);
+  // Connector between the two groups. The RAE coma ante "y" — ", y " — is
+  // obligatory when the preceding element already contains "y":
+  //   • last 'a la' item is a merged period unit ("de la tarde y de la noche").
+  // A plain comma — ", " — prevents a double "y" when the join would land
+  // between two list-ending "y"s:
+  //   • 'a la' group has two or more items ("… y X de la tarde, a las …")
+  //   • 'a las' group has exactly two items ("…, a las X y Y").
+  // Otherwise " y " joins the two groups.
+  const lastLaItem = mergedLaItems[mergedLaItems.length - 1];
+  const lastLaIsMerged = isMergedPeriodItem(lastLaItem);
+  const doubleY = mergedLaItems.length >= 2 || mergedLasItems.length === 2;
+  // Three-way choice: merged unit → ', y '; double-y → ', '; plain → ' y '.
+  // Split across two assignments to satisfy the no-nested-ternary rule.
+  const connectorBase = doubleY ? ', ' : ' y ';
+  const connector = lastLaIsMerged ? ', y ' : connectorBase;
 
   return laPart + connector + lasPart;
 }

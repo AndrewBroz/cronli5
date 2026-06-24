@@ -78,9 +78,23 @@ describe('Español (es):', function() {
       ['0 22 * * *', 'todos los días a las 10 de la noche'],
       ['0 9,17 * * *',
         'todos los días a las 9 de la mañana y 5 de la tarde'],
+      // Same clock value (1) in madrugada and tarde: factor the value.
       ['0 1,9,13 * * *',
-        'todos los días a la 1 de la madrugada y 1 de la tarde, ' +
-        'a las 9 de la mañana']
+        'todos los días a la 1 de la madrugada y de la tarde, ' +
+        'y a las 9 de la mañana'],
+      // Adjacent same-value pairs across both articles.
+      ['0 1,13 * * *',
+        'todos los días a la 1 de la madrugada y de la tarde'],
+      ['0 2,14 * * *',
+        'todos los días a las 2 de la madrugada y de la tarde'],
+      ['30 1,13 * * *',
+        'todos los días a la 1:30 de la madrugada y de la tarde'],
+      // Merged unit followed by a further item: RAE coma ante 'y'.
+      ['0 2,14,18 * * *',
+        'todos los días a las 2 de la madrugada y de la tarde, y 6 de la tarde'],
+      // Guard: the two 3s are NOT adjacent (9 de la mañana sits between them).
+      ['0 3,9,15 * * *',
+        'todos los días a las 3 de la madrugada, 9 de la mañana y 3 de la tarde']
     ], ampm);
   });
 
@@ -445,13 +459,6 @@ describe('Español (es):', function() {
 // docs/backlog.md, "Open rendering findings"). Omitidos hasta el paso C:
 // reactivar (skip → describe) y corregir.
 describe('Errores conocidos (paso C):', function() {
-  it('usa "a la" singular para la una en una lista', function() {
-    expect(cronli5('0 1,13 * * *', {lang: es}))
-      .to.equal('todos los días a la 01:00 y a las 13:00');
-    expect(cronli5('0 1,13 * * *', {lang: es, ...ampm}))
-      .to.equal('todos los días a la 1 de la madrugada y a la 1 de la tarde');
-  });
-
   it('usa el reloj del dialecto en la lista de horas, no 24 h', function() {
     expect(cronli5('*/15 14,18,20,22 * * *', {dialect: 'es-MX', lang: es}))
       .to.not.include('las 14');
