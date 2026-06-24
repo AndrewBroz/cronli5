@@ -14,16 +14,18 @@ see [../../CONTRIBUTING.md](../../CONTRIBUTING.md). For the architecture, see
   automated path the **panel** is a *proxy* oracle, which is why its output
   ships as **beta**. Its outputs are "fool's gold" — useful for iteration
   but not definitive and considered unstable.
-- **A cross-family, multi-persona, blind** process is used to defeat same-model
-  bias and single-judge sycophancy. Every judgment comes from a panel spanning
-  two model families and several reviewer personas, none aware of provenance.
+- **Blind, multi-persona Sonnet panels** defeat same-model bias and
+  single-judge sycophancy. Every judgment comes from three fresh Sonnet
+  personas (everyday native speaker, copy-editor, technical communicator),
+  none aware of provenance, none aware of each other. **Critics find;
+  detectors guarantee** — a per-entry critic pass is never trusted as a
+  mechanical guarantee; the detector suite is the backstop.
 - **Clear status labels:** Beta is model-validated; stable requires human review.
 
-## Mechanical checks (run first, no human or judge)
+## Mechanical checks
 
-Two cheap, wide passes run before the panel and catch whole classes of defect
-the curated spanning set misses — so the expensive panel only sees a
-representative sample:
+Two cheap, wide passes run as part of the Verify phase and catch whole
+classes of defect the curated spanning set misses:
 
 - **Fuzz** — `node --import tsx scripts/fuzz-lang.mjs <code>` (`npm run fuzz`).
   Sweeps a broad combinatorial pattern set and flags throws, degenerate output,
@@ -36,101 +38,111 @@ representative sample:
   *needs-review*, and *day-or* (cron's OR case, segregated as model noise).
   Advisory bulk comprehension pass — `i18n-design.md` §4 Pass 2.
 
-The panel below also runs **wide**, above the spanning set: `panel.mjs <code>
---wide[=N]` reviews a shape-deduped sample of the fuzz space (one representative
-per output shape) instead of the curated set. Same two-phase flow — its Gemma
-half is a cheap pre-filter; adding `--judges` folds in the Claude half for the
-full 4-judge verdict. The single-Gemma pre-pass over the long tail is noisy
-(complex OR/Quartz patterns over-flag); the 4-judge median is what decides.
-
-When you change a renderer's wording, also re-judge the affected patterns with
-`scripts/panel-targeted.mjs` — the corpus tests only confirm the output didn't
-change, not that the *new* wording is good.
-
 ## The panel
 
-The unit of judgment is a **blind, cross-family persona panel** — diverse
-reviewer personas across two model families, none aware of provenance.
+The unit of judgment is a **blind, multi-persona Sonnet panel** — three
+fresh Sonnet sub-agent instances, each assigned a distinct reviewer persona
+and told nothing about provenance or the other panelists.
 
 - **Personas** (each catches a different failure mode):
   - *everyday native speaker* — naturalness ("would a person say this?")
-  - *meticulous editor* — grammar, agreement, register
-  - *precise/technical communicator* — correctness, ambiguity
-- **Families**: **Claude** (fresh `Agent` sub-agents) and **Gemma**
-  (`gemma4:31b-cloud` via Ollama Cloud, through `scripts/llm.mjs`).
-- **Composition (cost-tuned).** Gemma's account serves one model at a time,
-  so every Gemma call serializes; the panel therefore runs a **single Gemma
-  judge** plus **3 Claude judges** (4 voters) and **2 Gemma baselines**,
-  letting the parallel Claude side carry the statistical weight. The judge
-  count is what the gate is calibrated to.
-- **Blind**: each panelist is a fresh, stateless instance, told only its
-  persona and the target language — no provenance, no sight of cronli5 /
-  cRonstrue / other panelists.
+  - *meticulous copy-editor* — written-register clarity, grammar, idiom
+  - *precise technical communicator* — correctness, scannable precision, ambiguity
+- **Blind**: each panelist is a fresh, stateless sub-agent instance, told
+  only its persona and the target language — no provenance, no sight of
+  cronli5 internals, no awareness of other panelists.
+- **Comprehension test, not a beauty contest.** A form passes a panel only if
+  every ordinary reader would conclude the *intended* schedule meaning with no
+  misread. Naturalness is secondary to correctness. A misread-able form is
+  eliminated even if it sounds natural.
+
+The same panel runs in three contexts: the **Conventions** phase (register
+choices), the **Corpus** phase (contested entries), and the **Trap** panel
+phase (comprehension of each playbook-registered universal trap).
 
 ## Stages
 
-0. **Scaffold** the module from the typed `en` reference (the `Language`
-   interface, `dialects.ts`).
-1. **Spanning set** — the shared substrate: cron patterns spanning the
-   `PlanNode` kinds **crossed with complexity**, *simple → compound*, derived
-   from `en`'s full corpus (`basic` + `showcase`/`complex`: wrap-arounds,
-   seconds-folding, Quartz). The compound rows matter
-   most because that is where a blind model rendering is hardest and where
-   cronli5's folding is both most capable and most prone to error.
-2. **Baseline panel** — each of the 6 panelists *blind-renders the meaning*
-   naturally in the target language. The result is a **field of natural
-   alternatives** per item. Personas and model families converging is a strong
-   naturalness signal. The spread maps the acceptable register range.
-3. **Implement** the renderer (against the `ir.ts` contract, `en` as the
-   structural reference, the baseline field as the naturalness guide).
-4. **Double-blind judge panel** — For each item, programmatically assemble
-   an **anonymized, shuffled slate** of candidate renderings: cronli5's output,
-   cRonstrue's locale output, and the baseline field. Labels are stripped,
-   the order is shuffled, and the key is held by the orchestrator and hidden
-   from judges. Each blind judge scores **every** candidate (naturalness 0–5,
-   correct bool, best pick, and qualitative feedback) without knowing which is
-   which. **De-anonymize against the key** afterward and read cronli5's
-   standing.
-5. **Beta gate** — two parts:
-   - *absolute*: per item, median naturalness ≥ 4 **and** enough judges call it
-     correct — the gate tolerates one dissenter, **scaled to the panel size**
-     (`correctBar(n)` = `(n−1)/n`, capped at 0.8; for the 4-judge panel, 3 of
-     4). A panel exists to *outvote* an outlier, so a lone wrong or
-     hallucinated vote must not fail a verified-correct rendering;
-   - *relative*: cronli5 ranks **at or above** the baseline/cRonstrue on most
-     items ("indistinguishable from or better than a fluent model's blind
-     attempt").
-   Failures surface the **clustered fixes**; fix them **test-first** (write the
-   intended output into the corpus, watch it fail, then fix the renderer — see
-   CONTRIBUTING.md) and re-run the failing items only.
-6. **Corpus + `status.json`** — `corpus.js` is the settled outputs;
-   `src/lang/<code>/status.json` records `status: "beta"`, the judge summary,
-   and `PlanNode`-kind coverage.
-7. **Gates** — `lint`, `typecheck`, `test`, `coverage`, `docs --check`,
-   `build` (CI runs the same).
-8. **Status** — a generated status table (from the `status.json` files plus
-   derived coverage) makes the beta label public.
+1. **Conventions** — A drafter agent proposes the style contract: numerals,
+   date/weekday/month forms, list/range connectives, recurrence marking, and
+   how this grammar resolves each universal trap from the playbook. Every
+   genuinely-contested register choice (clock format, midnight/noon idiom,
+   interval phrasing, range-boundary convention, union connective) is surfaced
+   with 2–4 concrete candidate sentences. A blind 3-persona Sonnet panel votes
+   on each contested choice; the drafter finalizes conventions against the
+   majority verdict. Results written to `src/lang/<code>/notes.md`.
 
-## Aggregation
+2. **Corpus** — Three independent Sonnet agents author variant corpora
+   (`corpus-a.js`, `corpus-b.js`, `corpus-c.js`), each spanning the full core
+   set (`test/core/core-set.json`) against the conventions and the English
+   meaning oracle — never lifting wording from any existing renderer. A
+   reconciler diffs all three: agreed entries are settled; contested entries and
+   any entry that fails mechanical detector lints (field-coverage, trap-lints)
+   are panelled by the same blind 3-persona panel. The panel-resolved winner for
+   each contested entry is assembled into the canonical `test/lang/<code>/corpus.js`
+   and the variant files are deleted. Detectors run one final pass on the
+   assembled corpus.
 
-Per item, across the judges: **naturalness = median**, **correct = vote
-fraction** (gate: `correctBar(n)`), **fixes = clustered** (a *consensus fix*
-when a majority converge), **relative = cronli5's mean rank** in the slate plus
-its win-rate versus the baseline median and versus cRonstrue.
+   A **held-out split** (~15%, stratified across every cell/value-class/variant)
+   is partitioned out of the corpus for the Renderer phase — the build agent
+   never sees these entries and they serve as the generalization probe.
+
+3. **Renderer** — The corpus is the train set. Three independent Sonnet agents
+   build the renderer (`src/lang/<code>/index.ts`) in parallel under **form
+   pressures**: zero `eslint-disable`, reduced cognitive complexity, and
+   minimized copy-paste duplication. Each variant is evaluated on the held-out
+   set (the generalization probe — patterns the builder never trained on) plus
+   line count and duplication. The Pareto winner (held-out correctness first,
+   then compactness) seeds the next round. Two rounds suffice. The winning
+   variant is promoted to `src/lang/<code>/`.
+
+4. **Critique** — Five single-focus habit-critic agents read every output of the
+   renderer against the core set, each applying one lens: redundancy,
+   misparse/scope, consistency, naturalness, fidelity. Flags are clustered and
+   surfaced for the next step; critics propose rules, never auto-apply fixes.
+   **Critics find; detectors guarantee.**
+
+5. **Trap panels** — For each universal trap registered in the playbook
+   (union-connective, shared-qualifier-scope, confinement-vs-juxtaposition,
+   range-boundary, recurrence-marking, redundancy, numeral-register,
+   sentence-wrapper-punctuation, cardinality-rendering, and any lessons added
+   by prior runs), a blind 3-persona Sonnet panel finds a core-set pattern that
+   exercises it and judges whether the renderer's output makes an ordinary reader
+   conclude the exact intended meaning. A trap passes if at least 2 of 3
+   personas read it as intended.
+
+6. **Verify** — The mechanical backstop:
+   - Fuzz: 0 throws, degenerate outputs, or dropped field values.
+   - Both-side OR-scope detector: every OR with a shared restricted qualifier
+     carries it on each arm.
+   - Round-trip: blind agent recovers cron from description; compared by
+     expanded per-field value sets.
+   - Full test suite, typecheck, eslint clean (no disables).
+   A per-entry critic pass never substitutes for this; the detector suite is
+   what *guarantees*.
+
+7. **Playbook update** — If the run surfaces a genuinely new universal lesson
+   (a trap or method insight that would help the *next, unrelated* language, not
+   a restatement of this language's specific answer), it is appended to
+   `playbook.md` and `tooling/scripts/playbook.mjs` re-derives `playbook.json`.
+   The next language run starts knowing this one's hard-won traps.
+
+8. **Status** — `src/lang/<code>/status.json` records `status: "beta"`.
+   Gates `lint`, `typecheck`, `test`, `coverage`, `docs --check`, `build`
+   (CI runs the same). A generated status table makes the beta label public.
 
 ## Caveats
 
-- **The panel is not an oracle.** Six models can share a blind spot,
+- **The panel is not an oracle.** Three Sonnet personas can share a blind spot,
   especially on compound semantics. The panel's job is to *catch* errors and
-  *map* naturalness; it gates **beta**, and the parked human pilot remains the
-  path to stable.
-- **Self-recognition.** A panelist may recognize its own baseline line in the
-  slate. Each judge instance is fresh and stateless, but the strict
-  mitigation is to draw judges from fresh instances and never feed a panelist
-  a slate containing its own baseline rendering.
-- **Cost/latency.** ~6 panelists × items × 2 steps per pass (half Gemma
-  cloud, half Claude sub-agents). Bounded; during iteration, subset to the
-  failing items.
+  verify comprehension; it gates **beta**, and the parked human review platform
+  remains the path to stable.
+- **No self-recognition mitigation needed.** Each judge instance is a fresh,
+  stateless sub-agent. Because all three personas are Sonnet instances the
+  risk of recognizing provenance exists, which is why the panel is structured
+  as a *comprehension* test ("does a reader conclude the intended meaning?")
+  rather than a preference or authorship vote.
+- **Cost/latency.** ~3 personas × traps × rounds. Bounded; during iteration,
+  subset to failing items.
 
 ## Graduation to stable
 
@@ -156,7 +168,8 @@ change:
   `scripts/patterns.mjs` is exactly this.
 - **Personas anchor to the region/style** (a Guardian-style British writer for
   `gb`; a Mexican or US-Latino speaker for `es-MX`/`es-US`), not just the
-  language — `panel.mjs` keys these off its `DIALECT_NAMES` map.
+  language — the same blind 3-persona Sonnet panel is re-parameterized to the
+  target `{dialect}` with region-anchored personas.
 
 Dialects sit on a spectrum that sets how much review each needs:
 
@@ -173,22 +186,6 @@ applies. English's `us`, `gb`, and `house` are all **stable** (`us` Chicago +
 maintainer-native; `gb` reviewed by the maintainer, a competent UK-English
 reader; `house` stable by construction). A machine-built dialect ships **beta**
 until human-reviewed, exactly like a language.
-
-**Running the dialect panel.** `panel.mjs` takes a `--dialect` flag:
-
-```sh
-node --import tsx scripts/panel.mjs es --dialect=es-MX        # Gemma half
-# spawn the Claude half as region-native judges → tmp/claude-es-MX.json
-node --import tsx scripts/panel.mjs es --dialect=es-MX \
-  --judges=tmp/claude-es-MX.json                              # re-aggregate
-```
-
-It renders `cronli5(pattern, {dialect})`, draws baselines and a judge from the
-region (`DIALECT_NAMES`) over the clock-time `DIALECT_PATTERNS`, and writes
-`tmp/panel-<dialect>.json`. Each language now owns its style shape
-(`NormalizedOptions<Style>`; `SpanishStyle` for `es`), so the `DialectStyle`
-generalization this once depended on is **done** — a new dialect is a style
-table plus a renderer branch, not new machinery.
 
 **A regional dialect must clear the *native* panel — or be dropped.** `es-MX`
 and `es-US` passed 9/9. `es-AR` did **not**: Argentine judges found its `.`+`h`
