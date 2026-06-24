@@ -8,10 +8,20 @@
 // are skipped. Driven by .claude/workflows/add-language.js — no standalone
 // CLI, no model client of its own.
 
+import {readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {dirname, join} from 'node:path';
 import {sampleShapes, spread} from './sample.mjs';
-import {spanningSet} from './spanning-set.mjs';
 import {enumerateFires} from '../../src/core/analyze.js';
 import cronli5 from '../../src/cronli5.js';
+
+// The review substrate is the committed core set: the cell sweep PLUS the
+// curated spanning patterns folded into its `spanning` field
+// (test/core/core-set.json).
+const CORE_SET = JSON.parse(readFileSync(join(
+  dirname(fileURLToPath(import.meta.url)), '..', '..',
+  'test', 'core', 'core-set.json'), 'utf8'));
+const reviewPatterns = [...CORE_SET.patterns, ...CORE_SET.spanning];
 
 const MONTHS = {
   JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
@@ -104,8 +114,14 @@ function bothDays(pattern) {
 }
 
 function render(pattern, lang) {
+  // A 6-field pattern ending in a 4-digit token is minute..weekday + year;
+  // without {years} the year is parsed as a weekday and throws. (5/6/7-field
+  // patterns without a trailing year need no option.)
+  const tokens = pattern.trim().split(/\s+/u);
+  const years = tokens.length === 6 && (/\d{4}/u).test(tokens[5]);
+
   try {
-    return cronli5(pattern, {lang});
+    return cronli5(pattern, years ? {lang, years: true} : {lang});
   }
   catch {
     return null;
@@ -125,13 +141,14 @@ function prepareRoundtrip(lang, limit) {
     .filter((item) => item.description);
 }
 
-// The curated review substrate: every spanning-set pattern (one per PlanNode
-// kind, crossed with complexity) rendered with `lang`. This is the panel's
-// input — it guarantees PlanNode-kind coverage, unlike the shape-deduped fuzz
-// sample prepareRoundtrip draws. Quartz patterns are included (the naturalness
-// panel rates them); tallyRoundtrip skips them for the correctness comparison.
+// The review substrate: the whole expanded core set (cell sweep + curated
+// spanning patterns) rendered with `lang`. This is the panel's input — broad
+// coverage of every rendering strategy plus realistic curated patterns, far
+// wider than the shape-deduped fuzz sample prepareRoundtrip draws. Quartz
+// patterns are included (the naturalness panel rates them); tallyRoundtrip
+// skips them for the correctness comparison.
 function prepareReview(lang) {
-  return spanningSet
+  return reviewPatterns
     .map((pattern) => ({pattern, description: render(pattern, lang)}))
     .filter((item) => item.description);
 }

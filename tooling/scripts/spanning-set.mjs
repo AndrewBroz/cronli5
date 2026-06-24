@@ -7,17 +7,7 @@
 import {pathToFileURL} from 'node:url';
 import {analyze, prepare} from '../../src/core/index.js';
 import en from '../../src/lang/en/index.js';
-import {tables} from '../../scripts/patterns.mjs';
-
-// Breadth fillers: the curated docs sets don't exercise every rendering
-// strategy, so these top up the uncovered PlanNode kinds (verified by the
-// coverage report below).
-const coverageExtras = [
-  '* * * * * *', '5 * * * * *', '5 * * * *', '5,10 * * * *',
-  '0-30 9 * * *', '0-30 */2 * * *', '0 * * * *', '0 */3 * * *'
-];
-
-const spanningSet = [...tables.basic, ...tables.showcase, ...coverageExtras];
+import {coverageExtras, spanningSet, tables} from '../../scripts/patterns.mjs';
 
 // Every rendering strategy the core can select (see src/core/ir.ts). The
 // spanning set should exercise each one.

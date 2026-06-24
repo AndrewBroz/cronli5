@@ -31,4 +31,18 @@ const dialectPatterns = [
   '*/15 9-17 * * *', '0 0 12 25 12 * 2030'
 ];
 
-export {dialectPatterns, languagePatterns, tables};
+// Breadth fillers that top up the PlanNode kinds the curated `basic`/`showcase`
+// sets don't reach (verified by spanning-set.mjs's coverage report).
+const coverageExtras = [
+  '* * * * * *', '5 * * * * *', '5 * * * *', '5,10 * * * *',
+  '0-30 9 * * *', '0-30 */2 * * *', '0 * * * *', '0 */3 * * *'
+];
+
+// The spanning set: curated simple + compound patterns, simple-first, that
+// exercise every rendering strategy. Folded into the core set's `spanning`
+// field and used (with the cell sweep) as the panel review substrate.
+const spanningSet = [...tables.basic, ...tables.showcase, ...coverageExtras];
+
+export {
+  coverageExtras, dialectPatterns, languagePatterns, spanningSet, tables
+};

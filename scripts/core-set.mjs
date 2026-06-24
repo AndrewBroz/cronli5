@@ -9,10 +9,16 @@
 // seconds, years, the half/quarter and fires-once edges), `macros` (@reboot
 // etc., which bypass analyze), and `invalid` (the lenient fallback). A corpus
 // must cover the cells AND test the variants/macros/invalid.
+//
+// It also carries `spanning`: the curated spanning set (patterns.mjs), deduped
+// against the cell sweep. These are not part of the corpus-coverage contract
+// (the cells are); they are folded in here so the language review panel runs
+// over the cell sweep PLUS these realistic, curated patterns.
 import {writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname, join} from 'node:path';
 import {analyze, prepare} from '../src/core/index.js';
+import {spanningSet} from './patterns.mjs';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..',
   'test', 'core', 'core-set.json');
@@ -228,10 +234,17 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
   }
 
+  const patterns = [...byCell.values()].sort();
+  const inSweep = new Set(patterns);
+  const spanning = spanningSet
+    .filter((pattern) => !inSweep.has(pattern))
+    .sort();
+
   const out = {
     generated: 'scripts/core-set.mjs',
     cells: byCell.size,
-    patterns: [...byCell.values()].sort(),
+    patterns,
+    spanning,
     valueClasses: VALUE_CLASSES,
     variants: VARIANTS,
     macros: MACROS,
@@ -239,7 +252,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   };
 
   writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
-  console.log('core set: ' + byCell.size + ' cells, ' +
-    VALUE_CLASSES.length + ' value classes, ' + VARIANTS.length +
-    ' variants, ' + MACROS.length + ' macros → ' + OUT);
+  console.log('core set: ' + byCell.size + ' cells, ' + spanning.length +
+    ' spanning, ' + VALUE_CLASSES.length + ' value classes, ' +
+    VARIANTS.length + ' variants, ' + MACROS.length + ' macros → ' + OUT);
 }
