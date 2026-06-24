@@ -718,9 +718,11 @@ function groupClockTimesByArticle(phrases: string[]): string {
   // Mixed: 'a la' group first, then 'a las' group.
   const laPart = singular + joinList(laItems);
   const lasPart = plural + joinList(lasItems);
-  // Comma connector when the 'a las' group has exactly two items, to avoid
-  // a double 'y' ('… y a las 02:00 y 03:00' → '… , a las 02:00 y 03:00').
-  const connector = lasItems.length === 2 ? ', ' : ' y ';
+  // Comma connector when a group adjacent to the join already ends in a list
+  // 'y' — a two-item 'a las' group ('… y a las 02:00 y 03:00') or a 'a la'
+  // group of two or more ('… y 1 de la tarde y a las …') — to avoid a double 'y'.
+  const connector =
+    laItems.length >= 2 || lasItems.length === 2 ? ', ' : ' y ';
 
   return laPart + connector + lasPart;
 }

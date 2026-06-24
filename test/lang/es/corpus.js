@@ -77,7 +77,10 @@ describe('Español (es):', function() {
       ['0 1 * * *', 'todos los días a la 1 de la madrugada'],
       ['0 22 * * *', 'todos los días a las 10 de la noche'],
       ['0 9,17 * * *',
-        'todos los días a las 9 de la mañana y 5 de la tarde']
+        'todos los días a las 9 de la mañana y 5 de la tarde'],
+      ['0 1,9,13 * * *',
+        'todos los días a la 1 de la madrugada y 1 de la tarde, ' +
+        'a las 9 de la mañana']
     ], ampm);
   });
 
