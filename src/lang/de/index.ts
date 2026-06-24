@@ -818,7 +818,10 @@ const de: Language<GermanStyle> = {
   fallback: 'ein unlesbares Cron-Muster',
   options: normalizeOptions,
   reboot: 'beim Systemstart',
-  sentence: (description) => 'Läuft ' + description + '.'
+  // A description ending in a German ordinal already carries its period
+  // ("…am 8."), so closing the sentence must not double it.
+  sentence: (description) =>
+    'Läuft ' + description + (description.endsWith('.') ? '' : '.')
 };
 
 export default de;

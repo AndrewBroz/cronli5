@@ -18,6 +18,13 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
       .to.equal('Läuft täglich um Mitternacht.');
   });
 
+  it('German does not double the period after an ordinal', function() {
+    // A fragment ending in a German ordinal already carries a period
+    // ("…am 8."); the sentence wrapper must not append a second one.
+    expect(de.sentence('am 3., 5. und 8.'))
+      .to.equal('Läuft am 3., 5. und 8.');
+  });
+
   it('Spanish', function() {
     expect(es.sentence('cada minuto')).to.equal('Se ejecuta cada minuto.');
   });
