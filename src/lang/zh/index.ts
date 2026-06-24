@@ -436,6 +436,12 @@ function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
     return '每天' + restText + sec;
   }
 
+  // A stated minute (e.g. minute 0 under a sub-minute second) takes the same
+  // "，" connector the listed-minute path uses.
+  if (rest.kind === 'singleMinute') {
+    return restText + '，' + sec;
+  }
+
   return restText + sec;
 }
 
