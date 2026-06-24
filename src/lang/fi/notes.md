@@ -125,9 +125,19 @@ first review's naturalness defects ship.
   minute **step** cadences (`välein`, the cadence runs through the hour). When
   the minute is **anchored points** (`kohdalla`) under specific hours, the
   windows are redundant — render bare hours (`klo 9 ja 17`).
+* **Nearest-weekday (Quartz `W`).** Date-first participle form, paralleling
+  the `LW` idiom: `kuukauden N. päivää lähinnä olevana arkipäivänä` (e.g.
+  `kuukauden 15. päivää lähinnä olevana arkipäivänä`). The earlier
+  `arkipäivänä lähinnä kuukauden N. päivää` inverted natural Finnish order;
+  the date-first form was decided by the blind panel (2026-06-24). `LW`
+  (`kuukauden viimeisenä arkipäivänä`) is unchanged.
 * **Range + isolated hour.** In a `klo` enumeration where a range is followed
-  by an isolated hour, join with **`sekä klo`** (repeat `klo`):
-  `klo 9–20 sekä klo 22`. Bare `sekä 22`/`ja 22` reads as a range extension.
+  by an isolated hour, join with **`sekä klo`** (repeat `klo`) for
+  **non-window** forms: `klo 9–20 sekä klo 22` and `klo 9.30–20.30 sekä klo
+  22.30`. Per-hour window forms (minute step cadences like
+  `klo 8.00–18.59 ja 22.00–22.59`) keep plain `ja`. Applies to both the
+  folded pure-hour path (on-the-minute fires) and the minute-clause path.
+  Bare `sekä 22`/`ja 22` reads as a range extension.
 * **Mixed cadence.** A minute step leads its within-firing second anchor,
   comma between: `15 minuutin välein, 5 ja 30 sekunnin kohdalla` (the comma
   marks the granularity boundary, not a flat list).

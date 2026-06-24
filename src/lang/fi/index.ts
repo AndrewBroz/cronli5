@@ -748,15 +748,19 @@ function renderCompactClockTimes(
   plan: Extract<PlanNode, {kind: 'compactClockTimes'}>,
   opts: NormalizedOptions
 ): string {
-  if (plan.fold) {
-    return leadingQualifier(ir, opts) +
-      hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
-  }
-
   const hourSegs = ir.analyses.segments.hour!;
 
-  // RULE E: range+isolated hours — minute-first, bare minutes, sekä klo.
+  // RULE E: range+isolated hours — join the isolated hour with "sekä klo"
+  // to stop it reading as a range extension. For the folded path (single
+  // minute folded into clock ranges) use the leading-qualifier form;
+  // for the non-folded path use bare-minutes-first with a trailing qualifier.
   if (hoursAreRangeIsolated(hourSegs)) {
+    if (plan.fold) {
+      return leadingQualifier(ir, opts) +
+        hourSegmentTimesWithSeka(ir, plan.minute,
+          ir.analyses.clockSecond, opts);
+    }
+
     const phrase = bareMinutes(ir) + ' ' +
       hourSegmentTimesWithSeka(ir, 0, null, opts) +
       trailingQualifier(ir, opts);
@@ -764,6 +768,11 @@ function renderCompactClockTimes(
     return ir.analyses.clockSecond ?
       secondsLeadClause(ir, opts) + ', ' + phrase :
       phrase;
+  }
+
+  if (plan.fold) {
+    return leadingQualifier(ir, opts) +
+      hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
   }
 
   // RULE C: a minute list over purely enumerated hours (step fires, all
@@ -1294,8 +1303,8 @@ function quartzDatePhrase(dateField: string): string | undefined {
   const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(dateField);
 
   if (nearest) {
-    return 'arkipäivänä lähinnä kuukauden ' + (nearest[1] || nearest[2]) +
-      '. päivää';
+    return 'kuukauden ' + (nearest[1] || nearest[2]) +
+      '. päivää lähinnä olevana arkipäivänä';
   }
 }
 

@@ -142,7 +142,9 @@ describe('Suomi (fi):', function() {
       ['0 0 L-1 * *',
         'päivää ennen kuukauden viimeistä päivää keskiyöllä'],
       ['0 0 15W * *',
-        'arkipäivänä lähinnä kuukauden 15. päivää keskiyöllä'],
+        'kuukauden 15. päivää lähinnä olevana arkipäivänä keskiyöllä'],
+      ['30 9 15W 6 *',
+        'kuukauden 15. päivää lähinnä olevana arkipäivänä kesäkuussa klo 9.30'],
       ['0 0 * * 5L', 'kuukauden viimeisenä perjantaina keskiyöllä'],
       ['0 0 * * MON#2', 'kuukauden toisena maanantaina keskiyöllä'],
       // A Quartz date OR'd with a weekday under a ranged month (fuzzer-found
@@ -217,7 +219,9 @@ describe('Suomi (fi):', function() {
       ['0 1/5 * * *', 'viiden tunnin välein klo 1:stä alkaen'],
       ['0 11/2 * * *', 'kahden tunnin välein klo 11:stä alkaen'],
       ['0 13/3 * * *', 'kolmen tunnin välein klo 13:sta alkaen'],
-      ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 ja 22.30'],
+      // RULE E: pure-hour range+isolated enumeration uses sekä klo (non-window).
+      ['0 9-20,22 * * *', 'joka päivä klo 9–20 sekä klo 22'],
+      ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 sekä klo 22.30'],
       ['0,30 8-18/2 * * *',
         'klo 8, 10, 12, 14, 16 ja 18 aina minuuttien 0 ja 30 kohdalla'],
       ['*/15 30 9 * * *', '15 sekunnin välein, joka päivä klo 9.30'],
@@ -270,6 +274,10 @@ describe('Suomi (fi):', function() {
         '0–30 minuutin kohdalla, kuuden tunnin välein klo 1:stä alkaen'],
       ['* 8-18,22 * * *',
         'joka minuutti klo 8.00–18.59 ja 22.00–22.59'],
+      // Compact clock-times fold path (single minute, many non-range+isolated
+      // single hours past the enumeration cap):
+      ['5 1,3,5,7,9,11,13 * * *',
+        'joka päivä klo 1.05, 3.05, 5.05, 7.05, 9.05, 11.05 ja 13.05'],
       ['5-10 1,3,5,7,9,11,13 * * *',
         'klo 1, 3, 5, 7, 9, 11 ja 13 aina minuuttien 5–10 kohdalla'],
       ['0 9 * * 7', 'sunnuntaisin klo 9'],
