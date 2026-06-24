@@ -204,6 +204,35 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
 ): string {
+  // F1: seconds list + fixed clock time — nest the seconds into the clock time
+  // with genitive "de las HH:MM" instead of "de cada minuto"; the minute is
+  // fixed so "de cada minuto" is misleading. Single seconds already fold into
+  // the time in the clockTimes renderer; step seconds keep their own clause.
+  if (plan.rest.kind === 'clockTimes' && ir.shapes.second === 'list') {
+    const time = plan.rest.times[0];
+    const timeStr = timePhrase(time.hour, time.minute, null, opts);
+    const secondsPhrase = 'en los segundos ' +
+      joinList(segmentWords(fieldSegments(ir, 'second')));
+    const dayFrame = trailingQualifier(ir, opts);
+
+    return (dayFrame ? dayFrame.trimStart() + ', ' : '') +
+      secondsPhrase + ' de ' + timeStr;
+  }
+
+  // F2: second-step + fixed minute + hour range + weekday — anchor the cadence
+  // to the minute after the weekday + hour-range frame.
+  if (plan.rest.kind === 'hourRange' && ir.shapes.second === 'step' &&
+      ir.pattern.weekday !== '*') {
+    const restNode = plan.rest;
+    const window = hourWindow(restNode, opts);
+    const dayFrame = weekdayQualifier(ir) + monthScope(ir);
+    const cadence = 'cada ' +
+      numero(stepSegment(ir.analyses.segments.second).interval, opts) +
+      ' segundos del minuto ' + ir.pattern.minute;
+
+    return dayFrame + ', ' + window + ', ' + cadence;
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
 }
 
@@ -439,7 +468,12 @@ function renderMinutesAcrossHours(
     minuteRangeLead(ir.pattern.minute) :
     minutesList(ir);
 
-  return lead + ', ' + atHourTimes(ir, plan.times, opts) +
+  // F3: a minute window confined to specific clock hours (list — not a step)
+  // reads as restrictive; mark it with "solo" so it is not parsed as a
+  // separate additive trigger.
+  const soloPrefix = plan.form === 'range' ? 'solo ' : '';
+
+  return lead + ', ' + soloPrefix + atHourTimes(ir, plan.times, opts) +
     trailingQualifier(ir, opts);
 }
 
@@ -482,8 +516,11 @@ function renderHourRange(
     return 'cada minuto ' + window + trailingQualifier(ir, opts);
   }
 
+  // F3: a minute window (range) confined to a specific hour range reads as
+  // restrictive; mark it with "solo" so the hours clause is not parsed as a
+  // separate additive trigger or an extended cross-hour range.
   if (plan.minuteForm === 'range') {
-    return minuteRangeLead(ir.pattern.minute) + ', ' + window +
+    return minuteRangeLead(ir.pattern.minute) + ', solo ' + window +
       trailingQualifier(ir, opts);
   }
 

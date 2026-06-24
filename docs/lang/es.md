@@ -81,7 +81,7 @@ on the 24-hour clock, and the `sábados` plural).
 | `0 12 1 1 *` | el 1 de enero a las 12:00 | A las 12:00, el día 1 del mes, sólo en enero |
 | `0 12 * 11-2 *` | todos los días de noviembre a febrero a las 12:00 | A las 12:00, de noviembre a febrero |
 | `0 0 * * 5L` | el último viernes del mes a las 00:00 | A las 00:00, en el último viernes del mes |
-| `5,10 30 9 * * MON` | en los segundos 5 y 10 de cada minuto, los lunes a las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
+| `5,10 30 9 * * MON` | los lunes, en los segundos 5 y 10 de las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | `1/1 * * * *` | cada minuto del 1 al 59 de cada hora | Cada 1 minutos, comenzando a los 1 minutos de la hora |
 | `0 1 * * *` | todos los días a la 01:00 | A las 01:00 |
 | `0 12 * * SAT` | los sábados a las 12:00 | A las 12:00, sólo el sábado |
