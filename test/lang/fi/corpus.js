@@ -256,6 +256,16 @@ describe('Suomi (fi):', function() {
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "joka sekunti"). Fuzzer-found.
       ['* * 9 * * *', 'joka sekunti, joka minuutti klo 9.00–9.59'],
+      // A wildcard second over a minute-step + hour-list: the hour restriction
+      // must survive (it once dropped to "joka tunti"). Fuzzer-found.
+      ['* */45 9,17 1 * *',
+        'joka sekunti, klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla ' +
+        'kuukauden 1. päivänä'],
+      // A fixed second over the same anchored minute-step + hour-list: hours
+      // must likewise survive (same dropped-hours bug). Fuzzer-found.
+      ['30 */45 9,17 1 * *',
+        'klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla, ' +
+        '30 sekunnin kohdalla kuukauden 1. päivänä'],
       ['*/15 * 9-17 * * *', '15 sekunnin välein, joka minuutti klo 9.00–17.59'],
       ['0-30 * 9 * * *',
         'joka minuutti 0–30 sekunnin kohdalla, joka minuutti klo 9.00–9.59'],

@@ -322,13 +322,22 @@ function renderComposeSeconds(
   // duplicating the full renderMinuteFrequency logic. The hours-first reorder
   // that applies inside renderMinuteFrequency is intentionally NOT applied
   // here (the step-leads form is the correct shape for this construction).
-  if (plan.rest.kind === 'minuteFrequency') {
+  if (plan.rest.kind === 'minuteFrequency' && ir.pattern.second !== '*') {
     const freq = plan.rest as Extract<PlanNode, {kind: 'minuteFrequency'}>;
     const seg = stepSegment(ir.analyses.segments.minute!);
     const stepPhrase = stepCycle60(seg, units.minute, opts);
     let hourClause = '';
 
-    if (freq.hours.kind === 'during' && !minuteStepIsAnchored(seg)) {
+    if (freq.hours.kind === 'during' && minuteStepIsAnchored(seg)) {
+      // The step renders as an anchored kohdalla list rather than a cadence,
+      // so the hours-first reorder applies here too: bare hours lead, minute
+      // anchors follow, then the seconds clause.
+      const bareHours = kloFromTimes(ir, freq.hours.times, opts);
+
+      return hoursFirstMinutes(bareHours, ir) + ', ' +
+        secondsLeadClause(ir, opts) + trailingQualifier(ir, opts);
+    }
+    else if (freq.hours.kind === 'during' && !minuteStepIsAnchored(seg)) {
       hourClause = ' ' + hourWindowsFromTimes(ir, freq.hours.times, opts);
     }
     else if (freq.hours.kind === 'window') {
