@@ -87,6 +87,51 @@ case constructions.
   `vuonna 2030`.
 * Lists: `ja`, no comma before it; `tai` for the date-or-weekday OR.
 
+## Compound schedules (the OR / shared-qualifier-scope contract)
+
+Decided by three rounds of blind 3-persona Sonnet panels (deciding →
+validation → ordering; the last unanimous), June 2026. These pin the
+compound forms the corpus was previously thin on — the gap that let the
+first review's naturalness defects ship.
+
+* **OR-scope (restricted-month date-OR-weekday union).** When cron ORs a
+  restricted DOM with a restricted DOW *and* the month is restricted, the
+  month and the time are shared across both arms. Render
+  **`[month] [time] joko <DOM> tai <DOW>`**: the month leads and scopes the
+  union, the time follows it, and the `joko … tai` union comes **last** —
+  nothing trails it. A trailing month or time word mis-scopes onto only the
+  last arm (`tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin`, not
+  `… tai maanantaisin tammikuussa keskiyöllä`). Use the correlative
+  `joko … tai`, not bare `tai`, whenever a shared qualifier scopes the union.
+* **Fronted-month case + day arm.** Single month → inessive (`tammikuussa`),
+  list → inessive list (`tammikuussa ja heinäkuussa`), range →
+  elative-illative (`kesäkuusta syyskuuhun`). Under a fronted month an
+  ordinary DOM drops the generic `kuukauden` (`joko 1. päivänä …`); a Quartz
+  date keeps its idiom (`joko kuukauden viimeisenä päivänä …`). The inessive
+  list also sidesteps the old genitive coordination bug — one ordinal, no
+  `tammikuun ja heinäkuun 1. päivänä`. A **wildcard-month** union is left on
+  plain `tai` (nothing to scope).
+* **Level reorder (anchored minute window/list + specific hours).** When the
+  minute is an anchored `kohdalla` clause for a **range** (`0–30`) or
+  multi-point **list** (`0 ja 30`) and the hour is a simple `klo`-digit list
+  or single range, render **hours-first**:
+  `klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla` (plural genitive
+  `minuuttien`, drop any leading `joka tunti`). A bare comma before `klo`
+  does not separate the two levels. Does **not** apply to a single anchored
+  minute the clock already shows (`30 minuutin kohdalla klo 9.30–17.30`),
+  minute **steps** (`välein` keep their per-hour windows), or a range+isolated
+  hour compound (keep that minute-first).
+* **Hour-window vs bare hours.** Per-hour windows (`klo 9.00–9.59`) belong to
+  minute **step** cadences (`välein`, the cadence runs through the hour). When
+  the minute is **anchored points** (`kohdalla`) under specific hours, the
+  windows are redundant — render bare hours (`klo 9 ja 17`).
+* **Range + isolated hour.** In a `klo` enumeration where a range is followed
+  by an isolated hour, join with **`sekä klo`** (repeat `klo`):
+  `klo 9–20 sekä klo 22`. Bare `sekä 22`/`ja 22` reads as a range extension.
+* **Mixed cadence.** A minute step leads its within-firing second anchor,
+  comma between: `15 minuutin välein, 5 ja 30 sekunnin kohdalla` (the comma
+  marks the granularity boundary, not a flat list).
+
 ## Validation of earlier fixes
 
 The English/Spanish month-range no-fold rule (June 2026) is confirmed
