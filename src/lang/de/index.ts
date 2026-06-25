@@ -462,7 +462,9 @@ function duringHours(ir: IR, times: HourTimesPlan, sep: string): string {
     return joinList(windows);
   }
 
-  return 'in den Stunden von ' + joinList(times.fires.map(String)) + ' Uhr';
+  // A discrete set of hours is a list, not a range, so it takes no "von"
+  // (which would read as "von X bis Y"); it mirrors the minute list form.
+  return 'in den Stunden ' + joinList(times.fires.map(String)) + ' Uhr';
 }
 
 // --- Renderers. ---

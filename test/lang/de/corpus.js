@@ -227,7 +227,7 @@ describe('Deutsch (de):', function() {
       // A bounded hour step lists its active hours; beyond three a compact
       // list reads better than sprawling windows (panel-preferred).
       ['*/20 9-17/2 * * *',
-        'alle 20 Minuten in den Stunden von 9, 11, 13, 15 und 17 Uhr'],
+        'alle 20 Minuten in den Stunden 9, 11, 13, 15 und 17 Uhr'],
       // A clean (unbounded) hour step confines the cadence to every Nth hour,
       // not a juxtaposed second cadence ("alle 2 Stunden").
       ['*/15 */2 * * *', 'alle 15 Minuten in jeder zweiten Stunde'],
@@ -238,7 +238,7 @@ describe('Deutsch (de):', function() {
       ['* 1/2 * * *', 'jede Minute in jeder zweiten Stunde ab 1 Uhr'],
       // An uneven hour step lists its active hours the same way.
       ['*/15 */5 * * *',
-        'alle 15 Minuten in den Stunden von 0, 5, 10, 15 und 20 Uhr'],
+        'alle 15 Minuten in den Stunden 0, 5, 10, 15 und 20 Uhr'],
       // The same clean hour step composed with a second clause.
       ['0-10 */15 */2 L * *',
         'in den Sekunden 0 bis 10 jeder Minute, ' +
