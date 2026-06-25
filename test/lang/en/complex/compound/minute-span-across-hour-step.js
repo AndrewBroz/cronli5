@@ -25,16 +25,14 @@ describe('Minute span across an hour step:', function() {
       ['5,30 1/2 * * *',
         'at 5 and 30 minutes past the hour, every two hours from 1 a.m.'],
       ['3/2 1/2 * * *',
-        'at 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, ' +
-        '35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, and 59 minutes ' +
-        'past the hour, every two hours from 1 a.m.'],
+        'every two minutes from 3 through 59 minutes past the hour, ' +
+        'every two hours from 1 a.m.'],
       ['5,30 */2 * * *',
         'at 5 and 30 minutes past the hour, every two hours'],
       // An unclean stride still enumerates its hours (compactClockTimes).
       ['3/2 9-17/2 * * *',
-        'at 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, ' +
-        '35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, and 59 minutes ' +
-        'past the hour, at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+        'every two minutes from 3 through 59 minutes past the hour, ' +
+        'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
     ]);
   });
 

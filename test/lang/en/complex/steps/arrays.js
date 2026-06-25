@@ -17,11 +17,11 @@ describe('Valid arrays with steps:', function() {
       [['0/5', '*', '*', '*', '*'], 'every five minutes'],
       [
         ['*/7', '*', '*', '*', '*'],
-        'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour'
+        'every seven minutes from 0 through 56 minutes past the hour'
       ],
       [
         ['0/7', '*', '*', '*', '*'],
-        'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour'
+        'every seven minutes from 0 through 56 minutes past the hour'
       ],
       [['*/10', '*', '*', '*', '*'], 'every ten minutes'],
       [['*/17', '*', '*', '*', '*'], 'at 0, 17, 34, and 51 minutes past the hour'],
@@ -55,7 +55,7 @@ describe('Valid arrays with steps:', function() {
       [['*/2', '*', '*', '*', '*', '*'], 'every two seconds'],
       [
         ['*/7', '*', '*', '*', '*', '*'],
-        'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 seconds past the minute'
+        'every seven seconds from 0 through 56 seconds past the minute'
       ],
       [['*/30', '*', '*', '*', '*', '*'], 'every 30 seconds'],
       [['0', '*/2', '*', '*', '*', '*'], 'every two minutes'],

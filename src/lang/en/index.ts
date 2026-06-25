@@ -3,6 +3,7 @@
 // the core stays semantic, and this module's only input is the IR.
 // See docs/i18n-design.md.
 
+import {arithmeticStep} from '../../core/util.js';
 import {clockDigits, numeral} from '../../core/format.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
@@ -18,6 +19,18 @@ type PlanOf<K extends PlanNode['kind']> = Extract<PlanNode, {kind: K}>;
 // `startToken`). The plan only routes step-shaped fields to the step
 // phrasing, where the first segment is always a step segment.
 type StepSegment = Extract<Segment, {kind: 'step'}>;
+
+// A step cadence to phrase: the `interval` repeats over a `cycle`-long field
+// (60 for minute/second, 24 for hour), running from `start` to `last`. `unit`
+// is the singular noun and `anchor` the larger unit the values count against.
+interface Stride {
+  interval: number;
+  start: number;
+  last: number;
+  cycle: number;
+  unit: string;
+  anchor: string;
+}
 
 // A clock-time entry assembled for rendering. Hour/minute/second arrive as
 // numbers or as raw field tokens (a range bound or single value is a
@@ -282,8 +295,11 @@ function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
       pluralize(secondField, 'second') + ' past the minute';
   }
 
-  // A non-wildcard second under the list/step path always has segments.
-  return listPastThe(segmentWords(ir.analyses.segments.second!, opts),
+  // A non-wildcard second under the list/step path always has segments. An
+  // offset/uneven step the core enumerated to a fire list reads as a stride
+  // cadence when those fires form a long-enough progression.
+  return strideFromSegments(ir.analyses.segments.second!, 'second', 'minute',
+    opts) ?? listPastThe(segmentWords(ir.analyses.segments.second!, opts),
     'second', 'minute', opts);
 }
 
@@ -312,9 +328,13 @@ function renderRangeOfMinutes(ir: IR, plan: PlanOf<'rangeOfMinutes'>,
 function renderMultipleMinutes(ir: IR, plan: PlanOf<'multipleMinutes'>,
   opts: NormalizedOptions): string {
   // A multiple-minutes plan is selected only for a minute list, which has
-  // segments.
-  return listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
-    'minute', 'hour', opts) + trailingQualifier(ir, opts);
+  // segments. An offset/uneven step the core enumerated to this list reads as
+  // a stride cadence when the fires form a long-enough progression.
+  const stride =
+    strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts);
+
+  return (stride ?? listPastThe(segmentWords(ir.analyses.segments.minute!,
+    opts), 'minute', 'hour', opts)) + trailingQualifier(ir, opts);
 }
 
 // A repeating minute step, qualified by the active hour window(s).
@@ -376,9 +396,11 @@ function renderMinutesAcrossHours(ir: IR, plan: PlanOf<'minutesAcrossHours'>,
   const times = hourTimesFromPlan(ir, plan.times, true, opts);
   const lead = plan.form === 'range' ?
     minuteRangeLead(ir.pattern.minute, opts) :
-    // The 'list' form is a minute list, which has segments.
-    listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
-      'minute', 'hour', opts);
+    // The 'list' form is a minute list, which has segments; an offset/uneven
+    // step enumerated to that list reads as a stride.
+    strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts) ??
+      listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+        'minute', 'hour', opts);
 
   return lead + ', at ' + times + trailingQualifier(ir, opts);
 }
@@ -414,10 +436,12 @@ function renderMinuteSpanAcrossHourStep(ir: IR,
       trailingQualifier(ir, opts);
   }
 
-  // A minute list keeps the same cadence clause; only its lead differs.
+  // A minute list keeps the same cadence clause; only its lead differs. An
+  // offset/uneven step the core enumerated to that list reads as a stride.
   const lead = plan.form === 'list' ?
-    listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
-      'minute', 'hour', opts) :
+    strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts) ??
+      listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+        'minute', 'hour', opts) :
     minuteRangeLead(ir.pattern.minute, opts);
 
   return lead + ', ' + stepHours(segment, opts) + trailingQualifier(ir, opts);
@@ -468,8 +492,10 @@ function rangeMinuteLead(ir: IR, opts: NormalizedOptions): string {
     return 'every hour';
   }
 
-  // A non-"0" minute here is a discrete list, which has segments.
-  return listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+  // A non-"0" minute here is a discrete list, which has segments; an
+  // offset/uneven step enumerated to that list reads as a stride.
+  return strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour',
+    opts) ?? listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
     'minute', 'hour', opts);
 }
 
@@ -540,9 +566,11 @@ function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
   }
 
   const phrase =
-    // The non-fold branch is a minute list, which has segments.
-    listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
-      'minute', 'hour', opts) +
+    // The non-fold branch is a minute list, which has segments. An
+    // offset/uneven step enumerated to that list reads as a stride.
+    (strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts) ??
+      listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+        'minute', 'hour', opts)) +
     ', at ' + hourSegmentTimes(ir, {minute: 0, second: null}, true, opts) +
     trailingQualifier(ir, opts);
 
@@ -614,6 +642,71 @@ const renderers = {
 
 // --- Step phrases. ---
 
+// Speak a step cadence over a `cycle`-long field ("every N <unit>s [from M
+// [through K]] past the <anchor>"). A clean stride from the top of the cycle
+// is the bare cadence; a uniform offset (start within the first interval, the
+// interval still tiling the cycle) names only its start, since it wraps cleanly
+// and has no distinct endpoint; a non-uniform stride (start >= interval, or an
+// interval that does not tile the cycle) pins both endpoints so the bounded,
+// non-wrapping set reads unambiguously. This is the one phrasing for every
+// step the renderer speaks, whether the core kept it a step shape (a clean
+// cadence) or enumerated it to a fire list (an offset/uneven set the list
+// path recognizes as an arithmetic progression).
+function renderStride(stride: Stride, opts: NormalizedOptions): string {
+  const {interval, start, last, cycle, unit, anchor} = stride;
+  const cadence = 'every ' + getNumber(interval, opts) + ' ' + unit + 's';
+  const tiles = cycle % interval === 0;
+
+  if (start === 0 && tiles) {
+    return cadence;
+  }
+
+  if (start < interval && tiles) {
+    // A clean wrap from a non-zero offset: name the start, no endpoint.
+    return cadence + ' from ' + getNumber(start, opts) + ' ' +
+      pluralize(start, unit) + ' past the ' + anchor;
+  }
+
+  // A bounded, non-wrapping set: pin both endpoints. The two bounds share one
+  // number style (all spelled, or all numerals once either crosses ten),
+  // matching the range idiom ("from 0 through 30").
+  const num = seriesNumber([start, last], opts);
+
+  return cadence + ' from ' + num(start) + through(opts) + num(last) + ' ' +
+    pluralize(last, unit) + ' past the ' + anchor;
+}
+
+// The sorted numeric values a field's segments cover, or null if any segment
+// is not a discrete single (a range or sub-step is not a plain fire list).
+function singleValues(segments: Segment[]): number[] | null {
+  const values: number[] = [];
+
+  for (const segment of segments) {
+    if (segment.kind !== 'single') {
+      return null;
+    }
+
+    values.push(+segment.value);
+  }
+
+  return values;
+}
+
+// Speak a minute/second field's enumerated fires as a step cadence when they
+// form an arithmetic progression long enough to beat the list (the core
+// enumerates an offset/uneven step to this fire list; the IR is unchanged, so
+// the renderer recognizes the progression). Returns null for a non-progression
+// or a too-short list, leaving the caller to enumerate.
+function strideFromSegments(segments: Segment[], unit: string, anchor: string,
+  opts: NormalizedOptions): string | null {
+  const values = singleValues(segments);
+  const step = values && arithmeticStep(values);
+
+  return step ?
+    renderStride({...step, cycle: 60, unit, anchor}, opts) :
+    null;
+}
+
 // Phrase a `start/interval` step segment for a field that cycles every 60
 // units (seconds and minutes). `unit` is the singular noun and `anchor` is
 // the larger unit the values are counted against. Interval-one steps never
@@ -629,23 +722,23 @@ function stepCycle60(segment: StepSegment, unit: string,
   }
 
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
-  const interval = segment.interval;
 
-  if (start !== 0) {
-    // A short offset cadence lists its fires; a longer one names the
-    // interval and its starting offset ("every six minutes from five …").
-    if (segment.fires.length <= 3) {
-      return listPastThe(numberWords(segment.fires, opts), unit, anchor,
-        opts);
-    }
-
-    return 'every ' + getNumber(interval, opts) + ' ' + unit + 's from ' +
-      getNumber(start, opts) + ' ' + pluralize(start, unit) +
-      ' past the ' + anchor;
+  // A short offset cadence lists its fires; otherwise the stride phrasing
+  // names the interval and its offset ("every six minutes from five …"). A
+  // step shape only reaches here as a clean cadence (the interval tiles 60),
+  // so the stride collapses to the bare or uniform-offset form.
+  if (start !== 0 && segment.fires.length <= 3) {
+    return listPastThe(numberWords(segment.fires, opts), unit, anchor, opts);
   }
 
-  // A clean stride from the top of the cycle is the bare cadence.
-  return 'every ' + getNumber(interval, opts) + ' ' + unit + 's';
+  return renderStride({
+    interval: segment.interval,
+    start,
+    last: segment.fires[segment.fires.length - 1],
+    cycle: 60,
+    unit,
+    anchor
+  }, opts);
 }
 
 // Phrase a `start/interval` step segment for the hour field (cycles every
