@@ -65,6 +65,10 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
         '15点0分、16点0分和17点0分的每一秒'],
       ['* 0 9 * * MON', '每周一，9点0分的每一秒'],
       ['*/15 0 9 * * *', '每天9点0分的每15秒'],
+      // An offset/uneven second stride under a pinned minute keeps both
+      // endpoints but drops the "每分钟" anchor (the minute is a single value,
+      // not every minute): "9点0分的从3秒起每2秒，至59秒".
+      ['3/2 0 9 * * *', '每天9点0分的从3秒起每2秒，至59秒'],
       ['* 0-30 * * * *', '每小时0至30分，每秒'],
       ['* 0-30 */2 * * *', '每2小时，每小时0至30分，每秒'],
       ['* 0-30 9,17 * * *', '在9点和17点，每小时0至30分，每秒'],
@@ -79,10 +83,22 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['* 30 9 * * MON', '每周一，9点30分每秒'],
       ['*/15 * * * * *', '每15秒'],
       ['*/15 0 * * * *', '每小时0分，每15秒'],
-      // An offset minute step enumerates its fires; the bare "每N分钟" cadence
-      // would drop the start (5/6 fires at :05,:11,… not :00,:06,…).
-      ['5/6 * * * *', '每小时5、11、17、23、29、35、41、47、53、59分'],
-      ['11/12 * * * *', '每小时11、23、35、47、59分'],
+      // A uniform offset step (interval divides the cycle, start within the
+      // first interval) wraps cleanly: name only its start ("从M分起"), keeping
+      // the cadence rather than enumerating the offset fires.
+      ['5/6 * * * *', '每小时从5分起每6分钟'],
+      ['11/12 * * * *', '每小时从11分起每12分钟'],
+      // An uneven step (interval does not divide the cycle) and an offset step
+      // (start >= interval) fire a non-uniform bounded set: named with its
+      // interval and both endpoints ("从M分起…，至K分"), not enumerated.
+      ['*/7 * * * *', '每小时从0分起每7分钟，至56分'],
+      ['3/2 * * * *', '每小时从3分起每2分钟，至59分'],
+      ['7/9 * * * *', '每小时从7分起每9分钟，至52分'],
+      // A clean stride from the top of the cycle keeps the bare cadence.
+      ['*/2 * * * *', '每2分钟'],
+      // Compounded: a stepped second over a stepped minute, each a cadence.
+      ['3/2 1/2 * * * *',
+        '每小时从1分起每2分钟，每分钟从3秒起每2秒，至59秒'],
       // An offset step keeps its start in every context: an hour step under a
       // minute frequency, a minute step composed with seconds, a minute range
       // across an hour step — never the bare "每N小时"/"每N分钟" that drops it.
@@ -302,8 +318,8 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
 
   describe('值类别 (value classes)', function() {
     run([
-      ['*/7 * * * *', '每小时0、7、14、21、28、35、42、49、56分'],
-      ['*/11 * * * *', '每小时0、11、22、33、44、55分'],
+      ['*/7 * * * *', '每小时从0分起每7分钟，至56分'],
+      ['*/11 * * * *', '每小时从0分起每11分钟，至55分'],
       ['*/25 * * * *', '每小时0、25、50分'],
       ['0 */5 * * *', '每天凌晨0点、5点、10点、15点和20点'],
       ['0 */7 * * *', '每天凌晨0点、7点、14点和21点'],
@@ -316,7 +332,7 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 * */5 *', '1、6、11月每天凌晨0点'],
       ['0 0 * */7 *', '1、8月每天凌晨0点'],
       ['0 0 * * */4', '每周日和周四凌晨0点'],
-      ['*/7 * * * * *', '每分钟第0、7、14、21、28、35、42、49、56秒'],
+      ['*/7 * * * * *', '每分钟从0秒起每7秒，至56秒'],
       ['4,6,9 * * * *', '每小时4、6、9分'],
       ['5,17,42 * * * *', '每小时5、17、42分'],
       ['0,20,40 * * * *', '每小时0、20、40分'],

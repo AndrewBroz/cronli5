@@ -11,7 +11,7 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {weekdayNumbers} from '../../core/specs.js';
-import {toFieldNumber} from '../../core/util.js';
+import {arithmeticStep, toFieldNumber} from '../../core/util.js';
 import {resolveDialect} from './dialects.js';
 import type {
   ClockTime, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -63,6 +63,7 @@ interface UnitForms {
   mark: string;
   anchor: string;
   ela: string;
+  ill: string;
   gen: string;
 }
 
@@ -170,12 +171,14 @@ const units: {minute: UnitForms; second: UnitForms} = {
     mark: 'joka tunti',
     anchor: 'jokaisen tunnin',
     ela: 'minuutista',
+    ill: 'minuuttiin',
     gen: 'minuutin'
   },
   second: {
     mark: 'joka minuutti',
     anchor: 'jokaisen minuutin',
     ela: 'sekunnista',
+    ill: 'sekuntiin',
     gen: 'sekunnin'
   }
 };
@@ -323,7 +326,7 @@ function renderComposeSeconds(
       // anchors follow, then the seconds clause.
       const bareHours = kloFromTimes(ir, freq.hours.times, opts);
 
-      return hoursFirstMinutes(bareHours, ir) + ', ' +
+      return hoursFirstMinutes(bareHours, ir, opts) + ', ' +
         secondsLeadClause(ir, opts) + trailingQualifier(ir, opts);
     }
     else if (freq.hours.kind === 'during' && !minuteStepIsAnchored(seg)) {
@@ -425,8 +428,11 @@ function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
     return atMarks(secondField, units.second, marked);
   }
 
-  return atMarks(joinList(segmentWords(ir.analyses.segments.second!)),
-    units.second, marked);
+  // An offset/uneven step the core enumerated to this list reads as a stride
+  // cadence when the fires form a long-enough progression.
+  return strideFromSegments(ir.analyses.segments.second!, units.second, opts) ??
+    atMarks(joinList(segmentWords(ir.analyses.segments.second!)),
+      units.second, marked);
 }
 
 // --- Minute renderers. ---
@@ -453,7 +459,7 @@ function renderRangeOfMinutes(
   plan: Extract<PlanNode, {kind: 'rangeOfMinutes'}>,
   opts: NormalizedOptions
 ): string {
-  return minutesList(ir) + trailingQualifier(ir, opts);
+  return minutesList(ir, opts) + trailingQualifier(ir, opts);
 }
 
 function renderMultipleMinutes(
@@ -461,21 +467,27 @@ function renderMultipleMinutes(
   plan: Extract<PlanNode, {kind: 'multipleMinutes'}>,
   opts: NormalizedOptions
 ): string {
-  return minutesList(ir) + trailingQualifier(ir, opts);
+  return minutesList(ir, opts) + trailingQualifier(ir, opts);
 }
 
-// "joka tunti 0, 15 ja 30 minuutin kohdalla" (or a dash range).
-function minutesList(ir: IR): string {
-  return atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
-    units.minute, true);
+// "joka tunti 0, 15 ja 30 minuutin kohdalla" (or a dash range). An offset/
+// uneven step the core enumerated to this list reads as a stride cadence when
+// the fires form a long-enough progression ("kahden minuutin välein
+// minuutista 3 minuuttiin 59").
+function minutesList(ir: IR, opts: NormalizedOptions): string {
+  return strideFromSegments(ir.analyses.segments.minute!, units.minute, opts) ??
+    atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
+      units.minute, true);
 }
 
 // The bare minute mark, for clauses where a specific hour follows and
 // the "joka tunti" frequency would be redundant: "0–30 minuutin
-// kohdalla".
-function bareMinutes(ir: IR): string {
-  return atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
-    units.minute, false);
+// kohdalla". A progression reads as its bounded cadence (which carries no
+// per-hour frequency to drop).
+function bareMinutes(ir: IR, opts: NormalizedOptions): string {
+  return strideFromSegments(ir.analyses.segments.minute!, units.minute, opts) ??
+    atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
+      units.minute, false);
 }
 
 // Whether a minute step renders as an anchored "kohdalla" clause rather
@@ -525,7 +537,21 @@ function hoursAreRangeIsolated(segments: Segment[]): boolean {
 // (plural genitive "minuuttien"; replaces the leading "joka tunti"). Used
 // when a range or multi-point minute list over enumerated hours renders
 // hours-first.
-function hoursFirstMinutes(hoursStr: string, ir: IR): string {
+function hoursFirstMinutes(
+  hoursStr: string,
+  ir: IR,
+  opts: NormalizedOptions
+): string {
+  // An offset/uneven step the core enumerated to this list reads as a stride
+  // cadence ("aina kahden minuutin välein minuutista 3 minuuttiin 59") when
+  // the fires form a long-enough progression, rather than the kohdalla list.
+  const stride =
+    strideFromSegments(ir.analyses.segments.minute!, units.minute, opts);
+
+  if (stride) {
+    return hoursStr + ' aina ' + stride;
+  }
+
   return hoursStr + ' aina minuuttien ' +
     joinList(segmentWords(ir.analyses.segments.minute!)) + ' kohdalla';
 }
@@ -571,7 +597,8 @@ function renderMinuteFrequency(
     if (minuteStepIsAnchored(seg)) {
       const bareHours = kloFromTimes(ir, plan.hours.times, opts);
 
-      return hoursFirstMinutes(bareHours, ir) + trailingQualifier(ir, opts);
+      return hoursFirstMinutes(bareHours, ir, opts) +
+        trailingQualifier(ir, opts);
     }
 
     return stepCycle60(seg, units.minute, opts) + ' ' +
@@ -631,7 +658,7 @@ function renderMinutesAcrossHours(
 
   // Range+isolated hours: minute-first, bare minutes, sekä klo.
   if (hoursAreRangeIsolated(ir.analyses.segments.hour!)) {
-    return bareMinutes(ir) + ' ' +
+    return bareMinutes(ir, opts) + ' ' +
       hourSegmentTimesWithSeka(ir, 0, null, opts) +
       trailingQualifier(ir, opts);
   }
@@ -641,7 +668,7 @@ function renderMinutesAcrossHours(
   // shows it).
   const hoursStr = kloFromTimes(ir, plan.times, opts);
 
-  return hoursFirstMinutes(hoursStr, ir) + trailingQualifier(ir, opts);
+  return hoursFirstMinutes(hoursStr, ir, opts) + trailingQualifier(ir, opts);
 }
 
 function renderMinuteSpanAcrossHourStep(
@@ -669,10 +696,10 @@ function renderMinuteSpanAcrossHourStep(
   if (segment.startToken.indexOf('-') !== -1) {
     const hoursStr = kloList(segment.fires, opts);
 
-    return hoursFirstMinutes(hoursStr, ir) + trailingQualifier(ir, opts);
+    return hoursFirstMinutes(hoursStr, ir, opts) + trailingQualifier(ir, opts);
   }
 
-  return bareMinutes(ir) + hourStepTail(segment, opts) +
+  return bareMinutes(ir, opts) + hourStepTail(segment, opts) +
     trailingQualifier(ir, opts);
 }
 
@@ -750,7 +777,7 @@ function renderHourRange(
   // A minute range over a single hour range renders hours-first
   // ("klo 9.00–17.30 aina minuuttien 0–30 kohdalla").
   if (plan.minuteForm === 'range') {
-    return hoursFirstMinutes(window, ir) + trailingQualifier(ir, opts);
+    return hoursFirstMinutes(window, ir, opts) + trailingQualifier(ir, opts);
   }
 
   // On the hour the window joins directly ("joka tunti klo 9–17"); a
@@ -769,7 +796,7 @@ function renderHourRange(
 
   // A minute list (≥2 values) over a single hour range renders hours-first
   // ("klo 9.00–17.30 aina minuuttien 0 ja 30 kohdalla").
-  return hoursFirstMinutes(window, ir) + trailingQualifier(ir, opts);
+  return hoursFirstMinutes(window, ir, opts) + trailingQualifier(ir, opts);
 }
 
 function renderHourStep(
@@ -840,7 +867,7 @@ function renderCompactClockTimes(
           ir.analyses.clockSecond, opts);
     }
 
-    const phrase = bareMinutes(ir) + ' ' +
+    const phrase = bareMinutes(ir, opts) + ' ' +
       hourSegmentTimesWithSeka(ir, 0, null, opts) +
       trailingQualifier(ir, opts);
 
@@ -857,7 +884,7 @@ function renderCompactClockTimes(
   // A minute list over purely enumerated hours (step fires, all singles) —
   // hours-first, drop "joka tunti".
   const hoursStr = hourSegmentTimes(ir, 0, null, opts);
-  const phrase = hoursFirstMinutes(hoursStr, ir) +
+  const phrase = hoursFirstMinutes(hoursStr, ir, opts) +
     trailingQualifier(ir, opts);
 
   return ir.analyses.clockSecond ?
@@ -889,8 +916,82 @@ const renderers = {
 
 // --- Step phrases. ---
 
+// A step cadence to phrase over a `cycle`-long field (60 for minute/second),
+// running from `start` to `last`.
+interface Stride {
+  interval: number;
+  start: number;
+  last: number;
+  cycle: number;
+  unit: UnitForms;
+}
+
+// Speak a step cadence over a `cycle`-long field. A clean stride from the top
+// of the cycle is the bare cadence ("viiden minuutin välein"); a uniform
+// offset (start within the first interval, the interval still dividing the
+// cycle) names only its start, since it wraps cleanly with no distinct
+// endpoint ("kuuden minuutin välein jokaisen tunnin minuutista 5 alkaen"); a
+// non-uniform stride (start >= interval, or an interval that does not divide
+// the cycle) pins both endpoints so the bounded, non-wrapping set reads
+// unambiguously ("kahden minuutin välein minuutista 3 minuuttiin 59"). This is
+// the one phrasing for every step the renderer speaks, whether the core kept
+// it a step shape (a clean cadence) or enumerated it to a fire list (an
+// offset/uneven set the list path recognizes as a progression).
+function renderStride(stride: Stride, opts: NormalizedOptions): string {
+  const {interval, start, last, cycle, unit} = stride;
+  const cadence = genitive(interval, opts) + ' ' + unit.gen + ' välein';
+  const tiles = cycle % interval === 0;
+
+  if (start === 0 && tiles) {
+    return cadence;
+  }
+
+  if (start < interval && tiles) {
+    return cadence + ' ' + unit.anchor + ' ' + unit.ela + ' ' + start +
+      ' alkaen';
+  }
+
+  return cadence + ' ' + unit.ela + ' ' + start + ' ' + unit.ill + ' ' + last;
+}
+
+// Speak a minute/second field's enumerated fires as a step cadence when they
+// form an arithmetic progression long enough to beat the list (the core
+// enumerates an offset/uneven step to this fire list; the IR is unchanged, so
+// the renderer recognizes the progression). Returns null for a non-progression
+// or a too-short list, leaving the caller to enumerate.
+function strideFromSegments(
+  segments: Segment[],
+  unit: UnitForms,
+  opts: NormalizedOptions
+): string | null {
+  const values = singleValues(segments);
+  const step = values && arithmeticStep(values);
+
+  return step ?
+    renderStride({...step, cycle: 60, unit}, opts) :
+    null;
+}
+
+// The sorted numeric values a field's segments cover, or null if any segment
+// is not a discrete single (a range or sub-step is not a plain fire list).
+function singleValues(segments: Segment[]): number[] | null {
+  const values: number[] = [];
+
+  for (const segment of segments) {
+    if (segment.kind !== 'single') {
+      return null;
+    }
+
+    values.push(+segment.value);
+  }
+
+  return values;
+}
+
 // "viiden minuutin välein", "joka tunti 0 ja 31 minuutin kohdalla", or
-// "kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen".
+// "kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen". A step shape
+// only reaches here as a clean or uniform-offset cadence; an offset/uneven set
+// arrives as a fire list and is recognized by the list path instead.
 function stepCycle60(
   segment: StepSegment,
   unit: UnitForms,
@@ -901,21 +1002,20 @@ function stepCycle60(
   }
 
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
-  const interval = segment.interval;
-  const cadence = genitive(interval, opts) + ' ' + unit.gen + ' välein';
 
-  if (start !== 0) {
-    if (segment.fires.length <= 3) {
-      return atMarks(joinList(wordList(segment.fires)), unit, true);
-    }
-
-    return cadence + ' ' + unit.anchor + ' ' + unit.ela + ' ' + start +
-      ' alkaen';
+  // A short offset cadence still lists its fires; the stride phrasing names
+  // the interval and offset only once there are enough fires to beat the list.
+  if (start !== 0 && segment.fires.length <= 3) {
+    return atMarks(joinList(wordList(segment.fires)), unit, true);
   }
 
-  // A clean stride from the top of the cycle is the bare cadence. (An uneven
-  // stride is rewritten to its fires upstream and never reaches here.)
-  return cadence;
+  return renderStride({
+    interval: segment.interval,
+    start,
+    last: segment.fires[segment.fires.length - 1],
+    cycle: 60,
+    unit
+  }, opts);
 }
 
 // "kahden tunnin välein", "klo 0, 10 ja 20", or "viiden tunnin välein

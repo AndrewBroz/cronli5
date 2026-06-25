@@ -348,8 +348,27 @@ describe('Español (es):', function() {
         'cada 15 minutos a partir del minuto 5 de cada hora'],
       ['40/15 * * * *', 'en los minutos 40 y 55 de cada hora'],
       ['0-30/10 * * * *', 'en los minutos 0, 10, 20 y 30 de cada hora'],
+      // An uneven step (interval does not divide the cycle) and an offset step
+      // (start >= interval) fire a non-uniform bounded set: named with its
+      // interval and both endpoints ("del minuto M al K"), not enumerated.
       ['*/7 * * * *',
-        'en los minutos 0, 7, 14, 21, 28, 35, 42, 49 y 56 de cada hora'],
+        'cada siete minutos del minuto 0 al 56 de cada hora'],
+      ['3/2 * * * *',
+        'cada dos minutos del minuto 3 al 59 de cada hora'],
+      ['7/9 * * * *',
+        'cada nueve minutos del minuto 7 al 52 de cada hora'],
+      // A uniform offset step (interval divides the cycle, start within the
+      // first interval) wraps cleanly: name only its start, no endpoint.
+      ['5/6 * * * *',
+        'cada seis minutos a partir del minuto 5 de cada hora'],
+      ['11/12 * * * *',
+        'cada 12 minutos a partir del minuto 11 de cada hora'],
+      // A clean stride from the top of the cycle keeps the bare cadence.
+      ['*/2 * * * *', 'cada dos minutos'],
+      // Compounded: a stepped second over a stepped minute, each a cadence.
+      ['3/2 1/2 * * * *',
+        'cada dos segundos del segundo 3 al 59 de cada minuto, ' +
+        'cada dos minutos a partir del minuto 1 de cada hora'],
       ['*/35 * * * *', 'en los minutos 0 y 35 de cada hora'],
       ['0 2/5 * * *',
         'todos los días a las 2 de la madrugada, a las 7 de la mañana, ' +

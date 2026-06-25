@@ -3,7 +3,7 @@
 
 import {pad} from '../../core/format.js';
 import {weekdayNumbers} from '../../core/specs.js';
-import {toFieldNumber} from '../../core/util.js';
+import {arithmeticStep, toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
@@ -20,6 +20,19 @@ interface Unit {
   every: string;
   plural: string;
   singular: string;
+}
+
+// A step cadence to phrase: the `interval` repeats over a `cycle`-long field
+// (60 for minute/second), running from `start` to `last`. `anchor` is the
+// scope clause ("jeder Stunde"); an empty anchor lets the caller supply its
+// own trailing scope, dropping the tail.
+interface Stride {
+  interval: number;
+  start: number;
+  last: number;
+  cycle: number;
+  unit: Unit;
+  anchor: string;
 }
 
 const UNITS: Record<'second' | 'minute' | 'hour', Unit> = {
@@ -49,6 +62,98 @@ function stepSegment(segments: Segment[] | null): StepSegment {
 function cleanStep(segment: StepSegment, cycle: number): boolean {
   return (segment.startToken === '*' || +segment.startToken === 0) &&
     cycle % segment.interval === 0;
+}
+
+// Speak a step cadence over a `cycle`-long field (60 for minute/second). A
+// clean stride from the top of the cycle is the bare cadence ("alle 15
+// Minuten"); a uniform offset (start within the first interval, the interval
+// still dividing the cycle) names only its start, since it wraps cleanly with
+// no distinct endpoint ("alle 6 Minuten ab Minute 5 jeder Stunde"); a
+// non-uniform stride (start >= interval, or an interval that does not divide
+// the cycle) pins both endpoints so the bounded, non-wrapping set reads
+// unambiguously ("alle 2 Minuten von Minute 3 bis 59 jeder Stunde"). This is
+// the one phrasing for every step the renderer speaks, whether the core kept
+// it a step shape (a clean cadence) or enumerated it to a fire list (an
+// offset/uneven set the list path recognizes as a progression).
+function renderStride(stride: Stride): string {
+  const {interval, start, last, cycle, unit, anchor} = stride;
+  const cadence = everyN(interval, unit);
+  const tiles = cycle % interval === 0;
+
+  if (start === 0 && tiles) {
+    return cadence;
+  }
+
+  // A context that supplies its own trailing scope passes an empty anchor, so
+  // the cadence keeps its endpoints but drops the "jeder Stunde" tail.
+  const tail = anchor ? ' ' + anchor : '';
+
+  if (start < interval && tiles) {
+    return cadence + ' ab ' + unit.singular + ' ' + start + tail;
+  }
+
+  return cadence + ' von ' + unit.singular + ' ' + start + ' bis ' + last +
+    tail;
+}
+
+// A step *shape* segment as its cadence ("alle 6 Minuten ab Minute 5 jeder
+// Stunde"). A bounded sub-range step (`a-b/n`) is not a whole-cycle stride, so
+// it lists its fires; a short offset cadence (three fires or fewer) also lists,
+// since the list is no longer than the cadence. Everything else routes through
+// `renderStride`. The uneven whole-cycle step (interval not dividing the cycle)
+// never reaches here as a step shape — the core enumerates it to a fire list,
+// which the list path recognizes instead.
+function stepClause(segment: StepSegment, unit: Unit, anchor: string): string {
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+  const short = start !== 0 && segment.fires.length <= 3;
+
+  if (segment.startToken.indexOf('-') !== -1 || short) {
+    return 'in den ' + unit.plural + ' ' + joinList(segment.fires.map(String)) +
+      ' ' + anchor;
+  }
+
+  return renderStride({
+    interval: segment.interval,
+    start,
+    last: segment.fires[segment.fires.length - 1],
+    cycle: 60,
+    unit,
+    anchor
+  });
+}
+
+// The sorted numeric values a field's segments cover, or null if any segment
+// is not a discrete single (a range or sub-step is not a plain fire list).
+function singleValues(segments: Segment[]): number[] | null {
+  const values: number[] = [];
+
+  for (const segment of segments) {
+    if (segment.kind !== 'single') {
+      return null;
+    }
+
+    values.push(+segment.value);
+  }
+
+  return values;
+}
+
+// Speak a minute/second field's enumerated fires as a step cadence when they
+// form an arithmetic progression long enough to beat the list (the core
+// enumerates an offset/uneven step to this fire list; the IR is unchanged, so
+// the renderer recognizes the progression). Returns null for a non-progression
+// or a too-short list, leaving the caller to enumerate.
+function strideFromSegments(
+  segments: Segment[],
+  unit: Unit,
+  anchor: string
+): string | null {
+  const values = singleValues(segments);
+  const step = values && arithmeticStep(values);
+
+  return step ?
+    renderStride({...step, cycle: 60, unit, anchor}) :
+    null;
 }
 
 type NameToken = string | number;
@@ -364,11 +469,16 @@ function secondsLead(ir: IR): string {
 
   const segments = ir.analyses.segments.second;
 
-  if (ir.shapes.second === 'step' && cleanStep(stepSegment(segments), 60)) {
-    return everyN(stepSegment(segments).interval, UNITS.second);
+  // A step shape speaks its cadence directly; an offset/uneven step the core
+  // enumerated to a list is recognized as a progression. Both fall back to the
+  // counted list (a short or irregular set).
+  if (ir.shapes.second === 'step') {
+    return stepClause(stepSegment(segments), UNITS.second, 'jeder Minute');
   }
 
-  return countedPhrase(ir, 'second', 'Sekunde', 'Sekunden') + ' jeder Minute';
+  return strideFromSegments(segments as Segment[], UNITS.second,
+    'jeder Minute') ??
+    countedPhrase(ir, 'second', 'Sekunde', 'Sekunden') + ' jeder Minute';
 }
 
 // A clock time that always shows its minutes: "9:00", "9:30".
@@ -490,9 +600,17 @@ function renderSeconds(ir: IR): string {
 }
 
 // The minute-past-the-hour clause: "in Minute 5 jeder Stunde", "in den
-// Minuten 5, 10 und 30 jeder Stunde".
+// Minuten 5, 10 und 30 jeder Stunde". An offset/uneven step the core
+// enumerated to this list reads as a stride cadence when the fires form a
+// long-enough progression ("alle 2 Minuten von Minute 3 bis 59 jeder Stunde").
+function minutePastClause(ir: IR): string {
+  return strideFromSegments(fieldSegments(ir, 'minute'), UNITS.minute,
+    'jeder Stunde') ??
+    countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ' jeder Stunde';
+}
+
 function renderMinutePast(ir: IR): string {
-  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ' jeder Stunde';
+  return minutePastClause(ir);
 }
 
 // A specific minute and second: "in Minute 0 und Sekunde 30 jeder Stunde".
@@ -622,7 +740,8 @@ function renderMinutesAcrossHours(
     atHours(plan.times.fires) :
     joinList(hourSegmentParts(ir, 0, 0, sep));
 
-  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' + hours;
+  return (strideFromSegments(fieldSegments(ir, 'minute'), UNITS.minute, '') ??
+    countedPhrase(ir, 'minute', 'Minute', 'Minuten')) + ', ' + hours;
 }
 
 // A minute clause across a stepped hour range. A wildcard minute (a cadence)
@@ -647,7 +766,8 @@ function renderMinuteSpanAcrossHourStep(
     everyNthHour(segment) :
     atHours(segment.fires);
 
-  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' + hours;
+  return (strideFromSegments(fieldSegments(ir, 'minute'), UNITS.minute, '') ??
+    countedPhrase(ir, 'minute', 'Minute', 'Minuten')) + ', ' + hours;
 }
 
 // Compact minutes across discrete hours: "in den Minuten 5 und 10, um 9, 17,
@@ -683,7 +803,8 @@ function renderCompactClockTimes(
     countedPhrase(ir, 'second', 'Sekunde', 'Sekunden') + ', ' : '';
 
   return lead +
-    countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' + hours;
+    (strideFromSegments(fieldSegments(ir, 'minute'), UNITS.minute, '') ??
+    countedPhrase(ir, 'minute', 'Minute', 'Minuten')) + ', ' + hours;
 }
 
 // A repeating minute step, optionally within an hour window: "alle 5
@@ -696,9 +817,7 @@ function renderMinuteFrequency(
   const segment = stepSegment(ir.analyses.segments.minute);
   const sep = opts.style.sep;
   const clean = cleanStep(segment, 60);
-  const base = clean ?
-    everyN(segment.interval, UNITS.minute) :
-    countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ' jeder Stunde';
+  const base = stepClause(segment, UNITS.minute, 'jeder Stunde');
 
   if (plan.hours.kind === 'window') {
     const window = hourWindow(plan.hours.from, plan.hours.to, plan.hours.last,

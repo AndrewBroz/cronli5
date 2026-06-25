@@ -10,7 +10,7 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {weekdayNumbers} from '../../core/specs.js';
-import {toFieldNumber} from '../../core/util.js';
+import {arithmeticStep, toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -26,6 +26,20 @@ type Renderer = (ir: IR, plan: PlanNode, opts: Opts) => string;
 
 // A `step` segment, narrowed from the discriminated `Segment` union.
 type StepSegment = Extract<Segment, {kind: 'step'}>;
+
+// A step cadence to phrase: the `interval` repeats over a `cycle`-long field
+// (60 for minute/second), running from `start` to `last`. `unit` is the
+// singular noun and `anchor` the larger unit the values count against. When
+// `anchor` is empty the caller supplies its own trailing scope, so the cadence
+// drops the "de cada <anchor>" tail.
+interface Stride {
+  interval: number;
+  start: number;
+  last: number;
+  cycle: number;
+  unit: string;
+  anchor: string;
+}
 
 // One end of a clock-time range. The second is optional and may be absent
 // (top-of-hour windows) or a folded clock second.
@@ -206,6 +220,33 @@ function renderSecondsWithinMinute(
     ' de cada hora' + trailingQualifier(ir, opts);
 }
 
+// A seconds list nested into one or more fixed clock times ("..., en los
+// segundos 5 y 30 de las 09:00 y 17:00"). An offset/uneven second step the
+// core enumerated to this list reads as a stride cadence; otherwise the fires
+// are listed. The clock time follows with the genitive "de", so the stride
+// drops its "de cada minuto" anchor.
+function secondsListAtClock(
+  ir: IR,
+  rest: Extract<PlanNode, {kind: 'clockTimes'}>,
+  opts: Opts
+): string {
+  const clockPhrases = rest.times.map(function clock(time) {
+    return atTime(timePhrase(time.hour, time.minute, null, opts));
+  });
+  const grouped = groupClockTimesByArticle(clockPhrases);
+  // Strip the leading "a " prefix from the grouped result so the caller can
+  // prepend "de " to produce the genitive form "de las 09:00 y 17:00".
+  const clockList = grouped.startsWith('a ') ? grouped.slice(2) : grouped;
+  const stride =
+    strideFromSegments(fieldSegments(ir, 'second'), 'segundo', '', opts);
+  const secondsPhrase = stride ?? 'en los segundos ' +
+    joinList(segmentWords(fieldSegments(ir, 'second')));
+  const dayFrame = trailingQualifier(ir, opts);
+
+  return (dayFrame ? dayFrame.trimStart() + ', ' : '') +
+    secondsPhrase + ' de ' + clockList;
+}
+
 function renderComposeSeconds(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -223,19 +264,7 @@ function renderComposeSeconds(
   // fixed so "de cada minuto" is misleading. Single seconds already fold into
   // the time in the clockTimes renderer; step seconds keep their own clause.
   if (plan.rest.kind === 'clockTimes' && ir.shapes.second === 'list') {
-    const clockPhrases = plan.rest.times.map(function clock(time) {
-      return atTime(timePhrase(time.hour, time.minute, null, opts));
-    });
-    const grouped = groupClockTimesByArticle(clockPhrases);
-    // Strip the leading "a " prefix from the grouped result so the caller can
-    // prepend "de " to produce the genitive form "de las 09:00 y 17:00".
-    const clockList = grouped.startsWith('a ') ? grouped.slice(2) : grouped;
-    const secondsPhrase = 'en los segundos ' +
-      joinList(segmentWords(fieldSegments(ir, 'second')));
-    const dayFrame = trailingQualifier(ir, opts);
-
-    return (dayFrame ? dayFrame.trimStart() + ', ' : '') +
-      secondsPhrase + ' de ' + clockList;
+    return secondsListAtClock(ir, plan.rest, opts);
   }
 
   // Second-step + fixed minute + hour range + weekday: anchor the cadence to
@@ -332,7 +361,8 @@ function secondsLeadClause(ir: IR, opts: Opts): string {
     return 'en el segundo ' + secondField + ' de cada minuto';
   }
 
-  return 'en los segundos ' +
+  return strideFromSegments(fieldSegments(ir, 'second'), 'segundo', 'minuto',
+    opts) ?? 'en los segundos ' +
     joinList(segmentWords(fieldSegments(ir, 'second'))) +
     ' de cada minuto';
 }
@@ -370,12 +400,15 @@ function renderMultipleMinutes(
   plan: Extract<PlanNode, {kind: 'multipleMinutes'}>,
   opts: Opts
 ): string {
-  return minutesList(ir) + trailingQualifier(ir, opts);
+  return minutesList(ir, opts) + trailingQualifier(ir, opts);
 }
 
-// "en los minutos 5, 10 y 30 de cada hora".
-function minutesList(ir: IR): string {
-  return 'en los minutos ' +
+// "en los minutos 5, 10 y 30 de cada hora". An offset/uneven step the core
+// enumerated to this list reads as a stride cadence when the fires form a
+// long-enough progression.
+function minutesList(ir: IR, opts: Opts): string {
+  return strideFromSegments(fieldSegments(ir, 'minute'), 'minuto', 'hora',
+    opts) ?? 'en los minutos ' +
     joinList(segmentWords(fieldSegments(ir, 'minute'))) + ' de cada hora';
 }
 
@@ -546,7 +579,7 @@ function renderMinutesAcrossHours(
 
   const lead = plan.form === 'range' ?
     minuteRangeLead(ir.pattern.minute) :
-    minutesList(ir);
+    minutesList(ir, opts);
 
   return lead + ', ' + atHourTimes(ir, plan.times, opts) +
     trailingQualifier(ir, opts);
@@ -570,7 +603,7 @@ function renderMinuteSpanAcrossHourStep(
   // differs ("en los minutos 5 y 30 de cada hora" vs "cada minuto del 0 al
   // 30").
   const lead = plan.form === 'list' ?
-    minutesList(ir) :
+    minutesList(ir, opts) :
     minuteRangeLead(ir.pattern.minute);
 
   return lead + ', ' + stepHours(segment, opts) + trailingQualifier(ir, opts);
@@ -610,7 +643,7 @@ function renderHourRange(
 
   const lead = ir.shapes.minute === 'single' ?
     'en el minuto ' + ir.pattern.minute + ' de cada hora' :
-    minutesList(ir);
+    minutesList(ir, opts);
 
   return lead + ', ' + window + trailingQualifier(ir, opts);
 }
@@ -1099,7 +1132,7 @@ function renderCompactClockTimes(
       hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
   }
 
-  const phrase = minutesList(ir) + ', ' +
+  const phrase = minutesList(ir, opts) + ', ' +
     hourSegmentTimes(ir, 0, null, opts) + trailingQualifier(ir, opts);
 
   return ir.analyses.clockSecond ?
@@ -1131,8 +1164,42 @@ const renderers = {
 
 // --- Step phrases. ---
 
+// Speak a step cadence over a `cycle`-long field (60 for minute/second). A
+// clean stride from the top of the cycle is the bare cadence ("cada quince
+// minutos"); a uniform offset (start within the first interval, the interval
+// still dividing the cycle) names only its start, since it wraps cleanly with
+// no distinct endpoint ("cada seis minutos a partir del minuto 5 de cada
+// hora"); a non-uniform stride (start >= interval, or an interval that does
+// not divide the cycle) pins both endpoints so the bounded, non-wrapping set
+// reads unambiguously ("cada dos minutos del minuto 3 al 59 de cada hora").
+// This is the one phrasing for every step the renderer speaks, whether the
+// core kept it a step shape (a clean cadence) or enumerated it to a fire list
+// (an offset/uneven set the list path recognizes as a progression).
+function renderStride(stride: Stride, opts: Opts): string {
+  const {interval, start, last, cycle, unit, anchor} = stride;
+  const cadence = 'cada ' + numero(interval, opts) + ' ' + unit + 's';
+  const tiles = cycle % interval === 0;
+
+  if (start === 0 && tiles) {
+    return cadence;
+  }
+
+  // A context that supplies its own trailing scope passes an empty anchor, so
+  // the cadence keeps its endpoints but drops the "de cada <anchor>" tail.
+  const tail = anchor ? ' de cada ' + anchor : '';
+
+  if (start < interval && tiles) {
+    return cadence + ' a partir del ' + unit + ' ' + start + tail;
+  }
+
+  return cadence + ' del ' + unit + ' ' + start + ' al ' + last + tail;
+}
+
 // "cada 15 minutos", "en los minutos 5, 20 y 35 de cada hora", or
-// "cada 15 minutos a partir del minuto 5 de cada hora".
+// "cada 15 minutos a partir del minuto 5 de cada hora". A step shape only
+// reaches here as a clean cadence (the interval divides 60), so the stride
+// collapses to the bare or uniform-offset form; an offset/uneven set arrives
+// as a fire list and is recognized by the list path instead.
 function stepCycle60(
   segment: StepSegment,
   unit: string,
@@ -1145,21 +1212,57 @@ function stepCycle60(
   }
 
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
-  const interval = segment.interval;
 
-  if (start !== 0) {
-    if (segment.fires.length <= 3) {
-      return 'en los ' + unit + 's ' + joinList(wordList(segment.fires)) +
-        ' de cada ' + anchor;
-    }
-
-    return 'cada ' + numero(interval, opts) + ' ' + unit + 's a partir del ' +
-      unit + ' ' + start + ' de cada ' + anchor;
+  // A short offset cadence still lists its fires; the stride phrasing names
+  // the interval and offset only once there are enough fires to beat the list.
+  if (start !== 0 && segment.fires.length <= 3) {
+    return 'en los ' + unit + 's ' + joinList(wordList(segment.fires)) +
+      ' de cada ' + anchor;
   }
 
-  // A clean stride from the top of the cycle is the bare cadence. (An uneven
-  // stride is rewritten to its fires upstream and never reaches here.)
-  return 'cada ' + numero(interval, opts) + ' ' + unit + 's';
+  return renderStride({
+    interval: segment.interval,
+    start,
+    last: segment.fires[segment.fires.length - 1],
+    cycle: 60,
+    unit,
+    anchor
+  }, opts);
+}
+
+// Speak a minute/second field's enumerated fires as a step cadence when they
+// form an arithmetic progression long enough to beat the list (the core
+// enumerates an offset/uneven step to this fire list; the IR is unchanged, so
+// the renderer recognizes the progression). Returns null for a non-progression
+// or a too-short list, leaving the caller to enumerate.
+function strideFromSegments(
+  segments: Segment[],
+  unit: string,
+  anchor: string,
+  opts: Opts
+): string | null {
+  const values = singleValues(segments);
+  const step = values && arithmeticStep(values);
+
+  return step ?
+    renderStride({...step, cycle: 60, unit, anchor}, opts) :
+    null;
+}
+
+// The sorted numeric values a field's segments cover, or null if any segment
+// is not a discrete single (a range or sub-step is not a plain fire list).
+function singleValues(segments: Segment[]): number[] | null {
+  const values: number[] = [];
+
+  for (const segment of segments) {
+    if (segment.kind !== 'single') {
+      return null;
+    }
+
+    values.push(+segment.value);
+  }
+
+  return values;
 }
 
 // "cada seis horas", "a las 9:00, a las 11:00 y a la 1:00", or "cada

@@ -168,6 +168,22 @@ describe('Suomi (fi):', function() {
       ['*/17 * * * *', 'joka tunti 0, 17, 34 ja 51 minuutin kohdalla'],
       ['1/3 * * * *',
         'kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen'],
+      // A uniform offset step (interval divides the cycle, start within the
+      // first interval) wraps cleanly: name only its start ("minuutista M
+      // alkaen"), keeping the cadence rather than enumerating the offset fires.
+      ['5/6 * * * *',
+        'kuuden minuutin välein jokaisen tunnin minuutista 5 alkaen'],
+      ['11/12 * * * *',
+        '12 minuutin välein jokaisen tunnin minuutista 11 alkaen'],
+      // An uneven step (interval does not divide the cycle) and an offset step
+      // (start >= interval) fire a non-uniform bounded set: named with its
+      // interval and both endpoints ("minuutista M minuuttiin K"), not listed.
+      ['*/7 * * * *',
+        'seitsemän minuutin välein minuutista 0 minuuttiin 56'],
+      ['3/2 * * * *',
+        'kahden minuutin välein minuutista 3 minuuttiin 59'],
+      ['7/9 * * * *',
+        'yhdeksän minuutin välein minuutista 7 minuuttiin 52'],
       ['15 * * * * *', 'joka minuutti 15 sekunnin kohdalla'],
       ['0,30 * * * * *', 'joka minuutti 0 ja 30 sekunnin kohdalla'],
       ['0-30 * * * * *', 'joka minuutti 0–30 sekunnin kohdalla'],
@@ -175,7 +191,11 @@ describe('Suomi (fi):', function() {
       ['*/15 30 * * * *',
         '15 sekunnin välein, joka tunti 30 minuutin kohdalla'],
       ['*/7 * * * * *',
-        'joka minuutti 0, 7, 14, 21, 28, 35, 42, 49 ja 56 sekunnin kohdalla']
+        'seitsemän sekunnin välein sekunnista 0 sekuntiin 56'],
+      // Compounded: a stepped second over a stepped minute, each a cadence.
+      ['3/2 1/2 * * * *',
+        'kahden minuutin välein jokaisen tunnin minuutista 1 alkaen, ' +
+        'kahden sekunnin välein sekunnista 3 sekuntiin 59']
     ]);
   });
 

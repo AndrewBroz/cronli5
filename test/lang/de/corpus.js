@@ -146,11 +146,26 @@ describe('Deutsch (de):', function() {
       ['*/45 * * * * *', 'in den Sekunden 0 und 45 jeder Minute'],
       ['*/45 * * * *', 'in den Minuten 0 und 45 jeder Stunde'],
       ['*/25 * * * *', 'in den Minuten 0, 25 und 50 jeder Stunde'],
-      // A divisor step that starts off the top of the cycle still fires at
-      // discrete offset points, so German lists them rather than reading
-      // "alle 6 Minuten" (which would lose the offset).
+      // A uniform offset step (interval divides the cycle, start within the
+      // first interval) wraps cleanly: name only its start ("ab Minute M"),
+      // keeping the cadence rather than enumerating the offset fires.
       ['5/6 * * * *',
-        'in den Minuten 5, 11, 17, 23, 29, 35, 41, 47, 53 und 59 jeder Stunde'],
+        'alle 6 Minuten ab Minute 5 jeder Stunde'],
+      ['11/12 * * * *',
+        'alle 12 Minuten ab Minute 11 jeder Stunde'],
+      // An uneven step (interval does not divide the cycle) and an offset step
+      // (start >= interval) fire a non-uniform bounded set: named with its
+      // interval and both endpoints ("von Minute M bis K"), not enumerated.
+      ['*/7 * * * *',
+        'alle 7 Minuten von Minute 0 bis 56 jeder Stunde'],
+      ['3/2 * * * *',
+        'alle 2 Minuten von Minute 3 bis 59 jeder Stunde'],
+      ['7/9 * * * *',
+        'alle 9 Minuten von Minute 7 bis 52 jeder Stunde'],
+      // Compounded: a stepped second over a stepped minute, each a cadence.
+      ['3/2 1/2 * * * *',
+        'alle 2 Sekunden von Sekunde 3 bis 59 jeder Minute, ' +
+        'alle 2 Minuten ab Minute 1 jeder Stunde'],
       // Uneven hour steps render as their fire list, so they take the daily
       // frame too (a bare clock list, like clockTimes).
       ['0 */5 * * *', 'täglich um 0, 5, 10, 15 und 20 Uhr'],
