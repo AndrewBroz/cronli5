@@ -450,11 +450,30 @@ function isHourCadence(ir: IR): boolean {
 function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
   const sec = secondClause(ir);
   const {rest} = plan as Extract<PlanNode, {kind: 'composeSeconds'}>;
+
+  // The minute is pinned to 0 under a specific hour: a bare clock word ("9点")
+  // would hide the :00 and leave the second dangling ("…9点每秒"), reading as
+  // the whole hour. Fuse the seconds with the explicit clock minute ("9点0分
+  // 的每一秒"), so the one-minute confinement (60 fires in :00, not 3,600
+  // across the hour) stays visible. The daily frame leads with 每天; a weekday
+  // or date qualifier is added by describe().
+  if ((rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') &&
+    ir.pattern.minute === '0') {
+    const clocks = hourFires(ir).map(function clock(hour): string {
+      return hourWord(hour) + '0分';
+    });
+    const tail = sec === '每秒' ? '的每一秒' : '的' + sec;
+    const core = joinAnd(clocks) + tail;
+
+    return isDaily(ir) ? '每天' + core : core;
+  }
+
   const restText = render(ir, rest, opts);
 
-  if ((rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') &&
-    isDaily(ir)) {
-    return '每天' + restText + sec;
+  if (rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') {
+    if (isDaily(ir)) {
+      return '每天' + restText + sec;
+    }
   }
 
   // A stated minute (e.g. minute 0 under a sub-minute second) takes the same

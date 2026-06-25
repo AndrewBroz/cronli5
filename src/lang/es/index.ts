@@ -211,6 +211,21 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
 ): string {
+  // A sub-minute second with the minute pinned to 0 and a specific hour: the
+  // clock-time rest would otherwise read "todos los días a las 9 de la mañana"
+  // — which on the 12-hour clock drops the :00 entirely, hiding the one-minute
+  // confinement (60 fires in :00, not 3,600 across the hour). Bind the seconds
+  // into the explicit clock minute with a genitive "de las HH:00" and trail
+  // the day qualifier ("cada segundo de las 09:00, todos los días").
+  if (plan.rest.kind === 'clockTimes' && ir.shapes.second !== 'list' &&
+      plan.rest.times.every((time) => +time.minute === 0)) {
+    const clockList = explicitClockList(plan.rest.times, opts);
+    const dayTrail = leadingQualifier(ir, opts).trimEnd();
+
+    return secondsLeadClause(ir, opts) + ' de ' + clockList +
+      (dayTrail ? ', ' + dayTrail : '');
+  }
+
   // Seconds list + fixed clock time: nest the seconds into the clock time(s)
   // with genitive "de las HH:MM" instead of "de cada minuto"; the minute is
   // fixed so "de cada minuto" is misleading. Single seconds already fold into
@@ -688,6 +703,46 @@ function renderClockTimes(
   });
 
   return leadingQualifier(ir, opts) + groupClockTimes(phrases);
+}
+
+// The genitive clock-time list for a minute-0 compose-seconds confinement:
+// each time with its minute forced visible ("las 09:00"), grouped as usual,
+// then reframed from "a …" to the genitive "de …" the caller prepends. So a
+// pinned minute-0 reads "de las 09:00", never the bare hour.
+function explicitClockList(
+  times: {hour: number; minute: number; second?: number | null}[],
+  opts: Opts
+): string {
+  const phrases = times.map(function clock(time) {
+    return atTime(explicitTimePhrase(time.hour, time.minute, opts));
+  });
+  const grouped = groupClockTimes(phrases);
+
+  // Strip the leading "a " so the caller's "de " produces the genitive form.
+  return grouped.startsWith('a ') ? grouped.slice(2) : grouped;
+}
+
+// A clock time with its minute forced visible and the noon/midnight words
+// suppressed: "las 09:00", "las 9:00 de la mañana", "las 12:00 de la tarde".
+// So a pinned minute-0 confinement always shows its ":00".
+function explicitTimePhrase(hour: number, minute: number, opts: Opts): string {
+  if (!opts.ampm) {
+    const article = +hour === 1 ? 'la ' : 'las ';
+    const suffix = opts.style.hSuffix ? ' h' : '';
+
+    return article +
+      clockDigits({hour, minute, second: 0},
+        {pad: true, sep: opts.style.sep}) + suffix;
+  }
+
+  const display = hour % 12 || 12;
+  const time = (display === 1 ? 'la ' : 'las ') +
+    clockDigits({hour: display, minute, second: 0}, {sep: opts.style.sep});
+  const period = opts.style.meridiem === 'english' ?
+    meridiemMark(hour) :
+    dayPeriod(hour, opts);
+
+  return time + ' ' + period;
 }
 
 // Group a chronological run of "a la(s) …" clock phrases. The 12-hour clock

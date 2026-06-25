@@ -96,7 +96,29 @@ describe('Deutsch (de):', function() {
       ['30 0 * * * *', 'in Minute 0 und Sekunde 30 jeder Stunde'],
       ['0-30 9 * * *', 'jede Minute von 9:00 bis 9:30 Uhr'],
       ['0,30 5 9 * * *', 'in den Sekunden 0 und 30 jeder Minute, um 9:05 Uhr'],
-      ['*/15 0 9 * * *', 'alle 15 Sekunden, um 9 Uhr']
+      ['*/15 0 9 * * *', 'täglich alle 15 Sekunden der Minute 9:00']
+    ]);
+  });
+
+  // A sub-minute second with the minute pinned to 0 and a specific hour: the
+  // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
+  // across the hour). The clock minute must stay visible, so the seconds bind
+  // to the explicit clock minute in the genitive ("der Minute 9:00") under the
+  // recurring "täglich" frame, never the bare hour ("um 9 Uhr").
+  describe('Minute auf 0 fixiert unter einer bestimmten Stunde', function() {
+    run([
+      ['* 0 0 * * *', 'täglich jede Sekunde der Minute 0:00'],
+      ['* 0 9 * * *', 'täglich jede Sekunde der Minute 9:00'],
+      ['* 0 12 * * *', 'täglich jede Sekunde der Minute 12:00'],
+      ['* 0 9,11 * * *',
+        'täglich jede Sekunde der Minuten 9:00 und 11:00'],
+      ['* 0 9-17 * * *',
+        'täglich jede Sekunde der Minuten 9:00, 10:00, 11:00, 12:00, ' +
+        '13:00, 14:00, 15:00, 16:00 und 17:00'],
+      ['* 0 */2 * * *',
+        'täglich jede Sekunde der Minuten 0:00, 2:00, 4:00, 6:00, 8:00, ' +
+        '10:00, 12:00, 14:00, 16:00, 18:00, 20:00 und 22:00'],
+      ['* 0 9 * * MON', 'montags jede Sekunde der Minute 9:00']
     ]);
   });
 
@@ -265,14 +287,17 @@ describe('Deutsch (de):', function() {
         'in den Sekunden 0 bis 10 jeder Minute, in Minute 0 jeder Stunde'],
       // date+weekday OR where the weekday is a Quartz form.
       ['0 9 1 * 5L', 'am 1. oder am letzten Freitag des Monats um 9 Uhr'],
-      // A wildcard second composed with a clock time.
-      ['* 0 9 * * *', 'jede Sekunde, um 9 Uhr'],
+      // A wildcard second composed with a minute-0 clock time: the pinned
+      // clock minute surfaces in the genitive under the "täglich" frame, never
+      // the bare hour ("um 9 Uhr"), which would hide the :00.
+      ['* 0 9 * * *', 'täglich jede Sekunde der Minute 9:00'],
       // Minute 0 under a sub-minute second must be stated, not absorbed into
       // an hourly idiom ("jede Stunde" / "alle 2 Stunden" / a 9-bis-17 window)
       // that silently drops the :00.
       ['* 0 * * * *', 'jede Sekunde, in Minute 0 jeder Stunde'],
       ['* 0 9-17 * * *',
-        'jede Sekunde, um 9, 10, 11, 12, 13, 14, 15, 16 und 17 Uhr'],
+        'täglich jede Sekunde der Minuten 9:00, 10:00, 11:00, 12:00, ' +
+        '13:00, 14:00, 15:00, 16:00 und 17:00'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "jede Sekunde"). Fuzzer-found.
       ['* * 9 * * *', 'jede Sekunde, jede Minute der 9-Uhr-Stunde'],

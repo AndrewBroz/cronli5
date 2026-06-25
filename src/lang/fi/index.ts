@@ -341,7 +341,40 @@ function renderComposeSeconds(
       hourClause + trailingQualifier(ir, opts);
   }
 
+  // A sub-minute second with the minute pinned to 0 and a specific hour: the
+  // clock-time rest would read "klo 9", dropping the pinned :00 and so the
+  // one-minute confinement (60 fires in :00, not 3,600 across the hour). Bind
+  // the seconds to the explicit clock minute with the "minuutin HH.00 aikana"
+  // frame (an "of"/during form, never a range) and trail the day qualifier
+  // ("joka sekunti minuutin 9.00 aikana, joka päivä").
+  if (plan.rest.kind === 'clockTimes' &&
+      plan.rest.times.every((time) => +time.minute === 0)) {
+    return composeMinuteZero(ir, plan.rest, opts);
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// The minute-0 confinement: bind the seconds to the explicit clock minute(s)
+// in the "minuutin/minuuttien HH.00 aikana" frame (an "of"/during form, never
+// a range — a range would round-trip back to the whole hour) and trail the day
+// qualifier ("joka sekunti minuutin 9.00 aikana, joka päivä").
+function composeMinuteZero(
+  ir: IR,
+  rest: Extract<PlanNode, {kind: 'clockTimes'}>,
+  opts: NormalizedOptions
+): string {
+  const clocks = rest.times.map(function clock(time): string {
+    return clockDigits({hour: time.hour, minute: time.minute},
+      {sep: opts.style.sep});
+  });
+  const frame = clocks.length === 1 ?
+    'minuutin ' + clocks[0] :
+    'minuuttien ' + joinList(clocks);
+  const dayTrail = leadingQualifier(ir, opts).trimEnd();
+
+  return secondsLeadClause(ir, opts) + ' ' + frame + ' aikana' +
+    (dayTrail ? ', ' + dayTrail : '');
 }
 
 // The leading clause describing a second field relative to the minute.

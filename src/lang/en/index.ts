@@ -21,12 +21,15 @@ type StepSegment = Extract<Segment, {kind: 'step'}>;
 
 // A clock-time entry assembled for rendering. Hour/minute/second arrive as
 // numbers or as raw field tokens (a range bound or single value is a
-// string); `plain` suppresses the noon/midnight words.
+// string); `plain` suppresses the noon/midnight words. `explicit` forces the
+// minute to show even when zero ("9:00 a.m.", not "9 a.m.") and suppresses
+// the noon/midnight words, so a pinned minute-0 stays visible.
 interface TimeEntry {
   hour: number | string;
   minute: number | string;
   second?: number | string | null;
   plain?: boolean;
+  explicit?: boolean;
 }
 
 // English number names for the integers zero through ten.
@@ -176,7 +179,38 @@ function renderSecondsWithinMinute(ir: IR, plan: PlanOf<'secondsWithinMinute'>,
 // pattern follows.
 function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
   opts: NormalizedOptions): string {
+  // A sub-minute second under a minute pinned to 0 and a specific hour: the
+  // clock-time rest would collapse "H:00" to the bare hour word ("9 a.m."),
+  // which a reader hears as the whole hour. The minute-0 is a real one-minute
+  // confinement, so lead the seconds into the explicit clock minute under an
+  // "of" frame and trail the day qualifier ("every second of 9:00 a.m.,
+  // every day").
+  if (plan.rest.kind === 'clockTimes' &&
+      plan.rest.times.every((time) => +time.minute === 0)) {
+    return secondsLeadClause(ir, opts) + ' of ' +
+      clockTimesOf(ir, plan.rest, opts);
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// The explicit-minute clock times for a minute-0 compose-seconds rest, joined
+// and followed by the trailing day qualifier: "9:00 a.m. and 11:00 a.m.,
+// every day". The minute is forced visible so the one-minute confinement is
+// never read as the whole hour.
+function clockTimesOf(ir: IR, plan: PlanOf<'clockTimes'>,
+  opts: NormalizedOptions): string {
+  const times = plan.times.map(function clock(time) {
+    return getTime({
+      hour: time.hour,
+      minute: time.minute,
+      second: time.second,
+      explicit: true
+    }, opts);
+  });
+  const trail = dayQualifier(ir, leadingWords, opts);
+
+  return joinList(times, opts) + (trail && ', ' + trail);
 }
 
 // The leading clause describing a second field relative to the minute,
@@ -1162,7 +1196,7 @@ function stepYears(yearField: string, opts: NormalizedOptions): string {
 // "3.45pm" / "9am" / "midday" for UK (Guardian), or "15:45" / "15.45" in
 // 24-hour mode.
 function getTime(time: TimeEntry, opts: NormalizedOptions): string {
-  const {hour, minute, plain} = time;
+  const {hour, minute, plain, explicit} = time;
   // Seconds are only shown when a specific non-zero value is supplied.
   const second = typeof time.second === 'number' && time.second > 0 ?
     time.second :
@@ -1172,12 +1206,13 @@ function getTime(time: TimeEntry, opts: NormalizedOptions): string {
     // Hour/minute arrive as numbers or raw field tokens (a range bound or
     // single value is a string); `clockDigits` types them as numbers but
     // `pad` stringifies either form to the same digits. Cast to keep the
-    // value byte-identical rather than coercing it.
+    // value byte-identical rather than coercing it. The 24-hour form always
+    // shows the minute, so it is already explicit.
     return clockDigits({hour: hour as number, minute: minute as number,
       second}, {pad: true, sep: opts.style.sep});
   }
 
-  return twelveHourTime({hour, minute, second, plain}, opts);
+  return twelveHourTime({hour, minute, second, plain, explicit}, opts);
 }
 
 // The 12-hour form of a clock time: "9:30 a.m.", "9 a.m." on the hour, or
@@ -1186,13 +1221,13 @@ function getTime(time: TimeEntry, opts: NormalizedOptions): string {
 // stays in one number style.
 function twelveHourTime(
   time: {hour: number | string; minute: number | string; second: number;
-    plain?: boolean},
+    plain?: boolean; explicit?: boolean},
   opts: NormalizedOptions
 ): string {
-  const {hour, minute, second, plain} = time;
+  const {hour, minute, second, plain, explicit} = time;
   const style = opts.style;
 
-  if (!plain && +minute === 0 && !second) {
+  if (!plain && !explicit && +minute === 0 && !second) {
     if (+hour === 0) {
       return style.midnight;
     }
@@ -1204,9 +1239,11 @@ function twelveHourTime(
 
   // `hour`/`minute` may be raw field tokens; the arithmetic below coerces
   // them numerically, matching `clockDigits`. Cast for the modulo/compare.
+  // `explicit` keeps the minute (":00") rather than leaning down to the bare
+  // hour, so a pinned minute-0 stays visible.
   const digits = clockDigits(
     {hour: (hour as number) % 12 || 12, minute: minute as number, second},
-    {lean: true, sep: style.sep});
+    {lean: !explicit, sep: style.sep});
 
   return digits + (style.closeUp ? '' : ' ') +
     ((hour as number) < 12 ? style.am : style.pm);

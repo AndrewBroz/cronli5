@@ -36,6 +36,31 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
+  // A sub-minute second with the minute pinned to 0 and a specific hour: the
+  // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
+  // across the hour), so the clock minute must stay visible. The bare hour
+  // word ("9 a.m.") would read as the whole hour, so the time leads with an
+  // explicit ":00" under an "of" frame and the day qualifier trails.
+  describe('minute pinned to 0 under a specific hour', function() {
+    run([
+      ['* 0 0 * * *', 'every second of 12:00 a.m., every day'],
+      ['* 0 9 * * *', 'every second of 9:00 a.m., every day'],
+      ['* 0 12 * * *', 'every second of 12:00 p.m., every day'],
+      ['* 0 9,11 * * *',
+        'every second of 9:00 a.m. and 11:00 a.m., every day'],
+      ['* 0 9-17 * * *',
+        'every second of 9:00 a.m., 10:00 a.m., 11:00 a.m., 12:00 p.m., ' +
+        '1:00 p.m., 2:00 p.m., 3:00 p.m., 4:00 p.m., and 5:00 p.m., ' +
+        'every day'],
+      ['* 0 */2 * * *',
+        'every second of 12:00 a.m., 2:00 a.m., 4:00 a.m., 6:00 a.m., ' +
+        '8:00 a.m., 10:00 a.m., 12:00 p.m., 2:00 p.m., 4:00 p.m., ' +
+        '6:00 p.m., 8:00 p.m., and 10:00 p.m., every day'],
+      ['* 0 9 * * MON', 'every second of 9:00 a.m., every Monday'],
+      ['*/15 0 9 * * *', 'every 15 seconds of 9:00 a.m., every day']
+    ]);
+  });
+
   describe('single second under a non-single minute', function() {
     run([
       ['15 0,30 * * * *',
