@@ -252,7 +252,32 @@ function renderComposeSeconds(
     return dayFrame + ', ' + window + ', ' + cadence;
   }
 
+  // A wildcard second under a minute */2 with a wildcard hour juxtaposes two
+  // cadences that read as contradictory ("cada segundo, cada dos minutos").
+  // Bind them with the genitive "de" ("cada segundo de cada dos minutos"),
+  // mirroring English. Other strides, a restricted hour, and an hour cadence
+  // keep the juxtaposed form.
+  if (isEveryOtherMinuteSeconds(ir, plan)) {
+    return secondsLeadClause(ir, opts) + ' de ' + render(ir, plan.rest, opts);
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// A wildcard second over an unoffset minute */2 with a wildcard hour: the two
+// cadences read as contradictory side by side, so they bind into one.
+function isEveryOtherMinuteSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  if (plan.rest.kind !== 'minuteFrequency' ||
+      ir.shapes.second !== 'wildcard' || ir.shapes.hour !== 'wildcard') {
+    return false;
+  }
+
+  const minuteStep = stepSegment(ir.analyses.segments.minute);
+
+  return minuteStep.startToken === '*' && minuteStep.interval === 2;
 }
 
 // A wildcard or stepped second under a single pinned minute and specific

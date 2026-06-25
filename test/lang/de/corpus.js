@@ -158,6 +158,19 @@ describe('Deutsch (de):', function() {
     ]);
   });
 
+  describe('Sekunde unter gepaarter Minute (* */N)', function() {
+    run([
+      // A wildcard second under a minute */2 binds the two cadences instead of
+      // juxtaposing the contradictory "jede Sekunde, alle 2 Minuten".
+      ['* */2 * * * *', 'jede Sekunde jeder zweiten Minute'],
+      // Other strides keep the juxtaposed form.
+      ['* */3 * * * *', 'jede Sekunde, alle 3 Minuten'],
+      // Guards: no-seconds and restricted hour are unchanged.
+      ['*/2 * * * *', 'alle 2 Minuten'],
+      ['* */2 0 * * *', 'jede Sekunde, alle 2 Minuten von 0 bis 0:58 Uhr']
+    ]);
+  });
+
   describe('Weitere Uhrzeiten', function() {
     run([
       ['0 1 * * *', 'täglich um 1 Uhr'],

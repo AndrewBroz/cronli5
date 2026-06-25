@@ -352,7 +352,32 @@ function renderComposeSeconds(
     return composeMinuteZero(ir, plan.rest, opts);
   }
 
+  // A wildcard second under a minute */2 with a wildcard hour juxtaposes two
+  // cadences that read as contradictory ("joka sekunti, kahden minuutin
+  // välein"). Bind them as "every second of every other minute" ("joka sekunti
+  // joka toisena minuuttina"), mirroring English. Other strides, a restricted
+  // hour, and an hour cadence keep the juxtaposed form.
+  if (isEveryOtherMinuteSeconds(ir, plan)) {
+    return secondsLeadClause(ir, opts) + ' joka toisena minuuttina';
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// A wildcard second over an unoffset minute */2 with a wildcard hour: the two
+// cadences read as contradictory side by side, so they bind into one.
+function isEveryOtherMinuteSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  if (plan.rest.kind !== 'minuteFrequency' || ir.pattern.second !== '*' ||
+      ir.shapes.hour !== 'wildcard') {
+    return false;
+  }
+
+  const seg = stepSegment(ir.analyses.segments.minute!);
+
+  return seg.startToken === '*' && seg.interval === 2;
 }
 
 // The minute-0 confinement: bind the seconds to the explicit clock minute(s)

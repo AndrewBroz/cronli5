@@ -460,7 +460,9 @@ function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
   if ((rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') &&
     ir.pattern.minute === '0') {
     const clocks = hourFires(ir).map(function clock(hour): string {
-      return hourWord(hour) + '0分';
+      // Noon's word (正午) already pins 12:00, so the "0分" is redundant for it;
+      // midnight (凌晨0点) and other hours still need it to pin the minute.
+      return hour === 12 ? '正午' : hourWord(hour) + '0分';
     });
     const tail = sec === '每秒' ? '的每一秒' : '的' + sec;
     const core = joinAnd(clocks) + tail;
@@ -499,6 +501,18 @@ function composeSecondsCadence(ir: IR): string {
   }
 
   if (ir.shapes.hour === 'wildcard') {
+    // "每秒，每2分钟" juxtaposes two cadences that read as contradictory. A
+    // step-2 minute from the top of the hour IS exactly the even minutes; bind
+    // the every-second cadence to them ("每偶数分钟的每一秒") rather than listing
+    // the two side by side. Other strides keep the juxtaposed form.
+    if (ir.shapes.minute === 'step' && sec === '每秒') {
+      const minuteStep = stepSegment(ir, 'minute');
+
+      if (minuteStep.startToken === '*' && minuteStep.interval === 2) {
+        return '每偶数分钟的每一秒';
+      }
+    }
+
     return sec + '，' + minuteClause(ir);
   }
 

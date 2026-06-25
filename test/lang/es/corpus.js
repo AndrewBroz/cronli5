@@ -255,6 +255,23 @@ describe('Español (es):', function() {
     ], ampm);
   });
 
+  describe('segundo bajo un minuto pareado (* */N)', function() {
+    run([
+      // A wildcard second under a minute */2 binds the two cadences instead of
+      // juxtaposing the contradictory "cada segundo, cada dos minutos".
+      ['* */2 * * * *', 'cada segundo de cada dos minutos'],
+      // Other strides keep the juxtaposed form.
+      ['* */3 * * * *', 'cada segundo, cada tres minutos'],
+      ['* */15 * * * *', 'cada segundo, cada 15 minutos'],
+      // Guards: no-seconds, restricted hour, hour cadence are unchanged.
+      ['*/2 * * * *', 'cada dos minutos'],
+      ['* */2 0 * * *',
+        'cada segundo, cada dos minutos de las 00:00 a las 00:58'],
+      ['* */2 */2 * * *',
+        'cada segundo, cada dos minutos, durante las horas pares']
+    ]);
+  });
+
   describe('fichas Quartz', function() {
     run([
       ['0 0 L * *', 'el último día del mes a medianoche'],

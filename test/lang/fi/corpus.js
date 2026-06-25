@@ -296,6 +296,14 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
         'klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä'],
       ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
+      // A wildcard second under a minute */2 binds the two cadences instead of
+      // juxtaposing the contradictory "joka sekunti, kahden minuutin välein".
+      ['* */2 * * * *', 'joka sekunti joka toisena minuuttina'],
+      // Other strides keep the juxtaposed form.
+      ['* */3 * * * *', 'joka sekunti, kolmen minuutin välein'],
+      // Guards: no-seconds and restricted hour are unchanged.
+      ['*/2 * * * *', 'kahden minuutin välein'],
+      ['* */2 0 * * *', 'joka sekunti, kahden minuutin välein klo 0.00–0.58'],
       // Minute 0 under a sub-minute second must be stated, not absorbed into
       // an hourly idiom ("joka tunti" / "kahden tunnin välein" / a klo 9–17
       // window) that silently drops the :00.

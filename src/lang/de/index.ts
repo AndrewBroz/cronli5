@@ -545,6 +545,20 @@ function renderComposeSeconds(
       clockMinuteGenitive(plan.rest.times, opts.style.sep);
   }
 
+  // A wildcard second under a minute */2 with a wildcard hour juxtaposes two
+  // cadences that read as contradictory ("jede Sekunde, alle 2 Minuten"). Bind
+  // them in the genitive ("jede Sekunde jeder zweiten Minute"), mirroring
+  // English. Other strides, a restricted hour, and an hour cadence keep the
+  // juxtaposed form.
+  if (plan.rest.kind === 'minuteFrequency' &&
+      ir.shapes.second === 'wildcard' && ir.shapes.hour === 'wildcard') {
+    const minuteStep = stepSegment(ir.analyses.segments.minute);
+
+    if (minuteStep.startToken === '*' && minuteStep.interval === 2) {
+      return secondsLead(ir) + ' jeder zweiten Minute';
+    }
+  }
+
   return secondsLead(ir) + ', ' + render(ir, plan.rest, opts);
 }
 
