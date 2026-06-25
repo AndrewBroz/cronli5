@@ -45,10 +45,9 @@ describe('Valid strings with steps:', function() {
       // A uniform offset hour stride (interval divides 24, start within the
       // first interval) keeps its cadence form; a short one lists its fires.
       ['0 8/12 * * *', 'at 8 a.m. and 8 p.m.'],
-      ['5 */2 * * *',
-        'every day at 12:05 a.m., 2:05 a.m., 4:05 a.m., 6:05 a.m., ' +
-        '8:05 a.m., 10:05 a.m., 12:05 p.m., 2:05 p.m., 4:05 p.m., ' +
-        '6:05 p.m., 8:05 p.m., and 10:05 p.m.'],
+      // An hour step past the clock-time cap is a cadence, not a wall of
+      // times: the pinned minute leads, then the hour cadence.
+      ['5 */2 * * *', 'five minutes past the hour, every two hours'],
       // A uniform step segment beside a range in a folded clock-time set: the
       // range is a window, the step contributes its fires.
       ['5 8-10,2/4 * * *',
