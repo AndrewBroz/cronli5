@@ -200,6 +200,11 @@ describe('Español (es):', function() {
       // Seconds list + fixed clock time: nest seconds into the time with
       // genitive "de las HH:MM"; never "de cada minuto" when the minute is fixed.
       ['5,10 30 9 * * MON', 'los lunes, en los segundos 5 y 10 de las 09:30'],
+      // A date-OR-weekday union drops the day frame here; the unified frame
+      // supplies the day-level suffix, so the seconds clause leads it.
+      ['5,10 0 9 1 * MON',
+        'en los segundos 5 y 10 de las 09:00, ya sea el 1 de cada mes ' +
+        'o cualquier lunes'],
       // Guard: wildcard minute keeps "de cada minuto".
       // (5,10 * * * * * is already covered in segundos independientes y compuestos)
       // Second-step + fixed minute + hour range + weekday: anchor cadence to the minute.
@@ -245,7 +250,7 @@ describe('Español (es):', function() {
   describe('segundos compuestos', function() {
     run([
       ['*/15 30 9 * * *',
-        'cada 15 segundos, todos los días a las 9:30 de la mañana'],
+        'cada 15 segundos de las 9:30 de la mañana, todos los días'],
       ['15 30 9 * * *', 'todos los días a las 9:30:15 de la mañana']
     ], ampm);
   });
@@ -351,26 +356,58 @@ describe('Español (es):', function() {
 
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
   // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
-  // across the hour). The clock minute must stay visible, so the seconds bind
-  // to the explicit clock time with a genitive "de las HH:00" and the day
-  // qualifier trails (24-hour clock, the RAE default).
+  // across the hour). A bare hour ("a las 9") reads aloud as the whole hour,
+  // so the confinement is stated outright with a duration frame ("durante un
+  // minuto a las 9") and the day qualifier trails (24-hour clock, RAE default).
   describe('minuto fijado a 0 bajo una hora concreta (24 horas)', function() {
     run([
-      ['* 0 0 * * *', 'cada segundo de las 00:00, todos los días'],
-      ['* 0 9 * * *', 'cada segundo de las 09:00, todos los días'],
-      ['* 0 12 * * *', 'cada segundo de las 12:00, todos los días'],
+      ['* 0 0 * * *',
+        'cada segundo durante un minuto a medianoche, todos los días'],
+      ['* 0 9 * * *',
+        'cada segundo durante un minuto a las 9, todos los días'],
+      ['* 0 12 * * *',
+        'cada segundo durante un minuto al mediodía, todos los días'],
       ['* 0 9,11 * * *',
-        'cada segundo de las 09:00 y 11:00, todos los días'],
+        'cada segundo durante un minuto a las 9 y 11, todos los días'],
       ['* 0 9-17 * * *',
-        'cada segundo de las 09:00, 10:00, 11:00, 12:00, 13:00, 14:00, ' +
-        '15:00, 16:00 y 17:00, todos los días'],
+        'cada segundo durante un minuto a las 9, a las 10, a las 11, ' +
+        'al mediodía, a las 13, a las 14, a las 15, a las 16 y a las 17, ' +
+        'todos los días'],
       ['* 0 */2 * * *',
-        'cada segundo de las 00:00, 02:00, 04:00, 06:00, 08:00, 10:00, ' +
-        '12:00, 14:00, 16:00, 18:00, 20:00 y 22:00, todos los días'],
-      ['* 0 9 * * MON', 'cada segundo de las 09:00, los lunes'],
-      ['*/15 0 9 * * *', 'cada 15 segundos de las 09:00, todos los días']
+        'cada segundo durante un minuto a medianoche, a las 2, a las 4, ' +
+        'a las 6, a las 8, a las 10, al mediodía, a las 14, a las 16, ' +
+        'a las 18, a las 20 y a las 22, todos los días'],
+      ['* 0 9 * * MON',
+        'cada segundo durante un minuto a las 9, los lunes'],
+      ['*/15 0 9 * * *',
+        'cada 15 segundos durante un minuto a las 9, todos los días'],
+      // One o'clock takes the singular article ("a la 1") even on the 24-hour
+      // clock.
+      ['* 0 1 * * *',
+        'cada segundo durante un minuto a la 1, todos los días'],
+      // A date-OR-weekday union drops the day trail here (the unified frame
+      // supplies the day-level suffix), so the confinement leads the frame.
+      ['* 0 9 1 * MON',
+        'cada segundo durante un minuto a las 9, ya sea el 1 de cada mes ' +
+        'o cualquier lunes']
     ]);
   });
+
+  // A non-zero pinned minute is an unambiguous clock time: the genitive
+  // "de las 09:05" form reads as the minute, never the hour, so it generalizes
+  // the confinement without the duration frame the minute-0 case needs.
+  describe('minuto fijado distinto de 0 bajo una hora concreta (24 horas)',
+    function() {
+      run([
+        ['* 5 0 * * *', 'cada segundo de las 00:05, todos los días'],
+        ['* 5 9 * * *', 'cada segundo de las 09:05, todos los días'],
+        // One o'clock takes the singular article ("de la 01:05").
+        ['* 5 1 * * *', 'cada segundo de la 01:05, todos los días'],
+        ['* 5 9,11 * * *',
+          'cada segundo de las 09:05 y 11:05, todos los días'],
+        ['* 5 9 * * MON', 'cada segundo de las 09:05, los lunes']
+      ]);
+    });
 
   describe('segundos independientes y compuestos', function() {
     run([
@@ -379,17 +416,18 @@ describe('Español (es):', function() {
       ['*/15 30 * * * *',
         'cada 15 segundos, en el minuto 30 de cada hora'],
       ['* 30 9 * * *',
-        'cada segundo, todos los días a las 9:30 de la mañana'],
+        'cada segundo de las 9:30 de la mañana, todos los días'],
       // Minute 0 under a sub-minute second must be stated, not absorbed into
       // an hourly idiom ("cada hora" / "cada dos horas" / a 9-a-17 window)
       // that silently drops the :00.
       ['* 0 * * * *', 'cada segundo, en el minuto 0 de cada hora'],
-      // The minute-0 confinement reads with the explicit clock minute under a
-      // genitive frame ("de las 9:00 …"), never the bare hour ("a las 9"),
-      // which on the 12-hour clock would hide the :00.
+      // The minute-0 confinement reads with a duration frame ("durante un
+      // minuto a las 9 …"), never a bare hour, which reads aloud as the whole
+      // hour. The hour reads as its day-period word; "durante un minuto"
+      // carries the one-minute window.
       ['* 0 9-17 * * *',
-        'cada segundo de las 9:00, 10:00 y 11:00 de la mañana, y a las ' +
-        '12:00, a la 1:00, a las 2:00, a las 3:00, a las 4:00 y a las 5:00 ' +
+        'cada segundo durante un minuto a las 9, 10 y 11 de la mañana, ' +
+        'al mediodía, y a la 1, a las 2, a las 3, a las 4 y a las 5 ' +
         'de la tarde, todos los días'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "cada segundo"). Fuzzer-found.
@@ -536,9 +574,11 @@ describe('Español (es):', function() {
       // es-US: 12-hour with the English AM/PM meridiem (no "de la").
       ['30 9 * * *', 'todos los días a las 9:30 AM', {dialect: 'es-US'}],
       ['0 22 * * *', 'todos los días a las 10 PM', {dialect: 'es-US'}],
-      // es-US minute-0 confinement: the explicit ":00 AM" keeps the pinned
-      // minute visible under the English meridiem.
-      ['* 0 9 * * *', 'cada segundo de las 9:00 AM, todos los días',
+      // es-US minute-0 confinement: the duration frame ("durante un minuto a
+      // las 9 AM") states the one-minute window so the bare hour cannot be
+      // heard as the whole hour, under the English meridiem.
+      ['* 0 9 * * *',
+        'cada segundo durante un minuto a las 9 AM, todos los días',
         {dialect: 'es-US'}],
       // es-ES: the RAE-anchored 24-hour default (same as neutral `es`).
       ['30 9 * * *', 'todos los días a las 09:30', {dialect: 'es-ES'}]

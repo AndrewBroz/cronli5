@@ -14,7 +14,7 @@ describe('Seven-field patterns:', function() {
         'on December 25 at noon in 2030-2035'],
       ['0 0 12 1 1 * */2', 'on January 1 at noon every two years'],
       ['*/15 30 9 * * * 2030',
-        'every 15 seconds, every day at 9:30 a.m. in 2030'],
+        'every 15 seconds of 9:30 a.m., every day in 2030'],
       ['0 30 9 * * * *', 'every day at 9:30 a.m.']
     ]);
   });
@@ -51,9 +51,8 @@ describe('Seven-field patterns:', function() {
       ['* 0 * * * * 2013',
         'every second, zero minutes past the hour, every hour in 2013'],
       ['* 0 9-17 * * *',
-        'every second of 9:00 a.m., 10:00 a.m., 11:00 a.m., 12:00 p.m., ' +
-        '1:00 p.m., 2:00 p.m., 3:00 p.m., 4:00 p.m., and 5:00 p.m., ' +
-        'every day']
+        'every second for one minute at 9 a.m., 10 a.m., 11 a.m., noon, ' +
+        '1 p.m., 2 p.m., 3 p.m., 4 p.m., and 5 p.m., every day']
     ]);
   });
 });

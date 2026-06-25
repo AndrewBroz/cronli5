@@ -211,19 +211,11 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
 ): string {
-  // A sub-minute second with the minute pinned to 0 and a specific hour: the
-  // clock-time rest would otherwise read "todos los días a las 9 de la mañana"
-  // — which on the 12-hour clock drops the :00 entirely, hiding the one-minute
-  // confinement (60 fires in :00, not 3,600 across the hour). Bind the seconds
-  // into the explicit clock minute with a genitive "de las HH:00" and trail
-  // the day qualifier ("cada segundo de las 09:00, todos los días").
-  if (plan.rest.kind === 'clockTimes' && ir.shapes.second !== 'list' &&
-      plan.rest.times.every((time) => +time.minute === 0)) {
-    const clockList = explicitClockList(plan.rest.times, opts);
-    const dayTrail = leadingQualifier(ir, opts).trimEnd();
-
-    return secondsLeadClause(ir, opts) + ' de ' + clockList +
-      (dayTrail ? ', ' + dayTrail : '');
+  // A wildcard or stepped second with the minute pinned to a single value
+  // across one or more specific hours: the seconds confine to the clock time.
+  if (plan.rest.kind === 'clockTimes' &&
+      (ir.shapes.second === 'wildcard' || ir.shapes.second === 'step')) {
+    return pinnedMinuteSeconds(ir, plan.rest, opts);
   }
 
   // Seconds list + fixed clock time: nest the seconds into the clock time(s)
@@ -261,6 +253,33 @@ function renderComposeSeconds(
   }
 
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// A wildcard or stepped second under a single pinned minute and specific
+// hour(s). The clock-time rest folds the minute into the hour, and on the
+// 12-hour clock a pinned minute-0 drops the :00 entirely ("a las 9 de la
+// mañana") — and even "a las 9" reads aloud as the whole hour, hiding the
+// one-minute confinement (60 fires in :00, not 3,600 across the hour). Minute
+// 0 is the one-minute window at the top of each named hour: a duration frame
+// ("durante un minuto a las 9") states the confinement outright, with the hour
+// as a bare hour so it cannot be heard as the whole hour. A non-zero pinned
+// minute is an unambiguous clock time, so the genitive "de las 09:05" form
+// reads it as the minute, never the hour.
+function pinnedMinuteSeconds(
+  ir: IR,
+  rest: Extract<PlanNode, {kind: 'clockTimes'}>,
+  opts: Opts
+): string {
+  const dayTrail = leadingQualifier(ir, opts).trimEnd();
+  const trail = dayTrail ? ', ' + dayTrail : '';
+
+  if (+rest.times[0].minute === 0) {
+    return secondsLeadClause(ir, opts) + ' durante un minuto ' +
+      durationHourList(rest.times, opts) + trail;
+  }
+
+  return secondsLeadClause(ir, opts) + ' de ' +
+    explicitClockList(rest.times, opts) + trail;
 }
 
 // The leading clause describing a second field relative to the minute.
@@ -720,6 +739,42 @@ function explicitClockList(
 
   // Strip the leading "a " so the caller's "de " produces the genitive form.
   return grouped.startsWith('a ') ? grouped.slice(2) : grouped;
+}
+
+// The bare-hour list for a minute-0 duration confinement, keeping the "a …"
+// frame the caller embeds after "durante un minuto": "a las 9",
+// "a medianoche", "a las 9, 10, 11 y 12". The hour reads as a bare hour
+// (no minutes), since the "durante un minuto" frame already carries the
+// one-minute window — never "las 09:00", which would read as the whole hour.
+function durationHourList(
+  times: {hour: number; minute: number; second?: number | null}[],
+  opts: Opts
+): string {
+  const phrases = times.map(function clock(time) {
+    return atTime(bareHourPhrase(time.hour, opts));
+  });
+
+  return groupClockTimes(phrases);
+}
+
+// A bare hour with its article, no minutes: "las 9" / "la 1" / "mediodía" /
+// "medianoche" on the 24-hour clock, or the 12-hour day-period form
+// ("las 9 de la mañana"). Used by the minute-0 duration frame, where the
+// minute is already stated and the clock minute would only mislead.
+function bareHourPhrase(hour: number, opts: Opts): string {
+  if (opts.ampm) {
+    return timePhrase(hour, 0, null, opts);
+  }
+
+  if (+hour === 0) {
+    return 'medianoche';
+  }
+
+  if (+hour === 12) {
+    return 'mediodía';
+  }
+
+  return (+hour === 1 ? 'la ' : 'las ') + hour;
 }
 
 // A clock time with its minute forced visible and the noon/midnight words

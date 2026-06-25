@@ -179,14 +179,26 @@ function renderSecondsWithinMinute(ir: IR, plan: PlanOf<'secondsWithinMinute'>,
 // pattern follows.
 function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
   opts: NormalizedOptions): string {
-  // A sub-minute second under a minute pinned to 0 and a specific hour: the
-  // clock-time rest would collapse "H:00" to the bare hour word ("9 a.m."),
-  // which a reader hears as the whole hour. The minute-0 is a real one-minute
-  // confinement, so lead the seconds into the explicit clock minute under an
-  // "of" frame and trail the day qualifier ("every second of 9:00 a.m.,
-  // every day").
+  // A wildcard or stepped second under a minute pinned to a single value
+  // across one or more specific hours. The clock-time rest collapses the
+  // pinned minute into the hour, and on the clock a pinned minute-0 reads as
+  // the whole hour ("9 a.m." spoken == "9:00 a.m."), losing the one-minute
+  // confinement. (A second list/range/single leads with a "past the minute"
+  // clause that an "of"/duration frame cannot follow, so it stays generic.)
   if (plan.rest.kind === 'clockTimes' &&
-      plan.rest.times.every((time) => +time.minute === 0)) {
+      (ir.shapes.second === 'wildcard' || ir.shapes.second === 'step')) {
+    const minute = plan.rest.times[0].minute;
+
+    // Minute 0 is the one-minute window at the top of each named hour: a
+    // duration frame ("for one minute at 9 a.m.") states the confinement
+    // outright, with the hour as its word so it cannot be heard as the hour
+    // itself. A non-zero pinned minute is an unambiguous clock time, so the
+    // compact "of 9:05 a.m." form reads it as the minute, never the hour.
+    if (+minute === 0) {
+      return secondsLeadClause(ir, opts) + ' for one minute at ' +
+        durationHours(ir, plan.rest, opts);
+    }
+
     return secondsLeadClause(ir, opts) + ' of ' +
       clockTimesOf(ir, plan.rest, opts);
   }
@@ -194,10 +206,23 @@ function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
 }
 
-// The explicit-minute clock times for a minute-0 compose-seconds rest, joined
-// and followed by the trailing day qualifier: "9:00 a.m. and 11:00 a.m.,
-// every day". The minute is forced visible so the one-minute confinement is
-// never read as the whole hour.
+// The bare-hour words for a minute-0 duration confinement, joined and followed
+// by the trailing day qualifier: "9 a.m. and 11 a.m., every day", "midnight,
+// 2 a.m., …, every day". The hour reads as its word (noon/midnight included),
+// never "H:00", since the "for one minute" frame already carries the minute.
+function durationHours(ir: IR, plan: PlanOf<'clockTimes'>,
+  opts: NormalizedOptions): string {
+  const hours = plan.times.map(function clock(time) {
+    return getTime({hour: time.hour, minute: 0}, opts);
+  });
+  const trail = dayQualifier(ir, leadingWords, opts);
+
+  return joinList(hours, opts) + (trail && ', ' + trail);
+}
+
+// The clock times for a non-zero pinned-minute compose-seconds rest, joined
+// and followed by the trailing day qualifier: "9:05 a.m. and 11:05 a.m.,
+// every day". The non-zero minute reads as a clock time, never the hour.
 function clockTimesOf(ir: IR, plan: PlanOf<'clockTimes'>,
   opts: NormalizedOptions): string {
   const times = plan.times.map(function clock(time) {
