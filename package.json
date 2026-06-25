@@ -62,6 +62,7 @@
     "docs": "node --import tsx scripts/docs.mjs",
     "fuzz": "node --import tsx scripts/fuzz-lang.mjs",
     "lint": "eslint src test cli.js eslint.config.js scripts tooling/scripts",
+    "metamorphic": "node --import tsx tooling/scripts/metamorphic.mjs",
     "lint:fix": "eslint src test cli.js eslint.config.js scripts tooling/scripts --fix",
     "test": "mocha",
     "types": "tsc -p tsconfig.types.json",
