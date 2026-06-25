@@ -253,9 +253,15 @@ function renderMinuteFrequency(ir: IR, plan: PlanNode): string {
   return base;
 }
 
-// A minute span within a single hour: "在9点至9点58分之间，每分钟".
+// A minute span within a single hour. A wildcard minute reads as that hour
+// itself — "凌晨0点的每一分钟" — not a synthesized "在H点至H点59分之间" range the
+// source never stated; a partial minute span keeps the named range.
 function renderMinuteSpanInHour(ir: IR, plan: PlanNode): string {
   const span = plan as Extract<PlanNode, {kind: 'minuteSpanInHour'}>;
+
+  if (ir.pattern.minute === '*') {
+    return hourWord(span.hour) + '的每一分钟';
+  }
 
   return '在' + hourWord(span.hour) + '至' + span.hour + '点' +
     span.span[1] + '分之间，每分钟';
@@ -289,6 +295,12 @@ function renderMinuteSpanAcrossHourStep(ir: IR, plan: PlanNode): string {
     return form === 'wildcard' ?
       '在' + hourList(ir) + '，' + minuteTail :
       hourList(ir) + '，' + minuteTail;
+  }
+
+  // A step-2 hour from midnight IS exactly the even hours; name them so, rather
+  // than the vague "每2小时内" that reads as an interval. Other strides keep it.
+  if (hourStep.interval === 2 && form === 'wildcard') {
+    return '在偶数小时，' + minuteTail;
   }
 
   const cad = cadence(hourStep.interval, UNITS.hour);
@@ -481,6 +493,14 @@ function composeSecondsCadence(ir: IR): string {
 function composeSecondsListed(ir: IR): string {
   const sec = secondClause(ir);
   const minutes = '每小时' + valueList(fieldSegments(ir, 'minute'), '分');
+
+  // A single restricted hour with an every-second cadence fuses the clock time
+  // with its minutes — "凌晨0点5、20、35、50分的每一秒" — rather than the "每小时"
+  // that falsely implies every hour. A non-wildcard second keeps the list form.
+  if (ir.shapes.hour === 'single' && sec === '每秒') {
+    return hourWord(hourFires(ir)[0]) +
+      valueList(fieldSegments(ir, 'minute'), '分') + '的每一秒';
+  }
 
   if (ir.shapes.hour === 'wildcard') {
     return minutes + '，' + sec;
