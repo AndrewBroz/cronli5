@@ -13,6 +13,20 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
     expect(en.sentence('every minute')).to.equal('Runs every minute.');
   });
 
+  it('English does not double the period after an abbreviation', function() {
+    // A fragment ending in "a.m."/"p.m." already carries a period; the
+    // sentence wrapper must not append a second one.
+    expect(en.sentence('every day at 9 a.m.'))
+      .to.equal('Runs every day at 9 a.m.');
+    expect(en.sentence('every Monday at 5:30 p.m.'))
+      .to.equal('Runs every Monday at 5:30 p.m.');
+  });
+
+  it('English still closes a non-abbreviation fragment', function() {
+    expect(en.sentence('every day at midnight'))
+      .to.equal('Runs every day at midnight.');
+  });
+
   it('German', function() {
     expect(de.sentence('täglich um Mitternacht'))
       .to.equal('Läuft täglich um Mitternacht.');
@@ -29,9 +43,19 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
     expect(es.sentence('cada minuto')).to.equal('Se ejecuta cada minuto.');
   });
 
+  it('Spanish does not double a period already on the fragment', function() {
+    expect(es.sentence('a las 9 a.m.'))
+      .to.equal('Se ejecuta a las 9 a.m.');
+  });
+
   it('Finnish', function() {
     expect(fi.sentence('joka minuutti'))
       .to.equal('Suoritetaan joka minuutti.');
+  });
+
+  it('Finnish does not double a period already on the fragment', function() {
+    expect(fi.sentence('kuukauden 8.'))
+      .to.equal('Suoritetaan kuukauden 8.');
   });
 });
 

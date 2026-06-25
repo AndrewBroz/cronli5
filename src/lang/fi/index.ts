@@ -1492,7 +1492,10 @@ const fi: Language = {
   fallback: 'tunnistamaton cron-lauseke',
   options: normalizeOptions,
   reboot: 'järjestelmän käynnistyessä',
-  sentence: (description) => 'Suoritetaan ' + description + '.'
+  // A description ending in a period already carries it, so closing the
+  // sentence must not double it.
+  sentence: (description) =>
+    'Suoritetaan ' + description + (description.endsWith('.') ? '' : '.')
 };
 
 export default fi;

@@ -1287,7 +1287,10 @@ const en: Language = {
   fallback: 'an unrecognizable cron pattern',
   options: normalizeOptions,
   reboot: 'at system startup',
-  sentence: (description) => 'Runs ' + description + '.'
+  // A description ending in an abbreviation already carries its period
+  // ("…9 a.m."), so closing the sentence must not double it.
+  sentence: (description) =>
+    'Runs ' + description + (description.endsWith('.') ? '' : '.')
 };
 
 export default en;

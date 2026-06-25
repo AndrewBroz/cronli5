@@ -1730,7 +1730,10 @@ const es: Language<SpanishStyle> = {
   fallback: 'un patrón cron irreconocible',
   options: normalizeOptions,
   reboot: 'al arrancar el sistema',
-  sentence: (description) => 'Se ejecuta ' + description + '.'
+  // A description ending in a period already carries it, so closing the
+  // sentence must not double it.
+  sentence: (description) =>
+    'Se ejecuta ' + description + (description.endsWith('.') ? '' : '.')
 };
 
 export default es;
