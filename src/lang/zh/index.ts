@@ -479,8 +479,17 @@ function composeSecondsListed(ir: IR): string {
 }
 
 // Seconds composed with the minute/hour structure, dispatched on the minute.
+// A single minute over a composed clock-time rest (the core already joined the
+// lone hour and minute into "N点M分") keeps that composition, attaching the
+// second to it rather than splitting the minute back out into the "每小时N分"
+// list path; a minute list stays on that list path so each fire is named.
 function renderComposeSeconds(ir: IR, plan: PlanNode, opts: Opts): string {
-  if (ir.pattern.minute === '0') {
+  const {rest} = plan as Extract<PlanNode, {kind: 'composeSeconds'}>;
+  const composedClock =
+    rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes';
+
+  if (ir.pattern.minute === '0' ||
+    composedClock && ir.shapes.minute === 'single') {
     return composeSecondsOnHour(ir, plan, opts);
   }
 

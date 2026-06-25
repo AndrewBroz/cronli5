@@ -51,6 +51,11 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['* 1 * * * *', '每小时1分，每秒'],
       ['* 5,30 * * * *', '每小时5分和30分，每秒'],
       ['* 5,30 */2 * * *', '每2小时，每小时5分和30分，每秒'],
+      // A single minute over a lone hour keeps the composed clock time
+      // ("0点2分"), attaching the second to it rather than splitting the
+      // hour and minute apart.
+      ['* 2 0 * * *', '每天0点2分每秒'],
+      ['* 30 9 * * MON', '每周一，9点30分每秒'],
       ['*/15 * * * * *', '每15秒'],
       ['*/15 0 * * * *', '每小时0分，每15秒'],
       // An offset minute step enumerates its fires; the bare "每N分钟" cadence
