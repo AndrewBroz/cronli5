@@ -414,8 +414,13 @@ function renderMinuteSpanAcrossHourStep(ir: IR,
       trailingQualifier(ir, opts);
   }
 
-  return minuteRangeLead(ir.pattern.minute, opts) + ', ' +
-    stepHours(segment, opts) + trailingQualifier(ir, opts);
+  // A minute list keeps the same cadence clause; only its lead differs.
+  const lead = plan.form === 'list' ?
+    listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+      'minute', 'hour', opts) :
+    minuteRangeLead(ir.pattern.minute, opts);
+
+  return lead + ', ' + stepHours(segment, opts) + trailingQualifier(ir, opts);
 }
 
 // Lead phrase for a plain minute range: "every minute from <a> through <b>

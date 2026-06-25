@@ -243,7 +243,14 @@ describe('Español (es):', function() {
       ['0-30 9,17 * * *',
         'cada minuto del 0 al 30, a las 9 de la mañana y 5 de la tarde'],
       ['0-30 */2 * * *',
-        'cada minuto del 0 al 30, cada dos horas']
+        'cada minuto del 0 al 30, cada dos horas'],
+      // A minute list under a clean stride keeps the same cadence the range
+      // and wildcard forms do, never enumerating the hours.
+      ['5,30 */2 * * *',
+        'en los minutos 5 y 30 de cada hora, cada dos horas'],
+      ['5,30 1/2 * * *',
+        'en los minutos 5 y 30 de cada hora, ' +
+        'cada dos horas a partir de la 1 de la madrugada']
     ], ampm);
   });
 

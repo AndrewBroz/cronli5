@@ -142,6 +142,20 @@ function everyNthHour(segment: StepSegment): string {
   return start === 0 ? base : base + ' ab ' + start + ' Uhr';
 }
 
+// Whether an hour step is a clean stride over the whole day — unbounded,
+// dividing 24, and starting within the first interval — so it confines to "in
+// jeder N-ten Stunde" rather than enumerating its fires. Mirrors the core's
+// cleanHourStride: an offset like 1/2 qualifies; bounded (9-17/2) does not.
+function confinedHourStride(segment: StepSegment): boolean {
+  if (segment.startToken.indexOf('-') !== -1) {
+    return false;
+  }
+
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+  return 24 % segment.interval === 0 && start < segment.interval;
+}
+
 // The Quartz weekday stem (`5L`, `MON#2`) is not number-canonicalized in the
 // core, so it may still be a name token; resolve it via the core's index.
 function weekdayNoun(token: string): string {
@@ -613,8 +627,8 @@ function renderMinutesAcrossHours(
 
 // A minute clause across a stepped hour range. A wildcard minute (a cadence)
 // is reached only for a clean step and is confined to every Nth hour ("jede
-// Minute in jeder zweiten Stunde"); a plain range is a per-hour window whose
-// recurrence trails ("in den Minuten 0 bis 30, alle 2 Stunden").
+// Minute in jeder zweiten Stunde"); a range or list leads with its minutes and
+// trails the same cadence ("in den Minuten 0 bis 30, in jeder zweiten Stunde").
 function renderMinuteSpanAcrossHourStep(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>
@@ -624,8 +638,16 @@ function renderMinuteSpanAcrossHourStep(
       everyNthHour(stepSegment(ir.analyses.segments.hour));
   }
 
-  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' +
-    hourStepPhrase(ir);
+  // The minute (range or list) leads; the hour trails. A clean stride confines
+  // to "in jeder N-ten Stunde" — the same cadence the wildcard form and the
+  // minute-step compositions use, never a juxtaposed second frequency. A
+  // bounded stride (reachable only via a range) enumerates its fires instead.
+  const segment = stepSegment(ir.analyses.segments.hour);
+  const hours = confinedHourStride(segment) ?
+    everyNthHour(segment) :
+    atHours(segment.fires);
+
+  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ', ' + hours;
 }
 
 // Compact minutes across discrete hours: "in den Minuten 5 und 10, um 9, 17,

@@ -285,6 +285,13 @@ function renderMinutesAcrossHours(ir: IR, plan: PlanNode): string {
 function renderMinuteSpanAcrossHourStep(ir: IR, plan: PlanNode): string {
   const hourStep = stepSegment(ir, 'hour');
   const {form} = plan as Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>;
+
+  // A minute list enumerates its hours, with no "from M" idiom to lean on:
+  // "每小时5分和30分，在1点、3点…".
+  if (form === 'list') {
+    return renderMinutePast(ir) + '，在' + hourList(ir);
+  }
+
   const minuteTail = form === 'wildcard' ?
     '每分钟' :
     '每小时' + valueList(fieldSegments(ir, 'minute'), '分') + '，每分钟';

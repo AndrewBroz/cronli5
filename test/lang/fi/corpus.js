@@ -204,6 +204,11 @@ describe('Suomi (fi):', function() {
       // Minute range over range+isolated hours: minute-first, sekä klo.
       ['0-30 9-20,22 * * *', '0–30 minuutin kohdalla klo 9–20 sekä klo 22'],
       ['0-30 */2 * * *', '0–30 minuutin kohdalla joka toinen tunti'],
+      // A minute list under a clean stride keeps the same step phrase the
+      // range and wildcard forms do, never enumerating the hours.
+      ['5,30 */2 * * *', '5 ja 30 minuutin kohdalla joka toinen tunti'],
+      ['5,30 1/2 * * *',
+        '5 ja 30 minuutin kohdalla, kahden tunnin välein klo 1:stä alkaen'],
       ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
       ['* */10 * * *',
         'joka minuutti klo 0.00–0.59, 10.00–10.59 ja 20.00–20.59'],

@@ -245,7 +245,15 @@ describe('Deutsch (de):', function() {
       ['* 9,12,17 * * *',
         'jede Minute von 9 bis 9:59 Uhr, von 12 bis 12:59 Uhr und von 17 ' +
         'bis 17:59 Uhr'],
-      ['0-30 */2 * * *', 'in den Minuten 0 bis 30, alle 2 Stunden']
+      // A range or list under a clean stride trails the same cadence the
+      // wildcard form and the minute-step compositions use ("in jeder zweiten
+      // Stunde"), never an enumerated hour list or a juxtaposed "alle 2 Stunden".
+      ['0-30 */2 * * *', 'in den Minuten 0 bis 30, in jeder zweiten Stunde'],
+      ['0-30 1/2 * * *',
+        'in den Minuten 0 bis 30, in jeder zweiten Stunde ab 1 Uhr'],
+      ['5,30 */2 * * *', 'in den Minuten 5 und 30, in jeder zweiten Stunde'],
+      ['5,30 1/2 * * *',
+        'in den Minuten 5 und 30, in jeder zweiten Stunde ab 1 Uhr']
     ]);
   });
 

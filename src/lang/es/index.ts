@@ -566,8 +566,14 @@ function renderMinuteSpanAcrossHourStep(
       trailingQualifier(ir, opts);
   }
 
-  return minuteRangeLead(ir.pattern.minute) + ', ' + stepHours(segment, opts) +
-    trailingQualifier(ir, opts);
+  // A minute list keeps the same cadence clause as the range; only its lead
+  // differs ("en los minutos 5 y 30 de cada hora" vs "cada minuto del 0 al
+  // 30").
+  const lead = plan.form === 'list' ?
+    minutesList(ir) :
+    minuteRangeLead(ir.pattern.minute);
+
+  return lead + ', ' + stepHours(segment, opts) + trailingQualifier(ir, opts);
 }
 
 // --- Hour renderers. ---
