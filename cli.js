@@ -52,11 +52,20 @@ if (flag !== -1) {
   }
 }
 
+// After the recognized flags are consumed, any remaining `--flag` is a typo or
+// an unsupported option (e.g. `--land` for `--lang`); naming it beats letting
+// it fall through and surface as a confusing "invalid field value" error.
+const unknownFlag = args.find((a) => a.startsWith('--'));
 const pattern = args.length === 1 ? args[0] : args;
 const requested = code || 'en';
 
 if (missingLang) {
   console.error('Missing language value for --lang');
+  process.exitCode = 1;
+}
+else if (unknownFlag) {
+  console.error('Unknown option: ' + unknownFlag +
+    ' (valid options: --lang, --fragment)');
   process.exitCode = 1;
 }
 else if (availableLanguages().includes(requested)) {

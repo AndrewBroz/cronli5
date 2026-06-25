@@ -152,5 +152,15 @@ describe('Built package artifacts:', function() {
       expect(result.status).to.not.equal(0);
       expect(result.stderr).to.match(/--lang/u);
     });
+
+    it('rejects an unknown flag instead of parsing it as a pattern',
+      function() {
+        const result = cliFail('* 0 * * *', '--land', 'de');
+
+        expect(result.status).to.not.equal(0);
+        // It names the offending flag and does not mistake it for a field.
+        expect(result.stderr).to.match(/[Uu]nknown option: --land/u);
+        expect(result.stderr).to.not.match(/minute field/u);
+      });
   });
 });
