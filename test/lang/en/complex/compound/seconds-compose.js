@@ -40,6 +40,20 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
+  // A wildcard second under a */2 minute step with a wildcard hour binds as
+  // "every second of every other minute" — "every other" is the idiomatic
+  // English for an interval of 2, and "of" joins the cadence and its
+  // confinement without the ambiguity of a comma (which reads as two
+  // independent cadences). Other step sizes keep the comma form ("every
+  // second, every three minutes").
+  describe('wildcard second under */2 minute step (of-binding)', function() {
+    run([
+      ['* */2 * * * *', 'every second of every other minute'],
+      ['* */3 * * * *', 'every second, every three minutes'],
+      ['* */15 * * * *', 'every second, every 15 minutes']
+    ]);
+  });
+
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
   // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
   // across the hour). On the clock a pinned minute-0 reads aloud as the whole

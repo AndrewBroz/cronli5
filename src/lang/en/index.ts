@@ -203,6 +203,19 @@ function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
       clockTimesOf(ir, plan.rest, opts);
   }
 
+  // A wildcard second under a */2 minute step with a wildcard hour binds
+  // idiomatically as "every second of every other minute": "every other" is
+  // the natural English for an interval of 2, and "of" joins the two without
+  // the ambiguity of a comma, which reads as two independent cadences.
+  // Scoped to */2 only; other step sizes keep the comma form.
+  if (ir.shapes.second === 'wildcard' &&
+      plan.rest.kind === 'minuteFrequency' &&
+      plan.rest.hours.kind === 'none' &&
+      ir.pattern.minute === '*/2') {
+    return 'every second of every other minute' +
+      trailingQualifier(ir, opts);
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
 }
 
