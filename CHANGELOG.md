@@ -6,6 +6,34 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.3]
+
+### Changed
+
+- **Full-span ranges now read as no restriction**, matching their `*` form. A
+  plain range covering an entire field imposes no restriction, so `0 0 * * 0-6`
+  reads "every day at midnight" (was "every Sunday through Saturday at
+  midnight"), `0-59` is "every minute", `0 0-23 * * *` "every hour",
+  `1-31`/`1-12` add nothing, and every seven-day weekday range (`0-6`, `1-7`,
+  `0-7`, `SUN-SAT`) collapses to every day. A step whose range covers the field
+  does the same: `0-59/2` reads "every two minutes" instead of listing 30 fires,
+  `0-23/2` "every two hours". Partial ranges and steps (`9-17`, `9-17/2`,
+  `MON-FRI`) and the year field are unchanged. All languages.
+- **Chinese now composes the clock time in second-level patterns.**
+  `* 2 0 * * *` read "在凌晨0点，每小时2分，每秒" — three floating clauses, with the
+  minute mis-stated as "minute 2 of every hour" and the hour split off — and now
+  reads "每天0点2分每秒". The other languages already composed these; Chinese
+  reused its list path for single-minute patterns instead of the clock time the
+  core had already assembled.
+
+### Fixed
+
+- **English** no longer doubles the period when a sentence ends in an
+  abbreviation: `0 9 * * *` reads "Runs every day at 9 a.m." (was "…9 a.m..").
+  The terminator guard German gained in 0.1.2 now covers English's `a.m.`/`p.m.`.
+- The **CLI reports an unknown option clearly**: `--land` (a typo for `--lang`)
+  now reports "Unknown option: --land" instead of mis-blaming the minute field.
+
 ## [0.1.2]
 
 ### Changed
