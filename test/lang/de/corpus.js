@@ -74,6 +74,12 @@ describe('Deutsch (de):', function() {
   describe('Stundenfenster', function() {
     run([
       ['0 9-17 * * *', 'stündlich von 9 bis 17 Uhr'],
+      // A single hour with a wildcard minute is the whole hour: it reads as
+      // that hour ("der 9-Uhr-Stunde"), not a synthesized "von 9:00 bis 9:59"
+      // range. An hour RANGE keeps its window.
+      ['* 9 * * *', 'jede Minute der 9-Uhr-Stunde'],
+      ['* 0 * * *', 'jede Minute der Mitternachtsstunde'],
+      ['* 12 * * *', 'jede Minute der Mittagsstunde'],
       ['* 9-17 * * *', 'jede Minute von 9 bis 17:59 Uhr'],
       ['*/15 9-17 * * *', 'alle 15 Minuten von 9 bis 17:45 Uhr'],
       ['*/30 9-17 * * *', 'alle 30 Minuten von 9 bis 17:30 Uhr']
@@ -269,12 +275,12 @@ describe('Deutsch (de):', function() {
         'jede Sekunde, um 9, 10, 11, 12, 13, 14, 15, 16 und 17 Uhr'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "jede Sekunde"). Fuzzer-found.
-      ['* * 9 * * *', 'jede Sekunde, jede Minute von 9:00 bis 9:59 Uhr'],
+      ['* * 9 * * *', 'jede Sekunde, jede Minute der 9-Uhr-Stunde'],
       ['*/15 * 9-17 * * *',
         'alle 15 Sekunden, jede Minute von 9 bis 17:59 Uhr'],
       ['0-30 * 9 * * *',
         'in den Sekunden 0 bis 30 jeder Minute, ' +
-        'jede Minute von 9:00 bis 9:59 Uhr'],
+        'jede Minute der 9-Uhr-Stunde'],
       // during-hours given as segments (a range must not collapse to its
       // start), found by the fuzzer.
       ['*/15 9-20,22 * * *',

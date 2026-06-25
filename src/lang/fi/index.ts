@@ -534,12 +534,20 @@ function renderMinuteFrequency(
   return phrase + trailingQualifier(ir, opts);
 }
 
-// "joka minuutti klo 9.00–9.59".
+// "joka minuutti klo 9.00–9.59". A wildcard minute is the whole hour, so it
+// reads as that hour itself ("joka minuutti kello 9 aikana") rather than a
+// synthesized "klo 9.00–9.59" range the source never stated; a plain range is
+// a real window and keeps the dash form.
 function renderMinuteSpanInHour(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
   opts: NormalizedOptions
 ): string {
+  if (ir.pattern.minute === '*') {
+    return 'joka minuutti kello ' + plan.hour + ' aikana' +
+      trailingQualifier(ir, opts);
+  }
+
   return 'joka minuutti ' +
     kloRange({hour: plan.hour, minute: plan.span[0]},
       {hour: plan.hour, minute: plan.span[1]}, opts) +

@@ -445,12 +445,21 @@ function renderMinuteFrequency(
   return phrase + trailingQualifier(ir, opts);
 }
 
-// "cada minuto de las 9:00 a las 9:29 de la mañana".
+// "cada minuto de las 9:00 a las 9:29 de la mañana". A wildcard minute is the
+// whole hour, so it reads as that hour itself ("cada minuto de la hora de las
+// 09:00") rather than a synthesized "de las HH:00 a las HH:59" range the
+// source never stated; a plain range is a real window and keeps "de … a …".
 function renderMinuteSpanInHour(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
   opts: Opts
 ): string {
+  if (ir.pattern.minute === '*') {
+    return 'cada minuto de la hora ' +
+      fromTime(timePhrase(plan.hour, 0, null, opts)) +
+      trailingQualifier(ir, opts);
+  }
+
   return 'cada minuto ' +
     timeRange({hour: plan.hour, minute: plan.span[0]},
       {hour: plan.hour, minute: plan.span[1]}, opts) +

@@ -63,7 +63,13 @@ describe('Español (es):', function() {
       ['0 22-2 * * *', 'cada hora de las 22:00 a las 02:00'],
       ['0 9-20,22 * * *',
         'cada hora de las 09:00 a las 20:00 y también a las 22:00'],
-      ['* 1 * * *', 'cada minuto de la 01:00 a la 01:59']
+      // A single hour with a wildcard minute is the whole hour: it reads as
+      // that hour ("la hora de las 09:00"), not a synthesized "de las HH:00 a
+      // las HH:59" range the source never stated.
+      ['* 9 * * *', 'cada minuto de la hora de las 09:00'],
+      ['* 0 * * *', 'cada minuto de la hora de las 00:00'],
+      ['* 12 * * *', 'cada minuto de la hora de las 12:00'],
+      ['* 1 * * *', 'cada minuto de la hora de la 01:00']
     ]);
   });
 
@@ -215,7 +221,7 @@ describe('Español (es):', function() {
     run([
       ['*/15 9-17 * * *',
         'cada 15 minutos de las 9 de la mañana a las 5:45 de la tarde'],
-      ['* 9 * * *', 'cada minuto de las 9 a las 9:59 de la mañana'],
+      ['* 9 * * *', 'cada minuto de la hora de las 9 de la mañana'],
       ['0 9-17 * * *',
         'cada hora de las 9 de la mañana a las 5 de la tarde'],
       ['30 9-17 * * *',
@@ -362,13 +368,13 @@ describe('Español (es):', function() {
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "cada segundo"). Fuzzer-found.
       ['* * 9 * * *',
-        'cada segundo, cada minuto de las 9 a las 9:59 de la mañana'],
+        'cada segundo, cada minuto de la hora de las 9 de la mañana'],
       ['*/15 * 9-17 * * *',
         'cada 15 segundos, cada minuto de las 9 de la mañana ' +
         'a las 5:59 de la tarde'],
       ['0-30 * 9 * * *',
         'cada segundo del 0 al 30 de cada minuto, ' +
-        'cada minuto de las 9 a las 9:59 de la mañana']
+        'cada minuto de la hora de las 9 de la mañana']
     ], ampm);
   });
 

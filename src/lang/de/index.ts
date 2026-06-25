@@ -495,12 +495,33 @@ function renderSecondsWithinMinute(
     ' jeder Stunde';
 }
 
-// A minute span inside one hour: "jede Minute von 9:00 bis 9:30 Uhr".
+// The whole-hour noun in the genitive: "der Mitternachtsstunde" (0), "der
+// Mittagsstunde" (12), or "der <H>-Uhr-Stunde" for any other hour.
+function wholeHour(hour: number): string {
+  if (hour === 0) {
+    return 'der Mitternachtsstunde';
+  }
+
+  if (hour === 12) {
+    return 'der Mittagsstunde';
+  }
+
+  return 'der ' + hour + '-Uhr-Stunde';
+}
+
+// A minute span inside one hour: "jede Minute von 9:00 bis 9:30 Uhr". A
+// wildcard minute is the whole hour, so it reads as that hour itself ("jede
+// Minute der 9-Uhr-Stunde") rather than a synthesized "von 9:00 bis 9:59"
+// range the source never stated; a plain range is a real window and keeps it.
 function renderMinuteSpanInHour(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
   opts: Opts
 ): string {
+  if (ir.pattern.minute === '*') {
+    return 'jede Minute ' + wholeHour(plan.hour);
+  }
+
   const sep = opts.style.sep;
 
   return 'jede Minute von ' + spanTime(plan.hour, plan.span[0], sep) +

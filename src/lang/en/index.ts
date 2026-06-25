@@ -273,9 +273,18 @@ function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
 }
 
 // A minute wildcard or plain range under a single specific hour fires
-// every minute within a window inside that hour.
+// every minute within a window inside that hour. A wildcard minute is the
+// whole hour, so it reads as that hour itself ("every minute of the 9 a.m.
+// hour") rather than a synthesized "from H:00 through H:59" range the source
+// never stated; a plain range is a real window and keeps "from … through …".
 function renderMinuteSpanInHour(ir: IR, plan: PlanOf<'minuteSpanInHour'>,
   opts: NormalizedOptions): string {
+  if (ir.pattern.minute === '*') {
+    return 'every minute of the ' +
+      getTime({hour: plan.hour, minute: 0}, opts) + ' hour' +
+      trailingQualifier(ir, opts);
+  }
+
   return 'every minute from ' +
     getTime({hour: plan.hour, minute: plan.span[0]}, opts) +
     through(opts) + getTime({hour: plan.hour, minute: plan.span[1]}, opts) +

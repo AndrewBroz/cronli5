@@ -59,9 +59,9 @@ describe('Seconds composed with the rest of the pattern:', function() {
   describe('wildcard minute under a restricted hour', function() {
     run([
       ['* * 9 * * *',
-        'every second, every minute from 9 a.m. through 9:59 a.m.'],
+        'every second, every minute of the 9 a.m. hour'],
       ['* * 9 1 * *',
-        'every second, every minute from 9 a.m. through 9:59 a.m. ' +
+        'every second, every minute of the 9 a.m. hour ' +
         'on the 1st'],
       ['* * 9-17 * * *',
         'every second, every minute from 9 a.m. through 5:59 p.m.'],
@@ -70,10 +70,10 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['* * */2 * * *', 'every second, every minute during every other hour'],
       ['5 * 9 * * *',
         'at five seconds past the minute, ' +
-        'every minute from 9 a.m. through 9:59 a.m.'],
+        'every minute of the 9 a.m. hour'],
       ['0-30 * 9 * * *',
         'every second from 0 through 30 past the minute, ' +
-        'every minute from 9 a.m. through 9:59 a.m.'],
+        'every minute of the 9 a.m. hour'],
       ['*/15 * 9-17 * * *',
         'every 15 seconds, every minute from 9 a.m. through 5:59 p.m.']
     ]);

@@ -39,7 +39,7 @@ describe('Short option:', function() {
       ['0-30,45 9 * * *',
         'at 0-30 and 45 minutes past the hour, at 9 a.m.', options],
       ['*/15 9-17 * * *', 'every 15 minutes from 9 a.m.-5:45 p.m.', options],
-      ['* 9 * * *', 'every minute from 9 a.m.-9:59 a.m.', options],
+      ['* 9 * * *', 'every minute of the 9 a.m. hour', options],
       ['30 9-20,22 * * *',
         'at 30 minutes past the hour from 9 a.m.-8:30 p.m. and at 10:30 p.m.', options]
     ]);

@@ -85,7 +85,7 @@ describe('Input normalization:', function() {
       // A step whose interval overshoots the field before a second fire
       // enumerates only its start, so `1/24` is `1` and `*/24` is `0`.
       ['*/15 1/24 * * *', 'every 15 minutes from 1 a.m. through 1:45 a.m.'],
-      ['* */24 * * *', 'every minute from midnight through 12:59 a.m.'],
+      ['* */24 * * *', 'every minute of the midnight hour'],
       ['0 */24 * * *', 'every day at midnight'],
       ['0 1/24 * * *', 'every day at 1 a.m.'],
       ['*/60 * * * *', 'every hour'],

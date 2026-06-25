@@ -37,8 +37,8 @@ describe('Español (es) — pares mínimos:', function() {
     reads12('0 14 * * *', 'todos los días a las 2 de la tarde');
   });
 
-  describe('rango que empieza a la 1 conserva el artículo', function() {
-    reads('* 1 * * *', 'cada minuto de la 01:00 a la 01:59');
+  describe('la hora completa conserva el artículo singular de la 1', function() {
+    reads('* 1 * * *', 'cada minuto de la hora de la 01:00');
   });
 
   describe('plural de los días: -s invariable, sábado/domingo en -s', function() {
