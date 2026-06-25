@@ -69,8 +69,10 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
   const segments = stringValue.split(',').map(function canonical(segment) {
     return collapseFullSpanRange(
       enumerateNonUniformStep(
-        collapseDegenerateRange(
-          collapseOnceStep(collapseUnitStep(segment, spec), spec), spec),
+        collapseFullSpanStep(
+          collapseDegenerateRange(
+            collapseOnceStep(collapseUnitStep(segment, spec), spec), spec),
+          spec),
         spec, cycle), spec);
   }).join(',').split(',');
 
@@ -162,6 +164,22 @@ function enumerateNonUniformStep(
   }
 
   return fires.join(',');
+}
+
+// A step whose range part covers the whole field (`0-59/2`, `0-23/2`) strides
+// across the entire cycle, so the bound adds nothing — it reads as the
+// unbounded `*/N` step (which the cycle test then renders as "every N" or its
+// fires). Partial-range steps (`9-17/2`) keep their window.
+function collapseFullSpanStep(segment: string, spec: FieldSpec): string {
+  const parts = segment.split('/');
+
+  if (parts.length !== 2 || !includes(parts[0], '-')) {
+    return segment;
+  }
+
+  return collapseFullSpanRange(parts[0], spec) === '*' ?
+    '*/' + parts[1] :
+    segment;
 }
 
 // A plain range whose enumerated values cover the whole field imposes no

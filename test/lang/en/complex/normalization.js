@@ -70,7 +70,13 @@ describe('Input normalization:', function() {
       ['0 0 * * 1-7', 'every day at midnight'],
       ['0 0 * * 0-7', 'every day at midnight'],
       ['0 0 * * SUN-SAT', 'every day at midnight'],
-      ['0-59 * * * * *', 'every second']
+      ['0-59 * * * * *', 'every second'],
+      // A step whose range covers the whole field reads as the unbounded `*/N`.
+      ['0-59/2 * * * *', 'every two minutes'],
+      ['0 0-23/2 * * *', 'every two hours'],
+      ['0-59/7 * * * *',
+        'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour'],
+      ['0 9-17/2 * * *', 'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
     ]);
   });
 
