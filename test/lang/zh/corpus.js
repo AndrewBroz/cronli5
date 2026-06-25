@@ -62,6 +62,12 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // would drop the start (5/6 fires at :05,:11,… not :00,:06,…).
       ['5/6 * * * *', '每小时5、11、17、23、29、35、41、47、53、59分'],
       ['11/12 * * * *', '每小时11、23、35、47、59分'],
+      // An offset step keeps its start in every context: an hour step under a
+      // minute frequency, a minute step composed with seconds, a minute range
+      // across an hour step — never the bare "每N小时"/"每N分钟" that drops it.
+      ['*/15 2/6 * * *', '在2点、8点、14点和20点，每15分钟'],
+      ['* 5/15 0 * * *', '在凌晨0点，每小时5、20、35、50分，每秒'],
+      ['0-30 2/6 * * *', '2点、8点、14点和20点，每小时0至30分，每分钟'],
       ['0 * * * * *', '每分钟'],
       ['0 * */2 * * *', '每2小时内，每分钟'],
       ['0 * 0 * * *', '在凌晨0点至0点59分之间，每分钟'],

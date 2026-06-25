@@ -226,7 +226,13 @@ function renderMinuteFrequency(ir: IR, plan: PlanNode): string {
   const {hours} = plan as Extract<PlanNode, {kind: 'minuteFrequency'}>;
 
   if (hours.kind === 'step') {
-    return cadence(stepSegment(ir, 'hour').interval, UNITS.hour) + base;
+    const hourStep = stepSegment(ir, 'hour');
+
+    // "每N小时" is only faithful from midnight; an offset step (2/6 fires at
+    // 2,8,14,20) enumerates its hours instead.
+    return hourStep.startToken === '*' ?
+      cadence(hourStep.interval, UNITS.hour) + base :
+      '在' + hourList(ir) + '，' + base;
   }
 
   if (hours.kind === 'single' ||
@@ -271,15 +277,25 @@ function renderMinutesAcrossHours(ir: IR, plan: PlanNode): string {
 // A minute clause across a stepped hour field. A wildcard minute reads "每2小时
 // 内，每分钟"; a ranged minute names it: "每2小时，每小时0至30分，每分钟".
 function renderMinuteSpanAcrossHourStep(ir: IR, plan: PlanNode): string {
-  const cad = cadence(stepSegment(ir, 'hour').interval, UNITS.hour);
+  const hourStep = stepSegment(ir, 'hour');
   const {form} = plan as Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>;
+  const minuteTail = form === 'wildcard' ?
+    '每分钟' :
+    '每小时' + valueList(fieldSegments(ir, 'minute'), '分') + '，每分钟';
 
-  if (form === 'wildcard') {
-    return cad + '内，每分钟';
+  // An offset stride (2/6 fires at 2,8,14,20) enumerates its hours like a
+  // discrete list; "每N小时" is faithful only from midnight.
+  if (hourStep.startToken !== '*') {
+    return form === 'wildcard' ?
+      '在' + hourList(ir) + '，' + minuteTail :
+      hourList(ir) + '，' + minuteTail;
   }
 
-  return cad + '，每小时' + valueList(fieldSegments(ir, 'minute'), '分') +
-    '，每分钟';
+  const cad = cadence(hourStep.interval, UNITS.hour);
+
+  return form === 'wildcard' ?
+    cad + '内，' + minuteTail :
+    cad + '，' + minuteTail;
 }
 
 // Discrete clock times: "9点", "9点和17点".
@@ -493,7 +509,14 @@ function renderComposeSeconds(ir: IR, plan: PlanNode, opts: Opts): string {
     return composeSecondsOnHour(ir, plan, opts);
   }
 
-  if (ir.pattern.minute === '*' || ir.shapes.minute === 'step') {
+  // "每N分钟" is faithful only for a wildcard or top-of-hour step; an offset
+  // step (5/15 fires at :05,:20,…) takes the enumerated list path so its start
+  // is named, never dropped.
+  const minuteCadence = ir.pattern.minute === '*' ||
+    ir.shapes.minute === 'step' &&
+      stepSegment(ir, 'minute').startToken === '*';
+
+  if (minuteCadence) {
     return composeSecondsCadence(ir);
   }
 
