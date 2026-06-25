@@ -217,7 +217,12 @@ function hourFrame(ir: IR): string {
 
 // A repeating minute step, optionally confined to active hours.
 function renderMinuteFrequency(ir: IR, plan: PlanNode): string {
-  const base = cadence(stepSegment(ir, 'minute').interval, UNITS.minute);
+  const minuteStep = stepSegment(ir, 'minute');
+  // A "每N分钟" cadence is only faithful from the top of the hour; an offset
+  // step (5/6 fires at :05,:11,…) enumerates its fires instead.
+  const base = minuteStep.startToken === '*' ?
+    cadence(minuteStep.interval, UNITS.minute) :
+    renderMinutePast(ir);
   const {hours} = plan as Extract<PlanNode, {kind: 'minuteFrequency'}>;
 
   if (hours.kind === 'step') {
