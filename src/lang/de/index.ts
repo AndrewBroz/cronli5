@@ -2,6 +2,8 @@
 // German. Anchored to Duden; see notes.md for the decisions.
 
 import {pad} from '../../core/format.js';
+import {weekdayNumbers} from '../../core/specs.js';
+import {toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
@@ -61,11 +63,6 @@ const weekdayNames = [
   'freitags', 'samstags'
 ];
 
-// Cron weekday tokens (part of cron syntax), mapped to indices.
-const weekdayTokens: {[token: string]: number} = {
-  SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
-};
-
 function fieldSegments(ir: IR, field: Field): Segment[] {
   return ir.analyses.segments[field] as Segment[];
 }
@@ -94,14 +91,9 @@ function joinList(items: string[]): string {
   return items.slice(0, -1).join(', ') + ' und ' + items[items.length - 1];
 }
 
-// The adverbial name for a weekday token (cron name or number; 7 = Sunday).
+// The adverbial name for a canonical weekday number (0 = Sunday).
 function weekdayName(token: NameToken): string {
-  if (token === '7' || token === 7) {
-    return weekdayNames[0];
-  }
-
-  return weekdayNames[token as number] ||
-    weekdayNames[weekdayTokens[token as string]];
+  return weekdayNames[+token];
 }
 
 // "montags bis freitags".
@@ -150,12 +142,10 @@ function everyNthHour(segment: StepSegment): string {
   return start === 0 ? base : base + ' ab ' + start + ' Uhr';
 }
 
+// The Quartz weekday stem (`5L`, `MON#2`) is not number-canonicalized in the
+// core, so it may still be a name token; resolve it via the core's index.
 function weekdayNoun(token: string): string {
-  if (token === '7') {
-    return weekdayNouns[0];
-  }
-
-  return weekdayNouns[token in weekdayTokens ? weekdayTokens[token] : +token];
+  return weekdayNouns[toFieldNumber(token, weekdayNumbers)];
 }
 
 // The Quartz weekday phrase: "am letzten Freitag des Monats", "am zweiten
@@ -193,18 +183,12 @@ function quartzDate(field: string): string | null {
   return null;
 }
 
-// Cron month tokens (part of cron syntax), mapped to indices. The month names
-// themselves are dialect-scoped and resolved from `opts.style.months`.
-const monthTokens: {[token: string]: number} = {
-  JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-  JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
-};
-
 type Months = GermanStyle['months'];
 
+// The month names are dialect-scoped (resolved from `opts.style.months`);
+// the canonical month number indexes them.
 function monthName(token: NameToken, months: Months): string {
-  return (months[token as number] ||
-    months[monthTokens[token as string]]) as string;
+  return months[+token] as string;
 }
 
 // "von Juni bis August".
@@ -511,12 +495,33 @@ function renderSecondsWithinMinute(
     ' jeder Stunde';
 }
 
-// A minute span inside one hour: "jede Minute von 9:00 bis 9:30 Uhr".
+// The whole-hour noun in the genitive: "der Mitternachtsstunde" (0), "der
+// Mittagsstunde" (12), or "der <H>-Uhr-Stunde" for any other hour.
+function wholeHour(hour: number): string {
+  if (hour === 0) {
+    return 'der Mitternachtsstunde';
+  }
+
+  if (hour === 12) {
+    return 'der Mittagsstunde';
+  }
+
+  return 'der ' + hour + '-Uhr-Stunde';
+}
+
+// A minute span inside one hour: "jede Minute von 9:00 bis 9:30 Uhr". A
+// wildcard minute is the whole hour, so it reads as that hour itself ("jede
+// Minute der 9-Uhr-Stunde") rather than a synthesized "von 9:00 bis 9:59"
+// range the source never stated; a plain range is a real window and keeps it.
 function renderMinuteSpanInHour(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
   opts: Opts
 ): string {
+  if (ir.pattern.minute === '*') {
+    return 'jede Minute ' + wholeHour(plan.hour);
+  }
+
   const sep = opts.style.sep;
 
   return 'jede Minute von ' + spanTime(plan.hour, plan.span[0], sep) +
@@ -530,7 +535,45 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
 ): string {
+  // A sub-minute second with the minute pinned to 0 and a specific hour: the
+  // clock-time rest would read "um 9 Uhr", which hides the pinned :00 (and so
+  // the one-minute confinement — 60 fires in :00, not 3,600 across the hour).
+  // Bind the seconds into the explicit clock minute in the genitive ("der
+  // Minute 9:00"); the recurring "täglich"/day frame is added in `describe`.
+  if (composeMinuteZero(ir, plan)) {
+    return secondsLead(ir) + ' ' +
+      clockMinuteGenitive(plan.rest.times, opts.style.sep);
+  }
+
   return secondsLead(ir) + ', ' + render(ir, plan.rest, opts);
+}
+
+// True when a compose-seconds plan is a sub-minute second over a minute-0
+// clock-time rest — the case that reads as the bare hour and so must surface
+// the pinned clock minute.
+function composeMinuteZero(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): plan is Extract<PlanNode, {kind: 'composeSeconds'}> &
+  {rest: Extract<PlanNode, {kind: 'clockTimes'}>} {
+  return plan.rest.kind === 'clockTimes' &&
+    plan.rest.times.every((time) => +time.minute === 0);
+}
+
+// The pinned clock minute in the genitive: "der Minute 9:00" for one hour,
+// "der Minuten 9:00, 10:00 und 17:00" for several — the explicit ":00" so the
+// minute-0 confinement stays visible.
+function clockMinuteGenitive(
+  times: {hour: number; minute: number}[],
+  sep: string
+): string {
+  const clocks = times.map(function clock(time): string {
+    return time.hour + sep + pad(time.minute);
+  });
+
+  return clocks.length === 1 ?
+    'der Minute ' + clocks[0] :
+    'der Minuten ' + joinList(clocks);
 }
 
 // A minute clause across discrete hours: "in den Minuten 0 bis 30, um 9 und
@@ -741,15 +784,31 @@ function qualifier(ir: IR, months: Months): string {
 }
 
 // Plan kinds whose clause is a clock time: the qualifier leads them ("montags
-// um 9 Uhr"); a frequency clause trails it ("jede Minute montags").
+// um 9 Uhr"); a frequency clause trails it ("jede Minute montags"). The
+// minute-0 compose-seconds clause is anchored on a clock minute too, so the
+// qualifier leads it ("montags jede Sekunde der Minute 9:00").
 const LEADING_PLANS = new Set(['clockTimes']);
 
+// True when the leading qualifier should precede the clause: a clock-time
+// plan, or the minute-0 compose-seconds clause that surfaces a clock minute.
+function leadsQualifier(ir: IR): boolean {
+  return LEADING_PLANS.has(ir.plan.kind) || isComposeMinuteZero(ir);
+}
+
+// Whether the planned clause is the minute-0 compose-seconds confinement
+// (a sub-minute second over a minute-0 clock-time rest).
+function isComposeMinuteZero(ir: IR): boolean {
+  return ir.plan.kind === 'composeSeconds' &&
+    composeMinuteZero(ir, ir.plan);
+}
+
 // True when the clause is a bare daily clock-time list and so needs the
-// "täglich" frame to read as recurring, not a one-off: clockTimes always, and
-// an uneven hour step (rendered as its fire list "um 0, 5, … Uhr", not the
-// cadence "alle N Stunden"). A frequency clause already implies recurrence.
+// "täglich" frame to read as recurring, not a one-off: clockTimes always, the
+// minute-0 compose-seconds clause (a recurring clock minute), and an uneven
+// hour step (rendered as its fire list "um 0, 5, … Uhr", not the cadence "alle
+// N Stunden"). A frequency clause already implies recurrence.
 function needsDailyFrame(ir: IR): boolean {
-  if (ir.plan.kind === 'clockTimes') {
+  if (ir.plan.kind === 'clockTimes' || isComposeMinuteZero(ir)) {
     return true;
   }
 
@@ -804,7 +863,7 @@ function describe(ir: IR, opts: Opts): string {
   let base = core;
 
   if (qual) {
-    base = LEADING_PLANS.has(ir.plan.kind) ?
+    base = leadsQualifier(ir) ?
       qual + ' ' + core :
       core + ' ' + qual;
   }

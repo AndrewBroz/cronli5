@@ -6,6 +6,42 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.4]
+
+### Fixed
+
+- **A pinned minute 0 under sub-minute seconds no longer loses its one-minute
+  confinement.** `* 0 0` runs every second of the single minute 00:00 — sixty
+  fires, then nothing until the next midnight — but read "every second … at
+  midnight", which a reader takes for the whole midnight hour (3,600 fires). It
+  now names the bounded minute: English "every second for one minute at
+  midnight", Spanish "cada segundo durante un minuto a medianoche", German "jede
+  Sekunde der Minute 0:00", Finnish "joka sekunti minuutin 0.00 aikana", Chinese
+  "凌晨0点0分的每一秒". Hour lists, ranges, and steps too (`* 0 9-17`, `* 0 */2`).
+  Every non-zero pinned minute under seconds now reads compactly as "every second
+  of 9:05 a.m." / "de las 09:05". All languages.
+- **Chinese keeps the start of an offset step in every context.** An offset step
+  such as `2/6` (hours 2, 8, 14, 20) or `5/15` (minutes :05, :20, …) could render
+  as the bare "每6小时" / "每15分钟" cadence — silently dropping the start — under a
+  minute frequency, composed with seconds, or across an hour step. Each now
+  enumerates its fires.
+
+### Changed
+
+- **A single hour with a wildcard minute reads as that hour, not a synthesized
+  range.** `0 * 9` reads "every minute of the 9 a.m. hour" rather than "every
+  minute from 9 a.m. through 9:59 a.m." — the source has no range. Spanish "cada
+  minuto de la hora de las 09:00", German "jede Minute der 9-Uhr-Stunde", Finnish
+  "joka minuutti kello 9 aikana", Chinese "9点的每一分钟". Genuine hour ranges
+  (`9-17`) and partial-minute single hours (`0-30 9`) are unchanged. All
+  languages.
+- **English `* */2` under seconds** reads "every second of every other minute"
+  (was "every second, every two minutes", which juxtaposed two cadences that read
+  as contradictory).
+- **Chinese idiom polish:** an every-other-hour minute (`0 * */2` → "在偶数小时，
+  每分钟"), single-hour minutes, and a restricted-hour second list ("凌晨0点5、20、
+  35、50分的每一秒" instead of the misleading "每小时…").
+
 ## [0.1.3]
 
 ### Changed

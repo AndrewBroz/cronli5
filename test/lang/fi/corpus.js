@@ -182,7 +182,11 @@ describe('Suomi (fi):', function() {
   describe('yhdistelmät', function() {
     run([
       ['*/15 9-17 * * *', '15 minuutin välein klo 9.00–17.45'],
-      ['* 9 * * *', 'joka minuutti klo 9.00–9.59'],
+      // A single hour with a wildcard minute is the whole hour: it reads as
+      // that hour ("kello 9 aikana"), not a synthesized "klo 9.00–9.59" range.
+      ['* 9 * * *', 'joka minuutti kello 9 aikana'],
+      ['* 0 * * *', 'joka minuutti kello 0 aikana'],
+      ['* 12 * * *', 'joka minuutti kello 12 aikana'],
       ['0 9-17 * * *', 'joka tunti klo 9–17'],
       ['0 22-2 * * *', 'joka tunti klo 22–2'],
       ['30 9-17 * * *', '30 minuutin kohdalla klo 9.30–17.30'],
@@ -260,6 +264,31 @@ describe('Suomi (fi):', function() {
     ]);
   });
 
+  // A sub-minute second with the minute pinned to 0 and a specific hour: the
+  // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
+  // across the hour). The clock minute must stay visible, so the seconds fire
+  // "during" the explicit clock minute ("minuutin 9.00 aikana"), never the
+  // bare hour ("klo 9"). The "of"-style frame, NOT a range — "minuutin
+  // 9.00–9.59" would round-trip back to the whole hour.
+  describe('minuutti kiinnitetty 0:aan tietyn tunnin alla', function() {
+    run([
+      ['* 0 0 * * *', 'joka sekunti minuutin 0.00 aikana, joka päivä'],
+      ['* 0 9 * * *', 'joka sekunti minuutin 9.00 aikana, joka päivä'],
+      ['* 0 12 * * *', 'joka sekunti minuutin 12.00 aikana, joka päivä'],
+      ['* 0 9,11 * * *',
+        'joka sekunti minuuttien 9.00 ja 11.00 aikana, joka päivä'],
+      ['* 0 9-17 * * *',
+        'joka sekunti minuuttien 9.00, 10.00, 11.00, 12.00, 13.00, 14.00, ' +
+        '15.00, 16.00 ja 17.00 aikana, joka päivä'],
+      ['* 0 */2 * * *',
+        'joka sekunti minuuttien 0.00, 2.00, 4.00, 6.00, 8.00, 10.00, ' +
+        '12.00, 14.00, 16.00, 18.00, 20.00 ja 22.00 aikana, joka päivä'],
+      ['* 0 9 * * MON', 'joka sekunti minuutin 9.00 aikana, maanantaisin'],
+      ['*/15 0 9 * * *',
+        '15 sekunnin välein minuutin 9.00 aikana, joka päivä']
+    ]);
+  });
+
   describe('harvinaiset muodot', function() {
     run([
       // Minute step leads its within-firing second anchor (comma separates).
@@ -271,11 +300,15 @@ describe('Suomi (fi):', function() {
       // an hourly idiom ("joka tunti" / "kahden tunnin välein" / a klo 9–17
       // window) that silently drops the :00.
       ['* 0 * * * *', 'joka sekunti, joka tunti 0 minuutin kohdalla'],
+      // A specific hour with the minute pinned to 0: the seconds fire only
+      // during the explicit clock minute ("minuutin 9.00 aikana"), never the
+      // bare hour ("klo 9"), which would hide the :00 confinement.
       ['* 0 9-17 * * *',
-        'joka sekunti, joka päivä klo 9, 10, 11, 12, 13, 14, 15, 16 ja 17'],
+        'joka sekunti minuuttien 9.00, 10.00, 11.00, 12.00, 13.00, 14.00, ' +
+        '15.00, 16.00 ja 17.00 aikana, joka päivä'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "joka sekunti"). Fuzzer-found.
-      ['* * 9 * * *', 'joka sekunti, joka minuutti klo 9.00–9.59'],
+      ['* * 9 * * *', 'joka sekunti, joka minuutti kello 9 aikana'],
       // A wildcard second over a minute-step + hour-list: the hour restriction
       // must survive (it once dropped to "joka tunti"). Fuzzer-found.
       ['* */45 9,17 1 * *',
@@ -294,7 +327,7 @@ describe('Suomi (fi):', function() {
         '30 sekunnin kohdalla kuukauden 1. päivänä'],
       ['*/15 * 9-17 * * *', '15 sekunnin välein, joka minuutti klo 9.00–17.59'],
       ['0-30 * 9 * * *',
-        'joka minuutti 0–30 sekunnin kohdalla, joka minuutti klo 9.00–9.59'],
+        'joka minuutti 0–30 sekunnin kohdalla, joka minuutti kello 9 aikana'],
       // Minute is fixed (0, 30), so the second is not "joka minuutti" — it
       // fires within those minutes (cross-family validated).
       ['5 0,30 * * * *',

@@ -226,7 +226,13 @@ function renderMinuteFrequency(ir: IR, plan: PlanNode): string {
   const {hours} = plan as Extract<PlanNode, {kind: 'minuteFrequency'}>;
 
   if (hours.kind === 'step') {
-    return cadence(stepSegment(ir, 'hour').interval, UNITS.hour) + base;
+    const hourStep = stepSegment(ir, 'hour');
+
+    // "每N小时" is only faithful from midnight; an offset step (2/6 fires at
+    // 2,8,14,20) enumerates its hours instead.
+    return hourStep.startToken === '*' ?
+      cadence(hourStep.interval, UNITS.hour) + base :
+      '在' + hourList(ir) + '，' + base;
   }
 
   if (hours.kind === 'single' ||
@@ -247,9 +253,15 @@ function renderMinuteFrequency(ir: IR, plan: PlanNode): string {
   return base;
 }
 
-// A minute span within a single hour: "在9点至9点58分之间，每分钟".
+// A minute span within a single hour. A wildcard minute reads as that hour
+// itself — "凌晨0点的每一分钟" — not a synthesized "在H点至H点59分之间" range the
+// source never stated; a partial minute span keeps the named range.
 function renderMinuteSpanInHour(ir: IR, plan: PlanNode): string {
   const span = plan as Extract<PlanNode, {kind: 'minuteSpanInHour'}>;
+
+  if (ir.pattern.minute === '*') {
+    return hourWord(span.hour) + '的每一分钟';
+  }
 
   return '在' + hourWord(span.hour) + '至' + span.hour + '点' +
     span.span[1] + '分之间，每分钟';
@@ -271,15 +283,31 @@ function renderMinutesAcrossHours(ir: IR, plan: PlanNode): string {
 // A minute clause across a stepped hour field. A wildcard minute reads "每2小时
 // 内，每分钟"; a ranged minute names it: "每2小时，每小时0至30分，每分钟".
 function renderMinuteSpanAcrossHourStep(ir: IR, plan: PlanNode): string {
-  const cad = cadence(stepSegment(ir, 'hour').interval, UNITS.hour);
+  const hourStep = stepSegment(ir, 'hour');
   const {form} = plan as Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>;
+  const minuteTail = form === 'wildcard' ?
+    '每分钟' :
+    '每小时' + valueList(fieldSegments(ir, 'minute'), '分') + '，每分钟';
 
-  if (form === 'wildcard') {
-    return cad + '内，每分钟';
+  // An offset stride (2/6 fires at 2,8,14,20) enumerates its hours like a
+  // discrete list; "每N小时" is faithful only from midnight.
+  if (hourStep.startToken !== '*') {
+    return form === 'wildcard' ?
+      '在' + hourList(ir) + '，' + minuteTail :
+      hourList(ir) + '，' + minuteTail;
   }
 
-  return cad + '，每小时' + valueList(fieldSegments(ir, 'minute'), '分') +
-    '，每分钟';
+  // A step-2 hour from midnight IS exactly the even hours; name them so, rather
+  // than the vague "每2小时内" that reads as an interval. Other strides keep it.
+  if (hourStep.interval === 2 && form === 'wildcard') {
+    return '在偶数小时，' + minuteTail;
+  }
+
+  const cad = cadence(hourStep.interval, UNITS.hour);
+
+  return form === 'wildcard' ?
+    cad + '内，' + minuteTail :
+    cad + '，' + minuteTail;
 }
 
 // Discrete clock times: "9点", "9点和17点".
@@ -422,11 +450,30 @@ function isHourCadence(ir: IR): boolean {
 function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
   const sec = secondClause(ir);
   const {rest} = plan as Extract<PlanNode, {kind: 'composeSeconds'}>;
+
+  // The minute is pinned to 0 under a specific hour: a bare clock word ("9点")
+  // would hide the :00 and leave the second dangling ("…9点每秒"), reading as
+  // the whole hour. Fuse the seconds with the explicit clock minute ("9点0分
+  // 的每一秒"), so the one-minute confinement (60 fires in :00, not 3,600
+  // across the hour) stays visible. The daily frame leads with 每天; a weekday
+  // or date qualifier is added by describe().
+  if ((rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') &&
+    ir.pattern.minute === '0') {
+    const clocks = hourFires(ir).map(function clock(hour): string {
+      return hourWord(hour) + '0分';
+    });
+    const tail = sec === '每秒' ? '的每一秒' : '的' + sec;
+    const core = joinAnd(clocks) + tail;
+
+    return isDaily(ir) ? '每天' + core : core;
+  }
+
   const restText = render(ir, rest, opts);
 
-  if ((rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') &&
-    isDaily(ir)) {
-    return '每天' + restText + sec;
+  if (rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') {
+    if (isDaily(ir)) {
+      return '每天' + restText + sec;
+    }
   }
 
   // A stated minute (e.g. minute 0 under a sub-minute second) takes the same
@@ -466,6 +513,14 @@ function composeSecondsListed(ir: IR): string {
   const sec = secondClause(ir);
   const minutes = '每小时' + valueList(fieldSegments(ir, 'minute'), '分');
 
+  // A single restricted hour with an every-second cadence fuses the clock time
+  // with its minutes — "凌晨0点5、20、35、50分的每一秒" — rather than the "每小时"
+  // that falsely implies every hour. A non-wildcard second keeps the list form.
+  if (ir.shapes.hour === 'single' && sec === '每秒') {
+    return hourWord(hourFires(ir)[0]) +
+      valueList(fieldSegments(ir, 'minute'), '分') + '的每一秒';
+  }
+
   if (ir.shapes.hour === 'wildcard') {
     return minutes + '，' + sec;
   }
@@ -493,7 +548,14 @@ function renderComposeSeconds(ir: IR, plan: PlanNode, opts: Opts): string {
     return composeSecondsOnHour(ir, plan, opts);
   }
 
-  if (ir.pattern.minute === '*' || ir.shapes.minute === 'step') {
+  // "每N分钟" is faithful only for a wildcard or top-of-hour step; an offset
+  // step (5/15 fires at :05,:20,…) takes the enumerated list path so its start
+  // is named, never dropped.
+  const minuteCadence = ir.pattern.minute === '*' ||
+    ir.shapes.minute === 'step' &&
+      stepSegment(ir, 'minute').startToken === '*';
+
+  if (minuteCadence) {
     return composeSecondsCadence(ir);
   }
 

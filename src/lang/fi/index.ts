@@ -10,6 +10,8 @@
 // case-pair construction wherever digits appear.
 
 import {clockDigits, numeral} from '../../core/format.js';
+import {weekdayNumbers} from '../../core/specs.js';
+import {toFieldNumber} from '../../core/util.js';
 import {resolveDialect} from './dialects.js';
 import type {
   ClockTime, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -158,16 +160,6 @@ const monthStems: (string | null)[] = [
   'marras',
   'joulu'
 ];
-
-// Cron token vocabulary (JAN..DEC, SUN..SAT) is part of cron syntax; map
-// it to field numbers.
-const monthTokens: {[token: string]: number} = {
-  JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-  JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
-};
-const weekdayTokens: {[token: string]: number} = {
-  SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
-};
 
 // Unit form tables for the anchored-minute/second constructions.
 // `mark` is the frequency for the "N minuutin kohdalla" ("at the
@@ -349,7 +341,40 @@ function renderComposeSeconds(
       hourClause + trailingQualifier(ir, opts);
   }
 
+  // A sub-minute second with the minute pinned to 0 and a specific hour: the
+  // clock-time rest would read "klo 9", dropping the pinned :00 and so the
+  // one-minute confinement (60 fires in :00, not 3,600 across the hour). Bind
+  // the seconds to the explicit clock minute with the "minuutin HH.00 aikana"
+  // frame (an "of"/during form, never a range) and trail the day qualifier
+  // ("joka sekunti minuutin 9.00 aikana, joka päivä").
+  if (plan.rest.kind === 'clockTimes' &&
+      plan.rest.times.every((time) => +time.minute === 0)) {
+    return composeMinuteZero(ir, plan.rest, opts);
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// The minute-0 confinement: bind the seconds to the explicit clock minute(s)
+// in the "minuutin/minuuttien HH.00 aikana" frame (an "of"/during form, never
+// a range — a range would round-trip back to the whole hour) and trail the day
+// qualifier ("joka sekunti minuutin 9.00 aikana, joka päivä").
+function composeMinuteZero(
+  ir: IR,
+  rest: Extract<PlanNode, {kind: 'clockTimes'}>,
+  opts: NormalizedOptions
+): string {
+  const clocks = rest.times.map(function clock(time): string {
+    return clockDigits({hour: time.hour, minute: time.minute},
+      {sep: opts.style.sep});
+  });
+  const frame = clocks.length === 1 ?
+    'minuutin ' + clocks[0] :
+    'minuuttien ' + joinList(clocks);
+  const dayTrail = leadingQualifier(ir, opts).trimEnd();
+
+  return secondsLeadClause(ir, opts) + ' ' + frame + ' aikana' +
+    (dayTrail ? ', ' + dayTrail : '');
 }
 
 // The leading clause describing a second field relative to the minute.
@@ -542,12 +567,20 @@ function renderMinuteFrequency(
   return phrase + trailingQualifier(ir, opts);
 }
 
-// "joka minuutti klo 9.00–9.59".
+// "joka minuutti klo 9.00–9.59". A wildcard minute is the whole hour, so it
+// reads as that hour itself ("joka minuutti kello 9 aikana") rather than a
+// synthesized "klo 9.00–9.59" range the source never stated; a plain range is
+// a real window and keeps the dash form.
 function renderMinuteSpanInHour(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
   opts: NormalizedOptions
 ): string {
+  if (ir.pattern.minute === '*') {
+    return 'joka minuutti kello ' + plan.hour + ' aikana' +
+      trailingQualifier(ir, opts);
+  }
+
   return 'joka minuutti ' +
     kloRange({hour: plan.hour, minute: plan.span[0]},
       {hour: plan.hour, minute: plan.span[1]}, opts) +
@@ -1339,18 +1372,16 @@ function quartzWeekdayPhrase(weekdayField: string): string | undefined {
   }
 }
 
-// Resolve a weekday token or number to its table index.
+// Resolve a weekday to its table index. Weekday-field segments are already
+// canonical numbers; a Quartz stem (`5L`, `MON#2`) is not, so resolve any
+// name via the core's index (with the Sunday alias 7 folding to 0).
 function weekdayNumber(token: string | number): number {
-  if (token in weekdayTokens) {
-    return weekdayTokens[token];
-  }
-
-  return +token % 7;
+  return toFieldNumber('' + token, weekdayNumbers) % 7;
 }
 
-// Resolve a month token or number to its table index.
+// Resolve a canonical month number to its table index.
 function monthNumber(token: string | number): number {
-  return monthTokens[token] || +token;
+  return +token;
 }
 
 // --- Years. ---

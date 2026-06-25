@@ -9,6 +9,8 @@
 // lists render as per-hour windows).
 
 import {clockDigits, numeral} from '../../core/format.js';
+import {weekdayNumbers} from '../../core/specs.js';
+import {toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -108,16 +110,6 @@ const weekdayNames = [
   'viernes',
   'sábado'
 ];
-
-// Cron token vocabulary (JAN..DEC, SUN..SAT) is part of cron syntax; map
-// it to Spanish names.
-const monthTokens: {[token: string]: number} = {
-  JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-  JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
-};
-const weekdayTokens: {[token: string]: number} = {
-  SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
-};
 
 // Ordinals for Quartz `#` weekday occurrences (1-5).
 const nthWeekdayNames =
@@ -219,6 +211,13 @@ function renderComposeSeconds(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
 ): string {
+  // A wildcard or stepped second with the minute pinned to a single value
+  // across one or more specific hours: the seconds confine to the clock time.
+  if (plan.rest.kind === 'clockTimes' &&
+      (ir.shapes.second === 'wildcard' || ir.shapes.second === 'step')) {
+    return pinnedMinuteSeconds(ir, plan.rest, opts);
+  }
+
   // Seconds list + fixed clock time: nest the seconds into the clock time(s)
   // with genitive "de las HH:MM" instead of "de cada minuto"; the minute is
   // fixed so "de cada minuto" is misleading. Single seconds already fold into
@@ -254,6 +253,33 @@ function renderComposeSeconds(
   }
 
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// A wildcard or stepped second under a single pinned minute and specific
+// hour(s). The clock-time rest folds the minute into the hour, and on the
+// 12-hour clock a pinned minute-0 drops the :00 entirely ("a las 9 de la
+// mañana") — and even "a las 9" reads aloud as the whole hour, hiding the
+// one-minute confinement (60 fires in :00, not 3,600 across the hour). Minute
+// 0 is the one-minute window at the top of each named hour: a duration frame
+// ("durante un minuto a las 9") states the confinement outright, with the hour
+// as a bare hour so it cannot be heard as the whole hour. A non-zero pinned
+// minute is an unambiguous clock time, so the genitive "de las 09:05" form
+// reads it as the minute, never the hour.
+function pinnedMinuteSeconds(
+  ir: IR,
+  rest: Extract<PlanNode, {kind: 'clockTimes'}>,
+  opts: Opts
+): string {
+  const dayTrail = leadingQualifier(ir, opts).trimEnd();
+  const trail = dayTrail ? ', ' + dayTrail : '';
+
+  if (+rest.times[0].minute === 0) {
+    return secondsLeadClause(ir, opts) + ' durante un minuto ' +
+      durationHourList(rest.times, opts) + trail;
+  }
+
+  return secondsLeadClause(ir, opts) + ' de ' +
+    explicitClockList(rest.times, opts) + trail;
 }
 
 // The leading clause describing a second field relative to the minute.
@@ -453,12 +479,21 @@ function renderMinuteFrequency(
   return phrase + trailingQualifier(ir, opts);
 }
 
-// "cada minuto de las 9:00 a las 9:29 de la mañana".
+// "cada minuto de las 9:00 a las 9:29 de la mañana". A wildcard minute is the
+// whole hour, so it reads as that hour itself ("cada minuto de la hora de las
+// 09:00") rather than a synthesized "de las HH:00 a las HH:59" range the
+// source never stated; a plain range is a real window and keeps "de … a …".
 function renderMinuteSpanInHour(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'minuteSpanInHour'}>,
   opts: Opts
 ): string {
+  if (ir.pattern.minute === '*') {
+    return 'cada minuto de la hora ' +
+      fromTime(timePhrase(plan.hour, 0, null, opts)) +
+      trailingQualifier(ir, opts);
+  }
+
   return 'cada minuto ' +
     timeRange({hour: plan.hour, minute: plan.span[0]},
       {hour: plan.hour, minute: plan.span[1]}, opts) +
@@ -687,6 +722,82 @@ function renderClockTimes(
   });
 
   return leadingQualifier(ir, opts) + groupClockTimes(phrases);
+}
+
+// The genitive clock-time list for a minute-0 compose-seconds confinement:
+// each time with its minute forced visible ("las 09:00"), grouped as usual,
+// then reframed from "a …" to the genitive "de …" the caller prepends. So a
+// pinned minute-0 reads "de las 09:00", never the bare hour.
+function explicitClockList(
+  times: {hour: number; minute: number; second?: number | null}[],
+  opts: Opts
+): string {
+  const phrases = times.map(function clock(time) {
+    return atTime(explicitTimePhrase(time.hour, time.minute, opts));
+  });
+  const grouped = groupClockTimes(phrases);
+
+  // Strip the leading "a " so the caller's "de " produces the genitive form.
+  return grouped.startsWith('a ') ? grouped.slice(2) : grouped;
+}
+
+// The bare-hour list for a minute-0 duration confinement, keeping the "a …"
+// frame the caller embeds after "durante un minuto": "a las 9",
+// "a medianoche", "a las 9, 10, 11 y 12". The hour reads as a bare hour
+// (no minutes), since the "durante un minuto" frame already carries the
+// one-minute window — never "las 09:00", which would read as the whole hour.
+function durationHourList(
+  times: {hour: number; minute: number; second?: number | null}[],
+  opts: Opts
+): string {
+  const phrases = times.map(function clock(time) {
+    return atTime(bareHourPhrase(time.hour, opts));
+  });
+
+  return groupClockTimes(phrases);
+}
+
+// A bare hour with its article, no minutes: "las 9" / "la 1" / "mediodía" /
+// "medianoche" on the 24-hour clock, or the 12-hour day-period form
+// ("las 9 de la mañana"). Used by the minute-0 duration frame, where the
+// minute is already stated and the clock minute would only mislead.
+function bareHourPhrase(hour: number, opts: Opts): string {
+  if (opts.ampm) {
+    return timePhrase(hour, 0, null, opts);
+  }
+
+  if (+hour === 0) {
+    return 'medianoche';
+  }
+
+  if (+hour === 12) {
+    return 'mediodía';
+  }
+
+  return (+hour === 1 ? 'la ' : 'las ') + hour;
+}
+
+// A clock time with its minute forced visible and the noon/midnight words
+// suppressed: "las 09:00", "las 9:00 de la mañana", "las 12:00 de la tarde".
+// So a pinned minute-0 confinement always shows its ":00".
+function explicitTimePhrase(hour: number, minute: number, opts: Opts): string {
+  if (!opts.ampm) {
+    const article = +hour === 1 ? 'la ' : 'las ';
+    const suffix = opts.style.hSuffix ? ' h' : '';
+
+    return article +
+      clockDigits({hour, minute, second: 0},
+        {pad: true, sep: opts.style.sep}) + suffix;
+  }
+
+  const display = hour % 12 || 12;
+  const time = (display === 1 ? 'la ' : 'las ') +
+    clockDigits({hour: display, minute, second: 0}, {sep: opts.style.sep});
+  const period = opts.style.meridiem === 'english' ?
+    meridiemMark(hour) :
+    dayPeriod(hour, opts);
+
+  return time + ' ' + period;
 }
 
 // Group a chronological run of "a la(s) …" clock phrases. The 12-hour clock
@@ -1689,16 +1800,13 @@ function numero(n: number, opts: Opts): string | number {
   return numeral(n, numeros, opts);
 }
 
-// A weekday name from a number or a cron token.
+// A weekday name from a canonical number, or from a Quartz stem (`5L`,
+// `MON#2`), which the core does not number-canonicalize: resolve any name
+// via the core's index and fold the Sunday alias 7 to 0.
 function weekdayName(token: NameToken): string {
-  if (token === '7' || token === 7) {
-    return weekdayNames[0];
-  }
+  const number = toFieldNumber('' + token, weekdayNumbers);
 
-  // `token` may be a numeric (string or number) field index or a cron name;
-  // the numeric path indexes the name array, the name path the token map.
-  return weekdayNames[token as number] ||
-    weekdayNames[weekdayTokens[token as string]];
+  return weekdayNames[number === 7 ? 0 : number];
 }
 
 // The plural weekday form: días ending in -s are invariant ("los lunes");
@@ -1709,12 +1817,10 @@ function pluralWeekday(token: NameToken): string {
   return name.endsWith('s') ? name : name + 's';
 }
 
-// A month name from a number or a cron token.
+// A month name from a canonical month number. The name array has a leading
+// null hole for the 1-based index.
 function monthName(token: NameToken): string {
-  // As with weekdays: a numeric index hits the name array, a cron name the
-  // token map. The name array has a leading null hole for the 1-based index.
-  return (monthNames[token as number] ||
-    monthNames[monthTokens[token as string]]) as string;
+  return monthNames[+token] as string;
 }
 
 // Whether a canonical field value is an open step (`*/n` or `a/n`).

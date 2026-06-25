@@ -21,12 +21,15 @@ type StepSegment = Extract<Segment, {kind: 'step'}>;
 
 // A clock-time entry assembled for rendering. Hour/minute/second arrive as
 // numbers or as raw field tokens (a range bound or single value is a
-// string); `plain` suppresses the noon/midnight words.
+// string); `plain` suppresses the noon/midnight words. `explicit` forces the
+// minute to show even when zero ("9:00 a.m.", not "9 a.m.") and suppresses
+// the noon/midnight words, so a pinned minute-0 stays visible.
 interface TimeEntry {
   hour: number | string;
   minute: number | string;
   second?: number | string | null;
   plain?: boolean;
+  explicit?: boolean;
 }
 
 // English number names for the integers zero through ten.
@@ -79,22 +82,6 @@ const weekdayNames: [string, string][] = [
   ['Friday', 'Fri'],
   ['Saturday', 'Sat']
 ];
-
-// Month names by abbreviation.
-const monthAbbreviations: Record<string, [string, string] | null> = {
-  JAN: monthNames[1],
-  FEB: monthNames[2],
-  MAR: monthNames[3],
-  APR: monthNames[4],
-  MAY: monthNames[5],
-  JUN: monthNames[6],
-  JUL: monthNames[7],
-  AUG: monthNames[8],
-  SEP: monthNames[9],
-  OCT: monthNames[10],
-  NOV: monthNames[11],
-  DEC: monthNames[12]
-};
 
 // Weekday name by abbreviation.
 const weekdayAbbreviations: Record<string, [string, string]> = {
@@ -192,7 +179,76 @@ function renderSecondsWithinMinute(ir: IR, plan: PlanOf<'secondsWithinMinute'>,
 // pattern follows.
 function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
   opts: NormalizedOptions): string {
+  // A wildcard or stepped second under a minute pinned to a single value
+  // across one or more specific hours. The clock-time rest collapses the
+  // pinned minute into the hour, and on the clock a pinned minute-0 reads as
+  // the whole hour ("9 a.m." spoken == "9:00 a.m."), losing the one-minute
+  // confinement. (A second list/range/single leads with a "past the minute"
+  // clause that an "of"/duration frame cannot follow, so it stays generic.)
+  if (plan.rest.kind === 'clockTimes' &&
+      (ir.shapes.second === 'wildcard' || ir.shapes.second === 'step')) {
+    const minute = plan.rest.times[0].minute;
+
+    // Minute 0 is the one-minute window at the top of each named hour: a
+    // duration frame ("for one minute at 9 a.m.") states the confinement
+    // outright, with the hour as its word so it cannot be heard as the hour
+    // itself. A non-zero pinned minute is an unambiguous clock time, so the
+    // compact "of 9:05 a.m." form reads it as the minute, never the hour.
+    if (+minute === 0) {
+      return secondsLeadClause(ir, opts) + ' for one minute at ' +
+        durationHours(ir, plan.rest, opts);
+    }
+
+    return secondsLeadClause(ir, opts) + ' of ' +
+      clockTimesOf(ir, plan.rest, opts);
+  }
+
+  // A wildcard second under a */2 minute step with a wildcard hour binds
+  // idiomatically as "every second of every other minute": "every other" is
+  // the natural English for an interval of 2, and "of" joins the two without
+  // the ambiguity of a comma, which reads as two independent cadences.
+  // Scoped to */2 only; other step sizes keep the comma form.
+  if (ir.shapes.second === 'wildcard' &&
+      plan.rest.kind === 'minuteFrequency' &&
+      plan.rest.hours.kind === 'none' &&
+      ir.pattern.minute === '*/2') {
+    return 'every second of every other minute' +
+      trailingQualifier(ir, opts);
+  }
+
   return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+}
+
+// The bare-hour words for a minute-0 duration confinement, joined and followed
+// by the trailing day qualifier: "9 a.m. and 11 a.m., every day", "midnight,
+// 2 a.m., …, every day". The hour reads as its word (noon/midnight included),
+// never "H:00", since the "for one minute" frame already carries the minute.
+function durationHours(ir: IR, plan: PlanOf<'clockTimes'>,
+  opts: NormalizedOptions): string {
+  const hours = plan.times.map(function clock(time) {
+    return getTime({hour: time.hour, minute: 0}, opts);
+  });
+  const trail = dayQualifier(ir, leadingWords, opts);
+
+  return joinList(hours, opts) + (trail && ', ' + trail);
+}
+
+// The clock times for a non-zero pinned-minute compose-seconds rest, joined
+// and followed by the trailing day qualifier: "9:05 a.m. and 11:05 a.m.,
+// every day". The non-zero minute reads as a clock time, never the hour.
+function clockTimesOf(ir: IR, plan: PlanOf<'clockTimes'>,
+  opts: NormalizedOptions): string {
+  const times = plan.times.map(function clock(time) {
+    return getTime({
+      hour: time.hour,
+      minute: time.minute,
+      second: time.second,
+      explicit: true
+    }, opts);
+  });
+  const trail = dayQualifier(ir, leadingWords, opts);
+
+  return joinList(times, opts) + (trail && ', ' + trail);
 }
 
 // The leading clause describing a second field relative to the minute,
@@ -289,9 +345,18 @@ function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
 }
 
 // A minute wildcard or plain range under a single specific hour fires
-// every minute within a window inside that hour.
+// every minute within a window inside that hour. A wildcard minute is the
+// whole hour, so it reads as that hour itself ("every minute of the 9 a.m.
+// hour") rather than a synthesized "from H:00 through H:59" range the source
+// never stated; a plain range is a real window and keeps "from … through …".
 function renderMinuteSpanInHour(ir: IR, plan: PlanOf<'minuteSpanInHour'>,
   opts: NormalizedOptions): string {
+  if (ir.pattern.minute === '*') {
+    return 'every minute of the ' +
+      getTime({hour: plan.hour, minute: 0}, opts) + ' hour' +
+      trailingQualifier(ir, opts);
+  }
+
   return 'every minute from ' +
     getTime({hour: plan.hour, minute: plan.span[0]}, opts) +
     through(opts) + getTime({hour: plan.hour, minute: plan.span[1]}, opts) +
@@ -1169,7 +1234,7 @@ function stepYears(yearField: string, opts: NormalizedOptions): string {
 // "3.45pm" / "9am" / "midday" for UK (Guardian), or "15:45" / "15.45" in
 // 24-hour mode.
 function getTime(time: TimeEntry, opts: NormalizedOptions): string {
-  const {hour, minute, plain} = time;
+  const {hour, minute, plain, explicit} = time;
   // Seconds are only shown when a specific non-zero value is supplied.
   const second = typeof time.second === 'number' && time.second > 0 ?
     time.second :
@@ -1179,12 +1244,13 @@ function getTime(time: TimeEntry, opts: NormalizedOptions): string {
     // Hour/minute arrive as numbers or raw field tokens (a range bound or
     // single value is a string); `clockDigits` types them as numbers but
     // `pad` stringifies either form to the same digits. Cast to keep the
-    // value byte-identical rather than coercing it.
+    // value byte-identical rather than coercing it. The 24-hour form always
+    // shows the minute, so it is already explicit.
     return clockDigits({hour: hour as number, minute: minute as number,
       second}, {pad: true, sep: opts.style.sep});
   }
 
-  return twelveHourTime({hour, minute, second, plain}, opts);
+  return twelveHourTime({hour, minute, second, plain, explicit}, opts);
 }
 
 // The 12-hour form of a clock time: "9:30 a.m.", "9 a.m." on the hour, or
@@ -1193,13 +1259,13 @@ function getTime(time: TimeEntry, opts: NormalizedOptions): string {
 // stays in one number style.
 function twelveHourTime(
   time: {hour: number | string; minute: number | string; second: number;
-    plain?: boolean},
+    plain?: boolean; explicit?: boolean},
   opts: NormalizedOptions
 ): string {
-  const {hour, minute, second, plain} = time;
+  const {hour, minute, second, plain, explicit} = time;
   const style = opts.style;
 
-  if (!plain && +minute === 0 && !second) {
+  if (!plain && !explicit && +minute === 0 && !second) {
     if (+hour === 0) {
       return style.midnight;
     }
@@ -1211,9 +1277,11 @@ function twelveHourTime(
 
   // `hour`/`minute` may be raw field tokens; the arithmetic below coerces
   // them numerically, matching `clockDigits`. Cast for the modulo/compare.
+  // `explicit` keeps the minute (":00") rather than leaning down to the bare
+  // hour, so a pinned minute-0 stays visible.
   const digits = clockDigits(
     {hour: (hour as number) % 12 || 12, minute: minute as number, second},
-    {lean: true, sep: style.sep});
+    {lean: !explicit, sep: style.sep});
 
   return digits + (style.closeUp ? '' : ' ') +
     ((hour as number) < 12 ? style.am : style.pm);
@@ -1255,11 +1323,10 @@ function getOrdinal(n: number | string): string {
   return n + suffix;
 }
 
-// Get English month names from a number or from an abbreviation.
+// Get English month names from a canonical month number (months are never
+// Quartz, so the field is always number-canonicalized by the core).
 function getMonth(m: number | string, opts: NormalizedOptions): string {
-  // `m` is a month number (indexing `monthNames`) or an abbreviation token
-  // (indexing `monthAbbreviations`); the unmatched table yields undefined.
-  const month = monthNames[m as number] || monthAbbreviations[m];
+  const month = monthNames[+m];
 
   // A valid month always resolves to a name pair, so the guarded lookup is
   // a string; the cast keeps the original null-guard expression intact.
