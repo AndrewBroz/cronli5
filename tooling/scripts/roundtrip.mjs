@@ -193,7 +193,70 @@ function tallyRoundtrip(recoveries) {
   };
 }
 
+// The differential substrate: every review pattern rendered in EVERY language,
+// so a blind recovery of each rendering can be cross-checked. A pattern where
+// some languages recover the right schedule and others don't is a per-renderer
+// bug — the agreeing languages are the oracle, so no per-language ground truth
+// is needed. The caller shows ONLY the descriptions to the blind recovery step.
+function prepareDifferential(langs) {
+  return reviewPatterns.map(function each(pattern) {
+    const descriptions = {};
+
+    for (const code of Object.keys(langs)) {
+      descriptions[code] = render(pattern, langs[code]);
+    }
+
+    return {pattern, descriptions};
+  }).filter(function complete(item) {
+    return Object.values(item.descriptions).every(Boolean);
+  });
+}
+
+// Cross-language tally. `recoveries` is [{pattern, recovered: {code: cron}}].
+// `diverge` holds patterns where some languages (`bad`) recovered a schedule
+// disagreeing with the original while others matched — the divergence signal
+// that localizes a per-renderer bug. The cron OR-case is segregated as noise.
+function tallyDifferential(recoveries) {
+  const agree = [];
+  const diverge = [];
+  const orNoise = [];
+  const skipped = [];
+
+  for (const {pattern, recovered} of recoveries) {
+    const original = expandCron(pattern);
+
+    if (original) {
+      const bad = Object.keys(recovered).filter(function wrong(code) {
+        const parsed = recovered[code] ? expandCron(recovered[code]) : null;
+
+        return !(parsed && cronsEqual(original, parsed));
+      });
+
+      if (bad.length === 0) {
+        agree.push(pattern);
+      }
+      else if (bothDays(pattern)) {
+        orNoise.push({pattern, bad});
+      }
+      else {
+        diverge.push({pattern, bad, recovered});
+      }
+    }
+    else {
+      skipped.push(pattern);
+    }
+  }
+
+  return {
+    checked: recoveries.length - skipped.length,
+    agree: agree.length,
+    diverge,
+    orNoise,
+    skipped
+  };
+}
+
 export {
-  bothDays, cronsEqual, expandCron,
-  prepareReview, prepareRoundtrip, tallyRoundtrip
+  bothDays, cronsEqual, expandCron, prepareDifferential, prepareReview,
+  prepareRoundtrip, tallyDifferential, tallyRoundtrip
 };
