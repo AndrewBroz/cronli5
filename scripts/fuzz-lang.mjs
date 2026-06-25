@@ -16,9 +16,10 @@ import cronli5 from '../src/cronli5.js';
 // uneven), folded list, and the Quartz operators.
 const FORMS = {
   second: ['*', '0', '30', '*/15', '0-10', '5,30', '*/45'],
-  minute: ['0', '5', '30', '*/15', '*/45', '*/25', '0-30', '5,10,30', '*'],
-  hour: ['0', '9', '12', '9-17', '9,17', '*/2', '*/5', '9-17/2', '9-20,22',
+  minute: ['0', '5', '30', '*/15', '*/45', '*/25', '5/15', '0-30', '5,10,30',
     '*'],
+  hour: ['0', '9', '12', '9-17', '9,17', '*/2', '*/5', '2/6', '9-17/2',
+    '9-20,22', '*'],
   date: ['1', '15', '31', '1,15', '1-5', 'L', '15W', 'LW', '*'],
   month: ['1', '6', '12', '1,7', '*/3', '6-8', '*'],
   weekday: ['MON', 'FRI', 'MON-FRI', 'SAT,SUN', '5L', 'MON#2', '0', '7', '*']
@@ -85,11 +86,33 @@ function degenerate(output) {
   return doubled ? 'doubled word "' + doubled[1] + '"' : null;
 }
 
-// A salient numeric value that should surface but does not — a dropped field,
-// the clearest "fudge". Membership against the output's integer set handles
-// zero-padding (`0:05` contains 5). Skips steps and Quartz (rendered as
-// cadence/fires/words), months and weekdays (names), and 0 (a word or a
-// dropped :00).
+// The numeric values a field contributes to the "must surface" check. A plain
+// segment contributes its digits; a STEP segment contributes its START fire —
+// an offset like `5/6` fires at :05, so the 5 must surface even when the
+// cadence reads "every six minutes" (this is what catches a dropped step
+// offset). `*/N` (start `*`) and a bounded `A-B/N` add nothing extra; Quartz
+// (L/W/#) adds nothing (rendered as words).
+function fieldValues(field) {
+  return field.split(',').flatMap(function segment(seg) {
+    if ((/[LW#]/).test(seg)) {
+      return [];
+    }
+
+    if (seg.includes('/')) {
+      const start = seg.split('/')[0];
+
+      return (/^\d+$/).test(start) ? [Number(start)] : [];
+    }
+
+    return (seg.match(/\d+/g) || []).map(Number);
+  });
+}
+
+// A salient numeric value that should surface but does not — a dropped field or
+// step offset, the clearest "fudge". Membership against the output's integer
+// set handles zero-padding (`0:05` contains 5). Skips Quartz and `0` (a word or
+// a dropped :00); months/weekdays render as names but normalize to numbers, so
+// only the time fields are checked.
 //
 // This assumes a 24-hour clock and digit numerals (true for de/es/fi). A
 // 12-hour or number-spelling language (en: `17`→`5 p.m.`, `5`→`five`) will
@@ -105,9 +128,8 @@ function missingValue(pattern, output) {
     ['date', fields[offset + 2]]
   ];
   const dropped = checked
-    .filter(([, field]) => field !== '*' && !(/[/LW#]/).test(field))
-    .flatMap(([name, field]) => (field.match(/\d+/g) || [])
-      .map(Number)
+    .filter(([, field]) => field !== '*')
+    .flatMap(([name, field]) => fieldValues(field)
       // 0 (midnight) and an hour 12 (noon) commonly render as a word
       // (Mitternacht / keskipäivällä), so they need not appear as digits.
       .filter((value) => value !== 0 &&
