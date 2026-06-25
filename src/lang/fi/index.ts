@@ -10,6 +10,8 @@
 // case-pair construction wherever digits appear.
 
 import {clockDigits, numeral} from '../../core/format.js';
+import {weekdayNumbers} from '../../core/specs.js';
+import {toFieldNumber} from '../../core/util.js';
 import {resolveDialect} from './dialects.js';
 import type {
   ClockTime, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -158,16 +160,6 @@ const monthStems: (string | null)[] = [
   'marras',
   'joulu'
 ];
-
-// Cron token vocabulary (JAN..DEC, SUN..SAT) is part of cron syntax; map
-// it to field numbers.
-const monthTokens: {[token: string]: number} = {
-  JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-  JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
-};
-const weekdayTokens: {[token: string]: number} = {
-  SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
-};
 
 // Unit form tables for the anchored-minute/second constructions.
 // `mark` is the frequency for the "N minuutin kohdalla" ("at the
@@ -1339,18 +1331,16 @@ function quartzWeekdayPhrase(weekdayField: string): string | undefined {
   }
 }
 
-// Resolve a weekday token or number to its table index.
+// Resolve a weekday to its table index. Weekday-field segments are already
+// canonical numbers; a Quartz stem (`5L`, `MON#2`) is not, so resolve any
+// name via the core's index (with the Sunday alias 7 folding to 0).
 function weekdayNumber(token: string | number): number {
-  if (token in weekdayTokens) {
-    return weekdayTokens[token];
-  }
-
-  return +token % 7;
+  return toFieldNumber('' + token, weekdayNumbers) % 7;
 }
 
-// Resolve a month token or number to its table index.
+// Resolve a canonical month number to its table index.
 function monthNumber(token: string | number): number {
-  return monthTokens[token] || +token;
+  return +token;
 }
 
 // --- Years. ---

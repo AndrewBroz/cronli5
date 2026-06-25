@@ -80,22 +80,6 @@ const weekdayNames: [string, string][] = [
   ['Saturday', 'Sat']
 ];
 
-// Month names by abbreviation.
-const monthAbbreviations: Record<string, [string, string] | null> = {
-  JAN: monthNames[1],
-  FEB: monthNames[2],
-  MAR: monthNames[3],
-  APR: monthNames[4],
-  MAY: monthNames[5],
-  JUN: monthNames[6],
-  JUL: monthNames[7],
-  AUG: monthNames[8],
-  SEP: monthNames[9],
-  OCT: monthNames[10],
-  NOV: monthNames[11],
-  DEC: monthNames[12]
-};
-
 // Weekday name by abbreviation.
 const weekdayAbbreviations: Record<string, [string, string]> = {
   SUN: weekdayNames[0],
@@ -1255,11 +1239,10 @@ function getOrdinal(n: number | string): string {
   return n + suffix;
 }
 
-// Get English month names from a number or from an abbreviation.
+// Get English month names from a canonical month number (months are never
+// Quartz, so the field is always number-canonicalized by the core).
 function getMonth(m: number | string, opts: NormalizedOptions): string {
-  // `m` is a month number (indexing `monthNames`) or an abbreviation token
-  // (indexing `monthAbbreviations`); the unmatched table yields undefined.
-  const month = monthNames[m as number] || monthAbbreviations[m];
+  const month = monthNames[+m];
 
   // A valid month always resolves to a name pair, so the guarded lookup is
   // a string; the cast keeps the original null-guard expression intact.

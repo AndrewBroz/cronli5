@@ -36,8 +36,34 @@ describe('Core analyze:', function() {
         {fires: [6, 9, 12], interval: 3, kind: 'step', startToken: '6'}
       ]);
       expect(analyses.segments.weekday).to.deep.equal([
-        {bounds: ['MON', 'FRI'], kind: 'range'}
+        {bounds: ['1', '5'], kind: 'range'}
       ]);
+    });
+
+    it('canonicalizes name tokens to their numbers in every position',
+      function() {
+        const {analyses, pattern} = ir('0 0 * JAN,MAR-MAY SUN');
+
+        expect(pattern.month).to.equal('1,3-5');
+        expect(pattern.weekday).to.equal('0');
+        expect(analyses.segments.month).to.deep.equal([
+          {kind: 'single', value: '1'},
+          {bounds: ['3', '5'], kind: 'range'}
+        ]);
+        expect(analyses.segments.weekday).to.deep.equal([
+          {kind: 'single', value: '0'}
+        ]);
+      });
+
+    it('folds the Sunday alias 7 to 0', function() {
+      expect(ir('0 0 * * 7').pattern.weekday).to.equal('0');
+    });
+
+    it('a name and its number analyze to a deep-equal IR', function() {
+      expect(ir('0 0 * * MON')).to.deep.equal(ir('0 0 * * 1'));
+      expect(ir('0 0 * * SUN')).to.deep.equal(ir('0 0 * * 7'));
+      expect(ir('0 0 * JAN *')).to.deep.equal(ir('0 0 * 1 *'));
+      expect(ir('0 0 * * MON-FRI')).to.deep.equal(ir('0 0 * * 1-5'));
     });
 
     it('leaves wildcard and Quartz fields unsegmented', function() {

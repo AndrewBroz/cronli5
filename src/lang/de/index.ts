@@ -2,6 +2,8 @@
 // German. Anchored to Duden; see notes.md for the decisions.
 
 import {pad} from '../../core/format.js';
+import {weekdayNumbers} from '../../core/specs.js';
+import {toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
@@ -61,11 +63,6 @@ const weekdayNames = [
   'freitags', 'samstags'
 ];
 
-// Cron weekday tokens (part of cron syntax), mapped to indices.
-const weekdayTokens: {[token: string]: number} = {
-  SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
-};
-
 function fieldSegments(ir: IR, field: Field): Segment[] {
   return ir.analyses.segments[field] as Segment[];
 }
@@ -94,14 +91,9 @@ function joinList(items: string[]): string {
   return items.slice(0, -1).join(', ') + ' und ' + items[items.length - 1];
 }
 
-// The adverbial name for a weekday token (cron name or number; 7 = Sunday).
+// The adverbial name for a canonical weekday number (0 = Sunday).
 function weekdayName(token: NameToken): string {
-  if (token === '7' || token === 7) {
-    return weekdayNames[0];
-  }
-
-  return weekdayNames[token as number] ||
-    weekdayNames[weekdayTokens[token as string]];
+  return weekdayNames[+token];
 }
 
 // "montags bis freitags".
@@ -150,12 +142,10 @@ function everyNthHour(segment: StepSegment): string {
   return start === 0 ? base : base + ' ab ' + start + ' Uhr';
 }
 
+// The Quartz weekday stem (`5L`, `MON#2`) is not number-canonicalized in the
+// core, so it may still be a name token; resolve it via the core's index.
 function weekdayNoun(token: string): string {
-  if (token === '7') {
-    return weekdayNouns[0];
-  }
-
-  return weekdayNouns[token in weekdayTokens ? weekdayTokens[token] : +token];
+  return weekdayNouns[toFieldNumber(token, weekdayNumbers)];
 }
 
 // The Quartz weekday phrase: "am letzten Freitag des Monats", "am zweiten
@@ -193,18 +183,12 @@ function quartzDate(field: string): string | null {
   return null;
 }
 
-// Cron month tokens (part of cron syntax), mapped to indices. The month names
-// themselves are dialect-scoped and resolved from `opts.style.months`.
-const monthTokens: {[token: string]: number} = {
-  JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-  JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
-};
-
 type Months = GermanStyle['months'];
 
+// The month names are dialect-scoped (resolved from `opts.style.months`);
+// the canonical month number indexes them.
 function monthName(token: NameToken, months: Months): string {
-  return (months[token as number] ||
-    months[monthTokens[token as string]]) as string;
+  return months[+token] as string;
 }
 
 // "von Juni bis August".

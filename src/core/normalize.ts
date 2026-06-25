@@ -67,13 +67,13 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
 
   const cycle = timeFieldCycle[field];
   const segments = stringValue.split(',').map(function canonical(segment) {
-    return collapseFullSpanRange(
+    return canonicalizeTokens(collapseFullSpanRange(
       enumerateNonUniformStep(
         collapseFullSpanStep(
           collapseDegenerateRange(
             collapseOnceStep(collapseUnitStep(segment, spec), spec), spec),
           spec),
-        spec, cycle), spec);
+        spec, cycle), spec), spec);
   }).join(',').split(',');
 
   // A full-cycle segment covers the whole field.
@@ -84,6 +84,40 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
   return unique(segments).sort(function ascending(a, b) {
     return firstFire(a, spec) - firstFire(b, spec);
   }).join(',');
+}
+
+// Rewrite a segment's value tokens to their canonical numbers: a name
+// (`MON`, `JAN`) becomes its index, and a weekday `7` (Sunday again, above
+// `top`) folds to the field minimum (`0`). Applied to every token position —
+// a single, both range bounds, and a step's start — so a normalized field
+// never carries a surface name or the 7-for-Sunday alias. `*` and Quartz
+// tokens (resolved earlier) are left untouched. Output is unchanged: a
+// renderer maps the number back to its own name.
+function canonicalizeTokens(segment: string, spec: FieldSpec): string {
+  // Only the named fields (month, weekday) carry name tokens or the
+  // weekday `7`-for-Sunday alias; every other field is already numeric.
+  if (!spec.numbers) {
+    return segment;
+  }
+
+  const parts = segment.split('/');
+  const start = parts[0].split('-').map(function fold(token) {
+    return canonicalizeToken(token, spec);
+  }).join('-');
+
+  return parts.length === 2 ? start + '/' + parts[1] : start;
+}
+
+// A single token to its canonical number string (`*` passes through).
+function canonicalizeToken(token: string, spec: FieldSpec): string {
+  if (token === '*') {
+    return token;
+  }
+
+  const number = toFieldNumber(token, spec.numbers);
+
+  // A value above `top` (weekday 7) is the field minimum again.
+  return '' + (number > (spec.top as number) ? spec.min : number);
 }
 
 // An interval-one step enumerates every value from its start, so it reads

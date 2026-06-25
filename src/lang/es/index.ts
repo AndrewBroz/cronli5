@@ -9,6 +9,8 @@
 // lists render as per-hour windows).
 
 import {clockDigits, numeral} from '../../core/format.js';
+import {weekdayNumbers} from '../../core/specs.js';
+import {toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -108,16 +110,6 @@ const weekdayNames = [
   'viernes',
   'sábado'
 ];
-
-// Cron token vocabulary (JAN..DEC, SUN..SAT) is part of cron syntax; map
-// it to Spanish names.
-const monthTokens: {[token: string]: number} = {
-  JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-  JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12
-};
-const weekdayTokens: {[token: string]: number} = {
-  SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
-};
 
 // Ordinals for Quartz `#` weekday occurrences (1-5).
 const nthWeekdayNames =
@@ -1689,16 +1681,13 @@ function numero(n: number, opts: Opts): string | number {
   return numeral(n, numeros, opts);
 }
 
-// A weekday name from a number or a cron token.
+// A weekday name from a canonical number, or from a Quartz stem (`5L`,
+// `MON#2`), which the core does not number-canonicalize: resolve any name
+// via the core's index and fold the Sunday alias 7 to 0.
 function weekdayName(token: NameToken): string {
-  if (token === '7' || token === 7) {
-    return weekdayNames[0];
-  }
+  const number = toFieldNumber('' + token, weekdayNumbers);
 
-  // `token` may be a numeric (string or number) field index or a cron name;
-  // the numeric path indexes the name array, the name path the token map.
-  return weekdayNames[token as number] ||
-    weekdayNames[weekdayTokens[token as string]];
+  return weekdayNames[number === 7 ? 0 : number];
 }
 
 // The plural weekday form: días ending in -s are invariant ("los lunes");
@@ -1709,12 +1698,10 @@ function pluralWeekday(token: NameToken): string {
   return name.endsWith('s') ? name : name + 's';
 }
 
-// A month name from a number or a cron token.
+// A month name from a canonical month number. The name array has a leading
+// null hole for the 1-based index.
 function monthName(token: NameToken): string {
-  // As with weekdays: a numeric index hits the name array, a cron name the
-  // token map. The name array has a leading null hole for the 1-based index.
-  return (monthNames[token as number] ||
-    monthNames[monthTokens[token as string]]) as string;
+  return monthNames[+token] as string;
 }
 
 // Whether a canonical field value is an open step (`*/n` or `a/n`).
