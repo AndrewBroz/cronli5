@@ -6,6 +6,33 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.2]
+
+### Changed
+
+- **Non-uniform steps in the time fields now list their fires** instead of
+  reading "every N". A step is a true "every N" cadence only when it tiles the
+  field's cycle evenly — `step` divides the cycle (60 for minutes/seconds, 24 for
+  hours) **and** `start < step`; otherwise the gap at the field boundary differs.
+  `*/7 * * * *` fires at :00, :07, …, :56 — the :56→:00 gap is 4 minutes, not 7 —
+  so it now reads "at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour"
+  rather than "every seven minutes". `7/6` and `11/6` (the step divides 60 but
+  starts past it) enumerate too. Genuine "every N" steps (`*/6`, `*/15`, `5/6`,
+  `11/12`, `*/2` hours) are unchanged. German already rendered these; English,
+  Spanish, Finnish, and Chinese now match. Date/month/weekday steps are unchanged
+  (their cycles vary — a separate follow-up).
+- **Chinese no longer drops the start of an offset step.** `5/6` had rendered as
+  "每6分钟" — identical to `*/6`, the wrong schedule — and now enumerates its
+  fires ("每小时5、11、…、59分"), matching how Chinese already rendered offset
+  second and hour steps.
+
+### Fixed
+
+- **German** no longer doubles the period when a sentence ends in an ordinal
+  ("…am 3., 5. und 8." instead of "…8.."), and an hour list no longer takes
+  "von" ("in den Stunden 9, 11 und 13 Uhr", not "von 9, 11 und 13 Uhr"; genuine
+  "von … bis" ranges are unchanged).
+
 ## [0.1.1]
 
 ### Fixed
