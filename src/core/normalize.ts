@@ -67,10 +67,11 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
 
   const cycle = timeFieldCycle[field];
   const segments = stringValue.split(',').map(function canonical(segment) {
-    return enumerateNonUniformStep(
-      collapseDegenerateRange(
-        collapseOnceStep(collapseUnitStep(segment, spec), spec), spec),
-      spec, cycle);
+    return collapseFullSpanRange(
+      enumerateNonUniformStep(
+        collapseDegenerateRange(
+          collapseOnceStep(collapseUnitStep(segment, spec), spec), spec),
+        spec, cycle), spec);
   }).join(',').split(',');
 
   // A full-cycle segment covers the whole field.
@@ -161,6 +162,43 @@ function enumerateNonUniformStep(
   }
 
   return fires.join(',');
+}
+
+// A plain range whose enumerated values cover the whole field imposes no
+// restriction, so it reads identically to `*` (`0-59` minute, `0-23` hour,
+// `1-31` date, `1-12` month, and every seven-day weekday range — `0-6`,
+// `1-7`, `0-7`, `SUN-SAT` — since cron's 7 is Sunday again, folding to the
+// field minimum). Only bare ranges qualify: a step (`0-59/2`) keeps its
+// cadence, so segments carrying a `/` are left untouched.
+function collapseFullSpanRange(segment: string, spec: FieldSpec): string {
+  if (typeof spec.top !== 'number' || includes(segment, '/') ||
+      !includes(segment, '-')) {
+    return segment;
+  }
+
+  const bounds = segment.split('-');
+  const low = toFieldNumber(bounds[0], spec.numbers);
+  const high = toFieldNumber(bounds[1], spec.numbers);
+
+  if (low > high) {
+    return segment;
+  }
+
+  // The full field is min..top; a value above top (weekday 7) folds to min.
+  const top = spec.top as number;
+  const fired: Record<number, boolean> = {};
+
+  for (let value = low; value <= high; value += 1) {
+    fired[value > top ? spec.min : value] = true;
+  }
+
+  for (let value = spec.min; value <= top; value += 1) {
+    if (!fired[value]) {
+      return segment;
+    }
+  }
+
+  return '*';
 }
 
 // A degenerate range (`9-9`) fires once, so it reads as its single value.

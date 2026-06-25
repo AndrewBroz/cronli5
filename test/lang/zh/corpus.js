@@ -328,6 +328,19 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
     ]);
   });
 
+  // 覆盖整个字段的普通范围不构成任何限制，读法与 `*` 完全相同。
+  describe('覆盖整个字段的范围读作通配符 (full-span range)', function() {
+    run([
+      ['0-59 * * * *', '每分钟'],
+      ['0 0-23 * * *', '每小时'],
+      ['0 0 1-31 * *', '每天凌晨0点'],
+      ['0 0 * 1-12 *', '每天凌晨0点'],
+      ['0 0 * * 0-6', '每天凌晨0点'],
+      ['0 0 * * 1-7', '每天凌晨0点'],
+      ['0 0 * * SUN-SAT', '每天凌晨0点']
+    ]);
+  });
+
   describe('特殊情况 (special)', function() {
     run([
       ['not a cron pattern', '无法识别的 cron 表达式', {lenient: true}]

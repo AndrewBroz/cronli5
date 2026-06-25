@@ -509,6 +509,20 @@ describe('Español (es):', function() {
     ]);
   });
 
+  // Un rango simple que abarca todo el campo no impone restricción alguna,
+  // así que se lee igual que `*`.
+  describe('un rango sobre todo el campo se lee como el comodín', function() {
+    run([
+      ['0-59 * * * *', 'cada minuto'],
+      ['0 0-23 * * *', 'cada hora'],
+      ['0 0 1-31 * *', 'todos los días a las 00:00'],
+      ['0 0 * 1-12 *', 'todos los días a las 00:00'],
+      ['0 0 * * 0-6', 'todos los días a las 00:00'],
+      ['0 0 * * 1-7', 'todos los días a las 00:00'],
+      ['0 0 * * SUN-SAT', 'todos los días a las 00:00']
+    ]);
+  });
+
   describe('casos especiales', function() {
     it('describe @reboot', function() {
       expect(cronli5('@reboot', {lang: es}))

@@ -338,6 +338,20 @@ describe('Suomi (fi):', function() {
         '9.00–9.59, 11.00–11.59, 13.00–13.59 ja 20.00–20.59']
     ]);
   });
+
+  // Yksinkertainen alue, joka kattaa koko kentän, ei rajoita mitään, joten
+  // se luetaan kuten `*`.
+  describe('koko kentän kattava alue luetaan kuten jokerimerkki', function() {
+    run([
+      ['0-59 * * * *', 'joka minuutti'],
+      ['0 0-23 * * *', 'joka tunti'],
+      ['0 0 1-31 * *', 'joka päivä keskiyöllä'],
+      ['0 0 * 1-12 *', 'joka päivä keskiyöllä'],
+      ['0 0 * * 0-6', 'joka päivä keskiyöllä'],
+      ['0 0 * * 1-7', 'joka päivä keskiyöllä'],
+      ['0 0 * * SUN-SAT', 'joka päivä keskiyöllä']
+    ]);
+  });
 });
 
 // Tunnetut, vielä korjaamattomat virheet (katselmus + laaja pyyhkäisy;

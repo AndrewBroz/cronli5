@@ -58,6 +58,22 @@ describe('Input normalization:', function() {
     ]);
   });
 
+  describe('a range over the whole field reads as a wildcard', function() {
+    run([
+      // A plain range that enumerates every value in the field imposes no
+      // restriction, so it reads identically to `*`.
+      ['0-59 * * * *', 'every minute'],
+      ['0 0-23 * * *', 'every hour'],
+      ['0 0 1-31 * *', 'every day at midnight'],
+      ['0 0 * 1-12 *', 'every day at midnight'],
+      ['0 0 * * 0-6', 'every day at midnight'],
+      ['0 0 * * 1-7', 'every day at midnight'],
+      ['0 0 * * 0-7', 'every day at midnight'],
+      ['0 0 * * SUN-SAT', 'every day at midnight'],
+      ['0-59 * * * * *', 'every second']
+    ]);
+  });
+
   describe('steps that fire once read as their single value', function() {
     run([
       // A step whose interval overshoots the field before a second fire

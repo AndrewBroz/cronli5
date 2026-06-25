@@ -303,6 +303,20 @@ describe('Deutsch (de):', function() {
     ]);
   });
 
+  // Ein einfacher Bereich über das ganze Feld schränkt nichts ein und liest
+  // sich daher genau wie `*`.
+  describe('Vollständiger Bereich liest sich wie der Platzhalter', function() {
+    run([
+      ['0-59 * * * *', 'jede Minute'],
+      ['0 0-23 * * *', 'jede Stunde'],
+      ['0 0 1-31 * *', 'täglich um Mitternacht'],
+      ['0 0 * 1-12 *', 'täglich um Mitternacht'],
+      ['0 0 * * 0-6', 'täglich um Mitternacht'],
+      ['0 0 * * 1-7', 'täglich um Mitternacht'],
+      ['0 0 * * SUN-SAT', 'täglich um Mitternacht']
+    ]);
+  });
+
   describe('Sonderfälle', function() {
     run([
       ['@reboot', 'beim Systemstart'],
