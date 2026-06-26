@@ -6,6 +6,34 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.6]
+
+### Fixed
+
+- **Chinese no longer drops the minute** when an uneven minute step meets an uneven
+  hour step: `*/25 */5` read "凌晨0点、5点、…、20点" — silently losing minutes :25 and
+  :50 (a wrong schedule) — and now reads "从0点起每5小时，至20点，每小时0、25、50分".
+- **A bounded hour step composed with a second no longer doubles the seconds
+  clause**: `30 */25 9-17/2` read "at 30 seconds past the minute, at 30 seconds past
+  the minute, …"; the clause is now emitted once (en/es/de/fi; zh's clock-time
+  variant likewise).
+- **A sub-minute second under a minute list starting at 0 no longer repeats the
+  hour**: `* */25 9,17` read "9 a.m., 9 a.m., 9 a.m." (en/es) — fixed.
+
+### Changed
+
+- **Far fewer enumerations: steps, ranges, and stepped hours now read as cadences
+  and spans throughout composed forms.** Extending 0.1.5's bounded-step cadence into
+  every context — a minute step under an hour range/list ("alle 2 Minuten von Minute
+  3 bis 59 jeder Stunde, von 9 bis 17 Uhr"), an hour range or step under a fixed time
+  ("at 30 seconds past the hour, every hour from 9 a.m. through 5 p.m."), and
+  **offset/uneven hour steps** ("从1点起每2小时"; "every 5 hours from midnight through
+  8 p.m."; "cada 5 horas de las 00:00 a las 20:00") — instead of listing every fire.
+  Irregular sets and runs of up to six clock times still read as explicit times. All
+  languages.
+- **Chinese renders an hour range inside a list as a span**: `9-20,22` →
+  "9点至20点和22点" rather than thirteen enumerated hours.
+
 ## [0.1.5]
 
 ### Changed
