@@ -8,7 +8,7 @@ describe('Weekday step patterns:', function() {
   describe('wildcard start', function() {
     run([
       ['0 0 * * */2',
-        'every Sunday, Tuesday, Thursday, and Saturday at midnight']
+        'every Tuesday, Thursday, Saturday, and Sunday at midnight']
     ]);
   });
 
@@ -29,7 +29,7 @@ describe('Weekday step patterns:', function() {
   describe('as a trailing qualifier', function() {
     run([
       ['0 * * * */2',
-        'every hour on Sunday, Tuesday, Thursday, and Saturday']
+        'every hour on Tuesday, Thursday, Saturday, and Sunday']
     ]);
   });
 });

@@ -331,17 +331,17 @@ describe('Español (es):', function() {
       ['0 0 1 * 5L', 'a las 00:00, ya sea el 1 de cada mes o el último viernes del mes'],
       // Wildcard month, step DOM, step DOW.
       ['0 0 */2 * */2',
-        'a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados'],
+        'a las 00:00, ya sea cada dos días del mes o los martes, jueves, sábados y domingos'],
       // Enumeration/step months (≥2): month lead with trailing comma.
       ['0 0 */2 */2 */2',
         'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
-        'ya sea cada dos días del mes o los domingos, martes, jueves y sábados'],
+        'ya sea cada dos días del mes o los martes, jueves, sábados y domingos'],
       ['0 0 L */2 */2',
         'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
-        'ya sea el último día del mes o los domingos, martes, jueves y sábados'],
+        'ya sea el último día del mes o los martes, jueves, sábados y domingos'],
       // Range month (no trailing comma).
       ['0 0 1-15 1-3 */2',
-        'de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los domingos, martes, jueves y sábados'],
+        'de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los martes, jueves, sábados y domingos'],
       ['0 0 1 1-3 0',
         'de enero a marzo a las 00:00, ya sea el día 1 o cualquier domingo'],
       // Frequency + wildcard month.
@@ -349,9 +349,9 @@ describe('Español (es):', function() {
         'cada cinco minutos, durante las horas pares, ya sea el 1 de cada mes o cualquier viernes'],
       // Mixed weekday arm (range + single): exercises the mixed-list dow branch.
       ['0 0 1 * 0,1-5',
-        'a las 00:00, ya sea el 1 de cada mes o los domingos y de lunes a viernes'],
+        'a las 00:00, ya sea el 1 de cada mes o de lunes a viernes y los domingos'],
       ['0 0 1 6-9 0,1-5',
-        'de junio a septiembre a las 00:00, ya sea el día 1 o los domingos y de lunes a viernes'],
+        'de junio a septiembre a las 00:00, ya sea el día 1 o de lunes a viernes y los domingos'],
       // Irregular hour list with a 1-o'clock fire (not a progression, so it
       // stays an enumeration): group by article in the union frame.
       ['5 1,6,11,16,22 1 1,7 MON',
@@ -662,7 +662,7 @@ describe('Español (es):', function() {
       ['0-10,30 9 * * *',
         'en los minutos 0 a 10 y 30 de cada hora, a las 9 de la mañana'],
       ['0 0 * * 1-5,0',
-        'los domingos y de lunes a viernes a medianoche'],
+        'de lunes a viernes y los domingos a medianoche'],
       ['50-10 * * * *', 'cada minuto del 50 al 10 de cada hora']
     ], ampm);
   });
@@ -731,7 +731,7 @@ describe('Español (es):', function() {
         'cada 15 minutos, ya sea el 13 de cada mes o cualquier viernes'],
       ['*/15 * * 6 *', 'cada 15 minutos en junio'],
       ['0 12 * * 0,1/2',
-        'los domingos, lunes, miércoles y viernes al mediodía'],
+        'los lunes, miércoles, viernes y domingos al mediodía'],
       ['0 12 * 1,6/3 *',
         'todos los días de enero, junio, septiembre y diciembre ' +
         'al mediodía'],

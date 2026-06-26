@@ -3,7 +3,9 @@
 
 import {pad} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
-import {arithmeticStep, toFieldNumber} from '../../core/util.js';
+import {
+  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
@@ -208,7 +210,9 @@ function weekdayRange(bounds: [string, string]): string {
 
 // "montags", "montags bis freitags", "montags, mittwochs und freitags".
 function weekdayQualifier(ir: IR): string {
-  const segments = flattenSteps(fieldSegments(ir, 'weekday'));
+  // Weekday lists display Monday-first (Sunday last); a lone range keeps its
+  // form. The IR stays canonical (Sunday=0). The helper flattens steps.
+  const segments = orderWeekdaysForDisplay(fieldSegments(ir, 'weekday'));
 
   if (segments.length === 1 && segments[0].kind === 'range') {
     return weekdayRange(segments[0].bounds);

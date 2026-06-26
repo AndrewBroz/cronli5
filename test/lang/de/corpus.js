@@ -339,7 +339,7 @@ describe('Deutsch (de):', function() {
       ['0 9 * * 7', 'sonntags um 9 Uhr'],
       ['0 9 * * SAT', 'samstags um 9 Uhr'],
       ['0 9 * * TUE-THU', 'dienstags bis donnerstags um 9 Uhr'],
-      ['0 9 * * SAT,SUN', 'sonntags und samstags um 9 Uhr'],
+      ['0 9 * * SAT,SUN', 'samstags und sonntags um 9 Uhr'],
       ['0 9 31 * *', 'am 31. um 9 Uhr'],
       ['0 9 * 12 *', 'im Dezember um 9 Uhr'],
       ['0 9 * 3 *', 'im März um 9 Uhr'],

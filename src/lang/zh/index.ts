@@ -4,7 +4,9 @@
 // big-endian dates, 每 for recurrence, 24-hour clock with 凌晨0点/正午 anchors,
 // day periods under `ampm`. The style contract is src/lang/zh/notes.md.
 
-import {arithmeticStep, toFieldNumber} from '../../core/util.js';
+import {
+  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+} from '../../core/util.js';
 import {maxClockTimes, monthNumbers, weekdayNumbers} from '../../core/specs.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
@@ -1165,13 +1167,12 @@ function weekdayPhrase(
     return '每' + weekdayName(from) + '至' + weekdayName(to);
   }
 
+  // Weekday lists display Monday-first (Sunday last); the IR stays canonical
+  // (Sunday=0). The helper flattens steps into singles and orders the list.
   const days: number[] = [];
 
-  segs.forEach(function expand(seg) {
-    if (seg.kind === 'step') {
-      days.push(...seg.fires);
-    }
-    else if (seg.kind === 'single') {
+  orderWeekdaysForDisplay(segs).forEach(function expand(seg) {
+    if (seg.kind === 'single') {
       days.push(toFieldNumber(seg.value, weekdayNumbers));
     }
   });

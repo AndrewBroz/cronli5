@@ -11,7 +11,9 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
-import {arithmeticStep, toFieldNumber} from '../../core/util.js';
+import {
+  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+} from '../../core/util.js';
 import {resolveDialect} from './dialects.js';
 import type {
   ClockTime, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -1703,7 +1705,9 @@ function weekdayQualifier(ir: IR): string {
     return quartz;
   }
 
-  const segments = flattenSteps(ir.analyses.segments.weekday!);
+  // Weekday lists display Monday-first (Sunday last); a lone range keeps its
+  // form. The IR stays canonical (Sunday=0). The helper flattens steps.
+  const segments = orderWeekdaysForDisplay(ir.analyses.segments.weekday!);
 
   return joinList(segments.map(function piece(segment: FlatSegment) {
     if (segment.kind === 'range') {

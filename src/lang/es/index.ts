@@ -10,7 +10,9 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
-import {arithmeticStep, toFieldNumber} from '../../core/util.js';
+import {
+  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode,
@@ -844,7 +846,9 @@ function dowArm(ir: IR): string {
     return quartz;
   }
 
-  const segments = flattenSteps(fieldSegments(ir, 'weekday'));
+  // Weekday lists display Monday-first (Sunday last); a lone range keeps its
+  // form. The IR stays canonical (Sunday=0). The helper flattens steps.
+  const segments = orderWeekdaysForDisplay(fieldSegments(ir, 'weekday'));
   const allSingles = segments.every(function single(segment) {
     return segment.kind === 'single';
   });
@@ -2201,7 +2205,9 @@ function weekdayQualifier(ir: IR): string {
     return quartz;
   }
 
-  const segments = flattenSteps(fieldSegments(ir, 'weekday'));
+  // Weekday lists display Monday-first (Sunday last); a lone range keeps its
+  // form. The IR stays canonical (Sunday=0). The helper flattens steps.
+  const segments = orderWeekdaysForDisplay(fieldSegments(ir, 'weekday'));
   const allSingles = segments.every(function single(segment) {
     return segment.kind === 'single';
   });

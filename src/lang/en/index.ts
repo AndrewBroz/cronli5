@@ -3,7 +3,7 @@
 // the core stays semantic, and this module's only input is the IR.
 // See docs/i18n-design.md.
 
-import {arithmeticStep} from '../../core/util.js';
+import {arithmeticStep, orderWeekdaysForDisplay} from '../../core/util.js';
 import {maxClockTimes} from '../../core/specs.js';
 import {clockDigits, numeral} from '../../core/format.js';
 import type {Cronli5Options} from '../../types.js';
@@ -1692,8 +1692,12 @@ function oddEvenMonth(monthField: string): string | null {
 // Render the weekday field as names. Ranges read in their connective form
 // ("Monday through Friday", or "Mon-Fri" with `short`).
 function weekdayPhrase(ir: IR, opts: NormalizedOptions): string {
-  // Reached only with a restricted weekday, which has segments.
-  return renderSegments(ir.analyses.segments.weekday!, function name(value) {
+  // Reached only with a restricted weekday, which has segments. Weekday lists
+  // display Monday-first (Sunday last) so a weekend reads naturally; the IR
+  // stays canonical (Sunday=0) and ranges keep their form.
+  const segments = orderWeekdaysForDisplay(ir.analyses.segments.weekday!);
+
+  return renderSegments(segments, function name(value) {
     return getWeekday(value, opts);
   }, opts);
 }
