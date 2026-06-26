@@ -53,6 +53,12 @@ function everyN(interval: number, unit: Unit): string {
   return 'alle ' + interval + ' ' + unit.plural;
 }
 
+// Append a scope anchor to a clause, separated by a space; an empty anchor
+// (a context that names that field in its own clause) leaves the clause bare.
+function withAnchor(clause: string, anchor: string): string {
+  return anchor ? clause + ' ' + anchor : clause;
+}
+
 // The first segment of a step field, which the plan guarantees is step-kinded.
 function stepSegment(segments: Segment[] | null): StepSegment {
   return (segments as Segment[])[0] as StepSegment;
@@ -110,8 +116,9 @@ function stepClause(segment: StepSegment, unit: Unit, anchor: string): string {
   const short = start !== 0 && segment.fires.length <= 3;
 
   if (segment.startToken.indexOf('-') !== -1 || short) {
-    return 'in den ' + unit.plural + ' ' + joinList(segment.fires.map(String)) +
-      ' ' + anchor;
+    return withAnchor(
+      'in den ' + unit.plural + ' ' + joinList(segment.fires.map(String)),
+      anchor);
   }
 
   return renderStride({
@@ -464,10 +471,21 @@ function countedPhrase(
   return 'in den ' + plural + ' ' + joinList(fieldValues(ir, field));
 }
 
-// The seconds clause: "alle 30 Sekunden" for a step, else "in Sekunde 15
-// jeder Minute".
+// The minute scope for a seconds clause: "jeder Minute" only when the minute
+// is a wildcard (the seconds really do fire in every minute). A restricted
+// minute (single/list/range/step) is named by its own clause, so the seconds
+// clause drops the scope — "jeder Minute" would otherwise contradict the fixed
+// minute ("in Sekunde 30 jeder Minute, in Minute 30" fires at second 30 of
+// minute 30, not every minute).
+function minuteAnchor(ir: IR): string {
+  return ir.pattern.minute === '*' ? 'jeder Minute' : '';
+}
+
+// The seconds clause: "alle 30 Sekunden" for a step, "in Sekunde 15 jeder
+// Minute" under a wildcard minute, else the bare "in Sekunde 15" when the
+// minute is fixed (its own clause names it).
 function secondsLead(ir: IR): string {
-  return secondsClause(ir, 'jeder Minute');
+  return secondsClause(ir, minuteAnchor(ir));
 }
 
 // The second clause counted against an arbitrary anchor. The anchor is "jeder
@@ -490,7 +508,7 @@ function secondsClause(ir: IR, anchor: string): string {
   }
 
   return strideFromSegments(segments as Segment[], UNITS.second, anchor) ??
-    countedPhrase(ir, 'second', 'Sekunde', 'Sekunden') + ' ' + anchor;
+    withAnchor(countedPhrase(ir, 'second', 'Sekunde', 'Sekunden'), anchor);
 }
 
 // A clock time that always shows its minutes: "9:00", "9:30".
@@ -1118,7 +1136,7 @@ function subMinuteSecond(ir: IR): boolean {
 function hourCadenceLead(ir: IR, minute: number): string {
   if (minute === 0) {
     if (subMinuteSecond(ir)) {
-      return secondsClause(ir, 'jeder Minute') + ' für eine Minute';
+      return withAnchor(secondsClause(ir, minuteAnchor(ir)), 'für eine Minute');
     }
 
     return secondsClause(ir, 'jeder Stunde');
@@ -1132,7 +1150,7 @@ function hourCadenceLead(ir: IR, minute: number): string {
     return minutePhrase;
   }
 
-  return secondsClause(ir, 'jeder Minute') + ', ' + minutePhrase;
+  return secondsClause(ir, minuteAnchor(ir)) + ', ' + minutePhrase;
 }
 
 // Render an hour step (or arithmetic-progression hour list) under a single
@@ -1174,8 +1192,8 @@ function hourCadence(ir: IR, minute: number): string | null {
     confinedHourStride(segment);
 
   if (confined) {
-    return secondsClause(ir, 'jeder Minute') + ' für eine Minute ' +
-      everyNthHour(segment);
+    return withAnchor(secondsClause(ir, minuteAnchor(ir)), 'für eine Minute') +
+      ' ' + everyNthHour(segment);
   }
 
   // A plain top-of-the-hour fire (minute 0 with no meaningful second) has no
