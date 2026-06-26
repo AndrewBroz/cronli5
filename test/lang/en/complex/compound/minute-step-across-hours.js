@@ -3,9 +3,9 @@ import {run} from '../../../../runner.js';
 // Behavior spec for a minute step combined with an hour list or hour step.
 // The step previously dropped the hour entirely ("every 15 minutes"); it must
 // confine the cadence so it never reads as a second, conflicting frequency.
-// An hour list reads "during the <times> hours"; a clean hour step (dividing
-// the day) reads "during every <Nth> hour"; an uneven or bounded step lists
-// its active hours the same way as a list.
+// An hour list reads "during the <times> hours"; the "every other" stride reads
+// "of every other hour", a longer clean step (dividing the day) "during every
+// <Nth> hour"; an uneven or bounded step lists its active hours like a list.
 
 describe('Minute step across multiple hours:', function() {
   describe('hour list', function() {
@@ -19,7 +19,7 @@ describe('Minute step across multiple hours:', function() {
 
   describe('clean hour step (confined to every Nth hour)', function() {
     run([
-      ['*/15 */2 * * *', 'every 15 minutes during every other hour'],
+      ['*/15 */2 * * *', 'every 15 minutes of every other hour'],
       ['*/15 */3 * * *', 'every 15 minutes during every third hour'],
       ['*/15 */4 * * *', 'every 15 minutes during every fourth hour']
     ]);

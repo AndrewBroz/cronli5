@@ -29,22 +29,22 @@ describe('Valid compound arrays:', function() {
   describe('frequency within an hour range', function() {
     run([
       [['*/15', '9-17', '*', '*', '*'],
-        'every 15 minutes from 9 a.m. through 5:45 p.m.'],
+        'every 15 minutes from 9 a.m. until 6 p.m.'],
       [['*/15', '9-17', '*', '*', 'MON-FRI'],
-        'every 15 minutes from 9 a.m. through 5:45 p.m. on Monday through Friday']
+        'every 15 minutes from 9 a.m. until 6 p.m. on Monday through Friday']
     ]);
   });
 
   describe('specific minute(s) within an hour range', function() {
     run([
       [['0', '9-17', '*', '*', '*'],
-        'every hour from 9 a.m. through 5 p.m.'],
+        'every hour from 9 a.m. until 6 p.m.'],
       [['30', '9-17', '*', '*', '*'],
-        'at 30 minutes past the hour from 9 a.m. through 5 p.m.'],
+        'at 30 minutes past the hour from 9 a.m. until 6 p.m.'],
       [['0,30', '9-17', '*', '*', '*'],
-        'at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m.'],
+        'at 0 and 30 minutes past the hour from 9 a.m. until 6 p.m.'],
       [['15', '9-17', '*', '*', 'MON-FRI'],
-        'at 15 minutes past the hour from 9 a.m. through 5 p.m. ' +
+        'at 15 minutes past the hour from 9 a.m. until 6 p.m. ' +
           'on Monday through Friday']
     ]);
   });
@@ -58,8 +58,8 @@ describe('Valid compound arrays:', function() {
 
   describe('frequency with a day qualifier', function() {
     run([
-      [['*', '*', '*', '*', 'MON'], 'every minute on Monday'],
-      [['0', '*', '*', '*', 'MON'], 'every hour on Monday'],
+      [['*', '*', '*', '*', 'MON'], 'every minute on Mondays'],
+      [['0', '*', '*', '*', 'MON'], 'every hour on Mondays'],
       [['*', '*', '*', '*', 'MON-FRI'], 'every minute on Monday through Friday'],
       [['*', '*', '13', '*', '*'], 'every minute on the 13th'],
       [['0', '*', '13', '*', '*'], 'every hour on the 13th'],

@@ -15,16 +15,16 @@ describe('Valid arrays with ranges:', function() {
       [['0-29', '*', '*', '*', '*'],
         'every minute from 0 through 29 past the hour'],
       [['1-5', '*', '*', '*', '*'],
-        'every minute from one through five past the hour']
+        'every minute from 1 through 5 past the hour']
     ]);
   });
 
   describe('hour ranges', function() {
     run([
       [['0', '9-17', '*', '*', '*'],
-        'every hour from 9 a.m. through 5 p.m.'],
+        'every hour from 9 a.m. until 6 p.m.'],
       [['0', '0-5', '*', '*', '*'],
-        'every hour from midnight through 5 a.m.']
+        'every hour from midnight until 6 a.m.']
     ]);
   });
 

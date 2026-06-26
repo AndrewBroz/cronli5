@@ -17,7 +17,7 @@ describe('Lists mixing values with ranges or steps:', function() {
         'at 9 a.m. and 5 p.m.'],
       ['0-10,30 9-17 * * *',
         'at 0 through 10 and 30 minutes past the hour ' +
-        'from 9 a.m. through 5 p.m.']
+        'from 9 a.m. until 6 p.m.']
     ]);
   });
 
@@ -38,8 +38,8 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 9,17/2 * * *',
         'every day at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m.'],
       ['0-30 9,17-19 * * *',
-        'every minute from 0 through 30 past the hour, ' +
-        'at 9 a.m., 5 p.m., 6 p.m., and 7 p.m.'],
+        'every minute from 0 through 30 past the hour ' +
+        'during the 9 a.m., 5 p.m., 6 p.m., and 7 p.m. hours'],
       ['*/15 9,17/2 * * *',
         'every 15 minutes during the ' +
         '9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. hours']
@@ -90,7 +90,8 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 0 1 1-11/3 *',
         'on January, April, July, and October 1 at midnight'],
       ['0 0 1 6-9 FRI',
-        'on the 1st or on Friday, in June through September at midnight']
+        'in June through September at midnight whenever the day is the 1st ' +
+        'or a Friday']
     ]);
   });
 });

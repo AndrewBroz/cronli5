@@ -20,7 +20,7 @@ describe('Minute step within a specific hour:', function() {
   describe('with a day qualifier', function() {
     run([
       ['*/15 9 * * MON',
-        'every 15 minutes from 9 a.m. through 9:45 a.m. on Monday']
+        'every 15 minutes from 9 a.m. through 9:45 a.m. on Mondays']
     ]);
   });
 

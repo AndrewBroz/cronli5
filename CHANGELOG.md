@@ -6,6 +6,49 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0]
+
+A major naturalness pass for English, validated by blind native-speaker
+(math-inclined) panels: mean idiom rose 3.60 → 4.15 and clarity 3.75 → 4.20 on
+full-space random samples, with zero correctness regressions. The full
+panel-validated naturalness specification (`test/lang/en/core-set.js` +
+`known-issues.js`, 165 cases) is now un-skipped and runs in CI as the contract
+for the prose. Changes are to the English default dialect; other languages are
+unchanged, and round-trip + the metamorphic invariant guard every rewrite.
+
+### Changed
+
+- **OR-day now reads as a union condition-frame.** When both day-of-month and
+  day-of-week are restricted, cron fires on the *union* of days. The old "on the
+  1st or on Friday" read as alternatives (and "and" would read as intersection);
+  it now reads "[in MONTH] [at TIME] whenever the day is the 1st or a Friday" — a
+  predicate over the day that reads as a union for naive, logical, and technical
+  readers. (~70% of expressions.)
+- **Hour ranges read as an until-window:** "from 9 a.m. until 6 p.m." (was
+  "through 5 p.m."); hour *steps* keep "through K" (the endpoint is a real fire).
+- **Coarser fields confine under a finer cadence:** "every second during minute
+  :00 of every hour", "every second of the midnight hour", "every two minutes
+  from midnight until 1 a.m."; a redundant unrestricted finer field drops.
+- **Trailing weekdays pluralize** ("on Mondays"); weekday ranges keep "on Monday
+  through Friday". Weekday lists order Monday-first.
+- **"of the month" drops under an explicit month** ("on the last Friday in
+  January"); a month range keeps "of each month from January through March".
+- Minute lists numeralize ("4, 6, and 9 minutes past the hour"); a seconds range
+  digitizes its bounds ("from 0 through 10 past the minute"); a contiguous hour
+  run with an outlier reads "from 9 a.m. until 9 p.m. plus 10 p.m."; a year range
+  reads "2030 through 2035" and a stepped year "every second, every other year";
+  the gb day-first multi-month fold no longer garden-paths the day.
+
+### Added
+
+- The English naturalness specification (`core-set.js` + `known-issues.js`, 165
+  cases) is un-skipped and runs in CI as the prose contract.
+
+### Known limitations
+
+- Genuinely dense crons (three stacked sub-hour cadences) remain inherently
+  verbose (~3/5 naturalness); a structural rewrite was scoped and deferred.
+
 ## [0.1.7]
 
 A correctness and clarity pass driven by blind, math-inclined native-speaker

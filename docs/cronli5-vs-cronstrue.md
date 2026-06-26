@@ -45,7 +45,7 @@ in voice. A few edge cases are dramatically different (see the comparison for
 | `0 12 * * *` | every day at noon | At 12:00 PM |
 | `30 9 * * MON-FRI` | every Monday through Friday at 9:30 a.m. | At 09:30 AM, Monday through Friday |
 | `0 9,17 * * *` | every day at 9 a.m. and 5 p.m. | At 09:00 AM and 05:00 PM |
-| `0 9-17 * * *` | every hour from 9 a.m. through 5 p.m. | Every hour, between 09:00 AM and 05:00 PM |
+| `0 9-17 * * *` | every hour from 9 a.m. until 6 p.m. | Every hour, between 09:00 AM and 05:00 PM |
 | `0-29 * * * *` | every minute from 0 through 29 past the hour | Minutes 0 through 29 past the hour |
 | `0 0 1,15 * *` | on the 1st and 15th at midnight | At 12:00 AM, on day 1 and 15 of the month |
 | `0 12 1 1 *` | on January 1 at noon | At 12:00 PM, on day 1 of the month, only in January |
@@ -68,20 +68,20 @@ are handled more fluently and accurately `cronli5`.
 <!-- BEGIN GENERATED: showcase -->
 | Pattern | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
-| `5,10 30 9 * * MON` | at five and ten seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| `*/15 30 9-17 * * MON-FRI` | every 15 seconds, at 30 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday | Every 15 seconds, at 30 minutes past the hour, between 09:00 AM and 05:59 PM, Monday through Friday |
+| `5,10 30 9 * * MON` | at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| `*/15 30 9-17 * * MON-FRI` | every 15 seconds during minute :30 from 9 a.m. until 6 p.m. on Monday through Friday | Every 15 seconds, at 30 minutes past the hour, between 09:00 AM and 05:59 PM, Monday through Friday |
 | `15 30 9 * * MON` | every Monday at 9:30:15 a.m. | At 09:30:15 AM, only on Monday |
 | `45 17,9 0 * * *` | every day at 12:09:45 a.m. and 12:17:45 a.m. | At 45 seconds past the minute, at 9 and 17 minutes past the hour, at 12:00 AM |
-| `0-30 9,17-19 * * *` | every minute from 0 through 30 past the hour, at 9 a.m., 5 p.m., 6 p.m., and 7 p.m. | Minutes 0 through 30 past the hour, at 09:00 AM and 05:00 PM through 07:59 PM |
+| `0-30 9,17-19 * * *` | every minute from 0 through 30 past the hour during the 9 a.m., 5 p.m., 6 p.m., and 7 p.m. hours | Minutes 0 through 30 past the hour, at 09:00 AM and 05:00 PM through 07:59 PM |
 | `0 22-2,12 * * *` | every day at 12 p.m., 10 p.m., 11 p.m., 12 a.m., 1 a.m., and 2 a.m. | Every hour, at 10:00 PM through 02:00 AM and 12:00 PM |
-| `0 9-20,22 * * *` | every hour from 9 a.m. through 8 p.m. and at 10 p.m. | Every hour, at 09:00 AM through 08:00 PM and 10:00 PM |
+| `0 9-20,22 * * *` | every hour from 9 a.m. until 9 p.m. plus 10 p.m. | Every hour, at 09:00 AM through 08:00 PM and 10:00 PM |
 | `* 9,12,17 * * MON-FRI` | every minute during the 9 a.m., 12 p.m., and 5 p.m. hours on Monday through Friday | Every minute, at 09:00 AM, 12:00 PM, and 05:00 PM, Monday through Friday |
 | `30 9 15W 6 *` | on the weekday nearest the 15th in June at 9:30 a.m. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
 | `0 0 29 2 *` | on February 29 at midnight | At 12:00 AM, on day 29 of the month, only in February |
 | `0 9-9 * * *` | every day at 9 a.m. | Every hour, between 09:00 AM and 09:00 AM |
 | `1/1 * * * *` | every minute from 1 through 59 past the hour | Every 1 minutes, starting at 1 minutes past the hour |
 | `1 1 * * * *` | one minute and one second past the hour, every hour | At 1 seconds past the minute, at 1 minutes past the hour |
-| `59 23 31 12 5` | on December 31 or on Friday in December at 11:59 p.m. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
+| `59 23 31 12 5` | in December at 11:59 p.m. whenever the day is the 31st or a Friday | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
 <!-- END GENERATED: showcase -->
 
 [cronstrue]: https://github.com/bradymholt/cRonstrue

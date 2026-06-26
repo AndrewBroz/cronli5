@@ -27,9 +27,15 @@ describe('Weekday step patterns:', function() {
   });
 
   describe('as a trailing qualifier', function() {
+    // A trailing single/list weekday under a wildcard day-of-month reads
+    // plural ("on Mondays"); a weekday RANGE keeps the singular idiom ("on
+    // Monday through Friday"), so the through-connective stays unmistakable.
     run([
       ['0 * * * */2',
-        'every hour on Tuesday, Thursday, Saturday, and Sunday']
+        'every hour on Tuesdays, Thursdays, Saturdays, and Sundays'],
+      ['0 * * * MON,WED,FRI',
+        'every hour on Mondays, Wednesdays, and Fridays'],
+      ['0 * * * MON-FRI', 'every hour on Monday through Friday']
     ]);
   });
 });

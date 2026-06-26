@@ -54,7 +54,7 @@ describe('Month step patterns:', function() {
       // gb drops the Oxford comma (and reads day-first); the enumerated step
       // still matches its explicit-list equivalent in both dialects.
       ['0 0 13 */3 *',
-        'on 13 January, April, July and October at midnight',
+        'on the 13th of January, April, July and October at midnight',
         {dialect: 'gb'}]
     ]);
   });

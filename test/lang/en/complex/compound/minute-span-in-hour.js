@@ -23,9 +23,19 @@ describe('Minute span within a specific hour:', function() {
     ]);
   });
 
+  // An "every other minute" step is a leading cadence; confined to a single
+  // hour it spans that hour ("from midnight until 1 a.m."), the hour-confinement
+  // analog of the until-window.
+  describe('every other minute confined to a single hour', function() {
+    run([
+      ['0 */2 0 * * *', 'every two minutes from midnight until 1 a.m.'],
+      ['0 */2 9 * * *', 'every two minutes from 9 a.m. until 10 a.m.']
+    ]);
+  });
+
   describe('with a day qualifier', function() {
     run([
-      ['* 9 * * MON', 'every minute of the 9 a.m. hour on Monday']
+      ['* 9 * * MON', 'every minute of the 9 a.m. hour on Mondays']
     ]);
   });
 

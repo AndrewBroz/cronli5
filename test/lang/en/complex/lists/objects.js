@@ -9,7 +9,7 @@ describe('Valid objects with lists:', function() {
       'at 0, 15, 30, and 45 seconds past the minute'
     ],
     [{minute: '0,30'}, 'at 0 and 30 minutes past the hour'],
-    [{minute: '1,2,3'}, 'at one, two, and three minutes past the hour'],
+    [{minute: '1,2,3'}, 'at 1, 2, and 3 minutes past the hour'],
     [{minute: '0,15,30,45'}, 'at 0, 15, 30, and 45 minutes past the hour'],
     [{hour: '9,17'}, 'every day at 9 a.m. and 5 p.m.'],
     [{hour: '0,12'}, 'every day at midnight and noon'],

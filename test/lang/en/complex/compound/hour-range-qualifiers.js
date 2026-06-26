@@ -9,22 +9,23 @@ describe('Hour-range and frequency day qualifiers:', function() {
   describe('hour range with a date and/or month', function() {
     run([
       ['0 9-17 13 * *',
-        'every hour from 9 a.m. through 5 p.m. on the 13th'],
+        'every hour from 9 a.m. until 6 p.m. on the 13th'],
       ['0 9-17 * 6 *',
-        'every hour from 9 a.m. through 5 p.m. in June'],
+        'every hour from 9 a.m. until 6 p.m. in June'],
       ['0 9-17 13 6 *',
-        'every hour from 9 a.m. through 5 p.m. on June 13'],
+        'every hour from 9 a.m. until 6 p.m. on June 13'],
       ['0 9-17 13 * 5',
-        'every hour from 9 a.m. through 5 p.m. on the 13th or on Friday']
+        'every hour from 9 a.m. until 6 p.m. whenever the day is the 13th ' +
+        'or a Friday']
     ]);
   });
 
   describe('step frequency with a date or weekday (no hour range)', function() {
     run([
-      ['*/15 * * * MON', 'every 15 minutes on Monday'],
+      ['*/15 * * * MON', 'every 15 minutes on Mondays'],
       ['*/15 * 13 * *', 'every 15 minutes on the 13th'],
       ['*/15 9-17 13 * *',
-        'every 15 minutes from 9 a.m. through 5:45 p.m. on the 13th']
+        'every 15 minutes from 9 a.m. until 6 p.m. on the 13th']
     ]);
   });
 });

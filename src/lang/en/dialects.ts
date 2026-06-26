@@ -34,7 +34,8 @@ const dialects: {[name: string]: DialectStyle} = {
     pm: 'p.m.',
     sep: ':',
     serialComma: true,
-    through: ' through '
+    through: ' through ',
+    untilWindow: true
   },
   house: {
     am: 'AM',
@@ -58,7 +59,10 @@ function resolveDialect(
   dialect?: Cronli5Options['dialect']
 ): DialectStyle {
   if (typeof dialect === 'object' && dialect !== null) {
-    return {...dialects.us, ...dialect};
+    // A custom style inherits the US base but NOT the until-window: a custom
+    // dialect that only overrides the connective (e.g. `{through: ' until '}`)
+    // keeps the "through <last fire>" close, just spelled with its own word.
+    return {...dialects.us, untilWindow: false, ...dialect};
   }
 
   // The legacy 'uk' name resolves to 'gb'; a name another language owns

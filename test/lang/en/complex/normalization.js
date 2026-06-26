@@ -44,7 +44,7 @@ describe('Input normalization:', function() {
       ['0/1 * * * *', 'every minute'],
       ['*/1 * * * *', 'every minute'],
       ['5-30/1 * * * *', 'every minute from 5 through 30 past the hour'],
-      ['0 1/1 * * *', 'every hour from 1 a.m. through 11 p.m.'],
+      ['0 1/1 * * *', 'every hour from 1 a.m. until midnight'],
       ['0 0 2/1 * *', 'on the 2nd through 31st at midnight'],
       ['0 0 * 3/1 *', 'every day in March through December at midnight'],
       ['0 0 * * 1/1', 'every Monday through Saturday at midnight']

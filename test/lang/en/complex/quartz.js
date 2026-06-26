@@ -9,7 +9,10 @@ describe('Quartz tokens:', function() {
   describe('L: the last day of the month', function() {
     run([
       ['0 0 L * *', 'on the last day of the month at midnight'],
-      ['0 0 L 6 *', 'on the last day of the month in June at midnight'],
+      ['0 0 L 6 *', 'on the last day in June at midnight'],
+      ['0 0 L 1-3 *',
+        'on the last day of each month from January through March at ' +
+        'midnight'],
       ['*/15 * L * *', 'every 15 minutes on the last day of the month'],
       ['0 0 L-5 * *',
         'five days before the last day of the month at midnight'],
@@ -37,7 +40,12 @@ describe('Quartz tokens:', function() {
       ['0 0 * * FRIL', 'on the last Friday of the month at midnight'],
       ['*/15 * * * 5L', 'every 15 minutes on the last Friday of the month'],
       ['0 0 * 6 5L',
-        'on the last Friday of the month in June at midnight'],
+        'on the last Friday in June at midnight'],
+      ['0 0 * 1-3 5L',
+        'on the last Friday of each month from January through March at ' +
+        'midnight'],
+      ['0 0 * */2 5L',
+        'on the last Friday in every odd-numbered month at midnight'],
       ['0 0 * * L', 'every Saturday at midnight']
     ]);
   });
@@ -61,9 +69,11 @@ describe('Quartz tokens:', function() {
   describe('date or weekday', function() {
     run([
       ['0 0 L * MON',
-        'on the last day of the month or on Monday at midnight'],
+        'at midnight whenever the day is the last day of the month or a ' +
+        'Monday'],
       ['0 0 13 * 5L',
-        'on the 13th or on the last Friday of the month at midnight']
+        'at midnight whenever the day is the 13th or the last Friday of the ' +
+        'month']
     ]);
   });
 

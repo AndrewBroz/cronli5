@@ -26,7 +26,7 @@ function run(cases) {
   });
 }
 
-describe.skip('English core-set corrections:', function() {
+describe('English core-set corrections:', function() {
 
   // Under a seconds wildcard, a coarser minute/hour step is a CONFINEMENT, not
   // a second juxtaposed cadence; an unrestricted minute is redundant under
@@ -49,9 +49,9 @@ describe.skip('English core-set corrections:', function() {
       ['* */2 9-17/2 * * *',
         'every second of every other minute during the 9 a.m., 11 a.m., ' +
         '1 p.m., 3 p.m., and 5 p.m. hours'],
-      ['* 0 * * * *', 'every second of minute :00 of every hour'],
-      ['* 1 * * * *', 'every second of minute :01 of every hour'],
-      ['* 13 * * * *', 'every second of minute :13 of every hour']
+      ['* 0 * * * *', 'every second during minute :00 of every hour'],
+      ['* 1 * * * *', 'every second during minute :01 of every hour'],
+      ['* 13 * * * *', 'every second during minute :13 of every hour']
     ]);
   });
 
@@ -68,24 +68,24 @@ describe.skip('English core-set corrections:', function() {
   // [c0011–c0020] seconds wildcard, minute fixed/range, hours fixed/range/list.
   describe('batch 2 refinements - seconds in minutes:', function() {
     run([
-      ['* 0 */2 * * *', 'every second of minute :00 of every other hour'],
-      ['* 0 0 * * *', 'every second of minute :00 at midnight'],
+      ['* 0 */2 * * *', 'every second during minute :00 of every other hour'],
+      ['* 0 0 * * *', 'every second during minute :00 at midnight'],
       ['* 0 9,11,13,15,17,19,21 * * *',
-        'every second of minute :00 during the 9 a.m., 11 a.m., 1 p.m., ' +
+        'every second during minute :00 during the 9 a.m., 11 a.m., 1 p.m., ' +
         '3 p.m., 5 p.m., 7 p.m., and 9 p.m. hours'],
       ['* 0 9-17 * * *',
-        'every second of minute :00 from 9 a.m. until 6 p.m.'],
+        'every second during minute :00 from 9 a.m. until 6 p.m.'],
       ['* 0-30 * * * *',
-        'every second of minutes :00 through :30 of every hour'],
+        'every second during minutes :00 through :30 of every hour'],
       ['* 0-30 */2 * * *',
-        'every second of minutes :00 through :30 of every ' +
+        'every second during minutes :00 through :30 of every ' +
         'other hour'],
       ['* 0-30 9,17 * * *',
-        'every second of minutes :00 through :30 during the ' +
+        'every second during minutes :00 through :30 during the ' +
         '9 a.m. and 5 p.m. hours'],
       ['* 0-30 9-17 * * *',
-        'every second of minutes :00 through :30 from 9 a.m. until 6 p.m.'],
-      ['* 5,30 * * * *', 'every second of minutes :05 and :30 of every hour']
+        'every second during minutes :00 through :30 from 9 a.m. until 6 p.m.'],
+      ['* 5,30 * * * *', 'every second during minutes :05 and :30 of every hour']
     ]);
   });
 
@@ -94,8 +94,8 @@ describe.skip('English core-set corrections:', function() {
   describe('batch 3 - minute-leading & second-step:', function() {
     run([
       ['* 5,30 */2 * * *',
-        'every second of minutes :05 and :30 of every other hour'],
-      ['*/15 0 * * * *', 'every 15 seconds of minute :00 of every hour'],
+        'every second during minutes :05 and :30 of every other hour'],
+      ['*/15 0 * * * *', 'every 15 seconds during minute :00 of every hour'],
       ['0 * */2 * * *', 'every minute of every other hour'],
       ['0 * 0 * * *', 'every minute of the midnight hour'],
       ['0 * 9-17 * * *', 'every minute from 9 a.m. until 6 p.m.'],
@@ -251,7 +251,7 @@ describe.skip('English core-set corrections:', function() {
         'in June every hour from 9 a.m. until 6 p.m. whenever the day is ' +
         'the 1st or a Friday'],
       ['30 5,10 9,17,19,21,23 * * 1',
-        'at 30 seconds past the minute, at five and ten minutes past the ' +
+        'at 30 seconds past the minute, at 5 and 10 minutes past the ' +
         'hour, at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. on Mondays'],
       ['30 5,10 9,17,19,21,23 1 * 5',
         'at 30 seconds past the minute, at 5 and 10 minutes past the hour, ' +
@@ -270,8 +270,9 @@ describe.skip('English core-set corrections:', function() {
   // form that reads as a union for naive, logical, AND technical readers — plain
   // "on X or on Y" reads as alternative, "on X and on Y" as intersection. Day
   // predicates: the 1st / from the 1st through the 15th / an odd-numbered day /
-  // the (month's) last day; a Friday / a weekday / the last Friday of the month
-  // (possessive "its last Friday" when paired with another quartz). The cadence
+  // the last day of the month; a Friday / a weekday / the last Friday of the
+  // month (each quartz keeps its full parallel phrase, no possessive). The
+  // cadence
   // OR cases (in batches 4–8 above + below) use the same frame with the cadence
   // as the lead. (Note: no mainstream cron tool renders the union this way.)
   describe('OR union — condition-frame (panel-validated):', function() {
@@ -427,8 +428,8 @@ describe.skip('English core-set corrections:', function() {
         'at midnight whenever the day is the last day of the month or a ' +
         'weekday'],
       ['0 0 L * 5L',
-        'at midnight whenever the day is the month\'s last day or its last ' +
-        'Friday'],
+        'at midnight whenever the day is the last day of the month or the ' +
+        'last Friday of the month'],
       ['0 0 L */2 */2',
         'in every odd-numbered month at midnight whenever the day is the ' +
         'last day of the month, a Sunday, a Tuesday, a Thursday, or a ' +
@@ -441,7 +442,7 @@ describe.skip('English core-set corrections:', function() {
         'last day of the month or a weekday'],
       ['0 0 L */2 5L',
         'in every odd-numbered month at midnight whenever the day is the ' +
-        'month\'s last day or its last Friday'],
+        'last day of the month or the last Friday of the month'],
       ['0 0 L 1 */2',
         'in January at midnight whenever the day is the last day of the ' +
         'month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
@@ -452,8 +453,8 @@ describe.skip('English core-set corrections:', function() {
         'in January at midnight whenever the day is the last day of the ' +
         'month or a weekday'],
       ['0 0 L 1 5L',
-        'in January at midnight whenever the day is the month\'s last day ' +
-        'or its last Friday'],
+        'in January at midnight whenever the day is the last day of the ' +
+        'month or the last Friday of the month'],
       ['0 0 L 1-3 */2',
         'in January through March at midnight whenever the day is the last ' +
         'day of the month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
@@ -464,8 +465,8 @@ describe.skip('English core-set corrections:', function() {
         'in January through March at midnight whenever the day is the last ' +
         'day of the month or a weekday'],
       ['0 0 L 1-3 5L',
-        'in January through March at midnight whenever the day is the ' +
-        'month\'s last day or its last Friday']
+        'in January through March at midnight whenever the day is the last ' +
+        'day of the month or the last Friday of the month']
     ]);
   });
 

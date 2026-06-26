@@ -15,9 +15,8 @@ describe('Hour step under a fixed minute and a second reads as a cadence:',
   function() {
     // Minute 0 folds into the lead: a single/list/range second is "past the
     // hour" (H:00:SS) followed by the hour cadence; a wildcard or sub-minute
-    // step second is the whole minute-0 window ("for one minute"), confined to
-    // a clean stride with the "during every other hour" idiom so it is never
-    // heard as the bare hour-step form.
+    // step second is the leading cadence, with the pinned minute and clean hour
+    // stride as confinements ("during minute :00 of every other hour").
     describe('minute 0 (folds into the hour)', function() {
       run([
         ['30 0 */2 * * *',
@@ -25,13 +24,13 @@ describe('Hour step under a fixed minute and a second reads as a cadence:',
         ['5 0 */2 * * *',
           'at five seconds past the hour, every two hours'],
         ['* 0 */2 * * *',
-          'every second for one minute during every other hour'],
+          'every second during minute :00 of every other hour'],
         ['*/15 0 */2 * * *',
-          'every 15 seconds for one minute during every other hour'],
+          'every 15 seconds during minute :00 of every other hour'],
         ['5,30 0 */2 * * *',
           'at 5 and 30 seconds past the hour, every two hours'],
         ['0-10 0 */2 * * *',
-          'every second from zero through ten past the hour, every two hours']
+          'every second from 0 through 10 past the hour, every two hours']
       ]);
     });
 
@@ -50,12 +49,14 @@ describe('Hour step under a fixed minute and a second reads as a cadence:',
       ]);
     });
 
-    // A non-zero pinned minute is a real clock minute: the second leads, the
-    // minute follows as "M minutes past the hour", then the hour cadence.
+    // A non-zero pinned minute under a seconds-cadence lead is the minute
+    // confinement ("during minute :05"); under a clock-point second it is "M
+    // minutes past the hour" after the second's own clause, then the hour
+    // cadence.
     describe('non-zero pinned minute', function() {
       run([
         ['* 5 */2 * * *',
-          'every second, five minutes past the hour, every two hours'],
+          'every second during minute :05 of every other hour'],
         ['5,30 5 */2 * * *',
           'at 5 and 30 seconds past the minute, ' +
           'five minutes past the hour, every two hours'],
@@ -72,7 +73,7 @@ describe('Hour step under a fixed minute and a second reads as a cadence:',
         ['30 0 */2 1 * *',
           'at 30 seconds past the hour, every two hours on the 1st'],
         ['30 0 */2 * * MON',
-          'at 30 seconds past the hour, every two hours on Monday']
+          'at 30 seconds past the hour, every two hours on Mondays']
       ]);
     });
 
