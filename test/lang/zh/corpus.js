@@ -61,9 +61,10 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['* 0 9,11,13,15,17,19,21 * * *',
         '每天9点0分、11点0分、13点0分、15点0分、17点0分、19点0分和' +
         '21点0分的每一秒'],
-      ['* 0 9-17 * * *',
-        '每天9点0分、10点0分、11点0分、正午、13点0分、14点0分、' +
-        '15点0分、16点0分和17点0分的每一秒'],
+      // An hour RANGE under a minute-0 confinement reads as a window, not a
+      // wall of clock minutes: the span pins "0分" so the :00 confinement stays
+      // visible, distinct from the bare hourly window "在9点至17点之间，每小时".
+      ['* 0 9-17 * * *', '每天9点至17点0分的每一秒'],
       ['* 0 9 * * MON', '每周一，9点0分的每一秒'],
       ['*/15 0 9 * * *', '每天9点0分的每15秒'],
       // An offset/uneven second stride under a pinned minute keeps both
@@ -100,11 +101,12 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // cadence, with a meaningful second fused as its own clause.
       ['30 5 */2 * * *', '每2小时5分的第30秒'],
       ['* 5 */2 * * *', '每2小时5分的每一秒'],
-      // Guards: irregular hour lists and ranges keep enumerating.
+      // An hour RANGE reads as a window span, not a wall of clock times: the
+      // second appended to "9点至17点" (see the dedicated hour-range section
+      // below). Guard: an irregular hour list (no range) has no range to
+      // collapse and still enumerates.
       ['30 0 9,17 * * *', '每天9点30秒和17点30秒'],
-      ['30 0 9-17 * * *',
-        '每天9点0分、10点0分、11点0分、正午、13点0分、14点0分、' +
-        '15点0分、16点0分和17点0分的第30秒'],
+      ['30 0 9-17 * * *', '每天9点至17点，第30秒'],
       ['0 0 */2 * * *', '每2小时'],
       // An offset or non-uniform hour step reads as the cadence its minute
       // sibling already uses ("从M点起每N小时[，至K点]"), not the enumerated hours:
@@ -125,7 +127,22 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 9-20,22 * * *', '每天9点至20点和22点'],
       ['* * 9-20,22 * * *', '在9点至20点和22点，每分钟每秒'],
       ['0 0 9-12,14-17 * * *', '每天9点至正午和14点至17点'],
+      // An hour RANGE (or a list whose segments include a range) under minute 0
+      // and a meaningful second used to expand into a wall of clock times; it
+      // now reads as the hour-range window span ("9点至17点"). The hour-RANGE
+      // analog of the hour-step cadence. A single/list/range second appends as
+      // a clock-point second ("，第30秒"); a wildcard or sub-minute step second
+      // pins "0分" so the :00 confinement stays visible.
+      ['30 0 9-17 * * *', '每天9点至17点，第30秒'],
+      ['5,30 0 9-17 * * *', '每天9点至17点，第5、30秒'],
+      ['0-10 0 9-17 * * *', '每天9点至17点，第0至10秒'],
+      ['* 0 9-17 * * *', '每天9点至17点0分的每一秒'],
+      ['*/15 0 9-17 * * *', '每天9点至17点0分的每15秒'],
+      ['30 0 9-20,22 * * *', '每天9点至20点和22点，第30秒'],
+      ['* 0 9-20,22 * * *', '每天9点至20点和22点0分的每一秒'],
+      ['30 0 9-17 * * MON', '每周一，9点至17点，第30秒'],
       // Guard: a pure single-value hour list has no range, so nothing collapses.
+      ['30 0 9,17 * * *', '每天9点30秒和17点30秒'],
       ['* 5 9,17 * * *', '每天9点5分和17点5分每秒'],
       // A single minute over a lone hour keeps the composed clock time
       // ("0点2分"), attaching the second to it rather than splitting the

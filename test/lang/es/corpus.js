@@ -412,10 +412,12 @@ describe('Español (es):', function() {
         'cada segundo durante un minuto al mediodía, todos los días'],
       ['* 0 9,11 * * *',
         'cada segundo durante un minuto a las 9 y 11, todos los días'],
+      // An hour RANGE under a minute-0 confinement reads as a window, not a
+      // wall of clock times: the one-minute window during the 09:00-17:00
+      // hours (the hour-range analog of the even-hours confinement below).
       ['* 0 9-17 * * *',
-        'cada segundo durante un minuto a las 9, a las 10, a las 11, ' +
-        'al mediodía, a las 13, a las 14, a las 15, a las 16 y a las 17, ' +
-        'todos los días'],
+        'cada segundo durante un minuto, durante las horas de las 09:00 ' +
+        'a las 17:00'],
       // An hour step under a minute-0 confinement reads as a cadence, not a
       // wall of clock times: the one-minute window during the even hours.
       ['* 0 */2 * * *',
@@ -485,14 +487,53 @@ describe('Español (es):', function() {
       ['30 5 */2 * * *',
         'en el segundo 30 de cada minuto, en el minuto 5, cada dos horas'],
       ['* 5 */2 * * *', 'cada segundo, en el minuto 5, cada dos horas'],
-      // Guards: irregular hour lists and ranges keep enumerating.
+      // An hour RANGE reads as a window, not a wall of clock times: the
+      // second/minute lead, then "de las 09:00 a las 17:00" (see the
+      // dedicated hour-range section below). Guard: an irregular hour list
+      // (no range) has no window to form and still enumerates.
       ['30 0 9,17 * * *', 'todos los días a las 09:00:30 y 17:00:30'],
       ['30 0 9-17 * * *',
-        'en el segundo 30 de cada minuto, todos los días a las 09:00:30, ' +
-        '10:00:30, 11:00:30, 12:00:30, 13:00:30, 14:00:30, 15:00:30, ' +
-        '16:00:30 y 17:00:30'],
+        'en el segundo 30 de cada hora, de las 09:00 a las 17:00'],
       // A clean hour step with a plain :00 stays the bare hour cadence.
       ['0 0 */2 * * *', 'cada dos horas']
+    ]);
+  });
+
+  // An hour RANGE (or a list whose segments include a range) under minute 0
+  // and a meaningful second used to expand into a wall of clock times; it now
+  // reads as the hour-range window ("de las 09:00 a las 17:00"). The
+  // hour-RANGE analog of the hour-step cadence. A pure single-value hour list
+  // (9,17) has no range to span and still enumerates.
+  describe('rango horario como ventana en vez de lista de horas', function() {
+    run([
+      ['30 0 9-17 * * *',
+        'en el segundo 30 de cada hora, de las 09:00 a las 17:00'],
+      ['5,30 0 9-17 * * *',
+        'en los segundos 5 y 30 de cada hora, de las 09:00 a las 17:00'],
+      ['0-10 0 9-17 * * *',
+        'cada segundo del 0 al 10 de cada hora, de las 09:00 a las 17:00'],
+      // A wildcard or sub-minute step second is the one-minute window confined
+      // to the hour range ("durante las horas …"), distinct from the bare
+      // minute-0 window so the confinement is never heard as it.
+      ['* 0 9-17 * * *',
+        'cada segundo durante un minuto, durante las horas de las 09:00 ' +
+        'a las 17:00'],
+      ['*/15 0 9-17 * * *',
+        'cada 15 segundos durante un minuto, durante las horas de las 09:00 ' +
+        'a las 17:00'],
+      // A range inside a list: the contiguous span is a window, the
+      // non-contiguous hour joins with "y también".
+      ['30 0 9-20,22 * * *',
+        'en el segundo 30 de cada hora, de las 09:00 a las 20:00 ' +
+        'y también a las 22:00'],
+      ['* 0 9-20,22 * * *',
+        'cada segundo durante un minuto, durante las horas de las 09:00 ' +
+        'a las 20:00 y también a las 22:00'],
+      // The window carries the trailing day qualifier.
+      ['30 0 9-17 * * MON',
+        'en el segundo 30 de cada hora, de las 09:00 a las 17:00 los lunes'],
+      // Guard: a pure single-value hour list (no range) still enumerates.
+      ['30 0 9,17 * * *', 'todos los días a las 09:00:30 y 17:00:30']
     ]);
   });
 
@@ -508,14 +549,12 @@ describe('Español (es):', function() {
       // an hourly idiom ("cada hora" / "cada dos horas" / a 9-a-17 window)
       // that silently drops the :00.
       ['* 0 * * * *', 'cada segundo, en el minuto 0 de cada hora'],
-      // The minute-0 confinement reads with a duration frame ("durante un
-      // minuto a las 9 …"), never a bare hour, which reads aloud as the whole
-      // hour. The hour reads as its day-period word; "durante un minuto"
-      // carries the one-minute window.
+      // An hour RANGE under the minute-0 confinement reads as a window
+      // ("durante las horas …"), not a wall of clock times; the window honors
+      // the 12-hour dialect ("de las 9 de la mañana a las 5 de la tarde").
       ['* 0 9-17 * * *',
-        'cada segundo durante un minuto a las 9, 10 y 11 de la mañana, ' +
-        'al mediodía, y a la 1, a las 2, a las 3, a las 4 y a las 5 ' +
-        'de la tarde, todos los días'],
+        'cada segundo durante un minuto, durante las horas de las 9 ' +
+        'de la mañana a las 5 de la tarde'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "cada segundo"). Fuzzer-found.
       ['* * 9 * * *',

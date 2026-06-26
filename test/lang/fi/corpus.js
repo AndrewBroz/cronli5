@@ -309,9 +309,11 @@ describe('Suomi (fi):', function() {
       ['* 0 12 * * *', 'joka sekunti minuutin 12.00 aikana, joka päivä'],
       ['* 0 9,11 * * *',
         'joka sekunti minuuttien 9.00 ja 11.00 aikana, joka päivä'],
+      // An hour RANGE under a minute-0 confinement reads as a window, not a
+      // wall of clock minutes: the one-minute window klo 9–17 (the hour-range
+      // analog of the every-other-hour confinement below).
       ['* 0 9-17 * * *',
-        'joka sekunti minuuttien 9.00, 10.00, 11.00, 12.00, 13.00, 14.00, ' +
-        '15.00, 16.00 ja 17.00 aikana, joka päivä'],
+        'joka sekunti minuutin ajan klo 9–17'],
       // An hour step under a minute-0 confinement reads as a cadence, not a
       // wall of clock minutes: the one-minute window during every other hour.
       ['* 0 */2 * * *',
@@ -356,13 +358,49 @@ describe('Suomi (fi):', function() {
         '30 sekunnin kohdalla, 5 minuutin kohdalla, kahden tunnin välein'],
       ['* 5 */2 * * *',
         'joka sekunti, 5 minuutin kohdalla, kahden tunnin välein'],
-      // Guards: irregular hour lists and ranges keep enumerating.
+      // An hour RANGE reads as a window, not a wall of clock times: the
+      // second/minute lead, then "klo 9–17" (see the dedicated hour-range
+      // section below). Guard: an irregular hour list (no range) has no window
+      // to form and still enumerates.
       ['30 0 9,17 * * *', 'joka päivä klo 9.00.30 ja 17.00.30'],
       ['30 0 9-17 * * *',
-        '30 sekunnin kohdalla minuuttien 9.00, 10.00, 11.00, 12.00, ' +
-        '13.00, 14.00, 15.00, 16.00 ja 17.00 aikana, joka päivä'],
+        '30 sekunnin kohdalla, klo 9–17'],
       // A clean hour step with a plain :00 stays the bare hour cadence.
       ['0 0 */2 * * *', 'kahden tunnin välein']
+    ]);
+  });
+
+  // An hour RANGE (or a list whose segments include a range) under minute 0
+  // and a meaningful second used to expand into a wall of clock times; it now
+  // reads as the hour-range window ("klo 9–17"). The hour-RANGE analog of the
+  // hour-step cadence. A pure single-value hour list (9,17) has no range to
+  // span and still enumerates.
+  describe('tuntiväli ikkunana tuntilistan sijaan', function() {
+    run([
+      ['30 0 9-17 * * *',
+        '30 sekunnin kohdalla, klo 9–17'],
+      ['5,30 0 9-17 * * *',
+        '5 ja 30 sekunnin kohdalla, klo 9–17'],
+      ['0-10 0 9-17 * * *',
+        '0–10 sekunnin kohdalla, klo 9–17'],
+      // A wildcard or sub-minute step second is the one-minute window across
+      // the range ("minuutin ajan klo 9–17"); "minuutin ajan" carries the :00,
+      // distinct from the bare "joka tunti klo 9–17".
+      ['* 0 9-17 * * *',
+        'joka sekunti minuutin ajan klo 9–17'],
+      ['*/15 0 9-17 * * *',
+        '15 sekunnin välein minuutin ajan klo 9–17'],
+      // A range inside a list: the contiguous span is a window, the
+      // non-contiguous hour joins with "sekä klo".
+      ['30 0 9-20,22 * * *',
+        '30 sekunnin kohdalla, klo 9–20 sekä klo 22'],
+      ['* 0 9-20,22 * * *',
+        'joka sekunti minuutin ajan klo 9–20 sekä klo 22'],
+      // The window carries the trailing day qualifier.
+      ['30 0 9-17 * * MON',
+        '30 sekunnin kohdalla, klo 9–17 maanantaisin'],
+      // Guard: a pure single-value hour list (no range) still enumerates.
+      ['30 0 9,17 * * *', 'joka päivä klo 9.00.30 ja 17.00.30']
     ]);
   });
 
@@ -385,12 +423,11 @@ describe('Suomi (fi):', function() {
       // an hourly idiom ("joka tunti" / "kahden tunnin välein" / a klo 9–17
       // window) that silently drops the :00.
       ['* 0 * * * *', 'joka sekunti, joka tunti 0 minuutin kohdalla'],
-      // A specific hour with the minute pinned to 0: the seconds fire only
-      // during the explicit clock minute ("minuutin 9.00 aikana"), never the
-      // bare hour ("klo 9"), which would hide the :00 confinement.
+      // An hour RANGE under the minute-0 confinement reads as a window, not a
+      // wall of clock minutes: "minuutin ajan" carries the :00, then klo 9–17,
+      // distinct from the bare "joka tunti klo 9–17" so the :00 is not dropped.
       ['* 0 9-17 * * *',
-        'joka sekunti minuuttien 9.00, 10.00, 11.00, 12.00, 13.00, 14.00, ' +
-        '15.00, 16.00 ja 17.00 aikana, joka päivä'],
+        'joka sekunti minuutin ajan klo 9–17'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "joka sekunti"). Fuzzer-found.
       ['* * 9 * * *', 'joka sekunti, joka minuutti kello 9 aikana'],

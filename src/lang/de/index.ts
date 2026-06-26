@@ -682,7 +682,8 @@ function renderComposeSeconds(
   if ((plan.rest.kind === 'clockTimes' ||
       plan.rest.kind === 'compactClockTimes') &&
       ir.shapes.minute === 'single') {
-    const cadence = hourCadence(ir, +ir.pattern.minute);
+    const minute = +ir.pattern.minute;
+    const cadence = hourCadence(ir, minute) ?? hourRangeCadence(ir, minute);
 
     if (cadence !== null) {
       return cadence;
@@ -805,10 +806,11 @@ function renderCompactClockTimes(
   const sep = opts.style.sep;
 
   if (plan.fold) {
-    // An hour step (or arithmetic-progression hour list) under the single
-    // pinned minute reads as a cadence, not a wall of clock times. (Returns
-    // null for an irregular list or a range, which keep folding below.)
-    const cadence = hourCadence(ir, plan.minute);
+    // An hour step or range (or arithmetic-progression hour list) under the
+    // single pinned minute reads as a cadence or window, not a wall of clock
+    // times. (Returns null for an irregular list, which keeps folding below.)
+    const cadence = hourCadence(ir, plan.minute) ??
+      hourRangeCadence(ir, plan.minute);
 
     if (cadence !== null) {
       return cadence;
@@ -1015,12 +1017,58 @@ function hourCadence(ir: IR, minute: number): string | null {
   return hourCadenceLead(ir, minute) + ', ' + hourStrideCadence(stride);
 }
 
-// Whether an hour cadence applies to a plan with a single pinned minute — the
-// signal that the clause is a cadence, not a daily clock-time list, so the
-// "täglich" frame must not be added.
+// Whether an hour cadence or hour-range window applies to a plan with a single
+// pinned minute — the signal that the clause is a cadence/window, not a daily
+// clock-time list, so the "täglich" frame must not be added.
 function hourCadenceApplies(ir: IR): boolean {
-  return ir.shapes.minute === 'single' &&
-    hourCadence(ir, +ir.pattern.minute) !== null;
+  if (ir.shapes.minute !== 'single') {
+    return false;
+  }
+
+  const minute = +ir.pattern.minute;
+
+  return hourCadence(ir, minute) !== null ||
+    hourRangeCadence(ir, minute) !== null;
+}
+
+// Whether the hour field is a range — or a list whose segments include a
+// range — and so forms a window rather than a cross-product of clock times.
+// A pure single-value list (9,17) has no range to span and still enumerates;
+// a step is handled by hourStride/hourCadence.
+function hasHourWindow(ir: IR): boolean {
+  const segments = fieldSegments(ir, 'hour');
+
+  return !!segments && segments.some(function range(segment) {
+    return segment.kind === 'range';
+  });
+}
+
+// Render an hour range (or a list whose segments include a range) under
+// minute 0 and a meaningful second as the hour-range window — the lead clause,
+// then "von 9 bis 17 Uhr" (and any non-contiguous hour as "und um 22 Uhr") —
+// instead of cross-multiplying the hours into a wall of clock times. The
+// hour-RANGE analog of hourCadence; returns the bare clause (the day frame is
+// suppressed by hourCadenceApplies). Returns null when the hour has no range,
+// when the minute is non-zero (a real clock minute the existing window form
+// already speaks), or when a plain :00 set carries no clause. Renderer-only;
+// the IR is unchanged.
+function hourRangeCadence(ir: IR, minute: number): string | null {
+  if (minute !== 0 || !hasHourWindow(ir) || ir.pattern.second === '0') {
+    return null;
+  }
+
+  return hourCadenceLead(ir, minute) + ', ' + hourRangeWindowTail(ir);
+}
+
+// The hour-range window as a cadence tail at the top of each hour: each range
+// segment is "von X bis Y Uhr", any non-contiguous hour is "um Z Uhr", joined
+// — the same parts the bare "stündlich von 9 bis 17 Uhr" window forms, minus
+// the "stündlich" prefix the lead replaces. The minute has folded into the
+// lead, so the parts close on the top of their final hour.
+function hourRangeWindowTail(ir: IR): string {
+  // Minute 0 with a falsy second renders each part as a bare hour ("von 9 bis
+  // 17 Uhr", "um 22 Uhr"); the separator is unused in that path.
+  return joinList(hourSegmentParts(ir, 0, 0, ':'));
 }
 
 // An hourly window: "stündlich von 9 bis 17 Uhr", or every minute across it.
@@ -1060,10 +1108,12 @@ function renderClockTimes(
   plan: Extract<PlanNode, {kind: 'clockTimes'}>,
   opts: Opts
 ): string {
-  // An hour step (or arithmetic-progression hour list) under a single pinned
-  // minute reads as a cadence rather than a cross-product of clock times.
+  // An hour step or range (or arithmetic-progression hour list) under a single
+  // pinned minute reads as a cadence or window rather than a cross-product of
+  // clock times.
   if (ir.shapes.minute === 'single') {
-    const cadence = hourCadence(ir, +ir.pattern.minute);
+    const minute = +ir.pattern.minute;
+    const cadence = hourCadence(ir, minute) ?? hourRangeCadence(ir, minute);
 
     if (cadence !== null) {
       return cadence;

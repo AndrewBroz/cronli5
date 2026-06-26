@@ -67,9 +67,11 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['* 0 12 * * *', 'every second for one minute at noon, every day'],
       ['* 0 9,11 * * *',
         'every second for one minute at 9 a.m. and 11 a.m., every day'],
+      // An hour RANGE is a window, not a discrete hour list: confined to
+      // minute 0 it reads "every hour from 9 a.m. through 5 p.m." — the same
+      // window the bare 0 0 9-17 forms (see hour-range-cadence.js).
       ['* 0 9-17 * * *',
-        'every second for one minute at 9 a.m., 10 a.m., 11 a.m., noon, ' +
-        '1 p.m., 2 p.m., 3 p.m., 4 p.m., and 5 p.m., every day'],
+        'every second for one minute during the 9 a.m. through 5 p.m. hours'],
       // An hour STEP is a cadence, not a discrete hour list: confined to
       // minute 0 it reads "during every other hour" — the same confinement
       // idiom as "every minute during every other hour", kept distinct from

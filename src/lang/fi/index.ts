@@ -353,9 +353,13 @@ function composeHourCadence(
   const clockRest = plan.rest.kind === 'clockTimes' ||
     plan.rest.kind === 'compactClockTimes';
 
-  return clockRest && ir.shapes.minute === 'single' ?
-    hourCadence(ir, +ir.pattern.minute, opts) :
-    null;
+  if (!clockRest || ir.shapes.minute !== 'single') {
+    return null;
+  }
+
+  const minute = +ir.pattern.minute;
+
+  return hourCadence(ir, minute, opts) ?? hourRangeCadence(ir, minute, opts);
 }
 
 function renderComposeSeconds(
@@ -867,10 +871,13 @@ function renderClockTimes(
   plan: Extract<PlanNode, {kind: 'clockTimes'}>,
   opts: NormalizedOptions
 ): string {
-  // An hour step (or arithmetic-progression hour list) under a single pinned
-  // minute reads as a cadence rather than a cross-product of clock times.
+  // An hour step or range (or arithmetic-progression hour list) under a single
+  // pinned minute reads as a cadence or window rather than a cross-product of
+  // clock times.
   if (ir.shapes.minute === 'single') {
-    const cadence = hourCadence(ir, +ir.pattern.minute, opts);
+    const minute = +ir.pattern.minute;
+    const cadence = hourCadence(ir, minute, opts) ??
+      hourRangeCadence(ir, minute, opts);
 
     if (cadence !== null) {
       return cadence;
@@ -904,7 +911,8 @@ function renderCompactClockTimes(
   // minute reads as a cadence, not a wall of clock times. (Returns null for an
   // irregular list or a range, which keep folding below.)
   if (plan.fold) {
-    const cadence = hourCadence(ir, plan.minute, opts);
+    const cadence = hourCadence(ir, plan.minute, opts) ??
+      hourRangeCadence(ir, plan.minute, opts);
 
     if (cadence !== null) {
       return cadence;
@@ -1247,6 +1255,55 @@ function cleanHourStride(segment: StepSegment): boolean {
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
 
   return 24 % segment.interval === 0 && start < segment.interval;
+}
+
+// Whether the hour field is a range — or a list whose segments include a
+// range — and so forms a window rather than a cross-product of clock times.
+// A pure single-value list (9,17) has no range to span and still enumerates;
+// a step is handled by hourStride/hourCadence.
+function hasHourWindow(ir: IR): boolean {
+  const segments = ir.analyses.segments.hour;
+
+  return !!segments && segments.some(function range(segment: Segment) {
+    return segment.kind === 'range';
+  });
+}
+
+// The hour-range window as a cadence tail at the top of each hour: a lone
+// range is the bare "klo 9–17"; a range plus a non-contiguous hour joins it
+// with "sekä klo" ("klo 9–20 sekä klo 22"), the same idiom the bare folded
+// window uses. The minute has folded into the lead, so the window closes on
+// the top of its final hour.
+function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
+  return ir.analyses.segments.hour!.length === 1 ?
+    hourSegmentTimes(ir, 0, null, opts) :
+    hourSegmentTimesWithSeka(ir, 0, null, opts);
+}
+
+// Render an hour range (or a list whose segments include a range) under
+// minute 0 and a meaningful second as the hour-range window — the lead clause,
+// then "klo 9–17" — instead of cross-multiplying the hours into a wall of
+// clock times. The hour-RANGE analog of hourCadence. Returns null when the
+// hour has no range, when the minute is non-zero (a real clock minute the
+// existing window form already speaks), or when a plain :00 set carries no
+// clause. Renderer-only; the IR is unchanged.
+function hourRangeCadence(ir: IR, minute: number,
+  opts: NormalizedOptions): string | null {
+  if (minute !== 0 || !hasHourWindow(ir) || ir.pattern.second === '0') {
+    return null;
+  }
+
+  const tail = hourRangeWindowTail(ir, opts);
+
+  // A wildcard or sub-minute step second is the whole minute-0 window
+  // ("minuutin ajan", carried by hourCadenceLead), then the window — kept
+  // distinct from the bare "joka tunti klo 9–17" so the confinement is never
+  // heard as it (the hour-range analog of "minuutin ajan joka toisen tunnin
+  // aikana"). A meaningful second leads at its mark, then the window.
+  const joiner = subMinuteSecond(ir) ? ' ' : ', ';
+
+  return hourCadenceLead(ir, minute, opts) + joiner + tail +
+    trailingQualifier(ir, opts);
 }
 
 // --- Hour-time phrasing. ---

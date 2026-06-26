@@ -781,6 +781,15 @@ function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
 // :00, not 3,600 across the hour) stays visible. The daily frame leads with
 // 每天; a weekday or date qualifier is added by describe().
 function composeMinuteZeroClocks(ir: IR, sec: string): string {
+  // An hour RANGE (or a list whose segments include a range) reads as the span
+  // the source wrote ("9点至17点"), not the wall of clock words it expands to —
+  // the hour-RANGE analog of the hour-step cadence. A pure single-value list
+  // (9,17) has no range to span and keeps enumerating below.
+  if (hasHourWindow(ir)) {
+    return isDaily(ir) ? '每天' + hourRangeWindow(ir, sec) :
+      hourRangeWindow(ir, sec);
+  }
+
   const clocks = hourFires(ir).map(function clock(hour): string {
     // Noon's word (正午) already pins 12:00, so the "0分" is redundant for it;
     // midnight (凌晨0点) and other hours still need it to pin the minute.
@@ -793,6 +802,33 @@ function composeMinuteZeroClocks(ir: IR, sec: string): string {
   const core = joinAnd(clocks) + tail;
 
   return isDaily(ir) ? '每天' + core : core;
+}
+
+// Whether the hour field is a range — or a list whose segments include a
+// range — and so forms a window ("9点至17点") rather than a wall of clock
+// words. A pure single-value list (9,17) has no range to span; a step is
+// handled by hourStride/hourCadence.
+function hasHourWindow(ir: IR): boolean {
+  return fieldSegments(ir, 'hour').some(function range(segment) {
+    return segment.kind === 'range';
+  });
+}
+
+// The hour-range window under a pinned minute 0 and a meaningful or wildcard
+// second: the hour span list ("9点至17点", "9点至20点和22点") plus the second.
+// A wildcard or sub-minute step second pins the explicit "0分" so the
+// one-minute confinement stays visible ("9点至17点0分的每一秒"), distinct from
+// the bare hourly window ("在9点至17点之间，每小时"); a single/list/range second
+// reads as a clock-point span with the second appended ("9点至17点，第30秒"),
+// matching the folded compact form for the same shape.
+function hourRangeWindow(ir: IR, sec: string): string {
+  const span = hourList(ir);
+
+  if (ir.pattern.second === '*' || ir.shapes.second === 'step') {
+    return span + '0分' + (sec === '每秒' ? '的每一秒' : '的' + sec);
+  }
+
+  return span + '，' + sec;
 }
 
 // Wildcard or stepped minute: hang the "每分钟/每N分钟每秒" tail off the hour.

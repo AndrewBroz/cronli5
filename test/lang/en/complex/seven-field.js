@@ -51,8 +51,7 @@ describe('Seven-field patterns:', function() {
       ['* 0 * * * * 2013',
         'every second, zero minutes past the hour, every hour in 2013'],
       ['* 0 9-17 * * *',
-        'every second for one minute at 9 a.m., 10 a.m., 11 a.m., noon, ' +
-        '1 p.m., 2 p.m., 3 p.m., 4 p.m., and 5 p.m., every day']
+        'every second for one minute during the 9 a.m. through 5 p.m. hours']
     ]);
   });
 });

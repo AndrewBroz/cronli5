@@ -112,9 +112,11 @@ describe('Deutsch (de):', function() {
       ['* 0 12 * * *', 'täglich jede Sekunde der Minute 12:00'],
       ['* 0 9,11 * * *',
         'täglich jede Sekunde der Minuten 9:00 und 11:00'],
+      // An hour RANGE under a minute-0 confinement reads as a window, not a
+      // wall of clock minutes: the one-minute window from 9 to 17h (the
+      // hour-range analog of the every-other-hour confinement below).
       ['* 0 9-17 * * *',
-        'täglich jede Sekunde der Minuten 9:00, 10:00, 11:00, 12:00, ' +
-        '13:00, 14:00, 15:00, 16:00 und 17:00'],
+        'jede Sekunde für eine Minute, von 9 bis 17 Uhr'],
       // An hour step under a minute-0 confinement reads as a cadence, not a
       // wall of clock minutes: the one-minute window in every other hour.
       ['* 0 */2 * * *',
@@ -151,13 +153,49 @@ describe('Deutsch (de):', function() {
       ['30 5 */2 * * *',
         'in Sekunde 30 jeder Minute, in Minute 5, alle 2 Stunden'],
       ['* 5 */2 * * *', 'jede Sekunde, in Minute 5, alle 2 Stunden'],
-      // Guards: irregular hour lists and ranges keep enumerating.
+      // An hour RANGE reads as a window, not a wall of clock times: the
+      // second/minute lead, then "von 9 bis 17 Uhr" (see the dedicated
+      // hour-range section below). Guard: an irregular hour list (no range)
+      // has no window to form and still enumerates.
       ['30 0 9,17 * * *', 'täglich um 9:00:30 und 17:00:30 Uhr'],
       ['30 0 9-17 * * *',
-        'täglich in Sekunde 30 jeder Minute der Minuten 9:00, 10:00, ' +
-        '11:00, 12:00, 13:00, 14:00, 15:00, 16:00 und 17:00'],
+        'in Sekunde 30 jeder Stunde, von 9 bis 17 Uhr'],
       // A clean hour step with a plain :00 stays the bare hour cadence.
       ['0 0 */2 * * *', 'alle 2 Stunden']
+    ]);
+  });
+
+  // An hour RANGE (or a list whose segments include a range) under minute 0
+  // and a meaningful second used to expand into a wall of clock times; it now
+  // reads as the hour-range window ("von 9 bis 17 Uhr"). The hour-RANGE analog
+  // of the hour-step cadence. A pure single-value hour list (9,17) has no
+  // range to span and still enumerates.
+  describe('Stundenbereich als Fenster statt Stundenliste', function() {
+    run([
+      ['30 0 9-17 * * *',
+        'in Sekunde 30 jeder Stunde, von 9 bis 17 Uhr'],
+      ['5,30 0 9-17 * * *',
+        'in den Sekunden 5 und 30 jeder Stunde, von 9 bis 17 Uhr'],
+      ['0-10 0 9-17 * * *',
+        'in den Sekunden 0 bis 10 jeder Stunde, von 9 bis 17 Uhr'],
+      // A wildcard or sub-minute step second is the one-minute window across
+      // the range ("für eine Minute, von 9 bis 17 Uhr"); "für eine Minute"
+      // carries the :00 confinement, distinct from the bare "stündlich …".
+      ['* 0 9-17 * * *',
+        'jede Sekunde für eine Minute, von 9 bis 17 Uhr'],
+      ['*/15 0 9-17 * * *',
+        'alle 15 Sekunden für eine Minute, von 9 bis 17 Uhr'],
+      // A range inside a list: the contiguous span is a window, the
+      // non-contiguous hour trails as "und um 22 Uhr".
+      ['30 0 9-20,22 * * *',
+        'in Sekunde 30 jeder Stunde, von 9 bis 20 Uhr und um 22 Uhr'],
+      ['* 0 9-20,22 * * *',
+        'jede Sekunde für eine Minute, von 9 bis 20 Uhr und um 22 Uhr'],
+      // The window carries the trailing day qualifier (no "täglich").
+      ['30 0 9-17 * * MON',
+        'montags in Sekunde 30 jeder Stunde, von 9 bis 17 Uhr'],
+      // Guard: a pure single-value hour list (no range) still enumerates.
+      ['30 0 9,17 * * *', 'täglich um 9:00:30 und 17:00:30 Uhr']
     ]);
   });
 
@@ -383,12 +421,12 @@ describe('Deutsch (de):', function() {
       // the bare hour ("um 9 Uhr"), which would hide the :00.
       ['* 0 9 * * *', 'täglich jede Sekunde der Minute 9:00'],
       // Minute 0 under a sub-minute second must be stated, not absorbed into
-      // an hourly idiom ("jede Stunde" / "alle 2 Stunden" / a 9-bis-17 window)
-      // that silently drops the :00.
+      // a bare hourly idiom ("jede Stunde" / "alle 2 Stunden" / "stündlich von
+      // 9 bis 17 Uhr") that silently drops the :00. An hour range surfaces it
+      // with the "für eine Minute" frame, then the window.
       ['* 0 * * * *', 'jede Sekunde, in Minute 0 jeder Stunde'],
       ['* 0 9-17 * * *',
-        'täglich jede Sekunde der Minuten 9:00, 10:00, 11:00, 12:00, ' +
-        '13:00, 14:00, 15:00, 16:00 und 17:00'],
+        'jede Sekunde für eine Minute, von 9 bis 17 Uhr'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "jede Sekunde"). Fuzzer-found.
       ['* * 9 * * *', 'jede Sekunde, jede Minute der 9-Uhr-Stunde'],
@@ -406,9 +444,11 @@ describe('Deutsch (de):', function() {
       // compactClockTimes: a range among the hours reads as a window.
       ['5,10,30 9-20,22 * * *',
         'in den Minuten 5, 10 und 30, von 9 bis 20 Uhr und um 22 Uhr'],
-      // A folded compact must keep its clock second.
+      // A range inside a list under a meaningful second reads as the window
+      // cadence: the second/minute lead, then "von 9 bis 20 Uhr und um 22 Uhr"
+      // (the hour-range section covers the family).
       ['30 0 9-20,22 * * *',
-        'stündlich von 9:00:30 bis 20:00:30 Uhr und um 22:00:30 Uhr']
+        'in Sekunde 30 jeder Stunde, von 9 bis 20 Uhr und um 22 Uhr']
     ]);
   });
 

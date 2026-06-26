@@ -197,9 +197,13 @@ function composeHourCadence(ir: IR, plan: PlanOf<'composeSeconds'>,
   const clockRest = plan.rest.kind === 'clockTimes' ||
     plan.rest.kind === 'compactClockTimes';
 
-  return clockRest && ir.shapes.minute === 'single' ?
-    hourCadence(ir, +ir.pattern.minute, opts) :
-    null;
+  if (!clockRest || ir.shapes.minute !== 'single') {
+    return null;
+  }
+
+  const minute = +ir.pattern.minute;
+
+  return hourCadence(ir, minute, opts) ?? hourRangeCadence(ir, minute, opts);
 }
 
 // A meaningful second under minute/hour shapes the earlier strategies
@@ -563,10 +567,13 @@ function hourWindow(window: {from: number; to: number; last: number},
 // a day-level qualifier, e.g. "every day at 9 a.m. and 9:30 a.m.".
 function renderClockTimes(ir: IR, plan: PlanOf<'clockTimes'>,
   opts: NormalizedOptions): string {
-  // An hour step (or arithmetic-progression hour list) under a single pinned
-  // minute reads as a cadence rather than a cross-product of clock times.
+  // An hour step or range (or arithmetic-progression hour list) under a
+  // single pinned minute reads as a cadence or window rather than a
+  // cross-product of clock times.
   if (ir.shapes.minute === 'single') {
-    const cadence = hourCadence(ir, +ir.pattern.minute, opts);
+    const minute = +ir.pattern.minute;
+    const cadence = hourCadence(ir, minute, opts) ??
+      hourRangeCadence(ir, minute, opts);
 
     if (cadence !== null) {
       return cadence;
@@ -592,10 +599,11 @@ function renderClockTimes(ir: IR, plan: PlanOf<'clockTimes'>,
 function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
   opts: NormalizedOptions): string {
   if (plan.fold) {
-    // An hour step (or arithmetic-progression hour list) under the single
-    // pinned minute reads as a cadence, not a wall of clock times. (Returns
-    // null for an irregular list or a range, which keep folding below.)
-    const cadence = hourCadence(ir, +plan.minute, opts);
+    // An hour step or range (or arithmetic-progression hour list) under the
+    // single pinned minute reads as a cadence or window, not a wall of clock
+    // times. (Returns null for an irregular list, which keeps folding below.)
+    const cadence = hourCadence(ir, +plan.minute, opts) ??
+      hourRangeCadence(ir, +plan.minute, opts);
 
     if (cadence !== null) {
       return cadence;
@@ -968,6 +976,94 @@ function cleanStrideSegment(ir: IR): StepSegment | null {
   }
 
   return segment;
+}
+
+// Whether the hour field is a range — or a list whose segments include a
+// range — and so forms a window rather than a cross-product of clock times.
+// A pure single-value list (9,17) has no range to span and still enumerates;
+// a step is handled by hourStride/hourCadence, so a field whose only segments
+// are steps and singles is left alone here.
+function hasHourWindow(ir: IR): boolean {
+  // Reached only from the clock-time paths, which run under discrete hours
+  // and so always carry hour segments.
+  return ir.analyses.segments.hour!.some(function range(segment) {
+    return segment.kind === 'range';
+  });
+}
+
+// The hour-range window as a cadence tail at the top of each hour: each range
+// segment is a "from X through Y" window ("every hour from 9 a.m. through
+// 5 p.m."), and any non-contiguous single hour is appended ("and at 10 p.m.").
+// The minute has already folded into the lead, so the window closes on the
+// top of its final hour. Mirrors foldedHourWindows but pinned to minute 0.
+function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
+  const windows: string[] = [];
+  const singles: number[] = [];
+
+  // Reached only after hasHourWindow, so hour segments exist.
+  ir.analyses.segments.hour!.forEach(function classify(segment) {
+    if (segment.kind === 'range') {
+      windows.push('from ' + getTime({hour: +segment.bounds[0], minute: 0},
+        opts) + through(opts) +
+        getTime({hour: +segment.bounds[1], minute: 0}, opts));
+    }
+    else if (segment.kind === 'step') {
+      singles.push(...segment.fires);
+    }
+    else {
+      singles.push(+segment.value);
+    }
+  });
+
+  let phrase = 'every hour ' + joinList(windows, opts);
+
+  if (singles.length) {
+    phrase += ' and at ' + joinList(singles.map(function time(hour) {
+      return getTime({hour, minute: 0}, opts);
+    }), opts);
+  }
+
+  return phrase;
+}
+
+// Render an hour range (or a list whose segments include a range) under a
+// single pinned minute and a second as the hour-range window — the lead
+// clause, then "every hour from X through Y" — instead of cross-multiplying
+// the hours into a wall of clock times. Returns null when the hour has no
+// range (a pure single-value list, a single hour, or a step, which other
+// paths own), or when a plain :00 set is short enough that enumeration is no
+// longer than the window. Renderer-only; the IR is unchanged.
+function hourRangeCadence(ir: IR, minute: number,
+  opts: NormalizedOptions): string | null {
+  // Scoped to minute 0: the minute folds into the lead and every hour fires
+  // at the top, so the window closes cleanly on the final hour. A non-zero
+  // pinned minute is a real clock minute the existing clock-time window form
+  // already speaks ("9:30:15 a.m. through 8:30:15 p.m."), unchanged.
+  if (minute !== 0 || !hasHourWindow(ir)) {
+    return null;
+  }
+
+  // A plain top-of-minute second (:00) carries no clause: the existing
+  // hour-range and folded-window renderers already speak that window, so this
+  // path only forms a window when there is a meaningful second to lead with.
+  if (ir.pattern.second === '0') {
+    return null;
+  }
+
+  // A wildcard or sub-minute step second confined to minute 0 is the whole
+  // minute-0 window ("every second for one minute"), confined to the hour
+  // range with the "during the … hours" idiom (the same idiom an hour list
+  // uses). This is kept distinct from the bare minute-0 window ("every hour
+  // from 9 a.m. through 5 p.m.") so the one-minute confinement is never heard
+  // as it — the hour-range analog of "for one minute during every other hour".
+  if (subMinuteSecond(ir)) {
+    return secondsClause(ir, 'minute', opts) + ' for one minute during the ' +
+      hourSegmentTimes(ir, {minute: 0, second: null}, false, opts) +
+      ' hours' + trailingQualifier(ir, opts);
+  }
+
+  return hourCadenceLead(ir, minute, opts) + ', ' +
+    hourRangeWindowTail(ir, opts) + trailingQualifier(ir, opts);
 }
 
 // --- List and segment phrasing. ---

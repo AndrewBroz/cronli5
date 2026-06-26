@@ -259,9 +259,13 @@ function composeHourCadence(
   const clockRest = plan.rest.kind === 'clockTimes' ||
     plan.rest.kind === 'compactClockTimes';
 
-  return clockRest && ir.shapes.minute === 'single' ?
-    hourCadence(ir, +ir.pattern.minute, opts) :
-    null;
+  if (!clockRest || ir.shapes.minute !== 'single') {
+    return null;
+  }
+
+  const minute = +ir.pattern.minute;
+
+  return hourCadence(ir, minute, opts) ?? hourRangeCadence(ir, minute, opts);
 }
 
 function renderComposeSeconds(
@@ -817,10 +821,13 @@ function renderClockTimes(
   plan: Extract<PlanNode, {kind: 'clockTimes'}>,
   opts: Opts
 ): string {
-  // An hour step (or arithmetic-progression hour list) under a single pinned
-  // minute reads as a cadence rather than a cross-product of clock times.
+  // An hour step or range (or arithmetic-progression hour list) under a single
+  // pinned minute reads as a cadence or window rather than a cross-product of
+  // clock times.
   if (ir.shapes.minute === 'single') {
-    const cadence = hourCadence(ir, +ir.pattern.minute, opts);
+    const minute = +ir.pattern.minute;
+    const cadence = hourCadence(ir, minute, opts) ??
+      hourRangeCadence(ir, minute, opts);
 
     if (cadence !== null) {
       return cadence;
@@ -1162,10 +1169,11 @@ function renderCompactClockTimes(
   opts: Opts
 ): string {
   if (plan.fold) {
-    // An hour step (or arithmetic-progression hour list) under the single
-    // pinned minute reads as a cadence, not a wall of clock times. (Returns
-    // null for an irregular list or a range, which keep folding below.)
-    const cadence = hourCadence(ir, plan.minute, opts);
+    // An hour step or range (or arithmetic-progression hour list) under the
+    // single pinned minute reads as a cadence or window, not a wall of clock
+    // times. (Returns null for an irregular list, which keeps folding below.)
+    const cadence = hourCadence(ir, plan.minute, opts) ??
+      hourRangeCadence(ir, plan.minute, opts);
 
     if (cadence !== null) {
       return cadence;
@@ -1486,6 +1494,45 @@ function cleanStrideSegment(ir: IR): StepSegment | null {
   }
 
   return segment;
+}
+
+// Whether the hour field is a range — or a list whose segments include a
+// range — and so forms a window rather than a cross-product of clock times.
+// A pure single-value list (9,17) has no range to span and still enumerates;
+// a step is handled by hourStride/hourCadence.
+function hasHourWindow(ir: IR): boolean {
+  return hourSegments(ir).some(function range(segment) {
+    return segment.kind === 'range';
+  });
+}
+
+// Render an hour range (or a list whose segments include a range) under
+// minute 0 and a meaningful second as the hour-range window — the lead clause,
+// then "de las 09:00 a las 17:00" (and any non-contiguous hour joined with
+// "y también") — instead of cross-multiplying the hours into a wall of clock
+// times. The hour-RANGE analog of hourCadence. Returns null when the hour has
+// no range, when the minute is non-zero (a real clock minute the existing
+// window form already speaks), or when a plain :00 set carries no clause.
+// Renderer-only; the IR is unchanged.
+function hourRangeCadence(ir: IR, minute: number, opts: Opts): string | null {
+  if (minute !== 0 || !hasHourWindow(ir) || ir.pattern.second === '0') {
+    return null;
+  }
+
+  // A wildcard or sub-minute step second confined to minute 0 is the whole
+  // minute-0 window ("durante un minuto"), confined to the hour range with the
+  // "durante las horas …" idiom — kept distinct from the bare minute-0 window
+  // ("cada hora de las 09:00 a las 17:00") so the confinement is never heard
+  // as it — the hour-range analog of "durante un minuto, durante las horas
+  // pares".
+  if (subMinuteSecond(ir)) {
+    return secondsClause(ir, 'minuto', opts) + ' durante un minuto, ' +
+      'durante las horas ' + hourSegmentTimes(ir, 0, null, opts) +
+      trailingQualifier(ir, opts);
+  }
+
+  return hourCadenceLead(ir, minute, opts) + ', ' +
+    hourSegmentTimes(ir, 0, null, opts) + trailingQualifier(ir, opts);
 }
 
 // --- Hour-time phrasing. ---
