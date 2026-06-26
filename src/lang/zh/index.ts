@@ -361,14 +361,17 @@ function renderMinuteFrequency(ir: IR, plan: PlanNode): string {
   const base = stepClause(minuteStep, UNITS.minute, '分', '每小时');
   const {hours} = plan as Extract<PlanNode, {kind: 'minuteFrequency'}>;
 
-  if (hours.kind === 'step') {
-    const hourStep = stepSegment(ir, 'hour');
+  // An hour stride (a clean step, or an offset/non-tiling progression the core
+  // kept a step shape or enumerated to a list) leads the minute cadence:
+  // "每2小时每5分钟", "从2点起每6小时每15分钟". A clean cadence concatenates as
+  // before; a bounded cadence ends on "至K点", so a comma keeps that endpoint
+  // from gluing onto the minute clause ("从9点起每2小时，至17点，每2分钟").
+  if (hours.kind === 'step' || hours.kind === 'during') {
+    const hourCad = hourCadencePhrase(ir);
 
-    // "每N小时" is only faithful from midnight; an offset step (2/6 fires at
-    // 2,8,14,20) enumerates its hours instead.
-    return hourStep.startToken === '*' ?
-      cadence(hourStep.interval, UNITS.hour) + base :
-      '在' + hourList(ir) + '，' + base;
+    if (hourCad !== null) {
+      return hourCad + (hourCad.indexOf('至') === -1 ? '' : '，') + base;
+    }
   }
 
   if (hours.kind === 'single' ||
@@ -404,15 +407,20 @@ function renderMinuteSpanInHour(ir: IR, plan: PlanNode): string {
 }
 
 // A minute clause across discrete hours. A wildcard minute reads "在9点、11点…，
-// 每分钟"; a ranged/listed minute names it: "9点和17点，每小时0至30分，每分钟".
+// 每分钟"; a ranged/listed minute names it: "9点和17点，每小时0至30分，每分钟". An
+// hour progression reads as its cadence ("从9点起每2小时，至17点，每分钟") rather
+// than the enumerated hours, the same idiom the minute field uses.
 function renderMinutesAcrossHours(ir: IR, plan: PlanNode): string {
   const {form} = plan as Extract<PlanNode, {kind: 'minutesAcrossHours'}>;
+  const hourCad = hourCadencePhrase(ir);
 
   if (form === 'wildcard') {
-    return '在' + hourList(ir) + '，每分钟';
+    return hourCad === null ?
+      '在' + hourList(ir) + '，每分钟' :
+      hourCad + '，每分钟';
   }
 
-  return hourList(ir) + '，' + minuteHourClause(ir) + '，每分钟';
+  return (hourCad ?? hourList(ir)) + '，' + minuteHourClause(ir) + '，每分钟';
 }
 
 // A minute clause across a stepped hour field. A wildcard minute reads "每2小时
@@ -421,27 +429,22 @@ function renderMinuteSpanAcrossHourStep(ir: IR, plan: PlanNode): string {
   const hourStep = stepSegment(ir, 'hour');
   const {form} = plan as Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>;
 
-  // A minute list under a CLEAN stride from midnight reads as the "每N小时"
-  // cadence plus the minute list ("每2小时，每小时0、25、50分"), the same
-  // compaction the wildcard/range minute already uses, rather than the twelve
-  // enumerated hours. An OFFSET stride (1/2) has no "从M起" hour idiom, so it
-  // keeps enumerating its active hours ("每小时5分和30分，在1点、3点…").
+  // A minute list reads as the hour cadence plus the minute list ("每2小时，
+  // 每小时0、25、50分"; offset "从1点起每2小时，每小时5分和30分"), the same compaction
+  // the wildcard/range minute already uses, rather than the enumerated hours.
   if (form === 'list') {
-    return hourStep.startToken === '*' ?
-      cadence(hourStep.interval, UNITS.hour) + '，' + renderMinutePast(ir) :
-      renderMinutePast(ir) + '，在' + hourList(ir);
+    return hourCadencePhrase(ir) + '，' + renderMinutePast(ir);
   }
 
   const minuteTail = form === 'wildcard' ?
     '每分钟' :
     minuteHourClause(ir) + '，每分钟';
 
-  // An offset stride (2/6 fires at 2,8,14,20) enumerates its hours like a
-  // discrete list; "每N小时" is faithful only from midnight.
+  // An offset or non-tiling stride (2/6 fires at 2,8,14,20) reads as its
+  // cadence ("从2点起每6小时"). A wildcard minute hangs off it with a comma; a
+  // named minute follows the cadence and its own comma.
   if (hourStep.startToken !== '*') {
-    return form === 'wildcard' ?
-      '在' + hourList(ir) + '，' + minuteTail :
-      hourList(ir) + '，' + minuteTail;
+    return hourCadencePhrase(ir) + '，' + minuteTail;
   }
 
   // A step-2 hour from midnight IS exactly the even hours; name them so, rather
@@ -461,12 +464,10 @@ function renderMinuteSpanAcrossHourStep(ir: IR, plan: PlanNode): string {
 function renderClockTimes(ir: IR, plan: PlanNode, opts: Opts): string {
   // An hour step (or arithmetic-progression hour list) under a single pinned
   // minute reads as a cadence rather than a cross-product of clock times.
-  if (ir.shapes.minute === 'single') {
-    const cad = hourCadence(ir);
+  const cad = hourCadenceText(ir);
 
-    if (cad !== null) {
-      return cad;
-    }
+  if (cad !== null) {
+    return cad;
   }
 
   const {times} = plan as Extract<PlanNode, {kind: 'clockTimes'}>;
@@ -480,12 +481,10 @@ function renderCompactClockTimes(ir: IR, plan: PlanNode): string {
   // An hour step (or arithmetic-progression hour list) under the single pinned
   // minute reads as a cadence, not a wall of clock times. (Returns null for an
   // irregular list or a range, which keep enumerating below.)
-  if (ir.shapes.minute === 'single') {
-    const cad = hourCadence(ir);
+  const cad = hourCadenceText(ir);
 
-    if (cad !== null) {
-      return cad;
-    }
+  if (cad !== null) {
+    return cad;
   }
 
   const {minute} = plan as Extract<PlanNode, {kind: 'compactClockTimes'}>;
@@ -523,67 +522,71 @@ function renderHourRange(ir: IR, plan: PlanNode): string {
     range.last + '分之间，每分钟';
 }
 
-// A stepped hour field: "每2小时", or its two fires as clock words when the
-// stride fires only twice. An uneven stride (one that does not divide 24) is
-// rewritten to its fire list upstream and never reaches here.
+// A stepped hour field as its cadence: "每2小时" (clean), "从1点起每2小时"
+// (offset), "从9点起每2小时，至17点" (bounded). A stride that fires only twice
+// reads instead as its two clock words ("凌晨0点和正午", "8点和20点"), shorter and
+// clearer than a cadence for a pair.
 function renderHourStep(ir: IR): string {
   const segment = stepSegment(ir, 'hour');
 
-  if (segment.startToken !== '*') {
-    return hourList(ir);
-  }
-
-  // A step that fires only twice reads as two clock times ("凌晨0点和正午").
   if (segment.fires.length <= 2) {
     return joinAnd(segment.fires.map(hourWord));
   }
 
-  return cadence(segment.interval, UNITS.hour);
+  return hourCadencePhrase(ir) as string;
 }
 
 // --- Hour-step cadence (the 24-cycle analog of renderStride). ---
 
-// The hour field's stride, or null when the hour is not a cadence: a clean
-// step segment from midnight yields its {interval, last}; an all-single hour
-// list yields one only when its values form a long-enough arithmetic
-// progression from midnight (so an irregular list like 9,17 keeps
-// enumerating). Chinese has no "每N小时从X起" offset-hour idiom, so an offset or
-// bounded stride (start > 0, or an interval not dividing 24) returns null and
-// the caller enumerates its clock words, as before. The IR is unchanged.
-function hourStride(ir: IR): {interval: number; last: number} | null {
+// The hour field's stride, or null when the hour is not a cadence: a step
+// segment yields its {interval, start, last}; an all-single hour list yields
+// one only when its values form a long-enough arithmetic progression (so an
+// irregular list, or a too-short one like 9,17, keeps enumerating). An offset
+// (start > 0) or non-tiling (interval ∤ 24) stride is still a cadence — Chinese
+// names its start and endpoint ("从M点起每N小时，至K点"), the same idiom the
+// minute field already uses — so it is no longer rejected. The IR is unchanged.
+function hourStride(
+  ir: IR
+): {interval: number; start: number; last: number} | null {
   const segments = fieldSegments(ir, 'hour');
 
   if (segments.length === 1 && segments[0].kind === 'step') {
-    const segment = segments[0];
-    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+    const {fires, interval} = segments[0];
 
-    if (start !== 0 || 24 % segment.interval !== 0) {
-      return null;
-    }
-
-    return {interval: segment.interval,
-      last: segment.fires[segment.fires.length - 1]};
+    return {interval, start: fires[0], last: fires[fires.length - 1]};
   }
 
   const values = singleValues(segments);
-  const step = values && arithmeticStep(values);
 
-  if (!step || step.start !== 0 || 24 % step.interval !== 0) {
-    return null;
-  }
+  return values && arithmeticStep(values);
+}
 
-  return {interval: step.interval, last: step.last};
+// The hour field's cadence phrase ("每2小时", "从1点起每2小时", "从0点起每5小时，
+// 至20点"), or null when the hour is not a single arithmetic progression (an
+// irregular list, a range, or a too-short list keeps enumerating). The 24-cycle
+// analog of strideFromSegments — it routes the stride through the one phrasing
+// renderStride speaks, so a clean, offset, or non-tiling hour stride all read
+// as the cadence the equivalent minute step does.
+function hourCadencePhrase(ir: IR): string | null {
+  const stride = hourStride(ir);
+
+  return stride && renderStride({
+    ...stride, cycle: 24, unit: UNITS.hour, mark: '点', anchor: ''
+  });
 }
 
 // Render an hour step (or arithmetic-progression hour list) under a single
-// pinned minute and a second as a cadence — "每N小时" plus the minute/second —
-// instead of cross-multiplying the hours into a wall of clock times. Returns
-// null when the hour is not a clean stride from midnight, or when the
-// cross-product is short enough that enumeration is no longer than the cadence:
-// a meaningful second makes every clock time carry a second, so any stride is
-// worth compacting; otherwise the stride must exceed the clock-time cap, the
-// same point at which the core itself stops enumerating. Renderer-only; the IR
-// is unchanged.
+// pinned minute and a second as a cadence — the hour cadence plus the
+// minute/second — instead of cross-multiplying the hours into a wall of clock
+// times. Returns null when the hour is not a stride, when the cross-product is
+// short enough that enumeration is no longer than the cadence (a meaningful
+// second makes every clock time carry a second, so any stride is worth
+// compacting; otherwise the stride must exceed the clock-time cap, the same
+// point at which the core itself stops enumerating), or when the cadence is
+// bounded ("…，至K点"): a trailing minute fused onto its endpoint ("至20点0分")
+// would read as a clock time, so a bounded stride keeps enumerating its fused
+// clock times here, naming the cadence only where no minute follows it (the
+// bare hour field). Renderer-only; the IR is unchanged.
 function hourCadence(ir: IR): string | null {
   const stride = hourStride(ir);
 
@@ -591,25 +594,33 @@ function hourCadence(ir: IR): string | null {
     return null;
   }
 
-  const fires = stride.last / stride.interval + 1;
+  const fires = (stride.last - stride.start) / stride.interval + 1;
 
   if (ir.pattern.second === '0' && fires <= maxClockTimes) {
     return null;
   }
 
-  const prefix = cadence(stride.interval, UNITS.hour);
+  const prefix = hourCadencePhrase(ir) as string;
+
+  // A bounded cadence cannot carry a fused minute unambiguously; enumerate.
+  if (prefix.indexOf('至') !== -1) {
+    return null;
+  }
+
   const minute = +ir.pattern.minute;
   const subMinute = ir.pattern.second === '*' || ir.shapes.second === 'step';
 
-  // A wildcard or sub-minute step second confined to minute 0 of a clean
+  // A wildcard or sub-minute step second confined to minute 0 of the even-hour
   // stride is a confinement, not a juxtaposed cadence. Reuse the even-hours
   // idiom ("在偶数小时0分的每一秒") so the form does NOT contain the bare "每2小时"
   // and can never be misread as the absorbing hour cadence (the same reason en
   // says "for one minute during every other hour", not "every two hours"). The
-  // idiom exists only for the even-hour stride; another clean stride keeps
-  // enumerating (return null) rather than coin a misleading "每N小时…" form.
+  // idiom exists only for the even-hour stride (interval 2 from midnight);
+  // another stride keeps enumerating (return null) rather than coin a
+  // misleading "…小时…" form.
   if (minute === 0 && subMinute) {
-    return stride.interval === 2 ? '在偶数小时0分' + secondTail(ir) : null;
+    return stride.interval === 2 && stride.start === 0 ?
+      '在偶数小时0分' + secondTail(ir) : null;
   }
 
   // A pinned minute 0 folds into the cadence with the explicit "0分" so the
@@ -623,6 +634,24 @@ function hourCadence(ir: IR): string | null {
   return ir.pattern.second === '0' ?
     prefix + minute + '分' :
     prefix + minute + '分' + secondTail(ir);
+}
+
+// The cadence a clock-point core (clockTimes/compactClockTimes/composeSeconds)
+// renders an hour stride to, or null. A bare hour stride (minute 0 on the plain
+// :00 second) is the cadence phrase itself — "每2小时", "从0点起每5小时，至20点" —
+// so a short non-tiling stride like */5, which hourCadence keeps enumerating
+// (no minute to fold, nothing to disambiguate), still reads as the cadence. A
+// pinned minute or meaningful second folds into the cadence via hourCadence.
+function hourCadenceText(ir: IR): string | null {
+  if (ir.shapes.minute !== 'single') {
+    return null;
+  }
+
+  if (+ir.pattern.minute === 0 && ir.pattern.second === '0') {
+    return hourCadencePhrase(ir);
+  }
+
+  return hourCadence(ir);
 }
 
 // The fused second tail for an hour cadence: "的每一秒" for a wildcard second,
@@ -702,13 +731,6 @@ function minuteClause(ir: IR): string {
   return valueList(fieldSegments(ir, 'minute'), '分');
 }
 
-// Whether the hour field is a true "every N hours" cadence (vs discrete fires
-// like 9-17/2, whose start token is a number).
-function isHourCadence(ir: IR): boolean {
-  return ir.shapes.hour === 'step' &&
-    stepSegment(ir, 'hour').startToken === '*';
-}
-
 // minute = 0 ("on the hour"): render the rest schedule and attach the second.
 function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
   const sec = secondClause(ir);
@@ -778,8 +800,13 @@ function composeSecondsCadence(ir: IR): string {
   const sec = secondClause(ir);
   const tail = minuteClause(ir) + sec;
 
-  if (isHourCadence(ir)) {
-    return cadence(stepSegment(ir, 'hour').interval, UNITS.hour) + '的' + tail;
+  const hourCad = hourCadencePhrase(ir);
+
+  if (hourCad !== null) {
+    // The cadence absorbs the tail with "的" ("每2小时的每分钟每秒",
+    // "从1点起每2小时的每分钟每秒"); a bounded cadence ends on "至K点", so its tail
+    // takes a comma to keep that endpoint from reading as a fused clock time.
+    return hourCad + (hourCad.indexOf('至') === -1 ? '的' : '，') + tail;
   }
 
   if (ir.shapes.hour === 'single') {
@@ -831,9 +858,10 @@ function composeSecondsListed(ir: IR): string {
     return minutes + '，' + sec;
   }
 
-  if (isHourCadence(ir)) {
-    return cadence(stepSegment(ir, 'hour').interval, UNITS.hour) + '，' +
-      minutes + '，' + sec;
+  const hourCad = hourCadencePhrase(ir);
+
+  if (hourCad !== null) {
+    return hourCad + '，' + minutes + '，' + sec;
   }
 
   return hourFrame(ir) + minutes + '，' + sec;
@@ -1167,10 +1195,11 @@ function composeWindow(ir: IR, core: string): string {
   return qualifier(ir) + core;
 }
 
-// Whether an hour cadence applies — a single pinned minute over a clean hour
-// stride — so the clock-point plans take the cadence frame, not the daily one.
+// Whether an hour cadence applies — a single pinned minute over an hour stride
+// (clean, offset, or non-tiling) — so the clock-point plans take the cadence
+// frame, not the daily one.
 function hourCadenceApplies(ir: IR): boolean {
-  return ir.shapes.minute === 'single' && hourCadence(ir) !== null;
+  return hourCadenceText(ir) !== null;
 }
 
 function describe(ir: IR, opts: Opts): string {
