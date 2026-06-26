@@ -5,7 +5,7 @@
 
 import {arithmeticStep, orderWeekdaysForDisplay} from '../../core/util.js';
 import {maxClockTimes} from '../../core/specs.js';
-import {clockDigits, numeral} from '../../core/format.js';
+import {clockDigits, numeral, pad} from '../../core/format.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
@@ -130,7 +130,11 @@ function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
 
 // Render an analyzed cron pattern (the IR) as English.
 function describe(ir: IR, opts: NormalizedOptions): string {
-  return applyYear(render(ir, ir.plan, opts), ir, opts);
+  // A finer leading cadence puts each coarser field in the confinement frame,
+  // overriding the per-plan juxtaposed-cadence and duration-frame forms.
+  const body = confinement(ir, opts) ?? render(ir, ir.plan, opts);
+
+  return applyYear(body, ir, opts);
 }
 
 // Render one plan node. `composeSeconds` recurses with its `rest` plan.
@@ -762,6 +766,263 @@ function foldedHourWindows(ir: IR, plan: PlanOf<'compactClockTimes'>,
   return phrase;
 }
 
+// --- Confinement frame. ---
+//
+// Under a finer LEADING CADENCE — the finest restricted field spoken as a
+// recurrence ("every second", "every 15 seconds", "every minute", "every two
+// minutes") — each COARSER restricted field reads as a confinement, not a
+// juxtaposed cadence: "every second during minute :00 of every hour", "every
+// second of the midnight hour", "every two minutes from midnight until 1 a.m.".
+// A redundant unrestricted finer field drops ("every second" already spans all
+// minutes, so a wildcard minute is not stated). The leading field is the
+// seconds when it is a wildcard or clean step; otherwise the minute, when the
+// second is a plain :00 and the minute is a wildcard or clean step. A single,
+// range, or list lead is a clock-point form ("at 30 seconds past the minute"),
+// not a cadence, and is left to the existing renderers.
+
+// Whether a field token is a wildcard or a clean step (`*/n`) — the two shapes
+// that read as a leading cadence. A bounded step (`a-b/n`) is a windowed set,
+// not a clean day/hour-spanning cadence.
+function isCadenceField(token: string): boolean {
+  return token === '*' ||
+    token.startsWith('*/') && token.indexOf('-') === -1;
+}
+
+// The leading cadence and whether the second is the leading field, or null when
+// the pattern has no cadence lead (the finest restricted field is a clock-point
+// single/range/list). The seconds lead when restricted as a cadence; otherwise
+// the minute leads when the second is a plain :00 and the minute is a cadence.
+function leadingCadence(ir: IR, opts: NormalizedOptions):
+  {text: string; secondLead: boolean} | null {
+  const {second, minute} = ir.pattern;
+
+  if (isCadenceField(second)) {
+    return {secondLead: true, text: secondsClause(ir, 'minute', opts)};
+  }
+
+  if (second === '0' && isCadenceField(minute)) {
+    const text = minute === '*' ?
+      'every minute' :
+      // A clean minute step's first segment is a step segment.
+      stepCycle60(ir.analyses.segments.minute![0] as StepSegment,
+        'minute', 'hour', opts);
+
+    return {secondLead: false, text};
+  }
+
+  return null;
+}
+
+// A pinned minute (single/range/list) under a seconds lead reads as a
+// confinement: "during minute :NN", "during minutes :NN through :MM", "during
+// minutes :NN and :MM". A clean minute step reads "of every other minute". A
+// wildcard minute is redundant under the seconds cadence and drops (empty).
+function minuteConfinement(ir: IR, opts: NormalizedOptions): string {
+  const minute = ir.pattern.minute;
+
+  if (minute === '*') {
+    return '';
+  }
+
+  if (isCadenceField(minute)) {
+    // The gate admits only the `*/2` "every other minute" step here; other
+    // minute steps defer to the existing renderer.
+    return ' of every other minute';
+  }
+
+  // A minute single/range/list under the seconds lead. The minute reads as a
+  // ":NN" clock-minute confinement, never "N minutes past the hour" (that is
+  // the minute-lead clock-point form).
+  const segments = ir.analyses.segments.minute!;
+
+  if (ir.shapes.minute === 'single') {
+    return ' during minute :' + pad(minute);
+  }
+
+  if (ir.shapes.minute === 'range') {
+    const bounds = minute.split('-');
+
+    return ' during minutes :' + pad(bounds[0]) + through(opts) + ':' +
+      pad(bounds[1]);
+  }
+
+  const values = segmentWords(segments, opts).map(function colon(word) {
+    return ':' + pad(word);
+  });
+
+  return ' during minutes ' + joinList(values, opts);
+}
+
+// A restricted hour under a finer cadence reads as a confinement. The form
+// depends on the nearest stated finer field: a stepped minute makes a single
+// hour a span ("from midnight until 1 a.m."); a pinned minute makes it a clock
+// point ("at midnight"); a wildcard/absent minute makes it the hour itself
+// ("of the midnight hour"). A clean hour step is "of every other hour"; a range
+// reuses the until-window; a list or stepped range reads "during the … hours".
+// A wildcard hour drops (empty).
+function hourConfinement(ir: IR, opts: NormalizedOptions): string {
+  const hour = ir.pattern.hour;
+
+  if (hour === '*') {
+    // A pinned minute confinement ("during minute :00") repeats across every
+    // hour, so the hour is named as the unit of recurrence; a stepped minute
+    // ("of every other minute") or absent minute already implies all hours.
+    const minutePinned = ir.pattern.minute !== '*' &&
+      !isCadenceField(ir.pattern.minute);
+
+    return minutePinned ? ' of every hour' : '';
+  }
+
+  if (isCadenceField(hour)) {
+    return hour === '*/2' ? ' of every other hour' : '';
+  }
+
+  if (ir.shapes.hour === 'single') {
+    const h = +hour;
+
+    if (ir.shapes.minute === 'step') {
+      return ' from ' + getTime({hour: h, minute: 0}, opts) + ' until ' +
+        getTime({hour: (h + 1) % 24, minute: 0}, opts);
+    }
+
+    // A pinned minute confinement already named the minute, so the hour reads
+    // as a plain clock point; a wildcard or absent minute makes the hour the
+    // unit of recurrence ("of the midnight hour").
+    if (ir.pattern.minute !== '*' && !isCadenceField(ir.pattern.minute)) {
+      return ' at ' + getTime({hour: h, minute: 0}, opts);
+    }
+
+    return ' of the ' + getTime({hour: h, minute: 0}, opts) + ' hour';
+  }
+
+  if (ir.shapes.hour === 'range') {
+    const bounds = hour.split('-');
+
+    return ' ' + rangeWindow(+bounds[0], +bounds[1], 0, opts);
+  }
+
+  // An hour list or stepped range reads "during the <times> hours".
+  return ' during the ' +
+    hourSegmentTimes(ir, {minute: 0, second: null}, false, opts) + ' hours';
+}
+
+// Whether the hour field reads as a contiguous window — a real range whose
+// close depends on the finer field's last fire. A finer STEP cadence does not
+// fill the closing hour ("from 9 a.m. until 5:45 p.m."), so that window is left
+// to the existing windowing renderer rather than the confinement frame, which
+// closes on the top of the next hour ("until 6 p.m.").
+function isContiguousHourRange(ir: IR): boolean {
+  return ir.shapes.hour === 'range';
+}
+
+// Whether an hour field is confinement-eligible. An OPEN hour stride — a clean
+// `*/n`, an offset `m/n`, or a uneven step — reads as a cadence ("every three
+// hours from 2 a.m."), and only the `*/2` form has a blessed confinement idiom
+// ("of every other hour"), so other open steps defer. A BOUNDED stepped range
+// (`a-b/n`, e.g. `9-17/2`) is a discrete set of named hours the confinement
+// frame speaks as a list ("during the 9 a.m., 11 a.m., … hours").
+function confinableHour(ir: IR): boolean {
+  if (ir.shapes.hour !== 'step') {
+    return true;
+  }
+
+  // Reached only under a stepped hour, whose first segment is a step segment.
+  const segment = ir.analyses.segments.hour![0] as StepSegment;
+
+  return ir.pattern.hour === '*/2' || segment.startToken.indexOf('-') !== -1;
+}
+
+// Whether a minute list is really a stride the existing renderer speaks as a
+// cadence ("every two minutes from 3 through 59"): such a progression is not a
+// short explicit ":NN" confinement, so it defers.
+function isMinuteStride(ir: IR): boolean {
+  if (ir.shapes.minute !== 'list') {
+    return false;
+  }
+
+  const values = singleValues(ir.analyses.segments.minute!);
+
+  return values !== null && arithmeticStep(values) !== null;
+}
+
+// Whether the pattern is in the panel-blessed confinement shape-set. The frame
+// covers a finer leading cadence (seconds, or minute under a :00 second) with
+// each coarser field as a confinement; shapes outside the blessed set defer to
+// the existing renderers, which already produce the blessed phrasing for them.
+function confinementEligible(ir: IR,
+  lead: {secondLead: boolean}): boolean {
+  const {minute, hour} = ir.pattern;
+  const minuteStep = isCadenceField(minute) && minute !== '*';
+
+  // A non-`*/2` hour stride keeps the existing cadence form.
+  if (!confinableHour(ir)) {
+    return false;
+  }
+
+  if (lead.secondLead) {
+    // A minute STEP is blessed only as the `*/2` "every other minute" idiom,
+    // and only where it fills the coarser field: a contiguous hour range or a
+    // single hour both close on the minute's real last fire, which the
+    // windowing renderer already speaks. The `*/2` step fills both, so it keeps
+    // the "of every other minute" confinement; other steps defer entirely.
+    if (minuteStep) {
+      return minute === '*/2' && !isContiguousHourRange(ir);
+    }
+
+    // A minute list that is really a stride keeps its cadence form; a short
+    // explicit minute list crossed with a discrete hour LIST is a wall of
+    // distinct clock times ("9:00 a.m., 9:25 a.m., …"), not a single minute
+    // confinement. Both stay with the enumerating renderer.
+    if (isMinuteStride(ir) ||
+        ir.shapes.minute === 'list' && ir.shapes.hour === 'list') {
+      return false;
+    }
+
+    return true;
+  }
+
+  // A minute-LEAD cadence (second :00). The existing renderers already produce
+  // the blessed phrasing for a single/range/list hour and for a non-`*/2` hour
+  // step; the confinement frame only changes the `*/2` hour ("of every other
+  // hour") and the single hour under an "every other minute" step ("from
+  // midnight until 1 a.m."). Everything else defers.
+  if (hour === '*/2') {
+    return true;
+  }
+
+  return ir.shapes.hour === 'single' && minute === '*/2';
+}
+
+// Whether the pattern reads with the confinement frame: a finer leading
+// cadence with each coarser field as a confinement. Routed to from the cadence
+// renderers in place of the older juxtaposed-cadence and duration-frame forms.
+function confinement(ir: IR, opts: NormalizedOptions): string | null {
+  // The confinement frame is scoped to the default (US) dialect, the one that
+  // carries the until-window; every other dialect and the compact `short` form
+  // keep their established juxtaposed-cadence / duration-frame phrasing.
+  if (!opts.style.untilWindow || opts.short) {
+    return null;
+  }
+
+  // With nothing coarser to confine (minute and hour both wildcard), the bare
+  // cadence renderers already speak the pattern ("every second", "every
+  // minute"); the confinement frame only applies once a coarser field is set.
+  if (ir.pattern.minute === '*' && ir.pattern.hour === '*') {
+    return null;
+  }
+
+  const lead = leadingCadence(ir, opts);
+
+  if (!lead || !confinementEligible(ir, lead)) {
+    return null;
+  }
+
+  const minutePart = lead.secondLead ? minuteConfinement(ir, opts) : '';
+
+  return lead.text + minutePart + hourConfinement(ir, opts) +
+    trailingQualifier(ir, opts);
+}
+
 // The plan dispatch table.
 const renderers = {
   clockTimes: renderClockTimes,
@@ -1104,12 +1365,12 @@ function hourCadence(ir: IR, minute: number,
   // minute during every other hour", matching the "every minute during every
   // other hour" idiom and keeping it distinct from the bare hour-step form
   // ("every two hours") so the minute-0 confinement is never heard as it.
-  const confinement = minute === 0 && subMinuteSecond(ir) &&
+  const minuteZeroStride = minute === 0 && subMinuteSecond(ir) &&
     cleanStrideSegment(ir);
 
-  if (confinement) {
+  if (minuteZeroStride) {
     return secondsClause(ir, 'minute', opts) + ' for one minute ' +
-      everyNthHour(confinement, opts) + trailingQualifier(ir, opts);
+      everyNthHour(minuteZeroStride, opts) + trailingQualifier(ir, opts);
   }
 
   // A plain top-of-the-hour fire (minute 0 with no meaningful second) has no

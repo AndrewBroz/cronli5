@@ -86,4 +86,36 @@ describe('Dialect option:', function() {
         {dialect: 'uk'}]
     ]);
   });
+
+  // The confinement frame ("every second during minute :00 at 9 a.m.", "every
+  // second of every other hour") is scoped to the default (US) dialect. Every
+  // other dialect — and the compact `short` form — keeps the older
+  // juxtaposed-cadence / duration-frame phrasing, byte for byte.
+  describe('confinement frame is default-dialect only', function() {
+    var gb = {dialect: 'gb'};
+    var house = {dialect: 'house'};
+
+    run([
+      ['* 0 * * * *',
+        'every second, zero minutes past the hour, every hour', gb],
+      ['* * 9 * * *', 'every second, every minute of the 9am hour', gb],
+      ['* 0 9 * * *', 'every second for one minute at 9am, every day', gb],
+      ['* 0 9,11 * * *',
+        'every second for one minute at 9am and 11am, every day', gb],
+      ['* 0 9-17 * * *',
+        'every second for one minute during the 9am to 5pm hours', gb],
+      ['* 0 */2 * * *',
+        'every second for one minute during every other hour', gb],
+      ['* 5 9 * * *', 'every second of 9.05am, every day', gb],
+      ['* 30 9 * * *', 'every second of 9:30 AM, every day', house],
+      ['*/15 30 9 * * *', 'every 15 seconds of 9.30am, every day', gb],
+      ['* */2 * * *', 'every minute during every other hour', gb],
+      ['* */2 * * * *', 'every second of every other minute', gb],
+      ['* 0 9-20,22 * * *',
+        'every second for one minute during the 9am to 8pm and 10pm hours', gb],
+      ['* 0 0 * * *',
+        'every second for one minute at midnight, every day',
+        {dialect: 'us', short: true}]
+    ]);
+  });
 });

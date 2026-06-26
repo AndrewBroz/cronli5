@@ -15,7 +15,8 @@ describe('Hour range under a fixed minute and a second reads as a window:',
   function() {
     // Minute 0 folds into the lead: a single/list/range second is "past the
     // hour" (H:00:SS) followed by the window; a wildcard or sub-minute step
-    // second is the whole minute-0 window ("for one minute").
+    // second is the leading cadence, with the pinned minute and the hour range
+    // as confinements ("during minute :00 from 9 a.m. until 6 p.m.").
     describe('minute 0 (folds into the hour)', function() {
       run([
         ['30 0 9-17 * * *',
@@ -30,11 +31,9 @@ describe('Hour range under a fixed minute and a second reads as a window:',
           'every second from zero through ten past the hour, every hour ' +
           'from 9 a.m. until 6 p.m.'],
         ['* 0 9-17 * * *',
-          'every second for one minute during the 9 a.m. through 5 p.m. ' +
-          'hours'],
+          'every second during minute :00 from 9 a.m. until 6 p.m.'],
         ['*/15 0 9-17 * * *',
-          'every 15 seconds for one minute during the 9 a.m. through 5 p.m. ' +
-          'hours']
+          'every 15 seconds during minute :00 from 9 a.m. until 6 p.m.']
       ]);
     });
 
@@ -46,8 +45,8 @@ describe('Hour range under a fixed minute and a second reads as a window:',
           'at 30 seconds past the hour, every hour from 9 a.m. until ' +
           '9 p.m. and at 10 p.m.'],
         ['* 0 9-20,22 * * *',
-          'every second for one minute during the 9 a.m. through 8 p.m. and ' +
-          '10 p.m. hours']
+          'every second during minute :00 during the 9 a.m. through 8 p.m. ' +
+          'and 10 p.m. hours']
       ]);
     });
 

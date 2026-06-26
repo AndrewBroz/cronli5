@@ -1,25 +1,24 @@
 import {run} from '../../../../runner.js';
 
-// Behavior spec for a meaningful second under minute/hour shapes that anchor
-// the description (a restricted hour, or a non-single minute). The second
-// must not be silently dropped: it leads with its own clause and the rest of
-// the pattern follows, e.g. "every 15 seconds, at 30 minutes past the hour
-// from 9 a.m. until 6 p.m.". A wildcard or stepped second under a single
-// pinned minute and specific hours instead reads the clock time compactly
-// ("every 15 seconds of 9:30 a.m., every day"), and a pinned minute-0 takes a
-// duration frame ("for one minute at 9 a.m.") so it is not heard as the hour.
-// (A single second under discrete minutes and hours still folds into the
-// clock time instead; see second-within-clock-time.js.)
+// Behavior spec for a meaningful second under minute/hour shapes. A wildcard or
+// stepped second is the LEADING CADENCE ("every second", "every 15 seconds"),
+// and each coarser restricted field reads as a CONFINEMENT of that cadence, not
+// a juxtaposed clause: "every second during minute :30 at 9 a.m.", "every
+// second of every other hour". A redundant unrestricted finer field drops
+// (a wildcard minute under "every second" is implied). A single, range, or list
+// SECOND is a clock-point form instead ("at 30 seconds past the minute"), so it
+// leads with its own clause and the rest of the pattern follows; a single
+// second under discrete minutes and hours folds into the clock time (see
+// second-within-clock-time.js).
 
 describe('Seconds composed with the rest of the pattern:', function() {
   describe('second step', function() {
     run([
-      ['*/15 30 9 * * *', 'every 15 seconds of 9:30 a.m., every day'],
+      ['*/15 30 9 * * *', 'every 15 seconds during minute :30 at 9 a.m.'],
       ['*/15 0,30 * * * *',
-        'every 15 seconds, at 0 and 30 minutes past the hour'],
+        'every 15 seconds during minutes :00 and :30 of every hour'],
       ['*/15 30 9-17 * * *',
-        'every 15 seconds, at 30 minutes past the hour ' +
-        'from 9 a.m. until 6 p.m.']
+        'every 15 seconds during minute :30 from 9 a.m. until 6 p.m.']
     ]);
   });
 
@@ -35,8 +34,14 @@ describe('Seconds composed with the rest of the pattern:', function() {
 
   describe('wildcard second', function() {
     run([
-      ['* 30 9 * * *', 'every second of 9:30 a.m., every day'],
-      ['* 30 * * * *', 'every second, 30 minutes past the hour, every hour']
+      ['* 30 9 * * *', 'every second during minute :30 at 9 a.m.'],
+      ['* 30 * * * *', 'every second during minute :30 of every hour'],
+      // A minute range or short list confines as ":NN through :MM" / ":NN and
+      // :MM"; the redundant wildcard hour reads "of every hour".
+      ['* 0-30 * * * *',
+        'every second during minutes :00 through :30 of every hour'],
+      ['* 5,30 * * * *',
+        'every second during minutes :05 and :30 of every hour']
     ]);
   });
 
@@ -54,48 +59,33 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
-  // A sub-minute second with the minute pinned to 0 and a specific hour: the
-  // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
-  // across the hour). On the clock a pinned minute-0 reads aloud as the whole
-  // hour ("9 a.m." == "9:00 a.m." spoken), so the confinement is stated
-  // outright with a duration frame ("for one minute at 9 a.m.") and the hour
-  // as its word, then the day qualifier trails.
-  describe('minute pinned to 0 under a specific hour', function() {
+  // A pinned minute under a seconds lead is a CONFINEMENT of the cadence:
+  // "during minute :NN", then the hour confinement. A single hour reads "at
+  // <clock>" (the minute is already named, so the hour is a plain clock point);
+  // an hour list reads "during the … hours"; an hour range reuses the
+  // until-window; a clean hour step reads "of every other hour". The day
+  // qualifier trails.
+  describe('minute pinned under a specific hour', function() {
     run([
-      ['* 0 0 * * *', 'every second for one minute at midnight, every day'],
-      ['* 0 9 * * *', 'every second for one minute at 9 a.m., every day'],
-      ['* 0 12 * * *', 'every second for one minute at noon, every day'],
+      ['* 0 0 * * *', 'every second during minute :00 at midnight'],
+      ['* 0 9 * * *', 'every second during minute :00 at 9 a.m.'],
+      ['* 0 12 * * *', 'every second during minute :00 at noon'],
       ['* 0 9,11 * * *',
-        'every second for one minute at 9 a.m. and 11 a.m., every day'],
-      // An hour RANGE is a window, not a discrete hour list: confined to
-      // minute 0 it reads "every hour from 9 a.m. until 6 p.m." — the same
-      // window the bare 0 0 9-17 forms (see hour-range-cadence.js).
+        'every second during minute :00 during the 9 a.m. and 11 a.m. hours'],
       ['* 0 9-17 * * *',
-        'every second for one minute during the 9 a.m. through 5 p.m. hours'],
-      // An hour STEP is a cadence, not a discrete hour list: confined to
-      // minute 0 it reads "during every other hour" — the same confinement
-      // idiom as "every minute during every other hour", kept distinct from
-      // the bare hour-step form "every two hours" (see hour-step-cadence.js).
-      // A short discrete hour list still enumerates.
+        'every second during minute :00 from 9 a.m. until 6 p.m.'],
       ['* 0 */2 * * *',
-        'every second for one minute during every other hour'],
+        'every second during minute :00 of every other hour'],
       ['* 0 9 * * MON',
-        'every second for one minute at 9 a.m., every Monday'],
+        'every second during minute :00 at 9 a.m. on Mondays'],
       ['*/15 0 9 * * *',
-        'every 15 seconds for one minute at 9 a.m., every day']
-    ]);
-  });
-
-  // A non-zero pinned minute is an unambiguous clock time: the compact "of
-  // 9:05 a.m." form reads as the minute, never the hour, so it generalizes the
-  // confinement without the duration frame the minute-0 case needs.
-  describe('non-zero minute pinned under a specific hour', function() {
-    run([
-      ['* 5 0 * * *', 'every second of 12:05 a.m., every day'],
-      ['* 5 9 * * *', 'every second of 9:05 a.m., every day'],
+        'every 15 seconds during minute :00 at 9 a.m.'],
+      // A non-zero pinned minute reads the same way, with its own ":NN".
+      ['* 5 0 * * *', 'every second during minute :05 at midnight'],
+      ['* 5 9 * * *', 'every second during minute :05 at 9 a.m.'],
       ['* 5 9,11 * * *',
-        'every second of 9:05 a.m. and 11:05 a.m., every day'],
-      ['* 5 9 * * MON', 'every second of 9:05 a.m., every Monday']
+        'every second during minute :05 during the 9 a.m. and 11 a.m. hours'],
+      ['* 5 9 * * MON', 'every second during minute :05 at 9 a.m. on Mondays']
     ]);
   });
 
@@ -142,25 +132,25 @@ describe('Seconds composed with the rest of the pattern:', function() {
 
   describe('with a day qualifier', function() {
     run([
-      ['*/15 30 9 * * MON', 'every 15 seconds of 9:30 a.m., every Monday']
+      ['*/15 30 9 * * MON',
+        'every 15 seconds during minute :30 at 9 a.m. on Mondays']
     ]);
   });
 
-  // A wildcard minute under a restricted hour: the second leads and the hour
-  // window follows, so the hour is never dropped (it once collapsed to a bare
-  // "every second"). The wildcard-minute window reads "every minute ...".
+  // A wildcard minute under a restricted hour and a seconds-cadence lead drops:
+  // "every second" already spans every minute, so the redundant minute is not
+  // stated, and the hour reads as the confinement ("of the 9 a.m. hour", "from
+  // 9 a.m. until 6 p.m."). A single, range, or list SECOND is a clock-point
+  // lead instead, so it keeps its own clause and the wildcard-minute window
+  // follows ("every minute of the 9 a.m. hour").
   describe('wildcard minute under a restricted hour', function() {
     run([
-      ['* * 9 * * *',
-        'every second, every minute of the 9 a.m. hour'],
-      ['* * 9 1 * *',
-        'every second, every minute of the 9 a.m. hour ' +
-        'on the 1st'],
-      ['* * 9-17 * * *',
-        'every second, every minute from 9 a.m. until 6 p.m.'],
+      ['* * 9 * * *', 'every second of the 9 a.m. hour'],
+      ['* * 9 1 * *', 'every second of the 9 a.m. hour on the 1st'],
+      ['* * 9-17 * * *', 'every second from 9 a.m. until 6 p.m.'],
       ['* * 9,17 * * *',
-        'every second, every minute during the 9 a.m. and 5 p.m. hours'],
-      ['* * */2 * * *', 'every second, every minute during every other hour'],
+        'every second during the 9 a.m. and 5 p.m. hours'],
+      ['* * */2 * * *', 'every second of every other hour'],
       ['5 * 9 * * *',
         'at five seconds past the minute, ' +
         'every minute of the 9 a.m. hour'],
@@ -168,7 +158,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
         'every second from 0 through 30 past the minute, ' +
         'every minute of the 9 a.m. hour'],
       ['*/15 * 9-17 * * *',
-        'every 15 seconds, every minute from 9 a.m. until 6 p.m.']
+        'every 15 seconds from 9 a.m. until 6 p.m.']
     ]);
   });
 });
