@@ -270,8 +270,9 @@ describe.skip('English core-set corrections:', function() {
   // form that reads as a union for naive, logical, AND technical readers — plain
   // "on X or on Y" reads as alternative, "on X and on Y" as intersection. Day
   // predicates: the 1st / from the 1st through the 15th / an odd-numbered day /
-  // the (month's) last day; a Friday / a weekday / the last Friday of the month
-  // (possessive "its last Friday" when paired with another quartz). The cadence
+  // the last day of the month; a Friday / a weekday / the last Friday of the
+  // month (each quartz keeps its full parallel phrase, no possessive). The
+  // cadence
   // OR cases (in batches 4–8 above + below) use the same frame with the cadence
   // as the lead. (Note: no mainstream cron tool renders the union this way.)
   describe('OR union — condition-frame (panel-validated):', function() {
@@ -427,8 +428,8 @@ describe.skip('English core-set corrections:', function() {
         'at midnight whenever the day is the last day of the month or a ' +
         'weekday'],
       ['0 0 L * 5L',
-        'at midnight whenever the day is the month\'s last day or its last ' +
-        'Friday'],
+        'at midnight whenever the day is the last day of the month or the ' +
+        'last Friday of the month'],
       ['0 0 L */2 */2',
         'in every odd-numbered month at midnight whenever the day is the ' +
         'last day of the month, a Sunday, a Tuesday, a Thursday, or a ' +
@@ -441,7 +442,7 @@ describe.skip('English core-set corrections:', function() {
         'last day of the month or a weekday'],
       ['0 0 L */2 5L',
         'in every odd-numbered month at midnight whenever the day is the ' +
-        'month\'s last day or its last Friday'],
+        'last day of the month or the last Friday of the month'],
       ['0 0 L 1 */2',
         'in January at midnight whenever the day is the last day of the ' +
         'month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
@@ -452,8 +453,8 @@ describe.skip('English core-set corrections:', function() {
         'in January at midnight whenever the day is the last day of the ' +
         'month or a weekday'],
       ['0 0 L 1 5L',
-        'in January at midnight whenever the day is the month\'s last day ' +
-        'or its last Friday'],
+        'in January at midnight whenever the day is the last day of the ' +
+        'month or the last Friday of the month'],
       ['0 0 L 1-3 */2',
         'in January through March at midnight whenever the day is the last ' +
         'day of the month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
@@ -464,8 +465,8 @@ describe.skip('English core-set corrections:', function() {
         'in January through March at midnight whenever the day is the last ' +
         'day of the month or a weekday'],
       ['0 0 L 1-3 5L',
-        'in January through March at midnight whenever the day is the ' +
-        'month\'s last day or its last Friday']
+        'in January through March at midnight whenever the day is the last ' +
+        'day of the month or the last Friday of the month']
     ]);
   });
 

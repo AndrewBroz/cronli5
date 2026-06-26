@@ -15,7 +15,8 @@ describe('Hour-range and frequency day qualifiers:', function() {
       ['0 9-17 13 6 *',
         'every hour from 9 a.m. until 6 p.m. on June 13'],
       ['0 9-17 13 * 5',
-        'every hour from 9 a.m. until 6 p.m. on the 13th or on Friday']
+        'every hour from 9 a.m. until 6 p.m. whenever the day is the 13th ' +
+        'or a Friday']
     ]);
   });
 

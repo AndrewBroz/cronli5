@@ -81,7 +81,7 @@ are handled more fluently and accurately `cronli5`.
 | `0 9-9 * * *` | every day at 9 a.m. | Every hour, between 09:00 AM and 09:00 AM |
 | `1/1 * * * *` | every minute from 1 through 59 past the hour | Every 1 minutes, starting at 1 minutes past the hour |
 | `1 1 * * * *` | one minute and one second past the hour, every hour | At 1 seconds past the minute, at 1 minutes past the hour |
-| `59 23 31 12 5` | on December 31 or on Friday in December at 11:59 p.m. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
+| `59 23 31 12 5` | in December at 11:59 p.m. whenever the day is the 31st or a Friday | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
 <!-- END GENERATED: showcase -->
 
 [cronstrue]: https://github.com/bradymholt/cRonstrue

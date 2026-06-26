@@ -2,56 +2,64 @@ import {run} from '../../../../runner.js';
 
 // Behavior spec for the day-of-month / day-of-week OR rule. Per the crontab
 // spec, when BOTH the date, and weekday fields are restricted (not `*`), the
-// schedule fires when EITHER matches. cronli5 must render this as an explicit
-// "or" rather than silently dropping the weekday. A restricted month scopes
-// both halves.
+// schedule fires on the UNION of the two day sets. The default dialect renders
+// this as a condition over the day — "whenever the day is <dom> or <dow>" — so
+// the union is unmistakable (the older "on <dom> or on <dow>" read as
+// alternatives). A restricted month scopes the whole union and leads the clause
+// ("in June …").
 
 describe('Day-of-month or day-of-week (both restricted):', function() {
   describe('time-anchored', function() {
     run([
-      ['0 0 13 * 5', 'on the 13th or on Friday at midnight'],
-      ['0 0 13 * FRI', 'on the 13th or on Friday at midnight'],
-      ['0 0 13 * MON-FRI', 'on the 13th or on Monday through Friday at midnight'],
-      ['0 0 1,15 * 5', 'on the 1st and 15th or on Friday at midnight'],
-      ['0 0 13 6 5', 'on June 13 or on Friday in June at midnight']
+      ['0 0 13 * 5', 'at midnight whenever the day is the 13th or a Friday'],
+      ['0 0 13 * FRI', 'at midnight whenever the day is the 13th or a Friday'],
+      ['0 0 13 * MON-FRI',
+        'at midnight whenever the day is the 13th or a weekday'],
+      ['0 0 1,15 * 5',
+        'at midnight whenever the day is the 1st, the 15th, or a Friday'],
+      ['0 0 13 6 5',
+        'in June at midnight whenever the day is the 13th or a Friday']
     ]);
   });
 
   describe('bare frequency', function() {
     run([
-      ['* * 13 * 5', 'every minute on the 13th or on Friday'],
-      ['0 * 13 * 5', 'every hour on the 13th or on Friday']
+      ['* * 13 * 5',
+        'every minute whenever the day is the 13th or a Friday'],
+      ['0 * 13 * 5', 'every hour whenever the day is the 13th or a Friday']
     ]);
   });
 
-  // A restricted month must scope the WHOLE or, not just the day-of-month
-  // half: a month attached only to the date branch falsely implies the
-  // weekday branch fires every month. When the month cannot fold into a
-  // calendar date (a Quartz date, an open day step, a month range, or the
-  // odd/even frequency), it trails the whole or as ", in <month>".
-  describe('month scopes the whole or', function() {
+  // A restricted month scopes the WHOLE union, leading the clause ("in June
+  // …"); it never attaches to one day half (which would imply the other half
+  // fires every month). This holds whatever the day forms — a Quartz date or
+  // weekday, an open day step, a plain date — and whatever the month shape.
+  describe('month scopes the whole union', function() {
     run([
-      // Quartz date (nearest-weekday) — the month had scoped only the date.
+      // Quartz date (nearest-weekday) and Quartz weekday (nth occurrence).
       ['0 0 15W 6 MON#2',
-        'on the weekday nearest the 15th or on the second Monday of the ' +
-        'month, in June at midnight'],
+        'in June at midnight whenever the day is the weekday nearest the ' +
+        '15th or the second Monday of the month'],
       ['*/45 9-17/2 15W 6-8 MON#2',
-        'at 0 and 45 minutes past the hour, every two hours from 9 a.m. ' +
-        'through 5 p.m. on the weekday nearest the 15th or on the second ' +
-        'Monday of the month, in June through August'],
-      // Quartz date (last day) — likewise scoped only the date.
+        'in June through August at 0 and 45 minutes past the hour, every ' +
+        'two hours from 9 a.m. through 5 p.m. whenever the day is the ' +
+        'weekday nearest the 15th or the second Monday of the month'],
+      // Quartz date (last day) with a plain weekday.
       ['0 0 L 6 5',
-        'on the last day of the month or on Friday, in June at midnight'],
-      // Open day-of-month step — the month had scoped only the step.
+        'in June at midnight whenever the day is the last day of the month ' +
+        'or a Friday'],
+      // Open day-of-month step (the parity idiom) with a plain weekday.
       ['0 0 1/2 6 5',
-        'every other day of the month or on Friday, in June at midnight'],
-      // Plain date with a month RANGE (cannot fold) — the month had scoped
-      // only the weekday, leaving the date unqualified.
+        'in June at midnight whenever the day is an odd-numbered day or a ' +
+        'Friday'],
+      // Plain date with a month RANGE.
       ['0 0 13 6-8 5',
-        'on the 13th or on Friday, in June through August at midnight'],
-      // Plain date with the every-odd-month frequency (cannot fold).
+        'in June through August at midnight whenever the day is the 13th or ' +
+        'a Friday'],
+      // Plain date with the every-odd-month frequency.
       ['0 0 13 */2 5',
-        'on the 13th or on Friday, in every odd-numbered month at midnight']
+        'in every odd-numbered month at midnight whenever the day is the ' +
+        '13th or a Friday']
     ]);
   });
 });

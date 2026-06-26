@@ -134,7 +134,12 @@ function describe(ir: IR, opts: NormalizedOptions): string {
   // overriding the per-plan juxtaposed-cadence and duration-frame forms.
   const body = confinement(ir, opts) ?? render(ir, ir.plan, opts);
 
-  return applyYear(body, ir, opts);
+  // A day union scopes the whole clause by its month, which leads the
+  // description ("in June <time> whenever the day is …"); the time/cadence and
+  // the trailing condition are already in `body`.
+  const lead = isDayUnion(ir, opts) ? dayUnionMonthLead(ir, opts) : '';
+
+  return applyYear(lead + body, ir, opts);
 }
 
 // Render one plan node. `composeSeconds` recurses with its `rest` plan.
@@ -671,7 +676,15 @@ function renderClockTimes(ir: IR, plan: PlanOf<'clockTimes'>,
     }, opts);
   });
 
-  return interpretDayQualifier(ir, opts) + 'at ' + joinList(times, opts);
+  return interpretDayQualifier(ir, opts) + 'at ' + joinList(times, opts) +
+    dayUnionTrail(ir, opts);
+}
+
+// The trailing day-union condition for a clock-time form (which leads with its
+// time, not a day qualifier), or an empty string when the pattern is not a day
+// union. The cadence renderers carry this through `trailingQualifier` instead.
+function dayUnionTrail(ir: IR, opts: NormalizedOptions): string {
+  return isDayUnion(ir, opts) ? dayUnionCondition(ir, opts) : '';
 }
 
 // Compact form for a clock-time set past the enumeration cap. A single
@@ -705,7 +718,7 @@ function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
     const fold = {minute: plan.minute, second: ir.analyses.clockSecond};
 
     return interpretDayQualifier(ir, opts) + 'at ' +
-      hourSegmentTimes(ir, fold, true, opts);
+      hourSegmentTimes(ir, fold, true, opts) + dayUnionTrail(ir, opts);
   }
 
   const minuteLead =
@@ -1697,22 +1710,35 @@ function disambiguateTimes(pieces: string[], segments: Segment[],
   });
 }
 
-// Join a list with commas and a terminal "and". The US dialect (Chicago)
-// adds a serial comma before the "and" in lists of three or more; the UK
+// Join a list with commas and a terminal conjunction. The US dialect (Chicago)
+// adds a serial comma before the conjunction in lists of three or more; the UK
 // dialect (Guardian) does not. Pairs never take one.
-function joinList(items: (string | number)[],
+function joinWith(items: (string | number)[], conjunction: string,
   opts: NormalizedOptions): string {
   if (items.length <= 1) {
     return items.join('');
   }
 
   if (items.length === 2) {
-    return items[0] + ' and ' + items[1];
+    return items[0] + conjunction + items[1];
   }
 
-  const and = opts.style.serialComma ? ', and ' : ' and ';
+  const tail = opts.style.serialComma ? ',' + conjunction : conjunction;
 
-  return items.slice(0, -1).join(', ') + and + items[items.length - 1];
+  return items.slice(0, -1).join(', ') + tail + items[items.length - 1];
+}
+
+// Join a list with a terminal "and" (the default English connective).
+function joinList(items: (string | number)[],
+  opts: NormalizedOptions): string {
+  return joinWith(items, ' and ', opts);
+}
+
+// Join a list with a terminal "or", for an alternation such as a day-union
+// predicate list ("the 1st, a Sunday, or a weekday").
+function joinOr(items: (string | number)[],
+  opts: NormalizedOptions): string {
+  return joinWith(items, ' or ', opts);
 }
 
 // --- Day-level qualifiers. ---
@@ -1746,6 +1772,13 @@ const leadingWords: QualifierWords = {
 // A trailing day-level qualifier for bare frequencies, e.g. " on Monday".
 // Returns an empty string when no date, month, or weekday is set.
 function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
+  // A day union reframes both day fields as a trailing condition clause; the
+  // month leads the whole description (applied in `describe`), so it is not
+  // part of the trailing qualifier here.
+  if (isDayUnion(ir, opts)) {
+    return dayUnionCondition(ir, opts);
+  }
+
   const phrase = dayQualifier(ir, trailingWords, opts);
 
   return phrase && ' ' + phrase;
@@ -1754,6 +1787,13 @@ function trailingQualifier(ir: IR, opts: NormalizedOptions): string {
 // Build the day-level qualifier that precedes a specific time, e.g.
 // "every day ", "every Friday ", or "on January 13 ".
 function interpretDayQualifier(ir: IR, opts: NormalizedOptions): string {
+  // A day union puts the time first ("at midnight whenever the day is …"), so
+  // the leading position contributes no day phrase; the condition clause is
+  // appended after the time by the clock renderer.
+  if (isDayUnion(ir, opts)) {
+    return '';
+  }
+
   return dayQualifier(ir, leadingWords, opts) + ' ';
 }
 
@@ -1837,6 +1877,148 @@ function monthFoldsIntoDate(ir: IR): boolean {
     ir.analyses.segments.month!.every(function flat(segment) {
       return segment.kind !== 'range';
     });
+}
+
+// When BOTH the date and weekday are restricted, cron fires on the UNION of
+// the two day sets — a point the old "on <dom> or on <dow>" form blurred,
+// reading as alternatives (or, with "and", as an intersection). The default
+// dialect reframes the union as a predicate over a single variable, the day:
+// "whenever the day is <dom-predicate> or <dow-predicate(s)>", a flat or-list
+// that reads as a union for naive, logical, and technical readers alike. The
+// month leads the whole clause ("in June …") and the time/cadence sits between
+// the two, so this form is composed at the top level (see `dayUnionMonthLead`
+// and `dayUnionCondition`), not inside the trailing/leading qualifier. Scoped
+// to the until-window dialect; every other dialect and the `short` form keep
+// the established "on <dom> or on <dow>" phrasing.
+function isDayUnion(ir: IR, opts: NormalizedOptions): boolean {
+  return ir.pattern.date !== '*' && ir.pattern.weekday !== '*' &&
+    !!opts.style.untilWindow && !opts.short;
+}
+
+// The trailing condition clause for a day union, e.g. " whenever the day is
+// the 1st or a Friday". The day predicates are flattened into one or-list so
+// the union reads as a single set of matching days.
+function dayUnionCondition(ir: IR, opts: NormalizedOptions): string {
+  const pieces = [...dayUnionDatePieces(ir, opts),
+    ...dayUnionWeekdayPieces(ir, opts)];
+
+  return ' whenever the day is ' + joinOr(pieces, opts);
+}
+
+// The leading "in <month> " scope for a day union, or an empty string when the
+// month is a wildcard. The month scopes the whole union, so it leads the clause
+// rather than attaching to either day half.
+function dayUnionMonthLead(ir: IR, opts: NormalizedOptions): string {
+  if (ir.pattern.month === '*') {
+    return '';
+  }
+
+  return 'in ' + monthName(ir, opts) + ' ';
+}
+
+// The day-of-month half of a union as a flat list of predicate pieces. A
+// Quartz date is its definite phrase ("the last day of the month"); an open
+// `*/2`-style step is the parity idiom ("an odd-numbered day"); a plain field
+// reads each segment as "the <ordinal>" or "from the <ordinal> through the
+// <ordinal>".
+function dayUnionDatePieces(ir: IR, opts: NormalizedOptions): string[] {
+  const dateField = ir.pattern.date;
+  const quartz = quartzDatePhrase(dateField, opts);
+
+  if (quartz) {
+    return [quartz.replace(/^on /, '')];
+  }
+
+  const oddEven = oddEvenDay(dateField);
+
+  if (oddEven) {
+    return [oddEven];
+  }
+
+  // Reached only with a restricted, non-Quartz date, which has segments. Each
+  // segment contributes its predicate piece(s) to the flat union list; a step
+  // spreads its enumerated fires as separate "the <ordinal>" alternatives.
+  const pieces: string[] = [];
+
+  ir.analyses.segments.date!.forEach(function expand(segment) {
+    if (segment.kind === 'range') {
+      pieces.push('from the ' + getOrdinal(segment.bounds[0]) + through(opts) +
+        'the ' + getOrdinal(segment.bounds[1]));
+    }
+    else if (segment.kind === 'step') {
+      segment.fires.forEach(function fire(value) {
+        pieces.push('the ' + getOrdinal(value));
+      });
+    }
+    else {
+      pieces.push('the ' + getOrdinal(segment.value));
+    }
+  });
+
+  return pieces;
+}
+
+// The day-of-week half of a union as a flat list of predicate pieces. A Quartz
+// weekday is its definite phrase ("the last Friday of the month"); the Monday-
+// through-Friday range is the "a weekday" idiom; every other weekday names each
+// day with the indefinite article ("a Friday", "a Sunday"), so each reads as a
+// kind of day the union can match.
+function dayUnionWeekdayPieces(ir: IR, opts: NormalizedOptions): string[] {
+  const weekdayField = ir.pattern.weekday;
+  const quartz = quartzWeekdayPhrase(weekdayField, opts);
+
+  if (quartz) {
+    return [quartz.replace(/^on /, '')];
+  }
+
+  // The union predicate keeps the canonical Sunday-first order (0…6) rather
+  // than the weekend-last display order: as a flat or-list of day kinds, the
+  // numeric order reads as naturally as any other and matches the reviewed
+  // spec ("a Sunday, a Tuesday, a Thursday, or a Saturday").
+  const pieces: string[] = [];
+
+  ir.analyses.segments.weekday!.forEach(function expand(segment) {
+    if (segment.kind === 'range' &&
+        segment.bounds[0] === '1' && segment.bounds[1] === '5') {
+      pieces.push('a weekday');
+    }
+    else if (segment.kind === 'range') {
+      pieces.push('a ' + getWeekday(segment.bounds[0], opts) + through(opts) +
+        'a ' + getWeekday(segment.bounds[1], opts));
+    }
+    else if (segment.kind === 'step') {
+      segment.fires.forEach(function fire(value) {
+        pieces.push('a ' + getWeekday(value, opts));
+      });
+    }
+    else {
+      pieces.push('a ' + getWeekday(segment.value, opts));
+    }
+  });
+
+  return pieces;
+}
+
+// An interval-2 day-of-month step covering a parity set reads as "an
+// odd/even-numbered day", mirroring the month and year parity idioms: `*/2`
+// and `1/2` are the odd days, `2/2` the even; any other start enumerates
+// instead. Null when the field is not an open interval-2 step.
+function oddEvenDay(dateField: string): string | null {
+  if (!isOpenStep(dateField)) {
+    return null;
+  }
+
+  const [start, step] = dateField.split('/');
+
+  if (+step !== 2) {
+    return null;
+  }
+
+  if (start === '*' || start === '1') {
+    return 'an odd-numbered day';
+  }
+
+  return start === '2' ? 'an even-numbered day' : null;
 }
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields

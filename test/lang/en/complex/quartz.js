@@ -69,9 +69,11 @@ describe('Quartz tokens:', function() {
   describe('date or weekday', function() {
     run([
       ['0 0 L * MON',
-        'on the last day of the month or on Monday at midnight'],
+        'at midnight whenever the day is the last day of the month or a ' +
+        'Monday'],
       ['0 0 13 * 5L',
-        'on the 13th or on the last Friday of the month at midnight']
+        'at midnight whenever the day is the 13th or the last Friday of the ' +
+        'month']
     ]);
   });
 

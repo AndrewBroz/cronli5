@@ -32,7 +32,7 @@ describe('Day-of-month step patterns:', function() {
   describe('with a weekday (OR)', function() {
     run([
       ['0 0 */2 * 5',
-        'every other day of the month or on Friday at midnight']
+        'at midnight whenever the day is an odd-numbered day or a Friday']
     ]);
   });
 
