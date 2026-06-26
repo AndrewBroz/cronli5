@@ -336,11 +336,17 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0-30 9-17 * * *', '在9点至17点之间，每小时0至30分，每分钟'],
       ['0 1 * * * *', '每小时1分'],
       ['0 5,30 * * * *', '每小时5分和30分'],
-      ['0 5,30 */2 * * *', '每小时5分和30分，在凌晨0点、2点、4点、6点、8点、10点、正午、14点、16点、18点、20点和22点'],
-      // A minute list under a clean stride enumerates its hours (no "from M"
-      // idiom), the same whatever the minute's shape — offset and even strides.
+      ['0 5,30 */2 * * *', '每2小时，每小时5分和30分'],
+      // A minute list under a CLEAN hour stride reads as the "每N小时" cadence
+      // plus the minute list (the same compaction the wildcard/range minute
+      // already uses), not the twelve enumerated hours. An OFFSET stride (1/2)
+      // has no "from M" idiom, so it keeps enumerating its active hours.
       ['5,30 1/2 * * *', '每小时5分和30分，在1点、3点、5点、7点、9点、11点、13点、15点、17点、19点、21点和23点'],
-      ['5,30 */2 * * *', '每小时5分和30分，在凌晨0点、2点、4点、6点、8点、10点、正午、14点、16点、18点、20点和22点'],
+      ['5,30 */2 * * *', '每2小时，每小时5分和30分'],
+      ['*/25 */2 * * *', '每2小时，每小时0、25、50分'],
+      ['5,10,30 */2 * * *', '每2小时，每小时5、10、30分'],
+      ['*/25 */3 * * *', '每3小时，每小时0、25、50分'],
+      ['*/25 1/2 * * *', '每小时0、25、50分，在1点、3点、5点、7点、9点、11点、13点、15点、17点、19点、21点和23点'],
       ['1 * * * * *', '每分钟第1秒'],
       ['1 0 * * * *', '每小时0分第1秒'],
       ['30 5,10 9,17,19,21,23 * * 1', '每周一，每小时5分和10分，在9点、17点、19点、21点和23点，第30秒'],

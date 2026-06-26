@@ -421,10 +421,15 @@ function renderMinuteSpanAcrossHourStep(ir: IR, plan: PlanNode): string {
   const hourStep = stepSegment(ir, 'hour');
   const {form} = plan as Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>;
 
-  // A minute list enumerates its hours, with no "from M" idiom to lean on:
-  // "每小时5分和30分，在1点、3点…".
+  // A minute list under a CLEAN stride from midnight reads as the "每N小时"
+  // cadence plus the minute list ("每2小时，每小时0、25、50分"), the same
+  // compaction the wildcard/range minute already uses, rather than the twelve
+  // enumerated hours. An OFFSET stride (1/2) has no "从M起" hour idiom, so it
+  // keeps enumerating its active hours ("每小时5分和30分，在1点、3点…").
   if (form === 'list') {
-    return renderMinutePast(ir) + '，在' + hourList(ir);
+    return hourStep.startToken === '*' ?
+      cadence(hourStep.interval, UNITS.hour) + '，' + renderMinutePast(ir) :
+      renderMinutePast(ir) + '，在' + hourList(ir);
   }
 
   const minuteTail = form === 'wildcard' ?
