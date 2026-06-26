@@ -10,7 +10,7 @@ describe('Step patterns with a bounded (range) start:', function() {
       ['1-5/2 * * * *', 'at 1, 3, and 5 minutes past the hour'],
       ['0-10/5 * * * *', 'at 0, 5, and 10 minutes past the hour'],
       ['1-5/1 * * * *',
-        'every minute from one through five past the hour']
+        'every minute from 1 through 5 past the hour']
     ]);
   });
 

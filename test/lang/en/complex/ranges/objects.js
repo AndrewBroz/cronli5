@@ -5,7 +5,7 @@ describe('Valid objects with ranges:', function() {
     [{second: '0-30'}, 'every second from 0 through 30 past the minute'],
     [{second: '10-20'}, 'every second from 10 through 20 past the minute'],
     [{minute: '0-29'}, 'every minute from 0 through 29 past the hour'],
-    [{minute: '1-5'}, 'every minute from one through five past the hour'],
+    [{minute: '1-5'}, 'every minute from 1 through 5 past the hour'],
     [{hour: '9-17'}, 'every hour from 9 a.m. until 6 p.m.'],
     [{hour: '0-5'}, 'every hour from midnight until 6 a.m.'],
     [{hour: '0', date: '1-15'}, 'on the 1st through 15th at midnight'],

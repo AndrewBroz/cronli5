@@ -341,7 +341,7 @@ function secondsClause(ir: IR, anchor: string,
 
   if (shape === 'range') {
     const bounds = secondField.split('-');
-    const num = seriesNumber(bounds, opts);
+    const num = seriesNumber();
 
     return 'every second from ' + num(bounds[0]) +
       through(opts) + num(bounds[1]) + ' past the ' + anchor;
@@ -536,7 +536,7 @@ function renderMinuteSpanAcrossHourStep(ir: IR,
 function minuteRangeLead(minuteField: string,
   opts: NormalizedOptions): string {
   const bounds = minuteField.split('-');
-  const num = seriesNumber(bounds, opts);
+  const num = seriesNumber();
 
   return 'every minute from ' + num(bounds[0]) + through(opts) +
     num(bounds[1]) + ' past the hour';
@@ -732,13 +732,17 @@ function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
 
 // A folded hour field that includes a contiguous range reads with the
 // hour-range frame: a shared minute lead ("every hour" / "at 30 minutes
-// past the hour"), each range as a "from X through Y" window, and any
-// non-contiguous hours appended as "and at Z".
+// past the hour"), each range as a window, and any non-contiguous hour
+// appended by `outlierTail` (the default until-window form reads "plus Z";
+// every other dialect keeps "and at Z").
 function foldedHourWindows(ir: IR, plan: PlanOf<'compactClockTimes'>,
   opts: NormalizedOptions): string {
   const minute = plan.minute;
   const windows: string[] = [];
-  const singles: number[] = [];
+  const outliers = collectHourOutliers(ir);
+  const times = outliers.hours.map(function time(hour) {
+    return getTime({hour, minute}, opts);
+  });
 
   // Reached only via the fold branch under discrete hours, which have
   // segments.
@@ -747,23 +751,54 @@ function foldedHourWindows(ir: IR, plan: PlanOf<'compactClockTimes'>,
       windows.push(rangeWindow(+segment.bounds[0], +segment.bounds[1],
         minute, opts));
     }
-    else if (segment.kind === 'step') {
-      singles.push(...segment.fires);
+  });
+
+  const phrase = rangeMinuteLead(ir, opts) + ' ' + joinList(windows, opts);
+
+  return phrase + outlierTail(times, outliers.pureStrays, opts);
+}
+
+// The hours outside a contiguous run — every non-range segment's values — and
+// whether they are all STRAY single values (no step fires). A step beside a run
+// contributes a whole cadence's worth of fires, not a lone outlier, so the
+// "plus" idiom does not fit and the additive list keeps "and at".
+function collectHourOutliers(ir: IR):
+  {hours: number[]; pureStrays: boolean} {
+  const hours: number[] = [];
+  let pureStrays = true;
+
+  // Reached only under discrete hours, which carry segments.
+  ir.analyses.segments.hour!.forEach(function classify(segment) {
+    if (segment.kind === 'step') {
+      hours.push(...segment.fires);
+      pureStrays = false;
     }
-    else {
-      singles.push(+segment.value);
+    else if (segment.kind !== 'range') {
+      hours.push(+segment.value);
     }
   });
 
-  let phrase = rangeMinuteLead(ir, opts) + ' ' + joinList(windows, opts);
+  return {hours, pureStrays};
+}
 
-  if (singles.length) {
-    phrase += ' and at ' + joinList(singles.map(function time(hour) {
-      return getTime({hour, minute}, opts);
-    }), opts);
+// Join the outlier hour times that follow a contiguous-run window. When the run
+// rendered as the leading until-window ("from 9 a.m. until 9 p.m.") and the
+// outlier is a single stray value, it reads "plus 10 p.m." — an additive idiom
+// for the one hour that breaks the run. A step beside the run is a full cadence
+// of fires, not a lone outlier, so it keeps the enumerating "and at"; so does
+// every other dialect (and the compact `short` form), which renders the run as
+// a "through <last fire>" span rather than the until-window.
+function outlierTail(times: string[], pureStrays: boolean,
+  opts: NormalizedOptions): string {
+  if (!times.length) {
+    return '';
   }
 
-  return phrase;
+  const connector = pureStrays && opts.style.untilWindow && !opts.short ?
+    ' plus ' :
+    ' and at ';
+
+  return connector + joinList(times, opts);
 }
 
 // --- Confinement frame. ---
@@ -1072,10 +1107,9 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
       pluralize(start, unit) + ' past the ' + anchor;
   }
 
-  // A bounded, non-wrapping set: pin both endpoints. The two bounds share one
-  // number style (all spelled, or all numerals once either crosses ten),
-  // matching the range idiom ("from 0 through 30").
-  const num = seriesNumber([start, last], opts);
+  // A bounded, non-wrapping set: pin both endpoints. Each bound is a value, so
+  // it reads as a digit, matching the range idiom ("from 0 through 30").
+  const num = seriesNumber();
 
   return cadence + ' from ' + num(start) + through(opts) + num(last) + ' ' +
     pluralize(last, unit) + ' past the ' + anchor;
@@ -1417,13 +1451,14 @@ function hasHourWindow(ir: IR): boolean {
 }
 
 // The hour-range window as a cadence tail at the top of each hour: each range
-// segment is a "from X through Y" window ("every hour from 9 a.m. through
-// 5 p.m."), and any non-contiguous single hour is appended ("and at 10 p.m.").
-// The minute has already folded into the lead, so the window closes on the
-// top of its final hour. Mirrors foldedHourWindows but pinned to minute 0.
+// segment is a window ("every hour from 9 a.m. until 9 p.m."), and any
+// non-contiguous single hour is appended by `outlierTail` ("plus 10 p.m." in
+// the default until-window form, "and at 10 p.m." elsewhere). The minute has
+// already folded into the lead, so the window closes on the top of its final
+// hour. Mirrors foldedHourWindows but pinned to minute 0.
 function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
   const windows: string[] = [];
-  const singles: number[] = [];
+  const outliers = collectHourOutliers(ir);
 
   // Reached only after hasHourWindow, so hour segments exist.
   ir.analyses.segments.hour!.forEach(function classify(segment) {
@@ -1431,23 +1466,14 @@ function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
       windows.push(rangeWindow(+segment.bounds[0], +segment.bounds[1], 0,
         opts));
     }
-    else if (segment.kind === 'step') {
-      singles.push(...segment.fires);
-    }
-    else {
-      singles.push(+segment.value);
-    }
   });
 
-  let phrase = 'every hour ' + joinList(windows, opts);
+  const phrase = 'every hour ' + joinList(windows, opts);
+  const times = outliers.hours.map(function time(hour) {
+    return getTime({hour, minute: 0}, opts);
+  });
 
-  if (singles.length) {
-    phrase += ' and at ' + joinList(singles.map(function time(hour) {
-      return getTime({hour, minute: 0}, opts);
-    }), opts);
-  }
-
-  return phrase;
+  return phrase + outlierTail(times, outliers.pureStrays, opts);
 }
 
 // Render an hour range (or a list whose segments include a range) under a
@@ -1492,18 +1518,14 @@ function hourRangeCadence(ir: IR, minute: number,
 
 // --- List and segment phrasing. ---
 
-// Chicago number style for a series: if any value crosses the spell-out
-// boundary (greater than ten), render the whole series as numerals;
-// otherwise spell each per getNumber. Keeps "five through ten" spelled
-// but makes "0 through 29" all-numeral instead of "zero through 29".
-function seriesNumber(values: (number | string)[], opts: NormalizedOptions):
-  (n: number | string) => string | number {
-  const anyBig = values.some(function big(v) {
-    return +v > 10;
-  });
-
+// Number style for the bounds of a "from X through Y" series — a range or a
+// pinned-endpoint stride. The boundary of a range is a clock/calendar VALUE,
+// not a frequency, so it always reads as a digit ("from 0 through 10", "from 1
+// through 5"), matching the minutes-/seconds-past convention; only the "every
+// N" multiplier keeps the spell-when-small style.
+function seriesNumber(): (n: number | string) => string | number {
   return function format(n) {
-    return anyBig ? '' + n : getNumber(n, opts);
+    return '' + n;
   };
 }
 

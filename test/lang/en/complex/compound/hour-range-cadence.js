@@ -6,7 +6,7 @@ import {run} from '../../../../runner.js';
 // ("9:00:30 a.m., 10:00:30 a.m., …", nine times for 9-17). The hours fire at
 // the same minute:second every hour across the range, so it now reads as the
 // hour-range window: the second/minute lead clause, then "every hour from
-// 9 a.m. until 6 p.m." (and any non-contiguous hour appended as "and at Z").
+// 9 a.m. until 6 p.m." (and any non-contiguous hour appended with "plus Z").
 // This is the hour-RANGE analog of the hour-STEP cadence (hour-step-cadence.js).
 // Renderer-only; the IR is unchanged. A pure single-value hour list (9,17) has
 // no range to form a window and still enumerates.
@@ -28,7 +28,7 @@ describe('Hour range under a fixed minute and a second reads as a window:',
           'at 5 and 30 seconds past the hour, every hour from 9 a.m. ' +
           'until 6 p.m.'],
         ['0-10 0 9-17 * * *',
-          'every second from zero through ten past the hour, every hour ' +
+          'every second from 0 through 10 past the hour, every hour ' +
           'from 9 a.m. until 6 p.m.'],
         ['* 0 9-17 * * *',
           'every second during minute :00 from 9 a.m. until 6 p.m.'],
@@ -37,13 +37,13 @@ describe('Hour range under a fixed minute and a second reads as a window:',
       ]);
     });
 
-    // A range inside a list: the contiguous span is a window, the
-    // non-contiguous hour is appended as "and at Z".
+    // A range inside a list: the contiguous span is the until-window, the
+    // non-contiguous hour is appended with "plus Z".
     describe('a range inside a list (window + single)', function() {
       run([
         ['30 0 9-20,22 * * *',
           'at 30 seconds past the hour, every hour from 9 a.m. until ' +
-          '9 p.m. and at 10 p.m.'],
+          '9 p.m. plus 10 p.m.'],
         ['* 0 9-20,22 * * *',
           'every second during minute :00 during the 9 a.m. through 8 p.m. ' +
           'and 10 p.m. hours']

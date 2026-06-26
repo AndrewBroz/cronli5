@@ -30,7 +30,7 @@ describe('Hour step under a fixed minute and a second reads as a cadence:',
         ['5,30 0 */2 * * *',
           'at 5 and 30 seconds past the hour, every two hours'],
         ['0-10 0 */2 * * *',
-          'every second from zero through ten past the hour, every two hours']
+          'every second from 0 through 10 past the hour, every two hours']
       ]);
     });
 

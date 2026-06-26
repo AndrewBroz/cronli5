@@ -21,7 +21,7 @@ describe('Valid strings with ranges:', function() {
   describe('minute ranges', function() {
     run([
       ['0-29 * * * *', 'every minute from 0 through 29 past the hour'],
-      ['1-5 * * * *', 'every minute from one through five past the hour']
+      ['1-5 * * * *', 'every minute from 1 through 5 past the hour']
     ]);
   });
 
