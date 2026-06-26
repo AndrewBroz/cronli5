@@ -74,7 +74,7 @@ describe('English core-set corrections:', function() {
         'every second during minute :00 during the 9 a.m., 11 a.m., 1 p.m., ' +
         '3 p.m., 5 p.m., 7 p.m., and 9 p.m. hours'],
       ['* 0 9-17 * * *',
-        'every second during minute :00 from 9 a.m. until 6 p.m.'],
+        'every second during minute :00 from 9 a.m. through 5 p.m.'],
       ['* 0-30 * * * *',
         'every second during minutes :00 through :30 of every hour'],
       ['* 0-30 */2 * * *',
@@ -84,7 +84,7 @@ describe('English core-set corrections:', function() {
         'every second during minutes :00 through :30 during the ' +
         '9 a.m. and 5 p.m. hours'],
       ['* 0-30 9-17 * * *',
-        'every second during minutes :00 through :30 from 9 a.m. until 6 p.m.'],
+        'every second during minutes :00 through :30 from 9 a.m. through 5 p.m.'],
       ['* 5,30 * * * *', 'every second during minutes :05 and :30 of every hour']
     ]);
   });
@@ -160,8 +160,9 @@ describe('English core-set corrections:', function() {
     ]);
   });
 
-  // [c0061–c0070] hour list keeps during; hour RANGE uses the until window
-  // ("from 9 a.m. until 6 p.m.", not the spelled-out 5:55 last fire).
+  // [c0061–c0070] hour list keeps during; an hour RANGE under a RESTRICTED
+  // minute (here `*/5`) reads the bare "through <last hour>" window — the run is
+  // not continuous to the top of the next hour, so it is not the until-window.
   describe('batch 7 - hour list vs range under a minute cadence:', function() {
     run([
       ['0 */5 9,17 1 * 5',
@@ -171,40 +172,41 @@ describe('English core-set corrections:', function() {
         'in June every five minutes during the 9 a.m. and 5 p.m. hours ' +
         'whenever the day is the 1st or a Friday'],
       ['0 */5 9-17 * * 1',
-        'every five minutes from 9 a.m. until 6 p.m. on Mondays'],
+        'every five minutes from 9 a.m. through 5 p.m. on Mondays'],
       ['0 */5 9-17 * * 1-5',
-        'every five minutes from 9 a.m. until 6 p.m. on Monday through ' +
+        'every five minutes from 9 a.m. through 5 p.m. on Monday through ' +
         'Friday'],
       ['0 */5 9-17 * * 5L',
-        'every five minutes from 9 a.m. until 6 p.m. on the last Friday of ' +
+        'every five minutes from 9 a.m. through 5 p.m. on the last Friday of ' +
         'the month'],
       ['0 */5 9-17 * */3 *',
-        'every five minutes from 9 a.m. until 6 p.m. in January, April, ' +
+        'every five minutes from 9 a.m. through 5 p.m. in January, April, ' +
         'July, and October'],
       ['0 */5 9-17 * 6 *',
-        'every five minutes from 9 a.m. until 6 p.m. in June']
+        'every five minutes from 9 a.m. through 5 p.m. in June']
     ]);
   });
 
-  // [c0071–c0080] hour-range until-window continued; leading weekday forms
-  // ("every Sunday…", "every Monday through Friday") are already correct.
-  describe('batch 8 - hour range until-window; leading weekdays:', function() {
+  // [c0071–c0080] hour-range "through" window (restricted `*/5` minute)
+  // continued; leading weekday forms ("every Sunday…", "every Monday through
+  // Friday") are already correct.
+  describe('batch 8 - hour range window; leading weekdays:', function() {
     run([
       ['0 */5 9-17 */2 * *',
-        'every five minutes from 9 a.m. until 6 p.m. on every other day of ' +
+        'every five minutes from 9 a.m. through 5 p.m. on every other day of ' +
         'the month'],
       ['0 */5 9-17 1 * *',
-        'every five minutes from 9 a.m. until 6 p.m. on the 1st'],
+        'every five minutes from 9 a.m. through 5 p.m. on the 1st'],
       ['0 */5 9-17 1 * 5',
-        'every five minutes from 9 a.m. until 6 p.m. whenever the day is ' +
+        'every five minutes from 9 a.m. through 5 p.m. whenever the day is ' +
         'the 1st or a Friday'],
       ['0 */5 9-17 1 6 *',
-        'every five minutes from 9 a.m. until 6 p.m. on June 1'],
+        'every five minutes from 9 a.m. through 5 p.m. on June 1'],
       ['0 */5 9-17 1 6 5',
-        'in June every five minutes from 9 a.m. until 6 p.m. whenever the ' +
+        'in June every five minutes from 9 a.m. through 5 p.m. whenever the ' +
         'day is the 1st or a Friday'],
       ['0 */5 9-17 L * *',
-        'every five minutes from 9 a.m. until 6 p.m. on the last day of the ' +
+        'every five minutes from 9 a.m. through 5 p.m. on the last day of the ' +
         'month']
     ]);
   });
@@ -234,21 +236,22 @@ describe('English core-set corrections:', function() {
     ]);
   });
 
-  // Trailing weekday pluralizes; an hour-range cadence uses the until-window.
+  // Trailing weekday pluralizes; a restricted-minute hour-range cadence reads
+  // the "through <last hour>" window.
   // (non-OR + cadence-OR; the 30 5,10 … time clauses are live — weekday fix only.)
-  describe('trailing weekday plural + until-window:', function() {
+  describe('trailing weekday plural + hour-range window:', function() {
     run([
       ['0 0 */2 * * 1', 'every two hours on Mondays'],
       ['0 0 */2 1 * 5',
         'every two hours whenever the day is the 1st or a Friday'],
       ['0 0 */2 1 6 5',
         'in June every two hours whenever the day is the 1st or a Friday'],
-      ['0 0 9-17 * * 1', 'every hour from 9 a.m. until 6 p.m. on Mondays'],
+      ['0 0 9-17 * * 1', 'every hour from 9 a.m. through 5 p.m. on Mondays'],
       ['0 0 9-17 1 * 5',
-        'every hour from 9 a.m. until 6 p.m. whenever the day is the 1st or ' +
-        'a Friday'],
+        'every hour from 9 a.m. through 5 p.m. whenever the day is the 1st ' +
+        'or a Friday'],
       ['0 0 9-17 1 6 5',
-        'in June every hour from 9 a.m. until 6 p.m. whenever the day is ' +
+        'in June every hour from 9 a.m. through 5 p.m. whenever the day is ' +
         'the 1st or a Friday'],
       ['30 5,10 9,17,19,21,23 * * 1',
         'at 30 seconds past the minute, at 5 and 10 minutes past the ' +
@@ -470,33 +473,33 @@ describe('English core-set corrections:', function() {
     ]);
   });
 
-  // [workflow review] until-window on hourly ranges, enumerated-list
-  // 'during', and NUMERALS-MINUTE-LIST ('five and ten' -> '5 and 10').
+  // [workflow review] restricted-minute hourly ranges read the "through"
+  // window, enumerated-list 'during', and NUMERALS-MINUTE-LIST ('five and ten'
+  // -> '5 and 10').
   describe('workflow-found corrections (value classes & compounds):', function() {
     run([
-      ['0 0 9-17 * * *', 'every hour from 9 a.m. until 6 p.m.'],
+      ['0 0 9-17 * * *', 'every hour from 9 a.m. through 5 p.m.'],
       ['0 0 9-17 * * 1-5',
-        'every hour from 9 a.m. until 6 p.m. on Monday through Friday'],
+        'every hour from 9 a.m. through 5 p.m. on Monday through Friday'],
       ['0 0 9-17 * * 5L',
-        'every hour from 9 a.m. until 6 p.m. on the last Friday of the ' +
+        'every hour from 9 a.m. through 5 p.m. on the last Friday of the ' +
         'month'],
       ['0 0 9-17 * */3 *',
-        'every hour from 9 a.m. until 6 p.m. in January, April, July, and ' +
+        'every hour from 9 a.m. through 5 p.m. in January, April, July, and ' +
         'October'],
-      ['0 0 9-17 * 6 *', 'every hour from 9 a.m. until 6 p.m. in June'],
+      ['0 0 9-17 * 6 *', 'every hour from 9 a.m. through 5 p.m. in June'],
       ['0 0 9-17 */2 * *',
-        'every hour from 9 a.m. until 6 p.m. on every other day of the ' +
+        'every hour from 9 a.m. through 5 p.m. on every other day of the ' +
         'month'],
-      ['0 0 9-17 1 * *', 'every hour from 9 a.m. until 6 p.m. on the 1st'],
-      ['0 0 9-17 1 6 *', 'every hour from 9 a.m. until 6 p.m. on June 1'],
+      ['0 0 9-17 1 * *', 'every hour from 9 a.m. through 5 p.m. on the 1st'],
+      ['0 0 9-17 1 6 *', 'every hour from 9 a.m. through 5 p.m. on June 1'],
       ['0 0 9-17 L * *',
-        'every hour from 9 a.m. until 6 p.m. on the last day of the month'],
+        'every hour from 9 a.m. through 5 p.m. on the last day of the month'],
       ['0 0-30 9,17 * * *',
         'every minute from 0 through 30 past the hour during the 9 a.m. and ' +
         '5 p.m. hours'],
       ['0 0-30 9-17 * * *',
-        'every minute from 0 through 30 past the hour, from 9 a.m. until 6 ' +
-        'p.m.'],
+        'every minute from 0 through 30 past the hour, from 9 a.m. through 5 p.m.'],
       ['30 5,10 9,17,19,21,23 * * 1-5',
         'at 30 seconds past the minute, at 5 and 10 minutes past the hour, ' +
         'at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. on Monday through ' +
@@ -528,7 +531,7 @@ describe('English core-set corrections:', function() {
         'the month'],
       ['4,6,9 * * * *', 'at 4, 6, and 9 minutes past the hour'],
       ['* 9-10 * * *', 'every minute from 9 a.m. until 11 a.m.'],
-      ['0 1-23 * * *', 'every hour from 1 a.m. until midnight'],
+      ['0 1-23 * * *', 'every hour from 1 a.m. through 11 p.m.'],
       ['0 0 0 1 1 * 2030-2035',
         'on January 1 at midnight in 2030 through 2035', {years: true}]
     ]);

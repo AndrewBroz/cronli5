@@ -33,6 +33,17 @@ interface Stride {
   anchor: string;
 }
 
+// A contiguous hour range to phrase as a window. `from`/`to` are the bounding
+// hours; `throughMinute` is the close minute used by the "through" span;
+// `continuous` is true only when the run fills every minute of the final hour
+// (a wildcard minute), which earns the default dialect's until-window.
+interface HourWindowSpec {
+  from: number;
+  to: number;
+  throughMinute: number | string;
+  continuous: boolean;
+}
+
 // A clock-time entry assembled for rendering. Hour/minute/second arrive as
 // numbers or as raw field tokens (a range bound or single value is a
 // string); `plain` suppresses the noon/midnight words. `explicit` forces the
@@ -419,7 +430,16 @@ function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
         hourTimesFromPlan(ir, plan.hours.times, false, opts) + ' hours';
   }
   else if (plan.hours.kind === 'window') {
-    phrase += ' ' + hourWindow(plan.hours, opts);
+    // A minute-frequency cadence ("every 15 minutes") fills the hours from a
+    // STEPPED minute, never a wildcard one, so its run is not continuous to the
+    // top of the next hour: the default dialect reads "through <last hour>" and
+    // every other dialect closes on the step's last fire (`last`).
+    phrase += ' ' + rangeWindow({
+      continuous: false,
+      from: plan.hours.from,
+      throughMinute: plan.hours.last,
+      to: plan.hours.to
+    }, opts);
   }
   else if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean stride (dividing the day),
@@ -634,31 +654,42 @@ function renderHourStep(ir: IR, plan: PlanOf<'hourStep'>,
 // a wildcard minute, which fills every minute and states no separate clause.
 // A pinned/listed/ranged minute is named in its own lead clause, so folding it
 // into the close too would read as a span ("through 5:05 p.m.") that
-// contradicts the minute clause; the window stays bare ("through 5 p.m.").
+// contradicts the minute clause; the window stays bare ("through 5 p.m."). The
+// same wildcard minute is what makes the run CONTINUOUS to the top of the next
+// hour, so it also drives the until-window choice in `rangeWindow`.
 function boundedWindow(plan: PlanOf<'hourRange'>):
-  {from: number; to: number; last: number} {
-  const last = plan.minuteForm === 'wildcard' ? plan.boundMinute ?? 0 : 0;
+  {from: number; to: number; closeMinute: number; continuous: boolean} {
+  const continuous = plan.minuteForm === 'wildcard';
+  const closeMinute = continuous ? plan.boundMinute ?? 0 : 0;
 
-  return {from: plan.from, last, to: plan.to};
+  return {from: plan.from, closeMinute, to: plan.to, continuous};
 }
 
 // A contiguous hour range as a window phrase. The default English dialect
-// reads a MULTI-hour range as an up-to-but-not-including window — "from 9 a.m.
-// until 6 p.m." (the close is the top of the hour after the last, the sense
-// English uses for time windows: 9-17 runs until 6 p.m.); 23 wraps to
-// midnight. Every other dialect (and the compact `short` form) keeps the
-// "through <last fire>" span, closing on the minute field's last fire within
-// the final hour. A single-hour sub-hour window (`from === to`, e.g. */15 9
-// firing 9:00 through 9:45) is NOT a multi-hour range: its close is a real
-// fire inside the hour, so it always keeps "through" — naming "until 10 a.m."
-// would overstate the span past the last fire.
-function rangeWindow(from: number, to: number, throughMinute: number | string,
+// reads a MULTI-hour range whose run is CONTINUOUS to the top of the next hour
+// as an up-to-but-not-including window — "from 9 a.m. until 6 p.m." (the close
+// is the top of the hour after the last, the sense English uses for time
+// windows: 9-17 runs until 6 p.m.); 23 wraps to midnight. The run is continuous
+// only when the minute is wildcard, so every minute of the final hour fires; a
+// restricted minute fires at discrete points (e.g. only `:00`), so the run
+// stops within the final hour and the default dialect reverts to the bare
+// "through <last hour>" span (the minute is named in its own lead clause, so
+// the close stays on the top of the final hour rather than restating a last
+// fire). Every other dialect (and the compact `short` form) always speaks the
+// span, closing on the minute field's last fire within the final hour. A
+// single-hour sub-hour window (`from === to`, e.g. */15 9 firing 9:00 through
+// 9:45) is NOT a multi-hour range: its close is a real fire inside the hour, so
+// it always keeps "through" — naming "until 10 a.m." would overstate the span
+// past the last fire.
+function rangeWindow(window: HourWindowSpec,
   opts: NormalizedOptions): string {
+  const {from, to, throughMinute, continuous} = window;
   const open = 'from ' + getTime({hour: from, minute: 0}, opts);
 
   if (opts.style.untilWindow && !opts.short && from !== to) {
-    return open + ' until ' +
-      getTime({hour: (to + 1) % 24, minute: 0}, opts);
+    return continuous ?
+      open + ' until ' + getTime({hour: (to + 1) % 24, minute: 0}, opts) :
+      open + through(opts) + getTime({hour: to, minute: 0}, opts);
   }
 
   return open + through(opts) +
@@ -666,11 +697,18 @@ function rangeWindow(from: number, to: number, throughMinute: number | string,
 }
 
 // An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m." (or "from 9 a.m.
-// until 6 p.m." in the default dialect). Windows open at the top of the first
-// hour and close at the minute field's last fire within the final hour.
-function hourWindow(window: {from: number; to: number; last: number},
+// until 6 p.m." in the default dialect, when the minute is wildcard). Windows
+// open at the top of the first hour and close at the minute field's last fire
+// within the final hour.
+function hourWindow(
+  window: {from: number; to: number; closeMinute: number; continuous: boolean},
   opts: NormalizedOptions): string {
-  return rangeWindow(window.from, window.to, window.last, opts);
+  return rangeWindow({
+    continuous: window.continuous,
+    from: window.from,
+    throughMinute: window.closeMinute,
+    to: window.to
+  }, opts);
 }
 
 // Expand a discrete set of hours and minutes into clock times prefixed by
@@ -770,72 +808,63 @@ function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
 // A folded hour field that includes a contiguous range reads with the
 // hour-range frame: a shared minute lead ("every hour" / "at 30 minutes
 // past the hour"), each range as a window, and any non-contiguous hour
-// appended by `outlierTail` (the default until-window form reads "plus Z";
-// every other dialect keeps "and at Z").
+// appended by `outlierTail` ("and at Z").
 function foldedHourWindows(ir: IR, plan: PlanOf<'compactClockTimes'>,
   opts: NormalizedOptions): string {
   const minute = plan.minute;
   const windows: string[] = [];
-  const outliers = collectHourOutliers(ir);
-  const times = outliers.hours.map(function time(hour) {
+  const times = collectHourOutliers(ir).map(function time(hour) {
     return getTime({hour, minute}, opts);
   });
 
-  // Reached only via the fold branch under discrete hours, which have
-  // segments.
+  // Reached only via the fold branch under discrete hours, which have segments.
+  // A folded minute is a discrete pin/list, never a wildcard, so the run is not
+  // continuous to the top of the next hour: the window is not an until-window.
   ir.analyses.segments.hour!.forEach(function classify(segment) {
     if (segment.kind === 'range') {
-      windows.push(rangeWindow(+segment.bounds[0], +segment.bounds[1],
-        minute, opts));
+      windows.push(rangeWindow({
+        continuous: false,
+        from: +segment.bounds[0],
+        throughMinute: minute,
+        to: +segment.bounds[1]
+      }, opts));
     }
   });
 
   const phrase = rangeMinuteLead(ir, opts) + ' ' + joinList(windows, opts);
 
-  return phrase + outlierTail(times, outliers.pureStrays, opts);
+  return phrase + outlierTail(times, opts);
 }
 
-// The hours outside a contiguous run — every non-range segment's values — and
-// whether they are all STRAY single values (no step fires). A step beside a run
-// contributes a whole cadence's worth of fires, not a lone outlier, so the
-// "plus" idiom does not fit and the additive list keeps "and at".
-function collectHourOutliers(ir: IR):
-  {hours: number[]; pureStrays: boolean} {
+// The hours outside a contiguous run — every non-range segment's values, with
+// a step contributing its whole fire set.
+function collectHourOutliers(ir: IR): number[] {
   const hours: number[] = [];
-  let pureStrays = true;
 
   // Reached only under discrete hours, which carry segments.
   ir.analyses.segments.hour!.forEach(function classify(segment) {
     if (segment.kind === 'step') {
       hours.push(...segment.fires);
-      pureStrays = false;
     }
     else if (segment.kind !== 'range') {
       hours.push(+segment.value);
     }
   });
 
-  return {hours, pureStrays};
+  return hours;
 }
 
-// Join the outlier hour times that follow a contiguous-run window. When the run
-// rendered as the leading until-window ("from 9 a.m. until 9 p.m.") and the
-// outlier is a single stray value, it reads "plus 10 p.m." — an additive idiom
-// for the one hour that breaks the run. A step beside the run is a full cadence
-// of fires, not a lone outlier, so it keeps the enumerating "and at"; so does
-// every other dialect (and the compact `short` form), which renders the run as
-// a "through <last fire>" span rather than the until-window.
-function outlierTail(times: string[], pureStrays: boolean,
-  opts: NormalizedOptions): string {
+// Join the outlier hour times that follow a contiguous-run window — the hours
+// outside the run, enumerated as "and at 10 p.m.". (A fold always carries a
+// restricted minute, so its run reads the "through" span, never the
+// until-window; the additive "plus" idiom that paired with the until-window no
+// longer applies here.)
+function outlierTail(times: string[], opts: NormalizedOptions): string {
   if (!times.length) {
     return '';
   }
 
-  const connector = pureStrays && opts.style.untilWindow && !opts.short ?
-    ' plus ' :
-    ' and at ';
-
-  return connector + joinList(times, opts);
+  return ' and at ' + joinList(times, opts);
 }
 
 // --- Confinement frame. ---
@@ -970,7 +999,15 @@ function hourConfinement(ir: IR, opts: NormalizedOptions): string {
   if (ir.shapes.hour === 'range') {
     const bounds = hour.split('-');
 
-    return ' ' + rangeWindow(+bounds[0], +bounds[1], 0, opts);
+    // The until-window holds only when the run is continuous to the top of the
+    // next hour — a wildcard minute fills every minute of the final hour; a
+    // confined minute (":00", a step) stops within it, reading "through".
+    return ' ' + rangeWindow({
+      continuous: ir.pattern.minute === '*',
+      from: +bounds[0],
+      throughMinute: 0,
+      to: +bounds[1]
+    }, opts);
   }
 
   // An hour list or stepped range reads "during the <times> hours".
@@ -1488,29 +1525,34 @@ function hasHourWindow(ir: IR): boolean {
 }
 
 // The hour-range window as a cadence tail at the top of each hour: each range
-// segment is a window ("every hour from 9 a.m. until 9 p.m."), and any
-// non-contiguous single hour is appended by `outlierTail` ("plus 10 p.m." in
-// the default until-window form, "and at 10 p.m." elsewhere). The minute has
-// already folded into the lead, so the window closes on the top of its final
-// hour. Mirrors foldedHourWindows but pinned to minute 0.
+// segment is a window ("every hour from 9 a.m. through 8 p.m."), and any
+// non-contiguous single hour is appended by `outlierTail` ("and at 10 p.m.").
+// The minute has already folded into the "every hour" lead — a single pinned
+// minute, never a wildcard — so the run is not continuous to the top of the
+// next hour and the window keeps "through". Mirrors foldedHourWindows but
+// pinned to minute 0.
 function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
   const windows: string[] = [];
-  const outliers = collectHourOutliers(ir);
+  const outlierHours = collectHourOutliers(ir);
 
   // Reached only after hasHourWindow, so hour segments exist.
   ir.analyses.segments.hour!.forEach(function classify(segment) {
     if (segment.kind === 'range') {
-      windows.push(rangeWindow(+segment.bounds[0], +segment.bounds[1], 0,
-        opts));
+      windows.push(rangeWindow({
+        continuous: false,
+        from: +segment.bounds[0],
+        throughMinute: 0,
+        to: +segment.bounds[1]
+      }, opts));
     }
   });
 
   const phrase = 'every hour ' + joinList(windows, opts);
-  const times = outliers.hours.map(function time(hour) {
+  const times = outlierHours.map(function time(hour) {
     return getTime({hour, minute: 0}, opts);
   });
 
-  return phrase + outlierTail(times, outliers.pureStrays, opts);
+  return phrase + outlierTail(times, opts);
 }
 
 // Render an hour range (or a list whose segments include a range) under a

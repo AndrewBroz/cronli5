@@ -18,7 +18,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['*/15 0,30 * * * *',
         'every 15 seconds during minutes :00 and :30 of every hour'],
       ['*/15 30 9-17 * * *',
-        'every 15 seconds during minute :30 from 9 a.m. until 6 p.m.']
+        'every 15 seconds during minute :30 from 9 a.m. through 5 p.m.']
     ]);
   });
 
@@ -73,7 +73,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['* 0 9,11 * * *',
         'every second during minute :00 during the 9 a.m. and 11 a.m. hours'],
       ['* 0 9-17 * * *',
-        'every second during minute :00 from 9 a.m. until 6 p.m.'],
+        'every second during minute :00 from 9 a.m. through 5 p.m.'],
       ['* 0 */2 * * *',
         'every second during minute :00 of every other hour'],
       ['* 0 9 * * MON',

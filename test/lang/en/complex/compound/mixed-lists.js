@@ -17,7 +17,7 @@ describe('Lists mixing values with ranges or steps:', function() {
         'at 9 a.m. and 5 p.m.'],
       ['0-10,30 9-17 * * *',
         'at 0 through 10 and 30 minutes past the hour ' +
-        'from 9 a.m. until 6 p.m.']
+        'from 9 a.m. through 5 p.m.']
     ]);
   });
 
