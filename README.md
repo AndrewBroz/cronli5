@@ -256,7 +256,7 @@ cronli5('0 0 * * FRI-MON'); // 'every Friday through Monday at midnight'
 cronli5('0,30 9 * * *');   // 'every day at 9 a.m. and 9:30 a.m.'
 cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m.'
 cronli5('30 9-17 * * *');
-// 'at 30 minutes past the hour from 9 a.m. through 5:30 p.m.'
+// 'at 30 minutes past the hour from 9 a.m. through 5 p.m.'
 cronli5('0 12 1 1 *');     // 'on January 1 at noon'
 cronli5('0 * 13 * *');     // 'every hour on the 13th'
 
@@ -280,7 +280,7 @@ pattern &mdash; `5,10 30 9 * * MON` &mdash; in every language:
 | Language | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
 | English | at five and ten seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| German | in den Sekunden 5 und 10 jeder Minute, um 9:30 Uhr montags | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
+| German | in den Sekunden 5 und 10, um 9:30 Uhr montags | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | Spanish | los lunes, en los segundos 5 y 10 de las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | Finnish | 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
 <!-- END GENERATED: cronstrue-head-to-head -->

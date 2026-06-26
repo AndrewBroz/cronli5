@@ -51,13 +51,16 @@ describe('Hour range under a fixed minute and a second reads as a window:',
       ]);
     });
 
-    // A non-zero pinned minute is a real clock minute the existing window
-    // form already speaks; only the minute-0 fold is reshaped here.
-    describe('non-zero pinned minute is unchanged', function() {
+    // A non-zero pinned minute is stated in the lead clause ("at five minutes
+    // past the hour"), so the window stays bare ("through 5 p.m.") rather than
+    // folding the minute into the close — a closing :05 would read as a span,
+    // contradicting the minute clause. (Matches the bare-window list cases and
+    // fi/zh.)
+    describe('non-zero pinned minute leads, window stays bare', function() {
       run([
         ['30 5 9-17 * * *',
           'at 30 seconds past the minute, at five minutes past the hour ' +
-          'from 9 a.m. through 5:05 p.m.']
+          'from 9 a.m. through 5 p.m.']
       ]);
     });
 

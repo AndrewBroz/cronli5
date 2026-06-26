@@ -66,10 +66,10 @@ describe('Suomi (fi):', function() {
       ['0 12 * * MON,WED,FRI',
         'maanantaisin, keskiviikkoisin ja perjantaisin keskipäivällä'],
       ['0 12 * * 0,1/2',
-        'sunnuntaisin, maanantaisin, keskiviikkoisin ja perjantaisin ' +
+        'maanantaisin, keskiviikkoisin, perjantaisin ja sunnuntaisin ' +
         'keskipäivällä'],
       ['0 0 * * 1-5,0',
-        'sunnuntaisin ja maanantaista perjantaihin keskiyöllä']
+        'maanantaista perjantaihin ja sunnuntaisin keskiyöllä']
     ]);
   });
 
@@ -293,15 +293,15 @@ describe('Suomi (fi):', function() {
       // range. SAT,SUN + ranged month included.
       ['0-30 9-17/2 * 6-8 SAT,SUN',
         '0–30 minuutin kohdalla, kahden tunnin välein klo 9–17 ' +
-        'sunnuntaisin ja lauantaisin kesäkuusta elokuuhun'],
+        'lauantaisin ja sunnuntaisin kesäkuusta elokuuhun'],
       // Uneven step over list hours: enumerates into clock times.
       ['*/45 9,17 * 12 SAT,SUN',
-        'sunnuntaisin ja lauantaisin joulukuussa klo 9, 9.45, 17 ja 17.45'],
+        'lauantaisin ja sunnuntaisin joulukuussa klo 9, 9.45, 17 ja 17.45'],
       // A uniform offset step that fires few times stays an anchored kohdalla
       // list, so the hours-first reorder applies (hours lead, minutes follow).
       ['17/20 9,17 * 12 SAT,SUN',
         'klo 9 ja 17 aina minuuttien 17, 37 ja 57 kohdalla ' +
-        'sunnuntaisin ja lauantaisin joulukuussa']
+        'lauantaisin ja sunnuntaisin joulukuussa']
     ]);
   });
 

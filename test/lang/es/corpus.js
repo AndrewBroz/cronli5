@@ -211,7 +211,7 @@ describe('Español (es):', function() {
       // (5,10 * * * * * is already covered in segundos independientes y compuestos)
       // Second-step + fixed minute + hour range + weekday: anchor cadence to the minute.
       ['*/15 30 9-17 * * MON-FRI',
-        'de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30'],
+        'de lunes a viernes, de las 09:00 a las 17:00, cada 15 segundos del minuto 30'],
       // Minute window confined to specific hours.
       ['0-30 9,17-19 * * *',
         'cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00'],
@@ -233,7 +233,13 @@ describe('Español (es):', function() {
         'cada hora de las 9 de la mañana a las 5 de la tarde'],
       ['30 9-17 * * *',
         'en el minuto 30 de cada hora, ' +
-        'de las 9 de la mañana a las 5:30 de la tarde'],
+        'de las 9 de la mañana a las 5 de la tarde'],
+      ['5 9-17 * * *',
+        'en el minuto 5 de cada hora, ' +
+        'de las 9 de la mañana a las 5 de la tarde'],
+      ['5 9-17 * 1 *',
+        'en el minuto 5 de cada hora, ' +
+        'de las 9 de la mañana a las 5 de la tarde en enero'],
       ['0 22-2 * * *',
         'cada hora de las 10 de la noche a las 2 de la madrugada'],
       ['*/15 9,17 * * *',
@@ -262,6 +268,15 @@ describe('Español (es):', function() {
         'cada 15 segundos de las 9:30 de la mañana, todos los días'],
       ['15 30 9 * * *', 'todos los días a las 9:30:15 de la mañana']
     ], ampm);
+
+    // A fixed hour under a stepped minute (six-field, seconds wildcard) names
+    // the hour — "al mediodía" — not a false "a las 12:00" the minute never
+    // fires at.
+    run([
+      ['* 3/2 12 1-5 * *',
+        'cada segundo, cada dos minutos del minuto 3 al 59 de cada hora, ' +
+        'al mediodía del 1 al 5 de cada mes']
+    ]);
   });
 
   describe('segundo bajo un minuto pareado (* */N)', function() {
@@ -316,17 +331,17 @@ describe('Español (es):', function() {
       ['0 0 1 * 5L', 'a las 00:00, ya sea el 1 de cada mes o el último viernes del mes'],
       // Wildcard month, step DOM, step DOW.
       ['0 0 */2 * */2',
-        'a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados'],
+        'a las 00:00, ya sea cada dos días del mes o los martes, jueves, sábados y domingos'],
       // Enumeration/step months (≥2): month lead with trailing comma.
       ['0 0 */2 */2 */2',
         'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
-        'ya sea cada dos días del mes o los domingos, martes, jueves y sábados'],
+        'ya sea cada dos días del mes o los martes, jueves, sábados y domingos'],
       ['0 0 L */2 */2',
         'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
-        'ya sea el último día del mes o los domingos, martes, jueves y sábados'],
+        'ya sea el último día del mes o los martes, jueves, sábados y domingos'],
       // Range month (no trailing comma).
       ['0 0 1-15 1-3 */2',
-        'de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los domingos, martes, jueves y sábados'],
+        'de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los martes, jueves, sábados y domingos'],
       ['0 0 1 1-3 0',
         'de enero a marzo a las 00:00, ya sea el día 1 o cualquier domingo'],
       // Frequency + wildcard month.
@@ -334,9 +349,9 @@ describe('Español (es):', function() {
         'cada cinco minutos, durante las horas pares, ya sea el 1 de cada mes o cualquier viernes'],
       // Mixed weekday arm (range + single): exercises the mixed-list dow branch.
       ['0 0 1 * 0,1-5',
-        'a las 00:00, ya sea el 1 de cada mes o los domingos y de lunes a viernes'],
+        'a las 00:00, ya sea el 1 de cada mes o de lunes a viernes y los domingos'],
       ['0 0 1 6-9 0,1-5',
-        'de junio a septiembre a las 00:00, ya sea el día 1 o los domingos y de lunes a viernes'],
+        'de junio a septiembre a las 00:00, ya sea el día 1 o de lunes a viernes y los domingos'],
       // Irregular hour list with a 1-o'clock fire (not a progression, so it
       // stays an enumeration): group by article in the union frame.
       ['5 1,6,11,16,22 1 1,7 MON',
@@ -399,6 +414,40 @@ describe('Español (es):', function() {
         'las 8:59 de la noche']
     ], ampm);
   });
+
+  // A fixed hour under a stepped/listed minute names the HOUR, never a false
+  // "a las HH:00" clock instant the minute never fires at: midnight and noon
+  // read as the hour word ("a medianoche"/"al mediodía"), any other hour as
+  // "de la hora de las HH:00". A minute that IS a single value keeps the real
+  // clock time ("a las HH:MM"). 24-hour default (no ampm shared option).
+  describe('hora fija bajo un minuto en paso (lee la hora, no las HH:00)',
+    function() {
+      run([
+        ['3/2 0 * 1 5L',
+          'cada dos minutos del minuto 3 al 59 de cada hora, a medianoche ' +
+          'el último viernes del mes de enero'],
+        ['3/2 12 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, al mediodía'],
+        ['3/2 9 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'de la hora de las 09:00'],
+        // Several fixed hours each read as their own whole hour; an all
+        // noon/midnight set keeps the word forms.
+        ['3/2 9,12 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'de la hora de las 09:00 y de la hora de las 12:00'],
+        ['3/2 0,12 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'a medianoche y al mediodía'],
+        // A fixed hour beside an hour range: the range stays a whole-hour
+        // window, the point its own whole hour — never a dropped range.
+        ['3/2 9-11,15 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'de las 09:00 a las 11:00 y de la hora de las 15:00'],
+        // The guard: a single-value minute is a real clock time — keep HH:MM.
+        ['5 9 * * *', 'todos los días a las 09:05']
+      ]);
+    });
 
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
   // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
@@ -613,7 +662,7 @@ describe('Español (es):', function() {
       ['0-10,30 9 * * *',
         'en los minutos 0 a 10 y 30 de cada hora, a las 9 de la mañana'],
       ['0 0 * * 1-5,0',
-        'los domingos y de lunes a viernes a medianoche'],
+        'de lunes a viernes y los domingos a medianoche'],
       ['50-10 * * * *', 'cada minuto del 50 al 10 de cada hora']
     ], ampm);
   });
@@ -682,7 +731,7 @@ describe('Español (es):', function() {
         'cada 15 minutos, ya sea el 13 de cada mes o cualquier viernes'],
       ['*/15 * * 6 *', 'cada 15 minutos en junio'],
       ['0 12 * * 0,1/2',
-        'los domingos, lunes, miércoles y viernes al mediodía'],
+        'los lunes, miércoles, viernes y domingos al mediodía'],
       ['0 12 * 1,6/3 *',
         'todos los días de enero, junio, septiembre y diciembre ' +
         'al mediodía'],

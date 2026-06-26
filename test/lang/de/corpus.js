@@ -95,10 +95,32 @@ describe('Deutsch (de):', function() {
       ['5,30 * * * * *', 'in den Sekunden 5 und 30 jeder Minute'],
       ['30 0 * * * *', 'in Minute 0 und Sekunde 30 jeder Stunde'],
       ['0-30 9 * * *', 'jede Minute von 9:00 bis 9:30 Uhr'],
-      ['0,30 5 9 * * *', 'in den Sekunden 0 und 30 jeder Minute, um 9:05 Uhr'],
+      ['0,30 5 9 * * *', 'in den Sekunden 0 und 30, um 9:05 Uhr'],
       ['*/15 0 9 * * *', 'täglich alle 15 Sekunden der Minute 9:00']
     ]);
   });
+
+  // The "jeder Minute" scope on a seconds clause means the seconds fire in
+  // every minute — true only when the minute is a wildcard. When the minute is
+  // fixed (single/list/range/step) its own clause names it, so the scope is
+  // dropped: "in Sekunde 30 jeder Minute, in Minute 30" claimed every minute
+  // while firing only at second 30 of minute 30.
+  describe('Sekundenklausel ohne "jeder Minute" bei fixierter Minute',
+    function() {
+      run([
+        // The reported case: minute fixed to 30, so the seconds clause is bare.
+        ['30 30 9-17/2 * * *',
+          'in Sekunde 30, in Minute 30, alle 2 Stunden von 9 bis 17 Uhr'],
+        // A fully pinned clock time folds into the clock form — no scope at all.
+        ['30 30 9 * * *', 'täglich um 9:30:30 Uhr'],
+        ['30 5 9 * * *', 'täglich um 9:05:30 Uhr'],
+        // Guards: the minute IS a wildcard, so "jeder Minute" is legitimate and
+        // stays — the seconds really do fire in every minute.
+        ['30 * 9 * * *',
+          'in Sekunde 30 jeder Minute, jede Minute der 9-Uhr-Stunde'],
+        ['5/15 * * * * *', 'alle 15 Sekunden ab Sekunde 5 jeder Minute']
+      ]);
+    });
 
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
   // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
@@ -151,7 +173,7 @@ describe('Deutsch (de):', function() {
       // A non-zero pinned minute under an hour step: the second leads, then the
       // minute, then the hour cadence.
       ['30 5 */2 * * *',
-        'in Sekunde 30 jeder Minute, in Minute 5, alle 2 Stunden'],
+        'in Sekunde 30, in Minute 5, alle 2 Stunden'],
       ['* 5 */2 * * *', 'jede Sekunde, in Minute 5, alle 2 Stunden'],
       // An hour RANGE reads as a window, not a wall of clock times: the
       // second/minute lead, then "von 9 bis 17 Uhr" (see the dedicated
@@ -242,6 +264,18 @@ describe('Deutsch (de):', function() {
         'alle 6 Minuten ab Minute 5 jeder Stunde'],
       ['11/12 * * * *',
         'alle 12 Minuten ab Minute 11 jeder Stunde'],
+      // A minute step under a FIXED hour drops the "jeder Stunde" tail — the
+      // hour window already names the single hour, so "jeder Stunde" (every
+      // hour) would contradict it. The wildcard-hour guard above keeps it.
+      ['5/15 0 1,15 1,7 0',
+        'alle 15 Minuten ab Minute 5, von 0 bis 0:50 Uhr ' +
+        'am 1. und 15. oder sonntags im Januar und Juli'],
+      ['5/15 9 * * *',
+        'alle 15 Minuten ab Minute 5, von 9 bis 9:50 Uhr'],
+      // A RANGE of hours keeps "jeder Stunde": the cadence really does repeat
+      // across each hour of the window, so the tail is true, not contradictory.
+      ['5/15 9-17 * * *',
+        'alle 15 Minuten ab Minute 5 jeder Stunde, von 9 bis 17:50 Uhr'],
       // An uneven step (interval does not divide the cycle) and an offset step
       // (start >= interval) fire a non-uniform bounded set: named with its
       // interval and both endpoints ("von Minute M bis K"), not enumerated.
@@ -253,12 +287,23 @@ describe('Deutsch (de):', function() {
         'alle 9 Minuten von Minute 7 bis 52 jeder Stunde'],
       // Compounded: a stepped second over a stepped minute, each a cadence.
       ['3/2 1/2 * * * *',
-        'alle 2 Sekunden von Sekunde 3 bis 59 jeder Minute, ' +
+        'alle 2 Sekunden von Sekunde 3 bis 59, ' +
         'alle 2 Minuten ab Minute 1 jeder Stunde'],
       // A uneven hour step (24 not divisible by the step) has no clean wrap, so
       // it reads as a bounded cadence pinning both endpoints, not a clock list.
       ['0 */5 * * *', 'alle 5 Stunden von 0 bis 20 Uhr'],
-      ['0 */9 * * *', 'alle 9 Stunden von 0 bis 18 Uhr']
+      ['0 */9 * * *', 'alle 9 Stunden von 0 bis 18 Uhr'],
+      // An OPEN offset-clean hour step (`m/n`, m < n dividing 24) wraps the day
+      // with no endpoint: name only its start ("alle N Stunden ab M Uhr"), the
+      // cadence the compose paths and en/fi/zh already speak — never the
+      // enumerated hour list, and no "täglich" frame (it is a frequency).
+      ['0 1/2 * * *', 'alle 2 Stunden ab 1 Uhr'],
+      ['0 2/6 * * *', 'alle 6 Stunden ab 2 Uhr'],
+      ['0 5/6 * * *', 'alle 6 Stunden ab 5 Uhr'],
+      // Guard: an explicitly bounded step (`a-b/n`) keeps its enumerated hours,
+      // even when its fires happen to span a clean wrap.
+      ['0 1-23/2 * * *',
+        'um 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 und 23 Uhr']
     ]);
   });
 
@@ -316,7 +361,7 @@ describe('Deutsch (de):', function() {
       ['0 9 * * 7', 'sonntags um 9 Uhr'],
       ['0 9 * * SAT', 'samstags um 9 Uhr'],
       ['0 9 * * TUE-THU', 'dienstags bis donnerstags um 9 Uhr'],
-      ['0 9 * * SAT,SUN', 'sonntags und samstags um 9 Uhr'],
+      ['0 9 * * SAT,SUN', 'samstags und sonntags um 9 Uhr'],
       ['0 9 31 * *', 'am 31. um 9 Uhr'],
       ['0 9 * 12 *', 'im Dezember um 9 Uhr'],
       ['0 9 * 3 *', 'im März um 9 Uhr'],
@@ -359,7 +404,9 @@ describe('Deutsch (de):', function() {
 
   describe('Stundenfenster mit Minute, Faltung, ODER', function() {
     run([
-      ['30 9-17 * * *', 'in Minute 30 jeder Stunde, von 9 bis 17:30 Uhr'],
+      ['30 9-17 * * *', 'in Minute 30 jeder Stunde, von 9 bis 17 Uhr'],
+      ['5 9-17 * * *', 'in Minute 5 jeder Stunde, von 9 bis 17 Uhr'],
+      ['5 9-17 * 1 *', 'in Minute 5 jeder Stunde, von 9 bis 17 Uhr im Januar'],
       ['15,45 9-17 * * *',
         'in den Minuten 15 und 45 jeder Stunde, von 9 bis 17 Uhr'],
       // A non-uniform minute step under an hour range is a cadence, not the wall
@@ -403,7 +450,7 @@ describe('Deutsch (de):', function() {
       ['15 8,12,17 * * *', 'täglich um 8:15, 12:15 und 17:15 Uhr'],
       ['0 0 1 */3 *', 'am 1. Januar, April, Juli und Oktober um Mitternacht'],
       ['0,30 5 9,18 * * *',
-        'in den Sekunden 0 und 30 jeder Minute, um 9:05 und 18:05 Uhr'],
+        'in den Sekunden 0 und 30, um 9:05 und 18:05 Uhr'],
       ['0 0 29 2 *', 'am 29. Februar um Mitternacht'],
       ['0 12 25 12 *', 'am 25. Dezember um 12 Uhr']
     ]);
@@ -431,7 +478,7 @@ describe('Deutsch (de):', function() {
         'alle 15 Minuten, alle 5 Stunden von 0 bis 20 Uhr'],
       // The same clean hour step composed with a second clause.
       ['0-10 */15 */2 L * *',
-        'in den Sekunden 0 bis 10 jeder Minute, ' +
+        'in den Sekunden 0 bis 10, ' +
         'alle 15 Minuten in jeder zweiten Stunde am letzten Tag des Monats'],
       // Uneven minute step within a window.
       ['*/45 9-17 * * *',
@@ -446,7 +493,7 @@ describe('Deutsch (de):', function() {
       ['5 9-20,22 * * *', 'stündlich von 9:05 bis 20:05 Uhr und um 22:05 Uhr'],
       // secondsWithinMinute with a non-single second.
       ['0-10 0 * * * *',
-        'in den Sekunden 0 bis 10 jeder Minute, in Minute 0 jeder Stunde'],
+        'in den Sekunden 0 bis 10, in Minute 0 jeder Stunde'],
       // date+weekday OR where the weekday is a Quartz form.
       ['0 9 1 * 5L', 'am 1. oder am letzten Freitag des Monats um 9 Uhr'],
       // A wildcard second composed with a minute-0 clock time: the pinned

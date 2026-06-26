@@ -1,6 +1,6 @@
 {
   "name": "cronli5",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Cron Like I'm Five: A Cron to English Utility",
   "repository": {
     "type": "git",
@@ -70,7 +70,7 @@
     "test:types": "npm run types && tsd",
     "typecheck": "tsc -p tsconfig.json",
     "coverage": "c8 mocha",
-    "verify": "npm run lint && npm run typecheck && npm run test:types && npm test && npm run coverage && npm run docs -- --check && npm run build",
+    "verify": "npm run lint && npm run typecheck && npm run test:types && npm test && npm run coverage && npm run conciseness && npm run docs -- --check && npm run build",
     "prepare": "node scripts/install-hooks.mjs",
     "prepublishOnly": "npm run lint && npm run typecheck && npm run test:types && npm run build && npm test"
   },

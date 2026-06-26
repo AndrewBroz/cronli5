@@ -3,7 +3,9 @@
 
 import {pad} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
-import {arithmeticStep, toFieldNumber} from '../../core/util.js';
+import {
+  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   Field, HourTimesPlan, IR, Language, NormalizedOptions, PlanNode, Segment
@@ -49,6 +51,12 @@ function everyUnit(unit: Unit): string {
 // "every N <units>" at interval > 1: "alle 5 Minuten". `alle` is invariant.
 function everyN(interval: number, unit: Unit): string {
   return 'alle ' + interval + ' ' + unit.plural;
+}
+
+// Append a scope anchor to a clause, separated by a space; an empty anchor
+// (a context that names that field in its own clause) leaves the clause bare.
+function withAnchor(clause: string, anchor: string): string {
+  return anchor ? clause + ' ' + anchor : clause;
 }
 
 // The first segment of a step field, which the plan guarantees is step-kinded.
@@ -108,8 +116,9 @@ function stepClause(segment: StepSegment, unit: Unit, anchor: string): string {
   const short = start !== 0 && segment.fires.length <= 3;
 
   if (segment.startToken.indexOf('-') !== -1 || short) {
-    return 'in den ' + unit.plural + ' ' + joinList(segment.fires.map(String)) +
-      ' ' + anchor;
+    return withAnchor(
+      'in den ' + unit.plural + ' ' + joinList(segment.fires.map(String)),
+      anchor);
   }
 
   return renderStride({
@@ -208,7 +217,9 @@ function weekdayRange(bounds: [string, string]): string {
 
 // "montags", "montags bis freitags", "montags, mittwochs und freitags".
 function weekdayQualifier(ir: IR): string {
-  const segments = flattenSteps(fieldSegments(ir, 'weekday'));
+  // Weekday lists display Monday-first (Sunday last); a lone range keeps its
+  // form. The IR stays canonical (Sunday=0). The helper flattens steps.
+  const segments = orderWeekdaysForDisplay(fieldSegments(ir, 'weekday'));
 
   if (segments.length === 1 && segments[0].kind === 'range') {
     return weekdayRange(segments[0].bounds);
@@ -460,10 +471,21 @@ function countedPhrase(
   return 'in den ' + plural + ' ' + joinList(fieldValues(ir, field));
 }
 
-// The seconds clause: "alle 30 Sekunden" for a step, else "in Sekunde 15
-// jeder Minute".
+// The minute scope for a seconds clause: "jeder Minute" only when the minute
+// is a wildcard (the seconds really do fire in every minute). A restricted
+// minute (single/list/range/step) is named by its own clause, so the seconds
+// clause drops the scope — "jeder Minute" would otherwise contradict the fixed
+// minute ("in Sekunde 30 jeder Minute, in Minute 30" fires at second 30 of
+// minute 30, not every minute).
+function minuteAnchor(ir: IR): string {
+  return ir.pattern.minute === '*' ? 'jeder Minute' : '';
+}
+
+// The seconds clause: "alle 30 Sekunden" for a step, "in Sekunde 15 jeder
+// Minute" under a wildcard minute, else the bare "in Sekunde 15" when the
+// minute is fixed (its own clause names it).
 function secondsLead(ir: IR): string {
-  return secondsClause(ir, 'jeder Minute');
+  return secondsClause(ir, minuteAnchor(ir));
 }
 
 // The second clause counted against an arbitrary anchor. The anchor is "jeder
@@ -486,7 +508,7 @@ function secondsClause(ir: IR, anchor: string): string {
   }
 
   return strideFromSegments(segments as Segment[], UNITS.second, anchor) ??
-    countedPhrase(ir, 'second', 'Sekunde', 'Sekunden') + ' ' + anchor;
+    withAnchor(countedPhrase(ir, 'second', 'Sekunde', 'Sekunden'), anchor);
 }
 
 // A clock time that always shows its minutes: "9:00", "9:30".
@@ -888,14 +910,21 @@ function renderMinuteFrequency(
   const segment = stepSegment(ir.analyses.segments.minute);
   const sep = opts.style.sep;
   const clean = cleanStep(segment, 60);
-  const base = stepClause(segment, UNITS.minute, 'jeder Stunde');
 
   if (plan.hours.kind === 'window') {
+    // A single fixed hour (from === to) drops the "jeder Stunde" tail — the
+    // window names that one hour, so "jeder Stunde" (every hour) contradicts
+    // it. A range keeps it: the cadence truly repeats across each hour.
+    const singleHour = plan.hours.from === plan.hours.to;
+    const base = stepClause(segment, UNITS.minute,
+      singleHour ? '' : 'jeder Stunde');
     const window = hourWindow(plan.hours.from, plan.hours.to, plan.hours.last,
       sep);
 
     return clean ? base + ' ' + window : base + ', ' + window;
   }
+
+  const base = stepClause(segment, UNITS.minute, 'jeder Stunde');
 
   if (plan.hours.kind === 'during') {
     // A bounded or uneven hour stride confines the minute cadence to its own
@@ -918,9 +947,13 @@ function renderMinuteFrequency(
   return base;
 }
 
-// A stepped hour field as a phrase: an offset-clean stride is its bare or "ab"
-// cadence; a bounded or uneven stride pins both ends ("alle 2 Stunden von 9
+// A stepped hour field as a phrase: a clean stride from midnight is the bare
+// cadence ("alle 2 Stunden"); an open offset-clean stride names only its start
+// ("alle 2 Stunden ab 1 Uhr") since it wraps the day with no distinct
+// endpoint; a bounded or uneven stride pins both ends ("alle 2 Stunden von 9
 // bis 17 Uhr"). Shared by the bare hour step and the minute-step compositions.
+// An explicitly bounded step (`a-b/n`) keeps its enumerated hours, matching
+// en/fi/zh; only an OPEN step (`m/n`) reads as the wrapping cadence.
 function hourStepPhrase(ir: IR): string {
   const cadence = unevenHourCadence(ir);
 
@@ -930,9 +963,34 @@ function hourStepPhrase(ir: IR): string {
 
   const segment = stepSegment(ir.analyses.segments.hour);
 
-  return cleanStep(segment, 24) ?
-    everyN(segment.interval, UNITS.hour) :
-    atHours(segment.fires);
+  if (cleanStep(segment, 24)) {
+    return everyN(segment.interval, UNITS.hour);
+  }
+
+  // An open offset-clean step (`m/n`, m < n dividing 24) wraps the day with no
+  // endpoint: name only its start, the cadence en/fi/zh and the compose paths
+  // already speak — never the enumerated hour list. A bounded `a-b/n` keeps its
+  // explicit hours.
+  const stride = openOffsetCleanStride(ir, segment);
+
+  return stride ? hourStrideCadence(stride) : atHours(segment.fires);
+}
+
+// The stride of an OPEN offset-clean hour step (`m/n`, m < n dividing 24),
+// or null for any other step: such a step wraps the day with no endpoint and
+// reads as the "alle N Stunden ab M Uhr" cadence. An explicitly bounded step
+// (`a-b/n`, startToken carries a `-`) is excluded so it keeps its enumerated
+// hours, matching en/fi/zh.
+function openOffsetCleanStride(
+  ir: IR, segment: StepSegment
+): {start: number; interval: number; last: number} | null {
+  if (segment.startToken.indexOf('-') !== -1) {
+    return null;
+  }
+
+  const stride = hourStride(ir);
+
+  return stride && offsetCleanStride(stride) ? stride : null;
 }
 
 // --- Hour-step cadence (the 24-cycle analog of renderStride). ---
@@ -1078,7 +1136,7 @@ function subMinuteSecond(ir: IR): boolean {
 function hourCadenceLead(ir: IR, minute: number): string {
   if (minute === 0) {
     if (subMinuteSecond(ir)) {
-      return secondsClause(ir, 'jeder Minute') + ' für eine Minute';
+      return withAnchor(secondsClause(ir, minuteAnchor(ir)), 'für eine Minute');
     }
 
     return secondsClause(ir, 'jeder Stunde');
@@ -1092,7 +1150,7 @@ function hourCadenceLead(ir: IR, minute: number): string {
     return minutePhrase;
   }
 
-  return secondsClause(ir, 'jeder Minute') + ', ' + minutePhrase;
+  return secondsClause(ir, minuteAnchor(ir)) + ', ' + minutePhrase;
 }
 
 // Render an hour step (or arithmetic-progression hour list) under a single
@@ -1134,8 +1192,8 @@ function hourCadence(ir: IR, minute: number): string | null {
     confinedHourStride(segment);
 
   if (confined) {
-    return secondsClause(ir, 'jeder Minute') + ' für eine Minute ' +
-      everyNthHour(segment);
+    return withAnchor(secondsClause(ir, minuteAnchor(ir)), 'für eine Minute') +
+      ' ' + everyNthHour(segment);
   }
 
   // A plain top-of-the-hour fire (minute 0 with no meaningful second) has no
@@ -1208,11 +1266,14 @@ function renderHourRange(
   plan: Extract<PlanNode, {kind: 'hourRange'}>,
   opts: Opts
 ): string {
-  // A bare close (`boundMinute` null) lands on the top of the final hour
-  // (minute 0), matching the minute-0 baseline, with the minutes stated
-  // separately; a single fire or wildcard names an exact closing minute.
-  const window = hourWindow(plan.from, plan.to, plan.boundMinute ?? 0,
-    opts.style.sep);
+  // The close lands on the top of the final hour (minute 0) unless the minute
+  // genuinely runs to the end of that hour — i.e. a wildcard minute, which
+  // fills every minute and states no separate clause. A pinned/listed/ranged
+  // minute is named in its own lead clause, so folding it into the close too
+  // would read as a span ("bis 17:05 Uhr") that contradicts the minute clause;
+  // the window stays bare ("bis 17 Uhr").
+  const last = plan.minuteForm === 'wildcard' ? plan.boundMinute ?? 0 : 0;
+  const window = hourWindow(plan.from, plan.to, last, opts.style.sep);
 
   if (plan.minuteForm === 'wildcard') {
     return 'jede Minute ' + window;
@@ -1343,8 +1404,17 @@ function needsDailyFrame(ir: IR): boolean {
     return true;
   }
 
-  return ir.plan.kind === 'hourStep' &&
-    !cleanStep(stepSegment(ir.analyses.segments.hour), 24);
+  if (ir.plan.kind !== 'hourStep') {
+    return false;
+  }
+
+  // An hour step rendered as a cadence ("alle N Stunden [ab M Uhr]") is a
+  // frequency, not a daily clock-time list, so it takes no "täglich" frame —
+  // only a bounded `a-b/n` step that enumerates its hours ("um 1, 3, … Uhr")
+  // needs the recurring frame.
+  const segment = stepSegment(ir.analyses.segments.hour);
+
+  return !cleanStep(segment, 24) && !openOffsetCleanStride(ir, segment);
 }
 
 function render(ir: IR, plan: PlanNode, opts: Opts): string {

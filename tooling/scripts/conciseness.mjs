@@ -131,10 +131,14 @@ async function sweep(code, threshold) {
   return hits.sort((a, b) => b.excess - a.excess);
 }
 
+// Returns the total over-budget shape count so callers can gate on it.
 async function main(code, threshold) {
+  let total = 0;
+
   for (const lang of code ? [code] : LANGS) {
     const hits = await sweep(lang, threshold);
 
+    total += hits.length;
     console.log('\n=== ' + lang + ': ' + hits.length +
       ' distinct over-budget shapes (excess > ' + threshold + ') ===');
     hits.slice(0, 12).forEach((h) => {
@@ -142,6 +146,8 @@ async function main(code, threshold) {
         ')  ' + h.cron + '\n       ' + h.description);
     });
   }
+
+  return total;
 }
 
 export {budget, fieldBudget, outputNumbers, sweep};
@@ -150,6 +156,15 @@ if (process.argv[1] &&
     import.meta.url === pathToFileURL(process.argv[1]).href) {
   const code = process.argv.find((arg) => LANGS.includes(arg));
   const flag = process.argv.find((arg) => arg.startsWith('--threshold='));
+  const threshold = flag ? Number(flag.slice('--threshold='.length)) : 6;
+  const total = await main(code, threshold);
 
-  await main(code, flag ? Number(flag.slice('--threshold='.length)) : 6);
+  // Gate: any over-budget shape is a verbosity regression.
+  if (total > 0) {
+    console.log('\nFAIL: ' + total + ' over-budget shape(s).');
+    process.exitCode = 1;
+  }
+  else {
+    console.log('\nOK: no over-budget shapes.');
+  }
 }

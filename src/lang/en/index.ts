@@ -3,7 +3,7 @@
 // the core stays semantic, and this module's only input is the IR.
 // See docs/i18n-design.md.
 
-import {arithmeticStep} from '../../core/util.js';
+import {arithmeticStep, orderWeekdaysForDisplay} from '../../core/util.js';
 import {maxClockTimes} from '../../core/specs.js';
 import {clockDigits, numeral} from '../../core/format.js';
 import type {Cronli5Options} from '../../types.js';
@@ -596,12 +596,17 @@ function renderHourStep(ir: IR, plan: PlanOf<'hourStep'>,
     trailingQualifier(ir, opts);
 }
 
-// The hour-range plan as a window whose closing minute honors `boundMinute`:
-// a bare close (`null`) lands on the top of the final hour (`:00`), matching
-// the minute-0 baseline, with the minutes stated separately elsewhere.
+// The hour-range plan as a window. The close lands on the top of the final
+// hour (`:00`) unless the minute genuinely runs to the end of that hour — i.e.
+// a wildcard minute, which fills every minute and states no separate clause.
+// A pinned/listed/ranged minute is named in its own lead clause, so folding it
+// into the close too would read as a span ("through 5:05 p.m.") that
+// contradicts the minute clause; the window stays bare ("through 5 p.m.").
 function boundedWindow(plan: PlanOf<'hourRange'>):
   {from: number; to: number; last: number} {
-  return {from: plan.from, last: plan.boundMinute ?? 0, to: plan.to};
+  const last = plan.minuteForm === 'wildcard' ? plan.boundMinute ?? 0 : 0;
+
+  return {from: plan.from, last, to: plan.to};
 }
 
 // An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m.". Windows
@@ -1499,29 +1504,51 @@ function monthFoldsIntoDate(ir: IR): boolean {
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
 // are restricted: cron fires when either is a match. A restricted month
-// scopes both.
+// scopes BOTH halves, so it attaches to the whole or, never to a single
+// branch. When the month folds into a calendar date ("on June 13") it also
+// names itself on the weekday ("or on Friday in June"), keeping both halves
+// scoped; otherwise (a Quartz date, an open day step, a month range, or the
+// odd/even frequency) it trails the whole or as ", in <month>".
 function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
   const weekdayPart = quartzWeekdayPhrase(pattern.weekday, opts) ||
     'on ' + weekdayPhrase(ir, opts);
-  const quartzDate = quartzDatePhrase(pattern.date, opts);
 
-  if (quartzDate) {
-    return quartzDate + monthScope(ir, opts) + ' or ' + weekdayPart;
-  }
-
-  if (isOpenStep(pattern.date)) {
-    return stepDates(pattern.date) + monthScope(ir, opts) + ' or ' +
-      weekdayPart;
-  }
-
-  if (pattern.month !== '*' && monthFoldsIntoDate(ir)) {
+  if (pattern.month !== '*' && monthFoldsIntoDate(ir) &&
+      !quartzDatePhrase(pattern.date, opts) && !isOpenStep(pattern.date)) {
     return 'on ' + monthDatePhrase(ir, opts) + ' or ' + weekdayPart +
       ' in ' + monthName(ir, opts);
   }
 
-  return 'on the ' + dateOrdinals(ir, opts) + ' or ' + weekdayPart +
-    monthScope(ir, opts);
+  return datePart(ir, opts) + ' or ' + weekdayPart + orMonthScope(ir, opts);
+}
+
+// The day-of-month half of an or-day phrase, without any month scope (the
+// month scopes the whole or, applied by the caller).
+function datePart(ir: IR, opts: NormalizedOptions): string {
+  const pattern = ir.pattern;
+  const quartzDate = quartzDatePhrase(pattern.date, opts);
+
+  if (quartzDate) {
+    return quartzDate;
+  }
+
+  if (isOpenStep(pattern.date)) {
+    return stepDates(pattern.date);
+  }
+
+  return 'on the ' + dateOrdinals(ir, opts);
+}
+
+// A trailing month scope for the whole or, set off by a comma so it reads
+// over both day halves ("…or on Friday, in June"); empty when the month is a
+// wildcard.
+function orMonthScope(ir: IR, opts: NormalizedOptions): string {
+  if (ir.pattern.month === '*') {
+    return '';
+  }
+
+  return ', in ' + monthName(ir, opts);
 }
 
 // The day-qualifier phrase for a Quartz date field (e.g. "on the last day
@@ -1665,8 +1692,12 @@ function oddEvenMonth(monthField: string): string | null {
 // Render the weekday field as names. Ranges read in their connective form
 // ("Monday through Friday", or "Mon-Fri" with `short`).
 function weekdayPhrase(ir: IR, opts: NormalizedOptions): string {
-  // Reached only with a restricted weekday, which has segments.
-  return renderSegments(ir.analyses.segments.weekday!, function name(value) {
+  // Reached only with a restricted weekday, which has segments. Weekday lists
+  // display Monday-first (Sunday last) so a weekend reads naturally; the IR
+  // stays canonical (Sunday=0) and ranges keep their form.
+  const segments = orderWeekdaysForDisplay(ir.analyses.segments.weekday!);
+
+  return renderSegments(segments, function name(value) {
     return getWeekday(value, opts);
   }, opts);
 }

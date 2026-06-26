@@ -4,7 +4,9 @@
 // big-endian dates, 每 for recurrence, 24-hour clock with 凌晨0点/正午 anchors,
 // day periods under `ampm`. The style contract is src/lang/zh/notes.md.
 
-import {arithmeticStep, toFieldNumber} from '../../core/util.js';
+import {
+  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+} from '../../core/util.js';
 import {maxClockTimes, monthNumbers, weekdayNumbers} from '../../core/specs.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
@@ -591,6 +593,30 @@ function hourCadencePhrase(ir: IR): string | null {
   });
 }
 
+// A wildcard or sub-minute step second confined to minute 0 of an hour stride
+// is a confinement, not a juxtaposed cadence. The even-hour stride (interval 2
+// from midnight) reuses the even-hours idiom ("在偶数小时0分的每一秒") so the form
+// does NOT contain the bare "每2小时" and can never be misread as the absorbing
+// hour cadence (the same reason en says "for one minute during every other
+// hour", not "every two hours"). An OFFSET stride names its start ("从1点起每2小时"),
+// already unambiguous — it cannot be heard as the bare cadence — so it folds
+// "0分" and the second onto that named cadence ("从1点起每2小时0分的每一秒"). A bare
+// cadence from midnight (no start named, e.g. "每3小时") keeps enumerating its
+// hours so it is never heard as the absorbing form.
+function minuteZeroConfinement(
+  ir: IR, stride: {interval: number; start: number}, prefix: string
+): string | null {
+  if (stride.interval === 2 && stride.start === 0) {
+    return '在偶数小时0分' + secondTail(ir);
+  }
+
+  if (prefix.indexOf('从') !== -1) {
+    return prefix + '0分' + secondTail(ir);
+  }
+
+  return null;
+}
+
 // Render an hour step (or arithmetic-progression hour list) under a single
 // pinned minute and a second as a cadence — the hour cadence plus the
 // minute/second — instead of cross-multiplying the hours into a wall of clock
@@ -626,17 +652,8 @@ function hourCadence(ir: IR): string | null {
   const minute = +ir.pattern.minute;
   const subMinute = ir.pattern.second === '*' || ir.shapes.second === 'step';
 
-  // A wildcard or sub-minute step second confined to minute 0 of the even-hour
-  // stride is a confinement, not a juxtaposed cadence. Reuse the even-hours
-  // idiom ("在偶数小时0分的每一秒") so the form does NOT contain the bare "每2小时"
-  // and can never be misread as the absorbing hour cadence (the same reason en
-  // says "for one minute during every other hour", not "every two hours"). The
-  // idiom exists only for the even-hour stride (interval 2 from midnight);
-  // another stride keeps enumerating (return null) rather than coin a
-  // misleading "…小时…" form.
   if (minute === 0 && subMinute) {
-    return stride.interval === 2 && stride.start === 0 ?
-      '在偶数小时0分' + secondTail(ir) : null;
+    return minuteZeroConfinement(ir, stride, prefix);
   }
 
   // A pinned minute 0 folds into the cadence with the explicit "0分" so the
@@ -1050,7 +1067,7 @@ function quartzDate(token: string, monthPrefix: string): string {
     return monthPrefix + '最后第' + token.slice(2) + '天';
   }
 
-  return '最接近' + token.slice(0, -1) + '日的工作日';
+  return monthPrefix + '最接近' + token.slice(0, -1) + '日的工作日';
 }
 
 // The date side of a qualifier (month folded in): "每月1日", "1月1日",
@@ -1071,7 +1088,17 @@ function datePhrase(ir: IR): string {
     return month + cadence(stepSegment(ir, 'date').interval, '天');
   }
 
-  return month ? month + dayList(ir) : '每月' + dayList(ir);
+  if (!month) {
+    return '每月' + dayList(ir);
+  }
+
+  // A multi-month scope (range/list) ends in 月 and would run straight into the
+  // day — "6月至8月1日" reads "8月1日" as August 1st. The comma keeps the month
+  // scope distinct from the day ("6月至8月，1日"). A single month stays glued
+  // ("6月1日"), which is unambiguous.
+  const monthMulti = ir.shapes.month === 'range' || ir.shapes.month === 'list';
+
+  return month + (monthMulti ? '，' : '') + dayList(ir);
 }
 
 // The date side WITHOUT its month or 每月 lead — just the day part: "1日",
@@ -1140,13 +1167,12 @@ function weekdayPhrase(
     return '每' + weekdayName(from) + '至' + weekdayName(to);
   }
 
+  // Weekday lists display Monday-first (Sunday last); the IR stays canonical
+  // (Sunday=0). The helper flattens steps into singles and orders the list.
   const days: number[] = [];
 
-  segs.forEach(function expand(seg) {
-    if (seg.kind === 'step') {
-      days.push(...seg.fires);
-    }
-    else if (seg.kind === 'single') {
+  orderWeekdaysForDisplay(segs).forEach(function expand(seg) {
+    if (seg.kind === 'single') {
       days.push(toFieldNumber(seg.value, weekdayNumbers));
     }
   });

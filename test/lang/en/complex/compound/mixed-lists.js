@@ -62,7 +62,7 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 0 * 1,6/3 *',
         'every day in January, June, September, and December at midnight'],
       ['0 0 * * 1-5,0',
-        'every Sunday and Monday through Friday at midnight']
+        'every Monday through Friday and Sunday at midnight']
     ]);
   });
 
@@ -90,7 +90,7 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 0 1 1-11/3 *',
         'on January, April, July, and October 1 at midnight'],
       ['0 0 1 6-9 FRI',
-        'on the 1st or on Friday in June through September at midnight']
+        'on the 1st or on Friday, in June through September at midnight']
     ]);
   });
 });
