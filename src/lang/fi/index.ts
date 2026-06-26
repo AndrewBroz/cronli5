@@ -404,7 +404,15 @@ function renderComposeSeconds(
     return secondsLeadClause(ir, opts) + ' joka toisena minuuttina';
   }
 
-  return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+  // A compact clock-time rest folds a meaningful SINGLE second into its own
+  // leading clause, so the composer must not prepend a second lead that would
+  // double it. A wildcard or stepped second is not folded there (no
+  // clockSecond), so it still leads its own clause here.
+  const restOwnsLead = plan.rest.kind === 'compactClockTimes' &&
+    ir.analyses.clockSecond;
+  const lead = restOwnsLead ? '' : secondsLeadClause(ir, opts) + ', ';
+
+  return lead + render(ir, plan.rest, opts);
 }
 
 // A wildcard second over an unoffset minute */2 with a wildcard hour: the two

@@ -165,6 +165,18 @@ describe('Deutsch (de):', function() {
     ]);
   });
 
+  // A single second under a multi-valued minute and a bounded hour step: the
+  // compact clock-time rest owns the second lead ("in Sekunde 30"), so the
+  // composer must not prepend its own lead, which once doubled the second.
+  describe('Sekunde unter Minutenschritt und begrenztem Stundenschritt',
+    function() {
+      run([
+        ['30 */25 9-17/2 * * *',
+          'in Sekunde 30, in den Minuten 0, 25 und 50, ' +
+          'um 9, 11, 13, 15 und 17 Uhr']
+      ]);
+    });
+
   // An hour RANGE (or a list whose segments include a range) under minute 0
   // and a meaningful second used to expand into a wall of clock times; it now
   // reads as the hour-range window ("von 9 bis 17 Uhr"). The hour-RANGE analog

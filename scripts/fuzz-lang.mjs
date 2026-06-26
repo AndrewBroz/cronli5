@@ -67,6 +67,26 @@ function minuteZeroStated() {
   ];
 }
 
+// Two ADJACENT identical clauses — a doubled clause, the clause-level analog of
+// the doubled-word check. A compose path that both prepends a lead clause AND
+// routes through a sub-renderer that re-emits it yields output like "at 30
+// seconds past the minute, at 30 seconds past the minute, ...". Split on the
+// clause separators every language uses (", " and zh's "，"/"、"), then flag the
+// first pair of adjacent, trimmed, non-empty, identical clauses. Conservative
+// by design: only ADJACENT duplicates flag, so a legitimately repeated short
+// token across non-neighboring clauses is not a false positive.
+function doubledClause(output) {
+  const clauses = output.split(/, |，|、/).map((clause) => clause.trim());
+
+  for (let i = 1; i < clauses.length; i += 1) {
+    if (clauses[i] && clauses[i] === clauses[i - 1]) {
+      return clauses[i];
+    }
+  }
+
+  return null;
+}
+
 // Obvious garbage in an output.
 function degenerate(output) {
   if (!output || !output.trim()) {
@@ -83,7 +103,13 @@ function degenerate(output) {
 
   const doubled = (/\b(\w+)\s+\1\b/).exec(output);
 
-  return doubled ? 'doubled word "' + doubled[1] + '"' : null;
+  if (doubled) {
+    return 'doubled word "' + doubled[1] + '"';
+  }
+
+  const clause = doubledClause(output);
+
+  return clause ? 'doubled clause "' + clause + '"' : null;
 }
 
 // The numeric values a field contributes to the "must surface" check. A plain

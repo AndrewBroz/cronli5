@@ -110,6 +110,36 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
+  // A single second under a multi-valued minute and a bounded hour step
+  // composes the minute list with the hour cadence; the second leads with its
+  // own clause exactly once (the compact clock-time rest owns that lead, so the
+  // composer must not prepend it again, which once doubled it).
+  describe('single second under a minute step and a bounded hour step',
+    function() {
+      run([
+        ['30 */25 9-17/2 * * *',
+          'at 30 seconds past the minute, ' +
+          'at 0, 25, and 50 minutes past the hour, ' +
+          'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+      ]);
+    });
+
+  // A wildcard or stepped second under a MINUTE LIST across specific hours is a
+  // wall of distinct clock times, not a one-minute confinement: each minute is
+  // named ("9:25 a.m."), never collapsed to the bare hour (which once repeated
+  // the hour once per minute, "9 a.m., 9 a.m., 9 a.m., ...").
+  describe('sub-minute second under a minute list across specific hours',
+    function() {
+      run([
+        ['* */25 9,17 * * *',
+          'every second of 9:00 a.m., 9:25 a.m., 9:50 a.m., ' +
+          '5:00 p.m., 5:25 p.m., and 5:50 p.m., every day'],
+        ['*/15 */25 9,17 * * *',
+          'every 15 seconds of 9:00 a.m., 9:25 a.m., 9:50 a.m., ' +
+          '5:00 p.m., 5:25 p.m., and 5:50 p.m., every day']
+      ]);
+    });
+
   describe('with a day qualifier', function() {
     run([
       ['*/15 30 9 * * MON', 'every 15 seconds of 9:30 a.m., every Monday']

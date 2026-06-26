@@ -268,6 +268,17 @@ function composeHourCadence(
   return hourCadence(ir, minute, opts) ?? hourRangeCadence(ir, minute, opts);
 }
 
+// A wildcard or stepped second with a fixed minute across one or more specific
+// hours: the seconds confine to the clock time(s), each minute named.
+function isPinnedMinuteSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): plan is Extract<PlanNode, {kind: 'composeSeconds'}> &
+  {rest: Extract<PlanNode, {kind: 'clockTimes'}>} {
+  return plan.rest.kind === 'clockTimes' &&
+    (ir.shapes.second === 'wildcard' || ir.shapes.second === 'step');
+}
+
 function renderComposeSeconds(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -285,8 +296,7 @@ function renderComposeSeconds(
 
   // A wildcard or stepped second with the minute pinned to a single value
   // across one or more specific hours: the seconds confine to the clock time.
-  if (plan.rest.kind === 'clockTimes' &&
-      (ir.shapes.second === 'wildcard' || ir.shapes.second === 'step')) {
+  if (isPinnedMinuteSeconds(ir, plan)) {
     return pinnedMinuteSeconds(ir, plan.rest, opts);
   }
 
@@ -321,7 +331,15 @@ function renderComposeSeconds(
     return secondsLeadClause(ir, opts) + ' de ' + render(ir, plan.rest, opts);
   }
 
-  return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+  // A compact clock-time rest folds a meaningful SINGLE second into its own
+  // leading clause, so the composer must not prepend a second lead that would
+  // double it. A wildcard or stepped second is not folded there (no
+  // clockSecond), so it still leads its own clause here.
+  const restOwnsLead = plan.rest.kind === 'compactClockTimes' &&
+    ir.analyses.clockSecond;
+  const lead = restOwnsLead ? '' : secondsLeadClause(ir, opts) + ', ';
+
+  return lead + render(ir, plan.rest, opts);
 }
 
 // A wildcard second over an unoffset minute */2 with a wildcard hour: the two
@@ -358,7 +376,12 @@ function pinnedMinuteSeconds(
   const dayTrail = leadingQualifier(ir, opts).trimEnd();
   const trail = dayTrail ? ', ' + dayTrail : '';
 
-  if (+rest.times[0].minute === 0) {
+  // The "durante un minuto a las 9" duration form drops the clock minute, so it
+  // is correct only when the minute is a SINGLE 0 — every clock time at :00. A
+  // minute LIST whose first value is 0 (e.g. */45 → :00, :45) must name each
+  // minute, never collapse to the bare hour (which once repeated it, "a las 9 y
+  // 9"), so it takes the explicit clock list.
+  if (+rest.times[0].minute === 0 && ir.shapes.minute === 'single') {
     return secondsLeadClause(ir, opts) + ' durante un minuto ' +
       durationHourList(rest.times, opts) + trail;
   }

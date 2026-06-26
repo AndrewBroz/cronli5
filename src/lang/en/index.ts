@@ -209,6 +209,29 @@ function composeHourCadence(ir: IR, plan: PlanOf<'composeSeconds'>,
 // A meaningful second under minute/hour shapes the earlier strategies
 // deferred on: the second leads with its own clause and the rest of the
 // pattern follows.
+// A wildcard or stepped second under a fixed minute across one or more specific
+// hours. The clock-time rest collapses the pinned minute into the hour, and on
+// the clock a pinned minute-0 reads as the whole hour ("9 a.m." spoken ==
+// "9:00 a.m."), losing the one-minute confinement.
+//
+// A SINGLE minute-0 is the one-minute window at the top of each named hour: a
+// duration frame ("for one minute at 9 a.m.") states the confinement outright,
+// with the hour as its word so it cannot be heard as the hour itself. A minute
+// LIST whose first value is 0 (e.g. */25 → :00, :25, :50) is a wall of distinct
+// clock times, not one confinement, so it names each minute via the compact
+// form, never collapsing to the bare hour (which once repeated it, "9 a.m.,
+// 9 a.m."). A non-zero pinned minute is an unambiguous clock time the compact
+// "of 9:05 a.m." form reads as the minute, never the hour.
+function clockTimesConfinement(ir: IR, rest: PlanOf<'clockTimes'>,
+  opts: NormalizedOptions): string {
+  if (+rest.times[0].minute === 0 && ir.shapes.minute === 'single') {
+    return secondsLeadClause(ir, opts) + ' for one minute at ' +
+      durationHours(ir, rest, opts);
+  }
+
+  return secondsLeadClause(ir, opts) + ' of ' + clockTimesOf(ir, rest, opts);
+}
+
 function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
   opts: NormalizedOptions): string {
   // An hour step (or arithmetic-progression hour list) under a single pinned
@@ -221,28 +244,11 @@ function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
     return cadence;
   }
 
-  // A wildcard or stepped second under a minute pinned to a single value
-  // across one or more specific hours. The clock-time rest collapses the
-  // pinned minute into the hour, and on the clock a pinned minute-0 reads as
-  // the whole hour ("9 a.m." spoken == "9:00 a.m."), losing the one-minute
-  // confinement. (A second list/range/single leads with a "past the minute"
-  // clause that an "of"/duration frame cannot follow, so it stays generic.)
+  // A wildcard or stepped second under a fixed minute across one or more
+  // specific hours confines the seconds to the clock time(s).
   if (plan.rest.kind === 'clockTimes' &&
       (ir.shapes.second === 'wildcard' || ir.shapes.second === 'step')) {
-    const minute = plan.rest.times[0].minute;
-
-    // Minute 0 is the one-minute window at the top of each named hour: a
-    // duration frame ("for one minute at 9 a.m.") states the confinement
-    // outright, with the hour as its word so it cannot be heard as the hour
-    // itself. A non-zero pinned minute is an unambiguous clock time, so the
-    // compact "of 9:05 a.m." form reads it as the minute, never the hour.
-    if (+minute === 0) {
-      return secondsLeadClause(ir, opts) + ' for one minute at ' +
-        durationHours(ir, plan.rest, opts);
-    }
-
-    return secondsLeadClause(ir, opts) + ' of ' +
-      clockTimesOf(ir, plan.rest, opts);
+    return clockTimesConfinement(ir, plan.rest, opts);
   }
 
   // A wildcard second under a */2 minute step with a wildcard hour binds
@@ -258,7 +264,15 @@ function renderComposeSeconds(ir: IR, plan: PlanOf<'composeSeconds'>,
       trailingQualifier(ir, opts);
   }
 
-  return secondsLeadClause(ir, opts) + ', ' + render(ir, plan.rest, opts);
+  // A compact clock-time rest folds a meaningful SINGLE second into its own
+  // leading clause, so the composer must not prepend a second lead that would
+  // double it. A wildcard or stepped second is not folded there (no
+  // clockSecond), so it still leads its own clause here.
+  const restOwnsLead = plan.rest.kind === 'compactClockTimes' &&
+    ir.analyses.clockSecond;
+  const lead = restOwnsLead ? '' : secondsLeadClause(ir, opts) + ', ';
+
+  return lead + render(ir, plan.rest, opts);
 }
 
 // The bare-hour words for a minute-0 duration confinement, joined and followed

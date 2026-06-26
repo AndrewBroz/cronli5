@@ -370,6 +370,18 @@ describe('Suomi (fi):', function() {
     ]);
   });
 
+  // A single second under a multi-valued minute and a bounded hour step: the
+  // compact clock-time rest owns the second lead, so the composer must not
+  // prepend it again (which once doubled "30 sekunnin kohdalla").
+  describe('sekunti minuuttiaskeleen ja rajatun tuntiaskeleen alla',
+    function() {
+      run([
+        ['30 */25 9-17/2 * * *',
+          '30 sekunnin kohdalla, klo 9, 11, 13, 15 ja 17 ' +
+          'aina minuuttien 0, 25 ja 50 kohdalla']
+      ]);
+    });
+
   // An hour RANGE (or a list whose segments include a range) under minute 0
   // and a meaningful second used to expand into a wall of clock times; it now
   // reads as the hour-range window ("klo 9–17"). The hour-RANGE analog of the

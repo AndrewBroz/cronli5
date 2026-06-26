@@ -499,6 +499,34 @@ describe('Español (es):', function() {
     ]);
   });
 
+  // A single second under a multi-valued minute and a bounded hour step: the
+  // compact clock-time rest owns the second lead, so the composer must not
+  // prepend it again (which once doubled "en el segundo 30 de cada minuto").
+  describe('segundo bajo paso de minuto y paso horario acotado', function() {
+    run([
+      ['30 */25 9-17/2 * * *',
+        'en el segundo 30 de cada minuto, ' +
+        'en los minutos 0, 25 y 50 de cada hora, ' +
+        'a las 09:00, 11:00, 13:00, 15:00 y 17:00']
+    ]);
+  });
+
+  // A wildcard or stepped second under a MINUTE LIST across specific hours is a
+  // wall of distinct clock times, not a one-minute confinement: each minute is
+  // named ("09:25"), never collapsed to the bare hour (which once repeated the
+  // hour once per minute, "a las 9, 9, 9, ...").
+  describe('segundo subminuto bajo lista de minutos en horas concretas',
+    function() {
+      run([
+        ['* */25 9,17 * * *',
+          'cada segundo de las 09:00, 09:25, 09:50, ' +
+          '17:00, 17:25 y 17:50, todos los días'],
+        ['*/15 */25 9,17 * * *',
+          'cada 15 segundos de las 09:00, 09:25, 09:50, ' +
+          '17:00, 17:25 y 17:50, todos los días']
+      ]);
+    });
+
   // An hour RANGE (or a list whose segments include a range) under minute 0
   // and a meaningful second used to expand into a wall of clock times; it now
   // reads as the hour-range window ("de las 09:00 a las 17:00"). The

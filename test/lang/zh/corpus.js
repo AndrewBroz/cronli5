@@ -144,6 +144,11 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // Guard: a pure single-value hour list has no range, so nothing collapses.
       ['30 0 9,17 * * *', '每天9点30秒和17点30秒'],
       ['* 5 9,17 * * *', '每天9点5分和17点5分每秒'],
+      // A single second over a non-zero minute and a bounded hour step folds
+      // into each clock time ("9点5分30秒"); the composer must not append the
+      // second clause again (which once doubled it to "…17点5分30秒第30秒").
+      ['30 5 9-17/2 * * *',
+        '每天9点5分30秒、11点5分30秒、13点5分30秒、15点5分30秒和17点5分30秒'],
       // A single minute over a lone hour keeps the composed clock time
       // ("0点2分"), attaching the second to it rather than splitting the
       // hour and minute apart.

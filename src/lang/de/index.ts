@@ -670,6 +670,25 @@ function renderMinuteSpanInHour(
 
 // Seconds composed with the rest: "in den Sekunden 0 und 30 jeder Minute, um
 // 9:05 Uhr".
+// A wildcard second under a minute */2 with a wildcard hour juxtaposes two
+// cadences that read as contradictory ("jede Sekunde, alle 2 Minuten"). Bind
+// them in the genitive ("jede Sekunde jeder zweiten Minute"), mirroring
+// English. Other strides, a restricted hour, and an hour cadence keep the
+// juxtaposed form.
+function isEveryOtherMinuteSeconds(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  if (plan.rest.kind !== 'minuteFrequency' ||
+      ir.shapes.second !== 'wildcard' || ir.shapes.hour !== 'wildcard') {
+    return false;
+  }
+
+  const minuteStep = stepSegment(ir.analyses.segments.minute);
+
+  return minuteStep.startToken === '*' && minuteStep.interval === 2;
+}
+
 function renderComposeSeconds(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -700,21 +719,21 @@ function renderComposeSeconds(
       clockMinuteGenitive(plan.rest.times, opts.style.sep);
   }
 
-  // A wildcard second under a minute */2 with a wildcard hour juxtaposes two
-  // cadences that read as contradictory ("jede Sekunde, alle 2 Minuten"). Bind
-  // them in the genitive ("jede Sekunde jeder zweiten Minute"), mirroring
-  // English. Other strides, a restricted hour, and an hour cadence keep the
-  // juxtaposed form.
-  if (plan.rest.kind === 'minuteFrequency' &&
-      ir.shapes.second === 'wildcard' && ir.shapes.hour === 'wildcard') {
-    const minuteStep = stepSegment(ir.analyses.segments.minute);
-
-    if (minuteStep.startToken === '*' && minuteStep.interval === 2) {
-      return secondsLead(ir) + ' jeder zweiten Minute';
-    }
+  // A wildcard second under a minute */2 with a wildcard hour binds in the
+  // genitive ("jede Sekunde jeder zweiten Minute").
+  if (isEveryOtherMinuteSeconds(ir, plan)) {
+    return secondsLead(ir) + ' jeder zweiten Minute';
   }
 
-  return secondsLead(ir) + ', ' + render(ir, plan.rest, opts);
+  // A compact clock-time rest folds a meaningful SINGLE second into its own
+  // leading clause, so the composer must not prepend a second lead that would
+  // double it. A wildcard or stepped second is not folded there (no
+  // clockSecond), so it still leads its own clause here.
+  const restOwnsLead = plan.rest.kind === 'compactClockTimes' &&
+    ir.analyses.clockSecond;
+  const lead = restOwnsLead ? '' : secondsLead(ir) + ', ';
+
+  return lead + render(ir, plan.rest, opts);
 }
 
 // True when a compose-seconds plan is a sub-minute second over a minute-0

@@ -731,6 +731,15 @@ function minuteClause(ir: IR): string {
   return valueList(fieldSegments(ir, 'minute'), '分');
 }
 
+// A single second folds into each clock time a clockTimes rest renders
+// ("9点5分30秒"), so it is already spoken; appending the second clause again
+// would double it. A wildcard/list/range second does not fold, so it still
+// leads its own clause after the clock times.
+function clockRestCarriesSecond(rest: PlanNode): boolean {
+  return rest.kind === 'clockTimes' &&
+    rest.times.some((time) => Boolean(time.second));
+}
+
 // minute = 0 ("on the hour"): render the rest schedule and attach the second.
 function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
   const sec = secondClause(ir);
@@ -758,11 +767,10 @@ function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
   }
 
   const restText = render(ir, rest, opts);
+  const secTail = clockRestCarriesSecond(rest) ? '' : sec;
 
-  if (rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes') {
-    if (isDaily(ir)) {
-      return '每天' + restText + sec;
-    }
+  if (composedClock && isDaily(ir)) {
+    return '每天' + restText + secTail;
   }
 
   // A stated minute (e.g. minute 0 under a sub-minute second) takes the same
@@ -771,7 +779,7 @@ function composeSecondsOnHour(ir: IR, plan: PlanNode, opts: Opts): string {
     return restText + '，' + sec;
   }
 
-  return restText + sec;
+  return restText + secTail;
 }
 
 // A minute pinned to 0 under specific clock hours (not a compacted cadence): a
