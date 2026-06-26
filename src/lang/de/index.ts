@@ -1043,9 +1043,15 @@ function renderHourRange(
     return 'stündlich ' + window;
   }
 
-  // A non-zero single minute ('lead') or a minute range leads the window.
-  return countedPhrase(ir, 'minute', 'Minute', 'Minuten') +
-    ' jeder Stunde, ' + window;
+  // A non-zero single minute ('lead') or a minute range leads the window. A
+  // non-uniform minute step the core enumerated to a fire list reads as its
+  // bounded cadence ("alle 2 Minuten von Minute 3 bis 59 jeder Stunde") instead
+  // of the wall of fires; an irregular list or a single minute keeps the
+  // counted form.
+  return (strideFromSegments(fieldSegments(ir, 'minute'), UNITS.minute,
+    'jeder Stunde') ??
+    countedPhrase(ir, 'minute', 'Minute', 'Minuten') + ' jeder Stunde') +
+    ', ' + window;
 }
 
 // One or more clock times: "um 9 Uhr", "um 14:30 Uhr", "um 9 und 17 Uhr".
