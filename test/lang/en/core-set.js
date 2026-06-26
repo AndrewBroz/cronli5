@@ -26,7 +26,7 @@ function run(cases) {
   });
 }
 
-describe.skip('English core-set corrections:', function() {
+describe('English core-set corrections:', function() {
 
   // Under a seconds wildcard, a coarser minute/hour step is a CONFINEMENT, not
   // a second juxtaposed cadence; an unrestricted minute is redundant under

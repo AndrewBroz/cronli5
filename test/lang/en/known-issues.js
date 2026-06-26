@@ -9,7 +9,7 @@ const {expect} = chai;
 // stable, so any fix must leave all other en output byte-identical — the rest
 // of the corpus is that guard. These assert the defect's invariant, not a
 // final wording (which is chosen when the fix lands).
-describe.skip('Known issues (pending fix):', function() {
+describe('Known issues (pending fix):', function() {
 
   // Under a seconds wildcard the leading "every second" makes every coarser
   // field a confinement joined by "of" (… of minute :00 of every hour, … of

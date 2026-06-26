@@ -57,8 +57,8 @@ describe('Clock-time enumeration cap:', function() {
         'every 15 minutes during the ' +
         '9 a.m. through 8 p.m. and 10 p.m. hours'],
       ['0-30 9-20,22 * * *',
-        'every minute from 0 through 30 past the hour, ' +
-        'at 9 a.m. through 8 p.m. and at 10 p.m.']
+        'every minute from 0 through 30 past the hour during the ' +
+        '9 a.m. through 8 p.m. and 10 p.m. hours']
     ]);
   });
 });

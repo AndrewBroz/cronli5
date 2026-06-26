@@ -469,10 +469,34 @@ function renderMinutesAcrossHours(ir: IR, plan: PlanOf<'minutesAcrossHours'>,
       trailingQualifier(ir, opts);
   }
 
-  const lead = plan.form === 'range' ?
-    minuteRangeLead(ir.pattern.minute, opts) :
-    // The 'list' form is a minute list, which has segments; an offset/uneven
-    // step enumerated to that list reads as a stride.
+  if (plan.form === 'range') {
+    const lead = minuteRangeLead(ir.pattern.minute, opts);
+
+    if (cadence !== null) {
+      return lead + ', ' + cadence + trailingQualifier(ir, opts);
+    }
+
+    // A plain minute range is a cadence, so an hour list confines it with the
+    // "during the … hours" idiom — the same reading the seconds-leading
+    // sibling and the wildcard-minute form already use — rather than a
+    // clock-time "at <times>" list, which reads as discrete fire points. A
+    // lone hour is not a list, so it keeps the "at <time>" frame ("…past the
+    // hour, at 9 a.m."), never the plural "hours" confinement.
+    if (singleHourFire(plan.times)) {
+      return lead + ', at ' +
+        hourTimesFromPlan(ir, plan.times, true, opts) +
+        trailingQualifier(ir, opts);
+    }
+
+    return lead + ' during the ' +
+      hourTimesFromPlan(ir, plan.times, false, opts) + ' hours' +
+      trailingQualifier(ir, opts);
+  }
+
+  // The 'list' form is a minute list, which has segments; an offset/uneven
+  // step enumerated to that list reads as a stride. A list is a set of
+  // discrete fire minutes, not a cadence, so it keeps the "at <times>" frame.
+  const lead =
     strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts) ??
       listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
         'minute', 'hour', opts);
@@ -1630,6 +1654,13 @@ function hourTimes(hours: number[], opts: NormalizedOptions): string {
   });
 
   return joinList(times, opts);
+}
+
+// Whether an hour-times plan names exactly one hour. A lone hour is not a
+// list, so the cadence renderers keep the "at <time>" frame rather than the
+// plural "during the … hours" confinement.
+function singleHourFire(times: HourTimesPlan): boolean {
+  return times.kind === 'fires' && times.fires.length === 1;
 }
 
 // The hour times accompanying a window phrase: enumerated fires up to the

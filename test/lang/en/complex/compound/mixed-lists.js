@@ -38,8 +38,8 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 9,17/2 * * *',
         'every day at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m.'],
       ['0-30 9,17-19 * * *',
-        'every minute from 0 through 30 past the hour, ' +
-        'at 9 a.m., 5 p.m., 6 p.m., and 7 p.m.'],
+        'every minute from 0 through 30 past the hour ' +
+        'during the 9 a.m., 5 p.m., 6 p.m., and 7 p.m. hours'],
       ['*/15 9,17/2 * * *',
         'every 15 minutes during the ' +
         '9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. hours']
