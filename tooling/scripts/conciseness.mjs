@@ -20,9 +20,15 @@
 
 import {pathToFileURL} from 'node:url';
 import cronli5 from '../../src/cronli5.js';
+import {enumerateFires} from '../../src/core/analyze.js';
 import {patterns} from '../../scripts/fuzz-lang.mjs';
 
 const LANGS = ['en', 'es', 'de', 'fi', 'zh'];
+
+// Up to this many fires, naming each as an explicit clock time ("9:05 a.m.,
+// 9:10 a.m., …") is the accepted readable form rather than a defect; beyond it
+// the renderer factors. (Matches the renderer's six-item cap.)
+const CLOCK_TIME_CAP = 6;
 
 // The numbers a faithful rendering of one field needs at most. A step is "every
 // N from M through K" — three numbers however often it fires; a Quartz operator
@@ -47,8 +53,42 @@ function fieldBudget(field) {
   return field.includes('-') ? 2 : 1;
 }
 
+// A restricted (non-wildcard, non-Quartz) field contributes a fire count.
+function restricted(field) {
+  return field !== '*' && field !== '?' && !(/[LW#]/).test(field);
+}
+
+// When minute AND hour are both restricted, the schedule is a set of clock
+// times (their cross product, times a restricted second). Up to CLOCK_TIME_CAP
+// of them, naming each is accepted (the maintainer's call), so the budget gets
+// an allowance of a few numbers per clock time. Beyond the cap the renderer
+// factors, so no allowance — an enumeration there is still flagged.
+function clockTimeAllowance(cron) {
+  const f = cron.trim().split(/\s+/u);
+  const six = f.length === 6;
+  const minute = six ? f[1] : f[0];
+  const hour = six ? f[2] : f[1];
+  const second = six ? f[0] : '*';
+
+  if (!restricted(minute) || !restricted(hour)) {
+    return 0;
+  }
+
+  let size = enumerateFires(minute, 0, 59).length *
+    enumerateFires(hour, 0, 23).length;
+
+  if (restricted(second)) {
+    size *= enumerateFires(second, 0, 59).length;
+  }
+
+  return size > 1 && size <= CLOCK_TIME_CAP ? 3 * size : 0;
+}
+
 function budget(cron) {
-  return cron.trim().split(/\s+/u).reduce((sum, f) => sum + fieldBudget(f), 0);
+  const additive = cron.trim().split(/\s+/u)
+    .reduce((sum, f) => sum + fieldBudget(f), 0);
+
+  return additive + clockTimeAllowance(cron);
 }
 
 // Digit-groups carried by the description — the blowup signal.
