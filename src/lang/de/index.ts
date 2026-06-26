@@ -1244,11 +1244,14 @@ function renderHourRange(
   plan: Extract<PlanNode, {kind: 'hourRange'}>,
   opts: Opts
 ): string {
-  // A bare close (`boundMinute` null) lands on the top of the final hour
-  // (minute 0), matching the minute-0 baseline, with the minutes stated
-  // separately; a single fire or wildcard names an exact closing minute.
-  const window = hourWindow(plan.from, plan.to, plan.boundMinute ?? 0,
-    opts.style.sep);
+  // The close lands on the top of the final hour (minute 0) unless the minute
+  // genuinely runs to the end of that hour — i.e. a wildcard minute, which
+  // fills every minute and states no separate clause. A pinned/listed/ranged
+  // minute is named in its own lead clause, so folding it into the close too
+  // would read as a span ("bis 17:05 Uhr") that contradicts the minute clause;
+  // the window stays bare ("bis 17 Uhr").
+  const last = plan.minuteForm === 'wildcard' ? plan.boundMinute ?? 0 : 0;
+  const window = hourWindow(plan.from, plan.to, last, opts.style.sep);
 
   if (plan.minuteForm === 'wildcard') {
     return 'jede Minute ' + window;

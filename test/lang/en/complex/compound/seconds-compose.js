@@ -4,7 +4,7 @@ import {run} from '../../../../runner.js';
 // the description (a restricted hour, or a non-single minute). The second
 // must not be silently dropped: it leads with its own clause and the rest of
 // the pattern follows, e.g. "every 15 seconds, at 30 minutes past the hour
-// from 9 a.m. through 5:30 p.m.". A wildcard or stepped second under a single
+// from 9 a.m. through 5 p.m.". A wildcard or stepped second under a single
 // pinned minute and specific hours instead reads the clock time compactly
 // ("every 15 seconds of 9:30 a.m., every day"), and a pinned minute-0 takes a
 // duration frame ("for one minute at 9 a.m.") so it is not heard as the hour.
@@ -19,7 +19,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
         'every 15 seconds, at 0 and 30 minutes past the hour'],
       ['*/15 30 9-17 * * *',
         'every 15 seconds, at 30 minutes past the hour ' +
-        'from 9 a.m. through 5:30 p.m.']
+        'from 9 a.m. through 5 p.m.']
     ]);
   });
 

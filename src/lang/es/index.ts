@@ -313,7 +313,7 @@ function renderComposeSeconds(
   if (plan.rest.kind === 'hourRange' && ir.shapes.second === 'step' &&
       ir.pattern.weekday !== '*') {
     const restNode = plan.rest;
-    const window = hourWindow(restNode, opts);
+    const window = hourWindow(boundedWindow(restNode), opts);
     const dayFrame = weekdayQualifier(ir) + monthScope(ir);
     const cadence = 'cada ' +
       numero(stepSegment(ir.analyses.segments.second).interval, opts) +
@@ -754,13 +754,18 @@ function renderHourStep(
     trailingQualifier(ir, opts);
 }
 
-// The hour-range plan as a window whose closing minute honors `boundMinute`:
-// a bare close (`null`) lands on the top of the final hour (minute 0),
-// matching the minute-0 baseline, with the minutes stated separately.
+// The hour-range plan as a window. The close lands on the top of the final
+// hour (minute 0) unless the minute genuinely runs to the end of that hour —
+// i.e. a wildcard minute, which fills every minute and states no separate
+// clause. A pinned/listed/ranged minute is named in its own lead clause, so
+// folding it into the close too would read as a span ("a las 17:05") that
+// contradicts the minute clause; the window stays bare ("a las 17:00").
 function boundedWindow(
   plan: Extract<PlanNode, {kind: 'hourRange'}>
 ): {from: number; to: number; last: number} {
-  return {from: plan.from, last: plan.boundMinute ?? 0, to: plan.to};
+  const last = plan.minuteForm === 'wildcard' ? plan.boundMinute ?? 0 : 0;
+
+  return {from: plan.from, last, to: plan.to};
 }
 
 // "de las 9:00 a las 17:45": a window from the top of the first hour to

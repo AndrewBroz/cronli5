@@ -382,7 +382,9 @@ describe('Deutsch (de):', function() {
 
   describe('Stundenfenster mit Minute, Faltung, ODER', function() {
     run([
-      ['30 9-17 * * *', 'in Minute 30 jeder Stunde, von 9 bis 17:30 Uhr'],
+      ['30 9-17 * * *', 'in Minute 30 jeder Stunde, von 9 bis 17 Uhr'],
+      ['5 9-17 * * *', 'in Minute 5 jeder Stunde, von 9 bis 17 Uhr'],
+      ['5 9-17 * 1 *', 'in Minute 5 jeder Stunde, von 9 bis 17 Uhr im Januar'],
       ['15,45 9-17 * * *',
         'in den Minuten 15 und 45 jeder Stunde, von 9 bis 17 Uhr'],
       // A non-uniform minute step under an hour range is a cadence, not the wall

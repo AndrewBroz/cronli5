@@ -211,7 +211,7 @@ describe('Español (es):', function() {
       // (5,10 * * * * * is already covered in segundos independientes y compuestos)
       // Second-step + fixed minute + hour range + weekday: anchor cadence to the minute.
       ['*/15 30 9-17 * * MON-FRI',
-        'de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30'],
+        'de lunes a viernes, de las 09:00 a las 17:00, cada 15 segundos del minuto 30'],
       // Minute window confined to specific hours.
       ['0-30 9,17-19 * * *',
         'cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00'],
@@ -233,7 +233,13 @@ describe('Español (es):', function() {
         'cada hora de las 9 de la mañana a las 5 de la tarde'],
       ['30 9-17 * * *',
         'en el minuto 30 de cada hora, ' +
-        'de las 9 de la mañana a las 5:30 de la tarde'],
+        'de las 9 de la mañana a las 5 de la tarde'],
+      ['5 9-17 * * *',
+        'en el minuto 5 de cada hora, ' +
+        'de las 9 de la mañana a las 5 de la tarde'],
+      ['5 9-17 * 1 *',
+        'en el minuto 5 de cada hora, ' +
+        'de las 9 de la mañana a las 5 de la tarde en enero'],
       ['0 22-2 * * *',
         'cada hora de las 10 de la noche a las 2 de la madrugada'],
       ['*/15 9,17 * * *',

@@ -596,12 +596,17 @@ function renderHourStep(ir: IR, plan: PlanOf<'hourStep'>,
     trailingQualifier(ir, opts);
 }
 
-// The hour-range plan as a window whose closing minute honors `boundMinute`:
-// a bare close (`null`) lands on the top of the final hour (`:00`), matching
-// the minute-0 baseline, with the minutes stated separately elsewhere.
+// The hour-range plan as a window. The close lands on the top of the final
+// hour (`:00`) unless the minute genuinely runs to the end of that hour — i.e.
+// a wildcard minute, which fills every minute and states no separate clause.
+// A pinned/listed/ranged minute is named in its own lead clause, so folding it
+// into the close too would read as a span ("through 5:05 p.m.") that
+// contradicts the minute clause; the window stays bare ("through 5 p.m.").
 function boundedWindow(plan: PlanOf<'hourRange'>):
   {from: number; to: number; last: number} {
-  return {from: plan.from, last: plan.boundMinute ?? 0, to: plan.to};
+  const last = plan.minuteForm === 'wildcard' ? plan.boundMinute ?? 0 : 0;
+
+  return {from: plan.from, last, to: plan.to};
 }
 
 // An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m.". Windows

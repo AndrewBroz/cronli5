@@ -256,7 +256,7 @@ cronli5('0 0 * * FRI-MON'); // 'every Friday through Monday at midnight'
 cronli5('0,30 9 * * *');   // 'every day at 9 a.m. and 9:30 a.m.'
 cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m.'
 cronli5('30 9-17 * * *');
-// 'at 30 minutes past the hour from 9 a.m. through 5:30 p.m.'
+// 'at 30 minutes past the hour from 9 a.m. through 5 p.m.'
 cronli5('0 12 1 1 *');     // 'on January 1 at noon'
 cronli5('0 * 13 * *');     // 'every hour on the 13th'
 
