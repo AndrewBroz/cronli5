@@ -591,6 +591,30 @@ function hourCadencePhrase(ir: IR): string | null {
   });
 }
 
+// A wildcard or sub-minute step second confined to minute 0 of an hour stride
+// is a confinement, not a juxtaposed cadence. The even-hour stride (interval 2
+// from midnight) reuses the even-hours idiom ("在偶数小时0分的每一秒") so the form
+// does NOT contain the bare "每2小时" and can never be misread as the absorbing
+// hour cadence (the same reason en says "for one minute during every other
+// hour", not "every two hours"). An OFFSET stride names its start ("从1点起每2小时"),
+// already unambiguous — it cannot be heard as the bare cadence — so it folds
+// "0分" and the second onto that named cadence ("从1点起每2小时0分的每一秒"). A bare
+// cadence from midnight (no start named, e.g. "每3小时") keeps enumerating its
+// hours so it is never heard as the absorbing form.
+function minuteZeroConfinement(
+  ir: IR, stride: {interval: number; start: number}, prefix: string
+): string | null {
+  if (stride.interval === 2 && stride.start === 0) {
+    return '在偶数小时0分' + secondTail(ir);
+  }
+
+  if (prefix.indexOf('从') !== -1) {
+    return prefix + '0分' + secondTail(ir);
+  }
+
+  return null;
+}
+
 // Render an hour step (or arithmetic-progression hour list) under a single
 // pinned minute and a second as a cadence — the hour cadence plus the
 // minute/second — instead of cross-multiplying the hours into a wall of clock
@@ -626,17 +650,8 @@ function hourCadence(ir: IR): string | null {
   const minute = +ir.pattern.minute;
   const subMinute = ir.pattern.second === '*' || ir.shapes.second === 'step';
 
-  // A wildcard or sub-minute step second confined to minute 0 of the even-hour
-  // stride is a confinement, not a juxtaposed cadence. Reuse the even-hours
-  // idiom ("在偶数小时0分的每一秒") so the form does NOT contain the bare "每2小时"
-  // and can never be misread as the absorbing hour cadence (the same reason en
-  // says "for one minute during every other hour", not "every two hours"). The
-  // idiom exists only for the even-hour stride (interval 2 from midnight);
-  // another stride keeps enumerating (return null) rather than coin a
-  // misleading "…小时…" form.
   if (minute === 0 && subMinute) {
-    return stride.interval === 2 && stride.start === 0 ?
-      '在偶数小时0分' + secondTail(ir) : null;
+    return minuteZeroConfinement(ir, stride, prefix);
   }
 
   // A pinned minute 0 folds into the cadence with the explicit "0分" so the

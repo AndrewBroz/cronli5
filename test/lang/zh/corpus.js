@@ -94,6 +94,15 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // carry a fused minute unambiguously, so it keeps enumerating its clock
       // times (see the */5 and 9-17 cases below).
       ['30 0 1/2 * * *', '从1点起每2小时0分的第30秒'],
+      // A wildcard or sub-minute step second at minute 0 over an OFFSET stride
+      // folds onto the named cadence ("从1点起每2小时0分的每一秒"), never the
+      // enumerated hours: the start ("从1点") already disambiguates it from the
+      // bare cadence, so the misread the even-hours idiom guards against cannot
+      // arise. (A clean stride from midnight has a bare cadence and still
+      // enumerates — see the */3 case below.)
+      ['* 0 1/2 * * *', '从1点起每2小时0分的每一秒'],
+      ['*/15 0 1/2 * * *', '从1点起每2小时0分的每15秒'],
+      ['* 0 2/6 * * *', '从2点起每6小时0分的每一秒'],
       ['* 0 */3 * * *',
         '每天凌晨0点0分、3点0分、6点0分、9点0分、正午、15点0分、18点0分和' +
         '21点0分的每一秒'],

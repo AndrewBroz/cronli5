@@ -918,9 +918,13 @@ function renderMinuteFrequency(
   return base;
 }
 
-// A stepped hour field as a phrase: an offset-clean stride is its bare or "ab"
-// cadence; a bounded or uneven stride pins both ends ("alle 2 Stunden von 9
+// A stepped hour field as a phrase: a clean stride from midnight is the bare
+// cadence ("alle 2 Stunden"); an open offset-clean stride names only its start
+// ("alle 2 Stunden ab 1 Uhr") since it wraps the day with no distinct
+// endpoint; a bounded or uneven stride pins both ends ("alle 2 Stunden von 9
 // bis 17 Uhr"). Shared by the bare hour step and the minute-step compositions.
+// An explicitly bounded step (`a-b/n`) keeps its enumerated hours, matching
+// en/fi/zh; only an OPEN step (`m/n`) reads as the wrapping cadence.
 function hourStepPhrase(ir: IR): string {
   const cadence = unevenHourCadence(ir);
 
@@ -930,9 +934,34 @@ function hourStepPhrase(ir: IR): string {
 
   const segment = stepSegment(ir.analyses.segments.hour);
 
-  return cleanStep(segment, 24) ?
-    everyN(segment.interval, UNITS.hour) :
-    atHours(segment.fires);
+  if (cleanStep(segment, 24)) {
+    return everyN(segment.interval, UNITS.hour);
+  }
+
+  // An open offset-clean step (`m/n`, m < n dividing 24) wraps the day with no
+  // endpoint: name only its start, the cadence en/fi/zh and the compose paths
+  // already speak — never the enumerated hour list. A bounded `a-b/n` keeps its
+  // explicit hours.
+  const stride = openOffsetCleanStride(ir, segment);
+
+  return stride ? hourStrideCadence(stride) : atHours(segment.fires);
+}
+
+// The stride of an OPEN offset-clean hour step (`m/n`, m < n dividing 24),
+// or null for any other step: such a step wraps the day with no endpoint and
+// reads as the "alle N Stunden ab M Uhr" cadence. An explicitly bounded step
+// (`a-b/n`, startToken carries a `-`) is excluded so it keeps its enumerated
+// hours, matching en/fi/zh.
+function openOffsetCleanStride(
+  ir: IR, segment: StepSegment
+): {start: number; interval: number; last: number} | null {
+  if (segment.startToken.indexOf('-') !== -1) {
+    return null;
+  }
+
+  const stride = hourStride(ir);
+
+  return stride && offsetCleanStride(stride) ? stride : null;
 }
 
 // --- Hour-step cadence (the 24-cycle analog of renderStride). ---
@@ -1343,8 +1372,17 @@ function needsDailyFrame(ir: IR): boolean {
     return true;
   }
 
-  return ir.plan.kind === 'hourStep' &&
-    !cleanStep(stepSegment(ir.analyses.segments.hour), 24);
+  if (ir.plan.kind !== 'hourStep') {
+    return false;
+  }
+
+  // An hour step rendered as a cadence ("alle N Stunden [ab M Uhr]") is a
+  // frequency, not a daily clock-time list, so it takes no "täglich" frame —
+  // only a bounded `a-b/n` step that enumerates its hours ("um 1, 3, … Uhr")
+  // needs the recurring frame.
+  const segment = stepSegment(ir.analyses.segments.hour);
+
+  return !cleanStep(segment, 24) && !openOffsetCleanStride(ir, segment);
 }
 
 function render(ir: IR, plan: PlanNode, opts: Opts): string {

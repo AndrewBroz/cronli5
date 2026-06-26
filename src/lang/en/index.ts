@@ -1499,29 +1499,51 @@ function monthFoldsIntoDate(ir: IR): boolean {
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
 // are restricted: cron fires when either is a match. A restricted month
-// scopes both.
+// scopes BOTH halves, so it attaches to the whole or, never to a single
+// branch. When the month folds into a calendar date ("on June 13") it also
+// names itself on the weekday ("or on Friday in June"), keeping both halves
+// scoped; otherwise (a Quartz date, an open day step, a month range, or the
+// odd/even frequency) it trails the whole or as ", in <month>".
 function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
   const weekdayPart = quartzWeekdayPhrase(pattern.weekday, opts) ||
     'on ' + weekdayPhrase(ir, opts);
-  const quartzDate = quartzDatePhrase(pattern.date, opts);
 
-  if (quartzDate) {
-    return quartzDate + monthScope(ir, opts) + ' or ' + weekdayPart;
-  }
-
-  if (isOpenStep(pattern.date)) {
-    return stepDates(pattern.date) + monthScope(ir, opts) + ' or ' +
-      weekdayPart;
-  }
-
-  if (pattern.month !== '*' && monthFoldsIntoDate(ir)) {
+  if (pattern.month !== '*' && monthFoldsIntoDate(ir) &&
+      !quartzDatePhrase(pattern.date, opts) && !isOpenStep(pattern.date)) {
     return 'on ' + monthDatePhrase(ir, opts) + ' or ' + weekdayPart +
       ' in ' + monthName(ir, opts);
   }
 
-  return 'on the ' + dateOrdinals(ir, opts) + ' or ' + weekdayPart +
-    monthScope(ir, opts);
+  return datePart(ir, opts) + ' or ' + weekdayPart + orMonthScope(ir, opts);
+}
+
+// The day-of-month half of an or-day phrase, without any month scope (the
+// month scopes the whole or, applied by the caller).
+function datePart(ir: IR, opts: NormalizedOptions): string {
+  const pattern = ir.pattern;
+  const quartzDate = quartzDatePhrase(pattern.date, opts);
+
+  if (quartzDate) {
+    return quartzDate;
+  }
+
+  if (isOpenStep(pattern.date)) {
+    return stepDates(pattern.date);
+  }
+
+  return 'on the ' + dateOrdinals(ir, opts);
+}
+
+// A trailing month scope for the whole or, set off by a comma so it reads
+// over both day halves ("…or on Friday, in June"); empty when the month is a
+// wildcard.
+function orMonthScope(ir: IR, opts: NormalizedOptions): string {
+  if (ir.pattern.month === '*') {
+    return '';
+  }
+
+  return ', in ' + monthName(ir, opts);
 }
 
 // The day-qualifier phrase for a Quartz date field (e.g. "on the last day

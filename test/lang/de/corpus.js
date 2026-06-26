@@ -258,7 +258,18 @@ describe('Deutsch (de):', function() {
       // A uneven hour step (24 not divisible by the step) has no clean wrap, so
       // it reads as a bounded cadence pinning both endpoints, not a clock list.
       ['0 */5 * * *', 'alle 5 Stunden von 0 bis 20 Uhr'],
-      ['0 */9 * * *', 'alle 9 Stunden von 0 bis 18 Uhr']
+      ['0 */9 * * *', 'alle 9 Stunden von 0 bis 18 Uhr'],
+      // An OPEN offset-clean hour step (`m/n`, m < n dividing 24) wraps the day
+      // with no endpoint: name only its start ("alle N Stunden ab M Uhr"), the
+      // cadence the compose paths and en/fi/zh already speak — never the
+      // enumerated hour list, and no "täglich" frame (it is a frequency).
+      ['0 1/2 * * *', 'alle 2 Stunden ab 1 Uhr'],
+      ['0 2/6 * * *', 'alle 6 Stunden ab 2 Uhr'],
+      ['0 5/6 * * *', 'alle 6 Stunden ab 5 Uhr'],
+      // Guard: an explicitly bounded step (`a-b/n`) keeps its enumerated hours,
+      // even when its fires happen to span a clean wrap.
+      ['0 1-23/2 * * *',
+        'um 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 und 23 Uhr']
     ]);
   });
 
