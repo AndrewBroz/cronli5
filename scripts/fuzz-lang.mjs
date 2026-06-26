@@ -112,22 +112,52 @@ function degenerate(output) {
   return clause ? 'doubled clause "' + clause + '"' : null;
 }
 
+// The last fire of a whole-cycle step `start/interval` within [0, cycle): the
+// bound a non-uniform stride names ("…，至K分" / "…，至K点"), e.g. `*/25` over a
+// 60-cycle fires :00,:25,:50, bound 50. Returns null when there is no cycle.
+function stepBound(start, interval, cycle) {
+  return cycle === null ?
+    null :
+    start + interval * Math.floor((cycle - 1 - start) / interval);
+}
+
 // The numeric values a field contributes to the "must surface" check. A plain
 // segment contributes its digits; a STEP segment contributes its START fire —
 // an offset like `5/6` fires at :05, so the 5 must surface even when the
 // cadence reads "every six minutes" (this is what catches a dropped step
-// offset). `*/N` (start `*`) and a bounded `A-B/N` add nothing extra; Quartz
-// (L/W/#) adds nothing (rendered as words).
-function fieldValues(field) {
+// offset). A NON-UNIFORM step (start >= interval, OR interval does not divide
+// the cycle) also contributes its LAST fire (the bound) — the endpoint a
+// renderer spells out ("至50分"). `*/25` (start 0, 60 % 25 != 0) thus
+// surfaces its bound 50, so a dropped `*/N`-from-0 clause is caught even
+// though its start 0 is exempt. A UNIFORM step (`*/2`, `5/6`, `5/15` — the
+// interval divides the cycle and the start is within it) names no bound, so
+// none is added (adding one would false-flag its absent endpoint). A bounded
+// `A-B/N` and Quartz (L/W/#) add nothing. `cycle` is 60 for minute/second, 24
+// for hour, null elsewhere (no cyclic bound).
+function fieldValues(field, cycle) {
   return field.split(',').flatMap(function segment(seg) {
     if ((/[LW#]/).test(seg)) {
       return [];
     }
 
     if (seg.includes('/')) {
-      const start = seg.split('/')[0];
+      const [startToken, intervalToken] = seg.split('/');
 
-      return (/^\d+$/).test(start) ? [Number(start)] : [];
+      if (startToken.includes('-')) {
+        return [];
+      }
+
+      const start = startToken === '*' ? 0 : Number(startToken);
+      const interval = Number(intervalToken);
+      const nonUniform = start >= interval ||
+        cycle !== null && cycle % interval !== 0;
+      const values = startToken === '*' ? [] : [start];
+
+      if (nonUniform) {
+        values.push(stepBound(start, interval, cycle));
+      }
+
+      return values;
     }
 
     return (seg.match(/\d+/g) || []).map(Number);
@@ -147,15 +177,17 @@ function missingValue(pattern, output) {
   const fields = pattern.split(' ');
   const offset = fields.length - 5;
   const present = new Set((output.match(/\d+/g) || []).map(Number));
+  // The cycle a whole-cycle step wraps over (so a non-uniform step's bound can
+  // be computed): 60 for second/minute, 24 for hour, none for the date.
   const checked = [
-    ['second', offset >= 1 ? fields[0] : '*'],
-    ['minute', fields[offset]],
-    ['hour', fields[offset + 1]],
-    ['date', fields[offset + 2]]
+    ['second', offset >= 1 ? fields[0] : '*', 60],
+    ['minute', fields[offset], 60],
+    ['hour', fields[offset + 1], 24],
+    ['date', fields[offset + 2], null]
   ];
   const dropped = checked
     .filter(([, field]) => field !== '*')
-    .flatMap(([name, field]) => fieldValues(field)
+    .flatMap(([name, field, cycle]) => fieldValues(field, cycle)
       // 0 (midnight) and an hour 12 (noon) commonly render as a word
       // (Mitternacht / keskipäivällä), so they need not appear as digits.
       .filter((value) => value !== 0 &&

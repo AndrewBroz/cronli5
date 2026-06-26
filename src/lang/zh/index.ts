@@ -487,12 +487,28 @@ function renderCompactClockTimes(ir: IR, plan: PlanNode): string {
     return cad;
   }
 
-  const {minute} = plan as Extract<PlanNode, {kind: 'compactClockTimes'}>;
+  const compact = plan as Extract<PlanNode, {kind: 'compactClockTimes'}>;
   const secs = fieldSegments(ir, 'second');
   const tail = secs.length && ir.pattern.second !== '0' ?
     '，第' + valueText(secs) + '秒' : '';
 
-  if (minute > 0) {
+  // A multi-valued minute (`fold` false) names its whole set, never just its
+  // first fire — a list starting at 0 ("*/25" -> :00,:25,:50) must keep the
+  // minute clause, not drop it because the leading fire is 0. The hour reads as
+  // its bounded cadence when its fires form a progression ("从0点起每5小时，至20
+  // 点"), composed after the minute set, the same idiom the stepped-hour path
+  // uses; an irregular hour list keeps enumerating with the "在…" frame.
+  if (!compact.fold) {
+    const hourCad = hourCadencePhrase(ir);
+
+    return hourCad === null ?
+      minuteHourClause(ir) + '，在' + hourList(ir) + tail :
+      hourCad + '，' + minuteHourClause(ir) + tail;
+  }
+
+  // A single pinned minute past 0 leads with its clause; a pinned 0 folds into
+  // the hour times (the :00 is implicit).
+  if (compact.minute > 0) {
     return minuteHourClause(ir) + '，在' + hourList(ir) + tail;
   }
 

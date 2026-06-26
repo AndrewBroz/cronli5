@@ -415,6 +415,18 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 */12 * * *', '凌晨0点和正午'],
       ['0 8/12 * * *', '8点和20点'],
       ['*/15 */5 * * *', '从0点起每5小时，至20点，每15分钟'],
+      // A non-uniform minute step (enumerated to a fire list) under an uneven
+      // hour step must keep BOTH the minute set and the hour cadence — the
+      // minute is never dropped just because its first fire is 0.
+      ['*/25 */5 * * *', '从0点起每5小时，至20点，每小时0、25、50分'],
+      ['*/7 */5 * * *', '从0点起每5小时，至20点，每小时从0分起每7分钟，至56分'],
+      // An offset minute list under the same uneven hour step keeps both sets,
+      // reading as the same hour cadence the leading-0 list does.
+      ['5/25 */5 * * *', '从0点起每5小时，至20点，每小时5、30、55分'],
+      // Working-case guards: the minute set survives under an even hour step, an
+      // hour range, and an offset hour step too.
+      ['*/25 9-17 * * *', '在9点至17点之间，每小时0、25、50分'],
+      ['*/25 2/6 * * *', '从2点起每6小时，每小时0、25、50分'],
       ['0 0 */7 * *', '每7天，凌晨0点'],
       ['0 0 */10 * *', '每10天，凌晨0点'],
       ['0 0 * */5 *', '1、6、11月每天凌晨0点'],
