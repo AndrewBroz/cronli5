@@ -10,7 +10,7 @@ describe('Seconds option:', function() {
     ['*/15 * * * *', 'every 15 seconds', options],
     ['*/30 * * * *', 'every 30 seconds', options],
     ['*/7 * * * *',
-      'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 seconds past the minute',
+      'every seven seconds from 0 through 56 seconds past the minute',
       options],
     ['30 * * * *', '30 seconds past the minute, every minute', options],
     ['0 * * * *', 'every minute', options],

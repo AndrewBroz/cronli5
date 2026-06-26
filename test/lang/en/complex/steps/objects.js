@@ -5,7 +5,7 @@ describe('Valid objects with steps:', function() {
     [{second: '*/2'}, 'every two seconds'],
     [
       {second: '*/7'},
-      'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 seconds past the minute'
+      'every seven seconds from 0 through 56 seconds past the minute'
     ],
     [{second: '*/30'}, 'every 30 seconds'],
     [{minute: '*/2'}, 'every two minutes'],
@@ -17,7 +17,7 @@ describe('Valid objects with steps:', function() {
     [{minute: '*/5'}, 'every five minutes'],
     [
       {minute: '*/7'},
-      'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour'
+      'every seven minutes from 0 through 56 minutes past the hour'
     ],
     [{minute: '*/10'}, 'every ten minutes'],
     [{minute: '*/17'}, 'at 0, 17, 34, and 51 minutes past the hour'],

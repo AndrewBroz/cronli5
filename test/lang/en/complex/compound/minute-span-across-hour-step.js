@@ -17,6 +17,25 @@ describe('Minute span across an hour step:', function() {
     ]);
   });
 
+  // A minute list under a clean hour stride keeps the cadence, exactly as the
+  // wildcard and range forms do — the hour reads the same regardless of the
+  // minute's shape, never enumerated into a wall of clock times.
+  describe('minute list (keeps the cadence)', function() {
+    run([
+      ['5,30 1/2 * * *',
+        'at 5 and 30 minutes past the hour, every two hours from 1 a.m.'],
+      ['3/2 1/2 * * *',
+        'every two minutes from 3 through 59 minutes past the hour, ' +
+        'every two hours from 1 a.m.'],
+      ['5,30 */2 * * *',
+        'at 5 and 30 minutes past the hour, every two hours'],
+      // An unclean stride still enumerates its hours (compactClockTimes).
+      ['3/2 9-17/2 * * *',
+        'every two minutes from 3 through 59 minutes past the hour, ' +
+        'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+    ]);
+  });
+
   describe('wildcard minute (confined to the active hours)', function() {
     run([
       ['* */2 * * *', 'every minute during every other hour'],

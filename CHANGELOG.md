@@ -6,6 +6,31 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.5]
+
+### Changed
+
+- **A regular step reads as a bounded cadence instead of an enumerated list.** A
+  step like `3/2` (every other minute starting at :03) listed out all 29 of its
+  fires; it now reads "every two minutes from 3 through 59 minutes past the hour".
+  Offset steps (`5/6` → "every six minutes from five minutes past the hour"),
+  uneven steps (`*/7` → "every seven minutes from 0 through 56 minutes past the
+  hour"), and a stepped hour composed with a fixed time (`30 0 */2` → "at 30
+  seconds past the hour, every two hours", was twelve clock times) are all
+  covered, in every context — standalone and composed. So `3/2 1/2` reads "every
+  two minutes from 3 through 59 minutes past the hour, every two hours from 1
+  a.m." with no enumeration. Clean strides (`*/2` → "every two minutes") and
+  irregular lists (`5,10,30`) are unchanged. All languages. Spanish, German,
+  Finnish, and Chinese gain the idiom (Chinese and German previously enumerated
+  even uniform offset steps).
+- **`* */2` under seconds binds its two cadences** in Spanish, German, Finnish,
+  and Chinese (English shipped this in 0.1.4): "cada segundo de cada dos minutos",
+  "jede Sekunde jeder zweiten Minute", "joka sekunti joka toisena minuuttina",
+  "每偶数分钟的每一秒" — no longer the juxtaposed "every second, every two minutes".
+- **Chinese drops the redundant "0分" for noon** in the per-second confinement
+  form: `* 0 12` reads "每天正午的每一秒" (正午 already denotes 12:00); midnight keeps
+  "凌晨0点0分".
+
 ## [0.1.4]
 
 ### Fixed

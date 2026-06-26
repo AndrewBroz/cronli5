@@ -115,10 +115,49 @@ describe('Deutsch (de):', function() {
       ['* 0 9-17 * * *',
         'täglich jede Sekunde der Minuten 9:00, 10:00, 11:00, 12:00, ' +
         '13:00, 14:00, 15:00, 16:00 und 17:00'],
+      // An hour step under a minute-0 confinement reads as a cadence, not a
+      // wall of clock minutes: the one-minute window in every other hour.
       ['* 0 */2 * * *',
-        'täglich jede Sekunde der Minuten 0:00, 2:00, 4:00, 6:00, 8:00, ' +
-        '10:00, 12:00, 14:00, 16:00, 18:00, 20:00 und 22:00'],
+        'jede Sekunde für eine Minute in jeder zweiten Stunde'],
       ['* 0 9 * * MON', 'montags jede Sekunde der Minute 9:00']
+    ]);
+  });
+
+  // An hour step (or arithmetic-progression hour list) under a single pinned
+  // minute reads as a cadence, not a cross-product of clock times: the
+  // minute/second lead clause, then the hour cadence ("alle 2 Stunden").
+  // Irregular hour lists and ranges still enumerate.
+  describe('Stundenschritt als Kadenz statt Stundenliste', function() {
+    run([
+      ['30 0 */2 * * *', 'in Sekunde 30 jeder Stunde, alle 2 Stunden'],
+      ['5 0 */2 * * *', 'in Sekunde 5 jeder Stunde, alle 2 Stunden'],
+      ['30 */2 * * *', 'in Minute 30, alle 2 Stunden'],
+      // An arithmetic-progression hour list compacts the same way.
+      ['30 0 0,4,8,12,16,20 * * *',
+        'in Sekunde 30 jeder Stunde, alle 4 Stunden'],
+      // An offset stride that still tiles names only its start; a bounded one
+      // pins both clock-time endpoints; the minute-0 confinement names the odd
+      // stride's start, and a non-clean stride keeps enumerating its fires.
+      ['30 0 1/2 * * *',
+        'in Sekunde 30 jeder Stunde, alle 2 Stunden ab 1 Uhr'],
+      ['30 0 5,9,13,17,21 * * *',
+        'in Sekunde 30 jeder Stunde, alle 4 Stunden von 5 bis 21 Uhr'],
+      ['* 0 1/2 * * *',
+        'jede Sekunde für eine Minute in jeder zweiten Stunde ab 1 Uhr'],
+      ['* 0 */3 * * *',
+        'jede Sekunde für eine Minute in jeder dritten Stunde'],
+      // A non-zero pinned minute under an hour step: the second leads, then the
+      // minute, then the hour cadence.
+      ['30 5 */2 * * *',
+        'in Sekunde 30 jeder Minute, in Minute 5, alle 2 Stunden'],
+      ['* 5 */2 * * *', 'jede Sekunde, in Minute 5, alle 2 Stunden'],
+      // Guards: irregular hour lists and ranges keep enumerating.
+      ['30 0 9,17 * * *', 'täglich um 9:00:30 und 17:00:30 Uhr'],
+      ['30 0 9-17 * * *',
+        'täglich in Sekunde 30 jeder Minute der Minuten 9:00, 10:00, ' +
+        '11:00, 12:00, 13:00, 14:00, 15:00, 16:00 und 17:00'],
+      // A clean hour step with a plain :00 stays the bare hour cadence.
+      ['0 0 */2 * * *', 'alle 2 Stunden']
     ]);
   });
 
@@ -146,15 +185,43 @@ describe('Deutsch (de):', function() {
       ['*/45 * * * * *', 'in den Sekunden 0 und 45 jeder Minute'],
       ['*/45 * * * *', 'in den Minuten 0 und 45 jeder Stunde'],
       ['*/25 * * * *', 'in den Minuten 0, 25 und 50 jeder Stunde'],
-      // A divisor step that starts off the top of the cycle still fires at
-      // discrete offset points, so German lists them rather than reading
-      // "alle 6 Minuten" (which would lose the offset).
+      // A uniform offset step (interval divides the cycle, start within the
+      // first interval) wraps cleanly: name only its start ("ab Minute M"),
+      // keeping the cadence rather than enumerating the offset fires.
       ['5/6 * * * *',
-        'in den Minuten 5, 11, 17, 23, 29, 35, 41, 47, 53 und 59 jeder Stunde'],
+        'alle 6 Minuten ab Minute 5 jeder Stunde'],
+      ['11/12 * * * *',
+        'alle 12 Minuten ab Minute 11 jeder Stunde'],
+      // An uneven step (interval does not divide the cycle) and an offset step
+      // (start >= interval) fire a non-uniform bounded set: named with its
+      // interval and both endpoints ("von Minute M bis K"), not enumerated.
+      ['*/7 * * * *',
+        'alle 7 Minuten von Minute 0 bis 56 jeder Stunde'],
+      ['3/2 * * * *',
+        'alle 2 Minuten von Minute 3 bis 59 jeder Stunde'],
+      ['7/9 * * * *',
+        'alle 9 Minuten von Minute 7 bis 52 jeder Stunde'],
+      // Compounded: a stepped second over a stepped minute, each a cadence.
+      ['3/2 1/2 * * * *',
+        'alle 2 Sekunden von Sekunde 3 bis 59 jeder Minute, ' +
+        'alle 2 Minuten ab Minute 1 jeder Stunde'],
       // Uneven hour steps render as their fire list, so they take the daily
       // frame too (a bare clock list, like clockTimes).
       ['0 */5 * * *', 'täglich um 0, 5, 10, 15 und 20 Uhr'],
       ['0 */9 * * *', 'täglich um 0, 9 und 18 Uhr']
+    ]);
+  });
+
+  describe('Sekunde unter gepaarter Minute (* */N)', function() {
+    run([
+      // A wildcard second under a minute */2 binds the two cadences instead of
+      // juxtaposing the contradictory "jede Sekunde, alle 2 Minuten".
+      ['* */2 * * * *', 'jede Sekunde jeder zweiten Minute'],
+      // Other strides keep the juxtaposed form.
+      ['* */3 * * * *', 'jede Sekunde, alle 3 Minuten'],
+      // Guards: no-seconds and restricted hour are unchanged.
+      ['*/2 * * * *', 'alle 2 Minuten'],
+      ['* */2 0 * * *', 'jede Sekunde, alle 2 Minuten von 0 bis 0:58 Uhr']
     ]);
   });
 
@@ -232,7 +299,15 @@ describe('Deutsch (de):', function() {
       ['* 9,12,17 * * *',
         'jede Minute von 9 bis 9:59 Uhr, von 12 bis 12:59 Uhr und von 17 ' +
         'bis 17:59 Uhr'],
-      ['0-30 */2 * * *', 'in den Minuten 0 bis 30, alle 2 Stunden']
+      // A range or list under a clean stride trails the same cadence the
+      // wildcard form and the minute-step compositions use ("in jeder zweiten
+      // Stunde"), never an enumerated hour list or a juxtaposed "alle 2 Stunden".
+      ['0-30 */2 * * *', 'in den Minuten 0 bis 30, in jeder zweiten Stunde'],
+      ['0-30 1/2 * * *',
+        'in den Minuten 0 bis 30, in jeder zweiten Stunde ab 1 Uhr'],
+      ['5,30 */2 * * *', 'in den Minuten 5 und 30, in jeder zweiten Stunde'],
+      ['5,30 1/2 * * *',
+        'in den Minuten 5 und 30, in jeder zweiten Stunde ab 1 Uhr']
     ]);
   });
 

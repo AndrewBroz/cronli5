@@ -168,6 +168,22 @@ describe('Suomi (fi):', function() {
       ['*/17 * * * *', 'joka tunti 0, 17, 34 ja 51 minuutin kohdalla'],
       ['1/3 * * * *',
         'kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen'],
+      // A uniform offset step (interval divides the cycle, start within the
+      // first interval) wraps cleanly: name only its start ("minuutista M
+      // alkaen"), keeping the cadence rather than enumerating the offset fires.
+      ['5/6 * * * *',
+        'kuuden minuutin välein jokaisen tunnin minuutista 5 alkaen'],
+      ['11/12 * * * *',
+        '12 minuutin välein jokaisen tunnin minuutista 11 alkaen'],
+      // An uneven step (interval does not divide the cycle) and an offset step
+      // (start >= interval) fire a non-uniform bounded set: named with its
+      // interval and both endpoints ("minuutista M minuuttiin K"), not listed.
+      ['*/7 * * * *',
+        'seitsemän minuutin välein minuutista 0 minuuttiin 56'],
+      ['3/2 * * * *',
+        'kahden minuutin välein minuutista 3 minuuttiin 59'],
+      ['7/9 * * * *',
+        'yhdeksän minuutin välein minuutista 7 minuuttiin 52'],
       ['15 * * * * *', 'joka minuutti 15 sekunnin kohdalla'],
       ['0,30 * * * * *', 'joka minuutti 0 ja 30 sekunnin kohdalla'],
       ['0-30 * * * * *', 'joka minuutti 0–30 sekunnin kohdalla'],
@@ -175,7 +191,11 @@ describe('Suomi (fi):', function() {
       ['*/15 30 * * * *',
         '15 sekunnin välein, joka tunti 30 minuutin kohdalla'],
       ['*/7 * * * * *',
-        'joka minuutti 0, 7, 14, 21, 28, 35, 42, 49 ja 56 sekunnin kohdalla']
+        'seitsemän sekunnin välein sekunnista 0 sekuntiin 56'],
+      // Compounded: a stepped second over a stepped minute, each a cadence.
+      ['3/2 1/2 * * * *',
+        'kahden minuutin välein jokaisen tunnin minuutista 1 alkaen, ' +
+        'kahden sekunnin välein sekunnista 3 sekuntiin 59']
     ]);
   });
 
@@ -204,6 +224,11 @@ describe('Suomi (fi):', function() {
       // Minute range over range+isolated hours: minute-first, sekä klo.
       ['0-30 9-20,22 * * *', '0–30 minuutin kohdalla klo 9–20 sekä klo 22'],
       ['0-30 */2 * * *', '0–30 minuutin kohdalla joka toinen tunti'],
+      // A minute list under a clean stride keeps the same step phrase the
+      // range and wildcard forms do, never enumerating the hours.
+      ['5,30 */2 * * *', '5 ja 30 minuutin kohdalla joka toinen tunti'],
+      ['5,30 1/2 * * *',
+        '5 ja 30 minuutin kohdalla, kahden tunnin välein klo 1:stä alkaen'],
       ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
       ['* */10 * * *',
         'joka minuutti klo 0.00–0.59, 10.00–10.59 ja 20.00–20.59'],
@@ -225,7 +250,10 @@ describe('Suomi (fi):', function() {
       ['0 */10 * * *', 'joka päivä klo 0, 10 ja 20'],
       ['0 3/7 * * *', 'joka päivä klo 3, 10 ja 17'],
       ['0 1/5 * * *', 'joka päivä klo 1, 6, 11, 16 ja 21'],
-      ['0 11/2 * * *', 'joka päivä klo 11, 13, 15, 17, 19, 21 ja 23'],
+      // A bounded/offset hour stride reads as a cadence with its clock-time
+      // bounds, not a wall of clock times.
+      ['0 11/2 * * *',
+        '0 sekunnin kohdalla, kahden tunnin välein klo 11–23'],
       ['0 13/3 * * *', 'joka päivä klo 13, 16, 19 ja 22'],
       // Uniform offset strides (interval divides the cycle, start within the
       // first interval) keep the cadence form: a short minute/hour stride
@@ -280,12 +308,57 @@ describe('Suomi (fi):', function() {
       ['* 0 9-17 * * *',
         'joka sekunti minuuttien 9.00, 10.00, 11.00, 12.00, 13.00, 14.00, ' +
         '15.00, 16.00 ja 17.00 aikana, joka päivä'],
+      // An hour step under a minute-0 confinement reads as a cadence, not a
+      // wall of clock minutes: the one-minute window during every other hour.
       ['* 0 */2 * * *',
-        'joka sekunti minuuttien 0.00, 2.00, 4.00, 6.00, 8.00, 10.00, ' +
-        '12.00, 14.00, 16.00, 18.00, 20.00 ja 22.00 aikana, joka päivä'],
+        'joka sekunti minuutin ajan joka toisen tunnin aikana'],
       ['* 0 9 * * MON', 'joka sekunti minuutin 9.00 aikana, maanantaisin'],
       ['*/15 0 9 * * *',
         '15 sekunnin välein minuutin 9.00 aikana, joka päivä']
+    ]);
+  });
+
+  // An hour step (or arithmetic-progression hour list) under a single pinned
+  // minute reads as a cadence, not a cross-product of clock times: the
+  // minute/second lead clause, then the hour cadence ("kahden tunnin välein").
+  // Irregular hour lists and ranges still enumerate.
+  describe('tuntiaskel kadenssina tuntilistan sijaan', function() {
+    run([
+      ['30 0 */2 * * *',
+        '30 sekunnin kohdalla, kahden tunnin välein'],
+      ['5 0 */2 * * *',
+        '5 sekunnin kohdalla, kahden tunnin välein'],
+      ['30 */2 * * *',
+        '30 minuutin kohdalla, kahden tunnin välein'],
+      // An arithmetic-progression hour list compacts the same way.
+      ['30 0 0,4,8,12,16,20 * * *',
+        '30 sekunnin kohdalla, neljän tunnin välein'],
+      // An offset stride that still tiles names only its start; a bounded one
+      // pins both clock-time endpoints; the minute-0 confinement names the odd
+      // stride's start, and a non-clean stride still confines to every Nth
+      // hour.
+      ['30 0 1/2 * * *',
+        '30 sekunnin kohdalla, kahden tunnin välein klo 1:stä alkaen'],
+      ['30 0 5,9,13,17,21 * * *',
+        '30 sekunnin kohdalla, neljän tunnin välein klo 5–21'],
+      ['* 0 1/2 * * *',
+        'joka sekunti minuutin ajan joka toisen tunnin aikana ' +
+        'kello 1:stä alkaen'],
+      ['* 0 */3 * * *',
+        'joka sekunti minuutin ajan joka kolmannen tunnin aikana'],
+      // A non-zero pinned minute under an hour step: the second leads, then the
+      // minute, then the hour cadence.
+      ['30 5 */2 * * *',
+        '30 sekunnin kohdalla, 5 minuutin kohdalla, kahden tunnin välein'],
+      ['* 5 */2 * * *',
+        'joka sekunti, 5 minuutin kohdalla, kahden tunnin välein'],
+      // Guards: irregular hour lists and ranges keep enumerating.
+      ['30 0 9,17 * * *', 'joka päivä klo 9.00.30 ja 17.00.30'],
+      ['30 0 9-17 * * *',
+        '30 sekunnin kohdalla minuuttien 9.00, 10.00, 11.00, 12.00, ' +
+        '13.00, 14.00, 15.00, 16.00 ja 17.00 aikana, joka päivä'],
+      // A clean hour step with a plain :00 stays the bare hour cadence.
+      ['0 0 */2 * * *', 'kahden tunnin välein']
     ]);
   });
 
@@ -296,6 +369,14 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
         'klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä'],
       ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
+      // A wildcard second under a minute */2 binds the two cadences instead of
+      // juxtaposing the contradictory "joka sekunti, kahden minuutin välein".
+      ['* */2 * * * *', 'joka sekunti joka toisena minuuttina'],
+      // Other strides keep the juxtaposed form.
+      ['* */3 * * * *', 'joka sekunti, kolmen minuutin välein'],
+      // Guards: no-seconds and restricted hour are unchanged.
+      ['*/2 * * * *', 'kahden minuutin välein'],
+      ['* */2 0 * * *', 'joka sekunti, kahden minuutin välein klo 0.00–0.58'],
       // Minute 0 under a sub-minute second must be stated, not absorbed into
       // an hourly idiom ("joka tunti" / "kahden tunnin välein" / a klo 9–17
       // window) that silently drops the :00.
@@ -343,10 +424,10 @@ describe('Suomi (fi):', function() {
         '0–30 minuutin kohdalla, kuuden tunnin välein klo 1:stä alkaen'],
       ['* 8-18,22 * * *',
         'joka minuutti klo 8.00–18.59 ja 22.00–22.59'],
-      // Compact clock-times fold path (single minute, many non-range+isolated
-      // single hours past the enumeration cap):
+      // An arithmetic-progression hour list reads as an hour cadence, not a
+      // wall of clock times (the single pinned minute leads).
       ['5 1,3,5,7,9,11,13 * * *',
-        'joka päivä klo 1.05, 3.05, 5.05, 7.05, 9.05, 11.05 ja 13.05'],
+        '5 minuutin kohdalla, kahden tunnin välein klo 1:stä alkaen'],
       ['5-10 1,3,5,7,9,11,13 * * *',
         'klo 1, 3, 5, 7, 9, 11 ja 13 aina minuuttien 5–10 kohdalla'],
       ['0 9 * * 7', 'sunnuntaisin klo 9'],

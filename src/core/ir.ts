@@ -71,7 +71,7 @@ export type PlanNode =
       form: 'wildcard' | 'range' | 'list';
       times: HourTimesPlan;
     }
-  | {kind: 'minuteSpanAcrossHourStep'; form: 'wildcard' | 'range'}
+  | {kind: 'minuteSpanAcrossHourStep'; form: 'wildcard' | 'range' | 'list'}
   | {kind: 'everyHour'}
   | {
       kind: 'hourRange';

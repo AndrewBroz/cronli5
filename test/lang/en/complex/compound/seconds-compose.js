@@ -70,10 +70,13 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['* 0 9-17 * * *',
         'every second for one minute at 9 a.m., 10 a.m., 11 a.m., noon, ' +
         '1 p.m., 2 p.m., 3 p.m., 4 p.m., and 5 p.m., every day'],
+      // An hour STEP is a cadence, not a discrete hour list: confined to
+      // minute 0 it reads "during every other hour" — the same confinement
+      // idiom as "every minute during every other hour", kept distinct from
+      // the bare hour-step form "every two hours" (see hour-step-cadence.js).
+      // A short discrete hour list still enumerates.
       ['* 0 */2 * * *',
-        'every second for one minute at midnight, 2 a.m., 4 a.m., 6 a.m., ' +
-        '8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., 6 p.m., 8 p.m., ' +
-        'and 10 p.m., every day'],
+        'every second for one minute during every other hour'],
       ['* 0 9 * * MON',
         'every second for one minute at 9 a.m., every Monday'],
       ['*/15 0 9 * * *',

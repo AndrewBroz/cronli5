@@ -376,6 +376,13 @@ function planMinuteUnderHourStep(
     return {form: 'range', kind: 'minuteSpanAcrossHourStep'};
   }
 
+  // A minute list under a clean stride keeps the cadence too, so the hour
+  // reads the same whatever the minute's shape. An unclean stride falls
+  // through to compactClockTimes and enumerates its hours.
+  if (shapes.minute === 'list' && cleanHourStride(pattern.hour)) {
+    return {form: 'list', kind: 'minuteSpanAcrossHourStep'};
+  }
+
   return null;
 }
 

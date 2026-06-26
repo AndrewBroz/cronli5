@@ -13,10 +13,18 @@ describe('Valid strings with steps:', function() {
       ['*/5 * * * *', 'every five minutes'],
       ['0/5 * * * *', 'every five minutes'],
       ['*/7 * * * *',
-        'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour'],
+        'every seven minutes from 0 through 56 minutes past the hour'],
       ['0/7 * * * *',
-        'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 minutes past the hour'],
+        'every seven minutes from 0 through 56 minutes past the hour'],
       ['*/10 * * * *', 'every ten minutes'],
+      // An offset step (start >= interval) and an uneven step (interval does
+      // not tile the cycle) both fire a non-uniform bounded set; named with
+      // its interval and explicit endpoints rather than enumerated.
+      ['3/2 * * * *',
+        'every two minutes from 3 through 59 minutes past the hour'],
+      ['7/9 * * * *',
+        'every nine minutes from 7 through 52 minutes past the hour'],
+      // Below the compaction threshold (fewer than five fires): still listed.
       ['*/17 * * * *', 'at 0, 17, 34, and 51 minutes past the hour'],
       ['*/20 * * * *', 'every 20 minutes'],
       ['17/20 * * * *', 'at 17, 37, and 57 minutes past the hour'],
@@ -37,10 +45,9 @@ describe('Valid strings with steps:', function() {
       // A uniform offset hour stride (interval divides 24, start within the
       // first interval) keeps its cadence form; a short one lists its fires.
       ['0 8/12 * * *', 'at 8 a.m. and 8 p.m.'],
-      ['5 */2 * * *',
-        'every day at 12:05 a.m., 2:05 a.m., 4:05 a.m., 6:05 a.m., ' +
-        '8:05 a.m., 10:05 a.m., 12:05 p.m., 2:05 p.m., 4:05 p.m., ' +
-        '6:05 p.m., 8:05 p.m., and 10:05 p.m.'],
+      // An hour step past the clock-time cap is a cadence, not a wall of
+      // times: the pinned minute leads, then the hour cadence.
+      ['5 */2 * * *', 'five minutes past the hour, every two hours'],
       // A uniform step segment beside a range in a folded clock-time set: the
       // range is a window, the step contributes its fires.
       ['5 8-10,2/4 * * *',
@@ -55,7 +62,7 @@ describe('Valid strings with steps:', function() {
       ['* * * * * *', 'every second'],
       ['*/2 * * * * *', 'every two seconds'],
       ['*/7 * * * * *',
-        'at 0, 7, 14, 21, 28, 35, 42, 49, and 56 seconds past the minute'],
+        'every seven seconds from 0 through 56 seconds past the minute'],
       ['*/30 * * * * *', 'every 30 seconds'],
       ['0 */2 * * * *', 'every two minutes'],
       ['0 */4 * * * *', 'every four minutes'],
