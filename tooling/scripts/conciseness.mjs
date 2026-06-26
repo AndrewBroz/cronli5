@@ -59,27 +59,25 @@ function restricted(field) {
 }
 
 // When minute AND hour are both restricted, the schedule is a set of clock
-// times (their cross product, times a restricted second). Up to CLOCK_TIME_CAP
-// of them, naming each is accepted (the maintainer's call), so the budget gets
-// an allowance of a few numbers per clock time. Beyond the cap the renderer
-// factors, so no allowance — an enumeration there is still flagged.
+// times — the minute×hour cross product. Up to CLOCK_TIME_CAP of them, naming
+// each is accepted (the maintainer's call), so the budget gets an allowance of
+// a few numbers per clock time. A restricted second is either carried inside
+// each clock time or factored out as its own clause — either way it does not
+// multiply the count, so it is left to the additive per-field budget. Beyond
+// the cap the renderer factors, so no allowance — an enumeration there is still
+// flagged.
 function clockTimeAllowance(cron) {
   const f = cron.trim().split(/\s+/u);
   const six = f.length === 6;
   const minute = six ? f[1] : f[0];
   const hour = six ? f[2] : f[1];
-  const second = six ? f[0] : '*';
 
   if (!restricted(minute) || !restricted(hour)) {
     return 0;
   }
 
-  let size = enumerateFires(minute, 0, 59).length *
+  const size = enumerateFires(minute, 0, 59).length *
     enumerateFires(hour, 0, 23).length;
-
-  if (restricted(second)) {
-    size *= enumerateFires(second, 0, 59).length;
-  }
 
   return size > 1 && size <= CLOCK_TIME_CAP ? 3 * size : 0;
 }
