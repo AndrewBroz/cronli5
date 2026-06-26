@@ -58,8 +58,8 @@ describe('Valid compound arrays:', function() {
 
   describe('frequency with a day qualifier', function() {
     run([
-      [['*', '*', '*', '*', 'MON'], 'every minute on Monday'],
-      [['0', '*', '*', '*', 'MON'], 'every hour on Monday'],
+      [['*', '*', '*', '*', 'MON'], 'every minute on Mondays'],
+      [['0', '*', '*', '*', 'MON'], 'every hour on Mondays'],
       [['*', '*', '*', '*', 'MON-FRI'], 'every minute on Monday through Friday'],
       [['*', '*', '13', '*', '*'], 'every minute on the 13th'],
       [['0', '*', '13', '*', '*'], 'every hour on the 13th'],

@@ -54,7 +54,7 @@ describe('Minute span across an hour step:', function() {
     run([
       ['0-30 */2 * * MON',
         'every minute from 0 through 30 past the hour, ' +
-        'every two hours on Monday']
+        'every two hours on Mondays']
     ]);
   });
 });

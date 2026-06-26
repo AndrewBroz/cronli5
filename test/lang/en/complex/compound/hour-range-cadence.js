@@ -69,7 +69,7 @@ describe('Hour range under a fixed minute and a second reads as a window:',
       run([
         ['30 0 9-17 * * MON',
           'at 30 seconds past the hour, every hour from 9 a.m. through ' +
-          '5 p.m. on Monday']
+          '5 p.m. on Mondays']
       ]);
     });
 

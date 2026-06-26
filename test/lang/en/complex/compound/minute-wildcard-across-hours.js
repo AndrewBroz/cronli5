@@ -18,7 +18,7 @@ describe('Minute wildcard across an hour list:', function() {
   describe('with a day qualifier', function() {
     run([
       ['* 9,17 * * MON',
-        'every minute during the 9 a.m. and 5 p.m. hours on Monday']
+        'every minute during the 9 a.m. and 5 p.m. hours on Mondays']
     ]);
   });
 

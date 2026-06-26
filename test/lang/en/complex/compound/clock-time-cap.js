@@ -36,7 +36,7 @@ describe('Clock-time enumeration cap:', function() {
         'every two hours from 8 a.m. through 6 p.m.'],
       ['0,15,30,45 9,17 * * MON',
         'at 0, 15, 30, and 45 minutes past the hour, ' +
-        'at 9 a.m. and 5 p.m. on Monday']
+        'at 9 a.m. and 5 p.m. on Mondays']
     ]);
   });
 

@@ -20,7 +20,7 @@ describe('Minute range across an hour list:', function() {
     run([
       ['0-30 9,17 * * MON',
         'every minute from 0 through 30 past the hour, ' +
-        'at 9 a.m. and 5 p.m. on Monday']
+        'at 9 a.m. and 5 p.m. on Mondays']
     ]);
   });
 

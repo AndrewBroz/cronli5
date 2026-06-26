@@ -25,7 +25,7 @@ describe('Minute span within a specific hour:', function() {
 
   describe('with a day qualifier', function() {
     run([
-      ['* 9 * * MON', 'every minute of the 9 a.m. hour on Monday']
+      ['* 9 * * MON', 'every minute of the 9 a.m. hour on Mondays']
     ]);
   });
 

@@ -1405,13 +1405,19 @@ interface QualifierWords {
   month: string;
   stepDate: string;
   weekday: string;
+  // A trailing weekday is a recurring schedule and reads plural ("on
+  // Mondays"); a leading time-anchored one names the day singular ("every
+  // Monday at 9 a.m.").
+  recurringWeekday: boolean;
 }
 
-const trailingWords: QualifierWords =
-  {all: '', month: 'in ', stepDate: 'on ', weekday: 'on '};
+const trailingWords: QualifierWords = {
+  all: '', month: 'in ', recurringWeekday: true, stepDate: 'on ', weekday: 'on '
+};
 const leadingWords: QualifierWords = {
   all: 'every day',
   month: 'every day in ',
+  recurringWeekday: false,
   stepDate: '',
   weekday: 'every '
 };
@@ -1451,7 +1457,7 @@ function dayQualifier(ir: IR, words: QualifierWords,
   // June").
   if (pattern.weekday !== '*') {
     const weekdays = quartzWeekdayPhrase(pattern.weekday, opts) ||
-      words.weekday + weekdayPhrase(ir, opts);
+      words.weekday + weekdayPhrase(ir, words.recurringWeekday, opts);
 
     return weekdays + monthScope(ir, opts);
   }
@@ -1511,8 +1517,10 @@ function monthFoldsIntoDate(ir: IR): boolean {
 // odd/even frequency) it trails the whole or as ", in <month>".
 function dateOrWeekday(ir: IR, opts: NormalizedOptions): string {
   const pattern = ir.pattern;
+  // The day-of-month-OR-day-of-week union is out of scope for the recurring
+  // plural (it is reframed elsewhere): the weekday half stays singular here.
   const weekdayPart = quartzWeekdayPhrase(pattern.weekday, opts) ||
-    'on ' + weekdayPhrase(ir, opts);
+    'on ' + weekdayPhrase(ir, false, opts);
 
   if (pattern.month !== '*' && monthFoldsIntoDate(ir) &&
       !quartzDatePhrase(pattern.date, opts) && !isOpenStep(pattern.date)) {
@@ -1690,16 +1698,44 @@ function oddEvenMonth(monthField: string): string | null {
 }
 
 // Render the weekday field as names. Ranges read in their connective form
-// ("Monday through Friday", or "Mon-Fri" with `short`).
-function weekdayPhrase(ir: IR, opts: NormalizedOptions): string {
+// ("Monday through Friday", or "Mon-Fri" with `short`). When `recurring`, a
+// trailing single or list weekday is a repeating schedule and reads plural
+// ("on Mondays", "on Mondays and Wednesdays"), matching es/de/fi; a RANGE
+// keeps the singular idiom ("on Monday through Friday") so its through-
+// connective stays unmistakable, and a leading time-anchored form ("every
+// Monday") is never recurring here.
+function weekdayPhrase(ir: IR, recurring: boolean,
+  opts: NormalizedOptions): string {
   // Reached only with a restricted weekday, which has segments. Weekday lists
   // display Monday-first (Sunday last) so a weekend reads naturally; the IR
   // stays canonical (Sunday=0) and ranges keep their form.
   const segments = orderWeekdaysForDisplay(ir.analyses.segments.weekday!);
+  const hasRange = segments.some(function range(segment) {
+    return segment.kind === 'range';
+  });
 
-  return renderSegments(segments, function name(value) {
-    return getWeekday(value, opts);
-  }, opts);
+  // A range pins the singular idiom for the whole phrase ("Monday through
+  // Friday"); only an all-single/step set pluralizes its names.
+  const name = recurring && !hasRange ?
+    function plural(value: number | string): string {
+      return pluralWeekday(value, opts);
+    } :
+    function singular(value: number | string): string {
+      return getWeekday(value, opts);
+    };
+
+  return renderSegments(segments, name, opts);
+}
+
+// The recurring (plural) form of a weekday name: every English weekday name
+// pluralizes by appending "s" ("Mondays", "Sundays"). The `short`
+// abbreviation keeps its singular form — "on Mons" reads as an error, not a
+// plural.
+function pluralWeekday(value: number | string,
+  opts: NormalizedOptions): string {
+  const name = getWeekday(value, opts);
+
+  return opts.short ? name : name + 's';
 }
 
 // Render classified field segments with `word`, expanding step segments

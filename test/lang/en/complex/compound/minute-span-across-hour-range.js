@@ -22,7 +22,7 @@ describe('Minute span across an hour range:', function() {
 
   describe('with a day qualifier', function() {
     run([
-      ['* 9-17 * * MON', 'every minute from 9 a.m. through 5:59 p.m. on Monday'],
+      ['* 9-17 * * MON', 'every minute from 9 a.m. through 5:59 p.m. on Mondays'],
       ['0-30 9-17 * * MON-FRI',
         'every minute from 0 through 30 past the hour, ' +
         'from 9 a.m. through 5 p.m. on Monday through Friday']
