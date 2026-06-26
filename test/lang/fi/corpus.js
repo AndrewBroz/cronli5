@@ -105,13 +105,15 @@ describe('Suomi (fi):', function() {
       ['5 9-17 1,15 6-8 MON-FRI',
         'kesäkuusta elokuuhun 5 minuutin kohdalla klo 9.05–17.05 ' +
         'joko 1. ja 15. päivänä tai maanantaista perjantaihin'],
-      // Month-list case: inessive list fronts the union.
+      // Month-list case: inessive list fronts the union; the uneven hour step
+      // reads as its bounded cadence.
       ['5 */5 1 1,7 MON',
-        'tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 ' +
-        'joko 1. päivänä tai maanantaisin'],
-      // Anchored minute step: bare hours, hours-first reorder, OR-scope.
+        'tammikuussa ja heinäkuussa 5 minuutin kohdalla, ' +
+        'viiden tunnin välein klo 0–20 joko 1. päivänä tai maanantaisin'],
+      // Anchored minute step with a uneven hour cadence, OR-scope.
       ['*/45 */5 1-5 6 MON-FRI',
-        'kesäkuussa klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla ' +
+        'kesäkuussa 0 ja 45 minuutin kohdalla, ' +
+        'viiden tunnin välein klo 0–20 ' +
         'joko 1.–5. päivänä tai maanantaista perjantaihin'],
       // Range+isolated hours under a restricted-month union: minute-first, sekä klo.
       ['5,10,30 9-20,22 1 1 MON',
@@ -222,10 +224,10 @@ describe('Suomi (fi):', function() {
       ['*/15 9-17 * * MON-FRI',
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
       ['* 9,17 * * *', 'joka minuutti klo 9 ja 17'],
-      ['* */5 * * *', 'joka minuutti klo 0, 5, 10, 15 ja 20'],
+      ['* */5 * * *', 'joka minuutti, viiden tunnin välein klo 0–20'],
       ['5/15 */5 * * *',
-        '15 minuutin välein jokaisen tunnin minuutista 5 alkaen ' +
-        'klo 0, 5, 10, 15 ja 20'],
+        '15 minuutin välein jokaisen tunnin minuutista 5 alkaen, ' +
+        'viiden tunnin välein klo 0–20'],
       ['0-30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 0–30 kohdalla'],
       // Minute range over range+isolated hours: minute-first, sekä klo.
       ['0-30 9-20,22 * * *', '0–30 minuutin kohdalla klo 9–20 sekä klo 22'],
@@ -236,7 +238,7 @@ describe('Suomi (fi):', function() {
       ['5,30 1/2 * * *',
         '5 ja 30 minuutin kohdalla, kahden tunnin välein klo 1:stä alkaen'],
       ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
-      ['* */10 * * *', 'joka minuutti klo 0, 10 ja 20'],
+      ['* */10 * * *', 'joka minuutti, kymmenen tunnin välein klo 0–20'],
       // A clean hour step confines the cadence to every Nth hour, not a
       // second, conflicting cadence ("joka toinen tunti").
       ['*/15 */2 * * *', '15 minuutin välein joka toisen tunnin aikana'],
@@ -246,18 +248,25 @@ describe('Suomi (fi):', function() {
       ['*/15 1/3 * * *',
         '15 minuutin välein joka kolmannen tunnin aikana kello 1:stä alkaen'],
       ['* 1/2 * * *', 'joka minuutti joka toisen tunnin aikana kello 1:stä alkaen'],
-      // An uneven or bounded hour step lists its active hours as windows.
+      // A uneven or bounded hour step has a distinct endpoint, so it reads as a
+      // bounded cadence pinning both clock-time ends, not a wall of clock times.
       ['*/20 9-17/2 * * *',
-        '20 minuutin välein klo 9, 11, 13, 15 ja 17'],
+        '20 minuutin välein, kahden tunnin välein klo 9–17'],
+      ['*/25 */5 * * *',
+        '0, 25 ja 50 minuutin kohdalla, viiden tunnin välein klo 0–20'],
+      ['5,10 9-17/2 * * *',
+        '5 ja 10 minuutin kohdalla, kahden tunnin välein klo 9–17'],
       ['0 */2 * * *', 'kahden tunnin välein'],
-      ['0 */5 * * *', 'joka päivä klo 0, 5, 10, 15 ja 20'],
-      ['0 */10 * * *', 'joka päivä klo 0, 10 ja 20'],
+      ['0 0,8,16 * * *', 'joka päivä klo 0, 8 ja 16'],
+      ['0 */5 * * *', 'viiden tunnin välein klo 0–20'],
+      ['0 */10 * * *', 'kymmenen tunnin välein klo 0–20'],
+      // An offset step too short to be a deliberate list stays an enumeration
+      // (3,10,17 could be a hand list); a five-value one reads as its cadence.
       ['0 3/7 * * *', 'joka päivä klo 3, 10 ja 17'],
-      ['0 1/5 * * *', 'joka päivä klo 1, 6, 11, 16 ja 21'],
+      ['0 1/5 * * *', 'viiden tunnin välein klo 1–21'],
       // A bounded/offset hour stride reads as a cadence with its clock-time
       // bounds, not a wall of clock times.
-      ['0 11/2 * * *',
-        '0 sekunnin kohdalla, kahden tunnin välein klo 11–23'],
+      ['0 11/2 * * *', 'kahden tunnin välein klo 11–23'],
       ['0 13/3 * * *', 'joka päivä klo 13, 16, 19 ja 22'],
       // Uniform offset strides (interval divides the cycle, start within the
       // first interval) keep the cadence form: a short minute/hour stride
@@ -269,7 +278,7 @@ describe('Suomi (fi):', function() {
       ['0 9-20,22 * * *', 'joka päivä klo 9–20 sekä klo 22'],
       ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 sekä klo 22.30'],
       ['0,30 8-18/2 * * *',
-        'klo 8, 10, 12, 14, 16 ja 18 aina minuuttien 0 ja 30 kohdalla'],
+        '0 ja 30 minuutin kohdalla, kahden tunnin välein klo 8–18'],
       ['*/15 30 9 * * *', '15 sekunnin välein, joka päivä klo 9.30'],
       ['1 1 * * * *', 'joka tunti 1 minuutin ja 1 sekunnin kohdalla'],
       ['*/15 * * * MON', '15 minuutin välein maanantaisin'],
@@ -280,10 +289,10 @@ describe('Suomi (fi):', function() {
       ['0 * * * MON', 'joka tunti maanantaisin'],
       ['*/15 * 13 * 5',
         '15 minuutin välein kuukauden 13. päivänä tai perjantaisin'],
-      // Hours-first reorder: anchored minute range/list over enumerated hours.
-      // SAT,SUN + ranged month included.
+      // A bounded hour stride reads as its bounded cadence after the minute
+      // range. SAT,SUN + ranged month included.
       ['0-30 9-17/2 * 6-8 SAT,SUN',
-        'klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla ' +
+        '0–30 minuutin kohdalla, kahden tunnin välein klo 9–17 ' +
         'sunnuntaisin ja lauantaisin kesäkuusta elokuuhun'],
       // Uneven step over list hours: enumerates into clock times.
       ['*/45 9,17 * 12 SAT,SUN',
@@ -377,8 +386,8 @@ describe('Suomi (fi):', function() {
     function() {
       run([
         ['30 */25 9-17/2 * * *',
-          '30 sekunnin kohdalla, klo 9, 11, 13, 15 ja 17 ' +
-          'aina minuuttien 0, 25 ja 50 kohdalla']
+          '30 sekunnin kohdalla, 0, 25 ja 50 minuutin kohdalla, ' +
+          'kahden tunnin välein klo 9–17']
       ]);
     });
 
@@ -472,7 +481,7 @@ describe('Suomi (fi):', function() {
       ['0-30 9-17 * * *', 'klo 9–17 aina minuuttien 0–30 kohdalla'],
       ['0,30 9-17 * * *',
         'klo 9–17 aina minuuttien 0 ja 30 kohdalla'],
-      ['0 9-17/2 * * *', 'klo 9, 11, 13, 15 ja 17'],
+      ['0 9-17/2 * * *', 'kahden tunnin välein klo 9–17'],
       ['0-30 1/6 * * *',
         '0–30 minuutin kohdalla, kuuden tunnin välein klo 1:stä alkaen'],
       ['* 8-18,22 * * *',

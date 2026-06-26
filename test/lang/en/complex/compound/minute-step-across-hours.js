@@ -36,13 +36,17 @@ describe('Minute step across multiple hours:', function() {
     ]);
   });
 
-  describe('uneven or bounded hour step (lists its hours)', function() {
+  describe('uneven hour step (reads as a bounded cadence)', function() {
     run([
       ['*/15 */10 * * *',
-        'every 15 minutes during the 12 a.m., 10 a.m., and 8 p.m. hours'],
+        'every 15 minutes, every ten hours from midnight through 8 p.m.']
+    ]);
+  });
+
+  describe('bounded hour step (reads as a bounded cadence)', function() {
+    run([
       ['*/20 9-17/2 * * *',
-        'every 20 minutes during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., ' +
-        'and 5 p.m. hours']
+        'every 20 minutes, every two hours from 9 a.m. through 5 p.m.']
     ]);
   });
 

@@ -76,7 +76,7 @@ describe('Input normalization:', function() {
       ['0 0-23/2 * * *', 'every two hours'],
       ['0-59/7 * * * *',
         'every seven minutes from 0 through 56 minutes past the hour'],
-      ['0 9-17/2 * * *', 'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+      ['0 9-17/2 * * *', 'every two hours from 9 a.m. through 5 p.m.']
     ]);
   });
 

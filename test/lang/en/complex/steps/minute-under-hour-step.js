@@ -12,7 +12,10 @@ describe('Discrete minutes under an hour step:', function() {
         'every day at 12:05 a.m., 6:05 a.m., 12:05 p.m., and 6:05 p.m.'],
       ['5 0-23/6 * * *',
         'every day at 12:05 a.m., 6:05 a.m., 12:05 p.m., and 6:05 p.m.'],
-      ['30 9-17/4 * * *', 'every day at 9:30 a.m., 1:30 p.m., and 5:30 p.m.']
+      // A bounded hour step has a distinct endpoint, so the minute leads its
+      // own clause and the hour reads as a bounded cadence (not clock times).
+      ['30 9-17/4 * * *',
+        '30 minutes past the hour, every four hours from 9 a.m. through 5 p.m.']
     ]);
   });
 

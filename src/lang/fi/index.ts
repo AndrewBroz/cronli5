@@ -639,6 +639,16 @@ function renderMinuteFrequency(
   const seg = stepSegment(ir.analyses.segments.minute!);
 
   if (plan.hours.kind === 'during') {
+    // A bounded or uneven hour stride reads as its endpoint-pinning cadence
+    // after the minute step ("15 minuutin välein, viiden tunnin välein klo
+    // 0–20").
+    const cadence = unevenHourCadence(ir, opts);
+
+    if (cadence !== null) {
+      return stepCycle60(seg, units.minute, opts) + ', ' + cadence +
+        trailingQualifier(ir, opts);
+    }
+
     // When the step renders as anchored ("kohdalla"), the per-hour windows
     // are redundant — use bare clock hours instead, then reorder to
     // hours-first: "klo <hours> aina minuuttien <spec> kohdalla".
@@ -699,9 +709,20 @@ function renderMinutesAcrossHours(
   plan: Extract<PlanNode, {kind: 'minutesAcrossHours'}>,
   opts: NormalizedOptions
 ): string {
+  // A bounded or uneven hour stride reads as its endpoint-pinning cadence after
+  // the minute clause ("joka minuutti, viiden tunnin välein klo 0–20"), not a
+  // wall of hour windows.
+  const cadence = unevenHourCadence(ir, opts);
+
   if (plan.form === 'wildcard') {
-    return 'joka minuutti ' + hourWindowsFromTimes(ir, plan.times, opts) +
-      trailingQualifier(ir, opts);
+    return cadence ?
+      'joka minuutti, ' + cadence + trailingQualifier(ir, opts) :
+      'joka minuutti ' + hourWindowsFromTimes(ir, plan.times, opts) +
+        trailingQualifier(ir, opts);
+  }
+
+  if (cadence !== null) {
+    return bareMinutes(ir, opts) + ', ' + cadence + trailingQualifier(ir, opts);
   }
 
   // Range+isolated hours: minute-first, bare minutes, sekä klo.
@@ -726,25 +747,25 @@ function renderMinuteSpanAcrossHourStep(
 ): string {
   // An hour-step plan's first hour segment is always a step segment.
   const segment = stepSegment(ir.analyses.segments.hour!);
+  // A bounded or uneven hour stride reads as its endpoint-pinning cadence; an
+  // offset-clean stride keeps its confinement / per-step phrasing.
+  const cadence = unevenHourCadence(ir, opts);
 
   // A wildcard span always sets the step off with a comma ("joka
   // minuutti, joka toinen tunti"); a restricted span joins a plain step
   // directly ("minuuteilla 0–30 joka toinen tunti").
-  // A wildcard minute (a cadence) is reached only for a clean step and is
-  // confined to every Nth hour; a restricted span is a per-hour window whose
-  // recurrence joins as a plain step.
+  // A wildcard minute (a cadence) is reached only for a clean step (a bounded
+  // or uneven step routes through minutesAcrossHours instead) and is confined
+  // to every Nth hour; a restricted span is a per-hour window + plain step.
   if (plan.form === 'wildcard') {
     return 'joka minuutti ' + everyNthHour(segment, opts) +
       trailingQualifier(ir, opts);
   }
 
-  // A bounded range-step (e.g. 9-17/2) whose fires enumerate as a klo-digit
-  // list renders hours-first. A clean or offset unbounded step (e.g. 1/6,
-  // */2) keeps minute-first with its step phrase.
-  if (segment.startToken.indexOf('-') !== -1) {
-    const hoursStr = kloList(segment.fires, opts);
-
-    return hoursFirstMinutes(hoursStr, ir, opts) + trailingQualifier(ir, opts);
+  // A bounded or uneven stride reads as its bounded cadence after the bare
+  // minutes ("minuuteilla 0–30, kahden tunnin välein klo 9–17").
+  if (cadence !== null) {
+    return bareMinutes(ir, opts) + ', ' + cadence + trailingQualifier(ir, opts);
   }
 
   return bareMinutes(ir, opts) + hourStepTail(segment, opts) +
@@ -852,6 +873,15 @@ function renderHourStep(
   plan: Extract<PlanNode, {kind: 'hourStep'}>,
   opts: NormalizedOptions
 ): string {
+  // A bounded or uneven hour step reads as its endpoint-pinning cadence
+  // ("kahden tunnin välein klo 9–17"); an offset-clean step keeps its bare or
+  // "alkaen" cadence.
+  const cadence = unevenHourCadence(ir, opts);
+
+  if (cadence !== null) {
+    return cadence + trailingQualifier(ir, opts);
+  }
+
   return stepHours(stepSegment(ir.analyses.segments.hour!), opts) +
     trailingQualifier(ir, opts);
 }
@@ -954,11 +984,16 @@ function renderCompactClockTimes(
       hourSegmentTimes(ir, plan.minute, ir.analyses.clockSecond, opts);
   }
 
-  // A minute list over purely enumerated hours (step fires, all singles) —
-  // hours-first, drop "joka tunti".
-  const hoursStr = hourSegmentTimes(ir, 0, null, opts);
-  const phrase = hoursFirstMinutes(hoursStr, ir, opts) +
-    trailingQualifier(ir, opts);
+  // A bounded or uneven hour stride reads as its endpoint-pinning cadence after
+  // the bare minute clause ("minuuteilla 0, 25 ja 50, viiden tunnin välein klo
+  // 0–20"), not a wall of clock-time columns.
+  const cadence = unevenHourCadence(ir, opts);
+  const phrase = cadence ?
+    bareMinutes(ir, opts) + ', ' + cadence + trailingQualifier(ir, opts) :
+    // A minute list over purely enumerated hours (step fires, all singles) —
+    // hours-first, drop "joka tunti".
+    hoursFirstMinutes(hourSegmentTimes(ir, 0, null, opts), ir, opts) +
+      trailingQualifier(ir, opts);
 
   return ir.analyses.clockSecond ?
     secondsLeadClause(ir, opts) + ', ' + phrase :
@@ -1144,12 +1179,56 @@ function hourStrideCadence(
     kloRange({hour: start, minute: 0}, {hour: last, minute: 0}, opts);
 }
 
+// An hour list's arithmetic progression, or null when its values are not a step
+// the renderer should speak as a cadence. The core rewrites a uneven hour step
+// (whose interval does not tile 24, e.g. `*/5` → 0,5,10,15,20) to its literal
+// fire list, indistinguishable in the IR from a hand-written list; the renderer
+// recovers the cadence from the values. A progression starting at zero is a
+// `*/n` step however short (0,7,14,21 is `*/7`); a non-zero progression is only
+// a step when it is too long to be a deliberate clock-time list (9,17 is two
+// named times, not a cadence). Interval one is a plain range, never a step.
+function hourListStride(
+  values: number[]
+): {start: number; interval: number; last: number} | null {
+  if (values.length < 2) {
+    return null;
+  }
+
+  const interval = values[1] - values[0];
+
+  if (interval < 2) {
+    return null;
+  }
+
+  for (let i = 2; i < values.length; i += 1) {
+    if (values[i] - values[i - 1] !== interval) {
+      return null;
+    }
+  }
+
+  if (values[0] !== 0 && values.length < 5) {
+    return null;
+  }
+
+  return {interval, last: values[values.length - 1], start: values[0]};
+}
+
+// Whether an hour stride wraps the day cleanly from within its first interval
+// (a `*/n` from the top, or a `m/n` offset with m < n that divides 24): such a
+// stride has no distinct endpoint and keeps its bare or "alkaen" cadence. Every
+// other stride — a uneven interval, or one starting at or past its interval (a
+// bounded `a-b/n`) — is a bounded set the cadence pins both endpoints of.
+function offsetCleanStride(
+  stride: {start: number; interval: number}
+): boolean {
+  return stride.start < stride.interval && 24 % stride.interval === 0;
+}
+
 // The hour field's stride, or null when the hour is not a cadence: a step
 // segment yields its {start, interval, last} directly; an all-single hour list
-// yields one only when its values form a long-enough arithmetic progression
-// (so an irregular list like 9,17 keeps enumerating). The IR is unchanged —
-// the renderer recognizes the stride and speaks it as a cadence instead of the
-// clock-time cross-product.
+// yields one only when its values form a step progression (so an irregular list
+// like 9,17 keeps enumerating). The IR is unchanged — the renderer recognizes
+// the stride and speaks it as a cadence, not the clock-time cross-product.
 function hourStride(
   ir: IR
 ): {start: number; interval: number; last: number} | null {
@@ -1162,6 +1241,13 @@ function hourStride(
 
   if (segments.length === 1 && segments[0].kind === 'step') {
     const segment = segments[0];
+
+    // A bounded step that fires only once (e.g. `9-10/5` -> just 9) is a single
+    // value, not a stride: it has no interval to speak and no endpoint to pin.
+    if (segment.fires.length < 2) {
+      return null;
+    }
+
     const start = segment.startToken === '*' ?
       0 :
       +segment.startToken.split('-')[0];
@@ -1171,9 +1257,25 @@ function hourStride(
   }
 
   const values = singleValues(segments);
-  const step = values && arithmeticStep(values);
 
-  return step || null;
+  return values && hourListStride(values);
+}
+
+// The bounded cadence for an hour stride that pins both clock-time endpoints,
+// or null when the hour is not such a stride. The core rewrites a uneven step
+// to its fire list, so a minute window/list/step crossed with it lands in the
+// enumerating list paths; there the bounded hour reads better as its cadence
+// ("…, viiden tunnin välein klo 0–20") than as a wall of clock times. An
+// offset-clean stride keeps its existing confinement form, so only the
+// endpoint-bearing case routes here.
+function unevenHourCadence(ir: IR, opts: NormalizedOptions): string | null {
+  const stride = hourStride(ir);
+
+  if (!stride || offsetCleanStride(stride)) {
+    return null;
+  }
+
+  return hourStrideCadence(stride, opts);
 }
 
 // The second's status against a pinned minute: a wildcard or sub-minute step
@@ -1230,7 +1332,13 @@ function hourCadence(ir: IR, minute: number,
 
   const fires = (stride.last - stride.start) / stride.interval + 1;
 
-  if (ir.pattern.second === '0' && fires <= maxClockTimes) {
+  // A short stride that spells out as few clock times stays an enumeration only
+  // when it wraps cleanly (an offset-clean stride with no endpoint): the bare
+  // or "alkaen" form is no shorter than the list. A bounded or uneven stride
+  // has no clean wrap, so its endpoint-pinning cadence ("viiden tunnin välein
+  // klo 0–20") reads better however short.
+  if (ir.pattern.second === '0' && fires <= maxClockTimes &&
+      offsetCleanStride(stride)) {
     return null;
   }
 
@@ -1246,6 +1354,13 @@ function hourCadence(ir: IR, minute: number,
   if (confined) {
     return secondsLeadClause(ir, opts) + ' minuutin ajan ' +
       everyNthHour(segment, opts) + trailingQualifier(ir, opts);
+  }
+
+  // A plain top-of-the-hour fire (minute 0 with no meaningful second) has no
+  // lead clause to fold in, so the bounded cadence stands on its own ("viiden
+  // tunnin välein klo 0–20").
+  if (minute === 0 && ir.pattern.second === '0') {
+    return hourStrideCadence(stride, opts) + trailingQualifier(ir, opts);
   }
 
   return hourCadenceLead(ir, minute, opts) + ', ' +

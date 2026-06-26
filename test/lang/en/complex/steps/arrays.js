@@ -35,17 +35,20 @@ describe('Valid arrays with steps:', function() {
       [['0', '2/3', '*', '*', '*'], 'every three hours from 2 a.m.'],
       [
         ['0', '*/5', '*', '*', '*'],
-        'every day at 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m.'
+        'every five hours from midnight through 8 p.m.'
       ],
       [
         ['0', '*/7', '*', '*', '*'],
-        'every day at 12 a.m., 7 a.m., 2 p.m., and 9 p.m.'
+        'every seven hours from midnight through 9 p.m.'
       ],
       [['0', '*/8', '*', '*', '*'], 'every eight hours'],
-      [['0', '*/10', '*', '*', '*'], 'every day at 12 a.m., 10 a.m., and 8 p.m.'],
+      [['0', '*/10', '*', '*', '*'],
+        'every ten hours from midnight through 8 p.m.'],
       [['0', '*/12', '*', '*', '*'], 'every 12 hours'],
-      [['0', '*/17', '*', '*', '*'], 'every day at 12 a.m. and 5 p.m.'],
-      [['0', '*/20', '*', '*', '*'], 'every day at 12 a.m. and 8 p.m.']
+      [['0', '*/17', '*', '*', '*'],
+        'every 17 hours from midnight through 5 p.m.'],
+      [['0', '*/20', '*', '*', '*'],
+        'every 20 hours from midnight through 8 p.m.']
     ]);
   });
 
@@ -63,7 +66,7 @@ describe('Valid arrays with steps:', function() {
       [['0', '0', '*/3', '*', '*', '*'], 'every three hours'],
       [
         ['0', '0', '*/5', '*', '*', '*'],
-        'every day at 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m.'
+        'every five hours from midnight through 8 p.m.'
       ]
     ]);
   });

@@ -173,7 +173,7 @@ describe('Deutsch (de):', function() {
       run([
         ['30 */25 9-17/2 * * *',
           'in Sekunde 30, in den Minuten 0, 25 und 50, ' +
-          'um 9, 11, 13, 15 und 17 Uhr']
+          'alle 2 Stunden von 9 bis 17 Uhr']
       ]);
     });
 
@@ -215,7 +215,7 @@ describe('Deutsch (de):', function() {
     run([
       ['0-30 9,17 * * *', 'in den Minuten 0 bis 30, um 9 und 17 Uhr'],
       ['0-30 9-17/2 * * *',
-        'in den Minuten 0 bis 30, um 9, 11, 13, 15 und 17 Uhr'],
+        'in den Minuten 0 bis 30, alle 2 Stunden von 9 bis 17 Uhr'],
       ['5,10 9,17/2 * * *',
         'in den Minuten 5 und 10, um 9, 17, 19, 21 und 23 Uhr'],
       ['0,30 9,17/2 * * *',
@@ -255,10 +255,31 @@ describe('Deutsch (de):', function() {
       ['3/2 1/2 * * * *',
         'alle 2 Sekunden von Sekunde 3 bis 59 jeder Minute, ' +
         'alle 2 Minuten ab Minute 1 jeder Stunde'],
-      // Uneven hour steps render as their fire list, so they take the daily
-      // frame too (a bare clock list, like clockTimes).
-      ['0 */5 * * *', 'täglich um 0, 5, 10, 15 und 20 Uhr'],
-      ['0 */9 * * *', 'täglich um 0, 9 und 18 Uhr']
+      // A uneven hour step (24 not divisible by the step) has no clean wrap, so
+      // it reads as a bounded cadence pinning both endpoints, not a clock list.
+      ['0 */5 * * *', 'alle 5 Stunden von 0 bis 20 Uhr'],
+      ['0 */9 * * *', 'alle 9 Stunden von 0 bis 18 Uhr']
+    ]);
+  });
+
+  // A bounded or uneven hour stride reads as its endpoint-pinning cadence
+  // across the minute paths; an offset-clean bounded step keeps its fires, and
+  // a single-fire bounded step is just that value.
+  describe('Stundenkadenz über die Minutenpfade', function() {
+    run([
+      ['0 9-17/2 * * *', 'alle 2 Stunden von 9 bis 17 Uhr'],
+      ['0 0,8,16 * * *', 'täglich um 0, 8 und 16 Uhr'],
+      ['* */5 * * *', 'jede Minute, alle 5 Stunden von 0 bis 20 Uhr'],
+      ['*/25 */5 * * *',
+        'in den Minuten 0, 25 und 50, alle 5 Stunden von 0 bis 20 Uhr'],
+      ['0-30 */5 * * *',
+        'in den Minuten 0 bis 30, alle 5 Stunden von 0 bis 20 Uhr'],
+      ['* 9-17/2 * * *', 'jede Minute, alle 2 Stunden von 9 bis 17 Uhr'],
+      ['0-30 9-17/2 * * *',
+        'in den Minuten 0 bis 30, alle 2 Stunden von 9 bis 17 Uhr'],
+      ['0 1-23/2 * * *',
+        'um 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 und 23 Uhr'],
+      ['0 9-10/5 * * *', 'täglich um 9 Uhr']
     ]);
   });
 
@@ -393,10 +414,10 @@ describe('Deutsch (de):', function() {
       // minuteFrequency across discrete hours (each a full hour) / a step.
       ['*/15 9,17 * * *',
         'alle 15 Minuten von 9 bis 9:59 Uhr und von 17 bis 17:59 Uhr'],
-      // A bounded hour step lists its active hours; beyond three a compact
-      // list reads better than sprawling windows (panel-preferred).
+      // A bounded hour step has a distinct endpoint, so it reads as a bounded
+      // cadence pinning both ends rather than listing its active hours.
       ['*/20 9-17/2 * * *',
-        'alle 20 Minuten in den Stunden 9, 11, 13, 15 und 17 Uhr'],
+        'alle 20 Minuten, alle 2 Stunden von 9 bis 17 Uhr'],
       // A clean (unbounded) hour step confines the cadence to every Nth hour,
       // not a juxtaposed second cadence ("alle 2 Stunden").
       ['*/15 */2 * * *', 'alle 15 Minuten in jeder zweiten Stunde'],
@@ -405,9 +426,9 @@ describe('Deutsch (de):', function() {
       ['*/15 1/2 * * *', 'alle 15 Minuten in jeder zweiten Stunde ab 1 Uhr'],
       ['*/15 1/3 * * *', 'alle 15 Minuten in jeder dritten Stunde ab 1 Uhr'],
       ['* 1/2 * * *', 'jede Minute in jeder zweiten Stunde ab 1 Uhr'],
-      // An uneven hour step lists its active hours the same way.
+      // A uneven hour step reads as its bounded cadence the same way.
       ['*/15 */5 * * *',
-        'alle 15 Minuten in den Stunden 0, 5, 10, 15 und 20 Uhr'],
+        'alle 15 Minuten, alle 5 Stunden von 0 bis 20 Uhr'],
       // The same clean hour step composed with a second clause.
       ['0-10 */15 */2 L * *',
         'in den Sekunden 0 bis 10 jeder Minute, ' +

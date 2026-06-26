@@ -34,14 +34,20 @@ describe('Valid strings with steps:', function() {
       ['0 */2 * * *', 'every two hours'],
       ['0 */3 * * *', 'every three hours'],
       ['0 2/3 * * *', 'every three hours from 2 a.m.'],
+      // An uneven hour step (24 not divisible by the step) reads as a bounded
+      // cadence, not a wall of clock times: the cadence names the interval and
+      // pins both clock-time endpoints, since the set does not wrap cleanly.
       ['0 */5 * * *',
-        'every day at 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m.'],
-      ['0 */7 * * *', 'every day at 12 a.m., 7 a.m., 2 p.m., and 9 p.m.'],
+        'every five hours from midnight through 8 p.m.'],
+      ['0 */7 * * *', 'every seven hours from midnight through 9 p.m.'],
       ['0 */8 * * *', 'every eight hours'],
-      ['0 */10 * * *', 'every day at 12 a.m., 10 a.m., and 8 p.m.'],
+      // A hand-written list that tiles the day from the top (0,8,16 = */8)
+      // wraps cleanly with no endpoint, so it stays a short enumeration.
+      ['0 0,8,16 * * *', 'every day at 12 a.m., 8 a.m., and 4 p.m.'],
+      ['0 */10 * * *', 'every ten hours from midnight through 8 p.m.'],
       ['0 */12 * * *', 'every 12 hours'],
-      ['0 */17 * * *', 'every day at 12 a.m. and 5 p.m.'],
-      ['0 */20 * * *', 'every day at 12 a.m. and 8 p.m.'],
+      ['0 */17 * * *', 'every 17 hours from midnight through 5 p.m.'],
+      ['0 */20 * * *', 'every 20 hours from midnight through 8 p.m.'],
       // A uniform offset hour stride (interval divides 24, start within the
       // first interval) keeps its cadence form; a short one lists its fires.
       ['0 8/12 * * *', 'at 8 a.m. and 8 p.m.'],
@@ -68,7 +74,7 @@ describe('Valid strings with steps:', function() {
       ['0 */4 * * * *', 'every four minutes'],
       ['0 0 */3 * * *', 'every three hours'],
       ['0 0 */5 * * *',
-        'every day at 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m.']
+        'every five hours from midnight through 8 p.m.']
     ]);
   });
 });

@@ -2,9 +2,10 @@ import {run} from '../../../../runner.js';
 
 // Behavior spec for a minute wildcard or plain range combined with an hour
 // step. A wildcard minute is a cadence and must be confined to the active
-// hours ("during every other hour" for a clean step, else the hour list), never
-// juxtaposed with a second cadence. A plain range is a per-hour window whose
-// recurrence trails as its own clause ("…, every two hours").
+// hours ("during every other hour" for an offset-clean step, else a bounded
+// cadence pinning both endpoints), never juxtaposed with a second cadence. A
+// plain range is a per-hour window whose recurrence trails as its own clause
+// ("…, every two hours").
 
 describe('Minute span across an hour step:', function() {
   describe('minute range', function() {
@@ -13,7 +14,7 @@ describe('Minute span across an hour step:', function() {
         'every minute from 0 through 30 past the hour, every two hours'],
       ['0-30 9-17/2 * * *',
         'every minute from 0 through 30 past the hour, ' +
-        'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+        'every two hours from 9 a.m. through 5 p.m.']
     ]);
   });
 
@@ -29,10 +30,11 @@ describe('Minute span across an hour step:', function() {
         'every two hours from 1 a.m.'],
       ['5,30 */2 * * *',
         'at 5 and 30 minutes past the hour, every two hours'],
-      // An unclean stride still enumerates its hours (compactClockTimes).
+      // A bounded stride has a distinct endpoint, so its hours read as a
+      // bounded cadence rather than a wall of clock times.
       ['3/2 9-17/2 * * *',
         'every two minutes from 3 through 59 minutes past the hour, ' +
-        'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+        'every two hours from 9 a.m. through 5 p.m.']
     ]);
   });
 
@@ -41,8 +43,10 @@ describe('Minute span across an hour step:', function() {
       ['* */2 * * *', 'every minute during every other hour'],
       ['* */3 * * *', 'every minute during every third hour'],
       ['* 1/2 * * *', 'every minute during every other hour starting at 1 a.m.'],
+      // A uneven hour step has no clean "every Nth hour" wrap, so it reads as a
+      // bounded cadence rather than listing its hours.
       ['* */10 * * *',
-        'every minute during the 12 a.m., 10 a.m., and 8 p.m. hours']
+        'every minute, every ten hours from midnight through 8 p.m.']
     ]);
   });
 
