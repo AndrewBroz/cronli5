@@ -106,6 +106,17 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
         '每天9点0分、10点0分、11点0分、正午、13点0分、14点0分、' +
         '15点0分、16点0分和17点0分的第30秒'],
       ['0 0 */2 * * *', '每2小时'],
+      // An hour range stated inside a list reads as the span the source wrote,
+      // plus the single — "9点至20点和22点" — not the 13 hours it expands to,
+      // the same span-plus-single en/es/de/fi render. The range keeps zh's "至"
+      // idiom; a pure list of singles (9,17) has no range to collapse and is
+      // unchanged. Two ranges each keep their own span.
+      ['* 5 9-20,22 * * *', '每天每小时5分，在9点至20点和22点每秒'],
+      ['0 0 9-20,22 * * *', '每天9点至20点和22点'],
+      ['* * 9-20,22 * * *', '在9点至20点和22点，每分钟每秒'],
+      ['0 0 9-12,14-17 * * *', '每天9点至正午和14点至17点'],
+      // Guard: a pure single-value hour list has no range, so nothing collapses.
+      ['* 5 9,17 * * *', '每天9点5分和17点5分每秒'],
       // A single minute over a lone hour keeps the composed clock time
       // ("0点2分"), attaching the second to it rather than splitting the
       // hour and minute apart.

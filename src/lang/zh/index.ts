@@ -314,9 +314,30 @@ function renderMinutePast(ir: IR): string {
   return minuteHourClause(ir);
 }
 
-// The hour list as clock words: "9点、11点和13点".
+// One hour segment as clock words by its form: a range is a span ("9点至20点"),
+// a single is one clock word ("22点"), a step keeps its fires enumerated as
+// clock words ("9点、11点、13点"). A range stated as a list element should read
+// as the span the source wrote, not the hours it expands to — the same choice
+// en/es/de/fi make ("from 9 a.m. through 8 p.m. and at 10 p.m.").
+function hourSegmentWords(segment: Segment): string[] {
+  if (segment.kind === 'range') {
+    return [hourWord(+segment.bounds[0]) + '至' + hourWord(+segment.bounds[1])];
+  }
+
+  if (segment.kind === 'step') {
+    return segment.fires.map(hourWord);
+  }
+
+  return [hourWord(+segment.value)];
+}
+
+// The hour field as clock words, by segment form: "9点、11点和13点" for a list
+// of singles, "9点至20点和22点" for a range plus a single. Each segment renders
+// as the operator the source wrote (range → span), not its expanded fires.
 function hourList(ir: IR): string {
-  return joinAnd(hourFires(ir).map(hourWord));
+  const words = fieldSegments(ir, 'hour').flatMap(hourSegmentWords);
+
+  return joinAnd(words);
 }
 
 // A frame that confines a cadence to active hours: a range gives "在F点至T点之
