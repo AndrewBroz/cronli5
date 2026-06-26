@@ -210,16 +210,22 @@ describe('Suomi (fi):', function() {
       ['0 9-17 * * *', 'joka tunti klo 9–17'],
       ['0 22-2 * * *', 'joka tunti klo 22–2'],
       ['30 9-17 * * *', '30 minuutin kohdalla klo 9.30–17.30'],
-      ['*/15 9,17 * * *',
-        '15 minuutin välein klo 9.00–9.59 ja 17.00–17.59'],
+      // Under an hour LIST or STEP, the minute is named once and the on-the-
+      // hour hours are listed; a per-hour minute span is never repeated. (A
+      // real hour RANGE keeps its window — see the guards below.)
+      ['*/15 9,17 * * *', '15 minuutin välein klo 9 ja 17'],
       // A uniform offset stride with many fires keeps the cadence form (not
-      // an anchored list) even under restricted hours.
+      // an anchored list); the hour list is named once.
       ['2/3 9,17 * * *',
         'kolmen minuutin välein jokaisen tunnin minuutista 2 alkaen ' +
-        'klo 9.00–9.59 ja 17.00–17.59'],
+        'klo 9 ja 17'],
       ['*/15 9-17 * * MON-FRI',
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
-      ['* 9,17 * * *', 'joka minuutti klo 9.00–9.59 ja 17.00–17.59'],
+      ['* 9,17 * * *', 'joka minuutti klo 9 ja 17'],
+      ['* */5 * * *', 'joka minuutti klo 0, 5, 10, 15 ja 20'],
+      ['5/15 */5 * * *',
+        '15 minuutin välein jokaisen tunnin minuutista 5 alkaen ' +
+        'klo 0, 5, 10, 15 ja 20'],
       ['0-30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 0–30 kohdalla'],
       // Minute range over range+isolated hours: minute-first, sekä klo.
       ['0-30 9-20,22 * * *', '0–30 minuutin kohdalla klo 9–20 sekä klo 22'],
@@ -230,8 +236,7 @@ describe('Suomi (fi):', function() {
       ['5,30 1/2 * * *',
         '5 ja 30 minuutin kohdalla, kahden tunnin välein klo 1:stä alkaen'],
       ['* */2 * * *', 'joka minuutti joka toisen tunnin aikana'],
-      ['* */10 * * *',
-        'joka minuutti klo 0.00–0.59, 10.00–10.59 ja 20.00–20.59'],
+      ['* */10 * * *', 'joka minuutti klo 0, 10 ja 20'],
       // A clean hour step confines the cadence to every Nth hour, not a
       // second, conflicting cadence ("joka toinen tunti").
       ['*/15 */2 * * *', '15 minuutin välein joka toisen tunnin aikana'],
@@ -243,8 +248,7 @@ describe('Suomi (fi):', function() {
       ['* 1/2 * * *', 'joka minuutti joka toisen tunnin aikana kello 1:stä alkaen'],
       // An uneven or bounded hour step lists its active hours as windows.
       ['*/20 9-17/2 * * *',
-        '20 minuutin välein klo 9.00–9.59, 11.00–11.59, ' +
-        '13.00–13.59, 15.00–15.59 ja 17.00–17.59'],
+        '20 minuutin välein klo 9, 11, 13, 15 ja 17'],
       ['0 */2 * * *', 'kahden tunnin välein'],
       ['0 */5 * * *', 'joka päivä klo 0, 5, 10, 15 ja 20'],
       ['0 */10 * * *', 'joka päivä klo 0, 10 ja 20'],
@@ -367,7 +371,7 @@ describe('Suomi (fi):', function() {
       // Minute step leads its within-firing second anchor (comma separates).
       ['5,30 */15 9,17 1,15 * *',
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
-        'klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä'],
+        'klo 9 ja 17 kuukauden 1. ja 15. päivänä'],
       ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "joka sekunti, kahden minuutin välein".
@@ -447,9 +451,11 @@ describe('Suomi (fi):', function() {
       ['0 0 */2 * *', 'joka 2. päivä keskiyöllä', {short: true}],
       ['*/5 * * * *', '5 minuutin välein', {short: true}],
       ['0 9-10/5 * * *', 'klo 9'],
+      // An hour STEP segment fires on discrete on-the-hour hours (not a span),
+      // so it lists those hours once rather than a per-hour window each. A real
+      // hour RANGE segment ('8-18,22' above) keeps its window.
       ['* 1-13/2,20 * * *',
-        'joka minuutti klo 1.00–1.59, 3.00–3.59, 5.00–5.59, 7.00–7.59, ' +
-        '9.00–9.59, 11.00–11.59, 13.00–13.59 ja 20.00–20.59']
+        'joka minuutti klo 1, 3, 5, 7, 9, 11, 13 ja 20']
     ]);
   });
 

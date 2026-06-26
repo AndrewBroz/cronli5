@@ -1276,23 +1276,32 @@ function kloFromTimes(
   return hourSegmentTimes(ir, 0, null, opts);
 }
 
-// Each fire hour as its own one-hour dash window under a single klo:
-// "klo 9.00–9.59 ja 17.00–17.59". Finnish prefers this to the English
-// "during the 9 a.m. and 5 p.m. hours" shape.
+// The hours accompanying a named-once minute clause under an hour list or
+// step. On-the-hour hours (a fires set, or a segment set with no real range)
+// are listed once — "klo 0, 5, 10, 15 ja 20" — so the minute is never repeated
+// as a per-hour span. A real hour RANGE segment is a genuine span and keeps its
+// per-segment window ("klo 8.00–18.59 ja 22.00–22.59"), mirroring the other
+// languages, which list discrete hours but keep range windows.
 function hourWindowsFromTimes(
   ir: IR,
   times: HourTimesPlan,
   opts: NormalizedOptions
 ): string {
   if (times.kind === 'fires') {
-    return 'klo ' + joinList(times.fires.map(function window(hour: number) {
-      return hourWindowDigits(hour, opts);
-    }));
+    return kloList(times.fires, opts);
+  }
+
+  const segments = ir.analyses.segments.hour!;
+
+  if (!segments.some(function ranged(segment: Segment) {
+    return segment.kind === 'range';
+  })) {
+    return kloList(hourSegmentFires(segments), opts);
   }
 
   const pieces: string[] = [];
 
-  ir.analyses.segments.hour!.forEach(function window(segment: Segment) {
+  segments.forEach(function window(segment: Segment) {
     if (segment.kind === 'range') {
       pieces.push(rangeDigits({hour: +segment.bounds[0], minute: 0},
         {hour: +segment.bounds[1], minute: 59}, opts));
@@ -1308,6 +1317,23 @@ function hourWindowsFromTimes(
   });
 
   return 'klo ' + joinList(pieces);
+}
+
+// The on-the-hour fires of a range-free hour segment set, in order: a step
+// segment contributes its enumerated fires, a single its one value.
+function hourSegmentFires(segments: Segment[]): number[] {
+  const hours: number[] = [];
+
+  segments.forEach(function each(segment: Segment) {
+    if (segment.kind === 'step') {
+      hours.push(...segment.fires);
+    }
+    else if (segment.kind === 'single') {
+      hours.push(+segment.value);
+    }
+  });
+
+  return hours;
 }
 
 // "9.00–9.59": one hour as a dash window, in digits.
