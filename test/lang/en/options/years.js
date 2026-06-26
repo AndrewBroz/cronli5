@@ -13,7 +13,7 @@ describe('Years option:', function() {
     ['*/5 * * * * 2030', 'every five minutes in 2030', options],
     [
       '0 0 12 25 12 * 2030-2035',
-      'on December 25 at noon in 2030-2035',
+      'on December 25 at noon in 2030 through 2035',
       options
     ],
     [
@@ -27,27 +27,27 @@ describe('Years option:', function() {
     run([
       [
         '0 0 12 1 1 * */2',
-        'on January 1 at noon every two years',
+        'on January 1 at noon, every other year',
         options
       ],
       [
         '0 0 12 1 1 * */5',
-        'on January 1 at noon every five years',
+        'on January 1 at noon, every five years',
         options
       ],
       [
         '0 0 12 1 1 * */1',
-        'on January 1 at noon every year',
+        'on January 1 at noon, every year',
         options
       ],
       [
         '0 0 12 1 1 * 2030/2',
-        'on January 1 at noon every two years from 2030',
+        'on January 1 at noon, every other year from 2030',
         options
       ],
-      ['0 13 * * FRI */2', 'every Friday at 1 p.m. every two years', options],
-      ['0 9 * * * */10', 'every day at 9 a.m. every ten years', options],
-      ['*/5 * * * * */3', 'every five minutes every three years', options]
+      ['0 13 * * FRI */2', 'every Friday at 1 p.m., every other year', options],
+      ['0 9 * * * */10', 'every day at 9 a.m., every ten years', options],
+      ['*/5 * * * * */3', 'every five minutes, every three years', options]
     ]);
   });
 });

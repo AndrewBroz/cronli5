@@ -251,7 +251,7 @@ describe.skip('English core-set corrections:', function() {
         'in June every hour from 9 a.m. until 6 p.m. whenever the day is ' +
         'the 1st or a Friday'],
       ['30 5,10 9,17,19,21,23 * * 1',
-        'at 30 seconds past the minute, at five and ten minutes past the ' +
+        'at 30 seconds past the minute, at 5 and 10 minutes past the ' +
         'hour, at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. on Mondays'],
       ['30 5,10 9,17,19,21,23 1 * 5',
         'at 30 seconds past the minute, at 5 and 10 minutes past the hour, ' +

@@ -80,7 +80,7 @@ many more rows lives in
 | `0 12 1 1 *` | on January 1 at noon | At 12:00 PM, on day 1 of the month, only in January |
 | `0 12 * 11-2 *` | every day in November through February at noon | At 12:00 PM, November through February |
 | `0 0 * * 5L` | on the last Friday of the month at midnight | At 12:00 AM, on the last Friday of the month |
-| `5,10 30 9 * * MON` | at five and ten seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| `5,10 30 9 * * MON` | at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | `1/1 * * * *` | every minute from 1 through 59 past the hour | Every 1 minutes, starting at 1 minutes past the hour |
 <!-- END GENERATED: comparison -->
 

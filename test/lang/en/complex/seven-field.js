@@ -11,8 +11,9 @@ describe('Seven-field patterns:', function() {
       ['0 30 9 * * * 2030', 'every day at 9:30 a.m. in 2030'],
       ['0 0 12 1 1 * 2030', 'on January 1, 2030 at noon'],
       ['0 0 12 25 12 * 2030-2035',
-        'on December 25 at noon in 2030-2035'],
-      ['0 0 12 1 1 * */2', 'on January 1 at noon every two years'],
+        'on December 25 at noon in 2030 through 2035'],
+      ['0 0 12 1 1 * */2', 'on January 1 at noon, every other year'],
+      ['* * * * * * */2', 'every second, every other year'],
       ['*/15 30 9 * * * 2030',
         'every 15 seconds during minute :30 at 9 a.m. in 2030'],
       ['0 30 9 * * * *', 'every day at 9:30 a.m.']

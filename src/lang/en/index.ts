@@ -1507,26 +1507,44 @@ function seriesNumber(values: (number | string)[], opts: NormalizedOptions):
   };
 }
 
-// Render numeric fire values as number words, consistent across the set.
-function numberWords(fires: number[],
-  opts: NormalizedOptions): (string | number)[] {
-  return fires.map(seriesNumber(fires, opts));
+// The number style for an enumerated set of values: a genuine LIST (two or
+// more comma-separated values) reads as numerals throughout ("at 4, 6, and 9
+// minutes past the hour") even when every value is small; a lone value keeps
+// the dialect's spelled-when-small style ("at five minutes past the hour"),
+// matching the single-value renderers. The list comma is the cue that pushes
+// the eye to numerals.
+function listNumber(count: number, opts: NormalizedOptions):
+  (n: number | string) => string | number {
+  return count > 1 ?
+    function asNumeral(n) {
+      return '' + n;
+    } :
+    function spelled(n) {
+      return getNumber(n, opts);
+    };
 }
 
-// Render classified segments as words: singles as numbers, ranges as
-// "<a> through <b>" pairs, step segments as their enumerated fires. The
-// whole field shares one number style (all spelled or all numerals).
+// Render numeric fire values for an enumerated list: a multi-value list reads
+// as numerals, a lone value stays spelled (see `listNumber`).
+function numberWords(fires: number[],
+  opts: NormalizedOptions): (string | number)[] {
+  return fires.map(listNumber(fires.length, opts));
+}
+
+// Render classified segments as words for an enumerated list: singles as
+// numbers, ranges as "<a> through <b>" pairs, step segments as their
+// enumerated fires. A multi-value list numeralizes throughout; a lone value
+// keeps the spelled-when-small style (see `listNumber`).
 function segmentWords(segments: Segment[],
   opts: NormalizedOptions): (string | number)[] {
-  const values = segments.flatMap(function collect(segment):
-    (string | number)[] {
+  const count = segments.reduce(function tally(sum, segment) {
     if (segment.kind === 'range') {
-      return segment.bounds;
+      return sum + 1;
     }
 
-    return segment.kind === 'step' ? segment.fires : [segment.value];
-  });
-  const num = seriesNumber(values, opts);
+    return sum + (segment.kind === 'step' ? segment.fires.length : 1);
+  }, 0);
+  const num = listNumber(count, opts);
 
   return segments.flatMap(function word(segment) {
     if (segment.kind === 'range') {
@@ -1737,8 +1755,17 @@ function dayQualifier(ir: IR, words: QualifierWords,
   // A weekday qualifier, optionally scoped to a month ("on Monday in
   // June").
   if (pattern.weekday !== '*') {
-    const weekdays = quartzWeekdayPhrase(pattern.weekday, opts) ||
-      words.weekday + weekdayPhrase(ir, words.recurringWeekday, opts);
+    const quartzWeekday = quartzWeekdayPhrase(pattern.weekday, opts);
+
+    // The Quartz weekday phrase ("on the last Friday of the month") carries
+    // the "of the month" recurrence a concrete month makes redundant; a plain
+    // weekday name takes the ordinary " in <month>" scope.
+    if (quartzWeekday) {
+      return monthScopeForRecurrence(quartzWeekday, ir, opts);
+    }
+
+    const weekdays = words.weekday +
+      weekdayPhrase(ir, words.recurringWeekday, opts);
 
     return weekdays + monthScope(ir, opts);
   }
@@ -1757,11 +1784,12 @@ function datePhrase(ir: IR, words: QualifierWords,
   const quartzDate = quartzDatePhrase(pattern.date, opts);
 
   if (quartzDate) {
-    return quartzDate + monthScope(ir, opts);
+    return monthScopeForRecurrence(quartzDate, ir, opts);
   }
 
   if (isOpenStep(pattern.date)) {
-    return words.stepDate + stepDates(pattern.date) + monthScope(ir, opts);
+    return monthScopeForRecurrence(
+      words.stepDate + stepDates(pattern.date), ir, opts);
   }
 
   if (pattern.month !== '*' && !monthFoldsIntoDate(ir)) {
@@ -1888,12 +1916,23 @@ function quartzWeekdayPhrase(weekdayField: string,
 // A calendar date with its month, in the dialect's order and day form:
 // cardinal "January 1" / "1 January", or ordinal "January 1st" for
 // dialects that set `ordinals`.
+//
+// A day-first dialect places the day before the month, but a single day before
+// a MULTI-month list garden-paths — "13 January, April, July and October"
+// reads as if the 13 belongs to January alone. The day is reattached to the
+// whole list with the possessive "the <ordinal> of <months>", which names the
+// same day across every month unambiguously.
 function monthDatePhrase(ir: IR, opts: NormalizedOptions): string {
   const month = monthName(ir, opts);
   // A month-day phrase is reached only with a restricted date, which has
   // segments.
   const days = renderSegments(ir.analyses.segments.date!,
     opts.style.ordinals ? getOrdinal : cardinalDay, opts);
+
+  if (opts.style.dayFirst && ir.shapes.date === 'single' &&
+      ir.shapes.month !== 'single') {
+    return 'the ' + getOrdinal(ir.pattern.date) + ' of ' + month;
+  }
 
   return opts.style.dayFirst ? days + ' ' + month : month + ' ' + days;
 }
@@ -1911,6 +1950,35 @@ function monthScope(ir: IR, opts: NormalizedOptions): string {
   }
 
   return ' in ' + monthName(ir, opts);
+}
+
+// Scope a phrase that ends in the recurrence "of the month" (the Quartz last-
+// day / last-weekday / nth-weekday forms and the open day-of-month step) by a
+// named month. A concrete month — a single name or a step ("every odd-numbered
+// month", "January, April, …") — makes "of the month" redundant: it names that
+// one month, so the phrase drops it and reads "in <month>". A month RANGE
+// distributes the recurrence across the span and keeps it, rephrased as "of
+// each month from <first> through <last>". A month list is left as-is (the
+// recurrence stays, scoped "in <names>"), and a wildcard month adds nothing.
+function monthScopeForRecurrence(phrase: string, ir: IR,
+  opts: NormalizedOptions): string {
+  if (ir.pattern.month === '*') {
+    return phrase;
+  }
+
+  const carriesRecurrence = phrase.indexOf(' of the month') !== -1;
+
+  if (carriesRecurrence && ir.shapes.month === 'range') {
+    return phrase.replace(' of the month', ' of each month') + ' from ' +
+      monthName(ir, opts);
+  }
+
+  if (carriesRecurrence &&
+      (ir.shapes.month === 'single' || ir.shapes.month === 'step')) {
+    return phrase.replace(' of the month', '') + ' in ' + monthName(ir, opts);
+  }
+
+  return phrase + ' in ' + monthName(ir, opts);
 }
 
 // Frequency phrase for an open day-of-month step, e.g. "every other day of
@@ -2063,7 +2131,10 @@ function applyYear(description: string, ir: IR,
   }
 
   if (yearField.indexOf('/') !== -1) {
-    return description + ' ' + stepYears(yearField, opts);
+    // A year step is a coarser cadence juxtaposed on the finished clause: a
+    // clause comma separates it ("every second, every other year"), matching
+    // how every other juxtaposed clause is joined.
+    return description + ', ' + stepYears(yearField, opts);
   }
 
   const label = yearLabel(yearField, opts);
@@ -2086,6 +2157,12 @@ function yearLabel(yearField: string, opts: NormalizedOptions): string {
     return joinList(yearField.split(','), opts);
   }
 
+  // A year range reads with the dialect's range connective ("2030 through
+  // 2035"), the same form every other field uses, not a raw hyphen.
+  if (yearField.indexOf('-') !== -1) {
+    return yearField.split('-').join(through(opts));
+  }
+
   return yearField;
 }
 
@@ -2100,7 +2177,11 @@ function stepYears(yearField: string, opts: NormalizedOptions): string {
     return 'every year';
   }
 
-  let phrase = 'every ' + getNumber(interval, opts) + ' years';
+  // Interval 2 reads as the parity idiom ("every other year"), matching the
+  // month and day-of-month step forms; longer intervals count the years.
+  let phrase = interval === 2 ?
+    'every other year' :
+    'every ' + getNumber(interval, opts) + ' years';
 
   if (start !== '*' && start !== '0') {
     phrase += ' from ' + start;

@@ -7,8 +7,8 @@ import {run} from '../../../../runner.js';
 describe('Step patterns with a bounded (range) start:', function() {
   describe('minutes', function() {
     run([
-      ['1-5/2 * * * *', 'at one, three, and five minutes past the hour'],
-      ['0-10/5 * * * *', 'at zero, five, and ten minutes past the hour'],
+      ['1-5/2 * * * *', 'at 1, 3, and 5 minutes past the hour'],
+      ['0-10/5 * * * *', 'at 0, 5, and 10 minutes past the hour'],
       ['1-5/1 * * * *',
         'every minute from one through five past the hour']
     ]);
@@ -16,7 +16,7 @@ describe('Step patterns with a bounded (range) start:', function() {
 
   describe('seconds', function() {
     run([
-      ['1-5/2 * * * * *', 'at one, three, and five seconds past the minute']
+      ['1-5/2 * * * * *', 'at 1, 3, and 5 seconds past the minute']
     ]);
   });
 

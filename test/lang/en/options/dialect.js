@@ -69,6 +69,8 @@ describe('Dialect option:', function() {
       ['0 0 * * *', 'every day at midnight', gb],
       ['0 12 1 1 *', 'on 1 January at midday', gb],
       ['0 12 1,15 6 *', 'on 1 and 15 June at midday', gb],
+      ['0 0 13 1,4,7,10 *',
+        'on the 13th of January, April, July and October at midnight', gb],
       ['0 0 12 25 12 * 2030', 'on 25 December 2030 at midday', gb],
       ['15 30 9 * * *', 'every day at 9.30.15am', gb],
       ['*/15 9-17 * * *', 'every 15 minutes from 9am to 5.45pm', gb],

@@ -68,7 +68,7 @@ are handled more fluently and accurately `cronli5`.
 <!-- BEGIN GENERATED: showcase -->
 | Pattern | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
-| `5,10 30 9 * * MON` | at five and ten seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| `5,10 30 9 * * MON` | at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | `*/15 30 9-17 * * MON-FRI` | every 15 seconds during minute :30 from 9 a.m. until 6 p.m. on Monday through Friday | Every 15 seconds, at 30 minutes past the hour, between 09:00 AM and 05:59 PM, Monday through Friday |
 | `15 30 9 * * MON` | every Monday at 9:30:15 a.m. | At 09:30:15 AM, only on Monday |
 | `45 17,9 0 * * *` | every day at 12:09:45 a.m. and 12:17:45 a.m. | At 45 seconds past the minute, at 9 and 17 minutes past the hour, at 12:00 AM |

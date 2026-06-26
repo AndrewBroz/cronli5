@@ -25,7 +25,8 @@ describe('Valid strings with lists:', function() {
   describe('minute lists', function() {
     run([
       ['0,30 * * * *', 'at 0 and 30 minutes past the hour'],
-      ['1,2,3 * * * *', 'at one, two, and three minutes past the hour'],
+      ['1,2,3 * * * *', 'at 1, 2, and 3 minutes past the hour'],
+      ['4,6,9 * * * *', 'at 4, 6, and 9 minutes past the hour'],
       ['0,15,30,45 * * * *', 'at 0, 15, 30, and 45 minutes past the hour']
     ]);
   });

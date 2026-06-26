@@ -18,7 +18,7 @@ describe('Seconds combined with a specific minute:', function() {
   describe('a second list or range leads with its own clause', function() {
     run([
       ['5,10 30 * * * *',
-        'at five and ten seconds past the minute, ' +
+        'at 5 and 10 seconds past the minute, ' +
         '30 minutes past the hour, every hour'],
       ['0-30 30 * * * *',
         'every second from 0 through 30 past the minute, ' +

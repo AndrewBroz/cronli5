@@ -25,7 +25,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
   describe('second list and range', function() {
     run([
       ['5,10 30 9 * * *',
-        'at five and ten seconds past the minute, every day at 9:30 a.m.'],
+        'at 5 and 10 seconds past the minute, every day at 9:30 a.m.'],
       ['0-30 30 9 * * *',
         'every second from 0 through 30 past the minute, ' +
         'every day at 9:30 a.m.']

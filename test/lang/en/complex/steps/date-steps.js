@@ -13,7 +13,12 @@ describe('Day-of-month step patterns:', function() {
       ['0 0 5/2 * *',
         'every other day of the month from the 5th at midnight'],
       ['0 0 */2 6 *',
-        'every other day of the month in June at midnight']
+        'every other day in June at midnight'],
+      ['0 0 */2 */2 *',
+        'every other day in every odd-numbered month at midnight'],
+      ['0 0 */2 1-3 *',
+        'every other day of each month from January through March at ' +
+        'midnight']
     ]);
   });
 
