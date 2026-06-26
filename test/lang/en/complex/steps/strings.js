@@ -57,7 +57,7 @@ describe('Valid strings with steps:', function() {
       // A uniform step segment beside a range in a folded clock-time set: the
       // range is a window, the step contributes its fires.
       ['5 8-10,2/4 * * *',
-        'at five minutes past the hour from 8 a.m. through 10:05 a.m. and ' +
+        'at five minutes past the hour from 8 a.m. until 11 a.m. and ' +
         'at 2:05 a.m., 6:05 a.m., 10:05 a.m., 2:05 p.m., 6:05 p.m., and ' +
         '10:05 p.m.']
     ]);

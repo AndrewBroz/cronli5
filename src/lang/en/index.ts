@@ -609,13 +609,35 @@ function boundedWindow(plan: PlanOf<'hourRange'>):
   return {from: plan.from, last, to: plan.to};
 }
 
-// An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m.". Windows
-// open at the top of the first hour and close at the minute field's last
-// fire within the final hour.
+// A contiguous hour range as a window phrase. The default English dialect
+// reads a MULTI-hour range as an up-to-but-not-including window — "from 9 a.m.
+// until 6 p.m." (the close is the top of the hour after the last, the sense
+// English uses for time windows: 9-17 runs until 6 p.m.); 23 wraps to
+// midnight. Every other dialect (and the compact `short` form) keeps the
+// "through <last fire>" span, closing on the minute field's last fire within
+// the final hour. A single-hour sub-hour window (`from === to`, e.g. */15 9
+// firing 9:00 through 9:45) is NOT a multi-hour range: its close is a real
+// fire inside the hour, so it always keeps "through" — naming "until 10 a.m."
+// would overstate the span past the last fire.
+function rangeWindow(from: number, to: number, throughMinute: number | string,
+  opts: NormalizedOptions): string {
+  const open = 'from ' + getTime({hour: from, minute: 0}, opts);
+
+  if (opts.style.untilWindow && !opts.short && from !== to) {
+    return open + ' until ' +
+      getTime({hour: (to + 1) % 24, minute: 0}, opts);
+  }
+
+  return open + through(opts) +
+    getTime({hour: to, minute: throughMinute}, opts);
+}
+
+// An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m." (or "from 9 a.m.
+// until 6 p.m." in the default dialect). Windows open at the top of the first
+// hour and close at the minute field's last fire within the final hour.
 function hourWindow(window: {from: number; to: number; last: number},
   opts: NormalizedOptions): string {
-  return 'from ' + getTime({hour: window.from, minute: 0}, opts) +
-    through(opts) + getTime({hour: window.to, minute: window.last}, opts);
+  return rangeWindow(window.from, window.to, window.last, opts);
 }
 
 // Expand a discrete set of hours and minutes into clock times prefixed by
@@ -718,9 +740,8 @@ function foldedHourWindows(ir: IR, plan: PlanOf<'compactClockTimes'>,
   // segments.
   ir.analyses.segments.hour!.forEach(function classify(segment) {
     if (segment.kind === 'range') {
-      windows.push('from ' + getTime({hour: segment.bounds[0], minute: 0},
-        opts) + through(opts) +
-        getTime({hour: segment.bounds[1], minute}, opts));
+      windows.push(rangeWindow(+segment.bounds[0], +segment.bounds[1],
+        minute, opts));
     }
     else if (segment.kind === 'step') {
       singles.push(...segment.fires);
@@ -1146,9 +1167,8 @@ function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
   // Reached only after hasHourWindow, so hour segments exist.
   ir.analyses.segments.hour!.forEach(function classify(segment) {
     if (segment.kind === 'range') {
-      windows.push('from ' + getTime({hour: +segment.bounds[0], minute: 0},
-        opts) + through(opts) +
-        getTime({hour: +segment.bounds[1], minute: 0}, opts));
+      windows.push(rangeWindow(+segment.bounds[0], +segment.bounds[1], 0,
+        opts));
     }
     else if (segment.kind === 'step') {
       singles.push(...segment.fires);

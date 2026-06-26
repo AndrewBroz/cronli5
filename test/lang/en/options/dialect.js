@@ -19,7 +19,7 @@ describe('Dialect option:', function() {
       ['0 0 12 25 12 * 2030', 'on December 25, 2030 at noon'],
       ['15 30 9 * * *', 'every day at 9:30:15 a.m.'],
       ['15 0 9 * * *', 'every day at 9:00:15 a.m.'],
-      ['*/15 9-17 * * *', 'every 15 minutes from 9 a.m. through 5:45 p.m.'],
+      ['*/15 9-17 * * *', 'every 15 minutes from 9 a.m. until 6 p.m.'],
       ['0 9 * * 1,3,5', 'every Monday, Wednesday, and Friday at 9 a.m.'],
       ['0 0 1-15 * *', 'on the 1st through 15th at midnight'],
       ['0 17 * * *', 'every day at 17:00', {ampm: false}]

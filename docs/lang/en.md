@@ -74,8 +74,8 @@ many more rows lives in
 | `0 0 * * *` | every day at midnight | At 12:00 AM |
 | `30 9 * * MON-FRI` | every Monday through Friday at 9:30 a.m. | At 09:30 AM, Monday through Friday |
 | `0 9,17 * * *` | every day at 9 a.m. and 5 p.m. | At 09:00 AM and 05:00 PM |
-| `0 22-2 * * *` | every hour from 10 p.m. through 2 a.m. | Every hour, between 10:00 PM and 02:00 AM |
-| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5:45 p.m. | Every 15 minutes, between 09:00 AM and 05:59 PM |
+| `0 22-2 * * *` | every hour from 10 p.m. until 3 a.m. | Every hour, between 10:00 PM and 02:00 AM |
+| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. until 6 p.m. | Every 15 minutes, between 09:00 AM and 05:59 PM |
 | `0 0 1,15 * *` | on the 1st and 15th at midnight | At 12:00 AM, on day 1 and 15 of the month |
 | `0 12 1 1 *` | on January 1 at noon | At 12:00 PM, on day 1 of the month, only in January |
 | `0 12 * 11-2 *` | every day in November through February at noon | At 12:00 PM, November through February |

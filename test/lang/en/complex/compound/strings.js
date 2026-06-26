@@ -4,7 +4,7 @@ import {run} from '../../../../runner.js';
 // - A list/range of minutes combined with specific hour(s) expands into the
 //   full set of clock times, e.g. "every day at 9 a.m., and 9:30 a.m.".
 // - A frequency (step) combined with an hour range trails with the active
-//   window, e.g. "every 15 minutes from 9 a.m. through 5:45 p.m.".
+//   window, e.g. "every 15 minutes from 9 a.m. until 6 p.m.".
 // - Time-anchored descriptions lead with the weekday ("every Monday through Friday
 //   at ..."); frequency descriptions trail with it ("... on Monday through Friday").
 // - A specific date with a month reads "on <Month> <ordinal> at <time>".
@@ -38,36 +38,36 @@ describe('Valid compound strings:', function() {
 
   describe('frequency within an hour range', function() {
     run([
-      ['*/15 9-17 * * *', 'every 15 minutes from 9 a.m. through 5:45 p.m.'],
+      ['*/15 9-17 * * *', 'every 15 minutes from 9 a.m. until 6 p.m.'],
       [
         '*/15 9-17 * * MON-FRI',
-        'every 15 minutes from 9 a.m. through 5:45 p.m. on Monday through Friday'
+        'every 15 minutes from 9 a.m. until 6 p.m. on Monday through Friday'
       ]
     ]);
   });
 
   describe('specific minute(s) within an hour range', function() {
     run([
-      ['0 9-17 * * *', 'every hour from 9 a.m. through 5 p.m.'],
+      ['0 9-17 * * *', 'every hour from 9 a.m. until 6 p.m.'],
       [
         '5 9-17 * * *',
-        'at five minutes past the hour from 9 a.m. through 5 p.m.'
+        'at five minutes past the hour from 9 a.m. until 6 p.m.'
       ],
       [
         '5 9-17 * 1 *',
-        'at five minutes past the hour from 9 a.m. through 5 p.m. in January'
+        'at five minutes past the hour from 9 a.m. until 6 p.m. in January'
       ],
       [
         '30 9-17 * * *',
-        'at 30 minutes past the hour from 9 a.m. through 5 p.m.'
+        'at 30 minutes past the hour from 9 a.m. until 6 p.m.'
       ],
       [
         '0,30 9-17 * * *',
-        'at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m.'
+        'at 0 and 30 minutes past the hour from 9 a.m. until 6 p.m.'
       ],
       [
         '15 9-17 * * MON-FRI',
-        'at 15 minutes past the hour from 9 a.m. through 5 p.m. ' +
+        'at 15 minutes past the hour from 9 a.m. until 6 p.m. ' +
           'on Monday through Friday'
       ]
     ]);

@@ -8,12 +8,12 @@ import {run} from '../../../runner.js';
 describe('Wrap-around ranges:', function() {
   describe('hours wrap across midnight', function() {
     run([
-      ['0 22-2 * * *', 'every hour from 10 p.m. through 2 a.m.'],
-      ['* 22-2 * * *', 'every minute from 10 p.m. through 2:59 a.m.'],
-      ['*/15 22-2 * * *', 'every 15 minutes from 10 p.m. through 2:45 a.m.'],
+      ['0 22-2 * * *', 'every hour from 10 p.m. until 3 a.m.'],
+      ['* 22-2 * * *', 'every minute from 10 p.m. until 3 a.m.'],
+      ['*/15 22-2 * * *', 'every 15 minutes from 10 p.m. until 3 a.m.'],
       ['0-30 22-2 * * *',
         'every minute from 0 through 30 past the hour, ' +
-        'from 10 p.m. through 2 a.m.']
+        'from 10 p.m. until 3 a.m.']
     ]);
   });
 
@@ -46,7 +46,7 @@ describe('Wrap-around ranges:', function() {
 
   describe('24-hour option', function() {
     run([
-      ['0 17-9 * * *', 'every hour from 17:00 through 09:00', {ampm: false}]
+      ['0 17-9 * * *', 'every hour from 17:00 until 10:00', {ampm: false}]
     ]);
   });
 });

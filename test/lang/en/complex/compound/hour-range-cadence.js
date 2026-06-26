@@ -6,7 +6,7 @@ import {run} from '../../../../runner.js';
 // ("9:00:30 a.m., 10:00:30 a.m., …", nine times for 9-17). The hours fire at
 // the same minute:second every hour across the range, so it now reads as the
 // hour-range window: the second/minute lead clause, then "every hour from
-// 9 a.m. through 5 p.m." (and any non-contiguous hour appended as "and at Z").
+// 9 a.m. until 6 p.m." (and any non-contiguous hour appended as "and at Z").
 // This is the hour-RANGE analog of the hour-STEP cadence (hour-step-cadence.js).
 // Renderer-only; the IR is unchanged. A pure single-value hour list (9,17) has
 // no range to form a window and still enumerates.
@@ -19,16 +19,16 @@ describe('Hour range under a fixed minute and a second reads as a window:',
     describe('minute 0 (folds into the hour)', function() {
       run([
         ['30 0 9-17 * * *',
-          'at 30 seconds past the hour, every hour from 9 a.m. through 5 p.m.'],
+          'at 30 seconds past the hour, every hour from 9 a.m. until 6 p.m.'],
         ['5 0 9-17 * * *',
-          'at five seconds past the hour, every hour from 9 a.m. through ' +
-          '5 p.m.'],
+          'at five seconds past the hour, every hour from 9 a.m. until ' +
+          '6 p.m.'],
         ['5,30 0 9-17 * * *',
           'at 5 and 30 seconds past the hour, every hour from 9 a.m. ' +
-          'through 5 p.m.'],
+          'until 6 p.m.'],
         ['0-10 0 9-17 * * *',
           'every second from zero through ten past the hour, every hour ' +
-          'from 9 a.m. through 5 p.m.'],
+          'from 9 a.m. until 6 p.m.'],
         ['* 0 9-17 * * *',
           'every second for one minute during the 9 a.m. through 5 p.m. ' +
           'hours'],
@@ -43,8 +43,8 @@ describe('Hour range under a fixed minute and a second reads as a window:',
     describe('a range inside a list (window + single)', function() {
       run([
         ['30 0 9-20,22 * * *',
-          'at 30 seconds past the hour, every hour from 9 a.m. through ' +
-          '8 p.m. and at 10 p.m.'],
+          'at 30 seconds past the hour, every hour from 9 a.m. until ' +
+          '9 p.m. and at 10 p.m.'],
         ['* 0 9-20,22 * * *',
           'every second for one minute during the 9 a.m. through 8 p.m. and ' +
           '10 p.m. hours']
@@ -52,24 +52,25 @@ describe('Hour range under a fixed minute and a second reads as a window:',
     });
 
     // A non-zero pinned minute is stated in the lead clause ("at five minutes
-    // past the hour"), so the window stays bare ("through 5 p.m.") rather than
-    // folding the minute into the close — a closing :05 would read as a span,
-    // contradicting the minute clause. (Matches the bare-window list cases and
-    // fi/zh.)
-    describe('non-zero pinned minute leads, window stays bare', function() {
-      run([
-        ['30 5 9-17 * * *',
-          'at 30 seconds past the minute, at five minutes past the hour ' +
-          'from 9 a.m. through 5 p.m.']
-      ]);
-    });
+    // past the hour"), so the window does not fold the minute into its close —
+    // the until-window names the top of the hour after the last ("until
+    // 6 p.m."), never a closing :05 that would read as a span contradicting the
+    // minute clause.
+    describe('non-zero pinned minute leads, window names the boundary',
+      function() {
+        run([
+          ['30 5 9-17 * * *',
+            'at 30 seconds past the minute, at five minutes past the hour ' +
+            'from 9 a.m. until 6 p.m.']
+        ]);
+      });
 
     // The window carries the trailing day qualifier.
     describe('with a day qualifier', function() {
       run([
         ['30 0 9-17 * * MON',
-          'at 30 seconds past the hour, every hour from 9 a.m. through ' +
-          '5 p.m. on Mondays']
+          'at 30 seconds past the hour, every hour from 9 a.m. until ' +
+          '6 p.m. on Mondays']
       ]);
     });
 

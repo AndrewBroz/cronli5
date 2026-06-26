@@ -4,7 +4,7 @@ import {run} from '../../../../runner.js';
 // the description (a restricted hour, or a non-single minute). The second
 // must not be silently dropped: it leads with its own clause and the rest of
 // the pattern follows, e.g. "every 15 seconds, at 30 minutes past the hour
-// from 9 a.m. through 5 p.m.". A wildcard or stepped second under a single
+// from 9 a.m. until 6 p.m.". A wildcard or stepped second under a single
 // pinned minute and specific hours instead reads the clock time compactly
 // ("every 15 seconds of 9:30 a.m., every day"), and a pinned minute-0 takes a
 // duration frame ("for one minute at 9 a.m.") so it is not heard as the hour.
@@ -19,7 +19,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
         'every 15 seconds, at 0 and 30 minutes past the hour'],
       ['*/15 30 9-17 * * *',
         'every 15 seconds, at 30 minutes past the hour ' +
-        'from 9 a.m. through 5 p.m.']
+        'from 9 a.m. until 6 p.m.']
     ]);
   });
 
@@ -68,7 +68,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['* 0 9,11 * * *',
         'every second for one minute at 9 a.m. and 11 a.m., every day'],
       // An hour RANGE is a window, not a discrete hour list: confined to
-      // minute 0 it reads "every hour from 9 a.m. through 5 p.m." — the same
+      // minute 0 it reads "every hour from 9 a.m. until 6 p.m." — the same
       // window the bare 0 0 9-17 forms (see hour-range-cadence.js).
       ['* 0 9-17 * * *',
         'every second for one minute during the 9 a.m. through 5 p.m. hours'],
@@ -157,7 +157,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
         'every second, every minute of the 9 a.m. hour ' +
         'on the 1st'],
       ['* * 9-17 * * *',
-        'every second, every minute from 9 a.m. through 5:59 p.m.'],
+        'every second, every minute from 9 a.m. until 6 p.m.'],
       ['* * 9,17 * * *',
         'every second, every minute during the 9 a.m. and 5 p.m. hours'],
       ['* * */2 * * *', 'every second, every minute during every other hour'],
@@ -168,7 +168,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
         'every second from 0 through 30 past the minute, ' +
         'every minute of the 9 a.m. hour'],
       ['*/15 * 9-17 * * *',
-        'every 15 seconds, every minute from 9 a.m. through 5:59 p.m.']
+        'every 15 seconds, every minute from 9 a.m. until 6 p.m.']
     ]);
   });
 });
