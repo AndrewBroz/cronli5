@@ -1258,7 +1258,7 @@ function renderCompactClockTimes(
   const phrase = cadence ?
     minutesList(ir, opts) + ', ' + cadence + trailingQualifier(ir, opts) :
     minutesList(ir, opts) + ', ' +
-      hourSegmentTimes(ir, 0, null, opts) + trailingQualifier(ir, opts);
+      hourContextTimes(ir, opts) + trailingQualifier(ir, opts);
 
   return ir.analyses.clockSecond ?
     secondsLeadClause(ir, opts) + ', ' + phrase :
@@ -1680,6 +1680,71 @@ function hourRangeCadence(ir: IR, minute: number, opts: Opts): string | null {
 }
 
 // --- Hour-time phrasing. ---
+
+// The fixed hour(s) of a stepped/listed minute, named as the HOUR rather than a
+// "a las HH:00" clock instant the minute never fires at: noon and midnight read
+// as the hour word ("al mediodía"/"a medianoche"), any other hour as the whole
+// hour "de la hora de las HH:00" (the idiom a wildcard minute already uses).
+// Used by the compact-clock non-fold path, where the minute is a step or list
+// (a single-value minute keeps its real "a las HH:MM" clock time elsewhere).
+function hourContextTimes(ir: IR, opts: Opts): string {
+  const segments = hourSegments(ir);
+
+  // Collect the point hours (singles and step fires) — a range stays a window.
+  const points: number[] = [];
+  const hasRange = segments.some(function range(segment) {
+    return segment.kind === 'range';
+  });
+
+  segments.forEach(function collect(segment) {
+    if (segment.kind === 'step') {
+      points.push(...segment.fires);
+    }
+    else if (segment.kind === 'single') {
+      points.push(+segment.value);
+    }
+  });
+
+  // All point hours, all noon/midnight: stand alone as their own words ("a
+  // medianoche y al mediodía").
+  function isWord(hour: number): boolean {
+    return !opts.ampm && (hour === 0 || hour === 12);
+  }
+
+  if (!hasRange && points.every(isWord)) {
+    return joinList(points.map(function each(hour) {
+      return atTime(bareHourPhrase(hour, opts));
+    }));
+  }
+
+  // A point hour as the whole hour: "de la hora de las HH:00".
+  function wholeHour(hour: number): string {
+    return 'de la hora ' + fromTime(explicitTimePhrase(hour, 0, opts));
+  }
+
+  // Otherwise each whole hour reads as a window ("de las HH:00 a las HH:00" for
+  // a range, "de la hora de las HH:00" for a point), never a false "a las
+  // HH:00" clock instant the stepped minute never fires at.
+  const pieces: string[] = [];
+
+  segments.forEach(function place(segment) {
+    if (segment.kind === 'range') {
+      pieces.push(timeRange(
+        {hour: +segment.bounds[0], minute: 0},
+        {hour: +segment.bounds[1], minute: 0}, opts));
+    }
+    else if (segment.kind === 'step') {
+      segment.fires.forEach(function each(hour) {
+        pieces.push(wholeHour(hour));
+      });
+    }
+    else {
+      pieces.push(wholeHour(+segment.value));
+    }
+  });
+
+  return joinList(pieces);
+}
 
 // "a las 9:00" / "a la 1:00" / "al mediodía" for each fire hour.
 function atTimes(hours: number[], opts: Opts): string[] {

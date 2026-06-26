@@ -1065,7 +1065,7 @@ function quartzDate(token: string, monthPrefix: string): string {
     return monthPrefix + '最后第' + token.slice(2) + '天';
   }
 
-  return '最接近' + token.slice(0, -1) + '日的工作日';
+  return monthPrefix + '最接近' + token.slice(0, -1) + '日的工作日';
 }
 
 // The date side of a qualifier (month folded in): "每月1日", "1月1日",
@@ -1086,7 +1086,17 @@ function datePhrase(ir: IR): string {
     return month + cadence(stepSegment(ir, 'date').interval, '天');
   }
 
-  return month ? month + dayList(ir) : '每月' + dayList(ir);
+  if (!month) {
+    return '每月' + dayList(ir);
+  }
+
+  // A multi-month scope (range/list) ends in 月 and would run straight into the
+  // day — "6月至8月1日" reads "8月1日" as August 1st. The comma keeps the month
+  // scope distinct from the day ("6月至8月，1日"). A single month stays glued
+  // ("6月1日"), which is unambiguous.
+  const monthMulti = ir.shapes.month === 'range' || ir.shapes.month === 'list';
+
+  return month + (monthMulti ? '，' : '') + dayList(ir);
 }
 
 // The date side WITHOUT its month or 每月 lead — just the day part: "1日",

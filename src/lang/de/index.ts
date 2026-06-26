@@ -888,14 +888,21 @@ function renderMinuteFrequency(
   const segment = stepSegment(ir.analyses.segments.minute);
   const sep = opts.style.sep;
   const clean = cleanStep(segment, 60);
-  const base = stepClause(segment, UNITS.minute, 'jeder Stunde');
 
   if (plan.hours.kind === 'window') {
+    // A single fixed hour (from === to) drops the "jeder Stunde" tail — the
+    // window names that one hour, so "jeder Stunde" (every hour) contradicts
+    // it. A range keeps it: the cadence truly repeats across each hour.
+    const singleHour = plan.hours.from === plan.hours.to;
+    const base = stepClause(segment, UNITS.minute,
+      singleHour ? '' : 'jeder Stunde');
     const window = hourWindow(plan.hours.from, plan.hours.to, plan.hours.last,
       sep);
 
     return clean ? base + ' ' + window : base + ', ' + window;
   }
+
+  const base = stepClause(segment, UNITS.minute, 'jeder Stunde');
 
   if (plan.hours.kind === 'during') {
     // A bounded or uneven hour stride confines the minute cadence to its own

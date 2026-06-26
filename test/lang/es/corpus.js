@@ -262,6 +262,15 @@ describe('Español (es):', function() {
         'cada 15 segundos de las 9:30 de la mañana, todos los días'],
       ['15 30 9 * * *', 'todos los días a las 9:30:15 de la mañana']
     ], ampm);
+
+    // A fixed hour under a stepped minute (six-field, seconds wildcard) names
+    // the hour — "al mediodía" — not a false "a las 12:00" the minute never
+    // fires at.
+    run([
+      ['* 3/2 12 1-5 * *',
+        'cada segundo, cada dos minutos del minuto 3 al 59 de cada hora, ' +
+        'al mediodía del 1 al 5 de cada mes']
+    ]);
   });
 
   describe('segundo bajo un minuto pareado (* */N)', function() {
@@ -399,6 +408,40 @@ describe('Español (es):', function() {
         'las 8:59 de la noche']
     ], ampm);
   });
+
+  // A fixed hour under a stepped/listed minute names the HOUR, never a false
+  // "a las HH:00" clock instant the minute never fires at: midnight and noon
+  // read as the hour word ("a medianoche"/"al mediodía"), any other hour as
+  // "de la hora de las HH:00". A minute that IS a single value keeps the real
+  // clock time ("a las HH:MM"). 24-hour default (no ampm shared option).
+  describe('hora fija bajo un minuto en paso (lee la hora, no las HH:00)',
+    function() {
+      run([
+        ['3/2 0 * 1 5L',
+          'cada dos minutos del minuto 3 al 59 de cada hora, a medianoche ' +
+          'el último viernes del mes de enero'],
+        ['3/2 12 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, al mediodía'],
+        ['3/2 9 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'de la hora de las 09:00'],
+        // Several fixed hours each read as their own whole hour; an all
+        // noon/midnight set keeps the word forms.
+        ['3/2 9,12 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'de la hora de las 09:00 y de la hora de las 12:00'],
+        ['3/2 0,12 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'a medianoche y al mediodía'],
+        // A fixed hour beside an hour range: the range stays a whole-hour
+        // window, the point its own whole hour — never a dropped range.
+        ['3/2 9-11,15 * * *',
+          'cada dos minutos del minuto 3 al 59 de cada hora, ' +
+          'de las 09:00 a las 11:00 y de la hora de las 15:00'],
+        // The guard: a single-value minute is a real clock time — keep HH:MM.
+        ['5 9 * * *', 'todos los días a las 09:05']
+      ]);
+    });
 
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
   // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600

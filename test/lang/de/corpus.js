@@ -242,6 +242,18 @@ describe('Deutsch (de):', function() {
         'alle 6 Minuten ab Minute 5 jeder Stunde'],
       ['11/12 * * * *',
         'alle 12 Minuten ab Minute 11 jeder Stunde'],
+      // A minute step under a FIXED hour drops the "jeder Stunde" tail — the
+      // hour window already names the single hour, so "jeder Stunde" (every
+      // hour) would contradict it. The wildcard-hour guard above keeps it.
+      ['5/15 0 1,15 1,7 0',
+        'alle 15 Minuten ab Minute 5, von 0 bis 0:50 Uhr ' +
+        'am 1. und 15. oder sonntags im Januar und Juli'],
+      ['5/15 9 * * *',
+        'alle 15 Minuten ab Minute 5, von 9 bis 9:50 Uhr'],
+      // A RANGE of hours keeps "jeder Stunde": the cadence really does repeat
+      // across each hour of the window, so the tail is true, not contradictory.
+      ['5/15 9-17 * * *',
+        'alle 15 Minuten ab Minute 5 jeder Stunde, von 9 bis 17:50 Uhr'],
       // An uneven step (interval does not divide the cycle) and an offset step
       // (start >= interval) fire a non-uniform bounded set: named with its
       // interval and both endpoints ("von Minute M bis K"), not enumerated.
