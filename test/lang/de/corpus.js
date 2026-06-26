@@ -115,10 +115,49 @@ describe('Deutsch (de):', function() {
       ['* 0 9-17 * * *',
         'täglich jede Sekunde der Minuten 9:00, 10:00, 11:00, 12:00, ' +
         '13:00, 14:00, 15:00, 16:00 und 17:00'],
+      // An hour step under a minute-0 confinement reads as a cadence, not a
+      // wall of clock minutes: the one-minute window in every other hour.
       ['* 0 */2 * * *',
-        'täglich jede Sekunde der Minuten 0:00, 2:00, 4:00, 6:00, 8:00, ' +
-        '10:00, 12:00, 14:00, 16:00, 18:00, 20:00 und 22:00'],
+        'jede Sekunde für eine Minute in jeder zweiten Stunde'],
       ['* 0 9 * * MON', 'montags jede Sekunde der Minute 9:00']
+    ]);
+  });
+
+  // An hour step (or arithmetic-progression hour list) under a single pinned
+  // minute reads as a cadence, not a cross-product of clock times: the
+  // minute/second lead clause, then the hour cadence ("alle 2 Stunden").
+  // Irregular hour lists and ranges still enumerate.
+  describe('Stundenschritt als Kadenz statt Stundenliste', function() {
+    run([
+      ['30 0 */2 * * *', 'in Sekunde 30 jeder Stunde, alle 2 Stunden'],
+      ['5 0 */2 * * *', 'in Sekunde 5 jeder Stunde, alle 2 Stunden'],
+      ['30 */2 * * *', 'in Minute 30, alle 2 Stunden'],
+      // An arithmetic-progression hour list compacts the same way.
+      ['30 0 0,4,8,12,16,20 * * *',
+        'in Sekunde 30 jeder Stunde, alle 4 Stunden'],
+      // An offset stride that still tiles names only its start; a bounded one
+      // pins both clock-time endpoints; the minute-0 confinement names the odd
+      // stride's start, and a non-clean stride keeps enumerating its fires.
+      ['30 0 1/2 * * *',
+        'in Sekunde 30 jeder Stunde, alle 2 Stunden ab 1 Uhr'],
+      ['30 0 5,9,13,17,21 * * *',
+        'in Sekunde 30 jeder Stunde, alle 4 Stunden von 5 bis 21 Uhr'],
+      ['* 0 1/2 * * *',
+        'jede Sekunde für eine Minute in jeder zweiten Stunde ab 1 Uhr'],
+      ['* 0 */3 * * *',
+        'jede Sekunde für eine Minute in jeder dritten Stunde'],
+      // A non-zero pinned minute under an hour step: the second leads, then the
+      // minute, then the hour cadence.
+      ['30 5 */2 * * *',
+        'in Sekunde 30 jeder Minute, in Minute 5, alle 2 Stunden'],
+      ['* 5 */2 * * *', 'jede Sekunde, in Minute 5, alle 2 Stunden'],
+      // Guards: irregular hour lists and ranges keep enumerating.
+      ['30 0 9,17 * * *', 'täglich um 9:00:30 und 17:00:30 Uhr'],
+      ['30 0 9-17 * * *',
+        'täglich in Sekunde 30 jeder Minute der Minuten 9:00, 10:00, ' +
+        '11:00, 12:00, 13:00, 14:00, 15:00, 16:00 und 17:00'],
+      // A clean hour step with a plain :00 stays the bare hour cadence.
+      ['0 0 */2 * * *', 'alle 2 Stunden']
     ]);
   });
 

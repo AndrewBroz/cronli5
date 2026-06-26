@@ -10,7 +10,7 @@
 // case-pair construction wherever digits appear.
 
 import {clockDigits, numeral} from '../../core/format.js';
-import {weekdayNumbers} from '../../core/specs.js';
+import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {arithmeticStep, toFieldNumber} from '../../core/util.js';
 import {resolveDialect} from './dialects.js';
 import type {
@@ -299,49 +299,85 @@ function renderSecondsWithinMinute(
     atMarks(minuteField, units.minute, true) + trailingQualifier(ir, opts);
 }
 
+// A meaningful second composed over a minute-step cadence: the step leads and
+// the second anchor follows after a comma, with the hour clause interleaved
+// between them ("[step], [seconds][hour clause][trailing qualifier]"). The
+// minute-frequency phrase is reconstructed directly here so the hour clause can
+// sit between the step and the second anchor without duplicating the full
+// renderMinuteFrequency logic; its hours-first reorder is intentionally NOT
+// applied (the step-leads form is the correct shape for this construction).
+function composeSecondsOverMinuteStep(
+  ir: IR,
+  freq: Extract<PlanNode, {kind: 'minuteFrequency'}>,
+  opts: NormalizedOptions
+): string {
+  const seg = stepSegment(ir.analyses.segments.minute!);
+  const stepPhrase = stepCycle60(seg, units.minute, opts);
+
+  if (freq.hours.kind === 'during' && minuteStepIsAnchored(seg)) {
+    // The step renders as an anchored kohdalla list rather than a cadence, so
+    // the hours-first reorder applies here too: bare hours lead, minute anchors
+    // follow, then the seconds clause.
+    const bareHours = kloFromTimes(ir, freq.hours.times, opts);
+
+    return hoursFirstMinutes(bareHours, ir, opts) + ', ' +
+      secondsLeadClause(ir, opts) + trailingQualifier(ir, opts);
+  }
+
+  let hourClause = '';
+
+  if (freq.hours.kind === 'during') {
+    hourClause = ' ' + hourWindowsFromTimes(ir, freq.hours.times, opts);
+  }
+  else if (freq.hours.kind === 'window') {
+    hourClause = ' ' + hourWindow(freq.hours, opts);
+  }
+  else if (freq.hours.kind === 'step') {
+    hourClause = ' ' +
+      everyNthHour(stepSegment(ir.analyses.segments.hour!), opts);
+  }
+
+  return stepPhrase + ', ' + secondsLeadClause(ir, opts) +
+    hourClause + trailingQualifier(ir, opts);
+}
+
+// The hour-cadence rendering of a compose-seconds plan whose clock-time rest
+// would cross-multiply an hour stride under a single pinned minute, or null
+// when that does not apply (a non-clock rest, a multi-valued minute, or an
+// hour that is not a stride).
+function composeHourCadence(
+  ir: IR,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
+  opts: NormalizedOptions
+): string | null {
+  const clockRest = plan.rest.kind === 'clockTimes' ||
+    plan.rest.kind === 'compactClockTimes';
+
+  return clockRest && ir.shapes.minute === 'single' ?
+    hourCadence(ir, +ir.pattern.minute, opts) :
+    null;
+}
+
 function renderComposeSeconds(
   ir: IR,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: NormalizedOptions
 ): string {
+  // An hour step (or arithmetic-progression hour list) under a single pinned
+  // minute is a cadence, not a wall of clock times: the second/minute lead,
+  // then the hour cadence ("30 sekunnin kohdalla, kahden tunnin välein"). The
+  // clock-time rest would otherwise cross-multiply the hours.
+  const cadence = composeHourCadence(ir, plan, opts);
+
+  if (cadence !== null) {
+    return cadence;
+  }
+
   // When the rest is a minute-step cadence, the step leads and the second
   // anchor follows after a comma (the comma marks the granularity boundary
-  // between the two levels, not a flat list). Build:
-  // "[step phrase], [seconds][hour clause][trailing qualifier]".
-  //
-  // The minute-frequency phrase is reconstructed directly here so the hour
-  // clause can be interleaved between the step and the second anchor without
-  // duplicating the full renderMinuteFrequency logic. The hours-first reorder
-  // that applies inside renderMinuteFrequency is intentionally NOT applied
-  // here (the step-leads form is the correct shape for this construction).
+  // between the two levels, not a flat list).
   if (plan.rest.kind === 'minuteFrequency' && ir.pattern.second !== '*') {
-    const freq = plan.rest as Extract<PlanNode, {kind: 'minuteFrequency'}>;
-    const seg = stepSegment(ir.analyses.segments.minute!);
-    const stepPhrase = stepCycle60(seg, units.minute, opts);
-    let hourClause = '';
-
-    if (freq.hours.kind === 'during' && minuteStepIsAnchored(seg)) {
-      // The step renders as an anchored kohdalla list rather than a cadence,
-      // so the hours-first reorder applies here too: bare hours lead, minute
-      // anchors follow, then the seconds clause.
-      const bareHours = kloFromTimes(ir, freq.hours.times, opts);
-
-      return hoursFirstMinutes(bareHours, ir, opts) + ', ' +
-        secondsLeadClause(ir, opts) + trailingQualifier(ir, opts);
-    }
-    else if (freq.hours.kind === 'during' && !minuteStepIsAnchored(seg)) {
-      hourClause = ' ' + hourWindowsFromTimes(ir, freq.hours.times, opts);
-    }
-    else if (freq.hours.kind === 'window') {
-      hourClause = ' ' + hourWindow(freq.hours, opts);
-    }
-    else if (freq.hours.kind === 'step') {
-      hourClause = ' ' +
-        everyNthHour(stepSegment(ir.analyses.segments.hour!), opts);
-    }
-
-    return stepPhrase + ', ' + secondsLeadClause(ir, opts) +
-      hourClause + trailingQualifier(ir, opts);
+    return composeSecondsOverMinuteStep(ir, plan.rest, opts);
   }
 
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
@@ -831,6 +867,16 @@ function renderClockTimes(
   plan: Extract<PlanNode, {kind: 'clockTimes'}>,
   opts: NormalizedOptions
 ): string {
+  // An hour step (or arithmetic-progression hour list) under a single pinned
+  // minute reads as a cadence rather than a cross-product of clock times.
+  if (ir.shapes.minute === 'single') {
+    const cadence = hourCadence(ir, +ir.pattern.minute, opts);
+
+    if (cadence !== null) {
+      return cadence;
+    }
+  }
+
   if (plan.times.length === 1) {
     const time = plan.times[0];
 
@@ -854,6 +900,17 @@ function renderCompactClockTimes(
   plan: Extract<PlanNode, {kind: 'compactClockTimes'}>,
   opts: NormalizedOptions
 ): string {
+  // An hour step (or arithmetic-progression hour list) under the single pinned
+  // minute reads as a cadence, not a wall of clock times. (Returns null for an
+  // irregular list or a range, which keep folding below.)
+  if (plan.fold) {
+    const cadence = hourCadence(ir, plan.minute, opts);
+
+    if (cadence !== null) {
+      return cadence;
+    }
+  }
+
   const hourSegs = ir.analyses.segments.hour!;
 
   // Range+isolated hours: join the isolated hour with "sekä klo" to stop it
@@ -1040,6 +1097,156 @@ function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
   }
 
   return cadence + ' klo ' + hourElatives[start] + ' alkaen';
+}
+
+// --- Hour-step cadence (the 24-cycle analog of renderStride). ---
+
+// Speak an hour stride as a cadence with clock-time bounds: a clean stride
+// from midnight is the bare cadence ("kahden tunnin välein"); a clean offset
+// names only its start ("kuuden tunnin välein klo 2:sta alkaen"); a bounded or
+// non-tiling stride pins both clock-time endpoints ("kahden tunnin välein klo
+// 9–17") so the bounded set reads unambiguously. Used wherever an hour step
+// (or arithmetic-progression hour list) would otherwise be cross-multiplied
+// into a wall of clock times.
+function hourStrideCadence(
+  stride: {start: number; interval: number; last: number},
+  opts: NormalizedOptions
+): string {
+  const {start, interval, last} = stride;
+  const cadence = genitive(interval, opts) + ' tunnin välein';
+  const tiles = 24 % interval === 0;
+
+  if (start === 0 && tiles) {
+    return cadence;
+  }
+
+  if (start < interval && tiles) {
+    return cadence + ' klo ' + hourElatives[start] + ' alkaen';
+  }
+
+  return cadence + ' ' +
+    kloRange({hour: start, minute: 0}, {hour: last, minute: 0}, opts);
+}
+
+// The hour field's stride, or null when the hour is not a cadence: a step
+// segment yields its {start, interval, last} directly; an all-single hour list
+// yields one only when its values form a long-enough arithmetic progression
+// (so an irregular list like 9,17 keeps enumerating). The IR is unchanged —
+// the renderer recognizes the stride and speaks it as a cadence instead of the
+// clock-time cross-product.
+function hourStride(
+  ir: IR
+): {start: number; interval: number; last: number} | null {
+  const segments = ir.analyses.segments.hour;
+
+  // A wildcard hour carries no segments (no discrete hours to stride over).
+  if (!segments) {
+    return null;
+  }
+
+  if (segments.length === 1 && segments[0].kind === 'step') {
+    const segment = segments[0];
+    const start = segment.startToken === '*' ?
+      0 :
+      +segment.startToken.split('-')[0];
+
+    return {interval: segment.interval, last: segment.fires[
+      segment.fires.length - 1], start};
+  }
+
+  const values = singleValues(segments);
+  const step = values && arithmeticStep(values);
+
+  return step || null;
+}
+
+// The second's status against a pinned minute: a wildcard or sub-minute step
+// fills the minute (a "minuutin ajan" frame at minute 0); a single 0 is just
+// the top of the minute (no clause); anything else needs its own clause.
+function subMinuteSecond(ir: IR): boolean {
+  return ir.pattern.second === '*' || ir.shapes.second === 'step';
+}
+
+// The lead clause for an hour-cadence rendering: the second and the pinned
+// minute, before the hour cadence. A pinned minute 0 folds in — a single,
+// list, range, or step second is counted at its own bare "kohdalla" mark (the
+// minute-0 is the top of the hour), and a wildcard second takes a "minuutin
+// ajan" frame (the whole minute-0 window). A non-zero minute is a real clock
+// minute: the second leads with its own clause (if any), then the minute reads
+// at its bare "kohdalla" mark.
+function hourCadenceLead(ir: IR, minute: number,
+  opts: NormalizedOptions): string {
+  if (minute === 0) {
+    if (subMinuteSecond(ir)) {
+      return secondsLeadClause(ir, opts) + ' minuutin ajan';
+    }
+
+    return secondsLeadClause(ir, opts);
+  }
+
+  const minutePhrase = atMarks(String(minute), units.minute, false);
+
+  // A single 0 second is just the top of the minute, so the minute leads
+  // alone; any other second prefixes its own clause.
+  if (ir.pattern.second === '0') {
+    return minutePhrase;
+  }
+
+  return secondsLeadClause(ir, opts) + ', ' + minutePhrase;
+}
+
+// Render an hour step (or arithmetic-progression hour list) under a single
+// pinned minute and a second as a cadence — the lead clause, then the hour
+// cadence — instead of cross-multiplying the hours into a wall of clock times.
+// Returns null when the hour is not a stride (an irregular list, a single
+// hour, or a range), or when the cross-product is short enough that
+// enumeration is no longer than the cadence: a meaningful second makes every
+// clock time three digit-groups, so any stride is worth compacting; otherwise
+// the stride must exceed the clock-time cap, the same point at which the core
+// itself stops enumerating. Renderer-only; the IR is unchanged.
+function hourCadence(ir: IR, minute: number,
+  opts: NormalizedOptions): string | null {
+  const stride = hourStride(ir);
+
+  if (!stride) {
+    return null;
+  }
+
+  const fires = (stride.last - stride.start) / stride.interval + 1;
+
+  if (ir.pattern.second === '0' && fires <= maxClockTimes) {
+    return null;
+  }
+
+  // A wildcard or sub-minute step second confined to minute 0 of a clean hour
+  // stride is a confinement, not a juxtaposed cadence: it reads "minuutin ajan
+  // joka toisen tunnin aikana", reusing the every-Nth-hour idiom so the
+  // minute-0 window is never heard as the bare hour cadence.
+  const segment = ir.analyses.segments.hour![0];
+  const confined = minute === 0 && subMinuteSecond(ir) &&
+    ir.analyses.segments.hour!.length === 1 && segment.kind === 'step' &&
+    cleanHourStride(segment);
+
+  if (confined) {
+    return secondsLeadClause(ir, opts) + ' minuutin ajan ' +
+      everyNthHour(segment, opts) + trailingQualifier(ir, opts);
+  }
+
+  return hourCadenceLead(ir, minute, opts) + ', ' +
+    hourStrideCadence(stride, opts) + trailingQualifier(ir, opts);
+}
+
+// Whether an hour step is a clean stride over the whole day — unbounded,
+// dividing 24, and starting within the first interval — so it confines to "joka
+// N:nnen tunnin aikana" rather than enumerating its fires.
+function cleanHourStride(segment: StepSegment): boolean {
+  if (segment.startToken.indexOf('-') !== -1) {
+    return false;
+  }
+
+  const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+  return 24 % segment.interval === 0 && start < segment.interval;
 }
 
 // --- Hour-time phrasing. ---

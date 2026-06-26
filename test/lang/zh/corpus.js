@@ -54,9 +54,10 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // and other hours keep "H点0分".
       ['* 0 12 * * *', '每天正午的每一秒'],
       ['* 0 9,11 * * *', '每天9点0分和11点0分的每一秒'],
-      ['* 0 */2 * * *',
-        '每天凌晨0点0分、2点0分、4点0分、6点0分、8点0分、10点0分、' +
-        '正午、14点0分、16点0分、18点0分、20点0分和22点0分的每一秒'],
+      // An hour step under a minute-0 confinement reads as a cadence, not a
+      // wall of clock minutes. The even-hours idiom keeps it distinct from the
+      // bare "每2小时" so the minute-0 confinement is never misread as it.
+      ['* 0 */2 * * *', '在偶数小时0分的每一秒'],
       ['* 0 9,11,13,15,17,19,21 * * *',
         '每天9点0分、11点0分、13点0分、15点0分、17点0分、19点0分和' +
         '21点0分的每一秒'],
@@ -69,6 +70,9 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // endpoints but drops the "每分钟" anchor (the minute is a single value,
       // not every minute): "9点0分的从3秒起每2秒，至59秒".
       ['3/2 0 9 * * *', '每天9点0分的从3秒起每2秒，至59秒'],
+      // A non-uniform minute step under a single hour compacts to its stride
+      // cadence, not an enumerated minute list.
+      ['* 3/2 0 * * *', '凌晨0点从3分起每2分钟，至59分的每一秒'],
       ['* 0-30 * * * *', '每小时0至30分，每秒'],
       ['* 0-30 */2 * * *', '每2小时，每小时0至30分，每秒'],
       ['* 0-30 9,17 * * *', '在9点和17点，每小时0至30分，每秒'],
@@ -76,6 +80,32 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['* 1 * * * *', '每小时1分，每秒'],
       ['* 5,30 * * * *', '每小时5分和30分，每秒'],
       ['* 5,30 */2 * * *', '每2小时，每小时5分和30分，每秒'],
+      // An hour step (or arithmetic-progression hour list) under a single
+      // pinned minute reads as a cadence, not a cross-product of clock times.
+      // Irregular hour lists and ranges still enumerate.
+      ['30 0 */2 * * *', '每2小时0分的第30秒'],
+      ['5 0 */2 * * *', '每2小时0分的第5秒'],
+      ['30 */2 * * *', '每2小时30分'],
+      ['30 0 0,4,8,12,16,20 * * *', '每4小时0分的第30秒'],
+      // Chinese has no offset-hour cadence idiom, so an offset or non-even
+      // clean stride keeps enumerating its clock words (the confinement idiom
+      // exists only for the even-hour stride).
+      ['30 0 1/2 * * *',
+        '每天1点0分、3点0分、5点0分、7点0分、9点0分、11点0分、13点0分、' +
+        '15点0分、17点0分、19点0分、21点0分和23点0分的第30秒'],
+      ['* 0 */3 * * *',
+        '每天凌晨0点0分、3点0分、6点0分、9点0分、正午、15点0分、18点0分和' +
+        '21点0分的每一秒'],
+      // A non-zero pinned minute under an hour step names the minute past the
+      // cadence, with a meaningful second fused as its own clause.
+      ['30 5 */2 * * *', '每2小时5分的第30秒'],
+      ['* 5 */2 * * *', '每2小时5分的每一秒'],
+      // Guards: irregular hour lists and ranges keep enumerating.
+      ['30 0 9,17 * * *', '每天9点30秒和17点30秒'],
+      ['30 0 9-17 * * *',
+        '每天9点0分、10点0分、11点0分、正午、13点0分、14点0分、' +
+        '15点0分、16点0分和17点0分的第30秒'],
+      ['0 0 */2 * * *', '每2小时'],
       // A single minute over a lone hour keeps the composed clock time
       // ("0点2分"), attaching the second to it rather than splitting the
       // hour and minute apart.

@@ -416,10 +416,10 @@ describe('Español (es):', function() {
         'cada segundo durante un minuto a las 9, a las 10, a las 11, ' +
         'al mediodía, a las 13, a las 14, a las 15, a las 16 y a las 17, ' +
         'todos los días'],
+      // An hour step under a minute-0 confinement reads as a cadence, not a
+      // wall of clock times: the one-minute window during the even hours.
       ['* 0 */2 * * *',
-        'cada segundo durante un minuto a medianoche, a las 2, a las 4, ' +
-        'a las 6, a las 8, a las 10, al mediodía, a las 14, a las 16, ' +
-        'a las 18, a las 20 y a las 22, todos los días'],
+        'cada segundo durante un minuto, durante las horas pares'],
       ['* 0 9 * * MON',
         'cada segundo durante un minuto a las 9, los lunes'],
       ['*/15 0 9 * * *',
@@ -451,6 +451,50 @@ describe('Español (es):', function() {
         ['* 5 9 * * MON', 'cada segundo de las 09:05, los lunes']
       ]);
     });
+
+  // An hour step (or arithmetic-progression hour list) under a single pinned
+  // minute reads as a cadence, not a cross-product of clock times: the
+  // minute/second lead clause, then the hour cadence ("cada dos horas").
+  // Irregular hour lists and ranges still enumerate.
+  describe('paso horario como cadencia en vez de lista de horas', function() {
+    run([
+      ['30 0 */2 * * *',
+        'en el segundo 30 de cada hora, cada dos horas'],
+      ['5 0 */2 * * *',
+        'en el segundo 5 de cada hora, cada dos horas'],
+      ['30 */2 * * *',
+        'en el minuto 30, cada dos horas'],
+      // An arithmetic-progression hour list compacts the same way.
+      ['30 0 0,4,8,12,16,20 * * *',
+        'en el segundo 30 de cada hora, cada cuatro horas'],
+      // An offset stride that still tiles names only its start; a bounded one
+      // pins both clock-time endpoints; the minute-0 confinement reuses the
+      // odd-hours idiom for an odd stride.
+      ['30 0 1/2 * * *',
+        'en el segundo 30 de cada hora, cada dos horas a partir de la 01:00'],
+      ['30 0 5,9,13,17,21 * * *',
+        'en el segundo 30 de cada hora, cada cuatro horas de las 05:00 ' +
+        'a las 21:00'],
+      ['* 0 1/2 * * *',
+        'cada segundo durante un minuto, durante las horas impares'],
+      ['* 0 */3 * * *',
+        'cada segundo durante un minuto, durante las horas de las 0, 3, 6, ' +
+        '9, 12, 15, 18 y 21'],
+      // A non-zero pinned minute under an hour step: the second leads, then the
+      // minute, then the hour cadence.
+      ['30 5 */2 * * *',
+        'en el segundo 30 de cada minuto, en el minuto 5, cada dos horas'],
+      ['* 5 */2 * * *', 'cada segundo, en el minuto 5, cada dos horas'],
+      // Guards: irregular hour lists and ranges keep enumerating.
+      ['30 0 9,17 * * *', 'todos los días a las 09:00:30 y 17:00:30'],
+      ['30 0 9-17 * * *',
+        'en el segundo 30 de cada minuto, todos los días a las 09:00:30, ' +
+        '10:00:30, 11:00:30, 12:00:30, 13:00:30, 14:00:30, 15:00:30, ' +
+        '16:00:30 y 17:00:30'],
+      // A clean hour step with a plain :00 stays the bare hour cadence.
+      ['0 0 */2 * * *', 'cada dos horas']
+    ]);
+  });
 
   describe('segundos independientes y compuestos', function() {
     run([
