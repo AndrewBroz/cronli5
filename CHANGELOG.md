@@ -6,6 +6,49 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.7]
+
+A correctness and clarity pass driven by blind, math-inclined native-speaker
+review panels over four rounds of randomly sampled patterns (one reviewer per
+language per round), plus a new conciseness CI gate. Each fix was written
+test-first and validated by round-trip, fuzz, and the metamorphic invariant.
+
+### Added
+
+- The conciseness sweep is wired into `npm run verify` as a gate: it exits
+  non-zero on any over-budget description and runs alongside lint, types, tests,
+  the metamorphic invariant, docs, and build. It is zero over-budget across all
+  five languages, guarding against verbosity regressions.
+
+### Fixed
+
+- **en:** a month (or year) restriction on an "or"-day cron — both day-of-month
+  and day-of-week set, e.g. `15W 6-8 MON#2` — scoped only the day-of-month
+  branch, falsely implying the weekday branch fires every month; it now scopes
+  the whole or.
+- **en/es/de:** an hour range under a fixed minute (`5 9-17`) folded the minute
+  into the window end only ("through 5:05 p.m." with a bare :00 start), a false
+  continuous span; now the bare hour window plus the minute clause.
+- **es:** a fixed hour under a step or range minute (`3/2 0`) read "a las
+  00:00", asserting a minute-:00 fire that never happens; now the hour context
+  ("a medianoche" / "al mediodía" / "de la hora de las HH").
+- **de:** a standalone offset-clean hour step (`0 0 1/2`) enumerated its hours
+  instead of the cadence ("alle 2 Stunden ab 1 Uhr"); and a "jeder
+  Minute/Stunde" suffix was emitted even when that field is fixed
+  (`30 30 9-17/2`), contradicting it — now dropped unless the field is a
+  wildcard.
+- **zh:** an offset hour stride at minute 0 under a sub-minute second enumerated
+  instead of its cadence; a month range ran into the day-of-month
+  (`6月至8月1日` → `6月至8月，1日`); and a single-hour minute-step with a `15W`
+  day dropped the month entirely (`*/25 12 15W 12`) — all fixed.
+
+### Changed
+
+- Weekday lists now order Monday-first (Sunday last): `SAT,SUN` reads "Saturday
+  and Sunday" (and the equivalent in each language). Display order only — the IR
+  stays canonical (Sunday = 0), so ranges, single days, and the metamorphic
+  invariant are unaffected.
+
 ## [0.1.6]
 
 ### Fixed
