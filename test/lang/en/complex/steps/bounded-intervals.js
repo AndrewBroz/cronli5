@@ -22,8 +22,19 @@ describe('Step patterns with a bounded (range) start:', function() {
 
   describe('hours', function() {
     run([
+      // A bounded hour step starts at or past its interval, so it has a
+      // distinct endpoint: it reads as a bounded cadence pinning both ends
+      // (which recovers the same {9,11,13,15,17}), not a wall of clock times.
       ['0 9-17/2 * * *',
-        'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m.']
+        'every two hours from 9 a.m. through 5 p.m.'],
+      // A bounded step that wraps cleanly from within its first interval (start
+      // < interval, dividing the day) keeps its enumerated fires — there is no
+      // distinct endpoint to pin.
+      ['0 1-23/2 * * *',
+        'at 1 a.m., 3 a.m., 5 a.m., 7 a.m., 9 a.m., 11 a.m., 1 p.m., 3 p.m., ' +
+        '5 p.m., 7 p.m., 9 p.m., and 11 p.m.'],
+      // A bounded step that fires only once is a single value, not a cadence.
+      ['0 9-10/5 * * *', 'at 9 a.m.']
     ]);
   });
 });

@@ -54,8 +54,10 @@ describe('Español (es):', function() {
       // Mixed article: 1-o'clock (a la) followed by other hours (a las).
       // la-group first, then las-group; comma connector when las has exactly 2.
       ['0 1,13 * * *', 'todos los días a la 01:00 y a las 13:00'],
-      ['0 1,6,11,16,21 * * *',
-        'todos los días a la 01:00 y a las 06:00, 11:00, 16:00 y 21:00'],
+      // An irregular five-value list (not an arithmetic progression, so it
+      // stays an enumeration) exercises the la/las grouping at length five.
+      ['0 1,6,11,16,22 * * *',
+        'todos los días a la 01:00 y a las 06:00, 11:00, 16:00 y 22:00'],
       ['0 1,2,3 * * *', 'todos los días a la 01:00, a las 02:00 y 03:00'],
       ['30 1,5,13 * * *', 'todos los días a la 01:30, a las 05:30 y 13:30'],
       ['0 22-2,12 * * *',
@@ -335,9 +337,10 @@ describe('Español (es):', function() {
         'a las 00:00, ya sea el 1 de cada mes o los domingos y de lunes a viernes'],
       ['0 0 1 6-9 0,1-5',
         'de junio a septiembre a las 00:00, ya sea el día 1 o los domingos y de lunes a viernes'],
-      // Step hour with 1-o'clock fire: group by article in the union frame.
-      ['5 1/5 1 1,7 MON',
-        'en enero y julio, a la 01:05 y a las 06:05, 11:05, 16:05 y 21:05, ' +
+      // Irregular hour list with a 1-o'clock fire (not a progression, so it
+      // stays an enumeration): group by article in the union frame.
+      ['5 1,6,11,16,22 1 1,7 MON',
+        'en enero y julio, a la 01:05 y a las 06:05, 11:05, 16:05 y 22:05, ' +
         'ya sea el día 1 o cualquier lunes']
     ]);
   });
@@ -370,14 +373,14 @@ describe('Español (es):', function() {
         'cada dos segundos del segundo 3 al 59 de cada minuto, ' +
         'cada dos minutos a partir del minuto 1 de cada hora'],
       ['*/35 * * * *', 'en los minutos 0 y 35 de cada hora'],
+      // A uneven or bounded hour step has a distinct endpoint, so it reads as a
+      // bounded cadence pinning both clock-time ends, not a wall of clock times.
       ['0 2/5 * * *',
-        'todos los días a las 2 de la madrugada, a las 7 de la mañana, ' +
-        'al mediodía, a las 5 de la tarde y a las 10 de la noche'],
+        'cada cinco horas de las 2 de la madrugada a las 10 de la noche'],
       ['0 8-18/4 * * *',
-        'a las 8 de la mañana, al mediodía y a las 4 de la tarde'],
+        'cada cuatro horas de las 8 de la mañana a las 4 de la tarde'],
       ['0 0/7 * * *',
-        'todos los días a medianoche, a las 7 de la mañana, ' +
-        'a las 2 de la tarde y a las 9 de la noche'],
+        'cada siete horas de medianoche a las 9 de la noche'],
       ['* */2 * * *', 'cada minuto, durante las horas pares'],
       ['0 12 */2 * *', 'cada dos días del mes al mediodía'],
       ['0 12 5/3 * *', 'cada tres días del mes desde el 5 al mediodía'],
@@ -412,10 +415,12 @@ describe('Español (es):', function() {
         'cada segundo durante un minuto al mediodía, todos los días'],
       ['* 0 9,11 * * *',
         'cada segundo durante un minuto a las 9 y 11, todos los días'],
+      // An hour RANGE under a minute-0 confinement reads as a window, not a
+      // wall of clock times: the one-minute window during the 09:00-17:00
+      // hours (the hour-range analog of the even-hours confinement below).
       ['* 0 9-17 * * *',
-        'cada segundo durante un minuto a las 9, a las 10, a las 11, ' +
-        'al mediodía, a las 13, a las 14, a las 15, a las 16 y a las 17, ' +
-        'todos los días'],
+        'cada segundo durante un minuto, durante las horas de las 09:00 ' +
+        'a las 17:00'],
       // An hour step under a minute-0 confinement reads as a cadence, not a
       // wall of clock times: the one-minute window during the even hours.
       ['* 0 */2 * * *',
@@ -485,14 +490,81 @@ describe('Español (es):', function() {
       ['30 5 */2 * * *',
         'en el segundo 30 de cada minuto, en el minuto 5, cada dos horas'],
       ['* 5 */2 * * *', 'cada segundo, en el minuto 5, cada dos horas'],
-      // Guards: irregular hour lists and ranges keep enumerating.
+      // An hour RANGE reads as a window, not a wall of clock times: the
+      // second/minute lead, then "de las 09:00 a las 17:00" (see the
+      // dedicated hour-range section below). Guard: an irregular hour list
+      // (no range) has no window to form and still enumerates.
       ['30 0 9,17 * * *', 'todos los días a las 09:00:30 y 17:00:30'],
       ['30 0 9-17 * * *',
-        'en el segundo 30 de cada minuto, todos los días a las 09:00:30, ' +
-        '10:00:30, 11:00:30, 12:00:30, 13:00:30, 14:00:30, 15:00:30, ' +
-        '16:00:30 y 17:00:30'],
+        'en el segundo 30 de cada hora, de las 09:00 a las 17:00'],
       // A clean hour step with a plain :00 stays the bare hour cadence.
       ['0 0 */2 * * *', 'cada dos horas']
+    ]);
+  });
+
+  // A single second under a multi-valued minute and a bounded hour step: the
+  // compact clock-time rest owns the second lead, so the composer must not
+  // prepend it again (which once doubled "en el segundo 30 de cada minuto").
+  describe('segundo bajo paso de minuto y paso horario acotado', function() {
+    run([
+      ['30 */25 9-17/2 * * *',
+        'en el segundo 30 de cada minuto, ' +
+        'en los minutos 0, 25 y 50 de cada hora, ' +
+        'cada dos horas de las 09:00 a las 17:00']
+    ]);
+  });
+
+  // A wildcard or stepped second under a MINUTE LIST across specific hours is a
+  // wall of distinct clock times, not a one-minute confinement: each minute is
+  // named ("09:25"), never collapsed to the bare hour (which once repeated the
+  // hour once per minute, "a las 9, 9, 9, ...").
+  describe('segundo subminuto bajo lista de minutos en horas concretas',
+    function() {
+      run([
+        ['* */25 9,17 * * *',
+          'cada segundo de las 09:00, 09:25, 09:50, ' +
+          '17:00, 17:25 y 17:50, todos los días'],
+        ['*/15 */25 9,17 * * *',
+          'cada 15 segundos de las 09:00, 09:25, 09:50, ' +
+          '17:00, 17:25 y 17:50, todos los días']
+      ]);
+    });
+
+  // An hour RANGE (or a list whose segments include a range) under minute 0
+  // and a meaningful second used to expand into a wall of clock times; it now
+  // reads as the hour-range window ("de las 09:00 a las 17:00"). The
+  // hour-RANGE analog of the hour-step cadence. A pure single-value hour list
+  // (9,17) has no range to span and still enumerates.
+  describe('rango horario como ventana en vez de lista de horas', function() {
+    run([
+      ['30 0 9-17 * * *',
+        'en el segundo 30 de cada hora, de las 09:00 a las 17:00'],
+      ['5,30 0 9-17 * * *',
+        'en los segundos 5 y 30 de cada hora, de las 09:00 a las 17:00'],
+      ['0-10 0 9-17 * * *',
+        'cada segundo del 0 al 10 de cada hora, de las 09:00 a las 17:00'],
+      // A wildcard or sub-minute step second is the one-minute window confined
+      // to the hour range ("durante las horas …"), distinct from the bare
+      // minute-0 window so the confinement is never heard as it.
+      ['* 0 9-17 * * *',
+        'cada segundo durante un minuto, durante las horas de las 09:00 ' +
+        'a las 17:00'],
+      ['*/15 0 9-17 * * *',
+        'cada 15 segundos durante un minuto, durante las horas de las 09:00 ' +
+        'a las 17:00'],
+      // A range inside a list: the contiguous span is a window, the
+      // non-contiguous hour joins with "y también".
+      ['30 0 9-20,22 * * *',
+        'en el segundo 30 de cada hora, de las 09:00 a las 20:00 ' +
+        'y también a las 22:00'],
+      ['* 0 9-20,22 * * *',
+        'cada segundo durante un minuto, durante las horas de las 09:00 ' +
+        'a las 20:00 y también a las 22:00'],
+      // The window carries the trailing day qualifier.
+      ['30 0 9-17 * * MON',
+        'en el segundo 30 de cada hora, de las 09:00 a las 17:00 los lunes'],
+      // Guard: a pure single-value hour list (no range) still enumerates.
+      ['30 0 9,17 * * *', 'todos los días a las 09:00:30 y 17:00:30']
     ]);
   });
 
@@ -508,14 +580,12 @@ describe('Español (es):', function() {
       // an hourly idiom ("cada hora" / "cada dos horas" / a 9-a-17 window)
       // that silently drops the :00.
       ['* 0 * * * *', 'cada segundo, en el minuto 0 de cada hora'],
-      // The minute-0 confinement reads with a duration frame ("durante un
-      // minuto a las 9 …"), never a bare hour, which reads aloud as the whole
-      // hour. The hour reads as its day-period word; "durante un minuto"
-      // carries the one-minute window.
+      // An hour RANGE under the minute-0 confinement reads as a window
+      // ("durante las horas …"), not a wall of clock times; the window honors
+      // the 12-hour dialect ("de las 9 de la mañana a las 5 de la tarde").
       ['* 0 9-17 * * *',
-        'cada segundo durante un minuto a las 9, 10 y 11 de la mañana, ' +
-        'al mediodía, y a la 1, a las 2, a las 3, a las 4 y a las 5 ' +
-        'de la tarde, todos los días'],
+        'cada segundo durante un minuto, durante las horas de las 9 ' +
+        'de la mañana a las 5 de la tarde'],
       // A wildcard minute under a restricted hour: the hour window must
       // survive (it once collapsed to a bare "cada segundo"). Fuzzer-found.
       ['* * 9 * * *',
@@ -535,9 +605,8 @@ describe('Español (es):', function() {
         'cada hora de las 9:30 de la mañana a las 8:30 de la noche ' +
         'y también a las 10:30 de la noche'],
       ['0,30 8-18/2 * * *',
-        'en los minutos 0 y 30 de cada hora, a las 8 de la mañana, ' +
-        'a las 10 de la mañana, al mediodía, a las 2 de la tarde, ' +
-        'a las 4 de la tarde y a las 6 de la tarde'],
+        'en los minutos 0 y 30 de cada hora, ' +
+        'cada dos horas de las 8 de la mañana a las 6 de la tarde'],
       ['*/15 9-20,22 * * *',
         'cada 15 minutos de las 9 de la mañana a las 8:59 de la noche ' +
         'y de las 10 a las 10:59 de la noche'],
@@ -589,8 +658,8 @@ describe('Español (es):', function() {
         'madrugada, de las 7 y 10 de la mañana, de la 1, las 4 y las 7 de ' +
         'la tarde y de las 10 de la noche'],
       ['*/20 9-17/2 * * *',
-        'cada 20 minutos, durante las horas de las 9 y 11 de la mañana y ' +
-        'de la 1, las 3 y las 5 de la tarde'],
+        'cada 20 minutos, ' +
+        'cada dos horas de las 9 de la mañana a las 5 de la tarde'],
       ['* 9-17 * * *',
         'cada minuto de las 9 de la mañana a las 5:59 de la tarde'],
       ['* 0-5 * * *',
@@ -598,8 +667,7 @@ describe('Español (es):', function() {
       ['0-30 9-17 * * *',
         'cada minuto del 0 al 30, de las 9 de la mañana a las 5 de la tarde'],
       ['0 */9 * * *',
-        'todos los días a medianoche, a las 9 de la mañana y ' +
-        'a las 6 de la tarde'],
+        'cada nueve horas de medianoche a las 6 de la tarde'],
       ['0-30 9-20,22 * * *',
         'cada minuto del 0 al 30, de las 9 de la mañana a las 8 de la noche y también a las 10 de la noche'],
       ['* 1,6/3 * * *',
@@ -696,6 +764,31 @@ describe('Español (es):', function() {
       expect(cronli5('no es cron', {lang: es, lenient: true}))
         .to.equal('un patrón cron irreconocible');
     });
+  });
+
+  // A bounded or uneven hour stride reads as its endpoint-pinning cadence
+  // across the minute paths; an offset-clean bounded step keeps its fires, and
+  // a single-fire bounded step is just that value.
+  describe('cadencia horaria por los pasos de minuto', function() {
+    run([
+      ['0 0,8,16 * * *', 'todos los días a las 00:00, 08:00 y 16:00'],
+      ['* */5 * * *', 'cada minuto, cada cinco horas de las 00:00 a las 20:00'],
+      ['*/25 */5 * * *',
+        'en los minutos 0, 25 y 50 de cada hora, ' +
+        'cada cinco horas de las 00:00 a las 20:00'],
+      ['0-30 */5 * * *',
+        'cada minuto del 0 al 30, cada cinco horas de las 00:00 a las 20:00'],
+      ['* 9-17/2 * * *', 'cada minuto, cada dos horas de las 09:00 a las 17:00'],
+      ['0-30 9-17/2 * * *',
+        'cada minuto del 0 al 30, cada dos horas de las 09:00 a las 17:00'],
+      ['5,10 9-17/2 * * *',
+        'en los minutos 5 y 10 de cada hora, ' +
+        'cada dos horas de las 09:00 a las 17:00'],
+      ['0 1-23/2 * * *',
+        'a la 01:00 y a las 03:00, 05:00, 07:00, 09:00, 11:00, 13:00, 15:00, ' +
+        '17:00, 19:00, 21:00 y 23:00'],
+      ['0 9-10/5 * * *', 'a las 09:00']
+    ]);
   });
 });
 

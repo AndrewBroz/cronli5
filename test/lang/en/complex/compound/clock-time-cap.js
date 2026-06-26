@@ -32,8 +32,8 @@ describe('Clock-time enumeration cap:', function() {
   describe('a minute list leads with its own clause', function() {
     run([
       ['0,30 8-18/2 * * *',
-        'at 0 and 30 minutes past the hour, at 8 a.m., 10 a.m., ' +
-        '12 p.m., 2 p.m., 4 p.m., and 6 p.m.'],
+        'at 0 and 30 minutes past the hour, ' +
+        'every two hours from 8 a.m. through 6 p.m.'],
       ['0,15,30,45 9,17 * * MON',
         'at 0, 15, 30, and 45 minutes past the hour, ' +
         'at 9 a.m. and 5 p.m. on Monday']
