@@ -105,33 +105,29 @@ phrasings, LLM eval-set curation, style/tone compliance.
 adapter is the contract between cronli5 and any review tool. The automated
 path needs it too, so it gets locked now; the human UI plugs into it later.
 
-## Coverage tooling — source-accurate function/branch gating
+## Coverage tooling — source-accurate function/branch gating (RESOLVED)
 
-**Status:** Deferred — a documented tradeoff of the TypeScript migration, not
-a regression.
+**Status:** Resolved — the test runner moved from mocha + c8-over-`tsx` to
+Vitest with built-in V8 coverage (`vitest.config.ts`); `.mocharc.json` and
+`.c8rc.json` are gone. Coverage is now measured directly against the TypeScript
+sources (`resolve.extensionAlias` maps the NodeNext `.js` imports to `.ts`), so
+the gate reflects what the code actually exercises.
 
-**Problem.** `npm run coverage` (c8 over `tsx`) reports accurate line/statement
-coverage (gated at 99 in `.c8rc.json`) but **undercounts function/branch by
-~2–3 points**: esbuild's source maps (via `tsx`) blur function/branch
-boundaries — e.g. `analyze.ts` reports ~81% functions for fully-exercised code
-that was only *annotated*. Thresholds were relaxed to functions 97 / branches
-96 to absorb the artifact; the true numbers are ~100/99. It is an artifact, not
-a gap — proven because Monocart re-maps the *identical* run to true 100%.
+**What the accurate numbers revealed.** The old c8-over-`tsx` run was wrong in
+*both* directions, not just deflating: esbuild's source maps blurred function
+boundaries (deflating `analyze.ts` functions to ~81%, which forced the function
+gate down to 97), *and* they false-covered real source gaps, inflating
+statement/branch/line. The earlier "true numbers are ~100/99" claim was itself
+an artifact of that mis-mapping. Vitest's V8 measurement against source gives
+statements 98.3 / branches 96.3 / functions 99.1 / lines 98.4 — the function
+artifact is fixed (97 → 99), and the remaining gaps (e.g. the wildcard-hour
+`return null` paths in the per-language renderers) are genuine untested lines,
+not noise. Thresholds are gated at those accurate floors (98 / 96 / 99 / 98).
 
-**Options (to restore true-100% function/branch gating):**
-
-- **Monocart** (`monocart-coverage-reports` / `mcr`) — TS-aware, re-maps
-  accurately. But `c8 --experimental-monocart` *ignores* `--check-coverage`
-  (reports but won't gate), and standalone `mcr` needs `entryFilter` /
-  `sourceFilter` tuning and showed unreliable threshold/summary semantics in
-  testing.
-- **Vitest** — accurate built-in V8/Istanbul coverage with source maps; the
-  cleaner path **if** we accept switching the test runner off mocha.
-- **Node's native test runner + V8 coverage**, or building to JS before
-  instrumenting, are also worth evaluating.
-
-**Done when** function/branch thresholds are back at ~100/99 and gated in CI
-without the `tsx` artifact.
+**Follow-up (optional).** The genuine uncovered branches in the `de`/`es`/`fi`
+renderers (and a few in `en`/`zh`) are now visible and could be closed with
+targeted corpus cases to lift the floors toward 100; that is a coverage task,
+no longer a tooling one.
 
 ## Other deferred items
 
