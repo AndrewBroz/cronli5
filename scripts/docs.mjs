@@ -29,8 +29,11 @@ import en from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
 import zh from '../src/lang/zh/index.js';
-import {dialectPatterns, languagePatterns, tables} from './patterns.mjs';
+import {
+  comparisonPatterns, dialectPatterns, languagePatterns
+} from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
+import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
   new URL('../node_modules/cronstrue/package.json', import.meta.url),
@@ -63,16 +66,44 @@ function tableFrom(header, rows) {
   return [header, sep, ...rows].join('\n');
 }
 
-function renderEnglishTable(patterns) {
+// The class-grouped head-to-head: cronli5 in SENTENCE form (the capitalized
+// standalone, `{sentence: true}`) vs. cRonstrue (English), which always returns
+// a capitalized sentence — a fair like-for-like. One markdown table per class,
+// each preceded by an H3 heading, in simple -> medium -> complex order. Every
+// pattern's group is asserted against the divergence engine's `classify`, so a
+// mis-bucketed row fails `npm run docs` instead of shipping.
+const comparisonHeadings = {
+  simple: '### Simple &mdash; everyday cadences',
+  medium: '### Medium &mdash; a specific schedule',
+  complex: '### Complex &mdash; advanced operators and unions'
+};
+
+function comparisonTable(patterns) {
   const rows = patterns.map(function compare(pattern) {
-    return '| `' + pattern + '` | ' + describe(cronli5, pattern) + ' | ' +
-      describe(function their(p) {
-        return cronstrue.toString(p);
-      }, pattern) + ' |';
+    return '| `' + pattern + '` | ' +
+      describe((p) => cronli5(p, {sentence: true}), pattern) + ' | ' +
+      describe((p) => cronstrue.toString(p), pattern) + ' |';
   });
 
   return tableFrom(
-    '| Pattern | cronli5 | cRonstrue ' + cronstrueVersion + ' |', rows);
+    '| Pattern | cronli5 (sentence form) | cRonstrue ' + cronstrueVersion +
+    ' |', rows);
+}
+
+function renderComparison() {
+  const sections = ['simple', 'medium', 'complex'].map(function section(cls) {
+    const patterns = comparisonPatterns[cls];
+    const misgrouped = patterns.filter((p) => classify(p) !== cls);
+
+    if (misgrouped.length > 0) {
+      throw new Error('comparisonPatterns.' + cls + ' contains rows that do ' +
+        'not classify as ' + cls + ': ' + misgrouped.join(', '));
+    }
+
+    return comparisonHeadings[cls] + '\n\n' + comparisonTable(patterns);
+  });
+
+  return sections.join('\n\n');
 }
 
 function renderLanguageTable(language) {
@@ -223,10 +254,7 @@ const tableJobs = {
     'language-status': statusSummary()
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},
-  'docs/cronli5-vs-cronstrue.md': {
-    basic: renderEnglishTable(tables.basic),
-    showcase: renderEnglishTable(tables.showcase)
-  },
+  'docs/cronli5-vs-cronstrue.md': {comparison: renderComparison()},
   'docs/dialects.md': {dialects: renderDialectTable()}
 };
 

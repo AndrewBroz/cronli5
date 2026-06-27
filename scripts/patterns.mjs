@@ -31,6 +31,30 @@ const dialectPatterns = [
   '*/15 9-17 * * *', '0 0 12 25 12 * 2030'
 ];
 
+// The cRonstrue head-to-head display set, grouped by how a user perceives the
+// pattern (simple/medium/complex per the divergence engine's `classify`). Each
+// row is rendered cronli5-in-sentence-form vs. cRonstrue (English) so it is a
+// fair like-for-like, and the groups are chosen to be representative AND to
+// surface the real divergences: the OR-union (`0 0 1,15 * 3`), a bounded step
+// (`0 0 9-17/2 * *`), a step-in-range hour (`23 0-20/2 * * *`), month and
+// day-of-month enumerations, weekday ranges, and everyday cadences. Every
+// pattern's class is asserted by the docs generator against `classify`, so a
+// mis-grouped row fails the build rather than shipping.
+const comparisonPatterns = {
+  simple: [
+    '* * * * *', '*/5 * * * *', '*/15 * * * *', '0 */6 * * *',
+    '0 9 * * *', '0 12 * * *', '0 0 * * *'
+  ],
+  medium: [
+    '30 9 * * MON-FRI', '0 9-17 * * *', '0 9,17 * * *', '0 0 1,15 * *',
+    '0 9 * * 1', '0 12 * * SAT', '0 0 1 1 *', '0-29 * * * *'
+  ],
+  complex: [
+    '0 0 1,15 * 3', '0 0 9-17/2 * *', '23 0-20/2 * * *', '0 0 * * 5L',
+    '5,10 30 9 * * MON', '59 23 31 12 5', '30 9 15W 6 *', '15 30 9 * * MON'
+  ]
+};
+
 // Breadth fillers that top up the PlanNode kinds the curated `basic`/`showcase`
 // sets don't reach (verified by spanning-set.mjs's coverage report).
 const coverageExtras = [
@@ -44,5 +68,6 @@ const coverageExtras = [
 const spanningSet = [...tables.basic, ...tables.showcase, ...coverageExtras];
 
 export {
-  coverageExtras, dialectPatterns, languagePatterns, spanningSet, tables
+  comparisonPatterns, coverageExtras, dialectPatterns, languagePatterns,
+  spanningSet, tables
 };
