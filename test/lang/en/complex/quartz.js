@@ -30,7 +30,9 @@ describe('Quartz tokens:', function() {
   describe('W: the weekday nearest a date', function() {
     run([
       ['0 0 15W * *', 'on the weekday nearest the 15th at midnight'],
-      ['0 0 1W * *', 'on the weekday nearest the 1st at midnight']
+      ['0 0 1W * *', 'on the weekday nearest the 1st at midnight'],
+      // The `Wn` spelling (W before the day) is accepted alongside `nW`.
+      ['0 0 W15 * *', 'on the weekday nearest the 15th at midnight']
     ]);
   });
 
@@ -46,7 +48,9 @@ describe('Quartz tokens:', function() {
         'midnight'],
       ['0 0 * */2 5L',
         'on the last Friday in every odd-numbered month at midnight'],
-      ['0 0 * * L', 'every Saturday at midnight']
+      ['0 0 * * L', 'every Saturday at midnight'],
+      // The `7`-for-Sunday alias inside a Quartz weekday resolves to Sunday.
+      ['0 0 * * 7L', 'on the last Sunday of the month at midnight']
     ]);
   });
 
@@ -55,7 +59,9 @@ describe('Quartz tokens:', function() {
       ['0 0 * * 1#2', 'on the second Monday of the month at midnight'],
       ['0 9 * * MON#2', 'on the second Monday of the month at 9 a.m.'],
       ['0 0 * * 0#1', 'on the first Sunday of the month at midnight'],
-      ['0 0 * * 4#5', 'on the fifth Thursday of the month at midnight']
+      ['0 0 * * 4#5', 'on the fifth Thursday of the month at midnight'],
+      // The `7`-for-Sunday alias inside an nth-weekday form resolves to Sunday.
+      ['0 0 * * 7#2', 'on the second Sunday of the month at midnight']
     ]);
   });
 

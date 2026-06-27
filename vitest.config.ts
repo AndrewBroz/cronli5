@@ -31,11 +31,17 @@ export default defineConfig({
       // (the analyze.ts phantom that forced functions down to 97) while
       // *inflating* statement/branch/line coverage by false-covering real gaps.
       // These floors reflect what the TypeScript source actually exercises.
+      // Raised after closing the reachable gaps the migration exposed: core
+      // and the English renderer are now fully covered (100% lines/functions),
+      // and verified rows were added across de/es/fi/zh. The residual uncovered
+      // branches are either core-defensive guards or beta-renderer code paths
+      // the core normalizes away before they can fire; the floors sit just at
+      // the achieved coverage so any regression below it fails CI.
       thresholds: {
-        lines: 98,
-        branches: 96,
-        functions: 99,
-        statements: 98
+        lines: 98.5,
+        branches: 97,
+        functions: 99.2,
+        statements: 98.5
       }
     }
   }

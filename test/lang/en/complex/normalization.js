@@ -28,6 +28,14 @@ describe('Input normalization:', function() {
     ]);
   });
 
+  describe('a stepped-wildcard segment sorts ahead of a literal', function() {
+    // A `*/N` segment in a list fires first at the field minimum, so it sorts
+    // ahead of a later literal: `7,*/30` reads 0, 30 (from `*/30`), then 7.
+    run([
+      ['0 7,*/30 * * * *', 'at 0, 30, and 7 minutes past the hour']
+    ]);
+  });
+
   describe('degenerate ranges read as single values', function() {
     run([
       ['0 9-9 * * *', 'every day at 9 a.m.'],

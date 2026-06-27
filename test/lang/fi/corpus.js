@@ -556,6 +556,23 @@ describe('Suomi (fi):', function() {
       ['0 0 * * SUN-SAT', 'joka päivä keskiyöllä']
     ]);
   });
+
+  // Lisäkattavuus: tuntilistat ja -välit sekuntien/minuuttien kadenssin kanssa.
+  // Jokainen rivi kuvaa saman aikataulun kuin englanninkielinen tuloste.
+  describe('lisäkattavuus (tuntilistat/-välit)', function() {
+    run([
+      ['0 0 9,17 * * *', 'joka päivä klo 9 ja 17'],
+      ['0 9,12,17 * * *', 'joka päivä klo 9, 12 ja 17'],
+      ['*/15 9,17 * * *', '15 minuutin välein klo 9 ja 17'],
+      ['*/15 0,12 * * *', '15 minuutin välein klo 0 ja 12'],
+      ['15 0 9-17 * * *', '15 sekunnin kohdalla, klo 9–17'],
+      ['30 0 9-17/2 * * *',
+        '30 sekunnin kohdalla, kahden tunnin välein klo 9–17'],
+      // Siirretty tuntiaskel luettelee laukaisunsa kellonaikoina.
+      ['0 0 8/4 * * *', 'joka päivä klo 8, 12, 16 ja 20'],
+      ['0 30 0,8,16 * * *', 'joka päivä klo 0.30, 8.30 ja 16.30']
+    ]);
+  });
 });
 
 // Tunnetut, vielä korjaamattomat virheet (katselmus + laaja pyyhkäisy;

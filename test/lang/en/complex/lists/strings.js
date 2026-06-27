@@ -64,4 +64,14 @@ describe('Valid strings with lists:', function() {
       ['0 14 * * 1,3,5', 'every Monday, Wednesday, and Friday at 2 p.m.']
     ]);
   });
+
+  // A non-progression minute list inside a continuous hour range: the minutes
+  // enumerate ("at 1, 2, and 5 minutes past the hour") rather than collapsing
+  // to a stride, scoped to the hour window.
+  describe('minute list within an hour range', function() {
+    run([
+      ['1,2,5 9-17 * * *',
+        'at 1, 2, and 5 minutes past the hour from 9 a.m. through 5 p.m.']
+    ]);
+  });
 });

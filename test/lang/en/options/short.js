@@ -22,7 +22,12 @@ describe('Short option:', function() {
     ['0 2 * * 1-5', 'every Mon-Fri at 2 a.m.', options],
     ['0 14 * * 1,3,5', 'every Mon, Wed, and Fri at 2 p.m.', options],
     ['0 23 * * 4', 'every Thu at 11 p.m.', options],
-    ['0 6 * * 6', 'every Sat at 6 a.m.', options]
+    ['0 6 * * 6', 'every Sat at 6 a.m.', options],
+    // The `7`-for-Sunday alias resolves to Sunday, abbreviated under short.
+    ['0 9 * * 7', 'every Sun at 9 a.m.', options],
+    // A plain weekday list pluralizes per name, abbreviated under short;
+    // weekday lists display Monday-first with Sunday last.
+    ['0 9 * * 0,2', 'every Tue and Sun at 9 a.m.', options]
   ]);
 
   // The short flag compacts every "A through B" range to "A-B": weekday,
@@ -42,6 +47,17 @@ describe('Short option:', function() {
       ['* 9 * * *', 'every minute of the 9 a.m. hour', options],
       ['30 9-20,22 * * *',
         'at 30 minutes past the hour from 9 a.m.-8:30 p.m. and at 10:30 p.m.', options]
+    ]);
+  });
+
+  // A recurring weekday (no time anchor) pluralizes to "on Mondays" in full;
+  // under short the name is abbreviated and the plural suffix is dropped ("on
+  // Mon"). The `7`-for-Sunday alias resolves to Sunday.
+  describe('recurring weekday abbreviates without a plural suffix', function() {
+    run([
+      ['*/5 * * * 1', 'every 5 minutes on Mon', options],
+      ['*/5 * * * 1,3', 'every 5 minutes on Mon and Wed', options],
+      ['*/5 * * * 7', 'every 5 minutes on Sun', options]
     ]);
   });
 });

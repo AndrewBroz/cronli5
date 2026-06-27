@@ -1074,13 +1074,14 @@ function monthPhrase(schedule: Schedule): string {
   return nums.join('、') + '月';
 }
 
-// The day-of-month list. A pure list of singles shares one trailing 日
-// ("1、3、8日"); any range gives each segment its own 日 ("1至5日、10日").
+// The day-of-month list. A list of singles — or a bounded step enumerated to
+// its fires (9-17/2 = 9,11,13,15,17) — shares one trailing 日 ("1、3、8日",
+// "9、11、13、15、17日"); any range gives each segment its own 日 ("1至5日、10日").
 function dayList(schedule: Schedule): string {
   const segs = segmentsOf(schedule, 'date');
 
-  if (segs.every((seg) => seg.kind === 'single')) {
-    return segs.map((seg) => (seg as {value: string}).value).join('、') + '日';
+  if (segs.every((seg) => seg.kind === 'single' || seg.kind === 'step')) {
+    return fireValues(segs).join('、') + '日';
   }
 
   return segs.map(function day(seg) {
@@ -1088,7 +1089,9 @@ function dayList(schedule: Schedule): string {
       return seg.bounds[0] + '日至' + seg.bounds[1] + '日';
     }
 
-    return (seg as {value: string}).value + '日';
+    return seg.kind === 'step' ?
+      seg.fires.join('、') + '日' :
+      (seg as {value: string}).value + '日';
   }).join('、');
 }
 
@@ -1152,7 +1155,11 @@ function datePhrase(schedule: Schedule): string {
     return quartzDate(date, month || '本月');
   }
 
-  if (schedule.shapes.date === 'step') {
+  // An OPEN day step ("*/N") is a frequency — the bare "每N天" cadence. A
+  // BOUNDED step ("a-b/N") fires a finite set of days, so it enumerates them
+  // through the day-list path below, never the cadence (which would drop the
+  // bounds).
+  if (schedule.shapes.date === 'step' && isOpenStep(date)) {
     return month + cadence(stepSegment(schedule, 'date').interval, '天');
   }
 
@@ -1178,7 +1185,9 @@ function dateCore(schedule: Schedule, quartzPrefix: string): string {
     return quartzDate(schedule.pattern.date, quartzPrefix);
   }
 
-  if (schedule.shapes.date === 'step') {
+  // An open day step is the bare "每N天" cadence; a bounded step enumerates its
+  // days through dayList (see datePhrase), so the bounds are not dropped.
+  if (schedule.shapes.date === 'step' && isOpenStep(schedule.pattern.date)) {
     return cadence(stepSegment(schedule, 'date').interval, '天');
   }
 
@@ -1318,7 +1327,12 @@ function composePoint(schedule: Schedule, core: string): string {
 
   const dateSet = isSet(schedule.pattern.date);
   const weekdaySet = isSet(schedule.pattern.weekday);
-  const comma = dateSet && weekdaySet || schedule.shapes.date === 'step';
+  // The comma separates an OR union or the open "每N天" cadence from the core. A
+  // bounded date step renders as a glued day list ("每月9、11…日"), not a
+  // cadence, so it takes no comma — only an open step does.
+  const dateCadence = schedule.shapes.date === 'step' &&
+    isOpenStep(schedule.pattern.date);
+  const comma = dateSet && weekdaySet || dateCadence;
 
   return qual + (comma ? '，' : '') + core;
 }

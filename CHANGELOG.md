@@ -6,6 +6,23 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.3]
+
+### Fixed
+
+- **zh:** a bounded day-of-month step dropped its bounds — `0 0 9-17/2` rendered
+  "每2天" (every 2 days) instead of the days 9, 11, 13, 15, 17. It now enumerates
+  the days like en/es/de/fi ("每月9、11、13、15、17日"); the open `*/N` step keeps
+  "每N天". Surfaced by the new coverage tests (the zh corpus had only open-step
+  rows, so the bounded branch was untested).
+
+### Changed
+
+- Test coverage closed to its true floor after the Vitest migration: 74 new
+  verified corpus rows (core and the English renderer now ~100%), thresholds
+  raised to lines 98.5 / branches 97 / functions 99.2 / statements 98.5. The
+  remaining uncovered branches are genuinely-unreachable defensive guards.
+
 ## [0.3.2]
 
 Tooling and docs only — the published library is functionally unchanged.

@@ -265,6 +265,24 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 * 1-3 1-5', '1月至3月每周一至周五凌晨0点'],
       ['0 0 * 1-3 5L', '1月至3月最后一个周五凌晨0点'],
       ['0 0 */2 * *', '每2天，凌晨0点'],
+      // A BOUNDED day-of-month step (start-end/interval) fires a finite set of
+      // days, so it enumerates them like the equivalent explicit day list
+      // (9-17/2 = 9,11,13,15,17), never the open "每N天" cadence, which drops the
+      // bounds. The open "*/N" step above keeps "每N天" (no endpoint to lose).
+      // Mirrors en/es/de/fi, which all enumerate the bounded step's days.
+      ['0 0 9-17/2 * *', '每月9、11、13、15、17日凌晨0点'],
+      ['0 0 1-15/3 * *', '每月1、4、7、10、13日凌晨0点'],
+      ['0 0 5-25/4 * *', '每月5、9、13、17、21、25日凌晨0点'],
+      // A date list mixing a range with a bounded step: the range keeps its 至
+      // span, the step enumerates its fires, each segment carrying its own 日.
+      ['0 0 1-5,9-15/2 * *', '每月1日至5日、9、11、13、15日凌晨0点'],
+      ['0 0 9-17/2 1 *', '1月9、11、13、15、17日凌晨0点'],
+      ['0 0 9-17/2 1-3 *', '1月至3月，9、11、13、15、17日凌晨0点'],
+      ['0 0 9-17/2 */2 *', '每个奇数月9、11、13、15、17日凌晨0点'],
+      // In an OR union the bounded step enumerates its days in its arm, not "每2
+      // 天": "每月9、11、13、15、17日或每周五".
+      ['0 0 9-17/2 * 5', '每月9、11、13、15、17日或每周五，凌晨0点'],
+      ['0 0 9-17/2 * */2', '每月9、11、13、15、17日或周二、四、六、日，凌晨0点'],
       ['0 0 */2 * * *', '每2小时'],
       ['0 0 */2 * * 1', '每周一，每2小时'],
       ['0 0 */2 * * 1-5', '每周一至周五，每2小时'],
@@ -546,6 +564,30 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['*/25 12 15W 12 *', '12月最接近15日的工作日正午、12点25分和12点50分'],
       ['0 0 15W 12 *', '12月最接近15日的工作日凌晨0点'],
       ['0 0 15W * *', '本月最接近15日的工作日凌晨0点']
+    ]);
+  });
+
+  // Additional verified rows exercising renderer branches the core set leaves
+  // untouched: an interval-1 step, hour lists/ranges crossed with minute
+  // cadences, the `?` date placeholder folding to its month, the 7-for-Sunday
+  // alias, and a second folded across an hour list. Each was checked to carry
+  // the same schedule as the English rendering.
+  describe('额外覆盖 (additional coverage)', function() {
+    run([
+      ['*/1 * * * *', '每分钟'],
+      ['1/1 * * * *', '每小时1至59分，每分钟'],
+      ['0 9,12,17 * * *', '每天9点、正午和17点'],
+      ['0 1,2,5 * * *', '每天1点、2点和5点'],
+      ['30 9-17 * * *', '在9点至17点之间，每小时30分'],
+      ['*/15 9,17 * * *', '在9点和17点，每15分钟'],
+      ['* 9,17 * * *', '在9点和17点，每分钟'],
+      ['*/15 0,12 * * *', '在凌晨0点和正午，每15分钟'],
+      ['1,2,5 * * * *', '每小时1、2、5分'],
+      ['0 0 9,12,17 * *', '每月9、12、17日凌晨0点'],
+      ['0 0 9-17 * *', '每月9日至17日凌晨0点'],
+      ['0 0 ? 6 *', '6月每天凌晨0点'],
+      ['0 0 * 6 ?', '6月每天凌晨0点'],
+      ['30 0 9,17 * * *', '每天9点30秒和17点30秒']
     ]);
   });
 
