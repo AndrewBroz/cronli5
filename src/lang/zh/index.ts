@@ -25,6 +25,40 @@ type StepSegment = Extract<Segment, {kind: 'step'}>;
 const UNITS = {hour: '小时', minute: '分钟', second: '秒'};
 const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
+// Simplified → Traditional (zh-Hant) Han glyph map. Schedule prose differs
+// between the two scripts only by character form — within this domain every
+// Simplified glyph that has a Traditional form maps 1:1 with no context
+// sensitivity — so the Traditional variant is the reviewed Simplified output
+// with this map applied at the render boundary, NOT a second word table that
+// would duplicate the renderer's logic. The Taiwan-standard form is chosen for
+// each glyph (週 for week, 點/時/鐘/個/數/單/雙/後/間/從/內); 啟 (not the 啓
+// variant) for 啟動. Two whole-word choices are kept faithful to the 1:1 map
+// and flagged for native review in notes.md: 運行時間 (a Taiwan-native may say
+// 執行時間) and 表達式 (Taiwan tech register may prefer 運算式 / 表示式).
+const HANT: {[glyph: string]: string} = {
+  个: '個', 从: '從', 内: '內', 别: '別', 动: '動', 单: '單', 双: '雙',
+  后: '後', 启: '啟', 周: '週', 数: '數', 无: '無', 时: '時', 点: '點',
+  统: '統', 识: '識', 达: '達', 运: '運', 钟: '鐘', 间: '間'
+};
+
+// Apply the Traditional glyph map to a finished Simplified string. The default
+// Simplified (zh / zh-Hans) variant returns the input untouched, so its output
+// is byte-identical to before this variant existed.
+function toVariant(text: string, variant: ChineseStyle['variant']): string {
+  if (variant !== 'Hant') {
+    return text;
+  }
+
+  return Array.from(text, (glyph) => HANT[glyph] ?? glyph).join('');
+}
+
+// The variant the most recent `options()` call resolved. `cronli5()` always
+// calls `options()` before reading `reboot`/`fallback` or invoking `sentence`,
+// none of which receive `opts`; this lets those contract-fixed members honor
+// the dialect without changing the shared Language contract. The library is
+// synchronous and single render per call, so a module-private latch is safe.
+let activeVariant: ChineseStyle['variant'] = 'Hans';
+
 // "A、B和C" — enumerate with 、 and join the final item with 和.
 function joinAnd(items: string[]): string {
   if (items.length < 2) {
@@ -1405,6 +1439,13 @@ function hourCadenceApplies(schedule: Schedule): boolean {
 }
 
 function describe(schedule: Schedule, opts: Opts): string {
+  return toVariant(describeHans(schedule, opts), opts.style.variant);
+}
+
+// The Simplified rendering of a schedule; `describe` maps it to the active
+// variant. The body owns every Simplified glyph; the variant is applied once,
+// at the boundary, so no emit point has to know which script it is writing.
+function describeHans(schedule: Schedule, opts: Opts): string {
   const {kind} = schedule.plan;
   const core = render(schedule, schedule.plan, opts);
   let composed = core;
@@ -1453,22 +1494,36 @@ function describe(schedule: Schedule, opts: Opts): string {
 function normalizeOptions(options?: Cronli5Options): Opts {
   options = options || {};
 
+  const style = resolveDialect(options.dialect);
+
+  // `cronli5()` reads `reboot`/`fallback` and calls `sentence` without `opts`;
+  // latch the variant here (always called first) so they can honor the dialect.
+  activeVariant = style.variant;
+
   return {
     ampm: typeof options.ampm === 'boolean' ? options.ampm : false,
     lenient: !!options.lenient,
     seconds: !!options.seconds,
     short: !!options.short,
-    style: resolveDialect(options.dialect),
+    style,
     years: !!options.years
   };
 }
 
 const zh: Language<ChineseStyle> = {
   describe,
-  fallback: '无法识别的 cron 表达式',
+  // `reboot`/`fallback` are contract-fixed strings the core reads without
+  // `opts`; getters honor the variant `options()` latched, keeping the shared
+  // Language contract unchanged while the Traditional dialect still applies.
+  get fallback(): string {
+    return toVariant('无法识别的 cron 表达式', activeVariant);
+  },
   options: normalizeOptions,
-  reboot: '系统启动时',
-  sentence: (description) => '运行时间：' + description + '。'
+  get reboot(): string {
+    return toVariant('系统启动时', activeVariant);
+  },
+  sentence: (description) =>
+    toVariant('运行时间：', activeVariant) + description + '。'
 };
 
 export default zh;

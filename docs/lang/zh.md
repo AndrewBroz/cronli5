@@ -31,10 +31,23 @@ cronli5('30 9 * * MON-FRI', {lang: zh}); // '每周一至周五9点30分'
 
 ## Dialects
 
-Simplified Han (`zh-Hans`) is the default; Traditional (`zh-Hant`) is a
-separate top-level locale selected with the `dialect` option, reserved for
-Traditional character-form overrides. Schedule prose surfaces little regional
-variation, so the dialect surface is minimal today.
+Simplified Han (`zh`, `zh-Hans`) is the default; Traditional (`zh-Hant`) is a
+**within-zh variant** selected with the `dialect` option — not a separate
+locale module. A language never imports another language (only the core is
+shared; see [i18n-design.md](../i18n-design.md)), so a standalone `zh-Hant`
+module would have to duplicate or import zh's assembly logic. Within this domain
+the two scripts differ only by character form, so the variant is the Simplified
+output with a 1:1 Han glyph map applied at the render boundary
+(`時/鐘/點/週/個/數/單/雙/後/間/從/內` and the fallback/reboot/sentence strings).
+
+```js
+cronli5('30 9 * * MON-FRI', {lang: zh, dialect: 'zh-Hant'}); // '每週一至週五9點30分'
+```
+
+> **Experimental (`zh-Hant`).** A model-drafted glyph/register mapping, not yet
+> validated by a Traditional-native or blind Hant panel (the same gate that
+> graduates Simplified zh). `運行時間` and `表達式` are flagged for native
+> review (a Taiwan-native may prefer `執行時間` and `運算式` / `表示式`).
 
 ## cronli5 vs. cRonstrue (zh_CN locale)
 
