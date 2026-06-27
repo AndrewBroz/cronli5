@@ -1041,8 +1041,26 @@ function render(schedule: Schedule, plan: PlanNode, opts: Opts): string {
 
 // --- Day-level qualifier (date / month / weekday / year). ---
 
-// The month phrase: "" (wildcard), "每个奇数月"/"每个偶数月" (step ×2),
+// Whether the month is a BOUNDED parity step ("2-10/2") — an interval-2 step
+// that does NOT span the open parity set. It enumerates as a list of singles
+// ("2、4、6、8、10月"), so it takes the multi-month comma like an explicit list,
+// unlike a single month or a non-parity bounded step ("3-11/3", glued).
+function boundedParityMonth(schedule: Schedule): boolean {
+  if (schedule.shapes.month !== 'step' ||
+      isOpenStep(schedule.pattern.month)) {
+    return false;
+  }
+
+  const segs = segmentsOf(schedule, 'month');
+
+  return segs.length === 1 && segs[0].kind === 'step' && segs[0].interval === 2;
+}
+
+// The month phrase: "" (wildcard), "每个奇数月"/"每个偶数月" (OPEN step ×2),
 // "1月至3月" (range), else the enumerated numbers sharing one 月 ("1、4、7、10月").
+// A BOUNDED parity step ("2-10/2" = months 2,4,6,8,10) fires a finite set, so
+// it enumerates through the number path below rather than the open parity class
+// — the "每个偶数月" wording asserts December too, which the bound excludes.
 function monthPhrase(schedule: Schedule): string {
   if (schedule.pattern.month === '*') {
     return '';
@@ -1051,7 +1069,8 @@ function monthPhrase(schedule: Schedule): string {
   const segs = segmentsOf(schedule, 'month');
   const first = segs[0];
 
-  if (segs.length === 1 && first.kind === 'step' && first.interval === 2) {
+  if (segs.length === 1 && first.kind === 'step' && first.interval === 2 &&
+      isOpenStep(schedule.pattern.month)) {
     return '每个' + (first.fires[0] % 2 ? '奇' : '偶') + '数月';
   }
 
@@ -1167,12 +1186,13 @@ function datePhrase(schedule: Schedule): string {
     return '每月' + dayList(schedule);
   }
 
-  // A multi-month scope (range/list) ends in 月 and would run straight into the
+  // A multi-month scope (range/list, or a bounded parity step that enumerates
+  // like a list — "2、4、6、8、10月") ends in 月 and would run straight into the
   // day — "6月至8月1日" reads "8月1日" as August 1st. The comma keeps the month
   // scope distinct from the day ("6月至8月，1日"). A single month stays glued
   // ("6月1日"), which is unambiguous.
   const monthMulti = schedule.shapes.month === 'range' ||
-    schedule.shapes.month === 'list';
+    schedule.shapes.month === 'list' || boundedParityMonth(schedule);
 
   return month + (monthMulti ? '，' : '') + dayList(schedule);
 }
