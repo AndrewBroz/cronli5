@@ -6,6 +6,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.5.0]
+
+### Added
+
+- **Traditional Chinese (`zh-Hant`).** The Chinese renderer now produces
+  Traditional output via `cronli5(pattern, {lang: zh, dialect: 'zh-Hant'})` — a
+  faithful within-zh variant (時/鐘/點/週/個/數/單/雙/後/間 …), with Simplified
+  (`zh` / `zh-Hans`) output unchanged and identical round-trip meaning. Ships
+  **experimental** pending a Traditional-native review (two vocabulary choices
+  are flagged in the backlog).
+
 ## [0.4.0]
 
 ### Fixed

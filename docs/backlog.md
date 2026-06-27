@@ -44,6 +44,13 @@ open:
 
 - **fi compound/OR "tai"-rakenne + stacked-qualifier naturalness.** The blind Sonnet panel (17-pattern spanning set, 2026-06-24) found a systematic naturalness defect in the compound day-of-month/day-of-week/month "tai"-rakenne and in stacked month-weekday-hour qualifiers (8/17 items ≤3, two at 2; all three personas flagged it). Fix the compound rendering, then re-run the blind panel + round-trip review and re-promote fi from experimental to beta.
 
+- **zh-Hant native review (graduate experimental → beta).** The Traditional
+  Chinese variant ships as a model-drafted glyph/register mapping (no
+  Traditional-native or blind-Hant panel yet). A native review graduates it to
+  beta and should confirm the two flagged whole-word choices: `運行時間` (Taiwan
+  may prefer `執行時間`) and `表達式` (Taiwan tech register may prefer
+  `運算式`/`表示式`).
+
 **Minor / low priority (not yet captured as tests):**
 
 - CLI whitespace `--lang ' '` → "Unknown language:   (available …)" with a
@@ -180,6 +187,14 @@ achieved floor rather than a forced 100. Two sub-items remain:
   `this.timeout`, bridged onto Vitest by `test/vitest.setup.ts`. Porting it to
   Vitest-native hooks (`beforeAll`/`afterAll`, per-test timeout) would let the
   shim file go.
+- **zh's `activeVariant` module latch (Hant).** Because the `Language` contract
+  exposes `reboot`/`fallback` as plain strings and `sentence(description)` takes
+  no options, the zh-Hant variant honors the dialect for those three via a
+  module-private mutable `activeVariant` set in `options()`. It is safe today
+  (the library is synchronous and `options()` always runs first), but it is
+  global mutable state in an otherwise-pure renderer. Making `reboot`/`fallback`/
+  `sentence` options-aware in the contract would remove the latch — worth doing
+  if the contract is revisited or another language needs the same.
 
 ## Wider automated review coverage
 
