@@ -6,6 +6,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.4]
+
+### Fixed
+
+- **zh:** a bounded *parity* month step dropped its bound — `0 0 1 2-10/2`
+  (months 2,4,6,8,10) rendered "每个偶数月" (every even-numbered month), which
+  wrongly includes December. zh now enumerates a bounded parity step
+  ("2、4、6、8、10月") like en/es/de/fi; the open `*/2`/`2/2` step keeps
+  "单数月/偶数月". The exact analogue of the 0.3.3 day-step fix; found by auditing
+  the bug class that fix implied (the bounded case was thin in the corpora).
+
 ## [0.3.3]
 
 ### Fixed

@@ -26,28 +26,19 @@ open:
   really the month-not-scoping-the-union bug (the en analogue of the zh OR fix),
   not a redundancy.
 
-- **zh renders a bounded *month* step as the open parity form, dropping the
-  bound (a live bug).** `0 0 1 2-10/2 *` (months 2,4,6,8,10) → "每个偶数月"
-  ("every even-numbered month") — which also includes December, so it asserts a
-  month that does not fire. en/es/de/fi correctly enumerate "February, April,
-  June, August, and October". This is the exact analogue of the zh *day* bounded
-  step bug fixed in 0.3.3 (`9-17/2` → "每2天"): zh maps a bounded step to the
-  open cadence/parity wording without checking for bounds. Same fix shape — a
-  bounded month step should enumerate (or carry its bound), the open `*/2`/`2/2`
-  step keeps "单数月/偶数月". Test-first; round-trip must recover {2,4,6,8,10},
-  not the six even months.
-
-- **Audit the bounded-vs-open step class across every field × language.** The two
-  found instances (zh day, fixed; zh month, open above) are the same root cause: a
-  bounded step (`a-b/n`, a finite enumerable set) must enumerate or carry its
-  bounds, while an open step (`*/n`) reads as a cadence/parity. A spot-check of
-  hour/minute/second bounded steps across all five languages came back clean
-  (en/es/de/fi enumerate or use a bounded cadence; zh's hour/minute/second are
-  fine — only its parity-style *month* and the now-fixed *day* conflated), but the
-  bounded case is thin in the corpora, so this was dark. Run `roundtrip.mjs`
-  focused on `a-b/n` shapes per field per language (the value-set check fails on a
-  bounds-drop), and add bounded-step corpus rows wherever a field × language lacks
-  one — the absence of those rows is why both zh bugs went unnoticed.
+- **Audit the bounded-vs-open step class across every field × language.** Both
+  found instances were zh (day, fixed in 0.3.3; month, fixed in 0.3.4) and shared
+  one root cause: a bounded step (`a-b/n`, a finite enumerable set) must enumerate
+  or carry its bounds, while an open step (`*/n`) reads as a cadence/parity — zh
+  mapped a bounded step to the open cadence/parity wording without checking for
+  bounds. A spot-check of hour/minute/second bounded steps across all five
+  languages came back clean (en/es/de/fi enumerate or use a bounded cadence; zh's
+  hour/minute/second are fine — only its parity-style *day* and *month* conflated,
+  both now fixed), but the bounded case is thin in the corpora, which is why both
+  zh bugs went dark. Remaining work: run `roundtrip.mjs` focused on `a-b/n` shapes
+  per field per language (the value-set check fails on a bounds-drop) for full
+  assurance, and add bounded-step corpus rows wherever a field × language lacks
+  one — the absence of those rows is the systemic gap.
 
 **Per-language follow-ups:**
 
