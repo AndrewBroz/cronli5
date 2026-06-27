@@ -39,9 +39,9 @@ classes of defect the curated spanning set misses:
   Advisory bulk comprehension pass — `i18n-design.md` §4 Pass 2.
   The blind naturalness panel and re-review run instead over the **expanded core
   set** (`prepareReview`) — the cell sweep plus the curated spanning patterns
-  folded into `core-set.json`'s `spanning` field — so every rendering strategy
-  and every IR cell is covered, alongside realistic curated patterns. (Batch and
-  parallelize the panel over this larger set.)
+  folded into `core-set.json`'s `spanning` field — so every rendering plan
+  and every `Schedule` cell is covered, alongside realistic curated patterns.
+  (Parallelize the panel over this larger set.)
 
 ## The panel
 

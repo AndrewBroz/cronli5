@@ -19,7 +19,8 @@ plus contrast* — by hand, field × operator × boundary-value — and every on
 them had survived the entire code-derived tooling stack (fuzz, roundtrip, the
 panel). They survived because that stack defines its cells *from the
 implementation*, and the implementation was structurally blind to distinctions
-its IR does not model. So the cells must come from outside the code. The LLM
+its `Schedule` does not model. So the cells must come from outside the code. The
+LLM
 only does the two things code cannot (reverse a description, judge naturalness)
 and never owns the control flow.
 
@@ -60,8 +61,8 @@ This yields a factoring the code-derived view cannot express:
 a-priori spec = (cron-semantic classes, UNIVERSAL) ⋉ (linguistic distinctions, PER-LANGUAGE)
 ```
 
-The universal half validates the **IR**; the per-language half validates each
-**renderer** — the core/renderer split, now with an external standard. The
+The universal half validates the **`Schedule`**; the per-language half validates
+each **renderer** — the core/renderer split, now with an external standard. The
 universal half is a **single shared spec every language is measured against**,
 so adding a language is "honor every a-priori distinction," available *before
 the renderer exists* — whereas a-posteriori cells need the renderer to exist to
@@ -136,18 +137,18 @@ every decision in two or more places, assert the copies agree on shared inputs.
 
 ## The map is the diagnostic
 
-Build `a-priori class → IR cell` by running one representative of each class
-through `analyze()`:
+Build `a-priori class → Schedule cell` by running one representative of each
+class through `analyze()`:
 
-- two a-priori classes → the same IR cell: the IR *conflates* a real distinction
-  (an under-distinction bug in the neutral layer);
-- one a-priori class → multiple IR cells: the IR *splits* on something cron
-  semantics doesn't care about — a language-specific assumption *leaked into the
-  neutral IR* (the cadence/confinement leaks).
+- two a-priori classes → the same `Schedule` cell: the `Schedule` *conflates* a
+  real distinction (an under-distinction bug in the neutral layer);
+- one a-priori class → multiple `Schedule` cells: the `Schedule` *splits* on
+  something cron semantics doesn't care about — a language-specific assumption
+  *leaked into the neutral `Schedule`* (the cadence/confinement leaks).
 
-So a-priori coverage **tests the IR's neutrality and completeness** — the
+So a-priori coverage **tests the `Schedule`'s neutrality and completeness** — the
 external oracle for the cell structure itself, which the a-posteriori floor
-definitionally cannot be (it is defined *by* the IR).
+definitionally cannot be (it is defined *by* the `Schedule`).
 
 ### The denotational uniformity test (worked example)
 
@@ -235,8 +236,9 @@ stateful framework or TMS earns its place only in the human graduation loop.
    crons by fire-set invariant" and the universal half falls out.
 2. **Generate** *(code)* — a representative per a-priori class + both-branch
    patterns per rule.
-3. **Map + floor** *(code)* — `a-priori class → IR cell`; flag conflations/leaks
-   (IR diagnostic); assert `declared == reachable`, branch coverage 100%, and
+3. **Map + floor** *(code)* — `a-priori class → Schedule cell`; flag
+   conflations/leaks (`Schedule` diagnostic); assert `declared == reachable`,
+   branch coverage 100%, and
    cross-site consistency.
 4. **Objective tier** *(LLM node)* — roundtrip each representative: render →
    back-translate → exact per-field value-set compare. Scales; unfudgeable.
@@ -266,7 +268,7 @@ decides coverage.
 | certifies | every *distinction* exercised | every code path exercised |
 | blind to | nothing semantic (can over-split) | distinctions the code fails to make |
 | tied to | the cron + target language | this implementation |
-| tests the IR? | **yes** | no — defined by it |
+| tests the `Schedule`? | **yes** | no — defined by it |
 | transfers across languages | **yes** (universal half shared) | no (cells are en-shaped) |
 | available | **before the renderer exists** | only once the renderer has cells |
 

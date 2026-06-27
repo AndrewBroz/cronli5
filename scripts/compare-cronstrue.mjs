@@ -5,9 +5,8 @@
 // cronstrue read better (or worse)?
 //
 // Usage: node --import tsx scripts/compare-cronstrue.mjs [--only=<substr>]
-// [--diffs] (the `tsx` loader is required since the move to TypeScript source).
+// (the `tsx` loader is required since the move to TypeScript source).
 //   --only=<substr>  only show patterns containing <substr>
-//   --diffs          (reserved) reserved for future filtering
 
 import {readdirSync, readFileSync, statSync} from 'node:fs';
 import {join, relative} from 'node:path';

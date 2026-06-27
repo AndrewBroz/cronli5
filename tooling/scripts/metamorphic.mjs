@@ -1,14 +1,16 @@
 // Metamorphic + anti-collision bug discovery for cronli5 — oracle-free.
 //
-// The IR is the canonical semantic form: two crons that denote the SAME
-// schedule must analyze() to a DEEP-EQUAL IR, after which identical rendering
-// in every language follows for free. So the primary assertion is IR equality,
-// not prose. A pair that renders the same but has a DIFFERENT IR is the fragile
-// case — the equivalence is enforced per-renderer instead of canonicalized in
-// the core, exactly where a language can later drift.
+// The Schedule is the canonical semantic form: two crons that denote the SAME
+// schedule must analyze() to a DEEP-EQUAL Schedule, after which identical
+// rendering in every language follows for free. So the primary assertion is
+// Schedule equality, not prose. A pair that renders the same but has a
+// DIFFERENT Schedule is the fragile case — the equivalence is enforced
+// per-renderer instead of canonicalized in the core, exactly where a language
+// can later drift.
 //
 // Anti-collision is the dual: crons with different fire-sets must produce
-// different IR; identical IR for distinct schedules is a dropped restriction.
+// different Schedules; identical Schedules for distinct schedules is a dropped
+// restriction.
 //
 // No model, no oracle — pure structural invariants. Run directly to print the
 // report (exits non-zero on any violation); test/core/metamorphic.js gates it.
@@ -25,8 +27,9 @@ import zh from '../../src/lang/zh/index.js';
 const LANGS = {en, es, de, fi, zh};
 const OPTS = en.options();
 
-// [label, cronA, cronB] — A and B denote the SAME schedule; their IR must be
-// deep-equal. Each equivalence rule we discover becomes a row, guarded forever.
+// [label, cronA, cronB] — A and B denote the SAME schedule; their Schedule must
+// be deep-equal. Each equivalence rule we discover becomes a row, guarded
+// forever.
 const EQUIVALENT = [
   ['full-span minute', '0-59 * * * *', '* * * * *'],
   ['full-span hour', '0 0-23 * * *', '0 * * * *'],
@@ -50,7 +53,7 @@ const EQUIVALENT = [
   ['5-field = 6-field second-0', '2 0 * * *', '0 2 0 * * *']
 ];
 
-// [label, cronA, cronB] — DIFFERENT schedules; the IR must differ.
+// [label, cronA, cronB] — DIFFERENT schedules; the Schedule must differ.
 const DISTINCT = [
   ['minute-0 vs every-minute', '* 0 * * *', '* * * * *'],
   ['weekday 1-5 vs every', '0 0 * * 1-5', '0 0 * * *'],
@@ -69,7 +72,8 @@ function renderAll(cron) {
   }));
 }
 
-// Classify one equivalence pair against the IR-first invariant: {ok, status}.
+// Classify one equivalence pair against the Schedule-first invariant:
+// {ok, status}.
 function classifyEquivalent(a, b) {
   const irEqual = irKey(a) === irKey(b);
   const ra = renderAll(a);

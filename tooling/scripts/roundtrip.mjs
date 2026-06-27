@@ -142,11 +142,10 @@ function prepareRoundtrip(lang, limit) {
 }
 
 // The review substrate: the whole expanded core set (cell sweep + curated
-// spanning patterns) rendered with `lang`. This is the panel's input — broad
-// coverage of every rendering plan plus realistic curated patterns, far
-// wider than the shape-deduped fuzz sample prepareRoundtrip draws. Quartz
-// patterns are included (the naturalness panel rates them); tallyRoundtrip
-// skips them for the correctness comparison.
+// spanning patterns) rendered with `lang` — broad coverage of every rendering
+// plan plus realistic curated patterns, far wider than the shape-deduped fuzz
+// sample prepareRoundtrip draws. Quartz patterns are included (reviewed for
+// naturalness); tallyRoundtrip skips them for the correctness comparison.
 function prepareReview(lang) {
   return reviewPatterns
     .map((pattern) => ({pattern, description: render(pattern, lang)}))
