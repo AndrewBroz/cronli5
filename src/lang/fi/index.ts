@@ -209,31 +209,67 @@ function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
 
 // A restricted-month date-or-weekday union: both the date and weekday are
 // restricted AND the month is restricted. When true, the month leads so it
-// scopes both arms, and the joko…tai union comes last.
+// scopes both arms, and the inclusive "tai" union comes last.
 function restrictedMonthUnion(schedule: Schedule): boolean {
   return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*' &&
     schedule.pattern.month !== '*';
 }
 
-// The DOM arm of a restricted-month joko…tai union. Under a fronted month
-// an ordinary date drops the generic "kuukauden" anchor; a Quartz date
-// keeps its idiom unchanged.
+// An open interval-2 day-of-month step covers the odd days (1, 3, 5, …, 31),
+// resetting each month — so in a union arm it reads as the parity class
+// "kuukauden parittomina päivinä" (the essive plural of "odd days of the
+// month"), never the continuous "joka toinen päivä" (which implies an
+// unbroken 48-hour cycle across month boundaries) nor a 16-date enumeration
+// that would bury the union beside the "tai". `*/2` and `1/2` are the odd
+// days. Mirrors en's odd-numbered-day idiom; null when not such a step.
+function oddDayUnion(dateField: string): string | null {
+  if (!isOpenStep(dateField)) {
+    return null;
+  }
+
+  const [start, step] = dateField.split('/');
+
+  return (start === '*' || start === '1') && +step === 2 ?
+    'kuukauden parittomina päivinä' :
+    null;
+}
+
+// The DOM arm of a restricted-month union. Under a fronted month an ordinary
+// date drops the generic "kuukauden" anchor; a Quartz date keeps its idiom
+// unchanged; an open `*/2` step reads as the odd-day parity class.
 function unionDateArm(schedule: Schedule): string {
   return quartzDatePhrase(schedule.pattern.date) ||
+    oddDayUnion(schedule.pattern.date) ||
     dateWords(schedule) + ' päivänä';
+}
+
+// The weekday arm of a union. A Monday-through-Friday range reads as the
+// recurring weekday class "arkisin" (= weekdays), parallel to the recurring
+// date arm beside it; everything else defers to the general weekday qualifier.
+function unionWeekdayArm(schedule: Schedule): string {
+  const segments = segmentsOf(schedule, 'weekday');
+
+  if (segments.length === 1 && segments[0].kind === 'range' &&
+      segments[0].bounds[0] === '1' && segments[0].bounds[1] === '5') {
+    return 'arkisin';
+  }
+
+  return weekdayQualifier(schedule);
 }
 
 // Render an analyzed cron pattern (the Schedule) as Finnish.
 function describe(schedule: Schedule, opts: NormalizedOptions): string {
   // A restricted-month date-or-weekday union: the month leads so it scopes
-  // both arms, then the joko…tai union comes last.
+  // both arms, then the inclusive "tai" union comes last. Finnish "joko … tai"
+  // is the EXCLUSIVE disjunction (only one of the two), so it cannot express
+  // cron's union — plain "tai" reads inclusively.
   if (restrictedMonthUnion(schedule)) {
     const timePart = render(schedule, schedule.plan, opts);
 
     return applyYear(
       monthPhrase(schedule) + ' ' + timePart +
-        ' joko ' + unionDateArm(schedule) + ' tai ' +
-        weekdayQualifier(schedule),
+        ' ' + unionDateArm(schedule) + ' tai ' +
+        unionWeekdayArm(schedule),
       schedule,
       opts
     );
@@ -1647,11 +1683,16 @@ function trailingQualifier(
 }
 
 // "kuukauden 13. päivänä tai perjantaisin": cron fires when either the
-// date or the weekday matches. Only reachable when date≠* AND weekday≠*
-// AND month=* (the restricted-month union is handled in describe()),
-// so monthScope always returns '' here.
+// date or the weekday matches (inclusive union). Only reachable when date≠*
+// AND weekday≠* AND month=* (the restricted-month union is handled in
+// describe()), so monthScope always returns '' here. An open `*/2` date
+// reads as the odd-day parity class (not the continuous "joka toinen
+// päivä"); a Mon–Fri weekday reads as the recurring class "arkisin".
 function dateOrWeekday(schedule: Schedule, opts: NormalizedOptions): string {
-  return datePhrase(schedule, opts) + ' tai ' + weekdayQualifier(schedule) +
+  const dateArm = oddDayUnion(schedule.pattern.date) ||
+    datePhrase(schedule, opts);
+
+  return dateArm + ' tai ' + unionWeekdayArm(schedule) +
     monthScope(schedule);
 }
 

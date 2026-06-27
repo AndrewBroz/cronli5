@@ -97,20 +97,35 @@ first review's naturalness defects ship.
 * **OR-scope (restricted-month date-OR-weekday union).** When cron ORs a
   restricted DOM with a restricted DOW *and* the month is restricted, the
   month and the time are shared across both arms. Render
-  **`[month] [time] joko <DOM> tai <DOW>`**: the month leads and scopes the
-  union, the time follows it, and the `joko … tai` union comes **last** —
+  **`[month] [time] <DOM> tai <DOW>`**: the month leads and scopes the
+  union, the time follows it, and the `… tai …` union comes **last** —
   nothing trails it. A trailing month or time word mis-scopes onto only the
-  last arm (`tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin`, not
-  `… tai maanantaisin tammikuussa keskiyöllä`). Use the correlative
-  `joko … tai`, not bare `tai`, whenever a shared qualifier scopes the union.
+  last arm (`tammikuussa keskiyöllä 1. päivänä tai maanantaisin`, not
+  `… tai maanantaisin tammikuussa keskiyöllä`). The union joiner is the
+  **plain inclusive `tai`**, never the correlative `joko … tai`: Finnish
+  `joko … tai` is the EXCLUSIVE disjunction (only one of the two), which
+  destroys cron's union reading. (An earlier panel-pinned `joko … tai` form
+  was reversed once a fi native panel flagged the exclusive reading.)
 * **Fronted-month case + day arm.** Single month → inessive (`tammikuussa`),
   list → inessive list (`tammikuussa ja heinäkuussa`), range →
   elative-illative (`kesäkuusta syyskuuhun`). Under a fronted month an
-  ordinary DOM drops the generic `kuukauden` (`joko 1. päivänä …`); a Quartz
-  date keeps its idiom (`joko kuukauden viimeisenä päivänä …`). The inessive
+  ordinary DOM drops the generic `kuukauden` (`1. päivänä …`); a Quartz
+  date keeps its idiom (`kuukauden viimeisenä päivänä …`). The inessive
   list also sidesteps the old genitive coordination bug — one ordinal, no
   `tammikuun ja heinäkuun 1. päivänä`. A **wildcard-month** union is left on
   plain `tai` (nothing to scope).
+* **`*/2` day-of-month in a union.** An open `*/2` (or `1/2`) DOM is the
+  odd-day parity class, read as **`kuukauden parittomina päivinä`** (odd days
+  of the month, resetting each month: 1, 3, 5, …, 31), never the continuous
+  `joka toinen päivä` (which implies an unbroken 48-hour cycle across month
+  boundaries) and never its 16-date enumeration. The **standalone** `0 0 */2 * *`
+  keeps the parity-neutral cadence `joka toinen päivä`; only the union arm uses
+  the odd-day idiom. Other open steps (`*/3`, `2/2`, …) keep their cadence or
+  enumeration in a union.
+* **Weekday arm of a union.** A Mon–Fri (`1-5`/`MON-FRI`) weekday reads as the
+  recurring class **`arkisin`** (= weekdays), parallel to the recurring date
+  arm beside it — not `maanantaista perjantaihin`, which is reserved for the
+  **standalone** weekday-only schedule.
 * **Level reorder (anchored minute window/list + specific hours).** When the
   minute is an anchored `kohdalla` clause for a **range** (`0–30`) or
   multi-point **list** (`0 ja 30`) and the hour is a simple `klo`-digit list
