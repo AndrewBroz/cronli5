@@ -97,28 +97,54 @@ describe('Suomi (fi):', function() {
         'joulukuun 25. päivänä vuonna 2030 keskipäivällä'],
       ['0 0 13 * FRI',
         'kuukauden 13. päivänä tai perjantaisin keskiyöllä'],
-      // Restricted-month date-or-weekday union: month leads, time follows, joko…tai union last.
+      // A Mon–Fri weekday arm reads as the parallel recurring class "arkisin"
+      // (= weekdays), matching the recurring date arm beside it.
+      ['0 0 1 * 1-5',
+        'kuukauden 1. päivänä tai arkisin keskiyöllä'],
+      // An open */2 day-of-month is the odd-day parity class, never enumerated:
+      // "kuukauden parittomina päivinä" (odd days, resetting each month), not the
+      // continuous "joka toinen päivä".
+      ['0 0 */2 * */2',
+        'kuukauden parittomina päivinä tai tiistaisin, torstaisin, ' +
+        'lauantaisin ja sunnuntaisin keskiyöllä'],
+      // Restricted-month date-or-weekday union: month leads + time follows, then
+      // the inclusive "tai" union last (NOT exclusive "joko … tai").
       ['0 0 1 1 MON',
-        'tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin'],
+        'tammikuussa keskiyöllä 1. päivänä tai maanantaisin'],
       ['0 0 1 6-9 FRI',
-        'kesäkuusta syyskuuhun keskiyöllä joko 1. päivänä tai perjantaisin'],
+        'kesäkuusta syyskuuhun keskiyöllä 1. päivänä tai perjantaisin'],
+      ['0 0 1 1-3 5L',
+        'tammikuusta maaliskuuhun keskiyöllä 1. päivänä tai ' +
+        'kuukauden viimeisenä perjantaina'],
+      ['*/5 * 1 6 5',
+        'kesäkuussa viiden minuutin välein 1. päivänä tai perjantaisin'],
+      ['0 9-17 1 6 5',
+        'kesäkuussa joka tunti klo 9–17 1. päivänä tai perjantaisin'],
       ['5 9-17 1,15 6-8 MON-FRI',
         'kesäkuusta elokuuhun 5 minuutin kohdalla klo 9.05–17.05 ' +
-        'joko 1. ja 15. päivänä tai maanantaista perjantaihin'],
+        '1. ja 15. päivänä tai arkisin'],
       // Month-list case: inessive list fronts the union; the uneven hour step
       // reads as its bounded cadence.
       ['5 */5 1 1,7 MON',
         'tammikuussa ja heinäkuussa 5 minuutin kohdalla, ' +
-        'viiden tunnin välein klo 0–20 joko 1. päivänä tai maanantaisin'],
+        'viiden tunnin välein klo 0–20 1. päivänä tai maanantaisin'],
       // Anchored minute step with a uneven hour cadence, OR-scope.
       ['*/45 */5 1-5 6 MON-FRI',
         'kesäkuussa 0 ja 45 minuutin kohdalla, ' +
         'viiden tunnin välein klo 0–20 ' +
-        'joko 1.–5. päivänä tai maanantaista perjantaihin'],
+        '1.–5. päivänä tai arkisin'],
       // Range+isolated hours under a restricted-month union: minute-first, sekä klo.
       ['5,10,30 9-20,22 1 1 MON',
         'tammikuussa 5, 10 ja 30 minuutin kohdalla klo 9–20 sekä klo 22 ' +
-        'joko 1. päivänä tai maanantaisin']
+        '1. päivänä tai maanantaisin'],
+      // An open day-of-month step that is NOT */2 keeps its cadence/enumeration
+      // in a union (only */2 reads as the odd-day parity class): a month=*
+      // union takes the plain step cadence, a fronted-month union enumerates.
+      ['0 0 */3 * 5',
+        'joka kolmas päivä tai perjantaisin keskiyöllä'],
+      ['0 0 */3 6 5',
+        'kesäkuussa keskiyöllä 1., 4., 7., 10., 13., 16., 19., 22., 25., ' +
+        '28. ja 31. päivänä tai perjantaisin']
     ]);
   });
 
@@ -151,9 +177,9 @@ describe('Suomi (fi):', function() {
       ['0 0 * * MON#2', 'kuukauden toisena maanantaina keskiyöllä'],
       // A Quartz date OR'd with a weekday under a ranged month (fuzzer-found
       // crash: the ranged-month branch assumed the date had segments).
-      // Restricted month fronts + joko…tai union last.
+      // Restricted month fronts + inclusive "tai" union last.
       ['0 0 L 6-8 MON',
-        'kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä ' +
+        'kesäkuusta elokuuhun keskiyöllä kuukauden viimeisenä päivänä ' +
         'tai maanantaisin']
     ]);
   });

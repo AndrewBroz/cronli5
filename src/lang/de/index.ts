@@ -8,6 +8,7 @@ import {
   renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
+import {isOpenStep} from '../../core/shapes.js';
 import {toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
@@ -284,6 +285,29 @@ function quartzDate(field: string): string | null {
   }
 
   return null;
+}
+
+// An open interval-2 day-of-month step covers a parity set, so it reads as the
+// parity class ("an jedem ungeraden Tag des Monats") rather than enumerating
+// its 16 fires — the enumeration would bury the union beside the "oder". `*/2`
+// and `1/2` are the odd days, `2/2` the even; any other start enumerates.
+// Mirrors en's odd/even-numbered-day idiom. Null when not such a step.
+function oddEvenDay(dateField: string): string | null {
+  if (!isOpenStep(dateField)) {
+    return null;
+  }
+
+  const [start, step] = dateField.split('/');
+
+  if (+step !== 2) {
+    return null;
+  }
+
+  if (start === '*' || start === '1') {
+    return 'an jedem ungeraden Tag des Monats';
+  }
+
+  return start === '2' ? 'an jedem geraden Tag des Monats' : null;
 }
 
 type Months = GermanStyle['months'];
@@ -1280,18 +1304,83 @@ const renderers = {
   standaloneSeconds: renderSeconds
 };
 
-// The weekday/day/month frame. Date and weekday together are cron's OR case,
-// not yet built.
+// True when both the day-of-month and the weekday are restricted: cron fires on
+// the UNION of the two sets ("am 1. oder sonntags"). The month, if any, scopes
+// the WHOLE union and so leads the description (see `dayUnionMonthLead`) rather
+// than trailing one half, where it would read as scoping only that half.
+function isDayUnion(schedule: Schedule): boolean {
+  return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*';
+}
+
+// The leading "im Januar " scope for a day union (empty when the month is a
+// wildcard). The month brackets both or-branches, so it precedes the whole
+// description; the union clause itself then carries no trailing month.
+function dayUnionMonthLead(schedule: Schedule, months: Months): string {
+  return schedule.pattern.month === '*' ?
+    '' :
+    monthClause(schedule, months) + ' ';
+}
+
+// The day-of-month half of a union as a predicate. A Quartz date is its
+// definite phrase; an open `*/2`-style step is the parity class ("an jedem
+// ungeraden Tag des Monats"), never a 16-date enumeration that would bury the
+// union; otherwise the plain date clause ("am 1.", "vom 1. bis zum 15.").
+function dayUnionDate(schedule: Schedule): string {
+  return quartzDate(schedule.pattern.date) ||
+    oddEvenDay(schedule.pattern.date) ||
+    dateClauseBare(schedule);
+}
+
+// The day-of-week half of a union as a predicate. A Quartz weekday is its
+// definite phrase; the Monday-through-Friday range reads as the weekday class
+// ("an einem Wochentag (Mo–Fr)"), parallel to the date predicate beside it;
+// otherwise the adverbial weekday list ("freitags", "montags und mittwochs").
+function dayUnionWeekday(schedule: Schedule): string {
+  const weekday = schedule.pattern.weekday;
+  const quartz = quartzWeekday(weekday);
+
+  if (quartz) {
+    return quartz;
+  }
+
+  const segments = segmentsOf(schedule, 'weekday');
+
+  if (segments.length === 1 && segments[0].kind === 'range' &&
+      segments[0].bounds[0] === '1' && segments[0].bounds[1] === '5') {
+    return 'an einem Wochentag (Mo–Fr)';
+  }
+
+  return weekdayQualifier(schedule);
+}
+
+// An open day-of-month step (`*/n`/`a/n`) as a cadence, not its 16-date
+// enumeration. Interval 2 reads as the parity-neutral cadence ("jeden zweiten
+// Tag des Monats") in the standalone case (the OR-union prefers the parity
+// idiom); other open steps fall back to the enumerated date clause. Null when
+// the date is not an open step.
+function dateStepCadence(schedule: Schedule): string | null {
+  const date = schedule.pattern.date;
+
+  if (!isOpenStep(date)) {
+    return null;
+  }
+
+  const [start, step] = date.split('/');
+
+  return (start === '*' || start === '1') && +step === 2 ?
+    'jeden zweiten Tag des Monats' :
+    null;
+}
+
+// The weekday/day/month frame. Date and weekday together are cron's OR case.
 function qualifier(schedule: Schedule, months: Months): string {
   const {date, month, weekday} = schedule.pattern;
 
   // Date and weekday together are cron's OR: "am 31. oder freitags". Either
-  // side may itself be a Quartz form.
-  if (date !== '*' && weekday !== '*') {
-    const datePart = quartzDate(date) || dateClauseBare(schedule);
-    const weekdayPart = quartzWeekday(weekday) || weekdayQualifier(schedule);
-
-    return datePart + ' oder ' + weekdayPart + monthScope(schedule, months);
+  // side may itself be a Quartz or parity form. The month leads the whole
+  // union (handled in `describe`), so the union clause carries none here.
+  if (isDayUnion(schedule)) {
+    return dayUnionDate(schedule) + ' oder ' + dayUnionWeekday(schedule);
   }
 
   if (weekday !== '*') {
@@ -1300,7 +1389,7 @@ function qualifier(schedule: Schedule, months: Months): string {
   }
 
   if (date !== '*') {
-    const quartz = quartzDate(date);
+    const quartz = quartzDate(date) || dateStepCadence(schedule);
 
     return quartz ?
       quartz + monthScope(schedule, months) :
@@ -1416,6 +1505,12 @@ function describe(schedule: Schedule, opts: Opts): string {
   }
   else if (needsDailyFrame(schedule)) {
     base = 'täglich ' + core;
+  }
+
+  // A day union's month brackets both or-branches, so it leads the whole
+  // description rather than trailing one half (the qualifier left it off).
+  if (isDayUnion(schedule)) {
+    base = dayUnionMonthLead(schedule, opts.style.months) + base;
   }
 
   return applyYear(base, schedule);

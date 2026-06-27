@@ -37,4 +37,23 @@ describe('中文 (zh) — branch coverage:', function() {
       ['0 0 15W * *', '本月最接近15日的工作日凌晨0点']
     ]);
   });
+
+  // The */2 day-of-month parity split: standalone (date-only) keeps the parity-
+  // neutral cadence "每2天"; an OR union takes the odd/even-day predicate so the
+  // union is not buried beside the 或. 2/2 is the even-day class ("双数日").
+  describe('单/双数日 (*/2 odd/even-day parity in OR)', function() {
+    run([
+      ['0 0 */2 * *', '每2天，凌晨0点'],
+      ['0 0 */2 * *', '每2天，凌晨0点', {short: true}],
+      ['0 0 1/2 * 0', '每月单数日或每周日，凌晨0点'],
+      ['0 0 2/2 * 0', '每月双数日或每周日，凌晨0点'],
+      ['0 0 2/2 6 0', '6月，双数日或每周日，凌晨0点'],
+      // A non-parity open step (step !== 2) or an offset start not in {*,1,2}
+      // carries no parity class — it falls back to the plain cadence in the OR,
+      // both with a wildcard month (每3天) and a fronted month (6月，每3天).
+      ['0 0 */3 * 0', '每3天或每周日，凌晨0点'],
+      ['0 0 3/2 * 0', '每2天或每周日，凌晨0点'],
+      ['0 0 */3 6 0', '6月，每3天或每周日，凌晨0点']
+    ]);
+  });
 });

@@ -8,6 +8,7 @@ import {
   arithmeticStep, hourListStride, offsetCleanStride,
   renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
+import {isOpenStep} from '../../core/shapes.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
 import {maxClockTimes, monthNumbers, weekdayNumbers} from '../../core/specs.js';
@@ -1109,6 +1110,34 @@ function quartzDate(token: string, monthPrefix: string): string {
   return monthPrefix + '最接近' + token.slice(0, -1) + '日的工作日';
 }
 
+// An open interval-2 day-of-month step covers a parity set, so in an OR union
+// it reads as the parity class — "单数日" (odd days, resetting each month) for
+// `*/2`/`1/2`, "双数日" (even days) for `2/2` — rather than the continuous
+// "每2天" cadence, which buries the union beside the 或 and mis-implies a fixed
+// 48-hour cycle. The standalone date-only case keeps "每2天" (a parity-neutral
+// cadence). With a wildcard month the predicate leads with 每月 ("每月单数日");
+// a fronted month already scopes it, so the bare predicate is used ("单数日").
+// Mirrors en's odd/even-numbered-day idiom and de/fi's split. Null otherwise.
+function oddEvenDay(dateField: string, monthLead: boolean): string | null {
+  if (!isOpenStep(dateField)) {
+    return null;
+  }
+
+  const [start, step] = dateField.split('/');
+
+  if (+step !== 2) {
+    return null;
+  }
+
+  const lead = monthLead ? '每月' : '';
+
+  if (start === '*' || start === '1') {
+    return lead + '单数日';
+  }
+
+  return start === '2' ? lead + '双数日' : null;
+}
+
 // The date side of a qualifier (month folded in): "每月1日", "1月1日",
 // "每2天", "1月每2天", "本月最后一天", "每个奇数月1日至15日".
 function datePhrase(schedule: Schedule): string {
@@ -1242,11 +1271,16 @@ function qualifier(schedule: Schedule): string {
     const month = monthPhrase(schedule);
 
     if (month) {
-      return month + '，' + dateCore(schedule, '') + '或' +
-        weekdayPhrase(schedule, true, '');
+      const date = oddEvenDay(schedule.pattern.date, false) ||
+        dateCore(schedule, '');
+
+      return month + '，' + date + '或' + weekdayPhrase(schedule, true, '');
     }
 
-    return datePhrase(schedule) + '或' + weekdayPhrase(schedule, true, '本月');
+    const date = oddEvenDay(schedule.pattern.date, true) ||
+      datePhrase(schedule);
+
+    return date + '或' + weekdayPhrase(schedule, true, '本月');
   }
 
   if (dateSet) {
@@ -1318,9 +1352,15 @@ function composeCadence(schedule: Schedule, core: string): string {
   return trail ? core + '，' + qual : qual + '，' + core;
 }
 
-// A window core (hourRange) whose 在…之间 frame the qualifier leads, no comma.
+// A window core (hourRange) whose 在…之间 frame the qualifier leads. A single-arm
+// day qualifier glues to the window ("每月1日在9点至17点之间…"); a day-union
+// (both date and weekday set) takes a comma before the window so the time frame
+// reads as binding the whole union, not just the trailing weekday arm
+// ("…1日或每周五，在9点至17点之间…").
 function composeWindow(schedule: Schedule, core: string): string {
-  return qualifier(schedule) + core;
+  const union = isSet(schedule.pattern.date) && isSet(schedule.pattern.weekday);
+
+  return qualifier(schedule) + (union ? '，' : '') + core;
 }
 
 // Whether an hour cadence applies — a single pinned minute over an hour stride

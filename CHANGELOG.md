@@ -6,6 +6,35 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0]
+
+The OR-day union (both day-of-month and day-of-week restricted — cron fires on
+EITHER, the union of days) now reads clearly and correctly in es, de, fi, and
+zh, validated by native math-inclined panels. None needed en's condition-frame —
+each language already had a union construction — so this was a per-language
+audit + fix, which surfaced real bugs.
+
+### Fixed
+
+- **de — month scope (union-breaking):** a trailing month scoped only the last
+  OR-branch ("am 1. oder sonntags im Januar"); it now leads and scopes the whole
+  union ("im Januar am 1. oder sonntags"). Also, `*/2` day-of-month rendered as a
+  16-date enumeration → "an jedem ungeraden Tag des Monats".
+- **fi — exclusive-or (union-breaking):** month-restricted OR-day used "joko …
+  tai …", the *exclusive* disjunction; now the inclusive "tai".
+- **es/de/fi/zh — `*/2` day-of-month:** in the OR-union it read as a continuous
+  every-two-days cadence, mis-implying continuity across the month boundary
+  (`*/2` dom is the odd days, resetting each month). Now an odd-day predicate
+  ("un día impar del mes" / "ungerader Tag des Monats" / "kuukauden parittomina
+  päivinä" / "每月单数日"). Standalone `*/2` keeps the cadence.
+
+### Changed
+
+- OR-day naturalness polish: es/de weekday-range parallelism; zh separates the
+  time window from the day union; tested even-day predicates in es/de/zh.
+- The fuzz date FORMS now include `*/2` so a day-of-month step verbosity
+  regression can't slip through unswept.
+
 ## [0.2.2]
 
 Architecture cleanup from the code review, plus a zh consistency fix. Internal

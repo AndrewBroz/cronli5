@@ -804,6 +804,17 @@ function domArm(schedule: Schedule, opts: Opts): string {
     return quartz;
   }
 
+  // In the union the `*/2` day-of-month is a parity predicate over the days of
+  // the month ("un día impar del mes" = 1, 3, …, 31, resetting each month),
+  // not the durative "cada dos días del mes" the standalone form uses. A bare
+  // "cada dos días" would mis-imply a continuous every-other-day cadence with
+  // no monthly anchor, so the reader could not reconstruct the odd days.
+  const parity = parityDayPredicate(date);
+
+  if (parity) {
+    return parity;
+  }
+
   if (isOpenStep(date)) {
     return stepDates(date, opts);
   }
@@ -854,8 +865,12 @@ function dowArm(schedule: Schedule): string {
       }));
   }
 
+  // A lone weekday range reads "cualquier día de lunes a viernes" in the union:
+  // the leading "cualquier día" makes it a day predicate parallel to the
+  // date arm ("el 1 de cada mes o cualquier día de lunes a viernes"), so the
+  // union "o" plainly joins two independent day conditions.
   if (segments.length === 1) {
-    return weekdayRange(segments[0] as RangeNameSegment);
+    return 'cualquier día ' + weekdayRange(segments[0] as RangeNameSegment);
   }
 
   return joinList(segments.map(function name(segment) {
@@ -2229,6 +2244,30 @@ function monthScope(schedule: Schedule): string {
 }
 
 // Open day-of-month steps: "cada 2 días del mes (desde el 5)".
+// The parity predicate for a `*/2`-style day-of-month step, used only inside
+// the OR union frame (see domArm). `*/2` and `1/2` fire on the odd days
+// (1, 3, …, 31); `2/2` fires on the even days. Any other open step has no
+// parity reading, so the caller falls back to stepDates.
+function parityDayPredicate(dateField: string): string | undefined {
+  if (!isOpenStep(dateField)) {
+    return;
+  }
+
+  const [start, step] = dateField.split('/');
+
+  if (+step !== 2) {
+    return;
+  }
+
+  if (start === '*' || start === '1') {
+    return 'un día impar del mes';
+  }
+
+  if (start === '2') {
+    return 'un día par del mes';
+  }
+}
+
 function stepDates(dateField: string, opts: Opts): string {
   const parts = dateField.split('/');
   let phrase = 'cada ' + numero(+parts[1], opts) + ' días del mes';
