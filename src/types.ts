@@ -46,22 +46,22 @@ export interface Cronli5Dialect {
 }
 
 /**
- * A language module is a renderer over the semantic IR plus the
+ * A language module is a renderer over the semantic Schedule plus the
  * language-owned strings and option normalization. The `describe`/`options`
- * payloads are the module's internal `IR`/options shapes (see
- * `core/ir.ts`). They are intentionally opaque at this public boundary,
+ * payloads are the module's internal `Schedule`/options shapes (see
+ * `core/schedule.ts`). They are intentionally opaque at this public boundary,
  * which a caller passes to `cronli5` via the `lang` option but never invokes
  * directly.
  */
 export interface Cronli5Language {
-  describe(ir: any, opts: any): string;
+  describe(schedule: any, opts: any): string;
   fallback: string;
   options(options?: Cronli5Options): any;
   reboot: string;
   sentence(description: string): string;
-  // Optional plan override (see `core/ir.ts` `Language.plan`). Opaque
+  // Optional plan override (see `core/schedule.ts` `Language.plan`). Opaque
   // at this public boundary, like `describe`/`options`.
-  plan?(content: any, base: any): any;
+  plan?(facts: any, base: any): any;
 }
 
 /**

@@ -415,14 +415,32 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['*/7 * * * *', '每小时从0分起每7分钟，至56分'],
       ['*/11 * * * *', '每小时从0分起每11分钟，至55分'],
       ['*/25 * * * *', '每小时0、25、50分'],
-      // A non-tiling hour stride long enough to be a progression (>= 5 fires)
-      // reads as the bounded cadence ("从0点起每5小时，至20点"). A shorter one
-      // (*/7 -> 4 fires, */13 -> 2, 8/12 -> 2) stays as its clock words.
+      // A non-tiling (uneven) hour stride from midnight reads as the bounded
+      // cadence ("从0点起每5小时，至20点") however few its fires — the same gate the
+      // other languages use, so */7 (= 0,7,14,21) and */13 (= 0,13) compact too.
+      // A clean wrap whose interval tiles 24 (*/12 = 0,12; 8/12 = 8,20) has no
+      // distinct endpoint, so it keeps its clock words.
       ['0 */5 * * *', '从0点起每5小时，至20点'],
-      ['0 */7 * * *', '每天凌晨0点、7点、14点和21点'],
-      ['0 */13 * * *', '每天凌晨0点和13点'],
+      ['0 */7 * * *', '从0点起每7小时，至21点'],
+      ['0 */13 * * *', '从0点起每13小时，至13点'],
       ['0 */12 * * *', '凌晨0点和正午'],
       ['0 8/12 * * *', '8点和20点'],
+      // A literal hour list is indistinguishable from the step it expands to, so
+      // an uneven list compacts exactly as its `*/n` form does, while an offset-
+      // clean short list keeps enumerating its hours — the bare "每8小时" would
+      // hide which hours fire and is no shorter than the list. A clean wrap long
+      // enough to outrun the clock-time cap (0,3,…,21) still compacts.
+      ['0 0,7,14,21 * * *', '从0点起每7小时，至21点'],
+      ['0 0,8,16 * * *', '每天凌晨0点、8点和16点'],
+      ['0 0,4,8,12,16,20 * * *', '每天凌晨0点、4点、8点、正午、16点和20点'],
+      ['0 0,3,6,9,12,15,18,21 * * *', '每3小时'],
+      // A meaningful second makes every clock time carry a second, so even a
+      // short clean wrap is worth compacting then ("每8小时0分的第30秒"); a
+      // wildcard or stepped minute frames the uneven cadence but enumerates the
+      // clean wrap as its hours.
+      ['30 0 0,8,16 * * *', '每8小时0分的第30秒'],
+      ['* 0,7,14,21 * * *', '从0点起每7小时，至21点，每分钟'],
+      ['* 0,8,16 * * *', '在凌晨0点、8点和16点，每分钟'],
       ['*/15 */5 * * *', '从0点起每5小时，至20点，每15分钟'],
       // A non-uniform minute step (enumerated to a fire list) under an uneven
       // hour step must keep BOTH the minute set and the hour cadence — the

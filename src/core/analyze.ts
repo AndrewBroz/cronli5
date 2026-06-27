@@ -1,14 +1,14 @@
 // Semantic analysis of canonical fields: fire enumeration, windows, shape
 // classification, and description-plan selection (the `plan`). The
-// resulting IR is descriptive. Language modules handle rendering into
+// resulting Schedule is descriptive. Language modules handle rendering into
 // words (docs/i18n-design.md §2.2).
 
 import {fieldOrder, fieldSpecs, maxClockTimes} from './specs.js';
 import type {FieldSpec} from './specs.js';
 import type {
-  Analyses, ClockTime, Content, Field, HourTimesPlan, HoursPlan, IR, Pattern,
-  PlanNode, Segment, Shape, Shapes
-} from './ir.js';
+  Analyses, ClockTime, Field, HourTimesPlan, HoursPlan, Pattern,
+  PlanNode, Schedule, ScheduleFacts, Segment, Shape, Shapes
+} from './schedule.js';
 import {includes, toFieldNumber, unique} from './util.js';
 import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
   from './shapes.js';
@@ -198,8 +198,8 @@ function fieldSegments(
 }
 
 // Analyze a prepared (parsed, validated, normalized) cron pattern into the
-// IR a language module renders from.
-function analyze(pattern: Pattern): IR {
+// Schedule a language module renders from.
+function analyze(pattern: Pattern): Schedule {
   const shapes = {} as Shapes;
   const segments = {} as Analyses['segments'];
 
@@ -216,18 +216,18 @@ function analyze(pattern: Pattern): IR {
     segments
   };
 
-  const content: Content = {analyses, pattern, shapes};
+  const facts: ScheduleFacts = {analyses, pattern, shapes};
 
-  return {...content, plan: selectPlan(content)};
+  return {...facts, plan: selectPlan(facts)};
 }
 
-// Select the description plan from the neutral content. This is the
+// Select the description plan from the neutral facts. This is the
 // core's *suggestion*: a language may override it via `Language.plan`
-// without re-deriving it (the content-plan / overridable-plan split).
+// without re-deriving it (the facts / overridable-plan split).
 // The selection mirrors the interpreter chain ordering exactly; renderers
 // must not re-derive it.
-function selectPlan(content: Content): PlanNode {
-  const {analyses, pattern, shapes} = content;
+function selectPlan(facts: ScheduleFacts): PlanNode {
+  const {analyses, pattern, shapes} = facts;
 
   if (pattern.second !== '0') {
     const seconds = planSeconds(pattern, shapes, analyses);

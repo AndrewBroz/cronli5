@@ -63,7 +63,7 @@ identical in every language doc.
 ## Internals
 
 The renderer lives in [`src/lang/zh/`](../../src/lang/zh/), consumes only the
-semantic IR produced by the core (see
+semantic Schedule produced by the core (see
 [i18n-design.md](../i18n-design.md)), and owns every Chinese word in the
 output. Its expectation suite is the corpus under
 [`test/lang/zh/`](../../test/lang/zh/); the style contract it was authored

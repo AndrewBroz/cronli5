@@ -3,7 +3,7 @@
 
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
-import type {Field} from './ir.js';
+import type {Field} from './schedule.js';
 import {includes, isNonNegativeInteger, toFieldNumber} from './util.js';
 
 // Validate every field of a cron-like object, throwing on the first

@@ -3,7 +3,7 @@
 // Ukrainian language code (now a `cronli5/lang/uk` module).
 
 import type {Cronli5Options} from '../../types.js';
-import type {DialectStyle} from '../../core/ir.js';
+import type {DialectStyle} from '../../core/schedule.js';
 
 // Style tables for the `dialect` option. `us` follows the Chicago Manual of
 // Style; `gb` follows the Guardian style guide; `house` is cronli5's legacy

@@ -32,7 +32,7 @@ and language-specific renderers.
 parse → validate → normalize → analyze              (core: lang-independent)
                                   │
                                   ▼
-                          semantic description      (thin, descriptive IR)
+                          semantic description      (thin, descriptive Schedule)
                                   │
                                   ▼
                      lang/<code> renderer + styles  (language-specific)
@@ -54,11 +54,11 @@ Everything that is true about a cron pattern regardless of language:
 * A **plan**: which description strategy the core suggests (clock times,
   frequency-with-window, span, composition, Quartz qualifier, …).
 
-### 2.2 The Intermediate Representation (IR)
+### 2.2 The Schedule
 
-The intermediate representation (IR) carries information about the shape of
-a cron pattern (but not how to say it). An IR is an object that contains the
-`pattern` object and other generalizable analyses of the pattern including:
+The `Schedule` carries information about the shape of
+a cron pattern (but not how to say it). A `Schedule` is an object that contains
+the `pattern` object and other generalizable analyses of the pattern including:
 
 * `shapes`: The shape of each field (e.g., `step`, `range`, `list`, `all`, `none`)
 * `analyses`: The results of semantic analysis (e.g., `hourFires`, `lastMinuteFire`, `foldsToClockTime`, `capExceeded`)
@@ -81,8 +81,8 @@ or as a range depends on the grammar and style of a given language doing the
 work (§5). As such,  when writing a module, treat the `plan` as a *hint* based
 on heuristics from other languages. A language module may consume it
 directly (the common case) or re-plan from `pattern` + `analyses` when its
-grammar demands. The IR should not encode sentence shape like fragment order
-or connective slots.
+grammar demands. The `Schedule` should not encode sentence shape like fragment
+order or connective slots.
 
 Semantic fixes (a fold bug, a cap policy change, a new Quartz token) go
 in the core. Wording fixes are language-specific. Current test: If a change must
@@ -125,7 +125,7 @@ src/
     index.ts                  # the semantic toolkit lang modules import
   lang/
     en/
-      index.ts                # render(ir, opts) — today's interpreters
+      index.ts                # render(schedule, opts) — today's interpreters
       dialects.ts             # us / gb / house style tables (en-scoped)
       notes.md                # anchors: Chicago, Guardian; en quirks
     es/                       # ...same shape per language

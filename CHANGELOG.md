@@ -6,6 +6,27 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.2]
+
+Architecture cleanup from the code review, plus a zh consistency fix. Internal
+refactors are output byte-identical; the zh change is noted below.
+
+### Changed
+
+- Renamed the core semantic contract `IR` → `Schedule` and `Content` →
+  `ScheduleFacts` (now `src/core/schedule.ts`, `describe(schedule, opts)`) — a
+  domain name over compiler jargon, clearer for language contributors. Internal;
+  the public API is unchanged.
+- Lifted the stride/cadence decision tree (hand-copied ~9× across the renderers)
+  into one core helper parameterized by per-language phrasing, and split
+  `util.ts` into generic / weekday-display / cadence modules. Output
+  byte-identical across all five languages.
+- **zh:** an uneven 4-fire hour step now compacts to its bounded cadence
+  (`*/7` → "从0点起每7小时，至21点") instead of enumerating, matching
+  en/es/de/fi; clean-stride hour lists now enumerate to match the others too.
+- Minor naming: `enumerateNonUniformStep` → `enumerateIfNonUniform`; removed the
+  dead `HoursPlan` `'single'` variant; inlined `isContiguousHourRange`.
+
 ## [0.2.1]
 
 ### Fixed
