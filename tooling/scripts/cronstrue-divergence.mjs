@@ -4,9 +4,9 @@
 // and the generated comparison docs build on; it changes no library behavior.
 //
 // It does three things:
-//   1. classify(pattern) buckets each pattern simple/medium/complex from real
-//      core signals (the selected PlanNode kind, the field count, and the
-//      qualifier load), so later phases can weight by difficulty.
+//   1. classify(pattern) buckets each pattern simple/medium/complex the way a
+//      user perceives it (everyday cadence vs. a specific schedule vs. advanced
+//      operators), so the comparison can group rows by difficulty.
 //   2. sweep({patterns, langs}) renders cronli5 AND cRonstrue for every pattern
 //      in every language, capturing each side's output or thrown message.
 //   3. acceptanceDivergences(results) extracts the one finding that needs no
@@ -68,30 +68,24 @@ async function loadLangModules(langs) {
 
 // CLASSIFICATION
 //
-// The rule, settled after sanity-checking the distribution over the 257 set:
+// The rule is USER-FACING — it buckets by how a person perceives their cron,
+// not by the renderer's internal plan shape (a plain `*/15` every-15-minutes
+// cron reads as simple even though its PlanNode is a compound minuteFrequency).
 //
-//   simple  — a 5-field pattern, a single plain time-plan kind (everyMinute,
-//             singleMinute, everyHour, or clockTimes naming at most one clock
-//             time), and NO day-of-month / month / weekday restriction.
-//   medium  — a 5-field pattern with exactly ONE qualifier axis (a weekday OR a
-//             day-of-month OR a month restriction) or a basic step/range in the
-//             time, still on a single, non-compound plan kind.
-//   complex — anything heavier: a 6-/7-field pattern (seconds present), a
-//             compound plan kind (composeSeconds, minutesAcrossHours,
-//             minuteSpanAcrossHourStep, minuteSpanInHour, minuteFrequency,
-//             hourRange, compactClockTimes, clockTimes with >1 time, …), a
-//             Quartz operator (L/W/#), the OR-union day case (date AND weekday
-//             both restricted), or >=2 stacked qualifier axes.
+//   simple  — an everyday cadence or a single daily time, with NO calendar
+//             restriction: every minute, every N minutes/hours, hourly, or
+//             "every day at HH:MM" (e.g. `*/15 * * * *`, `0 */6 * * *`,
+//             `0 9 * * *`).
+//   medium  — "a specific schedule": one calendar axis (a weekday, a
+//             day-of-month, or a month) and/or an hour/minute window or list
+//             (e.g. `0 9 * * 1`, `0 9-17 * * *`, `0 0 1,15 * *`).
+//   complex — what a casual user would call advanced: a seconds field, a Quartz
+//             operator (L/W/#), the OR-union day case (date AND weekday both
+//             restricted), a step-within-a-range (`a-b/n`), or a heavily
+//             stacked pattern (calendar axes + time windows scoring 3+).
 //
-// Every threshold is a real core signal — the PlanNode the renderer would
-// consume, the raw field count, and the same qualifier buckets core-set.mjs
-// uses — not an invented number.
-
-// The plan kinds that are inherently a single, plain time statement. Anything
-// outside this set is a compound/region plan and forces `complex`.
-const PLAIN_PLAN_KINDS = new Set([
-  'everyMinute', 'singleMinute', 'everyHour', 'clockTimes'
-]);
+// The signals are read off the cron's surface fields, plus the parsed Schedule
+// for the qualifier axes and the OR-union — not invented numbers.
 
 // The neutral Schedule the renderers consume, or null when the pattern does not
 // parse (so classify can still bucket it as complex rather than throwing). The
@@ -135,8 +129,26 @@ function isOrUnion(schedule) {
     pattern.weekday !== '*' && pattern.weekday !== '?';
 }
 
-// simple | medium | complex for one pattern. An unparseable pattern (the core
-// throws) is `complex` — it is at least as hard as anything it could parse to.
+// A minute/hour field that is a window or list (a range or list — not a `*/n`
+// cadence), which adds everyday "load".
+function isWindowOrList(field) {
+  return (/[,-]/u).test(field);
+}
+
+// The advanced features that put a pattern straight into `complex`: a
+// restricted seconds field, a Quartz operator (L/W/#), the OR-union day case,
+// or a step-within-a-range (`a-b/n`).
+function hasAdvancedFeature(pattern, schedule, tokens, secondsPresent) {
+  const secondsRestricted = secondsPresent && tokens[0] !== '*';
+  const stepInRange = tokens.some((token) => (/\d+-\d+\/\d+/u).test(token));
+
+  return secondsRestricted || hasQuartz(pattern) || isOrUnion(schedule) ||
+    stepInRange;
+}
+
+// simple | medium | complex for one pattern, user-facing (see the rule above).
+// An unparseable pattern (the core throws) is `complex` — at least as hard as
+// anything it could parse to.
 function classify(pattern) {
   const schedule = scheduleOf(pattern);
 
@@ -144,19 +156,25 @@ function classify(pattern) {
     return 'complex';
   }
 
-  const fieldCount = pattern.trim().split(/\s+/u).length;
-  const compoundPlan = !PLAIN_PLAN_KINDS.has(schedule.plan.kind);
-  const manyClockTimes = schedule.plan.kind === 'clockTimes' &&
-    schedule.plan.times.length > 1;
-  const axes = qualifierAxes(schedule);
+  const tokens = pattern.trim().split(/\s+/u);
+  const years = (/\d{4}/u).test(tokens[tokens.length - 1]);
+  const secondsPresent = years ? tokens.length >= 7 : tokens.length >= 6;
 
-  if (fieldCount >= 6 || compoundPlan || manyClockTimes ||
-      hasQuartz(pattern) || isOrUnion(schedule) || axes >= 2) {
+  if (hasAdvancedFeature(pattern, schedule, tokens, secondsPresent)) {
     return 'complex';
   }
 
-  // A single qualifier axis, or a step/range time on a plain plan, is medium.
-  return axes === 1 ? 'medium' : 'simple';
+  // Otherwise score the everyday "load": each calendar axis, plus a minute or
+  // hour window/list, counts one.
+  const [minute, hour] = tokens.slice(secondsPresent ? 1 : 0);
+  const score = qualifierAxes(schedule) +
+    (isWindowOrList(minute) ? 1 : 0) + (isWindowOrList(hour) ? 1 : 0);
+
+  if (score === 0) {
+    return 'simple';
+  }
+
+  return score <= 2 ? 'medium' : 'complex';
 }
 
 // SWEEP
