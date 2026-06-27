@@ -49,6 +49,22 @@ describe('Hour step under a fixed minute and a second reads as a cadence:',
       ]);
     });
 
+    // A bounded step that starts at midnight (start 0) but stops short of the
+    // day's last tile is still a bounded set, not the open `*/n`: it pins both
+    // endpoints, the same as a `9-17/2`. (0-20/2 fires 0,2,…,20 — never 22, so
+    // it must not read as the all-day "every two hours", which would recover as
+    // `*/2`. 0-22/2 ≡ `*/2` and stays bare; see the guards below.)
+    describe('bounded step from midnight (start 0, stops short)', function() {
+      run([
+        ['23 0-20/2 * * *',
+          '23 minutes past the hour, ' +
+          'every two hours from midnight through 8 p.m.'],
+        ['30 0-20/3 * * *',
+          '30 minutes past the hour, ' +
+          'every three hours from midnight through 6 p.m.']
+      ]);
+    });
+
     // A non-zero pinned minute under a seconds-cadence lead is the minute
     // confinement ("during minute :05"); under a clock-point second it is "M
     // minutes past the hour" after the second's own clause, then the hour
@@ -78,12 +94,17 @@ describe('Hour step under a fixed minute and a second reads as a cadence:',
     });
 
     // Guards: an irregular hour list is not a stride and still enumerates;
-    // the bare hour-step confinement (no second, minute 0) is unchanged.
+    // the bare hour-step confinement (no second, minute 0) is unchanged. An
+    // open `*/n` and a full-field-equivalent bounded step (0-22/2 ≡ `*/2`)
+    // ARE the all-day set, so they stay bare — pinning a bound would be wrong.
     describe('guards — not a stride, or no second', function() {
       run([
         ['30 0 9,17 * * *',
           'every day at 9:00:30 a.m. and 5:00:30 p.m.'],
-        ['0 0 */2 * * *', 'every two hours']
+        ['0 0 */2 * * *', 'every two hours'],
+        ['23 */2 * * *', '23 minutes past the hour, every two hours'],
+        ['23 0-22/2 * * *', '23 minutes past the hour, every two hours'],
+        ['23 0-23/2 * * *', '23 minutes past the hour, every two hours']
       ]);
     });
   });

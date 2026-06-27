@@ -1313,7 +1313,7 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
   const {interval, start, last, cycle, unit, anchor} = stride;
   const cadence = 'every ' + getNumber(interval, opts) + ' ' + unit + 's';
 
-  return chooseStride({start, interval, cycle}, {
+  return chooseStride({start, interval, last, cycle}, {
     bare: () => cadence,
 
     // A clean wrap from a non-zero offset: name the start, no endpoint.
@@ -1419,7 +1419,7 @@ function hourStrideCadence(stride: {start: number; interval: number;
   const {start, interval, last} = stride;
   const cadence = 'every ' + getNumber(interval, opts) + ' hours';
 
-  return chooseStride({start, interval, cycle: 24}, {
+  return chooseStride({start, interval, last, cycle: 24}, {
     bare: () => cadence,
     offset: () => cadence + ' from ' + getTime({hour: start, minute: 0}, opts),
     bounded: () =>

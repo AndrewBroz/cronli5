@@ -1326,7 +1326,7 @@ function renderStride(stride: Stride, opts: Opts): string {
   // the cadence keeps its endpoints but drops the "de cada <anchor>" tail.
   const tail = anchor ? ' de cada ' + anchor : '';
 
-  return chooseStride({start, interval, cycle}, {
+  return chooseStride({start, interval, last, cycle}, {
     bare: () => cadence,
     offset: () => cadence + ' a partir del ' + unit + ' ' + start + tail,
     bounded: () =>
@@ -1429,7 +1429,7 @@ function hourStrideCadence(
   const {start, interval, last} = stride;
   const cadence = 'cada ' + numero(interval, opts) + ' horas';
 
-  return chooseStride({start, interval, cycle: 24}, {
+  return chooseStride({start, interval, last, cycle: 24}, {
     bare: () => cadence,
     offset: () => cadence + ' a partir de ' + timePhrase(start, 0, null, opts),
     bounded: () => cadence + ' de ' + timePhrase(start, 0, null, opts) + ' a ' +

@@ -67,7 +67,7 @@ function renderStride(stride: Stride): string {
   const {interval, start, last, cycle, unit, mark, anchor} = stride;
   const lead = anchor + '从' + start + mark + '起' + cadence(interval, unit);
 
-  return chooseStride({start, interval, cycle}, {
+  return chooseStride({start, interval, last, cycle}, {
     bare: () => cadence(interval, unit),
     offset: () => lead,
     bounded: () => lead + '，至' + last + mark

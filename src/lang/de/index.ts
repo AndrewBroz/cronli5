@@ -90,7 +90,7 @@ function renderStride(stride: Stride): string {
   // the cadence keeps its endpoints but drops the "jeder Stunde" tail.
   const tail = anchor ? ' ' + anchor : '';
 
-  return chooseStride({start, interval, cycle}, {
+  return chooseStride({start, interval, last, cycle}, {
     bare: () => cadence,
     offset: () => cadence + ' ab ' + unit.singular + ' ' + start + tail,
     bounded: () =>
@@ -1019,7 +1019,7 @@ function hourStrideCadence(
   const {start, interval, last} = stride;
   const cadence = everyN(interval, UNITS.hour);
 
-  return chooseStride({start, interval, cycle: 24}, {
+  return chooseStride({start, interval, last, cycle: 24}, {
     bare: () => cadence,
     offset: () => cadence + ' ab ' + start + ' Uhr',
     bounded: () => cadence + ' von ' + start + ' bis ' + last + ' Uhr'

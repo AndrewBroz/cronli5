@@ -848,7 +848,17 @@ describe('Español (es):', function() {
       ['0 1-23/2 * * *',
         'a la 01:00 y a las 03:00, 05:00, 07:00, 09:00, 11:00, 13:00, 15:00, ' +
         '17:00, 19:00, 21:00 y 23:00'],
-      ['0 9-10/5 * * *', 'a las 09:00']
+      ['0 9-10/5 * * *', 'a las 09:00'],
+      // A bounded step from midnight that stops short of the day's last tile
+      // (0-20/2 fires 0,2,…,20, never 22) pins both endpoints, like 9-17/2 —
+      // it must not read as the all-day "cada dos horas".
+      ['23 0-20/2 * * *', 'en el minuto 23, cada dos horas de las 00:00 a las 20:00'],
+      ['30 0-20/3 * * *',
+        'en el minuto 30, cada tres horas de las 00:00 a las 18:00'],
+      // Guards: an open `*/n` and a full-field-equivalent step (0-22/2 ≡ `*/2`)
+      // are the all-day set and stay bare.
+      ['23 */2 * * *', 'en el minuto 23, cada dos horas'],
+      ['23 0-22/2 * * *', 'en el minuto 23, cada dos horas']
     ]);
   });
 

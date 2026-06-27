@@ -94,28 +94,41 @@ interface StrideParts {
   bounded(): string;
 }
 
+// The last value a stride reaches within `[0, cycle)`: the largest value below
+// the cycle that is congruent to `start` modulo `interval`. A clean, full-field
+// stride runs to this tile; a bounded one (`a-b/n`) stops short of it, and that
+// shortfall is what distinguishes the open cadence from a bounded set.
+function lastTileOf(start: number, interval: number, cycle: number): number {
+  return cycle - 1 - (cycle - 1 - start) % interval;
+}
+
 // Choose the stride/cadence branch for a step over a `cycle`-long field and
-// emit the renderer's words for it. A clean stride from the top of the cycle
-// is the bare cadence; a uniform offset (start within the first interval, the
+// emit the renderer's words for it. A clean stride from the top of the cycle is
+// the bare cadence; a uniform offset (start within the first interval, the
 // interval still tiling the cycle) names only its start, since it wraps cleanly
-// with no distinct endpoint; a non-uniform stride (start >= interval, or an
-// interval that does not tile the cycle) pins both endpoints so the bounded,
-// non-wrapping set reads unambiguously. This is the one decision tree every
-// renderer's `renderStride`/`hourStrideCadence` shared (cycle 60 for
+// with no distinct endpoint; a non-uniform stride (start >= interval, an
+// interval that does not tile the cycle, or one whose last fire stops short of
+// the cycle's final tile — a bounded `a-b/n`) pins both endpoints so the
+// bounded, non-wrapping set reads unambiguously. This is the one decision tree
+// every renderer's `renderStride`/`hourStrideCadence` shared (cycle 60 for
 // minute/second, 24 for the hour); the branch lives here once, the prose in
 // each language's `parts`.
 function renderStride(
-  spec: {start: number; interval: number; cycle: number},
+  spec: {start: number; interval: number; last: number; cycle: number},
   parts: StrideParts
 ): string {
-  const {start, interval, cycle} = spec;
-  const tiles = cycle % interval === 0;
+  const {start, interval, last, cycle} = spec;
+  // A stride wraps the full field only when it both tiles the cycle and runs to
+  // the cycle's last tile; one that stops short (`0-20/2`, last 20 of 22) is a
+  // bounded set, not the open `*/n`, so it keeps its endpoint-pinning cadence.
+  const open = cycle % interval === 0 && last === lastTileOf(start, interval,
+    cycle);
 
-  if (start === 0 && tiles) {
+  if (start === 0 && open) {
     return parts.bare();
   }
 
-  if (start < interval && tiles) {
+  if (start < interval && open) {
     return parts.offset();
   }
 
