@@ -10,6 +10,20 @@ Concrete defects from the code review and the wide objective sweep
 (`roundtrip.mjs` over all four languages). The sweep found no meaning-drift
 bugs. Everything found is grammar/naturalness/consistency.
 
+> **Status (shipped in 0.2.0–0.3.1) — this section is largely resolved and due
+> for a prune.** The English naturalness pass (0.2.0), the OR-union port to
+> es/de/fi/zh (0.3.0), the dense-run-on restructure (0.3.1), and the
+> architecture cleanup (0.2.1–0.2.2) have landed most of what follows: the
+> English defects below (confinement-with-*of*, trailing-weekday plural, gb
+> day-first fold, year-range `through`, sentence double-period, "of the month"
+> redundancy, minute-list digits) are **shipped** — `core-set.js` and
+> `known-issues.js` are now un-skipped and passing, not `describe.skip`. The
+> cadence-vs-enumeration crux is addressed (the stride decision tree was lifted
+> into `core/cadence.ts`; the zh hour-stride gate was unified). The per-language
+> `*/2`-day mis-rendering, de's month-scope, and fi's exclusive-`joko` OR bugs
+> are fixed. What genuinely remains open: the de range/OR "of the month"
+> sub-classes, and the fi compound follow-up below.
+
 **The per-language defects are recorded as `describe.skip` tests** in each
 corpus (`test/lang/{de,es,fi}/corpus.js`, "Known issues / Bekannte offene
 Fehler / Errores conocidos / Tunnetut virheet"). Each asserts the defect's
@@ -122,6 +136,17 @@ must leave all other en output byte-identical (the corpus is the guard).
   blank-looking code.
 - The lenient `catch {}` in `cronli5.ts` swallows *every* exception, so a
   genuine renderer bug on a valid pattern masquerades as the fallback string.
+- **Dense-restructure trigger is slightly wider than the named cases (0.3.1).**
+  A stepped-range hour with no stride (e.g. `9-17/2`) is now dense-eligible and
+  would take the same anchor-led + nested "during the … hours" form. None exist
+  in the corpus, so nothing changed — worth a panel glance if such shapes are
+  added later.
+- **Standalone `*/2` day-of-month keeps the durative form in every language**
+  ("every other day", "cada dos días", "jeden zweiten Tag", "joka toinen
+  päivä", "每2天"). The native panels noted this slightly mis-implies a
+  continuous 2-day cycle (vs the odd days that reset each month) — but it's the
+  established convention and en uses it too, so only the OR-union frame got the
+  "odd day" predicate. A possible future consistency tidy, not a bug.
 
 ## Human-in-the-loop language review platform
 
