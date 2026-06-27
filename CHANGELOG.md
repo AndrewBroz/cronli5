@@ -6,6 +6,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.2]
+
+Tooling and docs only — the published library is functionally unchanged.
+
+### Changed
+
+- **Test runner migrated to Vitest** (from mocha + c8-over-tsx). V8 coverage is
+  source-accurate, so the esbuild/tsx phantom-branch artifact is gone and
+  thresholds are gated at the true numbers. (The old c8 figures were wrong in
+  both directions — inflated as well as deflated; real coverage is ~98 lines /
+  96 branches / 99 functions, and the genuine untested-source gaps it revealed
+  are now tracked in the backlog.)
+- Pruned the shipped rendering items (0.2.0–0.3.1) from the backlog, and ran a
+  comment/reference cleanup over the scripts and tooling (stale `IR`→`Schedule`,
+  util-split, and mocha/c8 references; process-label scrub; dead code).
+
 ## [0.3.1]
 
 ### Changed

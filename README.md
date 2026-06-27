@@ -330,13 +330,13 @@ required.
 
 ## Development
 
-The library has no runtime dependencies. The toolchain (ESLint, Mocha, Chai,
-c8, esbuild) lives in `devDependencies`.
+The library has no runtime dependencies. The toolchain (ESLint, Vitest, Chai,
+esbuild) lives in `devDependencies`.
 
 ```bash
 npm install       # install dev dependencies (also wires the git hooks)
-npm test          # run the Mocha test suite (runs against src/, no build needed)
-npm run coverage  # run tests with c8 coverage and enforce thresholds
+npm test          # run the Vitest suite (runs against src/, no build needed)
+npm run coverage  # run tests with Vitest V8 coverage and enforce thresholds
 npm run lint      # lint source and tests with ESLint
 npm run build     # emit dist/ (ESM + CJS) and the minified browser global
 npm run verify    # the full CI gate: lint, types, tests, coverage, docs, build

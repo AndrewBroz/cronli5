@@ -1,7 +1,7 @@
 // Shared sampler over the fuzz pattern space: one pattern per distinct output
-// shape in a given language (the wide, IR-deduped set), and an evenly-spaced
-// spread for a budget-limited subset. Used by panel.mjs (--wide) and
-// roundtrip.mjs to drive review beyond the curated spanning set.
+// shape in a given language (the wide, shape-deduped set), and an evenly-spaced
+// spread for a budget-limited subset. Used by roundtrip.mjs to drive review
+// beyond the curated spanning set.
 
 import {patterns} from '../../scripts/fuzz-lang.mjs';
 import cronli5 from '../../src/cronli5.js';

@@ -1,19 +1,19 @@
 // Generate the fixed core pattern set every language corpus must cover.
 // Deterministically sweep a defined grid, bucket each pattern by its
-// language-neutral IR cell (the branch-tuple analyze() produces), and keep one
-// representative per cell. Saves test/core/core-set.json — the committed
-// contract. Run: node --import tsx scripts/core-set.mjs
+// language-neutral Schedule cell (the branch-tuple analyze() produces), and
+// keep one representative per cell. Saves test/core/core-set.json — the
+// committed contract. Run: node --import tsx scripts/core-set.mjs
 //
-// Coverage in IR cells is option-blind, so the set also carries `variants`
-// (cell-identical but render-distinct under an option — 12h, short, dialect,
-// seconds, years, the half/quarter and fires-once edges), `macros` (@reboot
-// etc., which bypass analyze), and `invalid` (the lenient fallback). A corpus
-// must cover the cells AND test the variants/macros/invalid.
+// Coverage in Schedule cells is option-blind, so the set also carries
+// `variants` (cell-identical but render-distinct under an option — 12h, short,
+// dialect, seconds, years, the half/quarter and fires-once edges), `macros`
+// (@reboot etc., which bypass analyze), and `invalid` (the lenient fallback). A
+// corpus must cover the cells AND test the variants/macros/invalid.
 //
 // It also carries `spanning`: the curated spanning set (patterns.mjs), deduped
 // against the cell sweep. These are not part of the corpus-coverage contract
-// (the cells are); they are folded in here so the language review panel runs
-// over the cell sweep PLUS these realistic, curated patterns.
+// (the cells are); they are folded in here so a language is reviewed over the
+// cell sweep PLUS these realistic, curated patterns.
 import {writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname, join} from 'node:path';
@@ -54,9 +54,9 @@ const MACROS = ['@reboot', '@daily', '@hourly', '@weekly', '@monthly',
   '@yearly', '@annually', '@midnight'];
 const INVALID = ['not a cron pattern', '99 * * * *'];
 
-// Value classes the IR cell erases (a step and a list are one cell regardless
-// of their numbers), but which a corpus must test because rendering and
-// correctness turn on them: divisor vs non-divisor steps, near-cycle steps
+// Value classes the Schedule cell erases (a step and a list are one cell
+// regardless of their numbers), but which a corpus must test because rendering
+// and correctness turn on them: divisor vs non-divisor steps, near-cycle steps
 // that fire ≤2 times, list cardinality and regularity, mixed-segment fields,
 // and range widths. One representative per class, across the fields whose
 // rendering differs (numeric minute/hour/date vs named month/weekday).
@@ -153,9 +153,9 @@ function bucket(field, shape) {
   return shape === 'single' ? 'single' : 'multi';
 }
 
-function qualKey(ir) {
-  const p = ir.pattern;
-  const s = ir.shapes;
+function qualKey(schedule) {
+  const p = schedule.pattern;
+  const s = schedule.shapes;
 
   return JSON.stringify({
     date: bucket(p.date, s.date),
@@ -168,9 +168,9 @@ function qualKey(ir) {
 
 function cellOf(pattern, opts) {
   try {
-    const ir = analyze(prepare(pattern, opts));
+    const schedule = analyze(prepare(pattern, opts));
 
-    return planKey(ir.plan) + '||' + qualKey(ir);
+    return planKey(schedule.plan) + '||' + qualKey(schedule);
   }
   catch {
     return null;
