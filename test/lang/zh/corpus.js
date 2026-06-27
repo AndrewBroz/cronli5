@@ -549,6 +549,30 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
     ]);
   });
 
+  // Additional verified rows exercising renderer branches the core set leaves
+  // untouched: an interval-1 step, hour lists/ranges crossed with minute
+  // cadences, the `?` date placeholder folding to its month, the 7-for-Sunday
+  // alias, and a second folded across an hour list. Each was checked to carry
+  // the same schedule as the English rendering.
+  describe('额外覆盖 (additional coverage)', function() {
+    run([
+      ['*/1 * * * *', '每分钟'],
+      ['1/1 * * * *', '每小时1至59分，每分钟'],
+      ['0 9,12,17 * * *', '每天9点、正午和17点'],
+      ['0 1,2,5 * * *', '每天1点、2点和5点'],
+      ['30 9-17 * * *', '在9点至17点之间，每小时30分'],
+      ['*/15 9,17 * * *', '在9点和17点，每15分钟'],
+      ['* 9,17 * * *', '在9点和17点，每分钟'],
+      ['*/15 0,12 * * *', '在凌晨0点和正午，每15分钟'],
+      ['1,2,5 * * * *', '每小时1、2、5分'],
+      ['0 0 9,12,17 * *', '每月9、12、17日凌晨0点'],
+      ['0 0 9-17 * *', '每月9日至17日凌晨0点'],
+      ['0 0 ? 6 *', '6月每天凌晨0点'],
+      ['0 0 * 6 ?', '6月每天凌晨0点'],
+      ['30 0 9,17 * * *', '每天9点30秒和17点30秒']
+    ]);
+  });
+
   describe('特殊情况 (special)', function() {
     run([
       ['not a cron pattern', '无法识别的 cron 表达式', {lenient: true}]

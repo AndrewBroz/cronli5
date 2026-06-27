@@ -10,7 +10,10 @@ describe('Second folded into a clock time:', function() {
       ['15 0 9 * * *', 'every day at 9:00:15 a.m.'],
       ['15 30 9 * * *', 'every day at 9:30:15 a.m.'],
       ['5 0 9 * * *', 'every day at 9:00:05 a.m.'],
-      ['0 0 9 * * *', 'every day at 9 a.m.']
+      ['0 0 9 * * *', 'every day at 9 a.m.'],
+      // A nonzero second at midnight blocks the "midnight" word form, so it
+      // reads as the full clock time "12:00:30 a.m." rather than "midnight".
+      ['30 0 0 * * *', 'every day at 12:00:30 a.m.']
     ]);
   });
 

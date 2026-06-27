@@ -77,4 +77,25 @@ describe('Valid strings with steps:', function() {
         'every five hours from midnight through 8 p.m.']
     ]);
   });
+
+  // A cadence hour (every Nth hour) carrying a pinned minute or a sub-minute
+  // second. A minute past the hour names the cadence after itself; a
+  // sub-minute second adds the "for one minute" duration on each fired hour.
+  describe('cadence hour with a leading minute or second', function() {
+    run([
+      ['5 */3 * * *', 'five minutes past the hour, every three hours'],
+      ['*/15 0 */3 * * *',
+        'every 15 seconds for one minute during every third hour'],
+      ['0/10 0 */2 * * *',
+        'every ten seconds for one minute during every other hour'],
+      ['0 */11 * * *',
+        'every 11 hours from midnight through 10 p.m.'],
+      // A sub-minute second at minute 0 over a wide hour stride whose interval
+      // has no "every Nth" ordinal: the second leads "for one minute" and the
+      // bounded hour cadence pins its endpoint.
+      ['0/10 0 */13 * * *',
+        'every ten seconds for one minute, ' +
+        'every 13 hours from midnight through 1 p.m.']
+    ]);
+  });
 });

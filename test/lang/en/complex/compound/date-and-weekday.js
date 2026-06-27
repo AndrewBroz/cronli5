@@ -62,4 +62,40 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
         '13th or a Friday']
     ]);
   });
+
+  // The day-of-month parity idioms in a union. `*/2` and `1/2` are the odd
+  // days, `2/2` the even; any other start (`3/2`) enumerates its fires
+  // instead, each ordinal joining the flat or-list.
+  describe('day-of-month parity in a union', function() {
+    run([
+      ['0 0 */2 * 5',
+        'at midnight whenever the day is an odd-numbered day or a Friday'],
+      ['0 0 1/2 * 5',
+        'at midnight whenever the day is an odd-numbered day or a Friday'],
+      ['0 0 2/2 * 5',
+        'at midnight whenever the day is an even-numbered day or a Friday'],
+      ['0 0 3/2 * 5',
+        'at midnight whenever the day is the 3rd, the 5th, the 7th, the ' +
+        '9th, the 11th, the 13th, the 15th, the 17th, the 19th, the 21st, ' +
+        'the 23rd, the 25th, the 27th, the 29th, the 31st, or a Friday']
+    ]);
+  });
+
+  // The day-of-week half of a union spans every weekday form: a single day, a
+  // list, a non-Mon-Fri range, an open step, and the `7`-for-Sunday alias.
+  // Each weekday joins the flat or-list as "a <day>".
+  describe('weekday forms in a union', function() {
+    run([
+      ['0 0 15 * MON,WED',
+        'at midnight whenever the day is the 15th, a Monday, or a Wednesday'],
+      ['0 0 15 * 7',
+        'at midnight whenever the day is the 15th or a Sunday'],
+      ['0 0 15 * 2-4',
+        'at midnight whenever the day is the 15th or a Tuesday through a ' +
+        'Thursday'],
+      ['0 0 15 * */2',
+        'at midnight whenever the day is the 15th, a Sunday, a Tuesday, a ' +
+        'Thursday, or a Saturday']
+    ]);
+  });
 });

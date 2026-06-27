@@ -89,6 +89,38 @@ describe('Dialect option:', function() {
     ]);
   });
 
+  // A day-of-month-OR-day-of-week union (both fields restricted). The default
+  // (US) dialect reframes it as "whenever the day is …"; every other dialect
+  // keeps the established "on <dom> or on <dow>" phrasing, with the month
+  // scoping the whole or.
+  describe('day-of-month-or-weekday union keeps "on X or on Y"', function() {
+    var gb = {dialect: 'gb'};
+
+    run([
+      // A single restricted month folds into the calendar date and repeats on
+      // the weekday half ("or on Friday in June").
+      ['0 0 13 6 FRI', 'on 13 June or on Friday in June at midnight', gb],
+      ['0 0 15 3 FRI', 'on 15 March or on Friday in March at midnight', gb],
+      // No month: a bare date ordinal or a Quartz date, or'd with the weekday.
+      ['0 0 15 * MON', 'on the 15th or on Monday at midnight', gb],
+      ['0 0 L * FRI',
+        'on the last day of the month or on Friday at midnight', gb],
+      ['0 0 15W * FRI',
+        'on the weekday nearest the 15th or on Friday at midnight', gb],
+      ['0 0 W15 * FRI',
+        'on the weekday nearest the 15th or on Friday at midnight', gb],
+      // An open day step reads as the parity idiom on the date half.
+      ['0 0 */2 * FRI',
+        'every other day of the month or on Friday at midnight', gb],
+      // A month that does not fold (a range, or a Quartz date) trails the
+      // whole or as ", in <month>".
+      ['0 0 13 6-8 FRI',
+        'on the 13th or on Friday, in June to August at midnight', gb],
+      ['0 0 L 6 FRI',
+        'on the last day of the month or on Friday, in June at midnight', gb]
+    ]);
+  });
+
   // The confinement frame ("every second during minute :00 at 9 a.m.", "every
   // second of every other hour") is scoped to the default (US) dialect. Every
   // other dialect — and the compact `short` form — keeps the older

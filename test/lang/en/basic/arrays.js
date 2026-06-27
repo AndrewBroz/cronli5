@@ -1,6 +1,16 @@
 import {run} from '../../../runner.js';
 
 describe('Common arrays:', function() {
+  // Sparse arrays: a missing or empty element falls back to its field default
+  // (second 0, every other field *), so the schedule reads as "every minute".
+  describe('empty and missing elements take field defaults', function() {
+    run([
+      [[null, null], 'every minute'],
+      [['', '', '*', '*', '*', '*'], 'every minute', {seconds: true}]
+    ]);
+  });
+
+
   describe('5-part arrays', function() {
     run([
       [['*', '*', '*', '*', '*'], 'every minute'],

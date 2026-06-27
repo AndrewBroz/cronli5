@@ -851,6 +851,25 @@ describe('Español (es):', function() {
       ['0 9-10/5 * * *', 'a las 09:00']
     ]);
   });
+
+  // Cobertura adicional: listas y rangos de hora con cadencia de segundos /
+  // minutos. Cada fila describe el mismo horario que la salida en inglés.
+  describe('cobertura adicional (listas/rangos de hora)', function() {
+    run([
+      ['0 0 9,17 * * *', 'todos los días a las 09:00 y 17:00'],
+      ['0 9,12,17 * * *', 'todos los días a las 09:00, 12:00 y 17:00'],
+      ['*/15 0,12 * * *',
+        'cada 15 minutos de las 00:00 a las 00:59 y de las 12:00 a las 12:59'],
+      ['15 0 9-17 * * *',
+        'en el segundo 15 de cada hora, de las 09:00 a las 17:00'],
+      ['30 0 9-17/2 * * *',
+        'en el segundo 30 de cada hora, ' +
+        'cada dos horas de las 09:00 a las 17:00'],
+      // Un paso de hora con desfase enumera sus disparos como horas de reloj.
+      ['0 0 8/4 * * *', 'todos los días a las 08:00, 12:00, 16:00 y 20:00'],
+      ['0 30 0,8,16 * * *', 'todos los días a las 00:30, 08:30 y 16:30']
+    ]);
+  });
 });
 
 // Errores conocidos, aún sin corregir (revisión + barrido amplio;

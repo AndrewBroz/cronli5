@@ -608,6 +608,26 @@ describe('Deutsch (de):', function() {
       ['kein Cron', 'ein unlesbares Cron-Muster', {lenient: true}]
     ]);
   });
+
+  // Zusätzliche Abdeckung: Stundenlisten und -bereiche mit Sekunden/Minuten-
+  // Kadenz. Jede Zeile beschreibt denselben Zeitplan wie die englische Ausgabe.
+  describe('zusätzliche Abdeckung (Stundenlisten/-bereiche)', function() {
+    run([
+      ['0 0 9,17 * * *', 'täglich um 9 und 17 Uhr'],
+      ['0 9,12,17 * * *', 'täglich um 9, 12 und 17 Uhr'],
+      ['* 9,17 * * *',
+        'jede Minute von 9 bis 9:59 Uhr und von 17 bis 17:59 Uhr'],
+      ['*/15 0,12 * * *',
+        'alle 15 Minuten von 0 bis 0:59 Uhr und von 12 bis 12:59 Uhr'],
+      ['15 0 9-17 * * *',
+        'in Sekunde 15 jeder Stunde, von 9 bis 17 Uhr'],
+      ['30 0 9-17/2 * * *',
+        'in Sekunde 30 jeder Stunde, alle 2 Stunden von 9 bis 17 Uhr'],
+      // An offset-clean hour step enumerates its fires as clock times.
+      ['0 0 8/4 * * *', 'täglich um 8, 12, 16 und 20 Uhr'],
+      ['0 30 0,8,16 * * *', 'täglich um 0:30, 8:30 und 16:30 Uhr']
+    ]);
+  });
 });
 
 // Bekannte, noch offene Fehler (Code-Review + Wide-Sweep; docs/backlog.md,

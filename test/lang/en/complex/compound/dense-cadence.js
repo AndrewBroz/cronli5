@@ -111,4 +111,15 @@ describe('Dense multi-cadence patterns:', function() {
         'every second from 20 through 40 past the minute']
     ]);
   });
+
+  // A minute LIST whose values do not form a stride enumerates ("at 1, 2, and
+  // 5 minutes past the hour") inside the dense form, rather than collapsing to
+  // a cadence.
+  describe('minute as a non-stride list', function() {
+    run([
+      ['*/15 1,2,5 */2 * * *',
+        'every two hours, at 1, 2, and 5 minutes past the hour, ' +
+        'and within each of those minutes, every 15 seconds']
+    ]);
+  });
 });
