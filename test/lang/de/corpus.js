@@ -268,8 +268,8 @@ describe('Deutsch (de):', function() {
       // hour window already names the single hour, so "jeder Stunde" (every
       // hour) would contradict it. The wildcard-hour guard above keeps it.
       ['5/15 0 1,15 1,7 0',
-        'alle 15 Minuten ab Minute 5, von 0 bis 0:50 Uhr ' +
-        'am 1. und 15. oder sonntags im Januar und Juli'],
+        'im Januar und Juli alle 15 Minuten ab Minute 5, von 0 bis 0:50 Uhr ' +
+        'am 1. und 15. oder sonntags'],
       ['5/15 9 * * *',
         'alle 15 Minuten ab Minute 5, von 9 bis 9:50 Uhr'],
       // A RANGE of hours keeps "jeder Stunde": the cadence really does repeat
@@ -427,7 +427,7 @@ describe('Deutsch (de):', function() {
         'in den Minuten 5, 10 und 30 jeder Stunde, von 9 bis 17 Uhr'],
       ['0 9-20,22 * * *', 'stündlich von 9 bis 20 Uhr und um 22 Uhr'],
       ['0 9 1 * MON', 'am 1. oder montags um 9 Uhr'],
-      ['59 23 31 12 5', 'am 31. oder freitags im Dezember um 23:59 Uhr'],
+      ['59 23 31 12 5', 'im Dezember am 31. oder freitags um 23:59 Uhr'],
       // Panel: "every minute during the X o'clock hours" is hour windows,
       // not points; a clean hour step is "alle N Stunden", not enumerated.
       ['* 9,12,17 * * *',
@@ -559,6 +559,49 @@ describe('Deutsch (de):', function() {
     ]);
   });
 
+  // Tag-Vereinigung (OR-Tag): ist sowohl der Tag des Monats als auch der
+  // Wochentag eingeschränkt, feuert cron an der VEREINIGUNG beider Mengen. Das
+  // "… oder …"-Gerüst liest sich als einschließende Vereinigung. Ein etwaiger
+  // Monat umklammert die GANZE Vereinigung, also führt er den Satz an ("im
+  // Januar am 1. oder sonntags"), statt nur dem letzten Glied anzuhängen ("am
+  // 1. oder sonntags im Januar" läse sich, als gälte der 1. ganzjährig). Ein
+  // offener `*/2`-Schritt im Tagesfeld liest sich als ungerade-Tage-Klasse, nie
+  // als 16-fache Datumsaufzählung.
+  describe('Tag-Vereinigung (OR-Tag)', function() {
+    run([
+      ['0 0 1 * 5', 'am 1. oder freitags um Mitternacht'],
+      // Wochentagsspanne als Klasse, parallel zur Datumsangabe.
+      ['0 0 1 * 1-5', 'am 1. oder an einem Wochentag (Mo–Fr) um Mitternacht'],
+      ['0 0 1 * 5L',
+        'am 1. oder am letzten Freitag des Monats um Mitternacht'],
+      // `*/2` im Tagesfeld: ungerade-Tage-Prädikat statt 16-Datums-Liste.
+      ['0 0 */2 * */2',
+        'an jedem ungeraden Tag des Monats oder dienstags, donnerstags, ' +
+        'samstags und sonntags um Mitternacht'],
+      // `2/2` ist die Klasse der geraden Tage; ein anderer offener Schritt
+      // (`*/3`) trägt keine Paritäts-Klasse und zählt seine Tage auf.
+      ['0 0 2/2 * 0',
+        'an jedem geraden Tag des Monats oder sonntags um Mitternacht'],
+      ['0 0 */3 * 0',
+        'am 1., 4., 7., 10., 13., 16., 19., 22., 25., 28. und 31. oder ' +
+        'sonntags um Mitternacht'],
+      ['0 0 1-15 * 0', 'vom 1. bis zum 15. oder sonntags um Mitternacht'],
+      ['0 0 L * 5L',
+        'am letzten Tag des Monats oder am letzten Freitag des Monats ' +
+        'um Mitternacht'],
+      ['0 0 L * 0', 'am letzten Tag des Monats oder sonntags um Mitternacht'],
+      // Monat umklammert beide Glieder: er führt den Satz an.
+      ['0 0 1 1 0', 'im Januar am 1. oder sonntags um Mitternacht'],
+      ['0 0 1 1-3 5L',
+        'von Januar bis März am 1. oder am letzten Freitag des Monats ' +
+        'um Mitternacht'],
+      ['*/5 * 1 * 5', 'alle 5 Minuten am 1. oder freitags'],
+      ['*/5 * 1 6 5', 'im Juni alle 5 Minuten am 1. oder freitags'],
+      ['0 9-17 1 6 5',
+        'im Juni stündlich von 9 bis 17 Uhr am 1. oder freitags']
+    ]);
+  });
+
   describe('Sonderfälle', function() {
     run([
       ['@reboot', 'beim Systemstart'],
@@ -590,9 +633,12 @@ describe('Bekannte offene Fehler (Schritt C):', function() {
     expect(cronli5('5 */2 * * *', {lang: de})).to.not.include('stündlich');
   });
 
-  // Verschoben auf die IR-Kadenz-Arbeit (betrifft alle Sprachen + stabiles en).
-  it.skip('liest den Tages-Schritt als Kadenz, nicht als Aufzählung',
-    function() {
-      expect(cronli5('0 0 */2 * *', {lang: de})).to.not.include('29.');
-    });
+  // Der offene Tages-Schritt `*/2` liest sich als Kadenz, nicht als 16-fache
+  // Aufzählung (die die Vereinigung im OR-Fall begrübe).
+  it('liest den Tages-Schritt als Kadenz, nicht als Aufzählung', function() {
+    const text = cronli5('0 0 */2 * *', {lang: de});
+
+    expect(text).to.not.include('29.');
+    expect(text).to.equal('jeden zweiten Tag des Monats um Mitternacht');
+  });
 });
