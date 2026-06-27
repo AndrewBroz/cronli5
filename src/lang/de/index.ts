@@ -4,8 +4,8 @@
 import {pad} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride, segmentsOf, singleValues,
-  stepSegment
+  arithmeticStep, hourListStride, offsetCleanStride,
+  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
@@ -84,22 +84,17 @@ function cleanStep(segment: StepSegment, cycle: number): boolean {
 function renderStride(stride: Stride): string {
   const {interval, start, last, cycle, unit, anchor} = stride;
   const cadence = everyN(interval, unit);
-  const tiles = cycle % interval === 0;
-
-  if (start === 0 && tiles) {
-    return cadence;
-  }
 
   // A context that supplies its own trailing scope passes an empty anchor, so
   // the cadence keeps its endpoints but drops the "jeder Stunde" tail.
   const tail = anchor ? ' ' + anchor : '';
 
-  if (start < interval && tiles) {
-    return cadence + ' ab ' + unit.singular + ' ' + start + tail;
-  }
-
-  return cadence + ' von ' + unit.singular + ' ' + start + ' bis ' + last +
-    tail;
+  return chooseStride({start, interval, cycle}, {
+    bare: () => cadence,
+    offset: () => cadence + ' ab ' + unit.singular + ' ' + start + tail,
+    bounded: () =>
+      cadence + ' von ' + unit.singular + ' ' + start + ' bis ' + last + tail
+  });
 }
 
 // A step *shape* segment as its cadence ("alle 6 Minuten ab Minute 5 jeder
@@ -999,17 +994,12 @@ function hourStrideCadence(
 ): string {
   const {start, interval, last} = stride;
   const cadence = everyN(interval, UNITS.hour);
-  const tiles = 24 % interval === 0;
 
-  if (start === 0 && tiles) {
-    return cadence;
-  }
-
-  if (start < interval && tiles) {
-    return cadence + ' ab ' + start + ' Uhr';
-  }
-
-  return cadence + ' von ' + start + ' bis ' + last + ' Uhr';
+  return chooseStride({start, interval, cycle: 24}, {
+    bare: () => cadence,
+    offset: () => cadence + ' ab ' + start + ' Uhr',
+    bounded: () => cadence + ' von ' + start + ' bis ' + last + ' Uhr'
+  });
 }
 
 // The hour field's stride, or null when the hour is not a cadence: a step

@@ -12,8 +12,8 @@ import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride, segmentsOf, singleValues,
-  stepSegment
+  arithmeticStep, hourListStride, offsetCleanStride,
+  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
@@ -1306,21 +1306,17 @@ const renderers = {
 function renderStride(stride: Stride, opts: Opts): string {
   const {interval, start, last, cycle, unit, anchor} = stride;
   const cadence = 'cada ' + numero(interval, opts) + ' ' + unit + 's';
-  const tiles = cycle % interval === 0;
-
-  if (start === 0 && tiles) {
-    return cadence;
-  }
 
   // A context that supplies its own trailing scope passes an empty anchor, so
   // the cadence keeps its endpoints but drops the "de cada <anchor>" tail.
   const tail = anchor ? ' de cada ' + anchor : '';
 
-  if (start < interval && tiles) {
-    return cadence + ' a partir del ' + unit + ' ' + start + tail;
-  }
-
-  return cadence + ' del ' + unit + ' ' + start + ' al ' + last + tail;
+  return chooseStride({start, interval, cycle}, {
+    bare: () => cadence,
+    offset: () => cadence + ' a partir del ' + unit + ' ' + start + tail,
+    bounded: () =>
+      cadence + ' del ' + unit + ' ' + start + ' al ' + last + tail
+  });
 }
 
 // "cada 15 minutos", "en los minutos 5, 20 y 35 de cada hora", or
@@ -1417,18 +1413,13 @@ function hourStrideCadence(
 ): string {
   const {start, interval, last} = stride;
   const cadence = 'cada ' + numero(interval, opts) + ' horas';
-  const tiles = 24 % interval === 0;
 
-  if (start === 0 && tiles) {
-    return cadence;
-  }
-
-  if (start < interval && tiles) {
-    return cadence + ' a partir de ' + timePhrase(start, 0, null, opts);
-  }
-
-  return cadence + ' de ' + timePhrase(start, 0, null, opts) + ' a ' +
-    timePhrase(last, 0, null, opts);
+  return chooseStride({start, interval, cycle: 24}, {
+    bare: () => cadence,
+    offset: () => cadence + ' a partir de ' + timePhrase(start, 0, null, opts),
+    bounded: () => cadence + ' de ' + timePhrase(start, 0, null, opts) + ' a ' +
+      timePhrase(last, 0, null, opts)
+  });
 }
 
 // The bounded cadence for an hour stride that pins both clock-time endpoints,

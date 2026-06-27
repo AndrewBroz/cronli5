@@ -5,7 +5,8 @@
 // day periods under `ampm`. The style contract is src/lang/zh/notes.md.
 
 import {
-  arithmeticStep, segmentsOf, singleValues, stepSegment
+  arithmeticStep, renderStride as chooseStride, segmentsOf, singleValues,
+  stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
@@ -63,15 +64,13 @@ interface Stride {
 // list path recognizes as a progression).
 function renderStride(stride: Stride): string {
   const {interval, start, last, cycle, unit, mark, anchor} = stride;
-  const tiles = cycle % interval === 0;
-
-  if (start === 0 && tiles) {
-    return cadence(interval, unit);
-  }
-
   const lead = anchor + '从' + start + mark + '起' + cadence(interval, unit);
 
-  return start < interval && tiles ? lead : lead + '，至' + last + mark;
+  return chooseStride({start, interval, cycle}, {
+    bare: () => cadence(interval, unit),
+    offset: () => lead,
+    bounded: () => lead + '，至' + last + mark
+  });
 }
 
 // Speak a minute/second field's enumerated fires as a step cadence when they

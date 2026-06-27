@@ -4,8 +4,8 @@
 // See docs/i18n-design.md.
 
 import {
-  arithmeticStep, hourListStride, offsetCleanStride, segmentsOf, singleValues,
-  stepSegment
+  arithmeticStep, hourListStride, offsetCleanStride,
+  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {isOpenStep} from '../../core/shapes.js';
@@ -1185,24 +1185,23 @@ const renderers = {
 function renderStride(stride: Stride, opts: NormalizedOptions): string {
   const {interval, start, last, cycle, unit, anchor} = stride;
   const cadence = 'every ' + getNumber(interval, opts) + ' ' + unit + 's';
-  const tiles = cycle % interval === 0;
 
-  if (start === 0 && tiles) {
-    return cadence;
-  }
+  return chooseStride({start, interval, cycle}, {
+    bare: () => cadence,
 
-  if (start < interval && tiles) {
     // A clean wrap from a non-zero offset: name the start, no endpoint.
-    return cadence + ' from ' + getNumber(start, opts) + ' ' +
-      pluralize(start, unit) + ' past the ' + anchor;
-  }
+    offset: () => cadence + ' from ' + getNumber(start, opts) + ' ' +
+      pluralize(start, unit) + ' past the ' + anchor,
 
-  // A bounded, non-wrapping set: pin both endpoints. Each bound is a value, so
-  // it reads as a digit, matching the range idiom ("from 0 through 30").
-  const num = seriesNumber();
+    // A bounded, non-wrapping set: pin both endpoints. Each bound is a value,
+    // so it reads as a digit, matching the range idiom ("from 0 through 30").
+    bounded: () => {
+      const num = seriesNumber();
 
-  return cadence + ' from ' + num(start) + through(opts) + num(last) + ' ' +
-    pluralize(last, unit) + ' past the ' + anchor;
+      return cadence + ' from ' + num(start) + through(opts) + num(last) + ' ' +
+        pluralize(last, unit) + ' past the ' + anchor;
+    }
+  });
 }
 
 // Speak a minute/second field's enumerated fires as a step cadence when they
@@ -1292,18 +1291,14 @@ function hourStrideCadence(stride: {start: number; interval: number;
   last: number}, opts: NormalizedOptions): string {
   const {start, interval, last} = stride;
   const cadence = 'every ' + getNumber(interval, opts) + ' hours';
-  const tiles = 24 % interval === 0;
 
-  if (start === 0 && tiles) {
-    return cadence;
-  }
-
-  if (start < interval && tiles) {
-    return cadence + ' from ' + getTime({hour: start, minute: 0}, opts);
-  }
-
-  return cadence + ' from ' + getTime({hour: start, minute: 0}, opts) +
-    through(opts) + getTime({hour: last, minute: 0}, opts);
+  return chooseStride({start, interval, cycle: 24}, {
+    bare: () => cadence,
+    offset: () => cadence + ' from ' + getTime({hour: start, minute: 0}, opts),
+    bounded: () =>
+      cadence + ' from ' + getTime({hour: start, minute: 0}, opts) +
+      through(opts) + getTime({hour: last, minute: 0}, opts)
+  });
 }
 
 // The bounded cadence for an hour stride that pins both clock-time endpoints,

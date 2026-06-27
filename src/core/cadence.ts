@@ -79,6 +79,49 @@ function offsetCleanStride(
   return stride.start < stride.interval && 24 % stride.interval === 0;
 }
 
+// The three branches of the stride/cadence decision tree, supplied by a
+// renderer as its own words. The core picks the branch; the language owns the
+// prose. `bare` is the clean cadence ("every N <unit>"); `offset` names only
+// the start (a clean wrap with no distinct endpoint); `bounded` pins both
+// endpoints (a non-wrapping set). Each is a thunk so the renderer evaluates
+// only the branch the core selects (e.g. a stateful bound formatter is never
+// constructed for the bare case). The words differ per language — case
+// inflection, a measure word, a trailing idiom — so the leaves stay here, not
+// in core.
+interface StrideParts {
+  bare(): string;
+  offset(): string;
+  bounded(): string;
+}
+
+// Choose the stride/cadence branch for a step over a `cycle`-long field and
+// emit the renderer's words for it. A clean stride from the top of the cycle
+// is the bare cadence; a uniform offset (start within the first interval, the
+// interval still tiling the cycle) names only its start, since it wraps cleanly
+// with no distinct endpoint; a non-uniform stride (start >= interval, or an
+// interval that does not tile the cycle) pins both endpoints so the bounded,
+// non-wrapping set reads unambiguously. This is the one decision tree every
+// renderer's `renderStride`/`hourStrideCadence` shared (cycle 60 for
+// minute/second, 24 for the hour); the branch lives here once, the prose in
+// each language's `parts`.
+function renderStride(
+  spec: {start: number; interval: number; cycle: number},
+  parts: StrideParts
+): string {
+  const {start, interval, cycle} = spec;
+  const tiles = cycle % interval === 0;
+
+  if (start === 0 && tiles) {
+    return parts.bare();
+  }
+
+  if (start < interval && tiles) {
+    return parts.offset();
+  }
+
+  return parts.bounded();
+}
+
 // An hour list's arithmetic progression, or null when its values are not a
 // step the renderer should speak as a cadence. The core rewrites a uneven hour
 // step (whose interval does not tile 24, e.g. `*/5` → 0,5,10,15,20) to its
@@ -115,6 +158,7 @@ function hourListStride(
 }
 
 export {
-  arithmeticStep, hourListStride, offsetCleanStride, segmentsOf, singleValues,
-  stepSegment
+  arithmeticStep, hourListStride, offsetCleanStride, renderStride, segmentsOf,
+  singleValues, stepSegment
 };
+export type {StrideParts};

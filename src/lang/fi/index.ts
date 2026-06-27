@@ -13,8 +13,8 @@ import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride, segmentsOf, singleValues,
-  stepSegment
+  arithmeticStep, hourListStride, offsetCleanStride,
+  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
@@ -1071,18 +1071,14 @@ interface Stride {
 function renderStride(stride: Stride, opts: NormalizedOptions): string {
   const {interval, start, last, cycle, unit} = stride;
   const cadence = genitive(interval, opts) + ' ' + unit.gen + ' välein';
-  const tiles = cycle % interval === 0;
 
-  if (start === 0 && tiles) {
-    return cadence;
-  }
-
-  if (start < interval && tiles) {
-    return cadence + ' ' + unit.anchor + ' ' + unit.ela + ' ' + start +
-      ' alkaen';
-  }
-
-  return cadence + ' ' + unit.ela + ' ' + start + ' ' + unit.ill + ' ' + last;
+  return chooseStride({start, interval, cycle}, {
+    bare: () => cadence,
+    offset: () =>
+      cadence + ' ' + unit.anchor + ' ' + unit.ela + ' ' + start + ' alkaen',
+    bounded: () =>
+      cadence + ' ' + unit.ela + ' ' + start + ' ' + unit.ill + ' ' + last
+  });
 }
 
 // Speak a minute/second field's enumerated fires as a step cadence when they
@@ -1173,18 +1169,13 @@ function hourStrideCadence(
 ): string {
   const {start, interval, last} = stride;
   const cadence = genitive(interval, opts) + ' tunnin välein';
-  const tiles = 24 % interval === 0;
 
-  if (start === 0 && tiles) {
-    return cadence;
-  }
-
-  if (start < interval && tiles) {
-    return cadence + ' klo ' + hourElatives[start] + ' alkaen';
-  }
-
-  return cadence + ' ' +
-    kloRange({hour: start, minute: 0}, {hour: last, minute: 0}, opts);
+  return chooseStride({start, interval, cycle: 24}, {
+    bare: () => cadence,
+    offset: () => cadence + ' klo ' + hourElatives[start] + ' alkaen',
+    bounded: () => cadence + ' ' +
+      kloRange({hour: start, minute: 0}, {hour: last, minute: 0}, opts)
+  });
 }
 
 // The hour field's stride, or null when the hour is not a cadence: a step
