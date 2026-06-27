@@ -330,6 +330,18 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 1 */2 0', '每个奇数月，1日或每周日，凌晨0点'],
       ['0 0 1 */2 1-5', '每个奇数月，1日或每周一至周五，凌晨0点'],
       ['0 0 1 */2 5L', '每个奇数月，1日或最后一个周五，凌晨0点'],
+      // An OPEN parity month step ("*/2", "2/2") is the parity class
+      // ("每个奇数月"/"每个偶数月"). A BOUNDED parity step ("2-10/2" = months
+      // 2,4,6,8,10) fires a finite set, so it ENUMERATES like the explicit
+      // list "2,4,6,8,10" — the open parity wording would wrongly add the next
+      // term (December for 2-10/2, November for 1-9/2). Mirrors the day field.
+      ['0 0 1 2-10/2 *', '2、4、6、8、10月，1日凌晨0点'],
+      ['0 0 1 1-9/2 *', '1、3、5、7、9月，1日凌晨0点'],
+      ['0 0 1 2-10/2 5', '2、4、6、8、10月，1日或每周五，凌晨0点'],
+      ['0 0 1 2,4,6,8,10 *', '2、4、6、8、10月，1日凌晨0点'],
+      ['0 0 1 3-11/3 *', '3、6、9月1日凌晨0点'],
+      ['0 0 1 2/2 *', '每个偶数月1日凌晨0点'],
+      ['0 0 1 */3 *', '1、4、7、10月1日凌晨0点'],
       ['0 0 1 1 *', '1月1日凌晨0点'],
       ['0 0 1 1 * */2', '每月1日或周二、四、六、日，1点'],
       ['0 0 1 1 * 2030', '2030年1月1日凌晨0点', {years: true}],
