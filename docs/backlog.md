@@ -7,124 +7,24 @@ actively pursued. Current development is **automated-only** (see
 ## Open rendering findings
 
 Concrete defects from the code review and the wide objective sweep
-(`roundtrip.mjs` over all four languages). The sweep found no meaning-drift
-bugs. Everything found is grammar/naturalness/consistency.
+(`roundtrip.mjs` over all four languages) — grammar/naturalness/consistency, no
+meaning-drift.
 
-> **Status (shipped in 0.2.0–0.3.1) — this section is largely resolved and due
-> for a prune.** The English naturalness pass (0.2.0), the OR-union port to
-> es/de/fi/zh (0.3.0), the dense-run-on restructure (0.3.1), and the
-> architecture cleanup (0.2.1–0.2.2) have landed most of what follows: the
-> English defects below (confinement-with-*of*, trailing-weekday plural, gb
-> day-first fold, year-range `through`, sentence double-period, "of the month"
-> redundancy, minute-list digits) are **shipped** — `core-set.js` and
-> `known-issues.js` are now un-skipped and passing, not `describe.skip`. The
-> cadence-vs-enumeration crux is addressed (the stride decision tree was lifted
-> into `core/cadence.ts`; the zh hour-stride gate was unified). The per-language
-> `*/2`-day mis-rendering, de's month-scope, and fi's exclusive-`joko` OR bugs
-> are fixed. What genuinely remains open: the de range/OR "of the month"
-> sub-classes, and the fi compound follow-up below.
+The bulk of the pre-0.2.0 rendering punch list shipped in 0.2.0–0.3.1 (the
+English naturalness pass, the OR-union port to es/de/fi/zh, the dense-run-on
+restructure, and the architecture cleanup that lifted the cadence-vs-enumeration
+decision tree into `core/cadence.ts`) — see CHANGELOG; `test/lang/en/core-set.js`
+and `known-issues.js` are now un-skipped and passing. What genuinely remains
+open:
 
-**The per-language defects are recorded as `describe.skip` tests** in each
-corpus (`test/lang/{de,es,fi}/corpus.js`, "Known issues / Bekannte offene
-Fehler / Errores conocidos / Tunnetut virheet"). Each asserts the defect's
-invariant and fails when enabled, so fixing one is: un-skip (`skip →
-describe`), watch it go red, fix the renderer, watch it pass — the test-first
-loop, with the contract living in the corpus. Exact beta-language wording is
-panel-validated (each fix below was checked against the cross-family model).
-
-**C progress: 7 of 8 fixed, 1 remains.** Fixed (un-skipped, passing): es "a la"
-vs "a las" article in a time list; de "am vom" double preposition; de month
-range no longer folds onto the date ("am 1., von Juni bis August"); de seconds
-no longer dropped in the compact path; de multi-hour step no longer "stündlich"
-(now "täglich"); fi no false "joka minuutti" when the minute is fixed; es
-24-hour numbers under 12-hour dialects now read in the dialect clock with day
-periods ("de las 2 de la tarde …"). Each corrected its same-bug corpus
-entries, all cross-family validated. **Still `skip`ped (1):** de day-step
-enumeration → the IR cadence flag below (beta-only; en stays frozen).
-
-**Fixed this session (kept for traceability):**
-
-- `*/24`/`1/24`-style steps that fire once leaked `undefined`/spurious
-  cadences — fixed at the root in `normalize.ts` (`collapseOnceStep`).
-- CLI exited `0` on parse failure / no args — now sets `process.exitCode`.
-- CLI `--lang` with no value silently used English — now an error.
-
-**The design crux of C — cadence vs. enumeration, lift the decision into the
-IR.** Whether a stepped field reads as a cadence or an enumeration is decided
-independently per renderer, and they disagree: `0 0 */2 * *` → en/es/fi cadence
-but **de enumerates** "am 1., 3., … 31."; `0 0 * */3 *` → **en** cadence but
-de/es/fi enumerate; `0 0 1/2 * * *` → de enumerates the hours while en/es/fi
-keep the cadence; and de mislabels a multi-hour step as "stündlich" (`5 */2` →
-"stündlich um 0:05, 2:05, …"). No language is internally consistent. A
-`cadence`/`start` flag on the step segment in `core` (mirroring
-`cleanHourStride`) would let renderers supply only words and never diverge —
-this is the single highest-leverage fix, subsuming most of the skipped tests.
-
-**English (stable) — found in the 7-field simple-output-class review.** Tests
-in `test/lang/en/known-issues.js` (`describe.skip`); en stays frozen, so a fix
-must leave all other en output byte-identical (the corpus is the guard).
-
-- **Under a seconds wildcard, coarser fields must *confine* (with "of"), not
-  juxtapose a second cadence** (a real bug; the dominant en defect). A leading
-  "every second" makes every coarser restriction a confinement joined by *of* —
-  never a second "every …" frequency, and never a redundant one. Today the
-  renderer juxtaposes: `* 0 * * * *` → "every second, **every hour**" (drops the
-  `:00`-minute confinement — indistinguishable from the continuous `* * * * * *`);
-  `* 1 * * * *` → "…, **one minute past the hour**, every hour"; `* */2 * * * *`
-  → "…, **every two minutes**"; `* * 0 * * *` → "…, **every minute** from
-  midnight…" (redundant); and the stepped year `* * * * * * */2` → "**every two
-  years**". Intended: confine with *of* — `every second of minute :00 of every
-  hour`, `… of every other minute`, `… of the midnight hour`, `… in every other
-  year` — dropping the juxtaposed/redundant cadence; range bounds read
-  exclusively ("from 9 a.m. **until** 6 p.m."). The *of* confinement marker is
-  universal, not seconds-only: any leading cadence confines a coarser cadence
-  with *of* (`0 * */2 * * *` → "every minute **of** every other hour", not
-  "during every other hour"). The one exception is an *enumerated* hour list,
-  which keeps *during* ("during the 9 a.m., 11 a.m., … hours"). The exact
-  intended strings for the core set are pinned in `test/lang/en/core-set.js`.
-- **Trailing weekday is singular** ("on Monday" → "on Mondays") — a bug class,
-  English-only: es/de/fi already mark recurrence ("los lunes", "montags",
-  "maanantaisin"). Affects every pattern where a weekday trails a frequency or
-  time. Pluralize the single and list forms; leave the range idiom ("Monday
-  through Friday") and the leading "every Monday" alone.
-- **gb day-first multi-month fold is a garden-path.** `0 0 13 1,4,7,10 *` with
-  `{dialect: 'gb'}` → "on **13 January, April, July and October** at midnight" —
-  reads as if the 13 attaches only to January, not the whole list. Pre-existing
-  (any multi-month fold, lists and steps alike, not introduced by the month
-  step-enumeration change); surfaced testing that change. The day must attach
-  unambiguously to the full month list. May generalize to other day-first
-  dialects.
-- **Year range uses a raw hyphen, not the `through` connective.**
-  `0 0 1 1 * 2030-2035` (years) → "…in **2030-2035**" where every other field's
-  range reads "…through…" ("on the 1st through 5th"). The year field skips the
-  dialect range rendering (`applyYear`/`yearLabel`). Surfaced verifying that
-  year *lists* don't throw (they don't — that earlier claim was a 6-field
-  parsing artifact, the year landing in the weekday slot).
-- **Sentence form doubles the period after an `a.m.`/`p.m.` ending.** `sentence`
-  appends `.` to a fragment that already ends in the abbreviation's period:
-  `0 9 * * *` `{sentence: true}` → "Runs every day at 9 a.m.**..**". Affects every
-  a.m./p.m.-ending time in sentence form (the CLI form); the bare fragment is
-  fine. Surfaced reviewing the core-set English in sentence form. Pinned in
-  `test/lang/en/core-set.js` (sentence-form rows).
-- **A quartz "… of the month" repeats the month under an explicit month
-  qualifier.** `0 0 * */2 5L` → "on the last Friday **of the month** in every
-  odd-numbered **month** at midnight" — "of the month" is redundant once a month
-  is named, so it should drop: "the last Friday in every odd-numbered month". A
-  ~27-entry class (`5L`/`L` × restricted month). Clean for a single month ("…in
-  January") or the distributive `every odd/even` month; a month **range** ("…in
-  January through March") needs care, since dropping "of the month" can read as
-  one Friday in the span rather than per-month; and the **OR** cases (`… or on
-  the last Friday of the month`) are really the month-not-scoping-the-union bug
-  (the en analogue of the zh OR fix), not a redundancy. c0086 pinned in
-  `test/lang/en/core-set.js`; the range and OR sub-classes are open.
-- **A minute/second *list* spells small values instead of using digits.**
-  `4,6,9 * * * *` → "at **four, six, and nine** minutes past the hour" and the
-  `30 5,10 …` family → "at **five and ten** minutes past the hour". A list names
-  clock *positions*, which take digits (cf. `5,17,42` → "5, 17, and 42"); only a
-  cadence *count* spells small numbers ("every **seven** minutes"). Fix: digits
-  for minute/second list positions regardless of magnitude. Surfaced by the
-  automated stance-review; pinned across c0216–c0225, c0239 in
-  `test/lang/en/core-set.js`.
+- **A quartz "… of the month" range/OR sub-class still over- or mis-scopes the
+  month.** The single-month and distributive `every odd/even` redundancy-drop
+  shipped (`0 0 * */2 5L` → "the last Friday in every odd-numbered month"), but
+  two edges are open: a month **range** ("…in January through March") needs care,
+  since dropping "of the month" can read as one Friday in the span rather than
+  per-month; and the **OR** cases (`… or on the last Friday of the month`) are
+  really the month-not-scoping-the-union bug (the en analogue of the zh OR fix),
+  not a redundancy.
 
 **Per-language follow-ups:**
 
