@@ -146,6 +146,16 @@ function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
 
 // Render an analyzed cron pattern (the Schedule) as English.
 function describe(schedule: Schedule, opts: NormalizedOptions): string {
+  // A dense pattern — a seconds cadence stacked on a minutes cadence under an
+  // hours cadence — reads coarse-to-fine with the second nested under the
+  // minute, leading with the calendar anchor; it preempts the fine-to-coarse
+  // run-on the per-plan composer would otherwise produce.
+  const dense = denseCadence(schedule, opts);
+
+  if (dense !== null) {
+    return applyYear(dense, schedule, opts);
+  }
+
   // A finer leading cadence puts each coarser field in the confinement frame,
   // overriding the per-plan juxtaposed-cadence and duration-frame forms.
   const body = confinement(schedule, opts) ??
@@ -170,6 +180,111 @@ function render(schedule: Schedule, plan: PlanNode,
     (schedule: Schedule, plan: PlanNode, opts: NormalizedOptions) => string;
 
   return renderer(schedule, plan, opts);
+}
+
+// --- Dense multi-cadence restructure. ---
+
+// Whether a field's shape is a true cadence — a repeating pattern (step, range,
+// or enumerated list), not a wildcard or a single pinned value. A dense pattern
+// stacks one of these in the second, the minute, and the hour.
+function isCadenceShape(shape: Schedule['shapes'][keyof Schedule['shapes']]):
+  boolean {
+  return shape === 'step' || shape === 'range' || shape === 'list';
+}
+
+// A dense pattern is a seconds cadence stacked on a minutes cadence under an
+// hours cadence: three independent cadences whose flat fine-to-coarse run-on
+// reads as a robotic list. It is recognized only on the `composeSeconds` plan
+// (a meaningful second over a coarser rest), with all three of second, minute,
+// and hour a cadence, the hour speakable as a stride or a range window, and no
+// day union (which owns its own leading-month structure). Restricted to the
+// default dialect's voice — the same scope as the confinement frame — so other
+// dialects and the compact `short` form keep their established phrasing.
+function isDenseCadence(schedule: Schedule, opts: NormalizedOptions): boolean {
+  if (!opts.style.untilWindow || opts.short ||
+      schedule.plan.kind !== 'composeSeconds' ||
+      isDayUnion(schedule, opts)) {
+    return false;
+  }
+
+  const {shapes} = schedule;
+
+  if (!isCadenceShape(shapes.second) || !isCadenceShape(shapes.minute) ||
+      !isCadenceShape(shapes.hour)) {
+    return false;
+  }
+
+  return hourStride(schedule) !== null || shapes.hour === 'range';
+}
+
+// The coarse hour cadence as a standalone fragment: a stride reads as its
+// bounded/bare cadence ("every five hours from midnight through 8 p.m.", "every
+// six hours"); a range reads as its window ("from 8 a.m. through 6 p.m."), the
+// non-continuous form a stepped minute already uses inside the range.
+function denseHourFragment(schedule: Schedule,
+  opts: NormalizedOptions): string {
+  const stride = hourStride(schedule);
+
+  if (stride) {
+    return hourStrideCadence(stride, opts);
+  }
+
+  // Reached only with a range hour (per `isDenseCadence`), whose single range
+  // segment carries the window bounds.
+  const segment = segmentsOf(schedule, 'hour').find(function range(part) {
+    return part.kind === 'range';
+  }) as Extract<Segment, {kind: 'range'}>;
+
+  return rangeWindow({
+    continuous: false,
+    from: +segment.bounds[0],
+    throughMinute: 0,
+    to: +segment.bounds[1]
+  }, opts);
+}
+
+// The minute cadence as a standalone fragment, counted past the hour: a step is
+// its stride phrase, a range its "every minute from M through K" lead, and a
+// list its stride-or-enumeration.
+function denseMinuteFragment(schedule: Schedule,
+  opts: NormalizedOptions): string {
+  if (schedule.shapes.minute === 'step') {
+    return stepCycle60(stepSegment(schedule, 'minute'), 'minute', 'hour', opts);
+  }
+
+  if (schedule.shapes.minute === 'range') {
+    return minuteRangeLead(schedule.pattern.minute, opts);
+  }
+
+  // A minute list has segments; an offset/uneven step the core enumerated to a
+  // list reads as a stride when its fires form a progression.
+  return strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
+    opts) ?? listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+    'minute', 'hour', opts);
+}
+
+// Assemble the dense form, or null when the pattern is not dense. The calendar
+// anchor leads ("on the last weekday of the month, …"), the cadences run
+// coarse-to-fine (hour, then minute), and the second nests under the minute
+// ("…, and within each of those minutes, every second …"). Each fragment is
+// today's leaf phrasing, reordered and nested but otherwise unchanged.
+function denseCadence(schedule: Schedule,
+  opts: NormalizedOptions): string | null {
+  if (!isDenseCadence(schedule, opts)) {
+    return null;
+  }
+
+  const hour = denseHourFragment(schedule, opts);
+  const minute = denseMinuteFragment(schedule, opts);
+  const second = secondsClause(schedule, 'minute', opts);
+  const nested = hour + ', ' + minute +
+    ', and within each of those minutes, ' + second;
+
+  // A trailing day qualifier (" on the last weekday of the month") leads the
+  // dense form instead; with no anchor the hour cadence leads alone.
+  const anchor = trailingQualifier(schedule, opts).trim();
+
+  return anchor ? anchor + ', ' + nested : nested;
 }
 
 // --- Seconds renderers. ---
