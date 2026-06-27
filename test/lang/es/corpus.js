@@ -329,13 +329,15 @@ describe('Español (es):', function() {
       ['0 0 1 1 0', 'en enero a las 00:00, ya sea el día 1 o cualquier domingo'],
       // Wildcard month — el N de cada mes arm.
       ['0 0 1 * 5L', 'a las 00:00, ya sea el 1 de cada mes o el último viernes del mes'],
-      // Wildcard month, step DOM, step DOW.
+      // Wildcard month, step DOM, step DOW. In the OR union the `*/2` day-of-
+      // month is the parity predicate "un día impar del mes" (the odd days
+      // 1,3,…,31 resetting each month), not the durative "cada dos días".
       ['0 0 */2 * */2',
-        'a las 00:00, ya sea cada dos días del mes o los martes, jueves, sábados y domingos'],
+        'a las 00:00, ya sea un día impar del mes o los martes, jueves, sábados y domingos'],
       // Enumeration/step months (≥2): month lead with trailing comma.
       ['0 0 */2 */2 */2',
         'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
-        'ya sea cada dos días del mes o los martes, jueves, sábados y domingos'],
+        'ya sea un día impar del mes o los martes, jueves, sábados y domingos'],
       ['0 0 L */2 */2',
         'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
         'ya sea el último día del mes o los martes, jueves, sábados y domingos'],
@@ -742,9 +744,15 @@ describe('Español (es):', function() {
       ['0 12 * * 7', 'los domingos al mediodía'],
       ['5 9 * * *', 'todos los días a las 9:05 de la mañana'],
       // Restricted-month OR union with a range weekday: now uses the unified
-      // ya-sea frame with month fronted once and month-less arms.
+      // ya-sea frame with month fronted once and month-less arms. The weekday
+      // range arm reads "cualquier día de lunes a viernes" so the union "o"
+      // joins two parallel day predicates (a nominal day vs. a weekday range).
       ['0 12 1 6-9 MON-FRI',
-        'de junio a septiembre al mediodía, ya sea el día 1 o de lunes a viernes'],
+        'de junio a septiembre al mediodía, ya sea el día 1 o cualquier día de lunes a viernes'],
+      // Wildcard-month OR union with a range weekday (the panel's n2 case):
+      // "el 1 de cada mes" or "cualquier día de lunes a viernes".
+      ['0 0 1 * 1-5',
+        'a medianoche, ya sea el 1 de cada mes o cualquier día de lunes a viernes'],
       // Single restricted month + weekday (no date): exercises monthScope
       // with a non-ranged month.
       ['0 9 * 6 MON', 'los lunes de junio a las 9 de la mañana']
