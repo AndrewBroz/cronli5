@@ -9,7 +9,7 @@ import {analyze, prepare} from '../../src/core/index.js';
 import en from '../../src/lang/en/index.js';
 import {coverageExtras, spanningSet, tables} from '../../scripts/patterns.mjs';
 
-// Every rendering plan the core can select (see src/core/ir.ts). The
+// Every rendering plan the core can select (see src/core/schedule.ts). The
 // spanning set should exercise each one.
 const PLAN_KINDS = [
   'everySecond', 'standaloneSeconds', 'secondPastMinute',

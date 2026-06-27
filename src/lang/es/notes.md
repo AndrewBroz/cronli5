@@ -36,7 +36,7 @@ es-ES (full-point times, 24h-leaning) vs es-419 (a. m./p. m. forms;
   than a calque of "past the hour".
 * **Re-strategy**: wildcard minutes over hour lists render as per-hour
   windows ("de las 9 a las 9:59 de la mañana"), not the English "during
-  the 9 a.m. hours" shape — the IR permits this by design.
+  the 9 a.m. hours" shape — the Schedule permits this by design.
 * A shared day period is said once per range ("de las 9 a las 9:59 de la
   mañana"); cross-period ranges name both.
 * A foldable single year joins the date inside `datePhrase`

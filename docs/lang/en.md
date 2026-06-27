@@ -87,7 +87,7 @@ many more rows lives in
 ## Internals
 
 The renderer lives in [`src/lang/en/`](../../src/lang/en/), consumes
-only the semantic IR produced by the core (see
+only the semantic Schedule produced by the core (see
 [i18n-design.md](../i18n-design.md)), and owns every English word in the
 output. Its expectation suite is the corpus under
 [`test/lang/en/`](../../test/lang/en/).

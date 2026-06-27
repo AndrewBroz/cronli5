@@ -8,7 +8,7 @@
   ],
   "exclude": [
     "src/browser.ts",
-    "src/core/ir.ts",
+    "src/core/schedule.ts",
     "src/types.ts"
   ],
   "reporter": [

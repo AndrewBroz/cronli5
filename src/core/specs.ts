@@ -1,6 +1,6 @@
 // Field specifications, macros, and core policy constants.
 
-import type {Field} from './ir.js';
+import type {Field} from './schedule.js';
 
 /**
  * A parsed but not-yet-canonical cron pattern: every field present, values

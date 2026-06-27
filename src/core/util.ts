@@ -1,6 +1,6 @@
 // Small shared utilities for the core.
 
-import type {Field, IR, Segment} from './ir.js';
+import type {Field, Schedule, Segment} from './schedule.js';
 
 // A step segment of a classified field, carrying its `fires`/`interval`/
 // `startToken`. The plan only routes step-shaped fields to step phrasing,
@@ -52,7 +52,7 @@ function arithmeticStep(values: number[]):
 }
 
 // The display sort key for a canonical weekday number: Monday (1) first,
-// Sunday (0) last. The IR keeps Sunday=0 canonical; this is display-only.
+// Sunday (0) last. The Schedule keeps Sunday=0 canonical; this is display-only.
 function weekdayDisplayKey(value: number): number {
   return value === 0 ? 7 : value;
 }
@@ -66,12 +66,12 @@ type WeekdaySegment =
 
 // Reorder weekday segments Monday-first (Sunday last) for display, so a weekend
 // list reads "Saturday and Sunday" rather than the canonical Sunday-first
-// "Sunday and Saturday". Display-only: the IR / canonical order is unchanged (a
-// fresh array is returned). A step expands to its fires as singles so the days
-// sort into the list; a range stays one unit and keeps its own bounds order (a
-// wrap range is not reordered into a list), sorting by its opening bound — so a
-// lone range sorts to a one-element list and is unchanged. The sort is stable,
-// so equal opening days keep input order.
+// "Sunday and Saturday". Display-only: the Schedule / canonical order is
+// unchanged (a fresh array is returned). A step expands to its fires as singles
+// so the days sort into the list; a range stays one unit and keeps its own
+// bounds order (a wrap range is not reordered into a list), sorting by its
+// opening bound — so a lone range sorts to a one-element list and is unchanged.
+// The sort is stable, so equal opening days keep input order.
 function orderWeekdaysForDisplay(segments: Segment[]): WeekdaySegment[] {
   const flattened: WeekdaySegment[] = segments.flatMap(function flat(segment) {
     return segment.kind === 'step' ?
@@ -112,15 +112,15 @@ function toFieldNumber(
 // wildcard or Quartz shape (no segments). Renderers reach a non-empty list
 // only on the field shapes the analysis segmented; the empty fallback keeps
 // callers that touch a possibly-unsegmented field (a `.map`/`.forEach`) safe.
-function segmentsOf(ir: IR, field: Field): Segment[] {
-  return ir.analyses.segments[field] ?? [];
+function segmentsOf(schedule: Schedule, field: Field): Segment[] {
+  return schedule.analyses.segments[field] ?? [];
 }
 
 // The first segment of a step field, narrowed to its step variant. The plan
 // only routes step shapes here, whose (single) segment always classifies as a
 // step; this asserts what the analysis guarantees but the type cannot express.
-function stepSegment(ir: IR, field: Field): StepSegment {
-  return segmentsOf(ir, field)[0] as StepSegment;
+function stepSegment(schedule: Schedule, field: Field): StepSegment {
+  return segmentsOf(schedule, field)[0] as StepSegment;
 }
 
 // The sorted numeric values a field's segments cover, or null if any segment
@@ -153,12 +153,12 @@ function offsetCleanStride(
 // An hour list's arithmetic progression, or null when its values are not a
 // step the renderer should speak as a cadence. The core rewrites a uneven hour
 // step (whose interval does not tile 24, e.g. `*/5` → 0,5,10,15,20) to its
-// literal fire list, indistinguishable in the IR from a hand-written list; the
-// renderer recovers the cadence from the values. A progression starting at
-// zero is a `*/n` step however short (0,7,14,21 is `*/7`); a non-zero one is
-// only a step when it is too long to be a deliberate clock-time list (e.g.
-// 9,17 is two named times, not a cadence), the same length the minute/second
-// list path uses. Interval one is a plain range, never a step.
+// literal fire list, indistinguishable in the Schedule from a hand-written
+// list; the renderer recovers the cadence from the values. A progression
+// starting at zero is a `*/n` step however short (0,7,14,21 is `*/7`); a
+// non-zero one is only a step when it is too long to be a deliberate clock-time
+// list (e.g. 9,17 is two named times, not a cadence), the same length the
+// minute/second list path uses. Interval one is a plain range, never a step.
 function hourListStride(
   values: number[]
 ): {start: number; interval: number; last: number} | null {

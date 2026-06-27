@@ -4,7 +4,7 @@
 
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
-import type {Field, Pattern} from './ir.js';
+import type {Field, Pattern} from './schedule.js';
 import {includes, toFieldNumber, unique} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 

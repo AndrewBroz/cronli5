@@ -147,7 +147,7 @@ first review's naturalness defects ship.
 The English/Spanish month-range no-fold rule (June 2026) is confirmed
 language-local: `kuukauden 1. päivänä kesäkuusta syyskuuhun` has no
 garden path, because elative/illative marking does the work the comma
-does in Spanish. The IR needed nothing new.
+does in Spanish. The Schedule needed nothing new.
 
 ## Dialect axes (future)
 

@@ -4,7 +4,7 @@
 // See docs/i18n-design.md.
 
 import {applyQuartzAliases, normalizeCronPattern} from './normalize.js';
-import type {NormalizedOptions, Pattern} from './ir.js';
+import type {NormalizedOptions, Pattern} from './schedule.js';
 import {parseCronPattern} from './parse.js';
 import type {CronPattern} from '../types.js';
 import {validateCronPattern} from './validate.js';

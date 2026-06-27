@@ -2,7 +2,7 @@
 // default `fi` style follows Kielitoimiston ohjepankki and SFS 4175 (see
 // notes.md). Custom objects merge over the `fi` defaults.
 
-import type {DialectStyle} from '../../core/ir.js';
+import type {DialectStyle} from '../../core/schedule.js';
 import type {Cronli5Options} from '../../types.js';
 
 const dialects = {

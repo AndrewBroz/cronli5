@@ -80,7 +80,7 @@ plus a declared boundary layer (noon/midnight, the one-o'clock article, weekday
 step). This is the **simple slice** — the hand-method tables, made exhaustive.
 
 **Output lattices** (the distinctions) — two, from
-[`ir.ts`](../../src/core/ir.ts):
+[`schedule.ts`](../../src/core/schedule.ts):
 
 - **Time-plan lattice** — the `PlanNode` union, where a cell is `kind × its
   discriminant sub-fields`, not just `kind`: `minuteFrequency.hours.kind` (5),

@@ -28,7 +28,7 @@
 //     patterns always parse seconds first and year last)
 
 import {analyze, prepare} from './core/index.js';
-import type {NormalizedOptions} from './core/ir.js';
+import type {NormalizedOptions} from './core/schedule.js';
 import type {CronPattern, Cronli5Language, Cronli5Options}
   from './types.js';
 import en from './lang/en/index.js';
@@ -79,13 +79,13 @@ function interpretCronPattern(
     return lang.reboot;
   }
 
-  // Analyze into the neutral content + the core's suggested plan, then let the
+  // Analyze into the neutral facts + the core's suggested plan, then let the
   // language optionally override the plan before rendering. A language
   // without a `plan` hook renders the core's suggestion unchanged.
-  const ir = analyze(prepare(cronPattern, opts));
-  const plan = lang.plan ? lang.plan(ir, ir.plan) : ir.plan;
+  const schedule = analyze(prepare(cronPattern, opts));
+  const plan = lang.plan ? lang.plan(schedule, schedule.plan) : schedule.plan;
 
-  return lang.describe({...ir, plan}, opts);
+  return lang.describe({...schedule, plan}, opts);
 }
 
 export default cronli5;

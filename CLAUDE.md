@@ -8,15 +8,17 @@ restating them — if something is enforced, trust the gate, not your memory.
 
 It turns cron patterns into plain-language descriptions. The
 language-independent **core** (`src/core/`) parses → validates → normalizes →
-analyzes a pattern into a semantic **IR**; a per-language **renderer**
-(`src/lang/<code>/`) turns that IR into prose and owns all of its own words. A
+analyzes a pattern into a semantic **Schedule**; a per-language **renderer**
+(`src/lang/<code>/`) turns that Schedule into prose and owns all of its own
+words. A
 language never imports another language — the only shared dependency is the
 core. The *why* is in [docs/i18n-design.md](docs/i18n-design.md).
 
 ## The contract
 
-[`src/core/ir.ts`](src/core/ir.ts) is the typed contract between core and
-renderers (`IR`, `PlanNode`, `NormalizedOptions`, `Language`). `npm run
+[`src/core/schedule.ts`](src/core/schedule.ts) is the typed contract between
+core and renderers (`Schedule`, `PlanNode`, `NormalizedOptions`, `Language`).
+`npm run
 typecheck` enforces that the core *produces* it and renderers *consume* it
 correctly. Public API types live in [`src/types.ts`](src/types.ts).
 

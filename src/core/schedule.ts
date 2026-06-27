@@ -1,8 +1,7 @@
-// An Intermediate Representation (`IR`) is the semantic contract between
-// the core and a language renderer. The core (parse → validate →
-// normalize → analyze) produces an IR, then a language module renders it to
-// prose. These shapes are what any new language module interacts with. See
-// docs/i18n-design.md.
+// A `Schedule` is the semantic contract between the core and a language
+// renderer. The core (parse → validate → normalize → analyze) produces a
+// `Schedule`, then a language module renders it to prose. These shapes are
+// what any new language module interacts with. See docs/i18n-design.md.
 
 import type {Cronli5Options} from '../types.js';
 
@@ -99,24 +98,25 @@ export interface Analyses {
 }
 
 /**
- * The neutral content plan: the language-independent facts about a pattern,
+ * The neutral schedule facts: the language-independent facts about a pattern,
  * carrying no phrasing decision. `analyze` produces this; `selectPlan`
  * reads it to suggest a `plan`. The phrasing plan is deliberately *not*
- * part of the neutral content (docs/i18n-design.md §2.2).
+ * part of the neutral facts (docs/i18n-design.md §2.2).
  */
-export interface Content {
+export interface ScheduleFacts {
   pattern: Pattern;
   shapes: Shapes;
   analyses: Analyses;
 }
 
 /**
- * The semantic intermediate representation a language renders: the neutral
- * `Content` plus the selected `plan`. A language may widen `plan` with its
- * own `Extra` plan kinds via `Language.plan`; by default there are
- * none, so `IR` is the neutral content with a core `PlanNode`.
+ * The semantic schedule a language renders: the neutral `ScheduleFacts`
+ * plus the selected `plan`. A language may widen `plan` with its own
+ * `Extra` plan kinds via `Language.plan`; by default there are none, so
+ * `Schedule` is the neutral facts with a core `PlanNode`.
  */
-export interface IR<Extra extends {kind: string} = never> extends Content {
+export interface Schedule<Extra extends {kind: string} = never>
+  extends ScheduleFacts {
   plan: PlanNode | Extra;
 }
 
@@ -163,7 +163,7 @@ export interface Language<
   Style = DialectStyle,
   Extra extends {kind: string} = never
 > {
-  describe(ir: IR<Extra>, opts: NormalizedOptions<Style>): string;
+  describe(schedule: Schedule<Extra>, opts: NormalizedOptions<Style>): string;
   fallback: string;
   options(options?: Cronli5Options): NormalizedOptions<Style>;
   reboot: string;
@@ -171,8 +171,8 @@ export interface Language<
   // form); each language owns its lead verb and punctuation.
   sentence(description: string): string;
   // Optionally override the core's suggested plan. Receives the neutral
-  // `content` and the core's suggestion (`base`), so overriding is a thin
+  // `facts` and the core's suggestion (`base`), so overriding is a thin
   // remap, not a re-derivation. Omitted by languages that accept the core's
   // choice (all of en/de/es/fi today).
-  plan?(content: Content, base: PlanNode): PlanNode | Extra;
+  plan?(facts: ScheduleFacts, base: PlanNode): PlanNode | Extra;
 }
