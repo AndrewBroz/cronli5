@@ -6,6 +6,21 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.1]
+
+### Changed
+
+- **en — dense crons read coarse-to-fine.** A dense cron (a seconds cadence
+  stacked on a minute cadence under an hour cadence, with a calendar anchor)
+  previously rendered as a robotic fine-to-coarse run-on. It now leads with the
+  day/month anchor, states cadences coarse-to-fine, and nests the second under
+  the minute — e.g. `0-10 */7 */5 LW` → "on the last weekday of the month, every
+  five hours from midnight through 8 p.m., every seven minutes from 0 through 56
+  minutes past the hour, and within each of those minutes, every second from 0
+  through 10 past the minute". Blind native-panel naturalness on these shapes
+  rose from ~2.0 to ~4.9. Dense shapes only; simple and medium crons, the
+  sentence wrapper, and the other languages are unchanged.
+
 ## [0.3.0]
 
 The OR-day union (both day-of-month and day-of-week restricted — cron fires on
