@@ -196,31 +196,35 @@ function isCadenceShape(shape: Schedule['shapes'][keyof Schedule['shapes']]):
 // hours cadence: three independent cadences whose flat fine-to-coarse run-on
 // reads as a robotic list. It is recognized only on the `composeSeconds` plan
 // (a meaningful second over a coarser rest), with all three of second, minute,
-// and hour a cadence, the hour speakable as a stride or a range window, and no
-// day union (which owns its own leading-month structure). Restricted to the
-// default dialect's voice — the same scope as the confinement frame — so other
-// dialects and the compact `short` form keep their established phrasing.
+// and hour a cadence, and no day union (which owns its own leading-month
+// structure). The hour may take any cadence shape — a stride, a range window,
+// or a list/range-with-outlier — each rendered in its own existing leaf form
+// inside the restructured frame. A `clockTimes` rest is excluded: there the
+// minute and hour fold into a named clock-time enumeration ("every 15 seconds
+// of 9:00 a.m., 9:25 a.m., …"), a compact form already better than a run-on, so
+// it is left as is. Restricted to the default dialect's voice — the same scope
+// as the confinement frame — so other dialects and the compact `short` form
+// keep their established phrasing.
 function isDenseCadence(schedule: Schedule, opts: NormalizedOptions): boolean {
   if (!opts.style.untilWindow || opts.short ||
       schedule.plan.kind !== 'composeSeconds' ||
+      schedule.plan.rest.kind === 'clockTimes' ||
       isDayUnion(schedule, opts)) {
     return false;
   }
 
   const {shapes} = schedule;
 
-  if (!isCadenceShape(shapes.second) || !isCadenceShape(shapes.minute) ||
-      !isCadenceShape(shapes.hour)) {
-    return false;
-  }
-
-  return hourStride(schedule) !== null || shapes.hour === 'range';
+  return isCadenceShape(shapes.second) && isCadenceShape(shapes.minute) &&
+    isCadenceShape(shapes.hour);
 }
 
 // The coarse hour cadence as a standalone fragment: a stride reads as its
 // bounded/bare cadence ("every five hours from midnight through 8 p.m.", "every
-// six hours"); a range reads as its window ("from 8 a.m. through 6 p.m."), the
-// non-continuous form a stepped minute already uses inside the range.
+// six hours"); a plain range reads as its window ("from 8 a.m. through 6
+// p.m."), the non-continuous form a stepped minute uses inside the range; a
+// list or range-with-outlier reads as its "during the … hours" frame (the same
+// phrasing the confinement form produces, just hoisted into the dense lead).
 function denseHourFragment(schedule: Schedule,
   opts: NormalizedOptions): string {
   const stride = hourStride(schedule);
@@ -229,18 +233,26 @@ function denseHourFragment(schedule: Schedule,
     return hourStrideCadence(stride, opts);
   }
 
-  // Reached only with a range hour (per `isDenseCadence`), whose single range
-  // segment carries the window bounds.
-  const segment = segmentsOf(schedule, 'hour').find(function range(part) {
-    return part.kind === 'range';
-  }) as Extract<Segment, {kind: 'range'}>;
+  if (schedule.shapes.hour === 'range') {
+    // A plain range hour, whose single range segment carries the window bounds.
+    const segment = segmentsOf(schedule, 'hour').find(function range(part) {
+      return part.kind === 'range';
+    }) as Extract<Segment, {kind: 'range'}>;
 
-  return rangeWindow({
-    continuous: false,
-    from: +segment.bounds[0],
-    throughMinute: 0,
-    to: +segment.bounds[1]
-  }, opts);
+    return rangeWindow({
+      continuous: false,
+      from: +segment.bounds[0],
+      throughMinute: 0,
+      to: +segment.bounds[1]
+    }, opts);
+  }
+
+  // A list or range-with-outlier hour ("9-20,22") reads as the discrete
+  // "during the <times> hours" frame, the same construction the hour
+  // confinement uses for these shapes.
+  return 'during the ' +
+    hourSegmentTimes(schedule, {minute: 0, second: null}, false, opts) +
+    ' hours';
 }
 
 // The minute cadence as a standalone fragment, counted past the hour: a step is

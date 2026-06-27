@@ -71,6 +71,32 @@ describe('Dense multi-cadence patterns:', function() {
     ]);
   });
 
+  describe('anchor-led with a list/range-with-outlier hour window', function() {
+    // A dense cron whose hour field is a list or range-with-outlier ("9-20,22")
+    // restructures the same way as a stride/range hour: the hour reads as its
+    // "during the … hours" frame inside the anchor-led, second-nested form.
+    run([
+      ['0-10 */7 9-20,22 LW * *',
+        'on the last weekday of the month, ' +
+        'during the 9 a.m. through 8 p.m. and 10 p.m. hours, ' +
+        'every seven minutes from 0 through 56 minutes past the hour, ' +
+        'and within each of those minutes, ' +
+        'every second from 0 through 10 past the minute'],
+      ['0-10 5/15 9-20,22 LW * *',
+        'on the last weekday of the month, ' +
+        'during the 9 a.m. through 8 p.m. and 10 p.m. hours, ' +
+        'every 15 minutes from five minutes past the hour, ' +
+        'and within each of those minutes, ' +
+        'every second from 0 through 10 past the minute'],
+      ['0-10 0-30 9-20,22 LW * *',
+        'on the last weekday of the month, ' +
+        'during the 9 a.m. through 8 p.m. and 10 p.m. hours, ' +
+        'every minute from 0 through 30 past the hour, ' +
+        'and within each of those minutes, ' +
+        'every second from 0 through 10 past the minute']
+    ]);
+  });
+
   describe('no anchor: lead with the hour cadence', function() {
     run([
       ['0-10 */7 */5 * * *',
