@@ -5,7 +5,7 @@ const {expect} = chai;
 
 // Behavior spec for the semantic IR (docs/i18n-design.md §2.2). `analyze`
 // classifies field shapes, precomputes the analyses renderers need, and
-// selects a description strategy (the `plan`). The plan is descriptive —
+// selects a description plan (the `plan`). The plan is descriptive —
 // numbers, enumerations, windows — never phrasing.
 
 function ir(pattern, opts) {
@@ -101,7 +101,7 @@ describe('Core analyze:', function() {
   });
 
   describe('plans: minutes and hours', function() {
-    it('selects strategies mirroring the interpreter chain', function() {
+    it('selects plans mirroring the interpreter chain', function() {
       expect(ir('*/15 9-17 * * *').plan).to.deep.equal({
         hours: {from: 9, kind: 'window', last: 45, to: 17},
         kind: 'minuteFrequency'

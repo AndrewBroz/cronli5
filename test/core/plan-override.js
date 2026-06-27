@@ -3,9 +3,9 @@ import cronli5 from '../../src/cronli5.js';
 import en from '../../src/lang/en/index.js';
 
 // The orchestrator (src/cronli5.ts) lets a language override the core's
-// suggested strategy via `lang.strategy(content, base)`: the core selects a
+// suggested plan via `lang.plan(content, base)`: the core selects a
 // default plan, and a language may remap it to its own kind while inheriting
-// the core's choice for any strategy it does not customize. These probes
+// the core's choice for any plan it does not customize. These probes
 // assert the seam without depending on any language's phrasing — a probe
 // language simply reports which `plan.kind` reached `describe`.
 
@@ -17,30 +17,30 @@ const probe = {
   }
 };
 
-// The same probe, overriding exactly one strategy with a language-specific
+// The same probe, overriding exactly one plan with a language-specific
 // kind and deferring to the core for everything else.
 const probeOverride = {
   ...probe,
-  strategy(content, base) {
+  plan(content, base) {
     return base.kind === 'minutesAcrossHours'
       ? {kind: 'custom:everyMinuteWindow'}
       : base;
   }
 };
 
-describe('Strategy override (lang.strategy):', function() {
-  it('uses the core strategy when a language has no override', function() {
+describe('Plan override (lang.plan):', function() {
+  it('uses the core plan when a language has no override', function() {
     // `* 9,17 * * *` is a minute wildcard over discrete hours.
     expect(cronli5('* 9,17 * * *', {lang: probe}))
       .to.equal('minutesAcrossHours');
   });
 
-  it('lets a language override that strategy with its own kind', function() {
+  it('lets a language override that plan with its own kind', function() {
     expect(cronli5('* 9,17 * * *', {lang: probeOverride}))
       .to.equal('custom:everyMinuteWindow');
   });
 
-  it('falls through to the core strategy for kinds it does not override',
+  it('falls through to the core plan for kinds it does not override',
     function() {
       expect(cronli5('* * * * *', {lang: probeOverride}))
         .to.equal('everyMinute');

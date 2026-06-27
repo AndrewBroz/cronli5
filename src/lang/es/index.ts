@@ -4,7 +4,7 @@
 //
 // Spanish is the pilot language for the i18n architecture
 // (docs/i18n-design.md §7): it consumes only the IR, owns all of its
-// words, and is free to re-strategize where Spanish grammar prefers a
+// words, and is free to re-plan where Spanish grammar prefers a
 // different shape than the plan hint (e.g. wildcard minutes over hour
 // lists render as per-hour windows).
 
@@ -632,7 +632,7 @@ function renderMinuteSpanInHour(
     trailingQualifier(ir, opts);
 }
 
-// A minute window under discrete hours. Spanish re-strategizes the
+// A minute window under discrete hours. Spanish re-plans the
 // wildcard form: rather than "during the X hours", each hour reads as its
 // own window ("de las 9:00 a las 9:59").
 function renderMinutesAcrossHours(

@@ -700,7 +700,7 @@ function renderMinuteSpanInHour(
 }
 
 // A minute window under discrete hours. Like Spanish, the wildcard form
-// re-strategizes to per-hour windows; restricted minutes drop the
+// re-plans to per-hour windows; restricted minutes drop the
 // "jokaisen tunnin" anchor, which the specific hours would contradict.
 // A range or multi-point list over enumerated hours renders hours-first
 // ("klo <hours> aina minuuttien <spec> kohdalla"); a range+isolated hour

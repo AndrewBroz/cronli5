@@ -80,10 +80,10 @@ function interpretCronPattern(
   }
 
   // Analyze into the neutral content + the core's suggested plan, then let the
-  // language optionally override the strategy before rendering. A language
-  // without a `strategy` hook renders the core's suggestion unchanged.
+  // language optionally override the plan before rendering. A language
+  // without a `plan` hook renders the core's suggestion unchanged.
   const ir = analyze(prepare(cronPattern, opts));
-  const plan = lang.strategy ? lang.strategy(ir, ir.plan) : ir.plan;
+  const plan = lang.plan ? lang.plan(ir, ir.plan) : ir.plan;
 
   return lang.describe({...ir, plan}, opts);
 }

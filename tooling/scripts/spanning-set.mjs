@@ -2,14 +2,14 @@
 // (showcase) cron patterns, reused from the curated docs sets, ordered
 // simple-first. It also reports which `PlanNode` kinds the set exercises, so
 // a language is reviewed against the full breadth of the core's rendering
-// strategies. Run directly to print the coverage report.
+// plans. Run directly to print the coverage report.
 
 import {pathToFileURL} from 'node:url';
 import {analyze, prepare} from '../../src/core/index.js';
 import en from '../../src/lang/en/index.js';
 import {coverageExtras, spanningSet, tables} from '../../scripts/patterns.mjs';
 
-// Every rendering strategy the core can select (see src/core/ir.ts). The
+// Every rendering plan the core can select (see src/core/ir.ts). The
 // spanning set should exercise each one.
 const PLAN_KINDS = [
   'everySecond', 'standaloneSeconds', 'secondPastMinute',
