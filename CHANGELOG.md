@@ -6,6 +6,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0]
+
+### Fixed
+
+- **Core: a bounded hour step lost its bound when it folded.** A bounded hour
+  step with more fires than the clock-time enumeration cap (e.g. `23 0-20/2`,
+  hours 0,2,…,20) folded to the compact "every N hours" form, which carried no
+  bound — so it read as running all day, in every language. The fold now keeps
+  the range bound ("every two hours from midnight through 8 p.m."); open `*/n`
+  and full-day-equivalent steps stay unbounded. Surfaced by the new cRonstrue
+  round-trip. (en/es/de/fi/zh.)
+
+### Added
+
+- **cRonstrue comparison + migration guide (user support).** A generated,
+  CI-checked comparison (`docs/cronli5-vs-cronstrue.md`) grouping representative
+  patterns simple/medium/complex with cronli5 vs cRonstrue side by side, backed
+  by a blind reader panel (cronli5 preferred 81/108 — even on simple cadences,
+  decisive on medium/complex) and a round-trip correctness pass. A migration
+  guide (`docs/migrating-from-cronstrue.md`) with API, option, and locale
+  mappings and the behavior differences to expect. New tooling:
+  `tooling/scripts/cronstrue-divergence.mjs` (`npm run divergence`).
+
 ## [0.3.4]
 
 ### Fixed
