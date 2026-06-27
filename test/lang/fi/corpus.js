@@ -508,14 +508,28 @@ describe('Suomi (fi):', function() {
       ['0,30 9-17 * * *',
         'klo 9–17 aina minuuttien 0 ja 30 kohdalla'],
       ['0 9-17/2 * * *', 'kahden tunnin välein klo 9–17'],
+      // A bounded step from midnight that stops short of the day's last tile
+      // (0-20/2 fires 0,2,…,20, never 22) pins both endpoints, like 9-17/2 —
+      // it must not read as the all-day "kahden tunnin välein".
+      ['23 0-20/2 * * *',
+        '23 minuutin kohdalla, kahden tunnin välein klo 0–20'],
+      ['30 0-20/3 * * *',
+        '30 minuutin kohdalla, kolmen tunnin välein klo 0–18'],
+      // Guards: an open `*/n` and a full-field-equivalent step (0-22/2 ≡ `*/2`)
+      // are the all-day set and stay bare.
+      ['23 */2 * * *', '23 minuutin kohdalla, kahden tunnin välein'],
+      ['23 0-22/2 * * *', '23 minuutin kohdalla, kahden tunnin välein'],
       ['0-30 1/6 * * *',
         '0–30 minuutin kohdalla, kuuden tunnin välein klo 1:stä alkaen'],
       ['* 8-18,22 * * *',
         'joka minuutti klo 8.00–18.59 ja 22.00–22.59'],
       // An arithmetic-progression hour list reads as an hour cadence, not a
-      // wall of clock times (the single pinned minute leads).
+      // wall of clock times (the single pinned minute leads). The list stops
+      // at 13, short of the day's last odd hour, so the cadence is bounded
+      // ("klo 1–13"), not the open "klo 1:stä alkaen" — which would recover the
+      // all-day 1,3,…,23.
       ['5 1,3,5,7,9,11,13 * * *',
-        '5 minuutin kohdalla, kahden tunnin välein klo 1:stä alkaen'],
+        '5 minuutin kohdalla, kahden tunnin välein klo 1–13'],
       ['5-10 1,3,5,7,9,11,13 * * *',
         'klo 1, 3, 5, 7, 9, 11 ja 13 aina minuuttien 5–10 kohdalla'],
       ['0 9 * * 7', 'sunnuntaisin klo 9'],

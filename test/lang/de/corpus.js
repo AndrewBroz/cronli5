@@ -324,7 +324,16 @@ describe('Deutsch (de):', function() {
         'in den Minuten 0 bis 30, alle 2 Stunden von 9 bis 17 Uhr'],
       ['0 1-23/2 * * *',
         'um 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 und 23 Uhr'],
-      ['0 9-10/5 * * *', 'täglich um 9 Uhr']
+      ['0 9-10/5 * * *', 'täglich um 9 Uhr'],
+      // A bounded step from midnight that stops short of the day's last tile
+      // (0-20/2 fires 0,2,…,20, never 22) pins both endpoints, like 9-17/2 —
+      // it must not read as the all-day "alle 2 Stunden".
+      ['23 0-20/2 * * *', 'in Minute 23, alle 2 Stunden von 0 bis 20 Uhr'],
+      ['30 0-20/3 * * *', 'in Minute 30, alle 3 Stunden von 0 bis 18 Uhr'],
+      // Guards: an open `*/n` and a full-field-equivalent step (0-22/2 ≡ `*/2`)
+      // are the all-day set and stay bare.
+      ['23 */2 * * *', 'in Minute 23, alle 2 Stunden'],
+      ['23 0-22/2 * * *', 'in Minute 23, alle 2 Stunden']
     ]);
   });
 

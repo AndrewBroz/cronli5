@@ -286,7 +286,9 @@ pattern &mdash; `5,10 30 9 * * MON` &mdash; in every language:
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
-more generated side-by-side output tables.
+more generated side-by-side output tables, and
+[docs/migrating-from-cronstrue.md](./docs/migrating-from-cronstrue.md) if you
+are switching from cRonstrue.
 
 ## Description Accuracy
 

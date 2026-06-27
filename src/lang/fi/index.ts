@@ -1108,7 +1108,7 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
   const {interval, start, last, cycle, unit} = stride;
   const cadence = genitive(interval, opts) + ' ' + unit.gen + ' välein';
 
-  return chooseStride({start, interval, cycle}, {
+  return chooseStride({start, interval, last, cycle}, {
     bare: () => cadence,
     offset: () =>
       cadence + ' ' + unit.anchor + ' ' + unit.ela + ' ' + start + ' alkaen',
@@ -1206,7 +1206,7 @@ function hourStrideCadence(
   const {start, interval, last} = stride;
   const cadence = genitive(interval, opts) + ' tunnin välein';
 
-  return chooseStride({start, interval, cycle: 24}, {
+  return chooseStride({start, interval, last, cycle: 24}, {
     bare: () => cadence,
     offset: () => cadence + ' klo ' + hourElatives[start] + ' alkaen',
     bounded: () => cadence + ' ' +

@@ -126,6 +126,15 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 2/6 * * *', '从2点起每6小时'],
       ['0 0 */5 * * *', '从0点起每5小时，至20点'],
       ['0 0 9-17/2 * * *', '从9点起每2小时，至17点'],
+      // A bounded step from midnight that stops short of the day's last tile
+      // (0-20/2 fires 0,2,…,20, never 22) pins its endpoint "至20点", like
+      // 9-17/2 — it must not read as the all-day "每2小时". (0-22/2 ≡ */2 stays
+      // bare; see below.) A non-zero pinned minute cannot fuse onto "至K点", so
+      // the compact form enumerates the clock points instead.
+      ['0 0 0-20/2 * * *', '从0点起每2小时，至20点'],
+      ['0 0 0-22/2 * * *', '每2小时'],
+      ['23 0-20/2 * * *',
+        '每小时23分，在凌晨0点、2点、4点、6点、8点、10点、正午、14点、16点、18点和20点'],
       ['* * 1/2 * * *', '从1点起每2小时的每分钟每秒'],
       // An hour range stated inside a list reads as the span the source wrote,
       // plus the single — "9点至20点和22点" — not the 13 hours it expands to,
