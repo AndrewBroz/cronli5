@@ -27,8 +27,8 @@ describe('Valid strings with ranges:', function() {
 
   describe('hour ranges', function() {
     run([
-      ['0 9-17 * * *', 'every hour from 9 a.m. until 6 p.m.'],
-      ['0 0-5 * * *', 'every hour from midnight until 6 a.m.']
+      ['0 9-17 * * *', 'every hour from 9 a.m. through 5 p.m.'],
+      ['0 0-5 * * *', 'every hour from midnight through 5 a.m.']
     ]);
   });
 

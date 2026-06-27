@@ -1,5 +1,7 @@
 import chai from 'chai';
-import {arithmeticStep} from '../../src/core/util.js';
+import {
+  arithmeticStep, hourListStride, offsetCleanStride, singleValues
+} from '../../src/core/util.js';
 
 const {expect} = chai;
 
@@ -62,5 +64,96 @@ describe('arithmeticStep:', function() {
     it('an empty set', function() {
       expect(arithmeticStep([])).to.equal(null);
     });
+  });
+});
+
+// Behavior spec for `singleValues`: the sorted numeric values a field's
+// segments cover, or null if any segment is not a discrete single (a range or
+// sub-step is not a plain fire list). Language-neutral; renderers use it to
+// recover a fire list before recognizing a stride.
+
+describe('singleValues:', function() {
+  it('reads an all-single segment list as its values', function() {
+    expect(singleValues([
+      {kind: 'single', value: '5'},
+      {kind: 'single', value: '17'}
+    ])).to.deep.equal([5, 17]);
+  });
+
+  it('is null when a segment is a range', function() {
+    expect(singleValues([
+      {kind: 'single', value: '5'},
+      {kind: 'range', bounds: ['9', '17']}
+    ])).to.equal(null);
+  });
+
+  it('is null when a segment is a step', function() {
+    expect(singleValues([
+      {kind: 'step', fires: [0, 15, 30, 45], interval: 15, startToken: '*'}
+    ])).to.equal(null);
+  });
+
+  it('is an empty list for no segments', function() {
+    expect(singleValues([])).to.deep.equal([]);
+  });
+});
+
+// Behavior spec for `offsetCleanStride`: whether an hour stride wraps the day
+// cleanly from within its first interval (start < interval and the interval
+// divides 24) — such a stride has no distinct endpoint. Every other stride is a
+// bounded set the cadence pins both ends of.
+
+describe('offsetCleanStride:', function() {
+  it('is true for a clean offset that divides 24 (1/2)', function() {
+    expect(offsetCleanStride({start: 1, interval: 2})).to.equal(true);
+  });
+
+  it('is true for a top-of-day stride (*/6)', function() {
+    expect(offsetCleanStride({start: 0, interval: 6})).to.equal(true);
+  });
+
+  it('is false when the interval does not divide 24 (*/5)', function() {
+    expect(offsetCleanStride({start: 0, interval: 5})).to.equal(false);
+  });
+
+  it('is false when the start reaches its interval (a bounded step)',
+    function() {
+      expect(offsetCleanStride({start: 9, interval: 2})).to.equal(false);
+    });
+});
+
+// Behavior spec for `hourListStride`: an hour list's arithmetic progression, or
+// null when its values are not a step the renderer should speak as a cadence. A
+// progression from zero is a step however short; a non-zero one is only a step
+// when it is too long to be a deliberate clock-time list (length >= 5). Interval
+// one is a plain range, never a step.
+
+describe('hourListStride:', function() {
+  it('recognizes a zero-based progression however short (*/7-style)',
+    function() {
+      expect(hourListStride([0, 7, 14]))
+        .to.deep.equal({start: 0, interval: 7, last: 14});
+    });
+
+  it('recognizes a long non-zero progression (length >= 5)', function() {
+    expect(hourListStride([1, 3, 5, 7, 9]))
+      .to.deep.equal({start: 1, interval: 2, last: 9});
+  });
+
+  it('is null for a short non-zero progression (a clock-time list)',
+    function() {
+      expect(hourListStride([9, 17])).to.equal(null);
+    });
+
+  it('is null for fewer than two values', function() {
+    expect(hourListStride([5])).to.equal(null);
+  });
+
+  it('is null for an interval of one (a plain range)', function() {
+    expect(hourListStride([1, 2, 3, 4, 5])).to.equal(null);
+  });
+
+  it('is null for an irregular set', function() {
+    expect(hourListStride([0, 2, 5, 9])).to.equal(null);
   });
 });

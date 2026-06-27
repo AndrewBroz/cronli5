@@ -39,7 +39,7 @@ const coverageExtras = [
 ];
 
 // The spanning set: curated simple + compound patterns, simple-first, that
-// exercise every rendering strategy. Folded into the core set's `spanning`
+// exercise every rendering plan. Folded into the core set's `spanning`
 // field and used (with the cell sweep) as the panel review substrate.
 const spanningSet = [...tables.basic, ...tables.showcase, ...coverageExtras];
 

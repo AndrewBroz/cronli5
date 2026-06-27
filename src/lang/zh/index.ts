@@ -5,12 +5,13 @@
 // day periods under `ampm`. The style contract is src/lang/zh/notes.md.
 
 import {
-  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+  arithmeticStep, orderWeekdaysForDisplay, segmentsOf, singleValues,
+  stepSegment, toFieldNumber
 } from '../../core/util.js';
 import {maxClockTimes, monthNumbers, weekdayNumbers} from '../../core/specs.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
-  Field, IR, Language, NormalizedOptions, PlanNode, Segment
+  IR, Language, NormalizedOptions, PlanNode, Segment
 } from '../../core/ir.js';
 import {resolveDialect, type ChineseStyle} from './dialects.js';
 
@@ -28,16 +29,6 @@ function joinAnd(items: string[]): string {
   }
 
   return items.slice(0, -1).join('、') + '和' + items[items.length - 1];
-}
-
-// A field's classified segments (empty when the field is a wildcard).
-function fieldSegments(ir: IR, field: Field): Segment[] {
-  return ir.analyses.segments[field] || [];
-}
-
-// The first segment of a step field, which the plan guarantees is step-kinded.
-function stepSegment(ir: IR, field: Field): StepSegment {
-  return fieldSegments(ir, field)[0] as StepSegment;
 }
 
 // "每N分钟" / "每分钟" — a cadence over a unit (the numeral 1 is suppressed).
@@ -80,22 +71,6 @@ function renderStride(stride: Stride): string {
   const lead = anchor + '从' + start + mark + '起' + cadence(interval, unit);
 
   return start < interval && tiles ? lead : lead + '，至' + last + mark;
-}
-
-// The sorted numeric values a field's segments cover, or null if any segment
-// is not a discrete single (a range or sub-step is not a plain fire list).
-function singleValues(segments: Segment[]): number[] | null {
-  const values: number[] = [];
-
-  for (const segment of segments) {
-    if (segment.kind !== 'single') {
-      return null;
-    }
-
-    values.push(+segment.value);
-  }
-
-  return values;
 }
 
 // Speak a minute/second field's enumerated fires as a step cadence when they
@@ -212,7 +187,7 @@ function hourWord(hour: number): string {
 function hourFires(ir: IR): number[] {
   const fires: number[] = [];
 
-  fieldSegments(ir, 'hour').forEach(function expand(segment) {
+  segmentsOf(ir, 'hour').forEach(function expand(segment) {
     if (segment.kind === 'step') {
       fires.push(...segment.fires);
     }
@@ -302,7 +277,7 @@ function renderEveryHour(): string {
 // enumerated it to a fire list (an offset/uneven set) — both route through the
 // stride; a short or irregular set keeps the enumerated "每小时…分" list.
 function minuteHourClause(ir: IR): string {
-  const segments = fieldSegments(ir, 'minute');
+  const segments = segmentsOf(ir, 'minute');
 
   if (ir.shapes.minute === 'step') {
     return stepClause(stepSegment(ir, 'minute'), '分钟', '分', '每小时');
@@ -337,7 +312,7 @@ function hourSegmentWords(segment: Segment): string[] {
 // of singles, "9点至20点和22点" for a range plus a single. Each segment renders
 // as the operator the source wrote (range → span), not its expanded fires.
 function hourList(ir: IR): string {
-  const words = fieldSegments(ir, 'hour').flatMap(hourSegmentWords);
+  const words = segmentsOf(ir, 'hour').flatMap(hourSegmentWords);
 
   return joinAnd(words);
 }
@@ -346,7 +321,7 @@ function hourList(ir: IR): string {
 // 间，", a discrete hour list gives "在H、H…，".
 function hourFrame(ir: IR): string {
   if (ir.shapes.hour === 'range') {
-    const [from, to] = (fieldSegments(ir, 'hour')[0] as
+    const [from, to] = (segmentsOf(ir, 'hour')[0] as
       Extract<Segment, {kind: 'range'}>).bounds;
 
     return '在' + hourWord(+from) + '至' + hourWord(+to) + '之间，';
@@ -490,7 +465,7 @@ function renderCompactClockTimes(ir: IR, plan: PlanNode): string {
   }
 
   const compact = plan as Extract<PlanNode, {kind: 'compactClockTimes'}>;
-  const secs = fieldSegments(ir, 'second');
+  const secs = segmentsOf(ir, 'second');
   const tail = secs.length && ir.pattern.second !== '0' ?
     '，第' + valueText(secs) + '秒' : '';
 
@@ -522,7 +497,7 @@ function renderHourRange(ir: IR, plan: PlanNode): string {
   const range = plan as Extract<PlanNode, {kind: 'hourRange'}>;
 
   if (range.minuteForm === 'lead') {
-    const minuteSegs = fieldSegments(ir, 'minute');
+    const minuteSegs = segmentsOf(ir, 'minute');
     const past = minuteSegs.length && ir.pattern.minute !== '0' ?
       minuteHourClause(ir) : '每小时';
 
@@ -533,7 +508,7 @@ function renderHourRange(ir: IR, plan: PlanNode): string {
   // A minute range is named separately ("每小时0至30分"), not folded into the end.
   if (range.minuteForm === 'range') {
     return '在' + hourWord(range.from) + '至' + hourWord(range.to) +
-      '之间，每小时' + valueList(fieldSegments(ir, 'minute'), '分') + '，每分钟';
+      '之间，每小时' + valueList(segmentsOf(ir, 'minute'), '分') + '，每分钟';
   }
 
   return '在' + hourWord(range.from) + '至' + range.to + '点' +
@@ -566,7 +541,7 @@ function renderHourStep(ir: IR): string {
 function hourStride(
   ir: IR
 ): {interval: number; start: number; last: number} | null {
-  const segments = fieldSegments(ir, 'hour');
+  const segments = segmentsOf(ir, 'hour');
 
   if (segments.length === 1 && segments[0].kind === 'step') {
     const {fires, interval} = segments[0];
@@ -702,7 +677,7 @@ function renderRangeOfMinutes(ir: IR): string {
 
 // A standalone second field: "每7秒" (step cadence) or "每分钟第4、17、42秒".
 function renderStandaloneSeconds(ir: IR): string {
-  const segs = fieldSegments(ir, 'second');
+  const segs = segmentsOf(ir, 'second');
   const first = segs[0];
 
   if (segs.length === 1 && first.kind === 'step' && first.startToken === '*') {
@@ -715,13 +690,13 @@ function renderStandaloneSeconds(ir: IR): string {
 
 // A second anchored to the minute: "每分钟第1秒", "每分钟第4、17、42秒".
 function renderSecondPastMinute(ir: IR): string {
-  return '每分钟第' + valueText(fieldSegments(ir, 'second')) + '秒';
+  return '每分钟第' + valueText(segmentsOf(ir, 'second')) + '秒';
 }
 
 // A second within a single specific minute: "每小时0分第1秒" / "…，每15秒".
 function renderSecondsWithinMinute(ir: IR): string {
   const base = '每小时' + ir.pattern.minute + '分';
-  const segs = fieldSegments(ir, 'second');
+  const segs = segmentsOf(ir, 'second');
   const first = segs[0];
 
   if (segs.length === 1 && first.kind === 'step' && first.startToken === '*') {
@@ -733,7 +708,7 @@ function renderSecondsWithinMinute(ir: IR): string {
 
 // The second clause for a composed schedule: "每秒" / "每7秒" / "第4、17、42秒".
 function secondClause(ir: IR): string {
-  const segs = fieldSegments(ir, 'second');
+  const segs = segmentsOf(ir, 'second');
 
   if (!segs.length) {
     return '每秒';
@@ -761,7 +736,7 @@ function minuteClause(ir: IR): string {
     return cadence(stepSegment(ir, 'minute').interval, UNITS.minute);
   }
 
-  return valueList(fieldSegments(ir, 'minute'), '分');
+  return valueList(segmentsOf(ir, 'minute'), '分');
 }
 
 // A single second folds into each clock time a clockTimes rest renders
@@ -838,7 +813,7 @@ function composeMinuteZeroClocks(ir: IR, sec: string): string {
   });
   // A pinned minute makes the seconds' own "每分钟" anchor misleading (it is a
   // single minute, not every minute), so the stride here drops it.
-  const nested = strideFromSegments(fieldSegments(ir, 'second'), '秒', '秒', '');
+  const nested = strideFromSegments(segmentsOf(ir, 'second'), '秒', '秒', '');
   const tail = sec === '每秒' ? '的每一秒' : '的' + (nested ?? sec);
   const core = joinAnd(clocks) + tail;
 
@@ -850,7 +825,7 @@ function composeMinuteZeroClocks(ir: IR, sec: string): string {
 // words. A pure single-value list (9,17) has no range to span; a step is
 // handled by hourStride/hourCadence.
 function hasHourWindow(ir: IR): boolean {
-  return fieldSegments(ir, 'hour').some(function range(segment) {
+  return segmentsOf(ir, 'hour').some(function range(segment) {
     return segment.kind === 'range';
   });
 }
@@ -924,7 +899,7 @@ function composeSecondsListed(ir: IR): string {
   // stride cadence ("凌晨0点从3分起每2分钟，至59分的每一秒"); the hour fuses, so the
   // stride drops its "每小时" anchor. A short or irregular set keeps the list.
   if (ir.shapes.hour === 'single' && sec === '每秒') {
-    const minuteSegs = fieldSegments(ir, 'minute');
+    const minuteSegs = segmentsOf(ir, 'minute');
     const minuteCad = strideFromSegments(minuteSegs, '分钟', '分', '') ??
       valueList(minuteSegs, '分');
 
@@ -1008,7 +983,7 @@ function monthPhrase(ir: IR): string {
     return '';
   }
 
-  const segs = fieldSegments(ir, 'month');
+  const segs = segmentsOf(ir, 'month');
   const first = segs[0];
 
   if (segs.length === 1 && first.kind === 'step' && first.interval === 2) {
@@ -1037,7 +1012,7 @@ function monthPhrase(ir: IR): string {
 // The day-of-month list. A pure list of singles shares one trailing 日
 // ("1、3、8日"); any range gives each segment its own 日 ("1至5日、10日").
 function dayList(ir: IR): string {
-  const segs = fieldSegments(ir, 'date');
+  const segs = segmentsOf(ir, 'date');
 
   if (segs.every((seg) => seg.kind === 'single')) {
     return segs.map((seg) => (seg as {value: string}).value).join('、') + '日';
@@ -1159,7 +1134,7 @@ function weekdayPhrase(
     return quartzWeekday(ir.pattern.weekday, monthPrefix);
   }
 
-  const segs = fieldSegments(ir, 'weekday');
+  const segs = segmentsOf(ir, 'weekday');
 
   if (segs.length === 1 && segs[0].kind === 'range') {
     const [from, to] = (segs[0] as Extract<Segment, {kind: 'range'}>).bounds;
@@ -1323,7 +1298,7 @@ function describe(ir: IR, opts: Opts): string {
   }
 
   // The year leads as "2030年", a range as "2030年至2032年", a list joined with 、.
-  const year = fieldSegments(ir, 'year').map(function part(seg) {
+  const year = segmentsOf(ir, 'year').map(function part(seg) {
     if (seg.kind === 'range') {
       return seg.bounds[0] + '年至' + seg.bounds[1] + '年';
     }

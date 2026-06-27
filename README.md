@@ -247,16 +247,16 @@ cronli5('0 12 * 6,12 *');     // 'every day in June and December at noon'
 
 // Ranges (wrap-around ranges describe overnight and weekend windows)
 cronli5('0-29 * * * *'); // 'every minute from 0 through 29 past the hour'
-cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. until 6 p.m.'
+cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m.'
 cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at midnight'
-cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. until 3 a.m.'
+cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m.'
 cronli5('0 0 * * FRI-MON'); // 'every Friday through Monday at midnight'
 
 // Compound patterns
 cronli5('0,30 9 * * *');   // 'every day at 9 a.m. and 9:30 a.m.'
-cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. until 6 p.m.'
+cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5 p.m.'
 cronli5('30 9-17 * * *');
-// 'at 30 minutes past the hour from 9 a.m. until 6 p.m.'
+// 'at 30 minutes past the hour from 9 a.m. through 5 p.m.'
 cronli5('0 12 1 1 *');     // 'on January 1 at noon'
 cronli5('0 * 13 * *');     // 'every hour on the 13th'
 

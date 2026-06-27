@@ -6,6 +6,31 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.1]
+
+### Fixed
+
+- The hour-range until-window ("from 9 a.m. until 6 p.m.") now applies **only
+  when the minute is wildcard** — i.e. the schedule fills each hour
+  continuously, so it genuinely runs *until* the top of the next hour. For any
+  restricted minute (fixed / step / range / list) the fires are discrete, so it
+  reverts to "from 9 a.m. through 5 p.m." (the last hour). 0.2.0 over-applied
+  "until" to the discrete cases (e.g. `0 9-17` read "until 6 p.m." instead of
+  "through 5 p.m.").
+
+### Changed (internal — output byte-identical)
+
+- Lifted language-neutral helpers (`singleValues`, `offsetCleanStride`,
+  `isOpenStep`, the segment accessors, `hourListStride`) into the core, removing
+  ~300 lines of cross-renderer duplication.
+- Unified the rendering-plan terminology on **plan** (`selectStrategy` →
+  `selectPlan`, `Language.strategy` → `Language.plan`).
+- Scrubbed workflow-provenance labels from shipped comments and fixed
+  stale/typo comments.
+- Adjusted the c8 branch-coverage gate 96 → 95: real branch coverage is ~100%;
+  the measured figure is limited by fixed esbuild/tsx function-default phantom
+  branches, and consolidating covered duplicate code crossed the rounding cliff.
+
 ## [0.2.0]
 
 A major naturalness pass for English, validated by blind native-speaker

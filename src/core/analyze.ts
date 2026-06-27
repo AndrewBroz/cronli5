@@ -1,5 +1,5 @@
 // Semantic analysis of canonical fields: fire enumeration, windows, shape
-// classification, and description-strategy selection (the `plan`). The
+// classification, and description-plan selection (the `plan`). The
 // resulting IR is descriptive. Language modules handle rendering into
 // words (docs/i18n-design.md §2.2).
 
@@ -14,7 +14,8 @@ import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
   from './shapes.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
-// List the values a `start/interval` step fires on within [0, max].
+// List the values a `start/interval` step fires on from `start` up to `max`,
+// stepping by `interval`.
 function getOccurrences(
   start: number,
   interval: number,
@@ -217,15 +218,15 @@ function analyze(pattern: Pattern): IR {
 
   const content: Content = {analyses, pattern, shapes};
 
-  return {...content, plan: selectStrategy(content)};
+  return {...content, plan: selectPlan(content)};
 }
 
-// Select the description strategy from the neutral content. This is the
-// core's *suggestion*: a language may override it via `Language.strategy`
-// without re-deriving it (the content-plan / overridable-strategy split).
+// Select the description plan from the neutral content. This is the
+// core's *suggestion*: a language may override it via `Language.plan`
+// without re-deriving it (the content-plan / overridable-plan split).
 // The selection mirrors the interpreter chain ordering exactly; renderers
 // must not re-derive it.
-function selectStrategy(content: Content): PlanNode {
+function selectPlan(content: Content): PlanNode {
   const {analyses, pattern, shapes} = content;
 
   if (pattern.second !== '0') {
@@ -240,7 +241,7 @@ function selectStrategy(content: Content): PlanNode {
     planHours(pattern, shapes, analyses);
 }
 
-// Seconds strategies, or null when the second folds into the clock time
+// Seconds plans, or null when the second folds into the clock time
 // downstream (a single second under discrete minutes and hours).
 function planSeconds(
   pattern: Pattern,
@@ -301,8 +302,8 @@ function planStandaloneSeconds(
   return {kind: 'standaloneSeconds'};
 }
 
-// Minute strategies, in the interpreter-chain order, or null to defer to
-// the hour strategies.
+// Minute plans, in the interpreter-chain order, or null to defer to
+// the hour plans.
 function planMinutes(
   pattern: Pattern,
   shapes: Shapes,
@@ -459,7 +460,7 @@ function planMinutesAcrossHours(
   return null;
 }
 
-// Minute strategies that only stand on their own under a wildcard hour.
+// Minute plans that only stand on their own under a wildcard hour.
 function planMinutesUnderOpenHour(
   pattern: Pattern,
   shapes: Shapes,
@@ -484,7 +485,7 @@ function planMinutesUnderOpenHour(
   }
 }
 
-// Hour strategies: the chain's last resort always produces a plan. Under a
+// Hour plans: the chain's last resort always produces a plan. Under a
 // sub-minute second a minute of 0 is a real restriction, so the absorbing
 // idioms (hour range, hour step, every hour) are skipped for it and the hour
 // is enumerated as clock times instead, stating the :00.
@@ -591,4 +592,4 @@ function hourTimesPlan(hourField: string): HourTimesPlan {
 }
 
 export {analyze, clockSecond, enumerateFires, enumerateStep,
-  enumerateValues, getOccurrences, lastMinuteFire, minuteSpan, selectStrategy};
+  enumerateValues, getOccurrences, lastMinuteFire, minuteSpan, selectPlan};

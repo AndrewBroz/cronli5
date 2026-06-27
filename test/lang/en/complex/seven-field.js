@@ -53,7 +53,7 @@ describe('Seven-field patterns:', function() {
       ['* 0 * * * * 2013',
         'every second during minute :00 of every hour in 2013'],
       ['* 0 9-17 * * *',
-        'every second during minute :00 from 9 a.m. until 6 p.m.']
+        'every second during minute :00 from 9 a.m. through 5 p.m.']
     ]);
   });
 });
