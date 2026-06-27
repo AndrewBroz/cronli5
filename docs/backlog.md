@@ -26,6 +26,29 @@ open:
   really the month-not-scoping-the-union bug (the en analogue of the zh OR fix),
   not a redundancy.
 
+- **zh renders a bounded *month* step as the open parity form, dropping the
+  bound (a live bug).** `0 0 1 2-10/2 *` (months 2,4,6,8,10) → "每个偶数月"
+  ("every even-numbered month") — which also includes December, so it asserts a
+  month that does not fire. en/es/de/fi correctly enumerate "February, April,
+  June, August, and October". This is the exact analogue of the zh *day* bounded
+  step bug fixed in 0.3.3 (`9-17/2` → "每2天"): zh maps a bounded step to the
+  open cadence/parity wording without checking for bounds. Same fix shape — a
+  bounded month step should enumerate (or carry its bound), the open `*/2`/`2/2`
+  step keeps "单数月/偶数月". Test-first; round-trip must recover {2,4,6,8,10},
+  not the six even months.
+
+- **Audit the bounded-vs-open step class across every field × language.** The two
+  found instances (zh day, fixed; zh month, open above) are the same root cause: a
+  bounded step (`a-b/n`, a finite enumerable set) must enumerate or carry its
+  bounds, while an open step (`*/n`) reads as a cadence/parity. A spot-check of
+  hour/minute/second bounded steps across all five languages came back clean
+  (en/es/de/fi enumerate or use a bounded cadence; zh's hour/minute/second are
+  fine — only its parity-style *month* and the now-fixed *day* conflated), but the
+  bounded case is thin in the corpora, so this was dark. Run `roundtrip.mjs`
+  focused on `a-b/n` shapes per field per language (the value-set check fails on a
+  bounds-drop), and add bounded-step corpus rows wherever a field × language lacks
+  one — the absence of those rows is why both zh bugs went unnoticed.
+
 **Per-language follow-ups:**
 
 - **fi compound/OR "tai"-rakenne + stacked-qualifier naturalness.** The blind Sonnet panel (17-pattern spanning set, 2026-06-24) found a systematic naturalness defect in the compound day-of-month/day-of-week/month "tai"-rakenne and in stacked month-weekday-hour qualifiers (8/17 items ≤3, two at 2; all three personas flagged it). Fix the compound rendering, then re-run the blind panel + round-trip review and re-promote fi from experimental to beta.
@@ -124,10 +147,26 @@ artifact is fixed (97 → 99), and the remaining gaps (e.g. the wildcard-hour
 `return null` paths in the per-language renderers) are genuine untested lines,
 not noise. Thresholds are gated at those accurate floors (98 / 96 / 99 / 98).
 
-**Follow-up (optional).** The genuine uncovered branches in the `de`/`es`/`fi`
-renderers (and a few in `en`/`zh`) are now visible and could be closed with
-targeted corpus cases to lift the floors toward 100; that is a coverage task,
-no longer a tooling one.
+**Follow-up.** A coverage-gap pass (0.3.3) closed the *reachable* gaps: 74
+verified corpus rows lifted core and the `en` renderer to ~100% and raised the
+thresholds to lines 98.5 / branches 97 / functions 99.2 / statements 98.5.
+Exercising a previously-dark branch also surfaced a real zh bug (the bounded
+day-step bounds-drop, fixed in 0.3.3 — and the audit it implies is now under
+"Open rendering findings"). What remains uncovered is *not* reachable by any
+valid cron: core defensive guards (proven unreachable) and per-language renderer
+arms (e.g. beta hour-step clock-list/window branches) that the core
+normalizes/enumerates away before they can fire — so the gate sits at the
+achieved floor rather than a forced 100. Two sub-items remain:
+
+- **Dead-vs-defensive decision.** The genuinely-unreachable renderer arms are
+  either dead code to delete or intentional guards to keep (with a `c8 ignore`
+  marker so they don't depress the gate). Decide per arm; today they just sit
+  uncovered.
+- **Beta corpus rows are meaning-verified, not fluency-reviewed.** The rows the
+  pass added to the *beta* es/de/fi/zh corpora were verified against the English
+  meaning (they pin correctness and round-trip), but not checked by a fluent
+  speaker. Fluency is settled when each language graduates via the panel — until
+  then these rows guard *correctness* only, consistent with beta status.
 
 ## Other deferred items
 
@@ -142,6 +181,15 @@ no longer a tooling one.
   meridiem}` for `es`) would need the public type generalized the way
   `NormalizedOptions<Style>` already is internally. Named dialects (`es-MX`, …)
   cover the common case, so this is low priority.
+- **`verify` runs the test suite twice** — after the Vitest migration `npm run
+  verify` calls both `npm test` (`vitest run`) and `npm run coverage` (`vitest
+  run --coverage`), so the full suite runs twice. Harmless but wasteful; could
+  collapse to the coverage run alone (it already runs every test).
+- **`smoke.js` is the lone mocha-hook holdout** — it uses `before`/`after`/
+  `this.timeout`, bridged onto Vitest by `test/vitest.setup.ts`. Porting it to
+  Vitest-native hooks (`beforeAll`/`afterAll`, per-test timeout) would let the
+  shim file go.
+
 ## Wider automated review coverage
 
 The coverage theory, harness design, and the a-priori vs a-posteriori
