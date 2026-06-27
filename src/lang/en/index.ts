@@ -4,9 +4,10 @@
 // See docs/i18n-design.md.
 
 import {
-  arithmeticStep, hourListStride, offsetCleanStride, orderWeekdaysForDisplay,
-  segmentsOf, singleValues, stepSegment
-} from '../../core/util.js';
+  arithmeticStep, hourListStride, offsetCleanStride, segmentsOf, singleValues,
+  stepSegment
+} from '../../core/cadence.js';
+import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {maxClockTimes} from '../../core/specs.js';
 import {clockDigits, numeral, pad} from '../../core/format.js';
@@ -1033,15 +1034,6 @@ function hourConfinement(schedule: Schedule, opts: NormalizedOptions): string {
     ' hours';
 }
 
-// Whether the hour field reads as a contiguous window — a real range whose
-// close depends on the finer field's last fire. A finer STEP cadence does not
-// fill the closing hour ("from 9 a.m. until 5:45 p.m."), so that window is left
-// to the existing windowing renderer rather than the confinement frame, which
-// closes on the top of the next hour ("until 6 p.m.").
-function isContiguousHourRange(schedule: Schedule): boolean {
-  return schedule.shapes.hour === 'range';
-}
-
 // Whether an hour field is confinement-eligible. An OPEN hour stride — a clean
 // `*/n`, an offset `m/n`, or a uneven step — reads as a cadence ("every three
 // hours from 2 a.m."), and only the `*/2` form has a dedicated confinement
@@ -1092,9 +1084,12 @@ function confinementEligible(schedule: Schedule,
     // and only where it fills the coarser field: a contiguous hour range or a
     // single hour both close on the minute's real last fire, which the
     // windowing renderer already speaks. The `*/2` step fills both, so it keeps
-    // the "of every other minute" confinement; other steps defer entirely.
+    // the "of every other minute" confinement; other steps defer entirely. A
+    // contiguous hour range (`hour === 'range'`) is left to that windowing
+    // renderer rather than this confinement frame, which closes on the top of
+    // the next hour.
     if (minuteStep) {
-      return minute === '*/2' && !isContiguousHourRange(schedule);
+      return minute === '*/2' && schedule.shapes.hour !== 'range';
     }
 
     // A minute list that is really a stride keeps its cadence form; a short

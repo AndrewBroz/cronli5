@@ -12,9 +12,11 @@ import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride, orderWeekdaysForDisplay,
-  segmentsOf, singleValues, stepSegment, toFieldNumber
-} from '../../core/util.js';
+  arithmeticStep, hourListStride, offsetCleanStride, segmentsOf, singleValues,
+  stepSegment
+} from '../../core/cadence.js';
+import {orderWeekdaysForDisplay} from '../../core/weekday.js';
+import {toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   HourTimesPlan, Schedule, Language, NormalizedOptions, PlanNode,

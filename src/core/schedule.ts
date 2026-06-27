@@ -41,8 +41,7 @@ export type HoursPlan =
   | {kind: 'none'}
   | {kind: 'step'}
   | {kind: 'window'; from: number; to: number; last: number}
-  | {kind: 'during'; times: HourTimesPlan}
-  | {kind: 'single'; from: number; to: number; last: number};
+  | {kind: 'during'; times: HourTimesPlan};
 
 /** Hour times: enumerated fires, or deferred to per-segment rendering. */
 export type HourTimesPlan =

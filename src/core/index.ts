@@ -24,5 +24,7 @@ function prepare(cronPattern: CronPattern, opts: NormalizedOptions): Pattern {
 export {prepare};
 export * from './specs.js';
 export * from './util.js';
+export * from './weekday.js';
+export * from './cadence.js';
 export * from './shapes.js';
 export * from './analyze.js';

@@ -68,7 +68,7 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
   const cycle = timeFieldCycle[field];
   const segments = stringValue.split(',').map(function canonical(segment) {
     return canonicalizeTokens(collapseFullSpanRange(
-      enumerateNonUniformStep(
+      enumerateIfNonUniform(
         collapseFullSpanStep(
           collapseDegenerateRange(
             collapseOnceStep(collapseUnitStep(segment, spec), spec), spec),
@@ -172,7 +172,7 @@ function collapseOnceStep(segment: string, spec: FieldSpec): string {
 // list of those fires (`*/7` is `0,7,14,…`), the same as if it were written
 // out. Calendar fields (no `cycle`), bounded steps (`9-17/2`, a per-window
 // stride), and non-step segments are left untouched.
-function enumerateNonUniformStep(
+function enumerateIfNonUniform(
   segment: string,
   spec: FieldSpec,
   cycle: number | undefined

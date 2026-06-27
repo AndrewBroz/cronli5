@@ -1,7 +1,7 @@
 import chai from 'chai';
 import {
   arithmeticStep, hourListStride, offsetCleanStride, singleValues
-} from '../../src/core/util.js';
+} from '../../src/core/cadence.js';
 
 const {expect} = chai;
 

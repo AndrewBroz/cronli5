@@ -5,9 +5,10 @@
 // day periods under `ampm`. The style contract is src/lang/zh/notes.md.
 
 import {
-  arithmeticStep, orderWeekdaysForDisplay, segmentsOf, singleValues,
-  stepSegment, toFieldNumber
-} from '../../core/util.js';
+  arithmeticStep, segmentsOf, singleValues, stepSegment
+} from '../../core/cadence.js';
+import {orderWeekdaysForDisplay} from '../../core/weekday.js';
+import {toFieldNumber} from '../../core/util.js';
 import {maxClockTimes, monthNumbers, weekdayNumbers} from '../../core/specs.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
@@ -352,8 +353,7 @@ function renderMinuteFrequency(schedule: Schedule, plan: PlanNode): string {
     }
   }
 
-  if (hours.kind === 'single' ||
-    hours.kind === 'window' && hours.from === hours.to) {
+  if (hours.kind === 'window' && hours.from === hours.to) {
     return '在' + hourWord(hours.from) + '至' + hours.from + '点' +
       hours.last + '分之间，' + base;
   }
