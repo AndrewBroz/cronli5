@@ -334,6 +334,10 @@ describe('Español (es):', function() {
       // 1,3,…,31 resetting each month), not the durative "cada dos días".
       ['0 0 */2 * */2',
         'a las 00:00, ya sea un día impar del mes o los martes, jueves, sábados y domingos'],
+      // Even-day start (`2/2`) selects the complementary parity predicate
+      // "un día par del mes" in the OR union, mirroring the en even-day arm.
+      ['0 0 2/2 * 0',
+        'a las 00:00, ya sea un día par del mes o cualquier domingo'],
       // Enumeration/step months (≥2): month lead with trailing comma.
       ['0 0 */2 */2 */2',
         'en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ' +
