@@ -37,5 +37,12 @@ function isDiscreteHours(hourField: string): boolean {
   return hourField !== '*' && !isPlainRange(hourField) &&
     !isPlainStep(hourField);
 }
-export {isDiscreteHours, isDiscreteList, isPlainRange, isPlainStep,
+
+// Whether a field is an "open" step (`*/n` or `a/n`, not a bounded range or a
+// list). Open steps read as a frequency rather than an enumeration.
+function isOpenStep(field: string): boolean {
+  return field.indexOf('/') !== -1 && field.indexOf('-') === -1 &&
+    field.indexOf(',') === -1;
+}
+export {isDiscreteHours, isDiscreteList, isOpenStep, isPlainRange, isPlainStep,
   isSingleValue};

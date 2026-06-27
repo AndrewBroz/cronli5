@@ -3,7 +3,11 @@
 // the core stays semantic, and this module's only input is the IR.
 // See docs/i18n-design.md.
 
-import {arithmeticStep, orderWeekdaysForDisplay} from '../../core/util.js';
+import {
+  arithmeticStep, hourListStride, offsetCleanStride, orderWeekdaysForDisplay,
+  segmentsOf, singleValues, stepSegment
+} from '../../core/util.js';
+import {isOpenStep} from '../../core/shapes.js';
 import {maxClockTimes} from '../../core/specs.js';
 import {clockDigits, numeral, pad} from '../../core/format.js';
 import type {Cronli5Options} from '../../types.js';
@@ -348,7 +352,7 @@ function secondsClause(ir: IR, anchor: string,
   if (shape === 'step') {
     // The plan reached this clause only for a stepped second field, whose
     // first segment is always a step segment.
-    return stepCycle60(ir.analyses.segments.second![0] as StepSegment,
+    return stepCycle60(stepSegment(ir, 'second'),
       'second', anchor, opts);
   }
 
@@ -368,8 +372,8 @@ function secondsClause(ir: IR, anchor: string,
   // A non-wildcard second under the list/step path always has segments. An
   // offset/uneven step the core enumerated to a fire list reads as a stride
   // cadence when those fires form a long-enough progression.
-  return strideFromSegments(ir.analyses.segments.second!, 'second', anchor,
-    opts) ?? listPastThe(segmentWords(ir.analyses.segments.second!, opts),
+  return strideFromSegments(segmentsOf(ir, 'second'), 'second', anchor,
+    opts) ?? listPastThe(segmentWords(segmentsOf(ir, 'second'), opts),
     'second', anchor, opts);
 }
 
@@ -401,9 +405,9 @@ function renderMultipleMinutes(ir: IR, plan: PlanOf<'multipleMinutes'>,
   // segments. An offset/uneven step the core enumerated to this list reads as
   // a stride cadence when the fires form a long-enough progression.
   const stride =
-    strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts);
+    strideFromSegments(segmentsOf(ir, 'minute'), 'minute', 'hour', opts);
 
-  return (stride ?? listPastThe(segmentWords(ir.analyses.segments.minute!,
+  return (stride ?? listPastThe(segmentWords(segmentsOf(ir, 'minute'),
     opts), 'minute', 'hour', opts)) + trailingQualifier(ir, opts);
 }
 
@@ -412,7 +416,7 @@ function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
   opts: NormalizedOptions): string {
   // A minute-frequency plan is selected only for a stepped minute field,
   // which has segments.
-  let phrase = stepCycle60(ir.analyses.segments.minute![0] as StepSegment,
+  let phrase = stepCycle60(stepSegment(ir, 'minute'),
     'minute', 'hour', opts);
 
   if (plan.hours.kind === 'during') {
@@ -443,7 +447,7 @@ function renderMinuteFrequency(ir: IR, plan: PlanOf<'minuteFrequency'>,
     // which confines the cadence to every Nth hour; a stepped hour field's
     // first segment is a step segment.
     phrase += ' ' +
-      everyNthHour(ir.analyses.segments.hour![0] as StepSegment, opts);
+      everyNthHour(stepSegment(ir, 'hour'), opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
@@ -514,8 +518,8 @@ function renderMinutesAcrossHours(ir: IR, plan: PlanOf<'minutesAcrossHours'>,
   // step enumerated to that list reads as a stride. A list is a set of
   // discrete fire minutes, not a cadence, so it keeps the "at <times>" frame.
   const lead =
-    strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts) ??
-      listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+    strideFromSegments(segmentsOf(ir, 'minute'), 'minute', 'hour', opts) ??
+      listPastThe(segmentWords(segmentsOf(ir, 'minute'), opts),
         'minute', 'hour', opts);
 
   if (cadence !== null) {
@@ -551,7 +555,7 @@ function renderMinuteSpanAcrossHourStep(ir: IR,
   plan: PlanOf<'minuteSpanAcrossHourStep'>, opts: NormalizedOptions): string {
   // This plan is reached only under a stepped hour field, whose first
   // segment is a step segment.
-  const segment = ir.analyses.segments.hour![0] as StepSegment;
+  const segment = stepSegment(ir, 'hour');
 
   // A wildcard minute over a stepped hour is reached only for a clean stride
   // (a bounded or uneven step routes through minutesAcrossHours instead), so it
@@ -564,8 +568,8 @@ function renderMinuteSpanAcrossHourStep(ir: IR,
   // A minute list keeps the same cadence clause; only its lead differs. An
   // offset/uneven step the core enumerated to that list reads as a stride.
   const lead = plan.form === 'list' ?
-    strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts) ??
-      listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+    strideFromSegments(segmentsOf(ir, 'minute'), 'minute', 'hour', opts) ??
+      listPastThe(segmentWords(segmentsOf(ir, 'minute'), opts),
         'minute', 'hour', opts) :
     minuteRangeLead(ir.pattern.minute, opts);
   // A bounded or uneven hour step reads as its endpoint-pinning cadence after
@@ -624,8 +628,8 @@ function rangeMinuteLead(ir: IR, opts: NormalizedOptions): string {
 
   // A non-"0" minute here is a discrete list, which has segments; an
   // offset/uneven step enumerated to that list reads as a stride.
-  return strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour',
-    opts) ?? listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+  return strideFromSegments(segmentsOf(ir, 'minute'), 'minute', 'hour',
+    opts) ?? listPastThe(segmentWords(segmentsOf(ir, 'minute'), opts),
     'minute', 'hour', opts);
 }
 
@@ -642,7 +646,7 @@ function renderHourStep(ir: IR, plan: PlanOf<'hourStep'>,
 
   // An hour-step plan is selected only for a stepped hour field, whose
   // first segment is a step segment.
-  return stepHours(ir.analyses.segments.hour![0] as StepSegment, opts) +
+  return stepHours(stepSegment(ir, 'hour'), opts) +
     trailingQualifier(ir, opts);
 }
 
@@ -764,7 +768,7 @@ function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
 
     // A compact clock-time plan is reached only for discrete hours, which
     // have segments.
-    const hasRange = ir.analyses.segments.hour!.some(function range(segment) {
+    const hasRange = segmentsOf(ir, 'hour').some(function range(segment) {
       return segment.kind === 'range';
     });
 
@@ -783,8 +787,8 @@ function renderCompactClockTimes(ir: IR, plan: PlanOf<'compactClockTimes'>,
   const minuteLead =
     // The non-fold branch is a minute list, which has segments. An
     // offset/uneven step enumerated to that list reads as a stride.
-    strideFromSegments(ir.analyses.segments.minute!, 'minute', 'hour', opts) ??
-      listPastThe(segmentWords(ir.analyses.segments.minute!, opts),
+    strideFromSegments(segmentsOf(ir, 'minute'), 'minute', 'hour', opts) ??
+      listPastThe(segmentWords(segmentsOf(ir, 'minute'), opts),
         'minute', 'hour', opts);
   // A uneven hour stride reads as a cadence after the minute lead, not a wall
   // of clock-time columns.
@@ -817,7 +821,7 @@ function foldedHourWindows(ir: IR, plan: PlanOf<'compactClockTimes'>,
   // Reached only via the fold branch under discrete hours, which have segments.
   // A folded minute is a discrete pin/list, never a wildcard, so the run is not
   // continuous to the top of the next hour: the window is not an until-window.
-  ir.analyses.segments.hour!.forEach(function classify(segment) {
+  segmentsOf(ir, 'hour').forEach(function classify(segment) {
     if (segment.kind === 'range') {
       windows.push(rangeWindow({
         continuous: false,
@@ -839,7 +843,7 @@ function collectHourOutliers(ir: IR): number[] {
   const hours: number[] = [];
 
   // Reached only under discrete hours, which carry segments.
-  ir.analyses.segments.hour!.forEach(function classify(segment) {
+  segmentsOf(ir, 'hour').forEach(function classify(segment) {
     if (segment.kind === 'step') {
       hours.push(...segment.fires);
     }
@@ -902,7 +906,7 @@ function leadingCadence(ir: IR, opts: NormalizedOptions):
     const text = minute === '*' ?
       'every minute' :
       // A clean minute step's first segment is a step segment.
-      stepCycle60(ir.analyses.segments.minute![0] as StepSegment,
+      stepCycle60(stepSegment(ir, 'minute'),
         'minute', 'hour', opts);
 
     return {secondLead: false, text};
@@ -931,7 +935,7 @@ function minuteConfinement(ir: IR, opts: NormalizedOptions): string {
   // A minute single/range/list under the seconds lead. The minute reads as a
   // ":NN" clock-minute confinement, never "N minutes past the hour" (that is
   // the minute-lead clock-point form).
-  const segments = ir.analyses.segments.minute!;
+  const segments = segmentsOf(ir, 'minute');
 
   if (ir.shapes.minute === 'single') {
     return ' during minute :' + pad(minute);
@@ -1033,7 +1037,7 @@ function confinableHour(ir: IR): boolean {
   }
 
   // Reached only under a stepped hour, whose first segment is a step segment.
-  const segment = ir.analyses.segments.hour![0] as StepSegment;
+  const segment = stepSegment(ir, 'hour');
 
   return ir.pattern.hour === '*/2' || segment.startToken.indexOf('-') !== -1;
 }
@@ -1046,7 +1050,7 @@ function isMinuteStride(ir: IR): boolean {
     return false;
   }
 
-  const values = singleValues(ir.analyses.segments.minute!);
+  const values = singleValues(segmentsOf(ir, 'minute'));
 
   return values !== null && arithmeticStep(values) !== null;
 }
@@ -1187,22 +1191,6 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
     pluralize(last, unit) + ' past the ' + anchor;
 }
 
-// The sorted numeric values a field's segments cover, or null if any segment
-// is not a discrete single (a range or sub-step is not a plain fire list).
-function singleValues(segments: Segment[]): number[] | null {
-  const values: number[] = [];
-
-  for (const segment of segments) {
-    if (segment.kind !== 'single') {
-      return null;
-    }
-
-    values.push(+segment.value);
-  }
-
-  return values;
-}
-
 // Speak a minute/second field's enumerated fires as a step cadence when they
 // form an arithmetic progression long enough to beat the list (the core
 // enumerates an offset/uneven step to this fire list; the IR is unchanged, so
@@ -1304,17 +1292,6 @@ function hourStrideCadence(stride: {start: number; interval: number;
     through(opts) + getTime({hour: last, minute: 0}, opts);
 }
 
-// Whether an hour stride wraps the day cleanly from within its first interval
-// (a `*/n` from the top, or a `m/n` offset with m < n that divides 24): such a
-// stride has no distinct endpoint and keeps its bare or "from M" cadence. Every
-// other stride — a uneven interval, or one starting at or past its interval
-// (a bounded `a-b/n`) — is a bounded set the cadence pins both endpoints of.
-function offsetCleanStride(
-  stride: {start: number; interval: number}
-): boolean {
-  return stride.start < stride.interval && 24 % stride.interval === 0;
-}
-
 // The bounded cadence for an hour stride that pins both clock-time endpoints,
 // or null when the hour is not such a stride. The core rewrites a uneven step
 // to its fire list, so a minute window/list/step crossed with it lands in the
@@ -1332,40 +1309,6 @@ function unevenHourCadence(ir: IR, opts: NormalizedOptions): string | null {
   return hourStrideCadence(stride, opts);
 }
 
-// An hour list's arithmetic progression, or null when its values are not a
-// step the renderer should speak as a cadence. The core rewrites a uneven hour
-// step (whose interval does not tile 24, e.g. `*/5` → 0,5,10,15,20) to its
-// literal fire list, indistinguishable in the IR from a hand-written list; the
-// renderer recovers the cadence from the values. A progression starting at
-// zero is a `*/n` step however short (0,7,14,21 is `*/7`); a non-zero one is
-// only a step when it is too long to be a deliberate clock-time list (e.g.
-// 9,17 is two named times, not a cadence), the same length the minute/second
-// list path uses. Interval one is a plain range, never a step.
-function hourListStride(values: number[]):
-  {start: number; interval: number; last: number} | null {
-  if (values.length < 2) {
-    return null;
-  }
-
-  const interval = values[1] - values[0];
-
-  if (interval < 2) {
-    return null;
-  }
-
-  for (let i = 2; i < values.length; i += 1) {
-    if (values[i] - values[i - 1] !== interval) {
-      return null;
-    }
-  }
-
-  if (values[0] !== 0 && values.length < 5) {
-    return null;
-  }
-
-  return {interval, last: values[values.length - 1], start: values[0]};
-}
-
 // The hour field's stride, or null when the hour is not a cadence: a step
 // segment yields its {start, interval, last} directly; an all-single hour
 // list yields one only when its values form a step progression (so an irregular
@@ -1376,7 +1319,7 @@ function hourStride(ir: IR):
   {start: number; interval: number; last: number} | null {
   // Reached only from the clock-time paths, which run under discrete hours
   // and so always carry hour segments.
-  const segments = ir.analyses.segments.hour!;
+  const segments = segmentsOf(ir, 'hour');
 
   if (segments.length === 1 && segments[0].kind === 'step') {
     const segment = segments[0];
@@ -1497,7 +1440,7 @@ function hourCadence(ir: IR, minute: number,
 // or an arithmetic-progression list, which keep the bounded cadence form).
 function cleanStrideSegment(ir: IR): StepSegment | null {
   // Reached only after hourStride confirmed a stride, so hour segments exist.
-  const segments = ir.analyses.segments.hour!;
+  const segments = segmentsOf(ir, 'hour');
   const segment = segments.length === 1 && segments[0];
 
   if (!segment || segment.kind !== 'step' ||
@@ -1517,7 +1460,7 @@ function cleanStrideSegment(ir: IR): StepSegment | null {
 function hasHourWindow(ir: IR): boolean {
   // Reached only from the clock-time paths, which run under discrete hours
   // and so always carry hour segments.
-  return ir.analyses.segments.hour!.some(function range(segment) {
+  return segmentsOf(ir, 'hour').some(function range(segment) {
     return segment.kind === 'range';
   });
 }
@@ -1534,7 +1477,7 @@ function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
   const outlierHours = collectHourOutliers(ir);
 
   // Reached only after hasHourWindow, so hour segments exist.
-  ir.analyses.segments.hour!.forEach(function classify(segment) {
+  segmentsOf(ir, 'hour').forEach(function classify(segment) {
     if (segment.kind === 'range') {
       windows.push(rangeWindow({
         continuous: false,
@@ -1734,7 +1677,7 @@ function hourSegmentTimes(ir: IR,
   const {minute, second} = fold;
   // Hour-segment rendering is reached only under discrete hours, which have
   // segments.
-  const segments = ir.analyses.segments.hour!;
+  const segments = segmentsOf(ir, 'hour');
   const plain = mixedTwelve(segments.flatMap(function entries(segment) {
     return segmentHours(segment).map(function entry(hour) {
       return {hour: +hour, minute, second};
@@ -1945,7 +1888,7 @@ function datePhrase(ir: IR, words: QualifierWords,
 function monthFoldsIntoDate(ir: IR): boolean {
   return !oddEvenMonth(ir.pattern.month) &&
     // Reached only with a restricted month, which has segments.
-    ir.analyses.segments.month!.every(function flat(segment) {
+    segmentsOf(ir, 'month').every(function flat(segment) {
       return segment.kind !== 'range';
     });
 }
@@ -2011,7 +1954,7 @@ function dayUnionDatePieces(ir: IR, opts: NormalizedOptions): string[] {
   // spreads its enumerated fires as separate "the <ordinal>" alternatives.
   const pieces: string[] = [];
 
-  ir.analyses.segments.date!.forEach(function expand(segment) {
+  segmentsOf(ir, 'date').forEach(function expand(segment) {
     if (segment.kind === 'range') {
       pieces.push('from the ' + getOrdinal(segment.bounds[0]) + through(opts) +
         'the ' + getOrdinal(segment.bounds[1]));
@@ -2048,7 +1991,7 @@ function dayUnionWeekdayPieces(ir: IR, opts: NormalizedOptions): string[] {
   // Sunday, a Tuesday, a Thursday, or a Saturday").
   const pieces: string[] = [];
 
-  ir.analyses.segments.weekday!.forEach(function expand(segment) {
+  segmentsOf(ir, 'weekday').forEach(function expand(segment) {
     if (segment.kind === 'range' &&
         segment.bounds[0] === '1' && segment.bounds[1] === '5') {
       pieces.push('a weekday');
@@ -2201,7 +2144,7 @@ function monthDatePhrase(ir: IR, opts: NormalizedOptions): string {
   const month = monthName(ir, opts);
   // A month-day phrase is reached only with a restricted date, which has
   // segments.
-  const days = renderSegments(ir.analyses.segments.date!,
+  const days = renderSegments(segmentsOf(ir, 'date'),
     opts.style.ordinals ? getOrdinal : cardinalDay, opts);
 
   if (opts.style.dayFirst && ir.shapes.date === 'single' &&
@@ -2278,7 +2221,7 @@ function stepDates(dateField: string): string {
 // handled separately as a frequency phrase.
 function dateOrdinals(ir: IR, opts: NormalizedOptions): string {
   // Reached only with a restricted date, which has segments.
-  return renderSegments(ir.analyses.segments.date!, getOrdinal, opts);
+  return renderSegments(segmentsOf(ir, 'date'), getOrdinal, opts);
 }
 
 // Render the month field as names. There are few, named months, so a step
@@ -2294,7 +2237,7 @@ function monthName(ir: IR, opts: NormalizedOptions): string {
 
   // A restricted month has segments; open steps of interval 3+ enumerate their
   // fires here too.
-  return renderSegments(ir.analyses.segments.month!, function name(value) {
+  return renderSegments(segmentsOf(ir, 'month'), function name(value) {
     return getMonth(value, opts);
   }, opts);
 }
@@ -2333,7 +2276,7 @@ function weekdayPhrase(ir: IR, recurring: boolean,
   // Reached only with a restricted weekday, which has segments. Weekday lists
   // display Monday-first (Sunday last) so a weekend reads naturally; the IR
   // stays canonical (Sunday=0) and ranges keep their form.
-  const segments = orderWeekdaysForDisplay(ir.analyses.segments.weekday!);
+  const segments = orderWeekdaysForDisplay(segmentsOf(ir, 'weekday'));
   const hasRange = segments.some(function range(segment) {
     return segment.kind === 'range';
   });
@@ -2383,14 +2326,6 @@ function renderSegments(segments: Segment[],
   });
 
   return joinList(pieces, opts);
-}
-
-// Whether a canonical field value is an "open" step (`*/n` or `a/n`, not a
-// bounded range or a list). Open steps read as a frequency rather than an
-// enumeration.
-function isOpenStep(field: string): boolean {
-  return field.indexOf('/') !== -1 && field.indexOf('-') === -1 &&
-    field.indexOf(',') === -1;
 }
 
 // --- Years. ---

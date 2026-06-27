@@ -11,8 +11,10 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
+import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, orderWeekdaysForDisplay, toFieldNumber
+  arithmeticStep, hourListStride, offsetCleanStride, orderWeekdaysForDisplay,
+  segmentsOf, singleValues, stepSegment, toFieldNumber
 } from '../../core/util.js';
 import {resolveDialect} from './dialects.js';
 import type {
@@ -37,12 +39,6 @@ interface HourWindow {
   from: number;
   to: number;
   last: number;
-}
-
-// The first segment of a step field, narrowed to its step variant. Step
-// shapes always classify their (single) segment as a step.
-function stepSegment(segments: Segment[]): StepSegment {
-  return segments[0] as StepSegment;
 }
 
 // A `{hour, minute, second?}` time end for the digit/range helpers.
@@ -313,7 +309,7 @@ function composeSecondsOverMinuteStep(
   freq: Extract<PlanNode, {kind: 'minuteFrequency'}>,
   opts: NormalizedOptions
 ): string {
-  const seg = stepSegment(ir.analyses.segments.minute!);
+  const seg = stepSegment(ir, 'minute');
   const stepPhrase = stepCycle60(seg, units.minute, opts);
 
   if (freq.hours.kind === 'during' && minuteStepIsAnchored(seg)) {
@@ -336,7 +332,7 @@ function composeSecondsOverMinuteStep(
   }
   else if (freq.hours.kind === 'step') {
     hourClause = ' ' +
-      everyNthHour(stepSegment(ir.analyses.segments.hour!), opts);
+      everyNthHour(stepSegment(ir, 'hour'), opts);
   }
 
   return stepPhrase + ', ' + secondsLeadClause(ir, opts) +
@@ -428,7 +424,7 @@ function isEveryOtherMinuteSeconds(
     return false;
   }
 
-  const seg = stepSegment(ir.analyses.segments.minute!);
+  const seg = stepSegment(ir, 'minute');
 
   return seg.startToken === '*' && seg.interval === 2;
 }
@@ -466,7 +462,7 @@ function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
 
   if (shape === 'step') {
     // A step shape always has segments whose first is a step segment.
-    return stepCycle60(stepSegment(ir.analyses.segments.second!),
+    return stepCycle60(stepSegment(ir, 'second'),
       units.second, opts);
   }
 
@@ -480,8 +476,8 @@ function secondsLeadClause(ir: IR, opts: NormalizedOptions): string {
 
   // An offset/uneven step the core enumerated to this list reads as a stride
   // cadence when the fires form a long-enough progression.
-  return strideFromSegments(ir.analyses.segments.second!, units.second, opts) ??
-    atMarks(joinList(segmentWords(ir.analyses.segments.second!)),
+  return strideFromSegments(segmentsOf(ir, 'second'), units.second, opts) ??
+    atMarks(joinList(segmentWords(segmentsOf(ir, 'second'))),
       units.second, marked);
 }
 
@@ -525,8 +521,8 @@ function renderMultipleMinutes(
 // the fires form a long-enough progression ("kahden minuutin välein
 // minuutista 3 minuuttiin 59").
 function minutesList(ir: IR, opts: NormalizedOptions): string {
-  return strideFromSegments(ir.analyses.segments.minute!, units.minute, opts) ??
-    atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
+  return strideFromSegments(segmentsOf(ir, 'minute'), units.minute, opts) ??
+    atMarks(joinList(segmentWords(segmentsOf(ir, 'minute'))),
       units.minute, true);
 }
 
@@ -535,8 +531,8 @@ function minutesList(ir: IR, opts: NormalizedOptions): string {
 // kohdalla". A progression reads as its bounded cadence (which carries no
 // per-hour frequency to drop).
 function bareMinutes(ir: IR, opts: NormalizedOptions): string {
-  return strideFromSegments(ir.analyses.segments.minute!, units.minute, opts) ??
-    atMarks(joinList(segmentWords(ir.analyses.segments.minute!)),
+  return strideFromSegments(segmentsOf(ir, 'minute'), units.minute, opts) ??
+    atMarks(joinList(segmentWords(segmentsOf(ir, 'minute'))),
       units.minute, false);
 }
 
@@ -596,14 +592,14 @@ function hoursFirstMinutes(
   // cadence ("aina kahden minuutin välein minuutista 3 minuuttiin 59") when
   // the fires form a long-enough progression, rather than the kohdalla list.
   const stride =
-    strideFromSegments(ir.analyses.segments.minute!, units.minute, opts);
+    strideFromSegments(segmentsOf(ir, 'minute'), units.minute, opts);
 
   if (stride) {
     return hoursStr + ' aina ' + stride;
   }
 
   return hoursStr + ' aina minuuttien ' +
-    joinList(segmentWords(ir.analyses.segments.minute!)) + ' kohdalla';
+    joinList(segmentWords(segmentsOf(ir, 'minute'))) + ' kohdalla';
 }
 
 // Hour segment times for a range+isolated pattern: joins the isolated hour
@@ -617,7 +613,7 @@ function hourSegmentTimesWithSeka(
 ): string {
   const pieces: string[] = [];
 
-  ir.analyses.segments.hour!.forEach(function clock(segment: Segment) {
+  segmentsOf(ir, 'hour').forEach(function clock(segment: Segment) {
     if (segment.kind === 'range') {
       pieces.push(rangeDigits(
         {hour: +segment.bounds[0], minute, second},
@@ -638,7 +634,7 @@ function renderMinuteFrequency(
   plan: Extract<PlanNode, {kind: 'minuteFrequency'}>,
   opts: NormalizedOptions
 ): string {
-  const seg = stepSegment(ir.analyses.segments.minute!);
+  const seg = stepSegment(ir, 'minute');
 
   if (plan.hours.kind === 'during') {
     // A bounded or uneven hour stride reads as its endpoint-pinning cadence
@@ -673,7 +669,7 @@ function renderMinuteFrequency(
   }
   else if (plan.hours.kind === 'step') {
     phrase += ' ' +
-      everyNthHour(stepSegment(ir.analyses.segments.hour!), opts);
+      everyNthHour(stepSegment(ir, 'hour'), opts);
   }
 
   return phrase + trailingQualifier(ir, opts);
@@ -728,7 +724,7 @@ function renderMinutesAcrossHours(
   }
 
   // Range+isolated hours: minute-first, bare minutes, sekä klo.
-  if (hoursAreRangeIsolated(ir.analyses.segments.hour!)) {
+  if (hoursAreRangeIsolated(segmentsOf(ir, 'hour'))) {
     return bareMinutes(ir, opts) + ' ' +
       hourSegmentTimesWithSeka(ir, 0, null, opts) +
       trailingQualifier(ir, opts);
@@ -748,7 +744,7 @@ function renderMinuteSpanAcrossHourStep(
   opts: NormalizedOptions
 ): string {
   // An hour-step plan's first hour segment is always a step segment.
-  const segment = stepSegment(ir.analyses.segments.hour!);
+  const segment = stepSegment(ir, 'hour');
   // A bounded or uneven hour stride reads as its endpoint-pinning cadence; an
   // offset-clean stride keeps its confinement / per-step phrasing.
   const cadence = unevenHourCadence(ir, opts);
@@ -884,7 +880,7 @@ function renderHourStep(
     return cadence + trailingQualifier(ir, opts);
   }
 
-  return stepHours(stepSegment(ir.analyses.segments.hour!), opts) +
+  return stepHours(stepSegment(ir, 'hour'), opts) +
     trailingQualifier(ir, opts);
 }
 
@@ -959,7 +955,7 @@ function renderCompactClockTimes(
     }
   }
 
-  const hourSegs = ir.analyses.segments.hour!;
+  const hourSegs = segmentsOf(ir, 'hour');
 
   // Range+isolated hours: join the isolated hour with "sekä klo" to stop it
   // reading as a range extension. For the folded path (single minute folded
@@ -1082,21 +1078,6 @@ function strideFromSegments(
     null;
 }
 
-// The sorted numeric values a field's segments cover, or null if any segment
-// is not a discrete single (a range or sub-step is not a plain fire list).
-function singleValues(segments: Segment[]): number[] | null {
-  const values: number[] = [];
-
-  for (const segment of segments) {
-    if (segment.kind !== 'single') {
-      return null;
-    }
-
-    values.push(+segment.value);
-  }
-
-  return values;
-}
 
 // "viiden minuutin välein", "joka tunti 0 ja 31 minuutin kohdalla", or
 // "kolmen minuutin välein jokaisen tunnin minuutista 1 alkaen". A step shape
@@ -1179,51 +1160,6 @@ function hourStrideCadence(
 
   return cadence + ' ' +
     kloRange({hour: start, minute: 0}, {hour: last, minute: 0}, opts);
-}
-
-// An hour list's arithmetic progression, or null when its values are not a step
-// the renderer should speak as a cadence. The core rewrites a uneven hour step
-// (whose interval does not tile 24, e.g. `*/5` → 0,5,10,15,20) to its literal
-// fire list, indistinguishable in the IR from a hand-written list; the renderer
-// recovers the cadence from the values. A progression starting at zero is a
-// `*/n` step however short (0,7,14,21 is `*/7`); a non-zero progression is only
-// a step when it is too long to be a deliberate clock-time list (9,17 is two
-// named times, not a cadence). Interval one is a plain range, never a step.
-function hourListStride(
-  values: number[]
-): {start: number; interval: number; last: number} | null {
-  if (values.length < 2) {
-    return null;
-  }
-
-  const interval = values[1] - values[0];
-
-  if (interval < 2) {
-    return null;
-  }
-
-  for (let i = 2; i < values.length; i += 1) {
-    if (values[i] - values[i - 1] !== interval) {
-      return null;
-    }
-  }
-
-  if (values[0] !== 0 && values.length < 5) {
-    return null;
-  }
-
-  return {interval, last: values[values.length - 1], start: values[0]};
-}
-
-// Whether an hour stride wraps the day cleanly from within its first interval
-// (a `*/n` from the top, or a `m/n` offset with m < n that divides 24): such a
-// stride has no distinct endpoint and keeps its bare or "alkaen" cadence. Every
-// other stride — a uneven interval, or one starting at or past its interval (a
-// bounded `a-b/n`) — is a bounded set the cadence pins both endpoints of.
-function offsetCleanStride(
-  stride: {start: number; interval: number}
-): boolean {
-  return stride.start < stride.interval && 24 % stride.interval === 0;
 }
 
 // The hour field's stride, or null when the hour is not a cadence: a step
@@ -1348,9 +1284,9 @@ function hourCadence(ir: IR, minute: number,
   // stride is a confinement, not a juxtaposed cadence: it reads "minuutin ajan
   // joka toisen tunnin aikana", reusing the every-Nth-hour idiom so the
   // minute-0 window is never heard as the bare hour cadence.
-  const segment = ir.analyses.segments.hour![0];
+  const segment = segmentsOf(ir, 'hour')[0];
   const confined = minute === 0 && subMinuteSecond(ir) &&
-    ir.analyses.segments.hour!.length === 1 && segment.kind === 'step' &&
+    segmentsOf(ir, 'hour').length === 1 && segment.kind === 'step' &&
     cleanHourStride(segment);
 
   if (confined) {
@@ -1400,7 +1336,7 @@ function hasHourWindow(ir: IR): boolean {
 // window uses. The minute has folded into the lead, so the window closes on
 // the top of its final hour.
 function hourRangeWindowTail(ir: IR, opts: NormalizedOptions): string {
-  return ir.analyses.segments.hour!.length === 1 ?
+  return segmentsOf(ir, 'hour').length === 1 ?
     hourSegmentTimes(ir, 0, null, opts) :
     hourSegmentTimesWithSeka(ir, 0, null, opts);
 }
@@ -1473,7 +1409,7 @@ function hourWindowsFromTimes(
     return kloList(times.fires, opts);
   }
 
-  const segments = ir.analyses.segments.hour!;
+  const segments = segmentsOf(ir, 'hour');
 
   if (!segments.some(function ranged(segment: Segment) {
     return segment.kind === 'range';
@@ -1534,7 +1470,7 @@ function hourSegmentTimes(
 ): string {
   const pieces: string[] = [];
 
-  ir.analyses.segments.hour!.forEach(function clock(segment: Segment) {
+  segmentsOf(ir, 'hour').forEach(function clock(segment: Segment) {
     if (segment.kind === 'step') {
       pieces.push(...segment.fires.map(function each(hour: number) {
         return timeDigits(hour, minute, second, opts);
@@ -1707,7 +1643,7 @@ function weekdayQualifier(ir: IR): string {
 
   // Weekday lists display Monday-first (Sunday last); a lone range keeps its
   // form. The IR stays canonical (Sunday=0). The helper flattens steps.
-  const segments = orderWeekdaysForDisplay(ir.analyses.segments.weekday!);
+  const segments = orderWeekdaysForDisplay(segmentsOf(ir, 'weekday'));
 
   return joinList(segments.map(function piece(segment: FlatSegment) {
     if (segment.kind === 'range') {
@@ -1723,7 +1659,7 @@ function weekdayQualifier(ir: IR): string {
 // elative–illative ranges ("kesäkuusta syyskuuhun"). The case endings
 // keep mixed lists unambiguous with no preposition bookkeeping.
 function monthPhrase(ir: IR): string {
-  const segments = flattenSteps(ir.analyses.segments.month!);
+  const segments = flattenSteps(segmentsOf(ir, 'month'));
 
   return joinList(segments.map(function piece(segment: FlatSegment) {
     if (segment.kind === 'range') {
@@ -1808,7 +1744,7 @@ function monthAnchor(ir: IR, opts: NormalizedOptions): string {
     return stepMonths(monthField, opts);
   }
 
-  const segments = flattenSteps(ir.analyses.segments.month!);
+  const segments = flattenSteps(segmentsOf(ir, 'month'));
 
   return joinList(segments.map(function genitiveOf(segment: FlatSegment) {
     // The anchor branch is only reached for non-ranged months, so every
@@ -1827,7 +1763,7 @@ function rangedMonthScope(ir: IR): string {
 // Whether the month field contains a range segment.
 function monthRanged(ir: IR): boolean {
   return ir.pattern.month !== '*' &&
-    ir.analyses.segments.month!.some(function range(segment: Segment) {
+    segmentsOf(ir, 'month').some(function range(segment: Segment) {
       return segment.kind === 'range';
     });
 }
@@ -1835,7 +1771,7 @@ function monthRanged(ir: IR): boolean {
 // The day-of-month words: "13.", "1. ja 15.", "1.–15.", with step
 // segments expanded into their fires.
 function dateWords(ir: IR): string {
-  return joinList(ir.analyses.segments.date!.flatMap(
+  return joinList(segmentsOf(ir, 'date').flatMap(
     function word(segment: Segment): string[] {
     if (segment.kind === 'range') {
       return [segment.bounds[0] + '.–' + segment.bounds[1] + '.'];
@@ -2008,13 +1944,6 @@ function segmentWords(segments: Segment[]): string[] {
   });
 }
 
-// Whether a canonical field value is an "open" step (`*/n` or `a/n`, not
-// a bounded range or a list). Open steps read as a frequency rather than
-// an enumeration.
-function isOpenStep(field: string): boolean {
-  return field.indexOf('/') !== -1 && field.indexOf('-') === -1 &&
-    field.indexOf(',') === -1;
-}
 
 // Numeric fire values as digits.
 function wordList(fires: number[]): string[] {
