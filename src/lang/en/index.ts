@@ -226,9 +226,6 @@ function composeHourCadence(ir: IR, plan: PlanOf<'composeSeconds'>,
   return hourCadence(ir, minute, opts) ?? hourRangeCadence(ir, minute, opts);
 }
 
-// A meaningful second under minute/hour shapes the earlier strategies
-// deferred on: the second leads with its own clause and the rest of the
-// pattern follows.
 // A wildcard or stepped second under a fixed minute across one or more specific
 // hours. The clock-time rest collapses the pinned minute into the hour, and on
 // the clock a pinned minute-0 reads as the whole hour ("9 a.m." spoken ==
@@ -1026,10 +1023,10 @@ function isContiguousHourRange(ir: IR): boolean {
 
 // Whether an hour field is confinement-eligible. An OPEN hour stride — a clean
 // `*/n`, an offset `m/n`, or a uneven step — reads as a cadence ("every three
-// hours from 2 a.m."), and only the `*/2` form has a blessed confinement idiom
-// ("of every other hour"), so other open steps defer. A BOUNDED stepped range
-// (`a-b/n`, e.g. `9-17/2`) is a discrete set of named hours the confinement
-// frame speaks as a list ("during the 9 a.m., 11 a.m., … hours").
+// hours from 2 a.m."), and only the `*/2` form has a dedicated confinement
+// idiom ("of every other hour"), so other open steps defer. A BOUNDED stepped
+// range (`a-b/n`, e.g. `9-17/2`) is a discrete set of named hours the
+// confinement frame speaks as a list ("during the 9 a.m., 11 a.m., … hours").
 function confinableHour(ir: IR): boolean {
   if (ir.shapes.hour !== 'step') {
     return true;
@@ -1054,10 +1051,10 @@ function isMinuteStride(ir: IR): boolean {
   return values !== null && arithmeticStep(values) !== null;
 }
 
-// Whether the pattern is in the panel-blessed confinement shape-set. The frame
-// covers a finer leading cadence (seconds, or minute under a :00 second) with
-// each coarser field as a confinement; shapes outside the blessed set defer to
-// the existing renderers, which already produce the blessed phrasing for them.
+// Whether the pattern is in the confinement frame's supported shape-set. The
+// frame covers a finer leading cadence (seconds, or minute under a :00 second)
+// with each coarser field as a confinement; shapes outside it defer to the
+// existing renderers, which already produce that phrasing for them.
 function confinementEligible(ir: IR,
   lead: {secondLead: boolean}): boolean {
   const {minute, hour} = ir.pattern;
@@ -1069,7 +1066,7 @@ function confinementEligible(ir: IR,
   }
 
   if (lead.secondLead) {
-    // A minute STEP is blessed only as the `*/2` "every other minute" idiom,
+    // A minute STEP is supported only as the `*/2` "every other minute" idiom,
     // and only where it fills the coarser field: a contiguous hour range or a
     // single hour both close on the minute's real last fire, which the
     // windowing renderer already speaks. The `*/2` step fills both, so it keeps
@@ -1091,7 +1088,7 @@ function confinementEligible(ir: IR,
   }
 
   // A minute-LEAD cadence (second :00). The existing renderers already produce
-  // the blessed phrasing for a single/range/list hour and for a non-`*/2` hour
+  // that phrasing for a single/range/list hour and for a non-`*/2` hour
   // step; the confinement frame only changes the `*/2` hour ("of every other
   // hour") and the single hour under an "every other minute" step ("from
   // midnight until 1 a.m."). Everything else defers.
@@ -1102,9 +1099,10 @@ function confinementEligible(ir: IR,
   return ir.shapes.hour === 'single' && minute === '*/2';
 }
 
-// Whether the pattern reads with the confinement frame: a finer leading
-// cadence with each coarser field as a confinement. Routed to from the cadence
-// renderers in place of the older juxtaposed-cadence and duration-frame forms.
+// Render the pattern with the confinement frame: a finer leading cadence with
+// each coarser field as a confinement, or null when it does not apply. Routed
+// to from the cadence renderers in place of the older juxtaposed-cadence and
+// duration-frame forms.
 function confinement(ir: IR, opts: NormalizedOptions): string | null {
   // The confinement frame is scoped to the default (US) dialect, the one that
   // carries the until-window; every other dialect and the compact `short` form
@@ -2046,8 +2044,8 @@ function dayUnionWeekdayPieces(ir: IR, opts: NormalizedOptions): string[] {
 
   // The union predicate keeps the canonical Sunday-first order (0…6) rather
   // than the weekend-last display order: as a flat or-list of day kinds, the
-  // numeric order reads as naturally as any other and matches the reviewed
-  // spec ("a Sunday, a Tuesday, a Thursday, or a Saturday").
+  // numeric order reads as naturally as any other in a flat or-list ("a
+  // Sunday, a Tuesday, a Thursday, or a Saturday").
   const pieces: string[] = [];
 
   ir.analyses.segments.weekday!.forEach(function expand(segment) {

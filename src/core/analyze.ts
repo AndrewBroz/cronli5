@@ -14,7 +14,8 @@ import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
   from './shapes.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
-// List the values a `start/interval` step fires on within [0, max].
+// List the values a `start/interval` step fires on from `start` up to `max`,
+// stepping by `interval`.
 function getOccurrences(
   start: number,
   interval: number,

@@ -496,7 +496,7 @@ function singleHourStep(segments: Segment[] | null): boolean {
 // A single hour step as a confinement. A stride of two over the whole day
 // reads idiomatically as the even ("las horas pares") or odd ("impares")
 // hours; any other step names its active hours, which pins the schedule
-// precisely (a panel found ordinal/colloquial forms imprecise).
+// precisely (ordinal/colloquial forms would be imprecise here).
 function stepHourSpan(segment: StepSegment, opts: Opts): string {
   const bounded = segment.startToken.indexOf('-') !== -1;
   const start = segment.startToken === '*' ? 0 : +segment.startToken;
