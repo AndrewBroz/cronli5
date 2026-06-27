@@ -104,4 +104,11 @@ a specific schedule, or an advanced operator.
 | `15 30 9 * * MON` | Runs every Monday at 9:30:15 a.m. | At 09:30:15 AM, only on Monday |
 <!-- END GENERATED: comparison -->
 
+## Migrating
+
+Already calling `cronstrue.toString(...)`? See
+[migrating-from-cronstrue.md](./migrating-from-cronstrue.md) for the API and
+options mapping, the fragment-vs-sentence default, locale&nbsp;&rarr;&nbsp;language,
+and the behavior differences to expect.
+
 [cronstrue]: https://github.com/bradymholt/cRonstrue
