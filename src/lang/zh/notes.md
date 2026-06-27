@@ -22,9 +22,21 @@ conventions (this doc) → coverage-spec pattern set → panel-validated
   for duration vs 分 for clock position (never swapped); **每天** not 每日;
   suppress the numeral 1 (每分钟, not 每1分钟); no 第 before day/month numbers;
   no redundant 每.
-- **Simplified (zh-Hans) is the default; Traditional (zh-Hant) is a separate
-  top-level locale**, not a sub-dialect — a distinct vocab/surface table
-  (週/號 swaps), per the copy-editor.
+- **Simplified (zh-Hans) is the default; Traditional (zh-Hant) is a within-zh
+  variant** selected by the `dialect` option, NOT a separate top-level locale.
+  A separate `zh-Hant` module would have to duplicate or import zh's assembly
+  logic, both forbidden (a language never imports another language — see
+  docs/i18n-design.md; only the core is shared). Within this domain the two
+  scripts differ only by character form (no register-level grammar split), so
+  the variant is the reviewed Simplified output with a 1:1 Han glyph map applied
+  at the render boundary (`toVariant` in `index.ts`:
+  時/鐘/點/週/個/數/單/雙/後/間/從/內/無/識/別/啟/統/達/運). It ships
+  **experimental** — a model-drafted glyph/register mapping, not yet validated
+  by a Traditional-native or blind Hant panel (the same gate that graduates zh).
+  Two whole-word choices are flagged for native review: `運行時間` (a
+  Taiwan-native may say `執行時間`) and `表達式` (Taiwan tech register may prefer
+  `運算式` / `表示式`); both are widely-accepted, and the faithful 1:1 map is
+  kept so the variant stays a pure transliteration of the reviewed Hans oracle.
 - **Confinement uses a frame, never juxtaposed cadences:** 在9点至17点之间，
   每15分钟 — the 在…之间 frame binds the cadence to the window (the same
   confinement-vs-juxtaposition rule as the other languages).
@@ -95,7 +107,7 @@ every field value preserved — `npm run fuzz zh` is clean):
 |---|---|---|---|
 | `numerals` | `'arabic'` / `'chinese'` | arabic | 9点 vs 九点 |
 | `clock` | `'24h'` / `'12h'` | 24h | 14点 vs 下午2点 (maps to today's `ampm`) |
-| `locale` | `'zh-Hans'` / `'zh-Hant'` | zh-Hans | Simplified vs Traditional vocab table |
+| `dialect` | `'zh-Hans'` / `'zh-Hant'` | zh-Hans | Simplified vs Traditional Han glyph form (within-zh variant; experimental) |
 | `quarterHour` | bool | false | enable 半 / 一刻 / 三刻 (default is explicit 分) |
 | `useHao` | bool | false | 号 vs 日 |
 

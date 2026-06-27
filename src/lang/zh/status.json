@@ -3,5 +3,14 @@
   "status": "beta",
   "humanReview": null,
   "modelReview": "blind 3-persona Sonnet style panel + author/audit corpus workflow (2026-06-20); npm run fuzz zh clean (0 throws / degenerate / missing-value)",
-  "note": "BETA — model-validated by a blind 3-persona Sonnet panel (src/lang/zh/notes.md), corpus authored via an author/audit/fix workflow and converged to the renderer's canonical forms. Graduates to stable only on fluent-human review."
+  "note": "BETA — model-validated by a blind 3-persona Sonnet panel (src/lang/zh/notes.md), corpus authored via an author/audit/fix workflow and converged to the renderer's canonical forms. Graduates to stable only on fluent-human review.",
+  "variants": {
+    "zh-Hant": {
+      "name": "Chinese (Mandarin, Traditional)",
+      "status": "experimental",
+      "humanReview": null,
+      "modelReview": null,
+      "note": "EXPERIMENTAL — a within-zh variant (the reviewed Simplified output with a 1:1 Han glyph map applied at the render boundary, selected by {dialect: 'zh-Hant'}), NOT a separate locale. Model-drafted glyph/register mapping, not yet validated by a Traditional-native or blind Hant panel. Graduates to beta on a Traditional-native / blind Hant review (the same gate model as Simplified zh). Whole-word choices flagged for native review: 運行時間 (vs 執行時間), 表達式 (vs 運算式 / 表示式)."
+    }
+  }
 }

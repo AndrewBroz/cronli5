@@ -617,4 +617,47 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['not a cron pattern', '无法识别的 cron 表达式', {lenient: true}]
     ]);
   });
+
+  // Traditional Chinese (zh-Hant) is the SAME reviewed Simplified output with
+  // the Han glyph map applied (時/鐘/點/週/個/數/單/雙/後/間/從/內/無/識/別/啟/統/達/運),
+  // selected by {dialect: 'zh-Hant'}. These cells are the spec: the intended
+  // Traditional strings, written first; the renderer chases them. Every
+  // Hant-affected glyph cluster is exercised — a weekday 周→週, a 点→點 clock, a
+  // 小时→小時 cadence, 个/数/单/双 month-parity and day-parity, 最后…/之间, the
+  // sentence wrapper, the fallback, and @reboot. zh-Hant is a MODEL-DRAFTED
+  // glyph/register mapping, NOT yet validated by a Traditional-native or blind
+  // Hant panel: experimental pending that review (see status.json / notes.md).
+  // Two vocabulary choices are flagged for native review: 運行時間 (a
+  // Taiwan-native may say 執行時間) and 表達式 (Taiwan tech register may prefer
+  // 運算式 / 表示式). Both are widely-accepted forms; the faithful 1:1 glyph map
+  // is kept so zh-Hant stays a pure transliteration of the reviewed Hans oracle.
+  describe('繁體中文 (zh-Hant) — 字形映射 [EXPERIMENTAL]', function() {
+    run([
+      ['30 9 * * MON-FRI', '每週一至週五9點30分', {dialect: 'zh-Hant'}],
+      ['0 0 * * *', '每天凌晨0點', {dialect: 'zh-Hant'}],
+      ['*/5 * * * *', '每5分鐘', {dialect: 'zh-Hant'}],
+      ['0 0 */2 * * *', '每2小時', {dialect: 'zh-Hant'}],
+      ['* * 9-17 * * *', '在9點至17點之間，每分鐘每秒', {dialect: 'zh-Hant'}],
+      ['0 0 9-17 * *', '每月9日至17日凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 1 1 * 2030', '2030年1月1日凌晨0點', {years: true, dialect: 'zh-Hant'}],
+      ['0 9 * * *', '每天上午9點', {ampm: true, dialect: 'zh-Hant'}],
+      ['30 14 * * *', '每天下午2點30分', {ampm: true, dialect: 'zh-Hant'}],
+      ['*/2 * * * *', '每2分鐘', {dialect: 'zh-Hant'}],
+      ['1,2,5 * * * *', '每小時1、2、5分', {dialect: 'zh-Hant'}],
+      ['0 0 */2 * MON', '每月單數日或每週一，凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 2/2 * MON', '每月雙數日或每週一，凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 1 */2 *', '每個奇數月1日凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 1 2/2 *', '每個偶數月1日凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 1,15 * *', '每月1、15日凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 * * 5L', '本月最後一個週五凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 LW * *', '本月最後一個工作日凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0 * * 1#2', '第2個週一凌晨0點', {dialect: 'zh-Hant'}],
+      ['*/15 9-17 * * *', '在9點至17點之間，每15分鐘', {dialect: 'zh-Hant'}],
+      ['0 0 15W * *', '本月最接近15日的工作日凌晨0點', {dialect: 'zh-Hant'}],
+      ['0 0-30 */2 * * *', '每2小時，每小時0至30分，每分鐘', {dialect: 'zh-Hant'}],
+      ['@reboot', '系統啟動時', {dialect: 'zh-Hant'}],
+      ['0 0 * * *', '運行時間：每天凌晨0點。', {sentence: true, dialect: 'zh-Hant'}],
+      ['not a cron', '無法識別的 cron 表達式', {lenient: true, dialect: 'zh-Hant'}]
+    ]);
+  });
 });
