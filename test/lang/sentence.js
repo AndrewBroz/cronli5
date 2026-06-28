@@ -4,6 +4,7 @@ import en from '../../src/lang/en/index.js';
 import es from '../../src/lang/es/index.js';
 import de from '../../src/lang/de/index.js';
 import fi from '../../src/lang/fi/index.js';
+import fr from '../../src/lang/fr/index.js';
 import pt from '../../src/lang/pt/index.js';
 import zh from '../../src/lang/zh/index.js';
 
@@ -70,6 +71,19 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
       expect(pt.sentence('às 9 da manhã.'))
         .to.equal('Se executa às 9 da manhã.');
     });
+
+  it('French', function() {
+    expect(fr.sentence('chaque minute'))
+      .to.equal('S\'exécute chaque minute.');
+  });
+
+  it('French does not double a period already on the fragment', function() {
+    // A fr fragment ending in an abbreviation period (e.g. "9 h 30 min 15 s."
+    // never carries one, but the guard mirrors the other languages) must not
+    // gain a second period.
+    expect(fr.sentence('tous les jours à 9 h.'))
+      .to.equal('S\'exécute tous les jours à 9 h.');
+  });
 
   it('Chinese', function() {
     expect(zh.sentence('每分钟')).to.equal('运行时间：每分钟。');

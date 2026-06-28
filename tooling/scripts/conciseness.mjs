@@ -23,7 +23,7 @@ import cronli5 from '../../src/cronli5.js';
 import {enumerateFires} from '../../src/core/analyze.js';
 import {patterns} from '../../scripts/fuzz-lang.mjs';
 
-const LANGS = ['en', 'es', 'de', 'fi', 'pt', 'zh'];
+const LANGS = ['en', 'es', 'de', 'fi', 'fr', 'pt', 'zh'];
 
 // Up to this many fires, naming each as an explicit clock time ("9:05 a.m.,
 // 9:10 a.m., …") is the accepted readable form rather than a defect; beyond it

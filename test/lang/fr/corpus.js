@@ -758,6 +758,73 @@ describe('Français (fr):', function() {
     ]);
   });
 
+  // Coverage of reachable renderer branches the rows above do not yet reach.
+  // Each form is the faithful fr translation of the es donor's output for the
+  // same pattern (the es corpus exercises these branches; fr inherits the
+  // structure, so the same patterns must reach them here). Not separate
+  // conventions — the same fr-FR rules applied to less-common shapes.
+  describe('couverture des branches du moteur', function() {
+    run([
+      // A single hour with a minute RANGE is a one-hour window (minuteSpanInHour
+      // with a real range, not the whole-hour wildcard form).
+      ['0-30 9 * * *', 'chaque minute de 9 h à 9 h 30'],
+      // A wildcard minute over an odd hour step names the active hours; the
+      // single-step confinement branch of the across-hours wildcard form.
+      ['* */3 * * *',
+        'chaque minute, pendant les heures de 0 h, 3 h, 6 h, 9 h, 12 h, ' +
+        '15 h, 18 h et 21 h'],
+      // OR union, open-step date that is NOT a parity (step 3): the durative
+      // "tous les trois jours du mois à partir du 5" arm.
+      ['0 0 5/3 * 5',
+        'à minuit, soit tous les trois jours du mois à partir du 5, ' +
+        'soit n\'importe quel vendredi'],
+      // OR union, multi-value date list arm ("le 1er, le 15 et le 20 du mois").
+      ['0 0 1,15,20 * 5',
+        'à minuit, soit le 1er, le 15 et le 20 du mois, ' +
+        'soit n\'importe quel vendredi'],
+      // A date list mixing a single and a range carries the per-value ordinal
+      // and the "du A au B" contraction within the list.
+      ['0 0 1,10-15 * *',
+        'le 1er et du 10 au 15 de chaque mois à minuit'],
+      // A minute list over a fixed hour list folds the minutes into each clock
+      // time (compact-clock non-fold path).
+      ['0,30 8,12,16 * * *',
+        'tous les jours à 8 h, 8 h 30, 12 h, 12 h 30, 16 h et 16 h 30'],
+      // A stepped minute over an hour step names each fixed hour as its whole
+      // hour ("de l'heure de 8 h …"), noon as "de l'heure de midi".
+      ['3/2 8/4 * * *',
+        'toutes les deux minutes de la minute 3 à 59 de chaque heure, ' +
+        'de l\'heure de 8 h, de l\'heure de midi, de l\'heure de 16 h ' +
+        'et de l\'heure de 20 h'],
+      // A wildcard minute over a 4+-hour list reads the compact active-hours
+      // list, not a sprawl of per-hour windows.
+      ['* 0,4,8,12 * * *',
+        'chaque minute pendant les heures de 0 h, 4 h, 8 h et 12 h'],
+      // A sub-minute second at minute 0 over a BOUNDED hour step: the duration
+      // frame with the endpoint-pinning bounded cadence (not the clean-stride
+      // "pendant les heures" confinement).
+      ['* 0 0-20/2 * * *',
+        'chaque seconde pendant une minute, ' +
+        'toutes les deux heures de minuit à 20 h'],
+      // An offset hour step with a folded second enumerates its fires as clock
+      // times carrying the seconds ("8 h 30 s …").
+      ['30 0 8/4 * * *',
+        'tous les jours à 8 h 30 s, 12 h 30 s, 16 h 30 s et 20 h 30 s'],
+      // A step SEGMENT beside a range in the hour field (the step survives, not
+      // enumerated to singles): under a minute list each step fire reads as its
+      // whole hour and the range stays a window (compact-clock non-fold path).
+      ['5,30 2/4,18-20 * * *',
+        'aux minutes 5 et 30 de chaque heure, de l\'heure de 2 h, ' +
+        'de l\'heure de 6 h, de l\'heure de 10 h, de l\'heure de 14 h, ' +
+        'de l\'heure de 18 h, de l\'heure de 22 h et de 18 h à 20 h'],
+      // The same hour shape under minute 0: each step fire is a clock time and
+      // the range a window (hour-segment clock times, fold path).
+      ['0 0 2/4,18-20 * * *',
+        'chaque heure à 2 h, à 6 h, à 10 h, à 14 h, à 18 h, à 22 h ' +
+        'et de 18 h à 20 h']
+    ]);
+  });
+
   describe('style personnalisé', function() {
     run([
       // A custom separator replaces the spaced "h" with the chosen mark.
