@@ -6,6 +6,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.7.2]
+
+### Changed
+
+- **Docs refresh.** README + CONTRIBUTING updated for the seven languages (incl.
+  pt-BR, fr-FR, and the zh-Hant variant), the Node 20+ requirement, the Vitest
+  test runner, the `IR`→`Schedule` rename, and the sibling-derivation
+  add-language workflow (blind pipeline now the fallback). Regenerated the
+  language-status and cRonstrue comparison tables.
+- **CI:** bumped `actions/checkout` and `actions/setup-node` to v5.
+
+### Fixed
+
+- A duplicate `engines` key left `engines.node` effectively `>=18`; deduped to a
+  single `>=20`, so the Node requirement declared in 0.7.1 is actually in force.
+
 ## [0.7.1]
 
 ### Changed

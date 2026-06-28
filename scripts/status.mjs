@@ -32,20 +32,27 @@ function row(label, unit) {
     (unit.humanReview || '—') + ' | ' + (unit.modelReview || '—') + ' |';
 }
 
-// A markdown table of each language's status, with a sub-row for any dialect
-// whose status diverges from its language (e.g. a beta dialect of a stable
-// language). Dialects that match their language are captured in status.json
-// but left off the table to avoid restating "stable".
+// Non-default sub-units of a language whose status diverges from it: dialect
+// variants (`dialects`) and script/glyph variants (`variants`, e.g. zh-Hant).
+// A sub-unit whose status matches its language is captured in status.json but
+// left off the table to avoid restating "stable"/"beta".
+function divergentSubUnits(lang) {
+  return [...Object.entries(lang.dialects || {}),
+    ...Object.entries(lang.variants || {})]
+    .filter(([, unit]) => unit.status !== lang.status);
+}
+
+// A markdown table of each language's status, with a sub-row for any dialect or
+// variant whose status diverges from its language (e.g. an experimental variant
+// of a beta language).
 function statusTable() {
   const rows = [];
 
   for (const lang of languageStatuses()) {
     rows.push(row(lang.name, lang));
 
-    for (const [id, dialect] of Object.entries(lang.dialects || {})) {
-      if (dialect.status !== lang.status) {
-        rows.push(row(lang.name + ' (`' + id + '`)', dialect));
-      }
+    for (const [id, unit] of divergentSubUnits(lang)) {
+      rows.push(row(lang.name + ' (`' + id + '`)', unit));
     }
   }
 
@@ -62,11 +69,8 @@ function statusSummary() {
   for (const lang of languageStatuses()) {
     rows.push('| ' + lang.name + ' | ' + lang.status + ' |');
 
-    for (const [id, dialect] of Object.entries(lang.dialects || {})) {
-      if (dialect.status !== lang.status) {
-        rows.push('| ' + lang.name + ' (`' + id + '`) | ' +
-          dialect.status + ' |');
-      }
+    for (const [id, unit] of divergentSubUnits(lang)) {
+      rows.push('| ' + lang.name + ' (`' + id + '`) | ' + unit.status + ' |');
     }
   }
 

@@ -51,6 +51,8 @@ differ and which to pick.
 
 ## Installation
 
+Requires **Node.js 20 or newer**.
+
 Install using npm:
 ```
 # For a Node project:
@@ -103,13 +105,27 @@ As a command line tool:
 $ cronli5 "*/5 * * * *"
 Runs every five minutes.
 
-# Other languages with --lang (de, es, fi, zh):
+# Other languages with --lang (de, es, fi, fr, pt, zh):
 $ cronli5 --lang de "0 0 * * *"
 Läuft täglich um Mitternacht.
+$ cronli5 --lang fr "0 0 * * *"
+S'exécute tous les jours à minuit.
 
 # --fragment prints the bare, embeddable fragment instead of a sentence:
 $ cronli5 --fragment "*/5 * * * *"
 every five minutes
+```
+
+Dialects and script variants — including Traditional Chinese (`zh-Hant`) — are
+selected through the library's [`dialect`](#options) option rather than the CLI;
+the CLI exposes only `--lang` and `--fragment`.
+
+```js
+import cronli5 from 'cronli5';
+import zh from 'cronli5/lang/zh';
+
+cronli5('0 0 * * *', {lang: zh});                       // '每天凌晨0点' (Simplified, default)
+cronli5('0 0 * * *', {lang: zh, dialect: 'zh-Hant'});   // '每天凌晨0點' (Traditional)
 ```
 
 ## Input Formats
@@ -202,13 +218,19 @@ docs below.
 | German | `cronli5/lang/de` | Duden (`de-AT`/`de-CH` dialects) | [docs/lang/de.md](./docs/lang/de.md) |
 | Spanish | `cronli5/lang/es` | RAE / FundéuRAE | [docs/lang/es.md](./docs/lang/es.md) |
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
+| French | `cronli5/lang/fr` | Imprimerie nationale / Académie française (fr-FR; fr-CA is a future axis) | [docs/lang/fr.md](./docs/lang/fr.md) |
 | Portuguese | `cronli5/lang/pt` | VOLP / Academia Brasileira de Letras (pt-BR; pt-PT is a future axis) | [docs/lang/pt.md](./docs/lang/pt.md) |
 | Chinese (Mandarin) | `cronli5/lang/zh` | Simplified (`zh-Hans`) default; Traditional (`zh-Hant`) | [docs/lang/zh.md](./docs/lang/zh.md) |
 
 ### Language maturity
 
 Languages ship as **experimental** → **beta** → **stable** (model-drafted →
-model-validated by a blind persona panel → verified by a fluent human):
+model-validated → verified by a fluent human). A new language is usually built
+by **sibling-derivation** — deriving it from its nearest validated relative
+(porting that renderer and translating its reviewed corpus, then TDD to green) —
+and reaches **beta** once it passes the objective gates (round-trip, fuzz,
+OR-scope, the cRonstrue comparison) and a blind persona-panel review. It
+graduates to **stable** only on fluent-human review:
 
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status |
@@ -220,6 +242,7 @@ model-validated by a blind persona panel → verified by a fluent human):
 | French | beta |
 | Portuguese | beta |
 | Chinese (Mandarin, Simplified) | beta |
+| Chinese (Mandarin, Simplified) (`zh-Hant`) | experimental |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see
@@ -275,7 +298,7 @@ cronli5('0 0 15W * *');    // 'on the weekday nearest the 15th at midnight'
 [`cRonstrue`][cronstrue] is the most widely used cron-description library, but
 it differs from `cronli5` in philosophy. `cronli5` writes one flowing sentence
 and does additional validation; its languages are full renderers
-([four so far](#languages)). cRonstrue assembles per-field fragments from
+([seven so far](#languages)). cRonstrue assembles per-field fragments from
 translated templates, which is how it covers 39 locales. The same compound
 pattern &mdash; `5,10 30 9 * * MON` &mdash; in every language:
 
@@ -286,6 +309,10 @@ pattern &mdash; `5,10 30 9 * * MON` &mdash; in every language:
 | German | in den Sekunden 5 und 10, um 9:30 Uhr montags | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | Spanish | los lunes, en los segundos 5 y 10 de las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | Finnish | 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
+| French | le lundi, aux secondes 5 et 10 de 9 h 30 | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
+| Portuguese | às segundas-feiras, nos segundos 5 e 10 das 09:30 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
+| Chinese (Simplified) | 每周一，9点30分第5、10秒 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
+| Chinese (Traditional) | 每週一，9點30分第5、10秒 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
@@ -335,8 +362,9 @@ required.
 
 ## Development
 
-The library has no runtime dependencies. The toolchain (ESLint, Vitest, Chai,
-esbuild) lives in `devDependencies`.
+The library has no runtime dependencies. Development requires **Node.js 20 or
+newer** (the Vitest 4 test runner needs it); the toolchain (ESLint, Vitest,
+Chai, esbuild) lives in `devDependencies`.
 
 ```bash
 npm install       # install dev dependencies (also wires the git hooks)
