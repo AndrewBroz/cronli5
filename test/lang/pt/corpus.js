@@ -123,7 +123,13 @@ describe('Português (pt):', function() {
       ['* 9 * * *', 'a cada minuto da hora das 09:00'],
       ['* 0 * * *', 'a cada minuto da hora das 00:00'],
       ['* 12 * * *', 'a cada minuto da hora das 12:00'],
-      ['* 1 * * *', 'a cada minuto da hora da 01:00']
+      ['* 1 * * *', 'a cada minuto da hora da 01:00'],
+      // A wildcard minute over a >3-value hour list confines to those hours
+      // ("durante as horas das …") on the 24-hour clock (no day period).
+      ['* 1,3,5,7 * * *',
+        'a cada minuto durante as horas das 1, 3, 5 e 7'],
+      // A clean every-other-hour step is the even hours ("as horas pares").
+      ['* */2 * * *', 'a cada minuto, durante as horas pares']
     ]);
   });
 
@@ -201,7 +207,16 @@ describe('Português (pt):', function() {
         'às segundas, quartas e sextas-feiras às 2 da tarde'],
       ['*/15 * * * MON', 'a cada 15 minutos às segundas-feiras'],
       ['*/15 * * * MON-FRI', 'a cada 15 minutos de segunda a sexta-feira'],
-      ['0 0 * * FRI-MON', 'de sexta a segunda-feira à meia-noite']
+      ['0 0 * * FRI-MON', 'de sexta a segunda-feira à meia-noite'],
+      // A standalone single MASCULINE weekday recurs as "aos domingos"
+      // (a+os=aos), gender-driven — it never takes the "toda X" head.
+      ['*/15 * * * SUN', 'a cada 15 minutos aos domingos'],
+      // An all-masculine list takes the masculine recurrence outright.
+      ['*/15 * * * SAT,SUN', 'a cada 15 minutos aos sábados e domingos'],
+      // A single masculine day trailing a feminine run splits into its own
+      // contracted "aos" group ("às …" cannot govern a masculine noun).
+      ['*/15 * * * MON,SAT',
+        'a cada 15 minutos às segundas-feiras e aos sábados']
     ], ampm);
   });
 
@@ -217,6 +232,10 @@ describe('Português (pt):', function() {
         'nos dias 1º, 4, 7, 10 e 13 de cada mês à meia-noite'],
       ['0 0 1,20-28/4 * *',
         'nos dias 1º, 20, 24 e 28 de cada mês à meia-noite'],
+      // A mixed date list keeping a range reads the range as "1º a 5" (ordinal
+      // first term, cardinal rest), then the singles.
+      ['0 0 1-5,10 * *',
+        'nos dias 1º a 5 e 10 de cada mês à meia-noite'],
       ['0 0 1-15/3 6 *', 'nos dias 1º, 4, 7, 10 e 13 de junho à meia-noite'],
       ['0 12 * 6,12 *',
         'todos os dias de junho e dezembro ao meio-dia'],
@@ -262,6 +281,47 @@ describe('Português (pt):', function() {
       // Seconds list + fixed clock time: nest seconds into the time with
       // genitive "das HH:MM"; never "de cada minuto" when the minute is fixed.
       ['5,10 30 9 * * MON', 'às segundas-feiras, nos segundos 5 e 10 das 09:30'],
+      // A sub-minute second pinned at a non-zero minute and single hour trails
+      // its day frame after a comma: the date ("no dia 13 de junho") and the
+      // month-only scope ("todos os dias de junho").
+      ['0/15 5 9 13 6 *',
+        'a cada 15 segundos das 09:05, no dia 13 de junho'],
+      ['0/15 5 9 * 6 *',
+        'a cada 15 segundos das 09:05, todos os dias de junho'],
+      // A sub-minute second confined to minute 0 over a >3-value hour list reads
+      // as a one-minute frame at each named (bare) hour; the seconds lead.
+      ['0/15 0 9,13,17,21 * * *',
+        'a cada 15 segundos durante um minuto às 9, 13, 17 e 21, todos os dias'],
+      // A clock-second at a fixed non-zero minute over an hour list reads the
+      // genitive clock list "das HH:MM" (the minute is a real clock minute).
+      ['0/15 30 9,13,17,21 * * *',
+        'a cada 15 segundos das 09:30, 13:30, 17:30 e 21:30, todos os dias'],
+      // A seconds list nested at exactly noon (12-hour clock): the noon word
+      // carries its own article, so it reads "ao meio-dia".
+      ['5,30 0 12 * * *',
+        'nos segundos 5 e 30 ao meio-dia', {ampm: true}],
+      // A sub-minute second under minute 0 over an arithmetic-progression hour
+      // list folds the hours to a cadence; the minute-0 confinement reads as the
+      // "durante um minuto" frame leading it.
+      ['0/15 0 0,2,4,6,8,10 * * *',
+        'a cada 15 segundos durante um minuto, ' +
+        'a cada duas horas das 00:00 às 10:00'],
+      // A clock-second + fixed minute over a MIXED hour list (explicit hour +
+      // step): the step fires expand into the genitive clock list "das HH:MM".
+      ['0/15 30 9,*/6 * * *',
+        'a cada 15 segundos das 00:30, 06:30, 12:30, 18:30 e 09:30, ' +
+        'todos os dias'],
+      // A single fixed minute over a MIXED hour list whose fire count exceeds
+      // the clock-time cap folds to the compact hour-segment form: the step
+      // fires expand into "às HH:MM" instants (the explicit 9 repeats — the
+      // donor does not dedup, meaning preserved).
+      ['30 9,*/3 * * *',
+        'todos os dias às 00:30, 03:30, 06:30, 09:30, 12:30, 15:30, ' +
+        '18:30, 21:30 e 09:30'],
+      // The same compact fold carrying a clock SECOND: "às HH:MM:SS".
+      ['10 30 9,*/3 * * *',
+        'todos os dias às 00:30:10, 03:30:10, 06:30:10, 09:30:10, ' +
+        '12:30:10, 15:30:10, 18:30:10, 21:30:10 e 09:30:10'],
       // A date-OR-weekday union drops the day frame here; the unified frame
       // supplies the day-level suffix, so the seconds clause leads it.
       ['5,10 0 9 1 * MON',
@@ -288,6 +348,9 @@ describe('Português (pt):', function() {
       ['*/15 9-17 * * *',
         'a cada 15 minutos das 9 da manhã às 5:45 da tarde'],
       ['* 9 * * *', 'a cada minuto da hora das 9 da manhã'],
+      // A minute RANGE within a single specific hour reads as a sub-hour window
+      // ("a cada minuto das 09:05 às 09:30"), 24-hour clock.
+      ['5-30 9 * * *', 'a cada minuto das 09:05 às 09:30', {ampm: false}],
       ['0 9-17 * * *',
         'a cada hora das 9 da manhã às 5 da tarde'],
       ['30 9-17 * * *',
@@ -312,13 +375,31 @@ describe('Português (pt):', function() {
         'a cada minuto do 0 ao 30, às 9 da manhã e 5 da tarde'],
       ['0-30 */2 * * *',
         'a cada minuto do 0 ao 30, a cada duas horas'],
+      // A wildcard minute over a clean hour step under a restricted date reads
+      // as the even-hours confinement, with the date trailing.
+      ['* */2 1,2,3 * *',
+        'a cada minuto, durante as horas pares nos dias 1º, 2 e 3 de cada mês'],
+      // A wildcard minute over an OFFSET hour step (odd hours, >cap fires) names
+      // its active hours, with the date trailing.
+      ['* 1-23/2 1,2,3 * *',
+        'a cada minuto, durante as horas das 1, 3, 5, 7, 9, 11, 13, ' +
+        '15, 17, 19, 21 e 23 nos dias 1º, 2 e 3 de cada mês',
+        {ampm: false}],
       // A minute list under a clean stride keeps the same cadence the range
       // and wildcard forms do, never enumerating the hours.
       ['5,30 */2 * * *',
         'nos minutos 5 e 30 de cada hora, a cada duas horas'],
       ['5,30 1/2 * * *',
         'nos minutos 5 e 30 de cada hora, ' +
-        'a cada duas horas a partir da 1 da madrugada']
+        'a cada duas horas a partir da 1 da madrugada'],
+      // A minute list over a MIXED hour list (an explicit hour plus a step that
+      // cannot fold into a cadence): each point hour reads as the whole hour
+      // ("da hora das HH:00"), since a stepped minute fires no clock instant.
+      ['5,30 9,*/6 * * *',
+        'nos minutos 5 e 30 de cada hora, da hora das 00:00, ' +
+        'da hora das 06:00, da hora das 12:00, da hora das 18:00 ' +
+        'e da hora das 09:00',
+        {ampm: false}]
     ], ampm);
   });
 
@@ -326,7 +407,13 @@ describe('Português (pt):', function() {
     run([
       ['*/15 30 9 * * *',
         'a cada 15 segundos das 9:30 da manhã, todos os dias'],
-      ['15 30 9 * * *', 'todos os dias às 9:30:15 da manhã']
+      ['15 30 9 * * *', 'todos os dias às 9:30:15 da manhã'],
+      // A sub-minute second under minute 0 and an hour step: the minute-0 window
+      // reads as a one-minute frame ("durante um minuto"), then the active hours
+      // (24-hour clock).
+      ['0/15 0 0/6 * * *',
+        'a cada 15 segundos durante um minuto, durante as horas das 0, 6, 12 e 18',
+        {ampm: false}]
     ], ampm);
 
     // A fixed hour under a stepped minute (six-field, seconds wildcard) names
@@ -362,7 +449,17 @@ describe('Português (pt):', function() {
     run([
       ['0 0 L * *', 'no último dia do mês à meia-noite'],
       ['0 0 * * 5L', 'na última sexta-feira do mês à meia-noite'],
+      // Last-Sunday: masculine "o último domingo" (em+o=no), gender-agreed.
+      ['0 0 * * 0L', 'no último domingo do mês à meia-noite'],
       ['0 0 * * 1#2', 'na 2ª segunda-feira do mês à meia-noite'],
+      // Non-colliding nth ordinals keep the WORD form, gender-agreed: feminine
+      // "a primeira sexta-feira" (em+a=na), masculine "o terceiro domingo" /
+      // "o segundo sábado" (em+o=no). 3#3 ("terceira" != "quarta") is the
+      // feminine word for a -feira day whose stem does not collide.
+      ['0 0 * * 5#1', 'na primeira sexta-feira do mês à meia-noite'],
+      ['0 0 * * 3#3', 'na terceira quarta-feira do mês à meia-noite'],
+      ['0 0 * * 0#3', 'no terceiro domingo do mês à meia-noite'],
+      ['0 0 * * 6#2', 'no segundo sábado do mês à meia-noite'],
       ['0 0 15W * *', 'no dia útil mais próximo ao dia 15 à meia-noite']
     ], ampm);
   });
@@ -403,6 +500,12 @@ describe('Português (pt):', function() {
       // "um dia par do mês" in the OR union, mirroring the en even-day arm.
       ['0 0 2/2 * 0',
         'às 00:00, seja em um dia par do mês ou aos domingos'],
+      // Open-step DOM in the OR union: the date arm is the bare cadence "a cada
+      // cinco dias do mês" (the durative is correct here, parallel to the es
+      // donor's "cada cinco días"), NOT a contracted "na cada …" — "a cada" is
+      // the cadence "every", not the article the contraction would fuse.
+      ['0 0 */5 * 0',
+        'às 00:00, seja a cada cinco dias do mês ou aos domingos'],
       // Enumeration/step months (>=2): month lead with trailing comma.
       ['0 0 */2 */2 */2',
         'em janeiro, março, maio, julho, setembro e novembro, às 00:00, ' +
@@ -415,6 +518,12 @@ describe('Português (pt):', function() {
         'de janeiro a março às 00:00, seja do dia 1º ao dia 15 do mês ou às terças, quintas-feiras, sábados e domingos'],
       ['0 0 1 1-3 0',
         'de janeiro a março às 00:00, seja no dia 1º ou aos domingos'],
+      // Multi-value DOM list in the union: the date arm is "nos dias N … do mês".
+      ['0 0 1,15,20 * 0',
+        'às 00:00, seja nos dias 1º, 15 e 20 do mês ou aos domingos'],
+      // DOM range in the union under a single month: "do dia N ao dia M do mês".
+      ['0 0 1-5 6 0',
+        'em junho às 00:00, seja do dia 1º ao dia 5 do mês ou aos domingos'],
       // Frequency + wildcard month.
       ['*/5 */2 1 * 5',
         'a cada cinco minutos, durante as horas pares, seja no dia 1º de cada mês ou às sextas-feiras'],
@@ -535,6 +644,12 @@ describe('Português (pt):', function() {
         'a cada segundo durante um minuto ao meio-dia, todos os dias'],
       ['* 0 9,11 * * *',
         'a cada segundo durante um minuto às 9 e 11, todos os dias'],
+      // The 12-hour clock builds the bare hour through the day-period path; noon
+      // and 6pm read "ao meio-dia" / "às 6 da tarde" with no clock minute.
+      ['0/15 0 12,18 * * *',
+        'a cada 15 segundos durante um minuto ao meio-dia e às 6 da tarde, ' +
+        'todos os dias',
+        {ampm: true}],
       // An hour RANGE under a minute-0 confinement reads as a window, not a
       // wall of clock times.
       ['* 0 9-17 * * *',
@@ -764,10 +879,12 @@ describe('Português (pt):', function() {
         'a cada 15 minutos, durante as horas da meia-noite, das 3 da ' +
         'madrugada, das 6 e 9 da manhã, do meio-dia, das 3 e 6 ' +
         'da tarde e das 9 da noite'],
+      // 1/3 => hours 1,4,7,10,13,16,19,22; 19h is da noite (boundary 19h),
+      // so the tarde group is just 1 and 4, and the noite group is 7 and 10.
       ['*/15 1/3 * * *',
         'a cada 15 minutos, durante as horas da 1 e das 4 da ' +
-        'madrugada, das 7 e 10 da manhã, da 1, das 4 e das 7 da ' +
-        'tarde e das 10 da noite'],
+        'madrugada, das 7 e 10 da manhã, da 1 e das 4 da ' +
+        'tarde e das 7 e 10 da noite'],
       ['*/20 9-17/2 * * *',
         'a cada 20 minutos, ' +
         'a cada duas horas das 9 da manhã às 5 da tarde'],

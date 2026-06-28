@@ -968,7 +968,11 @@ function domArm(schedule: Schedule, opts: Opts): string {
   }
 
   if (isOpenStep(date)) {
-    return withEm(stepDates(date, opts));
+    // The open-step date arm is the bare cadence "a cada N dias do mês" (the
+    // es donor returns it bare too). Its leading "a cada" is the durative
+    // "every", not an article, so it takes no preposition — wrapping it in
+    // withEm would mis-fuse it to "na cada".
+    return stepDates(date, opts);
   }
 
   const segments = segmentsOf(schedule, 'date');
@@ -2092,16 +2096,17 @@ function meridiemMark(hour: number): string {
 }
 
 // The Portuguese day period for an hour: "da madrugada" (1-5), "da manhã"
-// (6-11), "da tarde" (12-19), or "da noite" (20-23 and midnight's hour). The
-// reviewed corpus is the contract on the boundary: it places 19h in tarde and
-// 20h+ in noite (e.g. "0 8/12" → "8 da noite" at 20h; "1/3" → "7 da tarde" at
-// 19h), so the noite boundary sits at 20h. Empty in 24-hour mode.
+// (6-11), "da tarde" (12-18), or "da noite" (19-23 and midnight's hour). The
+// pt-BR panel unanimously ratified the noite boundary at 19h (the
+// broadcast/weather register and the "jornal da noite" anchor; see notes.md),
+// earlier than the es donor's 20h: 18h reads "da tarde", 19h+ "da noite" (e.g.
+// "1/3" → "7 da noite" at 19h). Empty in 24-hour mode.
 function dayPeriod(hour: number, opts: Opts): string {
   if (!opts.ampm) {
     return '';
   }
 
-  if (+hour === 0 || +hour >= 20) {
+  if (+hour === 0 || +hour >= 19) {
     return 'da noite';
   }
 
