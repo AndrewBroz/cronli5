@@ -16,7 +16,10 @@ export default defineConfig({
     exclude: [
       '**/node_modules/**',
       'test/runner.js',
-      'test/core/bad_input/error-types.js'
+      'test/core/bad_input/error-types.js',
+      // fr Stage-2 candidate: imports src/lang/fr/index.js, which does not
+      // exist yet (corpus -> review -> port order). Removed at the fr port.
+      'test/lang/fr/corpus.js'
     ],
     setupFiles: ['./test/vitest.setup.ts'],
     globals: true,
