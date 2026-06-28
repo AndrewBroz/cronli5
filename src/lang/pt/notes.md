@@ -35,33 +35,47 @@ leaves the hour unpadded ("às 9 da manhã").
 ## Day periods (12-hour)
 
 "da madrugada / da manhã / da tarde / da noite" (contraction *de + a* = *da*).
-Anchor to es's bands, with one pt-BR adjustment **FLAGGED for the panel**: es
-uses tarde 12–19 / noche 20–24, but pt-BR commonly puts *noite* earlier (≈19h).
-Proposed: **madrugada 1–5, manhã 6–11, tarde 12–18, noite 19–24**. This is a
-real pt-BR boundary question (some speakers keep tarde to 18, others to 19) —
-surfaced for review rather than guessed. "meio-dia" / "meia-noite" for exact
-12:00 / 0:00.
+**Decided (panel-confirmed): madrugada 1–5, manhã 6–11, tarde 12–18, noite
+19–24.** es uses tarde 12–19 / noche 20–24, but pt-BR puts *noite* earlier;
+the blind pt-BR panel unanimously affirmed the 19h boundary (broadcast/weather
+register and the "jornal da noite" cultural anchor place noite firmly at 19h —
+tighter than the loose popular sense that some extend to 18h, and the better
+choice for an unambiguous description). 18h reads *da tarde*, 19h+ *da noite*.
+"meio-dia" / "meia-noite" for exact 12:00 / 0:00.
 
 ## Weekday recurrence
 
-es uses the plural article "los lunes" = every Monday. **Decided for pt-BR:
-"às segundas-feiras"** (plural, with the *a+as=às* contraction), parallel to
-es's plural-article recurrence and the donor's "no 'todos'" rule (the plural
-already means *every*). Ranges: **"de segunda a sexta(-feira)"** mirroring "de
-lunes a viernes". The *-feira* element attaches to weekdays Mon–Fri
-(segunda-feira … sexta-feira); sábado and domingo have none.
+es uses the plural article "los lunes" = every Monday. **Decided (panel-
+confirmed): keep *-feira* throughout** — the full forms are the standard pt-BR
+written/spoken register and dropping *-feira* is too informal for an unambiguous
+description. The *-feira* element attaches to weekdays Mon–Fri (segunda-feira …
+sexta-feira); sábado and domingo have none. The resolved sub-rules:
 
-- **FLAGGED (contested, real pt-BR variation):** whether *-feira* is *dropped*
-  in recurrence/range contexts. "às segundas" and "de segunda a sexta" (no
-  *-feira*) are extremely common and arguably more natural in running text;
-  "às segundas-feiras" is fuller/more formal. Candidate forms for the panel:
-  (a) "às segundas-feiras" / "de segunda a sexta-feira";
-  (b) "às segundas" / "de segunda a sexta";
-  (c) full *-feira* on a single weekday, dropped inside a range.
-  Drafter leans (a) for the explicit single-weekday form to avoid any misread,
-  but the panel should settle the range/list register.
-- Single weekday in the OR-union arm: "qualquer segunda-feira" (parallels es
-  "cualquier lunes").
+- **Single weekday recurrence + a clock time → "toda segunda-feira às 9 da
+  manhã".** The plural-article recurrence "às segundas-feiras" before an "às …"
+  time clashed aurally (the double-"às"); the panel's fix is the singular
+  "toda X" head, which reads naturally and keeps the meaning. This applies
+  wherever a single weekday leads a clause that a clock time follows (incl.
+  "toda segunda-feira de junho às 9 da manhã").
+- **Standalone single weekday recurrence (no following time) keeps the plural
+  article** "às segundas-feiras" (e.g. "a cada 15 minutos às segundas-feiras",
+  trailing-qualifier "… às segundas-feiras").
+- **Lists carry the *-feira* suffix on the last *-feira* day only**, the
+  idiomatic pt-BR suffix-ellipsis: "às segundas, quartas e sextas-feiras";
+  "às terças, quintas-feiras, sábados e domingos" (terça bare, quinta is the
+  last *-feira* day so it carries the suffix, sábado/domingo never do). All
+  panels affirmed this is correct and unambiguous, not an inconsistency.
+- **Ranges carry *-feira* on the last term only**: "de segunda a sexta-feira"
+  (the asymmetric form is the idiomatic pt-BR range shorthand — not
+  "de segunda-feira a sexta-feira").
+- **Single weekday in an OR-union arm reads the Brazilian recurrence**
+  "às [weekday]s-feiras" / "aos domingos" (NOT "em qualquer [weekday]", which
+  reads slightly Iberian); a **range** arm keeps the nominal head
+  "em qualquer dia de segunda a sexta-feira" (a range needs the head "dia").
+- **Quartz nth-weekday ordinal collision:** when the ordinal word would collide
+  with the weekday name ("segunda segunda-feira" for `1#2`), use the ordinal
+  digit "na 2ª segunda-feira do mês". Non-colliding ordinals keep the word form
+  ("na última sexta-feira", "a primeira segunda-feira").
 
 ## Ordinals / dates
 
@@ -71,14 +85,14 @@ es: "el 1 de junio" / "el día N" / "el N de cada mes". **Decided for pt-BR:
 "do dia 1 ao dia 15 do mês" (contractions *de+o=do*, *a+o=ao*). The es bare
 "el 1 de junio" → "**dia 1 de junho**".
 
-- **FLAGGED (genuinely contested):** the **1st of the month**. pt-BR strongly
-  prefers the *ordinal* "1º" / "dia primeiro" for the first day ("dia 1º de
-  junho", "primeiro de junho"), unlike the rest of the month which stays
-  cardinal. Candidates for the panel: (a) "dia 1" (cardinal, uniform, parallels
-  es); (b) "dia 1º" (ordinal only for the 1st); (c) "dia primeiro". The drafter
-  recommends (b) — the ordinal 1st is a strong pt-BR norm — but flags it because
-  it introduces a special-case the donor does not have, and it interacts with
-  the date-range and OR-union arms (must "1º" appear there too?).
+- **Decided (panel-confirmed): the 1st of the month is the ordinal "dia 1º"**;
+  every other day stays cardinal. The ordinal first is a deep pt-BR norm
+  (calendars, official/legal texts, speech); cardinal "dia 1" reads as a typo or
+  informal shorthand. The "1º" carries into the date-range and OR-union arms
+  too: "do dia 1º ao dia 15", "seja no dia 1º …". (Ranges carry the ordinal on
+  the first term and cardinal on the rest, the normal pt-BR pattern.) The
+  W-operator proximity preposition is the dative "próximo **ao** dia 15" (not
+  "próximo do dia 15") — proximity-to-a-target takes *a+o=ao*.
 - Quartz nth-weekday ordinals: primeiro/primeira, segundo/segunda, terceiro,
   quarto, quinto — **gendered** (see below).
 
@@ -130,11 +144,14 @@ formation**, not a lexical substitution.
 - **Per-hour windows for wildcard minutes over hour lists** (es §"wildcard
   minutes over hour lists render as per-hour windows"): keep the strategy; pt
   form "das 9 às 9:59 da manhã" (note *das* = de+as, *às* = a+as).
-- **OR-union unified frame:** es "ya sea X o Y" → the natural pt union frame.
-  **Decided: "seja X ou Y"** (or the simpler "X ou Y" if the panel finds "seja"
-  stilted — **FLAGGED**: "seja … ou …" vs a bare "ou …" join; "ou seja" must be
-  avoided — it means "that is/i.e." and would mis-signal). The shared month is
-  fronted once and the arms are month-less, exactly as in es.
+- **OR-union unified frame:** es "ya sea X o Y" → **"seja X ou Y"
+  (panel-confirmed).** All three personas read it as an unambiguous inclusive
+  OR; the "seja" frame is cleaner than a bare "X ou Y" and there is no
+  intersection misreading. "ou seja" is avoided — it means "that is/i.e." The
+  shared month is fronted once and the arms are month-less, exactly as in es.
+  The weekday arm wording is resolved under *Weekday recurrence* above (single
+  weekday → "às [weekday]s-feiras"; range → "em qualquer dia de segunda a
+  sexta-feira").
 - **No-fold month range:** a month range never folds into another phrase
   ("dia 1 de junho a setembro" parses as "(dia 1 de junho) a setembro"); dates
   scope it instead ("dia 1 de cada mês, de junho a setembro"); mixed lists
@@ -153,6 +170,25 @@ date/register differences), mirroring es's es-ES / es-419 split. **One `pt`
 table today = pt-BR.** A future `pt-PT` (and any regional pt-BR style such as a
 "9h" colloquial-clock custom field) would clear its own native panel before
 shipping, per the dialect rules in the pipeline.
+
+## Residuals inherited from es (NOT fixed here — es+pt follow-up)
+
+The blind pt-BR panel's technical reviewer flagged two issues that are **shared
+artifacts of the es donor corpus**, not pt regressions, so they were left in the
+pt corpus to keep it field-comparable with es and are tracked as a joint es+pt
+follow-up (docs/backlog.md, per-language follow-ups):
+
+- **Hour-window overlap in `* 2/4,18-20 * * *`.** Hour 18 is named twice — once
+  as the 2/4 step arm's per-hour window ("das 6 às 6:59 da tarde") and again as
+  the left endpoint of the 18-20 range window ("das 6 da tarde às 8:59 da
+  noite"). The fire set is correct (no value dropped or understated); the
+  overlap is a rendering-clarity artifact present identically in es.
+- **OR DOW-arm "e" bracketing** in `… ou de segunda a sexta-feira e aos
+  domingos` (`0 0 1 * 0,1-5`, `0 0 1 6-9 0,1-5`). The internal "e" joining
+  Mon–Fri + Sun inside the second OR arm could be misparsed as a top-level
+  conjunction. The meaning is correct and the construction is the same one the
+  es donor uses ("o de lunes a viernes y los domingos"); fixing it is an es+pt
+  bracketing change, not a pt-only one.
 
 ## Known trade-offs
 

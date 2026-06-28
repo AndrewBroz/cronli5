@@ -5,16 +5,18 @@ import pt from '../../../src/lang/pt/index.js';
 const {expect} = chai;
 
 // ===========================================================================
-// STAGE-2 CANDIDATE CORPUS — pt-BR (donor: es). PENDING BLIND PANEL REVIEW.
+// REVIEWED CORPUS — pt-BR (donor: es). PANEL-REVIEWED ORACLE.
 // ===========================================================================
 //
-// This is the reviewed-CANDIDATE oracle the pt-BR renderer will later chase
-// (corpus -> review -> port; see tooling/docs/language-pipeline.md Stage 2).
-// It was produced by translating the reviewed es corpus (test/lang/es/
-// corpus.js) entry-for-entry into pt-BR idiom per src/lang/pt/notes.md — the
-// sanctioned drafting method for a sibling-derived language (CLAUDE.md: the
-// "never generated" rule governs the shipped oracle; translating a reviewed
-// sibling's reviewed corpus to a target candidate is explicitly sanctioned).
+// This is the reviewed oracle the pt-BR renderer will chase (corpus -> review
+// -> port; see tooling/docs/language-pipeline.md Stage 2). It was produced by
+// translating the reviewed es corpus (test/lang/es/corpus.js) entry-for-entry
+// into pt-BR idiom per src/lang/pt/notes.md — the sanctioned drafting method
+// for a sibling-derived language (CLAUDE.md: the "never generated" rule governs
+// the shipped oracle; translating a reviewed sibling's reviewed corpus to a
+// target candidate is explicitly sanctioned) — then finalized by a blind
+// 3-persona pt-BR native panel (everyday / copy-editor / technical) whose
+// agreed naturalness fixes are applied here.
 //
 // NO RENDERER EXISTS YET. pt has no status.json, so the suite enumeration
 // skips it and this file is the spec, not (yet) run against any renderer.
@@ -37,12 +39,23 @@ const {expect} = chai;
 //     month range, step-flattening, anchored "no minuto 30 de cada hora".
 //   - The RAE "coma ante 'y'" join is DROPPED (pt has no comma before "e").
 //
-// CONTESTED CONVENTIONS (flagged inline with [CONTESTED:n] so the blind pt
-// panel and native review can locate them):
-//   [CONTESTED:noite]  the noite boundary (19h here; tarde to 18). notes.md §"Day periods".
-//   [CONTESTED:feira]  whether "-feira" is dropped in recurrence/range. Drafter keeps it (form a). notes.md §"Weekday recurrence".
-//   [CONTESTED:1o]     the 1st of the month as ordinal "1º" vs cardinal "dia 1". Drafter uses "1º". notes.md §"Ordinals / dates".
-//   [CONTESTED:union]  the OR-union wording "seja X ou Y" vs a bare "X ou Y". notes.md §"OR-union".
+// CONVENTIONS RESOLVED by the blind pt-BR panel (all confirmed correct +
+// natural, zero misreads — see src/lang/pt/notes.md for the full rules):
+//   noite  boundary at 19h (tarde 12-18, noite 19-24) — confirmed pt-BR norm.
+//   -feira single weekday + time reads "toda segunda-feira às 9 da manhã" (kills
+//          the double-"às"); a standalone single weekday and lists/ranges keep
+//          the às-/de-…-a forms; lists carry the -feira suffix on the last
+//          -feira day only ("às segundas, quartas e sextas-feiras"); ranges
+//          carry it on the last term ("de segunda a sexta-feira").
+//   1º     the 1st of the month is the ordinal "1º"; other days cardinal.
+//   union  the OR frame is "seja X ou Y"; single-weekday arms read the Brazilian
+//          recurrence "às [weekday]s-feiras" / "aos domingos" (not "em
+//          qualquer X"); a range arm keeps the nominal head "em qualquer dia
+//          de segunda a sexta-feira".
+//   nth-weekday collision (1#2) reads "na 2ª segunda-feira" (ordinal digit,
+//          avoids the "segunda segunda" homograph); non-colliding ordinals keep
+//          the word form ("na última sexta-feira").
+//   W-operator proximity takes the dative "próximo ao dia 15" (not "do").
 //
 // es-MX / es-US regional-dialect rows are REMOVED: pt has no regional dialect
 // yet (pt-PT is a future axis, notes.md §"Dialect axis"). The es custom-style
@@ -158,11 +171,11 @@ describe('Português (pt):', function() {
       ['0,30 1 * * *',
         'todos os dias à 1 e 1:30 da madrugada'],
       // Three single-value clauses across three periods, no elision.
-      // [CONTESTED:noite] 21h => da noite (boundary 19h).
+      // 21h => da noite (boundary 19h).
       ['0 9,15,21 * * *',
         'todos os dias às 9 da manhã, às 3 da tarde e ' +
         'às 9 da noite'],
-      // Elision pair across manhã/noite. [CONTESTED:noite] 23h => da noite.
+      // Elision pair across manhã/noite. 23h => da noite.
       ['0 11,23 * * *',
         'todos os dias às 11 da manhã e da noite'],
       // Mixed article WITHIN one period (1 -> "à", 2 -> "às"): the period
@@ -179,9 +192,10 @@ describe('Português (pt):', function() {
   });
 
   describe('dias da semana', function() {
-    // [CONTESTED:feira] recurrence/range keep -feira (drafter form a).
+    // Single weekday + time reads "toda X às …" (kills the double-"às");
+    // recurrence/range otherwise keep -feira (às-/de-…-a forms).
     run([
-      ['0 9 * * MON', 'às segundas-feiras às 9 da manhã'],
+      ['0 9 * * MON', 'toda segunda-feira às 9 da manhã'],
       ['30 9 * * MON-FRI', 'de segunda a sexta-feira às 9:30 da manhã'],
       ['0 14 * * 1,3,5',
         'às segundas, quartas e sextas-feiras às 2 da tarde'],
@@ -192,7 +206,7 @@ describe('Português (pt):', function() {
   });
 
   describe('datas e meses', function() {
-    // [CONTESTED:1o] the 1st renders as the ordinal "1º"; other days cardinal.
+    // The 1st renders as the ordinal "1º"; other days cardinal.
     run([
       ['0 12 1 1 *', 'no dia 1º de janeiro ao meio-dia'],
       ['0 0 13 * *', 'no dia 13 de cada mês à meia-noite'],
@@ -223,9 +237,9 @@ describe('Português (pt):', function() {
         'no dia 1º de cada mês, de janeiro e de março a junho à meia-noite'],
       ['0 0 1 1-11/3 *',
         'no dia 1º de janeiro, abril, julho e outubro à meia-noite'],
-      // [CONTESTED:union] "seja X ou Y"; [CONTESTED:1o] the day-1 arm "dia 1º".
+      // "seja X ou Y" union; the day-1 arm "dia 1º"; weekday arm "às sextas-feiras".
       ['0 0 1 6-9 FRI',
-        'de junho a setembro à meia-noite, seja no dia 1º ou em qualquer sexta-feira'],
+        'de junho a setembro à meia-noite, seja no dia 1º ou às sextas-feiras'],
       ['0 0 L 6-9 *',
         'no último dia do mês, de junho a setembro à meia-noite'],
       ['0 0 */2 6-9 *',
@@ -250,10 +264,9 @@ describe('Português (pt):', function() {
       ['5,10 30 9 * * MON', 'às segundas-feiras, nos segundos 5 e 10 das 09:30'],
       // A date-OR-weekday union drops the day frame here; the unified frame
       // supplies the day-level suffix, so the seconds clause leads it.
-      // [CONTESTED:union] / [CONTESTED:1o].
       ['5,10 0 9 1 * MON',
         'nos segundos 5 e 10 das 09:00, seja no dia 1º de cada mês ' +
-        'ou em qualquer segunda-feira'],
+        'ou às segundas-feiras'],
       // Guard: wildcard minute keeps "de cada minuto".
       // Second-step + fixed minute + hour range + weekday: anchor cadence to the minute.
       ['*/15 30 9-17 * * MON-FRI',
@@ -262,7 +275,7 @@ describe('Português (pt):', function() {
       ['0-30 9,17-19 * * *',
         'a cada minuto do 0 ao 30, às 09:00, 17:00, 18:00 e 19:00'],
       // Seconds list + multi-time clock list: seconds must nest into ALL clock
-      // times, not just the first. [CONTESTED:1o].
+      // times, not just the first.
       ['5,30 0 9,17 1 * *',
         'no dia 1º de cada mês, nos segundos 5 e 30 das 09:00 e 17:00'],
       ['5,30 5,10,30 0 1 * *',
@@ -344,12 +357,13 @@ describe('Português (pt):', function() {
   });
 
   describe('fichas Quartz', function() {
-    // [CONTESTED:feira] last-friday keeps -feira; gendered ordinals (notes.md).
+    // last-friday keeps -feira; gendered ordinals (notes.md). The nth-weekday
+    // collision (1#2) takes the ordinal digit "na 2ª segunda-feira".
     run([
       ['0 0 L * *', 'no último dia do mês à meia-noite'],
       ['0 0 * * 5L', 'na última sexta-feira do mês à meia-noite'],
-      ['0 0 * * 1#2', 'na segunda segunda-feira do mês à meia-noite'],
-      ['0 0 15W * *', 'no dia útil mais próximo do dia 15 à meia-noite']
+      ['0 0 * * 1#2', 'na 2ª segunda-feira do mês à meia-noite'],
+      ['0 0 15W * *', 'no dia útil mais próximo ao dia 15 à meia-noite']
     ], ampm);
   });
 
@@ -362,32 +376,33 @@ describe('Português (pt):', function() {
 
   describe('data ou dia da semana', function() {
     // 12-hour entries (ampm: true shared).
-    // [CONTESTED:union] "seja X ou Y"; [CONTESTED:noite] 23h => da noite.
+    // "seja X ou Y" union; 23h => da noite; weekday arm "às sextas-feiras".
     run([
       // Single month, single DOM, single DOW.
       ['59 23 31 12 5',
-        'em dezembro às 11:59 da noite, seja no dia 31 ou em qualquer sexta-feira'],
+        'em dezembro às 11:59 da noite, seja no dia 31 ou às sextas-feiras'],
       ['59 23 31 12 5',
-        'em dezembro às 23:59, seja no dia 31 ou em qualquer sexta-feira',
+        'em dezembro às 23:59, seja no dia 31 ou às sextas-feiras',
         {ampm: false}]
     ], ampm);
 
     // 24-hour entries (default clock; no ampm override).
     run([
-      // Single month — no dia N arm. [CONTESTED:1o] the day-1 arm "dia 1º".
-      ['0 0 1 1 0', 'em janeiro às 00:00, seja no dia 1º ou em qualquer domingo'],
-      // Wildcard month — dia N de cada mês arm. [CONTESTED:1o]/[CONTESTED:feira].
+      // Single month — no dia N arm. The day-1 arm "dia 1º"; weekday arm "aos domingos".
+      ['0 0 1 1 0', 'em janeiro às 00:00, seja no dia 1º ou aos domingos'],
+      // Wildcard month — dia N de cada mês arm; the 1st is "1º"; last-friday keeps -feira.
       ['0 0 1 * 5L', 'às 00:00, seja no dia 1º de cada mês ou na última sexta-feira do mês'],
       // Wildcard month, step DOM, step DOW. In the OR union the `*/2` day-of-
       // month is the parity predicate "um dia ímpar do mês" (the odd days
       // 1,3,…,31 resetting each month), not the durative "a cada dois dias".
-      // [CONTESTED:feira] terça/quinta/sábado are non -feira; domingo none.
+      // List carries the -feira suffix on the last -feira day only (quinta);
+      // sábado/domingo never carry it.
       ['0 0 */2 * */2',
         'às 00:00, seja em um dia ímpar do mês ou às terças, quintas-feiras, sábados e domingos'],
       // Even-day start (`2/2`) selects the complementary parity predicate
       // "um dia par do mês" in the OR union, mirroring the en even-day arm.
       ['0 0 2/2 * 0',
-        'às 00:00, seja em um dia par do mês ou em qualquer domingo'],
+        'às 00:00, seja em um dia par do mês ou aos domingos'],
       // Enumeration/step months (>=2): month lead with trailing comma.
       ['0 0 */2 */2 */2',
         'em janeiro, março, maio, julho, setembro e novembro, às 00:00, ' +
@@ -399,10 +414,10 @@ describe('Português (pt):', function() {
       ['0 0 1-15 1-3 */2',
         'de janeiro a março às 00:00, seja do dia 1º ao dia 15 do mês ou às terças, quintas-feiras, sábados e domingos'],
       ['0 0 1 1-3 0',
-        'de janeiro a março às 00:00, seja no dia 1º ou em qualquer domingo'],
+        'de janeiro a março às 00:00, seja no dia 1º ou aos domingos'],
       // Frequency + wildcard month.
       ['*/5 */2 1 * 5',
-        'a cada cinco minutos, durante as horas pares, seja no dia 1º de cada mês ou em qualquer sexta-feira'],
+        'a cada cinco minutos, durante as horas pares, seja no dia 1º de cada mês ou às sextas-feiras'],
       // Mixed weekday arm (range + single): exercises the mixed-list dow branch.
       ['0 0 1 * 0,1-5',
         'às 00:00, seja no dia 1º de cada mês ou de segunda a sexta-feira e aos domingos'],
@@ -412,7 +427,7 @@ describe('Português (pt):', function() {
       // stays an enumeration): group by article in the union frame.
       ['5 1,6,11,16,22 1 1,7 MON',
         'em janeiro e julho, à 01:05 e às 06:05, 11:05, 16:05 e 22:05, ' +
-        'seja no dia 1º ou em qualquer segunda-feira']
+        'seja no dia 1º ou às segundas-feiras']
     ]);
   });
 
@@ -461,7 +476,7 @@ describe('Português (pt):', function() {
       ['0 8/12 * * *', 'às 8 da manhã e 8 da noite'],
       ['0 2/3 * * *', 'a cada três horas a partir das 2 da madrugada'],
       // A uniform step segment beside a range, rendered as per-hour windows.
-      // [CONTESTED:noite] 6pm/8pm => da noite (boundary 19h: 6pm tarde, 8pm noite).
+      // 6pm tarde, 8pm noite (boundary 19h).
       ['* 2/4,18-20 * * *',
         'a cada minuto das 2 às 2:59 da madrugada, ' +
         'das 6 às 6:59 da manhã, das 10 às 10:59 da ' +
@@ -536,11 +551,11 @@ describe('Português (pt):', function() {
       // clock.
       ['* 0 1 * * *',
         'a cada segundo durante um minuto à 1, todos os dias'],
-      // A date-OR-weekday union drops the day trail here.
-      // [CONTESTED:union]/[CONTESTED:1o].
+      // A date-OR-weekday union drops the day trail here. "seja X ou Y" with
+      // the weekday arm "às segundas-feiras".
       ['* 0 9 1 * MON',
         'a cada segundo durante um minuto às 9, seja no dia 1º de cada mês ' +
-        'ou em qualquer segunda-feira']
+        'ou às segundas-feiras']
     ]);
   });
 
@@ -708,7 +723,7 @@ describe('Português (pt):', function() {
         'e das 10 às 10:59 da noite'],
       ['0-10,30 9 * * *',
         'nos minutos 0 a 10 e 30 de cada hora, às 9 da manhã'],
-      // [CONTESTED:feira] range + single weekday; domingo has no -feira.
+      // Range + single weekday; domingo has no -feira; range keeps "de … a sexta-feira".
       ['0 0 * * 1-5,0',
         'de segunda a sexta-feira e aos domingos à meia-noite'],
       ['50-10 * * * *', 'a cada minuto do 50 ao 10 de cada hora']
@@ -744,7 +759,7 @@ describe('Português (pt):', function() {
       ['*/15 */2 * * *', 'a cada 15 minutos, durante as horas pares'],
       ['*/15 1/2 * * *', 'a cada 15 minutos, durante as horas ímpares'],
       // 12-hour dialect: active hours grouped by day period, each period named
-      // once, noon/midnight as their own markers. [CONTESTED:noite] 21h noite.
+      // once, noon/midnight as their own markers. 21h noite (boundary 19h).
       ['*/15 */3 * * *',
         'a cada 15 minutos, durante as horas da meia-noite, das 3 da ' +
         'madrugada, das 6 e 9 da manhã, do meio-dia, das 3 e 6 ' +
@@ -774,9 +789,9 @@ describe('Português (pt):', function() {
         'às 9:59 da noite'],
       ['*/15 9-17 * * *', 'a cada 15 minutos das 09:00 às 17:45',
         {ampm: false}],
-      // [CONTESTED:union]/[CONTESTED:feira].
+      // "seja X ou Y" union; single-weekday arm "às sextas-feiras".
       ['*/15 * 13 * 5',
-        'a cada 15 minutos, seja no dia 13 de cada mês ou em qualquer sexta-feira'],
+        'a cada 15 minutos, seja no dia 13 de cada mês ou às sextas-feiras'],
       ['*/15 * * 6 *', 'a cada 15 minutos em junho'],
       ['0 12 * * 0,1/2',
         'às segundas, quartas, sextas-feiras e aos domingos ao meio-dia'],
@@ -791,8 +806,9 @@ describe('Português (pt):', function() {
       ['5 9 * * *', 'todos os dias às 9:05 da manhã'],
       // Restricted-month OR union with a range weekday: the unified "seja"
       // frame with month fronted once and month-less arms. The weekday range
-      // arm reads "qualquer dia de segunda a sexta-feira" so the union "ou"
-      // joins two parallel day predicates. [CONTESTED:union]/[CONTESTED:1o]/[CONTESTED:feira].
+      // arm reads "em qualquer dia de segunda a sexta-feira" (a RANGE arm keeps
+      // its nominal head "dia", unlike the single-weekday arms) so the union
+      // "ou" joins two parallel day predicates.
       ['0 12 1 6-9 MON-FRI',
         'de junho a setembro ao meio-dia, seja no dia 1º ou em qualquer dia de segunda a sexta-feira'],
       // Wildcard-month OR union with a range weekday.
@@ -800,7 +816,7 @@ describe('Português (pt):', function() {
         'à meia-noite, seja no dia 1º de cada mês ou em qualquer dia de segunda a sexta-feira'],
       // Single restricted month + weekday (no date): exercises monthScope
       // with a non-ranged month.
-      ['0 9 * 6 MON', 'às segundas-feiras de junho às 9 da manhã']
+      ['0 9 * 6 MON', 'toda segunda-feira de junho às 9 da manhã']
     ], ampm);
   });
 
