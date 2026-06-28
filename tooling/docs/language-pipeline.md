@@ -1,4 +1,4 @@
-# Adding a language: the automated pipeline
+# Adding a language: the pipeline
 
 This describes an automated, no-human-in-the-loop pipeline to develop a
 language module to beta (model-validated). Reaching stable requires
@@ -7,13 +7,50 @@ and parked in [backlog.md](../../docs/backlog.md). For the contributor's-eye vie
 see [../../CONTRIBUTING.md](../../CONTRIBUTING.md). For the architecture, see
 [i18n-design.md](../../docs/i18n-design.md).
 
+The **primary path is sibling-derivation**: derive a new language from its
+nearest *validated* sibling — translate that sibling's reviewed corpus into a
+target candidate, port its renderer, then TDD to green and validate
+objectively. The **blind pipeline** (no language sees another) is the
+**fallback** used only when no suitable sibling exists. The why: the blind
+pipeline, run alone, produced verbose, stylistically *inconsistent* renderers,
+because each language re-invented the same decisions with no style anchor.
+Deriving from a sibling gives every new language a proven structure and style
+to start from, then objective gates and native review keep it honest.
+
 ## Principles
 
-- **The corpus is the contract** of outputs a renderer must reproduce.
-  The oracle that authors it cannot be the renderer itself. In the
-  automated path the **panel** is a *proxy* oracle, which is why its output
-  ships as **beta**. Its outputs are "fool's gold" — useful for iteration
-  but not definitive and considered unstable.
+- **Derive from the nearest validated sibling, then adapt and objectively
+  validate; go blind only when there is no sibling.** The sibling supplies a
+  proven structure and style anchor so the new language doesn't re-invent every
+  decision (the source of the blind path's verbosity and inconsistency). See
+  *Donor selection* below.
+- **The new language must not grade itself.** Translating *both* the corpus and
+  the renderer from the donor risks "target agrees with target." Two guards
+  keep it honest:
+  - The translated corpus is a **candidate**, exactly like the blind pipeline's
+    drafted corpus — it becomes the contract only after independent
+    target-native/panel review, and is **finalized before the renderer port**,
+    never regenerated from the ported renderer. The order is load-bearing:
+    **corpus → review → port → TDD**. Never port → emit → bless. This is fully
+    consistent with the *corpus is the contract* rule below and CLAUDE.md's
+    "hand-written/reviewed, never generated" — translation from a *reviewed*
+    sibling is simply a better candidate-drafting method than blind authoring,
+    subject to the same review gate.
+  - The **objective gates validate correctness independent of the corpus**:
+    round-trip recovery, the fuzz dropped-value detector, the both-side
+    OR-scope detector, and the cRonstrue comparison reference check. "Green
+    against the translated corpus" is the dev loop; these gates plus the native
+    review are the trust.
+- **Translate to target idiom, not donor-with-translated-words.** The donor
+  supplies structure and coverage; the panel ensures natural *target-language*
+  idiom, adapting the donor's frames where the target genuinely differs (e.g.
+  Spanish "ya sea X o Y" → the natural target union frame, not a
+  transliteration).
+- **The corpus is the contract** of outputs a renderer must reproduce. The
+  oracle that authors it cannot be the renderer itself. In the automated path
+  the **panel** is a *proxy* oracle, which is why its output ships as **beta**.
+  Its outputs are "fool's gold" — useful for iteration but not definitive and
+  considered unstable.
 - **Blind, multi-persona Sonnet panels** defeat same-model bias and
   single-judge sycophancy. Every judgment comes from three fresh Sonnet
   personas (everyday native speaker, copy-editor, technical communicator),
@@ -22,10 +59,30 @@ see [../../CONTRIBUTING.md](../../CONTRIBUTING.md). For the architecture, see
   mechanical guarantee; the detector suite is the backstop.
 - **Clear status labels:** Beta is model-validated; stable requires human review.
 
+## Donor selection
+
+Pick the nearest *validated* sibling and record it (the donor goes into
+`notes.md` and the `notes.md` of the new module):
+
+- **Same family, most-validated renderer.** pt ← es; fr ← es (or pt once it is
+  solid). The donor supplies structure, style, and most coverage; the target
+  diverges only at specific points (contractions, gender/agreement, ordinals,
+  clock/day-periods).
+- **Different family, mechanics-only donor.** When no same-family sibling
+  exists but another language shares the *mechanics*, take the mechanics and
+  author the grammar fresh: ja ← zh for the CJK mechanics (spaceless joining,
+  the day-period hour-band table, the numeral flag); the grammar is authored
+  fresh.
+- **No suitable sibling → the blind pipeline.** The fallback below (the
+  3-author corpus / 3-Pareto renderer build).
+
+A language **never imports another** — porting means *copying and translating*
+the donor's source, not importing it. The only shared dependency is the core.
+
 ## Mechanical checks
 
-Two cheap, wide passes run as part of the Verify phase and catch whole
-classes of defect the curated spanning set misses:
+Cheap, wide passes run as part of the Verify phase and catch whole classes of
+defect the curated spanning set misses:
 
 - **Fuzz** — `node --import tsx scripts/fuzz-lang.mjs <code>` (`npm run fuzz`).
   Sweeps a broad combinatorial pattern set and flags throws, degenerate output,
@@ -37,10 +94,20 @@ classes of defect the curated spanning set misses:
   per-field value sets (mechanical, exact). Partitions into *verified*,
   *needs-review*, and *day-or* (cron's OR case, segregated as model noise).
   Advisory bulk comprehension pass — `i18n-design.md` §4 Pass 2.
-  The blind naturalness panel and re-review run instead over the **expanded core
-  set** (`prepareReview`) — the cell sweep plus the curated spanning patterns
-  folded into `core-set.json`'s `spanning` field — so every rendering plan
-  and every `Schedule` cell is covered, alongside realistic curated patterns.
+- **Both-side OR-scope detector** — every OR with a shared restricted qualifier
+  must carry it on each arm.
+- **cRonstrue comparison** — `node --import tsx
+  tooling/scripts/cronstrue-divergence.mjs`. Renders cronli5 and cRonstrue's
+  matching locale (the new language's cRonstrue locale — e.g. pt→pt_BR, zh→zh_CN)
+  over the committed core set and surfaces where they diverge, plus the
+  objective coverage gaps (rows where exactly one library accepted the pattern).
+  This is a **reference check independent of the corpus**, not an oracle —
+  cRonstrue can be wrong — but a divergence is a flag worth a look.
+
+  The blind naturalness panel and re-review run over the **expanded core set**
+  (`prepareReview`) — the cell sweep plus the curated spanning patterns folded
+  into `core-set.json`'s `spanning` field — so every rendering plan and every
+  `Schedule` cell is covered, alongside realistic curated patterns.
   (Parallelize the panel over this larger set.)
 
 ## The panel
@@ -61,79 +128,139 @@ and told nothing about provenance or the other panelists.
   misread. Naturalness is secondary to correctness. A misread-able form is
   eliminated even if it sounds natural.
 
-The same panel runs in three contexts: the **Conventions** phase (register
-choices), the **Corpus** phase (contested entries), and the **Trap** panel
-phase (comprehension of each playbook-registered universal trap).
+The same panel runs in several contexts: the **Conventions** phase (register
+choices where the target diverges from the donor), the **Corpus-translation**
+review (faithful + natural target idiom + coverage parity), and the **Trap**
+panel phase (comprehension of each playbook-registered universal trap). In the
+blind fallback it also panels the contested **Corpus** entries.
 
-## Stages
+## Stages (sibling-derivation — the primary path)
 
-1. **Conventions** — A drafter agent proposes the style contract: numerals,
-   date/weekday/month forms, list/range connectives, recurrence marking, and
-   how this grammar resolves each universal trap from the playbook. Every
-   genuinely-contested register choice (clock format, midnight/noon idiom,
-   interval phrasing, range-boundary convention, union connective) is surfaced
-   with 2–4 concrete candidate sentences. A blind 3-persona Sonnet panel votes
-   on each contested choice; the drafter finalizes conventions against the
-   majority verdict. Results written to `src/lang/<code>/notes.md`.
+0. **Donor selection** — pick the nearest validated sibling per *Donor
+   selection* above and record it. No suitable sibling → use the blind fallback
+   below.
 
-2. **Corpus** — Three independent Sonnet agents author variant corpora
-   (`corpus-a.js`, `corpus-b.js`, `corpus-c.js`), each spanning the full core
-   set (`test/core/core-set.json`) against the conventions and the English
-   meaning oracle — never lifting wording from any existing renderer. A
-   reconciler diffs all three: agreed entries are settled; contested entries and
-   any entry that fails mechanical detector lints (field-coverage, trap-lints)
-   are panelled by the same blind 3-persona panel. The panel-resolved winner for
-   each contested entry is assembled into the canonical `test/lang/<code>/corpus.js`
-   and the variant files are deleted. Detectors run one final pass on the
-   assembled corpus.
+1. **Conventions (anchored to the donor)** — start from the donor's style
+   contract and surface only where the **target diverges**: clock format,
+   ordinals, day-periods, list/range connectives, contractions,
+   gender/agreement, and how this grammar resolves each universal trap from the
+   playbook. Each genuinely-contested divergence is surfaced with 2–4 concrete
+   candidate sentences; a blind 3-persona panel votes on the contested ones; the
+   drafter finalizes against the majority verdict. Results to
+   `src/lang/<code>/notes.md` (recording the donor).
 
-   A **held-out split** (~15%, stratified across every cell/value-class/variant)
-   is partitioned out of the corpus for the Renderer phase — the build agent
-   never sees these entries and they serve as the generalization probe.
+2. **Corpus translation** — translate the **donor's reviewed corpus** to a
+   target **candidate**, in batches. Each batch is reviewed by the blind
+   3-persona panel anchored to the *target* language: the meaning is inherited
+   from the donor (already validated), so review focuses on faithful + natural
+   target idiom + coverage parity, adapting frames where the target genuinely
+   differs. Assemble the reviewed candidate as `test/lang/<code>/corpus.js`.
+   **This is the oracle, and it is finalized before the port** — never
+   regenerated from the ported renderer.
 
-3. **Renderer** — The corpus is the train set. Three independent Sonnet agents
-   build the renderer (`src/lang/<code>/index.ts`) in parallel under **form
-   pressures**: zero `eslint-disable`, reduced cognitive complexity, and
-   minimized copy-paste duplication. Each variant is evaluated on the held-out
-   set (the generalization probe — patterns the builder never trained on) plus
-   line count and duplication. The Pareto winner (held-out correctness first,
-   then compactness) seeds the next round. Two rounds suffice. The winning
-   variant is promoted to `src/lang/<code>/`.
+3. **Port the tests** — wire the corpus into the test harness (package.json
+   `exports`, docs, the usual scaffolding).
 
-4. **Critique** — Five single-focus habit-critic agents read every output of the
-   renderer against the core set, each applying one lens: redundancy,
-   misparse/scope, consistency, naturalness, fidelity. Flags are clustered and
-   surfaced for the next step; critics propose rules, never auto-apply fixes.
-   **Critics find; detectors guarantee.**
+4. **Naive renderer port** — copy the donor `src/lang/<donor>/index.ts` to
+   `src/lang/<code>/`, and swap the lexicon / tables / dialects to the target.
+   **One** renderer (not the blind 3-Pareto build). The donor's *structure*
+   ports as-is — its `plan` override, OR-frame, predicates, dialect mechanism.
+   Expect **RED**. (A language never imports another: porting copies and
+   translates source, it does not import the donor.)
 
-5. **Trap panels** — For each universal trap registered in the playbook
+5. **TDD to green** — the RED failures **are** the donor→target divergences
+   worth attention (contractions, gender agreement, ordinals,
+   clock/day-periods). Fix the renderer until it is green **against the reviewed
+   corpus**.
+
+6. **Critique** — the five single-focus habit-critic agents read every output
+   against the core set, one lens each: redundancy, misparse/scope, consistency,
+   naturalness, fidelity. Flags are clustered and surfaced for the next step;
+   critics propose rules, never auto-apply fixes. **Critics find; detectors
+   guarantee.**
+
+7. **Trap panels** — for each universal trap registered in the playbook
    (union-connective, shared-qualifier-scope, confinement-vs-juxtaposition,
    range-boundary, recurrence-marking, redundancy, numeral-register,
-   sentence-wrapper-punctuation, cardinality-rendering, and any lessons added
-   by prior runs), a blind 3-persona Sonnet panel finds a core-set pattern that
-   exercises it and judges whether the renderer's output makes an ordinary reader
-   conclude the exact intended meaning. A trap passes if at least 2 of 3
-   personas read it as intended.
+   sentence-wrapper-punctuation, cardinality-rendering, and any lessons added by
+   prior runs), a blind 3-persona panel finds a core-set pattern that exercises
+   it and judges whether the output makes an ordinary reader conclude the exact
+   intended meaning. A trap passes if at least 2 of 3 personas read it as
+   intended.
 
-6. **Verify** — The mechanical backstop:
+8. **Verify** — the mechanical backstop, **independent of the corpus**:
    - Fuzz: 0 throws, degenerate outputs, or dropped field values.
-   - Both-side OR-scope detector: every OR with a shared restricted qualifier
-     carries it on each arm.
+   - Both-side OR-scope detector.
    - Round-trip: blind agent recovers cron from description; compared by
      expanded per-field value sets.
+   - cRonstrue comparison reference check (the new language's cRonstrue locale).
    - Full test suite, typecheck, eslint clean (no disables).
    A per-entry critic pass never substitutes for this; the detector suite is
    what *guarantees*.
 
-7. **Playbook update** — If the run surfaces a genuinely new universal lesson
+9. **Playbook update** — if the run surfaces a genuinely new *universal* lesson
    (a trap or method insight that would help the *next, unrelated* language, not
-   a restatement of this language's specific answer), it is appended to
-   `playbook.md` and `tooling/scripts/playbook.mjs` re-derives `playbook.json`.
-   The next language run starts knowing this one's hard-won traps.
+   a restatement of this language's specific answer), append it to `playbook.md`
+   and run `tooling/scripts/playbook.mjs` to re-derive `playbook.json`. The next
+   language run starts knowing this one's hard-won traps.
 
-8. **Status** — `src/lang/<code>/status.json` records `status: "beta"`.
-   Gates `lint`, `typecheck`, `test`, `coverage`, `docs --check`, `build`
-   (CI runs the same). A generated status table makes the beta label public.
+10. **Status** — `src/lang/<code>/status.json` records `status: "beta"`. Gates
+    `lint`, `typecheck`, `test`, `coverage`, `docs --check`, `build` (CI runs
+    the same). A generated status table makes the beta label public.
+
+The sibling path is **lighter** than the blind fallback — one renderer, an
+anchored candidate corpus instead of three authored variants — and it is what
+removes the verbosity and inconsistency: the new language inherits a proven
+structure and style rather than re-deriving them.
+
+## Fallback: the blind pipeline (no suitable sibling)
+
+When no same-family sibling and no mechanics-donor exists, fall back to the
+blind path — no language sees another; the core plus the panel carry quality
+alone. Only the corpus-authoring and renderer-build stages change from the
+sibling path; Conventions, Critique, Trap panels, Verify, Playbook, and Status
+are identical.
+
+- **Conventions (blind)** — a drafter agent proposes the style contract from
+  scratch: numerals, date/weekday/month forms, list/range connectives,
+  recurrence marking, and how this grammar resolves each universal trap. Every
+  genuinely-contested register choice is surfaced with 2–4 candidate sentences;
+  a blind 3-persona panel votes; the drafter finalizes against the majority.
+  → `src/lang/<code>/notes.md`.
+
+- **Corpus (blind, 3-author)** — three independent Sonnet agents author variant
+  corpora (`corpus-a.js`, `corpus-b.js`, `corpus-c.js`), each spanning the full
+  core set against the conventions and the English meaning oracle — never
+  lifting wording from any existing renderer. A reconciler diffs all three:
+  agreed entries are settled; contested entries and any entry that fails
+  mechanical detector lints are panelled by the blind 3-persona panel. The
+  panel-resolved winner for each contested entry is assembled into the canonical
+  `test/lang/<code>/corpus.js` and the variant files are deleted. Detectors run
+  one final pass on the assembled corpus. A **held-out split** (~15%, stratified
+  across every cell/value-class/variant) is partitioned out for the renderer
+  phase — the build agent never sees these entries and they serve as the
+  generalization probe.
+
+- **Renderer (blind, 3-Pareto)** — the corpus is the train set. Three
+  independent Sonnet agents build the renderer (`src/lang/<code>/index.ts`) in
+  parallel under **form pressures**: zero `eslint-disable`, reduced cognitive
+  complexity, minimized copy-paste duplication. Each variant is evaluated on the
+  held-out set (the generalization probe) plus line count and duplication. The
+  Pareto winner (held-out correctness first, then compactness) seeds the next
+  round. Two rounds suffice. The winner is promoted to `src/lang/<code>/`.
+
+Then Critique, Trap panels, Verify, Playbook, and Status run exactly as in the
+sibling path.
+
+## Acceptance / soundness check
+
+The blind fallback's clean-room `rewrite-test` stays as the standing soundness
+check: rebuild a renderer the build agent never saw (e.g. English) and
+adversarially judge it against the original. The **sibling path's analogue** is
+to derive a *known* language from its sibling and adversarially judge it versus
+the original — feasible once a Romance sibling exists (e.g. rebuild `fr` from
+`es`). Mention it as the standing soundness check for the sibling path; it does
+not need to be built now.
 
 ## Caveats
 
@@ -147,7 +274,8 @@ phase (comprehension of each playbook-registered universal trap).
   as a *comprehension* test ("does a reader conclude the intended meaning?")
   rather than a preference or authorship vote.
 - **Cost/latency.** ~3 personas × traps × rounds. Bounded; during iteration,
-  subset to failing items.
+  subset to failing items. The sibling path is cheaper than blind — one
+  renderer, an anchored corpus.
 
 ## Graduation to stable
 

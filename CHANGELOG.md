@@ -6,6 +6,30 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.6.0]
+
+### Added
+
+- **Portuguese (pt-BR), beta.** A full Portuguese renderer via `{lang: pt}` — the
+  first language built with the new sibling-derivation workflow (derived from the
+  Spanish renderer). Natural pt-BR: preposition+article contractions
+  (do/da/no/na/à/às), gender agreement, "toda segunda-feira" recurrence, "dia 1º",
+  a 19h noite boundary. Validated by a blind 3-persona pt-BR panel and a clean
+  round-trip; ships **beta** pending fluent-human review (pt-PT is a future
+  dialect axis).
+
+### Changed
+
+- **Add-language workflow: sibling-derivation is now the primary path.** A new
+  language is derived from its nearest *validated* sibling — translate its
+  reviewed corpus into a target candidate, port its renderer, TDD to green — then
+  validated objectively (round-trip, fuzz, OR-scope, cRonstrue comparison) plus
+  native review. The blind pipeline (which produced verbose, inconsistent
+  renderers) is now the no-sibling fallback. See
+  [tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md).
+- Coverage enumeration keys off `status.json` so an in-progress language build
+  stays green.
+
 ## [0.5.0]
 
 ### Added

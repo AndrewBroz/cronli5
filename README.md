@@ -202,6 +202,7 @@ docs below.
 | German | `cronli5/lang/de` | Duden (`de-AT`/`de-CH` dialects) | [docs/lang/de.md](./docs/lang/de.md) |
 | Spanish | `cronli5/lang/es` | RAE / FundéuRAE | [docs/lang/es.md](./docs/lang/es.md) |
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
+| Portuguese | `cronli5/lang/pt` | VOLP / Academia Brasileira de Letras (pt-BR; pt-PT is a future axis) | [docs/lang/pt.md](./docs/lang/pt.md) |
 | Chinese (Mandarin) | `cronli5/lang/zh` | Simplified (`zh-Hans`) default; Traditional (`zh-Hant`) | [docs/lang/zh.md](./docs/lang/zh.md) |
 
 ### Language maturity
@@ -216,6 +217,7 @@ model-validated by a blind persona panel → verified by a fluent human):
 | English | stable |
 | Spanish | beta |
 | Finnish | beta |
+| Portuguese | beta |
 | Chinese (Mandarin, Simplified) | beta |
 <!-- END GENERATED: language-status -->
 

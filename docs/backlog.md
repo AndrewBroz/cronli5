@@ -44,6 +44,19 @@ open:
 
 - **fi compound/OR "tai"-rakenne + stacked-qualifier naturalness.** The blind Sonnet panel (17-pattern spanning set, 2026-06-24) found a systematic naturalness defect in the compound day-of-month/day-of-week/month "tai"-rakenne and in stacked month-weekday-hour qualifiers (8/17 items ≤3, two at 2; all three personas flagged it). Fix the compound rendering, then re-run the blind panel + round-trip review and re-promote fi from experimental to beta.
 
+- **es+pt shared corpus residuals (two items, flagged by the pt-BR native
+  panel).** The blind pt-BR panel ratified the pt corpus but its technical
+  reviewer flagged two issues inherited from the es donor (present identically in
+  both corpora, so a joint es+pt fix): (1) an **hour-window overlap** in
+  `* 2/4,18-20 * * *` — hour 18 is rendered twice, once as the step arm's
+  per-hour window and once as the left endpoint of the 18-20 range window (fire
+  set correct, a clarity artifact); and (2) **OR DOW-arm "e" bracketing** in
+  `… ou de segunda a sexta-feira e aos domingos` (`0 0 1 * 0,1-5`,
+  `0 0 1 6-9 0,1-5`) — the internal "e" (Mon–Fri + Sun) could be misparsed as a
+  top-level conjunction. Both are meaning-preserving; fixing either is a change
+  to the shared es/pt rendering, not pt-only. (See src/lang/pt/notes.md
+  §"Residuals inherited from es".)
+
 - **zh-Hant native review (graduate experimental → beta).** The Traditional
   Chinese variant ships as a model-drafted glyph/register mapping (no
   Traditional-native or blind-Hant panel yet). A native review graduates it to

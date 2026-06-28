@@ -59,10 +59,17 @@ describe('Built package artifacts:', function() {
         .to.equal('los lunes a las 09:00');
     });
 
-  it('every language under src/lang has both built artifacts', function() {
+  it('every shipped language has both built artifacts', function() {
+    // Enumerate shipped languages — those carrying a status.json marker — not
+    // every directory on disk. A language is built incrementally (notes ->
+    // corpus -> renderer), so src/lang/<code>/ briefly exists with only
+    // notes.md and no status.json; such an in-progress dir is not yet shipped
+    // and must be skipped. A dir that claims to ship (has status.json) is
+    // still fully enforced below.
     const langs = readdirSync('src/lang', {withFileTypes: true})
       .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name);
+      .map((entry) => entry.name)
+      .filter((code) => existsSync(`src/lang/${code}/status.json`));
 
     expect(langs.length).to.be.greaterThan(0);
 
@@ -132,7 +139,8 @@ describe('Built package artifacts:', function() {
       // The available list is derived from the built languages (sorted), not
       // hardcoded, so it never drifts when a language is added.
       expect(stderr)
-        .to.match(/Unknown language: xx \(available: de, en, es, fi, zh\)/u);
+        .to.match(
+          /Unknown language: xx \(available: de, en, es, fi, pt, zh\)/u);
     });
 
     it('exits non-zero on an invalid cron pattern', function() {

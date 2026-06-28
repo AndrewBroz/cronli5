@@ -68,6 +68,13 @@ the corpus as the spec and the renderer as the thing that must satisfy it.
 See `test/lang/es/corpus.js` for the shape, and `test/lang/<code>/REVIEW.md`
 for the reviewer's notes.
 
+If your language has a close, already-validated sibling (e.g. pt ← es), the
+fastest honest start is to **translate the sibling's reviewed corpus** into a
+target candidate and review *that* — a better candidate-drafting method than
+authoring from scratch, still finalized by review before it becomes the
+contract, and never regenerated from the renderer. The automated pipeline does
+this for you; see [tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md).
+
 ### 4. Wire it up
 
 - Add a `./lang/<code>` entry to `exports` in `package.json` (mirror the
