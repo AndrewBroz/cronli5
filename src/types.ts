@@ -137,6 +137,36 @@ export interface Cronli5Options {
 }
 
 /**
+ * The callable default export: a function that turns a cron pattern into a
+ * description, carrying two named convenience methods that are sugar over the
+ * `sentence` option.
+ *
+ * There is deliberately **no** `toString` method: it would shadow
+ * `Function.prototype.toString`, which the runtime calls arg-less for
+ * `String(cronli5)`, template-literal coercion, and `console`/debug output.
+ * The named methods avoid that collision.
+ */
+export interface Cronli5 {
+
+  /** Describe a cron pattern (lowercase embeddable fragment by default). */
+  (cronPattern: CronPattern, options?: Cronli5Options): string;
+
+  /**
+   * Describe a cron pattern as a capitalized standalone sentence
+   * (`'Runs every day at midnight.'`). Sugar for
+   * `{...options, sentence: true}`.
+   */
+  sentence(cronPattern: CronPattern, options?: Cronli5Options): string;
+
+  /**
+   * Describe a cron pattern as a lowercase embeddable fragment
+   * (`'every day at midnight'`) — the default form. Sugar for
+   * `{...options, sentence: false}`.
+   */
+  fragment(cronPattern: CronPattern, options?: Cronli5Options): string;
+}
+
+/**
  * Object form of a cron pattern. Fields may be strings or numbers; at least
  * one of `second`, `minute`, or `hour` is required.
  */

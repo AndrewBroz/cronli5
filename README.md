@@ -91,6 +91,23 @@ cronli5(['*/5', '*', '*', '*', '*']);   // 'every five minutes'
 cronli5({ minute: '*/5' });             // 'every five minutes'
 ```
 
+By default `cronli5(...)` returns the lowercase, embeddable **fragment**. For
+the capitalized, standalone **sentence**, set [`sentence: true`](#options) — or
+call the matching convenience method. `cronli5.sentence(...)` and
+`cronli5.fragment(...)` are thin sugar over that option (each forwards all
+other options) and read a little better at the call site:
+```js
+cronli5('0 0 * * *');                     // 'every day at midnight'  (fragment, default)
+cronli5.fragment('0 0 * * *');            // 'every day at midnight'  (same as above)
+cronli5.sentence('0 0 * * *');            // 'Runs every day at midnight.'
+cronli5.sentence('0 0 * * *', {lang: de}); // 'Läuft täglich um Mitternacht.'
+```
+
+(There is intentionally no `cronli5.toString(...)`: it would shadow
+`Function.prototype.toString`, which the runtime calls with no arguments for
+`String(cronli5)`, template literals, and console output — the named methods
+sidestep that collision.)
+
 TypeScript types are bundled, so usage is fully typed out of the box:
 ```ts
 import cronli5, { type Cronli5Options } from 'cronli5';
@@ -160,7 +177,7 @@ The `cronli5` function takes an `options` object as its 2nd parameter:
 | `lang` | English | A language module, e.g. `import es from 'cronli5/lang/es'`. Each language owns its words, conventions, and dialects — see [Languages](#languages). |
 | `lenient` | `false` | Never throw: invalid input returns the language's fallback description (`'an unrecognizable cron pattern'`) instead. Useful when rendering arbitrary user crontabs. |
 | `quartz` | `false` | Read the pattern with [Quartz](https://www.quartz-scheduler.org/) semantics. Quartz numbers the day-of-week **1 = Sunday … 7 = Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday) and requires exactly one of day-of-month or day-of-week to be `?` ("no specific value"). With this off, `?` is rejected outright rather than silently mis-read — a `?` is the unambiguous mark of a Quartz pattern, so `'0 0 ? * 2'` would otherwise read as Tuesday when its author meant Monday. The Quartz numbering also applies inside the day-of-week operators (`6L`, `2#2`) and the weekday `L` alias. Day names (`MON`) and the other fields are unaffected. Composable with `seconds`/`years`. |
-| `sentence` | `false` | Return a complete standalone sentence (`'Runs every day at midnight.'`, `'Läuft täglich um Mitternacht.'`) instead of the embeddable fragment. Each language supplies its own wrapping. Wraps a schedule and `@reboot`, but not the lenient `fallback`. |
+| `sentence` | `false` | Return a complete standalone sentence (`'Runs every day at midnight.'`, `'Läuft täglich um Mitternacht.'`) instead of the embeddable fragment. Each language supplies its own wrapping. Wraps a schedule and `@reboot`, but not the lenient `fallback`. The methods `cronli5.sentence(...)` / `cronli5.fragment(...)` (see [Usage](#usage)) are sugar for this option set to `true` / `false`. |
 | `short` | `false` | Compact output: abbreviated month and weekday names, and hyphenated ranges everywhere `through`/`to` would appear (`Mon-Fri`, `Jan-Mar`, `1st-5th`, `9 a.m.-5:45 p.m.`). |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |

@@ -29,7 +29,7 @@
 
 import {analyze, prepare} from './core/index.js';
 import type {NormalizedOptions} from './core/schedule.js';
-import type {CronPattern, Cronli5Language, Cronli5Options}
+import type {Cronli5, CronPattern, Cronli5Language, Cronli5Options}
   from './types.js';
 import en from './lang/en/index.js';
 
@@ -88,8 +88,25 @@ function interpretCronPattern(
   return lang.describe({...schedule, plan}, opts);
 }
 
-export default cronli5;
+// Two named convenience methods are attached to the callable export as sugar
+// over the `sentence` option: `.sentence(...)` forces the capitalized
+// standalone, `.fragment(...)` forces the embeddable fragment (the default).
+// The method's own intent wins, so a passed-through `sentence` flag is
+// overridden. There is no `toString` method on purpose — it would shadow
+// `Function.prototype.toString` (called arg-less by `String()`, template
+// literals, and console/debug) and break coercion; named methods sidestep that.
+function sentence(cronPattern: CronPattern, options?: Cronli5Options): string {
+  return cronli5(cronPattern, {...options, sentence: true});
+}
+
+function fragment(cronPattern: CronPattern, options?: Cronli5Options): string {
+  return cronli5(cronPattern, {...options, sentence: false});
+}
+
+const callable: Cronli5 = Object.assign(cronli5, {sentence, fragment});
+
+export default callable;
 export type {
-  Cronli5Dialect, Cronli5Language, Cronli5Options, CronPattern,
+  Cronli5, Cronli5Dialect, Cronli5Language, Cronli5Options, CronPattern,
   CronPatternObject
 } from './types.js';

@@ -58,3 +58,17 @@ expectError(cronli5(42));
 // declares) is assignable to the `lang` option.
 expectAssignable<Cronli5Options>({lang: es});
 expectType<string>(cronli5('* * * * *', {lang: es}));
+
+// The callable export carries `.sentence(...)` and `.fragment(...)` methods,
+// each with the same signature as the plain call: a required pattern, optional
+// options, returning a string.
+expectType<string>(cronli5.sentence('0 0 * * *'));
+expectType<string>(cronli5.sentence('0 0 ? * 2', {quartz: true}));
+expectType<string>(cronli5.sentence(['*/5', '*', '*', '*', '*']));
+expectType<string>(cronli5.fragment('0 0 * * *'));
+expectType<string>(cronli5.fragment('0 9 * * 1', {lang: es}));
+expectType<string>(cronli5.fragment({minute: '*/5'}));
+
+// The methods require a pattern and reject unknown option keys.
+expectError(cronli5.sentence());
+expectError(cronli5.fragment('* * * * *', {nope: true}));
