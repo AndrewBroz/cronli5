@@ -139,18 +139,34 @@ function cronstrueFor(code, pattern) {
 
 // One compound pattern, every language side by side against its cRonstrue
 // locale — the head-to-head that shows folding vs. per-field assembly at a
-// glance.
+// glance. Each row names the cronli5 module, an optional `dialect`/variant
+// override, and the matching cRonstrue locale.
 const headToHead = '5,10 30 9 * * MON';
-const languageNames = {
-  de: 'German', en: 'English', es: 'Spanish', fi: 'Finnish'
-};
+const headToHeadRows = [
+  {name: 'English', code: 'en'},
+  {name: 'German', code: 'de'},
+  {name: 'Spanish', code: 'es'},
+  {name: 'Finnish', code: 'fi'},
+  {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
+  {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
+  {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
+  {name: 'Chinese (Traditional)', code: 'zh', dialect: 'zh-Hant',
+    cronstrueLocale: 'zh_TW'}
+];
 
 function renderHeadToHead() {
   const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
-  const rows = ['en', 'de', 'es', 'fi'].map(function row(code) {
-    return '| ' + languageNames[code] + ' | ' +
-      describe((p) => cronli5(p, {lang: byCode[code].lang}), headToHead) +
-      ' | ' + describe((p) => cronstrueFor(code, p), headToHead) + ' |';
+  const rows = headToHeadRows.map(function row(entry) {
+    const opts = {lang: byCode[entry.code].lang};
+
+    if (entry.dialect) {
+      opts.dialect = entry.dialect;
+    }
+
+    return '| ' + entry.name + ' | ' +
+      describe((p) => cronli5(p, opts), headToHead) + ' | ' +
+      describe((p) => cronstrueFor(entry.cronstrueLocale || entry.code, p),
+        headToHead) + ' |';
   });
 
   return tableFrom('| Language | cronli5 | cRonstrue ' + cronstrueVersion +
