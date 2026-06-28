@@ -1,15 +1,12 @@
 {
   "name": "cronli5",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Cron Like I'm Five: A Cron to English Utility",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrewbroz/cronli5.git"
   },
   "type": "module",
-  "engines": {
-    "node": ">=20"
-  },
   "main": "./dist/cronli5.cjs",
   "module": "./dist/cronli5.js",
   "types": "./types/cronli5.d.ts",
@@ -89,7 +86,7 @@
     "prepublishOnly": "npm run lint && npm run typecheck && npm run test:types && npm run build && npm test"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "keywords": [
     "cron",
