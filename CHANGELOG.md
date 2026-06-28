@@ -6,6 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.7.1]
+
+### Changed
+
+- **Require Node 20+** (`engines.node` `>=20`) and drop Node 18 from CI. Node 18
+  is EOL, and the dev/test toolchain (Vitest 4) requires Node 20.12+ (it imports
+  `node:util`'s `styleText`), which was failing the Node 18.x CI leg with a
+  startup `SyntaxError`. The published library's runtime is otherwise unchanged;
+  this just declares the supported Node range.
+
 ## [0.7.0]
 
 ### Added
