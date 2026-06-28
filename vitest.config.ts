@@ -16,7 +16,13 @@ export default defineConfig({
     exclude: [
       '**/node_modules/**',
       'test/runner.js',
-      'test/core/bad_input/error-types.js'
+      'test/core/bad_input/error-types.js',
+      // Stage-2 CANDIDATE corpus: the pt-BR oracle is finalized before the
+      // renderer (corpus -> review -> port; tooling/docs/language-pipeline.md).
+      // It imports src/lang/pt/index.js, which does not exist yet, so it is
+      // excluded until the Stage-4 renderer port wires it in (and is dropped
+      // from this list then). Until then it is the spec, not a run suite.
+      'test/lang/pt/corpus.js'
     ],
     setupFiles: ['./test/vitest.setup.ts'],
     globals: true,
