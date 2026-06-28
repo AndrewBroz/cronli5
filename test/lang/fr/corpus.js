@@ -5,25 +5,30 @@ import fr from '../../../src/lang/fr/index.js';
 const {expect} = chai;
 
 // ===========================================================================
-// STAGE-2 CANDIDATE — fr-FR (donor: es). PENDING the blind fr panel.
+// REVIEWED ORACLE — fr-FR (donor: es). Ratified by the blind fr-FR panel.
 // ===========================================================================
 //
-// This is the Stage-2 CANDIDATE the fr-FR renderer will chase (corpus ->
-// review -> port; see tooling/docs/language-pipeline.md Stage 2). It was
-// produced by translating the reviewed es corpus (test/lang/es/corpus.js)
-// into fr-FR idiom per src/lang/fr/notes.md — the sanctioned drafting method
-// for a sibling-derived language (CLAUDE.md: the "never generated" rule
-// governs the *shipped* oracle; translating a reviewed sibling's reviewed
-// corpus to a target candidate is explicitly sanctioned). It is NOT yet
-// finalized: it awaits the blind 3-persona fr-FR native panel (everyday /
-// copy-editor / technical) before it graduates to the reviewed oracle.
+// This is the fr-FR reviewed oracle the renderer will chase (corpus -> review
+// -> port; see tooling/docs/language-pipeline.md Stage 2). It was drafted by
+// translating the reviewed es corpus (test/lang/es/corpus.js) into fr-FR idiom
+// per src/lang/fr/notes.md — the sanctioned drafting method for a
+// sibling-derived language (CLAUDE.md: the "never generated" rule governs the
+// *shipped* oracle; translating a reviewed sibling's reviewed corpus to a
+// target candidate is explicitly sanctioned) — and then FINALIZED by the blind
+// 3-persona fr-FR native panel (everyday / copy-editor / technical,
+// 2026-06-27). The panel found ZERO misreads (every fire set correct), ratified
+// all seven contested conventions, and agreed five naturalness/consistency
+// fixes (now applied): zero-minute suppression in the seconds-clock;
+// minuit/midi as exact-point only (numeric hour-ranges); singular-definite
+// multi-day weekday lists; "ouvrable" for the W operator; "h" on bare-numeral
+// hour lists. See src/lang/fr/notes.md for the resolved conventions.
 //
 // NO RENDERER EXISTS YET. fr has no status.json, so the suite enumeration
 // skips it; this file imports src/lang/fr/index.js (which does not exist yet),
 // so it is in vitest.config.ts `exclude` until the port stage wires it in
 // (exactly as pt's Stage-2 candidate was, then removed at the port).
 //
-// fr-FR contract applied uniformly (notes.md). Each is PINNED here rather than
+// fr-FR contract applied uniformly (notes.md), each form pinned rather than
 // trusted to the translation (the pt-run inheritance lesson: a translated
 // corpus silently keeps the donor's conventions — pin the ratified forms):
 //   - 24-HOUR ONLY. {ampm} is a documented NO-OP for fr (notes.md). The es
@@ -33,31 +38,36 @@ const {expect} = chai;
 //     coverage is kept.
 //   - Clock: spaced "h", UNPADDED hour, NO definite article on the time, NO
 //     zero-padding: "à 9 h 30", "à 1 h", bare "9 h" at the top of the hour
-//     (no "h 00"). [CONTESTED: spaced "9 h 30" vs unspaced "9h30" — the single
-//     most-contested fr-FR register choice; flagged for the panel.]
+//     (no "h 00"). Spaced "9 h 30" is the ratified default; unspaced "9h30" is
+//     the opt-in dialect register.
 //   - minuit / midi for exact 0:00 / 12:00 — bare nouns, no article, no "h"
-//     ("à minuit", "à midi"). [PINNED]
+//     ("à minuit", "à midi"). EXACT-POINT only: a per-hour window over the
+//     midnight/noon hour is numeric ("de 0 h à 0 h 59", "de 12 h à 12 h 59").
 //   - Per-VALUE ordinal: the 1st is "le 1er"; every other day is the bare
 //     cardinal with the article ("le 2", "le 15", "le 31"). The "1er" carries
 //     into ranges (first term only), lists, and OR-union date arms.
-//     [CONTESTED: per-value ordinal logic; flagged.]
 //   - Contractions: de+le=du, de+les=des, à+le=au, à+les=aux; "de la"/"à la"/
 //     "de l'"/"à l'" stay unfused; "de chaque" unfused. On date/scope nouns,
-//     NOT the clock (no article on a clock time). [flagged where contraction-heavy]
+//     NOT the clock (no article on a clock time).
 //   - Gender: masculine weekdays (le lundi), masculine months; gendered nth
 //     ordinals (premier/première, dernier/dernière) agreeing with the target
 //     noun; "le dernier jour", "tous les jours", "chaque heure"/"chaque mois",
 //     the agreeing cadence determiner (toutes les heures / tous les mois).
-//     [CONTESTED: nth-gender selection; flagged.]
+//   - Seconds-clock "H h MM min SS s", with the zero-minute suppressed
+//     ("9 h 30 s", not "9 h 0 min 30 s"); "min" kept only when minutes are
+//     non-zero ("9 h 30 min 15 s").
+//   - W operator: "ouvrable" (the legally-workable day the token selects), not
+//     "ouvré" (a worked-time term).
+//   - Bare-numeral active-hour lists carry the "h": "pendant les heures de
+//     0 h, 3 h, 6 h, …".
 //   - Weekday recurrence: "le lundi" (= every Monday, singular definite, the
 //     habitual reading — NOT "les lundis"). Ranges "du lundi au vendredi".
-//     Lists repeat the article ("le lundi, le mercredi et le vendredi").
-//     [CONTESTED: "le lundi" vs "les lundis"; flagged.]
-//   - OR-union frame: "soit X soit Y" (the fr either-or correlative; month
-//     fronted once, arms month-less, exactly as es). A single-weekday arm reads
-//     "le lundi"; a range arm reads "du lundi au vendredi"; an es
-//     "cualquier lunes" arm reads "n'importe quel lundi". [CONTESTED:
-//     "soit X soit Y" vs plain "X ou Y" vs "que ce soit X ou Y"; flagged.]
+//     Multi-day lists stay singular-definite, repeating the article ("le lundi,
+//     le mercredi et le vendredi") — NOT the es-style plural "les lundis".
+//   - OR-union frame: "soit X soit Y" (the fr inclusive either-or correlative;
+//     month fronted once, arms month-less, exactly as es). A single-weekday arm
+//     reads "n'importe quel lundi"; a range arm reads "n'importe quel jour du
+//     lundi au vendredi".
 //   - Connectives: et / ou; range "de … à …", "du … au …"; "jusqu'à" only where
 //     a terminal "until" reads better (default to "à", mirroring es). No
 //     RAE-style comma before "et" (the es "coma ante 'y'" is DROPPED — moot
@@ -100,13 +110,13 @@ describe('Français (fr):', function() {
   });
 
   describe('heures de la journée (horloge de 24 heures, par défaut)', function() {
-    // PINNED clock: unpadded, spaced "h", no article, no padding; bare "9 h" at
-    // the top of the hour; minuit/midi for 0:00/12:00. [CONTESTED spacing — panel]
+    // Clock: unpadded, spaced "h", no article, no padding; bare "9 h" at
+    // the top of the hour; minuit/midi for 0:00/12:00.
     run([
       ['0 9 * * *', 'tous les jours à 9 h'],
       ['30 9 * * *', 'tous les jours à 9 h 30'],
       ['30 17 * * *', 'tous les jours à 17 h 30'],
-      // 0:00 and 12:00 read as the bare nouns minuit / midi. [PINNED]
+      // 0:00 and 12:00 read as the bare nouns minuit / midi.
       ['0 0 * * *', 'tous les jours à minuit'],
       ['0 12 * * *', 'tous les jours à midi'],
       // One o'clock is just "1 h" (no article on the time, unlike es "a la").
@@ -139,8 +149,8 @@ describe('Français (fr):', function() {
 
   describe('jours de la semaine', function() {
     // "le lundi" = every Monday (singular definite, habitual). Ranges
-    // "du lundi au vendredi" (du/au contractions). Lists repeat the article.
-    // [CONTESTED: "le lundi" vs "les lundis" — flagged for the panel.]
+    // "du lundi au vendredi" (du/au contractions). Lists repeat the article,
+    // singular-definite ("le lundi, le mercredi et le vendredi").
     run([
       ['0 9 * * MON', 'le lundi à 9 h'],
       ['30 9 * * MON-FRI', 'du lundi au vendredi à 9 h 30'],
@@ -154,7 +164,7 @@ describe('Français (fr):', function() {
 
   describe('dates et mois', function() {
     // Per-VALUE ordinal: the 1st is "le 1er"; every other day cardinal
-    // ("le 2", "le 15"). [CONTESTED — flagged.] Contractions du/des on
+    // ("le 2", "le 15"). Contractions du/des on
     // date/scope nouns; "de chaque mois" unfused. midi/minuit pinned.
     run([
       ['0 12 1 1 *', 'le 1er janvier à midi'],
@@ -187,7 +197,7 @@ describe('Français (fr):', function() {
       ['0 0 1 1-11/3 *',
         'le 1er janvier, avril, juillet et octobre à minuit'],
       // OR-union: "soit X soit Y"; the day-1 arm "le 1er"; weekday arm
-      // "n'importe quel vendredi" (es "cualquier viernes"). [CONTESTED — flagged.]
+      // "n'importe quel vendredi" (es "cualquier viernes").
       ['0 0 1 6-9 FRI',
         'de juin à septembre à minuit, soit le 1er, soit n\'importe quel vendredi'],
       // "le dernier jour" (jour masculine), du/des contractions on the scope.
@@ -253,7 +263,7 @@ describe('Français (fr):', function() {
       ['0 22-2 * * *',
         'chaque heure de 22 h à 2 h'],
       // Per-hour windows for wildcard/step minutes over hour lists (notes.md):
-      // "de 9 h à 9 h 59" (bare hours, de/à, no article). [PINNED window form]
+      // "de 9 h à 9 h 59" (bare hours, de/à, no article).
       ['*/15 9,17 * * *',
         'toutes les 15 minutes de 9 h à 9 h 59 ' +
         'et de 17 h à 17 h 59'],
@@ -310,12 +320,11 @@ describe('Français (fr):', function() {
   describe('jetons Quartz', function() {
     // Gendered nth ordinals agreeing with the (masculine) weekday/jour:
     // "le dernier jour", "le dernier vendredi", "le deuxième lundi".
-    // [CONTESTED: nth-gender selection — flagged for the panel.]
     run([
       ['0 0 L * *', 'le dernier jour du mois à minuit'],
       ['0 0 * * 5L', 'le dernier vendredi du mois à minuit'],
       ['0 0 * * 1#2', 'le deuxième lundi du mois à minuit'],
-      ['0 0 15W * *', 'le jour ouvré le plus proche du 15 à minuit']
+      ['0 0 15W * *', 'le jour ouvrable le plus proche du 15 à minuit']
     ]);
   });
 
@@ -328,7 +337,7 @@ describe('Français (fr):', function() {
 
   describe('date ou jour de la semaine', function() {
     // OR-union: "soit X soit Y". Single-weekday arm "n'importe quel X" (es
-    // "cualquier X"); range arm "du lundi au vendredi". [CONTESTED — flagged.]
+    // "cualquier X"); range arm "n'importe quel jour du lundi au vendredi".
     // 24-hour only (the 12-hour ampm rows from es are DROPPED).
     run([
       // Single month, single DOM, single DOW. (es 12h row dropped; 24h kept.)
@@ -536,8 +545,8 @@ describe('Français (fr):', function() {
       ['* 0 1/2 * * *',
         'chaque seconde pendant une minute, pendant les heures impaires'],
       ['* 0 */3 * * *',
-        'chaque seconde pendant une minute, pendant les heures de 0, 3, 6, ' +
-        '9, 12, 15, 18 et 21'],
+        'chaque seconde pendant une minute, pendant les heures de 0 h, 3 h, ' +
+        '6 h, 9 h, 12 h, 15 h, 18 h et 21 h'],
       // A non-zero pinned minute under an hour step: the second leads, then the
       // minute, then the hour cadence.
       ['30 5 */2 * * *',
@@ -545,7 +554,7 @@ describe('Français (fr):', function() {
       ['* 5 */2 * * *', 'chaque seconde, à la minute 5, toutes les deux heures'],
       // An hour RANGE reads as a window. Guard: an irregular hour list
       // (no range) has no window to form and still enumerates.
-      ['30 0 9,17 * * *', 'tous les jours à 9 h 0 min 30 s et 17 h 0 min 30 s'],
+      ['30 0 9,17 * * *', 'tous les jours à 9 h 30 s et 17 h 30 s'],
       ['30 0 9-17 * * *',
         'à la seconde 30 de chaque heure, de 9 h à 17 h'],
       // A clean hour step with a plain :00 stays the bare hour cadence.
@@ -612,7 +621,7 @@ describe('Français (fr):', function() {
       ['30 0 9-17 * * MON',
         'à la seconde 30 de chaque heure, de 9 h à 17 h le lundi'],
       // Guard: a pure single-value hour list (no range) still enumerates.
-      ['30 0 9,17 * * *', 'tous les jours à 9 h 0 min 30 s et 17 h 0 min 30 s']
+      ['30 0 9,17 * * *', 'tous les jours à 9 h 30 s et 17 h 30 s']
     ]);
   });
 
@@ -666,7 +675,7 @@ describe('Français (fr):', function() {
 
   describe('autres jetons Quartz et années', function() {
     run([
-      ['0 0 LW * *', 'le dernier jour ouvré du mois à minuit'],
+      ['0 0 LW * *', 'le dernier jour ouvrable du mois à minuit'],
       ['0 0 L-5 * *',
         '5 jours avant le dernier jour du mois à minuit'],
       ['0 0 L-1 * *',
@@ -695,11 +704,11 @@ describe('Français (fr):', function() {
       // An odd stride over the day: 24h-only, so the active hours are named
       // outright (no day-period grouping — fr has none).
       ['*/15 */3 * * *',
-        'toutes les 15 minutes, pendant les heures de 0, 3, 6, ' +
-        '9, 12, 15, 18 et 21'],
+        'toutes les 15 minutes, pendant les heures de 0 h, 3 h, 6 h, ' +
+        '9 h, 12 h, 15 h, 18 h et 21 h'],
       ['*/15 1/3 * * *',
-        'toutes les 15 minutes, pendant les heures de 1, 4, 7, 10, 13, ' +
-        '16, 19 et 22'],
+        'toutes les 15 minutes, pendant les heures de 1 h, 4 h, 7 h, 10 h, 13 h, ' +
+        '16 h, 19 h et 22 h'],
       ['*/20 9-17/2 * * *',
         'toutes les 20 minutes, ' +
         'toutes les deux heures de 9 h à 17 h'],
@@ -826,7 +835,7 @@ describe('Français (fr):', function() {
       ['0 0 9,17 * * *', 'tous les jours à 9 h et 17 h'],
       ['0 9,12,17 * * *', 'tous les jours à 9 h, 12 h et 17 h'],
       ['*/15 0,12 * * *',
-        'toutes les 15 minutes de minuit à 0 h 59 et de midi à 12 h 59'],
+        'toutes les 15 minutes de 0 h à 0 h 59 et de 12 h à 12 h 59'],
       ['15 0 9-17 * * *',
         'à la seconde 15 de chaque heure, de 9 h à 17 h'],
       ['30 0 9-17/2 * * *',

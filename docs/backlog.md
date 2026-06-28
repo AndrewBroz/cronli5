@@ -57,6 +57,20 @@ open:
   to the shared es/pt rendering, not pt-only. (See src/lang/pt/notes.md
   §"Residuals inherited from es".)
 
+- **es+fr shared corpus residual (one item, flagged by the fr-FR native
+  panel).** The blind fr-FR panel (everyday / copy-editor / technical,
+  2026-06-27) ratified the fr corpus with zero misreads, but the copy-editor and
+  technical reviewers both flagged a **double-"et" boundary** on
+  `* 2/4,18-20 * * *`: the per-hour step-segment windows and the 18–20 range
+  window join with two consecutive "et" (`… et de 22 h à 22 h 59 et de 18 h à
+  20 h 59`), which can momentarily read as a single chained range. Fire set is
+  correct — a clarity artifact, meaning-preserving. This is the fr face of the
+  same es-donor structure behind the es+pt hour-window overlap on the identical
+  cron (the step arm and the 18–20 range arm both cover hour 18); a clean fix
+  collapses the overlapping step/range arms to the hour union and is a change to
+  the shared es-derived rendering, not fr-only. A joint es+fr (and es+pt)
+  follow-up. (See src/lang/fr/notes.md §"Residual inherited from es".)
+
 - **zh-Hant native review (graduate experimental → beta).** The Traditional
   Chinese variant ships as a model-drafted glyph/register mapping (no
   Traditional-native or blind-Hant panel yet). A native review graduates it to

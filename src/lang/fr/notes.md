@@ -21,13 +21,36 @@ separator** between hour and minute. **Decided: spaced "9 h 30" form**
 **unpadded** ("1 h", "9 h", "17 h 30"), top-of-hour as bare "9 h" (no "h 00").
 Rationale: the spaced `h` is the typographic standard fr-FR reference (IN
 *Lexique des règles typographiques*); the colon "09:30" reads as Anglophone/SI
-and the unspaced "9h30" is the casual register. **FLAGGED for panel**: spaced
-"9 h 30" vs unspaced "9h30" is the single most-contested fr-FR register choice;
-the panel ratifies one and the corpus pins it.
+and the unspaced "9h30" is the casual register. **Ratified** by the blind fr-FR
+native panel (everyday / copy-editor / technical, 2026-06-27): spaced "9 h 30" is
+the default, unspaced "9h30" remains the opt-in dialect register.
 
 **minuit / midi for exact 0:00 / 12:00** (replacing es "medianoche/mediodía").
 These are **bare nouns, no article and no `h`** — "à minuit", "à midi" (not "à
 0 h" / "à 12 h"). minuit is masculine, midi is masculine.
+
+**minuit/midi are the exact-POINT form only — panel-ratified (2026-06-27).** A
+range *over* the midnight or noon hour (the whole 0:00–0:59 / 12:00–12:59 hour
+as a per-hour window) must **not** mix the word with a numeric endpoint: render
+**"de 0 h à 0 h 59"**, **"de 12 h à 12 h 59"** — never "de minuit à 0 h 59" /
+"de midi à 12 h 59" (the panel found the word+numeric mix within one window
+jarring and register-inconsistent). minuit/midi are reserved for the bare exact
+instant ("à minuit") and for a cadence/range whose endpoint genuinely **is** the
+0:00 / 12:00 point ("toutes les sept heures **de minuit** à 21 h", "de minuit à
+5 h 59" — minuit is the real first fire there, not a 0:00–0:59 window).
+
+**Seconds-clock: "H h MM min SS s", with the zero-minute SUPPRESSED —
+panel-ratified (2026-06-27).** The full hours/minutes/seconds form is "9 h 30 min
+15 s" (SI abbreviations `min` / `s`, spaced per the `h` convention). When the
+minute is **zero**, drop the "0 min" segment entirely: **"9 h 30 s"** (not
+"9 h 0 min 30 s") — nobody says "neuf heures zéro minute trente secondes". Keep
+"min" only when the minute is non-zero.
+
+**Bare-numeral hour lists carry the `h` — panel-ratified (2026-06-27).** An
+index-style active-hours list ("pendant les heures de …") uses the **"X h"** form
+for every value, consistent with the clock convention everywhere else: "pendant
+les heures de 0 h, 3 h, 6 h, …" (not the bare "0, 3, 6, …" the donor's
+unit-less list would give).
 
 **12-hour {ampm} mode — decided: NOT supported; {ampm} is a documented no-op
 for fr.** Rationale: fr-FR overwhelmingly uses the 24-hour clock in writing and
@@ -37,8 +60,8 @@ no clean 12-noon-boundary meridiem. So fr ships **24h-only**; an explicit
 `{ampm: true}` is accepted and ignored (no throw). This is a real es→fr
 divergence: es made {ampm} a first-class clock; fr declines it. The es day-period
 band machinery (madrugada/mañana/tarde/noche) therefore has **no fr analog** and
-is dropped, not ported. **FLAGGED** for the panel only to confirm the decline is
-acceptable (it is the safe, idiomatic default).
+is dropped, not ported. **Ratified** by the fr-FR panel (2026-06-27): the 24h-only
+decline is the safe, idiomatic default.
 
 ## Per-value ordinals (the named fr hazard)
 
@@ -52,8 +75,9 @@ rule the renderer must implement:
 - The "1er" carries into **ranges** (first term only — "du 1er au 15"), **lists**
   ("le 1er, le 15 et le 20"), and **OR-union date arms** ("le 1er de chaque
   mois"). Every other position stays cardinal.
-- **FLAGGED** as needing real per-value logic — this is one of the three es→fr
-  stress points (with contractions and gender).
+- **Ratified** by the fr-FR panel (2026-06-27) as correct and natural; it remains
+  one of the three es→fr stress points needing real per-value logic (with
+  contractions and gender).
 
 ## Quartz nth-weekday ordinals (gendered)
 
@@ -63,9 +87,20 @@ dernier/dernière.** Weekdays are **masculine** in fr (le lundi), so
 "le premier lundi du mois", "le dernier vendredi du mois". "le dernier jour du
 mois" (jour masculine). The feminine "première/dernière" form is needed for any
 feminine target noun (e.g. "la dernière semaine" if a week-scoped form arises).
-**FLAGGED**: gender selection is renderer logic, like pt; but fr weekdays are
-masculine (unlike pt's feminine -feira), so the common case is the masculine
-ordinal.
+gender selection is renderer logic, like pt; but fr weekdays are masculine
+(unlike pt's feminine -feira), so the common case is the masculine ordinal. The
+gendered-ordinal selection was **ratified** by the fr-FR panel (2026-06-27).
+
+## W operator: "ouvrable", not "ouvré"
+
+The Quartz `W` / `LW` tokens (nearest weekday to a date / last weekday of the
+month) render with **"ouvrable"** — "le jour ouvrable le plus proche du 15", "le
+dernier jour ouvrable du mois". **Panel-ratified (2026-06-27), replacing the
+candidate's "ouvré".** Rationale: *ouvrable* = a legally-workable day (the
+calendar-defined Mon–Fri/non-holiday day the `W` token actually selects), whereas
+*ouvré* = an actually-worked day (a payroll/accounting term implying the day was
+in fact worked). `W` is a calendar predicate, not a worked-time count, so
+*ouvrable* is the precise term.
 
 ## Contractions (es lacks these; pt solved the analogous problem)
 
@@ -116,10 +151,16 @@ es uses the plural article "los lunes" = every Monday. **Decided: "le lundi"**
 (singular definite article = the habitual/recurrent every-Monday), the standard
 fr-FR generic-recurrence form — "le lundi" already means "on Mondays / every
 Monday", so a plural "les lundis" is **not** used (it reads as several specific
-Mondays, the wrong sense). **FLAGGED**: "le lundi" vs "les lundis" is a genuine
-fr register choice; "le lundi" is the recommended habitual reading and avoids the
-"specific occurrences" misread, but the panel should confirm.
+Mondays, the wrong sense). **Ratified** by the fr-FR panel (2026-06-27): "le
+lundi" (singular definite habitual) is the default.
 
+- **Multi-day lists stay singular-definite — panel-ratified (2026-06-27), a
+  deliberate es divergence.** A weekday list repeats the singular "le" per day:
+  **"le mardi, le jeudi, le samedi et le dimanche"** — *not* the es-style plural
+  "les mardis, les jeudis, …". es pluralizes ("los martes, jueves, …"); fr keeps
+  the distributive singular habitual, consistent with the single-day "le lundi".
+  Applies uniformly to every weekday-list entry (plain lists and OR-union DOW arms
+  alike).
 - **Ranges: "du lundi au vendredi"** (de+le → du, à+le → au), the idiomatic fr
   weekday range.
 - **Lists: "le lundi, le mercredi et le vendredi"** — the article repeats per
@@ -147,13 +188,16 @@ e.g. "le 1er de chaque mois, soit le 1er, soit le lundi". Rationale: "soit …
 soit …" is the unambiguous fr inclusive-alternative correlative and reads as the
 union of two independent day conditions, parallel to es "ya sea … o". A bare
 "X ou Y" risks an intersection misread when the arms are themselves complex; the
-"soit … soit" frame brackets each arm. **FLAGGED for the panel** (the named
-contested OR choice): "soit X soit Y" vs plain "X ou Y" vs "que ce soit X ou Y"
-— pick the one that unambiguously reads as the union. The shared month is fronted
-once and the arms are month-less, exactly as in es. The weekday arm reads the fr
-recurrence ("le lundi" / "du lundi au vendredi"); a single-weekday arm reads
-"n'importe quel lundi" or "le lundi" (panel to confirm the arm wording — es uses
-"cualquier lunes").
+"soit … soit" frame brackets each arm. **Ratified** by the fr-FR panel
+(2026-06-27): "soit … soit …" is the precision-appropriate **inclusive**-union
+correlative (the technical reviewer confirmed the inclusive reading is standard in
+technical prose; all three personas read the union, not an intersection or an
+exclusive or). The shared month is fronted once and the arms are month-less,
+exactly as in es. The weekday arm reads the fr recurrence ("le lundi" / "du lundi
+au vendredi"); a **single-weekday** arm reads **"n'importe quel lundi"** (es
+"cualquier lunes"), and a **range** arm keeps a nominal head: **"n'importe quel
+jour du lundi au vendredi"**. Both "n'importe quel …" forms ratified by the panel
+as idiomatic and unambiguous.
 
 ## Names
 
@@ -209,11 +253,28 @@ contraction/gender layer but wider:
 5. **Recurrence head** — "le lundi" singular-definite, replacing es's plural
    "los lunes".
 
+## Residual inherited from es (panel-flagged, NOT fixed here)
+
+The blind fr-FR panel (2026-06-27) found one structural residual it did **not**
+ask fr to fix in isolation, because it is inherited from the es donor and shows
+identically in es (and pt):
+
+- **Double-"et" boundary on `* 2/4,18-20 * * *`.** The hour field unions a step
+  segment {2,6,10,14,18,22} with a range {18,19,20}; the renderer emits the
+  step segment's per-hour windows and then the range window, joining them with a
+  second "et": "… et de 22 h à 22 h 59 **et** de 18 h à 20 h 59". The two
+  consecutive "et" at the step/range join can momentarily read as one chained
+  range (hour 18 is covered by both arms — the same overlap behind the es+pt
+  hour-window-overlap residual on this exact cron). Fire set is correct;
+  meaning-preserving. A clean fix collapses the overlapping step/range arms to
+  the hour union, which is a change to the **shared es-derived rendering**, not
+  fr-only — tracked as a joint es+fr (and es+pt) follow-up in docs/backlog.md
+  (per-language follow-ups). Left as-is in this corpus.
+
 ## Known trade-offs
 
 - `short` only switches spelled numbers to digits; fr name abbreviations
   (lun., janv.) are not yet implemented (same residue as es/pt).
 - The spaced-`h` clock and the per-value "1er" are correctness/register-critical;
   the renderer forms both programmatically rather than hard-coding strings.
-</content>
-</invoke>
+
