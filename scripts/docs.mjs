@@ -28,6 +28,7 @@ import de from '../src/lang/de/index.js';
 import en from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
+import fr from '../src/lang/fr/index.js';
 import pt from '../src/lang/pt/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
@@ -45,6 +46,7 @@ const languages = [
   {code: 'en', extras: [], lang: en},
   {code: 'es', extras: ['0 1 * * *', '0 12 * * SAT'], lang: es},
   {code: 'fi', extras: ['0 9 * * WED-FRI', '0 0 13 * FRI'], lang: fi},
+  {code: 'fr', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: fr},
   {code: 'pt', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: pt,
     cronstrueLocale: 'pt_BR'},
   {code: 'zh', extras: [], lang: zh, cronstrueLocale: 'zh_CN'}

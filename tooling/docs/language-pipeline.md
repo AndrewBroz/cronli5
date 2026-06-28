@@ -87,13 +87,15 @@ defect the curated spanning set misses:
 - **Fuzz** — `node --import tsx scripts/fuzz-lang.mjs <code>` (`npm run fuzz`).
   Sweeps a broad combinatorial pattern set and flags throws, degenerate output,
   and dropped/collapsed field values (the "is the output fudged?" check).
-- **Round-trip** — a Verify-phase check in the workflow. It samples the fuzz
-  space deduped by output shape and renders each; a **blind Claude agent**
-  recovers a cron from each description (prose only — never the source pattern),
-  and `tooling/scripts/roundtrip.mjs` compares the two crons by expanded
-  per-field value sets (mechanical, exact). Partitions into *verified*,
-  *needs-review*, and *day-or* (cron's OR case, segregated as model noise).
-  Advisory bulk comprehension pass — `i18n-design.md` §4 Pass 2.
+- **Round-trip** — a Verify-phase check in the workflow, **run by the
+  orchestrator, not the implementer subagent** (which has no blind-recovery
+  harness). It samples the fuzz space deduped by output shape and renders each; a
+  **blind Claude agent** recovers a cron from each description (prose only —
+  never the source pattern), and `tooling/scripts/roundtrip.mjs` compares the two
+  crons by expanded per-field value sets (mechanical, exact). Partitions into
+  *verified*, *needs-review*, and *day-or* (cron's OR case, segregated as model
+  noise). Advisory bulk comprehension pass — `i18n-design.md` §4 Pass 2. Never
+  accept a subagent's "round-trip not run" as a pass — the controller runs it.
 - **Both-side OR-scope detector** — every OR with a shared restricted qualifier
   must carry it on each arm.
 - **cRonstrue comparison** — `node --import tsx
@@ -156,7 +158,12 @@ blind fallback it also panels the contested **Corpus** entries.
    target idiom + coverage parity, adapting frames where the target genuinely
    differs. Assemble the reviewed candidate as `test/lang/<code>/corpus.js`.
    **This is the oracle, and it is finalized before the port** — never
-   regenerated from the ported renderer.
+   regenerated from the ported renderer. **A translated corpus silently inherits
+   the donor's conventions**: pin every convention the Conventions panel ratified
+   *differently* from the donor (day-periods/clock boundaries, ordinals) directly
+   into the candidate rows, and re-check them against the panel verdict — don't
+   trust the translation to have applied them. In the pt run the corpus kept es's
+   *noite* boundary at 20h although the panel had unanimously ratified 19h.
 
 3. **Port the tests** — wire the corpus into the test harness (package.json
    `exports`, docs, the usual scaffolding).
@@ -191,8 +198,27 @@ blind fallback it also panels the contested **Corpus** entries.
 8. **Verify** — the mechanical backstop, **independent of the corpus**:
    - Fuzz: 0 throws, degenerate outputs, or dropped field values.
    - Both-side OR-scope detector.
+   - **Render-and-check the ratified conventions in the *built* renderer.** A
+     port can silently keep the donor's convention even after the panel ratified
+     a different one for the target, and a panel persona may *misverify* the
+     rendered boundary as correct — so check the actual output (especially
+     day-period/clock boundaries and ordinals) against the ratified verdict
+     rather than assuming the translation applied it. In the pt run the renderer
+     emitted es's *noite*-at-20h though the panel had ratified 19h, and a persona
+     read the wrong boundary as right.
+   - **Restore the coverage gate — never lower it to absorb the port's new
+     branches.** The naive port adds target-specific branches (contraction,
+     gender, recurrence) the translated corpus doesn't reach; the first pt port
+     lowered the global thresholds to pass. Instead add target corpus rows that
+     exercise the *reachable* new branches, document any genuinely-unreachable
+     defensive branch with the honest-floor convention (no ignore-hints), and
+     return the thresholds to their prior level. Covering those branches also
+     surfaces bugs — it found a real pt contraction bug (an open-step day fused
+     *a cada* as an article), fixed test-first.
    - Round-trip: blind agent recovers cron from description; compared by
-     expanded per-field value sets.
+     expanded per-field value sets. **Orchestrator-run, not the implementer
+     subagent** (no blind-recovery harness) — never accept "round-trip not run"
+     as a pass.
    - cRonstrue comparison reference check (the new language's cRonstrue locale).
    - Full test suite, typecheck, eslint clean (no disables).
    A per-entry critic pass never substitutes for this; the detector suite is

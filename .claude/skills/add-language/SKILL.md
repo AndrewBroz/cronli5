@@ -57,7 +57,14 @@ copy-editor, a technical communicator). The sibling stages:
    dropped values), the both-side OR-scope detector, roundtrip, the cRonstrue
    comparison reference check (the new language's cRonstrue locale), coverage,
    typecheck/lint. **Critics find; detectors guarantee** — a per-entry pass is
-   never trusted.
+   never trusted. Three pt-run lessons: **render-and-check the ratified
+   conventions in the *built* renderer** (a port can keep the donor's
+   day-period/clock boundary or ordinals even after the panel ratified a
+   different one — and a persona may misverify it); **restore the coverage gate,
+   never lower it** to absorb the port's new target-specific branches — cover
+   them with target corpus rows (which surfaced a real pt bug) and document any
+   unreachable defensive branch; and the **round-trip is orchestrator-run**, not
+   the implementer subagent — never accept "round-trip not run" as a pass.
 9. **Playbook** — append any genuinely-new *universal* lesson to `playbook.md`
    and re-derive `playbook.json`, so the next language starts knowing this one's
    hard-won traps.

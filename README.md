@@ -217,6 +217,7 @@ model-validated by a blind persona panel → verified by a fluent human):
 | English | stable |
 | Spanish | beta |
 | Finnish | beta |
+| French | beta |
 | Portuguese | beta |
 | Chinese (Mandarin, Simplified) | beta |
 <!-- END GENERATED: language-status -->

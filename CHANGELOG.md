@@ -6,6 +6,19 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.7.0]
+
+### Added
+
+- **French (fr-FR), beta.** A full French renderer via `{lang: fr}` — the
+  sibling-derivation workflow's stress test against the wider es→fr gap. 24h-only
+  ("à 9 h 30", minuit/midi; `{ampm}` is a no-op), the per-value "le 1er" ordinal,
+  du/des/au/aux contractions, masculine gender agreement, "le lundi" recurrence,
+  "soit X soit Y" union, "ouvrable" for the W operator. Validated by a blind
+  3-persona fr-FR panel (0 misreads, all conventions ratified) and a clean
+  round-trip; ships **beta** pending fluent-human review (fr-CA is a future
+  dialect axis).
+
 ## [0.6.0]
 
 ### Added

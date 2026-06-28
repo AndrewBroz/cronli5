@@ -1,6 +1,6 @@
 {
   "name": "cronli5",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Cron Like I'm Five: A Cron to English Utility",
   "repository": {
     "type": "git",
@@ -36,6 +36,11 @@
       "types": "./types/lang/fi/index.d.ts",
       "import": "./dist/lang/fi.js",
       "require": "./dist/lang/fi.cjs"
+    },
+    "./lang/fr": {
+      "types": "./types/lang/fr/index.d.ts",
+      "import": "./dist/lang/fr.js",
+      "require": "./dist/lang/fr.cjs"
     },
     "./lang/pt": {
       "types": "./types/lang/pt/index.d.ts",
