@@ -90,6 +90,23 @@ cronli5("0 0 * * *", { sentence: true });  // "Runs every day at midnight."
 When comparing the two libraries like-for-like, compare cRonstrue against
 `cronli5(pattern, { sentence: true })`.
 
+cronli5 also exposes the two forms as named methods on the callable export, so
+you do not have to thread the option through: `cronli5.sentence(pattern, opts)`
+is the capitalized standalone (the closest match to `cronstrue.toString`), and
+`cronli5.fragment(pattern, opts)` is the embeddable fragment (the default).
+Both forward every other option.
+
+```js
+cronli5.sentence("0 0 * * *");  // "Runs every day at midnight."
+cronli5.fragment("0 0 * * *");  // "every day at midnight"
+```
+
+Note there is **no** `cronli5.toString(expr)` mirroring `cronstrue.toString`:
+a `toString` method would shadow `Function.prototype.toString` (which the
+runtime calls arg-less for `String(cronli5)`, template literals, and console
+output) and break that coercion. The named `.sentence()`/`.fragment()` methods
+exist precisely to avoid that collision.
+
 ### cronli5 also accepts arrays and objects as the pattern
 
 `cronstrue.toString` takes only a string. `cronli5`'s pattern argument is a
@@ -139,7 +156,7 @@ including some malformed input; `cronli5` validates strictly and only the
 | `use24HourTimeFormat: true` | `ampm: false` | cronli5's `ampm` defaults to `true` (12-hour) for English; `false` gives 24-hour zero-padded time (`09:00`). The default is language-specific (Spanish/Finnish default to 24-hour). |
 | `throwExceptionOnParseError: false` | `lenient: true` | Both suppress the throw; cronli5 returns a fixed fallback, cRonstrue returns a generic error sentence. |
 | `verbose: true` | *no equivalent* | cronli5 has no verbose toggle; it always writes one folded sentence. (`short: true` goes the *other* way &mdash; more compact.) |
-| `dayOfWeekStartIndexZero` | *no equivalent* | cronli5 always uses the standard interpretation: `0` and `7` are Sunday, `1` is Monday. There is no toggle to make `1` mean Sunday. |
+| `dayOfWeekStartIndexZero` | `quartz: true` (partial) | By default cronli5 uses the standard interpretation: `0`/`7` are Sunday, `1` is Monday. cRonstrue's `dayOfWeekStartIndexZero: false` shifts to a 1-based week; cronli5's nearest equivalent is `quartz: true`, which reads the day-of-week as **Quartz numbering (1 = Sunday … 7 = Saturday)**. It is not a general re-base toggle — it is the Quartz dialect (and also enables `?`, `L`, `#`); use it when your source is Quartz, where `1` means Sunday. |
 | `monthStartIndexZero` | *no equivalent* | cronli5 always reads `1` as January (`6` is June). There is no zero-based-month mode. |
 | `trimHoursLeadingZero` | n/a | Only relevant to cRonstrue's zero-padded clock style. cronli5's 12-hour default already writes `9 a.m.` (no leading zero); its 24-hour mode (`ampm: false`) is always zero-padded (`09:00`). |
 | `logicalAndDayFields: true` | *no equivalent* | When both day-of-month and day-of-week are set, cron fires on the **union** (OR). cronli5 always renders this as OR, unambiguously ("...whenever the day is the 1st, the 15th, or a Wednesday"). cRonstrue's default OR wording uses a misleading "and"; its `logicalAndDayFields` switches to AND wording, which cronli5 does not model. |

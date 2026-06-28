@@ -138,6 +138,7 @@ function normalizeOptions(options?: Cronli5Options): Opts {
     // satisfied without the 12-hour machinery the es donor carried.
     ampm: false,
     lenient: !!options.lenient,
+    quartz: !!options.quartz,
     seconds: !!options.seconds,
     short: !!options.short,
     style,

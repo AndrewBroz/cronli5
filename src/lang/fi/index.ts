@@ -200,6 +200,7 @@ function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
   return {
     ampm: false,
     lenient: !!options.lenient,
+    quartz: !!options.quartz,
     seconds: !!options.seconds,
     short: !!options.short,
     style: resolveDialect(options.dialect),

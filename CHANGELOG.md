@@ -6,6 +6,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.0]
+
+### Added
+
+- **`quartz` option.** `cronli5(pattern, { quartz: true })` reads the schedule as
+  Quartz: day-of-week is `1`=Sunday … `7`=Saturday (so `0 0 ? * 2` is **Monday**),
+  with the DOW-indexed operators (`6L`, `2#2`) and `?` following Quartz. Without
+  it, day-of-week stays standard cron (`0`/`7`=Sun, `1`=Mon).
+- **`cronli5.sentence(expr, opts)` and `cronli5.fragment(expr, opts)`** —
+  convenience methods on the callable: `.sentence()` returns the capitalized
+  standalone ("Runs …."), `.fragment()` the embeddable lowercase fragment (the
+  default). Sugar over the `{ sentence }` option. (Deliberately no `toString`
+  method — it would collide with `Function.prototype.toString`.)
+
+### Changed
+
+- **Breaking: `?` now requires `{ quartz: true }`.** Previously `?` was silently
+  treated as `*` while day-of-week used standard indexing, so a genuine Quartz
+  cron like `0 0 ? * 2` rendered "every Tuesday" when the author meant Monday.
+  `?` (mandatory in Quartz, absent in standard cron) now throws a clear
+  `pass { quartz: true }` error by default — eliminating silent wrong output.
+  `L`, `W`, and `#` are unaffected and remain usable in standard mode.
+
 ## [0.7.2]
 
 ### Changed

@@ -97,6 +97,20 @@ export interface Cronli5Options {
   lenient?: boolean;
 
   /**
+   * Read the pattern with Quartz semantics. Quartz numbers the day-of-week
+   * **1 = Sunday, 2 = Monday, … 7 = Saturday** (standard cron uses
+   * 0/7 = Sunday, 1 = Monday), and **requires** exactly one of day-of-month or
+   * day-of-week to be `?` ("no specific value"). Off by default; with it off,
+   * `?` is rejected (rather than silently mis-read as standard cron), since a
+   * `?` is the unambiguous mark of a Quartz pattern. The Quartz numbering also
+   * applies inside the day-of-week operators (`6L`, `2#2`) and the weekday `L`
+   * alias (Saturday). Day names (`MON`, `SUN`) and the day-of-month, month,
+   * hour, and minute fields are unaffected. Composable with `seconds`/`years`.
+   * Defaults to `false`.
+   */
+  quartz?: boolean;
+
+  /**
    * Return a complete standalone sentence (`'Runs every day at midnight.'`)
    * instead of the embeddable fragment (`'every day at midnight'`). Each
    * language supplies its own wrapping. Wraps a schedule and `@reboot`, but
@@ -120,6 +134,36 @@ export interface Cronli5Options {
    * `false`.
    */
   years?: boolean;
+}
+
+/**
+ * The callable default export: a function that turns a cron pattern into a
+ * description, carrying two named convenience methods that are sugar over the
+ * `sentence` option.
+ *
+ * There is deliberately **no** `toString` method: it would shadow
+ * `Function.prototype.toString`, which the runtime calls arg-less for
+ * `String(cronli5)`, template-literal coercion, and `console`/debug output.
+ * The named methods avoid that collision.
+ */
+export interface Cronli5 {
+
+  /** Describe a cron pattern (lowercase embeddable fragment by default). */
+  (cronPattern: CronPattern, options?: Cronli5Options): string;
+
+  /**
+   * Describe a cron pattern as a capitalized standalone sentence
+   * (`'Runs every day at midnight.'`). Sugar for
+   * `{...options, sentence: true}`.
+   */
+  sentence(cronPattern: CronPattern, options?: Cronli5Options): string;
+
+  /**
+   * Describe a cron pattern as a lowercase embeddable fragment
+   * (`'every day at midnight'`) — the default form. Sugar for
+   * `{...options, sentence: false}`.
+   */
+  fragment(cronPattern: CronPattern, options?: Cronli5Options): string;
 }
 
 /**

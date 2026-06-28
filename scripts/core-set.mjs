@@ -185,8 +185,11 @@ function corpusCell(pattern) {
   const tokens = pattern.trim().split(/\s+/u);
   const years = (/\d{4}/u).test(tokens[tokens.length - 1]);
   const seconds = years ? tokens.length >= 7 : tokens.length >= 6;
+  // A `?` is a Quartz token (mandatory in Quartz, absent in standard cron), so
+  // a pattern carrying one is read under Quartz semantics.
+  const quartz = pattern.includes('?');
 
-  return cellOf(pattern, {seconds, years});
+  return cellOf(pattern, {quartz, seconds, years});
 }
 
 function coreCells(coreSet) {

@@ -63,12 +63,14 @@ const mixedFields = fc.tuple(
   mixedField(0, 23),
   fc.oneof(
     mixedField(1, 31),
-    fc.constantFrom('L', 'LW', 'WL', 'L-1', 'L-30', '1W', '31W', '?')
+    // `?` is a Quartz token, gated behind { quartz: true } and so exercised by
+    // the Quartz suite rather than this default-mode invariant.
+    fc.constantFrom('L', 'LW', 'WL', 'L-1', 'L-30', '1W', '31W')
   ),
   mixedField(1, 12),
   fc.oneof(
     mixedField(0, 6),
-    fc.constantFrom('5L', 'FRIL', '0L', '1#2', 'MON#5', 'L', '?')
+    fc.constantFrom('5L', 'FRIL', '0L', '1#2', 'MON#5', 'L')
   )
 );
 

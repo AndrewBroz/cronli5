@@ -125,6 +125,7 @@ function normalizeOptions(options?: Cronli5Options): Opts {
     // 12-hour for Mexico/US); an explicit `{ampm}` option overrides it.
     ampm: typeof options.ampm === 'boolean' ? options.ampm : style.ampm,
     lenient: !!options.lenient,
+    quartz: !!options.quartz,
     seconds: !!options.seconds,
     short: !!options.short,
     style,

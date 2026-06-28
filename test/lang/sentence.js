@@ -118,3 +118,53 @@ describe('The sentence option:', function() {
       .to.equal('an unrecognizable cron pattern');
   });
 });
+
+// The callable export carries two named convenience methods that are thin
+// sugar over the `sentence` option: `.sentence(...)` forces the capitalized
+// standalone, `.fragment(...)` forces the embeddable fragment (the default).
+// There is deliberately no `toString` method — it would shadow
+// `Function.prototype.toString` and break `String(cronli5)` coercion.
+describe('The sentence()/fragment() convenience methods:', function() {
+  it('sentence() matches the {sentence: true} call', function() {
+    expect(cronli5.sentence('0 0 * * *'))
+      .to.equal(cronli5('0 0 * * *', {sentence: true}));
+    expect(cronli5.sentence('0 0 * * *'))
+      .to.equal('Runs every day at midnight.');
+  });
+
+  it('fragment() matches the default (no-option) call', function() {
+    expect(cronli5.fragment('0 0 * * *'))
+      .to.equal(cronli5('0 0 * * *'));
+    expect(cronli5.fragment('0 0 * * *')).to.equal('every day at midnight');
+  });
+
+  it('sentence() forwards all options (quartz)', function() {
+    expect(cronli5.sentence('0 0 ? * 2', {quartz: true}))
+      .to.equal(cronli5('0 0 ? * 2', {quartz: true, sentence: true}));
+  });
+
+  it('fragment() forwards all options (lang)', function() {
+    expect(cronli5.fragment('0 9 * * 1', {lang: es}))
+      .to.equal(cronli5('0 9 * * 1', {lang: es}));
+  });
+
+  it('sentence() forwards lang and wraps in that language', function() {
+    expect(cronli5.sentence('0 0 * * *', {lang: de}))
+      .to.equal('Läuft täglich um Mitternacht.');
+  });
+
+  it('an explicit sentence option is overridden by the method', function() {
+    // The method's own intent wins over a passed-through `sentence` flag.
+    expect(cronli5.fragment('0 0 * * *', {sentence: true}))
+      .to.equal('every day at midnight');
+    expect(cronli5.sentence('0 0 * * *', {sentence: false}))
+      .to.equal('Runs every day at midnight.');
+  });
+
+  it('does not clobber Function.prototype.toString', function() {
+    // `String(fn)` / template coercion call `toString` arg-less; it must
+    // still return the function source, not throw or mis-render.
+    expect(String(cronli5)).to.match(/^function cronli5\b/u);
+    expect(`${cronli5}`).to.match(/^function cronli5\b/u);
+  });
+});

@@ -32,6 +32,26 @@ describe('Built package artifacts:', function() {
     expect(esm('0 9 * * MON')).to.equal('every Monday at 9 a.m.');
   });
 
+  it('CommonJS build exposes the sentence()/fragment() methods', function() {
+    const cjs = require('../../dist/cronli5.cjs');
+
+    expect(cjs.sentence).to.be.a('function');
+    expect(cjs.fragment).to.be.a('function');
+    expect(cjs.sentence('0 0 * * *')).to.equal('Runs every day at midnight.');
+    expect(cjs.fragment('0 0 * * *')).to.equal('every day at midnight');
+    // toString is not clobbered: String() coercion returns the source.
+    expect(String(cjs)).to.match(/^function cronli5\b/u);
+  });
+
+  it('ESM build exposes the sentence()/fragment() methods', async function() {
+    const esm = (await import('../../dist/cronli5.js')).default;
+
+    expect(esm.sentence).to.be.a('function');
+    expect(esm.fragment).to.be.a('function');
+    expect(esm.sentence('0 0 * * *')).to.equal('Runs every day at midnight.');
+    expect(esm.fragment('0 0 * * *')).to.equal('every day at midnight');
+  });
+
   it('both builds agree with the source implementation', async function() {
     const cjs = require('../../dist/cronli5.cjs');
     const esm = (await import('../../dist/cronli5.js')).default;
