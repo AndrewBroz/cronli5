@@ -147,6 +147,7 @@ export interface DialectStyle {
 export interface NormalizedOptions<Style = DialectStyle> {
   ampm: boolean;
   lenient: boolean;
+  quartz: boolean;
   seconds: boolean;
   short: boolean;
   style: Style;

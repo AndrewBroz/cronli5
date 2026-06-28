@@ -1503,6 +1503,7 @@ function normalizeOptions(options?: Cronli5Options): Opts {
   return {
     ampm: typeof options.ampm === 'boolean' ? options.ampm : false,
     lenient: !!options.lenient,
+    quartz: !!options.quartz,
     seconds: !!options.seconds,
     short: !!options.short,
     style,

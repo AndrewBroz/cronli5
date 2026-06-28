@@ -147,8 +147,7 @@ It accepts the standard allowed values and the following operators:
 ### Extended Format Support
 
 Ranges in cyclic fields may wrap around (`22-2` is an overnight window, and
-`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the date and weekday fields: `L` (last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`), `#` (nth weekday, e.g. `1#2` for the second Monday), and `?` (no specific
-value).
+`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the date and weekday fields: `L` (last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`), and `#` (nth weekday, e.g. `1#2` for the second Monday). Quartz's `?` ("no specific value") and its day-of-week numbering (1 = Sunday) require the [`quartz` option](#options); see its note for why.
 
 ## Options
 
@@ -158,15 +157,16 @@ The `cronli5` function takes an `options` object as its 2nd parameter:
 | --- | --- | --- |
 | `ampm` | `true` (English) | Use a 12-hour clock. Set `false` for 24-hour time. The default is language-specific: English is 12-hour; Spanish and Finnish default to 24-hour (Finnish is 24-hour only). |
 | `dialect` | `'us'` | The English style. `'us'` follows the [Chicago Manual of Style][chicago]: serial commas, `through` ranges, `9 a.m.`/`5:30 p.m.` times, `noon`/`midnight`, and `January 1` dates. `'gb'` follows the [Guardian style guide][guardian]: no serial comma, `to` ranges, `9am`/`5.30pm` times, `midday`/`midnight`, and `1 January` dates. `'house'` is cronli5's legacy voice (`9:30 AM`, `Monday - Friday`). A custom object defines your own style. (`'uk'` is a deprecated alias for `'gb'`.) See [docs/dialects.md](./docs/dialects.md). |
-| `lang` | English | A language module, e.g. `import es from 'cronli5/lang/es'`. Each language owns its words, conventions, and dialects &mdash; see [Languages](#languages). |
+| `lang` | English | A language module, e.g. `import es from 'cronli5/lang/es'`. Each language owns its words, conventions, and dialects — see [Languages](#languages). |
 | `lenient` | `false` | Never throw: invalid input returns the language's fallback description (`'an unrecognizable cron pattern'`) instead. Useful when rendering arbitrary user crontabs. |
+| `quartz` | `false` | Read the pattern with [Quartz](https://www.quartz-scheduler.org/) semantics. Quartz numbers the day-of-week **1 = Sunday … 7 = Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday) and requires exactly one of day-of-month or day-of-week to be `?` ("no specific value"). With this off, `?` is rejected outright rather than silently mis-read — a `?` is the unambiguous mark of a Quartz pattern, so `'0 0 ? * 2'` would otherwise read as Tuesday when its author meant Monday. The Quartz numbering also applies inside the day-of-week operators (`6L`, `2#2`) and the weekday `L` alias. Day names (`MON`) and the other fields are unaffected. Composable with `seconds`/`years`. |
 | `sentence` | `false` | Return a complete standalone sentence (`'Runs every day at midnight.'`, `'Läuft täglich um Mitternacht.'`) instead of the embeddable fragment. Each language supplies its own wrapping. Wraps a schedule and `@reboot`, but not the lenient `fallback`. |
 | `short` | `false` | Compact output: abbreviated month and weekday names, and hyphenated ranges everywhere `through`/`to` would appear (`Mon-Fri`, `Jan-Mar`, `1st-5th`, `9 a.m.-5:45 p.m.`). |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |
 
-When a specific year is given &mdash; via a seven-field pattern, an object's
-`year` property, or a six-field pattern with `years: true` &mdash; it is
+When a specific year is given — via a seven-field pattern, an object's
+`year` property, or a six-field pattern with `years: true` — it is
 folded into a specific calendar date (`'on January 1, 2030 at noon'`)
 or otherwise trails the description (`'every Friday at 1 p.m. in 2030'`).
 
@@ -300,7 +300,7 @@ it differs from `cronli5` in philosophy. `cronli5` writes one flowing sentence
 and does additional validation; its languages are full renderers
 ([seven so far](#languages)). cRonstrue assembles per-field fragments from
 translated templates, which is how it covers 39 locales. The same compound
-pattern &mdash; `5,10 30 9 * * MON` &mdash; in every language:
+pattern — `5,10 30 9 * * MON` — in every language:
 
 <!-- BEGIN GENERATED: cronstrue-head-to-head -->
 | Language | cronli5 | cRonstrue 3.14.0 |

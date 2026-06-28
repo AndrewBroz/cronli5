@@ -65,10 +65,60 @@ describe('Quartz tokens:', function() {
     ]);
   });
 
-  describe('?: no specific value', function() {
+  describe('?: no specific value (Quartz mode)', function() {
     run([
-      ['0 12 ? * MON', 'every Monday at noon'],
-      ['0 12 15 * ?', 'on the 15th at noon']
+      ['0 12 ? * MON', 'every Monday at noon', {quartz: true}],
+      ['0 12 15 * ?', 'on the 15th at noon', {quartz: true}]
+    ]);
+  });
+
+  // Without `{quartz: true}`, `?` is rejected: it is a Quartz token, and any
+  // standard cron that carries it would be silently mis-read.
+  describe('?: rejected by default', function() {
+    error([
+      ['0 0 ? * 2', 'Quartz token'],
+      ['0 0 1 * ?', 'Quartz token']
+    ]);
+    run([
+      // Lenient mode returns the fallback rather than throwing.
+      ['0 0 ? * 2',
+        'an unrecognizable cron pattern', {lenient: true}]
+    ]);
+  });
+
+  // Quartz day-of-week numbering: 1=Sunday, 2=Monday, ... 7=Saturday. In the
+  // default (Unix) mode these same numbers mean 0/7=Sun, 1=Mon, etc.
+  describe('Quartz weekday numbering (1=Sun..7=Sat)', function() {
+    run([
+      ['0 0 ? * 1', 'every Sunday at midnight', {quartz: true}],
+      ['0 0 ? * 2', 'every Monday at midnight', {quartz: true}],
+      ['0 0 ? * 7', 'every Saturday at midnight', {quartz: true}],
+      // A weekday NAME is unambiguous and reads the same in either mode.
+      ['0 0 ? * MON', 'every Monday at midnight', {quartz: true}],
+      // The day-of-month side is never reindexed.
+      ['0 0 1 * ?', 'on the 1st at midnight', {quartz: true}]
+    ]);
+    // Quartz has no weekday 0.
+    error([
+      ['0 0 ? * 0', 'invalid Quartz day-of-week value "0"', {quartz: true}]
+    ]);
+  });
+
+  // The DOW-indexed operators reindex too: `6L` is Quartz Friday (Unix 5),
+  // `2#2` is the 2nd Quartz Monday (Unix 1).
+  describe('Quartz weekday operators (nL, n#k)', function() {
+    run([
+      ['0 0 ? * 6L',
+        'on the last Friday of the month at midnight', {quartz: true}],
+      ['0 0 ? * 2#2',
+        'on the second Monday of the month at midnight', {quartz: true}],
+      // Quartz weekday `L` alias is Saturday, same as Unix.
+      ['0 0 ? * L', 'every Saturday at midnight', {quartz: true}],
+      // A weekday step reindexes its start too: Quartz `1/2` (from Sunday,
+      // every other day) is Unix `0/2` = Sun, Tue, Thu, Sat.
+      ['0 0 ? * 1/2',
+        'every Tuesday, Thursday, Saturday, and Sunday at midnight',
+        {quartz: true}]
     ]);
   });
 

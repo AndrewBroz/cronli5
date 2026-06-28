@@ -269,6 +269,7 @@ function normalizeOptions(options?: Cronli5Options): Opts {
     // `{ampm}` option overrides it.
     ampm: typeof options.ampm === 'boolean' ? options.ampm : style.ampm,
     lenient: !!options.lenient,
+    quartz: !!options.quartz,
     seconds: !!options.seconds,
     short: !!options.short,
     style,

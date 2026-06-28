@@ -55,9 +55,9 @@ const fieldSpecs: Record<Field, FieldSpec> = {
   second: {cyclic: true, max: 59, min: 0, top: 59},
   minute: {cyclic: true, max: 59, min: 0, top: 59},
   hour: {cyclic: true, max: 23, min: 0, top: 23},
-  date: {aliases: {'?': '*'}, cyclic: true, max: 31, min: 1, top: 31},
+  date: {cyclic: true, max: 31, min: 1, top: 31},
   month: {cyclic: true, max: 12, min: 1, numbers: monthNumbers, top: 12},
-  weekday: {aliases: {'?': '*', L: '6'}, cyclic: true, max: 7, min: 0,
+  weekday: {aliases: {L: '6'}, cyclic: true, max: 7, min: 0,
     numbers: weekdayNumbers, top: 6},
   year: {max: 9999, min: 1970}
 };

@@ -21,6 +21,7 @@ expectAssignable<Cronli5Options>({
   ampm: true,
   dialect: 'uk',
   lenient: false,
+  quartz: true,
   short: false,
   seconds: false,
   years: true
