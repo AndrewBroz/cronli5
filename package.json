@@ -37,6 +37,11 @@
       "import": "./dist/lang/fi.js",
       "require": "./dist/lang/fi.cjs"
     },
+    "./lang/pt": {
+      "types": "./types/lang/pt/index.d.ts",
+      "import": "./dist/lang/pt.js",
+      "require": "./dist/lang/pt.cjs"
+    },
     "./lang/zh": {
       "types": "./types/lang/zh/index.d.ts",
       "import": "./dist/lang/zh.js",

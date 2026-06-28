@@ -4,6 +4,7 @@ import en from '../../src/lang/en/index.js';
 import es from '../../src/lang/es/index.js';
 import de from '../../src/lang/de/index.js';
 import fi from '../../src/lang/fi/index.js';
+import pt from '../../src/lang/pt/index.js';
 import zh from '../../src/lang/zh/index.js';
 
 // Each language owns how its fragment becomes a complete standalone sentence
@@ -58,6 +59,17 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
     expect(fi.sentence('kuukauden 8.'))
       .to.equal('Suoritetaan kuukauden 8.');
   });
+
+  it('Portuguese', function() {
+    expect(pt.sentence('a cada minuto'))
+      .to.equal('Se executa a cada minuto.');
+  });
+
+  it('Portuguese does not double a period already on the fragment',
+    function() {
+      expect(pt.sentence('às 9 da manhã.'))
+        .to.equal('Se executa às 9 da manhã.');
+    });
 
   it('Chinese', function() {
     expect(zh.sentence('每分钟')).to.equal('运行时间：每分钟。');
