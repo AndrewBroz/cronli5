@@ -33,10 +33,11 @@ guide links to it rather than duplicating its tables.
   joining per-field fragments with commas ("At 09:30 AM, Monday through
   Friday"). It uses natural times (`9 a.m.`, `noon`, `midnight`), spelled small
   numbers, and ordinals.
-* **Precision on the tricky cases.** A blind reader panel (an everyday user, a
-  developer, and a copy-editor) rated unlabeled output from both libraries over
-  a 36-pattern English sample and preferred `cronli5` on **81 of 108**
-  judgements (cRonstrue 12, 15 ties). The edge grows with difficulty: on
+* **Precision on the tricky cases.** A blind panel of three Claude Sonnet
+  instances (each running a distinct persona — an everyday user, a developer,
+  and a copy-editor — and unaware of which library produced which output) rated
+  unlabeled output from both libraries over a 36-pattern English sample and
+  preferred `cronli5` on **81 of 108** judgements (cRonstrue 12, 15 ties). The edge grows with difficulty: on
   **simple** everyday cadences the two were **even (10/10)** &mdash; cRonstrue
   is perfectly fine there, and terser &mdash; but on **medium** specific
   schedules `cronli5` was preferred **45 to 0**, and on **complex** patterns

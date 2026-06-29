@@ -1,6 +1,6 @@
 ---
 name: add-language
-description: Use when adding a new language module to cronli5, or re-validating one. Primary path is sibling-derivation — derive the new language from its nearest validated sibling (translate its reviewed corpus to a target candidate → port its renderer → TDD to green), then validate objectively (round-trip, fuzz, OR-scope, cRonstrue) + native panel review. Blind pipeline (conventions panel → 3-author corpus → 3-Pareto renderer) is the no-sibling fallback. Sonnet personas only — no cross-family/Gemma panels. Ships BETA; never claims stable (that needs a fluent human).
+description: Use when adding a new language module to cronli5, or re-validating one. Always derive from existing renderers — the primary donor is the nearest validated same-family sibling, or English (the universal anchor) when there is no family; consult reference donors for shared mechanics. Translate the donor's reviewed corpus to a target candidate → port its renderer → TDD to green, then validate objectively (round-trip, fuzz, OR-scope, cRonstrue) + a blind panel of Claude Sonnet instances. The blind no-anchor pipeline is NOT a build path — it is retained only as the clean-room rewrite-test soundness check. Sonnet personas only — no cross-family/Gemma panels. Ships BETA; never claims stable (that needs a fluent human).
 ---
 
 # Adding a language to cronli5
@@ -9,11 +9,17 @@ This skill is **thin by design**: the work lives in a programmatic workflow and
 a self-improving playbook. Your job is to invoke it, watch the gates, and bring
 in a human only where the pipeline genuinely cannot self-certify.
 
-The **primary path is sibling-derivation** — derive the new language from its
-nearest *validated* sibling, then adapt and objectively validate. Go **blind**
-(no language sees another) only when there is no suitable sibling. The blind
-path alone produced verbose, stylistically inconsistent renderers; a sibling
-gives the new language a proven structure and style anchor to start from.
+**Always derive the new language from existing renderers — never from scratch.**
+The **primary donor** (you port + translate its corpus) is the nearest
+*validated* same-family sibling when one exists, otherwise **English**, the
+universal anchor: the plan/Schedule layer is language-neutral and English is the
+most-developed renderer, so its structure transfers to any language. There is
+never "no anchor." A same-family sibling is the **fast path** (it maximizes
+transfer), not a precondition; consult **reference donors** for shared
+*mechanics* (e.g. zh's CJK mechanics for ja) while authoring the grammar fresh.
+Building with no anchor (the original blind experiment) produced verbose,
+stylistically inconsistent renderers — which is why blind is no longer a build
+path (see *Acceptance / regression test*).
 
 ## Run it
 
@@ -23,11 +29,16 @@ Invoke the workflow with the donor (and dialect, if any) alongside `code`/`name`
 Workflow({ name: 'add-language', args: { code: '<code>', name: '<Language>', donor: '<donor-code>', dialect: '<dialect>' } })
 ```
 
-**Donor selection** (record it):
-- Same family, most-validated renderer: `pt ← es`, `fr ← es` (or `pt` once solid).
-- Different family, mechanics-only donor: `ja ← zh` (CJK mechanics — spaceless
-  joining, day-period hour-band table, numeral flag); grammar authored fresh.
-- No suitable sibling → omit `donor`; the **blind fallback** runs.
+**Donor selection** (record it). There is always a primary donor — omitting
+`donor` defaults to **English**, the universal anchor, never to a blind no-anchor
+build:
+- **Primary donor — same family (the fast path):** `pt ← es`, `fr ← es` (or `pt`
+  once solid). Maximizes transfer (structure + words + morphology).
+- **Primary donor — English (no same-family sibling):** `donor: 'en'` — the
+  universal anchor; English structure ports, words/morphology authored fresh.
+- **Reference donor — shared mechanics, consulted not ported:** `ja` consults
+  `zh` (CJK mechanics — spaceless joining, day-period hour-band table, numeral
+  flag) while its grammar is authored fresh on the English structural anchor.
 
 That orchestrates, all with **blind Sonnet personas** (an everyday speaker, a
 copy-editor, a technical communicator). The sibling stages:
@@ -78,12 +89,14 @@ copy-editor, a technical communicator). The sibling stages:
   dropped-value, OR-scope, cRonstrue). Green against the translated corpus is the
   dev loop; the gates plus native review are the trust.
 
-### Blind fallback (no suitable sibling)
+### The blind no-anchor build (rewrite-test only — not a build path)
 
-Omit `donor`. Conventions are drafted from scratch (no donor anchor); the corpus
-is authored by **three** independent agents and reconciled into the candidate;
-the renderer is a **3-Pareto** parallel build judged on a held-out split. Then
-Critique → Trap panels → Verify → Playbook → Status run identically. See
+The blind path — conventions drafted from scratch, a corpus authored by
+**three** independent agents and reconciled, a **3-Pareto** renderer judged on a
+held-out split — is **not** a way to build a new language and **not** a
+no-sibling fallback. A new language always anchors to its sibling or to English.
+The blind build survives only inside the clean-room `rewrite-test` soundness
+check (see *Acceptance / regression test*). See
 [tooling/docs/language-pipeline.md](../../../tooling/docs/language-pipeline.md).
 
 ## The self-improving memory
@@ -126,6 +139,8 @@ The old manual step-list and the **cross-family / Gemma panel** are gone: Gemma
 was a serializing bottleneck that made results *worse*, and the multi-judge
 Sonnet persona panel re-calibrates its noise far better. `tooling/scripts/archive/panel.mjs` and
 `tooling/scripts/archive/llm.mjs` are legacy. The blind 3-author-corpus /
-3-Pareto-renderer build is no longer the default — it is the no-sibling
-**fallback**; the primary path derives from a validated sibling. See
+3-Pareto-renderer build is no longer a build path at all — it was the original
+no-anchor experiment and is retained only as the clean-room `rewrite-test`
+soundness check. Every language now derives from existing renderers (a validated
+sibling, or English as the universal anchor). See
 [tooling/docs/language-pipeline.md](../../../tooling/docs/language-pipeline.md).
