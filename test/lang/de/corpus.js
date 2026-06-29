@@ -95,7 +95,10 @@ describe('Deutsch (de):', function() {
       ['5,30 * * * * *', 'in den Sekunden 5 und 30 jeder Minute'],
       ['30 0 * * * *', 'in Minute 0 und Sekunde 30 jeder Stunde'],
       ['0-30 9 * * *', 'jede Minute von 9:00 bis 9:30 Uhr'],
-      ['0,30 5 9 * * *', 'in den Sekunden 0 und 30, um 9:05 Uhr'],
+      // A list of seconds over a single fixed minute fuses to the clock minute
+      // just like the minute-0 case below ("der Minute 9:00"), rather than
+      // floating ("…, um 9:05 Uhr").
+      ['0,30 5 9 * * *', 'täglich in den Sekunden 0 und 30 der Minute 9:05'],
       ['*/15 0 9 * * *', 'täglich alle 15 Sekunden der Minute 9:00']
     ]);
   });
@@ -143,7 +146,13 @@ describe('Deutsch (de):', function() {
       // wall of clock minutes: the one-minute window in every other hour.
       ['* 0 */2 * * *',
         'jede Sekunde für eine Minute in jeder zweiten Stunde'],
-      ['* 0 9 * * MON', 'montags jede Sekunde der Minute 9:00']
+      ['* 0 9 * * MON', 'montags jede Sekunde der Minute 9:00'],
+      // A single fixed NONZERO minute is a single fixed timestamp just like
+      // minute 0: the seconds fuse to that explicit clock minute in the
+      // genitive ("der Minute 0:02"), matching the minute-0 form above, never
+      // floating as a separate apposition ("um 0:02 Uhr").
+      ['* 2 0 * * 0-6', 'täglich jede Sekunde der Minute 0:02'],
+      ['* 2 9 * * *', 'täglich jede Sekunde der Minute 9:02']
     ]);
   });
 
@@ -459,7 +468,7 @@ describe('Deutsch (de):', function() {
       ['15 8,12,17 * * *', 'täglich um 8:15, 12:15 und 17:15 Uhr'],
       ['0 0 1 */3 *', 'am 1. Januar, April, Juli und Oktober um Mitternacht'],
       ['0,30 5 9,18 * * *',
-        'in den Sekunden 0 und 30, um 9:05 und 18:05 Uhr'],
+        'täglich in den Sekunden 0 und 30 der Minuten 9:05 und 18:05'],
       ['0 0 29 2 *', 'am 29. Februar um Mitternacht'],
       ['0 12 25 12 *', 'am 25. Dezember um 12 Uhr']
     ]);
