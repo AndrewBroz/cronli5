@@ -25,16 +25,18 @@ The short version of the trade:
   or ~50&nbsp;KB+ with all locales, and its documented i18n entry bundles all
   39.
 
-## What a blind reader panel found
+## What a blind panel of Claude Sonnet instances found
 
-To compare the two without grading our own homework, three blind reader
-personas (an everyday user, a developer, and a copy-editor) rated unlabeled
-renderings of both libraries over a 36-pattern English sample, and a separate
-round-trip pass reverse-parsed each description back to the set of times it
-would fire and compared that to the original cron.
+To compare the two without grading our own homework, a blind panel of three
+Claude Sonnet instances — each running a distinct reviewer persona (an everyday
+user, a developer, and a copy-editor) and told nothing about which library
+produced which output — rated unlabeled renderings of both libraries over a
+36-pattern English sample, and a separate round-trip pass reverse-parsed each
+description back to the set of times it would fire and compared that to the
+original cron.
 
-* **Overall**, the panel preferred `cronli5` on **81 of 108** judgements
-  (cRonstrue 12, 15 ties).
+* **Overall**, the Sonnet panel preferred `cronli5` on **81 of 108**
+  judgements (cRonstrue 12, 15 ties).
 * **By difficulty** the edge grows with complexity: on **simple** everyday
   cadences the two were **even (10/10)** &mdash; cRonstrue is perfectly fine
   here, and terser. On **medium** "specific schedule" patterns `cronli5` was

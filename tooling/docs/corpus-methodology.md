@@ -156,7 +156,7 @@ The denotational layer's first run sharpened the signal. Encodings with
 *identical fire-sets* that render differently — a step `*/N` vs its explicit
 fire-list — are leaks, but a raw leak is often an intentional cadence-vs-
 enumeration UX choice; the *count* is noise. The bug is when that choice is
-**inconsistent**. Running step ≡ list across every field × all four languages
+**inconsistent**. Running step ≡ list across every field × every shipped language
 yields a decision matrix — does the language render a step as a *cadence*
 (diverges from the list) or *enumerate* it (matches)?
 

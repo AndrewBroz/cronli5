@@ -21,11 +21,17 @@ copied per language.
 
 ## Adding a language
 
-The primary path is **sibling-derivation**: build the new language from its
-nearest *validated* relative rather than from scratch. This gives every
-language a proven structure and style anchor (the blind-authored alternative
-drifted into verbose, inconsistent renderers). The order is load-bearing —
-**corpus → review → port → TDD** — so the new language never grades itself.
+**Always derive a new language from existing renderers — never from scratch.**
+You pick a **primary donor** you port and translate the corpus from, and consult
+**reference donors** for specific shared mechanics. The primary donor is the
+nearest *validated* same-family sibling when one exists; absent a family, it is
+**English**, the universal anchor — the plan/Schedule layer is language-neutral
+and the English renderer is the most-developed reference, so its *structure*
+(plan handling, the OR-union frame, confinement, cadence-vs-enumeration)
+transfers to any language. There is never "no anchor." A same-family sibling is
+the *fast path* (it maximizes transfer — structure, words, and morphology), not
+a precondition. The order is load-bearing — **corpus → review → port → TDD** —
+so the new language never grades itself.
 
 This section is the contributor-friendly summary; the full mechanics, donor
 selection, and objective gates live in
@@ -44,20 +50,26 @@ automation in [`.claude/skills/add-language`](./.claude/skills/add-language).
 
 ### 1. Pick the donor and translate its corpus to a *candidate*
 
-Choose the nearest validated sibling (same family, most-validated renderer —
-pt ← es, fr ← es). **Translate the donor's reviewed corpus** into a target
-candidate — a better candidate-drafting method than authoring from scratch,
-but still only a candidate. Translate to natural *target idiom*, not
-donor-with-translated-words.
+Choose the primary donor: the nearest validated same-family sibling (same
+family, most-validated renderer — pt ← es, fr ← es) when one exists, otherwise
+**English**, the universal anchor. **Translate the donor's reviewed corpus**
+into a target candidate — a better candidate-drafting method than authoring
+from scratch, but still only a candidate. Translate to natural *target idiom*,
+not donor-with-translated-words.
 
-If no suitable sibling exists, fall back to the **blind pipeline** (each
-language drafts its own corpus, seeing no other language); see the pipeline doc.
+When the target shares specific *mechanics* with a language outside its family,
+also consult a **reference donor** for those mechanics while authoring the
+grammar fresh (e.g. zh's CJK mechanics — spaceless joining, numerals,
+day-period bands — for Japanese). The shorthand is "English + neighbors":
+structure from English (or the sibling), mechanics from typological neighbors.
+See the pipeline doc for the full donor-selection guidance.
 
 ### 2. Review the candidate into the contract
 
 `test/lang/<code>/corpus.js` is a table of cron patterns and their **exact**
 expected output — the oracle that makes the module trustworthy. The candidate
-becomes the contract only after independent target-native / blind-panel review,
+becomes the contract only after independent review by a target-native reader or
+the blind Claude Sonnet persona panel,
 and is **finalized before you port the renderer** — never regenerated from the
 renderer afterward (that would only prove the code agrees with itself). See
 `test/lang/es/corpus.js` for the shape and `test/lang/<code>/REVIEW.md` for the
@@ -174,6 +186,7 @@ npm run build       # dual ESM/CJS + the type tree
 ```
 
 A new language merges as **beta** when it passes the objective gates
-(round-trip, fuzz, OR-scope, the cRonstrue comparison), the blind Sonnet
-persona panel, and the full gate above is green. A fluent-speaker review is
-what graduates it from beta to **stable**.
+(round-trip, fuzz, OR-scope, the cRonstrue comparison), the blind panel of
+Claude Sonnet instances, and the full gate above is green. The only human step
+is the **beta → stable** graduation: a review by a fluent human speaker (not a
+model), which the Sonnet panel cannot stand in for.

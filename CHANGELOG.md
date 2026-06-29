@@ -6,6 +6,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.1]
+
+### Changed
+
+- **Docs: review panels are Claude Sonnet instances.** Every reference to a
+  review "panel" now reads unambiguously as a blind panel of Claude Sonnet model
+  instances — including the cRonstrue comparison's "preferred cronli5 on 81 of
+  108" claim — with the human **beta → stable** graduation gate kept sharply
+  distinct (a fluent human, not a model). No confusion about human involvement.
+- **Docs: the add-language workflow reframed.** A new language is always derived
+  from existing renderers — a same-family sibling is the fast path, otherwise
+  English (the universal anchor) plus typological neighbors for specific
+  mechanics. The blind from-scratch pipeline is the original experiment, retained
+  only as the clean-room `rewrite-test` soundness check — no longer presented as
+  a "no-sibling fallback".
+
 ## [0.8.0]
 
 ### Added

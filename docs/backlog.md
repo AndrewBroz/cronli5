@@ -195,6 +195,11 @@ achieved floor rather than a forced 100. Two sub-items remain:
 
 ## Other deferred items
 
+- **Quartz `?` mutual-exclusion not enforced (`quartz: true`).** Quartz requires
+  *exactly one* of day-of-month / day-of-week to be `?`. The `quartz` option
+  (0.8.0) gates `?` and fixes the day-of-week numbering, but does not yet reject
+  a both-`?` or neither-`?` pattern — those still parse (as `*` / the date-or-
+  weekday union). A strict-Quartz validation refinement; low priority.
 - **Per-language `PlanNode` coverage in the status table** — show which of the
   18 `PlanNode` kinds each language's corpus exercises. Needs the corpora to
   export their pattern lists; today only `spanning-set.mjs` reports kind

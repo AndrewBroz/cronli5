@@ -246,8 +246,8 @@ model-validated → verified by a fluent human). A new language is usually built
 by **sibling-derivation** — deriving it from its nearest validated relative
 (porting that renderer and translating its reviewed corpus, then TDD to green) —
 and reaches **beta** once it passes the objective gates (round-trip, fuzz,
-OR-scope, the cRonstrue comparison) and a blind persona-panel review. It
-graduates to **stable** only on fluent-human review:
+OR-scope, the cRonstrue comparison) and review by a blind panel of Claude
+Sonnet instances. It graduates to **stable** only on review by a fluent human:
 
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status |

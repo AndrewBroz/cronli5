@@ -1,7 +1,7 @@
 export const meta = {
   name: 'add-language',
-  description: 'Develop a cronli5 language module to beta via the self-improving pipeline: conventions panel -> corpus -> renderer (TDD) -> habit-critics -> trap panels -> mechanical verify -> playbook update. Sonnet personas only; no cross-family panels.',
-  whenToUse: 'Invoked by the add-language skill to build a new language, or with mode "rewrite-test" to rebuild an existing renderer clean-room and judge it against the original.',
+  description: 'The BLIND clean-room pipeline (no language sees another): conventions -> corpus -> renderer (TDD) -> habit-critics -> trap panels -> mechanical verify -> playbook. Every panel is a blind panel of Claude Sonnet instances running distinct personas (never humans). This is the original experiment, retained mainly as the rewrite-test soundness check; the recommended way to ADD a language is sibling-derivation (derive from the nearest sibling, else English + neighbors). Ships beta; stable needs a fluent human.',
+  whenToUse: 'Primarily the "rewrite-test" soundness check: rebuild an existing renderer clean-room and adversarially judge it against the original. The blind from-scratch build is the original experiment, NOT the recommended way to add a language — use sibling-derivation (English + neighbors) for that.',
   phases: [
     { title: 'Conventions', detail: 'panel the style + universal traps in this grammar' },
     { title: 'Corpus', detail: 'author/audit the core-set corpus against the conventions' },
@@ -113,8 +113,9 @@ let conventions = await agent(`Finalize the ${NAME} (${CODE}) conventions in ${N
 // (2) mechanical detectors kill objective errors (dropped field values,
 // unresolved traps, inconsistent phrasing); (3) cross-version DISAGREEMENTS
 // surface the judgment calls nobody thought to panel + the ambiguous entries;
-// (4) panel those blind; (5) assemble + final-lint. This replaces a human
-// reading the spec.
+// (4) a blind Claude Sonnet panel judges those; (5) assemble + final-lint.
+// (The Sonnet panel is a proxy for a human reviewing the spec — hence beta-only;
+// a fluent human is still required to reach stable.)
 phase('Corpus')
 const dir = `${ROOT}/tooling/experiments/${CODE}-rebuild`
 await parallel(['a', 'b', 'c'].map((v) => () =>

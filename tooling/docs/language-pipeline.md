@@ -7,28 +7,45 @@ and parked in [backlog.md](../../docs/backlog.md). For the contributor's-eye vie
 see [../../CONTRIBUTING.md](../../CONTRIBUTING.md). For the architecture, see
 [i18n-design.md](../../docs/i18n-design.md).
 
-The **primary path is sibling-derivation**: derive a new language from its
-nearest *validated* sibling — translate that sibling's reviewed corpus into a
-target candidate, port its renderer, then TDD to green and validate
-objectively. The **blind pipeline** (no language sees another) is the
-**fallback** used only when no suitable sibling exists. The why: the blind
-pipeline, run alone, produced verbose, stylistically *inconsistent* renderers,
-because each language re-invented the same decisions with no style anchor.
-Deriving from a sibling gives every new language a proven structure and style
-to start from, then objective gates and native review keep it honest.
+**Always derive a new language from existing renderers — never from scratch.**
+Every language has a **primary donor** (you port + translate its reviewed
+corpus) and may have **reference donors** (you consult them for specific shared
+*mechanics*). The primary donor is the nearest *validated* same-family sibling
+when one exists, otherwise **English** — the universal anchor. The
+plan/Schedule layer is language-neutral and the English renderer is the
+most-developed reference, so its *structure* (plan handling, the OR-union frame,
+confinement, cadence-vs-enumeration) transfers to **any** language. There is
+never "no anchor." A same-family sibling is the **fast path** — it maximizes
+transfer (structure + words + morphology) — not a precondition; the goal is
+between-renderer **consistency** plus cross-language **learning**. The why:
+authoring a renderer with no anchor (the original blind experiment) produced
+verbose, stylistically *inconsistent* renderers, because each language
+re-invented the same decisions with no structure to start from. Deriving from
+English + neighbors gives every new language a proven structure to start from,
+then objective gates and native review keep it honest.
+
+The **blind pipeline** (no language sees another) is **not** a construction
+path and **not** a no-sibling fallback. It was the original experiment — it
+proved the core plus the Sonnet panel can carry quality with no anchor (a
+useful result) and exposed the verbosity/stylistic-inconsistency cost. It is
+retained only as the clean-room `rewrite-test` soundness check (see *Acceptance
+/ soundness check* below).
 
 ## Principles
 
-- **Derive from the nearest validated sibling, then adapt and objectively
-  validate; go blind only when there is no sibling.** The sibling supplies a
-  proven structure and style anchor so the new language doesn't re-invent every
-  decision (the source of the blind path's verbosity and inconsistency). See
-  *Donor selection* below.
+- **Always derive from existing renderers, then adapt and objectively
+  validate.** The primary donor — the nearest validated same-family sibling, or
+  **English** when there is no family — supplies a proven structure so the new
+  language doesn't re-invent every decision (the source of the from-scratch
+  blind experiment's verbosity and inconsistency). English is the universal
+  anchor: even a typologically-isolated language derives structure from English
+  and mechanics from typological neighbors. Families are the fast path, not the
+  principle. See *Donor selection* below.
 - **The new language must not grade itself.** Translating *both* the corpus and
   the renderer from the donor risks "target agrees with target." Two guards
   keep it honest:
-  - The translated corpus is a **candidate**, exactly like the blind pipeline's
-    drafted corpus — it becomes the contract only after independent
+  - The translated corpus is a **candidate**, like any pipeline-drafted corpus
+    — it becomes the contract only after independent
     target-native/panel review, and is **finalized before the renderer port**,
     never regenerated from the ported renderer. The order is load-bearing:
     **corpus → review → port → TDD**. Never port → emit → bless. This is fully
@@ -61,23 +78,33 @@ to start from, then objective gates and native review keep it honest.
 
 ## Donor selection
 
-Pick the nearest *validated* sibling and record it (the donor goes into
-`notes.md` and the `notes.md` of the new module):
+Pick the **primary donor** (you port + translate its corpus) and any **reference
+donors** (you consult them for specific mechanics) and record them (the donors
+go into `notes.md` of the new module). "English + neighbors":
 
-- **Same family, most-validated renderer.** pt ← es; fr ← es (or pt once it is
-  solid). The donor supplies structure, style, and most coverage; the target
-  diverges only at specific points (contractions, gender/agreement, ordinals,
-  clock/day-periods).
-- **Different family, mechanics-only donor.** When no same-family sibling
-  exists but another language shares the *mechanics*, take the mechanics and
-  author the grammar fresh: ja ← zh for the CJK mechanics (spaceless joining,
-  the day-period hour-band table, the numeral flag); the grammar is authored
-  fresh.
-- **No suitable sibling → the blind pipeline.** The fallback below (the
-  3-author corpus / 3-Pareto renderer build).
+- **Primary donor — same family, most-validated renderer (the fast path).**
+  pt ← es; fr ← es (or pt once it is solid). The sibling supplies structure,
+  style, and most coverage; the target diverges only at specific points
+  (contractions, gender/agreement, ordinals, clock/day-periods). This is the
+  fastest path because it maximizes transfer, but it is not required.
+- **Primary donor — English, the universal anchor (no same-family sibling).**
+  When the target has no validated same-family sibling, the primary donor is
+  **English**. The plan/Schedule layer is language-neutral and English is the
+  most-developed renderer, so its *structure* (plan handling, the OR-union
+  frame, confinement, cadence-vs-enumeration) ports to any language; you author
+  the target's words and morphology fresh against that structure. Even a
+  typologically-isolated language anchors to English alone.
+- **Reference donors — mechanics, consulted not ported.** When the target
+  shares specific *mechanics* with a language outside its primary donor's
+  family, consult that language for the mechanics while authoring the grammar
+  fresh: ja consults zh for the CJK mechanics (spaceless joining, the
+  day-period hour-band table, the numeral flag) while its grammar is authored
+  fresh on the English structural anchor.
 
-A language **never imports another** — porting means *copying and translating*
-the donor's source, not importing it. The only shared dependency is the core.
+There is **no "omit the donor → blind" path** — every language derives from
+English at minimum. A language **never imports another** — porting means
+*copying and translating* the donor's source, not importing it. The only shared
+dependency is the core.
 
 ## Mechanical checks
 
@@ -134,13 +161,15 @@ The same panel runs in several contexts: the **Conventions** phase (register
 choices where the target diverges from the donor), the **Corpus-translation**
 review (faithful + natural target idiom + coverage parity), and the **Trap**
 panel phase (comprehension of each playbook-registered universal trap). In the
-blind fallback it also panels the contested **Corpus** entries.
+clean-room `rewrite-test` soundness check it also panels the contested
+**Corpus** entries authored without an anchor.
 
-## Stages (sibling-derivation — the primary path)
+## Stages (derivation — the build path)
 
-0. **Donor selection** — pick the nearest validated sibling per *Donor
-   selection* above and record it. No suitable sibling → use the blind fallback
-   below.
+0. **Donor selection** — pick the primary donor per *Donor selection* above —
+   the nearest validated same-family sibling, or **English** when there is no
+   family — plus any reference donors for shared mechanics, and record them.
+   There is always a primary donor; never build without one.
 
 1. **Conventions (anchored to the donor)** — start from the donor's style
    contract and surface only where the **target diverges**: clock format,
@@ -234,18 +263,21 @@ blind fallback it also panels the contested **Corpus** entries.
     `lint`, `typecheck`, `test`, `coverage`, `docs --check`, `build` (CI runs
     the same). A generated status table makes the beta label public.
 
-The sibling path is **lighter** than the blind fallback — one renderer, an
-anchored candidate corpus instead of three authored variants — and it is what
-removes the verbosity and inconsistency: the new language inherits a proven
-structure and style rather than re-deriving them.
+Derivation is light — one renderer, an anchored candidate corpus — and it is
+what removes the verbosity and inconsistency: the new language inherits a proven
+structure (from the sibling when there is one, otherwise from English) rather
+than re-deriving it from scratch.
 
-## Fallback: the blind pipeline (no suitable sibling)
+## The blind clean-room build (the rewrite-test soundness check only)
 
-When no same-family sibling and no mechanics-donor exists, fall back to the
-blind path — no language sees another; the core plus the panel carry quality
-alone. Only the corpus-authoring and renderer-build stages change from the
-sibling path; Conventions, Critique, Trap panels, Verify, Playbook, and Status
-are identical.
+The blind path — no language sees another; the core plus the Sonnet panel carry
+quality with no anchor — is **not a way to build a new language** and **not a
+no-sibling fallback** (a new language always anchors to its sibling or to
+English). It survives only as the clean-room build inside the `rewrite-test`
+soundness check (see *Acceptance / soundness check* below): rebuild a renderer
+the build agent has never seen, to prove the pipeline is sound. The stages below
+describe that clean-room build; Conventions, Critique, Trap panels, Verify,
+Playbook, and Status run as in the derivation path.
 
 - **Conventions (blind)** — a drafter agent proposes the style contract from
   scratch: numerals, date/weekday/month forms, list/range connectives,
@@ -276,17 +308,18 @@ are identical.
   round. Two rounds suffice. The winner is promoted to `src/lang/<code>/`.
 
 Then Critique, Trap panels, Verify, Playbook, and Status run exactly as in the
-sibling path.
+derivation path.
 
 ## Acceptance / soundness check
 
-The blind fallback's clean-room `rewrite-test` stays as the standing soundness
-check: rebuild a renderer the build agent never saw (e.g. English) and
-adversarially judge it against the original. The **sibling path's analogue** is
-to derive a *known* language from its sibling and adversarially judge it versus
-the original — feasible once a Romance sibling exists (e.g. rebuild `fr` from
-`es`). Mention it as the standing soundness check for the sibling path; it does
-not need to be built now.
+The clean-room `rewrite-test` is the standing soundness check — the *only*
+place the blind build is used: rebuild a renderer the build agent never saw
+(e.g. English) with no anchor and adversarially judge it against the original.
+Passing proves the pipeline is sound, not that blind is a recommended way to
+build. The **derivation path's analogue** is to derive a *known* language from
+its donor and adversarially judge it versus the original — feasible once a
+Romance sibling exists (e.g. rebuild `fr` from `es`). Mention it as the standing
+soundness check for the derivation path; it does not need to be built now.
 
 ## Caveats
 
@@ -300,8 +333,8 @@ not need to be built now.
   as a *comprehension* test ("does a reader conclude the intended meaning?")
   rather than a preference or authorship vote.
 - **Cost/latency.** ~3 personas × traps × rounds. Bounded; during iteration,
-  subset to failing items. The sibling path is cheaper than blind — one
-  renderer, an anchored corpus.
+  subset to failing items. Derivation is cheaper than the clean-room blind
+  build — one renderer, an anchored corpus.
 
 ## Graduation to stable
 
