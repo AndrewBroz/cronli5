@@ -581,8 +581,11 @@ function renderMinuteFrequency(schedule: Schedule,
   else if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean stride (dividing the day),
     // which confines the cadence to every Nth hour; a stepped hour field's
-    // first segment is a step segment.
-    phrase += ' ' +
+    // first segment is a step segment. The hour step scopes the hours, so an
+    // offset cadence drops "past the hour" and joins with a comma.
+    const bound = withoutHourAnchor(phrase);
+
+    phrase = bound + (bound === phrase ? ' ' : ', ') +
       everyNthHour(stepSegment(schedule, 'hour'), opts);
   }
 
@@ -703,13 +706,14 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
   }
 
   // A minute list keeps the same cadence clause; only its lead differs. An
-  // offset/uneven step the core enumerated to that list reads as a stride.
-  const lead = plan.form === 'list' ?
+  // offset/uneven step the core enumerated to that list reads as a stride. The
+  // hour step scopes the hours, so the lead drops its generic "past the hour".
+  const lead = withoutHourAnchor(plan.form === 'list' ?
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
       opts) ??
       listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
         'minute', 'hour', opts) :
-    minuteRangeLead(schedule.pattern.minute, opts);
+    minuteRangeLead(schedule.pattern.minute, opts));
   // A bounded or uneven hour step reads as its endpoint-pinning cadence after
   // the minute lead, not a wall of clock-time columns; an offset-clean step
   // keeps its existing per-step phrasing.
@@ -1746,6 +1750,15 @@ function listPastThe(words: (string | number)[], unit: string, anchor: string,
   opts: NormalizedOptions): string {
   return 'at ' + joinList(words, opts) + ' ' + unit + 's past the ' +
     anchor;
+}
+
+// Strip the generic "past the hour" anchor from a minute-cadence lead. When the
+// hour field is restricted (a step or window), the hour clause is the sole hour
+// authority, so the cadence must not also assert "every hour" — "past the hour"
+// alongside a stepped/windowed hour reads as a conflicting every-hour scope. An
+// unrestricted hour keeps the anchor (it is the only hour statement there).
+function withoutHourAnchor(lead: string): string {
+  return lead.replace(/ past the hour$/, '');
 }
 
 // A clock time reads as a word ("noon"/"midnight") only at exact 12:00 or

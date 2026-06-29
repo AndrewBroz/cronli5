@@ -7,14 +7,19 @@ import {run} from '../../../../runner.js';
 // bounded cadence pinning both endpoints — never juxtaposed with a second
 // cadence. A plain range is a per-hour window whose recurrence trails as its
 // own clause ("…, every two hours").
+//
+// Under an hour STEP the minute clause does not assert a generic "past the
+// hour" (every-hour) scope: the step is the sole hour authority, so the cadence
+// binds to it ("…, every two hours"), matching de/fi. A "past the hour" here
+// would conflict with the step's recurrence.
 
 describe('Minute span across an hour step:', function() {
   describe('minute range', function() {
     run([
       ['0-30 */2 * * *',
-        'every minute from 0 through 30 past the hour, every two hours'],
+        'every minute from 0 through 30, every two hours'],
       ['0-30 9-17/2 * * *',
-        'every minute from 0 through 30 past the hour, ' +
+        'every minute from 0 through 30, ' +
         'every two hours from 9 a.m. through 5 p.m.']
     ]);
   });
@@ -25,12 +30,12 @@ describe('Minute span across an hour step:', function() {
   describe('minute list (keeps the cadence)', function() {
     run([
       ['5,30 1/2 * * *',
-        'at 5 and 30 minutes past the hour, every two hours from 1 a.m.'],
+        'at 5 and 30 minutes, every two hours from 1 a.m.'],
       ['3/2 1/2 * * *',
-        'every two minutes from 3 through 59 minutes past the hour, ' +
+        'every two minutes from 3 through 59 minutes, ' +
         'every two hours from 1 a.m.'],
       ['5,30 */2 * * *',
-        'at 5 and 30 minutes past the hour, every two hours'],
+        'at 5 and 30 minutes, every two hours'],
       // A bounded stride has a distinct endpoint, so its hours read as a
       // bounded cadence rather than a wall of clock times.
       ['3/2 9-17/2 * * *',
@@ -54,7 +59,7 @@ describe('Minute span across an hour step:', function() {
   describe('with a day qualifier', function() {
     run([
       ['0-30 */2 * * MON',
-        'every minute from 0 through 30 past the hour, ' +
+        'every minute from 0 through 30, ' +
         'every two hours on Mondays']
     ]);
   });

@@ -386,11 +386,14 @@ describe('Português (pt):', function() {
         '15, 17, 19, 21 e 23 nos dias 1º, 2 e 3 de cada mês',
         {ampm: false}],
       // A minute list under a clean stride keeps the same cadence the range
-      // and wildcard forms do, never enumerating the hours.
+      // and wildcard forms do, never enumerating the hours. Under an hour STEP
+      // the minute clause drops "de cada hora": the step is the sole hour
+      // authority, so the cadence binds to it (as in de/fi). "de cada hora"
+      // alongside "a cada duas horas" would be a conflicting every-hour scope.
       ['5,30 */2 * * *',
-        'nos minutos 5 e 30 de cada hora, a cada duas horas'],
+        'nos minutos 5 e 30, a cada duas horas'],
       ['5,30 1/2 * * *',
-        'nos minutos 5 e 30 de cada hora, ' +
+        'nos minutos 5 e 30, ' +
         'a cada duas horas a partir da 1 da madrugada'],
       // A minute list over a MIXED hour list (an explicit hour plus a step that
       // cannot fold into a cadence): each point hour reads as the whole hour
@@ -424,6 +427,34 @@ describe('Português (pt):', function() {
         'a cada segundo, a cada dois minutos do minuto 3 ao 59 de cada hora, ' +
         'ao meio-dia do dia 1º ao dia 5 de cada mês']
     ]);
+  });
+
+  // A minute CADENCE under an hour STEP must not assert a generic every-hour
+  // scope ("de cada hora"): the hour step is the sole hour authority. An hour
+  // WINDOW (9-17) and the hour=* case keep "de cada hora" — the window names
+  // the hours, so there is no every-hour-of-the-day conflict.
+  describe('a cadência dos minutos liga-se ao passo horário, sem alcance ' +
+    'genérico', function() {
+    run([
+      ['2/7 0/4 * * *',
+        'a cada sete minutos do minuto 2 ao 58, a cada quatro horas'],
+      ['5/10 0/4 * * *',
+        'a cada dez minutos a partir do minuto 5, ' +
+        'durante as horas das 0, 4, 8, 12, 16 e 20'],
+      ['3/2 1/2 * * *',
+        'a cada dois minutos do minuto 3 ao 59, ' +
+        'a cada duas horas a partir da 01:00'],
+      // Hour WINDOW keeps "de cada hora".
+      ['2/7 9-17 * * *',
+        'a cada sete minutos do minuto 2 ao 58 de cada hora, ' +
+        'das 09:00 às 17:00'],
+      ['5/10 1-6 * * *',
+        'a cada dez minutos a partir do minuto 5 de cada hora ' +
+        'da 01:00 às 06:55'],
+      // hour=* keeps "de cada hora" (the only hour statement).
+      ['2/7 * * * *',
+        'a cada sete minutos do minuto 2 ao 58 de cada hora']
+    ], {ampm: false});
   });
 
   describe('segundo sob um minuto pareado (* */N)', function() {

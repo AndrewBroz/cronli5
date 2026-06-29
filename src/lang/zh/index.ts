@@ -327,6 +327,16 @@ function renderMinutePast(schedule: Schedule): string {
   return minuteHourClause(schedule);
 }
 
+// Strip the generic "每小时" (every-hour) anchor that leads a minute clause.
+// Under an hour STEP the hour cadence is the sole hour authority, so the minute
+// clause must not also assert "每小时" — alongside a stepped hour ("每4小时…每小
+// 时…") it reads as a conflicting every-hour scope. An hour WINDOW and an
+// unrestricted hour keep "每小时" (the window already names the hours; an open
+// hour has no other hour statement).
+function withoutHourAnchor(clause: string): string {
+  return clause.replace(/^每小时/, '');
+}
+
 // One hour segment as clock words by its form: a range is a span ("9点至20点"),
 // a single is one clock word ("22点"), a step keeps its fires enumerated as
 // clock words ("9点、11点、13点"). A range stated as a list element should read
@@ -383,7 +393,14 @@ function renderMinuteFrequency(schedule: Schedule, plan: PlanNode): string {
     const hourCad = unevenHourCadence(schedule);
 
     if (hourCad !== null) {
-      return hourCad + (hourCad.indexOf('至') === -1 ? '' : '，') + base;
+      // An hour STEP is the sole hour authority, so an offset minute cadence
+      // drops its leading "每小时" ("每4小时从5分起每10分钟"); a discrete hour
+      // list (during) keeps it. Only the step path reaches a non-null cadence
+      // here — an irregular list falls through to the enumerated frame below.
+      const minuteBase = hours.kind === 'step' ?
+        withoutHourAnchor(base) : base;
+
+      return hourCad + (hourCad.indexOf('至') === -1 ? '' : '，') + minuteBase;
     }
   }
 
@@ -445,15 +462,17 @@ function renderMinuteSpanAcrossHourStep(
   const {form} = plan as Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>;
 
   // A minute list reads as the hour cadence plus the minute list ("每2小时，
-  // 每小时0、25、50分"; offset "从1点起每2小时，每小时5分和30分"), the same compaction
-  // the wildcard/range minute already uses, rather than the enumerated hours.
+  // 0、25、50分"; offset "从1点起每2小时，5分和30分"), the same compaction the
+  // wildcard/range minute already uses, rather than the enumerated hours. The
+  // hour cadence scopes the hours, so the minute clause drops its "每小时".
   if (form === 'list') {
-    return hourCadencePhrase(schedule) + '，' + renderMinutePast(schedule);
+    return hourCadencePhrase(schedule) + '，' +
+      withoutHourAnchor(renderMinutePast(schedule));
   }
 
   const minuteTail = form === 'wildcard' ?
     '每分钟' :
-    minuteHourClause(schedule) + '，每分钟';
+    withoutHourAnchor(minuteHourClause(schedule)) + '，每分钟';
 
   // An offset or non-tiling stride (2/6 fires at 2,8,14,20) reads as its
   // cadence ("从2点起每6小时"). A wildcard minute hangs off it with a comma; a
@@ -1010,7 +1029,10 @@ function composeSecondsListed(schedule: Schedule): string {
   const hourCad = unevenHourCadence(schedule);
 
   if (hourCad !== null) {
-    return hourCad + '，' + minutes + '，' + sec;
+    // An hour STEP cadence is the sole hour authority, so the minute clause
+    // drops its "每小时" ("每2小时，0至30分，每秒"); a discrete hour list keeps it
+    // (it falls through to the hourFrame branch below with a null cadence).
+    return hourCad + '，' + withoutHourAnchor(minutes) + '，' + sec;
   }
 
   return hourFrame(schedule) + minutes + '，' + sec;

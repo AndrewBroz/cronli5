@@ -616,6 +616,16 @@ function minutesList(schedule: Schedule, opts: Opts): string {
     joinList(segmentWords(segmentsOf(schedule, 'minute'))) + ' de cada hora';
 }
 
+// Strip the generic "de cada hora" anchor from a minute-cadence lead. Under an
+// hour STEP the hour clause is the sole hour authority, so the cadence must not
+// also assert "de cada hora" — alongside a stepped hour it reads as a
+// conflicting every-hour scope ("de cada hora, a cada quatro horas"). An hour
+// WINDOW and an unrestricted hour keep the anchor (the window already names the
+// hours; an open hour has no other hour statement).
+function withoutHourAnchor(lead: string): string {
+  return lead.replace(/ de cada hora$/, '');
+}
+
 // "a cada minuto do 0 ao 30". The standalone renderer adds "de cada hora";
 // when an hour qualifier follows ("..., às 09:00", "..., a cada duas horas")
 // it would contradict, so it is not baked in here.
@@ -746,8 +756,10 @@ function renderMinuteFrequency(
   }
   else if (plan.hours.kind === 'step') {
     // A clean stride is a confinement ("as horas pares", or the active-hour
-    // list), never a juxtaposed cadence ("a cada duas horas").
-    phrase += ', ' + stepHourSpan(stepSegment(schedule, 'hour'), opts);
+    // list), never a juxtaposed cadence ("a cada duas horas"). The hour step
+    // scopes the hours, so an offset cadence drops "de cada hora".
+    phrase = withoutHourAnchor(phrase) + ', ' +
+      stepHourSpan(stepSegment(schedule, 'hour'), opts);
   }
 
   return phrase + trailingQualifier(schedule, opts);
@@ -832,9 +844,10 @@ function renderMinuteSpanAcrossHourStep(
 
   // A minute list keeps the same cadence clause as the range; only its lead
   // differs ("nos minutos 5 e 30 de cada hora" vs "a cada minuto do 0 ao 30").
-  const lead = plan.form === 'list' ?
+  // The hour step scopes the hours, so the lead drops "de cada hora".
+  const lead = withoutHourAnchor(plan.form === 'list' ?
     minutesList(schedule, opts) :
-    minuteRangeLead(schedule.pattern.minute);
+    minuteRangeLead(schedule.pattern.minute));
 
   return lead + ', ' +
     (cadence ?? stepHours(segment, opts)) + trailingQualifier(schedule, opts);

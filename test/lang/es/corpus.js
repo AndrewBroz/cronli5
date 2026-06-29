@@ -253,13 +253,45 @@ describe('Español (es):', function() {
       ['0-30 */2 * * *',
         'cada minuto del 0 al 30, cada dos horas'],
       // A minute list under a clean stride keeps the same cadence the range
-      // and wildcard forms do, never enumerating the hours.
+      // and wildcard forms do, never enumerating the hours. Under an hour STEP
+      // the minute clause drops "de cada hora": the step is the sole hour
+      // authority, so the cadence binds to it (as in de/fi). "de cada hora"
+      // alongside "cada dos horas" would be a conflicting every-hour scope.
       ['5,30 */2 * * *',
-        'en los minutos 5 y 30 de cada hora, cada dos horas'],
+        'en los minutos 5 y 30, cada dos horas'],
       ['5,30 1/2 * * *',
-        'en los minutos 5 y 30 de cada hora, ' +
+        'en los minutos 5 y 30, ' +
         'cada dos horas a partir de la 1 de la madrugada']
     ], ampm);
+  });
+
+  // A minute CADENCE under an hour STEP must not assert a generic every-hour
+  // scope ("de cada hora"): the hour step is the sole hour authority. An hour
+  // WINDOW (9-17) and the hour=* case keep "de cada hora" — the window names
+  // the hours, so "de cada hora ... de las 09:00 a las 17:00" recovers the
+  // window with no conflict.
+  describe('la cadencia de minutos se ata al paso horario, sin alcance ' +
+    'genérico', function() {
+    run([
+      ['2/7 0/4 * * *',
+        'cada siete minutos del minuto 2 al 58, cada cuatro horas'],
+      ['5/10 0/4 * * *',
+        'cada diez minutos a partir del minuto 5, ' +
+        'durante las horas de las 0, 4, 8, 12, 16 y 20'],
+      ['3/2 1/2 * * *',
+        'cada dos minutos del minuto 3 al 59, ' +
+        'cada dos horas a partir de la 01:00'],
+      // Hour WINDOW keeps "de cada hora".
+      ['2/7 9-17 * * *',
+        'cada siete minutos del minuto 2 al 58 de cada hora, ' +
+        'de las 09:00 a las 17:00'],
+      ['5/10 1-6 * * *',
+        'cada diez minutos a partir del minuto 5 de cada hora ' +
+        'de la 01:00 a las 06:55'],
+      // hour=* keeps "de cada hora" (the only hour statement).
+      ['2/7 * * * *',
+        'cada siete minutos del minuto 2 al 58 de cada hora']
+    ], {ampm: false});
   });
 
   describe('segundos compuestos', function() {
