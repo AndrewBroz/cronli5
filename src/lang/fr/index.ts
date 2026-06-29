@@ -1003,10 +1003,13 @@ function renderCompactClockTimes(
   }
 
   // A uneven hour stride reads as a cadence after the minute lead, not a wall
-  // of clock-time columns.
+  // of clock-time columns. That hour step is the sole hour authority, so the
+  // minute lead drops its generic "de chaque heure" (an every-hour scope that
+  // would conflict with the step); the clock-time branch keeps it, naming
+  // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    minutesList(schedule, opts) + ', ' + cadence +
+    withoutHourAnchor(minutesList(schedule, opts)) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
     minutesList(schedule, opts) + ', ' +
       hourContextTimes(schedule, opts) + trailingQualifier(schedule, opts);

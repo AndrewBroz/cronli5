@@ -109,7 +109,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
       run([
         ['30 */25 9-17/2 * * *',
           'at 30 seconds past the minute, ' +
-          'at 0, 25, and 50 minutes past the hour, ' +
+          'at 0, 25, and 50 minutes, ' +
           'every two hours from 9 a.m. through 5 p.m.']
       ]);
     });

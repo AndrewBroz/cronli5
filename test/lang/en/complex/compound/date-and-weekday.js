@@ -41,7 +41,7 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
         'in June at midnight whenever the day is the weekday nearest the ' +
         '15th or the second Monday of the month'],
       ['*/45 9-17/2 15W 6-8 MON#2',
-        'in June through August at 0 and 45 minutes past the hour, every ' +
+        'in June through August at 0 and 45 minutes, every ' +
         'two hours from 9 a.m. through 5 p.m. whenever the day is the ' +
         'weekday nearest the 15th or the second Monday of the month'],
       // Quartz date (last day) with a plain weekday.

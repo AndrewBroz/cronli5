@@ -37,10 +37,19 @@ describe('Minute span across an hour step:', function() {
       ['5,30 */2 * * *',
         'at 5 and 30 minutes, every two hours'],
       // A bounded stride has a distinct endpoint, so its hours read as a
-      // bounded cadence rather than a wall of clock times.
+      // bounded cadence rather than a wall of clock times. The hour step is the
+      // sole hour authority, so the minute lead drops its generic "past the
+      // hour" (which would assert a conflicting every-hour scope), matching the
+      // open-step case above and de/fi.
       ['3/2 9-17/2 * * *',
-        'every two minutes from 3 through 59 minutes past the hour, ' +
-        'every two hours from 9 a.m. through 5 p.m.']
+        'every two minutes from 3 through 59 minutes, ' +
+        'every two hours from 9 a.m. through 5 p.m.'],
+      ['2/7 9-17/2 * * *',
+        'every seven minutes from 2 through 58 minutes, ' +
+        'every two hours from 9 a.m. through 5 p.m.'],
+      // A plain minute LIST under a bounded hour step drops the anchor too.
+      ['5,30 9-17/2 * * *',
+        'at 5 and 30 minutes, every two hours from 9 a.m. through 5 p.m.']
     ]);
   });
 

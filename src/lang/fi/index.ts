@@ -695,8 +695,10 @@ function renderMinuteFrequency(
     const cadence = unevenHourCadence(schedule, opts);
 
     if (cadence !== null) {
-      return stepCycle60(seg, units.minute, opts) + ', ' + cadence +
-        trailingQualifier(schedule, opts);
+      // The hour step is the sole hour authority, so an offset minute cadence
+      // drops its generic "jokaisen tunnin" every-hour scope.
+      return withoutHourAnchor(stepCycle60(seg, units.minute, opts)) + ', ' +
+        cadence + trailingQualifier(schedule, opts);
     }
 
     // When the step renders as anchored ("kohdalla"), the per-hour windows
@@ -714,13 +716,16 @@ function renderMinuteFrequency(
       trailingQualifier(schedule, opts);
   }
 
-  let phrase = stepCycle60(seg, units.minute, opts);
+  const phraseBase = stepCycle60(seg, units.minute, opts);
+  let phrase = phraseBase;
 
   if (plan.hours.kind === 'window') {
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    phrase += ' ' +
+    // The hour step is the sole hour authority, so the minute cadence drops its
+    // generic "jokaisen tunnin" every-hour scope.
+    phrase = withoutHourAnchor(phraseBase) + ' ' +
       everyNthHour(stepSegment(schedule, 'hour'), opts);
   }
 
@@ -1165,6 +1170,16 @@ function stepCycle60(
     cycle: 60,
     unit
   }, opts);
+}
+
+// Strip the generic "jokaisen tunnin" anchor from an offset minute-cadence
+// lead. When the hour field is a restricted step, the hour clause is the sole
+// hour authority, so the cadence must not also assert "jokaisen tunnin" (every
+// hour) — alongside a stepped hour it conflicts as an every-hour scope.
+// An unrestricted hour, and an hour WINDOW, keep the anchor (the window names
+// the hours without an every-hour-of-the-day conflict).
+function withoutHourAnchor(lead: string): string {
+  return lead.replace(' ' + units.minute.anchor + ' ', ' ');
 }
 
 // "kahden tunnin välein", "klo 0, 10 ja 20", or "viiden tunnin välein

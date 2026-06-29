@@ -940,18 +940,22 @@ function renderMinuteFrequency(
   if (plan.hours.kind === 'during') {
     // A bounded or uneven hour stride confines the minute cadence to its own
     // endpoint-pinning hour cadence ("alle 15 Minuten, alle 5 Stunden von 0 bis
-    // 20 Uhr").
+    // 20 Uhr"). That hour step is the sole hour authority, so an offset minute
+    // cadence drops its generic "jeder Stunde" (an every-hour scope conflicting
+    // with the step); a list of specific hours keeps it.
     const cadence = unevenHourCadence(schedule);
 
     return cadence ?
-      base + ', ' + cadence :
+      stepClause(segment, UNITS.minute, '') + ', ' + cadence :
       base + ' ' + duringHours(schedule, plan.hours.times, sep);
   }
 
   if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean step (dividing the day):
-    // confine the cadence to every Nth hour ("in jeder zweiten Stunde").
-    return base + ' ' +
+    // confine the cadence to every Nth hour ("in jeder zweiten Stunde"). The
+    // hour step is the sole hour authority, so the minute cadence drops its
+    // generic "jeder Stunde".
+    return stepClause(segment, UNITS.minute, '') + ' ' +
       everyNthHour(stepSegment(schedule, 'hour'));
   }
 

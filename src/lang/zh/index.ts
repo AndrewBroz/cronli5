@@ -537,9 +537,13 @@ function renderCompactClockTimes(schedule: Schedule, plan: PlanNode): string {
   if (!compact.fold) {
     const hourCad = unevenHourCadence(schedule);
 
+    // A bounded/uneven hour step leads as the cadence and is the sole hour
+    // authority, so the minute clause drops its generic "每小时" every-hour
+    // scope; an enumerated hour list (hourCad null) names specific hours and
+    // keeps the anchor.
     return hourCad === null ?
       minuteHourClause(schedule) + '，在' + hourList(schedule) + tail :
-      hourCad + '，' + minuteHourClause(schedule) + tail;
+      hourCad + '，' + withoutHourAnchor(minuteHourClause(schedule)) + tail;
   }
 
   // A single pinned minute past 0 leads with its clause; a pinned 0 folds into

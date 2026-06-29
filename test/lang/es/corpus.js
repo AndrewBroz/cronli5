@@ -281,6 +281,18 @@ describe('Español (es):', function() {
       ['3/2 1/2 * * *',
         'cada dos minutos del minuto 3 al 59, ' +
         'cada dos horas a partir de la 01:00'],
+      // A bounded hour step is the sole hour authority, so a minute cadence or
+      // list drops its generic "de cada hora" (the every-hour scope conflicts
+      // with the step).
+      ['3/2 9-17/2 * * *',
+        'cada dos minutos del minuto 3 al 59, ' +
+        'cada dos horas de las 09:00 a las 17:00'],
+      ['2/7 9-17/2 * * *',
+        'cada siete minutos del minuto 2 al 58, ' +
+        'cada dos horas de las 09:00 a las 17:00'],
+      ['5,30 9-17/2 * * *',
+        'en los minutos 5 y 30, ' +
+        'cada dos horas de las 09:00 a las 17:00'],
       // Hour WINDOW keeps "de cada hora".
       ['2/7 9-17 * * *',
         'cada siete minutos del minuto 2 al 58 de cada hora, ' +
@@ -596,7 +608,7 @@ describe('Español (es):', function() {
     run([
       ['30 */25 9-17/2 * * *',
         'en el segundo 30 de cada minuto, ' +
-        'en los minutos 0, 25 y 50 de cada hora, ' +
+        'en los minutos 0, 25 y 50, ' +
         'cada dos horas de las 09:00 a las 17:00']
     ]);
   });
@@ -692,7 +704,7 @@ describe('Español (es):', function() {
         'cada hora de las 9:30 de la mañana a las 8:30 de la noche ' +
         'y también a las 10:30 de la noche'],
       ['0,30 8-18/2 * * *',
-        'en los minutos 0 y 30 de cada hora, ' +
+        'en los minutos 0 y 30, ' +
         'cada dos horas de las 8 de la mañana a las 6 de la tarde'],
       ['*/15 9-20,22 * * *',
         'cada 15 minutos de las 9 de la mañana a las 8:59 de la noche ' +
@@ -867,7 +879,7 @@ describe('Español (es):', function() {
       ['0 0,8,16 * * *', 'todos los días a las 00:00, 08:00 y 16:00'],
       ['* */5 * * *', 'cada minuto, cada cinco horas de las 00:00 a las 20:00'],
       ['*/25 */5 * * *',
-        'en los minutos 0, 25 y 50 de cada hora, ' +
+        'en los minutos 0, 25 y 50, ' +
         'cada cinco horas de las 00:00 a las 20:00'],
       ['0-30 */5 * * *',
         'cada minuto del 0 al 30, cada cinco horas de las 00:00 a las 20:00'],
@@ -875,7 +887,7 @@ describe('Español (es):', function() {
       ['0-30 9-17/2 * * *',
         'cada minuto del 0 al 30, cada dos horas de las 09:00 a las 17:00'],
       ['5,10 9-17/2 * * *',
-        'en los minutos 5 y 10 de cada hora, ' +
+        'en los minutos 5 y 10, ' +
         'cada dos horas de las 09:00 a las 17:00'],
       ['0 1-23/2 * * *',
         'a la 01:00 y a las 03:00, 05:00, 07:00, 09:00, 11:00, 13:00, 15:00, ' +

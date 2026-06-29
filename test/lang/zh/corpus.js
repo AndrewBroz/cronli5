@@ -210,6 +210,11 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['2/7 0/4 * * *', '每4小时，从2分起每7分钟，至58分'],
       ['5/10 0/4 * * *', '每4小时从5分起每10分钟'],
       ['3/2 1/2 * * *', '从1点起每2小时，从3分起每2分钟，至59分'],
+      // A BOUNDED hour step leads as the cadence and is the sole hour authority,
+      // so the minute clause drops its generic "每小时".
+      ['3/2 9-17/2 * * *', '从9点起每2小时，至17点，从3分起每2分钟，至59分'],
+      ['2/7 9-17/2 * * *', '从9点起每2小时，至17点，从2分起每7分钟，至58分'],
+      ['5,30 9-17/2 * * *', '从9点起每2小时，至17点，5分和30分'],
       ['2/7 9-17 * * *', '在9点至17点之间，每小时从2分起每7分钟，至58分'],
       ['5/10 1-6 * * *', '在1点至6点之间，每小时从5分起每10分钟'],
       ['2/7 * * * *', '每小时从2分起每7分钟，至58分'],
@@ -508,11 +513,11 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // A non-uniform minute step (enumerated to a fire list) under an uneven
       // hour step must keep BOTH the minute set and the hour cadence — the
       // minute is never dropped just because its first fire is 0.
-      ['*/25 */5 * * *', '从0点起每5小时，至20点，每小时0、25、50分'],
-      ['*/7 */5 * * *', '从0点起每5小时，至20点，每小时从0分起每7分钟，至56分'],
+      ['*/25 */5 * * *', '从0点起每5小时，至20点，0、25、50分'],
+      ['*/7 */5 * * *', '从0点起每5小时，至20点，从0分起每7分钟，至56分'],
       // An offset minute list under the same uneven hour step keeps both sets,
       // reading as the same hour cadence the leading-0 list does.
-      ['5/25 */5 * * *', '从0点起每5小时，至20点，每小时5、30、55分'],
+      ['5/25 */5 * * *', '从0点起每5小时，至20点，5、30、55分'],
       // Working-case guards: the minute set survives under an even hour step, an
       // hour range, and an offset hour step too.
       ['*/25 9-17 * * *', '在9点至17点之间，每小时0、25、50分'],

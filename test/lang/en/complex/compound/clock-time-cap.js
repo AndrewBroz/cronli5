@@ -33,8 +33,10 @@ describe('Clock-time enumeration cap:', function() {
 
   describe('a minute list leads with its own clause', function() {
     run([
+      // A bounded hour step is the sole hour authority, so the minute list
+      // drops its generic "past the hour"; a specific-hour list below keeps it.
       ['0,30 8-18/2 * * *',
-        'at 0 and 30 minutes past the hour, ' +
+        'at 0 and 30 minutes, ' +
         'every two hours from 8 a.m. through 6 p.m.'],
       ['0,15,30,45 9,17 * * MON',
         'at 0, 15, 30, and 45 minutes past the hour, ' +

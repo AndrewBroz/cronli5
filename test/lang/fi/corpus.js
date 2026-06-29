@@ -251,8 +251,10 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
       ['* 9,17 * * *', 'joka minuutti klo 9 ja 17'],
       ['* */5 * * *', 'joka minuutti, viiden tunnin välein klo 0–20'],
+      // An offset minute frequency under an open/uneven hour step drops the
+      // generic "jokaisen tunnin": the hour step is the sole hour authority.
       ['5/15 */5 * * *',
-        '15 minuutin välein jokaisen tunnin minuutista 5 alkaen, ' +
+        '15 minuutin välein minuutista 5 alkaen, ' +
         'viiden tunnin välein klo 0–20'],
       ['0-30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 0–30 kohdalla'],
       // Minute range over range+isolated hours: minute-first, sekä klo.
@@ -274,6 +276,21 @@ describe('Suomi (fi):', function() {
       ['*/15 1/3 * * *',
         '15 minuutin välein joka kolmannen tunnin aikana kello 1:stä alkaen'],
       ['* 1/2 * * *', 'joka minuutti joka toisen tunnin aikana kello 1:stä alkaen'],
+      // An OFFSET minute frequency under a restricted hour step drops its
+      // generic "jokaisen tunnin": the hour step is the sole hour authority, so
+      // an every-hour scope alongside it would conflict. This holds for an open
+      // step (every Nth hour) and a bounded step (its endpoint-pinning cadence).
+      ['5/10 0/4 * * *',
+        'kymmenen minuutin välein minuutista 5 alkaen joka neljännen ' +
+        'tunnin aikana'],
+      ['5/10 9-17/2 * * *',
+        'kymmenen minuutin välein minuutista 5 alkaen, ' +
+        'kahden tunnin välein klo 9–17'],
+      // An hour WINDOW keeps "jokaisen tunnin": the window names the hours, so
+      // there is no every-hour-of-the-day conflict.
+      ['5/10 1-6 * * *',
+        'kymmenen minuutin välein jokaisen tunnin minuutista 5 alkaen ' +
+        'klo 1.00–6.55'],
       // A uneven or bounded hour step has a distinct endpoint, so it reads as a
       // bounded cadence pinning both clock-time ends, not a wall of clock times.
       ['*/20 9-17/2 * * *',

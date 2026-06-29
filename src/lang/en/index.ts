@@ -936,10 +936,14 @@ function renderCompactClockTimes(schedule: Schedule,
       listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
         'minute', 'hour', opts);
   // A uneven hour stride reads as a cadence after the minute lead, not a wall
-  // of clock-time columns.
+  // of clock-time columns. The hour step is the sole hour authority there, so
+  // the minute lead drops its generic "past the hour" (an every-hour scope that
+  // would conflict with the step); the clock-time branch keeps it, naming
+  // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    minuteLead + ', ' + cadence + trailingQualifier(schedule, opts) :
+    withoutHourAnchor(minuteLead) + ', ' + cadence +
+      trailingQualifier(schedule, opts) :
     minuteLead +
     ', at ' +
     hourSegmentTimes(schedule, {minute: 0, second: null}, true, opts) +

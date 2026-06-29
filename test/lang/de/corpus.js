@@ -482,6 +482,18 @@ describe('Deutsch (de):', function() {
       ['*/15 1/2 * * *', 'alle 15 Minuten in jeder zweiten Stunde ab 1 Uhr'],
       ['*/15 1/3 * * *', 'alle 15 Minuten in jeder dritten Stunde ab 1 Uhr'],
       ['* 1/2 * * *', 'jede Minute in jeder zweiten Stunde ab 1 Uhr'],
+      // An OFFSET minute frequency under a restricted hour step drops its
+      // generic "jeder Stunde": the hour step is the sole hour authority, so
+      // an every-hour scope alongside it would conflict. This holds for an open
+      // step (every Nth hour) and a bounded step (its endpoint-pinning cadence).
+      ['5/10 0/4 * * *',
+        'alle 10 Minuten ab Minute 5 in jeder vierten Stunde'],
+      ['5/10 9-17/2 * * *',
+        'alle 10 Minuten ab Minute 5, alle 2 Stunden von 9 bis 17 Uhr'],
+      // An hour WINDOW keeps "jeder Stunde": the window names the hours, so
+      // there is no every-hour-of-the-day conflict.
+      ['5/10 1-6 * * *',
+        'alle 10 Minuten ab Minute 5 jeder Stunde, von 1 bis 6:55 Uhr'],
       // A uneven hour step reads as its bounded cadence the same way.
       ['*/15 */5 * * *',
         'alle 15 Minuten, alle 5 Stunden von 0 bis 20 Uhr'],
