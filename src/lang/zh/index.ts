@@ -327,6 +327,16 @@ function renderMinutePast(schedule: Schedule): string {
   return minuteHourClause(schedule);
 }
 
+// Strip the generic "每小时" (every-hour) anchor that leads a minute clause.
+// Under an hour STEP the hour cadence is the sole hour authority, so the minute
+// clause must not also assert "每小时" — alongside a stepped hour ("每4小时…每小
+// 时…") it reads as a conflicting every-hour scope. An hour WINDOW and an
+// unrestricted hour keep "每小时" (the window already names the hours; an open
+// hour has no other hour statement).
+function withoutHourAnchor(clause: string): string {
+  return clause.replace(/^每小时/, '');
+}
+
 // One hour segment as clock words by its form: a range is a span ("9点至20点"),
 // a single is one clock word ("22点"), a step keeps its fires enumerated as
 // clock words ("9点、11点、13点"). A range stated as a list element should read
@@ -383,7 +393,14 @@ function renderMinuteFrequency(schedule: Schedule, plan: PlanNode): string {
     const hourCad = unevenHourCadence(schedule);
 
     if (hourCad !== null) {
-      return hourCad + (hourCad.indexOf('至') === -1 ? '' : '，') + base;
+      // An hour STEP is the sole hour authority, so an offset minute cadence
+      // drops its leading "每小时" ("每4小时从5分起每10分钟"); a discrete hour
+      // list (during) keeps it. Only the step path reaches a non-null cadence
+      // here — an irregular list falls through to the enumerated frame below.
+      const minuteBase = hours.kind === 'step' ?
+        withoutHourAnchor(base) : base;
+
+      return hourCad + (hourCad.indexOf('至') === -1 ? '' : '，') + minuteBase;
     }
   }
 
@@ -445,15 +462,17 @@ function renderMinuteSpanAcrossHourStep(
   const {form} = plan as Extract<PlanNode, {kind: 'minuteSpanAcrossHourStep'}>;
 
   // A minute list reads as the hour cadence plus the minute list ("每2小时，
-  // 每小时0、25、50分"; offset "从1点起每2小时，每小时5分和30分"), the same compaction
-  // the wildcard/range minute already uses, rather than the enumerated hours.
+  // 0、25、50分"; offset "从1点起每2小时，5分和30分"), the same compaction the
+  // wildcard/range minute already uses, rather than the enumerated hours. The
+  // hour cadence scopes the hours, so the minute clause drops its "每小时".
   if (form === 'list') {
-    return hourCadencePhrase(schedule) + '，' + renderMinutePast(schedule);
+    return hourCadencePhrase(schedule) + '，' +
+      withoutHourAnchor(renderMinutePast(schedule));
   }
 
   const minuteTail = form === 'wildcard' ?
     '每分钟' :
-    minuteHourClause(schedule) + '，每分钟';
+    withoutHourAnchor(minuteHourClause(schedule)) + '，每分钟';
 
   // An offset or non-tiling stride (2/6 fires at 2,8,14,20) reads as its
   // cadence ("从2点起每6小时"). A wildcard minute hangs off it with a comma; a
@@ -518,9 +537,13 @@ function renderCompactClockTimes(schedule: Schedule, plan: PlanNode): string {
   if (!compact.fold) {
     const hourCad = unevenHourCadence(schedule);
 
+    // A bounded/uneven hour step leads as the cadence and is the sole hour
+    // authority, so the minute clause drops its generic "每小时" every-hour
+    // scope; an enumerated hour list (hourCad null) names specific hours and
+    // keeps the anchor.
     return hourCad === null ?
       minuteHourClause(schedule) + '，在' + hourList(schedule) + tail :
-      hourCad + '，' + minuteHourClause(schedule) + tail;
+      hourCad + '，' + withoutHourAnchor(minuteHourClause(schedule)) + tail;
   }
 
   // A single pinned minute past 0 leads with its clause; a pinned 0 folds into
@@ -870,6 +893,15 @@ function composeSecondsOnHour(
     return composeMinuteZeroClocks(schedule, sec);
   }
 
+  // A single fixed (non-zero) minute under enumerated clock times fuses the
+  // seconds onto the composed clock time the same way ("0点2分的每一秒").
+  const fusedSingleMinute =
+    composeSingleMinuteClocks(schedule, rest, sec, opts);
+
+  if (fusedSingleMinute !== null) {
+    return fusedSingleMinute;
+  }
+
   const restText = render(schedule, rest, opts);
   const secTail = clockRestCarriesSecond(rest) ? '' : sec;
 
@@ -884,6 +916,29 @@ function composeSecondsOnHour(
   }
 
   return restText + secTail;
+}
+
+// A single fixed (non-zero) minute under enumerated clock times: each clock
+// point already names the minute ("0点2分", "9点5分和17点5分"), so bind the
+// seconds to it with "的" — the same fusion the minute-0 ("0分的每一秒") and
+// minute-step ("5、20…分的每一秒") cases use — rather than leaving a bare
+// trailing "每秒" that floats as a second, unlinked adverbial. A single second
+// already folded into each clock time ("9点5分30秒") is not re-appended. The
+// compactClockTimes window form states its minute separately ("每小时5分") and
+// keeps its own seconds clause, so it does not qualify (returns null). minute 0
+// is handled by composeMinuteZeroClocks before this point.
+function composeSingleMinuteClocks(
+  schedule: Schedule, rest: PlanNode, sec: string, opts: Opts
+): string | null {
+  if (rest.kind !== 'clockTimes' || schedule.shapes.minute !== 'single' ||
+      clockRestCarriesSecond(rest)) {
+    return null;
+  }
+
+  const core =
+    render(schedule, rest, opts) + minuteZeroSecondTail(schedule, sec);
+
+  return isDaily(schedule) ? '每天' + core : core;
 }
 
 // A minute pinned to 0 under specific clock hours (not a compacted cadence): a
@@ -907,14 +962,24 @@ function composeMinuteZeroClocks(schedule: Schedule, sec: string): string {
     // midnight (凌晨0点) and other hours still need it to pin the minute.
     return hour === 12 ? '正午' : hourWord(hour) + '0分';
   });
-  // A pinned minute makes the seconds' own "每分钟" anchor misleading (it is a
-  // single minute, not every minute), so the stride here drops it.
-  const nested =
-    strideFromSegments(segmentsOf(schedule, 'second'), '秒', '秒', '');
-  const tail = sec === '每秒' ? '的每一秒' : '的' + (nested ?? sec);
-  const core = joinAnd(clocks) + tail;
+  const core = joinAnd(clocks) + minuteZeroSecondTail(schedule, sec);
 
   return isDaily(schedule) ? '每天' + core : core;
+}
+
+// The "的"-fused second tail for a clock time that already names a single pinned
+// minute ("…的每一秒" for a wildcard second, else "…的" + the second's clause).
+// A pinned minute makes the seconds' own "每分钟" anchor misleading (it is a
+// single minute, not every minute), so a stride here drops it.
+function minuteZeroSecondTail(schedule: Schedule, sec: string): string {
+  if (sec === '每秒') {
+    return '的每一秒';
+  }
+
+  const nested =
+    strideFromSegments(segmentsOf(schedule, 'second'), '秒', '秒', '');
+
+  return '的' + (nested ?? sec);
 }
 
 // Whether the hour field is a range — or a list whose segments include a
@@ -1010,7 +1075,10 @@ function composeSecondsListed(schedule: Schedule): string {
   const hourCad = unevenHourCadence(schedule);
 
   if (hourCad !== null) {
-    return hourCad + '，' + minutes + '，' + sec;
+    // An hour STEP cadence is the sole hour authority, so the minute clause
+    // drops its "每小时" ("每2小时，0至30分，每秒"); a discrete hour list keeps it
+    // (it falls through to the hourFrame branch below with a null cadence).
+    return hourCad + '，' + withoutHourAnchor(minutes) + '，' + sec;
   }
 
   return hourFrame(schedule) + minutes + '，' + sec;

@@ -426,15 +426,15 @@ function renderComposeSeconds(
     return composeSecondsOverMinuteStep(schedule, plan.rest, opts);
   }
 
-  // A sub-minute second with the minute pinned to 0 and a specific hour: the
-  // clock-time rest would read "klo 9", dropping the pinned :00 and so the
-  // one-minute confinement (60 fires in :00, not 3,600 across the hour). Bind
-  // the seconds to the explicit clock minute with the "minuutin HH.00 aikana"
-  // frame (an "of"/during form, never a range) and trail the day qualifier
-  // ("joka sekunti minuutin 9.00 aikana, joka päivä").
-  if (plan.rest.kind === 'clockTimes' &&
-      plan.rest.times.every((time) => +time.minute === 0)) {
-    return composeMinuteZero(schedule, plan.rest, opts);
+  // A second over a single fixed minute and a specific hour is a single fixed
+  // timestamp: the clock-time rest would float the seconds as a separate clause
+  // ("joka sekunti, joka päivä klo 9.02"), hiding that they belong to that one
+  // minute. Bind the seconds to the explicit clock minute with the "minuutin
+  // HH.MM aikana" frame (an "of"/during form, never a range) and trail the day
+  // qualifier ("joka sekunti minuutin 9.02 aikana, joka päivä") — the same
+  // fusion the minute-0 case ("minuutin 9.00 aikana") uses.
+  if (plan.rest.kind === 'clockTimes' && schedule.shapes.minute === 'single') {
+    return composeSingleMinute(schedule, plan.rest, opts);
   }
 
   // A wildcard second under a minute */2 with a wildcard hour juxtaposes two
@@ -473,11 +473,13 @@ function isEveryOtherMinuteSeconds(
   return seg.startToken === '*' && seg.interval === 2;
 }
 
-// The minute-0 confinement: bind the seconds to the explicit clock minute(s)
-// in the "minuutin/minuuttien HH.00 aikana" frame (an "of"/during form, never
-// a range — a range would round-trip back to the whole hour) and trail the day
-// qualifier ("joka sekunti minuutin 9.00 aikana, joka päivä").
-function composeMinuteZero(
+// The single-fixed-minute confinement: bind the seconds to the explicit clock
+// minute(s) in the "minuutin/minuuttien HH.MM aikana" frame (an "of"/during
+// form, never a range — a range would round-trip back to the whole hour) and
+// trail the day qualifier ("joka sekunti minuutin 9.02 aikana, joka päivä").
+// Minute 0 ("minuutin 9.00 aikana") is just this with the minute being 0; any
+// single fixed minute fuses the same way.
+function composeSingleMinute(
   schedule: Schedule,
   rest: Extract<PlanNode, {kind: 'clockTimes'}>,
   opts: NormalizedOptions
@@ -695,8 +697,10 @@ function renderMinuteFrequency(
     const cadence = unevenHourCadence(schedule, opts);
 
     if (cadence !== null) {
-      return stepCycle60(seg, units.minute, opts) + ', ' + cadence +
-        trailingQualifier(schedule, opts);
+      // The hour step is the sole hour authority, so an offset minute cadence
+      // drops its generic "jokaisen tunnin" every-hour scope.
+      return withoutHourAnchor(stepCycle60(seg, units.minute, opts)) + ', ' +
+        cadence + trailingQualifier(schedule, opts);
     }
 
     // When the step renders as anchored ("kohdalla"), the per-hour windows
@@ -714,13 +718,16 @@ function renderMinuteFrequency(
       trailingQualifier(schedule, opts);
   }
 
-  let phrase = stepCycle60(seg, units.minute, opts);
+  const phraseBase = stepCycle60(seg, units.minute, opts);
+  let phrase = phraseBase;
 
   if (plan.hours.kind === 'window') {
     phrase += ' ' + hourWindow(plan.hours, opts);
   }
   else if (plan.hours.kind === 'step') {
-    phrase += ' ' +
+    // The hour step is the sole hour authority, so the minute cadence drops its
+    // generic "jokaisen tunnin" every-hour scope.
+    phrase = withoutHourAnchor(phraseBase) + ' ' +
       everyNthHour(stepSegment(schedule, 'hour'), opts);
   }
 
@@ -1165,6 +1172,16 @@ function stepCycle60(
     cycle: 60,
     unit
   }, opts);
+}
+
+// Strip the generic "jokaisen tunnin" anchor from an offset minute-cadence
+// lead. When the hour field is a restricted step, the hour clause is the sole
+// hour authority, so the cadence must not also assert "jokaisen tunnin" (every
+// hour) — alongside a stepped hour it conflicts as an every-hour scope.
+// An unrestricted hour, and an hour WINDOW, keep the anchor (the window names
+// the hours without an every-hour-of-the-day conflict).
+function withoutHourAnchor(lead: string): string {
+  return lead.replace(' ' + units.minute.anchor + ' ', ' ');
 }
 
 // "kahden tunnin välein", "klo 0, 10 ja 20", or "viiden tunnin välein

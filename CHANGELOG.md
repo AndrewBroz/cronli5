@@ -6,6 +6,24 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.2]
+
+### Fixed
+
+- **Redundant hour scope under a stepped/ranged hour (all languages).** A minute
+  cadence under a restricted hour-step (e.g. `2/7 0/4`, `3/2 9-17/2`, `5/10 0/4`)
+  no longer asserts a generic every-hour scope alongside the hour clause
+  ("past the hour" / "de cada hora" / "de chaque heure" / "每小时" / "jeder
+  Stunde"). The hour clause is now the sole authority, so the description recovers
+  the hour step rather than reading as "every hour." Hour windows (`9-17`) and
+  lists keep their bound (they already round-trip). Now uniform across
+  en/es/de/fi/fr/pt/zh.
+- **Dangling seconds clause (zh, de, fi).** For a single fixed minute, the
+  "every second" clause now binds to the timestamp instead of floating — zh
+  "0点2分**的**每一秒" (was an ungrammatical bare "每秒"), de "**der Minute** 0:02",
+  fi "minuutin 0.02 **aikana**" — matching their own minute-0 form and
+  en/es/fr/pt.
+
 ## [0.8.1]
 
 ### Changed

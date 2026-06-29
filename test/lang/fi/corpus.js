@@ -251,8 +251,10 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein klo 9.00–17.45 maanantaista perjantaihin'],
       ['* 9,17 * * *', 'joka minuutti klo 9 ja 17'],
       ['* */5 * * *', 'joka minuutti, viiden tunnin välein klo 0–20'],
+      // An offset minute frequency under an open/uneven hour step drops the
+      // generic "jokaisen tunnin": the hour step is the sole hour authority.
       ['5/15 */5 * * *',
-        '15 minuutin välein jokaisen tunnin minuutista 5 alkaen, ' +
+        '15 minuutin välein minuutista 5 alkaen, ' +
         'viiden tunnin välein klo 0–20'],
       ['0-30 9,17 * * *', 'klo 9 ja 17 aina minuuttien 0–30 kohdalla'],
       // Minute range over range+isolated hours: minute-first, sekä klo.
@@ -274,6 +276,21 @@ describe('Suomi (fi):', function() {
       ['*/15 1/3 * * *',
         '15 minuutin välein joka kolmannen tunnin aikana kello 1:stä alkaen'],
       ['* 1/2 * * *', 'joka minuutti joka toisen tunnin aikana kello 1:stä alkaen'],
+      // An OFFSET minute frequency under a restricted hour step drops its
+      // generic "jokaisen tunnin": the hour step is the sole hour authority, so
+      // an every-hour scope alongside it would conflict. This holds for an open
+      // step (every Nth hour) and a bounded step (its endpoint-pinning cadence).
+      ['5/10 0/4 * * *',
+        'kymmenen minuutin välein minuutista 5 alkaen joka neljännen ' +
+        'tunnin aikana'],
+      ['5/10 9-17/2 * * *',
+        'kymmenen minuutin välein minuutista 5 alkaen, ' +
+        'kahden tunnin välein klo 9–17'],
+      // An hour WINDOW keeps "jokaisen tunnin": the window names the hours, so
+      // there is no every-hour-of-the-day conflict.
+      ['5/10 1-6 * * *',
+        'kymmenen minuutin välein jokaisen tunnin minuutista 5 alkaen ' +
+        'klo 1.00–6.55'],
       // A uneven or bounded hour step has a distinct endpoint, so it reads as a
       // bounded cadence pinning both clock-time ends, not a wall of clock times.
       ['*/20 9-17/2 * * *',
@@ -305,7 +322,10 @@ describe('Suomi (fi):', function() {
       ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 sekä klo 22.30'],
       ['0,30 8-18/2 * * *',
         '0 ja 30 minuutin kohdalla, kahden tunnin välein klo 8–18'],
-      ['*/15 30 9 * * *', '15 sekunnin välein, joka päivä klo 9.30'],
+      // A single fixed minute fuses the seconds to the clock minute (the same
+      // "minuutin HH.MM aikana" frame as minute 0), never floating "klo 9.30".
+      ['*/15 30 9 * * *',
+        '15 sekunnin välein minuutin 9.30 aikana, joka päivä'],
       ['1 1 * * * *', 'joka tunti 1 minuutin ja 1 sekunnin kohdalla'],
       ['*/15 * * * MON', '15 minuutin välein maanantaisin'],
       ['*/15 * 13 * *', '15 minuutin välein kuukauden 13. päivänä'],
@@ -355,7 +375,13 @@ describe('Suomi (fi):', function() {
         'joka sekunti minuutin ajan joka toisen tunnin aikana'],
       ['* 0 9 * * MON', 'joka sekunti minuutin 9.00 aikana, maanantaisin'],
       ['*/15 0 9 * * *',
-        '15 sekunnin välein minuutin 9.00 aikana, joka päivä']
+        '15 sekunnin välein minuutin 9.00 aikana, joka päivä'],
+      // A single fixed NONZERO minute is a single fixed timestamp just like
+      // minute 0: the seconds fuse to that explicit clock minute ("minuutin
+      // 0.02 aikana"), matching the minute-0 form above, never floating as a
+      // separate apposition ("klo 0.02").
+      ['* 2 0 * * 0-6', 'joka sekunti minuutin 0.02 aikana, joka päivä'],
+      ['* 2 9 * * *', 'joka sekunti minuutin 9.02 aikana, joka päivä']
     ]);
   });
 
@@ -457,7 +483,7 @@ describe('Suomi (fi):', function() {
       ['5,30 */15 9,17 1,15 * *',
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
         'klo 9 ja 17 kuukauden 1. ja 15. päivänä'],
-      ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
+      ['* 30 9 * * *', 'joka sekunti minuutin 9.30 aikana, joka päivä'],
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "joka sekunti, kahden minuutin välein".
       ['* */2 * * * *', 'joka sekunti joka toisena minuuttina'],

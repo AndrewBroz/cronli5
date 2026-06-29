@@ -738,12 +738,13 @@ function renderComposeSeconds(
     }
   }
 
-  // A sub-minute second with the minute pinned to 0 and a specific hour: the
-  // clock-time rest would read "um 9 Uhr", which hides the pinned :00 (and so
-  // the one-minute confinement — 60 fires in :00, not 3,600 across the hour).
-  // Bind the seconds into the explicit clock minute in the genitive ("der
-  // Minute 9:00"); the recurring "täglich"/day frame is added in `describe`.
-  if (composeMinuteZero(schedule, plan)) {
+  // A second over a single fixed minute and a specific hour is a single fixed
+  // timestamp: the clock-time rest would float the seconds as a separate
+  // apposition ("jede Sekunde, um 9:02 Uhr"), hiding that they belong to that
+  // one minute. Bind the seconds into the explicit clock minute in the genitive
+  // ("der Minute 9:02"), the same fusion the minute-0 case ("der Minute 9:00")
+  // uses; the recurring "täglich"/day frame is added in `describe`.
+  if (composeSingleMinute(schedule, plan)) {
     return secondsLead(schedule) + ' ' +
       clockMinuteGenitive(plan.rest.times, opts.style.sep);
   }
@@ -765,21 +766,23 @@ function renderComposeSeconds(
   return lead + render(schedule, plan.rest, opts);
 }
 
-// True when a compose-seconds plan is a sub-minute second over a minute-0
-// clock-time rest — the case that reads as the bare hour and so must surface
-// the pinned clock minute.
-function composeMinuteZero(
+// True when a compose-seconds plan is a sub-minute second over a single fixed
+// minute's clock-time rest — the single fixed timestamp whose seconds must fuse
+// to the explicit clock minute rather than float as a separate apposition.
+// Minute 0 ("der Minute 0:00") is just this with the minute being 0; any single
+// fixed minute fuses the same way.
+function composeSingleMinute(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>
 ): plan is Extract<PlanNode, {kind: 'composeSeconds'}> &
   {rest: Extract<PlanNode, {kind: 'clockTimes'}>} {
   return plan.rest.kind === 'clockTimes' &&
-    plan.rest.times.every((time) => +time.minute === 0);
+    schedule.shapes.minute === 'single';
 }
 
-// The pinned clock minute in the genitive: "der Minute 9:00" for one hour,
-// "der Minuten 9:00, 10:00 und 17:00" for several — the explicit ":00" so the
-// minute-0 confinement stays visible.
+// The pinned clock minute in the genitive: "der Minute 9:02" for one hour,
+// "der Minuten 9:00, 10:00 und 17:00" for several — the explicit minute so the
+// single-fixed-minute confinement stays visible.
 function clockMinuteGenitive(
   times: {hour: number; minute: number}[],
   sep: string
@@ -940,18 +943,22 @@ function renderMinuteFrequency(
   if (plan.hours.kind === 'during') {
     // A bounded or uneven hour stride confines the minute cadence to its own
     // endpoint-pinning hour cadence ("alle 15 Minuten, alle 5 Stunden von 0 bis
-    // 20 Uhr").
+    // 20 Uhr"). That hour step is the sole hour authority, so an offset minute
+    // cadence drops its generic "jeder Stunde" (an every-hour scope conflicting
+    // with the step); a list of specific hours keeps it.
     const cadence = unevenHourCadence(schedule);
 
     return cadence ?
-      base + ', ' + cadence :
+      stepClause(segment, UNITS.minute, '') + ', ' + cadence :
       base + ' ' + duringHours(schedule, plan.hours.times, sep);
   }
 
   if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean step (dividing the day):
-    // confine the cadence to every Nth hour ("in jeder zweiten Stunde").
-    return base + ' ' +
+    // confine the cadence to every Nth hour ("in jeder zweiten Stunde"). The
+    // hour step is the sole hour authority, so the minute cadence drops its
+    // generic "jeder Stunde".
+    return stepClause(segment, UNITS.minute, '') + ' ' +
       everyNthHour(stepSegment(schedule, 'hour'));
   }
 
@@ -1405,28 +1412,31 @@ function qualifier(schedule: Schedule, months: Months): string {
 
 // Plan kinds whose clause is a clock time: the qualifier leads them ("montags
 // um 9 Uhr"); a frequency clause trails it ("jede Minute montags"). The
-// minute-0 compose-seconds clause is anchored on a clock minute too, so the
-// qualifier leads it ("montags jede Sekunde der Minute 9:00").
+// single-fixed-minute compose-seconds clause is anchored on a clock minute too,
+// so the qualifier leads it ("montags jede Sekunde der Minute 9:00").
 const LEADING_PLANS = new Set(['clockTimes']);
 
 // True when the leading qualifier should precede the clause: a clock-time
-// plan, or the minute-0 compose-seconds clause that surfaces a clock minute.
+// plan, or the single-fixed-minute compose-seconds clause that surfaces a clock
+// minute.
 function leadsQualifier(schedule: Schedule): boolean {
-  return LEADING_PLANS.has(schedule.plan.kind) || isComposeMinuteZero(schedule);
+  return LEADING_PLANS.has(schedule.plan.kind) ||
+    isComposeSingleMinute(schedule);
 }
 
-// Whether the planned clause is the minute-0 compose-seconds confinement
-// (a sub-minute second over a minute-0 clock-time rest).
-function isComposeMinuteZero(schedule: Schedule): boolean {
+// Whether the planned clause is the single-fixed-minute compose-seconds
+// confinement (a sub-minute second over a single fixed minute's clock-time
+// rest).
+function isComposeSingleMinute(schedule: Schedule): boolean {
   return schedule.plan.kind === 'composeSeconds' &&
-    composeMinuteZero(schedule, schedule.plan);
+    composeSingleMinute(schedule, schedule.plan);
 }
 
 // True when the clause is a bare daily clock-time list and so needs the
 // "täglich" frame to read as recurring, not a one-off: clockTimes always, the
-// minute-0 compose-seconds clause (a recurring clock minute), and an uneven
-// hour step (rendered as its fire list "um 0, 5, … Uhr", not the cadence "alle
-// N Stunden"). A frequency clause already implies recurrence.
+// single-fixed-minute compose-seconds clause (a recurring clock minute), and an
+// uneven hour step (rendered as its fire list "um 0, 5, … Uhr", not the cadence
+// "alle N Stunden"). A frequency clause already implies recurrence.
 function needsDailyFrame(schedule: Schedule): boolean {
   // An hour cadence is a sub-daily frequency, not a daily clock-time list, so
   // it must not take the "täglich" frame ("alle 2 Stunden", not "täglich alle
@@ -1435,7 +1445,7 @@ function needsDailyFrame(schedule: Schedule): boolean {
     return false;
   }
 
-  if (schedule.plan.kind === 'clockTimes' || isComposeMinuteZero(schedule)) {
+  if (schedule.plan.kind === 'clockTimes' || isComposeSingleMinute(schedule)) {
     return true;
   }
 

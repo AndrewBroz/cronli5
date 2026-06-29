@@ -275,12 +275,55 @@ describe('Français (fr):', function() {
       ['0-30 */2 * * *',
         'chaque minute de 0 à 30, toutes les deux heures'],
       // A minute list under a clean stride keeps the same cadence the range
-      // and wildcard forms do, never enumerating the hours.
+      // and wildcard forms do, never enumerating the hours. Under an hour STEP
+      // the minute clause drops "de chaque heure": the step is the sole hour
+      // authority, so the cadence binds to it (as in de/fi). "de chaque heure"
+      // alongside "toutes les deux heures" would be a conflicting every-hour
+      // scope.
       ['5,30 */2 * * *',
-        'aux minutes 5 et 30 de chaque heure, toutes les deux heures'],
+        'aux minutes 5 et 30, toutes les deux heures'],
       ['5,30 1/2 * * *',
-        'aux minutes 5 et 30 de chaque heure, ' +
+        'aux minutes 5 et 30, ' +
         'toutes les deux heures à partir de 1 h']
+    ]);
+  });
+
+  // A minute CADENCE under an hour STEP must not assert a generic every-hour
+  // scope ("de chaque heure"): the hour step is the sole hour authority. An
+  // hour WINDOW (9-17) and the hour=* case keep "de chaque heure" — the window
+  // names the hours, so there is no every-hour-of-the-day conflict.
+  describe('la cadence des minutes se lie au pas horaire, sans portée ' +
+    'générique', function() {
+    run([
+      ['2/7 0/4 * * *',
+        'toutes les sept minutes de la minute 2 à 58, toutes les quatre heures'],
+      ['5/10 0/4 * * *',
+        'toutes les dix minutes à partir de la minute 5, ' +
+        'pendant les heures de 0 h, 4 h, 8 h, 12 h, 16 h et 20 h'],
+      ['3/2 1/2 * * *',
+        'toutes les deux minutes de la minute 3 à 59, ' +
+        'toutes les deux heures à partir de 1 h'],
+      // A bounded hour step is the sole hour authority, so a minute cadence or
+      // list drops its generic "de chaque heure".
+      ['3/2 9-17/2 * * *',
+        'toutes les deux minutes de la minute 3 à 59, ' +
+        'toutes les deux heures de 9 h à 17 h'],
+      ['2/7 9-17/2 * * *',
+        'toutes les sept minutes de la minute 2 à 58, ' +
+        'toutes les deux heures de 9 h à 17 h'],
+      ['5,30 9-17/2 * * *',
+        'aux minutes 5 et 30, ' +
+        'toutes les deux heures de 9 h à 17 h'],
+      // Hour WINDOW keeps "de chaque heure".
+      ['2/7 9-17 * * *',
+        'toutes les sept minutes de la minute 2 à 58 de chaque heure, ' +
+        'de 9 h à 17 h'],
+      ['5/10 1-6 * * *',
+        'toutes les dix minutes à partir de la minute 5 de chaque heure ' +
+        'de 1 h à 6 h 55'],
+      // hour=* keeps "de chaque heure" (the only hour statement).
+      ['2/7 * * * *',
+        'toutes les sept minutes de la minute 2 à 58 de chaque heure']
     ]);
   });
 
@@ -569,7 +612,7 @@ describe('Français (fr):', function() {
     run([
       ['30 */25 9-17/2 * * *',
         'à la seconde 30 de chaque minute, ' +
-        'aux minutes 0, 25 et 50 de chaque heure, ' +
+        'aux minutes 0, 25 et 50, ' +
         'toutes les deux heures de 9 h à 17 h']
     ]);
   });
@@ -660,7 +703,7 @@ describe('Français (fr):', function() {
         'chaque heure de 9 h 30 à 20 h 30 ' +
         'et aussi à 22 h 30'],
       ['0,30 8-18/2 * * *',
-        'aux minutes 0 et 30 de chaque heure, ' +
+        'aux minutes 0 et 30, ' +
         'toutes les deux heures de 8 h à 18 h'],
       ['*/15 9-20,22 * * *',
         'toutes les 15 minutes de 9 h à 20 h 59 ' +
@@ -869,7 +912,7 @@ describe('Français (fr):', function() {
       ['0 0,8,16 * * *', 'tous les jours à minuit, 8 h et 16 h'],
       ['* */5 * * *', 'chaque minute, toutes les cinq heures de minuit à 20 h'],
       ['*/25 */5 * * *',
-        'aux minutes 0, 25 et 50 de chaque heure, ' +
+        'aux minutes 0, 25 et 50, ' +
         'toutes les cinq heures de minuit à 20 h'],
       ['0-30 */5 * * *',
         'chaque minute de 0 à 30, toutes les cinq heures de minuit à 20 h'],
@@ -877,7 +920,7 @@ describe('Français (fr):', function() {
       ['0-30 9-17/2 * * *',
         'chaque minute de 0 à 30, toutes les deux heures de 9 h à 17 h'],
       ['5,10 9-17/2 * * *',
-        'aux minutes 5 et 10 de chaque heure, ' +
+        'aux minutes 5 et 10, ' +
         'toutes les deux heures de 9 h à 17 h'],
       ['0 1-23/2 * * *',
         'à 1 h, 3 h, 5 h, 7 h, 9 h, 11 h, 13 h, 15 h, ' +

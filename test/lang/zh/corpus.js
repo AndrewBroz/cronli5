@@ -75,12 +75,12 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // cadence, not an enumerated minute list.
       ['* 3/2 0 * * *', '凌晨0点从3分起每2分钟，至59分的每一秒'],
       ['* 0-30 * * * *', '每小时0至30分，每秒'],
-      ['* 0-30 */2 * * *', '每2小时，每小时0至30分，每秒'],
+      ['* 0-30 */2 * * *', '每2小时，0至30分，每秒'],
       ['* 0-30 9,17 * * *', '在9点和17点，每小时0至30分，每秒'],
       ['* 0-30 9-17 * * *', '在9点至17点之间，每小时0至30分，每秒'],
       ['* 1 * * * *', '每小时1分，每秒'],
       ['* 5,30 * * * *', '每小时5分和30分，每秒'],
-      ['* 5,30 */2 * * *', '每2小时，每小时5分和30分，每秒'],
+      ['* 5,30 */2 * * *', '每2小时，5分和30分，每秒'],
       // An hour step (or arithmetic-progression hour list) under a single
       // pinned minute reads as a cadence, not a cross-product of clock times.
       // Irregular hour lists and ranges still enumerate.
@@ -161,17 +161,21 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['30 0 9-17 * * MON', '每周一，9点至17点，第30秒'],
       // Guard: a pure single-value hour list has no range, so nothing collapses.
       ['30 0 9,17 * * *', '每天9点30秒和17点30秒'],
-      ['* 5 9,17 * * *', '每天9点5分和17点5分每秒'],
+      ['* 5 9,17 * * *', '每天9点5分和17点5分的每一秒'],
       // A single second over a non-zero minute and a bounded hour step folds
       // into each clock time ("9点5分30秒"); the composer must not append the
       // second clause again (which once doubled it to "…17点5分30秒第30秒").
       ['30 5 9-17/2 * * *',
         '每天9点5分30秒、11点5分30秒、13点5分30秒、15点5分30秒和17点5分30秒'],
-      // A single minute over a lone hour keeps the composed clock time
-      // ("0点2分"), attaching the second to it rather than splitting the
-      // hour and minute apart.
-      ['* 2 0 * * *', '每天0点2分每秒'],
-      ['* 30 9 * * MON', '每周一，9点30分每秒'],
+      // A single fixed minute over a lone hour keeps the composed clock time
+      // ("0点2分") and binds the seconds to it with "的", the same fusion the
+      // minute-0 case ("0分的每一秒") and the minute-step case ("5、20…分的每
+      // 一秒") already use — never a bare trailing "每秒" that floats as a
+      // second, unlinked adverbial ("0点2分每秒").
+      ['* 2 0 * * *', '每天0点2分的每一秒'],
+      ['* 2 0 * * 0-6', '每天0点2分的每一秒'],
+      ['* 2 9 * * *', '每天9点2分的每一秒'],
+      ['* 30 9 * * MON', '每周一，9点30分的每一秒'],
       ['*/15 * * * * *', '每15秒'],
       ['*/15 0 * * * *', '每小时0分，每15秒'],
       // A uniform offset step (interval divides the cycle, start within the
@@ -197,7 +201,23 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // "每N分钟" that drops the start.
       ['*/15 2/6 * * *', '从2点起每6小时每15分钟'],
       ['* 5/15 0 * * *', '凌晨0点5、20、35、50分的每一秒'],
-      ['0-30 2/6 * * *', '从2点起每6小时，每小时0至30分，每分钟'],
+      ['0-30 2/6 * * *', '从2点起每6小时，0至30分，每分钟'],
+      // A minute CADENCE under an hour STEP must not lead with the generic
+      // "每小时" (every-hour) scope: the hour cadence ("每4小时") is the sole hour
+      // authority, so the minute clause binds to it, as in de/fi. An hour
+      // WINDOW (9-17) keeps "每小时" — the window already names the hours, so
+      // there is no every-hour-of-the-day conflict; hour=* keeps it too.
+      ['2/7 0/4 * * *', '每4小时，从2分起每7分钟，至58分'],
+      ['5/10 0/4 * * *', '每4小时从5分起每10分钟'],
+      ['3/2 1/2 * * *', '从1点起每2小时，从3分起每2分钟，至59分'],
+      // A BOUNDED hour step leads as the cadence and is the sole hour authority,
+      // so the minute clause drops its generic "每小时".
+      ['3/2 9-17/2 * * *', '从9点起每2小时，至17点，从3分起每2分钟，至59分'],
+      ['2/7 9-17/2 * * *', '从9点起每2小时，至17点，从2分起每7分钟，至58分'],
+      ['5,30 9-17/2 * * *', '从9点起每2小时，至17点，5分和30分'],
+      ['2/7 9-17 * * *', '在9点至17点之间，每小时从2分起每7分钟，至58分'],
+      ['5/10 1-6 * * *', '在1点至6点之间，每小时从5分起每10分钟'],
+      ['2/7 * * * *', '每小时从2分起每7分钟，至58分'],
       ['0 * * * * *', '每分钟'],
       ['0 * */2 * * *', '在偶数小时，每分钟'],
       ['0 * */3 * * *', '每3小时内，每分钟'],
@@ -426,22 +446,22 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 L 1-3 1-5', '1月至3月，最后一天或每周一至周五，凌晨0点'],
       ['0 0 L 1-3 5L', '1月至3月，最后一天或最后一个周五，凌晨0点'],
       ['0 0-30 * * * *', '每小时0至30分，每分钟'],
-      ['0 0-30 */2 * * *', '每2小时，每小时0至30分，每分钟'],
+      ['0 0-30 */2 * * *', '每2小时，0至30分，每分钟'],
       ['0 0-30 9,17 * * *', '9点和17点，每小时0至30分，每分钟'],
       ['0 0-30 9-17 * * *', '在9点至17点之间，每小时0至30分，每分钟'],
       ['0 1 * * * *', '每小时1分'],
       ['0 5,30 * * * *', '每小时5分和30分'],
-      ['0 5,30 */2 * * *', '每2小时，每小时5分和30分'],
+      ['0 5,30 */2 * * *', '每2小时，5分和30分'],
       // A minute list under an hour stride reads as the hour cadence plus the
       // minute list (the same compaction the wildcard/range minute already
       // uses), not the twelve enumerated hours — whether the stride is clean
       // ("每2小时，…") or offset ("从1点起每2小时，…").
-      ['5,30 1/2 * * *', '从1点起每2小时，每小时5分和30分'],
-      ['5,30 */2 * * *', '每2小时，每小时5分和30分'],
-      ['*/25 */2 * * *', '每2小时，每小时0、25、50分'],
-      ['5,10,30 */2 * * *', '每2小时，每小时5、10、30分'],
-      ['*/25 */3 * * *', '每3小时，每小时0、25、50分'],
-      ['*/25 1/2 * * *', '从1点起每2小时，每小时0、25、50分'],
+      ['5,30 1/2 * * *', '从1点起每2小时，5分和30分'],
+      ['5,30 */2 * * *', '每2小时，5分和30分'],
+      ['*/25 */2 * * *', '每2小时，0、25、50分'],
+      ['5,10,30 */2 * * *', '每2小时，5、10、30分'],
+      ['*/25 */3 * * *', '每3小时，0、25、50分'],
+      ['*/25 1/2 * * *', '从1点起每2小时，0、25、50分'],
       ['1 * * * * *', '每分钟第1秒'],
       ['1 0 * * * *', '每小时0分第1秒'],
       ['30 5,10 9,17,19,21,23 * * 1', '每周一，每小时5分和10分，在9点、17点、19点、21点和23点，第30秒'],
@@ -493,15 +513,15 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // A non-uniform minute step (enumerated to a fire list) under an uneven
       // hour step must keep BOTH the minute set and the hour cadence — the
       // minute is never dropped just because its first fire is 0.
-      ['*/25 */5 * * *', '从0点起每5小时，至20点，每小时0、25、50分'],
-      ['*/7 */5 * * *', '从0点起每5小时，至20点，每小时从0分起每7分钟，至56分'],
+      ['*/25 */5 * * *', '从0点起每5小时，至20点，0、25、50分'],
+      ['*/7 */5 * * *', '从0点起每5小时，至20点，从0分起每7分钟，至56分'],
       // An offset minute list under the same uneven hour step keeps both sets,
       // reading as the same hour cadence the leading-0 list does.
-      ['5/25 */5 * * *', '从0点起每5小时，至20点，每小时5、30、55分'],
+      ['5/25 */5 * * *', '从0点起每5小时，至20点，5、30、55分'],
       // Working-case guards: the minute set survives under an even hour step, an
       // hour range, and an offset hour step too.
       ['*/25 9-17 * * *', '在9点至17点之间，每小时0、25、50分'],
-      ['*/25 2/6 * * *', '从2点起每6小时，每小时0、25、50分'],
+      ['*/25 2/6 * * *', '从2点起每6小时，0、25、50分'],
       ['0 0 */7 * *', '每7天，凌晨0点'],
       ['0 0 */10 * *', '每10天，凌晨0点'],
       ['0 0 * */5 *', '1、6、11月每天凌晨0点'],
@@ -654,7 +674,7 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 * * 1#2', '第2個週一凌晨0點', {dialect: 'zh-Hant'}],
       ['*/15 9-17 * * *', '在9點至17點之間，每15分鐘', {dialect: 'zh-Hant'}],
       ['0 0 15W * *', '本月最接近15日的工作日凌晨0點', {dialect: 'zh-Hant'}],
-      ['0 0-30 */2 * * *', '每2小時，每小時0至30分，每分鐘', {dialect: 'zh-Hant'}],
+      ['0 0-30 */2 * * *', '每2小時，0至30分，每分鐘', {dialect: 'zh-Hant'}],
       ['@reboot', '系統啟動時', {dialect: 'zh-Hant'}],
       ['0 0 * * *', '運行時間：每天凌晨0點。', {sentence: true, dialect: 'zh-Hant'}],
       ['not a cron', '無法識別的 cron 表達式', {lenient: true, dialect: 'zh-Hant'}]

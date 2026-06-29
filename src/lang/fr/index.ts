@@ -476,6 +476,16 @@ function minutesList(schedule: Schedule, opts: Opts): string {
     joinList(segmentWords(segmentsOf(schedule, 'minute'))) + ' de chaque heure';
 }
 
+// Strip the generic "de chaque heure" anchor from a minute-cadence lead. Under
+// an hour STEP the hour clause is the sole hour authority, so the cadence must
+// not also assert "de chaque heure" — alongside a stepped hour it reads as a
+// conflicting every-hour scope ("de chaque heure, toutes les quatre heures").
+// An hour WINDOW and an unrestricted hour keep the anchor (the window already
+// names the hours; an open hour has no other hour statement).
+function withoutHourAnchor(lead: string): string {
+  return lead.replace(/ de chaque heure$/, '');
+}
+
 // "chaque minute de 0 à 30". The standalone renderer adds "de chaque heure";
 // when an hour qualifier follows ("..., à 9 h", "..., toutes les deux heures")
 // it would contradict, so it is not baked in here.
@@ -550,8 +560,10 @@ function renderMinuteFrequency(
   }
   else if (plan.hours.kind === 'step') {
     // A clean stride is a confinement ("les heures paires", or the active-hour
-    // list), never a juxtaposed cadence ("toutes les deux heures").
-    phrase += ', ' + stepHourSpan(stepSegment(schedule, 'hour'), opts);
+    // list), never a juxtaposed cadence ("toutes les deux heures"). The hour
+    // step scopes the hours, so an offset cadence drops "de chaque heure".
+    phrase = withoutHourAnchor(phrase) + ', ' +
+      stepHourSpan(stepSegment(schedule, 'hour'), opts);
   }
 
   return phrase + trailingQualifier(schedule, opts);
@@ -635,10 +647,10 @@ function renderMinuteSpanAcrossHourStep(
 
   // A minute list keeps the same cadence clause as the range; only its lead
   // differs ("aux minutes 5 et 30 de chaque heure" vs "chaque minute de 0 à
-  // 30").
-  const lead = plan.form === 'list' ?
+  // 30"). The hour step scopes the hours, so the lead drops "de chaque heure".
+  const lead = withoutHourAnchor(plan.form === 'list' ?
     minutesList(schedule, opts) :
-    minuteRangeLead(schedule.pattern.minute);
+    minuteRangeLead(schedule.pattern.minute));
 
   return lead + ', ' +
     (cadence ?? stepHours(segment, opts)) + trailingQualifier(schedule, opts);
@@ -991,10 +1003,13 @@ function renderCompactClockTimes(
   }
 
   // A uneven hour stride reads as a cadence after the minute lead, not a wall
-  // of clock-time columns.
+  // of clock-time columns. That hour step is the sole hour authority, so the
+  // minute lead drops its generic "de chaque heure" (an every-hour scope that
+  // would conflict with the step); the clock-time branch keeps it, naming
+  // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    minutesList(schedule, opts) + ', ' + cadence +
+    withoutHourAnchor(minutesList(schedule, opts)) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
     minutesList(schedule, opts) + ', ' +
       hourContextTimes(schedule, opts) + trailingQualifier(schedule, opts);
