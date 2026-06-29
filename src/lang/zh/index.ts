@@ -889,6 +889,15 @@ function composeSecondsOnHour(
     return composeMinuteZeroClocks(schedule, sec);
   }
 
+  // A single fixed (non-zero) minute under enumerated clock times fuses the
+  // seconds onto the composed clock time the same way ("0点2分的每一秒").
+  const fusedSingleMinute =
+    composeSingleMinuteClocks(schedule, rest, sec, opts);
+
+  if (fusedSingleMinute !== null) {
+    return fusedSingleMinute;
+  }
+
   const restText = render(schedule, rest, opts);
   const secTail = clockRestCarriesSecond(rest) ? '' : sec;
 
@@ -903,6 +912,29 @@ function composeSecondsOnHour(
   }
 
   return restText + secTail;
+}
+
+// A single fixed (non-zero) minute under enumerated clock times: each clock
+// point already names the minute ("0点2分", "9点5分和17点5分"), so bind the
+// seconds to it with "的" — the same fusion the minute-0 ("0分的每一秒") and
+// minute-step ("5、20…分的每一秒") cases use — rather than leaving a bare
+// trailing "每秒" that floats as a second, unlinked adverbial. A single second
+// already folded into each clock time ("9点5分30秒") is not re-appended. The
+// compactClockTimes window form states its minute separately ("每小时5分") and
+// keeps its own seconds clause, so it does not qualify (returns null). minute 0
+// is handled by composeMinuteZeroClocks before this point.
+function composeSingleMinuteClocks(
+  schedule: Schedule, rest: PlanNode, sec: string, opts: Opts
+): string | null {
+  if (rest.kind !== 'clockTimes' || schedule.shapes.minute !== 'single' ||
+      clockRestCarriesSecond(rest)) {
+    return null;
+  }
+
+  const core =
+    render(schedule, rest, opts) + minuteZeroSecondTail(schedule, sec);
+
+  return isDaily(schedule) ? '每天' + core : core;
 }
 
 // A minute pinned to 0 under specific clock hours (not a compacted cadence): a
@@ -926,14 +958,24 @@ function composeMinuteZeroClocks(schedule: Schedule, sec: string): string {
     // midnight (凌晨0点) and other hours still need it to pin the minute.
     return hour === 12 ? '正午' : hourWord(hour) + '0分';
   });
-  // A pinned minute makes the seconds' own "每分钟" anchor misleading (it is a
-  // single minute, not every minute), so the stride here drops it.
-  const nested =
-    strideFromSegments(segmentsOf(schedule, 'second'), '秒', '秒', '');
-  const tail = sec === '每秒' ? '的每一秒' : '的' + (nested ?? sec);
-  const core = joinAnd(clocks) + tail;
+  const core = joinAnd(clocks) + minuteZeroSecondTail(schedule, sec);
 
   return isDaily(schedule) ? '每天' + core : core;
+}
+
+// The "的"-fused second tail for a clock time that already names a single pinned
+// minute ("…的每一秒" for a wildcard second, else "…的" + the second's clause).
+// A pinned minute makes the seconds' own "每分钟" anchor misleading (it is a
+// single minute, not every minute), so a stride here drops it.
+function minuteZeroSecondTail(schedule: Schedule, sec: string): string {
+  if (sec === '每秒') {
+    return '的每一秒';
+  }
+
+  const nested =
+    strideFromSegments(segmentsOf(schedule, 'second'), '秒', '秒', '');
+
+  return '的' + (nested ?? sec);
 }
 
 // Whether the hour field is a range — or a list whose segments include a

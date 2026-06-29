@@ -161,17 +161,21 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['30 0 9-17 * * MON', '每周一，9点至17点，第30秒'],
       // Guard: a pure single-value hour list has no range, so nothing collapses.
       ['30 0 9,17 * * *', '每天9点30秒和17点30秒'],
-      ['* 5 9,17 * * *', '每天9点5分和17点5分每秒'],
+      ['* 5 9,17 * * *', '每天9点5分和17点5分的每一秒'],
       // A single second over a non-zero minute and a bounded hour step folds
       // into each clock time ("9点5分30秒"); the composer must not append the
       // second clause again (which once doubled it to "…17点5分30秒第30秒").
       ['30 5 9-17/2 * * *',
         '每天9点5分30秒、11点5分30秒、13点5分30秒、15点5分30秒和17点5分30秒'],
-      // A single minute over a lone hour keeps the composed clock time
-      // ("0点2分"), attaching the second to it rather than splitting the
-      // hour and minute apart.
-      ['* 2 0 * * *', '每天0点2分每秒'],
-      ['* 30 9 * * MON', '每周一，9点30分每秒'],
+      // A single fixed minute over a lone hour keeps the composed clock time
+      // ("0点2分") and binds the seconds to it with "的", the same fusion the
+      // minute-0 case ("0分的每一秒") and the minute-step case ("5、20…分的每
+      // 一秒") already use — never a bare trailing "每秒" that floats as a
+      // second, unlinked adverbial ("0点2分每秒").
+      ['* 2 0 * * *', '每天0点2分的每一秒'],
+      ['* 2 0 * * 0-6', '每天0点2分的每一秒'],
+      ['* 2 9 * * *', '每天9点2分的每一秒'],
+      ['* 30 9 * * MON', '每周一，9点30分的每一秒'],
       ['*/15 * * * * *', '每15秒'],
       ['*/15 0 * * * *', '每小时0分，每15秒'],
       // A uniform offset step (interval divides the cycle, start within the

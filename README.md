@@ -328,8 +328,8 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Finnish | 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
 | French | le lundi, aux secondes 5 et 10 de 9 h 30 | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
 | Portuguese | às segundas-feiras, nos segundos 5 e 10 das 09:30 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
-| Chinese (Simplified) | 每周一，9点30分第5、10秒 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
-| Chinese (Traditional) | 每週一，9點30分第5、10秒 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
+| Chinese (Simplified) | 每周一，9点30分的第5、10秒 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
+| Chinese (Traditional) | 每週一，9點30分的第5、10秒 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
