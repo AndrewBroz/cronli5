@@ -484,11 +484,27 @@ describe('Suomi (fi):', function() {
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
         'klo 9 ja 17 kuukauden 1. ja 15. päivänä'],
       ['* 30 9 * * *', 'joka sekunti minuutin 9.30 aikana, joka päivä'],
+      // A stepped minute under a wildcard/stepped second and wildcard hour
+      // confines the second cadence to the ORDINAL minute cadence ("joka
+      // sekunti joka kuudentena minuuttina …"), never the comma juxtaposition
+      // that reads as two independent cadences. The offset-clean stride names
+      // only its start; the uneven one pins both endpoints ("minuutista 2
+      // minuuttiin 58").
+      ['* 4/6 * * * *',
+        'joka sekunti joka kuudentena minuuttina ' +
+        'jokaisen tunnin minuutista 4 alkaen'],
+      ['* 2/7 * * * *',
+        'joka sekunti joka seitsemäntenä minuuttina ' +
+        'minuutista 2 minuuttiin 58'],
+      ['* */6 * * * *', 'joka sekunti joka kuudentena minuuttina'],
+      ['*/15 4/6 * * * *',
+        '15 sekunnin välein joka kuudentena minuuttina ' +
+        'jokaisen tunnin minuutista 4 alkaen'],
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "joka sekunti, kahden minuutin välein".
       ['* */2 * * * *', 'joka sekunti joka toisena minuuttina'],
-      // Other strides keep the juxtaposed form.
-      ['* */3 * * * *', 'joka sekunti, kolmen minuutin välein'],
+      // Other clean steps confine as the ordinal cadence.
+      ['* */3 * * * *', 'joka sekunti joka kolmantena minuuttina'],
       // Guards: no-seconds and restricted hour are unchanged.
       ['*/2 * * * *', 'kahden minuutin välein'],
       ['* */2 0 * * *', 'joka sekunti, kahden minuutin välein klo 0.00–0.58'],

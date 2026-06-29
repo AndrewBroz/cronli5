@@ -6,6 +6,21 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.3]
+
+### Fixed
+
+- **A stepped minute under a seconds wildcard now confines, not juxtaposes
+  (all languages).** `* 4/6 * * * *` rendered the seconds against an enumerated
+  minute list (en ":04, :10, …") or behind a comma that reads as two independent
+  cadences ("every second, every six minutes…" — es/de/fi/fr/pt/zh). A blind
+  panel of Claude Sonnet instances confirmed the comma is a genuine misread. Each
+  language now uses its single-minute confinement form plus the ordinal cadence —
+  e.g. en "every second during every sixth minute from four minutes past the
+  hour", es "cada segundo en cada sexto minuto…", zh "每小时从4分起每6分钟的每一秒".
+  The standalone cadence (`0 4/6`), single-minute confinement (`* 30`), and
+  5-field patterns are unchanged.
+
 ## [0.8.2]
 
 ### Fixed

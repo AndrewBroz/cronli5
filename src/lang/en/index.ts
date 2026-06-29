@@ -677,6 +677,67 @@ const stepOrdinals: Record<number, string> = {
   2: 'other', 3: 'third', 4: 'fourth', 6: 'sixth', 8: 'eighth', 12: 'twelfth'
 };
 
+// Spelled ordinals for "every Nth minute" — the step intervals a minute
+// cadence can take (2 reads idiomatically as "other"). A lookup miss falls back
+// to the suffixed numeric ordinal, so an unusually large interval still reads.
+const spelledOrdinals: Record<number, string> = {
+  2: 'other', 3: 'third', 4: 'fourth', 5: 'fifth', 6: 'sixth', 7: 'seventh',
+  8: 'eighth', 9: 'ninth', 10: 'tenth', 11: 'eleventh', 12: 'twelfth',
+  15: 'fifteenth', 20: 'twentieth', 30: 'thirtieth'
+};
+
+// The ordinal word for a cadence interval ("sixth", "seventh"), spelled where
+// known and suffixed-numeric ("13th") otherwise.
+function ordinalWord(interval: number): string {
+  return spelledOrdinals[interval] ?? getOrdinal(interval);
+}
+
+// A stepped minute under a seconds lead reads as a CONFINEMENT of that cadence,
+// not a juxtaposed clause (a comma there reads as two independent cadences) nor
+// a wall of enumerated minutes: "during every Nth minute" plus the step's
+// offset/bound. The cadence is ORDINAL ("every sixth minute"); the cardinal
+// ("every six minutes") is the form that reads as a separate cadence. The
+// offset/bound mirrors the standalone minute cadence: a clean stride from the
+// top names no offset, an offset-clean stride names only its start ("from four
+// minutes past the hour"), and an uneven one pins both endpoints ("from 2
+// through 58 minutes past the hour").
+function minuteStrideConfinement(stride: {start: number; interval: number;
+  last: number}, opts: NormalizedOptions): string {
+  const base = ' during every ' + ordinalWord(stride.interval) + ' minute';
+
+  return chooseStride({...stride, cycle: 60}, {
+    bare: () => base,
+    offset: () => base + ' from ' + getNumber(stride.start, opts) + ' ' +
+      pluralize(stride.start, 'minute') + ' past the hour',
+    bounded: () => {
+      const num = seriesNumber();
+
+      return base + ' from ' + num(stride.start) + through(opts) +
+        num(stride.last) + ' ' + pluralize(stride.last, 'minute') +
+        ' past the hour';
+    }
+  });
+}
+
+// The minute field's step stride for the confinement frame, or null when the
+// minute is not a stepped cadence. A `step`-shaped field (`*/6`) reads its
+// segment directly; a `list`-shaped field the core enumerated from an uneven
+// step (`2/7` → 2,9,…,58) recovers the progression from its values.
+function minuteStride(schedule: Schedule):
+  {start: number; interval: number; last: number} | null {
+  if (schedule.shapes.minute === 'step') {
+    const segment = stepSegment(schedule, 'minute');
+    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+    return {interval: segment.interval, last:
+      segment.fires[segment.fires.length - 1], start};
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'minute'));
+
+  return values && arithmeticStep(values);
+}
+
 // Confine a cadence to a clean hour stride: "during every other hour", with
 // the start named when it is not midnight ("…from 1 a.m." for an odd stride).
 function everyNthHour(segment: StepSegment, opts: NormalizedOptions): string {
@@ -1078,10 +1139,20 @@ function minuteConfinement(schedule: Schedule,
     return '';
   }
 
-  if (isCadenceField(minute)) {
-    // The gate admits only the `*/2` "every other minute" step here; other
-    // minute steps defer to the existing renderer.
+  if (minute === '*/2') {
+    // The `*/2` clean step reads idiomatically as "every other minute" with no
+    // offset; other minute steps take the ordinal stride-cadence below.
     return ' of every other minute';
+  }
+
+  // A stepped minute (a clean `*/n`, an offset `m/n`, or a uneven step the core
+  // enumerated to an arithmetic list) confines as "during every Nth minute"
+  // plus the step's offset/bound — the ordinal cadence, not the cardinal that
+  // reads as a separate cadence, nor a wall of enumerated ":NN" minutes.
+  const stride = minuteStride(schedule);
+
+  if (stride) {
+    return minuteStrideConfinement(stride, opts);
   }
 
   // A minute single/range/list under the seconds lead. The minute reads as a
@@ -1119,10 +1190,11 @@ function hourConfinement(schedule: Schedule, opts: NormalizedOptions): string {
 
   if (hour === '*') {
     // A pinned minute confinement ("during minute :00") repeats across every
-    // hour, so the hour is named as the unit of recurrence; a stepped minute
-    // ("of every other minute") or absent minute already implies all hours.
+    // hour, so the hour is named as the unit of recurrence; a minute cadence
+    // ("of every other minute", "during every sixth minute …") or an absent
+    // minute already implies all hours, so the hour is not restated.
     const minutePinned = schedule.pattern.minute !== '*' &&
-      !isCadenceField(schedule.pattern.minute);
+      !isCadenceField(schedule.pattern.minute) && !minuteStride(schedule);
 
     return minutePinned ? ' of every hour' : '';
   }
@@ -1216,24 +1288,28 @@ function confinementEligible(schedule: Schedule,
   }
 
   if (lead.secondLead) {
-    // A minute STEP is supported only as the `*/2` "every other minute" idiom,
-    // and only where it fills the coarser field: a contiguous hour range or a
-    // single hour both close on the minute's real last fire, which the
-    // windowing renderer already speaks. The `*/2` step fills both, so it keeps
-    // the "of every other minute" confinement; other steps defer entirely. A
-    // contiguous hour range (`hour === 'range'`) is left to that windowing
-    // renderer rather than this confinement frame, which closes on the top of
-    // the next hour.
+    // A minute STEP confines as an ordinal cadence ("during every sixth minute
+    // from four minutes past the hour"), but only where it fills the coarser
+    // field: under a WILDCARD hour the step repeats every hour, so the cadence
+    // is the whole confinement. A single hour or a contiguous range closes on
+    // the minute's real last fire, which the windowing renderer already speaks,
+    // so those defer. The `*/2` step keeps its "of every other minute" idiom.
     if (minuteStep) {
-      return minute === '*/2' && schedule.shapes.hour !== 'range';
+      return minute === '*/2' ?
+        schedule.shapes.hour !== 'range' :
+        schedule.pattern.hour === '*';
     }
 
-    // A minute list that is really a stride keeps its cadence form; a short
-    // explicit minute list crossed with a discrete hour LIST is a wall of
-    // distinct clock times ("9:00 a.m., 9:25 a.m., …"), not a single minute
-    // confinement. Both stay with the enumerating renderer.
-    if (isMinuteStride(schedule) ||
-        schedule.shapes.minute === 'list' && schedule.shapes.hour === 'list') {
+    // A minute list that is really an arithmetic stride confines as that same
+    // ordinal cadence when it fills a wildcard hour; under a restricted hour it
+    // keeps its existing cadence form. A short explicit minute list crossed
+    // with a discrete hour LIST is a wall of distinct clock times ("9:00 a.m.,
+    // 9:25 a.m., …"), not a single minute confinement, so it stays enumerated.
+    if (isMinuteStride(schedule)) {
+      return schedule.pattern.hour === '*';
+    }
+
+    if (schedule.shapes.minute === 'list' && schedule.shapes.hour === 'list') {
       return false;
     }
 

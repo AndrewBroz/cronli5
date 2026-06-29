@@ -115,6 +115,17 @@ const weekdayNames = [
 const nthWeekdayNames =
   [null, 'primer', 'segundo', 'tercer', 'cuarto', 'quinto'];
 
+// Spanish ordinals (masculine) for a stepped-minute cadence under a seconds
+// lead ("cada sexto minuto"). The interval-2 step never reaches here — it keeps
+// its own "de cada dos minutos" idiom — so the colliding "segundo" is unused.
+// A lookup miss falls back to the cardinal-with-"cada" form, which still
+// confines (see `minuteStepOrdinal`).
+const stepOrdinals: Record<number, string> = {
+  3: 'tercer', 4: 'cuarto', 5: 'quinto', 6: 'sexto', 7: 'séptimo',
+  8: 'octavo', 9: 'noveno', 10: 'décimo', 12: 'duodécimo', 15: 'decimoquinto',
+  20: 'vigésimo', 30: 'trigésimo'
+};
+
 // Normalize raw user options.
 function normalizeOptions(options?: Cronli5Options): Opts {
   options = options || {};
@@ -269,6 +280,71 @@ function isPinnedMinuteSeconds(
       schedule.shapes.second === 'step');
 }
 
+// The minute field's step stride for the confinement frame, or null when the
+// minute is not a stepped cadence. A `step`-shaped field (`*/6`) reads its
+// segment; a `list`-shaped field the core enumerated from a uneven step (`2/7`
+// → 2,9,…,58) recovers the progression from its values.
+function minuteStride(
+  schedule: Schedule
+): {start: number; interval: number; last: number} | null {
+  if (schedule.shapes.minute === 'step') {
+    const segment = stepSegment(schedule, 'minute');
+    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+    return {interval: segment.interval, last:
+      segment.fires[segment.fires.length - 1], start};
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'minute'));
+
+  return values && arithmeticStep(values);
+}
+
+// A stepped minute under a wildcard second and wildcard hour: bind the second
+// cadence to the minute cadence as a CONFINEMENT ("cada segundo en cada sexto
+// minuto a partir del minuto 4 de cada hora"), never the comma juxtaposition
+// that reads as two independent cadences. The cadence is ORDINAL ("cada sexto
+// minuto") — the cardinal "cada seis minutos" is what fuels the misread — and
+// the start/bound mirror the standalone minute cadence: a clean step from the
+// top names no offset, an offset-clean stride names only its start, and a
+// uneven one pins both endpoints ("del minuto 2 al 58"). An interval the
+// ordinal table does not cover keeps the cardinal "cada N" after "en", which
+// still confines.
+function minuteStepConfinement(
+  schedule: Schedule,
+  stride: {start: number; interval: number; last: number},
+  opts: Opts
+): string {
+  const ordinal = stepOrdinals[stride.interval];
+  const head = ordinal ?
+    'cada ' + ordinal + ' minuto' :
+    'cada ' + numero(stride.interval, opts) + ' minutos';
+
+  const tail = chooseStride({...stride, cycle: 60}, {
+    bare: () => '',
+    offset: () => ' a partir del minuto ' + stride.start,
+    bounded: () => ' del minuto ' + stride.start + ' al ' + stride.last
+  });
+
+  return secondsLeadClause(schedule, opts) + ' en ' + head + tail +
+    ' de cada hora' + trailingQualifier(schedule, opts);
+}
+
+// Whether a stepped minute fills a wildcard hour under a wildcard second — the
+// shape the confinement frame above handles.
+function isSteppedMinuteSeconds(
+  schedule: Schedule,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  return (plan.rest.kind === 'minuteFrequency' ||
+    plan.rest.kind === 'multipleMinutes') &&
+    (schedule.shapes.second === 'wildcard' ||
+      schedule.shapes.second === 'step') &&
+    schedule.shapes.hour === 'wildcard' &&
+    schedule.pattern.minute !== '*/2' &&
+    minuteStride(schedule) !== null;
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -310,6 +386,14 @@ function renderComposeSeconds(
       ' segundos del minuto ' + schedule.pattern.minute;
 
     return dayFrame + ', ' + window + ', ' + cadence;
+  }
+
+  // A stepped minute under a wildcard second + wildcard hour confines the
+  // second cadence to the ordinal minute cadence ("cada segundo en cada sexto
+  // minuto a partir del minuto 4 de cada hora"), never the comma juxtaposition
+  // that reads as two independent cadences.
+  if (isSteppedMinuteSeconds(schedule, plan)) {
+    return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
   }
 
   // A wildcard second under a minute */2 with a wildcard hour juxtaposes two

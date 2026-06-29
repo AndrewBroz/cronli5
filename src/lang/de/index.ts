@@ -223,6 +223,16 @@ const stepOrdinals: {[interval: number]: string} = {
   12: 'zwölften'
 };
 
+// Dative ordinals for "in jeder N-ten Minute" — the step intervals a minute
+// cadence can take. The interval-2 step keeps its own "jeder zweiten Minute"
+// idiom and never reaches the confinement helper; a lookup miss falls back to
+// the cardinal "alle N Minuten" form, which still confines.
+const minuteStepOrdinals: {[interval: number]: string} = {
+  3: 'dritten', 4: 'vierten', 5: 'fünften', 6: 'sechsten', 7: 'siebten',
+  8: 'achten', 9: 'neunten', 10: 'zehnten', 12: 'zwölften',
+  15: 'fünfzehnten', 20: 'zwanzigsten', 30: 'dreißigsten'
+};
+
 // Confine a cadence to a clean hour stride: "in jeder zweiten Stunde", with
 // the start named when it is not midnight ("…ab 1 Uhr" for an odd stride).
 function everyNthHour(segment: StepSegment): string {
@@ -717,6 +727,65 @@ function isEveryOtherMinuteSeconds(
   return minuteStep.startToken === '*' && minuteStep.interval === 2;
 }
 
+// The minute field's step stride for the confinement frame, or null when the
+// minute is not a stepped cadence. A `step`-shaped field reads its segment; a
+// `list`-shaped field the core enumerated from a uneven step (`2/7` → 2,9,…,58)
+// recovers the progression from its values.
+function minuteStride(
+  schedule: Schedule
+): {start: number; interval: number; last: number} | null {
+  if (schedule.shapes.minute === 'step') {
+    const segment = stepSegment(schedule, 'minute');
+    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+    return {interval: segment.interval, last:
+      segment.fires[segment.fires.length - 1], start};
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'minute'));
+
+  return values && arithmeticStep(values);
+}
+
+// A stepped minute under a wildcard/stepped second and wildcard hour: bind the
+// second cadence to the minute cadence as a CONFINEMENT ("jede Sekunde in jeder
+// sechsten Minute ab Minute 4 jeder Stunde"), never the comma juxtaposition
+// that reads as two independent cadences. The cadence is ORDINAL ("in jeder
+// sechsten Minute") — the cardinal "alle 6 Minuten" is what fuels the misread —
+// and the start/bound mirror the standalone minute cadence.
+function minuteStepConfinement(
+  schedule: Schedule,
+  stride: {start: number; interval: number; last: number}
+): string {
+  const ordinal = minuteStepOrdinals[stride.interval];
+  const head = ordinal ?
+    'in jeder ' + ordinal + ' Minute' :
+    'alle ' + stride.interval + ' Minuten';
+
+  const tail = chooseStride({...stride, cycle: 60}, {
+    bare: () => '',
+    offset: () => ' ab Minute ' + stride.start,
+    bounded: () => ' von Minute ' + stride.start + ' bis ' + stride.last
+  });
+
+  return secondsLead(schedule) + ' ' + head + tail + ' jeder Stunde';
+}
+
+// Whether a stepped minute fills a wildcard hour under a wildcard/stepped
+// second — the shape the confinement frame above handles.
+function isSteppedMinuteSeconds(
+  schedule: Schedule,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  return (plan.rest.kind === 'minuteFrequency' ||
+    plan.rest.kind === 'multipleMinutes') &&
+    (schedule.shapes.second === 'wildcard' ||
+      schedule.shapes.second === 'step') &&
+    schedule.shapes.hour === 'wildcard' &&
+    schedule.pattern.minute !== '*/2' &&
+    minuteStride(schedule) !== null;
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -747,6 +816,14 @@ function renderComposeSeconds(
   if (composeSingleMinute(schedule, plan)) {
     return secondsLead(schedule) + ' ' +
       clockMinuteGenitive(plan.rest.times, opts.style.sep);
+  }
+
+  // A stepped minute under a wildcard/stepped second + wildcard hour confines
+  // the second cadence to the ordinal minute cadence ("jede Sekunde in jeder
+  // sechsten Minute ab Minute 4 jeder Stunde"), never the comma juxtaposition
+  // that reads as two independent cadences.
+  if (isSteppedMinuteSeconds(schedule, plan)) {
+    return minuteStepConfinement(schedule, minuteStride(schedule)!);
   }
 
   // A wildcard second under a minute */2 with a wildcard hour binds in the
