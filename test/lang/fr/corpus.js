@@ -343,14 +343,35 @@ describe('Français (fr):', function() {
     ]);
   });
 
+  // A stepped minute under a wildcard second and wildcard hour confines the
+  // second cadence to the ORDINAL minute cadence ("chaque seconde à la sixième
+  // minute …"), never the comma juxtaposition that reads as two independent
+  // cadences. The offset-clean stride names only its start; the uneven one pins
+  // both endpoints ("de la minute 2 à 58").
+  describe('seconde sous une minute échelonnée (confinement)', function() {
+    run([
+      ['* 4/6 * * * *',
+        'chaque seconde à la sixième minute à partir de la minute 4 ' +
+        'de chaque heure'],
+      ['* 2/7 * * * *',
+        'chaque seconde à la septième minute de la minute 2 à 58 ' +
+        'de chaque heure'],
+      ['* */6 * * * *', 'chaque seconde à la sixième minute de chaque heure'],
+      ['*/15 4/6 * * * *',
+        'toutes les 15 secondes à la sixième minute à partir de la minute 4 ' +
+        'de chaque heure']
+    ]);
+  });
+
   describe('seconde sous une minute appariée (* */N)', function() {
     run([
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "chaque seconde, toutes les deux minutes".
       ['* */2 * * * *', 'chaque seconde de chaque deux minutes'],
-      // Other strides keep the juxtaposed form.
-      ['* */3 * * * *', 'chaque seconde, toutes les trois minutes'],
-      ['* */15 * * * *', 'chaque seconde, toutes les 15 minutes'],
+      // Other clean steps confine as the ordinal cadence.
+      ['* */3 * * * *', 'chaque seconde à la troisième minute de chaque heure'],
+      ['* */15 * * * *',
+        'chaque seconde à la quinzième minute de chaque heure'],
       // Guards: no-seconds, restricted hour, hour cadence are unchanged.
       ['*/2 * * * *', 'toutes les deux minutes'],
       ['* */2 0 * * *',

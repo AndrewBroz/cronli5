@@ -144,6 +144,16 @@ const nthWeekdayMasculine =
 const nthWeekdayFeminine =
   [null, 'primeira', 'segunda', 'terceira', 'quarta', 'quinta'];
 
+// Portuguese ordinals (masculine) for a stepped-minute cadence under a seconds
+// lead ("a cada segundo no sexto minuto"). The interval-2 step keeps its own
+// idiom and never reaches here, so the colliding "segundo" is unused; a lookup
+// miss falls back to the cardinal-with-"no" form, which still confines.
+const stepOrdinals: Record<number, string> = {
+  3: 'terceiro', 4: 'quarto', 5: 'quinto', 6: 'sexto', 7: 'sétimo',
+  8: 'oitavo', 9: 'nono', 10: 'décimo', 12: 'décimo segundo',
+  15: 'décimo quinto', 20: 'vigésimo', 30: 'trigésimo'
+};
+
 // --- Contractions (the principal es->pt divergence). ---
 //
 // Portuguese fuses a preposition with the following article wherever es emitted
@@ -413,6 +423,67 @@ function isPinnedMinuteSeconds(
       schedule.shapes.second === 'step');
 }
 
+// The minute field's step stride for the confinement frame, or null when the
+// minute is not a stepped cadence. A `step`-shaped field reads its segment; a
+// `list`-shaped field the core enumerated from a uneven step (`2/7` → 2,9,…,58)
+// recovers the progression from its values.
+function minuteStride(
+  schedule: Schedule
+): {start: number; interval: number; last: number} | null {
+  if (schedule.shapes.minute === 'step') {
+    const segment = stepSegment(schedule, 'minute');
+    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+    return {interval: segment.interval, last:
+      segment.fires[segment.fires.length - 1], start};
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'minute'));
+
+  return values && arithmeticStep(values);
+}
+
+// A stepped minute under a wildcard/stepped second and wildcard hour: bind the
+// second cadence to the minute cadence as a CONFINEMENT ("a cada segundo no
+// sexto minuto a partir do minuto 4 de cada hora"), never the comma
+// juxtaposition that reads as two independent cadences. The cadence is ORDINAL
+// ("no sexto minuto") — the cardinal "a cada seis minutos" is what fuels the
+// misread — and the start/bound mirror the standalone minute cadence.
+function minuteStepConfinement(
+  schedule: Schedule,
+  stride: {start: number; interval: number; last: number},
+  opts: Opts
+): string {
+  const ordinal = stepOrdinals[stride.interval];
+  const head = ordinal ?
+    'no ' + ordinal + ' minuto' :
+    'a cada ' + numero(stride.interval, opts) + ' minutos';
+
+  const tail = chooseStride({...stride, cycle: 60}, {
+    bare: () => '',
+    offset: () => ' a partir do minuto ' + stride.start,
+    bounded: () => ' do minuto ' + stride.start + ' ao ' + stride.last
+  });
+
+  return secondsLeadClause(schedule, opts) + ' ' + head + tail +
+    ' de cada hora' + trailingQualifier(schedule, opts);
+}
+
+// Whether a stepped minute fills a wildcard hour under a wildcard/stepped
+// second — the shape the confinement frame above handles.
+function isSteppedMinuteSeconds(
+  schedule: Schedule,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  return (plan.rest.kind === 'minuteFrequency' ||
+    plan.rest.kind === 'multipleMinutes') &&
+    (schedule.shapes.second === 'wildcard' ||
+      schedule.shapes.second === 'step') &&
+    schedule.shapes.hour === 'wildcard' &&
+    schedule.pattern.minute !== '*/2' &&
+    minuteStride(schedule) !== null;
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -454,6 +525,14 @@ function renderComposeSeconds(
       ' segundos do minuto ' + schedule.pattern.minute;
 
     return dayFrame + ', ' + window + ', ' + cadence;
+  }
+
+  // A stepped minute under a wildcard/stepped second + wildcard hour confines
+  // the second cadence to the ordinal minute cadence ("a cada segundo no sexto
+  // minuto a partir do minuto 4 de cada hora"), never the comma juxtaposition
+  // that reads as two independent cadences.
+  if (isSteppedMinuteSeconds(schedule, plan)) {
+    return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
   }
 
   // A wildcard second under a minute */2 with a wildcard hour juxtaposes two

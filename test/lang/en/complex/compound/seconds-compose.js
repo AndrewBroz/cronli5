@@ -45,19 +45,43 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
-  // A wildcard second under a */2 minute step with a wildcard hour binds as
-  // "every second of every other minute" — "every other" is the idiomatic
-  // English for an interval of 2, and "of" joins the cadence and its
-  // confinement without the ambiguity of a comma (which reads as two
-  // independent cadences). Other step sizes keep the comma form ("every
-  // second, every three minutes").
-  describe('wildcard second under */2 minute step (of-binding)', function() {
+  // A clean minute step under a seconds lead confines the cadence rather than
+  // juxtaposing it behind a comma (which reads as two independent cadences).
+  // The */2 step keeps the idiomatic "of every other minute"; every other clean
+  // step reads as the ordinal "during every Nth minute".
+  describe('clean minute step under a seconds lead (confinement)', function() {
     run([
       ['* */2 * * * *', 'every second of every other minute'],
-      ['* */3 * * * *', 'every second, every three minutes'],
-      ['* */15 * * * *', 'every second, every 15 minutes']
+      ['* */3 * * * *', 'every second during every third minute'],
+      ['* */15 * * * *', 'every second during every fifteenth minute']
     ]);
   });
+
+  // A STEPPED minute under a seconds lead is a CONFINEMENT of the cadence, not
+  // a juxtaposed cadence (a comma there reads as two independent cadences) nor a
+  // wall of enumerated minutes (":04, :10, …"): "during every Nth minute" + the
+  // step's offset/bound. The cadence is ORDINAL ("every sixth minute"), since
+  // the cardinal ("every six minutes") is the form that fuels the misread. The
+  // offset-clean stride (`4/6` tiles 60) names only its start; the uneven one
+  // (`2/7`) pins both endpoints ("from 2 through 58"), matching the seconds-less
+  // cadence's bound behavior.
+  describe('stepped minute under a seconds lead (confinement + cadence)',
+    function() {
+      run([
+        ['* 4/6 * * * *',
+          'every second during every sixth minute ' +
+          'from four minutes past the hour'],
+        ['* 2/7 * * * *',
+          'every second during every seventh minute ' +
+          'from 2 through 58 minutes past the hour'],
+        // A clean step from the top of the hour names no offset.
+        ['* */6 * * * *', 'every second during every sixth minute'],
+        // A stepped second leads as its own cadence over the same confinement.
+        ['*/15 4/6 * * * *',
+          'every 15 seconds during every sixth minute ' +
+          'from four minutes past the hour']
+      ]);
+    });
 
   // A pinned minute under a seconds lead is a CONFINEMENT of the cadence:
   // "during minute :NN", then the hour confinement. A single hour reads "at

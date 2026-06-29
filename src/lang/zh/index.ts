@@ -909,10 +909,14 @@ function composeSecondsOnHour(
     return '每天' + restText + secTail;
   }
 
-  // A stated minute (e.g. minute 0 under a sub-minute second) takes the same
-  // "，" connector the listed-minute path uses.
+  // A stated single minute (minute 0 under an open hour) confines the second
+  // beneath it with "的" when the second is a cadence ("每小时0分的每一秒"), the
+  // same fusion the other pinned-minute paths use; the bare comma ("每小时0分，
+  // 每秒") reads as two independent cadences. A single/list/range second is a
+  // clock-point, not a cadence, so it keeps the "，" connector.
   if (rest.kind === 'singleMinute') {
-    return restText + '，' + sec;
+    return secondIsCadence(schedule) ?
+      restText + confinedSecondTail(sec) : restText + '，' + sec;
   }
 
   return restText + secTail;
@@ -1069,7 +1073,13 @@ function composeSecondsListed(schedule: Schedule): string {
   }
 
   if (schedule.shapes.hour === 'wildcard') {
-    return minutes + '，' + sec;
+    // A wildcard or stepped second is a cadence; the bare comma ("每小时30分，
+    // 每秒") reads as two independent cadences, so fuse the second beneath the
+    // stated minute(s) with "的" ("每小时30分的每一秒"), the same confinement the
+    // minute-stride and pinned-clock paths use. A single/list/range second is a
+    // clock-point, not a cadence, so it keeps the comma.
+    return secondIsCadence(schedule) ?
+      minutes + confinedSecondTail(sec) : minutes + '，' + sec;
   }
 
   const hourCad = unevenHourCadence(schedule);
@@ -1084,6 +1094,54 @@ function composeSecondsListed(schedule: Schedule): string {
   return hourFrame(schedule) + minutes + '，' + sec;
 }
 
+// Whether the minute field is a stepped cadence (a clean `*/n`, an offset
+// `m/n`, or a uneven step the core enumerated to an arithmetic fire list). The
+// shape the seconds-wildcard confinement below fuses with "的".
+function isMinuteStride(schedule: Schedule): boolean {
+  if (schedule.shapes.minute === 'step') {
+    return true;
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'minute'));
+
+  return values !== null && arithmeticStep(values) !== null;
+}
+
+// Whether the second is a CADENCE (wildcard "每秒" or a clean step "每N秒") rather
+// than a clock-point (a single/list/range). A cadence second under a stated
+// minute fuses beneath it with "的"; a clock-point keeps the "，" connector.
+function secondIsCadence(schedule: Schedule): boolean {
+  return schedule.pattern.second === '*' || schedule.shapes.second === 'step';
+}
+
+// The "的"-fused second tail for a clause that already states its minute(s):
+// "的每一秒" for a wildcard second, else "的" + the second's own cadence clause.
+// The fusion binds the second beneath the minute rather than leaving a bare
+// trailing "每秒" that reads as a second, independent cadence.
+function confinedSecondTail(sec: string): string {
+  return sec === '每秒' ? '的每一秒' : '的' + sec;
+}
+
+// Whether a compose-seconds plan is a stepped minute under a cadence second and
+// wildcard hour — the shape the "的"-fused confinement below handles, kept
+// distinct from the */2 even-minutes idiom and the composed-clock paths.
+function isSteppedMinuteSeconds(
+  schedule: Schedule, composedClock: boolean
+): boolean {
+  return !composedClock && schedule.shapes.hour === 'wildcard' &&
+    secondIsCadence(schedule) && schedule.pattern.minute !== '*/2' &&
+    isMinuteStride(schedule);
+}
+
+// A stepped minute under a cadence second and wildcard hour: fuse the minute
+// cadence and the second cadence with "的" ("每小时从4分起每6分钟的每一秒"), never
+// the comma juxtaposition ("…每6分钟，每秒") that reads as two independent
+// cadences. The minute clause carries the offset/bound ("从4分起" / "，至58分").
+function minuteStrideConfinement(schedule: Schedule): string {
+  return minuteHourClause(schedule) +
+    confinedSecondTail(secondClause(schedule));
+}
+
 // Seconds composed with the minute/hour structure, dispatched on the minute.
 // A single minute over a composed clock-time rest (the core already joined the
 // lone hour and minute into "N点M分") keeps that composition, attaching the
@@ -1095,6 +1153,13 @@ function renderComposeSeconds(
   const {rest} = plan as Extract<PlanNode, {kind: 'composeSeconds'}>;
   const composedClock =
     rest.kind === 'clockTimes' || rest.kind === 'compactClockTimes';
+
+  // A stepped minute under a cadence second and wildcard hour confines the
+  // second beneath the minute cadence with "的", never the comma that reads as
+  // two independent cadences. The */2 step keeps its own "每偶数分钟" idiom.
+  if (isSteppedMinuteSeconds(schedule, composedClock)) {
+    return minuteStrideConfinement(schedule);
+  }
 
   if (schedule.pattern.minute === '0' ||
     composedClock && schedule.shapes.minute === 'single') {

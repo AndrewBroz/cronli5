@@ -123,6 +123,17 @@ const nthWeekdayNames: (string | null)[] = [
   'viidentenä'
 ];
 
+// Essive ordinals for "joka N:ntenä minuuttina" — the step intervals a minute
+// cadence can take. The interval-2 step keeps its own "joka toisena minuuttina"
+// idiom and never reaches the confinement helper; a lookup miss falls back to
+// the genitive "N minuutin välein" cadence, which still confines.
+const minuteStepOrdinals: {[interval: number]: string} = {
+  3: 'kolmantena', 4: 'neljäntenä', 5: 'viidentenä', 6: 'kuudentena',
+  7: 'seitsemäntenä', 8: 'kahdeksantena', 9: 'yhdeksäntenä',
+  10: 'kymmenentenä', 12: 'kahdentenatoista', 15: 'viidentenätoista',
+  20: 'kahdentenakymmenentenä', 30: 'kolmantenakymmenentenä'
+};
+
 // Weekdays as stored inflected forms (SUN..SAT): distributive -isin,
 // elative, illative, and essive. Consonant gradation (keskiviikko →
 // keskiviikosta) makes stem+suffix logic wrong; store the forms.
@@ -404,6 +415,71 @@ function composeHourCadence(
     hourRangeCadence(schedule, minute, opts);
 }
 
+// The minute field's step stride for the confinement frame, or null when the
+// minute is not a stepped cadence. A `step`-shaped field reads its segment; a
+// `list`-shaped field the core enumerated from a uneven step (`2/7` → 2,9,…,58)
+// recovers the progression from its values.
+function minuteStride(
+  schedule: Schedule
+): {start: number; interval: number; last: number} | null {
+  if (schedule.shapes.minute === 'step') {
+    const segment = stepSegment(schedule, 'minute');
+    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+    return {interval: segment.interval, last:
+      segment.fires[segment.fires.length - 1], start};
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'minute'));
+
+  return values && arithmeticStep(values);
+}
+
+// A stepped minute under a wildcard/stepped second and wildcard hour: bind the
+// second cadence to the minute cadence as a CONFINEMENT ("joka sekunti joka
+// kuudentena minuuttina jokaisen tunnin minuutista 4 alkaen"), never the comma
+// juxtaposition that reads as two independent cadences. The cadence is ORDINAL
+// ("joka kuudentena minuuttina") — the cardinal "kuuden minuutin välein" is
+// what fuels the misread — and the start/bound mirror the standalone minute
+// cadence: an offset-clean stride names only its start, a uneven one pins both
+// endpoints ("minuutista 2 minuuttiin 58").
+function minuteStepConfinement(
+  schedule: Schedule,
+  stride: {start: number; interval: number; last: number},
+  opts: NormalizedOptions
+): string {
+  const ordinalForm = minuteStepOrdinals[stride.interval];
+  const minute = units.minute;
+  const head = ordinalForm ?
+    ' joka ' + ordinalForm + ' minuuttina' :
+    ' ' + genitive(stride.interval, opts) + ' ' + minute.gen + ' välein';
+
+  const tail = chooseStride({...stride, cycle: 60}, {
+    bare: () => '',
+    offset: () => ' ' + minute.anchor + ' ' + minute.ela + ' ' +
+      stride.start + ' alkaen',
+    bounded: () => ' ' + minute.ela + ' ' + stride.start + ' ' +
+      minute.ill + ' ' + stride.last
+  });
+
+  return secondsLeadClause(schedule, opts) + head + tail +
+    trailingQualifier(schedule, opts);
+}
+
+// Whether a stepped minute fills a wildcard hour under a wildcard/stepped
+// second — the shape the confinement frame above handles.
+function isSteppedMinuteSeconds(
+  schedule: Schedule,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  return (plan.rest.kind === 'minuteFrequency' ||
+    plan.rest.kind === 'multipleMinutes') &&
+    (schedule.pattern.second === '*' || schedule.shapes.second === 'step') &&
+    schedule.shapes.hour === 'wildcard' &&
+    schedule.pattern.minute !== '*/2' &&
+    minuteStride(schedule) !== null;
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -417,6 +493,16 @@ function renderComposeSeconds(
 
   if (cadence !== null) {
     return cadence;
+  }
+
+  // A stepped minute under a wildcard/stepped second + wildcard hour confines
+  // the second cadence to the ordinal minute cadence ("joka sekunti joka
+  // kuudentena minuuttina jokaisen tunnin minuutista 4 alkaen"), never the
+  // comma juxtaposition that reads as two independent cadences. Checked before
+  // the general minute-step compose path, which keeps the comma form under a
+  // restricted hour.
+  if (isSteppedMinuteSeconds(schedule, plan)) {
+    return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
   }
 
   // When the rest is a minute-step cadence, the step leads and the second

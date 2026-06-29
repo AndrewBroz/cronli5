@@ -346,13 +346,31 @@ describe('Deutsch (de):', function() {
     ]);
   });
 
+  // A stepped minute under a wildcard second and wildcard hour confines the
+  // second cadence to the ORDINAL minute cadence ("jede Sekunde in jeder
+  // sechsten Minute …"), never the comma juxtaposition that reads as two
+  // independent cadences. The offset-clean stride names only its start; the
+  // uneven one pins both endpoints ("von Minute 2 bis 58").
+  describe('Sekunde unter gestufter Minute (Einschluss)', function() {
+    run([
+      ['* 4/6 * * * *',
+        'jede Sekunde in jeder sechsten Minute ab Minute 4 jeder Stunde'],
+      ['* 2/7 * * * *',
+        'jede Sekunde in jeder siebten Minute von Minute 2 bis 58 ' +
+        'jeder Stunde'],
+      ['* */6 * * * *', 'jede Sekunde in jeder sechsten Minute jeder Stunde'],
+      ['*/15 4/6 * * * *',
+        'alle 15 Sekunden in jeder sechsten Minute ab Minute 4 jeder Stunde']
+    ]);
+  });
+
   describe('Sekunde unter gepaarter Minute (* */N)', function() {
     run([
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "jede Sekunde, alle 2 Minuten".
       ['* */2 * * * *', 'jede Sekunde jeder zweiten Minute'],
-      // Other strides keep the juxtaposed form.
-      ['* */3 * * * *', 'jede Sekunde, alle 3 Minuten'],
+      // Other clean steps confine as the ordinal cadence.
+      ['* */3 * * * *', 'jede Sekunde in jeder dritten Minute jeder Stunde'],
       // Guards: no-seconds and restricted hour are unchanged.
       ['*/2 * * * *', 'alle 2 Minuten'],
       ['* */2 0 * * *', 'jede Sekunde, alle 2 Minuten von 0 bis 0:58 Uhr']

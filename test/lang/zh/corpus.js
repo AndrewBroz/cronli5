@@ -33,16 +33,21 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['* * 0 * * *', '凌晨0点的每分钟每秒'],
       ['* * 9-17 * * *', '在9点至17点之间，每分钟每秒'],
       ['* * 9-17/2 * * *', '从9点起每2小时，至17点，每分钟每秒'],
-      // A wildcard second under a minute */2 binds the two cadences as the even
-      // minutes instead of juxtaposing the contradictory "每秒，每2分钟". Other
-      // strides keep the juxtaposed form; restricted hour / hour cadence stay.
+      // A stepped minute under a wildcard/stepped second confines the second
+      // beneath the minute cadence with "的" ("每小时从4分起每6分钟的每一秒"),
+      // never the comma ("…每6分钟，每秒") that reads as two independent cadences.
+      // The */2 step keeps its even-minutes idiom; the offset-clean stride names
+      // only its start, the uneven one pins both endpoints ("，至58分").
+      ['* 4/6 * * * *', '每小时从4分起每6分钟的每一秒'],
+      ['* 2/7 * * * *', '每小时从2分起每7分钟，至58分的每一秒'],
+      ['*/15 4/6 * * * *', '每小时从4分起每6分钟的每15秒'],
       ['* */2 * * * *', '每偶数分钟的每一秒'],
-      ['* */3 * * * *', '每秒，每3分钟'],
-      ['* */15 * * * *', '每秒，每15分钟'],
+      ['* */3 * * * *', '每3分钟的每一秒'],
+      ['* */15 * * * *', '每15分钟的每一秒'],
       ['* */2 */2 * * *', '每2小时的每2分钟每秒'],
       ['* */2 0 * * *', '凌晨0点的每2分钟每秒'],
       ['* */2 9-17/2 * * *', '从9点起每2小时，至17点，每2分钟每秒'],
-      ['* 0 * * * *', '每小时0分，每秒'],
+      ['* 0 * * * *', '每小时0分的每一秒'],
       // Minute pinned to 0 under a specific hour: the explicit "0分" keeps the
       // one-minute confinement (60 fires in :00, not 3,600 across the hour)
       // visible, and the seconds fuse with the clock time as "…的每一秒",
@@ -74,12 +79,12 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       // A non-uniform minute step under a single hour compacts to its stride
       // cadence, not an enumerated minute list.
       ['* 3/2 0 * * *', '凌晨0点从3分起每2分钟，至59分的每一秒'],
-      ['* 0-30 * * * *', '每小时0至30分，每秒'],
+      ['* 0-30 * * * *', '每小时0至30分的每一秒'],
       ['* 0-30 */2 * * *', '每2小时，0至30分，每秒'],
       ['* 0-30 9,17 * * *', '在9点和17点，每小时0至30分，每秒'],
       ['* 0-30 9-17 * * *', '在9点至17点之间，每小时0至30分，每秒'],
-      ['* 1 * * * *', '每小时1分，每秒'],
-      ['* 5,30 * * * *', '每小时5分和30分，每秒'],
+      ['* 1 * * * *', '每小时1分的每一秒'],
+      ['* 5,30 * * * *', '每小时5分和30分的每一秒'],
       ['* 5,30 */2 * * *', '每2小时，5分和30分，每秒'],
       // An hour step (or arithmetic-progression hour list) under a single
       // pinned minute reads as a cadence, not a cross-product of clock times.

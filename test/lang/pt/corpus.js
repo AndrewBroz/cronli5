@@ -468,14 +468,31 @@ describe('Português (pt):', function() {
     ], {ampm: false});
   });
 
+  // A stepped minute under a wildcard second and wildcard hour confines the
+  // second cadence to the ORDINAL minute cadence ("a cada segundo no sexto
+  // minuto …"), never the comma juxtaposition that reads as two independent
+  // cadences. The offset-clean stride names only its start; the uneven one pins
+  // both endpoints ("do minuto 2 ao 58").
+  describe('segundo sob um minuto escalonado (confinamento)', function() {
+    run([
+      ['* 4/6 * * * *',
+        'a cada segundo no sexto minuto a partir do minuto 4 de cada hora'],
+      ['* 2/7 * * * *',
+        'a cada segundo no sétimo minuto do minuto 2 ao 58 de cada hora'],
+      ['* */6 * * * *', 'a cada segundo no sexto minuto de cada hora'],
+      ['*/15 4/6 * * * *',
+        'a cada 15 segundos no sexto minuto a partir do minuto 4 de cada hora']
+    ]);
+  });
+
   describe('segundo sob um minuto pareado (* */N)', function() {
     run([
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "a cada segundo, a cada dois minutos".
       ['* */2 * * * *', 'a cada segundo de cada dois minutos'],
-      // Other strides keep the juxtaposed form.
-      ['* */3 * * * *', 'a cada segundo, a cada três minutos'],
-      ['* */15 * * * *', 'a cada segundo, a cada 15 minutos'],
+      // Other clean steps confine as the ordinal cadence.
+      ['* */3 * * * *', 'a cada segundo no terceiro minuto de cada hora'],
+      ['* */15 * * * *', 'a cada segundo no décimo quinto minuto de cada hora'],
       // Guards: no-seconds, restricted hour, hour cadence are unchanged.
       ['*/2 * * * *', 'a cada dois minutos'],
       ['* */2 0 * * *',
