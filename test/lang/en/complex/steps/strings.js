@@ -86,16 +86,21 @@ describe('Valid strings with steps:', function() {
       ['5 */3 * * *', 'five minutes past the hour, every three hours'],
       ['*/15 0 */3 * * *',
         'every 15 seconds for one minute during every third hour'],
+      // An offset-form second step (`0/10`) leads the SAME confinement the
+      // wildcard / clean-step second does: under `*/2` the dedicated "of every
+      // other hour" idiom pins the minute outright ("during minute :00"),
+      // matching `* 0 */2` and `*/10 0 */2`, never the juxtaposed duration
+      // frame the offset form once used.
       ['0/10 0 */2 * * *',
-        'every ten seconds for one minute during every other hour'],
+        'every ten seconds during minute :00 of every other hour'],
       ['0 */11 * * *',
         'every 11 hours from midnight through 10 p.m.'],
-      // A sub-minute second at minute 0 over a wide hour stride whose interval
-      // has no "every Nth" ordinal: the second leads "for one minute" and the
-      // bounded hour cadence pins its endpoint.
+      // A sub-minute second at minute 0 over a wide bounded hour stride confines
+      // the same way the wildcard second does ("during minute :00 during the
+      // … hours"), the hour list naming each fired hour.
       ['0/10 0 */13 * * *',
-        'every ten seconds for one minute, ' +
-        'every 13 hours from midnight through 1 p.m.']
+        'every ten seconds during minute :00 ' +
+        'during the 12 a.m. and 1 p.m. hours']
     ]);
   });
 });

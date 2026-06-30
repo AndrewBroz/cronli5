@@ -346,6 +346,13 @@ function renderSecondsWithinMinute(
       units.second.gen + ' kohdalla' + trailingQualifier(schedule, opts);
   }
 
+  // A second LIST or RANGE under a single minute folds both into one shared
+  // "kohdalla" ("joka tunti 30 minuutin ja 5 ja 10 sekunnin kohdalla"), never
+  // the comma juxtaposition; a STEP second is a cadence and keeps its clause.
+  if (secondsConfinesMinute(schedule)) {
+    return secondsConfinement(schedule, opts);
+  }
+
   return secondsLeadClause(schedule, opts) + ', ' +
     atMarks(minuteField, units.minute, true) +
     trailingQualifier(schedule, opts);
@@ -480,6 +487,68 @@ function isSteppedMinuteSeconds(
     minuteStride(schedule) !== null;
 }
 
+// Whether a clock-point second (list, range, or single) sits under a restricted
+// minute and a wildcard hour — the shape that must CONFINE the minute rather
+// than juxtapose it behind a comma (two independent schedules). A second LIST
+// the core enumerated from a step (`3/2`) is really a stride cadence and stays
+// out. The single-second + single-minute pair folds into one shared "kohdalla"
+// already ("joka tunti 30 minuutin ja 15 sekunnin kohdalla") and is excluded.
+function secondsConfinesMinute(schedule: Schedule): boolean {
+  const {second, minute, hour} = schedule.shapes;
+
+  if (second === 'list') {
+    const values = singleValues(segmentsOf(schedule, 'second'));
+
+    if (values && arithmeticStep(values)) {
+      return false;
+    }
+  }
+
+  const clockPoint = second === 'single' || second === 'range' ||
+    second === 'list';
+
+  return clockPoint && minute !== 'wildcard' && hour === 'wildcard' &&
+    !(second === 'single' && minute === 'single');
+}
+
+// Whether a compose-seconds plan over a minute-cadence/list/range rest carries
+// a clock-point second that must confine the minute — the gate for the "的"/
+// shared-"kohdalla" fusion in `renderComposeSeconds`, kept out of that function
+// to hold its branch count down.
+function composeConfinesMinute(
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>, schedule: Schedule
+): boolean {
+  const minuteRest = plan.rest.kind === 'minuteFrequency' ||
+    plan.rest.kind === 'multipleMinutes' ||
+    plan.rest.kind === 'rangeOfMinutes';
+
+  return minuteRest && secondsConfinesMinute(schedule);
+}
+
+// Confine a restricted minute under a clock-point second. A STEPPED minute
+// keeps the essive ordinal cadence frame ("joka kuudentena minuuttina jokaisen
+// tunnin minuutista 4 alkaen") and the seconds trail as their postposition,
+// mirroring the open-minute "joka minuutti 5, 10 ja 15 sekunnin kohdalla". A
+// list, range, or single minute folds BOTH fields into one shared "kohdalla"
+// ("joka tunti 0, 15 ja 30 minuutin ja 5, 10 ja 15 sekunnin kohdalla"), the
+// same fusion the single-second case uses — never the comma juxtaposition.
+function secondsConfinement(
+  schedule: Schedule, opts: NormalizedOptions
+): string {
+  const stride = minuteStride(schedule);
+
+  if (stride && schedule.pattern.minute !== '*/2') {
+    return minuteStepConfinement(schedule, stride, opts);
+  }
+
+  const minuteDigits = joinList(segmentWords(segmentsOf(schedule, 'minute')));
+  const secondDigits = joinList(segmentWords(segmentsOf(schedule, 'second')));
+
+  return units.minute.mark + ' ' + minuteDigits + ' ' + units.minute.gen +
+    ' ja ' + secondDigits + ' ' + units.second.gen + ' kohdalla' +
+    trailingQualifier(schedule, opts);
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -503,6 +572,14 @@ function renderComposeSeconds(
   // restricted hour.
   if (isSteppedMinuteSeconds(schedule, plan)) {
     return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
+  }
+
+  // A clock-point second (list/range/single) under a restricted minute confines
+  // that minute, never the comma juxtaposition that reads as two schedules: a
+  // stepped minute keeps its essive frame with the seconds postposition; a
+  // list, range, or single minute folds both into one shared "kohdalla".
+  if (composeConfinesMinute(plan, schedule)) {
+    return secondsConfinement(schedule, opts);
   }
 
   // When the rest is a minute-step cadence, the step leads and the second

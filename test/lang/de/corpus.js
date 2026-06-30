@@ -364,6 +364,42 @@ describe('Deutsch (de):', function() {
     ]);
   });
 
+  // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
+  // restriction in the genitive, never the comma juxtaposition that reads as two
+  // independent schedules ("in den Sekunden 5, 10 und 15, alle 6 Minuten …").
+  // The seconds clause leads (bare, no "jeder Minute"), then the minute in the
+  // genitive ("jeder sechsten Minute …", "der Minuten 0, 15 und 30 …"). NOTE:
+  // mirrors c0d0a1f's marker; flagged for native review at graduation (only
+  // English was panel-ratified).
+  describe('Sekundenliste/-bereich/-einzelwert schließt die Minute ein',
+    function() {
+      run([
+        ['5,10,15 4/6 * * * *',
+          'in den Sekunden 5, 10 und 15 jeder sechsten Minute ' +
+          'ab Minute 4 jeder Stunde'],
+        ['30 4/6 * * * *',
+          'in Sekunde 30 jeder sechsten Minute ab Minute 4 jeder Stunde'],
+        ['0-30 4/6 * * * *',
+          'in den Sekunden 0 bis 30 jeder sechsten Minute ' +
+          'ab Minute 4 jeder Stunde'],
+        ['30 */6 * * * *',
+          'in Sekunde 30 jeder sechsten Minute jeder Stunde'],
+        ['30 2/7 * * * *',
+          'in Sekunde 30 jeder siebten Minute ' +
+          'von Minute 2 bis 58 jeder Stunde'],
+        ['5,10,15 0,15,30 * * * *',
+          'in den Sekunden 5, 10 und 15 der Minuten 0, 15 und 30 jeder Stunde'],
+        ['15 0,30 * * * *',
+          'in Sekunde 15 der Minuten 0 und 30 jeder Stunde'],
+        ['15 0-30 * * * *',
+          'in Sekunde 15 der Minuten 0 bis 30 jeder Stunde'],
+        ['5,10 30 * * * *',
+          'in den Sekunden 5 und 10 der Minute 30 jeder Stunde'],
+        ['0-30 30 * * * *',
+          'in den Sekunden 0 bis 30 der Minute 30 jeder Stunde']
+      ]);
+    });
+
   describe('Sekunde unter gepaarter Minute (* */N)', function() {
     run([
       // A wildcard second under a minute */2 binds the two cadences instead of
@@ -539,9 +575,10 @@ describe('Deutsch (de):', function() {
         'in den Minuten 0 bis 30, von 9 bis 20 Uhr und um 22 Uhr'],
       // Folded compactClockTimes with a non-zero minute.
       ['5 9-20,22 * * *', 'stündlich von 9:05 bis 20:05 Uhr und um 22:05 Uhr'],
-      // secondsWithinMinute with a non-single second.
+      // secondsWithinMinute with a non-single second: the range confines the
+      // single minute in the genitive, never the comma juxtaposition.
       ['0-10 0 * * * *',
-        'in den Sekunden 0 bis 10, in Minute 0 jeder Stunde'],
+        'in den Sekunden 0 bis 10 der Minute 0 jeder Stunde'],
       // date+weekday OR where the weekday is a Quartz form.
       ['0 9 1 * 5L', 'am 1. oder am letzten Freitag des Monats um 9 Uhr'],
       // A wildcard second composed with a minute-0 clock time: the pinned

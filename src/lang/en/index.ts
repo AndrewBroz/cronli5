@@ -1102,15 +1102,69 @@ function isCadenceField(token: string): boolean {
     token.startsWith('*/') && token.indexOf('-') === -1;
 }
 
+// Whether the second field leads the confinement frame as a clean cadence. A
+// wildcard ("every second") and a clean `*/n` step both lead via
+// `isCadenceField`; an OPEN OFFSET step (`m/n`) is the SAME cadence, only named
+// from its offset ("every six seconds from five seconds past the minute"), so
+// it leads the SAME confinement rather than juxtaposing the minute restriction
+// behind a comma — whether the offset is clean from the top (`0/n`) or not
+// (`5/n`). A bounded step (`a-b/n`, a windowed set) is not an open cadence and
+// keeps its existing form.
+function secondLeadsCadence(schedule: Schedule): boolean {
+  if (isCadenceField(schedule.pattern.second)) {
+    return true;
+  }
+
+  if (schedule.shapes.second !== 'step') {
+    return false;
+  }
+
+  // Reached only under a stepped second the `isCadenceField` guard did not
+  // already admit, so its `*/n` clean-cadence forms are gone and the remaining
+  // open form is the offset step `m/n` (`0/n` or non-zero). A bounded step
+  // `a-b/n` is a windowed set, not a cadence, and stays out.
+  return isOpenStep(schedule.pattern.second);
+}
+
+// Whether the second leads the confinement frame as a CLOCK-POINT clause (a
+// list, range, or single second), as opposed to a cadence. A clock-point second
+// under a minute restriction confines that restriction exactly as the cadence
+// does ("at 5, 10, and 15 seconds past the minute during every sixth minute …")
+// rather than juxtaposing it behind a comma, which reads as two independent
+// schedules. The single-second + single-minute pair is excluded: it folds into
+// one coherent clock point ("30 minutes and 15 seconds past the hour"), not a
+// juxtaposition, so it keeps that fold. The confinement only applies where the
+// minute is the restriction and the hour is open; `confinementEligible` gates
+// the rest (a restricted hour folds into a clock time, left to that renderer).
+function secondLeadsClockPoint(schedule: Schedule): boolean {
+  // Only a MEANINGFUL second leads a clause: the two seconds-bearing plans the
+  // core chooses for a real second. A 5-field pattern (or an explicit `0`
+  // second) carries no seconds clause — its plan is the minute's own — so it is
+  // not confined here, which would otherwise prepend "at zero seconds …".
+  if (schedule.plan.kind !== 'composeSeconds' &&
+      schedule.plan.kind !== 'secondsWithinMinute') {
+    return false;
+  }
+
+  const {second, minute, hour} = schedule.shapes;
+  const clockPoint = second === 'single' || second === 'range' ||
+    second === 'list';
+  const minuteRestricted = minute !== 'wildcard';
+
+  return clockPoint && minuteRestricted && hour === 'wildcard' &&
+    !(second === 'single' && minute === 'single');
+}
+
 // The leading cadence and whether the second is the leading field, or null when
 // the pattern has no cadence lead (the finest restricted field is a clock-point
-// single/range/list). The seconds lead when restricted as a cadence; otherwise
-// the minute leads when the second is a plain :00 and the minute is a cadence.
+// single/range/list). The seconds lead when restricted as a cadence, or as a
+// clock-point clause that confines a minute restriction; otherwise the minute
+// leads when the second is a plain :00 and the minute is a cadence.
 function leadingCadence(schedule: Schedule, opts: NormalizedOptions):
   {text: string; secondLead: boolean} | null {
   const {second, minute} = schedule.pattern;
 
-  if (isCadenceField(second)) {
+  if (secondLeadsCadence(schedule) || secondLeadsClockPoint(schedule)) {
     return {secondLead: true, text: secondsClause(schedule, 'minute', opts)};
   }
 

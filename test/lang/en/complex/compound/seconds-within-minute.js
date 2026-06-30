@@ -15,14 +15,20 @@ describe('Seconds combined with a specific minute:', function() {
     ]);
   });
 
-  describe('a second list or range leads with its own clause', function() {
+  // A second list or range under a single minute CONFINES that minute (a comma
+  // there — "…, 30 minutes past the hour, every hour" — reads as two
+  // independent schedules); the clock-point seconds clause leads, then the
+  // minute reads "during minute :NN of every hour". A single second still folds
+  // into the minute anchor above ("30 minutes and 15 seconds past the hour"), a
+  // single coherent clock point, not a juxtaposition.
+  describe('a second list or range confines the minute', function() {
     run([
       ['5,10 30 * * * *',
-        'at 5 and 10 seconds past the minute, ' +
-        '30 minutes past the hour, every hour'],
+        'at 5 and 10 seconds past the minute ' +
+        'during minute :30 of every hour'],
       ['0-30 30 * * * *',
-        'every second from 0 through 30 past the minute, ' +
-        '30 minutes past the hour, every hour']
+        'every second from 0 through 30 past the minute ' +
+        'during minute :30 of every hour']
     ]);
   });
 

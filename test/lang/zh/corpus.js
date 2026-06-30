@@ -86,6 +86,21 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['* 1 * * * *', '每小时1分的每一秒'],
       ['* 5,30 * * * *', '每小时5分和30分的每一秒'],
       ['* 5,30 */2 * * *', '每2小时，5分和30分，每秒'],
+      // A second LIST, RANGE, or SINGLE under a minute restriction (open hour)
+      // fuses beneath that minute with "的" ("每小时从4分起每6分钟的第5、10、15
+      // 秒"), never the comma ("…，第5、10、15秒") that reads as two independent
+      // schedules — the same "的" confinement the cadence second uses. A second
+      // stride keeps its bounded-cadence comma form. NOTE: mirrors c0d0a1f's
+      // marker; flagged for native review at graduation (only English was
+      // panel-ratified).
+      ['5,10,15 4/6 * * * *', '每小时从4分起每6分钟的第5、10、15秒'],
+      ['30 4/6 * * * *', '每小时从4分起每6分钟的第30秒'],
+      ['0-30 4/6 * * * *', '每小时从4分起每6分钟的第0至30秒'],
+      ['30 */6 * * * *', '每6分钟的第30秒'],
+      ['30 2/7 * * * *', '每小时从2分起每7分钟，至58分的第30秒'],
+      ['5,10,15 0,15,30 * * * *', '每小时0、15、30分的第5、10、15秒'],
+      ['15 0,30 * * * *', '每小时0分和30分的第15秒'],
+      ['15 0-30 * * * *', '每小时0至30分的第15秒'],
       // An hour step (or arithmetic-progression hour list) under a single
       // pinned minute reads as a cadence, not a cross-product of clock times.
       // Irregular hour lists and ranges still enumerate.

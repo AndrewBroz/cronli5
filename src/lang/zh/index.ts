@@ -1044,6 +1044,13 @@ function composeSecondsCadence(schedule: Schedule): string {
       }
     }
 
+    // A CLOCK-POINT second (a single/list/range, not a stride cadence) under a
+    // clean minute step fuses beneath the minute with "的" ("每6分钟的第30秒"),
+    // never the comma that reads as two independent schedules.
+    if (!secondIsCadence(schedule) && !secondIsStride(schedule)) {
+      return minuteClause(schedule) + '的' + sec;
+    }
+
     return sec + '，' + minuteClause(schedule);
   }
 
@@ -1073,13 +1080,14 @@ function composeSecondsListed(schedule: Schedule): string {
   }
 
   if (schedule.shapes.hour === 'wildcard') {
-    // A wildcard or stepped second is a cadence; the bare comma ("每小时30分，
-    // 每秒") reads as two independent cadences, so fuse the second beneath the
-    // stated minute(s) with "的" ("每小时30分的每一秒"), the same confinement the
-    // minute-stride and pinned-clock paths use. A single/list/range second is a
-    // clock-point, not a cadence, so it keeps the comma.
-    return secondIsCadence(schedule) ?
-      minutes + confinedSecondTail(sec) : minutes + '，' + sec;
+    // The minute(s) are stated and the hour is open, so the second — whether a
+    // cadence ("每秒"/"每N秒") or a clock-point ("第5、10、15秒") — fuses beneath
+    // the minute(s) with "的" ("每小时30分的每一秒", "每小时0、15、30分的第5、10、15
+    // 秒"). The bare comma ("…，第5、10、15秒") reads as two independent schedules.
+    // A second STRIDE the core enumerated to a list ("3/2" → "每2秒，至59秒") is a
+    // bounded cadence with its own trailing "，至N秒"; it keeps the comma.
+    return secondIsStride(schedule) ?
+      minutes + '，' + sec : minutes + confinedSecondTail(sec);
   }
 
   const hourCad = unevenHourCadence(schedule);
@@ -1112,6 +1120,20 @@ function isMinuteStride(schedule: Schedule): boolean {
 // minute fuses beneath it with "的"; a clock-point keeps the "，" connector.
 function secondIsCadence(schedule: Schedule): boolean {
   return schedule.pattern.second === '*' || schedule.shapes.second === 'step';
+}
+
+// Whether a second LIST is really a stride the core enumerated from a step
+// ("3/2" → 3,5,…,59), spoken as a bounded cadence ("每2秒，至59秒") with its own
+// trailing comma — not a clock-point list ("第5、10、15秒"). Such a stride keeps
+// its comma form rather than fusing beneath the minute with "的".
+function secondIsStride(schedule: Schedule): boolean {
+  if (schedule.shapes.second !== 'list') {
+    return false;
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'second'));
+
+  return values !== null && arithmeticStep(values) !== null;
 }
 
 // The "的"-fused second tail for a clause that already states its minute(s):
