@@ -49,6 +49,42 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
+  // A NON-ZERO offset second step (`5/6`) is the SAME six-second cadence as
+  // `0/6` / `*/6`, only named from its offset ("every six seconds from five
+  // seconds past the minute"); it leads the SAME confinement, never juxtaposing
+  // the minute restriction behind a comma ("…, every six minutes from four").
+  describe('non-zero offset second step leads the confinement', function() {
+    run([
+      ['5/6 30 * * * *',
+        'every six seconds from five seconds past the minute ' +
+        'during minute :30 of every hour'],
+      ['5/6 0,15,30 * * * *',
+        'every six seconds from five seconds past the minute ' +
+        'during minutes :00, :15, and :30 of every hour'],
+      ['5/6 4/6 * * * *',
+        'every six seconds from five seconds past the minute ' +
+        'during every sixth minute from four minutes past the hour'],
+      ['5/6 7,8,4/7 * * 5,8 *',
+        'every six seconds from five seconds past the minute ' +
+        'during minutes :04, :07, :08, :11, :18, :25, :32, :39, :46, ' +
+        'and :53 of every hour in May and August']
+    ]);
+  });
+
+  // SCOPE GUARD: a second LIST or SINGLE under a stepped minute is a separate,
+  // unresolved tier and is intentionally NOT confined — it keeps its existing
+  // juxtaposed clock-point lead. Only the stepped (cadence) second confines.
+  describe('second list or single does not confine (scope guard)', function() {
+    run([
+      ['5,10,15 4/6 * * * *',
+        'at 5, 10, and 15 seconds past the minute, ' +
+        'every six minutes from four minutes past the hour'],
+      ['30 4/6 * * * *',
+        'at 30 seconds past the minute, ' +
+        'every six minutes from four minutes past the hour']
+    ]);
+  });
+
   describe('second list and range', function() {
     run([
       ['5,10 30 9 * * *',

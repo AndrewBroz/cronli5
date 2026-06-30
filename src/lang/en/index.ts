@@ -1104,12 +1104,12 @@ function isCadenceField(token: string): boolean {
 
 // Whether the second field leads the confinement frame as a clean cadence. A
 // wildcard ("every second") and a clean `*/n` step both lead via
-// `isCadenceField`; an OFFSET-form step that still strides cleanly from the top
-// of the minute (`0/n`) is the SAME cadence as `*/n` ("every six seconds") and
-// leads identically, so it routes through the confinement rather than
-// juxtaposing the minute restriction behind a comma. A non-zero offset (`5/n`,
-// whose lead names an offset) or a bounded step (`a-b/n`, a windowed set) keeps
-// its existing form.
+// `isCadenceField`; an OPEN OFFSET step (`m/n`) is the SAME cadence, only named
+// from its offset ("every six seconds from five seconds past the minute"), so
+// it leads the SAME confinement rather than juxtaposing the minute restriction
+// behind a comma — whether the offset is clean from the top (`0/n`) or not
+// (`5/n`). A bounded step (`a-b/n`, a windowed set) is not an open cadence and
+// keeps its existing form.
 function secondLeadsCadence(schedule: Schedule): boolean {
   if (isCadenceField(schedule.pattern.second)) {
     return true;
@@ -1120,9 +1120,10 @@ function secondLeadsCadence(schedule: Schedule): boolean {
   }
 
   // Reached only under a stepped second the `isCadenceField` guard did not
-  // already admit, so its `*/n` clean-cadence forms are gone and the only clean
-  // stride left from the top of the minute is the offset form `0/n`.
-  return stepSegment(schedule, 'second').startToken === '0';
+  // already admit, so its `*/n` clean-cadence forms are gone and the remaining
+  // open form is the offset step `m/n` (`0/n` or non-zero). A bounded step
+  // `a-b/n` is a windowed set, not a cadence, and stays out.
+  return isOpenStep(schedule.pattern.second);
 }
 
 // The leading cadence and whether the second is the leading field, or null when
