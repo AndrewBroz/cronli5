@@ -468,45 +468,51 @@ describe('Português (pt):', function() {
     ], {ampm: false});
   });
 
-  // A stepped minute under a wildcard second and wildcard hour confines the
-  // second cadence to the ORDINAL minute cadence ("a cada segundo no sexto
-  // minuto …"), never the comma juxtaposition that reads as two independent
-  // cadences. The offset-clean stride names only its start; the uneven one pins
-  // both endpoints ("do minuto 2 ao 58").
+  // A stepped minute under a wildcard second and wildcard hour leads with the
+  // second clause, a COMMA, then the minute's own STANDALONE cardinal cadence
+  // ("a cada segundo, a cada seis minutos a partir do minuto 4 …"). The ordinal
+  // "no sexto minuto" read as a single minute (the 10th), not the every-sixth
+  // series; the cardinal "a cada seis minutos" reads correctly. The offset-clean
+  // stride names only its start; the uneven one pins both endpoints ("do minuto
+  // 2 ao 58").
   describe('segundo sob um minuto escalonado (confinamento)', function() {
     run([
       ['* 4/6 * * * *',
-        'a cada segundo no sexto minuto a partir do minuto 4 de cada hora'],
+        'a cada segundo, a cada seis minutos a partir do minuto 4 de cada hora'],
       ['* 2/7 * * * *',
-        'a cada segundo no sétimo minuto do minuto 2 ao 58 de cada hora'],
-      ['* */6 * * * *', 'a cada segundo no sexto minuto de cada hora'],
+        'a cada segundo, a cada sete minutos do minuto 2 ao 58 de cada hora'],
+      ['* */6 * * * *', 'a cada segundo, a cada seis minutos'],
       ['*/15 4/6 * * * *',
-        'a cada 15 segundos no sexto minuto a partir do minuto 4 de cada hora']
+        'a cada 15 segundos, a cada seis minutos a partir do minuto 4 ' +
+        'de cada hora']
     ]);
   });
 
   // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
-  // restriction in the genitive, never the comma juxtaposition that reads as two
-  // independent schedules ("nos segundos 5, 10 e 15 de cada minuto, a cada seis
-  // minutos …"). The seconds clause leads (bare, no "de cada minuto"), then the
-  // minute in the genitive ("do sexto minuto …", "dos minutos 0, 15 e 30 …").
-  // NOTE: mirrors c0d0a1f's marker; flagged for native review at graduation
-  // (only English was panel-ratified).
+  // restriction. A STEPPED minute leads with the second clause, a COMMA, then
+  // the minute's own standalone cardinal cadence ("nos segundos 5, 10 e 15, a
+  // cada seis minutos …") — the cardinal reads as the series; the ordinal "do
+  // sexto minuto" read as one minute. A LIST/SINGLE minute names the minute(s)
+  // in the genitive ("dos minutos 0, 15 e 30 …", "do minuto 30 …"). Either way
+  // it never juxtaposes two schedules behind a comma + "de cada minuto". NOTE:
+  // mirrors c0d0a1f's marker; flagged for native review at graduation (only
+  // English was panel-ratified).
   describe('segundo lista/intervalo/único confina a restrição do minuto',
     function() {
       run([
         ['5,10,15 4/6 * * * *',
-          'nos segundos 5, 10 e 15 do sexto minuto ' +
+          'nos segundos 5, 10 e 15, a cada seis minutos ' +
           'a partir do minuto 4 de cada hora'],
         ['30 4/6 * * * *',
-          'no segundo 30 do sexto minuto a partir do minuto 4 de cada hora'],
+          'no segundo 30, a cada seis minutos a partir do minuto 4 de cada ' +
+          'hora'],
         ['0-30 4/6 * * * *',
-          'a cada segundo do 0 ao 30 do sexto minuto ' +
+          'a cada segundo do 0 ao 30, a cada seis minutos ' +
           'a partir do minuto 4 de cada hora'],
         ['30 */6 * * * *',
-          'no segundo 30 do sexto minuto de cada hora'],
+          'no segundo 30, a cada seis minutos'],
         ['30 2/7 * * * *',
-          'no segundo 30 do sétimo minuto ' +
+          'no segundo 30, a cada sete minutos ' +
           'do minuto 2 ao 58 de cada hora'],
         ['5,10,15 0,15,30 * * * *',
           'nos segundos 5, 10 e 15 dos minutos 0, 15 e 30 de cada hora'],
@@ -524,9 +530,10 @@ describe('Português (pt):', function() {
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "a cada segundo, a cada dois minutos".
       ['* */2 * * * *', 'a cada segundo de cada dois minutos'],
-      // Other clean steps confine as the ordinal cadence.
-      ['* */3 * * * *', 'a cada segundo no terceiro minuto de cada hora'],
-      ['* */15 * * * *', 'a cada segundo no décimo quinto minuto de cada hora'],
+      // Other clean steps lead with the second clause + a comma, then the
+      // minute's own standalone cardinal cadence.
+      ['* */3 * * * *', 'a cada segundo, a cada três minutos'],
+      ['* */15 * * * *', 'a cada segundo, a cada 15 minutos'],
       // Guards: no-seconds, restricted hour, hour cadence are unchanged.
       ['*/2 * * * *', 'a cada dois minutos'],
       ['* */2 0 * * *',

@@ -127,16 +127,6 @@ const weekdayNames = [
 const nthWeekdayMasculine =
   [null, 'premier', 'deuxième', 'troisième', 'quatrième', 'cinquième'];
 
-// French ordinals (gender-neutral "-ième") for a stepped-minute cadence under a
-// seconds lead ("à la sixième minute"). The interval-2 step keeps its own
-// idiom and never reaches here; a lookup miss falls back to the cardinal-with-
-// preposition form, which still confines (see `minuteStepConfinement`).
-const stepOrdinals: Record<number, string> = {
-  3: 'troisième', 4: 'quatrième', 5: 'cinquième', 6: 'sixième',
-  7: 'septième', 8: 'huitième', 9: 'neuvième', 10: 'dixième',
-  12: 'douzième', 15: 'quinzième', 20: 'vingtième', 30: 'trentième'
-};
-
 // Normalize raw user options.
 function normalizeOptions(options?: Cronli5Options): Opts {
   options = options || {};
@@ -232,7 +222,7 @@ function renderSecondsWithinMinute(
   // the comma juxtaposition; a STEP second is a cadence and keeps its own lead.
   if (secondsConfinesMinute(schedule)) {
     return secondsBareLead(schedule) + ' ' +
-      confinedMinutePhrase(schedule, opts) + trailingQualifier(schedule, opts);
+      confinedMinutePhrase(schedule) + trailingQualifier(schedule, opts);
   }
 
   return secondsLeadClause(schedule, opts) + ', à la minute ' + minuteField +
@@ -317,30 +307,22 @@ function minuteStride(
   return values && arithmeticStep(values);
 }
 
-// A stepped minute under a wildcard/stepped second and wildcard hour: bind the
-// second cadence to the minute cadence as a CONFINEMENT ("chaque seconde à la
-// sixième minute à partir de la minute 4 de chaque heure"), never the comma
-// juxtaposition that reads as two independent cadences. The cadence is ORDINAL
-// ("à la sixième minute") — the cardinal "toutes les six minutes" is what fuels
-// the misread — and the start/bound mirror the standalone minute cadence.
-function minuteStepConfinement(
+// A stepped minute under a wildcard hour: the second clause leads, a COMMA,
+// then the minute's own STANDALONE cardinal cadence ("chaque seconde, toutes
+// les six minutes à partir de la minute 4 de chaque heure"; "aux secondes 5,
+// 10 et 15, toutes les six minutes …"). The ordinal "à la sixième minute" read
+// as a single minute (the 10th), not the every-sixth series; the standalone
+// cardinal "toutes les six minutes" reads it correctly and handles every stride
+// (offset, bounded, uneven) for free. The lead is the cadence clause for a
+// wildcard/stepped second, the bare clock-point clause for a list/range/single.
+function steppedMinuteConfinement(
   schedule: Schedule,
-  stride: {start: number; interval: number; last: number},
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
+  lead: string,
   opts: Opts
 ): string {
-  const ordinal = stepOrdinals[stride.interval];
-  const head = ordinal ?
-    'à la ' + ordinal + ' minute' :
-    'à la minute toutes les ' + numero(stride.interval, opts);
-
-  const tail = chooseStride({...stride, cycle: 60}, {
-    bare: () => '',
-    offset: () => ' à partir de la minute ' + stride.start,
-    bounded: () => ' de la minute ' + stride.start + ' à ' + stride.last
-  });
-
-  return secondsLeadClause(schedule, opts) + ' ' + head + tail +
-    ' de chaque heure' + trailingQualifier(schedule, opts);
+  return lead + ', ' + render(schedule, plan.rest, opts) +
+    trailingQualifier(schedule, opts);
 }
 
 // Whether a stepped minute fills a wildcard hour under a wildcard/stepped
@@ -379,29 +361,13 @@ function secondsBareLead(schedule: Schedule): string {
     joinList(segmentWords(segmentsOf(schedule, 'second')));
 }
 
-// The CONFINED-minute genitive phrase a clock-point second attaches to ("de la
-// sixième minute à partir de la minute 4 de chaque heure", "des minutes 0, 15
-// et 30 de chaque heure", "de la minute 30 de chaque heure"). A stepped minute
-// reuses the ordinal cadence; a list, range, or single names the minute(s) in
-// the genitive — so the bare seconds lead never stacks a redundant "de chaque
-// minute".
-function confinedMinutePhrase(schedule: Schedule, opts: Opts): string {
-  const stride = minuteStride(schedule);
-
-  if (stride && schedule.pattern.minute !== '*/2') {
-    const ordinal = stepOrdinals[stride.interval];
-    const head = ordinal ?
-      'de la ' + ordinal + ' minute' :
-      'de la minute toutes les ' + numero(stride.interval, opts);
-    const tail = chooseStride({...stride, cycle: 60}, {
-      bare: () => '',
-      offset: () => ' à partir de la minute ' + stride.start,
-      bounded: () => ' de la minute ' + stride.start + ' à ' + stride.last
-    });
-
-    return head + tail + ' de chaque heure';
-  }
-
+// The CONFINED-minute genitive phrase a clock-point second attaches to ("des
+// minutes 0, 15 et 30 de chaque heure", "de la minute 30 de chaque heure", "de
+// chaque minute de 0 à 30 de chaque heure"). A stepped minute is handled by the
+// standalone-cadence confinement before this point; a list, range, or single
+// names the minute(s) in the genitive — so the bare seconds lead never stacks a
+// redundant "de chaque minute".
+function confinedMinutePhrase(schedule: Schedule): string {
   if (schedule.shapes.minute === 'range') {
     return 'de ' + minuteRangeLead(schedule.pattern.minute) +
       ' de chaque heure';
@@ -441,17 +407,20 @@ function secondsConfinesMinute(schedule: Schedule): boolean {
 }
 
 // The minute-confinement rendering for a compose-seconds plan, or null when the
-// plan is not one. A CADENCE second over a stepped minute uses the ordinal
-// cadence form; a CLOCK-POINT second (list/range/single) over any restricted
-// minute uses the genitive form anchored to the confined minute. Both bind the
-// second beneath the minute instead of juxtaposing the two behind a comma.
-// Folded into one helper so `renderComposeSeconds` carries a single branch.
+// plan is not one. A STEPPED minute (cadence or clock-point second) leads with
+// the second clause, a comma, then the minute's own standalone cardinal
+// cadence; a CLOCK-POINT second over a LIST/RANGE/SINGLE minute uses the
+// genitive form anchored to the confined minute. Both bind the second beneath
+// the minute instead of juxtaposing the two behind a bare comma + "de chaque
+// minute". Folded into one helper so `renderComposeSeconds` carries a single
+// branch.
 function minuteConfinementRender(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   schedule: Schedule, opts: Opts
 ): string | null {
   if (isSteppedMinuteSeconds(schedule, plan)) {
-    return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
+    return steppedMinuteConfinement(schedule, plan,
+      secondsLeadClause(schedule, opts), opts);
   }
 
   const minuteRest = plan.rest.kind === 'minuteFrequency' ||
@@ -459,8 +428,15 @@ function minuteConfinementRender(
     plan.rest.kind === 'rangeOfMinutes';
 
   if (minuteRest && secondsConfinesMinute(schedule)) {
+    // A clock-point second over a STEPPED minute reuses the standalone cardinal
+    // cadence the same way; only a list/range/single minute keeps the genitive.
+    if (minuteStride(schedule) && schedule.pattern.minute !== '*/2') {
+      return steppedMinuteConfinement(schedule, plan,
+        secondsBareLead(schedule), opts);
+    }
+
     return secondsBareLead(schedule) + ' ' +
-      confinedMinutePhrase(schedule, opts) + trailingQualifier(schedule, opts);
+      confinedMinutePhrase(schedule) + trailingQualifier(schedule, opts);
   }
 
   return null;

@@ -395,6 +395,25 @@ describe('Español (es):', function() {
     ]);
   });
 
+  // A CADENCE/STEPPED second under a minute LIST or SINGLE and a wildcard hour
+  // leads straight into the locative "en …" minute phrase with NO comma. The
+  // locative already binds the two specs; a comma read as two independent
+  // specifications and is inconsistent with the no-comma stepped-minute and
+  // list-tier (genitive "de") confinements. The preposition split — locative
+  // "en" here, genitive "de" for the clock-point list tier — is correct grammar
+  // and stays.
+  describe('segundo cadencia/paso bajo un minuto lista/único (sin coma)',
+    function() {
+      run([
+        ['* 0,15,30 * * * *',
+          'cada segundo en los minutos 0, 15 y 30 de cada hora'],
+        ['* 30 * * * *', 'cada segundo en el minuto 30 de cada hora'],
+        ['* 5,30 * * * *', 'cada segundo en los minutos 5 y 30 de cada hora'],
+        ['*/6 0,15,30 * * * *',
+          'cada seis segundos en los minutos 0, 15 y 30 de cada hora']
+      ]);
+    });
+
   describe('fichas Quartz', function() {
     run([
       ['0 0 L * *', 'el último día del mes a medianoche'],
@@ -727,13 +746,13 @@ describe('Español (es):', function() {
       ['0-30 * * * * *', 'cada segundo del 0 al 30 de cada minuto'],
       ['5,10 * * * * *', 'en los segundos 5 y 10 de cada minuto'],
       ['*/15 30 * * * *',
-        'cada 15 segundos, en el minuto 30 de cada hora'],
+        'cada 15 segundos en el minuto 30 de cada hora'],
       ['* 30 9 * * *',
         'cada segundo de las 9:30 de la mañana, todos los días'],
       // Minute 0 under a sub-minute second must be stated, not absorbed into
       // an hourly idiom ("cada hora" / "cada dos horas" / a 9-a-17 window)
-      // that silently drops the :00.
-      ['* 0 * * * *', 'cada segundo, en el minuto 0 de cada hora'],
+      // that silently drops the :00. The locative "en" binds it with no comma.
+      ['* 0 * * * *', 'cada segundo en el minuto 0 de cada hora'],
       // An hour RANGE under the minute-0 confinement reads as a window
       // ("durante las horas …"), not a wall of clock times; the window honors
       // the 12-hour dialect ("de las 9 de la mañana a las 5 de la tarde").

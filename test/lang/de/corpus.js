@@ -413,6 +413,25 @@ describe('Deutsch (de):', function() {
     ]);
   });
 
+  // A CADENCE/STEPPED second under a minute LIST or SINGLE and a wildcard hour
+  // leads straight into the locative "in …" minute phrase with NO comma. The
+  // locative already binds the two specs; a comma read as two independent
+  // specifications and is inconsistent with the no-comma stepped-minute and
+  // list-tier (genitive "der") confinements. The preposition split — locative
+  // "in" here, genitive "der" for the clock-point list tier — is correct German
+  // and stays.
+  describe('Sekunden-Kadenz/-Schritt unter Minuten-Liste/-Einzelwert (kein ' +
+    'Komma)', function() {
+    run([
+      ['* 0,15,30 * * * *',
+        'jede Sekunde in den Minuten 0, 15 und 30 jeder Stunde'],
+      ['* 30 * * * *', 'jede Sekunde in Minute 30 jeder Stunde'],
+      ['* 5,30 * * * *', 'jede Sekunde in den Minuten 5 und 30 jeder Stunde'],
+      ['*/6 0,15,30 * * * *',
+        'alle 6 Sekunden in den Minuten 0, 15 und 30 jeder Stunde']
+    ]);
+  });
+
   describe('Weitere Uhrzeiten', function() {
     run([
       ['0 1 * * *', 'täglich um 1 Uhr'],
@@ -589,7 +608,7 @@ describe('Deutsch (de):', function() {
       // a bare hourly idiom ("jede Stunde" / "alle 2 Stunden" / "stündlich von
       // 9 bis 17 Uhr") that silently drops the :00. An hour range surfaces it
       // with the "für eine Minute" frame, then the window.
-      ['* 0 * * * *', 'jede Sekunde, in Minute 0 jeder Stunde'],
+      ['* 0 * * * *', 'jede Sekunde in Minute 0 jeder Stunde'],
       ['* 0 9-17 * * *',
         'jede Sekunde für eine Minute, von 9 bis 17 Uhr'],
       // A wildcard minute under a restricted hour: the hour window must

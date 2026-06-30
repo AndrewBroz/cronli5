@@ -144,16 +144,6 @@ const nthWeekdayMasculine =
 const nthWeekdayFeminine =
   [null, 'primeira', 'segunda', 'terceira', 'quarta', 'quinta'];
 
-// Portuguese ordinals (masculine) for a stepped-minute cadence under a seconds
-// lead ("a cada segundo no sexto minuto"). The interval-2 step keeps its own
-// idiom and never reaches here, so the colliding "segundo" is unused; a lookup
-// miss falls back to the cardinal-with-"no" form, which still confines.
-const stepOrdinals: Record<number, string> = {
-  3: 'terceiro', 4: 'quarto', 5: 'quinto', 6: 'sexto', 7: 'sétimo',
-  8: 'oitavo', 9: 'nono', 10: 'décimo', 12: 'décimo segundo',
-  15: 'décimo quinto', 20: 'vigésimo', 30: 'trigésimo'
-};
-
 // --- Contractions (the principal es->pt divergence). ---
 //
 // Portuguese fuses a preposition with the following article wherever es emitted
@@ -363,7 +353,7 @@ function renderSecondsWithinMinute(
   // juxtaposition; a STEP second is a cadence and keeps its own lead.
   if (secondsConfinesMinute(schedule)) {
     return secondsBareLead(schedule) + ' ' +
-      confinedMinutePhrase(schedule, opts) + trailingQualifier(schedule, opts);
+      confinedMinutePhrase(schedule) + trailingQualifier(schedule, opts);
   }
 
   return secondsLeadClause(schedule, opts) + ', no minuto ' + minuteField +
@@ -452,29 +442,21 @@ function minuteStride(
 }
 
 // A stepped minute under a wildcard/stepped second and wildcard hour: bind the
-// second cadence to the minute cadence as a CONFINEMENT ("a cada segundo no
-// sexto minuto a partir do minuto 4 de cada hora"), never the comma
-// juxtaposition that reads as two independent cadences. The cadence is ORDINAL
-// ("no sexto minuto") — the cardinal "a cada seis minutos" is what fuels the
-// misread — and the start/bound mirror the standalone minute cadence.
-function minuteStepConfinement(
+// second clause leads, a COMMA, then the minute's own STANDALONE cardinal
+// cadence ("a cada segundo, a cada seis minutos a partir do minuto 4 de cada
+// hora"; "nos segundos 5, 10 e 15, a cada seis minutos …"). The ordinal "no
+// sexto minuto" read as a single minute (the 10th), not the every-sixth series;
+// the standalone cardinal "a cada seis minutos" reads it correctly and handles
+// every stride (offset, bounded, uneven) for free. The lead is the cadence
+// clause for a wildcard/stepped second, the bare clock-point clause otherwise.
+function steppedMinuteConfinement(
   schedule: Schedule,
-  stride: {start: number; interval: number; last: number},
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
+  lead: string,
   opts: Opts
 ): string {
-  const ordinal = stepOrdinals[stride.interval];
-  const head = ordinal ?
-    'no ' + ordinal + ' minuto' :
-    'a cada ' + numero(stride.interval, opts) + ' minutos';
-
-  const tail = chooseStride({...stride, cycle: 60}, {
-    bare: () => '',
-    offset: () => ' a partir do minuto ' + stride.start,
-    bounded: () => ' do minuto ' + stride.start + ' ao ' + stride.last
-  });
-
-  return secondsLeadClause(schedule, opts) + ' ' + head + tail +
-    ' de cada hora' + trailingQualifier(schedule, opts);
+  return lead + ', ' + render(schedule, plan.rest, opts) +
+    trailingQualifier(schedule, opts);
 }
 
 // Whether a stepped minute fills a wildcard hour under a wildcard/stepped
@@ -513,29 +495,13 @@ function secondsBareLead(schedule: Schedule): string {
     joinList(segmentWords(segmentsOf(schedule, 'second')));
 }
 
-// The CONFINED-minute genitive phrase a clock-point second attaches to ("do
-// sexto minuto a partir do minuto 4 de cada hora", "dos minutos 0, 15 e 30 de
-// cada hora", "do minuto 30 de cada hora"). A stepped minute reuses the ordinal
-// cadence (in the genitive "do" rather than the locative "no"); a list, range,
-// or single names the minute(s) — so the bare seconds lead never stacks a
-// redundant "de cada minuto".
-function confinedMinutePhrase(schedule: Schedule, opts: Opts): string {
-  const stride = minuteStride(schedule);
-
-  if (stride && schedule.pattern.minute !== '*/2') {
-    const ordinal = stepOrdinals[stride.interval];
-    const head = ordinal ?
-      'do ' + ordinal + ' minuto' :
-      'a cada ' + numero(stride.interval, opts) + ' minutos';
-    const tail = chooseStride({...stride, cycle: 60}, {
-      bare: () => '',
-      offset: () => ' a partir do minuto ' + stride.start,
-      bounded: () => ' do minuto ' + stride.start + ' ao ' + stride.last
-    });
-
-    return head + tail + ' de cada hora';
-  }
-
+// The CONFINED-minute genitive phrase a clock-point second attaches to ("dos
+// minutos 0, 15 e 30 de cada hora", "do minuto 30 de cada hora", "de cada
+// minuto do 0 ao 30 de cada hora"). A stepped minute is handled by the
+// standalone-cadence confinement before this point; a list, range, or single
+// names the minute(s) — so the bare seconds lead never stacks a redundant "de
+// cada minuto".
+function confinedMinutePhrase(schedule: Schedule): string {
   if (schedule.shapes.minute === 'range') {
     // `minuteRangeLead` is "a cada minuto do 0 ao 30"; the genitive "de"
     // absorbs its leading "a" ("de cada minuto …", not "de a cada minuto").
@@ -587,7 +553,8 @@ function minuteConfinementRender(
   schedule: Schedule, opts: Opts
 ): string | null {
   if (isSteppedMinuteSeconds(schedule, plan)) {
-    return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
+    return steppedMinuteConfinement(schedule, plan,
+      secondsLeadClause(schedule, opts), opts);
   }
 
   const minuteRest = plan.rest.kind === 'minuteFrequency' ||
@@ -595,8 +562,15 @@ function minuteConfinementRender(
     plan.rest.kind === 'rangeOfMinutes';
 
   if (minuteRest && secondsConfinesMinute(schedule)) {
+    // A clock-point second over a STEPPED minute reuses the standalone cardinal
+    // cadence the same way; only a list/range/single minute keeps the genitive.
+    if (minuteStride(schedule) && schedule.pattern.minute !== '*/2') {
+      return steppedMinuteConfinement(schedule, plan,
+        secondsBareLead(schedule), opts);
+    }
+
     return secondsBareLead(schedule) + ' ' +
-      confinedMinutePhrase(schedule, opts) + trailingQualifier(schedule, opts);
+      confinedMinutePhrase(schedule) + trailingQualifier(schedule, opts);
   }
 
   return null;

@@ -675,7 +675,10 @@ function renderSecondsWithinMinute(
     return secondsLead(schedule) + ' ' + confinedMinutePhrase(schedule);
   }
 
-  return secondsLead(schedule) + ', in Minute ' + schedule.pattern.minute +
+  // A cadence/stepped second leads straight into the locative "in Minute …"
+  // with NO comma ("alle 15 Sekunden in Minute 30 jeder Stunde"); the locative
+  // binds the two specs, matching the no-comma list/single confinement.
+  return secondsLead(schedule) + ' in Minute ' + schedule.pattern.minute +
     ' jeder Stunde';
 }
 
@@ -871,6 +874,18 @@ function secondsConfinesMinute(schedule: Schedule): boolean {
     !(second === 'single' && minute === 'single');
 }
 
+// Whether a compose-seconds plan is a cadence/stepped second under a minute
+// LIST or SINGLE and a wildcard hour — the shape that leads into the locative
+// "in …" minute phrase with no comma. A restricted/cadence hour keeps the
+// comma, so it does not qualify.
+function isLocativeMinuteConfinement(
+  schedule: Schedule,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
+): boolean {
+  return (plan.rest.kind === 'multipleMinutes' ||
+    plan.rest.kind === 'singleMinute') && schedule.shapes.hour === 'wildcard';
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -918,6 +933,15 @@ function renderComposeSeconds(
   // genitive ("jede Sekunde jeder zweiten Minute").
   if (isEveryOtherMinuteSeconds(schedule, plan)) {
     return secondsLead(schedule) + ' jeder zweiten Minute';
+  }
+
+  // A cadence/stepped second under a minute LIST or SINGLE and a wildcard hour
+  // leads straight into the locative minute phrase with NO comma ("jede Sekunde
+  // in den Minuten 0, 15 und 30 jeder Stunde"). The locative "in" already binds
+  // the two specs; the comma read as two independent specifications and is
+  // inconsistent with the no-comma stepped-minute and list-tier confinements.
+  if (isLocativeMinuteConfinement(schedule, plan)) {
+    return secondsLead(schedule) + ' ' + render(schedule, plan.rest, opts);
   }
 
   // A compact clock-time rest folds a meaningful SINGLE second into its own

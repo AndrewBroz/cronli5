@@ -41,6 +41,11 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['* 4/6 * * * *', '每小时从4分起每6分钟的每一秒'],
       ['* 2/7 * * * *', '每小时从2分起每7分钟，至58分的每一秒'],
       ['*/15 4/6 * * * *', '每小时从4分起每6分钟的每15秒'],
+      // A clean second step reads as its cadence ("每6秒"), whether written
+      // "*/6" or "0/6" — both fire 0,6,…,54 — never the enumerated
+      // "第0、6、…、54秒" the list path would spell out. It mirrors the minute
+      // side's "每6分钟".
+      ['0/6 4/6 * * * *', '每小时从4分起每6分钟的每6秒'],
       ['* */2 * * * *', '每偶数分钟的每一秒'],
       ['* */3 * * * *', '每3分钟的每一秒'],
       ['* */15 * * * *', '每15分钟的每一秒'],
@@ -99,6 +104,9 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['30 */6 * * * *', '每6分钟的第30秒'],
       ['30 2/7 * * * *', '每小时从2分起每7分钟，至58分的第30秒'],
       ['5,10,15 0,15,30 * * * *', '每小时0、15、30分的第5、10、15秒'],
+      // A clean second step under a minute list fuses as its cadence "的每6秒",
+      // not the enumerated "第0、6、…、54秒".
+      ['0/6 0,15,30 * * * *', '每小时0、15、30分的每6秒'],
       ['15 0,30 * * * *', '每小时0分和30分的第15秒'],
       ['15 0-30 * * * *', '每小时0至30分的第15秒'],
       // An hour step (or arithmetic-progression hour list) under a single
