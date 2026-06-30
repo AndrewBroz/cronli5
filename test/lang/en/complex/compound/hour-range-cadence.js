@@ -32,9 +32,9 @@ describe('Hour range under a fixed minute and a second reads as a window:',
           'every second from 0 through 10 past the hour, every hour ' +
           'from 9 a.m. through 5 p.m.'],
         ['* 0 9-17 * * *',
-          'every second during minute :00 from 9 a.m. through 5 p.m.'],
+          'every second during minute 0 from 9 a.m. through 5 p.m.'],
         ['*/15 0 9-17 * * *',
-          'every 15 seconds during minute :00 from 9 a.m. through 5 p.m.']
+          'every 15 seconds during minute 0 from 9 a.m. through 5 p.m.']
       ]);
     });
 
@@ -47,7 +47,7 @@ describe('Hour range under a fixed minute and a second reads as a window:',
           'at 30 seconds past the hour, every hour from 9 a.m. ' +
           'through 8 p.m. and at 10 p.m.'],
         ['* 0 9-20,22 * * *',
-          'every second during minute :00 during the 9 a.m. through 8 p.m. ' +
+          'every second during minute 0 during the 9 a.m. through 8 p.m. ' +
           'and 10 p.m. hours']
       ]);
     });

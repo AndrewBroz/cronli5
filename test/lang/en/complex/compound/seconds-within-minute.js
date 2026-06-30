@@ -25,17 +25,17 @@ describe('Seconds combined with a specific minute:', function() {
     run([
       ['5,10 30 * * * *',
         'at 5 and 10 seconds past the minute ' +
-        'during minute :30 of every hour'],
+        'during minute 30 of every hour'],
       ['0-30 30 * * * *',
         'every second from 0 through 30 past the minute ' +
-        'during minute :30 of every hour']
+        'during minute 30 of every hour']
     ]);
   });
 
   describe('a step second confines the minute as a cadence', function() {
     run([
       ['*/15 30 * * * *',
-        'every 15 seconds during minute :30 of every hour']
+        'every 15 seconds during minute 30 of every hour']
     ]);
   });
 });

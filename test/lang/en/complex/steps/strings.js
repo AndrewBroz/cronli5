@@ -92,14 +92,14 @@ describe('Valid strings with steps:', function() {
       // matching `* 0 */2` and `*/10 0 */2`, never the juxtaposed duration
       // frame the offset form once used.
       ['0/10 0 */2 * * *',
-        'every ten seconds during minute :00 of every other hour'],
+        'every ten seconds during minute 0 of every other hour'],
       ['0 */11 * * *',
         'every 11 hours from midnight through 10 p.m.'],
       // A sub-minute second at minute 0 over a wide bounded hour stride confines
       // the same way the wildcard second does ("during minute :00 during the
       // … hours"), the hour list naming each fired hour.
       ['0/10 0 */13 * * *',
-        'every ten seconds during minute :00 ' +
+        'every ten seconds during minute 0 ' +
         'during the 12 a.m. and 1 p.m. hours']
     ]);
   });

@@ -14,11 +14,11 @@ import {run} from '../../../../runner.js';
 describe('Seconds composed with the rest of the pattern:', function() {
   describe('second step', function() {
     run([
-      ['*/15 30 9 * * *', 'every 15 seconds during minute :30 at 9 a.m.'],
+      ['*/15 30 9 * * *', 'every 15 seconds during minute 30 at 9 a.m.'],
       ['*/15 0,30 * * * *',
-        'every 15 seconds during minutes :00 and :30 of every hour'],
+        'every 15 seconds during minutes 0 and 30 of every hour'],
       ['*/15 30 9-17 * * *',
-        'every 15 seconds during minute :30 from 9 a.m. through 5 p.m.']
+        'every 15 seconds during minute 30 from 9 a.m. through 5 p.m.']
     ]);
   });
 
@@ -31,18 +31,18 @@ describe('Seconds composed with the rest of the pattern:', function() {
   describe('offset-form second step leads the confinement', function() {
     run([
       ['0/6 30 * * * *',
-        'every six seconds during minute :30 of every hour'],
+        'every six seconds during minute 30 of every hour'],
       ['0/6 0,15,30 * * * *',
-        'every six seconds during minutes :00, :15, and :30 of every hour'],
+        'every six seconds during minutes 0, 15, and 30 of every hour'],
       ['0/6 4/6 * * * *',
         'every six seconds during every sixth minute ' +
         'from four minutes past the hour'],
       ['0/6 7,8,4/7 * * 5,8 *',
-        'every six seconds during minutes :04, :07, :08, :11, :18, :25, ' +
-        ':32, :39, :46, and :53 of every hour in May and August'],
+        'every six seconds during minutes 4, 7, 8, 11, 18, 25, ' +
+        '32, 39, 46, and 53 of every hour in May and August'],
       // The seconds count generalizes to whatever the cadence is.
       ['0/30 30 * * * *',
-        'every 30 seconds during minute :30 of every hour'],
+        'every 30 seconds during minute 30 of every hour'],
       ['0/30 4/6 * * * *',
         'every 30 seconds during every sixth minute ' +
         'from four minutes past the hour']
@@ -57,17 +57,17 @@ describe('Seconds composed with the rest of the pattern:', function() {
     run([
       ['5/6 30 * * * *',
         'every six seconds from five seconds past the minute ' +
-        'during minute :30 of every hour'],
+        'during minute 30 of every hour'],
       ['5/6 0,15,30 * * * *',
         'every six seconds from five seconds past the minute ' +
-        'during minutes :00, :15, and :30 of every hour'],
+        'during minutes 0, 15, and 30 of every hour'],
       ['5/6 4/6 * * * *',
         'every six seconds from five seconds past the minute ' +
         'during every sixth minute from four minutes past the hour'],
       ['5/6 7,8,4/7 * * 5,8 *',
         'every six seconds from five seconds past the minute ' +
-        'during minutes :04, :07, :08, :11, :18, :25, :32, :39, :46, ' +
-        'and :53 of every hour in May and August']
+        'during minutes 4, 7, 8, 11, 18, 25, 32, 39, 46, ' +
+        'and 53 of every hour in May and August']
     ]);
   });
 
@@ -105,13 +105,13 @@ describe('Seconds composed with the rest of the pattern:', function() {
       run([
         ['5,10,15 0,15,30 * * * *',
           'at 5, 10, and 15 seconds past the minute ' +
-          'during minutes :00, :15, and :30 of every hour'],
+          'during minutes 0, 15, and 30 of every hour'],
         ['15 0,30 * * * *',
           'at 15 seconds past the minute ' +
-          'during minutes :00 and :30 of every hour'],
+          'during minutes 0 and 30 of every hour'],
         ['15 0-30 * * * *',
           'at 15 seconds past the minute ' +
-          'during minutes :00 through :30 of every hour']
+          'during minutes 0 through 30 of every hour']
       ]);
     });
 
@@ -127,14 +127,14 @@ describe('Seconds composed with the rest of the pattern:', function() {
 
   describe('wildcard second', function() {
     run([
-      ['* 30 9 * * *', 'every second during minute :30 at 9 a.m.'],
-      ['* 30 * * * *', 'every second during minute :30 of every hour'],
-      // A minute range or short list confines as ":NN through :MM" / ":NN and
-      // :MM"; the redundant wildcard hour reads "of every hour".
+      ['* 30 9 * * *', 'every second during minute 30 at 9 a.m.'],
+      ['* 30 * * * *', 'every second during minute 30 of every hour'],
+      // A minute range or short list confines as "N through M" / "N and M";
+      // the redundant wildcard hour reads "of every hour".
       ['* 0-30 * * * *',
-        'every second during minutes :00 through :30 of every hour'],
+        'every second during minutes 0 through 30 of every hour'],
       ['* 5,30 * * * *',
-        'every second during minutes :05 and :30 of every hour']
+        'every second during minutes 5 and 30 of every hour']
     ]);
   });
 
@@ -184,25 +184,25 @@ describe('Seconds composed with the rest of the pattern:', function() {
   // qualifier trails.
   describe('minute pinned under a specific hour', function() {
     run([
-      ['* 0 0 * * *', 'every second during minute :00 at midnight'],
-      ['* 0 9 * * *', 'every second during minute :00 at 9 a.m.'],
-      ['* 0 12 * * *', 'every second during minute :00 at noon'],
+      ['* 0 0 * * *', 'every second during minute 0 at midnight'],
+      ['* 0 9 * * *', 'every second during minute 0 at 9 a.m.'],
+      ['* 0 12 * * *', 'every second during minute 0 at noon'],
       ['* 0 9,11 * * *',
-        'every second during minute :00 during the 9 a.m. and 11 a.m. hours'],
+        'every second during minute 0 during the 9 a.m. and 11 a.m. hours'],
       ['* 0 9-17 * * *',
-        'every second during minute :00 from 9 a.m. through 5 p.m.'],
+        'every second during minute 0 from 9 a.m. through 5 p.m.'],
       ['* 0 */2 * * *',
-        'every second during minute :00 of every other hour'],
+        'every second during minute 0 of every other hour'],
       ['* 0 9 * * MON',
-        'every second during minute :00 at 9 a.m. on Mondays'],
+        'every second during minute 0 at 9 a.m. on Mondays'],
       ['*/15 0 9 * * *',
-        'every 15 seconds during minute :00 at 9 a.m.'],
-      // A non-zero pinned minute reads the same way, with its own ":NN".
-      ['* 5 0 * * *', 'every second during minute :05 at midnight'],
-      ['* 5 9 * * *', 'every second during minute :05 at 9 a.m.'],
+        'every 15 seconds during minute 0 at 9 a.m.'],
+      // A non-zero pinned minute reads the same way, as a plain number.
+      ['* 5 0 * * *', 'every second during minute 5 at midnight'],
+      ['* 5 9 * * *', 'every second during minute 5 at 9 a.m.'],
       ['* 5 9,11 * * *',
-        'every second during minute :05 during the 9 a.m. and 11 a.m. hours'],
-      ['* 5 9 * * MON', 'every second during minute :05 at 9 a.m. on Mondays']
+        'every second during minute 5 during the 9 a.m. and 11 a.m. hours'],
+      ['* 5 9 * * MON', 'every second during minute 5 at 9 a.m. on Mondays']
     ]);
   });
 
@@ -239,7 +239,7 @@ describe('Seconds composed with the rest of the pattern:', function() {
   describe('with a day qualifier', function() {
     run([
       ['*/15 30 9 * * MON',
-        'every 15 seconds during minute :30 at 9 a.m. on Mondays']
+        'every 15 seconds during minute 30 at 9 a.m. on Mondays']
     ]);
   });
 

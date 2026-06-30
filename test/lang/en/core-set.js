@@ -49,9 +49,9 @@ describe('English core-set corrections:', function() {
       ['* */2 9-17/2 * * *',
         'every second of every other minute during the 9 a.m., 11 a.m., ' +
         '1 p.m., 3 p.m., and 5 p.m. hours'],
-      ['* 0 * * * *', 'every second during minute :00 of every hour'],
-      ['* 1 * * * *', 'every second during minute :01 of every hour'],
-      ['* 13 * * * *', 'every second during minute :13 of every hour']
+      ['* 0 * * * *', 'every second during minute 0 of every hour'],
+      ['* 1 * * * *', 'every second during minute 1 of every hour'],
+      ['* 13 * * * *', 'every second during minute 13 of every hour']
     ]);
   });
 
@@ -68,24 +68,24 @@ describe('English core-set corrections:', function() {
   // [c0011–c0020] seconds wildcard, minute fixed/range, hours fixed/range/list.
   describe('batch 2 refinements - seconds in minutes:', function() {
     run([
-      ['* 0 */2 * * *', 'every second during minute :00 of every other hour'],
-      ['* 0 0 * * *', 'every second during minute :00 at midnight'],
+      ['* 0 */2 * * *', 'every second during minute 0 of every other hour'],
+      ['* 0 0 * * *', 'every second during minute 0 at midnight'],
       ['* 0 9,11,13,15,17,19,21 * * *',
-        'every second during minute :00 during the 9 a.m., 11 a.m., 1 p.m., ' +
+        'every second during minute 0 during the 9 a.m., 11 a.m., 1 p.m., ' +
         '3 p.m., 5 p.m., 7 p.m., and 9 p.m. hours'],
       ['* 0 9-17 * * *',
-        'every second during minute :00 from 9 a.m. through 5 p.m.'],
+        'every second during minute 0 from 9 a.m. through 5 p.m.'],
       ['* 0-30 * * * *',
-        'every second during minutes :00 through :30 of every hour'],
+        'every second during minutes 0 through 30 of every hour'],
       ['* 0-30 */2 * * *',
-        'every second during minutes :00 through :30 of every ' +
+        'every second during minutes 0 through 30 of every ' +
         'other hour'],
       ['* 0-30 9,17 * * *',
-        'every second during minutes :00 through :30 during the ' +
+        'every second during minutes 0 through 30 during the ' +
         '9 a.m. and 5 p.m. hours'],
       ['* 0-30 9-17 * * *',
-        'every second during minutes :00 through :30 from 9 a.m. through 5 p.m.'],
-      ['* 5,30 * * * *', 'every second during minutes :05 and :30 of every hour']
+        'every second during minutes 0 through 30 from 9 a.m. through 5 p.m.'],
+      ['* 5,30 * * * *', 'every second during minutes 5 and 30 of every hour']
     ]);
   });
 
@@ -94,8 +94,8 @@ describe('English core-set corrections:', function() {
   describe('batch 3 - minute-leading & second-step:', function() {
     run([
       ['* 5,30 */2 * * *',
-        'every second during minutes :05 and :30 of every other hour'],
-      ['*/15 0 * * * *', 'every 15 seconds during minute :00 of every hour'],
+        'every second during minutes 5 and 30 of every other hour'],
+      ['*/15 0 * * * *', 'every 15 seconds during minute 0 of every hour'],
       ['0 * */2 * * *', 'every minute of every other hour'],
       ['0 * 0 * * *', 'every minute of the midnight hour'],
       ['0 * 9-17 * * *', 'every minute from 9 a.m. until 6 p.m.'],

@@ -10,7 +10,7 @@ import {
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {maxClockTimes} from '../../core/specs.js';
-import {clockDigits, numeral, pad} from '../../core/format.js';
+import {clockDigits, numeral} from '../../core/format.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
   HourTimesPlan, Schedule, Language, NormalizedOptions, PlanNode, Segment
@@ -1210,23 +1210,23 @@ function minuteConfinement(schedule: Schedule,
   }
 
   // A minute single/range/list under the seconds lead. The minute reads as a
-  // ":NN" clock-minute confinement, never "N minutes past the hour" (that is
+  // plain integer confinement, never "N minutes past the hour" (that is
   // the minute-lead clock-point form).
   const segments = segmentsOf(schedule, 'minute');
 
   if (schedule.shapes.minute === 'single') {
-    return ' during minute :' + pad(minute);
+    return ' during minute ' + Number(minute);
   }
 
   if (schedule.shapes.minute === 'range') {
     const bounds = minute.split('-');
 
-    return ' during minutes :' + pad(bounds[0]) + through(opts) + ':' +
-      pad(bounds[1]);
+    return ' during minutes ' + Number(bounds[0]) + through(opts) +
+      Number(bounds[1]);
   }
 
-  const values = segmentWords(segments, opts).map(function colon(word) {
-    return ':' + pad(word);
+  const values = segmentWords(segments, opts).map(function plain(word) {
+    return String(Number(word));
   });
 
   return ' during minutes ' + joinList(values, opts);
