@@ -833,8 +833,12 @@ function secondClause(schedule: Schedule): string {
 
   const first = segs[0];
 
-  if (segs.length === 1 && first.kind === 'step' && first.startToken === '*') {
-    return cadence(first.interval, UNITS.second);
+  // A STEP-shaped second reads as its stride cadence ("每6秒"), whether written
+  // "*/6" or the offset-clean "0/6" — both fire 0,6,…,54 — never the enumerated
+  // "第0、6、…、54秒". stepClause routes a clean/offset-clean stride through the
+  // bare cadence and only lists a bounded `a-b/n` or a short offset.
+  if (segs.length === 1 && first.kind === 'step') {
+    return stepClause(first, '秒', '秒', '每分钟');
   }
 
   // An offset/uneven step the core enumerated to this list reads as a stride

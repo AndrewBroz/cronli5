@@ -224,7 +224,10 @@ function renderSecondsWithinMinute(
       confinedMinutePhrase(schedule, opts) + trailingQualifier(schedule, opts);
   }
 
-  return secondsLeadClause(schedule, opts) + ', en el minuto ' + minuteField +
+  // A cadence/stepped second leads straight into the locative "en el minuto …"
+  // with NO comma ("cada 15 segundos en el minuto 30 de cada hora"); the
+  // locative binds the two specs, matching the no-comma list/single form.
+  return secondsLeadClause(schedule, opts) + ' en el minuto ' + minuteField +
     ' de cada hora' + trailingQualifier(schedule, opts);
 }
 
@@ -464,6 +467,26 @@ function secondsConfinesMinute(schedule: Schedule): boolean {
     !(second === 'single' && minute === 'single');
 }
 
+// The seconds lead plus its connector for a generic compose-seconds fallback:
+// empty when the rest already owns the second (a compact clock time folding a
+// meaningful single second); a bare space when the rest is a locative "en …"
+// minute LIST/SINGLE under a wildcard hour (the locative binds the two specs,
+// so no comma); otherwise the comma that sets the seconds clause apart.
+function composeConnector(
+  schedule: Schedule,
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
+  opts: Opts
+): string {
+  if (plan.rest.kind === 'compactClockTimes' && schedule.analyses.clockSecond) {
+    return '';
+  }
+
+  const locative = (plan.rest.kind === 'multipleMinutes' ||
+    plan.rest.kind === 'singleMinute') && schedule.shapes.hour === 'wildcard';
+
+  return secondsLeadClause(schedule, opts) + (locative ? ' ' : ', ');
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -530,11 +553,12 @@ function renderComposeSeconds(
 
   // A compact clock-time rest folds a meaningful SINGLE second into its own
   // leading clause, so the composer must not prepend a second lead that would
-  // double it. A wildcard or stepped second is not folded there (no
-  // clockSecond), so it still leads its own clause here.
-  const restOwnsLead = plan.rest.kind === 'compactClockTimes' &&
-    schedule.analyses.clockSecond;
-  const lead = restOwnsLead ? '' : secondsLeadClause(schedule, opts) + ', ';
+  // double it (empty connector). A cadence/stepped second under a minute
+  // LIST or SINGLE and a wildcard hour leads straight into the locative "en …"
+  // minute phrase with NO comma ("cada segundo en los minutos 0, 15 y 30 de
+  // cada hora") — the locative binds the two specs, matching the no-comma
+  // stepped-minute and list-tier confinements. Every other rest takes a comma.
+  const lead = composeConnector(schedule, plan, opts);
 
   return lead + render(schedule, plan.rest, opts);
 }

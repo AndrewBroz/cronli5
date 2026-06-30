@@ -6,6 +6,30 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.5]
+
+Blind per-language Claude Sonnet panels reviewed the seconds-within-minute
+confinement forms (the non-English mirrors added in 0.8.3–0.8.4).
+
+### Fixed
+
+- **French & Portuguese: a minute step inside the seconds confinement no longer
+  reads as a single minute.** It rendered a stepped minute with an ordinal — fr
+  "à la sixième minute", pt "no sexto minuto" — which a native reads as one
+  minute (the 10th), not every sixth. It now uses the same cardinal cadence the
+  standalone already used: fr "…toutes les six minutes à partir de la minute 4…",
+  pt "…a cada seis minutos a partir do minuto 4…".
+
+### Changed
+
+- **Chinese: a clean seconds step is no longer spelled out.** Under a minute
+  confinement, `0/6` now reads "每6秒" (mirroring "每6分钟") instead of listing
+  "第0、6、…、54秒".
+- **Spanish & German: dropped the comma** before the locative minute phrase in
+  the seconds confinement ("cada segundo en los minutos…", "jede Sekunde in den
+  Minuten…"). The locative-vs-genitive preposition split is correct grammar and
+  is unchanged. Finnish is unchanged pending a dedicated redesign (see backlog).
+
 ## [0.8.4]
 
 ### Fixed

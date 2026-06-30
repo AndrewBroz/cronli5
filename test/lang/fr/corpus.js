@@ -343,49 +343,54 @@ describe('Français (fr):', function() {
     ]);
   });
 
-  // A stepped minute under a wildcard second and wildcard hour confines the
-  // second cadence to the ORDINAL minute cadence ("chaque seconde à la sixième
-  // minute …"), never the comma juxtaposition that reads as two independent
-  // cadences. The offset-clean stride names only its start; the uneven one pins
-  // both endpoints ("de la minute 2 à 58").
+  // A stepped minute under a wildcard second and wildcard hour leads with the
+  // second clause, a COMMA, then the minute's own STANDALONE cardinal cadence
+  // ("chaque seconde, toutes les six minutes à partir de la minute 4 …"). The
+  // ordinal "à la sixième minute" read as a single minute (the 10th), not the
+  // every-sixth series; the cardinal "toutes les six minutes" reads correctly.
+  // The offset-clean stride names only its start; the uneven one pins both
+  // endpoints ("de la minute 2 à 58").
   describe('seconde sous une minute échelonnée (confinement)', function() {
     run([
       ['* 4/6 * * * *',
-        'chaque seconde à la sixième minute à partir de la minute 4 ' +
+        'chaque seconde, toutes les six minutes à partir de la minute 4 ' +
         'de chaque heure'],
       ['* 2/7 * * * *',
-        'chaque seconde à la septième minute de la minute 2 à 58 ' +
+        'chaque seconde, toutes les sept minutes de la minute 2 à 58 ' +
         'de chaque heure'],
-      ['* */6 * * * *', 'chaque seconde à la sixième minute de chaque heure'],
+      ['* */6 * * * *',
+        'chaque seconde, toutes les six minutes'],
       ['*/15 4/6 * * * *',
-        'toutes les 15 secondes à la sixième minute à partir de la minute 4 ' +
-        'de chaque heure']
+        'toutes les 15 secondes, toutes les six minutes à partir de la ' +
+        'minute 4 de chaque heure']
     ]);
   });
 
   // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
-  // restriction in the genitive, never the comma juxtaposition that reads as two
-  // independent schedules ("aux secondes 5, 10 et 15 de chaque minute, toutes
-  // les six minutes …"). The seconds clause leads (bare, no "de chaque
-  // minute"), then the minute in the genitive ("de la sixième minute …", "des
-  // minutes 0, 15 et 30 …"). NOTE: mirrors c0d0a1f's marker; flagged for native
-  // review at graduation (only English was panel-ratified).
+  // restriction. A STEPPED minute leads with the second clause, a COMMA, then
+  // the minute's own standalone cardinal cadence ("aux secondes 5, 10 et 15,
+  // toutes les six minutes …") — the cardinal reads as the series; the ordinal
+  // "de la sixième minute" read as one minute. A LIST/SINGLE minute names the
+  // minute(s) in the genitive ("des minutes 0, 15 et 30 …", "de la minute 30
+  // …"). Either way it never juxtaposes two schedules behind a comma + "de
+  // chaque minute". NOTE: mirrors c0d0a1f's marker; flagged for native review at
+  // graduation (only English was panel-ratified).
   describe('seconde liste/plage/unité confine la restriction de la minute',
     function() {
       run([
         ['5,10,15 4/6 * * * *',
-          'aux secondes 5, 10 et 15 de la sixième minute ' +
+          'aux secondes 5, 10 et 15, toutes les six minutes ' +
           'à partir de la minute 4 de chaque heure'],
         ['30 4/6 * * * *',
-          'à la seconde 30 de la sixième minute ' +
+          'à la seconde 30, toutes les six minutes ' +
           'à partir de la minute 4 de chaque heure'],
         ['0-30 4/6 * * * *',
-          'chaque seconde de 0 à 30 de la sixième minute ' +
+          'chaque seconde de 0 à 30, toutes les six minutes ' +
           'à partir de la minute 4 de chaque heure'],
         ['30 */6 * * * *',
-          'à la seconde 30 de la sixième minute de chaque heure'],
+          'à la seconde 30, toutes les six minutes'],
         ['30 2/7 * * * *',
-          'à la seconde 30 de la septième minute ' +
+          'à la seconde 30, toutes les sept minutes ' +
           'de la minute 2 à 58 de chaque heure'],
         ['5,10,15 0,15,30 * * * *',
           'aux secondes 5, 10 et 15 des minutes 0, 15 et 30 de chaque heure'],
@@ -403,10 +408,10 @@ describe('Français (fr):', function() {
       // A wildcard second under a minute */2 binds the two cadences instead of
       // juxtaposing the contradictory "chaque seconde, toutes les deux minutes".
       ['* */2 * * * *', 'chaque seconde de chaque deux minutes'],
-      // Other clean steps confine as the ordinal cadence.
-      ['* */3 * * * *', 'chaque seconde à la troisième minute de chaque heure'],
-      ['* */15 * * * *',
-        'chaque seconde à la quinzième minute de chaque heure'],
+      // Other clean steps lead with the second clause + a comma, then the
+      // minute's own standalone cardinal cadence.
+      ['* */3 * * * *', 'chaque seconde, toutes les trois minutes'],
+      ['* */15 * * * *', 'chaque seconde, toutes les 15 minutes'],
       // Guards: no-seconds, restricted hour, hour cadence are unchanged.
       ['*/2 * * * *', 'toutes les deux minutes'],
       ['* */2 0 * * *',
