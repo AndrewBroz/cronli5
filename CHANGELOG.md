@@ -6,6 +6,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.6]
+
+### Changed
+
+- **English: minute-of-hour positions render as plain numbers, not ":NN".** A
+  blind Claude Sonnet panel unanimously found the colon notation ("during minute
+  :30", "minutes :04, :07, …") reads as a seconds value or a clock fragment — the
+  word "minute(s)" already supplies the unit. English now writes plain, unpadded
+  integers: "during minute 30 of every hour", "during minutes 4, 7, 8, … of every
+  hour". Clock times (h:mm, e.g. "9:30 a.m.") are unchanged; the other six
+  languages were already plain.
+
 ## [0.8.5]
 
 Blind per-language Claude Sonnet panels reviewed the seconds-within-minute

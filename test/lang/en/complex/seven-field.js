@@ -15,7 +15,7 @@ describe('Seven-field patterns:', function() {
       ['0 0 12 1 1 * */2', 'on January 1 at noon, every other year'],
       ['* * * * * * */2', 'every second, every other year'],
       ['*/15 30 9 * * * 2030',
-        'every 15 seconds during minute :30 at 9 a.m. in 2030'],
+        'every 15 seconds during minute 30 at 9 a.m. in 2030'],
       ['0 30 9 * * * *', 'every day at 9:30 a.m.']
     ]);
   });
@@ -49,11 +49,11 @@ describe('Seven-field patterns:', function() {
   // then the hour confinement ("of every hour", or the hour window).
   describe('minute 0 stated under a sub-minute second', function() {
     run([
-      ['* 0 * * * *', 'every second during minute :00 of every hour'],
+      ['* 0 * * * *', 'every second during minute 0 of every hour'],
       ['* 0 * * * * 2013',
-        'every second during minute :00 of every hour in 2013'],
+        'every second during minute 0 of every hour in 2013'],
       ['* 0 9-17 * * *',
-        'every second during minute :00 from 9 a.m. through 5 p.m.']
+        'every second during minute 0 from 9 a.m. through 5 p.m.']
     ]);
   });
 });
