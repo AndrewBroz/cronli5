@@ -1102,6 +1102,29 @@ function isCadenceField(token: string): boolean {
     token.startsWith('*/') && token.indexOf('-') === -1;
 }
 
+// Whether the second field leads the confinement frame as a clean cadence. A
+// wildcard ("every second") and a clean `*/n` step both lead via
+// `isCadenceField`; an OFFSET-form step that still strides cleanly from the top
+// of the minute (`0/n`) is the SAME cadence as `*/n` ("every six seconds") and
+// leads identically, so it routes through the confinement rather than
+// juxtaposing the minute restriction behind a comma. A non-zero offset (`5/n`,
+// whose lead names an offset) or a bounded step (`a-b/n`, a windowed set) keeps
+// its existing form.
+function secondLeadsCadence(schedule: Schedule): boolean {
+  if (isCadenceField(schedule.pattern.second)) {
+    return true;
+  }
+
+  if (schedule.shapes.second !== 'step') {
+    return false;
+  }
+
+  // Reached only under a stepped second the `isCadenceField` guard did not
+  // already admit, so its `*/n` clean-cadence forms are gone and the only clean
+  // stride left from the top of the minute is the offset form `0/n`.
+  return stepSegment(schedule, 'second').startToken === '0';
+}
+
 // The leading cadence and whether the second is the leading field, or null when
 // the pattern has no cadence lead (the finest restricted field is a clock-point
 // single/range/list). The seconds lead when restricted as a cadence; otherwise
@@ -1110,7 +1133,7 @@ function leadingCadence(schedule: Schedule, opts: NormalizedOptions):
   {text: string; secondLead: boolean} | null {
   const {second, minute} = schedule.pattern;
 
-  if (isCadenceField(second)) {
+  if (secondLeadsCadence(schedule)) {
     return {secondLead: true, text: secondsClause(schedule, 'minute', opts)};
   }
 

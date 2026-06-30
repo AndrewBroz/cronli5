@@ -22,6 +22,33 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
+  // An OFFSET-form clean second step (`0/6`, `0/30`) is a clean cadence from
+  // the top of the minute, identical in meaning to `*/6` / `*/30`, so it leads
+  // the SAME confinement the wildcard / clean-step second does — "every six
+  // seconds during minute :30 of every hour", never the juxtaposed "every six
+  // seconds, 30 minutes past the hour, every hour". The seconds count is
+  // whatever the cadence is.
+  describe('offset-form second step leads the confinement', function() {
+    run([
+      ['0/6 30 * * * *',
+        'every six seconds during minute :30 of every hour'],
+      ['0/6 0,15,30 * * * *',
+        'every six seconds during minutes :00, :15, and :30 of every hour'],
+      ['0/6 4/6 * * * *',
+        'every six seconds during every sixth minute ' +
+        'from four minutes past the hour'],
+      ['0/6 7,8,4/7 * * 5,8 *',
+        'every six seconds during minutes :04, :07, :08, :11, :18, :25, ' +
+        ':32, :39, :46, and :53 of every hour in May and August'],
+      // The seconds count generalizes to whatever the cadence is.
+      ['0/30 30 * * * *',
+        'every 30 seconds during minute :30 of every hour'],
+      ['0/30 4/6 * * * *',
+        'every 30 seconds during every sixth minute ' +
+        'from four minutes past the hour']
+    ]);
+  });
+
   describe('second list and range', function() {
     run([
       ['5,10 30 9 * * *',
