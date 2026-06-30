@@ -95,6 +95,17 @@ open:
   continuous 2-day cycle (vs the odd days that reset each month) — but it's the
   established convention and en uses it too, so only the OR-union frame got the
   "odd day" predicate. A possible future consistency tidy, not a bug.
+- **Seconds confinement connector differs by tier in es/de/fi/fr/pt under a
+  minute list/single (0.8.4).** The seconds *cadence* and *step* tiers under a
+  minute list keep a comma + locative ("cada segundo, en los minutos 0, 15 y 30
+  de cada hora"; de "…, in den Minuten …"), while the seconds *list/range/single*
+  tier (confined in 0.8.4) uses a genitive fold ("en los segundos 5 y 10 **de
+  los** minutos 0, 15 y 30…"; de "**der** Minuten …"). So two adjacent tiers
+  use different connectors in those five languages. en and zh are uniform
+  (en "during" everywhere; zh 的). The choice between locative and genitive is a
+  per-language preposition call — settle it at native review (where the non-en
+  confinement forms from c0d0a1f and 0.8.4 are already headed), then unify all
+  three seconds tiers to one connector per language.
 
 ## Human-in-the-loop language review platform
 

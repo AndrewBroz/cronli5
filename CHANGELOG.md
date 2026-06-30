@@ -6,6 +6,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.4]
+
+### Fixed
+
+- **Seconds combined with a minute restriction now confine instead of
+  juxtaposing.** A seconds clause beside a minute restriction used to be joined
+  by a comma — which reads as two independent schedules — in two places:
+  - **English: a seconds *step*** (`0/6`, `*/6`, `5/6`) juxtaposed ("every six
+    seconds, every six minutes from four minutes past the hour") while the
+    seconds wildcard already confined. English now confines any seconds step:
+    "every six seconds during every sixth minute from four minutes past the
+    hour" — matching the other six languages.
+  - **All languages: a seconds *list, range, or single value*** under a minute
+    restriction (`5,10,15 4/6`, `30 4/6`, `0-30 4/6`, `5,10,15 0,15,30`)
+    juxtaposed; a blind panel of Claude Sonnet instances confirmed the comma
+    reads as two schedules. Each language now confines it — e.g. English "at 5,
+    10, and 15 seconds past the minute during every sixth minute from four
+    minutes past the hour".
+
+  English and Chinese are now uniform across the whole seconds × minute surface
+  (wildcard, step, offset-step, list, range, single); a remaining es/de/fi/fr/pt
+  connector nuance under a minute list is tracked for native review.
+
 ## [0.8.3]
 
 ### Fixed
