@@ -95,17 +95,22 @@ open:
   continuous 2-day cycle (vs the odd days that reset each month) — but it's the
   established convention and en uses it too, so only the OR-union frame got the
   "odd day" predicate. A possible future consistency tidy, not a bug.
-- **Seconds confinement connector differs by tier in es/de/fi/fr/pt under a
-  minute list/single (0.8.4).** The seconds *cadence* and *step* tiers under a
-  minute list keep a comma + locative ("cada segundo, en los minutos 0, 15 y 30
-  de cada hora"; de "…, in den Minuten …"), while the seconds *list/range/single*
-  tier (confined in 0.8.4) uses a genitive fold ("en los segundos 5 y 10 **de
-  los** minutos 0, 15 y 30…"; de "**der** Minuten …"). So two adjacent tiers
-  use different connectors in those five languages. en and zh are uniform
-  (en "during" everywhere; zh 的). The choice between locative and genitive is a
-  per-language preposition call — settle it at native review (where the non-en
-  confinement forms from c0d0a1f and 0.8.4 are already headed), then unify all
-  three seconds tiers to one connector per language.
+- **Seconds confinement — fi needs a redesign (blind per-language Sonnet panels,
+  0.8.5).** The seconds×minute confinement was reviewed by blind fluent Claude
+  Sonnet panels (3 personas each for es/de/fr/pt, 2 for zh). Resolved in 0.8.5:
+  the locative-vs-genitive "connector inconsistency" is **correct grammar, not a
+  bug** (the preposition reflects the seconds' syntactic role — forcing one
+  creates a partitive ambiguity); es/de dropped the stylistic comma; fr/pt had a
+  real **correctness** bug fixed (the confinement minute-step rendered an ordinal
+  "à la sixième minute" / "no sexto minuto" that reads as a *single* minute — now
+  the standalone cardinal cadence); zh's verbose seconds-step enumeration became
+  "每N秒". **fi is the remaining open item:** all three fi personas split or
+  flagged it — the step form "joka kuudentena minuuttina jokaisen tunnin
+  minuutista 4 alkaen" is awkward (2/3), the comma direction is contested, and
+  the list+list "…minuutin ja …sekunnin kohdalla" merge is ambiguous (2/3, reads
+  as 9 time-points not nesting). The personas proposed divergent rewrites, so fi
+  needs a dedicated redesign + re-panel, not a patch. Pairs with the existing fi
+  compound/"tai"-rakenne naturalness debt above — do both in one fi pass.
 
 ## Human-in-the-loop language review platform
 
