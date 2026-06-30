@@ -71,19 +71,49 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
-  // SCOPE GUARD: a second LIST or SINGLE under a stepped minute is a separate,
-  // unresolved tier and is intentionally NOT confined — it keeps its existing
-  // juxtaposed clock-point lead. Only the stepped (cadence) second confines.
-  describe('second list or single does not confine (scope guard)', function() {
+  // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
+  // restriction (a comma there reads as two independent schedules: "at 5, 10,
+  // and 15 seconds past the minute" + "every six minutes from four"). The
+  // clock-point seconds clause leads, then the minute reads as its confinement
+  // — the same frame the seconds cadence uses, only with a clock-point lead in
+  // place of the cadence. A stepped minute confines as the ordinal cadence
+  // ("during every sixth minute from four minutes past the hour"); a minute
+  // list as ":NN" minutes "of every hour".
+  describe('second list/range/single confines a stepped minute', function() {
     run([
       ['5,10,15 4/6 * * * *',
-        'at 5, 10, and 15 seconds past the minute, ' +
-        'every six minutes from four minutes past the hour'],
+        'at 5, 10, and 15 seconds past the minute ' +
+        'during every sixth minute from four minutes past the hour'],
       ['30 4/6 * * * *',
-        'at 30 seconds past the minute, ' +
-        'every six minutes from four minutes past the hour']
+        'at 30 seconds past the minute ' +
+        'during every sixth minute from four minutes past the hour'],
+      ['0-30 4/6 * * * *',
+        'every second from 0 through 30 past the minute ' +
+        'during every sixth minute from four minutes past the hour'],
+      // A clean step from the top of the hour names no offset; an uneven step
+      // pins both endpoints ("from 2 through 58"), as the cadence form does.
+      ['30 */6 * * * *',
+        'at 30 seconds past the minute during every sixth minute'],
+      ['30 2/7 * * * *',
+        'at 30 seconds past the minute during every seventh minute ' +
+        'from 2 through 58 minutes past the hour']
     ]);
   });
+
+  describe('second list/range/single confines a minute list or range',
+    function() {
+      run([
+        ['5,10,15 0,15,30 * * * *',
+          'at 5, 10, and 15 seconds past the minute ' +
+          'during minutes :00, :15, and :30 of every hour'],
+        ['15 0,30 * * * *',
+          'at 15 seconds past the minute ' +
+          'during minutes :00 and :30 of every hour'],
+        ['15 0-30 * * * *',
+          'at 15 seconds past the minute ' +
+          'during minutes :00 through :30 of every hour']
+      ]);
+    });
 
   describe('second list and range', function() {
     run([
@@ -173,17 +203,6 @@ describe('Seconds composed with the rest of the pattern:', function() {
       ['* 5 9,11 * * *',
         'every second during minute :05 during the 9 a.m. and 11 a.m. hours'],
       ['* 5 9 * * MON', 'every second during minute :05 at 9 a.m. on Mondays']
-    ]);
-  });
-
-  describe('single second under a non-single minute', function() {
-    run([
-      ['15 0,30 * * * *',
-        'at 15 seconds past the minute, ' +
-        'at 0 and 30 minutes past the hour'],
-      ['15 0-30 * * * *',
-        'at 15 seconds past the minute, ' +
-        'every minute from 0 through 30 past the hour']
     ]);
   });
 

@@ -341,6 +341,42 @@ describe('Español (es):', function() {
     ]);
   });
 
+  // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
+  // restriction with the genitive "de", never the comma juxtaposition that
+  // reads as two independent schedules ("en los segundos 5, 10 y 15 de cada
+  // minuto, cada seis minutos…"). The seconds clause leads, anchored to the
+  // CONFINED minute ("de cada sexto minuto…", "de los minutos 0, 15 y 30…")
+  // rather than the generic "de cada minuto"; the stepped minute keeps the
+  // ordinal cadence form c0d0a1f introduced. NOTE: mirrors c0d0a1f's marker;
+  // flagged for native review at graduation (only English was panel-ratified).
+  describe('segundo lista/rango/único confina la restricción del minuto',
+    function() {
+      run([
+        ['5,10,15 4/6 * * * *',
+          'en los segundos 5, 10 y 15 de cada sexto minuto ' +
+          'a partir del minuto 4 de cada hora'],
+        ['30 4/6 * * * *',
+          'en el segundo 30 de cada sexto minuto ' +
+          'a partir del minuto 4 de cada hora'],
+        ['0-30 4/6 * * * *',
+          'cada segundo del 0 al 30 de cada sexto minuto ' +
+          'a partir del minuto 4 de cada hora'],
+        ['30 */6 * * * *',
+          'en el segundo 30 de cada sexto minuto de cada hora'],
+        ['30 2/7 * * * *',
+          'en el segundo 30 de cada séptimo minuto ' +
+          'del minuto 2 al 58 de cada hora'],
+        ['5,10,15 0,15,30 * * * *',
+          'en los segundos 5, 10 y 15 de los minutos 0, 15 y 30 de cada hora'],
+        ['15 0-30 * * * *',
+          'en el segundo 15 de cada minuto del 0 al 30 de cada hora'],
+        ['5,10 30 * * * *',
+          'en los segundos 5 y 10 del minuto 30 de cada hora'],
+        ['0-30 30 * * * *',
+          'cada segundo del 0 al 30 del minuto 30 de cada hora']
+      ]);
+    });
+
   describe('segundo bajo un minuto pareado (* */N)', function() {
     run([
       // A wildcard second under a minute */2 binds the two cadences instead of
@@ -758,8 +794,7 @@ describe('Español (es):', function() {
   describe('cobertura de ramas', function() {
     run([
       ['15 0,30 * * * *',
-        'en el segundo 15 de cada minuto, ' +
-        'en los minutos 0 y 30 de cada hora'],
+        'en el segundo 15 de los minutos 0 y 30 de cada hora'],
       // A stride of two over the whole day reads as the even/odd hours; any
       // other step names its active hours, which pins the schedule precisely
       // (a panel found ordinal/colloquial forms imprecise).

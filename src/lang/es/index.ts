@@ -215,6 +215,15 @@ function renderSecondsWithinMinute(
       trailingQualifier(schedule, opts);
   }
 
+  // A second LIST or RANGE under a single minute confines that minute with the
+  // genitive "de" ("en los segundos 5 y 10 del minuto 30 de cada hora"), never
+  // the comma juxtaposition that reads as two independent schedules. A STEP
+  // second is a cadence ("cada 15 segundos") and keeps its own lead.
+  if (secondsConfinesMinute(schedule)) {
+    return secondsBareLead(schedule) + ' ' +
+      confinedMinutePhrase(schedule, opts) + trailingQualifier(schedule, opts);
+  }
+
   return secondsLeadClause(schedule, opts) + ', en el minuto ' + minuteField +
     ' de cada hora' + trailingQualifier(schedule, opts);
 }
@@ -345,6 +354,116 @@ function isSteppedMinuteSeconds(
     minuteStride(schedule) !== null;
 }
 
+// The leading seconds words for a clock-point second, WITHOUT the trailing "de
+// cada minuto" anchor: a confined second attaches to the CONFINED minute ("de
+// cada sexto minuto…"), so the generic minute anchor would be redundant. The
+// list/range/single forms mirror `secondsClause` minus that anchor.
+function secondsBareLead(schedule: Schedule): string {
+  const secondField = schedule.pattern.second;
+  const shape = schedule.shapes.second;
+
+  if (shape === 'range') {
+    const bounds = secondField.split('-');
+
+    return 'cada segundo del ' + bounds[0] + ' al ' + bounds[1];
+  }
+
+  if (shape === 'single') {
+    return 'en el segundo ' + secondField;
+  }
+
+  return 'en los segundos ' +
+    joinList(segmentWords(segmentsOf(schedule, 'second')));
+}
+
+// The CONFINED-minute genitive phrase a clock-point second attaches to, with
+// its leading connector folded in ("de cada sexto minuto a partir del minuto 4
+// de cada hora", "de los minutos 0, 15 y 30 de cada hora", "del minuto 30 de
+// cada hora"). A stepped minute reuses the ordinal cadence form; a list, range,
+// or single names the minute(s) directly. This is the seconds clause's anchor,
+// so the generic "de cada minuto" is never stacked alongside it.
+function confinedMinutePhrase(schedule: Schedule, opts: Opts): string {
+  const stride = minuteStride(schedule);
+
+  if (stride && schedule.pattern.minute !== '*/2') {
+    const ordinal = stepOrdinals[stride.interval];
+    const head = ordinal ?
+      'cada ' + ordinal + ' minuto' :
+      'cada ' + numero(stride.interval, opts) + ' minutos';
+    const tail = chooseStride({...stride, cycle: 60}, {
+      bare: () => '',
+      offset: () => ' a partir del minuto ' + stride.start,
+      bounded: () => ' del minuto ' + stride.start + ' al ' + stride.last
+    });
+
+    return 'de ' + head + tail + ' de cada hora';
+  }
+
+  if (schedule.shapes.minute === 'range') {
+    return 'de ' + minuteRangeLead(schedule.pattern.minute) + ' de cada hora';
+  }
+
+  if (schedule.shapes.minute === 'list') {
+    return 'de los minutos ' +
+      joinList(segmentWords(segmentsOf(schedule, 'minute'))) + ' de cada hora';
+  }
+
+  // A single pinned minute: "del minuto 30 de cada hora".
+  return 'del minuto ' + schedule.pattern.minute + ' de cada hora';
+}
+
+// Whether a clock-point second (list, range, or single) sits under a restricted
+// minute and a wildcard hour — the shape that must CONFINE the minute with the
+// genitive "de" rather than juxtapose it behind a comma (two independent
+// schedules). The single-second + single-minute pair folds into one coherent
+// clock point ("en el minuto 5 y el segundo 30 de cada hora") and is excluded.
+// The minute-confinement rendering for a compose-seconds plan, or null when the
+// plan is not one. A CADENCE second over a stepped minute uses the ordinal
+// cadence form; a CLOCK-POINT second (list/range/single) over any restricted
+// minute uses the genitive form anchored to the confined minute. Both bind the
+// second beneath the minute instead of juxtaposing the two behind a comma.
+// Folded into one helper so `renderComposeSeconds` carries a single branch.
+function minuteConfinementRender(
+  plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
+  schedule: Schedule, opts: Opts
+): string | null {
+  if (isSteppedMinuteSeconds(schedule, plan)) {
+    return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
+  }
+
+  const minuteRest = plan.rest.kind === 'minuteFrequency' ||
+    plan.rest.kind === 'multipleMinutes' ||
+    plan.rest.kind === 'rangeOfMinutes';
+
+  if (minuteRest && secondsConfinesMinute(schedule)) {
+    return secondsBareLead(schedule) + ' ' +
+      confinedMinutePhrase(schedule, opts) + trailingQualifier(schedule, opts);
+  }
+
+  return null;
+}
+
+function secondsConfinesMinute(schedule: Schedule): boolean {
+  const {second, minute, hour} = schedule.shapes;
+
+  // A second LIST the core enumerated from a step (`*/15` → 0,15,30,45; `3/2` →
+  // 3,5,…) is really a stride CADENCE, spoken "cada N segundos" and confined by
+  // the cadence path, not a clock-point clause; exclude it here.
+  if (second === 'list') {
+    const values = singleValues(segmentsOf(schedule, 'second'));
+
+    if (values && arithmeticStep(values)) {
+      return false;
+    }
+  }
+
+  const clockPoint = second === 'single' || second === 'range' ||
+    second === 'list';
+
+  return clockPoint && minute !== 'wildcard' && hour === 'wildcard' &&
+    !(second === 'single' && minute === 'single');
+}
+
 function renderComposeSeconds(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
@@ -388,12 +507,15 @@ function renderComposeSeconds(
     return dayFrame + ', ' + window + ', ' + cadence;
   }
 
-  // A stepped minute under a wildcard second + wildcard hour confines the
-  // second cadence to the ordinal minute cadence ("cada segundo en cada sexto
-  // minuto a partir del minuto 4 de cada hora"), never the comma juxtaposition
-  // that reads as two independent cadences.
-  if (isSteppedMinuteSeconds(schedule, plan)) {
-    return minuteStepConfinement(schedule, minuteStride(schedule)!, opts);
+  // A second confines the minute restriction (open hour), never the comma
+  // juxtaposition that reads as two independent cadences: a CADENCE second over
+  // a stepped minute uses the ordinal-cadence form ("cada segundo en cada sexto
+  // minuto …"); a CLOCK-POINT second uses the genitive form anchored to the
+  // confined minute ("en los segundos 5, 10 y 15 de cada sexto minuto …").
+  const confined = minuteConfinementRender(plan, schedule, opts);
+
+  if (confined !== null) {
+    return confined;
   }
 
   // A wildcard second under a minute */2 with a wildcard hour juxtaposes two

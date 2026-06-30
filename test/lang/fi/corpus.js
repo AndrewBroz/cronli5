@@ -477,6 +477,43 @@ describe('Suomi (fi):', function() {
     ]);
   });
 
+  // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
+  // restriction, never the comma juxtaposition that reads as two independent
+  // schedules. A stepped minute keeps its essive ordinal frame with the seconds
+  // postposition ("… sekunnin kohdalla joka kuudentena minuuttina …"); a list,
+  // range, or single minute folds both fields into one shared "kohdalla" ("joka
+  // tunti 0, 15 ja 30 minuutin ja 5, 10 ja 15 sekunnin kohdalla"). NOTE: mirrors
+  // c0d0a1f's marker; flagged for native review at graduation (only English was
+  // panel-ratified).
+  describe('sekuntilista/-väli/-yksittäisarvo rajaa minuutin', function() {
+    run([
+      ['5,10,15 4/6 * * * *',
+        '5, 10 ja 15 sekunnin kohdalla joka kuudentena minuuttina ' +
+        'jokaisen tunnin minuutista 4 alkaen'],
+      ['30 4/6 * * * *',
+        '30 sekunnin kohdalla joka kuudentena minuuttina ' +
+        'jokaisen tunnin minuutista 4 alkaen'],
+      ['0-30 4/6 * * * *',
+        '0–30 sekunnin kohdalla joka kuudentena minuuttina ' +
+        'jokaisen tunnin minuutista 4 alkaen'],
+      ['30 */6 * * * *',
+        '30 sekunnin kohdalla joka kuudentena minuuttina'],
+      ['30 2/7 * * * *',
+        '30 sekunnin kohdalla joka seitsemäntenä minuuttina ' +
+        'minuutista 2 minuuttiin 58'],
+      ['5,10,15 0,15,30 * * * *',
+        'joka tunti 0, 15 ja 30 minuutin ja 5, 10 ja 15 sekunnin kohdalla'],
+      ['15 0,30 * * * *',
+        'joka tunti 0 ja 30 minuutin ja 15 sekunnin kohdalla'],
+      ['15 0-30 * * * *',
+        'joka tunti 0–30 minuutin ja 15 sekunnin kohdalla'],
+      ['5,10 30 * * * *',
+        'joka tunti 30 minuutin ja 5 ja 10 sekunnin kohdalla'],
+      ['0-30 30 * * * *',
+        'joka tunti 30 minuutin ja 0–30 sekunnin kohdalla']
+    ]);
+  });
+
   describe('harvinaiset muodot', function() {
     run([
       // Minute step leads its within-firing second anchor (comma separates).
@@ -539,10 +576,11 @@ describe('Suomi (fi):', function() {
       ['*/15 * 9-17 * * *', '15 sekunnin välein, joka minuutti klo 9.00–17.59'],
       ['0-30 * 9 * * *',
         'joka minuutti 0–30 sekunnin kohdalla, joka minuutti kello 9 aikana'],
-      // Minute is fixed (0, 30), so the second is not "joka minuutti" — it
-      // fires within those minutes (cross-family validated).
+      // A single second under a minute list confines that minute into one
+      // shared "kohdalla", never the comma juxtaposition that reads as two
+      // independent schedules.
       ['5 0,30 * * * *',
-        '5 sekunnin kohdalla, joka tunti 0 ja 30 minuutin kohdalla'],
+        'joka tunti 0 ja 30 minuutin ja 5 sekunnin kohdalla'],
       ['30-40/5 * * * * *', 'joka minuutti 30, 35 ja 40 sekunnin kohdalla'],
       ['40/15 * * * *', 'joka tunti 40 ja 55 minuutin kohdalla'],
       ['* 9-17 * * *', 'joka minuutti klo 9.00–17.59'],

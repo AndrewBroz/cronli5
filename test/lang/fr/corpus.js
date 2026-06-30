@@ -363,6 +363,41 @@ describe('Français (fr):', function() {
     ]);
   });
 
+  // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
+  // restriction in the genitive, never the comma juxtaposition that reads as two
+  // independent schedules ("aux secondes 5, 10 et 15 de chaque minute, toutes
+  // les six minutes …"). The seconds clause leads (bare, no "de chaque
+  // minute"), then the minute in the genitive ("de la sixième minute …", "des
+  // minutes 0, 15 et 30 …"). NOTE: mirrors c0d0a1f's marker; flagged for native
+  // review at graduation (only English was panel-ratified).
+  describe('seconde liste/plage/unité confine la restriction de la minute',
+    function() {
+      run([
+        ['5,10,15 4/6 * * * *',
+          'aux secondes 5, 10 et 15 de la sixième minute ' +
+          'à partir de la minute 4 de chaque heure'],
+        ['30 4/6 * * * *',
+          'à la seconde 30 de la sixième minute ' +
+          'à partir de la minute 4 de chaque heure'],
+        ['0-30 4/6 * * * *',
+          'chaque seconde de 0 à 30 de la sixième minute ' +
+          'à partir de la minute 4 de chaque heure'],
+        ['30 */6 * * * *',
+          'à la seconde 30 de la sixième minute de chaque heure'],
+        ['30 2/7 * * * *',
+          'à la seconde 30 de la septième minute ' +
+          'de la minute 2 à 58 de chaque heure'],
+        ['5,10,15 0,15,30 * * * *',
+          'aux secondes 5, 10 et 15 des minutes 0, 15 et 30 de chaque heure'],
+        ['15 0-30 * * * *',
+          'à la seconde 15 de chaque minute de 0 à 30 de chaque heure'],
+        ['5,10 30 * * * *',
+          'aux secondes 5 et 10 de la minute 30 de chaque heure'],
+        ['0-30 30 * * * *',
+          'chaque seconde de 0 à 30 de la minute 30 de chaque heure']
+      ]);
+    });
+
   describe('seconde sous une minute appariée (* */N)', function() {
     run([
       // A wildcard second under a minute */2 binds the two cadences instead of
@@ -759,8 +794,7 @@ describe('Français (fr):', function() {
   describe('couverture des branches', function() {
     run([
       ['15 0,30 * * * *',
-        'à la seconde 15 de chaque minute, ' +
-        'aux minutes 0 et 30 de chaque heure'],
+        'à la seconde 15 des minutes 0 et 30 de chaque heure'],
       // A stride of two over the whole day reads as the even/odd hours; any
       // other step names its active hours, which pins the schedule precisely.
       ['*/15 */2 * * *', 'toutes les 15 minutes, pendant les heures paires'],

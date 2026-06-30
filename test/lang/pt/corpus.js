@@ -485,6 +485,40 @@ describe('Português (pt):', function() {
     ]);
   });
 
+  // A second LIST, RANGE, or SINGLE under a minute restriction CONFINES that
+  // restriction in the genitive, never the comma juxtaposition that reads as two
+  // independent schedules ("nos segundos 5, 10 e 15 de cada minuto, a cada seis
+  // minutos …"). The seconds clause leads (bare, no "de cada minuto"), then the
+  // minute in the genitive ("do sexto minuto …", "dos minutos 0, 15 e 30 …").
+  // NOTE: mirrors c0d0a1f's marker; flagged for native review at graduation
+  // (only English was panel-ratified).
+  describe('segundo lista/intervalo/único confina a restrição do minuto',
+    function() {
+      run([
+        ['5,10,15 4/6 * * * *',
+          'nos segundos 5, 10 e 15 do sexto minuto ' +
+          'a partir do minuto 4 de cada hora'],
+        ['30 4/6 * * * *',
+          'no segundo 30 do sexto minuto a partir do minuto 4 de cada hora'],
+        ['0-30 4/6 * * * *',
+          'a cada segundo do 0 ao 30 do sexto minuto ' +
+          'a partir do minuto 4 de cada hora'],
+        ['30 */6 * * * *',
+          'no segundo 30 do sexto minuto de cada hora'],
+        ['30 2/7 * * * *',
+          'no segundo 30 do sétimo minuto ' +
+          'do minuto 2 ao 58 de cada hora'],
+        ['5,10,15 0,15,30 * * * *',
+          'nos segundos 5, 10 e 15 dos minutos 0, 15 e 30 de cada hora'],
+        ['15 0-30 * * * *',
+          'no segundo 15 de cada minuto do 0 ao 30 de cada hora'],
+        ['5,10 30 * * * *',
+          'nos segundos 5 e 10 do minuto 30 de cada hora'],
+        ['0-30 30 * * * *',
+          'a cada segundo do 0 ao 30 do minuto 30 de cada hora']
+      ]);
+    });
+
   describe('segundo sob um minuto pareado (* */N)', function() {
     run([
       // A wildcard second under a minute */2 binds the two cadences instead of
@@ -926,8 +960,7 @@ describe('Português (pt):', function() {
   describe('cobertura de ramos', function() {
     run([
       ['15 0,30 * * * *',
-        'no segundo 15 de cada minuto, ' +
-        'nos minutos 0 e 30 de cada hora'],
+        'no segundo 15 dos minutos 0 e 30 de cada hora'],
       // A stride of two over the whole day reads as the even/odd hours; any
       // other step names its active hours, which pins the schedule precisely.
       ['*/15 */2 * * *', 'a cada 15 minutos, durante as horas pares'],

@@ -37,8 +37,8 @@ describe('Day qualifiers on second and minute anchors:', function() {
       ['15 30 * * * MON',
         '30 minutes and 15 seconds past the hour, every hour on Mondays'],
       ['5,10 30 * * * MON',
-        'at 5 and 10 seconds past the minute, ' +
-        '30 minutes past the hour, every hour on Mondays']
+        'at 5 and 10 seconds past the minute ' +
+        'during minute :30 of every hour on Mondays']
     ]);
   });
 });

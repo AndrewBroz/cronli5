@@ -26,8 +26,8 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0-30,45 * * * * *',
         'at 0 through 30 and 45 seconds past the minute'],
       ['5-10,20 30 * * * *',
-        'at 5 through 10 and 20 seconds past the minute, ' +
-        '30 minutes past the hour, every hour']
+        'at 5 through 10 and 20 seconds past the minute ' +
+        'during minute :30 of every hour']
     ]);
   });
 
