@@ -89,10 +89,12 @@ describe('Options × languages smoke:', function() {
       });
 
       it('lenient invalid input returns exactly the fallback', function() {
+        const fallback = lang.fallback(lang.options());
+
         expect(cronli5('not cron', {lang, lenient: true}))
-          .to.equal(lang.fallback);
+          .to.equal(fallback);
         expect(cronli5('61 * * * *', {lang, lenient: true}))
-          .to.equal(lang.fallback);
+          .to.equal(fallback);
       });
     });
   });

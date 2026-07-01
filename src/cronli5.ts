@@ -42,7 +42,7 @@ function cronli5(cronPattern: CronPattern, options?: Cronli5Options): string {
 
   if (!opts.lenient) {
     return present(
-      interpretCronPattern(cronPattern, lang, opts), lang, options);
+      interpretCronPattern(cronPattern, lang, opts), lang, options, opts);
   }
 
   // Lenient mode never throws on bad INPUT: unparseable input yields a fixed
@@ -53,11 +53,11 @@ function cronli5(cronPattern: CronPattern, options?: Cronli5Options): string {
   // and must propagate rather than masquerade as the fallback.
   try {
     return present(
-      interpretCronPattern(cronPattern, lang, opts), lang, options);
+      interpretCronPattern(cronPattern, lang, opts), lang, options, opts);
   }
   catch (error) {
     if (error instanceof Cronli5InputError) {
-      return lang.fallback;
+      return lang.fallback(opts);
     }
 
     throw error;
@@ -69,9 +69,12 @@ function cronli5(cronPattern: CronPattern, options?: Cronli5Options): string {
 function present(
   description: string,
   lang: Cronli5Language,
-  options?: Cronli5Options
+  options: Cronli5Options | undefined,
+  opts: NormalizedOptions
 ): string {
-  return options && options.sentence ? lang.sentence(description) : description;
+  return options && options.sentence ?
+    lang.sentence(description, opts) :
+    description;
 }
 
 // Prepare (parse, validate, normalize), analyze, and describe a cron
@@ -84,7 +87,7 @@ function interpretCronPattern(
   // `@reboot` runs on startup and has no field schedule to interpret.
   if (typeof cronPattern === 'string' &&
       cronPattern.trim().toLowerCase() === '@reboot') {
-    return lang.reboot;
+    return lang.reboot(opts);
   }
 
   // Analyze into the neutral facts + the core's suggested plan, then let the

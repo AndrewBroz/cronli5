@@ -2223,9 +2223,9 @@ function monthName(token: NameToken): string {
 // strings and option normalization.
 const fr: Language<FrenchStyle> = {
   describe,
-  fallback: 'un motif cron non reconnu',
+  fallback: () => 'un motif cron non reconnu',
   options: normalizeOptions,
-  reboot: 'au démarrage du système',
+  reboot: () => 'au démarrage du système',
   // A description ending in a period already carries it, so closing the
   // sentence must not double it.
   sentence: (description) =>

@@ -2166,9 +2166,9 @@ function joinList(items: string[]): string {
 // strings and option normalization.
 const fi: Language = {
   describe,
-  fallback: 'tunnistamaton cron-lauseke',
+  fallback: () => 'tunnistamaton cron-lauseke',
   options: normalizeOptions,
-  reboot: 'järjestelmän käynnistyessä',
+  reboot: () => 'järjestelmän käynnistyessä',
   // A description ending in a period already carries it, so closing the
   // sentence must not double it.
   sentence: (description) =>

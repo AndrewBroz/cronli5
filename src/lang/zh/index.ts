@@ -52,13 +52,6 @@ function toVariant(text: string, variant: ChineseStyle['variant']): string {
   return Array.from(text, (glyph) => HANT[glyph] ?? glyph).join('');
 }
 
-// The variant the most recent `options()` call resolved. `cronli5()` always
-// calls `options()` before reading `reboot`/`fallback` or invoking `sentence`,
-// none of which receive `opts`; this lets those contract-fixed members honor
-// the dialect without changing the shared Language contract. The library is
-// synchronous and single render per call, so a module-private latch is safe.
-let activeVariant: ChineseStyle['variant'] = 'Hans';
-
 // "A、B和C" — enumerate with 、 and join the final item with 和.
 function joinAnd(items: string[]): string {
   if (items.length < 2) {
@@ -1655,10 +1648,6 @@ function normalizeOptions(options?: Cronli5Options): Opts {
 
   const style = resolveDialect(options.dialect);
 
-  // `cronli5()` reads `reboot`/`fallback` and calls `sentence` without `opts`;
-  // latch the variant here (always called first) so they can honor the dialect.
-  activeVariant = style.variant;
-
   return {
     ampm: typeof options.ampm === 'boolean' ? options.ampm : false,
     lenient: !!options.lenient,
@@ -1672,18 +1661,13 @@ function normalizeOptions(options?: Cronli5Options): Opts {
 
 const zh: Language<ChineseStyle> = {
   describe,
-  // `reboot`/`fallback` are contract-fixed strings the core reads without
-  // `opts`; getters honor the variant `options()` latched, keeping the shared
-  // Language contract unchanged while the Traditional dialect still applies.
-  get fallback(): string {
-    return toVariant('无法识别的 cron 表达式', activeVariant);
-  },
+  // The reviewed Simplified strings, mapped to the variant the given opts
+  // resolved — the dialect flows through the arguments, not module state.
+  fallback: (opts) => toVariant('无法识别的 cron 表达式', opts.style.variant),
   options: normalizeOptions,
-  get reboot(): string {
-    return toVariant('系统启动时', activeVariant);
-  },
-  sentence: (description) =>
-    toVariant('运行时间：', activeVariant) + description + '。'
+  reboot: (opts) => toVariant('系统启动时', opts.style.variant),
+  sentence: (description, opts) =>
+    toVariant('运行时间：', opts.style.variant) + description + '。'
 };
 
 export default zh;

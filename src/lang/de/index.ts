@@ -1638,9 +1638,9 @@ function describe(schedule: Schedule, opts: Opts): string {
 
 const de: Language<GermanStyle> = {
   describe,
-  fallback: 'ein unlesbares Cron-Muster',
+  fallback: () => 'ein unlesbares Cron-Muster',
   options: normalizeOptions,
-  reboot: 'beim Systemstart',
+  reboot: () => 'beim Systemstart',
   // A description ending in a German ordinal already carries its period
   // ("…am 8."), so closing the sentence must not double it.
   sentence: (description) =>

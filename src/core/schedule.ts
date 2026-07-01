@@ -164,12 +164,15 @@ export interface Language<
   Extra extends {kind: string} = never
 > {
   describe(schedule: Schedule<Extra>, opts: NormalizedOptions<Style>): string;
-  fallback: string;
+  // The lenient-mode fallback description. Options-aware (like `reboot` and
+  // `sentence`) so a dialect that changes whole words flows through the
+  // arguments; a language with one fixed string ignores `opts`.
+  fallback(opts: NormalizedOptions<Style>): string;
   options(options?: Cronli5Options): NormalizedOptions<Style>;
-  reboot: string;
+  reboot(opts: NormalizedOptions<Style>): string;
   // Wrap a rendered description into a complete standalone sentence (the CLI
   // form); each language owns its lead verb and punctuation.
-  sentence(description: string): string;
+  sentence(description: string, opts: NormalizedOptions<Style>): string;
   // Optionally override the core's suggested plan. Receives the neutral
   // `facts` and the core's suggestion (`base`), so overriding is a thin
   // remap, not a re-derivation. Omitted by languages that accept the core's

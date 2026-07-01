@@ -2801,9 +2801,9 @@ function getWeekday(d: number | string, opts: NormalizedOptions): string {
 // strings and option normalization.
 const en: Language = {
   describe,
-  fallback: 'an unrecognizable cron pattern',
+  fallback: () => 'an unrecognizable cron pattern',
   options: normalizeOptions,
-  reboot: 'at system startup',
+  reboot: () => 'at system startup',
   // A description ending in an abbreviation already carries its period
   // ("…9 a.m."), so closing the sentence must not double it.
   sentence: (description) =>
