@@ -1,0 +1,74 @@
+[
+ {
+  "n": 1,
+  "cron": "0 0 1 * 5",
+  "current": "am 1. oder freitags um Mitternacht",
+  "en_reference": "at midnight whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 2,
+  "cron": "0 0 1 * 1-5",
+  "current": "am 1. oder montags bis freitags um Mitternacht",
+  "en_reference": "at midnight whenever the day is the 1st or a weekday"
+ },
+ {
+  "n": 3,
+  "cron": "0 0 1 * 5L",
+  "current": "am 1. oder am letzten Freitag des Monats um Mitternacht",
+  "en_reference": "at midnight whenever the day is the 1st or the last Friday of the month"
+ },
+ {
+  "n": 4,
+  "cron": "0 0 */2 * */2",
+  "current": "am 1., 3., 5., 7., 9., 11., 13., 15., 17., 19., 21., 23., 25., 27., 29. und 31. oder dienstags, donnerstags, samstags und sonntags um Mitternacht",
+  "en_reference": "at midnight whenever the day is an odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday"
+ },
+ {
+  "n": 5,
+  "cron": "0 0 1-15 * 0",
+  "current": "vom 1. bis zum 15. oder sonntags um Mitternacht",
+  "en_reference": "at midnight whenever the day is from the 1st through the 15th or a Sunday"
+ },
+ {
+  "n": 6,
+  "cron": "0 0 L * 5L",
+  "current": "am letzten Tag des Monats oder am letzten Freitag des Monats um Mitternacht",
+  "en_reference": "at midnight whenever the day is the last day of the month or the last Friday of the month"
+ },
+ {
+  "n": 7,
+  "cron": "0 0 L * 0",
+  "current": "am letzten Tag des Monats oder sonntags um Mitternacht",
+  "en_reference": "at midnight whenever the day is the last day of the month or a Sunday"
+ },
+ {
+  "n": 8,
+  "cron": "0 0 1 1 0",
+  "current": "am 1. oder sonntags im Januar um Mitternacht",
+  "en_reference": "in January at midnight whenever the day is the 1st or a Sunday"
+ },
+ {
+  "n": 9,
+  "cron": "0 0 1 1-3 5L",
+  "current": "am 1. oder am letzten Freitag des Monats von Januar bis März um Mitternacht",
+  "en_reference": "in January through March at midnight whenever the day is the 1st or the last Friday of the month"
+ },
+ {
+  "n": 10,
+  "cron": "*/5 * 1 * 5",
+  "current": "alle 5 Minuten am 1. oder freitags",
+  "en_reference": "every five minutes whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 11,
+  "cron": "*/5 * 1 6 5",
+  "current": "alle 5 Minuten am 1. oder freitags im Juni",
+  "en_reference": "in June every five minutes whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 12,
+  "cron": "0 9-17 1 6 5",
+  "current": "stündlich von 9 bis 17 Uhr am 1. oder freitags im Juni",
+  "en_reference": "in June every hour from 9 a.m. through 5 p.m. whenever the day is the 1st or a Friday"
+ }
+]

@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 3, "clarity": 4, "issue": "'every 15 minutes of every other hour' is a touch stilted; 'of' reads awkwardly" },
+ { "n": 5, "correct": true, "idiom": 3, "clarity": 4, "issue": "'every 15 minutes from five minutes past the hour' is wordy but accurate" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 3, "clarity": 3, "issue": "long; 'from five minutes past the hour during the ... hours' stacks several qualifiers" },
+ { "n": 9, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 3, "clarity": 3, "issue": "dense list of four times after a four-month list; parseable but heavy" },
+ { "n": 11, "correct": true, "idiom": 3, "clarity": 3, "issue": "'every six hours from 2 a.m.' is open-ended with no upper bound stated" },
+ { "n": 12, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 2, "clarity": 2, "issue": "run-on; inconsistent number style ('zero through ten' words vs '0 through 30' digits)" },
+ { "n": 14, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 2, "clarity": 2, "issue": "very long run-on chaining seconds, minutes, and hours clauses" },
+ { "n": 19, "correct": true, "idiom": 3, "clarity": 4, "issue": "'from five minutes past the hour from 9 a.m.' repeats 'from' awkwardly" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

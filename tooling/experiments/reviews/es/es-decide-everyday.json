@@ -1,0 +1,65 @@
+[
+  {
+    "cluster": "A",
+    "pick": "cada minuto del 0 al 29 de cada hora",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "'del 0 al 29' unambiguously marks a closed range with continuous firing; 'entre' would suggest exclusive endpoints in everyday speech, and 'en los minutos 0 a 29' reads more like a set of two endpoints than a window."
+  },
+  {
+    "cluster": "B",
+    "pick": "a las 12:00, 22:00, 23:00, 00:00, a la 01:00 y a las 02:00",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "The article must switch to singular 'a la' for 01:00 (la una); repeating the article only where the grammar demands it (at 01:00 and then again at 02:00 to re-establish plural) is more natural than either repeating it on every item or silently leaving 01:00 grammatically wrong."
+  },
+  {
+    "cluster": "C",
+    "pick": "en el minuto 1 y el segundo 1 de cada hora",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Both articles present remove the homonym risk ('segundo' without article reads as the ordinal 'second'); 'de cada hora' clearly scopes both nouns."
+  },
+  {
+    "cluster": "D",
+    "pick": "cada hora de las 09:00 a las 20:00, además de las 22:00",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "'además de' is an additive marker that clearly distinguishes 22:00 as an extra slot rather than a range endpoint; 'y a las 22:00' is ambiguous (could be read as extending to 22:00), and 'también' is slightly redundant when 'además' already carries that meaning."
+  },
+  {
+    "cluster": "E",
+    "pick": "en diciembre, el 31 o los viernes, a las 23:59",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The three comma-delimited blocks (month / day-or-weekday / time) make the shared scope of December and 23:59 visually and syntactically clear for both arms of the OR; other candidates let 'a las 23:59' attach only to the closest noun."
+  },
+  {
+    "cluster": "F1",
+    "pick": "los lunes a las 09:30, en los segundos 5 y 10",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Natural top-down order (day → time → sub-second detail); the comma signals that 'en los segundos 5 y 10' narrows the preceding 09:30 slot. The first candidate falsely implies every minute via 'de cada minuto'."
+  },
+  {
+    "cluster": "F2",
+    "pick": "de lunes a viernes, en el minuto 30 de cada hora de las 09:00 a las 17:30, cada 15 segundos",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "'de cada hora de las 09:00 a las 17:30' neatly restricts which hours count; 'cada 15 segundos' at the end qualifies the trigger within that minute. The other options either make the hour restriction feel global or leave the 15-second nesting ambiguous."
+  },
+  {
+    "cluster": "F3",
+    "pick": "a las 09:00, 17:00, 18:00 y 19:00, cada minuto del 0 al 30",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Leading with the four anchor hours frames them as the context; 'cada minuto del 0 al 30' then clearly falls within those hours. The reverse order ('cada minuto..., a las 09:00...') risks reading the hours as a second independent trigger."
+  },
+  {
+    "cluster": "F4",
+    "pick": "cada minuto del 0 al 30 dentro de cada dos horas",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "'dentro de cada dos horas' explicitly nests the minute window inside each 2-hour cycle; the two 'cada' forms in the other candidates sit side-by-side and could be parsed as two independent firing rules."
+  }
+]

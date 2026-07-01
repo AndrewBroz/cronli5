@@ -1,0 +1,98 @@
+[
+  {
+    "cluster": 1,
+    "subcase": null,
+    "pick": "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä",
+    "rank": [
+      "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä",
+      "tammikuun 1. päivänä tai tammikuun maanantaisin keskiyöllä",
+      "tammikuun 1. päivänä tai maanantaisin tammikuussa keskiyöllä",
+      "tammikuussa 1. päivänä tai maanantaisin keskiyöllä"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The correlative 'joko...tai' bracket unambiguously places both conditions inside 'tammikuussa', leaving no room for a reader to interpret the Monday arm as year-round. Candidate 3 is also unambiguous (both arms carry the month explicitly) but more verbose. Candidates 1 and 2 fail: candidate 2 fronts the month adverbial but lacks the 'joko' bracket, so 'maanantaisin' across the 'tai' boundary can plausibly be read as year-round; candidate 1 asymmetrically marks only the weekday arm with 'tammikuussa', which is confusing even if technically parseable."
+  },
+  {
+    "cluster": 2,
+    "subcase": null,
+    "pick": "kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin",
+    "rank": [
+      "kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin",
+      "kesäkuun 1.–5. päivänä tai kesäkuun maanantaista perjantaihin",
+      "kesäkuun 1.–5. päivänä tai maanantaista perjantaihin kesäkuussa",
+      "kesäkuussa 1.–5. päivänä tai maanantaista perjantaihin"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Same structural argument as cluster 1: 'joko...tai' with 'kesäkuussa' fronted brackets both conditions unambiguously inside June. Candidate 3 (both arms explicit) is also unambiguous but redundant. Candidate 4 (fronted month, no 'joko') leaves 'maanantaista perjantaihin' potentially scopeless across the 'tai'. Candidate 1 (asymmetric month placement) is awkward and potentially misleading."
+  },
+  {
+    "cluster": 3,
+    "subcase": null,
+    "pick": "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin",
+    "rank": [
+      "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin",
+      "tammikuun 1. ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa",
+      "tammikuun ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa",
+      "tammikuussa ja heinäkuussa 1. päivänä tai maanantaisin"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 4 ('joko...tai' under the two-month adverbial) applies the established pattern and is unambiguously scoped. Candidate 3 is also unambiguous—both arms are explicitly month-qualified—but is verbose and the dangling 'tammikuussa ja heinäkuussa' at the end of the weekday arm reads awkwardly. Candidate 2 risks the same scope-across-'tai' misread as the prior clusters. Candidate 1 has the same fronted-month-without-bracket problem and additionally the 'tammikuun ja heinäkuun 1. päivänä' construction is slightly ambiguous about whether it means 'January and July 1st' or 'the 1st of January and July each'."
+  },
+  {
+    "cluster": 4,
+    "subcase": null,
+    "pick": "15 minuutin välein, 5 ja 30 sekunnin kohdalla",
+    "rank": [
+      "15 minuutin välein, 5 ja 30 sekunnin kohdalla",
+      "joka 15. minuutti 5 ja 30 sekunnin kohdalla",
+      "15 minuutin välein 5 ja 30 sekunnin kohdalla",
+      "5 ja 30 sekunnin kohdalla, 15 minuutin välein"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 3 states the primary cadence (15-minute interval) first, then uses a comma to introduce the within-interval refinement at seconds 5 and 30; the comma signals a hierarchical relationship rather than a flat list, which matches the meaning. Candidate 4 ('joka 15. minuutti') is natural but treats the 15-minute boundary as a point-in-time event and the following second-level clause is harder to parse without a comma. Candidate 2 (no comma) is the most ambiguous—'klo' confusion aside, the two granularities blur together. Candidate 1 inverts the hierarchy by leading with the finer level, making 'every 15 minutes' feel like an afterthought rather than the primary schedule driver."
+  },
+  {
+    "cluster": 5,
+    "subcase": "5a",
+    "pick": "klo 0, 5, 10, 15 ja 20",
+    "rank": [
+      "klo 0, 5, 10, 15 ja 20",
+      "tunteina 0, 5, 10, 15 ja 20",
+      "klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "When the minute level is stated separately, listing full hour windows (candidate 1) is actively misleading—it implies all minutes within each window fire, contradicting the separately-stated minute cadence. 'klo 0, 5, 10, 15 ja 20' is the standard Finnish way to list clock hours; it is concise, unambiguous, and leaves room for the minute-level description elsewhere. 'tunteina 0, 5, 10, 15 ja 20' is also unambiguous but 'tunteina' is more technical and less natural in everyday scheduling prose than 'klo'."
+  },
+  {
+    "cluster": 5,
+    "subcase": "5b",
+    "pick": "klo 9–20 sekä 22",
+    "rank": [
+      "klo 9–20 sekä 22",
+      "klo 9–20 ja lisäksi 22",
+      "klo 9–20 ja 22"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "'sekä' is an additive conjunction in Finnish that signals 'and also' rather than list continuation, making it clear that 22 is appended to the range rather than extending it. 'ja lisäksi' achieves the same unambiguity but at the cost of an extra word. 'ja 22' is slightly risky: Finnish readers familiar with range notation will likely parse it correctly, but the naked 'ja' could theoretically invite a reading of 22 as part of a continued range or an implied 21–22 extension; in a precision-critical scheduling context, the minor ambiguity is worth eliminating."
+  },
+  {
+    "cluster": 6,
+    "subcase": null,
+    "pick": "klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla",
+    "rank": [
+      "klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla",
+      "klo 9, 11, 13, 15 ja 17, minuutteina 0–30",
+      "0–30 minuutin kohdalla, klo 9, 11, 13, 15 ja 17",
+      "0–30 minuutin kohdalla klo 9, 11, 13, 15 ja 17"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 4 ('klo' hours first, then 'aina minuuttien 0–30 kohdalla') is unambiguous on both levels: 'klo' anchors the first clause as clock hours, 'aina' reinforces that the minute window applies at every listed hour, and 'minuuttien 0–30 kohdalla' unambiguously labels the minute level. Candidate 3 ('klo' hours + comma + 'minuutteina 0–30') is also unambiguous and slightly more compact but lacks the 'aina' that clarifies the minute window recurs at each listed hour. Candidate 2 (minutes first with comma) risks '0–30' being read as a clock-time range (00:00–00:30) before 'minuutin kohdalla' clarifies the unit. Candidate 1 (no comma, minutes first) is critically ambiguous: 'klo 9, 11, 13, 15 ja 17' could be parsed as the list of minute positions within the 0–30 window, not as clock hours at all."
+  }
+]

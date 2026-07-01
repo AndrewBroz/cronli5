@@ -1,0 +1,87 @@
+[
+  {
+    "id": 0,
+    "pattern": "0 0 1 1 MON",
+    "description": "tammikuun 1. päivänä tai maanantaisin tammikuussa keskiyöllä"
+  },
+  {
+    "id": 1,
+    "pattern": "0 9 1-5 6-8 *",
+    "description": "kuukauden 1.–5. päivänä kesäkuusta elokuuhun klo 9"
+  },
+  {
+    "id": 2,
+    "pattern": "5 9-17 1,15 6-8 MON-FRI",
+    "description": "5 minuutin kohdalla klo 9.05–17.05 kuukauden 1. ja 15. päivänä tai maanantaista perjantaihin kesäkuusta elokuuhun"
+  },
+  {
+    "id": 3,
+    "pattern": "5 */5 1 1,7 MON",
+    "description": "tammikuun ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05"
+  },
+  {
+    "id": 4,
+    "pattern": "5 * * 1 *",
+    "description": "joka tunti 5 minuutin kohdalla tammikuussa"
+  },
+  {
+    "id": 5,
+    "pattern": "*/15 9,17 1,15 * 0",
+    "description": "15 minuutin välein klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä tai sunnuntaisin"
+  },
+  {
+    "id": 6,
+    "pattern": "*/45 9,17 * 12 SAT,SUN",
+    "description": "joka tunti 0 ja 45 minuutin kohdalla klo 9.00–9.59 ja 17.00–17.59 sunnuntaisin ja lauantaisin joulukuussa"
+  },
+  {
+    "id": 7,
+    "pattern": "*/45 */5 1-5 6 MON-FRI",
+    "description": "joka tunti 0 ja 45 minuutin kohdalla klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59 kesäkuun 1.–5. päivänä tai maanantaista perjantaihin kesäkuussa"
+  },
+  {
+    "id": 8,
+    "pattern": "*/25 9,17 1 * FRI",
+    "description": "25 minuutin välein tasatunnista alkaen klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. päivänä tai perjantaisin"
+  },
+  {
+    "id": 9,
+    "pattern": "*/25 */5 * 1,7 *",
+    "description": "25 minuutin välein tasatunnista alkaen klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59 tammikuussa ja heinäkuussa"
+  },
+  {
+    "id": 10,
+    "pattern": "0-30 0 1-5 12 0",
+    "description": "joka minuutti klo 0.00–0.30 joulukuun 1.–5. päivänä tai sunnuntaisin joulukuussa"
+  },
+  {
+    "id": 11,
+    "pattern": "0-30 9-17/2 * 6-8 SAT,SUN",
+    "description": "0–30 minuutin kohdalla, klo 9, 11, 13, 15 ja 17 sunnuntaisin ja lauantaisin kesäkuusta elokuuhun"
+  },
+  {
+    "id": 12,
+    "pattern": "0-30 * 1-5 */3 SAT,SUN",
+    "description": "joka tunti 0–30 minuutin kohdalla joka kolmannen kuukauden 1.–5. päivänä tai sunnuntaisin ja lauantaisin tammikuussa, huhtikuussa, heinäkuussa ja lokakuussa"
+  },
+  {
+    "id": 13,
+    "pattern": "5,10,30 9,17 1,15 12 FRI",
+    "description": "joulukuun 1. ja 15. päivänä tai perjantaisin joulukuussa klo 9.05, 9.10, 9.30, 17.05, 17.10 ja 17.30"
+  },
+  {
+    "id": 14,
+    "pattern": "5,10,30 9-20,22 1 1 MON",
+    "description": "joka tunti 5, 10 ja 30 minuutin kohdalla, klo 9–20 ja 22 tammikuun 1. päivänä tai maanantaisin tammikuussa"
+  },
+  {
+    "id": 15,
+    "pattern": "5,10,30 * 1-5 6-8 *",
+    "description": "joka tunti 5, 10 ja 30 minuutin kohdalla kuukauden 1.–5. päivänä kesäkuusta elokuuhun"
+  },
+  {
+    "id": 16,
+    "pattern": "5,30 */15 9,17 1,15 * *",
+    "description": "5 ja 30 sekunnin kohdalla, 15 minuutin välein klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä"
+  }
+]

@@ -1,0 +1,5 @@
+[
+ {"id":"u1","meaning":"At these five times of day: 01:05, 06:05, 11:05, 16:05 and 21:05.","candidates":["a la 01:05 y a las 06:05, 11:05, 16:05 y 21:05","a la 01:05, a las 06:05, a las 11:05, a las 16:05 y a las 21:05"]},
+ {"id":"u2","meaning":"Every day at these six times: 12:00, 22:00, 23:00, 00:00, 01:00 and 02:00 (the 1-o'clock time takes the singular article 'a la', the rest 'a las').","candidates":["todos los días a la 01:00 y a las 12:00, 22:00, 23:00, 00:00 y 02:00","todos los días a las 12:00, 22:00, 23:00, 00:00 y 02:00, y a la 01:00","todos los días a las 12:00, 22:00, 23:00, 00:00, a la 01:00 y a las 02:00"]},
+ {"id":"u3","meaning":"Every day at 01:00, 02:00 and 03:00.","candidates":["todos los días a la 01:00 y a las 02:00 y 03:00","todos los días a la 01:00, a las 02:00 y 03:00"]}
+]

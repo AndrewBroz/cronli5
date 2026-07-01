@@ -1,0 +1,641 @@
+{
+  "0 9 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct a. m. format"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "very natural"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "correct but terse, no daily context"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment form"
+      },
+      "best": "D"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct, natural abbreviation"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "C": {
+        "natural": 3,
+        "correct": false,
+        "note": "omits 'todos los días'; just a time"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct, standard 'a. m.' format"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural and clear"
+      },
+      "C": {
+        "natural": 2,
+        "correct": true,
+        "note": "correct but bare 24h, omits 'every day'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; lowercase fine"
+      },
+      "best": "B"
+    }
+  ],
+  "30 9 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural and correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "terse, lacks daily context"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment"
+      },
+      "best": "D"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "clear and correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "C": {
+        "natural": 3,
+        "correct": false,
+        "note": "missing daily frequency"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "clear and correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "C": {
+        "natural": 2,
+        "correct": true,
+        "note": "bare 24h, omits 'every day'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; lowercase fine"
+      },
+      "best": "B"
+    }
+  ],
+  "0 14 * * *": [
+    {
+      "A": {
+        "natural": 3,
+        "correct": true,
+        "note": "terse, no daily context"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "p. m. less common spoken"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 3,
+        "correct": false,
+        "note": "missing daily frequency"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct abbreviation"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 2,
+        "correct": true,
+        "note": "bare 24h, omits 'every day'"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; lowercase fine"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct; 'p. m.' less colloquial"
+      },
+      "best": "C"
+    }
+  ],
+  "30 14 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "terse, lacks context"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "diario fine; p. m. less spoken"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "B": {
+        "natural": 3,
+        "correct": false,
+        "note": "missing daily frequency"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'diario' fine but a. m./p. m. less elegant here"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; lowercase fine"
+      },
+      "B": {
+        "natural": 2,
+        "correct": true,
+        "note": "bare 24h, omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'diario' fine; 'p. m.' less colloquial"
+      },
+      "best": "C"
+    }
+  ],
+  "0 22 * * *": [
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "p. m. less natural spoken"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "terse, no daily context"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct abbreviation"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 3,
+        "correct": false,
+        "note": "missing daily frequency"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct; 'p. m.' less colloquial"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; lowercase fine"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 2,
+        "correct": true,
+        "note": "bare 24h, omits 'every day'"
+      },
+      "best": "C"
+    }
+  ],
+  "0 0 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; a medianoche correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "terse, lacks context"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, duplicate of A"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct"
+      },
+      "C": {
+        "natural": 3,
+        "correct": false,
+        "note": "missing daily frequency; just a time"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct; 'a medianoche' natural"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; lowercase fine"
+      },
+      "C": {
+        "natural": 2,
+        "correct": true,
+        "note": "bare 24h, omits 'every day'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "identical to A, correct"
+      },
+      "best": "A"
+    }
+  ],
+  "0 12 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment; al mediodía correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; a mediodía also fine"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "terse, lacks context"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, duplicate of A"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 'al mediodía' idiomatic"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "'a mediodía' fine; 'al mediodía' preferred"
+      },
+      "C": {
+        "natural": 3,
+        "correct": false,
+        "note": "missing daily frequency"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 'al mediodía' idiomatic"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "'al mediodía' natural and correct"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "'a mediodía' fine; 'al' more common"
+      },
+      "C": {
+        "natural": 2,
+        "correct": true,
+        "note": "bare 24h, omits 'every day'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "identical to A, natural"
+      },
+      "best": "A"
+    }
+  ],
+  "30 14 * * 1-5": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural fragment"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct but front-loaded time feels listy"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "p. m. less spoken"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct but 24h clock less colloquial"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct abbreviation"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; lowercase fine"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "24h with weekday gloss, less colloquial"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct; 'p. m.' less colloquial"
+      },
+      "best": "C"
+    }
+  ],
+  "0 8,20 * * *": [
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct; mixing a.m./p.m. ok but terse"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "terse, no daily context"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 8 de la noche correct for 8pm"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, explicit a las repetition"
+      },
+      "best": "D"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct but repeating a.m./p.m. slightly terse"
+      },
+      "B": {
+        "natural": 3,
+        "correct": false,
+        "note": "missing daily frequency"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "'a diario' natural and correct"
+      },
+      "best": "D"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct; mixes 'a. m./p. m.'"
+      },
+      "B": {
+        "natural": 2,
+        "correct": true,
+        "note": "bare 24h, omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; clear day/night distinction"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "'a diario' natural; repeats 'a las' well"
+      },
+      "best": "D"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+[
+  {
+    "id": 0,
+    "naturalness": 4,
+    "flag": "Slightly awkward coordination: 'tai maanantaisin tammikuussa' — the month qualifier placement after the weekday is grammatically acceptable but creates a structural imbalance; natural Finnish might prefer 'tai tammikuun maanantaisin'"
+  },
+  {
+    "id": 1,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 2,
+    "naturalness": 3,
+    "flag": "'5 minuutin kohdalla klo 9.05–17.05' is structurally confusing: '5 minuutin kohdalla' (at the 5-minute mark) followed by a range that already encodes minutes; the phrase does not naturally convey the intended meaning and reads as a literal mistranslation of a machine-parsed expression"
+  },
+  {
+    "id": 3,
+    "naturalness": 3,
+    "flag": "'tammikuun ja heinäkuun 1. päivänä' — genitive coordination with a single ordinal is grammatically borderline; more natural: 'tammikuun 1. ja heinäkuun 1. päivänä'; also 'tai maanantaisin tammikuussa ja heinäkuussa' — acceptable but wordy"
+  },
+  {
+    "id": 4,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 5,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 6,
+    "naturalness": 4,
+    "flag": "'sunnuntaisin ja lauantaisin' — conventional order in Finnish is 'lauantaisin ja sunnuntaisin' (Saturday before Sunday); minor register issue"
+  },
+  {
+    "id": 7,
+    "naturalness": 3,
+    "flag": "Very long, complex sentence with multiple stacked qualifiers that strains Finnish sentence structure; 'kesäkuun 1.–5. päivänä tai maanantaista perjantaihin kesäkuussa' — redundant double month reference (kesäkuun…kesäkuussa) within same clause is awkward; overall comprehensibility is poor"
+  },
+  {
+    "id": 8,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 9,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 10,
+    "naturalness": 4,
+    "flag": "'joulukuun 1.–5. päivänä tai sunnuntaisin joulukuussa' — double month reference (joulukuun…joulukuussa) within the same clause is slightly redundant and awkward, though grammatically tolerable"
+  },
+  {
+    "id": 11,
+    "naturalness": 3,
+    "flag": "'0–30 minuutin kohdalla, klo 9, 11, 13, 15 ja 17' — comma after the minute phrase before 'klo' is non-standard; 'klo 9, 11, 13, 15 ja 17' lists clock hours without minutes, inconsistent with the minute-range prefix; the phrase reads as a fragment and is structurally confusing"
+  },
+  {
+    "id": 12,
+    "naturalness": 4,
+    "flag": "'joka kolmannen kuukauden 1.–5. päivänä' is grammatically correct but 'joka kolmas kuukausi' construction with genitive here is somewhat formal/stiff; acceptable in written register"
+  },
+  {
+    "id": 13,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 14,
+    "naturalness": 3,
+    "flag": "'klo 9–20 ja 22' — listing a range and then an isolated hour with 'ja' is grammatically odd; normally the isolated hour would be listed first or the range reformulated; comma before 'klo' is missing for parallel structure consistency with similar sentences in the set"
+  },
+  {
+    "id": 15,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 16,
+    "naturalness": 3,
+    "flag": "'5 ja 30 sekunnin kohdalla' mixed with '15 minuutin välein' in the same phrase creates a confusing double-cadence structure; comma after 'kohdalla' before '15 minuutin välein' is present but the coordination of two different time-granularity expressions (seconds + minutes) without a clear connector reads as ill-formed Finnish"
+  }
+]

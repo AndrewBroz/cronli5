@@ -1,0 +1,2416 @@
+{
+ "* * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "perfect natural German"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "perfect natural German"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "perfect natural German"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "perfect, just with period"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and idiomatic"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, lowercase fine mid-sentence"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and idiomatic"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "trailing period acceptable"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, trailing period harmless"
+   },
+   "best": "A"
+  }
+ ],
+ "*/5 * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "spelled-out, natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "spelled-out, natural"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, numeral fine"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "spelled-out, natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, spelled-out preferred"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, numeral fine"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, spelled-out idiomatic"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, spelled-out idiomatic"
+   },
+   "best": "B"
+  }
+ ],
+ "0 12 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, idiomatic"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "clipped, just a time"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, mittags=noon"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic German"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse, no daily marker but noon=12:00"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "mittags = noon, natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise and idiomatic"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, daily at noon"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse, omits daily but accurate"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "mittags = noon, natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise and natural"
+   },
+   "best": "A"
+  }
+ ],
+ "30 9 * * MON-FRI": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and idiomatic"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and idiomatic"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and idiomatic"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "comma style, a bit stiff"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, natural"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "montags capitalized oddly but fine"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "same as B"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "clear but stiff word order"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic weekday phrasing"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, correct"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, slightly mechanical ordering"
+   },
+   "best": "A"
+  }
+ ],
+ "0 9,17 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "bare times, terse"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, clear"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and complete"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse, lacks daily marker"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "mixed numeral fine, natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise, idiomatic"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse, omits daily"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, Uhr placement fine"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "best": "A"
+  }
+ ],
+ "0 9-17 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, idiomatic"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, idiomatic"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, idiomatic"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "comma+times, stiff"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, natural"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "stiff, missing stündlich notion"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "stündlich von..bis natural"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 3,
+    "correct": false,
+    "note": "17:00 not 17:59; upper bound wrong"
+   },
+   "best": "A"
+  }
+ ],
+ "0-29 * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "fragmentary, no per-hour sense"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "Null odd, redundant wording"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "redundant 'Minute', clunky"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and accurate"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "too terse, no hour context"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "verbose, 'Minute Null' awkward"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "slightly verbose but correct"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate range"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "telegraphic, lacks per-hour clarity"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "correct but verbose, Null awkward"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, slightly redundant"
+   },
+   "best": "A"
+  }
+ ],
+ "0 0 1,15 * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, jeweils good"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "jeweils placement slightly off"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "machine-like comma style"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, jeweils natural"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "jeweils placement slightly off"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "machine-like 'an Tag 1 und 15'"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise and natural"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, jeweils fitting"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, jeweils placement ok"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "correct but mechanical phrasing"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "clean and natural"
+   },
+   "best": "A"
+  }
+ ],
+ "0 12 1 1 *": [
+  {
+   "A": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-style, clunky phrasing"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, mittags=noon"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 2,
+    "correct": true,
+    "note": "verbose, machine-like phrasing"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, mittags natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 2,
+    "correct": true,
+    "note": "mechanical, Tag1/Monat verbose"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, mittags=noon"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "B"
+  }
+ ],
+ "@daily": [
+  {
+   "A": {
+    "natural": 3,
+    "correct": true,
+    "note": "bare time, terse"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, idiomatic"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, idiomatic"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 2,
+    "correct": true,
+    "note": "terse, no daily marker, midnight implied"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic and natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse, omits daily explicitly"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "B"
+  }
+ ],
+ "*/30 * * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, lowercase fine"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "A"
+  }
+ ],
+ "0 0 * * 5L": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "im Monat natural here"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "des Monats, natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "des Monats, natural"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "comma+time, stiff"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "'im Monat' natural"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "'des Monats' equally natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "clear but stiff order"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "im Monat natural, correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "des Monats natural, correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "des Monats natural, correct"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, slightly mechanical"
+   },
+   "best": "B"
+  }
+ ],
+ "5,10 30 9 * * MON": [
+  {
+   "A": {
+    "natural": 4,
+    "correct": false,
+    "note": "drops 5s, only 10s; wrong"
+   },
+   "B": {
+    "natural": 4,
+    "correct": false,
+    "note": "drops 10s, only 5s; wrong"
+   },
+   "C": {
+    "natural": 2,
+    "correct": false,
+    "note": "says 09:00 not 9:30; wrong"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, slightly technical"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": false,
+    "note": "only 10s, drops 5s, mangles seconds"
+   },
+   "B": {
+    "natural": 3,
+    "correct": false,
+    "note": "only 5s, drops 10s"
+   },
+   "C": {
+    "natural": 2,
+    "correct": false,
+    "note": "'um 09:00' wrong, should be 9:30"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "both seconds, accurate, natural"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": false,
+    "note": "says 10s only, omits 5s; wrong"
+   },
+   "B": {
+    "natural": 3,
+    "correct": false,
+    "note": "says 5s only, omits 10s; wrong"
+   },
+   "C": {
+    "natural": 2,
+    "correct": false,
+    "note": "09:00 wrong, should be 9:30"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct seconds and time, natural"
+   },
+   "best": "D"
+  }
+ ],
+ "*/15 30 9-17 * * MON-FRI": [
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "slightly wordy but correct"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "'halb nach' awkward, wordy"
+   },
+   "C": {
+    "natural": 3,
+    "correct": false,
+    "note": "17:59 wrong, should be 17:30"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct and clear"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": true,
+    "note": "'jeder Stunde' redundant, dense"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "'halb nach' awkward phrasing"
+   },
+   "C": {
+    "natural": 3,
+    "correct": false,
+    "note": "17:59 wrong, meaning says 17:30"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "accurate and reasonably natural"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": false,
+    "note": "halbe Stunde jeder Stunde wrong, implies recurring"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "halb nach awkward and inaccurate"
+   },
+   "C": {
+    "natural": 3,
+    "correct": false,
+    "note": "17:59 wrong upper bound, should 17:30"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "accurate, Minute 30, 17:30 correct"
+   },
+   "best": "D"
+  }
+ ],
+ "15 30 9 * * MON": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "machine-style 'nur jeden'"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, concise"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "machine-like 'nur jeden Montag'"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, zero-padded fine"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "mechanical nur jeden Montag"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "A"
+  }
+ ],
+ "45 17,9 0 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, correct times"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-style fragments"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, 0: format minor"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "accurate, natural"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-like enumeration"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, non-padded fine"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "accurate, natural"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "correct times, natural"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "telegraphic, hard to parse"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, single-digit hour ok"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "A"
+  }
+ ],
+ "0-30 9,17-19 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "drops 18/19, 17-19:59; wrong"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, a bit wordy"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, a bit wordy"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise and accurate"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "'17:00 bis 19:59' misreads hours"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "verbose but accurate"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "same as C, accurate"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate hours"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "omits 18:00? 17:00-19:59 plus missing 9 listing unclear"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct hours, slightly verbose"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct hours, slightly verbose"
+   },
+   "best": "A"
+  }
+ ],
+ "0 22-2,12 * * *": [
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, lists all hours"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, idiomatic"
+   },
+   "C": {
+    "natural": 2,
+    "correct": false,
+    "note": "'jede Stunde' wrong, machine-style"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, terse hour list"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "accurate, lists all hours"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "idiomatic, natural prose"
+   },
+   "C": {
+    "natural": 2,
+    "correct": false,
+    "note": "'Jede Stunde' wrong, only specific hours"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "accurate, non-padded fine"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "all hours listed, natural"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural prose, von22bis2 accurate"
+   },
+   "C": {
+    "natural": 2,
+    "correct": false,
+    "note": "Jede Stunde misleading; incomplete"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "all hours correct, natural"
+   },
+   "best": "D"
+  }
+ ],
+ "0 9-20,22 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "'jede Stunde' wrong, machine-style"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, expressive"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, 'sowie' idiomatic"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "'Jede Stunde' contradicts ranges"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, slightly wordy"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise, natural"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, sowie um 22 correct"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "Jede Stunde plus 09-20 phrasing off"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, explicit and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "D"
+  }
+ ],
+ "* 9,12,17 * * MON-FRI": [
+  {
+   "A": {
+    "natural": 2,
+    "correct": false,
+    "note": "bare times, not whole hours; unclear"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "explicit, correct, wordy"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "'9. Stunde' slightly odd but correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, clear"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 2,
+    "correct": false,
+    "note": "'um 09:00' implies once, not whole hour"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "accurate, explicit ranges, verbose"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "'in der 9. Stunde' natural, accurate"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, 'Stunden von' slightly off"
+   },
+   "best": "C"
+  },
+  {
+   "A": {
+    "natural": 2,
+    "correct": false,
+    "note": "um 09:00 implies instants not whole hour"
+   },
+   "B": {
+    "natural": 4,
+    "correct": true,
+    "note": "explicit hour ranges, accurate"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "in der 9. Stunde correct, natural"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, Stunden von slightly off"
+   },
+   "best": "B"
+  }
+ ],
+ "30 9 15W 6 *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-style, broken phrasing"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, slightly compressed"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-like 'am nächsten zum 15 Tag'"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "'nächsten Werktag zum' slightly off"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, Werktag nearest 15 June"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "mechanical, awkward phrasing"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, slightly compressed"
+   },
+   "best": "A"
+  }
+ ],
+ "0 0 29 2 *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "machine-style comma fragments"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and concise"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "machine-like phrasing"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "mechanical Tag29/Monat phrasing"
+   },
+   "best": "A"
+  }
+ ],
+ "0 9-9 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 1,
+    "correct": false,
+    "note": "'zwischen 9 und 9' absurd, machine"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "D": {
+    "natural": 1,
+    "correct": false,
+    "note": "'zwischen 09:00 und 09:00' absurd"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 2,
+    "correct": false,
+    "note": "zwischen 09:00 und 09:00 awkward, not daily"
+   },
+   "best": "B"
+  }
+ ],
+ "1/1 * * * *": [
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, slightly wordy"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "'alle 1 Minuten' wrong, awkward"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "verbose but accurate"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "'Alle 1 Minuten' ungrammatical"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "accurate, slightly wordy"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise and accurate"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": true,
+    "note": "correct but wordy"
+   },
+   "B": {
+    "natural": 2,
+    "correct": false,
+    "note": "Alle 1 Minuten wrong framing"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "correct, somewhat verbose"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate range"
+   },
+   "best": "D"
+  }
+ ],
+ "1 1 * * * *": [
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "'nach voll' colloquial but clear"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-style fragments"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, clear"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct and clear"
+   },
+   "best": "C"
+  },
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "'nach voll' colloquial but clear"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-like, terse"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural prose"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise and accurate"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "nach voll colloquial, correct"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "telegraphic, correct"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and precise"
+   },
+   "best": "D"
+  }
+ ],
+ "59 23 31 12 5": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "C": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-style, fragmented"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, concise"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate OR-logic"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "C": {
+    "natural": 2,
+    "correct": true,
+    "note": "machine-like, fragmented"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise, idiomatic"
+   },
+   "best": "D"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, captures OR semantics"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, captures OR semantics"
+   },
+   "C": {
+    "natural": 3,
+    "correct": false,
+    "note": "nur im Dezember + every Friday conflated"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, concise, correct"
+   },
+   "best": "D"
+  }
+ ],
+ "* * * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "sekündlich = every second"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "sekündlich = every second"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "'sekündlich' precise, natural"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "sekündlich correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "sekündlich correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "D"
+  }
+ ],
+ "5 * * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and precise"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse fragment"
+   },
+   "C": {
+    "natural": 2,
+    "correct": true,
+    "note": "'alle 60 Sek' awkward roundabout"
+   },
+   "D": {
+    "natural": 2,
+    "correct": true,
+    "note": "'alle 60 Sek' awkward roundabout"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise, accurate"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "terse, no 'every minute' context"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "'alle sechzig Sekunden' odd framing"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "same odd framing, redundant"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, precise"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "telegraphic, correct"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "verbose, alle 60s redundant"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, slightly verbose"
+   },
+   "best": "A"
+  }
+ ],
+ "5 * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and precise"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse fragment"
+   },
+   "C": {
+    "natural": 2,
+    "correct": true,
+    "note": "'fünf nach voll' colloquial, vague"
+   },
+   "D": {
+    "natural": 2,
+    "correct": true,
+    "note": "'zur fünf nach' ungrammatical"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise, accurate"
+   },
+   "B": {
+    "natural": 2,
+    "correct": true,
+    "note": "terse, no hourly context"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "'alle fünf nach voll' colloquial, ambiguous"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "'zur fünf nach' awkward"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, precise"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "telegraphic, correct"
+   },
+   "C": {
+    "natural": 2,
+    "correct": false,
+    "note": "fünf nach voll = :05 only, lacks hourly clarity"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "zur fünf nach colloquial, ok"
+   },
+   "best": "A"
+  }
+ ],
+ "5,10 * * * *": [
+  {
+   "A": {
+    "natural": 1,
+    "correct": false,
+    "note": "'fünf vor zehn' = clock time 9:55; wrong"
+   },
+   "B": {
+    "natural": 1,
+    "correct": false,
+    "note": "'fünf nach zehn'=10:05 time; wrong"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse but correct"
+   },
+   "best": "C"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": false,
+    "note": "'fünf vor zehn' = 9:55, wrong"
+   },
+   "B": {
+    "natural": 3,
+    "correct": false,
+    "note": "'fünf nach zehn' = single time 10:05"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "accurate, natural"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "accurate but terse, machine-like"
+   },
+   "best": "C"
+  },
+  {
+   "A": {
+    "natural": 3,
+    "correct": false,
+    "note": "fünf vor zehn = 09:55, wrong"
+   },
+   "B": {
+    "natural": 3,
+    "correct": false,
+    "note": "fünf nach zehn = 10:05, wrong"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate both minutes"
+   },
+   "D": {
+    "natural": 3,
+    "correct": true,
+    "note": "telegraphic, correct"
+   },
+   "best": "C"
+  }
+ ],
+ "0-30 9 * * *": [
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "minütlich fine, correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, time format ok"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "'minütlich' natural, accurate"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, accurate"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 4,
+    "correct": true,
+    "note": "Minütlich correct, slightly stiff"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, mixed time format ok"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "B"
+  }
+ ],
+ "0-30 */2 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "fragmentary phrasing"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, slightly wordy"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural, slightly wordy"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "concise, accurate"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "terse, no hour context"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "natural prose, accurate"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "'jeweils' natural, accurate"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 3,
+    "correct": true,
+    "note": "telegraphic, correct"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, natural prose"
+   },
+   "D": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, jeweils slightly redundant"
+   },
+   "best": "A"
+  }
+ ],
+ "0 * * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "stündlich, natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "stündlich, natural"
+   },
+   "best": "A"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "'stündlich' natural"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "best": "C"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "C": {
+    "natural": 5,
+    "correct": true,
+    "note": "stündlich natural and correct"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "A"
+  }
+ ],
+ "0 */3 * * *": [
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "C": {
+    "natural": 3,
+    "correct": true,
+    "note": "'zur vollen Stunde' redundant, stiff"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and clear"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, numeral fine"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, spelled-out preferred"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "'zur vollen Stunde' adds detail"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural"
+   },
+   "best": "B"
+  },
+  {
+   "A": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, numeral fine"
+   },
+   "B": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural, spelled-out idiomatic"
+   },
+   "C": {
+    "natural": 4,
+    "correct": true,
+    "note": "correct, zur vollen Stunde extra"
+   },
+   "D": {
+    "natural": 5,
+    "correct": true,
+    "note": "natural and correct"
+   },
+   "best": "B"
+  }
+ ]
+}

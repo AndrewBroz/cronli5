@@ -1,0 +1,6 @@
+[
+ {"id":"h0","meaning":"Every minute of the single midnight hour (00:00 through 00:59 — all 60 minutes of hour 0).","candidates":["every minute from midnight through 12:59 a.m.","every minute of the midnight hour"]},
+ {"id":"h12","meaning":"Every minute of the single noon hour (12:00 through 12:59 — all 60 minutes of hour 12).","candidates":["every minute from noon through 12:59 p.m.","every minute of the noon hour"]},
+ {"id":"h9","meaning":"Every minute of the single 9 a.m. hour (09:00 through 09:59).","candidates":["every minute from 9 a.m. through 9:59 a.m.","every minute of the 9 a.m. hour"]},
+ {"id":"h17","meaning":"Every minute of the single 5 p.m. hour (17:00 through 17:59).","candidates":["every minute from 5 p.m. through 5:59 p.m.","every minute of the 5 p.m. hour"]}
+]

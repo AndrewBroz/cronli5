@@ -1,0 +1,14 @@
+[
+  {
+    "id": 18,
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": 20,
+    "naturalness": 4,
+    "misread": false,
+    "flag": "\"lähinnä olevana\" is grammatically correct but slightly stilted; \"lähimpänä olevana\" reads more naturally in contemporary written Finnish. Meaning is unambiguous."
+  }
+]

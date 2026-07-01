@@ -1,0 +1,32 @@
+[
+  {
+    "id": "c1",
+    "pick": "a las 2 de la madrugada y 2 y 6 de la tarde",
+    "confidence": 3,
+    "reasoning": "Neither candidate is ideal. The first ('a las 2 de la madrugada, y a las 2 y 6 de la tarde') uses a comma before 'y' that links two full clauses — acceptable but slightly formal. The second drops the second 'a las', which is the more natural spoken shorthand, but '2 y 6 de la tarde' without 'a las' can sound rushed. Between the two, the second is closer to everyday speech where the article is elided once the period is established. Still awkward: the repeated '2' (madrugada vs. tarde) is inherently confusing in any phrasing; ideally it would be 'a las 2 de la madrugada, y a las 2 y a las 6 de la tarde' to prevent misreading '2 y 6' as a compound time."
+  },
+  {
+    "id": "c2",
+    "pick": "a las 2 y 3 de la madrugada, y a las 3 y 6 de la tarde",
+    "confidence": 4,
+    "reasoning": "The first candidate repeats 'a las' after the comma, which makes the boundary between the two day-periods completely clear — important here because the number '3' appears in both groups. The second drops the second 'a las', making 'y 3 y 6 de la tarde' harder to parse at first glance. The comma-plus-'y' juncture ('madrugada, y a las') is natural in spoken Spanish for joining contrasting time groups. Slight awkwardness: the repeated '3' across groups will always cause a double-take regardless of phrasing."
+  },
+  {
+    "id": "c3",
+    "pick": "a la 1 de la madrugada, a las 9 de la mañana y a la 1 de la tarde",
+    "confidence": 5,
+    "reasoning": "The first candidate is clearly superior. Chronological order is preserved (01:00 → 09:00 → 13:00), each time gets its own 'a la/las' and period label, so there is zero ambiguity even though '1' appears twice. The second candidate reorders — it groups the two '1 de la' together ('madrugada y de la tarde') and bumps 9 de la mañana to after — which violates the chronological constraint and would confuse a listener expecting clock order."
+  },
+  {
+    "id": "c4",
+    "pick": "a las 9 de la mañana, a las 3 de la tarde y a las 9 de la noche",
+    "confidence": 5,
+    "reasoning": "Both candidates are grammatically fine. The second repeats 'a las' before each time, which reads slightly more formal but is completely natural in speech when listing three distinct day-periods. The first elides 'a las' after the first item, relying on shared-period ellipsis — but since each time belongs to a *different* period, the ellipsis can mislead ('9 de la mañana, 3 de la tarde y 9 de la noche' — the missing 'a las' before '3' and '9' is only recoverable from context). For unambiguous everyday use, repeating 'a las' is better. The '9' ambiguity (mañana vs. noche) makes the full form preferable."
+  },
+  {
+    "id": "c5",
+    "pick": "a la 1 de la madrugada y a la 1 de la tarde",
+    "confidence": 4,
+    "reasoning": "The second candidate is unambiguous: each occurrence of '1' gets its own 'a la' and period label. The first candidate ('a la 1 de la madrugada y de la tarde') is a valid and concise Spanish construction — sharing the numeral across two periods — but it can sound like the *same* time belongs to two periods simultaneously, which is not the intended meaning. In practice a native speaker would understand it, but for a system-generated description where precision matters, the fuller form avoids any hesitation."
+  }
+]

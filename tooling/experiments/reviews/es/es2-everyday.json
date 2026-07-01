@@ -1,0 +1,8 @@
+[
+  {"id":12,"naturalness":3,"misread":false,"flag":"'en los segundos 5 y 10 de las 09:30' reads correctly but sounds technical; a native would more likely say 'a los segundos 5 y 10 del minuto de las 09:30' or simply omit 'en los' — 'los lunes a las 09:30:05 y 09:30:10'"},
+  {"id":13,"naturalness":4,"misread":false,"flag":"'cada 15 segundos del minuto 30' is clear; 'del minuto 30' slightly unusual phrasing but not wrong — minor"},
+  {"id":16,"naturalness":2,"misread":true,"flag":"'solo a las 09:00, 17:00, 18:00 y 19:00' reads as 'only at those exact clock times', which a reader would naturally interpret as four one-minute windows, not as hour-filters applied to the minute range — the hour-gating relationship is ambiguous; also 'cada minuto del 0 al 30' is somewhat unnatural, more natural would be 'del minuto 0 al 30'"},
+  {"id":18,"naturalness":4,"misread":false,"flag":"Natural and clear; 'y también a las 22:00' correctly signals the discontinuity (21:00 excluded)"},
+  {"id":24,"naturalness":4,"misread":false,"flag":"Reads naturally; technically precise — 'en el minuto 1 y el segundo 1 de cada hora' is unambiguous"},
+  {"id":25,"naturalness":4,"misread":false,"flag":"'ya sea el día 31 o un viernes' correctly conveys inclusive OR; natural phrasing a Spanish speaker would use"}
+]

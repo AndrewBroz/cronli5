@@ -1,0 +1,134 @@
+[
+ {
+  "n": 1,
+  "tier": "dense",
+  "cron": "0-10 */7 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 2,
+  "tier": "dense",
+  "cron": "0-10 3/2 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every two minutes from 3 through 59 minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 3,
+  "tier": "dense",
+  "cron": "0-10 */7 9-17/2 LW * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the last weekday of the month"
+ },
+ {
+  "n": 4,
+  "tier": "dense",
+  "cron": "0-10 3/2 9-17/2 LW * *",
+  "current": "every second from zero through ten past the minute, every two minutes from 3 through 59 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the last weekday of the month"
+ },
+ {
+  "n": 5,
+  "tier": "dense",
+  "cron": "0-10 */7 9-20,22 15W * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, at 9 a.m. through 8 p.m. and at 10 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 6,
+  "tier": "dense",
+  "cron": "0-10 5/15 9-20,22 15W * *",
+  "current": "every second from zero through ten past the minute, every 15 minutes from five minutes past the hour during the 9 a.m. through 8 p.m. and 10 p.m. hours on the weekday nearest the 15th"
+ },
+ {
+  "n": 7,
+  "tier": "dense",
+  "cron": "0-10 3/2 9-20,22 15W * *",
+  "current": "every second from zero through ten past the minute, every two minutes from 3 through 59 minutes past the hour, at 9 a.m. through 8 p.m. and at 10 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 8,
+  "tier": "dense",
+  "cron": "0-10 5/15 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every 15 minutes from five minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 9,
+  "tier": "dense",
+  "cron": "0-10 5/15 9-17/2 LW * *",
+  "current": "every second from zero through ten past the minute, every 15 minutes from five minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the last weekday of the month"
+ },
+ {
+  "n": 10,
+  "tier": "dense",
+  "cron": "*/7 */5 15W */3 *",
+  "current": "every seven minutes from 0 through 56 minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th in January, April, July, and October"
+ },
+ {
+  "n": 11,
+  "tier": "dense",
+  "cron": "0-10 */7 9-17/2 1,15 * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the 1st and 15th"
+ },
+ {
+  "n": 12,
+  "tier": "dense",
+  "cron": "0-10 0-30 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every minute from 0 through 30 past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 13,
+  "tier": "simple",
+  "cron": "0 9 * * 1",
+  "current": "every Monday at 9 a.m."
+ },
+ {
+  "n": 14,
+  "tier": "simple",
+  "cron": "*/5 * * * *",
+  "current": "every five minutes"
+ },
+ {
+  "n": 15,
+  "tier": "medium",
+  "cron": "0 0 9-17 * * *",
+  "current": "every hour from 9 a.m. until 6 p.m."
+ },
+ {
+  "n": 16,
+  "tier": "medium",
+  "cron": "0 0 */5 * * *",
+  "current": "every five hours from midnight through 8 p.m."
+ },
+ {
+  "n": 17,
+  "tier": "medium",
+  "cron": "0 5,10,30 9 * * *",
+  "current": "every day at 9:05 a.m., 9:10 a.m., and 9:30 a.m."
+ },
+ {
+  "n": 18,
+  "tier": "medium",
+  "cron": "* 0 0 * * *",
+  "current": "every second during minute :00 at midnight"
+ },
+ {
+  "n": 19,
+  "tier": "medium",
+  "cron": "* * 9-17 * * *",
+  "current": "every second from 9 a.m. until 6 p.m."
+ },
+ {
+  "n": 20,
+  "tier": "medium",
+  "cron": "0 */5 9-17 * * 1",
+  "current": "every five minutes from 9 a.m. until 6 p.m. on Mondays"
+ },
+ {
+  "n": 21,
+  "tier": "medium",
+  "cron": "0 0 * 1 5L",
+  "current": "on the last Friday in January at midnight"
+ },
+ {
+  "n": 22,
+  "tier": "medium",
+  "cron": "0 0 9-20,22 * * *",
+  "current": "every hour from 9 a.m. until 9 p.m. and at 10 p.m."
+ }
+]

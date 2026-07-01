@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 3, "clarity": 3, "issue": "Double 'from' is a run-on: 'every 15 minutes from five minutes past the hour from midnight through 12:50 a.m.' reads awkwardly." },
+ { "n": 6, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 3, "clarity": 3, "issue": "'during the 9 a.m. through 8 p.m. and 10 p.m. hours' is stilted; the mixed range-plus-singleton over 'hours' is hard to parse on one read." },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "'until 9 p.m. plus 10:05 p.m.' mixes an exclusive-bound phrasing with an explicit time; slightly uneven but parseable." },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 3, "issue": "Long stacked clause: 'every seven minutes... every six hours from 2 a.m. whenever the day is...' is a lot to hold; correct but dense." },
+ { "n": 16, "correct": true, "idiom": 3, "clarity": 4, "issue": "Day order 'a Sunday, or a Saturday' is reversed from natural Sat-then-Sun ordering; mildly jarring." },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

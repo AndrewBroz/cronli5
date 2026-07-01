@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 3, "issue": "Laukaisuajat ovat 0.05–0.50 (5,20,35,50), mutta 'klo 0.00–0.50' antaa alarajaksi 0.00; 'minuutista 5 alkaen' korjaa tämän, mutta alarajan ja aloitusminuutin ristiriita on hämäävä." },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 3, "issue": "Ajat ovat 9.05–17.50, mutta ilmaisu 'klo 9.00–17.50' antaa alarajaksi 9.00; 'minuutista 5 alkaen' korjaa, mutta alaraja ja aloitusminuutti ovat keskenään epäjohdonmukaiset." },
+ { "n": 6, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "Kuukausimääre 'joulukuussa' on lauseen lopussa, kaukana muista määreistä; toimii mutta sijainti on hieman epäidiomaattinen." },
+ { "n": 15, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 3, "issue": "Ajat ovat 9.05–9.50, mutta 'klo 9.00–9.50' antaa alarajaksi 9.00; 'minuutista 5 alkaen' korjaa, mutta alaraja ja aloitusminuutti ovat ristiriidassa." },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 3, "issue": "Tunti 2/6 = 2,8,14,20, mutta 'klo 2:sta alkaen' jää avoimeksi ilman ylärajaa (vrt. muissa annettu väli kuten klo 0–20); vähemmän täsmällinen." },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 4, "issue": "0.00 esitetään muodossa 'klo 0' mutta 0.45 muodossa 'klo 0.45'; epäjohdonmukainen muotoilu, vaikka laukaisujoukko on oikein." },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

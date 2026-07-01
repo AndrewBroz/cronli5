@@ -1,0 +1,344 @@
+[
+  {
+    "pattern": "0 0 1 1 MON",
+    "meaning": "on January 1 or on Monday in January at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "am 1. oder montags im Januar um Mitternacht"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Um 00:00, an Tag 1 des Monats, und jeden Montag, nur im Januar"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "am 1. Januar oder jeweils montags im Januar um Mitternacht"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "am 1. Januar oder montags im Januar um Mitternacht"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": false,
+          "note": "Missing 'Januar' after '1.', making it ambiguous."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Too clinical/robotic; 'Tag 1 des Monats' is not natural German for a date."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Precise and natural; 'jeweils' clarifies the recurring nature of the Mondays."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and natural, though slightly less explicit than C regarding the repetition."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "5 0 L 1,7 0",
+    "meaning": "on the last day of the month in January and July or on Sunday at 12:05 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Um 00:05, am letzten Tag des Monats, und jeden Sonntag, nur im Januar und Juli"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "am letzten Tag im Januar und Juli oder sonntags um 00:05 Uhr."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Am letzten Tag im Januar und Juli oder sonntags um 00:05 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "am letzten Tag des Monats oder sonntags im Januar und Juli um 0:05 Uhr"
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrectly implies that Sundays only occur in January and July."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Accurate, natural, and correctly maps the logical OR between the specific dates and Sundays."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to B; natural and accurate."
+        },
+        "D": {
+          "natural": 3,
+          "correct": false,
+          "note": "Incorrectly suggests the 'last day of the month' part is not restricted to Jan/July, or that the time only applies to Sundays."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "*/15 */2 1 1 5L",
+    "meaning": "every 15 minutes during every other hour on January 1 or on the last Friday of the month in January",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Alle 15 Minuten in jeder zweiten Stunde am 1. Januar oder am letzten Freitag des Januars."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Alle 15 Minuten in jeder zweiten Stunde am 1. Januar oder am letzten Freitag im Januar."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Alle 15 Minuten, alle 2 Stunden, an Tag 1 des Monats, am letzten Freitag des Monats, nur im Januar"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "alle 15 Minuten in jeder zweiten Stunde am 1. oder am letzten Freitag des Monats im Januar"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and natural, though 'im Januar' is slightly more common than 'des Januars'."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Reads like a list of parameters; 'Tag 1' is unnatural for a date."
+        },
+        "D": {
+          "natural": 3,
+          "correct": false,
+          "note": "Ambiguous; implies the 1st of the month AND the last Friday must both be in January, but phrased awkwardly."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "*/25 0 L */3 SAT,SUN",
+    "meaning": "every 25 minutes past the hour from midnight through 12:50 a.m. on the last day of the month in every 3rd month or on Sunday and Saturday",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Alle 25 Minuten, zwischen 00:00 und 00:59, am letzten Tag des Monats, und jeden Samstag und Sonntag, alle 3 Monate"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Alle 25 Minuten nach der vollen Stunde von Mitternacht bis 00:50 Uhr am letzten Tag des Monats jedes dritte Quartals sowie samstags und sonntags."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Alle 25 Minuten nach der vollen Stunde von Mitternacht bis 00:50 Uhr am letzten Tag jedes dritten Monats sowie samstags und sonntags."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "in den Minuten 0, 25 und 50 jeder Stunde, von 0 bis 0:50 Uhr am letzten Tag des Monats oder sonntags und samstags im Januar, April, Juli und Oktober"
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrectly interprets '25 minutes past the hour' as 'every 25 minutes' (frequency vs. point in time)."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "'Jedes dritte Quartal' (every third quarter) means every 9 months, not every 3rd month."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurately captures '25 minutes past the hour', the time window, the frequency, and the weekend condition."
+        },
+        "D": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrectly assumes multiple intervals per hour (0, 25, 50) and hardcodes specific months not mentioned."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "0-30 */5 1 6 FRI",
+    "meaning": "every minute from 0 through 30 past the hour, every five hours from midnight on June 1 or on Friday in June",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von Minute 0 bis 30, alle fünf Stunden ab Mitternacht am 1. Juni oder an Freitagen im Juni."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von 0 bis 30 alle fünf Stunden ab Mitternacht am 1. Juni oder an Freitagen im Juni."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Minuten 0 bis 30, alle 5 Stunden, an Tag 1 des Monats, und jeden Freitag, nur im Juni"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "in den Minuten 0 bis 30, um 0, 5, 10, 15 und 20 Uhr am 1. oder freitags im Juni"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and clear, though 'von Minute 0' is slightly redundant but grammatically sound."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "The most natural phrasing for a schedule description; concise and accurate."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Phrasing is fragmented; 'Tag 1 des Monats' is unnatural compared to '1. Juni'."
+        },
+        "D": {
+          "natural": 3,
+          "correct": false,
+          "note": "Incorrectly interprets 'every five hours' as specific fixed hours and '1.' as just any 1st of the month rather than June 1st."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "* 9-17 L */3 *",
+    "meaning": "every minute from 9 a.m. through 5:59 p.m. on the last day of the month in every 3rd month",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von 09:00 bis 17:59 Uhr am letzten Tag eines jeden dritten Monats."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "jede Minute von 9 bis 17:59 Uhr am letzten Tag des Monats im Januar, April, Juli und Oktober"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Jede Minute, zwischen 09:00 und 17:59, am letzten Tag des Monats, alle 3 Monate"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von 9:00 bis 17:59 Uhr am letzten Tag des Monats jedes dritte Quartals."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly matches the English meaning with natural phrasing."
+        },
+        "B": {
+          "natural": 4,
+          "correct": false,
+          "note": "Too specific; it assumes which months, whereas the source says 'every 3rd month' generally."
+        },
+        "C": {
+          "natural": 2,
+          "correct": true,
+          "note": "Clunky phrasing with excessive commas; sounds like a literal translation."
+        },
+        "D": {
+          "natural": 3,
+          "correct": false,
+          "note": "Quartal (quarter) is not the same as 'every 3rd month' in a scheduling context."
+        },
+        "best": "A"
+      }
+    ]
+  }
+]

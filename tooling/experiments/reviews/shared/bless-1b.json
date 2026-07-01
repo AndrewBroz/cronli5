@@ -1,0 +1,17 @@
+[
+ {"n":1,"cron":"0 0 9-17 * * *","proposed":"every hour from 9 a.m. until 6 p.m."},
+ {"n":2,"cron":"0 0 1-23 * * *","proposed":"every hour from 1 a.m. until midnight"},
+ {"n":3,"cron":"* 9-10 * * *","proposed":"every minute from 9 a.m. until 11 a.m."},
+ {"n":4,"cron":"0 */5 9-17 * * *","proposed":"every five minutes from 9 a.m. until 6 p.m."},
+ {"n":5,"cron":"0 0-30 9-17 * * *","proposed":"every minute from 0 through 30 past the hour, from 9 a.m. until 6 p.m."},
+ {"n":6,"cron":"0 0 22-23 * * *","proposed":"every hour from 10 p.m. until midnight"},
+ {"n":7,"cron":"* * */2 * * *","proposed":"every second of every other hour"},
+ {"n":8,"cron":"* * 0 * * *","proposed":"every second of the midnight hour"},
+ {"n":9,"cron":"* * 9-17/2 * * *","proposed":"every second during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours"},
+ {"n":10,"cron":"* 0 * * * *","proposed":"every second of minute :00 of every hour"},
+ {"n":11,"cron":"* 0-30 * * * *","proposed":"every second of minutes :00 through :30 of every hour"},
+ {"n":12,"cron":"0 */2 0 * * *","proposed":"every two minutes from midnight until 1 a.m."},
+ {"n":13,"cron":"0 * */2 * * *","proposed":"every minute of every other hour"},
+ {"n":14,"cron":"0 0 */5 * * *","proposed":"every five hours from midnight through 8 p.m.  [CONTRAST: hour STEP keeps 'through' — should NOT become 'until']"},
+ {"n":15,"cron":"0 0 9 * * *","proposed":"every day at 9 a.m.  [CONTRAST: single hour, no window]"}
+]

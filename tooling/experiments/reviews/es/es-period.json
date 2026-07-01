@@ -1,0 +1,5 @@
+[
+ {"id":"p1","meaning":"Every day at 1 in the morning (01:00) and 1 in the afternoon (13:00).","candidates":["a la 1 de la madrugada y a la 1 de la tarde","a la 1 de la madrugada y de la tarde"]},
+ {"id":"p2","meaning":"Every day at 2 in the morning (02:00) and 2 in the afternoon (14:00).","candidates":["a las 2 de la madrugada y 2 de la tarde","a las 2 de la madrugada y de la tarde"]},
+ {"id":"p3","meaning":"Every day at three times: 1 in the morning (01:00), 9 in the morning (09:00), and 1 in the afternoon (13:00). The two 1-o'clock times are grouped; 9 follows.","candidates":["a la 1 de la madrugada y 1 de la tarde, a las 9 de la mañana","a la 1 de la madrugada y de la tarde, y a las 9 de la mañana","a la 1 de la madrugada y de la tarde, a las 9 de la mañana"]}
+]

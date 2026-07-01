@@ -1,0 +1,17 @@
+[
+ {"id":"en-5/6","desc":"every six minutes from five minutes past the hour"},
+ {"id":"en-3/2","desc":"every other minute from 3 through 59 minutes past the hour"},
+ {"id":"en-*/7","desc":"every seven minutes from 0 through 56 minutes past the hour"},
+ {"id":"es-5/6","desc":"cada seis minutos a partir del minuto 5 de cada hora"},
+ {"id":"es-3/2","desc":"cada dos minutos del minuto 3 al 59 de cada hora"},
+ {"id":"es-*/7","desc":"cada siete minutos del minuto 0 al 56 de cada hora"},
+ {"id":"de-5/6","desc":"alle 6 Minuten ab Minute 5 jeder Stunde"},
+ {"id":"de-3/2","desc":"alle 2 Minuten von Minute 3 bis 59 jeder Stunde"},
+ {"id":"de-*/7","desc":"alle 7 Minuten von Minute 0 bis 56 jeder Stunde"},
+ {"id":"fi-5/6","desc":"kuuden minuutin välein jokaisen tunnin minuutista 5 alkaen"},
+ {"id":"fi-3/2","desc":"kahden minuutin välein minuutista 3 minuuttiin 59"},
+ {"id":"fi-*/7","desc":"seitsemän minuutin välein minuutista 0 minuuttiin 56"},
+ {"id":"zh-5/6","desc":"每小时从5分起每6分钟"},
+ {"id":"zh-3/2","desc":"每小时从3分起每2分钟，至59分"},
+ {"id":"zh-*/7","desc":"每小时从0分起每7分钟，至56分"}
+]

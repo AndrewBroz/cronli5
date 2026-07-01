@@ -1,0 +1,30 @@
+[
+  {
+    "cluster": "E",
+    "pick": "en diciembre, a las 23:59, el día 31 o cualquier viernes",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Both 'en diciembre' and 'a las 23:59' are fronted prepositional phrases that unambiguously scope both OR arms; 'o' is inclusive-OR in standard Spanish. Candidates 3 and 4 let 'de diciembre' attach syntactically only to the nearest arm ('los viernes' / 'cualquier viernes'), leaking scope. Candidate 2's 'ya sea...o' skews toward exclusive-OR and loses precision with 'un viernes' over 'cualquier viernes'."
+  },
+  {
+    "cluster": "F1",
+    "pick": "los lunes, en los segundos 5 y 10 de las 09:30",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The genitive 'de las 09:30' explicitly binds seconds 5 and 10 to that specific time, eliminating any floating-cadence reading. Candidates 1 and 2 are clean but looser: they state the fixed time without directly attaching the seconds to it via syntax. No candidate says 'de cada minuto', so the named trap is avoided across all three; candidate 3 is simply the most structurally precise."
+  },
+  {
+    "cluster": "F2",
+    "pick": "de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30",
+    "proposed": "de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30 de cada hora",
+    "confidence": 4,
+    "reasoning": "Candidate 1's genitive 'del minuto 30' anchors the 15-second cadence to minute 30 rather than floating it globally. However, 'minuto 30' without 'de cada hora' is technically ambiguous about whether it recurs each hour; adding 'de cada hora' removes that residual doubt. Candidate 2 also anchors correctly but leads with the cadence, inviting a momentary floating-cadence reading before the anchor arrives. Candidate 3 lacks the genitive, making the attachment weaker."
+  },
+  {
+    "cluster": "F3",
+    "pick": "cada minuto del 0 al 30, solo a las 09:00, 17:00, 18:00 y 19:00",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "'Solo' explicitly marks the hours as a restriction, directly blocking both the additive-trigger and the cross-hour-range misreadings. Candidate 1 is also clean (fronted hour list governs the minute window) but lacks an overt restrictive marker. Candidate 3's 'durante las horas' with a discontinuous list risks reading as a continuous span from 09:00 to 19:00, triggering the cross-hour-range trap."
+  }
+]

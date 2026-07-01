@@ -1,0 +1,44 @@
+[
+  {
+    "id": "d1",
+    "pick": "tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Both shared qualifiers (tammikuussa, keskiyöllä) precede the joko…tai fork, giving unambiguous scope to both arms. Candidate 2 disqualified: trailing 'keskiyöllä' reads as scoping only 'maanantaisin'. Candidate 3 is sound but time-before-month is stylistically weaker for a calendar context."
+  },
+  {
+    "id": "d2",
+    "pick": "kesäkuusta syyskuuhun keskiyöllä joko 1. päivänä tai perjantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Both shared qualifiers (month range, keskiyöllä) sit before the fork. Candidate 2 disqualified: trailing 'keskiyöllä' after the union makes midnight appear to scope only 'perjantaisin'."
+  },
+  {
+    "id": "d3",
+    "pick": "kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Same structure as d2. Both shared qualifiers precede the fork. Candidate 2 disqualified: 'keskiyöllä' trails and appears to scope only the weekday arm."
+  },
+  {
+    "id": "d4",
+    "pick": "tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 joko 1. päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Months then times then day condition — natural topic progression; both shared qualifiers unambiguously precede the fork. Candidate 2 is also sound but leading with clock time is awkward register. Candidate 3 disqualified: times trail after the union, appearing to scope only the second arm."
+  },
+  {
+    "id": "d5",
+    "pick": "kesäkuussa klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla joko 1.–5. päivänä tai maanantaista perjantaihin",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Month first, then the complete time phrase, then the fork — both shared qualifiers unambiguously scope both arms and the sentence parses cleanly in left-to-right order. Candidate 1 disqualified: 'kesäkuussa' is buried mid-clause between the time phrase and the fork, creating a syntactically fragmented, hard-to-parse structure."
+  },
+  {
+    "id": "d6",
+    "pick": "5, 10 ja 30 minuutin kohdalla klo 9–20 sekä klo 22",
+    "proposed": "klo 9–20 sekä klo 22, aina minuuttien 5, 10 ja 30 kohdalla",
+    "confidence": 4,
+    "reasoning": "Candidate 2 disqualified: the minute phrase trails after the hour union and appears to scope only 'klo 22' rather than both hour groups. Candidate 3 ('ja klo 22') is sound but 'ja' is weaker than 'sekä' for an additive element alongside a range — 'sekä klo 22' more clearly signals a discrete extra hour rather than a range extension. Proposed reorder leads with the hours (given entity) and appends the minute scope with a clarifying comma, avoiding the scope trap of candidate 2."
+  }
+]

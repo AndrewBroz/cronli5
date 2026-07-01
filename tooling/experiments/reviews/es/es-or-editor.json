@@ -1,0 +1,66 @@
+[
+  {
+    "id": "S1",
+    "pick": "en enero a las 00:00, ya sea el día 1 o los domingos",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 ('un domingo') reads as 'any single Sunday' — indefinite article implies a one-off occurrence, not a recurring day class. Candidate 3 ('cualquier domingo') is grammatical but 'cualquier' can sound overly emphatic or restrictive in written register. Candidate 2 ('los domingos') is the idiomatic generic plural for a recurring day class in Spanish and clearly scopes to the fronted 'en enero a las 00:00'. The comma after '00:00' keeps month+time as a shared prefix before 'ya sea … o', so both arms inherit them correctly."
+  },
+  {
+    "id": "W1",
+    "pick": "a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 2 places 'a las 00:00' at the end, after the two OR arms, which creates scope ambiguity: does the time apply to both arms or only the second? Fronting 'a las 00:00' as a shared prefix before 'ya sea … o' unambiguously governs both arms. 'los domingos, martes, jueves y sábados' is idiomatic for recurring days. Candidate 1 is correct."
+  },
+  {
+    "id": "M1",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+    "ok": false,
+    "proposed": "en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+    "confidence": 4,
+    "reasoning": "Candidate 2 repeats the month list on each arm, which the meaning explicitly forbids and produces an unwieldy sentence. Candidate 1 fronts the month list and time correctly so they govern both arms, but it lacks a comma after the long month enumeration, making the boundary between the list and 'a las 00:00' hard to parse in written register (RAE recommends a comma after a heavy fronted adverbial). The fix adds that comma. Scope is otherwise correct."
+  },
+  {
+    "id": "WM1",
+    "pick": "cada cinco minutos, durante las horas pares, ya sea el 1 de cada mes o los viernes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 ('el día 1 del mes') is grammatical but slightly redundant ('del mes' after 'día 1' is already clear). Candidate 3 ('los días 1 de cada mes') uses an odd plural — there is only one 1st per month — and 'días' in plural is incorrect here. Candidate 2 ('el 1 de cada mes') is the most concise and natural written-register form for 'the 1st of each month', and 'los viernes' correctly expresses recurring Fridays. The two commas before 'ya sea' keep both the frequency and the hour constraint as shared scope."
+  },
+  {
+    "id": "R1",
+    "pick": "de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Both candidates are grammatically acceptable. Candidate 1 ('del 1 al 15') without 'del mes' is slightly ambiguous — stripped of context it could refer to months — whereas candidate 2 ('del 1 al 15 del mes') specifies days of the month unambiguously. In a date-range context the noun 'del mes' is the safer written-register choice. Both front the month range and time as shared prefix; candidate 2 is marginally clearer."
+  },
+  {
+    "id": "DR1",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o de lunes a viernes",
+    "ok": false,
+    "proposed": "en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ya sea cada dos días del mes o de lunes a viernes",
+    "confidence": 4,
+    "reasoning": "The single candidate is structurally correct — month list and time front both OR arms — but like M1, the long month enumeration runs directly into 'a las 00:00' without a comma, making the sentence harder to parse. A comma after 'noviembre' clarifies the boundary between the adverbial month phrase and the time adverbial, following RAE style for consecutive fronted adverbials."
+  },
+  {
+    "id": "QL",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea el último día del mes o los domingos, martes, jueves y sábados",
+    "ok": false,
+    "proposed": "en enero, marzo, mayo, julio, septiembre y noviembre, a las 00:00, ya sea el último día del mes o los domingos, martes, jueves y sábados",
+    "confidence": 4,
+    "reasoning": "Same structural issue as M1 and DR1: no comma after 'noviembre' before 'a las 00:00'. The phrasing 'el último día del mes' is idiomatic and unambiguous. 'los domingos, martes, jueves y sábados' correctly expresses recurring day classes. Fix adds the comma after the month enumeration."
+  },
+  {
+    "id": "Q5L",
+    "pick": "a las 00:00, ya sea el 1 de cada mes o el último viernes del mes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 1 ('el día 1 del mes') is grammatical but mixes 'del mes' with an explicit 'día' noun, making it slightly heavier than needed. Candidate 2 ('el 1 de cada mes') is the cleaner written-register form for a recurring calendar date, and it pairs well with 'el último viernes del mes' (both use 'del mes' in parallel, different senses but structurally balanced). 'a las 00:00' is unambiguously fronted. Candidate 2 is preferred."
+  }
+]

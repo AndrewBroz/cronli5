@@ -1,0 +1,23 @@
+[
+  {
+    "id": "w1",
+    "pick": "lähimpänä kuukauden 15. päivää olevana arkipäivänä",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 ('arkipäivänä lähinnä…') leads with the head noun before the postpositional phrase, which is grammatically possible but reads as an adverbial clump — the participial modifier trails awkwardly. Candidate 2 ('kuukauden 15. päivää lähinnä olevana arkipäivänä') uses the shorter comparative 'lähinnä' with 'olevana', which is grammatically fine but the superlative 'lähimpänä … olevana' (candidate 3) more precisely captures the single-closest-day semantics of 15W. Candidate 4 ('kuukauden 15. päivää lähimpänä arkipäivänä') drops the 'olevana' participle, leaving 'lähimpänä' stranded as a bare postposition before the head noun — the modifier chain is broken and the construction is unnatural. Candidate 3 keeps the full participial phrase ('lähimpänä … olevana') and fronts it naturally before the head noun 'arkipäivänä', which is the standard Finnish pattern for pre-nominal participial attributes."
+  },
+  {
+    "id": "h1",
+    "pick": "klo 9–20 ja klo 22",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The core risk is that a reader parses '22' as extending the range (i.e., 9–22). Candidate 2 ('klo 9–20 ja 22') is the most ambiguous: the bare '22' after 'ja' with no repeated 'klo' marker could plausibly be read as a range-end, giving 9–22. Candidate 1 ('klo 9–20 sekä klo 22') uses 'sekä' (literary/formal 'and also') with the repeated 'klo', which does disambiguate, but 'sekä' in enumerations typically signals a two-part conjunction of clauses or nouns of equal weight, which is slight overkill and slightly formal for a time expression. Candidate 3 ('klo 9–20 ja klo 22') achieves clear separation by repeating the 'klo' prefix before 22, making 22 unambiguously a standalone hour, while using the more natural everyday coordinator 'ja'. Best balance of unambiguity and register."
+  },
+  {
+    "id": "h2",
+    "pick": "klo 9 sekä klo 17–19",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Here the isolated hour comes first, so range-extension ambiguity is lower (9 cannot be extended forward by 17–19). However, clarity still matters. Candidate 1 ('klo 9 ja 17–19') omits 'klo' before the range, which could weakly suggest '9 ja 17' as an extension sequence before '–19'. Candidate 3 ('klo 9 ja klo 17–19') is clean and uses 'ja', but the repeated 'klo' already ensures clarity. Candidate 2 ('klo 9 sekä klo 17–19') uses 'sekä' with full 'klo' repetition, which maximally distinguishes the single hour from the range as two discrete, co-equal time entities — this is the right register since we want the reader to parse them as two separate schedule entries. Confidence is 4 rather than 5 because 'ja' (candidate 3) is equally acceptable and more colloquial; the choice between them is partly stylistic."
+  }
+]

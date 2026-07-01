@@ -1,0 +1,515 @@
+[
+  {
+    "pattern": "0 9 * * *",
+    "meaning": "every day at 9 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 09:00"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "todos los días a las 09.00 h"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and common in Argentine Spanish."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly natural."
+        },
+        "C": {
+          "natural": 3,
+          "correct": false,
+          "note": "Missing the frequency 'every day'."
+        },
+        "D": {
+          "natural": 2,
+          "correct": true,
+          "note": "Too formal/technical for a mid-sentence fragment; 'h' is rarely used in speech."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "30 9 * * *",
+    "meaning": "every day at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 09.30 h"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 09:30"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las nueve y media de la mañana."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9:30."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Common in formal/written schedules, but 'h' is less natural in casual speech."
+        },
+        "B": {
+          "natural": 5,
+          "correct": false,
+          "note": "Inaccurate; it omits the 'every day' frequency."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural, though slightly more verbose than needed for a schedule fragment."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural, concise, and accurate for an embedded fragment."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0 14 * * *",
+    "meaning": "every day at 2 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 14 h."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 14:00"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "todos los días a las 14.00 h"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 2."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and standard for Argentine Spanish."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Missing the 'every day' frequency requirement."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, though '14 h' is slightly more common than '14.00 h' in casual text."
+        },
+        "D": {
+          "natural": 2,
+          "correct": false,
+          "note": "Too ambiguous; could be 2 a.m., and 'las 2' usually requires 'de la tarde' for clarity."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "30 14 * * *",
+    "meaning": "every day at 2:30 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 14:30."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las dos y media de la tarde."
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "todos los días a las 14.30 h"
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "A las 14:30"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronli5",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and standard for Argentine Spanish."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural, though slightly more informal/conversational."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "More common in formal writing or documents; less natural for a mid-sentence fragment."
+        },
+        "D": {
+          "natural": 4,
+          "correct": false,
+          "note": "Inaccurate; it omits 'every day'."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 22 * * *",
+    "meaning": "every day at 10 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 22.00 h"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 22:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las diez de la noche."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 22."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Clear and formal, but 'h' is more common in written documents than in natural speech or casual fragments."
+        },
+        "B": {
+          "natural": 4,
+          "correct": false,
+          "note": "Missing the 'every day' component."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and common for all contexts."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very common in colloquial Argentine Spanish to omit 'hs' or 'de la noche' when the context is clear."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 * * *",
+    "meaning": "every day at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a medianoche."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "todos los días a las 00.00 h"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 00:00"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a medianoche."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfect, natural, and accurate."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct, but feels more like a technical log or official form than a natural sentence fragment."
+        },
+        "C": {
+          "natural": 4,
+          "correct": false,
+          "note": "Accurate for the time, but missing 'every day', making it incomplete compared to the source."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfect."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 12 * * *",
+    "meaning": "every day at noon",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 12.00 h"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días al mediodía."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días al mediodía."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "A las 12:00"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate and formal, but 'h' is less common in casual speech than 'al mediodía'."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for 'at noon'."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Duplicate of B; perfectly natural."
+        },
+        "D": {
+          "natural": 3,
+          "correct": false,
+          "note": "Missing 'todos los días' (every day)."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "30 14 * * 1-5",
+    "meaning": "every Monday through Friday at 2:30 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "de lunes a viernes a las 14.30 h"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 14:30, de lunes a viernes"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "de lunes a viernes a las 14:30."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "De lunes a viernes a las dos y media."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard and professional for schedules in Argentina; 'h' is common for hours."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though the inverted order is slightly less common in a mid-sentence embed."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural, especially in spoken or informal written contexts."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 8,20 * * *",
+    "meaning": "every day at 8 a.m. and 8 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 8 de la mañana y a las 8 de la noche."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "todos los días a las 08.00 h y 20.00 h"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 08:00 y 20:00"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 8 a.m. y a las 8 p.m."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and standard for any Argentine context."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Formal/technical style; 'h' is less common than 'hs' or nothing in Argentina."
+        },
+        "C": {
+          "natural": 4,
+          "correct": false,
+          "note": "Missing 'todos los días'; does not fully convey the original meaning."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Understood, but 'a.m./p.m.' is an anglicism; less natural than 'de la mañana/noche'."
+        },
+        "best": "A"
+      }
+    ]
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "cluster": 1,
+    "subcase": null,
+    "pick": "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä",
+    "rank": [
+      "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä",
+      "tammikuussa 1. päivänä tai maanantaisin keskiyöllä",
+      "tammikuun 1. päivänä tai tammikuun maanantaisin keskiyöllä",
+      "tammikuun 1. päivänä tai maanantaisin tammikuussa keskiyöllä"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The inessive topic-frame 'tammikuussa' at the start scopes unambiguously over both arms of the union, and 'joko...tai' is the canonical Finnish either-or coordinator in written register. C1 is disqualified because the month qualifier is split — genitive on the first arm, inessive appended after the second — which is both awkward and leaves momentary scope ambiguity. C3 repeats the genitive on both arms, which is unambiguous but unnecessarily wordy."
+  },
+  {
+    "cluster": 2,
+    "subcase": null,
+    "pick": "kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin",
+    "rank": [
+      "kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin",
+      "kesäkuussa 1.–5. päivänä tai maanantaista perjantaihin",
+      "kesäkuun 1.–5. päivänä tai kesäkuun maanantaista perjantaihin",
+      "kesäkuun 1.–5. päivänä tai maanantaista perjantaihin kesäkuussa"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Same structural analysis as cluster 1: the inessive front-frame 'kesäkuussa' scopes cleanly over both arms, and 'joko...tai' signals the disjunction explicitly. C1 is disqualified for the split-month problem (genitive on arm one, inessive trailing after arm two). C3 is unambiguous but wastes words by repeating the genitive on each arm."
+  },
+  {
+    "cluster": 3,
+    "subcase": null,
+    "pick": "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin",
+    "rank": [
+      "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin",
+      "tammikuussa ja heinäkuussa 1. päivänä tai maanantaisin",
+      "tammikuun 1. ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa",
+      "tammikuun ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "C1 is disqualified: 'tammikuun ja heinäkuun 1. päivänä' has two genitives sharing a single ordinal head, which is awkward in careful written Finnish and invites misreading, and the second arm then restates both months redundantly. C4 (the pick) uses the inessive plural frame 'tammikuussa ja heinäkuussa' before 'joko...tai', giving unambiguous two-month scope over both conditions with no repetition. C3 is fully explicit and correct but noticeably verbose."
+  },
+  {
+    "cluster": 4,
+    "subcase": null,
+    "pick": "15 minuutin välein, 5 ja 30 sekunnin kohdalla",
+    "rank": [
+      "15 minuutin välein, 5 ja 30 sekunnin kohdalla",
+      "15 minuutin välein 5 ja 30 sekunnin kohdalla",
+      "5 ja 30 sekunnin kohdalla, 15 minuutin välein",
+      "joka 15. minuutti 5 ja 30 sekunnin kohdalla"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "C4 is disqualified: 'joka 15. minuutti' is a nominative noun phrase that clashes in register with the adverbial 'sekunnin kohdalla' — the construction lacks a verb and reads as a sentence fragment rather than a nominal time specification. The comma in C2 (the pick) explicitly separates the outer cadence level from the inner anchor, making the two-level structure clear; C1 (no comma) is grammatically sound but the comma in C2 signals the level boundary more distinctly. C3 puts the minor inner detail first and the governing cadence last, which inverts the natural hierarchy."
+  },
+  {
+    "cluster": 5,
+    "subcase": "5a",
+    "pick": "klo 0, 5, 10, 15 ja 20",
+    "rank": [
+      "klo 0, 5, 10, 15 ja 20",
+      "tunteina 0, 5, 10, 15 ja 20",
+      "klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "C1 is disqualified: listing full clock ranges (0.00–0.59 etc.) is both verbose and misleading when the minute detail is stated separately — a reader might think the ranges themselves carry the minute information. 'klo 0, 5, 10, 15 ja 20' is the standard written-register form for listing clock hours in Finnish; 'tunteina' (essive plural) is grammatically correct but unusual and slightly bureaucratic compared with the conventional 'klo' prefix."
+  },
+  {
+    "cluster": 5,
+    "subcase": "5b",
+    "pick": "klo 9–20 ja lisäksi 22",
+    "rank": [
+      "klo 9–20 ja lisäksi 22",
+      "klo 9–20 sekä 22",
+      "klo 9–20 ja 22"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "All three are grammatically sound. 'klo 9–20 ja 22' (C1) is terse but risks being read as a second range endpoint rather than an additional isolated hour. 'sekä' (C2) is a stronger additive coordinator than 'ja' and signals that 22 is an extra element, but 'ja lisäksi' (C3, the pick) is the most explicit — it unambiguously marks 22 as a supplementary isolated addition to the range, which matters precisely because a range-plus-singleton is an unusual, potentially confusing combination."
+  },
+  {
+    "cluster": 6,
+    "subcase": null,
+    "pick": "klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla",
+    "rank": [
+      "klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla",
+      "klo 9, 11, 13, 15 ja 17, minuutteina 0–30",
+      "0–30 minuutin kohdalla, klo 9, 11, 13, 15 ja 17",
+      "0–30 minuutin kohdalla klo 9, 11, 13, 15 ja 17"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "C2 (without comma) is disqualified on scope: placing '0–30 minuutin kohdalla' before 'klo ...' makes the minute phrase a modifier of the hour list, syntactically inverting their semantic relationship (the hours are the primary frame; the minute window is the within-hour qualifier). The pick (C4) puts the hours first — the primary frame — then uses 'aina minuuttien 0–30 kohdalla': 'aina' clarifies that the minute window applies each time the hour fires, and the genitive plural 'minuuttien' is well-formed for a range head; this formulation cleanly separates the two levels. C3 ('minuutteina 0–30') is also acceptable — the essive 'minuutteina' for a range is natural — but lacks the emphasis of 'aina' that signals within-each-hour application."
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "d1",
+    "pick": "tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Month and time fronted together before 'joko…tai' — both adverbials unambiguously scope both arms. Candidate 2 trails 'keskiyöllä' after the second arm, risking a reading that midnight applies only to Mondays. Candidate 3 is syntactically equivalent to candidate 1 (both modifiers precede 'joko') but less scannable because time before place is marked word-order in Finnish."
+  },
+  {
+    "id": "d2",
+    "pick": "kesäkuusta syyskuuhun keskiyöllä joko 1. päivänä tai perjantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Month range and 'keskiyöllä' both precede 'joko…tai', so both scope both arms unambiguously. Candidate 2 trails 'keskiyöllä' after 'perjantaisin', which a reader could parse as midnight applying only to Fridays, not to the 1st-of-month arm."
+  },
+  {
+    "id": "d3",
+    "pick": "kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Same structure as d2: month range and time precede 'joko…tai', locking both modifiers onto both arms. Candidate 2 trails 'keskiyöllä' at the end, creating the same last-arm-only attachment risk."
+  },
+  {
+    "id": "d4",
+    "pick": "tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 joko 1. päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Months then times both fronted before 'joko…tai', so both scope both arms. Candidate 2 (times before months) is equally unambiguous structurally but less natural Finnish topic order (timeframe before clock time). Candidate 3 trails the long time list after 'maanantaisin' — a reader could parse it as a parenthetical on the Monday arm only, ambiguous."
+  },
+  {
+    "id": "d5",
+    "pick": "kesäkuussa klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla joko 1.–5. päivänä tai maanantaista perjantaihin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Month fronted first, then the full time expression ('klo … aina minuuttien … kohdalla') as a single block, before 'joko…tai'. Both month and time scope both arms without ambiguity. Candidate 1 fronts the clock expression but trails 'kesäkuussa' mid-sentence between the time block and 'joko', risking a reading of June scoping only the 'joko' part, not the time expression."
+  },
+  {
+    "id": "d6",
+    "pick": "5, 10 ja 30 minuutin kohdalla klo 9–20 sekä klo 22",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The 'klo' prefix on both '9–20' and '22' signals that 22 is a discrete hour, not a range endpoint — the symmetry 'klo 9–20 sekä klo 22' makes both elements parallel clock-time expressions. Candidate 2 trails the minute expression after both hour terms; a reader could parse 'aina minuuttien 5, 10 ja 30 kohdalla' as modifying only 'klo 22'. Candidate 3 uses 'ja' instead of 'sekä', which in Finnish can imply a closer binding and risks '9–20 ja klo 22' being read as '9–22' range (sekä more clearly adds a separate item). The chosen candidate has the fewest misreading paths."
+  }
+]

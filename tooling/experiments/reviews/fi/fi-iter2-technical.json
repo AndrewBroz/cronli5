@@ -1,0 +1,23 @@
+[
+  {
+    "id": "w1",
+    "pick": "kuukauden 15. päivää lähinnä olevana arkipäivänä",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Participial 'olevana' makes the modifier unambiguously an attribute of 'arkipäivänä'; head noun last, full relative clause eliminates any parse where 'lähinnä' could be read as a loose adverb on the time expression. 'Lähinnä' (not superlative 'lähimpänä') matches standard Finnish idiom for nearness."
+  },
+  {
+    "id": "h1",
+    "pick": "klo 9–20 sekä klo 22",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Double defense: repeated 'klo' forces a syntactic break so 22 cannot be parsed as a range endpoint, and 'sekä' (additive, stronger than 'ja') signals a discrete extra item. 'klo 9–20 ja 22' risks '9–(20 ja 22)' misread; 'klo 9–20 ja klo 22' is also safe but 'sekä' is the cleaner signal here."
+  },
+  {
+    "id": "h2",
+    "pick": "klo 9 sekä klo 17–19",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Repeated 'klo' anchors both units independently; 'sekä' makes the discrete boundary explicit. 'klo 9 ja 17–19' without the second 'klo' risks '9 ja 17' parsing as two isolated hours with an orphaned '–19'. Parallel construction with h1 pick aids consistency across the renderer."
+  }
+]

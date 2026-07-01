@@ -1,0 +1,43 @@
+[
+  {
+    "cluster": "E",
+    "name": "OR-scope (shared month + time over a day-of-month OR weekday union)",
+    "meaning": "In December only, at 23:59, on the 31st OR on any Friday. The December restriction AND the 23:59 time apply to BOTH conditions; the two are an inclusive OR (either triggers). The phrasing must NOT let 'December' or '23:59' attach to only one side, and must not read as an exclusive either/or.",
+    "candidates": [
+      "en diciembre, a las 23:59, el día 31 o cualquier viernes",
+      "en diciembre a las 23:59, ya sea el día 31 o un viernes",
+      "a las 23:59, los días 31 o los viernes de diciembre",
+      "el día 31 o cualquier viernes de diciembre, a las 23:59"
+    ]
+  },
+  {
+    "cluster": "F1",
+    "name": "seconds + a fixed minute/time (the 'de cada minuto' is misleading when the minute is fixed)",
+    "meaning": "On Mondays at 09:30, firing at second 5 and second 10 (09:30:05 and 09:30:10). It must NOT say 'of each minute', since the minute is fixed at 30 (shown by 09:30).",
+    "candidates": [
+      "los lunes a las 09:30, en los segundos 5 y 10",
+      "en los segundos 5 y 10, los lunes a las 09:30",
+      "los lunes, en los segundos 5 y 10 de las 09:30"
+    ]
+  },
+  {
+    "cluster": "F2",
+    "name": "second-step + fixed minute + hour range + weekday (anchor the seconds to the minute)",
+    "meaning": "Monday through Friday, from 09:00 to 17:30, at minute 30 of each hour, firing every 15 seconds within that minute. The 'every 15 seconds' must clearly belong to minute 30, not float as a global cadence.",
+    "candidates": [
+      "de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30",
+      "cada 15 segundos del minuto 30 de cada hora, de las 09:00 a las 17:30, de lunes a viernes",
+      "de lunes a viernes, de las 09:00 a las 17:30, en el minuto 30 cada 15 segundos"
+    ]
+  },
+  {
+    "cluster": "F3",
+    "name": "minute window + specific hours list (restrictive, not additive)",
+    "meaning": "Every minute from minute 0 through 30, but ONLY during the hours 09:00, 17:00, 18:00 and 19:00. The hours restrict when the minute window applies; it must not read as a cross-hour range (minute 0 of 09:00 through minute 30 of 19:00) nor as a separate additive trigger.",
+    "candidates": [
+      "a las 09:00, 17:00, 18:00 y 19:00, cada minuto del 0 al 30",
+      "cada minuto del 0 al 30, solo a las 09:00, 17:00, 18:00 y 19:00",
+      "cada minuto del 0 al 30 durante las horas 09:00, 17:00, 18:00 y 19:00"
+    ]
+  }
+]

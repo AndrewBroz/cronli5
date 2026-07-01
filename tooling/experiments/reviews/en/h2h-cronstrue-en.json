@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "cron": "5,10,30 9,17 15 * MON-FRI",
+  "rendering": "At 5, 10, and 30 minutes past the hour, at 09:00 AM and 05:00 PM, on day 15 of the month, Monday through Friday"
+ },
+ {
+  "n": 2,
+  "cron": "5/15 9-20,22 1-5 * MON#2",
+  "rendering": "Every 15 minutes, starting at 5 minutes past the hour, at 09:00 AM through 08:59 PM and 10:00 PM, between day 1 and 5 of the month, on the second Monday of the month"
+ },
+ {
+  "n": 3,
+  "cron": "*/7 9-20,22 1 */3 MON-FRI",
+  "rendering": "Every 7 minutes, at 09:00 AM through 08:59 PM and 10:00 PM, on day 1 of the month, Monday through Friday, every 3 months"
+ },
+ {
+  "n": 4,
+  "cron": "5/15 9-17 31 6 *",
+  "rendering": "Every 15 minutes, starting at 5 minutes past the hour, between 09:00 AM and 05:59 PM, on day 31 of the month, only in June"
+ },
+ {
+  "n": 5,
+  "cron": "*/7 9-17 L * MON#2",
+  "rendering": "Every 7 minutes, between 09:00 AM and 05:59 PM, on the last day of the month, on the second Monday of the month"
+ },
+ {
+  "n": 6,
+  "cron": "3/2 9-17 * */3 0",
+  "rendering": "Every 2 minutes, starting at 3 minutes past the hour, between 09:00 AM and 05:59 PM, only on Sunday, every 3 months"
+ },
+ {
+  "n": 7,
+  "cron": "*/25 9 * 1 5L",
+  "rendering": "Every 25 minutes, between 09:00 AM and 09:59 AM, on the last Friday of the month, only in January"
+ },
+ {
+  "n": 8,
+  "cron": "5,10,30 9 L 1,7 7",
+  "rendering": "At 5, 10, and 30 minutes past the hour, at 09:00 AM, on the last day of the month, and on Sunday, only in January and July"
+ },
+ {
+  "n": 9,
+  "cron": "5/15 9,17 * 12 MON-FRI",
+  "rendering": "Every 15 minutes, starting at 5 minutes past the hour, at 09:00 AM and 05:00 PM, Monday through Friday, only in December"
+ },
+ {
+  "n": 10,
+  "cron": "5 9-20,22 L * *",
+  "rendering": "At 5 minutes past the hour, at 09:00 AM through 08:59 PM and 10:00 PM, on the last day of the month"
+ },
+ {
+  "n": 11,
+  "cron": "*/15 * 9 1-5 * *",
+  "rendering": "Every 15 seconds, between 09:00 AM and 09:59 AM, between day 1 and 5 of the month"
+ },
+ {
+  "n": 12,
+  "cron": "5 0 1 * *",
+  "rendering": "At 12:05 AM, on day 1 of the month"
+ },
+ {
+  "n": 13,
+  "cron": "* 1/2 * 1 5L",
+  "rendering": "Every minute, every 2 hours, starting at 01:00 AM, on the last Friday of the month, only in January"
+ },
+ {
+  "n": 14,
+  "cron": "5/15 0 1-5 12 MON#2",
+  "rendering": "Every 15 minutes, starting at 5 minutes past the hour, between 12:00 AM and 12:59 AM, between day 1 and 5 of the month, on the second Monday of the month, only in December"
+ },
+ {
+  "n": 15,
+  "cron": "*/7 12 15 1 5L",
+  "rendering": "Every 7 minutes, between 12:00 PM and 12:59 PM, on day 15 of the month, on the last Friday of the month, only in January"
+ },
+ {
+  "n": 16,
+  "cron": "*/45 9 LW 12 5L",
+  "rendering": "Every 45 minutes, between 09:00 AM and 09:59 AM, on the last weekday of the month, on the last Friday of the month, only in December"
+ },
+ {
+  "n": 17,
+  "cron": "3/2 9,17 31 12 FRI",
+  "rendering": "Every 2 minutes, starting at 3 minutes past the hour, at 09:00 AM and 05:00 PM, on day 31 of the month, and on Friday, only in December"
+ },
+ {
+  "n": 18,
+  "cron": "* 9,17 31 12 FRI",
+  "rendering": "Every minute, at 09:00 AM and 05:00 PM, on day 31 of the month, and on Friday, only in December"
+ },
+ {
+  "n": 19,
+  "cron": "* */5 15 */3 FRI",
+  "rendering": "Every minute, every 5 hours, on day 15 of the month, and on Friday, every 3 months"
+ },
+ {
+  "n": 20,
+  "cron": "5,10,30 2/6 15W * SAT,SUN",
+  "rendering": "At 5, 10, and 30 minutes past the hour, every 6 hours, starting at 02:00 AM, on the weekday nearest day 15 of the month, and on Saturday and Sunday"
+ }
+]

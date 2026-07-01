@@ -1,0 +1,94 @@
+[
+  {
+    "cluster": "A",
+    "name": "minute/second range register",
+    "meaning": "Every minute from minute 0 through minute 29, in every hour (a within-the-hour minute window).",
+    "candidates": [
+      "cada minuto del 0 al 29 de cada hora",
+      "en los minutos 0 a 29 de cada hora",
+      "cada minuto entre el 0 y el 29 de cada hora"
+    ]
+  },
+  {
+    "cluster": "B",
+    "name": "repeated 'a las' in a clock list",
+    "meaning": "At these six times of day: 12:00, 22:00, 23:00, 00:00, 01:00 and 02:00 (note 01:00 takes the singular article, 'la una').",
+    "candidates": [
+      "a las 12:00, a las 22:00, a las 23:00, a las 00:00, a la 01:00 y a las 02:00",
+      "a las 12:00, 22:00, 23:00, 00:00, 01:00 y 02:00",
+      "a las 12:00, 22:00, 23:00, 00:00, a la 01:00 y a las 02:00"
+    ]
+  },
+  {
+    "cluster": "C",
+    "name": "minute + second of the hour (missing article / homonym)",
+    "meaning": "At minute 1 and second 1 of each hour (i.e. at HH:01:01).",
+    "candidates": [
+      "en el minuto 1 y segundo 1 de cada hora",
+      "en el minuto 1 y el segundo 1 de cada hora",
+      "en el segundo 1 del minuto 1 de cada hora"
+    ]
+  },
+  {
+    "cluster": "D",
+    "name": "range + isolated hour",
+    "meaning": "Every hour from 09:00 through 20:00, AND ALSO at 22:00 (22:00 is a separate extra hour, not a continuation of the range; 21:00 is excluded).",
+    "candidates": [
+      "cada hora de las 09:00 a las 20:00 y a las 22:00",
+      "cada hora de las 09:00 a las 20:00 y también a las 22:00",
+      "cada hora de las 09:00 a las 20:00, además de las 22:00",
+      "cada hora de las 09:00 a las 20:00 y, aparte, a las 22:00"
+    ]
+  },
+  {
+    "cluster": "E",
+    "name": "day-of-month OR weekday union, with shared month + time",
+    "meaning": "In December only, at 23:59, on the 31st OR on any Friday. (Both the December restriction and 23:59 apply to BOTH the date and the weekday condition; the two conditions are an inclusive OR — either one triggers.)",
+    "candidates": [
+      "el 31 de diciembre o los viernes de diciembre a las 23:59",
+      "en diciembre, el 31 o los viernes, a las 23:59",
+      "a las 23:59, el 31 de diciembre o los viernes de diciembre",
+      "en diciembre a las 23:59, el día 31 o los viernes"
+    ]
+  },
+  {
+    "cluster": "F1",
+    "name": "stacking: seconds + fixed minute + weekday + time",
+    "meaning": "On Mondays, at 09:30, firing at second 5 and second 10 (i.e. at 09:30:05 and 09:30:10 on Mondays).",
+    "candidates": [
+      "en los segundos 5 y 10 de cada minuto, los lunes a las 09:30",
+      "los lunes a las 09:30, en los segundos 5 y 10",
+      "los lunes, en los segundos 5 y 10 del minuto 30, a las 09:30"
+    ]
+  },
+  {
+    "cluster": "F2",
+    "name": "stacking: second-step + fixed minute + hour range + weekday",
+    "meaning": "Monday through Friday, from 09:00 to 17:30, at minute 30 of each hour, every 15 seconds (within that minute).",
+    "candidates": [
+      "cada 15 segundos, en el minuto 30 de cada hora, de las 09:00 a las 17:30 de lunes a viernes",
+      "de lunes a viernes, de las 09:00 a las 17:30, en el minuto 30 y cada 15 segundos",
+      "de lunes a viernes, en el minuto 30 de cada hora de las 09:00 a las 17:30, cada 15 segundos"
+    ]
+  },
+  {
+    "cluster": "F3",
+    "name": "level separation: minute window + specific hours list",
+    "meaning": "Every minute from minute 0 through 30, but only during the hours 09:00, 17:00, 18:00 and 19:00.",
+    "candidates": [
+      "cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00",
+      "a las 09:00, 17:00, 18:00 y 19:00, cada minuto del 0 al 30",
+      "del minuto 0 al 30 de las 09:00, 17:00, 18:00 y 19:00"
+    ]
+  },
+  {
+    "cluster": "F4",
+    "name": "level separation: minute window + hour step",
+    "meaning": "Every minute from minute 0 through 30, within every second hour (every two hours).",
+    "candidates": [
+      "cada minuto del 0 al 30, cada dos horas",
+      "cada dos horas, cada minuto del 0 al 30",
+      "cada minuto del 0 al 30 dentro de cada dos horas"
+    ]
+  }
+]

@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "correct": true,
+  "idiom": 2,
+  "clarity": 2,
+  "issue": "语义可还原但措辞冗赘混乱：分钟字段 0-30 表示该范围内每分钟都触发，描述写成“每小时0至30分，每分钟”，把范围和频率拆成两段反而引起歧义。建议合并为“每小时的0至30分（每分钟）”或“每小时第0至30分钟”。另外语序“9点和17点……6月至8月”把时间放在月份/星期之前，不如统一顺序自然。"
+ },
+ {
+  "n": 2,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 3,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 5,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "正确（分30、9-17时、6-8月、1-5日或周六周日，dom/dow 取并集）。但长句无标点分隔，“1日至5日或周日和周六在9点至17点之间”读起来易把“周六”和“在9点至17点”粘连，断句不清。建议加逗号：“……1日至5日或周日和周六，在9点至17点之间，每小时第30分”。"
+ },
+ {
+  "n": 8,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 9,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 3,
+  "issue": "6字段（秒=0）；秒为0时省略秒数、渲染为“9点5分”等是合理约定，触发集（每月最后一天的 9/11/13/15/17 点 05 分）正确。仅清晰度上可考虑显式说明“每月”最后一天而非“本月”。"
+ },
+ {
+  "n": 10,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 13,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 14,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 15,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 16,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 17,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 18,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 19,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 20,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ }
+]

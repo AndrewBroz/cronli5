@@ -1,0 +1,30 @@
+[
+  {
+    "cluster": "E",
+    "pick": "en diciembre a las 23:59, ya sea el día 31 o un viernes",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "\"ya sea...o\" is the standard written-register inclusive-OR; the single shared phrase \"en diciembre a las 23:59\" (no internal comma) unambiguously scopes both branches. The other two candidates attach \"de diciembre\" only to the nearest noun (Fridays or 31st), leaving the other arm month-free."
+  },
+  {
+    "cluster": "F1",
+    "pick": "los lunes a las 09:30, en los segundos 5 y 10",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Natural day→time→subsecond order; \"a las 09:30\" fixes the minute precisely without any \"de cada minuto\" leakage. The inverted form (candidate 2) is register-awkward; \"de las 09:30\" in candidate 3 is a strained preposition governing a time expression."
+  },
+  {
+    "cluster": "F2",
+    "pick": "de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "\"cada 15 segundos del minuto 30\" uses the genitive to anchor the seconds firmly inside minute 30, eliminating any floating-cadence reading. Candidate 3 (\"en el minuto 30 cada 15 segundos\") is structurally looser; candidate 2 front-loads the cadence in a way that invites misreading."
+  },
+  {
+    "cluster": "F3",
+    "pick": "a las 09:00, 17:00, 18:00 y 19:00, cada minuto del 0 al 30",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Placing the hours first establishes them as the restrictive frame before the minute window, preventing a cross-hour range (09:00:00 through 19:30) or additive misread. Candidates 2 and 3 front-load the minute range and then restrict it, which is the weaker reading order for disambiguating scope."
+  }
+]

@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 3, "clarity": 3, "issue": "“每小时0至30分，每分钟”略冗，前半已含‘每分钟’之意" },
+ { "n": 3, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 3, "clarity": 3, "issue": "“每小时0至30分，每分钟”重复表意" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "“周日和周六”语序欠自然，宜‘周六和周日’" },
+ { "n": 11, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "“周日和周六”语序欠自然" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "“周日和周六”语序欠自然" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

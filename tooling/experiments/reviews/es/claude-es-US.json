@@ -1,0 +1,641 @@
+{
+  "0 9 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural US style with AM"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "perfect, standard a.m."
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "spaced 'a. m.' feels overly formal"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day', just a time"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, AM acceptable in US Spanish"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct a.m. spacing, fully natural"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "a. m. spacing is RAE-correct but stiff"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días', drops every-day meaning"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, clear"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct, idiomatic"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "a. m. with space stiff but correct"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'; less explicit"
+      },
+      "best": "B"
+    }
+  ],
+  "30 9 * * *": [
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "spaced 'a. m.' slightly stiff"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, fully spelled out"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day', terse"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural US style with AM"
+      },
+      "best": "D"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural and correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "fully natural spelled-out form"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day' framing"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, AM acceptable"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "clear and correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural for US Spanish"
+      },
+      "best": "A"
+    }
+  ],
+  "0 14 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural US style, PM common"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "24h, omits 'every day'"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "spaced 'p. m.' a bit formal"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "identical to C, fine"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, PM acceptable"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct but stiff spacing"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "duplicate of C"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, US-style PM"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits frequency phrase"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct; spaced p. m."
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "duplicate of C"
+      },
+      "best": "A"
+    }
+  ],
+  "30 14 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, clean p.m."
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out, accurate"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day', terse"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural US style with PM"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct p.m."
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, PM acceptable"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "clear, correct"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits frequency phrase"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural US Spanish"
+      },
+      "best": "A"
+    }
+  ],
+  "0 22 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural US style with PM"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "24h, omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, 'de la noche' idiomatic"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "spaced 'p. m.' slightly stiff"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, PM acceptable"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural idiomatic 'de la noche'"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "stiff a. m./p. m. spacing"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "clear, correct"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits frequency phrase"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural 'diez de la noche'"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct; spaced p. m."
+      },
+      "best": "A"
+    }
+  ],
+  "0 0 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic midnight"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "24h, omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural with period"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "identical to A, natural"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, 'a medianoche' fine"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural and correct"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "duplicate, natural"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct; 'a medianoche' fine"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day'/midnight wording"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct, natural"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "correct, natural"
+      },
+      "best": "C"
+    }
+  ],
+  "0 12 * * *": [
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "'a mediodía' fine, 'al' preferred"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "24h, omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "'al mediodía' most natural"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "'al mediodía' natural"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "'a mediodía' acceptable, 'al' preferred"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "'al mediodía' most natural"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural 'al mediodía'"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "'a mediodía' ok; 'al' preferred"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits noon wording, ambiguous"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "'al mediodía' most natural"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct"
+      },
+      "best": "C"
+    }
+  ],
+  "30 14 * * 1-5": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, 'de lunes a viernes'"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "24h, reordered but clear"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, clean p.m."
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "spaced 'p. m.' slightly formal"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, PM acceptable"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "reordered but clear and correct"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct p.m."
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct but stiff spacing"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "clear, correct"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct but reordered, listy"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct"
+      },
+      "best": "C"
+    }
+  ],
+  "0 8,20 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural US, both times with AM/PM"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "24h, omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, 'de la mañana/noche' idiomatic"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "spaced 'a. m./p. m.' bit formal"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "slightly terse, 'a las' omitted before 8 PM"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'every day'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural idiomatic phrasing"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct a. m./p. m."
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "clear, correct"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits frequency phrase"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural spelled-out form"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, correct"
+      },
+      "best": "D"
+    }
+  ]
+}

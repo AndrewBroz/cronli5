@@ -1,0 +1,67 @@
+[
+  {
+    "id": "v1",
+    "meaning": "At midnight, in the months June through September only, on either the 1st day of the month OR on any Friday. (The month range restricts BOTH conditions.)",
+    "finnish": "kesäkuusta syyskuuhun joko 1. päivänä tai perjantaisin keskiyöllä"
+  },
+  {
+    "id": "v2",
+    "meaning": "At midnight, in the months June through August only, on either the LAST day of the month OR on any Monday. (The month range restricts both conditions.)",
+    "finnish": "kesäkuusta elokuuhun joko kuukauden viimeisenä päivänä tai maanantaisin keskiyöllä"
+  },
+  {
+    "id": "v3",
+    "meaning": "In the months June through August only, on either the 1st and 15th days of the month OR on weekdays Monday through Friday. (The month range restricts both conditions; ignore any separate time-of-day part.)",
+    "finnish": "kesäkuusta elokuuhun joko 1. ja 15. päivänä tai maanantaista perjantaihin"
+  },
+  {
+    "id": "v4",
+    "meaning": "At 9 and 17 o'clock, on every minute from minute 0 through minute 30 (a continuous within-the-hour window).",
+    "finnish": "klo 9 ja 17 aina minuuttien 0–30 kohdalla"
+  },
+  {
+    "id": "v5",
+    "meaning": "During the clock range 9:00 to 17:30, on every minute from minute 0 through minute 30.",
+    "finnish": "klo 9.00–17.30 aina minuuttien 0–30 kohdalla"
+  },
+  {
+    "id": "v6",
+    "meaning": "During the clock range 9:00 to 17:30, at the 0 and 30 minute marks of each hour (i.e. on the hour and the half-hour).",
+    "finnish": "klo 9.00–17.30 aina minuuttien 0 ja 30 kohdalla"
+  },
+  {
+    "id": "v7",
+    "meaning": "At 8, 10, 12, 14, 16 and 18 o'clock, at the 0 and 30 minute marks (on the hour and the half-hour).",
+    "finnish": "klo 8, 10, 12, 14, 16 ja 18 aina minuuttien 0 ja 30 kohdalla"
+  },
+  {
+    "id": "v8",
+    "meaning": "At 0, 5, 10, 15 and 20 o'clock, at the 0 and 45 minute marks.",
+    "finnish": "klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla"
+  },
+  {
+    "id": "v9",
+    "meaning": "At 9 and 17 o'clock, at the 0 and 45 minute marks.",
+    "finnish": "klo 9 ja 17 aina minuuttien 0 ja 45 kohdalla"
+  },
+  {
+    "id": "v10",
+    "meaning": "At 1, 3, 5, 7, 9, 11 and 13 o'clock, on every minute from minute 5 through minute 10.",
+    "finnish": "klo 1, 3, 5, 7, 9, 11 ja 13 aina minuuttien 5–10 kohdalla"
+  },
+  {
+    "id": "v11",
+    "meaning": "At the hours 9 through 20 inclusive, and ALSO at 22 o'clock, at the 5, 10 and 30 minute marks.",
+    "finnish": "klo 9–20 sekä 22 aina minuuttien 5, 10 ja 30 kohdalla"
+  },
+  {
+    "id": "v12",
+    "meaning": "On every minute during the hours 8:00 through 18:59, and ALSO during 22:00 through 22:59.",
+    "finnish": "joka minuutti klo 8.00–18.59 sekä 22.00–22.59"
+  },
+  {
+    "id": "v13",
+    "meaning": "Every day at 9:30 through 20:30 (on the half-hour each hour), and ALSO at 22:30.",
+    "finnish": "joka päivä klo 9.30–20.30 sekä 22.30"
+  }
+]

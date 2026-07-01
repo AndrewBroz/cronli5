@@ -1,0 +1,18 @@
+{
+ "en": {
+  "hour 0": "every minute from midnight through 12:59 a.m.",
+  "hour 9": "every minute from 9 a.m. through 9:59 a.m."
+ },
+ "es": {
+  "hour 0": "cada minuto de las 00:00 a las 00:59",
+  "hour 9": "cada minuto de las 09:00 a las 09:59"
+ },
+ "de": {
+  "hour 0": "jede Minute von 0:00 bis 0:59 Uhr",
+  "hour 9": "jede Minute von 9:00 bis 9:59 Uhr"
+ },
+ "fi": {
+  "hour 0": "joka minuutti klo 0.00–0.59",
+  "hour 9": "joka minuutti klo 9.00–9.59"
+ }
+}

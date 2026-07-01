@@ -1,0 +1,5 @@
+[
+ {"id":"A","meaning":"Every minute, but only during the even-numbered hours 0,2,4,…,22 (each even hour fires once per minute for the whole hour; odd hours never fire).","candidates":["每2小时内，每分钟","在偶数小时，每分钟","在0点、2点、4点、6点、8点、10点、正午、14点、16点、18点、20点和22点，每分钟"]},
+ {"id":"B","meaning":"Every minute during the midnight hour only — 00:00, 00:01, …, 00:59 (the single hour 0, all 60 of its minutes).","candidates":["在凌晨0点至0点59分之间，每分钟","凌晨0点这一小时内，每分钟","凌晨0点的每一分钟"]},
+ {"id":"C","meaning":"Every second, at minutes 5, 20, 35 and 50 of the midnight hour — i.e. every second of 0:05, 0:20, 0:35 and 0:50.","candidates":["在凌晨0点，每小时5、20、35、50分，每秒","凌晨0点5、20、35、50分的每一秒"]}
+]

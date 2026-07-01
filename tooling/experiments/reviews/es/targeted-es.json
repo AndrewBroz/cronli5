@@ -1,0 +1,287 @@
+[
+  {
+    "pattern": "*/15 */2 * * *",
+    "meaning": "every 15 minutes during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada 15 minutos cada dos horas."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "cada 15 minutos, cada dos horas"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada 15 minutos, una hora sí y otra no."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Cada 15 minutos, cada 2 horas"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but slightly ambiguous as it could be read as 'every 15 minutes for a duration of two hours'."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Same as A; the comma provides a slight pause but doesn't fully clarify the 'every other' logic."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "The most natural way to express 'every other' in Spanish to avoid ambiguity."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Same as A; using the digit '2' is common in schedules but doesn't improve the phrasing."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "* */2 * * *",
+    "meaning": "every minute during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada minuto durante horas alternas."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "cada minuto, cada dos horas"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Cada minuto, cada 2 horas"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada minuto, cada dos horas."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct, but 'horas alternas' sounds slightly formal or technical."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural and clear for a schedule description."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Equally natural; using the digit is common in schedules."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Same as B, but the period is irrelevant per instructions."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "*/15 */3 * * *",
+    "meaning": "every 15 minutes during every third hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada 15 minutos cada tres horas."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada 15 minutos durante cada tercera hora."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Cada 15 minutos, cada 3 horas"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "cada 15 minutos, cada tres horas"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Simple and clear, though slightly ambiguous as to whether it means 'every 3rd hour' or 'every 3 hours'."
+        },
+        "B": {
+          "natural": 2,
+          "correct": true,
+          "note": "Too literal a translation of the English structure; sounds robotic/unnatural in Spanish."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "The comma helps separate the frequency from the interval, making it very clear."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Same as C; the use of digits or words for numbers doesn't significantly affect naturalness here."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "*/20 9-17/2 * * *",
+    "meaning": "every 20 minutes during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "cada 20 minutos durante las horas de las 9, 11, 13, 15 y 17"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Cada 20 minutos, cada 2 horas, entre las 09:00 y las 17:59"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada 20 minutos a las 9, 11, 1, 3 y 5."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada 20 minutos durante las horas de las 9:00, 11:00, 13:00, 15:00 y 17:00."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural and accurate; using 24h format is common for schedules in Spanish."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect; implies a continuous range rather than specific disjointed hours."
+        },
+        "C": {
+          "natural": 3,
+          "correct": false,
+          "note": "Ambiguous; 'a las 9' usually means exactly at 9:00, not throughout the 9th hour."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and clear, though slightly more formal/stiff due to the full timestamps."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "* */5 * * *",
+    "meaning": "every minute during the 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "cada minuto durante las horas de las 0, 5, 10, 15 y 20"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada minuto durante las horas de las 12, 5, 10, 15 y 20."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada minuto durante las horas de las 00:00, 05:00, 10:00, 15:00 y 20:00."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Cada minuto, cada 5 horas"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and natural, using 24h format which is common for schedules."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate; mixing 12 and 24h formats is slightly less consistent than A, but common."
+        },
+        "C": {
+          "natural": 2,
+          "correct": true,
+          "note": "Redundant to use full timestamps (00:00) when referring to the entire hour."
+        },
+        "D": {
+          "natural": 1,
+          "correct": false,
+          "note": "Incorrect meaning; implies a frequency of every 5 hours, not specific hours of the day."
+        },
+        "best": "A"
+      }
+    ]
+  }
+]

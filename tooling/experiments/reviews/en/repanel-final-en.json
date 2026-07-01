@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "cron": "*/15 0 LW 6-8 5L",
+  "rendering": "in June through August every 15 minutes from midnight through 12:45 a.m. whenever the day is the last weekday of the month or the last Friday of the month"
+ },
+ {
+  "n": 2,
+  "cron": "3/2 9,17 1 */3 MON-FRI",
+  "rendering": "in January, April, July, and October every two minutes from 3 through 59 minutes past the hour, at 9 a.m. and 5 p.m. whenever the day is the 1st or a weekday"
+ },
+ {
+  "n": 3,
+  "cron": "*/25 9-17/2 1-5 */3 MON",
+  "rendering": "in January, April, July, and October at 0, 25, and 50 minutes past the hour, every two hours from 9 a.m. through 5 p.m. whenever the day is from the 1st through the 5th or a Monday"
+ },
+ {
+  "n": 4,
+  "cron": "*/45 9,17 15W 1,7 MON",
+  "rendering": "in January and July at 9 a.m., 9:45 a.m., 5 p.m., and 5:45 p.m. whenever the day is the weekday nearest the 15th or a Monday"
+ },
+ {
+  "n": 5,
+  "cron": "5/15 0 1,15 6-8 5L",
+  "rendering": "in June through August every 15 minutes from five minutes past the hour from midnight through 12:50 a.m. whenever the day is the 1st, the 15th, or the last Friday of the month"
+ },
+ {
+  "n": 6,
+  "cron": "* 12 * 6-8 FRI",
+  "rendering": "every minute of the noon hour on Fridays in June through August"
+ },
+ {
+  "n": 7,
+  "cron": "30 0 LW 6-8 FRI",
+  "rendering": "in June through August at 12:30 a.m. whenever the day is the last weekday of the month or a Friday"
+ },
+ {
+  "n": 8,
+  "cron": "5 12 31 1 MON#2",
+  "rendering": "in January at 12:05 p.m. whenever the day is the 31st or the second Monday of the month"
+ },
+ {
+  "n": 9,
+  "cron": "* */5 1-5 12 MON-FRI",
+  "rendering": "in December every minute, every five hours from midnight through 8 p.m. whenever the day is from the 1st through the 5th or a weekday"
+ },
+ {
+  "n": 10,
+  "cron": "* */5 15 6-8 MON#2",
+  "rendering": "in June through August every minute, every five hours from midnight through 8 p.m. whenever the day is the 15th or the second Monday of the month"
+ },
+ {
+  "n": 11,
+  "cron": "*/15 9-20,22 L 1,7 7",
+  "rendering": "in January and July every 15 minutes during the 9 a.m. through 8 p.m. and 10 p.m. hours whenever the day is the last day of the month or a Sunday"
+ },
+ {
+  "n": 12,
+  "cron": "5 9-20,22 15 6-8 5L",
+  "rendering": "in June through August at five minutes past the hour from 9 a.m. until 9 p.m. plus 10:05 p.m. whenever the day is the 15th or the last Friday of the month"
+ },
+ {
+  "n": 13,
+  "cron": "*/7 12 15 6 7",
+  "rendering": "in June every seven minutes from 0 through 56 minutes past the hour, at noon whenever the day is the 15th or a Sunday"
+ },
+ {
+  "n": 14,
+  "cron": "*/45 0-30 * 15 * *",
+  "rendering": "at 0 and 45 seconds past the minute, every minute from 0 through 30 past the hour on the 15th"
+ },
+ {
+  "n": 15,
+  "cron": "*/7 2/6 15W 1,7 5L",
+  "rendering": "in January and July every seven minutes from 0 through 56 minutes past the hour, every six hours from 2 a.m. whenever the day is the weekday nearest the 15th or the last Friday of the month"
+ },
+ {
+  "n": 16,
+  "cron": "5,10,30 */2 1-5 */3 SAT,SUN",
+  "rendering": "in January, April, July, and October at 5, 10, and 30 minutes past the hour, every two hours whenever the day is from the 1st through the 5th, a Sunday, or a Saturday"
+ },
+ {
+  "n": 17,
+  "cron": "*/25 */5 L */3 MON",
+  "rendering": "in January, April, July, and October at 0, 25, and 50 minutes past the hour, every five hours from midnight through 8 p.m. whenever the day is the last day of the month or a Monday"
+ },
+ {
+  "n": 18,
+  "cron": "3/2 9-17/2 * 1,7 MON#2",
+  "rendering": "every two minutes from 3 through 59 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the second Monday of the month in January and July"
+ },
+ {
+  "n": 19,
+  "cron": "* 9,17 1-5 1,7 MON",
+  "rendering": "in January and July every minute during the 9 a.m. and 5 p.m. hours whenever the day is from the 1st through the 5th or a Monday"
+ },
+ {
+  "n": 20,
+  "cron": "*/7 1/2 L 6-8 MON#2",
+  "rendering": "in June through August every seven minutes from 0 through 56 minutes past the hour, every two hours from 1 a.m. whenever the day is the last day of the month or the second Monday of the month"
+ }
+]

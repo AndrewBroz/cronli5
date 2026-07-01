@@ -1,0 +1,134 @@
+[
+ {
+  "n": 1,
+  "gold": "On the weekday nearest the 15th, every five hours from midnight through 8 p.m., every seven minutes from 0 through 56 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead 15W; coarse-to-fine cadence order (hour step 'through 8 p.m.' leads, then minutes, then nested seconds :00-:10); range bounds digitized."
+ },
+ {
+  "n": 2,
+  "gold": "On the weekday nearest the 15th, every five hours from midnight through 8 p.m., every two minutes from 3 through 59 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead 15W; coarse-to-fine (hour step leads, then min 3/2 -> 3..59, then nested seconds)."
+ },
+ {
+  "n": 3,
+  "gold": "On the last weekday of the month, every two hours from 9 a.m. through 5 p.m., every seven minutes from 0 through 56 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead LW; coarse-to-fine (hour step 9-17/2 'through 5 p.m.' leads, then minutes, then nested seconds)."
+ },
+ {
+  "n": 4,
+  "gold": "On the last weekday of the month, every two hours from 9 a.m. through 5 p.m., every two minutes from 3 through 59 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead LW; coarse-to-fine (hour step leads, then minutes, then nested seconds)."
+ },
+ {
+  "n": 5,
+  "gold": "On the weekday nearest the 15th, from 9 a.m. until 9 p.m. plus 10 p.m., every seven minutes from 0 through 56 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead 15W; coarse-to-fine. Hour list 9-20,22 is a LEADING frame here, so until-window+plus 'from 9 a.m. until 9 p.m. plus 10 p.m.' (run end+1, outlier appended); then minutes, then nested seconds."
+ },
+ {
+  "n": 6,
+  "gold": "On the weekday nearest the 15th, during the 9 a.m. through 8 p.m. and 10 p.m. hours, every 15 minutes from 5 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead 15W; coarse-to-fine. Hour 9-20,22 is a CONFINEMENT under the finer minute cadence, so 'during the … hours' with range as 'through' and outlier joined with 'and' (NOT the until-window+plus leading form); then minutes, then nested seconds; '5 minutes' digitized."
+ },
+ {
+  "n": 7,
+  "gold": "On the weekday nearest the 15th, from 9 a.m. until 9 p.m. plus 10 p.m., every two minutes from 3 through 59 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead 15W; coarse-to-fine. Hour list is a LEADING frame -> until-window + plus outlier; then minutes, then nested seconds."
+ },
+ {
+  "n": 8,
+  "gold": "On the weekday nearest the 15th, every five hours from midnight through 8 p.m., every 15 minutes from 5 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead 15W; coarse-to-fine (hour step leads, then minutes, then nested seconds); '5 minutes' digitized."
+ },
+ {
+  "n": 9,
+  "gold": "On the last weekday of the month, every two hours from 9 a.m. through 5 p.m., every 15 minutes from 5 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead LW; coarse-to-fine (hour step 9-17/2 leads, then minutes, then nested seconds)."
+ },
+ {
+  "n": 10,
+  "gold": "In January, April, July, and October, on the weekday nearest the 15th, every five hours from midnight through 8 p.m., every seven minutes from 0 through 56 minutes past the hour.",
+  "changed": true,
+  "note": "Dense (5-field): anchor-lead month then day (month */3 -> Jan/Apr/Jul/Oct, 15W); coarse-to-fine (hour step leads, then minutes); only one sub-hour cadence, so no nesting."
+ },
+ {
+  "n": 11,
+  "gold": "On the 1st and 15th, every two hours from 9 a.m. through 5 p.m., every seven minutes from 0 through 56 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead day-of-month list (1,15); coarse-to-fine (hour step leads, then minutes, then nested seconds)."
+ },
+ {
+  "n": 12,
+  "gold": "On the weekday nearest the 15th, every five hours from midnight through 8 p.m., every minute from 0 through 30 minutes past the hour, and within each of those minutes, every second from :00 through :10.",
+  "changed": true,
+  "note": "Dense: anchor-lead 15W; coarse-to-fine (hour step leads, then minutes cadence 'every minute from 0 through 30', then nested seconds)."
+ },
+ {
+  "n": 13,
+  "gold": "every Monday at 9 a.m.",
+  "changed": false,
+  "note": "Simple: kept order and phrasing."
+ },
+ {
+  "n": 14,
+  "gold": "every five minutes",
+  "changed": false,
+  "note": "Simple: unchanged ('five' already follows the spell-2-9 frequency rule)."
+ },
+ {
+  "n": 15,
+  "gold": "every hour from 9 a.m. until 6 p.m.",
+  "changed": false,
+  "note": "Medium: until-window kept; no dense triggers."
+ },
+ {
+  "n": 16,
+  "gold": "every five hours from midnight through 8 p.m.",
+  "changed": false,
+  "note": "Medium: hour step 'through 8 p.m.' kept; 'five' spelled."
+ },
+ {
+  "n": 17,
+  "gold": "every day at 9:05 a.m., 9:10 a.m., and 9:30 a.m.",
+  "changed": false,
+  "note": "Medium: clock-time list form unaffected by the number policy."
+ },
+ {
+  "n": 18,
+  "gold": "every second during minute :00 at midnight",
+  "changed": false,
+  "note": "Medium: confinement phrasing kept; single sub-hour cadence, no nesting."
+ },
+ {
+  "n": 19,
+  "gold": "every second from 9 a.m. until 6 p.m.",
+  "changed": false,
+  "note": "Medium: until-window kept; single sub-hour cadence, no nesting."
+ },
+ {
+  "n": 20,
+  "gold": "every five minutes from 9 a.m. until 6 p.m. on Mondays",
+  "changed": false,
+  "note": "Medium: trailing weekday and until-window kept; not dense, so no anchor-lead."
+ },
+ {
+  "n": 21,
+  "gold": "on the last Friday in January at midnight",
+  "changed": false,
+  "note": "Medium: 'of the month' already dropped under explicit month; kept."
+ },
+ {
+  "n": 22,
+  "gold": "every hour from 9 a.m. until 9 p.m. plus 10 p.m.",
+  "changed": true,
+  "note": "Medium: hour list 9-20,22 -> 'plus' outlier replaces shipped 'and at 10 p.m.'; leading hour frame, so until-window run end+1 (9-20 -> until 9 p.m.)."
+ }
+]

@@ -1,0 +1,17 @@
+[
+  {"id":0,"recovered":"0 9,17 * * *"},
+  {"id":1,"recovered":"0 9,15,21 * * *"},
+  {"id":2,"recovered":"0,30 1 * * *"},
+  {"id":3,"recovered":"0 1,9,13 * * *"},
+  {"id":4,"recovered":"0 2,14,18 * * *"},
+  {"id":5,"recovered":"0 2,3,15,18 * * *"},
+  {"id":6,"recovered":"0 1,13 * * *"},
+  {"id":7,"recovered":"0 11,23 * * *"},
+  {"id":8,"recovered":"0 13,14 * * *"},
+  {"id":9,"recovered":"0 1,2 * * *"},
+  {"id":10,"recovered":"0 12,13,14 * * *"},
+  {"id":11,"recovered":"0 8,12,16 * * *"},
+  {"id":12,"recovered":"0 3,9,15 * * *"},
+  {"id":13,"recovered":"30 1,13 * * *"},
+  {"id":14,"recovered":"0 7,19 * * *"}
+]

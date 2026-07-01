@@ -1,0 +1,26 @@
+[
+  {
+    "id": "h0",
+    "pick": "every minute of the midnight hour",
+    "confidence": 5,
+    "reasoning": "\"The midnight hour\" is a fixed, natural English idiom. The range form is redundant and reads like a printout, not speech."
+  },
+  {
+    "id": "h12",
+    "pick": "every minute of the noon hour",
+    "confidence": 5,
+    "reasoning": "\"The noon hour\" is a well-worn phrase (e.g., 'noon-hour break'). The range form is stilted and the ':59' endpoint feels unnecessary to say aloud."
+  },
+  {
+    "id": "h9",
+    "pick": "every minute of the 9 a.m. hour",
+    "confidence": 4,
+    "reasoning": "Clearly more natural than spelling out '9 a.m. through 9:59 a.m.' — though 'the 9 a.m. hour' is slightly more constructed than midnight/noon, it's still how people talk. Slight awkwardness: 'a.m.' repeated in the longer form is worse."
+  },
+  {
+    "id": "h17",
+    "pick": "every minute of the 5 p.m. hour",
+    "confidence": 4,
+    "reasoning": "Same pattern as h9. 'The 5 p.m. hour' is natural conversational English; spelling out '5 p.m. through 5:59 p.m.' is how a bus timetable reads, not how a person speaks."
+  }
+]

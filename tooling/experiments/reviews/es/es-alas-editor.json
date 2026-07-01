@@ -1,0 +1,20 @@
+[
+  {
+    "id": "u1",
+    "pick": "a la 01:05 y a las 06:05, 11:05, 16:05 y 21:05",
+    "confidence": 5,
+    "reasoning": "Economical grouping: singular 'a la' clause leads (01:05 is genuinely the earliest time so no out-of-order issue), then 'a las' list closes with a single 'y'. Repeating 'a las' four times in candidate B adds no clarity and burdens the rhythm."
+  },
+  {
+    "id": "u2",
+    "pick": "todos los días a las 12:00, 22:00, 23:00, 00:00, a la 01:00 y a las 02:00",
+    "confidence": 4,
+    "reasoning": "Preserves strict clock-sequence order; inserting 'a la 01:00' mid-list after 00:00 is the natural place for it and avoids reordering. No double-y: the list closes with a single 'y a las 02:00'. Candidate A displaces 01:00 to the front out of sequence; candidate B produces a clumsy double-y ('00:00 y 02:00, y a la 01:00') and also places 01:00 out of order at the end."
+  },
+  {
+    "id": "u3",
+    "pick": "todos los días a la 01:00, a las 02:00 y 03:00",
+    "confidence": 5,
+    "reasoning": "The comma after 'a la 01:00' separates the two article groups without a conjunction, eliminating the double-y stutter present in candidate A ('a la 01:00 y a las 02:00 y 03:00'). Numeric order is preserved; rhythm is clean."
+  }
+]

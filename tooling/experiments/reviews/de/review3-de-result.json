@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": false, "idiom": 2, "clarity": 1, "issue": "Auslösung ist Minute 5 jeder Stunde von 9 bis 17 Uhr (9:05, 10:05, ..., 17:05). 'von 9 bis 17:05 Uhr' suggeriert eine durchgehende Zeitspanne mit Ende 17:05 und widerspricht 'in Minute 5 jeder Stunde'; falsche Stundengrenzen-Wiedergabe." },
+ { "n": 10, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "in jeder zweiten Stunde ohne explizite Spanne (0-22) — akzeptabel, aber etwas weniger eindeutig als 'ab 0 Uhr'." },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

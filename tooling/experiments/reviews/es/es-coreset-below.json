@@ -1,0 +1,935 @@
+[
+ {
+  "id": 109,
+  "median": 2,
+  "e": 2,
+  "d": 2,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Oración extremadamente larga y repetitiva; la lista de meses duplicada resulta muy mecánica y difícil de leer de corrido.",
+   "editor: Frase muy larga y difícil de parsear. La doble repetición de la lista de meses a ambos lados del 'o' hace que la estructura de las dos alternativas sea casi ilegible. El lector pierde el hilo de qué aplica a qué. Misread probable: la rama 'los domingos, martes, jueves y sábados de enero…' podría interpretarse como independiente de los meses de la primera rama.",
+   "technical: Oración muy larga con dos cláusulas «o» y lista de meses repetida dos veces. «a las 00:00» al final puede asociarse solo al segundo brazo, no a ambos."
+  ],
+  "pattern": "0 0 */2 */2 */2",
+  "desc": "cada dos días del mes de enero, marzo, mayo, julio, septiembre y noviembre o los domingos, martes, jueves y sábados de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 110,
+  "median": 2,
+  "e": 2,
+  "d": 2,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Igual que 109: la repetición íntegra de 'de enero, marzo, mayo, julio, septiembre y noviembre' dos veces en la misma oración suena a texto generado por máquina.",
+   "editor: Mismo problema que id 109: la repetición íntegra de la lista de seis meses en ambas ramas hace la frase casi incomprensible. Un lector no puede seguir fácilmente la estructura de la disyunción.",
+   "technical: Igual que id 109: la hora final y el alcance del mes en el segundo brazo son ambiguos respecto al primer brazo."
+  ],
+  "pattern": "0 0 */2 */2 0",
+  "desc": "cada dos días del mes de enero, marzo, mayo, julio, septiembre y noviembre o los domingos de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 111,
+  "median": 2,
+  "e": 2,
+  "d": 2,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Misma estructura mecánica y muy repetitiva que 109 y 110.",
+   "editor: Mismo problema estructural. La doble lista de meses con 'o de lunes a viernes' en medio produce una cadena nominal extremadamente larga y confusa. Misread probable.",
+   "technical: Igual que ids 109/110: «a las 00:00» al final puede no leerse como cubriendo el primer brazo."
+  ],
+  "pattern": "0 0 */2 */2 1-5",
+  "desc": "cada dos días del mes de enero, marzo, mayo, julio, septiembre y noviembre o de lunes a viernes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 112,
+  "median": 2,
+  "e": 2,
+  "d": 2,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Combinación de 'el último viernes del mes de enero, marzo…' repetido dos veces; muy denso y artificial.",
+   "editor: Extremadamente larga; la doble lista de meses con 'o el último viernes del mes' en medio es difícil de leer, aunque no produce un misread categórico —la estructura lógica se puede deducir con esfuerzo.",
+   "technical: Igual que ids 109-111: ambigüedad de alcance de hora y mes en la unión doble."
+  ],
+  "pattern": "0 0 */2 */2 5L",
+  "desc": "cada dos días del mes de enero, marzo, mayo, julio, septiembre y noviembre o el último viernes del mes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 101,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 3,
+  "flags": [
+   "everyday: 'cada dos días del mes o los domingos, martes, jueves y sábados a las 00:00' es ambiguo: no queda claro si 'a las 00:00' aplica solo a los días de semana o a toda la oración.",
+   "editor: 'Cada dos días del mes o los domingos, martes, jueves y sábados a las 00:00': la enumeración de días de semana queda sin verbo principal claro; un lector puede pensar que 'los domingos, martes, jueves y sábados' modifican 'cada dos días', no que son la segunda alternativa. Misread posible: ¿se corre 'a las 00:00' solo sobre los días de semana o sobre toda la expresión?",
+   "technical: La unión «o» es ambigua: no queda claro si «a las 00:00» se aplica solo al segundo brazo (los días de semana) o a ambos («cada dos días del mes» también). Un lector puede concluir que los días-del-mes corren a medianoche, pero no es explícito."
+  ],
+  "pattern": "0 0 */2 * */2",
+  "desc": "cada dos días del mes o los domingos, martes, jueves y sábados a las 00:00"
+ },
+ {
+  "id": 144,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 3,
+  "flags": [
+   "everyday: 'ya sea el día 1 o un domingo' — 'un domingo' sin especificar mes (aunque se entiende por contexto 'en enero') puede leerse como cualquier domingo del año. Ambigüedad real.",
+   "editor: «ya sea el día 1 o un domingo» omite martes, jueves y sábados; el lector entendería que solo aplica el domingo de enero.",
+   "technical: 'ya sea el día 1 o un domingo' omite martes, jueves y sábados; si el cron tiene {dom, mar, jue, sáb} el lector sólo percibirá domingos. Descripción incompleta respecto al otro brazo."
+  ],
+  "pattern": "0 0 1 1 0",
+  "desc": "en enero a las 00:00, ya sea el día 1 o un domingo"
+ },
+ {
+  "id": 149,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 3,
+  "flags": [
+   "everyday: 'ya sea el día 1 o un domingo' — igual que id 144, 'un domingo' puede interpretarse como cualquier domingo, no solo domingos de enero a marzo.",
+   "editor: «ya sea el día 1 o un domingo» omite martes, jueves y sábados; el lector inferiría que el intervalo enero-marzo solo aplica los días 1 y domingos.",
+   "technical: 'ya sea el día 1 o un domingo' omite martes, jueves y sábados. Descripción incompleta si el cron incluye esos días adicionales."
+  ],
+  "pattern": "0 0 1 1-3 0",
+  "desc": "de enero a marzo a las 00:00, ya sea el día 1 o un domingo"
+ },
+ {
+  "id": 37,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: 'cada dos días del mes' es ambiguo: puede interpretarse como 'el 1, 3, 5...' (días impares) o como 'con una cadencia de 48 h'; un lector podría pensar que es cada 48 horas",
+   "editor: «cada dos días del mes» es comprensible pero algo ambiguo en español conversacional (¿día 1, 3, 5…? ¿cada 48 h?); técnicamente aceptable para cron",
+   "technical: «cada dos días del mes» es ambiguo: ¿los días impares (1, 3, 5…), días con número par, o un intervalo de 2 días? Sin contexto cron el lector no sabe cuáles días exactamente"
+  ],
+  "pattern": "0 */5 * */2 * *",
+  "desc": "cada cinco minutos cada dos días del mes"
+ },
+ {
+  "id": 50,
+  "median": 3,
+  "e": 3,
+  "d": 5,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: 'el 1 de cada mes o los viernes' puede leerse como 'el primer viernes de cada mes' o como 'cualquier viernes'; la ambigüedad del 'o' hace que la programación compuesta no quede inequívoca.",
+   "technical: La frase 'el 1 de cada mes o los viernes' es ambigua sobre si las horas pares se aplican también a los viernes o solo al día 1; un lector puede concluir que los viernes funcionan las 24 horas."
+  ],
+  "pattern": "0 */5 */2 1 * 5",
+  "desc": "cada cinco minutos, durante las horas pares el 1 de cada mes o los viernes"
+ },
+ {
+  "id": 52,
+  "median": 3,
+  "e": 3,
+  "d": 5,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: 'el 1 de junio o los viernes de junio' puede entenderse como que se ejecuta solo en junio del año corriente o en cualquier año; el alcance anual es ambiguo. Además 'los viernes de junio' podría confundirse con 'todos los viernes'.",
+   "technical: Igual que id 50: 'el 1 de junio o los viernes de junio' deja ambiguo si las horas pares restringen también los viernes de junio o solo el día 1."
+  ],
+  "pattern": "0 */5 */2 1 6 5",
+  "desc": "cada cinco minutos, durante las horas pares el 1 de junio o los viernes de junio"
+ },
+ {
+  "id": 61,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: El 'o los viernes' al final de una cadena muy larga puede confundirse: ¿viernes de junio o de todo el año? Ambigüedad de alcance.",
+   "editor: Misma estructura mecánica; clara pero larga",
+   "technical: 'el 1 de cada mes o los viernes' tras las dos franjas horarias: un lector puede dudar si los viernes están restringidos a esas horas o corren todo el día."
+  ],
+  "pattern": "0 */5 9,17 1 * 5",
+  "desc": "cada cinco minutos de las 09:00 a las 09:59 y de las 17:00 a las 17:59 el 1 de cada mes o los viernes"
+ },
+ {
+  "id": 63,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Igual que 61 y 52: 'o los viernes de junio' al final es ambiguo respecto al alcance anual.",
+   "editor: Misma estructura mecánica; clara pero larga",
+   "technical: Igual que id 61: 'el 1 de junio o los viernes de junio' tras las franjas horarias deja incierto si las horas se aplican a ambas ramas del 'o'."
+  ],
+  "pattern": "0 */5 9,17 1 6 5",
+  "desc": "cada cinco minutos de las 09:00 a las 09:59 y de las 17:00 a las 17:59 el 1 de junio o los viernes de junio"
+ },
+ {
+  "id": 72,
+  "median": 3,
+  "e": 3,
+  "d": 5,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: 'o los viernes' al final: ambigüedad de si 'los viernes' aplica solo al contexto del mes 1 o a todos los viernes del año.",
+   "technical: 'el 1 de cada mes o los viernes' sin restricción de hora adicional tras el rango 09:00-17:55: queda ambiguo si los viernes corren solo dentro de esa ventana o también fuera de ella."
+  ],
+  "pattern": "0 */5 9-17 1 * 5",
+  "desc": "cada cinco minutos de las 09:00 a las 17:55 el 1 de cada mes o los viernes"
+ },
+ {
+  "id": 74,
+  "median": 3,
+  "e": 3,
+  "d": 5,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: 'o los viernes de junio': ambigüedad de alcance anual, igual que 52 y 63.",
+   "technical: Igual que id 72: 'el 1 de junio o los viernes de junio' —un lector puede concluir que los viernes no están acotados al rango horario 09:00-17:55."
+  ],
+  "pattern": "0 */5 9-17 1 6 5",
+  "desc": "cada cinco minutos de las 09:00 a las 17:55 el 1 de junio o los viernes de junio"
+ },
+ {
+  "id": 116,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: La repetición de 'de enero' al final de cada cláusula suena redundante; difícil de leer fluidamente.",
+   "editor: 'Cada dos días del mes de enero o los domingos, martes, jueves y sábados de enero a las 00:00': la coma en la enumeración de días puede interpretarse como que la enumeración es aposición de 'de enero' en lugar de ser la segunda alternativa. Misread posible.",
+   "technical: «a las 00:00» al final puede no leerse como modificando también el primer brazo (cada dos días del mes de enero)."
+  ],
+  "pattern": "0 0 */2 1 */2",
+  "desc": "cada dos días del mes de enero o los domingos, martes, jueves y sábados de enero a las 00:00"
+ },
+ {
+  "id": 123,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: 'cada dos días del mes o los domingos, martes, jueves y sábados, de enero a marzo a las 00:00' — la coma antes de 'de enero' hace difícil saber si el rango de meses modifica todo o solo los días de semana.",
+   "editor: La secuencia de comas es inconsistente: hay coma tras 'sábados' y tras 'marzo' pero falta la coma final antes de 'a las 00:00'. La estructura es difícil de leer a primera vista.",
+   "technical: «a las 00:00» al final puede no leerse como cubriendo el primer brazo (cada dos días del mes)."
+  ],
+  "pattern": "0 0 */2 1-3 */2",
+  "desc": "cada dos días del mes o los domingos, martes, jueves y sábados, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 130,
+  "median": 3,
+  "e": 4,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Correcto y comprensible, aunque la lista de días resulta un poco larga.",
+   "editor: 'El 1 de cada mes o los domingos, martes, jueves y sábados a las 00:00': la enumeración de días de semana sin coma de cierre antes de 'a las 00:00' hace que la restricción horaria parezca aplicar solo a los días de semana enumerados, no a la primera rama ('el 1 de cada mes'). Misread posible.",
+   "technical: «a las 00:00» al final puede no leerse como cubriendo el primer brazo (el día 1 de cada mes)."
+  ],
+  "pattern": "0 0 1 * */2",
+  "desc": "el 1 de cada mes o los domingos, martes, jueves y sábados a las 00:00"
+ },
+ {
+  "id": 135,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Construcción muy larga y enredada: mezcla 'el 1 de...' con 'o los domingos, martes, jueves y sábados de...' repitiendo la lista de meses dos veces. Un lector nativo no diría esto así; la oración es casi incomprensible al primer vistazo.",
+   "editor: El listado de meses se repite íntegro en ambas ramas de la disyunción; resulta pesado pero gramaticalmente correcto.",
+   "technical: La frase es muy larga y ambigua: un lector puede dudar si los días de la semana (domingos, martes, jueves y sábados) se aplican también a los mismos meses listados, o si se trata de dos condiciones OR con alcance de mes compartido o independiente. La omisión de estructura paralela explícita genera confusión."
+  ],
+  "pattern": "0 0 1 */2 */2",
+  "desc": "el 1 de enero, marzo, mayo, julio, septiembre y noviembre o los domingos, martes, jueves y sábados de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 136,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: La construcción 'ya sea el día 1 o un domingo' es más natural que la alternativa larga de id 135, pero suena algo informal y ambigua — 'un domingo' podría leerse como cualquier domingo de cualquier mes, no solo domingos de esos meses.",
+   "editor: \"ya sea el día 1 o un domingo\" omite martes, jueves y sábados; el lector inferiría que solo aplica el domingo, no todos los días impares de la semana listados.",
+   "technical: La construcción 'ya sea el día 1 o un domingo' sólo menciona domingos, omitiendo martes, jueves y sábados del otro brazo. Si la intención es día 1 OR cualquiera de {dom, mar, jue, sáb}, la descripción es incompleta y el lector concluiría sólo domingos."
+  ],
+  "pattern": "0 0 1 */2 0",
+  "desc": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea el día 1 o un domingo"
+ },
+ {
+  "id": 137,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Igual que 135: la lista de meses se repite dos veces y la oración resulta imposible de procesar sin releerla. Muy mecánica.",
+   "editor: Listado de meses duplicado en ambas ramas; pesado pero correcto.",
+   "technical: Ambigüedad de alcance: no queda claro si 'de lunes a viernes de enero, marzo, ...' limita los laborables a esos meses además del día 1, o si es una condición OR. La longitud y la falta de puntuación dificultan identificar los dos brazos."
+  ],
+  "pattern": "0 0 1 */2 1-5",
+  "desc": "el 1 de enero, marzo, mayo, julio, septiembre y noviembre o de lunes a viernes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 214,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Acumulación de tres niveles de restricción (segundo, minuto, hora) en una sola frase; suena a un volcado mecánico de campos cron, muy difícil de procesar de forma natural.",
+   "editor: La oración acumula tres niveles de restricción (segundo, minuto, hora) seguidos de un día de la semana al final sin separación clara. Un lector puede dudar de si 'los lunes' modifica todo lo anterior o solo las horas listadas. Muy cargada; riesgo real de malinterpretación del alcance.",
+   "technical: Descripción muy compleja con tres capas (segundo, minutos específicos, horas específicas) y un modificador de día de semana al final. La relación entre 'en el segundo 30 de cada minuto' y 'en los minutos 5 y 10 de cada hora' no queda clara: ¿son condiciones independientes (OR) o anidadas? Un lector podría concluir erróneamente que solo se dispara en los segundos 30 de los minutos 5 y 10."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 * * 1",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 los lunes"
+ },
+ {
+  "id": 215,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Mismo problema que 214: tres niveles de granularidad encadenados sin estructura discursiva natural.",
+   "editor: Idéntico problema que 214: 'de lunes a viernes' al final puede parecer modificar solo las horas o la expresión completa. La longitud extrema dificulta la comprensión.",
+   "technical: Misma ambigüedad estructural que 214: la relación entre el segundo 30, los minutos 5 y 10, y las horas listadas no queda clara. La longitud y densidad generan riesgo real de malinterpretación."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 * * 1-5",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 de lunes a viernes"
+ },
+ {
+  "id": 216,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Mismo problema que 214-215; la cola 'el último viernes del mes' añade otro nivel que agrava la dificultad de lectura.",
+   "editor: Misma estructura que 214-215: 'el último viernes del mes' al final es ambiguo en cuanto a qué restringe (¿solo las horas? ¿todo el patrón?).",
+   "technical: Misma ambigüedad estructural que 214-215; la complejidad de tres niveles temporales más el modificador de fecha hace muy difícil deducir el calendario exacto."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 * * 5L",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 el último viernes del mes"
+ },
+ {
+  "id": 217,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Misma estructura acumulativa que 214-216; la lista de meses al final aumenta aún más la longitud.",
+   "editor: Misma acumulación de restricciones sin separación clara. 'en enero, abril, julio y octubre' al final puede confundirse con un modificador solo de las horas.",
+   "technical: Misma ambigüedad estructural; añade la lista de meses lo que incrementa aún más la densidad. ¿El segundo 30 aplica solo a los minutos 5 y 10, o también a cualquier minuto dentro de las horas listadas?"
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 * */3 *",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 en enero, abril, julio y octubre"
+ },
+ {
+  "id": 218,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Estructura idéntica a las anteriores; aunque 'en junio' es corto, el cuerpo sigue siendo opaco y mecánico.",
+   "editor: Misma estructura que 217. 'en junio' al final modifica toda la expresión pero sintácticamente parece solo ligado a las horas.",
+   "technical: Misma ambigüedad estructural de niveles temporales; el modificador 'en junio' al final puede confundirse con que solo se aplica a la última condición horaria."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 * 6 *",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 en junio"
+ },
+ {
+  "id": 219,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Mismo problema acumulativo; 'cada dos días del mes' al final es claro pero la combinación con segundo y minuto resulta antinatural.",
+   "editor: Misma estructura acumulativa. 'cada dos días del mes' al final es ambiguo en alcance.",
+   "technical: Misma ambigüedad estructural de tres niveles; 'cada dos días del mes' al final puede interpretarse como modificador solo de las horas o de toda la expresión."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 */2 * *",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 cada dos días del mes"
+ },
+ {
+  "id": 221,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Misma estructura; 'o los viernes' al final queda colgado de una frase ya muy larga.",
+   "editor: La disyunción 'el 1 de cada mes o los viernes' al final de una oración ya muy larga deja dudas sobre si 'los viernes' es un complemento de día independiente o solo aplica a las horas finales de la lista.",
+   "technical: La unión 'el 1 de cada mes o los viernes' al final del todo añade ambigüedad adicional: ¿la restricción de horas (09:00, 17:00…) aplica a ambos brazos, o solo al 1 de cada mes?"
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 1 * 5",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 el 1 de cada mes o los viernes"
+ },
+ {
+  "id": 223,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 2,
+  "flags": [
+   "everyday: Misma estructura acumulativa; 'o los viernes de junio' añade una bifurcación más a una frase ya difícil.",
+   "editor: Como 221, la disyunción 'el 1 de junio o los viernes de junio' al final de una cadena muy larga puede interpretarse como que 'los viernes de junio' solo modifica las últimas horas de la lista.",
+   "technical: Ídem a 222 más el 'o los viernes de junio' que introduce ambigüedad de alcance sobre cuáles restricciones de segundo/minuto/hora aplican a los viernes."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 1 6 5",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 el 1 de junio o los viernes de junio"
+ },
+ {
+  "id": 16,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: 'a las 09:00 y 17:00' es la única hora sin 'a las' repetido — la asimetría dentro del patrón general es inconsistente; además la coma antes genera leve ambigüedad",
+   "editor: «a las 09:00 y 17:00» — la segunda hora no lleva «a las»; preferible «a las 09:00 y a las 17:00» para simetría",
+   "technical: «a las 09:00 y 17:00» sin «h» de hora puede leerse como minutos 9 y 17, o bien el lector puede confundir el alcance; además falta indicar que son horas completas"
+  ],
+  "pattern": "* 0-30 9,17 * * *",
+  "desc": "cada segundo, cada minuto del 0 al 30, a las 09:00 y 17:00"
+ },
+ {
+  "id": 85,
+  "median": 3,
+  "e": 3,
+  "d": 2,
+  "t": 4,
+  "misread": 1,
+  "flags": [
+   "everyday: 'el último viernes del mes de enero, marzo, mayo...' — la cadena 'del mes de enero' suena redundante/mecánica. Un hablante diría 'el último viernes de enero, marzo...'.",
+   "editor: «el último viernes del mes de enero, marzo...» fusiona «del mes» con la lista de meses: suena como «del mes de enero» (un mes específico) en vez de «el último viernes del mes, en enero, marzo...»; confusión real de significado",
+   "technical: 'el último viernes del mes de enero, marzo...' podría interpretarse como 'el último viernes del mes [que corresponda a] enero...', que es la lectura correcta, pero la cadena nominal es larga y requiere relectura."
+  ],
+  "pattern": "0 0 * */2 5L",
+  "desc": "el último viernes del mes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 95,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 4,
+  "misread": 1,
+  "flags": [
+   "everyday: 'el último viernes del mes, de enero a marzo' suena torpe: se esperaría 'el último viernes de cada mes entre enero y marzo' o similar.",
+   "editor: Coma tras 'mes' correcta para separar el predicado del rango, pero falta coma antes de 'a las 00:00': 'el último viernes del mes, de enero a marzo a las 00:00' debería ser '…a marzo, a las 00:00'.",
+   "technical: «el último viernes del mes, de enero a marzo» puede leerse como el último viernes de cada mes dentro del rango enero-marzo, o como el último viernes del mes-de-enero-a-marzo (ambigüedad de alcance del genitivo)."
+  ],
+  "pattern": "0 0 * 1-3 5L",
+  "desc": "el último viernes del mes, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 117,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Igual que 116: 'de enero' repetido en ambas cláusulas resulta redundante y mecánico.",
+   "editor: Correcto; la disyunción está claramente expresada.",
+   "technical: Igual que id 116: ambigüedad de alcance de la hora en la unión."
+  ],
+  "pattern": "0 0 */2 1 0",
+  "desc": "cada dos días del mes de enero o los domingos de enero a las 00:00"
+ },
+ {
+  "id": 118,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Misma redundancia de 'de enero' en cada cláusula.",
+   "editor: Claro y natural.",
+   "technical: Igual que ids 116/117."
+  ],
+  "pattern": "0 0 */2 1 1-5",
+  "desc": "cada dos días del mes de enero o de lunes a viernes de enero a las 00:00"
+ },
+ {
+  "id": 119,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: 'el último viernes del mes de enero' al final es denso; la oración tiene la misma redundancia que 116-118.",
+   "editor: Repetición de 'del mes de enero' en ambas ramas de la disyunción resulta redundante: 'cada dos días del mes de enero o el último viernes del mes de enero'. Estilísticamente torpe.",
+   "technical: Igual que ids 116-118."
+  ],
+  "pattern": "0 0 */2 1 5L",
+  "desc": "cada dos días del mes de enero o el último viernes del mes de enero a las 00:00"
+ },
+ {
+  "id": 124,
+  "median": 3,
+  "e": 4,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "editor: Falta coma antes de 'a las 00:00' tras 'marzo'. Mismo patrón que ids 122-123.",
+   "technical: Igual que id 123."
+  ],
+  "pattern": "0 0 */2 1-3 0",
+  "desc": "cada dos días del mes o los domingos, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 125,
+  "median": 3,
+  "e": 4,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "editor: Falta coma antes de 'a las 00:00'. Igual que ids 122-124.",
+   "technical: Igual que ids 123/124."
+  ],
+  "pattern": "0 0 */2 1-3 1-5",
+  "desc": "cada dos días del mes o de lunes a viernes, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 126,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: 'el último viernes del mes, de enero a marzo' — la coma y la estructura son correctas pero la frase 'el último viernes del mes de enero a marzo' resultaría más fluida; suena algo cortada.",
+   "editor: Falta coma antes de 'a las 00:00'. Igual que ids 122-125.",
+   "technical: Igual que ids 123-125."
+  ],
+  "pattern": "0 0 */2 1-3 5L",
+  "desc": "cada dos días del mes o el último viernes del mes, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 133,
+  "median": 3,
+  "e": 5,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "editor: Redundancia: 'el 1 de cada mes o el último viernes del mes' — 'del mes' se repite en ambas ramas. Aceptable pero estilísticamente mejorable.",
+   "technical: Igual que ids 130-132."
+  ],
+  "pattern": "0 0 1 * 5L",
+  "desc": "el 1 de cada mes o el último viernes del mes a las 00:00"
+ },
+ {
+  "id": 142,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: 'en 2030-2032' con guion resulta técnico/escrito; en español hablado sería 'entre 2030 y 2032' o 'de 2030 a 2032'. Suena a un formato de datos, no a lenguaje natural.",
+   "editor: «en 2030-2032» es inusual en español; lo natural sería «de 2030 a 2032» o «entre 2030 y 2032».",
+   "technical: 'en 2030-2032' al final es una expresión inusual en español para referirse a un rango de años. Un lector podría interpretar '2030-2032' como una referencia a un documento o código, no a un rango temporal. Mejor: 'de 2030 a 2032'."
+  ],
+  "pattern": "0 0 1 1 * 2030-2032",
+  "desc": "el 1 de enero a las 00:00 en 2030-2032"
+ },
+ {
+  "id": 148,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Larga y con lista de días que pesa, pero la estructura con coma antes de 'de enero a marzo' ayuda. Algo mecánico pero legible.",
+   "technical: Ambigüedad de alcance: la coma antes de 'de enero a marzo' puede leerse como limitando sólo el segundo brazo (días de semana) y no el día 1 del mes. Un lector puede concluir que el día 1 de cualquier mes dispara también."
+  ],
+  "pattern": "0 0 1 1-3 */2",
+  "desc": "el 1 de cada mes o los domingos, martes, jueves y sábados, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 151,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: 'el último viernes del mes, de enero a marzo' — la frase 'del mes' es redundante con 'de enero a marzo'. Sonaría mejor 'el último viernes, de enero a marzo'.",
+   "technical: Misma ambigüedad de alcance del trimestre: la coma antes de 'de enero a marzo' puede asociarse sólo al último viernes, dejando el día 1 sin restricción mensual."
+  ],
+  "pattern": "0 0 1 1-3 5L",
+  "desc": "el 1 de cada mes o el último viernes del mes, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 158,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: La lista de meses aparece dos veces en la misma oración junto a la lista de días. Extremadamente larga y difícil de leer. Mecánica.",
+   "editor: Listado de seis meses repetido en ambas ramas; oración muy pesada aunque gramaticalmente correcta.",
+   "technical: Frase extremadamente larga con OR implícito. El alcance de meses del segundo brazo (días de semana) se repite, pero es difícil verificar si ambos brazos comparten el mismo filtro mensual o si el lector lo asociará correctamente."
+  ],
+  "pattern": "0 0 1-15 */2 */2",
+  "desc": "del 1 al 15 de enero, marzo, mayo, julio, septiembre y noviembre o los domingos, martes, jueves y sábados de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 168,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Largo por la lista de días, pero la estructura con coma al final funciona. Aceptable.",
+   "technical: La coma antes de 'de enero a marzo' crea ambigüedad: el lector puede pensar que sólo los días de semana están limitados al trimestre, no los días 1-15 del mes."
+  ],
+  "pattern": "0 0 1-15 1-3 */2",
+  "desc": "del 1 al 15 de cada mes o los domingos, martes, jueves y sábados, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 171,
+  "median": 3,
+  "e": 3,
+  "d": 4,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: 'el último viernes del mes, de enero a marzo' — 'del mes' es redundante cuando ya se acota el rango de meses.",
+   "technical: Misma ambigüedad de coma: el último viernes del mes podría parecer el único brazo limitado al trimestre."
+  ],
+  "pattern": "0 0 1-15 1-3 5L",
+  "desc": "del 1 al 15 de cada mes o el último viernes del mes, de enero a marzo a las 00:00"
+ },
+ {
+  "id": 191,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 4,
+  "misread": 1,
+  "flags": [
+   "everyday: Frase muy larga; la lista de meses se repite en ambas partes del 'o', suena mecánico y resulta difícil de seguir.",
+   "editor: Oración extremadamente larga con dos listas de meses idénticas. Muy difícil de procesar, aunque es técnicamente correcta. El peso del registro formal acerca al lenguaje máquina-traducido.",
+   "technical: Descripción muy larga con 'o'; el lector puede perder si el mes (enero, marzo…) aplica también al brazo de los días de semana — aunque aquí está explícitamente repetido, la densidad sintáctica genera riesgo de salto visual."
+  ],
+  "pattern": "0 0 L */2 */2",
+  "desc": "el último día del mes de enero, marzo, mayo, julio, septiembre y noviembre o los domingos, martes, jueves y sábados de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 220,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Idéntica estructura opaca a 214-219.",
+   "editor: 'el 1 de cada mes' es complemento de fecha claro, pero la cadena de tres niveles (segundo → minuto → hora) seguida de fecha es muy densa y de lectura difícil, aunque técnicamente no induce un error de fecha.",
+   "technical: Misma ambigüedad estructural; 'el 1 de cada mes' al final aplica teóricamente a toda la expresión pero la densidad del inicio (segundo 30, minutos 5 y 10, horas…) hace que el lector pierda el hilo."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 1 * *",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 el 1 de cada mes"
+ },
+ {
+  "id": 222,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Idéntica a las anteriores; aunque el contexto temporal final es breve, el bloque de restricciones sigue siendo mecánico.",
+   "editor: Extremadamente larga pero 'el 1 de junio' es suficientemente específico para anclar la fecha. Correcto aunque muy denso.",
+   "technical: Misma ambigüedad de estructura compleja de tres niveles; 'el 1 de junio' al final no aclara si modifica toda la expresión temporal o solo la última hora listada."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 1 6 *",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 el 1 de junio"
+ },
+ {
+  "id": 224,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 1,
+  "flags": [
+   "everyday: Idéntica estructura a 214-223; 'el último día del mes' al final no mejora la legibilidad del conjunto.",
+   "editor: Misma estructura muy densa que 220/222. 'el último día del mes' es claro como fecha, pero la oración entera es difícil de procesar de un vistazo.",
+   "technical: Misma ambigüedad estructural de tres niveles temporales; 'el último día del mes' al final puede leerse como que modifica solo las horas listadas o toda la expresión compuesta."
+  ],
+  "pattern": "30 5,10 9,17,19,21,23 L * *",
+  "desc": "en el segundo 30 de cada minuto, en los minutos 5 y 10 de cada hora, a las 09:00, a las 17:00, a las 19:00, a las 21:00 y a las 23:00 el último día del mes"
+ },
+ {
+  "id": 4,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: 'durante las horas de las 9, 11, 13, 15 y 17' es artificioso; natural sería 'a las 9, 11, 13, 15 y 17 horas' o 'a las 9 h, 11 h...'",
+   "editor: «durante las horas de las 9, 11…» — doble artículo («las horas de las»); mejor «a las 9, 11, 13, 15 y 17 h» o «en las horas 9, 11, 13, 15 y 17»",
+   "technical: \"durante las horas de las 9, 11…\" es levemente redundante («horas de las»); podría ser «a las 9, 11, 13, 15 y 17 h»"
+  ],
+  "pattern": "* * 9-17/2 * * *",
+  "desc": "cada segundo, cada minuto, durante las horas de las 9, 11, 13, 15 y 17"
+ },
+ {
+  "id": 8,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: 'durante las horas de las 9, 11, 13, 15 y 17' suena muy forzado; mismo problema que id 4",
+   "editor: «durante las horas de las 9, 11…» — construcción con doble artículo; mismo defecto que id 4",
+   "technical: Misma observación de redundancia en «horas de las 9…» que en id 4"
+  ],
+  "pattern": "* */2 9-17/2 * * *",
+  "desc": "cada segundo, cada dos minutos, durante las horas de las 9, 11, 13, 15 y 17"
+ },
+ {
+  "id": 12,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: Muy largo y repetitivo: 'a las 09:00, a las 11:00, a las 13:00...' con 'a las' repetido en cada hora; un humano usaría '...a las 9, 11, 13, 15, 17, 19 y 21 horas'",
+   "editor: Enumeración muy larga con «a las» repetido siete veces; legible pero cansada. Podría condensarse",
+   "technical: Lista larga de horas pero clara; la repetición de «a las» es levemente pesada pero sin ambigüedad"
+  ],
+  "pattern": "* 0 9,11,13,15,17,19,21 * * *",
+  "desc": "cada segundo, todos los días a las 09:00, a las 11:00, a las 13:00, a las 15:00, a las 17:00, a las 19:00 y a las 21:00"
+ },
+ {
+  "id": 20,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: Enumeración exhaustiva de horas pares con 'a las' repetido 12 veces; muy mecánico y casi ilegible",
+   "editor: La lista de horas pares completa (00:00 a 22:00) hace la frase excesivamente larga; internamente correcta pero pesada en registro escrito",
+   "technical: Lista de horas muy larga; correcto pero pesado de leer"
+  ],
+  "pattern": "* 5,30 */2 * * *",
+  "desc": "cada segundo, en los minutos 5 y 30 de cada hora, a las 00:00, a las 02:00, a las 04:00, a las 06:00, a las 08:00, a las 10:00, a las 12:00, a las 14:00, a las 16:00, a las 18:00, a las 20:00 y a las 22:00"
+ },
+ {
+  "id": 27,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: 'durante las horas de las 9, 11, 13, 15 y 17' sigue siendo forzado; más natural: 'a las 9, 11, 13, 15 y 17'",
+   "editor: «durante las horas de las 9, 11…» — doble artículo, construcción rara; igual que ids 4 y 8",
+   "technical: Misma nota de redundancia «horas de las 9…» que en id 4"
+  ],
+  "pattern": "0 * 9-17/2 * * *",
+  "desc": "cada minuto, durante las horas de las 9, 11, 13, 15 y 17"
+ },
+ {
+  "id": 31,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: 'durante las horas de las 9, 11, 13, 15 y 17' — mismo problema que id 27",
+   "editor: «durante las horas de las 9, 11…» — doble artículo; igual que ids 4, 8, 27"
+  ],
+  "pattern": "0 */2 9-17/2 * * *",
+  "desc": "cada dos minutos, durante las horas de las 9, 11, 13, 15 y 17"
+ },
+ {
+  "id": 138,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 0,
+  "flags": [
+   "everyday: Muy larga y repetitiva: la lista de seis meses aparece dos veces en la misma oración. Nadie lo diría así en español natural.",
+   "editor: Listado de meses duplicado; además «el último viernes del mes de enero, marzo…» resulta algo forzado aunque inteligible.",
+   "technical: Frase muy larga pero la estructura OR es deducible. El alcance de meses se repite explícitamente en ambos brazos, lo que es correcto aunque verboso."
+  ],
+  "pattern": "0 0 1 */2 5L",
+  "desc": "el 1 de enero, marzo, mayo, julio, septiembre y noviembre o el último viernes del mes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 146,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: 'el último viernes del mes de enero' — la frase 'del mes de enero' es redundante (si ya es enero, es ese mes). Sonaría mejor 'el último viernes de enero'.",
+   "editor: «el último viernes del mes de enero» es redundante: «del mes» sobra cuando ya se dice «de enero»; mejor «el último viernes de enero».",
+   "technical: Clara y correcta."
+  ],
+  "pattern": "0 0 1 1 5L",
+  "desc": "el 1 de enero o el último viernes del mes de enero a las 00:00"
+ },
+ {
+  "id": 159,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 0,
+  "flags": [
+   "everyday: Igual que 158: lista de meses repetida dos veces. Muy difícil de procesar en una sola lectura.",
+   "editor: Listado de meses duplicado en ambas ramas; pesado pero correcto.",
+   "technical: Muy largo pero con estructura paralela: los meses se repiten en ambos brazos. Comprensible con esfuerzo; baja naturalidad por densidad."
+  ],
+  "pattern": "0 0 1-15 */2 0",
+  "desc": "del 1 al 15 de enero, marzo, mayo, julio, septiembre y noviembre o los domingos de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 160,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 0,
+  "flags": [
+   "everyday: La lista de meses se repite dos veces. Nadie hablaría así. Muy mecánico y tedioso de leer.",
+   "editor: Listado de meses duplicado en ambas ramas; pesado pero correcto.",
+   "technical: Muy largo pero paralelo. Laborables + meses repetidos en ambos brazos; comprensible aunque fatigante."
+  ],
+  "pattern": "0 0 1-15 */2 1-5",
+  "desc": "del 1 al 15 de enero, marzo, mayo, julio, septiembre y noviembre o de lunes a viernes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 161,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 3,
+  "misread": 0,
+  "flags": [
+   "everyday: La lista de meses se repite dos veces. Muy largo y mecánico.",
+   "editor: Listado de meses duplicado y «el último viernes del mes de enero, marzo…» resulta forzado; redundancia de «del mes» ante la lista de meses nombrados.",
+   "technical: Muy largo. La repetición de la lista de meses en ambos brazos es verbosa pero precisa."
+  ],
+  "pattern": "0 0 1-15 */2 5L",
+  "desc": "del 1 al 15 de enero, marzo, mayo, julio, septiembre y noviembre o el último viernes del mes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 166,
+  "median": 3,
+  "e": 3,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: 'el último viernes del mes de enero' — 'del mes de enero' es redundante; sería más natural 'el último viernes de enero'.",
+   "editor: «el último viernes del mes de enero» es redundante: «del mes» sobra cuando ya se dice «de enero»; mejor «el último viernes de enero».",
+   "technical: Clara y correcta."
+  ],
+  "pattern": "0 0 1-15 1 5L",
+  "desc": "del 1 al 15 de enero o el último viernes del mes de enero a las 00:00"
+ },
+ {
+  "id": 192,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: Lista de meses repetida en ambas ramas; muy pesada para leerla de corrido, suena a volcado de datos.",
+   "editor: Misma cadena doble de meses que 191. Correcto pero artificialmente pesado.",
+   "technical: Naturalmente correcto pero muy denso; la repetición de la lista de meses en cada brazo resulta pesada aunque no ambigua."
+  ],
+  "pattern": "0 0 L */2 0",
+  "desc": "el último día del mes de enero, marzo, mayo, julio, septiembre y noviembre o los domingos de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 193,
+  "median": 3,
+  "e": 2,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: La lista de seis meses aparece dos veces completa; un hablante nativo nunca expresaría esto así. Muy mecánico.",
+   "editor: Misma estructura de doble lista de meses; muy cargada. Correcto gramaticalmente.",
+   "technical: Ídem al 192: correcto pero la doble repetición de meses hace la lectura engorrosa."
+  ],
+  "pattern": "0 0 L */2 1-5",
+  "desc": "el último día del mes de enero, marzo, mayo, julio, septiembre y noviembre o de lunes a viernes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ },
+ {
+  "id": 194,
+  "median": 3,
+  "e": 1,
+  "d": 3,
+  "t": 4,
+  "misread": 0,
+  "flags": [
+   "everyday: Extremadamente verboso: la lista de meses se duplica y los dos 'último' (día y viernes) se yuxtaponen; casi incomprensible de un vistazo.",
+   "editor: La cadena '…o el último viernes del mes de enero, marzo, mayo, julio, septiembre y noviembre' repite los meses por segunda vez; cognitivamente pesado aunque gramaticalmente válido.",
+   "technical: Muy denso por la doble repetición de la lista de meses, pero no genera ambigüedad real."
+  ],
+  "pattern": "0 0 L */2 5L",
+  "desc": "el último día del mes de enero, marzo, mayo, julio, septiembre y noviembre o el último viernes del mes de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+ }
+]

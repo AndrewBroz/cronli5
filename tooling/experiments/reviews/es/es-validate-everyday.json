@@ -1,0 +1,50 @@
+[
+  {
+    "id": "B",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "The list mixes 'a las' and 'a la' inconsistently (01:00 uses singular 'a la', fine) but the bigger problem is that '00:00' appears between '23:00' and '01:00', making it easy to read the tail '00:00, a la 01:00 y a las 02:00' as a range or as midnight-adjacent times only; the opening 'todos los días' disappears from view by the end of a long list. More naturally: 'todos los días a las 12:00, 22:00, 23:00, 00:00, 01:00 y 02:00' (drop the repeated prepositions mid-list). Naturalness hurt by the mixed 'a la'/'a las' and the inconsistent preposition repetition."
+  },
+  {
+    "id": "C",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "D",
+    "naturalness": 4,
+    "misread": true,
+    "flag": "'y también a las 22:00' is natural, but a reader could parse 'de las 09:00 a las 20:00 y también a las 22:00' as the range extending to 22:00 (i.e. 09:00–22:00 with 21:00 somehow implicit), rather than grasping that 21:00 is explicitly excluded. The exclusion of 21:00 is invisible and the phrasing gives no signal that the gap is intentional."
+  },
+  {
+    "id": "E",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "The comma placement makes scoping ambiguous. 'en diciembre, el 31 o los viernes, a las 23:59' can be read as: (a) December scopes only 'el 31', leaving 'los viernes' year-round; or (b) 'a las 23:59' scopes only 'los viernes' (not el 31). A reader has to work to confirm all three constraints apply to both arms. More explicit: 'en diciembre, a las 23:59, el día 31 o los viernes'. Naturalness is also mildly hurt by the flat comma list with no bracketing cue."
+  },
+  {
+    "id": "F1",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "F2",
+    "naturalness": 4,
+    "misread": false,
+    "flag": "Slightly dense but parseable; 'cada 15 segundos' at the end clearly modifies the whole schedule."
+  },
+  {
+    "id": "F3",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'del minuto 0 al 30 de las 09:00, 17:00, 18:00 y 19:00' — the prepositional phrase 'de las …' can attach to '30' (i.e. 'minute 30 of 09:00') rather than to the whole range. A natural reader could parse it as 'from minute 0 to [minute 30 of 09:00, 17:00, 18:00 and 19:00]' — nonsensical but the surface grammar allows it. Better: 'cada minuto del 0 al 30, solo durante las 09:00, 17:00, 18:00 y 19:00'."
+  },
+  {
+    "id": "F4",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "'dentro de cada dos horas' is not idiomatic Spanish for 'every two hours' (that would be 'cada dos horas'). 'Dentro de' means 'within/inside', so the phrase reads as 'within every two-hour period', which is vague about where in that period the minutes 0–30 fire. A fluent speaker would write 'cada minuto del 0 al 30, cada dos horas'."
+  }
+]

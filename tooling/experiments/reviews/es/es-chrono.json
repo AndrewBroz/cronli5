@@ -1,0 +1,7 @@
+[
+ {"id":"c1","meaning":"2 in the morning (02:00), 2 in the afternoon (14:00), 6 in the afternoon (18:00). Group by part of day, in chronological order.","candidates":["a las 2 de la madrugada, y a las 2 y 6 de la tarde","a las 2 de la madrugada y 2 y 6 de la tarde"]},
+ {"id":"c2","meaning":"2 and 3 in the morning (02:00, 03:00), 3 and 6 in the afternoon (15:00, 18:00). Group by part of day, chronological.","candidates":["a las 2 y 3 de la madrugada, y a las 3 y 6 de la tarde","a las 2 y 3 de la madrugada, y 3 y 6 de la tarde"]},
+ {"id":"c3","meaning":"1 in the morning (01:00), 9 in the morning (09:00), 1 in the afternoon (13:00). Chronological order — do NOT reorder to group the two 1-o'clocks.","candidates":["a la 1 de la madrugada, a las 9 de la mañana y a la 1 de la tarde","a la 1 de la madrugada y de la tarde, y a las 9 de la mañana"]},
+ {"id":"c4","meaning":"9 in the morning (09:00), 3 in the afternoon (15:00), 9 at night (21:00). Chronological.","candidates":["a las 9 de la mañana, 3 de la tarde y 9 de la noche","a las 9 de la mañana, a las 3 de la tarde y a las 9 de la noche"]},
+ {"id":"c5","meaning":"1 in the morning (01:00) and 1 in the afternoon (13:00) — consecutive, same value, different periods.","candidates":["a la 1 de la madrugada y de la tarde","a la 1 de la madrugada y a la 1 de la tarde"]}
+]

@@ -1,0 +1,134 @@
+{
+  "1": {
+    "pattern": "* * * * *",
+    "A": "cronli5",
+    "aText": "every minute",
+    "bText": "Every minute"
+  },
+  "2": {
+    "pattern": "*/5 * * * *",
+    "A": "cronli5",
+    "aText": "every five minutes",
+    "bText": "Every 5 minutes"
+  },
+  "3": {
+    "pattern": "0 12 * * *",
+    "A": "cronli5",
+    "aText": "every day at noon",
+    "bText": "At 12:00 PM"
+  },
+  "4": {
+    "pattern": "30 9 * * MON-FRI",
+    "A": "cronli5",
+    "aText": "every Monday through Friday at 9:30 a.m.",
+    "bText": "At 09:30 AM, Monday through Friday"
+  },
+  "5": {
+    "pattern": "0 9,17 * * *",
+    "A": "cronstrue",
+    "aText": "At 09:00 AM and 05:00 PM",
+    "bText": "every day at 9 a.m. and 5 p.m."
+  },
+  "6": {
+    "pattern": "0 9-17 * * *",
+    "A": "cronstrue",
+    "aText": "Every hour, between 09:00 AM and 05:00 PM",
+    "bText": "every hour from 9 a.m. through 5 p.m."
+  },
+  "7": {
+    "pattern": "0-29 * * * *",
+    "A": "cronli5",
+    "aText": "every minute from zero through 29 past the hour",
+    "bText": "Minutes 0 through 29 past the hour"
+  },
+  "8": {
+    "pattern": "0 0 1,15 * *",
+    "A": "cronstrue",
+    "aText": "At 12:00 AM, on day 1 and 15 of the month",
+    "bText": "on the 1st and 15th at midnight"
+  },
+  "9": {
+    "pattern": "0 12 1 1 *",
+    "A": "cronli5",
+    "aText": "on January 1 at noon",
+    "bText": "At 12:00 PM, on day 1 of the month, only in January"
+  },
+  "10": {
+    "pattern": "@daily",
+    "A": "cronli5",
+    "aText": "every day at midnight",
+    "bText": "At 12:00 AM"
+  },
+  "11": {
+    "pattern": "0 22-2 * * *",
+    "A": "cronli5",
+    "aText": "every hour from 10 p.m. through 2 a.m.",
+    "bText": "Every hour, between 10:00 PM and 02:00 AM"
+  },
+  "12": {
+    "pattern": "0 0 * * 5L",
+    "A": "cronli5",
+    "aText": "on the last Friday of the month at midnight",
+    "bText": "At 12:00 AM, on the last Friday of the month"
+  },
+  "13": {
+    "pattern": "15 30 9 * * MON",
+    "A": "cronstrue",
+    "aText": "At 09:30:15 AM, only on Monday",
+    "bText": "every Monday at 9:30:15 a.m."
+  },
+  "14": {
+    "pattern": "*/15 9-17 * * MON-FRI",
+    "A": "cronli5",
+    "aText": "every 15 minutes from 9 a.m. through 5:45 p.m. on Monday through Friday",
+    "bText": "Every 15 minutes, between 09:00 AM and 05:59 PM, Monday through Friday"
+  },
+  "15": {
+    "pattern": "0 9,12,17 * * MON-FRI",
+    "A": "cronstrue",
+    "aText": "At 09:00 AM, 12:00 PM and 05:00 PM, Monday through Friday",
+    "bText": "every Monday through Friday at 9 a.m., noon, and 5 p.m."
+  },
+  "16": {
+    "pattern": "0 0 29 2 *",
+    "A": "cronli5",
+    "aText": "on February 29 at midnight",
+    "bText": "At 12:00 AM, on day 29 of the month, only in February"
+  },
+  "17": {
+    "pattern": "5,10 30 9 * * MON",
+    "A": "cronli5",
+    "aText": "at five and ten seconds past the minute, every Monday at 9:30 a.m.",
+    "bText": "At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday"
+  },
+  "18": {
+    "pattern": "0 0 * * 1-5,0",
+    "A": "cronstrue",
+    "aText": "At 12:00 AM, only on Monday through Friday and Sunday",
+    "bText": "every Sunday and Monday through Friday at midnight"
+  },
+  "19": {
+    "pattern": "0 9-20,22 * * *",
+    "A": "cronstrue",
+    "aText": "Every hour, at 09:00 AM through 08:00 PM and 10:00 PM",
+    "bText": "every day at 9 a.m. through 8 p.m. and 10 p.m."
+  },
+  "20": {
+    "pattern": "59 23 31 12 5",
+    "A": "cronli5",
+    "aText": "on December 31 or on Friday in December at 11:59 p.m.",
+    "bText": "At 11:59 PM, on day 31 of the month, and on Friday, only in December"
+  },
+  "21": {
+    "pattern": "30 9 15W 6 *",
+    "A": "cronstrue",
+    "aText": "At 09:30 AM, on the weekday nearest day 15 of the month, only in June",
+    "bText": "on the weekday nearest the 15th in June at 9:30 a.m."
+  },
+  "22": {
+    "pattern": "1/1 * * * *",
+    "A": "cronstrue",
+    "aText": "Every 1 minutes, starting at 1 minutes past the hour",
+    "bText": "every minute from one through 59 past the hour"
+  }
+}

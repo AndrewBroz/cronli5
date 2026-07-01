@@ -1,0 +1,156 @@
+[
+ {
+  "n": 1,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 2,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 3,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 4,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 5,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 6,
+  "correct": true,
+  "natural": 2,
+  "verdict": "revise",
+  "suggestion": "On the weekday nearest the 15th, from 9 a.m. until 9 p.m. plus 10 p.m., every 15 minutes from 5 minutes past the hour, and within each of those minutes, every second from :00 through :10."
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 8,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 9,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 10,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 11,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 13,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 14,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 15,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 16,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 17,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 18,
+  "correct": true,
+  "natural": 3,
+  "verdict": "revise",
+  "suggestion": "every second of the first minute of the midnight hour"
+ },
+ {
+  "n": 19,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 20,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 21,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 22,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ }
+]

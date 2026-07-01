@@ -1,0 +1,287 @@
+[
+  {
+    "pattern": "*/15 */2 * * *",
+    "meaning": "every 15 minutes during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "alle 15 Minuten in jeder zweiten Stunde"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Alle 15 Minuten, alle 2 Stunden"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Alle 15 Minuten in jeder zweiten Stunde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Alle 15 Minuten in jeder zweiten Stunde."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate translation."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Ambiguous; it sounds like two separate schedules rather than one occurring within the other."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; capitalization/punctuation are ignored per instructions."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; capitalization/punctuation are ignored per instructions."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "* */2 * * *",
+    "meaning": "every minute during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "jede Minute in jeder zweiten Stunde"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "jede Minute in jeder zweiten Stunde"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Jede Minute, alle 2 Stunden"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Jede Minute in jeder zweiten Stunde."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "perfectly natural and accurate"
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "identical to A"
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "slightly more colloquial, but 'alle 2 Stunden' can be ambiguous (every 2 hours vs every second hour)"
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "accurate, but contains a period which was noted as not to be penalized"
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "*/15 */3 * * *",
+    "meaning": "every 15 minutes during every third hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Alle 15 Minuten, alle 3 Stunden"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "alle 15 Minuten in jeder dritten Stunde"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Alle 15 Minuten jede dritte Stunde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Alle 15 Minuten in jeder dritten Stunde."
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": false,
+          "note": "Ambiguous; sounds like 'every 15 minutes AND every 3 hours' rather than one happening within the other."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and precise translation of the English meaning."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Grammatically correct, though slightly more clipped than B."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to B; perfectly natural."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "*/20 9-17/2 * * *",
+    "meaning": "every 20 minutes during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "alle 20 Minuten in den Stunden von 9, 11, 13, 15 und 17 Uhr"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Alle 20 Minuten, alle 2 Stunden, zwischen 09:00 und 17:59"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Alle 20 Minuten in den Stunden von 9, 11, 13, 15 und 17 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Alle 20 Minuten in den Stunden von 9, 11, 13, 15 und 17 Uhr."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly matches the meaning and feels natural as a fragment."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect. This describes a continuous range from 9 to 18, not disjoint hours."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly correct."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly correct."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "* */5 * * *",
+    "meaning": "every minute during the 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jede Minute während der Stunden um 0, 5, 10, 15 und 20 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Jede Minute, alle 5 Stunden"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jede Minute in den Stunden von 00, 05, 10, 15 und 20 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "jede Minute in den Stunden von 0, 5, 10, 15 und 20 Uhr"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Understandable, but 'Stunden um X Uhr' is slightly ambiguous (could mean 'around' the hour)."
+        },
+        "B": {
+          "natural": 5,
+          "correct": false,
+          "note": "Incorrect. This describes an interval of every 5 hours, not specific clock hours."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and clear. Using '00' is common for the midnight hour."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and natural; virtually identical to C."
+        },
+        "best": "D"
+      }
+    ]
+  }
+]

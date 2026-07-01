@@ -1,0 +1,98 @@
+[
+  {
+    "cluster": 1,
+    "subcase": null,
+    "pick": "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä",
+    "rank": [
+      "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä",
+      "tammikuussa 1. päivänä tai maanantaisin keskiyöllä",
+      "tammikuun 1. päivänä tai tammikuun maanantaisin keskiyöllä",
+      "tammikuun 1. päivänä tai maanantaisin tammikuussa keskiyöllä"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Front-scoping 'tammikuussa' makes the month restriction unambiguously apply to both conditions. The 'joko...tai' construction makes the OR explicit and is natural everyday Finnish. The double-tammikuun variants are redundant and awkward; the last candidate buries 'tammikuussa' mid-phrase between 'maanantaisin' and 'keskiyöllä', which breaks the rhythm and risks the reader missing the month scope."
+  },
+  {
+    "cluster": 2,
+    "subcase": null,
+    "pick": "kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin",
+    "rank": [
+      "kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin",
+      "kesäkuussa 1.–5. päivänä tai maanantaista perjantaihin",
+      "kesäkuun 1.–5. päivänä tai kesäkuun maanantaista perjantaihin",
+      "kesäkuun 1.–5. päivänä tai maanantaista perjantaihin kesäkuussa"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Same pattern as cluster 1: 'kesäkuussa' at the front scopes both conditions cleanly and is how a Finnish speaker naturally frames a month-restricted choice. The 'joko...tai' makes the OR unambiguous. The last candidate puts 'kesäkuussa' after the weekday range, which looks as if the month restriction only applies to the weekday half — a genuine misreading risk."
+  },
+  {
+    "cluster": 3,
+    "subcase": null,
+    "pick": "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin",
+    "rank": [
+      "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin",
+      "tammikuussa ja heinäkuussa 1. päivänä tai maanantaisin",
+      "tammikuun ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa",
+      "tammikuun 1. ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Front-scoping both months with 'tammikuussa ja heinäkuussa' and then using 'joko...tai' produces the clearest reading. The two candidates that repeat the month names at the end are grammatically valid but sound machine-generated and exhausting to read; a real Finnish person would not double-state the months. 'Tammikuussa ja heinäkuussa 1. päivänä tai maanantaisin' also works but the plain 'tai' leaves the OR-scope slightly more ambiguous than 'joko...tai'."
+  },
+  {
+    "cluster": 4,
+    "subcase": null,
+    "pick": "15 minuutin välein, 5 ja 30 sekunnin kohdalla",
+    "rank": [
+      "15 minuutin välein, 5 ja 30 sekunnin kohdalla",
+      "5 ja 30 sekunnin kohdalla, 15 minuutin välein",
+      "15 minuutin välein 5 ja 30 sekunnin kohdalla",
+      "joka 15. minuutti 5 ja 30 sekunnin kohdalla"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "The comma after '15 minuutin välein' creates a natural pause that separates the cadence level from the within-firing detail, matching how a Finnish speaker would naturally layer two different time granularities. 'Joka 15. minuutti' is disqualified — it reads as 'the 15th minute' (a specific minute) rather than 'every 15 minutes', a comprehension error. The no-comma version is clear but the two clauses run together awkwardly."
+  },
+  {
+    "cluster": 5,
+    "subcase": "5a",
+    "pick": "klo 0, 5, 10, 15 ja 20",
+    "rank": [
+      "klo 0, 5, 10, 15 ja 20",
+      "tunteina 0, 5, 10, 15 ja 20",
+      "klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59"
+    ],
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Since the minute detail is described elsewhere, listing bare clock hours as 'klo 0, 5, 10, 15 ja 20' is standard and immediately clear to any Finnish reader. The full range notation (0.00–0.59 etc.) is redundant bloat given the separate minute description. 'Tunteina' is grammatically correct but sounds bureaucratic and is not how Finnish people actually refer to clock hours in everyday language."
+  },
+  {
+    "cluster": 5,
+    "subcase": "5b",
+    "pick": "klo 9–20 ja 22",
+    "rank": [
+      "klo 9–20 ja 22",
+      "klo 9–20 ja lisäksi 22",
+      "klo 9–20 sekä 22"
+    ],
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "All three candidates are clear, but 'klo 9–20 ja 22' is the most natural and concise everyday Finnish — a real person writes it exactly this way. 'Ja lisäksi 22' over-explains the isolation of 22 o'clock in a way that feels slightly pedantic, though it is the clearest structurally. 'Sekä' is more formal/literary register than needed here."
+  },
+  {
+    "cluster": 6,
+    "subcase": null,
+    "pick": "klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla",
+    "rank": [
+      "klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla",
+      "0–30 minuutin kohdalla, klo 9, 11, 13, 15 ja 17",
+      "klo 9, 11, 13, 15 ja 17, minuutteina 0–30",
+      "0–30 minuutin kohdalla klo 9, 11, 13, 15 ja 17"
+    ],
+    "proposed": null,
+    "confidence": 3,
+    "reasoning": "The 'aina' (always/each time) in the winning candidate gives the minute clause a natural subordinate feel — 'at 9, 11, 13, 15 and 17 o'clock, every time at minutes 0–30' — and clearly layers the two time levels without ambiguity. The minutes-first variants work but feel inverted; a Finnish reader expects the coarser anchor (the hour) first and the within-hour detail second. 'Minuutteina 0–30' is acceptable shorthand but the dash range without context looks slightly bare. Confidence is 3 because 'aina' may sound slightly redundant to some readers — a proposed alternative without it is also natural."
+  }
+]

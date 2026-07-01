@@ -1,0 +1,66 @@
+[
+  {
+    "id": "S1",
+    "pick": "en enero a las 00:00, ya sea el día 1 o cualquier domingo",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 1 ('un domingo') reads as 'one specific Sunday', which could suggest a single occurrence. Candidate 2 ('los domingos') is natural but could be read as 'all Sundays' in a general/habitual sense that downplays the inclusive-OR semantics. Candidate 3 ('cualquier domingo') is unambiguous: it signals that any Sunday satisfies the condition, which maps cleanly onto inclusive OR. It's also completely natural in spoken Spanish."
+  },
+  {
+    "id": "W1",
+    "pick": "a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 2 front-loads the day conditions and appends 'a las 00:00' at the end, making it harder to parse because the time feels like it only modifies the last day-of-week arm. Candidate 1 leads with the time, then introduces the OR, so 'a las 00:00' clearly governs both arms. The structure 'a las 00:00, ya sea X o Y' is the idiomatic template used throughout this set and reads most naturally."
+  },
+  {
+    "id": "M1",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 2 repeats the month list on both arms, which directly violates the stated constraint (month list must appear once). Candidate 1 states the months once, then the time, then the OR—so both the month restriction and the time unambiguously govern both arms. It's concise and natural."
+  },
+  {
+    "id": "WM1",
+    "pick": "cada cinco minutos, durante las horas pares, ya sea el 1 de cada mes o los viernes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 ('el día 1 del mes') is fine but slightly wordy. Candidate 3 ('los días 1') uses a plural that is technically defensible (each month has a 1st) but can sound odd to everyday speakers. Candidate 2 ('el 1 de cada mes') is the most natural everyday phrasing for 'the 1st of each month' and pairs cleanly with 'o los viernes'. All three keep 'durante las horas pares' as a shared modifier, which is correct."
+  },
+  {
+    "id": "R1",
+    "pick": "de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Both candidates are clear. Candidate 1 ('del 1 al 15') without 'del mes' is slightly ambiguous in isolation—it could be read as days 1–15 of the year or of some unspecified period. Candidate 2 adds 'del mes', which anchors the range to days-of-month and matches the meaning precisely. The added two words are worth it for clarity."
+  },
+  {
+    "id": "DR1",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o de lunes a viernes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Single candidate. The structure is consistent with the rest of the set: months once, time once, then 'ya sea X o Y'. 'De lunes a viernes' is the standard everyday phrase for Monday–Friday and is unambiguous. No issues."
+  },
+  {
+    "id": "QL",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea el último día del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Single candidate. 'El último día del mes' is the natural, unambiguous phrase for the last day of the month. The overall structure is correct and consistent. No issues."
+  },
+  {
+    "id": "Q5L",
+    "pick": "a las 00:00, ya sea el 1 de cada mes o el último viernes del mes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 ('el día 1 del mes') is grammatically fine but slightly more formal/wordy. Candidate 2 ('el 1 de cada mes') is the more natural everyday phrasing and subtly reinforces the 'no month restriction' aspect by implying it recurs each month. 'El último viernes del mes' is clear and idiomatic on both candidates; no difference there. Candidate 2 wins on naturalness."
+  }
+]

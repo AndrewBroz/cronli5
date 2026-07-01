@@ -1,0 +1,86 @@
+[
+ {
+  "n": 1,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 2,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 3,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "reads_as_union": true,
+  "correct": false,
+  "natural": 2,
+  "issue": "\"每2天\"错误表达 */2(月内日)。*/2 是月内单数日 1,3,5,…,31，每月重置；\"每2天\"会被读成连续48小时一次、跨月不重置的固定周期，含义错误且不可还原。建议改为\"每月单数日\"(或\"每月1、3、5…日\")。整条建议：\"每月单数日或周二、四、六、日，凌晨0点\"。星期部分(周二、四、六、日)正确。"
+ },
+ {
+  "n": 5,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": "并集清楚、正确。小瑕疵：相对 n1 的\"每\"，本条无重复标记，\"本月\"靠语境读作\"每月\"，略欠反复感。可保留；若求一致，可作\"每月最后一天或每月最后一个周五\"。"
+ },
+ {
+  "n": 7,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": "并集清楚。小瑕疵：\"本月最后一天\"(无每)与\"每周日\"(有每)语体不一致，略不齐整。可作\"每月最后一天或每周日\"。"
+ },
+ {
+  "n": 8,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": "并集清楚、正确(月已限定为1月，故\"1日\"即1月1日)。略简：\"1月，1日或每周日\"中\"1日\"无\"每月\"标记，但因月份限定不致误解。可读性可微调为\"仅1月，逢1日或每周日\"。"
+ },
+ {
+  "n": 9,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": "并集清楚、正确。\"最后一个周五\"落在1-3月各月，表达可。轻微：与n3相比省了\"本月\"，靠语境补足，可保留。"
+ },
+ {
+  "n": 10,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 12,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 2,
+  "issue": "语序笨拙、易误读。\"6月，1日或每周五在9点至17点之间，每小时\"把日子条件埋在句中，\"每周五在9点至17点之间\"易被误读为\"只有周五才限定到9-17点\"，让人以为星期受时间限制(而非并集中的一支)。建议把时间与日子分离：\"6月，每月1日或每周五，9点至17点之间每小时一次\"。"
+ }
+]

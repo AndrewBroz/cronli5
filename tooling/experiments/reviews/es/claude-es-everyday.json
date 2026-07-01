@@ -1,0 +1,240 @@
+{
+  "* * * * *": {
+    "A": {"natural": 5, "correct": true, "note": "perfecto y natural"},
+    "B": {"natural": 5, "correct": true, "note": "igual de natural"},
+    "C": {"natural": 5, "correct": true, "note": "natural, minuscula"},
+    "D": {"natural": 5, "correct": true, "note": "igual"},
+    "best": "C"
+  },
+  "*/5 * * * *": {
+    "A": {"natural": 5, "correct": true, "note": "natural en letras"},
+    "B": {"natural": 5, "correct": true, "note": "natural en letras"},
+    "C": {"natural": 4, "correct": true, "note": "con cifra, tambien claro"},
+    "D": {"natural": 5, "correct": true, "note": "natural"},
+    "best": "B"
+  },
+  "0 12 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "12:00 es mediodia, correcto pero menos natural que 'mediodia'"},
+    "B": {"natural": 2, "correct": false, "note": "le falta 'todos los dias', no transmite la repeticion diaria"},
+    "C": {"natural": 5, "correct": true, "note": "'al mediodia' es lo mas natural y exacto"},
+    "D": {"natural": 5, "correct": true, "note": "'a mediodia' tambien natural y correcto"},
+    "best": "C"
+  },
+  "30 9 * * MON-FRI": {
+    "A": {"natural": 5, "correct": true, "note": "muy natural con a.m."},
+    "B": {"natural": 4, "correct": true, "note": "correcto pero formato 24h con coma menos fluido"},
+    "C": {"natural": 5, "correct": true, "note": "igual de natural"},
+    "D": {"natural": 4, "correct": true, "note": "correcto, 09:30 sin a.m. algo seco pero claro"},
+    "best": "A"
+  },
+  "0 9,17 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "correcto, 24h sin 'y a las' suena algo seco"},
+    "B": {"natural": 2, "correct": false, "note": "falta 'todos los dias'"},
+    "C": {"natural": 5, "correct": true, "note": "'9 de la manana y 5 de la tarde' lo mas natural"},
+    "D": {"natural": 4, "correct": true, "note": "correcto y claro"},
+    "best": "C"
+  },
+  "0 9-17 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "correcto y claro"},
+    "B": {"natural": 5, "correct": true, "note": "muy natural con a.m./p.m."},
+    "C": {"natural": 5, "correct": true, "note": "natural"},
+    "D": {"natural": 4, "correct": true, "note": "natural pero 'entre' puede sugerir intervalo unico"},
+    "best": "B"
+  },
+  "0-29 * * * *": {
+    "A": {"natural": 4, "correct": true, "note": "claro, 'del 0 al 29 de cada hora'"},
+    "B": {"natural": 2, "correct": true, "note": "'del minuto 0 al 29' redundante y torpe"},
+    "C": {"natural": 2, "correct": false, "note": "'pasada la hora' es calco del ingles, no natural en espanol"},
+    "D": {"natural": 4, "correct": true, "note": "natural en minuscula"},
+    "best": "D"
+  },
+  "0 0 1,15 * *": {
+    "A": {"natural": 5, "correct": true, "note": "natural y exacto"},
+    "B": {"natural": 5, "correct": true, "note": "identico"},
+    "C": {"natural": 3, "correct": true, "note": "correcto pero estructura invertida algo robotica"},
+    "D": {"natural": 4, "correct": true, "note": "correcto, 'de cada mes' explicito"},
+    "best": "A"
+  },
+  "0 12 1 1 *": {
+    "A": {"natural": 5, "correct": true, "note": "'al mediodia' natural y exacto"},
+    "B": {"natural": 4, "correct": true, "note": "correcto, 12:00 = mediodia"},
+    "C": {"natural": 2, "correct": true, "note": "'el dia 1 del mes, solo en enero' robotico"},
+    "D": {"natural": 5, "correct": true, "note": "natural"},
+    "best": "A"
+  },
+  "@daily": {
+    "A": {"natural": 4, "correct": true, "note": "correcto, 00:00 = medianoche"},
+    "B": {"natural": 2, "correct": false, "note": "falta 'todos los dias'"},
+    "C": {"natural": 5, "correct": true, "note": "'a medianoche' lo mas natural"},
+    "D": {"natural": 5, "correct": true, "note": "igual"},
+    "best": "C"
+  },
+  "*/30 * * * * *": {
+    "A": {"natural": 5, "correct": true, "note": "perfecto"},
+    "B": {"natural": 5, "correct": true, "note": "igual"},
+    "C": {"natural": 5, "correct": true, "note": "igual"},
+    "D": {"natural": 5, "correct": true, "note": "igual"},
+    "best": "D"
+  },
+  "0 0 * * 5L": {
+    "A": {"natural": 5, "correct": true, "note": "natural y exacto"},
+    "B": {"natural": 5, "correct": true, "note": "igual en minuscula"},
+    "C": {"natural": 4, "correct": true, "note": "correcto, 00:00 menos calido que 'medianoche'"},
+    "D": {"natural": 3, "correct": true, "note": "estructura invertida 'en el ultimo viernes' algo torpe"},
+    "best": "A"
+  },
+  "5,10 30 9 * * MON": {
+    "A": {"natural": 5, "correct": true, "note": "muy natural y exacto: segundos 5 y 10, lunes 09:30"},
+    "B": {"natural": 1, "correct": false, "note": "'a las 09:00' incorrecto (es 09:30), descomposicion robotica"},
+    "C": {"natural": 4, "correct": true, "note": "9:30:05 y 9:30:10 correcto y muy claro"},
+    "D": {"natural": 1, "correct": false, "note": "'diez centesimas' inventado, totalmente erroneo"},
+    "best": "A"
+  },
+  "*/15 30 9-17 * * MON-FRI": {
+    "A": {"natural": 4, "correct": false, "note": "rango horario termina 17:30 pero deberia ser hasta 17:59 (hora 17 completa); ademas omite que el minuto 30 limita"},
+    "B": {"natural": 4, "correct": false, "note": "'de las 09:00 a las 17:30' incorrecto, deberia cubrir hora 17 completa"},
+    "C": {"natural": 4, "correct": true, "note": "'09:00 y las 17:59' es la interpretacion correcta del rango de horas"},
+    "D": {"natural": 4, "correct": false, "note": "igual problema 17:30 que A"},
+    "best": "C"
+  },
+  "15 30 9 * * MON": {
+    "A": {"natural": 5, "correct": true, "note": "9:30:15 a.m. natural y exacto"},
+    "B": {"natural": 4, "correct": true, "note": "correcto, 'solo el lunes' algo seco"},
+    "C": {"natural": 4, "correct": true, "note": "correcto y natural"},
+    "D": {"natural": 1, "correct": false, "note": "'9:30 y 15 de la manana' no expresa los segundos, erroneo"},
+    "best": "A"
+  },
+  "45 17,9 0 * * *": {
+    "A": {"natural": 5, "correct": true, "note": "00:09:45 y 00:17:45 exacto"},
+    "B": {"natural": 2, "correct": false, "note": "'12:09:45 de la madrugada' contradictorio/erroneo"},
+    "C": {"natural": 2, "correct": false, "note": "descomposicion robotica e incompleta de los segundos"},
+    "D": {"natural": 5, "correct": true, "note": "igual que A, exacto"},
+    "best": "D"
+  },
+  "0-30 9,17-19 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "correcto, horas 9,17,18,19"},
+    "B": {"natural": 4, "correct": true, "note": "natural en minuscula"},
+    "C": {"natural": 3, "correct": false, "note": "'del 0 al 30 de las 9:00...' el 'de' confunde; sugiere otra cosa"},
+    "D": {"natural": 2, "correct": false, "note": "'pasada la hora' calco; '17:00 a 19:59' cambia el sentido del listado"},
+    "best": "A"
+  },
+  "0 22-2,12 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "lista todas las horas correctamente"},
+    "B": {"natural": 1, "correct": false, "note": "'a las de 22:00 a 02:00' gramatica rota y 'cada hora' impreciso"},
+    "C": {"natural": 3, "correct": true, "note": "correcto con p.m./a.m. pero muy cargado"},
+    "D": {"natural": 4, "correct": true, "note": "igual que A, claro"},
+    "best": "A"
+  },
+  "0 9-20,22 * * *": {
+    "A": {"natural": 5, "correct": true, "note": "muy natural con a.m./p.m."},
+    "B": {"natural": 1, "correct": false, "note": "'a las de 09:00 a 20:00' gramatica rota"},
+    "C": {"natural": 4, "correct": true, "note": "correcto y natural en 24h"},
+    "D": {"natural": 5, "correct": true, "note": "igual que A"},
+    "best": "A"
+  },
+  "* 9,12,17 * * MON-FRI": {
+    "A": {"natural": 4, "correct": true, "note": "'durante las horas de las 9:00, 12:00 y 17:00' transmite bien el sentido"},
+    "B": {"natural": 4, "correct": true, "note": "'durante las horas de las 9, 12 y 17' natural"},
+    "C": {"natural": 2, "correct": false, "note": "'a las 09:00, 12:00...' sugiere solo en punto, pierde 'cada minuto durante la hora'"},
+    "D": {"natural": 3, "correct": true, "note": "'de las 09:00 a las 09:59...' correcto pero muy largo y tecnico"},
+    "best": "A"
+  },
+  "30 9 15W 6 *": {
+    "A": {"natural": 5, "correct": true, "note": "'dia laborable mas cercano al 15 de junio' natural y exacto"},
+    "B": {"natural": 5, "correct": true, "note": "igual con a.m."},
+    "C": {"natural": 2, "correct": true, "note": "'dia de la semana mas proximo' tecnicamente cualquier dia, menos preciso; robotico"},
+    "D": {"natural": 5, "correct": true, "note": "igual que B"},
+    "best": "B"
+  },
+  "0 0 29 2 *": {
+    "A": {"natural": 5, "correct": true, "note": "natural y exacto"},
+    "B": {"natural": 5, "correct": true, "note": "identico"},
+    "C": {"natural": 2, "correct": true, "note": "'el dia 29 del mes, solo en febrero' robotico"},
+    "D": {"natural": 4, "correct": true, "note": "correcto, 00:00 menos calido"},
+    "best": "A"
+  },
+  "0 9-9 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "correcto, una sola hora 09:00"},
+    "B": {"natural": 1, "correct": false, "note": "'entre las 09:00 y las 09:00' absurdo, no transmite 'a las 9'"},
+    "C": {"natural": 5, "correct": true, "note": "'a las 9 a.m.' natural y exacto"},
+    "D": {"natural": 5, "correct": true, "note": "igual que C"},
+    "best": "C"
+  },
+  "1/1 * * * *": {
+    "A": {"natural": 4, "correct": true, "note": "'del 1 al 59 de cada hora' claro"},
+    "B": {"natural": 4, "correct": true, "note": "igual"},
+    "C": {"natural": 2, "correct": true, "note": "'del minuto 1 al 59' redundante"},
+    "D": {"natural": 1, "correct": false, "note": "'cada 1 minutos, comenzando a los 1 minutos' robotico y gramatica rota"},
+    "best": "A"
+  },
+  "1 1 * * * *": {
+    "A": {"natural": 4, "correct": true, "note": "'minuto uno y un segundo de cada hora' natural"},
+    "B": {"natural": 4, "correct": true, "note": "identico"},
+    "C": {"natural": 1, "correct": true, "note": "'a los 1 segundos... a los 1 minutos' gramatica rota"},
+    "D": {"natural": 4, "correct": true, "note": "'minuto 1 y segundo 1 de cada hora' claro y natural"},
+    "best": "D"
+  },
+  "59 23 31 12 5": {
+    "A": {"natural": 5, "correct": true, "note": "'31 de diciembre o cualquier viernes de diciembre' natural y exacto"},
+    "B": {"natural": 5, "correct": true, "note": "'los viernes de diciembre' natural"},
+    "C": {"natural": 3, "correct": false, "note": "'el viernes de diciembre' singular sugiere uno solo, impreciso"},
+    "D": {"natural": 2, "correct": true, "note": "'y el viernes, solo en diciembre' robotico y ambiguo"},
+    "best": "A"
+  },
+  "* * * * * *": {
+    "A": {"natural": 5, "correct": true, "note": "perfecto"},
+    "B": {"natural": 5, "correct": true, "note": "igual"},
+    "C": {"natural": 5, "correct": true, "note": "igual"},
+    "D": {"natural": 5, "correct": true, "note": "igual"},
+    "best": "A"
+  },
+  "5 * * * * *": {
+    "A": {"natural": 5, "correct": true, "note": "'cada minuto, al segundo cinco' natural y exacto"},
+    "B": {"natural": 5, "correct": true, "note": "identico"},
+    "C": {"natural": 4, "correct": true, "note": "'a los 5 segundos del minuto' correcto, falta 'cada minuto' explicito pero implicito"},
+    "D": {"natural": 4, "correct": true, "note": "'en el segundo 5 de cada minuto' natural"},
+    "best": "A"
+  },
+  "5 * * * *": {
+    "A": {"natural": 5, "correct": true, "note": "'en el minuto 5 de cada hora' natural y exacto"},
+    "B": {"natural": 2, "correct": true, "note": "'cinco minutos pasados los cero' raro, calco torpe"},
+    "C": {"natural": 4, "correct": true, "note": "'a los 5 minutos de la hora' correcto, falta 'cada hora'"},
+    "D": {"natural": 2, "correct": false, "note": "'a los cinco de cada hora' ambiguo, no aclara minutos"},
+    "best": "A"
+  },
+  "5,10 * * * *": {
+    "A": {"natural": 2, "correct": false, "note": "'a las cinco y diez' suena a hora 5:10, no a minutos 5 y 10"},
+    "B": {"natural": 2, "correct": false, "note": "igual ambiguedad de hora"},
+    "C": {"natural": 4, "correct": true, "note": "'a los 5 y 10 minutos de la hora' correcto"},
+    "D": {"natural": 5, "correct": true, "note": "'en los minutos 5 y 10 de cada hora' natural y exacto"},
+    "best": "D"
+  },
+  "0-30 9 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "'desde las 9:00 hasta las 9:30 a.m.' natural"},
+    "B": {"natural": 5, "correct": true, "note": "'de 9:00 a 9:30 de la manana' muy natural"},
+    "C": {"natural": 4, "correct": true, "note": "'entre las 09:00 y las 09:30' natural"},
+    "D": {"natural": 4, "correct": true, "note": "igual en minuscula"},
+    "best": "B"
+  },
+  "0-30 */2 * * *": {
+    "A": {"natural": 4, "correct": true, "note": "'del 0 al 30, cada dos horas' natural"},
+    "B": {"natural": 2, "correct": false, "note": "'pasada la hora' calco; 'cada 2 horas' ok pero frase poco natural"},
+    "C": {"natural": 4, "correct": true, "note": "natural y exacto"},
+    "D": {"natural": 4, "correct": true, "note": "igual que C"},
+    "best": "C"
+  },
+  "0 * * * *": {
+    "A": {"natural": 5, "correct": true, "note": "perfecto"},
+    "B": {"natural": 5, "correct": true, "note": "igual"},
+    "C": {"natural": 5, "correct": true, "note": "igual"},
+    "D": {"natural": 5, "correct": true, "note": "igual"},
+    "best": "A"
+  },
+  "0 */3 * * *": {
+    "A": {"natural": 5, "correct": true, "note": "'cada tres horas' perfecto"},
+    "B": {"natural": 5, "correct": true, "note": "igual"},
+    "C": {"natural": 2, "correct": false, "note": "'en punto, cada 3 horas' raro y poco claro"},
+    "D": {"natural": 5, "correct": true, "note": "natural en minuscula"},
+    "best": "A"
+  }
+}

@@ -1,0 +1,138 @@
+[
+  {
+    "id": 0,
+    "description": "joka minuutti"
+  },
+  {
+    "id": 1,
+    "description": "viiden minuutin välein"
+  },
+  {
+    "id": 2,
+    "description": "joka päivä keskipäivällä"
+  },
+  {
+    "id": 3,
+    "description": "maanantaista perjantaihin klo 9.30"
+  },
+  {
+    "id": 4,
+    "description": "joka päivä klo 9 ja 17"
+  },
+  {
+    "id": 5,
+    "description": "joka tunti klo 9–17"
+  },
+  {
+    "id": 6,
+    "description": "joka tunti 0–29 minuutin kohdalla"
+  },
+  {
+    "id": 7,
+    "description": "kuukauden 1. ja 15. päivänä keskiyöllä"
+  },
+  {
+    "id": 8,
+    "description": "tammikuun 1. päivänä keskipäivällä"
+  },
+  {
+    "id": 9,
+    "description": "joka päivä keskiyöllä"
+  },
+  {
+    "id": 10,
+    "description": "30 sekunnin välein"
+  },
+  {
+    "id": 11,
+    "description": "kuukauden viimeisenä perjantaina keskiyöllä"
+  },
+  {
+    "id": 12,
+    "description": "5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30"
+  },
+  {
+    "id": 13,
+    "description": "15 sekunnin välein, 30 minuutin kohdalla klo 9.30–17.30 maanantaista perjantaihin"
+  },
+  {
+    "id": 14,
+    "description": "maanantaisin klo 9.30.15"
+  },
+  {
+    "id": 15,
+    "description": "joka päivä klo 0.09.45 ja 0.17.45"
+  },
+  {
+    "id": 16,
+    "description": "0–30 minuutin kohdalla klo 9 sekä klo 17–19"
+  },
+  {
+    "id": 17,
+    "description": "joka päivä klo 12, 22, 23, 0, 1 ja 2"
+  },
+  {
+    "id": 18,
+    "description": "joka päivä klo 9–20 ja 22"
+  },
+  {
+    "id": 19,
+    "description": "joka minuutti klo 9.00–9.59, 12.00–12.59 ja 17.00–17.59 maanantaista perjantaihin"
+  },
+  {
+    "id": 20,
+    "description": "arkipäivänä lähinnä kuukauden 15. päivää kesäkuussa klo 9.30"
+  },
+  {
+    "id": 21,
+    "description": "helmikuun 29. päivänä keskiyöllä"
+  },
+  {
+    "id": 22,
+    "description": "joka päivä klo 9"
+  },
+  {
+    "id": 23,
+    "description": "joka tunti 1–59 minuutin kohdalla"
+  },
+  {
+    "id": 24,
+    "description": "joka tunti 1 minuutin ja 1 sekunnin kohdalla"
+  },
+  {
+    "id": 25,
+    "description": "joulukuussa klo 23.59 joko 31. päivänä tai perjantaisin"
+  },
+  {
+    "id": 26,
+    "description": "joka sekunti"
+  },
+  {
+    "id": 27,
+    "description": "joka minuutti 5 sekunnin kohdalla"
+  },
+  {
+    "id": 28,
+    "description": "joka tunti 5 minuutin kohdalla"
+  },
+  {
+    "id": 29,
+    "description": "joka tunti 5 ja 10 minuutin kohdalla"
+  },
+  {
+    "id": 30,
+    "description": "joka minuutti klo 9.00–9.30"
+  },
+  {
+    "id": 31,
+    "description": "0–30 minuutin kohdalla joka toinen tunti"
+  },
+  {
+    "id": 32,
+    "description": "joka tunti"
+  },
+  {
+    "id": 33,
+    "description": "kolmen tunnin välein"
+  }
+]

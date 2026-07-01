@@ -1,0 +1,20 @@
+[
+  {
+    "id": "u1",
+    "pick": "a la 01:05 y a las 06:05, 11:05, 16:05 y 21:05",
+    "confidence": 5,
+    "reasoning": "All five times present. Single 'a las' introduces the comma-separated group of four; the article switch at the boundary is unambiguous. Candidate 2 is correct but repeats 'a las' four times unnecessarily."
+  },
+  {
+    "id": "u2",
+    "pick": "todos los días a la 01:00 y a las 12:00, 22:00, 23:00, 00:00 y 02:00",
+    "confidence": 5,
+    "reasoning": "All six times present. Leading with the 'a la' singleton then a clean 'a las' comma list avoids mid-list article switching (candidate 3 is flagged ambiguous for flipping back and forth) and avoids the awkward double 'y' in candidate 2. Candidate 3 is flagged: the mid-list switch 'a las 12:00, 22:00, 23:00, 00:00, a la 01:00 y a las 02:00' makes it unclear which times belong to each article group."
+  },
+  {
+    "id": "u3",
+    "pick": "todos los días a la 01:00, a las 02:00 y 03:00",
+    "confidence": 5,
+    "reasoning": "All three times present. The comma after 01:00 closes the 'a la' group cleanly; 'a las 02:00 y 03:00' is a standard two-element list under one article. Candidate 1 uses two 'y' conjunctions ('a la 01:00 y a las 02:00 y 03:00'), which is structurally ambiguous about whether 03:00 belongs to the 'a las' group or is a third independent element."
+  }
+]

@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "cron": "0-30 9 1-5 6 5L",
+  "rendering": "jede Minute von 9:00 bis 9:30 Uhr vom 1. bis zum 5. oder am letzten Freitag des Monats im Juni"
+ },
+ {
+  "n": 2,
+  "cron": "0-30 1/2 1,15 */3 MON",
+  "rendering": "in den Minuten 0 bis 30, in jeder zweiten Stunde ab 1 Uhr am 1. und 15. oder montags im Januar, April, Juli und Oktober"
+ },
+ {
+  "n": 3,
+  "cron": "0 9-17 1-5 * 0",
+  "rendering": "stündlich von 9 bis 17 Uhr vom 1. bis zum 5. oder sonntags"
+ },
+ {
+  "n": 4,
+  "cron": "*/45 */5 * 12 MON-FRI",
+  "rendering": "in den Minuten 0 und 45, alle 5 Stunden von 0 bis 20 Uhr montags bis freitags im Dezember"
+ },
+ {
+  "n": 5,
+  "cron": "30 9 1 1 MON#2",
+  "rendering": "am 1. oder am zweiten Montag des Monats im Januar um 9:30 Uhr"
+ },
+ {
+  "n": 6,
+  "cron": "0-30 2/6 LW * MON#2",
+  "rendering": "in den Minuten 0 bis 30, in jeder sechsten Stunde ab 2 Uhr am letzten Werktag des Monats oder am zweiten Montag des Monats"
+ },
+ {
+  "n": 7,
+  "cron": "*/7 9-20,22 1,15 * 0",
+  "rendering": "alle 7 Minuten von Minute 0 bis 56, von 9 bis 20 Uhr und um 22 Uhr am 1. und 15. oder sonntags"
+ },
+ {
+  "n": 8,
+  "cron": "0 0 1-5 * *",
+  "rendering": "vom 1. bis zum 5. um Mitternacht"
+ },
+ {
+  "n": 9,
+  "cron": "5 9-17 * 1 *",
+  "rendering": "in Minute 5 jeder Stunde, von 9 bis 17:05 Uhr im Januar"
+ },
+ {
+  "n": 10,
+  "cron": "* 12 L * SAT,SUN",
+  "rendering": "jede Minute der Mittagsstunde am letzten Tag des Monats oder sonntags und samstags"
+ },
+ {
+  "n": 11,
+  "cron": "*/25 2/6 LW */3 MON#2",
+  "rendering": "in den Minuten 0, 25 und 50, in jeder sechsten Stunde ab 2 Uhr am letzten Werktag des Monats oder am zweiten Montag des Monats im Januar, April, Juli und Oktober"
+ },
+ {
+  "n": 12,
+  "cron": "*/7 12 LW */3 7",
+  "rendering": "alle 7 Minuten von Minute 0 bis 56, um 12 Uhr am letzten Werktag des Monats oder sonntags im Januar, April, Juli und Oktober"
+ },
+ {
+  "n": 13,
+  "cron": "*/15 2/6 L 6-8 SAT,SUN",
+  "rendering": "alle 15 Minuten in jeder sechsten Stunde ab 2 Uhr am letzten Tag des Monats oder sonntags und samstags von Juni bis August"
+ },
+ {
+  "n": 14,
+  "cron": "*/45 */2 31 1,7 5L",
+  "rendering": "in den Minuten 0 und 45, in jeder zweiten Stunde am 31. oder am letzten Freitag des Monats im Januar und Juli"
+ },
+ {
+  "n": 15,
+  "cron": "*/15 0-30 9-17 * * *",
+  "rendering": "alle 15 Sekunden, in den Minuten 0 bis 30 jeder Stunde, von 9 bis 17 Uhr"
+ },
+ {
+  "n": 16,
+  "cron": "3/2 */2 L */3 SAT,SUN",
+  "rendering": "alle 2 Minuten von Minute 3 bis 59, in jeder zweiten Stunde am letzten Tag des Monats oder sonntags und samstags im Januar, April, Juli und Oktober"
+ },
+ {
+  "n": 17,
+  "cron": "* 9,17 L 6 FRI",
+  "rendering": "jede Minute von 9 bis 9:59 Uhr und von 17 bis 17:59 Uhr am letzten Tag des Monats oder freitags im Juni"
+ },
+ {
+  "n": 18,
+  "cron": "5,10,30 2/6 15 * MON#2",
+  "rendering": "in den Minuten 5, 10 und 30, in jeder sechsten Stunde ab 2 Uhr am 15. oder am zweiten Montag des Monats"
+ },
+ {
+  "n": 19,
+  "cron": "5 * 31 */3 FRI",
+  "rendering": "in Minute 5 jeder Stunde am 31. oder freitags im Januar, April, Juli und Oktober"
+ },
+ {
+  "n": 20,
+  "cron": "3/2 9,17 15 1,7 7",
+  "rendering": "alle 2 Minuten von Minute 3 bis 59, um 9 und 17 Uhr am 15. oder sonntags im Januar und Juli"
+ }
+]

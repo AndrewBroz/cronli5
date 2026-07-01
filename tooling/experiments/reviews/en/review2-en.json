@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "cron": "3/2 0 * 1 5L",
+  "rendering": "every two minutes from 3 through 59 minutes past the hour, at midnight on the last Friday of the month in January"
+ },
+ {
+  "n": 2,
+  "cron": "5,10,30 9-17/2 * 1 *",
+  "rendering": "at 5, 10, and 30 minutes past the hour, every two hours from 9 a.m. through 5 p.m. in January"
+ },
+ {
+  "n": 3,
+  "cron": "*/15 9,17 1 1,7 MON",
+  "rendering": "every 15 minutes during the 9 a.m. and 5 p.m. hours on January and July 1 or on Monday in January and July"
+ },
+ {
+  "n": 4,
+  "cron": "3/2 * 15 1,7 MON-FRI",
+  "rendering": "every two minutes from 3 through 59 minutes past the hour on January and July 15 or on Monday through Friday in January and July"
+ },
+ {
+  "n": 5,
+  "cron": "5 12 31 1,7 FRI",
+  "rendering": "on January and July 31 or on Friday in January and July at 12:05 p.m."
+ },
+ {
+  "n": 6,
+  "cron": "* 3/2 12 1-5 * *",
+  "rendering": "every second, every two minutes from 3 through 59 minutes past the hour, at noon on the 1st through 5th"
+ },
+ {
+  "n": 7,
+  "cron": "* 9 15W 6 MON#2",
+  "rendering": "every minute of the 9 a.m. hour on the weekday nearest the 15th or on the second Monday of the month, in June"
+ },
+ {
+  "n": 8,
+  "cron": "0 2/6 1 6-8 *",
+  "rendering": "every six hours from 2 a.m. on the 1st in June through August"
+ },
+ {
+  "n": 9,
+  "cron": "*/15 9-17/2 15 1 SAT,SUN",
+  "rendering": "every 15 minutes, every two hours from 9 a.m. through 5 p.m. on January 15 or on Sunday and Saturday in January"
+ },
+ {
+  "n": 10,
+  "cron": "*/25 12 15W 12 *",
+  "rendering": "on the weekday nearest the 15th in December at 12 p.m., 12:25 p.m., and 12:50 p.m."
+ },
+ {
+  "n": 11,
+  "cron": "* 9-17/2 LW * MON-FRI",
+  "rendering": "every minute, every two hours from 9 a.m. through 5 p.m. on the last weekday of the month or on Monday through Friday"
+ },
+ {
+  "n": 12,
+  "cron": "5/15 0 1,15 1,7 0",
+  "rendering": "every 15 minutes from five minutes past the hour from midnight through 12:50 a.m. on January and July 1 and 15 or on Sunday in January and July"
+ },
+ {
+  "n": 13,
+  "cron": "*/15 */2 1,15 12 MON-FRI",
+  "rendering": "every 15 minutes during every other hour on December 1 and 15 or on Monday through Friday in December"
+ },
+ {
+  "n": 14,
+  "cron": "0-30 9-20,22 L 1 *",
+  "rendering": "every minute from 0 through 30 past the hour, at 9 a.m. through 8 p.m. and at 10 p.m. on the last day of the month in January"
+ },
+ {
+  "n": 15,
+  "cron": "* 0 31 12 SAT,SUN",
+  "rendering": "every minute of the midnight hour on December 31 or on Sunday and Saturday in December"
+ },
+ {
+  "n": 16,
+  "cron": "*/15 9-17 * 6 *",
+  "rendering": "every 15 minutes from 9 a.m. through 5:45 p.m. in June"
+ },
+ {
+  "n": 17,
+  "cron": "*/45 9-17/2 1,15 1 MON-FRI",
+  "rendering": "at 0 and 45 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on January 1 and 15 or on Monday through Friday in January"
+ },
+ {
+  "n": 18,
+  "cron": "5 12 * 6 7",
+  "rendering": "every Sunday in June at 12:05 p.m."
+ },
+ {
+  "n": 19,
+  "cron": "5/15 */5 * * FRI",
+  "rendering": "every 15 minutes from five minutes past the hour, every five hours from midnight through 8 p.m. on Friday"
+ },
+ {
+  "n": 20,
+  "cron": "* 9-20,22 1 1 5L",
+  "rendering": "every minute during the 9 a.m. through 8 p.m. and 10 p.m. hours on January 1 or on the last Friday of the month in January"
+ }
+]

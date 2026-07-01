@@ -1,0 +1,20 @@
+[
+  {
+    "id": "p1",
+    "pick": "a la 1 de la madrugada y de la tarde",
+    "confidence": 5,
+    "reasoning": "Elision is idiomatic and unambiguous: 'a la' governs both 'madrugada' and 'tarde', the shared numeral 1 is cleanly omitted. Repeating '1' is redundant. No double-y or comma issue arises."
+  },
+  {
+    "id": "p2",
+    "pick": "a las 2 de la madrugada y de la tarde",
+    "confidence": 5,
+    "reasoning": "Same elision pattern as p1: shared numeral drops cleanly after 'y'. The rejected candidate 'y 2 de la tarde' feels like an incomplete repetition — the bare numeral without 'a las' is rhythmically jarring. The elided form is the natural register."
+  },
+  {
+    "id": "p3",
+    "pick": "a la 1 de la madrugada y de la tarde, y a las 9 de la mañana",
+    "confidence": 5,
+    "reasoning": "Three-element list where the first element already contains an internal 'y'; RAE Ortografía (2010, §3.4.3) sanctions a comma before the final 'y' copulativa precisely in this case to avoid parsing ambiguity. Without the comma the 'y a las 9' could attach only to 'de la tarde'. The comma-y sequence is warranted, not a double-y error. Candidate 1 repeats '1' needlessly; candidate 3 drops the 'y' before the final member, making it read as a loose apposition rather than a proper enumeration."
+  }
+]

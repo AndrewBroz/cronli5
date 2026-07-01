@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 4, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "Reihenfolge ungewohnt (DOM/DOW vor Minute/Stunde), aber korrekt" },
+ { "n": 11, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "'in den Minuten 0 bis 30' grenzwertig, aber als Bereich korrekt" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": false, "idiom": 3, "clarity": 2, "issue": "Widerspruch: 'in Sekunde 30 jeder Minute' suggeriert jede Minute, obwohl Minute auf 30 fixiert ist; nur Sekunde 30 in Minute 30 trifft zu" }
+]

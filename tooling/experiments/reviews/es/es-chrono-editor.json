@@ -1,0 +1,32 @@
+[
+  {
+    "id": "c1",
+    "pick": "a las 2 de la madrugada, y a las 2 y 6 de la tarde",
+    "confidence": 5,
+    "reasoning": "Comma before the final coordinator 'y' is required (RAE Ortografía §3.4.3.2) because the second clause contains an internal 'y' ('2 y 6'); repeating 'a las' before the tarde group is obligatory since a single fronted article cannot span two groups with different part-of-day labels without ambiguity."
+  },
+  {
+    "id": "c2",
+    "pick": "a las 2 y 3 de la madrugada, y a las 3 y 6 de la tarde",
+    "confidence": 5,
+    "reasoning": "Same rule as c1: comma before the coordinator 'y' because both conjuncts contain an internal 'y'; each group needs its own 'a las' — dropping it (candidate B) leaves '3 y 6 de la tarde' without a governing article, which is ungrammatical."
+  },
+  {
+    "id": "c3",
+    "pick": "a la 1 de la madrugada, a las 9 de la mañana y a la 1 de la tarde",
+    "confidence": 5,
+    "reasoning": "Chronological order must be preserved (01:00 → 09:00 → 13:00); candidate B reorders and violates the stated constraint. Three independent locative phrases each take their own preposed article, with correct singular agreement ('a la 1') vs. plural ('a las 9'). No comma before final 'y' since no internal 'y' appears in any conjunct."
+  },
+  {
+    "id": "c4",
+    "pick": "a las 9 de la mañana, a las 3 de la tarde y a las 9 de la noche",
+    "confidence": 4,
+    "reasoning": "Repeating 'a las' before each distinct part-of-day group is the formal-register preference (FundéuRAE); ellipsis across groups with different labels (candidate A) is permitted but introduces an inferential step. No comma before final 'y' since none of the conjuncts contains an internal 'y'."
+  },
+  {
+    "id": "c5",
+    "pick": "a la 1 de la madrugada y de la tarde",
+    "confidence": 5,
+    "reasoning": "RAE-standard nominal ellipsis: 'a la 1' is shared, and 'de la madrugada y de la tarde' are coordinated part-of-day complements. Compact and unambiguous; the fully explicit form (candidate B) is also correct but unnecessarily repeats the numeral."
+  }
+]

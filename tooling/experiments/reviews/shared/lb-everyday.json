@@ -1,0 +1,20 @@
+[
+  {
+    "id": "b1",
+    "pick": "at 2, 3, and 4 minutes past the hour from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "\"Through 5:04 p.m.\" singles out the last of three recurring minutes as the endpoint, implying 5:02 and 5:03 are not the end and suggesting the schedule terminates at 5:04 specifically. \"Through 5 p.m.\" correctly names the last hour; the minutes-past-the-hour clause already covers what fires within it."
+  },
+  {
+    "id": "b2",
+    "pick": "at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "\"Through 5:30 p.m.\" is almost universally read as \"the schedule ends at half past five,\" implying 5:30 is a special cutoff rather than a recurring minute in the final hour. The bare hour \"through 5 p.m.\" is unambiguous; the \"at 0 and 30 minutes\" clause already tells you both firings."
+  },
+  {
+    "id": "b3",
+    "pick": "every minute from 2 through 8 past the hour, from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "\"Through 5:08 p.m.\" reads as a continuous block ending mid-hour at 5:08, not as an hourly pattern running through the full 5 o'clock hour. \"Through 5 p.m.\" correctly scopes the hour range; \"from 2 through 8 past the hour\" already conveys the per-hour window."
+  }
+]

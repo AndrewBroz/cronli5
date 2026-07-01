@@ -1,0 +1,1940 @@
+[
+  {
+    "pattern": "* * * * *",
+    "meaning": "every minute",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Cada minuto"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada minuto."
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "cada minuto"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada minuto."
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "gemma-baseline",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Natural and accurate, though capitalized."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Contains an unnecessary period for a mid-sentence fragment."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly matches the requirements for a lowercase fragment."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Contains an unnecessary period and capitalization."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "*/5 * * * *",
+    "meaning": "every five minutes",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada cinco minutos."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "cada cinco minutos"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Cada 5 minutos"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada cinco minutos."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate; preferred for mid-sentence embedding."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Commonly used in schedules, though 'cinco' is more formal."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "0 12 * * *",
+    "meaning": "every day at noon",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 12:00"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 12:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días al mediodía."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a mediodía."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate, though '12:00' is slightly more formal/digital than 'mediodía'."
+        },
+        "B": {
+          "natural": 5,
+          "correct": false,
+          "note": "Incorrect because it omits 'every day'."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, but 'al mediodía' is generally more common for this specific phrase."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "30 9 * * MON-FRI",
+    "meaning": "every Monday through Friday at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "De lunes a viernes a las 9:30 a. m."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 09:30, de lunes a viernes"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "De lunes a viernes a las 9:30 a. m."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "de lunes a viernes a las 09:30"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though rearranging the order slightly changes emphasis."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly natural and accurate."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though 09:30 is more common in digital/formal contexts than speech."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9,17 * * *",
+    "meaning": "every day at 9 a.m. and 5 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 09:00 y 17:00"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 09:00 y 17:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9 de la mañana y a las 5 de la tarde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9:00 y a las 17:00."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and common in written schedules; '09:00' is slightly formal but precise."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Missing 'todos los días'; fails to convey the full meaning."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural spoken and written phrasing for a general audience."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and precise, though slightly more formal than C."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9-17 * * *",
+    "meaning": "every hour from 9 a.m. through 5 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "cada hora de las 09:00 a las 17:00"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada hora, de 9 a.m. a 5 p.m."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada hora de 9 a.m. a 5 p.m."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Cada hora, entre las 09:00 y las 17:00"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very standard, professional, and clear. Using 24h format is common and precise in Spanish."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though the comma is slightly redundant for a mid-sentence fragment."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and concise; mirrors the English structure well."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "'Entre' suggests a range but is slightly less precise for a recurring hourly event than 'de... a...'"
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0-29 * * * *",
+    "meaning": "every minute from 0 through 29 past the hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del 0 al 29 de cada hora."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del minuto 0 al 29 de cada hora."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Del minuto 0 al 29 pasada la hora"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "cada minuto del 0 al 29 de cada hora"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for a schedule description."
+        },
+        "B": {
+          "natural": 2,
+          "correct": true,
+          "note": "Redundant use of 'minuto' twice."
+        },
+        "C": {
+          "natural": 3,
+          "correct": false,
+          "note": "Incorrect preposition; 'pasada la hora' implies after the hour has finished, not during the first 30 minutes."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly natural."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 1,15 * *",
+    "meaning": "on the 1st and 15th at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Los días 1 y 15 a medianoche."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Los días 1 y 15 a medianoche."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 00:00, el día 1 y 15 del mes"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "los días 1 y 15 de cada mes a las 00:00"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfect, concise, and natural."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfect."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Slightly clunky word order; 'el día 1 y 15' should be plural 'los días'."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and clear, though slightly more formal/technical than A/B."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 12 1 1 *",
+    "meaning": "on January 1 at noon",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "el 1 de enero al mediodía"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "el 1 de enero a las 12:00"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 12:00, el día 1 del mes, sólo en enero"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "El 1 de enero a mediodía."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate translation."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate, though slightly more formal/digital than 'mediodía'."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Incorrect meaning; suggests it only happens in January and is overly wordy."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but 'al mediodía' is more natural than 'a mediodía' in this context."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "@daily",
+    "meaning": "every day at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 00:00"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 00:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a medianoche."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a medianoche."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and precise, common in technical or formal schedules."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incomplete; missing the 'every day' frequency."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to C; perfectly natural and accurate."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "*/30 * * * * *",
+    "meaning": "every 30 seconds",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada 30 segundos."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada 30 segundos."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Cada 30 segundos"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "cada 30 segundos"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 * * 5L",
+    "meaning": "on the last Friday of the month at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "El último viernes de cada mes a medianoche."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "el último viernes de cada mes a medianoche"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "el último viernes del mes a las 00:00"
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "A las 00:00, en el último viernes del mes"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronli5",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate; slightly penalized only for the unexpected capitalization if meant as a mid-sentence fragment."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate, though '00:00' is more technical than the natural 'medianoche'."
+        },
+        "D": {
+          "natural": 2,
+          "correct": false,
+          "note": "The preposition 'en' is incorrect here; it should be 'el último viernes'."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "5,10 30 9 * * MON",
+    "meaning": "at five and ten seconds past the minute, every Monday at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "en los segundos 5 y 10 de cada minuto, los lunes a las 09:30"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los lunes a las 9:30:05 y 9:30:10."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Los lunes a las 9:30 con cinco segundos y diez centésimas."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and accurate, though 'del minuto' is slightly more common than 'de cada minuto' in this context."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Overly wordy and redundant; phrasing is unnatural for a schedule."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "The most natural and precise way to describe specific seconds in a schedule."
+        },
+        "D": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect; 'centésimas' means hundredths of a second, not 10 seconds."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "*/15 30 9-17 * * MON-FRI",
+    "meaning": "every 15 seconds, at 30 minutes past the hour from 9 a.m. through 5:30 p.m. on Monday through Friday",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada 15 segundos, al minuto 30 de cada hora, de lunes a viernes, entre las 9:00 y las 17:30."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "cada 15 segundos, en el minuto 30 de cada hora, de las 09:00 a las 17:30 de lunes a viernes"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Cada 15 segundos, a los 30 minutos de la hora, entre las 09:00 y las 17:59, de lunes a viernes"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada 15 segundos, al minuto 30 de cada hora, de lunes a viernes entre las 9:00 y las 17:30."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and accurate; follows a logical order."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural flow and precise timing."
+        },
+        "C": {
+          "natural": 3,
+          "correct": false,
+          "note": "Incorrect end time (17:59 instead of 17:30)."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural phrasing for a mid-sentence fragment."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "15 30 9 * * MON",
+    "meaning": "every Monday at 9:30:15 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "todos los lunes a las 9:30:15 a. m."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 09:30:15, sólo el lunes"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "los lunes a las 09:30:15"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los lunes a las 9:30 y 15 de la mañana."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect meaning; 'sólo el lunes' implies only one specific Monday, not every Monday."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though slightly less explicit than 'todos los lunes'."
+        },
+        "D": {
+          "natural": 1,
+          "correct": false,
+          "note": "Incorrect way to express seconds; 'y 15' reads as 15 minutes or a separate number."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "45 17,9 0 * * *",
+    "meaning": "every day at 12:09:45 a.m. and 12:17:45 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 00:09:45 y 00:17:45"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 12:09:45 y 12:17:45 de la madrugada."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A los 45 segundos del minuto, a los 9 y 17 minutos de la hora, a las 00:00"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 00:09:45 y 00:17:45."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural and precise for a technical or scheduled context."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and natural, though 'de la madrugada' is slightly more verbose."
+        },
+        "C": {
+          "natural": 0,
+          "correct": false,
+          "note": "Overly convoluted and grammatically awkward."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A in wording; perfectly natural."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0-30 9,17-19 * * *",
+    "meaning": "every minute from 0 through 30 past the hour, at 9 a.m., 5 p.m., 6 p.m., and 7 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del 0 al 30 a las 9:00, 17:00, 18:00 y 19:00."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del 0 al 30 de las 9:00, 17:00, 18:00 y 19:00."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Del minuto 0 al 30 pasada la hora, a las 09:00 y de 17:00 a 19:59"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and accurate. Using 24h format is standard for schedules."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Essentially the same as A; slightly more formal with leading zeros."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "The use of 'de las' makes it sound like the minutes belong to the hours rather than occurring at those specific hours."
+        },
+        "D": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect range; '17:00 a 19:59' implies every minute in that block, not just the 0-30 mark."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 22-2,12 * * *",
+    "meaning": "every day at 12 p.m., 10 p.m., 11 p.m., 12 a.m., 1 a.m., and 2 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 12:00, 22:00, 23:00, 00:00, 01:00 y 02:00"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Cada hora, a las de 22:00 a 02:00 y 12:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 12 p. m., 10 p. m., 11 p. m., 12 a. m., 1 a. m. y 2 a. m."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 12:00, 22:00, 23:00, 00:00, 01:00 y 02:00."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Clear, precise, and natural using the 24-hour format common in schedules."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Grammatically incorrect ('a las de') and misleading ('Cada hora' implies every single hour)."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and natural, though slightly more verbose than the digital format."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; the final period is ignored per instructions."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9-20,22 * * *",
+    "meaning": "every hour from 9 a.m. through 8 p.m. and at 10 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada hora de 9 a.m. a 8 p.m. y a las 10 p.m."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Cada hora, a las de 09:00 a 20:00 y 22:00"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "cada hora de las 09:00 a las 20:00 y a las 22:00"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada hora de 9 a.m. a 8 p.m. y a las 10 p.m."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for most regions."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Grammatically incorrect; 'a las de' is not a valid structure."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate, using the 24-hour format common in many Spanish-speaking countries."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly natural and accurate."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "* 9,12,17 * * MON-FRI",
+    "meaning": "every minute during the 9 a.m., 12 p.m., and 5 p.m. hours on Monday through Friday",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada minuto durante las horas de las 9:00, 12:00 y 17:00, de lunes a viernes."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada minuto durante las horas de las 9, 12 y 17, de lunes a viernes."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Cada minuto, a las 09:00, 12:00, y 17:00, de lunes a viernes"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "cada minuto de las 09:00 a las 09:59, de las 12:00 a las 12:59 y de las 17:00 a las 17:59 de lunes a viernes"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and clear, though specifying :00 is slightly redundant when using 'horas'."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural phrasing for a schedule description."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect; 'a las' implies exactly at those three moments, not throughout the hours."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Technically precise but overly wordy and robotic for a general description."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "30 9 15W 6 *",
+    "meaning": "on the weekday nearest the 15th in June at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "el día laborable más cercano al 15 de junio a las 09:30"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "El día laborable más cercano al 15 de junio a las 9:30 a. m."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 09:30, en el día de la semana más próximo al 15 del mes, sólo en junio"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "El día laborable más cercano al 15 de junio a las 9:30 a. m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural and accurate; standard way to express this in a professional or administrative context."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and natural. The addition of 'a. m.' is explicit but correct."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Awkward phrasing. 'Día de la semana' is ambiguous (could mean any day Mon-Sun) and 'sólo en junio' changes the meaning."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to B and perfectly accurate."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 29 2 *",
+    "meaning": "on February 29 at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "el 29 de febrero a medianoche"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "el 29 de febrero a medianoche"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 00:00, el día 29 del mes, sólo en febrero"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "el 29 de febrero a las 00:00"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate translation."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate translation."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Too wordy and changes the meaning to imply a restriction ('only in February')."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and common, though slightly more formal/technical than 'medianoche'."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9-9 * * *",
+    "meaning": "every day at 9 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 09:00"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Cada hora, entre las 09:00 y las 09:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9 a. m."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9 a.m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and common, though the 09:00 format is more typical of digital logs than prose."
+        },
+        "B": {
+          "natural": 0,
+          "correct": false,
+          "note": "Incorrect; it describes an hourly range rather than a single daily event."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and follows standard Spanish orthography for 'a. m.'."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Extremely common and natural, though technically missing a space before 'm' per RAE."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "1/1 * * * *",
+    "meaning": "every minute from 1 through 59 past the hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "cada minuto del 1 al 59 de cada hora"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del 1 al 59 de cada hora."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del minuto 1 al 59 de cada hora."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Cada 1 minutos, comenzando a los 1 minutos de la hora"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; capitalization/punctuation ignored per instructions."
+        },
+        "C": {
+          "natural": 2,
+          "correct": true,
+          "note": "Redundant use of 'minuto' (every minute from minute 1...)."
+        },
+        "D": {
+          "natural": 1,
+          "correct": false,
+          "note": "Grammatically incorrect pluralization ('1 minutos') and unnatural phrasing."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "1 1 * * * *",
+    "meaning": "one minute and one second past the hour, every hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Al minuto uno y un segundo de cada hora."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Al minuto uno y un segundo de cada hora."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A los 1 segundos del minuto, a los 1 minutos de la hora"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "en el minuto 1 y segundo 1 de cada hora"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and accurate, though slightly formal."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Duplicate of A."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Phrasing is clumsy, repetitive, and grammatically awkward."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural way to describe a specific timestamp in a schedule."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "59 23 31 12 5",
+    "meaning": "on December 31 or on Friday in December at 11:59 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "El 31 de diciembre o cualquier viernes de diciembre a las 11:59 p. m."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "el 31 de diciembre o los viernes de diciembre a las 23:59"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "El 31 de diciembre o el viernes de diciembre a las 11:59 p.m."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "A las 23:59, el día 31 del mes, y el viernes, sólo en diciembre"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly captures 'on Friday' as a general occurrence in December; very natural."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and concise; using 23:59 is common and natural in Spanish."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Using 'el viernes' (singular) implies there is only one Friday in December."
+        },
+        "D": {
+          "natural": 1,
+          "correct": false,
+          "note": "Wordy, unnatural phrasing and changes the logical structure."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "* * * * * *",
+    "meaning": "every second",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "cada segundo"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Cada segundo"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada segundo."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada segundo."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for a mid-sentence fragment."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Correct, but capitalization is unnecessary for a mid-sentence fragment."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "The period is unnecessary for a mid-sentence fragment."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "The period is unnecessary for a mid-sentence fragment."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "5 * * * * *",
+    "meaning": "five seconds past the minute, every minute",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada minuto, al segundo cinco."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada minuto, al segundo cinco."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A los 5 segundos del minuto"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "en el segundo 5 de cada minuto"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Clear and correct, though slightly formal/staccato."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Duplicate of A."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very natural phrasing for a scheduled event."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "The most precise and natural way to describe this specific timing in Spanish."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "5 * * * *",
+    "meaning": "five minutes past the hour, every hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "en el minuto 5 de cada hora"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada hora, cinco minutos pasados los cero."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A los 5 minutos de la hora"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "A los cinco de cada hora."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate but sounds slightly technical or like a set of instructions."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Phrasing 'pasados los cero' is unnatural and not standard Spanish."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and natural, though slightly less common than D."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "The most natural and idiomatic way to express this in Spanish."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "5,10 * * * *",
+    "meaning": "at five and ten minutes past the hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "A las cinco y diez."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "A las cinco y diez."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A los 5 y 10 minutos de la hora"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "en los minutos 5 y 10 de cada hora"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard and most natural way to express this time in Spanish."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; standard and natural."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Literal translation that sounds unnatural; 'de la hora' is redundant and non-idiomatic here."
+        },
+        "D": {
+          "natural": 1,
+          "correct": false,
+          "note": "Changes the meaning to two separate time markers (the 5th and 10th minute) rather than 5:10."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0-30 9 * * *",
+    "meaning": "every minute from 9 a.m. through 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada minuto desde las 9:00 hasta las 9:30 a. m."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada minuto de 9:00 a 9:30 de la mañana."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Cada minuto entre las 09:00 y las 09:30"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "cada minuto de las 09:00 a las 09:30"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and accurate, though 'a. m.' is slightly formal for some contexts."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural phrasing and common in spoken/written Spanish."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct, but 'entre' can sometimes imply a range rather than a sequence of every minute."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Concise, natural, and grammatically perfect for a mid-sentence fragment."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0-30 */2 * * *",
+    "meaning": "every minute from 0 through 30 past the hour, every two hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "cada minuto del 0 al 30, cada dos horas"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Del minuto 0 al 30 pasada la hora, cada 2 horas"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del 0 al 30, cada dos horas."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada minuto del 0 al 30, cada dos horas."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Clear, concise, and follows the logic of the English phrase perfectly."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Slightly wordy; 'pasada la hora' is redundant in this context."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly natural."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A and C; perfectly natural."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 * * * *",
+    "meaning": "every hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Cada hora"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "cada hora"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Cada hora."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Cada hora."
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and natural; the leading capital is irrelevant per instructions."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and natural; fits the 'sentence fragment' requirement."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate, but the trailing period is unnecessary for a mid-sentence fragment."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate, but the trailing period is unnecessary for a mid-sentence fragment."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "0 */3 * * *",
+    "meaning": "every three hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Cada tres horas."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Cada tres horas."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "En punto, cada 3 horas"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "cada tres horas"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and natural."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and natural."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "'En punto' means 'on the dot', which changes the meaning from a frequency to a specific timing."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and natural."
+        },
+        "best": "A"
+      }
+    ]
+  }
+]

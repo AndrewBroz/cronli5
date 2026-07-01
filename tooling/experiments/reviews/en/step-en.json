@@ -1,0 +1,7 @@
+{
+  "uniform_offset": "every six minutes from :05 past the hour",
+  "nonuniform_evendiv": "every other minute from :03 through :59 past the hour",
+  "uneven": "every seven minutes from the top of the hour through :56",
+  "confidence": 4,
+  "reasoning": "Case 1 needs only start+step (clean wrap). Cases 2–3 need an explicit end because the trailing gap differs from the step; the end is the last value before the step would overflow 59. Case 1 uses the existing natural form but drops 'five minutes' in favour of the colon notation for consistency with cases 2–3; kept 'five minutes past the hour' form is also acceptable. Case 2 uses 'every other minute' (step=2 has idiomatic English). Case 3 uses 'top of the hour' for :00, which is idiomatic and unambiguous. Confidence docked one point because the colon-digit notation (:03, :56) is conventional in cron contexts but not in all plain-English registers."
+}

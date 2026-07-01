@@ -1,0 +1,7 @@
+{
+  "pick": "B",
+  "hour0": "every second of 12:00 a.m., every day",
+  "hour9": "every second of 9:00 a.m., every day",
+  "confidence": 4,
+  "reasoning": "Clock-time notation (12:00 a.m., 9:00 a.m.) already names a specific minute, not an hour, so 'every second of 9:00 a.m.' naturally reads as the 60-second burst within that one minute. A is ambiguous (reads as 'all day' or 'all hour'). C is accurate but verbose and 'first minute of midnight' is awkward English. B is compact, unambiguous, and idiomatic for both hour values."
+}

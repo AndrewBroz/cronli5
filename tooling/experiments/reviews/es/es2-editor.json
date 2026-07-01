@@ -1,0 +1,38 @@
+[
+  {
+    "id": 12,
+    "naturalness": 4,
+    "misread": true,
+    "flag": "'en los segundos 5 y 10 de las 09:30' is grammatically sound but 'los segundos 5 y 10' reads like ordinals naming positions in a sequence, which could be parsed as 'seconds numbered 5 and 10' — fine technically, but 'a los 5 y 10 segundos de las 09:30' or 'en el segundo 5 y el segundo 10 de las 09:30' is crisper. The bare numeral after the article risks misread as 'the 5th and 10th seconds (ordinal)' vs. 'second-marks at 5 and 10'."
+  },
+  {
+    "id": 13,
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": 16,
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'cada minuto del 0 al 30, solo a las 09:00, 17:00, 18:00 y 19:00' — the scope of 'solo' is ambiguous: a native reader may take it as restricting only 'del 0 al 30' (i.e., only within that minute range, not constraining the hours), rather than also constraining the active hours. The meaning requires the hours to restrict the minutes, but the structure places the hour list as an afterthought. Better: 'cada minuto del 0 al 30, pero solo en las horas 09:00, 17:00, 18:00 y 19:00' or 'a las 09:00, 17:00, 18:00 y 19:00, en cada minuto del 0 al 30'. Also, 'a las 09:00' is idiomatic for a clock time but '09:00, 17:00 …' without 'las' before each feels elliptical in formal register."
+  },
+  {
+    "id": 18,
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": 24,
+    "naturalness": 4,
+    "misread": false,
+    "flag": "Grammatically correct. 'en el minuto 1 y el segundo 1 de cada hora' is clear. Slight stylistic note: repeating the article ('el minuto 1 y el segundo 1') is proper and avoids ellipsis ambiguity — good. No change needed, but 'al minuto 1 con el segundo 1' could feel marginally more idiomatic for simultaneous timing; current phrasing is acceptable."
+  },
+  {
+    "id": 25,
+    "naturalness": 4,
+    "misread": true,
+    "flag": "'ya sea el día 31 o un viernes' — 'ya sea … o' correctly signals inclusive-or, but 'un viernes' (indefinite) alongside 'el día 31' (definite) is register-inconsistent and could suggest 'any random Friday' vs. a specific date. More pressing: the description does not make explicit that diciembre and 23:59 apply to both branches of the OR; a reader could parse 'el día 31 o un viernes' as meaning 31 December OR any Friday of any month at 23:59. Consider: 'en diciembre a las 23:59, el día 31 o cualquier viernes' — 'cualquier' reinforces that it is every qualifying Friday in December, not a single one."
+  }
+]

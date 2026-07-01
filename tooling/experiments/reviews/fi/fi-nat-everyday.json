@@ -1,0 +1,87 @@
+[
+  {
+    "id": 0,
+    "naturalness": 3,
+    "flag": "\"tai maanantaisin tammikuussa\" after a specific date feels abrupt; a Finn would likely say \"tai joka maanantai tammikuussa\". Also, \"keskiyöllä\" placement at the very end is fine but the whole sentence is long and slightly confusing."
+  },
+  {
+    "id": 1,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 2,
+    "naturalness": 2,
+    "flag": "\"5 minuutin kohdalla klo 9.05\" is redundant and contradictory — 5 min past the hour at 9:05 makes sense only on the :05 mark, but saying \"5 minuutin kohdalla\" and then listing \"klo 9.05–17.05\" is oddly phrased and hard to parse. The sentence is very long and confusing."
+  },
+  {
+    "id": 3,
+    "naturalness": 3,
+    "flag": "\"tammikuun ja heinäkuun 1. päivänä\" is grammatically awkward — a Finn would say \"tammikuun 1. ja heinäkuun 1. päivänä\" or rephrase. The sentence is also very long with multiple clauses."
+  },
+  {
+    "id": 4,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 5,
+    "naturalness": 4,
+    "flag": "\"klo 9.00–9.59\" is unusual; a Finn would more naturally say \"klo 9\" or \"klo 9–10\". The precise minute range feels technical/machine-generated."
+  },
+  {
+    "id": 6,
+    "naturalness": 3,
+    "flag": "\"klo 9.00–9.59 ja 17.00–17.59\" — same issue as id 5, very technical hour ranges. Also \"sunnuntaisin ja lauantaisin\" would more naturally be \"lauantaisin ja sunnuntaisin\" (Sat before Sun is more common in Finnish)."
+  },
+  {
+    "id": 7,
+    "naturalness": 2,
+    "flag": "Extremely long and hard to parse. \"klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59\" is a very unnatural way to express hour windows in everyday Finnish. The dual condition (date range OR weekday) tacked on at the end adds further confusion."
+  },
+  {
+    "id": 8,
+    "naturalness": 4,
+    "flag": "\"tasatunnista alkaen\" is slightly formal/technical but understandable. \"kuukauden 1. päivänä tai perjantaisin\" is a clear enough structure."
+  },
+  {
+    "id": 9,
+    "naturalness": 2,
+    "flag": "Same issue as id 7 — listing five separate hour windows as \"klo 0.00–0.59, 5.00–5.59...\" is not how a Finn would naturally express this. Very hard to read."
+  },
+  {
+    "id": 10,
+    "naturalness": 4,
+    "flag": "\"klo 0.00–0.30\" would more naturally be \"klo 0.00–0.30\" — acceptable, but a Finn might just say \"puoleen yöhön asti\". Otherwise fine."
+  },
+  {
+    "id": 11,
+    "naturalness": 3,
+    "flag": "\"0–30 minuutin kohdalla\" is awkward — in natural Finnish you'd say \"0–30. minuutilla\" or more likely just describe it differently. The comma before \"klo\" is also slightly off in rhythm."
+  },
+  {
+    "id": 12,
+    "naturalness": 3,
+    "flag": "\"joka kolmannen kuukauden\" is understandable but slightly stiff. Listing four specific months after explaining the pattern is redundant and confusing. Very long sentence."
+  },
+  {
+    "id": 13,
+    "naturalness": 4,
+    "flag": "Listing specific times \"klo 9.05, 9.10, 9.30, 17.05, 17.10 ja 17.30\" is clear and readable. The \"tai perjantaisin\" condition is natural."
+  },
+  {
+    "id": 14,
+    "naturalness": 3,
+    "flag": "\"klo 9–20 ja 22\" is an odd range — listing hour 22 separately after a range feels unnatural. The rest is okay but the sentence is long."
+  },
+  {
+    "id": 15,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 16,
+    "naturalness": 2,
+    "flag": "\"5 ja 30 sekunnin kohdalla\" combined with \"15 minuutin välein\" is very hard to parse — seconds and minutes mixed together in one sentence is confusing. The structure does not read naturally in Finnish."
+  }
+]

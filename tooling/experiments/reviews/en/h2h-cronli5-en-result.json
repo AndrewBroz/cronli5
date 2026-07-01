@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 3, "clarity": 3, "issue": "\"during the 9 a.m. through 8 p.m. and 10 p.m. hours\" is clunky; the trailing hour set jammed onto a range reads awkwardly" },
+ { "n": 3, "correct": true, "idiom": 3, "clarity": 3, "issue": "\"at 9 a.m. through 8 p.m. and at 10 p.m.\" is stilted; repeated month list (Jan/Apr/Jul/Oct) on both branches is verbose" },
+ { "n": 4, "correct": false, "idiom": 2, "clarity": 2, "issue": "June 31 does not exist; schedule never fires, but rendering states \"on June 31\" as if it does, misleading the reader" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 4, "clarity": 4, "issue": "comma placement \"or on Sunday, in January and July\" is slightly awkward but scoping is clear" },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 3, "clarity": 4, "issue": "\"from 9 a.m. through 8:05 p.m.\" mixes a top-of-hour bound with a :05 bound, slightly jarring" },
+ { "n": 11, "correct": false, "idiom": 2, "clarity": 2, "issue": "6-field cron botched: hour is * (every hour) not the 9th; \"9 a.m. hour\" misreads dom=9; \"1st through 5th\" misreads month field 1-5 (Jan-May) as days of month; whole day/month structure wrong" },
+ { "n": 12, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 3, "clarity": 3, "issue": "\"from midnight through 12:50 a.m.\" for a single-hour minute range is wordy; long sentence" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 3, "clarity": 4, "issue": "long; minute-range plus two-branch or-clause packs a lot into one sentence" },
+ { "n": 18, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 3, "clarity": 3, "issue": "very long; repeated four-month list on both or-branches is heavy to parse" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

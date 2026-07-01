@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 2,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 3,
+  "issue": "\"every 3 months\" loses the anchor (which 3 months). The set is Jan/Apr/Jul/Oct; clearer as \"in every 3rd month from January\" or listing the months."
+ },
+ {
+  "n": 3,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "When both day-of-month and day-of-week are restricted cron fires when EITHER matches. \"on the last day of the month, and on Friday\" reads as a conjunction; it must be \"on the last day of the month OR on Friday\"."
+ },
+ {
+  "n": 5,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "dom (15) and dow (FRI) both restricted = OR, but \"on day 15 of the month, and on Friday\" implies AND. Fix: \"on day 15 of the month OR on Friday\"."
+ },
+ {
+  "n": 6,
+  "correct": false,
+  "idiom": 4,
+  "clarity": 3,
+  "issue": "dom (L) and dow (Sun) both restricted = OR, but \"on the last day of the month, and on Sunday\" implies AND. Fix: use \"or\"."
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 8,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "dom (1) and dow (MON#2) both restricted = OR. The bare comma \"on day 1 of the month, on the second Monday of the month\" reads as AND/list, not the required EITHER-matches. Fix: \"on day 1 of the month OR on the second Monday\"."
+ },
+ {
+  "n": 9,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 10,
+  "correct": false,
+  "idiom": 2,
+  "clarity": 2,
+  "issue": "Two faults: (1) dom (31) and dow (Sat,Sun) both restricted = OR, but \"and on Saturday and Sunday\" implies AND. (2) \"Minutes 0 through 30 past the hour, at 09:00 AM and 05:00 PM\" is contradictory — the \":00\" times clash with the 0–30 minute span; should read \"minutes 0 through 30 past the 9 AM and 5 PM hours\"."
+ },
+ {
+  "n": 11,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "dom (1) and dow (MON) both restricted = OR, but \"on day 1 of the month, and on Monday\" implies AND. Fix: use \"or\". (Minor: \"every 45 minutes\" for */45 actually fires only at :00 and :45.)"
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 13,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "dom (15W) and dow (MON#2) both restricted = OR, but the comma-joined \"on the weekday nearest day 15..., on the second Monday...\" reads as conjunction. Fix: \"...nearest day 15 OR on the second Monday\"."
+ },
+ {
+  "n": 14,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "dom (L) and dow (5L) both restricted = OR, but \"on the last day of the month, on the last Friday of the month\" (comma) reads as AND. Fix: use \"or\"."
+ },
+ {
+  "n": 15,
+  "correct": false,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "dom (31) and dow (Sun) both restricted = OR, but \"on day 31 of the month, and on Sunday\" implies AND. Fix: use \"or\". (Time portion \"09:30 AM and 05:30 PM\" is correct.)"
+ },
+ {
+  "n": 16,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "dom (15W) and dow (MON-FRI) both restricted = OR, but comma-joined \"on the weekday nearest day 15..., Monday through Friday\" reads as conjunction. Fix: \"...nearest day 15 OR Monday through Friday\"."
+ },
+ {
+  "n": 17,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "dom (1) and dow (MON#2) both restricted = OR, but the comma \"on day 1 of the month, on the second Monday of the month\" reads as AND. Fix: use \"or\"."
+ },
+ {
+  "n": 18,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "dom (1-5) and dow (MON) both restricted = OR, but \"between day 1 and 5 of the month, and on Monday\" implies AND. Fix: \"between day 1 and 5 of the month OR on Monday\"."
+ },
+ {
+  "n": 19,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "dom (1) and dow (MON-FRI) both restricted = OR, but comma \"on day 1 of the month, Monday through Friday\" reads as conjunction. Fix: \"on day 1 of the month OR Monday through Friday\"."
+ },
+ {
+  "n": 20,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "dom (15W) and dow (MON#2) both restricted = OR, but comma \"on the weekday nearest day 15..., on the second Monday...\" reads as conjunction. Fix: use \"or\"."
+ }
+]

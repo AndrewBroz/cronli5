@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 3, "issue": "'every 15 minutes from five minutes past the hour from midnight through 12:50 a.m.' stacks two 'from' clauses awkwardly" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 3, "clarity": 3, "issue": "leads with bare '30 minutes past the hour' (no 'at'); inconsistent with sibling renderings that open with 'at'" },
+ { "n": 11, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 3, "issue": "very long run-on; multiple stacked clauses tax the reader but remains recoverable" },
+ { "n": 14, "correct": true, "idiom": 3, "clarity": 3, "issue": "opens with bare 'five minutes past the hour' (no 'at')" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 3, "issue": "double 'from' clause ('from five minutes past the hour from 9 a.m. through 9:50 a.m.') reads awkwardly" },
+ { "n": 17, "correct": true, "idiom": 3, "clarity": 3, "issue": "'every minute from 0 through 30 past the hour' omits 'minutes'; 'every six hours from 2 a.m.' leaves the upper bound implicit" },
+ { "n": 18, "correct": true, "idiom": 4, "clarity": 4, "issue": "day clause precedes time-of-day; slightly inverted but clear" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 5, "clarity": 5, "issue": "" }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "v1",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "Kuukausirajaus 'kesäkuusta syyskuuhun' tuntuu liittyvän vain 'joko'-lausekkeen ensimmäiseen vaihtoehtoon — lukija voi ymmärtää, että perjantaisin ajetaan ympäri vuoden. Lisäksi 'keskiyöllä' sijoittuu lauseen loppuun irrallaan. Selkeämpi: 'kesäkuusta syyskuuhun, joka yö keskiyöllä — joko kuun 1. päivänä tai perjantaisin'."
+  },
+  {
+    "id": "v2",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "Sama ongelma kuin v1: 'kesäkuusta elokuuhun' vaikuttaa rajaavan vain ensimmäisen ehdon, ei maanantaita. Lukija voi lukea 'maanantaisin keskiyöllä' ajankohtana, joka ei ole kuukausirajoituksen alainen. 'Keskiyöllä' myös jää lauseen hännälle. Selkeämpi: 'kesäkuusta elokuuhun joka yö keskiyöllä — joko kuukauden viimeisenä päivänä tai maanantaisin'."
+  },
+  {
+    "id": "v3",
+    "naturalness": 4,
+    "misread": true,
+    "flag": "'Kesäkuusta elokuuhun' voidaan tulkita rajoittavan vain ensimmäistä vaihtoehtoa ('1. ja 15. päivänä'), jolloin 'maanantaista perjantaihin' tuntuisi koskevat koko vuotta. Rakenne 'joko A tai B' ei luonnostaan sido yhteistä ehtoa molempiin."
+  },
+  {
+    "id": "v4",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "'Aina minuuttien 0–30 kohdalla' on epäselvä — tarkottaako se jokaista minuuttia välillä 0–30 vai vain minuutteja 0 ja 30? Suomenkielinen lukija oletusarvoisesti tulkitsee tämän 'minuuteilla 0 ja 30' eli kahdesti tunnissa, ei 31 kertaa. Selkeämpi: 'klo 9 ja 17 — joka minuutti minuutista 0 minuuttiin 30'."
+  },
+  {
+    "id": "v5",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "Sama ongelma kuin v4: 'minuuttien 0–30 kohdalla' kuulostaa hetkiltä 0 ja 30, ei jokaiselta minuutilta välillä. 'Kohdalla'-rakenne viittaa yksittäisiin pisteisiin eikä jatkuvaan väliin. Selkeämpi: 'klo 9.00–17.30 joka minuutti (minuuteilla 0–30 per tunti)'."
+  },
+  {
+    "id": "v6",
+    "naturalness": 3,
+    "misread": false,
+    "flag": "'Minuuttien 0 ja 30 kohdalla' on ymmärrettävä (kaksi pistettä = tasatunti ja puoli), mutta 'kohdalla' on hieman kömpelö. Luontevampi: 'klo 9.00–17.30 tasatunnein ja puolen tunnin välein'."
+  },
+  {
+    "id": "v7",
+    "naturalness": 3,
+    "misread": false,
+    "flag": "Ymmärrettävä, mutta 'aina minuuttien 0 ja 30 kohdalla' on jäykkää. Luontevampi: 'klo 8, 10, 12, 14, 16 ja 18 — tasatunnein ja puoltatuntia myöhemmin'."
+  },
+  {
+    "id": "v8",
+    "naturalness": 3,
+    "misread": false,
+    "flag": "Rakenne on ymmärrettävä. 'Aina minuuttien 0 ja 45 kohdalla' on vain hieman tekninen, mutta ei aiheuta väärinymmärrystä. Luontevampi: 'klo 0, 5, 10, 15 ja 20 tasatunnein ja varttia vaille seuraavaan tuntiin'."
+  },
+  {
+    "id": "v9",
+    "naturalness": 3,
+    "misread": false,
+    "flag": "Sama rakenne kuin v8. Toimiva mutta hieman tekninen."
+  },
+  {
+    "id": "v10",
+    "naturalness": 3,
+    "misread": false,
+    "flag": "'Aina minuuttien 5–10 kohdalla' — välimerkki '–' tässä yhteydessä toimii paremmin kuin v4:ssä, koska 'minuuttien 5–10' voidaan lukea välinä. Kuitenkin 'kohdalla' on edelleen hieman epäluonteinen. Merkitys välittyy."
+  },
+  {
+    "id": "v11",
+    "naturalness": 4,
+    "misread": false,
+    "flag": "Rakenne on selkeä ja luontevan kuuloinen. 'Sekä 22' on lyhyt mutta toimii. Minuutit välittyvät oikein."
+  },
+  {
+    "id": "v12",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v13",
+    "naturalness": 4,
+    "misread": false,
+    "flag": "'Klo 9.30–20.30 sekä 22.30' on selkeää; lukija ymmärtää nämä tasapuolisiksi yksittäisiksi ajankohdiksi. Luonteva."
+  }
+]

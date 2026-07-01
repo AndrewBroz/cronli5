@@ -1,0 +1,26 @@
+[
+  {
+    "id": "h0",
+    "pick": "every minute of the midnight hour",
+    "confidence": 5,
+    "reasoning": "\"Midnight through 12:59 a.m.\" conflates two naming registers (midnight / a.m.) for the same hour boundary, creating an implicit redundancy. \"The midnight hour\" is a settled idiom that names exactly 00:00–00:59 without forcing the reader to reconstruct a range from a named instant to a clock time."
+  },
+  {
+    "id": "h12",
+    "pick": "every minute of the noon hour",
+    "confidence": 5,
+    "reasoning": "\"From noon through 12:59 p.m.\" is directly redundant: noon is 12:00 p.m., so the phrase simultaneously uses a named instant and a clock/period suffix to label the same point, then appends 12:59 p.m. The mix of registers forces the reader to reconcile two systems. \"The noon hour\" is idiomatic, unambiguous, and eliminates the redundancy entirely."
+  },
+  {
+    "id": "h9",
+    "pick": "every minute of the 9 a.m. hour",
+    "confidence": 4,
+    "reasoning": "The range-span is technically correct, but for a single whole hour it synthesizes a range that conveys no additional precision — and repeating \"a.m.\" at both endpoints adds clutter. The single-hour idiom is more economical and equally clear. (Range-span would be appropriate if the span were a subset or crossed an a.m./p.m. boundary.)"
+  },
+  {
+    "id": "h17",
+    "pick": "every minute of the 5 p.m. hour",
+    "confidence": 4,
+    "reasoning": "Same logic as h9: \"5 p.m. through 5:59 p.m.\" repeats \"p.m.\" twice and adds no precision over the idiom for a single whole hour. The idiomatic form is cleaner and consistent with the other whole-hour entries."
+  }
+]

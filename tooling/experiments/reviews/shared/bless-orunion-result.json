@@ -1,0 +1,98 @@
+[
+ {
+  "n": 1,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 2,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 3,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 4,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 3,
+  "verdict": "bless",
+  "suggestion": "at midnight whenever the day is an odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday"
+ },
+ {
+  "n": 5,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 6,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 3,
+  "verdict": "revise",
+  "suggestion": "at midnight whenever the day is the last day of the month or the last Friday of the month"
+ },
+ {
+  "n": 7,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 8,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 9,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 10,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 11,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ },
+ {
+  "n": 12,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "verdict": "bless",
+  "suggestion": ""
+ }
+]

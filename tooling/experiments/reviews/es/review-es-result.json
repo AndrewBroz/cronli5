@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "correct": true,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "Contradiccion superficial: 'cada minuto del 0 al 30' (minutos 0-30) choca con 'a las 09:00 y 17:00', que con sus ':00' explicitos sugiere disparo solo en el minuto 0. El sentido (minutos 0-30 de las horas 9 y 17) es recuperable combinando clausulas, pero ambiguo. Mejor: 'cada minuto del 0 al 30, a las 9 y a las 17' (referir a la hora, no a 'HH:00')."
+ },
+ {
+  "n": 2,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 3,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 5,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 8,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 9,
+  "correct": false,
+  "idiom": 4,
+  "clarity": 3,
+  "issue": "El cron tiene 6 campos (0 5 9-17/2 L * *): segundo=0, minuto=5, horas 9/11/13/15/17, ultimo dia del mes. La descripcion omite por completo el campo de segundos (segundo 0); un lector no podria reconstruir que es un cron de 6 campos. Anadir 'en el segundo 0' / 'a los 0 segundos del minuto 5'."
+ },
+ {
+  "n": 10,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 13,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 14,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 15,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 16,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 17,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 18,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 19,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 20,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ }
+]

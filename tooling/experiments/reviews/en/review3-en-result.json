@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 3, "clarity": 3, "issue": "Dense run-on; 'every two hours from 1 a.m. on ... 1 and 15' is hard to parse but recoverable." },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 3, "clarity": 3, "issue": "Asymmetric bounds: 'from 9 a.m. through 5:05 p.m.' should read 9:05 a.m. for the lower bound; the bare-hour start is mildly misleading though recoverable from 'five minutes past the hour'." },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 3, "clarity": 4, "issue": "Long run-on but all values present and correctly scoped." },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "'every sixth hour starting at 2 a.m.' is fine; phrasing differs from siblings but accurate." },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 3, "clarity": 4, "issue": "'five minutes past the hour, every hour' is slightly clunky (missing 'at'), but correct and recoverable." },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

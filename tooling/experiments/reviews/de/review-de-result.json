@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Korrekt: DOM/DOW-ODER, Min 0-30, Std 9 und 17, Jun-Aug richtig. 'in den Minuten 0 bis 30' ist leicht steif gegenueber 'in den ersten 31 Minuten', aber eindeutig."
+ },
+ {
+  "n": 2,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 3,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Korrekt: */7 = 0,7,...,56, Std 9-17, 1.-5. Dez. 'von Minute 0 bis 56 jeder Stunde' ist etwas umstaendlich, aber der Schritt 7 ('alle 7 Minuten') macht die Menge eindeutig."
+ },
+ {
+  "n": 5,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Korrekt: DOM/DOW-ODER, Min 30 zu Std 9-17 (= 9:30...17:30), Sa+So, Jun-Aug. Reihenfolge 'sonntags und samstags' kehrt SAT,SUN um, semantisch unkritisch."
+ },
+ {
+  "n": 8,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": "Korrekt: 3/2 = 3,5,...,59, jede Stunde, Dez, Fr (nur DOW eingeschraenkt, kein ODER). Fehlendes Komma vor 'freitags' minimal."
+ },
+ {
+  "n": 9,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "6-Feld-Cron (Sek=0); Std 9-17/2 = 9,11,13,15,17 korrekt als 'alle 2 Stunden von 9 bis 17 Uhr', Min 5, letzter Tag des Monats. Sek=0 (Minutenanfang) wird konventionell weggelassen - akzeptabel."
+ },
+ {
+  "n": 10,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": "Korrekt: jede Minute, Std 9 und 17 (als '9 bis 9:59'/'17 bis 17:59'), DOM/DOW-ODER, Jun, So (0). Eindeutig."
+ },
+ {
+  "n": 13,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 14,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Korrekt: 5/15 = 5,20,35,50, */5 = 0,5,10,15,20, Jan, Mo (nur DOW). 'alle 15 Minuten ab Minute 5 jeder Stunde, alle 5 Stunden von 0 bis 20 Uhr' ist dicht, aber eindeutig."
+ },
+ {
+  "n": 15,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 16,
+  "correct": true,
+  "idiom": 3,
+  "clarity": 4,
+  "issue": "Korrekt: 2/6 = 2,8,14,20, LW = letzter Werktag, DOM/DOW-ODER, Dez. 'in jeder sechsten Stunde ab 2 Uhr' ist unidiomatischer als z.B. 'alle 6 Stunden ab 2 Uhr (2, 8, 14, 20 Uhr)', aber die Menge stimmt."
+ },
+ {
+  "n": 17,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 18,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Korrekt: */45 = 0,45, 9-17/2 = 9,11,13,15,17, 15W = naechster Werktag zum 15., DOM/DOW-ODER, Jun-Aug. 'naechsten Werktag zum 15.' ist verstaendlich, 'zum nahegelegenen Werktag' waere praeziser."
+ },
+ {
+  "n": 19,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 20,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Korrekt: */5 = 0,5,10,15,20, DOM/DOW-ODER (1. oder letzter Freitag), Jun-Aug, Min 30. Reihenfolge (Tag zuerst, dann Zeit) leicht ungewohnt, aber eindeutig."
+ }
+]

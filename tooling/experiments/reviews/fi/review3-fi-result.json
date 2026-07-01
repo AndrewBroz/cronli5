@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 4, "clarity": 4, "issue": "minuuttien esitys 'kohdalla' ja tuntien 'välein' eri tyylillä, mutta selvä" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 3, "clarity": 4, "issue": "kuukausi ('joulukuussa') sijoitettu loppuun viikonpäivän jälkeen, muista poiketen; luettavuus heikkenee" },
+ { "n": 5, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 5, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "'minuutista 0 minuuttiin 56' raskas; muuten oikein (klo 9-20 sekä 22)" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 3, "clarity": 4, "issue": "SAT,SUN renderoituu 'sunnuntaisin ja lauantaisin' (kaanteinen jarjestys); 'kello 12 aikana' kankea" },
+ { "n": 11, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "'klo 12 aina seitseman minuutin valein' sanajarjestys hieman kankea" },
+ { "n": 13, "correct": true, "idiom": 3, "clarity": 4, "issue": "'joka kuudennen tunnin aikana kello 2:sta alkaen' poikkeaa muiden tyylista ('kuuden tunnin valein klo 2:sta alkaen'); epajohdonmukaisuus" },
+ { "n": 14, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "kentat oikein (6-kenttainen, sekunnit edessa); jarjestys sekunti->tunti->minuutti hieman epatavallinen mutta selva" },
+ { "n": 16, "correct": true, "idiom": 3, "clarity": 4, "issue": "SAT,SUN 'sunnuntaisin ja lauantaisin' kaanteinen jarjestys" },
+ { "n": 17, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]
