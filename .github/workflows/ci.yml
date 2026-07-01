@@ -21,13 +21,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run test:types
-      - name: Generated docs are current
-        run: npm run docs -- --check
-      - run: npm run build
-      - run: npm test
-      - name: Coverage (with thresholds)
-        if: matrix.node-version == '22.x'
-        run: npm run coverage
+      # The one gate definition: lint, typecheck, type tests, the full suite
+      # under coverage thresholds, conciseness, generated-docs freshness, and
+      # the build — identical to the local pre-push hook.
+      - run: npm run verify

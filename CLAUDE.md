@@ -72,9 +72,11 @@ the status. The pipeline is in
 
 ## Before you finish
 
-CI runs these; so should you:
+CI, the pre-push hook, and you all run the same single gate:
 
 ```sh
-npm run lint && npm run typecheck && npm run test:types && \
-  npm test && npm run coverage && npm run docs -- --check && npm run build
+npm run verify
 ```
+
+(The step list lives once, in `package.json`'s `verify` script; the coverage
+run executes the full test suite, so there is no separate `npm test` step.)
