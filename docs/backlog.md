@@ -251,6 +251,18 @@ achieved floor rather than a forced 100. Two sub-items remain:
 
 ## Other deferred items
 
+- **Per-language clock-times cap (design settled, build on demand).** The
+  enumeration threshold `maxClockTimes` is a core constant (`specs.ts`, 6),
+  but i18n-design §5 concludes the threshold and fallback shape should be
+  overridable per language — enumeration is cheap in Mandarin (compact, no
+  agreement) and expensive in Finnish (every time inflects). The settled
+  answer to §7's "cap policy ownership" question: the core default stays the
+  policy (it is about cognitive load), and a language may supply its own cap,
+  threaded to `selectPlan` through the prepare/analyze call (the plan is
+  chosen before the renderer runs, so the cap must arrive with the normalized
+  options rather than as a renderer-side override). Build it when a language
+  actually wants a different value; an unused knob is YAGNI.
+
 - **Quartz `?` mutual-exclusion not enforced (`quartz: true`).** Quartz requires
   *exactly one* of day-of-month / day-of-week to be `?`. The `quartz` option
   (0.8.0) gates `?` and fixes the day-of-week numbering, but does not yet reject

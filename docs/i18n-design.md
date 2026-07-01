@@ -294,8 +294,9 @@ Every `lang/<code>/notes.md` must answer these questions:
 
 ## 7. Open questions
 
-* **Cap policy ownership**: core constant, language override, or both
-  (core default + language multiplier)?
+* **Cap policy ownership** — settled: core default + optional language
+  override, built when a language wants a different value (the design and
+  the threading constraint are recorded in docs/backlog.md).
 * **`lenient` fallback string** must come from the language
   module, which makes even the error path part of the corpus.
 * **Review model recording**: how much provenance belongs in `REVIEW.md`
