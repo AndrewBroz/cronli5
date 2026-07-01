@@ -253,23 +253,16 @@ contraction/gender layer but wider:
 5. **Recurrence head** — "le lundi" singular-definite, replacing es's plural
    "los lunes".
 
-## Residual inherited from es (panel-flagged, NOT fixed here)
+## Residual inherited from es (panel-flagged — RESOLVED)
 
-The blind fr-FR panel (2026-06-27) found one structural residual it did **not**
-ask fr to fix in isolation, because it is inherited from the es donor and shows
-identically in es (and pt):
-
-- **Double-"et" boundary on `* 2/4,18-20 * * *`.** The hour field unions a step
-  segment {2,6,10,14,18,22} with a range {18,19,20}; the renderer emits the
-  step segment's per-hour windows and then the range window, joining them with a
-  second "et": "… et de 22 h à 22 h 59 **et** de 18 h à 20 h 59". The two
-  consecutive "et" at the step/range join can momentarily read as one chained
-  range (hour 18 is covered by both arms — the same overlap behind the es+pt
-  hour-window-overlap residual on this exact cron). Fire set is correct;
-  meaning-preserving. A clean fix collapses the overlapping step/range arms to
-  the hour union, which is a change to the **shared es-derived rendering**, not
-  fr-only — tracked as a joint es+fr (and es+pt) follow-up in docs/backlog.md
-  (per-language follow-ups). Left as-is in this corpus.
+The blind fr-FR panel (2026-06-27) flagged one structural residual inherited
+from the es donor (the double-"et" boundary on `* 2/4,18-20 * * *`, where the
+step arm's per-hour windows and the 18-20 range window both covered hour 18).
+Resolved in the core, not per-language: normalization now merges list arms
+whose covered values intersect into their coverage union, so the pattern
+reaches every renderer as `2,6,10,14,18-20,22` and the corpus row reads one
+18-20 window with a single "et". The fix landed for all seven languages at
+once (docs/backlog.md records the class).
 
 ## Known trade-offs
 

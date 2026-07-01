@@ -643,6 +643,13 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
   // the same schedule as the English rendering.
   describe('额外覆盖 (additional coverage)', function() {
     run([
+      // Hour 18 is covered by both list arms (step fire and range start), so
+      // they merge into the union: one 18-20 span, no duplicated 18. A
+      // DISJOINT step arm survives the merge and keeps its per-hour fires.
+      ['* 2/4,18-20 * * *', '在2点、6点、10点、14点、18点至20点和22点，每分钟'],
+      ['* 1/4,18-20 * * *', '在1点、5点、9点、13点、17点、21点和18点至20点，每分钟'],
+      ['5,30 1/4,18-20 * * *', '每小时5分和30分，在1点、5点、9点、13点、17点、21点和18点至20点'],
+      ['0 0 1/4,18-20 * * *', '每天1点、5点、9点、13点、17点、21点和18点至20点'],
       ['*/1 * * * *', '每分钟'],
       ['1/1 * * * *', '每小时1至59分，每分钟'],
       ['0 9,12,17 * * *', '每天9点、正午和17点'],

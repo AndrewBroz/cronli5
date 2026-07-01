@@ -50,7 +50,13 @@ const EQUIVALENT = [
   ['list dedupe 9,9,17 = 9,17', '0 9,9,17 * * *', '0 9,17 * * *'],
   ['degenerate range 9-9 = 9', '0 9-9 * * *', '0 9 * * *'],
   ['step-one 1/1 = 1-59', '1/1 * * * *', '1-59 * * * *'],
-  ['5-field = 6-field second-0', '2 0 * * *', '0 2 0 * * *']
+  ['5-field = 6-field second-0', '2 0 * * *', '0 2 0 * * *'],
+  // Overlapping list arms merge into their coverage union; an arm another
+  // arm already covers is absorbed entirely.
+  ['overlap range+single 5-10,7 = 5-10', '5-10,7 * * * *', '5-10 * * * *'],
+  ['overlap absorbed by step 9,*/3 = */3', '0 9,*/3 * * *', '0 */3 * * *'],
+  ['overlap weekday 1-5,3 = 1-5', '0 0 * * 1-5,3', '0 0 * * 1-5'],
+  ['overlap union 1/2,2-4 = 1-5', '0 0 * * 1/2,2-4', '0 0 * * 1-5']
 ];
 
 // [label, cronA, cronB] — DIFFERENT schedules; the Schedule must differ.

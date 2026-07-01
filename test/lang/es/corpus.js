@@ -530,12 +530,31 @@ describe('Español (es):', function() {
       ['0 8/12 * * *', 'a las 8 de la mañana y 8 de la noche'],
       ['0 2/3 * * *', 'cada tres horas a partir de las 2 de la madrugada'],
       // A uniform step segment beside a range, rendered as per-hour windows.
+      // Hour 18 is covered by both arms, so they merge into the union: one
+      // 18-20 window, no duplicated 18 (the pt-BR/fr-FR panels' finding).
       ['* 2/4,18-20 * * *',
         'cada minuto de las 2 a las 2:59 de la madrugada, ' +
         'de las 6 a las 6:59 de la mañana, de las 10 a las 10:59 de la ' +
-        'mañana, de las 2 a las 2:59 de la tarde, de las 6 a las 6:59 de la ' +
-        'tarde y de las 10 a las 10:59 de la noche y de las 6 de la tarde a ' +
-        'las 8:59 de la noche']
+        'mañana, de las 2 a las 2:59 de la tarde, de las 6 de la tarde a ' +
+        'las 8:59 de la noche y de las 10 a las 10:59 de la noche'],
+      // A step arm beside a DISJOINT range arm survives the merge intact:
+      // the step keeps its per-hour windows, the range its window.
+      ['* 1/4,18-20 * * *',
+        'cada minuto de la 1 a la 1:59 de la madrugada, de las 5 a las ' +
+        '5:59 de la madrugada, de las 9 a las 9:59 de la mañana, de la 1 ' +
+        'a la 1:59 de la tarde, de las 5 a las 5:59 de la tarde y de las ' +
+        '9 a las 9:59 de la noche y de las 6 de la tarde a las 8:59 de ' +
+        'la noche'],
+      ['5,30 1/4,18-20 * * *',
+        'en los minutos 5 y 30 de cada hora, de la hora de la 1:00 de la ' +
+        'madrugada, de la hora de las 5:00 de la madrugada, de la hora de ' +
+        'las 9:00 de la mañana, de la hora de la 1:00 de la tarde, de la ' +
+        'hora de las 5:00 de la tarde, de la hora de las 9:00 de la noche ' +
+        'y de las 6 de la tarde a las 8 de la noche'],
+      ['0 0 1/4,18-20 * * *',
+        'cada hora a la 1 de la madrugada, a las 5 de la madrugada, a las ' +
+        '9 de la mañana, a la 1 de la tarde, a las 5 de la tarde, a las 9 ' +
+        'de la noche y de las 6 de la tarde a las 8 de la noche']
     ], ampm);
   });
 

@@ -8,6 +8,21 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Overlapping list arms merge into their coverage union — in every field
+  and every language.** `* 2/4,18-20 * * *` named hour 18 twice (the step
+  arm's window and the range window) in all seven languages — the defect the
+  pt-BR and fr-FR panels flagged as an es-family residual turned out to be
+  universal, as was the wider class: `0 12 * * 1-5,3` read "Monday through
+  Friday and Wednesday", `0 0 1-10,5 * *` "the 1st through 10th and 5th".
+  Normalization now merges arms whose covered values intersect into their
+  union, so equivalent patterns are identical through the whole pipeline:
+  `5-10,7` reads exactly like `5-10`, and an arm another arm fully covers is
+  absorbed (`9,*/3` reads exactly like `*/3`, keeping the step's cadence).
+  Disjoint arms — even adjacent ones — are untouched. Metamorphic rules pin
+  the equivalences; the fuzz dropped-value detector is clean over 100,800
+  patterns per language. Two corpus rows that had enshrined the duplicate
+  (pt `9,*/3`, en `8-10,2/4`) now expect the deduplicated reading.
+
 - **Numeric `0` fields are no longer mistaken for absent fields.** Two faces
   of the same truthiness bug: an array element of numeric `0` fell through to
   the field default, so `cronli5([0, 9])` read as "every minute of the 9 a.m.

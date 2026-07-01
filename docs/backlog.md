@@ -44,8 +44,13 @@ open:
 
 - **fi compound/OR "tai"-rakenne + stacked-qualifier naturalness.** The blind Sonnet panel (17-pattern spanning set, 2026-06-24) found a systematic naturalness defect in the compound day-of-month/day-of-week/month "tai"-rakenne and in stacked month-weekday-hour qualifiers (8/17 items ≤3, two at 2; all three personas flagged it). Fix the compound rendering, then re-run the blind panel + round-trip review and re-promote fi from experimental to beta.
 
-- **es+pt shared corpus residuals (two items, flagged by the pt-BR native
-  panel).** The blind pt-BR panel ratified the pt corpus but its technical
+- **es+pt shared corpus residuals (item 1 RESOLVED; item 2 open).** The
+  hour-window overlap in `* 2/4,18-20 * * *` is fixed in the core:
+  normalization merges list arms whose covered values intersect into their
+  coverage union (the same fix covers en/de/fi/zh, which had the identical
+  artifact, plus the enshrined-duplicate corpus rows found along the way —
+  pt `9,*/3` and en `8-10,2/4`). The OR DOW-arm "e" bracketing remains open.
+  Original item: The blind pt-BR panel ratified the pt corpus but its technical
   reviewer flagged two issues inherited from the es donor (present identically in
   both corpora, so a joint es+pt fix): (1) an **hour-window overlap** in
   `* 2/4,18-20 * * *` — hour 18 is rendered twice, once as the step arm's
@@ -57,8 +62,9 @@ open:
   to the shared es/pt rendering, not pt-only. (See src/lang/pt/notes.md
   §"Residuals inherited from es".)
 
-- **es+fr shared corpus residual (one item, flagged by the fr-FR native
-  panel).** The blind fr-FR panel (everyday / copy-editor / technical,
+- **es+fr shared corpus residual (RESOLVED).** The double-"et" boundary was
+  the fr face of the same overlap; the normalization-level union merge fixed
+  it with the es+pt item above. Original item: The blind fr-FR panel (everyday / copy-editor / technical,
   2026-06-27) ratified the fr corpus with zero misreads, but the copy-editor and
   technical reviewers both flagged a **double-"et" boundary** on
   `* 2/4,18-20 * * *`: the per-hour step-segment windows and the 18–20 range
@@ -134,11 +140,12 @@ Output-preserving; the full corpora were the proof.
   the union frame applies) is language-neutral; the frame words are not.
   Largest win, largest surface — do it when the union next needs a
   cross-language change.
-- **The es/pt/fr hour-window overlap collapse** (the `* 2/4,18-20 * * *`
-  residual above) is the natural first vehicle: the fix — collapsing a step
-  arm's per-hour windows into the union with an overlapping range arm — is
-  set math that belongs in core, and shipping it fixes three languages at
-  once instead of patching each.
+- **The hour-window overlap collapse — SHIPPED**, and one layer deeper than
+  planned: the union merge lives in *normalization* (`mergeOverlappingArms`),
+  so equivalent patterns are identical through the whole pipeline (`5-10,7`
+  IS `5-10`; `9,*/3` IS `*/3` by absorption) and all seven languages were
+  fixed at once — the overlap turned out to affect en/de/fi/zh too, not just
+  the es family. Metamorphic rules pin the equivalences.
 - **Confinement-eligibility variants.** zh's `isSteppedMinuteSeconds` (a
   different signature over its composed-clock routing) and en's
   `confinementEligible`/`secondLeadsCadence`/`secondLeadsClockPoint` express

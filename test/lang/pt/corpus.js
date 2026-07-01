@@ -313,15 +313,18 @@ describe('Português (pt):', function() {
         'todos os dias'],
       // A single fixed minute over a MIXED hour list whose fire count exceeds
       // the clock-time cap folds to the compact hour-segment form: the step
-      // fires expand into "às HH:MM" instants (the explicit 9 repeats — the
-      // donor does not dedup, meaning preserved).
-      ['30 9,*/3 * * *',
-        'todos os dias às 00:30, 03:30, 06:30, 09:30, 12:30, 15:30, ' +
-        '18:30, 21:30 e 09:30'],
+      // fires expand into "às HH:MM" instants (the explicit 1 is disjoint
+      // from the step fires and lists after them).
+      ['30 1,*/3 * * *',
+        'todos os dias à 01:30 e às 00:30, 03:30, 06:30, 09:30, 12:30, ' +
+        '15:30, 18:30 e 21:30'],
       // The same compact fold carrying a clock SECOND: "às HH:MM:SS".
-      ['10 30 9,*/3 * * *',
-        'todos os dias às 00:30:10, 03:30:10, 06:30:10, 09:30:10, ' +
-        '12:30:10, 15:30:10, 18:30:10, 21:30:10 e 09:30:10'],
+      ['10 30 1,*/3 * * *',
+        'todos os dias à 01:30:10 e às 00:30:10, 03:30:10, 06:30:10, ' +
+        '09:30:10, 12:30:10, 15:30:10, 18:30:10 e 21:30:10'],
+      // An hour arm the step already covers is absorbed (hour 9 IS a */3
+      // fire), so the pattern reads exactly like its duplicate-free '*/3'.
+      ['30 9,*/3 * * *', 'no minuto 30, a cada três horas'],
       // A date-OR-weekday union drops the day frame here; the unified frame
       // supplies the day-level suffix, so the seconds clause leads it.
       ['5,10 0 9 1 * MON',
@@ -685,13 +688,30 @@ describe('Português (pt):', function() {
       ['0 8/12 * * *', 'às 8 da manhã e 8 da noite'],
       ['0 2/3 * * *', 'a cada três horas a partir das 2 da madrugada'],
       // A uniform step segment beside a range, rendered as per-hour windows.
-      // 6pm tarde, 8pm noite (boundary 19h).
+      // 6pm tarde, 8pm noite (boundary 19h). Hour 18 is covered by both
+      // arms, so they merge into the union: one 18-20 window, no duplicated
+      // 18 (the pt-BR panel's finding).
       ['* 2/4,18-20 * * *',
         'a cada minuto das 2 às 2:59 da madrugada, ' +
         'das 6 às 6:59 da manhã, das 10 às 10:59 da ' +
-        'manhã, das 2 às 2:59 da tarde, das 6 às 6:59 da ' +
-        'tarde e das 10 às 10:59 da noite e das 6 da tarde às ' +
-        '8:59 da noite']
+        'manhã, das 2 às 2:59 da tarde, das 6 da tarde às ' +
+        '8:59 da noite e das 10 às 10:59 da noite'],
+      // A step arm beside a DISJOINT range arm survives the merge intact:
+      // the step keeps its per-hour windows, the range its window.
+      ['* 1/4,18-20 * * *',
+        'a cada minuto da 1 à 1:59 da madrugada, das 5 às 5:59 da ' +
+        'madrugada, das 9 às 9:59 da manhã, da 1 à 1:59 da tarde, das 5 ' +
+        'às 5:59 da tarde e das 9 às 9:59 da noite e das 6 da tarde às ' +
+        '8:59 da noite'],
+      ['5,30 1/4,18-20 * * *',
+        'nos minutos 5 e 30 de cada hora, da hora da 1:00 da madrugada, ' +
+        'da hora das 5:00 da madrugada, da hora das 9:00 da manhã, da ' +
+        'hora da 1:00 da tarde, da hora das 5:00 da tarde, da hora das ' +
+        '9:00 da noite e das 6 da tarde às 8 da noite'],
+      ['0 0 1/4,18-20 * * *',
+        'a cada hora à 1 da madrugada, às 5 da madrugada, às 9 da manhã, ' +
+        'à 1 da tarde, às 5 da tarde, às 9 da noite e das 6 da tarde às ' +
+        '8 da noite']
     ], ampm);
   });
 

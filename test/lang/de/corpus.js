@@ -82,7 +82,24 @@ describe('Deutsch (de):', function() {
       ['* 12 * * *', 'jede Minute der Mittagsstunde'],
       ['* 9-17 * * *', 'jede Minute von 9 bis 17:59 Uhr'],
       ['*/15 9-17 * * *', 'alle 15 Minuten von 9 bis 17:45 Uhr'],
-      ['*/30 9-17 * * *', 'alle 30 Minuten von 9 bis 17:30 Uhr']
+      ['*/30 9-17 * * *', 'alle 30 Minuten von 9 bis 17:30 Uhr'],
+      // Hour 18 is covered by both list arms (step fire and range start), so
+      // they merge into the union: one 18-20 window, no duplicated 18.
+      ['* 2/4,18-20 * * *',
+        'jede Minute von 2 bis 2:59 Uhr, von 6 bis 6:59 Uhr, ' +
+        'von 10 bis 10:59 Uhr, von 14 bis 14:59 Uhr, von 18 bis 20:59 Uhr ' +
+        'und von 22 bis 22:59 Uhr'],
+      // A step arm beside a DISJOINT range arm survives the merge intact:
+      // the step keeps its per-hour windows, the range its window.
+      ['* 1/4,18-20 * * *',
+        'jede Minute von 1 bis 1:59 Uhr, von 5 bis 5:59 Uhr, ' +
+        'von 9 bis 9:59 Uhr, von 13 bis 13:59 Uhr, von 17 bis 17:59 Uhr, ' +
+        'von 21 bis 21:59 Uhr und von 18 bis 20:59 Uhr'],
+      ['5,30 1/4,18-20 * * *',
+        'in den Minuten 5 und 30, um 1, 5, 9, 13, 17 und 21 Uhr ' +
+        'und von 18 bis 20 Uhr'],
+      ['0 0 1/4,18-20 * * *',
+        'stündlich um 1, 5, 9, 13, 17 und 21 Uhr und von 18 bis 20 Uhr']
     ]);
   });
 

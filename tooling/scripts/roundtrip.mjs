@@ -12,7 +12,7 @@ import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname, join} from 'node:path';
 import {sampleShapes, spread} from './sample.mjs';
-import {enumerateFires} from '../../src/core/analyze.js';
+import {enumerateFires} from '../../src/core/util.js';
 import cronli5 from '../../src/cronli5.js';
 
 // The review substrate is the committed core set: the cell sweep PLUS the
