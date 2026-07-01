@@ -38,6 +38,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   (see `Cronli5InputError` below) converts to the fallback; any other
   exception propagates.
 
+### Changed
+
+- **The `Language` contract's `reboot`/`fallback`/`sentence` are now
+  options-aware functions** (`reboot(opts)`, `fallback(opts)`,
+  `sentence(description, opts)`), so a dialect that changes whole words
+  (zh-Hant) flows through the arguments instead of zh's module-private
+  variant latch (now removed). Breaking for external custom language
+  modules; the bundled seven are updated, and `cronli5(pattern, options)`
+  itself is unchanged.
+- **The shared confinement decision tree moved into the core.** Renderers
+  carried byte-identical copies of `minuteStride` (six, including English),
+  `secondsConfinesMinute`, `isEveryOtherMinuteSeconds`, and
+  `isSteppedMinuteSeconds` (five each); they now live once in
+  `core/cadence.ts`, following the `renderStride` decision-in-core /
+  words-in-language pattern. Output is unchanged in every language.
+
 ### Added
 
 - **`Cronli5InputError`, a public named export.** Every intentional

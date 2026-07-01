@@ -112,6 +112,46 @@ open:
   needs a dedicated redesign + re-panel, not a patch. Pairs with the existing fi
   compound/"tai"-rakenne naturalness debt above — do both in one fi pass.
 
+## Hoisting shared decision trees into core
+
+**Status:** In progress — the first slice shipped. The i18n design's own test
+("if a change must touch more than one language module, it belonged in the
+core") applied retroactively: renderers had accumulated byte-identical copies
+of *decision* logic (which shapes confine, which lists are cadences), which is
+Schedule fact, not prose. The `core/cadence.ts` `renderStride` pattern is the
+template — the decision lives once in core, each language supplies only words.
+
+**Shipped:** `minuteStride` (was six identical copies, including en),
+`secondsConfinesMinute`, `isEveryOtherMinuteSeconds`, and
+`isSteppedMinuteSeconds` (five copies each) now live in `core/cadence.ts`.
+Output-preserving; the full corpora were the proof.
+
+**Remaining candidates, in rough value order:**
+
+- **The OR-union frame.** The es-derived family (es/pt/fr) shares the
+  date-or-weekday union structure wholesale, and en/de/fi/zh each rebuilt the
+  same routing. The *decision* (which arm shapes exist, month scoping, when
+  the union frame applies) is language-neutral; the frame words are not.
+  Largest win, largest surface — do it when the union next needs a
+  cross-language change.
+- **The es/pt/fr hour-window overlap collapse** (the `* 2/4,18-20 * * *`
+  residual above) is the natural first vehicle: the fix — collapsing a step
+  arm's per-hour windows into the union with an overlapping range arm — is
+  set math that belongs in core, and shipping it fixes three languages at
+  once instead of patching each.
+- **Confinement-eligibility variants.** zh's `isSteppedMinuteSeconds` (a
+  different signature over its composed-clock routing) and en's
+  `confinementEligible`/`secondLeadsCadence`/`secondLeadsClockPoint` express
+  overlapping decisions in renderer-local vocabulary; unifying them onto the
+  core predicates needs care, not copy-deletion.
+- **`flattenSteps`** (five copies): blocked on a small type nuance — the core
+  `Segment` single carries a string value, the renderer copies produce
+  numbers. Decide the canonical value type, then hoist.
+
+The working rule going forward: a fix that touches two or more renderers'
+*logic* triggers a hoist of that decision into core with per-language word
+thunks, rather than N parallel patches.
+
 ## Human-in-the-loop language review platform
 
 **Status:** Parked — it has long feedback loops (real fluent reviewers,
@@ -235,14 +275,12 @@ achieved floor rather than a forced 100. Two sub-items remain:
   `this.timeout`, bridged onto Vitest by `test/vitest.setup.ts`. Porting it to
   Vitest-native hooks (`beforeAll`/`afterAll`, per-test timeout) would let the
   shim file go.
-- **zh's `activeVariant` module latch (Hant).** Because the `Language` contract
-  exposes `reboot`/`fallback` as plain strings and `sentence(description)` takes
-  no options, the zh-Hant variant honors the dialect for those three via a
-  module-private mutable `activeVariant` set in `options()`. It is safe today
-  (the library is synchronous and `options()` always runs first), but it is
-  global mutable state in an otherwise-pure renderer. Making `reboot`/`fallback`/
-  `sentence` options-aware in the contract would remove the latch — worth doing
-  if the contract is revisited or another language needs the same.
+- **zh's `activeVariant` module latch (Hant). (RESOLVED)** The `Language`
+  contract now passes the normalized options to `reboot`/`fallback`/`sentence`,
+  so the zh-Hant variant flows through the arguments and the module-private
+  latch is gone. Breaking for external language modules (pre-1.0); the bundled
+  seven were updated together, and `test/lang/contract.js` pins the
+  options-aware behavior (including the stale-latch hazard case).
 
 ## Wider automated review coverage
 
