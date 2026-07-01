@@ -28,6 +28,7 @@
 //     patterns always parse seconds first and year last)
 
 import {analyze, prepare} from './core/index.js';
+import {Cronli5InputError} from './core/errors.js';
 import type {NormalizedOptions} from './core/schedule.js';
 import type {Cronli5, CronPattern, Cronli5Language, Cronli5Options}
   from './types.js';
@@ -44,15 +45,22 @@ function cronli5(cronPattern: CronPattern, options?: Cronli5Options): string {
       interpretCronPattern(cronPattern, lang, opts), lang, options);
   }
 
-  // Lenient mode never throws: unparseable input yields a fixed fallback
-  // description instead, so arbitrary user crontabs are safe to render. The
-  // fallback is an error string, not a schedule, so it is never wrapped.
+  // Lenient mode never throws on bad INPUT: unparseable input yields a fixed
+  // fallback description instead, so arbitrary user crontabs are safe to
+  // render. The fallback is an error string, not a schedule, so it is never
+  // wrapped. Only the typed input rejection is converted — any other
+  // exception is a genuine defect (e.g. a renderer bug on a valid pattern)
+  // and must propagate rather than masquerade as the fallback.
   try {
     return present(
       interpretCronPattern(cronPattern, lang, opts), lang, options);
   }
-  catch {
-    return lang.fallback;
+  catch (error) {
+    if (error instanceof Cronli5InputError) {
+      return lang.fallback;
+    }
+
+    throw error;
   }
 }
 
@@ -106,6 +114,7 @@ function fragment(cronPattern: CronPattern, options?: Cronli5Options): string {
 const callable: Cronli5 = Object.assign(cronli5, {sentence, fragment});
 
 export default callable;
+export {Cronli5InputError} from './core/errors.js';
 export type {
   Cronli5, Cronli5Dialect, Cronli5Language, Cronli5Options, CronPattern,
   CronPatternObject

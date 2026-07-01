@@ -10,6 +10,17 @@ describe('Common arrays:', function() {
     ]);
   });
 
+  // A numeric zero is a present value, not an absent element: [0, 9] is
+  // minute 0 of hour 9, the same schedule as ['0', '9'].
+  describe('numeric zeros are field values, not defaults', function() {
+    run([
+      [[0, 9], 'every day at 9 a.m.'],
+      [[0, 12], 'every day at noon'],
+      [[30, 9], 'every day at 9:30 a.m.'],
+      [[0, 0, 9, '*', '*', '*'], 'every day at 9 a.m.', {seconds: true}]
+    ]);
+  });
+
 
   describe('5-part arrays', function() {
     run([

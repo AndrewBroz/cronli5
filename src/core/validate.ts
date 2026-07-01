@@ -1,6 +1,7 @@
 // Loosely validate a cron-like object against the field specifications,
 // including Quartz tokens and wrap-around range rules.
 
+import {Cronli5InputError} from './errors.js';
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
 import type {Field} from './schedule.js';
@@ -164,7 +165,7 @@ function isValidSingle(value: string, spec: FieldSpec): boolean {
 
 // Throw a descriptive error for an invalid field value.
 function throwInvalidField(value: string | number, field: Field): never {
-  throw new Error('`cronli5` was passed an invalid field value "' +
-    value + '" for the ' + field + ' field.');
+  throw new Cronli5InputError('`cronli5` was passed an invalid field ' +
+    'value "' + value + '" for the ' + field + ' field.');
 }
 export {isQuartzDate, isQuartzWeekday, validateCronPattern};

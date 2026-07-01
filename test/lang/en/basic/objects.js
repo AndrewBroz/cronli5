@@ -43,6 +43,19 @@ describe('Common objects:', function() {
     run(tests);
   });
 
+  // A numeric zero is a present value: {hour: 0} names midnight, the same
+  // schedule as {hour: '0'}. (These stay out of the shared `tests` list —
+  // `populateCron` below fills absent fields by truthiness, which would
+  // mis-populate a zero.)
+  describe('numeric zeros are field values, not absences', function() {
+    run([
+      [{hour: 0}, 'every day at midnight'],
+      [{minute: 0}, 'every hour'],
+      [{second: 0}, 'every minute'],
+      [{minute: 0, hour: 0}, 'every day at midnight']
+    ]);
+  });
+
   describe('Populated cron objects', function() {
     run(populateCronObjects(tests));
   });

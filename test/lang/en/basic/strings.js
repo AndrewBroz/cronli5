@@ -1,6 +1,18 @@
 import {run} from '../../../runner.js';
 
 describe('Common strings:', function() {
+  // Crontab lines copied from files routinely carry surrounding whitespace;
+  // a trailing space must not read as a phantom sixth field.
+  describe('surrounding whitespace is ignored', function() {
+    run([
+      ['0 12 * * * ', 'every day at noon'],
+      [' 0 12 * * *', 'every day at noon'],
+      ['  0 12 * * *  ', 'every day at noon'],
+      ['0 12 * * *\n', 'every day at noon'],
+      ['\t0 12 * * *\t', 'every day at noon']
+    ]);
+  });
+
   describe('5-part strings', function() {
     run([
       ['* * * * *', 'every minute'],

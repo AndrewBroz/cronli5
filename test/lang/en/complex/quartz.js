@@ -98,9 +98,12 @@ describe('Quartz tokens:', function() {
       // The day-of-month side is never reindexed.
       ['0 0 1 * ?', 'on the 1st at midnight', {quartz: true}]
     ]);
-    // Quartz has no weekday 0.
+    // Quartz has no weekday 0, and none above 7: an out-of-range value must
+    // be rejected, not shifted onto a neighboring day by the reindexing.
     error([
-      ['0 0 ? * 0', 'invalid Quartz day-of-week value "0"', {quartz: true}]
+      ['0 0 ? * 0', 'invalid Quartz day-of-week value "0"', {quartz: true}],
+      ['0 0 ? * 8', 'invalid Quartz day-of-week value "8"', {quartz: true}],
+      ['0 0 ? * 10', 'invalid Quartz day-of-week value "10"', {quartz: true}]
     ]);
   });
 

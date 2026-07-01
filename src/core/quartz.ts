@@ -11,6 +11,7 @@
 // cron errors loudly instead of being mis-read; inside Quartz mode it is the
 // equivalent of `*`.
 
+import {Cronli5InputError} from './errors.js';
 import type {CronLike} from './specs.js';
 import {isNonNegativeInteger} from './util.js';
 
@@ -48,7 +49,7 @@ function applyQuartz(cronPattern: CronLike, quartz: boolean): void {
 // Throw the Quartz-token error if a field is exactly `?`.
 function rejectQuartzToken(value: string | number): void {
   if ('' + value === '?') {
-    throw new Error(quartzTokenMessage);
+    throw new Cronli5InputError(quartzTokenMessage);
   }
 }
 
@@ -79,16 +80,19 @@ function reindexSegment(segment: string): string {
   return head + suffix;
 }
 
-// Re-index a single weekday token: a number maps n -> n-1 (rejecting 0, which
-// Quartz does not use); a name passes through unchanged.
+// Re-index a single weekday token: a number maps n -> n-1 (rejecting 0 and
+// anything above 7, which Quartz does not use — re-indexing an out-of-range
+// value would silently shift it onto a neighboring valid day); a name passes
+// through unchanged.
 function reindexNumber(token: string): string {
   if (!isNonNegativeInteger(token)) {
     return token;
   }
 
-  if (token === '0') {
-    throw new Error('`cronli5` was passed an invalid Quartz day-of-week ' +
-      'value "0"; Quartz numbers weekdays 1 (Sunday) through 7 (Saturday).');
+  if (token === '0' || +token > 7) {
+    throw new Cronli5InputError(
+      '`cronli5` was passed an invalid Quartz day-of-week value "' + token +
+      '"; Quartz numbers weekdays 1 (Sunday) through 7 (Saturday).');
   }
 
   return '' + (+token - 1);
