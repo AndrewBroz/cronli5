@@ -1225,11 +1225,10 @@ function minuteConfinement(schedule: Schedule,
       Number(bounds[1]);
   }
 
-  const values = segmentWords(segments, opts).map(function plain(word) {
-    return String(Number(word));
-  });
-
-  return ' during minutes ' + joinList(values, opts);
+  // `segmentWords` already numeralizes a multi-value list and renders a
+  // range segment as its "<a> through <b>" pair, so its words are used
+  // as-is (coercing them back through `Number` would corrupt the ranges).
+  return ' during minutes ' + joinList(segmentWords(segments, opts), opts);
 }
 
 // A restricted hour under a finer cadence reads as a confinement. The form
