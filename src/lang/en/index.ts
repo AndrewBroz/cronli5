@@ -1832,30 +1832,21 @@ function numberWords(fires: number[],
 }
 
 // Render classified segments as words for an enumerated list: singles as
-// numbers, ranges as "<a> through <b>" pairs, step segments as their
-// enumerated fires. A multi-value list numeralizes throughout; a lone value
-// keeps the spelled-when-small style (see `listNumber`).
+// numbers, ranges as "<a> through <b>" pairs. A multi-value list
+// numeralizes throughout; a lone value keeps the spelled-when-small style
+// (see `listNumber`).
 function segmentWords(segments: Segment[],
   opts: NormalizedOptions): (string | number)[] {
-  const count = segments.reduce(function tally(sum, segment) {
+  // Normalization expands step arms in lists, so the segments here are
+  // singles and ranges only and the unit count is the segment count.
+  const num = listNumber(segments.length, opts);
+
+  return segments.map(function word(segment) {
     if (segment.kind === 'range') {
-      return sum + 1;
+      return num(segment.bounds[0]) + through(opts) + num(segment.bounds[1]);
     }
 
-    return sum + (segment.kind === 'step' ? segment.fires.length : 1);
-  }, 0);
-  const num = listNumber(count, opts);
-
-  return segments.flatMap(function word(segment) {
-    if (segment.kind === 'range') {
-      return [num(segment.bounds[0]) + through(opts) + num(segment.bounds[1])];
-    }
-
-    if (segment.kind === 'step') {
-      return segment.fires.map(num);
-    }
-
-    return [num(segment.value)];
+    return num((segment as {value: string}).value);
   });
 }
 

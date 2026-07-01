@@ -28,11 +28,11 @@ describe('Input normalization:', function() {
     ]);
   });
 
-  describe('a stepped-wildcard segment sorts ahead of a literal', function() {
-    // A `*/N` segment in a list fires first at the field minimum, so it sorts
-    // ahead of a later literal: `7,*/30` reads 0, 30 (from `*/30`), then 7.
+  describe('a step arm in a list reads as its fires, sorted', function() {
+    // A step is a cadence only when it is the whole field: in a list `*/30`
+    // reads as its fires (0, 30), which sort chronologically with the lone 7.
     run([
-      ['0 7,*/30 * * * *', 'at 0, 30, and 7 minutes past the hour']
+      ['0 7,*/30 * * * *', 'at 0, 7, and 30 minutes past the hour']
     ]);
   });
 

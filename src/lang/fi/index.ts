@@ -1591,29 +1591,22 @@ function hourWindowsFromTimes(
       pieces.push(rangeDigits({hour: +segment.bounds[0], minute: 0},
         {hour: +segment.bounds[1], minute: 59}, opts));
     }
-    else if (segment.kind === 'step') {
-      pieces.push(...segment.fires.map(function each(hour: number) {
-        return hourWindowDigits(hour, opts);
-      }));
-    }
     else {
-      pieces.push(hourWindowDigits(+segment.value, opts));
+      pieces.push(hourWindowDigits(+(segment as {value: string}).value,
+        opts));
     }
   });
 
   return 'klo ' + joinList(pieces);
 }
 
-// The on-the-hour fires of a range-free hour segment set, in order: a step
-// segment contributes its enumerated fires, a single its one value.
+// The on-the-hour fires of a range-free hour segment set, in order (a
+// single contributes its one value; normalization expands step arms).
 function hourSegmentFires(segments: Segment[]): number[] {
   const hours: number[] = [];
 
   segments.forEach(function each(segment: Segment) {
-    if (segment.kind === 'step') {
-      hours.push(...segment.fires);
-    }
-    else if (segment.kind === 'single') {
+    if (segment.kind === 'single') {
       hours.push(+segment.value);
     }
   });
@@ -1638,18 +1631,14 @@ function hourSegmentTimes(
   const pieces: string[] = [];
 
   segmentsOf(schedule, 'hour').forEach(function clock(segment: Segment) {
-    if (segment.kind === 'step') {
-      pieces.push(...segment.fires.map(function each(hour: number) {
-        return timeDigits(hour, minute, second, opts);
-      }));
-    }
-    else if (segment.kind === 'range') {
+    if (segment.kind === 'range') {
       pieces.push(rangeDigits(
         {hour: +segment.bounds[0], minute, second},
         {hour: +segment.bounds[1], minute, second}, opts));
     }
     else {
-      pieces.push(timeDigits(+segment.value, minute, second, opts));
+      pieces.push(timeDigits(+(segment as {value: string}).value, minute,
+        second, opts));
     }
   });
 

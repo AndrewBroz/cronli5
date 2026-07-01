@@ -455,15 +455,16 @@ describe('Suomi (fi):', function() {
       ['* 2/4,18-20 * * *',
         'joka minuutti klo 2.00–2.59, 6.00–6.59, 10.00–10.59, ' +
         '14.00–14.59, 18.00–20.59 ja 22.00–22.59'],
-      // A step arm beside a DISJOINT range arm survives the merge intact:
-      // the step keeps its per-hour windows, the range its window.
+      // A step arm in a list reads as its fires, and the display units sort
+      // chronologically: the 18-20 span sits between 17 and 21, with the
+      // trailing isolated hour joining via the established "sekä klo".
       ['* 1/4,18-20 * * *',
         'joka minuutti klo 1.00–1.59, 5.00–5.59, 9.00–9.59, ' +
-        '13.00–13.59, 17.00–17.59, 21.00–21.59 ja 18.00–20.59'],
+        '13.00–13.59, 17.00–17.59, 18.00–20.59 ja 21.00–21.59'],
       ['5,30 1/4,18-20 * * *',
-        'klo 1, 5, 9, 13, 17, 21 ja 18–20 aina minuuttien 5 ja 30 ' +
-        'kohdalla'],
-      ['0 0 1/4,18-20 * * *', 'joka päivä klo 1, 5, 9, 13, 17, 21 ja 18–20']
+        '5 ja 30 minuutin kohdalla klo 1, 5, 9, 13, 17, 18–20 sekä klo 21'],
+      ['0 0 1/4,18-20 * * *',
+        'joka päivä klo 1, 5, 9, 13, 17, 18–20 sekä klo 21']
     ]);
   });
 

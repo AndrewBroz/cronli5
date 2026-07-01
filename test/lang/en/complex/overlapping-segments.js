@@ -38,15 +38,16 @@ describe('Overlapping list segments merge into their union:', function() {
       ['0 12 * * 1-3,5', 'every Monday through Wednesday and Friday at noon'],
       ['0 12 * * 1-3,4', 'every Monday through Wednesday and Thursday at noon'],
       ['0 9,17-19 * * *', 'every day at 9 a.m., 5 p.m., 6 p.m., and 7 p.m.'],
-      // A step arm beside a DISJOINT range arm survives the merge intact:
-      // the step keeps its per-hour windows/fires, the range its window.
+      // A step arm beside a DISJOINT range arm: in a list the step reads as
+      // its fires, and all the display units sort chronologically (the 6-8
+      // p.m. window sits between 5 p.m. and 9 p.m., not after them).
       ['* 1/4,18-20 * * *',
         'every minute during the 1 a.m., 5 a.m., 9 a.m., 1 p.m., 5 p.m., ' +
-        '9 p.m., and 6 p.m. through 8 p.m. hours'],
+        '6 p.m. through 8 p.m., and 9 p.m. hours'],
       ['5,30 1/4,18-20 * * *',
         'at 5 and 30 minutes past the hour, at 1 a.m., at 5 a.m., ' +
-        'at 9 a.m., at 1 p.m., at 5 p.m., at 9 p.m., and at 6 p.m. ' +
-        'through 8 p.m.'],
+        'at 9 a.m., at 1 p.m., at 5 p.m., at 6 p.m. through 8 p.m., ' +
+        'and at 9 p.m.'],
       ['0 0 1/4,18-20 * * *',
         'every hour from 6 p.m. through 8 p.m. and at 1 a.m., 5 a.m., ' +
         '9 a.m., 1 p.m., 5 p.m., and 9 p.m.']

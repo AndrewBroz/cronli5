@@ -1821,17 +1821,14 @@ function hourRangeCadence(
 function hourContextTimes(schedule: Schedule, opts: Opts): string {
   const segments = segmentsOf(schedule, 'hour');
 
-  // Collect the point hours (singles and step fires) — a range stays a window.
+  // Collect the point hours (singles) — a range stays a window.
   const points: number[] = [];
   const hasRange = segments.some(function range(segment) {
     return segment.kind === 'range';
   });
 
   segments.forEach(function collect(segment) {
-    if (segment.kind === 'step') {
-      points.push(...segment.fires);
-    }
-    else if (segment.kind === 'single') {
+    if (segment.kind === 'single') {
       points.push(+segment.value);
     }
   });
@@ -1864,13 +1861,8 @@ function hourContextTimes(schedule: Schedule, opts: Opts): string {
         {hour: +segment.bounds[0], minute: 0},
         {hour: +segment.bounds[1], minute: 0}, opts));
     }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function each(hour) {
-        pieces.push(wholeHour(hour));
-      });
-    }
     else {
-      pieces.push(wholeHour(+segment.value));
+      pieces.push(wholeHour(+(segment as {value: string}).value));
     }
   });
 
@@ -1931,13 +1923,7 @@ function hourWindowsFromTimes(
         {hour: +segment.bounds[1], minute: 59}, opts);
     }
 
-    if (segment.kind === 'step') {
-      return joinList(segment.fires.map(function each(hour) {
-        return hourAsWindow(hour, opts);
-      }));
-    }
-
-    return hourAsWindow(+segment.value, opts);
+    return hourAsWindow(+(segment as {value: string}).value, opts);
   }));
 }
 
@@ -1955,20 +1941,15 @@ function hourSegmentTimes(
   const fromRange: boolean[] = [];
 
   segmentsOf(schedule, 'hour').forEach(function clock(segment) {
-    if (segment.kind === 'step') {
-      segment.fires.forEach(function each(hour) {
-        pieces.push(atTime(timePhrase(hour, minute, second, opts)));
-        fromRange.push(false);
-      });
-    }
-    else if (segment.kind === 'range') {
+    if (segment.kind === 'range') {
       pieces.push(timeRange(
         {hour: +segment.bounds[0], minute, second},
         {hour: +segment.bounds[1], minute, second}, opts));
       fromRange.push(true);
     }
     else {
-      pieces.push(atTime(timePhrase(+segment.value, minute, second, opts)));
+      pieces.push(atTime(timePhrase(+(segment as {value: string}).value,
+        minute, second, opts)));
       fromRange.push(false);
     }
   });

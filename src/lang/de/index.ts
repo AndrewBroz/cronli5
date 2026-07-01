@@ -555,32 +555,47 @@ function partTime(
   return minute === 0 ? String(hour) : hour + sep + pad(minute);
 }
 
-// The hour segments as parts: a range is a window, a single an "um H Uhr", a
-// step its fires. `minute`/`second` attach to each.
+// The hour segments as parts: a range is a window, singles are "um … Uhr"
+// instants. A run of adjacent single hours groups into one "um X, Y und Z
+// Uhr" phrase rather than repeating "um … Uhr" per hour; a range window
+// closes the run. `minute`/`second` attach to each.
 function hourSegmentParts(
   schedule: Schedule,
   minute: number,
   second: number | undefined,
   sep: string
 ): string[] {
-  return segmentsOf(schedule, 'hour').map(function part(segment): string {
+  const parts: string[] = [];
+  const instants: string[] = [];
+
+  function flushInstants(): void {
+    if (instants.length) {
+      parts.push('um ' + joinList(instants) + ' Uhr');
+      instants.length = 0;
+    }
+  }
+
+  segmentsOf(schedule, 'hour').forEach(function part(segment) {
     if (segment.kind === 'range') {
-      return 'von ' + partTime(+segment.bounds[0], minute, second, sep) +
-        ' bis ' + partTime(+segment.bounds[1], minute, second, sep) + ' Uhr';
+      flushInstants();
+      parts.push('von ' + partTime(+segment.bounds[0], minute, second, sep) +
+        ' bis ' + partTime(+segment.bounds[1], minute, second, sep) + ' Uhr');
+
+      return;
     }
 
-    if (segment.kind === 'step') {
-      return 'um ' + joinList(segment.fires.map(function fire(hour) {
-        return partTime(hour, minute, second, sep);
-      })) + ' Uhr';
+    if (segment.kind === 'single') {
+      instants.push(partTime(+segment.value, minute, second, sep));
     }
-
-    return 'um ' + partTime(+segment.value, minute, second, sep) + ' Uhr';
   });
+
+  flushInstants();
+
+  return parts;
 }
 
-// Each "during" hour as a full window (H:00–H:59); a range spans one window,
-// a step its fires.
+// Each "during" hour as a full window (H:00–H:59); a range spans one
+// window (normalization expands step arms in lists).
 function duringWindows(
   schedule: Schedule, times: HourTimesPlan, sep: string
 ): string[] {
@@ -590,18 +605,13 @@ function duringWindows(
     });
   }
 
-  return segmentsOf(schedule, 'hour').flatMap(function part(segment): string[] {
+  return segmentsOf(schedule, 'hour').map(function part(segment): string {
     if (segment.kind === 'range') {
-      return [hourWindow(+segment.bounds[0], +segment.bounds[1], 59, sep)];
+      return hourWindow(+segment.bounds[0], +segment.bounds[1], 59, sep);
     }
 
-    if (segment.kind === 'step') {
-      return segment.fires.map(function each(hour) {
-        return hourWindow(hour, hour, 59, sep);
-      });
-    }
-
-    return [hourWindow(+segment.value, +segment.value, 59, sep)];
+    return hourWindow(+(segment as {value: string}).value,
+      +(segment as {value: string}).value, 59, sep);
   });
 }
 

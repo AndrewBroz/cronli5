@@ -535,12 +535,12 @@ describe('Français (fr):', function() {
         'chaque minute de 2 h à 2 h 59, ' +
         'de 6 h à 6 h 59, de 10 h à 10 h 59, ' +
         'de 14 h à 14 h 59, de 18 h à 20 h 59 et de 22 h à 22 h 59'],
-      // A step arm beside a DISJOINT range arm survives the merge intact:
-      // the step keeps its per-hour windows, the range its window.
+      // A step arm in a list reads as its fires, and the display units sort
+      // chronologically: the 18-20 window sits between 17 and 21.
       ['* 1/4,18-20 * * *',
         'chaque minute de 1 h à 1 h 59, de 5 h à 5 h 59, de 9 h à 9 h 59, ' +
-        'de 13 h à 13 h 59, de 17 h à 17 h 59 et de 21 h à 21 h 59 ' +
-        'et de 18 h à 20 h 59']
+        'de 13 h à 13 h 59, de 17 h à 17 h 59, de 18 h à 20 h 59 ' +
+        'et de 21 h à 21 h 59']
     ]);
   });
 
@@ -927,15 +927,16 @@ describe('Français (fr):', function() {
         'aux minutes 5 et 30 de chaque heure, de l\'heure de 2 h, ' +
         'de l\'heure de 6 h, de l\'heure de 10 h, de l\'heure de 14 h, ' +
         'de 18 h à 20 h et de l\'heure de 22 h'],
-      // The disjoint sibling: the step arm survives the merge and keeps its
-      // per-hour form beside the range window.
+      // The disjoint sibling: the step arm reads as its fires, sorted
+      // chronologically around the range window; a trailing isolated hour
+      // joins via the established "et aussi".
       ['5,30 1/4,18-20 * * *',
         'aux minutes 5 et 30 de chaque heure, de l\'heure de 1 h, ' +
         'de l\'heure de 5 h, de l\'heure de 9 h, de l\'heure de 13 h, ' +
-        'de l\'heure de 17 h, de l\'heure de 21 h et de 18 h à 20 h'],
+        'de l\'heure de 17 h, de 18 h à 20 h et de l\'heure de 21 h'],
       ['0 0 1/4,18-20 * * *',
-        'chaque heure à 1 h, à 5 h, à 9 h, à 13 h, à 17 h, à 21 h ' +
-        'et de 18 h à 20 h'],
+        'chaque heure à 1 h, à 5 h, à 9 h, à 13 h, à 17 h ' +
+        'et de 18 h à 20 h et aussi à 21 h'],
       // The same hour shape under minute 0: each step fire is a clock time,
       // the range a window, and the isolated hour after the range joins with
       // the established "et aussi" (hour-segment clock times, fold path).

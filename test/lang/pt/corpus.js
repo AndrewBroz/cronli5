@@ -309,7 +309,7 @@ describe('Português (pt):', function() {
       // A clock-second + fixed minute over a MIXED hour list (explicit hour +
       // step): the step fires expand into the genitive clock list "das HH:MM".
       ['0/15 30 9,*/6 * * *',
-        'a cada 15 segundos das 00:30, 06:30, 12:30, 18:30 e 09:30, ' +
+        'a cada 15 segundos das 00:30, 06:30, 09:30, 12:30 e 18:30, ' +
         'todos os dias'],
       // A single fixed minute over a MIXED hour list whose fire count exceeds
       // the clock-time cap folds to the compact hour-segment form: the step
@@ -403,8 +403,8 @@ describe('Português (pt):', function() {
       // ("da hora das HH:00"), since a stepped minute fires no clock instant.
       ['5,30 9,*/6 * * *',
         'nos minutos 5 e 30 de cada hora, da hora das 00:00, ' +
-        'da hora das 06:00, da hora das 12:00, da hora das 18:00 ' +
-        'e da hora das 09:00',
+        'da hora das 06:00, da hora das 09:00, da hora das 12:00 ' +
+        'e da hora das 18:00',
         {ampm: false}]
     ], ampm);
   });
@@ -696,22 +696,23 @@ describe('Português (pt):', function() {
         'das 6 às 6:59 da manhã, das 10 às 10:59 da ' +
         'manhã, das 2 às 2:59 da tarde, das 6 da tarde às ' +
         '8:59 da noite e das 10 às 10:59 da noite'],
-      // A step arm beside a DISJOINT range arm survives the merge intact:
-      // the step keeps its per-hour windows, the range its window.
+      // A step arm in a list reads as its fires, and the display units sort
+      // chronologically: the 18-20 window sits between the 17 and 21 hours,
+      // with a trailing isolated hour joining via "e também".
       ['* 1/4,18-20 * * *',
         'a cada minuto da 1 à 1:59 da madrugada, das 5 às 5:59 da ' +
         'madrugada, das 9 às 9:59 da manhã, da 1 à 1:59 da tarde, das 5 ' +
-        'às 5:59 da tarde e das 9 às 9:59 da noite e das 6 da tarde às ' +
-        '8:59 da noite'],
+        'às 5:59 da tarde, das 6 da tarde às 8:59 da noite e das 9 às ' +
+        '9:59 da noite'],
       ['5,30 1/4,18-20 * * *',
         'nos minutos 5 e 30 de cada hora, da hora da 1:00 da madrugada, ' +
         'da hora das 5:00 da madrugada, da hora das 9:00 da manhã, da ' +
-        'hora da 1:00 da tarde, da hora das 5:00 da tarde, da hora das ' +
-        '9:00 da noite e das 6 da tarde às 8 da noite'],
+        'hora da 1:00 da tarde, da hora das 5:00 da tarde, das 6 da ' +
+        'tarde às 8 da noite e da hora das 9:00 da noite'],
       ['0 0 1/4,18-20 * * *',
         'a cada hora à 1 da madrugada, às 5 da madrugada, às 9 da manhã, ' +
-        'à 1 da tarde, às 5 da tarde, às 9 da noite e das 6 da tarde às ' +
-        '8 da noite']
+        'à 1 da tarde, às 5 da tarde e das 6 da tarde às 8 da noite ' +
+        'e também às 9 da noite']
     ], ampm);
   });
 

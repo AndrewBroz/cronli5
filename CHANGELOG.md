@@ -6,6 +6,21 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **A step arm inside a list reads as its fires, and display units sort
+  chronologically.** A step is a cadence only when it is the whole field
+  (`*/3` alone still reads "every three hours", and an absorbed arm keeps
+  it); inside a list its fires join the other arms and everything sorts —
+  `1/4,18-20` hours read "…5 p.m., 6 p.m. through 8 p.m., and 9 p.m."
+  instead of trailing the window after 9 p.m., in all seven languages. The
+  reviewed weekday display already treated step arms this way; the rule now
+  lives once in normalization. German additionally groups runs of adjacent
+  single hours into one "um 1, 5, 9, 13 und 17 Uhr" phrase. The renderers'
+  now-unreachable step-in-list display arms were removed (verified
+  unreachable by the corpora plus a clean 100,800-pattern fuzz per
+  language).
+
 ### Fixed
 
 - **Overlapping list arms merge into their coverage union — in every field

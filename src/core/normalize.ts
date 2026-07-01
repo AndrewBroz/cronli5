@@ -93,9 +93,35 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
     return '*';
   }
 
-  return merged.sort(function ascending(a, b) {
-    return firstFire(a, spec) - firstFire(b, spec);
-  }).join(',');
+  return unique(expandStepArms(merged, spec))
+    .sort(function ascending(a, b) {
+      return firstFire(a, spec) - firstFire(b, spec);
+    }).join(',');
+}
+
+// A step is a cadence only when it is the whole field. Inside a list it
+// reads as its enumerated fires (the reviewed weekday display already
+// treats step arms this way), so every arm becomes a single or a range and
+// the list sorts into chronological display order — a step arm's fires
+// never straddle a neighboring arm in the prose. Runs after the overlap
+// merge, whose absorption has already kept a dominant step ("9,*/3" is
+// "*/3") as the whole field.
+function expandStepArms(arms: string[], spec: FieldSpec): string[] {
+  if (arms.length < 2) {
+    return arms;
+  }
+
+  const top = typeof spec.top === 'number' ? spec.top : spec.max;
+
+  return arms.flatMap(function expand(arm) {
+    if (!includes(arm, '/')) {
+      return [arm];
+    }
+
+    return enumerateFires(arm, spec.min, top).map(function token(fire) {
+      return '' + fire;
+    });
+  });
 }
 
 // Merge canonical list arms whose covered values intersect into their
