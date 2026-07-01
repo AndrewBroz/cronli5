@@ -22,8 +22,10 @@ import {numeral, pad} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride,
-  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
+  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  renderStride as chooseStride, secondsConfinesMinute, segmentsOf,
+  singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
@@ -287,26 +289,6 @@ function isPinnedMinuteSeconds(
       schedule.shapes.second === 'step');
 }
 
-// The minute field's step stride for the confinement frame, or null when the
-// minute is not a stepped cadence. A `step`-shaped field reads its segment; a
-// `list`-shaped field the core enumerated from a uneven step (`2/7` → 2,9,…,58)
-// recovers the progression from its values.
-function minuteStride(
-  schedule: Schedule
-): {start: number; interval: number; last: number} | null {
-  if (schedule.shapes.minute === 'step') {
-    const segment = stepSegment(schedule, 'minute');
-    const start = segment.startToken === '*' ? 0 : +segment.startToken;
-
-    return {interval: segment.interval, last:
-      segment.fires[segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segmentsOf(schedule, 'minute'));
-
-  return values && arithmeticStep(values);
-}
-
 // A stepped minute under a wildcard hour: the second clause leads, a COMMA,
 // then the minute's own STANDALONE cardinal cadence ("chaque seconde, toutes
 // les six minutes à partir de la minute 4 de chaque heure"; "aux secondes 5,
@@ -323,21 +305,6 @@ function steppedMinuteConfinement(
 ): string {
   return lead + ', ' + render(schedule, plan.rest, opts) +
     trailingQualifier(schedule, opts);
-}
-
-// Whether a stepped minute fills a wildcard hour under a wildcard/stepped
-// second — the shape the confinement frame above handles.
-function isSteppedMinuteSeconds(
-  schedule: Schedule,
-  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
-): boolean {
-  return (plan.rest.kind === 'minuteFrequency' ||
-    plan.rest.kind === 'multipleMinutes') &&
-    (schedule.shapes.second === 'wildcard' ||
-      schedule.shapes.second === 'step') &&
-    schedule.shapes.hour === 'wildcard' &&
-    schedule.pattern.minute !== '*/2' &&
-    minuteStride(schedule) !== null;
 }
 
 // The leading seconds words for a clock-point second, WITHOUT the trailing "de
@@ -380,30 +347,6 @@ function confinedMinutePhrase(schedule: Schedule): string {
   }
 
   return 'de la minute ' + schedule.pattern.minute + ' de chaque heure';
-}
-
-// Whether a clock-point second (list, range, or single) sits under a restricted
-// minute and a wildcard hour — the shape that must CONFINE the minute in the
-// genitive rather than juxtapose it behind a comma (two independent schedules).
-// A second LIST the core enumerated from a step (`3/2`) is really a stride
-// cadence and stays out. The single-second + single-minute pair folds into one
-// coherent clock point and is excluded.
-function secondsConfinesMinute(schedule: Schedule): boolean {
-  const {second, minute, hour} = schedule.shapes;
-
-  if (second === 'list') {
-    const values = singleValues(segmentsOf(schedule, 'second'));
-
-    if (values && arithmeticStep(values)) {
-      return false;
-    }
-  }
-
-  const clockPoint = second === 'single' || second === 'range' ||
-    second === 'list';
-
-  return clockPoint && minute !== 'wildcard' && hour === 'wildcard' &&
-    !(second === 'single' && minute === 'single');
 }
 
 // The minute-confinement rendering for a compose-seconds plan, or null when the
@@ -519,23 +462,6 @@ function renderComposeSeconds(
   const lead = restOwnsLead ? '' : secondsLeadClause(schedule, opts) + ', ';
 
   return lead + render(schedule, plan.rest, opts);
-}
-
-// A wildcard second over an unoffset minute */2 with a wildcard hour: the two
-// cadences read as contradictory side by side, so they bind into one.
-function isEveryOtherMinuteSeconds(
-  schedule: Schedule,
-  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
-): boolean {
-  if (plan.rest.kind !== 'minuteFrequency' ||
-      schedule.shapes.second !== 'wildcard' ||
-      schedule.shapes.hour !== 'wildcard') {
-    return false;
-  }
-
-  const minuteStep = stepSegment(schedule, 'minute');
-
-  return minuteStep.startToken === '*' && minuteStep.interval === 2;
 }
 
 // A wildcard or stepped second under a single pinned minute and specific

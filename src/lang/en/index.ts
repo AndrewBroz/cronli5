@@ -4,7 +4,7 @@
 // See docs/i18n-design.md.
 
 import {
-  arithmeticStep, hourListStride, offsetCleanStride,
+  arithmeticStep, hourListStride, minuteStride, offsetCleanStride,
   renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
@@ -717,25 +717,6 @@ function minuteStrideConfinement(stride: {start: number; interval: number;
         ' past the hour';
     }
   });
-}
-
-// The minute field's step stride for the confinement frame, or null when the
-// minute is not a stepped cadence. A `step`-shaped field (`*/6`) reads its
-// segment directly; a `list`-shaped field the core enumerated from an uneven
-// step (`2/7` → 2,9,…,58) recovers the progression from its values.
-function minuteStride(schedule: Schedule):
-  {start: number; interval: number; last: number} | null {
-  if (schedule.shapes.minute === 'step') {
-    const segment = stepSegment(schedule, 'minute');
-    const start = segment.startToken === '*' ? 0 : +segment.startToken;
-
-    return {interval: segment.interval, last:
-      segment.fires[segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segmentsOf(schedule, 'minute'));
-
-  return values && arithmeticStep(values);
 }
 
 // Confine a cadence to a clean hour stride: "during every other hour", with
