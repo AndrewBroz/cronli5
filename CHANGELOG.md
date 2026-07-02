@@ -23,6 +23,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **English: a restricted month scopes the whole date-or-weekday union.**
+  The gb dialect and `short` union frame folded the month into one arm and
+  restated it on the other ("on 13 June or on Friday in June") or trailed
+  it ambiguously; the month now fronts the union once — "in June, on the
+  13th or on Friday at midnight" — whatever its shape (single, range, list,
+  odd/even). The default dialect's already-fronted month lead gains the
+  comma of a fronted adverbial: "in June, at midnight whenever the day is
+  the 13th or the last Friday of the month".
 - **Overlapping list arms merge into their coverage union — in every field
   and every language.** `* 2/4,18-20 * * *` named hour 18 twice (the step
   arm's window and the range window) in all seven languages — the defect the

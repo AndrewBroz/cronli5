@@ -39,6 +39,10 @@ describe('Short option:', function() {
       ['0 12 * 11-2 *', 'every day in Nov-Feb at noon', options],
       ['0 0 1-5 * *', 'on the 1st-5th at midnight', options],
       ['0 0 13 * 1-5', 'on the 13th or on Mon-Fri at midnight', options],
+      // A restricted month fronts the whole union once.
+      ['0 0 13 6 5L',
+        'in Jun, on the 13th or on the last Fri of the month at midnight',
+        options],
       ['0 0 * * FRI-MON', 'every Fri-Mon at midnight', options],
       ['0-29 * * * *', 'every minute from 0-29 past the hour', options],
       ['0-30,45 9 * * *',

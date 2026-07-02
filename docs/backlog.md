@@ -17,14 +17,18 @@ decision tree into `core/cadence.ts`) — see CHANGELOG; `test/lang/en/core-set.
 and `known-issues.js` are now un-skipped and passing. What genuinely remains
 open:
 
-- **A quartz "… of the month" range/OR sub-class still over- or mis-scopes the
-  month.** The single-month and distributive `every odd/even` redundancy-drop
-  shipped (`0 0 * */2 5L` → "the last Friday in every odd-numbered month"), but
-  two edges are open: a month **range** ("…in January through March") needs care,
-  since dropping "of the month" can read as one Friday in the span rather than
-  per-month; and the **OR** cases (`… or on the last Friday of the month`) are
-  really the month-not-scoping-the-union bug (the en analogue of the zh OR fix),
-  not a redundancy.
+- **A quartz "… of the month" range/OR sub-class over- or mis-scoped the
+  month. (RESOLVED)** The OR cases were the month-not-scoping-the-union bug
+  (the en analogue of the zh OR fix): the gb/short union frame folded the
+  month into one arm and repeated it on the other ("on 13 June or on Friday
+  in June"). Both en union frames now front the month once, set off by a
+  comma, so it scopes the whole union — "in June, on the 13th or on Friday
+  at midnight"; "in January through March, at midnight whenever the day is
+  the 13th or the last Friday of the month". The month-range edge resolves
+  with it: "of the month" is kept inside the fronted scope, so the Quartz
+  arm stays per-month within the range (the non-union range form, "on the
+  last Friday of each month from January through March", was already
+  shipped).
 
 - **Audit the bounded-vs-open step class across every field × language.** Both
   found instances were zh (day, fixed in 0.3.3; month, fixed in 0.3.4) and shared

@@ -132,7 +132,22 @@ describe('Quartz tokens:', function() {
         'Monday'],
       ['0 0 13 * 5L',
         'at midnight whenever the day is the 13th or the last Friday of the ' +
-        'month']
+        'month'],
+      // A restricted month scopes the whole union: it fronts the clause
+      // once (set off by a comma), whatever its shape — single, range,
+      // list, or the odd/even parity idiom.
+      ['0 0 13 6 5L',
+        'in June, at midnight whenever the day is the 13th or the last ' +
+        'Friday of the month'],
+      ['0 0 13 1-3 5L',
+        'in January through March, at midnight whenever the day is the ' +
+        '13th or the last Friday of the month'],
+      ['0 0 13 1,7 5L',
+        'in January and July, at midnight whenever the day is the 13th ' +
+        'or the last Friday of the month'],
+      ['0 0 13 */2 5L',
+        'in every odd-numbered month, at midnight whenever the day is ' +
+        'the 13th or the last Friday of the month']
     ]);
   });
 
