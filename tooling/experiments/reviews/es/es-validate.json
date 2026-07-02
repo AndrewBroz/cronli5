@@ -1,0 +1,42 @@
+[
+  {
+    "id": "B",
+    "meaning": "Every day at these six times: 12:00, 22:00, 23:00, 00:00, 01:00 and 02:00.",
+    "spanish": "todos los días a las 12:00, 22:00, 23:00, 00:00, a la 01:00 y a las 02:00"
+  },
+  {
+    "id": "C",
+    "meaning": "At minute 1 and second 1 of each hour (HH:01:01).",
+    "spanish": "en el minuto 1 y el segundo 1 de cada hora"
+  },
+  {
+    "id": "D",
+    "meaning": "Every hour from 09:00 through 20:00, and also at 22:00 (22:00 is a separate extra hour; 21:00 is excluded).",
+    "spanish": "cada hora de las 09:00 a las 20:00 y también a las 22:00"
+  },
+  {
+    "id": "E",
+    "meaning": "In December only, at 23:59, on the 31st OR on any Friday (both December and 23:59 apply to both conditions; inclusive OR).",
+    "spanish": "en diciembre, el 31 o los viernes, a las 23:59"
+  },
+  {
+    "id": "F1",
+    "meaning": "On Mondays at 09:30, firing at second 5 and second 10 (09:30:05 and 09:30:10).",
+    "spanish": "los lunes a las 09:30, en los segundos 5 y 10"
+  },
+  {
+    "id": "F2",
+    "meaning": "Monday through Friday, at minute 30 of each hour from 09:00 to 17:30, every 15 seconds within that minute.",
+    "spanish": "de lunes a viernes, en el minuto 30 de cada hora de las 09:00 a las 17:30, cada 15 segundos"
+  },
+  {
+    "id": "F3",
+    "meaning": "Every minute from minute 0 through 30, but only during the hours 09:00, 17:00, 18:00 and 19:00.",
+    "spanish": "del minuto 0 al 30 de las 09:00, 17:00, 18:00 y 19:00"
+  },
+  {
+    "id": "F4",
+    "meaning": "Every minute from minute 0 through 30, within every second hour (every two hours).",
+    "spanish": "cada minuto del 0 al 30 dentro de cada dos horas"
+  }
+]

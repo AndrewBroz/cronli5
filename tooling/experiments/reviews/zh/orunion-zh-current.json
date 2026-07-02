@@ -1,0 +1,74 @@
+[
+ {
+  "n": 1,
+  "cron": "0 0 1 * 5",
+  "current": "每月1日或每周五，凌晨0点",
+  "en_reference": "at midnight whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 2,
+  "cron": "0 0 1 * 1-5",
+  "current": "每月1日或每周一至周五，凌晨0点",
+  "en_reference": "at midnight whenever the day is the 1st or a weekday"
+ },
+ {
+  "n": 3,
+  "cron": "0 0 1 * 5L",
+  "current": "每月1日或本月最后一个周五，凌晨0点",
+  "en_reference": "at midnight whenever the day is the 1st or the last Friday of the month"
+ },
+ {
+  "n": 4,
+  "cron": "0 0 */2 * */2",
+  "current": "每2天或周二、四、六、日，凌晨0点",
+  "en_reference": "at midnight whenever the day is an odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday"
+ },
+ {
+  "n": 5,
+  "cron": "0 0 1-15 * 0",
+  "current": "每月1日至15日或每周日，凌晨0点",
+  "en_reference": "at midnight whenever the day is from the 1st through the 15th or a Sunday"
+ },
+ {
+  "n": 6,
+  "cron": "0 0 L * 5L",
+  "current": "本月最后一天或本月最后一个周五，凌晨0点",
+  "en_reference": "at midnight whenever the day is the last day of the month or the last Friday of the month"
+ },
+ {
+  "n": 7,
+  "cron": "0 0 L * 0",
+  "current": "本月最后一天或每周日，凌晨0点",
+  "en_reference": "at midnight whenever the day is the last day of the month or a Sunday"
+ },
+ {
+  "n": 8,
+  "cron": "0 0 1 1 0",
+  "current": "1月，1日或每周日，凌晨0点",
+  "en_reference": "in January at midnight whenever the day is the 1st or a Sunday"
+ },
+ {
+  "n": 9,
+  "cron": "0 0 1 1-3 5L",
+  "current": "1月至3月，1日或最后一个周五，凌晨0点",
+  "en_reference": "in January through March at midnight whenever the day is the 1st or the last Friday of the month"
+ },
+ {
+  "n": 10,
+  "cron": "*/5 * 1 * 5",
+  "current": "每5分钟，每月1日或每周五",
+  "en_reference": "every five minutes whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 11,
+  "cron": "*/5 * 1 6 5",
+  "current": "每5分钟，6月，1日或每周五",
+  "en_reference": "in June every five minutes whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 12,
+  "cron": "0 9-17 1 6 5",
+  "current": "6月，1日或每周五在9点至17点之间，每小时",
+  "en_reference": "in June every hour from 9 a.m. through 5 p.m. whenever the day is the 1st or a Friday"
+ }
+]

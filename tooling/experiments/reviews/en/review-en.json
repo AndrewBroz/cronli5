@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "cron": "0-30 9,17 1,15 6-8 MON",
+  "rendering": "every minute from 0 through 30 past the hour, at 9 a.m. and 5 p.m. on the 1st and 15th or on Monday in June through August"
+ },
+ {
+  "n": 2,
+  "cron": "*/15 12 15 * *",
+  "rendering": "every 15 minutes from noon through 12:45 p.m. on the 15th"
+ },
+ {
+  "n": 3,
+  "cron": "* 12 1 6 FRI",
+  "rendering": "every minute of the noon hour on June 1 or on Friday in June"
+ },
+ {
+  "n": 4,
+  "cron": "*/7 9-17 1-5 12 *",
+  "rendering": "every seven minutes from 0 through 56 minutes past the hour from 9 a.m. through 5 p.m. on December 1 through 5"
+ },
+ {
+  "n": 5,
+  "cron": "0 0 L * FRI",
+  "rendering": "on the last day of the month or on Friday at midnight"
+ },
+ {
+  "n": 6,
+  "cron": "0-30 12 31 1 *",
+  "rendering": "every minute from noon through 12:30 p.m. on January 31"
+ },
+ {
+  "n": 7,
+  "cron": "30 9-17 1-5 6-8 SAT,SUN",
+  "rendering": "at 30 minutes past the hour from 9 a.m. through 5:30 p.m. on the 1st through 5th or on Sunday and Saturday in June through August"
+ },
+ {
+  "n": 8,
+  "cron": "3/2 * * 12 FRI",
+  "rendering": "every two minutes from 3 through 59 minutes past the hour on Friday in December"
+ },
+ {
+  "n": 9,
+  "cron": "0 5 9-17/2 L * *",
+  "rendering": "five minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the last day of the month"
+ },
+ {
+  "n": 10,
+  "cron": "*/15 12 1-5 6 MON#2",
+  "rendering": "every 15 minutes from noon through 12:45 p.m. on June 1 through 5 or on the second Monday of the month in June"
+ },
+ {
+  "n": 11,
+  "cron": "30 9 1,15 * SAT,SUN",
+  "rendering": "on the 1st and 15th or on Sunday and Saturday at 9:30 a.m."
+ },
+ {
+  "n": 12,
+  "cron": "* 9,17 1-5 6 0",
+  "rendering": "every minute during the 9 a.m. and 5 p.m. hours on June 1 through 5 or on Sunday in June"
+ },
+ {
+  "n": 13,
+  "cron": "5 2/6 L 1,7 FRI",
+  "rendering": "on the last day of the month in January and July or on Friday at 2:05 a.m., 8:05 a.m., 2:05 p.m., and 8:05 p.m."
+ },
+ {
+  "n": 14,
+  "cron": "5/15 */5 * 1 MON",
+  "rendering": "every 15 minutes from five minutes past the hour, every five hours from midnight through 8 p.m. on Monday in January"
+ },
+ {
+  "n": 15,
+  "cron": "5 * 1,15 */3 MON-FRI",
+  "rendering": "five minutes past the hour, every hour on January, April, July, and October 1 and 15 or on Monday through Friday in January, April, July, and October"
+ },
+ {
+  "n": 16,
+  "cron": "*/7 2/6 LW 12 SAT,SUN",
+  "rendering": "every seven minutes from 0 through 56 minutes past the hour, every six hours from 2 a.m. on the last weekday of the month in December or on Sunday and Saturday"
+ },
+ {
+  "n": 17,
+  "cron": "* */5 31 12 5L",
+  "rendering": "every minute, every five hours from midnight through 8 p.m. on December 31 or on the last Friday of the month in December"
+ },
+ {
+  "n": 18,
+  "cron": "*/45 9-17/2 15W 6-8 MON#2",
+  "rendering": "at 0 and 45 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the weekday nearest the 15th in June through August or on the second Monday of the month"
+ },
+ {
+  "n": 19,
+  "cron": "5 9 * 6 SAT,SUN",
+  "rendering": "every Sunday and Saturday in June at 9:05 a.m."
+ },
+ {
+  "n": 20,
+  "cron": "30 */5 1 6-8 5L",
+  "rendering": "30 minutes past the hour, every five hours from midnight through 8 p.m. on the 1st or on the last Friday of the month in June through August"
+ }
+]

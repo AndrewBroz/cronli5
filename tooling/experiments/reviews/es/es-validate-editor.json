@@ -1,0 +1,50 @@
+[
+  {
+    "id": "B",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "Article inconsistency mid-list: '00:00, a la 01:00 y a las 02:00' mixes the repeated-preposition style ('a la'/'a las') with the bare-comma style used for the first four times. The correct article for 01:00 is 'a la una' (singular), but '01:00' rendered numerically still requires 'a la 01:00', not 'a las 01:00'. However the real problem is structural: the first four entries drop 'a las' ('a las 12:00, 22:00, 23:00, 00:00') then the list abruptly reintroduces the preposition only for the last two, making the list feel broken and potentially misread as two separate clauses. Either keep bare commas throughout and attach one 'a las' at the head ('a las 12:00, 22:00, 23:00, 00:00, 01:00 y 02:00') or repeat consistently. Additionally '00:00' is midnight and requires 'a las 00:00' (plural convention), while 01:00 requires 'a la 01:00' (singular) — the mixed article at the end is the only correct part but looks like an error in context."
+  },
+  {
+    "id": "C",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "D",
+    "naturalness": 4,
+    "misread": false,
+    "flag": "'también' reads naturally as an additive aside. Slight register concern: 'de las 09:00 a las 20:00' is standard and clear; 'y también a las 22:00' correctly signals the non-contiguous extra hour. No ambiguity."
+  },
+  {
+    "id": "E",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "Scope ambiguity: 'en diciembre, el 31 o los viernes, a las 23:59' — the fronted 'en diciembre' and the trailing 'a las 23:59' are meant to scope both arms of the OR ('el 31' and 'los viernes'), but the comma-isolated structure makes it easy to read 'a las 23:59' as modifying only 'los viernes' (the nearest clause). A reader may parse it as: in December [on the 31st, or on Fridays at 23:59]. Recommend restructuring for unambiguous double-scope: 'en diciembre, a las 23:59, el día 31 o los viernes' or 'en diciembre, el 31 o cualquier viernes, a las 23:59'. Also, 'el 31' without 'de diciembre' after the comma slightly weakens the tie to the month clause."
+  },
+  {
+    "id": "F1",
+    "naturalness": 4,
+    "misread": false,
+    "flag": "Grammatically clean. 'en los segundos 5 y 10' is the standard way to enumerate specific seconds."
+  },
+  {
+    "id": "F2",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "Nesting ambiguity: 'en el minuto 30 de cada hora de las 09:00 a las 17:30, cada 15 segundos' — 'de cada hora de las 09:00 a las 17:30' is a plausible but slightly garden-path reading because 'de cada hora' could be heard as the end of the noun phrase ('el minuto 30 de cada hora') before 'de las 09:00 a las 17:30' arrives to narrow it. More critically, 'cada 15 segundos' at the tail is ambiguous: does it mean every 15 seconds within that minute, or every 15 seconds throughout the period? Spanish readers are likely to parse it as a free-floating final adjunct. Suggested clearer form: 'de lunes a viernes, cada 15 segundos del minuto 30 de cada hora, entre las 09:00 y las 17:30'. Naturalness docked because the stacked 'de … de … de' chain ('minuto 30 de cada hora de las 09:00 a las 17:30') is awkward."
+  },
+  {
+    "id": "F3",
+    "naturalness": 4,
+    "misread": false,
+    "flag": "'del minuto 0 al 30 de las 09:00, 17:00, 18:00 y 19:00' is compact and clear: 'de las [hours]' naturally reads as the owning hours for the minute range. No misread risk."
+  },
+  {
+    "id": "F4",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "'dentro de cada dos horas' is not idiomatic Spanish for 'every two hours'. 'Dentro de' means 'inside/within' a duration, not 'per/every'. The correct phrasing for 'every two hours' is 'cada dos horas'. As written, 'cada minuto del 0 al 30 dentro de cada dos horas' could be parsed as 'every minute 0–30 within each two-hour window/block', which is closer to the meaning but still awkward; it does not convey a recurring every-two-hours cadence clearly. Recommended: 'cada minuto del 0 al 30, cada dos horas' or 'cada minuto del 0 al 30 en cada intervalo de dos horas'."
+  }
+]

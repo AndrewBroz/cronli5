@@ -1,0 +1,74 @@
+[
+ {
+  "n": 1,
+  "cron": "0 0 1 * 5",
+  "current": "kuukauden 1. päivänä tai perjantaisin keskiyöllä",
+  "en_reference": "at midnight whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 2,
+  "cron": "0 0 1 * 1-5",
+  "current": "kuukauden 1. päivänä tai maanantaista perjantaihin keskiyöllä",
+  "en_reference": "at midnight whenever the day is the 1st or a weekday"
+ },
+ {
+  "n": 3,
+  "cron": "0 0 1 * 5L",
+  "current": "kuukauden 1. päivänä tai kuukauden viimeisenä perjantaina keskiyöllä",
+  "en_reference": "at midnight whenever the day is the 1st or the last Friday of the month"
+ },
+ {
+  "n": 4,
+  "cron": "0 0 */2 * */2",
+  "current": "joka toinen päivä tai tiistaisin, torstaisin, lauantaisin ja sunnuntaisin keskiyöllä",
+  "en_reference": "at midnight whenever the day is an odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday"
+ },
+ {
+  "n": 5,
+  "cron": "0 0 1-15 * 0",
+  "current": "kuukauden 1.–15. päivänä tai sunnuntaisin keskiyöllä",
+  "en_reference": "at midnight whenever the day is from the 1st through the 15th or a Sunday"
+ },
+ {
+  "n": 6,
+  "cron": "0 0 L * 5L",
+  "current": "kuukauden viimeisenä päivänä tai kuukauden viimeisenä perjantaina keskiyöllä",
+  "en_reference": "at midnight whenever the day is the last day of the month or the last Friday of the month"
+ },
+ {
+  "n": 7,
+  "cron": "0 0 L * 0",
+  "current": "kuukauden viimeisenä päivänä tai sunnuntaisin keskiyöllä",
+  "en_reference": "at midnight whenever the day is the last day of the month or a Sunday"
+ },
+ {
+  "n": 8,
+  "cron": "0 0 1 1 0",
+  "current": "tammikuussa keskiyöllä joko 1. päivänä tai sunnuntaisin",
+  "en_reference": "in January at midnight whenever the day is the 1st or a Sunday"
+ },
+ {
+  "n": 9,
+  "cron": "0 0 1 1-3 5L",
+  "current": "tammikuusta maaliskuuhun keskiyöllä joko 1. päivänä tai kuukauden viimeisenä perjantaina",
+  "en_reference": "in January through March at midnight whenever the day is the 1st or the last Friday of the month"
+ },
+ {
+  "n": 10,
+  "cron": "*/5 * 1 * 5",
+  "current": "viiden minuutin välein kuukauden 1. päivänä tai perjantaisin",
+  "en_reference": "every five minutes whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 11,
+  "cron": "*/5 * 1 6 5",
+  "current": "kesäkuussa viiden minuutin välein joko 1. päivänä tai perjantaisin",
+  "en_reference": "in June every five minutes whenever the day is the 1st or a Friday"
+ },
+ {
+  "n": 12,
+  "cron": "0 9-17 1 6 5",
+  "current": "kesäkuussa joka tunti klo 9–17 joko 1. päivänä tai perjantaisin",
+  "en_reference": "in June every hour from 9 a.m. through 5 p.m. whenever the day is the 1st or a Friday"
+ }
+]

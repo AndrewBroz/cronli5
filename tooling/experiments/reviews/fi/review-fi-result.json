@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 2,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 3,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "'kello 12 aikana' on hieman puhekielinen; 'klo 12-12.59' tai 'klo 12 aikaan' olisi tarkempi, mutta merkitys (joka minuutti tunnin 12 aikana) on yksiselitteinen."
+ },
+ {
+  "n": 4,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 5,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": "Sisalto oikein (klo 9.30-17.30 joka tunti). Pieni idiomihuomio: 'sunnuntaisin ja lauantaisin' kaantaa SAT,SUN-jarjestyksen; luontevampi 'lauantaisin ja sunnuntaisin'. Ei vaikuta semantiikkaan."
+ },
+ {
+  "n": 8,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 9,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 4,
+  "issue": "6-kenttainen (sek=0). Sekunti 0 on oletus, joten sen pois jattaminen on hyvaksyttavaa. 'kahden tunnin valein klo 9-17' = 9,11,13,15,17, oikein. 'tai dow=*' joten vain kuukaudenpaiva (L) rajaa, ei OR-tilannetta - oikein kuvattu yhdella ehdolla."
+ },
+ {
+  "n": 10,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": "Oikein. Idiomihuomio: 'sunnuntaisin ja lauantaisin' kaantaa SAT,SUN-jarjestyksen; luontevampi 'lauantaisin ja sunnuntaisin'."
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 13,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 14,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Oikein (min 5,20,35,50; tunnit 0,5,10,15,20). Lause on raskas; 'jokaisen tunnin minuutista 5 alkaen' + 'viiden tunnin valein klo 0-20' toimii mutta on tihea. Selkeytta voisi parantaa erottamalla minuutti- ja tuntiosan selvemmin."
+ },
+ {
+  "n": 15,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 16,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "Sisalto oikein. 'kuuden tunnin valein klo 2:sta alkaen' antaa alkupisteen muttei ylarajaa; tarkka lukija paattelee 2,8,14,20, mutta epayhtenaista muihin kohtiin nahden (vrt. n=20 'klo 0-20'). Suositus: 'kuuden tunnin valein klo 2-20'. Lisaksi 'sunnuntaisin ja lauantaisin' kaantaa jarjestyksen."
+ },
+ {
+  "n": 17,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 18,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 19,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": "Oikein (vain dow rajaa, ei OR). Idiomihuomio: 'sunnuntaisin ja lauantaisin' kaantaa SAT,SUN-jarjestyksen; luontevampi 'lauantaisin ja sunnuntaisin'."
+ },
+ {
+  "n": 20,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ }
+]

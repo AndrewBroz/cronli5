@@ -332,7 +332,9 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 5-25/4 * *', '每月5、9、13、17、21、25日凌晨0点'],
       // A date list mixing a range with a bounded step: the range keeps its 至
       // span, the step enumerates its fires, each segment carrying its own 日.
-      ['0 0 1-5,9-15/2 * *', '每月1日至5日、9、11、13、15日凌晨0点'],
+      // A step arm in a list reads as its fires; the mixed range+singles
+      // list carries the per-unit 日 (the same convention as 1-5,10,20-25).
+      ['0 0 1-5,9-15/2 * *', '每月1日至5日、9日、11日、13日、15日凌晨0点'],
       ['0 0 9-17/2 1 *', '1月9、11、13、15、17日凌晨0点'],
       ['0 0 9-17/2 1-3 *', '1月至3月，9、11、13、15、17日凌晨0点'],
       ['0 0 9-17/2 */2 *', '每个奇数月9、11、13、15、17日凌晨0点'],
@@ -643,6 +645,14 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
   // the same schedule as the English rendering.
   describe('额外覆盖 (additional coverage)', function() {
     run([
+      // Hour 18 is covered by both list arms (step fire and range start), so
+      // they merge into the union: one 18-20 span, no duplicated 18. A
+      // DISJOINT step arm reads as its fires, sorted chronologically around
+      // the 18-20 span.
+      ['* 2/4,18-20 * * *', '在2点、6点、10点、14点、18点至20点和22点，每分钟'],
+      ['* 1/4,18-20 * * *', '在1点、5点、9点、13点、17点、18点至20点和21点，每分钟'],
+      ['5,30 1/4,18-20 * * *', '每小时5分和30分，在1点、5点、9点、13点、17点、18点至20点和21点'],
+      ['0 0 1/4,18-20 * * *', '每天1点、5点、9点、13点、17点、18点至20点和21点'],
       ['*/1 * * * *', '每分钟'],
       ['1/1 * * * *', '每小时1至59分，每分钟'],
       ['0 9,12,17 * * *', '每天9点、正午和17点'],

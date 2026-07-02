@@ -4,7 +4,7 @@
 // See docs/i18n-design.md.
 
 import {
-  arithmeticStep, hourListStride, offsetCleanStride,
+  arithmeticStep, hourListStride, minuteStride, offsetCleanStride,
   renderStride as chooseStride, segmentsOf, singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
@@ -719,25 +719,6 @@ function minuteStrideConfinement(stride: {start: number; interval: number;
   });
 }
 
-// The minute field's step stride for the confinement frame, or null when the
-// minute is not a stepped cadence. A `step`-shaped field (`*/6`) reads its
-// segment directly; a `list`-shaped field the core enumerated from an uneven
-// step (`2/7` → 2,9,…,58) recovers the progression from its values.
-function minuteStride(schedule: Schedule):
-  {start: number; interval: number; last: number} | null {
-  if (schedule.shapes.minute === 'step') {
-    const segment = stepSegment(schedule, 'minute');
-    const start = segment.startToken === '*' ? 0 : +segment.startToken;
-
-    return {interval: segment.interval, last:
-      segment.fires[segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segmentsOf(schedule, 'minute'));
-
-  return values && arithmeticStep(values);
-}
-
 // Confine a cadence to a clean hour stride: "during every other hour", with
 // the start named when it is not midnight ("…from 1 a.m." for an odd stride).
 function everyNthHour(segment: StepSegment, opts: NormalizedOptions): string {
@@ -1225,11 +1206,10 @@ function minuteConfinement(schedule: Schedule,
       Number(bounds[1]);
   }
 
-  const values = segmentWords(segments, opts).map(function plain(word) {
-    return String(Number(word));
-  });
-
-  return ' during minutes ' + joinList(values, opts);
+  // `segmentWords` already numeralizes a multi-value list and renders a
+  // range segment as its "<a> through <b>" pair, so its words are used
+  // as-is (coercing them back through `Number` would corrupt the ranges).
+  return ' during minutes ' + joinList(segmentWords(segments, opts), opts);
 }
 
 // A restricted hour under a finer cadence reads as a confinement. The form
@@ -1852,30 +1832,21 @@ function numberWords(fires: number[],
 }
 
 // Render classified segments as words for an enumerated list: singles as
-// numbers, ranges as "<a> through <b>" pairs, step segments as their
-// enumerated fires. A multi-value list numeralizes throughout; a lone value
-// keeps the spelled-when-small style (see `listNumber`).
+// numbers, ranges as "<a> through <b>" pairs. A multi-value list
+// numeralizes throughout; a lone value keeps the spelled-when-small style
+// (see `listNumber`).
 function segmentWords(segments: Segment[],
   opts: NormalizedOptions): (string | number)[] {
-  const count = segments.reduce(function tally(sum, segment) {
+  // Normalization expands step arms in lists, so the segments here are
+  // singles and ranges only and the unit count is the segment count.
+  const num = listNumber(segments.length, opts);
+
+  return segments.map(function word(segment) {
     if (segment.kind === 'range') {
-      return sum + 1;
+      return num(segment.bounds[0]) + through(opts) + num(segment.bounds[1]);
     }
 
-    return sum + (segment.kind === 'step' ? segment.fires.length : 1);
-  }, 0);
-  const num = listNumber(count, opts);
-
-  return segments.flatMap(function word(segment) {
-    if (segment.kind === 'range') {
-      return [num(segment.bounds[0]) + through(opts) + num(segment.bounds[1])];
-    }
-
-    if (segment.kind === 'step') {
-      return segment.fires.map(num);
-    }
-
-    return [num(segment.value)];
+    return num((segment as {value: string}).value);
   });
 }
 
@@ -2210,16 +2181,17 @@ function dayUnionCondition(schedule: Schedule,
   return ' whenever the day is ' + joinOr(pieces, opts);
 }
 
-// The leading "in <month> " scope for a day union, or an empty string when the
-// month is a wildcard. The month scopes the whole union, so it leads the clause
-// rather than attaching to either day half.
+// The leading "in <month>, " scope for a day union, or an empty string when
+// the month is a wildcard. The month scopes the whole union, so it leads the
+// clause — set off by a comma, like any fronted adverbial — rather than
+// attaching to either day half.
 function dayUnionMonthLead(schedule: Schedule,
   opts: NormalizedOptions): string {
   if (schedule.pattern.month === '*') {
     return '';
   }
 
-  return 'in ' + monthName(schedule, opts) + ' ';
+  return 'in ' + monthName(schedule, opts) + ', ';
 }
 
 // The day-of-month half of a union as a flat list of predicate pieces. A
@@ -2331,26 +2303,22 @@ function oddEvenDay(dateField: string): string | null {
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
 // are restricted: cron fires when either is a match. A restricted month
-// scopes BOTH halves, so it attaches to the whole or, never to a single
-// branch. When the month folds into a calendar date ("on June 13") it also
-// names itself on the weekday ("or on Friday in June"), keeping both halves
-// scoped; otherwise (a Quartz date, an open day step, a month range, or the
-// odd/even frequency) it trails the whole or as ", in <month>".
+// scopes BOTH halves, so it fronts the whole or-phrase once ("in June, on
+// the 13th or on Friday"), never folding into one arm or repeating on the
+// other.
 function dateOrWeekday(schedule: Schedule, opts: NormalizedOptions): string {
   const pattern = schedule.pattern;
   // The day-of-month-OR-day-of-week union is out of scope for the recurring
   // plural (it is reframed elsewhere): the weekday half stays singular here.
   const weekdayPart = quartzWeekdayPhrase(pattern.weekday, opts) ||
     'on ' + weekdayPhrase(schedule, false, opts);
+  const union = datePart(schedule, opts) + ' or ' + weekdayPart;
 
-  if (pattern.month !== '*' && monthFoldsIntoDate(schedule) &&
-      !quartzDatePhrase(pattern.date, opts) && !isOpenStep(pattern.date)) {
-    return 'on ' + monthDatePhrase(schedule, opts) + ' or ' + weekdayPart +
-      ' in ' + monthName(schedule, opts);
+  if (pattern.month === '*') {
+    return union;
   }
 
-  return datePart(schedule, opts) + ' or ' + weekdayPart +
-    orMonthScope(schedule, opts);
+  return 'in ' + monthName(schedule, opts) + ', ' + union;
 }
 
 // The day-of-month half of an or-day phrase, without any month scope (the
@@ -2368,17 +2336,6 @@ function datePart(schedule: Schedule, opts: NormalizedOptions): string {
   }
 
   return 'on the ' + dateOrdinals(schedule, opts);
-}
-
-// A trailing month scope for the whole or, set off by a comma so it reads
-// over both day halves ("…or on Friday, in June"); empty when the month is a
-// wildcard.
-function orMonthScope(schedule: Schedule, opts: NormalizedOptions): string {
-  if (schedule.pattern.month === '*') {
-    return '';
-  }
-
-  return ', in ' + monthName(schedule, opts);
 }
 
 // The day-qualifier phrase for a Quartz date field (e.g. "on the last day
@@ -2821,9 +2778,9 @@ function getWeekday(d: number | string, opts: NormalizedOptions): string {
 // strings and option normalization.
 const en: Language = {
   describe,
-  fallback: 'an unrecognizable cron pattern',
+  fallback: () => 'an unrecognizable cron pattern',
   options: normalizeOptions,
-  reboot: 'at system startup',
+  reboot: () => 'at system startup',
   // A description ending in an abbreviation already carries its period
   // ("…9 a.m."), so closing the sentence must not double it.
   sentence: (description) =>

@@ -178,11 +178,12 @@ artifacts of the es donor corpus**, not pt regressions, so they were left in the
 pt corpus to keep it field-comparable with es and are tracked as a joint es+pt
 follow-up (docs/backlog.md, per-language follow-ups):
 
-- **Hour-window overlap in `* 2/4,18-20 * * *`.** Hour 18 is named twice — once
-  as the 2/4 step arm's per-hour window ("das 6 às 6:59 da tarde") and again as
-  the left endpoint of the 18-20 range window ("das 6 da tarde às 8:59 da
-  noite"). The fire set is correct (no value dropped or understated); the
-  overlap is a rendering-clarity artifact present identically in es.
+- **Hour-window overlap in `* 2/4,18-20 * * *` — RESOLVED.** Hour 18 was named
+  twice (the 2/4 step arm's per-hour window and the 18-20 range window).
+  Resolved in the core: normalization merges list arms whose covered values
+  intersect into their coverage union, so the pattern reaches every renderer
+  as `2,6,10,14,18-20,22` and the corpus row reads one 18-20 window. Fixed for
+  all seven languages at once.
 - **OR DOW-arm "e" bracketing** in `… ou de segunda a sexta-feira e aos
   domingos` (`0 0 1 * 0,1-5`, `0 0 1 6-9 0,1-5`). The internal "e" joining
   Mon–Fri + Sun inside the second OR arm could be misparsed as a top-level

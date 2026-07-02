@@ -1,0 +1,86 @@
+[
+ {
+  "n": 1,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 2,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 3,
+  "issue": "Paralelismo flojo: 'el 1 de cada mes o de lunes a viernes' yuxtapone un día-del-mes nominal con un rango de días-de-semana sin que el 'o' deje claro que son dos condiciones independientes. Se entiende como union pero suena descuidado. Propuesta: 'a las 00:00, cuando sea el 1 del mes o cualquier dia de lunes a viernes'."
+ },
+ {
+  "n": 3,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "reads_as_union": true,
+  "correct": false,
+  "natural": 2,
+  "issue": "INCORRECTO y NO recuperable. '*/2' en dia-del-mes = dias impares (1,3,5,...), pero 'cada dos dias del mes' es durativo ('uno si, uno no' arrancando sin ancla) y no comunica 'dias impares'; el lector no puede reconstruir 1,3,5,... La parte de semana ('martes, jueves, sabados y domingos' = 0,2,4,6) si es correcta. Propuesta: 'a las 00:00, cuando sea un dia impar del mes o un domingo, martes, jueves o sabado'."
+ },
+ {
+  "n": 5,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 8,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 9,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 10,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 12,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ }
+]

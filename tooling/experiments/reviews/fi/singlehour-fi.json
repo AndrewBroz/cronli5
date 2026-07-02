@@ -1,0 +1,9 @@
+{
+  "verdict": "change",
+  "proposed": {
+    "hour0": "joka minuutti kello 0 aikana",
+    "hour9": "joka minuutti kello 9 aikana"
+  },
+  "confidence": 4,
+  "reasoning": "Väli-ilmaus '0.00–0.59' on yksiselitteinen mutta tekninen ja verboosi. Suomessa tunnin ilmaisemiseen käytetään luontevammin 'kello N aikana' -rakennetta — se on idiomattinen, tiivis ja yksiselitteinen yhden kokonaisen tunnin merkityksessä. Väli sopisi paremmin, jos kyseessä olisi osatunti tai epäsäännöllinen jakso."
+}

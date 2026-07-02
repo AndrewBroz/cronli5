@@ -20,7 +20,7 @@
 
 import {pathToFileURL} from 'node:url';
 import cronli5 from '../../src/cronli5.js';
-import {enumerateFires} from '../../src/core/analyze.js';
+import {enumerateFires} from '../../src/core/util.js';
 import {patterns} from '../../scripts/fuzz-lang.mjs';
 
 const LANGS = ['en', 'es', 'de', 'fi', 'fr', 'pt', 'zh'];

@@ -90,7 +90,7 @@ describe('Lists mixing values with ranges or steps:', function() {
       ['0 0 1 1-11/3 *',
         'on January, April, July, and October 1 at midnight'],
       ['0 0 1 6-9 FRI',
-        'in June through September at midnight whenever the day is the 1st ' +
+        'in June through September, at midnight whenever the day is the 1st ' +
         'or a Friday']
     ]);
   });

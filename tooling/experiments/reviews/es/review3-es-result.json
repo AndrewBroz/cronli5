@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 3, "clarity": 4, "issue": "'de la hora de las 22:00' es algo torpe pero correcto" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": false, "idiom": 2, "clarity": 2, "issue": "Conjunto real: minuto :05 de cada hora 9-17 (en enero). 'de las 09:00 a las 17:05' es erroneo: afirma minuto :00 al inicio (deberia ser 09:05) y describe un rango continuo inexistente; ademas contradice el 'minuto 5 de cada hora' previo. Deberia ser 'en el minuto 5 de cada hora, de las 09:00 a las 17:00' o 'a las 09:05, 10:05, ... 17:05'" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 4, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 3, "clarity": 4, "issue": "'de la hora de las 09:00 y de la hora de las 17:00' es repetitivo/torpe pero correcto" }
+]

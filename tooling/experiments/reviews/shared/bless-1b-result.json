@@ -1,0 +1,17 @@
+[
+ {"n":1,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":2,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":3,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":4,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":5,"correct":true,"natural":4,"verdict":"bless","suggestion":""},
+ {"n":6,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":7,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":8,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":9,"correct":true,"natural":4,"verdict":"bless","suggestion":""},
+ {"n":10,"correct":true,"natural":3,"verdict":"revise","suggestion":"every second during minute :00 of every hour"},
+ {"n":11,"correct":true,"natural":4,"verdict":"bless","suggestion":""},
+ {"n":12,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":13,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":14,"correct":true,"natural":5,"verdict":"bless","suggestion":""},
+ {"n":15,"correct":true,"natural":5,"verdict":"bless","suggestion":""}
+]

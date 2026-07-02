@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "Both DOM (15) and DOW (Mon-Fri) restricted = OR, but the comma between 'day 15' and 'Monday through Friday' reads as AND/conjunction; OR not stated. Also 'at 09:00 AM' names a clean hour while minutes vary (:05,:10,:30), which is mildly misleading."
+ },
+ {
+  "n": 2,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (1-5) and DOW (2nd Monday) both restricted = OR, but rendered as a comma list implying AND. 'between day 1 and 5' is also slightly unidiomatic ('between day 1 and day 5')."
+ },
+ {
+  "n": 3,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (1) and DOW (Mon-Fri) both restricted = OR, rendered as a comma list implying AND. 'every 3 months' lacks an anchor (Jan/Apr/Jul/Oct)."
+ },
+ {
+  "n": 4,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "DOW is * so no OR ambiguity; literally correct (June has only 30 days, but that is a property of the schedule, not a rendering fault)."
+ },
+ {
+  "n": 5,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (last day) and DOW (2nd Monday) both restricted = OR, but rendered as a comma list implying AND."
+ },
+ {
+  "n": 6,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "DOM is * so no OR ambiguity; correct and clear."
+ },
+ {
+  "n": 8,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (last day) and DOW (Sunday) both restricted = OR, but '...on the last day of the month, and on Sunday' uses 'and', actively asserting AND. Wrong semantics."
+ },
+ {
+  "n": 9,
+  "correct": true,
+  "idiom": 3,
+  "clarity": 4,
+  "issue": "DOM is * so no OR ambiguity. 'at 09:00 AM and 05:00 PM' names clean hours though minutes vary (:05,:20,:35,:50) — mildly misleading but the leading minute clause covers it."
+ },
+ {
+  "n": 10,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "DOW is * so no OR ambiguity; correct."
+ },
+ {
+  "n": 11,
+  "correct": true,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "6-field; DOM (1-5) restricted but DOW is * so no OR. minute=* is folded into the hour range, acceptable. 'between day 1 and 5' slightly unidiomatic."
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 13,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "DOM is * so no OR ambiguity; correct."
+ },
+ {
+  "n": 14,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 2,
+  "issue": "DOM (1-5) and DOW (2nd Monday) both restricted = OR, rendered as a comma list implying AND. Long six-clause sentence is hard to parse in one read."
+ },
+ {
+  "n": 15,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (15) and DOW (last Friday) both restricted = OR, but rendered as a comma list implying AND."
+ },
+ {
+  "n": 16,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (last weekday) and DOW (last Friday) both restricted = OR, but rendered as a comma list implying AND."
+ },
+ {
+  "n": 17,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (31) and DOW (Friday) both restricted = OR, but '...on day 31 of the month, and on Friday' uses 'and', asserting AND. Wrong semantics."
+ },
+ {
+  "n": 18,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 4,
+  "issue": "DOM (31) and DOW (Friday) both restricted = OR, but 'and on Friday' asserts AND. Wrong semantics."
+ },
+ {
+  "n": 19,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 4,
+  "issue": "DOM (15) and DOW (Friday) both restricted = OR, but 'and on Friday' asserts AND. Wrong semantics."
+ },
+ {
+  "n": 20,
+  "correct": false,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "DOM (15W) and DOW (Sat,Sun) both restricted = OR, but '...nearest day 15 of the month, and on Saturday and Sunday' uses 'and', asserting AND. Wrong semantics."
+ }
+]

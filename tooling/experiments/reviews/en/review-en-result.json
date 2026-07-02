@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 3, "issue": "Accurate but the stacked 'every 15 minutes from five minutes past the hour, every five hours from midnight through 8 p.m.' is hard to parse; consider 'at 5, 20, 35, and 50 minutes past the hour' to disambiguate the minute series." },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": false, "idiom": 3, "clarity": 3, "issue": "Hour field 2/6 = 2,8,14,20, but 'every six hours from 2 a.m.' gives no upper bound, so a reader cannot recover that the last fire hour is 8 p.m. (unlike every other item). Fix: 'every six hours from 2 a.m. through 8 p.m.'" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": false, "idiom": 4, "clarity": 3, "issue": "Month restriction 6-8 applies to BOTH or-branches, but the second-Monday branch reads 'on the second Monday of the month' with no month qualifier, implying it fires every month. Fix: 'or on the second Monday of the month in June through August' (cf. item 10)." },
+ { "n": 19, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

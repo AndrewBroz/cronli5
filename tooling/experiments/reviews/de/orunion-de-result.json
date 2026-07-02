@@ -1,0 +1,86 @@
+[
+ {
+  "n": 1,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 2,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 3,
+  "issue": "Verstaendlich, aber leicht holprig: 'am 1. oder montags bis freitags' mischt eine Datumsangabe mit einer Wochentagsspanne, was die Vereinigung etwas verwaschen wirken laesst. Natuerlicher: 'am 1. sowie an Wochentagen (Mo-Fr)' oder 'am 1. oder an einem Wochentag (Mo-Fr)'."
+ },
+ {
+  "n": 3,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "reads_as_union": false,
+  "correct": true,
+  "natural": 1,
+  "issue": "Wortschwall: die 16-fache Aufzaehlung der ungeraden Tage erschlaegt den Leser und begraebt die Vereinigung; ausserdem zwingt der Mischsatz ('... und 31. oder dienstags, ...') eine zweite, lange 'und'-Liste daneben, sodass voellig unklar wird, wo die Vereinigung (oder) und wo die Aufzaehlung (und) liegt. Naive Leser und Sysadmins verlieren den Faden, der Logiker stolpert ueber das 'und' mitten in einer 'oder'-Struktur. Vorschlag (kompakt, ungerade Tage als Klasse): 'an jedem ungeraden Tag des Monats oder dienstags, donnerstags, samstags und sonntags um Mitternacht'. Noch klarer mit Klammergruppen: 'an jedem ungeraden Tag oder an einem Di, Do, Sa oder So um Mitternacht'."
+ },
+ {
+  "n": 5,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 8,
+  "reads_as_union": false,
+  "correct": false,
+  "natural": 2,
+  "issue": "Scope-Ambiguitaet: 'am 1. oder sonntags im Januar' laesst offen, ob 'im Januar' nur auf 'sonntags' oder auf beide Glieder wirkt. Ein naiver Leser kann es als 'immer am 1. (jeden Monats), oder sonntags im Januar' missverstehen; cron meint aber: nur im Januar, dort am 1. ODER sonntags. Der Monat muss klar vorangestellt sein. Vorschlag: 'im Januar am 1. oder sonntags um Mitternacht' (Monat als Klammer um die ganze Vereinigung, wie im en_reference)."
+ },
+ {
+  "n": 9,
+  "reads_as_union": true,
+  "correct": false,
+  "natural": 2,
+  "issue": "Gleiches Scope-Problem wie n8, hier schaerfer: 'am 1. oder am letzten Freitag des Monats von Januar bis Maerz'. Der Zusatz 'von Januar bis Maerz' haengt am Ende und scheint nur den letzten Freitag zu modifizieren, waehrend 'am 1.' monatslos und damit ganzjaehrig wirkt. Korrekt gilt der Monatsfilter fuer beide Glieder. Zusaetzlich kollidiert 'des Monats' (= jeder Monat) mit 'von Januar bis Maerz'. Vorschlag: 'von Januar bis Maerz am 1. oder am letzten Freitag des Monats um Mitternacht'."
+ },
+ {
+  "n": 10,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": "Korrekt und verstaendlich; 'im Juni' am Ende ist hier eindeutig, weil keine zweite Datumsspanne konkurriert. Natuerlicher waere die Monatsklammer vorn: 'im Juni alle 5 Minuten am 1. oder freitags'."
+ },
+ {
+  "n": 12,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": ""
+ }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "v1",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v2",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'keskiyöllä' trails only 'maanantaisin'; reader may conclude midnight applies to Mondays only, not also to last-day-of-month. Safer: 'kesäkuusta elokuuhun joko kuukauden viimeisenä päivänä tai maanantaisin – aina keskiyöllä' or repeat 'keskiyöllä' in both arms."
+  },
+  {
+    "id": "v3",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v4",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v5",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v6",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v7",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v8",
+    "naturalness": 3,
+    "misread": false,
+    "flag": "Hour list (0, 5, 10, 15, 20) superficially resembles minute values; 'klo' prefix anchors it correctly but the overlap in number range with typical minutes is a slight readability hazard. Consider adding 'tasatunteina' or explicit ':00' notation for clarity."
+  },
+  {
+    "id": "v9",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v10",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v11",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'klo 9–20 sekä 22' may be read as a range extended to 22 (with 21 anomalously skipped) rather than a discrete extra hour. Safer: 'klo 9–20 ja lisäksi klo 22' or 'klo 9–20 sekä klo 22' (repeating 'klo' forces discreteness)."
+  },
+  {
+    "id": "v12",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v13",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'klo 9.30–20.30 sekä 22.30' risks being read as the range endpoint extended to 22.30 (with 21.30 skipped), not a separate discrete firing time. Safer: 'klo 9.30–20.30 sekä klo 22.30' (repeat 'klo') or 'joka päivä puolen tunnin välein klo 9.30–20.30, lisäksi klo 22.30'."
+  }
+]

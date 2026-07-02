@@ -21,7 +21,9 @@ describe('Invalid arrays:', function() {
     ['*', '*', '*', '*', '*', ',,'],
     ['*', '*', '*', '*', {}],
     ['*', new Date(), '*', '*', '*', '*'],
-    ['*', '*', '*', new Error('*'), '*', '*']
+    ['*', '*', '*', new Error('*'), '*', '*'],
+    [NaN, '*', '*', '*', '*'],
+    ['*', false, '*', '*', '*']
   ];
 
   run(wrap(invalidFieldArrays), errors.invalidField);

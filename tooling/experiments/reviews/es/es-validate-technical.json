@@ -1,0 +1,50 @@
+[
+  {
+    "id": "B",
+    "naturalness": 3,
+    "misread": false,
+    "flag": "Rhythm break: 'a la 01:00' (grammatically correct singular) disrupts the scanning pattern of the preceding 'a las' list items; a fast reader may perceive a structural grouping that isn't there."
+  },
+  {
+    "id": "C",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'de cada hora' attaches most naturally to the nearest NP ('el segundo 1') only, leaving 'el minuto 1' without an explicit time scope. A reader can conclude 'minute 1 [unspecified period] and second 1 of each hour' rather than both constrained to each hour."
+  },
+  {
+    "id": "D",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "E",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "Two misread paths: (1) flat comma list reads as three simultaneous constraints (AND), not 'en diciembre' scoping the OR group; (2) 'a las 23:59' may scope only 'los viernes' and not 'el 31', reading as 'the 31st [at any time] OR Fridays at 23:59'."
+  },
+  {
+    "id": "F1",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "F2",
+    "naturalness": 4,
+    "misread": true,
+    "flag": "Dangling 'cada 15 segundos' at sentence end reads as modifying the entire schedule (fires every 15 seconds throughout) rather than specifically within minute 30. Nesting is not signalled — needs explicit binding to 'el minuto 30'."
+  },
+  {
+    "id": "F3",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'del minuto 0 al 30 de las 09:00, 17:00, 18:00 y 19:00' can be parsed as a cross-hour range ('from minute 0 of 09:00 through minute 30 of 19:00') rather than minutes 0–30 repeated independently within each of the four listed hours."
+  },
+  {
+    "id": "F4",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "'dentro de cada dos horas' is elliptical and unusual; it does not clearly express that the 0–30 window fires at each two-hour clock mark. Readers may interpret it as a cycling window or a repetition period without understanding which hours are targeted."
+  }
+]

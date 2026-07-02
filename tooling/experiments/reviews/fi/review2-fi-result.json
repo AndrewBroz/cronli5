@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 4, "clarity": 4, "issue": "2/6 paattyy klo 20; 'klo 2:sta alkaen' ei ilmaise ylarajaa, mutta laukaisujoukko (2,8,14,20) on oikein" },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "'sunnuntaisin ja lauantaisin' epaidiomaattinen jarjestys; luontevampi 'lauantaisin ja sunnuntaisin'" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 3, "clarity": 3, "issue": "Todelliset laukaisut 0.05,0.20,0.35,0.50; 'klo 0.00-0.50' antaa harhaan alarajan 0.00, vaikka 'minuutista 5 alkaen' korjaa sen — paallekkainen ja sekava ilmaus" },
+ { "n": 13, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "'sunnuntaisin ja lauantaisin' epaidiomaattinen jarjestys" },
+ { "n": 16, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 5, "clarity": 5, "issue": "" }
+]

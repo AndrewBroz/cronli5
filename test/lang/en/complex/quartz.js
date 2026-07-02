@@ -98,9 +98,12 @@ describe('Quartz tokens:', function() {
       // The day-of-month side is never reindexed.
       ['0 0 1 * ?', 'on the 1st at midnight', {quartz: true}]
     ]);
-    // Quartz has no weekday 0.
+    // Quartz has no weekday 0, and none above 7: an out-of-range value must
+    // be rejected, not shifted onto a neighboring day by the reindexing.
     error([
-      ['0 0 ? * 0', 'invalid Quartz day-of-week value "0"', {quartz: true}]
+      ['0 0 ? * 0', 'invalid Quartz day-of-week value "0"', {quartz: true}],
+      ['0 0 ? * 8', 'invalid Quartz day-of-week value "8"', {quartz: true}],
+      ['0 0 ? * 10', 'invalid Quartz day-of-week value "10"', {quartz: true}]
     ]);
   });
 
@@ -129,7 +132,22 @@ describe('Quartz tokens:', function() {
         'Monday'],
       ['0 0 13 * 5L',
         'at midnight whenever the day is the 13th or the last Friday of the ' +
-        'month']
+        'month'],
+      // A restricted month scopes the whole union: it fronts the clause
+      // once (set off by a comma), whatever its shape — single, range,
+      // list, or the odd/even parity idiom.
+      ['0 0 13 6 5L',
+        'in June, at midnight whenever the day is the 13th or the last ' +
+        'Friday of the month'],
+      ['0 0 13 1-3 5L',
+        'in January through March, at midnight whenever the day is the ' +
+        '13th or the last Friday of the month'],
+      ['0 0 13 1,7 5L',
+        'in January and July, at midnight whenever the day is the 13th ' +
+        'or the last Friday of the month'],
+      ['0 0 13 */2 5L',
+        'in every odd-numbered month, at midnight whenever the day is ' +
+        'the 13th or the last Friday of the month']
     ]);
   });
 

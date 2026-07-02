@@ -1,0 +1,20 @@
+[
+  {
+    "id": "b1",
+    "pick": "at 2, 3, and 4 minutes past the hour from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "The minutes (2,3,4) are already declared up front as a recurring pattern; 'through 5 p.m.' names the bare hour boundary cleanly. The alternative '5:04 p.m.' can be read as a continuous time span ending at 17:04, conflicting with the per-hour recurrence framing."
+  },
+  {
+    "id": "b2",
+    "pick": "at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "Same pattern as b1: ':30' recurrence is already expressed by 'at 0 and 30 minutes past the hour'. Using '5:30 p.m.' as the bound invites a continuous-span misread (9:00 AM to 5:30 PM uninterrupted), while '5 p.m.' is unambiguous as the last qualifying hour."
+  },
+  {
+    "id": "b3",
+    "pick": "every minute from 2 through 8 past the hour, from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "This is the highest-risk case: the sentence already contains one 'through' for the minute window (2 through 8); adding '5:08 p.m.' as an end-bound creates two layered 'through' spans that strongly invite the misread of a single continuous block from 9:00 to 17:08 (every minute throughout). '5 p.m.' eliminates that conflation entirely."
+  }
+]

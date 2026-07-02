@@ -66,7 +66,7 @@ describe('Built package artifacts:', function() {
       const es = require('../../dist/lang/es.cjs');
 
       expect(es.describe).to.be.a('function');
-      expect(es.fallback).to.be.a('string');
+      expect(es.fallback).to.be.a('function');
       expect(cjs('*/5 * * * *', {lang: es})).to.equal('cada cinco minutos');
     });
 

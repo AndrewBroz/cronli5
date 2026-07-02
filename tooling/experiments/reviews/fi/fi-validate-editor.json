@@ -1,0 +1,80 @@
+[
+  {
+    "id": "v1",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'keskiyöllä' at the end attaches most naturally to 'perjantaisin' alone, leaving the 1st-day-of-month arm without a stated time. Scope over the whole 'joko…tai' union is ambiguous. Consider: 'kesäkuusta syyskuuhun keskiyöllä joko 1. päivänä tai perjantaisin'."
+  },
+  {
+    "id": "v2",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "Same trailing-qualifier problem as v1: 'keskiyöllä' post-positions so tightly after 'maanantaisin' that a reader will parse it as modifying only the Monday arm, not the last-day arm. Move 'keskiyöllä' before the 'joko' split: 'kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä tai maanantaisin'."
+  },
+  {
+    "id": "v3",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v4",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v5",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v6",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v7",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v8",
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v9",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v10",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v11",
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'sekä 22 aina minuuttien…' is structurally ambiguous: 'aina minuuttien 5, 10 ja 30 kohdalla' can be read as scoping only over the isolated '22', not over the full 'klo 9–20 sekä 22' group. Restructure so the minute qualifier leads: 'aina minuuttien 5, 10 ja 30 kohdalla klo 9–20 sekä klo 22'."
+  },
+  {
+    "id": "v12",
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": "v13",
+    "naturalness": 2,
+    "misread": true,
+    "flag": "'klo 9.30–20.30' reads as a continuous 11-hour window, not as repeated :30-minute strikes across hours 9–20. The intended meaning (at minute 30 of each hour from 9 to 20, plus 22:30) requires a different form, e.g. 'joka päivä klo 9–20 minuutin 30 kohdalla sekä klo 22.30'."
+  }
+]

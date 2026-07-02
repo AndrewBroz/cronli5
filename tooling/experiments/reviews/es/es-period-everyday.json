@@ -1,0 +1,20 @@
+[
+  {
+    "id": "p1",
+    "pick": "a la 1 de la madrugada y de la tarde",
+    "confidence": 4,
+    "reasoning": "Eliding the repeated '1' reads naturally — the number is understood from the first clause. The full repeat 'y a la 1 de la tarde' is not wrong but feels slightly heavy for everyday speech."
+  },
+  {
+    "id": "p2",
+    "pick": "a las 2 de la madrugada y de la tarde",
+    "confidence": 5,
+    "reasoning": "Clean elision, no ambiguity. 'y 2 de la tarde' (with the bare number) sounds slightly clipped; dropping the '2' entirely and keeping just the period marker is the most natural spoken form."
+  },
+  {
+    "id": "p3",
+    "pick": "a la 1 de la madrugada y de la tarde, a las 9 de la mañana",
+    "confidence": 3,
+    "reasoning": "The comma avoids the jarring double 'y' of the second candidate. The repeated bare '1' in the first candidate is awkward. Main drawback here is non-chronological order (01:00 → 13:00 → 09:00); if reordering were allowed, 'a las 9 de la mañana, y a la 1 de la madrugada y de la tarde' would be cleaner, but among the given candidates this is the least awkward."
+  }
+]

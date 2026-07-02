@@ -1,0 +1,287 @@
+[
+  {
+    "pattern": "*/15 */2 * * *",
+    "meaning": "every 15 minutes during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Quarter-hourly during every second hour."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Every 15 minutes, every other hour."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Every 15 minutes, every 2 hours"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "every 15 minutes during every other hour"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct, but 'quarter-hourly' is slightly formal/dated compared to 'every 15 minutes'."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural and concise; common in scheduling contexts."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and natural, though 'every other hour' is slightly more precise for alternation."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurately matches the authoritative meaning."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "* */2 * * *",
+    "meaning": "every minute during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Every minute of every second hour."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Every minute during every other hour."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Every minute, every 2 hours"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "every minute during every other hour"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Technically correct, but 'second hour' is slightly ambiguous compared to 'every other hour'."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "The comma makes it read like two separate intervals rather than a nested one."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate (identical to B)."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "*/15 */3 * * *",
+    "meaning": "every 15 minutes during every third hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Every 15 minutes every third hour."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Every 15 minutes, every 3 hours"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Every 15 minutes during every third hour."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "every 15 minutes during every third hour"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically acceptable in a schedule context, but slightly ambiguous without a preposition."
+        },
+        "B": {
+          "natural": 4,
+          "correct": false,
+          "note": "Changes the meaning from 'the third hour' (a specific window) to 'every 3 hours' (a frequency)."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly matches the authoritative meaning and is naturally phrased."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to C; perfectly natural and accurate."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "*/20 9-17/2 * * *",
+    "meaning": "every 20 minutes during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Every 20 minutes during the 9, 11, 1, 3, and 5 o'clock hours."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "every 20 minutes during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Every 20 minutes, every 2 hours, between 09:00 AM and 05:59 PM"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Every 20 minutes during the 9, 11, 1, 3, and 5 o'clock hours."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but 'o'clock hours' is slightly less common than specifying a.m./p.m."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly matches the authoritative meaning and is the most natural way to express this specific schedule."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Incorrect; it implies a continuous range from 9 to 6, rather than specific disjointed hours."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Duplicate of A; natural but less precise than B."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "* */5 * * *",
+    "meaning": "every minute during the 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Every minute every five hours starting at midnight."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Every minute, every 5 hours"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "every minute during the 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m. hours"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Every minute during the 00, 05, 10, 15, and 20 hours."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and natural way to describe the recurrence."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Too fragmented; sounds like two separate schedules rather than one coordinated event."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate but wordy and slightly repetitive."
+        },
+        "D": {
+          "natural": 2,
+          "correct": true,
+          "note": "Uses 24-hour notation which is clear but less natural in a conversational fragment."
+        },
+        "best": "A"
+      }
+    ]
+  }
+]

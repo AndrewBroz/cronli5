@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "cron": "0-30 9,17 1,15 6-8 MON",
+  "rendering": "kesäkuusta elokuuhun klo 9 ja 17 aina minuuttien 0–30 kohdalla joko 1. ja 15. päivänä tai maanantaisin"
+ },
+ {
+  "n": 2,
+  "cron": "*/15 12 15 * *",
+  "rendering": "15 minuutin välein klo 12.00–12.45 kuukauden 15. päivänä"
+ },
+ {
+  "n": 3,
+  "cron": "* 12 1 6 FRI",
+  "rendering": "kesäkuussa joka minuutti kello 12 aikana joko 1. päivänä tai perjantaisin"
+ },
+ {
+  "n": 4,
+  "cron": "*/7 9-17 1-5 12 *",
+  "rendering": "klo 9–17 aina seitsemän minuutin välein minuutista 0 minuuttiin 56 joulukuun 1.–5. päivänä"
+ },
+ {
+  "n": 5,
+  "cron": "0 0 L * FRI",
+  "rendering": "kuukauden viimeisenä päivänä tai perjantaisin keskiyöllä"
+ },
+ {
+  "n": 6,
+  "cron": "0-30 12 31 1 *",
+  "rendering": "joka minuutti klo 12.00–12.30 tammikuun 31. päivänä"
+ },
+ {
+  "n": 7,
+  "cron": "30 9-17 1-5 6-8 SAT,SUN",
+  "rendering": "kesäkuusta elokuuhun 30 minuutin kohdalla klo 9.30–17.30 joko 1.–5. päivänä tai sunnuntaisin ja lauantaisin"
+ },
+ {
+  "n": 8,
+  "cron": "3/2 * * 12 FRI",
+  "rendering": "kahden minuutin välein minuutista 3 minuuttiin 59 perjantaisin joulukuussa"
+ },
+ {
+  "n": 9,
+  "cron": "0 5 9-17/2 L * *",
+  "rendering": "5 minuutin kohdalla, kahden tunnin välein klo 9–17 kuukauden viimeisenä päivänä"
+ },
+ {
+  "n": 10,
+  "cron": "*/15 12 1-5 6 MON#2",
+  "rendering": "kesäkuussa 15 minuutin välein klo 12.00–12.45 joko 1.–5. päivänä tai kuukauden toisena maanantaina"
+ },
+ {
+  "n": 11,
+  "cron": "30 9 1,15 * SAT,SUN",
+  "rendering": "kuukauden 1. ja 15. päivänä tai sunnuntaisin ja lauantaisin klo 9.30"
+ },
+ {
+  "n": 12,
+  "cron": "* 9,17 1-5 6 0",
+  "rendering": "kesäkuussa joka minuutti klo 9 ja 17 joko 1.–5. päivänä tai sunnuntaisin"
+ },
+ {
+  "n": 13,
+  "cron": "5 2/6 L 1,7 FRI",
+  "rendering": "tammikuussa ja heinäkuussa klo 2.05, 8.05, 14.05 ja 20.05 joko kuukauden viimeisenä päivänä tai perjantaisin"
+ },
+ {
+  "n": 14,
+  "cron": "5/15 */5 * 1 MON",
+  "rendering": "15 minuutin välein jokaisen tunnin minuutista 5 alkaen, viiden tunnin välein klo 0–20 maanantaisin tammikuussa"
+ },
+ {
+  "n": 15,
+  "cron": "5 * 1,15 */3 MON-FRI",
+  "rendering": "tammikuussa, huhtikuussa, heinäkuussa ja lokakuussa joka tunti 5 minuutin kohdalla joko 1. ja 15. päivänä tai maanantaista perjantaihin"
+ },
+ {
+  "n": 16,
+  "cron": "*/7 2/6 LW 12 SAT,SUN",
+  "rendering": "joulukuussa seitsemän minuutin välein minuutista 0 minuuttiin 56, kuuden tunnin välein klo 2:sta alkaen joko kuukauden viimeisenä arkipäivänä tai sunnuntaisin ja lauantaisin"
+ },
+ {
+  "n": 17,
+  "cron": "* */5 31 12 5L",
+  "rendering": "joulukuussa joka minuutti, viiden tunnin välein klo 0–20 joko 31. päivänä tai kuukauden viimeisenä perjantaina"
+ },
+ {
+  "n": 18,
+  "cron": "*/45 9-17/2 15W 6-8 MON#2",
+  "rendering": "kesäkuusta elokuuhun 0 ja 45 minuutin kohdalla, kahden tunnin välein klo 9–17 joko kuukauden 15. päivää lähinnä olevana arkipäivänä tai kuukauden toisena maanantaina"
+ },
+ {
+  "n": 19,
+  "cron": "5 9 * 6 SAT,SUN",
+  "rendering": "sunnuntaisin ja lauantaisin kesäkuussa klo 9.05"
+ },
+ {
+  "n": 20,
+  "cron": "30 */5 1 6-8 5L",
+  "rendering": "kesäkuusta elokuuhun 30 minuutin kohdalla, viiden tunnin välein klo 0–20 joko 1. päivänä tai kuukauden viimeisenä perjantaina"
+ }
+]

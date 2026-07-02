@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 5, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 3, "clarity": 3, "issue": "tension entre 'en los minutos 0 y 45 de cada hora' y 'cada dos horas' colocados juntos sin separacion clara; aceptable pero algo confuso" },
+ { "n": 8, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 3, "clarity": 4, "issue": "'de la hora de las 09:00 y de la hora de las 17:00' es repetitivo; mas natural 'a las 09 y a las 17 horas'" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 5, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

@@ -1,0 +1,62 @@
+[
+ {
+  "n": 1,
+  "gold": "On the weekday nearest the 15th, at 5-hourly intervals from midnight through 8 p.m. (midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m.): every 7 minutes from :00 to :56, and within each of those minutes, every second from :00 to :10.",
+  "note": "Led with the day anchor (15W), then the coarsest time layer (hours), then minutes, then seconds. Collapsed the five hour-starts into a parenthetical so the reader can recover them exactly. Switched all numerals to digits with :MM/:SS clock notation; dropped the inconsistent spelled-out 'zero through ten.'"
+ },
+ {
+  "n": 2,
+  "gold": "On the weekday nearest the 15th, at 5-hourly intervals from midnight through 8 p.m. (midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m.): every 2 minutes from :03 to :59 (the odd minutes from 3 on), and within each of those minutes, every second from :00 to :10.",
+  "note": "Same coarse-to-fine frame as #1. Made the 3/2 step explicit as 'odd minutes from 3 on' since start=3, step=2 yields 3,5,7,...,59. Digits throughout."
+ },
+ {
+  "n": 3,
+  "gold": "On the last weekday of the month, every 2 hours from 9 a.m. to 5 p.m. (9, 11, 1, 3, and 5): every 7 minutes from :00 to :56, and within each of those minutes, every second from :00 to :10.",
+  "note": "Led with LW, then the hour range with its explicit values, then minutes, then seconds. The 9-17/2 odd-hour cadence is spelled out so the reader recovers 9,11,13,15,17."
+ },
+ {
+  "n": 4,
+  "gold": "On the last weekday of the month, every 2 hours from 9 a.m. to 5 p.m. (9, 11, 1, 3, and 5): every 2 minutes from :03 to :59 (the odd minutes from 3 on), and within each of those minutes, every second from :00 to :10.",
+  "note": "Combines the LW + 9-17/2 frame of #3 with the 3/2 minute cadence of #2. Coarse-to-fine; digits throughout."
+ },
+ {
+  "n": 5,
+  "gold": "On the weekday nearest the 15th, every hour from 9 a.m. to 8 p.m. plus 10 p.m.: every 7 minutes from :00 to :56, and within each of those minutes, every second from :00 to :10.",
+  "note": "Hour field 9-20,22 is a contiguous range plus an outlier, rendered as 'every hour from 9 a.m. to 8 p.m. plus 10 p.m.' to keep it compact and exact. Day anchor leads."
+ },
+ {
+  "n": 6,
+  "gold": "On the weekday nearest the 15th, every hour from 9 a.m. to 8 p.m. plus 10 p.m.: every 15 minutes starting at :05 (so :05, :20, :35, and :50), and within each of those minutes, every second from :00 to :10.",
+  "note": "Fixed the original's confusing 'during the ... hours' clause ordering by putting the hour anchor first. Spelled out 5/15 as :05,:20,:35,:50 since start=5, step=15 stops at 50 (65 is out of range)."
+ },
+ {
+  "n": 7,
+  "gold": "On the weekday nearest the 15th, every hour from 9 a.m. to 8 p.m. plus 10 p.m.: every 2 minutes from :03 to :59 (the odd minutes from 3 on), and within each of those minutes, every second from :00 to :10.",
+  "note": "Same hour frame as #5/#6 with the 3/2 minute cadence. Coarse-to-fine; digits throughout."
+ },
+ {
+  "n": 8,
+  "gold": "On the weekday nearest the 15th, at 5-hourly intervals from midnight through 8 p.m. (midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m.): every 15 minutes starting at :05 (so :05, :20, :35, and :50), and within each of those minutes, every second from :00 to :10.",
+  "note": "Reuses the */5 hour frame from #1/#2 with the 5/15 minute cadence from #6. Day anchor leads."
+ },
+ {
+  "n": 9,
+  "gold": "On the last weekday of the month, every 2 hours from 9 a.m. to 5 p.m. (9, 11, 1, 3, and 5): every 15 minutes starting at :05 (so :05, :20, :35, and :50), and within each of those minutes, every second from :00 to :10.",
+  "note": "LW + 9-17/2 hour frame from #3 with the 5/15 minute cadence. Coarse-to-fine; digits throughout."
+ },
+ {
+  "n": 10,
+  "gold": "In January, April, July, and October, on the weekday nearest the 15th, at 5-hourly intervals from midnight through 8 p.m. (midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m.): every 7 minutes from :00 to :56.",
+  "note": "This cron has no seconds field, so the description correctly stops at minutes. Led with the month set (*/3 = quarterly), then the day, then hours, then minutes - the only item where month is restricted, so it earns the lead position as the coarsest anchor."
+ },
+ {
+  "n": 11,
+  "gold": "On the 1st and 15th of the month, every 2 hours from 9 a.m. to 5 p.m. (9, 11, 1, 3, and 5): every 7 minutes from :00 to :56, and within each of those minutes, every second from :00 to :10.",
+  "note": "Day-of-month list (1,15) leads. The 9-17/2 odd-hour cadence is spelled out; minutes and seconds follow coarse-to-fine."
+ },
+ {
+  "n": 12,
+  "gold": "On the weekday nearest the 15th, at 5-hourly intervals from midnight through 8 p.m. (midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m.): every minute from :00 to :30, and within each of those minutes, every second from :00 to :10.",
+  "note": "Minute field 0-30 is a plain contiguous range ('every minute from :00 to :30'), not a step. Day anchor leads; coarse-to-fine; digits throughout."
+ }
+]

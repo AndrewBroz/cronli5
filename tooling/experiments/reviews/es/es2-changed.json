@@ -1,0 +1,8 @@
+[
+ {"id":12,"meaning":"On Mondays at 09:30, firing at second 5 and second 10 (09:30:05 and 09:30:10).","description":"los lunes, en los segundos 5 y 10 de las 09:30"},
+ {"id":13,"meaning":"Monday through Friday, from 09:00 to 17:30, at minute 30 of each hour, every 15 seconds within that minute.","description":"de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30"},
+ {"id":16,"meaning":"Every minute from minute 0 through 30, but only during the hours 09:00, 17:00, 18:00 and 19:00.","description":"cada minuto del 0 al 30, solo a las 09:00, 17:00, 18:00 y 19:00"},
+ {"id":18,"meaning":"Every hour from 09:00 through 20:00, and also at 22:00 (a separate hour; 21:00 excluded).","description":"cada hora de las 09:00 a las 20:00 y también a las 22:00"},
+ {"id":24,"meaning":"At minute 1 and second 1 of each hour (HH:01:01).","description":"en el minuto 1 y el segundo 1 de cada hora"},
+ {"id":25,"meaning":"In December only, at 23:59, on the 31st OR on any Friday (inclusive OR; both December and 23:59 apply to both).","description":"en diciembre a las 23:59, ya sea el día 31 o un viernes"}
+]

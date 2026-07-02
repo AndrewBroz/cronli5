@@ -1,0 +1,30 @@
+[
+  {
+    "cluster": "E",
+    "pick": "en diciembre a las 23:59, ya sea el día 31 o un viernes",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Fronting 'en diciembre a las 23:59' before the fork ensures both conditions inherit the month and time. 'Ya sea...o' is the natural Spanish inclusive-OR marker and cannot be read as exclusive. Candidates 3 and 4 both fail because 'de diciembre' only attaches to 'viernes', leaving 'el día 31' month-free."
+  },
+  {
+    "cluster": "F1",
+    "pick": "los lunes, en los segundos 5 y 10 de las 09:30",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "'De las 09:30' explicitly anchors seconds 5 and 10 to the fixed 09:30 mark, ruling out any 'of each minute' reading. Candidate 1 is also correct but leaves the anchoring implicit; candidate 3 makes it structural."
+  },
+  {
+    "cluster": "F2",
+    "pick": "de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "'Cada 15 segundos del minuto 30' clearly assigns the 15-second cadence to minute 30, not to the whole span. Candidate 3 ('en el minuto 30 cada 15 segundos') is syntactically ambiguous about whether the 15-second rhythm is local or global. Candidate 2 is accurate but leading with 'cada 15 segundos' initially sounds like a global cadence."
+  },
+  {
+    "cluster": "F3",
+    "pick": "cada minuto del 0 al 30, solo a las 09:00, 17:00, 18:00 y 19:00",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "'Solo' makes the restrictive reading explicit and blocks any additive-trigger interpretation. Candidate 1 is also natural and correct (hours-first framing is inherently restrictive), but 'solo' in candidate 2 removes the last trace of ambiguity. Candidate 3 uses 'durante las horas' which sounds stilted for discrete clock hours."
+  }
+]

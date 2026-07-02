@@ -1,0 +1,38 @@
+[
+  {
+    "id": 12,
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": 13,
+    "naturalness": 4,
+    "misread": true,
+    "flag": "'cada 15 segundos del minuto 30' — 'del minuto 30' anchors the 15-second cadence to minute 30 only, which is correct, but a reader could parse it as 'starting from second 30 of each minute' (del minuto 30 = from the 30th minute onward); rephrase as 'cada 15 segundos dentro del minuto 30' to seal the scope."
+  },
+  {
+    "id": 16,
+    "naturalness": 4,
+    "misread": true,
+    "flag": "'solo a las 09:00, 17:00, 18:00 y 19:00' — 'solo' is restrictive but its scope is ambiguous: it could be read as restricting the entire expression (minutes 0–30 apply only in those hours) OR as an independent list of fixed fire-times alongside the minute range; reordering as 'pero solo en las horas 09:00, 17:00, 18:00 y 19:00' makes the restrictive scope explicit."
+  },
+  {
+    "id": 18,
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'y también a las 22:00' — 'y también' is idiomatic for extending a range or adding a related item, but here it must signal a discrete extra hour outside the 09:00–20:00 span (21:00 excluded); a reader can misread the range as 09:00–22:00 with 21:00 simply unmentioned; prefer 'y, por separado, a las 22:00' or 'más las 22:00 (saltando las 21:00)'."
+  },
+  {
+    "id": 24,
+    "naturalness": 5,
+    "misread": false,
+    "flag": null
+  },
+  {
+    "id": 25,
+    "naturalness": 3,
+    "misread": true,
+    "flag": "'ya sea el día 31 o un viernes' — the 'ya sea…o' OR construction is correct in intent, but the day-of-month and day-of-week arms are left syntactically parallel without explicit disambiguation of which outer constraints (diciembre, 23:59) govern both arms; a reader may read the viernes arm as unbounded (any Friday, any month). Rephrase as 'ya sea el día 31 o cualquier viernes, siempre en diciembre a las 23:59' to anchor both arms."
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "verdict": "change",
+  "proposed": {
+    "hour0": "jede Minute der Mitternachtsstunde",
+    "hour9": "jede Minute der 9-Uhr-Stunde"
+  },
+  "confidence": 4,
+  "reasoning": "Die Spannen-Formulierung 'von 0:00 bis 0:59 Uhr' ist umständlich für etwas, das schlicht 'eine ganze Stunde' bedeutet. Im Deutschen benennt man eine Stunde als Einheit, nicht als Bereich. 'Die 9-Uhr-Stunde' ist idiomatisch für die Stunde, die um 9 beginnt. Stunde 0 bekommt den Sonderfall 'Mitternachtsstunde', der natürlicher klingt als '0-Uhr-Stunde'. Konfidenz 4 statt 5, weil 'jede Minute der 9-Uhr-Stunde' zwar klar und natürlich ist, aber 'jede Minute in der 9-Uhr-Stunde' als alternative Präposition ebenfalls vertretbar wäre."
+}

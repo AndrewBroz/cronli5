@@ -1,0 +1,32 @@
+[
+  {
+    "id": "c1",
+    "pick": "a las 2 de la madrugada, y a las 2 y 6 de la tarde",
+    "confidence": 5,
+    "reasoning": "Explicit 'a las' for each group and a comma before 'y' make the group boundary unambiguous. Candidate B omits the second 'a las', making the parse of '2 y 6 de la tarde' structurally weaker."
+  },
+  {
+    "id": "c2",
+    "pick": "a las 2 y 3 de la madrugada, y a las 3 y 6 de la tarde",
+    "confidence": 5,
+    "reasoning": "Full 'a las' on both groups. Candidate B's 'y 3 y 6 de la tarde' (group introduced by 'y' while also using 'y' internally) is awkward and harder to parse."
+  },
+  {
+    "id": "c3",
+    "pick": "a la 1 de la madrugada, a las 9 de la mañana y a la 1 de la tarde",
+    "confidence": 5,
+    "reasoning": "Only candidate that preserves strict chronological order (01:00, 09:00, 13:00) with independent 'a la/a las' per time. FLAG: Candidate B groups the two 1s together and places 09:00 last, violating the chronological constraint and the explicit instruction not to reorder."
+  },
+  {
+    "id": "c4",
+    "pick": "a las 9 de la mañana, a las 3 de la tarde y a las 9 de la noche",
+    "confidence": 5,
+    "reasoning": "Repeating 'a las' for each of the three items is unambiguous — each time is a self-contained prepositional phrase. Candidate A's elided form ('3 de la tarde y 9 de la noche' without 'a las') can read as labels rather than clock-time expressions."
+  },
+  {
+    "id": "c5",
+    "pick": "a la 1 de la madrugada y a la 1 de la tarde",
+    "confidence": 4,
+    "reasoning": "Fully explicit: each time is stated independently, eliminating any risk of reading 'de la madrugada y de la tarde' as a single compound modifier. Candidate A ('a la 1 de la madrugada y de la tarde') is grammatically valid Spanish but requires the reader to distribute '1' across both periods — a small ambiguity risk for a technical precision context."
+  }
+]

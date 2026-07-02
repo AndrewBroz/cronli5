@@ -18,7 +18,7 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
       ['0 0 1,15 * 5',
         'at midnight whenever the day is the 1st, the 15th, or a Friday'],
       ['0 0 13 6 5',
-        'in June at midnight whenever the day is the 13th or a Friday']
+        'in June, at midnight whenever the day is the 13th or a Friday']
     ]);
   });
 
@@ -38,27 +38,27 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
     run([
       // Quartz date (nearest-weekday) and Quartz weekday (nth occurrence).
       ['0 0 15W 6 MON#2',
-        'in June at midnight whenever the day is the weekday nearest the ' +
+        'in June, at midnight whenever the day is the weekday nearest the ' +
         '15th or the second Monday of the month'],
       ['*/45 9-17/2 15W 6-8 MON#2',
-        'in June through August at 0 and 45 minutes, every ' +
+        'in June through August, at 0 and 45 minutes, every ' +
         'two hours from 9 a.m. through 5 p.m. whenever the day is the ' +
         'weekday nearest the 15th or the second Monday of the month'],
       // Quartz date (last day) with a plain weekday.
       ['0 0 L 6 5',
-        'in June at midnight whenever the day is the last day of the month ' +
+        'in June, at midnight whenever the day is the last day of the month ' +
         'or a Friday'],
       // Open day-of-month step (the parity idiom) with a plain weekday.
       ['0 0 1/2 6 5',
-        'in June at midnight whenever the day is an odd-numbered day or a ' +
+        'in June, at midnight whenever the day is an odd-numbered day or a ' +
         'Friday'],
       // Plain date with a month RANGE.
       ['0 0 13 6-8 5',
-        'in June through August at midnight whenever the day is the 13th or ' +
+        'in June through August, at midnight whenever the day is the 13th or ' +
         'a Friday'],
       // Plain date with the every-odd-month frequency.
       ['0 0 13 */2 5',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         '13th or a Friday']
     ]);
   });

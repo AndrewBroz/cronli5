@@ -1,0 +1,7 @@
+{
+  "uniform_offset": "cada seis minutos a partir del minuto 5 de cada hora",
+  "nonuniform_evendiv": "cada dos minutos del minuto 3 al 59 de cada hora",
+  "uneven": "cada siete minutos del minuto 0 al 56 de cada hora",
+  "confidence": 4,
+  "reasoning": "Para 5/6 el ciclo es limpio (60 mod 6 = 0, offset 5 no rompe nada), basta indicar inicio. Para 3/2 y */7 el ciclo no termina en :59 o no tiene continuidad perfecta, así que se añade 'al NN' para delimitar el último disparo exacto dentro de la hora, permitiendo reconstruir el conjunto sin ambigüedad."
+}

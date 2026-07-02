@@ -1,0 +1,62 @@
+[
+ {
+  "n": 1,
+  "cron": "0-10 */7 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 2,
+  "cron": "0-10 3/2 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every two minutes from 3 through 59 minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 3,
+  "cron": "0-10 */7 9-17/2 LW * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the last weekday of the month"
+ },
+ {
+  "n": 4,
+  "cron": "0-10 3/2 9-17/2 LW * *",
+  "current": "every second from zero through ten past the minute, every two minutes from 3 through 59 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the last weekday of the month"
+ },
+ {
+  "n": 5,
+  "cron": "0-10 */7 9-20,22 15W * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, at 9 a.m. through 8 p.m. and at 10 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 6,
+  "cron": "0-10 5/15 9-20,22 15W * *",
+  "current": "every second from zero through ten past the minute, every 15 minutes from five minutes past the hour during the 9 a.m. through 8 p.m. and 10 p.m. hours on the weekday nearest the 15th"
+ },
+ {
+  "n": 7,
+  "cron": "0-10 3/2 9-20,22 15W * *",
+  "current": "every second from zero through ten past the minute, every two minutes from 3 through 59 minutes past the hour, at 9 a.m. through 8 p.m. and at 10 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 8,
+  "cron": "0-10 5/15 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every 15 minutes from five minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ },
+ {
+  "n": 9,
+  "cron": "0-10 5/15 9-17/2 LW * *",
+  "current": "every second from zero through ten past the minute, every 15 minutes from five minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the last weekday of the month"
+ },
+ {
+  "n": 10,
+  "cron": "*/7 */5 15W */3 *",
+  "current": "every seven minutes from 0 through 56 minutes past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th in January, April, July, and October"
+ },
+ {
+  "n": 11,
+  "cron": "0-10 */7 9-17/2 1,15 * *",
+  "current": "every second from zero through ten past the minute, every seven minutes from 0 through 56 minutes past the hour, every two hours from 9 a.m. through 5 p.m. on the 1st and 15th"
+ },
+ {
+  "n": 12,
+  "cron": "0-10 0-30 */5 15W * *",
+  "current": "every second from zero through ten past the minute, every minute from 0 through 30 past the hour, every five hours from midnight through 8 p.m. on the weekday nearest the 15th"
+ }
+]

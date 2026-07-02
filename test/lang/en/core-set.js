@@ -121,7 +121,7 @@ describe('English core-set corrections:', function() {
   describe('batch 5 - minute cadence under stepped hours:', function() {
     run([
       ['0 */5 * 1 6 5',
-        'in June every five minutes whenever the day is the 1st or a Friday'],
+        'in June, every five minutes whenever the day is the 1st or a Friday'],
       ['0 */5 */2 * * 1',
         'every five minutes of every other hour on Mondays'],
       ['0 */5 */2 * * 1-5',
@@ -150,7 +150,7 @@ describe('English core-set corrections:', function() {
       ['0 */5 */2 1 6 *',
         'every five minutes of every other hour on June 1'],
       ['0 */5 */2 1 6 5',
-        'in June every five minutes of every other hour whenever the day is ' +
+        'in June, every five minutes of every other hour whenever the day is ' +
         'the 1st or a Friday'],
       ['0 */5 */2 L * *',
         'every five minutes of every other hour on the last day of the ' +
@@ -169,7 +169,7 @@ describe('English core-set corrections:', function() {
         'every five minutes during the 9 a.m. and 5 p.m. hours whenever the ' +
         'day is the 1st or a Friday'],
       ['0 */5 9,17 1 6 5',
-        'in June every five minutes during the 9 a.m. and 5 p.m. hours ' +
+        'in June, every five minutes during the 9 a.m. and 5 p.m. hours ' +
         'whenever the day is the 1st or a Friday'],
       ['0 */5 9-17 * * 1',
         'every five minutes from 9 a.m. through 5 p.m. on Mondays'],
@@ -203,7 +203,7 @@ describe('English core-set corrections:', function() {
       ['0 */5 9-17 1 6 *',
         'every five minutes from 9 a.m. through 5 p.m. on June 1'],
       ['0 */5 9-17 1 6 5',
-        'in June every five minutes from 9 a.m. through 5 p.m. whenever the ' +
+        'in June, every five minutes from 9 a.m. through 5 p.m. whenever the ' +
         'day is the 1st or a Friday'],
       ['0 */5 9-17 L * *',
         'every five minutes from 9 a.m. through 5 p.m. on the last day of the ' +
@@ -245,13 +245,13 @@ describe('English core-set corrections:', function() {
       ['0 0 */2 1 * 5',
         'every two hours whenever the day is the 1st or a Friday'],
       ['0 0 */2 1 6 5',
-        'in June every two hours whenever the day is the 1st or a Friday'],
+        'in June, every two hours whenever the day is the 1st or a Friday'],
       ['0 0 9-17 * * 1', 'every hour from 9 a.m. through 5 p.m. on Mondays'],
       ['0 0 9-17 1 * 5',
         'every hour from 9 a.m. through 5 p.m. whenever the day is the 1st ' +
         'or a Friday'],
       ['0 0 9-17 1 6 5',
-        'in June every hour from 9 a.m. through 5 p.m. whenever the day is ' +
+        'in June, every hour from 9 a.m. through 5 p.m. whenever the day is ' +
         'the 1st or a Friday'],
       ['30 5,10 9,17,19,21,23 * * 1',
         'at 30 seconds past the minute, at 5 and 10 minutes past the ' +
@@ -261,7 +261,7 @@ describe('English core-set corrections:', function() {
         'at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. whenever the day is ' +
         'the 1st or a Friday'],
       ['30 5,10 9,17,19,21,23 1 6 5',
-        'in June at 30 seconds past the minute, at 5 and 10 minutes past ' +
+        'in June, at 30 seconds past the minute, at 5 and 10 minutes past ' +
         'the hour, at 9 a.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. whenever ' +
         'the day is the 1st or a Friday']
     ]);
@@ -291,40 +291,40 @@ describe('English core-set corrections:', function() {
         'at midnight whenever the day is an odd-numbered day or the last ' +
         'Friday of the month'],
       ['0 0 */2 */2 */2',
-        'in every odd-numbered month at midnight whenever the day is an ' +
+        'in every odd-numbered month, at midnight whenever the day is an ' +
         'odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 */2 */2 0',
-        'in every odd-numbered month at midnight whenever the day is an ' +
+        'in every odd-numbered month, at midnight whenever the day is an ' +
         'odd-numbered day or a Sunday'],
       ['0 0 */2 */2 1-5',
-        'in every odd-numbered month at midnight whenever the day is an ' +
+        'in every odd-numbered month, at midnight whenever the day is an ' +
         'odd-numbered day or a weekday'],
       ['0 0 */2 */2 5L',
-        'in every odd-numbered month at midnight whenever the day is an ' +
+        'in every odd-numbered month, at midnight whenever the day is an ' +
         'odd-numbered day or the last Friday of the month'],
       ['0 0 */2 1 */2',
-        'in January at midnight whenever the day is an odd-numbered day, a ' +
+        'in January, at midnight whenever the day is an odd-numbered day, a ' +
         'Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 */2 1 0',
-        'in January at midnight whenever the day is an odd-numbered day or ' +
+        'in January, at midnight whenever the day is an odd-numbered day or ' +
         'a Sunday'],
       ['0 0 */2 1 1-5',
-        'in January at midnight whenever the day is an odd-numbered day or ' +
+        'in January, at midnight whenever the day is an odd-numbered day or ' +
         'a weekday'],
       ['0 0 */2 1 5L',
-        'in January at midnight whenever the day is an odd-numbered day or ' +
+        'in January, at midnight whenever the day is an odd-numbered day or ' +
         'the last Friday of the month'],
       ['0 0 */2 1-3 */2',
-        'in January through March at midnight whenever the day is an ' +
+        'in January through March, at midnight whenever the day is an ' +
         'odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 */2 1-3 0',
-        'in January through March at midnight whenever the day is an ' +
+        'in January through March, at midnight whenever the day is an ' +
         'odd-numbered day or a Sunday'],
       ['0 0 */2 1-3 1-5',
-        'in January through March at midnight whenever the day is an ' +
+        'in January through March, at midnight whenever the day is an ' +
         'odd-numbered day or a weekday'],
       ['0 0 */2 1-3 5L',
-        'in January through March at midnight whenever the day is an ' +
+        'in January through March, at midnight whenever the day is an ' +
         'odd-numbered day or the last Friday of the month'],
       ['0 0 1 * */2',
         'at midnight whenever the day is the 1st, a Sunday, a Tuesday, a ' +
@@ -335,41 +335,41 @@ describe('English core-set corrections:', function() {
         'at midnight whenever the day is the 1st or the last Friday of the ' +
         'month'],
       ['0 0 1 */2 */2',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         '1st, a Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 1 */2 0',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         '1st or a Sunday'],
       ['0 0 1 */2 1-5',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         '1st or a weekday'],
       ['0 0 1 */2 5L',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         '1st or the last Friday of the month'],
       ['0 0 1 1 * */2',
         'at 1 a.m. whenever the day is the 1st, a Sunday, a Tuesday, a ' +
         'Thursday, or a Saturday'],
       ['0 0 1 1 */2',
-        'in January at midnight whenever the day is the 1st, a Sunday, a ' +
+        'in January, at midnight whenever the day is the 1st, a Sunday, a ' +
         'Tuesday, a Thursday, or a Saturday'],
       ['0 0 1 1 0',
-        'in January at midnight whenever the day is the 1st or a Sunday'],
+        'in January, at midnight whenever the day is the 1st or a Sunday'],
       ['0 0 1 1 1-5',
-        'in January at midnight whenever the day is the 1st or a weekday'],
+        'in January, at midnight whenever the day is the 1st or a weekday'],
       ['0 0 1 1 5L',
-        'in January at midnight whenever the day is the 1st or the last ' +
+        'in January, at midnight whenever the day is the 1st or the last ' +
         'Friday of the month'],
       ['0 0 1 1-3 */2',
-        'in January through March at midnight whenever the day is the 1st, ' +
+        'in January through March, at midnight whenever the day is the 1st, ' +
         'a Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 1 1-3 0',
-        'in January through March at midnight whenever the day is the 1st ' +
+        'in January through March, at midnight whenever the day is the 1st ' +
         'or a Sunday'],
       ['0 0 1 1-3 1-5',
-        'in January through March at midnight whenever the day is the 1st ' +
+        'in January through March, at midnight whenever the day is the 1st ' +
         'or a weekday'],
       ['0 0 1 1-3 5L',
-        'in January through March at midnight whenever the day is the 1st ' +
+        'in January through March, at midnight whenever the day is the 1st ' +
         'or the last Friday of the month'],
       ['0 0 1-15 * */2',
         'at midnight whenever the day is from the 1st through the 15th, a ' +
@@ -384,42 +384,42 @@ describe('English core-set corrections:', function() {
         'at midnight whenever the day is from the 1st through the 15th or ' +
         'the last Friday of the month'],
       ['0 0 1-15 */2 */2',
-        'in every odd-numbered month at midnight whenever the day is from ' +
+        'in every odd-numbered month, at midnight whenever the day is from ' +
         'the 1st through the 15th, a Sunday, a Tuesday, a Thursday, or a ' +
         'Saturday'],
       ['0 0 1-15 */2 0',
-        'in every odd-numbered month at midnight whenever the day is from ' +
+        'in every odd-numbered month, at midnight whenever the day is from ' +
         'the 1st through the 15th or a Sunday'],
       ['0 0 1-15 */2 1-5',
-        'in every odd-numbered month at midnight whenever the day is from ' +
+        'in every odd-numbered month, at midnight whenever the day is from ' +
         'the 1st through the 15th or a weekday'],
       ['0 0 1-15 */2 5L',
-        'in every odd-numbered month at midnight whenever the day is from ' +
+        'in every odd-numbered month, at midnight whenever the day is from ' +
         'the 1st through the 15th or the last Friday of the month'],
       ['0 0 1-15 1 */2',
-        'in January at midnight whenever the day is from the 1st through ' +
+        'in January, at midnight whenever the day is from the 1st through ' +
         'the 15th, a Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 1-15 1 0',
-        'in January at midnight whenever the day is from the 1st through ' +
+        'in January, at midnight whenever the day is from the 1st through ' +
         'the 15th or a Sunday'],
       ['0 0 1-15 1 1-5',
-        'in January at midnight whenever the day is from the 1st through ' +
+        'in January, at midnight whenever the day is from the 1st through ' +
         'the 15th or a weekday'],
       ['0 0 1-15 1 5L',
-        'in January at midnight whenever the day is from the 1st through ' +
+        'in January, at midnight whenever the day is from the 1st through ' +
         'the 15th or the last Friday of the month'],
       ['0 0 1-15 1-3 */2',
-        'in January through March at midnight whenever the day is from the ' +
+        'in January through March, at midnight whenever the day is from the ' +
         '1st through the 15th, a Sunday, a Tuesday, a Thursday, or a ' +
         'Saturday'],
       ['0 0 1-15 1-3 0',
-        'in January through March at midnight whenever the day is from the ' +
+        'in January through March, at midnight whenever the day is from the ' +
         '1st through the 15th or a Sunday'],
       ['0 0 1-15 1-3 1-5',
-        'in January through March at midnight whenever the day is from the ' +
+        'in January through March, at midnight whenever the day is from the ' +
         '1st through the 15th or a weekday'],
       ['0 0 1-15 1-3 5L',
-        'in January through March at midnight whenever the day is from the ' +
+        'in January through March, at midnight whenever the day is from the ' +
         '1st through the 15th or the last Friday of the month'],
       ['0 0 L * */2',
         'at midnight whenever the day is the last day of the month, a ' +
@@ -434,41 +434,41 @@ describe('English core-set corrections:', function() {
         'at midnight whenever the day is the last day of the month or the ' +
         'last Friday of the month'],
       ['0 0 L */2 */2',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         'last day of the month, a Sunday, a Tuesday, a Thursday, or a ' +
         'Saturday'],
       ['0 0 L */2 0',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         'last day of the month or a Sunday'],
       ['0 0 L */2 1-5',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         'last day of the month or a weekday'],
       ['0 0 L */2 5L',
-        'in every odd-numbered month at midnight whenever the day is the ' +
+        'in every odd-numbered month, at midnight whenever the day is the ' +
         'last day of the month or the last Friday of the month'],
       ['0 0 L 1 */2',
-        'in January at midnight whenever the day is the last day of the ' +
+        'in January, at midnight whenever the day is the last day of the ' +
         'month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 L 1 0',
-        'in January at midnight whenever the day is the last day of the ' +
+        'in January, at midnight whenever the day is the last day of the ' +
         'month or a Sunday'],
       ['0 0 L 1 1-5',
-        'in January at midnight whenever the day is the last day of the ' +
+        'in January, at midnight whenever the day is the last day of the ' +
         'month or a weekday'],
       ['0 0 L 1 5L',
-        'in January at midnight whenever the day is the last day of the ' +
+        'in January, at midnight whenever the day is the last day of the ' +
         'month or the last Friday of the month'],
       ['0 0 L 1-3 */2',
-        'in January through March at midnight whenever the day is the last ' +
+        'in January through March, at midnight whenever the day is the last ' +
         'day of the month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
       ['0 0 L 1-3 0',
-        'in January through March at midnight whenever the day is the last ' +
+        'in January through March, at midnight whenever the day is the last ' +
         'day of the month or a Sunday'],
       ['0 0 L 1-3 1-5',
-        'in January through March at midnight whenever the day is the last ' +
+        'in January through March, at midnight whenever the day is the last ' +
         'day of the month or a weekday'],
       ['0 0 L 1-3 5L',
-        'in January through March at midnight whenever the day is the last ' +
+        'in January through March, at midnight whenever the day is the last ' +
         'day of the month or the last Friday of the month']
     ]);
   });

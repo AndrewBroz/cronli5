@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 4, "clarity": 4, "issue": "Stundenangabe als '9 bis 9:59 Uhr / 17 bis 17:59 Uhr' fuer Einzelstunden umstaendlich; 'um 9 und 17 Uhr' waere idiomatischer." },
+ { "n": 4, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 5, "issue": "Zeitangabe am Ende statt vorn liest sich etwas holprig, aber korrekt und klar." },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 9, "correct": true, "idiom": 3, "clarity": 4, "issue": "SAT,SUN als 'sonntags und samstags' vertauscht die natuerliche Reihenfolge (samstags und sonntags)." },
+ { "n": 10, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 12, "correct": false, "idiom": 2, "clarity": 2, "issue": "Widerspruechlich: 'alle 15 Minuten ab Minute 5 jeder Stunde' impliziert jede Stunde, doch danach 'von 0 bis 0:50 Uhr' (nur Stunde 0). Die Stunde ist nur 0; 'jeder Stunde' ist falsch/irrefuehrend." },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "'in jeder zweiten Stunde' fuer */2 (0,2,...,22) verstaendlich, koennte aber 'jede zweite Stunde ab 0 Uhr' praezisieren." },
+ { "n": 14, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 3, "clarity": 4, "issue": "SAT,SUN als 'sonntags und samstags' vertauscht die natuerliche Reihenfolge (samstags und sonntags)." },
+ { "n": 16, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 5, "clarity": 5, "issue": "" }
+]

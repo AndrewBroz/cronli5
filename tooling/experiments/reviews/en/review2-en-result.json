@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 4, "clarity": 4, "issue": "Long but accurate; month correctly distributed over both or-branches." },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "Leading day/dow clauses before the time read slightly back-to-front, but unambiguous." },
+ { "n": 6, "correct": true, "idiom": 3, "clarity": 3, "issue": "Stacking 'every second, every two minutes from 3 through 59' is technically correct but awkward; a reader must work to see it means every second within minutes 3,5,...,59 at noon." },
+ { "n": 7, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 4, "clarity": 4, "issue": "Minute=0 only implied by 'every six hours from 2 a.m.'; upper bound (last hour 20:00) is also implicit but recoverable." },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 10, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "'every 15 minutes from five minutes past the hour from midnight through 12:50 a.m.' is dense but correctly yields 0:05,0:20,0:35,0:50." },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "'every other hour' for */2 reads as even hours 0,2,...,22; acceptable." },
+ { "n": 14, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 4, "issue": "'every five hours from midnight through 8 p.m.' correctly captures hours 0,5,10,15,20." },
+ { "n": 20, "correct": true, "idiom": 5, "clarity": 5, "issue": "Month correctly distributed over both or-branches." }
+]

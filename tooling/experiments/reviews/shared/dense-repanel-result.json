@@ -1,0 +1,12 @@
+[
+ { "n": 1, "correct": true, "natural": 5, "form": "restructured", "issue": "" },
+ { "n": 2, "correct": true, "natural": 5, "form": "restructured", "issue": "" },
+ { "n": 3, "correct": true, "natural": 2, "form": "flat", "issue": "second-first run-on; anchor (last weekday) buried at the end; coarse-to-fine order inverted" },
+ { "n": 4, "correct": true, "natural": 2, "form": "flat", "issue": "second-first run-on; no nesting of seconds under minutes; anchor trails at the end" },
+ { "n": 5, "correct": true, "natural": 5, "form": "restructured", "issue": "" },
+ { "n": 6, "correct": true, "natural": 5, "form": "restructured", "issue": "" },
+ { "n": 7, "correct": true, "natural": 2, "form": "flat", "issue": "second-first run-on; anchor trails; reads as a stacked frequency dump" },
+ { "n": 8, "correct": true, "natural": 5, "form": "restructured", "issue": "" },
+ { "n": 9, "correct": true, "natural": 4, "form": "restructured", "issue": "minor: '15 minutes from five minutes past the hour' omits an explicit upper bound, slightly less crisp than the '0 through 56' phrasings, but still recoverable (5,20,35,50)" },
+ { "n": 10, "correct": true, "natural": 5, "form": "restructured", "issue": "" }
+]

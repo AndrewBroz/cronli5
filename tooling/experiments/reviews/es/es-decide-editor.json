@@ -1,0 +1,65 @@
+[
+  {
+    "cluster": "A",
+    "pick": "cada minuto del 0 al 29 de cada hora",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "All three are grammatically sound. Candidate 1 is the most concise and natural: 'del 0 al 29' is idiomatic for a numeric range. Candidate 2 ('en los minutos 0 a 29') is correct but uses the plural 'minutos' where a range from a single start to end is being described, making it slightly less natural. Candidate 3 adds 'entre el … y el …' which is wordier with no clarity gain over 'del … al …'."
+  },
+  {
+    "cluster": "B",
+    "pick": "a las 12:00, 22:00, 23:00, 00:00, a la 01:00 y a las 02:00",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 repeats 'a las' before every item — grammatically correct but verbose for a list. Candidate 2 drops all articles after the first, leaving '01:00' without the required singular article 'la una', so it is DISQUALIFIED: the article-number agreement for 01:00 is wrong (needs 'a la', not 'a las' elided). Candidate 3 keeps 'a las' for the opening run, then correctly switches to 'a la 01:00' and back to 'a las 02:00'. This is the best balance of concision and correctness."
+  },
+  {
+    "cluster": "C",
+    "pick": "en el minuto 1 y el segundo 1 de cada hora",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 1 ('en el minuto 1 y segundo 1') drops the article before 'segundo', creating faulty parallelism — DISQUALIFIED. Candidate 3 inverts the nesting order ('el segundo 1 del minuto 1') which changes the syntactic grouping and implies 'second 1 of minute 1 of each hour', which is correct in meaning but oddly ordered for a cron renderer that generally goes coarser → finer (minute → second is the natural reading direction). Candidate 2 maintains parallel structure ('el minuto 1 y el segundo 1') with a clean shared complement 'de cada hora' and is the most grammatically sound."
+  },
+  {
+    "cluster": "D",
+    "pick": "cada hora de las 09:00 a las 20:00 y también a las 22:00",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 ('… y a las 22:00') is syntactically ambiguous: the 'y' could be read as continuing the range or adding an isolated item. Candidate 3 ('además de las 22:00') is sound and explicit but 'además de' typically introduces a supplement after a pause — dropping the second 'a las' before '22:00' is a minor omission ('además de a las 22:00' is the full correct form). Candidate 4 ('y, aparte, a las 22:00') is informal register. Candidate 2 adds 'también' which unambiguously signals that 22:00 is an additional isolated time, not an extension of the range, while staying in written register. Preferred."
+  },
+  {
+    "cluster": "E",
+    "pick": "en diciembre, el 31 o los viernes, a las 23:59",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidates 1 and 3 share a structural scope problem: 'el 31 de diciembre o los viernes de diciembre a las 23:59' — the 'a las 23:59' at the end attaches only to the second disjunct syntactically; a careful reader wonders whether 23:59 governs both. Candidate 4 ('en diciembre a las 23:59, el día 31 o los viernes') puts the time between the month and the day/weekday, creating awkward interruption. Candidate 2 uses a clear nested structure: 'en diciembre' sets the outer scope, the comma after it scopes 'el 31 o los viernes' as an OR within that, and the trailing 'a las 23:59' unambiguously governs both. Cleanest scope and most concise."
+  },
+  {
+    "cluster": "F1",
+    "pick": "los lunes a las 09:30, en los segundos 5 y 10",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 leads with 'en los segundos 5 y 10 de cada minuto' which misrepresents the meaning — this is not every minute but only the specific minute :30 at 09:30; 'de cada minuto' is factually wrong for the given schedule. DISQUALIFIED. Candidate 3 ('los lunes, en los segundos 5 y 10 del minuto 30, a las 09:30') splits the time across two phrases awkwardly and the final ', a las 09:30' is weakly attached. Candidate 2 anchors context first ('los lunes a las 09:30') then specifies the within-minute firing ('en los segundos 5 y 10') — clean, correct, written register."
+  },
+  {
+    "cluster": "F2",
+    "pick": "de lunes a viernes, en el minuto 30 de cada hora de las 09:00 a las 17:30, cada 15 segundos",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1 leads with 'cada 15 segundos' before establishing the day/time context — poor information hierarchy for a written description. Candidate 2 ('… en el minuto 30 y cada 15 segundos') uses 'y' to join 'el minuto 30' (a fixed position) with 'cada 15 segundos' (a step within that minute) — the 'y' creates a false parallelism between a position and a frequency. DISQUALIFIED. Candidate 3 preserves the natural outer-to-inner order (weekday → hour range → minute → second step), and 'cada hora de las 09:00 a las 17:30' correctly phrases the bounded hour range. Best structure."
+  },
+  {
+    "cluster": "F3",
+    "pick": "cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 3 ('del minuto 0 al 30 de las 09:00, 17:00, 18:00 y 19:00') uses 'de las 09:00…' as a genitive complement of 'minuto 0 al 30', which is grammatically strained and hard to parse. Candidate 2 leads with the hours list and appends the minute window — this buries the continuous 'every minute' firing pattern at the end, weaker hierarchy. Candidate 1 states the recurring action first ('cada minuto del 0 al 30') then scopes it to the specific hours with 'a las …' — natural order, clear scope, concise."
+  },
+  {
+    "cluster": "F4",
+    "pick": "cada minuto del 0 al 30, cada dos horas",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 3 ('cada minuto del 0 al 30 dentro de cada dos horas') uses 'dentro de' which in Spanish temporal idiom means 'within' a single span, not 'within each recurrence of'; it is semantically odd. Candidate 2 leads with the hour step and appends the minute window — inverted hierarchy (less frequent unit first). Candidate 1 states the minute window first then the hour cadence — mirrors the natural cron field order (minute then hour), is idiomatic, and concise."
+  }
+]

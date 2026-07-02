@@ -1,0 +1,66 @@
+[
+  {
+    "id": "S1",
+    "meaning": "In January only, at 00:00, on the 1st of the month OR on any Sunday (inclusive OR; both January and 00:00 apply to both conditions).",
+    "candidates": [
+      "en enero a las 00:00, ya sea el día 1 o un domingo",
+      "en enero a las 00:00, ya sea el día 1 o los domingos",
+      "en enero a las 00:00, ya sea el día 1 o cualquier domingo"
+    ]
+  },
+  {
+    "id": "W1",
+    "meaning": "At 00:00, on every other day of the month OR on Sundays, Tuesdays, Thursdays and Saturdays. (No month restriction; 00:00 applies to both conditions.)",
+    "candidates": [
+      "a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+      "cada dos días del mes o los domingos, martes, jueves y sábados, a las 00:00"
+    ]
+  },
+  {
+    "id": "M1",
+    "meaning": "In the months January, March, May, July, September and November only, at 00:00, on every other day of the month OR on Sundays, Tuesdays, Thursdays and Saturdays. (The month list AND 00:00 apply to BOTH conditions; the month list must appear ONCE, not be repeated on each arm.)",
+    "candidates": [
+      "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+      "cada dos días del mes de enero, marzo, mayo, julio, septiembre y noviembre o los domingos, martes, jueves y sábados de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+    ]
+  },
+  {
+    "id": "WM1",
+    "meaning": "Every five minutes during the even hours, on the 1st of the month OR on Fridays. (No month restriction; the time applies to both day conditions.)",
+    "candidates": [
+      "cada cinco minutos, durante las horas pares, ya sea el día 1 del mes o los viernes",
+      "cada cinco minutos, durante las horas pares, ya sea el 1 de cada mes o los viernes",
+      "cada cinco minutos durante las horas pares, ya sea los días 1 de cada mes o los viernes"
+    ]
+  },
+  {
+    "id": "R1",
+    "meaning": "From January to March only, at 00:00, on days 1 through 15 of the month OR on Sundays, Tuesdays, Thursdays and Saturdays. (Month range AND time apply to both.)",
+    "candidates": [
+      "de enero a marzo a las 00:00, ya sea del 1 al 15 o los domingos, martes, jueves y sábados",
+      "de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los domingos, martes, jueves y sábados"
+    ]
+  },
+  {
+    "id": "DR1",
+    "meaning": "In Jan/Mar/May/Jul/Sep/Nov only, at 00:00, on every other day of the month OR Monday through Friday.",
+    "candidates": [
+      "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o de lunes a viernes"
+    ]
+  },
+  {
+    "id": "QL",
+    "meaning": "In Jan/Mar/May/Jul/Sep/Nov only, at 00:00, on the LAST day of the month OR on Sundays, Tuesdays, Thursdays and Saturdays.",
+    "candidates": [
+      "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea el último día del mes o los domingos, martes, jueves y sábados"
+    ]
+  },
+  {
+    "id": "Q5L",
+    "meaning": "At 00:00, on the 1st of the month OR on the LAST Friday of the month. (No month restriction.)",
+    "candidates": [
+      "a las 00:00, ya sea el día 1 del mes o el último viernes del mes",
+      "a las 00:00, ya sea el 1 de cada mes o el último viernes del mes"
+    ]
+  }
+]

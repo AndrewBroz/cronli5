@@ -55,10 +55,11 @@ describe('Valid strings with steps:', function() {
       // times: the pinned minute leads, then the hour cadence.
       ['5 */2 * * *', 'five minutes past the hour, every two hours'],
       // A uniform step segment beside a range in a folded clock-time set: the
-      // range is a window, the step contributes its fires.
+      // range is a window, the step contributes its fires. The step's 10 a.m.
+      // fire falls inside the 8-10 window, so it is not restated in the list.
       ['5 8-10,2/4 * * *',
         'at five minutes past the hour from 8 a.m. through 10 a.m. ' +
-        'and at 2:05 a.m., 6:05 a.m., 10:05 a.m., 2:05 p.m., 6:05 p.m., ' +
+        'and at 2:05 a.m., 6:05 a.m., 2:05 p.m., 6:05 p.m., ' +
         'and 10:05 p.m.']
     ]);
   });

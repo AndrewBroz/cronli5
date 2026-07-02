@@ -1,0 +1,65 @@
+[
+  {
+    "cluster": "A",
+    "pick": "cada minuto del 0 al 29 de cada hora",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "\"del 0 al 29\" is an unambiguous closed range that fires every minute. C2 \"en los minutos 0 a 29\" loses the per-minute repetition signal and could be read as two point-in-time minutes. C3 \"entre el 0 y el 29\" is typically exclusive of endpoints in Spanish, risking omission of minute 0 or 29."
+  },
+  {
+    "cluster": "B",
+    "pick": "a las 12:00, a las 22:00, a las 23:00, a las 00:00, a la 01:00 y a las 02:00",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Repeating the article for every time makes all six times unambiguous peers and handles the grammatical singular for 01:00 (\"a la\") correctly. C2 drops all articles, losing the 01:00 singular distinction. C3's mid-list switch from implicit to explicit articles could signal an unintended grouping boundary."
+  },
+  {
+    "cluster": "C",
+    "pick": "en el segundo 1 del minuto 1 de cada hora",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The genitive nesting \"el segundo 1 del minuto 1\" encodes second-within-minute unambiguously, matching HH:01:01 exactly. C1 \"y segundo 1\" risks \"segundo\" being read as the ordinal adjective (\"the second minute 1\"). C2 is also unambiguous but less precise about nesting."
+  },
+  {
+    "cluster": "D",
+    "pick": "cada hora de las 09:00 a las 20:00 y también a las 22:00",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "\"y también\" explicitly signals addition, blocking the range-extension reading that \"y a las 22:00\" alone invites. C3 \"además de las 22:00\" risks \"de las 22:00\" being parsed as a new range anchor. C4 \"y, aparte,\" is slightly informal."
+  },
+  {
+    "cluster": "E",
+    "pick": "en diciembre, el 31 o los viernes, a las 23:59",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Fronting \"en diciembre\" scopes both OR arms to December; trailing \"a las 23:59\" scopes both OR arms to that time. The middle \"el 31 o los viernes\" is the clean OR. C1 leaves the time visually attached only to the second arm. C3 risks the fronted time appearing to modify only the following clause. C4 is also good but slightly less scannable. Only mild uncertainty: \"el 31\" without \"día\" is resolvable from context but could propose \"el día 31\" for maximum explicitness."
+  },
+  {
+    "cluster": "F1",
+    "pick": "los lunes a las 09:30, en los segundos 5 y 10",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Fronting \"los lunes a las 09:30\" anchors the full time context; \"en los segundos 5 y 10\" then qualifies only within that moment. C1 adds \"de cada minuto\" which contradicts the meaning (implies every minute, not just 09:30). C3 states both \"minuto 30\" and \"09:30\" redundantly, creating confusion about whether they are independent constraints."
+  },
+  {
+    "cluster": "F2",
+    "pick": "de lunes a viernes, en el minuto 30 de cada hora de las 09:00 a las 17:30, cada 15 segundos",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Weekday scope fronted; \"en el minuto 30 de cada hora de las 09:00 a las 17:30\" nests the hour range as the owner of the minute constraint; trailing \"cada 15 segundos\" modifies within that minute. C2's \"en el minuto 30 y cada 15 segundos\" joins the two constraints with \"y\" at the same level, making them look like independent triggers rather than nested. C1's inside-out ordering is harder to scan."
+  },
+  {
+    "cluster": "F3",
+    "pick": "del minuto 0 al 30 de las 09:00, 17:00, 18:00 y 19:00",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "\"de las [hours]\" makes the hours the genitive container for the minute range, blocking the additive misreading. C1 and C2 both use \"a las\" for the hours, which reads as specific clock-time targets rather than containing scopes, risking the reading \"every minute 0–30 PLUS at those four times.\""
+  },
+  {
+    "cluster": "F4",
+    "pick": "cada minuto del 0 al 30 dentro de cada dos horas",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "\"dentro de\" explicitly encodes nesting: the minute window is inside the two-hour cycle. C1 and C2 both use comma-separated \"cada\" clauses which are ambiguous between two independent repetition rates and a nested structure."
+  }
+]

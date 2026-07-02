@@ -1,0 +1,81 @@
+[
+  {
+    "cluster": 1,
+    "name": "OR-scope (shared month over a date-OR-weekday union)",
+    "meaning": "Runs at midnight, in January only, on either the 1st day of the month OR on any Monday. (The month restriction applies to BOTH the date condition and the weekday condition.)",
+    "candidates": [
+      "tammikuun 1. päivänä tai maanantaisin tammikuussa keskiyöllä",
+      "tammikuussa 1. päivänä tai maanantaisin keskiyöllä",
+      "tammikuun 1. päivänä tai tammikuun maanantaisin keskiyöllä",
+      "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä"
+    ]
+  },
+  {
+    "cluster": 2,
+    "name": "redundant double-month in a union (range/list day vs weekday range)",
+    "meaning": "In June only, on either days 1-5 of the month OR on weekdays Monday through Friday. (The month restriction applies to both conditions; ignore the separate time-of-day part for this judgement.)",
+    "candidates": [
+      "kesäkuun 1.–5. päivänä tai maanantaista perjantaihin kesäkuussa",
+      "kesäkuussa 1.–5. päivänä tai maanantaista perjantaihin",
+      "kesäkuun 1.–5. päivänä tai kesäkuun maanantaista perjantaihin",
+      "kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin"
+    ]
+  },
+  {
+    "cluster": 3,
+    "name": "month-list coordination + OR-scope over a month list",
+    "meaning": "In January and July only, on either the 1st day of the month OR on any Monday. (Both the date and the weekday condition are restricted to those two months; ignore the separate time-of-day part for this judgement.)",
+    "candidates": [
+      "tammikuun ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa",
+      "tammikuussa ja heinäkuussa 1. päivänä tai maanantaisin",
+      "tammikuun 1. ja heinäkuun 1. päivänä tai maanantaisin tammikuussa ja heinäkuussa",
+      "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin"
+    ]
+  },
+  {
+    "cluster": 4,
+    "name": "mixed-granularity cadence (seconds anchor + minute step)",
+    "meaning": "Every 15 minutes, and within each of those firings, at the 5th and 30th second.",
+    "candidates": [
+      "5 ja 30 sekunnin kohdalla, 15 minuutin välein",
+      "15 minuutin välein 5 ja 30 sekunnin kohdalla",
+      "15 minuutin välein, 5 ja 30 sekunnin kohdalla",
+      "joka 15. minuutti 5 ja 30 sekunnin kohdalla"
+    ]
+  },
+  {
+    "cluster": 5,
+    "name": "hour-window verbosity",
+    "subcases": [
+      {
+        "id": "5a",
+        "meaning": "The minute cadence is already stated separately (it fires twice within each selected hour). The hours selected are 0, 5, 10, 15 and 20 o'clock. How should the hour selection read, given the minutes are described elsewhere?",
+        "candidates": [
+          "klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59",
+          "klo 0, 5, 10, 15 ja 20",
+          "tunteina 0, 5, 10, 15 ja 20"
+        ]
+      },
+      {
+        "id": "5b",
+        "meaning": "The selected hours are 9 through 20 inclusive, plus also 22 o'clock (a range plus one extra isolated hour).",
+        "candidates": [
+          "klo 9–20 ja 22",
+          "klo 9–20 sekä 22",
+          "klo 9–20 ja lisäksi 22"
+        ]
+      }
+    ]
+  },
+  {
+    "cluster": 6,
+    "name": "level separation between a minute-cadence level and a clock-hour list",
+    "meaning": "On every minute from minute 0 through minute 30 (a within-the-hour minute window), at 9, 11, 13, 15 and 17 o'clock. The reader must not confuse the minute level with the hour level.",
+    "candidates": [
+      "0–30 minuutin kohdalla, klo 9, 11, 13, 15 ja 17",
+      "0–30 minuutin kohdalla klo 9, 11, 13, 15 ja 17",
+      "klo 9, 11, 13, 15 ja 17, minuutteina 0–30",
+      "klo 9, 11, 13, 15 ja 17 aina minuuttien 0–30 kohdalla"
+    ]
+  }
+]

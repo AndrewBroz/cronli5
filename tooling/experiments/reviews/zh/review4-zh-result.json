@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 2, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 3, "clarity": 3, "issue": "“每2小时每15分钟”两个频率直接相连略含混，宜作“在偶数小时，每小时0、15、30、45分”或加分隔" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 3, "clarity": 3, "issue": "“1日至5日或每周五在9点至17点之间”缺逗号，“或每周五”与时间段粘连，宜“1日至5日或每周五，在9点至17点之间”" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": true, "idiom": 4, "clarity": 4, "issue": "“至59分”与开头“每月1日至5日或周六和周日”分隔尚可；整体可接受" },
+ { "n": 9, "correct": true, "idiom": 3, "clarity": 3, "issue": "时间排序割裂：分钟在中段、小时在末尾，宜“1月1、15日，在9点和17点，每小时从3分起每2分钟，至59分”" },
+ { "n": 10, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 11, "correct": true, "idiom": 3, "clarity": 3, "issue": "“每小时，1月，最接近…”字段顺序跳跃，时分与日期穿插，可读性偏弱" },
+ { "n": 12, "correct": true, "idiom": 3, "clarity": 3, "issue": "时分在前、月份日期在后，顺序与中文习惯（先大后小）相反，宜先月份再时分" },
+ { "n": 13, "correct": true, "idiom": 3, "clarity": 2, "issue": "句子过长，小时频率与分钟频率穿插（“从0点起每5小时，至20点，每小时从0分起每7分钟，至56分”），断句拥挤难读" },
+ { "n": 14, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 3, "issue": "三层频率（秒/分/时）顺序由大到小再回到日期，尚可读但密度略高" },
+ { "n": 18, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

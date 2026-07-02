@@ -1,0 +1,287 @@
+[
+  {
+    "pattern": "*/15 */2 * * *",
+    "meaning": "every 15 minutes during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Joka toinen tunti 15 minuutin välein."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Joka toinen tunti 15 minuutin välein."
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "15 minuutin välein joka toisen tunnin aikana"
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Joka 15. minuutti, joka 2. tunti"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronli5",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate way to express this in Finnish."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly natural."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but slightly wordy and less idiomatic than A/B."
+        },
+        "D": {
+          "natural": 1,
+          "correct": false,
+          "note": "Incorrect phrasing; 'joka 15. minuutti' implies the 15th minute of the hour, not an interval."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "* */2 * * *",
+    "meaning": "every minute during every other hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "joka minuutti joka toisen tunnin aikana"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Joka minuutti, joka 2. tunti"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Joka minuutti joka toinen tunti."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "joka minuutti joka toinen tunti"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and grammatically correct, though slightly wordy."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "The comma creates a disjointed list rather than a continuous schedule description."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and natural; identical to D regardless of punctuation."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most concise and natural way to express this pattern in Finnish."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "*/15 */3 * * *",
+    "meaning": "every 15 minutes during every third hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "15 minuutin välein joka kolmannen tunnin aikana"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Joka 15. minuutti, joka 3. tunti"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Joka kolmas tunti 15 minuutin välein."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Joka kolmas tunti 15 minuutin välein."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and natural, though slightly wordy."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Incorrect; implies a specific minute and hour rather than a frequency."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural and common way to express this in Finnish."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to C; most natural."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "*/20 9-17/2 * * *",
+    "meaning": "every 20 minutes during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "20 minuutin välein kello 9, 11, 13, 15 ja 17."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "20 minuutin välein klo 9.00–9.59, 11.00–11.59, 13.00–13.59, 15.00–15.59 ja 17.00–17.59"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Joka 20. minuutti, joka 2. tunti, 09:00 - 17:59 välillä"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "20 minuutin välein kello 9, 11, 13, 15 ja 17."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and concise; in Finnish, mentioning the hour implies the hour-long window in this context."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Technically precise and unambiguous, but looks more like a technical log than a natural sentence fragment."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Incorrect logic; 'joka 2. tunti' implies every second hour regardless of the specific starting hours."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Identical to A."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "* */5 * * *",
+    "meaning": "every minute during the 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m. hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Joka minuutti kello 00, 05, 10, 15 ja 20 välisinä tunteina."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Joka minuutti, joka 5. tunti"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "joka minuutti klo 0.00–0.59, 5.00–5.59, 10.00–10.59, 15.00–15.59 ja 20.00–20.59"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Joka minuutti kello 0, 5, 10, 15 ja 20 välisin."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": false,
+          "note": "The phrasing 'välisinä tunteina' is grammatically awkward and not standard Finnish."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Meaning is slightly off; it implies every 5th hour generally, rather than these specific hours."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Explicit, accurate, and the most natural way to describe these specific intervals in Finnish."
+        },
+        "D": {
+          "natural": 2,
+          "correct": false,
+          "note": "The word 'välisin' refers to the interval between events, not the specific clock hours."
+        },
+        "best": "C"
+      }
+    ]
+  }
+]

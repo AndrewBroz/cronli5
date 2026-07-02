@@ -1,0 +1,66 @@
+[
+  {
+    "id": "S1",
+    "pick": "en enero a las 00:00, ya sea el día 1 o cualquier domingo",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "All three front the month and time correctly so both arms inherit them. 'el día 1' is unambiguous for day-of-month (not weekday). The deciding factor is the second arm: 'un domingo' (singular indefinite) could suggest a specific one-off Sunday; 'los domingos' (definite plural) could be read as habitual/all Sundays but is natural; 'cualquier domingo' (any Sunday) is maximally explicit that the arm means every Sunday, matching the inclusive-OR meaning. Pick 3 wins on precision."
+  },
+  {
+    "id": "W1",
+    "pick": "a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 1 fronts '00:00' so it unambiguously governs both arms of 'ya sea … o'. Candidate 2 places '00:00' at the end after the whole disjunction, risking a reading where it only modifies the second arm (the closest antecedent). Candidate 1 is structurally safer."
+  },
+  {
+    "id": "M1",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 1 fronts both the month list and '00:00' once, then uses 'ya sea … o' for the two day conditions — exactly what the meaning requires (months appear once, govern both arms). Candidate 2 repeats the month list on each arm, violating the 'must appear ONCE' constraint explicitly stated in the meaning."
+  },
+  {
+    "id": "WM1",
+    "pick": "cada cinco minutos, durante las horas pares, ya sea el día 1 del mes o los viernes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Candidate 1: 'el día 1 del mes' is unambiguous (ordinal day-of-month, not first weekday); comma after 'pares' cleanly separates time scope from the disjunction. Candidate 2: 'el 1 de cada mes' is also clear but 'cada mes' slightly implies a monthly frame that could conflict with no-month-restriction. Candidate 3: 'los días 1' (plural) is grammatically odd for a single monthly date. Candidate 1 is the cleanest."
+  },
+  {
+    "id": "R1",
+    "pick": "de enero a marzo a las 00:00, ya sea del 1 al 15 del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Both candidates front the month range and time correctly. The difference: candidate 1 uses 'del 1 al 15' bare, which in context following 'ya sea' reads naturally as days of the month but could marginally be read as months 1–15. Candidate 2 adds 'del mes' to the range arm, making explicit that 1–15 are days of the month, not a month range — eliminating the only plausible misreading."
+  },
+  {
+    "id": "DR1",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea cada dos días del mes o de lunes a viernes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Single candidate. Month list and time are fronted once, both arms of 'ya sea … o' are unambiguous ('cada dos días del mes' = day-of-month step; 'de lunes a viernes' = weekday range), no month repetition. No misreading trap."
+  },
+  {
+    "id": "QL",
+    "pick": "en enero, marzo, mayo, julio, septiembre y noviembre a las 00:00, ya sea el último día del mes o los domingos, martes, jueves y sábados",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Single candidate. Month list and time are fronted once. 'el último día del mes' unambiguously denotes the last calendar day (not last weekday). 'los domingos, martes, jueves y sábados' is clear. Both arms correctly inherit the month and time scope. No trap."
+  },
+  {
+    "id": "Q5L",
+    "pick": "a las 00:00, ya sea el día 1 del mes o el último viernes del mes",
+    "ok": true,
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Candidate 1: 'el día 1 del mes' is unambiguous for day-of-month (not first weekday); 'el último viernes del mes' clearly means the last Friday of the month (Quartz L semantics). Candidate 2: 'el 1 de cada mes' is also clear but 'cada mes' on only the first arm while the second arm uses bare 'del mes' is slightly asymmetric. Both are acceptable, but candidate 1 is fully parallel ('del mes' appears on both arms) and 'el día 1' vs bare 'el 1' removes any possible weekday ambiguity."
+  }
+]

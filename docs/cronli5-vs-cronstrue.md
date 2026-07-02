@@ -101,7 +101,7 @@ a specific schedule, or an advanced operator.
 | `23 0-20/2 * * *` | Runs 23 minutes past the hour, every two hours from midnight through 8 p.m. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
 | `0 0 * * 5L` | Runs on the last Friday of the month at midnight. | At 12:00 AM, on the last Friday of the month |
 | `5,10 30 9 * * MON` | Runs at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| `59 23 31 12 5` | Runs in December at 11:59 p.m. whenever the day is the 31st or a Friday. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
+| `59 23 31 12 5` | Runs in December, at 11:59 p.m. whenever the day is the 31st or a Friday. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
 | `30 9 15W 6 *` | Runs on the weekday nearest the 15th in June at 9:30 a.m. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
 | `15 30 9 * * MON` | Runs every Monday at 9:30:15 a.m. | At 09:30:15 AM, only on Monday |
 <!-- END GENERATED: comparison -->

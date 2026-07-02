@@ -1,0 +1,33 @@
+[
+  {
+    "id": "w1",
+    "topic": "Quartz nearest-weekday word order",
+    "meaning": "On the weekday (Mon–Fri) closest to the 15th day of the month. (Quartz '15W': if the 15th is a weekend, the nearest weekday is used.)",
+    "candidates": [
+      "arkipäivänä lähinnä kuukauden 15. päivää",
+      "kuukauden 15. päivää lähinnä olevana arkipäivänä",
+      "lähimpänä kuukauden 15. päivää olevana arkipäivänä",
+      "kuukauden 15. päivää lähimpänä arkipäivänä"
+    ]
+  },
+  {
+    "id": "h1",
+    "topic": "hour enumeration: a range followed by an isolated hour",
+    "meaning": "At the hours 9 through 20 inclusive, AND ALSO at 22 o'clock (22 is a separate hour; 21 is excluded — it must NOT read as the range extending to 22).",
+    "candidates": [
+      "klo 9–20 sekä klo 22",
+      "klo 9–20 ja 22",
+      "klo 9–20 ja klo 22"
+    ]
+  },
+  {
+    "id": "h2",
+    "topic": "hour enumeration: an isolated hour followed by a range",
+    "meaning": "At 9 o'clock, AND at the hours 17 through 19 inclusive. (9 is a single hour; 17–19 is a range.)",
+    "candidates": [
+      "klo 9 ja 17–19",
+      "klo 9 sekä klo 17–19",
+      "klo 9 ja klo 17–19"
+    ]
+  }
+]

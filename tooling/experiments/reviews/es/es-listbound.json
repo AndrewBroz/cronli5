@@ -1,0 +1,5 @@
+[
+ {"id":"b1","meaning":"At minutes 2, 3 and 4 past the hour, every hour from 9 AM through 5 PM (hours 9-17). The minutes 2,3,4 recur within each of those hours.","candidates":["at 2, 3, and 4 minutes past the hour from 9 a.m. through 5:04 p.m.","at 2, 3, and 4 minutes past the hour from 9 a.m. through 5 p.m."]},
+ {"id":"b2","meaning":"At minutes 0 and 30 past the hour, every hour from 9 AM through 5 PM (hours 9-17).","candidates":["at 0 and 30 minutes past the hour from 9 a.m. through 5:30 p.m.","at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m."]},
+ {"id":"b3","meaning":"Every minute from 2 through 8 past the hour (a contiguous window), every hour from 9 AM through 5 PM.","candidates":["every minute from 2 through 8 past the hour, from 9 a.m. through 5:08 p.m.","every minute from 2 through 8 past the hour, from 9 a.m. through 5 p.m."]}
+]

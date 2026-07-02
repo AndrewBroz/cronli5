@@ -221,8 +221,17 @@ Mechanics:
   emits a review packet. Verdicts land in `REVIEW.md` with the corpus hash.
   This CI is gated on tests and invariants passing, and a current review
   log for this corpus hash.
-* Use a mix of model families for review. Same-model review inherits
-  same-model biases.
+* Panels are **blind, multi-persona, and single-family (Claude Sonnet) by
+  procedure**. Same-model review inherits same-model biases, and the
+  original design called for a mix of model families — but the cross-family
+  panel run in practice (Gemma, archived under `tooling/scripts/archive/`)
+  added noise rather than signal, and no frontier-class second family is
+  currently available. The bias risk is instead mitigated structurally:
+  three fresh personas per judgment, blind to provenance and to each other;
+  the objective gates (round-trip, fuzz dropped-value, OR-scope, cRonstrue
+  reference) carry correctness independent of any model's taste; and model
+  validation only ever ships **beta** — naturalness is settled by a fluent
+  human at graduation. Revisit if a strong second family becomes available.
 * The corpus diff is the unit of re-review. A core semantic change that
   ripples into 40 corpus lines triggers a diff-scoped review.
 * _Limitations:_ LLM review is strong on grammar, agreement, and
@@ -285,8 +294,9 @@ Every `lang/<code>/notes.md` must answer these questions:
 
 ## 7. Open questions
 
-* **Cap policy ownership**: core constant, language override, or both
-  (core default + language multiplier)?
+* **Cap policy ownership** — settled: core default + optional language
+  override, built when a language wants a different value (the design and
+  the threading constraint are recorded in docs/backlog.md).
 * **`lenient` fallback string** must come from the language
   module, which makes even the error path part of the corpus.
 * **Review model recording**: how much provenance belongs in `REVIEW.md`

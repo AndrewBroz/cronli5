@@ -1,0 +1,48 @@
+PASS * * * * *  natural=5 correct=1.00 rank=1/4
+PASS */5 * * * *  natural=5 correct=1.00 rank=1/4
+FAIL 0 12 * * *  natural=3 correct=1.00 rank=2/4
+     fixes: Accurate for the time, but misses the 'every day' frequency.
+PASS 30 9 * * MON-FRI  natural=5 correct=1.00 rank=1/4
+PASS 0 9,17 * * *  natural=5 correct=0.00 rank=1/4
+PASS 0 9-17 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0-29 * * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 0 1,15 * *  natural=4 correct=1.00 rank=2/4
+PASS 0 12 1 1 *  natural=5 correct=1.00 rank=1/4
+FAIL @daily  natural=3 correct=0.00 rank=3/4
+     fixes: Missing the 'every day' aspect; implies a specific single midnight.
+PASS */30 * * * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 0 * * 5L  natural=5 correct=1.00 rank=1/4
+PASS 5,10 30 9 * * MON  natural=5 correct=1.00 rank=1/4
+FAIL */15 30 9-17 * * MON-FRI  natural=3 correct=1.00 rank=2/4
+     fixes: Grammatically correct, but 'in Minute 30' is less natural than 'ab Minute 30' or 'zur Minute 30'.
+PASS 15 30 9 * * MON  natural=5 correct=1.00 rank=1/4
+PASS 45 17,9 0 * * *  natural=4 correct=1.00 rank=2/4
+PASS 0-30 9,17-19 * * *  natural=5 correct=1.00 rank=1/4
+FAIL 0 22-2,12 * * *  natural=3 correct=1.00 rank=2/4
+     fixes: Grammatically correct and concise, but slightly informal for a schedule.
+PASS 0 9-20,22 * * *  natural=5 correct=1.00 rank=1/4
+FAIL * 9,12,17 * * MON-FRI  natural=2 correct=0.00 rank=2/4
+     fixes: Incorrect; similar to C, 'um 9 Uhr' is a single point in time, not a duration.
+FAIL 30 9 15W 6 *  natural=2 correct=1.00 rank=2/4
+     fixes: Grammatically okay, but 'zum 15.' is slightly colloquial and less precise than 'dem 15. Juni'.
+PASS 0 0 29 2 *  natural=5 correct=1.00 rank=1/4
+PASS 0 9-9 * * *  natural=5 correct=0.00 rank=1/4
+PASS 1/1 * * * *  natural=5 correct=1.00 rank=1/4
+PASS 1 1 * * * *  natural=4 correct=1.00 rank=1/4
+FAIL 59 23 31 12 5  natural=3 correct=1.00 rank=2/4
+     fixes: Grammatically correct and concise; 'freitags' suggests a recurring event, which fits the meaning.
+PASS * * * * * *  natural=5 correct=1.00 rank=1/4
+FAIL 5 * * * * *  natural=2 correct=0.00 rank=3/4
+     fixes: Grammatically incorrect; would need to be 'in der 5. Sekunde jeder Minute'.
+FAIL 5 * * * *  natural=1 correct=0.00 rank=3/4
+     fixes: Grammatically clunky; 'in Minute 5' is not how time intervals are typically described.
+FAIL 5,10 * * * *  natural=3 correct=1.00 rank=2/4
+     fixes: Accurate and clear, though slightly formal/technical.
+PASS 0-30 9 * * *  natural=5 correct=1.00 rank=1/4
+FAIL 0-30 */2 * * *  natural=2 correct=0.00 rank=2/4
+     fixes: Too verbose and implies specific hours rather than a recurring interval.
+PASS 0 * * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 */3 * * *  natural=5 correct=1.00 rank=1/4
+
+Gemma-half: 23/34 patterns pass. Slates → tmp/panel-de.json (add Claude judges, then re-aggregate).
+DONE

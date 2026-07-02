@@ -1,0 +1,44 @@
+===== es-MX =====
+PASS 0 9 * * *  natural=5 correct=1.00 rank=1/4
+PASS 30 9 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 14 * * *  natural=5 correct=1.00 rank=1/4
+PASS 30 14 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 22 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 0 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 12 * * *  natural=5 correct=1.00 rank=1/4
+PASS 30 14 * * 1-5  natural=5 correct=1.00 rank=1/4
+PASS 0 8,20 * * *  natural=5 correct=1.00 rank=1/4
+
+Gemma-half: 9/9 patterns pass. Slates → tmp/panel-es-MX.json (add Claude judges, then re-aggregate).
+===== es-US =====
+PASS 0 9 * * *  natural=5 correct=1.00 rank=1/4
+PASS 30 9 * * *  natural=4 correct=1.00 rank=2/4
+PASS 0 14 * * *  natural=5 correct=1.00 rank=1/4
+PASS 30 14 * * *  natural=4 correct=1.00 rank=2/4
+PASS 0 22 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 0 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 12 * * *  natural=5 correct=1.00 rank=1/4
+PASS 30 14 * * 1-5  natural=5 correct=1.00 rank=1/4
+PASS 0 8,20 * * *  natural=5 correct=1.00 rank=1/4
+
+Gemma-half: 9/9 patterns pass. Slates → tmp/panel-es-US.json (add Claude judges, then re-aggregate).
+===== es-AR =====
+FAIL 0 9 * * *  natural=2 correct=1.00 rank=3/4
+     fixes: Too formal/technical for a mid-sentence fragment; 'h' is rarely used in speech.
+FAIL 30 9 * * *  natural=3 correct=1.00 rank=3/4
+     fixes: Common in formal/written schedules, but 'h' is less natural in casual speech.
+PASS 0 14 * * *  natural=4 correct=1.00 rank=1/4
+FAIL 30 14 * * *  natural=3 correct=1.00 rank=3/4
+     fixes: More common in formal writing or documents; less natural for a mid-sentence fragment.
+FAIL 0 22 * * *  natural=3 correct=1.00 rank=3/4
+     fixes: Clear and formal, but 'h' is more common in written documents than in natural speech or casual fragments.
+FAIL 0 0 * * *  natural=3 correct=1.00 rank=3/4
+     fixes: Correct, but feels more like a technical log or official form than a natural sentence fragment.
+FAIL 0 12 * * *  natural=3 correct=1.00 rank=2/4
+     fixes: Accurate and formal, but 'h' is less common in casual speech than 'al mediodía'.
+PASS 30 14 * * 1-5  natural=5 correct=1.00 rank=1/4
+FAIL 0 8,20 * * *  natural=3 correct=1.00 rank=2/4
+     fixes: Formal/technical style; 'h' is less common than 'hs' or nothing in Argentina.
+
+Gemma-half: 2/9 patterns pass. Slates → tmp/panel-es-AR.json (add Claude judges, then re-aggregate).
+DONE all three dialects

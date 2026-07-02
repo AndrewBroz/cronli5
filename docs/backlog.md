@@ -17,14 +17,18 @@ decision tree into `core/cadence.ts`) — see CHANGELOG; `test/lang/en/core-set.
 and `known-issues.js` are now un-skipped and passing. What genuinely remains
 open:
 
-- **A quartz "… of the month" range/OR sub-class still over- or mis-scopes the
-  month.** The single-month and distributive `every odd/even` redundancy-drop
-  shipped (`0 0 * */2 5L` → "the last Friday in every odd-numbered month"), but
-  two edges are open: a month **range** ("…in January through March") needs care,
-  since dropping "of the month" can read as one Friday in the span rather than
-  per-month; and the **OR** cases (`… or on the last Friday of the month`) are
-  really the month-not-scoping-the-union bug (the en analogue of the zh OR fix),
-  not a redundancy.
+- **A quartz "… of the month" range/OR sub-class over- or mis-scoped the
+  month. (RESOLVED)** The OR cases were the month-not-scoping-the-union bug
+  (the en analogue of the zh OR fix): the gb/short union frame folded the
+  month into one arm and repeated it on the other ("on 13 June or on Friday
+  in June"). Both en union frames now front the month once, set off by a
+  comma, so it scopes the whole union — "in June, on the 13th or on Friday
+  at midnight"; "in January through March, at midnight whenever the day is
+  the 13th or the last Friday of the month". The month-range edge resolves
+  with it: "of the month" is kept inside the fronted scope, so the Quartz
+  arm stays per-month within the range (the non-union range form, "on the
+  last Friday of each month from January through March", was already
+  shipped).
 
 - **Audit the bounded-vs-open step class across every field × language.** Both
   found instances were zh (day, fixed in 0.3.3; month, fixed in 0.3.4) and shared
@@ -44,8 +48,13 @@ open:
 
 - **fi compound/OR "tai"-rakenne + stacked-qualifier naturalness.** The blind Sonnet panel (17-pattern spanning set, 2026-06-24) found a systematic naturalness defect in the compound day-of-month/day-of-week/month "tai"-rakenne and in stacked month-weekday-hour qualifiers (8/17 items ≤3, two at 2; all three personas flagged it). Fix the compound rendering, then re-run the blind panel + round-trip review and re-promote fi from experimental to beta.
 
-- **es+pt shared corpus residuals (two items, flagged by the pt-BR native
-  panel).** The blind pt-BR panel ratified the pt corpus but its technical
+- **es+pt shared corpus residuals (item 1 RESOLVED; item 2 open).** The
+  hour-window overlap in `* 2/4,18-20 * * *` is fixed in the core:
+  normalization merges list arms whose covered values intersect into their
+  coverage union (the same fix covers en/de/fi/zh, which had the identical
+  artifact, plus the enshrined-duplicate corpus rows found along the way —
+  pt `9,*/3` and en `8-10,2/4`). The OR DOW-arm "e" bracketing remains open.
+  Original item: The blind pt-BR panel ratified the pt corpus but its technical
   reviewer flagged two issues inherited from the es donor (present identically in
   both corpora, so a joint es+pt fix): (1) an **hour-window overlap** in
   `* 2/4,18-20 * * *` — hour 18 is rendered twice, once as the step arm's
@@ -57,8 +66,9 @@ open:
   to the shared es/pt rendering, not pt-only. (See src/lang/pt/notes.md
   §"Residuals inherited from es".)
 
-- **es+fr shared corpus residual (one item, flagged by the fr-FR native
-  panel).** The blind fr-FR panel (everyday / copy-editor / technical,
+- **es+fr shared corpus residual (RESOLVED).** The double-"et" boundary was
+  the fr face of the same overlap; the normalization-level union merge fixed
+  it with the es+pt item above. Original item: The blind fr-FR panel (everyday / copy-editor / technical,
   2026-06-27) ratified the fr corpus with zero misreads, but the copy-editor and
   technical reviewers both flagged a **double-"et" boundary** on
   `* 2/4,18-20 * * *`: the per-hour step-segment windows and the 18–20 range
@@ -111,6 +121,47 @@ open:
   as 9 time-points not nesting). The personas proposed divergent rewrites, so fi
   needs a dedicated redesign + re-panel, not a patch. Pairs with the existing fi
   compound/"tai"-rakenne naturalness debt above — do both in one fi pass.
+
+## Hoisting shared decision trees into core
+
+**Status:** In progress — the first slice shipped. The i18n design's own test
+("if a change must touch more than one language module, it belonged in the
+core") applied retroactively: renderers had accumulated byte-identical copies
+of *decision* logic (which shapes confine, which lists are cadences), which is
+Schedule fact, not prose. The `core/cadence.ts` `renderStride` pattern is the
+template — the decision lives once in core, each language supplies only words.
+
+**Shipped:** `minuteStride` (was six identical copies, including en),
+`secondsConfinesMinute`, `isEveryOtherMinuteSeconds`, and
+`isSteppedMinuteSeconds` (five copies each) now live in `core/cadence.ts`.
+Output-preserving; the full corpora were the proof.
+
+**Remaining candidates, in rough value order:**
+
+- **The OR-union frame.** The es-derived family (es/pt/fr) shares the
+  date-or-weekday union structure wholesale, and en/de/fi/zh each rebuilt the
+  same routing. The *decision* (which arm shapes exist, month scoping, when
+  the union frame applies) is language-neutral; the frame words are not.
+  Largest win, largest surface — do it when the union next needs a
+  cross-language change.
+- **The hour-window overlap collapse — SHIPPED**, and one layer deeper than
+  planned: the union merge lives in *normalization* (`mergeOverlappingArms`),
+  so equivalent patterns are identical through the whole pipeline (`5-10,7`
+  IS `5-10`; `9,*/3` IS `*/3` by absorption) and all seven languages were
+  fixed at once — the overlap turned out to affect en/de/fi/zh too, not just
+  the es family. Metamorphic rules pin the equivalences.
+- **Confinement-eligibility variants.** zh's `isSteppedMinuteSeconds` (a
+  different signature over its composed-clock routing) and en's
+  `confinementEligible`/`secondLeadsCadence`/`secondLeadsClockPoint` express
+  overlapping decisions in renderer-local vocabulary; unifying them onto the
+  core predicates needs care, not copy-deletion.
+- **`flattenSteps`** (five copies): blocked on a small type nuance — the core
+  `Segment` single carries a string value, the renderer copies produce
+  numbers. Decide the canonical value type, then hoist.
+
+The working rule going forward: a fix that touches two or more renderers'
+*logic* triggers a hoist of that decision into core with per-language word
+thunks, rather than N parallel patches.
 
 ## Human-in-the-loop language review platform
 
@@ -211,6 +262,18 @@ achieved floor rather than a forced 100. Two sub-items remain:
 
 ## Other deferred items
 
+- **Per-language clock-times cap (design settled, build on demand).** The
+  enumeration threshold `maxClockTimes` is a core constant (`specs.ts`, 6),
+  but i18n-design §5 concludes the threshold and fallback shape should be
+  overridable per language — enumeration is cheap in Mandarin (compact, no
+  agreement) and expensive in Finnish (every time inflects). The settled
+  answer to §7's "cap policy ownership" question: the core default stays the
+  policy (it is about cognitive load), and a language may supply its own cap,
+  threaded to `selectPlan` through the prepare/analyze call (the plan is
+  chosen before the renderer runs, so the cap must arrive with the normalized
+  options rather than as a renderer-side override). Build it when a language
+  actually wants a different value; an unused knob is YAGNI.
+
 - **Quartz `?` mutual-exclusion not enforced (`quartz: true`).** Quartz requires
   *exactly one* of day-of-month / day-of-week to be `?`. The `quartz` option
   (0.8.0) gates `?` and fixes the day-of-week numbering, but does not yet reject
@@ -235,14 +298,12 @@ achieved floor rather than a forced 100. Two sub-items remain:
   `this.timeout`, bridged onto Vitest by `test/vitest.setup.ts`. Porting it to
   Vitest-native hooks (`beforeAll`/`afterAll`, per-test timeout) would let the
   shim file go.
-- **zh's `activeVariant` module latch (Hant).** Because the `Language` contract
-  exposes `reboot`/`fallback` as plain strings and `sentence(description)` takes
-  no options, the zh-Hant variant honors the dialect for those three via a
-  module-private mutable `activeVariant` set in `options()`. It is safe today
-  (the library is synchronous and `options()` always runs first), but it is
-  global mutable state in an otherwise-pure renderer. Making `reboot`/`fallback`/
-  `sentence` options-aware in the contract would remove the latch — worth doing
-  if the contract is revisited or another language needs the same.
+- **zh's `activeVariant` module latch (Hant). (RESOLVED)** The `Language`
+  contract now passes the normalized options to `reboot`/`fallback`/`sentence`,
+  so the zh-Hant variant flows through the arguments and the module-private
+  latch is gone. Breaking for external language modules (pre-1.0); the bundled
+  seven were updated together, and `test/lang/contract.js` pins the
+  options-aware behavior (including the stale-latch hazard case).
 
 ## Wider automated review coverage
 

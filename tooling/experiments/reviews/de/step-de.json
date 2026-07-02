@@ -1,0 +1,7 @@
+{
+  "uniform_offset": "alle 6 Minuten ab Minute 5 jeder Stunde",
+  "nonuniform_evendiv": "alle 2 Minuten von Minute 3 bis 59 jeder Stunde",
+  "uneven": "alle 7 Minuten von Minute 0 bis 56 jeder Stunde",
+  "confidence": 4,
+  "reasoning": "Fall 1 (5/6): 5+6×9=59 trifft genau :59, kein Rest — kein Ende nötig, der Zyklus endet sauber mit der Stunde. Fall 2 (3/2): 3+2×28=59 trifft genau :59 — technisch sauber, aber das Intervall (2) teilt den Offset zum nächsten Zyklus-Start (4 Min) nicht gleichmäßig, daher Ende :59 explizit. Fall 3 (*/7): letzter Schlag :56, nicht :59 — Ende muss genannt werden. 'von Minute X bis Y' ist kompakter als 'ab Minute X, letzter Schlag Minute Y' und trotzdem eindeutig rekonstruierbar."
+}

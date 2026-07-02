@@ -28,15 +28,28 @@ describe('Core analyze:', function() {
   });
 
   describe('segments', function() {
-    it('classifies list segments and enumerates step fires', function() {
-      const {analyses} = ir('0 0 * 1,6/3 MON-FRI');
+    it('classifies list segments; a step arm in a list reads as its fires',
+      function() {
+        const {analyses} = ir('0 0 * 1,6/3 MON-FRI');
+
+        // Normalization expands the `6/3` arm: a step is a cadence only when
+        // it is the whole field, so in a list its fires join the singles.
+        expect(analyses.segments.month).to.deep.equal([
+          {kind: 'single', value: '1'},
+          {kind: 'single', value: '6'},
+          {kind: 'single', value: '9'},
+          {kind: 'single', value: '12'}
+        ]);
+        expect(analyses.segments.weekday).to.deep.equal([
+          {bounds: ['1', '5'], kind: 'range'}
+        ]);
+      });
+
+    it('keeps a whole-field step as a step segment', function() {
+      const {analyses} = ir('0 0 * 6/3 *');
 
       expect(analyses.segments.month).to.deep.equal([
-        {kind: 'single', value: '1'},
         {fires: [6, 9, 12], interval: 3, kind: 'step', startToken: '6'}
-      ]);
-      expect(analyses.segments.weekday).to.deep.equal([
-        {bounds: ['1', '5'], kind: 'range'}
       ]);
     });
 

@@ -1,0 +1,86 @@
+[
+ {
+  "n": 1,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 2,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 4,
+  "issue": "Toimii hyvin. Pieni rytmihäiriö: 'kuukauden 1. päivänä tai maanantaista perjantaihin' rinnastaa yksittäisen päivän ja jakson hieman epäsymmetrisesti. Luontevampi: 'kuukauden 1. päivänä tai arkisin keskiyöllä' (arki = ma-pe), jolloin molemmat ovat samanmuotoisia toistuvia ajankohtia."
+ },
+ {
+  "n": 3,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "reads_as_union": true,
+  "correct": false,
+  "natural": 2,
+  "issue": "VIRHE: 'joka toinen päivä' on vaarallisesti vaarin */2:lle kuukaudenpaivassa. 'Joka toinen päivä' tarkoittaa katkeamatonta 48 h:n rytmiä kuukausien yli, mutta */2 nollautuu joka kuukausi (1,3,5,...,29,31), joten kuun vaihteessa laukeaa kahtena perakkaisena paivana (31. ja 1.). Oikea merkitys on 'parittomina paivina'. Lisaksi viikonpaivalista on epaluonteva ja eri jarjestyksessa kuin englanti. Ehdotus: 'kuukauden parittomina paivina tai tiistaisin, torstaisin, lauantaisin ja sunnuntaisin keskiyolla'. (Viikonpaivien luonteva suomalainen jarjestys: ti, to, la, su.)"
+ },
+ {
+  "n": 5,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 7,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 8,
+  "reads_as_union": false,
+  "correct": true,
+  "natural": 2,
+  "issue": "MERKITYSRISKI: 'joko ... tai ...' on suomen NIMENOMAAN POISSULKEVA disjunktio (joko-tai = vain toinen). Tama vie unionilukeman: lukija voi ymmartaa 'joko 1. paivana tai sunnuntaisin' poissulkevaksi valinnaksi. Kayta pelkkaa 'tai': 'tammikuussa keskiyolla 1. paivana tai sunnuntaisin'. (Sama korjaus n9, n11, n12.)"
+ },
+ {
+  "n": 9,
+  "reads_as_union": false,
+  "correct": true,
+  "natural": 2,
+  "issue": "MERKITYSRISKI: 'joko ... tai ...' lukeutuu poissulkevaksi (ks. n8). Korjaus: 'tammikuusta maaliskuuhun keskiyolla 1. paivana tai kuukauden viimeisena perjantaina'."
+ },
+ {
+  "n": 10,
+  "reads_as_union": true,
+  "correct": true,
+  "natural": 5,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "reads_as_union": false,
+  "correct": true,
+  "natural": 2,
+  "issue": "MERKITYSRISKI: 'joko ... tai ...' lukeutuu poissulkevaksi (ks. n8). Korjaus: 'kesakuussa viiden minuutin valein 1. paivana tai perjantaisin'."
+ },
+ {
+  "n": 12,
+  "reads_as_union": false,
+  "correct": true,
+  "natural": 2,
+  "issue": "MERKITYSRISKI: 'joko ... tai ...' lukeutuu poissulkevaksi (ks. n8). Korjaus: 'kesakuussa joka tunti klo 9-17 1. paivana tai perjantaisin'."
+ }
+]

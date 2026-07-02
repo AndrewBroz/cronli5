@@ -111,7 +111,8 @@ corpus was updated.
 
 **Still same-family.** The wording choice `kohdalla` (the review's pick)
 over `yli` (cRonstrue's human locale) is itself an unverified
-same-family call. The native-review packet (tmp/) now ships the new
+same-family call. The native-review packet
+(tooling/experiments/reviews/fi/) now ships the new
 output and asks a real Finnish speaker to confirm `kohdalla` vs `yli`.
 The other two idiom items — keskiyöllä/keskipäivällä only standalone,
 and the per-hour-window re-strategy — remain open for that pass.

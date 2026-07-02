@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "cron": "3/2 0 * 1 5L",
+  "rendering": "cada dos minutos del minuto 3 al 59 de cada hora, a las 00:00 el último viernes del mes de enero"
+ },
+ {
+  "n": 2,
+  "cron": "5,10,30 9-17/2 * 1 *",
+  "rendering": "en los minutos 5, 10 y 30 de cada hora, cada dos horas de las 09:00 a las 17:00 en enero"
+ },
+ {
+  "n": 3,
+  "cron": "*/15 9,17 1 1,7 MON",
+  "rendering": "en enero y julio, cada 15 minutos de las 09:00 a las 09:59 y de las 17:00 a las 17:59, ya sea el día 1 o cualquier lunes"
+ },
+ {
+  "n": 4,
+  "cron": "3/2 * 15 1,7 MON-FRI",
+  "rendering": "en enero y julio, cada dos minutos del minuto 3 al 59 de cada hora, ya sea el día 15 o de lunes a viernes"
+ },
+ {
+  "n": 5,
+  "cron": "5 12 31 1,7 FRI",
+  "rendering": "en enero y julio, a las 12:05, ya sea el día 31 o cualquier viernes"
+ },
+ {
+  "n": 6,
+  "cron": "* 3/2 12 1-5 * *",
+  "rendering": "cada segundo, cada dos minutos del minuto 3 al 59 de cada hora, a las 12:00 del 1 al 5 de cada mes"
+ },
+ {
+  "n": 7,
+  "cron": "* 9 15W 6 MON#2",
+  "rendering": "en junio cada minuto de la hora de las 09:00, ya sea el día laborable más cercano al 15 o el segundo lunes del mes"
+ },
+ {
+  "n": 8,
+  "cron": "0 2/6 1 6-8 *",
+  "rendering": "cada seis horas a partir de las 02:00 el 1 de cada mes, de junio a agosto"
+ },
+ {
+  "n": 9,
+  "cron": "*/15 9-17/2 15 1 SAT,SUN",
+  "rendering": "en enero cada 15 minutos, cada dos horas de las 09:00 a las 17:00, ya sea el día 15 o los domingos y sábados"
+ },
+ {
+  "n": 10,
+  "cron": "*/25 12 15W 12 *",
+  "rendering": "el día laborable más cercano al 15 de diciembre a las 12:00, 12:25 y 12:50"
+ },
+ {
+  "n": 11,
+  "cron": "* 9-17/2 LW * MON-FRI",
+  "rendering": "cada minuto, cada dos horas de las 09:00 a las 17:00, ya sea el último día laborable del mes o de lunes a viernes"
+ },
+ {
+  "n": 12,
+  "cron": "5/15 0 1,15 1,7 0",
+  "rendering": "en enero y julio, cada 15 minutos a partir del minuto 5 de cada hora de las 00:00 a las 00:50, ya sea los días 1 y 15 del mes o cualquier domingo"
+ },
+ {
+  "n": 13,
+  "cron": "*/15 */2 1,15 12 MON-FRI",
+  "rendering": "en diciembre cada 15 minutos, durante las horas pares, ya sea los días 1 y 15 del mes o de lunes a viernes"
+ },
+ {
+  "n": 14,
+  "cron": "0-30 9-20,22 L 1 *",
+  "rendering": "cada minuto del 0 al 30, de las 09:00 a las 20:00 y también a las 22:00 el último día del mes de enero"
+ },
+ {
+  "n": 15,
+  "cron": "* 0 31 12 SAT,SUN",
+  "rendering": "en diciembre cada minuto de la hora de las 00:00, ya sea el día 31 o los domingos y sábados"
+ },
+ {
+  "n": 16,
+  "cron": "*/15 9-17 * 6 *",
+  "rendering": "cada 15 minutos de las 09:00 a las 17:45 en junio"
+ },
+ {
+  "n": 17,
+  "cron": "*/45 9-17/2 1,15 1 MON-FRI",
+  "rendering": "en enero en los minutos 0 y 45 de cada hora, cada dos horas de las 09:00 a las 17:00, ya sea los días 1 y 15 del mes o de lunes a viernes"
+ },
+ {
+  "n": 18,
+  "cron": "5 12 * 6 7",
+  "rendering": "los domingos de junio a las 12:05"
+ },
+ {
+  "n": 19,
+  "cron": "5/15 */5 * * FRI",
+  "rendering": "cada 15 minutos a partir del minuto 5 de cada hora, cada cinco horas de las 00:00 a las 20:00 los viernes"
+ },
+ {
+  "n": 20,
+  "cron": "* 9-20,22 1 1 5L",
+  "rendering": "en enero cada minuto de las 09:00 a las 20:59 y de las 22:00 a las 22:59, ya sea el día 1 o el último viernes del mes"
+ }
+]

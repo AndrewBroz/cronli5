@@ -2,12 +2,15 @@
 // field's values, and the segment accessors renderers use to reach them.
 // Output-neutral and language-agnostic; renderers speak the cadence they find.
 
-import type {Field, Schedule, Segment} from './schedule.js';
+import type {Field, PlanNode, Schedule, Segment} from './schedule.js';
 
 // A step segment of a classified field, carrying its `fires`/`interval`/
 // `startToken`. The plan only routes step-shaped fields to step phrasing,
 // where the first segment is always a step segment.
 type StepSegment = Extract<Segment, {kind: 'step'}>;
+
+// The composeSeconds plan node: a meaningful second over a coarser rest.
+type ComposeSecondsPlan = Extract<PlanNode, {kind: 'composeSeconds'}>;
 
 // Recognize an arithmetic progression in a sorted, distinct numeric set: a
 // run of length >= 5 whose consecutive gaps are all equal and >= 2. Returns
@@ -170,8 +173,85 @@ function hourListStride(
   return {interval, last: values[values.length - 1], start: values[0]};
 }
 
+// The minute field's stride for a confinement frame, or null when the minute
+// is not a stepped cadence. A `step`-shaped field (`*/6`) reads its segment;
+// a `list`-shaped field the core enumerated from a uneven step (`2/7` →
+// 2,9,…,58) recovers the progression from its values.
+function minuteStride(schedule: Schedule):
+  {start: number; interval: number; last: number} | null {
+  if (schedule.shapes.minute === 'step') {
+    const segment = stepSegment(schedule, 'minute');
+    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+
+    return {interval: segment.interval, last:
+      segment.fires[segment.fires.length - 1], start};
+  }
+
+  const values = singleValues(segmentsOf(schedule, 'minute'));
+
+  return values && arithmeticStep(values);
+}
+
+// Whether a clock-point second (a single, range, or list) confines a
+// restricted minute under an open hour. A single second under a single
+// minute folds into a clock time instead, and a second list the core
+// enumerated from a step (`*/15` → 0,15,30,45) is really a stride cadence —
+// spoken and confined by the cadence path, not a clock-point clause.
+function secondsConfinesMinute(schedule: Schedule): boolean {
+  const {second, minute, hour} = schedule.shapes;
+
+  if (second === 'list') {
+    const values = singleValues(segmentsOf(schedule, 'second'));
+
+    if (values && arithmeticStep(values)) {
+      return false;
+    }
+  }
+
+  const clockPoint = second === 'single' || second === 'range' ||
+    second === 'list';
+
+  return clockPoint && minute !== 'wildcard' && hour === 'wildcard' &&
+    !(second === 'single' && minute === 'single');
+}
+
+// A wildcard second over an unoffset `*/2` minute with a wildcard hour: the
+// two cadences read as contradictory side by side, so a renderer binds them
+// into one phrase.
+function isEveryOtherMinuteSeconds(
+  schedule: Schedule,
+  plan: ComposeSecondsPlan
+): boolean {
+  if (plan.rest.kind !== 'minuteFrequency' ||
+      schedule.shapes.second !== 'wildcard' ||
+      schedule.shapes.hour !== 'wildcard') {
+    return false;
+  }
+
+  const minuteStep = stepSegment(schedule, 'minute');
+
+  return minuteStep.startToken === '*' && minuteStep.interval === 2;
+}
+
+// Whether a stepped minute fills a wildcard hour under a wildcard or stepped
+// second — the shape a renderer's stride-confinement frame handles (`*/2`
+// stays with its own every-other idiom, see above).
+function isSteppedMinuteSeconds(
+  schedule: Schedule,
+  plan: ComposeSecondsPlan
+): boolean {
+  return (plan.rest.kind === 'minuteFrequency' ||
+    plan.rest.kind === 'multipleMinutes') &&
+    (schedule.shapes.second === 'wildcard' ||
+      schedule.shapes.second === 'step') &&
+    schedule.shapes.hour === 'wildcard' &&
+    schedule.pattern.minute !== '*/2' &&
+    minuteStride(schedule) !== null;
+}
+
 export {
-  arithmeticStep, hourListStride, offsetCleanStride, renderStride, segmentsOf,
-  singleValues, stepSegment
+  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride, offsetCleanStride, renderStride,
+  secondsConfinesMinute, segmentsOf, singleValues, stepSegment
 };
 export type {StrideParts};

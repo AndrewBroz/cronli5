@@ -1,0 +1,4 @@
+[
+  {"id":18,"meaning":"Every day, at the hours 9 through 20 inclusive, AND ALSO at 22 o'clock (22 is a separate hour, not a range extension).","description":"joka päivä klo 9–20 sekä klo 22"},
+  {"id":20,"meaning":"On the weekday (Mon-Fri) closest to the 15th day of the month, in June, at 9:30.","description":"kuukauden 15. päivää lähinnä olevana arkipäivänä kesäkuussa klo 9.30"}
+]

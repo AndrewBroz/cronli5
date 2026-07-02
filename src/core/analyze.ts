@@ -9,83 +9,10 @@ import type {
   Analyses, ClockTime, Field, HourTimesPlan, HoursPlan, Pattern,
   PlanNode, Schedule, ScheduleFacts, Segment, Shape, Shapes
 } from './schedule.js';
-import {includes, toFieldNumber, unique} from './util.js';
+import {enumerateFires, enumerateStep, includes} from './util.js';
 import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
   from './shapes.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
-
-// List the values a `start/interval` step fires on from `start` up to `max`,
-// stepping by `interval`.
-function getOccurrences(
-  start: number,
-  interval: number,
-  max: number
-): number[] {
-  const occurrences = [];
-  let value = start;
-
-  while (value <= max) {
-    occurrences.push(value);
-    value += interval;
-  }
-
-  return occurrences;
-}
-
-// List the values a step fires on for a day-level field. The start may be a
-// wildcard (`*`, begins at `min`), a single value, or a range (`a-b`), and
-// range bounds may be names resolved via `numberMap`.
-function enumerateStep(
-  field: string,
-  min: number,
-  max: number,
-  numberMap?: {[name: string]: number}
-): number[] {
-  const parts = field.split('/');
-  const interval = +parts[1];
-
-  if (includes(parts[0], '-')) {
-    const bounds = parts[0].split('-');
-
-    return getOccurrences(toFieldNumber(bounds[0], numberMap), interval,
-      toFieldNumber(bounds[1], numberMap));
-  }
-
-  const start = parts[0] === '*' ? min : toFieldNumber(parts[0], numberMap);
-
-  return getOccurrences(start, interval, max);
-}
-
-// Enumerate the values a field fires on within [min, max], expanding list
-// segments that are ranges (wrap-aware) or steps (e.g. "9,17-19" or
-// "9,17/2").
-function enumerateFires(field: string, min: number, max: number): number[] {
-  const fires: number[] = [];
-
-  field.split(',').forEach(function expand(segment) {
-    if (includes(segment, '/')) {
-      fires.push(...enumerateStep(segment, min, max));
-    }
-    else if (includes(segment, '-')) {
-      const bounds = segment.split('-');
-
-      if (+bounds[0] <= +bounds[1]) {
-        fires.push(...getOccurrences(+bounds[0], 1, +bounds[1]));
-      }
-      else {
-        // A wrap-around range runs to the end of the cycle and resumes
-        // from the start.
-        fires.push(...getOccurrences(+bounds[0], 1, max));
-        fires.push(...getOccurrences(min, 1, +bounds[1]));
-      }
-    }
-    else {
-      fires.push(+segment);
-    }
-  });
-
-  return unique(fires);
-}
 
 // Enumerate a discrete field (single value or comma list) as numbers. A
 // wildcard or any non-discrete form collapses to the top of the unit (0).
@@ -164,7 +91,8 @@ function fieldShape(value: string, field: Field): Shape {
 // Break a field into classified segments: single values keep their raw
 // token, ranges keep their raw bound tokens (names included), and steps
 // carry their enumerated fires. Wildcard and Quartz fields have no
-// segments.
+// segments. Overlapping arms never reach here: normalization has already
+// merged intersecting list arms into their coverage union.
 function fieldSegments(
   value: string,
   shape: Shape,
@@ -591,5 +519,5 @@ function hourTimesPlan(hourField: string): HourTimesPlan {
   return {kind: 'segments'};
 }
 
-export {analyze, clockSecond, enumerateFires, enumerateStep,
-  enumerateValues, getOccurrences, lastMinuteFire, minuteSpan, selectPlan};
+export {analyze, clockSecond, enumerateValues, lastMinuteFire, minuteSpan,
+  selectPlan};

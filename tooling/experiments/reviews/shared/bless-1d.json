@@ -1,0 +1,12 @@
+[
+ {"n":1,"cron":"0 0 * 1 5L","proposed":"on the last Friday in January at midnight","note":"of-the-month DROPS under an explicit month (was 'last Friday of the month in January')"},
+ {"n":2,"cron":"0 0 L 1 *","proposed":"on the last day in January at midnight","note":"of-the-month drop"},
+ {"n":3,"cron":"0 0 * 1-3 5L","proposed":"on the last Friday of each month from January through March at midnight","note":"month RANGE -> 'of each month from X through Y'"},
+ {"n":4,"cron":"0 0 */2 1 *","proposed":"every other day in January at midnight","note":"of-the-month drop on a day step"},
+ {"n":5,"cron":"0 0 * */2 5L","proposed":"on the last Friday in every odd-numbered month at midnight","note":"of-the-month drop under a month step"},
+ {"n":6,"cron":"30 5,10 9 * *","proposed":"at 30 seconds past the minute, at 5 and 10 minutes past the hour, at 9 a.m.","note":"minute LIST numeralizes (was 'five and ten')"},
+ {"n":7,"cron":"4,6,9 * * * *","proposed":"at 4, 6, and 9 minutes past the hour","note":"3-element minute list numerals"},
+ {"n":8,"cron":"0 5 9 * * *","proposed":"at five minutes past the hour at 9 a.m.","note":"CONTRAST: SINGLE minute stays spelled 'five' (only lists numeralize)"},
+ {"n":9,"cron":"0 0 0 1 1 * 2030-2035","proposed":"on January 1 at midnight in 2030 through 2035","note":"year RANGE uses 'through', not a hyphen"},
+ {"n":10,"cron":"* * * * * * */2","proposed":"every second every other year","note":"stepped YEAR confines like the month ('every other year')"}
+]

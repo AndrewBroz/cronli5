@@ -1,0 +1,138 @@
+[
+  {
+    "id": 0,
+    "description": "cada minuto"
+  },
+  {
+    "id": 1,
+    "description": "cada cinco minutos"
+  },
+  {
+    "id": 2,
+    "description": "todos los días a las 12:00"
+  },
+  {
+    "id": 3,
+    "description": "de lunes a viernes a las 09:30"
+  },
+  {
+    "id": 4,
+    "description": "todos los días a las 09:00 y 17:00"
+  },
+  {
+    "id": 5,
+    "description": "cada hora de las 09:00 a las 17:00"
+  },
+  {
+    "id": 6,
+    "description": "cada minuto del 0 al 29 de cada hora"
+  },
+  {
+    "id": 7,
+    "description": "los días 1 y 15 de cada mes a las 00:00"
+  },
+  {
+    "id": 8,
+    "description": "el 1 de enero a las 12:00"
+  },
+  {
+    "id": 9,
+    "description": "todos los días a las 00:00"
+  },
+  {
+    "id": 10,
+    "description": "cada 30 segundos"
+  },
+  {
+    "id": 11,
+    "description": "el último viernes del mes a las 00:00"
+  },
+  {
+    "id": 12,
+    "description": "los lunes, en los segundos 5 y 10 de las 09:30"
+  },
+  {
+    "id": 13,
+    "description": "de lunes a viernes, de las 09:00 a las 17:30, cada 15 segundos del minuto 30"
+  },
+  {
+    "id": 14,
+    "description": "los lunes a las 09:30:15"
+  },
+  {
+    "id": 15,
+    "description": "todos los días a las 00:09:45 y 00:17:45"
+  },
+  {
+    "id": 16,
+    "description": "cada minuto del 0 al 30, solo a las 09:00, 17:00, 18:00 y 19:00"
+  },
+  {
+    "id": 17,
+    "description": "todos los días a las 12:00, a las 22:00, a las 23:00, a las 00:00, a la 01:00 y a las 02:00"
+  },
+  {
+    "id": 18,
+    "description": "cada hora de las 09:00 a las 20:00 y también a las 22:00"
+  },
+  {
+    "id": 19,
+    "description": "cada minuto de las 09:00 a las 09:59, de las 12:00 a las 12:59 y de las 17:00 a las 17:59 de lunes a viernes"
+  },
+  {
+    "id": 20,
+    "description": "el día laborable más cercano al 15 de junio a las 09:30"
+  },
+  {
+    "id": 21,
+    "description": "el 29 de febrero a las 00:00"
+  },
+  {
+    "id": 22,
+    "description": "todos los días a las 09:00"
+  },
+  {
+    "id": 23,
+    "description": "cada minuto del 1 al 59 de cada hora"
+  },
+  {
+    "id": 24,
+    "description": "en el minuto 1 y el segundo 1 de cada hora"
+  },
+  {
+    "id": 25,
+    "description": "en diciembre a las 23:59, ya sea el día 31 o un viernes"
+  },
+  {
+    "id": 26,
+    "description": "cada segundo"
+  },
+  {
+    "id": 27,
+    "description": "en el segundo 5 de cada minuto"
+  },
+  {
+    "id": 28,
+    "description": "en el minuto 5 de cada hora"
+  },
+  {
+    "id": 29,
+    "description": "en los minutos 5 y 10 de cada hora"
+  },
+  {
+    "id": 30,
+    "description": "cada minuto de las 09:00 a las 09:30"
+  },
+  {
+    "id": 31,
+    "description": "cada minuto del 0 al 30, cada dos horas"
+  },
+  {
+    "id": 32,
+    "description": "cada hora"
+  },
+  {
+    "id": 33,
+    "description": "cada tres horas"
+  }
+]

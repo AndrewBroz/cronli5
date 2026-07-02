@@ -1,0 +1,515 @@
+[
+  {
+    "pattern": "0 9 * * *",
+    "meaning": "every day at 9 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 9 AM"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9 a.m."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9 a. m."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "A las 09:00"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very common and natural in US Spanish contexts."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard and highly natural."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Technically correct per RAE spacing, but less common in fluid US usage."
+        },
+        "D": {
+          "natural": 2,
+          "correct": false,
+          "note": "Omits the 'every day' requirement."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "30 9 * * *",
+    "meaning": "every day at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9:30 a. m."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las nueve y media de la mañana."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 09:30"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "todos los días a las 9:30 AM"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and natural for a formal or semi-formal schedule."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural; uses the spoken form 'nueve y media', which is common in US Spanish."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Missing the frequency 'every day'; too abrupt."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Common and acceptable in US Spanish, though 'AM' is technically an English abbreviation."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 14 * * *",
+    "meaning": "every day at 2 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 2 PM"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 14:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 2 p. m."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 2 p. m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural for US Spanish; 'PM' is commonly used and understood."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate, but misses the 'every day' requirement and uses 24-hour format, which is less common in US Spanish."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Grammatically correct and follows RAE style for abbreviations."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Duplicate of C."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "30 14 * * *",
+    "meaning": "every day at 2:30 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "todos los días a las 2:30 p.m."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las dos y media de la tarde."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 14:30"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "todos los días a las 2:30 PM"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfect, standard, and natural for US Spanish."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural; writing out the time is common and clear."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Missing 'todos los días' and uses 24h format, which is uncommon in US Spanish."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, though 'p.m.' is more standard than 'PM'."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 22 * * *",
+    "meaning": "every day at 10 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 10 PM"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 22:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las diez de la noche."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 10 p. m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Extremely common and natural in US Spanish contexts."
+        },
+        "B": {
+          "natural": 2,
+          "correct": true,
+          "note": "Too formal/military; lacks the 'every day' requirement."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and accurate, though slightly more formal than using digits."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Grammatically perfect according to RAE standards, but slightly less common in casual US usage than 'PM'."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 * * *",
+    "meaning": "every day at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a medianoche"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 00:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a medianoche."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "todos los días a medianoche"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate translation of the English meaning."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate but more clinical/technical; lacks the 'every day' frequency component."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Correct wording, though contains an unnecessary period per instructions."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate translation of the English meaning."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 12 * * *",
+    "meaning": "every day at noon",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a mediodía."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 12:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días al mediodía."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "todos los días al mediodía"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Grammatically correct; 'a mediodía' is common, though 'al' is more standard for a specific time of day."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Incomplete; misses the 'every day' requirement."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural and grammatically standard phrasing for US Spanish."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to C in wording; perfectly natural for a mid-sentence fragment."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "30 14 * * 1-5",
+    "meaning": "every Monday through Friday at 2:30 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "de lunes a viernes a las 2:30 PM"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 14:30, de lunes a viernes"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "De lunes a viernes a las 2:30 p.m."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "de lunes a viernes a las 2:30 p. m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural and standard for US Spanish contexts."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "24-hour clock is less common in casual US Spanish; word order is slightly shifted."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural; identical to A but with formal punctuation."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Technically follows RAE spacing for 'p. m.', but looks less natural to most US users."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 8,20 * * *",
+    "meaning": "every day at 8 a.m. and 8 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 8 AM y 8 PM"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 08:00 y 20:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 8 de la mañana y a las 8 de la noche."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 8 a. m. y a las 8 p. m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural and common in US Spanish, though AM/PM are technically English abbreviations."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Missing 'todos los días' and uses 24-hour format, which is less common in US Spanish."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural, clear, and grammatically correct."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and formal, following RAE punctuation for a. m./p. m."
+        },
+        "best": "C"
+      }
+    ]
+  }
+]

@@ -1,0 +1,44 @@
+PASS * * * * *  natural=5 correct=1.00 rank=1/4
+PASS */5 * * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 12 * * *  natural=5 correct=1.00 rank=1/4
+PASS 30 9 * * MON-FRI  natural=5 correct=1.00 rank=1/4
+PASS 0 9,17 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 9-17 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0-29 * * * *  natural=4 correct=1.00 rank=1/4
+PASS 0 0 1,15 * *  natural=4 correct=1.00 rank=1/4
+PASS 0 12 1 1 *  natural=5 correct=1.00 rank=1/4
+PASS @daily  natural=5 correct=1.00 rank=1/4
+PASS */30 * * * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 0 * * 5L  natural=5 correct=1.00 rank=1/4
+PASS 5,10 30 9 * * MON  natural=4 correct=1.00 rank=1/4
+PASS */15 30 9-17 * * MON-FRI  natural=4 correct=1.00 rank=1/4
+PASS 15 30 9 * * MON  natural=5 correct=1.00 rank=1/4
+PASS 45 17,9 0 * * *  natural=4 correct=1.00 rank=2/4
+PASS 0-30 9,17-19 * * *  natural=5 correct=1.00 rank=1/4
+FAIL 0 22-2,12 * * *  natural=3 correct=1.00 rank=2/4
+     fixes: Correct, but slightly too colloquial/clipped for most contexts.
+PASS 0 9-20,22 * * *  natural=5 correct=1.00 rank=1/4
+PASS * 9,12,17 * * MON-FRI  natural=4 correct=1.00 rank=1/4
+FAIL 30 9 15W 6 *  natural=3 correct=0.00 rank=2/4
+     fixes: Ambiguous; 'am nächsten Werktag zum 15.' sounds like the first working day following the 15th, not necessarily the nearest.
+PASS 0 0 29 2 *  natural=5 correct=1.00 rank=1/4
+PASS 0 9-9 * * *  natural=5 correct=1.00 rank=1/4
+PASS 1/1 * * * *  natural=5 correct=1.00 rank=1/4
+FAIL 1 1 * * * *  natural=2 correct=1.00 rank=2/4
+     fixes: Sounds like a literal translation of a technical log; not how a native speaker describes a schedule.
+FAIL 59 23 31 12 5  natural=3 correct=1.00 rank=2/4
+     fixes: Clear, but 'am 31.' is slightly colloquial; it assumes the month from the later part of the sentence.
+PASS * * * * * *  natural=5 correct=1.00 rank=1/4
+FAIL 5 * * * * *  natural=2 correct=1.00 rank=3/4
+     fixes: Grammatically okay, but slightly clunky; usually 'in der 5. Sekunde' or 'bei Sekunde 5'.
+FAIL 5 * * * *  natural=2 correct=1.00 rank=3/4
+     fixes: Grammatically okay but sounds like a technical data log rather than a schedule description.
+FAIL 5,10 * * * *  natural=3 correct=1.00 rank=3/4
+     fixes: Accurate but slightly wordy for a mid-sentence fragment.
+PASS 0-30 9 * * *  natural=5 correct=1.00 rank=1/4
+PASS 0-30 */2 * * *  natural=4 correct=1.00 rank=1/4
+PASS 0 * * * *  natural=5 correct=1.00 rank=1/4
+PASS 0 */3 * * *  natural=5 correct=1.00 rank=1/4
+
+Gemma-half: 27/34 patterns pass. Slates → tmp/panel-de.json (add Claude judges, then re-aggregate).
+DONE

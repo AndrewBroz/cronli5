@@ -1,0 +1,12 @@
+[
+ {"id":1, "desc":"every second of 12:00 a.m., every day"},
+ {"id":2, "desc":"every second of 9:00 a.m., every day"},
+ {"id":3, "desc":"cada segundo de las 00:00, todos los días"},
+ {"id":4, "desc":"cada segundo de las 09:00, todos los días"},
+ {"id":5, "desc":"täglich jede Sekunde der Minute 0:00"},
+ {"id":6, "desc":"täglich jede Sekunde der Minute 9:00"},
+ {"id":7, "desc":"joka sekunti minuutin 9.00 aikana, joka päivä"},
+ {"id":8, "desc":"joka sekunti minuutin 9:00–9:59 aikana, joka päivä"},
+ {"id":9, "desc":"每天凌晨0点0分的每一秒"},
+ {"id":10,"desc":"每天9点0分的每一秒"}
+]

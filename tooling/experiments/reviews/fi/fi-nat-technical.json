@@ -1,0 +1,87 @@
+[
+  {
+    "id": 0,
+    "naturalness": 3,
+    "flag": "Rakenne 'X tai Y Z:ssa' on moniselitteinen: luetaanko aikarajoite (keskiyöllä) molempiin haaroihin vai vain jälkimmäiseen? Lisäksi 'tammikuun 1. päivänä tai maanantaisin tammikuussa' jättää epäselväksi, kattaako 'tammikuussa' myös ensimmäisen haaran."
+  },
+  {
+    "id": 1,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 2,
+    "naturalness": 2,
+    "flag": "'5 minuutin kohdalla klo 9.05–17.05' on ristiriitainen: kellonaika-alue 9.05–17.05 ei vastaa tuntikohtaista '5 minuutin kohdalla' -rakennetta. Lisäksi 'tai'-rakenne (päivä-ehto OR viikonpäivä-ehto) on yhdistetty kuukausirajauksen kanssa epäselvästi."
+  },
+  {
+    "id": 3,
+    "naturalness": 3,
+    "flag": "'tai maanantaisin tammikuussa ja heinäkuussa' — jää epäselväksi, onko kuukausirajoitus vain maanantai-haaraan vai myös päivämäärähaaraan. Rakenne on kuormittunut."
+  },
+  {
+    "id": 4,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 5,
+    "naturalness": 3,
+    "flag": "'tai'-rakenne sitoo kuukauden 1. ja 15. päivän sekä sunnuntait yhdeksi OR-ehdoksi ilman selvää osoitusta siitä, koskeeko kellonaika-ikkuna (klo 9 ja 17) molempia haaroja tasapuolisesti."
+  },
+  {
+    "id": 6,
+    "naturalness": 4,
+    "flag": null
+  },
+  {
+    "id": 7,
+    "naturalness": 3,
+    "flag": "'tai'-rakenne yhdistää kaksi täysin eri tyyppistä ehtoa (kuukauden päivät kesäkuussa OR arkipäivät kesäkuussa) pitkän kellonaikalistauksen jälkeen; lukija voi menettää jäljityksen siitä, mihin 'tai' viittaa."
+  },
+  {
+    "id": 8,
+    "naturalness": 4,
+    "flag": null
+  },
+  {
+    "id": 9,
+    "naturalness": 4,
+    "flag": null
+  },
+  {
+    "id": 10,
+    "naturalness": 3,
+    "flag": "'tai sunnuntaisin joulukuussa' — epäselvää, koskeeko 'joulukuussa' myös päivämäärähaaraa (1.–5. päivänä) vai ainoastaan sunnuntai-haaraa."
+  },
+  {
+    "id": 11,
+    "naturalness": 3,
+    "flag": "'0–30 minuutin kohdalla, klo 9, 11, 13, 15 ja 17' on epäselvä: tarkoittaako se joka minuutti välillä 0–30 erikseen luetelluilla tunneilla, vai jokin muu rakenne? Pilkku kellonajan edellä ei riitä erottamaan tasoja."
+  },
+  {
+    "id": 12,
+    "naturalness": 2,
+    "flag": "'joka kolmannen kuukauden 1.–5. päivänä tai sunnuntaisin ja lauantaisin tammikuussa, huhtikuussa, heinäkuussa ja lokakuussa' — yhdistää step-pattern, OR-ehdon ja kuukausilistan; lukija ei voi varmuudella päätellä, koskeeko kuukausiluettelo koko lauseketta vai vain sunnuntai–lauantai-haaraa."
+  },
+  {
+    "id": 13,
+    "naturalness": 4,
+    "flag": null
+  },
+  {
+    "id": 14,
+    "naturalness": 3,
+    "flag": "'klo 9–20 ja 22' on moniselitteinen: tarkoittaako se tunteja 9–20 sekä lisäksi tuntia 22, vai jotain muuta? Yhdistelmä 'tai'-rakenteen ja pitkän minuuttilistan kanssa tekee lauseesta vaikeaselkoisen."
+  },
+  {
+    "id": 15,
+    "naturalness": 5,
+    "flag": null
+  },
+  {
+    "id": 16,
+    "naturalness": 2,
+    "flag": "'5 ja 30 sekunnin kohdalla, 15 minuutin välein klo 9.00–9.59 ja 17.00–17.59 kuukauden 1. ja 15. päivänä' — sekuntien ja minuuttien yhdistäminen yhdeksi lausekkeeksi on hyvin epätavallinen rakenne; lauseen pääsy epäselvä (mikä on pää-aikaväli, mikä tarkennin)."
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "h0",
+    "pick": "every minute of the midnight hour",
+    "confidence": 5,
+    "reasoning": "\"The midnight hour\" is a fixed English idiom unambiguously denoting 00:00–00:59. The range form \"from midnight through 12:59 a.m.\" is technically correct but awkward: midnight IS 12:00 a.m., so naming both the anchor and the endpoint in the same 12-hour zone invites the question of whether 12:00 a.m. itself is included before \"12:59 a.m.\" — a subtle confusion the idiom avoids entirely."
+  },
+  {
+    "id": "h12",
+    "pick": "every minute of the noon hour",
+    "confidence": 5,
+    "reasoning": "\"The noon hour\" is a well-established idiom for 12:00–12:59 p.m. The range form \"from noon through 12:59 p.m.\" is redundant (noon = 12:00 p.m.) and the double 12-reference in a single phrase can momentarily mislead a reader about which clock-hour is meant. The idiom is shorter and carries no ambiguity."
+  },
+  {
+    "id": "h9",
+    "pick": "every minute of the 9 a.m. hour",
+    "confidence": 4,
+    "reasoning": "Both candidates are clear for h9. The idiom form wins marginally: \"the 9 a.m. hour\" is standard English for the hour-block starting at 09:00, there is no plausible misreading as \"9 minutes\" given the surrounding words \"every minute of\", and it is more concise. The range form \"from 9 a.m. through 9:59 a.m.\" is equally correct but the repeated \"a.m.\" is slightly redundant. Confidence 4 (not 5) because the idiom pattern is less entrenched for arbitrary hours than for midnight/noon."
+  },
+  {
+    "id": "h17",
+    "pick": "every minute of the 5 p.m. hour",
+    "confidence": 4,
+    "reasoning": "Same reasoning as h9. \"The 5 p.m. hour\" straightforwardly names the hour-block starting at 17:00; no endpoint-exclusion risk, no ambiguity about which 60-minute span is meant. The range form \"from 5 p.m. through 5:59 p.m.\" is correct but the repeated \"p.m.\" adds visual noise without clarity gain. Confidence 4 for the same reason as h9."
+  }
+]

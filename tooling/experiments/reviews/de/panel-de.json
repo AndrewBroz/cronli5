@@ -1,0 +1,1940 @@
+[
+  {
+    "pattern": "* * * * *",
+    "meaning": "every minute",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Jede Minute"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "jede Minute"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "jede Minute"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Jede Minute."
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural; capitalization irrelevant per instructions."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural; lowercase fits mid-sentence embedding."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural; identical to B."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, but includes an unnecessary period for a fragment."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "*/5 * * * *",
+    "meaning": "every five minutes",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "alle 5 Minuten"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Alle fünf Minuten."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Alle 5 Minuten"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "alle fünf Minuten"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and common in schedules/notes."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but punctuation and capitalization make it less suitable as a mid-sentence fragment."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Capitalization makes it less suitable as a mid-sentence fragment."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural; writing numbers as words is more formal."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0 12 * * *",
+    "meaning": "every day at noon",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "täglich um 12 Uhr"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Um 12:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jeden Tag mittags."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Täglich mittags."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfect, standard way to express this."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Too brief; lacks the 'every day' frequency."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though slightly more colloquial than A."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and concise."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "30 9 * * MON-FRI",
+    "meaning": "every Monday through Friday at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "montags bis freitags um 9:30 Uhr"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Montags bis freitags um 9:30 Uhr."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Montags bis freitags um 9:30 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Um 09:30, Montag bis Freitag"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and grammatically correct for a mid-sentence fragment; lowercase 'montags' is correct here."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, but the capitalization of 'Montags' is unnecessary for a mid-sentence fragment."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, but the capitalization of 'Montags' is unnecessary for a mid-sentence fragment."
+        },
+        "D": {
+          "natural": 2,
+          "correct": true,
+          "note": "Sounds like a telegram or a list; less natural for embedding mid-sentence than A."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9,17 * * *",
+    "meaning": "every day at 9 a.m. and 5 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jeden Tag um 9 Uhr und um 17 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Um 09:00 und 17:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "täglich um 9:00 und 17:00 Uhr"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "täglich um 9 und 17 Uhr"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and natural, though slightly repetitive with the double 'um'."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Very concise; common in digital contexts, but lacks the word for 'daily'."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard professional phrasing for schedules."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural for spoken or informal written German."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9-17 * * *",
+    "meaning": "every hour from 9 a.m. through 5 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "stündlich von 9 bis 17 Uhr"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Stündlich von 9 bis 17 Uhr."
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Stündlich von 9 bis 17 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Jede Stunde, zwischen 09:00 und 17:00"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for a mid-sentence fragment."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, but capitalization and punctuation are unnecessary for a fragment."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, but capitalization and punctuation are unnecessary for a fragment."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct but sounds slightly more clunky/formal than 'stündlich'."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0-29 * * * *",
+    "meaning": "every minute from 0 through 29 past the hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "in den Minuten 0 bis 29 jeder Stunde"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Minuten 0 bis 29"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von Minute Null bis Minute 29 jeder Stunde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von Minute 0 bis 29 jeder Stunde."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and concise, though slightly less explicit about the 'every single minute' aspect."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Too elliptical; it describes a range but not the frequency/recurrence."
+        },
+        "C": {
+          "natural": 2,
+          "correct": true,
+          "note": "Redundant ('Minute' mentioned thrice) and writing out 'Null' is unconventional for schedules."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate but slightly repetitive/clunky due to the double use of 'Minute'."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 1,15 * *",
+    "meaning": "on the 1st and 15th at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "am 1. und 15. jeweils um Mitternacht"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "jeweils am 1. und 15. um Mitternacht"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Um 00:00, an Tag 1 und 15 des Monats"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "am 1. und 15. um Mitternacht"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural; 'jeweils' clarifies that midnight occurs on both dates."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very natural, slightly different emphasis than A."
+        },
+        "C": {
+          "natural": 1,
+          "correct": true,
+          "note": "Too technical and clunky; sounds like a literal translation of a database field."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Grammatically correct and common, though slightly less precise than A/B regarding the repetition."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 12 1 1 *",
+    "meaning": "on January 1 at noon",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Um 12:00, an Tag 1 des Monats, nur im Januar"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "am 1. Januar mittags"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "am 1. Januar um 12 Uhr"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "am 1. Januar um 12 Uhr"
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "gemma-baseline",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 0,
+          "correct": false,
+          "note": "Incorrect meaning; implies any January 1st, but only during January, and is phrased unnaturally."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and accurate, though 'mittags' is slightly less precise than '12 Uhr'."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfect, standard German for this meaning."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfect, standard German for this meaning."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "@daily",
+    "meaning": "every day at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Um 00:00"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "täglich um Mitternacht"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jeden Tag um Mitternacht."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "täglich um Mitternacht"
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate, but less descriptive than 'midnight'"
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and precise"
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural; identical to B in quality"
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and precise"
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "*/30 * * * * *",
+    "meaning": "every 30 seconds",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Alle 30 Sekunden"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Alle 30 Sekunden."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Alle 30 Sekunden"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "alle 30 Sekunden"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, but contains a period which violates the 'sentence fragment' requirement."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate; the lowercase start is ideal for mid-sentence embedding."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 * * 5L",
+    "meaning": "on the last Friday of the month at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "am letzten Freitag im Monat um Mitternacht"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "am letzten Freitag des Monats um Mitternacht"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "am letzten Freitag des Monats um Mitternacht"
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Um 00:00, am letzten Freitag des Monats"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronli5",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very natural, common in spoken and written German."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly accurate and the most standard phrasing."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to B; perfectly accurate."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Slightly clunky word order for a mid-sentence fragment; '00:00' is more technical than 'Mitternacht'."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "5,10 30 9 * * MON",
+    "meaning": "at five and ten seconds past the minute, every Monday at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jeden Montag um 09:30 Uhr und 10 Sekunden."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Jeden Montag um 9:30 Uhr und 5 Sekunden."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "in den Sekunden 5 und 10 jeder Minute, um 9:30 Uhr montags"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect; suggests one single point in time (9:30 and 10s) rather than two distinct seconds."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect; only mentions 5 seconds, misses the 10-second mark."
+        },
+        "C": {
+          "natural": 1,
+          "correct": true,
+          "note": "Accurate but reads like a technical list or a manual, not a natural sentence fragment."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Most natural phrasing that accurately captures both the specific seconds and the specific time/day."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "*/15 30 9-17 * * MON-FRI",
+    "meaning": "every 15 seconds, at 30 minutes past the hour from 9 a.m. through 5:30 p.m. on Monday through Friday",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Montags bis freitags von 09:00 bis 17:30 Uhr alle 15 Sekunden ab der halben Stunde jeder Stunde."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Montags bis freitags alle 15 Sekunden ab halb nach jeder Stunde von 9:00 bis 17:30 Uhr."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Alle 15 Sekunden, bei Minute 30, zwischen 09:00 und 17:59, Montag bis Freitag"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "alle 15 Sekunden, in Minute 30 jeder Stunde, von 9 bis 17:30 Uhr montags bis freitags"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but 'ab der halben Stunde jeder Stunde' is repetitive and slightly clunky."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "'halb nach jeder Stunde' is incorrect; 'halb' always refers to the half-hour mark of the current hour, not an offset from the start."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "The time range 17:59 contradicts the required 17:30 limit."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and concise. 'in Minute 30' is a common way to describe a specific timestamp in technical schedules."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "15 30 9 * * MON",
+    "meaning": "every Monday at 9:30:15 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "montags um 9:30:15 Uhr"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Um 09:30:15, nur jeden Montag"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jeden Montag um 9:30:15 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Jeden Montag um 09:30:15 Uhr."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfect, most natural way to express a recurring time in German."
+        },
+        "B": {
+          "natural": 2,
+          "correct": true,
+          "note": "Clunky and sounds like a manual override or a specific restriction."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and natural, though slightly more emphatic than 'montags'."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct; the leading zero in the hour is common in digital contexts but less natural in flowing text."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "45 17,9 0 * * *",
+    "meaning": "every day at 12:09:45 a.m. and 12:17:45 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jeden Tag um 00:09:45 Uhr und 00:17:45 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Bei Sekunde 45, bei Minute 9 und 17, um 00:00"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "täglich um 0:09:45 und 0:17:45 Uhr"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Täglich um 00:09:45 Uhr und 00:17:45 Uhr."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard, precise, and natural phrasing."
+        },
+        "B": {
+          "natural": 0,
+          "correct": false,
+          "note": "Incorrect and unnatural; reads like a literal list of parameters rather than a schedule."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and correct, though slightly less formal than using leading zeros for midnight."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard, precise, and natural phrasing."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0-30 9,17-19 * * *",
+    "meaning": "every minute from 0 through 30 past the hour, at 9 a.m., 5 p.m., 6 p.m., and 7 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "in den Minuten 0 bis 30, um 9, 17, 18 und 19 Uhr"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Minuten 0 bis 30, um 09:00 und 17:00 bis 19:59"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von Minute 0 bis 30 um 9:00, 17:00, 18:00 und 19:00 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von Minute 0 bis 30 um 9:00, 17:00, 18:00 und 19:00 Uhr."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Concise and idiomatic for a schedule description."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrect time range (17:00 to 19:59 includes 20:00 minus one minute, and the phrasing is clunky)."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Redundant ('Jede Minute von Minute 0'), though accurate."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Identical to C; redundant phrasing."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 22-2,12 * * *",
+    "meaning": "every day at 12 p.m., 10 p.m., 11 p.m., 12 a.m., 1 a.m., and 2 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Täglich um 12:00, 22:00, 23:00, 00:00, 01:00 und 02:00 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Täglich um 12 Uhr mittags sowie von 22 bis 2 Uhr nachts."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Jede Stunde, um 22:00 bis 02:00 und 12:00"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "täglich um 12, 22, 23, 0, 1 und 2 Uhr"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard, precise, and professional."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though 'von 22 bis 2 Uhr' implies a continuous range rather than specific hourly ticks."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Grammatically incorrect and confusing."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct, but slightly too colloquial/clipped for most contexts."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9-20,22 * * *",
+    "meaning": "every hour from 9 a.m. through 8 p.m. and at 10 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Stündlich von 9 bis 20 Uhr sowie um 22 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Jede Stunde, um 09:00 bis 20:00 und 22:00"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Stündlich von 9 bis 20 Uhr und dann noch einmal um 22 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "stündlich von 9 bis 20 Uhr und um 22 Uhr"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and precise professional phrasing."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Grammatically incorrect; 'um' cannot be used with a time range 'bis'."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural, though slightly more colloquial than A."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Accurate and natural; essentially a more concise version of A."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "* 9,12,17 * * MON-FRI",
+    "meaning": "every minute during the 9 a.m., 12 p.m., and 5 p.m. hours on Monday through Friday",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "Jede Minute, um 09:00, 12:00, und 17:00, Montag bis Freitag"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "jede Minute von 9 bis 9:59 Uhr, von 12 bis 12:59 Uhr und von 17 bis 17:59 Uhr montags bis freitags"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Montags bis freitags jeweils jede Minute in der 9., 12. und 17. Stunde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Montags bis freitags jede Minute in den Stunden von 9, 12 und 17 Uhr."
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": false,
+          "note": "Incorrectly implies three specific moments in time rather than three whole hours."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very precise and unambiguous, though slightly wordy."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Using 'Stunde' as an ordinal (9. Stunde) refers to the 9th hour of the day, which is logically correct but unnatural in this context."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct and clear, though slightly more formal/stilted than B."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "30 9 15W 6 *",
+    "meaning": "on the weekday nearest the 15th in June at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Am Werktag, der dem 15. Juni am nächsten liegt, um 9:30 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Um 09:30, am Werktag am nächsten zum 15 Tag des Monats, nur im Juni"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "am Werktag, der dem 15. Juni am nächsten liegt, um 9:30 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "am nächsten Werktag zum 15. im Juni um 9:30 Uhr"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Grammatically correct and precise, though slightly formal."
+        },
+        "B": {
+          "natural": 1,
+          "correct": false,
+          "note": "Awkward phrasing ('15 Tag') and inaccurate logic ('nur im Juni')."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Identical to A; natural and accurate."
+        },
+        "D": {
+          "natural": 3,
+          "correct": false,
+          "note": "Ambiguous; 'am nächsten Werktag zum 15.' sounds like the first working day following the 15th, not necessarily the nearest."
+        },
+        "best": "C"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 29 2 *",
+    "meaning": "on February 29 at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "am 29. Februar um Mitternacht"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "am 29. Februar um Mitternacht"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "am 29. Februar um Mitternacht"
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Um 00:00, an Tag 29 des Monats, nur im Februar"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronli5",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "D": {
+          "natural": 1,
+          "correct": false,
+          "note": "Overly literal, unnatural, and grammatically clumsy."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 9-9 * * *",
+    "meaning": "every day at 9 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jeden Tag um 9 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "täglich um 9 Uhr"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Täglich um 9 Uhr."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Jede Stunde, zwischen 09:00 und 09:00"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "perfectly natural and accurate"
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "standard and professional phrasing"
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "identical to B; capitalization doesn't affect correctness here"
+        },
+        "D": {
+          "natural": 0,
+          "correct": false,
+          "note": "completely wrong; means 'every hour between 9 and 9'"
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "1/1 * * * *",
+    "meaning": "every minute from 1 through 59 past the hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von der ersten bis zur 59. Minute nach der vollen Stunde."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Alle 1 Minuten, beginnend bei Minute 1"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von Minute 1 bis 59 nach der vollen Stunde."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "in den Minuten 1 bis 59 jeder Stunde"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but slightly redundant (Minute... Minute)."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Phrasing is imprecise and sounds like a technical setting rather than a natural description."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and natural, though 'nach der vollen Stunde' is slightly formal."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most concise and natural way to express this in German."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "1 1 * * * *",
+    "meaning": "one minute and one second past the hour, every hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Jede Stunde eine Minute und eine Sekunde nach voll."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Bei Sekunde 1, bei Minute 1"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Jede Stunde zur ersten Minute und ersten Sekunde."
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "in Minute 1 und Sekunde 1 jeder Stunde"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very natural and idiomatic use of 'nach voll' to denote past the hour."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Sounds like technical parameters or coordinates rather than a time description."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Grammatically correct, but 'zur ersten Minute' is slightly formal/stiff."
+        },
+        "D": {
+          "natural": 2,
+          "correct": true,
+          "note": "Sounds like a literal translation of a technical log; not how a native speaker describes a schedule."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "59 23 31 12 5",
+    "meaning": "on December 31 or on Friday in December at 11:59 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Am 31. Dezember oder an einem Freitag im Dezember um 23:59 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "am 31. Dezember oder an einem Freitag im Dezember um 23:59 Uhr."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Um 23:59, an Tag 31 des Monats, und jeden Freitag, nur im Dezember"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "am 31. oder freitags im Dezember um 23:59 Uhr"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Grammatically correct; slightly formal due to capitalization, but fits the meaning perfectly."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate as a mid-sentence fragment."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Very unnatural phrasing ('Tag 31') and changes the logic to 'and' instead of 'or'."
+        },
+        "D": {
+          "natural": 3,
+          "correct": true,
+          "note": "Clear, but 'am 31.' is slightly colloquial; it assumes the month from the later part of the sentence."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "* * * * * *",
+    "meaning": "every second",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Sekündlich."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Sekündlich"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Jede Sekunde"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "jede Sekunde"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct, but often implies 'every second' as an adjective/adverb meaning 'per second' or 'constantly'."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Same as A; natural but less precise for a timed interval than 'jede Sekunde'."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate. Capitalization ignored per instructions."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate; matches the requested fragment style."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "5 * * * * *",
+    "meaning": "five seconds past the minute, every minute",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "in Sekunde 5 jeder Minute"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Bei Sekunde 5"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Alle sechzig Sekunden, immer fünf Sekunden nach der vollen Minute."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Alle sechzig Sekunden, jeweils fünf Sekunden nach jeder vollen Minute."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": true,
+          "note": "Grammatically okay, but slightly clunky; usually 'in der 5. Sekunde' or 'bei Sekunde 5'."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Natural and concise, though it implies the 'every minute' part through context rather than explicitly stating it."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate, but a bit repetitive and wordy for a sentence fragment."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very precise and grammatically sound, though slightly formal."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "5 * * * *",
+    "meaning": "five minutes past the hour, every hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "in Minute 5 jeder Stunde"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Bei Minute 5"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Alle fünf nach voll."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Jede Stunde zur fünf nach."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": true,
+          "note": "Grammatically okay but sounds like a technical data log rather than a schedule description."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Too vague; it lacks the 'every hour' frequency."
+        },
+        "C": {
+          "natural": 1,
+          "correct": false,
+          "note": "Colloquial but grammatically incorrect; 'voll' cannot be used this way."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Idiomatic, concise, and precisely matches the English meaning."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "5,10 * * * *",
+    "meaning": "at five and ten minutes past the hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Um fünf vor zehn."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Um fünf nach zehn."
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "in den Minuten 5 und 10 jeder Stunde"
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "Bei Minute 5 und 10"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronli5",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": false,
+          "note": "Means 'at five to ten' (9:55)."
+        },
+        "B": {
+          "natural": 5,
+          "correct": false,
+          "note": "Means 'at five past ten' (10:05)."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "Accurate but slightly wordy for a mid-sentence fragment."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Commonly used in scheduling contexts to denote specific minute marks."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0-30 9 * * *",
+    "meaning": "every minute from 9 a.m. through 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Minütlich von 9:00 bis 9:30 Uhr."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Jede Minute von 9:00 bis 9:30 Uhr."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Jede Minute zwischen 09:00 und 09:30"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "jede Minute von 9:00 bis 9:30 Uhr"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Very natural, though 'minütlich' is slightly more adverbial than 'every minute'."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "C": {
+          "natural": 3,
+          "correct": false,
+          "note": "'Zwischen' can be ambiguous as to whether endpoints are included; missing 'Uhr'."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate; matches the lowercase request."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0-30 */2 * * *",
+    "meaning": "every minute from 0 through 30 past the hour, every two hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "in den Minuten 0 bis 30, alle 2 Stunden"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Minuten 0 bis 30, alle 2 Stunden"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Alle zwei Stunden jede Minute von Minute 0 bis 30."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Alle zwei Stunden jeweils jede Minute von Minute 0 bis 30."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Clear and concise, fits well as a fragment."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Slightly too elliptical, but functional in a list."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "A bit wordy; 'von Minute 0 bis 30' is slightly repetitive."
+        },
+        "D": {
+          "natural": 2,
+          "correct": true,
+          "note": "Overly redundant with 'jeweils jede Minute'."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 * * * *",
+    "meaning": "every hour",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "jede Stunde"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "Jede Stunde"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Stündlich."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "stündlich"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "most natural and common way to express 'every hour' in a sentence fragment."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "identical to A; capitalization is ignored per instructions."
+        },
+        "C": {
+          "natural": 3,
+          "correct": true,
+          "note": "correct, but 'stündlich' is slightly more formal/technical."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "natural for technical contexts or schedules, though 'jede Stunde' is more common in speech."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 */3 * * *",
+    "meaning": "every three hours",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "alle 3 Stunden"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "alle drei Stunden"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "Zur vollen Stunde, alle 3 Stunden"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Alle drei Stunden."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very common and natural, especially in technical or informal contexts."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Standard German; writing out the number is stylistically preferred in formal text."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Adds 'on the hour,' which changes the meaning from 'every 3 hours' to a specific fixed schedule."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to B; the capitalization and period are ignored per instructions."
+        },
+        "best": "B"
+      }
+    ]
+  }
+]

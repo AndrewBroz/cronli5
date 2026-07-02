@@ -1,0 +1,20 @@
+[
+  {
+    "id": "p1",
+    "pick": "a la 1 de la madrugada y a la 1 de la tarde",
+    "confidence": 5,
+    "reasoning": "Fully explicit: two separate 'a la 1' anchors leave no doubt that two distinct clock times are intended. The elided form ('a la 1 de la madrugada y de la tarde') risks being read as a single vague span across both periods rather than two discrete times at 01:00 and 13:00."
+  },
+  {
+    "id": "p2",
+    "pick": "a las 2 de la madrugada y 2 de la tarde",
+    "confidence": 4,
+    "reasoning": "Repeating the numeral '2' twice makes both clock times individually named. The elided form ('a las 2 de la madrugada y de la tarde') omits the second numeral entirely, creating the same ambiguity as p1-B where the reader may parse the period conjunction as a single fuzzy span. Minor note: candidate A drops 'a las' before the second '2 de la tarde', which is informal but not ambiguous."
+  },
+  {
+    "id": "p3",
+    "pick": "a la 1 de la madrugada y 1 de la tarde, a las 9 de la mañana",
+    "confidence": 4,
+    "reasoning": "Names '1' twice (once per period) so neither 1 o'clock is dropped, and names '9' once; the comma visually separates the paired group from the third time. Candidate B's elided '1' risks the madrugada+tarde pair reading as a span, and candidate C compounds that by also removing the coordinating 'y' before 9, making the three-item parse harder. No time is lost or merged in candidate A."
+  }
+]

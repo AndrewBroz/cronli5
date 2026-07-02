@@ -97,10 +97,11 @@ describe('Dialect option:', function() {
     var gb = {dialect: 'gb'};
 
     run([
-      // A single restricted month folds into the calendar date and repeats on
-      // the weekday half ("or on Friday in June").
-      ['0 0 13 6 FRI', 'on 13 June or on Friday in June at midnight', gb],
-      ['0 0 15 3 FRI', 'on 15 March or on Friday in March at midnight', gb],
+      // A restricted month scopes BOTH halves of the union, so it fronts the
+      // whole or-phrase once ("in June, on the 13th or on Friday") instead
+      // of folding into one arm and repeating on the other.
+      ['0 0 13 6 FRI', 'in June, on the 13th or on Friday at midnight', gb],
+      ['0 0 15 3 FRI', 'in March, on the 15th or on Friday at midnight', gb],
       // No month: a bare date ordinal or a Quartz date, or'd with the weekday.
       ['0 0 15 * MON', 'on the 15th or on Monday at midnight', gb],
       ['0 0 L * FRI',
@@ -112,12 +113,11 @@ describe('Dialect option:', function() {
       // An open day step reads as the parity idiom on the date half.
       ['0 0 */2 * FRI',
         'every other day of the month or on Friday at midnight', gb],
-      // A month that does not fold (a range, or a Quartz date) trails the
-      // whole or as ", in <month>".
+      // A month range and a Quartz date take the same fronted scope.
       ['0 0 13 6-8 FRI',
-        'on the 13th or on Friday, in June to August at midnight', gb],
+        'in June to August, on the 13th or on Friday at midnight', gb],
       ['0 0 L 6 FRI',
-        'on the last day of the month or on Friday, in June at midnight', gb]
+        'in June, on the last day of the month or on Friday at midnight', gb]
     ]);
   });
 

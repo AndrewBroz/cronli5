@@ -1,0 +1,9 @@
+{
+  "verdict": "change",
+  "proposed": {
+    "hour0": "cada minuto de la hora de las 00:00",
+    "hour9": "cada minuto de la hora de las 09:00"
+  },
+  "confidence": 4,
+  "reasoning": "La fórmula 'de las HH:00 a las HH:59' es técnicamente precisa pero redundante: en español coloquial y de estilo, cuando se habla de una única hora de reloj basta con nombrar la hora entera. 'La hora de las 09:00' (o 'la hora de las nueve') identifica sin ambigüedad el intervalo completo 09:00–09:59; añadir el rango horario aporta ruido sin claridad extra. La RAE y FundéuRAE prefieren la economía expresiva cuando el referente es unívoco. Alternativa aún más fluida en registro oral: 'cada minuto durante la hora de las nueve', pero para un contexto técnico de interfaz se mantiene el formato numérico HH:00."
+}

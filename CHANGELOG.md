@@ -6,6 +6,104 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **A step arm inside a list reads as its fires, and display units sort
+  chronologically.** A step is a cadence only when it is the whole field
+  (`*/3` alone still reads "every three hours", and an absorbed arm keeps
+  it); inside a list its fires join the other arms and everything sorts —
+  `1/4,18-20` hours read "…5 p.m., 6 p.m. through 8 p.m., and 9 p.m."
+  instead of trailing the window after 9 p.m., in all seven languages. The
+  reviewed weekday display already treated step arms this way; the rule now
+  lives once in normalization. German additionally groups runs of adjacent
+  single hours into one "um 1, 5, 9, 13 und 17 Uhr" phrase. The renderers'
+  now-unreachable step-in-list display arms were removed (verified
+  unreachable by the corpora plus a clean 100,800-pattern fuzz per
+  language).
+
+### Fixed
+
+- **English: a restricted month scopes the whole date-or-weekday union.**
+  The gb dialect and `short` union frame folded the month into one arm and
+  restated it on the other ("on 13 June or on Friday in June") or trailed
+  it ambiguously; the month now fronts the union once — "in June, on the
+  13th or on Friday at midnight" — whatever its shape (single, range, list,
+  odd/even). The default dialect's already-fronted month lead gains the
+  comma of a fronted adverbial: "in June, at midnight whenever the day is
+  the 13th or the last Friday of the month".
+- **Overlapping list arms merge into their coverage union — in every field
+  and every language.** `* 2/4,18-20 * * *` named hour 18 twice (the step
+  arm's window and the range window) in all seven languages — the defect the
+  pt-BR and fr-FR panels flagged as an es-family residual turned out to be
+  universal, as was the wider class: `0 12 * * 1-5,3` read "Monday through
+  Friday and Wednesday", `0 0 1-10,5 * *` "the 1st through 10th and 5th".
+  Normalization now merges arms whose covered values intersect into their
+  union, so equivalent patterns are identical through the whole pipeline:
+  `5-10,7` reads exactly like `5-10`, and an arm another arm fully covers is
+  absorbed (`9,*/3` reads exactly like `*/3`, keeping the step's cadence).
+  Disjoint arms — even adjacent ones — are untouched. Metamorphic rules pin
+  the equivalences; the fuzz dropped-value detector is clean over 100,800
+  patterns per language. Two corpus rows that had enshrined the duplicate
+  (pt `9,*/3`, en `8-10,2/4`) now expect the deduplicated reading.
+
+- **Numeric `0` fields are no longer mistaken for absent fields.** Two faces
+  of the same truthiness bug: an array element of numeric `0` fell through to
+  the field default, so `cronli5([0, 9])` read as "every minute of the 9 a.m.
+  hour" instead of "every day at 9 a.m." (`['0', '9']` was already correct);
+  and `{hour: 0}` threw the missing-properties error while `{hour: '0'}`
+  rendered midnight. Both forms now treat a present-but-falsy value as the
+  real field value it is, and a `NaN` or `false` element is flagged as
+  invalid instead of silently defaulting. Sparse arrays (`null`/`''`
+  elements) keep their documented field-default behavior.
+- **Surrounding whitespace no longer changes a string pattern's meaning.** A
+  trailing space split into a phantom field, silently re-reading
+  `'0 12 * * * '` as a six-field seconds-first pattern ("12 minutes past the
+  hour, every hour" instead of "every day at noon"), and a whitespace-only
+  string described as "every minute". Strings are now trimmed before
+  splitting, and a whitespace-only pattern throws the empty-pattern error.
+- **Quartz mode rejects out-of-range weekday numbers.** A Quartz weekday of
+  `8` (invalid in both numberings) was re-indexed before validation and
+  silently accepted as Sunday; values above 7 now throw the same descriptive
+  error as `0`.
+- **English: a minute list containing a range segment no longer corrupts the
+  seconds confinement.** `0-30 9,17-19 * * * *` rendered "during minutes 9
+  and NaN"; the range segment now keeps its range form: "during minutes 9
+  and 17 through 19". (Caught by the new cross-language option suite; the
+  other six languages were already correct.)
+- **Lenient mode no longer masks renderer defects.** `{lenient: true}`
+  swallowed *every* exception, so a renderer bug on a valid pattern
+  masqueraded as the fallback description. Only the typed input rejection
+  (see `Cronli5InputError` below) converts to the fallback; any other
+  exception propagates.
+
+### Changed
+
+- **The `Language` contract's `reboot`/`fallback`/`sentence` are now
+  options-aware functions** (`reboot(opts)`, `fallback(opts)`,
+  `sentence(description, opts)`), so a dialect that changes whole words
+  (zh-Hant) flows through the arguments instead of zh's module-private
+  variant latch (now removed). Breaking for external custom language
+  modules; the bundled seven are updated, and `cronli5(pattern, options)`
+  itself is unchanged.
+- **The shared confinement decision tree moved into the core.** Renderers
+  carried byte-identical copies of `minuteStride` (six, including English),
+  `secondsConfinesMinute`, `isEveryOtherMinuteSeconds`, and
+  `isSteppedMinuteSeconds` (five each); they now live once in
+  `core/cadence.ts`, following the `renderStride` decision-in-core /
+  words-in-language pattern. Output is unchanged in every language.
+
+### Added
+
+- **`Cronli5InputError`, a public named export.** Every intentional
+  "your pattern is bad" rejection (empty/malformed pattern, out-of-range or
+  unrecognized field value, unknown macro, misused Quartz token) now throws
+  this class, so callers can tell input errors from library defects.
+- **A cross-language option smoke suite** (`test/lang/options.js`): every
+  language × every public option flag over the spanning set must render
+  non-empty, non-degenerate, deterministic output — the floor beneath the
+  per-language corpora, which pin exact prose but only English exercised
+  per-option.
+
 ## [0.8.6]
 
 ### Changed

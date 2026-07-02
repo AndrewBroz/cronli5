@@ -1,0 +1,515 @@
+[
+  {
+    "pattern": "0 9 * * *",
+    "meaning": "every day at 9 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9 a. m."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9 de la mañana."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 09:00"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "todos los días a las 9 de la mañana"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and formal, though 'a. m.' is slightly more common in writing than speaking."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural and common way to express this in Mexican Spanish."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Missing the 'every day' frequency; too clipped."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to B and perfectly natural."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "30 9 * * *",
+    "meaning": "every day at 9:30 a.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 9:30 a. m."
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las nueve y media de la mañana."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 09:30"
+      },
+      {
+        "letter": "D",
+        "src": "cronli5",
+        "text": "todos los días a las 9:30 de la mañana"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "cronli5"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate; standard way to write it."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural, common in spoken or informal written contexts."
+        },
+        "C": {
+          "natural": 2,
+          "correct": false,
+          "note": "Missing 'every day' and the '09' format is too clinical/digital."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Extremely common and natural phrasing in Mexico."
+        },
+        "best": "D"
+      }
+    ]
+  },
+  {
+    "pattern": "0 14 * * *",
+    "meaning": "every day at 2 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronstrue",
+        "text": "A las 14:00"
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "todos los días a las 2 de la tarde"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las dos de la tarde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 2 p. m."
+      }
+    ],
+    "key": {
+      "A": "cronstrue",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 2,
+          "correct": true,
+          "note": "Too brief; misses the 'every day' requirement."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for a mid-sentence fragment."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Natural, though writing the number as a word is more formal."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, though 'p. m.' is slightly more formal/written than 'de la tarde'."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "30 14 * * *",
+    "meaning": "every day at 2:30 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días a las 2:30 de la tarde"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 14:30"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las dos y media de la tarde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "diario a las 2:30 p. m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for Mexican Spanish."
+        },
+        "B": {
+          "natural": 3,
+          "correct": false,
+          "note": "Missing the 'every day' frequency requirement; 24h format is less common in spoken Mexican Spanish."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural; writing out the time as 'dos y media' is common and accurate."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and concise, though slightly more formal/administrative than A or C."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 22 * * *",
+    "meaning": "every day at 10 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 10 p. m."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "todos los días a las 10 de la noche"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las diez de la noche."
+      },
+      {
+        "letter": "D",
+        "src": "cronstrue",
+        "text": "A las 22:00"
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "gemma-baseline",
+      "D": "cronstrue"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate and standard, though 'p. m.' is slightly more formal/written than spoken."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural phrasing for a mid-sentence fragment in Mexican Spanish."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Equally natural as B; writing out the number is common in narrative prose."
+        },
+        "D": {
+          "natural": 2,
+          "correct": true,
+          "note": "While understood, 24-hour time is rarely used in casual spoken Mexican Spanish."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "0 0 * * *",
+    "meaning": "every day at midnight",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a medianoche."
+      },
+      {
+        "letter": "B",
+        "src": "cronli5",
+        "text": "todos los días a medianoche"
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 00:00"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "Todos los días a medianoche."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronli5",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "B": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate; lowercase as requested."
+        },
+        "C": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate, but more technical/digital than the phrase 'at midnight'."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate."
+        },
+        "best": "B"
+      }
+    ]
+  },
+  {
+    "pattern": "0 12 * * *",
+    "meaning": "every day at noon",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "todos los días al mediodía"
+      },
+      {
+        "letter": "B",
+        "src": "gemma-baseline",
+        "text": "Todos los días a mediodía."
+      },
+      {
+        "letter": "C",
+        "src": "cronstrue",
+        "text": "A las 12:00"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "todos los días al mediodía"
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "gemma-baseline",
+      "C": "cronstrue",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for Mexican Spanish."
+        },
+        "B": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct, but 'al mediodía' is slightly more common than 'a mediodía' in Mexico."
+        },
+        "C": {
+          "natural": 3,
+          "correct": false,
+          "note": "Incomplete; it omits the 'every day' requirement."
+        },
+        "D": {
+          "natural": 5,
+          "correct": true,
+          "note": "Identical to A; perfectly natural."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "30 14 * * 1-5",
+    "meaning": "every Monday through Friday at 2:30 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "cronli5",
+        "text": "de lunes a viernes a las 2:30 de la tarde"
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 14:30, de lunes a viernes"
+      },
+      {
+        "letter": "C",
+        "src": "gemma-baseline",
+        "text": "De lunes a viernes a las dos y media de la tarde."
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "De lunes a viernes a las 2:30 p. m."
+      }
+    ],
+    "key": {
+      "A": "cronli5",
+      "B": "cronstrue",
+      "C": "gemma-baseline",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 5,
+          "correct": true,
+          "note": "Perfectly natural and accurate for Mexican Spanish."
+        },
+        "B": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct, but 24-hour format is more common in formal writing than in natural speech."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Very natural; writing out the time is common and sounds authentic."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Accurate, though 'p. m.' is slightly more formal/written than spoken."
+        },
+        "best": "A"
+      }
+    ]
+  },
+  {
+    "pattern": "0 8,20 * * *",
+    "meaning": "every day at 8 a.m. and 8 p.m.",
+    "slate": [
+      {
+        "letter": "A",
+        "src": "gemma-baseline",
+        "text": "Todos los días a las 8 a. m. y 8 p. m."
+      },
+      {
+        "letter": "B",
+        "src": "cronstrue",
+        "text": "A las 08:00 y 20:00"
+      },
+      {
+        "letter": "C",
+        "src": "cronli5",
+        "text": "todos los días a las 8 de la mañana y 8 de la noche"
+      },
+      {
+        "letter": "D",
+        "src": "gemma-baseline",
+        "text": "A diario a las 8 de la mañana y a las 8 de la noche."
+      }
+    ],
+    "key": {
+      "A": "gemma-baseline",
+      "B": "cronstrue",
+      "C": "cronli5",
+      "D": "gemma-baseline"
+    },
+    "gemmaVerdicts": [
+      {
+        "A": {
+          "natural": 3,
+          "correct": true,
+          "note": "Correct and clear, but 'a. m./p. m.' is more common in writing than in spoken natural Mexican Spanish."
+        },
+        "B": {
+          "natural": 2,
+          "correct": false,
+          "note": "Lacks 'todos los días' (every day), omitting essential meaning from the source."
+        },
+        "C": {
+          "natural": 5,
+          "correct": true,
+          "note": "Most natural phrasing for a mid-sentence fragment in Mexico."
+        },
+        "D": {
+          "natural": 4,
+          "correct": true,
+          "note": "Correct and natural, though slightly more formal than C."
+        },
+        "best": "C"
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "u1",
+    "pick": "a la 01:05 y a las 06:05, 11:05, 16:05 y 21:05",
+    "confidence": 5,
+    "reasoning": "The singular 'a la' fronts the one 1-o'clock time, then a single 'a las' covers all the rest in one clean run. No double 'y', no repetition. The other candidate repeats 'a las' four times, which is correct but unnecessarily wordy."
+  },
+  {
+    "id": "u2",
+    "pick": "todos los días a la 01:00 y a las 12:00, 22:00, 23:00, 00:00 y 02:00",
+    "confidence": 2,
+    "reasoning": "None of the three candidates is comfortable when one time pulls a different article mid-list. Candidate 1 is the least awkward: fronting 01:00 is slightly out of chronological order, but it avoids the double 'y' of candidate 2 ('… y 02:00, y a la 01:00') and the confusing mid-list article switch of candidate 3 ('… 23:00, 00:00, a la 01:00 y a las 02:00'). Low confidence because the ordering inversion still feels unnatural to a native ear."
+  },
+  {
+    "id": "u3",
+    "pick": "todos los días a la 01:00, a las 02:00 y 03:00",
+    "confidence": 5,
+    "reasoning": "A comma between the two article groups reads cleanly and naturally: 'a la 01:00, a las 02:00 y 03:00'. The other candidate ('a la 01:00 y a las 02:00 y 03:00') has two 'y' in a row, which sounds choppy and would make a native speaker trip over the coordination."
+  }
+]

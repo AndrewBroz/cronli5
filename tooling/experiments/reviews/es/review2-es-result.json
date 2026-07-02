@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "correct": false,
+  "idiom": 2,
+  "clarity": 2,
+  "issue": "El minuto es 3/2 (3,5,...,59), nunca 00; decir 'a las 00:00' afirma el minuto 00 que jamas dispara, y choca con 'cada dos minutos del minuto 3 al 59 de cada hora' (la hora esta fija en 0). Lo correcto seria 'durante la hora de las 00' o similar; los disparos reales son 00:03, 00:05, ..., 00:59."
+ },
+ {
+  "n": 2,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 3,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 4,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 5,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 6,
+  "correct": false,
+  "idiom": 2,
+  "clarity": 2,
+  "issue": "El minuto es 3/2 (3,5,...,59), nunca 00; 'a las 12:00' afirma el minuto 00 que no dispara y contradice 'cada dos minutos del minuto 3 al 59 de cada hora'. La hora correcta es 12 pero con minutos 3,5,...,59 (y 'cada segundo' por sec=*); deberia decir 'durante la hora de las 12' en vez de 'a las 12:00'."
+ },
+ {
+  "n": 7,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 8,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "'el 1 de cada mes, de junio a agosto' se lee un poco encadenado; mas claro 'el dia 1, de junio a agosto'. Conjunto correcto (02:00, 08:00, 14:00, 20:00)."
+ },
+ {
+  "n": 9,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "'los domingos y sabados' invierte el orden natural (sabados y domingos), aunque SAT,SUN justifica ese orden; menor."
+ },
+ {
+  "n": 10,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 11,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 12,
+  "correct": true,
+  "idiom": 3,
+  "clarity": 3,
+  "issue": "Disparos reales 00:05, 00:20, 00:35, 00:50. 'de las 00:00 a las 00:50' como cota horaria es aceptable, pero 'cada 15 minutos a partir del minuto 5 ... de cada hora ... de las 00:00 a las 00:50' es algo redundante (la hora ya esta fija en 0)."
+ },
+ {
+  "n": 13,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 14,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 15,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": "'los domingos y sabados' (orden invertido frente a sabados y domingos); menor."
+ },
+ {
+  "n": 16,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 17,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 18,
+  "correct": true,
+  "idiom": 5,
+  "clarity": 5,
+  "issue": ""
+ },
+ {
+  "n": 19,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 4,
+  "issue": ""
+ },
+ {
+  "n": 20,
+  "correct": true,
+  "idiom": 4,
+  "clarity": 5,
+  "issue": ""
+ }
+]

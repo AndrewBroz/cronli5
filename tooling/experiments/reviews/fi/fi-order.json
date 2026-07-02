@@ -1,0 +1,53 @@
+[
+  {
+    "id": "d1",
+    "meaning": "In January only, at midnight, on either the 1st day of the month OR on any Monday. (Month AND midnight apply to BOTH the date and the weekday condition.)",
+    "candidates": [
+      "tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin",
+      "tammikuussa joko 1. päivänä tai maanantaisin keskiyöllä",
+      "keskiyöllä tammikuussa joko 1. päivänä tai maanantaisin"
+    ]
+  },
+  {
+    "id": "d2",
+    "meaning": "In the months June through September only, at midnight, on either the 1st day of the month OR on any Friday. (Month range AND midnight apply to both conditions.)",
+    "candidates": [
+      "kesäkuusta syyskuuhun keskiyöllä joko 1. päivänä tai perjantaisin",
+      "kesäkuusta syyskuuhun joko 1. päivänä tai perjantaisin keskiyöllä"
+    ]
+  },
+  {
+    "id": "d3",
+    "meaning": "In the months June through August only, at midnight, on either the LAST day of the month OR on any Monday. (Month range AND midnight apply to both conditions.)",
+    "candidates": [
+      "kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä tai maanantaisin",
+      "kesäkuusta elokuuhun joko kuukauden viimeisenä päivänä tai maanantaisin keskiyöllä"
+    ]
+  },
+  {
+    "id": "d4",
+    "meaning": "In January and July only, at 0:05, 5:05, 10:05, 15:05 and 20:05, on either the 1st day of the month OR on any Monday. (The two months AND the listed times apply to both the date and the weekday condition.)",
+    "candidates": [
+      "tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 joko 1. päivänä tai maanantaisin",
+      "klo 0.05, 5.05, 10.05, 15.05 ja 20.05 tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin",
+      "tammikuussa ja heinäkuussa joko 1. päivänä tai maanantaisin klo 0.05, 5.05, 10.05, 15.05 ja 20.05"
+    ]
+  },
+  {
+    "id": "d5",
+    "meaning": "In June only, at 0, 5, 10, 15 and 20 o'clock, at the 0 and 45 minute marks, on either days 1-5 of the month OR on weekdays Monday through Friday. (June and the times apply to both day conditions.)",
+    "candidates": [
+      "klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla kesäkuussa joko 1.–5. päivänä tai maanantaista perjantaihin",
+      "kesäkuussa klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla joko 1.–5. päivänä tai maanantaista perjantaihin"
+    ]
+  },
+  {
+    "id": "d6",
+    "meaning": "At the 5, 10 and 30 minute marks, during the hours 9 through 20 inclusive AND also at 22 o'clock (22 is a separate discrete hour, NOT a range endpoint — hour 21 is excluded).",
+    "candidates": [
+      "5, 10 ja 30 minuutin kohdalla klo 9–20 sekä klo 22",
+      "klo 9–20 sekä klo 22 aina minuuttien 5, 10 ja 30 kohdalla",
+      "5, 10 ja 30 minuutin kohdalla klo 9–20 ja klo 22"
+    ]
+  }
+]

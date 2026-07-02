@@ -1,0 +1,22 @@
+[
+ { "n": 1, "correct": true, "idiom": 3, "clarity": 3, "issue": "时=0固定，但用“每小时”再加“在凌晨0点”，与系统其它条目模板一致，可解读为“0点这一小时内”，但“每小时”字面易误为每个小时；建议改为“凌晨0点，从3分起每2分钟至59分”" },
+ { "n": 2, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 3, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 4, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 5, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 6, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 7, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 8, "correct": false, "idiom": 2, "clarity": 2, "issue": "“6月至8月1日”有歧义且漏断句：月份=6-8、日=1，应为“6月至8月，每月1日”；此外时=2/6应到“至20点”，与其它条目（如n=2/9/19均含范围终点）不一致，缺“至20点”" },
+ { "n": 9, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 10, "correct": false, "idiom": 3, "clarity": 3, "issue": "缺月份限定：月=12（12月）完全未出现，应为“12月，最接近15日的工作日，正午、12点25分和12点50分”" },
+ { "n": 11, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 12, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 13, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 14, "correct": true, "idiom": 3, "clarity": 2, "issue": "“每小时0至30分，每分钟”冗余：分=0-30为连续区间，已含每分钟；“每分钟”多余，宜删或合并为“每小时的0至30分”" },
+ { "n": 15, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 16, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 17, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 18, "correct": true, "idiom": 5, "clarity": 5, "issue": "" },
+ { "n": 19, "correct": true, "idiom": 4, "clarity": 4, "issue": "" },
+ { "n": 20, "correct": true, "idiom": 4, "clarity": 4, "issue": "" }
+]

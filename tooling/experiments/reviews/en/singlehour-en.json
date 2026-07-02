@@ -1,0 +1,9 @@
+{
+  "verdict": "change",
+  "proposed": {
+    "hour0": "every minute of the midnight hour",
+    "hour9": "every minute of the 9 a.m. hour"
+  },
+  "confidence": 5,
+  "reasoning": "The range framing ('from X through Y') implies a selected span with meaningful endpoints, but the source is a single whole clock hour. A native speaker would name the hour directly. 'Every minute of the midnight hour' and 'every minute of the 9 a.m. hour' are unambiguous, natural, and accurately reflect that the entire hour is covered — not a range within it. The current 'midnight through 12:59 a.m.' form also risks suggesting midnight is the start of a range rather than the hour's name."
+}

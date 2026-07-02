@@ -1,0 +1,203 @@
+PATTERN `* * * * *` — means: "every minute"
+  A) Cada minuto
+  B) Cada minuto.
+  C) cada minuto
+  D) Cada minuto.
+
+PATTERN `*/5 * * * *` — means: "every five minutes"
+  A) Cada cinco minutos.
+  B) cada cinco minutos
+  C) Cada 5 minutos
+  D) Cada cinco minutos.
+
+PATTERN `0 12 * * *` — means: "every day at noon"
+  A) todos los días a las 12:00
+  B) A las 12:00
+  C) Todos los días al mediodía.
+  D) Todos los días a mediodía.
+
+PATTERN `30 9 * * MON-FRI` — means: "every Monday through Friday at 9:30 a.m."
+  A) De lunes a viernes a las 9:30 a. m.
+  B) A las 09:30, de lunes a viernes
+  C) De lunes a viernes a las 9:30 a. m.
+  D) de lunes a viernes a las 09:30
+
+PATTERN `0 9,17 * * *` — means: "every day at 9 a.m. and 5 p.m."
+  A) todos los días a las 09:00 y 17:00
+  B) A las 09:00 y 17:00
+  C) Todos los días a las 9 de la mañana y a las 5 de la tarde.
+  D) Todos los días a las 9:00 y a las 17:00.
+
+PATTERN `0 9-17 * * *` — means: "every hour from 9 a.m. through 5 p.m."
+  A) cada hora de las 09:00 a las 17:00
+  B) Cada hora, de 9 a.m. a 5 p.m.
+  C) Cada hora de 9 a.m. a 5 p.m.
+  D) Cada hora, entre las 09:00 y las 17:00
+
+PATTERN `0-29 * * * *` — means: "every minute from 0 through 29 past the hour"
+  A) Cada minuto del 0 al 29 de cada hora.
+  B) Cada minuto del minuto 0 al 29 de cada hora.
+  C) Del minuto 0 al 29 pasada la hora
+  D) cada minuto del 0 al 29 de cada hora
+
+PATTERN `0 0 1,15 * *` — means: "on the 1st and 15th at midnight"
+  A) Los días 1 y 15 a medianoche.
+  B) Los días 1 y 15 a medianoche.
+  C) A las 00:00, el día 1 y 15 del mes
+  D) los días 1 y 15 de cada mes a las 00:00
+
+PATTERN `0 12 1 1 *` — means: "on January 1 at noon"
+  A) el 1 de enero al mediodía
+  B) el 1 de enero a las 12:00
+  C) A las 12:00, el día 1 del mes, sólo en enero
+  D) El 1 de enero a mediodía.
+
+PATTERN `@daily` — means: "every day at midnight"
+  A) todos los días a las 00:00
+  B) A las 00:00
+  C) Todos los días a medianoche.
+  D) Todos los días a medianoche.
+
+PATTERN `*/30 * * * * *` — means: "every 30 seconds"
+  A) Cada 30 segundos.
+  B) Cada 30 segundos.
+  C) Cada 30 segundos
+  D) cada 30 segundos
+
+PATTERN `0 0 * * 5L` — means: "on the last Friday of the month at midnight"
+  A) El último viernes de cada mes a medianoche.
+  B) el último viernes de cada mes a medianoche
+  C) el último viernes del mes a las 00:00
+  D) A las 00:00, en el último viernes del mes
+
+PATTERN `5,10 30 9 * * MON` — means: "at five and ten seconds past the minute, every Monday at 9:30 a.m."
+  A) en los segundos 5 y 10 de cada minuto, los lunes a las 09:30
+  B) A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes
+  C) Todos los lunes a las 9:30:05 y 9:30:10.
+  D) Los lunes a las 9:30 con cinco segundos y diez centésimas.
+
+PATTERN `*/15 30 9-17 * * MON-FRI` — means: "every 15 seconds, at 30 minutes past the hour from 9 a.m. through 5:30 p.m. on Monday through Friday"
+  A) Cada 15 segundos, al minuto 30 de cada hora, de lunes a viernes, entre las 9:00 y las 17:30.
+  B) cada 15 segundos, en el minuto 30 de cada hora, de las 09:00 a las 17:30 de lunes a viernes
+  C) Cada 15 segundos, a los 30 minutos de la hora, entre las 09:00 y las 17:59, de lunes a viernes
+  D) Cada 15 segundos, al minuto 30 de cada hora, de lunes a viernes entre las 9:00 y las 17:30.
+
+PATTERN `15 30 9 * * MON` — means: "every Monday at 9:30:15 a.m."
+  A) todos los lunes a las 9:30:15 a. m.
+  B) A las 09:30:15, sólo el lunes
+  C) los lunes a las 09:30:15
+  D) Todos los lunes a las 9:30 y 15 de la mañana.
+
+PATTERN `45 17,9 0 * * *` — means: "every day at 12:09:45 a.m. and 12:17:45 a.m."
+  A) todos los días a las 00:09:45 y 00:17:45
+  B) Todos los días a las 12:09:45 y 12:17:45 de la madrugada.
+  C) A los 45 segundos del minuto, a los 9 y 17 minutos de la hora, a las 00:00
+  D) Todos los días a las 00:09:45 y 00:17:45.
+
+PATTERN `0-30 9,17-19 * * *` — means: "every minute from 0 through 30 past the hour, at 9 a.m., 5 p.m., 6 p.m., and 7 p.m."
+  A) Cada minuto del 0 al 30 a las 9:00, 17:00, 18:00 y 19:00.
+  B) cada minuto del 0 al 30, a las 09:00, 17:00, 18:00 y 19:00
+  C) Cada minuto del 0 al 30 de las 9:00, 17:00, 18:00 y 19:00.
+  D) Del minuto 0 al 30 pasada la hora, a las 09:00 y de 17:00 a 19:59
+
+PATTERN `0 22-2,12 * * *` — means: "every day at 12 p.m., 10 p.m., 11 p.m., 12 a.m., 1 a.m., and 2 a.m."
+  A) todos los días a las 12:00, 22:00, 23:00, 00:00, 01:00 y 02:00
+  B) Cada hora, a las de 22:00 a 02:00 y 12:00
+  C) Todos los días a las 12 p. m., 10 p. m., 11 p. m., 12 a. m., 1 a. m. y 2 a. m.
+  D) Todos los días a las 12:00, 22:00, 23:00, 00:00, 01:00 y 02:00.
+
+PATTERN `0 9-20,22 * * *` — means: "every hour from 9 a.m. through 8 p.m. and at 10 p.m."
+  A) Cada hora de 9 a.m. a 8 p.m. y a las 10 p.m.
+  B) Cada hora, a las de 09:00 a 20:00 y 22:00
+  C) cada hora de las 09:00 a las 20:00 y a las 22:00
+  D) Cada hora de 9 a.m. a 8 p.m. y a las 10 p.m.
+
+PATTERN `* 9,12,17 * * MON-FRI` — means: "every minute during the 9 a.m., 12 p.m., and 5 p.m. hours on Monday through Friday"
+  A) Cada minuto durante las horas de las 9:00, 12:00 y 17:00, de lunes a viernes.
+  B) Cada minuto durante las horas de las 9, 12 y 17, de lunes a viernes.
+  C) Cada minuto, a las 09:00, 12:00, y 17:00, de lunes a viernes
+  D) cada minuto de las 09:00 a las 09:59, de las 12:00 a las 12:59 y de las 17:00 a las 17:59 de lunes a viernes
+
+PATTERN `30 9 15W 6 *` — means: "on the weekday nearest the 15th in June at 9:30 a.m."
+  A) el día laborable más cercano al 15 de junio a las 09:30
+  B) El día laborable más cercano al 15 de junio a las 9:30 a. m.
+  C) A las 09:30, en el día de la semana más próximo al 15 del mes, sólo en junio
+  D) El día laborable más cercano al 15 de junio a las 9:30 a. m.
+
+PATTERN `0 0 29 2 *` — means: "on February 29 at midnight"
+  A) el 29 de febrero a medianoche
+  B) el 29 de febrero a medianoche
+  C) A las 00:00, el día 29 del mes, sólo en febrero
+  D) el 29 de febrero a las 00:00
+
+PATTERN `0 9-9 * * *` — means: "every day at 9 a.m."
+  A) todos los días a las 09:00
+  B) Cada hora, entre las 09:00 y las 09:00
+  C) Todos los días a las 9 a. m.
+  D) Todos los días a las 9 a.m.
+
+PATTERN `1/1 * * * *` — means: "every minute from 1 through 59 past the hour"
+  A) cada minuto del 1 al 59 de cada hora
+  B) Cada minuto del 1 al 59 de cada hora.
+  C) Cada minuto del minuto 1 al 59 de cada hora.
+  D) Cada 1 minutos, comenzando a los 1 minutos de la hora
+
+PATTERN `1 1 * * * *` — means: "one minute and one second past the hour, every hour"
+  A) Al minuto uno y un segundo de cada hora.
+  B) Al minuto uno y un segundo de cada hora.
+  C) A los 1 segundos del minuto, a los 1 minutos de la hora
+  D) en el minuto 1 y segundo 1 de cada hora
+
+PATTERN `59 23 31 12 5` — means: "on December 31 or on Friday in December at 11:59 p.m."
+  A) El 31 de diciembre o cualquier viernes de diciembre a las 11:59 p. m.
+  B) el 31 de diciembre o los viernes de diciembre a las 23:59
+  C) El 31 de diciembre o el viernes de diciembre a las 11:59 p.m.
+  D) A las 23:59, el día 31 del mes, y el viernes, sólo en diciembre
+
+PATTERN `* * * * * *` — means: "every second"
+  A) cada segundo
+  B) Cada segundo
+  C) Cada segundo.
+  D) Cada segundo.
+
+PATTERN `5 * * * * *` — means: "five seconds past the minute, every minute"
+  A) Cada minuto, al segundo cinco.
+  B) Cada minuto, al segundo cinco.
+  C) A los 5 segundos del minuto
+  D) en el segundo 5 de cada minuto
+
+PATTERN `5 * * * *` — means: "five minutes past the hour, every hour"
+  A) en el minuto 5 de cada hora
+  B) Cada hora, cinco minutos pasados los cero.
+  C) A los 5 minutos de la hora
+  D) A los cinco de cada hora.
+
+PATTERN `5,10 * * * *` — means: "at five and ten minutes past the hour"
+  A) A las cinco y diez.
+  B) A las cinco y diez.
+  C) A los 5 y 10 minutos de la hora
+  D) en los minutos 5 y 10 de cada hora
+
+PATTERN `0-30 9 * * *` — means: "every minute from 9 a.m. through 9:30 a.m."
+  A) Cada minuto desde las 9:00 hasta las 9:30 a. m.
+  B) Cada minuto de 9:00 a 9:30 de la mañana.
+  C) Cada minuto entre las 09:00 y las 09:30
+  D) cada minuto de las 09:00 a las 09:30
+
+PATTERN `0-30 */2 * * *` — means: "every minute from 0 through 30 past the hour, every two hours"
+  A) cada minuto del 0 al 30, cada dos horas
+  B) Del minuto 0 al 30 pasada la hora, cada 2 horas
+  C) Cada minuto del 0 al 30, cada dos horas.
+  D) Cada minuto del 0 al 30, cada dos horas.
+
+PATTERN `0 * * * *` — means: "every hour"
+  A) Cada hora
+  B) cada hora
+  C) Cada hora.
+  D) Cada hora.
+
+PATTERN `0 */3 * * *` — means: "every three hours"
+  A) Cada tres horas.
+  B) Cada tres horas.
+  C) En punto, cada 3 horas
+  D) cada tres horas

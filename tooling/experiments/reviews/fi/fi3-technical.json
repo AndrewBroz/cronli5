@@ -1,0 +1,14 @@
+[
+  {
+    "id": 18,
+    "naturalness": 4,
+    "misread": true,
+    "flag": "A skimming reader may chain '9–20 … 22' into a range ending at 22; repeating 'klo' before 22 reduces but does not eliminate the risk — the two range-like numbers in close proximity can visually fuse. Consider '... sekä erikseen klo 22' or reordering to 'klo 22 sekä klo 9–20' to break the chain."
+  },
+  {
+    "id": 20,
+    "naturalness": 4,
+    "misread": false,
+    "flag": null
+  }
+]

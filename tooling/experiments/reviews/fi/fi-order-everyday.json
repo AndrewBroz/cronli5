@@ -1,0 +1,44 @@
+[
+  {
+    "id": "d1",
+    "pick": "tammikuussa keskiyöllä joko 1. päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Month + time before the disjunction ensures both arms are clearly governed by both modifiers. Candidate 2 risks 'keskiyöllä' reading as attached only to 'maanantaisin'; candidate 3 is grammatical but front-loading the time is less natural in Finnish schedule phrasing."
+  },
+  {
+    "id": "d2",
+    "pick": "kesäkuusta syyskuuhun keskiyöllä joko 1. päivänä tai perjantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Same structure as d1: placing 'keskiyöllä' before the 'joko…tai' disjunction keeps midnight unambiguously scoped to both arms. Candidate 2 leaves midnight after the disjunction, making it read as if midnight applies only to perjantaisin."
+  },
+  {
+    "id": "d3",
+    "pick": "kesäkuusta elokuuhun keskiyöllä joko kuukauden viimeisenä päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Identical reasoning to d2: month range then time before the disjunction. The post-disjunction position in candidate 2 creates the same ambiguity risk with midnight."
+  },
+  {
+    "id": "d4",
+    "pick": "tammikuussa ja heinäkuussa klo 0.05, 5.05, 10.05, 15.05 ja 20.05 joko 1. päivänä tai maanantaisin",
+    "proposed": null,
+    "confidence": 4,
+    "reasoning": "Months first, then the time list, then the disjunction — natural Finnish topical order (context → time → event). Candidate 3 puts the long time list after the disjunction, making it look like it only modifies maanantaisin. Candidate 2 front-loads times before months, which is unnatural."
+  },
+  {
+    "id": "d5",
+    "pick": "kesäkuussa klo 0, 5, 10, 15 ja 20 aina minuuttien 0 ja 45 kohdalla joko 1.–5. päivänä tai maanantaista perjantaihin",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Leading with 'kesäkuussa' anchors the whole sentence in June from the start, then times, then the disjunction. Candidate 1 buries the month mid-clause after the time list, making it float — a reader could wonder whether June applies to the full statement or only to part of it."
+  },
+  {
+    "id": "d6",
+    "pick": "5, 10 ja 30 minuutin kohdalla klo 9–20 sekä klo 22",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "'sekä' signals an additive, parallel companion — it clearly marks klo 22 as a discrete additional hour alongside the range, not a range endpoint. Candidate 3 uses 'ja' which is more neutral and slightly less explicit about the discreteness. Candidate 2 buries the minute marks at the end, making them read as an afterthought with ambiguous scope."
+  }
+]

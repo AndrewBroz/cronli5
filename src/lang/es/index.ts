@@ -12,8 +12,10 @@ import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride,
-  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
+  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  renderStride as chooseStride, secondsConfinesMinute, segmentsOf,
+  singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
@@ -292,26 +294,6 @@ function isPinnedMinuteSeconds(
       schedule.shapes.second === 'step');
 }
 
-// The minute field's step stride for the confinement frame, or null when the
-// minute is not a stepped cadence. A `step`-shaped field (`*/6`) reads its
-// segment; a `list`-shaped field the core enumerated from a uneven step (`2/7`
-// → 2,9,…,58) recovers the progression from its values.
-function minuteStride(
-  schedule: Schedule
-): {start: number; interval: number; last: number} | null {
-  if (schedule.shapes.minute === 'step') {
-    const segment = stepSegment(schedule, 'minute');
-    const start = segment.startToken === '*' ? 0 : +segment.startToken;
-
-    return {interval: segment.interval, last:
-      segment.fires[segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segmentsOf(schedule, 'minute'));
-
-  return values && arithmeticStep(values);
-}
-
 // A stepped minute under a wildcard second and wildcard hour: bind the second
 // cadence to the minute cadence as a CONFINEMENT ("cada segundo en cada sexto
 // minuto a partir del minuto 4 de cada hora"), never the comma juxtaposition
@@ -340,21 +322,6 @@ function minuteStepConfinement(
 
   return secondsLeadClause(schedule, opts) + ' en ' + head + tail +
     ' de cada hora' + trailingQualifier(schedule, opts);
-}
-
-// Whether a stepped minute fills a wildcard hour under a wildcard second — the
-// shape the confinement frame above handles.
-function isSteppedMinuteSeconds(
-  schedule: Schedule,
-  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
-): boolean {
-  return (plan.rest.kind === 'minuteFrequency' ||
-    plan.rest.kind === 'multipleMinutes') &&
-    (schedule.shapes.second === 'wildcard' ||
-      schedule.shapes.second === 'step') &&
-    schedule.shapes.hour === 'wildcard' &&
-    schedule.pattern.minute !== '*/2' &&
-    minuteStride(schedule) !== null;
 }
 
 // The leading seconds words for a clock-point second, WITHOUT the trailing "de
@@ -444,27 +411,6 @@ function minuteConfinementRender(
   }
 
   return null;
-}
-
-function secondsConfinesMinute(schedule: Schedule): boolean {
-  const {second, minute, hour} = schedule.shapes;
-
-  // A second LIST the core enumerated from a step (`*/15` → 0,15,30,45; `3/2` →
-  // 3,5,…) is really a stride CADENCE, spoken "cada N segundos" and confined by
-  // the cadence path, not a clock-point clause; exclude it here.
-  if (second === 'list') {
-    const values = singleValues(segmentsOf(schedule, 'second'));
-
-    if (values && arithmeticStep(values)) {
-      return false;
-    }
-  }
-
-  const clockPoint = second === 'single' || second === 'range' ||
-    second === 'list';
-
-  return clockPoint && minute !== 'wildcard' && hour === 'wildcard' &&
-    !(second === 'single' && minute === 'single');
 }
 
 // The seconds lead plus its connector for a generic compose-seconds fallback:
@@ -561,23 +507,6 @@ function renderComposeSeconds(
   const lead = composeConnector(schedule, plan, opts);
 
   return lead + render(schedule, plan.rest, opts);
-}
-
-// A wildcard second over an unoffset minute */2 with a wildcard hour: the two
-// cadences read as contradictory side by side, so they bind into one.
-function isEveryOtherMinuteSeconds(
-  schedule: Schedule,
-  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
-): boolean {
-  if (plan.rest.kind !== 'minuteFrequency' ||
-      schedule.shapes.second !== 'wildcard' ||
-      schedule.shapes.hour !== 'wildcard') {
-    return false;
-  }
-
-  const minuteStep = stepSegment(schedule, 'minute');
-
-  return minuteStep.startToken === '*' && minuteStep.interval === 2;
 }
 
 // A wildcard or stepped second under a single pinned minute and specific
@@ -1892,17 +1821,14 @@ function hourRangeCadence(
 function hourContextTimes(schedule: Schedule, opts: Opts): string {
   const segments = segmentsOf(schedule, 'hour');
 
-  // Collect the point hours (singles and step fires) — a range stays a window.
+  // Collect the point hours (singles) — a range stays a window.
   const points: number[] = [];
   const hasRange = segments.some(function range(segment) {
     return segment.kind === 'range';
   });
 
   segments.forEach(function collect(segment) {
-    if (segment.kind === 'step') {
-      points.push(...segment.fires);
-    }
-    else if (segment.kind === 'single') {
+    if (segment.kind === 'single') {
       points.push(+segment.value);
     }
   });
@@ -1935,13 +1861,8 @@ function hourContextTimes(schedule: Schedule, opts: Opts): string {
         {hour: +segment.bounds[0], minute: 0},
         {hour: +segment.bounds[1], minute: 0}, opts));
     }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function each(hour) {
-        pieces.push(wholeHour(hour));
-      });
-    }
     else {
-      pieces.push(wholeHour(+segment.value));
+      pieces.push(wholeHour(+(segment as {value: string}).value));
     }
   });
 
@@ -2002,13 +1923,7 @@ function hourWindowsFromTimes(
         {hour: +segment.bounds[1], minute: 59}, opts);
     }
 
-    if (segment.kind === 'step') {
-      return joinList(segment.fires.map(function each(hour) {
-        return hourAsWindow(hour, opts);
-      }));
-    }
-
-    return hourAsWindow(+segment.value, opts);
+    return hourAsWindow(+(segment as {value: string}).value, opts);
   }));
 }
 
@@ -2026,20 +1941,15 @@ function hourSegmentTimes(
   const fromRange: boolean[] = [];
 
   segmentsOf(schedule, 'hour').forEach(function clock(segment) {
-    if (segment.kind === 'step') {
-      segment.fires.forEach(function each(hour) {
-        pieces.push(atTime(timePhrase(hour, minute, second, opts)));
-        fromRange.push(false);
-      });
-    }
-    else if (segment.kind === 'range') {
+    if (segment.kind === 'range') {
       pieces.push(timeRange(
         {hour: +segment.bounds[0], minute, second},
         {hour: +segment.bounds[1], minute, second}, opts));
       fromRange.push(true);
     }
     else {
-      pieces.push(atTime(timePhrase(+segment.value, minute, second, opts)));
+      pieces.push(atTime(timePhrase(+(segment as {value: string}).value,
+        minute, second, opts)));
       fromRange.push(false);
     }
   });
@@ -2647,9 +2557,9 @@ function monthName(token: NameToken): string {
 // strings and option normalization.
 const es: Language<SpanishStyle> = {
   describe,
-  fallback: 'un patrón cron irreconocible',
+  fallback: () => 'un patrón cron irreconocible',
   options: normalizeOptions,
-  reboot: 'al arrancar el sistema',
+  reboot: () => 'al arrancar el sistema',
   // A description ending in a period already carries it, so closing the
   // sentence must not double it.
   sentence: (description) =>

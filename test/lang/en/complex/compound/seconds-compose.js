@@ -22,6 +22,20 @@ describe('Seconds composed with the rest of the pattern:', function() {
     ]);
   });
 
+  // A minute list may carry a range segment ("9,17-19"); the confinement
+  // keeps the range as a range instead of flattening (or corrupting) it.
+  describe('minute list with a range segment', function() {
+    run([
+      ['* 9,17-19 * * * *',
+        'every second during minutes 9 and 17 through 19 of every hour'],
+      ['*/15 9,17-19 * * * *',
+        'every 15 seconds during minutes 9 and 17 through 19 of every hour'],
+      ['0-30 9,17-19 * * * *',
+        'every second from 0 through 30 past the minute during minutes 9 ' +
+        'and 17 through 19 of every hour']
+    ]);
+  });
+
   // An OFFSET-form clean second step (`0/6`, `0/30`) is a clean cadence from
   // the top of the minute, identical in meaning to `*/6` / `*/30`, so it leads
   // the SAME confinement the wildcard / clean-step second does — "every six

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "w1",
+    "pick": "lähimpänä kuukauden 15. päivää olevana arkipäivänä",
+    "proposed": "kuukauden 15. päivää lähimpänä olevana arkipäivänä",
+    "confidence": 4,
+    "reasoning": "Superlative 'lähimpänä' correctly expresses 'closest' (not merely 'near'), participial 'olevana' is standard Finnish. Word order with 'lähimpänä' fronted reads very naturally. The proposed variant puts the reference date first, which matches the typical Finnish pattern of topic-before-comment and may feel slightly more fluent. Candidate 1 ('arkipäivänä lähinnä...') is awkward with the adverbial hanging at front. Candidate 4 omits 'olevana', making it slightly clipped."
+  },
+  {
+    "id": "h1",
+    "pick": "klo 9–20 sekä klo 22",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "The combination of 'sekä' (a coordinating conjunction that more strongly signals a distinct additional element than 'ja') and the repeated 'klo' before 22 gives two independent signals that 22 is separate from the range, not its endpoint. 'klo 9–20 ja 22' is risky because '22' without its own 'klo' can visually suggest the range extends to 22. 'klo 9–20 ja klo 22' is acceptable but 'sekä' is the clearest choice here."
+  },
+  {
+    "id": "h2",
+    "pick": "klo 9 ja klo 17–19",
+    "proposed": null,
+    "confidence": 5,
+    "reasoning": "Repeating 'klo' before both elements creates parallel structure and clearly marks each as an independent time expression. No ambiguity risk: 9 is not adjacent to 17, so there is no danger of reading '9 ja 17' as a range. 'ja' is perfectly natural here. 'sekä klo 17–19' would also be fine but feels slightly more formal than needed; 'klo 9 ja 17–19' without the second 'klo' is acceptable but less clean."
+  }
+]

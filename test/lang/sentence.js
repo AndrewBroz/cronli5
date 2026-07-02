@@ -13,67 +13,67 @@ import zh from '../../src/lang/zh/index.js';
 // follows, a period closes.
 describe('Complete-sentence wrapping (lang.sentence):', function() {
   it('English', function() {
-    expect(en.sentence('every minute')).to.equal('Runs every minute.');
+    expect(en.sentence('every minute', en.options())).to.equal('Runs every minute.');
   });
 
   it('English does not double the period after an abbreviation', function() {
     // A fragment ending in "a.m."/"p.m." already carries a period; the
     // sentence wrapper must not append a second one.
-    expect(en.sentence('every day at 9 a.m.'))
+    expect(en.sentence('every day at 9 a.m.', en.options()))
       .to.equal('Runs every day at 9 a.m.');
-    expect(en.sentence('every Monday at 5:30 p.m.'))
+    expect(en.sentence('every Monday at 5:30 p.m.', en.options()))
       .to.equal('Runs every Monday at 5:30 p.m.');
   });
 
   it('English still closes a non-abbreviation fragment', function() {
-    expect(en.sentence('every day at midnight'))
+    expect(en.sentence('every day at midnight', en.options()))
       .to.equal('Runs every day at midnight.');
   });
 
   it('German', function() {
-    expect(de.sentence('täglich um Mitternacht'))
+    expect(de.sentence('täglich um Mitternacht', de.options()))
       .to.equal('Läuft täglich um Mitternacht.');
   });
 
   it('German does not double the period after an ordinal', function() {
     // A fragment ending in a German ordinal already carries a period
     // ("…am 8."); the sentence wrapper must not append a second one.
-    expect(de.sentence('am 3., 5. und 8.'))
+    expect(de.sentence('am 3., 5. und 8.', de.options()))
       .to.equal('Läuft am 3., 5. und 8.');
   });
 
   it('Spanish', function() {
-    expect(es.sentence('cada minuto')).to.equal('Se ejecuta cada minuto.');
+    expect(es.sentence('cada minuto', es.options())).to.equal('Se ejecuta cada minuto.');
   });
 
   it('Spanish does not double a period already on the fragment', function() {
-    expect(es.sentence('a las 9 a.m.'))
+    expect(es.sentence('a las 9 a.m.', es.options()))
       .to.equal('Se ejecuta a las 9 a.m.');
   });
 
   it('Finnish', function() {
-    expect(fi.sentence('joka minuutti'))
+    expect(fi.sentence('joka minuutti', fi.options()))
       .to.equal('Suoritetaan joka minuutti.');
   });
 
   it('Finnish does not double a period already on the fragment', function() {
-    expect(fi.sentence('kuukauden 8.'))
+    expect(fi.sentence('kuukauden 8.', fi.options()))
       .to.equal('Suoritetaan kuukauden 8.');
   });
 
   it('Portuguese', function() {
-    expect(pt.sentence('a cada minuto'))
+    expect(pt.sentence('a cada minuto', pt.options()))
       .to.equal('Se executa a cada minuto.');
   });
 
   it('Portuguese does not double a period already on the fragment',
     function() {
-      expect(pt.sentence('às 9 da manhã.'))
+      expect(pt.sentence('às 9 da manhã.', pt.options()))
         .to.equal('Se executa às 9 da manhã.');
     });
 
   it('French', function() {
-    expect(fr.sentence('chaque minute'))
+    expect(fr.sentence('chaque minute', fr.options()))
       .to.equal('S\'exécute chaque minute.');
   });
 
@@ -81,12 +81,12 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
     // A fr fragment ending in an abbreviation period (e.g. "9 h 30 min 15 s."
     // never carries one, but the guard mirrors the other languages) must not
     // gain a second period.
-    expect(fr.sentence('tous les jours à 9 h.'))
+    expect(fr.sentence('tous les jours à 9 h.', fr.options()))
       .to.equal('S\'exécute tous les jours à 9 h.');
   });
 
   it('Chinese', function() {
-    expect(zh.sentence('每分钟')).to.equal('运行时间：每分钟。');
+    expect(zh.sentence('每分钟', zh.options())).to.equal('运行时间：每分钟。');
   });
 });
 

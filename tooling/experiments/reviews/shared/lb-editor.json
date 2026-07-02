@@ -1,0 +1,20 @@
+[
+  {
+    "id": "b1",
+    "pick": "at 2, 3, and 4 minutes past the hour from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "The hour bound (17) and the minute list are orthogonal constraints; fusing them into '5:04 p.m.' implies the schedule itself ends at 5:04, which is false. Bare '5 p.m.' keeps the two dimensions separate and unambiguous."
+  },
+  {
+    "id": "b2",
+    "pick": "at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m.",
+    "confidence": 5,
+    "reasoning": "'Through 5:30 p.m.' is especially misleading because 5:30 reads as a natural half-hour cutoff, suggesting the schedule runs until 5:30 rather than that 5:30 is merely one firing time within the last allowed hour. Bare '5 p.m.' is unambiguous."
+  },
+  {
+    "id": "b3",
+    "pick": "every minute from 2 through 8 past the hour, from 9 a.m. through 5 p.m.",
+    "confidence": 4,
+    "reasoning": "A contiguous window does give '5:08 p.m.' a more legitimate reading (the window genuinely closes at :08), but it still conflates the hour-range bound with the minute-range bound. Keeping the two ranges structurally separate — hour range stated as bare hours, minute range stated as minutes-past — is cleaner and avoids any false impression that 5:08 p.m. is a special cutoff. Confidence is 4 rather than 5 because the argument for candidate 1 is non-trivial here."
+  }
+]

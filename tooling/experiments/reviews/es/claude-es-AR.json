@@ -1,0 +1,641 @@
+{
+  "0 9 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "identical to A"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'; just a time"
+      },
+      "D": {
+        "natural": 2,
+        "correct": true,
+        "note": "'09.00 h' formal/Iberian, not rioplatense"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y correcto"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y correcto"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite 'todos los días', solo la hora"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'09.00 h' algo formal pero válido"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "correcto pero omite 'todos los días'"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'09.00 h' algo formal pero válido"
+      },
+      "best": "A"
+    }
+  ],
+  "30 9 * * *": [
+    {
+      "A": {
+        "natural": 2,
+        "correct": true,
+        "note": "'09.30 h' formal/Iberian style"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "correct but slightly wordy spelled-out"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "best": "D"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "formal pero correcto y natural"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite la frecuencia diaria"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "muy natural en rioplatense"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "claro y natural"
+      },
+      "best": "D"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "formal pero natural en Argentina"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite 'todos los días'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "muy natural y explícito"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "best": "D"
+    }
+  ],
+  "0 14 * * *": [
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "'14 h' fine, slightly formal"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "C": {
+        "natural": 2,
+        "correct": true,
+        "note": "'14.00 h' Iberian style"
+      },
+      "D": {
+        "natural": 3,
+        "correct": false,
+        "note": "'a las 2' ambiguous; reads as 2 a.m."
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 'las 14 h' habitual"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite la frecuencia diaria"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "'14.00 h' válido, leve formalismo"
+      },
+      "D": {
+        "natural": 2,
+        "correct": false,
+        "note": "'las 2' es ambiguo, parece 2 a.m."
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "'14 h' muy natural en Argentina"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite 'todos los días'"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "'14.00 h' válido"
+      },
+      "D": {
+        "natural": 3,
+        "correct": false,
+        "note": "'a las 2' ambiguo; sugiere 2 a.m."
+      },
+      "best": "A"
+    }
+  ],
+  "30 14 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, clear 24h"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "clear, natural spoken form"
+      },
+      "C": {
+        "natural": 2,
+        "correct": true,
+        "note": "'14.30 h' Iberian style"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "claro y natural"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "muy natural y preciso"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "'14.30 h' válido, leve formalismo"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite la frecuencia diaria"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "muy natural y explícito"
+      },
+      "C": {
+        "natural": 4,
+        "correct": true,
+        "note": "'14.30 h' válido"
+      },
+      "D": {
+        "natural": 3,
+        "correct": false,
+        "note": "'dos y media' sin 'tarde' ambiguo"
+      },
+      "best": "A"
+    }
+  ],
+  "0 22 * * *": [
+    {
+      "A": {
+        "natural": 2,
+        "correct": true,
+        "note": "'22.00 h' Iberian style"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'a las 22' clear and natural"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "'22.00 h' válido, leve formalismo"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite la frecuencia diaria"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "muy natural en rioplatense"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'las 22' natural y claro"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "'22.00 h' válido"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite 'todos los días'"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'a las 22' natural y claro"
+      },
+      "best": "C"
+    }
+  ],
+  "0 0 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 'a la medianoche' also common"
+      },
+      "B": {
+        "natural": 2,
+        "correct": true,
+        "note": "'00.00 h' Iberian/technical"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "identical to A"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 'a medianoche' idiomático"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "'00.00 h' técnico, menos natural"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "correcto pero omite frecuencia"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 'a medianoche' idiomático"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "B": {
+        "natural": 3,
+        "correct": true,
+        "note": "'00.00 h' técnico pero correcto"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite 'todos los días'"
+      },
+      "D": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "best": "A"
+    }
+  ],
+  "0 12 * * *": [
+    {
+      "A": {
+        "natural": 2,
+        "correct": true,
+        "note": "'12.00 h' Iberian; not idiomatic"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "identical to B"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 3,
+        "correct": true,
+        "note": "'12.00 h' técnico, menos natural"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "'al mediodía' idiomático y natural"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "'al mediodía' idiomático y natural"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "correcto pero omite frecuencia"
+      },
+      "best": "B"
+    },
+    {
+      "A": {
+        "natural": 4,
+        "correct": true,
+        "note": "'12.00 h' válido pero menos natural que mediodía"
+      },
+      "B": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite 'todos los días'"
+      },
+      "best": "B"
+    }
+  ],
+  "30 14 * * 1-5": [
+    {
+      "A": {
+        "natural": 2,
+        "correct": true,
+        "note": "'14.30 h' Iberian style"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "natural, clear order"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, idiomatic rioplatense"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'dos y media' ok but ambiguous am/pm"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural; 'de lunes a viernes' correcto"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "válido; orden invertido algo menos fluido"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "claro y natural con 14:30"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'dos y media' natural; falta 'de la tarde'"
+      },
+      "best": "C"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "orden invertido algo menos fluido"
+      },
+      "C": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro"
+      },
+      "D": {
+        "natural": 4,
+        "correct": true,
+        "note": "'dos y media' sin 'tarde' algo ambiguo"
+      },
+      "best": "C"
+    }
+  ],
+  "0 8,20 * * *": [
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural, clear, unambiguous"
+      },
+      "B": {
+        "natural": 2,
+        "correct": true,
+        "note": "'08.00 h/20.00 h' Iberian style"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omits 'todos los días'"
+      },
+      "D": {
+        "natural": 2,
+        "correct": true,
+        "note": "'a.m./p.m.' anglicism, uncommon in writing"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y claro; horas en palabras"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "'08.00 h y 20.00 h' válido, formal"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite frecuencia; conciso"
+      },
+      "D": {
+        "natural": 3,
+        "correct": true,
+        "note": "'a.m./p.m.' poco usado en rioplatense"
+      },
+      "best": "A"
+    },
+    {
+      "A": {
+        "natural": 5,
+        "correct": true,
+        "note": "natural y explícito"
+      },
+      "B": {
+        "natural": 4,
+        "correct": true,
+        "note": "'08.00 h y 20.00 h' válido"
+      },
+      "C": {
+        "natural": 3,
+        "correct": true,
+        "note": "omite 'todos los días'"
+      },
+      "D": {
+        "natural": 3,
+        "correct": false,
+        "note": "'a.m./p.m.' poco usado en Argentina"
+      },
+      "best": "A"
+    }
+  ]
+}

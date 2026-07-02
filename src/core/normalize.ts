@@ -5,7 +5,7 @@
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
 import type {Field, Pattern} from './schedule.js';
-import {includes, toFieldNumber, unique} from './util.js';
+import {enumerateFires, includes, toFieldNumber, unique} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
 // The fixed-cycle time fields: their step intervals are measured against a
@@ -81,9 +81,145 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
     return '*';
   }
 
-  return unique(segments).sort(function ascending(a, b) {
-    return firstFire(a, spec) - firstFire(b, spec);
-  }).join(',');
+  // Arms whose covered values intersect merge into their coverage union
+  // (stating both reads as a duplicate: "MON-FRI,WED"). A merged run can
+  // itself cover the full field, so the full-span collapse re-applies.
+  const merged = mergeOverlappingArms(unique(segments), spec)
+    .map(function fullSpan(segment) {
+      return collapseFullSpanRange(segment, spec);
+    });
+
+  if (merged.indexOf('*') !== -1) {
+    return '*';
+  }
+
+  return unique(expandStepArms(merged, spec))
+    .sort(function ascending(a, b) {
+      return firstFire(a, spec) - firstFire(b, spec);
+    }).join(',');
+}
+
+// A step is a cadence only when it is the whole field. Inside a list it
+// reads as its enumerated fires (the reviewed weekday display already
+// treats step arms this way), so every arm becomes a single or a range and
+// the list sorts into chronological display order — a step arm's fires
+// never straddle a neighboring arm in the prose. Runs after the overlap
+// merge, whose absorption has already kept a dominant step ("9,*/3" is
+// "*/3") as the whole field.
+function expandStepArms(arms: string[], spec: FieldSpec): string[] {
+  if (arms.length < 2) {
+    return arms;
+  }
+
+  const top = typeof spec.top === 'number' ? spec.top : spec.max;
+
+  return arms.flatMap(function expand(arm) {
+    if (!includes(arm, '/')) {
+      return [arm];
+    }
+
+    return enumerateFires(arm, spec.min, top).map(function token(fire) {
+      return '' + fire;
+    });
+  });
+}
+
+// Merge canonical list arms whose covered values intersect into their
+// coverage union: overlapping arms state the same values twice ("1-5,3",
+// hour 18 in "2/4,18-20"), so the union reads as one coverage. When one
+// arm alone covers the whole union, that arm survives as written ("9,*/3"
+// is "*/3", keeping the step's cadence identity); otherwise the union
+// decomposes into its contiguous runs. Disjoint arms — even adjacent
+// ones — are left exactly as classified.
+function mergeOverlappingArms(arms: string[], spec: FieldSpec): string[] {
+  if (arms.length < 2) {
+    return arms;
+  }
+
+  const top = typeof spec.top === 'number' ? spec.top : spec.max;
+  const groups: {covered: Set<number>; arms: string[]}[] = [];
+
+  // Group arms transitively by coverage intersection.
+  arms.forEach(function place(arm) {
+    const coverage = enumerateFires(arm, spec.min, top);
+    const merged = {arms: [arm], covered: new Set(coverage)};
+
+    groups.filter(function touches(group) {
+      return coverage.some(function shared(value) {
+        return group.covered.has(value);
+      });
+    }).forEach(function absorb(group) {
+      group.covered.forEach(function keep(value) {
+        merged.covered.add(value);
+      });
+      merged.arms.unshift(...group.arms);
+      groups.splice(groups.indexOf(group), 1);
+    });
+
+    groups.push(merged);
+  });
+
+  return groups.flatMap(function flatten(group) {
+    if (group.arms.length === 1) {
+      return group.arms;
+    }
+
+    const dominant = group.arms.find(function covers(arm) {
+      return enumerateFires(arm, spec.min, top).length === group.covered.size;
+    });
+
+    if (dominant) {
+      return [dominant];
+    }
+
+    return coverageRuns(group, spec, top);
+  });
+}
+
+// Decompose a merged group's covered values into contiguous runs, each a
+// single or a range arm. When the group contained a wrap range and the
+// values still touch both cycle ends, the first and last runs rejoin into
+// one wrap range, so a merged overnight window keeps its `22-2` form.
+function coverageRuns(
+  group: {covered: Set<number>; arms: string[]},
+  spec: FieldSpec,
+  top: number
+): string[] {
+  const values = Array.from(group.covered).sort(function numeric(a, b) {
+    return a - b;
+  });
+  const runs: [number, number][] = [];
+
+  values.forEach(function extend(value) {
+    const last = runs[runs.length - 1];
+
+    if (last && value === last[1] + 1) {
+      last[1] = value;
+
+      return;
+    }
+
+    runs.push([value, value]);
+  });
+
+  const wraps = group.arms.some(function wrapRange(arm) {
+    const bounds = arm.split('-');
+
+    return bounds.length === 2 && !includes(arm, '/') &&
+      +bounds[0] > +bounds[1];
+  });
+  const first = runs[0];
+  const final = runs[runs.length - 1];
+
+  if (wraps && runs.length > 1 && first[0] === spec.min && final[1] === top) {
+    runs.pop();
+    runs.shift();
+    runs.push([final[0], first[1]]);
+  }
+
+  return runs.map(function arm([from, to]) {
+    return from === to ? '' + from : from + '-' + to;
+  });
 }
 
 // Rewrite a segment's value tokens to their canonical numbers: a name

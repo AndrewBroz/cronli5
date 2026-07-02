@@ -13,8 +13,10 @@ import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride,
-  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
+  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  renderStride as chooseStride, secondsConfinesMinute, segmentsOf,
+  singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {toFieldNumber} from '../../core/util.js';
@@ -422,26 +424,6 @@ function composeHourCadence(
     hourRangeCadence(schedule, minute, opts);
 }
 
-// The minute field's step stride for the confinement frame, or null when the
-// minute is not a stepped cadence. A `step`-shaped field reads its segment; a
-// `list`-shaped field the core enumerated from a uneven step (`2/7` → 2,9,…,58)
-// recovers the progression from its values.
-function minuteStride(
-  schedule: Schedule
-): {start: number; interval: number; last: number} | null {
-  if (schedule.shapes.minute === 'step') {
-    const segment = stepSegment(schedule, 'minute');
-    const start = segment.startToken === '*' ? 0 : +segment.startToken;
-
-    return {interval: segment.interval, last:
-      segment.fires[segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segmentsOf(schedule, 'minute'));
-
-  return values && arithmeticStep(values);
-}
-
 // A stepped minute under a wildcard/stepped second and wildcard hour: bind the
 // second cadence to the minute cadence as a CONFINEMENT ("joka sekunti joka
 // kuudentena minuuttina jokaisen tunnin minuutista 4 alkaen"), never the comma
@@ -471,44 +453,6 @@ function minuteStepConfinement(
 
   return secondsLeadClause(schedule, opts) + head + tail +
     trailingQualifier(schedule, opts);
-}
-
-// Whether a stepped minute fills a wildcard hour under a wildcard/stepped
-// second — the shape the confinement frame above handles.
-function isSteppedMinuteSeconds(
-  schedule: Schedule,
-  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
-): boolean {
-  return (plan.rest.kind === 'minuteFrequency' ||
-    plan.rest.kind === 'multipleMinutes') &&
-    (schedule.pattern.second === '*' || schedule.shapes.second === 'step') &&
-    schedule.shapes.hour === 'wildcard' &&
-    schedule.pattern.minute !== '*/2' &&
-    minuteStride(schedule) !== null;
-}
-
-// Whether a clock-point second (list, range, or single) sits under a restricted
-// minute and a wildcard hour — the shape that must CONFINE the minute rather
-// than juxtapose it behind a comma (two independent schedules). A second LIST
-// the core enumerated from a step (`3/2`) is really a stride cadence and stays
-// out. The single-second + single-minute pair folds into one shared "kohdalla"
-// already ("joka tunti 30 minuutin ja 15 sekunnin kohdalla") and is excluded.
-function secondsConfinesMinute(schedule: Schedule): boolean {
-  const {second, minute, hour} = schedule.shapes;
-
-  if (second === 'list') {
-    const values = singleValues(segmentsOf(schedule, 'second'));
-
-    if (values && arithmeticStep(values)) {
-      return false;
-    }
-  }
-
-  const clockPoint = second === 'single' || second === 'range' ||
-    second === 'list';
-
-  return clockPoint && minute !== 'wildcard' && hour === 'wildcard' &&
-    !(second === 'single' && minute === 'single');
 }
 
 // Whether a compose-seconds plan over a minute-cadence/list/range rest carries
@@ -618,22 +562,6 @@ function renderComposeSeconds(
   const lead = restOwnsLead ? '' : secondsLeadClause(schedule, opts) + ', ';
 
   return lead + render(schedule, plan.rest, opts);
-}
-
-// A wildcard second over an unoffset minute */2 with a wildcard hour: the two
-// cadences read as contradictory side by side, so they bind into one.
-function isEveryOtherMinuteSeconds(
-  schedule: Schedule,
-  plan: Extract<PlanNode, {kind: 'composeSeconds'}>
-): boolean {
-  if (plan.rest.kind !== 'minuteFrequency' || schedule.pattern.second !== '*' ||
-      schedule.shapes.hour !== 'wildcard') {
-    return false;
-  }
-
-  const seg = stepSegment(schedule, 'minute');
-
-  return seg.startToken === '*' && seg.interval === 2;
 }
 
 // The single-fixed-minute confinement: bind the seconds to the explicit clock
@@ -1663,29 +1591,22 @@ function hourWindowsFromTimes(
       pieces.push(rangeDigits({hour: +segment.bounds[0], minute: 0},
         {hour: +segment.bounds[1], minute: 59}, opts));
     }
-    else if (segment.kind === 'step') {
-      pieces.push(...segment.fires.map(function each(hour: number) {
-        return hourWindowDigits(hour, opts);
-      }));
-    }
     else {
-      pieces.push(hourWindowDigits(+segment.value, opts));
+      pieces.push(hourWindowDigits(+(segment as {value: string}).value,
+        opts));
     }
   });
 
   return 'klo ' + joinList(pieces);
 }
 
-// The on-the-hour fires of a range-free hour segment set, in order: a step
-// segment contributes its enumerated fires, a single its one value.
+// The on-the-hour fires of a range-free hour segment set, in order (a
+// single contributes its one value; normalization expands step arms).
 function hourSegmentFires(segments: Segment[]): number[] {
   const hours: number[] = [];
 
   segments.forEach(function each(segment: Segment) {
-    if (segment.kind === 'step') {
-      hours.push(...segment.fires);
-    }
-    else if (segment.kind === 'single') {
+    if (segment.kind === 'single') {
       hours.push(+segment.value);
     }
   });
@@ -1710,18 +1631,14 @@ function hourSegmentTimes(
   const pieces: string[] = [];
 
   segmentsOf(schedule, 'hour').forEach(function clock(segment: Segment) {
-    if (segment.kind === 'step') {
-      pieces.push(...segment.fires.map(function each(hour: number) {
-        return timeDigits(hour, minute, second, opts);
-      }));
-    }
-    else if (segment.kind === 'range') {
+    if (segment.kind === 'range') {
       pieces.push(rangeDigits(
         {hour: +segment.bounds[0], minute, second},
         {hour: +segment.bounds[1], minute, second}, opts));
     }
     else {
-      pieces.push(timeDigits(+segment.value, minute, second, opts));
+      pieces.push(timeDigits(+(segment as {value: string}).value, minute,
+        second, opts));
     }
   });
 
@@ -2238,9 +2155,9 @@ function joinList(items: string[]): string {
 // strings and option normalization.
 const fi: Language = {
   describe,
-  fallback: 'tunnistamaton cron-lauseke',
+  fallback: () => 'tunnistamaton cron-lauseke',
   options: normalizeOptions,
-  reboot: 'järjestelmän käynnistyessä',
+  reboot: () => 'järjestelmän käynnistyessä',
   // A description ending in a period already carries it, so closing the
   // sentence must not double it.
   sentence: (description) =>
