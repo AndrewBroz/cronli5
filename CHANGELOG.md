@@ -6,6 +6,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.9.0]
+
+Breaking for external custom language modules only: the `Language`
+contract's `reboot`/`fallback`/`sentence` are now options-aware functions.
+`cronli5(pattern, options)` itself is unchanged.
+
 ### Changed
 
 - **A step arm inside a list reads as its fires, and display units sort
