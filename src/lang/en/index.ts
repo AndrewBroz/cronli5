@@ -4,8 +4,8 @@
 // See docs/i18n-design.md.
 
 import {
-  arithmeticStep, hourListStride, minuteStride, offsetCleanStride,
-  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
+  arithmeticStep, minuteStride, renderStride as chooseStride, segmentsOf,
+  singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {isOpenStep} from '../../core/shapes.js';
@@ -227,7 +227,7 @@ function isDenseCadence(schedule: Schedule, opts: NormalizedOptions): boolean {
 // phrasing the confinement form produces, just hoisted into the dense lead).
 function denseHourFragment(schedule: Schedule,
   opts: NormalizedOptions): string {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (stride) {
     return hourStrideCadence(stride, opts);
@@ -1558,47 +1558,13 @@ function hourStrideCadence(stride: {start: number; interval: number;
 // form, so only the endpoint-bearing case routes here.
 function unevenHourCadence(schedule: Schedule,
   opts: NormalizedOptions): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
-  if (!stride || offsetCleanStride(stride)) {
+  if (!stride || stride.offsetClean) {
     return null;
   }
 
   return hourStrideCadence(stride, opts);
-}
-
-// The hour field's stride, or null when the hour is not a cadence: a step
-// segment yields its {start, interval, last} directly; an all-single hour
-// list yields one only when its values form a step progression (so an irregular
-// list like 9,17 keeps enumerating). The Schedule is unchanged — the renderer
-// recognizes the stride and speaks it as a cadence instead of the clock-time
-// cross-product.
-function hourStride(schedule: Schedule):
-  {start: number; interval: number; last: number} | null {
-  // Reached only from the clock-time paths, which run under discrete hours
-  // and so always carry hour segments.
-  const segments = segmentsOf(schedule, 'hour');
-
-  if (segments.length === 1 && segments[0].kind === 'step') {
-    const segment = segments[0];
-
-    // A bounded step that fires only once (e.g. `9-10/5` → just 9) is a single
-    // value, not a stride: it has no interval to speak and no endpoint to pin.
-    if (segment.fires.length < 2) {
-      return null;
-    }
-
-    const start = segment.startToken === '*' ?
-      0 :
-      +segment.startToken.split('-')[0];
-
-    return {interval: segment.interval, last: segment.fires[
-      segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segments);
-
-  return values && hourListStride(values);
 }
 
 // The second's status against a pinned minute: a wildcard or sub-minute step
@@ -1649,7 +1615,7 @@ function hourCadenceLead(schedule: Schedule, minute: number,
 // the Schedule is unchanged.
 function hourCadence(schedule: Schedule, minute: number,
   opts: NormalizedOptions): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (!stride) {
     return null;
@@ -1663,7 +1629,7 @@ function hourCadence(schedule: Schedule, minute: number,
   // bounded or uneven stride has no clean wrap, so its endpoint-pinning cadence
   // ("every five hours from midnight through 8 p.m.") reads better however few.
   if (schedule.pattern.second === '0' && fires <= maxClockTimes &&
-      offsetCleanStride(stride)) {
+      stride.offsetClean) {
     return null;
   }
 
