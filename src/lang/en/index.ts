@@ -2279,26 +2279,33 @@ function dayUnionWeekdayPieces(schedule: Schedule,
   return pieces;
 }
 
-// An interval-2 day-of-month step covering a parity set reads as "an
-// odd/even-numbered day", mirroring the month and year parity idioms: `*/2`
-// and `1/2` are the odd days, `2/2` the even; any other start enumerates
-// instead. Null when the field is not an open interval-2 step.
-function oddEvenDay(dateField: string): string | null {
-  if (!isOpenStep(dateField)) {
+// The parity idiom for an interval-2 open step: `*/2` and `1/2` cover the
+// odd values, `2/2` the even; any other start is a partial set with no idiom.
+// `odd`/`even` are the field's own words (day vs month phrasing).
+function parityIdiom(field: string, odd: string,
+  even: string): string | null {
+  if (!isOpenStep(field)) {
     return null;
   }
 
-  const [start, step] = dateField.split('/');
+  const [start, step] = field.split('/');
 
   if (+step !== 2) {
     return null;
   }
 
   if (start === '*' || start === '1') {
-    return 'an odd-numbered day';
+    return odd;
   }
 
-  return start === '2' ? 'an even-numbered day' : null;
+  return start === '2' ? even : null;
+}
+
+// An interval-2 day-of-month step covering a parity set reads as "an
+// odd/even-numbered day", mirroring the month and year parity idioms; any
+// other start enumerates instead. Null when the field is not such a step.
+function oddEvenDay(dateField: string): string | null {
+  return parityIdiom(dateField, 'an odd-numbered day', 'an even-numbered day');
 }
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
@@ -2498,24 +2505,11 @@ function monthName(schedule: Schedule, opts: NormalizedOptions): string {
 
 // An interval-2 month step covering a full parity set reads as "every
 // odd/even-numbered month" — the only month cadence, since the parity
-// disambiguates the start. `*/2` and `1/2` are the odd months, `2/2` the even;
-// any other start is a partial set that enumerates instead. Null otherwise.
+// disambiguates the start; any other start is a partial set that enumerates
+// instead. Null when the field is not such a step.
 function oddEvenMonth(monthField: string): string | null {
-  if (!isOpenStep(monthField)) {
-    return null;
-  }
-
-  const [start, step] = monthField.split('/');
-
-  if (+step !== 2) {
-    return null;
-  }
-
-  if (start === '*' || start === '1') {
-    return 'every odd-numbered month';
-  }
-
-  return start === '2' ? 'every even-numbered month' : null;
+  return parityIdiom(monthField,
+    'every odd-numbered month', 'every even-numbered month');
 }
 
 // Render the weekday field as names. Ranges read in their connective form
