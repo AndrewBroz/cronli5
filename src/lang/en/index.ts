@@ -203,11 +203,10 @@ function isCadenceShape(shape: Schedule['shapes'][keyof Schedule['shapes']]):
 // inside the restructured frame. A `clockTimes` rest is excluded: there the
 // minute and hour fold into a named clock-time enumeration ("every 15 seconds
 // of 9:00 a.m., 9:25 a.m., …"), a compact form already better than a run-on, so
-// it is left as is. Restricted to the default dialect's voice — the same scope
-// as the confinement frame — so other dialects and the compact `short` form
-// keep their established phrasing.
+// it is left as is. The compact `short` form keeps its established
+// juxtaposed phrasing — the same scope as the confinement frame.
 function isDenseCadence(schedule: Schedule, opts: NormalizedOptions): boolean {
-  if (!opts.style.untilWindow || opts.short ||
+  if (opts.short ||
       schedule.plan.kind !== 'composeSeconds' ||
       schedule.plan.rest.kind === 'clockTimes' ||
       isDayUnion(schedule, opts)) {
@@ -568,9 +567,10 @@ function renderMinuteFrequency(schedule: Schedule,
   }
   else if (plan.hours.kind === 'window') {
     // A minute-frequency cadence ("every 15 minutes") fills the hours from a
-    // STEPPED minute, never a wildcard one, so its run is not continuous to the
-    // top of the next hour: the default dialect reads "through <last hour>" and
-    // every other dialect closes on the step's last fire (`last`).
+    // STEPPED minute, never a wildcard one, so its run is not continuous to
+    // the top of the next hour: an inclusive-through dialect reads "through
+    // <last hour>" and an exclusive one closes on the step's last fire
+    // (`last`).
     phrase += ' ' + rangeWindow({
       continuous: false,
       from: plan.hours.from,
@@ -850,36 +850,38 @@ function boundedWindow(plan: PlanOf<'hourRange'>):
   return {from: plan.from, closeMinute, to: plan.to, continuous};
 }
 
-// A contiguous hour range as a window phrase. The default English dialect
-// reads a MULTI-hour range whose run is CONTINUOUS to the top of the next hour
-// as an up-to-but-not-including window — "from 9 a.m. until 6 p.m." (the close
-// is the top of the hour after the last, the sense English uses for time
-// windows: 9-17 runs until 6 p.m.); 23 wraps to midnight. The run is continuous
-// only when the minute is wildcard, so every minute of the final hour fires; a
-// restricted minute fires at discrete points (e.g. only `:00`), so the run
-// stops within the final hour and the default dialect reverts to the bare
-// "through <last hour>" span (the minute is named in its own lead clause, so
-// the close stays on the top of the final hour rather than restating a last
-// fire). Every other dialect (and the compact `short` form) always speaks the
-// span, closing on the minute field's last fire within the final hour. A
-// single-hour sub-hour window (`from === to`, e.g. */15 9 firing 9:00 through
-// 9:45) is NOT a multi-hour range: its close is a real fire inside the hour, so
-// it always keeps "through" — naming "until 10 a.m." would overstate the span
-// past the last fire.
+// A contiguous hour range as a window phrase. Every stated bound is true of
+// the run. A MULTI-hour range whose run is CONTINUOUS to the top of the next
+// hour (a wildcard minute fills every minute of the final hour) closes on
+// the true end — the top of the hour after the last, spoken with the
+// dialect's exclusive `until` connective ("from 9 a.m. until 6 p.m.", "from
+// 9am until 6pm"); 23 wraps to midnight. A restricted minute fires at
+// discrete points (e.g. only `:00`), so the run stops within the final
+// hour: an INCLUSIVE through connective ("through 5 p.m.") closes on the
+// bare hour (the minute lives in its own lead clause), while an exclusive
+// one ("to", "-") must close on the minute field's last fire within the
+// final hour or it would understate the run. The compact `short` form
+// always closes on the last fire. A single-hour sub-hour window (`from ===
+// to`, e.g. */15 9 firing 9:00 through 9:45) is NOT a multi-hour range: its
+// close is a real fire inside the hour, so it always closes on that fire —
+// naming "until 10 a.m." would overstate the span past the last fire.
 function rangeWindow(window: HourWindowSpec,
   opts: NormalizedOptions): string {
   const {from, to, throughMinute, continuous} = window;
   const open = 'from ' + getTime({hour: from, minute: 0}, opts);
+  const multiHour = !opts.short && from !== to;
 
-  if (opts.style.untilWindow && !opts.short && from !== to) {
-    return continuous ?
-      open + opts.style.until +
-        getTime({hour: (to + 1) % 24, minute: 0}, opts) :
-      open + through(opts) + getTime({hour: to, minute: 0}, opts);
+  if (multiHour && continuous) {
+    return open + opts.style.until +
+      getTime({hour: (to + 1) % 24, minute: 0}, opts);
   }
 
+  const closeMinute = multiHour && opts.style.inclusiveThrough ?
+    0 :
+    throughMinute;
+
   return open + through(opts) +
-    getTime({hour: to, minute: throughMinute}, opts);
+    getTime({hour: to, minute: closeMinute}, opts);
 }
 
 // An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m." (or "from 9 a.m.
@@ -1369,10 +1371,9 @@ function confinementEligible(schedule: Schedule,
 // duration-frame forms.
 function confinement(schedule: Schedule,
   opts: NormalizedOptions): string | null {
-  // The confinement frame is scoped to the default (US) dialect, the one that
-  // carries the until-window; every other dialect and the compact `short` form
-  // keep their established juxtaposed-cadence / duration-frame phrasing.
-  if (!opts.style.untilWindow || opts.short) {
+  // The compact `short` form keeps the established juxtaposed-cadence /
+  // duration-frame phrasing; every dialect speaks the confinement frame.
+  if (opts.short) {
     return null;
   }
 
@@ -2157,18 +2158,17 @@ function monthFoldsIntoDate(schedule: Schedule): boolean {
 
 // When BOTH the date and weekday are restricted, cron fires on the UNION of
 // the two day sets — a point the old "on <dom> or on <dow>" form blurred,
-// reading as alternatives (or, with "and", as an intersection). The default
+// reading as alternatives (or, with "and", as an intersection). Every
 // dialect reframes the union as a predicate over a single variable, the day:
 // "whenever the day is <dom-predicate> or <dow-predicate(s)>", a flat or-list
 // that reads as a union for naive, logical, and technical readers alike. The
 // month leads the whole clause ("in June …") and the time/cadence sits between
 // the two, so this form is composed at the top level (see `dayUnionMonthLead`
-// and `dayUnionCondition`), not inside the trailing/leading qualifier. Scoped
-// to the until-window dialect; every other dialect and the `short` form keep
-// the established "on <dom> or on <dow>" phrasing.
+// and `dayUnionCondition`), not inside the trailing/leading qualifier. Only
+// the compact `short` form keeps the older "on <dom> or on <dow>" phrasing.
 function isDayUnion(schedule: Schedule, opts: NormalizedOptions): boolean {
   return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*' &&
-    !!opts.style.untilWindow && !opts.short;
+    !opts.short;
 }
 
 // The trailing condition clause for a day union. Arms that read as nouns
@@ -2341,10 +2341,11 @@ function oddEvenDay(dateField: string): string | null {
 }
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
-// are restricted: cron fires when either is a match. A restricted month
-// scopes BOTH halves, so it fronts the whole or-phrase once ("in June, on
-// the 13th or on Friday"), never folding into one arm or repeating on the
-// other.
+// are restricted: cron fires when either is a match. Reached only by the
+// compact `short` form (every full-length dialect takes the condition
+// frame). A restricted month scopes BOTH halves, so it fronts the whole
+// or-phrase once ("in June, on the 13th or on Friday"), never folding into
+// one arm or repeating on the other.
 function dateOrWeekday(schedule: Schedule, opts: NormalizedOptions): string {
   const pattern = schedule.pattern;
   // The day-of-month-OR-day-of-week union is out of scope for the recurring

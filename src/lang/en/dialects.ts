@@ -38,8 +38,7 @@ const dialects: {[name: string]: DialectStyle} = {
     sep: ':',
     serialComma: true,
     through: ' through ',
-    until: ' until ',
-    untilWindow: true
+    until: ' until '
   },
   house: {
     am: 'AM',
@@ -68,9 +67,7 @@ function resolveDialect(
     // A custom style inherits the US base but NOT its inclusive-through: an
     // overridden connective's inclusivity is unknown (e.g. `{through:
     // ' until '}`), so the safe, always-true close names the last fire.
-    return {
-      ...dialects.us, inclusiveThrough: false, untilWindow: false, ...dialect
-    };
+    return {...dialects.us, inclusiveThrough: false, ...dialect};
   }
 
   // The legacy 'uk' name resolves to 'gb'; a name another language owns
