@@ -130,6 +130,30 @@ describe('Core analyze:', function() {
     });
   });
 
+  describe('hour stride', function() {
+    it('reads a step segment as a stride with its offset-clean flag',
+      function() {
+        expect(ir('0 0 */2 * * *', {seconds: true}).analyses.hourStride)
+          .to.deep.equal(
+            {interval: 2, last: 22, offsetClean: true, start: 0});
+        // 24 % 5 !== 0: an uneven stride pins endpoints.
+        expect(ir('0 0 */5 * * *', {seconds: true}).analyses.hourStride)
+          .to.deep.equal(
+            {interval: 5, last: 20, offsetClean: false, start: 0});
+      });
+
+    it('recovers a stride from an arithmetic hour list', function() {
+      expect(ir('0 0,7,14,21 * * *').analyses.hourStride).to.deep.equal(
+        {interval: 7, last: 21, offsetClean: false, start: 0});
+    });
+
+    it('is null for irregular, range, and wildcard hours', function() {
+      expect(ir('0 9,17 * * *').analyses.hourStride).to.equal(null);
+      expect(ir('0 9-17 * * *').analyses.hourStride).to.equal(null);
+      expect(ir('0 * * * *').analyses.hourStride).to.equal(null);
+    });
+  });
+
   describe('plans: seconds', function() {
     it('standalone second shapes lead on their own', function() {
       expect(ir('*/15 * * * * *', {seconds: true}).plan.kind)

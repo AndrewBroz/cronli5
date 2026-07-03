@@ -56,6 +56,18 @@ export interface DayFacts {
   weekday: WeekdayArm | null;
 }
 
+/**
+ * A precomputed hour-field arithmetic stride. `offsetClean` marks a stride
+ * that wraps the day cleanly from within its first interval (bare or
+ * "from M" cadence); a false value pins both endpoints.
+ */
+export interface HourStride {
+  interval: number;
+  last: number;
+  offsetClean: boolean;
+  start: number;
+}
+
 /** A discrete clock time the core folds minute/second into. */
 export interface ClockTime {
   hour: number;
@@ -119,6 +131,7 @@ export type PlanNode =
 export interface Analyses {
   clockSecond: number | undefined;
   day: DayFacts;
+  hourStride: HourStride | null;
   lastMinuteFire: number;
   minuteSpan: [number, number] | null;
   segments: Record<Field, Segment[] | null>;
