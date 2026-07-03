@@ -2202,10 +2202,10 @@ function dayUnionMonthLead(schedule: Schedule,
 function dayUnionDatePieces(schedule: Schedule,
   opts: NormalizedOptions): string[] {
   const dateField = schedule.pattern.date;
-  const quartz = quartzDatePhrase(dateField, opts);
+  const quartz = quartzDateNoun(dateField, opts);
 
   if (quartz) {
-    return [quartz.replace(/^on /, '')];
+    return [quartz];
   }
 
   const oddEven = oddEvenDay(dateField);
@@ -2217,24 +2217,12 @@ function dayUnionDatePieces(schedule: Schedule,
   // Reached only with a restricted, non-Quartz date, which has segments. Each
   // segment contributes its predicate piece(s) to the flat union list; a step
   // spreads its enumerated fires as separate "the <ordinal>" alternatives.
-  const pieces: string[] = [];
-
-  segmentsOf(schedule, 'date').forEach(function expand(segment) {
-    if (segment.kind === 'range') {
-      pieces.push('from the ' + getOrdinal(segment.bounds[0]) + through(opts) +
-        'the ' + getOrdinal(segment.bounds[1]));
-    }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function fire(value) {
-        pieces.push('the ' + getOrdinal(value));
-      });
-    }
-    else {
-      pieces.push('the ' + getOrdinal(segment.value));
-    }
+  return segmentPieces(segmentsOf(schedule, 'date'), function noun(value) {
+    return 'the ' + getOrdinal(value);
+  }, function span(bounds) {
+    return 'from the ' + getOrdinal(bounds[0]) + through(opts) +
+      'the ' + getOrdinal(bounds[1]);
   });
-
-  return pieces;
 }
 
 // The day-of-week half of a union as a flat list of predicate pieces. A Quartz
@@ -2245,38 +2233,26 @@ function dayUnionDatePieces(schedule: Schedule,
 function dayUnionWeekdayPieces(schedule: Schedule,
   opts: NormalizedOptions): string[] {
   const weekdayField = schedule.pattern.weekday;
-  const quartz = quartzWeekdayPhrase(weekdayField, opts);
+  const quartz = quartzWeekdayNoun(weekdayField, opts);
 
   if (quartz) {
-    return [quartz.replace(/^on /, '')];
+    return [quartz];
   }
 
   // The union predicate keeps the canonical Sunday-first order (0…6) rather
   // than the weekend-last display order: as a flat or-list of day kinds, the
   // numeric order reads as naturally as any other in a flat or-list ("a
   // Sunday, a Tuesday, a Thursday, or a Saturday").
-  const pieces: string[] = [];
+  return segmentPieces(segmentsOf(schedule, 'weekday'), function noun(value) {
+    return 'a ' + getWeekday(value, opts);
+  }, function span(bounds) {
+    if (bounds[0] === '1' && bounds[1] === '5') {
+      return 'a weekday';
+    }
 
-  segmentsOf(schedule, 'weekday').forEach(function expand(segment) {
-    if (segment.kind === 'range' &&
-        segment.bounds[0] === '1' && segment.bounds[1] === '5') {
-      pieces.push('a weekday');
-    }
-    else if (segment.kind === 'range') {
-      pieces.push('a ' + getWeekday(segment.bounds[0], opts) + through(opts) +
-        'a ' + getWeekday(segment.bounds[1], opts));
-    }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function fire(value) {
-        pieces.push('a ' + getWeekday(value, opts));
-      });
-    }
-    else {
-      pieces.push('a ' + getWeekday(segment.value, opts));
-    }
+    return 'a ' + getWeekday(bounds[0], opts) + through(opts) +
+      'a ' + getWeekday(bounds[1], opts);
   });
-
-  return pieces;
 }
 
 // The parity idiom for an interval-2 open step: `*/2` and `1/2` cover the
@@ -2345,16 +2321,18 @@ function datePart(schedule: Schedule, opts: NormalizedOptions): string {
   return 'on the ' + dateOrdinals(schedule, opts);
 }
 
-// The day-qualifier phrase for a Quartz date field (e.g. "on the last day
-// of the month"), or undefined when the field is not a Quartz form.
-function quartzDatePhrase(dateField: string,
+// The Quartz date field as a bare noun phrase (e.g. "the last day of the
+// month"), or undefined when the field is not a Quartz form. The union
+// predicate consumes the noun directly; `quartzDatePhrase` wraps it as a
+// day qualifier.
+function quartzDateNoun(dateField: string,
   opts: NormalizedOptions): string | undefined {
   if (dateField === 'L') {
-    return 'on the last day of the month';
+    return 'the last day of the month';
   }
 
   if (dateField === 'LW' || dateField === 'WL') {
-    return 'on the last weekday of the month';
+    return 'the last weekday of the month';
   }
 
   const offset = (/^L-(\d{1,2})$/).exec(dateField);
@@ -2367,27 +2345,47 @@ function quartzDatePhrase(dateField: string,
   const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(dateField);
 
   if (nearest) {
-    return 'on the weekday nearest the ' +
-      getOrdinal(nearest[1] || nearest[2]);
+    return 'the weekday nearest the ' + getOrdinal(nearest[1] || nearest[2]);
   }
 }
 
-// The day-qualifier phrase for a Quartz weekday field (e.g. "on the last
-// Friday of the month"), or undefined when the field is not a Quartz form.
-function quartzWeekdayPhrase(weekdayField: string,
+// The day-qualifier form of a Quartz date: the noun takes "on" when it names
+// a day ("on the last day of the month"); the before-offset form reads as its
+// own adverbial and stays bare ("two days before the last day of the month").
+function quartzDatePhrase(dateField: string,
+  opts: NormalizedOptions): string | undefined {
+  const noun = quartzDateNoun(dateField, opts);
+
+  return noun && (noun.startsWith('the ') ? 'on ' + noun : noun);
+}
+
+// The Quartz weekday field as a bare noun phrase (e.g. "the last Friday of
+// the month"), or undefined when the field is not a Quartz form. The union
+// predicate consumes the noun directly; `quartzWeekdayPhrase` wraps it as a
+// day qualifier.
+function quartzWeekdayNoun(weekdayField: string,
   opts: NormalizedOptions): string | undefined {
   const parts = weekdayField.split('#');
 
   if (parts.length === 2) {
-    return 'on the ' + nthWeekdayNames[+parts[1]] + ' ' +
+    return 'the ' + nthWeekdayNames[+parts[1]] + ' ' +
       getWeekday(parts[0], opts) + ' of the month';
   }
 
   // A bare `L` weekday cannot arrive here: it is aliased to Saturday.
   if ((/L$/).test(weekdayField)) {
-    return 'on the last ' +
+    return 'the last ' +
       getWeekday(weekdayField.slice(0, -1), opts) + ' of the month';
   }
+}
+
+// The day-qualifier form of a Quartz weekday: every weekday noun names a day,
+// so the qualifier is always "on <noun>".
+function quartzWeekdayPhrase(weekdayField: string,
+  opts: NormalizedOptions): string | undefined {
+  const noun = quartzWeekdayNoun(weekdayField, opts);
+
+  return noun && 'on ' + noun;
 }
 
 // A calendar date with its month, in the dialect's order and day form:
@@ -2553,12 +2551,13 @@ function pluralWeekday(value: number | string,
   return opts.short ? name : name + 's';
 }
 
-// Render classified field segments with `word`, expanding step segments
-// into their enumerated fires and joining range bounds with the dialect's
-// `through` connective.
-function renderSegments(segments: Segment[],
+// Render classified segments as list pieces: steps spread their enumerated
+// fires through `word`, singles pass through `word`, ranges through
+// `rangePiece`. The one segment walk every enumerating context shares; the
+// caller owns the join (and/or) and any per-piece framing.
+function segmentPieces(segments: Segment[],
   word: (value: number | string) => string,
-  opts: NormalizedOptions): string {
+  rangePiece: (bounds: [string, string]) => string): string[] {
   const pieces: string[] = [];
 
   segments.forEach(function expand(segment) {
@@ -2566,14 +2565,25 @@ function renderSegments(segments: Segment[],
       pieces.push(...segment.fires.map(word));
     }
     else if (segment.kind === 'range') {
-      pieces.push(segment.bounds.map(word).join(through(opts)));
+      pieces.push(rangePiece(segment.bounds));
     }
     else {
       pieces.push(word(segment.value));
     }
   });
 
-  return joinList(pieces, opts);
+  return pieces;
+}
+
+// Render classified field segments with `word`, expanding step segments
+// into their enumerated fires and joining range bounds with the dialect's
+// `through` connective.
+function renderSegments(segments: Segment[],
+  word: (value: number | string) => string,
+  opts: NormalizedOptions): string {
+  return joinList(segmentPieces(segments, word, function span(bounds) {
+    return bounds.map(word).join(through(opts));
+  }), opts);
 }
 
 // --- Years. ---
