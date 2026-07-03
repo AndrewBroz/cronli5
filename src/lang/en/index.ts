@@ -2125,7 +2125,7 @@ function datePhrase(schedule: Schedule, words: QualifierWords,
     return monthScopeForRecurrence(quartzDate, schedule, opts);
   }
 
-  if (isOpenStep(pattern.date)) {
+  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
     return monthScopeForRecurrence(
       words.stepDate + stepDates(pattern.date, false), schedule, opts);
   }
@@ -2167,8 +2167,7 @@ function monthFoldsIntoDate(schedule: Schedule): boolean {
 // and `dayUnionCondition`), not inside the trailing/leading qualifier. Only
 // the compact `short` form keeps the older "on <dom> or on <dow>" phrasing.
 function isDayUnion(schedule: Schedule, opts: NormalizedOptions): boolean {
-  return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*' &&
-    !opts.short;
+  return schedule.analyses.day.union && !opts.short;
 }
 
 // The trailing condition clause for a day union. Arms that read as nouns
@@ -2199,13 +2198,14 @@ function dayUnionCondition(schedule: Schedule,
 // " of the month".
 function dayUnionCadenceClause(schedule: Schedule,
   opts: NormalizedOptions): string | null {
-  const dateField = schedule.pattern.date;
+  const arm = schedule.analyses.day.date;
 
-  if (!isOpenStep(dateField) || oddEvenDay(dateField) !== null) {
+  if (!arm || arm.kind !== 'cadenceStep' || arm.parity !== null) {
     return null;
   }
 
-  return ' on ' + stepDates(dateField, schedule.pattern.month !== '*') +
+  return ' on ' +
+    stepDates(schedule.pattern.date, schedule.pattern.month !== '*') +
     ' or ' + anyWeekdayClause(schedule, opts);
 }
 
@@ -2263,10 +2263,10 @@ function dayUnionDatePieces(schedule: Schedule,
     return [quartz];
   }
 
-  const oddEven = oddEvenDay(dateField);
+  const arm = schedule.analyses.day.date;
 
-  if (oddEven) {
-    return [oddEven];
+  if (arm && arm.kind === 'cadenceStep' && arm.parity !== null) {
+    return [parityDayNoun(arm.parity)];
   }
 
   // Reached only with a restricted, non-Quartz date, which has segments. Each
@@ -2333,11 +2333,11 @@ function parityIdiom(field: string, odd: string,
   return start === '2' ? even : null;
 }
 
-// An interval-2 day-of-month step covering a parity set reads as "an
-// odd/even-numbered day", mirroring the month and year parity idioms; any
-// other start enumerates instead. Null when the field is not such a step.
-function oddEvenDay(dateField: string): string | null {
-  return parityIdiom(dateField, 'an odd-numbered day', 'an even-numbered day');
+// The union-predicate noun for a parity day set, mirroring the month and
+// year parity idioms. The classification is the core's (`analyses.day`);
+// only the words live here.
+function parityDayNoun(parity: 'odd' | 'even'): string {
+  return parity === 'odd' ? 'an odd-numbered day' : 'an even-numbered day';
 }
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
@@ -2371,7 +2371,7 @@ function datePart(schedule: Schedule, opts: NormalizedOptions): string {
     return quartzDate;
   }
 
-  if (isOpenStep(pattern.date)) {
+  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
     return stepDates(pattern.date, false);
   }
 
