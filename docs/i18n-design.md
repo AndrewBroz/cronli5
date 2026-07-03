@@ -84,6 +84,15 @@ directly (the common case) or re-plan from `pattern` + `analyses` when its
 grammar demands. The `Schedule` should not encode sentence shape like fragment
 order or connective slots.
 
+The `analyses.day` facts classify the day fields once for every language:
+whether both day fields are restricted (cron's DOM-or-DOW *union*), and each
+restricted arm's semantic kind — a Quartz form, an open-step cadence (with
+its odd/even parity when the interval-2 set has one), or plain segments.
+`analyses.hourStride` likewise precomputes the hour field's arithmetic stride
+(a step segment, or a list whose values form one) with its offset-clean flag.
+Renderers route on these facts instead of re-deriving them from raw field
+strings; the words and frames stay per-language.
+
 Semantic fixes (a fold bug, a cap policy change, a new Quartz token) go
 in the core. Wording fixes are language-specific. Current test: If a change must
 touch more than one language module, it belonged in the core.

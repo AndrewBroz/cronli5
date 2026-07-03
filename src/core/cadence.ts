@@ -2,7 +2,9 @@
 // field's values, and the segment accessors renderers use to reach them.
 // Output-neutral and language-agnostic; renderers speak the cadence they find.
 
-import type {Field, PlanNode, Schedule, Segment} from './schedule.js';
+import type {
+  Field, HourStride, PlanNode, Schedule, Segment
+} from './schedule.js';
 
 // A step segment of a classified field, carrying its `fires`/`interval`/
 // `startToken`. The plan only routes step-shaped fields to step phrasing,
@@ -168,6 +170,43 @@ function hourListStride(
   return stride.start !== 0 && values.length < 5 ? null : stride;
 }
 
+// The hour field's stride as a precomputed fact, or null when the hour is
+// not a cadence: a lone step segment yields its stride directly (two or
+// more fires — a bounded step that fires once is a single value, not a
+// stride); an all-single list yields one only when its values form a step
+// progression, so an irregular list like 9,17 keeps enumerating.
+function hourStrideFact(segments: Segment[] | null): HourStride | null {
+  const stride = hourSegmentStride(segments ?? []);
+
+  return stride && {...stride, offsetClean: offsetCleanStride(stride)};
+}
+
+// The raw {start, interval, last} of an hour segment list, or null.
+function hourSegmentStride(segments: Segment[]):
+  {start: number; interval: number; last: number} | null {
+  if (segments.length === 1 && segments[0].kind === 'step') {
+    const segment = segments[0];
+
+    if (segment.fires.length < 2) {
+      return null;
+    }
+
+    const start = segment.startToken === '*' ?
+      0 :
+      +segment.startToken.split('-')[0];
+
+    return {
+      interval: segment.interval,
+      last: segment.fires[segment.fires.length - 1],
+      start
+    };
+  }
+
+  const values = singleValues(segments);
+
+  return values && hourListStride(values);
+}
+
 // The minute field's stride for a confinement frame, or null when the minute
 // is not a stepped cadence. A `step`-shaped field (`*/6`) reads its segment;
 // a `list`-shaped field the core enumerated from a uneven step (`2/7` →
@@ -245,7 +284,7 @@ function isSteppedMinuteSeconds(
 }
 
 export {
-  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
+  arithmeticStep, hourListStride, hourStrideFact, isEveryOtherMinuteSeconds,
   isSteppedMinuteSeconds, minuteStride, offsetCleanStride, renderStride,
   secondsConfinesMinute, segmentsOf, singleValues, stepSegment
 };
