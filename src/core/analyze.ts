@@ -9,6 +9,7 @@ import type {
   Analyses, ClockTime, Field, HourTimesPlan, HoursPlan, Pattern,
   PlanNode, Schedule, ScheduleFacts, Segment, Shape, Shapes
 } from './schedule.js';
+import {dayFacts} from './day.js';
 import {enumerateFires, enumerateStep, includes} from './util.js';
 import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
   from './shapes.js';
@@ -139,6 +140,7 @@ function analyze(pattern: Pattern): Schedule {
 
   const analyses = {
     clockSecond: clockSecond(pattern.second),
+    day: dayFacts(pattern, shapes),
     lastMinuteFire: lastMinuteFire(pattern.minute),
     minuteSpan: minuteSpan(pattern.minute),
     segments

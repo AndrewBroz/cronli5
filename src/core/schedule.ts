@@ -29,6 +29,33 @@ export type Segment =
   | {kind: 'range'; bounds: [string, string]}
   | {kind: 'step'; fires: number[]; interval: number; startToken: string};
 
+/**
+ * The classified day-of-month arm: a Quartz form, an open-step cadence
+ * (carrying its odd/even parity when the interval-2 set has one), or plain
+ * segments a renderer enumerates.
+ */
+export type DateArm =
+  | {kind: 'quartz'}
+  | {kind: 'cadenceStep'; interval: number; start: number;
+      parity: 'odd' | 'even' | null}
+  | {kind: 'segments'};
+
+/** The classified day-of-week arm: a Quartz form or plain segments. */
+export type WeekdayArm =
+  | {kind: 'quartz'}
+  | {kind: 'segments'};
+
+/**
+ * Day-field facts: whether the pattern restricts both day fields (cron's
+ * DOM-or-DOW union) and each restricted arm's classification (`null` for a
+ * wildcard field). Semantic only — words and frames stay per-language.
+ */
+export interface DayFacts {
+  union: boolean;
+  date: DateArm | null;
+  weekday: WeekdayArm | null;
+}
+
 /** A discrete clock time the core folds minute/second into. */
 export interface ClockTime {
   hour: number;
@@ -91,6 +118,7 @@ export type PlanNode =
 /** The semantic analyses the core attaches to the pattern for rendering. */
 export interface Analyses {
   clockSecond: number | undefined;
+  day: DayFacts;
   lastMinuteFire: number;
   minuteSpan: [number, number] | null;
   segments: Record<Field, Segment[] | null>;

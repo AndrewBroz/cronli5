@@ -87,6 +87,49 @@ describe('Core analyze:', function() {
     });
   });
 
+  describe('day facts', function() {
+    it('classifies the DOM-or-DOW union and both arms', function() {
+      const {analyses} = ir('0 0 2/3 * 5');
+
+      expect(analyses.day).to.deep.equal({
+        date: {interval: 3, kind: 'cadenceStep', parity: null, start: 2},
+        union: true,
+        weekday: {kind: 'segments'}
+      });
+    });
+
+    it('classifies parity steps: */2 and 1/2 odd, 2/2 even, 3/2 none',
+      function() {
+        expect(ir('0 0 */2 * *').analyses.day.date.parity).to.equal('odd');
+        expect(ir('0 0 1/2 * *').analyses.day.date.parity).to.equal('odd');
+        expect(ir('0 0 2/2 * *').analyses.day.date.parity).to.equal('even');
+        expect(ir('0 0 3/2 * *').analyses.day.date.parity).to.equal(null);
+      });
+
+    it('classifies Quartz arms and wildcards', function() {
+      const {analyses} = ir('0 0 L * 5L');
+
+      expect(analyses.day).to.deep.equal({
+        date: {kind: 'quartz'},
+        union: true,
+        weekday: {kind: 'quartz'}
+      });
+      expect(ir('0 0 * * *').analyses.day).to.deep.equal({
+        date: null,
+        union: false,
+        weekday: null
+      });
+    });
+
+    it('classifies plain and bounded-step dates as segments', function() {
+      expect(ir('0 0 1,15 * *').analyses.day.date)
+        .to.deep.equal({kind: 'segments'});
+      // A bounded step (5-20/3) is a windowed set, not an open cadence.
+      expect(ir('0 0 5-20/3 * *').analyses.day.date)
+        .to.deep.equal({kind: 'segments'});
+    });
+  });
+
   describe('plans: seconds', function() {
     it('standalone second shapes lead on their own', function() {
       expect(ir('*/15 * * * * *', {seconds: true}).plan.kind)
