@@ -2125,7 +2125,7 @@ function datePhrase(schedule: Schedule, words: QualifierWords,
 
   if (isOpenStep(pattern.date)) {
     return monthScopeForRecurrence(
-      words.stepDate + stepDates(pattern.date), schedule, opts);
+      words.stepDate + stepDates(pattern.date, false), schedule, opts);
   }
 
   if (pattern.month !== '*' && !monthFoldsIntoDate(schedule)) {
@@ -2170,15 +2170,69 @@ function isDayUnion(schedule: Schedule, opts: NormalizedOptions): boolean {
     !!opts.style.untilWindow && !opts.short;
 }
 
-// The trailing condition clause for a day union, e.g. " whenever the day is
-// the 1st or a Friday". The day predicates are flattened into one or-list so
-// the union reads as a single set of matching days.
+// The trailing condition clause for a day union. Arms that read as nouns
+// (singles, lists, ranges, the parity idiom, Quartz forms) take the predicate
+// frame — " whenever the day is the 1st or a Friday" — a flat or-list over
+// one variable, the day. A cadence-shaped date arm is not a noun, and
+// enumerating its fires would bury the cadence, so that union reads as a
+// clause instead (see dayUnionCadenceClause).
 function dayUnionCondition(schedule: Schedule,
   opts: NormalizedOptions): string {
+  const cadence = dayUnionCadenceClause(schedule, opts);
+
+  if (cadence !== null) {
+    return cadence;
+  }
+
   const pieces = [...dayUnionDatePieces(schedule, opts),
     ...dayUnionWeekdayPieces(schedule, opts)];
 
   return ' whenever the day is ' + joinOr(pieces, opts);
+}
+
+// The clause form of the union for a cadence-shaped date arm (an open step
+// with no parity idiom), or null when the date arm is nominal (the predicate
+// frame's case): " on every 3rd day of the month from the 2nd or on any
+// Sunday", with "any" carrying the union reading on the weekday half. A
+// leading month has already scoped the whole union, so the cadence drops
+// " of the month".
+function dayUnionCadenceClause(schedule: Schedule,
+  opts: NormalizedOptions): string | null {
+  const dateField = schedule.pattern.date;
+
+  if (!isOpenStep(dateField) || oddEvenDay(dateField) !== null) {
+    return null;
+  }
+
+  return ' on ' + stepDates(dateField, schedule.pattern.month !== '*') +
+    ' or ' + anyWeekdayClause(schedule, opts);
+}
+
+// The weekday half of a clause-form union: "on any Friday", "on any Monday
+// or Wednesday", "on any weekday" — or the bare Quartz phrase ("on the
+// second Monday of the month"), which is already definite and takes no
+// "any". Names follow the weekday display order, like every weekday list.
+function anyWeekdayClause(schedule: Schedule,
+  opts: NormalizedOptions): string {
+  const quartz = quartzWeekdayNoun(schedule.pattern.weekday, opts);
+
+  if (quartz) {
+    return 'on ' + quartz;
+  }
+
+  const segments = orderWeekdaysForDisplay(segmentsOf(schedule, 'weekday'));
+  const names = segmentPieces(segments, function name(value) {
+    return getWeekday(value, opts);
+  }, function span(bounds) {
+    if (bounds[0] === '1' && bounds[1] === '5') {
+      return 'weekday';
+    }
+
+    return getWeekday(bounds[0], opts) + through(opts) +
+      getWeekday(bounds[1], opts);
+  });
+
+  return 'on any ' + joinOr(names, opts);
 }
 
 // The leading "in <month>, " scope for a day union, or an empty string when
@@ -2202,10 +2256,10 @@ function dayUnionMonthLead(schedule: Schedule,
 function dayUnionDatePieces(schedule: Schedule,
   opts: NormalizedOptions): string[] {
   const dateField = schedule.pattern.date;
-  const quartz = quartzDatePhrase(dateField, opts);
+  const quartz = quartzDateNoun(dateField, opts);
 
   if (quartz) {
-    return [quartz.replace(/^on /, '')];
+    return [quartz];
   }
 
   const oddEven = oddEvenDay(dateField);
@@ -2217,24 +2271,12 @@ function dayUnionDatePieces(schedule: Schedule,
   // Reached only with a restricted, non-Quartz date, which has segments. Each
   // segment contributes its predicate piece(s) to the flat union list; a step
   // spreads its enumerated fires as separate "the <ordinal>" alternatives.
-  const pieces: string[] = [];
-
-  segmentsOf(schedule, 'date').forEach(function expand(segment) {
-    if (segment.kind === 'range') {
-      pieces.push('from the ' + getOrdinal(segment.bounds[0]) + through(opts) +
-        'the ' + getOrdinal(segment.bounds[1]));
-    }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function fire(value) {
-        pieces.push('the ' + getOrdinal(value));
-      });
-    }
-    else {
-      pieces.push('the ' + getOrdinal(segment.value));
-    }
+  return segmentPieces(segmentsOf(schedule, 'date'), function noun(value) {
+    return 'the ' + getOrdinal(value);
+  }, function span(bounds) {
+    return 'from the ' + getOrdinal(bounds[0]) + through(opts) +
+      'the ' + getOrdinal(bounds[1]);
   });
-
-  return pieces;
 }
 
 // The day-of-week half of a union as a flat list of predicate pieces. A Quartz
@@ -2245,60 +2287,56 @@ function dayUnionDatePieces(schedule: Schedule,
 function dayUnionWeekdayPieces(schedule: Schedule,
   opts: NormalizedOptions): string[] {
   const weekdayField = schedule.pattern.weekday;
-  const quartz = quartzWeekdayPhrase(weekdayField, opts);
+  const quartz = quartzWeekdayNoun(weekdayField, opts);
 
   if (quartz) {
-    return [quartz.replace(/^on /, '')];
+    return [quartz];
   }
 
-  // The union predicate keeps the canonical Sunday-first order (0…6) rather
-  // than the weekend-last display order: as a flat or-list of day kinds, the
-  // numeric order reads as naturally as any other in a flat or-list ("a
-  // Sunday, a Tuesday, a Thursday, or a Saturday").
-  const pieces: string[] = [];
+  // Union pieces follow the weekday display order (Monday-first, weekend
+  // last) — the one ordering rule every weekday list the renderer speaks
+  // uses, so the same day set never reorders between contexts.
+  return segmentPieces(
+    orderWeekdaysForDisplay(segmentsOf(schedule, 'weekday')),
+    function noun(value) {
+    return 'a ' + getWeekday(value, opts);
+  }, function span(bounds) {
+    if (bounds[0] === '1' && bounds[1] === '5') {
+      return 'a weekday';
+    }
 
-  segmentsOf(schedule, 'weekday').forEach(function expand(segment) {
-    if (segment.kind === 'range' &&
-        segment.bounds[0] === '1' && segment.bounds[1] === '5') {
-      pieces.push('a weekday');
-    }
-    else if (segment.kind === 'range') {
-      pieces.push('a ' + getWeekday(segment.bounds[0], opts) + through(opts) +
-        'a ' + getWeekday(segment.bounds[1], opts));
-    }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function fire(value) {
-        pieces.push('a ' + getWeekday(value, opts));
-      });
-    }
-    else {
-      pieces.push('a ' + getWeekday(segment.value, opts));
-    }
+    return 'a ' + getWeekday(bounds[0], opts) + through(opts) +
+      'a ' + getWeekday(bounds[1], opts);
   });
-
-  return pieces;
 }
 
-// An interval-2 day-of-month step covering a parity set reads as "an
-// odd/even-numbered day", mirroring the month and year parity idioms: `*/2`
-// and `1/2` are the odd days, `2/2` the even; any other start enumerates
-// instead. Null when the field is not an open interval-2 step.
-function oddEvenDay(dateField: string): string | null {
-  if (!isOpenStep(dateField)) {
+// The parity idiom for an interval-2 open step: `*/2` and `1/2` cover the
+// odd values, `2/2` the even; any other start is a partial set with no idiom.
+// `odd`/`even` are the field's own words (day vs month phrasing).
+function parityIdiom(field: string, odd: string,
+  even: string): string | null {
+  if (!isOpenStep(field)) {
     return null;
   }
 
-  const [start, step] = dateField.split('/');
+  const [start, step] = field.split('/');
 
   if (+step !== 2) {
     return null;
   }
 
   if (start === '*' || start === '1') {
-    return 'an odd-numbered day';
+    return odd;
   }
 
-  return start === '2' ? 'an even-numbered day' : null;
+  return start === '2' ? even : null;
+}
+
+// An interval-2 day-of-month step covering a parity set reads as "an
+// odd/even-numbered day", mirroring the month and year parity idioms; any
+// other start enumerates instead. Null when the field is not such a step.
+function oddEvenDay(dateField: string): string | null {
+  return parityIdiom(dateField, 'an odd-numbered day', 'an even-numbered day');
 }
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
@@ -2332,22 +2370,24 @@ function datePart(schedule: Schedule, opts: NormalizedOptions): string {
   }
 
   if (isOpenStep(pattern.date)) {
-    return stepDates(pattern.date);
+    return stepDates(pattern.date, false);
   }
 
   return 'on the ' + dateOrdinals(schedule, opts);
 }
 
-// The day-qualifier phrase for a Quartz date field (e.g. "on the last day
-// of the month"), or undefined when the field is not a Quartz form.
-function quartzDatePhrase(dateField: string,
+// The Quartz date field as a bare noun phrase (e.g. "the last day of the
+// month"), or undefined when the field is not a Quartz form. The union
+// predicate consumes the noun directly; `quartzDatePhrase` wraps it as a
+// day qualifier.
+function quartzDateNoun(dateField: string,
   opts: NormalizedOptions): string | undefined {
   if (dateField === 'L') {
-    return 'on the last day of the month';
+    return 'the last day of the month';
   }
 
   if (dateField === 'LW' || dateField === 'WL') {
-    return 'on the last weekday of the month';
+    return 'the last weekday of the month';
   }
 
   const offset = (/^L-(\d{1,2})$/).exec(dateField);
@@ -2360,27 +2400,47 @@ function quartzDatePhrase(dateField: string,
   const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(dateField);
 
   if (nearest) {
-    return 'on the weekday nearest the ' +
-      getOrdinal(nearest[1] || nearest[2]);
+    return 'the weekday nearest the ' + getOrdinal(nearest[1] || nearest[2]);
   }
 }
 
-// The day-qualifier phrase for a Quartz weekday field (e.g. "on the last
-// Friday of the month"), or undefined when the field is not a Quartz form.
-function quartzWeekdayPhrase(weekdayField: string,
+// The day-qualifier form of a Quartz date: the noun takes "on" when it names
+// a day ("on the last day of the month"); the before-offset form reads as its
+// own adverbial and stays bare ("two days before the last day of the month").
+function quartzDatePhrase(dateField: string,
+  opts: NormalizedOptions): string | undefined {
+  const noun = quartzDateNoun(dateField, opts);
+
+  return noun && (noun.startsWith('the ') ? 'on ' + noun : noun);
+}
+
+// The Quartz weekday field as a bare noun phrase (e.g. "the last Friday of
+// the month"), or undefined when the field is not a Quartz form. The union
+// predicate consumes the noun directly; `quartzWeekdayPhrase` wraps it as a
+// day qualifier.
+function quartzWeekdayNoun(weekdayField: string,
   opts: NormalizedOptions): string | undefined {
   const parts = weekdayField.split('#');
 
   if (parts.length === 2) {
-    return 'on the ' + nthWeekdayNames[+parts[1]] + ' ' +
+    return 'the ' + nthWeekdayNames[+parts[1]] + ' ' +
       getWeekday(parts[0], opts) + ' of the month';
   }
 
   // A bare `L` weekday cannot arrive here: it is aliased to Saturday.
   if ((/L$/).test(weekdayField)) {
-    return 'on the last ' +
+    return 'the last ' +
       getWeekday(weekdayField.slice(0, -1), opts) + ' of the month';
   }
+}
+
+// The day-qualifier form of a Quartz weekday: every weekday noun names a day,
+// so the qualifier is always "on <noun>".
+function quartzWeekdayPhrase(weekdayField: string,
+  opts: NormalizedOptions): string | undefined {
+  const noun = quartzWeekdayNoun(weekdayField, opts);
+
+  return noun && 'on ' + noun;
 }
 
 // A calendar date with its month, in the dialect's order and day form:
@@ -2454,15 +2514,18 @@ function monthScopeForRecurrence(phrase: string, schedule: Schedule,
 }
 
 // Frequency phrase for an open day-of-month step, e.g. "every other day of
-// the month" or "every 3rd day of the month from the 5th".
-function stepDates(dateField: string): string {
+// the month" or "every 3rd day of the month from the 5th". `monthScoped`
+// marks a phrase a named month already scopes, which makes the "of the
+// month" recurrence redundant ("in June, … every other day from the 3rd") —
+// the same fold monthScopeForRecurrence applies in the qualifier positions.
+function stepDates(dateField: string, monthScoped: boolean): string {
   const parts = dateField.split('/');
   const interval = +parts[1];
   const start = parts[0];
   const cadence = interval === 2 ?
     'every other' :
     'every ' + getOrdinal(interval);
-  let phrase = cadence + ' day of the month';
+  let phrase = cadence + ' day' + (monthScoped ? '' : ' of the month');
 
   if (start !== '*' && start !== '1') {
     phrase += ' from the ' + getOrdinal(start);
@@ -2498,24 +2561,11 @@ function monthName(schedule: Schedule, opts: NormalizedOptions): string {
 
 // An interval-2 month step covering a full parity set reads as "every
 // odd/even-numbered month" — the only month cadence, since the parity
-// disambiguates the start. `*/2` and `1/2` are the odd months, `2/2` the even;
-// any other start is a partial set that enumerates instead. Null otherwise.
+// disambiguates the start; any other start is a partial set that enumerates
+// instead. Null when the field is not such a step.
 function oddEvenMonth(monthField: string): string | null {
-  if (!isOpenStep(monthField)) {
-    return null;
-  }
-
-  const [start, step] = monthField.split('/');
-
-  if (+step !== 2) {
-    return null;
-  }
-
-  if (start === '*' || start === '1') {
-    return 'every odd-numbered month';
-  }
-
-  return start === '2' ? 'every even-numbered month' : null;
+  return parityIdiom(monthField,
+    'every odd-numbered month', 'every even-numbered month');
 }
 
 // Render the weekday field as names. Ranges read in their connective form
@@ -2559,12 +2609,13 @@ function pluralWeekday(value: number | string,
   return opts.short ? name : name + 's';
 }
 
-// Render classified field segments with `word`, expanding step segments
-// into their enumerated fires and joining range bounds with the dialect's
-// `through` connective.
-function renderSegments(segments: Segment[],
+// Render classified segments as list pieces: steps spread their enumerated
+// fires through `word`, singles pass through `word`, ranges through
+// `rangePiece`. The one segment walk every enumerating context shares; the
+// caller owns the join (and/or) and any per-piece framing.
+function segmentPieces(segments: Segment[],
   word: (value: number | string) => string,
-  opts: NormalizedOptions): string {
+  rangePiece: (bounds: [string, string]) => string): string[] {
   const pieces: string[] = [];
 
   segments.forEach(function expand(segment) {
@@ -2572,14 +2623,25 @@ function renderSegments(segments: Segment[],
       pieces.push(...segment.fires.map(word));
     }
     else if (segment.kind === 'range') {
-      pieces.push(segment.bounds.map(word).join(through(opts)));
+      pieces.push(rangePiece(segment.bounds));
     }
     else {
       pieces.push(word(segment.value));
     }
   });
 
-  return joinList(pieces, opts);
+  return pieces;
+}
+
+// Render classified field segments with `word`, expanding step segments
+// into their enumerated fires and joining range bounds with the dialect's
+// `through` connective.
+function renderSegments(segments: Segment[],
+  word: (value: number | string) => string,
+  opts: NormalizedOptions): string {
+  return joinList(segmentPieces(segments, word, function span(bounds) {
+    return bounds.map(word).join(through(opts));
+  }), opts);
 }
 
 // --- Years. ---

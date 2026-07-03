@@ -281,8 +281,8 @@ describe('English core-set corrections:', function() {
   describe('OR union — condition-frame (panel-validated):', function() {
     run([
       ['0 0 */2 * */2',
-        'at midnight whenever the day is an odd-numbered day, a Sunday, a ' +
-        'Tuesday, a Thursday, or a Saturday'],
+        'at midnight whenever the day is an odd-numbered day, a Tuesday, a ' +
+        'Thursday, a Saturday, or a Sunday'],
       ['0 0 */2 * 0',
         'at midnight whenever the day is an odd-numbered day or a Sunday'],
       ['0 0 */2 * 1-5',
@@ -292,7 +292,7 @@ describe('English core-set corrections:', function() {
         'Friday of the month'],
       ['0 0 */2 */2 */2',
         'in every odd-numbered month, at midnight whenever the day is an ' +
-        'odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'odd-numbered day, a Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 */2 */2 0',
         'in every odd-numbered month, at midnight whenever the day is an ' +
         'odd-numbered day or a Sunday'],
@@ -304,7 +304,7 @@ describe('English core-set corrections:', function() {
         'odd-numbered day or the last Friday of the month'],
       ['0 0 */2 1 */2',
         'in January, at midnight whenever the day is an odd-numbered day, a ' +
-        'Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 */2 1 0',
         'in January, at midnight whenever the day is an odd-numbered day or ' +
         'a Sunday'],
@@ -316,7 +316,7 @@ describe('English core-set corrections:', function() {
         'the last Friday of the month'],
       ['0 0 */2 1-3 */2',
         'in January through March, at midnight whenever the day is an ' +
-        'odd-numbered day, a Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'odd-numbered day, a Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 */2 1-3 0',
         'in January through March, at midnight whenever the day is an ' +
         'odd-numbered day or a Sunday'],
@@ -327,8 +327,8 @@ describe('English core-set corrections:', function() {
         'in January through March, at midnight whenever the day is an ' +
         'odd-numbered day or the last Friday of the month'],
       ['0 0 1 * */2',
-        'at midnight whenever the day is the 1st, a Sunday, a Tuesday, a ' +
-        'Thursday, or a Saturday'],
+        'at midnight whenever the day is the 1st, a Tuesday, a Thursday, a ' +
+        'Saturday, or a Sunday'],
       ['0 0 1 * 0', 'at midnight whenever the day is the 1st or a Sunday'],
       ['0 0 1 * 1-5', 'at midnight whenever the day is the 1st or a weekday'],
       ['0 0 1 * 5L',
@@ -336,7 +336,7 @@ describe('English core-set corrections:', function() {
         'month'],
       ['0 0 1 */2 */2',
         'in every odd-numbered month, at midnight whenever the day is the ' +
-        '1st, a Sunday, a Tuesday, a Thursday, or a Saturday'],
+        '1st, a Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 1 */2 0',
         'in every odd-numbered month, at midnight whenever the day is the ' +
         '1st or a Sunday'],
@@ -347,11 +347,11 @@ describe('English core-set corrections:', function() {
         'in every odd-numbered month, at midnight whenever the day is the ' +
         '1st or the last Friday of the month'],
       ['0 0 1 1 * */2',
-        'at 1 a.m. whenever the day is the 1st, a Sunday, a Tuesday, a ' +
-        'Thursday, or a Saturday'],
+        'at 1 a.m. whenever the day is the 1st, a Tuesday, a Thursday, a ' +
+        'Saturday, or a Sunday'],
       ['0 0 1 1 */2',
-        'in January, at midnight whenever the day is the 1st, a Sunday, a ' +
-        'Tuesday, a Thursday, or a Saturday'],
+        'in January, at midnight whenever the day is the 1st, a Tuesday, a ' +
+        'Thursday, a Saturday, or a Sunday'],
       ['0 0 1 1 0',
         'in January, at midnight whenever the day is the 1st or a Sunday'],
       ['0 0 1 1 1-5',
@@ -361,7 +361,7 @@ describe('English core-set corrections:', function() {
         'Friday of the month'],
       ['0 0 1 1-3 */2',
         'in January through March, at midnight whenever the day is the 1st, ' +
-        'a Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'a Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 1 1-3 0',
         'in January through March, at midnight whenever the day is the 1st ' +
         'or a Sunday'],
@@ -373,7 +373,7 @@ describe('English core-set corrections:', function() {
         'or the last Friday of the month'],
       ['0 0 1-15 * */2',
         'at midnight whenever the day is from the 1st through the 15th, a ' +
-        'Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 1-15 * 0',
         'at midnight whenever the day is from the 1st through the 15th or a ' +
         'Sunday'],
@@ -385,8 +385,8 @@ describe('English core-set corrections:', function() {
         'the last Friday of the month'],
       ['0 0 1-15 */2 */2',
         'in every odd-numbered month, at midnight whenever the day is from ' +
-        'the 1st through the 15th, a Sunday, a Tuesday, a Thursday, or a ' +
-        'Saturday'],
+        'the 1st through the 15th, a Tuesday, a Thursday, a Saturday, or a ' +
+        'Sunday'],
       ['0 0 1-15 */2 0',
         'in every odd-numbered month, at midnight whenever the day is from ' +
         'the 1st through the 15th or a Sunday'],
@@ -398,7 +398,7 @@ describe('English core-set corrections:', function() {
         'the 1st through the 15th or the last Friday of the month'],
       ['0 0 1-15 1 */2',
         'in January, at midnight whenever the day is from the 1st through ' +
-        'the 15th, a Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'the 15th, a Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 1-15 1 0',
         'in January, at midnight whenever the day is from the 1st through ' +
         'the 15th or a Sunday'],
@@ -410,8 +410,8 @@ describe('English core-set corrections:', function() {
         'the 15th or the last Friday of the month'],
       ['0 0 1-15 1-3 */2',
         'in January through March, at midnight whenever the day is from the ' +
-        '1st through the 15th, a Sunday, a Tuesday, a Thursday, or a ' +
-        'Saturday'],
+        '1st through the 15th, a Tuesday, a Thursday, a Saturday, or a ' +
+        'Sunday'],
       ['0 0 1-15 1-3 0',
         'in January through March, at midnight whenever the day is from the ' +
         '1st through the 15th or a Sunday'],
@@ -423,7 +423,7 @@ describe('English core-set corrections:', function() {
         '1st through the 15th or the last Friday of the month'],
       ['0 0 L * */2',
         'at midnight whenever the day is the last day of the month, a ' +
-        'Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 L * 0',
         'at midnight whenever the day is the last day of the month or a ' +
         'Sunday'],
@@ -435,8 +435,8 @@ describe('English core-set corrections:', function() {
         'last Friday of the month'],
       ['0 0 L */2 */2',
         'in every odd-numbered month, at midnight whenever the day is the ' +
-        'last day of the month, a Sunday, a Tuesday, a Thursday, or a ' +
-        'Saturday'],
+        'last day of the month, a Tuesday, a Thursday, a Saturday, or a ' +
+        'Sunday'],
       ['0 0 L */2 0',
         'in every odd-numbered month, at midnight whenever the day is the ' +
         'last day of the month or a Sunday'],
@@ -448,7 +448,7 @@ describe('English core-set corrections:', function() {
         'last day of the month or the last Friday of the month'],
       ['0 0 L 1 */2',
         'in January, at midnight whenever the day is the last day of the ' +
-        'month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'month, a Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 L 1 0',
         'in January, at midnight whenever the day is the last day of the ' +
         'month or a Sunday'],
@@ -460,7 +460,7 @@ describe('English core-set corrections:', function() {
         'month or the last Friday of the month'],
       ['0 0 L 1-3 */2',
         'in January through March, at midnight whenever the day is the last ' +
-        'day of the month, a Sunday, a Tuesday, a Thursday, or a Saturday'],
+        'day of the month, a Tuesday, a Thursday, a Saturday, or a Sunday'],
       ['0 0 L 1-3 0',
         'in January through March, at midnight whenever the day is the last ' +
         'day of the month or a Sunday'],
