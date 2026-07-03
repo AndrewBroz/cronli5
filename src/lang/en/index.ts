@@ -873,7 +873,8 @@ function rangeWindow(window: HourWindowSpec,
 
   if (opts.style.untilWindow && !opts.short && from !== to) {
     return continuous ?
-      open + ' until ' + getTime({hour: (to + 1) % 24, minute: 0}, opts) :
+      open + opts.style.until +
+        getTime({hour: (to + 1) % 24, minute: 0}, opts) :
       open + through(opts) + getTime({hour: to, minute: 0}, opts);
   }
 
@@ -1241,8 +1242,8 @@ function hourConfinement(schedule: Schedule, opts: NormalizedOptions): string {
     const h = +hour;
 
     if (schedule.shapes.minute === 'step') {
-      return ' from ' + getTime({hour: h, minute: 0}, opts) + ' until ' +
-        getTime({hour: (h + 1) % 24, minute: 0}, opts);
+      return ' from ' + getTime({hour: h, minute: 0}, opts) +
+        opts.style.until + getTime({hour: (h + 1) % 24, minute: 0}, opts);
     }
 
     // A pinned minute confinement already named the minute, so the hour reads

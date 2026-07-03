@@ -22,7 +22,8 @@ const dialects: {[name: string]: DialectStyle} = {
     pm: 'pm',
     sep: '.',
     serialComma: false,
-    through: ' to '
+    through: ' to ',
+    until: ' to '
   },
   us: {
     am: 'a.m.',
@@ -35,6 +36,7 @@ const dialects: {[name: string]: DialectStyle} = {
     sep: ':',
     serialComma: true,
     through: ' through ',
+    until: ' until ',
     untilWindow: true
   },
   house: {
@@ -47,7 +49,8 @@ const dialects: {[name: string]: DialectStyle} = {
     pm: 'PM',
     sep: ':',
     serialComma: true,
-    through: ' - '
+    through: ' - ',
+    until: ' - '
   }
 };
 

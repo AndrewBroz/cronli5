@@ -131,6 +131,10 @@ export interface DialectStyle {
   sep: string;
   serialComma: boolean;
   through: string;
+  // The connective for the up-to-but-not-including close of a continuous
+  // run ("from 9 a.m. until 6 p.m."): exclusive, unlike `through`, which
+  // names an included bound.
+  until: string;
   // Whether a contiguous hour range reads as an up-to-but-not-including
   // window ("from 9 a.m. until 6 p.m.") rather than a "through <last fire>"
   // span. Set only on the default English dialect; other dialects and custom
