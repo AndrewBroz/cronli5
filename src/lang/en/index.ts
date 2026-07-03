@@ -2067,13 +2067,13 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
   // A weekday qualifier, optionally scoped to a month ("on Monday in
   // June").
   if (pattern.weekday !== '*') {
-    const quartzWeekday = quartzWeekdayPhrase(pattern.weekday, opts);
+    const quartzWeekday = quartzWeekdayParts(pattern.weekday, opts);
 
     // The Quartz weekday phrase ("on the last Friday of the month") carries
     // the "of the month" recurrence a concrete month makes redundant; a plain
     // weekday name takes the ordinary " in <month>" scope.
     if (quartzWeekday) {
-      return monthScopeForRecurrence(quartzWeekday, schedule, opts);
+      return monthScopeForRecurrence(withOn(quartzWeekday), schedule, opts);
     }
 
     const weekdays = words.weekday +
@@ -2093,15 +2093,17 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
 function datePhrase(schedule: Schedule, words: QualifierWords,
   opts: NormalizedOptions): string {
   const pattern = schedule.pattern;
-  const quartzDate = quartzDatePhrase(pattern.date, opts);
+  const quartzDate = quartzDateParts(pattern.date, opts);
 
   if (quartzDate) {
-    return monthScopeForRecurrence(quartzDate, schedule, opts);
+    return monthScopeForRecurrence(withOn(quartzDate), schedule, opts);
   }
 
   if (schedule.analyses.day.date?.kind === 'cadenceStep') {
+    const step = stepDateParts(pattern.date);
+
     return monthScopeForRecurrence(
-      words.stepDate + stepDates(pattern.date, false), schedule, opts);
+      {...step, head: words.stepDate + step.head}, schedule, opts);
   }
 
   if (pattern.month !== '*' && !monthFoldsIntoDate(schedule)) {
@@ -2178,8 +2180,10 @@ function dayUnionCadenceClause(schedule: Schedule,
     return null;
   }
 
-  return ' on ' +
-    stepDates(schedule.pattern.date, schedule.pattern.month !== '*') +
+  const step = stepDateParts(schedule.pattern.date);
+  const recurrence = schedule.pattern.month === '*' ? step.recurrence : '';
+
+  return ' on ' + step.head + recurrence + step.tail +
     ' or ' + anyWeekdayClause(schedule, opts);
 }
 
@@ -2346,43 +2350,82 @@ function datePart(schedule: Schedule, opts: NormalizedOptions): string {
   }
 
   if (schedule.analyses.day.date?.kind === 'cadenceStep') {
-    return stepDates(pattern.date, false);
+    const step = stepDateParts(pattern.date);
+
+    return step.head + step.recurrence + step.tail;
   }
 
   return 'on the ' + dateOrdinals(schedule, opts);
 }
 
-// The Quartz date field as a bare noun phrase (e.g. "the last day of the
-// month"), or undefined when the field is not a Quartz form. The union
-// predicate consumes the noun directly; `quartzDatePhrase` wraps it as a
-// day qualifier.
-function quartzDateNoun(dateField: string,
-  opts: NormalizedOptions): string | undefined {
+// A phrase split around its month recurrence: the full phrase is
+// `head + recurrence + tail`. `recurrence` is ' of the month' (or '' when
+// the form carries none, e.g. "the weekday nearest the 13th"); a named
+// month scope respells or absorbs it without patching a built string.
+interface RecurringPhrase {
+  head: string;
+  recurrence: string;
+  tail: string;
+}
+
+// The Quartz date field split around its recurrence, or undefined when the
+// field is not a Quartz form. The union predicate joins the parts directly
+// (`quartzDateNoun`); the month scope respells the recurrence
+// (`monthScopeForRecurrence`).
+function quartzDateParts(dateField: string,
+  opts: NormalizedOptions): RecurringPhrase | undefined {
   if (dateField === 'L') {
-    return 'the last day of the month';
+    return {head: 'the last day', recurrence: ' of the month', tail: ''};
   }
 
   if (dateField === 'LW' || dateField === 'WL') {
-    return 'the last weekday of the month';
+    return {head: 'the last weekday', recurrence: ' of the month', tail: ''};
   }
 
   const offset = (/^L-(\d{1,2})$/).exec(dateField);
 
   if (offset) {
-    return getNumber(+offset[1], opts) + ' ' + pluralize(offset[1], 'day') +
-      ' before the last day of the month';
+    return {
+      head: getNumber(+offset[1], opts) + ' ' + pluralize(offset[1], 'day') +
+        ' before the last day',
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
 
   const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(dateField);
 
   if (nearest) {
-    return 'the weekday nearest the ' + getOrdinal(nearest[1] || nearest[2]);
+    return {
+      head: 'the weekday nearest the ' + getOrdinal(nearest[1] || nearest[2]),
+      recurrence: '',
+      tail: ''
+    };
   }
 }
 
-// The day-qualifier form of a Quartz date: the noun takes "on" when it names
-// a day ("on the last day of the month"); the before-offset form reads as its
-// own adverbial and stays bare ("two days before the last day of the month").
+// The Quartz date field as a bare noun phrase (e.g. "the last day of the
+// month"), or undefined when the field is not a Quartz form.
+function quartzDateNoun(dateField: string,
+  opts: NormalizedOptions): string | undefined {
+  const parts = quartzDateParts(dateField, opts);
+
+  return parts && parts.head + parts.recurrence + parts.tail;
+}
+
+// The day-qualifier form of quartz parts: "on" attaches to a day-naming
+// head ("on the last day of the month"); the before-offset form reads as
+// its own adverbial and stays bare ("two days before the last day of the
+// month").
+function withOn(parts: RecurringPhrase): RecurringPhrase {
+  if (!parts.head.startsWith('the ')) {
+    return parts;
+  }
+
+  return {...parts, head: 'on ' + parts.head};
+}
+
+// The day-qualifier form of a Quartz date, as a phrase.
 function quartzDatePhrase(dateField: string,
   opts: NormalizedOptions): string | undefined {
   const noun = quartzDateNoun(dateField, opts);
@@ -2390,24 +2433,38 @@ function quartzDatePhrase(dateField: string,
   return noun && (noun.startsWith('the ') ? 'on ' + noun : noun);
 }
 
-// The Quartz weekday field as a bare noun phrase (e.g. "the last Friday of
-// the month"), or undefined when the field is not a Quartz form. The union
-// predicate consumes the noun directly; `quartzWeekdayPhrase` wraps it as a
-// day qualifier.
-function quartzWeekdayNoun(weekdayField: string,
-  opts: NormalizedOptions): string | undefined {
-  const parts = weekdayField.split('#');
+// The Quartz weekday field split around its recurrence, or undefined when
+// the field is not a Quartz form.
+function quartzWeekdayParts(weekdayField: string,
+  opts: NormalizedOptions): RecurringPhrase | undefined {
+  const pieces = weekdayField.split('#');
 
-  if (parts.length === 2) {
-    return 'the ' + nthWeekdayNames[+parts[1]] + ' ' +
-      getWeekday(parts[0], opts) + ' of the month';
+  if (pieces.length === 2) {
+    return {
+      head: 'the ' + nthWeekdayNames[+pieces[1]] + ' ' +
+        getWeekday(pieces[0], opts),
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
 
   // A bare `L` weekday cannot arrive here: it is aliased to Saturday.
   if ((/L$/).test(weekdayField)) {
-    return 'the last ' +
-      getWeekday(weekdayField.slice(0, -1), opts) + ' of the month';
+    return {
+      head: 'the last ' + getWeekday(weekdayField.slice(0, -1), opts),
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
+}
+
+// The Quartz weekday field as a bare noun phrase (e.g. "the last Friday of
+// the month"), or undefined when the field is not a Quartz form.
+function quartzWeekdayNoun(weekdayField: string,
+  opts: NormalizedOptions): string | undefined {
+  const parts = quartzWeekdayParts(weekdayField, opts);
+
+  return parts && parts.head + parts.recurrence + parts.tail;
 }
 
 // The day-qualifier form of a Quartz weekday: every weekday noun names a day,
@@ -2466,48 +2523,47 @@ function monthScope(schedule: Schedule, opts: NormalizedOptions): string {
 // distributes the recurrence across the span and keeps it, rephrased as "of
 // each month from <first> through <last>". A month list is left as-is (the
 // recurrence stays, scoped "in <names>"), and a wildcard month adds nothing.
-function monthScopeForRecurrence(phrase: string, schedule: Schedule,
+function monthScopeForRecurrence(parts: RecurringPhrase, schedule: Schedule,
   opts: NormalizedOptions): string {
+  const {head, recurrence, tail} = parts;
+
   if (schedule.pattern.month === '*') {
-    return phrase;
+    return head + recurrence + tail;
   }
 
-  const carriesRecurrence = phrase.indexOf(' of the month') !== -1;
-
-  if (carriesRecurrence && schedule.shapes.month === 'range') {
-    return phrase.replace(' of the month', ' of each month') + ' from ' +
+  if (recurrence && schedule.shapes.month === 'range') {
+    return head + ' of each month' + tail + ' from ' +
       monthName(schedule, opts);
   }
 
-  if (carriesRecurrence &&
+  if (recurrence &&
       (schedule.shapes.month === 'single' ||
         schedule.shapes.month === 'step')) {
-    return phrase.replace(' of the month', '') + ' in ' +
-      monthName(schedule, opts);
+    return head + tail + ' in ' + monthName(schedule, opts);
   }
 
-  return phrase + ' in ' + monthName(schedule, opts);
+  return head + recurrence + tail + ' in ' + monthName(schedule, opts);
 }
 
-// Frequency phrase for an open day-of-month step, e.g. "every other day of
-// the month" or "every 3rd day of the month from the 5th". `monthScoped`
-// marks a phrase a named month already scopes, which makes the "of the
-// month" recurrence redundant ("in June, … every other day from the 3rd") —
-// the same fold monthScopeForRecurrence applies in the qualifier positions.
-function stepDates(dateField: string, monthScoped: boolean): string {
-  const parts = dateField.split('/');
-  const interval = +parts[1];
-  const start = parts[0];
+// Frequency phrase for an open day-of-month step, split around its
+// recurrence: "every 3rd day" + " of the month" + " from the 5th". A named
+// month scope absorbs or respells the recurrence (monthScopeForRecurrence,
+// the union clause) without patching the built string.
+function stepDateParts(dateField: string): RecurringPhrase {
+  const pieces = dateField.split('/');
+  const interval = +pieces[1];
+  const start = pieces[0];
   const cadence = interval === 2 ?
     'every other' :
     'every ' + getOrdinal(interval);
-  let phrase = cadence + ' day' + (monthScoped ? '' : ' of the month');
 
-  if (start !== '*' && start !== '1') {
-    phrase += ' from the ' + getOrdinal(start);
-  }
-
-  return phrase;
+  return {
+    head: cadence + ' day',
+    recurrence: ' of the month',
+    tail: start !== '*' && start !== '1' ?
+      ' from the ' + getOrdinal(start) :
+      ''
+  };
 }
 
 // Render the date field's segments as suffixed ordinals. Open steps are
