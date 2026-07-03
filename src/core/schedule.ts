@@ -128,6 +128,11 @@ export interface DialectStyle {
   midnight: string;
   ordinals: boolean;
   pm: string;
+  // Whether the `through` connective includes the whole named hour ("through
+  // 5 p.m." covers a 5:45 fire), letting a discontinuous multi-hour close
+  // name the bare hour. An exclusive-reading connective ("to", "-") must
+  // close on the last fire instead, or it understates the run.
+  inclusiveThrough: boolean;
   sep: string;
   serialComma: boolean;
   through: string;

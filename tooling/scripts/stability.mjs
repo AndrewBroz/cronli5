@@ -31,11 +31,16 @@ const DATES = ['13', '1,15', '3-9', '2/3', '3/2', '*/2', '2/2', 'L', '15W'];
 // Weekday fields spanning single, list, range, step.
 const WEEKDAYS = ['5', 'MON,WED', '1-5', '*/2'];
 
+// Dialects the matrix runs under: the default (us) plus each named dialect.
+// Grammar is dialect-independent; only typography varies, and the token
+// extractor reads day words, which no dialect restyles.
+const DIALECTS = [null, 'gb', 'house'];
+
 const WEEKDAY_NAME =
   /(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)s?/g;
 
-function render(cron) {
-  return cronli5(cron);
+function render(cron, dialect) {
+  return cronli5(cron, dialect ? {dialect} : {});
 }
 
 // The date-arm tokens of a rendering: day ordinals plus normalized
@@ -100,8 +105,8 @@ function normalized(tokens) {
 // The time body of a [minute, hour] prefix: its day-free rendering with the
 // day-qualifier words stripped. This exact string must survive in every
 // day-restricted rendering of the same time.
-function timeBody(time) {
-  return render(time[0] + ' ' + time[1] + ' * * *')
+function timeBody(time, dialect) {
+  return render(time[0] + ' ' + time[1] + ' * * *', dialect)
     .replace(/^every day at /, 'at ')
     .replace(/,? every day$/, '')
     .replace(/^every day /, '');
@@ -114,14 +119,17 @@ function weekdayOrder(text) {
   });
 }
 
-// Check one (time, date, weekday) cell; returns violation strings.
-function checkPair(time, date, weekday) {
+// Check one (time, date, weekday, dialect) cell; returns violation strings.
+function checkPair(time, date, weekday, dialect) {
   const violations = [];
-  const label = time.join(' ') + ' ' + date + ' * ' + weekday;
-  const dateOnly = render(time[0] + ' ' + time[1] + ' ' + date + ' * *');
+  const label = (dialect ?? 'us') + ' ' + time.join(' ') + ' ' + date +
+    ' * ' + weekday;
+  const dateOnly = render(time[0] + ' ' + time[1] + ' ' + date + ' * *',
+    dialect);
   const union = render(
-    time[0] + ' ' + time[1] + ' ' + date + ' * ' + weekday);
-  const weekdayOnly = render(time[0] + ' ' + time[1] + ' * * ' + weekday);
+    time[0] + ' ' + time[1] + ' ' + date + ' * ' + weekday, dialect);
+  const weekdayOnly = render(time[0] + ' ' + time[1] + ' * * ' + weekday,
+    dialect);
 
   const armBefore = normalized(dateTokens(dateOnly)).join(',');
   const armAfter = normalized(dateTokens(union)).join(',');
@@ -131,7 +139,7 @@ function checkPair(time, date, weekday) {
       armBefore + '] vs [' + armAfter + ']');
   }
 
-  const body = timeBody(time);
+  const body = timeBody(time, dialect);
 
   if (dateOnly.indexOf(body) === -1) {
     violations.push('[frame] ' + label + ' — body "' + body +
@@ -157,10 +165,12 @@ function checkPair(time, date, weekday) {
 function run() {
   const violations = [];
 
-  for (const time of TIMES) {
-    for (const date of DATES) {
-      for (const weekday of WEEKDAYS) {
-        violations.push(...checkPair(time, date, weekday));
+  for (const dialect of DIALECTS) {
+    for (const time of TIMES) {
+      for (const date of DATES) {
+        for (const weekday of WEEKDAYS) {
+          violations.push(...checkPair(time, date, weekday, dialect));
+        }
       }
     }
   }
@@ -173,7 +183,7 @@ function run() {
   return violations;
 }
 
-export {TIMES, DATES, WEEKDAYS, checkPair, dateTokens, run};
+export {DIALECTS, TIMES, DATES, WEEKDAYS, checkPair, dateTokens, run};
 
 if (process.argv[1] &&
     import.meta.url === pathToFileURL(process.argv[1]).href) {
