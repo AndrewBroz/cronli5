@@ -12,16 +12,15 @@ type StepSegment = Extract<Segment, {kind: 'step'}>;
 // The composeSeconds plan node: a meaningful second over a coarser rest.
 type ComposeSecondsPlan = Extract<PlanNode, {kind: 'composeSeconds'}>;
 
-// Recognize an arithmetic progression in a sorted, distinct numeric set: a
-// run of length >= 5 whose consecutive gaps are all equal and >= 2. Returns
-// its {start, interval, last}; null for anything shorter, with a gap of one
-// (a plain run, which reads as a range), or irregular. Output-neutral and
-// language-agnostic: renderers use it to speak a bounded/offset step cadence
-// ("every N from M [through K]") instead of enumerating the fires. The set is
-// the field's full value list, which the core has already sorted and deduped.
-function arithmeticStep(values: number[]):
+// An arithmetic progression in a sorted, distinct numeric set: consecutive
+// gaps all equal and >= 2 (a gap of one is a plain run, which reads as a
+// range). Returns its {start, interval, last}; null for a set shorter than
+// two values or irregular. Callers apply their own length policy: a
+// minute/second list must be long enough to beat enumeration, an hour list
+// from zero is a stride however short.
+function progressionOf(values: number[]):
   {start: number; interval: number; last: number} | null {
-  if (values.length < 5) {
+  if (values.length < 2) {
     return null;
   }
 
@@ -38,6 +37,16 @@ function arithmeticStep(values: number[]):
   }
 
   return {start: values[0], interval, last: values[values.length - 1]};
+}
+
+// Recognize an arithmetic progression long enough (>= 5 values) to beat
+// enumerating the fires. Output-neutral and language-agnostic: renderers use
+// it to speak a bounded/offset step cadence ("every N from M [through K]")
+// instead of the list. The set is the field's full value list, which the core
+// has already sorted and deduped.
+function arithmeticStep(values: number[]):
+  {start: number; interval: number; last: number} | null {
+  return values.length >= 5 ? progressionOf(values) : null;
 }
 
 // A field's classified segments, or an empty list when the field is a
@@ -150,27 +159,13 @@ function renderStride(
 function hourListStride(
   values: number[]
 ): {start: number; interval: number; last: number} | null {
-  if (values.length < 2) {
+  const stride = progressionOf(values);
+
+  if (!stride) {
     return null;
   }
 
-  const interval = values[1] - values[0];
-
-  if (interval < 2) {
-    return null;
-  }
-
-  for (let i = 2; i < values.length; i += 1) {
-    if (values[i] - values[i - 1] !== interval) {
-      return null;
-    }
-  }
-
-  if (values[0] !== 0 && values.length < 5) {
-    return null;
-  }
-
-  return {interval, last: values[values.length - 1], start: values[0]};
+  return stride.start !== 0 && values.length < 5 ? null : stride;
 }
 
 // The minute field's stride for a confinement frame, or null when the minute
