@@ -28,14 +28,16 @@ type StepSegment = Extract<Segment, {kind: 'step'}>;
 
 // A step cadence to phrase: the `interval` repeats over a `cycle`-long field
 // (60 for minute/second, 24 for hour), running from `start` to `last`. `unit`
-// is the singular noun and `anchor` the larger unit the values count against.
+// is the singular noun and `anchor` the larger unit the values count against
+// — or null when a stepped/windowed hour clause is the sole hour authority
+// and the lead speaks unanchored.
 interface Stride {
   interval: number;
   start: number;
   last: number;
   cycle: number;
   unit: string;
-  anchor: string;
+  anchor: string | null;
 }
 
 // A contiguous hour range to phrase as a window. `from`/`to` are the bounding
@@ -265,7 +267,7 @@ function denseMinuteFragment(schedule: Schedule,
   }
 
   if (schedule.shapes.minute === 'range') {
-    return minuteRangeLead(schedule.pattern.minute, opts);
+    return minuteRangeLead(schedule.pattern.minute, true, opts);
   }
 
   // A minute list has segments; an offset/uneven step the core enumerated to a
@@ -530,7 +532,7 @@ function renderSingleMinute(schedule: Schedule, plan: PlanOf<'singleMinute'>,
 
 function renderRangeOfMinutes(schedule: Schedule,
   plan: PlanOf<'rangeOfMinutes'>, opts: NormalizedOptions): string {
-  return minuteRangeLead(schedule.pattern.minute, opts) +
+  return minuteRangeLead(schedule.pattern.minute, true, opts) +
     trailingQualifier(schedule, opts);
 }
 
@@ -581,11 +583,13 @@ function renderMinuteFrequency(schedule: Schedule,
   else if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean stride (dividing the day),
     // which confines the cadence to every Nth hour; a stepped hour field's
-    // first segment is a step segment. The hour step scopes the hours, so an
-    // offset cadence drops "past the hour" and joins with a comma.
-    const bound = withoutHourAnchor(phrase);
+    // first segment is a step segment. The hour step is the sole hour
+    // authority, so the lead speaks unanchored; an offset cadence joins
+    // with a comma, a bare one (which never anchors) with a space.
+    const bare = stepCycle60(stepSegment(schedule, 'minute'),
+      'minute', null, opts);
 
-    phrase = bound + (bound === phrase ? ' ' : ', ') +
+    phrase = bare + (bare === phrase ? ' ' : ', ') +
       everyNthHour(stepSegment(schedule, 'hour'), opts);
   }
 
@@ -630,7 +634,7 @@ function renderMinutesAcrossHours(schedule: Schedule,
   }
 
   if (plan.form === 'range') {
-    const lead = minuteRangeLead(schedule.pattern.minute, opts);
+    const lead = minuteRangeLead(schedule.pattern.minute, true, opts);
 
     if (cadence !== null) {
       return lead + ', ' + cadence + trailingQualifier(schedule, opts);
@@ -748,14 +752,14 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
   }
 
   // A minute list keeps the same cadence clause; only its lead differs. An
-  // offset/uneven step the core enumerated to that list reads as a stride. The
-  // hour step scopes the hours, so the lead drops its generic "past the hour".
-  const lead = withoutHourAnchor(plan.form === 'list' ?
-    strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
+  // offset/uneven step the core enumerated to that list reads as a stride.
+  // The hour step is the sole hour authority, so the lead speaks unanchored.
+  const lead = plan.form === 'list' ?
+    strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
       opts) ??
       listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
-        'minute', 'hour', opts) :
-    minuteRangeLead(schedule.pattern.minute, opts));
+        'minute', null, opts) :
+    minuteRangeLead(schedule.pattern.minute, false, opts);
   // A bounded or uneven hour step reads as its endpoint-pinning cadence after
   // the minute lead, not a wall of clock-time columns; an offset-clean step
   // keeps its existing per-step phrasing.
@@ -766,14 +770,16 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
 }
 
 // Lead phrase for a plain minute range: "every minute from <a> through <b>
-// past the hour".
-function minuteRangeLead(minuteField: string,
+// past the hour", or unanchored when a stepped hour clause is the sole hour
+// authority.
+function minuteRangeLead(minuteField: string, anchored: boolean,
   opts: NormalizedOptions): string {
   const bounds = minuteField.split('-');
   const num = seriesNumber();
+  const base = 'every minute from ' + num(bounds[0]) + through(opts) +
+    num(bounds[1]);
 
-  return 'every minute from ' + num(bounds[0]) + through(opts) +
-    num(bounds[1]) + ' past the hour';
+  return anchored ? base + ' past the hour' : base;
 }
 
 // --- Hour renderers. ---
@@ -795,8 +801,8 @@ function renderHourRange(schedule: Schedule, plan: PlanOf<'hourRange'>,
   }
 
   if (plan.minuteForm === 'range') {
-    return minuteRangeLead(schedule.pattern.minute, opts) + ', ' + window +
-      trailingQualifier(schedule, opts);
+    return minuteRangeLead(schedule.pattern.minute, true, opts) + ', ' +
+      window + trailingQualifier(schedule, opts);
   }
 
   return rangeMinuteLead(schedule, opts) + ' ' + window +
@@ -987,7 +993,10 @@ function renderCompactClockTimes(schedule: Schedule,
   // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    withoutHourAnchor(minuteLead) + ', ' + cadence +
+    (strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
+      opts) ??
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+        'minute', null, opts)) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
     minuteLead +
     ', at ' +
@@ -1438,16 +1447,21 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
     bare: () => cadence,
 
     // A clean wrap from a non-zero offset: name the start, no endpoint.
-    offset: () => cadence + ' from ' + getNumber(start, opts) + ' ' +
-      pluralize(start, unit) + ' past the ' + anchor,
+    offset: () => {
+      const base = cadence + ' from ' + getNumber(start, opts) + ' ' +
+        pluralize(start, unit);
+
+      return anchor === null ? base : base + ' past the ' + anchor;
+    },
 
     // A bounded, non-wrapping set: pin both endpoints. Each bound is a value,
     // so it reads as a digit, matching the range idiom ("from 0 through 30").
     bounded: () => {
       const num = seriesNumber();
+      const base = cadence + ' from ' + num(start) + through(opts) +
+        num(last) + ' ' + pluralize(last, unit);
 
-      return cadence + ' from ' + num(start) + through(opts) + num(last) + ' ' +
-        pluralize(last, unit) + ' past the ' + anchor;
+      return anchor === null ? base : base + ' past the ' + anchor;
     }
   });
 }
@@ -1457,8 +1471,8 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
 // enumerates an offset/uneven step to this fire list; the Schedule is
 // unchanged, so the renderer recognizes the progression). Returns null for a
 // non-progression or a too-short list, leaving the caller to enumerate.
-function strideFromSegments(segments: Segment[], unit: string, anchor: string,
-  opts: NormalizedOptions): string | null {
+function strideFromSegments(segments: Segment[], unit: string,
+  anchor: string | null, opts: NormalizedOptions): string | null {
   const values = singleValues(segments);
   const step = values && arithmeticStep(values);
 
@@ -1475,7 +1489,7 @@ function strideFromSegments(segments: Segment[], unit: string, anchor: string,
 // literal list of their fires, so only a clean cadence (interval dividing
 // 60, start within the first interval) reaches a step renderer.
 function stepCycle60(segment: StepSegment, unit: string,
-  anchor: string, opts: NormalizedOptions): string {
+  anchor: string | null, opts: NormalizedOptions): string {
   // A bounded start (`a-b/n`) applies the interval within the range.
   if (segment.startToken.indexOf('-') !== -1) {
     return listPastThe(numberWords(segment.fires, opts), unit, anchor, opts);
@@ -1818,20 +1832,14 @@ function segmentWords(segments: Segment[],
   });
 }
 
-// Enumerate fire words as "at A, B and C <unit>s past the <anchor>".
-function listPastThe(words: (string | number)[], unit: string, anchor: string,
-  opts: NormalizedOptions): string {
-  return 'at ' + joinList(words, opts) + ' ' + unit + 's past the ' +
-    anchor;
-}
+// Enumerate fire words as "at A, B and C <unit>s past the <anchor>", or
+// unanchored ("at A, B and C <unit>s") when a stepped/windowed hour clause
+// is the sole hour authority.
+function listPastThe(words: (string | number)[], unit: string,
+  anchor: string | null, opts: NormalizedOptions): string {
+  const base = 'at ' + joinList(words, opts) + ' ' + unit + 's';
 
-// Strip the generic "past the hour" anchor from a minute-cadence lead. When the
-// hour field is restricted (a step or window), the hour clause is the sole hour
-// authority, so the cadence must not also assert "every hour" — "past the hour"
-// alongside a stepped/windowed hour reads as a conflicting every-hour scope. An
-// unrestricted hour keeps the anchor (it is the only hour statement there).
-function withoutHourAnchor(lead: string): string {
-  return lead.replace(/ past the hour$/, '');
+  return anchor === null ? base : base + ' past the ' + anchor;
 }
 
 // A clock time reads as a word ("noon"/"midnight") only at exact 12:00 or
