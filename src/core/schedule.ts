@@ -128,14 +128,18 @@ export interface DialectStyle {
   midnight: string;
   ordinals: boolean;
   pm: string;
+  // Whether the `through` connective includes the whole named hour ("through
+  // 5 p.m." covers a 5:45 fire), letting a discontinuous multi-hour close
+  // name the bare hour. An exclusive-reading connective ("to", "-") must
+  // close on the last fire instead, or it understates the run.
+  inclusiveThrough: boolean;
   sep: string;
   serialComma: boolean;
   through: string;
-  // Whether a contiguous hour range reads as an up-to-but-not-including
-  // window ("from 9 a.m. until 6 p.m.") rather than a "through <last fire>"
-  // span. Set only on the default English dialect; other dialects and custom
-  // styles keep the "through" span.
-  untilWindow?: boolean;
+  // The connective for the up-to-but-not-including close of a continuous
+  // run ("from 9 a.m. until 6 p.m."): exclusive, unlike `through`, which
+  // names an included bound.
+  until: string;
 }
 
 /**

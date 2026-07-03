@@ -2,11 +2,12 @@ import {run} from '../../../../runner.js';
 
 // Behavior spec for the day-of-month / day-of-week OR rule. Per the crontab
 // spec, when BOTH the date, and weekday fields are restricted (not `*`), the
-// schedule fires on the UNION of the two day sets. The default dialect renders
+// schedule fires on the UNION of the two day sets. Every dialect renders
 // this as a condition over the day — "whenever the day is <dom> or <dow>" — so
-// the union is unmistakable (the older "on <dom> or on <dow>" read as
-// alternatives). A cadence-shaped date arm is not a noun the predicate frame
-// can hold, so that union reads as a clause with "any" carrying the union
+// the union is unmistakable (the older "on <dom> or on <dow>", kept only by
+// the compact `short` form, read as alternatives). A cadence-shaped date
+// arm is not a noun the predicate frame can hold, so that union reads as a
+// clause with "any" carrying the union
 // ("on every 3rd day of the month from the 2nd or on any Sunday"). A
 // restricted month scopes the whole union and leads the clause ("in June …").
 

@@ -25,17 +25,31 @@ suite.
    when next touched.
 3. **The stability suite generalizes.** A language-agnostic engine plus
    per-language token extractors, wired into the pipeline's Verify stage.
-4. **`untilWindow` is deleted, and the until-close converges.** The
-   up-to-but-not-including close for continuous runs is an accuracy
-   property, not typography ("every minute from 9 a.m. until 6 p.m." states
-   the true end; "to 5pm" undersells a run that fires at 5:59). Every
-   dialect states the true window end with its own connective; the
-   `untilWindow` boolean is removed from `DialectStyle` and replaced by an
-   `until` connective string (us `' until '`, gb `' to '`, house `' - '`).
-   A custom dialect passing `untilWindow` gets it silently ignored
-   (documented in the changelog; TS users see a type error). Discontinuous
-   runs (restricted minutes) keep the through-close on the last fire hour,
-   everywhere — that distinction is semantic and universal.
+4. **`untilWindow` is deleted; closes converge on a semantic rule.**
+   (Revised 2026-07-03 after maintainer review caught a factual error in the
+   first cut.) The universal rule is semantic: **every stated bound must be
+   true of the run**; its surface realization legitimately varies with the
+   connective's inclusivity.
+   - **Continuous runs** (wildcard minute): every dialect states the true
+     window end — the top of the hour after the last — with its own `until`
+     connective string (us `' until '`, gb `' until '` ("until" is
+     perfectly idiomatic British English), house `' - '`).
+   - **Discontinuous runs** (restricted minutes): the close policy follows
+     the through-connective's inclusivity via `inclusiveThrough: boolean`.
+     us `true`: "through 5 p.m." includes the named hour, so the bare-hour
+     close is truthful (the panel-blessed rationale: the minute cadence
+     lives in the lead clause). gb/house `false`: "to" and "-" read
+     exclusively, so the truthful close names the last fire ("to 5.45pm",
+     "- 5:45 PM") — unchanged from today. Custom dialects default `false`:
+     an overridden connective's inclusivity is unknown, so the safe,
+     always-true close is the last fire (this replaces `untilWindow`'s
+     force-false override with a narrower, truthfully-named flag).
+   - The first cut exported the us bare-hour close to every dialect, which
+     is factually false under an exclusive connective ("to 5pm" asserts a
+     stop at 5:00 for a run firing until 5:45). Rejected.
+   - A custom dialect passing `untilWindow` gets it silently ignored
+     (documented in the changelog; TS users see a type error). `short`
+     keeps last-fire closes everywhere, unchanged.
 
 ## Ordering and packaging
 
@@ -53,13 +67,16 @@ protocol).
 - The three frame gates (`isDayUnion`, `confinement`, `isDenseCadence`)
   drop the `opts.style.untilWindow` condition and keep only `!opts.short`.
 - `rangeWindow`'s continuous multi-hour branch applies in every dialect,
-  closing with `style.until` on the top of the hour after the last;
-  single-hour windows and discontinuous runs keep the through-close
-  (existing semantic rules, now universal). The hardcoded `' until '` in
+  closing with `style.until` on the top of the hour after the last. A
+  discontinuous multi-hour run closes per `style.inclusiveThrough`: bare
+  hour when the through-connective is inclusive (us), the last fire
+  otherwise (gb/house/custom) — both truthful; single-hour windows and
+  `short` always close on the last fire. The hardcoded `' until '` in
   `hourConfinement`'s single-hour span uses `style.until` too.
-- `DialectStyle`: delete `untilWindow?: boolean`; add `until: string`.
-  `resolveDialect` drops its custom-object `untilWindow: false` override
-  (custom dialects inherit the us base's `' until '`).
+- `DialectStyle`: delete `untilWindow?: boolean`; add `until: string` and
+  `inclusiveThrough: boolean`. `resolveDialect`'s custom-object override
+  becomes `inclusiveThrough: false` (safe close for an unknown connective),
+  replacing the old `untilWindow: false`.
 - Corpus: `test/lang/en/options/dialect.js` rows for gb/house move to the
   modern frames and the converged close; any custom-style rows exercising
   `untilWindow` are rewritten against `until`. Docs field reference

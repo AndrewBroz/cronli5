@@ -29,15 +29,22 @@ so `uk` is kept only as a deprecated alias for `gb`.
   ("9:00:15 a.m.").
 * Bare days of the month keep ordinals ("on the 1st and 15th") in all
   dialects. Only month-day dates follow the cardinal/ordinal dialect rule.
-* Day-of-month with day-of-week fires on the UNION of the two day sets. The
-  default (`us`) dialect renders it as a condition over one variable, the day
+* Day-of-month with day-of-week fires on the UNION of the two day sets.
+  Every dialect renders it as a condition over one variable, the day
   ("whenever the day is the 13th or a Friday") — the panel-validated frame
   that reads as a union rather than alternatives. A cadence-shaped date arm
   (an open step with no parity idiom) is not a noun that frame can hold, so
   that union reads as a clause with "any" carrying the union ("on every 3rd
   day of the month from the 2nd or on any Sunday") — maintainer-ratified as
   the best compromise between the union reading and keeping the cadence.
-  Other dialects and the `short` form keep the older "on <dom> or on <dow>".
+  Only the compact `short` form keeps the older "on <dom> or on <dow>".
+* Window closes state true bounds in every dialect. A continuous run
+  (wildcard minute) closes on the top of the hour after the last fire with
+  the dialect's `until` connective ("until 6 p.m.", gb "until 6pm", house
+  "- 6 PM"). A restricted minute stops within the final hour: `us`'s
+  inclusive "through 5 p.m." may close on the bare hour, while an
+  exclusive connective ("to", "-") closes on the last fire ("to 5.45pm")
+  so the window is never understated.
 * The UK seconds form extends the Guardian's dot convention ("9.30.15am"),
   although the guide itself does not specify a format for seconds.
 * Clock-time enumeration caps at six. Beyond that, windows render per

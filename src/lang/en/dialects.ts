@@ -16,18 +16,21 @@ const dialects: {[name: string]: DialectStyle} = {
     am: 'am',
     closeUp: true,
     dayFirst: true,
+    inclusiveThrough: false,
     midday: 'midday',
     midnight: 'midnight',
     ordinals: false,
     pm: 'pm',
     sep: '.',
     serialComma: false,
-    through: ' to '
+    through: ' to ',
+    until: ' until '
   },
   us: {
     am: 'a.m.',
     closeUp: false,
     dayFirst: false,
+    inclusiveThrough: true,
     midday: 'noon',
     midnight: 'midnight',
     ordinals: false,
@@ -35,19 +38,21 @@ const dialects: {[name: string]: DialectStyle} = {
     sep: ':',
     serialComma: true,
     through: ' through ',
-    untilWindow: true
+    until: ' until '
   },
   house: {
     am: 'AM',
     closeUp: false,
     dayFirst: false,
+    inclusiveThrough: false,
     midday: 'noon',
     midnight: 'midnight',
     ordinals: true,
     pm: 'PM',
     sep: ':',
     serialComma: true,
-    through: ' - '
+    through: ' - ',
+    until: ' - '
   }
 };
 
@@ -59,10 +64,10 @@ function resolveDialect(
   dialect?: Cronli5Options['dialect']
 ): DialectStyle {
   if (typeof dialect === 'object' && dialect !== null) {
-    // A custom style inherits the US base but NOT the until-window: a custom
-    // dialect that only overrides the connective (e.g. `{through: ' until '}`)
-    // keeps the "through <last fire>" close, just spelled with its own word.
-    return {...dialects.us, untilWindow: false, ...dialect};
+    // A custom style inherits the US base but NOT its inclusive-through: an
+    // overridden connective's inclusivity is unknown (e.g. `{through:
+    // ' until '}`), so the safe, always-true close names the last fire.
+    return {...dialects.us, inclusiveThrough: false, ...dialect};
   }
 
   // The legacy 'uk' name resolves to 'gb'; a name another language owns
