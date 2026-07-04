@@ -1685,4 +1685,5 @@ const zh: Language<ChineseStyle> = {
     toVariant('运行时间：', opts.style.variant) + description + '。'
 };
 
+export {HANT};
 export default zh;
