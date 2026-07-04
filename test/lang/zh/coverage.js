@@ -52,7 +52,7 @@ describe('中文 (zh) — branch coverage:', function() {
       // carries no parity class — it falls back to the plain cadence in the OR,
       // both with a wildcard month (每3天) and a fronted month (6月，每3天).
       ['0 0 */3 * 0', '每3天或每周日，凌晨0点'],
-      ['0 0 3/2 * 0', '每2天或每周日，凌晨0点'],
+      ['0 0 3/2 * 0', '从3日起每2天或每周日，凌晨0点'],
       ['0 0 */3 6 0', '6月，每3天或每周日，凌晨0点']
     ]);
   });

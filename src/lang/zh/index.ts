@@ -1401,9 +1401,20 @@ function dateCore(schedule: Schedule, quartzPrefix: string): string {
 }
 
 // The open day-step cadence — the one builder both the date qualifier and
-// the union date arm speak.
+// the union date arm speak. An offset start (a/N with a > 1, the core's
+// analyses.day cadence-step fact) names its start day with the same 从…起
+// idiom the minute and hour cadences use ("从2日起每3天"): dropping it
+// would collapse 3/2 into */2's "每2天". Start 1 wraps the whole month and
+// stays bare; dates never pin a 至 endpoint (month lengths vary).
 function openDateCadence(schedule: Schedule): string {
-  return cadence(stepSegment(schedule, 'date').interval, '天');
+  const arm = schedule.analyses.day.date;
+  const bare = cadence(stepSegment(schedule, 'date').interval, '天');
+
+  if (arm && arm.kind === 'cadenceStep' && arm.start > 1) {
+    return '从' + arm.start + '日起' + bare;
+  }
+
+  return bare;
 }
 
 // A weekday name, resolving a token (MON → 周一); cron treats 7 as Sunday.

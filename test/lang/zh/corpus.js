@@ -322,6 +322,14 @@ describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
       ['0 0 * 1-3 1-5', '1月至3月每周一至周五凌晨0点'],
       ['0 0 * 1-3 5L', '1月至3月最后一个周五凌晨0点'],
       ['0 0 */2 * *', '每2天，凌晨0点'],
+      // An OFFSET open day step (a/N with a > 1) names its start day with the
+      // same 从…起 idiom the minute and hour cadences use ("从2分起每7分钟"):
+      // dropping it would collapse 3/2 (fires 3, 5, …, 31) into */2's "每2天"
+      // — a dropped restriction and a prose collision between two distinct
+      // schedules. Start 1 (or *) wraps the whole month and stays bare.
+      ['0 0 2/3 * *', '从2日起每3天，凌晨0点'],
+      ['0 0 3/2 * *', '从3日起每2天，凌晨0点'],
+      ['0 0 3/2 * 5', '从3日起每2天或每周五，凌晨0点'],
       // A BOUNDED day-of-month step (start-end/interval) fires a finite set of
       // days, so it enumerates them like the equivalent explicit day list
       // (9-17/2 = 9,11,13,15,17), never the open "每N天" cadence, which drops the
