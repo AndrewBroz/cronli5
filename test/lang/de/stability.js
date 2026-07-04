@@ -7,14 +7,10 @@ import {de} from '../../../tooling/scripts/stability/de.mjs';
 const {expect} = chai;
 const {checkPair} = makeStability(de);
 
-// KNOWN arm instability, pinned as expected failures: a standalone `2/2`
-// date enumerates its 15 fires ("am 2., 4., … und 30.") while the union arm
-// reads the parity class ("an jedem geraden Tag des Monats") — the same
-// field at two fidelities. The odd set is consistent (cadence ↔ parity, a
-// declared fold); only the even set lacks a standalone cadence/parity form.
-// Fixing it is a German corpus decision (see docs/backlog.md); when it
-// lands, these it.fails flip and this set empties.
-const KNOWN_UNSTABLE_DATES = new Set(['2/2']);
+// Arm instabilities pinned as expected failures — empty since the `2/2`
+// even-parity fix (the standalone date now speaks the union arm's parity
+// class); the mechanism stays for the next real finding.
+const KNOWN_UNSTABLE_DATES = new Set();
 
 // Relational invariants over generated pattern triples — the dual of the
 // point-wise corpus (see the engine's header).

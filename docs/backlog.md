@@ -6,14 +6,10 @@ actively pursued. Current development is **automated-only** (see
 
 ## Open rendering findings
 
-- **de: even-parity day step is arm-unstable** *(2026-07-03, stability
-  engine)*. A standalone `2/2` date enumerates its 15 fires ("am 2., 4., …
-  und 30.") while the DOM∨DOW union arm reads the parity class ("an jedem
-  geraden Tag des Monats") — the same field at two fidelities; the odd set
-  is consistent (cadence ↔ parity fold). Fix is a German corpus decision:
-  either a standalone even-parity form ("an jedem geraden Tag des Monats")
-  or an even-set cadence. Pinned as `it.fails` cells in
-  `test/lang/de/stability.js` (KNOWN_UNSTABLE_DATES) — they flip when fixed.
+- ~~de: even-parity day step is arm-unstable~~ *(found and fixed
+  2026-07-03)*: the standalone `2/2` date now speaks the union arm's parity
+  class ("an jedem geraden Tag des Monats"); the 32 pinned stability cells
+  flipped green and `KNOWN_UNSTABLE_DATES` is empty.
 
 
 Concrete defects from the code review and the wide objective sweep
