@@ -4,11 +4,23 @@
 // digits as symmetric noise, like every digit-numeral language.
 
 import cronli5 from '../../../src/cronli5.js';
-import zh from '../../../src/lang/zh/index.js';
+import zh, {HANT} from '../../../src/lang/zh/index.js';
 
-// The default plus the explicit Simplified alias; the Traditional glyph map
-// (zh-Hant) is experimental and joins when it stabilizes.
-const dialects = [null, 'zh-Hans'];
+// All three variants. zh-Hant is a pure 1:1 glyph map applied at the render
+// boundary, so the extractor folds it back to Simplified with the inverse
+// map before token extraction — one source of truth, no duplicate regexes.
+const dialects = [null, 'zh-Hans', 'zh-Hant'];
+
+const HANS = Object.fromEntries(
+  Object.entries(HANT).map(function invert([hans, hant]) {
+    return [hant, hans];
+  }));
+
+function toHans(text) {
+  return Array.from(text, function fold(glyph) {
+    return HANS[glyph] ?? glyph;
+  }).join('');
+}
 
 // A weekday run: "周X" then any "、Y" continuations (bare day characters).
 const WEEKDAY_RUN = /周([一二三四五六日])((?:、[一二三四五六日])*)/g;
@@ -19,7 +31,8 @@ function render(cron, dialect) {
 
 // The date-arm tokens: bare digits plus normalized markers, with weekday
 // runs stripped first so their day characters never read as dates.
-function dateTokens(text) {
+function dateTokens(rendered) {
+  const text = toHans(rendered);
   const noWeekdays = text.replace(WEEKDAY_RUN, '');
   const tokens = [];
 
@@ -51,10 +64,10 @@ function dateTokens(text) {
 }
 
 // The weekday display order, each collapsed run expanded to full names.
-function weekdayOrder(text) {
+function weekdayOrder(rendered) {
   const names = [];
 
-  for (const m of text.matchAll(WEEKDAY_RUN)) {
+  for (const m of toHans(rendered).matchAll(WEEKDAY_RUN)) {
     names.push('周' + m[1]);
 
     for (const bare of m[2].matchAll(/[一二三四五六日]/g)) {
