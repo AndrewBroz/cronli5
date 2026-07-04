@@ -10,10 +10,9 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
-import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
-  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  arithmeticStep, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride,
   renderStride as chooseStride, secondsConfinesMinute, segmentsOf,
   singleValues, stepSegment
 } from '../../core/cadence.js';
@@ -944,7 +943,7 @@ function hourWindow(
 // Whether BOTH the date and weekday fields are restricted (not '*'): cron
 // fires when either condition matches, making this a date-OR-weekday union.
 function isDateWeekdayUnion(schedule: Schedule): boolean {
-  return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*';
+  return schedule.analyses.day.union;
 }
 
 // The month lead for the unified union frame, with a trailing comma appended
@@ -980,14 +979,15 @@ function domArm(schedule: Schedule, opts: Opts): string {
   // the month ("un día impar del mes" = 1, 3, …, 31, resetting each month),
   // not the durative "cada dos días del mes" the standalone form uses. A bare
   // "cada dos días" would mis-imply a continuous every-other-day cadence with
-  // no monthly anchor, so the reader could not reconstruct the odd days.
-  const parity = parityDayPredicate(date);
+  // no monthly anchor, so the reader could not reconstruct the odd days. The
+  // classification is the core's (analyses.day); only the words live here.
+  const arm = schedule.analyses.day.date;
 
-  if (parity) {
-    return parity;
+  if (arm && arm.kind === 'cadenceStep' && arm.parity !== null) {
+    return parityDayNoun(arm.parity);
   }
 
-  if (isOpenStep(date)) {
+  if (arm && arm.kind === 'cadenceStep') {
     return stepDates(date, opts);
   }
 
@@ -1620,46 +1620,13 @@ function hourStrideCadence(
 // times. An offset-clean stride keeps its existing confinement form, so only
 // the endpoint-bearing case routes here.
 function unevenHourCadence(schedule: Schedule, opts: Opts): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
-  if (!stride || offsetCleanStride(stride)) {
+  if (!stride || stride.offsetClean) {
     return null;
   }
 
   return hourStrideCadence(stride, opts);
-}
-
-// The hour field's stride, or null when the hour is not a cadence: a step
-// segment yields its {start, interval, last} directly; an all-single hour
-// list yields one only when its values form a step progression (so an irregular
-// list like 9,17 keeps enumerating). The Schedule is unchanged — the renderer
-// recognizes the stride and speaks it as a cadence instead of the clock-time
-// cross-product.
-function hourStride(
-  schedule: Schedule
-): {start: number; interval: number; last: number} | null {
-  const segments = segmentsOf(schedule, 'hour');
-
-  if (segments.length === 1 && segments[0].kind === 'step') {
-    const segment = segments[0];
-
-    // A bounded step that fires only once (e.g. `9-10/5` -> just 9) is a single
-    // value, not a stride: it has no interval to speak and no endpoint to pin.
-    if (segment.fires.length < 2) {
-      return null;
-    }
-
-    const start = segment.startToken === '*' ?
-      0 :
-      +segment.startToken.split('-')[0];
-
-    return {interval: segment.interval, last: segment.fires[
-      segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segments);
-
-  return values && hourListStride(values);
 }
 
 // The second's status against a pinned minute: a wildcard or sub-minute step
@@ -1710,7 +1677,7 @@ function hourCadenceLead(
 function hourCadence(
   schedule: Schedule, minute: number, opts: Opts
 ): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (!stride) {
     return null;
@@ -1724,7 +1691,7 @@ function hourCadence(
   // stride has no clean wrap, so its endpoint-pinning cadence ("cada cinco
   // horas de las 00:00 a las 20:00") reads better however short.
   if (schedule.pattern.second === '0' && fires <= maxClockTimes &&
-      offsetCleanStride(stride)) {
+      stride.offsetClean) {
     return null;
   }
 
@@ -2129,7 +2096,7 @@ function dayPeriod(hour: number, opts: Opts): string {
 function leadingQualifier(schedule: Schedule, opts: Opts): string {
   const pattern = schedule.pattern;
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
+  if (schedule.analyses.day.union) {
     return '';
   }
 
@@ -2155,7 +2122,7 @@ function leadingQualifier(schedule: Schedule, opts: Opts): string {
 function trailingQualifier(schedule: Schedule, opts: Opts): string {
   const pattern = schedule.pattern;
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
+  if (schedule.analyses.day.union) {
     return '';
   }
 
@@ -2180,7 +2147,8 @@ function trailingQualifier(schedule: Schedule, opts: Opts): string {
 function datePhrase(schedule: Schedule, opts: Opts): string {
   const pattern = schedule.pattern;
 
-  if (quartzDatePhrase(pattern.date) || isOpenStep(pattern.date)) {
+  if (quartzDatePhrase(pattern.date) ||
+      schedule.analyses.day.date?.kind === 'cadenceStep') {
     return dateClause(schedule, '', opts) + monthScope(schedule);
   }
 
@@ -2201,7 +2169,7 @@ function dateClause(
     return quartz;
   }
 
-  if (isOpenStep(pattern.date)) {
+  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
     return stepDates(pattern.date, opts);
   }
 
@@ -2404,24 +2372,8 @@ function monthScope(schedule: Schedule): string {
 // the OR union frame (see domArm). `*/2` and `1/2` fire on the odd days
 // (1, 3, …, 31); `2/2` fires on the even days. Any other open step has no
 // parity reading, so the caller falls back to stepDates.
-function parityDayPredicate(dateField: string): string | undefined {
-  if (!isOpenStep(dateField)) {
-    return;
-  }
-
-  const [start, step] = dateField.split('/');
-
-  if (+step !== 2) {
-    return;
-  }
-
-  if (start === '*' || start === '1') {
-    return 'un día impar del mes';
-  }
-
-  if (start === '2') {
-    return 'un día par del mes';
-  }
+function parityDayNoun(parity: 'odd' | 'even'): string {
+  return parity === 'odd' ? 'un día impar del mes' : 'un día par del mes';
 }
 
 function stepDates(dateField: string, opts: Opts): string {
