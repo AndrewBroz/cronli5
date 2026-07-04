@@ -4,13 +4,12 @@
 import {pad} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {
-  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
-  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  arithmeticStep, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride,
   renderStride as chooseStride, secondsConfinesMinute, segmentsOf,
   singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
-import {isOpenStep} from '../../core/shapes.js';
 import {toFieldNumber} from '../../core/util.js';
 import type {Cronli5Options} from '../../types.js';
 import type {
@@ -304,22 +303,16 @@ function quartzDate(field: string): string | null {
 // its 16 fires — the enumeration would bury the union beside the "oder". `*/2`
 // and `1/2` are the odd days, `2/2` the even; any other start enumerates.
 // Mirrors en's odd/even-numbered-day idiom. Null when not such a step.
-function oddEvenDay(dateField: string): string | null {
-  if (!isOpenStep(dateField)) {
+function oddEvenDay(schedule: Schedule): string | null {
+  const arm = schedule.analyses.day.date;
+
+  if (arm?.kind !== 'cadenceStep' || arm.parity === null) {
     return null;
   }
 
-  const [start, step] = dateField.split('/');
-
-  if (+step !== 2) {
-    return null;
-  }
-
-  if (start === '*' || start === '1') {
-    return 'an jedem ungeraden Tag des Monats';
-  }
-
-  return start === '2' ? 'an jedem geraden Tag des Monats' : null;
+  return arm.parity === 'odd' ?
+    'an jedem ungeraden Tag des Monats' :
+    'an jedem geraden Tag des Monats';
 }
 
 type Months = GermanStyle['months'];
@@ -1125,9 +1118,9 @@ function openOffsetCleanStride(
     return null;
   }
 
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
-  return stride && offsetCleanStride(stride) ? stride : null;
+  return stride?.offsetClean ? stride : null;
 }
 
 // --- Hour-step cadence (the 24-cycle analog of renderStride). ---
@@ -1158,38 +1151,6 @@ function hourStrideCadence(
 // like 9,17 keeps enumerating). The Schedule is unchanged — the renderer
 // recognizes the stride and speaks it as a cadence, not the clock-time
 // cross-product.
-function hourStride(
-  schedule: Schedule
-): {start: number; interval: number; last: number} | null {
-  const segments = segmentsOf(schedule, 'hour');
-
-  // A wildcard hour carries no segments (no discrete hours to stride over).
-  if (!segments) {
-    return null;
-  }
-
-  if (segments.length === 1 && segments[0].kind === 'step') {
-    const segment = segments[0];
-
-    // A bounded step that fires only once (e.g. `9-10/5` -> just 9) is a single
-    // value, not a stride: it has no interval to speak and no endpoint to pin.
-    if (segment.fires.length < 2) {
-      return null;
-    }
-
-    const start = segment.startToken === '*' ?
-      0 :
-      +segment.startToken.split('-')[0];
-
-    return {interval: segment.interval, last: segment.fires[
-      segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segments);
-
-  return values && hourListStride(values);
-}
-
 // The bounded cadence for an hour stride that pins both clock-time endpoints,
 // or null when the hour is not such a stride. The core rewrites a uneven step
 // to its fire list, so a minute window/list/step crossed with it lands in the
@@ -1198,9 +1159,9 @@ function hourStride(
 // offset-clean stride keeps its existing confinement form, so only the
 // endpoint-bearing case routes here.
 function unevenHourCadence(schedule: Schedule): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
-  if (!stride || offsetCleanStride(stride)) {
+  if (!stride || stride.offsetClean) {
     return null;
   }
 
@@ -1254,7 +1215,7 @@ function hourCadenceLead(schedule: Schedule, minute: number): string {
 // itself stops enumerating. The renderer returns the bare clause; the day
 // frame is composed in `describe`. Renderer-only; the Schedule is unchanged.
 function hourCadence(schedule: Schedule, minute: number): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (!stride) {
     return null;
@@ -1268,7 +1229,7 @@ function hourCadence(schedule: Schedule, minute: number): string | null {
   // clean wrap, so its endpoint-pinning cadence ("alle 5 Stunden von 0 bis 20
   // Uhr") reads better however short.
   if (schedule.pattern.second === '0' && fires <= maxClockTimes &&
-      offsetCleanStride(stride)) {
+      stride.offsetClean) {
     return null;
   }
 
@@ -1435,7 +1396,7 @@ const renderers = {
 // the WHOLE union and so leads the description (see `dayUnionMonthLead`) rather
 // than trailing one half, where it would read as scoping only that half.
 function isDayUnion(schedule: Schedule): boolean {
-  return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*';
+  return schedule.analyses.day.union;
 }
 
 // The leading "im Januar " scope for a day union (empty when the month is a
@@ -1453,7 +1414,7 @@ function dayUnionMonthLead(schedule: Schedule, months: Months): string {
 // union; otherwise the plain date clause ("am 1.", "vom 1. bis zum 15.").
 function dayUnionDate(schedule: Schedule): string {
   return quartzDate(schedule.pattern.date) ||
-    oddEvenDay(schedule.pattern.date) ||
+    oddEvenDay(schedule) ||
     dateClauseBare(schedule);
 }
 
@@ -1485,15 +1446,9 @@ function dayUnionWeekday(schedule: Schedule): string {
 // idiom); other open steps fall back to the enumerated date clause. Null when
 // the date is not an open step.
 function dateStepCadence(schedule: Schedule): string | null {
-  const date = schedule.pattern.date;
+  const arm = schedule.analyses.day.date;
 
-  if (!isOpenStep(date)) {
-    return null;
-  }
-
-  const [start, step] = date.split('/');
-
-  return (start === '*' || start === '1') && +step === 2 ?
+  return arm?.kind === 'cadenceStep' && arm.parity === 'odd' ?
     'jeden zweiten Tag des Monats' :
     null;
 }
