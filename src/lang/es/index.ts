@@ -613,26 +613,21 @@ function renderMultipleMinutes(
   plan: Extract<PlanNode, {kind: 'multipleMinutes'}>,
   opts: Opts
 ): string {
-  return minutesList(schedule, opts) + trailingQualifier(schedule, opts);
+  return minutesList(schedule, 'hora', opts) +
+    trailingQualifier(schedule, opts);
 }
 
 // "en los minutos 5, 10 y 30 de cada hora". An offset/uneven step the core
 // enumerated to this list reads as a stride cadence when the fires form a
-// long-enough progression.
-function minutesList(schedule: Schedule, opts: Opts): string {
-  return strideFromSegments(segmentsOf(schedule, 'minute'), 'minuto', 'hora',
+// long-enough progression. An empty `anchor` speaks unanchored — under an
+// hour STEP the hour clause is the sole hour authority, so the lead must not
+// also assert "de cada hora" (a conflicting every-hour scope); an hour
+// WINDOW and an unrestricted hour keep the anchor.
+function minutesList(schedule: Schedule, anchor: string, opts: Opts): string {
+  return strideFromSegments(segmentsOf(schedule, 'minute'), 'minuto', anchor,
     opts) ?? 'en los minutos ' +
-    joinList(segmentWords(segmentsOf(schedule, 'minute'))) + ' de cada hora';
-}
-
-// Strip the generic "de cada hora" anchor from a minute-cadence lead. Under an
-// hour STEP the hour clause is the sole hour authority, so the cadence must not
-// also assert "de cada hora" — alongside a stepped hour it reads as a
-// conflicting every-hour scope ("de cada hora, cada cuatro horas"). An hour
-// WINDOW and an unrestricted hour keep the anchor (the window already names the
-// hours; an open hour has no other hour statement).
-function withoutHourAnchor(lead: string): string {
-  return lead.replace(/ de cada hora$/, '');
+    joinList(segmentWords(segmentsOf(schedule, 'minute'))) +
+    (anchor ? ' de cada ' + anchor : '');
 }
 
 // "cada minuto del 0 al 30". The standalone renderer adds "de cada hora";
@@ -763,9 +758,9 @@ function renderMinuteFrequency(
   else if (plan.hours.kind === 'step') {
     // A clean stride is a confinement ("las horas pares", or the active-hour
     // list), never a juxtaposed cadence ("cada dos horas"). The hour step
-    // scopes the hours, so an offset cadence drops "de cada hora".
-    phrase = withoutHourAnchor(phrase) + ', ' +
-      stepHourSpan(stepSegment(schedule, 'hour'), opts);
+    // scopes the hours, so the lead speaks unanchored (no "de cada hora").
+    phrase = stepCycle60(stepSegment(schedule, 'minute'), 'minuto', '',
+      opts) + ', ' + stepHourSpan(stepSegment(schedule, 'hour'), opts);
   }
 
   return phrase + trailingQualifier(schedule, opts);
@@ -821,7 +816,7 @@ function renderMinutesAcrossHours(
 
   const lead = plan.form === 'range' ?
     minuteRangeLead(schedule.pattern.minute) :
-    minutesList(schedule, opts);
+    minutesList(schedule, 'hora', opts);
 
   if (cadence !== null) {
     return lead + ', ' + cadence + trailingQualifier(schedule, opts);
@@ -851,9 +846,9 @@ function renderMinuteSpanAcrossHourStep(
   // A minute list keeps the same cadence clause as the range; only its lead
   // differs ("en los minutos 5 y 30 de cada hora" vs "cada minuto del 0 al
   // 30"). The hour step scopes the hours, so the lead drops "de cada hora".
-  const lead = withoutHourAnchor(plan.form === 'list' ?
-    minutesList(schedule, opts) :
-    minuteRangeLead(schedule.pattern.minute));
+  const lead = plan.form === 'list' ?
+    minutesList(schedule, '', opts) :
+    minuteRangeLead(schedule.pattern.minute);
 
   return lead + ', ' +
     (cadence ?? stepHours(segment, opts)) + trailingQualifier(schedule, opts);
@@ -893,7 +888,7 @@ function renderHourRange(
 
   const lead = schedule.shapes.minute === 'single' ?
     'en el minuto ' + schedule.pattern.minute + ' de cada hora' :
-    minutesList(schedule, opts);
+    minutesList(schedule, 'hora', opts);
 
   return lead + ', ' + window + trailingQualifier(schedule, opts);
 }
@@ -1448,9 +1443,9 @@ function renderCompactClockTimes(
   // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    withoutHourAnchor(minutesList(schedule, opts)) + ', ' + cadence +
+    minutesList(schedule, '', opts) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
-    minutesList(schedule, opts) + ', ' +
+    minutesList(schedule, 'hora', opts) + ', ' +
       hourContextTimes(schedule, opts) + trailingQualifier(schedule, opts);
 
   return schedule.analyses.clockSecond ?
