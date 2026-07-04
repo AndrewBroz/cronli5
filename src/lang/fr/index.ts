@@ -2082,8 +2082,15 @@ function applyYear(
     return description + ' ' + stepYears(yearField, opts);
   }
 
-  // A foldable single year already joined its date in datePhrase.
-  if (foldedYear(schedule) && schedule.pattern.date !== '*') {
+  // A foldable single year joined its date only where datePhrase built the
+  // date from its segments (the core day facts name that arm kind); a
+  // Quartz, open-step, or DOM-or-DOW-union date never folds, so its year
+  // trails instead of silently dropping — a dropped year is a dropped
+  // restriction.
+  const day = schedule.analyses.day;
+
+  if (foldedYear(schedule) && !day.union &&
+      day.date?.kind === 'segments') {
     return description;
   }
 

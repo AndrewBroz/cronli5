@@ -699,3 +699,24 @@ describe('Tunnetut virheet (vaihe C):', function() {
         .to.not.include('joka minuutti');
     });
 });
+
+// Vuosi {years: true} -asetuksella. Taipuva muoto liittyy kalenteripäivään
+// ("kuukauden 13. päivänä vuonna 2030"); kaikki muut päivämuodot — Quartz,
+// avoin askel, DOM-tai-DOW-unioni — saavat vuoden loppuun ("vuonna 2030")
+// sen pudottamisen sijaan: pudonnut vuosi on kadonnut rajoitus.
+describe('Vuodet (fi):', function() {
+  const years = {years: true};
+
+  run([
+    ['0 9 13 * * 2030', 'kuukauden 13. päivänä vuonna 2030 klo 9', years],
+    ['0 0 L * * 2030',
+      'kuukauden viimeisenä päivänä keskiyöllä vuonna 2030', years],
+    ['*/15 30 9 15W * * 2030',
+      '15 sekunnin välein minuutin 9.30 aikana, kuukauden 15. päivää ' +
+      'lähinnä olevana arkipäivänä vuonna 2030', {seconds: true, years: true}],
+    ['0 0 2/3 * * 2030',
+      'joka kolmas päivä 2. päivästä alkaen keskiyöllä vuonna 2030', years],
+    ['0 0 13 * 5 2030',
+      'kuukauden 13. päivänä tai perjantaisin keskiyöllä vuonna 2030', years]
+  ]);
+});
