@@ -160,7 +160,15 @@ export interface Schedule<Extra extends {kind: string} = never>
   plan: PlanNode | Extra;
 }
 
-/** A resolved style table. */
+/**
+ * A resolved style table: pure typography and connectives, never grammar.
+ * Words: `am`/`pm`, `midday`/`midnight`; connectives: `through` (inclusive
+ * span), `until` (exclusive close); layout: `closeUp`, `sep`, `serialComma`,
+ * `dayFirst`, `ordinals`; close policy: `inclusiveThrough` (whether
+ * `through` includes the whole named hour — see the English rangeWindow
+ * rules). No field selects a sentence frame: grammar is universal, chosen by
+ * the composer, never by dialect.
+ */
 export interface DialectStyle {
   am: string;
   closeUp: boolean;

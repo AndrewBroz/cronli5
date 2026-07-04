@@ -23,6 +23,26 @@ describe('Years option:', function() {
     ]
   ]);
 
+  // The single-year fold belongs to the LEADING date phrase ("on January 1,
+  // 2030 at noon"). A description whose date rides elsewhere — a trailing
+  // qualifier under a confinement frame, a day-union condition — trails the
+  // year as " in 2030" like every other year form; it is never spliced
+  // mid-sentence ("during minute 30, 2030 at 9 a.m." was a live 0.9.0 bug)
+  // and never dropped.
+  describe('the year fold is exactly the leading date phrase', function() {
+    run([
+      ['* 0 9 13 * * 2030',
+        'every second during minute 0 at 9 a.m. on the 13th in 2030',
+        options],
+      ['*/15 30 9 15W * * 2030',
+        'every 15 seconds during minute 30 at 9 a.m. on the weekday ' +
+        'nearest the 15th in 2030', options],
+      ['0 0 13 6 5 2030',
+        'in June, at midnight whenever the day is the 13th or a Friday ' +
+        'in 2030', options]
+    ]);
+  });
+
   describe('year steps', function() {
     run([
       [

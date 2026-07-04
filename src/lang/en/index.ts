@@ -28,14 +28,16 @@ type StepSegment = Extract<Segment, {kind: 'step'}>;
 
 // A step cadence to phrase: the `interval` repeats over a `cycle`-long field
 // (60 for minute/second, 24 for hour), running from `start` to `last`. `unit`
-// is the singular noun and `anchor` the larger unit the values count against.
+// is the singular noun and `anchor` the larger unit the values count against
+// — or null when a stepped/windowed hour clause is the sole hour authority
+// and the lead speaks unanchored.
 interface Stride {
   interval: number;
   start: number;
   last: number;
   cycle: number;
   unit: string;
-  anchor: string;
+  anchor: string | null;
 }
 
 // A contiguous hour range to phrase as a window. `from`/`to` are the bounding
@@ -265,7 +267,7 @@ function denseMinuteFragment(schedule: Schedule,
   }
 
   if (schedule.shapes.minute === 'range') {
-    return minuteRangeLead(schedule.pattern.minute, opts);
+    return minuteRangeLead(schedule.pattern.minute, true, opts);
   }
 
   // A minute list has segments; an offset/uneven step the core enumerated to a
@@ -530,7 +532,7 @@ function renderSingleMinute(schedule: Schedule, plan: PlanOf<'singleMinute'>,
 
 function renderRangeOfMinutes(schedule: Schedule,
   plan: PlanOf<'rangeOfMinutes'>, opts: NormalizedOptions): string {
-  return minuteRangeLead(schedule.pattern.minute, opts) +
+  return minuteRangeLead(schedule.pattern.minute, true, opts) +
     trailingQualifier(schedule, opts);
 }
 
@@ -581,11 +583,13 @@ function renderMinuteFrequency(schedule: Schedule,
   else if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean stride (dividing the day),
     // which confines the cadence to every Nth hour; a stepped hour field's
-    // first segment is a step segment. The hour step scopes the hours, so an
-    // offset cadence drops "past the hour" and joins with a comma.
-    const bound = withoutHourAnchor(phrase);
+    // first segment is a step segment. The hour step is the sole hour
+    // authority, so the lead speaks unanchored; an offset cadence joins
+    // with a comma, a bare one (which never anchors) with a space.
+    const bare = stepCycle60(stepSegment(schedule, 'minute'),
+      'minute', null, opts);
 
-    phrase = bound + (bound === phrase ? ' ' : ', ') +
+    phrase = bare + (bare === phrase ? ' ' : ', ') +
       everyNthHour(stepSegment(schedule, 'hour'), opts);
   }
 
@@ -630,7 +634,7 @@ function renderMinutesAcrossHours(schedule: Schedule,
   }
 
   if (plan.form === 'range') {
-    const lead = minuteRangeLead(schedule.pattern.minute, opts);
+    const lead = minuteRangeLead(schedule.pattern.minute, true, opts);
 
     if (cadence !== null) {
       return lead + ', ' + cadence + trailingQualifier(schedule, opts);
@@ -748,14 +752,14 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
   }
 
   // A minute list keeps the same cadence clause; only its lead differs. An
-  // offset/uneven step the core enumerated to that list reads as a stride. The
-  // hour step scopes the hours, so the lead drops its generic "past the hour".
-  const lead = withoutHourAnchor(plan.form === 'list' ?
-    strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
+  // offset/uneven step the core enumerated to that list reads as a stride.
+  // The hour step is the sole hour authority, so the lead speaks unanchored.
+  const lead = plan.form === 'list' ?
+    strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
       opts) ??
       listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
-        'minute', 'hour', opts) :
-    minuteRangeLead(schedule.pattern.minute, opts));
+        'minute', null, opts) :
+    minuteRangeLead(schedule.pattern.minute, false, opts);
   // A bounded or uneven hour step reads as its endpoint-pinning cadence after
   // the minute lead, not a wall of clock-time columns; an offset-clean step
   // keeps its existing per-step phrasing.
@@ -766,14 +770,16 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
 }
 
 // Lead phrase for a plain minute range: "every minute from <a> through <b>
-// past the hour".
-function minuteRangeLead(minuteField: string,
+// past the hour", or unanchored when a stepped hour clause is the sole hour
+// authority.
+function minuteRangeLead(minuteField: string, anchored: boolean,
   opts: NormalizedOptions): string {
   const bounds = minuteField.split('-');
   const num = seriesNumber();
+  const base = 'every minute from ' + num(bounds[0]) + through(opts) +
+    num(bounds[1]);
 
-  return 'every minute from ' + num(bounds[0]) + through(opts) +
-    num(bounds[1]) + ' past the hour';
+  return anchored ? base + ' past the hour' : base;
 }
 
 // --- Hour renderers. ---
@@ -795,8 +801,8 @@ function renderHourRange(schedule: Schedule, plan: PlanOf<'hourRange'>,
   }
 
   if (plan.minuteForm === 'range') {
-    return minuteRangeLead(schedule.pattern.minute, opts) + ', ' + window +
-      trailingQualifier(schedule, opts);
+    return minuteRangeLead(schedule.pattern.minute, true, opts) + ', ' +
+      window + trailingQualifier(schedule, opts);
   }
 
   return rangeMinuteLead(schedule, opts) + ' ' + window +
@@ -987,7 +993,10 @@ function renderCompactClockTimes(schedule: Schedule,
   // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    withoutHourAnchor(minuteLead) + ', ' + cadence +
+    (strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
+      opts) ??
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+        'minute', null, opts)) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
     minuteLead +
     ', at ' +
@@ -1438,16 +1447,21 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
     bare: () => cadence,
 
     // A clean wrap from a non-zero offset: name the start, no endpoint.
-    offset: () => cadence + ' from ' + getNumber(start, opts) + ' ' +
-      pluralize(start, unit) + ' past the ' + anchor,
+    offset: () => {
+      const base = cadence + ' from ' + getNumber(start, opts) + ' ' +
+        pluralize(start, unit);
+
+      return anchor === null ? base : base + ' past the ' + anchor;
+    },
 
     // A bounded, non-wrapping set: pin both endpoints. Each bound is a value,
     // so it reads as a digit, matching the range idiom ("from 0 through 30").
     bounded: () => {
       const num = seriesNumber();
+      const base = cadence + ' from ' + num(start) + through(opts) +
+        num(last) + ' ' + pluralize(last, unit);
 
-      return cadence + ' from ' + num(start) + through(opts) + num(last) + ' ' +
-        pluralize(last, unit) + ' past the ' + anchor;
+      return anchor === null ? base : base + ' past the ' + anchor;
     }
   });
 }
@@ -1457,8 +1471,8 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
 // enumerates an offset/uneven step to this fire list; the Schedule is
 // unchanged, so the renderer recognizes the progression). Returns null for a
 // non-progression or a too-short list, leaving the caller to enumerate.
-function strideFromSegments(segments: Segment[], unit: string, anchor: string,
-  opts: NormalizedOptions): string | null {
+function strideFromSegments(segments: Segment[], unit: string,
+  anchor: string | null, opts: NormalizedOptions): string | null {
   const values = singleValues(segments);
   const step = values && arithmeticStep(values);
 
@@ -1475,7 +1489,7 @@ function strideFromSegments(segments: Segment[], unit: string, anchor: string,
 // literal list of their fires, so only a clean cadence (interval dividing
 // 60, start within the first interval) reaches a step renderer.
 function stepCycle60(segment: StepSegment, unit: string,
-  anchor: string, opts: NormalizedOptions): string {
+  anchor: string | null, opts: NormalizedOptions): string {
   // A bounded start (`a-b/n`) applies the interval within the range.
   if (segment.startToken.indexOf('-') !== -1) {
     return listPastThe(numberWords(segment.fires, opts), unit, anchor, opts);
@@ -1818,20 +1832,14 @@ function segmentWords(segments: Segment[],
   });
 }
 
-// Enumerate fire words as "at A, B and C <unit>s past the <anchor>".
-function listPastThe(words: (string | number)[], unit: string, anchor: string,
-  opts: NormalizedOptions): string {
-  return 'at ' + joinList(words, opts) + ' ' + unit + 's past the ' +
-    anchor;
-}
+// Enumerate fire words as "at A, B and C <unit>s past the <anchor>", or
+// unanchored ("at A, B and C <unit>s") when a stepped/windowed hour clause
+// is the sole hour authority.
+function listPastThe(words: (string | number)[], unit: string,
+  anchor: string | null, opts: NormalizedOptions): string {
+  const base = 'at ' + joinList(words, opts) + ' ' + unit + 's';
 
-// Strip the generic "past the hour" anchor from a minute-cadence lead. When the
-// hour field is restricted (a step or window), the hour clause is the sole hour
-// authority, so the cadence must not also assert "every hour" — "past the hour"
-// alongside a stepped/windowed hour reads as a conflicting every-hour scope. An
-// unrestricted hour keeps the anchor (it is the only hour statement there).
-function withoutHourAnchor(lead: string): string {
-  return lead.replace(/ past the hour$/, '');
+  return anchor === null ? base : base + ' past the ' + anchor;
 }
 
 // A clock time reads as a word ("noon"/"midnight") only at exact 12:00 or
@@ -2036,7 +2044,24 @@ function interpretDayQualifier(schedule: Schedule,
     return '';
   }
 
-  return dayQualifier(schedule, leadingWords, opts) + ' ';
+  return dayQualifier(schedule, leadingWords, opts) +
+    leadingYear(schedule, opts) + ' ';
+}
+
+// A single explicit year folds into the leading date phrase ("on January 1,
+// 2030 at midnight" / day-first "on 1 January 2030 at midnight"); every
+// other year form trails the finished description (see applyYear). US dates
+// take a comma before the year; day-first dates do not.
+function leadingYear(schedule: Schedule, opts: NormalizedOptions): string {
+  const yearField = schedule.pattern.year;
+
+  if (yearField === '*' || yearField.indexOf('/') !== -1 ||
+      yearField.indexOf('-') !== -1 || yearField.indexOf(',') !== -1 ||
+      schedule.pattern.date === '*') {
+    return '';
+  }
+
+  return (opts.style.dayFirst ? ' ' : ', ') + yearLabel(yearField, opts);
 }
 
 // The day-level qualifier phrase (date, month, and weekday), or
@@ -2059,13 +2084,13 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
   // A weekday qualifier, optionally scoped to a month ("on Monday in
   // June").
   if (pattern.weekday !== '*') {
-    const quartzWeekday = quartzWeekdayPhrase(pattern.weekday, opts);
+    const quartzWeekday = quartzWeekdayParts(pattern.weekday, opts);
 
     // The Quartz weekday phrase ("on the last Friday of the month") carries
     // the "of the month" recurrence a concrete month makes redundant; a plain
     // weekday name takes the ordinary " in <month>" scope.
     if (quartzWeekday) {
-      return monthScopeForRecurrence(quartzWeekday, schedule, opts);
+      return monthScopeForRecurrence(withOn(quartzWeekday), schedule, opts);
     }
 
     const weekdays = words.weekday +
@@ -2085,15 +2110,17 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
 function datePhrase(schedule: Schedule, words: QualifierWords,
   opts: NormalizedOptions): string {
   const pattern = schedule.pattern;
-  const quartzDate = quartzDatePhrase(pattern.date, opts);
+  const quartzDate = quartzDateParts(pattern.date, opts);
 
   if (quartzDate) {
-    return monthScopeForRecurrence(quartzDate, schedule, opts);
+    return monthScopeForRecurrence(withOn(quartzDate), schedule, opts);
   }
 
   if (schedule.analyses.day.date?.kind === 'cadenceStep') {
+    const step = stepDateParts(pattern.date);
+
     return monthScopeForRecurrence(
-      words.stepDate + stepDates(pattern.date, false), schedule, opts);
+      {...step, head: words.stepDate + step.head}, schedule, opts);
   }
 
   if (pattern.month !== '*' && !monthFoldsIntoDate(schedule)) {
@@ -2170,8 +2197,10 @@ function dayUnionCadenceClause(schedule: Schedule,
     return null;
   }
 
-  return ' on ' +
-    stepDates(schedule.pattern.date, schedule.pattern.month !== '*') +
+  const step = stepDateParts(schedule.pattern.date);
+  const recurrence = schedule.pattern.month === '*' ? step.recurrence : '';
+
+  return ' on ' + step.head + recurrence + step.tail +
     ' or ' + anyWeekdayClause(schedule, opts);
 }
 
@@ -2338,43 +2367,82 @@ function datePart(schedule: Schedule, opts: NormalizedOptions): string {
   }
 
   if (schedule.analyses.day.date?.kind === 'cadenceStep') {
-    return stepDates(pattern.date, false);
+    const step = stepDateParts(pattern.date);
+
+    return step.head + step.recurrence + step.tail;
   }
 
   return 'on the ' + dateOrdinals(schedule, opts);
 }
 
-// The Quartz date field as a bare noun phrase (e.g. "the last day of the
-// month"), or undefined when the field is not a Quartz form. The union
-// predicate consumes the noun directly; `quartzDatePhrase` wraps it as a
-// day qualifier.
-function quartzDateNoun(dateField: string,
-  opts: NormalizedOptions): string | undefined {
+// A phrase split around its month recurrence: the full phrase is
+// `head + recurrence + tail`. `recurrence` is ' of the month' (or '' when
+// the form carries none, e.g. "the weekday nearest the 13th"); a named
+// month scope respells or absorbs it without patching a built string.
+interface RecurringPhrase {
+  head: string;
+  recurrence: string;
+  tail: string;
+}
+
+// The Quartz date field split around its recurrence, or undefined when the
+// field is not a Quartz form. The union predicate joins the parts directly
+// (`quartzDateNoun`); the month scope respells the recurrence
+// (`monthScopeForRecurrence`).
+function quartzDateParts(dateField: string,
+  opts: NormalizedOptions): RecurringPhrase | undefined {
   if (dateField === 'L') {
-    return 'the last day of the month';
+    return {head: 'the last day', recurrence: ' of the month', tail: ''};
   }
 
   if (dateField === 'LW' || dateField === 'WL') {
-    return 'the last weekday of the month';
+    return {head: 'the last weekday', recurrence: ' of the month', tail: ''};
   }
 
   const offset = (/^L-(\d{1,2})$/).exec(dateField);
 
   if (offset) {
-    return getNumber(+offset[1], opts) + ' ' + pluralize(offset[1], 'day') +
-      ' before the last day of the month';
+    return {
+      head: getNumber(+offset[1], opts) + ' ' + pluralize(offset[1], 'day') +
+        ' before the last day',
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
 
   const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(dateField);
 
   if (nearest) {
-    return 'the weekday nearest the ' + getOrdinal(nearest[1] || nearest[2]);
+    return {
+      head: 'the weekday nearest the ' + getOrdinal(nearest[1] || nearest[2]),
+      recurrence: '',
+      tail: ''
+    };
   }
 }
 
-// The day-qualifier form of a Quartz date: the noun takes "on" when it names
-// a day ("on the last day of the month"); the before-offset form reads as its
-// own adverbial and stays bare ("two days before the last day of the month").
+// The Quartz date field as a bare noun phrase (e.g. "the last day of the
+// month"), or undefined when the field is not a Quartz form.
+function quartzDateNoun(dateField: string,
+  opts: NormalizedOptions): string | undefined {
+  const parts = quartzDateParts(dateField, opts);
+
+  return parts && parts.head + parts.recurrence + parts.tail;
+}
+
+// The day-qualifier form of quartz parts: "on" attaches to a day-naming
+// head ("on the last day of the month"); the before-offset form reads as
+// its own adverbial and stays bare ("two days before the last day of the
+// month").
+function withOn(parts: RecurringPhrase): RecurringPhrase {
+  if (!parts.head.startsWith('the ')) {
+    return parts;
+  }
+
+  return {...parts, head: 'on ' + parts.head};
+}
+
+// The day-qualifier form of a Quartz date, as a phrase.
 function quartzDatePhrase(dateField: string,
   opts: NormalizedOptions): string | undefined {
   const noun = quartzDateNoun(dateField, opts);
@@ -2382,24 +2450,38 @@ function quartzDatePhrase(dateField: string,
   return noun && (noun.startsWith('the ') ? 'on ' + noun : noun);
 }
 
-// The Quartz weekday field as a bare noun phrase (e.g. "the last Friday of
-// the month"), or undefined when the field is not a Quartz form. The union
-// predicate consumes the noun directly; `quartzWeekdayPhrase` wraps it as a
-// day qualifier.
-function quartzWeekdayNoun(weekdayField: string,
-  opts: NormalizedOptions): string | undefined {
-  const parts = weekdayField.split('#');
+// The Quartz weekday field split around its recurrence, or undefined when
+// the field is not a Quartz form.
+function quartzWeekdayParts(weekdayField: string,
+  opts: NormalizedOptions): RecurringPhrase | undefined {
+  const pieces = weekdayField.split('#');
 
-  if (parts.length === 2) {
-    return 'the ' + nthWeekdayNames[+parts[1]] + ' ' +
-      getWeekday(parts[0], opts) + ' of the month';
+  if (pieces.length === 2) {
+    return {
+      head: 'the ' + nthWeekdayNames[+pieces[1]] + ' ' +
+        getWeekday(pieces[0], opts),
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
 
   // A bare `L` weekday cannot arrive here: it is aliased to Saturday.
   if ((/L$/).test(weekdayField)) {
-    return 'the last ' +
-      getWeekday(weekdayField.slice(0, -1), opts) + ' of the month';
+    return {
+      head: 'the last ' + getWeekday(weekdayField.slice(0, -1), opts),
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
+}
+
+// The Quartz weekday field as a bare noun phrase (e.g. "the last Friday of
+// the month"), or undefined when the field is not a Quartz form.
+function quartzWeekdayNoun(weekdayField: string,
+  opts: NormalizedOptions): string | undefined {
+  const parts = quartzWeekdayParts(weekdayField, opts);
+
+  return parts && parts.head + parts.recurrence + parts.tail;
 }
 
 // The day-qualifier form of a Quartz weekday: every weekday noun names a day,
@@ -2458,48 +2540,47 @@ function monthScope(schedule: Schedule, opts: NormalizedOptions): string {
 // distributes the recurrence across the span and keeps it, rephrased as "of
 // each month from <first> through <last>". A month list is left as-is (the
 // recurrence stays, scoped "in <names>"), and a wildcard month adds nothing.
-function monthScopeForRecurrence(phrase: string, schedule: Schedule,
+function monthScopeForRecurrence(parts: RecurringPhrase, schedule: Schedule,
   opts: NormalizedOptions): string {
+  const {head, recurrence, tail} = parts;
+
   if (schedule.pattern.month === '*') {
-    return phrase;
+    return head + recurrence + tail;
   }
 
-  const carriesRecurrence = phrase.indexOf(' of the month') !== -1;
-
-  if (carriesRecurrence && schedule.shapes.month === 'range') {
-    return phrase.replace(' of the month', ' of each month') + ' from ' +
+  if (recurrence && schedule.shapes.month === 'range') {
+    return head + ' of each month' + tail + ' from ' +
       monthName(schedule, opts);
   }
 
-  if (carriesRecurrence &&
+  if (recurrence &&
       (schedule.shapes.month === 'single' ||
         schedule.shapes.month === 'step')) {
-    return phrase.replace(' of the month', '') + ' in ' +
-      monthName(schedule, opts);
+    return head + tail + ' in ' + monthName(schedule, opts);
   }
 
-  return phrase + ' in ' + monthName(schedule, opts);
+  return head + recurrence + tail + ' in ' + monthName(schedule, opts);
 }
 
-// Frequency phrase for an open day-of-month step, e.g. "every other day of
-// the month" or "every 3rd day of the month from the 5th". `monthScoped`
-// marks a phrase a named month already scopes, which makes the "of the
-// month" recurrence redundant ("in June, … every other day from the 3rd") —
-// the same fold monthScopeForRecurrence applies in the qualifier positions.
-function stepDates(dateField: string, monthScoped: boolean): string {
-  const parts = dateField.split('/');
-  const interval = +parts[1];
-  const start = parts[0];
+// Frequency phrase for an open day-of-month step, split around its
+// recurrence: "every 3rd day" + " of the month" + " from the 5th". A named
+// month scope absorbs or respells the recurrence (monthScopeForRecurrence,
+// the union clause) without patching the built string.
+function stepDateParts(dateField: string): RecurringPhrase {
+  const pieces = dateField.split('/');
+  const interval = +pieces[1];
+  const start = pieces[0];
   const cadence = interval === 2 ?
     'every other' :
     'every ' + getOrdinal(interval);
-  let phrase = cadence + ' day' + (monthScoped ? '' : ' of the month');
 
-  if (start !== '*' && start !== '1') {
-    phrase += ' from the ' + getOrdinal(start);
-  }
-
-  return phrase;
+  return {
+    head: cadence + ' day',
+    recurrence: ' of the month',
+    tail: start !== '*' && start !== '1' ?
+      ' from the ' + getOrdinal(start) :
+      ''
+  };
 }
 
 // Render the date field's segments as suffixed ordinals. Open steps are
@@ -2631,18 +2712,20 @@ function applyYear(description: string, schedule: Schedule,
     return description + ', ' + stepYears(yearField, opts);
   }
 
-  const label = yearLabel(yearField, opts);
+  // A single year over a restricted date folds into the leading date phrase
+  // (see leadingYear). The fold is real only where that leading qualifier
+  // actually opens the description; any other shape — a trailing date under
+  // a confinement frame, a day-union condition — trails the year instead,
+  // so it is never spliced mid-sentence and never dropped.
+  const folded = leadingYear(schedule, opts);
 
-  if (yearField.indexOf('-') === -1 && yearField.indexOf(',') === -1 &&
-      schedule.pattern.date !== '*' && description.indexOf(' at ') !== -1) {
-    // US dates take a comma before the year ("January 1, 2030"); UK dates
-    // do not ("1 January 2030").
-    const yearGlue = opts.style.dayFirst ? ' ' : ', ';
-
-    return description.replace(' at ', yearGlue + label + ' at ');
+  if (folded && !isDayUnion(schedule, opts) &&
+      description.startsWith(
+        dayQualifier(schedule, leadingWords, opts) + folded)) {
+    return description;
   }
 
-  return description + ' in ' + label;
+  return description + ' in ' + yearLabel(yearField, opts);
 }
 
 // Turn a single year, a range, or a list into a noun phrase.
