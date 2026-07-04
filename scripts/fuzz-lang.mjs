@@ -259,6 +259,34 @@ function checkMinuteZero(lang) {
   return failures;
 }
 
+// The day shapes whose year the es/pt/fr/fi family silently dropped (the
+// 2026-07 year-presence sweep): quartz dates, open steps, and DOM-or-DOW
+// unions — plus segment dates as the fold control. A renderer may fold the
+// year into the date phrase or trail it; either way its digits must appear.
+function yearBearing() {
+  return ['0 0 13 * * 2030', '30 9 1,15 * * 2030', '0 0 L * * 2030',
+    '0 0 15W * * 2030', '0 0 2/3 * * 2030', '0 0 13 * 5 2030',
+    '0 0 13 6 5 2030', '*/15 30 9 L * * 2030'];
+}
+
+// Run the year-presence invariant: a restricted year is a restriction like
+// any other, and an output without its digits has dropped it. 7-field
+// patterns carry a second; 6-field ones are minute-first with a year.
+function checkYearPresence(lang) {
+  const failures = {};
+
+  yearBearing().forEach(function each(pattern) {
+    const seconds = pattern.split(' ').length === 7;
+    const output = cronli5(pattern, {lang, seconds, years: true});
+
+    if (!output.includes('2030')) {
+      note(failures, pattern, pattern + ' -> ' + output);
+    }
+  });
+
+  return failures;
+}
+
 async function main(code, samples) {
   const lang = (await import('../src/lang/' + code + '/index.js')).default;
   const sink = {throwsBy: {}, degenBy: {}, missingBy: {}, templates: new Map()};
@@ -273,6 +301,7 @@ async function main(code, samples) {
   report('DEGENERATE', sink.degenBy);
   report('MISSING VALUE', sink.missingBy);
   report('DROPPED MINUTE 0', checkMinuteZero(lang));
+  report('DROPPED YEAR', checkYearPresence(lang));
   console.log('\ntried ' + tried + ', distinct output shapes ' +
     sink.templates.size);
 
