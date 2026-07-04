@@ -356,14 +356,25 @@ function hourList(schedule: Schedule): string {
   return joinAnd(words);
 }
 
-// A frame that confines a cadence to active hours: a range gives "在F点至T点之
-// 间，", a discrete hour list gives "在H、H…，".
+// A truthful hour window: "在F点至T点[M分]之间，". The exclusive 至 must name
+// the run's true last fire — the bare hour only when the minute field's last
+// fire is :00; anything later joins the close ("至17点45分"), matching the
+// wildcard-minute idiom ("至17点59分"). A bare close over a later fire would
+// understate the window.
+function hourWindow(from: number, to: number, last: number): string {
+  const close = last > 0 ? to + '点' + last + '分' : hourWord(to);
+
+  return '在' + hourWord(from) + '至' + close + '之间，';
+}
+
+// A frame that confines a cadence to active hours: a range gives the
+// truthful window, a discrete hour list gives "在H、H…，".
 function hourFrame(schedule: Schedule): string {
   if (schedule.shapes.hour === 'range') {
     const [from, to] = (segmentsOf(schedule, 'hour')[0] as
       Extract<Segment, {kind: 'range'}>).bounds;
 
-    return '在' + hourWord(+from) + '至' + hourWord(+to) + '之间，';
+    return hourWindow(+from, +to, schedule.analyses.lastMinuteFire);
   }
 
   return '在' + hourList(schedule) + '，';
@@ -397,14 +408,8 @@ function renderMinuteFrequency(schedule: Schedule, plan: PlanNode): string {
     }
   }
 
-  if (hours.kind === 'window' && hours.from === hours.to) {
-    return '在' + hourWord(hours.from) + '至' + hours.from + '点' +
-      hours.last + '分之间，' + base;
-  }
-
   if (hours.kind === 'window') {
-    return '在' + hourWord(hours.from) + '至' + hourWord(hours.to) +
-      '之间，' + base;
+    return hourWindow(hours.from, hours.to, hours.last) + base;
   }
 
   if (hours.kind === 'during') {
@@ -424,8 +429,7 @@ function renderMinuteSpanInHour(schedule: Schedule, plan: PlanNode): string {
     return hourWord(span.hour) + '的每一分钟';
   }
 
-  return '在' + hourWord(span.hour) + '至' + span.hour + '点' +
-    span.span[1] + '分之间，每分钟';
+  return hourWindow(span.hour, span.hour, span.span[1]) + '每分钟';
 }
 
 // A minute clause across discrete hours. A wildcard minute reads "在9点、11点…，
@@ -557,18 +561,17 @@ function renderHourRange(schedule: Schedule, plan: PlanNode): string {
     const past = minuteSegs.length && schedule.pattern.minute !== '0' ?
       minuteHourClause(schedule) : '每小时';
 
-    return '在' + hourWord(range.from) + '至' + hourWord(range.to) +
-      '之间，' + past;
+    return hourWindow(range.from, range.to, range.last) + past;
   }
 
-  // A minute range is named separately ("每小时0至30分"), not folded into the end.
+  // A minute range is named separately ("每小时0至30分") AND joins the
+  // truthful close, so the window never understates the run.
   if (range.minuteForm === 'range') {
-    return '在' + hourWord(range.from) + '至' + hourWord(range.to) +
-      '之间，每小时' + valueList(segmentsOf(schedule, 'minute'), '分') + '，每分钟';
+    return hourWindow(range.from, range.to, range.last) + '每小时' +
+      valueList(segmentsOf(schedule, 'minute'), '分') + '，每分钟';
   }
 
-  return '在' + hourWord(range.from) + '至' + range.to + '点' +
-    range.last + '分之间，每分钟';
+  return hourWindow(range.from, range.to, range.last) + '每分钟';
 }
 
 // A stepped hour field as its cadence: "每2小时" (clean), "从1点起每2小时"
