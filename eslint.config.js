@@ -142,11 +142,11 @@ export default [
     }
   },
   {
-    // The English renderer composes phrases from parts; patching a built
+    // Migrated renderers compose phrases from parts; patching a built
     // string with .replace is the phrase-surgery overlay red flag the
-    // improve-renderer skill bans. Sibling languages still carry copies of
-    // the pattern and join this scope as each one migrates.
-    files: ['src/lang/en/**'],
+    // improve-renderer skill bans. Remaining siblings join this scope as
+    // each one migrates.
+    files: ['src/lang/en/**', 'src/lang/es/**'],
     rules: {
       'no-restricted-syntax': ['error', {
         message: 'Compose phrases from parts instead of patching built ' +
