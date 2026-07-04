@@ -200,6 +200,21 @@ notation; numerals-in-lists; year-range `through`; double-period guard.
   an hour-range or time-window AND a restricted date/weekday, assert the day
   qualifier appears before the window phrase in the output.
 
+- *(2026-07-03, en)* **`relational-stability`** — point-wise golden rows
+  cannot see relations BETWEEN rows, and improvement runs exploit that
+  blindness: an overlay keeps every pinned row green while forking phrasing
+  across contexts (a date step reading as a cadence alone but exploding
+  into enumerated fires inside a union; weekday order differing between
+  contexts; a time body rewritten under a day-field change). *Question:*
+  does the same field value render with the same tokens in every context
+  that contains it? *Resolve:* run the relational stability engine
+  (`tooling/scripts/stability-engine.mjs`) with the language's extractor:
+  arm stability, frame stability, weekday-order stability over a generated
+  matrix. Declared transformations (a parity idiom absorbing its start
+  ordinal) are encoded in the extractor, not waived ad hoc. *Detector:* the
+  engine itself — gate it in the language's test suite as en does
+  (`test/lang/en/stability.js`).
+
 - *(2026-06-21, en)* Seeded from the English review + condition-frame
   investigation. The `union-connective` resolution (predicate-frame) and the
   comprehension-panel-not-preference-vote principle are the two highest-value

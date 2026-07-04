@@ -46,12 +46,15 @@ behavior.
   out-of-scope rows may change **only toward consistency**, and every such
   change is enumerated and justified for corpus review — "byte-identical
   outside scope" forbids convergence, which is how overlays are born.
-- The relational stability checks (`tooling/scripts/stability.mjs`, gated by
-  `test/lang/en/stability.js`) must pass: a field's phrasing tokens survive
-  context changes (arm stability), the time body survives day-field additions
-  (frame stability), one ordering rule per field everywhere. If the change
-  deliberately alters a relation, update the check's declared transformations
-  in the same commit — that declaration *is* the design decision.
+- The relational stability checks must pass (the engine
+  `tooling/scripts/stability-engine.mjs` with the language's extractor —
+  en: `tooling/scripts/stability.mjs`, gated by `test/lang/en/stability.js`):
+  a field's phrasing tokens survive context changes (arm stability), the
+  time body survives day-field additions (frame stability), one ordering
+  rule per field everywhere. If the change deliberately alters a relation,
+  update the extractor's declared transformations in the same commit — that
+  declaration *is* the design decision. A language without an extractor
+  ports the donor's first.
 
 ## Judgment
 

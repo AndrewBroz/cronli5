@@ -70,6 +70,13 @@ the status. The pipeline is in
 [CONTRIBUTING.md](CONTRIBUTING.md), the automation in
 `.claude/skills/add-language/`.
 
+## Changing an existing renderer
+
+Improvements to a shipped renderer follow the two-phase protocol in
+`.claude/skills/improve-renderer/` — byte-identical restructure first, then
+corpus-first behavior change, with the relational stability suite as the
+overlay guard.
+
 ## Before you finish
 
 CI, the pre-push hook, and you all run the same single gate:

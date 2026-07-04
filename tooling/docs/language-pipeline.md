@@ -125,6 +125,14 @@ defect the curated spanning set misses:
   accept a subagent's "round-trip not run" as a pass — the controller runs it.
 - **Both-side OR-scope detector** — every OR with a shared restricted qualifier
   must carry it on each arm.
+- **Relational stability** — `tooling/scripts/stability-engine.mjs` with the
+  target's extractor (ported from the donor's, e.g.
+  `tooling/scripts/stability/en.mjs`). Three relations over a generated
+  pattern matrix: a date arm's tokens survive the DOM∨DOW union context
+  (arm stability), the time body survives day-field additions (frame
+  stability), one weekday order everywhere. A relation the donor held must
+  hold in the target — an overlay is precisely a change that keeps
+  point-wise rows green while breaking a relation.
 - **cRonstrue comparison** — `node --import tsx
   tooling/scripts/cronstrue-divergence.mjs`. Renders cronli5 and cRonstrue's
   matching locale (the new language's cRonstrue locale — e.g. pt→pt_BR, zh→zh_CN)
@@ -227,6 +235,8 @@ clean-room `rewrite-test` soundness check it also panels the contested
 8. **Verify** — the mechanical backstop, **independent of the corpus**:
    - Fuzz: 0 throws, degenerate outputs, or dropped field values.
    - Both-side OR-scope detector.
+   - Relational stability: port the donor's stability extractor and run the
+     engine; every relation the donor held must hold in the target.
    - **Render-and-check the ratified conventions in the *built* renderer.** A
      port can silently keep the donor's convention even after the panel ratified
      a different one for the target, and a panel persona may *misverify* the
