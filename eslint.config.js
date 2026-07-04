@@ -147,7 +147,8 @@ export default [
     // improve-renderer skill bans. Remaining siblings join this scope as
     // each one migrates.
     files: [
-      'src/lang/en/**', 'src/lang/es/**', 'src/lang/fr/**', 'src/lang/pt/**'
+      'src/lang/en/**', 'src/lang/es/**', 'src/lang/fi/**',
+      'src/lang/fr/**', 'src/lang/pt/**'
     ],
     rules: {
       'no-restricted-syntax': ['error', {
