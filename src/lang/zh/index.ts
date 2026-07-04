@@ -305,29 +305,23 @@ function renderEveryHour(): string {
 // whether the core kept it a step shape (a uniform offset divides 60) or
 // enumerated it to a fire list (an offset/uneven set) — both route through the
 // stride; a short or irregular set keeps the enumerated "每小时…分" list.
-function minuteHourClause(schedule: Schedule): string {
+// The minute clause with its hour anchor ("每小时<minutes>分"), or unanchored
+// (anchor '') under an hour STEP — the hour cadence is the sole hour
+// authority there, so the clause must not also assert "每小时" (a conflicting
+// every-hour scope). An hour WINDOW and an unrestricted hour keep the anchor.
+function minuteHourClause(schedule: Schedule, anchor: string): string {
   const segments = segmentsOf(schedule, 'minute');
 
   if (schedule.shapes.minute === 'step') {
-    return stepClause(stepSegment(schedule, 'minute'), '分钟', '分', '每小时');
+    return stepClause(stepSegment(schedule, 'minute'), '分钟', '分', anchor);
   }
 
-  return strideFromSegments(segments, '分钟', '分', '每小时') ??
-    '每小时' + valueList(segments, '分');
+  return strideFromSegments(segments, '分钟', '分', anchor) ??
+    anchor + valueList(segments, '分');
 }
 
 function renderMinutePast(schedule: Schedule): string {
-  return minuteHourClause(schedule);
-}
-
-// Strip the generic "每小时" (every-hour) anchor that leads a minute clause.
-// Under an hour STEP the hour cadence is the sole hour authority, so the minute
-// clause must not also assert "每小时" — alongside a stepped hour ("每4小时…每小
-// 时…") it reads as a conflicting every-hour scope. An hour WINDOW and an
-// unrestricted hour keep "每小时" (the window already names the hours; an open
-// hour has no other hour statement).
-function withoutHourAnchor(clause: string): string {
-  return clause.replace(/^每小时/, '');
+  return minuteHourClause(schedule, '每小时');
 }
 
 // One hour segment as clock words by its form: a range is a span ("9点至20点"),
@@ -402,7 +396,7 @@ function renderMinuteFrequency(schedule: Schedule, plan: PlanNode): string {
       // list (during) keeps it. Only the step path reaches a non-null cadence
       // here — an irregular list falls through to the enumerated frame below.
       const minuteBase = hours.kind === 'step' ?
-        withoutHourAnchor(base) : base;
+        stepClause(minuteStep, UNITS.minute, '分', '') : base;
 
       return hourCad + (hourCad.indexOf('至') === -1 ? '' : '，') + minuteBase;
     }
@@ -446,7 +440,8 @@ function renderMinutesAcrossHours(schedule: Schedule, plan: PlanNode): string {
       hourCad + '，每分钟';
   }
 
-  return (hourCad ?? hourList(schedule)) + '，' + minuteHourClause(schedule) +
+  return (hourCad ?? hourList(schedule)) + '，' +
+    minuteHourClause(schedule, '每小时') +
     '，每分钟';
 }
 
@@ -464,12 +459,12 @@ function renderMinuteSpanAcrossHourStep(
   // hour cadence scopes the hours, so the minute clause drops its "每小时".
   if (form === 'list') {
     return hourCadencePhrase(schedule) + '，' +
-      withoutHourAnchor(renderMinutePast(schedule));
+      minuteHourClause(schedule, '');
   }
 
   const minuteTail = form === 'wildcard' ?
     '每分钟' :
-    withoutHourAnchor(minuteHourClause(schedule)) + '，每分钟';
+    minuteHourClause(schedule, '') + '，每分钟';
 
   // An offset or non-tiling stride (2/6 fires at 2,8,14,20) reads as its
   // cadence ("从2点起每6小时"). A wildcard minute hangs off it with a comma; a
@@ -539,14 +534,14 @@ function renderCompactClockTimes(schedule: Schedule, plan: PlanNode): string {
     // scope; an enumerated hour list (hourCad null) names specific hours and
     // keeps the anchor.
     return hourCad === null ?
-      minuteHourClause(schedule) + '，在' + hourList(schedule) + tail :
-      hourCad + '，' + withoutHourAnchor(minuteHourClause(schedule)) + tail;
+      minuteHourClause(schedule, '每小时') + '，在' + hourList(schedule) + tail :
+      hourCad + '，' + minuteHourClause(schedule, '') + tail;
   }
 
   // A single pinned minute past 0 leads with its clause; a pinned 0 folds into
   // the hour times (the :00 is implicit).
   if (compact.minute > 0) {
-    return minuteHourClause(schedule) + '，在' + hourList(schedule) + tail;
+    return minuteHourClause(schedule, '每小时') + '，在' + hourList(schedule) + tail;
   }
 
   return hourList(schedule) + tail;
@@ -559,7 +554,7 @@ function renderHourRange(schedule: Schedule, plan: PlanNode): string {
   if (range.minuteForm === 'lead') {
     const minuteSegs = segmentsOf(schedule, 'minute');
     const past = minuteSegs.length && schedule.pattern.minute !== '0' ?
-      minuteHourClause(schedule) : '每小时';
+      minuteHourClause(schedule, '每小时') : '每小时';
 
     return hourWindow(range.from, range.to, range.last) + past;
   }
@@ -785,7 +780,7 @@ function secondTail(schedule: Schedule): string {
 
 // A continuous minute range fires every minute within it: "每小时0至30分，每分钟".
 function renderRangeOfMinutes(schedule: Schedule): string {
-  return minuteHourClause(schedule) + '，每分钟';
+  return minuteHourClause(schedule, '每小时') + '，每分钟';
 }
 
 // A standalone second field: "每7秒" (step cadence) or "每分钟第4、17、42秒".
@@ -1063,7 +1058,7 @@ function composeSecondsCadence(schedule: Schedule): string {
 // last fire onto the window end ("…17点30分") and reading as a continuous span.
 function composeSecondsListed(schedule: Schedule): string {
   const sec = secondClause(schedule);
-  const minutes = minuteHourClause(schedule);
+  const minutes = minuteHourClause(schedule, '每小时');
 
   // A single restricted hour with an every-second cadence fuses the clock time
   // with its minutes — "凌晨0点5、20、35、50分的每一秒" — rather than the "每小时"
@@ -1096,7 +1091,7 @@ function composeSecondsListed(schedule: Schedule): string {
     // An hour STEP cadence is the sole hour authority, so the minute clause
     // drops its "每小时" ("每2小时，0至30分，每秒"); a discrete hour list keeps it
     // (it falls through to the hourFrame branch below with a null cadence).
-    return hourCad + '，' + withoutHourAnchor(minutes) + '，' + sec;
+    return hourCad + '，' + minuteHourClause(schedule, '') + '，' + sec;
   }
 
   return hourFrame(schedule) + minutes + '，' + sec;
@@ -1160,7 +1155,7 @@ function isSteppedMinuteSeconds(
 // the comma juxtaposition ("…每6分钟，每秒") that reads as two independent
 // cadences. The minute clause carries the offset/bound ("从4分起" / "，至58分").
 function minuteStrideConfinement(schedule: Schedule): string {
-  return minuteHourClause(schedule) +
+  return minuteHourClause(schedule, '每小时') +
     confinedSecondTail(secondClause(schedule));
 }
 
