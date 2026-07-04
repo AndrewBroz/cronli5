@@ -2044,7 +2044,24 @@ function interpretDayQualifier(schedule: Schedule,
     return '';
   }
 
-  return dayQualifier(schedule, leadingWords, opts) + ' ';
+  return dayQualifier(schedule, leadingWords, opts) +
+    leadingYear(schedule, opts) + ' ';
+}
+
+// A single explicit year folds into the leading date phrase ("on January 1,
+// 2030 at midnight" / day-first "on 1 January 2030 at midnight"); every
+// other year form trails the finished description (see applyYear). US dates
+// take a comma before the year; day-first dates do not.
+function leadingYear(schedule: Schedule, opts: NormalizedOptions): string {
+  const yearField = schedule.pattern.year;
+
+  if (yearField === '*' || yearField.indexOf('/') !== -1 ||
+      yearField.indexOf('-') !== -1 || yearField.indexOf(',') !== -1 ||
+      schedule.pattern.date === '*') {
+    return '';
+  }
+
+  return (opts.style.dayFirst ? ' ' : ', ') + yearLabel(yearField, opts);
 }
 
 // The day-level qualifier phrase (date, month, and weekday), or
@@ -2695,18 +2712,20 @@ function applyYear(description: string, schedule: Schedule,
     return description + ', ' + stepYears(yearField, opts);
   }
 
-  const label = yearLabel(yearField, opts);
+  // A single year over a restricted date folds into the leading date phrase
+  // (see leadingYear). The fold is real only where that leading qualifier
+  // actually opens the description; any other shape — a trailing date under
+  // a confinement frame, a day-union condition — trails the year instead,
+  // so it is never spliced mid-sentence and never dropped.
+  const folded = leadingYear(schedule, opts);
 
-  if (yearField.indexOf('-') === -1 && yearField.indexOf(',') === -1 &&
-      schedule.pattern.date !== '*' && description.indexOf(' at ') !== -1) {
-    // US dates take a comma before the year ("January 1, 2030"); UK dates
-    // do not ("1 January 2030").
-    const yearGlue = opts.style.dayFirst ? ' ' : ', ';
-
-    return description.replace(' at ', yearGlue + label + ' at ');
+  if (folded && !isDayUnion(schedule, opts) &&
+      description.startsWith(
+        dayQualifier(schedule, leadingWords, opts) + folded)) {
+    return description;
   }
 
-  return description + ' in ' + label;
+  return description + ' in ' + yearLabel(yearField, opts);
 }
 
 // Turn a single year, a range, or a list into a noun phrase.
