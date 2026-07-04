@@ -2045,8 +2045,15 @@ function applyYear(
     return description + ' ' + stepYears(yearField, opts);
   }
 
-  // A foldable single year already joined its date in datePhrase.
-  if (foldedYear(schedule) && schedule.pattern.date !== '*') {
+  // A foldable single year joined its date only where datePhrase built the
+  // date from its segments (the core day facts name that arm kind); a
+  // Quartz, open-step, or DOM-or-DOW-union date never folds, so its year
+  // trails instead of silently dropping — a dropped year is a dropped
+  // restriction.
+  const day = schedule.analyses.day;
+
+  if (foldedYear(schedule) && !day.union &&
+      day.date?.kind === 'segments') {
     return description;
   }
 
@@ -2084,6 +2091,14 @@ function foldedYear(schedule: Schedule): string {
 
   if (yearField === '*' || yearField.indexOf('/') !== -1 ||
       yearField.indexOf('-') !== -1 || yearField.indexOf(',') !== -1) {
+    return '';
+  }
+
+  // A DOM-or-DOW union never folds: the year scopes BOTH arms, and folding
+  // it into the date arm alone mis-scopes the OR ("13. päivänä vuonna 2030
+  // tai perjantaisin" reads the Fridays as year-free). The union trails the
+  // year after the whole clause instead (see applyYear).
+  if (schedule.analyses.day.union) {
     return '';
   }
 

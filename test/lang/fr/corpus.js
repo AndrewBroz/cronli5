@@ -1035,3 +1035,25 @@ describe('Français (fr):', function() {
     ]);
   });
 });
+
+// L'année avec {years: true}. La forme pliable rejoint la date de
+// calendrier ("le 13 de chaque mois 2030") ; toute autre forme de date —
+// Quartz, pas ouvert, union DOM-ou-DOW — porte l'année en fin de phrase
+// ("en 2030") au lieu de l'omettre : une année omise est une restriction
+// perdue.
+describe('Années (fr) :', function() {
+  const years = {years: true};
+
+  run([
+    ['0 9 13 * * 2030', 'le 13 de chaque mois 2030 à 9 h', years],
+    ['0 0 L * * 2030', 'le dernier jour du mois à minuit en 2030', years],
+    ['*/15 30 9 15W * * 2030',
+      'toutes les 15 secondes de 9 h 30, le jour ouvrable le plus proche ' +
+      'du 15 en 2030', {seconds: true, years: true}],
+    ['0 0 2/3 * * 2030',
+      'tous les trois jours du mois à partir du 2 à minuit en 2030', years],
+    ['0 0 13 * 5 2030',
+      'à minuit, soit le 13 de chaque mois, soit n\'importe quel vendredi ' +
+      'en 2030', years]
+  ]);
+});
