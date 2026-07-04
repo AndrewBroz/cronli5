@@ -1448,9 +1448,17 @@ function dayUnionWeekday(schedule: Schedule): string {
 function dateStepCadence(schedule: Schedule): string | null {
   const arm = schedule.analyses.day.date;
 
-  return arm?.kind === 'cadenceStep' && arm.parity === 'odd' ?
+  if (arm?.kind !== 'cadenceStep' || arm.parity === null) {
+    return null;
+  }
+
+  // The odd set keeps its natural cadence voice ("jeden zweiten Tag des
+  // Monats"); the even set has no offset-free cadence in German, so it
+  // speaks the parity class the union arm already uses — the same field
+  // must never speak at two fidelities across contexts (arm stability).
+  return arm.parity === 'odd' ?
     'jeden zweiten Tag des Monats' :
-    null;
+    'an jedem geraden Tag des Monats';
 }
 
 // The weekday/day/month frame. Date and weekday together are cron's OR case.

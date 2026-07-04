@@ -784,4 +784,17 @@ describe('Bekannte offene Fehler (Schritt C):', function() {
     expect(text).to.not.include('29.');
     expect(text).to.equal('jeden zweiten Tag des Monats um Mitternacht');
   });
+
+  // Die gerade Klasse `2/2` liest sich alleinstehend wie im OR-Fall als
+  // Paritätsklasse ("an jedem geraden Tag des Monats"), nie als 15-fache
+  // Aufzählung: dasselbe Feld darf nicht in zwei Genauigkeiten sprechen
+  // (Arm-Stabilität; siehe test/lang/de/stability.js).
+  it('liest die gerade Tagesklasse als Parität, nicht als Aufzählung',
+    function() {
+      const text = cronli5('0 0 2/2 * *', {lang: de});
+
+      expect(text).to.not.include('28.');
+      expect(text)
+        .to.equal('an jedem geraden Tag des Monats um Mitternacht');
+    });
 });
