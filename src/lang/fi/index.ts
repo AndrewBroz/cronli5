@@ -13,8 +13,8 @@ import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
 import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
-  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  arithmeticStep, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride,
   renderStride as chooseStride, secondsConfinesMinute, segmentsOf,
   singleValues, stepSegment
 } from '../../core/cadence.js';
@@ -225,8 +225,7 @@ function normalizeOptions(options?: Cronli5Options): NormalizedOptions {
 // restricted AND the month is restricted. When true, the month leads so it
 // scopes both arms, and the inclusive "tai" union comes last.
 function restrictedMonthUnion(schedule: Schedule): boolean {
-  return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*' &&
-    schedule.pattern.month !== '*';
+  return schedule.analyses.day.union && schedule.pattern.month !== '*';
 }
 
 // An open interval-2 day-of-month step covers the odd days (1, 3, 5, …, 31),
@@ -236,14 +235,10 @@ function restrictedMonthUnion(schedule: Schedule): boolean {
 // unbroken 48-hour cycle across month boundaries) nor a 16-date enumeration
 // that would bury the union beside the "tai". `*/2` and `1/2` are the odd
 // days. Mirrors en's odd-numbered-day idiom; null when not such a step.
-function oddDayUnion(dateField: string): string | null {
-  if (!isOpenStep(dateField)) {
-    return null;
-  }
+function oddDayUnion(schedule: Schedule): string | null {
+  const arm = schedule.analyses.day.date;
 
-  const [start, step] = dateField.split('/');
-
-  return (start === '*' || start === '1') && +step === 2 ?
+  return arm?.kind === 'cadenceStep' && arm.parity === 'odd' ?
     'kuukauden parittomina päivinä' :
     null;
 }
@@ -253,7 +248,7 @@ function oddDayUnion(dateField: string): string | null {
 // unchanged; an open `*/2` step reads as the odd-day parity class.
 function unionDateArm(schedule: Schedule): string {
   return quartzDatePhrase(schedule.pattern.date) ||
-    oddDayUnion(schedule.pattern.date) ||
+    oddDayUnion(schedule) ||
     dateWords(schedule) + ' päivänä';
 }
 
@@ -790,7 +785,7 @@ function renderMinuteFrequency(
     if (cadence !== null) {
       // The hour step is the sole hour authority, so an offset minute cadence
       // drops its generic "jokaisen tunnin" every-hour scope.
-      return withoutHourAnchor(stepCycle60(seg, units.minute, opts)) + ', ' +
+      return stepCycle60(seg, {...units.minute, anchor: ''}, opts) + ', ' +
         cadence + trailingQualifier(schedule, opts);
     }
 
@@ -818,7 +813,7 @@ function renderMinuteFrequency(
   else if (plan.hours.kind === 'step') {
     // The hour step is the sole hour authority, so the minute cadence drops its
     // generic "jokaisen tunnin" every-hour scope.
-    phrase = withoutHourAnchor(phraseBase) + ' ' +
+    phrase = stepCycle60(seg, {...units.minute, anchor: ''}, opts) + ' ' +
       everyNthHour(stepSegment(schedule, 'hour'), opts);
   }
 
@@ -1209,8 +1204,11 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
 
   return chooseStride({start, interval, last, cycle}, {
     bare: () => cadence,
-    offset: () =>
-      cadence + ' ' + unit.anchor + ' ' + unit.ela + ' ' + start + ' alkaen',
+    offset: () => {
+      const anchor = unit.anchor ? ' ' + unit.anchor : '';
+
+      return cadence + anchor + ' ' + unit.ela + ' ' + start + ' alkaen';
+    },
     bounded: () =>
       cadence + ' ' + unit.ela + ' ' + start + ' ' + unit.ill + ' ' + last
   });
@@ -1265,16 +1263,6 @@ function stepCycle60(
   }, opts);
 }
 
-// Strip the generic "jokaisen tunnin" anchor from an offset minute-cadence
-// lead. When the hour field is a restricted step, the hour clause is the sole
-// hour authority, so the cadence must not also assert "jokaisen tunnin" (every
-// hour) — alongside a stepped hour it conflicts as an every-hour scope.
-// An unrestricted hour, and an hour WINDOW, keep the anchor (the window names
-// the hours without an every-hour-of-the-day conflict).
-function withoutHourAnchor(lead: string): string {
-  return lead.replace(' ' + units.minute.anchor + ' ', ' ');
-}
-
 // "kahden tunnin välein", "klo 0, 10 ja 20", or "viiden tunnin välein
 // klo 1 alkaen".
 function stepHours(segment: StepSegment, opts: NormalizedOptions): string {
@@ -1323,44 +1311,6 @@ function hourStrideCadence(
   });
 }
 
-// The hour field's stride, or null when the hour is not a cadence: a step
-// segment yields its {start, interval, last} directly; an all-single hour list
-// yields one only when its values form a step progression (so an irregular list
-// like 9,17 keeps enumerating). The Schedule is unchanged — the renderer
-// recognizes the stride and speaks it as a cadence, not the clock-time
-// cross-product.
-function hourStride(
-  schedule: Schedule
-): {start: number; interval: number; last: number} | null {
-  const segments = schedule.analyses.segments.hour;
-
-  // A wildcard hour carries no segments (no discrete hours to stride over).
-  if (!segments) {
-    return null;
-  }
-
-  if (segments.length === 1 && segments[0].kind === 'step') {
-    const segment = segments[0];
-
-    // A bounded step that fires only once (e.g. `9-10/5` -> just 9) is a single
-    // value, not a stride: it has no interval to speak and no endpoint to pin.
-    if (segment.fires.length < 2) {
-      return null;
-    }
-
-    const start = segment.startToken === '*' ?
-      0 :
-      +segment.startToken.split('-')[0];
-
-    return {interval: segment.interval, last: segment.fires[
-      segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segments);
-
-  return values && hourListStride(values);
-}
-
 // The bounded cadence for an hour stride that pins both clock-time endpoints,
 // or null when the hour is not such a stride. The core rewrites a uneven step
 // to its fire list, so a minute window/list/step crossed with it lands in the
@@ -1371,9 +1321,9 @@ function hourStride(
 function unevenHourCadence(
   schedule: Schedule, opts: NormalizedOptions
 ): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
-  if (!stride || offsetCleanStride(stride)) {
+  if (!stride || stride.offsetClean) {
     return null;
   }
 
@@ -1426,7 +1376,7 @@ function hourCadenceLead(schedule: Schedule, minute: number,
 // itself stops enumerating. Renderer-only; the Schedule is unchanged.
 function hourCadence(schedule: Schedule, minute: number,
   opts: NormalizedOptions): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (!stride) {
     return null;
@@ -1440,7 +1390,7 @@ function hourCadence(schedule: Schedule, minute: number,
   // has no clean wrap, so its endpoint-pinning cadence ("viiden tunnin välein
   // klo 0–20") reads better however short.
   if (schedule.pattern.second === '0' && fires <= maxClockTimes &&
-      offsetCleanStride(stride)) {
+      stride.offsetClean) {
     return null;
   }
 
@@ -1728,7 +1678,7 @@ function leadingQualifier(schedule: Schedule, opts: NormalizedOptions): string {
     return '';
   }
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
+  if (schedule.analyses.day.union) {
     return dateOrWeekday(schedule, opts) + ' ';
   }
 
@@ -1761,7 +1711,7 @@ function trailingQualifier(
     return '';
   }
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
+  if (schedule.analyses.day.union) {
     return ' ' + dateOrWeekday(schedule, opts);
   }
 
@@ -1787,7 +1737,7 @@ function trailingQualifier(
 // reads as the odd-day parity class (not the continuous "joka toinen
 // päivä"); a Mon–Fri weekday reads as the recurring class "arkisin".
 function dateOrWeekday(schedule: Schedule, opts: NormalizedOptions): string {
-  const dateArm = oddDayUnion(schedule.pattern.date) ||
+  const dateArm = oddDayUnion(schedule) ||
     datePhrase(schedule, opts);
 
   return dateArm + ' tai ' + unionWeekdayArm(schedule) +
@@ -1867,7 +1817,7 @@ function datePhrase(schedule: Schedule, opts: NormalizedOptions): string {
     return quartz + monthScope(schedule);
   }
 
-  if (isOpenStep(pattern.date)) {
+  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
     return stepDates(pattern.date, opts) + monthScope(schedule);
   }
 
@@ -2063,7 +2013,7 @@ function applyYear(
   }
 
   if (yearField.indexOf('-') !== -1) {
-    return description + ' vuosina ' + yearField.replace('-', '–');
+    return description + ' vuosina ' + yearField.split('-').join('–');
   }
 
   return description + ' vuonna ' + yearField;
