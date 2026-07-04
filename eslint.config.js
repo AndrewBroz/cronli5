@@ -146,7 +146,9 @@ export default [
     // string with .replace is the phrase-surgery overlay red flag the
     // improve-renderer skill bans. Remaining siblings join this scope as
     // each one migrates.
-    files: ['src/lang/en/**', 'src/lang/es/**', 'src/lang/pt/**'],
+    files: [
+      'src/lang/en/**', 'src/lang/es/**', 'src/lang/fr/**', 'src/lang/pt/**'
+    ],
     rules: {
       'no-restricted-syntax': ['error', {
         message: 'Compose phrases from parts instead of patching built ' +
