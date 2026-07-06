@@ -114,11 +114,27 @@ describe('Deutsch (de):', function() {
       ['5,30 * * * * *', 'in den Sekunden 5 und 30 jeder Minute'],
       ['30 0 * * * *', 'in Minute 0 und Sekunde 30 jeder Stunde'],
       ['0-30 9 * * *', 'jede Minute von 9:00 bis 9:30 Uhr'],
-      // A list of seconds over a single fixed minute fuses to the clock minute
-      // just like the minute-0 case below ("der Minute 9:00"), rather than
-      // floating ("…, um 9:05 Uhr").
-      ['0,30 5 9 * * *', 'täglich in den Sekunden 0 und 30 der Minute 9:05'],
-      ['*/15 0 9 * * *', 'täglich alle 15 Sekunden der Minute 9:00']
+      // Discrete seconds at a fully fixed timestamp bind to the clock time
+      // itself ("…, um 9:05 Uhr") — 9:05 is a time, not a minute number, so a
+      // "der Minute 9:05" frame would be nonsense (minute numbers run 0-59).
+      ['0,30 5 9 * * *', 'in den Sekunden 0 und 30, um 9:05 Uhr'],
+      // The day qualifier fronts the timestamp INSIDE the apposition
+      // ("…, montags um 9:30 Uhr"): "montags um 9:30 Uhr" is the unmarked
+      // day→time order and stays one unbroken unit, exactly the standalone
+      // sentence of the seconds-free sibling. Trailing it ("um 9:30 Uhr
+      // montags") reads tacked-on; fronting the whole sentence ("montags in
+      // den Sekunden 5 und 10, …") garden-paths as seconds of every minute.
+      ['5,10 30 9 * * MON', 'in den Sekunden 5 und 10, montags um 9:30 Uhr'],
+      ['* 2 9 * * MON', 'jede Sekunde, montags um 9:02 Uhr'],
+      ['* 2 9 13 * *', 'jede Sekunde, am 13. um 9:02 Uhr'],
+      ['*/10 10,20 9,18 * * MON',
+        'alle 10 Sekunden, montags um 9:10, 9:20, 18:10 und 18:20 Uhr'],
+      // Discrete seconds at minute 0 are the same apposition (no duration
+      // frame — they don't fill the minute), so the qualifier and the
+      // "täglich" frame front its timestamp the same way.
+      ['0,30 0 9 * * MON', 'in den Sekunden 0 und 30, montags um 9 Uhr'],
+      ['0,30 0 9 * * *', 'in den Sekunden 0 und 30, täglich um 9 Uhr'],
+      ['*/15 0 9 * * *', 'täglich alle 15 Sekunden für eine Minute um 9 Uhr']
     ]);
   });
 
@@ -146,16 +162,18 @@ describe('Deutsch (de):', function() {
 
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
   // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
-  // across the hour). The clock minute must stay visible, so the seconds bind
-  // to the explicit clock minute in the genitive ("der Minute 9:00") under the
-  // recurring "täglich" frame, never the bare hour ("um 9 Uhr").
+  // across the hour). The confinement is stated as a duration on the clock
+  // time ("für eine Minute um 9 Uhr") — the frame the hour-range and hour-step
+  // confinements below already use — never the bare hour alone ("um 9 Uhr"
+  // reads as the whole hour) and never a minute noun ("der Minute 9:00" treats
+  // a clock time as a minute number).
   describe('Minute auf 0 fixiert unter einer bestimmten Stunde', function() {
     run([
-      ['* 0 0 * * *', 'täglich jede Sekunde der Minute 0:00'],
-      ['* 0 9 * * *', 'täglich jede Sekunde der Minute 9:00'],
-      ['* 0 12 * * *', 'täglich jede Sekunde der Minute 12:00'],
+      ['* 0 0 * * *', 'täglich jede Sekunde für eine Minute um Mitternacht'],
+      ['* 0 9 * * *', 'täglich jede Sekunde für eine Minute um 9 Uhr'],
+      ['* 0 12 * * *', 'täglich jede Sekunde für eine Minute um 12 Uhr'],
       ['* 0 9,11 * * *',
-        'täglich jede Sekunde der Minuten 9:00 und 11:00'],
+        'täglich jede Sekunde für eine Minute um 9 und 11 Uhr'],
       // An hour RANGE under a minute-0 confinement reads as a window, not a
       // wall of clock minutes: the one-minute window from 9 to 17h (the
       // hour-range analog of the every-other-hour confinement below).
@@ -165,13 +183,14 @@ describe('Deutsch (de):', function() {
       // wall of clock minutes: the one-minute window in every other hour.
       ['* 0 */2 * * *',
         'jede Sekunde für eine Minute in jeder zweiten Stunde'],
-      ['* 0 9 * * MON', 'montags jede Sekunde der Minute 9:00'],
-      // A single fixed NONZERO minute is a single fixed timestamp just like
-      // minute 0: the seconds fuse to that explicit clock minute in the
-      // genitive ("der Minute 0:02"), matching the minute-0 form above, never
-      // floating as a separate apposition ("um 0:02 Uhr").
-      ['* 2 0 * * 0-6', 'täglich jede Sekunde der Minute 0:02'],
-      ['* 2 9 * * *', 'täglich jede Sekunde der Minute 9:02']
+      ['* 0 9 * * MON', 'montags jede Sekunde für eine Minute um 9 Uhr'],
+      // A single fixed NONZERO minute composes a full timestamp: the seconds
+      // clause binds to that clock time as an apposition ("…, um 0:02 Uhr").
+      // The minute is visible in the timestamp itself, so no extra confinement
+      // frame is needed — and "der Minute 0:02" would treat the clock time as
+      // a minute number.
+      ['* 2 0 * * 0-6', 'jede Sekunde, um 0:02 Uhr'],
+      ['* 2 9 * * *', 'jede Sekunde, um 9:02 Uhr']
     ]);
   });
 
@@ -560,7 +579,7 @@ describe('Deutsch (de):', function() {
       ['15 8,12,17 * * *', 'täglich um 8:15, 12:15 und 17:15 Uhr'],
       ['0 0 1 */3 *', 'am 1. Januar, April, Juli und Oktober um Mitternacht'],
       ['0,30 5 9,18 * * *',
-        'täglich in den Sekunden 0 und 30 der Minuten 9:05 und 18:05'],
+        'in den Sekunden 0 und 30, um 9:05 und 18:05 Uhr'],
       ['0 0 29 2 *', 'am 29. Februar um Mitternacht'],
       ['0 12 25 12 *', 'am 25. Dezember um 12 Uhr']
     ]);
@@ -619,10 +638,11 @@ describe('Deutsch (de):', function() {
         'in den Sekunden 0 bis 10 der Minute 0 jeder Stunde'],
       // date+weekday OR where the weekday is a Quartz form.
       ['0 9 1 * 5L', 'am 1. oder am letzten Freitag des Monats um 9 Uhr'],
-      // A wildcard second composed with a minute-0 clock time: the pinned
-      // clock minute surfaces in the genitive under the "täglich" frame, never
-      // the bare hour ("um 9 Uhr"), which would hide the :00.
-      ['* 0 9 * * *', 'täglich jede Sekunde der Minute 9:00'],
+      // A wildcard second composed with a minute-0 clock time: the one-minute
+      // confinement surfaces as a duration on the clock time under the
+      // "täglich" frame, never the bare hour ("um 9 Uhr"), which would hide
+      // the :00.
+      ['* 0 9 * * *', 'täglich jede Sekunde für eine Minute um 9 Uhr'],
       // Minute 0 under a sub-minute second must be stated, not absorbed into
       // a bare hourly idiom ("jede Stunde" / "alle 2 Stunden" / "stündlich von
       // 9 bis 17 Uhr") that silently drops the :00. An hour range surfaces it
