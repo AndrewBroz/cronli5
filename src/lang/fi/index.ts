@@ -528,15 +528,18 @@ function renderComposeSeconds(
     return composeSecondsOverMinuteStep(schedule, plan.rest, opts);
   }
 
-  // A second over a single fixed minute and a specific hour is a single fixed
-  // timestamp: the clock-time rest would float the seconds as a separate clause
-  // ("joka sekunti, joka päivä klo 9.02"), hiding that they belong to that one
-  // minute. Bind the seconds to the explicit clock minute with the "minuutin
-  // HH.MM aikana" frame (an "of"/during form, never a range) and trail the day
-  // qualifier ("joka sekunti minuutin 9.02 aikana, joka päivä") — the same
-  // fusion the minute-0 case ("minuutin 9.00 aikana") uses.
-  if (plan.rest.kind === 'clockTimes' && schedule.shapes.minute === 'single') {
-    return composeSingleMinute(schedule, plan.rest, opts);
+  // A sub-minute second sweeping minute 0 of specific hours is a one-minute
+  // confinement of each named hour (60 fires in :00, not 3,600 across the
+  // hour). State it as a duration on the clock time ("joka sekunti minuutin
+  // ajan klo 9, joka päivä") — the same "minuutin ajan" frame the hour-range
+  // and hour-step confinements use. Any NONZERO fixed minute already composes
+  // a full timestamp, so the seconds bind to that clock time through the
+  // generic tail below ("joka sekunti, joka päivä klo 9.02") — never a
+  // "minuutin 9.02 aikana" frame, which would treat a clock time as a minute
+  // number.
+  if (plan.rest.kind === 'clockTimes' && restMinutesAllZero(plan.rest) &&
+      subMinuteSecond(schedule)) {
+    return composeMinuteZero(schedule, plan.rest, opts);
   }
 
   // A wildcard second under a minute */2 with a wildcard hour juxtaposes two
@@ -559,27 +562,33 @@ function renderComposeSeconds(
   return lead + render(schedule, plan.rest, opts);
 }
 
-// The single-fixed-minute confinement: bind the seconds to the explicit clock
-// minute(s) in the "minuutin/minuuttien HH.MM aikana" frame (an "of"/during
-// form, never a range — a range would round-trip back to the whole hour) and
-// trail the day qualifier ("joka sekunti minuutin 9.02 aikana, joka päivä").
-// Minute 0 ("minuutin 9.00 aikana") is just this with the minute being 0; any
-// single fixed minute fuses the same way.
-function composeSingleMinute(
+// Whether every clock time in the rest sits on a whole hour — the composed
+// timestamps name bare hours, so the seconds sweep is a minute-0 confinement.
+function restMinutesAllZero(
+  rest: Extract<PlanNode, {kind: 'clockTimes'}>
+): boolean {
+  return rest.times.every(function atZero(time): boolean {
+    return +time.minute === 0;
+  });
+}
+
+// The minute-0 sweep confinement: the duration frame on the named hour(s)
+// ("joka sekunti minuutin ajan klo 9, joka päivä"), with the day qualifier
+// trailing. A lone midnight/noon keeps its word form ("keskiyöllä",
+// "keskipäivällä"); lists stay uniform digits ("klo 9 ja 11").
+function composeMinuteZero(
   schedule: Schedule,
   rest: Extract<PlanNode, {kind: 'clockTimes'}>,
   opts: NormalizedOptions
 ): string {
-  const clocks = rest.times.map(function clock(time): string {
-    return clockDigits({hour: time.hour, minute: time.minute},
-      {sep: opts.style.sep});
-  });
-  const frame = clocks.length === 1 ?
-    'minuutin ' + clocks[0] :
-    'minuuttien ' + joinList(clocks);
+  const hours = rest.times.length === 1 ?
+    timeWord(rest.times[0].hour, 0, null, opts) :
+    'klo ' + joinList(rest.times.map(function digitsOf(time): string {
+      return timeDigits(time.hour, 0, null, opts);
+    }));
   const dayTrail = leadingQualifier(schedule, opts).trimEnd();
 
-  return secondsLeadClause(schedule, opts) + ' ' + frame + ' aikana' +
+  return secondsLeadClause(schedule, opts) + ' minuutin ajan ' + hours +
     (dayTrail ? ', ' + dayTrail : '');
 }
 

@@ -323,9 +323,9 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Language | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
 | English | at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| German | montags in den Sekunden 5 und 10 der Minute 9:30 | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
+| German | in den Sekunden 5 und 10, um 9:30 Uhr montags | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | Spanish | los lunes, en los segundos 5 y 10 de las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
-| Finnish | 5 ja 10 sekunnin kohdalla minuutin 9.30 aikana, maanantaisin | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
+| Finnish | 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
 | French | le lundi, aux secondes 5 et 10 de 9 h 30 | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
 | Portuguese | às segundas-feiras, nos segundos 5 e 10 das 09:30 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
 | Chinese (Simplified) | 每周一，9点30分的第5、10秒 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |

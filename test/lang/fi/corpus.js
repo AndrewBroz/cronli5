@@ -322,10 +322,12 @@ describe('Suomi (fi):', function() {
       ['30 9-20,22 * * *', 'joka päivä klo 9.30–20.30 sekä klo 22.30'],
       ['0,30 8-18/2 * * *',
         '0 ja 30 minuutin kohdalla, kahden tunnin välein klo 8–18'],
-      // A single fixed minute fuses the seconds to the clock minute (the same
-      // "minuutin HH.MM aikana" frame as minute 0), never floating "klo 9.30".
-      ['*/15 30 9 * * *',
-        '15 sekunnin välein minuutin 9.30 aikana, joka päivä'],
+      // Stepped/discrete seconds at a fully fixed timestamp bind to the clock
+      // time itself ("…klo 9.30") — 9.30 is a time, not a minute number, so a
+      // "minuutin 9.30 aikana" frame would treat a clock time as a minute.
+      ['*/15 30 9 * * *', '15 sekunnin välein, joka päivä klo 9.30'],
+      ['5,10 30 9 * * MON',
+        '5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30'],
       ['1 1 * * * *', 'joka tunti 1 minuutin ja 1 sekunnin kohdalla'],
       ['*/15 * * * MON', '15 minuutin välein maanantaisin'],
       ['*/15 * 13 * *', '15 minuutin välein kuukauden 13. päivänä'],
@@ -353,17 +355,21 @@ describe('Suomi (fi):', function() {
 
   // A sub-minute second with the minute pinned to 0 and a specific hour: the
   // minute-0 is a real one-minute confinement (60 fires in :00, not 3,600
-  // across the hour). The clock minute must stay visible, so the seconds fire
-  // "during" the explicit clock minute ("minuutin 9.00 aikana"), never the
-  // bare hour ("klo 9"). The "of"-style frame, NOT a range — "minuutin
-  // 9.00–9.59" would round-trip back to the whole hour.
+  // across the hour). The confinement is stated as a duration on the clock
+  // time ("minuutin ajan klo 9") — the "minuutin ajan" frame the hour-range
+  // and hour-step confinements below already use — never the bare hour alone
+  // ("klo 9" reads as the whole hour) and never a minute noun ("minuutin
+  // 9.00" treats a clock time as a minute number).
   describe('minuutti kiinnitetty 0:aan tietyn tunnin alla', function() {
     run([
-      ['* 0 0 * * *', 'joka sekunti minuutin 0.00 aikana, joka päivä'],
-      ['* 0 9 * * *', 'joka sekunti minuutin 9.00 aikana, joka päivä'],
-      ['* 0 12 * * *', 'joka sekunti minuutin 12.00 aikana, joka päivä'],
+      ['* 0 0 * * *', 'joka sekunti minuutin ajan keskiyöllä, joka päivä'],
+      ['* 0 9 * * *', 'joka sekunti minuutin ajan klo 9, joka päivä'],
+      // A lone noon/midnight keeps its word form ("keskipäivällä"), the same
+      // convention as "joka päivä keskipäivällä"; lists stay uniform digits.
+      ['* 0 12 * * *',
+        'joka sekunti minuutin ajan keskipäivällä, joka päivä'],
       ['* 0 9,11 * * *',
-        'joka sekunti minuuttien 9.00 ja 11.00 aikana, joka päivä'],
+        'joka sekunti minuutin ajan klo 9 ja 11, joka päivä'],
       // An hour RANGE under a minute-0 confinement reads as a window, not a
       // wall of clock minutes: the one-minute window klo 9–17 (the hour-range
       // analog of the every-other-hour confinement below).
@@ -373,15 +379,16 @@ describe('Suomi (fi):', function() {
       // wall of clock minutes: the one-minute window during every other hour.
       ['* 0 */2 * * *',
         'joka sekunti minuutin ajan joka toisen tunnin aikana'],
-      ['* 0 9 * * MON', 'joka sekunti minuutin 9.00 aikana, maanantaisin'],
+      ['* 0 9 * * MON', 'joka sekunti minuutin ajan klo 9, maanantaisin'],
       ['*/15 0 9 * * *',
-        '15 sekunnin välein minuutin 9.00 aikana, joka päivä'],
-      // A single fixed NONZERO minute is a single fixed timestamp just like
-      // minute 0: the seconds fuse to that explicit clock minute ("minuutin
-      // 0.02 aikana"), matching the minute-0 form above, never floating as a
-      // separate apposition ("klo 0.02").
-      ['* 2 0 * * 0-6', 'joka sekunti minuutin 0.02 aikana, joka päivä'],
-      ['* 2 9 * * *', 'joka sekunti minuutin 9.02 aikana, joka päivä']
+        '15 sekunnin välein minuutin ajan klo 9, joka päivä'],
+      // A single fixed NONZERO minute composes a full timestamp: the seconds
+      // clause binds to that clock time ("…klo 0.02"). The minute is visible
+      // in the timestamp itself, so no extra confinement frame is needed —
+      // and "minuutin 0.02 aikana" would treat the clock time as a minute
+      // number.
+      ['* 2 0 * * 0-6', 'joka sekunti, joka päivä klo 0.02'],
+      ['* 2 9 * * *', 'joka sekunti, joka päivä klo 9.02']
     ]);
   });
 
@@ -540,7 +547,7 @@ describe('Suomi (fi):', function() {
       ['5,30 */15 9,17 1,15 * *',
         '15 minuutin välein, 5 ja 30 sekunnin kohdalla ' +
         'klo 9 ja 17 kuukauden 1. ja 15. päivänä'],
-      ['* 30 9 * * *', 'joka sekunti minuutin 9.30 aikana, joka päivä'],
+      ['* 30 9 * * *', 'joka sekunti, joka päivä klo 9.30'],
       // A stepped minute under a wildcard/stepped second and wildcard hour
       // confines the second cadence to the ORDINAL minute cadence ("joka
       // sekunti joka kuudentena minuuttina …"), never the comma juxtaposition
@@ -712,8 +719,8 @@ describe('Vuodet (fi):', function() {
     ['0 0 L * * 2030',
       'kuukauden viimeisenä päivänä keskiyöllä vuonna 2030', years],
     ['*/15 30 9 15W * * 2030',
-      '15 sekunnin välein minuutin 9.30 aikana, kuukauden 15. päivää ' +
-      'lähinnä olevana arkipäivänä vuonna 2030', {seconds: true, years: true}],
+      '15 sekunnin välein, kuukauden 15. päivää lähinnä olevana ' +
+      'arkipäivänä klo 9.30 vuonna 2030', {seconds: true, years: true}],
     ['0 0 2/3 * * 2030',
       'joka kolmas päivä 2. päivästä alkaen keskiyöllä vuonna 2030', years],
     ['0 0 13 * 5 2030',
