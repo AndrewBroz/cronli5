@@ -118,7 +118,22 @@ describe('Deutsch (de):', function() {
       // itself ("…, um 9:05 Uhr") — 9:05 is a time, not a minute number, so a
       // "der Minute 9:05" frame would be nonsense (minute numbers run 0-59).
       ['0,30 5 9 * * *', 'in den Sekunden 0 und 30, um 9:05 Uhr'],
-      ['5,10 30 9 * * MON', 'in den Sekunden 5 und 10, um 9:30 Uhr montags'],
+      // The day qualifier fronts the timestamp INSIDE the apposition
+      // ("…, montags um 9:30 Uhr"): "montags um 9:30 Uhr" is the unmarked
+      // day→time order and stays one unbroken unit, exactly the standalone
+      // sentence of the seconds-free sibling. Trailing it ("um 9:30 Uhr
+      // montags") reads tacked-on; fronting the whole sentence ("montags in
+      // den Sekunden 5 und 10, …") garden-paths as seconds of every minute.
+      ['5,10 30 9 * * MON', 'in den Sekunden 5 und 10, montags um 9:30 Uhr'],
+      ['* 2 9 * * MON', 'jede Sekunde, montags um 9:02 Uhr'],
+      ['* 2 9 13 * *', 'jede Sekunde, am 13. um 9:02 Uhr'],
+      ['*/10 10,20 9,18 * * MON',
+        'alle 10 Sekunden, montags um 9:10, 9:20, 18:10 und 18:20 Uhr'],
+      // Discrete seconds at minute 0 are the same apposition (no duration
+      // frame — they don't fill the minute), so the qualifier and the
+      // "täglich" frame front its timestamp the same way.
+      ['0,30 0 9 * * MON', 'in den Sekunden 0 und 30, montags um 9 Uhr'],
+      ['0,30 0 9 * * *', 'in den Sekunden 0 und 30, täglich um 9 Uhr'],
       ['*/15 0 9 * * *', 'täglich alle 15 Sekunden für eine Minute um 9 Uhr']
     ]);
   });

@@ -778,7 +778,7 @@ function confinedMinutePhrase(schedule: Schedule): string {
 // cadence form; a CLOCK-POINT second (list/range/single) over any restricted
 // minute uses the genitive form. Both bind the second beneath the minute
 // instead of juxtaposing the two behind a comma. Folded into one helper so
-// `renderComposeSeconds` carries a single branch.
+// `composeSecondsParts` carries a single branch.
 function minuteConfinementRender(
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>, schedule: Schedule
 ): string | null {
@@ -831,11 +831,28 @@ function minuteZeroSweepRender(
     timesPhrase(plan.rest.times, sep);
 }
 
-function renderComposeSeconds(
+// A seconds clause whose whole rendering is the clause itself: no apposition
+// lead, and the qualifier is placed at the sentence level as usual.
+function wholeClause(
+  clause: string
+): {clause: string; lead: string; qualBindsClause: boolean} {
+  return {clause, lead: '', qualBindsClause: false};
+}
+
+// The composed parts of a seconds clause: the apposition lead ("jede
+// Sekunde, "), the clause it binds to, and whether the day qualifier (or the
+// "täglich" frame) belongs INSIDE the apposition, fronting the clause
+// ("jede Sekunde, montags um 9:02 Uhr"). It fronts exactly when the clause
+// is a composed clock-time list — "montags um 9:30 Uhr" is the unmarked
+// day→time order and the standalone sentence of the seconds-free sibling;
+// trailing it ("um 9:30 Uhr montags") reads tacked-on, and fronting the
+// whole sentence ("montags in den Sekunden 5 und 10, …") garden-paths as
+// seconds of every minute.
+function composeSecondsParts(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>,
   opts: Opts
-): string {
+): {clause: string; lead: string; qualBindsClause: boolean} {
   // An hour step (or arithmetic-progression hour list) under a single pinned
   // minute is a cadence, not a wall of clock times: the second/minute lead,
   // then the hour cadence ("in Sekunde 30 jeder Stunde, alle 2 Stunden"). The
@@ -848,7 +865,7 @@ function renderComposeSeconds(
       hourRangeCadence(schedule, minute);
 
     if (cadence !== null) {
-      return cadence;
+      return wholeClause(cadence);
     }
   }
 
@@ -857,7 +874,7 @@ function renderComposeSeconds(
   const sweep = minuteZeroSweepRender(plan, schedule, opts.style.sep);
 
   if (sweep !== null) {
-    return sweep;
+    return wholeClause(sweep);
   }
 
   // A second confines the minute restriction (open hour), never the comma
@@ -868,13 +885,13 @@ function renderComposeSeconds(
   const confined = minuteConfinementRender(plan, schedule);
 
   if (confined !== null) {
-    return confined;
+    return wholeClause(confined);
   }
 
   // A wildcard second under a minute */2 with a wildcard hour binds in the
   // genitive ("jede Sekunde jeder zweiten Minute").
   if (isEveryOtherMinuteSeconds(schedule, plan)) {
-    return secondsLead(schedule) + ' jeder zweiten Minute';
+    return wholeClause(secondsLead(schedule) + ' jeder zweiten Minute');
   }
 
   // A cadence/stepped second under a minute LIST or SINGLE and a wildcard hour
@@ -883,18 +900,25 @@ function renderComposeSeconds(
   // the two specs; the comma read as two independent specifications and is
   // inconsistent with the no-comma stepped-minute and list-tier confinements.
   if (isLocativeMinuteConfinement(schedule, plan)) {
-    return secondsLead(schedule) + ' ' + render(schedule, plan.rest, opts);
+    return wholeClause(secondsLead(schedule) + ' ' +
+      render(schedule, plan.rest, opts));
   }
 
   // A compact clock-time rest folds a meaningful SINGLE second into its own
   // leading clause, so the composer must not prepend a second lead that would
   // double it. A wildcard or stepped second is not folded there (no
-  // clockSecond), so it still leads its own clause here.
+  // clockSecond), so it still leads its own clause here. Only a plain
+  // clock-time clause binds the qualifier: a compact rest renders as windows
+  // and cadences, whose qualifier keeps the sentence-level placement.
   const restOwnsLead = plan.rest.kind === 'compactClockTimes' &&
     schedule.analyses.clockSecond;
   const lead = restOwnsLead ? '' : secondsLead(schedule) + ', ';
 
-  return lead + render(schedule, plan.rest, opts);
+  return {
+    clause: render(schedule, plan.rest, opts),
+    lead,
+    qualBindsClause: plan.rest.kind === 'clockTimes'
+  };
 }
 
 // True when a compose-seconds plan is a second over a minute-0 clock-time
@@ -902,7 +926,8 @@ function renderComposeSeconds(
 // leads it, and the "täglich" frame applies). A wildcard or sub-minute-step
 // second additionally takes the "für eine Minute" duration frame in the
 // renderer; a discrete second list counts from the top of the hour and binds
-// as the generic apposition instead.
+// as the generic apposition instead, whose qualifier placement
+// `qualBindsClause` already settles before this predicate is consulted.
 function composeMinuteZero(
   schedule: Schedule,
   plan: Extract<PlanNode, {kind: 'composeSeconds'}>
@@ -1374,10 +1399,12 @@ function renderClockTimes(
   return 'um ' + timesPhrase(plan.times, opts.style.sep);
 }
 
+// `composeSeconds` is absent: it only occurs as the top-level plan (its rest
+// is planned from the coarser fields), and `describe` renders it through
+// `composeSecondsParts` to place the qualifier inside the apposition.
 const renderers = {
   clockTimes: renderClockTimes,
   compactClockTimes: renderCompactClockTimes,
-  composeSeconds: renderComposeSeconds,
   everyHour: renderEveryHour,
   everyMinute: renderEveryMinute,
   everySecond: renderEverySecond,
@@ -1588,17 +1615,24 @@ function applyYear(description: string, schedule: Schedule): string {
 }
 
 function describe(schedule: Schedule, opts: Opts): string {
-  const core = render(schedule, schedule.plan, opts);
+  const parts = schedule.plan.kind === 'composeSeconds' ?
+    composeSecondsParts(schedule, schedule.plan, opts) :
+    wholeClause(render(schedule, schedule.plan, opts));
   const qual = qualifier(schedule, opts.style.months);
-  let base = core;
+  let base = parts.lead + parts.clause;
 
-  if (qual) {
+  if (parts.qualBindsClause && (qual || needsDailyFrame(schedule))) {
+    // The qualifier (or the "täglich" frame in its place) fronts the clause
+    // INSIDE the seconds apposition ("jede Sekunde, montags um 9:02 Uhr").
+    base = parts.lead + (qual || 'täglich') + ' ' + parts.clause;
+  }
+  else if (qual) {
     base = leadsQualifier(schedule) ?
-      qual + ' ' + core :
-      core + ' ' + qual;
+      qual + ' ' + base :
+      base + ' ' + qual;
   }
   else if (needsDailyFrame(schedule)) {
-    base = 'täglich ' + core;
+    base = 'täglich ' + base;
   }
 
   // A day union's month brackets both or-branches, so it leads the whole

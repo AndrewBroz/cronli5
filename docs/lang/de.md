@@ -82,7 +82,7 @@ listed as its fires rather than implying a cadence).
 | `0 12 1 1 *` | am 1. Januar um 12 Uhr | Um 12:00, an Tag 1 des Monats, nur im Januar |
 | `0 12 * 11-2 *` | von November bis Februar um 12 Uhr | Um 12:00, November bis Februar |
 | `0 0 * * 5L` | am letzten Freitag des Monats um Mitternacht | Um 00:00, am letzten Freitag des Monats |
-| `5,10 30 9 * * MON` | in den Sekunden 5 und 10, um 9:30 Uhr montags | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
+| `5,10 30 9 * * MON` | in den Sekunden 5 und 10, montags um 9:30 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | `1/1 * * * *` | in den Minuten 1 bis 59 jeder Stunde | Alle 1 Minuten, beginnend bei Minute 1 |
 | `0 0 1 */3 *` | am 1. Januar, April, Juli und Oktober um Mitternacht | Um 00:00, an Tag 1 des Monats, alle 3 Monate |
 | `*/45 * * * *` | in den Minuten 0 und 45 jeder Stunde | Alle 45 Minuten |
