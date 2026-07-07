@@ -89,67 +89,99 @@ describe('Dialect option:', function() {
     ]);
   });
 
-  // A day-of-month-OR-day-of-week union (both fields restricted). The default
-  // (US) dialect reframes it as "whenever the day is …"; every other dialect
-  // keeps the established "on <dom> or on <dow>" phrasing, with the month
-  // scoping the whole or.
-  describe('day-of-month-or-weekday union keeps "on X or on Y"', function() {
+  // A day-of-month-OR-day-of-week union (both fields restricted) reads the
+  // same condition frame in every dialect, dressed in each dialect's own
+  // typography; a cadence-shaped date arm takes the same any-clause as the
+  // default dialect. Only the compact `short` form keeps the older
+  // "on <dom> or on <dow>" phrasing. The month scopes the whole union and
+  // leads the clause.
+  describe('day union reads the condition frame in every dialect', function() {
     var gb = {dialect: 'gb'};
 
     run([
-      // A restricted month scopes BOTH halves of the union, so it fronts the
-      // whole or-phrase once ("in June, on the 13th or on Friday") instead
-      // of folding into one arm and repeating on the other.
-      ['0 0 13 6 FRI', 'in June, on the 13th or on Friday at midnight', gb],
-      ['0 0 15 3 FRI', 'in March, on the 15th or on Friday at midnight', gb],
-      // No month: a bare date ordinal or a Quartz date, or'd with the weekday.
-      ['0 0 15 * MON', 'on the 15th or on Monday at midnight', gb],
+      ['0 0 13 6 FRI',
+        'in June, at midnight whenever the day is the 13th or a Friday', gb],
+      ['0 0 15 3 FRI',
+        'in March, at midnight whenever the day is the 15th or a Friday', gb],
+      ['0 0 15 * MON',
+        'at midnight whenever the day is the 15th or a Monday', gb],
       ['0 0 L * FRI',
-        'on the last day of the month or on Friday at midnight', gb],
+        'at midnight whenever the day is the last day of the month or a ' +
+        'Friday', gb],
       ['0 0 15W * FRI',
-        'on the weekday nearest the 15th or on Friday at midnight', gb],
+        'at midnight whenever the day is the weekday nearest the 15th or a ' +
+        'Friday', gb],
       ['0 0 W15 * FRI',
-        'on the weekday nearest the 15th or on Friday at midnight', gb],
-      // An open day step reads as the parity idiom on the date half.
+        'at midnight whenever the day is the weekday nearest the 15th or a ' +
+        'Friday', gb],
       ['0 0 */2 * FRI',
-        'every other day of the month or on Friday at midnight', gb],
-      // A month range and a Quartz date take the same fronted scope.
+        'at midnight whenever the day is an odd-numbered day or a Friday',
+        gb],
       ['0 0 13 6-8 FRI',
-        'in June to August, on the 13th or on Friday at midnight', gb],
+        'in June to August, at midnight whenever the day is the 13th or a ' +
+        'Friday', gb],
       ['0 0 L 6 FRI',
-        'in June, on the last day of the month or on Friday at midnight', gb]
+        'in June, at midnight whenever the day is the last day of the month ' +
+        'or a Friday', gb],
+      // The cadence-arm any-clause, in gb typography.
+      ['0 0 3/2 * FRI',
+        'at midnight on every other day of the month from the 3rd or on ' +
+        'any Friday', gb],
+      // House typography in the condition frame.
+      ['0 9 13 * 5',
+        'at 9 AM whenever the day is the 13th or a Friday',
+        {dialect: 'house'}],
+      // Short keeps the compact legacy union.
+      ['0 0 13 * 5', 'on the 13th or on Fri at midnight', {short: true}]
     ]);
   });
 
-  // The confinement frame ("every second during minute :00 at 9 a.m.", "every
-  // second of every other hour") is scoped to the default (US) dialect. Every
-  // other dialect — and the compact `short` form — keeps the older
-  // juxtaposed-cadence / duration-frame phrasing, byte for byte.
-  describe('confinement frame is default-dialect only', function() {
+  // The confinement frame ("every second during minute 0 at 9 a.m.") reads
+  // in every dialect, dressed in each dialect's typography; only the
+  // compact `short` form keeps the older juxtaposed-cadence and
+  // duration-frame phrasing.
+  describe('confinement frame reads in every dialect', function() {
     var gb = {dialect: 'gb'};
     var house = {dialect: 'house'};
 
     run([
-      ['* 0 * * * *',
-        'every second, zero minutes past the hour, every hour', gb],
-      ['* * 9 * * *', 'every second, every minute of the 9am hour', gb],
-      ['* 0 9 * * *', 'every second for one minute at 9am, every day', gb],
+      ['* 0 * * * *', 'every second during minute 0 of every hour', gb],
+      ['* * 9 * * *', 'every second of the 9am hour', gb],
+      ['* 0 9 * * *', 'every second during minute 0 at 9am', gb],
       ['* 0 9,11 * * *',
-        'every second for one minute at 9am and 11am, every day', gb],
+        'every second during minute 0 during the 9am and 11am hours', gb],
       ['* 0 9-17 * * *',
-        'every second for one minute during the 9am to 5pm hours', gb],
+        'every second during minute 0 from 9am to 5pm', gb],
       ['* 0 */2 * * *',
-        'every second for one minute during every other hour', gb],
-      ['* 5 9 * * *', 'every second of 9.05am, every day', gb],
-      ['* 30 9 * * *', 'every second of 9:30 AM, every day', house],
-      ['*/15 30 9 * * *', 'every 15 seconds of 9.30am, every day', gb],
-      ['* */2 * * *', 'every minute during every other hour', gb],
+        'every second during minute 0 of every other hour', gb],
+      ['* 5 9 * * *', 'every second during minute 5 at 9am', gb],
+      ['* 30 9 * * *', 'every second during minute 30 at 9 AM', house],
+      ['*/15 30 9 * * *', 'every 15 seconds during minute 30 at 9am', gb],
+      ['* */2 * * *', 'every minute of every other hour', gb],
       ['* */2 * * * *', 'every second of every other minute', gb],
       ['* 0 9-20,22 * * *',
-        'every second for one minute during the 9am to 8pm and 10pm hours', gb],
+        'every second during minute 0 during the 9am to 8pm and 10pm ' +
+        'hours', gb],
       ['* 0 0 * * *',
         'every second for one minute at midnight, every day',
         {dialect: 'us', short: true}]
+    ]);
+  });
+
+  // Every stated bound is true of the run. A continuous run (wildcard
+  // minute) closes on the true end of the window — the top of the hour
+  // after the last fire — in every dialect, each with its own exclusive
+  // connective. A restricted minute stops within the final hour: an
+  // INCLUSIVE through connective ("through 5 p.m.") may close on the bare
+  // hour, while an exclusive one ("to", "-") must name the last fire or it
+  // understates the run.
+  describe('window closes state true bounds in every dialect', function() {
+    run([
+      ['* 9-17 * * *', 'every minute from 9 a.m. until 6 p.m.'],
+      ['* 9-17 * * *', 'every minute from 9am until 6pm', {dialect: 'gb'}],
+      ['* 9-17 * * *', 'every minute from 9 AM - 6 PM', {dialect: 'house'}],
+      ['*/2 0 * * *',
+        'every two minutes from midnight until 1am', {dialect: 'gb'}]
     ]);
   });
 });

@@ -2,11 +2,14 @@ import {run} from '../../../../runner.js';
 
 // Behavior spec for the day-of-month / day-of-week OR rule. Per the crontab
 // spec, when BOTH the date, and weekday fields are restricted (not `*`), the
-// schedule fires on the UNION of the two day sets. The default dialect renders
+// schedule fires on the UNION of the two day sets. Every dialect renders
 // this as a condition over the day — "whenever the day is <dom> or <dow>" — so
-// the union is unmistakable (the older "on <dom> or on <dow>" read as
-// alternatives). A restricted month scopes the whole union and leads the clause
-// ("in June …").
+// the union is unmistakable (the older "on <dom> or on <dow>", kept only by
+// the compact `short` form, read as alternatives). A cadence-shaped date
+// arm is not a noun the predicate frame can hold, so that union reads as a
+// clause with "any" carrying the union
+// ("on every 3rd day of the month from the 2nd or on any Sunday"). A
+// restricted month scopes the whole union and leads the clause ("in June …").
 
 describe('Day-of-month or day-of-week (both restricted):', function() {
   describe('time-anchored', function() {
@@ -64,8 +67,8 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
   });
 
   // The day-of-month parity idioms in a union. `*/2` and `1/2` are the odd
-  // days, `2/2` the even; any other start (`3/2`) enumerates its fires
-  // instead, each ordinal joining the flat or-list.
+  // days, `2/2` the even; any other start (`3/2`) is a cadence with no parity
+  // idiom, so its union takes the clause form (next block).
   describe('day-of-month parity in a union', function() {
     run([
       ['0 0 */2 * 5',
@@ -73,11 +76,40 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
       ['0 0 1/2 * 5',
         'at midnight whenever the day is an odd-numbered day or a Friday'],
       ['0 0 2/2 * 5',
-        'at midnight whenever the day is an even-numbered day or a Friday'],
+        'at midnight whenever the day is an even-numbered day or a Friday']
+    ]);
+  });
+
+  // A cadence-shaped date arm — an open step with no parity idiom — keeps its
+  // cadence phrase inside the union rather than exploding into its fires;
+  // "any" on the weekday half carries the union reading. The sentence
+  // architecture (month lead, time body, trailing day clause) matches the
+  // predicate-frame union's, and a leading month absorbs " of the month"
+  // exactly as the non-union month scope does.
+  describe('cadence date arms in a union', function() {
+    run([
       ['0 0 3/2 * 5',
-        'at midnight whenever the day is the 3rd, the 5th, the 7th, the ' +
-        '9th, the 11th, the 13th, the 15th, the 17th, the 19th, the 21st, ' +
-        'the 23rd, the 25th, the 27th, the 29th, the 31st, or a Friday']
+        'at midnight on every other day of the month from the 3rd or on ' +
+        'any Friday'],
+      ['0 9 2/3 * 0',
+        'at 9 a.m. on every 3rd day of the month from the 2nd or on any ' +
+        'Sunday'],
+      ['0 0 3/2 6 5',
+        'in June, at midnight on every other day from the 3rd or on any ' +
+        'Friday'],
+      ['0 0 2/3 * 1-5',
+        'at midnight on every 3rd day of the month from the 2nd or on any ' +
+        'weekday'],
+      ['0 0 2/3 * MON,WED',
+        'at midnight on every 3rd day of the month from the 2nd or on any ' +
+        'Monday or Wednesday'],
+      ['0 0 2/3 * 5L',
+        'at midnight on every 3rd day of the month from the 2nd or on the ' +
+        'last Friday of the month'],
+      ['* 0 */5 2/3 */4 */4',
+        'in January, May, and September, every second during minute 0 ' +
+        'during the 12 a.m., 5 a.m., 10 a.m., 3 p.m., and 8 p.m. hours on ' +
+        'every 3rd day from the 2nd or on any Thursday or Sunday']
     ]);
   });
 
@@ -94,8 +126,8 @@ describe('Day-of-month or day-of-week (both restricted):', function() {
         'at midnight whenever the day is the 15th or a Tuesday through a ' +
         'Thursday'],
       ['0 0 15 * */2',
-        'at midnight whenever the day is the 15th, a Sunday, a Tuesday, a ' +
-        'Thursday, or a Saturday']
+        'at midnight whenever the day is the 15th, a Tuesday, a Thursday, a ' +
+        'Saturday, or a Sunday']
     ]);
   });
 });

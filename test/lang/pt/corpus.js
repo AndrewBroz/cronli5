@@ -1154,3 +1154,35 @@ describe('Português (pt):', function() {
 // the es-MX/es-US dialect rows are removed entirely and this known-error block
 // has no pt counterpart. (If/when pt-PT lands it will carry its own corpus and
 // any such guard.)
+
+// O ano com {years: true}. A forma dobrável junta-se à data de calendário
+// ("no dia 13 de cada mês de 2030"); toda outra forma de data — Quartz,
+// passo aberto, união DOM-ou-DOW — leva o ano ao final ("em 2030") em vez
+// de omiti-lo: um ano omitido é uma restrição perdida.
+describe('Anos (pt):', function() {
+  const years = {years: true};
+
+  run([
+    ['0 9 13 * * 2030', 'no dia 13 de cada mês de 2030 às 09:00', years],
+    ['0 0 L * * 2030', 'no último dia do mês às 00:00 em 2030', years],
+    ['*/15 30 9 15W * * 2030',
+      'a cada 15 segundos das 09:30, no dia útil mais próximo ao dia 15 ' +
+      'em 2030', {seconds: true, years: true}],
+    ['0 0 2/3 * * 2030',
+      'a cada três dias do mês a partir do dia 2 às 00:00 em 2030', years],
+    ['0 0 13 * 5 2030',
+      'às 00:00, seja no dia 13 de cada mês ou às sextas-feiras em 2030',
+      years]
+  ]);
+});
+
+// A minute list mixing a range under a BOUNDED hour step: the core once
+// planned this as bare whole-hour clock times, silently dropping the
+// minutes (test/core/known-defects.js pinned it); the mixed list keeps
+// the language's own minute devices ahead of the step cadence.
+describe('lista de minutos mista sob passo de horas limitado', function() {
+  run([
+    ['5-10,20 9-17/2 * * *',
+      'nos minutos 5 a 10 e 20, a cada duas horas das 09:00 às 17:00']
+  ]);
+});

@@ -9,16 +9,24 @@ import type {
   Analyses, ClockTime, Field, HourTimesPlan, HoursPlan, Pattern,
   PlanNode, Schedule, ScheduleFacts, Segment, Shape, Shapes
 } from './schedule.js';
+import {dayFacts} from './day.js';
+import {hourStrideFact} from './cadence.js';
 import {enumerateFires, enumerateStep, includes} from './util.js';
 import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
   from './shapes.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
-// Enumerate a discrete field (single value or comma list) as numbers. A
-// wildcard or any non-discrete form collapses to the top of the unit (0).
+// Enumerate a discrete field (single value or comma list) as numbers; a
+// list mixing ranges or steps enumerates its fires, so no value is ever
+// silently collapsed away. Only a wildcard stands for the top of the unit
+// (0).
 function enumerateValues(field: string): number[] {
-  if (!isDiscreteList(field)) {
+  if (field === '*') {
     return [0];
+  }
+
+  if (!isDiscreteList(field)) {
+    return enumerateFires(field, 0, 59);
   }
 
   return field.split(',').map(Number);
@@ -139,6 +147,8 @@ function analyze(pattern: Pattern): Schedule {
 
   const analyses = {
     clockSecond: clockSecond(pattern.second),
+    day: dayFacts(pattern, shapes),
+    hourStride: hourStrideFact(segments.hour),
     lastMinuteFire: lastMinuteFire(pattern.minute),
     minuteSpan: minuteSpan(pattern.minute),
     segments

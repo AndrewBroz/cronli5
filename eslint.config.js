@@ -140,5 +140,20 @@ export default [
       // idiomatic TypeScript, not the redundancy this rule guards against.
       'no-duplicate-imports': 'off'
     }
+  },
+  {
+    // Every renderer composes phrases from parts; patching a built string
+    // with .replace is the phrase-surgery overlay red flag the
+    // improve-renderer skill bans. All eight languages are migrated and
+    // surgery-free.
+    files: ['src/lang/**'],
+    rules: {
+      'no-restricted-syntax': ['error', {
+        message: 'Compose phrases from parts instead of patching built ' +
+          'strings (improve-renderer skill: phrase surgery is an overlay ' +
+          'red flag).',
+        selector: 'CallExpression[callee.property.name="replace"]'
+      }]
+    }
   }
 ];

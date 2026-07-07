@@ -30,6 +30,7 @@ import es from '../src/lang/es/index.js';
 import fi from '../src/lang/fi/index.js';
 import fr from '../src/lang/fr/index.js';
 import pt from '../src/lang/pt/index.js';
+import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
   comparisonPatterns, dialectPatterns, languagePatterns
@@ -49,6 +50,7 @@ const languages = [
   {code: 'fr', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: fr},
   {code: 'pt', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: pt,
     cronstrueLocale: 'pt_BR'},
+  {code: 'uk', extras: ['1 1 * * * *', '0 0 13 * FRI'], lang: uk},
   {code: 'zh', extras: [], lang: zh, cronstrueLocale: 'zh_CN'}
 ];
 
@@ -149,6 +151,7 @@ const headToHeadRows = [
   {name: 'Finnish', code: 'fi'},
   {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
   {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
+  {name: 'Ukrainian', code: 'uk'},
   {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
   {name: 'Chinese (Traditional)', code: 'zh', dialect: 'zh-Hant',
     cronstrueLocale: 'zh_TW'}
@@ -234,10 +237,10 @@ function evaluateExample(args, vars) {
 
   try {
     // eslint-disable-next-line no-new-func
-    const run = Function('cronli5', 'es', 'fi', ...names,
+    const run = Function('cronli5', 'es', 'fi', 'uk', ...names,
       'return cronli5(' + args + ');');
 
-    return run(cronli5, es, fi, ...names.map(function value(n) {
+    return run(cronli5, es, fi, uk, ...names.map(function value(n) {
       return vars[n];
     }));
   }

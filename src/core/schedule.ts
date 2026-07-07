@@ -29,6 +29,45 @@ export type Segment =
   | {kind: 'range'; bounds: [string, string]}
   | {kind: 'step'; fires: number[]; interval: number; startToken: string};
 
+/**
+ * The classified day-of-month arm: a Quartz form, an open-step cadence
+ * (carrying its odd/even parity when the interval-2 set has one), or plain
+ * segments a renderer enumerates.
+ */
+export type DateArm =
+  | {kind: 'quartz'}
+  | {kind: 'cadenceStep'; interval: number; start: number;
+      parity: 'odd' | 'even' | null}
+  | {kind: 'segments'};
+
+/** The classified day-of-week arm: a Quartz form or plain segments. */
+export type WeekdayArm =
+  | {kind: 'quartz'}
+  | {kind: 'segments'};
+
+/**
+ * Day-field facts: whether the pattern restricts both day fields (cron's
+ * DOM-or-DOW union) and each restricted arm's classification (`null` for a
+ * wildcard field). Semantic only — words and frames stay per-language.
+ */
+export interface DayFacts {
+  union: boolean;
+  date: DateArm | null;
+  weekday: WeekdayArm | null;
+}
+
+/**
+ * A precomputed hour-field arithmetic stride. `offsetClean` marks a stride
+ * that wraps the day cleanly from within its first interval (bare or
+ * "from M" cadence); a false value pins both endpoints.
+ */
+export interface HourStride {
+  interval: number;
+  last: number;
+  offsetClean: boolean;
+  start: number;
+}
+
 /** A discrete clock time the core folds minute/second into. */
 export interface ClockTime {
   hour: number;
@@ -91,6 +130,8 @@ export type PlanNode =
 /** The semantic analyses the core attaches to the pattern for rendering. */
 export interface Analyses {
   clockSecond: number | undefined;
+  day: DayFacts;
+  hourStride: HourStride | null;
   lastMinuteFire: number;
   minuteSpan: [number, number] | null;
   segments: Record<Field, Segment[] | null>;
@@ -119,7 +160,15 @@ export interface Schedule<Extra extends {kind: string} = never>
   plan: PlanNode | Extra;
 }
 
-/** A resolved style table. */
+/**
+ * A resolved style table: pure typography and connectives, never grammar.
+ * Words: `am`/`pm`, `midday`/`midnight`; connectives: `through` (inclusive
+ * span), `until` (exclusive close); layout: `closeUp`, `sep`, `serialComma`,
+ * `dayFirst`, `ordinals`; close policy: `inclusiveThrough` (whether
+ * `through` includes the whole named hour — see the English rangeWindow
+ * rules). No field selects a sentence frame: grammar is universal, chosen by
+ * the composer, never by dialect.
+ */
 export interface DialectStyle {
   am: string;
   closeUp: boolean;
@@ -128,14 +177,18 @@ export interface DialectStyle {
   midnight: string;
   ordinals: boolean;
   pm: string;
+  // Whether the `through` connective includes the whole named hour ("through
+  // 5 p.m." covers a 5:45 fire), letting a discontinuous multi-hour close
+  // name the bare hour. An exclusive-reading connective ("to", "-") must
+  // close on the last fire instead, or it understates the run.
+  inclusiveThrough: boolean;
   sep: string;
   serialComma: boolean;
   through: string;
-  // Whether a contiguous hour range reads as an up-to-but-not-including
-  // window ("from 9 a.m. until 6 p.m.") rather than a "through <last fire>"
-  // span. Set only on the default English dialect; other dialects and custom
-  // styles keep the "through" span.
-  untilWindow?: boolean;
+  // The connective for the up-to-but-not-including close of a continuous
+  // run ("from 9 a.m. until 6 p.m."): exclusive, unlike `through`, which
+  // names an included bound.
+  until: string;
 }
 
 /**

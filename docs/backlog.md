@@ -6,6 +6,12 @@ actively pursued. Current development is **automated-only** (see
 
 ## Open rendering findings
 
+- ~~de: even-parity day step is arm-unstable~~ *(found and fixed
+  2026-07-03)*: the standalone `2/2` date now speaks the union arm's parity
+  class ("an jedem geraden Tag des Monats"); the 32 pinned stability cells
+  flipped green and `KNOWN_UNSTABLE_DATES` is empty.
+
+
 Concrete defects from the code review and the wide objective sweep
 (`roundtrip.mjs` over all four languages) — grammar/naturalness/consistency, no
 meaning-drift.

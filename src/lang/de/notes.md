@@ -77,3 +77,21 @@ Minuten · Stunde (f) / Stunden · Tag (m) / Tage · Woche (f) / Wochen · Monat
 - `montags` (recurring) vs `jeden Montag` (every) vs `Montag` (a Monday).
 - `de-AT` *Jänner* ≠ `de-DE` *Januar*.
 - "Uhr" always present; whole hours drop the `:00`.
+
+## Panel-validated: date steps enumerate (2026-07-03)
+
+A blind 3-persona panel (native speaker, copy-editor, technical
+communicator) compared the shipped enumeration ("am 2., 5., …, und 29.")
+against cadence candidates for open day-of-month steps:
+
+* **Enumeration retained** — ranked first for correct reader conclusions by
+  all three personas ("unambiguous by construction"; instant "does it run
+  on the 14th?" lookup); it is the shipping default, now by verdict rather
+  than inheritance.
+* **"jeden dritten Tag des Monats ab dem N."** passed comprehension (3/3
+  derived the correct monthly-resetting set) but carries a skim-risk
+  ("ab dem 2." is not explicitly per-month) — acceptable as a compact
+  secondary form, not the default.
+* **"alle drei Tage …" is banned for date steps** — unanimously flagged as
+  priming the continuous cross-month interval reading (day 29 + 3 = the
+  next month's 1st), a different schedule from the monthly-resetting set.

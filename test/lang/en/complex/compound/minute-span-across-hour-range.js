@@ -2,10 +2,12 @@ import {run} from '../../../../runner.js';
 
 // Behavior spec for a minute wildcard or plain range combined with an hour
 // range. A wildcard fires every minute across the whole window — a continuous
-// run the default dialect reads as an up-to-but-not-including window ("until
-// 6 p.m." for 9-17). A plain range is restricted (it stops at :30 each hour),
-// so the run is not continuous to the top of the next hour and the window keeps
-// the bare "through <last hour>" span ("through 5 p.m.").
+// run every dialect reads as an up-to-but-not-including window closed with
+// its own `until` connective ("until 6 p.m." for 9-17). A plain range is
+// restricted (it stops at :30 each hour), so the run is not continuous to the
+// top of the next hour and the window closes within it (bare "through 5 p.m."
+// under the inclusive us through; the last fire under an exclusive
+// connective).
 
 describe('Minute span across an hour range:', function() {
   describe('wildcard minute', function() {

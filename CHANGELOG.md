@@ -6,6 +6,45 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.10.0]
+
+### Added
+
+- **Ukrainian (uk), the eighth language, at beta.** Derived from English
+  (the universal anchor — no validated Slavic sibling existed), with
+  conventions and output both validated by blind uk-native persona panels
+  and a blind round-trip recovery; open findings for the fluent-human
+  review that gates stable are recorded in `src/lang/uk/notes.md`. Ships a
+  946-row corpus, a relational stability suite, and the compact `short`
+  register (abbreviated month/weekday stems, en-dash spans).
+
+### Changed
+
+- **English mixed lists re-anchor each later piece on its own
+  preposition.** "at 5 through 10 and 20 minutes" left 20 ambiguous — a
+  fire point, or a second bound coordinated under "through"? A list mixing
+  a range now reads "at 5 through 10 and at 20 minutes" ("on the 1st
+  through 5th and on the 15th"), across minutes, seconds, and the
+  day-of-month list, in the full and short registers. Bare single-value
+  lists keep their one shared anchor.
+- **German and Finnish seconds bind to the composed clock time, never a
+  minute noun.** `5,10 30 9 * * MON` reads "in den Sekunden 5 und 10,
+  montags um 9:30 Uhr" / "5 ja 10 sekunnin kohdalla, maanantaisin klo
+  9.30" — "der Minute 9:30" / "minuutin 9.30 aikana" treated a clock time
+  as a minute number. Minute-0 sweeps take the duration frame both
+  languages already used for hour windows ("jede Sekunde für eine Minute
+  um 9 Uhr" / "joka sekunti minuutin ajan klo 9"), and German fronts the
+  day qualifier inside the seconds apposition (panel-unanimous over the
+  trailing and sentence-fronted orders).
+
+### Fixed
+
+- **A minute list mixing a range under a bounded hour step no longer
+  collapses to minute 0.** `5-10,20 9-17/2 * * *` fires 35 times a day but
+  was described as five whole-hour times in every language; the core now
+  enumerates such fields' real fires, and each language pins the corrected
+  phrasing (with a core-level guard in `test/core/known-defects.js`).
+
 ## [0.9.0]
 
 Breaking for external custom language modules only: the `Language`

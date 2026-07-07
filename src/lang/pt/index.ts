@@ -15,10 +15,9 @@
 
 import {clockDigits, numeral} from '../../core/format.js';
 import {maxClockTimes, weekdayNumbers} from '../../core/specs.js';
-import {isOpenStep} from '../../core/shapes.js';
 import {
-  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
-  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  arithmeticStep, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride,
   renderStride as chooseStride, secondsConfinesMinute, segmentsOf,
   singleValues, stepSegment
 } from '../../core/cadence.js';
@@ -470,11 +469,9 @@ function secondsBareLead(schedule: Schedule): string {
 // cada minuto".
 function confinedMinutePhrase(schedule: Schedule): string {
   if (schedule.shapes.minute === 'range') {
-    // `minuteRangeLead` is "a cada minuto do 0 ao 30"; the genitive "de"
-    // absorbs its leading "a" ("de cada minuto …", not "de a cada minuto").
-    const range = minuteRangeLead(schedule.pattern.minute).replace(/^a /u, '');
-
-    return 'de ' + range + ' de cada hora';
+    // The genitive "de" absorbs the cadence's leading "a" ("de cada minuto
+    // …", not "de a cada minuto"), so the bare core is prefixed directly.
+    return 'de ' + minuteRangeCore(schedule.pattern.minute) + ' de cada hora';
   }
 
   if (schedule.shapes.minute === 'list') {
@@ -581,9 +578,11 @@ function renderComposeSeconds(
   // Other strides, a restricted hour, and an hour cadence keep the juxtaposed
   // form.
   if (isEveryOtherMinuteSeconds(schedule, plan)) {
-    const rest = render(schedule, plan.rest, opts).replace(/^a /u, '');
-
-    return secondsLeadClause(schedule, opts) + ' de ' + rest;
+    // The guard pins the rest to the bare "a cada dois minutos" cadence
+    // (interval-2 minute, wildcard hour, no qualifier), so the genitive form
+    // is composed directly rather than rendering the rest and patching it.
+    return secondsLeadClause(schedule, opts) + ' de cada dois minutos' +
+      trailingQualifier(schedule, opts);
   }
 
   // A compact clock-time rest folds a meaningful SINGLE second into its own
@@ -704,35 +703,36 @@ function renderMultipleMinutes(
   plan: Extract<PlanNode, {kind: 'multipleMinutes'}>,
   opts: Opts
 ): string {
-  return minutesList(schedule, opts) + trailingQualifier(schedule, opts);
+  return minutesList(schedule, 'hora', opts) +
+    trailingQualifier(schedule, opts);
 }
 
 // "nos minutos 5, 10 e 30 de cada hora". An offset/uneven step the core
 // enumerated to this list reads as a stride cadence when the fires form a
-// long-enough progression.
-function minutesList(schedule: Schedule, opts: Opts): string {
-  return strideFromSegments(segmentsOf(schedule, 'minute'), 'minuto', 'hora',
+// long-enough progression. An empty `anchor` speaks unanchored — under an
+// hour STEP the hour clause is the sole hour authority, so the lead must not
+// also assert "de cada hora" (a conflicting every-hour scope); an hour
+// WINDOW and an unrestricted hour keep the anchor.
+function minutesList(schedule: Schedule, anchor: string, opts: Opts): string {
+  return strideFromSegments(segmentsOf(schedule, 'minute'), 'minuto', anchor,
     opts) ?? 'nos minutos ' +
-    joinList(segmentWords(segmentsOf(schedule, 'minute'))) + ' de cada hora';
-}
-
-// Strip the generic "de cada hora" anchor from a minute-cadence lead. Under an
-// hour STEP the hour clause is the sole hour authority, so the cadence must not
-// also assert "de cada hora" — alongside a stepped hour it reads as a
-// conflicting every-hour scope ("de cada hora, a cada quatro horas"). An hour
-// WINDOW and an unrestricted hour keep the anchor (the window already names the
-// hours; an open hour has no other hour statement).
-function withoutHourAnchor(lead: string): string {
-  return lead.replace(/ de cada hora$/, '');
+    joinList(segmentWords(segmentsOf(schedule, 'minute'))) +
+    (anchor ? ' de cada ' + anchor : '');
 }
 
 // "a cada minuto do 0 ao 30". The standalone renderer adds "de cada hora";
 // when an hour qualifier follows ("..., às 09:00", "..., a cada duas horas")
 // it would contradict, so it is not baked in here.
 function minuteRangeLead(minuteField: string): string {
+  return 'a ' + minuteRangeCore(minuteField);
+}
+
+// The bare range cadence ("cada minuto do 0 ao 30"): the durative "a" or a
+// genitive "de" prefixes it at the call site.
+function minuteRangeCore(minuteField: string): string {
   const bounds = minuteField.split('-');
 
-  return 'a cada minuto do ' + bounds[0] + ' ao ' + bounds[1];
+  return 'cada minuto do ' + bounds[0] + ' ao ' + bounds[1];
 }
 
 // Whether the hour field is a single step, which pt renders as a confinement
@@ -857,9 +857,9 @@ function renderMinuteFrequency(
   else if (plan.hours.kind === 'step') {
     // A clean stride is a confinement ("as horas pares", or the active-hour
     // list), never a juxtaposed cadence ("a cada duas horas"). The hour step
-    // scopes the hours, so an offset cadence drops "de cada hora".
-    phrase = withoutHourAnchor(phrase) + ', ' +
-      stepHourSpan(stepSegment(schedule, 'hour'), opts);
+    // scopes the hours, so the lead speaks unanchored (no "de cada hora").
+    phrase = stepCycle60(stepSegment(schedule, 'minute'), 'minuto', '',
+      opts) + ', ' + stepHourSpan(stepSegment(schedule, 'hour'), opts);
   }
 
   return phrase + trailingQualifier(schedule, opts);
@@ -915,7 +915,7 @@ function renderMinutesAcrossHours(
 
   const lead = plan.form === 'range' ?
     minuteRangeLead(schedule.pattern.minute) :
-    minutesList(schedule, opts);
+    minutesList(schedule, 'hora', opts);
 
   if (cadence !== null) {
     return lead + ', ' + cadence + trailingQualifier(schedule, opts);
@@ -945,9 +945,9 @@ function renderMinuteSpanAcrossHourStep(
   // A minute list keeps the same cadence clause as the range; only its lead
   // differs ("nos minutos 5 e 30 de cada hora" vs "a cada minuto do 0 ao 30").
   // The hour step scopes the hours, so the lead drops "de cada hora".
-  const lead = withoutHourAnchor(plan.form === 'list' ?
-    minutesList(schedule, opts) :
-    minuteRangeLead(schedule.pattern.minute));
+  const lead = plan.form === 'list' ?
+    minutesList(schedule, '', opts) :
+    minuteRangeLead(schedule.pattern.minute);
 
   return lead + ', ' +
     (cadence ?? stepHours(segment, opts)) + trailingQualifier(schedule, opts);
@@ -987,7 +987,7 @@ function renderHourRange(
 
   const lead = schedule.shapes.minute === 'single' ?
     'no minuto ' + schedule.pattern.minute + ' de cada hora' :
-    minutesList(schedule, opts);
+    minutesList(schedule, 'hora', opts);
 
   return lead + ', ' + window + trailingQualifier(schedule, opts);
 }
@@ -1037,7 +1037,7 @@ function hourWindow(
 // Whether BOTH the date and weekday fields are restricted (not '*'): cron
 // fires when either condition matches, making this a date-OR-weekday union.
 function isDateWeekdayUnion(schedule: Schedule): boolean {
-  return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*';
+  return schedule.analyses.day.union;
 }
 
 // The month lead for the unified union frame, with a trailing comma appended
@@ -1057,6 +1057,25 @@ function unionMonthLeadFull(schedule: Schedule): string {
   return isEnumeration ? lead + ',' : lead;
 }
 
+// The cadence-shaped piece of the DOM arm, or null for nominal arms. In the
+// union the `*/2` day-of-month is a parity predicate over the days of the
+// month ("um dia ímpar do mês" = 1, 3, …, 31, resetting each month), not the
+// durative "a cada dois dias do mês" the standalone form uses (which would
+// mis-imply a continuous cadence with no monthly anchor). Any other open
+// step keeps its durative cadence, whose leading "a cada" is not an article
+// and takes no preposition — withEm would mis-fuse it to "na cada".
+function domCadenceArm(schedule: Schedule, opts: Opts): string | null {
+  const arm = schedule.analyses.day.date;
+
+  if (arm?.kind !== 'cadenceStep') {
+    return null;
+  }
+
+  return arm.parity === null ?
+    stepDates(schedule.pattern.date, opts) :
+    'em ' + parityDayNoun(arm.parity);
+}
+
 // The DOM arm for the union frame — month-less, driven by the date shape.
 // Quartz and open-step forms are self-contained; ranges use `do dia N ao dia M
 // do mês`; a single date reads `no dia N` under a restricted month (month is in
@@ -1070,23 +1089,10 @@ function domArm(schedule: Schedule, opts: Opts): string {
     return hasLeadingArticle(quartz) ? withEm(quartz) : quartz;
   }
 
-  // In the union the `*/2` day-of-month is a parity predicate over the days of
-  // the month ("um dia ímpar do mês" = 1, 3, …, 31, resetting each month), not
-  // the durative "a cada dois dias do mês" the standalone form uses. A bare
-  // "a cada dois dias" would mis-imply a continuous every-other-day cadence
-  // with no monthly anchor, so the reader could not reconstruct the odd days.
-  const parity = parityDayPredicate(date);
+  const cadenceArm = domCadenceArm(schedule, opts);
 
-  if (parity) {
-    return 'em ' + parity;
-  }
-
-  if (isOpenStep(date)) {
-    // The open-step date arm is the bare cadence "a cada N dias do mês" (the
-    // es donor returns it bare too). Its leading "a cada" is the durative
-    // "every", not an article, so it takes no preposition — wrapping it in
-    // withEm would mis-fuse it to "na cada".
-    return stepDates(date, opts);
+  if (cadenceArm !== null) {
+    return cadenceArm;
   }
 
   const segments = segmentsOf(schedule, 'date');
@@ -1542,9 +1548,9 @@ function renderCompactClockTimes(
   // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    withoutHourAnchor(minutesList(schedule, opts)) + ', ' + cadence +
+    minutesList(schedule, '', opts) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
-    minutesList(schedule, opts) + ', ' +
+    minutesList(schedule, 'hora', opts) + ', ' +
       hourContextTimes(schedule, opts) + trailingQualifier(schedule, opts);
 
   return schedule.analyses.clockSecond ?
@@ -1716,46 +1722,13 @@ function hourStrideCadence(
 // An offset-clean stride keeps its existing confinement form, so only the
 // endpoint-bearing case routes here.
 function unevenHourCadence(schedule: Schedule, opts: Opts): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
-  if (!stride || offsetCleanStride(stride)) {
+  if (!stride || stride.offsetClean) {
     return null;
   }
 
   return hourStrideCadence(stride, opts);
-}
-
-// The hour field's stride, or null when the hour is not a cadence: a step
-// segment yields its {start, interval, last} directly; an all-single hour
-// list yields one only when its values form a step progression (so an irregular
-// list like 9,17 keeps enumerating). The Schedule is unchanged — the renderer
-// recognizes the stride and speaks it as a cadence instead of the clock-time
-// cross-product.
-function hourStride(
-  schedule: Schedule
-): {start: number; interval: number; last: number} | null {
-  const segments = segmentsOf(schedule, 'hour');
-
-  if (segments.length === 1 && segments[0].kind === 'step') {
-    const segment = segments[0];
-
-    // A bounded step that fires only once (e.g. `9-10/5` -> just 9) is a single
-    // value, not a stride: it has no interval to speak and no endpoint to pin.
-    if (segment.fires.length < 2) {
-      return null;
-    }
-
-    const start = segment.startToken === '*' ?
-      0 :
-      +segment.startToken.split('-')[0];
-
-    return {interval: segment.interval, last: segment.fires[
-      segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segments);
-
-  return values && hourListStride(values);
 }
 
 // The second's status against a pinned minute: a wildcard or sub-minute step
@@ -1806,7 +1779,7 @@ function hourCadenceLead(
 function hourCadence(
   schedule: Schedule, minute: number, opts: Opts
 ): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (!stride) {
     return null;
@@ -1820,7 +1793,7 @@ function hourCadence(
   // stride has no clean wrap, so its endpoint-pinning cadence ("a cada cinco
   // horas das 00:00 às 20:00") reads better however short.
   if (schedule.pattern.second === '0' && fires <= maxClockTimes &&
-      offsetCleanStride(stride)) {
+      stride.offsetClean) {
     return null;
   }
 
@@ -2228,7 +2201,7 @@ function dayPeriod(hour: number, opts: Opts): string {
 function leadingQualifier(schedule: Schedule, opts: Opts): string {
   const pattern = schedule.pattern;
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
+  if (schedule.analyses.day.union) {
     return '';
   }
 
@@ -2255,7 +2228,7 @@ function leadingQualifier(schedule: Schedule, opts: Opts): string {
 function trailingDayClause(schedule: Schedule, opts: Opts): string {
   const pattern = schedule.pattern;
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
+  if (schedule.analyses.day.union) {
     return '';
   }
 
@@ -2281,7 +2254,7 @@ function trailingDayClause(schedule: Schedule, opts: Opts): string {
 function trailingQualifier(schedule: Schedule, opts: Opts): string {
   const pattern = schedule.pattern;
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
+  if (schedule.analyses.day.union) {
     return '';
   }
 
@@ -2348,7 +2321,8 @@ function everyWeekday(number: number): string {
 function datePhrase(schedule: Schedule, opts: Opts): string {
   const pattern = schedule.pattern;
 
-  if (quartzDatePhrase(pattern.date) || isOpenStep(pattern.date)) {
+  if (quartzDatePhrase(pattern.date) ||
+      schedule.analyses.day.date?.kind === 'cadenceStep') {
     return dateClause(schedule, '', opts) + monthScope(schedule);
   }
 
@@ -2369,7 +2343,7 @@ function dateClause(
     return hasLeadingArticle(quartz) ? withEm(quartz) : quartz;
   }
 
-  if (isOpenStep(pattern.date)) {
+  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
     return stepDates(pattern.date, opts);
   }
 
@@ -2673,24 +2647,8 @@ function monthScope(schedule: Schedule): string {
 // the OR union frame (see domArm). `*/2` and `1/2` fire on the odd days
 // (1, 3, …, 31); `2/2` fires on the even days. Any other open step has no
 // parity reading, so the caller falls back to stepDates.
-function parityDayPredicate(dateField: string): string | undefined {
-  if (!isOpenStep(dateField)) {
-    return;
-  }
-
-  const [start, step] = dateField.split('/');
-
-  if (+step !== 2) {
-    return;
-  }
-
-  if (start === '*' || start === '1') {
-    return 'um dia ímpar do mês';
-  }
-
-  if (start === '2') {
-    return 'um dia par do mês';
-  }
+function parityDayNoun(parity: 'odd' | 'even'): string {
+  return parity === 'odd' ? 'um dia ímpar do mês' : 'um dia par do mês';
 }
 
 // Open day-of-month steps: "a cada 2 dias do mês (a partir do dia 5)". Begins
@@ -2725,8 +2683,15 @@ function applyYear(
     return description + ' ' + stepYears(yearField, opts);
   }
 
-  // A foldable single year already joined its date in datePhrase.
-  if (foldedYear(schedule) && schedule.pattern.date !== '*') {
+  // A foldable single year joined its date only where datePhrase built the
+  // date from its segments (the core day facts name that arm kind); a
+  // Quartz, open-step, or DOM-or-DOW-union date never folds, so its year
+  // trails instead of silently dropping — a dropped year is a dropped
+  // restriction.
+  const day = schedule.analyses.day;
+
+  if (foldedYear(schedule) && !day.union &&
+      day.date?.kind === 'segments') {
     return description;
   }
 

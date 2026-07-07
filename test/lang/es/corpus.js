@@ -1019,6 +1019,29 @@ describe('Español (es):', function() {
   });
 });
 
+// El año con {years: true}. La forma plegable se une a la fecha de
+// calendario ("el 25 de diciembre de 2030"); toda otra forma de fecha —
+// Quartz, paso abierto, unión DOM-o-DOW — lleva el año al final ("en
+// 2030") en vez de omitirlo: un año omitido es una restricción perdida.
+describe('Años (es):', function() {
+  const years = {years: true};
+
+  run([
+    ['0 0 12 25 12 * 2030', 'el 25 de diciembre de 2030 a las 12:00',
+      years],
+    ['0 9 13 * * 2030', 'el 13 de cada mes de 2030 a las 09:00', years],
+    ['0 0 L * * 2030', 'el último día del mes a las 00:00 en 2030', years],
+    ['*/15 30 9 15W * * 2030',
+      'cada 15 segundos de las 09:30, el día laborable más cercano al 15 ' +
+      'en 2030', {seconds: true, years: true}],
+    ['0 0 2/3 * * 2030',
+      'cada tres días del mes desde el 2 a las 00:00 en 2030', years],
+    ['0 0 13 * 5 2030',
+      'a las 00:00, ya sea el 13 de cada mes o cualquier viernes en 2030',
+      years]
+  ]);
+});
+
 // Errores conocidos, aún sin corregir (revisión + barrido amplio;
 // docs/backlog.md, "Open rendering findings"). Omitidos hasta el paso C:
 // reactivar (skip → describe) y corregir.
@@ -1027,4 +1050,15 @@ describe('Errores conocidos (paso C):', function() {
     expect(cronli5('*/15 14,18,20,22 * * *', {dialect: 'es-MX', lang: es}))
       .to.not.include('las 14');
   });
+});
+
+// A minute list mixing a range under a BOUNDED hour step: the core once
+// planned this as bare whole-hour clock times, silently dropping the
+// minutes (test/core/known-defects.js pinned it); the mixed list keeps
+// the language's own minute devices ahead of the step cadence.
+describe('lista de minutos mixta bajo paso de horas acotado', function() {
+  run([
+    ['5-10,20 9-17/2 * * *',
+      'en los minutos 5 a 10 y 20, cada dos horas de las 09:00 a las 17:00']
+  ]);
 });

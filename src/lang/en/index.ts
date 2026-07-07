@@ -4,8 +4,8 @@
 // See docs/i18n-design.md.
 
 import {
-  arithmeticStep, hourListStride, minuteStride, offsetCleanStride,
-  renderStride as chooseStride, segmentsOf, singleValues, stepSegment
+  arithmeticStep, minuteStride, renderStride as chooseStride, segmentsOf,
+  singleValues, stepSegment
 } from '../../core/cadence.js';
 import {orderWeekdaysForDisplay} from '../../core/weekday.js';
 import {isOpenStep} from '../../core/shapes.js';
@@ -28,14 +28,16 @@ type StepSegment = Extract<Segment, {kind: 'step'}>;
 
 // A step cadence to phrase: the `interval` repeats over a `cycle`-long field
 // (60 for minute/second, 24 for hour), running from `start` to `last`. `unit`
-// is the singular noun and `anchor` the larger unit the values count against.
+// is the singular noun and `anchor` the larger unit the values count against
+// — or null when a stepped/windowed hour clause is the sole hour authority
+// and the lead speaks unanchored.
 interface Stride {
   interval: number;
   start: number;
   last: number;
   cycle: number;
   unit: string;
-  anchor: string;
+  anchor: string | null;
 }
 
 // A contiguous hour range to phrase as a window. `from`/`to` are the bounding
@@ -203,11 +205,10 @@ function isCadenceShape(shape: Schedule['shapes'][keyof Schedule['shapes']]):
 // inside the restructured frame. A `clockTimes` rest is excluded: there the
 // minute and hour fold into a named clock-time enumeration ("every 15 seconds
 // of 9:00 a.m., 9:25 a.m., …"), a compact form already better than a run-on, so
-// it is left as is. Restricted to the default dialect's voice — the same scope
-// as the confinement frame — so other dialects and the compact `short` form
-// keep their established phrasing.
+// it is left as is. The compact `short` form keeps its established
+// juxtaposed phrasing — the same scope as the confinement frame.
 function isDenseCadence(schedule: Schedule, opts: NormalizedOptions): boolean {
-  if (!opts.style.untilWindow || opts.short ||
+  if (opts.short ||
       schedule.plan.kind !== 'composeSeconds' ||
       schedule.plan.rest.kind === 'clockTimes' ||
       isDayUnion(schedule, opts)) {
@@ -228,7 +229,7 @@ function isDenseCadence(schedule: Schedule, opts: NormalizedOptions): boolean {
 // phrasing the confinement form produces, just hoisted into the dense lead).
 function denseHourFragment(schedule: Schedule,
   opts: NormalizedOptions): string {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (stride) {
     return hourStrideCadence(stride, opts);
@@ -266,13 +267,14 @@ function denseMinuteFragment(schedule: Schedule,
   }
 
   if (schedule.shapes.minute === 'range') {
-    return minuteRangeLead(schedule.pattern.minute, opts);
+    return minuteRangeLead(schedule.pattern.minute, true, opts);
   }
 
   // A minute list has segments; an offset/uneven step the core enumerated to a
   // list reads as a stride when its fires form a progression.
   return strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
-    opts) ?? listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+    opts) ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
     'minute', 'hour', opts);
 }
 
@@ -509,7 +511,8 @@ function secondsClause(schedule: Schedule, anchor: string,
   // offset/uneven step the core enumerated to a fire list reads as a stride
   // cadence when those fires form a long-enough progression.
   return strideFromSegments(segmentsOf(schedule, 'second'), 'second', anchor,
-    opts) ?? listPastThe(segmentWords(segmentsOf(schedule, 'second'), opts),
+    opts) ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'second'), 'at ', opts),
     'second', anchor, opts);
 }
 
@@ -531,7 +534,7 @@ function renderSingleMinute(schedule: Schedule, plan: PlanOf<'singleMinute'>,
 
 function renderRangeOfMinutes(schedule: Schedule,
   plan: PlanOf<'rangeOfMinutes'>, opts: NormalizedOptions): string {
-  return minuteRangeLead(schedule.pattern.minute, opts) +
+  return minuteRangeLead(schedule.pattern.minute, true, opts) +
     trailingQualifier(schedule, opts);
 }
 
@@ -543,8 +546,9 @@ function renderMultipleMinutes(schedule: Schedule,
   const stride =
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour', opts);
 
-  return (stride ?? listPastThe(segmentWords(segmentsOf(schedule, 'minute'),
-    opts), 'minute', 'hour', opts)) + trailingQualifier(schedule, opts);
+  return (stride ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
+    'minute', 'hour', opts)) + trailingQualifier(schedule, opts);
 }
 
 // A repeating minute step, qualified by the active hour window(s).
@@ -568,9 +572,10 @@ function renderMinuteFrequency(schedule: Schedule,
   }
   else if (plan.hours.kind === 'window') {
     // A minute-frequency cadence ("every 15 minutes") fills the hours from a
-    // STEPPED minute, never a wildcard one, so its run is not continuous to the
-    // top of the next hour: the default dialect reads "through <last hour>" and
-    // every other dialect closes on the step's last fire (`last`).
+    // STEPPED minute, never a wildcard one, so its run is not continuous to
+    // the top of the next hour: an inclusive-through dialect reads "through
+    // <last hour>" and an exclusive one closes on the step's last fire
+    // (`last`).
     phrase += ' ' + rangeWindow({
       continuous: false,
       from: plan.hours.from,
@@ -581,11 +586,13 @@ function renderMinuteFrequency(schedule: Schedule,
   else if (plan.hours.kind === 'step') {
     // The plan carries a step only for a clean stride (dividing the day),
     // which confines the cadence to every Nth hour; a stepped hour field's
-    // first segment is a step segment. The hour step scopes the hours, so an
-    // offset cadence drops "past the hour" and joins with a comma.
-    const bound = withoutHourAnchor(phrase);
+    // first segment is a step segment. The hour step is the sole hour
+    // authority, so the lead speaks unanchored; an offset cadence joins
+    // with a comma, a bare one (which never anchors) with a space.
+    const bare = stepCycle60(stepSegment(schedule, 'minute'),
+      'minute', null, opts);
 
-    phrase = bound + (bound === phrase ? ' ' : ', ') +
+    phrase = bare + (bare === phrase ? ' ' : ', ') +
       everyNthHour(stepSegment(schedule, 'hour'), opts);
   }
 
@@ -630,7 +637,7 @@ function renderMinutesAcrossHours(schedule: Schedule,
   }
 
   if (plan.form === 'range') {
-    const lead = minuteRangeLead(schedule.pattern.minute, opts);
+    const lead = minuteRangeLead(schedule.pattern.minute, true, opts);
 
     if (cadence !== null) {
       return lead + ', ' + cadence + trailingQualifier(schedule, opts);
@@ -659,7 +666,7 @@ function renderMinutesAcrossHours(schedule: Schedule,
   const lead =
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
       opts) ??
-      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
         'minute', 'hour', opts);
 
   if (cadence !== null) {
@@ -748,14 +755,14 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
   }
 
   // A minute list keeps the same cadence clause; only its lead differs. An
-  // offset/uneven step the core enumerated to that list reads as a stride. The
-  // hour step scopes the hours, so the lead drops its generic "past the hour".
-  const lead = withoutHourAnchor(plan.form === 'list' ?
-    strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
+  // offset/uneven step the core enumerated to that list reads as a stride.
+  // The hour step is the sole hour authority, so the lead speaks unanchored.
+  const lead = plan.form === 'list' ?
+    strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
       opts) ??
-      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
-        'minute', 'hour', opts) :
-    minuteRangeLead(schedule.pattern.minute, opts));
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
+        'minute', null, opts) :
+    minuteRangeLead(schedule.pattern.minute, false, opts);
   // A bounded or uneven hour step reads as its endpoint-pinning cadence after
   // the minute lead, not a wall of clock-time columns; an offset-clean step
   // keeps its existing per-step phrasing.
@@ -766,14 +773,16 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
 }
 
 // Lead phrase for a plain minute range: "every minute from <a> through <b>
-// past the hour".
-function minuteRangeLead(minuteField: string,
+// past the hour", or unanchored when a stepped hour clause is the sole hour
+// authority.
+function minuteRangeLead(minuteField: string, anchored: boolean,
   opts: NormalizedOptions): string {
   const bounds = minuteField.split('-');
   const num = seriesNumber();
+  const base = 'every minute from ' + num(bounds[0]) + through(opts) +
+    num(bounds[1]);
 
-  return 'every minute from ' + num(bounds[0]) + through(opts) +
-    num(bounds[1]) + ' past the hour';
+  return anchored ? base + ' past the hour' : base;
 }
 
 // --- Hour renderers. ---
@@ -795,8 +804,8 @@ function renderHourRange(schedule: Schedule, plan: PlanOf<'hourRange'>,
   }
 
   if (plan.minuteForm === 'range') {
-    return minuteRangeLead(schedule.pattern.minute, opts) + ', ' + window +
-      trailingQualifier(schedule, opts);
+    return minuteRangeLead(schedule.pattern.minute, true, opts) + ', ' +
+      window + trailingQualifier(schedule, opts);
   }
 
   return rangeMinuteLead(schedule, opts) + ' ' + window +
@@ -813,7 +822,8 @@ function rangeMinuteLead(schedule: Schedule, opts: NormalizedOptions): string {
   // A non-"0" minute here is a discrete list, which has segments; an
   // offset/uneven step enumerated to that list reads as a stride.
   return strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
-    opts) ?? listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+    opts) ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
     'minute', 'hour', opts);
 }
 
@@ -850,35 +860,38 @@ function boundedWindow(plan: PlanOf<'hourRange'>):
   return {from: plan.from, closeMinute, to: plan.to, continuous};
 }
 
-// A contiguous hour range as a window phrase. The default English dialect
-// reads a MULTI-hour range whose run is CONTINUOUS to the top of the next hour
-// as an up-to-but-not-including window — "from 9 a.m. until 6 p.m." (the close
-// is the top of the hour after the last, the sense English uses for time
-// windows: 9-17 runs until 6 p.m.); 23 wraps to midnight. The run is continuous
-// only when the minute is wildcard, so every minute of the final hour fires; a
-// restricted minute fires at discrete points (e.g. only `:00`), so the run
-// stops within the final hour and the default dialect reverts to the bare
-// "through <last hour>" span (the minute is named in its own lead clause, so
-// the close stays on the top of the final hour rather than restating a last
-// fire). Every other dialect (and the compact `short` form) always speaks the
-// span, closing on the minute field's last fire within the final hour. A
-// single-hour sub-hour window (`from === to`, e.g. */15 9 firing 9:00 through
-// 9:45) is NOT a multi-hour range: its close is a real fire inside the hour, so
-// it always keeps "through" — naming "until 10 a.m." would overstate the span
-// past the last fire.
+// A contiguous hour range as a window phrase. Every stated bound is true of
+// the run. A MULTI-hour range whose run is CONTINUOUS to the top of the next
+// hour (a wildcard minute fills every minute of the final hour) closes on
+// the true end — the top of the hour after the last, spoken with the
+// dialect's exclusive `until` connective ("from 9 a.m. until 6 p.m.", "from
+// 9am until 6pm"); 23 wraps to midnight. A restricted minute fires at
+// discrete points (e.g. only `:00`), so the run stops within the final
+// hour: an INCLUSIVE through connective ("through 5 p.m.") closes on the
+// bare hour (the minute lives in its own lead clause), while an exclusive
+// one ("to", "-") must close on the minute field's last fire within the
+// final hour or it would understate the run. The compact `short` form
+// always closes on the last fire. A single-hour sub-hour window (`from ===
+// to`, e.g. */15 9 firing 9:00 through 9:45) is NOT a multi-hour range: its
+// close is a real fire inside the hour, so it always closes on that fire —
+// naming "until 10 a.m." would overstate the span past the last fire.
 function rangeWindow(window: HourWindowSpec,
   opts: NormalizedOptions): string {
   const {from, to, throughMinute, continuous} = window;
   const open = 'from ' + getTime({hour: from, minute: 0}, opts);
+  const multiHour = !opts.short && from !== to;
 
-  if (opts.style.untilWindow && !opts.short && from !== to) {
-    return continuous ?
-      open + ' until ' + getTime({hour: (to + 1) % 24, minute: 0}, opts) :
-      open + through(opts) + getTime({hour: to, minute: 0}, opts);
+  if (multiHour && continuous) {
+    return open + opts.style.until +
+      getTime({hour: (to + 1) % 24, minute: 0}, opts);
   }
 
+  const closeMinute = multiHour && opts.style.inclusiveThrough ?
+    0 :
+    throughMinute;
+
   return open + through(opts) +
-    getTime({hour: to, minute: throughMinute}, opts);
+    getTime({hour: to, minute: closeMinute}, opts);
 }
 
 // An hour window phrase, e.g. "from 9 a.m. through 5:45 p.m." (or "from 9 a.m.
@@ -975,7 +988,7 @@ function renderCompactClockTimes(schedule: Schedule,
     // offset/uneven step enumerated to that list reads as a stride.
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
       opts) ??
-      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
         'minute', 'hour', opts);
   // A uneven hour stride reads as a cadence after the minute lead, not a wall
   // of clock-time columns. The hour step is the sole hour authority there, so
@@ -984,7 +997,10 @@ function renderCompactClockTimes(schedule: Schedule,
   // specific hours rather than a step.
   const cadence = unevenHourCadence(schedule, opts);
   const phrase = cadence ?
-    withoutHourAnchor(minuteLead) + ', ' + cadence +
+    (strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
+      opts) ??
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
+        'minute', null, opts)) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
     minuteLead +
     ', at ' +
@@ -1208,8 +1224,10 @@ function minuteConfinement(schedule: Schedule,
 
   // `segmentWords` already numeralizes a multi-value list and renders a
   // range segment as its "<a> through <b>" pair, so its words are used
-  // as-is (coercing them back through `Number` would corrupt the ranges).
-  return ' during minutes ' + joinList(segmentWords(segments, opts), opts);
+  // as-is (coercing them back through `Number` would corrupt the ranges) —
+  // with no re-anchor: this is the "during" frame, not the "at" one.
+  return ' during minutes ' +
+    joinList(segmentWords(segments, '', opts), opts);
 }
 
 // A restricted hour under a finer cadence reads as a confinement. The form
@@ -1241,8 +1259,8 @@ function hourConfinement(schedule: Schedule, opts: NormalizedOptions): string {
     const h = +hour;
 
     if (schedule.shapes.minute === 'step') {
-      return ' from ' + getTime({hour: h, minute: 0}, opts) + ' until ' +
-        getTime({hour: (h + 1) % 24, minute: 0}, opts);
+      return ' from ' + getTime({hour: h, minute: 0}, opts) +
+        opts.style.until + getTime({hour: (h + 1) % 24, minute: 0}, opts);
     }
 
     // A pinned minute confinement already named the minute, so the hour reads
@@ -1368,10 +1386,9 @@ function confinementEligible(schedule: Schedule,
 // duration-frame forms.
 function confinement(schedule: Schedule,
   opts: NormalizedOptions): string | null {
-  // The confinement frame is scoped to the default (US) dialect, the one that
-  // carries the until-window; every other dialect and the compact `short` form
-  // keep their established juxtaposed-cadence / duration-frame phrasing.
-  if (!opts.style.untilWindow || opts.short) {
+  // The compact `short` form keeps the established juxtaposed-cadence /
+  // duration-frame phrasing; every dialect speaks the confinement frame.
+  if (opts.short) {
     return null;
   }
 
@@ -1436,16 +1453,21 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
     bare: () => cadence,
 
     // A clean wrap from a non-zero offset: name the start, no endpoint.
-    offset: () => cadence + ' from ' + getNumber(start, opts) + ' ' +
-      pluralize(start, unit) + ' past the ' + anchor,
+    offset: () => {
+      const base = cadence + ' from ' + getNumber(start, opts) + ' ' +
+        pluralize(start, unit);
+
+      return anchor === null ? base : base + ' past the ' + anchor;
+    },
 
     // A bounded, non-wrapping set: pin both endpoints. Each bound is a value,
     // so it reads as a digit, matching the range idiom ("from 0 through 30").
     bounded: () => {
       const num = seriesNumber();
+      const base = cadence + ' from ' + num(start) + through(opts) +
+        num(last) + ' ' + pluralize(last, unit);
 
-      return cadence + ' from ' + num(start) + through(opts) + num(last) + ' ' +
-        pluralize(last, unit) + ' past the ' + anchor;
+      return anchor === null ? base : base + ' past the ' + anchor;
     }
   });
 }
@@ -1455,8 +1477,8 @@ function renderStride(stride: Stride, opts: NormalizedOptions): string {
 // enumerates an offset/uneven step to this fire list; the Schedule is
 // unchanged, so the renderer recognizes the progression). Returns null for a
 // non-progression or a too-short list, leaving the caller to enumerate.
-function strideFromSegments(segments: Segment[], unit: string, anchor: string,
-  opts: NormalizedOptions): string | null {
+function strideFromSegments(segments: Segment[], unit: string,
+  anchor: string | null, opts: NormalizedOptions): string | null {
   const values = singleValues(segments);
   const step = values && arithmeticStep(values);
 
@@ -1473,7 +1495,7 @@ function strideFromSegments(segments: Segment[], unit: string, anchor: string,
 // literal list of their fires, so only a clean cadence (interval dividing
 // 60, start within the first interval) reaches a step renderer.
 function stepCycle60(segment: StepSegment, unit: string,
-  anchor: string, opts: NormalizedOptions): string {
+  anchor: string | null, opts: NormalizedOptions): string {
   // A bounded start (`a-b/n`) applies the interval within the range.
   if (segment.startToken.indexOf('-') !== -1) {
     return listPastThe(numberWords(segment.fires, opts), unit, anchor, opts);
@@ -1556,47 +1578,13 @@ function hourStrideCadence(stride: {start: number; interval: number;
 // form, so only the endpoint-bearing case routes here.
 function unevenHourCadence(schedule: Schedule,
   opts: NormalizedOptions): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
-  if (!stride || offsetCleanStride(stride)) {
+  if (!stride || stride.offsetClean) {
     return null;
   }
 
   return hourStrideCadence(stride, opts);
-}
-
-// The hour field's stride, or null when the hour is not a cadence: a step
-// segment yields its {start, interval, last} directly; an all-single hour
-// list yields one only when its values form a step progression (so an irregular
-// list like 9,17 keeps enumerating). The Schedule is unchanged — the renderer
-// recognizes the stride and speaks it as a cadence instead of the clock-time
-// cross-product.
-function hourStride(schedule: Schedule):
-  {start: number; interval: number; last: number} | null {
-  // Reached only from the clock-time paths, which run under discrete hours
-  // and so always carry hour segments.
-  const segments = segmentsOf(schedule, 'hour');
-
-  if (segments.length === 1 && segments[0].kind === 'step') {
-    const segment = segments[0];
-
-    // A bounded step that fires only once (e.g. `9-10/5` → just 9) is a single
-    // value, not a stride: it has no interval to speak and no endpoint to pin.
-    if (segment.fires.length < 2) {
-      return null;
-    }
-
-    const start = segment.startToken === '*' ?
-      0 :
-      +segment.startToken.split('-')[0];
-
-    return {interval: segment.interval, last: segment.fires[
-      segment.fires.length - 1], start};
-  }
-
-  const values = singleValues(segments);
-
-  return values && hourListStride(values);
 }
 
 // The second's status against a pinned minute: a wildcard or sub-minute step
@@ -1647,7 +1635,7 @@ function hourCadenceLead(schedule: Schedule, minute: number,
 // the Schedule is unchanged.
 function hourCadence(schedule: Schedule, minute: number,
   opts: NormalizedOptions): string | null {
-  const stride = hourStride(schedule);
+  const stride = schedule.analyses.hourStride;
 
   if (!stride) {
     return null;
@@ -1661,7 +1649,7 @@ function hourCadence(schedule: Schedule, minute: number,
   // bounded or uneven stride has no clean wrap, so its endpoint-pinning cadence
   // ("every five hours from midnight through 8 p.m.") reads better however few.
   if (schedule.pattern.second === '0' && fires <= maxClockTimes &&
-      offsetCleanStride(stride)) {
+      stride.offsetClean) {
     return null;
   }
 
@@ -1835,35 +1823,51 @@ function numberWords(fires: number[],
 // numbers, ranges as "<a> through <b>" pairs. A multi-value list
 // numeralizes throughout; a lone value keeps the spelled-when-small style
 // (see `listNumber`).
-function segmentWords(segments: Segment[],
+function segmentWords(segments: Segment[], reanchor: string,
   opts: NormalizedOptions): (string | number)[] {
   // Normalization expands step arms in lists, so the segments here are
   // singles and ranges only and the unit count is the segment count.
   const num = listNumber(segments.length, opts);
-
-  return segments.map(function word(segment) {
+  const words = segments.map(function word(segment) {
     if (segment.kind === 'range') {
       return num(segment.bounds[0]) + through(opts) + num(segment.bounds[1]);
     }
 
     return num((segment as {value: string}).value);
   });
+
+  return reanchorMixed(segments, words, reanchor);
 }
 
-// Enumerate fire words as "at A, B and C <unit>s past the <anchor>".
-function listPastThe(words: (string | number)[], unit: string, anchor: string,
-  opts: NormalizedOptions): string {
-  return 'at ' + joinList(words, opts) + ' ' + unit + 's past the ' +
-    anchor;
+// Once a list mixes a range among its pieces, every piece after the first
+// re-anchors on its own preposition ("at 5 through 10 and at 20 minutes"):
+// with one shared anchor, "through 10 and 20" reads as coordinated range
+// endpoints, leaving the reader unsure whether 20 is a fire point or a
+// second bound. A list of bare singles keeps the single shared anchor.
+function reanchorMixed(segments: Segment[], words: (string | number)[],
+  reanchor: string): (string | number)[] {
+  const mixed = reanchor !== '' && segments.length > 1 &&
+    segments.some(function range(segment) {
+      return segment.kind === 'range';
+    });
+
+  if (!mixed) {
+    return words;
+  }
+
+  return words.map(function anchored(word, index) {
+    return index === 0 ? word : reanchor + word;
+  });
 }
 
-// Strip the generic "past the hour" anchor from a minute-cadence lead. When the
-// hour field is restricted (a step or window), the hour clause is the sole hour
-// authority, so the cadence must not also assert "every hour" — "past the hour"
-// alongside a stepped/windowed hour reads as a conflicting every-hour scope. An
-// unrestricted hour keeps the anchor (it is the only hour statement there).
-function withoutHourAnchor(lead: string): string {
-  return lead.replace(/ past the hour$/, '');
+// Enumerate fire words as "at A, B and C <unit>s past the <anchor>", or
+// unanchored ("at A, B and C <unit>s") when a stepped/windowed hour clause
+// is the sole hour authority.
+function listPastThe(words: (string | number)[], unit: string,
+  anchor: string | null, opts: NormalizedOptions): string {
+  const base = 'at ' + joinList(words, opts) + ' ' + unit + 's';
+
+  return anchor === null ? base : base + ' past the ' + anchor;
 }
 
 // A clock time reads as a word ("noon"/"midnight") only at exact 12:00 or
@@ -2068,7 +2072,24 @@ function interpretDayQualifier(schedule: Schedule,
     return '';
   }
 
-  return dayQualifier(schedule, leadingWords, opts) + ' ';
+  return dayQualifier(schedule, leadingWords, opts) +
+    leadingYear(schedule, opts) + ' ';
+}
+
+// A single explicit year folds into the leading date phrase ("on January 1,
+// 2030 at midnight" / day-first "on 1 January 2030 at midnight"); every
+// other year form trails the finished description (see applyYear). US dates
+// take a comma before the year; day-first dates do not.
+function leadingYear(schedule: Schedule, opts: NormalizedOptions): string {
+  const yearField = schedule.pattern.year;
+
+  if (yearField === '*' || yearField.indexOf('/') !== -1 ||
+      yearField.indexOf('-') !== -1 || yearField.indexOf(',') !== -1 ||
+      schedule.pattern.date === '*') {
+    return '';
+  }
+
+  return (opts.style.dayFirst ? ' ' : ', ') + yearLabel(yearField, opts);
 }
 
 // The day-level qualifier phrase (date, month, and weekday), or
@@ -2091,13 +2112,13 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
   // A weekday qualifier, optionally scoped to a month ("on Monday in
   // June").
   if (pattern.weekday !== '*') {
-    const quartzWeekday = quartzWeekdayPhrase(pattern.weekday, opts);
+    const quartzWeekday = quartzWeekdayParts(pattern.weekday, opts);
 
     // The Quartz weekday phrase ("on the last Friday of the month") carries
     // the "of the month" recurrence a concrete month makes redundant; a plain
     // weekday name takes the ordinary " in <month>" scope.
     if (quartzWeekday) {
-      return monthScopeForRecurrence(quartzWeekday, schedule, opts);
+      return monthScopeForRecurrence(withOn(quartzWeekday), schedule, opts);
     }
 
     const weekdays = words.weekday +
@@ -2117,15 +2138,17 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
 function datePhrase(schedule: Schedule, words: QualifierWords,
   opts: NormalizedOptions): string {
   const pattern = schedule.pattern;
-  const quartzDate = quartzDatePhrase(pattern.date, opts);
+  const quartzDate = quartzDateParts(pattern.date, opts);
 
   if (quartzDate) {
-    return monthScopeForRecurrence(quartzDate, schedule, opts);
+    return monthScopeForRecurrence(withOn(quartzDate), schedule, opts);
   }
 
-  if (isOpenStep(pattern.date)) {
+  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
+    const step = stepDateParts(pattern.date);
+
     return monthScopeForRecurrence(
-      words.stepDate + stepDates(pattern.date), schedule, opts);
+      {...step, head: words.stepDate + step.head}, schedule, opts);
   }
 
   if (pattern.month !== '*' && !monthFoldsIntoDate(schedule)) {
@@ -2156,29 +2179,84 @@ function monthFoldsIntoDate(schedule: Schedule): boolean {
 
 // When BOTH the date and weekday are restricted, cron fires on the UNION of
 // the two day sets — a point the old "on <dom> or on <dow>" form blurred,
-// reading as alternatives (or, with "and", as an intersection). The default
+// reading as alternatives (or, with "and", as an intersection). Every
 // dialect reframes the union as a predicate over a single variable, the day:
 // "whenever the day is <dom-predicate> or <dow-predicate(s)>", a flat or-list
 // that reads as a union for naive, logical, and technical readers alike. The
 // month leads the whole clause ("in June …") and the time/cadence sits between
 // the two, so this form is composed at the top level (see `dayUnionMonthLead`
-// and `dayUnionCondition`), not inside the trailing/leading qualifier. Scoped
-// to the until-window dialect; every other dialect and the `short` form keep
-// the established "on <dom> or on <dow>" phrasing.
+// and `dayUnionCondition`), not inside the trailing/leading qualifier. Only
+// the compact `short` form keeps the older "on <dom> or on <dow>" phrasing.
 function isDayUnion(schedule: Schedule, opts: NormalizedOptions): boolean {
-  return schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*' &&
-    !!opts.style.untilWindow && !opts.short;
+  return schedule.analyses.day.union && !opts.short;
 }
 
-// The trailing condition clause for a day union, e.g. " whenever the day is
-// the 1st or a Friday". The day predicates are flattened into one or-list so
-// the union reads as a single set of matching days.
+// The trailing condition clause for a day union. Arms that read as nouns
+// (singles, lists, ranges, the parity idiom, Quartz forms) take the predicate
+// frame — " whenever the day is the 1st or a Friday" — a flat or-list over
+// one variable, the day. A cadence-shaped date arm is not a noun, and
+// enumerating its fires would bury the cadence, so that union reads as a
+// clause instead (see dayUnionCadenceClause).
 function dayUnionCondition(schedule: Schedule,
   opts: NormalizedOptions): string {
+  const cadence = dayUnionCadenceClause(schedule, opts);
+
+  if (cadence !== null) {
+    return cadence;
+  }
+
   const pieces = [...dayUnionDatePieces(schedule, opts),
     ...dayUnionWeekdayPieces(schedule, opts)];
 
   return ' whenever the day is ' + joinOr(pieces, opts);
+}
+
+// The clause form of the union for a cadence-shaped date arm (an open step
+// with no parity idiom), or null when the date arm is nominal (the predicate
+// frame's case): " on every 3rd day of the month from the 2nd or on any
+// Sunday", with "any" carrying the union reading on the weekday half. A
+// leading month has already scoped the whole union, so the cadence drops
+// " of the month".
+function dayUnionCadenceClause(schedule: Schedule,
+  opts: NormalizedOptions): string | null {
+  const arm = schedule.analyses.day.date;
+
+  if (!arm || arm.kind !== 'cadenceStep' || arm.parity !== null) {
+    return null;
+  }
+
+  const step = stepDateParts(schedule.pattern.date);
+  const recurrence = schedule.pattern.month === '*' ? step.recurrence : '';
+
+  return ' on ' + step.head + recurrence + step.tail +
+    ' or ' + anyWeekdayClause(schedule, opts);
+}
+
+// The weekday half of a clause-form union: "on any Friday", "on any Monday
+// or Wednesday", "on any weekday" — or the bare Quartz phrase ("on the
+// second Monday of the month"), which is already definite and takes no
+// "any". Names follow the weekday display order, like every weekday list.
+function anyWeekdayClause(schedule: Schedule,
+  opts: NormalizedOptions): string {
+  const quartz = quartzWeekdayNoun(schedule.pattern.weekday, opts);
+
+  if (quartz) {
+    return 'on ' + quartz;
+  }
+
+  const segments = orderWeekdaysForDisplay(segmentsOf(schedule, 'weekday'));
+  const names = segmentPieces(segments, function name(value) {
+    return getWeekday(value, opts);
+  }, function span(bounds) {
+    if (bounds[0] === '1' && bounds[1] === '5') {
+      return 'weekday';
+    }
+
+    return getWeekday(bounds[0], opts) + through(opts) +
+      getWeekday(bounds[1], opts);
+  });
+
+  return 'on any ' + joinOr(names, opts);
 }
 
 // The leading "in <month>, " scope for a day union, or an empty string when
@@ -2202,39 +2280,27 @@ function dayUnionMonthLead(schedule: Schedule,
 function dayUnionDatePieces(schedule: Schedule,
   opts: NormalizedOptions): string[] {
   const dateField = schedule.pattern.date;
-  const quartz = quartzDatePhrase(dateField, opts);
+  const quartz = quartzDateNoun(dateField, opts);
 
   if (quartz) {
-    return [quartz.replace(/^on /, '')];
+    return [quartz];
   }
 
-  const oddEven = oddEvenDay(dateField);
+  const arm = schedule.analyses.day.date;
 
-  if (oddEven) {
-    return [oddEven];
+  if (arm && arm.kind === 'cadenceStep' && arm.parity !== null) {
+    return [parityDayNoun(arm.parity)];
   }
 
   // Reached only with a restricted, non-Quartz date, which has segments. Each
   // segment contributes its predicate piece(s) to the flat union list; a step
   // spreads its enumerated fires as separate "the <ordinal>" alternatives.
-  const pieces: string[] = [];
-
-  segmentsOf(schedule, 'date').forEach(function expand(segment) {
-    if (segment.kind === 'range') {
-      pieces.push('from the ' + getOrdinal(segment.bounds[0]) + through(opts) +
-        'the ' + getOrdinal(segment.bounds[1]));
-    }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function fire(value) {
-        pieces.push('the ' + getOrdinal(value));
-      });
-    }
-    else {
-      pieces.push('the ' + getOrdinal(segment.value));
-    }
+  return segmentPieces(segmentsOf(schedule, 'date'), function noun(value) {
+    return 'the ' + getOrdinal(value);
+  }, function span(bounds) {
+    return 'from the ' + getOrdinal(bounds[0]) + through(opts) +
+      'the ' + getOrdinal(bounds[1]);
   });
-
-  return pieces;
 }
 
 // The day-of-week half of a union as a flat list of predicate pieces. A Quartz
@@ -2245,67 +2311,64 @@ function dayUnionDatePieces(schedule: Schedule,
 function dayUnionWeekdayPieces(schedule: Schedule,
   opts: NormalizedOptions): string[] {
   const weekdayField = schedule.pattern.weekday;
-  const quartz = quartzWeekdayPhrase(weekdayField, opts);
+  const quartz = quartzWeekdayNoun(weekdayField, opts);
 
   if (quartz) {
-    return [quartz.replace(/^on /, '')];
+    return [quartz];
   }
 
-  // The union predicate keeps the canonical Sunday-first order (0…6) rather
-  // than the weekend-last display order: as a flat or-list of day kinds, the
-  // numeric order reads as naturally as any other in a flat or-list ("a
-  // Sunday, a Tuesday, a Thursday, or a Saturday").
-  const pieces: string[] = [];
+  // Union pieces follow the weekday display order (Monday-first, weekend
+  // last) — the one ordering rule every weekday list the renderer speaks
+  // uses, so the same day set never reorders between contexts.
+  return segmentPieces(
+    orderWeekdaysForDisplay(segmentsOf(schedule, 'weekday')),
+    function noun(value) {
+    return 'a ' + getWeekday(value, opts);
+  }, function span(bounds) {
+    if (bounds[0] === '1' && bounds[1] === '5') {
+      return 'a weekday';
+    }
 
-  segmentsOf(schedule, 'weekday').forEach(function expand(segment) {
-    if (segment.kind === 'range' &&
-        segment.bounds[0] === '1' && segment.bounds[1] === '5') {
-      pieces.push('a weekday');
-    }
-    else if (segment.kind === 'range') {
-      pieces.push('a ' + getWeekday(segment.bounds[0], opts) + through(opts) +
-        'a ' + getWeekday(segment.bounds[1], opts));
-    }
-    else if (segment.kind === 'step') {
-      segment.fires.forEach(function fire(value) {
-        pieces.push('a ' + getWeekday(value, opts));
-      });
-    }
-    else {
-      pieces.push('a ' + getWeekday(segment.value, opts));
-    }
+    return 'a ' + getWeekday(bounds[0], opts) + through(opts) +
+      'a ' + getWeekday(bounds[1], opts);
   });
-
-  return pieces;
 }
 
-// An interval-2 day-of-month step covering a parity set reads as "an
-// odd/even-numbered day", mirroring the month and year parity idioms: `*/2`
-// and `1/2` are the odd days, `2/2` the even; any other start enumerates
-// instead. Null when the field is not an open interval-2 step.
-function oddEvenDay(dateField: string): string | null {
-  if (!isOpenStep(dateField)) {
+// The parity idiom for an interval-2 open step: `*/2` and `1/2` cover the
+// odd values, `2/2` the even; any other start is a partial set with no idiom.
+// `odd`/`even` are the field's own words (day vs month phrasing).
+function parityIdiom(field: string, odd: string,
+  even: string): string | null {
+  if (!isOpenStep(field)) {
     return null;
   }
 
-  const [start, step] = dateField.split('/');
+  const [start, step] = field.split('/');
 
   if (+step !== 2) {
     return null;
   }
 
   if (start === '*' || start === '1') {
-    return 'an odd-numbered day';
+    return odd;
   }
 
-  return start === '2' ? 'an even-numbered day' : null;
+  return start === '2' ? even : null;
+}
+
+// The union-predicate noun for a parity day set, mirroring the month and
+// year parity idioms. The classification is the core's (`analyses.day`);
+// only the words live here.
+function parityDayNoun(parity: 'odd' | 'even'): string {
+  return parity === 'odd' ? 'an odd-numbered day' : 'an even-numbered day';
 }
 
 // Compose the "day-of-month or day-of-week" phrase used when both fields
-// are restricted: cron fires when either is a match. A restricted month
-// scopes BOTH halves, so it fronts the whole or-phrase once ("in June, on
-// the 13th or on Friday"), never folding into one arm or repeating on the
-// other.
+// are restricted: cron fires when either is a match. Reached only by the
+// compact `short` form (every full-length dialect takes the condition
+// frame). A restricted month scopes BOTH halves, so it fronts the whole
+// or-phrase once ("in June, on the 13th or on Friday"), never folding into
+// one arm or repeating on the other.
 function dateOrWeekday(schedule: Schedule, opts: NormalizedOptions): string {
   const pattern = schedule.pattern;
   // The day-of-month-OR-day-of-week union is out of scope for the recurring
@@ -2331,56 +2394,131 @@ function datePart(schedule: Schedule, opts: NormalizedOptions): string {
     return quartzDate;
   }
 
-  if (isOpenStep(pattern.date)) {
-    return stepDates(pattern.date);
+  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
+    const step = stepDateParts(pattern.date);
+
+    return step.head + step.recurrence + step.tail;
   }
 
   return 'on the ' + dateOrdinals(schedule, opts);
 }
 
-// The day-qualifier phrase for a Quartz date field (e.g. "on the last day
-// of the month"), or undefined when the field is not a Quartz form.
-function quartzDatePhrase(dateField: string,
-  opts: NormalizedOptions): string | undefined {
+// A phrase split around its month recurrence: the full phrase is
+// `head + recurrence + tail`. `recurrence` is ' of the month' (or '' when
+// the form carries none, e.g. "the weekday nearest the 13th"); a named
+// month scope respells or absorbs it without patching a built string.
+interface RecurringPhrase {
+  head: string;
+  recurrence: string;
+  tail: string;
+}
+
+// The Quartz date field split around its recurrence, or undefined when the
+// field is not a Quartz form. The union predicate joins the parts directly
+// (`quartzDateNoun`); the month scope respells the recurrence
+// (`monthScopeForRecurrence`).
+function quartzDateParts(dateField: string,
+  opts: NormalizedOptions): RecurringPhrase | undefined {
   if (dateField === 'L') {
-    return 'on the last day of the month';
+    return {head: 'the last day', recurrence: ' of the month', tail: ''};
   }
 
   if (dateField === 'LW' || dateField === 'WL') {
-    return 'on the last weekday of the month';
+    return {head: 'the last weekday', recurrence: ' of the month', tail: ''};
   }
 
   const offset = (/^L-(\d{1,2})$/).exec(dateField);
 
   if (offset) {
-    return getNumber(+offset[1], opts) + ' ' + pluralize(offset[1], 'day') +
-      ' before the last day of the month';
+    return {
+      head: getNumber(+offset[1], opts) + ' ' + pluralize(offset[1], 'day') +
+        ' before the last day',
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
 
   const nearest = (/^(\d{1,2})W$|^W(\d{1,2})$/).exec(dateField);
 
   if (nearest) {
-    return 'on the weekday nearest the ' +
-      getOrdinal(nearest[1] || nearest[2]);
+    return {
+      head: 'the weekday nearest the ' + getOrdinal(nearest[1] || nearest[2]),
+      recurrence: '',
+      tail: ''
+    };
   }
 }
 
-// The day-qualifier phrase for a Quartz weekday field (e.g. "on the last
-// Friday of the month"), or undefined when the field is not a Quartz form.
-function quartzWeekdayPhrase(weekdayField: string,
+// The Quartz date field as a bare noun phrase (e.g. "the last day of the
+// month"), or undefined when the field is not a Quartz form.
+function quartzDateNoun(dateField: string,
   opts: NormalizedOptions): string | undefined {
-  const parts = weekdayField.split('#');
+  const parts = quartzDateParts(dateField, opts);
 
-  if (parts.length === 2) {
-    return 'on the ' + nthWeekdayNames[+parts[1]] + ' ' +
-      getWeekday(parts[0], opts) + ' of the month';
+  return parts && parts.head + parts.recurrence + parts.tail;
+}
+
+// The day-qualifier form of quartz parts: "on" attaches to a day-naming
+// head ("on the last day of the month"); the before-offset form reads as
+// its own adverbial and stays bare ("two days before the last day of the
+// month").
+function withOn(parts: RecurringPhrase): RecurringPhrase {
+  if (!parts.head.startsWith('the ')) {
+    return parts;
+  }
+
+  return {...parts, head: 'on ' + parts.head};
+}
+
+// The day-qualifier form of a Quartz date, as a phrase.
+function quartzDatePhrase(dateField: string,
+  opts: NormalizedOptions): string | undefined {
+  const noun = quartzDateNoun(dateField, opts);
+
+  return noun && (noun.startsWith('the ') ? 'on ' + noun : noun);
+}
+
+// The Quartz weekday field split around its recurrence, or undefined when
+// the field is not a Quartz form.
+function quartzWeekdayParts(weekdayField: string,
+  opts: NormalizedOptions): RecurringPhrase | undefined {
+  const pieces = weekdayField.split('#');
+
+  if (pieces.length === 2) {
+    return {
+      head: 'the ' + nthWeekdayNames[+pieces[1]] + ' ' +
+        getWeekday(pieces[0], opts),
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
 
   // A bare `L` weekday cannot arrive here: it is aliased to Saturday.
   if ((/L$/).test(weekdayField)) {
-    return 'on the last ' +
-      getWeekday(weekdayField.slice(0, -1), opts) + ' of the month';
+    return {
+      head: 'the last ' + getWeekday(weekdayField.slice(0, -1), opts),
+      recurrence: ' of the month',
+      tail: ''
+    };
   }
+}
+
+// The Quartz weekday field as a bare noun phrase (e.g. "the last Friday of
+// the month"), or undefined when the field is not a Quartz form.
+function quartzWeekdayNoun(weekdayField: string,
+  opts: NormalizedOptions): string | undefined {
+  const parts = quartzWeekdayParts(weekdayField, opts);
+
+  return parts && parts.head + parts.recurrence + parts.tail;
+}
+
+// The day-qualifier form of a Quartz weekday: every weekday noun names a day,
+// so the qualifier is always "on <noun>".
+function quartzWeekdayPhrase(weekdayField: string,
+  opts: NormalizedOptions): string | undefined {
+  const noun = quartzWeekdayNoun(weekdayField, opts);
+
+  return noun && 'on ' + noun;
 }
 
 // A calendar date with its month, in the dialect's order and day form:
@@ -2430,52 +2568,63 @@ function monthScope(schedule: Schedule, opts: NormalizedOptions): string {
 // distributes the recurrence across the span and keeps it, rephrased as "of
 // each month from <first> through <last>". A month list is left as-is (the
 // recurrence stays, scoped "in <names>"), and a wildcard month adds nothing.
-function monthScopeForRecurrence(phrase: string, schedule: Schedule,
+function monthScopeForRecurrence(parts: RecurringPhrase, schedule: Schedule,
   opts: NormalizedOptions): string {
+  const {head, recurrence, tail} = parts;
+
   if (schedule.pattern.month === '*') {
-    return phrase;
+    return head + recurrence + tail;
   }
 
-  const carriesRecurrence = phrase.indexOf(' of the month') !== -1;
-
-  if (carriesRecurrence && schedule.shapes.month === 'range') {
-    return phrase.replace(' of the month', ' of each month') + ' from ' +
+  if (recurrence && schedule.shapes.month === 'range') {
+    return head + ' of each month' + tail + ' from ' +
       monthName(schedule, opts);
   }
 
-  if (carriesRecurrence &&
+  if (recurrence &&
       (schedule.shapes.month === 'single' ||
         schedule.shapes.month === 'step')) {
-    return phrase.replace(' of the month', '') + ' in ' +
-      monthName(schedule, opts);
+    return head + tail + ' in ' + monthName(schedule, opts);
   }
 
-  return phrase + ' in ' + monthName(schedule, opts);
+  return head + recurrence + tail + ' in ' + monthName(schedule, opts);
 }
 
-// Frequency phrase for an open day-of-month step, e.g. "every other day of
-// the month" or "every 3rd day of the month from the 5th".
-function stepDates(dateField: string): string {
-  const parts = dateField.split('/');
-  const interval = +parts[1];
-  const start = parts[0];
+// Frequency phrase for an open day-of-month step, split around its
+// recurrence: "every 3rd day" + " of the month" + " from the 5th". A named
+// month scope absorbs or respells the recurrence (monthScopeForRecurrence,
+// the union clause) without patching the built string.
+function stepDateParts(dateField: string): RecurringPhrase {
+  const pieces = dateField.split('/');
+  const interval = +pieces[1];
+  const start = pieces[0];
   const cadence = interval === 2 ?
     'every other' :
     'every ' + getOrdinal(interval);
-  let phrase = cadence + ' day of the month';
 
-  if (start !== '*' && start !== '1') {
-    phrase += ' from the ' + getOrdinal(start);
-  }
-
-  return phrase;
+  return {
+    head: cadence + ' day',
+    recurrence: ' of the month',
+    tail: start !== '*' && start !== '1' ?
+      ' from the ' + getOrdinal(start) :
+      ''
+  };
 }
 
 // Render the date field's segments as suffixed ordinals. Open steps are
 // handled separately as a frequency phrase.
 function dateOrdinals(schedule: Schedule, opts: NormalizedOptions): string {
-  // Reached only with a restricted date, which has segments.
-  return renderSegments(segmentsOf(schedule, 'date'), getOrdinal, opts);
+  // Reached only with a restricted date, which has segments. A list mixing
+  // a range re-anchors its later pieces ("on the 1st through 5th and on
+  // the 15th") — every caller heads this phrase with "on the ", so the
+  // re-anchor mirrors it (see reanchorMixed).
+  const segments = segmentsOf(schedule, 'date');
+  const pieces = reanchorMixed(segments,
+    segmentPieces(segments, getOrdinal, function span(bounds) {
+      return bounds.map(getOrdinal).join(through(opts));
+    }), 'on the ');
+
+  return joinList(pieces, opts);
 }
 
 // Render the month field as names. There are few, named months, so a step
@@ -2498,24 +2647,11 @@ function monthName(schedule: Schedule, opts: NormalizedOptions): string {
 
 // An interval-2 month step covering a full parity set reads as "every
 // odd/even-numbered month" — the only month cadence, since the parity
-// disambiguates the start. `*/2` and `1/2` are the odd months, `2/2` the even;
-// any other start is a partial set that enumerates instead. Null otherwise.
+// disambiguates the start; any other start is a partial set that enumerates
+// instead. Null when the field is not such a step.
 function oddEvenMonth(monthField: string): string | null {
-  if (!isOpenStep(monthField)) {
-    return null;
-  }
-
-  const [start, step] = monthField.split('/');
-
-  if (+step !== 2) {
-    return null;
-  }
-
-  if (start === '*' || start === '1') {
-    return 'every odd-numbered month';
-  }
-
-  return start === '2' ? 'every even-numbered month' : null;
+  return parityIdiom(monthField,
+    'every odd-numbered month', 'every even-numbered month');
 }
 
 // Render the weekday field as names. Ranges read in their connective form
@@ -2559,12 +2695,13 @@ function pluralWeekday(value: number | string,
   return opts.short ? name : name + 's';
 }
 
-// Render classified field segments with `word`, expanding step segments
-// into their enumerated fires and joining range bounds with the dialect's
-// `through` connective.
-function renderSegments(segments: Segment[],
+// Render classified segments as list pieces: steps spread their enumerated
+// fires through `word`, singles pass through `word`, ranges through
+// `rangePiece`. The one segment walk every enumerating context shares; the
+// caller owns the join (and/or) and any per-piece framing.
+function segmentPieces(segments: Segment[],
   word: (value: number | string) => string,
-  opts: NormalizedOptions): string {
+  rangePiece: (bounds: [string, string]) => string): string[] {
   const pieces: string[] = [];
 
   segments.forEach(function expand(segment) {
@@ -2572,14 +2709,25 @@ function renderSegments(segments: Segment[],
       pieces.push(...segment.fires.map(word));
     }
     else if (segment.kind === 'range') {
-      pieces.push(segment.bounds.map(word).join(through(opts)));
+      pieces.push(rangePiece(segment.bounds));
     }
     else {
       pieces.push(word(segment.value));
     }
   });
 
-  return joinList(pieces, opts);
+  return pieces;
+}
+
+// Render classified field segments with `word`, expanding step segments
+// into their enumerated fires and joining range bounds with the dialect's
+// `through` connective.
+function renderSegments(segments: Segment[],
+  word: (value: number | string) => string,
+  opts: NormalizedOptions): string {
+  return joinList(segmentPieces(segments, word, function span(bounds) {
+    return bounds.map(word).join(through(opts));
+  }), opts);
 }
 
 // --- Years. ---
@@ -2601,18 +2749,20 @@ function applyYear(description: string, schedule: Schedule,
     return description + ', ' + stepYears(yearField, opts);
   }
 
-  const label = yearLabel(yearField, opts);
+  // A single year over a restricted date folds into the leading date phrase
+  // (see leadingYear). The fold is real only where that leading qualifier
+  // actually opens the description; any other shape — a trailing date under
+  // a confinement frame, a day-union condition — trails the year instead,
+  // so it is never spliced mid-sentence and never dropped.
+  const folded = leadingYear(schedule, opts);
 
-  if (yearField.indexOf('-') === -1 && yearField.indexOf(',') === -1 &&
-      schedule.pattern.date !== '*' && description.indexOf(' at ') !== -1) {
-    // US dates take a comma before the year ("January 1, 2030"); UK dates
-    // do not ("1 January 2030").
-    const yearGlue = opts.style.dayFirst ? ' ' : ', ';
-
-    return description.replace(' at ', yearGlue + label + ' at ');
+  if (folded && !isDayUnion(schedule, opts) &&
+      description.startsWith(
+        dayQualifier(schedule, leadingWords, opts) + folded)) {
+    return description;
   }
 
-  return description + ' in ' + label;
+  return description + ' in ' + yearLabel(yearField, opts);
 }
 
 // Turn a single year, a range, or a list into a noun phrase.
