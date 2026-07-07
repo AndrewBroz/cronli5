@@ -273,7 +273,8 @@ function denseMinuteFragment(schedule: Schedule,
   // A minute list has segments; an offset/uneven step the core enumerated to a
   // list reads as a stride when its fires form a progression.
   return strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
-    opts) ?? listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+    opts) ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
     'minute', 'hour', opts);
 }
 
@@ -510,7 +511,8 @@ function secondsClause(schedule: Schedule, anchor: string,
   // offset/uneven step the core enumerated to a fire list reads as a stride
   // cadence when those fires form a long-enough progression.
   return strideFromSegments(segmentsOf(schedule, 'second'), 'second', anchor,
-    opts) ?? listPastThe(segmentWords(segmentsOf(schedule, 'second'), opts),
+    opts) ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'second'), 'at ', opts),
     'second', anchor, opts);
 }
 
@@ -544,8 +546,9 @@ function renderMultipleMinutes(schedule: Schedule,
   const stride =
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour', opts);
 
-  return (stride ?? listPastThe(segmentWords(segmentsOf(schedule, 'minute'),
-    opts), 'minute', 'hour', opts)) + trailingQualifier(schedule, opts);
+  return (stride ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
+    'minute', 'hour', opts)) + trailingQualifier(schedule, opts);
 }
 
 // A repeating minute step, qualified by the active hour window(s).
@@ -663,7 +666,7 @@ function renderMinutesAcrossHours(schedule: Schedule,
   const lead =
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
       opts) ??
-      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
         'minute', 'hour', opts);
 
   if (cadence !== null) {
@@ -757,7 +760,7 @@ function renderMinuteSpanAcrossHourStep(schedule: Schedule,
   const lead = plan.form === 'list' ?
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
       opts) ??
-      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
         'minute', null, opts) :
     minuteRangeLead(schedule.pattern.minute, false, opts);
   // A bounded or uneven hour step reads as its endpoint-pinning cadence after
@@ -819,7 +822,8 @@ function rangeMinuteLead(schedule: Schedule, opts: NormalizedOptions): string {
   // A non-"0" minute here is a discrete list, which has segments; an
   // offset/uneven step enumerated to that list reads as a stride.
   return strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
-    opts) ?? listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+    opts) ?? listPastThe(
+    segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
     'minute', 'hour', opts);
 }
 
@@ -984,7 +988,7 @@ function renderCompactClockTimes(schedule: Schedule,
     // offset/uneven step enumerated to that list reads as a stride.
     strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', 'hour',
       opts) ??
-      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
         'minute', 'hour', opts);
   // A uneven hour stride reads as a cadence after the minute lead, not a wall
   // of clock-time columns. The hour step is the sole hour authority there, so
@@ -995,7 +999,7 @@ function renderCompactClockTimes(schedule: Schedule,
   const phrase = cadence ?
     (strideFromSegments(segmentsOf(schedule, 'minute'), 'minute', null,
       opts) ??
-      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), opts),
+      listPastThe(segmentWords(segmentsOf(schedule, 'minute'), 'at ', opts),
         'minute', null, opts)) + ', ' + cadence +
       trailingQualifier(schedule, opts) :
     minuteLead +
@@ -1220,8 +1224,10 @@ function minuteConfinement(schedule: Schedule,
 
   // `segmentWords` already numeralizes a multi-value list and renders a
   // range segment as its "<a> through <b>" pair, so its words are used
-  // as-is (coercing them back through `Number` would corrupt the ranges).
-  return ' during minutes ' + joinList(segmentWords(segments, opts), opts);
+  // as-is (coercing them back through `Number` would corrupt the ranges) —
+  // with no re-anchor: this is the "during" frame, not the "at" one.
+  return ' during minutes ' +
+    joinList(segmentWords(segments, '', opts), opts);
 }
 
 // A restricted hour under a finer cadence reads as a confinement. The form
@@ -1817,18 +1823,40 @@ function numberWords(fires: number[],
 // numbers, ranges as "<a> through <b>" pairs. A multi-value list
 // numeralizes throughout; a lone value keeps the spelled-when-small style
 // (see `listNumber`).
-function segmentWords(segments: Segment[],
+function segmentWords(segments: Segment[], reanchor: string,
   opts: NormalizedOptions): (string | number)[] {
   // Normalization expands step arms in lists, so the segments here are
   // singles and ranges only and the unit count is the segment count.
   const num = listNumber(segments.length, opts);
-
-  return segments.map(function word(segment) {
+  const words = segments.map(function word(segment) {
     if (segment.kind === 'range') {
       return num(segment.bounds[0]) + through(opts) + num(segment.bounds[1]);
     }
 
     return num((segment as {value: string}).value);
+  });
+
+  return reanchorMixed(segments, words, reanchor);
+}
+
+// Once a list mixes a range among its pieces, every piece after the first
+// re-anchors on its own preposition ("at 5 through 10 and at 20 minutes"):
+// with one shared anchor, "through 10 and 20" reads as coordinated range
+// endpoints, leaving the reader unsure whether 20 is a fire point or a
+// second bound. A list of bare singles keeps the single shared anchor.
+function reanchorMixed(segments: Segment[], words: (string | number)[],
+  reanchor: string): (string | number)[] {
+  const mixed = reanchor !== '' && segments.length > 1 &&
+    segments.some(function range(segment) {
+      return segment.kind === 'range';
+    });
+
+  if (!mixed) {
+    return words;
+  }
+
+  return words.map(function anchored(word, index) {
+    return index === 0 ? word : reanchor + word;
   });
 }
 
@@ -2586,8 +2614,17 @@ function stepDateParts(dateField: string): RecurringPhrase {
 // Render the date field's segments as suffixed ordinals. Open steps are
 // handled separately as a frequency phrase.
 function dateOrdinals(schedule: Schedule, opts: NormalizedOptions): string {
-  // Reached only with a restricted date, which has segments.
-  return renderSegments(segmentsOf(schedule, 'date'), getOrdinal, opts);
+  // Reached only with a restricted date, which has segments. A list mixing
+  // a range re-anchors its later pieces ("on the 1st through 5th and on
+  // the 15th") — every caller heads this phrase with "on the ", so the
+  // re-anchor mirrors it (see reanchorMixed).
+  const segments = segmentsOf(schedule, 'date');
+  const pieces = reanchorMixed(segments,
+    segmentPieces(segments, getOrdinal, function span(bounds) {
+      return bounds.map(getOrdinal).join(through(opts));
+    }), 'on the ');
+
+  return joinList(pieces, opts);
 }
 
 // Render the month field as names. There are few, named months, so a step

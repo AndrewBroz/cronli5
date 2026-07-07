@@ -81,7 +81,7 @@ describe('Minute span across an hour step:', function() {
 describe('mixed minute list under a bounded hour step', function() {
   run([
     ['5-10,20 9-17/2 * * *',
-      'at 5 through 10 and 20 minutes, ' +
+      'at 5 through 10 and at 20 minutes, ' +
       'every two hours from 9 a.m. through 5 p.m.']
   ]);
 });
