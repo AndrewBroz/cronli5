@@ -643,3 +643,32 @@ hour-range-scoped lists (out of the list-scope class); the ordinal-frame
 `кожної N-ї години, починаючи` comma; the P8-endorsed `1 січня, 1 квітня,
 1 липня й 1 жовтня, опівночі`; the `починаючи з …, опівночі` closing
 comma; and the untouched short-option block.
+
+## Beta validation (2026-07-06)
+
+A blind 3-persona output panel (everyday reader, copy editor, technical
+writer — fresh personas, full sentences) plus a blind round-trip recovery
+ran over a 12-output sample spanning the trap constructions. Every
+construction was read correctly by at least 2 of 3 personas and the
+round-trip recovered 11/12 patterns exactly or equivalently. Findings held
+for the fluent-human review:
+
+* **Exclusive-end hour window boundary (`щосекунди з 9:00 до 18:00` for
+  `* * 9-17`).** The round-trip recoverer read the untagged `до 18:00` as
+  hour range 9–18 (an extra hour of fires); the technical writer read the
+  fire set correctly but independently flagged the untagged boundary. The
+  round-4 panel chose this form unanimously on comprehension-of-intent, but
+  the differential shows the boundary does not survive recovery — a
+  candidate re-panel should test it against an explicit-boundary form
+  (e.g. `до 17:59 включно`).
+* **Double `протягом` (`кожні 10 секунд протягом 30-ї хвилини, протягом
+  9-ї й 17-ї години`).** Semantically unambiguous to all readers, but 2 of
+  3 flagged the stacked confinements as mechanical/translated register.
+* **Minority misreading flags (1 of 3 each, majority read both
+  correctly).** The union frame's `або` could scan as a Friday-the-13th
+  conjunction; the nearest-workday `до 15-го` could scan as "before the
+  15th". Both forms are panel-ratified; the flags are recorded for the
+  human reviewer's attention, not re-litigated here.
+* The copy editor notes `щосекунди` reads as a young coinage (by analogy
+  with щохвилини/щогодини) — kept; it is the corpus-wide convention.
+
