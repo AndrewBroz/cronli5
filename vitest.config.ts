@@ -59,21 +59,18 @@ export default defineConfig({
       // them would be dishonest, so the branch floor honestly records what valid
       // input reaches.
       //
-      // The uk derivation moves branches to 96.3 (just below the 96.37
-      // achieved), the honest floor uk can reach today. uk's residual arms
-      // fall into two unreachable-by-construction classes: plan-renderer
-      // arms shadowed by the §8 confinement frame (describe() routes every
+      // uk moves branches to 96.3 (just below the 96.37 achieved), the
+      // honest floor uk can reach today. uk's residual arms are
+      // unreachable by construction, in two classes: plan-renderer arms
+      // shadowed by the confinement frame (uk's describe() routes every
       // second-led shape through confinement() first, so the equivalent
-      // arms inside renderSecondsWithinMinute/secondLeadAnnouncement and
-      // kin never see those shapes — duplicate grammar the convergence
-      // rounds left behind), and defensive segment-kind arms for step
-      // segments the core enumerates into single values before a renderer
-      // ever sees them. Deleting the shadowed copies (not contriving input)
-      // is the way this floor goes back up; the reachable gaps found during
-      // round 4 were covered with verified corpus rows instead (which also
-      // surfaced a real cross-language core bug: a minute list under a
-      // bounded hour step cross-multiplies to bare hour times, silently
-      // dropping the minutes — filed, out of the uk round's scope).
+      // arms inside the per-plan renderers — renderSecondsWithinMinute,
+      // secondLeadAnnouncement, and kin — never see those shapes), and
+      // defensive segment-kind arms for step segments the core enumerates
+      // into single values before any renderer sees them. Every reachable
+      // uk branch is exercised by a verified corpus row; deleting the
+      // shadowed duplicate arms (not contriving invalid input) is the way
+      // this floor goes back up.
       thresholds: {
         lines: 98.5,
         branches: 96.3,
