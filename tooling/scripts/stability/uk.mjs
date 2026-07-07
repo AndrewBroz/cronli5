@@ -148,6 +148,17 @@ function dateTokens(text) {
     }
   }
 
+  // The union frame's nearest-workday appositive names its day in the
+  // digit register ("робочий день, найближчий до 15-го") — a declared
+  // register split against the spelled genitive/accusative qualifier forms
+  // ("до п'ятнадцятого числа"); both carry the same date token.
+  const appositive = (/робочий день, найближчий до (\d+)-го/)
+    .exec(noWeekdays);
+
+  if (appositive) {
+    tokens.push(appositive[1]);
+  }
+
   if ((/непарний день місяця/).test(noWeekdays)) {
     tokens.push('parity:odd');
   }
@@ -167,7 +178,16 @@ function dateTokens(text) {
     tokens.push('quartz:last-day');
   }
 
-  if ((/найближчого робочого дня до/).test(noWeekdays)) {
+  // The nearest-workday landmark declines by position (a declared
+  // transformation, not drift): genitive as the leading anchor
+  // ("найближчого робочого дня до …"), accusative as a mid-sentence dated
+  // qualifier ("у найближчий робочий день до …"), and a nominative
+  // appositive inside the union frame ("робочий день, найближчий до
+  // 15-го,"). All three name the same landmark token.
+  const nearestForms = new RegExp('найближчого робочого дня до|' +
+    'найближчий робочий день до|робочий день, найближчий до');
+
+  if (nearestForms.test(noWeekdays)) {
     tokens.push('quartz:nearest');
   }
 

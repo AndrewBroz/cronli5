@@ -274,18 +274,35 @@ function clockPositionList(values: number[],
 // same kind.
 function positionPieces(segments: Segment[],
   unitKey: 'second' | 'minute'): string {
-  return joinList(segments.map(function piece(segment) {
+  const pieces: string[] = [];
+  let run: number[] = [];
+
+  function flush(): void {
+    if (run.length) {
+      pieces.push(clockPositionList(run, unitKey));
+      run = [];
+    }
+  }
+
+  segments.forEach(function piece(segment) {
     if (segment.kind === 'range') {
-      return confinementRange(+segment.bounds[0], +segment.bounds[1],
-        unitKey);
+      flush();
+      pieces.push(confinementRange(+segment.bounds[0], +segment.bounds[1],
+        unitKey));
     }
-
-    if (segment.kind === 'step') {
-      return clockPositionList(segment.fires, unitKey);
+    else if (segment.kind === 'step') {
+      flush();
+      pieces.push(clockPositionList(segment.fires, unitKey));
     }
+    else {
+      // Consecutive single values share one "о" and one noun ("о 40-й,
+      // 45-й, 50-й і 55-й хвилині"), never one announcement per value.
+      run.push(+(segment as {value: string}).value);
+    }
+  });
+  flush();
 
-    return clockPosition(+(segment as {value: string}).value, unitKey);
-  }));
+  return joinList(pieces);
 }
 
 // A single genitive confinement noun phrase ("9-ї години", "30-ї хвилини"):
@@ -522,7 +539,7 @@ function describe(schedule: Schedule, opts: Opts): string {
   const dense = denseCadence(schedule, opts);
 
   if (dense !== null) {
-    return applyYear(dense, schedule, opts);
+    return applyYear(dense, schedule);
   }
 
   // A finer leading cadence puts each coarser field in the confinement
@@ -533,10 +550,10 @@ function describe(schedule: Schedule, opts: Opts): string {
   // A day union scopes the whole clause by its month, which leads the
   // description ("у червні, щоразу коли настає …"); the time/cadence and
   // the trailing condition are already in `body`.
-  const lead = isDayUnion(schedule, opts) ?
-    dayUnionMonthLead(schedule) : '';
+  const lead = isDayUnion(schedule) ?
+    dayUnionMonthLead(schedule, opts.short) : '';
 
-  return applyYear(lead + body, schedule, opts);
+  return applyYear(lead + body, schedule);
 }
 
 // Render one plan node. `composeSeconds` recurses with its `rest` plan.
@@ -566,7 +583,7 @@ function isDenseCadence(schedule: Schedule, opts: Opts): boolean {
   if (opts.short ||
       schedule.plan.kind !== 'composeSeconds' ||
       schedule.plan.rest.kind === 'clockTimes' ||
-      isDayUnion(schedule, opts)) {
+      isDayUnion(schedule)) {
     return false;
   }
 
@@ -801,6 +818,16 @@ function clockTimesConfinement(schedule: Schedule,
     clockTimesOf(schedule, rest);
 }
 
+// The idiomatic every-second-of-every-other-minute shape: a wildcard
+// second under a */2 minute step with a wildcard hour.
+function isEveryOtherMinuteSeconds(schedule: Schedule,
+  plan: PlanOf<'composeSeconds'>): boolean {
+  return schedule.shapes.second === 'wildcard' &&
+    plan.rest.kind === 'minuteFrequency' &&
+    plan.rest.hours.kind === 'none' &&
+    schedule.pattern.minute === '*/2';
+}
+
 function renderComposeSeconds(schedule: Schedule,
   plan: PlanOf<'composeSeconds'>, opts: Opts): string {
   const cadence = composeHourCadence(schedule, plan, opts);
@@ -817,10 +844,7 @@ function renderComposeSeconds(schedule: Schedule,
 
   // A wildcard second under a */2 minute step with a wildcard hour binds
   // idiomatically, mirroring en's "every second of every other minute".
-  if (schedule.shapes.second === 'wildcard' &&
-      plan.rest.kind === 'minuteFrequency' &&
-      plan.rest.hours.kind === 'none' &&
-      schedule.pattern.minute === '*/2') {
+  if (isEveryOtherMinuteSeconds(schedule, plan)) {
     return 'щосекунди кожної другої хвилини' +
       trailingQualifier(schedule, opts);
   }
@@ -983,6 +1007,13 @@ function renderRangeOfMinutes(schedule: Schedule,
   plan: PlanOf<'rangeOfMinutes'>, opts: Opts): string {
   const bounds = schedule.pattern.minute.split('-');
 
+  // Compacted, the range is bare digits with the adverb scope
+  // ("щохвилини 0–29 щогодини").
+  if (opts.short) {
+    return 'щохвилини ' + bounds[0] + '–' + bounds[1] + ' щогодини' +
+      trailingQualifier(schedule, opts);
+  }
+
   // Forward and wraparound ranges share one register: the inclusive
   // confinement-noun range, scoped by the genitive "кожної години" (the
   // noun rides the range's own end, so the scope never has to supply the
@@ -1016,6 +1047,29 @@ function renderMultipleMinutes(schedule: Schedule,
     trailingQualifier(schedule, opts);
 }
 
+// The hour window bounding a minute cadence. Compacted, an en-dash span
+// closing on the cadence's last fire ("9:00–17:45"); in full, a single
+// hour (from===to) is a WITHIN-hour minute window — the cadence's own last
+// fire that hour, not the hour itself — bounding the clock digitally the
+// same way a genuine hour range does ("з 9:00 до 9:45 включно"), never a
+// bare genitive hour confinement (which would wrongly imply the whole
+// hour, not just the cadence's fires within it).
+function cadenceHourWindow(
+  hours: Extract<PlanOf<'minuteFrequency'>['hours'], {kind: 'window'}>,
+  short: boolean): string {
+  if (short) {
+    return getTime({hour: hours.from, minute: 0, plain: true}) + '–' +
+      getTime({hour: hours.to, minute: hours.last, plain: true});
+  }
+
+  if (hours.from === hours.to) {
+    return rangeSpan(getTime({hour: hours.from, minute: 0, plain: true}),
+      getTime({hour: hours.from, minute: hours.last, plain: true}));
+  }
+
+  return rangeWindow({from: hours.from, to: hours.to});
+}
+
 // A repeating minute step, qualified by the active hour window(s).
 function renderMinuteFrequency(schedule: Schedule,
   plan: PlanOf<'minuteFrequency'>, opts: Opts): string {
@@ -1038,11 +1092,8 @@ function renderMinuteFrequency(schedule: Schedule,
     // clock digitally the same way a genuine hour range does ("з 9:00 до
     // 9:45 включно"), never a bare genitive hour confinement (which would
     // wrongly imply the whole hour, not just the cadence's fires within it).
-    phrase += continueAfter(phrase) + (plan.hours.from === plan.hours.to ?
-      rangeSpan(getTime({hour: plan.hours.from, minute: 0, plain: true}),
-        getTime({hour: plan.hours.from, minute: plan.hours.last,
-          plain: true})) :
-      rangeWindow({from: plan.hours.from, to: plan.hours.to}));
+    phrase += continueAfter(phrase) +
+      cadenceHourWindow(plan.hours, opts.short);
   }
   else if (plan.hours.kind === 'step') {
     const bare = stepCycle60(stepSegment(schedule, 'minute'), 'minute', false);
@@ -1051,29 +1102,33 @@ function renderMinuteFrequency(schedule: Schedule,
       everyNthHour(stepSegment(schedule, 'hour'));
   }
 
-  // After a window that closed itself with "включно", a month/date
-  // qualifier opens its own comma-set clause in the leading (genitive)
-  // register, a bare day-of-month naming its "місяця" scope; weekday forms
-  // stay same-clause continuations here (unlike the hour-range path, whose
-  // window comma-attaches every qualifier).
+  return phrase + cadenceWindowQualifier(phrase, schedule, opts);
+}
+
+// The qualifier after a minute-cadence hour window: a month/date qualifier
+// directly after a "включно"-closed window opens its own comma-set clause,
+// a bare day-of-month naming its "місяця" scope; weekday forms stay
+// same-clause continuations (unlike the hour-range path, whose window
+// comma-attaches every qualifier).
+function cadenceWindowQualifier(phrase: string, schedule: Schedule,
+  opts: Opts): string {
   const {date, month, weekday} = schedule.pattern;
   const dateScoped = phrase.endsWith('включно') && weekday === '*' &&
-    (date !== '*' || month !== '*') && !isDayUnion(schedule, opts);
+    (date !== '*' || month !== '*') && !isDayUnion(schedule);
 
-  if (dateScoped) {
-    if (date === 'L' && month === '*') {
-      return phrase + ', останнього числа';
-    }
-
-    const bareDom = schedule.shapes.date === 'single' && month === '*' &&
-      !quartzDateParts(date);
-
-    return phrase + ', ' +
-      dayQualifier(schedule, trailingWords, opts.short) +
-      (bareDom ? ' місяця' : '');
+  if (!dateScoped) {
+    return trailingQualifier(schedule, opts);
   }
 
-  return phrase + trailingQualifier(schedule, opts);
+  if (date === 'L' && month === '*') {
+    return ', останнього числа';
+  }
+
+  const bareDom = schedule.shapes.date === 'single' && month === '*' &&
+    !quartzDateParts(date);
+
+  return ', ' + dayQualifier(schedule, trailingWords, opts.short) +
+    (bareDom ? ' місяця' : '');
 }
 
 // A minute wildcard or plain range under a single specific hour.
@@ -1139,6 +1194,11 @@ function renderMinutesAcrossHours(schedule: Schedule,
 
   const times = hourTimesFromPlan(schedule, plan.times, true);
 
+  if (opts.short) {
+    return shortMinutePieces(schedule) + ' о ' + times +
+      trailingQualifier(schedule, opts);
+  }
+
   return lead + ', о ' + times + trailingQualifier(schedule, opts);
 }
 
@@ -1165,18 +1225,7 @@ function minuteListLead(schedule: Schedule): string {
     return clockPositionList(values, 'minute');
   }
 
-  return joinList(segments.map(function piece(segment) {
-    if (segment.kind === 'range') {
-      return confinementRange(+segment.bounds[0], +segment.bounds[1],
-        'minute');
-    }
-
-    if (segment.kind === 'step') {
-      return clockPositionList(segment.fires, 'minute');
-    }
-
-    return clockPosition(+segment.value, 'minute');
-  }));
+  return positionPieces(segments, 'minute');
 }
 
 // A minute wildcard or plain range under an hour step.
@@ -1231,14 +1280,34 @@ function renderHourRange(schedule: Schedule, plan: PlanOf<'hourRange'>,
       window + qualifierAfterClause(window, schedule, opts);
   }
 
-  return rangeMinuteLead(schedule) + ' ' + window +
+  return rangeMinuteLead(schedule, opts.short) + ' ' + window +
     qualifierAfterClause(window, schedule, opts);
 }
 
+// The short register's minute list/range mix: the bare noun leading
+// en-dash digit pieces ("хвилини 0–30 і 45").
+function shortMinutePieces(schedule: Schedule): string {
+  return 'хвилини ' + joinList(segmentsOf(schedule, 'minute').map(
+    function piece(segment) {
+      return segment.kind === 'range' ?
+        segment.bounds[0] + '–' + segment.bounds[1] :
+        (segment as {value: string}).value;
+    }));
+}
+
 // Lead phrase for a discrete minute within an hour range.
-function rangeMinuteLead(schedule: Schedule): string {
+function rangeMinuteLead(schedule: Schedule, short = false): string {
   if (schedule.pattern.minute === '0') {
     return 'щогодини';
+  }
+
+  // The short register: a single minute takes the telegraphic "на" with no
+  // hour adverb ("на 30-й хвилині"); a list/range mix leads with the bare
+  // noun and en-dash digits ("хвилини 0–30 і 45").
+  if (short) {
+    return schedule.shapes.minute === 'single' ?
+      clockPosition(+schedule.pattern.minute, 'minute', 'на') :
+      shortMinutePieces(schedule);
   }
 
   const segments = segmentsOf(schedule, 'minute');
@@ -1346,8 +1415,13 @@ function renderClockTimes(schedule: Schedule, plan: PlanOf<'clockTimes'>,
     });
   });
 
+  if (isDayUnion(schedule) && opts.short) {
+    return dayUnionCondition(schedule, true).trimStart() + ', ' +
+      clockTimesPhrase(times, mixed);
+  }
+
   return interpretDayQualifier(schedule, opts) +
-    clockTimesPhrase(times, mixed) + dayUnionTrail(schedule, opts);
+    clockTimesPhrase(times, mixed) + dayUnionTrail(schedule);
 }
 
 // Whether a field's classified segments include a genuine range (a
@@ -1395,8 +1469,8 @@ function clockTimesPhrase(times: string[], mixed: boolean): string {
 
 // The trailing day-union condition for a clock-time form, or an empty string
 // when the pattern is not a day union.
-function dayUnionTrail(schedule: Schedule, opts: Opts): string {
-  return isDayUnion(schedule, opts) ? dayUnionCondition(schedule) : '';
+function dayUnionTrail(schedule: Schedule): string {
+  return isDayUnion(schedule) ? dayUnionCondition(schedule) : '';
 }
 
 // Compact form for a clock-time set past the enumeration cap.
@@ -1423,7 +1497,7 @@ function renderFoldedClockTimes(schedule: Schedule,
   });
 
   if (hasRange && !schedule.analyses.clockSecond) {
-    return foldedHourWindows(schedule, plan) +
+    return foldedHourWindows(schedule, plan, opts.short) +
       trailingQualifier(schedule, opts);
   }
 
@@ -1434,7 +1508,7 @@ function renderFoldedClockTimes(schedule: Schedule,
   return interpretDayQualifier(schedule, opts) + (hasRange ?
     hourSegmentTimes(schedule, {...fold, announce: true}) :
     'о ' + hourSegmentTimes(schedule, fold)) +
-    dayUnionTrail(schedule, opts);
+    dayUnionTrail(schedule);
 }
 
 // The non-`fold` branch of compactClockTimes: a minute list (or its own
@@ -1483,15 +1557,19 @@ function renderCompactMinuteList(schedule: Schedule, opts: Opts): string {
 // cadence sharing one clock-minute position, not a scattered set — "о 2:05,
 // 6:05, 14:05, 18:05 і 22:05"), while a bare single value still gets its own.
 function foldedHourWindows(schedule: Schedule,
-  plan: PlanOf<'compactClockTimes'>): string {
+  plan: PlanOf<'compactClockTimes'>, short = false): string {
   const minute = plan.minute;
   const windows: string[] = [];
   const outlierTimes: string[] = [];
 
   segmentsOf(schedule, 'hour').forEach(function classify(segment) {
     if (segment.kind === 'range') {
-      windows.push(rangeWindow({from: +segment.bounds[0],
-        to: +segment.bounds[1]}));
+      // Compacted, the window is a bare-start en-dash span whose closing
+      // bound carries the fold minute ("9–20:30").
+      windows.push(short ?
+        segment.bounds[0] + '–' +
+          getTime({hour: +segment.bounds[1], minute, plain: true}) :
+        rangeWindow({from: +segment.bounds[0], to: +segment.bounds[1]}));
     }
     else if (segment.kind === 'step') {
       outlierTimes.push(...segment.fires.map(function time(hour) {
@@ -1506,19 +1584,24 @@ function foldedHourWindows(schedule: Schedule,
   // A nonzero fold minute makes the outliers full clock times, shared under
   // one "о" ("й о 2:05, 6:05 …"); at minute 0 each bare hour keeps its own
   // "о" clock-position announcement.
-  const outlierChunks = +minute === 0 ?
-    outlierTimes.map(function announce(time) {
+  let outlierChunks: string[] = [];
+
+  if (+minute === 0) {
+    outlierChunks = outlierTimes.map(function announce(time) {
       return 'о ' + time;
-    }) :
-    outlierTimes.length ? ['о ' + joinList(outlierTimes)] : [];
+    });
+  }
+  else if (outlierTimes.length) {
+    outlierChunks = ['о ' + joinList(outlierTimes)];
+  }
 
   // A multi-outlier scatter reads the single-minute lead with the genitive
   // scope ("о 5-й хвилині кожної години"); a lone outlier, minute 0, and
   // lists keep rangeMinuteLead's own registers ("о 30-й хвилині щогодини").
-  const lead = schedule.shapes.minute === 'single' && +minute !== 0 &&
-    outlierTimes.length > 1 ?
+  const lead = !short && schedule.shapes.minute === 'single' &&
+    +minute !== 0 && outlierTimes.length > 1 ?
     clockPosition(+minute, 'minute') + ' кожної години' :
-    rangeMinuteLead(schedule);
+    rangeMinuteLead(schedule, short);
   const phrase = lead + ' ' + joinList(windows);
 
   if (!outlierChunks.length) {
@@ -1765,8 +1848,8 @@ function hourConfinement(schedule: Schedule, protracted: boolean,
       !isCadenceField(schedule.pattern.minute) && !minuteStride(schedule);
     // Ahead of a weekday qualifier the scope reads as its own comma-set
     // adverb clause ("…, щогодини по понеділках").
-    const scope = schedule.pattern.weekday !== '*' ?
-      ', щогодини' : ' кожної години';
+    const scope = schedule.pattern.weekday === '*' ?
+      ' кожної години' : ', щогодини';
 
     return minutePinned ? scope : '';
   }
@@ -1797,29 +1880,39 @@ function hourConfinement(schedule: Schedule, protracted: boolean,
 // shape (even a bounded one enumerated below the stride threshold, e.g.
 // "9-17/2") still reads as its own cadence and is exempt, matching
 // minuteConfinement's own stride exemption.
-function hourListConfinement(schedule: Schedule, protracted: boolean,
-  minutePresent: boolean): string {
-  // Inside a day union the hour list reads as its own comma-set clock
-  // anchor clause ("…, о 0-й, 5-й і 20-й годині, кожного 3-го дня …").
-  if (schedule.pattern.date !== '*' && schedule.pattern.weekday !== '*') {
-    const values = singleValues(segmentsOf(schedule, 'hour'));
+// The hour-list confinement shapes that pre-empt the genitive "протягом"
+// register, or null when none applies: inside a day union the list is its
+// own comma-set clock-anchor clause, one uniform ordinal enumeration (hour
+// 0 as "0-й", no опівночі word — the clause sits between two comma-set
+// union clauses, where a mixed-device list would read as separate items);
+// a list mixing a genuine range reads the digital "протягом годин" frame,
+// never a hybrid of the digital window and a genitive ordinal inside one
+// "протягом".
+function hourListSpecialConfinement(schedule: Schedule,
+  minutePresent: boolean): string | null {
+  const union = schedule.pattern.date !== '*' &&
+    schedule.pattern.weekday !== '*';
+  const values = union && singleValues(segmentsOf(schedule, 'hour'));
 
-    if (values) {
-      // The union's list stays one uniform ordinal enumeration (hour 0
-      // included as "0-й", no опівночі word) — the clause sits between two
-      // comma-set union clauses, where a mixed-device list would read as
-      // separate items.
-      return (minutePresent ? ', ' : ' ') +
-        clockPositionList(values, 'hour') + ',';
-    }
+  if (values) {
+    return (minutePresent ? ', ' : ' ') +
+      clockPositionList(values, 'hour') + ',';
   }
 
-  // A list mixing a genuine range reads the digital "протягом годин" frame
-  // ("протягом годин з 9:00 до 20:00 включно і 22:00") — never a hybrid of
-  // the digital window and a genitive ordinal inside one "протягом".
   if (hasRangeSegment(schedule, 'hour')) {
     return ' протягом годин ' +
       hourSegmentTimes(schedule, {minute: 0, second: null});
+  }
+
+  return null;
+}
+
+function hourListConfinement(schedule: Schedule, protracted: boolean,
+  minutePresent: boolean): string {
+  const special = hourListSpecialConfinement(schedule, minutePresent);
+
+  if (special !== null) {
+    return special;
   }
 
   // The minute-0/offset-second-step pair (isOffsetSecondStep) reads the hour
@@ -1879,19 +1972,14 @@ function hourConfinementPhrase(schedule: Schedule): string {
     return confinementList(values, 'hour');
   }
 
-  const pieces = segments.map(function piece(segment) {
-    if (segment.kind === 'range') {
-      return rangeWindow({from: +segment.bounds[0], to: +segment.bounds[1]});
-    }
-
-    if (segment.kind === 'step') {
-      return confinementList(segment.fires, 'hour');
-    }
-
-    return confinementNoun(+segment.value, 'hour');
-  });
-
-  return joinList(pieces);
+  // A range-mixed list never reaches here (hourListSpecialConfinement owns
+  // the digital "протягом годин" frame); the residue is the step-fire
+  // enumeration sharing one genitive noun.
+  return confinementList(segments.flatMap(function fires(segment) {
+    return segment.kind === 'step' ?
+      segment.fires :
+      [+(segment as {value: string}).value];
+  }), 'hour');
 }
 
 // Whether an hour field is confinement-eligible.
@@ -2299,23 +2387,6 @@ function rangeSpan(from: string | number, to: string | number): string {
   return 'з ' + from + ' до ' + to + ' включно';
 }
 
-// Render classified segments as words for an enumerated list: singles as
-// numbers, ranges as inclusive-tagged spans.
-function segmentWords(segments: Segment[]): (string | number)[] {
-  return segments.map(function word(segment) {
-    if (segment.kind === 'range') {
-      return rangeSpan(segment.bounds[0], segment.bounds[1]);
-    }
-
-    return +(segment as {value: string}).value;
-  });
-}
-
-// Enumerate fire words as "N, M і K <unit>" — digits with the plural
-// (many-form) noun trailing, matching the enumerated-list register.
-function listOfUnit(words: (string | number)[], unitKey: UnitKey): string {
-  return joinList(words) + ' ' + units[unitKey].many;
-}
 
 // Render hours as a joined list of clock times. `plain` forces the digital
 // form throughout (the coordinated single-"о" clock-time announcement,
@@ -2575,7 +2646,7 @@ const leadingWords: QualifierWords = {
 
 // A trailing day-level qualifier for bare frequencies.
 function trailingQualifier(schedule: Schedule, opts: Opts): string {
-  if (isDayUnion(schedule, opts)) {
+  if (isDayUnion(schedule)) {
     return dayUnionCondition(schedule);
   }
 
@@ -2651,7 +2722,7 @@ function hourRangeDateQualifier(schedule: Schedule): string | null {
 // uses.
 function qualifierAfterSelfContainedClause(needsComma: boolean,
   schedule: Schedule, opts: Opts): string {
-  if (isDayUnion(schedule, opts)) {
+  if (isDayUnion(schedule)) {
     return dayUnionCondition(schedule);
   }
 
@@ -2681,7 +2752,7 @@ function qualifierAfterClause(precedingText: string, schedule: Schedule,
 // range with other pieces), that embedded clause needs its own comma to
 // mark where it ends before the time announces.
 function interpretDayQualifier(schedule: Schedule, opts: Opts): string {
-  if (isDayUnion(schedule, opts)) {
+  if (isDayUnion(schedule)) {
     return '';
   }
 
@@ -2712,12 +2783,9 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
   short = false): string {
   const pattern = schedule.pattern;
 
-  if (pattern.date !== '*' && pattern.weekday !== '*') {
-    return dateOrWeekday(schedule);
-  }
-
   if (pattern.date !== '*') {
-    return datePhrase(schedule, words === trailingWords ? 'acc' : 'gen');
+    return datePhrase(schedule, words === trailingWords ? 'acc' : 'gen',
+      short);
   }
 
   if (pattern.weekday !== '*') {
@@ -2733,45 +2801,69 @@ function dayQualifier(schedule: Schedule, words: QualifierWords,
     }
 
     const prefix = hasRangeSegment(schedule, 'weekday') ? '' : words.weekday;
-    const weekdays = prefix + weekdayPhrase(schedule, words.recurringWeekday);
+    const weekdays = prefix + weekdayPhrase(schedule);
 
     return weekdays + monthScope(schedule);
   }
 
   if (pattern.month !== '*') {
-    return words.month + monthReference(schedule);
+    return words.month +
+      (short ? monthReferenceShort(schedule) : monthReference(schedule));
   }
 
   return words.all;
 }
 
 // The date portion of a day qualifier (the weekday is a wildcard).
-function datePhrase(schedule: Schedule,
-  nearestRole: 'acc' | 'gen' = 'gen'): string {
+// The recurrence-shaped date qualifiers (quartz landmarks and cadence
+// steps), or null for a plain calendar date. The bare, unqualified `L` (no
+// month, no `L-N`/nearest-weekday landmark) reads §2's bare day-of-month
+// idiom ("останнього числа"), not the more literal "дня місяця"
+// (reconciled round 3) — scoped to exactly this shape; a month attachment
+// or a named landmark keeps "дня <referent>", since they need to name what
+// the landmark is.
+function recurrenceDatePhrase(schedule: Schedule,
+  nearestRole: 'acc' | 'gen'): string | null {
   const pattern = schedule.pattern;
+
+  if (pattern.date === 'L' && pattern.month === '*') {
+    return 'останнього числа';
+  }
+
   const quartzDate = quartzDateParts(pattern.date, nearestRole);
 
   if (quartzDate) {
-    // The bare, unqualified `L` (no month, no `L-N`/nearest-weekday
-    // landmark) reads §2's bare day-of-month idiom ("останнього числа"), not
-    // the more literal "дня місяця" (reconciled round 3) — scoped to exactly
-    // this shape; a month attachment or a named landmark keeps "дня
-    // <referent>", since they need to name what the landmark is.
-    return pattern.date === 'L' && pattern.month === '*' ?
-      'останнього числа' :
-      monthScopeForRecurrence(quartzDate, schedule);
+    return monthScopeForRecurrence(quartzDate, schedule);
   }
 
   if (schedule.analyses.day.date?.kind === 'cadenceStep') {
     return stepDateMonthScope(stepDateParts(pattern.date), schedule);
   }
 
+  return null;
+}
+
+function datePhrase(schedule: Schedule,
+  nearestRole: 'acc' | 'gen' = 'gen', short = false): string {
+  const pattern = schedule.pattern;
+  const recurrence = recurrenceDatePhrase(schedule, nearestRole);
+
+  if (recurrence !== null) {
+    return recurrence;
+  }
+
   if (pattern.month !== '*' && !monthFoldsIntoDate(schedule)) {
-    // The month scope here is always a genuine RANGE (monthFoldsIntoDate's
-    // guard), a self-contained "з … до … включно" clause of its own — set
-    // off with a comma from the date-ordinal clause ahead of it, the same
-    // boundary every other two-clause qualifier in this renderer needs.
-    return dateOrdinalsWithNoun(schedule) + ',' + monthScope(schedule);
+    // Compacted, the month span rides bare after the date ordinal
+    // ("першого числа січ–бер"); in full it is a self-contained "з … до …
+    // включно" clause of its own, set off with a comma.
+    return short ?
+      dateOrdinalsWithNoun(schedule, true) + ' ' +
+        monthReferenceShort(schedule) :
+      dateOrdinalsWithNoun(schedule) + ',' + monthScope(schedule);
+  }
+
+  if (short && schedule.shapes.date === 'range') {
+    return dateOrdinalsWithNoun(schedule, true);
   }
 
   if (pattern.month !== '*') {
@@ -2787,12 +2879,17 @@ function datePhrase(schedule: Schedule,
 // включно"); every other shape (a single value, or a list mixing several
 // pieces) trails it once after the whole joined phrase instead, since
 // "включно" there can sit mid-list rather than at the very end.
-function dateOrdinalsWithNoun(schedule: Schedule): string {
+function dateOrdinalsWithNoun(schedule: Schedule, short = false): string {
   if (schedule.shapes.date === 'range') {
     const bounds = schedule.pattern.date.split('-');
 
-    return 'з ' + dateOrdinal(bounds[0]) + ' до ' + dateOrdinal(bounds[1]) +
-      ' числа включно';
+    // Compacted, the spelled ordinals join on a bare en dash ("першого–
+    // п'ятого числа" — §2's fully spelled ordinal survives the short
+    // register).
+    return short ?
+      dateOrdinal(bounds[0]) + '–' + dateOrdinal(bounds[1]) + ' числа' :
+      'з ' + dateOrdinal(bounds[0]) + ' до ' + dateOrdinal(bounds[1]) +
+        ' числа включно';
   }
 
   return dateOrdinals(schedule) + ' числа';
@@ -2807,15 +2904,15 @@ function monthFoldsIntoDate(schedule: Schedule): boolean {
 }
 
 // Whether the pattern restricts both day fields (cron's DOM-or-DOW union).
-function isDayUnion(schedule: Schedule, opts: Opts): boolean {
-  return schedule.analyses.day.union && !opts.short;
+function isDayUnion(schedule: Schedule): boolean {
+  return schedule.analyses.day.union;
 }
 
 // The trailing condition clause for a day union: the event-framed clause
 // ratified in notes.md §7 — "щоразу, коли настає X або Y" — keeps the
 // inclusive-union reading unambiguous without a connective a reader has to
 // infer a logical force from.
-function dayUnionCondition(schedule: Schedule): string {
+function dayUnionCondition(schedule: Schedule, short = false): string {
   const cadence = dayUnionCadenceClause(schedule);
 
   if (cadence !== null) {
@@ -2823,7 +2920,7 @@ function dayUnionCondition(schedule: Schedule): string {
   }
 
   const pieces = [...dayUnionDatePieces(schedule),
-    ...dayUnionWeekdayPieces(schedule)];
+    ...dayUnionWeekdayPieces(schedule, short)];
 
   return ' щоразу, коли настає ' + joinOr(pieces);
 }
@@ -2894,9 +2991,13 @@ function anyWeekdayClause(schedule: Schedule): string {
 // The leading "у <month>, " scope for a day union. A month LIST repeats its
 // "у" per item here (distinct from monthReference's single shared "у" for a
 // trailing qualifier) — the corpus's own day-union-lead register.
-function dayUnionMonthLead(schedule: Schedule): string {
+function dayUnionMonthLead(schedule: Schedule, short = false): string {
   if (schedule.pattern.month === '*') {
     return '';
+  }
+
+  if (short) {
+    return monthReferenceShort(schedule) + ', ';
   }
 
   if (schedule.shapes.month === 'list') {
@@ -2990,7 +3091,8 @@ function quartzDateUnionNoun(dateField: string): string | undefined {
 // reads the digit-genitive ordinal ("2-го понеділка місяця") the corpus's
 // own worked `#N` union rows use, distinct from both the nominative `L`
 // register and the day-qualifier's spelled genitive (nthWeekdayGenitive).
-function quartzWeekdayUnionNoun(weekdayField: string): string | undefined {
+function quartzWeekdayUnionNoun(weekdayField: string,
+  short = false): string | undefined {
   const pieces = weekdayField.split('#');
 
   if (pieces.length === 2) {
@@ -3006,14 +3108,15 @@ function quartzWeekdayUnionNoun(weekdayField: string): string | undefined {
     const day = weekdayField.slice(0, -1);
 
     return lastWeekdayAdjective.nom[weekdayGenderOf(day)] + ' ' +
-      getWeekday(day, 'nom') + ' місяця';
+      (short ? weekdayAbbrev(day) : getWeekday(day, 'nom')) + ' місяця';
   }
 }
 
 // The day-of-week half of a union as a flat list of predicate pieces.
-function dayUnionWeekdayPieces(schedule: Schedule): string[] {
+function dayUnionWeekdayPieces(schedule: Schedule,
+  short = false): string[] {
   const weekdayField = schedule.pattern.weekday;
-  const quartz = quartzWeekdayUnionNoun(weekdayField);
+  const quartz = quartzWeekdayUnionNoun(weekdayField, short);
 
   if (quartz) {
     return [quartz];
@@ -3024,6 +3127,13 @@ function dayUnionWeekdayPieces(schedule: Schedule): string[] {
     function noun(value) {
     return getWeekday(value, 'nom');
   }, function span(bounds) {
+    // Compacted, any weekday-range arm reads the generic-membership noun
+    // over the abbreviated en-dash span ("один із днів Пн–Пт").
+    if (short) {
+      return 'один із днів ' + weekdayAbbrev(bounds[0]) + '–' +
+        weekdayAbbrev(bounds[1]);
+    }
+
     if (bounds[0] === '1' && bounds[1] === '5') {
       return 'будній день';
     }
@@ -3071,36 +3181,6 @@ function parityDayNoun(parity: 'odd' | 'even'): string {
   return parity === 'odd' ? 'непарний день місяця' : 'парний день місяця';
 }
 
-// Compose the "day-of-month or day-of-week" phrase used by the compact
-// `short` form.
-function dateOrWeekday(schedule: Schedule): string {
-  const pattern = schedule.pattern;
-  const weekdayPart = quartzWeekdayPhrase(pattern.weekday) ||
-    'по ' + weekdayPhrase(schedule, false);
-  const union = datePart(schedule) + ' або ' + weekdayPart;
-
-  if (pattern.month === '*') {
-    return union;
-  }
-
-  return monthReference(schedule) + ', ' + union;
-}
-
-// The day-of-month half of an or-day phrase.
-function datePart(schedule: Schedule): string {
-  const pattern = schedule.pattern;
-  const quartzDate = quartzDatePhrase(pattern.date);
-
-  if (quartzDate) {
-    return quartzDate;
-  }
-
-  if (schedule.analyses.day.date?.kind === 'cadenceStep') {
-    return stepDateParts(pattern.date);
-  }
-
-  return dateOrdinalsWithNoun(schedule);
-}
 
 // Spelled cardinal numbers 1-31 (masculine, for "день"), used only by the
 // Quartz `L-N` "days before the end" idiom, an isolated construct the
@@ -3169,10 +3249,6 @@ function quartzDateNoun(dateField: string): string | undefined {
   return quartzDateParts(dateField);
 }
 
-// The day-qualifier form of a Quartz date, as a phrase.
-function quartzDatePhrase(dateField: string): string | undefined {
-  return quartzDateParts(dateField);
-}
 
 // The Quartz weekday field as a phrase, or undefined when the field is not a
 // Quartz form. `hourScoped` picks the plain last-weekday-of-month form's
@@ -3208,10 +3284,6 @@ function quartzWeekdayParts(weekdayField: string, hourScoped = false):
   }
 }
 
-// The day-qualifier form of a Quartz weekday.
-function quartzWeekdayPhrase(weekdayField: string): string | undefined {
-  return quartzWeekdayParts(weekdayField);
-}
 
 // A calendar date with its month: digit day, genitive month name ("1
 // червня" — §2, forced by grammar).
@@ -3221,6 +3293,16 @@ function monthDatePhrase(schedule: Schedule): string {
     return '' + v;
   });
   const monthSegments = segmentsOf(schedule, 'month');
+
+  // A dated day RANGE carries its month inside the span, before the
+  // closing "включно" ("з 1 до 15 січня включно") — trailing it after the
+  // tag would split the days from the month they belong to.
+  if (schedule.shapes.date === 'range') {
+    const bounds = schedule.pattern.date.split('-');
+
+    return 'з ' + bounds[0] + ' до ' + bounds[1] + ' ' + month +
+      ' включно';
+  }
 
   // A single day over several months repeats per month ("13 січня, 13
   // квітня …") — the date belongs to each month, so distributing it once
@@ -3243,6 +3325,30 @@ function monthDatePhrase(schedule: Schedule): string {
   }
 
   return days + ' ' + month;
+}
+
+// Dotless month abbreviation stems for the short register; abbreviations
+// are case-invariant, so one stem serves every position.
+const monthAbbreviations = [null, 'січ', 'лют', 'бер', 'квіт', 'трав',
+  'черв', 'лип', 'серп', 'вер', 'жовт', 'лист', 'груд'];
+
+function monthAbbr(value: number | string): string {
+  return monthAbbreviations[+value] as string;
+}
+
+// The short register's month reference: bare en-dash spans of abbreviated
+// stems ("січ–бер"), a locative "у" only on a bare name run.
+function monthReferenceShort(schedule: Schedule): string {
+  if (schedule.shapes.month === 'range') {
+    const bounds = schedule.pattern.month.split('-');
+
+    return monthAbbr(bounds[0]) + '–' + monthAbbr(bounds[1]);
+  }
+
+  return 'у ' + renderSegments(segmentsOf(schedule, 'month'),
+    function name(value) {
+      return monthAbbr(value);
+    });
 }
 
 // A trailing " у <month>" scope, or an empty string when the month is a
@@ -3479,14 +3585,16 @@ function weekdayPhraseShort(schedule: Schedule): string {
   return 'по ' + joinList(segmentPieces(segments, weekdayAbbrev, span));
 }
 
-// Render the weekday field as names.
-function weekdayPhrase(schedule: Schedule, recurring: boolean): string {
+// Render the weekday field as recurring names (по + locative plural, the
+// only register a weekday qualifier keeps now that the day union frame
+// owns every dated-occurrence shape).
+function weekdayPhrase(schedule: Schedule): string {
   const segments = orderWeekdaysForDisplay(segmentsOf(schedule, 'weekday'));
   const hasRange = segments.some(function range(segment) {
     return segment.kind === 'range';
   });
 
-  if (recurring && hasRange) {
+  if (hasRange) {
     return renderSegments(segments, function single(value) {
       return 'по ' + getWeekday(value, 'locPl');
     }, function span(bounds) {
@@ -3494,23 +3602,8 @@ function weekdayPhrase(schedule: Schedule, recurring: boolean): string {
     });
   }
 
-  if (recurring) {
-    return renderSegments(segments, function plural(value) {
-      return getWeekday(value, 'locPl');
-    });
-  }
-
-  if (hasRange) {
-    return renderSegments(segments, function single(value) {
-      return getWeekday(value, 'gen');
-    }, function span(bounds) {
-      return rangeSpan(getWeekday(bounds[0], 'gen'),
-        getWeekday(bounds[1], 'gen'));
-    });
-  }
-
-  return renderSegments(segments, function single(value) {
-    return getWeekday(value, 'acc');
+  return renderSegments(segments, function plural(value) {
+    return getWeekday(value, 'locPl');
   });
 }
 
@@ -3552,8 +3645,7 @@ function renderSegments(segments: Segment[],
 // --- Years. ---
 
 // Append or fold the year field into a finished description.
-function applyYear(description: string, schedule: Schedule,
-  opts: Opts): string {
+function applyYear(description: string, schedule: Schedule): string {
   const yearField = schedule.pattern.year;
 
   if (yearField === '*') {
@@ -3566,7 +3658,7 @@ function applyYear(description: string, schedule: Schedule,
 
   const folded = leadingYear(schedule);
 
-  if (folded && !isDayUnion(schedule, opts) &&
+  if (folded && !isDayUnion(schedule) &&
       description.startsWith(
         dayQualifier(schedule, leadingWords) + folded)) {
     return description;
@@ -3578,7 +3670,7 @@ function applyYear(description: string, schedule: Schedule,
   // starting a fresh unpunctuated run-on) or a year RANGE (a self-contained
   // "з … до … включно" clause of its own, the same boundary every other
   // "з … включно" clause in this renderer needs).
-  const connective = isDayUnion(schedule, opts) ||
+  const connective = isDayUnion(schedule) ||
     yearField.indexOf('-') !== -1 ? ', ' : ' ';
 
   return description + connective + yearClause(yearField);
