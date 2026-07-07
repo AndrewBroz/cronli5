@@ -798,3 +798,14 @@ describe('Bekannte offene Fehler (Schritt C):', function() {
         .to.equal('an jedem geraden Tag des Monats um Mitternacht');
     });
 });
+
+// A minute list mixing a range under a BOUNDED hour step: the core once
+// planned this as bare whole-hour clock times, silently dropping the
+// minutes (test/core/known-defects.js pinned it); the mixed list keeps
+// the language's own minute devices ahead of the step cadence.
+describe('gemischte Minutenliste unter gebundenem Stundenschritt', function() {
+  run([
+    ['5-10,20 9-17/2 * * *',
+      'in den Minuten 5 bis 10 und 20, alle 2 Stunden von 9 bis 17 Uhr']
+  ]);
+});

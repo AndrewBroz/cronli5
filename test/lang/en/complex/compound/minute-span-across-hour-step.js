@@ -73,3 +73,15 @@ describe('Minute span across an hour step:', function() {
     ]);
   });
 });
+
+// A minute list mixing a range under a BOUNDED hour step: the core once
+// planned this as bare whole-hour clock times, silently dropping the
+// minutes (test/core/known-defects.js pinned it); the mixed list keeps
+// its own minute devices ahead of the bounded step cadence.
+describe('mixed minute list under a bounded hour step', function() {
+  run([
+    ['5-10,20 9-17/2 * * *',
+      'at 5 through 10 and 20 minutes, ' +
+      'every two hours from 9 a.m. through 5 p.m.']
+  ]);
+});
