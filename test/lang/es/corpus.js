@@ -1051,3 +1051,14 @@ describe('Errores conocidos (paso C):', function() {
       .to.not.include('las 14');
   });
 });
+
+// A minute list mixing a range under a BOUNDED hour step: the core once
+// planned this as bare whole-hour clock times, silently dropping the
+// minutes (test/core/known-defects.js pinned it); the mixed list keeps
+// the language's own minute devices ahead of the step cadence.
+describe('lista de minutos mixta bajo paso de horas acotado', function() {
+  run([
+    ['5-10,20 9-17/2 * * *',
+      'en los minutos 5 a 10 y 20, cada dos horas de las 09:00 a las 17:00']
+  ]);
+});

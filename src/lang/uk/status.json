@@ -1,0 +1,7 @@
+{
+  "name": "Ukrainian",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "sibling-derivation from en (the universal-anchor donor; no validated Slavic sibling exists yet), Stage-1 conventions ratified by a blind 3-persona uk-native Sonnet panel (src/lang/uk/notes.md), derivation run dated 2026-07-03.",
+  "note": "BETA — model-validated: the corpus (test/lang/uk/corpus.js) is fully green, the repo gate passes, and a blind 3-persona output panel plus a blind round-trip recovery ran 2026-07-06 over a 12-output trap sample (2/3 personas PASS, every construction read correctly by a majority; round-trip 11/12). Findings for the human review are recorded in src/lang/uk/notes.md §Beta validation: the exclusive-end hour window ('до 18:00') dropped its boundary in recovery, the double-протягом confinement reads mechanical, and one persona each flagged the union frame and the nearest-workday 'до'. Graduates to stable only on fluent-human review."
+}

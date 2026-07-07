@@ -9,14 +9,14 @@ describe('Lists mixing values with ranges or steps:', function() {
   describe('minute list containing a range', function() {
     run([
       ['5-10,20 * * * *',
-        'at 5 through 10 and 20 minutes past the hour'],
+        'at 5 through 10 and at 20 minutes past the hour'],
       ['0-30,45 9 * * *',
-        'at 0 through 30 and 45 minutes past the hour, at 9 a.m.'],
+        'at 0 through 30 and at 45 minutes past the hour, at 9 a.m.'],
       ['5-10,20 9,17 * * *',
-        'at 5 through 10 and 20 minutes past the hour, ' +
+        'at 5 through 10 and at 20 minutes past the hour, ' +
         'at 9 a.m. and 5 p.m.'],
       ['0-10,30 9-17 * * *',
-        'at 0 through 10 and 30 minutes past the hour ' +
+        'at 0 through 10 and at 30 minutes past the hour ' +
         'from 9 a.m. through 5 p.m.']
     ]);
   });
@@ -24,9 +24,9 @@ describe('Lists mixing values with ranges or steps:', function() {
   describe('second list containing a range', function() {
     run([
       ['0-30,45 * * * * *',
-        'at 0 through 30 and 45 seconds past the minute'],
+        'at 0 through 30 and at 45 seconds past the minute'],
       ['5-10,20 30 * * * *',
-        'at 5 through 10 and 20 seconds past the minute ' +
+        'at 5 through 10 and at 20 seconds past the minute ' +
         'during minute 30 of every hour']
     ]);
   });
@@ -56,7 +56,7 @@ describe('Lists mixing values with ranges or steps:', function() {
   describe('day-level lists containing a range or step', function() {
     run([
       ['0 0 1-5,15 * *',
-        'on the 1st through 5th and 15th at midnight'],
+        'on the 1st through 5th and on the 15th at midnight'],
       ['0 0 * 1-3,6 *',
         'every day in January through March and June at midnight'],
       ['0 0 * 1,6/3 *',

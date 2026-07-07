@@ -13,7 +13,7 @@ describe('Input normalization:', function() {
       ['45,15,30 * * * *',
         'at 15, 30, and 45 minutes past the hour'],
       ['30-40,10 * * * *',
-        'at 10 and 30 through 40 minutes past the hour'],
+        'at 10 and at 30 through 40 minutes past the hour'],
       ['30,15 * * * * *', 'at 15 and 30 seconds past the minute'],
       ['0 0 * * FRI,MON', 'every Monday and Friday at midnight'],
       ['0 0 * SEP,MAR *', 'every day in March and September at midnight'],

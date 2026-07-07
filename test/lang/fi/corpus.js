@@ -727,3 +727,14 @@ describe('Vuodet (fi):', function() {
       'kuukauden 13. päivänä tai perjantaisin keskiyöllä vuonna 2030', years]
   ]);
 });
+
+// A minute list mixing a range under a BOUNDED hour step: the core once
+// planned this as bare whole-hour clock times, silently dropping the
+// minutes (test/core/known-defects.js pinned it); the mixed list keeps
+// the language's own minute devices ahead of the step cadence.
+describe('sekamuotoinen minuuttilista rajatun tuntiaskelen alla', function() {
+  run([
+    ['5-10,20 9-17/2 * * *',
+      '5–10 ja 20 minuutin kohdalla, kahden tunnin välein klo 9–17']
+  ]);
+});

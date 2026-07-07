@@ -160,7 +160,7 @@ describe('Built package artifacts:', function() {
       // hardcoded, so it never drifts when a language is added.
       expect(stderr)
         .to.match(
-          /Unknown language: xx \(available: de, en, es, fi, fr, pt, zh\)/u);
+          /Unknown language: xx \(available: de, en, es, fi, fr, pt, uk, zh\)/u);
     });
 
     it('exits non-zero on an invalid cron pattern', function() {

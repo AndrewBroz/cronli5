@@ -1175,3 +1175,14 @@ describe('Anos (pt):', function() {
       years]
   ]);
 });
+
+// A minute list mixing a range under a BOUNDED hour step: the core once
+// planned this as bare whole-hour clock times, silently dropping the
+// minutes (test/core/known-defects.js pinned it); the mixed list keeps
+// the language's own minute devices ahead of the step cadence.
+describe('lista de minutos mista sob passo de horas limitado', function() {
+  run([
+    ['5-10,20 9-17/2 * * *',
+      'nos minutos 5 a 10 e 20, a cada duas horas das 09:00 às 17:00']
+  ]);
+});
