@@ -215,7 +215,9 @@ function minuteStride(schedule: Schedule):
   {start: number; interval: number; last: number} | null {
   if (schedule.shapes.minute === 'step') {
     const segment = stepSegment(schedule, 'minute');
-    const start = segment.startToken === '*' ? 0 : +segment.startToken;
+    const start = segment.startToken === '*' ?
+      0 :
+      +segment.startToken.split('-')[0];
 
     return {interval: segment.interval, last:
       segment.fires[segment.fires.length - 1], start};

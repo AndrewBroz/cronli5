@@ -237,6 +237,7 @@ docs below.
 | Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
 | French | `cronli5/lang/fr` | Imprimerie nationale / Académie française (fr-FR; fr-CA is a future axis) | [docs/lang/fr.md](./docs/lang/fr.md) |
 | Portuguese | `cronli5/lang/pt` | VOLP / Academia Brasileira de Letras (pt-BR; pt-PT is a future axis) | [docs/lang/pt.md](./docs/lang/pt.md) |
+| Ukrainian | `cronli5/lang/uk` | Ukrainian National Commission on Spelling (2019) | [docs/lang/uk.md](./docs/lang/uk.md) |
 | Chinese (Mandarin) | `cronli5/lang/zh` | Simplified (`zh-Hans`) default; Traditional (`zh-Hant`) | [docs/lang/zh.md](./docs/lang/zh.md) |
 
 ### Language maturity
@@ -258,6 +259,7 @@ Sonnet instances. It graduates to **stable** only on review by a fluent human:
 | Finnish | beta |
 | French | beta |
 | Portuguese | beta |
+| Ukrainian | beta |
 | Chinese (Mandarin, Simplified) | beta |
 | Chinese (Mandarin, Simplified) (`zh-Hant`) | experimental |
 <!-- END GENERATED: language-status -->
@@ -328,6 +330,7 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Finnish | 5 ja 10 sekunnin kohdalla minuutin 9.30 aikana, maanantaisin | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
 | French | le lundi, aux secondes 5 et 10 de 9 h 30 | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
 | Portuguese | às segundas-feiras, nos segundos 5 e 10 das 09:30 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
+| Ukrainian | о 5-й і 10-й секунді, по понеділках о 9:30 | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
 | Chinese (Simplified) | 每周一，9点30分的第5、10秒 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
 | Chinese (Traditional) | 每週一，9點30分的第5、10秒 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
 <!-- END GENERATED: cronstrue-head-to-head -->

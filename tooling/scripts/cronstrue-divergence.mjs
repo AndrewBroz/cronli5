@@ -51,6 +51,7 @@ const LANGS = [
   {code: 'fi', locale: 'fi'},
   {code: 'fr', locale: 'fr'},
   {code: 'pt', locale: 'pt_BR'},
+  {code: 'uk', locale: 'uk'},
   {code: 'zh', locale: 'zh_CN'}
 ];
 

@@ -1,0 +1,7 @@
+{
+  "name": "Ukrainian",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "sibling-derivation from en (the universal-anchor donor; no validated Slavic sibling exists yet), Stage-1 conventions ratified by a blind 3-persona uk-native Sonnet panel (src/lang/uk/notes.md), derivation run dated 2026-07-03.",
+  "note": "BETA — model-validated conventions only; the renderer has not yet been chased to green against test/lang/uk/corpus.js (see src/lang/uk/index.ts's stage-3 header note) and round-trip/panel review of actual output is still pending. Graduates to stable only on fluent-human review, and to a defensible beta only once the corpus passes."
+}

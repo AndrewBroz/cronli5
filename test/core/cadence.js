@@ -1,6 +1,7 @@
 import chai from 'chai';
 import {
-  arithmeticStep, hourListStride, offsetCleanStride, singleValues
+  arithmeticStep, hourListStride, minuteStride, offsetCleanStride,
+  singleValues
 } from '../../src/core/cadence.js';
 
 const {expect} = chai;
@@ -127,6 +128,52 @@ describe('offsetCleanStride:', function() {
 // progression from zero is a step however short; a non-zero one is only a step
 // when it is too long to be a deliberate clock-time list (length >= 5). Interval
 // one is a plain range, never a step.
+
+// Behavior spec for `minuteStride`: the minute field's stride for a
+// confinement frame, recovered either from a `step`-shaped field's own
+// segment or (list-shaped) from its enumerated values. A step segment's
+// `startToken` is either `*` (an unbounded/offset stride, e.g. `*/6` or
+// `5/6`) or a hyphenated bound (`9-17` from `9-17/2`) — the bound's LOWER
+// end is the stride's start, not the whole token parsed as a number.
+
+describe('minuteStride:', function() {
+  it('reads an unbounded step segment (*/15: start 0)', function() {
+    const schedule = {
+      analyses: {segments: {minute: [
+        {fires: [0, 15, 30, 45], interval: 15, kind: 'step', startToken: '*'}
+      ]}},
+      shapes: {minute: 'step'}
+    };
+
+    expect(minuteStride(schedule))
+      .to.deep.equal({interval: 15, last: 45, start: 0});
+  });
+
+  it('reads an offset step segment (5/15: start 5)', function() {
+    const schedule = {
+      analyses: {segments: {minute: [
+        {fires: [5, 20, 35, 50], interval: 15, kind: 'step', startToken: '5'}
+      ]}},
+      shapes: {minute: 'step'}
+    };
+
+    expect(minuteStride(schedule))
+      .to.deep.equal({interval: 15, last: 50, start: 5});
+  });
+
+  it('reads a BOUNDED step segment (9-17/2: start 9, not NaN)', function() {
+    const schedule = {
+      analyses: {segments: {minute: [
+        {fires: [9, 11, 13, 15, 17], interval: 2, kind: 'step',
+          startToken: '9-17'}
+      ]}},
+      shapes: {minute: 'step'}
+    };
+
+    expect(minuteStride(schedule))
+      .to.deep.equal({interval: 2, last: 17, start: 9});
+  });
+});
 
 describe('hourListStride:', function() {
   it('recognizes a zero-based progression however short (*/7-style)',
