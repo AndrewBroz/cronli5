@@ -71,11 +71,18 @@ export default defineConfig({
       // uk branch is exercised by a verified corpus row; deleting the
       // shadowed duplicate arms (not contriving invalid input) is the way
       // this floor goes back up.
+      // lines/statements sit at 98.4: with uk's statements in the pool the
+      // achieved figure lands in a 98.49–98.52 band that varies run to run
+      // (the bad_input suites feed Math.random()/Date-derived garbage, so a
+      // couple of defensive statements are covered nondeterministically). A
+      // floor inside that band would fail CI on a coin flip; it sits just
+      // below the band instead. Seeding the bad_input generators would
+      // restore a point measurement and let both floors move back up.
       thresholds: {
-        lines: 98.5,
+        lines: 98.4,
         branches: 96.3,
         functions: 99.2,
-        statements: 98.5
+        statements: 98.4
       }
     }
   }
