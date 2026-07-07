@@ -775,7 +775,8 @@ function renderSecondsWithinMinute(schedule: Schedule,
   const anchor = plan.singleSecond ?
     clockPosition(+schedule.pattern.second, 'second') :
     secondsClause(schedule);
-  const pause = continueAfter(anchor) === ', ' ? ',' : '';
+  const pause = continueAfter(anchor) === ', ' ||
+    (/(включно|секунді)$/).test(anchor) ? ',' : '';
   // Ahead of a day qualifier the hour scope reads as its own comma-set
   // adverb clause ("…, щогодини по понеділках"); bare, it stays the plain
   // genitive confinement ("… кожної години").
@@ -1176,8 +1177,11 @@ function renderMinutesAcrossHours(schedule: Schedule,
         trailingQualifier(schedule, opts);
     }
 
-    return lead + ' протягом годин ' +
-      hourTimesFromPlan(schedule, plan.times) +
+    // A range lead closes with "включно", so the протягом clause is set
+    // off with a comma (the same re-panelled boundary rule the minute
+    // confinement follows); other leads stay flush.
+    return lead + (lead.endsWith('включно') ? ', ' : ' ') +
+      'протягом годин ' + hourTimesFromPlan(schedule, plan.times) +
       trailingQualifier(schedule, opts);
   }
 
@@ -2041,6 +2045,24 @@ function confinementEligible(schedule: Schedule,
   return schedule.shapes.hour === 'single' && minute === '*/2';
 }
 
+// The boundary mark between the second lead and its протягом minute
+// confinement: a comma after a clock-point or range lead (re-panelled 3-0:
+// "включно протягом" blurs where the range ends) or after an open
+// "починаючи з …" clause; a stride confinement ("кожної 6-ї хвилини") and
+// a bare cadence lead stay flush.
+function confinementPause(lead: string, minutePart: string): string {
+  if (!minutePart) {
+    return '';
+  }
+
+  if (continueAfter(lead) === ', ') {
+    return ',';
+  }
+
+  return minutePart.startsWith(' протягом') &&
+    (/(включно|секунді)$/).test(lead) ? ',' : '';
+}
+
 // Render the pattern with the confinement frame, or null when it does not
 // apply.
 function confinement(schedule: Schedule, opts: Opts): string | null {
@@ -2070,9 +2092,7 @@ function confinement(schedule: Schedule, opts: Opts): string | null {
   const hourProtracted = lead.secondLead &&
     (minutePart === '' || minutePointOrList);
 
-  const pause = minutePart && continueAfter(lead.text) === ', ' ? ',' : '';
-
-  return lead.text + pause + minutePart +
+  return lead.text + confinementPause(lead.text, minutePart) + minutePart +
     hourConfinement(schedule, hourProtracted, minutePart !== '') +
     trailingQualifier(schedule, opts);
 }

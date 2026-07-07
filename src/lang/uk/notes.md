@@ -586,21 +586,23 @@ form expresses it.
   dated-day, or day-of-month qualifier directly after an hour window now
   attaches with a comma; a bare numbered DOM in that position carries
   `місяця`. The bare quartz-`L` keeps round 3's `останнього числа`
-  (comma only). 11 rows changed. PROVISIONAL: the panel gave each
-  candidate one vote, so this stands on the batch-2 corpus majority alone —
-  re-panel it (fresh personas, full sentences) before beta sign-off.
+  (comma only). 11 rows changed. Re-panelled 2026-07-06 with fresh
+  personas and full sentences: 3–0 for this same form (the no-comma
+  candidate was eliminated as a misreading — "включно тринадцятого"
+  reads as one construction), so the round-4 tiebreak is now ratified.
 
-### Deferred (no verdict this round)
+### Re-panelled after deferral
 
-* **Comma before a `протягом` minute confinement after a preceding
-  range/anchor clause.** The corpus ties 2–2 (`включно, протягом` vs
-  `включно протягом`) and 3–3 (`секунді, протягом` vs `секунді протягом`),
-  split cleanly along batch lines, and the round-4 panel cap deferred it.
-  Until re-panelled, rows drop the comma: after this round's other
-  normalizations the corpus majority is 6:3 for the bare join, and the
-  round-4-ratified second-anchor device (`о 30-й секунді протягом 9-ї
-  хвилини кожної години`) itself joins bare. Provisional — flip corpus-wide
-  if the re-panel disagrees.
+* **Comma before a `протягом` confinement after a completed range/anchor
+  clause — winner: the comma (`…включно, протягом …`; `…секунді,
+  протягом …`), 3–0.** The corpus had tied along batch lines and the
+  round-4 panel cap deferred it; the interim bare-join call (made on a 6:3
+  post-normalization majority) is overturned — every panelist flagged the
+  bare "включно протягом"/"секунді протягом" boundary as blurring where
+  the preceding clause ends. A bare cadence lead (`щосекунди протягом…`,
+  `кожні 10 секунд протягом…`) and the stride confinement (`кожної 6-ї
+  хвилини`) stay flush — no completed clause precedes them, so there is no
+  boundary to mark. 10 rows flipped.
 * **Hour list containing 0 under a finer cadence — winner: adverb midnight
   + digital partner (`кожні 10 секунд о 0-й хвилині, опівночі й о 13:00`),
   2–1** over an all-ordinal list including `0-й`. Matches §1's
