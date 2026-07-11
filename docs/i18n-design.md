@@ -124,6 +124,13 @@ module, we expect:
 4. **Notes**: the language's anchor style guide(s), dialect axes, and known
   trade-offs.
 
+The corpus is hand-written, never generated — and **itself under test**:
+oracle-directed gates (contradiction/metamorphic-equality checks, round-trip
+of the *expected strings*, frame consistency per §6, a-priori coverage)
+validate the oracle without consulting the renderer, so testing it never
+lets code grade itself. See
+[corpus-methodology.md](../tooling/docs/corpus-methodology.md).
+
 ## 3. Project structure
 
 ```

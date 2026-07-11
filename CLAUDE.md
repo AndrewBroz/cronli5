@@ -45,7 +45,11 @@ a behavior change, run `npm run docs` and let it rewrite.
 
 Each language's golden outputs are in `test/lang/<code>/corpus.js` — the oracle
 a renderer must reproduce. It is **hand-written and reviewed, never generated**;
-generating it would only prove the code agrees with itself.
+generating it would only prove the code agrees with itself. Never generated —
+but machine-**checked**: the oracle is itself under test (contradictions,
+metamorphic equality, oracle-directed round-trip, frame consistency, a-priori
+coverage) without ever consulting the renderer — see
+[tooling/docs/corpus-methodology.md](tooling/docs/corpus-methodology.md).
 
 **Bug fixes are test-first.** When a defect is found, write the *intended*
 output into the corpus first (a failing test), run it, watch it fail, *then*

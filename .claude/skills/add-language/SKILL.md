@@ -53,6 +53,13 @@ copy-editor, a technical communicator). The sibling stages:
    panel anchored to the target (faithful + natural target idiom + coverage
    parity). Assemble as `test/lang/<code>/corpus.js`. **This is the oracle,
    finalized before the port — never regenerated from the renderer.**
+   Finalization includes the **oracle-directed gates** (the corpus is itself
+   under test — tooling/docs/corpus-methodology.md): no contradictory
+   duplicate keys, canonically-equal patterns carry identical prose,
+   round-trip the corpus's *expected strings* (not renderer output — no
+   renderer exists yet, which is the point), frame/device consistency across
+   rows. A corpus defect that survives finalization is not caught by TDD;
+   it is taught by it.
 3. **Port the tests** — wire the corpus into the harness.
 4. **Naive renderer port** — copy the donor `src/lang/<donor>/index.ts` to
    `src/lang/<code>/`, swap lexicon/tables/dialects to the target. **One**
@@ -81,13 +88,17 @@ copy-editor, a technical communicator). The sibling stages:
    hard-won traps.
 10. **Status** — ships the language to **beta** (`status.json`) on its own.
 
-**Two protections keep it honest** (the heart of the sibling path):
+**Three protections keep it honest** (the heart of the sibling path):
 - The translated corpus is a **candidate** finalized *before* the port and never
   regenerated from the ported renderer — order is load-bearing (corpus → review
   → port → TDD), so the target never grades itself.
 - The **objective gates validate independent of the corpus** (round-trip, fuzz
   dropped-value, OR-scope, cRonstrue). Green against the translated corpus is the
   dev loop; the gates plus native review are the trust.
+- The **oracle-directed gates validate the corpus independent of the renderer**
+  (contradictions, metamorphic equality, expected-string round-trip, frame
+  consistency) — the dual of the previous protection; neither side of the
+  contract grades itself.
 
 ### The blind no-anchor build (rewrite-test only — not a build path)
 

@@ -38,6 +38,28 @@ actively pursued. Current development is **automated-only** (see
     generator, frame-signature extraction, and the per-language declared
     device-threshold registry (§6.2) so the suite can assert *no
     undeclared discontinuity* instead of enumerating known relations.
+  - **Standing oracle-directed gates (the corpus is itself under test).**
+    The doctrine is tooling/docs/corpus-methodology.md (*The corpus is
+    itself under test*); the pipeline runs a detector pass only at corpus
+    assembly, as an ephemeral agent instruction, and round-trip only ever
+    reads renderer output. Implementation, cheapest first:
+    1. *Structural lint (pure code, runs in `verify`)*: parse every
+       `test/lang/<code>/corpus.js` row set; fail on duplicate patterns
+       with contradictory expectations, and on canonically-equal patterns
+       (deep-equal `analyze(prepare(...))` Schedules) carrying different
+       prose within one corpus (same opts). This alone would have caught
+       the uk round-3 duplicate-key contradictions mechanically.
+    2. *Oracle-directed round-trip*: point the `roundtrip.mjs` blind-
+       recovery machinery at corpus **expected strings** instead of
+       `cronli5(...)` output; run at corpus finalization and on corpus-diff
+       re-review (the diff is already the unit of re-review).
+    3. *Frame extractor over corpus text*: reuse each language's stability
+       extractor to assert frame/device consistency across corpus rows and
+       flag undeclared discontinuities against the §6.2 registry once it
+       exists.
+    4. *A-priori coverage gate over the corpus*: the corpus-methodology
+       cell map, computed, with uncovered cells failing loudly (today's
+       gap: no corpus reaches offset-minute-step-under-restricted-hour-list).
   - **Instrument idea — derivation as seam census.** Run the add-language
     pipeline with en as *target* (donor de, and separately donor zh) in a
     worktree, never to ship: each derived en′ is a total-policy English

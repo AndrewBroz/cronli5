@@ -278,3 +278,45 @@ spec so the code can't define its own *coverage*. The hand a-priori method
 proved this empirically — it caught what the entire a-posteriori stack was blind
 to — so a-priori is the method, and the floor is the cheap enforcement beneath
 it, not the other way around.
+
+## The corpus is itself under test
+
+The corpus and the renderer have the same type: a function from pattern to
+prose (the corpus a partial one). "Hand-written and reviewed, never
+generated" exempts the oracle from being *produced* by code — it never
+exempted it from being *checked* by code. None of the checks below consult
+the renderer, so none of them lets code grade itself: they compare corpus
+rows to each other, to the fire-set semantics, to the a-priori cell spec,
+and to the declared relational registry. Every mechanical gate that runs
+renderer-directed can also run oracle-directed, and must — a corpus defect
+that reaches TDD is not caught by TDD; it is *taught* by it.
+
+Four oracle-directed gate classes:
+
+1. **Structural** *(pure code)*. Key uniqueness: duplicate patterns with
+   contradictory expectations are corpus bugs (the uk convergence rounds
+   found ≥15, by hand, late). Metamorphic equality: rows whose patterns
+   `analyze()` to deep-equal canonical Schedules must carry identical
+   prose — the metamorphic harness's invariant, applied to the oracle.
+2. **Semantic** *(LLM as reverse parser, script as judge)*. Round-trip the
+   corpus's **expected strings**. Today `roundtrip.mjs` renders via
+   `cronli5`, so it validates the renderer; a corpus row whose prose
+   denotes the wrong fire-set is caught only if a panel notices. The same
+   blind-recovery machinery pointed at the oracle catches it *before* a
+   renderer is trained to reproduce it.
+3. **Relational**. The stability/frame extractor over corpus strings: one
+   frame per semantic class, device switches only at declared thresholds
+   (i18n-design §6.2). An oracle must not enshrine an undeclared
+   discontinuity — the uk window-anchor row did exactly that, with a
+   rationale comment translated from the donor.
+4. **Coverage**. The a-priori cell gate above, pointed at the corpus: every
+   semantic distinction reached. The offset-minute-step-under-hour-list
+   class was uncovered in *every* corpus, which is where a seam hid for a
+   release.
+
+Status: the pipeline runs a detector pass (field-coverage, trap-lints,
+phrasing consistency) at corpus **assembly**, but as an agent instruction —
+ephemeral, not a committed gate — and nothing re-runs it when convergence
+rounds or arbitrations edit the corpus afterward. The standing form —
+checked-in detectors in `verify`, oracle-directed round-trip at corpus
+finalization and re-review — is specced in docs/backlog.md.

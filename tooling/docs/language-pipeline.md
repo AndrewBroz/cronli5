@@ -58,6 +58,19 @@ retained only as the clean-room `rewrite-test` soundness check (see *Acceptance
     OR-scope detector, and the cRonstrue comparison reference check. "Green
     against the translated corpus" is the dev loop; these gates plus the native
     review are the trust.
+- **The oracle is itself under test** — the dual of "must not grade itself"
+  (tooling/docs/corpus-methodology.md, *The corpus is itself under test*).
+  "Never generated" exempts the corpus from being produced by code, not from
+  being checked by it. Oracle-directed gates run at corpus finalization,
+  **before the port** — structural (contradictory duplicate keys; metamorphic
+  equality: canonically-equal patterns carry identical prose), semantic
+  (round-trip the corpus's *expected strings*, not renderer output — a corpus
+  row denoting the wrong fire-set must die before TDD teaches a renderer to
+  reproduce it), relational (the frame extractor over corpus text; no
+  undeclared discontinuity enshrined), and coverage (every a-priori cell
+  reached) — and stand in `verify` so post-assembly corpus edits are re-gated.
+  A corpus row is only ever *deliberately* wrong via a declared known-issue
+  block, never silently.
 - **Translate to target idiom, not donor-with-translated-words.** The donor
   supplies structure and coverage; the panel ensures natural *target-language*
   idiom, adapting the donor's frames where the target genuinely differs (e.g.
