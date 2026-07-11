@@ -283,7 +283,101 @@ Conclusions:
    Hebrew corpora must assert bidi-safe output around LTR digit runs, and
    the review packet must render (not just diff) RTL strings.
 
-## 6. General language guidelines
+## 6. Continuity: the relational design constraint
+
+*(Adopted July 2026 as a hard constraint, ranked above point-wise
+naturalness. This section is the source of truth for what "continuity"
+means; the improve-renderer skill and the add-language pipeline enforce it.)*
+
+Nobody reads a cron description in a vacuum. The tool exists for
+verification and comparison — two crontab lines, a before/after edit, "what
+did changing this field do?" — so a description has three quality axes, each
+with its own oracle:
+
+1. **Faithfulness** — the prose denotes exactly the fire-set
+   (round-trip and the objective gates).
+2. **Naturalness** — a native speaker would write it (the corpus and the
+   blind panels).
+3. **Continuity** — a small edit to the pattern produces a small diff **in
+   the mind of the reader** (the relational stability suite).
+
+The first two are point-wise; continuity is relational, and a corpus is
+structurally blind to it: two individually-perfect rows can be jointly
+discontinuous. The criterion is the reader's mental/subvocal diff, not the
+byte diff — morphological agreement may cascade freely (a Ukrainian hour
+list surfaces genitive after one lead and locative after another; the
+reader absorbs case endings without registering a change).
+
+### 6.1 The frame/slots model
+
+A rendering is a **frame** (the sentence architecture: clause order,
+nesting, which field is the topic) filled with **slots** (each field's
+phrase, in its chosen device — enumeration, cadence, window, clock fold).
+The constraint: perturbing a single field of the pattern
+
+* may rewrite **that field's slot** freely;
+* must leave the **frame** and **every other slot** invariant, up to
+  morphological agreement;
+* may switch the slot's **device** only at a *declared threshold* (§6.2).
+
+Continuity is cheapest when it holds **by construction**: German renders
+the seconds clause as an apposition lead bound onto the seconds-free
+sentence, so no seconds shape can move anything else; Chinese grammar
+mandates one coarse-to-fine order for all patterns. A renderer with one
+total architecture never needs a continuity bug fix. The failure mode is
+the **piecewise architecture**: a shape-gated overlay that re-architects
+the sentence for a subset of patterns. Every gate boundary is then a
+discontinuity, and moving the gate only relocates the seam. (The English
+dense restructure is the canonical example: `*`→`*/6` in the seconds field
+flips the whole sentence between little- and big-endian, and the dense form
+also flips against its own seconds-free sibling. Ukrainian inherited the
+fork by derivation.)
+
+### 6.2 Declared device thresholds — the mindful exceptions
+
+Some discontinuities are right, because the *reader* re-chunks at the same
+point: nobody holds "at 0, 6, 12, 18, 24, 30, 36, 42, 48, and 54 minutes"
+as a list — they hold "every six minutes". A device switch is legitimate
+only when it is:
+
+* **semantic-predicate-gated**, never shape-gated — `*`, `*/1`, and `0-59`
+  must classify identically (the core canonicalizes; a renderer testing
+  surface shape is re-deriving semantics with a lossy proxy);
+* **local** — it swaps one slot's device, never the frame;
+* **chunk-mirroring** — it tracks what a human holds visually and
+  subvocally (enumeration→cadence past a count, list→range, clock-time
+  folding — the one device switch every language already agrees on);
+* **declared** — registered per language as data: field, device pair, and
+  the semantic predicate that flips it.
+
+The declared registry is the **relational contract**, dual to the
+point-wise corpus and with the same epistemic status: hand-written and
+reviewed, never generated. It inverts the enforcement burden — the
+stability suite generates single-field neighbor pairs, extracts frame
+signatures and slots, and fails on any frame flip or non-local slot change
+that is *not* in the registry. Undeclared discontinuity is a bug by
+definition.
+
+### 6.3 Consequences
+
+* **Voice improvements land as total-policy changes or declared
+  thresholds, never shape-gated carve-outs.** A panel verdict that a form
+  "reads robotic" is a constraint to satisfy *inside* the language's one
+  architecture, not a license to add a second one.
+* **The constraint binds the pipeline, not just the renderers.** A
+  derived language inherits its donor's architecture *and* its donor's
+  fitness pressures; point-wise panel optimization without a relational
+  gate will re-carve the same seams into every descendant. Continuity
+  checks belong in the derivation gate set alongside round-trip and the
+  panels.
+* **Enforcement instrument**: the stability engine
+  (`tooling/scripts/stability-engine.mjs`) with per-language extractors —
+  extended to frame signatures and a neighbor generator that covers
+  stacked cadences, offsets, and the wildcard boundary (today's four
+  `TIMES` shapes cannot reach the seams that motivated this section).
+  Known violations are enumerated in [backlog.md](./backlog.md).
+
+## 7. General language guidelines
 
 Every `lang/<code>/notes.md` must answer these questions:
 
@@ -301,8 +395,19 @@ Every `lang/<code>/notes.md` must answer these questions:
   a universal).
 * **Traps**: the minimal pairs for `pairs.js`.
 
-## 7. Open questions
+## 8. Open questions
 
+* **Architecture ownership under the continuity constraint (§6)** — is
+  sentence architecture a fact about the *language* (each renderer commits
+  to one total frame policy, as de and zh already do) or a fact about the
+  *schedule* (the core classifies e.g. "density" as a semantic analysis all
+  languages see, each deciding how its grammar *marks* it)? Leaning: the
+  core exposes semantic **facts** (recurrence-axis counts, fire counts,
+  coverage) and renderers own total strategies — the existing neutral
+  content / overridable strategy split — with threshold *values* staying
+  per-language (chunking is partly cultural). Undecided; must be settled
+  before English's architecture is unified and before the next derivation
+  copies the current chimera.
 * **Cap policy ownership** — settled: core default + optional language
   override, built when a language wants a different value (the design and
   the threading constraint are recorded in docs/backlog.md).

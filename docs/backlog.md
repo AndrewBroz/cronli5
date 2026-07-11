@@ -6,6 +6,48 @@ actively pursued. Current development is **automated-only** (see
 
 ## Open rendering findings
 
+- **Continuity violations under the §6 constraint** *(found 2026-07-09;
+  the constraint itself is docs/i18n-design.md §6)*. The census so far,
+  all one root class — shape-gated architecture instead of a total policy:
+  - **en: the dense/sparse architecture fork.** `isDenseCadence` gates the
+    big-endian restructure on the second field's *shape*, so `*` vs `*/6`
+    seconds flips the whole sentence between little- and big-endian
+    (`* 3/4 4,5,7 * * *` vs `*/6 3/4 4,5,7 * * *`), and the dense form also
+    flips against its seconds-free sibling (`0 3/4 4,5,7 * * *`). The core
+    hands both patterns the identical plan (`composeSeconds /
+    minuteFrequency`); the fork is renderer-local. de/zh are continuous
+    across the same family — de little-endian by construction (seconds as
+    apposition lead), zh big-endian by grammar — so current English is a
+    chimera of both, and the seconds-compose spec's own header classifies
+    "a wildcard or stepped second" as one device that the dense gate split.
+    Resolving the fork requires settling open question §8 (architecture
+    ownership) first; a gate tweak only relocates the seam.
+  - **uk: inherited both en seams.** The dense fork ported intact, and the
+    retained minute-cadence anchor under a restricted hour list surfaces as
+    "починаючи з 3-ї хвилини кожної години о 4-й, 5-й і 7-й годині" — the
+    literal "кожної години" contradicts the hour list. English hides the
+    same retained anchor behind the anaphoric idiom "past the hour"; the
+    translation stripped the camouflage (the fix commits scoped anchor
+    removal to hour *steps* only: "hour windows/lists/'*' keep their
+    anchor"). The uk corpus enshrines the window case deliberately
+    (corpus.js ~1579, translated from the en rationale) — re-panel it.
+  - **The stability matrix cannot reach any of this.** The engine's
+    neighbor set is four `TIMES` shapes (no stacked cadences, offsets,
+    hour lists, or the wildcard boundary), and no extractor emits a frame
+    signature, so architecture flips are invisible. Needed: a richer
+    generator, frame-signature extraction, and the per-language declared
+    device-threshold registry (§6.2) so the suite can assert *no
+    undeclared discontinuity* instead of enumerating known relations.
+  - **Instrument idea — derivation as seam census.** Run the add-language
+    pipeline with en as *target* (donor de, and separately donor zh) in a
+    worktree, never to ship: each derived en′ is a total-policy English
+    (de′ little-endian everywhere ≈ delete the dense mode; zh′ big-endian
+    everywhere ≈ make it total — the two horns of §8's English instance),
+    and `diff(en, en′)` mechanically enumerates every place shipped
+    English deviates from a total policy — the violation backlog for the
+    §6 registry, plus two coherent candidates for a panel to judge whole
+    instead of arbitrating patches on the chimera.
+
 - ~~de: even-parity day step is arm-unstable~~ *(found and fixed
   2026-07-03)*: the standalone `2/2` date now speaks the union arm's parity
   class ("an jedem geraden Tag des Monats"); the 32 pinned stability cells

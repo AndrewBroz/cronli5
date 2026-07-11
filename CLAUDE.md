@@ -75,7 +75,10 @@ the status. The pipeline is in
 Improvements to a shipped renderer follow the two-phase protocol in
 `.claude/skills/improve-renderer/` — byte-identical restructure first, then
 corpus-first behavior change, with the relational stability suite as the
-overlay guard.
+overlay guard. **Continuity is a hard constraint** — a one-field pattern
+edit must not flip a sentence's architecture; device switches are
+semantic-gated, slot-local, and declared. The definition lives in
+[docs/i18n-design.md](docs/i18n-design.md) §6.
 
 ## Before you finish
 

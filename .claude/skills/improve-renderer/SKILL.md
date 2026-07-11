@@ -55,6 +55,15 @@ behavior.
   update the extractor's declared transformations in the same commit — that
   declaration *is* the design decision. A language without an extractor
   ports the donor's first.
+- **Continuity is a hard constraint** (docs/i18n-design.md §6): perturbing
+  one pattern field may rewrite that field's slot, but the sentence frame
+  and every other slot stay put (morphological agreement excepted). Probe
+  the change's single-field neighbors — especially the wildcard boundary
+  (`*` vs `*/n`) and the field-absent sibling. A device switch
+  (enumeration→cadence, list→range) is legitimate only when
+  semantic-predicate-gated (never surface-shape-gated), slot-local, and
+  declared. A frame that flips across a shape test is an overlay wearing a
+  corpus-green disguise — restructure to one total policy instead.
 
 ## Judgment
 

@@ -68,6 +68,20 @@ retained only as the clean-room `rewrite-test` soundness check (see *Acceptance
   the **panel** is a *proxy* oracle, which is why its output ships as **beta**.
   Its outputs are "fool's gold" — useful for iteration but not definitive and
   considered unstable.
+- **The donor's seams are heritable — and so is its fitness function.**
+  Derivation transports the donor's architecture decisions wholesale,
+  including its overlays: Ukrainian inherited English's shape-gated
+  dense/sparse architecture fork intact, plus an anchor convention whose
+  safety was carried entirely by English idiom ("past the hour") that the
+  target's morphology stripped on translation. And the pressure that
+  *created* the donor's overlays — point-wise panel optimization with no
+  relational gate — re-creates them in every descendant. Two consequences:
+  **continuity** (docs/i18n-design.md §6: single-field perturbation may not
+  flip the sentence frame; device switches are semantic-gated, slot-local,
+  declared) is part of the gate set alongside round-trip and the panels,
+  via the ported stability extractor over a neighbor-generating matrix; and
+  a donor's *known* seams (backlog.md) are checked at the port, not
+  faithfully translated.
 - **Blind, multi-persona Sonnet panels** defeat same-model bias and
   single-judge sycophancy. Every judgment comes from three fresh Sonnet
   personas (everyday native speaker, copy-editor, technical communicator),
