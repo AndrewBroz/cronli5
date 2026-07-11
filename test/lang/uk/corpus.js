@@ -1,8 +1,5 @@
-import chai from 'chai';
-import cronli5 from '../../../src/cronli5.js';
 import uk from '../../../src/lang/uk/index.js';
-
-const {expect} = chai;
+import {makeRun} from '../../runner.js';
 
 // Ukrainian (uk) corpus — assembled from the ten reviewed Stage-2
 // (corpus-translation) batches under tooling/experiments/uk-derive/
@@ -44,19 +41,9 @@ const {expect} = chai;
 // carve-out above (§8); and the event-framed DOM-or-DOW union clause
 // щоразу, коли настає X або Y (§7).
 
-function run(cases) {
-  cases.forEach(function each(values) {
-    const pattern = values[0];
-    const expected = values[1];
-    const options = {...values[2] || {}, lang: uk};
-
-    describe(JSON.stringify(pattern), function() {
-      it('читається як "' + expected + '"', function() {
-        expect(cronli5(pattern, options)).to.equal(expected);
-      });
-    });
-  });
-}
+const run = makeRun(uk, function title(expected) {
+  return 'читається як "' + expected + '"';
+});
 
 describe('Українська (uk) — batch-1-core-set-cadence:', function() {
 

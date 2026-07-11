@@ -1,6 +1,7 @@
 import chai from 'chai';
 import cronli5 from '../../../src/cronli5.js';
 import fi from '../../../src/lang/fi/index.js';
+import {makeRun} from '../../runner.js';
 
 const {expect} = chai;
 
@@ -10,19 +11,9 @@ const {expect} = chai;
 // distributives, and date anchors are case constructions, and `klo`
 // phrases carry no case at all.
 
-function run(cases) {
-  cases.forEach(function each(values) {
-    const pattern = values[0];
-    const expected = values[1];
-    const options = {...values[2] || {}, lang: fi};
-
-    describe(JSON.stringify(pattern), function() {
-      it('luetaan "' + expected + '"', function() {
-        expect(cronli5(pattern, options)).to.equal(expected);
-      });
-    });
-  });
-}
+const run = makeRun(fi, function title(expected) {
+  return 'luetaan "' + expected + '"';
+});
 
 describe('Suomi (fi):', function() {
   describe('perusfrekvenssit', function() {

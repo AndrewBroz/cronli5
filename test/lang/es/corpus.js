@@ -1,6 +1,7 @@
 import chai from 'chai';
 import cronli5 from '../../../src/cronli5.js';
 import es from '../../../src/lang/es/index.js';
+import {makeRun} from '../../runner.js';
 
 const {expect} = chai;
 
@@ -11,19 +12,9 @@ const {expect} = chai;
 // exercise the 12-hour day-period forms pass `{ampm: true}` as the shared
 // option; a per-entry option object still overrides it.
 
-function run(cases, shared) {
-  cases.forEach(function each(values) {
-    const pattern = values[0];
-    const expected = values[1];
-    const options = {...shared || {}, ...values[2] || {}, lang: es};
-
-    describe(JSON.stringify(pattern), function() {
-      it('se lee "' + expected + '"', function() {
-        expect(cronli5(pattern, options)).to.equal(expected);
-      });
-    });
-  });
-}
+const run = makeRun(es, function title(expected) {
+  return 'se lee "' + expected + '"';
+});
 
 // 12-hour day-period blocks pass this shared option.
 const ampm = {ampm: true};

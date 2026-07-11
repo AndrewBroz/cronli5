@@ -1,6 +1,7 @@
 import chai from 'chai';
 import cronli5 from '../../../src/cronli5.js';
 import fr from '../../../src/lang/fr/index.js';
+import {makeRun} from '../../runner.js';
 
 const {expect} = chai;
 
@@ -82,19 +83,9 @@ const {expect} = chai;
 // block ("dialecto personalizado") is kept, translated to "style personnalisé".
 // ===========================================================================
 
-function run(cases, shared) {
-  cases.forEach(function each(values) {
-    const pattern = values[0];
-    const expected = values[1];
-    const options = {...shared || {}, ...values[2] || {}, lang: fr};
-
-    describe(JSON.stringify(pattern), function() {
-      it('se lit « ' + expected + ' »', function() {
-        expect(cronli5(pattern, options)).to.equal(expected);
-      });
-    });
-  });
-}
+const run = makeRun(fr, function title(expected) {
+  return 'se lit « ' + expected + ' »';
+});
 
 describe('Français (fr):', function() {
   describe('fréquences de base', function() {

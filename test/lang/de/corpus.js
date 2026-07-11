@@ -1,6 +1,7 @@
 import chai from 'chai';
 import cronli5 from '../../../src/cronli5.js';
 import de from '../../../src/lang/de/index.js';
+import {makeRun} from '../../runner.js';
 
 const {expect} = chai;
 
@@ -10,19 +11,9 @@ const {expect} = chai;
 // design crux: "jede <unit>" agrees with gender at interval 1; "alle N
 // <units>" is invariant for interval > 1 (see notes.md).
 
-function run(cases) {
-  cases.forEach(function each(values) {
-    const pattern = values[0];
-    const expected = values[1];
-    const options = {...values[2] || {}, lang: de};
-
-    describe(JSON.stringify(pattern), function() {
-      it('liest sich "' + expected + '"', function() {
-        expect(cronli5(pattern, options)).to.equal(expected);
-      });
-    });
-  });
-}
+const run = makeRun(de, function title(expected) {
+  return 'liest sich "' + expected + '"';
+});
 
 describe('Deutsch (de):', function() {
   describe('Häufigkeiten', function() {

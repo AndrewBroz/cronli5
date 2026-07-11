@@ -1,6 +1,7 @@
 import chai from 'chai';
 import cronli5 from '../../../src/cronli5.js';
 import pt from '../../../src/lang/pt/index.js';
+import {makeRun} from '../../runner.js';
 
 const {expect} = chai;
 
@@ -62,19 +63,9 @@ const {expect} = chai;
 // block ("dialecto personalizado") is kept, translated to "estilo personalizado".
 // ===========================================================================
 
-function run(cases, shared) {
-  cases.forEach(function each(values) {
-    const pattern = values[0];
-    const expected = values[1];
-    const options = {...shared || {}, ...values[2] || {}, lang: pt};
-
-    describe(JSON.stringify(pattern), function() {
-      it('se lê "' + expected + '"', function() {
-        expect(cronli5(pattern, options)).to.equal(expected);
-      });
-    });
-  });
-}
+const run = makeRun(pt, function title(expected) {
+  return 'se lê "' + expected + '"';
+});
 
 // 12-hour day-period blocks pass this shared option.
 const ampm = {ampm: true};

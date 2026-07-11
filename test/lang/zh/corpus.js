@@ -1,8 +1,5 @@
-import chai from 'chai';
-import cronli5 from '../../../src/cronli5.js';
 import zh from '../../../src/lang/zh/index.js';
-
-const {expect} = chai;
+import {makeRun} from '../../runner.js';
 
 // BETA / PROVISIONAL corpus — model-validated (blind Sonnet style panel +
 // author/audit/fix workflow over the core pattern set, then renderer-converged
@@ -11,19 +8,9 @@ const {expect} = chai;
 // against is src/lang/zh/notes.md. Spans the committed core set
 // (test/core/core-set.json). See tooling/docs/language-pipeline.md and status.json.
 
-function run(cases) {
-  cases.forEach(function each(values) {
-    const pattern = values[0];
-    const expected = values[1];
-    const options = {...values[2] || {}, lang: zh};
-
-    describe(JSON.stringify(pattern), function() {
-      it('读作 "' + expected + '"', function() {
-        expect(cronli5(pattern, options)).to.equal(expected);
-      });
-    });
-  });
-}
+const run = makeRun(zh, function title(expected) {
+  return '读作 "' + expected + '"';
+});
 
 describe('中文 (zh) — core set [BETA/PROVISIONAL]:', function() {
   describe('核心模式 (core cells)', function() {

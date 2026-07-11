@@ -314,9 +314,12 @@ Four oracle-directed gate classes:
    class was uncovered in *every* corpus, which is where a seam hid for a
    release.
 
-Status: the pipeline runs a detector pass (field-coverage, trap-lints,
-phrasing consistency) at corpus **assembly**, but as an agent instruction —
-ephemeral, not a committed gate — and nothing re-runs it when convergence
-rounds or arbitrations edit the corpus afterward. The standing form —
-checked-in detectors in `verify`, oracle-directed round-trip at corpus
-finalization and re-review — is specced in docs/backlog.md.
+Status: class 1 is a standing gate — `npm run corpus-lint`
+(`tooling/scripts/corpus-lint.mjs`, in `verify`) harvests every language's
+rows through the shared runner's collect mode and fails on contradictions,
+metamorphic disagreements, or a broken harvest; pipeline candidate corpora
+pass as CLI args. Classes 2–4 remain pipeline-time or specced work: the
+assembly detector pass (field-coverage, trap-lints, phrasing consistency)
+still runs as an ephemeral agent instruction, and the oracle-directed
+round-trip, frame extractor, and a-priori coverage gates are specced in
+docs/backlog.md.

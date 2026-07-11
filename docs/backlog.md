@@ -43,12 +43,17 @@ actively pursued. Current development is **automated-only** (see
     itself under test*); the pipeline runs a detector pass only at corpus
     assembly, as an ephemeral agent instruction, and round-trip only ever
     reads renderer output. Implementation, cheapest first:
-    1. *Structural lint (pure code, runs in `verify`)*: parse every
-       `test/lang/<code>/corpus.js` row set; fail on duplicate patterns
-       with contradictory expectations, and on canonically-equal patterns
-       (deep-equal `analyze(prepare(...))` Schedules) carrying different
-       prose within one corpus (same opts). This alone would have caught
-       the uk round-3 duplicate-key contradictions mechanically.
+    1. ~~*Structural lint (pure code, runs in `verify`)*~~ **(shipped
+       2026-07-11)**: `tooling/scripts/corpus-lint.mjs` harvests every
+       language's prose rows through the shared runner's collect mode
+       (`makeRun` — the seven per-language helper clones are hoisted into
+       it) and fails on contradictory duplicate patterns and on
+       canonically-equal patterns (deep-equal `analyze(prepare(...))`
+       Schedules) carrying different prose under one option set; a
+       harvest floor per language prevents a vacuously green run.
+       `npm run corpus-lint` (candidate corpora pass as CLI args), gated
+       in `verify`. This would have caught the uk round-3 duplicate-key
+       contradictions mechanically.
     2. *Oracle-directed round-trip*: point the `roundtrip.mjs` blind-
        recovery machinery at corpus **expected strings** instead of
        `cronli5(...)` output; run at corpus finalization and on corpus-diff
