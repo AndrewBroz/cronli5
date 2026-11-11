@@ -16,6 +16,7 @@ export default defineConfig({
     exclude: [
       '**/node_modules/**',
       'test/runner.js',
+      'test/paradigms/grid.js',
       'test/core/bad_input/error-types.js'
     ],
     setupFiles: ['./test/vitest.setup.ts'],
