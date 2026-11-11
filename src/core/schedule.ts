@@ -30,19 +30,38 @@ export type Segment =
   | {kind: 'step'; fires: number[]; interval: number; startToken: string};
 
 /**
+ * A Quartz day-of-month form: the last day (`L`), the last weekday (`LW`),
+ * so many days before the last (`L-3`), or the weekday nearest a day
+ * (`15W`).
+ */
+export type QuartzDate =
+  | {kind: 'last'}
+  | {kind: 'lastWeekday'}
+  | {kind: 'beforeLast'; days: number}
+  | {kind: 'nearestWeekday'; day: number};
+
+/**
+ * A Quartz day-of-week form: the last such weekday of the month (`5L`) or
+ * the nth (`1#2`). The weekday is cron's number, 0 for Sunday.
+ */
+export type QuartzWeekday =
+  | {kind: 'last'; weekday: number}
+  | {kind: 'nth'; weekday: number; nth: number};
+
+/**
  * The classified day-of-month arm: a Quartz form, an open-step cadence
  * (carrying its odd/even parity when the interval-2 set has one), or plain
  * segments a renderer enumerates.
  */
 export type DateArm =
-  | {kind: 'quartz'}
+  | {kind: 'quartz'; form: QuartzDate}
   | {kind: 'cadenceStep'; interval: number; start: number;
       parity: 'odd' | 'even' | null}
   | {kind: 'segments'};
 
 /** The classified day-of-week arm: a Quartz form or plain segments. */
 export type WeekdayArm =
-  | {kind: 'quartz'}
+  | {kind: 'quartz'; form: QuartzWeekday}
   | {kind: 'segments'};
 
 /**

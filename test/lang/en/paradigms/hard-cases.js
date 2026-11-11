@@ -8,13 +8,15 @@
 
 const rows = [
   // Years.
-  ['0 0 1 1 * 2030', 'at midnight on January 1 in 2030', {years: true}],
+  ['0 0 1 1 * 2030',
+    'at midnight on January 1, 2030',
+    {years: true}],
   ['0 0 0 1 1 * 2030,2035', 'at midnight on January 1 in 2030 and 2035'],
   ['0 0 0 1 1 * 2030-2035',
     'at midnight on January 1 from 2030 through 2035'],
   ['0 0 1 1 * */2', 'at midnight on January 1 in even-numbered years',
     {years: true}],
-  ['30 0 9 1 6 * 2030', 'at 9:00:30 a.m. on June 1 in 2030'],
+  ['30 0 9 1 6 * 2030', 'at 9:00:30 a.m. on June 1, 2030'],
 
   // Quartz forms.
   ['0 0 1 * ?', 'at midnight on the 1st', {quartz: true}],
@@ -41,10 +43,10 @@ const rows = [
   ['@reboot', 'Runs at system startup.', {sentence: true}],
 
   // A day of the month and a weekday, under a month.
-  ['0 0 1 6 5', 'at midnight on the 1st as well as on Fridays, in June'],
+  ['0 0 1 6 5', 'at midnight on June 1 as well as on Fridays in June'],
   ['0 0 1,15 1,7 1-5',
-    'at midnight on the 1st and 15th as well as on weekdays, in January ' +
-    'and July'],
+    'at midnight on the 1st and 15th of January and July as well as on ' +
+    'weekdays in January and July'],
 
   // A single month with its dates.
   ['0 0 1,15 6 *', 'at midnight on June 1 and 15'],
@@ -52,8 +54,8 @@ const rows = [
   ['0 0 1-7 6 *', 'at midnight from June 1 through 7'],
   ['0 0 1-7,15 6 *', 'at midnight from June 1 through 7 and on June 15'],
   ['0 0 */2 6 *', 'at midnight on odd-numbered days in June'],
-  ['0 0 */5 6 *', 'at midnight on every fifth day from June 1'],
-  ['0 0 1 1,3 *', 'at midnight on the 1st of January and March'],
+  ['0 0 */5 6 *', 'at midnight every 5 days from June 1'],
+  ['0 0 1 1,3 *', 'at midnight on January 1 and March 1'],
 
   // Weekday order and wrap-arounds.
   ['0 9 * * 5-1', 'at 9 a.m. Friday through Monday'],

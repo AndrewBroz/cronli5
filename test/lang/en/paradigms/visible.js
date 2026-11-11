@@ -8,10 +8,9 @@
 
 const rows = [
   // clock / second — context `0 9 * * *`
-  ['* 0 9 * * *', 'every second for one minute at 9 a.m.'],
-  ['*/6 0 9 * * *', 'every 6 seconds for one minute at 9 a.m.'],
-  ['5/10 0 9 * * *',
-    'every 10 seconds from 5 through 55 seconds past the minute, at 9 a.m.'],
+  ['* 0 9 * * *', 'every second from 9:00 until 9:01 a.m.'],
+  ['*/6 0 9 * * *', 'every 6 seconds from 9:00 until 9:01 a.m.'],
+  ['5/10 0 9 * * *', 'every 10 seconds from 9:00:05 through 9:00:55 a.m.'],
 
   // clock / minute
   ['* 9 * * *', 'every minute during the 9 a.m. hour'],
@@ -111,11 +110,11 @@ const rows = [
     'every 15 minutes from 9 a.m. until 6 p.m. on Tuesdays and Thursdays'],
 
   // monthly / second — context `0 0 1 * *`
-  ['* 0 0 1 * *', 'every second for one minute at midnight on the 1st'],
-  ['*/6 0 0 1 * *', 'every 6 seconds for one minute at midnight on the 1st'],
+  ['* 0 0 1 * *', 'every second from midnight until 12:01 a.m. on the 1st'],
+  ['*/6 0 0 1 * *',
+    'every 6 seconds from midnight until 12:01 a.m. on the 1st'],
   ['5/10 0 0 1 * *',
-    'every 10 seconds from 5 through 55 seconds past the minute, at ' +
-    'midnight on the 1st'],
+    'every 10 seconds from 12:00:05 through 12:00:55 a.m. on the 1st'],
 
   // monthly / minute
   ['* 0 1 * *', 'every minute during the midnight hour on the 1st'],
@@ -140,7 +139,7 @@ const rows = [
   // monthly / month
   ['0 0 1 1 *', 'at midnight on January 1'],
   ['0 0 1 3,6,9,12 *',
-    'at midnight on the 1st of every third month from March'],
+    'at midnight on March 1, June 1, September 1, and December 1'],
   ['0 0 1 */2 *', 'at midnight on the 1st of every other month'],
   ['0 0 1 11-2 *',
     'at midnight on the 1st of each month from November through February'],

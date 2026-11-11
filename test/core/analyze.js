@@ -110,9 +110,9 @@ describe('Core analyze:', function() {
       const {analyses} = ir('0 0 L * 5L');
 
       expect(analyses.day).to.deep.equal({
-        date: {kind: 'quartz'},
+        date: {form: {kind: 'last'}, kind: 'quartz'},
         union: true,
-        weekday: {kind: 'quartz'}
+        weekday: {form: {kind: 'last', weekday: 5}, kind: 'quartz'}
       });
       expect(ir('0 0 * * *').analyses.day).to.deep.equal({
         date: null,
