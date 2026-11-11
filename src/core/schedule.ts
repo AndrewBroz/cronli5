@@ -127,6 +127,40 @@ export type PlanNode =
   | {kind: 'clockTimes'; times: ClockTime[]}
   | {kind: 'compactClockTimes'; fold: boolean; minute: number};
 
+/** A run of consecutive values; `from > to` wraps around a cyclic field. */
+export interface RangeDescription {
+  kind: 'range';
+  from: number;
+  to: number;
+}
+
+/** Values named one by one. */
+export interface ValuesDescription {
+  kind: 'values';
+  values: number[];
+}
+
+/**
+ * One way to describe a set of field values: the whole field, a range, an
+ * evenly spaced cadence, several pieces, a simpler set with a few values
+ * removed, or the values named one by one. Set arithmetic only — which of
+ * these a language can say, and which reads best, is the language's call.
+ */
+export type SetDescription =
+  | {kind: 'all'}
+  | RangeDescription
+  | {kind: 'cadence'; interval: number; start: number; last: number}
+  | {kind: 'pieces'; parts: Array<RangeDescription | ValuesDescription>}
+  | {kind: 'except'; base: SetDescription; removed: number[]}
+  | ValuesDescription;
+
+/** The values a field can take. */
+export interface Domain {
+  min: number;
+  max: number;
+  cyclic: boolean;
+}
+
 /** The semantic analyses the core attaches to the pattern for rendering. */
 export interface Analyses {
   clockSecond: number | undefined;

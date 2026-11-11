@@ -33,3 +33,4 @@ export * from './weekday.js';
 export * from './cadence.js';
 export * from './shapes.js';
 export * from './analyze.js';
+export * from './describe-set.js';
