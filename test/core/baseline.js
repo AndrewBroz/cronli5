@@ -18,6 +18,8 @@ describe('baseline:', function() {
     expect(captured.singleCharacter.pairs).to.be.above(1000);
     expect(captured.grid.pairs).to.be.above(200);
     expect(captured.failures).to.equal(0);
+    expect(captured.grid.dropped).to.equal(0);
+    expect(captured.singleCharacter.dropped).to.equal(0);
     expect(captured.renderings).to.have.length(allRows().length);
     captured.renderings.forEach(function nonEmpty(row) {
       expect(row.text, row.pattern).to.be.a('string').and.not.equal('');

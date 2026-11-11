@@ -48,13 +48,19 @@ function attempt(render, pattern, options) {
   }
 }
 
-// The pairs both of whose sides render, so one throw does not hide the
-// rest of the distribution.
-function renderable(render, candidates) {
-  return candidates.filter(function bothRender(pair) {
+// Score the pairs both of whose sides render, and count the ones dropped
+// because a side threw: one throw should not hide the distribution, and a
+// renderer must not score better by failing on the hard patterns.
+function scoreRenderable(render, candidates, stem) {
+  const usable = candidates.filter(function bothRender(pair) {
     return attempt(render, pair[0], pair[2]).text !== null &&
       attempt(render, pair[1], pair[2]).text !== null;
   });
+
+  return {
+    ...score(render, usable, stem),
+    dropped: candidates.length - usable.length
+  };
 }
 
 function currentCommit() {
@@ -106,10 +112,10 @@ async function baseline(code) {
     failures: renderings.filter(function failed(row) {
       return row.text === null;
     }).length,
-    grid: score(render, renderable(render, pairs()), stem),
+    grid: scoreRenderable(render, pairs(), stem),
     renderings,
-    singleCharacter: score(render,
-      renderable(render, neighborPairs(coreSetSeeds())), stem),
+    singleCharacter: scoreRenderable(render,
+      neighborPairs(coreSetSeeds()), stem),
     size: sourceSize(code)
   };
 }

@@ -62,6 +62,18 @@ describe('edit-diff:', function() {
       expect(report.equivalentViolations).to.have.length(1);
     });
 
+    it('treats patterns that fire on the same values as equal', function() {
+      const report = score(function render(pattern) {
+        return pattern;
+      }, [
+        ['* * */2 * * *', '* * 0/2 * * *'],
+        ['0 9 1,2 * *', '0 9 1-2 * *'],
+        ['0 9 * * *', '0 8 * * *']
+      ]);
+
+      expect(report.equivalentViolations).to.have.length(2);
+    });
+
     it('summarizes the distribution', function() {
       const report = score(function render(pattern) {
         return pattern === 'a' ? 'one two' : 'one three';

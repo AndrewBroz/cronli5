@@ -11,13 +11,13 @@ import type {
 
 type Cadence = Extract<SetDescription, {kind: 'cadence'}>;
 
-// An exception needs at least this many values kept: one or two values are
-// only ever named.
-const minKeptForException = 3;
-
 // A cadence, and a run worth calling a range inside several pieces, need
 // at least this many values.
 const minProgression = 3;
+
+// How many things a range or a cadence names: its two ends, or its start
+// and its interval.
+const boundsNamed = 2;
 
 function integersBetween(from: number, to: number, step = 1): number[] {
   const values: number[] = [];
@@ -29,9 +29,15 @@ function integersBetween(from: number, to: number, step = 1): number[] {
   return values;
 }
 
+function ascending(a: number, b: number): number {
+  return a - b;
+}
+
 function without(values: number[], removed: number[]): number[] {
+  const dropped = new Set(removed);
+
   return values.filter(function kept(value) {
-    return !removed.includes(value);
+    return !dropped.has(value);
   });
 }
 
@@ -39,8 +45,20 @@ function greatestCommonDivisor(a: number, b: number): number {
   return b === 0 ? a : greatestCommonDivisor(b, a % b);
 }
 
-// The maximal runs of consecutive values, in order.
-function runsOf(values: number[]): number[][] {
+function sizeOf(domain: Domain): number {
+  return domain.max - domain.min + 1;
+}
+
+// How many values lie strictly between the end of one run and the start of
+// the next, going round the cycle.
+function gapAfter(run: number[], next: number[], domain: Domain): number {
+  const size = sizeOf(domain);
+
+  return ((next[0] - run[run.length - 1] - 1) % size + size) % size;
+}
+
+// The maximal runs of consecutive values, in ascending order.
+function linearRuns(values: number[]): number[][] {
   const runs: number[][] = [];
 
   values.forEach(function place(value) {
@@ -57,23 +75,47 @@ function runsOf(values: number[]): number[][] {
   return runs;
 }
 
-// One range covering the whole set: a plain run, or in a cyclic field a
-// run that leaves the top of the domain and resumes at the bottom.
-function rangeOf(runs: number[][], domain: Domain): RangeDescription | null {
-  const [first] = runs;
+// The maximal runs of consecutive values, in the order a speaker would
+// walk them. In a cyclic field a run that leaves the top of the domain and
+// resumes at the bottom is one run, and the walk starts after the widest
+// gap, so "10 p.m. through 2 a.m." stays whole whatever else is in the set.
+// The gap across the top of the domain wins a tie, which keeps an ordinary
+// set in ascending order.
+function runsOf(values: number[], domain: Domain): number[][] {
+  const runs = linearRuns(values);
   const last = runs[runs.length - 1];
 
-  if (runs.length === 1) {
-    return first.length > 1 ?
-      {from: first[0], kind: 'range', to: first[first.length - 1]} :
-      null;
+  if (!domain.cyclic || runs.length === 1) {
+    return runs;
   }
 
-  const wraps = runs.length === 2 && domain.cyclic &&
-    first[0] === domain.min && last[last.length - 1] === domain.max;
+  const joins = runs[0][0] === domain.min &&
+    last[last.length - 1] === domain.max;
+  const ring = joins ?
+    [...runs.slice(1, -1), [...last, ...runs[0]]] :
+    runs;
+  let start = 0;
+  let widest = gapAfter(ring[ring.length - 1], ring[0], domain);
 
-  return wraps ?
-    {from: last[0], kind: 'range', to: first[first.length - 1]} :
+  ring.slice(1).forEach(function compare(run, index) {
+    const gap = gapAfter(ring[index], run, domain);
+
+    if (gap > widest) {
+      widest = gap;
+      start = index + 1;
+    }
+  });
+
+  return [...ring.slice(start), ...ring.slice(0, start)];
+}
+
+// One range covering the whole set, when the set is a single run of two or
+// more values. `from > to` when the run wraps around.
+function rangeOf(runs: number[][]): RangeDescription | null {
+  const [only] = runs;
+
+  return runs.length === 1 && only.length > 1 ?
+    {from: only[0], kind: 'range', to: only[only.length - 1]} :
     null;
 }
 
@@ -144,28 +186,53 @@ function cadenceBases(values: number[], domain: Domain): Cadence[] {
     [spanning, {interval, kind: 'cadence', last: highest, start: lowest}];
 }
 
-// A simpler base with a few values removed, for each base that contains
-// the set and loses fewer values than it keeps.
-function exceptionsOf(values: number[], domain: Domain): SetDescription[] {
-  if (values.length < minKeptForException) {
-    return [];
+// How many values a base stands for, without listing them: the whole
+// domain can be thousands of years.
+function countOf(base: SetDescription, domain: Domain): number {
+  switch (base.kind) {
+    case 'all':
+      return sizeOf(domain);
+    case 'range':
+      return ((base.to - base.from) % sizeOf(domain) + sizeOf(domain)) %
+        sizeOf(domain) + 1;
+    case 'cadence':
+      return (base.last - base.start) / base.interval + 1;
+    default:
+      return denote(base, domain).length;
   }
+}
 
-  const first = values[0];
-  const last = values[values.length - 1];
-  const coversDomain = first === domain.min && last === domain.max;
+// A simpler base with a few values removed. Offered only when it names
+// fewer things than the plain list would: the base's own bounds plus each
+// removed value, against each value kept. "The odd days except the 15th"
+// names three things in place of fifteen; "1 through 5 except 2 and 4"
+// names four in place of three and is never offered.
+function exceptionsOf(
+  values: number[],
+  runs: number[][],
+  domain: Domain
+): SetDescription[] {
+  const lastRun = runs[runs.length - 1];
   const bases: SetDescription[] = [
     {kind: 'all'},
-    ...coversDomain ? [] : [{from: first, kind: 'range' as const, to: last}],
+    {from: runs[0][0], kind: 'range', to: lastRun[lastRun.length - 1]},
     ...cadenceBases(values, domain)
   ];
   const found: SetDescription[] = [];
 
   bases.forEach(function tryBase(base) {
-    const removed = without(denote(base, domain), values);
+    const total = countOf(base, domain);
+    const removedCount = total - values.length;
+    const named = base.kind === 'all' ? 0 : boundsNamed;
+    const redundant = base.kind === 'range' && total === sizeOf(domain);
 
-    if (removed.length > 0 && removed.length < values.length) {
-      found.push({base, kind: 'except', removed});
+    if (!redundant && removedCount > 0 &&
+        named + removedCount < values.length) {
+      found.push({
+        base,
+        kind: 'except',
+        removed: without(denote(base, domain), values)
+      });
     }
   });
 
@@ -179,17 +246,17 @@ function exceptionsOf(values: number[], domain: Domain): SetDescription[] {
  * and the values themselves.
  */
 function describeSet(values: number[], domain: Domain): SetDescription[] {
-  if (values.length === domain.max - domain.min + 1) {
+  if (values.length === sizeOf(domain)) {
     return [{kind: 'all'}];
   }
 
-  const runs = runsOf(values);
-  const range = rangeOf(runs, domain);
+  const runs = runsOf(values, domain);
+  const range = rangeOf(runs);
   const candidates: Array<SetDescription | null> = [
     range,
     cadenceOf(values),
     range ? null : piecesOf(runs),
-    ...exceptionsOf(values, domain),
+    ...exceptionsOf(values, runs, domain),
     {kind: 'values', values: values.slice()}
   ];
 
@@ -216,7 +283,7 @@ function denote(description: SetDescription, domain: Domain): number[] {
     case 'pieces':
       return description.parts.flatMap(function partValues(part) {
         return denote(part, domain);
-      });
+      }).sort(ascending);
     case 'except':
       return without(denote(description.base, domain), description.removed);
     default:

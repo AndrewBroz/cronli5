@@ -13,7 +13,7 @@
 import {readFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import cronli5 from '../../src/cronli5.js';
-import {fieldOrder, prepare} from '../../src/core/index.js';
+import {analyze, fieldOrder, prepare} from '../../src/core/index.js';
 
 const PLAIN_ALPHABET = '0123456789*/,-';
 const QUARTZ_ALPHABET = 'LW#?';
@@ -47,10 +47,22 @@ function canonical(pattern, options) {
   }).join(' ');
 }
 
-// The canonical form, or null when the core rejects the pattern.
-function canonicalOrNull(pattern, options) {
+// What a pattern fires on, as text two patterns can be compared by: each
+// field's candidate descriptions, or its normalized text where the field
+// is a Quartz form with no plain value set. Null when the core rejects the
+// pattern. Field text alone would miss `*/2` against `0/2`, or `1,2`
+// against `1-2`.
+function firesOn(pattern, options) {
   try {
-    return canonical(pattern, options);
+    const schedule = analyze(prepare(pattern, {
+      quartz: Boolean(options && options.quartz),
+      seconds: false,
+      years: Boolean(options && options.years)
+    }));
+
+    return JSON.stringify(fieldOrder.map(function fieldOf(field) {
+      return schedule.analyses.candidates[field] || schedule.pattern[field];
+    }));
   }
   catch {
     return null;
@@ -184,10 +196,10 @@ function score(render, pairs, normalize) {
     return x - y;
   });
   const equivalentViolations = rows.filter(function equalButDifferent(row) {
-    const left = canonicalOrNull(row.a, row.options);
+    const left = firesOn(row.a, row.options);
 
     return row.textA !== row.textB && left !== null &&
-      left === canonicalOrNull(row.b, row.options);
+      left === firesOn(row.b, row.options);
   }).map(function brief(row) {
     return {a: row.a, b: row.b, distance: row.distance};
   });
