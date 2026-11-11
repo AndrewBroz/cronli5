@@ -34,6 +34,16 @@ Two rules run through everything:
 The count never depends on *which* values are named, only on how many and
 in what arrangement. That is deliberate: see 3.10.
 
+Three notes on counting:
+
+* A run of exactly two values is not said as a range of points; the two
+  are listed ("on Sundays and Mondays", "at 9 and 10 a.m."). Two hours can
+  still be a window ("from 10 p.m. until midnight").
+* A minute or second carried inside a clock time adds nothing. "Every 12
+  hours from 12:30 a.m." names one thing, as "every 12 hours" does, so
+  moving the minute never changes the device.
+* An idiom wins a tie with any other candidate.
+
 ## 1. Anchors
 
 1.1 The Chicago Manual of Style for the default (US) style; the Guardian
@@ -70,6 +80,10 @@ Dropped, because they changed sentence structure or meaning:
   range's end is included is decided by what is being described (3.4), not
   by a dialect. The `house` range word is "through", not a hyphen.
 * `uk` as an alias for `gb` is gone; `uk` is the Ukrainian language code.
+
+A custom object's range word may be given with surrounding spaces (the
+earlier style tables wrote `' through '`); they are trimmed. An unknown
+dialect name is treated as `us`.
 
 1.3 None beyond `gb`.
 
@@ -182,6 +196,10 @@ in its list form. "Every minute from 0 through 29 and at 45 minutes past
 every hour"; "every hour from 9 a.m. through 5 p.m. and at 10 p.m."; "from
 the 1st through the 7th and on the 15th".
 
+Pieces are said in ascending order, each range with its own lead, unless
+one of the runs wraps round the cycle, in which case the wrapped run comes
+first: "every hour from 10 p.m. through 2 a.m. and at 10 a.m."
+
 3.7 An even cadence. A cadence may be called "every N" with no bounds only
 when it tiles its cycle: N divides the cycle (60 seconds, 60 minutes, 24
 hours, 12 months) and the cadence starts within its first interval.
@@ -200,6 +218,9 @@ hours, 12 months) and the cadence starts within its first interval.
   once in two months; the months are listed.
 * Weekdays have no cadence. "Every other day" would be false across the
   end of the week. The days are listed.
+
+A date cadence that stops before the end of the month names both ends:
+"every 3 days from the 5th through the 20th".
 
 3.8 A cadence that does not divide evenly, or starts off the beat.
 
@@ -224,6 +245,11 @@ missing ones, when that names fewer things than the alternatives.
   that its run is always named: "Monday through Saturday".
 * "At 0, 15, and 45 minutes past every hour": three things either way, so
   the core does not offer "every 15 minutes except at 30".
+
+An exception can be made to an idiom or a range as well as to a cadence:
+"on weekdays except Thursday"; "from June 1 through 20 except the 15th";
+"on every day except the 15th". Only "every day" of the week has no
+exception form.
 
 3.10 A limit on items held turned out to be the whole rule. Choosing by
 spoken syllables, as first designed, made the choice depend on which
@@ -318,6 +344,11 @@ they differ, every numbered time carries its own: "at 9 a.m. and 5 p.m.",
 the minute or the second shows that precision on its numbered ends: "from
 9:00 until 9:01 a.m.", "from midnight until 12:01 a.m."
 
+A shared a.m. or p.m. is only left to the end when the last item is a
+numbered time and, for a range, when the range does not wrap. Otherwise
+every numbered time carries its own: "at 9 a.m., 10 a.m., and noon";
+"every hour from 4:30 a.m. through 2:30 a.m."
+
 4.2 Seconds.
 
 * S is 0: silent.
@@ -342,6 +373,12 @@ the minute or the second shows that precision on its numbered ends: "from
   after it, "every minute" takes the place of "the minute": "at 30 seconds
   past every minute", "every second for the first 10 seconds of every
   minute".
+
+A single second joins every clock time the time part names, in a list or
+in the point forms of 4.1's first table: "every hour from 9:00:15 a.m.
+through 5:00:15 p.m." Anchored seconds under every minute of restricted
+hours are followed by the hours' confinement: "every 10 seconds from 5
+through 55 seconds past every minute during the 9 a.m. hour".
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
 first, then "as well as", then the weekday phrase exactly as it would stand
@@ -375,6 +412,9 @@ of January and July as well as on weekdays in January and July".
 * One day, one month and one year are a full date: "on January 1, 2030" in
   US style, "on 1 January 2030" in British style. Any other set of years
   follows the month: "on January 1 in 2030 and 2035".
+
+An idiom or a cadence of days takes "in" with any set of months: "on
+odd-numbered days in March and June".
 
 4.5 None.
 
@@ -423,6 +463,9 @@ month by name, "of June"; several in the forms of 4.4's last bullet).
 "in odd-numbered years". A year follows the month as "in 2030"; a list is
 "in 2030 and 2035"; a range is "from 2030 through 2035". A single year
 with a single date is 4.4's full date.
+
+A cadence of years uses a digit and names its start: "every 4 years from
+1970".
 
 ## 6. Words
 
