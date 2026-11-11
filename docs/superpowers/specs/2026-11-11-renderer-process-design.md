@@ -144,20 +144,33 @@ preferences and any limits stay per language. `hourStride` and the
 day-of-month parity facts already do this for two special cases. Clock-time
 folding is the same mechanism over the minute-by-hour product.
 
-### 5.5 Selection by spoken length
+### 5.5 Selection by things named
 
-The language renders each candidate it has a device for. The shortest
-spoken form wins; a fixed device order breaks ties.
+Amended 2026-11-11 after the English paradigms were written; approved by
+the maintainer. The first design chose the phrasing shortest in spoken
+syllables. That made the choice depend on *which* values were named: the
+same three minutes read as a list of clock times at 9 o'clock and as
+"5, 20, and 45 minutes past 11 a.m." at 11, because "eleven" is longer
+than "nine". That is a continuity failure, and continuity ranks higher.
 
-* Spoken lengths are lexicon data. The vocabulary is closed (numbers,
-  months, weekdays, units, function words), so each language carries
-  lengths in its word tables in whatever unit suits it. No general syllable
-  counter is needed.
-* Thresholds are not chosen by hand. "Except the 15th" wins until the
-  exceptions make it longer than the alternative.
-* Hypothesis to test: length alone is not enough, and a second limit is
-  needed on how many items a device asks a listener to hold (for example,
-  the number of exceptions).
+The language renders each candidate it has a device for. The phrasing that
+**names the fewest things** wins: a value, a clock time, an end of a range,
+an interval, an idiom. A fixed order breaks ties.
+
+* The count depends only on how many values there are and how they are
+  arranged, never on which values, so equal-shaped sets always get the same
+  device.
+* It is the "limit on items held" this section first posed as a
+  hypothesis, and it agrees with the core's own bound on exceptions.
+* Thresholds still are not chosen by hand: "except the 15th" wins until
+  the exceptions outnumber what the list would name.
+* Spoken syllable lengths stay in each lexicon as data. The maintainer's
+  finding stands that naturalness tracks what is spoken, not what is
+  written; the count of things named is a spoken measure that cannot vary
+  with the values.
+
+Each language states its counts in its questionnaire answers
+(`src/lang/en/answers.md` opens with the English table).
 
 ### 5.6 Idioms are rows
 
