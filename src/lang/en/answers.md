@@ -13,9 +13,26 @@ Two rules run through everything:
 * **A field that takes every value is silent.** "Every minute" does not add
   "of every hour of every day". A phrase appears when a field is
   restricted, and disappears when it is not.
-* **Where several phrasings are sayable, the one shortest in spoken
-  syllables wins.** The sayable phrasings for each kind of set are listed
-  in section 3. Ties go to the earlier candidate.
+* **Where several phrasings are sayable, the one that names the fewest
+  things wins.** A thing named is a value, a clock time, an end of a range,
+  an interval, or an idiom such as "weekdays". The sayable phrasings for
+  each kind of set are listed in section 3. Ties go to the earlier
+  candidate in the core's order, with an idiom before all of them.
+
+| Phrase | Things named |
+| --- | --- |
+| every value | 0 |
+| a list of values, or of clock times | one each |
+| a range | 2 |
+| a cadence that tiles from the start of its cycle ("every 15 minutes") | 1 |
+| a cadence with a named start ("every 2 hours from 1 a.m.") | 2 |
+| a cadence with both ends named | 3 |
+| pieces | the sum of the parts |
+| a base with exceptions | the base, plus one for each exception |
+| an idiom ("odd-numbered days", "weekdays") | 1 |
+
+The count never depends on *which* values are named, only on how many and
+in what arrangement. That is deliberate: see 3.10.
 
 ## 1. Anchors
 
@@ -28,7 +45,7 @@ of the sentence.
 | Option | Values | Default | What it changes |
 | --- | --- | --- | --- |
 | `ampm` | `true`, `false` | `true` | 12-hour times with a.m./p.m. and the words noon and midnight; `false` gives 24-hour times, zero-padded, always with minutes (`09:00`, `17:30`, `00:00`) and no noon or midnight |
-| `short` | `true`, `false` | `false` | Weekday and month names in their three-letter forms (`Mon`, `Jun`), with no full stop |
+| `short` | `true`, `false` | `false` | Weekday and month names in their three-letter forms (`Mon`, `Jun`), with no full stop and no plural: "on Mon, Wed, and Fri" |
 | `dialect` | `us`, `gb`, `house`, or a custom object | `us` | The style table below |
 
 Style table:
@@ -138,8 +155,9 @@ Numbers are digits everywhere. Ordinal words appear only in "every other",
 
 * **Points are named inclusively with "through".** Hours as times on the
   hour: "every hour from 9 a.m. through 5 p.m." Days: "from the 1st
-  through the 7th". Months: "from June through August". Weekdays: "Monday
-  through Friday" (but see 5.2), with no "on" and no plural.
+  through the 7th". Months: "from June through August". Weekdays: "Tuesday
+  through Thursday", with no "on" and no plural (Monday through Friday is
+  5.2).
 * **A stretch of time filled by a finer cadence is a window, closed with
   "until" at the moment it ends.** "Every minute from 9 a.m. until 6 p.m."
   for hours 9 to 17. The end is the hour after the last one; after hour 23
@@ -163,7 +181,8 @@ hours, 12 months) and the cadence starts within its first interval.
 * Minutes: "every 15 minutes".
 * Hours with minute 0: "every 2 hours".
 * Days of the month never tile, since months differ in length. A cadence
-  from the 1st is "every 5 days from the 1st". For odd and even see 5.1.
+  from the 1st is "on every fifth day from the 1st", with the interval as
+  a word up to twelfth and as "15th" beyond. For odd and even see 5.1.
 * Months, after a day of the month: "on the 1st of every third month".
   Without a day of the month, a month cadence is not said as a cadence,
   because "every 3 months" would be heard as once a quarter; the months
@@ -173,31 +192,40 @@ hours, 12 months) and the cadence starts within its first interval.
 
 3.8 A cadence that does not divide evenly, or starts off the beat.
 
-* Starts off the beat but tiles: name the start. "Every 15 minutes from 5
-  minutes past every hour"; "every 2 hours from 1 a.m."
-* Does not tile, or stops early: name both ends, so nobody assumes it
-  carries on. "Every 7 minutes from 0 through 56 minutes past every hour";
-  "every 10 minutes from 10 through 40 minutes past every hour"; "every 5
-  hours from midnight through 8 p.m."
+* Hours and months that start off the beat but tile: name the start.
+  "Every 2 hours from 1 a.m."; "of every third month from March".
+* Minutes and seconds that start off the beat, and any cadence that does
+  not tile or stops early: name both ends, so nobody assumes it carries
+  on. "Every 15 minutes from 5 through 50 minutes past every hour"; "every
+  7 minutes from 0 through 56 minutes past every hour"; "every 10 minutes
+  from 10 through 40 minutes past every hour"; "every 5 hours from midnight
+  through 8 p.m." A minute cadence named only by its start ("from 5 minutes
+  past 9 a.m.") could be heard as carrying on past the hour.
 
 3.9 A set with values missing is said as the simpler set "except" the
-missing ones, when that is shorter aloud than the list.
+missing ones, when that names fewer things than the list.
 
 * "Every 2 hours except at 8 a.m."
 * "On odd-numbered days except the 15th."
 * "In every month except December"; after a day, "of every month except
   December".
-* "Every day except Sunday" is sayable, but "Monday through Saturday" is
-  shorter and wins.
-* "At 0, 15, and 45 minutes past every hour": the list wins over "every 15
-  minutes except at 30 minutes past every hour", being shorter.
+* "On every day except Sunday", which names one thing where "Monday
+  through Saturday" names two.
+* "At 0, 15, and 45 minutes past every hour": three things either way, so
+  the core does not offer "every 15 minutes except at 30".
 
-3.10 No separate limit on items held was needed. In every grid family the
-switch between a list and another device fell where spoken length put it:
-four quarter-hour minutes are listed, eleven even hours are a cadence with
-an exception. This is a finding about the grid, not a proof; a long
-exception list ("except the 3rd, 5th, 9th, 11th and 21st") may want a cap
-once real patterns show one.
+3.10 A limit on items held turned out to be the whole rule. Choosing by
+spoken syllables, as first designed, made the choice depend on which
+values were named: "at 9:05, 9:20, and 9:45 a.m." came out for 9 o'clock
+and "at 5, 20, and 45 minutes past 11 a.m." for 11, because "eleven" is
+two syllables longer than "nine" and is said three times in one phrasing
+and once in the other. A reader comparing those two patterns would see the
+sentence change shape for no reason. Counting the things named gives the
+same switch points for every value, and they fall where a listener
+re-chunks: four quarter-hour times in one hour become "every 15 minutes
+during the 9 a.m. hour", eleven even hours become "every 2 hours except at
+8 a.m." Syllable lengths stay in the lexicon as data; they do not choose
+between phrasings.
 
 ## 4. Fusions
 
@@ -251,19 +279,23 @@ is followed by "past" and H as a noun phrase:
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past every hour from 9
 a.m. through 5 p.m."
 
-**A list of clock times is also sayable** whenever M and H are both lists
-or single values and there are at most 24 times: "at 9:05, 9:20, and 9:45
-a.m." It competes on spoken length with the continuous or anchored form.
-`*/30 9 * * *` is "at 9 and 9:30 a.m." because that is shorter than "every
-30 minutes during the 9 a.m. hour"; `*/15 9 * * *` is "every 15 minutes
-during the 9 a.m. hour" because four times are longer.
+**A list of clock times is also sayable** whenever neither M nor H is
+every value and there are at most 24 times: "at 9:05, 9:20, and 9:45 a.m."
+It names one thing per time and competes with the continuous or anchored
+form, which names the things in its minute phrase plus those in its hour
+phrase. On a tie the list of times wins. `0,30 9 * * *` is "at 9 and 9:30
+a.m." (two things either way); `*/15 9 * * *` is "every 15 minutes during
+the 9 a.m. hour" (two things against four times); `0,30 9,17 * * *` is
+"every 30 minutes during the 9 a.m. and 5 p.m. hours" (three against
+four).
 
 Writing a time: the hour alone on the hour ("9 a.m."), otherwise hour and
 minutes ("9:30 a.m."). 0:00 is "midnight" and 12:00 is "noon"; 0:30 is
-"12:30 a.m." In a list or a range whose times all share a.m. or p.m., it is
-said once, at the end: "at 9 and 9:30 a.m.", "at 9, 10, and 11 a.m.". When
-they differ, or one is noon or midnight, every time carries its own: "at 9
-a.m. and 5 p.m.", "from 9 a.m. until 6 p.m."
+"12:30 a.m." In a list or a range whose numbered times all share a.m. or
+p.m., it is said once, at the end: "at 9 and 9:30 a.m.", "at 9, 10, and 11
+a.m.", "at midnight, 12:15, and 12:45 a.m." When they differ, every
+numbered time carries its own: "at 9 a.m. and 5 p.m.", "from 9 a.m. until 6
+p.m." Noon and midnight never take one.
 
 4.2 Seconds.
 
@@ -282,13 +314,15 @@ a.m. and 5 p.m.", "from 9 a.m. until 6 p.m."
   With nothing after it, "past every minute": "at 30 seconds past every
   minute", "every second from 0 through 9 seconds past every minute".
 
-4.3 A day of the month and a weekday. Both arms are said in full, each
-with its own "on", joined by "and": "at midnight on the 1st and on
-Fridays". Repeating "on" is what makes it heard as two sets of days. "Or"
-is heard as a choice; a single "on the 1st and Fridays" can be heard as one
-combined condition. A month that applies to both follows the whole day
-part after a comma, and the date does not fuse with it: "at midnight on the
-1st and on Fridays, in June".
+4.3 A day of the month and a weekday. The day-of-month phrase comes
+first, then "as well as", then the weekday phrase exactly as it would stand
+alone: "at midnight on the 1st as well as on Fridays"; "on the 1st as well
+as on weekdays"; "from the 1st through the 7th and on the 15th as well as
+on weekdays". "As well as" is heard as adding a second set of days. "Or" is
+heard as a choice, and a bare "and" runs together with the "and" inside a
+list. A month that applies to both follows the whole day part after a
+comma, and the date does not fuse with it: "at midnight on the 1st as well
+as on Fridays, in June".
 
 This is the call most worth a fluent reviewer's attention. The earlier
 renderer used "whenever the day is the 1st or a Friday".
@@ -298,14 +332,16 @@ renderer used "whenever the day is the 1st or a Friday".
 * With every month: the day alone, "on the 1st".
 * With a single month: one date phrase, month first in US style, cardinal
   numbers. "On June 1"; "on June 1 and 15"; "on June 1, 10, and 20"; "from
-  June 1 through 7"; "from June 1 through 7 and on June 15"; "every 5 days
-  from June 1". British style puts the day first: "on 1 June", "on 1 and 15
+  June 1 through 7"; "from June 1 through 7 and on June 15"; "on every
+  fifth day from June 1". British style puts the day first: "on 1 June", "on 1 and 15
   June", "from 1 to 7 June". An idiom keeps its own words and takes "in":
   "on odd-numbered days in June".
 * With several months: the day in its ordinal form, "of", then the months.
-  "On the 1st of January and July"; "on the 1st of each month from June
-  through August"; "on the 1st of every third month"; "on the 1st of every
-  month except December".
+  "On the 1st of March and June"; "on the 1st of each month from June
+  through August"; "on the 1st of each month from June through August and
+  of December"; "on the 1st of every third month"; "on the 1st of every
+  sixth month" (January and July: one interval against two names); "on the
+  1st of every month except December".
 
 4.5 None.
 
@@ -337,18 +373,21 @@ hour", "every third hour", "every fourth", "every sixth", "every eighth",
 
 5.6 None. English uses a.m. and p.m.
 
-5.7 Quartz forms. Each ends "of the month", or "of" and the months when
-the month is restricted (in the forms of 4.4's last bullet).
+5.7 Quartz forms. Each except the nearest-weekday form ends "of the
+month", or "of" and the months when the month is restricted (a single
+month by name, "of June"; several in the forms of 4.4's last bullet).
 
 * `L` — "on the last day of the month"
 * `LW` — "on the last weekday of the month"
 * `L-3` — "3 days before the last day of the month"
-* `15W` — "on the weekday nearest the 15th of the month"
+* `15W` — "on the weekday nearest the 15th", the day said as any day of
+  the month is, so with June it is "on the weekday nearest June 15"
 * `1#2` — "on the second Monday of the month"
 * `5L` — "on the last Friday of the month"
 
 5.8 Years 1970, 1972 … : "in even-numbered years". Years 1971, 1973 … :
-"in odd-numbered years".
+"in odd-numbered years". A year follows the month as "in 2030"; a list is
+"in 2030 and 2035"; a range is "from 2030 through 2035".
 
 ## 6. Words
 
@@ -389,12 +428,12 @@ style; "A, B and C" in British style.
 
 ## 8. Traps
 
-8.1 `union-connective` — "and" with "on" repeated on each arm: "on the 1st
-and on Fridays". See 4.3.
+8.1 `union-connective` — "as well as" between the two day phrases: "on
+the 1st as well as on Fridays". See 4.3.
 
 8.2 `shared-qualifier-scope` — The time leads, so it covers both arms. A
-month follows the whole day part after a comma: "at midnight on the 1st and
-on Fridays, in June".
+month follows the whole day part after a comma: "at midnight on the 1st as
+well as on Fridays, in June".
 
 8.3 `confinement-vs-juxtaposition` — A confinement is introduced by
 "during", "from … until", or "for one minute", never by a bare comma:
@@ -422,7 +461,7 @@ full stop after, unless the description already ends in one: "Runs at 9
 a.m." The description for `@reboot` is "at system startup". The lenient
 fallback is "an unrecognizable cron pattern", which is never wrapped.
 
-8.9 `cardinality-rendering` — Decided by spoken length among the sayable
-forms. `0 0 1 */3 *` is "at midnight on the 1st of every third month";
-`0 0 1 */6 *` is "at midnight on the 1st of January and July"; `0 */6 * *
-*` is "every 6 hours"; `0 */8 * * *` is "every 8 hours".
+8.9 `cardinality-rendering` — Decided by the things named among the
+sayable forms. `0 0 1 */3 *` is "at midnight on the 1st of every third
+month"; `0 0 1 */6 *` is "at midnight on the 1st of every sixth month";
+`0 */6 * * *` is "every 6 hours"; `0 */8 * * *` is "every 8 hours".

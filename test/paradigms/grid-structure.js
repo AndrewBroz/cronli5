@@ -1,6 +1,9 @@
 import chai from 'chai';
 import {prepare} from '../../src/core/index.js';
-import {allRows, families, heldOutRows, pairs, visibleRows} from './grid.js';
+import {
+  allRows, families, heldOutPatterns, heldOutRows, pairs, visiblePatterns,
+  visibleRows
+} from './grid.js';
 
 const {expect} = chai;
 const FIELDS = ['second', 'minute', 'hour', 'date', 'month', 'weekday'];
@@ -69,5 +72,26 @@ describe('paradigm grid:', function() {
       expect(pairs()).to.deep.include(['0 9 * * *', '0 * * * *']);
       expect(pairs()).to.deep.include(
         [clockHours.rows[0].pattern, clockHours.rows[1].pattern]);
+    });
+
+  it('gives each distinct pattern to exactly one side of the split',
+    function() {
+      const visible = visiblePatterns();
+      const heldOut = heldOutPatterns();
+      const distinct = new Set(allRows().map(function patternOf(row) {
+        return row.pattern;
+      }));
+
+      expect(new Set(visible).size).to.equal(visible.length);
+      expect(visible.length + heldOut.length).to.equal(distinct.size);
+      heldOut.forEach(function notVisible(pattern) {
+        expect(visible).to.not.include(pattern);
+      });
+
+      // Visible in one family is visible everywhere: a builder that has
+      // seen a pattern cannot be judged on it.
+      visibleRows().forEach(function isVisible(row) {
+        expect(visible).to.include(row.pattern);
+      });
     });
 });

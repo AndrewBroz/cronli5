@@ -101,6 +101,25 @@ function heldOutRows() {
   });
 }
 
+// A pattern can sit in two families (`0 9 1 * *` varies the date of one
+// context and the hour of another). It is visible if any family shows it,
+// and held out only if every family holds it out.
+function visiblePatterns() {
+  return [...new Set(visibleRows().map(function patternOf(row) {
+    return row.pattern;
+  }))];
+}
+
+function heldOutPatterns() {
+  const visible = new Set(visiblePatterns());
+
+  return [...new Set(heldOutRows().map(function patternOf(row) {
+    return row.pattern;
+  }))].filter(function unseen(pattern) {
+    return !visible.has(pattern);
+  });
+}
+
 // The neighbor pairs a relational score runs over: within each family, the
 // context against every row, and each row against the next.
 function pairs() {
@@ -116,4 +135,7 @@ function pairs() {
   });
 }
 
-export {allRows, families, heldOutRows, pairs, visibleRows};
+export {
+  allRows, families, heldOutPatterns, heldOutRows, pairs, visiblePatterns,
+  visibleRows
+};
