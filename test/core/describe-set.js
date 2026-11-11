@@ -95,6 +95,18 @@ describe('describeSet:', function() {
       .to.deep.include({base: {kind: 'all'}, kind: 'except', removed: [12]});
   });
 
+  it('offers a two-value cadence only when it tiles a cyclic field',
+    function() {
+      expect(describeSet([0, 30], MINUTES)).to.deep.include(
+        {interval: 30, kind: 'cadence', last: 30, start: 0});
+      expect(describeSet([0, 12], HOURS)).to.deep.include(
+        {interval: 12, kind: 'cadence', last: 12, start: 0});
+      expect(kinds(describeSet([15, 45], MINUTES))).to.include('cadence');
+      expect(kinds(describeSet([0, 20], MINUTES))).to.not.include('cadence');
+      expect(kinds(describeSet([2020, 2025],
+        {cyclic: false, max: 2029, min: 2020}))).to.not.include('cadence');
+    });
+
   it('offers only values for one or two scattered values', function() {
     expect(describeSet([9], HOURS))
       .to.deep.equal([{kind: 'values', values: [9]}]);

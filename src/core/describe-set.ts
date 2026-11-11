@@ -119,15 +119,19 @@ function rangeOf(runs: number[][]): RangeDescription | null {
     null;
 }
 
-// The evenly spaced cadence the values form, if they form one.
-function cadenceOf(values: number[]): Cadence | null {
+// The evenly spaced cadence the values form, if they form one. Three
+// values make a cadence anywhere. Two do only when they tile a cyclic
+// field (minutes 0 and 30, hours 0 and 12): there the pair really is
+// "every 30 minutes", where minutes 0 and 20 are just two values.
+function cadenceOf(values: number[], domain: Domain): Cadence | null {
   const interval = values[1] - values[0];
-  const even = values.length >= minProgression && interval > 1 &&
-    values.every(function spaced(value, index) {
-      return index === 0 || value - values[index - 1] === interval;
-    });
+  const even = interval > 1 && values.every(function spaced(value, index) {
+    return index === 0 || value - values[index - 1] === interval;
+  });
+  const tilesAsPair = values.length === 2 && domain.cyclic &&
+    interval * 2 === sizeOf(domain) && values[0] - domain.min < interval;
 
-  return even ?
+  return even && (values.length >= minProgression || tilesAsPair) ?
     {interval, kind: 'cadence', last: values[values.length - 1],
       start: values[0]} :
     null;
@@ -254,7 +258,7 @@ function describeSet(values: number[], domain: Domain): SetDescription[] {
   const range = rangeOf(runs);
   const candidates: Array<SetDescription | null> = [
     range,
-    cadenceOf(values),
+    cadenceOf(values, domain),
     range ? null : piecesOf(runs),
     ...exceptionsOf(values, runs, domain),
     {kind: 'values', values: values.slice()}
