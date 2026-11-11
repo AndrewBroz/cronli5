@@ -16,21 +16,37 @@ import {coreSetSeeds, languageBinding, neighborPairs, score}
 const OUTPUT_DIR =
   new URL('../experiments/renderer-process/baseline/', import.meta.url);
 
-// A rough count of decision points: `if`, ternaries and `case` labels.
-const BRANCH = /\bif \(|\? .*:|\bcase /gu;
+// A decision point: an `if`, a `case` label, or a ternary. The ternary's
+// `?` may end its line; a nullish `??`, an optional `?.` and a type's
+// optional `?:` are not decisions.
+const BRANCH = /\bif \(|\bcase |(?<!\?)\?(?![?.:])\s/gu;
+
+// A rough count of the decision points in a source text.
+function countBranches(source) {
+  return (source.match(BRANCH) || []).length;
+}
+
+// Every TypeScript source under a directory, however deeply nested.
+function sourcesUnder(dir) {
+  return readdirSync(dir, {withFileTypes: true}).flatMap(function read(entry) {
+    if (entry.isDirectory()) {
+      return sourcesUnder(new URL(`${entry.name}/`, dir));
+    }
+
+    return entry.name.endsWith('.ts') ?
+      [readFileSync(new URL(entry.name, dir), 'utf8')] :
+      [];
+  });
+}
 
 // Lines and rough branch count across a language's TypeScript sources.
 function sourceSize(code) {
-  const dir = new URL(`../../src/lang/${code}/`, import.meta.url);
-  const sources = readdirSync(dir).filter(function isSource(name) {
-    return name.endsWith('.ts');
-  }).map(function read(name) {
-    return readFileSync(new URL(name, dir), 'utf8');
-  });
+  const sources =
+    sourcesUnder(new URL(`../../src/lang/${code}/`, import.meta.url));
 
   return {
     branches: sources.reduce(function count(total, source) {
-      return total + (source.match(BRANCH) || []).length;
+      return total + countBranches(source);
     }, 0),
     lines: sources.reduce(function count(total, source) {
       return total + source.split('\n').length;
@@ -144,4 +160,4 @@ if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
   await main(process.argv.slice(2));
 }
 
-export {baseline};
+export {baseline, countBranches, sourceSize};

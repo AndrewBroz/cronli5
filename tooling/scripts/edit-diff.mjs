@@ -37,7 +37,7 @@ function optionsFor(pattern) {
 function canonical(pattern, options) {
   const opts = {
     quartz: Boolean(options && options.quartz),
-    seconds: false,
+    seconds: Boolean(options && options.seconds),
     years: Boolean(options && options.years)
   };
   const normalized = prepare(pattern, opts);
@@ -56,7 +56,7 @@ function firesOn(pattern, options) {
   try {
     const schedule = analyze(prepare(pattern, {
       quartz: Boolean(options && options.quartz),
-      seconds: false,
+      seconds: Boolean(options && options.seconds),
       years: Boolean(options && options.years)
     }));
 
@@ -216,23 +216,31 @@ function score(render, pairs, normalize) {
   };
 }
 
-// Every (pattern, neighbor) pair over a seed set, each carrying the parse
-// options the seed implies.
+// Every (pattern, neighbor) pair over a seed set. A seed is
+// {pattern, options}; each pair carries the seed's parse options.
 function neighborPairs(seeds) {
   return seeds.flatMap(function expand(seed) {
-    const options = optionsFor(seed);
-
-    return neighbors(seed).map(function pairWith(neighbor) {
-      return [seed, neighbor, options];
-    });
+    return neighbors(seed.pattern, seed.options)
+      .map(function pairWith(neighbor) {
+        return [seed.pattern, neighbor, seed.options];
+      });
   });
 }
 
-// The patterns of the committed core set: the default seeds.
+// The patterns of the committed core set, the default seeds, each with its
+// parse options: the ones the core set records where a pattern alone is
+// ambiguous, and otherwise the ones the pattern implies.
 function coreSetSeeds() {
   const url = new URL('../../test/core/core-set.json', import.meta.url);
+  const coreSet = JSON.parse(readFileSync(url, 'utf8'));
+  const recorded = coreSet.options || {};
 
-  return JSON.parse(readFileSync(url, 'utf8')).patterns;
+  return coreSet.patterns.map(function toSeed(pattern) {
+    return {
+      options: {...optionsFor(pattern), ...recorded[pattern]},
+      pattern
+    };
+  });
 }
 
 // A language's renderer in its default style, and its stemmer when its
@@ -294,6 +302,6 @@ if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
 }
 
 export {
-  canonical, coreSetSeeds, languageBinding, neighborPairs, neighbors,
-  optionsFor, score, wordDistance
+  canonical, coreSetSeeds, firesOn, languageBinding, neighborPairs,
+  neighbors, optionsFor, score, wordDistance
 };

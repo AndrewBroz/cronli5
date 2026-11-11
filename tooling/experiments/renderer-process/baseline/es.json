@@ -1,0 +1,2933 @@
+{
+  "capturedAt": "2026-11-11T22:29:39.905Z",
+  "code": "es",
+  "commit": "08057c2",
+  "failures": 0,
+  "grid": {
+    "equivalentViolations": [],
+    "max": 1,
+    "median": 0.47368421052631576,
+    "p90": 0.8181818181818182,
+    "pairs": 464,
+    "worst": [
+      {
+        "a": "0 9 * * *",
+        "b": "0 * * * *",
+        "distance": 1,
+        "textA": "todos los días a las 09:00",
+        "textB": "cada hora"
+      },
+      {
+        "a": "0 9 * * *",
+        "b": "0 */2 * * *",
+        "distance": 1,
+        "textA": "todos los días a las 09:00",
+        "textB": "cada dos horas"
+      },
+      {
+        "a": "0 9 * * *",
+        "b": "0 */6 * * *",
+        "distance": 1,
+        "textA": "todos los días a las 09:00",
+        "textB": "cada seis horas"
+      },
+      {
+        "a": "0 * * * *",
+        "b": "0 0 * * *",
+        "distance": 1,
+        "textA": "cada hora",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "* * * * *",
+        "b": "* 0,2,4,6,10,12,14,16,18,20,22 * * *",
+        "distance": 0.9710144927536232,
+        "textA": "cada minuto",
+        "textB": "cada minuto de las 00:00 a las 00:59, de las 02:00 a las 02:59, de las 04:00 a las 04:59, de las 06:00 a las 06:59, de las 10:00 a las 10:59, de las 12:00 a las 12:59, de las 14:00 a las 14:59, de las 16:00 a las 16:59, de las 18:00 a las 18:59, de las 20:00 a las 20:59 y de las 22:00 a las 22:59"
+      },
+      {
+        "a": "* 1/2 * * *",
+        "b": "* 0,2,4,6,10,12,14,16,18,20,22 * * *",
+        "distance": 0.9565217391304348,
+        "textA": "cada minuto, durante las horas impares",
+        "textB": "cada minuto de las 00:00 a las 00:59, de las 02:00 a las 02:59, de las 04:00 a las 04:59, de las 06:00 a las 06:59, de las 10:00 a las 10:59, de las 12:00 a las 12:59, de las 14:00 a las 14:59, de las 16:00 a las 16:59, de las 18:00 a las 18:59, de las 20:00 a las 20:59 y de las 22:00 a las 22:59"
+      },
+      {
+        "a": "0 1/2 * * *",
+        "b": "0 0,2,4,6,10,12,14,16,18,20,22 * * *",
+        "distance": 0.9411764705882353,
+        "textA": "cada dos horas a partir de la 01:00",
+        "textB": "todos los días a las 00:00, 02:00, 04:00, 06:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00 y 22:00"
+      },
+      {
+        "a": "0 9-17,22 * * *",
+        "b": "0 */2 * * *",
+        "distance": 0.9230769230769231,
+        "textA": "cada hora de las 09:00 a las 17:00 y también a las 22:00",
+        "textB": "cada dos horas"
+      },
+      {
+        "a": "* * * * *",
+        "b": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+        "distance": 0.9130434782608695,
+        "textA": "cada minuto",
+        "textB": "cada minuto los días 1, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 29 y 31 de cada mes"
+      },
+      {
+        "a": "* * * * *",
+        "b": "0-29,45 * * * *",
+        "distance": 0.9090909090909091,
+        "textA": "cada minuto",
+        "textB": "en los minutos 0 a 29 y 45 de cada hora"
+      },
+      {
+        "a": "* * * * *",
+        "b": "10-40/10 * * * *",
+        "distance": 0.9090909090909091,
+        "textA": "cada minuto",
+        "textB": "en los minutos 10, 20, 30 y 40 de cada hora"
+      },
+      {
+        "a": "0-29,45 * * * *",
+        "b": "*/15 * * * *",
+        "distance": 0.9090909090909091,
+        "textA": "en los minutos 0 a 29 y 45 de cada hora",
+        "textB": "cada 15 minutos"
+      },
+      {
+        "a": "* * * * *",
+        "b": "* 8,12,18 * * *",
+        "distance": 0.9047619047619048,
+        "textA": "cada minuto",
+        "textB": "cada minuto de las 08:00 a las 08:59, de las 12:00 a las 12:59 y de las 18:00 a las 18:59"
+      },
+      {
+        "a": "* * * * *",
+        "b": "5,20,45 * * * *",
+        "distance": 0.9,
+        "textA": "cada minuto",
+        "textB": "en los minutos 5, 20 y 45 de cada hora"
+      },
+      {
+        "a": "* * * * *",
+        "b": "0,15,45 * * * *",
+        "distance": 0.9,
+        "textA": "cada minuto",
+        "textB": "en los minutos 0, 15 y 45 de cada hora"
+      },
+      {
+        "a": "* 0,2,4,6,10,12,14,16,18,20,22 * * *",
+        "b": "* 22-2 * * *",
+        "distance": 0.8985507246376812,
+        "textA": "cada minuto de las 00:00 a las 00:59, de las 02:00 a las 02:59, de las 04:00 a las 04:59, de las 06:00 a las 06:59, de las 10:00 a las 10:59, de las 12:00 a las 12:59, de las 14:00 a las 14:59, de las 16:00 a las 16:59, de las 18:00 a las 18:59, de las 20:00 a las 20:59 y de las 22:00 a las 22:59",
+        "textB": "cada minuto de las 22:00 a las 02:59"
+      },
+      {
+        "a": "*/15 1/2 * * 1-5",
+        "b": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5",
+        "distance": 0.8918918918918919,
+        "textA": "cada 15 minutos, durante las horas impares de lunes a viernes",
+        "textB": "cada 15 minutos de las 00:00 a las 00:59, de las 02:00 a las 02:59, de las 04:00 a las 04:59, de las 06:00 a las 06:59, de las 10:00 a las 10:59, de las 12:00 a las 12:59, de las 14:00 a las 14:59, de las 16:00 a las 16:59, de las 18:00 a las 18:59, de las 20:00 a las 20:59 y de las 22:00 a las 22:59 de lunes a viernes"
+      },
+      {
+        "a": "0,30 * * * * *",
+        "b": "*/6 * * * * *",
+        "distance": 0.8888888888888888,
+        "textA": "en los segundos 0 y 30 de cada minuto",
+        "textB": "cada seis segundos"
+      },
+      {
+        "a": "*/15 * * * * *",
+        "b": "0-9 * * * * *",
+        "distance": 0.8888888888888888,
+        "textA": "cada 15 segundos",
+        "textB": "cada segundo del 0 al 9 de cada minuto"
+      },
+      {
+        "a": "* * * * *",
+        "b": "0,30 * * * *",
+        "distance": 0.8888888888888888,
+        "textA": "cada minuto",
+        "textB": "en los minutos 0 y 30 de cada hora"
+      }
+    ],
+    "dropped": 0
+  },
+  "renderings": [
+    {
+      "pattern": "* 0 9 * * *",
+      "quartz": false,
+      "text": "cada segundo durante un minuto a las 9, todos los días"
+    },
+    {
+      "pattern": "30 0 9 * * *",
+      "quartz": false,
+      "text": "todos los días a las 09:00:30"
+    },
+    {
+      "pattern": "0,30 0 9 * * *",
+      "quartz": false,
+      "text": "en los segundos 0 y 30 de las 09:00"
+    },
+    {
+      "pattern": "*/6 0 9 * * *",
+      "quartz": false,
+      "text": "cada seis segundos durante un minuto a las 9, todos los días"
+    },
+    {
+      "pattern": "*/15 0 9 * * *",
+      "quartz": false,
+      "text": "cada 15 segundos durante un minuto a las 9, todos los días"
+    },
+    {
+      "pattern": "0-9 0 9 * * *",
+      "quartz": false,
+      "text": "cada segundo del 0 al 9 de cada minuto, todos los días a las 09:00"
+    },
+    {
+      "pattern": "5/10 0 9 * * *",
+      "quartz": false,
+      "text": "cada diez segundos a partir del segundo 5 de cada minuto durante un minuto a las 9, todos los días"
+    },
+    {
+      "pattern": "* 9 * * *",
+      "quartz": false,
+      "text": "cada minuto de la hora de las 09:00"
+    },
+    {
+      "pattern": "30 9 * * *",
+      "quartz": false,
+      "text": "todos los días a las 09:30"
+    },
+    {
+      "pattern": "0,30 9 * * *",
+      "quartz": false,
+      "text": "todos los días a las 09:00 y 09:30"
+    },
+    {
+      "pattern": "5,20,45 9 * * *",
+      "quartz": false,
+      "text": "todos los días a las 09:05, 09:20 y 09:45"
+    },
+    {
+      "pattern": "0-29 9 * * *",
+      "quartz": false,
+      "text": "cada minuto de las 09:00 a las 09:29"
+    },
+    {
+      "pattern": "0-29,45 9 * * *",
+      "quartz": false,
+      "text": "en los minutos 0 a 29 y 45 de cada hora, a las 09:00"
+    },
+    {
+      "pattern": "*/15 9 * * *",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 09:45"
+    },
+    {
+      "pattern": "*/7 9 * * *",
+      "quartz": false,
+      "text": "cada siete minutos del minuto 0 al 56 de cada hora, de la hora de las 09:00"
+    },
+    {
+      "pattern": "5/15 9 * * *",
+      "quartz": false,
+      "text": "cada 15 minutos a partir del minuto 5 de cada hora de las 09:00 a las 09:50"
+    },
+    {
+      "pattern": "0,15,45 9 * * *",
+      "quartz": false,
+      "text": "todos los días a las 09:00, 09:15 y 09:45"
+    },
+    {
+      "pattern": "10-40/10 9 * * *",
+      "quartz": false,
+      "text": "en los minutos 10, 20, 30 y 40 de cada hora de las 09:00 a las 09:40"
+    },
+    {
+      "pattern": "0 * * * *",
+      "quartz": false,
+      "text": "cada hora"
+    },
+    {
+      "pattern": "0 0 * * *",
+      "quartz": false,
+      "text": "todos los días a las 00:00"
+    },
+    {
+      "pattern": "0 12 * * *",
+      "quartz": false,
+      "text": "todos los días a las 12:00"
+    },
+    {
+      "pattern": "0 9,17 * * *",
+      "quartz": false,
+      "text": "todos los días a las 09:00 y 17:00"
+    },
+    {
+      "pattern": "0 8,12,18 * * *",
+      "quartz": false,
+      "text": "todos los días a las 08:00, 12:00 y 18:00"
+    },
+    {
+      "pattern": "0 9-17 * * *",
+      "quartz": false,
+      "text": "cada hora de las 09:00 a las 17:00"
+    },
+    {
+      "pattern": "0 9-17,22 * * *",
+      "quartz": false,
+      "text": "cada hora de las 09:00 a las 17:00 y también a las 22:00"
+    },
+    {
+      "pattern": "0 */2 * * *",
+      "quartz": false,
+      "text": "cada dos horas"
+    },
+    {
+      "pattern": "0 */6 * * *",
+      "quartz": false,
+      "text": "cada seis horas"
+    },
+    {
+      "pattern": "0 1/2 * * *",
+      "quartz": false,
+      "text": "cada dos horas a partir de la 01:00"
+    },
+    {
+      "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *",
+      "quartz": false,
+      "text": "todos los días a las 00:00, 02:00, 04:00, 06:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00 y 22:00"
+    },
+    {
+      "pattern": "0 22-2 * * *",
+      "quartz": false,
+      "text": "cada hora de las 22:00 a las 02:00"
+    },
+    {
+      "pattern": "0 9 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 15 * *",
+      "quartz": false,
+      "text": "el 15 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 1,15 * *",
+      "quartz": false,
+      "text": "los días 1 y 15 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 1,10,20 * *",
+      "quartz": false,
+      "text": "los días 1, 10 y 20 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 1-7 * *",
+      "quartz": false,
+      "text": "del 1 al 7 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 1-7,15 * *",
+      "quartz": false,
+      "text": "los días 1 a 7 y 15 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 */2 * *",
+      "quartz": false,
+      "text": "cada dos días del mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 2/2 * *",
+      "quartz": false,
+      "text": "cada dos días del mes desde el 2 a las 09:00"
+    },
+    {
+      "pattern": "0 9 */5 * *",
+      "quartz": false,
+      "text": "cada cinco días del mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+      "quartz": false,
+      "text": "los días 1, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 29 y 31 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 L * *",
+      "quartz": true,
+      "text": "el último día del mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 15W * *",
+      "quartz": true,
+      "text": "el día laborable más cercano al 15 a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 1 *",
+      "quartz": false,
+      "text": "todos los días de enero a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 6 *",
+      "quartz": false,
+      "text": "todos los días de junio a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 1,7 *",
+      "quartz": false,
+      "text": "todos los días de enero y julio a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 3,6,9,12 *",
+      "quartz": false,
+      "text": "todos los días de marzo, junio, septiembre y diciembre a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 6-8 *",
+      "quartz": false,
+      "text": "todos los días de junio a agosto a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 6-8,12 *",
+      "quartz": false,
+      "text": "todos los días de junio a agosto y de diciembre a las 09:00"
+    },
+    {
+      "pattern": "0 9 * */2 *",
+      "quartz": false,
+      "text": "todos los días de enero, marzo, mayo, julio, septiembre y noviembre a las 09:00"
+    },
+    {
+      "pattern": "0 9 * */3 *",
+      "quartz": false,
+      "text": "todos los días de enero, abril, julio y octubre a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 1-11 *",
+      "quartz": false,
+      "text": "todos los días de enero a noviembre a las 09:00"
+    },
+    {
+      "pattern": "0 9 * 11-2 *",
+      "quartz": false,
+      "text": "todos los días de noviembre a febrero a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 1",
+      "quartz": false,
+      "text": "los lunes a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 0",
+      "quartz": false,
+      "text": "los domingos a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 1,3,5",
+      "quartz": false,
+      "text": "los lunes, miércoles y viernes a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 1-5",
+      "quartz": false,
+      "text": "de lunes a viernes a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 0,6",
+      "quartz": false,
+      "text": "los sábados y domingos a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 1-6",
+      "quartz": false,
+      "text": "de lunes a sábado a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 2,4",
+      "quartz": false,
+      "text": "los martes y jueves a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 5L",
+      "quartz": true,
+      "text": "el último viernes del mes a las 09:00"
+    },
+    {
+      "pattern": "0 9 * * 1#2",
+      "quartz": true,
+      "text": "el segundo lunes del mes a las 09:00"
+    },
+    {
+      "pattern": "* */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada segundo, cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes"
+    },
+    {
+      "pattern": "30 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en el segundo 30 de cada minuto, cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes"
+    },
+    {
+      "pattern": "0,30 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en los segundos 0 y 30 de cada minuto, cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes"
+    },
+    {
+      "pattern": "*/6 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada seis segundos, cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 segundos, cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes"
+    },
+    {
+      "pattern": "0-9 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada segundo del 0 al 9 de cada minuto, cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes"
+    },
+    {
+      "pattern": "5/10 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada diez segundos a partir del segundo 5 de cada minuto, cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes"
+    },
+    {
+      "pattern": "* 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada minuto de las 09:00 a las 17:59 de lunes a viernes"
+    },
+    {
+      "pattern": "0 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada hora de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "30 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en el minuto 30 de cada hora, de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "0,30 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en los minutos 0 y 30 de cada hora, de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "5,20,45 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en los minutos 5, 20 y 45 de cada hora, de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "0-29 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada minuto del 0 al 29, de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "0-29,45 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en los minutos 0 a 29 y 45 de cada hora, de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "*/7 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada siete minutos del minuto 0 al 56 de cada hora, de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "5/15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos a partir del minuto 5 de cada hora de las 09:00 a las 17:50 de lunes a viernes"
+    },
+    {
+      "pattern": "0,15,45 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en los minutos 0, 15 y 45 de cada hora, de las 09:00 a las 17:00 de lunes a viernes"
+    },
+    {
+      "pattern": "10-40/10 9-17 * * 1-5",
+      "quartz": false,
+      "text": "en los minutos 10, 20, 30 y 40 de cada hora de las 09:00 a las 17:40 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 * * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 0 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 00:00 a las 00:45 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 09:45 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 12 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 12:00 a las 12:45 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9,17 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 09:59 y de las 17:00 a las 17:59 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 8,12,18 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 08:00 a las 08:59, de las 12:00 a las 12:59 y de las 18:00 a las 18:59 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17,22 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:59 y de las 22:00 a las 22:59 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 */2 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos, durante las horas pares de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 */6 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos, durante las horas de las 0, 6, 12 y 18 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 1/2 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos, durante las horas impares de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 00:00 a las 00:59, de las 02:00 a las 02:59, de las 04:00 a las 04:59, de las 06:00 a las 06:59, de las 10:00 a las 10:59, de las 12:00 a las 12:59, de las 14:00 a las 14:59, de las 16:00 a las 16:59, de las 18:00 a las 18:59, de las 20:00 a las 20:59 y de las 22:00 a las 22:59 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 22-2 * * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 22:00 a las 02:45 de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 1 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea el 1 de cada mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 15 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea el 15 de cada mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 1,15 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea los días 1 y 15 del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 1,10,20 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea los días 1, 10 y 20 del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 1-7 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea del 1 al 7 del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 1-7,15 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea los días 1 a 7 y 15 del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 */2 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea un día impar del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 2/2 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea un día par del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 */5 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea cada cinco días del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea los días 1, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 29 y 31 del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 L * 1-5",
+      "quartz": true,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea el último día del mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 15W * 1-5",
+      "quartz": true,
+      "text": "cada 15 minutos de las 09:00 a las 17:45, ya sea el día laborable más cercano al 15 o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "*/15 9-17 * 1 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes de enero"
+    },
+    {
+      "pattern": "*/15 9-17 * 6 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes de junio"
+    },
+    {
+      "pattern": "*/15 9-17 * 1,7 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes de enero y julio"
+    },
+    {
+      "pattern": "*/15 9-17 * 3,6,9,12 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes de marzo, junio, septiembre y diciembre"
+    },
+    {
+      "pattern": "*/15 9-17 * 6-8 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes, de junio a agosto"
+    },
+    {
+      "pattern": "*/15 9-17 * 6-8,12 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes, de junio a agosto y de diciembre"
+    },
+    {
+      "pattern": "*/15 9-17 * */2 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes de enero, marzo, mayo, julio, septiembre y noviembre"
+    },
+    {
+      "pattern": "*/15 9-17 * */3 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes de enero, abril, julio y octubre"
+    },
+    {
+      "pattern": "*/15 9-17 * 1-11 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes, de enero a noviembre"
+    },
+    {
+      "pattern": "*/15 9-17 * 11-2 1-5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a viernes, de noviembre a febrero"
+    },
+    {
+      "pattern": "*/15 9-17 * * *",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45"
+    },
+    {
+      "pattern": "*/15 9-17 * * 1",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 los lunes"
+    },
+    {
+      "pattern": "*/15 9-17 * * 0",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 los domingos"
+    },
+    {
+      "pattern": "*/15 9-17 * * 1,3,5",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 los lunes, miércoles y viernes"
+    },
+    {
+      "pattern": "*/15 9-17 * * 0,6",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 los sábados y domingos"
+    },
+    {
+      "pattern": "*/15 9-17 * * 1-6",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 de lunes a sábado"
+    },
+    {
+      "pattern": "*/15 9-17 * * 2,4",
+      "quartz": false,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 los martes y jueves"
+    },
+    {
+      "pattern": "*/15 9-17 * * 5L",
+      "quartz": true,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 el último viernes del mes"
+    },
+    {
+      "pattern": "*/15 9-17 * * 1#2",
+      "quartz": true,
+      "text": "cada 15 minutos de las 09:00 a las 17:45 el segundo lunes del mes"
+    },
+    {
+      "pattern": "* 0 0 1 * *",
+      "quartz": false,
+      "text": "cada segundo durante un minuto a medianoche, el 1 de cada mes"
+    },
+    {
+      "pattern": "30 0 0 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 00:00:30"
+    },
+    {
+      "pattern": "0,30 0 0 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes, en los segundos 0 y 30 de las 00:00"
+    },
+    {
+      "pattern": "*/6 0 0 1 * *",
+      "quartz": false,
+      "text": "cada seis segundos durante un minuto a medianoche, el 1 de cada mes"
+    },
+    {
+      "pattern": "*/15 0 0 1 * *",
+      "quartz": false,
+      "text": "cada 15 segundos durante un minuto a medianoche, el 1 de cada mes"
+    },
+    {
+      "pattern": "0-9 0 0 1 * *",
+      "quartz": false,
+      "text": "cada segundo del 0 al 9 de cada minuto, el 1 de cada mes a las 00:00"
+    },
+    {
+      "pattern": "5/10 0 0 1 * *",
+      "quartz": false,
+      "text": "cada diez segundos a partir del segundo 5 de cada minuto durante un minuto a medianoche, el 1 de cada mes"
+    },
+    {
+      "pattern": "* 0 1 * *",
+      "quartz": false,
+      "text": "cada minuto de la hora de las 00:00 el 1 de cada mes"
+    },
+    {
+      "pattern": "30 0 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 00:30"
+    },
+    {
+      "pattern": "0,30 0 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 00:00 y 00:30"
+    },
+    {
+      "pattern": "5,20,45 0 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 00:05, 00:20 y 00:45"
+    },
+    {
+      "pattern": "0-29 0 1 * *",
+      "quartz": false,
+      "text": "cada minuto de las 00:00 a las 00:29 el 1 de cada mes"
+    },
+    {
+      "pattern": "0-29,45 0 1 * *",
+      "quartz": false,
+      "text": "en los minutos 0 a 29 y 45 de cada hora, a las 00:00 el 1 de cada mes"
+    },
+    {
+      "pattern": "*/15 0 1 * *",
+      "quartz": false,
+      "text": "cada 15 minutos de las 00:00 a las 00:45 el 1 de cada mes"
+    },
+    {
+      "pattern": "*/7 0 1 * *",
+      "quartz": false,
+      "text": "cada siete minutos del minuto 0 al 56 de cada hora, a medianoche el 1 de cada mes"
+    },
+    {
+      "pattern": "5/15 0 1 * *",
+      "quartz": false,
+      "text": "cada 15 minutos a partir del minuto 5 de cada hora de las 00:00 a las 00:50 el 1 de cada mes"
+    },
+    {
+      "pattern": "0,15,45 0 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 00:00, 00:15 y 00:45"
+    },
+    {
+      "pattern": "10-40/10 0 1 * *",
+      "quartz": false,
+      "text": "en los minutos 10, 20, 30 y 40 de cada hora de las 00:00 a las 00:40 el 1 de cada mes"
+    },
+    {
+      "pattern": "0 * 1 * *",
+      "quartz": false,
+      "text": "cada hora el 1 de cada mes"
+    },
+    {
+      "pattern": "0 9 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 09:00"
+    },
+    {
+      "pattern": "0 12 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 12:00"
+    },
+    {
+      "pattern": "0 9,17 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 09:00 y 17:00"
+    },
+    {
+      "pattern": "0 8,12,18 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 08:00, 12:00 y 18:00"
+    },
+    {
+      "pattern": "0 9-17 1 * *",
+      "quartz": false,
+      "text": "cada hora de las 09:00 a las 17:00 el 1 de cada mes"
+    },
+    {
+      "pattern": "0 9-17,22 1 * *",
+      "quartz": false,
+      "text": "cada hora de las 09:00 a las 17:00 y también a las 22:00 el 1 de cada mes"
+    },
+    {
+      "pattern": "0 */2 1 * *",
+      "quartz": false,
+      "text": "cada dos horas el 1 de cada mes"
+    },
+    {
+      "pattern": "0 */6 1 * *",
+      "quartz": false,
+      "text": "cada seis horas el 1 de cada mes"
+    },
+    {
+      "pattern": "0 1/2 1 * *",
+      "quartz": false,
+      "text": "cada dos horas a partir de la 01:00 el 1 de cada mes"
+    },
+    {
+      "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *",
+      "quartz": false,
+      "text": "el 1 de cada mes a las 00:00, 02:00, 04:00, 06:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00 y 22:00"
+    },
+    {
+      "pattern": "0 22-2 1 * *",
+      "quartz": false,
+      "text": "cada hora de las 22:00 a las 02:00 el 1 de cada mes"
+    },
+    {
+      "pattern": "0 0 * * *",
+      "quartz": false,
+      "text": "todos los días a las 00:00"
+    },
+    {
+      "pattern": "0 0 15 * *",
+      "quartz": false,
+      "text": "el 15 de cada mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 1,15 * *",
+      "quartz": false,
+      "text": "los días 1 y 15 de cada mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 1,10,20 * *",
+      "quartz": false,
+      "text": "los días 1, 10 y 20 de cada mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 1-7 * *",
+      "quartz": false,
+      "text": "del 1 al 7 de cada mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 1-7,15 * *",
+      "quartz": false,
+      "text": "los días 1 a 7 y 15 de cada mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 */2 * *",
+      "quartz": false,
+      "text": "cada dos días del mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 2/2 * *",
+      "quartz": false,
+      "text": "cada dos días del mes desde el 2 a las 00:00"
+    },
+    {
+      "pattern": "0 0 */5 * *",
+      "quartz": false,
+      "text": "cada cinco días del mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+      "quartz": false,
+      "text": "los días 1, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 29 y 31 de cada mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 L * *",
+      "quartz": true,
+      "text": "el último día del mes a las 00:00"
+    },
+    {
+      "pattern": "0 0 15W * *",
+      "quartz": true,
+      "text": "el día laborable más cercano al 15 a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 1 *",
+      "quartz": false,
+      "text": "el 1 de enero a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 6 *",
+      "quartz": false,
+      "text": "el 1 de junio a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 1,7 *",
+      "quartz": false,
+      "text": "el 1 de enero y julio a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 3,6,9,12 *",
+      "quartz": false,
+      "text": "el 1 de marzo, junio, septiembre y diciembre a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 6-8 *",
+      "quartz": false,
+      "text": "el 1 de cada mes, de junio a agosto a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 6-8,12 *",
+      "quartz": false,
+      "text": "el 1 de cada mes, de junio a agosto y de diciembre a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 */2 *",
+      "quartz": false,
+      "text": "el 1 de enero, marzo, mayo, julio, septiembre y noviembre a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 */3 *",
+      "quartz": false,
+      "text": "el 1 de enero, abril, julio y octubre a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 1-11 *",
+      "quartz": false,
+      "text": "el 1 de cada mes, de enero a noviembre a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 11-2 *",
+      "quartz": false,
+      "text": "el 1 de cada mes, de noviembre a febrero a las 00:00"
+    },
+    {
+      "pattern": "0 0 1 * 1",
+      "quartz": false,
+      "text": "a las 00:00, ya sea el 1 de cada mes o cualquier lunes"
+    },
+    {
+      "pattern": "0 0 1 * 0",
+      "quartz": false,
+      "text": "a las 00:00, ya sea el 1 de cada mes o cualquier domingo"
+    },
+    {
+      "pattern": "0 0 1 * 1,3,5",
+      "quartz": false,
+      "text": "a las 00:00, ya sea el 1 de cada mes o los lunes, miércoles y viernes"
+    },
+    {
+      "pattern": "0 0 1 * 1-5",
+      "quartz": false,
+      "text": "a las 00:00, ya sea el 1 de cada mes o cualquier día de lunes a viernes"
+    },
+    {
+      "pattern": "0 0 1 * 0,6",
+      "quartz": false,
+      "text": "a las 00:00, ya sea el 1 de cada mes o los sábados y domingos"
+    },
+    {
+      "pattern": "0 0 1 * 1-6",
+      "quartz": false,
+      "text": "a las 00:00, ya sea el 1 de cada mes o cualquier día de lunes a sábado"
+    },
+    {
+      "pattern": "0 0 1 * 2,4",
+      "quartz": false,
+      "text": "a las 00:00, ya sea el 1 de cada mes o los martes y jueves"
+    },
+    {
+      "pattern": "0 0 1 * 5L",
+      "quartz": true,
+      "text": "a las 00:00, ya sea el 1 de cada mes o el último viernes del mes"
+    },
+    {
+      "pattern": "0 0 1 * 1#2",
+      "quartz": true,
+      "text": "a las 00:00, ya sea el 1 de cada mes o el segundo lunes del mes"
+    },
+    {
+      "pattern": "* * * * * *",
+      "quartz": false,
+      "text": "cada segundo"
+    },
+    {
+      "pattern": "30 * * * * *",
+      "quartz": false,
+      "text": "en el segundo 30 de cada minuto"
+    },
+    {
+      "pattern": "0,30 * * * * *",
+      "quartz": false,
+      "text": "en los segundos 0 y 30 de cada minuto"
+    },
+    {
+      "pattern": "*/6 * * * * *",
+      "quartz": false,
+      "text": "cada seis segundos"
+    },
+    {
+      "pattern": "*/15 * * * * *",
+      "quartz": false,
+      "text": "cada 15 segundos"
+    },
+    {
+      "pattern": "0-9 * * * * *",
+      "quartz": false,
+      "text": "cada segundo del 0 al 9 de cada minuto"
+    },
+    {
+      "pattern": "5/10 * * * * *",
+      "quartz": false,
+      "text": "cada diez segundos a partir del segundo 5 de cada minuto"
+    },
+    {
+      "pattern": "0 * * * *",
+      "quartz": false,
+      "text": "cada hora"
+    },
+    {
+      "pattern": "30 * * * *",
+      "quartz": false,
+      "text": "en el minuto 30 de cada hora"
+    },
+    {
+      "pattern": "0,30 * * * *",
+      "quartz": false,
+      "text": "en los minutos 0 y 30 de cada hora"
+    },
+    {
+      "pattern": "5,20,45 * * * *",
+      "quartz": false,
+      "text": "en los minutos 5, 20 y 45 de cada hora"
+    },
+    {
+      "pattern": "0-29 * * * *",
+      "quartz": false,
+      "text": "cada minuto del 0 al 29 de cada hora"
+    },
+    {
+      "pattern": "0-29,45 * * * *",
+      "quartz": false,
+      "text": "en los minutos 0 a 29 y 45 de cada hora"
+    },
+    {
+      "pattern": "*/15 * * * *",
+      "quartz": false,
+      "text": "cada 15 minutos"
+    },
+    {
+      "pattern": "*/7 * * * *",
+      "quartz": false,
+      "text": "cada siete minutos del minuto 0 al 56 de cada hora"
+    },
+    {
+      "pattern": "5/15 * * * *",
+      "quartz": false,
+      "text": "cada 15 minutos a partir del minuto 5 de cada hora"
+    },
+    {
+      "pattern": "0,15,45 * * * *",
+      "quartz": false,
+      "text": "en los minutos 0, 15 y 45 de cada hora"
+    },
+    {
+      "pattern": "10-40/10 * * * *",
+      "quartz": false,
+      "text": "en los minutos 10, 20, 30 y 40 de cada hora"
+    },
+    {
+      "pattern": "* 0 * * *",
+      "quartz": false,
+      "text": "cada minuto de la hora de las 00:00"
+    },
+    {
+      "pattern": "* 9 * * *",
+      "quartz": false,
+      "text": "cada minuto de la hora de las 09:00"
+    },
+    {
+      "pattern": "* 12 * * *",
+      "quartz": false,
+      "text": "cada minuto de la hora de las 12:00"
+    },
+    {
+      "pattern": "* 9,17 * * *",
+      "quartz": false,
+      "text": "cada minuto de las 09:00 a las 09:59 y de las 17:00 a las 17:59"
+    },
+    {
+      "pattern": "* 8,12,18 * * *",
+      "quartz": false,
+      "text": "cada minuto de las 08:00 a las 08:59, de las 12:00 a las 12:59 y de las 18:00 a las 18:59"
+    },
+    {
+      "pattern": "* 9-17 * * *",
+      "quartz": false,
+      "text": "cada minuto de las 09:00 a las 17:59"
+    },
+    {
+      "pattern": "* 9-17,22 * * *",
+      "quartz": false,
+      "text": "cada minuto de las 09:00 a las 17:59 y de las 22:00 a las 22:59"
+    },
+    {
+      "pattern": "* */2 * * *",
+      "quartz": false,
+      "text": "cada minuto, durante las horas pares"
+    },
+    {
+      "pattern": "* */6 * * *",
+      "quartz": false,
+      "text": "cada minuto, durante las horas de las 0, 6, 12 y 18"
+    },
+    {
+      "pattern": "* 1/2 * * *",
+      "quartz": false,
+      "text": "cada minuto, durante las horas impares"
+    },
+    {
+      "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *",
+      "quartz": false,
+      "text": "cada minuto de las 00:00 a las 00:59, de las 02:00 a las 02:59, de las 04:00 a las 04:59, de las 06:00 a las 06:59, de las 10:00 a las 10:59, de las 12:00 a las 12:59, de las 14:00 a las 14:59, de las 16:00 a las 16:59, de las 18:00 a las 18:59, de las 20:00 a las 20:59 y de las 22:00 a las 22:59"
+    },
+    {
+      "pattern": "* 22-2 * * *",
+      "quartz": false,
+      "text": "cada minuto de las 22:00 a las 02:59"
+    },
+    {
+      "pattern": "* * 1 * *",
+      "quartz": false,
+      "text": "cada minuto el 1 de cada mes"
+    },
+    {
+      "pattern": "* * 15 * *",
+      "quartz": false,
+      "text": "cada minuto el 15 de cada mes"
+    },
+    {
+      "pattern": "* * 1,15 * *",
+      "quartz": false,
+      "text": "cada minuto los días 1 y 15 de cada mes"
+    },
+    {
+      "pattern": "* * 1,10,20 * *",
+      "quartz": false,
+      "text": "cada minuto los días 1, 10 y 20 de cada mes"
+    },
+    {
+      "pattern": "* * 1-7 * *",
+      "quartz": false,
+      "text": "cada minuto del 1 al 7 de cada mes"
+    },
+    {
+      "pattern": "* * 1-7,15 * *",
+      "quartz": false,
+      "text": "cada minuto los días 1 a 7 y 15 de cada mes"
+    },
+    {
+      "pattern": "* * */2 * *",
+      "quartz": false,
+      "text": "cada minuto cada dos días del mes"
+    },
+    {
+      "pattern": "* * 2/2 * *",
+      "quartz": false,
+      "text": "cada minuto cada dos días del mes desde el 2"
+    },
+    {
+      "pattern": "* * */5 * *",
+      "quartz": false,
+      "text": "cada minuto cada cinco días del mes"
+    },
+    {
+      "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+      "quartz": false,
+      "text": "cada minuto los días 1, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 29 y 31 de cada mes"
+    },
+    {
+      "pattern": "* * L * *",
+      "quartz": true,
+      "text": "cada minuto el último día del mes"
+    },
+    {
+      "pattern": "* * 15W * *",
+      "quartz": true,
+      "text": "cada minuto el día laborable más cercano al 15"
+    },
+    {
+      "pattern": "* * * 1 *",
+      "quartz": false,
+      "text": "cada minuto en enero"
+    },
+    {
+      "pattern": "* * * 6 *",
+      "quartz": false,
+      "text": "cada minuto en junio"
+    },
+    {
+      "pattern": "* * * 1,7 *",
+      "quartz": false,
+      "text": "cada minuto en enero y julio"
+    },
+    {
+      "pattern": "* * * 3,6,9,12 *",
+      "quartz": false,
+      "text": "cada minuto en marzo, junio, septiembre y diciembre"
+    },
+    {
+      "pattern": "* * * 6-8 *",
+      "quartz": false,
+      "text": "cada minuto de junio a agosto"
+    },
+    {
+      "pattern": "* * * 6-8,12 *",
+      "quartz": false,
+      "text": "cada minuto de junio a agosto y en diciembre"
+    },
+    {
+      "pattern": "* * * */2 *",
+      "quartz": false,
+      "text": "cada minuto en enero, marzo, mayo, julio, septiembre y noviembre"
+    },
+    {
+      "pattern": "* * * */3 *",
+      "quartz": false,
+      "text": "cada minuto en enero, abril, julio y octubre"
+    },
+    {
+      "pattern": "* * * 1-11 *",
+      "quartz": false,
+      "text": "cada minuto de enero a noviembre"
+    },
+    {
+      "pattern": "* * * 11-2 *",
+      "quartz": false,
+      "text": "cada minuto de noviembre a febrero"
+    },
+    {
+      "pattern": "* * * * 1",
+      "quartz": false,
+      "text": "cada minuto los lunes"
+    },
+    {
+      "pattern": "* * * * 0",
+      "quartz": false,
+      "text": "cada minuto los domingos"
+    },
+    {
+      "pattern": "* * * * 1,3,5",
+      "quartz": false,
+      "text": "cada minuto los lunes, miércoles y viernes"
+    },
+    {
+      "pattern": "* * * * 1-5",
+      "quartz": false,
+      "text": "cada minuto de lunes a viernes"
+    },
+    {
+      "pattern": "* * * * 0,6",
+      "quartz": false,
+      "text": "cada minuto los sábados y domingos"
+    },
+    {
+      "pattern": "* * * * 1-6",
+      "quartz": false,
+      "text": "cada minuto de lunes a sábado"
+    },
+    {
+      "pattern": "* * * * 2,4",
+      "quartz": false,
+      "text": "cada minuto los martes y jueves"
+    },
+    {
+      "pattern": "* * * * 5L",
+      "quartz": true,
+      "text": "cada minuto el último viernes del mes"
+    },
+    {
+      "pattern": "* * * * 1#2",
+      "quartz": true,
+      "text": "cada minuto el segundo lunes del mes"
+    }
+  ],
+  "singleCharacter": {
+    "equivalentViolations": [
+      {
+        "a": "* */2 * * * *",
+        "b": "* */02 * * * *",
+        "distance": 0.4444444444444444
+      },
+      {
+        "a": "* */2 * * * *",
+        "b": "* 0/2 * * * *",
+        "distance": 0.4444444444444444
+      },
+      {
+        "a": "* 0 * * * *",
+        "b": "* 00 * * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "* 0-30 * * * *",
+        "b": "* 0-030 * * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 0-30 * * * *",
+        "b": "* 00-30 * * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 0-30 */2 * * *",
+        "b": "* 0-030 */2 * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 0-30 */2 * * *",
+        "b": "* 00-30 */2 * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 0-30 9,17 * * *",
+        "b": "* 0-030 9,17 * * *",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "* 0-30 9,17 * * *",
+        "b": "* 00-30 9,17 * * *",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "* 0-30 9-17 * * *",
+        "b": "* 0-030 9-17 * * *",
+        "distance": 0.07142857142857142
+      },
+      {
+        "a": "* 0-30 9-17 * * *",
+        "b": "* 00-30 9-17 * * *",
+        "distance": 0.07142857142857142
+      },
+      {
+        "a": "* 1 9-17 * * *",
+        "b": "* 01 9-17 * * *",
+        "distance": 0.06666666666666667
+      },
+      {
+        "a": "* 5,30 * * * *",
+        "b": "* 05,30 * * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 5,30 * * * *",
+        "b": "* 5,030 * * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 5,30 */2 * * *",
+        "b": "* 05,30 */2 * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 5,30 */2 * * *",
+        "b": "* 5,030 */2 * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "* 5,30 9-17/2 * * *",
+        "b": "* 05,30 9-17/2 * * *",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "* 5,30 9-17/2 * * *",
+        "b": "* 5,030 9-17/2 * * *",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "*/15 0 * * * *",
+        "b": "*/15 00 * * * *",
+        "distance": 0.1
+      },
+      {
+        "a": "0 * * * * *",
+        "b": "00 * * * * *",
+        "distance": 0.7142857142857143
+      },
+      {
+        "a": "0 * */2 * * *",
+        "b": "00 * */2 * * *",
+        "distance": 0.5384615384615384
+      },
+      {
+        "a": "0 * 0 * * *",
+        "b": "00 * 0 * * *",
+        "distance": 0.4666666666666667
+      },
+      {
+        "a": "0 * 9-17 * * *",
+        "b": "00 * 9-17 * * *",
+        "distance": 0.4666666666666667
+      },
+      {
+        "a": "0 * 9-17/2 * * *",
+        "b": "00 * 9-17/2 * * *",
+        "distance": 0.3888888888888889
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "00 */2 * * * *",
+        "distance": 0.9
+      },
+      {
+        "a": "0 */2 */2 * * *",
+        "b": "00 */2 */2 * * *",
+        "distance": 0.5
+      },
+      {
+        "a": "0 */2 0 * * *",
+        "b": "00 */2 0 * * *",
+        "distance": 0.4375
+      },
+      {
+        "a": "0 */2 9-17/2 * * *",
+        "b": "00 */2 9-17/2 * * *",
+        "distance": 0.3684210526315789
+      },
+      {
+        "a": "0 */5 * * * 1",
+        "b": "00 */5 * * * 1",
+        "distance": 0.7692307692307693
+      },
+      {
+        "a": "0 */5 * * * 1-5",
+        "b": "00 */5 * * * 1-5",
+        "distance": 0.6666666666666666
+      },
+      {
+        "a": "0 */5 * * * 5L",
+        "b": "00 */5 * * * 5L",
+        "distance": 0.625
+      },
+      {
+        "a": "0 */5 * * */3 *",
+        "b": "00 */5 * * */3 *",
+        "distance": 0.5882352941176471
+      },
+      {
+        "a": "0 */5 * * 6 *",
+        "b": "00 */5 * * 6 *",
+        "distance": 0.7692307692307693
+      },
+      {
+        "a": "0 */5 * */2 * *",
+        "b": "00 */5 * */2 * *",
+        "distance": 0.625
+      },
+      {
+        "a": "0 */5 * 1 * *",
+        "b": "0 */5 * 01 * *",
+        "distance": 0.125
+      },
+      {
+        "a": "0 */5 * 1 * *",
+        "b": "00 */5 * 1 * *",
+        "distance": 0.625
+      },
+      {
+        "a": "0 */5 * 1 * 5",
+        "b": "0 */5 * 01 * 5",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 */5 * 1 * 5",
+        "b": "00 */5 * 1 * 5",
+        "distance": 0.47619047619047616
+      },
+      {
+        "a": "0 */5 * 1 6 *",
+        "b": "0 */5 * 01 6 *",
+        "distance": 0.14285714285714285
+      },
+      {
+        "a": "0 */5 * 1 6 *",
+        "b": "00 */5 * 1 6 *",
+        "distance": 0.6666666666666666
+      },
+      {
+        "a": "0 */5 * 1 6 5",
+        "b": "0 */5 * 01 6 5",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 */5 * 1 6 5",
+        "b": "00 */5 * 1 6 5",
+        "distance": 0.47619047619047616
+      },
+      {
+        "a": "0 */5 * L * *",
+        "b": "00 */5 * L * *",
+        "distance": 0.625
+      },
+      {
+        "a": "0 */5 */2 * * 1",
+        "b": "00 */5 */2 * * 1",
+        "distance": 0.4375
+      },
+      {
+        "a": "0 */5 */2 * * 1-5",
+        "b": "00 */5 */2 * * 1-5",
+        "distance": 0.3888888888888889
+      },
+      {
+        "a": "0 */5 */2 * * 5L",
+        "b": "00 */5 */2 * * 5L",
+        "distance": 0.3684210526315789
+      },
+      {
+        "a": "0 */5 */2 * */3 *",
+        "b": "00 */5 */2 * */3 *",
+        "distance": 0.35
+      },
+      {
+        "a": "0 */5 */2 * 6 *",
+        "b": "00 */5 */2 * 6 *",
+        "distance": 0.4375
+      },
+      {
+        "a": "0 */5 */2 */2 * *",
+        "b": "00 */5 */2 */2 * *",
+        "distance": 0.3684210526315789
+      },
+      {
+        "a": "0 */5 */2 1 * *",
+        "b": "0 */5 */2 01 * *",
+        "distance": 0.08333333333333333
+      },
+      {
+        "a": "0 */5 */2 1 * *",
+        "b": "00 */5 */2 1 * *",
+        "distance": 0.3684210526315789
+      },
+      {
+        "a": "0 */5 */2 1 * 5",
+        "b": "0 */5 */2 01 * 5",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 */5 */2 1 * 5",
+        "b": "00 */5 */2 1 * 5",
+        "distance": 0.5
+      },
+      {
+        "a": "0 */5 */2 1 6 *",
+        "b": "0 */5 */2 01 6 *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "0 */5 */2 1 6 *",
+        "b": "00 */5 */2 1 6 *",
+        "distance": 0.3888888888888889
+      },
+      {
+        "a": "0 */5 */2 1 6 5",
+        "b": "0 */5 */2 01 6 5",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 */5 */2 1 6 5",
+        "b": "00 */5 */2 1 6 5",
+        "distance": 0.5
+      },
+      {
+        "a": "0 */5 */2 L * *",
+        "b": "00 */5 */2 L * *",
+        "distance": 0.3684210526315789
+      },
+      {
+        "a": "0 */5 9,17 * * 1",
+        "b": "00 */5 9,17 * * 1",
+        "distance": 0.28
+      },
+      {
+        "a": "0 */5 9,17 * * 1-5",
+        "b": "00 */5 9,17 * * 1-5",
+        "distance": 0.25925925925925924
+      },
+      {
+        "a": "0 */5 9,17 * * 5L",
+        "b": "00 */5 9,17 * * 5L",
+        "distance": 0.25
+      },
+      {
+        "a": "0 */5 9,17 * */3 *",
+        "b": "00 */5 9,17 * */3 *",
+        "distance": 0.2413793103448276
+      },
+      {
+        "a": "0 */5 9,17 * 6 *",
+        "b": "00 */5 9,17 * 6 *",
+        "distance": 0.28
+      },
+      {
+        "a": "0 */5 9,17 */2 * *",
+        "b": "00 */5 9,17 */2 * *",
+        "distance": 0.25
+      },
+      {
+        "a": "0 */5 9,17 1 * *",
+        "b": "0 */5 9,17 01 * *",
+        "distance": 0.047619047619047616
+      },
+      {
+        "a": "0 */5 9,17 1 * *",
+        "b": "00 */5 9,17 1 * *",
+        "distance": 0.25
+      },
+      {
+        "a": "0 */5 9,17 1 * 5",
+        "b": "0 */5 9,17 01 * 5",
+        "distance": 0.038461538461538464
+      },
+      {
+        "a": "0 */5 9,17 1 * 5",
+        "b": "00 */5 9,17 1 * 5",
+        "distance": 0.3953488372093023
+      },
+      {
+        "a": "0 */5 9,17 1 6 *",
+        "b": "0 */5 9,17 01 6 *",
+        "distance": 0.05
+      },
+      {
+        "a": "0 */5 9,17 1 6 *",
+        "b": "00 */5 9,17 1 6 *",
+        "distance": 0.25925925925925924
+      },
+      {
+        "a": "0 */5 9,17 1 6 5",
+        "b": "0 */5 9,17 01 6 5",
+        "distance": 0.038461538461538464
+      },
+      {
+        "a": "0 */5 9,17 1 6 5",
+        "b": "00 */5 9,17 1 6 5",
+        "distance": 0.3953488372093023
+      },
+      {
+        "a": "0 */5 9,17 L * *",
+        "b": "00 */5 9,17 L * *",
+        "distance": 0.25
+      },
+      {
+        "a": "0 */5 9-17 * * 1",
+        "b": "00 */5 9-17 * * 1",
+        "distance": 0.3888888888888889
+      },
+      {
+        "a": "0 */5 9-17 * * 1-5",
+        "b": "00 */5 9-17 * * 1-5",
+        "distance": 0.35
+      },
+      {
+        "a": "0 */5 9-17 * * 5L",
+        "b": "00 */5 9-17 * * 5L",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 */5 9-17 * */3 *",
+        "b": "00 */5 9-17 * */3 *",
+        "distance": 0.3181818181818182
+      },
+      {
+        "a": "0 */5 9-17 * 6 *",
+        "b": "00 */5 9-17 * 6 *",
+        "distance": 0.3888888888888889
+      },
+      {
+        "a": "0 */5 9-17 */2 * *",
+        "b": "00 */5 9-17 */2 * *",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 */5 9-17 1 * *",
+        "b": "0 */5 9-17 01 * *",
+        "distance": 0.07142857142857142
+      },
+      {
+        "a": "0 */5 9-17 1 * *",
+        "b": "00 */5 9-17 1 * *",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 */5 9-17 1 * 5",
+        "b": "0 */5 9-17 01 * 5",
+        "distance": 0.05263157894736842
+      },
+      {
+        "a": "0 */5 9-17 1 * 5",
+        "b": "00 */5 9-17 1 * 5",
+        "distance": 0.4722222222222222
+      },
+      {
+        "a": "0 */5 9-17 1 6 *",
+        "b": "0 */5 9-17 01 6 *",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 */5 9-17 1 6 *",
+        "b": "00 */5 9-17 1 6 *",
+        "distance": 0.35
+      },
+      {
+        "a": "0 */5 9-17 1 6 5",
+        "b": "0 */5 9-17 01 6 5",
+        "distance": 0.05263157894736842
+      },
+      {
+        "a": "0 */5 9-17 1 6 5",
+        "b": "00 */5 9-17 1 6 5",
+        "distance": 0.4722222222222222
+      },
+      {
+        "a": "0 */5 9-17 L * *",
+        "b": "00 */5 9-17 L * *",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 00 * * * *",
+        "distance": 0.7142857142857143
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "00 0 * * * *",
+        "distance": 0.8181818181818182
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "00 0 */2 * * *",
+        "distance": 0.7
+      },
+      {
+        "a": "0 0 */2 * * 1",
+        "b": "00 0 */2 * * 1",
+        "distance": 0.5833333333333334
+      },
+      {
+        "a": "0 0 */2 * * 1-5",
+        "b": "00 0 */2 * * 1-5",
+        "distance": 0.5
+      },
+      {
+        "a": "0 0 */2 * * 5L",
+        "b": "00 0 */2 * * 5L",
+        "distance": 0.4666666666666667
+      },
+      {
+        "a": "0 0 */2 * */3 *",
+        "b": "00 0 */2 * */3 *",
+        "distance": 0.4375
+      },
+      {
+        "a": "0 0 */2 * 6 *",
+        "b": "00 0 */2 * 6 *",
+        "distance": 0.5833333333333334
+      },
+      {
+        "a": "0 0 */2 */2 * *",
+        "b": "00 0 */2 */2 * *",
+        "distance": 0.4666666666666667
+      },
+      {
+        "a": "0 0 */2 1 * *",
+        "b": "0 0 */2 01 * *",
+        "distance": 0.125
+      },
+      {
+        "a": "0 0 */2 1 * *",
+        "b": "00 0 */2 1 * *",
+        "distance": 0.4666666666666667
+      },
+      {
+        "a": "0 0 */2 1 * 5",
+        "b": "0 0 */2 01 * 5",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 0 */2 1 * 5",
+        "b": "00 0 */2 1 * 5",
+        "distance": 0.35
+      },
+      {
+        "a": "0 0 */2 1 6 *",
+        "b": "0 0 */2 01 6 *",
+        "distance": 0.14285714285714285
+      },
+      {
+        "a": "0 0 */2 1 6 *",
+        "b": "00 0 */2 1 6 *",
+        "distance": 0.5
+      },
+      {
+        "a": "0 0 */2 1 6 5",
+        "b": "0 0 */2 01 6 5",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 0 */2 1 6 5",
+        "b": "00 0 */2 1 6 5",
+        "distance": 0.35
+      },
+      {
+        "a": "0 0 */2 L * *",
+        "b": "00 0 */2 L * *",
+        "distance": 0.4666666666666667
+      },
+      {
+        "a": "0 0 1 * *",
+        "b": "0 0 01 * *",
+        "distance": 0.125
+      },
+      {
+        "a": "0 0 1 * */2",
+        "b": "0 0 01 * */2",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 0 1 * 0",
+        "b": "0 0 01 * 0",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 0 1 * 1-5",
+        "b": "0 0 01 * 1-5",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 0 1 * 5L",
+        "b": "0 0 01 * 5L",
+        "distance": 0.0625
+      },
+      {
+        "a": "0 0 1 */2 *",
+        "b": "0 0 01 */2 *",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 0 1 */2 */2",
+        "b": "0 0 01 */2 */2",
+        "distance": 0.043478260869565216
+      },
+      {
+        "a": "0 0 1 */2 0",
+        "b": "0 0 01 */2 0",
+        "distance": 0.05263157894736842
+      },
+      {
+        "a": "0 0 1 */2 1-5",
+        "b": "0 0 01 */2 1-5",
+        "distance": 0.043478260869565216
+      },
+      {
+        "a": "0 0 1 */2 5L",
+        "b": "0 0 01 */2 5L",
+        "distance": 0.045454545454545456
+      },
+      {
+        "a": "0 0 1 1 *",
+        "b": "0 0 01 1 *",
+        "distance": 0.14285714285714285
+      },
+      {
+        "a": "0 0 1 1 * */2",
+        "b": "0 0 01 1 * */2",
+        "distance": 0.1
+      },
+      {
+        "a": "0 0 1 1 * 2030",
+        "b": "0 0 01 1 * 2030",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0 1 1 * 2030",
+        "b": "0 0 1 1 * 02030",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0 1 1 * 2030-2032",
+        "b": "0 0 01 1 * 2030-2032",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0 1 1 * 2030-2032",
+        "b": "0 0 1 1 * 02030-2032",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0 1 1 * 2030-2032",
+        "b": "0 0 1 1 * 2030-02032",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0 1 1 */2",
+        "b": "0 0 01 1 */2",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 0 1 1 0",
+        "b": "0 0 01 1 0",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 0 1 1 1-5",
+        "b": "0 0 01 1 1-5",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 0 1 1 5L",
+        "b": "0 0 01 1 5L",
+        "distance": 0.0625
+      },
+      {
+        "a": "0 0 1 1-3 *",
+        "b": "0 0 01 1-3 *",
+        "distance": 0.08333333333333333
+      },
+      {
+        "a": "0 0 1 1-3 */2",
+        "b": "0 0 01 1-3 */2",
+        "distance": 0.05263157894736842
+      },
+      {
+        "a": "0 0 1 1-3 0",
+        "b": "0 0 01 1-3 0",
+        "distance": 0.06666666666666667
+      },
+      {
+        "a": "0 0 1 1-3 1-5",
+        "b": "0 0 01 1-3 1-5",
+        "distance": 0.05263157894736842
+      },
+      {
+        "a": "0 0 1 1-3 5L",
+        "b": "0 0 01 1-3 5L",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 1-15 * *",
+        "b": "0 0 01-15 * *",
+        "distance": 0.1
+      },
+      {
+        "a": "0 0 1-15 * *",
+        "b": "0 0 1-015 * *",
+        "distance": 0.1
+      },
+      {
+        "a": "0 0 1-15 * */2",
+        "b": "0 0 01-15 * */2",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 1-15 * */2",
+        "b": "0 0 1-015 * */2",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 1-15 * 0",
+        "b": "0 0 01-15 * 0",
+        "distance": 0.07142857142857142
+      },
+      {
+        "a": "0 0 1-15 * 0",
+        "b": "0 0 1-015 * 0",
+        "distance": 0.07142857142857142
+      },
+      {
+        "a": "0 0 1-15 * 1-5",
+        "b": "0 0 01-15 * 1-5",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 1-15 * 1-5",
+        "b": "0 0 1-015 * 1-5",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 1-15 * 5L",
+        "b": "0 0 01-15 * 5L",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 0 1-15 * 5L",
+        "b": "0 0 1-015 * 5L",
+        "distance": 0.058823529411764705
+      },
+      {
+        "a": "0 0 1-15 */2 *",
+        "b": "0 0 01-15 */2 *",
+        "distance": 0.06666666666666667
+      },
+      {
+        "a": "0 0 1-15 */2 *",
+        "b": "0 0 1-015 */2 *",
+        "distance": 0.06666666666666667
+      },
+      {
+        "a": "0 0 1-15 */2 */2",
+        "b": "0 0 01-15 */2 */2",
+        "distance": 0.038461538461538464
+      },
+      {
+        "a": "0 0 1-15 */2 */2",
+        "b": "0 0 1-015 */2 */2",
+        "distance": 0.038461538461538464
+      },
+      {
+        "a": "0 0 1-15 */2 0",
+        "b": "0 0 01-15 */2 0",
+        "distance": 0.045454545454545456
+      },
+      {
+        "a": "0 0 1-15 */2 0",
+        "b": "0 0 1-015 */2 0",
+        "distance": 0.045454545454545456
+      },
+      {
+        "a": "0 0 1-15 */2 1-5",
+        "b": "0 0 01-15 */2 1-5",
+        "distance": 0.038461538461538464
+      },
+      {
+        "a": "0 0 1-15 */2 1-5",
+        "b": "0 0 1-015 */2 1-5",
+        "distance": 0.038461538461538464
+      },
+      {
+        "a": "0 0 1-15 */2 5L",
+        "b": "0 0 01-15 */2 5L",
+        "distance": 0.04
+      },
+      {
+        "a": "0 0 1-15 */2 5L",
+        "b": "0 0 1-015 */2 5L",
+        "distance": 0.04
+      },
+      {
+        "a": "0 0 1-15 1 *",
+        "b": "0 0 01-15 1 *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0 1-15 1 *",
+        "b": "0 0 1-015 1 *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0 1-15 1 */2",
+        "b": "0 0 01-15 1 */2",
+        "distance": 0.05
+      },
+      {
+        "a": "0 0 1-15 1 */2",
+        "b": "0 0 1-015 1 */2",
+        "distance": 0.05
+      },
+      {
+        "a": "0 0 1-15 1 0",
+        "b": "0 0 01-15 1 0",
+        "distance": 0.0625
+      },
+      {
+        "a": "0 0 1-15 1 0",
+        "b": "0 0 1-015 1 0",
+        "distance": 0.0625
+      },
+      {
+        "a": "0 0 1-15 1 1-5",
+        "b": "0 0 01-15 1 1-5",
+        "distance": 0.05
+      },
+      {
+        "a": "0 0 1-15 1 1-5",
+        "b": "0 0 1-015 1 1-5",
+        "distance": 0.05
+      },
+      {
+        "a": "0 0 1-15 1 5L",
+        "b": "0 0 01-15 1 5L",
+        "distance": 0.05263157894736842
+      },
+      {
+        "a": "0 0 1-15 1 5L",
+        "b": "0 0 1-015 1 5L",
+        "distance": 0.05263157894736842
+      },
+      {
+        "a": "0 0 1-15 1-3 *",
+        "b": "0 0 01-15 1-3 *",
+        "distance": 0.07142857142857142
+      },
+      {
+        "a": "0 0 1-15 1-3 *",
+        "b": "0 0 1-015 1-3 *",
+        "distance": 0.07142857142857142
+      },
+      {
+        "a": "0 0 1-15 1-3 */2",
+        "b": "0 0 01-15 1-3 */2",
+        "distance": 0.045454545454545456
+      },
+      {
+        "a": "0 0 1-15 1-3 */2",
+        "b": "0 0 1-015 1-3 */2",
+        "distance": 0.045454545454545456
+      },
+      {
+        "a": "0 0 1-15 1-3 0",
+        "b": "0 0 01-15 1-3 0",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 1-15 1-3 0",
+        "b": "0 0 1-015 1-3 0",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 1-15 1-3 1-5",
+        "b": "0 0 01-15 1-3 1-5",
+        "distance": 0.045454545454545456
+      },
+      {
+        "a": "0 0 1-15 1-3 1-5",
+        "b": "0 0 1-015 1-3 1-5",
+        "distance": 0.045454545454545456
+      },
+      {
+        "a": "0 0 1-15 1-3 5L",
+        "b": "0 0 01-15 1-3 5L",
+        "distance": 0.047619047619047616
+      },
+      {
+        "a": "0 0 1-15 1-3 5L",
+        "b": "0 0 1-015 1-3 5L",
+        "distance": 0.047619047619047616
+      },
+      {
+        "a": "0 0 9,11,13,15,17,19,21 * * *",
+        "b": "00 0 9,11,13,15,17,19,21 * * *",
+        "distance": 0.4375
+      },
+      {
+        "a": "0 0 9-17 * * *",
+        "b": "0 00 9-17 * * *",
+        "distance": 0.38461538461538464
+      },
+      {
+        "a": "0 0 9-17 * * *",
+        "b": "00 0 9-17 * * *",
+        "distance": 0.38461538461538464
+      },
+      {
+        "a": "0 0 9-17 * * 1",
+        "b": "0 00 9-17 * * 1",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 0 9-17 * * 1",
+        "b": "00 0 9-17 * * 1",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 0 9-17 * * 1-5",
+        "b": "0 00 9-17 * * 1-5",
+        "distance": 0.29411764705882354
+      },
+      {
+        "a": "0 0 9-17 * * 1-5",
+        "b": "00 0 9-17 * * 1-5",
+        "distance": 0.29411764705882354
+      },
+      {
+        "a": "0 0 9-17 * * 5L",
+        "b": "0 00 9-17 * * 5L",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0 9-17 * * 5L",
+        "b": "00 0 9-17 * * 5L",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0 9-17 * */3 *",
+        "b": "0 00 9-17 * */3 *",
+        "distance": 0.2631578947368421
+      },
+      {
+        "a": "0 0 9-17 * */3 *",
+        "b": "00 0 9-17 * */3 *",
+        "distance": 0.2631578947368421
+      },
+      {
+        "a": "0 0 9-17 * 6 *",
+        "b": "0 00 9-17 * 6 *",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 0 9-17 * 6 *",
+        "b": "00 0 9-17 * 6 *",
+        "distance": 0.3333333333333333
+      },
+      {
+        "a": "0 0 9-17 */2 * *",
+        "b": "0 00 9-17 */2 * *",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0 9-17 */2 * *",
+        "b": "00 0 9-17 */2 * *",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0 9-17 1 * *",
+        "b": "0 0 9-17 01 * *",
+        "distance": 0.07692307692307693
+      },
+      {
+        "a": "0 0 9-17 1 * *",
+        "b": "0 00 9-17 1 * *",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0 9-17 1 * *",
+        "b": "00 0 9-17 1 * *",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0 9-17 1 * 5",
+        "b": "0 0 9-17 01 * 5",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 9-17 1 * 5",
+        "b": "0 00 9-17 1 * 5",
+        "distance": 0.21739130434782608
+      },
+      {
+        "a": "0 0 9-17 1 * 5",
+        "b": "00 0 9-17 1 * 5",
+        "distance": 0.21739130434782608
+      },
+      {
+        "a": "0 0 9-17 1 6 *",
+        "b": "0 0 9-17 01 6 *",
+        "distance": 0.08333333333333333
+      },
+      {
+        "a": "0 0 9-17 1 6 *",
+        "b": "0 00 9-17 1 6 *",
+        "distance": 0.29411764705882354
+      },
+      {
+        "a": "0 0 9-17 1 6 *",
+        "b": "00 0 9-17 1 6 *",
+        "distance": 0.29411764705882354
+      },
+      {
+        "a": "0 0 9-17 1 6 5",
+        "b": "0 0 9-17 01 6 5",
+        "distance": 0.05555555555555555
+      },
+      {
+        "a": "0 0 9-17 1 6 5",
+        "b": "0 00 9-17 1 6 5",
+        "distance": 0.21739130434782608
+      },
+      {
+        "a": "0 0 9-17 1 6 5",
+        "b": "00 0 9-17 1 6 5",
+        "distance": 0.21739130434782608
+      },
+      {
+        "a": "0 0 9-17 L * *",
+        "b": "0 00 9-17 L * *",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0 9-17 L * *",
+        "b": "00 0 9-17 L * *",
+        "distance": 0.2777777777777778
+      },
+      {
+        "a": "0 0-30 * * * *",
+        "b": "0 0-030 * * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0-30 * * * *",
+        "b": "0 00-30 * * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0-30 * * * *",
+        "b": "00 0-30 * * * *",
+        "distance": 0.35714285714285715
+      },
+      {
+        "a": "0 0-30 */2 * * *",
+        "b": "0 0-030 */2 * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0-30 */2 * * *",
+        "b": "0 00-30 */2 * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 0-30 */2 * * *",
+        "b": "00 0-30 */2 * * *",
+        "distance": 0.4375
+      },
+      {
+        "a": "0 0-30 9,17 * * *",
+        "b": "0 0-030 9,17 * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "0 0-30 9,17 * * *",
+        "b": "0 00-30 9,17 * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "0 0-30 9,17 * * *",
+        "b": "00 0-30 9,17 * * *",
+        "distance": 0.3888888888888889
+      },
+      {
+        "a": "0 0-30 9-17 * * *",
+        "b": "0 0-030 9-17 * * *",
+        "distance": 0.08333333333333333
+      },
+      {
+        "a": "0 0-30 9-17 * * *",
+        "b": "0 00-30 9-17 * * *",
+        "distance": 0.08333333333333333
+      },
+      {
+        "a": "0 0-30 9-17 * * *",
+        "b": "00 0-30 9-17 * * *",
+        "distance": 0.3684210526315789
+      },
+      {
+        "a": "0 1 * * * *",
+        "b": "0 01 * * * *",
+        "distance": 0.14285714285714285
+      },
+      {
+        "a": "0 1 * * * *",
+        "b": "00 1 * * * *",
+        "distance": 0.36363636363636365
+      },
+      {
+        "a": "0 5,30 * * * *",
+        "b": "0 05,30 * * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 5,30 * * * *",
+        "b": "0 5,030 * * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 5,30 * * * *",
+        "b": "00 5,30 * * * *",
+        "distance": 0.3076923076923077
+      },
+      {
+        "a": "0 5,30 */2 * * *",
+        "b": "0 05,30 */2 * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 5,30 */2 * * *",
+        "b": "0 5,030 */2 * * *",
+        "distance": 0.1111111111111111
+      },
+      {
+        "a": "0 5,30 */2 * * *",
+        "b": "00 5,30 */2 * * *",
+        "distance": 0.4375
+      },
+      {
+        "a": "0 5,30 9-17/2 * * *",
+        "b": "0 05,30 9-17/2 * * *",
+        "distance": 0.06666666666666667
+      },
+      {
+        "a": "0 5,30 9-17/2 * * *",
+        "b": "0 5,030 9-17/2 * * *",
+        "distance": 0.06666666666666667
+      },
+      {
+        "a": "0 5,30 9-17/2 * * *",
+        "b": "00 5,30 9-17/2 * * *",
+        "distance": 0.3181818181818182
+      },
+      {
+        "a": "1 * * * * *",
+        "b": "01 * * * * *",
+        "distance": 0.14285714285714285
+      },
+      {
+        "a": "1 0 * * * *",
+        "b": "01 0 * * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "1 0 * * * *",
+        "b": "1 00 * * * *",
+        "distance": 0.09090909090909091
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 1",
+        "b": "030 5,10 9,17,19,21,23 * * 1",
+        "distance": 0.02040816326530612
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 1",
+        "b": "30 05,10 9,17,19,21,23 * * 1",
+        "distance": 0.02040816326530612
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 1",
+        "b": "30 5,010 9,17,19,21,23 * * 1",
+        "distance": 0.02040816326530612
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 1-5",
+        "b": "030 5,10 9,17,19,21,23 * * 1-5",
+        "distance": 0.0196078431372549
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 1-5",
+        "b": "30 05,10 9,17,19,21,23 * * 1-5",
+        "distance": 0.0196078431372549
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 1-5",
+        "b": "30 5,010 9,17,19,21,23 * * 1-5",
+        "distance": 0.0196078431372549
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 5L",
+        "b": "030 5,10 9,17,19,21,23 * * 5L",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 5L",
+        "b": "30 05,10 9,17,19,21,23 * * 5L",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * * 5L",
+        "b": "30 5,010 9,17,19,21,23 * * 5L",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * */3 *",
+        "b": "030 5,10 9,17,19,21,23 * */3 *",
+        "distance": 0.018867924528301886
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * */3 *",
+        "b": "30 05,10 9,17,19,21,23 * */3 *",
+        "distance": 0.018867924528301886
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * */3 *",
+        "b": "30 5,010 9,17,19,21,23 * */3 *",
+        "distance": 0.018867924528301886
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * 6 *",
+        "b": "030 5,10 9,17,19,21,23 * 6 *",
+        "distance": 0.02040816326530612
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * 6 *",
+        "b": "30 05,10 9,17,19,21,23 * 6 *",
+        "distance": 0.02040816326530612
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 * 6 *",
+        "b": "30 5,010 9,17,19,21,23 * 6 *",
+        "distance": 0.02040816326530612
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 */2 * *",
+        "b": "030 5,10 9,17,19,21,23 */2 * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 */2 * *",
+        "b": "30 05,10 9,17,19,21,23 */2 * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 */2 * *",
+        "b": "30 5,010 9,17,19,21,23 */2 * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * *",
+        "b": "030 5,10 9,17,19,21,23 1 * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * *",
+        "b": "30 05,10 9,17,19,21,23 1 * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * *",
+        "b": "30 5,010 9,17,19,21,23 1 * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * *",
+        "b": "30 5,10 9,17,19,21,23 01 * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * 5",
+        "b": "030 5,10 9,17,19,21,23 1 * 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * 5",
+        "b": "30 05,10 9,17,19,21,23 1 * 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * 5",
+        "b": "30 5,010 9,17,19,21,23 1 * 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 * 5",
+        "b": "30 5,10 9,17,19,21,23 01 * 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 *",
+        "b": "030 5,10 9,17,19,21,23 1 6 *",
+        "distance": 0.0196078431372549
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 *",
+        "b": "30 05,10 9,17,19,21,23 1 6 *",
+        "distance": 0.0196078431372549
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 *",
+        "b": "30 5,010 9,17,19,21,23 1 6 *",
+        "distance": 0.0196078431372549
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 *",
+        "b": "30 5,10 9,17,19,21,23 01 6 *",
+        "distance": 0.0196078431372549
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 5",
+        "b": "030 5,10 9,17,19,21,23 1 6 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 5",
+        "b": "30 05,10 9,17,19,21,23 1 6 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 5",
+        "b": "30 5,010 9,17,19,21,23 1 6 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 1 6 5",
+        "b": "30 5,10 9,17,19,21,23 01 6 5",
+        "distance": 0.017543859649122806
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 L * *",
+        "b": "030 5,10 9,17,19,21,23 L * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 L * *",
+        "b": "30 05,10 9,17,19,21,23 L * *",
+        "distance": 0.019230769230769232
+      },
+      {
+        "a": "30 5,10 9,17,19,21,23 L * *",
+        "b": "30 5,010 9,17,19,21,23 L * *",
+        "distance": 0.019230769230769232
+      }
+    ],
+    "max": 1,
+    "median": 0.14285714285714285,
+    "p90": 0.5333333333333333,
+    "pairs": 25888,
+    "worst": [
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 0 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 1 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a la 01:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 2 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 02:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 3 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 03:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 4 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 04:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 5 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 05:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 6 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 06:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 7 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 07:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 8 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 08:00"
+      },
+      {
+        "a": "0 0 * * * *",
+        "b": "0 0 9 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada hora",
+        "textB": "todos los días a las 09:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */24 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */25 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */26 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */27 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */28 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */29 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */32 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */42 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */52 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      },
+      {
+        "a": "0 0 */2 * * *",
+        "b": "0 0 */62 * * *",
+        "distance": 1,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "cada dos horas",
+        "textB": "todos los días a las 00:00"
+      }
+    ],
+    "dropped": 0
+  },
+  "size": {
+    "branches": 207,
+    "lines": 2580
+  }
+}

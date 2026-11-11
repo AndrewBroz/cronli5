@@ -1,6 +1,7 @@
 import chai from 'chai';
 import {allRows} from '../paradigms/grid.js';
-import {baseline} from '../../tooling/scripts/baseline.mjs';
+import {baseline, countBranches}
+  from '../../tooling/scripts/baseline.mjs';
 
 const {expect} = chai;
 
@@ -25,4 +26,11 @@ describe('baseline:', function() {
       expect(row.text, row.pattern).to.be.a('string').and.not.equal('');
     });
   }, SLOW_TEST_MS);
+
+  it('counts a ternary split across lines, and not a nullish default',
+    function() {
+      const source = 'a ?\n  b :\n  c;\nif (x) {}\nconst y = p ?? q;';
+
+      expect(countBranches(source)).to.equal(2);
+    });
 });

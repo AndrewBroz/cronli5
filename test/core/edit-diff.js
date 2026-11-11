@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {canonical, neighbors, score, wordDistance}
+import {canonical, coreSetSeeds, neighborPairs, neighbors, score, wordDistance}
   from '../../tooling/scripts/edit-diff.mjs';
 
 const {expect} = chai;
@@ -82,5 +82,26 @@ describe('edit-diff:', function() {
       expect(report).to.include({max: 0.5, median: 0.5, pairs: 1});
       expect(report.worst[0]).to.include({a: 'a', b: 'b', distance: 0.5});
     });
+  });
+
+  describe('core-set seeds', function() {
+    it('reads the every-other-year seed as a year pattern', function() {
+      const seed = coreSetSeeds().find(function isIt(entry) {
+        return entry.pattern === '0 0 1 1 * */2';
+      });
+
+      expect(seed.options).to.include({years: true});
+    });
+
+    it('pairs each seed with its neighbors under the seed\'s options',
+      function() {
+        const pairs = neighborPairs(
+          [{options: {quartz: false, years: true}, pattern: '0 0 1 1 * */2'}]);
+
+        expect(pairs.length).to.be.above(0);
+        pairs.forEach(function carries(pair) {
+          expect(pair[2]).to.include({years: true});
+        });
+      });
   });
 });

@@ -228,12 +228,19 @@ export {cellOf, corpusCell, coreCells};
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const byCell = new Map();
+  const options = {};
 
   for (const [pattern, opts] of candidates()) {
     const cell = cellOf(pattern, opts);
 
     if (cell && !byCell.has(cell)) {
       byCell.set(cell, pattern);
+
+      // A trailing year that is not four digits (`*/2`) cannot be told from
+      // a weekday by looking at the pattern, so its options are recorded.
+      if (opts.years && !(/\d{4}/u).test(pattern.split(' ').pop())) {
+        options[pattern] = {seconds: opts.seconds, years: true};
+      }
     }
   }
 
@@ -247,6 +254,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     generated: 'scripts/core-set.mjs',
     cells: byCell.size,
     patterns,
+    options,
     spanning,
     valueClasses: VALUE_CLASSES,
     variants: VARIANTS,
