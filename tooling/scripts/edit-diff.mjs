@@ -226,11 +226,15 @@ function coreSetSeeds() {
 // A language's renderer in its default style, and its stemmer when its
 // stability extractor exports one.
 async function languageBinding(code) {
-  const lang = (await import(`../../src/lang/${code}/index.js`)).default;
+  // Specifiers held in variables: a bundling test runner cannot resolve a
+  // templated import statically, and must leave these to the runtime.
+  const languagePath = `../../src/lang/${code}/index.js`;
+  const extractorPath = `./stability/${code}.mjs`;
+  const lang = (await import(languagePath)).default;
   let stem = null;
 
   try {
-    ({stem = null} = await import(`./stability/${code}.mjs`));
+    ({stem = null} = await import(extractorPath));
   }
   catch {
     // No extractor for this language: compare words as they are.

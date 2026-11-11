@@ -1,0 +1,1610 @@
+{
+  "capturedAt": "2026-11-11T21:14:09.997Z",
+  "code": "en",
+  "commit": "a594f5c",
+  "failures": 0,
+  "grid": {
+    "equivalentViolations": [],
+    "max": 1,
+    "median": 0.5,
+    "p90": 0.8181818181818182,
+    "pairs": 464,
+    "worst": [
+      {
+        "a": "* * * * *",
+        "b": "0,30 * * * *",
+        "distance": 1,
+        "textA": "every minute",
+        "textB": "at 0 and 30 minutes past the hour"
+      },
+      {
+        "a": "* * * * *",
+        "b": "5,20,45 * * * *",
+        "distance": 1,
+        "textA": "every minute",
+        "textB": "at 5, 20, and 45 minutes past the hour"
+      },
+      {
+        "a": "* * * * *",
+        "b": "0-29,45 * * * *",
+        "distance": 1,
+        "textA": "every minute",
+        "textB": "at 0 through 29 and at 45 minutes past the hour"
+      },
+      {
+        "a": "* * * * *",
+        "b": "0,15,45 * * * *",
+        "distance": 1,
+        "textA": "every minute",
+        "textB": "at 0, 15, and 45 minutes past the hour"
+      },
+      {
+        "a": "* * * * *",
+        "b": "10-40/10 * * * *",
+        "distance": 1,
+        "textA": "every minute",
+        "textB": "at 10, 20, 30, and 40 minutes past the hour"
+      },
+      {
+        "a": "* * * * *",
+        "b": "* 0,2,4,6,10,12,14,16,18,20,22 * * *",
+        "distance": 0.9285714285714286,
+        "textA": "every minute",
+        "textB": "every minute during the 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m. hours"
+      },
+      {
+        "a": "0 1/2 * * *",
+        "b": "0 0,2,4,6,10,12,14,16,18,20,22 * * *",
+        "distance": 0.9230769230769231,
+        "textA": "every two hours from 1 a.m.",
+        "textB": "every day at 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m."
+      },
+      {
+        "a": "0 9-17,22 * * *",
+        "b": "0 */2 * * *",
+        "distance": 0.9166666666666666,
+        "textA": "every hour from 9 a.m. through 5 p.m. and at 10 p.m.",
+        "textB": "every two hours"
+      },
+      {
+        "a": "* * * * *",
+        "b": "*/7 * * * *",
+        "distance": 0.9090909090909091,
+        "textA": "every minute",
+        "textB": "every seven minutes from 0 through 56 minutes past the hour"
+      },
+      {
+        "a": "0-29,45 * * * *",
+        "b": "*/15 * * * *",
+        "distance": 0.9090909090909091,
+        "textA": "at 0 through 29 and at 45 minutes past the hour",
+        "textB": "every 15 minutes"
+      },
+      {
+        "a": "* * * * *",
+        "b": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+        "distance": 0.9,
+        "textA": "every minute",
+        "textB": "every minute on the 1st, 3rd, 5th, 7th, 9th, 11th, 13th, 17th, 19th, 21st, 23rd, 25th, 27th, 29th, and 31st"
+      },
+      {
+        "a": "0 1/2 1 * *",
+        "b": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *",
+        "distance": 0.8888888888888888,
+        "textA": "every two hours from 1 a.m. on the 1st",
+        "textB": "on the 1st at 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m."
+      },
+      {
+        "a": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *",
+        "b": "0 22-2 1 * *",
+        "distance": 0.8888888888888888,
+        "textA": "on the 1st at 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m.",
+        "textB": "every hour from 10 p.m. through 2 a.m. on the 1st"
+      },
+      {
+        "a": "*/15 * * * * *",
+        "b": "0-9 * * * * *",
+        "distance": 0.8888888888888888,
+        "textA": "every 15 seconds",
+        "textB": "every second from 0 through 9 past the minute"
+      },
+      {
+        "a": "* * * * *",
+        "b": "5/15 * * * *",
+        "distance": 0.8888888888888888,
+        "textA": "every minute",
+        "textB": "every 15 minutes from five minutes past the hour"
+      },
+      {
+        "a": "* * * * *",
+        "b": "0,30 * * * * *",
+        "distance": 0.875,
+        "textA": "every minute",
+        "textB": "at 0 and 30 seconds past the minute"
+      },
+      {
+        "a": "0,30 * * * * *",
+        "b": "*/6 * * * * *",
+        "distance": 0.875,
+        "textA": "at 0 and 30 seconds past the minute",
+        "textB": "every six seconds"
+      },
+      {
+        "a": "0 0 1 * *",
+        "b": "0 0 1 * 1,3,5",
+        "distance": 0.8666666666666667,
+        "textA": "on the 1st at midnight",
+        "textB": "at midnight whenever the day is the 1st, a Monday, a Wednesday, or a Friday"
+      },
+      {
+        "a": "0 0 1 * *",
+        "b": "0 0 1 * 5L",
+        "distance": 0.8666666666666667,
+        "textA": "on the 1st at midnight",
+        "textB": "at midnight whenever the day is the 1st or the last Friday of the month"
+      },
+      {
+        "a": "0 0 1 * *",
+        "b": "0 0 1 * 1#2",
+        "distance": 0.8666666666666667,
+        "textA": "on the 1st at midnight",
+        "textB": "at midnight whenever the day is the 1st or the second Monday of the month"
+      }
+    ]
+  },
+  "renderings": [
+    {
+      "pattern": "* 0 9 * * *",
+      "quartz": false,
+      "text": "every second during minute 0 at 9 a.m."
+    },
+    {
+      "pattern": "30 0 9 * * *",
+      "quartz": false,
+      "text": "every day at 9:00:30 a.m."
+    },
+    {
+      "pattern": "0,30 0 9 * * *",
+      "quartz": false,
+      "text": "at 0 and 30 seconds past the minute, every day at 9 a.m."
+    },
+    {
+      "pattern": "*/6 0 9 * * *",
+      "quartz": false,
+      "text": "every six seconds during minute 0 at 9 a.m."
+    },
+    {
+      "pattern": "*/15 0 9 * * *",
+      "quartz": false,
+      "text": "every 15 seconds during minute 0 at 9 a.m."
+    },
+    {
+      "pattern": "0-9 0 9 * * *",
+      "quartz": false,
+      "text": "every second from 0 through 9 past the minute, every day at 9 a.m."
+    },
+    {
+      "pattern": "5/10 0 9 * * *",
+      "quartz": false,
+      "text": "every ten seconds from five seconds past the minute during minute 0 at 9 a.m."
+    },
+    {
+      "pattern": "* 9 * * *",
+      "quartz": false,
+      "text": "every minute of the 9 a.m. hour"
+    },
+    {
+      "pattern": "30 9 * * *",
+      "quartz": false,
+      "text": "every day at 9:30 a.m."
+    },
+    {
+      "pattern": "0,30 9 * * *",
+      "quartz": false,
+      "text": "every day at 9 a.m. and 9:30 a.m."
+    },
+    {
+      "pattern": "5,20,45 9 * * *",
+      "quartz": false,
+      "text": "every day at 9:05 a.m., 9:20 a.m., and 9:45 a.m."
+    },
+    {
+      "pattern": "0-29 9 * * *",
+      "quartz": false,
+      "text": "every minute from 9 a.m. through 9:29 a.m."
+    },
+    {
+      "pattern": "0-29,45 9 * * *",
+      "quartz": false,
+      "text": "at 0 through 29 and at 45 minutes past the hour, at 9 a.m."
+    },
+    {
+      "pattern": "*/15 9 * * *",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 9:45 a.m."
+    },
+    {
+      "pattern": "*/7 9 * * *",
+      "quartz": false,
+      "text": "every seven minutes from 0 through 56 minutes past the hour, at 9 a.m."
+    },
+    {
+      "pattern": "5/15 9 * * *",
+      "quartz": false,
+      "text": "every 15 minutes from five minutes past the hour from 9 a.m. through 9:50 a.m."
+    },
+    {
+      "pattern": "0,15,45 9 * * *",
+      "quartz": false,
+      "text": "every day at 9 a.m., 9:15 a.m., and 9:45 a.m."
+    },
+    {
+      "pattern": "10-40/10 9 * * *",
+      "quartz": false,
+      "text": "at 10, 20, 30, and 40 minutes past the hour from 9 a.m. through 9:40 a.m."
+    },
+    {
+      "pattern": "0 * * * *",
+      "quartz": false,
+      "text": "every hour"
+    },
+    {
+      "pattern": "0 0 * * *",
+      "quartz": false,
+      "text": "every day at midnight"
+    },
+    {
+      "pattern": "0 12 * * *",
+      "quartz": false,
+      "text": "every day at noon"
+    },
+    {
+      "pattern": "0 9,17 * * *",
+      "quartz": false,
+      "text": "every day at 9 a.m. and 5 p.m."
+    },
+    {
+      "pattern": "0 8,12,18 * * *",
+      "quartz": false,
+      "text": "every day at 8 a.m., 12 p.m., and 6 p.m."
+    },
+    {
+      "pattern": "0 9-17 * * *",
+      "quartz": false,
+      "text": "every hour from 9 a.m. through 5 p.m."
+    },
+    {
+      "pattern": "0 9-17,22 * * *",
+      "quartz": false,
+      "text": "every hour from 9 a.m. through 5 p.m. and at 10 p.m."
+    },
+    {
+      "pattern": "0 */2 * * *",
+      "quartz": false,
+      "text": "every two hours"
+    },
+    {
+      "pattern": "0 */6 * * *",
+      "quartz": false,
+      "text": "every six hours"
+    },
+    {
+      "pattern": "0 1/2 * * *",
+      "quartz": false,
+      "text": "every two hours from 1 a.m."
+    },
+    {
+      "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *",
+      "quartz": false,
+      "text": "every day at 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m."
+    },
+    {
+      "pattern": "0 22-2 * * *",
+      "quartz": false,
+      "text": "every hour from 10 p.m. through 2 a.m."
+    },
+    {
+      "pattern": "0 9 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 9 a.m."
+    },
+    {
+      "pattern": "0 9 15 * *",
+      "quartz": false,
+      "text": "on the 15th at 9 a.m."
+    },
+    {
+      "pattern": "0 9 1,15 * *",
+      "quartz": false,
+      "text": "on the 1st and 15th at 9 a.m."
+    },
+    {
+      "pattern": "0 9 1,10,20 * *",
+      "quartz": false,
+      "text": "on the 1st, 10th, and 20th at 9 a.m."
+    },
+    {
+      "pattern": "0 9 1-7 * *",
+      "quartz": false,
+      "text": "on the 1st through 7th at 9 a.m."
+    },
+    {
+      "pattern": "0 9 1-7,15 * *",
+      "quartz": false,
+      "text": "on the 1st through 7th and on the 15th at 9 a.m."
+    },
+    {
+      "pattern": "0 9 */2 * *",
+      "quartz": false,
+      "text": "every other day of the month at 9 a.m."
+    },
+    {
+      "pattern": "0 9 2/2 * *",
+      "quartz": false,
+      "text": "every other day of the month from the 2nd at 9 a.m."
+    },
+    {
+      "pattern": "0 9 */5 * *",
+      "quartz": false,
+      "text": "every 5th day of the month at 9 a.m."
+    },
+    {
+      "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+      "quartz": false,
+      "text": "on the 1st, 3rd, 5th, 7th, 9th, 11th, 13th, 17th, 19th, 21st, 23rd, 25th, 27th, 29th, and 31st at 9 a.m."
+    },
+    {
+      "pattern": "0 9 L * *",
+      "quartz": true,
+      "text": "on the last day of the month at 9 a.m."
+    },
+    {
+      "pattern": "0 9 15W * *",
+      "quartz": true,
+      "text": "on the weekday nearest the 15th at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 1 *",
+      "quartz": false,
+      "text": "every day in January at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 6 *",
+      "quartz": false,
+      "text": "every day in June at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 1,7 *",
+      "quartz": false,
+      "text": "every day in January and July at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 3,6,9,12 *",
+      "quartz": false,
+      "text": "every day in March, June, September, and December at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 6-8 *",
+      "quartz": false,
+      "text": "every day in June through August at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 6-8,12 *",
+      "quartz": false,
+      "text": "every day in June through August and December at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * */2 *",
+      "quartz": false,
+      "text": "every day in every odd-numbered month at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * */3 *",
+      "quartz": false,
+      "text": "every day in January, April, July, and October at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 1-11 *",
+      "quartz": false,
+      "text": "every day in January through November at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * 11-2 *",
+      "quartz": false,
+      "text": "every day in November through February at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 1",
+      "quartz": false,
+      "text": "every Monday at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 0",
+      "quartz": false,
+      "text": "every Sunday at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 1,3,5",
+      "quartz": false,
+      "text": "every Monday, Wednesday, and Friday at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 1-5",
+      "quartz": false,
+      "text": "every Monday through Friday at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 0,6",
+      "quartz": false,
+      "text": "every Saturday and Sunday at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 1-6",
+      "quartz": false,
+      "text": "every Monday through Saturday at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 2,4",
+      "quartz": false,
+      "text": "every Tuesday and Thursday at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 5L",
+      "quartz": true,
+      "text": "on the last Friday of the month at 9 a.m."
+    },
+    {
+      "pattern": "0 9 * * 1#2",
+      "quartz": true,
+      "text": "on the second Monday of the month at 9 a.m."
+    },
+    {
+      "pattern": "* */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "every second, every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "30 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "at 30 seconds past the minute, every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "0,30 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "on Monday through Friday, from 9 a.m. through 5 p.m., every 15 minutes, and within each of those minutes, at 0 and 30 seconds past the minute"
+    },
+    {
+      "pattern": "*/6 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "on Monday through Friday, from 9 a.m. through 5 p.m., every 15 minutes, and within each of those minutes, every six seconds"
+    },
+    {
+      "pattern": "*/15 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "on Monday through Friday, from 9 a.m. through 5 p.m., every 15 minutes, and within each of those minutes, every 15 seconds"
+    },
+    {
+      "pattern": "0-9 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "on Monday through Friday, from 9 a.m. through 5 p.m., every 15 minutes, and within each of those minutes, every second from 0 through 9 past the minute"
+    },
+    {
+      "pattern": "5/10 */15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "on Monday through Friday, from 9 a.m. through 5 p.m., every 15 minutes, and within each of those minutes, every ten seconds from five seconds past the minute"
+    },
+    {
+      "pattern": "* 9-17 * * 1-5",
+      "quartz": false,
+      "text": "every minute from 9 a.m. until 6 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "0 9-17 * * 1-5",
+      "quartz": false,
+      "text": "every hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "30 9-17 * * 1-5",
+      "quartz": false,
+      "text": "at 30 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "0,30 9-17 * * 1-5",
+      "quartz": false,
+      "text": "at 0 and 30 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "5,20,45 9-17 * * 1-5",
+      "quartz": false,
+      "text": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "0-29 9-17 * * 1-5",
+      "quartz": false,
+      "text": "every minute from 0 through 29 past the hour, from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "0-29,45 9-17 * * 1-5",
+      "quartz": false,
+      "text": "at 0 through 29 and at 45 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "*/7 9-17 * * 1-5",
+      "quartz": false,
+      "text": "every seven minutes from 0 through 56 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "5/15 9-17 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from five minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "0,15,45 9-17 * * 1-5",
+      "quartz": false,
+      "text": "at 0, 15, and 45 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "10-40/10 9-17 * * 1-5",
+      "quartz": false,
+      "text": "at 10, 20, 30, and 40 minutes past the hour from 9 a.m. through 5 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 * * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 0 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from midnight through 12:45 a.m. on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 9 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 9:45 a.m. on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 12 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from noon through 12:45 p.m. on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 9,17 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes during the 9 a.m. and 5 p.m. hours on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 8,12,18 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes during the 8 a.m., 12 p.m., and 6 p.m. hours on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 9-17,22 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes during the 9 a.m. through 5 p.m. and 10 p.m. hours on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 */2 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes of every other hour on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 */6 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes during every sixth hour on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 1/2 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes during every other hour starting at 1 a.m. on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes during the 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m. hours on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 22-2 * * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 10 p.m. through 2 a.m. on Monday through Friday"
+    },
+    {
+      "pattern": "*/15 9-17 1 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is the 1st or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 15 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is the 15th or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 1,15 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is the 1st, the 15th, or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 1,10,20 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is the 1st, the 10th, the 20th, or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 1-7 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is from the 1st through the 7th or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 1-7,15 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is from the 1st through the 7th, the 15th, or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 */2 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is an odd-numbered day or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 2/2 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is an even-numbered day or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 */5 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on every 5th day of the month or on any weekday"
+    },
+    {
+      "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is the 1st, the 3rd, the 5th, the 7th, the 9th, the 11th, the 13th, the 17th, the 19th, the 21st, the 23rd, the 25th, the 27th, the 29th, the 31st, or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 L * 1-5",
+      "quartz": true,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is the last day of the month or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 15W * 1-5",
+      "quartz": true,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. whenever the day is the weekday nearest the 15th or a weekday"
+    },
+    {
+      "pattern": "*/15 9-17 * 1 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in January"
+    },
+    {
+      "pattern": "*/15 9-17 * 6 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in June"
+    },
+    {
+      "pattern": "*/15 9-17 * 1,7 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in January and July"
+    },
+    {
+      "pattern": "*/15 9-17 * 3,6,9,12 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in March, June, September, and December"
+    },
+    {
+      "pattern": "*/15 9-17 * 6-8 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in June through August"
+    },
+    {
+      "pattern": "*/15 9-17 * 6-8,12 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in June through August and December"
+    },
+    {
+      "pattern": "*/15 9-17 * */2 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in every odd-numbered month"
+    },
+    {
+      "pattern": "*/15 9-17 * */3 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in January, April, July, and October"
+    },
+    {
+      "pattern": "*/15 9-17 * 1-11 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in January through November"
+    },
+    {
+      "pattern": "*/15 9-17 * 11-2 1-5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Friday in November through February"
+    },
+    {
+      "pattern": "*/15 9-17 * * *",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m."
+    },
+    {
+      "pattern": "*/15 9-17 * * 1",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Mondays"
+    },
+    {
+      "pattern": "*/15 9-17 * * 0",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Sundays"
+    },
+    {
+      "pattern": "*/15 9-17 * * 1,3,5",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Mondays, Wednesdays, and Fridays"
+    },
+    {
+      "pattern": "*/15 9-17 * * 0,6",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Saturdays and Sundays"
+    },
+    {
+      "pattern": "*/15 9-17 * * 1-6",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Monday through Saturday"
+    },
+    {
+      "pattern": "*/15 9-17 * * 2,4",
+      "quartz": false,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on Tuesdays and Thursdays"
+    },
+    {
+      "pattern": "*/15 9-17 * * 5L",
+      "quartz": true,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on the last Friday of the month"
+    },
+    {
+      "pattern": "*/15 9-17 * * 1#2",
+      "quartz": true,
+      "text": "every 15 minutes from 9 a.m. through 5 p.m. on the second Monday of the month"
+    },
+    {
+      "pattern": "* 0 0 1 * *",
+      "quartz": false,
+      "text": "every second during minute 0 at midnight on the 1st"
+    },
+    {
+      "pattern": "30 0 0 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 12:00:30 a.m."
+    },
+    {
+      "pattern": "0,30 0 0 1 * *",
+      "quartz": false,
+      "text": "at 0 and 30 seconds past the minute, on the 1st at midnight"
+    },
+    {
+      "pattern": "*/6 0 0 1 * *",
+      "quartz": false,
+      "text": "every six seconds during minute 0 at midnight on the 1st"
+    },
+    {
+      "pattern": "*/15 0 0 1 * *",
+      "quartz": false,
+      "text": "every 15 seconds during minute 0 at midnight on the 1st"
+    },
+    {
+      "pattern": "0-9 0 0 1 * *",
+      "quartz": false,
+      "text": "every second from 0 through 9 past the minute, on the 1st at midnight"
+    },
+    {
+      "pattern": "5/10 0 0 1 * *",
+      "quartz": false,
+      "text": "every ten seconds from five seconds past the minute during minute 0 at midnight on the 1st"
+    },
+    {
+      "pattern": "* 0 1 * *",
+      "quartz": false,
+      "text": "every minute of the midnight hour on the 1st"
+    },
+    {
+      "pattern": "30 0 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 12:30 a.m."
+    },
+    {
+      "pattern": "0,30 0 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 12 a.m. and 12:30 a.m."
+    },
+    {
+      "pattern": "5,20,45 0 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 12:05 a.m., 12:20 a.m., and 12:45 a.m."
+    },
+    {
+      "pattern": "0-29 0 1 * *",
+      "quartz": false,
+      "text": "every minute from midnight through 12:29 a.m. on the 1st"
+    },
+    {
+      "pattern": "0-29,45 0 1 * *",
+      "quartz": false,
+      "text": "at 0 through 29 and at 45 minutes past the hour, at midnight on the 1st"
+    },
+    {
+      "pattern": "*/15 0 1 * *",
+      "quartz": false,
+      "text": "every 15 minutes from midnight through 12:45 a.m. on the 1st"
+    },
+    {
+      "pattern": "*/7 0 1 * *",
+      "quartz": false,
+      "text": "every seven minutes from 0 through 56 minutes past the hour, at midnight on the 1st"
+    },
+    {
+      "pattern": "5/15 0 1 * *",
+      "quartz": false,
+      "text": "every 15 minutes from five minutes past the hour from midnight through 12:50 a.m. on the 1st"
+    },
+    {
+      "pattern": "0,15,45 0 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 12 a.m., 12:15 a.m., and 12:45 a.m."
+    },
+    {
+      "pattern": "10-40/10 0 1 * *",
+      "quartz": false,
+      "text": "at 10, 20, 30, and 40 minutes past the hour from midnight through 12:40 a.m. on the 1st"
+    },
+    {
+      "pattern": "0 * 1 * *",
+      "quartz": false,
+      "text": "every hour on the 1st"
+    },
+    {
+      "pattern": "0 9 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 9 a.m."
+    },
+    {
+      "pattern": "0 12 1 * *",
+      "quartz": false,
+      "text": "on the 1st at noon"
+    },
+    {
+      "pattern": "0 9,17 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 9 a.m. and 5 p.m."
+    },
+    {
+      "pattern": "0 8,12,18 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 8 a.m., 12 p.m., and 6 p.m."
+    },
+    {
+      "pattern": "0 9-17 1 * *",
+      "quartz": false,
+      "text": "every hour from 9 a.m. through 5 p.m. on the 1st"
+    },
+    {
+      "pattern": "0 9-17,22 1 * *",
+      "quartz": false,
+      "text": "every hour from 9 a.m. through 5 p.m. and at 10 p.m. on the 1st"
+    },
+    {
+      "pattern": "0 */2 1 * *",
+      "quartz": false,
+      "text": "every two hours on the 1st"
+    },
+    {
+      "pattern": "0 */6 1 * *",
+      "quartz": false,
+      "text": "every six hours on the 1st"
+    },
+    {
+      "pattern": "0 1/2 1 * *",
+      "quartz": false,
+      "text": "every two hours from 1 a.m. on the 1st"
+    },
+    {
+      "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *",
+      "quartz": false,
+      "text": "on the 1st at 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m."
+    },
+    {
+      "pattern": "0 22-2 1 * *",
+      "quartz": false,
+      "text": "every hour from 10 p.m. through 2 a.m. on the 1st"
+    },
+    {
+      "pattern": "0 0 * * *",
+      "quartz": false,
+      "text": "every day at midnight"
+    },
+    {
+      "pattern": "0 0 15 * *",
+      "quartz": false,
+      "text": "on the 15th at midnight"
+    },
+    {
+      "pattern": "0 0 1,15 * *",
+      "quartz": false,
+      "text": "on the 1st and 15th at midnight"
+    },
+    {
+      "pattern": "0 0 1,10,20 * *",
+      "quartz": false,
+      "text": "on the 1st, 10th, and 20th at midnight"
+    },
+    {
+      "pattern": "0 0 1-7 * *",
+      "quartz": false,
+      "text": "on the 1st through 7th at midnight"
+    },
+    {
+      "pattern": "0 0 1-7,15 * *",
+      "quartz": false,
+      "text": "on the 1st through 7th and on the 15th at midnight"
+    },
+    {
+      "pattern": "0 0 */2 * *",
+      "quartz": false,
+      "text": "every other day of the month at midnight"
+    },
+    {
+      "pattern": "0 0 2/2 * *",
+      "quartz": false,
+      "text": "every other day of the month from the 2nd at midnight"
+    },
+    {
+      "pattern": "0 0 */5 * *",
+      "quartz": false,
+      "text": "every 5th day of the month at midnight"
+    },
+    {
+      "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+      "quartz": false,
+      "text": "on the 1st, 3rd, 5th, 7th, 9th, 11th, 13th, 17th, 19th, 21st, 23rd, 25th, 27th, 29th, and 31st at midnight"
+    },
+    {
+      "pattern": "0 0 L * *",
+      "quartz": true,
+      "text": "on the last day of the month at midnight"
+    },
+    {
+      "pattern": "0 0 15W * *",
+      "quartz": true,
+      "text": "on the weekday nearest the 15th at midnight"
+    },
+    {
+      "pattern": "0 0 1 1 *",
+      "quartz": false,
+      "text": "on January 1 at midnight"
+    },
+    {
+      "pattern": "0 0 1 6 *",
+      "quartz": false,
+      "text": "on June 1 at midnight"
+    },
+    {
+      "pattern": "0 0 1 1,7 *",
+      "quartz": false,
+      "text": "on January and July 1 at midnight"
+    },
+    {
+      "pattern": "0 0 1 3,6,9,12 *",
+      "quartz": false,
+      "text": "on March, June, September, and December 1 at midnight"
+    },
+    {
+      "pattern": "0 0 1 6-8 *",
+      "quartz": false,
+      "text": "on the 1st in June through August at midnight"
+    },
+    {
+      "pattern": "0 0 1 6-8,12 *",
+      "quartz": false,
+      "text": "on the 1st in June through August and December at midnight"
+    },
+    {
+      "pattern": "0 0 1 */2 *",
+      "quartz": false,
+      "text": "on the 1st in every odd-numbered month at midnight"
+    },
+    {
+      "pattern": "0 0 1 */3 *",
+      "quartz": false,
+      "text": "on January, April, July, and October 1 at midnight"
+    },
+    {
+      "pattern": "0 0 1 1-11 *",
+      "quartz": false,
+      "text": "on the 1st in January through November at midnight"
+    },
+    {
+      "pattern": "0 0 1 11-2 *",
+      "quartz": false,
+      "text": "on the 1st in November through February at midnight"
+    },
+    {
+      "pattern": "0 0 1 * 1",
+      "quartz": false,
+      "text": "at midnight whenever the day is the 1st or a Monday"
+    },
+    {
+      "pattern": "0 0 1 * 0",
+      "quartz": false,
+      "text": "at midnight whenever the day is the 1st or a Sunday"
+    },
+    {
+      "pattern": "0 0 1 * 1,3,5",
+      "quartz": false,
+      "text": "at midnight whenever the day is the 1st, a Monday, a Wednesday, or a Friday"
+    },
+    {
+      "pattern": "0 0 1 * 1-5",
+      "quartz": false,
+      "text": "at midnight whenever the day is the 1st or a weekday"
+    },
+    {
+      "pattern": "0 0 1 * 0,6",
+      "quartz": false,
+      "text": "at midnight whenever the day is the 1st, a Saturday, or a Sunday"
+    },
+    {
+      "pattern": "0 0 1 * 1-6",
+      "quartz": false,
+      "text": "at midnight whenever the day is the 1st or a Monday through a Saturday"
+    },
+    {
+      "pattern": "0 0 1 * 2,4",
+      "quartz": false,
+      "text": "at midnight whenever the day is the 1st, a Tuesday, or a Thursday"
+    },
+    {
+      "pattern": "0 0 1 * 5L",
+      "quartz": true,
+      "text": "at midnight whenever the day is the 1st or the last Friday of the month"
+    },
+    {
+      "pattern": "0 0 1 * 1#2",
+      "quartz": true,
+      "text": "at midnight whenever the day is the 1st or the second Monday of the month"
+    },
+    {
+      "pattern": "* * * * * *",
+      "quartz": false,
+      "text": "every second"
+    },
+    {
+      "pattern": "30 * * * * *",
+      "quartz": false,
+      "text": "30 seconds past the minute, every minute"
+    },
+    {
+      "pattern": "0,30 * * * * *",
+      "quartz": false,
+      "text": "at 0 and 30 seconds past the minute"
+    },
+    {
+      "pattern": "*/6 * * * * *",
+      "quartz": false,
+      "text": "every six seconds"
+    },
+    {
+      "pattern": "*/15 * * * * *",
+      "quartz": false,
+      "text": "every 15 seconds"
+    },
+    {
+      "pattern": "0-9 * * * * *",
+      "quartz": false,
+      "text": "every second from 0 through 9 past the minute"
+    },
+    {
+      "pattern": "5/10 * * * * *",
+      "quartz": false,
+      "text": "every ten seconds from five seconds past the minute"
+    },
+    {
+      "pattern": "0 * * * *",
+      "quartz": false,
+      "text": "every hour"
+    },
+    {
+      "pattern": "30 * * * *",
+      "quartz": false,
+      "text": "30 minutes past the hour, every hour"
+    },
+    {
+      "pattern": "0,30 * * * *",
+      "quartz": false,
+      "text": "at 0 and 30 minutes past the hour"
+    },
+    {
+      "pattern": "5,20,45 * * * *",
+      "quartz": false,
+      "text": "at 5, 20, and 45 minutes past the hour"
+    },
+    {
+      "pattern": "0-29 * * * *",
+      "quartz": false,
+      "text": "every minute from 0 through 29 past the hour"
+    },
+    {
+      "pattern": "0-29,45 * * * *",
+      "quartz": false,
+      "text": "at 0 through 29 and at 45 minutes past the hour"
+    },
+    {
+      "pattern": "*/15 * * * *",
+      "quartz": false,
+      "text": "every 15 minutes"
+    },
+    {
+      "pattern": "*/7 * * * *",
+      "quartz": false,
+      "text": "every seven minutes from 0 through 56 minutes past the hour"
+    },
+    {
+      "pattern": "5/15 * * * *",
+      "quartz": false,
+      "text": "every 15 minutes from five minutes past the hour"
+    },
+    {
+      "pattern": "0,15,45 * * * *",
+      "quartz": false,
+      "text": "at 0, 15, and 45 minutes past the hour"
+    },
+    {
+      "pattern": "10-40/10 * * * *",
+      "quartz": false,
+      "text": "at 10, 20, 30, and 40 minutes past the hour"
+    },
+    {
+      "pattern": "* 0 * * *",
+      "quartz": false,
+      "text": "every minute of the midnight hour"
+    },
+    {
+      "pattern": "* 9 * * *",
+      "quartz": false,
+      "text": "every minute of the 9 a.m. hour"
+    },
+    {
+      "pattern": "* 12 * * *",
+      "quartz": false,
+      "text": "every minute of the noon hour"
+    },
+    {
+      "pattern": "* 9,17 * * *",
+      "quartz": false,
+      "text": "every minute during the 9 a.m. and 5 p.m. hours"
+    },
+    {
+      "pattern": "* 8,12,18 * * *",
+      "quartz": false,
+      "text": "every minute during the 8 a.m., 12 p.m., and 6 p.m. hours"
+    },
+    {
+      "pattern": "* 9-17 * * *",
+      "quartz": false,
+      "text": "every minute from 9 a.m. until 6 p.m."
+    },
+    {
+      "pattern": "* 9-17,22 * * *",
+      "quartz": false,
+      "text": "every minute during the 9 a.m. through 5 p.m. and 10 p.m. hours"
+    },
+    {
+      "pattern": "* */2 * * *",
+      "quartz": false,
+      "text": "every minute of every other hour"
+    },
+    {
+      "pattern": "* */6 * * *",
+      "quartz": false,
+      "text": "every minute during every sixth hour"
+    },
+    {
+      "pattern": "* 1/2 * * *",
+      "quartz": false,
+      "text": "every minute during every other hour starting at 1 a.m."
+    },
+    {
+      "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *",
+      "quartz": false,
+      "text": "every minute during the 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m. hours"
+    },
+    {
+      "pattern": "* 22-2 * * *",
+      "quartz": false,
+      "text": "every minute from 10 p.m. until 3 a.m."
+    },
+    {
+      "pattern": "* * 1 * *",
+      "quartz": false,
+      "text": "every minute on the 1st"
+    },
+    {
+      "pattern": "* * 15 * *",
+      "quartz": false,
+      "text": "every minute on the 15th"
+    },
+    {
+      "pattern": "* * 1,15 * *",
+      "quartz": false,
+      "text": "every minute on the 1st and 15th"
+    },
+    {
+      "pattern": "* * 1,10,20 * *",
+      "quartz": false,
+      "text": "every minute on the 1st, 10th, and 20th"
+    },
+    {
+      "pattern": "* * 1-7 * *",
+      "quartz": false,
+      "text": "every minute on the 1st through 7th"
+    },
+    {
+      "pattern": "* * 1-7,15 * *",
+      "quartz": false,
+      "text": "every minute on the 1st through 7th and on the 15th"
+    },
+    {
+      "pattern": "* * */2 * *",
+      "quartz": false,
+      "text": "every minute on every other day of the month"
+    },
+    {
+      "pattern": "* * 2/2 * *",
+      "quartz": false,
+      "text": "every minute on every other day of the month from the 2nd"
+    },
+    {
+      "pattern": "* * */5 * *",
+      "quartz": false,
+      "text": "every minute on every 5th day of the month"
+    },
+    {
+      "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *",
+      "quartz": false,
+      "text": "every minute on the 1st, 3rd, 5th, 7th, 9th, 11th, 13th, 17th, 19th, 21st, 23rd, 25th, 27th, 29th, and 31st"
+    },
+    {
+      "pattern": "* * L * *",
+      "quartz": true,
+      "text": "every minute on the last day of the month"
+    },
+    {
+      "pattern": "* * 15W * *",
+      "quartz": true,
+      "text": "every minute on the weekday nearest the 15th"
+    },
+    {
+      "pattern": "* * * 1 *",
+      "quartz": false,
+      "text": "every minute in January"
+    },
+    {
+      "pattern": "* * * 6 *",
+      "quartz": false,
+      "text": "every minute in June"
+    },
+    {
+      "pattern": "* * * 1,7 *",
+      "quartz": false,
+      "text": "every minute in January and July"
+    },
+    {
+      "pattern": "* * * 3,6,9,12 *",
+      "quartz": false,
+      "text": "every minute in March, June, September, and December"
+    },
+    {
+      "pattern": "* * * 6-8 *",
+      "quartz": false,
+      "text": "every minute in June through August"
+    },
+    {
+      "pattern": "* * * 6-8,12 *",
+      "quartz": false,
+      "text": "every minute in June through August and December"
+    },
+    {
+      "pattern": "* * * */2 *",
+      "quartz": false,
+      "text": "every minute in every odd-numbered month"
+    },
+    {
+      "pattern": "* * * */3 *",
+      "quartz": false,
+      "text": "every minute in January, April, July, and October"
+    },
+    {
+      "pattern": "* * * 1-11 *",
+      "quartz": false,
+      "text": "every minute in January through November"
+    },
+    {
+      "pattern": "* * * 11-2 *",
+      "quartz": false,
+      "text": "every minute in November through February"
+    },
+    {
+      "pattern": "* * * * 1",
+      "quartz": false,
+      "text": "every minute on Mondays"
+    },
+    {
+      "pattern": "* * * * 0",
+      "quartz": false,
+      "text": "every minute on Sundays"
+    },
+    {
+      "pattern": "* * * * 1,3,5",
+      "quartz": false,
+      "text": "every minute on Mondays, Wednesdays, and Fridays"
+    },
+    {
+      "pattern": "* * * * 1-5",
+      "quartz": false,
+      "text": "every minute on Monday through Friday"
+    },
+    {
+      "pattern": "* * * * 0,6",
+      "quartz": false,
+      "text": "every minute on Saturdays and Sundays"
+    },
+    {
+      "pattern": "* * * * 1-6",
+      "quartz": false,
+      "text": "every minute on Monday through Saturday"
+    },
+    {
+      "pattern": "* * * * 2,4",
+      "quartz": false,
+      "text": "every minute on Tuesdays and Thursdays"
+    },
+    {
+      "pattern": "* * * * 5L",
+      "quartz": true,
+      "text": "every minute on the last Friday of the month"
+    },
+    {
+      "pattern": "* * * * 1#2",
+      "quartz": true,
+      "text": "every minute on the second Monday of the month"
+    }
+  ],
+  "singleCharacter": {
+    "equivalentViolations": [],
+    "max": 0.9285714285714286,
+    "median": 0.18181818181818182,
+    "p90": 0.5454545454545454,
+    "pairs": 25879,
+    "worst": [
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 2/2 * * *",
+        "distance": 0.9285714285714286,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 2 a.m., 4 a.m., 6 a.m., 8 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m. hours"
+      },
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 3/2 * * *",
+        "distance": 0.9285714285714286,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 3 a.m., 5 a.m., 7 a.m., 9 a.m., 11 a.m., 1 p.m., 3 p.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. hours"
+      },
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 4/2 * * *",
+        "distance": 0.9230769230769231,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 4 a.m., 6 a.m., 8 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m. hours"
+      },
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 5/2 * * *",
+        "distance": 0.9230769230769231,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 5 a.m., 7 a.m., 9 a.m., 11 a.m., 1 p.m., 3 p.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. hours"
+      },
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 6/2 * * *",
+        "distance": 0.9166666666666666,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 6 a.m., 8 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m. hours"
+      },
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 7/2 * * *",
+        "distance": 0.9166666666666666,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 7 a.m., 9 a.m., 11 a.m., 1 p.m., 3 p.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. hours"
+      },
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 8/2 * * *",
+        "distance": 0.9090909090909091,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 8 a.m., 10 a.m., 12 p.m., 2 p.m., 4 p.m., 6 p.m., 8 p.m., and 10 p.m. hours"
+      },
+      {
+        "a": "* * */2 * * *",
+        "b": "* * 9/2 * * *",
+        "distance": 0.9090909090909091,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every second of every other hour",
+        "textB": "every second during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., 5 p.m., 7 p.m., 9 p.m., and 11 p.m. hours"
+      },
+      {
+        "a": "*/15 * * * * *",
+        "b": "*/16 * * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every 15 seconds",
+        "textB": "at 0, 16, 32, and 48 seconds past the minute"
+      },
+      {
+        "a": "*/15 * * * * *",
+        "b": "*/17 * * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every 15 seconds",
+        "textB": "at 0, 17, 34, and 51 seconds past the minute"
+      },
+      {
+        "a": "*/15 * * * * *",
+        "b": "*/18 * * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every 15 seconds",
+        "textB": "at 0, 18, 36, and 54 seconds past the minute"
+      },
+      {
+        "a": "*/15 * * * * *",
+        "b": "*/19 * * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every 15 seconds",
+        "textB": "at 0, 19, 38, and 57 seconds past the minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "00 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 00 seconds past the minute of every other minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "01 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 01 second past the minute of every other minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "02 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 02 seconds past the minute of every other minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "03 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 03 seconds past the minute of every other minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "04 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 04 seconds past the minute of every other minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "05 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 05 seconds past the minute of every other minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "06 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 06 seconds past the minute of every other minute"
+      },
+      {
+        "a": "0 */2 * * * *",
+        "b": "07 */2 * * * *",
+        "distance": 0.9,
+        "options": {
+          "quartz": false,
+          "years": false
+        },
+        "textA": "every two minutes",
+        "textB": "at 07 seconds past the minute of every other minute"
+      }
+    ]
+  },
+  "size": {
+    "branches": 190,
+    "lines": 3021
+  }
+}
