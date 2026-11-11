@@ -342,7 +342,9 @@ a.m.", "at midnight, 12:15, and 12:45 a.m.", "from 9 until 9:30 a.m." When
 they differ, every numbered time carries its own: "at 9 a.m. and 5 p.m.",
 "from 9 a.m. until 6 p.m." Noon and midnight never take one. A window to
 the minute or the second shows that precision on its numbered ends: "from
-9:00 until 9:01 a.m.", "from midnight until 12:01 a.m."
+9:00 until 9:01 a.m.", "from midnight until 12:01 a.m." An end that falls
+exactly on noon or midnight is still said as the word, whatever the
+precision of the other end: "from noon until 12:00:10 p.m."
 
 A shared a.m. or p.m. is only left to the end when the last item is a
 numbered time and, for a range, when the range does not wrap. Otherwise
