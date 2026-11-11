@@ -64,9 +64,33 @@ function currentCommit() {
   }).trim();
 }
 
+// Remember each rendering: the scores render every pattern many times
+// over, once per pair it appears in.
+function remembering(render) {
+  const seen = new Map();
+
+  return function remembered(pattern, options) {
+    const key = `${pattern}|${JSON.stringify(options || null)}`;
+
+    if (!seen.has(key)) {
+      seen.set(key, attempt(render, pattern, options));
+    }
+
+    const result = seen.get(key);
+
+    if (result.text === null) {
+      throw new Error(result.error);
+    }
+
+    return result.text;
+  };
+}
+
 /** Measure a language's current renderer. */
 async function baseline(code) {
-  const {render, stem} = await languageBinding(code);
+  const binding = await languageBinding(code);
+  const render = remembering(binding.render);
+  const {stem} = binding;
   const renderings = allRows().map(function renderRow(row) {
     return {
       pattern: row.pattern,

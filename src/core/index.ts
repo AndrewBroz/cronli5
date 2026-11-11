@@ -34,3 +34,4 @@ export * from './cadence.js';
 export * from './shapes.js';
 export * from './analyze.js';
 export * from './describe-set.js';
+export * from './select.js';

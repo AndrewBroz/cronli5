@@ -7,9 +7,10 @@ import {fieldOrder, fieldSpecs, maxClockTimes} from './specs.js';
 import type {FieldSpec} from './specs.js';
 import type {
   Analyses, ClockTime, Field, HourTimesPlan, HoursPlan, Pattern,
-  PlanNode, Schedule, ScheduleFacts, Segment, Shape, Shapes
+  PlanNode, Schedule, ScheduleFacts, Segment, SetDescription, Shape, Shapes
 } from './schedule.js';
 import {dayFacts} from './day.js';
+import {describeSet} from './describe-set.js';
 import {hourStrideFact} from './cadence.js';
 import {enumerateFires, enumerateStep, includes} from './util.js';
 import {isDiscreteHours, isDiscreteList, isPlainRange, isSingleValue}
@@ -133,19 +134,49 @@ function fieldSegments(
   });
 }
 
+// Every compact description of a field's value set. A wildcard is the
+// whole field without enumerating it (the year domain is thousands of
+// values); a Quartz form is not a plain set of values and has none.
+function fieldCandidates(
+  value: string,
+  shape: Shape,
+  spec: FieldSpec
+): SetDescription[] | null {
+  if (shape === 'quartz') {
+    return null;
+  }
+
+  if (shape === 'wildcard') {
+    return [{kind: 'all'}];
+  }
+
+  const max = spec.top ?? spec.max;
+  const fires = enumerateFires(value, spec.min, max)
+    .sort(function ascending(a, b) {
+      return a - b;
+    });
+
+  return describeSet(fires, {cyclic: Boolean(spec.cyclic), max,
+    min: spec.min});
+}
+
 // Analyze a prepared (parsed, validated, normalized) cron pattern into the
 // Schedule a language module renders from.
 function analyze(pattern: Pattern): Schedule {
   const shapes = {} as Shapes;
   const segments = {} as Analyses['segments'];
+  const candidates = {} as Analyses['candidates'];
 
   fieldOrder.forEach(function classify(field) {
     shapes[field] = fieldShape(pattern[field], field);
     segments[field] = fieldSegments(pattern[field], shapes[field],
       fieldSpecs[field]);
+    candidates[field] = fieldCandidates(pattern[field], shapes[field],
+      fieldSpecs[field]);
   });
 
   const analyses = {
+    candidates,
     clockSecond: clockSecond(pattern.second),
     day: dayFacts(pattern, shapes),
     hourStride: hourStrideFact(segments.hour),

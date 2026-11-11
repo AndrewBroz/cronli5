@@ -163,6 +163,10 @@ export interface Domain {
 
 /** The semantic analyses the core attaches to the pattern for rendering. */
 export interface Analyses {
+  // Every compact description of each field's value set, in tie-break
+  // order: a wildcard field is `[{kind: 'all'}]`, a Quartz field (not a
+  // plain set) is `null`.
+  candidates: Record<Field, SetDescription[] | null>;
   clockSecond: number | undefined;
   day: DayFacts;
   hourStride: HourStride | null;
