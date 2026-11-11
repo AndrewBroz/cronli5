@@ -77,6 +77,7 @@
     "docs": "node --import tsx scripts/docs.mjs",
     "conciseness": "node --import tsx tooling/scripts/conciseness.mjs",
     "corpus-lint": "node --import tsx tooling/scripts/corpus-lint.mjs",
+    "edit-diff": "node --import tsx tooling/scripts/edit-diff.mjs",
     "divergence": "node --import tsx tooling/scripts/cronstrue-divergence.mjs",
     "fuzz": "node --import tsx scripts/fuzz-lang.mjs",
     "lint": "eslint src test cli.js eslint.config.js scripts tooling/scripts",
