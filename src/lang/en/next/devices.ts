@@ -410,13 +410,23 @@ function hoursAsMoments(at: Omit<Moment, 'hour'>, opts: EnglishOptions):
   };
 }
 
+// Hours named as the hours that start at them: "the 9 a.m. and 5 p.m.
+// hours", "the midnight hour".
+function theHours(hours: number[], opts: EnglishOptions): string {
+  return join(words.the.text,
+    list(hourNames(hours, {minute: 0}, opts), opts),
+    unit('hour', hours.length));
+}
+
 /**
  * Hours as a noun phrase after "past": "9 a.m. and 5 p.m.", "every hour
  * from 9 a.m. through 5 p.m.", "every other hour". "Every other" is the
  * only interval word, so a wider cadence, or one that stops early, is
- * left to be said as its values.
+ * left to be said as its values. After "the first 30 minutes of", which
+ * is a part of an hour and not a point in it, listed hours are named
+ * `asHours`: "the 9 a.m. and 5 p.m. hours".
  */
-function hoursAsNouns(opts: EnglishOptions): Voice {
+function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
   function names(hours: number[]): string[] {
     return hourNames(hours, {minute: 0}, opts);
   }
@@ -443,7 +453,7 @@ function hoursAsNouns(opts: EnglishOptions): Voice {
       return join(everyHour, span(names([from, to]), opts));
     },
     values(values) {
-      return list(names(values), opts);
+      return asHours ? theHours(values, opts) : list(names(values), opts);
     }
   };
 }
@@ -454,15 +464,9 @@ function hoursAsNouns(opts: EnglishOptions): Voice {
  * stretch closes at the moment it ends, the hour after its last.
  */
 function hoursAsStretches(opts: EnglishOptions): Voice {
-  const nouns = hoursAsNouns(opts);
+  const nouns = hoursAsNouns(true, opts);
   const cadence = nouns.cadence as CadenceVoice;
   const during = words.during.text;
-
-  function theHours(hours: number[]): string {
-    return join(words.the.text,
-      list(hourNames(hours, {minute: 0}, opts), opts),
-      unit('hour', hours.length));
-  }
 
   return {
     all: '',
@@ -476,7 +480,7 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
     },
     exception(removed, base) {
       return join(except, base.kind === 'cadence' ? '' : during,
-        theHours(removed));
+        theHours(removed, opts));
     },
     field: 'hour',
     pairs: true,
@@ -487,7 +491,7 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
       return `${words.from.text} ${opens} ${words.until.text} ${closes}`;
     },
     values(values) {
-      return `${during} ${theHours(values)}`;
+      return `${during} ${nouns.values(values)}`;
     }
   };
 }
@@ -562,7 +566,8 @@ function monthsAlone(opts: EnglishOptions): Voice {
 /**
  * Months belonging to days that have already been phrased: "on the 1st
  * and 15th of January and July", "on the 1st of each month from June
- * through August", "on the 1st of every other month". Listed months
+ * through August", "on the 1st of every other month", "on the 1st of
+ * every other month from February". Listed months
  * under a single day (`day`, with `lead` to introduce it) are said as
  * dates in full: "on January 1 and July 1".
  */
@@ -578,10 +583,11 @@ function monthsOfDays(
     cadence: {
       bare: true,
       cycle: 12,
-      open: false,
+      open: true,
       say(cadence, ends) {
-        return cadence.interval === 2 && ends.length === 0 ?
-          `${of} ${every} ${lexicon.intervalWord(2).text} ${monthWord}` :
+        return cadence.interval === 2 && ends.length < 2 ?
+          join(`${of} ${every} ${lexicon.intervalWord(2).text} ${monthWord}`,
+            span(monthNames(ends, opts), opts)) :
           null;
       }
     },

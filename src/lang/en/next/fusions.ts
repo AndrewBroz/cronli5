@@ -36,6 +36,9 @@ interface Tick {
   length: number;
   // The value, when there is just one.
   only: number | null;
+  // Whether the phrase is a part of the hour or minute ("for the first
+  // 30 minutes of") and not a count past it.
+  portion: boolean;
   text: string;
 }
 
@@ -66,31 +69,31 @@ function unlessEvery(choice: Choice): string {
   return choice.description.kind === 'all' ? '' : choice.text;
 }
 
+// Whether a description is a run from the start of its hour or minute,
+// or to the end of it.
+function isPortion(description: SetDescription): boolean {
+  return description.kind === 'range' &&
+    (description.from === 0 || description.to === 59);
+}
+
 // Minutes or seconds that are not continuous, up to the word that ties
 // them to what follows. A run from the start is "for the first N minutes
 // of", a run to the end "for the last N minutes of", and anything else is
 // counted "minutes past".
 function anchored(chosen: Choice, field: 'minute' | 'second'): string {
   const {description} = chosen;
-  const everyOne = `${words.every.text} ${unit(field, 1)}`;
-  const many = unit(field, 0);
-  const forThe = `${extraWords.for} ${words.the.text}`;
-  const of = words.of.text;
 
-  if (description.kind === 'range' && description.from === 0) {
-    const first = lexicon.nthWords[1].text;
-
-    return `${everyOne} ${forThe} ${first} ${description.to + 1} ${many} ${of}`;
+  if (description.kind !== 'range' || !isPortion(description)) {
+    return join(chosen.text, unit(field, onlyValue(description) ?? 0),
+      words.past.text);
   }
 
-  if (description.kind === 'range' && description.to === 59) {
-    const count = 60 - description.from;
+  const which = description.from === 0 ?
+    `${lexicon.nthWords[1].text} ${description.to + 1}` :
+    `${words.last.text} ${60 - description.from}`;
 
-    return `${everyOne} ${forThe} ${words.last.text} ${count} ${many} ${of}`;
-  }
-
-  return join(chosen.text, unit(field, onlyValue(description) ?? 0),
-    words.past.text);
+  return `${words.every.text} ${unit(field, 1)} ${extraWords.for} ` +
+    `${words.the.text} ${which} ${unit(field, 0)} ${words.of.text}`;
 }
 
 function tick(
@@ -110,6 +113,7 @@ function tick(
     every,
     length: chosen.length,
     only: onlyValue(description),
+    portion: isPortion(description),
     text: continuous ? chosen.text : anchored(chosen, field)
   };
 }
@@ -174,7 +178,10 @@ function timeWith(
 
   const window = minute.continuous ? null : minuteWindow(hours, context, opts);
   const rest = say(hours,
-    minute.continuous ? hoursAsStretches(opts) : hoursAsNouns(opts), opts);
+    minute.continuous ?
+      hoursAsStretches(opts) :
+      hoursAsNouns(minute.portion, opts),
+    opts);
 
   if (window || !rest) {
     return window ? [window] : [];

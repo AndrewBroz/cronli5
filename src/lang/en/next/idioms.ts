@@ -52,8 +52,7 @@ function running(from: number, to: number) {
 
 function onTheHour(hour: number) {
   return function isThatMoment(moment: Moment): boolean {
-    return moment.hour === hour && moment.minute === 0 &&
-      typeof moment.second !== 'number';
+    return moment.hour === hour && moment.minute === 0 && !moment.second;
   };
 }
 
@@ -108,7 +107,8 @@ const idioms: SetIdiom[] = [
 ];
 
 // Said only of the moment itself, in 12-hour time: 12:30 a.m. is not
-// "half past midnight".
+// "half past midnight". A moment written to the second is still the word
+// when it falls exactly there.
 const momentIdioms: Array<Idiom<Moment>> = [
   {
     applies: onTheHour(0),
