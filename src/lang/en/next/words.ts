@@ -1,0 +1,205 @@
+// Getting the words right: lists, names, numbers and times of day. Nothing
+// here decides what is said or where it goes.
+
+import type {EnglishOptions} from './options.js';
+import type {Moment} from './idioms.js';
+import lexicon from './lexicon.js';
+import {momentIdioms} from './idioms.js';
+
+type UnitName = keyof typeof lexicon.units;
+
+const {words} = lexicon;
+
+// Words the lexicon does not hold yet.
+const extraWords = {
+  asWellAs: 'as well as',
+  each: 'each'
+};
+
+// The largest interval that has its own word ("twelfth").
+const lastIntervalWord = 12;
+
+/** Words joined by single spaces, leaving out any part that is silent. */
+function join(...parts: string[]): string {
+  return parts.filter(Boolean).join(' ');
+}
+
+/** "A", "A and B", "A, B, and C". */
+function list(items: string[], opts: EnglishOptions): string {
+  const and = ` ${words.and.text} `;
+
+  if (items.length < 3) {
+    return items.join(and);
+  }
+
+  const comma = opts.style.serialComma ? ',' : '';
+
+  return items.slice(0, -1).join(', ') + comma + and + items[items.length - 1];
+}
+
+/**
+ * The named ends of a stretch: nothing, "from A", or "from A through B".
+ */
+function span(ends: string[], opts: EnglishOptions): string {
+  return ends.map(function bound(end, index) {
+    return `${index === 0 ? words.from.text : opts.style.through} ${end}`;
+  }).join(' ');
+}
+
+/** A unit after "every" or the number one, or after any other number. */
+function unit(name: UnitName, count: number): string {
+  return lexicon.units[name][count === 1 ? 'one' : 'many'].text;
+}
+
+/** An interval after "every": "other", "third", "twelfth", then "13th". */
+function nth(interval: number): string {
+  return interval > lastIntervalWord ?
+    lexicon.ordinal(interval).text :
+    lexicon.intervalWord(interval).text;
+}
+
+// A time and the a.m. or p.m. it would carry; noon, midnight and 24-hour
+// times carry none.
+function writeTime(moment: Moment, opts: EnglishOptions):
+  {meridiem: string; text: string} {
+  const {style} = opts;
+  const parts = [moment.minute, moment.second]
+    .filter(function present(part) {
+      return typeof part === 'number';
+    })
+    .map(function twoDigits(part) {
+      return lexicon.clockMinute(part as number).text;
+    });
+
+  if (!opts.ampm) {
+    return {
+      meridiem: '',
+      text: [lexicon.clockMinute(moment.hour).text, ...parts].join(style.sep)
+    };
+  }
+
+  const idiom = momentIdioms.find(function fits(row) {
+    return row.applies(moment);
+  });
+
+  if (idiom) {
+    return {meridiem: '', text: idiom.say(opts).text};
+  }
+
+  // On the hour, the hour stands alone.
+  const shown = moment.minute === 0 && parts.length === 1 ? [] : parts;
+
+  return {
+    meridiem: moment.hour < 12 ? style.am : style.pm,
+    text: [String(moment.hour % 12 || 12), ...shown].join(style.sep)
+  };
+}
+
+/**
+ * Times of day as they are written together. When every numbered time
+ * shares a.m. or p.m., only the last one says it.
+ */
+function timeNames(moments: Moment[], opts: EnglishOptions): string[] {
+  const written = moments.map(function write(moment) {
+    return writeTime(moment, opts);
+  });
+  const numbered = written.filter(function carries(time) {
+    return time.meridiem;
+  });
+  const last = numbered[numbered.length - 1];
+  const shared = numbered.every(function same(time) {
+    return time.meridiem === last.meridiem;
+  });
+  const gap = opts.style.closeUp ? '' : ' ';
+
+  return written.map(function finish(time) {
+    const silent = !time.meridiem || shared && time !== last;
+
+    return silent ? time.text : time.text + gap + time.meridiem;
+  });
+}
+
+/** Hours as times, each at the same minute past. */
+function hourNames(hours: number[], minute: number, opts: EnglishOptions):
+  string[] {
+  return timeNames(hours.map(function toMoment(hour) {
+    return {hour, minute};
+  }), opts);
+}
+
+/**
+ * Days of the month. Alone they are ordinals after "the", said once for
+ * a list or before each end of a range. Beside a month they are numbers,
+ * with the month before the first or after the last as the style has it.
+ */
+function dayNames(
+  days: number[],
+  month: number | null,
+  eachArticle: boolean,
+  opts: EnglishOptions
+): string[] {
+  const names = days.map(function numeral(day) {
+    return month === null || opts.style.ordinals ?
+      lexicon.ordinal(day).text :
+      lexicon.cardinal(day).text;
+  });
+
+  if (month === null) {
+    return names.map(function article(name, index) {
+      return index === 0 || eachArticle ? `${words.the.text} ${name}` : name;
+    });
+  }
+
+  const at = opts.style.dayFirst ? names.length - 1 : 0;
+
+  names[at] = opts.style.dayFirst ?
+    `${names[at]} ${monthName(month, opts)}` :
+    `${monthName(month, opts)} ${names[at]}`;
+
+  return names;
+}
+
+function monthName(month: number, opts: EnglishOptions): string {
+  return lexicon.months[month][opts.short ? 'short' : 'full'].text;
+}
+
+/**
+ * Weekdays in the order they are said: round the week, starting after
+ * the longest gap, with Monday first among equal gaps.
+ */
+function walkWeek(days: number[]): number[] {
+  const mondayFirst = days.slice().sort(function byMonday(a, b) {
+    return (a + 6) % 7 - (b + 6) % 7;
+  });
+  let start = 0;
+  let widest = -1;
+
+  mondayFirst.forEach(function measure(day, index) {
+    const previous = mondayFirst.at(index - 1) as number;
+    const gap = (day - previous + 6) % 7;
+
+    if (gap > widest) {
+      widest = gap;
+      start = index;
+    }
+  });
+
+  return [...mondayFirst.slice(start), ...mondayFirst.slice(0, start)];
+}
+
+/** A recurring weekday ("Mondays") or a single one ("Monday"). */
+function weekdayName(day: number, recurring: boolean, opts: EnglishOptions):
+  string {
+  const name = lexicon.weekdays[day];
+
+  if (opts.short) {
+    return name.short.text;
+  }
+
+  return recurring ? name.plural.text : name.full.text;
+}
+
+export {
+  dayNames, extraWords, hourNames, join, list, monthName, nth, span,
+  timeNames, unit, walkWeek, weekdayName
+};
