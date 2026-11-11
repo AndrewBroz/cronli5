@@ -37,6 +37,13 @@ const EQUIVALENT = [
   ['full-range step minute', '0-59/2 * * * *', '*/2 * * * *'],
   ['full-range step hour', '0 0-23/2 * * *', '0 */2 * * *'],
   ['weekday MON = 1', '0 0 * * MON', '0 0 * * 1'],
+  // A number means the same however many zeros lead it.
+  ['leading zero second', '00 0 9 * * *', '0 0 9 * * *'],
+  ['leading zero minute and hour', '00 09 * * *', '0 9 * * *'],
+  ['leading zero date and month', '0 0 01 06 *', '0 0 1 6 *'],
+  ['leading zero in a list and a range', '05,020 09-017 * * *',
+    '5,20 9-17 * * *'],
+  ['leading zero step interval', '*/015 * * * *', '*/15 * * * *'],
   ['weekday SUN: 7 = 0', '0 0 * * 7', '0 0 * * 0'],
   ['weekday FRI-SUN = 5-7', '0 0 * * FRI-SUN', '0 0 * * 5-7'],
   ['weekday SAT-SUN = 6-7', '0 0 * * SAT-SUN', '0 0 * * 6-7'],

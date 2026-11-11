@@ -42,7 +42,7 @@ function applyQuartzAliases(cronPattern: CronLike): void {
 // never need to coerce.
 function normalizeCronPattern(cronPattern: CronLike): Pattern {
   fieldOrder.forEach(function normalize(field) {
-    const value = '' + cronPattern[field];
+    const value = withoutLeadingZeros('' + cronPattern[field]);
 
     // Quartz tokens are already canonical single values.
     if (field === 'date' && isQuartzDate(value) ||
@@ -57,6 +57,16 @@ function normalizeCronPattern(cronPattern: CronLike): Pattern {
 
   // Every field is now a canonical string.
   return cronPattern as Pattern;
+}
+
+// A number means the same however many zeros lead it: `00` is `0` and
+// `*/015` is `*/15`. Every run of digits loses its leading zeros before
+// anything else looks at the field, so no later step, and no renderer,
+// can tell the two spellings apart.
+function withoutLeadingZeros(value: string): string {
+  return value.replace(/\d+/gu, function plain(digits) {
+    return '' + +digits;
+  });
 }
 
 // Canonicalize a single validated field value to a string.
