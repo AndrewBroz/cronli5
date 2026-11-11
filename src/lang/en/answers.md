@@ -43,6 +43,11 @@ Three notes on counting:
   hours from 12:30 a.m." names one thing, as "every 12 hours" does, so
   moving the minute never changes the device.
 * An idiom wins a tie with any other candidate.
+* An exception, and a cadence with both ends named, must name strictly
+  fewer things than the plain list to be chosen. On a tie the list wins:
+  days 5, 10 and 15 are "on the 5th, 10th, and 15th", not "every 5 days
+  from the 5th through the 15th", and days 3, 5 … 31 are "every 2 days
+  from the 3rd", not "on odd-numbered days except the 1st".
 
 ## 1. Anchors
 
@@ -84,6 +89,8 @@ Dropped, because they changed sentence structure or meaning:
 A custom object's range word may be given with surrounding spaces (the
 earlier style tables wrote `' through '`); they are trimmed. An unknown
 dialect name is treated as `us`.
+
+A custom object may also set the word for midnight.
 
 1.3 None beyond `gb`.
 
@@ -154,7 +161,7 @@ Numbers are digits everywhere. The only interval word is "every other"
 
 3.3 A list. Items are joined with commas and a final "and" (7.4).
 
-* Minutes: "at 0 and 30 minutes past every hour", "at 5, 20, and 45
+* Minutes: "at 15 and 45 minutes past every hour", "at 5, 20, and 45
   minutes past every hour".
 * Hours with minute 0: "at 8 a.m., noon, and 6 p.m."
 * Days of the month: "on the 1st, 10th, and 20th". One "the" for the list.
@@ -203,7 +210,12 @@ the 1st through the 7th and on the 15th".
 
 Pieces are said in ascending order, each range with its own lead, unless
 one of the runs wraps round the cycle, in which case the wrapped run comes
-first: "every hour from 10 p.m. through 2 a.m. and at 10 a.m."
+first: "every hour from 10 p.m. through 2 a.m. and at 10 a.m." Weekday
+pieces follow the walk round the week of 3.3. Three or more parts are
+joined as a list is, with commas: "at 9 a.m., every hour from 11 a.m.
+through 1 p.m., and at 3, 7, and 9 p.m." A run of minutes that wraps inside
+one hour is two windows: "every minute from 9 until 9:11 a.m. and every
+minute from 9:50 until 10 a.m."
 
 3.7 An even cadence. A cadence may be called "every N" with no bounds only
 when it tiles its cycle: N divides the cycle (60 seconds, 60 minutes, 24
@@ -224,8 +236,9 @@ hours, 12 months) and the cadence starts within its first interval.
 * Weekdays have no cadence. "Every other day" would be false across the
   end of the week. The days are listed.
 
-A date cadence that stops before the end of the month names both ends:
-"every 3 days from the 5th through the 20th".
+A date cadence that runs to the end of the month names only its start,
+wherever it starts: "every 2 days from the 8th". One that stops earlier
+names both ends: "every 3 days from the 5th through the 20th".
 
 The month cadence may start in February: "on the 1st of every other month
 from February".
@@ -257,7 +270,9 @@ missing ones, when that names fewer things than the alternatives.
 An exception can be made to an idiom or a range as well as to a cadence:
 "on weekdays except Thursday"; "from June 1 through 20 except the 15th";
 "on every day except the 15th". Only "every day" of the week has no
-exception form.
+exception form. Months belong to the base and come before "except": "on
+every day in June except the 15th"; "on odd-numbered days in June except
+the 15th".
 
 3.10 A limit on items held turned out to be the whole rule. Choosing by
 spoken syllables, as first designed, made the choice depend on which
@@ -345,7 +360,7 @@ four).
 Writing a time: the hour alone on the hour ("9 a.m."), otherwise hour and
 minutes ("9:30 a.m."). 0:00 is "midnight" and 12:00 is "noon"; 0:30 is
 "12:30 a.m." In a list or a range whose numbered times all share a.m. or
-p.m., it is said once, at the end: "at 9 and 9:30 a.m.", "at 9, 10, and 11
+p.m., it is said once, at the end: "at 9 and 9:30 a.m.", "at 7, 9, and 10
 a.m.", "at midnight, 12:15, and 12:45 a.m.", "from 9 until 9:30 a.m." When
 they differ, every numbered time carries its own: "at 9 a.m. and 5 p.m.",
 "from 9 a.m. until 6 p.m." Noon and midnight never take one. A window to
@@ -356,8 +371,9 @@ precision of the other end: "from noon until 12:00:10 p.m."
 
 A shared a.m. or p.m. is only left to the end when the last item is a
 numbered time and, for a range, when the range does not wrap. Otherwise
-every numbered time carries its own: "at 9 a.m., 10 a.m., and noon";
-"every hour from 4:30 a.m. through 2:30 a.m."
+every numbered time carries its own: "at 9 a.m., 10 a.m., and noon".
+The same sharing applies to hours named as hours: "during the 9 and 10
+a.m. hours".
 
 4.2 Seconds.
 
@@ -384,11 +400,21 @@ every numbered time carries its own: "at 9 a.m., 10 a.m., and noon";
   past every minute", "every second for the first 10 seconds of every
   minute".
 
-A single second joins every clock time the time part names, in a list or
-in the point forms of 4.1's first table: "every hour from 9:00:15 a.m.
-through 5:00:15 p.m." Anchored seconds under every minute of restricted
-hours are followed by the hours' confinement: "every 10 seconds from 5
-through 55 seconds past every minute during the 9 a.m. hour".
+A single second joins a clock time only where the time part, chosen
+without regard to the second, already names clock times: a list of them,
+or the point forms of 4.1's first table ("every hour from 9:00:15 a.m.
+through 5:00:15 p.m."). It never forces a list. Where the time part is
+anything else, the second is anchored in front of it: "at 8 seconds past
+the minute, at 5 and 30 minutes past every other hour".
+
+Whenever the rest of the time begins "every minute", seconds take its
+place, in every form the rest can have: "every second for the first 30
+minutes of every hour"; "every second from 3 through 30 minutes past every
+hour"; "every second from 9 until 9:30 a.m. and for one minute at 9:45
+a.m." Anchored seconds do the same, with "every minute" in place of "the
+minute" and no comma: "at 1 second past every minute for the first 30
+minutes of every hour"; "every 10 seconds from 5 through 55 seconds past
+every minute during the 9 a.m. hour".
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
 first, then "as well as", then the weekday phrase exactly as it would stand

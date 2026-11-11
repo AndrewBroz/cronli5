@@ -1,9 +1,10 @@
 // The English lexicon: every word the renderer says, with its length as
-// spoken, in syllables. Phrasings compete on that length, so it has to be
-// how the words sound, not how they look: "27" is four syllables and "7th"
-// is two. The vocabulary of a cron description is closed, so the lengths
-// are stated here rather than computed, except for the regular number
-// words, which are built from their parts.
+// spoken, in syllables: "27" is four syllables and "7th" is two. The
+// vocabulary of a cron description is closed, so the lengths are stated
+// here rather than computed, except for the regular number words, which
+// are built from their parts. The lengths are a record of how the words
+// sound; phrasings are chosen by how many things they name, which the
+// renderer counts for itself.
 
 import type {Spoken} from '../../../core/select.js';
 

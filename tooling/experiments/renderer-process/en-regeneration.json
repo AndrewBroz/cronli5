@@ -1,0 +1,21 @@
+{
+  "rounds": [
+    {
+      "round": 1,
+      "date": "2026-11-11",
+      "heldOutAndHardCases": {
+        "total": 211,
+        "same": 211
+      },
+      "widePatternSweep": {
+        "total": 24298,
+        "same": 21569
+      },
+      "causes": [
+        "a single second forced a list of clock times in one renderer and was anchored in the other (2,064 patterns)",
+        "whether \"every second\" replaces \"every minute\" before a run of minutes (347)",
+        "date cadence against an idiom with exceptions; where months sit in an exception; punctuation of three or more pieces (318)"
+      ]
+    }
+  ]
+}
