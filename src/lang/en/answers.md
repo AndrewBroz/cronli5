@@ -186,6 +186,11 @@ Numbers are digits everywhere. The only interval word is "every other"
   Seconds follow the same three forms: "every second for the first 10
   seconds of every minute".
 
+After "for the first N minutes of" or "for the last N minutes of", listed
+hours are named as hours: "every minute for the first 30 minutes of the 9
+a.m. and 5 p.m. hours". "Every hour" and "every hour from 9 a.m. through 5
+p.m." follow it unchanged.
+
 3.5 A range that wraps is said from its start through its end, the same
 way: "every hour from 10 p.m. through 2 a.m.", "from November through
 February", "Friday through Monday". As a window: "from 10 p.m. until 3
@@ -221,6 +226,9 @@ hours, 12 months) and the cadence starts within its first interval.
 
 A date cadence that stops before the end of the month names both ends:
 "every 3 days from the 5th through the 20th".
+
+The month cadence may start in February: "on the 1st of every other month
+from February".
 
 3.8 A cadence that does not divide evenly, or starts off the beat.
 
