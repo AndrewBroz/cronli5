@@ -13,11 +13,11 @@ const {words} = lexicon;
 // Words the lexicon does not hold yet.
 const extraWords = {
   asWellAs: 'as well as',
-  each: 'each'
+  each: 'each',
+  for: 'for'
 };
 
-// The largest interval that has its own word ("twelfth").
-const lastIntervalWord = 12;
+const secondsInDay = 86400;
 
 /** Words joined by single spaces, leaving out any part that is silent. */
 function join(...parts: string[]): string {
@@ -51,11 +51,24 @@ function unit(name: UnitName, count: number): string {
   return lexicon.units[name][count === 1 ? 'one' : 'many'].text;
 }
 
-/** An interval after "every": "other", "third", "twelfth", then "13th". */
-function nth(interval: number): string {
-  return interval > lastIntervalWord ?
-    lexicon.ordinal(interval).text :
-    lexicon.intervalWord(interval).text;
+/**
+ * The time of day so many seconds after midnight, written to the hour
+ * ("9"), always to the minute ("9:00") or to the second ("9:00:00").
+ */
+function momentAt(seconds: number, precision: 'hour' | 'minute' | 'second'):
+  Moment {
+  const within = seconds % secondsInDay;
+  const moment = {
+    exact: precision !== 'hour',
+    hour: Math.floor(within / 3600),
+    minute: Math.floor(within / 60) % 60
+  };
+
+  return precision === 'second' ? {...moment, second: within % 60} : moment;
+}
+
+function secondOfDay(moment: Moment): number {
+  return moment.hour * 3600 + moment.minute * 60 + (moment.second ?? 0);
 }
 
 // A time and the a.m. or p.m. it would carry; noon, midnight and 24-hour
@@ -83,11 +96,12 @@ function writeTime(moment: Moment, opts: EnglishOptions):
   });
 
   if (idiom) {
-    return {meridiem: '', text: idiom.say(opts).text};
+    return {meridiem: '', text: idiom.say(moment, opts).text};
   }
 
-  // On the hour, the hour stands alone.
-  const shown = moment.minute === 0 && parts.length === 1 ? [] : parts;
+  // On the hour, the hour stands alone unless the minute must show.
+  const alone = moment.minute === 0 && parts.length === 1 && !moment.exact;
+  const shown = alone ? [] : parts;
 
   return {
     meridiem: moment.hour < 12 ? style.am : style.pm,
@@ -97,18 +111,18 @@ function writeTime(moment: Moment, opts: EnglishOptions):
 
 /**
  * Times of day as they are written together. When every numbered time
- * shares a.m. or p.m., only the last one says it.
+ * shares a.m. or p.m., only the last one says it, provided the last time
+ * is a numbered one and the times do not run past midnight.
  */
 function timeNames(moments: Moment[], opts: EnglishOptions): string[] {
   const written = moments.map(function write(moment) {
     return writeTime(moment, opts);
   });
-  const numbered = written.filter(function carries(time) {
-    return time.meridiem;
-  });
-  const last = numbered[numbered.length - 1];
-  const shared = numbered.every(function same(time) {
-    return time.meridiem === last.meridiem;
+  const last = written[written.length - 1];
+  const starts = moments.map(secondOfDay);
+  const forward = starts[0] <= starts[starts.length - 1];
+  const shared = forward && written.every(function same(time) {
+    return !time.meridiem || time.meridiem === last.meridiem;
   });
   const gap = opts.style.closeUp ? '' : ' ';
 
@@ -119,11 +133,17 @@ function timeNames(moments: Moment[], opts: EnglishOptions): string[] {
   });
 }
 
-/** Hours as times, each at the same minute past. */
-function hourNames(hours: number[], minute: number, opts: EnglishOptions):
-  string[] {
+/**
+ * Hours as times, each at the same minute past, and the same second if
+ * one is carried.
+ */
+function hourNames(
+  hours: number[],
+  at: Omit<Moment, 'hour'>,
+  opts: EnglishOptions
+): string[] {
   return timeNames(hours.map(function toMoment(hour) {
-    return {hour, minute};
+    return {...at, hour};
   }), opts);
 }
 
@@ -200,6 +220,6 @@ function weekdayName(day: number, recurring: boolean, opts: EnglishOptions):
 }
 
 export {
-  dayNames, extraWords, hourNames, join, list, monthName, nth, span,
+  dayNames, extraWords, hourNames, join, list, momentAt, monthName, span,
   timeNames, unit, walkWeek, weekdayName
 };

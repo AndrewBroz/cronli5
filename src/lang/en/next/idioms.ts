@@ -3,7 +3,9 @@
 // values, and what is said. An idiom names one thing however many values
 // it stands for.
 
-import type {Field, SetDescription} from '../../../core/schedule.js';
+import type {
+  Field, QuartzDate, QuartzWeekday, SetDescription
+} from '../../../core/schedule.js';
 import type {Spoken} from '../../../core/select.js';
 import type {EnglishOptions} from './options.js';
 import lexicon from './lexicon.js';
@@ -12,7 +14,7 @@ import lexicon from './lexicon.js';
 export interface Idiom<Subject> {
   name: string;
   applies(subject: Subject): boolean;
-  say(opts: EnglishOptions): Spoken;
+  say(subject: Subject, opts: EnglishOptions): Spoken;
 }
 
 /** An idiom for a set of one field's values. */
@@ -20,8 +22,12 @@ export interface SetIdiom extends Idiom<SetDescription> {
   field: Field;
 }
 
-/** A time of day; the second is absent when it is zero or not single. */
+/**
+ * A time of day. The second is absent unless it is to be shown; `exact`
+ * marks a time written to the minute even on the hour ("9:00").
+ */
 export interface Moment {
+  exact?: boolean;
   hour: number;
   minute: number;
   second?: number;
@@ -112,10 +118,70 @@ const momentIdioms: Array<Idiom<Moment>> = [
   {
     applies: onTheHour(12),
     name: 'noon',
-    say(opts) {
+    say(moment, opts) {
       return {length: 1, text: opts.style.midday};
     }
   }
 ];
 
-export {idioms, momentIdioms};
+// A row for one Quartz day form: it applies to that form whatever its
+// numbers, and its words are built from them.
+function quartzForm<Form extends {kind: string}, Kind extends Form['kind']>(
+  kind: Kind,
+  name: string,
+  wording: (form: Extract<Form, {kind: Kind}>, opts: EnglishOptions) => string
+): Idiom<Form> {
+  return {
+    applies(form) {
+      return form.kind === kind;
+    },
+    name,
+    say(form, opts) {
+      return {
+        length: 1,
+        text: wording(form as Extract<Form, {kind: Kind}>, opts)
+      };
+    }
+  };
+}
+
+function weekdayOf(day: number, opts: EnglishOptions): string {
+  return lexicon.weekdays[day][opts.short ? 'short' : 'full'].text;
+}
+
+const lastDay = `${words.the.text} ${words.last.text} ` +
+  lexicon.units.day.one.text;
+
+// Each is followed by "of the month" or "of" and the months, except the
+// nearest weekday, which is followed by the day it is nearest to.
+const quartzDateIdioms: Array<Idiom<QuartzDate>> = [
+  quartzForm('last', 'last day of the month', function say() {
+    return `${words.on.text} ${lastDay}`;
+  }),
+  quartzForm('lastWeekday', 'last weekday of the month', function say() {
+    return `${words.on.text} ${words.the.text} ${words.last.text} ` +
+      words.weekday.text;
+  }),
+  quartzForm('beforeLast', 'days before the last', function say(form) {
+    const days = lexicon.units.day[form.days === 1 ? 'one' : 'many'].text;
+
+    return `${form.days} ${days} ${words.before.text} ${lastDay}`;
+  }),
+  quartzForm('nearestWeekday', 'weekday nearest a day', function say() {
+    return `${words.on.text} ${words.the.text} ${words.weekday.text} ` +
+      words.nearest.text;
+  })
+];
+
+const quartzWeekdayIdioms: Array<Idiom<QuartzWeekday>> = [
+  quartzForm('last', 'last such weekday', function say(form, opts) {
+    return `${words.on.text} ${words.the.text} ${words.last.text} ` +
+      weekdayOf(form.weekday, opts);
+  }),
+  quartzForm('nth', 'nth such weekday', function say(form, opts) {
+    return `${words.on.text} ${words.the.text} ` +
+      `${lexicon.nthWords[form.nth].text} ${weekdayOf(form.weekday, opts)}`;
+  })
+];
+
+export {idioms, momentIdioms, quartzDateIdioms, quartzWeekdayIdioms};

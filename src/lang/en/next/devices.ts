@@ -5,6 +5,7 @@
 // wins.
 
 import type {Field, SetDescription} from '../../../core/schedule.js';
+import type {Moment} from './idioms.js';
 import type {Spoken} from '../../../core/select.js';
 import type {EnglishOptions} from './options.js';
 import {fieldSpecs} from '../../../core/specs.js';
@@ -12,8 +13,8 @@ import {shortestSpoken} from '../../../core/select.js';
 import {idioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {
-  dayNames, extraWords, hourNames, join, list, monthName, nth, span, unit,
-  walkWeek, weekdayName
+  dayNames, extraWords, hourNames, join, list, momentAt, monthName, span,
+  timeNames, unit, walkWeek, weekdayName
 } from './words.js';
 
 type Cadence = Extract<SetDescription, {kind: 'cadence'}>;
@@ -45,7 +46,8 @@ interface CadenceVoice {
   cycle: number | null;
   // Whether a cadence that fills its cycle may name its start alone.
   open: boolean;
-  say(interval: number, ends: number[]): string;
+  // The cadence with these ends named, or null if it cannot be said.
+  say(cadence: Cadence, ends: number[]): string | null;
 }
 
 /** How one field is said in one position of the sentence. */
@@ -119,25 +121,37 @@ function sayCadence(cadence: Cadence, voice: Voice): Phrase | null {
   }
 
   const ends = namedEnds(cadence, voice.field, voice.cadence);
+  const text = voice.cadence.say(cadence, ends);
 
-  return plain(voice.cadence.say(cadence.interval, ends), 1 + ends.length);
+  return text === null ? null : plain(text, 1 + ends.length);
 }
 
-// Several pieces: the ranges first, then the stray values as a list, so
-// the unit or hour that follows is not mistaken for part of a range.
+function ascending(a: number, b: number): number {
+  return a - b;
+}
+
+// Where a piece falls in the order pieces are said in: ascending, but a
+// run that wraps round the cycle comes first.
+function pieceOrder(part: Pieces['parts'][number]): number {
+  if (part.kind === 'values') {
+    return Math.min(...part.values);
+  }
+
+  return part.from > part.to ? -1 : part.from;
+}
+
+// Several pieces, each range with its own lead and the stray values
+// between them as lists.
 function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
   Phrase {
-  const ranges = pieces.parts.flatMap(function sayRun(part) {
+  const parts = pieces.parts.slice().sort(function inOrder(a, b) {
+    return pieceOrder(a) - pieceOrder(b);
+  }).map(function sayPart(part) {
     return part.kind === 'range' ?
-      [plain(voice.range(part.from, part.to), 2)] :
-      [];
+      plain(voice.range(part.from, part.to), 2) :
+      plain(voice.values(part.values.slice().sort(ascending)),
+        part.values.length);
   });
-  const strays = pieces.parts.flatMap(function sayStrays(part) {
-    return part.kind === 'values' ?
-      [plain(voice.values(part.values), part.values.length)] :
-      [];
-  });
-  const parts = [...ranges, ...strays];
 
   return plain(
     list(parts.map(function textOf(part) {
@@ -174,7 +188,7 @@ function say(description: SetDescription, voice: Voice, opts: EnglishOptions):
   });
 
   if (idiom) {
-    return {...idiom.say(opts), idiom: true, named: false};
+    return {...idiom.say(description, opts), idiom: true, named: false};
   }
 
   switch (description.kind) {
@@ -221,7 +235,7 @@ function choose(
 
 /**
  * Minutes or seconds by number, to be followed by the unit and "past":
- * "at 5, 20, and 45", "every minute from 0 through 29". A cadence that
+ * "at 5, 20, and 45", "every minute from 10 through 40". A cadence that
  * fills the hour or minute from zero stands alone as "every 15 minutes".
  */
 function withinTheHour(field: 'minute' | 'second', opts: EnglishOptions):
@@ -238,8 +252,8 @@ function withinTheHour(field: 'minute' | 'second', opts: EnglishOptions):
       bare: true,
       cycle: 60,
       open: false,
-      say(interval, ends) {
-        return join(`${every} ${interval} ${units[field].many.text}`,
+      say(cadence, ends) {
+        return join(`${every} ${cadence.interval} ${units[field].many.text}`,
           span(ends.map(String), opts));
       }
     },
@@ -257,27 +271,129 @@ function withinTheHour(field: 'minute' | 'second', opts: EnglishOptions):
   };
 }
 
+// The words for values that fall inside one stretch of clock time, each
+// value `step` seconds long from `start` seconds after midnight: a run
+// is a window closed with "until" at the moment it ends, and stray values
+// are clock times. A run that wraps is two windows.
+function clockWindows(
+  frame: {precision: 'hour' | 'second'; start: number; step: number},
+  lead: {before: string; every: string},
+  opts: EnglishOptions
+): Pick<Voice, 'exception' | 'pairs' | 'range' | 'values'> {
+  function names(values: number[]): string[] {
+    return timeNames(values.map(function toMoment(value) {
+      return momentAt(frame.start + value * frame.step, frame.precision);
+    }), opts);
+  }
+
+  function window(from: number, to: number): string {
+    const [opens, closes] = names([from, to + 1]);
+
+    return `${lead.every} ${words.from.text} ${opens} ` +
+      `${words.until.text} ${closes}`;
+  }
+
+  return {
+    exception(removed) {
+      return `${except} ${words.at.text} ${list(names(removed), opts)}`;
+    },
+    pairs: false,
+    range(from, to) {
+      return from > to ?
+        list([window(0, to), window(from, 59)], opts) :
+        window(from, to);
+    },
+    values(values) {
+      return join(lead.before, words.at.text, list(names(values), opts));
+    }
+  };
+}
+
+/**
+ * Runs of minutes inside one named hour, as windows of clock times:
+ * "every minute from 9 until 9:30 a.m.", with any stray minute a clock
+ * time of its own. `lead` is what "every minute" is said as, and what
+ * goes before a stray time, once the seconds have had their say.
+ */
+function minutesOfOneHour(
+  hour: number,
+  lead: {before: string; every: string},
+  opts: EnglishOptions
+): Voice {
+  return {
+    ...clockWindows({precision: 'hour', start: hour * 3600, step: 60}, lead,
+      opts),
+    all: null,
+    cadence: null,
+    field: 'minute'
+  };
+}
+
+/**
+ * Seconds inside one clock time, as a window: "every second from 9:00
+ * until 9:01 a.m." for the whole minute, to the second for a run
+ * ("from 9:00:00 until 9:00:10 a.m."), and with both ends named for a
+ * cadence that has them ("every 10 seconds from 9:00:05 through 9:00:55
+ * a.m.").
+ */
+function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
+  const start = time.hour * 3600 + time.minute * 60;
+  const everySecond = `${every} ${units.second.one.text}`;
+  const [opens, closes] = timeNames(
+    [momentAt(start, 'minute'), momentAt(start + 60, 'minute')], opts);
+  const theMinute = `${words.from.text} ${opens} ${words.until.text} ${closes}`;
+
+  return {
+    ...clockWindows({precision: 'second', start, step: 1},
+      {before: '', every: everySecond}, opts),
+    all: `${everySecond} ${theMinute}`,
+    cadence: {
+      bare: true,
+      cycle: 60,
+      open: false,
+      say(cadence, ends) {
+        const lead = `${every} ${cadence.interval} ${units.second.many.text}`;
+        const named = timeNames(ends.map(function toMoment(second) {
+          return momentAt(start + second, 'second');
+        }), opts);
+
+        return ends.length === 0 ?
+          `${lead} ${theMinute}` :
+          `${lead} ${span(named, opts)}`;
+      }
+    },
+    field: 'second'
+  };
+}
+
 const everyHour = `${every} ${units.hour.one.text}`;
 
 /**
  * Hours as moments, each at the same minute past: "at 9:30 a.m. and 5:30
  * p.m.", "every hour from 9 a.m. through 5 p.m.", "every 2 hours". Off the
- * hour, "every hour" has no moment to carry the minute and cannot be said.
+ * hour, a cadence names its start to carry the minute, which adds nothing
+ * to what it names, and "every hour" has no moment to carry it and cannot
+ * be said.
  */
-function hoursAsMoments(minute: number, opts: EnglishOptions): Voice {
+function hoursAsMoments(at: Omit<Moment, 'hour'>, opts: EnglishOptions):
+  Voice {
+  const carries = at.minute !== 0 || typeof at.second === 'number';
+
   function names(hours: number[]): string[] {
-    return hourNames(hours, minute, opts);
+    return hourNames(hours, at, opts);
   }
 
   return {
-    all: minute === 0 ? everyHour : null,
+    all: carries ? null : everyHour,
     cadence: {
-      bare: minute === 0,
+      bare: true,
       cycle: 24,
       open: true,
-      say(interval, ends) {
-        return join(`${every} ${interval} ${units.hour.many.text}`,
-          span(names(ends), opts));
+      say(cadence, ends) {
+        const named = carries && ends.length === 0 ? [cadence.start] : ends;
+
+        return join(`${every} ${cadence.interval} ${units.hour.many.text}`,
+          span(names(named), opts));
       }
     },
     exception(removed) {
@@ -296,11 +412,13 @@ function hoursAsMoments(minute: number, opts: EnglishOptions): Voice {
 
 /**
  * Hours as a noun phrase after "past": "9 a.m. and 5 p.m.", "every hour
- * from 9 a.m. through 5 p.m.", "every other hour".
+ * from 9 a.m. through 5 p.m.", "every other hour". "Every other" is the
+ * only interval word, so a wider cadence, or one that stops early, is
+ * left to be said as its values.
  */
 function hoursAsNouns(opts: EnglishOptions): Voice {
   function names(hours: number[]): string[] {
-    return hourNames(hours, 0, opts);
+    return hourNames(hours, {minute: 0}, opts);
   }
 
   return {
@@ -309,9 +427,11 @@ function hoursAsNouns(opts: EnglishOptions): Voice {
       bare: true,
       cycle: 24,
       open: true,
-      say(interval, ends) {
-        return join(`${every} ${nth(interval)} ${units.hour.one.text}`,
-          span(names(ends), opts));
+      say(cadence, ends) {
+        return cadence.interval === 2 && ends.length < 2 ?
+          join(`${every} ${lexicon.intervalWord(2).text}`,
+            units.hour.one.text, span(names(ends), opts)) :
+          null;
       }
     },
     exception(removed) {
@@ -339,7 +459,8 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
   const during = words.during.text;
 
   function theHours(hours: number[]): string {
-    return join(words.the.text, list(hourNames(hours, 0, opts), opts),
+    return join(words.the.text,
+      list(hourNames(hours, {minute: 0}, opts), opts),
       unit('hour', hours.length));
   }
 
@@ -347,8 +468,10 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
     all: '',
     cadence: {
       ...cadence,
-      say(interval, ends) {
-        return `${during} ${cadence.say(interval, ends)}`;
+      say(stride, ends) {
+        const noun = cadence.say(stride, ends);
+
+        return noun && `${during} ${noun}`;
       }
     },
     exception(removed, base) {
@@ -358,7 +481,8 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
     field: 'hour',
     pairs: true,
     range(from, to) {
-      const [opens, closes] = hourNames([from, (to + 1) % 24], 0, opts);
+      const [opens, closes] =
+        hourNames([from, (to + 1) % 24], {minute: 0}, opts);
 
       return `${words.from.text} ${opens} ${words.until.text} ${closes}`;
     },
@@ -370,20 +494,23 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
 
 /**
  * Days of the month: "on the 1st and 15th", "from the 1st through the
- * 7th", "on every fifth day from the 1st". With a month given, the days
- * are said as dates in it: "on June 1 and 15".
+ * 7th", "every 5 days from the 1st". With a month given, the days are
+ * said as dates in it: "on June 1 and 15". `lead` is the word that
+ * introduces a day or a list of them, ordinarily "on".
  */
-function daysOfTheMonth(month: number | null, opts: EnglishOptions): Voice {
-  const on = words.on.text;
-
+function daysOfTheMonth(
+  month: number | null,
+  lead: string,
+  opts: EnglishOptions
+): Voice {
   return {
-    all: `${on} ${every} ${units.day.one.text}`,
+    all: `${words.on.text} ${every} ${units.day.one.text}`,
     cadence: {
       bare: false,
       cycle: null,
       open: true,
-      say(interval, ends) {
-        return join(`${on} ${every} ${nth(interval)} ${units.day.one.text}`,
+      say(cadence, ends) {
+        return join(`${every} ${cadence.interval} ${units.day.many.text}`,
           span(dayNames(ends, month, true, opts), opts));
       }
     },
@@ -396,59 +523,94 @@ function daysOfTheMonth(month: number | null, opts: EnglishOptions): Voice {
       return span(dayNames([from, to], month, true, opts), opts);
     },
     values(values) {
-      return `${on} ${list(dayNames(values, month, false, opts), opts)}`;
+      return `${lead} ${list(dayNames(values, month, false, opts), opts)}`;
+    }
+  };
+}
+
+function monthNames(months: number[], opts: EnglishOptions): string[] {
+  return months.map(function nameOf(month) {
+    return monthName(month, opts);
+  });
+}
+
+/**
+ * Months standing alone: "in January and July", "from June through
+ * August". A cadence of months is not said: "every other month" would be
+ * heard as once in two months.
+ */
+function monthsAlone(opts: EnglishOptions): Voice {
+  const inWord = words.in.text;
+
+  return {
+    all: `${inWord} ${every} ${units.month.one.text}`,
+    cadence: null,
+    exception(removed) {
+      return `${except} ${list(monthNames(removed, opts), opts)}`;
+    },
+    field: 'month',
+    pairs: false,
+    range(from, to) {
+      return span(monthNames([from, to], opts), opts);
+    },
+    values(values) {
+      return `${inWord} ${list(monthNames(values, opts), opts)}`;
     }
   };
 }
 
 /**
- * Months, standing alone after "in" or belonging to a day after "of": "in
- * January and July", "of every third month". Alone, a cadence of months
- * is not said, because "every 3 months" is heard as once a quarter.
+ * Months belonging to days that have already been phrased: "on the 1st
+ * and 15th of January and July", "on the 1st of each month from June
+ * through August", "on the 1st of every other month". Listed months
+ * under a single day (`day`, with `lead` to introduce it) are said as
+ * dates in full: "on January 1 and July 1".
  */
-function monthsOfTheYear(position: 'in' | 'of', opts: EnglishOptions): Voice {
-  const ofDay = position === 'of';
+function monthsOfDays(
+  days: {day: number | null; lead: string; phrase: string},
+  opts: EnglishOptions
+): Voice {
+  const of = `${days.phrase} ${words.of.text}`;
   const monthWord = units.month.one.text;
 
-  function names(months: number[]): string[] {
-    return months.map(function nameOf(month) {
-      return monthName(month, opts);
-    });
-  }
-
   return {
-    all: `${words[position].text} ${every} ${monthWord}`,
-    cadence: ofDay ?
-      {
-        bare: true,
-        cycle: 12,
-        open: true,
-        say(interval, ends) {
-          return join(`${words.of.text} ${every} ${nth(interval)} ${monthWord}`,
-            span(names(ends), opts));
-        }
-      } :
-      null,
+    all: `${of} ${every} ${monthWord}`,
+    cadence: {
+      bare: true,
+      cycle: 12,
+      open: false,
+      say(cadence, ends) {
+        return cadence.interval === 2 && ends.length === 0 ?
+          `${of} ${every} ${lexicon.intervalWord(2).text} ${monthWord}` :
+          null;
+      }
+    },
     exception(removed) {
-      return `${except} ${list(names(removed), opts)}`;
+      return `${except} ${list(monthNames(removed, opts), opts)}`;
     },
     field: 'month',
     pairs: false,
     range(from, to) {
-      return join(
-        ofDay ? `${words.of.text} ${extraWords.each} ${monthWord}` : '',
-        span(names([from, to]), opts));
+      return `${of} ${extraWords.each} ${monthWord} ` +
+        span(monthNames([from, to], opts), opts);
     },
     values(values) {
-      return `${words[position].text} ${list(names(values), opts)}`;
+      const {day} = days;
+
+      return day === null ?
+        `${of} ${list(monthNames(values, opts), opts)}` :
+        `${days.lead} ` + list(values.flatMap(function dateIn(month) {
+          return dayNames([day], month, false, opts);
+        }), opts);
     }
   };
 }
 
 /**
  * Days of the week: "on Mondays and Wednesdays", "Tuesday through
- * Thursday". They have no cadence: "every other day" would be false
- * across the end of the week.
+ * Thursday". They have no cadence ("every other day" would be false
+ * across the end of the week) and no "every day except": the week is
+ * short enough that its run is always named.
  */
 function daysOfTheWeek(opts: EnglishOptions): Voice {
   const on = words.on.text;
@@ -460,7 +622,7 @@ function daysOfTheWeek(opts: EnglishOptions): Voice {
   }
 
   return {
-    all: `${on} ${every} ${units.day.one.text}`,
+    all: null,
     cadence: null,
     exception(removed) {
       return `${except} ${list(names(walkWeek(removed), false), opts)}`;
@@ -476,7 +638,10 @@ function daysOfTheWeek(opts: EnglishOptions): Voice {
   };
 }
 
-/** Years: "in 2030 and 2035", "from 2030 through 2035". */
+/**
+ * Years: "in 2030 and 2035", "from 2030 through 2035", "every 4 years
+ * from 1970".
+ */
 function yearsByNumber(opts: EnglishOptions): Voice {
   const inWord = words.in.text;
 
@@ -492,9 +657,8 @@ function yearsByNumber(opts: EnglishOptions): Voice {
       bare: false,
       cycle: null,
       open: true,
-      say(interval, ends) {
-        return join(
-          `${inWord} ${every} ${nth(interval)} ${units.year.one.text}`,
+      say(cadence, ends) {
+        return join(`${every} ${cadence.interval} ${units.year.many.text}`,
           span(names(ends), opts));
       }
     },
@@ -514,5 +678,6 @@ function yearsByNumber(opts: EnglishOptions): Voice {
 
 export {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, monthsOfTheYear, say, withinTheHour, yearsByNumber
+  hoursAsStretches, minutesOfOneHour, monthsAlone, monthsOfDays, say,
+  secondsOfOneMinute, withinTheHour, yearsByNumber
 };
