@@ -72,7 +72,7 @@ becomes the contract only after independent review by a target-native reader or
 the blind Claude Sonnet persona panel,
 and is **finalized before you port the renderer** — never regenerated from the
 renderer afterward (that would only prove the code agrees with itself). See
-`test/lang/es/corpus.js` for the shape and `test/lang/<code>/REVIEW.md` for the
+`test/lang/en/` for the shape and `test/lang/<code>/REVIEW.md` for the
 reviewer's notes.
 
 ### 3. Port the donor's renderer and TDD to green
@@ -106,7 +106,7 @@ qualifiers). Run the tests against the reviewed corpus and drive them to green.
 ### 4. Wire it up
 
 - Add a `./lang/<code>` entry to `exports` in `package.json` (mirror the
-  existing `./lang/es` block). The build (`scripts/build.mjs`) and the docs
+  existing `./lang/en` block). The build (`scripts/build.mjs`) and the docs
   generator (`scripts/docs.mjs`) both discover `src/lang/*` automatically.
 - Add `docs/lang/<code>.md`. Its comparison table against the matching
   cRonstrue locale is generated — run `npm run docs`, never hand-edit it.
@@ -119,10 +119,8 @@ Correctness and naturalness are checked separately:
 
 - **Objective gates, independent of the corpus** — round-trip recovery, the
   fuzz dropped-value detector (`npm run fuzz <code>`), the both-side OR-scope
-  check, and the cRonstrue comparison reference (`node --import tsx
-  scripts/review-lang.mjs` — the review scripts need the `tsx` loader since the
-  migration to TypeScript source). "Green against the corpus" is the dev loop;
-  these gates are the trust.
+  check, and the cRonstrue comparison reference (`npm run divergence`).
+  "Green against the corpus" is the dev loop; these gates are the trust.
 - **Blind Sonnet persona panel** — three Sonnet personas (everyday native
   speaker, copy-editor, technical communicator) blind-judge naturalness and
   comprehension over the spanning set with no knowledge of the renderer's

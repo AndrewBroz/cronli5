@@ -27,63 +27,15 @@ export default defineConfig({
       include: ['src/**/*.ts'],
       exclude: ['src/browser.ts', 'src/core/schedule.ts', 'src/types.ts'],
       reportsDirectory: './coverage',
-      // Gated at Vitest's accurate V8 measurements. The previous c8-over-tsx
-      // setup mis-mapped the transpiled output: it deflated function coverage
-      // (the analyze.ts phantom that forced functions down to 97) while
-      // *inflating* statement/branch/line coverage by false-covering real gaps.
-      // These floors reflect what the TypeScript source actually exercises.
-      // Raised after closing the reachable gaps the migration exposed: core
-      // and the English renderer are now fully covered (100% lines/functions),
-      // and verified rows were added across de/es/fi/zh. The residual uncovered
-      // branches are either core-defensive guards or beta-renderer code paths
-      // the core normalizes away before they can fire; the floors sit just at
-      // the achieved coverage so any regression below it fails CI.
-      //
-      // lines/statements/functions are restored to their pre-pt level after
-      // covering the pt contraction/gender/nth/recurrence branches with verified
-      // corpus rows (the pt port had temporarily lowered them to absorb its dark
-      // branches; that backslide is undone — the rows exercise the branches
-      // instead).
-      //
-      // branches sits at 96.7 (just below the 96.75 achieved), the honest floor
-      // pt can reach — NOT the pre-pt 97. pt's contraction layer (notes.md: the
-      // principal es->pt divergence) is written as COMPLETE gender/number-driven
-      // formation: each of withDe/withA/withEm carries all four article arms
-      // (da/do/das/dos, à/ao/às/aos, na/no/nas/nos). But the cron domain only
-      // ever feeds them feminine clock phrases (de+a/as) and the masculine
-      // plural weekday recurrence (a+os=aos) plus SINGULAR Quartz phrases
-      // (em+a/o); the masculine-singular date arms (a+o, de+o) and the plural-em
-      // arms (em+as, em+os) have no caller a valid cron pattern can produce.
-      // Those ~11 defensive arms are unreachable-by-construction, the same class
-      // of beta-renderer residual the other languages already carry (es's dead
-      // degenitive/meridiem scaffolding); contriving invalid input to "cover"
-      // them would be dishonest, so the branch floor honestly records what valid
-      // input reaches.
-      //
-      // uk moves branches to 96.3 (just below the 96.37 achieved), the
-      // honest floor uk can reach today. uk's residual arms are
-      // unreachable by construction, in two classes: plan-renderer arms
-      // shadowed by the confinement frame (uk's describe() routes every
-      // second-led shape through confinement() first, so the equivalent
-      // arms inside the per-plan renderers — renderSecondsWithinMinute,
-      // secondLeadAnnouncement, and kin — never see those shapes), and
-      // defensive segment-kind arms for step segments the core enumerates
-      // into single values before any renderer sees them. Every reachable
-      // uk branch is exercised by a verified corpus row; deleting the
-      // shadowed duplicate arms (not contriving invalid input) is the way
-      // this floor goes back up.
-      // lines/statements sit at 98.4: with uk's statements in the pool the
-      // achieved figure lands in a 98.49–98.52 band that varies run to run
-      // (the bad_input suites feed Math.random()/Date-derived garbage, so a
-      // couple of defensive statements are covered nondeterministically). A
-      // floor inside that band would fail CI on a coin flip; it sits just
-      // below the band instead. Seeding the bad_input generators would
-      // restore a point measurement and let both floors move back up.
+      // The floors sit just below what the core and the English renderer
+      // achieve. Statements, lines and branches leave a little room because
+      // the bad_input suites feed random garbage, so a few defensive
+      // statements are covered on some runs and not others.
       thresholds: {
-        lines: 98.4,
-        branches: 96.3,
-        functions: 99.2,
-        statements: 98.4
+        lines: 99.1,
+        branches: 98.3,
+        functions: 99.9,
+        statements: 99.1
       }
     }
   }

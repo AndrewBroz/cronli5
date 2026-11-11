@@ -20,12 +20,8 @@ const CELLS = coreCells(CORE);
 
 // Grandfathered debt: minimum core cells each pre-core-set language must keep
 // covering (of CELLS.size total). Raise toward full as corpora are expanded;
-// the goal is to delete this map (every language at full coverage). pt and fr
-// are sibling-derived from es: each corpus is the reviewed es corpus translated
-// entry-for-entry (plus a few branch-coverage rows), so each inherits es's
-// exact coverage (and its documented debt) rather than the full-core gate a
-// from-scratch language would face.
-const BASELINE = {de: 44, en: 76, es: 53, fi: 50, fr: 53, pt: 53};
+// the goal is to delete this map (every language at full coverage).
+const BASELINE = {en: 76};
 
 // String patterns a language's corpus tests (first quoted token of each entry;
 // array/object-form patterns are a rare minority and not in the core set).
@@ -103,7 +99,7 @@ describe('Core pattern-set coverage:', function() {
 
       expect(text, code + ' must test @reboot').to.include('@reboot');
       expect(text, code + ' must test lenient fallback')
-        .to.match(/lenient|reserva|无法识别|unlesbar|unrecogni|tunnista/u);
+        .to.match(/lenient|unrecogni/u);
     });
 
     if (!(code in BASELINE)) {

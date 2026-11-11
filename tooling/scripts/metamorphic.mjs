@@ -19,12 +19,8 @@ import {pathToFileURL} from 'node:url';
 import {analyze, prepare} from '../../src/core/index.js';
 import cronli5 from '../../src/cronli5.js';
 import en from '../../src/lang/en/index.js';
-import es from '../../src/lang/es/index.js';
-import de from '../../src/lang/de/index.js';
-import fi from '../../src/lang/fi/index.js';
-import zh from '../../src/lang/zh/index.js';
 
-const LANGS = {en, es, de, fi, zh};
+const LANGS = {en};
 const OPTS = en.options();
 
 // [label, cronA, cronB] — A and B denote the SAME schedule; their Schedule must

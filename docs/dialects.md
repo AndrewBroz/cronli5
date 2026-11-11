@@ -45,7 +45,7 @@ Side by side:
 <!-- END GENERATED: dialects -->
 
 `'uk'` is a deprecated alias for `'gb'`, renamed because the BCP-47 code
-`uk` is the Ukrainian language (`cronli5/lang/uk`), not British English.
+`uk` is the Ukrainian language, not British English.
 
 Style conventions shared by every dialect:
 

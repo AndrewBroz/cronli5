@@ -1,8 +1,11 @@
 import chai from 'chai';
 import {
-  arithmeticStep, hourListStride, minuteStride, offsetCleanStride,
-  singleValues
+  arithmeticStep, hourListStride, isEveryOtherMinuteSeconds,
+  isSteppedMinuteSeconds, minuteStride, offsetCleanStride,
+  secondsConfinesMinute, singleValues
 } from '../../src/core/cadence.js';
+import {analyze, prepare} from '../../src/core/index.js';
+import en from '../../src/lang/en/index.js';
 
 const {expect} = chai;
 
@@ -202,5 +205,126 @@ describe('hourListStride:', function() {
 
   it('is null for an irregular set', function() {
     expect(hourListStride([0, 2, 5, 9])).to.equal(null);
+  });
+});
+
+// The confinement predicates read a whole analyzed Schedule, so these rows
+// analyze real patterns instead of hand-building one: the predicate is tested
+// against exactly what the core hands a renderer.
+function scheduleOf(pattern) {
+  const opts = en.options({seconds: true});
+
+  return analyze(prepare(pattern, opts), opts);
+}
+
+describe('secondsConfinesMinute:', function() {
+  it('a single second confines a stepped minute under an open hour',
+    function() {
+      expect(secondsConfinesMinute(scheduleOf('5 */6 * * * *'))).to.equal(true);
+    });
+
+  it('a second list confines a single minute', function() {
+    expect(secondsConfinesMinute(scheduleOf('5,10 15 * * * *')))
+      .to.equal(true);
+  });
+
+  it('a second range confines a restricted minute', function() {
+    expect(secondsConfinesMinute(scheduleOf('5-9 15,45 * * * *')))
+      .to.equal(true);
+  });
+
+  it('a single second under a single minute folds into a clock time',
+    function() {
+      expect(secondsConfinesMinute(scheduleOf('5 15 * * * *')))
+        .to.equal(false);
+    });
+
+  it('a second list that is really a stride is a cadence, not a clock point',
+    function() {
+      expect(secondsConfinesMinute(scheduleOf('1,8,15,22,29 10 * * * *')))
+        .to.equal(false);
+    });
+
+  it('a stepped second is not a clock point', function() {
+    expect(secondsConfinesMinute(scheduleOf('*/15 10 * * * *')))
+      .to.equal(false);
+  });
+
+  it('a wildcard minute has nothing to confine', function() {
+    expect(secondsConfinesMinute(scheduleOf('1-5 * * * * *'))).to.equal(false);
+  });
+
+  it('a restricted hour is not confined', function() {
+    expect(secondsConfinesMinute(scheduleOf('5-9 */5 9 * * *')))
+      .to.equal(false);
+  });
+});
+
+describe('isEveryOtherMinuteSeconds:', function() {
+  function everyOther(pattern) {
+    const schedule = scheduleOf(pattern);
+
+    return isEveryOtherMinuteSeconds(schedule, schedule.plan);
+  }
+
+  it('holds for a wildcard second over an unoffset */2 minute', function() {
+    expect(everyOther('* */2 * * * *')).to.equal(true);
+  });
+
+  it('fails for any other interval', function() {
+    expect(everyOther('* */3 * * * *')).to.equal(false);
+  });
+
+  it('fails for an offset every-other minute', function() {
+    expect(everyOther('* 1/2 * * * *')).to.equal(false);
+  });
+
+  it('fails when the second is restricted', function() {
+    expect(everyOther('30 */2 * * * *')).to.equal(false);
+  });
+
+  it('fails when the hour is restricted', function() {
+    expect(everyOther('* */2 9 * * *')).to.equal(false);
+  });
+
+  it('fails when the minute is a list, not a frequency', function() {
+    expect(everyOther('* 5,6 * * * *')).to.equal(false);
+  });
+});
+
+describe('isSteppedMinuteSeconds:', function() {
+  function stepped(pattern) {
+    const schedule = scheduleOf(pattern);
+
+    return isSteppedMinuteSeconds(schedule, schedule.plan);
+  }
+
+  it('holds for a wildcard second over a stepped minute', function() {
+    expect(stepped('* */3 * * * *')).to.equal(true);
+  });
+
+  it('holds for a stepped second over a stepped minute', function() {
+    expect(stepped('*/5 */3 * * * *')).to.equal(true);
+  });
+
+  it('holds for a minute list the core enumerated from an uneven step',
+    function() {
+      expect(stepped('* 2/7 * * * *')).to.equal(true);
+    });
+
+  it('leaves */2 to the every-other idiom', function() {
+    expect(stepped('* */2 * * * *')).to.equal(false);
+  });
+
+  it('fails for an irregular minute list', function() {
+    expect(stepped('* 5,6 * * * *')).to.equal(false);
+  });
+
+  it('fails when the second is a clock point', function() {
+    expect(stepped('30 */3 * * * *')).to.equal(false);
+  });
+
+  it('fails when the hour is restricted', function() {
+    expect(stepped('* */3 9 * * *')).to.equal(false);
   });
 });

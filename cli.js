@@ -3,10 +3,9 @@
 // Need to sanity check a pattern before you schedule something? The cronli5
 // CLI takes a cron pattern and prints a plain-language description: a complete
 // sentence by default, or the bare fragment with --fragment. English by
-// default; pass --lang <code> (de, es, fi) for another language.
+// default; pass --lang <code> to choose a built language module.
 //
 //   cronli5 '* * * * *'                → Runs every minute.
-//   cronli5 --lang de '0 0 * * *'      → Läuft täglich um Mitternacht.
 //   cronli5 --fragment '0 0 * * *'     → every day at midnight
 //
 // It runs against the built dist/, so a plain `node` invocation works as

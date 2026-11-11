@@ -24,14 +24,7 @@ import {readFileSync, writeFileSync} from 'node:fs';
 import cronli5 from '../src/cronli5.js';
 import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
-import de from '../src/lang/de/index.js';
 import en from '../src/lang/en/index.js';
-import es from '../src/lang/es/index.js';
-import fi from '../src/lang/fi/index.js';
-import fr from '../src/lang/fr/index.js';
-import pt from '../src/lang/pt/index.js';
-import uk from '../src/lang/uk/index.js';
-import zh from '../src/lang/zh/index.js';
 import {
   comparisonPatterns, dialectPatterns, languagePatterns
 } from './patterns.mjs';
@@ -43,15 +36,7 @@ const cronstrueVersion = JSON.parse(readFileSync(
   'utf8')).version;
 
 const languages = [
-  {code: 'de', extras: ['0 0 1 */3 *', '*/45 * * * *'], lang: de},
-  {code: 'en', extras: [], lang: en},
-  {code: 'es', extras: ['0 1 * * *', '0 12 * * SAT'], lang: es},
-  {code: 'fi', extras: ['0 9 * * WED-FRI', '0 0 13 * FRI'], lang: fi},
-  {code: 'fr', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: fr},
-  {code: 'pt', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: pt,
-    cronstrueLocale: 'pt_BR'},
-  {code: 'uk', extras: ['1 1 * * * *', '0 0 13 * FRI'], lang: uk},
-  {code: 'zh', extras: [], lang: zh, cronstrueLocale: 'zh_CN'}
+  {code: 'en', extras: [], lang: en}
 ];
 
 function describe(fn, pattern) {
@@ -145,16 +130,7 @@ function cronstrueFor(code, pattern) {
 // override, and the matching cRonstrue locale.
 const headToHead = '5,10 30 9 * * MON';
 const headToHeadRows = [
-  {name: 'English', code: 'en'},
-  {name: 'German', code: 'de'},
-  {name: 'Spanish', code: 'es'},
-  {name: 'Finnish', code: 'fi'},
-  {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
-  {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
-  {name: 'Ukrainian', code: 'uk'},
-  {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
-  {name: 'Chinese (Traditional)', code: 'zh', dialect: 'zh-Hant',
-    cronstrueLocale: 'zh_TW'}
+  {name: 'English', code: 'en'}
 ];
 
 function renderHeadToHead() {
@@ -237,10 +213,10 @@ function evaluateExample(args, vars) {
 
   try {
     // eslint-disable-next-line no-new-func
-    const run = Function('cronli5', 'es', 'fi', 'uk', ...names,
+    const run = Function('cronli5', 'en', ...names,
       'return cronli5(' + args + ');');
 
-    return run(cronli5, es, fi, uk, ...names.map(function value(n) {
+    return run(cronli5, en, ...names.map(function value(n) {
       return vars[n];
     }));
   }

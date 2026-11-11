@@ -1,12 +1,6 @@
 import {expect} from 'chai';
 import cronli5 from '../../src/cronli5.js';
 import en from '../../src/lang/en/index.js';
-import es from '../../src/lang/es/index.js';
-import de from '../../src/lang/de/index.js';
-import fi from '../../src/lang/fi/index.js';
-import fr from '../../src/lang/fr/index.js';
-import pt from '../../src/lang/pt/index.js';
-import zh from '../../src/lang/zh/index.js';
 
 // Each language owns how its fragment becomes a complete standalone sentence
 // (the CLI's "Runs …." was English-only chrome); the verb leads, the fragment
@@ -29,65 +23,6 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
     expect(en.sentence('every day at midnight', en.options()))
       .to.equal('Runs every day at midnight.');
   });
-
-  it('German', function() {
-    expect(de.sentence('täglich um Mitternacht', de.options()))
-      .to.equal('Läuft täglich um Mitternacht.');
-  });
-
-  it('German does not double the period after an ordinal', function() {
-    // A fragment ending in a German ordinal already carries a period
-    // ("…am 8."); the sentence wrapper must not append a second one.
-    expect(de.sentence('am 3., 5. und 8.', de.options()))
-      .to.equal('Läuft am 3., 5. und 8.');
-  });
-
-  it('Spanish', function() {
-    expect(es.sentence('cada minuto', es.options())).to.equal('Se ejecuta cada minuto.');
-  });
-
-  it('Spanish does not double a period already on the fragment', function() {
-    expect(es.sentence('a las 9 a.m.', es.options()))
-      .to.equal('Se ejecuta a las 9 a.m.');
-  });
-
-  it('Finnish', function() {
-    expect(fi.sentence('joka minuutti', fi.options()))
-      .to.equal('Suoritetaan joka minuutti.');
-  });
-
-  it('Finnish does not double a period already on the fragment', function() {
-    expect(fi.sentence('kuukauden 8.', fi.options()))
-      .to.equal('Suoritetaan kuukauden 8.');
-  });
-
-  it('Portuguese', function() {
-    expect(pt.sentence('a cada minuto', pt.options()))
-      .to.equal('Se executa a cada minuto.');
-  });
-
-  it('Portuguese does not double a period already on the fragment',
-    function() {
-      expect(pt.sentence('às 9 da manhã.', pt.options()))
-        .to.equal('Se executa às 9 da manhã.');
-    });
-
-  it('French', function() {
-    expect(fr.sentence('chaque minute', fr.options()))
-      .to.equal('S\'exécute chaque minute.');
-  });
-
-  it('French does not double a period already on the fragment', function() {
-    // A fr fragment ending in an abbreviation period (e.g. "9 h 30 min 15 s."
-    // never carries one, but the guard mirrors the other languages) must not
-    // gain a second period.
-    expect(fr.sentence('tous les jours à 9 h.', fr.options()))
-      .to.equal('S\'exécute tous les jours à 9 h.');
-  });
-
-  it('Chinese', function() {
-    expect(zh.sentence('每分钟', zh.options())).to.equal('运行时间：每分钟。');
-  });
 });
 
 // The `sentence` option wraps cronli5's own output: the fragment by default, a
@@ -104,8 +39,8 @@ describe('The sentence option:', function() {
   });
 
   it('wraps in the chosen language', function() {
-    expect(cronli5('0 0 * * *', {lang: de, sentence: true}))
-      .to.equal('Läuft täglich um Mitternacht.');
+    expect(cronli5('0 0 * * *', {lang: en, sentence: true}))
+      .to.equal('Runs every day at midnight.');
   });
 
   it('wraps @reboot', function() {
@@ -144,13 +79,13 @@ describe('The sentence()/fragment() convenience methods:', function() {
   });
 
   it('fragment() forwards all options (lang)', function() {
-    expect(cronli5.fragment('0 9 * * 1', {lang: es}))
-      .to.equal(cronli5('0 9 * * 1', {lang: es}));
+    expect(cronli5.fragment('0 9 * * 1', {lang: en}))
+      .to.equal(cronli5('0 9 * * 1', {lang: en}));
   });
 
   it('sentence() forwards lang and wraps in that language', function() {
-    expect(cronli5.sentence('0 0 * * *', {lang: de}))
-      .to.equal('Läuft täglich um Mitternacht.');
+    expect(cronli5.sentence('0 0 * * *', {lang: en}))
+      .to.equal('Runs every day at midnight.');
   });
 
   it('an explicit sentence option is overridden by the method', function() {

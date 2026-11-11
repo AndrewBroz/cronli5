@@ -1,6 +1,6 @@
 import {expectType, expectError, expectAssignable} from 'tsd';
 import cronli5, {Cronli5Options, CronPattern, CronPatternObject} from '..';
-import es from '../types/lang/es/index.js';
+import en from '../types/lang/en/index.js';
 
 // The default export is a function returning a string.
 expectType<string>(cronli5('* * * * *'));
@@ -56,8 +56,8 @@ expectError(cronli5(42));
 
 // A language module (the shape every `cronli5/lang/<code>` subpath
 // declares) is assignable to the `lang` option.
-expectAssignable<Cronli5Options>({lang: es});
-expectType<string>(cronli5('* * * * *', {lang: es}));
+expectAssignable<Cronli5Options>({lang: en});
+expectType<string>(cronli5('* * * * *', {lang: en}));
 
 // The callable export carries `.sentence(...)` and `.fragment(...)` methods,
 // each with the same signature as the plain call: a required pattern, optional
@@ -66,7 +66,7 @@ expectType<string>(cronli5.sentence('0 0 * * *'));
 expectType<string>(cronli5.sentence('0 0 ? * 2', {quartz: true}));
 expectType<string>(cronli5.sentence(['*/5', '*', '*', '*', '*']));
 expectType<string>(cronli5.fragment('0 0 * * *'));
-expectType<string>(cronli5.fragment('0 9 * * 1', {lang: es}));
+expectType<string>(cronli5.fragment('0 9 * * 1', {lang: en}));
 expectType<string>(cronli5.fragment({minute: '*/5'}));
 
 // The methods require a pattern and reject unknown option keys.

@@ -45,14 +45,7 @@ const CORE_PATTERNS = [...CORE_SET.patterns, ...CORE_SET.spanning];
 // means the default 'us'. Adding pt/fr/ja or a zh-Hant entry is a one-line
 // change here once the renderer + cRonstrue locale exist.
 const LANGS = [
-  {code: 'en', locale: 'en'},
-  {code: 'es', locale: 'es'},
-  {code: 'de', locale: 'de'},
-  {code: 'fi', locale: 'fi'},
-  {code: 'fr', locale: 'fr'},
-  {code: 'pt', locale: 'pt_BR'},
-  {code: 'uk', locale: 'uk'},
-  {code: 'zh', locale: 'zh_CN'}
+  {code: 'en', locale: 'en'}
 ];
 
 // Returns a code -> lang-module map for the sweep. English is the bundled

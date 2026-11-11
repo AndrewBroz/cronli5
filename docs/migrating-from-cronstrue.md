@@ -20,7 +20,7 @@ guide links to it rather than duplicating its tables.
   "At 09:00 AM").
 * You need a **language `cronli5` does not ship**. cRonstrue carries **39
   locales** (machine-/community-translated string tables); `cronli5` ships
-  English, Spanish, German, Finnish, and Chinese today, with more added one
+  English today; the other languages are being rebuilt for the next major version, one
   reviewed module at a time. If your locale is not on cronli5's list, cRonstrue
   is the pragmatic answer.
 * You are happy with the clock-first, comma-joined house style and don't want
@@ -154,7 +154,7 @@ including some malformed input; `cronli5` validates strictly and only the
 | cRonstrue option | cronli5 equivalent | Notes |
 | --- | --- | --- |
 | `locale: "es"` | `lang` (a language module) | Different model &mdash; see [Locale &rarr; language](#locale--language) below. |
-| `use24HourTimeFormat: true` | `ampm: false` | cronli5's `ampm` defaults to `true` (12-hour) for English; `false` gives 24-hour zero-padded time (`09:00`). The default is language-specific (Spanish/Finnish default to 24-hour). |
+| `use24HourTimeFormat: true` | `ampm: false` | cronli5's `ampm` defaults to `true` (12-hour) for English; `false` gives 24-hour zero-padded time (`09:00`). The default is language-specific. |
 | `throwExceptionOnParseError: false` | `lenient: true` | Both suppress the throw; cronli5 returns a fixed fallback, cRonstrue returns a generic error sentence. |
 | `verbose: true` | *no equivalent* | cronli5 has no verbose toggle; it always writes one folded sentence. (`short: true` goes the *other* way &mdash; more compact.) |
 | `dayOfWeekStartIndexZero` | `quartz: true` (partial) | By default cronli5 uses the standard interpretation: `0`/`7` are Sunday, `1` is Monday. cRonstrue's `dayOfWeekStartIndexZero: false` shifts to a 1-based week; cronli5's nearest equivalent is `quartz: true`, which reads the day-of-week as **Quartz numbering (1 = Sunday … 7 = Saturday)**. It is not a general re-base toggle — it is the Quartz dialect (and also enables `?`, `L`, `#`); use it when your source is Quartz, where `1` means Sunday. |
@@ -166,7 +166,7 @@ including some malformed input; `cronli5` validates strictly and only the
 ### cronli5 options with no cRonstrue counterpart
 
 * **`dialect`** &mdash; per-language style (English `'us'`/`'gb'`/`'house'`;
-  Spanish `'es-ES'`/`'es-MX'`/`'es-US'`; or a custom object). See
+  or a custom object). See
   [docs/dialects.md](./dialects.md). cRonstrue has no style switch.
 * **`short`** &mdash; compact output: abbreviated month/weekday names and
   hyphenated ranges (`Mon-Fri`, `9 a.m.-5:45 p.m.`).
@@ -181,22 +181,19 @@ module** and passes it via `lang`:
 ```js
 // cRonstrue (the i18n build must be imported for non-English locales)
 import cronstrue from "cronstrue/i18n";
-cronstrue.toString("0 9 * * 1", { locale: "es" });
+cronstrue.toString("0 9 * * 1", { locale: "en" });
 
 // cronli5
 import cronli5 from "cronli5";
-import es from "cronli5/lang/es";
-cronli5("0 9 * * 1", { lang: es });        // "los lunes a las 09:00"
+import en from "cronli5/lang/en";
+cronli5("0 9 * * 1", { lang: en });        // "every Monday at 9 a.m."
 ```
 
 | cRonstrue locale | cronli5 `lang` | Status |
 | --- | --- | --- |
 | `en` | default (bundled) | stable |
-| `es` | `cronli5/lang/es` | shipped |
-| `de` | `cronli5/lang/de` | shipped |
-| `fi` | `cronli5/lang/fi` | shipped |
-| `zh_CN` | `cronli5/lang/zh` | shipped |
-| `pt_BR` / `pt_PT`, `fr`, `ja`, ... | *planned* | not yet shipped |
+| `es`, `de`, `fi`, `fr`, `pt_BR`, `uk`, `zh_CN` | *being rebuilt for the next major version* | not currently shipped |
+| `pt_PT`, `ja`, ... | *planned* | not yet shipped |
 
 (Check `src/lang/<code>/status.json` for each module's
 experimental/beta/stable status; the [README Languages

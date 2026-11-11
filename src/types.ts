@@ -85,7 +85,7 @@ export interface Cronli5Options {
     | 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect;
 
   /**
-   * A language module (e.g. `import es from 'cronli5/lang/es'`). Defaults
+   * A language module (e.g. `import en from 'cronli5/lang/en'`). Defaults
    * to the bundled English module. See docs/i18n-design.md.
    */
   lang?: Cronli5Language;

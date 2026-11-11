@@ -63,20 +63,20 @@ describe('Built package artifacts:', function() {
   it('CommonJS language build is require-able and plugs into `lang`',
     function() {
       const cjs = require('../../dist/cronli5.cjs');
-      const es = require('../../dist/lang/es.cjs');
+      const en = require('../../dist/lang/en.cjs');
 
-      expect(es.describe).to.be.a('function');
-      expect(es.fallback).to.be.a('function');
-      expect(cjs('*/5 * * * *', {lang: es})).to.equal('cada cinco minutos');
+      expect(en.describe).to.be.a('function');
+      expect(en.fallback).to.be.a('function');
+      expect(cjs('*/5 * * * *', {lang: en})).to.equal('every five minutes');
     });
 
   it('ESM language build exposes the module as the default export',
     async function() {
       const esm = (await import('../../dist/cronli5.js')).default;
-      const es = (await import('../../dist/lang/es.js')).default;
+      const en = (await import('../../dist/lang/en.js')).default;
 
-      expect(esm('0 9 * * MON', {lang: es}))
-        .to.equal('los lunes a las 09:00');
+      expect(esm('0 9 * * MON', {lang: en}))
+        .to.equal('every Monday at 9 a.m.');
     });
 
   it('every shipped language has both built artifacts', function() {
@@ -124,25 +124,20 @@ describe('Built package artifacts:', function() {
       expect(cli('*/5 * * * *')).to.equal('Runs every five minutes.');
     });
 
-    it('localizes the full sentence with --lang <code>', function() {
-      expect(cli('--lang', 'de', '0 0 * * *'))
-        .to.equal('Läuft täglich um Mitternacht.');
+    it('prints the full sentence with --lang <code>', function() {
+      expect(cli('--lang', 'en', '0 0 * * *'))
+        .to.equal('Runs every day at midnight.');
     });
 
     it('accepts the --lang=<code> form', function() {
-      expect(cli('--lang=es', '0 9 * * MON'))
-        .to.equal('Se ejecuta los lunes a las 09:00.');
-    });
-
-    it('wraps the sentence in each language (fi)', function() {
-      expect(cli('--lang=fi', '* * * * *'))
-        .to.equal('Suoritetaan joka minuutti.');
+      expect(cli('--lang=en', '0 9 * * MON'))
+        .to.equal('Runs every Monday at 9 a.m.');
     });
 
     it('prints the bare fragment with --fragment', function() {
       expect(cli('--fragment', '*/5 * * * *')).to.equal('every five minutes');
-      expect(cli('--lang', 'de', '--fragment', '0 0 * * *'))
-        .to.equal('täglich um Mitternacht');
+      expect(cli('--lang', 'en', '--fragment', '0 0 * * *'))
+        .to.equal('every day at midnight');
     });
 
     it('errors clearly on an unknown language', function() {
@@ -158,9 +153,7 @@ describe('Built package artifacts:', function() {
 
       // The available list is derived from the built languages (sorted), not
       // hardcoded, so it never drifts when a language is added.
-      expect(stderr)
-        .to.match(
-          /Unknown language: xx \(available: de, en, es, fi, fr, pt, uk, zh\)/u);
+      expect(stderr).to.match(/Unknown language: xx \(available: en\)/u);
     });
 
     it('exits non-zero on an invalid cron pattern', function() {
@@ -183,7 +176,7 @@ describe('Built package artifacts:', function() {
 
     it('rejects an unknown flag instead of parsing it as a pattern',
       function() {
-        const result = cliFail('* 0 * * *', '--land', 'de');
+        const result = cliFail('* 0 * * *', '--land', 'en');
 
         expect(result.status).to.not.equal(0);
         // It names the offending flag and does not mistake it for a field.
