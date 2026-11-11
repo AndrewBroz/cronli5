@@ -5,7 +5,9 @@
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
 import type {Field, Pattern} from './schedule.js';
-import {enumerateFires, includes, toFieldNumber, unique} from './util.js';
+import {
+  enumerateFires, getOccurrences, includes, toFieldNumber, unique
+} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
 // The fixed-cycle time fields: their step intervals are measured against a
@@ -66,7 +68,9 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
   }
 
   const cycle = timeFieldCycle[field];
-  const segments = stringValue.split(',').map(function canonical(segment) {
+  const segments = stringValue.split(',').flatMap(function unfold(segment) {
+    return strideFiresPastTop(segment, spec);
+  }).map(function canonical(segment) {
     return canonicalizeTokens(collapseFullSpanRange(
       enumerateIfNonUniform(
         collapseFullSpanStep(
@@ -219,6 +223,35 @@ function coverageRuns(
 
   return runs.map(function arm([from, to]) {
     return from === to ? '' + from : from + '-' + to;
+  });
+}
+
+// A stride over a range that runs past the top of the field (only the
+// weekday field has one: `3-7/2`, where 7 is Sunday again) reads as the
+// values it lands on, counted through to that bound: 3, 5 and 7. The bound
+// cannot be folded to the field minimum first, as it is for a plain range —
+// `3-0/2` strides over nothing, and `1-7/2` (Monday, Wednesday, Friday,
+// Sunday) is not `*/2`, which starts from Sunday. A stride from the field
+// minimum (`0-7/2`) lands only on values `*/N` also lands on, so it is left
+// to collapse to that cadence.
+function strideFiresPastTop(segment: string, spec: FieldSpec): string[] {
+  const parts = segment.split('/');
+
+  if (typeof spec.top !== 'number' || parts.length !== 2 ||
+      !includes(parts[0], '-')) {
+    return [segment];
+  }
+
+  const bounds = parts[0].split('-');
+  const low = toFieldNumber(bounds[0], spec.numbers);
+  const high = toFieldNumber(bounds[1], spec.numbers);
+
+  if (high <= spec.top || low === spec.min) {
+    return [segment];
+  }
+
+  return getOccurrences(low, +parts[1], high).map(function token(fire) {
+    return '' + fire;
   });
 }
 

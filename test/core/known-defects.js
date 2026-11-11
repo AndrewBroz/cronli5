@@ -18,4 +18,16 @@ describe('Core known defects:', function() {
   it('a minute list survives a bounded hour step', function() {
     expect(cronli5('5-10,20 9-17/2 * * *')).to.match(/minute/u);
   });
+
+  // A weekday stride over a range ending on 7 once lost its values: the 7
+  // was folded to 0 before the stride was counted, so `3-7/2` fired on
+  // nothing ("every  at midnight") and `1-7/2` was read as `*/2`, a
+  // different set of days.
+  it('a weekday stride that ends on 7 keeps every day it lands on',
+    function() {
+      expect(cronli5('0 0 * * 3-7/2'))
+        .to.equal('every Wednesday, Friday, and Sunday at midnight');
+      expect(cronli5('0 0 * * 1-7/2'))
+        .to.equal('every Monday, Wednesday, Friday, and Sunday at midnight');
+    });
 });

@@ -44,6 +44,21 @@ const EQUIVALENT = [
   ['weekday SUN: 7 = 0', '0 0 * * 7', '0 0 * * 0'],
   ['weekday FRI-SUN = 5-7', '0 0 * * FRI-SUN', '0 0 * * 5-7'],
   ['weekday SAT-SUN = 6-7', '0 0 * * SAT-SUN', '0 0 * * 6-7'],
+  // A stride over a range that ends on 7 lands on the values it counts
+  // through, with 7 being Sunday: 3-7/2 is 3, 5, 7. The 7 is the top of the
+  // stride, not another spelling of 0 to start from.
+  ['weekday stride to 7: 3-7/2', '0 0 * * 3-7/2', '0 0 * * 0,3,5'],
+  ['weekday stride to 7: 4-7/3', '0 0 * * 4-7/3', '0 0 * * 0,4'],
+  ['weekday stride to 7: 2-7/5', '0 0 * * 2-7/5', '0 0 * * 0,2'],
+  ['weekday stride to 7: 6-7/2', '0 0 * * 6-7/2', '0 0 * * 6'],
+  ['weekday stride 1-7/2 starts on Monday', '0 0 * * 1-7/2',
+    '0 0 * * 0,1,3,5'],
+  ['weekday stride 1-7/3 starts on Monday', '0 0 * * 1-7/3',
+    '0 0 * * 0,1,4'],
+  ['weekday stride to 7 inside a list', '0 0 * * 3-7/2,1',
+    '0 0 * * 0,1,3,5'],
+  ['weekday stride 0-7/2 is every other day', '0 0 * * 0-7/2',
+    '0 0 * * */2'],
   ['month JAN = 1', '0 0 1 JAN *', '0 0 1 1 *'],
   ['month MAR-MAY = 3-5', '0 0 1 MAR-MAY *', '0 0 1 3-5 *'],
   ['list order 17,9 = 9,17', '0 17,9 * * *', '0 9,17 * * *'],
@@ -63,6 +78,7 @@ const EQUIVALENT = [
 const DISTINCT = [
   ['minute-0 vs every-minute', '* 0 * * *', '* * * * *'],
   ['weekday 1-5 vs every', '0 0 * * 1-5', '0 0 * * *'],
+  ['weekday 1-7/2 vs */2', '0 0 * * 1-7/2', '0 0 * * */2'],
   ['hour 9 vs hour 0', '0 9 * * *', '0 0 * * *'],
   ['*/7 vs */6', '*/7 * * * *', '*/6 * * * *'],
   ['minute 0-30 vs full', '0-30 * * * *', '* * * * *']
