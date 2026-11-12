@@ -38,8 +38,8 @@ describe('Quartz day facts:', function() {
   });
 
   it('leaves plain day fields as they were', function() {
-    expect(day('0 0 1 * 1').date).to.deep.equal({kind: 'segments'});
-    expect(day('0 0 1 * 1').weekday).to.deep.equal({kind: 'segments'});
+    expect(day('0 0 1 * 1').date).to.deep.equal({kind: 'values'});
+    expect(day('0 0 1 * 1').weekday).to.deep.equal({kind: 'values'});
     expect(day('0 0 * * *').date).to.equal(null);
   });
 });

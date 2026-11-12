@@ -55,15 +55,15 @@ const comparisonPatterns = {
   ]
 };
 
-// Breadth fillers that top up the PlanNode kinds the curated `basic`/`showcase`
-// sets don't reach (verified by spanning-set.mjs's coverage report).
+// Breadth fillers: shapes of time field the curated `basic`/`showcase` sets
+// don't reach.
 const coverageExtras = [
   '* * * * * *', '5 * * * * *', '5 * * * *', '5,10 * * * *',
   '0-30 9 * * *', '0-30 */2 * * *', '0 * * * *', '0 */3 * * *'
 ];
 
 // The spanning set: curated simple + compound patterns, simple-first, that
-// exercise every rendering plan. Folded into the core set's `spanning`
+// span the shapes a time can take. Folded into the core set's `spanning`
 // field and reviewed alongside the cell sweep.
 const spanningSet = [...tables.basic, ...tables.showcase, ...coverageExtras];
 

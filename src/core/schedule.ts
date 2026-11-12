@@ -20,16 +20,6 @@ export type Pattern = Record<Field, string>;
 export type Shapes = Record<Field, Shape>;
 
 /**
- * One classified piece of a field. `value`/`bounds` keep their original
- * tokens (e.g. `'FRI'`, `'JAN'`) for later name resolution; only a step's
- * `fires` are enumerated to numbers.
- */
-export type Segment =
-  | {kind: 'single'; value: string}
-  | {kind: 'range'; bounds: [string, string]}
-  | {kind: 'step'; fires: number[]; interval: number; startToken: string};
-
-/**
  * A Quartz day-of-month form: the last day (`L`), the last weekday (`LW`),
  * so many days before the last (`L-3`), or the weekday nearest a day
  * (`15W`).
@@ -49,20 +39,17 @@ export type QuartzWeekday =
   | {kind: 'nth'; weekday: number; nth: number};
 
 /**
- * The classified day-of-month arm: a Quartz form, an open-step cadence
- * (carrying its odd/even parity when the interval-2 set has one), or plain
- * segments a renderer enumerates.
+ * The classified day-of-month arm: a Quartz form, or a plain set of values
+ * (described by the field's candidates).
  */
 export type DateArm =
   | {kind: 'quartz'; form: QuartzDate}
-  | {kind: 'cadenceStep'; interval: number; start: number;
-      parity: 'odd' | 'even' | null}
-  | {kind: 'segments'};
+  | {kind: 'values'};
 
-/** The classified day-of-week arm: a Quartz form or plain segments. */
+/** The classified day-of-week arm: a Quartz form or a plain set of values. */
 export type WeekdayArm =
   | {kind: 'quartz'; form: QuartzWeekday}
-  | {kind: 'segments'};
+  | {kind: 'values'};
 
 /**
  * Day-field facts: whether the pattern restricts both day fields (cron's
@@ -75,76 +62,12 @@ export interface DayFacts {
   weekday: WeekdayArm | null;
 }
 
-/**
- * A precomputed hour-field arithmetic stride. `offsetClean` marks a stride
- * that wraps the day cleanly from within its first interval (bare or
- * "from M" cadence); a false value pins both endpoints.
- */
-export interface HourStride {
-  interval: number;
-  last: number;
-  offsetClean: boolean;
-  start: number;
-}
-
-/** A discrete clock time the core folds minute/second into. */
+/** A discrete clock time: an hour and minute, with a second if one is set. */
 export interface ClockTime {
   hour: number;
   minute: number;
   second: number | undefined;
 }
-
-/** The hours accompanying a minute-frequency plan. */
-export type HoursPlan =
-  | {kind: 'none'}
-  | {kind: 'step'}
-  | {kind: 'window'; from: number; to: number; last: number}
-  | {kind: 'during'; times: HourTimesPlan};
-
-/** Hour times: enumerated fires, or deferred to per-segment rendering. */
-export type HourTimesPlan =
-  | {kind: 'fires'; fires: number[]}
-  | {kind: 'segments'};
-
-/**
- * The rendering plan the core selects for a pattern. The `kind`
- * discriminant tells a renderer which fields are present.
- */
-export type PlanNode =
-  | {kind: 'everySecond'}
-  | {kind: 'standaloneSeconds'}
-  | {kind: 'secondPastMinute'}
-  | {kind: 'secondsWithinMinute'; singleSecond: boolean}
-  | {kind: 'composeSeconds'; rest: PlanNode}
-  | {kind: 'everyMinute'}
-  | {kind: 'singleMinute'}
-  | {kind: 'rangeOfMinutes'}
-  | {kind: 'multipleMinutes'}
-  | {kind: 'minuteFrequency'; hours: HoursPlan}
-  | {kind: 'minuteSpanInHour'; hour: number; span: [number, number]}
-  | {
-      kind: 'minutesAcrossHours';
-      form: 'wildcard' | 'range' | 'list';
-      times: HourTimesPlan;
-    }
-  | {kind: 'minuteSpanAcrossHourStep'; form: 'wildcard' | 'range' | 'list'}
-  | {kind: 'everyHour'}
-  | {
-      kind: 'hourRange';
-      from: number;
-      to: number;
-      last: number;
-      // The minute to show on the closing bound, or `null` to close on the
-      // bare hour with the minutes stated separately. A single fire or a
-      // wildcard names an exact closing minute (the fire, or `:59`); a minute
-      // list or range would otherwise glue its last fire onto the bound and
-      // read as a continuous span, so it closes bare instead.
-      boundMinute: number | null;
-      minuteForm: 'lead' | 'wildcard' | 'range';
-    }
-  | {kind: 'hourStep'}
-  | {kind: 'clockTimes'; times: ClockTime[]}
-  | {kind: 'compactClockTimes'; fold: boolean; minute: number};
 
 /** A run of consecutive values; `from > to` wraps around a cyclic field. */
 export interface RangeDescription {
@@ -186,19 +109,15 @@ export interface Analyses {
   // order: a wildcard field is `[{kind: 'all'}]`, a Quartz field (not a
   // plain set) is `null`.
   candidates: Record<Field, SetDescription[] | null>;
+  // A single non-zero second, which a clock time can carry ("9:00:15").
   clockSecond: number | undefined;
   day: DayFacts;
-  hourStride: HourStride | null;
-  lastMinuteFire: number;
-  minuteSpan: [number, number] | null;
-  segments: Record<Field, Segment[] | null>;
 }
 
 /**
  * The neutral schedule facts: the language-independent facts about a pattern,
- * carrying no phrasing decision. `analyze` produces this; `selectPlan`
- * reads it to suggest a `plan`. The phrasing plan is deliberately *not*
- * part of the neutral facts (docs/i18n-design.md §2.2).
+ * carrying no phrasing decision. `analyze` produces this, and it is all a
+ * language is given (docs/i18n-design.md §2.2).
  */
 export interface ScheduleFacts {
   pattern: Pattern;
@@ -206,16 +125,8 @@ export interface ScheduleFacts {
   analyses: Analyses;
 }
 
-/**
- * The semantic schedule a language renders: the neutral `ScheduleFacts`
- * plus the selected `plan`. A language may widen `plan` with its own
- * `Extra` plan kinds via `Language.plan`; by default there are none, so
- * `Schedule` is the neutral facts with a core `PlanNode`.
- */
-export interface Schedule<Extra extends {kind: string} = never>
-  extends ScheduleFacts {
-  plan: PlanNode | Extra;
-}
+/** The semantic schedule a language renders: the neutral facts. */
+export type Schedule = ScheduleFacts;
 
 /**
  * Options after a language module's `options()` has normalized them. `Style`
@@ -232,16 +143,9 @@ export interface NormalizedOptions<Style = unknown> {
   years: boolean;
 }
 
-/**
- * The interface every language module's default export implements. `Extra`
- * lets a language add its own plan kinds (default: none), which its
- * `plan` override emits and its `describe` renders.
- */
-export interface Language<
-  Style = unknown,
-  Extra extends {kind: string} = never
-> {
-  describe(schedule: Schedule<Extra>, opts: NormalizedOptions<Style>): string;
+/** The interface every language module's default export implements. */
+export interface Language<Style = unknown> {
+  describe(schedule: Schedule, opts: NormalizedOptions<Style>): string;
   // The lenient-mode fallback description. Options-aware (like `reboot` and
   // `sentence`) so a dialect that changes whole words flows through the
   // arguments; a language with one fixed string ignores `opts`.
@@ -251,9 +155,4 @@ export interface Language<
   // Wrap a rendered description into a complete standalone sentence (the CLI
   // form); each language owns its lead verb and punctuation.
   sentence(description: string, opts: NormalizedOptions<Style>): string;
-  // Optionally override the core's suggested plan. Receives the neutral
-  // `facts` and the core's suggestion (`base`), so overriding is a thin
-  // remap, not a re-derivation. Omitted by languages that accept the core's
-  // choice (all of en/de/es/fi today).
-  plan?(facts: ScheduleFacts, base: PlanNode): PlanNode | Extra;
 }

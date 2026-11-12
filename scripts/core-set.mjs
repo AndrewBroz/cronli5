@@ -1,8 +1,10 @@
-// Generate the fixed core pattern set every language corpus must cover.
-// Deterministically sweep a defined grid, bucket each pattern by its
-// language-neutral Schedule cell (the branch-tuple analyze() produces), and
-// keep one representative per cell. Saves test/core/core-set.json — the
-// committed contract. Run: node --import tsx scripts/core-set.mjs
+// RETIRED: this script can no longer run. It generated the fixed core
+// pattern set (test/core/core-set.json) by sweeping a defined grid and
+// bucketing each pattern by the rendering plan the core selected for it,
+// keeping one representative per cell. The core no longer selects a plan,
+// so the cells cannot be recomputed; the committed JSON is now a static
+// seed set, edited by hand. The sweep is kept as the record of how the set
+// was made.
 //
 // Coverage in Schedule cells is option-blind, so the set also carries
 // `variants` (cell-identical but render-distinct under an option — 12h, short,
@@ -166,15 +168,25 @@ function qualKey(schedule) {
   });
 }
 
-function cellOf(pattern, opts) {
-  try {
-    const schedule = analyze(prepare(pattern, opts));
+const RETIRED = 'scripts/core-set.mjs is retired: its cell sweep bucketed ' +
+  'patterns by the core\'s rendering plan, which the core no longer ' +
+  'produces. test/core/core-set.json is a static seed set; edit it by hand.';
 
-    return planKey(schedule.plan) + '||' + qualKey(schedule);
+function cellOf(pattern, opts) {
+  let schedule = null;
+
+  try {
+    schedule = analyze(prepare(pattern, opts));
   }
   catch {
     return null;
   }
+
+  if (!schedule.plan) {
+    throw new Error(RETIRED);
+  }
+
+  return planKey(schedule.plan) + '||' + qualKey(schedule);
 }
 
 function corpusCell(pattern) {

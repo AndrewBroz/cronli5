@@ -56,9 +56,6 @@ export interface Cronli5Language {
   options(options?: Cronli5Options): any;
   reboot(opts: any): string;
   sentence(description: string, opts: any): string;
-  // Optional plan override (see `core/schedule.ts` `Language.plan`). Opaque
-  // at this public boundary, like `describe`/`options`.
-  plan?(facts: any, base: any): any;
 }
 
 /**

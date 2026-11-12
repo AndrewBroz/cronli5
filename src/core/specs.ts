@@ -1,4 +1,4 @@
-// Field specifications, macros, and core policy constants.
+// Field specifications and macros.
 
 import type {Field} from './schedule.js';
 
@@ -85,9 +85,4 @@ const macros: Record<string, string> = {
   '@hourly':   '0 * * * *'
 };
 
-// Enumerating more clock times than this reads as a wall of text, so
-// longer expansions compact into per-segment windows instead.
-const maxClockTimes = 6;
-
-export {fieldOrder, fieldSpecs, macros, maxClockTimes, monthNumbers,
-  weekdayNumbers};
+export {fieldOrder, fieldSpecs, macros};

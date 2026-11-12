@@ -6,9 +6,7 @@
 // Each status.json carries the language's headline status (its default
 // dialect) and review evidence, plus an optional `dialects` map of
 // non-default dialect variants, each with its own status — so the table can
-// surface a dialect whose maturity diverges from its language. Per-language
-// PlanNode-kind coverage is a planned addition; it needs the corpora to
-// export their pattern lists (today embedded in the test files).
+// surface a dialect whose maturity diverges from its language.
 
 import {existsSync, readdirSync, readFileSync} from 'node:fs';
 

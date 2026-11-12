@@ -65,8 +65,8 @@ async function loadLangModules(langs) {
 // CLASSIFICATION
 //
 // The rule is USER-FACING — it buckets by how a person perceives their cron,
-// not by the renderer's internal plan shape (a plain `*/15` every-15-minutes
-// cron reads as simple even though its PlanNode is a compound minuteFrequency).
+// not by how a renderer builds its description (a plain `*/15`
+// every-15-minutes cron reads as simple).
 //
 //   simple  — an everyday cadence or a single daily time, with NO calendar
 //             restriction: every minute, every N minutes/hours, hourly, or

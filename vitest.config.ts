@@ -35,7 +35,7 @@ export default defineConfig({
       // statements are covered on some runs and not others.
       thresholds: {
         lines: 99.7,
-        branches: 99.2,
+        branches: 99.3,
         functions: 99.9,
         statements: 99.7
       }

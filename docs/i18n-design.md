@@ -56,42 +56,44 @@ Everything that is true about a cron pattern regardless of language:
 
 ### 2.2 The Schedule
 
-The `Schedule` carries information about the shape of
-a cron pattern (but not how to say it). A `Schedule` is an object that contains
-the `pattern` object and other generalizable analyses of the pattern including:
+The `Schedule` carries neutral facts about a cron pattern (but not how to
+say it, and no plan for describing it). A `Schedule` is an object that
+contains the `pattern` object and the generalizable analyses of it:
 
-* `shapes`: The shape of each field (e.g., `step`, `range`, `list`, `all`, `none`)
-* `analyses`: The results of semantic analysis (e.g., `hourFires`, `lastMinuteFire`, `foldsToClockTime`, `capExceeded`)
-* `plan`: The plan for describing the pattern (e.g., `kind`, `unit`, `interval`, `window`, `qualifier`)
+* `shapes`: The shape of each field (e.g., `step`, `range`, `list`, `wildcard`)
+* `analyses`: The results of semantic analysis: `candidates`, `day` and `clockSecond`
 
 ```js
 {
   pattern:  {second: '0', minute: '*/15', hour: '9-17', ...}, // canonical
   shapes:   {minute: 'step', hour: 'range', ...},
-  analyses: {hourFires: [...], lastMinuteFire: 45,
-             foldsToClockTime: false, capExceeded: false, ...},
-  plan:     {kind: 'frequency', unit: 'minute', interval: 15,
-             window: {startHour: 9, endHour: 17, lastMinute: 45},
-             qualifier: {weekday: {kind: 'range', from: 1, to: 5}}}
+  analyses: {
+    candidates: {
+      minute: [{kind: 'cadence', interval: 15, start: 0, last: 45}, ...],
+      hour:   [{kind: 'range', from: 9, to: 17}, ...],
+      ...
+    },
+    day: {union: false, date: null, weekday: null},
+    clockSecond: undefined
+  }
 }
 ```
 
-Strategy choice is language-dependent. Whether a window reads better enumerated
-or as a range depends on the grammar and style of a given language doing the
-work (§5). As such,  when writing a module, treat the `plan` as a *hint* based
-on heuristics from other languages. A language module may consume it
-directly (the common case) or re-plan from `pattern` + `analyses` when its
-grammar demands. The `Schedule` should not encode sentence shape like fragment
-order or connective slots.
+`analyses.candidates` holds, for each field, every compact description of
+its value set: the whole field, a range, a cadence, several pieces, a simpler
+set with a few values removed, or the values one by one. This is set
+arithmetic only. Which candidates a language can say, and which reads best,
+is the language's decision, so the core selects no strategy and the
+`Schedule` encodes no sentence shape such as fragment order or connective
+slots. A renderer reads the facts, never the `pattern` or its `shapes`.
 
 The `analyses.day` facts classify the day fields once for every language:
-whether both day fields are restricted (cron's DOM-or-DOW *union*), and each
-restricted arm's semantic kind — a Quartz form, an open-step cadence (with
-its odd/even parity when the interval-2 set has one), or plain segments.
-`analyses.hourStride` likewise precomputes the hour field's arithmetic stride
-(a step segment, or a list whose values form one) with its offset-clean flag.
-Renderers route on these facts instead of re-deriving them from raw field
-strings; the words and frames stay per-language.
+whether both day fields are restricted (cron's DOM-or-DOW *union*), and
+whether each restricted arm is a Quartz form (with which form, and its
+numbers) or a plain set of values. Fusions of two fields into one phrase,
+such as the clock times a minute and an hour make together, are likewise
+worked out by the core (`core/fusions.ts`); whether to say them is the
+language's call.
 
 Semantic fixes (a fold bug, a cap policy change, a new Quartz token) go
 in the core. Wording fixes are language-specific. Current test: If a change must
@@ -404,17 +406,10 @@ Every `lang/<code>/notes.md` must answer these questions:
 
 ## 8. Open questions
 
-* **Architecture ownership under the continuity constraint (§6)** — is
-  sentence architecture a fact about the *language* (each renderer commits
-  to one total frame policy, as de and zh already do) or a fact about the
-  *schedule* (the core classifies e.g. "density" as a semantic analysis all
-  languages see, each deciding how its grammar *marks* it)? Leaning: the
-  core exposes semantic **facts** (recurrence-axis counts, fire counts,
-  coverage) and renderers own total strategies — the existing neutral
-  content / overridable strategy split — with threshold *values* staying
-  per-language (chunking is partly cultural). Undecided; must be settled
-  before English's architecture is unified and before the next derivation
-  copies the current chimera.
+* **Architecture ownership under the continuity constraint (§6)** —
+  settled: sentence architecture is a fact about the *language*. The core
+  gives neutral facts and candidate descriptions (§2.2) and selects no
+  plan; each language owns one frame and chooses among the candidates.
 * **Cap policy ownership** — settled: core default + optional language
   override, built when a language wants a different value (the design and
   the threading constraint are recorded in docs/backlog.md).

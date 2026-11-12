@@ -90,13 +90,7 @@ function interpretCronPattern(
     return lang.reboot(opts);
   }
 
-  // Analyze into the neutral facts + the core's suggested plan, then let the
-  // language optionally override the plan before rendering. A language
-  // without a `plan` hook renders the core's suggestion unchanged.
-  const schedule = analyze(prepare(cronPattern, opts));
-  const plan = lang.plan ? lang.plan(schedule, schedule.plan) : schedule.plan;
-
-  return lang.describe({...schedule, plan}, opts);
+  return lang.describe(analyze(prepare(cronPattern, opts)), opts);
 }
 
 // Two named convenience methods are attached to the callable export as sugar
