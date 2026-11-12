@@ -31,7 +31,7 @@ const rows = [
   ['0 0 L-1 * *',
     'at midnight 1 day before the last day of the month'],
   ['0 0 1 1 * */4',
-    'at midnight on January 1 every 4 years from 1970',
+    'at midnight on January 1 of every 4th year from 1970',
     {years: true}],
   ['0 0 1 1 * 2030-2034,2036-2040',
     'at midnight on January 1 in 2030 through 2040 except 2035',

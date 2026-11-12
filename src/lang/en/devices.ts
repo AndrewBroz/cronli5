@@ -825,8 +825,10 @@ function daysOfTheWeek(opts: EnglishOptions): Voice {
 }
 
 /**
- * Years: "in 2030 and 2035", "in 2030 through 2035", "every 4 years from
- * 1970", and for every second year "every other year from 2033".
+ * Years: "in 2030 and 2035", "in 2030 through 2035". A cadence of years
+ * hangs on the day before it with "of", and its interval is said as a
+ * position: "of every other year from 2033", "of every 4th year from
+ * 2028".
  */
 function yearsByNumber(opts: EnglishOptions): Voice {
   const years = listing({
@@ -846,10 +848,12 @@ function yearsByNumber(opts: EnglishOptions): Voice {
     cadence: {
       ...years.cadence,
       say(cadence, ends) {
-        return cadence.interval === 2 ?
-          join(`${every} ${words.other} ${units.year.one}`,
-            span(ends.map(String), opts)) :
-          years.cadence.say(cadence, ends);
+        const nth = cadence.interval === 2 ?
+          words.other :
+          lexicon.ordinal(cadence.interval);
+
+        return join(`${words.of} ${every} ${nth} ${units.year.one}`,
+          span(ends.map(String), opts));
       }
     }
   };

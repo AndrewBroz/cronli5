@@ -2601,7 +2601,7 @@
    "pattern": "*/10 24 */3 23-25 * 1-2"
   },
   {
-   "expected": "every 30 seconds for one minute at 12:23 a.m. and 12:23 p.m. on the second Saturday of June and July every 4 years from 2030",
+   "expected": "every 30 seconds for one minute at 12:23 a.m. and 12:23 p.m. on the second Saturday of June and July of every 4th year from 2030",
    "options": {
     "lang": "en"
    },
@@ -2615,7 +2615,7 @@
    "pattern": "0 35 2,15 * * * 2028,2030"
   },
   {
-   "expected": "at 0 and 6 minutes past the hour on Saturdays in March and April every other year from 2033",
+   "expected": "at 0 and 6 minutes past the hour on Saturdays in March and April of every other year from 2033",
    "options": {
     "lang": "en"
    },
@@ -2648,6 +2648,160 @@
     "lang": "en"
    },
    "pattern": "*/10 6-11 L-7 */6 *"
+  },
+  {
+   "expected": "at 9 a.m. every day of every other year from 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * * 2030/2"
+  },
+  {
+   "expected": "at 9 a.m. every day of every 3rd year from 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * * 2030/3"
+  },
+  {
+   "expected": "at 9 a.m. every day of every 4th year from 2028",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * * 2028/4"
+  },
+  {
+   "expected": "at 9 a.m. every day of every other year from 2030 through 2040",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2"
+  },
+  {
+   "expected": "at midnight on January 1 of every 4th year from 2028",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 1 1 * 2028/4"
+  },
+  {
+   "expected": "at 9 a.m. every day in June of every other year from 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6 * 2030/2"
+  },
+  {
+   "expected": "at 9 a.m. on Mondays of every other year from 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * 1 2030/2"
+  },
+  {
+   "expected": "at 9 a.m. on the last day of the month of every 4th year from 2028",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 L * * 2028/4"
+  },
+  {
+   "expected": "every 5 minutes every day of every 4th year from 2028",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */5 * * * * 2028/4"
+  },
+  {
+   "expected": "every 5 minutes every day in June of every 4th year from 2028",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */5 * * 6 * 2028/4"
+  },
+  {
+   "expected": "at 9 a.m. every day in even-numbered years",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * * */2"
+  },
+  {
+   "expected": "every 5 minutes in even-numbered years",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */5 * * * * */2"
+  },
+  {
+   "expected": "at 9 a.m. every day in June 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6 * 2030"
+  },
+  {
+   "expected": "at 9 a.m. on Mondays in June 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6 1 2030"
+  },
+  {
+   "expected": "at 9 a.m. on the last day of June 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 L 6 * 2030"
+  },
+  {
+   "expected": "at 9 a.m. on the second Monday of June 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6 1#2 2030"
+  },
+  {
+   "expected": "every 5 minutes in June 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */5 * * 6 * 2030"
+  },
+  {
+   "expected": "at 9 a.m. every day in June and July in 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6,7 * 2030"
+  },
+  {
+   "expected": "at 9 a.m. every day in June through August in 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6-8 * 2030"
+  },
+  {
+   "expected": "at 9 a.m. every day in June in 2030 and 2031",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6 * 2030,2031"
+  },
+  {
+   "expected": "at 9 a.m. every day in June in 2030 through 2032",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * 6 * 2030-2032"
+  },
+  {
+   "expected": "at 9 a.m. on June 1 and 15 in 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 1,15 6 * 2030"
   },
   {
    "expected": "at 09:00 every day",

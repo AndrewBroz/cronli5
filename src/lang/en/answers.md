@@ -717,7 +717,15 @@ month's name directly.
 Anything else keeps "in" before the year: several months ("in June and
 July in 2030"), several years ("in June in 2030 and 2031"), a month said
 inside a date ("on June 1 and 15 in 2030"), and a day of the month beside
-a weekday, where the month is said on each side.
+a weekday, where the month is said on each side. So does a phrase that
+does not end in the month's name ("on every day in June except the 15th
+in 2030"), the nearest-weekday form ("on the weekday nearest June 15 in
+2030": the day it names is not always the day it fires, so it is not made
+a full date), and a Quartz form under every month ("on the last day of the
+month in 2030").
+
+A cadence of years with exceptions is still a cadence, and brings "every
+day" the same way.
 
 ## 6. Words
 
