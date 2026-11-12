@@ -1,0 +1,22 @@
+/**
+ * @license MIT, Copyright (c) 2026 Andrew Brož
+ */
+
+// The entry point that knows every language, for callers who would sooner
+// name a language by code than choose which ones to ship. English is the
+// default. A caller who minds the size imports `cronli5` and the languages
+// they want instead.
+
+import type {Cronli5, Cronli5AnyStyle} from './types.js';
+import {create} from './cronli5.js';
+import en from './lang/en/index.js';
+
+const cronli5: Cronli5<Cronli5AnyStyle> = create({languages: [en]});
+
+export default cronli5;
+export {create};
+export {Cronli5InputError, Cronli5OptionError} from './core/errors.js';
+export type {
+  Cronli5, Cronli5AnyStyle, Cronli5Language, Cronli5Options, Cronli5Setup,
+  CronPattern, CronPatternObject
+} from './types.js';

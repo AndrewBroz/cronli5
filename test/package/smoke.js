@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {execFileSync} from 'node:child_process';
-import {existsSync, readdirSync} from 'node:fs';
+import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -32,24 +32,71 @@ describe('Built package artifacts:', function() {
     expect(esm('0 9 * * MON')).to.equal('at 9 a.m. on Mondays');
   });
 
-  it('CommonJS build exposes the sentence()/fragment() methods', function() {
+  it('CommonJS build carries the named exports on the function', function() {
     const cjs = require('../../dist/cronli5.cjs');
 
-    expect(cjs.sentence).to.be.a('function');
-    expect(cjs.fragment).to.be.a('function');
-    expect(cjs.sentence('0 0 * * *')).to.equal('Runs at midnight every day.');
-    expect(cjs.fragment('0 0 * * *')).to.equal('at midnight every day');
+    expect(cjs.create).to.be.a('function');
+    expect(cjs.Cronli5InputError).to.be.a('function');
+    expect(cjs.Cronli5OptionError).to.be.a('function');
+    expect(cjs('0 0 * * *', {form: 'sentence'}))
+      .to.equal('Runs at midnight every day.');
+    expect(cjs.sentence).to.be.an('undefined');
     // toString is not clobbered: String() coercion returns the source.
-    expect(String(cjs)).to.match(/^function cronli5\b/u);
+    expect(String(cjs)).to.match(/^function /u);
   });
 
-  it('ESM build exposes the sentence()/fragment() methods', async function() {
-    const esm = (await import('../../dist/cronli5.js')).default;
+  it('ESM build has the named exports', async function() {
+    const esm = await import('../../dist/cronli5.js');
 
-    expect(esm.sentence).to.be.a('function');
-    expect(esm.fragment).to.be.a('function');
-    expect(esm.sentence('0 0 * * *')).to.equal('Runs at midnight every day.');
-    expect(esm.fragment('0 0 * * *')).to.equal('at midnight every day');
+    expect(esm.create).to.be.a('function');
+    expect(esm.Cronli5OptionError).to.be.a('function');
+    expect(esm.default('0 0 * * *', {form: 'label'}))
+      .to.equal('At midnight every day');
+    expect(esm.default.sentence).to.be.an('undefined');
+  });
+
+  it('a bad option is the same error class from either build',
+    async function() {
+      const cjs = require('../../dist/cronli5.cjs');
+      const esm = await import('../../dist/cronli5.js');
+
+      expect(function old() {
+        cjs('0 0 * * *', {dialect: 'gb'});
+      }).to.throw(cjs.Cronli5OptionError, /en-GB/u);
+      expect(function old() {
+        esm.default('0 0 * * *', {lang: 'uk'});
+      }).to.throw(esm.Cronli5OptionError);
+    });
+
+  it('the every-language builds resolve a code with a region',
+    async function() {
+      const cjs = require('../../dist/all.cjs');
+      const esm = await import('../../dist/all.js');
+
+      expect(cjs('30 9 * * *', {lang: 'en-GB'}))
+        .to.equal('at 9.30am every day');
+      expect(esm.default('30 9 * * *', {lang: 'en-GB'}))
+        .to.equal('at 9.30am every day');
+      expect(esm.create).to.be.a('function');
+    });
+
+  it('the every-language entry lists every shipped language', function() {
+    const source = readFileSync('src/all.ts', 'utf8');
+
+    readdirSync('src/lang').filter(function shipped(code) {
+      return existsSync(`src/lang/${code}/status.json`);
+    }).forEach(function listed(code) {
+      expect(source, code).to.include(`'./lang/${code}/index.js'`);
+    });
+  });
+
+  it('a language build carries its named styles', async function() {
+    const cjs = require('../../dist/lang/en.cjs');
+    const esm = await import('../../dist/lang/en.js');
+
+    expect(cjs.code).to.equal('en');
+    expect(cjs.styles.house.am).to.equal('AM');
+    expect(esm.styles.house.am).to.equal('AM');
   });
 
   it('both builds agree with the source implementation', async function() {
@@ -156,6 +203,34 @@ describe('Built package artifacts:', function() {
       expect(stderr).to.match(/Unknown language: xx \(available: en\)/u);
     });
 
+    it('takes a region with the language', function() {
+      expect(cli('--lang', 'en-GB', '--fragment', '30 9 * * *'))
+        .to.equal('at 9.30am every day');
+    });
+
+    it('prints a label or a fragment with --form', function() {
+      expect(cli('--form', 'label', '0 0 * * *'))
+        .to.equal('At midnight every day');
+      expect(cli('--form=fragment', '0 0 * * *'))
+        .to.equal('at midnight every day');
+      expect(cli('--form', 'sentence', '0 0 * * *'))
+        .to.equal('Runs at midnight every day.');
+    });
+
+    it('reads a Quartz pattern with --cron quartz', function() {
+      expect(cli('--cron', 'quartz', '--fragment', '0 0 ? * 2'))
+        .to.equal('at midnight on Mondays');
+    });
+
+    it('reports a bad flag value with the library\'s own message',
+      function() {
+        const result = cliFail('--form', 'title', '0 0 * * *');
+
+        expect(result.status).to.not.equal(0);
+        expect(result.stderr).to.match(/form/u);
+        expect(result.stderr).to.not.match(/Problem parsing/u);
+      });
+
     it('exits non-zero on an invalid cron pattern', function() {
       const result = cliFail('not a cron pattern');
 
@@ -181,6 +256,7 @@ describe('Built package artifacts:', function() {
         expect(result.status).to.not.equal(0);
         // It names the offending flag and does not mistake it for a field.
         expect(result.stderr).to.match(/[Uu]nknown option: --land/u);
+        expect(result.stderr).to.match(/--lang, --form, --cron, --fragment/u);
         expect(result.stderr).to.not.match(/minute field/u);
       });
   });

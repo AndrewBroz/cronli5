@@ -11,9 +11,12 @@ const shared = {
   logLevel: 'info'
 };
 
-// The footer unwraps the ESM default export so that `require()` returns
-// it directly rather than `{ default }`.
-const unwrapDefault = {js: 'module.exports = module.exports.default;'};
+// The footer makes `require()` return the default export directly rather
+// than `{ default }`, with the named exports carried on it as properties.
+const unwrapDefault = {
+  js: 'module.exports = ' +
+    'Object.assign(module.exports.default, module.exports);'
+};
 
 // Start from clean output dirs so artifacts from deleted or renamed language
 // dirs (removed experiments, say) never linger and ship via the package. tsc
@@ -33,6 +36,22 @@ await esbuild.build({
   ...shared,
   format: 'cjs',
   outfile: 'dist/cronli5.cjs',
+  footer: unwrapDefault
+});
+
+// The entry point that knows every language, in both formats.
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/all.ts'],
+  format: 'esm',
+  outfile: 'dist/all.js'
+});
+
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/all.ts'],
+  format: 'cjs',
+  outfile: 'dist/all.cjs',
   footer: unwrapDefault
 });
 

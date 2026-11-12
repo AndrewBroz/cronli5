@@ -17,6 +17,11 @@
       "import": "./dist/cronli5.js",
       "require": "./dist/cronli5.cjs"
     },
+    "./all": {
+      "types": "./types/all.d.ts",
+      "import": "./dist/all.js",
+      "require": "./dist/all.cjs"
+    },
     "./lang/en": {
       "types": "./types/lang/en/index.d.ts",
       "import": "./dist/lang/en.js",
