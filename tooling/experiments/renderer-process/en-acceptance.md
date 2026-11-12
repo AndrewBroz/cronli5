@@ -165,8 +165,8 @@ The ranking was followed by a conversation, one direct comparison at a
 time, and that changed more than the ranking did. It replaced the selection
 rule itself (design section 5.5): counting things named gave way to ease of
 understanding, with the pattern's spelling settling declared ties. The
-English rules agreed in that conversation, **not yet in the answers, the
-rows or the renderer**:
+English rules agreed in that conversation, now in the answers, the rows
+and the renderer (build rounds 11 and 11b):
 
 * An hour cadence at an offset is split: "at 24 minutes past the hour,
   every 3 hours", never "every 3 hours from 12:24 a.m.".
@@ -188,9 +188,30 @@ rows or the renderer**:
 * "Every other year from 2033".
 
 Question 6 (`*/10 24 */3 23-25 * 1-2`) becomes "every 10 seconds for one
-minute at 24 minutes past the hour, every 3 hours, on the 23rd through the
-25th as well as on Mondays and Tuesdays". The maintainer called that
+minute at 24 minutes past the hour, every 3 hours on the 23rd through the
+25th as well as on Mondays and Tuesdays" (shown to the maintainer with a
+comma after "hours"; built without one, as every sentence of that shape
+is). The maintainer called that
 better, not solved; it stays a hard case to re-test blind.
+
+The builder stopped, correctly, on two rows that contradicted the
+counting rule: four weekdays that are not one run came out as pieces ("on
+Mondays and Wednesday through Friday"). The orchestrating model ruled that
+weekday pieces are said only for more than four days, which changed one
+earlier row (`0 9 * * 0,2-4`, now the four names). The maintainer has not
+judged that row.
+
+Afterwards: all 153 held-out rows pass; continuity holds with its two
+declared exceptions (an hour edit may set the day part to "every day"; the
+tie follows the spelling); and 41 reworded sentences went to a blind
+reader, which recovered 41 of 41 exactly. The reader's notes are worth
+keeping: it had to assume that "every 6 hours" starts at midnight and that
+"every other month" starts in January, and it found "every 30 seconds for
+one minute every 5 minutes" hard to parse while still reading it
+correctly.
+
+The renderer is 1,546 logical lines and 95 branches after these rules
+(1,488 and 97 before them).
 
 Not changed: sentence order. A day-first sentence won one question, tied
 another of the same structure and lost a third.
@@ -257,7 +278,11 @@ repairs.
 * A month range repeated on both sides of a day-of-month and weekday union
   is heavy: "…on the 1st and 15th of each month from June through August as
   well as on weekdays from June through August".
-* The renderer's branch budget is 97, its current count.
+* The renderer's branch budget is 95, its current count.
+* A year cadence with no day named stacks two "every" phrases: "at 9 a.m.
+  every day every other year from 2030". And a month beside a year says
+  "in June in 2030" where "in June 2030" is more natural.
+* The comparison table at the top of this record predates build round 11.
 * `builder-cases.js` holds 29 rows written by the builder and not yet
   reviewed.
 * The fuzz sweep's "missing value" and "dropped minute" heuristics assume
