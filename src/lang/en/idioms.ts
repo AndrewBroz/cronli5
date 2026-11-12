@@ -5,8 +5,8 @@
 
 import type {
   Field, QuartzDate, QuartzWeekday, SetDescription
-} from '../../../core/schedule.js';
-import type {Spoken} from '../../../core/select.js';
+} from '../../core/schedule.js';
+import type {Spoken} from '../../core/select.js';
 import type {EnglishOptions} from './options.js';
 import lexicon from './lexicon.js';
 

@@ -72,7 +72,7 @@ cronstrue.toString("0 9 * * 1");          // "At 09:00 AM, only on Monday"
 
 // cronli5
 import cronli5 from "cronli5";
-cronli5("0 9 * * 1");                      // "every Monday at 9 a.m."
+cronli5("0 9 * * 1");                      // "at 9 a.m. on Mondays"
 ```
 
 ### The default return value differs: fragment vs. sentence
@@ -84,8 +84,8 @@ sentence). Pass `{ sentence: true }` for the capitalized standalone that lines
 up with cRonstrue:
 
 ```js
-cronli5("0 0 * * *");                      // "every day at midnight"  (fragment)
-cronli5("0 0 * * *", { sentence: true });  // "Runs every day at midnight."
+cronli5("0 0 * * *");                      // "at midnight"  (fragment)
+cronli5("0 0 * * *", { sentence: true });  // "Runs at midnight."
 ```
 
 When comparing the two libraries like-for-like, compare cRonstrue against
@@ -98,8 +98,8 @@ is the capitalized standalone (the closest match to `cronstrue.toString`), and
 Both forward every other option.
 
 ```js
-cronli5.sentence("0 0 * * *");  // "Runs every day at midnight."
-cronli5.fragment("0 0 * * *");  // "every day at midnight"
+cronli5.sentence("0 0 * * *");  // "Runs at midnight."
+cronli5.fragment("0 0 * * *");  // "at midnight"
 ```
 
 Note there is **no** `cronli5.toString(expr)` mirroring `cronstrue.toString`:
@@ -117,7 +117,7 @@ pattern expressed three ways &mdash; not a list of separate patterns):
 ```js
 cronli5("0 9 * * 1-5");                     // string
 cronli5(["0", "9", "*", "*", "1-5"]);      // array of fields -> same result
-cronli5({ hour: 9, minute: 30 });          // object -> "every day at 9:30 a.m."
+cronli5({ hour: 9, minute: 30 });          // object -> "at 9:30 a.m."
 ```
 
 ### Error handling
@@ -156,7 +156,7 @@ including some malformed input; `cronli5` validates strictly and only the
 | `locale: "es"` | `lang` (a language module) | Different model &mdash; see [Locale &rarr; language](#locale--language) below. |
 | `use24HourTimeFormat: true` | `ampm: false` | cronli5's `ampm` defaults to `true` (12-hour) for English; `false` gives 24-hour zero-padded time (`09:00`). The default is language-specific. |
 | `throwExceptionOnParseError: false` | `lenient: true` | Both suppress the throw; cronli5 returns a fixed fallback, cRonstrue returns a generic error sentence. |
-| `verbose: true` | *no equivalent* | cronli5 has no verbose toggle; it always writes one folded sentence. (`short: true` goes the *other* way &mdash; more compact.) |
+| `verbose: true` | *no equivalent* | cronli5 has no verbose toggle; it always writes one folded sentence. (`short: true` goes the *other* way &mdash; abbreviated names.) |
 | `dayOfWeekStartIndexZero` | `quartz: true` (partial) | By default cronli5 uses the standard interpretation: `0`/`7` are Sunday, `1` is Monday. cRonstrue's `dayOfWeekStartIndexZero: false` shifts to a 1-based week; cronli5's nearest equivalent is `quartz: true`, which reads the day-of-week as **Quartz numbering (1 = Sunday … 7 = Saturday)**. It is not a general re-base toggle — it is the Quartz dialect (and also enables `?`, `L`, `#`); use it when your source is Quartz, where `1` means Sunday. |
 | `monthStartIndexZero` | *no equivalent* | cronli5 always reads `1` as January (`6` is June). There is no zero-based-month mode. |
 | `trimHoursLeadingZero` | n/a | Only relevant to cRonstrue's zero-padded clock style. cronli5's 12-hour default already writes `9 a.m.` (no leading zero); its 24-hour mode (`ampm: false`) is always zero-padded (`09:00`). |
@@ -168,8 +168,7 @@ including some malformed input; `cronli5` validates strictly and only the
 * **`dialect`** &mdash; per-language style (English `'us'`/`'gb'`/`'house'`;
   or a custom object). See
   [docs/dialects.md](./dialects.md). cRonstrue has no style switch.
-* **`short`** &mdash; compact output: abbreviated month/weekday names and
-  hyphenated ranges (`Mon-Fri`, `9 a.m.-5:45 p.m.`).
+* **`short`** &mdash; abbreviated month/weekday names (`Mon`, `Jun`).
 * **`seconds`** &mdash; treat the first field of a string/array as seconds.
 * **`years`** &mdash; read the trailing field of a six-field pattern as a year.
 
@@ -186,7 +185,7 @@ cronstrue.toString("0 9 * * 1", { locale: "en" });
 // cronli5
 import cronli5 from "cronli5";
 import en from "cronli5/lang/en";
-cronli5("0 9 * * 1", { lang: en });        // "every Monday at 9 a.m."
+cronli5("0 9 * * 1", { lang: en });        // "at 9 a.m. on Mondays"
 ```
 
 | cRonstrue locale | cronli5 `lang` | Status |

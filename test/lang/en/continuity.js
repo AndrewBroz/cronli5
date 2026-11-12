@@ -1,18 +1,11 @@
 import chai from 'chai';
-import {existsSync} from 'node:fs';
 import {analyze, prepare} from '../../../src/core/index.js';
+import * as english from '../../../src/lang/en/index.js';
 import {coreSetSeeds, neighborPairs, optionsFor, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
 
 const {expect} = chai;
-
-// The rebuilt renderer sits beside the one it replaces until it is moved
-// into place.
-const NEXT = new URL('../../../src/lang/en/next/index.ts', import.meta.url);
-const english = await import(existsSync(NEXT) ?
-  '../../../src/lang/en/next/index.js' :
-  '../../../src/lang/en/index.js');
 
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];

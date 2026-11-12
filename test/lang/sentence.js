@@ -13,15 +13,15 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
   it('English does not double the period after an abbreviation', function() {
     // A fragment ending in "a.m."/"p.m." already carries a period; the
     // sentence wrapper must not append a second one.
-    expect(en.sentence('every day at 9 a.m.', en.options()))
-      .to.equal('Runs every day at 9 a.m.');
-    expect(en.sentence('every Monday at 5:30 p.m.', en.options()))
-      .to.equal('Runs every Monday at 5:30 p.m.');
+    expect(en.sentence('at 9 a.m.', en.options()))
+      .to.equal('Runs at 9 a.m.');
+    expect(en.sentence('at 5:30 p.m.', en.options()))
+      .to.equal('Runs at 5:30 p.m.');
   });
 
   it('English still closes a non-abbreviation fragment', function() {
-    expect(en.sentence('every day at midnight', en.options()))
-      .to.equal('Runs every day at midnight.');
+    expect(en.sentence('at midnight', en.options()))
+      .to.equal('Runs at midnight.');
   });
 });
 
@@ -30,17 +30,17 @@ describe('Complete-sentence wrapping (lang.sentence):', function() {
 // lenient fallback (an error string, not a schedule).
 describe('The sentence option:', function() {
   it('returns the fragment by default', function() {
-    expect(cronli5('0 0 * * *')).to.equal('every day at midnight');
+    expect(cronli5('0 0 * * *')).to.equal('at midnight');
   });
 
   it('wraps the schedule as a sentence when set', function() {
     expect(cronli5('0 0 * * *', {sentence: true}))
-      .to.equal('Runs every day at midnight.');
+      .to.equal('Runs at midnight.');
   });
 
   it('wraps in the chosen language', function() {
     expect(cronli5('0 0 * * *', {lang: en, sentence: true}))
-      .to.equal('Runs every day at midnight.');
+      .to.equal('Runs at midnight.');
   });
 
   it('wraps @reboot', function() {
@@ -64,13 +64,13 @@ describe('The sentence()/fragment() convenience methods:', function() {
     expect(cronli5.sentence('0 0 * * *'))
       .to.equal(cronli5('0 0 * * *', {sentence: true}));
     expect(cronli5.sentence('0 0 * * *'))
-      .to.equal('Runs every day at midnight.');
+      .to.equal('Runs at midnight.');
   });
 
   it('fragment() matches the default (no-option) call', function() {
     expect(cronli5.fragment('0 0 * * *'))
       .to.equal(cronli5('0 0 * * *'));
-    expect(cronli5.fragment('0 0 * * *')).to.equal('every day at midnight');
+    expect(cronli5.fragment('0 0 * * *')).to.equal('at midnight');
   });
 
   it('sentence() forwards all options (quartz)', function() {
@@ -85,15 +85,15 @@ describe('The sentence()/fragment() convenience methods:', function() {
 
   it('sentence() forwards lang and wraps in that language', function() {
     expect(cronli5.sentence('0 0 * * *', {lang: en}))
-      .to.equal('Runs every day at midnight.');
+      .to.equal('Runs at midnight.');
   });
 
   it('an explicit sentence option is overridden by the method', function() {
     // The method's own intent wins over a passed-through `sentence` flag.
     expect(cronli5.fragment('0 0 * * *', {sentence: true}))
-      .to.equal('every day at midnight');
+      .to.equal('at midnight');
     expect(cronli5.sentence('0 0 * * *', {sentence: false}))
-      .to.equal('Runs every day at midnight.');
+      .to.equal('Runs at midnight.');
   });
 
   it('does not clobber Function.prototype.toString', function() {

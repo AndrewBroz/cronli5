@@ -1,5 +1,5 @@
 import chai from 'chai';
-import lexicon from '../../../src/lang/en/next/lexicon.js';
+import lexicon from '../../../src/lang/en/lexicon.js';
 
 const {expect} = chai;
 

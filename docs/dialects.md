@@ -7,16 +7,16 @@ own.
 
 ```js
 cronli5('30 9 * * MON-FRI');
-// 'every Monday through Friday at 9:30 a.m.'      (us — the default)
+// 'at 9:30 a.m. on weekdays'      (us — the default)
 
 cronli5('30 9 * * MON-FRI', { dialect: 'gb' });
-// 'every Monday to Friday at 9.30am'
+// 'at 9.30am on weekdays'
 
 cronli5('30 9 * * MON-FRI', { dialect: 'house' });
-// 'every Monday - Friday at 9:30 AM'
+// 'at 9:30 AM on weekdays'
 
-cronli5('30 9 * * MON-FRI', { dialect: { through: ' until ' } });
-// 'every Monday until Friday at 9:30 a.m.'
+cronli5('30 9 * * MON-FRI', { dialect: { am: 'am', pm: 'pm' } });
+// 'at 9:30 am on weekdays'
 ```
 
 ## Named dialects
@@ -25,7 +25,7 @@ cronli5('30 9 * * MON-FRI', { dialect: { through: ' until ' } });
 | --- | --- | --- | --- |
 | Anchor | [Chicago Manual of Style][chicago] | [Guardian style guide][guardian] | cronli5's legacy voice |
 | Serial comma | yes ("A, B, and C") | no ("A, B and C") | yes |
-| Range connective | "through" | "to" | " - " |
+| Range connective | "through" | "to" | "through" |
 | Meridiems | "9:30 a.m." | "9.30am" (closed up) | "9:30 AM" |
 | Time separator | colon | full point | colon |
 | Exactly 12:00 | "noon" / "midnight" | "midday" / "midnight" | "noon" / "midnight" |
@@ -37,15 +37,15 @@ Side by side:
 <!-- BEGIN GENERATED: dialects -->
 | Pattern | `'us'` | `'gb'` | `'house'` |
 | --- | --- | --- | --- |
-| `0 9,12,17 * * *` | every day at 9 a.m., 12 p.m., and 5 p.m. | every day at 9am, 12pm and 5pm | every day at 9 AM, 12 PM, and 5 PM |
-| `30 9 * * MON-FRI` | every Monday through Friday at 9:30 a.m. | every Monday to Friday at 9.30am | every Monday - Friday at 9:30 AM |
-| `0 12 1 1 *` | on January 1 at noon | on 1 January at midday | on January 1st at noon |
-| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5 p.m. | every 15 minutes from 9am to 5.45pm | every 15 minutes from 9 AM - 5:45 PM |
-| `0 0 12 25 12 * 2030` | on December 25, 2030 at noon | on 25 December 2030 at midday | on December 25th, 2030 at noon |
+| `0 9,12,17 * * *` | at 9 a.m., noon, and 5 p.m. | at 9am, midday and 5pm | at 9 AM, noon, and 5 PM |
+| `30 9 * * MON-FRI` | at 9:30 a.m. on weekdays | at 9.30am on weekdays | at 9:30 AM on weekdays |
+| `0 12 1 1 *` | at noon on January 1 | at midday on 1 January | at noon on January 1st |
+| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. until 6 p.m. | every 15 minutes from 9am until 6pm | every 15 minutes from 9 AM until 6 PM |
+| `0 0 12 25 12 * 2030` | at noon on December 25, 2030 | at midday on 25 December 2030 | at noon on December 25th, 2030 |
 <!-- END GENERATED: dialects -->
 
-`'uk'` is a deprecated alias for `'gb'`, renamed because the BCP-47 code
-`uk` is the Ukrainian language, not British English.
+`'uk'` is not a dialect name: the BCP-47 code `uk` is the Ukrainian
+language, not British English. An unknown name is treated as `'us'`.
 
 Style conventions shared by every dialect:
 
@@ -58,7 +58,7 @@ Style conventions shared by every dialect:
   "1 January") per both anchor guides, unless the dialect sets `ordinals`
   ("January 1st", as `'house'` does); bare days keep their ordinals
   everywhere ("on the 1st and 15th").
-* Small numbers are spelled out ("every five minutes"); pairs never take a
+* Numbers are written as numerals ("every 5 minutes"); pairs never take a
   serial comma.
 
 ## Custom dialects
@@ -68,13 +68,13 @@ inherits the US (Chicago) defaults, so a custom dialect can be a single
 override:
 
 ```js
-cronli5('*/15 9-17 * * *', { dialect: { through: ' until ' } });
-// 'every 15 minutes from 9 a.m. until 5:45 p.m.'
+cronli5('0 9-17 * * *', { dialect: { through: 'to' } });
+// 'every hour from 9 a.m. to 5 p.m.'
 
 cronli5('0 9,12,17 * * *', {
   dialect: { am: 'am', closeUp: true, pm: 'pm', serialComma: false }
 });
-// 'every day at 9am, 12pm and 5pm'
+// 'at 9am, noon and 5pm'
 ```
 
 The full field reference (all optional; defaults shown are the `'us'`
@@ -89,15 +89,15 @@ values):
 | `midday` | `'noon'` | The word for exactly 12:00 p.m. |
 | `midnight` | `'midnight'` | The word for exactly 12:00 a.m. |
 | `ordinals` | `false` | Ordinal days in month-day dates (`'January 1st'`) instead of cardinal. |
-| `through` | `' through '` | The range connective, spaces included (`' to '`, `' - '`). |
+| `through` | `'through'` | The word joining the two ends of an inclusive range (`'to'`); surrounding spaces are trimmed. |
 | `serialComma` | `true` | Use a serial comma in lists of three or more. |
 | `dayFirst` | `false` | Day-first dates (`'1 January'`) and no comma before a folded year (`'1 January 2030'`). |
 
 ## Interactions with other options
 
-* **`short`** compacts ranges to a bare hyphen, overriding the dialect's
-  `through` connective, and abbreviates month/weekday names. The dialect's
-  time style still applies (`'every Mon-Fri at 2 AM'` with `'house'`).
+* **`short`** abbreviates month and weekday names and changes nothing
+  else. The dialect's style still applies (`'at 2 AM on Mon and Wed'` with
+  `'house'`).
 * **`ampm: false`** switches to padded 24-hour times. The meridiem and
   12:00-word fields are unused; the dialect's `sep` still applies
   (`'17:00'` for `'us'`, `'17.00'` for `'gb'`).

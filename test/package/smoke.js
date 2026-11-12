@@ -22,14 +22,14 @@ describe('Built package artifacts:', function() {
     const cjs = require('../../dist/cronli5.cjs');
 
     expect(cjs).to.be.a('function');
-    expect(cjs('*/5 * * * *')).to.equal('every five minutes');
+    expect(cjs('*/5 * * * *')).to.equal('every 5 minutes');
   });
 
   it('ESM build exposes the function as the default export', async function() {
     const esm = (await import('../../dist/cronli5.js')).default;
 
     expect(esm).to.be.a('function');
-    expect(esm('0 9 * * MON')).to.equal('every Monday at 9 a.m.');
+    expect(esm('0 9 * * MON')).to.equal('at 9 a.m. on Mondays');
   });
 
   it('CommonJS build exposes the sentence()/fragment() methods', function() {
@@ -37,8 +37,8 @@ describe('Built package artifacts:', function() {
 
     expect(cjs.sentence).to.be.a('function');
     expect(cjs.fragment).to.be.a('function');
-    expect(cjs.sentence('0 0 * * *')).to.equal('Runs every day at midnight.');
-    expect(cjs.fragment('0 0 * * *')).to.equal('every day at midnight');
+    expect(cjs.sentence('0 0 * * *')).to.equal('Runs at midnight.');
+    expect(cjs.fragment('0 0 * * *')).to.equal('at midnight');
     // toString is not clobbered: String() coercion returns the source.
     expect(String(cjs)).to.match(/^function cronli5\b/u);
   });
@@ -48,8 +48,8 @@ describe('Built package artifacts:', function() {
 
     expect(esm.sentence).to.be.a('function');
     expect(esm.fragment).to.be.a('function');
-    expect(esm.sentence('0 0 * * *')).to.equal('Runs every day at midnight.');
-    expect(esm.fragment('0 0 * * *')).to.equal('every day at midnight');
+    expect(esm.sentence('0 0 * * *')).to.equal('Runs at midnight.');
+    expect(esm.fragment('0 0 * * *')).to.equal('at midnight');
   });
 
   it('both builds agree with the source implementation', async function() {
@@ -67,7 +67,7 @@ describe('Built package artifacts:', function() {
 
       expect(en.describe).to.be.a('function');
       expect(en.fallback).to.be.a('function');
-      expect(cjs('*/5 * * * *', {lang: en})).to.equal('every five minutes');
+      expect(cjs('*/5 * * * *', {lang: en})).to.equal('every 5 minutes');
     });
 
   it('ESM language build exposes the module as the default export',
@@ -76,7 +76,7 @@ describe('Built package artifacts:', function() {
       const en = (await import('../../dist/lang/en.js')).default;
 
       expect(esm('0 9 * * MON', {lang: en}))
-        .to.equal('every Monday at 9 a.m.');
+        .to.equal('at 9 a.m. on Mondays');
     });
 
   it('every shipped language has both built artifacts', function() {
@@ -121,23 +121,23 @@ describe('Built package artifacts:', function() {
     }
 
     it('prints an English description by default', function() {
-      expect(cli('*/5 * * * *')).to.equal('Runs every five minutes.');
+      expect(cli('*/5 * * * *')).to.equal('Runs every 5 minutes.');
     });
 
     it('prints the full sentence with --lang <code>', function() {
       expect(cli('--lang', 'en', '0 0 * * *'))
-        .to.equal('Runs every day at midnight.');
+        .to.equal('Runs at midnight.');
     });
 
     it('accepts the --lang=<code> form', function() {
       expect(cli('--lang=en', '0 9 * * MON'))
-        .to.equal('Runs every Monday at 9 a.m.');
+        .to.equal('Runs at 9 a.m. on Mondays.');
     });
 
     it('prints the bare fragment with --fragment', function() {
-      expect(cli('--fragment', '*/5 * * * *')).to.equal('every five minutes');
+      expect(cli('--fragment', '*/5 * * * *')).to.equal('every 5 minutes');
       expect(cli('--lang', 'en', '--fragment', '0 0 * * *'))
-        .to.equal('every day at midnight');
+        .to.equal('at midnight');
     });
 
     it('errors clearly on an unknown language', function() {

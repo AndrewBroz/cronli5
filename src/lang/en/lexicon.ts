@@ -6,7 +6,7 @@
 // sound; phrasings are chosen by how many things they name, which the
 // renderer counts for itself.
 
-import type {Spoken} from '../../../core/select.js';
+import type {Spoken} from '../../core/select.js';
 
 function spoken(text: string, length: number): Spoken {
   return {length, text};

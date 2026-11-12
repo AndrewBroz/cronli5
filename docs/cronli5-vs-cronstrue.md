@@ -72,38 +72,38 @@ a specific schedule, or an advanced operator.
 | Pattern | cronli5 (sentence form) | cRonstrue 3.14.0 |
 | --- | --- | --- |
 | `* * * * *` | Runs every minute. | Every minute |
-| `*/5 * * * *` | Runs every five minutes. | Every 5 minutes |
+| `*/5 * * * *` | Runs every 5 minutes. | Every 5 minutes |
 | `*/15 * * * *` | Runs every 15 minutes. | Every 15 minutes |
-| `0 */6 * * *` | Runs every six hours. | On the hour, every 6 hours |
-| `0 9 * * *` | Runs every day at 9 a.m. | At 09:00 AM |
-| `0 12 * * *` | Runs every day at noon. | At 12:00 PM |
-| `0 0 * * *` | Runs every day at midnight. | At 12:00 AM |
+| `0 */6 * * *` | Runs every 6 hours. | On the hour, every 6 hours |
+| `0 9 * * *` | Runs at 9 a.m. | At 09:00 AM |
+| `0 12 * * *` | Runs at noon. | At 12:00 PM |
+| `0 0 * * *` | Runs at midnight. | At 12:00 AM |
 
 ### Medium &mdash; a specific schedule
 
 | Pattern | cronli5 (sentence form) | cRonstrue 3.14.0 |
 | --- | --- | --- |
-| `30 9 * * MON-FRI` | Runs every Monday through Friday at 9:30 a.m. | At 09:30 AM, Monday through Friday |
+| `30 9 * * MON-FRI` | Runs at 9:30 a.m. on weekdays. | At 09:30 AM, Monday through Friday |
 | `0 9-17 * * *` | Runs every hour from 9 a.m. through 5 p.m. | Every hour, between 09:00 AM and 05:00 PM |
-| `0 9,17 * * *` | Runs every day at 9 a.m. and 5 p.m. | At 09:00 AM and 05:00 PM |
-| `0 0 1,15 * *` | Runs on the 1st and 15th at midnight. | At 12:00 AM, on day 1 and 15 of the month |
-| `0 9 * * 1` | Runs every Monday at 9 a.m. | At 09:00 AM, only on Monday |
-| `0 12 * * SAT` | Runs every Saturday at noon. | At 12:00 PM, only on Saturday |
-| `0 0 1 1 *` | Runs on January 1 at midnight. | At 12:00 AM, on day 1 of the month, only in January |
-| `0-29 * * * *` | Runs every minute from 0 through 29 past the hour. | Minutes 0 through 29 past the hour |
+| `0 9,17 * * *` | Runs at 9 a.m. and 5 p.m. | At 09:00 AM and 05:00 PM |
+| `0 0 1,15 * *` | Runs at midnight on the 1st and 15th. | At 12:00 AM, on day 1 and 15 of the month |
+| `0 9 * * 1` | Runs at 9 a.m. on Mondays. | At 09:00 AM, only on Monday |
+| `0 12 * * SAT` | Runs at noon on Saturdays. | At 12:00 PM, only on Saturday |
+| `0 0 1 1 *` | Runs at midnight on January 1. | At 12:00 AM, on day 1 of the month, only in January |
+| `0-29 * * * *` | Runs every minute for the first 30 minutes of every hour. | Minutes 0 through 29 past the hour |
 
 ### Complex &mdash; advanced operators and unions
 
 | Pattern | cronli5 (sentence form) | cRonstrue 3.14.0 |
 | --- | --- | --- |
-| `0 0 1,15 * 3` | Runs at midnight whenever the day is the 1st, the 15th, or a Wednesday. | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday |
-| `0 0 9-17/2 * *` | Runs on the 9th, 11th, 13th, 15th, and 17th at midnight. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
-| `23 0-20/2 * * *` | Runs 23 minutes past the hour, every two hours from midnight through 8 p.m. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
-| `0 0 * * 5L` | Runs on the last Friday of the month at midnight. | At 12:00 AM, on the last Friday of the month |
-| `5,10 30 9 * * MON` | Runs at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| `59 23 31 12 5` | Runs in December, at 11:59 p.m. whenever the day is the 31st or a Friday. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
-| `30 9 15W 6 *` | Runs on the weekday nearest the 15th in June at 9:30 a.m. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
-| `15 30 9 * * MON` | Runs every Monday at 9:30:15 a.m. | At 09:30:15 AM, only on Monday |
+| `0 0 1,15 * 3` | Runs at midnight on the 1st and 15th as well as on Wednesdays. | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday |
+| `0 0 9-17/2 * *` | Runs at midnight every 2 days from the 9th through the 17th. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
+| `23 0-20/2 * * *` | Runs every 2 hours from 12:23 a.m. except at 10:23 p.m. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
+| `0 0 * * 5L` | Runs at midnight on the last Friday of the month. | At 12:00 AM, on the last Friday of the month |
+| `5,10 30 9 * * MON` | Runs at 5 and 10 seconds past the minute, at 9:30 a.m. on Mondays. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| `59 23 31 12 5` | Runs at 11:59 p.m. on December 31 as well as on Fridays in December. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
+| `30 9 15W 6 *` | Runs at 9:30 a.m. on the weekday nearest June 15. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
+| `15 30 9 * * MON` | Runs at 9:30:15 a.m. on Mondays. | At 09:30:15 AM, only on Monday |
 <!-- END GENERATED: comparison -->
 
 ## Migrating

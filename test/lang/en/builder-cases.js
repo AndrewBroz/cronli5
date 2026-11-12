@@ -6,7 +6,7 @@
 // that no paradigm row does. A row's third element is the options it is
 // rendered with.
 
-import english from '../../../src/lang/en/next/index.js';
+import english from '../../../src/lang/en/index.js';
 import {checkRows} from '../../paradigms/check.js';
 
 const rows = [

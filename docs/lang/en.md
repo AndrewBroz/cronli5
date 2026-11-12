@@ -6,7 +6,7 @@ English is cronli5's default language — no import or option needed:
 import cronli5 from 'cronli5';
 
 cronli5('30 9 * * MON-FRI');
-// 'every Monday through Friday at 9:30 a.m.'
+// 'at 9:30 a.m. on weekdays'
 ```
 
 It is also an ordinary language module like any other, importable from
@@ -34,12 +34,12 @@ with the `dialect` option:
 
 | Dialect | Anchor | Sample |
 | --- | --- | --- |
-| `'us'` (default) | Chicago Manual of Style | every Monday through Friday at 9:30 a.m. |
-| `'gb'` | Guardian style guide | every Monday to Friday at 9.30am |
-| `'house'` | cronli5's legacy voice | every Monday - Friday at 9:30 AM |
+| `'us'` (default) | Chicago Manual of Style | at 9:30 a.m. on weekdays |
+| `'gb'` | Guardian style guide | at 9.30am on weekdays |
+| `'house'` | cronli5's legacy voice | at 9:30 AM on weekdays |
 
 A custom object merges over the US defaults
-(`{dialect: {through: ' until '}}`). The full style-field reference lives
+(`{dialect: {through: 'to'}}`). The full style-field reference lives
 in [dialects.md](../dialects.md).
 
 ## Conventions worth knowing
@@ -70,18 +70,18 @@ many more rows lives in
 <!-- BEGIN GENERATED: comparison -->
 | Pattern | cronli5 (en) | cRonstrue 3.14.0 (en locale) |
 | --- | --- | --- |
-| `*/5 * * * *` | every five minutes | Every 5 minutes |
-| `0 0 * * *` | every day at midnight | At 12:00 AM |
-| `30 9 * * MON-FRI` | every Monday through Friday at 9:30 a.m. | At 09:30 AM, Monday through Friday |
-| `0 9,17 * * *` | every day at 9 a.m. and 5 p.m. | At 09:00 AM and 05:00 PM |
+| `*/5 * * * *` | every 5 minutes | Every 5 minutes |
+| `0 0 * * *` | at midnight | At 12:00 AM |
+| `30 9 * * MON-FRI` | at 9:30 a.m. on weekdays | At 09:30 AM, Monday through Friday |
+| `0 9,17 * * *` | at 9 a.m. and 5 p.m. | At 09:00 AM and 05:00 PM |
 | `0 22-2 * * *` | every hour from 10 p.m. through 2 a.m. | Every hour, between 10:00 PM and 02:00 AM |
-| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5 p.m. | Every 15 minutes, between 09:00 AM and 05:59 PM |
-| `0 0 1,15 * *` | on the 1st and 15th at midnight | At 12:00 AM, on day 1 and 15 of the month |
-| `0 12 1 1 *` | on January 1 at noon | At 12:00 PM, on day 1 of the month, only in January |
-| `0 12 * 11-2 *` | every day in November through February at noon | At 12:00 PM, November through February |
-| `0 0 * * 5L` | on the last Friday of the month at midnight | At 12:00 AM, on the last Friday of the month |
-| `5,10 30 9 * * MON` | at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| `1/1 * * * *` | every minute from 1 through 59 past the hour | Every 1 minutes, starting at 1 minutes past the hour |
+| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. until 6 p.m. | Every 15 minutes, between 09:00 AM and 05:59 PM |
+| `0 0 1,15 * *` | at midnight on the 1st and 15th | At 12:00 AM, on day 1 and 15 of the month |
+| `0 12 1 1 *` | at noon on January 1 | At 12:00 PM, on day 1 of the month, only in January |
+| `0 12 * 11-2 *` | at noon from November through February | At 12:00 PM, November through February |
+| `0 0 * * 5L` | at midnight on the last Friday of the month | At 12:00 AM, on the last Friday of the month |
+| `5,10 30 9 * * MON` | at 5 and 10 seconds past the minute, at 9:30 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| `1/1 * * * *` | every minute except at 0 minutes past every hour | Every 1 minutes, starting at 1 minutes past the hour |
 <!-- END GENERATED: comparison -->
 
 ## Internals

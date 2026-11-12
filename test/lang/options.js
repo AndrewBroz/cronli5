@@ -90,6 +90,23 @@ describe('Options × languages smoke:', function() {
         expect(cronli5('61 * * * *', {lang, lenient: true}))
           .to.equal(fallback);
       });
+
+      // Lenient means "invalid input returns the fallback"; it must not
+      // also hide defects. A renderer that throws on a valid pattern is a
+      // bug, and masking it as the fallback would let it ship unseen.
+      it('lenient does not mask a failing renderer', function() {
+        const broken = {
+          ...lang,
+          describe: function describeBroken() {
+            throw new Error('renderer defect');
+          }
+        };
+
+        expect(cronli5.bind(null, '30 9 * * *',
+          {lang: broken, lenient: true})).to.throw('renderer defect');
+        expect(cronli5('not cron', {lang: broken, lenient: true}))
+          .to.equal(lang.fallback(lang.options()));
+      });
     });
   });
 });

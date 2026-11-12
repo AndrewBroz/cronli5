@@ -6,7 +6,7 @@
 // default; pass --lang <code> to choose a built language module.
 //
 //   cronli5 '* * * * *'                → Runs every minute.
-//   cronli5 --fragment '0 0 * * *'     → every day at midnight
+//   cronli5 --fragment '0 0 * * *'     → at midnight
 //
 // It runs against the built dist/, so a plain `node` invocation works as
 // published; in a source checkout, run `npm run build` first.

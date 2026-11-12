@@ -11,18 +11,18 @@
 //     use AM/PM instead of zero-padded 24-hour time
 // - dialect ('us' | 'gb' | 'house' | object):
 //     'us' (default) follows the Chicago Manual of Style; 'gb' follows the
-//     Guardian style guide; 'house' is the legacy cronli5 voice; an object
-//     defines a custom style over the US defaults (see docs/dialects.md).
-//     'uk' is a deprecated alias for 'gb'
+//     Guardian style guide; 'house' is Chicago with AM/PM and ordinal
+//     dates; an object defines a custom style over the US defaults (see
+//     docs/dialects.md)
 // - lenient (boolean):
 //     never throw; invalid input returns a fallback description
 // - sentence (boolean):
-//     return a complete sentence ("Runs every day at midnight.") instead of
+//     return a complete sentence ("Runs at midnight.") instead of
 //     the embeddable fragment; wraps a schedule and @reboot, not the fallback
 // - seconds (boolean):
 //     always treat the first value in a string or array as a second
 // - short (boolean):
-//     use shorthand, numeric representations, and hyphenated ranges
+//     abbreviate weekday and month names
 // - years (boolean):
 //     read the trailing field of a six-field pattern as a year (seven-field
 //     patterns always parse seconds first and year last)

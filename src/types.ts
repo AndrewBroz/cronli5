@@ -17,12 +17,6 @@ export interface Cronli5Dialect {
   /** Day-first dates (`'1 January'`) instead of month-first. */
   dayFirst?: boolean;
 
-  /**
-   * Spanish only: append an `h` after a 24-hour time (`'a las 14.30 h'`).
-   * Off by default; opt in for an Argentine/formal style.
-   */
-  hSuffix?: boolean;
-
   /** The word for exactly 12:00 p.m., e.g. `'noon'` or `'midday'`. */
   midday?: string;
 
@@ -41,7 +35,10 @@ export interface Cronli5Dialect {
   /** Use a serial comma in lists of three or more. */
   serialComma?: boolean;
 
-  /** Range connective, e.g. `' through '`, `' to '`, or `' - '`. */
+  /**
+   * The word joining the two ends of an inclusive range, e.g. `'through'`
+   * or `'to'`. Surrounding spaces are trimmed.
+   */
   through?: string;
 }
 
@@ -73,16 +70,12 @@ export interface Cronli5Options {
   ampm?: boolean;
 
   /**
-   * Dialect, **scoped to the chosen language**. English: `'us'` (default,
-   * Chicago Manual of Style), `'gb'` (Guardian style guide), `'house'`
-   * (cronli5's legacy voice on a Chicago base); `'uk'` is a deprecated alias
-   * for `'gb'`. Spanish: `'es-ES'` (RAE/default), `'es-MX'` (12-hour),
-   * `'es-US'` (12-hour, English AM/PM). A `Cronli5Dialect` object defines a
-   * custom style. A name another language owns falls back to the current
-   * language's default.
+   * The English style: `'us'` (default, Chicago Manual of Style), `'gb'`
+   * (Guardian style guide), or `'house'` (Chicago with `AM`/`PM` and
+   * ordinal dates). A `Cronli5Dialect` object defines a custom style over
+   * the US one. An unknown name is treated as `'us'`.
    */
-  dialect?: 'es-ES' | 'es-MX' | 'es-US'
-    | 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect;
+  dialect?: 'gb' | 'house' | 'us' | Cronli5Dialect;
 
   /**
    * A language module (e.g. `import en from 'cronli5/lang/en'`). Defaults
@@ -111,16 +104,16 @@ export interface Cronli5Options {
   quartz?: boolean;
 
   /**
-   * Return a complete standalone sentence (`'Runs every day at midnight.'`)
-   * instead of the embeddable fragment (`'every day at midnight'`). Each
+   * Return a complete standalone sentence (`'Runs at midnight.'`)
+   * instead of the embeddable fragment (`'at midnight'`). Each
    * language supplies its own wrapping. Wraps a schedule and `@reboot`, but
    * not the lenient `fallback`. Defaults to `false`.
    */
   sentence?: boolean;
 
   /**
-   * Compact output: abbreviated month/weekday names and hyphenated ranges
-   * ("Mon-Fri", "9 a.m.-5:45 p.m."). Defaults to `false`.
+   * Abbreviated weekday and month names (`'Mon'`, `'Jun'`). Defaults to
+   * `false`.
    */
   short?: boolean;
 
@@ -153,14 +146,14 @@ export interface Cronli5 {
 
   /**
    * Describe a cron pattern as a capitalized standalone sentence
-   * (`'Runs every day at midnight.'`). Sugar for
+   * (`'Runs at midnight.'`). Sugar for
    * `{...options, sentence: true}`.
    */
   sentence(cronPattern: CronPattern, options?: Cronli5Options): string;
 
   /**
    * Describe a cron pattern as a lowercase embeddable fragment
-   * (`'every day at midnight'`) — the default form. Sugar for
+   * (`'at midnight'`) — the default form. Sugar for
    * `{...options, sentence: false}`.
    */
   fragment(cronPattern: CronPattern, options?: Cronli5Options): string;

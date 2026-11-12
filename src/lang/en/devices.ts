@@ -4,13 +4,13 @@
 // voice can say is rendered, and the phrase that names the fewest things
 // wins.
 
-import type {Field, SetDescription} from '../../../core/schedule.js';
+import type {Field, SetDescription} from '../../core/schedule.js';
 import type {Moment} from './idioms.js';
-import type {Spoken} from '../../../core/select.js';
+import type {Spoken} from '../../core/select.js';
 import type {EnglishOptions} from './options.js';
-import {denote} from '../../../core/describe-set.js';
-import {fieldSpecs} from '../../../core/specs.js';
-import {shortestSpoken} from '../../../core/select.js';
+import {denote} from '../../core/describe-set.js';
+import {fieldSpecs} from '../../core/specs.js';
+import {shortestSpoken} from '../../core/select.js';
 import {idioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {

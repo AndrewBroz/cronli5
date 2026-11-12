@@ -4,14 +4,14 @@
 
 import type {
   ClockTime, ScheduleFacts, SetDescription
-} from '../../../core/schedule.js';
-import type {Spoken} from '../../../core/select.js';
+} from '../../core/schedule.js';
+import type {Spoken} from '../../core/select.js';
 import type {EnglishOptions} from './options.js';
 import type {Choice, Phrase} from './devices.js';
 import type {Idiom} from './idioms.js';
 import type {Parts} from './frame.js';
-import {clockTimes} from '../../../core/fusions.js';
-import {shortestSpoken} from '../../../core/select.js';
+import {clockTimes} from '../../core/fusions.js';
+import {shortestSpoken} from '../../core/select.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
   hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,

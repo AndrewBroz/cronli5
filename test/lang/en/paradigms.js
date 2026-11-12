@@ -1,6 +1,7 @@
 import chai from 'chai';
 import {existsSync} from 'node:fs';
 import cronli5 from '../../../src/cronli5.js';
+import english from '../../../src/lang/en/index.js';
 import {checkRows, oracleProblems} from '../../paradigms/check.js';
 import {heldOutPatterns, visiblePatterns} from '../../paradigms/grid.js';
 import {defaultParts, sets} from './paradigms/options.js';
@@ -14,18 +15,6 @@ const {expect} = chai;
 const HELD_OUT = new URL('./paradigms/held-out.js', import.meta.url);
 const heldOut = existsSync(HELD_OUT) ?
   (await import('./paradigms/held-out.js')).rows :
-  null;
-
-// The renderer under test, once one has been built from the answers.
-const RENDERER = ['../../../src/lang/en/next/index.ts',
-  '../../../src/lang/en/lexicon.ts'].map(function toUrl(path) {
-  return new URL(path, import.meta.url);
-});
-const rendererPath = existsSync(RENDERER[0]) ?
-  '../../../src/lang/en/next/index.js' :
-  '../../../src/lang/en/index.js';
-const english = existsSync(RENDERER[0]) || existsSync(RENDERER[1]) ?
-  (await import(rendererPath)).default :
   null;
 
 function asPatterns(patterns) {
@@ -85,14 +74,6 @@ describe('English paradigms:', function() {
         });
       });
   });
-
-  if (!english) {
-    it('has no renderer to hold to them yet', function() {
-      expect(english).to.equal(null);
-    });
-
-    return;
-  }
 
   describe('visible', function() {
     checkRows(english, visible);

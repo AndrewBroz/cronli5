@@ -218,43 +218,11 @@ export interface Schedule<Extra extends {kind: string} = never>
 }
 
 /**
- * A resolved style table: pure typography and connectives, never grammar.
- * Words: `am`/`pm`, `midday`/`midnight`; connectives: `through` (inclusive
- * span), `until` (exclusive close); layout: `closeUp`, `sep`, `serialComma`,
- * `dayFirst`, `ordinals`; close policy: `inclusiveThrough` (whether
- * `through` includes the whole named hour — see the English rangeWindow
- * rules). No field selects a sentence frame: grammar is universal, chosen by
- * the composer, never by dialect.
- */
-export interface DialectStyle {
-  am: string;
-  closeUp: boolean;
-  dayFirst: boolean;
-  midday: string;
-  midnight: string;
-  ordinals: boolean;
-  pm: string;
-  // Whether the `through` connective includes the whole named hour ("through
-  // 5 p.m." covers a 5:45 fire), letting a discontinuous multi-hour close
-  // name the bare hour. An exclusive-reading connective ("to", "-") must
-  // close on the last fire instead, or it understates the run.
-  inclusiveThrough: boolean;
-  sep: string;
-  serialComma: boolean;
-  through: string;
-  // The connective for the up-to-but-not-including close of a continuous
-  // run ("from 9 a.m. until 6 p.m."): exclusive, unlike `through`, which
-  // names an included bound.
-  until: string;
-}
-
-/**
  * Options after a language module's `options()` has normalized them. `Style`
- * is the language's specific style options. English's `DialectStyle` has
- * `serialComma`/`through`/`ordinals`; Spanish's has a meridiem form and an
- * `h` suffix.
+ * is the language's own style table (English's is `EnglishStyle`, in
+ * `lang/en/options.ts`); the core never reads it.
  */
-export interface NormalizedOptions<Style = DialectStyle> {
+export interface NormalizedOptions<Style = unknown> {
   ampm: boolean;
   lenient: boolean;
   quartz: boolean;
@@ -270,7 +238,7 @@ export interface NormalizedOptions<Style = DialectStyle> {
  * `plan` override emits and its `describe` renders.
  */
 export interface Language<
-  Style = DialectStyle,
+  Style = unknown,
   Extra extends {kind: string} = never
 > {
   describe(schedule: Schedule<Extra>, opts: NormalizedOptions<Style>): string;

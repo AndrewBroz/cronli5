@@ -29,7 +29,6 @@ export {prepare};
 export * from './errors.js';
 export * from './specs.js';
 export * from './util.js';
-export * from './weekday.js';
 export * from './cadence.js';
 export * from './shapes.js';
 export * from './analyze.js';

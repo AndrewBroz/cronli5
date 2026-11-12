@@ -2,8 +2,8 @@
 // names, and a style table of word-level conventions. None of them moves
 // a part of the sentence.
 
-import type {Cronli5Dialect, Cronli5Options} from '../../../types.js';
-import type {NormalizedOptions} from '../../../core/schedule.js';
+import type {Cronli5Dialect, Cronli5Options} from '../../types.js';
+import type {NormalizedOptions} from '../../core/schedule.js';
 
 /** The word-level conventions of one house style. */
 export interface EnglishStyle {

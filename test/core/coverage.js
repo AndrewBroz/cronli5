@@ -1,142 +1,53 @@
 import chai from 'chai';
-import {readFileSync, readdirSync, statSync, existsSync} from 'node:fs';
-import {join} from 'node:path';
-import {corpusCell, coreCells} from '../../scripts/core-set.mjs';
+import {readFileSync} from 'node:fs';
+import {Cronli5InputError, analyze, prepare} from '../../src/core/index.js';
+import {coreSetSeeds, optionsFor}
+  from '../../tooling/scripts/edit-diff.mjs';
 
 const {expect} = chai;
 
-// The fixed core pattern set (scripts/core-set.mjs) is the contract every
-// language corpus must cover. This gate enforces it:
-//   - a NEW language at beta/stable must cover ALL core cells;
-//   - the existing languages carry a documented coverage debt (their corpora
-//     predate the core set), grandfathered to a baseline they may not regress
-//     below — a ratchet toward full coverage;
-//   - scaffolds are exempt (incomplete by definition).
-// Coverage is measured in language-neutral IR cells, so a language's own
-// representative patterns count — it need not test the exact core strings.
+// The fixed core pattern set (test/core/core-set.json) seeds the continuity
+// and divergence checks. It is a committed, static set; these checks hold
+// it to the core alone: every pattern it carries is one the core accepts
+// and analyzes, and every input it calls invalid is one the core rejects.
 
 const CORE = JSON.parse(readFileSync('test/core/core-set.json', 'utf8'));
-const CELLS = coreCells(CORE);
 
-// Grandfathered debt: minimum core cells each pre-core-set language must keep
-// covering (of CELLS.size total). Raise toward full as corpora are expanded;
-// the goal is to delete this map (every language at full coverage).
-const BASELINE = {en: 76};
-
-// String patterns a language's corpus tests (first quoted token of each entry;
-// array/object-form patterns are a rare minority and not in the core set).
-function corpusPatterns(code) {
-  const found = new Set();
-  const re = /\[\s*'((?:[^'\\]|\\.)*)'/gu;
-
-  function walk(dir) {
-    readdirSync(dir).forEach(function each(name) {
-      const path = join(dir, name);
-
-      if (statSync(path).isDirectory()) {
-        walk(path);
-      }
-      else if (name.endsWith('.js')) {
-        const text = readFileSync(path, 'utf8');
-
-        for (let m = re.exec(text); m !== null; m = re.exec(text)) {
-          if ((/^[\d*/,\- A-Z?LW#]+$/u).test(m[1]) &&
-              (/[\d*]/u).test(m[1])) {
-            found.add(m[1]);
-          }
-        }
-      }
-    });
-  }
-
-  walk(join('test/lang', code));
-
-  return [...found];
+function analyzed(pattern, options) {
+  return analyze(prepare(pattern, {
+    lenient: false, quartz: false, seconds: false, years: false, ...options
+  }));
 }
 
-function coveredCells(code) {
-  const covered = new Set();
-
-  corpusPatterns(code).forEach(function hit(pattern) {
-    const cell = corpusCell(pattern);
-
-    if (cell && CELLS.has(cell)) {
-      covered.add(cell);
-    }
+describe('Core pattern set:', function() {
+  it('names each pattern once', function() {
+    expect(new Set(CORE.patterns).size).to.equal(CORE.patterns.length);
+    expect(CORE.patterns).to.have.length(CORE.cells);
   });
 
-  return covered;
-}
-
-describe('Core pattern-set coverage:', function() {
-  // Enumerate shipped languages — those carrying a status.json marker — not
-  // every directory on disk. A language is built incrementally (notes ->
-  // corpus -> renderer), so src/lang/<code>/ briefly exists with only notes.md
-  // and no status.json; such an in-progress dir is not yet shipped and has no
-  // corpus to cover, so it is skipped. A dir that ships (has status.json) is
-  // still fully enforced below.
-  const codes = readdirSync('src/lang', {withFileTypes: true})
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .filter((code) => existsSync(join('src/lang', code, 'status.json')));
-
-  codes.forEach(function each(code) {
-    const statusPath = join('src/lang', code, 'status.json');
-    const status = JSON.parse(readFileSync(statusPath, 'utf8')).status;
-
-    if (status === 'scaffold') {
-      it(code + ' is a scaffold — exempt from the core gate');
-
-      return;
-    }
-
-    it(code + ' tests @reboot and the lenient fallback', function() {
-      const dir = join('test/lang', code);
-      const text = readdirSync(dir, {recursive: true})
-        .filter((name) => String(name).endsWith('.js'))
-        .map((name) => readFileSync(join(dir, String(name)), 'utf8'))
-        .join('\n');
-
-      expect(text, code + ' must test @reboot').to.include('@reboot');
-      expect(text, code + ' must test lenient fallback')
-        .to.match(/lenient|unrecogni/u);
+  it('holds only patterns the core analyzes', function() {
+    coreSetSeeds().forEach(function each(seed) {
+      expect(analyzed(seed.pattern, seed.options).analyses, seed.pattern)
+        .to.be.an('object');
     });
+  });
 
-    if (!(code in BASELINE)) {
-      it(code + ' (new) covers every core cell', function() {
-        const missing = CELLS.size - coveredCells(code).size;
-
-        expect(missing, code + ' is missing ' + missing + ' core cells')
-          .to.equal(0);
+  it('holds only spanning, value-class and variant patterns the core ' +
+    'analyzes', function() {
+    CORE.spanning
+      .concat(CORE.valueClasses.map((entry) => entry.pattern))
+      .concat(CORE.variants.map((entry) => entry.pattern))
+      .forEach(function each(pattern) {
+        expect(analyzed(pattern, optionsFor(pattern)).analyses, pattern)
+          .to.be.an('object');
       });
+  });
 
-      it(code + ' (new) tests every value class, variant, and macro',
-        function() {
-          const tested = new Set(corpusPatterns(code));
-          const explicit = CORE.valueClasses.concat(CORE.variants)
-            .map((entry) => entry.pattern)
-            .filter((pattern) => !tested.has(pattern));
-
-          expect(explicit, 'untested: ' + explicit.join('; '))
-            .to.have.length(0);
-
-          const dir = join('test/lang', code);
-          const text = readdirSync(dir, {recursive: true})
-            .filter((name) => String(name).endsWith('.js'))
-            .map((name) => readFileSync(join(dir, String(name)), 'utf8'))
-            .join('\n');
-
-          CORE.macros.forEach(function macro(name) {
-            expect(text, code + ' must test ' + name).to.include(name);
-          });
-        });
-
-      return;
-    }
-
-    it(code + ' holds its core-coverage baseline (' + BASELINE[code] + ')',
-      function() {
-        expect(coveredCells(code).size).to.be.at.least(BASELINE[code]);
-      });
+  it('holds only invalid inputs the core rejects', function() {
+    CORE.invalid.forEach(function each(input) {
+      expect(function attempt() {
+        analyzed(input);
+      }, input).to.throw(Cronli5InputError);
+    });
   });
 });
