@@ -467,7 +467,7 @@ When a.m. or p.m. is shared and when it is repeated:
   joins each time. "At 9:30:15 a.m."
 * The time is one clock time, and S is continuous (every second, or a
   tiling cadence from 0): a one-minute window. "Every second from 9:00
-  until 9:01 a.m."; "every 6 seconds from midnight through 12:00:54 a.m." If S
+  until 9:01 a.m."; "every 6 seconds from midnight until 12:01 a.m." If S
   is a run, the window is to the second: "every second from 9:00:00 until
   9:00:10 a.m." If S is a cadence with both ends named, so are the ends of
   the window: "every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m."
