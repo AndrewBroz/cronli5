@@ -141,7 +141,7 @@ const rows = [
   // an independent review.
   ['5-10/60 0 9 * * *', 'at 9:00:05 a.m.'],
   ['0 0,1,22,23 * * 1', 'at midnight, 1 a.m., 10 p.m., and 11 p.m. on Mondays'],
-  ['0 0 30-2 6 *', 'at midnight on June 1, 2, and 30'],
+  ['0 0 30-2 6 *', 'at midnight on June 1, 2, 30, and 31'],
   ['0 0 * 11-2 * 2030',
     'at midnight in January, February, November, and December in 2030',
     {years: true}],
