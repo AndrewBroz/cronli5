@@ -9,8 +9,7 @@
 const rows = [
   // clock / second — context `0 9 * * *`
   ['* 0 9 * * *', 'every second from 9:00 until 9:01 a.m.'],
-  ['*/6 0 9 * * *',
-    'every 6 seconds from 9:00:00 a.m. through 9:00:54 a.m.'],
+  ['*/6 0 9 * * *', 'every 6 seconds from 9:00 until 9:01 a.m.'],
   ['5/10 0 9 * * *',
     'every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m.'],
 
@@ -117,7 +116,7 @@ const rows = [
   // monthly / second — context `0 0 1 * *`
   ['* 0 0 1 * *', 'every second from midnight until 12:01 a.m. on the 1st'],
   ['*/6 0 0 1 * *',
-    'every 6 seconds from midnight through 12:00:54 a.m. on the 1st'],
+    'every 6 seconds from midnight until 12:01 a.m. on the 1st'],
   ['5/10 0 0 1 * *',
     'every 10 seconds from 12:00:05 a.m. through 12:00:55 a.m. on the ' +
     '1st'],

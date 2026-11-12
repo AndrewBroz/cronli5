@@ -121,7 +121,7 @@ redundancy: after "every second" or "every N seconds", a following "every
 minute" is not said.
 
 * `30 0 9 * * *` — "at 9:00:30 a.m."
-* `*/6 0 9 * * *` — "every 6 seconds from 9:00:00 a.m. through 9:00:54 a.m."
+* `*/6 0 9 * * *` — "every 6 seconds from 9:00 until 9:01 a.m."
 * `* 0 9 * * *` — "every second from 9:00 until 9:01 a.m."
 
 2.4 No second order was adopted. All 24 grid families were written under
@@ -201,14 +201,16 @@ a.m. and 5 p.m. hours". "Every hour" and "every hour from 9 a.m. through 5
 p.m." follow it unchanged, and a stray hour beside a range is named as an
 hour too: "of every hour from 1 a.m. through 7 a.m. and the 9 a.m. hour".
 
-**A cadence inside a window closes on its last run.** "Every 30 minutes
-from midnight until 6 p.m." leaves it open whether 6:00 itself fires,
-because 6:00 is on the half-hour grid. So a window under "every N minutes"
-or "every N seconds" names its last run with "through": "every 30 minutes
-from midnight through 5:30 p.m."; "every 15 minutes from 10 p.m. through
-5:45 a.m."; "every 6 seconds from 9:00:00 a.m. through 9:00:54 a.m." Under
-"every minute" or "every second" nothing is in doubt and the window keeps
-"until": "every minute from 9 a.m. until 6 p.m."
+**A cadence of minutes inside a window closes on its last run.** "Every 30
+minutes from midnight until 6 p.m." leaves it open whether 6:00 itself
+fires, because 6:00 is on the half-hour grid. So a window under "every N
+minutes" names its last run with "through": "every 30 minutes from
+midnight through 5:30 p.m."; "every 15 minutes from 10 p.m. through 5:45
+a.m." Under "every minute" nothing is in doubt and the window keeps
+"until": "every minute from 9 a.m. until 6 p.m." Seconds always keep
+"until", cadence or not, because the plain form reads better and the
+doubt is a matter of one second: "every 6 seconds from 9:00 until 9:01
+a.m."
 
 3.5 A range that wraps is said from its start through its end, the same
 way: "every hour from 10 p.m. through 2 a.m.", "from November through
@@ -658,8 +660,9 @@ is not said.
 
 8.5 `range-boundary` — A window under "every minute" or "every second"
 closes with "until" at the moment it ends: "every minute from 9 a.m. until
-6 p.m." A window under a cadence closes with "through" on its last run:
-"every 15 minutes from 9 a.m. through 5:45 p.m." Named points close with
+6 p.m." A window under a cadence of minutes closes with "through" on its
+last run: "every 15 minutes from 9 a.m. through 5:45 p.m." Seconds always
+keep "until". Named points close with
 "through" on the last one: "every hour from 9 a.m. through 5 p.m."
 
 8.6 `recurrence-marking` — Plural with "on" for single days and lists

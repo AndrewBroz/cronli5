@@ -11,10 +11,8 @@ const EVEN_HOURS_BUT_8 = '0,2,4,6,10,12,14,16,18,20,22';
 const rows = [
   // clock / second — context `0 9 * * *`
   ['30 0 9 * * *', 'at 9:00:30 a.m.'],
-  ['0,30 0 9 * * *',
-    'every 30 seconds from 9:00:00 a.m. through 9:00:30 a.m.'],
-  ['*/15 0 9 * * *',
-    'every 15 seconds from 9:00:00 a.m. through 9:00:45 a.m.'],
+  ['0,30 0 9 * * *', 'every 30 seconds from 9:00 until 9:01 a.m.'],
+  ['*/15 0 9 * * *', 'every 15 seconds from 9:00 until 9:01 a.m.'],
   ['0-9 0 9 * * *', 'every second from 9:00:00 until 9:00:10 a.m.'],
 
   // clock / minute
@@ -176,9 +174,9 @@ const rows = [
   // monthly / second — context `0 0 1 * *`
   ['30 0 0 1 * *', 'at 12:00:30 a.m. on the 1st'],
   ['0,30 0 0 1 * *',
-    'every 30 seconds from midnight through 12:00:30 a.m. on the 1st'],
+    'every 30 seconds from midnight until 12:01 a.m. on the 1st'],
   ['*/15 0 0 1 * *',
-    'every 15 seconds from midnight through 12:00:45 a.m. on the 1st'],
+    'every 15 seconds from midnight until 12:01 a.m. on the 1st'],
   ['0-9 0 0 1 * *',
     'every second from midnight until 12:00:10 a.m. on the 1st'],
 
