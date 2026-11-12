@@ -1,0 +1,7 @@
+{
+  "name": "Ukrainian",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "rebuilt 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms (tooling/experiments/renderer-process/uk-acceptance.md)",
+  "branchBudget": 110
+}
