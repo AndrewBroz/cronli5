@@ -293,7 +293,11 @@ How it runs (author's call):
   fraction. A mismatch is a finding about the artifacts: something the
   answers or lexicon failed to pin down. It is closed by adding to those
   artifacts and re-running, never by accepting an equivalent string.
-* The pass bar is set after the English build shows what is achievable.
+* The pass bar, set by the English build: every held-out and hard-case
+  row identical, and at least 99% of a wide sweep of one-character
+  neighbours of the core set. English reached 211 of 211 and 99.9% on its
+  second regeneration. The wide sweep matters: the grid rows alone did not
+  separate two builds that disagreed on 11% of it.
 * This replaces the existing clean-room rewrite check, which judged a
   rebuild adversarially against the original instead of by matching output.
 
