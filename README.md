@@ -96,7 +96,7 @@ call the matching convenience method. `cronli5.sentence(...)` and
 `cronli5.fragment(...)` are thin sugar over that option (each forwards all
 other options) and read a little better at the call site:
 ```js
-cronli5('0 0 * * *');                     // 'at midnight'  (fragment, default)
+cronli5('0 0 * * *');                     // 'at midnight every day'  (fragment, default)
 cronli5.fragment('0 0 * * *');            // 'at midnight'  (same as above)
 cronli5.sentence('0 0 * * *');            // 'Runs at midnight.'
 ```
@@ -172,7 +172,7 @@ or otherwise trails the description (`'at 1 p.m. on Fridays in 2030'`).
 
 ```js
 cronli5('0 0 12 1 1 * 2030');  // 'at noon on January 1, 2030'
-cronli5({ hour: 9, year: 2030 }); // 'at 9 a.m. in 2030'
+cronli5({ hour: 9, year: 2030 }); // 'at 9 a.m. every day in 2030'
 ```
 
 ```js
@@ -252,22 +252,22 @@ cronli5('0 9 * * MON');     // 'at 9 a.m. on Mondays'
 
 // Lists
 cronli5('5,10,15 * * * * *'); // 'at 5, 10, and 15 seconds past the minute'
-cronli5('0 9,17 * * *');      // 'at 9 a.m. and 5 p.m.'
+cronli5('0 9,17 * * *');      // 'at 9 a.m. and 5 p.m. every day'
 cronli5('0 0 1,15 * *');      // 'at midnight on the 1st and 15th'
-cronli5('0 12 * 6,12 *');     // 'at noon in June and December'
+cronli5('0 12 * 6,12 *');     // 'at noon every day in June and December'
 
 // Ranges (wrap-around ranges describe overnight and weekend windows)
 cronli5('0-29 * * * *'); // 'every minute for the first 30 minutes of every hour'
-cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m.'
-cronli5('0 0 1-15 * *');  // 'at midnight from the 1st through the 15th'
-cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m.'
+cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m. every day'
+cronli5('0 0 1-15 * *');  // 'at midnight on the 1st through the 15th'
+cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m. every day'
 cronli5('0 0 * * FRI-MON'); // 'at midnight Friday through Monday'
 
 // Compound patterns
-cronli5('0,30 9 * * *');   // 'at 9 a.m. and 9:30 a.m.'
-cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m.'
+cronli5('0,30 9 * * *');   // 'at 9 a.m. and 9:30 a.m. every day'
+cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m. every day'
 cronli5('30 9-17 * * *');
-// 'every hour from 9:30 a.m. through 5:30 p.m.'
+// 'every hour from 9:30 a.m. through 5:30 p.m. every day'
 cronli5('0 12 1 1 *');     // 'at noon on January 1'
 cronli5('0 * 13 * *');     // 'every hour on the 13th'
 

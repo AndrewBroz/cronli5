@@ -37,8 +37,8 @@ describe('Built package artifacts:', function() {
 
     expect(cjs.sentence).to.be.a('function');
     expect(cjs.fragment).to.be.a('function');
-    expect(cjs.sentence('0 0 * * *')).to.equal('Runs at midnight.');
-    expect(cjs.fragment('0 0 * * *')).to.equal('at midnight');
+    expect(cjs.sentence('0 0 * * *')).to.equal('Runs at midnight every day.');
+    expect(cjs.fragment('0 0 * * *')).to.equal('at midnight every day');
     // toString is not clobbered: String() coercion returns the source.
     expect(String(cjs)).to.match(/^function cronli5\b/u);
   });
@@ -48,8 +48,8 @@ describe('Built package artifacts:', function() {
 
     expect(esm.sentence).to.be.a('function');
     expect(esm.fragment).to.be.a('function');
-    expect(esm.sentence('0 0 * * *')).to.equal('Runs at midnight.');
-    expect(esm.fragment('0 0 * * *')).to.equal('at midnight');
+    expect(esm.sentence('0 0 * * *')).to.equal('Runs at midnight every day.');
+    expect(esm.fragment('0 0 * * *')).to.equal('at midnight every day');
   });
 
   it('both builds agree with the source implementation', async function() {
@@ -126,7 +126,7 @@ describe('Built package artifacts:', function() {
 
     it('prints the full sentence with --lang <code>', function() {
       expect(cli('--lang', 'en', '0 0 * * *'))
-        .to.equal('Runs at midnight.');
+        .to.equal('Runs at midnight every day.');
     });
 
     it('accepts the --lang=<code> form', function() {
@@ -137,7 +137,7 @@ describe('Built package artifacts:', function() {
     it('prints the bare fragment with --fragment', function() {
       expect(cli('--fragment', '*/5 * * * *')).to.equal('every 5 minutes');
       expect(cli('--lang', 'en', '--fragment', '0 0 * * *'))
-        .to.equal('at midnight');
+        .to.equal('at midnight every day');
     });
 
     it('errors clearly on an unknown language', function() {

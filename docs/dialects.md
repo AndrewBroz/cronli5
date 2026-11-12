@@ -37,10 +37,10 @@ Side by side:
 <!-- BEGIN GENERATED: dialects -->
 | Pattern | `'us'` | `'gb'` | `'house'` |
 | --- | --- | --- | --- |
-| `0 9,12,17 * * *` | at 9 a.m., noon, and 5 p.m. | at 9am, midday and 5pm | at 9 AM, noon, and 5 PM |
+| `0 9,12,17 * * *` | at 9 a.m., noon, and 5 p.m. every day | at 9am, midday and 5pm every day | at 9 AM, noon, and 5 PM every day |
 | `30 9 * * MON-FRI` | at 9:30 a.m. on weekdays | at 9.30am on weekdays | at 9:30 AM on weekdays |
 | `0 12 1 1 *` | at noon on January 1 | at midday on 1 January | at noon on January 1st |
-| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5:45 p.m. | every 15 minutes from 9am to 5.45pm | every 15 minutes from 9 AM through 5:45 PM |
+| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5:45 p.m. every day | every 15 minutes from 9am to 5.45pm every day | every 15 minutes from 9 AM through 5:45 PM every day |
 | `0 0 12 25 12 * 2030` | at noon on December 25, 2030 | at midday on 25 December 2030 | at noon on December 25th, 2030 |
 <!-- END GENERATED: dialects -->
 
@@ -69,12 +69,12 @@ override:
 
 ```js
 cronli5('0 9-17 * * *', { dialect: { through: 'to' } });
-// 'every hour from 9 a.m. to 5 p.m.'
+// 'every hour from 9 a.m. to 5 p.m. every day'
 
 cronli5('0 9,12,17 * * *', {
   dialect: { am: 'am', closeUp: true, pm: 'pm', serialComma: false }
 });
-// 'at 9am, noon and 5pm'
+// 'at 9am, noon and 5pm every day'
 ```
 
 The full field reference (all optional; defaults shown are the `'us'`
