@@ -3,7 +3,8 @@
 // own the words and frames (docs/i18n-design.md §2.2).
 
 import type {
-  DateArm, DayFacts, Pattern, QuartzDate, QuartzWeekday, Shape, WeekdayArm
+  DateArm, DayFacts, Pattern, QuartzDate, QuartzWeekday, SetDescription,
+  Shape, WeekdayArm
 } from './schedule.js';
 import {fieldSpecs} from './specs.js';
 import {toFieldNumber} from './util.js';
@@ -60,12 +61,22 @@ function weekdayArm(field: string, shape: Shape): WeekdayArm | null {
     {kind: 'values'};
 }
 
-// The day facts for a pattern: the union flag plus each arm.
-function dayFacts(pattern: Pattern,
-  shapes: Record<'date' | 'weekday', Shape>): DayFacts {
+// Whether a day field narrows the days at all: a Quartz form does, and a
+// plain set does unless it covers every value, however that was written.
+function restricts(candidates: SetDescription[] | null): boolean {
+  return candidates === null || candidates[0].kind !== 'all';
+}
+
+// The day facts for a pattern: each arm, and whether both narrow the days
+// (cron then fires when either matches).
+function dayFacts(
+  pattern: Pattern,
+  shapes: Record<'date' | 'weekday', Shape>,
+  candidates: Record<'date' | 'weekday', SetDescription[] | null>
+): DayFacts {
   return {
     date: dateArm(pattern.date, shapes.date),
-    union: pattern.date !== '*' && pattern.weekday !== '*',
+    union: restricts(candidates.date) && restricts(candidates.weekday),
     weekday: weekdayArm(pattern.weekday, shapes.weekday)
   };
 }

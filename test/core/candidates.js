@@ -58,6 +58,31 @@ describe('analyses.candidates:', function() {
   });
 });
 
+describe('facts that follow the values, not the spelling:', function() {
+  function facts(pattern, options) {
+    const opts = {quartz: false, seconds: false, years: false, ...options};
+
+    return analyze(prepare(pattern, opts)).analyses;
+  }
+
+  it('finds a single second however it is written', function() {
+    expect(facts('5 0 9 * * *').clockSecond).to.equal(5);
+    expect(facts('5-10/60 0 9 * * *').clockSecond).to.equal(5);
+    expect(facts('5-9/5 0 9 * * *').clockSecond).to.equal(5);
+    expect(typeof facts('0 0 9 * * *').clockSecond).to.equal('undefined');
+    expect(typeof facts('5,10 0 9 * * *').clockSecond).to.equal('undefined');
+  });
+
+  it('calls it a union only when both day fields are really restricted',
+    function() {
+      expect(facts('0 0 1 * 1').day.union).to.equal(true);
+      expect(facts('0 0 1 * 0-3,4-6').day.union).to.equal(false);
+      expect(facts('0 0 1-15,16-31 * 1').day.union).to.equal(false);
+      expect(facts('0 0 L * 1').day.union).to.equal(true);
+      expect(facts('0 0 1 * *').day.union).to.equal(false);
+    });
+});
+
 describe('shortestSpoken:', function() {
   it('picks the smallest length and the earliest on a tie', function() {
     const phrases = [

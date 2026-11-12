@@ -12,13 +12,16 @@ import {dayFacts} from './day.js';
 import {describeSet} from './describe-set.js';
 import {enumerateFires, includes} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
-import {isSingleValue} from './shapes.js';
 
-// A single specific non-zero second to fold into a clock time (e.g. "9:00:15
-// AM"), or undefined when the second is zero, a wildcard, or non-discrete.
-function clockSecond(secondField: string): number | undefined {
-  if (isSingleValue(secondField) && secondField !== '0') {
-    return +secondField;
+// The pattern's one second, when it fires on exactly one second of the
+// minute and that second is not zero; undefined otherwise. Read from the
+// values the field fires on, so `5`, `5-10/60` and `5-9/5` all agree.
+function clockSecond(seconds: SetDescription[] | null): number | undefined {
+  const named = seconds && seconds[seconds.length - 1];
+
+  if (named && named.kind === 'values' && named.values.length === 1 &&
+      named.values[0] !== 0) {
+    return named.values[0];
   }
 }
 
@@ -90,8 +93,8 @@ function analyze(pattern: Pattern): Schedule {
   return {
     analyses: {
       candidates,
-      clockSecond: clockSecond(pattern.second),
-      day: dayFacts(pattern, shapes)
+      clockSecond: clockSecond(candidates.second),
+      day: dayFacts(pattern, shapes, candidates)
     },
     pattern,
     shapes

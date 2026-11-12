@@ -29,7 +29,6 @@ export {prepare};
 export * from './errors.js';
 export * from './specs.js';
 export * from './util.js';
-export * from './shapes.js';
 export * from './analyze.js';
 export * from './describe-set.js';
 export * from './select.js';
