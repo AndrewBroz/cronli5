@@ -479,7 +479,7 @@ When a.m. or p.m. is shared and when it is repeated:
   5 p.m.", "every 15 seconds for one minute every 15 minutes".
 * Otherwise S is anchored, like minutes: its phrase, "past the minute" (or
   "of the minute" after "the first N seconds"), a comma, then the rest.
-  "At 15 and 45 seconds past the minute, at 9:30 a.m."; "every second for
+  "At 15 and 45 seconds past the minute, every 15 minutes"; "every second for
   the first 10 seconds of the minute, every 15 minutes". With nothing
   after it, "every minute" takes the place of "the minute": "at 30 seconds past the minute", "every second for the first 10 seconds of every
   minute".
@@ -504,6 +504,18 @@ second, so the second is said against the hour: "at 30 seconds past every
 hour"; "every second for the first 10 seconds of every hour". With another
 single minute: "at 30 minutes and 15 seconds past every hour". A stray
 clock time carries a single second like any other: "…and at 9:45:08 a.m."
+
+**A list of clock times to the second is also sayable**, on the same terms
+as a list of clock times to the minute (4.1): whenever S is not every
+second, the minutes and hours are clock times, and there are at most 24
+times in all. It names one thing per time and competes with the seconds
+lead or the anchored form; on a tie the list wins. A time that falls on
+the minute is written without seconds. So `0,30 0 9` is "at 9 and 9:00:30
+a.m." (two things either way), `0,30 0 0` is "at midnight and 12:00:30
+a.m.", `15,45 30 9` is "at 9:30:15 and 9:30:45 a.m." (two against three),
+and `*/15 0 9` stays "every 15 seconds from 9:00 until 9:01 a.m." (two
+things against four times). This replaces the earlier limit that only a
+single second could join a clock time.
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
 first, then "as well as", then the weekday phrase exactly as it would stand

@@ -97,7 +97,7 @@ const rows = [
   // Seconds joined to a clock time, and anchored.
   ['15 30 9 * * *', 'at 9:30:15 a.m.'],
   ['15 30 9,17 * * *', 'at 9:30:15 a.m. and 5:30:15 p.m.'],
-  ['15,45 30 9 * * *', 'at 15 and 45 seconds past the minute, at 9:30 a.m.'],
+  ['15,45 30 9 * * *', 'at 9:30:15 and 9:30:45 a.m.'],
   ['* * 9 * * *', 'every second during the 9 a.m. hour'],
   ['* * 9-17 * * *', 'every second from 9 a.m. until 6 p.m.'],
 
@@ -179,7 +179,13 @@ const rows = [
   ['30 0-2,4-23 * * *', 'at 30 minutes past every hour except 3 a.m.'],
   ['30 0 * * * *', 'at 30 seconds past every hour'],
   ['0-9 0 * * * *', 'every second for the first 10 seconds of every hour'],
-  ['0,2-59 * * * *', 'every minute except at 1 minute past the hour']
+  ['0,2-59 * * * *', 'every minute except at 1 minute past the hour'],
+
+  // A few seconds inside named minutes are clock times, as a few minutes
+  // inside named hours are.
+  ['0,30 30 9 * * *', 'at 9:30 and 9:30:30 a.m.'],
+  ['0,20,40 0 9 * * *', 'at 9, 9:00:20, and 9:00:40 a.m.'],
+  ['*/15 0 9 * * *', 'every 15 seconds from 9:00 until 9:01 a.m.']
 ];
 
 export {rows};
