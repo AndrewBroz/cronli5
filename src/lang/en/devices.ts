@@ -305,21 +305,28 @@ function inTieOrder<T extends Pick<Phrase, 'idiom' | 'yields'>>(phrases: T[]):
 }
 
 /**
- * The phrase naming the fewest things among a field's candidates, with
- * ties settled as `inTieOrder` has them.
+ * Every candidate the voice can say, in the order a tie between them is
+ * settled in.
  */
+function sayable(
+  candidates: SetDescription[],
+  voice: Voice,
+  opts: EnglishOptions
+): Choice[] {
+  return inTieOrder(candidates.flatMap(function render(description): Choice[] {
+    const phrase = say(description, voice, opts);
+
+    return phrase ? [{...phrase, description}] : [];
+  }));
+}
+
+/** The phrase naming the fewest things among a field's candidates. */
 function choose(
   candidates: SetDescription[],
   voice: Voice,
   opts: EnglishOptions
 ): Choice {
-  const sayable = candidates.flatMap(function render(description): Choice[] {
-    const phrase = say(description, voice, opts);
-
-    return phrase ? [{...phrase, description}] : [];
-  });
-
-  return shortestSpoken(inTieOrder(sayable));
+  return shortestSpoken(sayable(candidates, voice, opts));
 }
 
 /**
@@ -556,7 +563,9 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
  * a.m. hour", "from 9 a.m. until 6 p.m.", "during every other hour". A
  * stretch closes at the moment it ends, the hour after its last. Any
  * cadence but every other hour runs "for one hour" at each of the
- * moments it names: "for one hour every 6 hours".
+ * moments it names: "for one hour every 6 hours". A cadence with a named
+ * end is not said at all, since "for one hour ... through 6 p.m." is
+ * heard as stopping at 6; its hours are left to be named.
  */
 function hoursAsStretches(opts: EnglishOptions): Voice {
   const nouns = hoursAsNouns(true, opts);
@@ -570,7 +579,11 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
     cadence: {
       ...strides,
       say(cadence, ends) {
-        return cadence.interval === 2 && ends.length < 2 ?
+        if (ends.length === 2) {
+          return null;
+        }
+
+        return cadence.interval === 2 ?
           join(everyOther, span(hourNames(ends, {minute: 0}, opts), opts)) :
           `${extraWords.forOneHour} ${strides.say(cadence, ends)}`;
       }
@@ -783,5 +796,6 @@ function yearsByNumber(opts: EnglishOptions): Voice {
 export {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
   hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,
-  opensWithEvery, say, secondsOfOneMinute, withinTheHour, yearsByNumber
+  opensWithEvery, say, sayable, secondsOfOneMinute, withinTheHour,
+  yearsByNumber
 };

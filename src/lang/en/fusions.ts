@@ -15,7 +15,8 @@ import {shortestSpoken} from '../../core/select.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
   hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,
-  opensWithEvery, say, secondsOfOneMinute, withinTheHour, yearsByNumber
+  opensWithEvery, say, sayable, secondsOfOneMinute, withinTheHour,
+  yearsByNumber
 } from './devices.js';
 import {quartzDateIdioms, quartzWeekdayIdioms} from './idioms.js';
 import lexicon from './lexicon.js';
@@ -40,6 +41,8 @@ interface Tick {
   // 30 minutes of") and not a count past it.
   portion: boolean;
   text: string;
+  // Whether the phrase is one that loses a tie.
+  yields: boolean;
 }
 
 // What the seconds contribute to the rest of the time: the words that
@@ -107,29 +110,33 @@ function anchored(chosen: Choice, field: 'minute' | 'second',
     `${unit(field, 0)} ${words.of.text}`;
 }
 
-// `everyOne` is what every value of the field is said as: "every second",
-// and "every minute" unless finer seconds take its place.
-function tick(
+// Each way the seconds or the minutes can be said, in the order a tie
+// between them is settled in. `everyOne` is what every value of the field
+// is said as: "every second", and "every minute" unless finer seconds
+// take its place.
+function ticks(
   candidates: SetDescription[],
   field: 'minute' | 'second',
   everyOne: string,
   opts: EnglishOptions
-): Tick {
-  const chosen = choose(candidates, withinTheHour(field, everyOne, opts),
-    opts);
-  const {description} = chosen;
-  const continuous = description.kind === 'all' ||
-    description.kind === 'cadence' && chosen.length === 1;
+): Tick[] {
+  return sayable(candidates, withinTheHour(field, everyOne, opts), opts)
+    .map(function toTick(chosen) {
+      const {description} = chosen;
+      const continuous = description.kind === 'all' ||
+        description.kind === 'cadence' && chosen.length === 1;
 
-  return {
-    continuous,
-    description,
-    length: chosen.length,
-    only: onlyValue(description),
-    opens: opensWithEvery(description, field),
-    portion: isPortion(description),
-    text: continuous ? chosen.text : anchored(chosen, field, everyOne)
-  };
+      return {
+        continuous,
+        description,
+        length: chosen.length,
+        only: onlyValue(description),
+        opens: opensWithEvery(description, field),
+        portion: isPortion(description),
+        text: continuous ? chosen.text : anchored(chosen, field, everyOne),
+        yields: chosen.yields
+      };
+    });
 }
 
 // Second 0 is silent. A continuous cadence of seconds takes the place of
@@ -157,6 +164,7 @@ function secondsLead(second: Tick): SecondsLead {
 }
 
 // A run of minutes inside one named hour is a window of clock times.
+// Continuous minutes and a plain list of them are not runs.
 function minuteWindow(
   hours: SetDescription,
   context: TimeContext,
@@ -164,8 +172,9 @@ function minuteWindow(
 ): Phrase | null {
   const hour = onlyValue(hours);
   const {lead, minute} = context;
+  const listed = minute.description.kind === 'values';
 
-  return hour === null || minute.description.kind === 'values' ?
+  return hour === null || minute.continuous || listed ?
     null :
     say(
       minute.description,
@@ -216,37 +225,45 @@ function timeWith(
     return [moments];
   }
 
-  const window = minute.continuous ? null : minuteWindow(hours, context, opts);
-  const rest = window || say(hours,
+  const window = minuteWindow(hours, context, opts);
+
+  if (window) {
+    return [{...window, carry: null}];
+  }
+
+  const rest = say(hours,
     minute.continuous ?
       hoursAsStretches(opts) :
       hoursAsNouns(minute.portion, opts),
     opts);
 
-  if (window || !rest) {
-    return window ? [{...window, carry: null}] : [];
+  if (!rest) {
+    return [];
   }
 
   return [{
     ...rest,
     carry: null,
     length: minute.length + rest.length,
-    text: join(minute.opens ? '' : lead.before, minute.text, rest.text)
+    text: join(minute.opens ? '' : lead.before, minute.text, rest.text),
+    yields: minute.yields || rest.yields
   }];
 }
 
 /**
  * The time of day. Within a single clock time, seconds that are not a
- * plain list are a window of it. Otherwise each description of the hours
- * is said with the minutes, and competes with the plain list of clock
- * times, which wins a tie. A single second does not affect the choice:
- * it rides on the clock times of the chosen phrase if it names any, and
- * is otherwise counted past the minute in front of it.
+ * plain list are a window of it. Otherwise each description of the
+ * minutes is said with each description of the hours, and all compete
+ * with the plain list of clock times, which wins a tie. A single second
+ * does not affect the choice: it rides on the clock times of the chosen
+ * phrase if it names any, and is otherwise counted past the minute in
+ * front of it.
  */
 function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
   const {candidates} = facts.analyses;
   const everySecond = `${words.every.text} ${unit('second', 1)}`;
-  const second = tick(candidates.second!, 'second', everySecond, opts);
+  const second = shortestSpoken(
+    ticks(candidates.second!, 'second', everySecond, opts));
   const times = clockTimes(facts, mostClockTimes);
 
   if (times?.length === 1 && second.description.kind !== 'values') {
@@ -255,15 +272,14 @@ function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
   }
 
   const lead = secondsLead(second);
-  const context = {
-    lead,
-    minute: tick(candidates.minute!, 'minute', lead.every, opts),
-    riding: second.only ? {second: second.only} : {}
-  };
+  const riding = second.only ? {second: second.only} : {};
   const listed = clockList(times, lead, opts);
-  const others = candidates.hour!.flatMap(function sayWith(hours) {
-    return timeWith(hours, context, opts);
-  });
+  const others = ticks(candidates.minute!, 'minute', lead.every, opts)
+    .flatMap(function eachMinute(minute) {
+      return candidates.hour!.flatMap(function sayWith(hours) {
+        return timeWith(hours, {lead, minute, riding}, opts);
+      });
+    });
   const best = shortestSpoken([...listed, ...inTieOrder(others)]);
 
   return second.only && best.carry ? best.carry : best.text;
