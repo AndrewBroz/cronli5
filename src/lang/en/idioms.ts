@@ -8,6 +8,7 @@ import type {
 } from '../../core/schedule.js';
 import type {EnglishOptions} from './options.js';
 import {domainOf} from '../../core/specs.js';
+import {named, unit} from './forms.js';
 import lexicon from './lexicon.js';
 
 /** A fixed phrasing and the condition under which it is said. */
@@ -108,7 +109,7 @@ function quartzForm<Form extends {kind: string}, Kind extends Form['kind']>(
 }
 
 function weekdayOf(day: number, opts: EnglishOptions): string {
-  return lexicon.weekdays[day][opts.short ? 'short' : 'full'];
+  return named(lexicon.weekdays[day], 'full', opts);
 }
 
 const onTheLast = `${words.on} ${words.the} ${words.last}`;
@@ -124,9 +125,7 @@ const quartzDateIdioms: Array<Idiom<QuartzDate>> = [
     return `${onTheLast} ${words.weekday}`;
   }),
   quartzForm('beforeLast', function daysBeforeLast(form) {
-    const days = units.day[form.days === 1 ? 'one' : 'many'];
-
-    return `${form.days} ${days} ${words.before} ${lastDay}`;
+    return `${form.days} ${unit('day', form.days)} ${words.before} ${lastDay}`;
   }),
   quartzForm('nearestWeekday', function weekdayNearest() {
     return `${words.on} ${words.the} ${words.weekday} ${words.nearest}`;

@@ -8,15 +8,16 @@ import type {Field, SetDescription} from '../../core/schedule.js';
 import type {Spoken} from '../../core/select.js';
 import type {Moment} from './idioms.js';
 import type {EnglishOptions} from './options.js';
-import type {UnitName} from './words.js';
+import type {UnitName} from './forms.js';
 import {denote} from '../../core/describe-set.js';
 import {shortestSpoken} from '../../core/select.js';
 import {domainOf} from '../../core/specs.js';
+import {unit} from './forms.js';
 import {idioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {
   dayNames, hourNames, inCycleOrder, join, list, momentAt, monthNames, span,
-  timeNames, unit, walkWeek, weekdayNames, weekRank
+  through, timeNames, walkWeek, weekdayNames, weekRank
 } from './words.js';
 
 type Cadence = Extract<SetDescription, {kind: 'cadence'}>;
@@ -28,9 +29,12 @@ type Part = Pieces['parts'][number];
  * A phrase and the number of things it names. `idiom` marks a fixed
  * phrasing, which wins a tie. `yields` marks an exception or a cadence
  * with both ends named, which loses one. `named` is false when the phrase
- * names none of its own values (every value, or an idiom).
+ * names none of its own values (every value, or an idiom). `fills` marks
+ * a phrase that runs right round its cycle: every value, a cadence with
+ * no end to name, or either with exceptions.
  */
 export interface Phrase extends Spoken {
+  fills: boolean;
   idiom: boolean;
   named: boolean;
   yields: boolean;
@@ -48,6 +52,10 @@ interface Stride {
   bare: boolean;
   // Whether a cadence that fills its cycle may name its start alone.
   open: boolean;
+  // Whether two values that halve the cycle from its start may be called
+  // a cadence: minutes 0 and 30 are "every 30 minutes", but two hours are
+  // two times.
+  pair: boolean;
   // Whether the cadence must divide its cycle evenly to fill it. Cycles
   // that differ in length, as months and so days of the month do, cannot
   // be divided: running to the end is all that filling one can mean.
@@ -93,19 +101,18 @@ interface Listing {
   exceptAt: string;
   field: Field;
   names(values: number[], role: Role): string[];
-  // What goes before the ends of a range: "every hour", or nothing.
+  // What goes before the ends of a range: "every hour from", "on".
   run: string;
-  // The unit a cadence counts in, with the ends it has to name. `carried`
-  // marks a cadence whose moments carry a minute or a second, so that it
-  // names its start even where it could go without.
-  stride: Stride & {carried?: boolean; unit: UnitName} | null;
+  // The unit a cadence counts in, with the ends it has to name.
+  stride: Stride & {unit: UnitName} | null;
 }
 
 const {units, words} = lexicon;
 const {every, except} = words;
 
 function plain(text: string, length: number): Phrase {
-  return {idiom: false, length, named: true, text, yields: false};
+  return {fills: false, idiom: false, length, named: true, text,
+    yields: false};
 }
 
 // Which ends of a cadence have to be named. A cadence that fills its cycle
@@ -131,7 +138,7 @@ function namedEnds(cadence: Cadence, field: Field, voice: Stride): number[] {
 function sayAll(voice: Voice): Phrase | null {
   return voice.all === null ?
     null :
-    {...plain(voice.all, 0), named: false};
+    {...plain(voice.all, 0), fills: true, named: false};
 }
 
 // Two neighbouring values are a list unless the voice describes a stretch
@@ -147,10 +154,16 @@ function sayRange(from: number, to: number, voice: Voice): Phrase | null {
 function sayCadence(cadence: Cadence, voice: Voice): Phrase | null {
   const ends = namedEnds(cadence, voice.field, voice.cadence);
   const text = voice.cadence.say(cadence, ends);
+  const two = cadence.last - cadence.start === cadence.interval;
+  const halves = voice.cadence.pair && ends.length === 0;
 
-  return text === null ?
+  return text === null || two && !halves ?
     null :
-    {...plain(text, 1 + ends.length), yields: ends.length === 2};
+    {
+      ...plain(text, 1 + ends.length),
+      fills: ends.length < 2,
+      yields: ends.length === 2
+    };
 }
 
 // The pieces in the order they are said. Values are walked in the order
@@ -234,7 +247,10 @@ function opensWithEvery(description: SetDescription,
 }
 
 // An exception is for a hole in the middle: a cadence that only stops
-// early or starts late is said with its bounds.
+// early or starts late is said with its bounds. And it has to replace a
+// list too long to hold, since it costs the listener a subtraction.
+const fewestExcepted = 5;
+
 function sayException(
   exception: Exception,
   voice: Voice,
@@ -244,7 +260,8 @@ function sayException(
   const hole = exception.removed.some(function inside(value) {
     return value > kept[0] && value < kept[kept.length - 1];
   });
-  const base = exception.base.kind === 'cadence' && !hole ?
+  const few = kept.length < fewestExcepted;
+  const base = few || exception.base.kind === 'cadence' && !hole ?
     null :
     say(exception.base, voice, opts);
 
@@ -332,6 +349,7 @@ function choose(
 const noCadence: CadenceVoice = {
   bare: false,
   open: false,
+  pair: false,
   say() {
     return null;
   },
@@ -347,12 +365,8 @@ function listing(spec: Listing, opts: EnglishOptions): Voice {
     cadence: stride ? {
       ...stride,
       say(cadence, ends) {
-        const named = stride.carried && ends.length === 0 ?
-          [cadence.start] :
-          ends;
-
         return join(`${every} ${cadence.interval} ${units[stride.unit].many}`,
-          span(spec.names(named, 'ends'), opts));
+          span(spec.names(ends, 'ends'), opts));
       }
     } : noCadence,
     exception(removed) {
@@ -362,7 +376,7 @@ function listing(spec: Listing, opts: EnglishOptions): Voice {
     field: spec.field,
     pairs: false,
     range(from, to) {
-      return join(spec.run, span(spec.names([from, to], 'ends'), opts));
+      return join(spec.run, through(spec.names([from, to], 'ends'), opts));
     },
     values(values) {
       return join(spec.at, list(spec.names(values, 'list'), opts));
@@ -393,8 +407,8 @@ function withinTheHour(
 
       return values.map(String);
     },
-    run: spoken.everyOne,
-    stride: {bare: true, open: false, tiles: true, unit: field}
+    run: `${spoken.everyOne} ${words.from}`,
+    stride: {bare: true, open: false, pair: true, tiles: true, unit: field}
   }, opts);
 }
 
@@ -501,6 +515,7 @@ function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
     cadence: {
       bare: true,
       open: false,
+      pair: true,
       say(cadence, ends) {
         const lead = `${every} ${cadence.interval} ${units.second.many}`;
 
@@ -516,10 +531,17 @@ function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
 const everyHour = `${every} ${units.hour.one}`;
 
 // Hours named as times of day: as moments after "at", each carrying the
-// same minute and second, or bare as a noun phrase.
-function hoursByName(at: Omit<Moment, 'hour'>, word: string,
-  opts: EnglishOptions): Voice {
+// same minute and second, or bare as a noun phrase. A cadence of hours
+// stays round: moments that carry a minute or a second cannot be said as
+// one. `pair` is whether two hours that halve the day may be a cadence.
+function hoursByName(
+  at: Omit<Moment, 'hour'> & {pair: boolean},
+  word: string,
+  opts: EnglishOptions
+): Voice {
   const carried = at.minute !== 0 || typeof at.second === 'number';
+  const round = {bare: true, open: true, pair: at.pair, tiles: true,
+    unit: 'hour'} as const;
 
   return listing({
     all: carried ? null : everyHour,
@@ -529,8 +551,8 @@ function hoursByName(at: Omit<Moment, 'hour'>, word: string,
     names(hours) {
       return hourNames(hours, at, opts);
     },
-    run: everyHour,
-    stride: {bare: true, carried, open: true, tiles: true, unit: 'hour'}
+    run: `${everyHour} ${words.from}`,
+    stride: carried ? null : round
   }, opts);
 }
 
@@ -541,8 +563,10 @@ function hoursByName(at: Omit<Moment, 'hour'>, word: string,
  * to what it names, and "every hour" has no moment to carry it and cannot
  * be said.
  */
-function hoursAsMoments(at: Omit<Moment, 'hour'>, opts: EnglishOptions):
-  Voice {
+function hoursAsMoments(
+  at: Omit<Moment, 'hour'> & {pair: boolean},
+  opts: EnglishOptions
+): Voice {
   return hoursByName(at, words.at, opts);
 }
 
@@ -566,8 +590,8 @@ function theHours(hours: number[], opts: EnglishOptions): string {
  * said as it is for moments: "the hour, every 4 hours".
  */
 function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
-  const moments = hoursAsMoments({minute: 0}, opts);
-  const nouns = hoursByName({minute: 0}, '', opts);
+  const moments = hoursAsMoments({minute: 0, pair: false}, opts);
+  const nouns = hoursByName({minute: 0, pair: false}, '', opts);
   const theHour = `${words.the} ${units.hour.one}`;
   const shared: Voice = {
     ...nouns,
@@ -617,7 +641,7 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
  */
 function hoursAsStretches(close: {minute: number} | null,
   opts: EnglishOptions): Voice {
-  const strides = hoursAsMoments({minute: 0}, opts).cadence;
+  const strides = hoursAsMoments({minute: 0, pair: false}, opts).cadence;
   const {during} = words;
   const everyOther = `${during} ${every} ${words.other} ${units.hour.one}`;
   const onTheHour = {minute: 0};
@@ -686,8 +710,8 @@ function daysOfTheMonth(
     names(days, role) {
       return dayNames(days, ...forms[role], opts);
     },
-    run: '',
-    stride: {bare: false, open: true, tiles: false, unit: 'day'}
+    run: lead,
+    stride: {bare: false, open: true, pair: false, tiles: false, unit: 'day'}
   }, opts);
 }
 
@@ -705,7 +729,7 @@ function monthsAlone(opts: EnglishOptions): Voice {
     names(months) {
       return monthNames(months, opts);
     },
-    run: '',
+    run: words.in,
     stride: null
   }, opts);
 }
@@ -732,7 +756,7 @@ function monthsOfDays(
     names(values) {
       return monthNames(values, opts);
     },
-    run: `${of} ${words.each} ${monthWord}`,
+    run: `${of} ${words.each} ${monthWord} ${words.from}`,
     stride: null
   }, opts);
 
@@ -741,6 +765,7 @@ function monthsOfDays(
     cadence: {
       bare: true,
       open: true,
+      pair: false,
       say(cadence, ends) {
         return cadence.interval === 2 && ends.length < 2 ?
           join(`${of} ${every} ${words.other} ${monthWord}`,
@@ -768,42 +793,58 @@ function monthsOfDays(
  * short enough that its run is always named.
  */
 function daysOfTheWeek(opts: EnglishOptions): Voice {
+  const weekdayForms =
+    {ends: 'full', excepted: 'full', list: 'plural'} as const;
+
   return {
     ...listing({
       all: null,
       at: words.on,
       exceptAt: '',
       field: 'weekday',
+      // A recurring day in a list is plural: "on Mondays".
       names(days, role) {
-        return weekdayNames(walkWeek(days), role === 'list', opts);
+        return weekdayNames(walkWeek(days), weekdayForms[role], opts);
       },
       run: '',
       stride: null
     }, opts),
     range(from, to) {
-      return weekdayNames([from, to], false, opts)
-        .join(` ${opts.style.through} `);
+      return through(weekdayNames([from, to], 'full', opts), opts);
     },
     rank: weekRank
   };
 }
 
 /**
- * Years: "in 2030 and 2035", "from 2030 through 2035", "every 4 years
- * from 1970".
+ * Years: "in 2030 and 2035", "in 2030 through 2035", "every 4 years from
+ * 1970", and for every second year "every other year from 2033".
  */
 function yearsByNumber(opts: EnglishOptions): Voice {
-  return listing({
+  const years = listing({
     all: `${words.in} ${every} ${units.year.one}`,
     at: words.in,
     exceptAt: '',
     field: 'year',
-    names(years) {
-      return years.map(String);
+    names(values) {
+      return values.map(String);
     },
-    run: '',
-    stride: {bare: false, open: true, tiles: false, unit: 'year'}
+    run: words.in,
+    stride: {bare: false, open: true, pair: false, tiles: false, unit: 'year'}
   }, opts);
+
+  return {
+    ...years,
+    cadence: {
+      ...years.cadence,
+      say(cadence, ends) {
+        return cadence.interval === 2 ?
+          join(`${every} ${words.other} ${units.year.one}`,
+            span(ends.map(String), opts)) :
+          years.cadence.say(cadence, ends);
+      }
+    }
+  };
 }
 
 export {
