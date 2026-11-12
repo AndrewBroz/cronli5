@@ -26,6 +26,6 @@ describe('Core known defects:', function() {
       expect(cronli5('0 0 * * 3-7/2'))
         .to.equal('at midnight on Wednesdays, Fridays, and Sundays');
       expect(cronli5('0 0 * * 1-7/2'))
-        .to.equal('at midnight on Wednesdays, Fridays, Sundays, and Mondays');
+        .to.equal('at midnight on Mondays, Wednesdays, Fridays, and Sundays');
     });
 });

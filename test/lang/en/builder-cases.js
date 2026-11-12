@@ -1,5 +1,5 @@
 // BUILDER-ADDED AND UNREVIEWED. These rows were written by the builder of
-// src/lang/en/next to reach rules of src/lang/en/answers.md that the
+// src/lang/en to reach rules of src/lang/en/answers.md that the
 // reviewed paradigms do not exercise. Each expected text is the builder's
 // reading of the answers, not a reviewed oracle: a fluent reviewer should
 // read every row before any of them is trusted. Every row reaches code

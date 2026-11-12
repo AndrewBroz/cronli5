@@ -87,7 +87,51 @@ const rows = [
   ['15 30 9,17 * * *', 'at 9:30:15 a.m. and 5:30:15 p.m.'],
   ['15,45 30 9 * * *', 'at 15 and 45 seconds past the minute, at 9:30 a.m.'],
   ['* * 9 * * *', 'every second during the 9 a.m. hour'],
-  ['* * 9-17 * * *', 'every second from 9 a.m. until 6 p.m.']
+  ['* * 9-17 * * *', 'every second from 9 a.m. until 6 p.m.'],
+
+  // Complex patterns, where several fields are restricted at once. Each
+  // was read against the most widely used library's wording and the
+  // renderer this one replaced, and is the easiest of the three to parse.
+  ['23 0-20/2 * * *', 'every 2 hours from 12:23 a.m. through 8:23 p.m.'],
+  ['15,45 */4 * * *', 'at 15 and 45 minutes past the hour, every 4 hours'],
+  ['5,20 */2 * * *', 'at 5 and 20 minutes past the hour, every 2 hours'],
+  ['5-10,20 9-17/2 * * *',
+    'every minute from 5 through 10 and at 20 minutes past the hour, ' +
+    'every 2 hours from 9 a.m. through 5 p.m.'],
+  ['*/10 6-8,17-19 * * 1-5',
+    'every 10 minutes from 6 until 9 a.m. and from 5 until 8 p.m. on ' +
+    'weekdays'],
+  ['0 0-6,22,23 * * *', 'every hour from 10 p.m. through 6 a.m.'],
+  ['*/15 0-5,22-23 * * *', 'every 15 minutes from 10 p.m. until 6 a.m.'],
+  ['*/20 */2 */2 */3 *',
+    'every 20 minutes during every other hour on odd-numbered days in ' +
+    'January, April, July, and October'],
+  ['7 4-22/6 1 */2 *',
+    'every 6 hours from 4:07 a.m. on the 1st of every other month'],
+  ['0 12 1-5,10,20-25 * *',
+    'at noon from the 1st through the 5th, on the 10th, and from the 20th ' +
+    'through the 25th'],
+  ['0 6,18 1-7,15-21 * *',
+    'at 6 a.m. and 6 p.m. from the 1st through the 7th and from the 15th ' +
+    'through the 21st'],
+  ['0 9-17/2 * 1-6 1-5',
+    'every 2 hours from 9 a.m. through 5 p.m. on weekdays from January ' +
+    'through June'],
+  ['0 18 15W 3,6,9,12 *',
+    'at 6 p.m. on the weekday nearest March 15, June 15, September 15, ' +
+    'and December 15'],
+  ['0,30 8-18/2 1,15 * 1-5',
+    'every 30 minutes for one hour every 2 hours from 8 a.m. through ' +
+    '6 p.m. on the 1st and 15th as well as on weekdays'],
+  ['15,45 */4 1-10 1,4,7,10 *',
+    'at 15 and 45 minutes past the hour, every 4 hours from the 1st ' +
+    'through the 10th of January, April, July, and October'],
+  ['0 0 * * 1-7/2', 'at midnight on Mondays, Wednesdays, Fridays, and Sundays'],
+  ['0 9 * * 0,2-4', 'at 9 a.m. Tuesday through Thursday and on Sundays'],
+  ['30 4 1-7 * 1',
+    'at 4:30 a.m. from the 1st through the 7th as well as on Mondays'],
+  ['59 23 31 12 *', 'at 11:59 p.m. on December 31'],
+  ['0 2 29 2 *', 'at 2 a.m. on February 29']
 ];
 
 export {rows};

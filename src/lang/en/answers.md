@@ -167,11 +167,12 @@ Numbers are digits everywhere. The only interval word is "every other"
 * Hours with minute 0: "at 8 a.m., noon, and 6 p.m."
 * Days of the month: "on the 1st, 10th, and 20th". One "the" for the list.
 * Months: "in January and July".
-* Weekdays: "on Mondays, Wednesdays, and Fridays". The list is walked
-  round the week starting after its longest gap; on a tie, Monday comes
-  first. So Saturday and Sunday are "Saturdays and Sundays", Sunday and
-  Monday are "Sundays and Mondays", and Sunday, Tuesday, Thursday,
-  Saturday are "Tuesdays, Thursdays, Saturdays, and Sundays".
+* Weekdays: "on Mondays, Wednesdays, and Fridays". The list is in week
+  order starting on Monday, with Sunday last: "on Mondays, Wednesdays,
+  Fridays, and Sundays"; "on Fridays and Sundays"; "on Tuesdays, Thursdays,
+  Saturdays, and Sundays". The one exception is a set that is a single
+  unbroken run crossing from Sunday into Monday, which is said in the
+  order of the run: "on Sundays and Mondays"; "Saturday through Monday".
 
 3.4 A range. Whether the end is included depends on what is described.
 
@@ -215,7 +216,8 @@ piece each is ("at 1 a.m., every hour from 9 through 11 a.m., and at 1, 3,
 and 5 p.m."), each range with its own lead, unless
 one of the runs wraps round the cycle, in which case the wrapped run comes
 first: "every hour from 10 p.m. through 2 a.m. and at 10 a.m." Weekday
-pieces follow the walk round the week of 3.3. Three or more parts are
+pieces follow the week order of 3.3, a wrapped run first: "Tuesday through
+Thursday and on Sundays"; "Friday through Monday and on Wednesdays". Three or more parts are
 joined as a list is, with commas: "at 9 a.m., every hour from 11 a.m.
 through 1 p.m., and at 3, 7, and 9 p.m." A run of minutes that wraps inside
 one hour is two windows: "every minute from 9 until 9:11 a.m. and every
@@ -277,6 +279,12 @@ An exception can be made to an idiom or a range as well as to a cadence:
 exception form. Months belong to the base and come before "except": "on
 every day in June except the 15th"; "on odd-numbered days in June except
 the 15th".
+
+An exception is for a hole in the middle. A cadence that is only missing
+values at its end or its start is said with its bounds, not as the full
+cadence with exceptions: hours 0, 2 … 20 are "every 2 hours through 8
+p.m." in the bounded form ("every 2 hours from midnight through 8 p.m."),
+never "every 2 hours except at 10 p.m."
 
 3.10 A limit on items held turned out to be the whole rule. Choosing by
 spoken syllables, as first designed, made the choice depend on which
@@ -344,8 +352,7 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 | values | "9 a.m."; "9 a.m. and 5 p.m." |
 | range | "every hour from 9 a.m. through 5 p.m." |
 | pieces | "every hour from 9 a.m. through 5 p.m. and 10 p.m." |
-| every second hour | "every other hour"; off the beat, "every other hour from 1 a.m." |
-| any other cadence | the hours as values: "midnight, 6 a.m., noon, and 6 p.m." |
+| any cadence | not a noun phrase. The minute phrase ends "past the hour" (or "of the hour"), then a comma and the cadence as it is said for points: "at 15 and 45 minutes past the hour, every 4 hours"; "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m."; "…past the hour, every 2 hours from 9 a.m. through 5 p.m." |
 | except | "every hour except 3 a.m." |
 
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past every hour from 9
@@ -409,7 +416,7 @@ without regard to the second, already names clock times: a list of them,
 or the point forms of 4.1's first table ("every hour from 9:00:15 a.m.
 through 5:00:15 p.m."). It never forces a list. Where the time part is
 anything else, the second is anchored in front of it: "at 8 seconds past
-the minute, at 5 and 30 minutes past every other hour".
+the minute, at 5 and 30 minutes past the hour, every 2 hours".
 
 Whenever the rest of the time begins "every minute", seconds take its
 place, in every form the rest can have: "every second for the first 30
@@ -478,12 +485,12 @@ hour". There are no words for half past or quarter past: "at 30 minutes
 past every hour", "at 15 and 45 minutes past every hour". Digits keep the
 description comparable with the pattern.
 
-5.5 Interval words. Standing alone, a cadence uses a digit: "every 2
-hours", "every 15 minutes", "every 5 days from the 1st". The only interval
-word is "every other", used where a cadence is a noun phrase after "past",
-"during" or "of": "every other hour", "of every other month". There is no
-"every third" or "every sixth"; a wider cadence in those positions is said
-as its values.
+5.5 Interval words. A cadence uses a digit: "every 2 hours", "every 15
+minutes", "every 5 days from the 1st". The only interval word is "every
+other", and it appears in exactly two phrases: "during every other hour"
+(4.1's confinement table) and "of every other month" (4.4). There is no
+"every third" or "every sixth", and after "past" an hour cadence is never
+a noun phrase (4.1).
 
 5.6 None. English uses a.m. and p.m.
 
