@@ -22,7 +22,7 @@ From `node --import tsx tooling/scripts/compare-baseline.mjs en`:
 
 | Measure | Old | New |
 | --- | --- | --- |
-| Logical lines (not blank, not comment) | 1,700 | 1,483 |
+| Logical lines (not blank, not comment) | 1,700 | 1,488 |
 | Physical lines | 3,021 | 2,124 |
 | Branches (`if`, ternary, `case`) | 206 | 97 |
 | Short-circuit operators (`&&`, `\|\|`, `??`) | 127 | 81 |
@@ -136,6 +136,10 @@ Where the new English lost, and what changed:
 * A few seconds inside named minutes are now clock times ("at midnight and
   12:00:30 a.m."), as a few minutes inside named hours are.
 
+The reworded sentences went to a blind reader again: 30 of 31 recovered
+exactly. The miss read "every second from 9:00:00 a.m. until 9:00:10 a.m."
+as including second 10; a run of seconds now names its last second.
+
 Twenty patterns and one judge is a small sample, and the generator draws
 only five-field patterns. It was still the most productive gate per
 minute of the whole build: five rule changes from twenty rows.
@@ -190,7 +194,7 @@ and eleven are in the generated comparison page
 
 ## What it cost
 
-Nine build rounds with one builder agent (about 615,000 tokens in its own
+Ten build rounds with one builder agent (about 630,000 tokens in its own
 context), one independent review (about 240,000), two independent regeneration builds (about 270,000 and 260,000),
 two mechanical refactors by subagents (about 157,000 and 251,000), and two
 blind-recovery runs by a cheaper model (about 79,000 for 217 descriptions).
