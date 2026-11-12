@@ -98,7 +98,7 @@ a specific schedule, or an advanced operator.
 | --- | --- | --- |
 | `0 0 1,15 * 3` | Runs at midnight on the 1st and 15th as well as on Wednesdays. | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday |
 | `0 0 9-17/2 * *` | Runs at midnight every 2 days from the 9th through the 17th. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
-| `23 0-20/2 * * *` | Runs every 2 hours from 12:23 a.m. except at 10:23 p.m. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
+| `23 0-20/2 * * *` | Runs every 2 hours from 12:23 a.m. through 8:23 p.m. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
 | `0 0 * * 5L` | Runs at midnight on the last Friday of the month. | At 12:00 AM, on the last Friday of the month |
 | `5,10 30 9 * * MON` | Runs at 5 and 10 seconds past the minute, at 9:30 a.m. on Mondays. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | `59 23 31 12 5` | Runs at 11:59 p.m. on December 31 as well as on Fridays in December. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |

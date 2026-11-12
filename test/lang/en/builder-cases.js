@@ -57,7 +57,7 @@ const rows = [
   ['*/15 */6 * * *',
     'every 15 minutes for one hour every 6 hours'],
   ['5,20,45 */6 * * *',
-    'at 5, 20, and 45 minutes past midnight, 6 a.m., noon, and 6 p.m.']
+    'at 5, 20, and 45 minutes past the hour, every 6 hours']
 ];
 
 describe('English builder-added cases (unreviewed):', function() {

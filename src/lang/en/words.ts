@@ -184,26 +184,27 @@ function monthName(month: number, opts: EnglishOptions): string {
   return lexicon.months[month][opts.short ? 'short' : 'full'].text;
 }
 
+/** Where a weekday falls in the week as it is said: Monday first. */
+function weekRank(day: number): number {
+  return (day + 6) % 7;
+}
+
 /**
- * Weekdays in the order they are said: round the week, starting after
- * the longest gap, with Monday first among equal gaps.
+ * Weekdays in the order they are said: week order from Monday, with
+ * Sunday last. A set that is one unbroken run is said in the order of
+ * the run, so one that crosses from Sunday into Monday starts where the
+ * run does.
  */
 function walkWeek(days: number[]): number[] {
   const mondayFirst = days.slice().sort(function byMonday(a, b) {
-    return (a + 6) % 7 - (b + 6) % 7;
+    return weekRank(a) - weekRank(b);
   });
-  let start = 0;
-  let widest = -1;
-
-  mondayFirst.forEach(function measure(day, index) {
+  const starts = mondayFirst.flatMap(function afterBreak(day, index) {
     const previous = mondayFirst.at(index - 1) as number;
-    const gap = (day - previous + 6) % 7;
 
-    if (gap > widest) {
-      widest = gap;
-      start = index;
-    }
+    return (day - previous + 6) % 7 > 0 ? [index] : [];
   });
+  const start = starts.length === 1 ? starts[0] : 0;
 
   return [...mondayFirst.slice(start), ...mondayFirst.slice(0, start)];
 }
@@ -222,5 +223,5 @@ function weekdayName(day: number, recurring: boolean, opts: EnglishOptions):
 
 export {
   dayNames, extraWords, hourNames, join, list, momentAt, monthName, span,
-  timeNames, unit, walkWeek, weekdayName
+  timeNames, unit, walkWeek, weekdayName, weekRank
 };

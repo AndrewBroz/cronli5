@@ -15,7 +15,7 @@ import {idioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {
   dayNames, extraWords, hourNames, join, list, momentAt, monthName, span,
-  timeNames, unit, walkWeek, weekdayName
+  timeNames, unit, walkWeek, weekdayName, weekRank
 } from './words.js';
 
 type Cadence = Extract<SetDescription, {kind: 'cadence'}>;
@@ -64,8 +64,9 @@ export interface Voice {
   exception(removed: number[], base: SetDescription): string;
   range(from: number, to: number): string;
   values(values: number[]): string;
-  // The order the field's values are said in, when it is not ascending.
-  walk?(values: number[]): number[];
+  // Where a value falls in its cycle as it is said, when that is not its
+  // own number: the week is said from Monday, which cron numbers 1.
+  rank?(value: number): number;
 }
 
 const {units, words} = lexicon;
@@ -136,20 +137,22 @@ function sayCadence(cadence: Cadence, voice: Voice): Phrase | null {
 type Part = Pieces['parts'][number];
 
 // The pieces in the order they are said. Values are walked in ascending
-// order, starting from a run that wraps round the cycle if there is one,
-// unless the voice has a walk of its own. Each run stands where its first
-// value does, whatever kind of piece its neighbours are, and the stray
-// values that fall together between runs make one list.
-function inSpokenOrder(pieces: Pieces, voice: Pick<Voice, 'field' | 'walk'>):
+// order of their place in the cycle, starting from a run that wraps
+// round it if there is one. Each run stands where its first value does,
+// whatever kind of piece its neighbours are, and the stray values that
+// fall together between runs make one list.
+function inSpokenOrder(pieces: Pieces, voice: Pick<Voice, 'field' | 'rank'>):
   Part[] {
-  const values = denote(pieces, {cyclic: true, ...domainOf(voice.field)});
+  const rank = voice.rank || Number;
+  const values = denote(pieces, {cyclic: true, ...domainOf(voice.field)})
+    .sort(function byRank(a, b) {
+      return rank(a) - rank(b);
+    });
   const wrapped = pieces.parts.find(function wraps(part) {
-    return part.kind === 'range' && part.from > part.to;
+    return part.kind === 'range' && rank(part.from) > rank(part.to);
   }) as {from: number} | undefined;
   const at = wrapped ? values.indexOf(wrapped.from) : 0;
-  const order = voice.walk ?
-    voice.walk(values) :
-    [...values.slice(at), ...values.slice(0, at)];
+  const order = [...values.slice(at), ...values.slice(0, at)];
 
   function place(part: Part): number {
     return order.indexOf(part.kind === 'range' ? part.from : part.values[0]);
@@ -222,6 +225,18 @@ function sayException(
   voice: Voice,
   opts: EnglishOptions
 ): Phrase | null {
+  const {max, min} = domainOf(voice.field);
+  const kept = denote(exception, {cyclic: true, max, min});
+  const hole = exception.removed.some(function inside(value) {
+    return value > kept[0] && value < kept[kept.length - 1];
+  });
+
+  // An exception is for a hole in the middle: a cadence that only stops
+  // early or starts late is said with its bounds.
+  if (exception.base.kind === 'cadence' && !hole) {
+    return null;
+  }
+
   const base = say(exception.base, voice, opts);
 
   return base && {
@@ -497,13 +512,17 @@ function theHours(hours: number[], opts: EnglishOptions): string {
 
 /**
  * Hours as a noun phrase after "past": "9 a.m. and 5 p.m.", "every hour
- * from 9 a.m. through 5 p.m.", "every other hour". "Every other" is the
- * only interval word, so a wider cadence, or one that stops early, is
- * left to be said as its values. After "the first 30 minutes of", which
- * is a part of an hour and not a point in it, listed hours are named
- * `asHours`: "the 9 a.m. and 5 p.m. hours".
+ * from 9 a.m. through 5 p.m.". A cadence of hours is never a noun phrase:
+ * what came before is counted past "the hour", and after a comma the
+ * cadence is said as it is for moments: "the hour, every 4 hours". After
+ * "the first 30 minutes of", which is a part of an hour and not a point
+ * in it, listed hours are named `asHours`: "the 9 a.m. and 5 p.m. hours".
  */
 function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
+  const moments = hoursAsMoments({minute: 0}, opts);
+  const strides = moments.cadence as CadenceVoice;
+  const theHour = `${words.the.text} ${units.hour.one.text},`;
+
   function names(hours: number[]): string[] {
     return hourNames(hours, {minute: 0}, opts);
   }
@@ -511,18 +530,15 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
   return {
     all: everyHour,
     cadence: {
-      bare: true,
-      cycle: 24,
-      open: true,
+      ...strides,
       say(cadence, ends) {
-        return cadence.interval === 2 && ends.length < 2 ?
-          join(`${every} ${lexicon.intervalWord(2).text}`,
-            units.hour.one.text, span(names(ends), opts)) :
-          null;
+        return `${theHour} ${strides.say(cadence, ends)}`;
       }
     },
-    exception(removed) {
-      return `${except} ${list(names(removed), opts)}`;
+    exception(removed, base) {
+      return base.kind === 'cadence' ?
+        moments.exception(removed, base) :
+        `${except} ${list(names(removed), opts)}`;
     },
     field: 'hour',
     pairs: false,
@@ -538,26 +554,25 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
 /**
  * Hours as stretches of time that a finer cadence fills: "during the 9
  * a.m. hour", "from 9 a.m. until 6 p.m.", "during every other hour". A
- * stretch closes at the moment it ends, the hour after its last. A
- * cadence wider than every other hour runs "for one hour" at each of the
+ * stretch closes at the moment it ends, the hour after its last. Any
+ * cadence but every other hour runs "for one hour" at each of the
  * moments it names: "for one hour every 6 hours".
  */
 function hoursAsStretches(opts: EnglishOptions): Voice {
   const nouns = hoursAsNouns(true, opts);
-  const cadence = nouns.cadence as CadenceVoice;
-  const moments = hoursAsMoments({minute: 0}, opts).cadence as CadenceVoice;
+  const strides = hoursAsMoments({minute: 0}, opts).cadence as CadenceVoice;
   const during = words.during.text;
+  const everyOther = `${during} ${every} ${lexicon.intervalWord(2).text} ` +
+    units.hour.one.text;
 
   return {
     all: '',
     cadence: {
-      ...cadence,
-      say(stride, ends) {
-        const noun = cadence.say(stride, ends);
-
-        return noun ?
-          `${during} ${noun}` :
-          `${extraWords.forOneHour} ${moments.say(stride, ends)}`;
+      ...strides,
+      say(cadence, ends) {
+        return cadence.interval === 2 && ends.length < 2 ?
+          join(everyOther, span(hourNames(ends, {minute: 0}, opts), opts)) :
+          `${extraWords.forOneHour} ${strides.say(cadence, ends)}`;
       }
     },
     exception(removed, base) {
@@ -720,10 +735,10 @@ function daysOfTheWeek(opts: EnglishOptions): Voice {
     range(from, to) {
       return names([from, to], false).join(` ${opts.style.through} `);
     },
+    rank: weekRank,
     values(values) {
       return `${on} ${list(names(walkWeek(values), true), opts)}`;
-    },
-    walk: walkWeek
+    }
   };
 }
 
