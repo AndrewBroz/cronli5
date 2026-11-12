@@ -446,10 +446,10 @@ function timesWith(
   opts: EnglishOptions
 ): TimePhrase[] {
   const {candidates, clockSecond: riding, written} = facts.analyses;
-  // Hours 0 and 12 on the hour are as easy to take in as "every 12
-  // hours" as they are as two times, so they are said the way they were
-  // written. Nothing else is decided by how a field was written.
-  const halves = written.hour === 'cadence';
+  // Hours 0 and 12 on the hour, to the second, are as easy to take in as
+  // "every 12 hours" as they are as two times, so they are said the way
+  // they were written. Nothing else is decided by how a field was written.
+  const halves = written.hour === 'cadence' && second.only === 0;
 
   if (times.length === 1 && second.description.kind !== 'values') {
     const window = say(second.description, secondsOfOneMinute(times[0], opts),

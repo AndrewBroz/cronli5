@@ -85,6 +85,9 @@ export interface Voice {
   // Where a value falls in its cycle as it is said, when that is not its
   // own number: the week is said from Monday, which cron numbers 1.
   rank?(value: number): number;
+  // The fewest values worth saying as pieces, where fewer are listed: a
+  // run of weekdays changes form, so four of them are easier named.
+  fewestInPieces?: number;
 }
 
 // What the values are being named for: a list of them, the ends of a
@@ -216,22 +219,25 @@ function inSpokenOrder(pieces: Pieces,
 // Several pieces, each range with its own lead and the stray values
 // between them as lists.
 function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
-  Phrase {
+  Phrase | null {
   const each = voice.inPieces || {...voice, lead: ''};
+  const count = denote(pieces, domainOf(voice.field)).length;
   const said = inSpokenOrder(pieces, voice).map(function sayPart(part) {
     return part.kind === 'range' ?
       plain(each.range(part.from, part.to), 2) :
       plain(each.values(part.values), part.values.length);
   });
 
-  return plain(
-    join(each.lead, list(said.map(function textOf(part) {
-      return part.text;
-    }), opts)),
-    said.reduce(function total(sum, part) {
-      return sum + part.length;
-    }, 0)
-  );
+  return count < (voice.fewestInPieces ?? 0) ?
+    null :
+    plain(
+      join(each.lead, list(said.map(function textOf(part) {
+        return part.text;
+      }), opts)),
+      said.reduce(function total(sum, part) {
+        return sum + part.length;
+      }, 0)
+    );
 }
 
 /**
@@ -790,7 +796,8 @@ function monthsOfDays(
  * Days of the week: "on Mondays and Wednesdays", "Tuesday through
  * Thursday". They have no cadence ("every other day" would be false
  * across the end of the week) and no "every day except": the week is
- * short enough that its run is always named.
+ * short enough that its run is always named. A run with stray days
+ * beside it is said as pieces only for more than four days.
  */
 function daysOfTheWeek(opts: EnglishOptions): Voice {
   const weekdayForms =
@@ -812,6 +819,7 @@ function daysOfTheWeek(opts: EnglishOptions): Voice {
     range(from, to) {
       return through(weekdayNames([from, to], 'full', opts), opts);
     },
+    fewestInPieces: 5,
     rank: weekRank
   };
 }
