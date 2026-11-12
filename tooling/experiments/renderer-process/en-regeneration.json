@@ -16,6 +16,23 @@
         "whether \"every second\" replaces \"every minute\" before a run of minutes (347)",
         "date cadence against an idiom with exceptions; where months sit in an exception; punctuation of three or more pieces (318)"
       ]
+    },
+    {
+      "round": 2,
+      "date": "2026-11-11",
+      "note": "after the answers were amended for round 1’s three gaps; a third fresh build against the first builder’s conforming renderer",
+      "heldOutAndHardCases": {
+        "total": 211,
+        "same": 211
+      },
+      "widePatternSweep": {
+        "total": 24298,
+        "same": 24268
+      },
+      "causes": [
+        "order and joining of three or more pieces of hours (the kept renderer does not say them in ascending order, as the answers require)",
+        "a stray hour after \"for the first N minutes of\": \"and the 9 a.m. hour\" against \"and 9 a.m.\""
+      ]
     }
   ]
 }
