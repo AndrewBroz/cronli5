@@ -57,6 +57,13 @@ sentence stay as it was?
 Give the family, both orderings said aloud for every member, and why the
 single order of 2.1 fails. A second order is adopted only on this evidence.
 
+2.5 A time of day followed directly by a month or a year skips the days.
+Does a listener need them said ("every day")? Say each aloud with and
+without, and state the condition on the set of hours, so that a schedule
+running round the clock is not given a daily rhythm it does not have.
+[`0 9 * * *`] [`0 9 * 6 *`] [`0 0 9 * * * 2030`] [`0 9-17 * * *`]
+[`*/5 * * 6 *`] [`0 */6 * * *`]
+
 ## 3. Devices, field by field
 
 For each of second, minute, hour, day of month, month and weekday, say how
@@ -95,6 +102,19 @@ exceptions stop being what a person would say?
 3.10 For each device above, how many items can a listener hold before a
 speaker would switch to another device? Answer from how it sounds, and say
 how you checked.
+
+What is held is half the measure. For each device also say what a listener
+has to work out: exact times need nothing, a cadence needs arithmetic, an
+exception needs subtraction. Compare these directly, changing nothing else:
+[`0 */6 * * *` against its four times] [`23 */6 * * *` as a cadence with a
+start, as four times, and with the minute said apart from the hours]
+
+3.11 Which pairs of phrasings are equally easy? List them by the form of
+the set, not by its values. For these pairs only, the phrasing that mirrors
+how the field was written is said (the core reports which kind of
+description each field was written as). Everywhere else the easier
+phrasing is said however the pattern was written.
+[`0 */12 * * *` against `0 0,12 * * *`]
 
 ## 4. Fusions
 

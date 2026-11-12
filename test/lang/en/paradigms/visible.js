@@ -8,21 +8,23 @@
 
 const rows = [
   // clock / second — context `0 9 * * *`
-  ['* 0 9 * * *', 'every second from 9:00 a.m. until 9:01 a.m.'],
-  ['*/6 0 9 * * *', 'every 6 seconds from 9:00 a.m. until 9:01 a.m.'],
+  ['* 0 9 * * *', 'every second from 9:00 a.m. until 9:01 a.m. every day'],
+  ['*/6 0 9 * * *', 'every 6 seconds from 9:00 a.m. until 9:01 a.m. every ' +
+    'day'],
   ['5/10 0 9 * * *',
-    'every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m.'],
+    'every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m. every day'],
 
   // clock / minute
-  ['* 9 * * *', 'every minute during the 9 a.m. hour'],
-  ['5,20,45 9 * * *', 'at 9:05 a.m., 9:20 a.m., and 9:45 a.m.'],
-  ['*/15 9 * * *', 'every 15 minutes during the 9 a.m. hour'],
-  ['0,15,45 9 * * *', 'at 9 a.m., 9:15 a.m., and 9:45 a.m.'],
+  ['* 9 * * *', 'every minute during the 9 a.m. hour every day'],
+  ['5,20,45 9 * * *', 'at 9:05 a.m., 9:20 a.m., and 9:45 a.m. every day'],
+  ['*/15 9 * * *', 'every 15 minutes during the 9 a.m. hour every day'],
+  ['0,15,45 9 * * *', 'at 9 a.m., 9:15 a.m., and 9:45 a.m. every day'],
 
   // clock / hour
   ['0 * * * *', 'every hour'],
-  ['0 9,17 * * *', 'at 9 a.m. and 5 p.m.'],
-  ['0 9-17,22 * * *', 'every hour from 9 a.m. through 5 p.m. and at 10 p.m.'],
+  ['0 9,17 * * *', 'at 9 a.m. and 5 p.m. every day'],
+  ['0 9-17,22 * * *', 'every hour from 9 a.m. through 5 p.m. and at 10 ' +
+    'p.m. every day'],
   ['0 1/2 * * *', 'every 2 hours from 1 a.m.'],
 
   // clock / date
@@ -33,11 +35,13 @@ const rows = [
     'at 9 a.m. on odd-numbered days except the 15th'],
 
   // clock / month
-  ['0 9 * 1 *', 'at 9 a.m. in January'],
-  ['0 9 * 3,6,9,12 *', 'at 9 a.m. in March, June, September, and December'],
+  ['0 9 * 1 *', 'at 9 a.m. every day in January'],
+  ['0 9 * 3,6,9,12 *', 'at 9 a.m. every day in March, June, September, and ' +
+    'December'],
   ['0 9 * */2 *',
-    'at 9 a.m. in January, March, May, July, September, and November'],
-  ['0 9 * 11-2 *', 'at 9 a.m. from November through February'],
+    'at 9 a.m. every day in January, March, May, July, September, and ' +
+      'November'],
+  ['0 9 * 11-2 *', 'at 9 a.m. every day in November through February'],
 
   // clock / weekday
   ['0 9 * * 1', 'at 9 a.m. on Mondays'],
@@ -100,12 +104,12 @@ const rows = [
     'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in ' +
     'January, March, May, July, September, and November'],
   ['*/15 9-17 * 11-2 1-5',
-    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays from ' +
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in ' +
     'November through February'],
 
   // window / weekday
   ['*/15 9-17 * * *',
-    'every 15 minutes from 9 a.m. through 5:45 p.m.'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. every day'],
   ['*/15 9-17 * * 1,3,5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on Mondays, ' +
     'Wednesdays, and Fridays'],
@@ -135,7 +139,7 @@ const rows = [
   ['0 1/2 1 * *', 'every 2 hours from 1 a.m. on the 1st'],
 
   // monthly / date
-  ['0 0 * * *', 'at midnight'],
+  ['0 0 * * *', 'at midnight every day'],
   ['0 0 1,10,20 * *', 'at midnight on the 1st, 10th, and 20th'],
   ['0 0 */2 * *', 'at midnight on odd-numbered days'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
@@ -169,10 +173,12 @@ const rows = [
     'at 0, 15, and 45 minutes past the hour'],
 
   // open / hour
-  ['* 0 * * *', 'every minute during the midnight hour'],
-  ['* 9,17 * * *', 'every minute during the 9 a.m. and 5 p.m. hours'],
+  ['* 0 * * *', 'every minute during the midnight hour every day'],
+  ['* 9,17 * * *', 'every minute during the 9 a.m. and 5 p.m. hours every ' +
+    'day'],
   ['* 9-17,22 * * *',
-    'every minute from 9 a.m. until 6 p.m. and during the 10 p.m. hour'],
+    'every minute from 9 a.m. until 6 p.m. and during the 10 p.m. hour ' +
+      'every day'],
   ['* 1/2 * * *', 'every minute during every other hour from 1 a.m.'],
 
   // open / date
@@ -187,7 +193,7 @@ const rows = [
   ['* * * 3,6,9,12 *', 'every minute in March, June, September, and December'],
   ['* * * */2 *',
     'every minute in January, March, May, July, September, and November'],
-  ['* * * 11-2 *', 'every minute from November through February'],
+  ['* * * 11-2 *', 'every minute in November through February'],
 
   // open / weekday
   ['* * * * 1', 'every minute on Mondays'],

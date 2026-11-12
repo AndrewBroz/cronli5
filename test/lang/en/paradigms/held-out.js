@@ -10,47 +10,53 @@ const EVEN_HOURS_BUT_8 = '0,2,4,6,10,12,14,16,18,20,22';
 
 const rows = [
   // clock / second — context `0 9 * * *`
-  ['30 0 9 * * *', 'at 9:00:30 a.m.'],
-  ['0,30 0 9 * * *', 'at 9 a.m. and 9:00:30 a.m.'],
-  ['*/15 0 9 * * *', 'every 15 seconds from 9:00 a.m. until 9:01 a.m.'],
-  ['0-9 0 9 * * *', 'every second from 9:00:00 a.m. through 9:00:09 a.m.'],
+  ['30 0 9 * * *', 'at 9:00:30 a.m. every day'],
+  ['0,30 0 9 * * *', 'at 9 a.m. and 9:00:30 a.m. every day'],
+  ['*/15 0 9 * * *', 'every 15 seconds from 9:00 a.m. until 9:01 a.m. ' +
+    'every day'],
+  ['0-9 0 9 * * *', 'every second from 9:00:00 a.m. through 9:00:09 a.m. ' +
+    'every day'],
 
   // clock / minute
-  ['30 9 * * *', 'at 9:30 a.m.'],
-  ['0,30 9 * * *', 'at 9 a.m. and 9:30 a.m.'],
-  ['0-29 9 * * *', 'every minute from 9 a.m. until 9:30 a.m.'],
+  ['30 9 * * *', 'at 9:30 a.m. every day'],
+  ['0,30 9 * * *', 'at 9 a.m. and 9:30 a.m. every day'],
+  ['0-29 9 * * *', 'every minute from 9 a.m. until 9:30 a.m. every day'],
   ['0-29,45 9 * * *',
-    'every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m.'],
-  ['*/7 9 * * *', 'every 7 minutes from 0 through 56 minutes past 9 a.m.'],
-  ['5/15 9 * * *', 'at 9:05 a.m., 9:20 a.m., 9:35 a.m., and 9:50 a.m.'],
-  ['10-40/10 9 * * *', 'at 9:10 a.m., 9:20 a.m., 9:30 a.m., and 9:40 a.m.'],
+    'every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m. every day'],
+  ['*/7 9 * * *', 'every 7 minutes from 0 through 56 minutes past 9 a.m. ' +
+    'every day'],
+  ['5/15 9 * * *', 'at 9:05 a.m., 9:20 a.m., 9:35 a.m., and 9:50 a.m. ' +
+    'every day'],
+  ['10-40/10 9 * * *', 'at 9:10 a.m., 9:20 a.m., 9:30 a.m., and 9:40 a.m. ' +
+    'every day'],
 
   // clock / hour
-  ['0 12 * * *', 'at noon'],
-  ['0 8,12,18 * * *', 'at 8 a.m., noon, and 6 p.m.'],
-  ['0 9-17 * * *', 'every hour from 9 a.m. through 5 p.m.'],
+  ['0 12 * * *', 'at noon every day'],
+  ['0 8,12,18 * * *', 'at 8 a.m., noon, and 6 p.m. every day'],
+  ['0 9-17 * * *', 'every hour from 9 a.m. through 5 p.m. every day'],
   ['0 */2 * * *', 'every 2 hours'],
   ['0 */6 * * *', 'every 6 hours'],
   [`0 ${EVEN_HOURS_BUT_8} * * *`, 'every 2 hours except at 8 a.m.'],
-  ['0 22-2 * * *', 'every hour from 10 p.m. through 2 a.m.'],
+  ['0 22-2 * * *', 'every hour from 10 p.m. through 2 a.m. every day'],
 
   // clock / date
   ['0 9 15 * *', 'at 9 a.m. on the 15th'],
   ['0 9 1,15 * *', 'at 9 a.m. on the 1st and 15th'],
-  ['0 9 1-7 * *', 'at 9 a.m. from the 1st through the 7th'],
-  ['0 9 1-7,15 * *', 'at 9 a.m. from the 1st through the 7th and on the 15th'],
+  ['0 9 1-7 * *', 'at 9 a.m. on the 1st through the 7th'],
+  ['0 9 1-7,15 * *', 'at 9 a.m. on the 1st through the 7th and on the 15th'],
   ['0 9 2/2 * *', 'at 9 a.m. on even-numbered days'],
   ['0 9 */5 * *', 'at 9 a.m. every 5 days from the 1st'],
   ['0 9 L * *', 'at 9 a.m. on the last day of the month'],
   ['0 9 15W * *', 'at 9 a.m. on the weekday nearest the 15th'],
 
   // clock / month
-  ['0 9 * 6 *', 'at 9 a.m. in June'],
-  ['0 9 * 1,7 *', 'at 9 a.m. in January and July'],
-  ['0 9 * 6-8 *', 'at 9 a.m. from June through August'],
-  ['0 9 * 6-8,12 *', 'at 9 a.m. from June through August and in December'],
-  ['0 9 * */3 *', 'at 9 a.m. in January, April, July, and October'],
-  ['0 9 * 1-11 *', 'at 9 a.m. in every month except December'],
+  ['0 9 * 6 *', 'at 9 a.m. every day in June'],
+  ['0 9 * 1,7 *', 'at 9 a.m. every day in January and July'],
+  ['0 9 * 6-8 *', 'at 9 a.m. every day in June through August'],
+  ['0 9 * 6-8,12 *', 'at 9 a.m. every day in June through August and in ' +
+    'December'],
+  ['0 9 * */3 *', 'at 9 a.m. every day in January, April, July, and October'],
+  ['0 9 * 1-11 *', 'at 9 a.m. every day in every month except December'],
 
   // clock / weekday
   ['0 9 * * 0', 'at 9 a.m. on Sundays'],
@@ -118,11 +124,11 @@ const rows = [
     'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st and 15th ' +
     'as well as on weekdays'],
   ['*/15 9-17 1-7 * 1-5',
-    'every 15 minutes from 9 a.m. through 5:45 p.m. from the 1st ' +
-    'through the 7th as well as on weekdays'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st through the ' +
+    '7th as well as on weekdays'],
   ['*/15 9-17 1-7,15 * 1-5',
-    'every 15 minutes from 9 a.m. through 5:45 p.m. from the 1st ' +
-    'through the 7th and on the 15th as well as on weekdays'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st through the ' +
+    '7th and on the 15th as well as on weekdays'],
   ['*/15 9-17 2/2 * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on even-numbered ' +
     'days as well as on weekdays'],
@@ -143,11 +149,11 @@ const rows = [
     'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in ' +
     'January and July'],
   ['*/15 9-17 * 6-8 1-5',
-    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays from ' +
-    'June through August'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in June ' +
+    'through August'],
   ['*/15 9-17 * 6-8,12 1-5',
-    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays from ' +
-    'June through August and in December'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in June ' +
+    'through August and in December'],
   ['*/15 9-17 * */3 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in ' +
     'January, April, July, and October'],
@@ -208,9 +214,9 @@ const rows = [
   // monthly / date
   ['0 0 15 * *', 'at midnight on the 15th'],
   ['0 0 1,15 * *', 'at midnight on the 1st and 15th'],
-  ['0 0 1-7 * *', 'at midnight from the 1st through the 7th'],
+  ['0 0 1-7 * *', 'at midnight on the 1st through the 7th'],
   ['0 0 1-7,15 * *',
-    'at midnight from the 1st through the 7th and on the 15th'],
+    'at midnight on the 1st through the 7th and on the 15th'],
   ['0 0 2/2 * *', 'at midnight on even-numbered days'],
   ['0 0 */5 * *', 'at midnight every 5 days from the 1st'],
   ['0 0 L * *', 'at midnight on the last day of the month'],
@@ -260,22 +266,22 @@ const rows = [
     'every 10 minutes from 10 through 40 minutes past the hour'],
 
   // open / hour
-  ['* 12 * * *', 'every minute during the noon hour'],
+  ['* 12 * * *', 'every minute during the noon hour every day'],
   ['* 8,12,18 * * *',
-    'every minute during the 8 a.m., noon, and 6 p.m. hours'],
-  ['* 9-17 * * *', 'every minute from 9 a.m. until 6 p.m.'],
+    'every minute during the 8 a.m., noon, and 6 p.m. hours every day'],
+  ['* 9-17 * * *', 'every minute from 9 a.m. until 6 p.m. every day'],
   ['* */2 * * *', 'every minute during every other hour'],
   ['* */6 * * *', 'every minute for one hour every 6 hours'],
   [`* ${EVEN_HOURS_BUT_8} * * *`,
     'every minute during every other hour except the 8 a.m. hour'],
-  ['* 22-2 * * *', 'every minute from 10 p.m. until 3 a.m.'],
+  ['* 22-2 * * *', 'every minute from 10 p.m. until 3 a.m. every day'],
 
   // open / date
   ['* * 15 * *', 'every minute on the 15th'],
   ['* * 1,15 * *', 'every minute on the 1st and 15th'],
-  ['* * 1-7 * *', 'every minute from the 1st through the 7th'],
+  ['* * 1-7 * *', 'every minute on the 1st through the 7th'],
   ['* * 1-7,15 * *',
-    'every minute from the 1st through the 7th and on the 15th'],
+    'every minute on the 1st through the 7th and on the 15th'],
   ['* * 2/2 * *', 'every minute on even-numbered days'],
   ['* * */5 * *', 'every minute every 5 days from the 1st'],
   ['* * L * *', 'every minute on the last day of the month'],
@@ -284,8 +290,8 @@ const rows = [
   // open / month
   ['* * * 6 *', 'every minute in June'],
   ['* * * 1,7 *', 'every minute in January and July'],
-  ['* * * 6-8 *', 'every minute from June through August'],
-  ['* * * 6-8,12 *', 'every minute from June through August and in December'],
+  ['* * * 6-8 *', 'every minute in June through August'],
+  ['* * * 6-8,12 *', 'every minute in June through August and in December'],
   ['* * * */3 *', 'every minute in January, April, July, and October'],
   ['* * * 1-11 *', 'every minute in every month except December'],
 

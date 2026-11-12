@@ -25,20 +25,20 @@ const sets = [
   {
     options: {ampm: false},
     rows: [
-      {expected: 'at 09:00', parts: ['09:00'], pattern: '0 9 * * *'},
-      {expected: 'at 00:00', parts: ['00:00'], pattern: '0 0 * * *'},
+      {expected: 'at 09:00 every day', parts: ['09:00'], pattern: '0 9 * * *'},
+      {expected: 'at 00:00 every day', parts: ['00:00'], pattern: '0 0 * * *'},
       {
-        expected: 'at 09:30 and 17:30',
+        expected: 'at 09:30 and 17:30 every day',
         parts: ['09:30', '17:30'],
         pattern: '30 9,17 * * *'
       },
       {
-        expected: 'at 08:00, 12:00, and 18:00',
+        expected: 'at 08:00, 12:00, and 18:00 every day',
         parts: ['08:00', '12:00', '18:00'],
         pattern: '0 8,12,18 * * *'
       },
       {
-        expected: 'every hour from 09:00 through 17:00',
+        expected: 'every hour from 09:00 through 17:00 every day',
         parts: ['09:00', '17:00'],
         pattern: '0 9-17 * * *'
       },
@@ -68,7 +68,7 @@ const sets = [
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'at 9 a.m. from Jun through Aug',
+        expected: 'at 9 a.m. every day in Jun through Aug',
         parts: ['9 a.m.', 'Jun', 'Aug'],
         pattern: '0 9 * 6-8 *'
       },
@@ -87,19 +87,19 @@ const sets = [
   {
     options: {dialect: 'gb'},
     rows: [
-      {expected: 'at 9am', parts: ['9am'], pattern: '0 9 * * *'},
+      {expected: 'at 9am every day', parts: ['9am'], pattern: '0 9 * * *'},
       {
-        expected: 'at 9.30am and 5.30pm',
+        expected: 'at 9.30am and 5.30pm every day',
         parts: ['9.30am', '5.30pm'],
         pattern: '30 9,17 * * *'
       },
       {
-        expected: 'at 8am, midday and 6pm',
+        expected: 'at 8am, midday and 6pm every day',
         parts: ['8am', 'midday', '6pm'],
         pattern: '0 8,12,18 * * *'
       },
       {
-        expected: 'every hour from 9am to 5pm',
+        expected: 'every hour from 9am to 5pm every day',
         parts: ['9am', '5pm'],
         pattern: '0 9-17 * * *'
       },
@@ -114,7 +114,7 @@ const sets = [
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'at 9am from June to August',
+        expected: 'at 9am every day in June to August',
         parts: ['9am', 'June', 'August'],
         pattern: '0 9 * 6-8 *'
       },
@@ -124,7 +124,7 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'at midnight from 1 to 7 June',
+        expected: 'at midnight on 1 to 7 June',
         parts: ['midnight', '1', '7 June'],
         pattern: '0 0 1-7 6 *'
       }
@@ -133,9 +133,9 @@ const sets = [
   {
     options: {dialect: 'house'},
     rows: [
-      {expected: 'at 9 AM', parts: ['9 AM'], pattern: '0 9 * * *'},
+      {expected: 'at 9 AM every day', parts: ['9 AM'], pattern: '0 9 * * *'},
       {
-        expected: 'every hour from 9 AM through 5 PM',
+        expected: 'every hour from 9 AM through 5 PM every day',
         parts: ['9 AM', '5 PM'],
         pattern: '0 9-17 * * *'
       },
@@ -145,7 +145,7 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'at midnight from June 1st through 7th',
+        expected: 'at midnight on June 1st through 7th',
         parts: ['midnight', 'June 1st', '7th'],
         pattern: '0 0 1-7 6 *'
       }
@@ -155,12 +155,12 @@ const sets = [
     options: {ampm: false, dialect: 'gb'},
     rows: [
       {
-        expected: 'at 09.30 and 17.30',
+        expected: 'at 09.30 and 17.30 every day',
         parts: ['09.30', '17.30'],
         pattern: '30 9,17 * * *'
       },
       {
-        expected: 'every hour from 09.00 to 17.00',
+        expected: 'every hour from 09.00 to 17.00 every day',
         parts: ['09.00', '17.00'],
         pattern: '0 9-17 * * *'
       },
