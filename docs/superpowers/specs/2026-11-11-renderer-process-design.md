@@ -144,33 +144,93 @@ preferences and any limits stay per language. `hourStride` and the
 day-of-month parity facts already do this for two special cases. Clock-time
 folding is the same mechanism over the minute-by-hour product.
 
-### 5.5 Selection by things named
+### 5.5 Selection by ease, with spelling on declared ties
 
-Amended 2026-11-11 after the English paradigms were written; approved by
-the maintainer. The first design chose the phrasing shortest in spoken
-syllables. That made the choice depend on *which* values were named: the
-same three minutes read as a list of clock times at 9 o'clock and as
-"5, 20, and 45 minutes past 11 a.m." at 11, because "eleven" is longer
-than "nine". That is a continuity failure, and continuity ranks higher.
+Amended twice. The first design chose the phrasing shortest in spoken
+syllables; that made the device depend on *which* values were named. The
+second (2026-11-11) chose the phrasing that names the fewest things. This
+third version (2026-11-12) follows the maintainer's second blind ranking
+and the conversation after it. Counting things named was a proxy too: it
+scored "every 12 hours from 12:23 a.m." as cheaper than two exact times,
+which is backwards.
 
-The language renders each candidate it has a device for. The phrasing that
-**names the fewest things** wins: a value, a clock time, an end of a range,
-an interval, an idiom. A fixed order breaks ties.
+**What is being minimized is the work of understanding.** A reader does
+three things with a description, and each has a cost:
 
-* The count depends only on how many values there are and how they are
-  arranged, never on which values, so equal-shaped sets always get the same
-  device.
-* It is the "limit on items held" this section first posed as a
-  hypothesis, and it agrees with the core's own bound on exceptions.
-* Thresholds still are not chosen by hand: "except the 15th" wins until
-  the exceptions outnumber what the list would name.
-* Spoken syllable lengths stay in each lexicon as data. The maintainer's
-  finding stands that naturalness tracks what is spoken, not what is
-  written; the count of things named is a spoken measure that cannot vary
-  with the values.
+* **Says it**, usually under their breath. Longer costs more.
+* **Interprets it**: gets from the words to when it fires. Exact times cost
+  almost nothing. A cadence costs arithmetic, and how much depends on its
+  form.
+* **Holds it**: keeps the separate items in mind. This grows with a list
+  and stays flat for a cadence, so the preference between them flips at
+  some length.
 
-Each language states its counts in its questionnaire answers
-(`src/lang/en/answers.md` opens with the English table).
+Counting things named measured only the third.
+
+**There is a second aim beside ease: the description should show how it
+relates to the pattern.** Someone laying the two side by side should see
+which words answer to which field. Continuity is one consequence of this.
+Another is a preference for phrasings that keep fields apart: "at 23
+minutes past the hour, every 6 hours" answers to `23` and `*/6` one for
+one, where "every 6 hours from 12:23 a.m." buries the minute in a start
+time.
+
+The two aims can disagree, and there is no formula for either. So the rule
+has an order, and each language writes its judgments down:
+
+1. **Ease decides first.** Where one phrasing is clearly easier, it wins
+   however the pattern was written. `0,6,12,18` in the hour field is "every
+   6 hours".
+2. **Spelling decides declared ties.** Each language's answers list, by
+   form, the pairs of phrasings it judges about equally easy. For those
+   pairs only, the phrasing that mirrors how the field was written wins:
+   `*/12` is "every 12 hours" and `0,12` is "at midnight and noon".
+3. **Spoken length breaks what is left.** Untested so far; no decision
+   made on 2026-11-12 needed it.
+
+What the conditions may depend on is unchanged in spirit: how many values
+there are, how they are arranged, and now, for a declared tie, which of the
+core's descriptions matches the spelling. Never which values are named.
+
+**Why the ties are a declared list and not a score.** There is no real
+number for cognitive load, and a threshold on an invented one would be the
+proxy mistake a third time. A list of ties by form can be read and
+disputed by a reviewer.
+
+**What this changes in the contract.** The core reports, for each field,
+which of its descriptions corresponds to how the field was written. A
+renderer still never reads the pattern text or field shapes, and may use
+that fact only to settle a tie its answers declare. Equal schedules may
+now be worded differently, on exactly the declared ties; the check that
+counts them allows that list and nothing else.
+
+**Judgments from the maintainer that calibrate this**, each from a direct
+comparison with nothing else varying:
+
+| Set | Easier | Than |
+| --- | --- | --- |
+| round hours, four a day | "every 6 hours" | four exact times |
+| round hours, two a day | tie: "every 12 hours" and "at midnight and noon" | |
+| hours at an offset, four a day | "at 23 minutes past the hour, every 6 hours" | four exact times, narrowly; "every 6 hours from 12:23 a.m.", by far |
+| hours at an offset, two a day | two exact times (from a sketch, not a comparison) | |
+
+Rules of thumb these support, to be tested per language and not assumed:
+
+* A cadence that lands on round values is close to free. One with a start
+  the reader must add to is among the most expensive things a description
+  can ask.
+* Splitting an offset cadence into a plain fact in the finer unit and a
+  round cadence in the coarser one removes the arithmetic.
+* An exception makes the reader subtract. It is worth it when it replaces
+  a list too long to hold, and not when it replaces a few names.
+* A word should do one job. English "from" was both starting cadences and
+  opening ranges of days and months, and the reader could not tell which
+  until later in the sentence.
+* A description should not skip a level of scale. A time of day followed
+  directly by a month or a year leaves the reader to supply "every day".
+
+Each language states its own judgments and ties in its questionnaire
+answers.
 
 ### 5.6 Idioms are rows
 

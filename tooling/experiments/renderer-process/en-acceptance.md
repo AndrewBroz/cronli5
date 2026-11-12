@@ -144,6 +144,57 @@ Twenty patterns and one judge is a small sample, and the generator draws
 only five-field patterns. It was still the most productive gate per
 minute of the whole build: five rule changes from twenty rows.
 
+## A second blind ranking, with seconds, years and Quartz forms
+
+2026-11-12. Twenty more patterns (seed 20261112), each with at least one
+of a seconds field that says something, a year field, or a Quartz day
+form, ranked blind the same way.
+
+| | New | Old | cRonstrue |
+| --- | --- | --- | --- |
+| Best or tied-best | 17 | 11 | 1 |
+| Sole best | 9 | 3 | 0 |
+| Worst, where not all tied | 0 | 0 | 19 |
+| Mean rank | 1.15 | 1.45 | 2.85 |
+
+The orchestrating model had doubted three of the new sentences before the
+ranking and held them back to keep it blind. Two were confirmed; the third
+(a weekday range with no "on") was ranked the clear winner.
+
+The ranking was followed by a conversation, one direct comparison at a
+time, and that changed more than the ranking did. It replaced the selection
+rule itself (design section 5.5): counting things named gave way to ease of
+understanding, with the pattern's spelling settling declared ties. The
+English rules agreed in that conversation, **not yet in the answers, the
+rows or the renderer**:
+
+* An hour cadence at an offset is split: "at 24 minutes past the hour,
+  every 3 hours", never "every 3 hours from 12:24 a.m.".
+* Round hours twice a day are a declared tie: `*/12` is "every 12 hours",
+  `0,12` is "at midnight and noon". Twice a day at an offset is two exact
+  times.
+* "From" belongs to times and cadences. Ranges of days, months and years
+  take the preposition their lists take: "on the 23rd through the 25th",
+  "in January through June", "in 2028 through 2031". "Of each month from
+  June through August" keeps its "from".
+* When the hours are restricted to a window or to named times and no day
+  is named, the day part says "every day": "at 9 a.m. every day", "every
+  hour from 9 a.m. through 5 p.m. every day in June". A round-the-clock
+  cadence stays bare ("every 6 hours", "every 5 minutes in June"). This is
+  a declared crossing: an hour edit may add or remove "every day".
+* An exception must replace a list of more than four items, so "on
+  Mondays, Wednesdays, Thursdays, and Fridays", not "on weekdays except
+  Tuesday".
+* "Every other year from 2033".
+
+Question 6 (`*/10 24 */3 23-25 * 1-2`) becomes "every 10 seconds for one
+minute at 24 minutes past the hour, every 3 hours, on the 23rd through the
+25th as well as on Mondays and Tuesdays". The maintainer called that
+better, not solved; it stays a hard case to re-test blind.
+
+Not changed: sentence order. A day-first sentence won one question, tied
+another of the same structure and lost a third.
+
 ## Regeneration
 
 A second agent, and later a third, each built a renderer from the answers,
