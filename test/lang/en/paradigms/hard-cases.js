@@ -121,8 +121,11 @@ const rows = [
     'at 6 p.m. on the weekday nearest March 15, June 15, September 15, ' +
     'and December 15'],
   ['0,30 8-18/2 1,15 * 1-5',
-    'every 30 minutes for one hour every 2 hours from 8 a.m. through ' +
+    'at 0 and 30 minutes past the hour, every 2 hours from 8 a.m. through ' +
     '6 p.m. on the 1st and 15th as well as on weekdays'],
+  ['* 8-18/2 * * *',
+    'every minute during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and ' +
+    '6 p.m. hours'],
   ['15,45 */4 1-10 1,4,7,10 *',
     'at 15 and 45 minutes past the hour, every 4 hours from the 1st ' +
     'through the 10th of January, April, July, and October'],

@@ -329,7 +329,8 @@ confinement:
 | range | "from 9 a.m. until 6 p.m." |
 | pieces | "from 9 a.m. until 6 p.m. and during the 10 p.m. hour" |
 | every second hour | "during every other hour"; off the beat, "during every other hour from 1 a.m." |
-| any other cadence | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours"; "for one hour every 5 hours from midnight through 8 p.m." It names what that cadence names. |
+| any other cadence that runs through the day | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours"; "for one hour every 3 hours from 1 a.m." It names what that cadence names. |
+| a cadence with a named end | the hours as values: "during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours". "For one hour every 2 hours from 8 a.m. through 6 p.m." is misheard as stopping at 6. |
 | except | "except during the 3 a.m. hour"; over every second hour, "during every other hour except the 8 a.m. hour" |
 
 Hours 0 and 12 are "the midnight hour" and "the noon hour".
