@@ -76,18 +76,26 @@ renderer change.
 
 ## What a renderer must hold to
 
-- **Ease of parsing is the aim.** Among sayable phrasings the one that names
-  the fewest things wins; the choice never depends on which values are
-  named, only on how many and how arranged.
+- **Ease of understanding is the aim.** A reader says a description, works
+  out when it fires, and holds its parts in mind; exact times need no
+  working out, a cadence with a start to add to needs a lot, and a long
+  list is hard to hold. The choice never depends on which values are
+  named, only on how many and how arranged. No count is the measure: each
+  language's answers record its judgments, from direct comparisons.
+- **The description shows how it answers to the pattern.** Fields are kept
+  apart where that costs nothing, and where two phrasings are equally
+  easy the one that mirrors the spelling is said. Those ties are declared
+  by form in the answers, and nowhere else.
 - **Continuity is a hard constraint.** One frame per language. Editing one
   field may change only that field's part of the sentence, apart from
   fusions declared by name (`test/lang/<code>/continuity.js` measures this
   directly). Word-change scores (`npm run edit-diff`) are a rough
   instrument, never a target: they reward long sentences and cannot tell a
   right description from a wrong one.
-- **Conditions are about the set of values, never how the pattern was
-  written.** A renderer does not read `pattern` or `shapes`
-  (`test/lang/renderer-rules.js`).
+- **Conditions are about the set of values.** A renderer does not read
+  `pattern` or `shapes` (`test/lang/renderer-rules.js`). For a declared
+  tie, and only there, it may ask which kind of description a field was
+  written as (`analyses.written`).
 - **Taste calls are made by the orchestrating frontier model or a fluent
   human**, recorded with reasons in the answers. No persona panels.
 

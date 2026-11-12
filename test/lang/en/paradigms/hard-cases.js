@@ -154,7 +154,9 @@ const rows = [
     'at 15 and 45 minutes past the hour, every 4 hours on the 1st through ' +
     'the 10th of January, April, July, and October'],
   ['0 0 * * 1-7/2', 'at midnight on Mondays, Wednesdays, Fridays, and Sundays'],
-  ['0 9 * * 0,2-4', 'at 9 a.m. Tuesday through Thursday and on Sundays'],
+  ['0 9 * * 0,2-4',
+    'at 9 a.m. on Tuesdays, Wednesdays, Thursdays, and Sundays'],
+  ['0 9 * * 0,2-5', 'at 9 a.m. Tuesday through Friday and on Sundays'],
   ['30 4 1-7 * 1',
     'at 4:30 a.m. on the 1st through the 7th as well as on Mondays'],
   ['59 23 31 12 *', 'at 11:59 p.m. on December 31'],
@@ -225,6 +227,7 @@ const rows = [
   ['0 0/12 * * *', 'every 12 hours'],
   ['0 0,12 * * *', 'at midnight and noon every day'],
   ['0 */12 1 * *', 'every 12 hours on the 1st'],
+  ['15 0 */12 * * *', 'at 12:00:15 a.m. and 12:00:15 p.m. every day'],
   ['0 0,12 1 * *', 'at midnight and noon on the 1st'],
 
   // "Every day" fills the level a restricted hour would otherwise skip,

@@ -306,7 +306,12 @@ piece each is ("at 1 a.m., every hour from 9 a.m. through 11 a.m., and at 1 p.m.
 one of the runs wraps round the cycle, in which case the wrapped run comes
 first: "every hour from 10 p.m. through 2 a.m. and at 10 a.m." Weekday
 pieces follow the week order of 3.3, a wrapped run first: "Tuesday through
-Thursday and on Sundays"; "Friday through Monday and on Wednesdays". Three or more parts are
+Friday and on Sundays"; "Friday through Monday and on Wednesdays". Weekday
+pieces are said only for more than four days. A run of weekdays changes
+form (no "on", no plural), so pieces mix two forms in one phrase, and four
+names are easy to hold: Tuesday to Thursday with Sunday is "on Tuesdays,
+Wednesdays, Thursdays, and Sundays"; Monday with Wednesday to Friday is
+"on Mondays, Wednesdays, Thursdays, and Fridays". Three or more parts are
 joined as a list is, with commas: "at 9 a.m., every hour from 11 a.m. through 1 p.m., and at 3 p.m., 7 p.m., and 9 p.m." A run of minutes that wraps inside
 one hour is two windows: "every minute from 9 a.m. until 9:11 a.m. and every minute from 9:50 a.m. until 10 a.m."
 
@@ -416,10 +421,11 @@ spelling is used, and only for the ties listed here.
 
 | Set | Written as a cadence (`*/12`, `0/12`) | Written any other way (`0,12`) |
 | --- | --- | --- |
-| hours 0 and 12, at minute 0, said as points | "every 12 hours" | "at midnight and noon every day" |
+| hours 0 and 12, at minute 0 and second 0, said as points | "every 12 hours" | "at midnight and noon every day" |
 
 Everywhere else hours 0 and 12 are two named hours, however written: "at
-12:23 a.m. and 12:23 p.m. every day"; "every 15 minutes during the
+12:23 a.m. and 12:23 p.m. every day"; "at 12:00:15 a.m. and 12:00:15 p.m.
+every day"; "every 15 minutes during the
 midnight and noon hours every day".
 
 ## 4. Fusions
@@ -490,8 +496,7 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m."
 
 **A list of clock times is also sayable** whenever neither M nor H is
-every value, the hours are not said as a cadence, and there are at most
-24 times: "at 9:05 a.m., 9:20 a.m., and 9:45 a.m."
+every value and there are at most 24 times: "at 9:05 a.m., 9:20 a.m., and 9:45 a.m."
 It names one thing per time and competes with the continuous or anchored
 form, which names the things in its minute phrase plus those in its hour
 phrase. On a tie the list of times wins. `0,30 9 * * *` is "at 9 a.m. and 9:30 a.m." (two things either way); `*/15 9 * * *` is "every 15 minutes during
