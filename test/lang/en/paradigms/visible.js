@@ -9,8 +9,10 @@
 const rows = [
   // clock / second — context `0 9 * * *`
   ['* 0 9 * * *', 'every second from 9:00 until 9:01 a.m.'],
-  ['*/6 0 9 * * *', 'every 6 seconds from 9:00 until 9:01 a.m.'],
-  ['5/10 0 9 * * *', 'every 10 seconds from 9:00:05 through 9:00:55 a.m.'],
+  ['*/6 0 9 * * *',
+    'every 6 seconds from 9:00:00 a.m. through 9:00:54 a.m.'],
+  ['5/10 0 9 * * *',
+    'every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m.'],
 
   // clock / minute
   ['* 9 * * *', 'every minute during the 9 a.m. hour'],
@@ -45,76 +47,80 @@ const rows = [
 
   // window / second — context `*/15 9-17 * * 1-5`
   ['* */15 9-17 * * 1-5',
-    'every second for one minute every 15 minutes from 9 a.m. until 6 p.m. ' +
-    'on weekdays'],
+    'every second for one minute every 15 minutes from 9 a.m. through ' +
+    '5:45 p.m. on weekdays'],
   ['*/6 */15 9-17 * * 1-5',
-    'every 6 seconds for one minute every 15 minutes from 9 a.m. until ' +
-    '6 p.m. on weekdays'],
+    'every 6 seconds for one minute every 15 minutes from 9 a.m. ' +
+    'through 5:45 p.m. on weekdays'],
   ['5/10 */15 9-17 * * 1-5',
-    'every 10 seconds from 5 through 55 seconds past the minute, every 15 ' +
-    'minutes from 9 a.m. until 6 p.m. on weekdays'],
+    'every 10 seconds from 5 through 55 seconds past the minute, every ' +
+    '15 minutes from 9 a.m. through 5:45 p.m. on weekdays'],
 
   // window / minute
   ['* 9-17 * * 1-5', 'every minute from 9 a.m. until 6 p.m. on weekdays'],
   ['0,30 9-17 * * 1-5',
-    'every 30 minutes from 9 a.m. until 6 p.m. on weekdays'],
+    'every 30 minutes from 9 a.m. through 5:30 p.m. on weekdays'],
   ['0-29,45 9-17 * * 1-5',
-    'every minute from 0 through 29 and at 45 minutes past every hour from ' +
-    '9 a.m. through 5 p.m. on weekdays'],
+    'every minute from 0 through 29 and at 45 minutes past the hour ' +
+    'from 9 a.m. through 5 p.m. on weekdays'],
   ['0,15,45 9-17 * * 1-5',
-    'at 0, 15, and 45 minutes past every hour from 9 a.m. through 5 p.m. ' +
+    'at 0, 15, and 45 minutes past the hour from 9 a.m. through 5 p.m. ' +
     'on weekdays'],
 
   // window / hour
   ['*/15 * * * 1-5', 'every 15 minutes on weekdays'],
   ['*/15 12 * * 1-5', 'every 15 minutes during the noon hour on weekdays'],
   ['*/15 9-17,22 * * 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. and during the 10 p.m. hour ' +
-    'on weekdays'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. and during the 10 ' +
+    'p.m. hour on weekdays'],
   ['*/15 1/2 * * 1-5',
     'every 15 minutes during every other hour from 1 a.m. on weekdays'],
 
   // window / date
   ['*/15 9-17 1 * 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on the 1st as well as on ' +
-    'weekdays'],
-  ['*/15 9-17 1,10,20 * 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on the 1st, 10th, and 20th ' +
-    'as well as on weekdays'],
-  ['*/15 9-17 */2 * 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on odd-numbered days as well ' +
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st as well ' +
     'as on weekdays'],
+  ['*/15 9-17 1,10,20 * 1-5',
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st, 10th, ' +
+    'and 20th as well as on weekdays'],
+  ['*/15 9-17 */2 * 1-5',
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered ' +
+    'days as well as on weekdays'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on odd-numbered days except ' +
-    'the 15th as well as on weekdays'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered ' +
+    'days except the 15th as well as on weekdays'],
 
   // window / month
   ['*/15 9-17 * 1 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on weekdays in January'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in ' +
+    'January'],
   ['*/15 9-17 * 3,6,9,12 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on weekdays in March, June, ' +
-    'September, and December'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in ' +
+    'March, June, September, and December'],
   ['*/15 9-17 * */2 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on weekdays in January, ' +
-    'March, May, July, September, and November'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in ' +
+    'January, March, May, July, September, and November'],
   ['*/15 9-17 * 11-2 1-5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on weekdays from November ' +
-    'through February'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays from ' +
+    'November through February'],
 
   // window / weekday
-  ['*/15 9-17 * * *', 'every 15 minutes from 9 a.m. until 6 p.m.'],
+  ['*/15 9-17 * * *',
+    'every 15 minutes from 9 a.m. through 5:45 p.m.'],
   ['*/15 9-17 * * 1,3,5',
-    'every 15 minutes from 9 a.m. until 6 p.m. on Mondays, Wednesdays, and ' +
-    'Fridays'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on Mondays, ' +
+    'Wednesdays, and Fridays'],
   ['*/15 9-17 * * 2,4',
-    'every 15 minutes from 9 a.m. until 6 p.m. on Tuesdays and Thursdays'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on Tuesdays and ' +
+    'Thursdays'],
 
   // monthly / second — context `0 0 1 * *`
   ['* 0 0 1 * *', 'every second from midnight until 12:01 a.m. on the 1st'],
   ['*/6 0 0 1 * *',
-    'every 6 seconds from midnight until 12:01 a.m. on the 1st'],
+    'every 6 seconds from midnight through 12:00:54 a.m. on the 1st'],
   ['5/10 0 0 1 * *',
-    'every 10 seconds from 12:00:05 through 12:00:55 a.m. on the 1st'],
+    'every 10 seconds from 12:00:05 a.m. through 12:00:55 a.m. on the ' +
+    '1st'],
 
   // monthly / minute
   ['* 0 1 * *', 'every minute during the midnight hour on the 1st'],
@@ -154,12 +160,14 @@ const rows = [
   ['* * * * * *', 'every second'],
   ['*/6 * * * * *', 'every 6 seconds'],
   ['5/10 * * * * *',
-    'every 10 seconds from 5 through 55 seconds past every minute'],
+    'every 10 seconds from 5 through 55 seconds past the minute'],
 
   // open / minute
-  ['5,20,45 * * * *', 'at 5, 20, and 45 minutes past every hour'],
+  ['5,20,45 * * * *',
+    'at 5, 20, and 45 minutes past the hour'],
   ['*/15 * * * *', 'every 15 minutes'],
-  ['0,15,45 * * * *', 'at 0, 15, and 45 minutes past every hour'],
+  ['0,15,45 * * * *',
+    'at 0, 15, and 45 minutes past the hour'],
 
   // open / hour
   ['* 0 * * *', 'every minute during the midnight hour'],

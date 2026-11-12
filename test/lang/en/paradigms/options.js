@@ -7,7 +7,7 @@
 // Written by hand from src/lang/en/answers.md §1.2.
 
 const defaultParts = {
-  '*/15 9-17 * * 1-5': ['15 minutes', '9 a.m.', '6 p.m.', 'weekdays'],
+  '*/15 9-17 * * 1-5': ['15 minutes', '9 a.m.', '5:45 p.m.', 'weekdays'],
   '0 0 * * *': ['midnight'],
   '0 0 1 6 *': ['midnight', 'June 1'],
   '0 0 1-7 6 *': ['midnight', 'June 1', '7'],
@@ -43,8 +43,8 @@ const sets = [
         pattern: '0 9-17 * * *'
       },
       {
-        expected: 'every 15 minutes from 09:00 until 18:00 on weekdays',
-        parts: ['15 minutes', '09:00', '18:00', 'weekdays'],
+        expected: 'every 15 minutes from 09:00 through 17:45 on weekdays',
+        parts: ['15 minutes', '09:00', '17:45', 'weekdays'],
         pattern: '*/15 9-17 * * 1-5'
       },
       {
@@ -78,8 +78,8 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'every 15 minutes from 9 a.m. until 6 p.m. on weekdays',
-        parts: ['15 minutes', '9 a.m.', '6 p.m.', 'weekdays'],
+        expected: 'every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays',
+        parts: ['15 minutes', '9 a.m.', '5:45 p.m.', 'weekdays'],
         pattern: '*/15 9-17 * * 1-5'
       }
     ]
@@ -104,8 +104,8 @@ const sets = [
         pattern: '0 9-17 * * *'
       },
       {
-        expected: 'every 15 minutes from 9am until 6pm on weekdays',
-        parts: ['15 minutes', '9am', '6pm', 'weekdays'],
+        expected: 'every 15 minutes from 9am to 5.45pm on weekdays',
+        parts: ['15 minutes', '9am', '5.45pm', 'weekdays'],
         pattern: '*/15 9-17 * * 1-5'
       },
       {

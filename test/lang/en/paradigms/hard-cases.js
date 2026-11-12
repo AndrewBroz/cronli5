@@ -45,8 +45,18 @@ const rows = [
   // A day of the month and a weekday, under a month.
   ['0 0 1 6 5', 'at midnight on June 1 as well as on Fridays in June'],
   ['0 0 1,15 1,7 1-5',
-    'at midnight on the 1st and 15th of January and July as well as on ' +
-    'weekdays in January and July'],
+    'at midnight on the 1st and 15th as well as on weekdays, in January ' +
+    'and July'],
+  ['52 7-16 1,19,23,28 5-7 3-4',
+    'every hour from 7:52 a.m. through 4:52 p.m. on the 1st, 19th, 23rd, ' +
+    'and 28th as well as on Wednesdays and Thursdays, from May through July'],
+  ['*/30 0-17 * * 2',
+    'every 30 minutes from midnight through 5:30 p.m. on Tuesdays'],
+  ['5,29,39 3-5 * 5 *',
+    'at 5, 29, and 39 minutes past the hour from 3 a.m. through 5 a.m. in ' +
+    'May'],
+  ['* 4,7 * * *', 'every minute during the 4 a.m. and 7 a.m. hours'],
+  ['9,14,47,56 * * * *', 'at 9, 14, 47, and 56 minutes past the hour'],
 
   // A single month with its dates.
   ['0 0 1,15 6 *', 'at midnight on June 1 and 15'],
@@ -77,8 +87,10 @@ const rows = [
   ['0 */5 * * *', 'every 5 hours from midnight through 8 p.m.'],
   ['30 */2 * * *', 'every 2 hours from 12:30 a.m.'],
   ['30 */5 * * *', 'every 5 hours from 12:30 a.m. through 8:30 p.m.'],
-  ['15,45 * * * *', 'at 15 and 45 minutes past every hour'],
-  ['1 * * * *', 'at 1 minute past every hour'],
+  ['15,45 * * * *',
+    'at 15 and 45 minutes past the hour'],
+  ['1 * * * *',
+    'at 1 minute past the hour'],
   ['30 0 * * *', 'at 12:30 a.m.'],
   ['30 12 * * *', 'at 12:30 p.m.'],
 
@@ -99,10 +111,11 @@ const rows = [
     'every minute from 5 through 10 and at 20 minutes past the hour, ' +
     'every 2 hours from 9 a.m. through 5 p.m.'],
   ['*/10 6-8,17-19 * * 1-5',
-    'every 10 minutes from 6 until 9 a.m. and from 5 until 8 p.m. on ' +
-    'weekdays'],
+    'every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. ' +
+    'through 7:50 p.m. on weekdays'],
   ['0 0-6,22,23 * * *', 'every hour from 10 p.m. through 6 a.m.'],
-  ['*/15 0-5,22-23 * * *', 'every 15 minutes from 10 p.m. until 6 a.m.'],
+  ['*/15 0-5,22-23 * * *',
+    'every 15 minutes from 10 p.m. through 5:45 a.m.'],
   ['*/20 */2 */2 */3 *',
     'every 20 minutes during every other hour on odd-numbered days in ' +
     'January, April, July, and October'],
@@ -151,8 +164,8 @@ const rows = [
   ['0-28,30-59 9 * * *',
     'every minute during the 9 a.m. hour except at 29 minutes past the hour'],
   ['0,10,20,40,50 9-17 * * *',
-    'every 10 minutes from 9 a.m. until 6 p.m. except at 30 minutes past ' +
-    'the hour'],
+    'every 10 minutes from 9 a.m. through 5:50 p.m. except at 30 ' +
+    'minutes past the hour'],
   ['0-28,30-59 * * * *', 'every minute except at 29 minutes past the hour'],
   ['* 0-28,30-59 * * * *',
     'every second except during the minute at 29 minutes past the hour'],
