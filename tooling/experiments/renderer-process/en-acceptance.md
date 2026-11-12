@@ -103,6 +103,9 @@ answers with sixteen new hard cases. The same review's simplifications
 took the renderer from 1,494 logical lines and 101 branches to 1,429 and
 98 while it gained those rules.
 
+The twenty sentences reworded by these fixes then went to a fresh blind
+reader: 20 of 20 recovered to exactly the right schedule.
+
 **An adversarial read is now a standing gate** (design §6.1): of the
 paradigm rows before they are accepted, and of the built renderer.
 
