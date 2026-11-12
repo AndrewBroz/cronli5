@@ -60,10 +60,6 @@ function momentAt(seconds: number, precision: 'hour' | 'minute' | 'second'):
   return precision === 'second' ? {...moment, second: within % 60} : moment;
 }
 
-function secondOfDay(moment: Moment): number {
-  return moment.hour * 3600 + moment.minute * 60 + (moment.second ?? 0);
-}
-
 // A time and the a.m. or p.m. it would carry; noon, midnight and 24-hour
 // times carry none.
 function writeTime(moment: Moment, opts: EnglishOptions):
@@ -102,27 +98,14 @@ function writeTime(moment: Moment, opts: EnglishOptions):
   };
 }
 
-/**
- * Times of day as they are written together. When every numbered time
- * shares a.m. or p.m., only the last one says it, provided the last time
- * is a numbered one and the times do not run past midnight.
- */
+/** Times of day, each numbered one with its own a.m. or p.m. */
 function timeNames(moments: Moment[], opts: EnglishOptions): string[] {
-  const written = moments.map(function write(moment) {
-    return writeTime(moment, opts);
-  });
-  const last = written[written.length - 1];
-  const starts = moments.map(secondOfDay);
-  const forward = starts[0] <= starts[starts.length - 1];
-  const shared = forward && written.every(function same(time) {
-    return !time.meridiem || time.meridiem === last.meridiem;
-  });
   const gap = opts.style.closeUp ? '' : ' ';
 
-  return written.map(function finish(time) {
-    const silent = !time.meridiem || shared && time !== last;
+  return moments.map(function write(moment) {
+    const time = writeTime(moment, opts);
 
-    return silent ? time.text : time.text + gap + time.meridiem;
+    return time.text + (time.meridiem && gap + time.meridiem);
   });
 }
 
@@ -170,11 +153,14 @@ function dayNames(
   }
 
   const [monthName] = monthNames([month], opts);
-  const at = opts.style.dayFirst ? names.length - 1 : 0;
+  const last = names.length - 1;
 
-  names[at] = opts.style.dayFirst ?
-    `${names[at]} ${monthName}` :
-    `${monthName} ${names[at]}`;
+  if (opts.style.dayFirst) {
+    names[last] = `${names[last]} ${monthName}`;
+  }
+  else {
+    names[0] = `${monthName} ${names[0]}`;
+  }
 
   return names;
 }

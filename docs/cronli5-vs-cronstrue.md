@@ -91,7 +91,7 @@ a specific schedule, or an advanced operator.
 | `0 12 * * SAT` | Runs at noon on Saturdays. | At 12:00 PM, only on Saturday |
 | `0 0 1 1 *` | Runs at midnight on January 1. | At 12:00 AM, on day 1 of the month, only in January |
 | `0-29 * * * *` | Runs every minute for the first 30 minutes of every hour. | Minutes 0 through 29 past the hour |
-| `*/10 6-8,17-19 * * 1-5` | Runs every 10 minutes from 6 until 9 a.m. and from 5 until 8 p.m. on weekdays. | Every 10 minutes, at 06:00 AM through 08:59 AM and 05:00 PM through 07:59 PM, Monday through Friday |
+| `*/10 6-8,17-19 * * 1-5` | Runs every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. through 7:50 p.m. on weekdays. | Every 10 minutes, at 06:00 AM through 08:59 AM and 05:00 PM through 07:59 PM, Monday through Friday |
 | `0 0-6,22,23 * * *` | Runs every hour from 10 p.m. through 6 a.m. | Every hour, at 12:00 AM through 06:00 AM, 10:00 PM, and 11:00 PM |
 | `*/20 */2 */2 */3 *` | Runs every 20 minutes during every other hour on odd-numbered days in January, April, July, and October. | Every 20 minutes, every 2 hours, every 2 days in a month, every 3 months |
 | `0 12 1-5,10,20-25 * *` | Runs at noon from the 1st through the 5th, on the 10th, and from the 20th through the 25th. | At 12:00 PM, on day 1 through 5, 10, and 20 through 25 of the month |
@@ -104,7 +104,7 @@ a specific schedule, or an advanced operator.
 | `0 0 9-17/2 * *` | Runs at midnight every 2 days from the 9th through the 17th. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
 | `23 0-20/2 * * *` | Runs every 2 hours from 12:23 a.m. through 8:23 p.m. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
 | `0 0 * * 5L` | Runs at midnight on the last Friday of the month. | At 12:00 AM, on the last Friday of the month |
-| `5,10 30 9 * * MON` | Runs at 5 and 10 seconds past the minute, at 9:30 a.m. on Mondays. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| `5,10 30 9 * * MON` | Runs at 9:30:05 a.m. and 9:30:10 a.m. on Mondays. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | `59 23 31 12 5` | Runs at 11:59 p.m. on December 31 as well as on Fridays in December. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
 | `30 9 15W 6 *` | Runs at 9:30 a.m. on the weekday nearest June 15. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
 | `15 30 9 * * MON` | Runs at 9:30:15 a.m. on Mondays. | At 09:30:15 AM, only on Monday |
@@ -114,7 +114,7 @@ a specific schedule, or an advanced operator.
 | `0 18 15W 3,6,9,12 *` | Runs at 6 p.m. on the weekday nearest March 15, June 15, September 15, and December 15. | At 06:00 PM, on the weekday nearest day 15 of the month, only in March, June, September, and December |
 | `30 4 1-7 * 1` | Runs at 4:30 a.m. from the 1st through the 7th as well as on Mondays. | At 04:30 AM, between day 1 and 7 of the month, and on Monday |
 | `0 9-17/2 * 1-6 1-5` | Runs every 2 hours from 9 a.m. through 5 p.m. on weekdays from January through June. | On the hour, every 2 hours, between 09:00 AM and 05:00 PM, Monday through Friday, January through June |
-| `30 */15 9-17 1,15 6-8 1-5` | Runs at 30 seconds past the minute, every 15 minutes from 9 a.m. until 6 p.m. on the 1st and 15th of each month from June through August as well as on weekdays from June through August. | At 30 seconds past the minute, every 15 minutes, between 09:00 AM and 05:59 PM, on day 1 and 15 of the month, Monday through Friday, June through August |
+| `30 */15 9-17 1,15 6-8 1-5` | Runs at 30 seconds past the minute, every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st and 15th as well as on weekdays, from June through August. | At 30 seconds past the minute, every 15 minutes, between 09:00 AM and 05:59 PM, on day 1 and 15 of the month, Monday through Friday, June through August |
 <!-- END GENERATED: comparison -->
 
 ## Migrating

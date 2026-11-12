@@ -40,7 +40,7 @@ Side by side:
 | `0 9,12,17 * * *` | at 9 a.m., noon, and 5 p.m. | at 9am, midday and 5pm | at 9 AM, noon, and 5 PM |
 | `30 9 * * MON-FRI` | at 9:30 a.m. on weekdays | at 9.30am on weekdays | at 9:30 AM on weekdays |
 | `0 12 1 1 *` | at noon on January 1 | at midday on 1 January | at noon on January 1st |
-| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. until 6 p.m. | every 15 minutes from 9am until 6pm | every 15 minutes from 9 AM until 6 PM |
+| `*/15 9-17 * * *` | every 15 minutes from 9 a.m. through 5:45 p.m. | every 15 minutes from 9am to 5.45pm | every 15 minutes from 9 AM through 5:45 PM |
 | `0 0 12 25 12 * 2030` | at noon on December 25, 2030 | at midday on 25 December 2030 | at noon on December 25th, 2030 |
 <!-- END GENERATED: dialects -->
 
