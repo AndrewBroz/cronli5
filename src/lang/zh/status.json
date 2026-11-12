@@ -1,0 +1,7 @@
+{
+  "name": "Chinese (Simplified)",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms (tooling/experiments/renderer-process/zh-acceptance.md)",
+  "branchBudget": 110
+}
