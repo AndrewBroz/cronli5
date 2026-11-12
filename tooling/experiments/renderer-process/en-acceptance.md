@@ -22,8 +22,10 @@ From `node --import tsx tooling/scripts/compare-baseline.mjs en`:
 
 | Measure | Old | New |
 | --- | --- | --- |
-| Lines | 3,021 | 2,096 |
-| Branches | 206 | 101 |
+| Logical lines (not blank, not comment) | 1,700 | 1,429 |
+| Physical lines | 3,021 | 2,043 |
+| Branches (`if`, ternary, `case`) | 206 | 98 |
+| Short-circuit operators (`&&`, `\|\|`, `??`) | 127 | 72 |
 | Equal schedules worded differently | 309 | 0 |
 | Grid, median share of words changed | 50% | 50% |
 | Grid, 90th percentile | 82% | 78% |
@@ -31,7 +33,12 @@ From `node --import tsx tooling/scripts/compare-baseline.mjs en`:
 | One-character edit, 90th percentile | 55% | 50% |
 | Grid rows that throw | 0 | 0 |
 
-The core went from about 2,400 lines to 1,854.
+The renderer is about a sixth shorter in logical lines and has half the
+decision points. The physical-line figure flatters it: the old renderer
+carried far more comments.
+
+The core went from 1,807 logical lines to about 1,150, while taking over
+the set description each renderer used to do for itself.
 
 **The word-change figures are not a target.** Pair by pair, the old renderer
 changes a smaller share of its words more often than the new one (194 of
@@ -70,6 +77,34 @@ The one blind-recovery miss was "every 30 minutes for one hour every 2
 hours from 8 a.m. through 6 p.m.", read as stopping at 6. A bounded hour
 cadence is no longer said that way. After that fix, the twelve reworded
 complex descriptions went to a fresh blind reader: 12 of 12 exact.
+
+## What an adversarial read found after every gate had passed
+
+With held-out rows, regeneration, blind recovery and fuzzing all green, an
+independent reviewer read the renderer and probed it by hand. It found no
+throw and nothing garbled, and no option that changed a sentence's
+structure. It found well-formed sentences that stated the wrong schedule:
+
+| Pattern | Said | Problem |
+| --- | --- | --- |
+| `5-10/60 0 9 * * *` | at 9 a.m. | fires at 9:00:05; the core judged "one second" by spelling |
+| `0-28,30-59 9,17 * * *` | every minute except at 29 minutes past 9 a.m. and 5 p.m. | read as all day except two moments |
+| `* 0-28,30-59 * * * *` | every second except at 29 minutes past every hour | a whole minute excluded, said as an instant |
+| `0 0,1,22,23 * * 1` | every hour from 10 p.m. through 1 a.m. on Mondays | read as Monday night into Tuesday |
+
+The last was in the oracle itself: a held-out row written by the
+orchestrating model enshrined a wrap-around under a restricted day. The
+passing gates could not see any of these, because each checks agreement
+with the rows or a mechanical property, and none reads a sentence against
+the schedule it should state.
+
+All are fixed, test-first: two in the core, the rest as rules in the
+answers with sixteen new hard cases. The same review's simplifications
+took the renderer from 1,494 logical lines and 101 branches to 1,429 and
+98 while it gained those rules.
+
+**An adversarial read is now a standing gate** (design §6.1): of the
+paradigm rows before they are accepted, and of the built renderer.
 
 ## Regeneration
 
@@ -121,8 +156,8 @@ and eleven are in the generated comparison page
 
 ## What it cost
 
-Seven build rounds with one builder agent (about 416,000 tokens in its own
-context), two independent regeneration builds (about 270,000 and 260,000),
+Eight build rounds with one builder agent (about 535,000 tokens in its own
+context), one independent review (about 240,000), two independent regeneration builds (about 270,000 and 260,000),
 two mechanical refactors by subagents (about 157,000 and 251,000), and two
 blind-recovery runs by a cheaper model (about 79,000 for 217 descriptions).
 Most build rounds after the second were rule changes from review, not
@@ -133,8 +168,8 @@ repairs.
 * A month range repeated on both sides of a day-of-month and weekday union
   is heavy: "…on the 1st and 15th of each month from June through August as
   well as on weekdays from June through August".
-* The renderer sits exactly at its branch budget of 101.
-* `builder-cases.js` holds 20 rows written by the builder and not yet
+* The renderer's branch budget is 98, its current count.
+* `builder-cases.js` holds 29 rows written by the builder and not yet
   reviewed.
 * The fuzz sweep's "missing value" and "dropped minute" heuristics assume
   24-hour digits and flag six correct descriptions.

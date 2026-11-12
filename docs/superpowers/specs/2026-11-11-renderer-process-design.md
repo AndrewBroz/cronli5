@@ -234,7 +234,17 @@ uses it for naturalness or conventions.
   date conventions, and agreement. The universal traps in
   `.claude/skills/add-language/playbook.md` and the questions in
   docs/i18n-design.md §7 become entries in it.
-* **The gates**, carried over, plus the edit-diff score (§6.3).
+* **The gates**: the paradigm oracle checks, held-out rows, the
+  parts-based continuity test, blind recovery of the pattern from the
+  description, regeneration, and the fuzz sweep. The edit-diff score
+  (§6.3) is an instrument beside them, not a gate.
+* **An adversarial read.** An independent reviewer reads the paradigm rows
+  before they are accepted, and the built renderer afterwards, hunting for
+  sentences that are well formed and state a different schedule from the
+  pattern. Added after the English build: every other gate was green while
+  four such sentences existed, one of them in the oracle. The other gates
+  check agreement with the rows or a mechanical property; only this one
+  reads a sentence against what it should mean.
 
 ### 6.2 Produced per language
 

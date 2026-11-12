@@ -91,6 +91,12 @@ renderer change.
 - **Taste calls are made by the orchestrating frontier model or a fluent
   human**, recorded with reasons in the answers. No persona panels.
 
+- **Green gates are not proof.** Held-out rows, regeneration, blind
+  recovery and fuzzing all passed for English while it said the wrong
+  schedule for some patterns, one of them enshrined in a paradigm row. An
+  independent, adversarial read of the rows and of the renderer is part of
+  the process, not an extra.
+
 `src/lang/<code>/status.json` records who has reviewed what, honestly.
 Review is tracked; it does not gate a release.
 
