@@ -5,22 +5,24 @@
 // wins.
 
 import type {Field, SetDescription} from '../../core/schedule.js';
-import type {Moment} from './idioms.js';
 import type {Spoken} from '../../core/select.js';
+import type {Moment} from './idioms.js';
 import type {EnglishOptions} from './options.js';
+import type {UnitName} from './words.js';
 import {denote} from '../../core/describe-set.js';
-import {fieldSpecs} from '../../core/specs.js';
 import {shortestSpoken} from '../../core/select.js';
+import {domainOf} from '../../core/specs.js';
 import {idioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {
-  dayNames, extraWords, hourNames, join, list, momentAt, monthName, span,
-  timeNames, unit, walkWeek, weekdayName, weekRank
+  dayNames, hourNames, inCycleOrder, join, list, momentAt, monthNames, span,
+  timeNames, unit, walkWeek, weekdayNames, weekRank
 } from './words.js';
 
 type Cadence = Extract<SetDescription, {kind: 'cadence'}>;
 type Pieces = Extract<SetDescription, {kind: 'pieces'}>;
 type Exception = Extract<SetDescription, {kind: 'except'}>;
+type Part = Pieces['parts'][number];
 
 /**
  * A phrase and the number of things it names. `idiom` marks a fixed
@@ -39,17 +41,22 @@ export interface Choice extends Phrase {
   description: SetDescription;
 }
 
-// How a voice says an evenly spaced cadence.
-interface CadenceVoice {
+// Which ends of a cadence a voice has to name.
+interface Stride {
   // Whether a cadence that fills its cycle from the very start needs no
   // bounds: "every 15 minutes".
   bare: boolean;
-  // The length of the cycle the cadence must divide to fill it, or null
-  // when cycles differ in length, as months and so days of the month do.
-  cycle: number | null;
   // Whether a cadence that fills its cycle may name its start alone.
   open: boolean;
-  // The cadence with these ends named, or null if it cannot be said.
+  // Whether the cadence must divide its cycle evenly to fill it. Cycles
+  // that differ in length, as months and so days of the month do, cannot
+  // be divided: running to the end is all that filling one can mean.
+  tiles: boolean;
+}
+
+// How a voice says an evenly spaced cadence: with these ends named, or
+// null if it cannot be said.
+interface CadenceVoice extends Stride {
   say(cadence: Cadence, ends: number[]): string | null;
 }
 
@@ -69,31 +76,44 @@ export interface Voice {
   rank?(value: number): number;
 }
 
+// What the values are being named for: a list of them, the ends of a
+// range or a cadence, or the values an exception takes out.
+type Role = 'ends' | 'excepted' | 'list';
+
+// The words of a voice that says its values by name, in the one shape
+// most voices share: "at A, B, and C", "every hour from A through B",
+// "every 2 hours from A", "except at A".
+interface Listing {
+  all: string | null;
+  // The word before a list, and before the values of an exception.
+  at: string;
+  exceptAt: string;
+  field: Field;
+  names(values: number[], role: Role): string[];
+  // What goes before the ends of a range: "every hour", or nothing.
+  run: string;
+  // The unit a cadence counts in, with the ends it has to name. `carried`
+  // marks a cadence whose moments carry a minute or a second, so that it
+  // names its start even where it could go without.
+  stride: Stride & {carried?: boolean; unit: UnitName} | null;
+}
+
 const {units, words} = lexicon;
-const every = words.every.text;
-const except = words.except.text;
+const {every, except} = words;
 
 function plain(text: string, length: number): Phrase {
   return {idiom: false, length, named: true, text, yields: false};
 }
 
-function domainOf(field: Field): {max: number; min: number} {
-  const spec = fieldSpecs[field];
-
-  return {max: spec.top ?? spec.max, min: spec.min};
-}
-
 // Which ends of a cadence have to be named. A cadence that fills its cycle
 // can leave its end unsaid, and its start too when it starts the cycle;
 // one that stops early or starts late names both, so nobody assumes it
-// carries on. Where cycles differ in length, running to the end is all
-// that filling one can mean.
-function namedEnds(cadence: Cadence, field: Field, voice: CadenceVoice):
-  number[] {
+// carries on.
+function namedEnds(cadence: Cadence, field: Field, voice: Stride): number[] {
   const {max, min} = domainOf(field);
   const offset = cadence.start - min;
-  const tiles = voice.cycle === null ||
-    offset < cadence.interval && voice.cycle % cadence.interval === 0;
+  const tiles = !voice.tiles ||
+    offset < cadence.interval && (max - min + 1) % cadence.interval === 0;
   const fills = cadence.last + cadence.interval > max && tiles;
 
   if (fills && offset === 0 && voice.bare) {
@@ -134,46 +154,47 @@ function sayCadence(cadence: Cadence, voice: Voice): Phrase | null {
     {...plain(text, 1 + ends.length), yields: ends.length === 2};
 }
 
-type Part = Pieces['parts'][number];
-
-// The pieces in the order they are said. Values are walked in ascending
-// order of their place in the cycle, starting from a run that wraps
-// round it if there is one. Each run stands where its first value does,
-// whatever kind of piece its neighbours are, and the stray values that
-// fall together between runs make one list.
-function inSpokenOrder(pieces: Pieces, voice: Pick<Voice, 'field' | 'rank'>):
-  Part[] {
+// The pieces in the order they are said. Values are walked in the order
+// of their cycle, starting from a run that wraps round it if there is
+// one, and gathered into runs of neighbours. A run long enough is a
+// range, standing where its first value does whatever its neighbours
+// are; the stray values that fall together between ranges make one list.
+// Two neighbours are a run only for a voice that says stretches of time.
+function inSpokenOrder(pieces: Pieces,
+  voice: Pick<Voice, 'field' | 'pairs' | 'rank'>): Part[] {
   const rank = voice.rank || Number;
-  const values = denote(pieces, {cyclic: true, ...domainOf(voice.field)})
-    .sort(function byRank(a, b) {
-      return rank(a) - rank(b);
-    });
+  const {max, min} = domainOf(voice.field);
   const wrapped = pieces.parts.find(function wraps(part) {
     return part.kind === 'range' && rank(part.from) > rank(part.to);
   }) as {from: number} | undefined;
-  const at = wrapped ? values.indexOf(wrapped.from) : 0;
-  const order = [...values.slice(at), ...values.slice(0, at)];
+  const order = inCycleOrder(denote(pieces, domainOf(voice.field)), rank,
+    wrapped && wrapped.from);
+  const shortest = voice.pairs ? 2 : 3;
+  const runs = order.reduce(function gather(found: number[][], value) {
+    const run = found[found.length - 1] || [];
+    const next = (rank(run[run.length - 1]) + 1) % (max - min + 1);
 
-  function place(part: Part): number {
-    return order.indexOf(part.kind === 'range' ? part.from : part.values[0]);
-  }
-
-  return pieces.parts.flatMap(function apart(part): Part[] {
-    return part.kind === 'range' ?
-      [part] :
-      part.values.map(function alone(value) {
-        return {kind: 'values', values: [value]};
-      });
-  }).sort(function byPlace(a, b) {
-    return place(a) - place(b);
-  }).reduce(function gather(parts: Part[], part) {
-    const previous = parts[parts.length - 1];
-
-    if (part.kind === 'values' && previous && previous.kind === 'values') {
-      previous.values.push(...part.values);
+    if (next === rank(value) % (max - min + 1)) {
+      run.push(value);
     }
     else {
-      parts.push(part);
+      found.push([value]);
+    }
+
+    return found;
+  }, []);
+
+  return runs.reduce(function toParts(parts: Part[], run) {
+    const previous = parts[parts.length - 1];
+
+    if (run.length >= shortest) {
+      parts.push({from: run[0], kind: 'range', to: run[run.length - 1]});
+    }
+    else if (previous && previous.kind === 'values') {
+      previous.values.push(...run);
+    }
+    else {
+      parts.push({kind: 'values', values: run});
     }
 
     return parts;
@@ -202,8 +223,8 @@ function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
 
 /**
  * Whether a description, said by number within the hour or the minute,
- * begins with "every minute" (or "every second"): every value, a run, an
- * exception to either, or pieces whose first is a run.
+ * begins with "every minute" (or "every second"): every value, a run, or
+ * pieces whose first is a run.
  */
 function opensWithEvery(description: SetDescription,
   field: 'minute' | 'second'): boolean {
@@ -211,33 +232,28 @@ function opensWithEvery(description: SetDescription,
     case 'all':
     case 'range':
       return true;
-    case 'except':
-      return opensWithEvery(description.base, field);
     case 'pieces':
-      return inSpokenOrder(description, {field})[0].kind === 'range';
+      return inSpokenOrder(description, {field, pairs: false})[0].kind ===
+        'range';
     default:
       return false;
   }
 }
 
+// An exception is for a hole in the middle: a cadence that only stops
+// early or starts late is said with its bounds.
 function sayException(
   exception: Exception,
   voice: Voice,
   opts: EnglishOptions
 ): Phrase | null {
-  const {max, min} = domainOf(voice.field);
-  const kept = denote(exception, {cyclic: true, max, min});
+  const kept = denote(exception, domainOf(voice.field));
   const hole = exception.removed.some(function inside(value) {
     return value > kept[0] && value < kept[kept.length - 1];
   });
-
-  // An exception is for a hole in the middle: a cadence that only stops
-  // early or starts late is said with its bounds.
-  if (exception.base.kind === 'cadence' && !hole) {
-    return null;
-  }
-
-  const base = say(exception.base, voice, opts);
+  const base = exception.base.kind === 'cadence' && !hole ?
+    null :
+    say(exception.base, voice, opts);
 
   return base && {
     ...base,
@@ -260,10 +276,9 @@ function say(description: SetDescription, voice: Voice, opts: EnglishOptions):
 
   if (idiom) {
     return {
-      ...idiom.say(description, opts),
+      ...plain(idiom.say(description, opts), 1),
       idiom: true,
-      named: false,
-      yields: false
+      named: false
     };
   }
 
@@ -289,8 +304,9 @@ function say(description: SetDescription, voice: Voice, opts: EnglishOptions):
  * then the others as offered, with those that must name strictly fewer
  * things than the plain list (which is offered last) after it.
  */
-function inTieOrder<T extends Pick<Phrase, 'idiom' | 'yields'>>(phrases: T[]):
-  T[] {
+function inTieOrder<T extends {idiom?: boolean; yields: boolean}>(
+  phrases: T[]
+): T[] {
   return [
     ...phrases.filter(function onIdiom(phrase) {
       return phrase.idiom;
@@ -304,29 +320,51 @@ function inTieOrder<T extends Pick<Phrase, 'idiom' | 'yields'>>(phrases: T[]):
   ];
 }
 
-/**
- * Every candidate the voice can say, in the order a tie between them is
- * settled in.
- */
-function sayable(
-  candidates: SetDescription[],
-  voice: Voice,
-  opts: EnglishOptions
-): Choice[] {
-  return inTieOrder(candidates.flatMap(function render(description): Choice[] {
-    const phrase = say(description, voice, opts);
-
-    return phrase ? [{...phrase, description}] : [];
-  }));
-}
-
 /** The phrase naming the fewest things among a field's candidates. */
 function choose(
   candidates: SetDescription[],
   voice: Voice,
   opts: EnglishOptions
 ): Choice {
-  return shortestSpoken(sayable(candidates, voice, opts));
+  return shortestSpoken(inTieOrder(
+    candidates.flatMap(function render(description): Choice[] {
+      const phrase = say(description, voice, opts);
+
+      return phrase ? [{...phrase, description}] : [];
+    })
+  ));
+}
+
+// A voice from its words.
+function listing(spec: Listing, opts: EnglishOptions): Voice {
+  const {stride} = spec;
+
+  return {
+    all: spec.all,
+    cadence: stride && {
+      ...stride,
+      say(cadence, ends) {
+        const named = stride.carried && ends.length === 0 ?
+          [cadence.start] :
+          ends;
+
+        return join(`${every} ${cadence.interval} ${units[stride.unit].many}`,
+          span(spec.names(named, 'ends'), opts));
+      }
+    },
+    exception(removed) {
+      return join(except, spec.exceptAt,
+        list(spec.names(removed, 'excepted'), opts));
+    },
+    field: spec.field,
+    pairs: false,
+    range(from, to) {
+      return join(spec.run, span(spec.names([from, to], 'ends'), opts));
+    },
+    values(values) {
+      return join(spec.at, list(spec.names(values, 'list'), opts));
+    }
+  };
 }
 
 /**
@@ -334,76 +372,69 @@ function choose(
  * "at 5, 20, and 45", "every minute from 10 through 40". A cadence that
  * fills the hour or minute from zero stands alone as "every 15 minutes".
  * `everyOne` is what "every minute" is said as: finer seconds take its
- * place.
+ * place. Each number said is added to `heard`, so that the unit after
+ * the phrase can agree with the last of them.
  */
 function withinTheHour(
   field: 'minute' | 'second',
-  everyOne: string,
+  spoken: {everyOne: string; heard: number[]},
   opts: EnglishOptions
 ): Voice {
-  function numbers(values: number[]): string {
-    return list(values.map(String), opts);
-  }
-
-  return {
-    all: everyOne,
-    cadence: {
-      bare: true,
-      cycle: 60,
-      open: false,
-      say(cadence, ends) {
-        return join(`${every} ${cadence.interval} ${units[field].many.text}`,
-          span(ends.map(String), opts));
-      }
-    },
-    exception(removed) {
-      return `${except} ${words.at.text} ${numbers(removed)}`;
-    },
+  return listing({
+    all: spoken.everyOne,
+    at: words.at,
+    exceptAt: words.at,
     field,
-    pairs: false,
-    range(from, to) {
-      return join(everyOne, span([from, to].map(String), opts));
+    names(values) {
+      spoken.heard.push(...values);
+
+      return values.map(String);
     },
-    values(values) {
-      return `${words.at.text} ${numbers(values)}`;
-    }
-  };
+    run: spoken.everyOne,
+    stride: {bare: true, open: false, tiles: true, unit: field}
+  }, opts);
 }
 
-// The words for values that fall inside one stretch of clock time, each
-// value `step` seconds long from `start` seconds after midnight: a run
-// is a window closed with "until" at the moment it ends, and stray values
-// are clock times. A run that wraps is two windows.
+// A voice for values that fall inside one stretch of clock time: a run
+// is a window closed with "until" at the moment it ends, and stray
+// values are clock times. A run that wraps is two windows. `moment` is
+// the moment a value starts at, as an end of a window or as a stray.
 function clockWindows(
-  frame: {precision: 'hour' | 'second'; start: number; step: number},
-  lead: {every: string; stray: string},
+  spec: {
+    field: 'minute' | 'second';
+    lead: {every: string; stray: string};
+    moment(value: number, stray: boolean): Moment;
+  },
   opts: EnglishOptions
-): Pick<Voice, 'exception' | 'pairs' | 'range' | 'values'> {
-  function names(values: number[]): string[] {
-    return timeNames(values.map(function toMoment(value) {
-      return momentAt(frame.start + value * frame.step, frame.precision);
-    }), opts);
-  }
+): Voice {
+  const {max, min} = domainOf(spec.field);
 
   function window(from: number, to: number): string {
-    const [opens, closes] = names([from, to + 1]);
+    const [opens, closes] = timeNames([from, to + 1].map(function end(value) {
+      return spec.moment(value, false);
+    }), opts);
 
-    return `${lead.every} ${words.from.text} ${opens} ` +
-      `${words.until.text} ${closes}`;
+    return `${spec.lead.every} ${words.from} ${opens} ${words.until} ${closes}`;
   }
 
   return {
-    exception(removed) {
-      return `${except} ${words.at.text} ${list(names(removed), opts)}`;
-    },
-    pairs: false,
+    ...listing({
+      all: null,
+      at: join(spec.lead.stray, words.at),
+      exceptAt: words.at,
+      field: spec.field,
+      names(values) {
+        return timeNames(values.map(function stray(value) {
+          return spec.moment(value, true);
+        }), opts);
+      },
+      run: '',
+      stride: null
+    }, opts),
     range(from, to) {
       return from > to ?
-        list([window(0, to), window(from, 59)], opts) :
+        list([window(min, to), window(from, max)], opts) :
         window(from, to);
-    },
-    values(values) {
-      return join(lead.stray, words.at.text, list(names(values), opts));
     }
   };
 }
@@ -411,21 +442,24 @@ function clockWindows(
 /**
  * Runs of minutes inside one named hour, as windows of clock times:
  * "every minute from 9 until 9:30 a.m.", with any stray minute a clock
- * time of its own. `lead` is what "every minute" is said as, and what
- * goes before a stray time, once the seconds have had their say.
+ * time of its own, carrying the single `second` if there is one. `lead`
+ * is what "every minute" is said as, and what goes before a stray time,
+ * once the seconds have had their say.
  */
 function minutesOfOneHour(
   hour: number,
-  lead: {every: string; stray: string},
+  lead: {every: string; second?: number; stray: string},
   opts: EnglishOptions
 ): Voice {
-  return {
-    ...clockWindows({precision: 'hour', start: hour * 3600, step: 60}, lead,
-      opts),
-    all: null,
-    cadence: null,
-    field: 'minute'
-  };
+  return clockWindows({
+    field: 'minute',
+    lead,
+    moment(minute, stray) {
+      const moment = momentAt(hour * 3600 + minute * 60, 'hour');
+
+      return stray ? {...moment, second: lead.second} : moment;
+    }
+  }, opts);
 }
 
 /**
@@ -437,35 +471,57 @@ function minutesOfOneHour(
  */
 function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
   const start = time.hour * 3600 + time.minute * 60;
-  const everySecond = `${every} ${units.second.one.text}`;
+  const everySecond = `${every} ${units.second.one}`;
   const [opens, closes] = timeNames(
     [momentAt(start, 'minute'), momentAt(start + 60, 'minute')], opts);
-  const theMinute = `${words.from.text} ${opens} ${words.until.text} ${closes}`;
+  const theMinute = `${words.from} ${opens} ${words.until} ${closes}`;
+
+  function toMoment(second: number): Moment {
+    return momentAt(start + second, 'second');
+  }
 
   return {
-    ...clockWindows({precision: 'second', start, step: 1},
-      {every: everySecond, stray: ''}, opts),
+    ...clockWindows({
+      field: 'second',
+      lead: {every: everySecond, stray: ''},
+      moment: toMoment
+    }, opts),
     all: `${everySecond} ${theMinute}`,
     cadence: {
       bare: true,
-      cycle: 60,
       open: false,
       say(cadence, ends) {
-        const lead = `${every} ${cadence.interval} ${units.second.many.text}`;
-        const named = timeNames(ends.map(function toMoment(second) {
-          return momentAt(start + second, 'second');
-        }), opts);
+        const lead = `${every} ${cadence.interval} ${units.second.many}`;
 
         return ends.length === 0 ?
           `${lead} ${theMinute}` :
-          `${lead} ${span(named, opts)}`;
-      }
-    },
-    field: 'second'
+          `${lead} ${span(timeNames(ends.map(toMoment), opts), opts)}`;
+      },
+      tiles: true
+    }
   };
 }
 
-const everyHour = `${every} ${units.hour.one.text}`;
+const everyHour = `${every} ${units.hour.one}`;
+
+// Hours named as times of day: as moments after "at", each carrying the
+// same minute and second, or bare as a noun phrase.
+function hoursByName(at: Omit<Moment, 'hour'>, word: string,
+  opts: EnglishOptions): Voice {
+  const carried = at.minute !== 0 || typeof at.second === 'number';
+
+  return listing({
+    all: carried ? null : everyHour,
+    at: word,
+    exceptAt: word,
+    field: 'hour',
+    names(hours) {
+      return hourNames(hours, at, opts);
+    },
+    run: everyHour,
+    stride: {bare: true, carried, open: true, tiles: true, unit: 'hour'}
+  }, opts);
+}
 
 /**
  * Hours as moments, each at the same minute past: "at 9:30 a.m. and 5:30
@@ -476,44 +532,13 @@ const everyHour = `${every} ${units.hour.one.text}`;
  */
 function hoursAsMoments(at: Omit<Moment, 'hour'>, opts: EnglishOptions):
   Voice {
-  const carries = at.minute !== 0 || typeof at.second === 'number';
-
-  function names(hours: number[]): string[] {
-    return hourNames(hours, at, opts);
-  }
-
-  return {
-    all: carries ? null : everyHour,
-    cadence: {
-      bare: true,
-      cycle: 24,
-      open: true,
-      say(cadence, ends) {
-        const named = carries && ends.length === 0 ? [cadence.start] : ends;
-
-        return join(`${every} ${cadence.interval} ${units.hour.many.text}`,
-          span(names(named), opts));
-      }
-    },
-    exception(removed) {
-      return `${except} ${words.at.text} ${list(names(removed), opts)}`;
-    },
-    field: 'hour',
-    pairs: false,
-    range(from, to) {
-      return join(everyHour, span(names([from, to]), opts));
-    },
-    values(values) {
-      return `${words.at.text} ${list(names(values), opts)}`;
-    }
-  };
+  return hoursByName(at, words.at, opts);
 }
 
 // Hours named as the hours that start at them: "the 9 a.m. and 5 p.m.
 // hours", "the midnight hour".
 function theHours(hours: number[], opts: EnglishOptions): string {
-  return join(words.the.text,
-    list(hourNames(hours, {minute: 0}, opts), opts),
+  return join(words.the, list(hourNames(hours, {minute: 0}, opts), opts),
     unit('hour', hours.length));
 }
 
@@ -527,33 +552,23 @@ function theHours(hours: number[], opts: EnglishOptions): string {
  */
 function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
   const moments = hoursAsMoments({minute: 0}, opts);
+  const nouns = hoursByName({minute: 0}, '', opts);
   const strides = moments.cadence as CadenceVoice;
-  const theHour = `${words.the.text} ${units.hour.one.text},`;
-
-  function names(hours: number[]): string[] {
-    return hourNames(hours, {minute: 0}, opts);
-  }
 
   return {
-    all: everyHour,
+    ...nouns,
     cadence: {
       ...strides,
       say(cadence, ends) {
-        return `${theHour} ${strides.say(cadence, ends)}`;
+        return `${words.the} ${units.hour.one}, ${strides.say(cadence, ends)}`;
       }
     },
     exception(removed, base) {
-      return base.kind === 'cadence' ?
-        moments.exception(removed, base) :
-        `${except} ${list(names(removed), opts)}`;
-    },
-    field: 'hour',
-    pairs: false,
-    range(from, to) {
-      return join(everyHour, span(names([from, to]), opts));
+      return (base.kind === 'cadence' ? moments : nouns)
+        .exception(removed, base);
     },
     values(values) {
-      return asHours ? theHours(values, opts) : list(names(values), opts);
+      return asHours ? theHours(values, opts) : nouns.values(values);
     }
   };
 }
@@ -568,11 +583,13 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
  * heard as stopping at 6; its hours are left to be named.
  */
 function hoursAsStretches(opts: EnglishOptions): Voice {
-  const nouns = hoursAsNouns(true, opts);
   const strides = hoursAsMoments({minute: 0}, opts).cadence as CadenceVoice;
-  const during = words.during.text;
-  const everyOther = `${during} ${every} ${lexicon.intervalWord(2).text} ` +
-    units.hour.one.text;
+  const {during} = words;
+  const everyOther = `${during} ${every} ${words.other} ${units.hour.one}`;
+
+  function names(hours: number[]): string[] {
+    return hourNames(hours, {minute: 0}, opts);
+  }
 
   return {
     all: '',
@@ -584,8 +601,8 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
         }
 
         return cadence.interval === 2 ?
-          join(everyOther, span(hourNames(ends, {minute: 0}, opts), opts)) :
-          `${extraWords.forOneHour} ${strides.say(cadence, ends)}`;
+          join(everyOther, span(names(ends), opts)) :
+          `${words.forOneHour} ${strides.say(cadence, ends)}`;
       }
     },
     exception(removed, base) {
@@ -595,13 +612,13 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
     field: 'hour',
     pairs: true,
     range(from, to) {
-      const [opens, closes] =
-        hourNames([from, (to + 1) % 24], {minute: 0}, opts);
+      const end = (to + 1) % (domainOf('hour').max + 1);
+      const [opens, closes] = names([from, end]);
 
-      return `${words.from.text} ${opens} ${words.until.text} ${closes}`;
+      return `${words.from} ${opens} ${words.until} ${closes}`;
     },
     values(values) {
-      return `${during} ${nouns.values(values)}`;
+      return `${during} ${theHours(values, opts)}`;
     }
   };
 }
@@ -609,43 +626,34 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
 /**
  * Days of the month: "on the 1st and 15th", "from the 1st through the
  * 7th", "every 5 days from the 1st". With a month given, the days are
- * said as dates in it: "on June 1 and 15". `lead` is the word that
- * introduces a day or a list of them, ordinarily "on".
+ * said as dates in it: "on June 1 and 15"; the days an exception takes
+ * out stay plain ("except the 15th"). `lead` is the word that introduces
+ * a day or a list of them, ordinarily "on".
  */
 function daysOfTheMonth(
   month: number | null,
   lead: string,
   opts: EnglishOptions
 ): Voice {
-  return {
-    all: `${words.on.text} ${every} ${units.day.one.text}`,
-    cadence: {
-      bare: false,
-      cycle: null,
-      open: true,
-      say(cadence, ends) {
-        return join(`${every} ${cadence.interval} ${units.day.many.text}`,
-          span(dayNames(ends, month, true, opts), opts));
-      }
-    },
-    exception(removed) {
-      return `${except} ${list(dayNames(removed, null, false, opts), opts)}`;
-    },
-    field: 'date',
-    pairs: false,
-    range(from, to) {
-      return span(dayNames([from, to], month, true, opts), opts);
-    },
-    values(values) {
-      return `${lead} ${list(dayNames(values, month, false, opts), opts)}`;
-    }
+  // For each role, the month the days are dates in, and whether each
+  // takes its own "the".
+  const forms: {[role in Role]: [number | null, boolean]} = {
+    ends: [month, true],
+    excepted: [null, false],
+    list: [month, false]
   };
-}
 
-function monthNames(months: number[], opts: EnglishOptions): string[] {
-  return months.map(function nameOf(month) {
-    return monthName(month, opts);
-  });
+  return listing({
+    all: `${words.on} ${every} ${units.day.one}`,
+    at: lead,
+    exceptAt: '',
+    field: 'date',
+    names(days, role) {
+      return dayNames(days, ...forms[role], opts);
+    },
+    run: '',
+    stride: {bare: false, open: true, tiles: false, unit: 'day'}
+  }, opts);
 }
 
 /**
@@ -654,67 +662,63 @@ function monthNames(months: number[], opts: EnglishOptions): string[] {
  * heard as once in two months.
  */
 function monthsAlone(opts: EnglishOptions): Voice {
-  const inWord = words.in.text;
-
-  return {
-    all: `${inWord} ${every} ${units.month.one.text}`,
-    cadence: null,
-    exception(removed) {
-      return `${except} ${list(monthNames(removed, opts), opts)}`;
-    },
+  return listing({
+    all: `${words.in} ${every} ${units.month.one}`,
+    at: words.in,
+    exceptAt: '',
     field: 'month',
-    pairs: false,
-    range(from, to) {
-      return span(monthNames([from, to], opts), opts);
+    names(months) {
+      return monthNames(months, opts);
     },
-    values(values) {
-      return `${inWord} ${list(monthNames(values, opts), opts)}`;
-    }
-  };
+    run: '',
+    stride: null
+  }, opts);
 }
 
 /**
  * Months belonging to days that have already been phrased: "on the 1st
  * and 15th of January and July", "on the 1st of each month from June
  * through August", "on the 1st of every other month", "on the 1st of
- * every other month from February". Listed months
- * under a single day (`day`, with `lead` to introduce it) are said as
- * dates in full: "on January 1 and July 1".
+ * every other month from February". Listed months under a single day
+ * (`day`, with `lead` to introduce it) are said as dates in full: "on
+ * January 1 and July 1".
  */
 function monthsOfDays(
   days: {day: number | null; lead: string; phrase: string},
   opts: EnglishOptions
 ): Voice {
-  const of = `${days.phrase} ${words.of.text}`;
-  const monthWord = units.month.one.text;
+  const of = `${days.phrase} ${words.of}`;
+  const monthWord = units.month.one;
+  const months = listing({
+    all: `${of} ${every} ${monthWord}`,
+    at: of,
+    exceptAt: '',
+    field: 'month',
+    names(values) {
+      return monthNames(values, opts);
+    },
+    run: `${of} ${words.each} ${monthWord}`,
+    stride: null
+  }, opts);
 
   return {
-    all: `${of} ${every} ${monthWord}`,
+    ...months,
     cadence: {
       bare: true,
-      cycle: 12,
       open: true,
       say(cadence, ends) {
         return cadence.interval === 2 && ends.length < 2 ?
-          join(`${of} ${every} ${lexicon.intervalWord(2).text} ${monthWord}`,
+          join(`${of} ${every} ${words.other} ${monthWord}`,
             span(monthNames(ends, opts), opts)) :
           null;
-      }
-    },
-    exception(removed) {
-      return `${except} ${list(monthNames(removed, opts), opts)}`;
-    },
-    field: 'month',
-    pairs: false,
-    range(from, to) {
-      return `${of} ${extraWords.each} ${monthWord} ` +
-        span(monthNames([from, to], opts), opts);
+      },
+      tiles: true
     },
     values(values) {
       const {day} = days;
 
       return day === null ?
-        `${of} ${list(monthNames(values, opts), opts)}` :
+        months.values(values) :
         `${days.lead} ` + list(values.flatMap(function dateIn(month) {
           return dayNames([day], month, false, opts);
         }), opts);
@@ -729,29 +733,23 @@ function monthsOfDays(
  * short enough that its run is always named.
  */
 function daysOfTheWeek(opts: EnglishOptions): Voice {
-  const on = words.on.text;
-
-  function names(days: number[], recurring: boolean): string[] {
-    return days.map(function nameOf(day) {
-      return weekdayName(day, recurring, opts);
-    });
-  }
-
   return {
-    all: null,
-    cadence: null,
-    exception(removed) {
-      return `${except} ${list(names(walkWeek(removed), false), opts)}`;
-    },
-    field: 'weekday',
-    pairs: false,
+    ...listing({
+      all: null,
+      at: words.on,
+      exceptAt: '',
+      field: 'weekday',
+      names(days, role) {
+        return weekdayNames(walkWeek(days), role === 'list', opts);
+      },
+      run: '',
+      stride: null
+    }, opts),
     range(from, to) {
-      return names([from, to], false).join(` ${opts.style.through} `);
+      return weekdayNames([from, to], false, opts)
+        .join(` ${opts.style.through} `);
     },
-    rank: weekRank,
-    values(values) {
-      return `${on} ${list(names(walkWeek(values), true), opts)}`;
-    }
+    rank: weekRank
   };
 }
 
@@ -760,42 +758,21 @@ function daysOfTheWeek(opts: EnglishOptions): Voice {
  * from 1970".
  */
 function yearsByNumber(opts: EnglishOptions): Voice {
-  const inWord = words.in.text;
-
-  function names(years: number[]): string[] {
-    return years.map(function nameOf(year) {
-      return lexicon.year(year).text;
-    });
-  }
-
-  return {
-    all: `${inWord} ${every} ${units.year.one.text}`,
-    cadence: {
-      bare: false,
-      cycle: null,
-      open: true,
-      say(cadence, ends) {
-        return join(`${every} ${cadence.interval} ${units.year.many.text}`,
-          span(names(ends), opts));
-      }
-    },
-    exception(removed) {
-      return `${except} ${list(names(removed), opts)}`;
-    },
+  return listing({
+    all: `${words.in} ${every} ${units.year.one}`,
+    at: words.in,
+    exceptAt: '',
     field: 'year',
-    pairs: false,
-    range(from, to) {
-      return span(names([from, to]), opts);
+    names(years) {
+      return years.map(String);
     },
-    values(values) {
-      return `${inWord} ${list(names(values), opts)}`;
-    }
-  };
+    run: '',
+    stride: {bare: false, open: true, tiles: false, unit: 'year'}
+  }, opts);
 }
 
 export {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
   hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,
-  opensWithEvery, say, sayable, secondsOfOneMinute, withinTheHour,
-  yearsByNumber
+  opensWithEvery, say, secondsOfOneMinute, withinTheHour, yearsByNumber
 };
