@@ -19,7 +19,7 @@
 import {writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname, join} from 'node:path';
-import {analyze, prepare} from '../src/core/index.js';
+import {analyze, prepare, readingOf} from '../src/core/index.js';
 import {spanningSet} from './patterns.mjs';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..',
@@ -201,7 +201,8 @@ function corpusCell(pattern) {
   // a pattern carrying one is read under Quartz semantics.
   const quartz = pattern.includes('?');
 
-  return cellOf(pattern, {quartz, seconds, years});
+  return cellOf(pattern,
+    readingOf({cron: quartz ? 'quartz' : 'standard', seconds, years}));
 }
 
 function coreCells(coreSet) {

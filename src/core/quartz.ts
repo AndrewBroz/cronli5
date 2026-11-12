@@ -1,55 +1,56 @@
-// Quartz input semantics. cronli5 accepts Quartz tokens (`?`, `L`, `W`, `#`),
-// but Quartz numbers the day-of-week differently from standard cron: Quartz is
-// 1 = Sunday … 7 = Saturday, while cron is 0/7 = Sunday, 1 = Monday. Reading a
-// Quartz pattern with cron indexing silently shifts every weekday by one, so a
-// Quartz `2` (Monday) would read as Tuesday. This module gates and re-indexes
-// the input so the rest of the core keeps facing canonical cron values.
+// How the day fields are read. Two facts differ between schedulers, and
+// each is applied here so the rest of the core faces canonical cron values.
 //
-// The `?` token (Quartz's "no specific value", mandatory in Quartz, absent in
-// standard cron) is the unambiguous mark of a Quartz pattern. Outside Quartz
-// mode it is rejected outright rather than aliased to `*`, so a real Quartz
-// cron errors loudly instead of being mis-read; inside Quartz mode it is the
-// equivalent of `*`.
+// Weekday numbering: Quartz numbers the day-of-week 1 = Sunday … 7 =
+// Saturday, while cron is 0/7 = Sunday, 1 = Monday. Reading one as the
+// other silently shifts every weekday by one, so a Quartz `2` (Monday)
+// would read as Tuesday.
+//
+// The `?` token: Quartz's "no specific value", absent from standard cron.
+// Where it is rejected, a real Quartz pattern errors loudly instead of
+// being mis-read; where it is allowed or required it is the equivalent of
+// `*`.
 
 import {Cronli5InputError} from './errors.js';
 import type {CronLike} from './specs.js';
+import type {Reading} from './reading.js';
 import {isNonNegativeInteger} from './util.js';
 
-// The error a `?` raises outside Quartz mode: a clear pointer at the option
-// that makes Quartz semantics (and `?`) available.
+// The error a rejected `?` raises: a clear pointer at the option that
+// reads the pattern as Quartz.
 const quartzTokenMessage =
-  '`?` is a Quartz token — pass { quartz: true } to enable Quartz semantics.';
+  '`?` is a Quartz token — pass { cron: \'quartz\' } to read the pattern ' +
+  'as Quartz.';
 
-// In standard (non-Quartz) mode, `?` is not a valid value: reject it with a
-// pointer at the `quartz` option. In Quartz mode, accept `?` as `*` and
-// re-index the day-of-week from Quartz numbering (1 = Sunday) to the canonical
-// cron numbering (0 = Sunday) the rest of the core expects. Operates in place
-// on the raw cron-like object, before aliasing and validation.
-function applyQuartz(cronPattern: CronLike, quartz: boolean): void {
-  if (!quartz) {
-    rejectQuartzToken(cronPattern.date);
-    rejectQuartzToken(cronPattern.weekday);
+const requiredMessage =
+  'Exactly one of the day-of-month and day-of-week fields must be `?` ' +
+  'when `questionMark` is \'require\'.';
 
-    return;
-  }
+// Apply the reading's day-field facts in place on the raw cron-like
+// object, before aliasing and validation: settle each `?`, then re-index
+// the day-of-week to the canonical cron numbering (0 = Sunday). A reading
+// with either fact missing is read as standard cron.
+function applyReading(cronPattern: CronLike, reading: Partial<Reading>): void {
+  const days: Array<'date' | 'weekday'> = ['date', 'weekday'];
+  const marked = days.filter(function isMark(field) {
+    return '' + cronPattern[field] === '?';
+  });
+  const rule = reading.questionMark ?? 'reject';
 
-  if ('' + cronPattern.date === '?') {
-    cronPattern.date = '*';
-  }
-
-  if ('' + cronPattern.weekday === '?') {
-    cronPattern.weekday = '*';
-
-    return;
-  }
-
-  cronPattern.weekday = reindexWeekday('' + cronPattern.weekday);
-}
-
-// Throw the Quartz-token error if a field is exactly `?`.
-function rejectQuartzToken(value: string | number): void {
-  if ('' + value === '?') {
+  if (rule === 'reject' && marked.length) {
     throw new Cronli5InputError(quartzTokenMessage);
+  }
+
+  if (rule === 'require' && marked.length !== 1) {
+    throw new Cronli5InputError(requiredMessage);
+  }
+
+  marked.forEach(function open(field) {
+    cronPattern[field] = '*';
+  });
+
+  if (reading.weekdaysFrom === 1) {
+    cronPattern.weekday = reindexWeekday('' + cronPattern.weekday);
   }
 }
 
@@ -98,4 +99,4 @@ function reindexNumber(token: string): string {
   return '' + (+token - 1);
 }
 
-export {applyQuartz, quartzTokenMessage};
+export {applyReading, quartzTokenMessage};

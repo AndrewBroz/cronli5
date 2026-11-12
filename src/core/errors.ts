@@ -18,4 +18,17 @@ class Cronli5InputError extends Error {
   }
 }
 
-export {Cronli5InputError};
+/**
+ * The error `cronli5` throws when an option cannot be honoured: an unknown
+ * option or language, a style field the language does not have, a value
+ * outside what an option accepts. It is the caller's code that is wrong,
+ * not the pattern, so `{lenient: true}` never converts it.
+ */
+class Cronli5OptionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'Cronli5OptionError';
+  }
+}
+
+export {Cronli5InputError, Cronli5OptionError};

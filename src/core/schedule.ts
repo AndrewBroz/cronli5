@@ -4,6 +4,7 @@
 // what any new language module interacts with. See docs/i18n-design.md.
 
 import type {Cronli5Options} from '../types.js';
+import type {Reading} from './reading.js';
 
 /** A cron field name, in canonical order. */
 export type Field =
@@ -137,14 +138,11 @@ export type Schedule = ScheduleFacts;
  * is the language's own style table (English's is `EnglishStyle`, in
  * `lang/en/options.ts`); the core never reads it.
  */
-export interface NormalizedOptions<Style = unknown> {
+export interface NormalizedOptions<Style = unknown> extends Reading {
   ampm: boolean;
   lenient: boolean;
-  quartz: boolean;
-  seconds: boolean;
   short: boolean;
   style: Style;
-  years: boolean;
 }
 
 /** The interface every language module's default export implements. */

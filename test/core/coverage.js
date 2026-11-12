@@ -1,6 +1,7 @@
 import chai from 'chai';
 import {readFileSync} from 'node:fs';
-import {Cronli5InputError, analyze, prepare} from '../../src/core/index.js';
+import {Cronli5InputError, analyze, prepare, readingOf}
+  from '../../src/core/index.js';
 import {coreSetSeeds, optionsFor}
   from '../../tooling/scripts/edit-diff.mjs';
 
@@ -14,9 +15,7 @@ const {expect} = chai;
 const CORE = JSON.parse(readFileSync('test/core/core-set.json', 'utf8'));
 
 function analyzed(pattern, options) {
-  return analyze(prepare(pattern, {
-    lenient: false, quartz: false, seconds: false, years: false, ...options
-  }));
+  return analyze(prepare(pattern, readingOf({...options})));
 }
 
 describe('Core pattern set:', function() {

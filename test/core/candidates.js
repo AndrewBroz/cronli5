@@ -1,10 +1,11 @@
 import chai from 'chai';
-import {analyze, prepare, shortestSpoken} from '../../src/core/index.js';
+import {analyze, prepare, readingOf, shortestSpoken}
+  from '../../src/core/index.js';
 
 const {expect} = chai;
 
 function candidates(pattern, options) {
-  const opts = {quartz: false, seconds: false, years: false, ...options};
+  const opts = readingOf({...options});
 
   return analyze(prepare(pattern, opts)).analyses.candidates;
 }
@@ -38,7 +39,7 @@ describe('analyses.candidates:', function() {
   });
 
   it('is null for a Quartz field', function() {
-    const found = candidates('0 0 15W * ?', {quartz: true});
+    const found = candidates('0 0 15W * ?', {cron: 'quartz'});
 
     expect(found.date).to.equal(null);
     expect(found.minute).to.deep.equal([{kind: 'values', values: [0]}]);
@@ -60,7 +61,7 @@ describe('analyses.candidates:', function() {
 
 describe('facts that follow the values, not the spelling:', function() {
   function facts(pattern, options) {
-    const opts = {quartz: false, seconds: false, years: false, ...options};
+    const opts = readingOf({...options});
 
     return analyze(prepare(pattern, opts)).analyses;
   }

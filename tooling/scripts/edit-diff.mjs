@@ -13,7 +13,8 @@
 import {readFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import cronli5 from '../../src/cronli5.js';
-import {analyze, fieldOrder, prepare} from '../../src/core/index.js';
+import {analyze, fieldOrder, prepare, readingOf}
+  from '../../src/core/index.js';
 
 const PLAIN_ALPHABET = '0123456789*/,-';
 const QUARTZ_ALPHABET = 'LW#?';
@@ -27,7 +28,7 @@ function optionsFor(pattern) {
   const fields = pattern.trim().split(/\s+/u);
 
   return {
-    quartz: pattern.includes('?'),
+    cron: pattern.includes('?') ? 'quartz' : 'standard',
     years: (/^\d{4}\b/u).test(fields[fields.length - 1])
   };
 }
@@ -35,12 +36,7 @@ function optionsFor(pattern) {
 // The canonical form of a pattern: its normalized fields in field order.
 // Throws what the core throws on invalid input.
 function canonical(pattern, options) {
-  const opts = {
-    quartz: Boolean(options && options.quartz),
-    seconds: Boolean(options && options.seconds),
-    years: Boolean(options && options.years)
-  };
-  const normalized = prepare(pattern, opts);
+  const normalized = prepare(pattern, readingOf({...options}));
 
   return fieldOrder.map(function fieldOf(field) {
     return normalized[field];
@@ -54,11 +50,7 @@ function canonical(pattern, options) {
 // against `1-2`.
 function firesOn(pattern, options) {
   try {
-    const schedule = analyze(prepare(pattern, {
-      quartz: Boolean(options && options.quartz),
-      seconds: Boolean(options && options.seconds),
-      years: Boolean(options && options.years)
-    }));
+    const schedule = analyze(prepare(pattern, readingOf({...options})));
 
     return JSON.stringify(fieldOrder.map(function fieldOf(field) {
       return schedule.analyses.candidates[field] || schedule.pattern[field];
@@ -99,7 +91,7 @@ function singleEdits(text, alphabet) {
 // fields, sorted, excluding the pattern itself.
 function neighbors(pattern, options) {
   const opts = {...optionsFor(pattern), ...options};
-  const {quartz} = opts;
+  const quartz = opts.cron === 'quartz';
   const alphabet = quartz ? PLAIN_ALPHABET + QUARTZ_ALPHABET : PLAIN_ALPHABET;
   const fieldCount = pattern.split(' ').length;
   const found = [];

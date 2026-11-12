@@ -3,7 +3,7 @@
 import {Cronli5InputError} from './errors.js';
 import {macros} from './specs.js';
 import type {CronLike} from './specs.js';
-import type {NormalizedOptions} from './schedule.js';
+import type {Reading} from './reading.js';
 import type {CronPattern, CronPatternObject} from '../types.js';
 
 // Take a cron pattern as a cron pattern string, an array of cron fields, a
@@ -12,7 +12,7 @@ import type {CronPattern, CronPatternObject} from '../types.js';
 // string. Returns a cron-like object.
 function parseCronPattern(
   cronPattern: CronPattern,
-  opts: NormalizedOptions
+  opts: Partial<Reading>
 ): CronLike {
   const isArray = cronPattern instanceof Array;
   const isEmpty = cronPattern === null ||
@@ -47,7 +47,7 @@ function parseCronPattern(
 // instead.
 function cronifyArray(
   cronlikeArray: Array<string | number>,
-  opts: NormalizedOptions
+  opts: Partial<Reading>
 ): CronLike {
   if (cronlikeArray.length > 7) {
     // Error messages are English for now (docs/i18n-design.md §7).
@@ -126,7 +126,7 @@ function pick(
 }
 
 // Turn a string into a cron-like object.
-function cronifyString(cronString: string, opts: NormalizedOptions): CronLike {
+function cronifyString(cronString: string, opts: Partial<Reading>): CronLike {
   // Trim first: crontab lines copied from files routinely carry surrounding
   // whitespace, and a trailing space would otherwise split into a phantom
   // field that shifts the meaning of every field before it.

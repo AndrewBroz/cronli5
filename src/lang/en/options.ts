@@ -4,6 +4,7 @@
 
 import type {Cronli5Options} from '../../types.js';
 import type {NormalizedOptions} from '../../core/schedule.js';
+import {readingOf} from '../../core/reading.js';
 
 /** The word-level conventions of one house style. */
 export interface EnglishStyle {
@@ -88,13 +89,16 @@ function normalize(options?: Cronli5Options): EnglishOptions {
   const given: Cronli5Options = {...options};
 
   return {
+    ...readingOf({
+      cron: (given as {cron?: unknown}).cron ??
+        ['standard', 'quartz'][Number(Boolean(given.quartz))],
+      seconds: Boolean(given.seconds),
+      years: Boolean(given.years)
+    }),
     ampm: given.ampm !== false,
     lenient: Boolean(given.lenient),
-    quartz: Boolean(given.quartz),
-    seconds: Boolean(given.seconds),
     short: Boolean(given.short),
-    style: styleFor(given.dialect),
-    years: Boolean(given.years)
+    style: styleFor(given.dialect)
   };
 }
 

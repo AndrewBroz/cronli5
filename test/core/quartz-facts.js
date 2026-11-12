@@ -1,10 +1,10 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../src/core/index.js';
+import {analyze, prepare, readingOf} from '../../src/core/index.js';
 
 const {expect} = chai;
 
 function day(pattern) {
-  const opts = {quartz: false, seconds: false, years: false};
+  const opts = readingOf({});
 
   return analyze(prepare(pattern, opts)).analyses.day;
 }

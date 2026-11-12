@@ -4,21 +4,22 @@
 // See docs/i18n-design.md.
 
 import {applyQuartzAliases, normalizeCronPattern} from './normalize.js';
-import type {NormalizedOptions, Pattern} from './schedule.js';
-import {applyQuartz} from './quartz.js';
+import type {Pattern} from './schedule.js';
+import type {Reading} from './reading.js';
+import {applyReading} from './quartz.js';
 import {parseCronPattern} from './parse.js';
 import type {CronPattern} from '../types.js';
 import {validateCronPattern} from './validate.js';
 
-// Parse, apply Quartz semantics, alias, validate, and normalize cron input
-// into a canonical cron-like object of string fields, ready for semantic
-// analysis and rendering. Quartz handling runs first: it gates the `?` token
-// (rejected unless `quartz`) and re-indexes the Quartz day-of-week to the
-// canonical cron numbering the rest of the core expects.
-function prepare(cronPattern: CronPattern, opts: NormalizedOptions): Pattern {
+// Parse, apply the reading, alias, validate, and normalize cron input into
+// a canonical cron-like object of string fields, ready for semantic
+// analysis and rendering. The reading runs first: it settles the `?` token
+// and re-indexes the day-of-week to the canonical cron numbering the rest
+// of the core expects.
+function prepare(cronPattern: CronPattern, opts: Partial<Reading>): Pattern {
   const pattern = parseCronPattern(cronPattern, opts);
 
-  applyQuartz(pattern, opts.quartz);
+  applyReading(pattern, opts);
   applyQuartzAliases(pattern);
   validateCronPattern(pattern);
 
@@ -27,6 +28,7 @@ function prepare(cronPattern: CronPattern, opts: NormalizedOptions): Pattern {
 
 export {prepare};
 export * from './errors.js';
+export * from './reading.js';
 export * from './specs.js';
 export * from './util.js';
 export * from './analyze.js';

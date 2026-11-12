@@ -27,7 +27,7 @@ describe('edit-diff:', function() {
 
     it('does not throw on Quartz tokens', function() {
       expect(function run() {
-        neighbors('0 0 15W * ?', {quartz: true});
+        neighbors('0 0 15W * ?', {cron: 'quartz'});
       }).to.not.throw();
     });
   });
@@ -96,7 +96,7 @@ describe('edit-diff:', function() {
     it('pairs each seed with its neighbors under the seed\'s options',
       function() {
         const pairs = neighborPairs(
-          [{options: {quartz: false, years: true}, pattern: '0 0 1 1 * */2'}]);
+          [{options: {cron: 'standard', years: true}, pattern: '0 0 1 1 * */2'}]);
 
         expect(pairs.length).to.be.above(0);
         pairs.forEach(function carries(pair) {
