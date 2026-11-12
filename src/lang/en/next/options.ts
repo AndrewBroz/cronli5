@@ -14,6 +14,8 @@ export interface EnglishStyle {
   dayFirst: boolean;
   // The word for 12:00.
   midday: string;
+  // The word for 0:00.
+  midnight: string;
   // Whether a day beside its month keeps its ordinal suffix.
   ordinals: boolean;
   pm: string;
@@ -33,6 +35,7 @@ const us: EnglishStyle = {
   closeUp: false,
   dayFirst: false,
   midday: 'noon',
+  midnight: 'midnight',
   ordinals: false,
   pm: 'p.m.',
   sep: ':',

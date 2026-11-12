@@ -8,6 +8,7 @@ import type {Field, SetDescription} from '../../../core/schedule.js';
 import type {Moment} from './idioms.js';
 import type {Spoken} from '../../../core/select.js';
 import type {EnglishOptions} from './options.js';
+import {denote} from '../../../core/describe-set.js';
 import {fieldSpecs} from '../../../core/specs.js';
 import {shortestSpoken} from '../../../core/select.js';
 import {idioms} from './idioms.js';
@@ -22,13 +23,15 @@ type Pieces = Extract<SetDescription, {kind: 'pieces'}>;
 type Exception = Extract<SetDescription, {kind: 'except'}>;
 
 /**
- * A phrase and the number of things it names. `idiom` marks a phrase
- * built on a fixed phrasing; `named` is false when the phrase names none
- * of its own values (every value, or an idiom).
+ * A phrase and the number of things it names. `idiom` marks a fixed
+ * phrasing, which wins a tie. `yields` marks an exception or a cadence
+ * with both ends named, which loses one. `named` is false when the phrase
+ * names none of its own values (every value, or an idiom).
  */
 export interface Phrase extends Spoken {
   idiom: boolean;
   named: boolean;
+  yields: boolean;
 }
 
 /** The phrase chosen for a field, with the description it says. */
@@ -61,6 +64,8 @@ export interface Voice {
   exception(removed: number[], base: SetDescription): string;
   range(from: number, to: number): string;
   values(values: number[]): string;
+  // The order the field's values are said in, when it is not ascending.
+  walk?(values: number[]): number[];
 }
 
 const {units, words} = lexicon;
@@ -68,7 +73,7 @@ const every = words.every.text;
 const except = words.except.text;
 
 function plain(text: string, length: number): Phrase {
-  return {idiom: false, length, named: true, text};
+  return {idiom: false, length, named: true, text, yields: false};
 }
 
 function domainOf(field: Field): {max: number; min: number} {
@@ -80,15 +85,15 @@ function domainOf(field: Field): {max: number; min: number} {
 // Which ends of a cadence have to be named. A cadence that fills its cycle
 // can leave its end unsaid, and its start too when it starts the cycle;
 // one that stops early or starts late names both, so nobody assumes it
-// carries on.
+// carries on. Where cycles differ in length, running to the end is all
+// that filling one can mean.
 function namedEnds(cadence: Cadence, field: Field, voice: CadenceVoice):
   number[] {
   const {max, min} = domainOf(field);
   const offset = cadence.start - min;
-  const divides = voice.cycle === null ||
-    voice.cycle % cadence.interval === 0;
-  const fills = cadence.last + cadence.interval > max &&
-    offset < cadence.interval && divides;
+  const tiles = voice.cycle === null ||
+    offset < cadence.interval && voice.cycle % cadence.interval === 0;
+  const fills = cadence.last + cadence.interval > max && tiles;
 
   if (fills && offset === 0 && voice.bare) {
     return [];
@@ -102,7 +107,7 @@ function namedEnds(cadence: Cadence, field: Field, voice: CadenceVoice):
 function sayAll(voice: Voice): Phrase | null {
   return voice.all === null ?
     null :
-    {idiom: false, length: 0, named: false, text: voice.all};
+    {...plain(voice.all, 0), named: false};
 }
 
 // Two neighbouring values are a list unless the voice describes a stretch
@@ -123,44 +128,85 @@ function sayCadence(cadence: Cadence, voice: Voice): Phrase | null {
   const ends = namedEnds(cadence, voice.field, voice.cadence);
   const text = voice.cadence.say(cadence, ends);
 
-  return text === null ? null : plain(text, 1 + ends.length);
+  return text === null ?
+    null :
+    {...plain(text, 1 + ends.length), yields: ends.length === 2};
 }
 
-function ascending(a: number, b: number): number {
-  return a - b;
-}
+// The pieces in the order they are said, with the order of the values
+// that decides it. Values are walked in ascending order, starting from a
+// run that wraps round the cycle if there is one, unless the voice has a
+// walk of its own; a piece stands where its first value does.
+function inSpokenOrder(pieces: Pieces, voice: Pick<Voice, 'field' | 'walk'>):
+  {order: number[]; parts: Pieces['parts']} {
+  const values = denote(pieces, {cyclic: true, ...domainOf(voice.field)});
+  const wrapped = pieces.parts.find(function wraps(part) {
+    return part.kind === 'range' && part.from > part.to;
+  }) as {from: number} | undefined;
+  const at = wrapped ? values.indexOf(wrapped.from) : 0;
+  const order = voice.walk ?
+    voice.walk(values) :
+    [...values.slice(at), ...values.slice(0, at)];
 
-// Where a piece falls in the order pieces are said in: ascending, but a
-// run that wraps round the cycle comes first.
-function pieceOrder(part: Pieces['parts'][number]): number {
-  if (part.kind === 'values') {
-    return Math.min(...part.values);
+  function place(part: Pieces['parts'][number]): number {
+    const members = part.kind === 'range' ? [part.from] : part.values;
+
+    return Math.min(...members.map(function position(value) {
+      return order.indexOf(value);
+    }));
   }
 
-  return part.from > part.to ? -1 : part.from;
+  return {
+    order,
+    parts: pieces.parts.slice().sort(function byPlace(a, b) {
+      return place(a) - place(b);
+    })
+  };
 }
 
 // Several pieces, each range with its own lead and the stray values
 // between them as lists.
 function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
   Phrase {
-  const parts = pieces.parts.slice().sort(function inOrder(a, b) {
-    return pieceOrder(a) - pieceOrder(b);
-  }).map(function sayPart(part) {
+  const {order, parts} = inSpokenOrder(pieces, voice);
+  const said = parts.map(function sayPart(part) {
     return part.kind === 'range' ?
       plain(voice.range(part.from, part.to), 2) :
-      plain(voice.values(part.values.slice().sort(ascending)),
+      plain(
+        voice.values(part.values.slice().sort(function inOrder(a, b) {
+          return order.indexOf(a) - order.indexOf(b);
+        })),
         part.values.length);
   });
 
   return plain(
-    list(parts.map(function textOf(part) {
+    list(said.map(function textOf(part) {
       return part.text;
     }), opts),
-    parts.reduce(function total(sum, part) {
+    said.reduce(function total(sum, part) {
       return sum + part.length;
     }, 0)
   );
+}
+
+/**
+ * Whether a description, said by number within the hour or the minute,
+ * begins with "every minute" (or "every second"): every value, a run, an
+ * exception to either, or pieces whose first is a run.
+ */
+function opensWithEvery(description: SetDescription,
+  field: 'minute' | 'second'): boolean {
+  switch (description.kind) {
+    case 'all':
+    case 'range':
+      return true;
+    case 'except':
+      return opensWithEvery(description.base, field);
+    case 'pieces':
+      return inSpokenOrder(description, {field}).parts[0].kind === 'range';
+    default:
+      return false;
+  }
 }
 
 function sayException(
@@ -172,8 +218,10 @@ function sayException(
 
   return base && {
     ...base,
+    idiom: false,
     length: base.length + exception.removed.length,
-    text: join(base.text, voice.exception(exception.removed, exception.base))
+    text: join(base.text, voice.exception(exception.removed, exception.base)),
+    yields: true
   };
 }
 
@@ -188,7 +236,12 @@ function say(description: SetDescription, voice: Voice, opts: EnglishOptions):
   });
 
   if (idiom) {
-    return {...idiom.say(description, opts), idiom: true, named: false};
+    return {
+      ...idiom.say(description, opts),
+      idiom: true,
+      named: false,
+      yields: false
+    };
   }
 
   switch (description.kind) {
@@ -209,8 +262,28 @@ function say(description: SetDescription, voice: Voice, opts: EnglishOptions):
 }
 
 /**
- * The phrase naming the fewest things among a field's candidates. A tie
- * goes to a phrase built on an idiom, then to the earlier candidate.
+ * Phrases in the order a tie between them is settled in: idioms first,
+ * then the others as offered, with those that must name strictly fewer
+ * things than the plain list (which is offered last) after it.
+ */
+function inTieOrder<T extends Pick<Phrase, 'idiom' | 'yields'>>(phrases: T[]):
+  T[] {
+  return [
+    ...phrases.filter(function onIdiom(phrase) {
+      return phrase.idiom;
+    }),
+    ...phrases.filter(function ordinary(phrase) {
+      return !phrase.idiom && !phrase.yields;
+    }),
+    ...phrases.filter(function yielding(phrase) {
+      return phrase.yields;
+    })
+  ];
+}
+
+/**
+ * The phrase naming the fewest things among a field's candidates, with
+ * ties settled as `inTieOrder` has them.
  */
 function choose(
   candidates: SetDescription[],
@@ -223,25 +296,21 @@ function choose(
     return phrase ? [{...phrase, description}] : [];
   });
 
-  return shortestSpoken([
-    ...sayable.filter(function onIdiom(choice) {
-      return choice.idiom;
-    }),
-    ...sayable.filter(function onNoIdiom(choice) {
-      return !choice.idiom;
-    })
-  ]);
+  return shortestSpoken(inTieOrder(sayable));
 }
 
 /**
  * Minutes or seconds by number, to be followed by the unit and "past":
  * "at 5, 20, and 45", "every minute from 10 through 40". A cadence that
  * fills the hour or minute from zero stands alone as "every 15 minutes".
+ * `everyOne` is what "every minute" is said as: finer seconds take its
+ * place.
  */
-function withinTheHour(field: 'minute' | 'second', opts: EnglishOptions):
-  Voice {
-  const everyOne = `${every} ${units[field].one.text}`;
-
+function withinTheHour(
+  field: 'minute' | 'second',
+  everyOne: string,
+  opts: EnglishOptions
+): Voice {
   function numbers(values: number[]): string {
     return list(values.map(String), opts);
   }
@@ -277,7 +346,7 @@ function withinTheHour(field: 'minute' | 'second', opts: EnglishOptions):
 // are clock times. A run that wraps is two windows.
 function clockWindows(
   frame: {precision: 'hour' | 'second'; start: number; step: number},
-  lead: {before: string; every: string},
+  lead: {every: string; stray: string},
   opts: EnglishOptions
 ): Pick<Voice, 'exception' | 'pairs' | 'range' | 'values'> {
   function names(values: number[]): string[] {
@@ -304,7 +373,7 @@ function clockWindows(
         window(from, to);
     },
     values(values) {
-      return join(lead.before, words.at.text, list(names(values), opts));
+      return join(lead.stray, words.at.text, list(names(values), opts));
     }
   };
 }
@@ -317,7 +386,7 @@ function clockWindows(
  */
 function minutesOfOneHour(
   hour: number,
-  lead: {before: string; every: string},
+  lead: {every: string; stray: string},
   opts: EnglishOptions
 ): Voice {
   return {
@@ -345,7 +414,7 @@ function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
 
   return {
     ...clockWindows({precision: 'second', start, step: 1},
-      {before: '', every: everySecond}, opts),
+      {every: everySecond, stray: ''}, opts),
     all: `${everySecond} ${theMinute}`,
     cadence: {
       bare: true,
@@ -640,7 +709,8 @@ function daysOfTheWeek(opts: EnglishOptions): Voice {
     },
     values(values) {
       return `${on} ${list(names(walkWeek(values), true), opts)}`;
-    }
+    },
+    walk: walkWeek
   };
 }
 
@@ -684,6 +754,6 @@ function yearsByNumber(opts: EnglishOptions): Voice {
 
 export {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, minutesOfOneHour, monthsAlone, monthsOfDays, say,
-  secondsOfOneMinute, withinTheHour, yearsByNumber
+  hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,
+  opensWithEvery, say, secondsOfOneMinute, withinTheHour, yearsByNumber
 };

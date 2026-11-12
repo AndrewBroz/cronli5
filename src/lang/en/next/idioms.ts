@@ -113,7 +113,9 @@ const momentIdioms: Array<Idiom<Moment>> = [
   {
     applies: onTheHour(0),
     name: 'midnight',
-    say: saying(words.midnight)
+    say(moment, opts) {
+      return {length: 1, text: opts.style.midnight};
+    }
   },
   {
     applies: onTheHour(12),
