@@ -90,27 +90,21 @@ cronli5(['*/5', '*', '*', '*', '*']);   // 'every 5 minutes'
 cronli5({ minute: '*/5' });             // 'every 5 minutes'
 ```
 
-By default `cronli5(...)` returns the lowercase, embeddable **fragment**. For
-the capitalized, standalone **sentence**, set [`sentence: true`](#options) — or
-call the matching convenience method. `cronli5.sentence(...)` and
-`cronli5.fragment(...)` are thin sugar over that option (each forwards all
-other options) and read a little better at the call site:
+By default `cronli5(...)` returns a lowercase **fragment** to embed in a
+sentence of your own. The [`form`](#options) option gives the same
+description capitalised as a standalone **label**, or as a complete
+**sentence**:
 ```js
-cronli5('0 0 * * *');                     // 'at midnight every day'  (fragment, default)
-cronli5.fragment('0 0 * * *');            // 'at midnight'  (same as above)
-cronli5.sentence('0 0 * * *');            // 'Runs at midnight.'
+cronli5('0 0 * * *');                       // 'at midnight every day'
+cronli5('0 0 * * *', { form: 'label' });    // 'At midnight every day'
+cronli5('0 0 * * *', { form: 'sentence' }); // 'Runs at midnight every day.'
 ```
-
-(There is intentionally no `cronli5.toString(...)`: it would shadow
-`Function.prototype.toString`, which the runtime calls with no arguments for
-`String(cronli5)`, template literals, and console output — the named methods
-sidestep that collision.)
 
 TypeScript types are bundled, so usage is fully typed out of the box:
 ```ts
 import cronli5, { type Cronli5Options } from 'cronli5';
 
-const options: Cronli5Options = { ampm: false };
+const options: Cronli5Options = { style: { hour12: false } };
 const description: string = cronli5('30 13 * * MON-FRI', options);
 // 'at 13:30 on weekdays'
 ```
@@ -125,8 +119,9 @@ $ cronli5 --fragment "*/5 * * * *"
 every 5 minutes
 ```
 
-Dialects are selected through the library's [`dialect`](#options) option rather than the CLI;
-the CLI exposes only `--lang` and `--fragment`.
+The CLI takes `--lang <code>` (with an optional region, such as `en-GB`),
+`--form fragment|label|sentence`, `--cron standard|quartz`, and
+`--fragment` as a short form of `--form fragment`.
 
 ## Input Formats
 
@@ -147,7 +142,7 @@ It accepts the standard allowed values and the following operators:
 ### Extended Format Support
 
 Ranges in cyclic fields may wrap around (`22-2` is an overnight window, and
-`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the date and weekday fields: `L` (last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`), and `#` (nth weekday, e.g. `1#2` for the second Monday). Quartz's `?` ("no specific value") and its day-of-week numbering (1 = Sunday) require the [`quartz` option](#options); see its note for why.
+`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the date and weekday fields: `L` (last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`), and `#` (nth weekday, e.g. `1#2` for the second Monday). Quartz's `?` ("no specific value") and its day-of-week numbering (1 = Sunday) are read with [`cron: 'quartz'`](#options); see its note for why.
 
 ## Options
 
@@ -155,15 +150,20 @@ The `cronli5` function takes an `options` object as its 2nd parameter:
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `ampm` | `true` (English) | Use a 12-hour clock. Set `false` for 24-hour time. The default is language-specific: English is 12-hour. |
-| `dialect` | `'us'` | The English style. `'us'` follows the [Chicago Manual of Style][chicago]: serial commas, `through` ranges, `9 a.m.`/`5:30 p.m.` times, `noon`/`midnight`, and `January 1` dates. `'gb'` follows the [Guardian style guide][guardian]: no serial comma, `to` ranges, `9am`/`5.30pm` times, `midday`/`midnight`, and `1 January` dates. `'house'` is Chicago with capital meridiems and ordinal dates (`9:30 AM`, `January 1st`). A custom object defines your own style. See [docs/dialects.md](./docs/dialects.md). |
-| `lang` | English | A language module, e.g. `import en from 'cronli5/lang/en'`. Each language owns its words, conventions, and dialects — see [Languages](#languages). |
-| `lenient` | `false` | Never throw: invalid input returns the language's fallback description (`'an unrecognizable cron pattern'`) instead. Useful when rendering arbitrary user crontabs. |
-| `quartz` | `false` | Read the pattern with [Quartz](https://www.quartz-scheduler.org/) semantics. Quartz numbers the day-of-week **1 = Sunday … 7 = Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday) and requires exactly one of day-of-month or day-of-week to be `?` ("no specific value"). With this off, `?` is rejected outright rather than silently mis-read — a `?` is the unambiguous mark of a Quartz pattern, so `'0 0 ? * 2'` would otherwise read as Tuesday when its author meant Monday. The Quartz numbering also applies inside the day-of-week operators (`6L`, `2#2`) and the weekday `L` alias. Day names (`MON`) and the other fields are unaffected. Composable with `seconds`/`years`. |
-| `sentence` | `false` | Return a complete standalone sentence (`'Runs at midnight.'`) instead of the embeddable fragment. Each language supplies its own wrapping. Wraps a schedule and `@reboot`, but not the lenient `fallback`. The methods `cronli5.sentence(...)` / `cronli5.fragment(...)` (see [Usage](#usage)) are sugar for this option set to `true` / `false`. |
-| `short` | `false` | Abbreviated month and weekday names (`Mon`, `Jun`); nothing else changes. |
+| `lang` | `'en'` | The language: a code such as `'en'`, optionally with a region (`'en-GB'`), or an imported language module. See [Languages](#languages). |
+| `style` | `{}` | Overrides of the language's style table: its copy-editor choices. In English, `{hour12: false}` gives 24-hour times and `{short: true}` abbreviated names (`Mon`, `Jun`); there are ten more fields. See [docs/styles.md](./docs/styles.md). |
+| `form` | `'fragment'` | `'fragment'` is a lowercase phrase to embed (`'at midnight every day'`); `'label'` is the same capitalised to stand alone; `'sentence'` is a complete sentence (`'Runs at midnight every day.'`). Each language supplies its own wrapping. The lenient fallback is never wrapped. |
+| `cron` | `'standard'` | The flavour of cron the pattern is written in. `'quartz'` reads it as [Quartz](https://www.quartz-scheduler.org/) does: the day-of-week is numbered **1 = Sunday … 7 = Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday), including inside the day-of-week operators (`6L`, `2#2`), and `?` ("no specific value") is accepted in a day field. Under `'standard'`, `?` is rejected outright rather than silently mis-read: it is the unambiguous mark of a Quartz pattern, so `'0 0 ? * 2'` would otherwise read as Tuesday when its author meant Monday. |
+| `weekdaysFrom` | from `cron` | The number that means Sunday in the day-of-week field, `0` or `1`: one half of what a flavour sets, available alone. |
+| `questionMark` | from `cron` | `'reject'`, `'allow'` (read `?` as `*`) or `'require'` (exactly one day field must be `?`): the other half. |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |
+| `lenient` | `false` | A bad pattern returns the language's fallback description (`'an unrecognizable cron pattern'`) instead of throwing. Useful when rendering arbitrary user crontabs. A bad option still throws. |
+
+**An option `cronli5` cannot honour is an error** (`Cronli5OptionError`):
+an unknown option, a language it does not have, a style field the language
+lacks, a value outside what an option accepts. Nothing is quietly ignored.
+Coming from 0.x? See [docs/migrating-to-1.0.md](./docs/migrating-to-1.0.md).
 
 When a specific year is given — via a seven-field pattern, an object's
 `year` property, or a six-field pattern with `years: true` — it is
@@ -180,13 +180,13 @@ import cronli5 from 'cronli5';
 
 const weekdaysAt1330 = '30 13 * * MON-FRI';
 
-cronli5(weekdaysAt1330, { ampm: true, short: false });
+cronli5(weekdaysAt1330);
 // 'at 1:30 p.m. on weekdays'
 
-cronli5(weekdaysAt1330, { ampm: false, short: true });
+cronli5(weekdaysAt1330, { style: { hour12: false } });
 // 'at 13:30 on weekdays'
 
-cronli5(weekdaysAt1330, { dialect: 'gb' });
+cronli5(weekdaysAt1330, { lang: 'en-GB' });
 // 'at 1.30pm on weekdays'
 ```
 
@@ -194,25 +194,37 @@ cronli5(weekdaysAt1330, { dialect: 'gb' });
 
 English is the default, and currently the only language shipped: the other
 languages are being rebuilt for the next major version. Languages are full
-renderers over the same language-independent core. A language ships as its own
-module and is selected
-per call with the `lang` option. If you never import it, it never reaches your
-bundle (each language adds about 3.3&nbsp;KB gzipped).
+renderers over the same language-independent core, and each ships as its own
+module. You choose what reaches your bundle:
 
 ```js
-import cronli5 from 'cronli5';
+import cronli5, {create} from 'cronli5';
 import en from 'cronli5/lang/en';
 
-cronli5('30 9 * * MON-FRI');             // 'at 9:30 a.m. on weekdays'
-cronli5('30 9 * * MON-FRI', {lang: en}); // 'at 9:30 a.m. on weekdays'
+// By code. The default export knows English.
+cronli5('30 9 * * MON-FRI', {lang: 'en-GB'}); // 'at 9.30am on weekdays'
+
+// By module. Only what you import is bundled.
+cronli5('30 9 * * MON-FRI', {lang: en});      // 'at 9:30 a.m. on weekdays'
+
+// An instance that knows the languages you choose, and resolves codes
+// among them. The first is its default; `options` and `styles` set
+// defaults for every call.
+const describe = create({languages: [en], options: {form: 'label'}});
+
+describe('30 9 * * MON-FRI', {lang: 'en'});   // 'At 9:30 a.m. on weekdays'
 ```
+
+If you would sooner not choose, `cronli5/all` is the same function with
+every language built in. A code that names a language an instance does not
+have is an error that says which import provides it.
 
 Each language carries its own conventions and defaults. See the per-language
 docs below.
 
 | Language | Module | Anchors | Doc |
 | --- | --- | --- | --- |
-| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'gb'` dialect) | [docs/lang/en.md](./docs/lang/en.md) |
+| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
 
 ### Language maturity
 
@@ -242,7 +254,7 @@ matching cRonstrue locale. The architecture is described in
 
 Output follows the Chicago Manual of Style by default (serial commas,
 `9 a.m.` times, `noon`/`midnight`, cardinal month-day dates). See the
-[`dialect`](#options) option for Guardian-style British English. Bare days
+[`lang`](#options) option (`'en-GB'`) for Guardian-style British English. Bare days
 of the month use suffixed ordinals (`on the 1st and 15th`).
 
 ```js

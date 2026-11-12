@@ -61,7 +61,7 @@ The tables below are generated from live library output by
 [`scripts/docs.mjs`](../scripts/docs.mjs) &mdash; run `npm run docs` to refresh
 all generated documentation after a change, or `npm run docs -- --check` (which
 CI runs) to verify it is current. `cronli5` is shown in **sentence form**
-(`cronli5(pattern, {sentence: true})`, the capitalized standalone) for a fair
+(`cronli5(pattern, {form: 'sentence'})`, the capitalized standalone) for a fair
 like-for-like with cRonstrue, which always returns a capitalized sentence. Rows
 are grouped by how a reader perceives the pattern &mdash; an everyday cadence,
 a specific schedule, or an advanced operator.

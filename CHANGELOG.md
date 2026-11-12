@@ -6,6 +6,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **The public API, for 1.0.** Languages are named by code, with a region
+  (`lang: 'en-GB'`); a `style` table per language replaces `dialect`,
+  `ampm` and `short`; one `form` option (`'fragment'`, `'label'`,
+  `'sentence'`) replaces `sentence` and the `sentence()`/`fragment()`
+  methods; `cron: 'quartz'` replaces `quartz`, and its two halves
+  (`weekdaysFrom`, `questionMark`) can be set alone. See
+  [docs/migrating-to-1.0.md](./docs/migrating-to-1.0.md).
+- **An option that cannot be honoured is an error.** An unknown option, a
+  language the instance does not have, a style field the language lacks or
+  a value of the wrong kind throws `Cronli5OptionError`, including in
+  lenient mode. These were ignored before.
+
+### Added
+
+- **`create`**, which makes an instance from the languages you choose,
+  with default options and a default style per language.
+- **`cronli5/all`**, an entry point that knows every language by code.
+- **`form: 'label'`**, the description capitalised to stand alone.
+- The named English styles, exported as plain tables (`styles`).
+- `--form` and `--cron` on the command line.
+
 ## [0.10.0]
 
 ### Added

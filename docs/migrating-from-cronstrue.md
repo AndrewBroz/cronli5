@@ -28,42 +28,60 @@ guide links to it rather than duplicating its tables.
 
 **`cronli5` is worth switching to when you want:**
 
-* **Natural-language prose.** `cronli5` writes one flowing sentence and folds
-  fields together ("every Monday through Friday at 9:30 a.m.") rather than
-  joining per-field fragments with commas ("At 09:30 AM, Monday through
-  Friday"). It uses natural times (`9 a.m.`, `noon`, `midnight`), spelled small
-  numbers, and ordinals.
-* **Precision on the tricky cases.** A blind panel of three Claude Sonnet
-  instances (each running a distinct persona — an everyday user, a developer,
-  and a copy-editor — and unaware of which library produced which output) rated
-  unlabeled output from both libraries over a 36-pattern English sample and
-  preferred `cronli5` on **81 of 108** judgements (cRonstrue 12, 15 ties). The edge grows with difficulty: on
-  **simple** everyday cadences the two were **even (10/10)** &mdash; cRonstrue
-  is perfectly fine there, and terser &mdash; but on **medium** specific
-  schedules `cronli5` was preferred **45 to 0**, and on **complex** patterns
-  (steps, Quartz operators, day-of-month *or* weekday unions) **26 to 2**. A
-  round-trip check (reverse-parsing each description back to the times it would
-  fire) found concrete cRonstrue ambiguities that `cronli5` avoids:
-  * The day-of-month *or* weekday union renders with "and"
+* **A description that is easy to understand.** `cronli5` writes one
+  sentence and folds fields together ("at 9:30 a.m. on weekdays") where
+  cRonstrue joins one clause per field ("At 09:30 AM, Monday through
+  Friday"). It uses natural times (`9 a.m.`, `noon`, `midnight`).
+* **Precision on the tricky cases.** In two blind rankings by the
+  maintainer, 20 random patterns each, with the libraries unlabelled,
+  `cronli5` was best or tied-best on 16 and then 17 of 20, cRonstrue on 5
+  and then 1. Some concrete differences:
+  * A day of the month *or* a weekday is joined with "and" in cRonstrue
     (`0 0 1,15 * 3` &rarr; "...on day 1 and 15 of the month, **and** on
-    Wednesday"), which reads as an *intersection*. `cronli5` says
-    "...whenever the day is the 1st, the 15th, **or** a Wednesday."
-  * Step-range time windows overstate the last tick (`23 0-20/2 * * *` &rarr;
-    "between 12:00 AM and **08:59 PM**", though the last fire is 20:23).
-    `cronli5` bounds it: "...every two hours **from midnight through 8 p.m.**"
-  * Bounded steps are enumerated: `0 0 9-17/2 * *` &rarr; "the 9th, 11th, 13th,
-    15th, and 17th", vs cRonstrue's "every 2 days in a month, between day 9 and
-    17".
+    Wednesday"), which reads as both at once. `cronli5` says "at midnight
+    on the 1st and 15th **as well as** on Wednesdays".
+  * A window of hours under a step overstates its last run
+    (`23 0-20/2 * * *` &rarr; "between 12:00 AM and **08:59 PM**", though
+    the last run is at 8:23 p.m.). `cronli5` names it: "at 23 minutes past
+    the hour, every 2 hours **from midnight through 8 p.m.** every day".
 
-  See the [comparison doc](./cronli5-vs-cronstrue.md) for these rendered in
-  full.
-* **A no-dependency footprint** that ships one language at a time (~6.3&nbsp;KB
-  gzipped core, +~3.3&nbsp;KB per imported language) rather than English-only or
-  all-locales.
+  See the [comparison doc](./cronli5-vs-cronstrue.md) for more, generated
+  from live output.
+* **Control over style.** A style table per language, with every field
+  adjustable ([docs/styles.md](./styles.md)). cRonstrue has no style
+  switch.
+* **A small footprint** that ships one language at a time.
+
+## The quickest way to switch
+
+`cronli5/cronstrue` takes cRonstrue's call as it is:
+
+```js
+// before
+import cronstrue from "cronstrue";
+// after
+import cronstrue from "cronli5/cronstrue";
+
+cronstrue.toString("0 9 * * 1");                               // "At 9 a.m. on Mondays"
+cronstrue.toString("30 17 * * *", { use24HourTimeFormat: true }); // "At 17:30 every day"
+```
+
+It translates the call and nothing else. The wording is `cronli5`'s, which
+is the point of switching. Each cRonstrue option is either mapped onto a
+`cronli5` option or, where `cronli5` has no equivalent, **refused with an
+error** that says so. It never quietly ignores an option:
+
+<!-- BEGIN GENERATED: cronstrue-options -->
+<!-- END GENERATED: cronstrue-options -->
+
+`?` in a day field is read as `*` under any settings, as cRonstrue reads
+it. A language `cronli5` does not ship is an error; cRonstrue would answer
+in English.
+
+When you have time, move to `cronli5`'s own API. It is smaller, and it is
+what the rest of this guide describes.
 
 ## API mapping
-
-The entry points line up closely:
 
 ```js
 // cRonstrue
@@ -75,107 +93,75 @@ import cronli5 from "cronli5";
 cronli5("0 9 * * 1");                      // "at 9 a.m. on Mondays"
 ```
 
-### The default return value differs: fragment vs. sentence
+### Three forms, not one
 
-This is the difference most likely to break a snapshot test. `cronstrue.toString`
-always returns a **capitalized, standalone sentence**. By default `cronli5`
-returns a **lowercase, embeddable fragment** (so you can drop it into your own
-sentence). Pass `{ sentence: true }` for the capitalized standalone that lines
-up with cRonstrue:
-
-```js
-cronli5("0 0 * * *");                      // "at midnight"  (fragment)
-cronli5("0 0 * * *", { sentence: true });  // "Runs at midnight."
-```
-
-When comparing the two libraries like-for-like, compare cRonstrue against
-`cronli5(pattern, { sentence: true })`.
-
-cronli5 also exposes the two forms as named methods on the callable export, so
-you do not have to thread the option through: `cronli5.sentence(pattern, opts)`
-is the capitalized standalone (the closest match to `cronstrue.toString`), and
-`cronli5.fragment(pattern, opts)` is the embeddable fragment (the default).
-Both forward every other option.
+This is the difference most likely to break a snapshot test.
+`cronstrue.toString` always returns a capitalised description. `cronli5`
+returns a lowercase **fragment** by default, so you can put it inside your
+own sentence, and offers two more forms:
 
 ```js
-cronli5.sentence("0 0 * * *");  // "Runs at midnight."
-cronli5.fragment("0 0 * * *");  // "at midnight"
+cronli5("0 0 * * *");                        // "at midnight every day"
+cronli5("0 0 * * *", { form: "label" });     // "At midnight every day"
+cronli5("0 0 * * *", { form: "sentence" });  // "Runs at midnight every day."
 ```
 
-Note there is **no** `cronli5.toString(expr)` mirroring `cronstrue.toString`:
-a `toString` method would shadow `Function.prototype.toString` (which the
-runtime calls arg-less for `String(cronli5)`, template literals, and console
-output) and break that coercion. The named `.sentence()`/`.fragment()` methods
-exist precisely to avoid that collision.
+`form: "label"` is the closest to what cRonstrue returns.
 
 ### cronli5 also accepts arrays and objects as the pattern
 
 `cronstrue.toString` takes only a string. `cronli5`'s pattern argument is a
-string, an **array of fields**, or an **object of named fields** (this is one
-pattern expressed three ways &mdash; not a list of separate patterns):
+string, an **array of fields**, or an **object of named fields** (one
+pattern written three ways, not a list of patterns):
 
 ```js
 cronli5("0 9 * * 1-5");                     // string
-cronli5(["0", "9", "*", "*", "1-5"]);      // array of fields -> same result
-cronli5({ hour: 9, minute: 30 });          // object -> "at 9:30 a.m."
+cronli5(["0", "9", "*", "*", "1-5"]);      // array of fields, same result
+cronli5({ hour: 9, minute: 30 });          // object: "at 9:30 a.m. every day"
 ```
 
 ### Error handling
 
-cRonstrue throws by default and turns the error into a description string when
-you pass `{ throwExceptionOnParseError: false }`:
+cRonstrue throws by default and turns the error into a description string
+when you pass `{ throwExceptionOnParseError: false }`.
 
-```js
-cronstrue.toString("not a cron");
-//=> throws
-cronstrue.toString("not a cron", { throwExceptionOnParseError: false });
-//=> "An error occurred when generating the expression description. ..."
-```
-
-`cronli5` also **throws by default** (with a named, specific error &mdash;
-e.g. `` `cronli5` was passed an invalid field value "not" for the minute
-field. ``). The opt-out is the `lenient` option, which returns the language's
-fallback description instead of throwing:
+`cronli5` also **throws by default**, with a specific error
+(`Cronli5InputError`). The `lenient` option returns the language's fallback
+description instead:
 
 ```js
 cronli5("not a cron");
-//=> throws Error: `cronli5` was passed an invalid field value ...
+//=> throws Cronli5InputError
 cronli5("not a cron", { lenient: true });
 //=> "an unrecognizable cron pattern"
 ```
 
-Note the difference in strictness: cRonstrue *describes whatever parses*,
-including some malformed input; `cronli5` validates strictly and only the
-`lenient` fallback is silent. The `lenient` fallback is **not** wrapped by
-`sentence: true` (it is an error string, not a schedule).
+Two differences in strictness. cRonstrue describes whatever parses,
+including some malformed input; `cronli5` validates. And `cronli5` treats a
+bad *option* as a mistake in your code: it throws `Cronli5OptionError` even
+in lenient mode, where cRonstrue ignores options it does not know.
 
-## Options mapping
+## Options
 
-| cRonstrue option | cronli5 equivalent | Notes |
+| cRonstrue | cronli5 | Notes |
 | --- | --- | --- |
-| `locale: "es"` | `lang` (a language module) | Different model &mdash; see [Locale &rarr; language](#locale--language) below. |
-| `use24HourTimeFormat: true` | `ampm: false` | cronli5's `ampm` defaults to `true` (12-hour) for English; `false` gives 24-hour zero-padded time (`09:00`). The default is language-specific. |
-| `throwExceptionOnParseError: false` | `lenient: true` | Both suppress the throw; cronli5 returns a fixed fallback, cRonstrue returns a generic error sentence. |
-| `verbose: true` | *no equivalent* | cronli5 has no verbose toggle; it always writes one folded sentence. (`short: true` goes the *other* way &mdash; abbreviated names.) |
-| `dayOfWeekStartIndexZero` | `quartz: true` (partial) | By default cronli5 uses the standard interpretation: `0`/`7` are Sunday, `1` is Monday. cRonstrue's `dayOfWeekStartIndexZero: false` shifts to a 1-based week; cronli5's nearest equivalent is `quartz: true`, which reads the day-of-week as **Quartz numbering (1 = Sunday … 7 = Saturday)**. It is not a general re-base toggle — it is the Quartz dialect (and also enables `?`, `L`, `#`); use it when your source is Quartz, where `1` means Sunday. |
-| `monthStartIndexZero` | *no equivalent* | cronli5 always reads `1` as January (`6` is June). There is no zero-based-month mode. |
-| `trimHoursLeadingZero` | n/a | Only relevant to cRonstrue's zero-padded clock style. cronli5's 12-hour default already writes `9 a.m.` (no leading zero); its 24-hour mode (`ampm: false`) is always zero-padded (`09:00`). |
-| `logicalAndDayFields: true` | *no equivalent* | When both day-of-month and day-of-week are set, cron fires on the **union** (OR). cronli5 always renders this as OR, unambiguously ("...whenever the day is the 1st, the 15th, or a Wednesday"). cRonstrue's default OR wording uses a misleading "and"; its `logicalAndDayFields` switches to AND wording, which cronli5 does not model. |
-| `tzOffset` | *no equivalent* | cronli5 has no timezone concept; it describes the cron fields as written and never shifts the displayed clock time. |
+| `locale: "en"` | `lang: "en"` | A code, with an optional region (`"en-GB"`). See [Locale &rarr; language](#locale--language). |
+| `use24HourTimeFormat: true` | `style: { hour12: false }` | 24-hour times are zero-padded (`09:00`). |
+| `throwExceptionOnParseError: false` | `lenient: true` | `cronli5` returns a fixed fallback; cRonstrue returns an error sentence. |
+| `dayOfWeekStartIndexZero: false` | `weekdaysFrom: 1` | 1 is Sunday through 7 for Saturday. `cron: "quartz"` sets this and accepts `?`. |
+| `verbose: true` | none | `cronli5` says "every day" where it helps and is otherwise brief. |
+| `monthStartIndexZero: true` | none | `cronli5` always reads `1` as January. |
+| `trimHoursLeadingZero` | not needed | 12-hour times never have a leading zero (`9 a.m.`); 24-hour times always do. |
+| `logicalAndDayFields: true` | none yet | `cronli5` reads a day of the month and a weekday as "either", as classic cron does. |
+| `tzOffset` | none | `cronli5` describes the fields as written. |
 
-### cronli5 options with no cRonstrue counterpart
-
-* **`dialect`** &mdash; per-language style (English `'us'`/`'gb'`/`'house'`;
-  or a custom object). See
-  [docs/dialects.md](./dialects.md). cRonstrue has no style switch.
-* **`short`** &mdash; abbreviated month/weekday names (`Mon`, `Jun`).
-* **`seconds`** &mdash; treat the first field of a string/array as seconds.
-* **`years`** &mdash; read the trailing field of a six-field pattern as a year.
+`cronli5` options with no cRonstrue counterpart: `style` (every field of a
+language's style table), `form`, `cron`, `questionMark`, `seconds`, `years`,
+and `create` for building an instance from the languages you choose.
 
 ## Locale &rarr; language
 
-cRonstrue selects a locale with a string code; `cronli5` imports a **language
-module** and passes it via `lang`:
+Both libraries name a language by code:
 
 ```js
 // cRonstrue (the i18n build must be imported for non-English locales)
@@ -184,41 +170,37 @@ cronstrue.toString("0 9 * * 1", { locale: "en" });
 
 // cronli5
 import cronli5 from "cronli5";
-import en from "cronli5/lang/en";
-cronli5("0 9 * * 1", { lang: en });        // "at 9 a.m. on Mondays"
+cronli5("0 9 * * 1", { lang: "en" });      // "at 9 a.m. on Mondays"
 ```
 
-| cRonstrue locale | cronli5 `lang` | Status |
-| --- | --- | --- |
-| `en` | default (bundled) | stable |
-| `es`, `de`, `fi`, `fr`, `pt_BR`, `uk`, `zh_CN` | *being rebuilt for the next major version* | not currently shipped |
-| `pt_PT`, `ja`, ... | *planned* | not yet shipped |
+`cronli5` gives you three ways to decide what ships, where cRonstrue has
+two:
 
-(Check `src/lang/<code>/status.json` for each module's
-experimental/beta/stable status; the [README Languages
-section](../README.md#languages) lists what currently ships.)
+* `cronli5` knows English. Pass any other language as an imported module
+  (`lang: uk`), and only what you import reaches your bundle.
+* `create({ languages: [uk, de] })` makes an instance that resolves codes
+  among the languages you chose.
+* `cronli5/all` knows every language, like `cronstrue/i18n`.
+
+A code that names a language the instance does not have is an error that
+tells you which import provides it.
 
 The honest trade: cRonstrue ships **far more locales** (39), built from
-per-locale string tables. `cronli5` ships **fewer**, but each is a full native
-renderer reviewed to beta or stable rather than a template fill-in &mdash; so
-the output reads like the language, but breadth grows slowly. Two practical
-notes: the default `import cronstrue from "cronstrue"` is **English-only**;
-non-English locales require the `cronstrue/i18n` entry (which bundles all 39).
-And `cronli5` adds a language to your bundle only if you import it.
+per-locale string tables. `cronli5` ships English today, and its other
+languages are being rebuilt one at a time, each a full renderer with its
+own rule book. The [README](../README.md#languages) lists what currently
+ships.
 
 ## Behavior differences to expect
 
 Even where both libraries are "correct", the strings differ. Expect:
 
 * **Style shift.** Clock-first, zero-padded 24-hour with uppercase meridiem
-  ("At 09:00 AM, Monday through Friday") becomes natural prose
-  ("every Monday through Friday at 9:30 a.m.", with `noon`/`midnight` for the
-  edges). If you rely on the exact output string anywhere (tests, stored copy),
+  ("At 09:30 AM, Monday through Friday") becomes natural prose
+  ("at 9:30 a.m. on weekdays", with `noon`/`midnight` for the edges). If you rely on the exact output string anywhere (tests, stored copy),
   update those expectations.
-* **Default capitalization.** Remember the fragment-vs-sentence default above:
-  `cronli5(...)` is lowercase and un-terminated by default; use
-  `{ sentence: true }` to match cRonstrue's capitalized, period-terminated
-  form.
+* **Default capitalization.** `cronli5(...)` is lowercase by default; use
+  `{ form: "label" }` for cRonstrue's capitalised form.
 * **Precision improvements.** Day-of-month *or* weekday unions, bounded steps,
   and step-range time windows render differently &mdash; and more accurately
   &mdash; in `cronli5`. These are the cases in the

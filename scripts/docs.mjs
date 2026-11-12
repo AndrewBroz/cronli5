@@ -4,7 +4,7 @@
 //
 //   1. Marker-bounded tables (`<!-- BEGIN GENERATED: name -->`): the
 //      cronli5-vs-cRonstrue head-to-head, the per-language locale tables,
-//      and the dialect comparison.
+//      and the style comparison.
 //   2. Inline examples: every `cronli5(<args>); // 'output'` line in the
 //      docs has its `// 'output'` comment rewritten from live output.
 //      The author still chooses the example and its order (the call); the
@@ -18,15 +18,15 @@
 // agree on meaning and differ only in voice; `showcase` shows compound
 // patterns where folded output beats fragment assembly; the language set
 // shows the same schedules across languages plus a few grammar-specific
-// rows; the dialect set exercises the US/UK/house style axes.
+// rows; the style set exercises the US/UK/house style axes.
 
 import {readFileSync, writeFileSync} from 'node:fs';
 import cronli5 from '../src/cronli5.js';
 import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
-import en from '../src/lang/en/index.js';
+import en, {styles as englishStyles} from '../src/lang/en/index.js';
 import {
-  comparisonPatterns, dialectPatterns, languagePatterns
+  comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
 import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
@@ -59,11 +59,11 @@ function tableFrom(header, rows) {
 }
 
 // The class-grouped head-to-head: cronli5 in SENTENCE form (the capitalized
-// standalone, `{sentence: true}`) vs. cRonstrue (English), which always returns
-// a capitalized sentence — a fair like-for-like. One markdown table per class,
-// each preceded by an H3 heading, in simple -> medium -> complex order. Every
-// pattern's group is asserted against the divergence engine's `classify`, so a
-// mis-bucketed row fails `npm run docs` instead of shipping.
+// standalone, `{form: 'sentence'}`) vs. cRonstrue (English), which always
+// returns a capitalized sentence — a fair like-for-like. One markdown table
+// per class, each preceded by an H3 heading, in simple -> medium -> complex
+// order. Every pattern's group is asserted against the divergence engine's
+// `classify`, so a mis-bucketed row fails `npm run docs` instead of shipping.
 const comparisonHeadings = {
   simple: '### Simple &mdash; everyday cadences',
   medium: '### Medium &mdash; a specific schedule',
@@ -73,7 +73,7 @@ const comparisonHeadings = {
 function comparisonTable(patterns) {
   const rows = patterns.map(function compare(pattern) {
     return '| `' + pattern + '` | ' +
-      describe((p) => cronli5(p, {sentence: true}), pattern) + ' | ' +
+      describe((p) => cronli5(p, {form: 'sentence'}), pattern) + ' | ' +
       describe((p) => cronstrue.toString(p), pattern) + ' |';
   });
 
@@ -126,8 +126,8 @@ function cronstrueFor(code, pattern) {
 
 // One compound pattern, every language side by side against its cRonstrue
 // locale — the head-to-head that shows folding vs. per-field assembly at a
-// glance. Each row names the cronli5 module, an optional `dialect`/variant
-// override, and the matching cRonstrue locale.
+// glance. Each row names the cronli5 module and the matching cRonstrue
+// locale.
 const headToHead = '5,10 30 9 * * MON';
 const headToHeadRows = [
   {name: 'English', code: 'en'}
@@ -137,10 +137,6 @@ function renderHeadToHead() {
   const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
   const rows = headToHeadRows.map(function row(entry) {
     const opts = {lang: byCode[entry.code].lang};
-
-    if (entry.dialect) {
-      opts.dialect = entry.dialect;
-    }
 
     return '| ' + entry.name + ' | ' +
       describe((p) => cronli5(p, opts), headToHead) + ' | ' +
@@ -152,23 +148,24 @@ function renderHeadToHead() {
     ' |', rows);
 }
 
-// One cell of the dialect table; `'us'` is the default (no dialect option).
-function dialectCell(pattern, dialect) {
-  return describe(function render(p) {
-    return dialect === 'us' ? cronli5(p) : cronli5(p, {dialect});
-  }, pattern);
-}
+// The named English styles, each as the options that select it.
+const styleColumns = [
+  ['us', {}],
+  ['gb', {lang: 'en-GB'}],
+  ['house', {style: englishStyles.house}]
+];
 
-const dialectHeader = '| Pattern | `\'us\'` | `\'gb\'` | `\'house\'` |';
-
-function renderDialectTable() {
-  const rows = dialectPatterns.map(function compare(pattern) {
-    return '| `' + pattern + '` | ' + dialectCell(pattern, 'us') + ' | ' +
-      dialectCell(pattern, 'gb') + ' | ' + dialectCell(pattern, 'house') +
-      ' |';
+function renderStyleTable() {
+  const rows = stylePatterns.map(function compare(pattern) {
+    return '| `' + pattern + '` | ' +
+      styleColumns.map(function cell(column) {
+        return describe((p) => cronli5(p, column[1]), pattern);
+      }).join(' | ') + ' |';
   });
 
-  return tableFrom(dialectHeader, rows);
+  return tableFrom('| Pattern | ' + styleColumns.map(function name(column) {
+    return '`' + column[0] + '`';
+  }).join(' | ') + ' |', rows);
 }
 
 // Replace the body between a table's BEGIN/END markers.
@@ -255,7 +252,7 @@ const tableJobs = {
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},
   'docs/cronli5-vs-cronstrue.md': {comparison: renderComparison()},
-  'docs/dialects.md': {dialects: renderDialectTable()}
+  'docs/styles.md': {styles: renderStyleTable()}
 };
 
 for (const language of languages) {
@@ -266,7 +263,7 @@ for (const language of languages) {
 
 const docs = [
   'README.md', 'docs/language-status.md', 'docs/cronli5-vs-cronstrue.md',
-  'docs/dialects.md',
+  'docs/styles.md',
   ...languages.map((language) => 'docs/lang/' + language.code + '.md')
 ];
 
@@ -293,6 +290,34 @@ for (const doc of docs) {
     written += 1;
     console.log('Updated ' + doc + '.');
   }
+}
+
+// What the 1.0 API replaced. A user-facing page that still shows one of
+// these is teaching a call that now throws. The 0.x migration page and the
+// changelog name them on purpose and are not checked.
+const removedApi = [
+  [/\bdialect:/u, '`dialect:`'],
+  [/\bampm:/u, '`ampm:`'],
+  [/\bsentence: true/u, '`sentence: true`'],
+  [/\bquartz: true/u, '`quartz: true`'],
+  [/\.sentence\(/u, '`.sentence(`'],
+  [/\.fragment\(/u, '`.fragment(`']
+];
+const userFacing = [...docs, 'docs/migrating-from-cronstrue.md'];
+const outdated = userFacing.flatMap(function scan(doc) {
+  const text = readFileSync(new URL('../' + doc, import.meta.url), 'utf8');
+
+  return removedApi.filter(function shown(entry) {
+    return entry[0].test(text);
+  }).map(function report(entry) {
+    return doc + ' shows ' + entry[1];
+  });
+});
+
+if (outdated.length > 0) {
+  console.error('Docs show an API that 1.0 removed: ' + outdated.join('; ') +
+    '.');
+  process.exitCode = 1;
 }
 
 if (check && stale.length > 0) {

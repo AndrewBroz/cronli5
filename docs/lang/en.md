@@ -27,20 +27,20 @@ on-the-hour times without minutes (`9 a.m.`), `noon`/`midnight` for exact
 12:00, and cardinal month-day dates (`January 1`). Bare days of the month
 keep suffixed ordinals (`on the 1st and 15th`).
 
-## Dialects
+## Styles
 
-English ships three named dialects plus custom style objects, selected
-with the `dialect` option:
+English has three named styles, and any field of a style can be
+overridden with the `style` option:
 
-| Dialect | Anchor | Sample |
-| --- | --- | --- |
-| `'us'` (default) | Chicago Manual of Style | at 9:30 a.m. on weekdays |
-| `'gb'` | Guardian style guide | at 9.30am on weekdays |
-| `'house'` | cronli5's legacy voice | at 9:30 AM on weekdays |
+| Style | Selected by | Anchor | Sample |
+| --- | --- | --- | --- |
+| `us` (default) | `lang: 'en'` | Chicago Manual of Style | at 9:30 a.m. on weekdays |
+| `gb` | `lang: 'en-GB'` | Guardian style guide | at 9.30am on weekdays |
+| `house` | `style: styles.house` | Chicago, with `AM`/`PM` and ordinal dates | at 9:30 AM on weekdays |
 
-A custom object merges over the US defaults
-(`{dialect: {through: 'to'}}`). The full style-field reference lives
-in [dialects.md](../dialects.md).
+A custom table overrides fields of the selected style
+(`{style: {through: 'to'}}`). The full field reference lives in
+[styles.md](../styles.md).
 
 ## Conventions worth knowing
 

@@ -26,7 +26,7 @@ const languagePatterns = [
   '0 12 * 11-2 *', '0 0 * * 5L', '5,10 30 9 * * MON', '1/1 * * * *'
 ];
 
-const dialectPatterns = [
+const stylePatterns = [
   '0 9,12,17 * * *', '30 9 * * MON-FRI', '0 12 1 1 *',
   '*/15 9-17 * * *', '0 0 12 25 12 * 2030'
 ];
@@ -73,6 +73,6 @@ const coverageExtras = [
 const spanningSet = [...tables.basic, ...tables.showcase, ...coverageExtras];
 
 export {
-  comparisonPatterns, coverageExtras, dialectPatterns, languagePatterns,
+  comparisonPatterns, coverageExtras, stylePatterns, languagePatterns,
   spanningSet, tables
 };
