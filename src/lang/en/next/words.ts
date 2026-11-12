@@ -14,7 +14,8 @@ const {words} = lexicon;
 const extraWords = {
   asWellAs: 'as well as',
   each: 'each',
-  for: 'for'
+  for: 'for',
+  forOneHour: 'for one hour'
 };
 
 const secondsInDay = 86400;

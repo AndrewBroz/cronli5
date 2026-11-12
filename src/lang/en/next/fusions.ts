@@ -9,7 +9,7 @@ import type {Spoken} from '../../../core/select.js';
 import type {EnglishOptions} from './options.js';
 import type {Choice, Phrase} from './devices.js';
 import type {Idiom} from './idioms.js';
-import type {Parts, Slot} from './frame.js';
+import type {Parts} from './frame.js';
 import {clockTimes} from '../../../core/fusions.js';
 import {shortestSpoken} from '../../../core/select.js';
 import {
@@ -397,46 +397,42 @@ function weekdayWithMonths(facts: ScheduleFacts, opts: EnglishOptions):
       unlessEvery(choose(months, monthsAlone(opts), opts)));
 }
 
-// The year. One day, one month and one year are a full date, so the year
-// closes the date ("on January 1, 2030"); any other years follow "in".
-function yearSlot(facts: ScheduleFacts, opts: EnglishOptions): Slot {
+// Whether the schedule is one day of one month of one year, which is
+// said as a full date.
+function isFullDate(facts: ScheduleFacts): boolean {
   const {candidates, day} = facts.analyses;
-  const year = choose(candidates.year!, yearsByNumber(opts), opts);
-  const fullDate = !day.union &&
+
+  return !day.union &&
     [candidates.date, candidates.month, candidates.year]
       .every(function isOne(field) {
         return field !== null && onlyValue(field[0]) !== null;
       });
-
-  return fullDate ?
-    {
-      before: opts.style.dayFirst ? ' ' : ', ',
-      text: lexicon.year(onlyValue(year.description) as number).text
-    } :
-    {before: ' ', text: unlessEvery(year)};
 }
 
 /**
- * The time, the days, the month and the year, each as it is said. A day
+ * The time, the day, the month and the year, each as it is said. A day
  * of the month and a day of the week are joined by "as well as", and
- * each carries the months; the month has its own part only when neither
- * kind of day is restricted.
+ * each carries the months, so the month has its own part only when
+ * neither kind of day is restricted. The year of a full date closes the
+ * day part ("on January 1, 2030"); any other years follow "in".
  */
 function partsOf(facts: ScheduleFacts, opts: EnglishOptions): Parts {
+  const {candidates} = facts.analyses;
   const date = dateWithMonths(facts, opts);
   const weekday = weekdayWithMonths(facts, opts);
-  const months = choose(facts.analyses.candidates.month!, monthsAlone(opts),
-    opts);
+  const days = join(date, date && weekday && extraWords.asWellAs, weekday);
+  const months = choose(candidates.month!, monthsAlone(opts), opts);
+  const year = choose(candidates.year!, yearsByNumber(opts), opts);
+  const closing = isFullDate(facts) ?
+    (opts.style.dayFirst ? ' ' : ', ') +
+      lexicon.year(onlyValue(year.description) as number).text :
+    '';
 
   return {
-    date: {before: ' ', text: date},
-    month: {before: ' ', text: date || weekday ? '' : unlessEvery(months)},
+    day: days + closing,
+    month: days ? '' : unlessEvery(months),
     time: timeOfDay(facts, opts),
-    weekday: {
-      before: date ? ` ${extraWords.asWellAs} ` : ' ',
-      text: weekday
-    },
-    year: yearSlot(facts, opts)
+    year: closing ? '' : unlessEvery(year)
   };
 }
 
