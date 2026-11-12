@@ -10,14 +10,6 @@ type UnitName = keyof typeof lexicon.units;
 
 const {words} = lexicon;
 
-// Words the lexicon does not hold yet.
-const extraWords = {
-  asWellAs: 'as well as',
-  each: 'each',
-  for: 'for',
-  forOneHour: 'for one hour'
-};
-
 const secondsInDay = 86400;
 
 /** Words joined by single spaces, leaving out any part that is silent. */
@@ -27,7 +19,7 @@ function join(...parts: string[]): string {
 
 /** "A", "A and B", "A, B, and C". */
 function list(items: string[], opts: EnglishOptions): string {
-  const and = ` ${words.and.text} `;
+  const and = ` ${words.and} `;
 
   if (items.length < 3) {
     return items.join(and);
@@ -43,13 +35,13 @@ function list(items: string[], opts: EnglishOptions): string {
  */
 function span(ends: string[], opts: EnglishOptions): string {
   return ends.map(function bound(end, index) {
-    return `${index === 0 ? words.from.text : opts.style.through} ${end}`;
+    return `${index === 0 ? words.from : opts.style.through} ${end}`;
   }).join(' ');
 }
 
 /** A unit after "every" or the number one, or after any other number. */
 function unit(name: UnitName, count: number): string {
-  return lexicon.units[name][count === 1 ? 'one' : 'many'].text;
+  return lexicon.units[name][count === 1 ? 'one' : 'many'];
 }
 
 /**
@@ -81,14 +73,14 @@ function writeTime(moment: Moment, opts: EnglishOptions):
     .filter(function present(part) {
       return typeof part === 'number';
     })
-    .map(function twoDigits(part) {
-      return lexicon.clockMinute(part as number).text;
+    .map(function write(part) {
+      return lexicon.twoDigits(part as number);
     });
 
   if (!opts.ampm) {
     return {
       meridiem: '',
-      text: [lexicon.clockMinute(moment.hour).text, ...parts].join(style.sep)
+      text: [lexicon.twoDigits(moment.hour), ...parts].join(style.sep)
     };
   }
 
@@ -97,7 +89,7 @@ function writeTime(moment: Moment, opts: EnglishOptions):
   });
 
   if (idiom) {
-    return {meridiem: '', text: idiom.say(moment, opts).text};
+    return {meridiem: '', text: idiom.say(moment, opts)};
   }
 
   // On the hour, the hour stands alone unless the minute must show.
@@ -148,6 +140,12 @@ function hourNames(
   }), opts);
 }
 
+function monthNames(months: number[], opts: EnglishOptions): string[] {
+  return months.map(function nameOf(month) {
+    return lexicon.months[month][opts.short ? 'short' : 'full'];
+  });
+}
+
 /**
  * Days of the month. Alone they are ordinals after "the", said once for
  * a list or before each end of a range. Beside a month they are numbers,
@@ -161,27 +159,42 @@ function dayNames(
 ): string[] {
   const names = days.map(function numeral(day) {
     return month === null || opts.style.ordinals ?
-      lexicon.ordinal(day).text :
-      lexicon.cardinal(day).text;
+      lexicon.ordinal(day) :
+      String(day);
   });
 
   if (month === null) {
     return names.map(function article(name, index) {
-      return index === 0 || eachArticle ? `${words.the.text} ${name}` : name;
+      return index === 0 || eachArticle ? `${words.the} ${name}` : name;
     });
   }
 
+  const [monthName] = monthNames([month], opts);
   const at = opts.style.dayFirst ? names.length - 1 : 0;
 
   names[at] = opts.style.dayFirst ?
-    `${names[at]} ${monthName(month, opts)}` :
-    `${monthName(month, opts)} ${names[at]}`;
+    `${names[at]} ${monthName}` :
+    `${monthName} ${names[at]}`;
 
   return names;
 }
 
-function monthName(month: number, opts: EnglishOptions): string {
-  return lexicon.months[month][opts.short ? 'short' : 'full'].text;
+/**
+ * Values in the order of their cycle as it is said, each placed by its
+ * `rank`, starting from `first` when a run that wraps round the cycle
+ * begins there.
+ */
+function inCycleOrder(
+  values: number[],
+  rank: (value: number) => number,
+  first?: number
+): number[] {
+  const ordered = values.slice().sort(function byRank(a, b) {
+    return rank(a) - rank(b);
+  });
+  const at = Math.max(0, ordered.indexOf(first as number));
+
+  return [...ordered.slice(at), ...ordered.slice(0, at)];
 }
 
 /** Where a weekday falls in the week as it is said: Monday first. */
@@ -196,32 +209,27 @@ function weekRank(day: number): number {
  * run does.
  */
 function walkWeek(days: number[]): number[] {
-  const mondayFirst = days.slice().sort(function byMonday(a, b) {
-    return weekRank(a) - weekRank(b);
+  const mondayFirst = inCycleOrder(days, weekRank);
+  const starts = mondayFirst.filter(function afterBreak(day, index) {
+    return (day - (mondayFirst.at(index - 1) as number) + 6) % 7 > 0;
   });
-  const starts = mondayFirst.flatMap(function afterBreak(day, index) {
-    const previous = mondayFirst.at(index - 1) as number;
 
-    return (day - previous + 6) % 7 > 0 ? [index] : [];
-  });
-  const start = starts.length === 1 ? starts[0] : 0;
-
-  return [...mondayFirst.slice(start), ...mondayFirst.slice(0, start)];
+  return inCycleOrder(days, weekRank,
+    starts.length === 1 ? starts[0] : mondayFirst[0]);
 }
 
 /** A recurring weekday ("Mondays") or a single one ("Monday"). */
-function weekdayName(day: number, recurring: boolean, opts: EnglishOptions):
-  string {
-  const name = lexicon.weekdays[day];
+function weekdayNames(days: number[], recurring: boolean,
+  opts: EnglishOptions): string[] {
+  const form = recurring ? 'plural' : 'full';
 
-  if (opts.short) {
-    return name.short.text;
-  }
-
-  return recurring ? name.plural.text : name.full.text;
+  return days.map(function nameOf(day) {
+    return lexicon.weekdays[day][opts.short ? 'short' : form];
+  });
 }
 
+export type {UnitName};
 export {
-  dayNames, extraWords, hourNames, join, list, momentAt, monthName, span,
-  timeNames, unit, walkWeek, weekdayName, weekRank
+  dayNames, hourNames, inCycleOrder, join, list, momentAt, monthNames, span,
+  timeNames, unit, walkWeek, weekdayNames, weekRank
 };
