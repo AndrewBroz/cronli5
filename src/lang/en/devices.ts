@@ -399,11 +399,13 @@ function withinTheHour(
 }
 
 // A voice for values that fall inside one stretch of clock time: a run
-// is a window closed with "until" at the moment it ends, and stray
-// values are clock times. A run that wraps is two windows. `moment` is
-// the moment a value starts at, as an end of a window or as a stray.
+// is a window, and stray values are clock times. A run that wraps is two
+// windows. `moment` is the moment a value starts at, as an end of a
+// window or as a stray. `close` is how a window closes: with which word,
+// and on the moment how many values after its last.
 function clockWindows(
   spec: {
+    close: {after: number; word: string};
     field: 'minute' | 'second';
     lead: {every: string; stray: string};
     moment(value: number, stray: boolean): Moment;
@@ -413,11 +415,13 @@ function clockWindows(
   const {max, min} = domainOf(spec.field);
 
   function window(from: number, to: number): string {
-    const [opens, closes] = timeNames([from, to + 1].map(function end(value) {
+    const ends = [from, to + spec.close.after];
+    const [opens, closes] = timeNames(ends.map(function end(value) {
       return spec.moment(value, false);
     }), opts);
 
-    return `${spec.lead.every} ${words.from} ${opens} ${words.until} ${closes}`;
+    return `${spec.lead.every} ${words.from} ${opens} ${spec.close.word} ` +
+      closes;
   }
 
   return {
@@ -443,9 +447,10 @@ function clockWindows(
 }
 
 /**
- * Runs of minutes inside one named hour, as windows of clock times:
- * "every minute from 9 until 9:30 a.m.", with any stray minute a clock
- * time of its own, carrying the single `second` if there is one. `lead`
+ * Runs of minutes inside one named hour, as windows of clock times
+ * closed with "until" at the moment they end: "every minute from 9 a.m.
+ * until 9:30 a.m.", with any stray minute a clock time of its own,
+ * carrying the single `second` if there is one. `lead`
  * is what "every minute" is said as, and what goes before a stray time,
  * once the seconds have had their say.
  */
@@ -455,6 +460,7 @@ function minutesOfOneHour(
   opts: EnglishOptions
 ): Voice {
   return clockWindows({
+    close: {after: 1, word: words.until},
     field: 'minute',
     lead,
     moment(minute, stray) {
@@ -467,10 +473,11 @@ function minutesOfOneHour(
 
 /**
  * Seconds inside one clock time, as a window: "every second from 9:00
- * until 9:01 a.m." for the whole minute, to the second for a run
- * ("from 9:00:00 until 9:00:10 a.m."), and with both ends named for a
- * cadence that has them ("every 10 seconds from 9:00:05 through 9:00:55
- * a.m.").
+ * a.m. until 9:01 a.m." for the whole minute, and to the second for a
+ * run, which names its last second so that nobody counts the one after
+ * ("from 9:00:00 a.m. through 9:00:09 a.m."). A cadence with both ends
+ * names them likewise ("every 10 seconds from 9:00:05 a.m. through
+ * 9:00:55 a.m.").
  */
 function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
   const start = time.hour * 3600 + time.minute * 60;
@@ -485,6 +492,7 @@ function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
 
   return {
     ...clockWindows({
+      close: {after: 0, word: opts.style.through},
       field: 'second',
       lead: {every: everySecond, stray: ''},
       moment: toMoment
