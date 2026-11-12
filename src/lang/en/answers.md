@@ -13,8 +13,9 @@ Two rules run through everything:
 * **A field that takes every value is silent.** "Every minute" does not add
   "of every hour of every day". A phrase appears when a field is
   restricted, and disappears when it is not.
-* **Where several phrasings are sayable, the one that names the fewest
-  things wins.** A thing named is a value, a clock time, an end of a range,
+* **The aim is a sentence that is easy to parse.** Where several phrasings
+  are sayable, the one that names the fewest things wins, because that is
+  the best single measure of how much a listener has to hold. A thing named is a value, a clock time, an end of a range,
   an interval, or an idiom such as "weekdays". The sayable phrasings for
   each kind of set are listed in section 3. Ties go to the earlier
   candidate in the core's order, with an idiom before all of them.
@@ -196,7 +197,8 @@ Numbers are digits everywhere. The only interval word is "every other"
 After "for the first N minutes of" or "for the last N minutes of", listed
 hours are named as hours: "every minute for the first 30 minutes of the 9
 a.m. and 5 p.m. hours". "Every hour" and "every hour from 9 a.m. through 5
-p.m." follow it unchanged.
+p.m." follow it unchanged, and a stray hour beside a range is named as an
+hour too: "of every hour from 1 through 7 a.m. and the 9 a.m. hour".
 
 3.5 A range that wraps is said from its start through its end, the same
 way: "every hour from 10 p.m. through 2 a.m.", "from November through
@@ -208,7 +210,9 @@ in its list form. "Every minute from 0 through 29 and at 45 minutes past
 every hour"; "every hour from 9 a.m. through 5 p.m. and at 10 p.m."; "from
 the 1st through the 7th and on the 15th".
 
-Pieces are said in ascending order, each range with its own lead, unless
+Pieces are said in ascending order of their first value, whatever kind of
+piece each is ("at 1 a.m., every hour from 9 through 11 a.m., and at 1, 3,
+and 5 p.m."), each range with its own lead, unless
 one of the runs wraps round the cycle, in which case the wrapped run comes
 first: "every hour from 10 p.m. through 2 a.m. and at 10 a.m." Weekday
 pieces follow the walk round the week of 3.3. Three or more parts are
@@ -317,7 +321,7 @@ confinement:
 | range | "from 9 a.m. until 6 p.m." |
 | pieces | "from 9 a.m. until 6 p.m. and during the 10 p.m. hour" |
 | every second hour | "during every other hour"; off the beat, "during every other hour from 1 a.m." |
-| any other cadence | the hours as values: "during the midnight, 6 a.m., noon, and 6 p.m. hours" |
+| any other cadence | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours"; "for one hour every 5 hours from midnight through 8 p.m." It names what that cadence names. |
 | except | "except during the 3 a.m. hour"; over every second hour, "during every other hour except the 8 a.m. hour" |
 
 Hours 0 and 12 are "the midnight hour" and "the noon hour".
