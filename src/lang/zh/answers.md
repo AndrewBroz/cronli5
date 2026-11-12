@@ -11,9 +11,10 @@ set of seconds.
 
 Three rules run through everything:
 
-* **A field that takes every value is silent**, with one exception: when
-  the hours are restricted and no day is named, the day part says 每天
-  (2.5).
+* **A field that takes every value is silent**, with two exceptions that
+  fill a level the sentence would otherwise skip: when the hours are
+  restricted and no day is named, the day part says 每天 (2.5); when the
+  month is restricted and no year is named, the year part says 每年 (2.6).
 * **The aim is a sentence that is easy to understand.** A reader says it,
   works out when it fires, and holds its parts in mind. Exact times need
   no working out; a cadence needs arithmetic, a little when it lands on
@@ -38,7 +39,7 @@ with an idiom before all of them.
 | a cadence with both ends named | 3 |
 | pieces | the sum of the parts |
 | a base with exceptions | the base, plus one for each exception |
-| an idiom (奇数日, 偶数小时) | 1 |
+| an idiom (奇数日, 偶数点) | 1 |
 
 The count never depends on *which* values are named, only on how many and
 in what arrangement.
@@ -52,13 +53,21 @@ Corrections, for what has to be worked out:
   of more than four items**, and must name strictly fewer things than the
   list. Minutes 5, 20, 35 and 50 of hour 9 are 9:05、9:20、9:35、9:50.
 * **Two hours are never a cadence**, with the one tie of 3.11.
-* **An hour cadence never carries a minute.** With a minute other than 0
-  the times are listed (0:30、6:30、12:30、18:30), or the hours are 偶数小时
-  or 奇数小时 (4.1).
-* **Every range is closed: it names its first and its last moment, and
-  both fire.** Chinese 至 is read as including its end, so nothing else is
-  needed: 9:00至17:59每分钟; 9:00至17:45每15分钟; 1日至7日. There is no
-  open-ended form, and so nothing for a reader to guess.
+* **Four exact times or fewer are always listed.** They need no working
+  out and are easy to hold: minutes 0, 15, 30 and 45 of hour 9 are 9:00、
+  9:15、9:30、9:45, not a cadence in a window.
+* **A cadence of hours with no ends never carries a minute.** With a
+  minute other than 0 the times are listed (0:30、6:30、12:30、18:30), or
+  the hours are 偶数点 or 奇数点 (4.1). A cadence with both ends named is a
+  range of exact times and may: 0:30至20:30每5小时.
+* **Every range of times is closed: it names its first and its last
+  moment, to the precision of what fires, and both fire.** Chinese 至 is
+  read as including its end, so nothing else is needed: 9:00至17:59每分钟;
+  9:00:00至17:59:59每秒; 9:00至17:45每15分钟. Where the minutes are a list
+  inside each hour, the hours are named as hours, not as a window of times
+  that do not fire: 9点至17点每小时的05分、20分、45分.
+* **Where one part could be read as running into the next, a comma parts
+  them** (2.1).
 * **A cadence of hours, minutes or seconds never names a start alone.**
   Off the beat, it names both ends (1:00至23:00每2小时). A cadence of days
   names its start inside the month (每月1日起每5天), and one of years its
@@ -80,11 +89,14 @@ never the order of the sentence.
 | `hour12` | boolean | `false` | `false`: 24-hour times (17:30). `true`: 12-hour times with the part of the day before each: 下午5:30 |
 | `short` | boolean | `false` | Nothing. Chinese names of weekdays and months have no shorter written form than the default (周一, 6月). The field exists so that a caller can set it for every language alike |
 
-With `hour12: true` the hour is 12, 1 … 11 and each time is preceded by
-its part of the day: 凌晨 for hours 0 to 5, 上午 for 6 to 11, 中午 for 12, 下午
-for 13 to 17, 晚上 for 18 to 23. 上午9:00, 中午12:00, 下午5:45, 凌晨12:30,
+With `hour12: true` the hour is 0, 1 … 12, 1 … 11 and each time is
+preceded by its part of the day: 凌晨 for hours 0 to 5, 上午 for 6 to 11, 中午
+for 12, 下午 for 13 to 17, 晚上 for 18 to 23. 上午9:00, 中午12:00, 下午5:45,
 晚上10:00. Every time carries its own; it is never shared: 上午9:00至下午5:45.
 次日 comes before the part of the day: 晚上10:00至次日凌晨2:59.
+
+A time in the hour after midnight keeps hour 0: 凌晨0:00, 凌晨0:30. (凌晨12:00
+is colloquial and can be taken for noon.)
 
 1.3 None yet. Traditional Chinese (台湾, 香港) differs in script and in some
 words (每週, 分鐘, 小時) and is left for a later region.
@@ -94,7 +106,20 @@ words (每週, 分鐘, 小時) and is left for a later region.
 2.1 One order, coarsest part first: **year, then month, then day, then
 time**. It is the order of a Chinese date and time (2030年6月1日9:00), and
 the reverse of the pattern's fields. The parts are written one after
-another with no space and nothing between them.
+another with no space.
+
+A comma (，) closes a part where the next would otherwise be read into it:
+
+* a year part that is not a single year: 2030年至2035年，1月1日0:00; 偶数年，
+  每5分钟 (without it, 2030年至2035年的1月1日 reads as a span ending on that
+  date);
+* a day part that holds a range of dates, a cadence of dates, or a date
+  and a weekday together: 每月1日至7日，9:00 (without it, a span ending at
+  9:00 on the 7th); 每月1日起每5天，每分钟; 每月1日以及每周五，0:00 (without
+  it, the time reads with the Fridays only).
+
+A list of dates, a weekday phrase and a Quartz form need none: 每月1日、15
+日9:00; 每周一至周五9:00.
 
 * `0 9 * * *` — 每天9:00
 * `*/15 9-17 * * 1-5` — 每周一至周五9:00至17:45每15分钟
@@ -103,9 +128,9 @@ another with no space and nothing between them.
 
 2.2 Each new part is added before the parts finer than it. Nothing moves.
 
-* `0 9 * 6 *` — 6月每天9:00
+* `0 9 * 6 *` — 每年6月每天9:00
 * `0 9 * * 1` — 每周一9:00
-* `0 9 * 6 1` — 6月每周一9:00
+* `0 9 * 6 1` — 每年6月每周一9:00
 
 2.3 Seconds close the time, as the finest part.
 
@@ -122,7 +147,7 @@ level. So when the hours are restricted and neither the day of the month
 nor the weekday is, the day part says 每天:
 
 * `0 9 * * *` — 每天9:00
-* `0 9 * 6 *` — 6月每天9:00
+* `0 9 * 6 *` — 每年6月每天9:00
 * `0 0 9 * * * 2030` — 2030年每天9:00
 * `0 9-17 * * *` — 每天9:00至17:00每小时整点
 * `*/15 9-17 * * *` — 每天9:00至17:45每15分钟
@@ -130,16 +155,22 @@ nor the weekday is, the day part says 每天:
 
 It is not said when the time part itself says the schedule runs round the
 clock: when the hours are said as every hour (每小时整点, 每小时的30分), as a
-cadence with no ends (每6小时), as 偶数小时 or 奇数小时, or as any of those with
+cadence with no ends (每6小时), as 偶数点 or 奇数点, or as any of those with
 exceptions.
 
-* `*/5 * * 6 *` — 6月每5分钟
+* `*/5 * * 6 *` — 每年6月每5分钟
 * `0 */6 * * *` — 每6小时
 * `30 * * * *` — 每小时的30分
 
 Hours said any other way take it. A named day of either kind, or a Quartz
 form, replaces it. An edit to the hours may add or remove 每天; no other
 field's words depend on the time.
+
+2.6 每年. A date or a month with no year before it reads as a single
+occasion: 1月1日0:00 looks like one New Year. So when the month is
+restricted and the year is not, the year part says 每年: 每年1月1日0:00; 每年
+6月每天9:00; 每年6月至8月每周一9:00; 每年奇数月的1日0:00; 每年除12月外每天
+9:00. A named year replaces it.
 
 ## 3. Devices, field by field
 
@@ -180,7 +211,8 @@ before the last item.
   周四 (one 每, one 周 each).
 * A stretch of time filled by a finer cadence is a window that names its
   last moment: hours 9 to 17 under every minute are 9:00至17:59每分钟; under
-  a cadence the window closes on the last run, 9:00至17:45每15分钟.
+  every second, 9:00:00至17:59:59每秒; under a cadence the window closes on
+  the last run, 9:00至17:45每15分钟.
 * A run of minutes inside one named hour: minutes 0 to 29 of hour 9 are
   9:00至9:29每分钟.
 * A run of minutes under every hour or a stretch of hours: one that starts
@@ -205,6 +237,10 @@ Where a wrap is not allowed, the set is described in ascending order:
 `0 22-2 1 * *` is 每月1日0:00至2:00每小时整点及22:00、23:00; `*/15 22-2 * *
 1-5` is 每周一至周五0:00至2:45、22:00至23:45每15分钟.
 
+A wrap is the one place a plain cadence of days is not what it seems: 每月1
+日起每5天 fires on the 31st and again on the 1st. That is what the pattern
+does, and it was left as it is.
+
 3.6 Pieces. Two windows, or two ranges of the same kind, are a list of
 ranges joined by 、 with what happens in them said once: 9:00至17:59、22:00
 至22:59每分钟; 9:00至17:45、22:00至22:45每15分钟. A range and stray values of
@@ -223,7 +259,9 @@ windows: 9:00至9:10、9:50至9:59每分钟.
 it tiles its cycle: N divides the cycle (60 seconds, 60 minutes, 24 hours)
 and the cadence starts at 0.
 
-* Minutes: 每15分钟. Minutes 0 and 30 are 每30分钟.
+* Minutes: 每15分钟. Minutes 0 and 30 are 每30分钟. (Inside one named hour,
+  or one named minute for seconds, four values or fewer are the list of
+  times: 9:00、9:15、9:30、9:45.)
 * Hours with minute 0: 每2小时. Two hours are not a cadence (3.11 has the
   one tie).
 * Days of the month never tile. A cadence names where it starts in the
@@ -261,8 +299,8 @@ An exception is for a hole in the middle. A cadence that is only missing
 values at its end or its start is said with its bounds.
 
 An exception to minutes: 每分钟（每小时的29分除外）; 9:00至17:50每10分钟（每小时
-的30分除外）. Under 每秒 the excepted minute is a whole minute: 每秒（每小时的
-29分整分钟除外）.
+的30分除外）. Under 每秒 the excepted minute is a whole minute, and is
+called one: 每秒（每小时29分这一分钟除外）.
 
 An exception to the hours is a clock time where the hours are points (每
 小时整点（3:00除外）; 每小时的30分（3:30除外）) and a window where they are
@@ -295,11 +333,11 @@ these cases in order.
 | values | 9:00、17:00 | 9:30、17:30 |
 | range | 9:00至17:00每小时整点 | 9:30至17:30每小时 |
 | pieces | 9:00至17:00每小时整点及22:00 | 9:30至17:30每小时及22:30 |
-| every second hour from 0 | 每2小时 | 偶数小时的30分 |
-| every second hour from 1 | 1:00至23:00每2小时 | 奇数小时的30分 |
+| every second hour from 0 | 每2小时 | 偶数点的30分 |
+| every second hour from 1 | 1:00至23:00每2小时 | 奇数点的30分 |
 | another tiling cadence | 每3小时, 每6小时 | the times, however many: 0:30、6:30、12:30、18:30 |
 | a cadence with named ends | 0:00至20:00每5小时 | 0:30至20:30每5小时 |
-| a cadence with exceptions | 每2小时（8:00除外） | 偶数小时的30分（8:30除外） |
+| a cadence with exceptions | 每2小时（8:00除外） | 偶数点的30分（8:30除外） |
 | every hour with exceptions | 每小时整点（3:00除外） | 每小时的30分（3:30除外） |
 
 **M is continuous** (every minute, or a tiling cadence starting at 0).
@@ -309,18 +347,20 @@ The hours come first, as a confinement, and then the lead, 每分钟 or 每N分
 | H | Confinement, with the lead |
 | --- | --- |
 | every hour | none: 每15分钟 |
-| one hour | a window: 9:00至9:59每分钟; 9:00至9:45每15分钟 |
+| one hour | a window: 9:00至9:59每分钟; 9:00至9:50每10分钟. With four times or fewer, the list: 9:00、9:15、9:30、9:45 |
 | a range | 9:00至17:59每分钟; 9:00至17:45每15分钟 |
 | two windows | 9:00至9:59、17:00至17:59每分钟; 9:00至17:45、22:00至22:45每15分钟 |
 | three or more windows, at least one longer than an hour | each a window: 9:00至17:59、20:00至20:59、22:00至22:59每分钟 |
-| three or more separate hours and nothing longer | the hours by name, then 各小时内: 8点、12点、18点各小时内每15分钟 |
-| every second hour from 0 | 偶数小时内每15分钟 |
-| every second hour from 1 | 奇数小时内每分钟 |
-| every hour, or every second hour, with exceptions | 每10分钟（3:00至3:59除外）; 偶数小时内（8点除外）每分钟 |
+| three or more separate hours and nothing longer | the hours by name, then 时段内: 8点、12点、18点时段内每15分钟 |
+| every second hour from 0 | 偶数点时段内每15分钟 |
+| every second hour from 1 | 奇数点时段内每分钟 |
+| every hour, or every second hour, with exceptions | 每10分钟（3:00至3:59除外）; 偶数点时段内（8点除外）每分钟 |
 
 Two exact times need no working out, so one hour is a window. Three or
 more separate hours would be six or more times to hold, so each is named
-once: 8点 is the hour that begins at 8:00.
+once: 8点时段 is the hour that begins at 8:00. (偶数小时 was rejected: it can
+be read as "an even number of hours". 各小时内 after 8点 was rejected: 8点
+alone is read as the instant.)
 
 **M is a single run of minutes and H is one hour.** A window of clock
 times: 9:00至9:29每分钟; 9:10至9:40每分钟. A run with a stray minute adds
@@ -334,19 +374,20 @@ minute phrase from section 3 follows 每小时的:
 | H | Before the minute phrase |
 | --- | --- |
 | every hour | 每小时的: 每小时的05分、20分、45分 |
-| a range | a window that names its last minute, then 每小时的: 9:00至17:59每小时的05分、20分、45分 |
-| pieces | windows: 9:00至17:59、22:00至22:59每小时的05分、20分、45分 |
-| separate hours | no minute phrase: the clock times are listed, while there are at most twelve (9:05、9:20、9:45、17:05、17:20、17:45). Beyond twelve: 8点、10点、12点、14点、16点、18点各小时的05分、20分、45分 |
-| every second hour | 偶数小时的15分、45分; 奇数小时的05分、20分 |
-| another cadence | the hours by name: 0点、4点、8点、12点、16点、20点各小时的15分、45分 |
+| a range | the hours by name, then 每小时的: 9点至17点每小时的05分、20分、45分. (9:00至17:59 would name two moments that do not fire.) |
+| pieces | 9点至17点及22点每小时的05分、20分、45分 |
+| separate hours | no minute phrase: the clock times are listed, while there are at most twelve (9:05、9:20、9:45、17:05、17:20、17:45). Beyond twelve: 8点、10点、12点、14点、16点、18点时段的05分、20分、45分 |
+| every second hour | 偶数点的15分、45分; 奇数点的05分、20分 |
+| another cadence | the hours by name: 0点、4点、8点、12点、16点、20点时段的15分、45分 |
 | every hour with exceptions | 每小时的05分、20分、45分（3:00至3:59除外） |
 
 **A list of clock times is also sayable** whenever neither M nor H is
 every value and there are at most 24 times: 9:05、9:20、9:45. It names one
 thing per time and competes with the other form. On a tie the list of
 times wins, and four times or fewer are always the list. `0,30 9 * * *`
-is 每天9:00、9:30; `*/15 9 * * *` is 每天9:00至9:45每15分钟; `0,30 9,17 * *
-*` is 每天9:00、9:30、17:00、17:30.
+is 每天9:00、9:30; `*/15 9 * * *` is 每天9:00、9:15、9:30、9:45; `*/10 9 * *
+*` is 每天9:00至9:50每10分钟; `0,30 9,17 * * *` is 每天9:00、9:30、17:00、
+17:30.
 
 Writing a time: hours without a leading zero, always with minutes, a
 colon between: 9:00, 17:30, 0:05. With seconds, 9:00:30; in a list or a
@@ -357,35 +398,43 @@ window where any time has seconds, every time shows them (9:00:00、
 
 * S is 0: silent.
 * S is one other second, or a few, and the time is clock times: a list of
-  clock times to the second. 每天9:30:15; 每天9:00:00、9:00:30.
+  clock times to the second. 每天9:30:15; 每天9:00:00、9:00:30. Four times or
+  fewer are always this list: seconds 0, 15, 30 and 45 of 9:00 are 9:00:00、
+  9:00:15、9:00:30、9:00:45.
 * The time is one clock time, and S is continuous or a run or a bounded
-  cadence: a window to the second. 9:00:00至9:00:59每秒; 9:00:00至9:00:54每6
-  秒; 9:00:00至9:00:09每秒; 9:00:05至9:00:55每10秒. With two clock times, two
-  windows: 9:00:00至9:00:59、17:00:00至17:00:59每秒.
+  cadence, with more than four values: a window to the second. 9:00:00至
+  9:00:59每秒; 9:00:00至9:00:54每6秒; 9:00:00至9:00:09每秒; 9:00:05至9:00:55
+  每10秒. With two clock times, two windows: 9:00:00至9:00:59、17:00:00至
+  17:00:59每秒.
 * Otherwise, when S is continuous: if the rest of the time ends 每分钟, 每
-  秒 or 每N秒 takes its place (9:00至17:59每秒). If there is no rest: 每秒, 每
-  15秒. Otherwise the rest is said first, then a comma and 每次1分钟内 and
-  the lead: 9:00至17:45每15分钟，每次1分钟内每秒; 每15分钟，每次1分钟内每15秒.
+  秒 or 每N秒 takes its place and the window is written to the second
+  (9:00:00至17:59:59每秒; 每小时的前30分钟内每秒). If there is no rest: 每秒,
+  每15秒. Otherwise the rest is said first, then what happens each time:
+  9:00至17:45每15分钟，每次持续1分钟，期间每秒; 每15分钟，每次持续1分钟，期间
+  每15秒.
 * A single second under a cadence of minutes in a window moves the
-  window: 9:00:30至17:45:30每15分钟.
-* Otherwise S is anchored: 每分钟的30秒; 每分钟的前10秒内每秒. After a rest
-  that is a cadence of minutes it follows a comma and 每次: 9:00至17:45每15
-  分钟，每次前10秒内每秒; 每15分钟，每次05秒至55秒每10秒; 每15分钟，每次在30秒.
+  window: 9:00:30至17:45:30每15分钟. Under a cadence of minutes with no
+  window it is 每15分钟的第30秒.
+* Otherwise S is anchored: 每分钟的30秒; 每分钟的前10秒内每秒; 每分钟的05秒至
+  55秒每10秒. After a rest it follows a comma and 每次的: 9:00至17:45每15分钟，
+  每次的前10秒内每秒; 每15分钟，每次的第5秒至第55秒每10秒.
 
 A single second joins a clock time only where the time part, chosen
 without regard to the second, already names clock times. Where the
 minutes are anchored instead, the second follows the minute: 每小时的30分15
-秒; 偶数小时的05分08秒、30分08秒. With minute 0 under every hour: 每小时的00分
+秒; 偶数点的05分08秒、30分08秒. With minute 0 under every hour: 每小时的00分
 30秒; 每小时的前10秒内每秒.
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
-first, then 以及, then the weekday phrase exactly as it would stand alone:
-每月1日以及每周五0:00; 每月1日至7日及15日以及每周一至周五. 以及 is read as
-adding a second set of days; 或 is read as a choice.
+first, then 以及, then the weekday phrase exactly as it would stand alone,
+then a comma before the time, so that the time is read with both: 每月1日以
+及每周五，0:00; 每月1日至7日及15日以及每周一至周五，9:00至17:45每15分钟. 以及
+is read as adding a second set of days; 或 is read as a choice.
 
 A month applies to both sides, so under such a pair it is said first and
-set apart: 6月期间，每月1日以及每周五0:00; 5月至7月期间，每月1日、19日、23日、
-28日以及每周三、周四.
+set apart with 期间 and a comma. Under a single month the date is said
+without 每月: 每年6月期间，1日以及每周五，0:00. Under several: 每年5月至7月期
+间，每月1日、19日、23日、28日以及每周三、周四，7:52至16:52每小时.
 
 Not built into any renderer yet: when both must match, a weekday that
 falls on a date is 每逢13日为周五时, and the first Monday is 每月第1个周一.
@@ -401,9 +450,10 @@ month, day, they join as a date does.
   月的1日、15日; 奇数月的1日.
 * With a range of months, or months excepted: the months, then the day
   phrase with 每月. 6月至8月每月1日; 6月至8月及12月每月1日; 除12月外每月1日.
-* A single year comes first: 2030年1月1日; 2030年6月每天9:00; 2030年每天9:00.
-  Several years are 2030年、2035年; a range is 2030年至2035年. After several
-  years or a range, a date or a month follows 的: 2030年、2035年的1月1日.
+* A single year comes first, as in a date: 2030年1月1日; 2030年6月每天9:00;
+  2030年每天9:00.
+* Any other year phrase comes first and is closed by a comma (2.1):
+  2030年、2035年，1月1日0:00; 2030年至2035年，1月1日0:00; 偶数年，每5分钟.
 
 4.5 None.
 
@@ -422,31 +472,33 @@ than Monday to Friday.
 5.4 Minute 0 with every hour is 每小时整点.
 
 5.5 Every second hour, month or year is said by its numbers being odd or
-even: 偶数小时 (hours 0, 2 … 22), 奇数小时; 奇数月 (January, March …), 偶数月;
+even: 偶数点 (the hours 0, 2 … 22), 奇数点; 奇数月 (January, March …), 偶数月;
 偶数年, 奇数年. It says which ones without a start to add to. Every other
 interval is a digit: 每15分钟, 每6小时.
 
 5.6 Parts of the day are used only with `hour12: true` (1.2).
 
 5.7 Quartz forms, each after 每月, or after the month when the month is
-restricted (6月最后一天; 1月、7月的最后一个周五).
+restricted, with no 的 (每年6月最后一天; 每年1月、7月最后一个周五).
 
 * `L` — 每月最后一天
-* `LW` — 每月最后一个工作日
+* `LW` — 每月最后一个工作日（周一至周五）
 * `L-3` — 每月倒数第4天 (three days before the last is the fourth from the
   end)
-* `15W` — 每月最接近15日的工作日
+* `15W` — 每月最接近15日的工作日（周一至周五）
 * `1#2` — 每月第2个周一
 * `5L` — 每月最后一个周五
 
-工作日 is used here because the Quartz form is defined by it; it means
-Monday to Friday.
+工作日 is the word the Quartz form is defined by, but in mainland China
+working days are moved around public holidays, so it is always followed by
+what it means here: （周一至周五）.
 
 5.8 Years. Years 1970, 1972 … : 偶数年. Years 1971, 1973 … : 奇数年. Any
-other cadence of years names its start, and its end if it stops early:
-2030年起每2年; 2028年起每4年; 2030年至2040年每2年. A year phrase that is not a
-single year is followed by 的 before a date or a month (2028年起每4年的1月1
-日) and directly by 每天 or a time.
+other cadence of years names its start, and its end if it stops early,
+and says 一次 so that it is not read with the cadence after it: 2030年起每2
+年一次; 2028年起每4年一次; 2030年至2040年每2年一次. Like every year phrase
+that is not a single year, it is closed by a comma: 2028年起每4年一次，1月1
+日0:00; 2028年起每4年一次，每5分钟.
 
 ## 6. Words
 
@@ -486,18 +538,19 @@ characters.
 
 8.1 `union-connective` — 以及: 每月1日以及每周五.
 
-8.2 `shared-qualifier-scope` — The time closes the sentence and is read
-with both sides. A month is said first, with 期间 and a comma: 6月期间，每
-月1日以及每周五0:00.
+8.2 `shared-qualifier-scope` — The time closes the sentence, after a
+comma, so that it is read with both sides. A month is said first, with 期
+间 and a comma: 每年6月期间，1日以及每周五，0:00.
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window before the
-lead (9:00至17:59每分钟), 各小时内, 偶数小时内, or 每次1分钟内.
+lead (9:00至17:59每分钟), 时段内, or 每次持续1分钟，期间.
 
 8.4 `redundancy` — 每月 is not said after a named month (6月1日). 每分钟 is
 not said beside 每秒. A field that takes every value is not said.
 
-8.5 `range-boundary` — Every range is closed and names its last moment
-(3.4). There is no form in which the end named does not fire.
+8.5 `range-boundary` — Every range of times is closed and names its last
+moment, to the second where seconds fire (3.4). There is no form in which
+a time that is named does not fire.
 
 8.6 `recurrence-marking` — 每周 before a weekday, once for a list or a
 range; 每月 before a date; 每天.
@@ -510,6 +563,6 @@ the description as it stands. A sentence is the description followed by 执
 时. The lenient fallback is 无法识别的cron表达式, which is never wrapped.
 
 8.9 `cardinality-rendering` — Decided by the things named among the
-sayable forms. `0 0 1 */3 *` is 1月、4月、7月、10月的1日0:00; `0 0 1 */2 *`
-is 奇数月的1日0:00; `0 */6 * * *` is 每6小时; `0 0,6,12,18 * * *` is 每6小时
+sayable forms. `0 0 1 */3 *` is 每年1月、4月、7月、10月的1日0:00; `0 0 1 */2
+*` is 每年奇数月的1日0:00; `0 */6 * * *` is 每6小时; `0 0,6,12,18 * * *` is 每6小时
 too.

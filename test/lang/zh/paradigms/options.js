@@ -35,8 +35,8 @@ const sets = [
         pattern: '0 9-17 * * *'
       },
       {
-        expected: '每天凌晨12:00',
-        parts: ['凌晨12:00'],
+        expected: '每天凌晨0:00',
+        parts: ['凌晨0:00'],
         pattern: '0 0 * * *'
       },
       {
