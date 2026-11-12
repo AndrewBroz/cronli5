@@ -1,6 +1,6 @@
 // Field specifications and macros.
 
-import type {Field} from './schedule.js';
+import type {Domain, Field} from './schedule.js';
 
 /**
  * A parsed but not-yet-canonical cron pattern: every field present, values
@@ -85,4 +85,15 @@ const macros: Record<string, string> = {
   '@hourly':   '0 * * * *'
 };
 
-export {fieldOrder, fieldSpecs, macros};
+/**
+ * The values a field can take, as a domain for describing sets of them. The
+ * top of the weekday domain is Saturday: 7 is Sunday again, not a value.
+ */
+function domainOf(field: Field): Domain {
+  const spec = fieldSpecs[field];
+
+  return {cyclic: Boolean(spec.cyclic), max: spec.top ?? spec.max,
+    min: spec.min};
+}
+
+export {domainOf, fieldOrder, fieldSpecs, macros};

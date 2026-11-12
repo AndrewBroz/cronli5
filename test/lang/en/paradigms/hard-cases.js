@@ -121,8 +121,9 @@ const rows = [
     'at 6 p.m. on the weekday nearest March 15, June 15, September 15, ' +
     'and December 15'],
   ['0,30 8-18/2 1,15 * 1-5',
-    'at 0 and 30 minutes past the hour, every 2 hours from 8 a.m. through ' +
-    '6 p.m. on the 1st and 15th as well as on weekdays'],
+    'every 30 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 ' +
+    'p.m., and 6 p.m. hours on the 1st and 15th as well as on ' +
+    'weekdays'],
   ['* 8-18/2 * * *',
     'every minute during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and ' +
     '6 p.m. hours'],
@@ -134,7 +135,38 @@ const rows = [
   ['30 4 1-7 * 1',
     'at 4:30 a.m. from the 1st through the 7th as well as on Mondays'],
   ['59 23 31 12 *', 'at 11:59 p.m. on December 31'],
-  ['0 2 29 2 *', 'at 2 a.m. on February 29']
+  ['0 2 29 2 *', 'at 2 a.m. on February 29'],
+
+  // Sentences that were well formed and said the wrong schedule, found by
+  // an independent review.
+  ['5-10/60 0 9 * * *', 'at 9:00:05 a.m.'],
+  ['0 0,1,22,23 * * 1', 'at midnight, 1 a.m., 10 p.m., and 11 p.m. on Mondays'],
+  ['0 0 30-2 6 *', 'at midnight on June 1, 2, and 30'],
+  ['0 0 * 11-2 * 2030',
+    'at midnight in January, February, November, and December in 2030',
+    {years: true}],
+  ['0-28,30-59 9,17 * * *',
+    'every minute during the 9 a.m. and 5 p.m. hours except at 29 minutes ' +
+    'past the hour'],
+  ['0-28,30-59 9 * * *',
+    'every minute during the 9 a.m. hour except at 29 minutes past the hour'],
+  ['0,10,20,40,50 9-17 * * *',
+    'every 10 minutes from 9 a.m. until 6 p.m. except at 30 minutes past ' +
+    'the hour'],
+  ['0-28,30-59 * * * *', 'every minute except at 29 minutes past the hour'],
+  ['* 0-28,30-59 * * * *',
+    'every second except during the minute at 29 minutes past the hour'],
+  ['*/15 8-18/2 * * *',
+    'every 15 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., ' +
+    'and 6 p.m. hours'],
+  ['*/15 8-20/2 * * *',
+    'every 15 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., ' +
+    '6 p.m., and 8 p.m. hours'],
+  ['0 0-2,4-23 * * *', 'every hour except at 3 a.m.'],
+  ['30 0-2,4-23 * * *', 'at 30 minutes past every hour except 3 a.m.'],
+  ['30 0 * * * *', 'at 30 seconds past every hour'],
+  ['0-9 0 * * * *', 'every second for the first 10 seconds of every hour'],
+  ['0,2-59 * * * *', 'every minute except at 1 minute past the hour']
 ];
 
 export {rows};

@@ -3,8 +3,7 @@
 // descriptive. Language modules handle rendering into words
 // (docs/i18n-design.md §2.2).
 
-import {fieldOrder, fieldSpecs} from './specs.js';
-import type {FieldSpec} from './specs.js';
+import {domainOf, fieldOrder, fieldSpecs} from './specs.js';
 import type {
   Analyses, Field, Pattern, Schedule, SetDescription, Shape, Shapes
 } from './schedule.js';
@@ -58,7 +57,7 @@ function fieldShape(value: string, field: Field): Shape {
 function fieldCandidates(
   value: string,
   shape: Shape,
-  spec: FieldSpec
+  field: Field
 ): SetDescription[] | null {
   if (shape === 'quartz') {
     return null;
@@ -68,14 +67,13 @@ function fieldCandidates(
     return [{kind: 'all'}];
   }
 
-  const max = spec.top ?? spec.max;
-  const fires = enumerateFires(value, spec.min, max)
+  const domain = domainOf(field);
+  const fires = enumerateFires(value, domain.min, domain.max)
     .sort(function ascending(a, b) {
       return a - b;
     });
 
-  return describeSet(fires, {cyclic: Boolean(spec.cyclic), max,
-    min: spec.min});
+  return describeSet(fires, domain);
 }
 
 // Analyze a prepared (parsed, validated, normalized) cron pattern into the
@@ -86,8 +84,7 @@ function analyze(pattern: Pattern): Schedule {
 
   fieldOrder.forEach(function classify(field) {
     shapes[field] = fieldShape(pattern[field], field);
-    candidates[field] = fieldCandidates(pattern[field], shapes[field],
-      fieldSpecs[field]);
+    candidates[field] = fieldCandidates(pattern[field], shapes[field], field);
   });
 
   return {

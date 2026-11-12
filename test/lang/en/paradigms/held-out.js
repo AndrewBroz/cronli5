@@ -106,7 +106,8 @@ const rows = [
     'every 15 minutes during every other hour except the 8 a.m. hour on ' +
     'weekdays'],
   ['*/15 22-2 * * 1-5',
-    'every 15 minutes from 10 p.m. until 3 a.m. on weekdays'],
+    'every 15 minutes from midnight until 3 a.m. and from 10 p.m. ' +
+    'until midnight on weekdays'],
 
   // window / date
   ['*/15 9-17 15 * 1-5', `${WINDOW} on the 15th as well as on weekdays`],
@@ -175,7 +176,9 @@ const rows = [
   ['0 */2 1 * *', 'every 2 hours on the 1st'],
   ['0 */6 1 * *', 'every 6 hours on the 1st'],
   [`0 ${EVEN_HOURS_BUT_8} 1 * *`, 'every 2 hours except at 8 a.m. on the 1st'],
-  ['0 22-2 1 * *', 'every hour from 10 p.m. through 2 a.m. on the 1st'],
+  ['0 22-2 1 * *',
+    'every hour from midnight through 2 a.m. and at 10 and 11 p.m. on ' +
+    'the 1st'],
 
   // monthly / date
   ['0 0 15 * *', 'at midnight on the 15th'],

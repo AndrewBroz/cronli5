@@ -4,23 +4,18 @@
 
 import type {ClockTime, Field, ScheduleFacts} from './schedule.js';
 import {denote} from './describe-set.js';
-import {fieldSpecs} from './specs.js';
+import {domainOf} from './specs.js';
 
 // A field's values, when it is a plain set narrower than the whole field.
 function restrictedValues(facts: ScheduleFacts, field: Field):
   number[] | null {
   const candidates = facts.analyses.candidates[field];
-  const spec = fieldSpecs[field];
 
   if (!candidates || candidates[0].kind === 'all') {
     return null;
   }
 
-  return denote(candidates[0], {
-    cyclic: Boolean(spec.cyclic),
-    max: spec.top ?? spec.max,
-    min: spec.min
-  });
+  return denote(candidates[0], domainOf(field));
 }
 
 /**

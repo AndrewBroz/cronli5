@@ -93,6 +93,9 @@ dialect name is treated as `us`.
 
 A custom object may also set the word for midnight.
 
+A custom field that is missing, undefined or of the wrong type is ignored,
+and the default stands. No option can make the renderer throw.
+
 1.3 None beyond `gb`.
 
 ## 2. Frame
@@ -206,6 +209,25 @@ way: "every hour from 10 p.m. through 2 a.m.", "from November through
 February", "Friday through Monday". As a window: "from 10 p.m. until 3
 a.m."
 
+A wrap is only true when nothing coarser is restricted. "Every hour from
+10 p.m. through 2 a.m." runs through the night; "on Mondays" it would be
+heard as Monday night into Tuesday, when the pattern means Monday's first
+hours and Monday's last. So:
+
+* hours wrap only when the day of the month, the weekday, the month and
+  the year are all every value;
+* days of the month wrap only when the month and the year are;
+* months wrap only when the year is;
+* weekdays may always wrap, because they name days, not a stretch of time;
+* minutes and seconds follow 3.6 (two windows inside one hour) and are
+  otherwise said as written.
+
+Where a wrap is not allowed, the set is described as if the field did not
+wrap, in ascending order: `0 22-2 1 * *` is "every hour from midnight
+through 2 a.m. and at 10 and 11 p.m. on the 1st"; `*/15 22-2 * * 1-5` is
+"every 15 minutes from midnight until 3 a.m. and from 10 p.m. until
+midnight on weekdays".
+
 3.6 A range and a stray value: the range, then "and", then the stray value
 in its list form. "Every minute from 0 through 29 and at 45 minutes past
 every hour"; "every hour from 9 a.m. through 5 p.m. and at 10 p.m."; "from
@@ -286,6 +308,25 @@ cadence with exceptions: hours 0, 2 … 20 are "every 2 hours through 8
 p.m." in the bounded form ("every 2 hours from midnight through 8 p.m."),
 never "every 2 hours except at 10 p.m."
 
+An exception to minutes is said last, after the hours, so that the hours
+belong to the whole phrase and not to the exception, and it names its
+minutes against "the hour":
+
+* "every minute except at 29 minutes past the hour" (every hour);
+* "every minute during the 9 a.m. and 5 p.m. hours except at 29 minutes
+  past the hour";
+* "every 10 minutes from 9 a.m. until 6 p.m. except at 30 minutes past the
+  hour";
+* one hour is no different: "every minute during the 9 a.m. hour except at
+  29 minutes past the hour", not two abutting windows.
+
+The base is said as the continuous form of 4.1 with its confinement. If
+the hours have an exception of their own, it comes first: "every 10
+minutes except during the 3 a.m. hour, and except at 30 minutes past the
+hour". Under "every second", an excepted minute is a whole minute, said as
+one: "every second except during the minute at 29 minutes past the hour".
+Seconds take exceptions the same way, against "the minute".
+
 3.10 A limit on items held turned out to be the whole rule. Choosing by
 spoken syllables, as first designed, made the choice depend on which
 values were named: "at 9:05, 9:20, and 9:45 a.m." came out for 9 o'clock
@@ -296,8 +337,8 @@ sentence change shape for no reason. Counting the things named gives the
 same switch points for every value, and they fall where a listener
 re-chunks: four quarter-hour times in one hour become "every 15 minutes
 during the 9 a.m. hour", eleven even hours become "every 2 hours except at
-8 a.m." Syllable lengths stay in the lexicon as data; they do not choose
-between phrasings.
+8 a.m." The lexicon therefore holds words only; it keeps no syllable
+lengths.
 
 ## 4. Fusions
 
@@ -331,6 +372,11 @@ confinement:
 | every second hour | "during every other hour"; off the beat, "during every other hour from 1 a.m." |
 | any other cadence that runs through the day | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours"; "for one hour every 3 hours from 1 a.m." It names what that cadence names. |
 | a cadence with a named end | the hours as values: "during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours". "For one hour every 2 hours from 8 a.m. through 6 p.m." is misheard as stopping at 6. |
+
+A single minute counts as nothing in every form, including "at 30 minutes
+past every hour", so hours 0 to 2 and 4 to 23 are "every hour except at 3
+a.m." at minute 0 and "at 30 minutes past every hour except 3 a.m." at
+minute 30: the same device.
 | except | "except during the 3 a.m. hour"; over every second hour, "during every other hour except the 8 a.m. hour" |
 
 Hours 0 and 12 are "the midnight hour" and "the noon hour".
@@ -368,6 +414,14 @@ a.m." (two things either way); `*/15 9 * * *` is "every 15 minutes during
 the 9 a.m. hour" (two things against four times); `0,30 9,17 * * *` is
 "every 30 minutes during the 9 a.m. and 5 p.m. hours" (three against
 four).
+
+The minute phrase is settled before the hours are considered: a continuous
+M is always its lead ("every 30 minutes"), never its list, whatever the
+hours are. Only the list of clock times competes with the result. So
+changing the hours never changes how the minutes are said: `*/15 8-18/2`
+and `*/15 8-20/2` are both "every 15 minutes during the … hours", and
+`0,30 8-18/2` is "every 30 minutes during the 8 a.m., 10 a.m., noon, 2
+p.m., 4 p.m., and 6 p.m. hours".
 
 Writing a time: the hour alone on the hour ("9 a.m."), otherwise hour and
 minutes ("9:30 a.m."). 0:00 is "midnight" and 12:00 is "noon"; 0:30 is
@@ -427,6 +481,12 @@ a.m." Anchored seconds do the same, with "every minute" in place of "the
 minute" and no comma: "at 1 second past every minute for the first 30
 minutes of every hour"; "every 10 seconds from 5 through 55 seconds past
 every minute during the 9 a.m. hour".
+
+When minute 0 is carried by "every hour" there is no clock time to hold a
+second, so the second is said against the hour: "at 30 seconds past every
+hour"; "every second for the first 10 seconds of every hour". With another
+single minute: "at 30 minutes and 15 seconds past every hour". A stray
+clock time carries a single second like any other: "…and at 9:45:08 a.m."
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
 first, then "as well as", then the weekday phrase exactly as it would stand
@@ -537,6 +597,9 @@ and, except, for one minute, the.
 7.1 Singular for 1, plural otherwise: "1 minute", "2 minutes", "0
 minutes". After "every" with no number the unit is singular: "every
 minute".
+
+The unit agrees with the last number said before it: "except at 1 minute
+past the hour"; "from 58 through 1 minute past every hour".
 
 7.2 None beyond number. A recurring weekday in a list is plural ("on
 Mondays"); in a range it is singular with no "on" ("Monday through
