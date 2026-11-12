@@ -133,12 +133,15 @@ function sayCadence(cadence: Cadence, voice: Voice): Phrase | null {
     {...plain(text, 1 + ends.length), yields: ends.length === 2};
 }
 
-// The pieces in the order they are said, with the order of the values
-// that decides it. Values are walked in ascending order, starting from a
-// run that wraps round the cycle if there is one, unless the voice has a
-// walk of its own; a piece stands where its first value does.
+type Part = Pieces['parts'][number];
+
+// The pieces in the order they are said. Values are walked in ascending
+// order, starting from a run that wraps round the cycle if there is one,
+// unless the voice has a walk of its own. Each run stands where its first
+// value does, whatever kind of piece its neighbours are, and the stray
+// values that fall together between runs make one list.
 function inSpokenOrder(pieces: Pieces, voice: Pick<Voice, 'field' | 'walk'>):
-  {order: number[]; parts: Pieces['parts']} {
+  Part[] {
   const values = denote(pieces, {cyclic: true, ...domainOf(voice.field)});
   const wrapped = pieces.parts.find(function wraps(part) {
     return part.kind === 'range' && part.from > part.to;
@@ -148,35 +151,40 @@ function inSpokenOrder(pieces: Pieces, voice: Pick<Voice, 'field' | 'walk'>):
     voice.walk(values) :
     [...values.slice(at), ...values.slice(0, at)];
 
-  function place(part: Pieces['parts'][number]): number {
-    const members = part.kind === 'range' ? [part.from] : part.values;
-
-    return Math.min(...members.map(function position(value) {
-      return order.indexOf(value);
-    }));
+  function place(part: Part): number {
+    return order.indexOf(part.kind === 'range' ? part.from : part.values[0]);
   }
 
-  return {
-    order,
-    parts: pieces.parts.slice().sort(function byPlace(a, b) {
-      return place(a) - place(b);
-    })
-  };
+  return pieces.parts.flatMap(function apart(part): Part[] {
+    return part.kind === 'range' ?
+      [part] :
+      part.values.map(function alone(value) {
+        return {kind: 'values', values: [value]};
+      });
+  }).sort(function byPlace(a, b) {
+    return place(a) - place(b);
+  }).reduce(function gather(parts: Part[], part) {
+    const previous = parts[parts.length - 1];
+
+    if (part.kind === 'values' && previous && previous.kind === 'values') {
+      previous.values.push(...part.values);
+    }
+    else {
+      parts.push(part);
+    }
+
+    return parts;
+  }, []);
 }
 
 // Several pieces, each range with its own lead and the stray values
 // between them as lists.
 function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
   Phrase {
-  const {order, parts} = inSpokenOrder(pieces, voice);
-  const said = parts.map(function sayPart(part) {
+  const said = inSpokenOrder(pieces, voice).map(function sayPart(part) {
     return part.kind === 'range' ?
       plain(voice.range(part.from, part.to), 2) :
-      plain(
-        voice.values(part.values.slice().sort(function inOrder(a, b) {
-          return order.indexOf(a) - order.indexOf(b);
-        })),
-        part.values.length);
+      plain(voice.values(part.values), part.values.length);
   });
 
   return plain(
@@ -203,7 +211,7 @@ function opensWithEvery(description: SetDescription,
     case 'except':
       return opensWithEvery(description.base, field);
     case 'pieces':
-      return inSpokenOrder(description, {field}).parts[0].kind === 'range';
+      return inSpokenOrder(description, {field})[0].kind === 'range';
     default:
       return false;
   }
@@ -530,11 +538,14 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
 /**
  * Hours as stretches of time that a finer cadence fills: "during the 9
  * a.m. hour", "from 9 a.m. until 6 p.m.", "during every other hour". A
- * stretch closes at the moment it ends, the hour after its last.
+ * stretch closes at the moment it ends, the hour after its last. A
+ * cadence wider than every other hour runs "for one hour" at each of the
+ * moments it names: "for one hour every 6 hours".
  */
 function hoursAsStretches(opts: EnglishOptions): Voice {
   const nouns = hoursAsNouns(true, opts);
   const cadence = nouns.cadence as CadenceVoice;
+  const moments = hoursAsMoments({minute: 0}, opts).cadence as CadenceVoice;
   const during = words.during.text;
 
   return {
@@ -544,7 +555,9 @@ function hoursAsStretches(opts: EnglishOptions): Voice {
       say(stride, ends) {
         const noun = cadence.say(stride, ends);
 
-        return noun && `${during} ${noun}`;
+        return noun ?
+          `${during} ${noun}` :
+          `${extraWords.forOneHour} ${moments.say(stride, ends)}`;
       }
     },
     exception(removed, base) {

@@ -14,8 +14,6 @@ const rows = [
     'at 5, 20, and 45 minutes past every hour except 3 a.m.'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'every minute during every other hour except the 8 a.m. hour'],
-  ['*/15 */6 * * *',
-    'every 15 minutes during the midnight, 6 a.m., noon, and 6 p.m. hours'],
   ['0 9-17,20,22 * * *',
     'every hour from 9 a.m. through 5 p.m. and at 8 and 10 p.m.'],
   ['0 22-2,10 * * *',
@@ -55,7 +53,11 @@ const rows = [
   ['* 5,10-40 9 * * *',
     'every second for one minute at 9:05 a.m. and every second from 9:10 until 9:41 a.m.'],
   ['0 0 1-14,16-31 6 *',
-    'at midnight on every day in June except the 15th']
+    'at midnight on every day in June except the 15th'],
+  ['*/15 */6 * * *',
+    'every 15 minutes for one hour every 6 hours'],
+  ['5,20,45 */6 * * *',
+    'at 5, 20, and 45 minutes past midnight, 6 a.m., noon, and 6 p.m.']
 ];
 
 describe('English builder-added cases (unreviewed):', function() {
