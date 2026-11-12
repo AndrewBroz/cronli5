@@ -35,7 +35,15 @@ option with its values and its default. An option may change words and the
 form of one phrase. It may never change the order or structure of the
 sentence.
 
-1.3 Which regional variants differ enough to need their own answers?
+These choices become the fields of the language's style table, which a
+caller overrides field by field. Name each field, the kind of value it
+takes, and its default. Every language states two: `hour12` (12-hour times
+or 24-hour, and which is the default here) and `short` (short names for
+weekdays and months, and what, if anything, else abbreviates with them).
+
+1.3 Which regional variants differ enough to need their own answers? Give
+each its region code (`GB` in `en-GB`) and the fields of the style table it
+sets differently. A caller selects one with the language code.
 
 ## 2. Frame
 
@@ -131,8 +139,16 @@ else? [`30 9 * * *`] [`0,30 9 * * *`] [`0 9,17 * * *`] [`0,30 9,17 * * *`]
 matches. How does the language say that so it is heard as "either", not as
 "both" and not as a choice? [`0 0 1 * 5`] [`0 0 1,15 * 1-5`]
 
+Some schedulers fire only when *both* match. No renderer says this yet,
+but answer it now, so the answer exists when the option does: how does the
+language say a weekday that falls on a date? [`0 0 13 * 5`, both: Friday
+the 13th] [`0 0 1-7 * 1`, both: the first Monday]
+
 4.4 **A day and a month.** Are they one date phrase? [`0 0 1 1 *`]
-[`0 0 1 1,7 *`]
+[`0 0 1 1,7 *`] And a year: a full date, a month with a year, a year
+alone, several years, a cadence of years.
+[`0 0 0 1 1 * 2030`] [`0 0 9 * 6 * 2030`] [`0 0 9 * * * 2030`]
+[`0 0 9 * * * 2030,2035`] [`0 0 9 * * * 2030/2`] [`0 0 9 * * * 2028/4`]
 
 4.5 Are there other pairs of fields this language says as one phrase?
 
@@ -231,9 +247,12 @@ between a single day, a list and a range? [`0 9 * * 1`] [`0 9 * * 1,3`]
 8.7 `numeral-register` — Are counts and positions said in different forms
 ("every five minutes" against "at 5 past")? Decide for each role.
 
-8.8 `sentence-wrapper-punctuation` — When a description becomes a complete
-sentence, what lead and closing punctuation does it take, and what happens
-when the description already ends in an abbreviation's full stop?
+8.8 `sentence-wrapper-punctuation` — A description is presented in three
+forms: a fragment to embed in another sentence, a label standing alone,
+and a complete sentence. How is a label capitalised, if the script has
+capitals? When a description becomes a complete sentence, what lead and
+closing punctuation does it take, and what happens when the description
+already ends in an abbreviation's full stop?
 
 8.9 `cardinality-rendering` — When is a stepped or listed field said as a
 cadence and when as an enumeration? Answer by spoken length across the
