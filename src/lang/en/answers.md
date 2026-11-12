@@ -207,9 +207,12 @@ fires, because 6:00 is on the half-hour grid. So a window under "every N
 minutes" names its last run with "through": "every 30 minutes from
 midnight through 5:30 p.m."; "every 15 minutes from 10 p.m. through 5:45
 a.m." Under "every minute" nothing is in doubt and the window keeps
-"until": "every minute from 9 a.m. until 6 p.m." Seconds always keep
-"until", cadence or not, because the plain form reads better and the
-doubt is a matter of one second: "every 6 seconds from 9:00 a.m. until 9:01 a.m."
+"until": "every minute from 9 a.m. until 6 p.m." A cadence of seconds keeps "until", because the plain form reads better
+and the doubt is a matter of one second: "every 6 seconds from 9:00 a.m.
+until 9:01 a.m." A run of seconds written to the second is different: it
+names its last second with "through", because a blind reader took "until
+9:00:10" to include it. "Every second from 9:00:00 a.m. through 9:00:09
+a.m."
 
 3.5 A range that wraps is said from its start through its end, the same
 way: "every hour from 10 p.m. through 2 a.m.", "from November through
@@ -423,7 +426,7 @@ minutes ("9:30 a.m."). 0:00 is "midnight" and 12:00 is "noon"; 0:30 is
 "12:30 a.m." Noon and midnight never take a.m. or p.m. A window to
 the minute or the second shows that precision on its numbered ends: "from 9:00 a.m. until 9:01 a.m.", "from midnight until 12:01 a.m." An end that falls
 exactly on noon or midnight is still said as the word, whatever the
-precision of the other end: "from noon until 12:00:10 p.m."
+precision of the other end: "from noon through 12:00:09 p.m."
 
 After "past", every hour is "the hour", and a range of hours follows it
 directly: "at 30 minutes past the hour"; "at 5, 20, and 45 minutes past
@@ -448,7 +451,7 @@ back across the list.
   "At 9:30:15 a.m."; "at 9 a.m. and 9:00:30 a.m."
 * The time is one clock time, and S is continuous (every second, or a
   tiling cadence from 0): a one-minute window. "Every second from 9:00 a.m. until 9:01 a.m."; "every 6 seconds from midnight until 12:01 a.m." If S
-  is a run, the window is to the second: "every second from 9:00:00 a.m. until 9:00:10 a.m." If S is a cadence with both ends named, so are the ends of
+  is a run, the window is to the second: "every second from 9:00:00 a.m. through 9:00:09 a.m." If S is a cadence with both ends named, so are the ends of
   the window: "every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m."
 * Otherwise, when S is continuous the lead is "every second" or "every N
   seconds". If the rest of the time begins "every minute", those two words

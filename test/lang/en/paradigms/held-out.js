@@ -13,7 +13,7 @@ const rows = [
   ['30 0 9 * * *', 'at 9:00:30 a.m.'],
   ['0,30 0 9 * * *', 'at 9 a.m. and 9:00:30 a.m.'],
   ['*/15 0 9 * * *', 'every 15 seconds from 9:00 a.m. until 9:01 a.m.'],
-  ['0-9 0 9 * * *', 'every second from 9:00:00 a.m. until 9:00:10 a.m.'],
+  ['0-9 0 9 * * *', 'every second from 9:00:00 a.m. through 9:00:09 a.m.'],
 
   // clock / minute
   ['30 9 * * *', 'at 9:30 a.m.'],
@@ -178,7 +178,7 @@ const rows = [
   ['*/15 0 0 1 * *',
     'every 15 seconds from midnight until 12:01 a.m. on the 1st'],
   ['0-9 0 0 1 * *',
-    'every second from midnight until 12:00:10 a.m. on the 1st'],
+    'every second from midnight through 12:00:09 a.m. on the 1st'],
 
   // monthly / minute
   ['30 0 1 * *', 'at 12:30 a.m. on the 1st'],

@@ -185,7 +185,11 @@ const rows = [
   // inside named hours are.
   ['0,30 30 9 * * *', 'at 9:30 a.m. and 9:30:30 a.m.'],
   ['0,20,40 0 9 * * *', 'every 20 seconds from 9:00 a.m. until 9:01 a.m.'],
-  ['*/15 0 9 * * *', 'every 15 seconds from 9:00 a.m. until 9:01 a.m.']
+  ['*/15 0 9 * * *', 'every 15 seconds from 9:00 a.m. until 9:01 a.m.'],
+
+  // A run of seconds names its last second: a blind reader took "until
+  // 9:00:10" to include it.
+  ['10-20 30 9 * * *', 'every second from 9:30:10 a.m. through 9:30:20 a.m.']
 ];
 
 export {rows};
