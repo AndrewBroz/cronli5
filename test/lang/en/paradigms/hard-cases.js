@@ -184,7 +184,7 @@ const rows = [
   // A few seconds inside named minutes are clock times, as a few minutes
   // inside named hours are.
   ['0,30 30 9 * * *', 'at 9:30 and 9:30:30 a.m.'],
-  ['0,20,40 0 9 * * *', 'at 9, 9:00:20, and 9:00:40 a.m.'],
+  ['0,20,40 0 9 * * *', 'every 20 seconds from 9:00 until 9:01 a.m.'],
   ['*/15 0 9 * * *', 'every 15 seconds from 9:00 until 9:01 a.m.']
 ];
 
