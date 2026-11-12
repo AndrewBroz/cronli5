@@ -1,10 +1,13 @@
 import {expectType, expectError, expectAssignable} from 'tsd';
-import cronli5, {Cronli5Options, CronPattern, CronPatternObject} from '..';
-import en from '../types/lang/en/index.js';
+import cronli5, {
+  create, Cronli5, Cronli5AnyStyle, Cronli5Options, CronPattern,
+  CronPatternObject
+} from '..';
+import en, {styles} from '../types/lang/en/index.js';
 
 // The default export is a function returning a string.
 expectType<string>(cronli5('* * * * *'));
-expectType<string>(cronli5('* * * * *', {ampm: false}));
+expectType<string>(cronli5('* * * * *', {style: {hour12: false}}));
 expectType<string>(cronli5(['*/5', '*', '*', '*', '*']));
 expectType<string>(cronli5({minute: '*/5'}));
 expectType<string>(cronli5({second: 0, minute: 30, hour: 9}));
@@ -18,55 +21,68 @@ expectAssignable<CronPatternObject>({hour: 9, weekday: 'MON-FRI'});
 // Options are all optional.
 expectAssignable<Cronli5Options>({});
 expectAssignable<Cronli5Options>({
-  ampm: true,
-  dialect: 'gb',
+  cron: 'quartz',
+  form: 'label',
+  lang: 'en-GB',
   lenient: false,
-  quartz: true,
-  short: false,
+  questionMark: 'allow',
   seconds: false,
+  style: {hour12: false, short: true},
+  weekdaysFrom: 1,
   years: true
 });
 
 // The pattern argument is required.
 expectError(cronli5());
 
-// Unknown option keys are rejected.
+// Unknown option keys are rejected, and so are the options 1.0 removed.
 expectError<Cronli5Options>({nope: true});
+expectError<Cronli5Options>({dialect: 'gb'});
+expectError<Cronli5Options>({ampm: false});
+expectError<Cronli5Options>({sentence: true});
+expectError<Cronli5Options>({quartz: true});
 
-// Unknown dialects are rejected.
-expectError<Cronli5Options>({dialect: 'fr'});
-expectError<Cronli5Options>({dialect: 'uk'});
-expectError<Cronli5Options>({dialect: 'es-MX'});
+// Values outside an option's set are rejected.
+expectError<Cronli5Options>({form: 'title'});
+expectError<Cronli5Options>({cron: 'spring'});
+expectError<Cronli5Options>({weekdaysFrom: 2});
+expectError<Cronli5Options>({questionMark: 'maybe'});
 
-// Named and custom-object dialects are accepted; unknown style fields are
-// rejected.
-expectAssignable<Cronli5Options>({dialect: 'house'});
-expectAssignable<Cronli5Options>({dialect: {through: ' until '}});
+// A style is a partial English table for the default export: named tables
+// and custom fields are accepted, unknown fields rejected.
+expectAssignable<Cronli5Options>({style: styles.house});
+expectAssignable<Cronli5Options>({style: {...styles.gb, hour12: false}});
+expectAssignable<Cronli5Options>({style: {through: ' until '}});
 expectAssignable<Cronli5Options>({
-  dialect: {am: 'am', closeUp: true, ordinals: true, serialComma: false}
+  style: {am: 'am', closeUp: true, ordinals: true, serialComma: false}
 });
-expectError<Cronli5Options>({dialect: {nope: true}});
-expectError<Cronli5Options>({dialect: {hSuffix: true}});
-expectError<Cronli5Options>({dialect: {until: ' until '}});
+expectError<Cronli5Options>({style: {nope: true}});
+expectError<Cronli5Options>({style: {hSuffix: true}});
+expectError<Cronli5Options>({style: {hour12: 'no'}});
 
 // Numbers are not valid patterns.
 expectError(cronli5(42));
 
-// A language module (the shape every `cronli5/lang/<code>` subpath
-// declares) is assignable to the `lang` option.
+// A language is named by code or passed as a module (the shape every
+// `cronli5/lang/<code>` subpath declares).
+expectAssignable<Cronli5Options>({lang: 'uk'});
 expectAssignable<Cronli5Options>({lang: en});
 expectType<string>(cronli5('* * * * *', {lang: en}));
+expectType<string>(en.code);
 
-// The callable export carries `.sentence(...)` and `.fragment(...)` methods,
-// each with the same signature as the plain call: a required pattern, optional
-// options, returning a string.
-expectType<string>(cronli5.sentence('0 0 * * *'));
-expectType<string>(cronli5.sentence('0 0 ? * 2', {quartz: true}));
-expectType<string>(cronli5.sentence(['*/5', '*', '*', '*', '*']));
-expectType<string>(cronli5.fragment('0 0 * * *'));
-expectType<string>(cronli5.fragment('0 9 * * 1', {lang: en}));
-expectType<string>(cronli5.fragment({minute: '*/5'}));
+// The convenience methods are gone.
+expectError(cronli5.sentence('0 0 * * *'));
+expectError(cronli5.fragment('0 0 * * *'));
 
-// The methods require a pattern and reject unknown option keys.
-expectError(cronli5.sentence());
-expectError(cronli5.fragment('* * * * *', {nope: true}));
+// An instance knows the languages it is given; its style is open, since
+// the type cannot know which language a call will name.
+const describe = create({
+  languages: [en],
+  options: {form: 'label'},
+  styles: {en: {hour12: false}}
+});
+
+expectType<Cronli5<Cronli5AnyStyle>>(describe);
+expectType<string>(describe('0 9 * * *', {lang: 'en', style: {short: true}}));
+expectError(create({}));
+expectError(create({languages: [en], options: {style: {hour12: false}}}));

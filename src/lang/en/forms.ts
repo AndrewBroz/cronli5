@@ -18,7 +18,7 @@ function unit(name: UnitName, count: number): string {
  */
 function named<N extends Name>(name: N, long: keyof N, opts: EnglishOptions):
   N[keyof N] {
-  return name[opts.short ? 'short' : long];
+  return name[opts.style.short ? 'short' : long];
 }
 
 export type {UnitName};

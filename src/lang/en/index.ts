@@ -7,7 +7,7 @@ import type {Parts} from './frame.js';
 import {arrange} from './frame.js';
 import {partsOf} from './fusions.js';
 import lexicon from './lexicon.js';
-import {normalize} from './options.js';
+import {regions, style, styles} from './options.js';
 
 const {words} = lexicon;
 
@@ -18,22 +18,32 @@ export function describeParts(schedule: ScheduleFacts, opts: EnglishOptions):
 }
 
 const english: Language<EnglishStyle> = {
+  code: 'en',
+  defaultStyle: 'us',
   describe(schedule, opts) {
     return arrange(describeParts(schedule, opts));
   },
   fallback() {
     return words.unrecognizable;
   },
-  options: normalize,
+  // A description standing alone as a label starts with a capital.
+  label(description) {
+    return description.charAt(0).toUpperCase() + description.slice(1);
+  },
   reboot() {
     return words.startup;
   },
+  regions,
   // One full stop, whether or not the description already ends in one.
   sentence(description) {
     const stop = description.endsWith('.') ? '' : '.';
 
     return `${words.runs} ${description}${stop}`;
-  }
+  },
+  style,
+  styles
 };
 
+export type {EnglishStyle};
+export {styles};
 export default english;

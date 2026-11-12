@@ -406,14 +406,18 @@
     {
       "pattern": "0 9 * * *",
       "opts": {
-        "ampm": true
+        "style": {
+          "hour12": true
+        }
       },
       "why": "12-hour / day-period"
     },
     {
       "pattern": "30 14 * * *",
       "opts": {
-        "ampm": true
+        "style": {
+          "hour12": true
+        }
       },
       "why": "afternoon period"
     },
@@ -430,7 +434,9 @@
     {
       "pattern": "0 9-17 * * *",
       "opts": {
-        "short": true
+        "style": {
+          "short": true
+        }
       },
       "why": "short forms"
     },
@@ -444,9 +450,9 @@
     {
       "pattern": "0 9 * * MON",
       "opts": {
-        "dialect": "gb"
+        "lang": "en-GB"
       },
-      "why": "dialect"
+      "why": "regional style"
     },
     {
       "pattern": "*/24 * * * *",

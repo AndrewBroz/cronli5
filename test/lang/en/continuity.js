@@ -4,6 +4,7 @@ import * as english from '../../../src/lang/en/index.js';
 import {coreSetSeeds, neighborPairs, optionsFor, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
+import {resolve} from '../../../src/options.js';
 
 const {expect} = chai;
 
@@ -40,8 +41,10 @@ const HOUR_MAY_SET_DAY = ['', 'every day'];
 // schedules are compared, so any other difference still fails.
 const TIE = /at midnight and noon(?: every day)?|every 12 hours/u;
 
+const SETUP = {languages: [english.default], options: {}, styles: {}};
+
 function parse(pattern, options) {
-  const opts = english.default.options({...optionsFor(pattern), ...options});
+  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
 
   return {opts, schedule: analyze(prepare(pattern, opts))};
 }

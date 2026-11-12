@@ -108,13 +108,17 @@ const VALUE_CLASSES = [
 // Cell-identical to a pattern already in the set, but rendered differently
 // under an option — so a corpus must test them explicitly.
 const VARIANTS = [
-  {pattern: '0 9 * * *', opts: {ampm: true}, why: '12-hour / day-period'},
-  {pattern: '30 14 * * *', opts: {ampm: true}, why: 'afternoon period'},
+  {pattern: '0 9 * * *', opts: {style: {hour12: true}},
+    why: '12-hour / day-period'},
+  {pattern: '30 14 * * *', opts: {style: {hour12: true}},
+    why: 'afternoon period'},
   {pattern: '15 9 * * *', opts: {}, why: 'quarter-past idiom'},
   {pattern: '45 9 * * *', opts: {}, why: 'three-quarter idiom'},
-  {pattern: '0 9-17 * * *', opts: {short: true}, why: 'short forms'},
+  {pattern: '0 9-17 * * *', opts: {style: {short: true}},
+    why: 'short forms'},
   {pattern: '0 0 1 1 * 2030', opts: {years: true}, why: 'explicit year'},
-  {pattern: '0 9 * * MON', opts: {dialect: 'gb'}, why: 'dialect'},
+  {pattern: '0 9 * * MON', opts: {lang: 'en-GB'},
+    why: 'regional style'},
   {pattern: '*/24 * * * *', opts: {}, why: 'fires-once step collapses'},
   {pattern: '0 0 * * 7', opts: {}, why: 'weekday 7 = Sunday'}
 ];

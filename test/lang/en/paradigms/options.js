@@ -23,7 +23,7 @@ const defaultParts = {
 
 const sets = [
   {
-    options: {ampm: false},
+    options: {style: {hour12: false}},
     rows: [
       {expected: 'at 09:00 every day', parts: ['09:00'], pattern: '0 9 * * *'},
       {expected: 'at 00:00 every day', parts: ['00:00'], pattern: '0 0 * * *'},
@@ -55,7 +55,7 @@ const sets = [
     ]
   },
   {
-    options: {short: true},
+    options: {style: {short: true}},
     rows: [
       {
         expected: 'at 9 a.m. on Mon in Jun',
@@ -85,7 +85,7 @@ const sets = [
     ]
   },
   {
-    options: {dialect: 'gb'},
+    options: {lang: 'en-GB'},
     rows: [
       {expected: 'at 9am every day', parts: ['9am'], pattern: '0 9 * * *'},
       {
@@ -131,7 +131,7 @@ const sets = [
     ]
   },
   {
-    options: {dialect: 'house'},
+    options: {style: {am: 'AM', ordinals: true, pm: 'PM'}},
     rows: [
       {expected: 'at 9 AM every day', parts: ['9 AM'], pattern: '0 9 * * *'},
       {
@@ -152,7 +152,7 @@ const sets = [
     ]
   },
   {
-    options: {ampm: false, dialect: 'gb'},
+    options: {lang: 'en-GB', style: {hour12: false}},
     rows: [
       {
         expected: 'at 09.30 and 17.30 every day',
@@ -172,7 +172,7 @@ const sets = [
     ]
   },
   {
-    options: {dialect: 'gb', short: true},
+    options: {lang: 'en-GB', style: {short: true}},
     rows: [
       {
         expected: 'at midnight on 1 Jun',
@@ -187,7 +187,7 @@ const sets = [
     ]
   },
   {
-    options: {ampm: false, short: true},
+    options: {style: {hour12: false, short: true}},
     rows: [
       {
         expected: 'at 09:00 on Mon in Jun',

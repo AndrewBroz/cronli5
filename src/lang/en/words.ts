@@ -72,7 +72,7 @@ function writeTime(moment: Moment, opts: EnglishOptions):
       return lexicon.twoDigits(part as number);
     });
 
-  if (!opts.ampm) {
+  if (!style.hour12) {
     return {
       meridiem: '',
       text: [lexicon.twoDigits(moment.hour), ...parts].join(style.sep)

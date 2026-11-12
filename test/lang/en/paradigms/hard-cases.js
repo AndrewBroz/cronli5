@@ -19,7 +19,7 @@ const rows = [
   ['30 0 9 1 6 * 2030', 'at 9:00:30 a.m. on June 1, 2030'],
 
   // Quartz forms.
-  ['0 0 1 * ?', 'at midnight on the 1st', {quartz: true}],
+  ['0 0 1 * ?', 'at midnight on the 1st', {cron: 'quartz'}],
   ['0 0 LW * *', 'at midnight on the last weekday of the month'],
   ['0 0 L-3 * *', 'at midnight 3 days before the last day of the month'],
   ['0 0 L 6 *', 'at midnight on the last day of June'],
@@ -38,10 +38,10 @@ const rows = [
   ['@reboot', 'at system startup'],
 
   // The sentence wrapper: one full stop, however the description ends.
-  ['0 9 * * *', 'Runs at 9 a.m. every day.', {sentence: true}],
-  ['0 1/2 * * *', 'Runs every 2 hours from 1 a.m.', {sentence: true}],
-  ['0 */2 * * *', 'Runs every 2 hours.', {sentence: true}],
-  ['@reboot', 'Runs at system startup.', {sentence: true}],
+  ['0 9 * * *', 'Runs at 9 a.m. every day.', {form: 'sentence'}],
+  ['0 1/2 * * *', 'Runs every 2 hours from 1 a.m.', {form: 'sentence'}],
+  ['0 */2 * * *', 'Runs every 2 hours.', {form: 'sentence'}],
+  ['@reboot', 'Runs at system startup.', {form: 'sentence'}],
 
   // A day of the month and a weekday, under a month.
   ['0 0 1 6 5', 'at midnight on June 1 as well as on Fridays in June'],

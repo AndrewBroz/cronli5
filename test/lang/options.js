@@ -19,12 +19,13 @@ const languages = {en};
 // against the same spanning set (still valid patterns, different reading).
 const optionSets = [
   {},
-  {ampm: false},
-  {ampm: true},
+  {style: {hour12: false}},
+  {style: {hour12: true}},
   {seconds: true},
-  {sentence: true},
-  {short: true},
-  {short: true, ampm: true},
+  {form: 'label'},
+  {form: 'sentence'},
+  {style: {short: true}},
+  {style: {hour12: false, short: true}},
   {years: true}
 ];
 
@@ -49,6 +50,8 @@ function degenerate(output) {
 describe('Options × languages smoke:', function() {
   Object.entries(languages).forEach(function eachLanguage([code, lang]) {
     describe(code, function() {
+      const defaults = {style: lang.style(lang.defaultStyle)};
+
       optionSets.forEach(function eachOptions(flags) {
         const label = JSON.stringify(flags);
 
@@ -83,7 +86,7 @@ describe('Options × languages smoke:', function() {
       });
 
       it('lenient invalid input returns exactly the fallback', function() {
-        const fallback = lang.fallback(lang.options());
+        const fallback = lang.fallback(defaults);
 
         expect(cronli5('not cron', {lang, lenient: true}))
           .to.equal(fallback);
@@ -105,7 +108,7 @@ describe('Options × languages smoke:', function() {
         expect(cronli5.bind(null, '30 9 * * *',
           {lang: broken, lenient: true})).to.throw('renderer defect');
         expect(cronli5('not cron', {lang: broken, lenient: true}))
-          .to.equal(lang.fallback(lang.options()));
+          .to.equal(lang.fallback(defaults));
       });
     });
   });

@@ -6,100 +6,52 @@ import en from '../../src/lang/en/index.js';
 // (the CLI's "Runs …." was English-only chrome); the verb leads, the fragment
 // follows, a period closes.
 describe('Complete-sentence wrapping (lang.sentence):', function() {
+  const opts = {style: en.style(en.defaultStyle)};
+
   it('English', function() {
-    expect(en.sentence('every minute', en.options())).to.equal('Runs every minute.');
+    expect(en.sentence('every minute', opts)).to.equal('Runs every minute.');
   });
 
   it('English does not double the period after an abbreviation', function() {
     // A fragment ending in "a.m."/"p.m." already carries a period; the
     // sentence wrapper must not append a second one.
-    expect(en.sentence('at 9 a.m.', en.options()))
+    expect(en.sentence('at 9 a.m.', opts))
       .to.equal('Runs at 9 a.m.');
-    expect(en.sentence('at 5:30 p.m.', en.options()))
+    expect(en.sentence('at 5:30 p.m.', opts))
       .to.equal('Runs at 5:30 p.m.');
   });
 
   it('English still closes a non-abbreviation fragment', function() {
-    expect(en.sentence('at midnight every day', en.options()))
+    expect(en.sentence('at midnight every day', opts))
       .to.equal('Runs at midnight every day.');
   });
 });
 
-// The `sentence` option wraps cronli5's own output: the fragment by default, a
-// complete sentence when set. It wraps a schedule and @reboot, but not the
+// The `form` option wraps cronli5's own output: the fragment by default, a
+// complete sentence when asked. It wraps a schedule and @reboot, but not the
 // lenient fallback (an error string, not a schedule).
-describe('The sentence option:', function() {
+describe('The sentence form:', function() {
   it('returns the fragment by default', function() {
     expect(cronli5('0 0 * * *')).to.equal('at midnight every day');
   });
 
   it('wraps the schedule as a sentence when set', function() {
-    expect(cronli5('0 0 * * *', {sentence: true}))
+    expect(cronli5('0 0 * * *', {form: 'sentence'}))
       .to.equal('Runs at midnight every day.');
   });
 
   it('wraps in the chosen language', function() {
-    expect(cronli5('0 0 * * *', {lang: en, sentence: true}))
+    expect(cronli5('0 0 * * *', {form: 'sentence', lang: en}))
       .to.equal('Runs at midnight every day.');
   });
 
   it('wraps @reboot', function() {
-    expect(cronli5('@reboot', {sentence: true}))
+    expect(cronli5('@reboot', {form: 'sentence'}))
       .to.equal('Runs at system startup.');
   });
 
   it('leaves the lenient fallback unwrapped', function() {
-    expect(cronli5('nonsense', {lenient: true, sentence: true}))
+    expect(cronli5('nonsense', {form: 'sentence', lenient: true}))
       .to.equal('an unrecognizable cron pattern');
-  });
-});
-
-// The callable export carries two named convenience methods that are thin
-// sugar over the `sentence` option: `.sentence(...)` forces the capitalized
-// standalone, `.fragment(...)` forces the embeddable fragment (the default).
-// There is deliberately no `toString` method — it would shadow
-// `Function.prototype.toString` and break `String(cronli5)` coercion.
-describe('The sentence()/fragment() convenience methods:', function() {
-  it('sentence() matches the {sentence: true} call', function() {
-    expect(cronli5.sentence('0 0 * * *'))
-      .to.equal(cronli5('0 0 * * *', {sentence: true}));
-    expect(cronli5.sentence('0 0 * * *'))
-      .to.equal('Runs at midnight every day.');
-  });
-
-  it('fragment() matches the default (no-option) call', function() {
-    expect(cronli5.fragment('0 0 * * *'))
-      .to.equal(cronli5('0 0 * * *'));
-    expect(cronli5.fragment('0 0 * * *')).to.equal('at midnight every day');
-  });
-
-  it('sentence() forwards all options (quartz)', function() {
-    expect(cronli5.sentence('0 0 ? * 2', {quartz: true}))
-      .to.equal(cronli5('0 0 ? * 2', {quartz: true, sentence: true}));
-  });
-
-  it('fragment() forwards all options (lang)', function() {
-    expect(cronli5.fragment('0 9 * * 1', {lang: en}))
-      .to.equal(cronli5('0 9 * * 1', {lang: en}));
-  });
-
-  it('sentence() forwards lang and wraps in that language', function() {
-    expect(cronli5.sentence('0 0 * * *', {lang: en}))
-      .to.equal('Runs at midnight every day.');
-  });
-
-  it('an explicit sentence option is overridden by the method', function() {
-    // The method's own intent wins over a passed-through `sentence` flag.
-    expect(cronli5.fragment('0 0 * * *', {sentence: true}))
-      .to.equal('at midnight every day');
-    expect(cronli5.sentence('0 0 * * *', {sentence: false}))
-      .to.equal('Runs at midnight every day.');
-  });
-
-  it('does not clobber Function.prototype.toString', function() {
-    // `String(fn)` / template coercion call `toString` arg-less; it must
-    // still return the function source, not throw or mis-render.
-    expect(String(cronli5)).to.match(/^function cronli5\b/u);
-    expect(`${cronli5}`).to.match(/^function cronli5\b/u);
   });
 });

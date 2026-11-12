@@ -45,7 +45,7 @@ describe('paradigm grid:', function() {
   it('holds only patterns the core accepts', function() {
     allRows().forEach(function accepted(row) {
       expect(function run() {
-        prepare(row.pattern, {quartz: false, seconds: false, years: false});
+        prepare(row.pattern, {seconds: false, years: false});
       }, row.pattern).to.not.throw();
     });
   });

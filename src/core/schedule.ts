@@ -3,7 +3,6 @@
 // `Schedule`, then a language module renders it to prose. These shapes are
 // what any new language module interacts with. See docs/i18n-design.md.
 
-import type {Cronli5Options} from '../types.js';
 import type {Reading} from './reading.js';
 
 /** A cron field name, in canonical order. */
@@ -134,27 +133,40 @@ export interface ScheduleFacts {
 export type Schedule = ScheduleFacts;
 
 /**
- * Options after a language module's `options()` has normalized them. `Style`
- * is the language's own style table (English's is `EnglishStyle`, in
+ * The options a description is rendered under, after the entry point has
+ * resolved them: how the pattern is read, and the language's style table.
+ * `Style` is the language's own table (English's is `EnglishStyle`, in
  * `lang/en/options.ts`); the core never reads it.
  */
 export interface NormalizedOptions<Style = unknown> extends Reading {
-  ampm: boolean;
   lenient: boolean;
-  short: boolean;
   style: Style;
 }
 
 /** The interface every language module's default export implements. */
 export interface Language<Style = unknown> {
+  // The language's code, as callers name it: `en`, `uk`.
+  code: string;
+  // The key of `styles` used when no region selects another.
+  defaultStyle: string;
   describe(schedule: Schedule, opts: NormalizedOptions<Style>): string;
-  // The lenient-mode fallback description. Options-aware (like `reboot` and
-  // `sentence`) so a dialect that changes whole words flows through the
-  // arguments; a language with one fixed string ignores `opts`.
+  // The lenient-mode fallback description. Options-aware (like `reboot`,
+  // `label` and `sentence`) so a style that changes whole words flows
+  // through the arguments; a language with one fixed string ignores `opts`.
   fallback(opts: NormalizedOptions<Style>): string;
-  options(options?: Cronli5Options): NormalizedOptions<Style>;
+  // A description standing alone as a label, capitalised as the language
+  // capitalises one.
+  label(description: string, opts: NormalizedOptions<Style>): string;
+  // Region codes in upper case, each naming a key of `styles`.
+  regions: {[region: string]: string};
   reboot(opts: NormalizedOptions<Style>): string;
   // Wrap a rendered description into a complete standalone sentence (the CLI
   // form); each language owns its lead verb and punctuation.
   sentence(description: string, opts: NormalizedOptions<Style>): string;
+  // A named table with a caller's overrides applied. Throws
+  // `Cronli5OptionError` for a field the table lacks or a value of the
+  // wrong kind.
+  style(base: string, overrides?: unknown): Style;
+  // The named whole tables.
+  styles: {[name: string]: Readonly<Style>};
 }

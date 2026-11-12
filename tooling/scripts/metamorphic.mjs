@@ -16,12 +16,12 @@
 // report (exits non-zero on any violation); test/core/metamorphic.js gates it.
 
 import {pathToFileURL} from 'node:url';
-import {analyze, prepare} from '../../src/core/index.js';
+import {analyze, prepare, readingOf} from '../../src/core/index.js';
 import cronli5 from '../../src/cronli5.js';
 import en from '../../src/lang/en/index.js';
 
 const LANGS = {en};
-const OPTS = en.options();
+const OPTS = readingOf({});
 
 // [label, cronA, cronB] — A and B denote the SAME schedule; their Schedule must
 // be deep-equal. Each equivalence rule we discover becomes a row, guarded
@@ -93,7 +93,7 @@ function irKey(cron) {
 
 function renderAll(cron) {
   return Object.fromEntries(Object.entries(LANGS).map(function each(entry) {
-    return [entry[0], cronli5(cron, {lang: entry[1], fragment: true})];
+    return [entry[0], cronli5(cron, {lang: entry[1]})];
   }));
 }
 

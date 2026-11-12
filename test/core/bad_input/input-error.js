@@ -40,7 +40,7 @@ describe('Input rejections are Cronli5InputError:', function() {
   });
 
   it('an invalid Quartz weekday throws Cronli5InputError', function() {
-    expect(cronli5.bind(null, '0 0 ? * 8', {quartz: true}))
+    expect(cronli5.bind(null, '0 0 ? * 8', {cron: 'quartz'}))
       .to.throw(Cronli5InputError);
   });
 });

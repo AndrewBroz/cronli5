@@ -3,21 +3,34 @@ import en from '../../src/lang/en/index.js';
 
 const {expect} = chai;
 
-// The Language contract's non-describe members are options-aware: `reboot`,
-// `fallback`, and `sentence` receive the normalized options, so a dialect
-// that changes whole words (zh-Hant) flows through the arguments instead of
-// module state.
+// What every language module declares, so the entry point can find it by
+// code, pick a regional style, and present a description in each form.
 
-describe('Language contract: options-aware reboot/fallback/sentence', function() {
-  const languages = {en};
+describe('Language contract:', function() {
+  const languages = [en];
 
-  Object.entries(languages).forEach(function each([code, lang]) {
-    it(code + ' serves them from the opts it is given', function() {
-      const opts = lang.options();
+  languages.forEach(function each(lang) {
+    describe(lang.code, function() {
+      const opts = {style: lang.style(lang.defaultStyle)};
 
-      expect(lang.reboot(opts)).to.be.a('string').that.is.not.empty;
-      expect(lang.fallback(opts)).to.be.a('string').that.is.not.empty;
-      expect(lang.sentence('x', opts)).to.be.a('string').that.is.not.empty;
+      it('has a lower-case code', function() {
+        expect(lang.code).to.match(/^[a-z]{2,3}$/u);
+      });
+
+      it('has a default style, and every region names a style', function() {
+        expect(lang.styles[lang.defaultStyle]).to.be.an('object');
+        Object.entries(lang.regions).forEach(function region([code, name]) {
+          expect(code, code).to.match(/^[A-Z]{2}$/u);
+          expect(lang.styles[name], name).to.be.an('object');
+        });
+      });
+
+      it('says each form, the startup text and the fallback', function() {
+        expect(lang.reboot(opts)).to.be.a('string').that.is.not.empty;
+        expect(lang.fallback(opts)).to.be.a('string').that.is.not.empty;
+        expect(lang.sentence('x', opts)).to.be.a('string').that.is.not.empty;
+        expect(lang.label('x', opts)).to.be.a('string').that.is.not.empty;
+      });
     });
   });
 });

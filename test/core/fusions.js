@@ -4,7 +4,7 @@ import {analyze, clockTimes, prepare} from '../../src/core/index.js';
 const {expect} = chai;
 
 function times(pattern, limit) {
-  const opts = {quartz: false, seconds: false, years: false};
+  const opts = {seconds: false, years: false};
 
   return clockTimes(analyze(prepare(pattern, opts)), limit);
 }

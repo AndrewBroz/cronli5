@@ -5,19 +5,23 @@
 // itself is caught before any code is written to satisfy it.
 
 import chai from 'chai';
-import cronli5 from '../../src/cronli5.js';
+import {create} from '../../src/cronli5.js';
 import {firesOn, optionsFor} from '../../tooling/scripts/edit-diff.mjs';
 
 const {expect} = chai;
 
 // Register one test per row: the language must say exactly the expected
-// text. A row's third element, and then `options`, are passed to cronli5.
+// text. A row's third element, and then `options`, are the options.
 function checkRows(language, rows, options) {
+  // An instance that knows only this language, so a row's `lang` can name
+  // one of its regions by code.
+  const describeIt = create({languages: [language]});
+
   rows.forEach(function each(row) {
     const [pattern, expected, rowOptions] = row;
 
     it(`${pattern} — ${expected}`, function() {
-      expect(cronli5(pattern, {...rowOptions, ...options, lang: language}))
+      expect(describeIt(pattern, {...rowOptions, ...options}))
         .to.equal(expected);
     });
   });
