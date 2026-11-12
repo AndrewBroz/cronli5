@@ -33,10 +33,14 @@ If a script produces it, the script owns it — never copy/paste its output:
 - README/docs tables, inline `cronli5(...) // 'output'` examples, the
   cRonstrue comparison, and the language status table → `scripts/docs.mjs`
   (run `npm run docs`).
+- The conformance suites (`conformance/<code>.json`: each language's
+  paradigm rows as plain data, for implementations in other programming
+  languages) → `scripts/conformance.mjs` (run `npm run conformance`).
 - The shipped `.d.ts` tree → `tsc` (`npm run types`; the `types/` tree is
   gitignored and built on demand).
 
-`npm run docs -- --check` and the type gates run in CI and reject drift. After
+`npm run docs -- --check`, `npm run conformance -- --check` and the type
+gates run in CI and reject drift. After
 a behavior change, run `npm run docs` and let it rewrite.
 
 ## Enforced conventions (these are lint rules — don't relitigate)
@@ -61,7 +65,9 @@ Each language is described by three hand-written artifacts, in this order:
    out to judge it, plus option sets and hard cases.
 
 The renderer is built from the artifacts by an agent that sees no other
-renderer and no held-out row. It must be rebuildable from them: that is the
+renderer and no held-out row. (A builder's checkout therefore has neither
+`paradigms/held-out.js` nor `conformance/<code>.json`, which contains
+those rows.) It must be rebuildable from them: that is the
 test of whether the artifacts are sufficient.
 
 **Paradigms are hand-written, never produced by running a renderer.** They

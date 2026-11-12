@@ -1,0 +1,2956 @@
+{
+ "language": "en",
+ "rows": [
+  {
+   "expected": "every second from 9:00 a.m. until 9:01 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "every 6 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/6 0 9 * * *"
+  },
+  {
+   "expected": "every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/10 0 9 * * *"
+  },
+  {
+   "expected": "every minute during the 9 a.m. hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "at 9:05 a.m., 9:20 a.m., and 9:45 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 9 * * *"
+  },
+  {
+   "expected": "every 15 minutes during the 9 a.m. hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9 * * *"
+  },
+  {
+   "expected": "at 9 a.m., 9:15 a.m., and 9:45 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,15,45 9 * * *"
+  },
+  {
+   "expected": "every hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "at 9 a.m. and 5 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9,17 * * *"
+  },
+  {
+   "expected": "every hour from 9 a.m. through 5 p.m. and at 10 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "every 2 hours from 1 a.m.",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "at 9 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 1 * *"
+  },
+  {
+   "expected": "at 9 a.m. on the 1st, 10th, and 20th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 1,10,20 * *"
+  },
+  {
+   "expected": "at 9 a.m. on odd-numbered days",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "at 9 a.m. on odd-numbered days except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "at 9 a.m. every day in January",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 1 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in March, June, September, and December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 3,6,9,12 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in January, March, May, July, September, and November",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * */2 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in November through February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "at 9 a.m. on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "at 9 a.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "at 9 a.m. on Tuesdays and Thursdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 2,4"
+  },
+  {
+   "expected": "every second for one minute every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 6 seconds for one minute every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/6 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 10 seconds from 5 through 55 seconds past the minute, every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/10 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every minute from 9 a.m. until 6 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 30 minutes from 9 a.m. through 5:30 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 9-17 * * 1-5"
+  },
+  {
+   "expected": "every minute from 0 through 29 and at 45 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 0, 15, and 45 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,15,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 * * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during the noon hour on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 12 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. and during the 10 p.m. hour on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17,22 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during every other hour from 1 a.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 1/2 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 1 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st, 10th, and 20th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 1,10,20 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered days as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 */2 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered days except the 15th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in January",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 1 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in March, June, September, and December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 3,6,9,12 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in January, March, May, July, September, and November",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * */2 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in November through February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 11-2 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * *"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on Mondays, Wednesdays, and Fridays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 1,3,5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on Tuesdays and Thursdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 2,4"
+  },
+  {
+   "expected": "every second from midnight until 12:01 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0 0 1 * *"
+  },
+  {
+   "expected": "every 6 seconds from midnight until 12:01 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/6 0 0 1 * *"
+  },
+  {
+   "expected": "every 10 seconds from 12:00:05 a.m. through 12:00:55 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/10 0 0 1 * *"
+  },
+  {
+   "expected": "every minute during the midnight hour on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0 1 * *"
+  },
+  {
+   "expected": "at 12:05 a.m., 12:20 a.m., and 12:45 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 0 1 * *"
+  },
+  {
+   "expected": "every 15 minutes during the midnight hour on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 0 1 * *"
+  },
+  {
+   "expected": "at midnight, 12:15 a.m., and 12:45 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,15,45 0 1 * *"
+  },
+  {
+   "expected": "every hour on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 * 1 * *"
+  },
+  {
+   "expected": "at 9 a.m. and 5 p.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9,17 1 * *"
+  },
+  {
+   "expected": "every hour from 9 a.m. through 5 p.m. and at 10 p.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9-17,22 1 * *"
+  },
+  {
+   "expected": "every 2 hours from 1 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 1/2 1 * *"
+  },
+  {
+   "expected": "at midnight every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "at midnight on the 1st, 10th, and 20th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1,10,20 * *"
+  },
+  {
+   "expected": "at midnight on odd-numbered days",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 */2 * *"
+  },
+  {
+   "expected": "at midnight on odd-numbered days except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "at midnight on January 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 1 *"
+  },
+  {
+   "expected": "at midnight on March 1, June 1, September 1, and December 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 3,6,9,12 *"
+  },
+  {
+   "expected": "at midnight on the 1st of every other month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 */2 *"
+  },
+  {
+   "expected": "at midnight on the 1st of each month from November through February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 11-2 *"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 1"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 1-5"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on Tuesdays and Thursdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 2,4"
+  },
+  {
+   "expected": "every second",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "every 6 seconds",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/6 * * * * *"
+  },
+  {
+   "expected": "every 10 seconds from 5 through 55 seconds past the minute",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/10 * * * * *"
+  },
+  {
+   "expected": "at 5, 20, and 45 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 * * * *"
+  },
+  {
+   "expected": "every 15 minutes",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "at 0, 15, and 45 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,15,45 * * * *"
+  },
+  {
+   "expected": "every minute during the midnight hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0 * * *"
+  },
+  {
+   "expected": "every minute during the 9 a.m. and 5 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "every minute from 9 a.m. until 6 p.m. and during the 10 p.m. hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 9-17,22 * * *"
+  },
+  {
+   "expected": "every minute during every other hour from 1 a.m.",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 1/2 * * *"
+  },
+  {
+   "expected": "every minute on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "every minute on the 1st, 10th, and 20th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 1,10,20 * *"
+  },
+  {
+   "expected": "every minute on odd-numbered days",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * */2 * *"
+  },
+  {
+   "expected": "every minute on odd-numbered days except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "every minute in January",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 1 *"
+  },
+  {
+   "expected": "every minute in March, June, September, and December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 3,6,9,12 *"
+  },
+  {
+   "expected": "every minute in January, March, May, July, September, and November",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * */2 *"
+  },
+  {
+   "expected": "every minute in November through February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 11-2 *"
+  },
+  {
+   "expected": "every minute on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 1"
+  },
+  {
+   "expected": "every minute on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 1-5"
+  },
+  {
+   "expected": "every minute on Tuesdays and Thursdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 2,4"
+  },
+  {
+   "expected": "at 9:00:30 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "at 9 a.m. and 9:00:30 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 0 9 * * *"
+  },
+  {
+   "expected": "every 15 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "every second from 9:00:00 a.m. through 9:00:09 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-9 0 9 * * *"
+  },
+  {
+   "expected": "at 9:30 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "at 9 a.m. and 9:30 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 9 * * *"
+  },
+  {
+   "expected": "every minute from 9 a.m. until 9:30 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29 9 * * *"
+  },
+  {
+   "expected": "every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29,45 9 * * *"
+  },
+  {
+   "expected": "every 7 minutes from 0 through 56 minutes past 9 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/7 9 * * *"
+  },
+  {
+   "expected": "at 9:05 a.m., 9:20 a.m., 9:35 a.m., and 9:50 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/15 9 * * *"
+  },
+  {
+   "expected": "at 9:10 a.m., 9:20 a.m., 9:30 a.m., and 9:40 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "10-40/10 9 * * *"
+  },
+  {
+   "expected": "at noon every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "at 8 a.m., noon, and 6 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "every hour from 9 a.m. through 5 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "every 2 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "every 6 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */6 * * *"
+  },
+  {
+   "expected": "every 2 hours except at 8 a.m.",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "every hour from 10 p.m. through 2 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "at 9 a.m. on the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 15 * *"
+  },
+  {
+   "expected": "at 9 a.m. on the 1st and 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 1,15 * *"
+  },
+  {
+   "expected": "at 9 a.m. on the 1st through the 7th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 1-7 * *"
+  },
+  {
+   "expected": "at 9 a.m. on the 1st through the 7th and on the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 1-7,15 * *"
+  },
+  {
+   "expected": "at 9 a.m. on even-numbered days",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 2/2 * *"
+  },
+  {
+   "expected": "at 9 a.m. every 5 days from the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 */5 * *"
+  },
+  {
+   "expected": "at 9 a.m. on the last day of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "at 9 a.m. on the weekday nearest the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "at 9 a.m. every day in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 6 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in January and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 1,7 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in June through August",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in June through August and in December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 6-8,12 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in January, April, July, and October",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * */3 *"
+  },
+  {
+   "expected": "at 9 a.m. every day in every month except December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "at 9 a.m. on Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "at 9 a.m. on Mondays, Wednesdays, and Fridays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "at 9 a.m. on weekends",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "at 9 a.m. Monday through Saturday",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "at 9 a.m. on the last Friday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "at 9 a.m. on the second Monday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "at 30 seconds past the minute, every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 30 seconds for one minute every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 15 seconds for one minute every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every second for the first 10 seconds of the minute, every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-9 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9-17 * * 1-5"
+  },
+  {
+   "expected": "every hour from 9:30 a.m. through 5:30 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "every minute for the first 30 minutes of every hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 7 minutes from 0 through 56 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/7 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 5 through 50 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 10 minutes from 10 through 40 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "10-40/10 9-17 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during the midnight hour on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 0 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during the 9 a.m. hour on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during the 9 a.m. and 5 p.m. hours on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9,17 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during the 8 a.m., noon, and 6 p.m. hours on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 8,12,18 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during every other hour on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 */2 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes for one hour every 6 hours on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 */6 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes during every other hour except the 8 a.m. hour on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from midnight through 2:45 a.m. and from 10 p.m. through 11:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 22-2 * * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the 15th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 15 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st and 15th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 1,15 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st through the 7th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 1-7 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st through the 7th and on the 15th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 1-7,15 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on even-numbered days as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 2/2 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. every 5 days from the 1st as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 */5 * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the last day of the month as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 L * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the weekday nearest the 15th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 15W * 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 6 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in January and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 1,7 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in June through August",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 6-8 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in June through August and in December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 6-8,12 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in January, April, July, and October",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * */3 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays in every month except December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * 1-11 1-5"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 1"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 0"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekends",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 0,6"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. Monday through Saturday",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 1-6"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the last Friday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 5L"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on the second Monday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 9-17 * * 1#2"
+  },
+  {
+   "expected": "at 12:00:30 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0 0 1 * *"
+  },
+  {
+   "expected": "at midnight and 12:00:30 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 0 0 1 * *"
+  },
+  {
+   "expected": "every 15 seconds from midnight until 12:01 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 0 0 1 * *"
+  },
+  {
+   "expected": "every second from midnight through 12:00:09 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-9 0 0 1 * *"
+  },
+  {
+   "expected": "at 12:30 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0 1 * *"
+  },
+  {
+   "expected": "at midnight and 12:30 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 0 1 * *"
+  },
+  {
+   "expected": "every minute from midnight until 12:30 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29 0 1 * *"
+  },
+  {
+   "expected": "every minute from midnight until 12:30 a.m. and at 12:45 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29,45 0 1 * *"
+  },
+  {
+   "expected": "every 7 minutes from 0 through 56 minutes past midnight on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/7 0 1 * *"
+  },
+  {
+   "expected": "at 12:05 a.m., 12:20 a.m., 12:35 a.m., and 12:50 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/15 0 1 * *"
+  },
+  {
+   "expected": "at 12:10 a.m., 12:20 a.m., 12:30 a.m., and 12:40 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "10-40/10 0 1 * *"
+  },
+  {
+   "expected": "at noon on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 12 1 * *"
+  },
+  {
+   "expected": "at 8 a.m., noon, and 6 p.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 8,12,18 1 * *"
+  },
+  {
+   "expected": "every hour from 9 a.m. through 5 p.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9-17 1 * *"
+  },
+  {
+   "expected": "every 2 hours on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */2 1 * *"
+  },
+  {
+   "expected": "every 6 hours on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */6 1 * *"
+  },
+  {
+   "expected": "every 2 hours except at 8 a.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
+  },
+  {
+   "expected": "every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 22-2 1 * *"
+  },
+  {
+   "expected": "at midnight on the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 15 * *"
+  },
+  {
+   "expected": "at midnight on the 1st and 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1,15 * *"
+  },
+  {
+   "expected": "at midnight on the 1st through the 7th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "at midnight on the 1st through the 7th and on the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-7,15 * *"
+  },
+  {
+   "expected": "at midnight on even-numbered days",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 2/2 * *"
+  },
+  {
+   "expected": "at midnight every 5 days from the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 */5 * *"
+  },
+  {
+   "expected": "at midnight on the last day of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "at midnight on the weekday nearest the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "at midnight on June 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "at midnight on January 1 and July 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 1,7 *"
+  },
+  {
+   "expected": "at midnight on the 1st of each month from June through August",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 6-8 *"
+  },
+  {
+   "expected": "at midnight on the 1st of each month from June through August and on December 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 6-8,12 *"
+  },
+  {
+   "expected": "at midnight on January 1, April 1, July 1, and October 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 */3 *"
+  },
+  {
+   "expected": "at midnight on the 1st of every month except December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 1-11 *"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 0"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on Mondays, Wednesdays, and Fridays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 1,3,5"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on weekends",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "at midnight on the 1st as well as Monday through Saturday",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 1-6"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on the last Friday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 5L"
+  },
+  {
+   "expected": "at midnight on the 1st as well as on the second Monday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * 1#2"
+  },
+  {
+   "expected": "at 30 seconds past the minute",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 * * * * *"
+  },
+  {
+   "expected": "every 30 seconds",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 * * * * *"
+  },
+  {
+   "expected": "every 15 seconds",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 * * * * *"
+  },
+  {
+   "expected": "every second for the first 10 seconds of every minute",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-9 * * * * *"
+  },
+  {
+   "expected": "at 30 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "every 30 minutes",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 * * * *"
+  },
+  {
+   "expected": "every minute for the first 30 minutes of every hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29 * * * *"
+  },
+  {
+   "expected": "every minute from 0 through 29 and at 45 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "every 7 minutes from 0 through 56 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/7 * * * *"
+  },
+  {
+   "expected": "every 15 minutes from 5 through 50 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5/15 * * * *"
+  },
+  {
+   "expected": "every 10 minutes from 10 through 40 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "10-40/10 * * * *"
+  },
+  {
+   "expected": "every minute during the noon hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 12 * * *"
+  },
+  {
+   "expected": "every minute during the 8 a.m., noon, and 6 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "every minute from 9 a.m. until 6 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 9-17 * * *"
+  },
+  {
+   "expected": "every minute during every other hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "every minute for one hour every 6 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* */6 * * *"
+  },
+  {
+   "expected": "every minute during every other hour except the 8 a.m. hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "every minute from 10 p.m. until 3 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "every minute on the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 15 * *"
+  },
+  {
+   "expected": "every minute on the 1st and 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 1,15 * *"
+  },
+  {
+   "expected": "every minute on the 1st through the 7th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 1-7 * *"
+  },
+  {
+   "expected": "every minute on the 1st through the 7th and on the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 1-7,15 * *"
+  },
+  {
+   "expected": "every minute on even-numbered days",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 2/2 * *"
+  },
+  {
+   "expected": "every minute every 5 days from the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * */5 * *"
+  },
+  {
+   "expected": "every minute on the last day of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * L * *"
+  },
+  {
+   "expected": "every minute on the weekday nearest the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 15W * *"
+  },
+  {
+   "expected": "every minute in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 6 *"
+  },
+  {
+   "expected": "every minute in January and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 1,7 *"
+  },
+  {
+   "expected": "every minute in June through August",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 6-8 *"
+  },
+  {
+   "expected": "every minute in June through August and in December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 6-8,12 *"
+  },
+  {
+   "expected": "every minute in January, April, July, and October",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * */3 *"
+  },
+  {
+   "expected": "every minute in every month except December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * 1-11 *"
+  },
+  {
+   "expected": "every minute on Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 0"
+  },
+  {
+   "expected": "every minute on Mondays, Wednesdays, and Fridays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 1,3,5"
+  },
+  {
+   "expected": "every minute on weekends",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 0,6"
+  },
+  {
+   "expected": "every minute Monday through Saturday",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 1-6"
+  },
+  {
+   "expected": "every minute on the last Friday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 5L"
+  },
+  {
+   "expected": "every minute on the second Monday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * * * 1#2"
+  },
+  {
+   "expected": "at midnight on January 1, 2030",
+   "options": {
+    "lang": "en",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "at midnight on January 1 in 2030 and 2035",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 1 1 * 2030,2035"
+  },
+  {
+   "expected": "at midnight on January 1 in 2030 through 2035",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2035"
+  },
+  {
+   "expected": "at midnight on January 1 in even-numbered years",
+   "options": {
+    "lang": "en",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * */2"
+  },
+  {
+   "expected": "at 9:00:30 a.m. on June 1, 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0 9 1 6 * 2030"
+  },
+  {
+   "expected": "at midnight on the 1st",
+   "options": {
+    "cron": "quartz",
+    "lang": "en"
+   },
+   "pattern": "0 0 1 * ?"
+  },
+  {
+   "expected": "at midnight on the last weekday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "at midnight 3 days before the last day of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 L-3 * *"
+  },
+  {
+   "expected": "at midnight on the last day of June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 L 6 *"
+  },
+  {
+   "expected": "at midnight on the weekday nearest June 15",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 15W 6 *"
+  },
+  {
+   "expected": "at midnight on the second Monday of June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 * 6 1#2"
+  },
+  {
+   "expected": "at midnight on the last Friday of January and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 * 1,7 5L"
+  },
+  {
+   "expected": "every hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@hourly"
+  },
+  {
+   "expected": "at midnight every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@daily"
+  },
+  {
+   "expected": "at midnight every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@midnight"
+  },
+  {
+   "expected": "at midnight on Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@weekly"
+  },
+  {
+   "expected": "at midnight on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@monthly"
+  },
+  {
+   "expected": "at midnight on January 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@yearly"
+  },
+  {
+   "expected": "at midnight on January 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@annually"
+  },
+  {
+   "expected": "at system startup",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "Runs at 9 a.m. every day.",
+   "options": {
+    "form": "sentence",
+    "lang": "en"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "Runs every 2 hours from 1 a.m.",
+   "options": {
+    "form": "sentence",
+    "lang": "en"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "Runs every 2 hours.",
+   "options": {
+    "form": "sentence",
+    "lang": "en"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "Runs at system startup.",
+   "options": {
+    "form": "sentence",
+    "lang": "en"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "at midnight on June 1 as well as on Fridays in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "at midnight on the 1st and 15th as well as on weekdays, in January and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1,15 1,7 1-5"
+  },
+  {
+   "expected": "every hour from 7:52 a.m. through 4:52 p.m. on the 1st, 19th, 23rd, and 28th as well as on Wednesdays and Thursdays, in May through July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "52 7-16 1,19,23,28 5-7 3-4"
+  },
+  {
+   "expected": "every 30 minutes from midnight through 5:30 p.m. on Tuesdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/30 0-17 * * 2"
+  },
+  {
+   "expected": "at 5, 29, and 39 minutes past the hour from 3 a.m. through 5 a.m. every day in May",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,29,39 3-5 * 5 *"
+  },
+  {
+   "expected": "every minute during the 4 a.m. and 7 a.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 4,7 * * *"
+  },
+  {
+   "expected": "at 9, 14, 47, and 56 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "9,14,47,56 * * * *"
+  },
+  {
+   "expected": "at midnight on June 1 and 15",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1,15 6 *"
+  },
+  {
+   "expected": "at midnight on June 1, 10, and 20",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1,10,20 6 *"
+  },
+  {
+   "expected": "at midnight on June 1 through 7",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "at midnight on June 1 through 7 and on June 15",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-7,15 6 *"
+  },
+  {
+   "expected": "at midnight on odd-numbered days in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "at midnight every 5 days from June 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 */5 6 *"
+  },
+  {
+   "expected": "at midnight on January 1 and March 1",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1 1,3 *"
+  },
+  {
+   "expected": "at 9 a.m. Friday through Monday",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "at 9 a.m. Tuesday through Thursday",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 2-4"
+  },
+  {
+   "expected": "at 9 a.m. on Sundays and Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 0,1"
+  },
+  {
+   "expected": "at 9 a.m. on Fridays and Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 0,5"
+  },
+  {
+   "expected": "at 9 a.m. on Tuesdays, Thursdays, Saturdays, and Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * */2"
+  },
+  {
+   "expected": "at 9 a.m. every day in November through February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "every minute from 10 p.m. until midnight every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "every minute during the 11 p.m. hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 23 * * *"
+  },
+  {
+   "expected": "every 30 minutes during the 9 a.m. and 5 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 9,17 * * *"
+  },
+  {
+   "expected": "at 9:05 a.m., 9:20 a.m., 5:05 p.m., and 5:20 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20 9,17 * * *"
+  },
+  {
+   "expected": "at 5, 20, and 45 minutes past 9 a.m. and 5 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 9,17 * * *"
+  },
+  {
+   "expected": "at 11:05 a.m., 11:20 a.m., and 11:45 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 11 * * *"
+  },
+  {
+   "expected": "every 6 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,6,12,18 * * *"
+  },
+  {
+   "expected": "every 8 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */8 * * *"
+  },
+  {
+   "expected": "every 5 hours from midnight through 8 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */5 * * *"
+  },
+  {
+   "expected": "at 30 minutes past the hour, every 2 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 */2 * * *"
+  },
+  {
+   "expected": "at 30 minutes past the hour, every 5 hours from midnight through 8 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 */5 * * *"
+  },
+  {
+   "expected": "at 15 and 45 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15,45 * * * *"
+  },
+  {
+   "expected": "at 1 minute past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "1 * * * *"
+  },
+  {
+   "expected": "at 12:30 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "at 12:30 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 12 * * *"
+  },
+  {
+   "expected": "at 9:30:15 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "at 9:30:15 a.m. and 5:30:15 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15 30 9,17 * * *"
+  },
+  {
+   "expected": "at 9:30:15 a.m. and 9:30:45 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15,45 30 9 * * *"
+  },
+  {
+   "expected": "every second during the 9 a.m. hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 9 * * *"
+  },
+  {
+   "expected": "every second from 9 a.m. until 6 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* * 9-17 * * *"
+  },
+  {
+   "expected": "at 23 minutes past the hour, every 2 hours from midnight through 8 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "23 0-20/2 * * *"
+  },
+  {
+   "expected": "at 15 and 45 minutes past the hour, every 4 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "at 5 and 20 minutes past the hour, every 2 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20 */2 * * *"
+  },
+  {
+   "expected": "every minute from 5 through 10 and at 20 minutes past the hour, every 2 hours from 9 a.m. through 5 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5-10,20 9-17/2 * * *"
+  },
+  {
+   "expected": "every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. through 7:50 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/10 6-8,17-19 * * 1-5"
+  },
+  {
+   "expected": "every hour from 10 p.m. through 6 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0-6,22,23 * * *"
+  },
+  {
+   "expected": "every 15 minutes from 10 p.m. through 5:45 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 0-5,22-23 * * *"
+  },
+  {
+   "expected": "every 20 minutes during every other hour on odd-numbered days in January, April, July, and October",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/20 */2 */2 */3 *"
+  },
+  {
+   "expected": "at 7 minutes past the hour, every 6 hours from 4 a.m. on the 1st of every other month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "at noon on the 1st through the 5th, on the 10th, and on the 20th through the 25th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 12 1-5,10,20-25 * *"
+  },
+  {
+   "expected": "at 6 a.m. and 6 p.m. on the 1st through the 7th and on the 15th through the 21st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 6,18 1-7,15-21 * *"
+  },
+  {
+   "expected": "every 2 hours from 9 a.m. through 5 p.m. on weekdays in January through June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9-17/2 * 1-6 1-5"
+  },
+  {
+   "expected": "at 6 p.m. on the weekday nearest March 15, June 15, September 15, and December 15",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 18 15W 3,6,9,12 *"
+  },
+  {
+   "expected": "every 30 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours on the 1st and 15th as well as on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 8-18/2 1,15 * 1-5"
+  },
+  {
+   "expected": "every minute during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 8-18/2 * * *"
+  },
+  {
+   "expected": "at 15 and 45 minutes past the hour, every 4 hours on the 1st through the 10th of January, April, July, and October",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15,45 */4 1-10 1,4,7,10 *"
+  },
+  {
+   "expected": "at midnight on Mondays, Wednesdays, Fridays, and Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 * * 1-7/2"
+  },
+  {
+   "expected": "at 9 a.m. on Tuesdays, Wednesdays, Thursdays, and Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 0,2-4"
+  },
+  {
+   "expected": "at 9 a.m. Tuesday through Friday and on Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 0,2-5"
+  },
+  {
+   "expected": "at 4:30 a.m. on the 1st through the 7th as well as on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 4 1-7 * 1"
+  },
+  {
+   "expected": "at 11:59 p.m. on December 31",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "59 23 31 12 *"
+  },
+  {
+   "expected": "at 2 a.m. on February 29",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 2 29 2 *"
+  },
+  {
+   "expected": "at 9:00:05 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5-10/60 0 9 * * *"
+  },
+  {
+   "expected": "at midnight, 1 a.m., 10 p.m., and 11 p.m. on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,1,22,23 * * 1"
+  },
+  {
+   "expected": "at midnight on June 1, 2, 30, and 31",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 30-2 6 *"
+  },
+  {
+   "expected": "at midnight every day in January, February, November, and December in 2030",
+   "options": {
+    "lang": "en",
+    "years": true
+   },
+   "pattern": "0 0 * 11-2 * 2030"
+  },
+  {
+   "expected": "every minute during the 9 a.m. and 5 p.m. hours except at 29 minutes past the hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "every minute during the 9 a.m. hour except at 29 minutes past the hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-28,30-59 9 * * *"
+  },
+  {
+   "expected": "every 10 minutes from 9 a.m. through 5:50 p.m. except at 30 minutes past the hour every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,10,20,40,50 9-17 * * *"
+  },
+  {
+   "expected": "every minute except at 29 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-28,30-59 * * * *"
+  },
+  {
+   "expected": "every second except during the minute at 29 minutes past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "every 15 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "every 15 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., 6 p.m., and 8 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 8-20/2 * * *"
+  },
+  {
+   "expected": "every hour except at 3 a.m.",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "at 30 minutes past every hour except 3 a.m.",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "at 30 seconds past every hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0 * * * *"
+  },
+  {
+   "expected": "every second for the first 10 seconds of every hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-9 0 * * * *"
+  },
+  {
+   "expected": "every minute except at 1 minute past the hour",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,2-59 * * * *"
+  },
+  {
+   "expected": "at 9:30 a.m. and 9:30:30 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,30 30 9 * * *"
+  },
+  {
+   "expected": "every 20 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0,20,40 0 9 * * *"
+  },
+  {
+   "expected": "every 15 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "every second from 9:30:10 a.m. through 9:30:20 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "at 23 minutes past the hour, every 6 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "23 */6 * * *"
+  },
+  {
+   "expected": "at 23 minutes past the hour, every 2 hours from 1 a.m.",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "23 1/2 * * *"
+  },
+  {
+   "expected": "at 12:23 a.m. and 12:23 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "23 */12 * * *"
+  },
+  {
+   "expected": "at 12:23 a.m. and 12:23 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "23 0,12 * * *"
+  },
+  {
+   "expected": "at 1 a.m. and 1 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 1/12 * * *"
+  },
+  {
+   "expected": "every 15 minutes during the midnight and noon hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/15 */12 * * *"
+  },
+  {
+   "expected": "at midnight, 6 a.m., and 6 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,6,18 * * *"
+  },
+  {
+   "expected": "at 9 a.m. on Mondays, Tuesdays, Wednesdays, and Fridays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * * 1,2,3,5"
+  },
+  {
+   "expected": "every 12 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */12 * * *"
+  },
+  {
+   "expected": "every 12 hours",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0/12 * * *"
+  },
+  {
+   "expected": "at midnight and noon every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "every 12 hours on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */12 1 * *"
+  },
+  {
+   "expected": "at 12:00:15 a.m. and 12:00:15 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15 0 */12 * * *"
+  },
+  {
+   "expected": "at midnight and noon on the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,12 1 * *"
+  },
+  {
+   "expected": "at 9 a.m. every day in 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * * 2030"
+  },
+  {
+   "expected": "at 9 a.m. every day in 2028 through 2031",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 9 * * * 2028-2031"
+  },
+  {
+   "expected": "at 9 a.m. every day in every month except December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "every 5 minutes in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/5 * * 6 *"
+  },
+  {
+   "expected": "every 5 minutes in 2030",
+   "options": {
+    "lang": "en",
+    "years": true
+   },
+   "pattern": "*/5 * * * * 2030"
+  },
+  {
+   "expected": "every 6 hours in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */6 * 6 *"
+  },
+  {
+   "expected": "every 2 hours from 1 a.m.",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "at 30 minutes past the hour in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 * * 6 *"
+  },
+  {
+   "expected": "at 9 a.m. on the last day of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "every 10 seconds for one minute at 24 minutes past the hour, every 3 hours on the 23rd through the 25th as well as on Mondays and Tuesdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/10 24 */3 23-25 * 1-2"
+  },
+  {
+   "expected": "every 30 seconds for one minute at 12:23 a.m. and 12:23 p.m. on the second Saturday of June and July every 4 years from 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/30 23 */12 * 6-7 6#2 2030/4"
+  },
+  {
+   "expected": "at 2:35 a.m. and 3:35 p.m. every day in 2028 and 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 35 2,15 * * * 2028,2030"
+  },
+  {
+   "expected": "at 0 and 6 minutes past the hour on Saturdays in March and April every other year from 2033",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0,6 * * 3-4 6 2033/2"
+  },
+  {
+   "expected": "every second for one minute at 30 and 42 minutes past the hour from 3 a.m. through 10 a.m. on Mondays, Wednesdays, Thursdays, and Fridays in July, September, October, and December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 30,42 3-10 * 7,9,10,12 1,3,4,5"
+  },
+  {
+   "expected": "every 30 seconds for one minute every 5 minutes in January through June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/30 */5 * * 1-6 *"
+  },
+  {
+   "expected": "every 5 minutes on October 25 through 29 in 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 */5 * 25-29 10 * 2030"
+  },
+  {
+   "expected": "every 10 minutes from 6 a.m. through 11:50 a.m. 7 days before the last day of January and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/10 6-11 L-7 */6 *"
+  },
+  {
+   "expected": "at 09:00 every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "at 00:00 every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "at 09:30 and 17:30 every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "at 08:00, 12:00, and 18:00 every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "every hour from 09:00 through 17:00 every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "every 15 minutes from 09:00 through 17:45 on weekdays",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 12:00 on Mondays in June",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 12 * 6 1"
+  },
+  {
+   "expected": "at 9 a.m. on Mon in Jun",
+   "options": {
+    "lang": "en",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "at 9 a.m. on Mon, Wed, and Fri",
+   "options": {
+    "lang": "en",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "at 9 a.m. every day in Jun through Aug",
+   "options": {
+    "lang": "en",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "at midnight on Jun 1",
+   "options": {
+    "lang": "en",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 9am every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "at 9.30am and 5.30pm every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "at 8am, midday and 6pm every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "every hour from 9am to 5pm every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "every 15 minutes from 9am to 5.45pm on weekdays",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 9am on Mondays, Wednesdays and Fridays",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "at 9am every day in June to August",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "at midnight on 1 June",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "at midnight on 1 to 7 June",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "at 9 AM every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "am": "AM",
+     "ordinals": true,
+     "pm": "PM"
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "every hour from 9 AM through 5 PM every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "am": "AM",
+     "ordinals": true,
+     "pm": "PM"
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "at midnight on June 1st",
+   "options": {
+    "lang": "en",
+    "style": {
+     "am": "AM",
+     "ordinals": true,
+     "pm": "PM"
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "at midnight on June 1st through 7th",
+   "options": {
+    "lang": "en",
+    "style": {
+     "am": "AM",
+     "ordinals": true,
+     "pm": "PM"
+    }
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "at 09.30 and 17.30 every day",
+   "options": {
+    "lang": "en-GB",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "every hour from 09.00 to 17.00 every day",
+   "options": {
+    "lang": "en-GB",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "at 12.00 on Mondays in June",
+   "options": {
+    "lang": "en-GB",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 12 * 6 1"
+  },
+  {
+   "expected": "at midnight on 1 Jun",
+   "options": {
+    "lang": "en-GB",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "at 9am on Mon, Wed and Fri",
+   "options": {
+    "lang": "en-GB",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "at 09:00 on Mon in Jun",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false,
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "at 12:00 on Mon in Jun",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false,
+     "short": true
+    }
+   },
+   "pattern": "0 12 * 6 1"
+  }
+ ]
+}
