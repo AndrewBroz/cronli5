@@ -22,10 +22,10 @@ From `node --import tsx tooling/scripts/compare-baseline.mjs en`:
 
 | Measure | Old | New |
 | --- | --- | --- |
-| Logical lines (not blank, not comment) | 1,700 | 1,429 |
-| Physical lines | 3,021 | 2,043 |
-| Branches (`if`, ternary, `case`) | 206 | 98 |
-| Short-circuit operators (`&&`, `\|\|`, `??`) | 127 | 72 |
+| Logical lines (not blank, not comment) | 1,700 | 1,483 |
+| Physical lines | 3,021 | 2,124 |
+| Branches (`if`, ternary, `case`) | 206 | 97 |
+| Short-circuit operators (`&&`, `\|\|`, `??`) | 127 | 81 |
 | Equal schedules worded differently | 309 | 0 |
 | Grid, median share of words changed | 50% | 50% |
 | Grid, 90th percentile | 82% | 78% |
@@ -33,8 +33,8 @@ From `node --import tsx tooling/scripts/compare-baseline.mjs en`:
 | One-character edit, 90th percentile | 55% | 50% |
 | Grid rows that throw | 0 | 0 |
 
-The renderer is about a sixth shorter in logical lines and has half the
-decision points. The physical-line figure flatters it: the old renderer
+The renderer is about an eighth shorter in logical lines and has a little
+over half the decision points (178 against 333, counting short-circuits). The physical-line figure flatters it: the old renderer
 carried far more comments.
 
 The core went from 1,807 logical lines to about 1,150, while taking over
@@ -109,6 +109,37 @@ reader: 20 of 20 recovered to exactly the right schedule.
 **An adversarial read is now a standing gate** (design §6.1): of the
 paradigm rows before they are accepted, and of the built renderer.
 
+## A blind ranking by the maintainer
+
+Twenty patterns from a seeded random generator (seed 20261111) were
+rendered by the old English, the new English and cRonstrue, shuffled, and
+ranked blind by the maintainer, ties allowed.
+
+| | New | Old | cRonstrue |
+| --- | --- | --- | --- |
+| Best or tied-best | 16 | 9 | 5 |
+| Sole best | 10 | 2 | 1 |
+| Worst, where not all tied | 1 | 3 | 13 |
+| Mean rank | 1.20 | 1.70 | 2.30 |
+
+Where the new English lost, and what changed:
+
+* A month range repeated on both sides of a union lost to cRonstrue. A
+  longer month phrase is now said once, after both sides.
+* "Past every hour" lost to "past the hour".
+* A shared a.m. lost to a repeated one. Every numbered time now carries
+  its own; sharing is gone entirely.
+* "Every 30 minutes from midnight until 6 p.m." ranked first and was still
+  called wrong: it leaves open whether 6:00 fires. A cadence of minutes in
+  a window now closes on its last run ("through 5:30 p.m."). Seconds keep
+  "until".
+* A few seconds inside named minutes are now clock times ("at midnight and
+  12:00:30 a.m."), as a few minutes inside named hours are.
+
+Twenty patterns and one judge is a small sample, and the generator draws
+only five-field patterns. It was still the most productive gate per
+minute of the whole build: five rule changes from twenty rows.
+
 ## Regeneration
 
 A second agent, and later a third, each built a renderer from the answers,
@@ -159,7 +190,7 @@ and eleven are in the generated comparison page
 
 ## What it cost
 
-Eight build rounds with one builder agent (about 535,000 tokens in its own
+Nine build rounds with one builder agent (about 615,000 tokens in its own
 context), one independent review (about 240,000), two independent regeneration builds (about 270,000 and 260,000),
 two mechanical refactors by subagents (about 157,000 and 251,000), and two
 blind-recovery runs by a cheaper model (about 79,000 for 217 descriptions).
@@ -171,7 +202,7 @@ repairs.
 * A month range repeated on both sides of a day-of-month and weekday union
   is heavy: "…on the 1st and 15th of each month from June through August as
   well as on weekdays from June through August".
-* The renderer's branch budget is 98, its current count.
+* The renderer's branch budget is 97, its current count.
 * `builder-cases.js` holds 29 rows written by the builder and not yet
   reviewed.
 * The fuzz sweep's "missing value" and "dropped minute" heuristics assume
