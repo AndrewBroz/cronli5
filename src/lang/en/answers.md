@@ -186,7 +186,7 @@ Numbers are digits everywhere. The only interval word is "every other"
   for hours 9 to 17. The end is the hour after the last one; after hour 23
   it is "until midnight".
 * A run of minutes inside one named hour is a window of clock times:
-  minutes 0 to 29 of hour 9 are "every minute from 9 until 9:30 a.m."
+  minutes 0 to 29 of hour 9 are "every minute from 9 a.m. until 9:30 a.m."
   (4.1).
 * A run of minutes that starts at 0, under every hour or several hours, is
   "for the first 30 minutes of": "every minute for the first 30 minutes of
