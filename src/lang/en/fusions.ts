@@ -21,7 +21,8 @@ import {
 } from './devices.js';
 import {quartzDateIdioms, quartzWeekdayIdioms} from './idioms.js';
 import lexicon from './lexicon.js';
-import {join, list, timeNames, unit} from './words.js';
+import {unit} from './forms.js';
+import {join, list, timeNames} from './words.js';
 
 // The most clock times a list of them may hold.
 const mostClockTimes = 24;
@@ -86,6 +87,8 @@ interface SecondsLead {
 // What a description of the hours is said with. `riding` is the single
 // second that clock times carry, if there is one.
 interface TimeContext {
+  // Whether two hours that halve the day may be said as a cadence.
+  halves: boolean;
   lead: SecondsLead;
   minute: Tick;
   riding: number | undefined;
@@ -97,6 +100,9 @@ interface TimeContext {
 interface TimePhrase extends Spoken {
   carry: string | null;
   excepts: boolean;
+  // Whether the hours run round the clock, so that no daily rhythm is
+  // there to name.
+  fills: boolean;
   yields: boolean;
 }
 
@@ -321,7 +327,7 @@ function minuteWindow(
     stray: minute.opens ? lead.stray : lead.strayFirst
   }, opts), opts);
 
-  return window && {...window, length: minute.length};
+  return window && {...window, fills: false, length: minute.length};
 }
 
 // Continuous minutes lead and the hours confine them; any other minutes
@@ -360,7 +366,7 @@ function momentsWith(
     return null;
   }
 
-  const at = {minute: minute.only};
+  const at = {minute: minute.only, pair: context.halves};
   const moments = say(hours, hoursAsMoments(at, opts), opts);
   const carrying = say(hours, hoursAsMoments({...at, second: riding}, opts),
     opts);
@@ -412,8 +418,8 @@ function clockList(moments: Moment[], before: string, opts: EnglishOptions):
 
   return moments.length === 0 || moments.length > mostClockTimes ?
     [] :
-    [{carry: null, excepts: false, length: moments.length, text,
-      yields: false}];
+    [{carry: null, excepts: false, fills: false, length: moments.length,
+      text, yields: false}];
 }
 
 // A single minute and a single second, counted together past hours that
@@ -439,13 +445,18 @@ function timesWith(
   times: Moment[],
   opts: EnglishOptions
 ): TimePhrase[] {
-  const {candidates, clockSecond: riding} = facts.analyses;
+  const {candidates, clockSecond: riding, written} = facts.analyses;
+  // Hours 0 and 12 on the hour, to the second, are as easy to take in as
+  // "every 12 hours" as they are as two times, so they are said the way
+  // they were written. Nothing else is decided by how a field was written.
+  const halves = written.hour === 'cadence' && second.only === 0;
 
   if (times.length === 1 && second.description.kind !== 'values') {
     const window = say(second.description, secondsOfOneMinute(times[0], opts),
       opts) as Phrase;
 
-    return [{...window, carry: null, excepts: false, length: 1}];
+    return [{...window, carry: null, excepts: false, fills: false,
+      length: 1}];
   }
 
   const lead = secondsLead(second, typeof riding === 'number');
@@ -455,7 +466,7 @@ function timesWith(
   return [
     ...clockList(times, lead.before, opts),
     ...inTieOrder(candidatesOf(facts, 'hour').flatMap(function sayWith(hours) {
-      return timeWith(hours, {lead, minute, riding}, opts);
+      return timeWith(hours, {halves, lead, minute, riding}, opts);
     }))
   ];
 }
@@ -468,7 +479,7 @@ function timesWith(
  * seconds name and the rest names, with the plain list of clock times to
  * the second, which wins a tie.
  */
-function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
+function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): TimePhrase {
   const {candidates, clockSecond} = facts.analyses;
   const everySecond = `${words.every} ${unit('second', 1)}`;
   const second = tick(candidates.second!, 'second',
@@ -498,8 +509,7 @@ function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
     };
   });
 
-  return shortestSpoken([...clockList(toTheSecond, '', opts), ...others])
-    .text;
+  return shortestSpoken([...clockList(toTheSecond, '', opts), ...others]);
 }
 
 function sayForm<Form>(rows: Array<Idiom<Form>>, form: Form,
@@ -624,6 +634,17 @@ function isFullDate(facts: ScheduleFacts): boolean {
       });
 }
 
+// The year, as what closes a full date in the day part ("on January 1,
+// 2030") or as the part of its own that any other years are.
+function yearOf(facts: ScheduleFacts, opts: EnglishOptions): [string, string] {
+  const year = choose(candidatesOf(facts, 'year'), yearsByNumber(opts), opts);
+  const glue = opts.style.dayFirst ? ' ' : ', ';
+
+  return isFullDate(facts) ?
+    [glue + onlyValue(year.description), ''] :
+    ['', unlessEvery(year)];
+}
+
 /**
  * The time, the day, the month and the year, each as it is said. A day
  * of the month and a day of the week are joined by "as well as". Each
@@ -645,16 +666,17 @@ function partsOf(facts: ScheduleFacts, opts: EnglishOptions): Parts {
   const date = dateWithMonths(facts, beside, opts);
   const weekday = weekdayWithMonths(facts, beside, opts);
   const days = join(date, date && weekday && words.asWellAs, weekday);
-  const year = choose(candidatesOf(facts, 'year'), yearsByNumber(opts), opts);
-  const closing = isFullDate(facts) ?
-    (opts.style.dayFirst ? ' ' : ', ') + onlyValue(year.description) :
-    '';
+  const [closing, year] = yearOf(facts, opts);
+  const time = timeOfDay(facts, opts);
+  // A time of day with no day named skips a level, unless it runs round
+  // the clock.
+  const everyDay = time.fills ? '' : `${words.every} ${unit('day', 1)}`;
 
   return {
-    day: days + (after && ',') + closing,
+    day: (days || everyDay) + (after && ',') + closing,
     month: days ? after : unlessEvery(alone),
-    time: timeOfDay(facts, opts),
-    year: closing ? '' : unlessEvery(year)
+    time: time.text,
+    year
   };
 }
 

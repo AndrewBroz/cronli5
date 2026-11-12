@@ -3,10 +3,9 @@
 
 import type {EnglishOptions} from './options.js';
 import type {Moment} from './idioms.js';
+import {named} from './forms.js';
 import lexicon from './lexicon.js';
 import {momentIdioms} from './idioms.js';
-
-type UnitName = keyof typeof lexicon.units;
 
 const {words} = lexicon;
 
@@ -39,9 +38,9 @@ function span(ends: string[], opts: EnglishOptions): string {
   }).join(' ');
 }
 
-/** A unit after "every" or the number one, or after any other number. */
-function unit(name: UnitName, count: number): string {
-  return lexicon.units[name][count === 1 ? 'one' : 'many'];
+/** The two ends of an inclusive range, without its lead: "A through B". */
+function through(ends: string[], opts: EnglishOptions): string {
+  return ends.join(` ${opts.style.through} `);
 }
 
 /**
@@ -125,7 +124,7 @@ function hourNames(
 
 function monthNames(months: number[], opts: EnglishOptions): string[] {
   return months.map(function nameOf(month) {
-    return lexicon.months[month][opts.short ? 'short' : 'full'];
+    return named(lexicon.months[month], 'full', opts);
   });
 }
 
@@ -205,17 +204,14 @@ function walkWeek(days: number[]): number[] {
 }
 
 /** A recurring weekday ("Mondays") or a single one ("Monday"). */
-function weekdayNames(days: number[], recurring: boolean,
+function weekdayNames(days: number[], form: 'full' | 'plural',
   opts: EnglishOptions): string[] {
-  const form = recurring ? 'plural' : 'full';
-
   return days.map(function nameOf(day) {
-    return lexicon.weekdays[day][opts.short ? 'short' : form];
+    return named(lexicon.weekdays[day], form, opts);
   });
 }
 
-export type {UnitName};
 export {
   dayNames, hourNames, inCycleOrder, join, list, momentAt, monthNames, span,
-  timeNames, unit, walkWeek, weekdayNames, weekRank
+  through, timeNames, walkWeek, weekdayNames, weekRank
 };
