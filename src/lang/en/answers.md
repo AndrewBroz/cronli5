@@ -373,12 +373,12 @@ confinement:
 | any other cadence that runs through the day | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours"; "for one hour every 3 hours from 1 a.m." It names what that cadence names. |
 | a cadence with a named end | the hours as values: "during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours". "For one hour every 2 hours from 8 a.m. through 6 p.m." is misheard as stopping at 6. |
 
+Hours 0 and 12 are "the midnight hour" and "the noon hour".
+
 A single minute counts as nothing in every form, including "at 30 minutes past the hour", so hours 0 to 2 and 4 to 23 are "every hour except at 3
 a.m." at minute 0 and "at 30 minutes past every hour except 3 a.m." at
 minute 30: the same device.
 | except | "except during the 3 a.m. hour"; over every second hour, "during every other hour except the 8 a.m. hour" |
-
-Hours 0 and 12 are "the midnight hour" and "the noon hour".
 
 **M is a single run of minutes and H is one hour.** The time part is a
 window of clock times, closed with "until" at the minute after the last:
@@ -392,12 +392,12 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 
 | H | Noun phrase |
 | --- | --- |
-| every hour | "every hour" |
+| every hour | "the hour" |
 | values | "9 a.m."; "9 a.m. and 5 p.m." |
-| range | "every hour from 9 a.m. through 5 p.m." |
-| pieces | "every hour from 9 a.m. through 5 p.m. and 10 p.m." |
+| range | "the hour from 9 a.m. through 5 p.m." |
+| pieces | "the hour from 9 a.m. through 5 p.m. and at 10 p.m." |
 | any cadence | not a noun phrase. The minute phrase ends "past the hour" (or "of the hour"), then a comma and the cadence as it is said for points: "at 15 and 45 minutes past the hour, every 4 hours"; "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m."; "…past the hour, every 2 hours from 9 a.m. through 5 p.m." |
-| except | "every hour except 3 a.m." |
+| except | "every hour except 3 a.m." (the one place "every hour" follows "past") |
 
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m."
 
@@ -425,7 +425,6 @@ the minute or the second shows that precision on its numbered ends: "from 9:00 a
 exactly on noon or midnight is still said as the word, whatever the
 precision of the other end: "from noon until 12:00:10 p.m."
 
-
 After "past", every hour is "the hour", and a range of hours follows it
 directly: "at 30 minutes past the hour"; "at 5, 20, and 45 minutes past
 the hour from 9 a.m. through 5 p.m."; with pieces, "…past the hour from 7
@@ -444,8 +443,9 @@ back across the list.
 4.2 Seconds.
 
 * S is 0: silent.
-* S is one other second and the time is at most 24 clock times: the second
-  joins each time. "At 9:30:15 a.m."
+* S is one other second, or a few, and the time is clock times: a list of
+  clock times to the second, on the terms given at the end of this answer.
+  "At 9:30:15 a.m."; "at 9 a.m. and 9:00:30 a.m."
 * The time is one clock time, and S is continuous (every second, or a
   tiling cadence from 0): a one-minute window. "Every second from 9:00 a.m. until 9:01 a.m."; "every 6 seconds from midnight until 12:01 a.m." If S
   is a run, the window is to the second: "every second from 9:00:00 a.m. until 9:00:10 a.m." If S is a cadence with both ends named, so are the ends of
@@ -460,8 +460,9 @@ back across the list.
   "of the minute" after "the first N seconds"), a comma, then the rest.
   "At 15 and 45 seconds past the minute, every 15 minutes"; "every second for
   the first 10 seconds of the minute, every 15 minutes". With nothing
-  after it, "every minute" takes the place of "the minute": "at 30 seconds past the minute", "every second for the first 10 seconds of every
-  minute".
+  after it, the same words stand alone: "at 30 seconds past the minute". A
+  portion of the minute says "every minute" when nothing follows: "every
+  second for the first 10 seconds of every minute".
 
 A single second joins a clock time only where the time part, chosen
 without regard to the second, already names clock times: a list of them,

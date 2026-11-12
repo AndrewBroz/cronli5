@@ -251,7 +251,7 @@ cronli5('*/5 * * * *');     // 'every 5 minutes'
 cronli5('0 9 * * MON');     // 'at 9 a.m. on Mondays'
 
 // Lists
-cronli5('5,10,15 * * * * *'); // 'at 5, 10, and 15 seconds past every minute'
+cronli5('5,10,15 * * * * *'); // 'at 5, 10, and 15 seconds past the minute'
 cronli5('0 9,17 * * *');      // 'at 9 a.m. and 5 p.m.'
 cronli5('0 0 1,15 * *');      // 'at midnight on the 1st and 15th'
 cronli5('0 12 * 6,12 *');     // 'at noon in June and December'
@@ -264,8 +264,8 @@ cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m.'
 cronli5('0 0 * * FRI-MON'); // 'at midnight Friday through Monday'
 
 // Compound patterns
-cronli5('0,30 9 * * *');   // 'at 9 and 9:30 a.m.'
-cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. until 6 p.m.'
+cronli5('0,30 9 * * *');   // 'at 9 a.m. and 9:30 a.m.'
+cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m.'
 cronli5('30 9-17 * * *');
 // 'every hour from 9:30 a.m. through 5:30 p.m.'
 cronli5('0 12 1 1 *');     // 'at noon on January 1'
@@ -290,7 +290,7 @@ pattern — `5,10 30 9 * * MON` — in every language:
 <!-- BEGIN GENERATED: cronstrue-head-to-head -->
 | Language | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
-| English | at 5 and 10 seconds past the minute, at 9:30 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| English | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for

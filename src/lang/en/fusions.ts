@@ -3,12 +3,12 @@
 // day of the week, with its month, and with its year.
 
 import type {
-  ClockTime, Field, ScheduleFacts, SetDescription
+  Field, ScheduleFacts, SetDescription
 } from '../../core/schedule.js';
 import type {Spoken} from '../../core/select.js';
 import type {EnglishOptions} from './options.js';
 import type {Choice, Phrase} from './devices.js';
-import type {Idiom} from './idioms.js';
+import type {Idiom, Moment} from './idioms.js';
 import type {Parts} from './frame.js';
 import {denote, describeSet} from '../../core/describe-set.js';
 import {clockTimes} from '../../core/fusions.js';
@@ -37,6 +37,9 @@ const coarser: {[field in Field]?: Field[]} = {
   month: ['year']
 };
 
+// The unit each of these fields is counted within.
+const within = {minute: 'hour', second: 'minute'} as const;
+
 // How the seconds or the minutes of a time are said.
 interface Tick {
   // A cadence with no gaps to name: every value, or "every 15 minutes".
@@ -54,6 +57,12 @@ interface Tick {
   // 30 minutes of") and not a count past it.
   portion: boolean;
   text: string;
+  // The last run of a cadence that needs no bounds, for a window around
+  // it to close on.
+  close: {minute: number} | null;
+  // The phrase when nothing coarser is restricted: "at 30 minutes past
+  // the hour", "for the first 30 minutes of every hour".
+  whole: string;
 }
 
 // What the seconds contribute to the rest of the time.
@@ -61,8 +70,10 @@ interface SecondsLead {
   // The words that go before a time part that does not begin "every
   // minute".
   before: string;
-  // The words that take the place of "every minute", and of "every hour".
+  // The words that take the place of "every minute", of "every minute"
+  // when nothing else is said of the time, and of "every hour".
   every: string;
+  everyAlone: string;
   everyHour: string;
   // The words that introduce so many minutes taken out by an exception.
   exceptAt(count: number): string;
@@ -130,40 +141,47 @@ function isPortion(description: SetDescription, field: Field): boolean {
 }
 
 // Minutes or seconds that are not continuous, up to the word that ties
-// them to what follows. A run from the start is "for the first N minutes
-// of", a run to the end "for the last N minutes of", and anything else is
-// counted "minutes past", the unit agreeing with the `last` number said.
+// them to what follows, and the article the next unit takes when every
+// one of them is meant. A run from the start is "for the first N minutes
+// of every hour", a run to the end "for the last N minutes of", and
+// anything else is counted "minutes past the hour", the unit agreeing
+// with the `last` number said.
 function anchored(
   said: string,
   about: {description: SetDescription; everyOne: string; last: number},
   field: 'minute' | 'second'
-): string {
+): [string, string] {
   const {description} = about;
   const {max, min} = domainOf(field);
 
   if (description.kind !== 'range' || !isPortion(description, field)) {
-    return join(said, unit(field, about.last), words.past);
+    return [join(said, unit(field, about.last), words.past), words.the];
   }
 
   const which = description.from === min ?
     `${words.first} ${description.to - min + 1}` :
     `${words.last} ${max - description.from + 1}`;
 
-  return `${about.everyOne} ${words.for} ${words.the} ${which} ` +
-    `${unit(field, 0)} ${words.of}`;
+  return [
+    `${about.everyOne} ${words.for} ${words.the} ${which} ` +
+      `${unit(field, 0)} ${words.of}`,
+    words.every
+  ];
 }
 
 // How the seconds or the minutes are said: the phrase naming the fewest
-// things, settled before anything coarser is considered. `everyOne` is
-// what every value of the field is said as: "every second", and "every
+// things, settled before anything coarser is considered. `every.one` is
+// what every value of the field is said as, and `every.alone` what it is
+// said as when nothing coarser is restricted: "every second", and "every
 // minute" unless finer seconds take its place. An exception is split
 // into its base, said here, and the values it takes out, said last.
 function tick(
   candidates: SetDescription[],
   field: 'minute' | 'second',
-  everyOne: string,
+  every: {alone: string; one: string},
   opts: EnglishOptions
 ): Tick {
+  const everyOne = every.one;
   const chosen = choose(candidates,
     withinTheHour(field, {everyOne, heard: []}, opts), opts);
   const {base, removed} = chosen.description.kind === 'except' ?
@@ -176,8 +194,14 @@ function tick(
     base.kind === 'cadence' && said.length === 1;
   const only = onlyValue(base);
   const last = heard[heard.length - 1];
+  const [text, article] = continuous ?
+    [said.text, ''] :
+    anchored(said.text, {description: base, everyOne, last}, field);
 
   return {
+    close: continuous && base.kind === 'cadence' ?
+      {minute: base.last} :
+      null,
     continuous,
     description: base,
     excepted: removed,
@@ -187,9 +211,10 @@ function tick(
     only,
     opens: opensWithEvery(base, field),
     portion: isPortion(base, field),
-    text: continuous ?
-      said.text :
-      anchored(said.text, {description: base, everyOne, last}, field)
+    text,
+    whole: chosen.description.kind === 'all' ?
+      every.alone :
+      join(text, article, article && unit(within[field], 1))
   };
 }
 
@@ -202,10 +227,9 @@ function exceptions(
   exceptAt: string,
   opts: EnglishOptions
 ): string[] {
-  const within = field === 'minute' ? 'hour' : 'minute';
   const clause = join(exceptAt, list(excepted.map(String), opts),
     unit(field, excepted[excepted.length - 1]), words.past, words.the,
-    unit(within, 1));
+    unit(within[field], 1));
 
   return excepted.length === 0 ? [] : [clause];
 }
@@ -236,6 +260,7 @@ function secondsLead(second: Tick, rides: boolean): SecondsLead {
     return {
       before: '',
       every: everyMinute,
+      everyAlone: everyMinute,
       everyHour,
       exceptAt,
       stray: '',
@@ -249,6 +274,7 @@ function secondsLead(second: Tick, rides: boolean): SecondsLead {
     return {
       before,
       every: second.text,
+      everyAlone: second.whole,
       everyHour: `${before} ${everyHour}`,
       // Under "every second" a minute taken out is a whole minute.
       exceptAt(count) {
@@ -266,6 +292,7 @@ function secondsLead(second: Tick, rides: boolean): SecondsLead {
   return {
     before,
     every: `${second.text} ${everyMinute}`,
+    everyAlone: second.whole,
     everyHour: `${second.text} ${everyHour}`,
     exceptAt,
     stray,
@@ -307,14 +334,15 @@ function minutesWith(
   const {lead, minute} = context;
   const rest = say(hours,
     minute.continuous ?
-      hoursAsStretches(opts) :
+      hoursAsStretches(minute.close, opts) :
       hoursAsNouns(minute.portion, opts),
     opts);
 
   return rest && {
     ...rest,
     length: minute.length + rest.length,
-    text: join(minute.opens ? '' : lead.before, minute.text, rest.text)
+    text: join(minute.opens ? '' : lead.before,
+      hours.kind === 'all' ? minute.whole : join(minute.text, rest.text))
   };
 }
 
@@ -375,76 +403,103 @@ function timeWith(
   });
 }
 
-// The plain list of clock times, when there are few enough to list.
-function clockList(
-  times: ClockTime[] | null,
-  lead: SecondsLead,
-  opts: EnglishOptions
-): TimePhrase[] {
-  if (!times) {
-    return [];
-  }
+// A list of clock times, when there are any and few enough to list.
+// `before` is what the seconds say in front of it.
+function clockList(moments: Moment[], before: string, opts: EnglishOptions):
+  TimePhrase[] {
+  const text = join(before, words.at,
+    list(timeNames(moments, opts), opts));
 
-  const bare = times.map(function withoutSecond(time) {
-    return {hour: time.hour, minute: time.minute};
-  });
-
-  return [{
-    carry: `${words.at} ${list(timeNames(times, opts), opts)}`,
-    excepts: false,
-    length: times.length,
-    text: join(lead.before, words.at, list(timeNames(bare, opts), opts)),
-    yields: false
-  }];
+  return moments.length === 0 || moments.length > mostClockTimes ?
+    [] :
+    [{carry: null, excepts: false, length: moments.length, text,
+      yields: false}];
 }
 
 // A single minute and a single second, counted together past hours that
 // have no moment to carry them: "at 30 minutes and 15 seconds past".
 function withSecond(minute: Tick, riding: number | undefined): Tick {
+  const both = join(words.at, String(minute.only),
+    unit('minute', minute.only ?? 0), words.and, String(riding),
+    unit('second', riding ?? 0), words.past);
+  const everyHour = `${words.every} ${unit('hour', 1)}`;
+
   return typeof riding === 'number' && minute.only !== null ?
-    {
-      ...minute,
-      opens: true,
-      text: `${words.at} ${minute.only} ${unit('minute', minute.only)} ` +
-        `${words.and} ${riding} ${unit('second', riding)} ${words.past}`
-    } :
+    {...minute, opens: true, text: both, whole: `${both} ${everyHour}`} :
     minute;
 }
 
-/**
- * The time of day. Within a single clock time, seconds that are not a
- * plain list are a window of it. Otherwise the minutes, already settled,
- * are said with each description of the hours, and the results compete
- * with the plain list of clock times, which wins a tie. A single second
- * does not affect the choice: it rides on the clock times of the chosen
- * phrase if it names any, and is otherwise said in front of it. An
- * exception to the seconds closes the whole.
- */
-function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
+// The ways of saying the time that are built on the seconds: a window
+// of one clock time when the seconds are not a plain list, and otherwise
+// the minutes, already settled, with each description of the hours, and
+// the list of clock times to the minute.
+function timesWith(
+  facts: ScheduleFacts,
+  second: Tick,
+  times: Moment[],
+  opts: EnglishOptions
+): TimePhrase[] {
   const {candidates, clockSecond: riding} = facts.analyses;
-  const rides = typeof riding === 'number';
-  const everySecond = `${words.every} ${unit('second', 1)}`;
-  const second = tick(candidates.second!, 'second', everySecond, opts);
-  const tail = exceptions(second.excepted, 'second',
-    `${words.except} ${words.at}`, opts);
-  const times = clockTimes(facts, mostClockTimes);
 
-  if (times?.length === 1 && second.description.kind !== 'values') {
-    return closedBy((say(second.description,
-      secondsOfOneMinute(times[0], opts), opts) as Phrase).text, false, tail);
+  if (times.length === 1 && second.description.kind !== 'values') {
+    const window = say(second.description, secondsOfOneMinute(times[0], opts),
+      opts) as Phrase;
+
+    return [{...window, carry: null, excepts: false, length: 1}];
   }
 
-  const lead = secondsLead(second, rides);
-  const minute = withSecond(
-    tick(candidates.minute!, 'minute', lead.every, opts), riding);
-  const others = candidatesOf(facts, 'hour').flatMap(function sayWith(hours) {
-    return timeWith(hours, {lead, minute, riding}, opts);
-  });
-  const best = shortestSpoken(
-    [...clockList(times, lead, opts), ...inTieOrder(others)]);
+  const lead = secondsLead(second, typeof riding === 'number');
+  const minute = withSecond(tick(candidates.minute!, 'minute',
+    {alone: lead.everyAlone, one: lead.every}, opts), riding);
 
-  return closedBy(rides && best.carry ? best.carry : best.text, best.excepts,
-    tail);
+  return [
+    ...clockList(times, lead.before, opts),
+    ...inTieOrder(candidatesOf(facts, 'hour').flatMap(function sayWith(hours) {
+      return timeWith(hours, {lead, minute, riding}, opts);
+    }))
+  ];
+}
+
+/**
+ * The time of day. The seconds, already settled, are said with the
+ * minutes and hours in each way those can be said, a single second
+ * riding on the clock times of a phrase that names any; an exception to
+ * the seconds closes the phrase. These compete, on the things the
+ * seconds name and the rest names, with the plain list of clock times to
+ * the second, which wins a tie.
+ */
+function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
+  const {candidates, clockSecond} = facts.analyses;
+  const everySecond = `${words.every} ${unit('second', 1)}`;
+  const second = tick(candidates.second!, 'second',
+    {alone: everySecond, one: everySecond}, opts);
+  const tail = exceptions(second.excepted, 'second',
+    `${words.except} ${words.at}`, opts);
+  const seconds = denote(candidates.second![0], domainOf('second'));
+  const times = (clockTimes(facts, mostClockTimes) || [])
+    .map(function toTheMinute(time) {
+      return {hour: time.hour, minute: time.minute};
+    });
+  const toTheSecond = times.flatMap(function eachSecond(time) {
+    // A time that falls on the minute is written without its seconds.
+    return seconds.map(function at(value) {
+      return {...time, ...value > 0 && {second: value}};
+    });
+  });
+  const others = timesWith(facts, second, times, opts).map(function whole(
+    said
+  ) {
+    const carried = typeof clockSecond === 'number' && said.carry;
+
+    return {
+      ...said,
+      length: second.length + said.length,
+      text: closedBy(carried || said.text, said.excepts, tail)
+    };
+  });
+
+  return shortestSpoken([...clockList(toTheSecond, '', opts), ...others])
+    .text;
 }
 
 function sayForm<Form>(rows: Array<Idiom<Form>>, form: Form,
@@ -514,9 +569,12 @@ function daysWithMonths(
 // The day-of-month part with its months. A Quartz form is an idiom
 // followed by its months, except the weekday nearest a day, which is
 // followed by that day said as any day of the month is.
-function dateWithMonths(facts: ScheduleFacts, opts: EnglishOptions): string {
+function dateWithMonths(
+  facts: ScheduleFacts,
+  months: SetDescription[],
+  opts: EnglishOptions
+): string {
   const {day} = facts.analyses;
-  const months = candidatesOf(facts, 'month');
 
   if (day.date?.kind !== 'quartz') {
     return daysWithMonths(candidatesOf(facts, 'date'), months, words.on,
@@ -534,10 +592,12 @@ function dateWithMonths(facts: ScheduleFacts, opts: EnglishOptions): string {
 
 // The day-of-week part with its months: "on Fridays in June", "on the
 // last Friday of June".
-function weekdayWithMonths(facts: ScheduleFacts, opts: EnglishOptions):
-  string {
+function weekdayWithMonths(
+  facts: ScheduleFacts,
+  months: SetDescription[],
+  opts: EnglishOptions
+): string {
   const {candidates, day} = facts.analyses;
-  const months = candidatesOf(facts, 'month');
 
   if (day.weekday?.kind === 'quartz') {
     return ofTheMonth(sayForm(quartzWeekdayIdioms, day.weekday.form, opts),
@@ -566,25 +626,33 @@ function isFullDate(facts: ScheduleFacts): boolean {
 
 /**
  * The time, the day, the month and the year, each as it is said. A day
- * of the month and a day of the week are joined by "as well as", and
- * each carries the months, so the month has its own part only when
- * neither kind of day is restricted. The year of a full date closes the
- * day part ("on January 1, 2030"); any other years follow "in".
+ * of the month and a day of the week are joined by "as well as". Each
+ * takes the months into its phrase, so the month has its own part only
+ * when neither kind of day is restricted, or when both are and the month
+ * phrase is longer than one month: then it is said once after the two,
+ * set off by a comma that closes the day part. The year of a full date
+ * closes the day part ("on January 1, 2030"); any other years follow
+ * "in".
  */
 function partsOf(facts: ScheduleFacts, opts: EnglishOptions): Parts {
-  const date = dateWithMonths(facts, opts);
-  const weekday = weekdayWithMonths(facts, opts);
+  const months = candidatesOf(facts, 'month');
+  const alone = choose(months, monthsAlone(opts), opts);
+  const after = facts.analyses.day.union &&
+    onlyValue(alone.description) === null ?
+    unlessEvery(alone) :
+    '';
+  const beside: SetDescription[] = after ? [{kind: 'all'}] : months;
+  const date = dateWithMonths(facts, beside, opts);
+  const weekday = weekdayWithMonths(facts, beside, opts);
   const days = join(date, date && weekday && words.asWellAs, weekday);
-  const months = choose(candidatesOf(facts, 'month'), monthsAlone(opts),
-    opts);
   const year = choose(candidatesOf(facts, 'year'), yearsByNumber(opts), opts);
   const closing = isFullDate(facts) ?
     (opts.style.dayFirst ? ' ' : ', ') + onlyValue(year.description) :
     '';
 
   return {
-    day: days + closing,
-    month: days ? '' : unlessEvery(months),
+    day: days + (after && ',') + closing,
+    month: days ? after : unlessEvery(alone),
     time: timeOfDay(facts, opts),
     year: closing ? '' : unlessEvery(year)
   };
