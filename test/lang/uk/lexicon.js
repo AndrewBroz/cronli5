@@ -32,7 +32,8 @@ describe('Ukrainian lexicon:', function() {
   it('has each unit in the forms a cadence takes', function() {
     expect(lexicon.units.minute).to.include(
       {few: 'хвилини', many: 'хвилин', one: 'хвилину'});
-    expect(lexicon.units.day.every.one).to.equal('кожен');
+    expect(lexicon.units.day).to.include(
+      {few: 'дні', many: 'днів', one: 'день'});
   });
 
   it('holds words only', function() {

@@ -117,23 +117,21 @@ const weekdays: WeekdayName[] = [
   }
 ];
 
-// Each unit after «кожні» (by category), and in the genitive after
-// «протягом перших» or «останніх» (one against the rest).
+// Each unit after «кожні» and a number (by the number's category:
+// «кожні 21 хвилину», «кожні 2 хвилини», «кожні 5 хвилин»), and in the
+// genitive after «протягом перших» or «останніх» (one against the rest).
 const units = {
   day: {
-    every: {few: 'кожні', many: 'кожні', one: 'кожен'},
     few: 'дні',
     many: 'днів',
     one: 'день'
   },
   hour: {
-    every: {few: 'кожні', many: 'кожні', one: 'кожну'},
     few: 'години',
     many: 'годин',
     one: 'годину'
   },
   minute: {
-    every: {few: 'кожні', many: 'кожні', one: 'кожну'},
     few: 'хвилини',
     genitiveOne: 'хвилини',
     genitiveRest: 'хвилин',
@@ -143,7 +141,6 @@ const units = {
     one: 'хвилину'
   },
   second: {
-    every: {few: 'кожні', many: 'кожні', one: 'кожну'},
     few: 'секунди',
     genitiveOne: 'секунди',
     genitiveRest: 'секунд',
@@ -171,8 +168,6 @@ const dayParts = [
 
 // The function words and fixed phrases.
 const words = {
-  after: 'після',
-  allMonths: 'усі місяці',
   also: 'а також',
   and: 'та',
   andPiece: 'і',
@@ -181,13 +176,17 @@ const words = {
   before: 'до',
   beforeLastDay: 'до останнього дня місяця',
   daysOfMonth: 'числа',
+  eachEvenHour: 'кожної парної години',
   eachHour: 'кожної години',
   eachMinute: 'кожної хвилини',
+  eachMonth: 'кожного місяця',
+  eachOddHour: 'кожної непарної години',
   evenDays: 'по парних числах',
-  evenYears: 'у парні роки',
+  evenYears: 'парні роки',
   everyDay: 'щодня',
   everyHour: 'щогодини',
   everyMinute: 'щохвилини',
+  every: 'кожні',
   everyMonth: 'щомісяця',
   everyNthYear: 'кожного',
   everyOtherMonth: 'кожного другого місяця',
@@ -195,9 +194,9 @@ const words = {
   except: 'крім',
   first: 'перших',
   firstOne: 'першої',
-  forAnHour: 'протягом години',
   forAMinute: 'протягом хвилини',
   from: 'з',
+  hoursBeginning: 'години з початком о',
   fromCalendar: 'від',
   in: 'у',
   inAfterVowel: 'в',
@@ -211,8 +210,10 @@ const words = {
   midnight: 'опівночі',
   nearest: 'найближчий до',
   oddDays: 'по непарних числах',
-  oddYears: 'у непарні роки',
+  oddYears: 'непарні роки',
   ofMonth: 'місяця',
+  penultimateDay: 'передостанній день',
+  minuteOf: 'хвилини',
   on: 'на',
   onDays: 'по',
   otherYear: 'другого року',
