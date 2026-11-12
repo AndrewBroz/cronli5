@@ -112,6 +112,10 @@ export interface Analyses {
   // A single non-zero second, which a clock time can carry ("9:00:15").
   clockSecond: number | undefined;
   day: DayFacts;
+  // The kind of description each field was written as (`*/12` is a
+  // cadence, `0,12` values), `null` for a Quartz form. A language may use
+  // it only to choose between phrasings it judges equally easy.
+  written: Record<Field, SetDescription['kind'] | null>;
 }
 
 /**

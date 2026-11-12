@@ -76,22 +76,42 @@ function fieldCandidates(
   return describeSet(fires, domain);
 }
 
+// The kind of description a field's spelling corresponds to. A list is
+// values when every item is a single value, and pieces otherwise.
+const writtenAs: Record<Shape, SetDescription['kind'] | null> = {
+  list: 'values',
+  quartz: null,
+  range: 'range',
+  single: 'values',
+  step: 'cadence',
+  wildcard: 'all'
+};
+
+function fieldWritten(value: string, shape: Shape) {
+  const mixed = shape === 'list' && (/[-/]/u).test(value);
+
+  return mixed ? 'pieces' : writtenAs[shape];
+}
+
 // Analyze a prepared (parsed, validated, normalized) cron pattern into the
 // Schedule a language module renders from.
 function analyze(pattern: Pattern): Schedule {
   const shapes = {} as Shapes;
   const candidates = {} as Analyses['candidates'];
+  const written = {} as Analyses['written'];
 
   fieldOrder.forEach(function classify(field) {
     shapes[field] = fieldShape(pattern[field], field);
     candidates[field] = fieldCandidates(pattern[field], shapes[field], field);
+    written[field] = fieldWritten(pattern[field], shapes[field]);
   });
 
   return {
     analyses: {
       candidates,
       clockSecond: clockSecond(candidates.second),
-      day: dayFacts(pattern, shapes, candidates)
+      day: dayFacts(pattern, shapes, candidates),
+      written
     },
     pattern,
     shapes

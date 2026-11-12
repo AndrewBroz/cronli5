@@ -106,5 +106,24 @@ describe('Core analyze:', function() {
       expect(ir('*/15 30 9 * * *', {seconds: true}).analyses.clockSecond)
         .to.be.an('undefined');
     });
+
+    it('says which description each field was written as', function() {
+      expect(ir('0 */12 * * *').analyses.written.hour).to.equal('cadence');
+      expect(ir('0 0,12 * * *').analyses.written.hour).to.equal('values');
+      expect(ir('0 9 * * *').analyses.written.hour).to.equal('values');
+      expect(ir('0 9-17 * * *').analyses.written.hour).to.equal('range');
+      expect(ir('0 9-12,15 * * *').analyses.written.hour).to.equal('pieces');
+      expect(ir('0 * * * *').analyses.written.hour).to.equal('all');
+      expect(ir('0 0 L * *').analyses.written.date).to.equal(null);
+    });
+
+    it('differs between equal schedules only in what was written',
+      function() {
+        const step = ir('0 */12 * * *').analyses;
+        const list = ir('0 0,12 * * *').analyses;
+
+        expect(step.candidates).to.deep.equal(list.candidates);
+        expect(step.written).to.not.deep.equal(list.written);
+      });
   });
 });
