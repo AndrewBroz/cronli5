@@ -182,6 +182,10 @@ a cadence that stops before the day ends ("every 5 hours from midnight
 through 8 p.m. every day"), named hours as a confinement. A named day of
 either kind, or a Quartz form, replaces it.
 
+A cadence of years brings the day with it too, whatever the hours, because
+it hangs on the day (5.8): "every 5 minutes every day of every 4th year
+from 2028".
+
 This is the one place a time field changes another part: an edit to the
 hours may add or remove "every day". No other field's words depend on it.
 
@@ -658,8 +662,9 @@ description comparable with the pattern.
 5.5 Interval words. A cadence uses a digit: "every 2 hours", "every 15
 minutes", "every 5 days from the 1st". The only interval word is "every
 other", and it appears in exactly three phrases: "during every other hour"
-(4.1's confinement table), "of every other month" (4.4) and "every other
-year from 2033" (5.8). There is no
+(4.1's confinement table), "of every other month" (4.4) and "of every other
+year from 2033" (5.8). That last phrase is also the one place an interval
+is an ordinal: "of every 4th year from 2028". There is no
 "every third" or "every sixth", and after "past" an hour cadence is never
 a noun phrase (4.1).
 
@@ -682,9 +687,37 @@ month by name, "of June"; several in the forms of 4.4's last bullet).
 "in 2030 and 2035"; a range is "in 2030 through 2035". A single year
 with a single date is 4.4's full date.
 
-A cadence of years names its start: "every 4 years from 1970". Every
-second year is "every other year from 2033", unless it is the even or odd
-years above.
+A cadence of years hangs on what comes before it with "of", as "of every
+other month" does, and names its start. Every second year is "of every
+other year from 2033"; a longer interval is an ordinal, "of every 4th year
+from 2028"; one that stops early names its end, "of every other year from
+2030 through 2040". ("Every day of every 4 years" is not English, and a
+bare "every day every other year" runs two rhythms together.) The even
+and odd years above keep their own words.
+
+* "at 9 a.m. every day of every other year from 2030"
+* "at midnight on January 1 of every 4th year from 2028"
+* "at 9 a.m. every day in June of every other year from 2030"
+* "at 9 a.m. on Mondays of every other year from 2030"
+* "on the last day of the month of every 4th year from 2028"
+
+"Of" needs a day to hang on. So when the year is said this way and neither
+day field is restricted, the day part says "every day" whatever the hours
+are (2.5): "every 5 minutes every day of every 4th year from 2028".
+
+One month and one year are said together, as one day, one month and one
+year are a full date: where a single month's phrase stands alone ("in
+June") or closes a Quartz form ("of June"), a single year follows the
+month's name directly.
+
+* "at 9 a.m. every day in June 2030"
+* "at 9 a.m. on Mondays in June 2030"
+* "at 9 a.m. on the last day of June 2030"
+
+Anything else keeps "in" before the year: several months ("in June and
+July in 2030"), several years ("in June in 2030 and 2031"), a month said
+inside a date ("on June 1 and 15 in 2030"), and a day of the month beside
+a weekday, where the month is said on each side.
 
 ## 6. Words
 

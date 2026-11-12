@@ -249,12 +249,12 @@ const rows = [
     'hours on the 23rd through the 25th as well as on Mondays and Tuesdays'],
   ['*/30 23 */12 * 6-7 6#2 2030/4',
     'every 30 seconds for one minute at 12:23 a.m. and 12:23 p.m. on the ' +
-    'second Saturday of June and July every 4 years from 2030'],
+    'second Saturday of June and July of every 4th year from 2030'],
   ['0 35 2,15 * * * 2028,2030',
     'at 2:35 a.m. and 3:35 p.m. every day in 2028 and 2030'],
   ['0 0,6 * * 3-4 6 2033/2',
     'at 0 and 6 minutes past the hour on Saturdays in March and April ' +
-    'every other year from 2033'],
+    'of every other year from 2033'],
   ['* 30,42 3-10 * 7,9,10,12 1,3,4,5',
     'every second for one minute at 30 and 42 minutes past the hour from 3 ' +
     'a.m. through 10 a.m. on Mondays, Wednesdays, Thursdays, and Fridays ' +
@@ -266,7 +266,41 @@ const rows = [
     'every 5 minutes on October 25 through 29 in 2030'],
   ['*/10 6-11 L-7 */6 *',
     'every 10 minutes from 6 a.m. through 11:50 a.m. 7 days before the ' +
-    'last day of January and July']
+    'last day of January and July'],
+
+  // A cadence of years hangs on the day with "of", so it always has a
+  // day to hang on; every second year is "every other", and beyond that
+  // the interval is an ordinal.
+  ['0 0 9 * * * 2030/2', 'at 9 a.m. every day of every other year from 2030'],
+  ['0 0 9 * * * 2030/3', 'at 9 a.m. every day of every 3rd year from 2030'],
+  ['0 0 9 * * * 2028/4', 'at 9 a.m. every day of every 4th year from 2028'],
+  ['0 0 9 * * * 2030-2040/2',
+    'at 9 a.m. every day of every other year from 2030 through 2040'],
+  ['0 0 0 1 1 * 2028/4',
+    'at midnight on January 1 of every 4th year from 2028'],
+  ['0 0 9 * 6 * 2030/2',
+    'at 9 a.m. every day in June of every other year from 2030'],
+  ['0 0 9 * * 1 2030/2', 'at 9 a.m. on Mondays of every other year from 2030'],
+  ['0 0 9 L * * 2028/4',
+    'at 9 a.m. on the last day of the month of every 4th year from 2028'],
+  ['0 */5 * * * * 2028/4',
+    'every 5 minutes every day of every 4th year from 2028'],
+  ['0 */5 * * 6 * 2028/4',
+    'every 5 minutes every day in June of every 4th year from 2028'],
+  ['0 0 9 * * * */2', 'at 9 a.m. every day in even-numbered years'],
+  ['0 */5 * * * * */2', 'every 5 minutes in even-numbered years'],
+
+  // One month and one year are said together, as a full date is.
+  ['0 0 9 * 6 * 2030', 'at 9 a.m. every day in June 2030'],
+  ['0 0 9 * 6 1 2030', 'at 9 a.m. on Mondays in June 2030'],
+  ['0 0 9 L 6 * 2030', 'at 9 a.m. on the last day of June 2030'],
+  ['0 0 9 * 6 1#2 2030', 'at 9 a.m. on the second Monday of June 2030'],
+  ['0 */5 * * 6 * 2030', 'every 5 minutes in June 2030'],
+  ['0 0 9 * 6,7 * 2030', 'at 9 a.m. every day in June and July in 2030'],
+  ['0 0 9 * 6-8 * 2030', 'at 9 a.m. every day in June through August in 2030'],
+  ['0 0 9 * 6 * 2030,2031', 'at 9 a.m. every day in June in 2030 and 2031'],
+  ['0 0 9 * 6 * 2030-2032', 'at 9 a.m. every day in June in 2030 through 2032'],
+  ['0 0 9 1,15 6 * 2030', 'at 9 a.m. on June 1 and 15 in 2030']
 ];
 
 export {rows};
