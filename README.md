@@ -68,7 +68,9 @@ Browser (script tag) via a CDN:
 ```
 
 When included in a script tag, the `cronli5` function will be available as a
-global in the scripts that follow.
+global in the scripts that follow. What the module exports by name rides on
+it: `cronli5.create`, `cronli5.Cronli5OptionError`, and the built-in
+languages with their styles (`cronli5.languages.en.styles.house`).
 
 ## Usage
 

@@ -73,6 +73,12 @@ describe('Reading a pattern:', function() {
     throwsInput('0 0 ? * ?', {questionMark: 'require'});
   });
 
+  it('reads a macro the same whatever the weekday numbering', function() {
+    same('@weekly', {weekdaysFrom: 1}, '0 0 * * 0', {});
+    same('@weekly', {cron: 'quartz'}, '@weekly', {});
+    same('  @daily ', {cron: 'quartz'}, '0 0 * * *', {});
+  });
+
   it('reads a Quartz pattern as today', function() {
     same('0 0 ? * 2', {cron: 'quartz'}, '0 0 * * 1', {});
     same('0 0 * * 2', {cron: 'quartz'}, '0 0 * * 1', {});

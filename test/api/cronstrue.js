@@ -37,6 +37,28 @@ describe('The cRonstrue adapter:', function() {
       .to.equal('At 9 a.m. every day');
   });
 
+  it('reads a switch as cRonstrue does: anything falsy is off', function() {
+    expect(cronstrue.toString('0 9 * * 2', {dayOfWeekStartIndexZero: 0}))
+      .to.equal('At 9 a.m. on Mondays');
+    expect(cronstrue.toString('0 9 * * 2', {dayOfWeekStartIndexZero: null}))
+      .to.equal('At 9 a.m. on Mondays');
+    expect(cronstrue.toString('nonsense', {throwExceptionOnParseError: 0}))
+      .to.equal('an unrecognizable cron pattern');
+    expect(cronstrue.toString('30 17 * * *', {use24HourTimeFormat: 1}))
+      .to.equal('At 17:30 every day');
+  });
+
+  it('refuses a locale that is not a code', function() {
+    [42, {}, ['en'], true].forEach(function each(locale) {
+      refuses({locale}, /locale/u);
+    });
+  });
+
+  it('describes a macro under either weekday numbering', function() {
+    expect(cronstrue.toString('@weekly', {dayOfWeekStartIndexZero: false}))
+      .to.equal('At midnight on Sundays');
+  });
+
   it('throws on a bad pattern unless told not to, as cRonstrue does',
     function() {
       expect(function strict() {

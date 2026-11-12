@@ -53,7 +53,8 @@ const us: EnglishStyle = {
  * The named English styles, each a whole table: pass one as `style`, or
  * spread one and change the fields a house differs on.
  */
-const styles: {[name: string]: Readonly<EnglishStyle>} = {
+const styles: Readonly<Record<'gb' | 'house' | 'us', Readonly<EnglishStyle>>> =
+Object.freeze({
   // The Guardian style guide.
   gb: Object.freeze({
     ...us,
@@ -68,7 +69,7 @@ const styles: {[name: string]: Readonly<EnglishStyle>} = {
   }),
   house: Object.freeze({...us, am: 'AM', ordinals: true, pm: 'PM'}),
   us: Object.freeze(us)
-};
+});
 
 /** The region codes English knows, and the style each one selects. */
 const regions: {[region: string]: string} = {GB: 'gb', US: 'us'};
@@ -81,7 +82,8 @@ const fields = Object.keys(us).sort();
 // refused anything that is not a table.) The range word may come padded
 // with the spaces it is set between; the sentence supplies those.
 function style(base: string, overrides?: unknown): EnglishStyle {
-  const table: {[field: string]: unknown} = {...styles[base]};
+  const named: {[name: string]: Readonly<EnglishStyle>} = styles;
+  const table: {[field: string]: unknown} = {...named[base]};
 
   Object.entries({...overrides as object}).forEach(
     function apply([field, value]) {

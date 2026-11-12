@@ -80,6 +80,16 @@ describe('Built package artifacts:', function() {
       expect(esm.create).to.be.a('function');
     });
 
+  it('the list of shipped codes matches the languages in the tree',
+    async function() {
+      const {shipped} = await import('../../src/languages.js');
+
+      expect([...shipped].sort()).to.deep.equal(
+        readdirSync('src/lang').filter(function has(code) {
+          return existsSync(`src/lang/${code}/status.json`);
+        }).sort());
+    });
+
   it('the every-language entry lists every shipped language', function() {
     const source = readFileSync('src/all.ts', 'utf8');
 
@@ -99,6 +109,67 @@ describe('Built package artifacts:', function() {
       .to.equal('At 17:30 every day');
     expect(esm.toString('0 9 ? * 1')).to.equal('At 9 a.m. on Mondays');
   });
+
+  it('an option error is one class, whichever build threw it',
+    async function() {
+      const main = await import('../../dist/cronli5.js');
+      const all = await import('../../dist/all.js');
+      const adapter = await import('../../dist/cronstrue.js');
+      const en = (await import('../../dist/lang/en.js')).default;
+      const cjs = require('../../dist/cronli5.cjs');
+      const throwers = [
+        function fromLanguage() {
+          main.default('0 9 * * *', {lang: en, style: {bogus: 1}});
+        },
+        function fromAll() {
+          all.default('0 9 * * *', {form: 'title'});
+        },
+        function fromAdapter() {
+          adapter.toString('0 9 * * *', {verbose: true});
+        },
+        function fromCommonJs() {
+          cjs('0 9 * * *', {form: 'title'});
+        }
+      ];
+
+      throwers.forEach(function each(thrower) {
+        [main, all, adapter, cjs].forEach(function caught(build) {
+          expect(thrower, thrower.name).to.throw(build.Cronli5OptionError);
+          expect(thrower, thrower.name)
+            .to.not.throw(build.Cronli5InputError);
+        });
+      });
+      expect(function bad() {
+        all.default('nonsense');
+      }).to.throw(main.Cronli5InputError);
+      expect(new Error('other')).to.not.be.instanceOf(main.Cronli5OptionError);
+    });
+
+  it('a CommonJS language or adapter build can be written as JSON',
+    function() {
+      expect(function write() {
+        JSON.stringify(require('../../dist/lang/en.cjs'));
+        JSON.stringify(require('../../dist/cronstrue.cjs'));
+      }).to.not.throw();
+      expect(require('../../dist/lang/en.cjs').describeParts)
+        .to.be.an('undefined');
+    });
+
+  it('the browser global carries create, the errors and the styles',
+    function() {
+      const sandbox = {};
+
+      // eslint-disable-next-line no-new-func
+      new Function('globalThis', readFileSync('cronli5.min.js', 'utf8'))(
+        sandbox);
+
+      expect(sandbox.cronli5('0 9 * * *')).to.equal('at 9 a.m. every day');
+      expect(sandbox.cronli5.create).to.be.a('function');
+      expect(sandbox.cronli5.Cronli5OptionError).to.be.a('function');
+      expect(sandbox.cronli5('0 9 * * *',
+        {style: sandbox.cronli5.languages.en.styles.house}))
+        .to.equal('at 9 AM every day');
+    });
 
   it('a language build carries its named styles', async function() {
     const cjs = require('../../dist/lang/en.cjs');

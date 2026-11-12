@@ -26,6 +26,12 @@ export interface Row {
   ): void;
 }
 
+// cRonstrue reads its switches by truthiness, and these two are on unless
+// given: anything falsy but `undefined` turns one off.
+function switchedOff(value: unknown): boolean {
+  return typeof value !== 'undefined' && !value;
+}
+
 // An option cronli5 cannot honour is refused once it is switched on; its
 // off value is what cronli5 does anyway.
 function refused(option: string, why: string): Row {
@@ -48,6 +54,11 @@ const table: Row[] = [
       if (typeof value === 'string') {
         into.lang = value.replace('_', '-');
       }
+      else if (typeof value !== 'undefined' && value !== null) {
+        throw new Cronli5OptionError(
+          '`locale` is a language code such as \'en\', not ' +
+          `${JSON.stringify(value)}.`);
+      }
     },
     becomes: '`lang`',
     note: '`pt_BR` becomes `pt-BR`. A language cronli5 does not ship is ' +
@@ -66,21 +77,21 @@ const table: Row[] = [
   },
   {
     translate(value, into) {
-      if (value === false) {
+      if (switchedOff(value)) {
         into.lenient = true;
       }
     },
-    becomes: '`lenient: true` when `false`',
+    becomes: '`lenient: true` when off',
     note: 'cronli5 returns its fallback text, not the parser\'s message.',
     option: 'throwExceptionOnParseError'
   },
   {
     translate(value, into) {
-      if (value === false) {
+      if (switchedOff(value)) {
         into.weekdaysFrom = 1;
       }
     },
-    becomes: '`weekdaysFrom: 1` when `false`',
+    becomes: '`weekdaysFrom: 1` when off',
     note: '1 is Sunday through 7 for Saturday.',
     option: 'dayOfWeekStartIndexZero'
   },

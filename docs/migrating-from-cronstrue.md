@@ -76,8 +76,8 @@ error** that says so. It never quietly ignores an option:
 | --- | --- | --- |
 | `locale` | `lang` | `pt_BR` becomes `pt-BR`. A language cronli5 does not ship is an error; cRonstrue answers in English. |
 | `use24HourTimeFormat` | `style: {hour12: false}` | 24-hour times are zero-padded (`09:00`). |
-| `throwExceptionOnParseError` | `lenient: true` when `false` | cronli5 returns its fallback text, not the parser's message. |
-| `dayOfWeekStartIndexZero` | `weekdaysFrom: 1` when `false` | 1 is Sunday through 7 for Saturday. |
+| `throwExceptionOnParseError` | `lenient: true` when off | cronli5 returns its fallback text, not the parser's message. |
+| `dayOfWeekStartIndexZero` | `weekdaysFrom: 1` when off | 1 is Sunday through 7 for Saturday. |
 | `trimHoursLeadingZero` | accepted | cronli5's 12-hour times never have a leading zero. Refused together with `use24HourTimeFormat`, whose times always do. |
 | `verbose` | refused | cronli5 says "every day" where it helps and is otherwise brief. |
 | `monthStartIndexZero` | refused | cronli5 always reads 1 as January. |

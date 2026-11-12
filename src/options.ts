@@ -6,6 +6,7 @@
 import {Cronli5OptionError} from './core/errors.js';
 import type {Language, NormalizedOptions} from './core/schedule.js';
 import {readingOf} from './core/reading.js';
+import {shipped} from './languages.js';
 
 /** How a description is presented. */
 export type Form = 'fragment' | 'label' | 'sentence';
@@ -43,6 +44,36 @@ const removed: {[option: string]: string} = {
   short: 'use `style: {short: true}`'
 };
 
+// A table of named values a caller wrote: an object literal or the like,
+// not an array, a Map, a Date or a function.
+function isTable(value: unknown): value is Options {
+  const prototype: unknown = typeof value === 'object' && value !== null ?
+    Reflect.getPrototypeOf(value) :
+    0;
+
+  return prototype === Object.prototype || prototype === null;
+}
+
+// The entries a caller gave. An option given as `undefined` was not given:
+// `{lang: user.locale}` must not erase a default when the user has none.
+function given(value: unknown, what: string): Options {
+  if (typeof value === 'undefined' || value === null) {
+    return {};
+  }
+
+  if (!isTable(value)) {
+    throw new Cronli5OptionError(
+      `${what} is a table such as {form: 'label'}, not ` +
+      `${JSON.stringify(value) ?? typeof value}.`);
+  }
+
+  return Object.fromEntries(Object.entries(value).filter(
+    function present(entry) {
+      return typeof entry[1] !== 'undefined';
+    }
+  ));
+}
+
 // Reject any option this version does not have.
 function checkNames(options: Options, names: string[], what: string): void {
   Object.keys(options).forEach(function check(name) {
@@ -64,11 +95,52 @@ function notATable(what: string): Cronli5OptionError {
     '{hour12: false}; a language exports its named tables as `styles`.');
 }
 
-function unavailable(code: string): Cronli5OptionError {
+function notALanguage(what: string): Cronli5OptionError {
   return new Cronli5OptionError(
-    `cronli5 has no language '${code}' here. Import it (import ${code} ` +
-    `from 'cronli5/lang/${code}') and pass it as \`lang\`, give it to ` +
-    'create({languages}), or import from \'cronli5/all\'.');
+    `${what} a language module: the default export of ` +
+    '\'cronli5/lang/<code>\' (import en from \'cronli5/lang/en\').');
+}
+
+function notACode(what: string): Cronli5OptionError {
+  return new Cronli5OptionError(
+    `${what} is a language code such as 'en' or 'en-GB'.`);
+}
+
+// A language the instance cannot describe in: one it was not given, or
+// one cronli5 does not have at all. Only the first can be fixed by an
+// import.
+function unavailable(code: string, setup: Setup): Cronli5OptionError {
+  const here = setup.languages.map(function named(language) {
+    return language.code;
+  }).join(', ');
+
+  return new Cronli5OptionError(shipped.includes(code) ?
+    `This instance does not have the language '${code}' (it has: ${here}). ` +
+    `Import it (import ${code} from 'cronli5/lang/${code}') and pass it as ` +
+    '`lang`, give it to create({languages}), or import from ' +
+    '\'cronli5/all\'.' :
+    `cronli5 does not ship '${code}'. It ships: ${shipped.join(', ')}. ` +
+    `This instance has: ${here}.`);
+}
+
+function isLanguage(value: unknown): value is Language {
+  const candidate = value as Partial<Language> | null;
+
+  return typeof candidate === 'object' && candidate !== null &&
+    typeof candidate.code === 'string' &&
+    typeof candidate.style === 'function' &&
+    typeof candidate.describe === 'function';
+}
+
+// A language code and its region, or nothing if the text is not shaped
+// like a code.
+function codeOf(text: unknown): {code: string; region: string} | null {
+  const parts = typeof text === 'string' &&
+    (/^([a-z]{2,3})(?:[-_]([a-z0-9]+))?(?:[-_][a-z0-9]+)*$/iu).exec(text);
+
+  return parts ?
+    {code: parts[1].toLowerCase(), region: (parts[2] ?? '').toUpperCase()} :
+    null;
 }
 
 // The language a `lang` option selects and the named style it starts
@@ -84,40 +156,41 @@ function languageFor(setup: Setup, lang: unknown):
   }
 
   if (typeof lang === 'object' && lang !== null) {
-    const language = lang as Language;
+    if (!isLanguage(lang)) {
+      throw notALanguage('`lang`, when it is not a code, is');
+    }
 
-    return {base: language.defaultStyle, language};
+    return {base: lang.defaultStyle, language: lang};
   }
 
-  if (typeof lang !== 'string' || !lang) {
-    throw new Cronli5OptionError(
-      '`lang` is a language code such as \'en\' or \'en-GB\', or an ' +
-      'imported language module.');
+  const named = codeOf(lang);
+
+  if (!named) {
+    throw notACode('`lang`');
   }
 
-  const [code, region = ''] = lang.toLowerCase().split(/[-_]/u);
-  const language = setup.languages.find(function named(candidate) {
-    return candidate.code === code;
+  const language = setup.languages.find(function match(candidate) {
+    return candidate.code === named.code;
   });
 
   if (!language) {
-    throw unavailable(code);
+    throw unavailable(named.code, setup);
   }
 
   return {
-    base: language.regions[region.toUpperCase()] ?? language.defaultStyle,
+    base: language.regions[named.region] ?? language.defaultStyle,
     language
   };
 }
 
 // A caller's options resolved against an instance's setup.
-function resolve(setup: Setup, given?: unknown): Resolved {
-  const call: Options = {...given as object};
+function resolve(setup: Setup, options?: unknown): Resolved {
+  const call = given(options, 'The options argument');
 
   checkNames(call, known, 'an option');
 
-  const options = {...setup.options, ...call};
-  const {form = 'fragment', lenient = false} = options;
+  const merged = {...setup.options, ...call};
+  const {form = 'fragment', lenient = false} = merged;
 
   if (!forms.includes(form)) {
     throw new Cronli5OptionError(
@@ -129,11 +202,11 @@ function resolve(setup: Setup, given?: unknown): Resolved {
     throw new Cronli5OptionError('`lenient` is true or false.');
   }
 
-  if (typeof (call.style ?? {}) !== 'object') {
+  if (Object.hasOwn(call, 'style') && !isTable(call.style)) {
     throw notATable('`style`');
   }
 
-  const {base, language} = languageFor(setup, options.lang);
+  const {base, language} = languageFor(setup, merged.lang);
   // A call's style overrides the instance's for the same language.
   const overrides = {
     ...setup.styles[language.code] as object,
@@ -144,7 +217,7 @@ function resolve(setup: Setup, given?: unknown): Resolved {
     form: form as Form,
     language,
     opts: {
-      ...readingOf(options),
+      ...readingOf(merged),
       lenient,
       style: language.style(base, overrides)
     }
@@ -152,20 +225,21 @@ function resolve(setup: Setup, given?: unknown): Resolved {
 }
 
 // An instance's setup, checked once when the instance is made.
-function setupOf(given: unknown): Setup {
-  const raw: Options = {...given as object};
+function setupOf(setup: unknown): Setup {
+  const raw = given(setup, 'What `create` is given');
 
   checkNames(raw, ['languages', 'options', 'styles'], 'part of a setup');
 
-  const languages = (raw.languages ?? []) as Language[];
-  const options: Options = {...raw.options as object};
-  const styles: Options = {...raw.styles as object};
-
-  if (!Array.isArray(languages) || !languages.length) {
-    throw new Cronli5OptionError(
-      '`languages` is the list of language modules the instance knows, ' +
-      'and needs at least one.');
+  if (!Array.isArray(raw.languages) || !raw.languages.length ||
+      !raw.languages.every(isLanguage)) {
+    throw notALanguage(
+      '`languages` is a list of at least one language module, each');
   }
+
+  // The instance keeps its own list: the caller's array may change later.
+  const languages: Language[] = [...raw.languages];
+  const options = given(raw.options, '`options`');
+  const styles = given(raw.styles, '`styles`');
 
   languages.forEach(function unique(language, index) {
     const first = languages.findIndex(function same(other) {
@@ -183,29 +257,33 @@ function setupOf(given: unknown): Setup {
   }), 'a default option (a default style goes in `styles`, by language ' +
     'code)');
 
+  const made = {languages, options, styles};
+
   Object.keys(styles).forEach(function check(code) {
-    const language = languages.find(function named(candidate) {
+    const language = languages.find(function match(candidate) {
       return candidate.code === code;
     });
 
-    if (!language) {
-      throw unavailable(code);
+    if (!codeOf(code) || codeOf(code)?.region) {
+      throw notACode(`A key of \`styles\` (${JSON.stringify(code)})`);
     }
 
-    if (typeof styles[code] !== 'object') {
+    if (!language) {
+      throw unavailable(code, made);
+    }
+
+    if (!isTable(styles[code])) {
       throw notATable(`\`styles.${code}\``);
     }
 
     language.style(language.defaultStyle, styles[code]);
   });
 
-  const setup = {languages, options, styles};
-
   // Resolving the defaults once reports a bad default when the instance
   // is made, not at its first call.
-  resolve(setup);
+  resolve(made);
 
-  return setup;
+  return made;
 }
 
 export {resolve, setupOf};

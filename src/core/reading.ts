@@ -61,7 +61,9 @@ function quoted(values: unknown[]): string {
 
 /** The reading a caller's options select: a flavour, then explicit flags. */
 function readingOf(options: ReadingOptions): Reading {
-  const name = options.cron ?? 'standard';
+  const name = typeof options.cron === 'undefined' ?
+    'standard' :
+    options.cron;
 
   if (typeof name !== 'string' || !Object.hasOwn(flavours, name)) {
     throw new Cronli5OptionError(

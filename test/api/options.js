@@ -59,10 +59,10 @@ describe('The options:', function() {
         .to.equal('at 9.30am every day');
     });
 
-    it('rejects a language it does not have, saying how to get it',
+    it('rejects a language it does not have, saying what it does have',
       function() {
-        throwsOption({lang: 'uk'}, /cronli5\/lang\/uk/u);
-        throwsOption({lang: 'uk', lenient: true}, /cronli5\/all/u);
+        throwsOption({lang: 'uk'}, /does not ship 'uk'/u);
+        throwsOption({lang: 'uk', lenient: true}, /ships: en/u);
         throwsOption({lang: ''}, /lang/u);
         throwsOption({lang: 5}, /lang/u);
       });

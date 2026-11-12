@@ -19,7 +19,12 @@ import {validateCronPattern} from './validate.js';
 function prepare(cronPattern: CronPattern, opts: Partial<Reading>): Pattern {
   const pattern = parseCronPattern(cronPattern, opts);
 
-  applyReading(pattern, opts);
+  // A macro is written in no scheduler's numbering: `@weekly` is Sunday
+  // whatever number the caller's patterns use for it.
+  const macro = typeof cronPattern === 'string' &&
+    cronPattern.trim().startsWith('@');
+
+  applyReading(pattern, macro ? {...opts, weekdaysFrom: 0} : opts);
   applyQuartzAliases(pattern);
   validateCronPattern(pattern);
 

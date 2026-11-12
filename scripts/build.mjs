@@ -12,11 +12,18 @@ const shared = {
 };
 
 // The footer makes `require()` return the default export directly rather
-// than `{ default }`, with the named exports carried on it as properties.
+// than `{ default }`, with the other named exports carried on it as
+// properties (`require('cronli5').create`).
 const unwrapDefault = {
-  js: 'module.exports = ' +
-    'Object.assign(module.exports.default, module.exports);'
+  js: '(function(){var all=module.exports,main=all.default;' +
+    'Object.keys(all).forEach(function(name){' +
+    'if(name!=="default"){main[name]=all[name];}});' +
+    'module.exports=main;}());'
 };
+
+// A language module's default export already holds everything a caller
+// needs (its `styles` among them), so `require()` returns it alone.
+const defaultOnly = {js: 'module.exports = module.exports.default;'};
 
 // Start from clean output dirs so artifacts from deleted or renamed language
 // dirs (removed experiments, say) never linger and ship via the package. tsc
@@ -103,7 +110,7 @@ for (const code of readdirSync('src/lang')) {
       ...language,
       format: 'cjs',
       outfile: `dist/lang/${code}.cjs`,
-      footer: unwrapDefault
+      footer: defaultOnly
     });
   }
 }

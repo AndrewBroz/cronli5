@@ -8,6 +8,8 @@
 // never ignored.
 
 import {Cronli5OptionError} from '../core/errors.js';
+
+export {Cronli5OptionError};
 import type {Translated} from './table.js';
 import cronli5 from '../all.js';
 import {table} from './table.js';
@@ -60,3 +62,4 @@ function toString(expression: string, options?: CronstrueOptions): string {
 
 export default {toString};
 export {toString};
+export {Cronli5InputError} from '../core/errors.js';
