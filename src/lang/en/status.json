@@ -1,20 +1,21 @@
 {
   "name": "English",
-  "status": "stable",
-  "humanReview": "maintainer (native)",
-  "modelReview": null,
+  "status": "beta",
+  "humanReview": "maintainer (native) reviewed the first paradigms, the rules and the wording changes on 2026-11-11; the final rows await a full read",
+  "modelReview": "rebuilt 2026-11-11 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms; 153 of 153 held-out rows; regenerates (tooling/experiments/renderer-process/en-acceptance.md)",
+  "branchBudget": 101,
   "dialects": {
     "gb": {
       "anchor": "Guardian style guide",
-      "status": "stable",
-      "humanReview": "maintainer (UK-English)",
-      "modelReview": null
+      "status": "beta",
+      "humanReview": null,
+      "modelReview": "option rows in test/lang/en/paradigms/options.js, written 2026-11-11"
     },
     "house": {
       "anchor": "cronli5 house style",
-      "status": "stable",
-      "humanReview": "by construction (self-defined)",
-      "modelReview": null
+      "status": "beta",
+      "humanReview": null,
+      "modelReview": "option rows in test/lang/en/paradigms/options.js, written 2026-11-11"
     }
   }
 }

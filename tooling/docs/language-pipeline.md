@@ -1,5 +1,11 @@
 # Adding a language: the pipeline
 
+> **This document describes the retired process** (corpus translation from a
+> donor renderer, persona panels, beta-to-stable graduation). Languages are
+> now built from questionnaire answers, a lexicon and paradigms: see
+> [the process design](../../docs/superpowers/specs/2026-11-11-renderer-process-design.md)
+> and `CLAUDE.md`. It is kept for its record of what was tried and why.
+
 This describes an automated, no-human-in-the-loop pipeline to develop a
 language module to beta (model-validated). Reaching stable requires
 human-review. The human-review platform to facilitate this is designed

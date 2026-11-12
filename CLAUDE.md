@@ -6,28 +6,33 @@ restating them — if something is enforced, trust the gate, not your memory.
 
 ## What cronli5 is
 
-It turns cron patterns into plain-language descriptions. The
-language-independent **core** (`src/core/`) parses → validates → normalizes →
-analyzes a pattern into a semantic **Schedule**; a per-language **renderer**
-(`src/lang/<code>/`) turns that Schedule into prose and owns all of its own
-words. A
-language never imports another language — the only shared dependency is the
-core. The *why* is in [docs/i18n-design.md](docs/i18n-design.md).
+It turns cron patterns into plain-language descriptions that are easy to
+parse, in the words a native speaker would say aloud. The language-independent
+**core** (`src/core/`) parses → validates → normalizes → analyzes a pattern
+into neutral **facts**, including every compact way each field's set of values
+can be described. A per-language **renderer** (`src/lang/<code>/`) chooses
+among those descriptions, arranges them in the language's one sentence frame,
+and owns all of its own words. A language never imports another language — the
+only shared dependency is the core. The *why* is in
+[docs/i18n-design.md](docs/i18n-design.md) and
+[the process design](docs/superpowers/specs/2026-11-11-renderer-process-design.md).
 
 ## The contract
 
 [`src/core/schedule.ts`](src/core/schedule.ts) is the typed contract between
-core and renderers (`Schedule`, `PlanNode`, `NormalizedOptions`, `Language`).
-`npm run
-typecheck` enforces that the core *produces* it and renderers *consume* it
-correctly. Public API types live in [`src/types.ts`](src/types.ts).
+core and renderers (`ScheduleFacts`, `SetDescription`, `NormalizedOptions`,
+`Language`). There is no plan: the core says what is true, never how to say
+it. `npm run typecheck` enforces that the core *produces* it and renderers
+*consume* it correctly. Public API types live in
+[`src/types.ts`](src/types.ts).
 
 ## Generated, never hand-edited
 
 If a script produces it, the script owns it — never copy/paste its output:
 
-- README/docs tables, inline `cronli5(...) // 'output'` examples, and the
-  language status table → `scripts/docs.mjs` (run `npm run docs`).
+- README/docs tables, inline `cronli5(...) // 'output'` examples, the
+  cRonstrue comparison, and the language status table → `scripts/docs.mjs`
+  (run `npm run docs`).
 - The shipped `.d.ts` tree → `tsc` (`npm run types`; the `types/` tree is
   gitignored and built on demand).
 
@@ -41,48 +46,53 @@ a behavior change, run `npm run docs` and let it rewrite.
   `multiline-comment-style`.
 - The curated set is `eslint:all`, via `.eslintrc.json` + `eslint.config.js`.
 
-## The corpus is the contract
+## A language is its artifacts; the renderer is built from them
 
-Each language's golden outputs are in `test/lang/<code>/corpus.js` — the oracle
-a renderer must reproduce. It is **hand-written and reviewed, never generated**;
-generating it would only prove the code agrees with itself. Never generated —
-but machine-**checked**: the oracle is itself under test (contradictions,
-metamorphic equality, oracle-directed round-trip, frame consistency, a-priori
-coverage) without ever consulting the renderer — see
-[tooling/docs/corpus-methodology.md](tooling/docs/corpus-methodology.md).
+Each language is described by three hand-written artifacts, in this order:
 
-**Bug fixes are test-first.** When a defect is found, write the *intended*
-output into the corpus first (a failing test), run it, watch it fail, *then*
-fix the renderer until it passes. Never edit the renderer first and update the
-corpus to match its new output — that lets the code grade itself and can
-enshrine a subtly-wrong fix. The corpus is the spec; the renderer chases it.
+1. **Answers** (`src/lang/<code>/answers.md`) to the fixed
+   [language questionnaire](tooling/docs/language-questionnaire.md): the one
+   frame, the device for every kind of set, the fusions, the idioms, the
+   options. This is the rule book.
+2. **Lexicon** (`src/lang/<code>/lexicon.ts`): the words.
+3. **Paradigms** (`test/lang/<code>/paradigms/`): expected descriptions for
+   the language-independent grid (`test/paradigms/grid.js`), in families that
+   vary one field at a time, split into rows a builder may see and rows held
+   out to judge it, plus option sets and hard cases.
 
-Pipeline-generated corpora are **candidates**, not the contract: the
-add-language pipeline drafts a corpus under `tooling/experiments/` as a beta
-seed, but it becomes a shipped `test/lang/<code>/corpus.js` only after human
-review (the same gate that graduates a language past experimental). The
-"never generated" rule governs the *shipped* oracle, not the pipeline's
-working drafts.
+The renderer is built from the artifacts by an agent that sees no other
+renderer and no held-out row. It must be rebuildable from them: that is the
+test of whether the artifacts are sufficient.
 
-## Languages ship as beta, then graduate
+**Paradigms are hand-written, never produced by running a renderer.** They
+are checked without one (`oracleProblems` in `test/paradigms/check.js`).
 
-A language may be **experimental** (model-drafted, not yet validated to beta by the
-blind Sonnet persona panel), **beta** (model-validated by that panel), or
-**stable** (graduated by a fluent human); `src/lang/<code>/status.json` records
-the status. The pipeline is in
-[tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md), the contributor guide in
-[CONTRIBUTING.md](CONTRIBUTING.md), the automation in
-`.claude/skills/add-language/`.
+**A failing row has three allowed responses, in this order:** the rule in
+the answers is wrong or silent (amend the answers); the row is wrong (fix
+the row, with a reason); a new idiom row is needed. A code path special to
+one example is never allowed. Bug fixes are test-first: the intended output
+goes into a paradigm or hard-case row, fails, and then the answers and
+renderer change.
 
-## Changing an existing renderer
+## What a renderer must hold to
 
-Improvements to a shipped renderer follow the two-phase protocol in
-`.claude/skills/improve-renderer/` — byte-identical restructure first, then
-corpus-first behavior change, with the relational stability suite as the
-overlay guard. **Continuity is a hard constraint** — a one-field pattern
-edit must not flip a sentence's architecture; device switches are
-semantic-gated, slot-local, and declared. The definition lives in
-[docs/i18n-design.md](docs/i18n-design.md) §6.
+- **Ease of parsing is the aim.** Among sayable phrasings the one that names
+  the fewest things wins; the choice never depends on which values are
+  named, only on how many and how arranged.
+- **Continuity is a hard constraint.** One frame per language. Editing one
+  field may change only that field's part of the sentence, apart from
+  fusions declared by name (`test/lang/<code>/continuity.js` measures this
+  directly). Word-change scores (`npm run edit-diff`) are a rough
+  instrument, never a target: they reward long sentences and cannot tell a
+  right description from a wrong one.
+- **Conditions are about the set of values, never how the pattern was
+  written.** A renderer does not read `pattern` or `shapes`
+  (`test/lang/renderer-rules.js`).
+- **Taste calls are made by the orchestrating frontier model or a fluent
+  human**, recorded with reasons in the answers. No persona panels.
+
+`src/lang/<code>/status.json` records who has reviewed what, honestly.
+Review is tracked; it does not gate a release.
 
 ## Before you finish
 

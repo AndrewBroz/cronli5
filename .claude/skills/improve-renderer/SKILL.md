@@ -3,6 +3,12 @@ name: improve-renderer
 description: Use when changing an EXISTING language renderer's output or structure — phrasing improvements, new sentence frames, panel-driven voice changes, consistency fixes. Enforces the two-phase protocol (byte-identical restructure, then corpus-first behavior change) so improvements land as restructurings, not overlays. Not for adding a new language (use add-language).
 ---
 
+> **This skill describes the retired process** (corpus translation from a
+> donor renderer, persona panels, beta-to-stable graduation). Languages are
+> now built from questionnaire answers, a lexicon and paradigms: see
+> [the process design](../../../docs/superpowers/specs/2026-11-11-renderer-process-design.md)
+> and `CLAUDE.md`. It is kept for its record of what was tried and why.
+
 # Improving a renderer
 
 An improvement run's natural failure mode is the **overlay**: a gated branch

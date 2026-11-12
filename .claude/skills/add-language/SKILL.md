@@ -3,6 +3,12 @@ name: add-language
 description: Use when adding a new language module to cronli5, or re-validating one. Always derive from existing renderers — the primary donor is the nearest validated same-family sibling, or English (the universal anchor) when there is no family; consult reference donors for shared mechanics. Translate the donor's reviewed corpus to a target candidate → port its renderer → TDD to green, then validate objectively (round-trip, fuzz, OR-scope, cRonstrue) + a blind panel of Claude Sonnet instances. The blind no-anchor pipeline is NOT a build path — it is retained only as the clean-room rewrite-test soundness check. Sonnet personas only — no cross-family/Gemma panels. Ships BETA; never claims stable (that needs a fluent human).
 ---
 
+> **This skill describes the retired process** (corpus translation from a
+> donor renderer, persona panels, beta-to-stable graduation). Languages are
+> now built from questionnaire answers, a lexicon and paradigms: see
+> [the process design](../../../docs/superpowers/specs/2026-11-11-renderer-process-design.md)
+> and `CLAUDE.md`. It is kept for its record of what was tried and why.
+
 # Adding a language to cronli5
 
 This skill is **thin by design**: the work lives in a programmatic workflow and

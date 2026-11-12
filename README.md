@@ -227,7 +227,7 @@ Sonnet instances. It graduates to **stable** only on review by a fluent human:
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status |
 | --- | --- |
-| English | stable |
+| English | beta |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see
