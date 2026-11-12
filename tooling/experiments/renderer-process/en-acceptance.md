@@ -213,6 +213,25 @@ correctly.
 The renderer is 1,546 logical lines and 95 branches after these rules
 (1,488 and 97 before them).
 
+Two sentences the orchestrating model doubted were then talked through
+with the maintainer and rebuilt (round 12):
+
+* A cadence of years hangs on the day with "of", and its interval beyond
+  two is an ordinal: "at 9 a.m. every day of every other year from 2030",
+  "of every 4th year from 2028". Such a year always brings "every day"
+  with it, so "of" has something to hang on.
+* One month and one year are said together: "in June 2030". The full date
+  ("on January 1, 2030") became the same rule, which removed a path.
+
+A blind reader recovered 23 of 24 of the reworded sentences exactly. The
+other was "in even-numbered years", written back as every second year from
+2000 where the pattern says every even year: the same reading, a different
+spelling. The reader noted that "on the 1st as well as on Mondays of every
+4th year" could be taken as both at once; that sentence is unchanged from
+before the round and stays a weak spot.
+
+The renderer is 1,564 logical lines and 95 branches.
+
 Not changed: sentence order. A day-first sentence won one question, tied
 another of the same structure and lost a third.
 
@@ -279,9 +298,9 @@ repairs.
   is heavy: "…on the 1st and 15th of each month from June through August as
   well as on weekdays from June through August".
 * The renderer's branch budget is 95, its current count.
-* A year cadence with no day named stacks two "every" phrases: "at 9 a.m.
-  every day every other year from 2030". And a month beside a year says
-  "in June in 2030" where "in June 2030" is more natural.
+* After a day of the month and a weekday together, a year cadence's "of"
+  reads as belonging to the weekday alone: "on the 1st as well as on
+  Mondays of every 4th year from 2028".
 * The comparison table at the top of this record predates build round 11.
 * `builder-cases.js` holds 29 rows written by the builder and not yet
   reviewed.
