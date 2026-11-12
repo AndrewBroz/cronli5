@@ -3,7 +3,7 @@
 // day of the week, with its month, and with its year.
 
 import type {
-  ScheduleFacts, SetDescription
+  ClockTime, ScheduleFacts, SetDescription
 } from '../../../core/schedule.js';
 import type {Spoken} from '../../../core/select.js';
 import type {EnglishOptions} from './options.js';
@@ -14,8 +14,8 @@ import {clockTimes} from '../../../core/fusions.js';
 import {shortestSpoken} from '../../../core/select.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, minutesOfOneHour, monthsAlone, monthsOfDays, say,
-  secondsOfOneMinute, withinTheHour, yearsByNumber
+  hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,
+  opensWithEvery, say, secondsOfOneMinute, withinTheHour, yearsByNumber
 } from './devices.js';
 import {quartzDateIdioms, quartzWeekdayIdioms} from './idioms.js';
 import lexicon from './lexicon.js';
@@ -31,11 +31,11 @@ interface Tick {
   // A cadence with no gaps to name: every value, or "every 15 minutes".
   continuous: boolean;
   description: SetDescription;
-  // Every value of the field.
-  every: boolean;
   length: number;
   // The value, when there is just one.
   only: number | null;
+  // Whether the phrase begins "every minute" (or "every second").
+  opens: boolean;
   // Whether the phrase is a part of the hour or minute ("for the first
   // 30 minutes of") and not a count past it.
   portion: boolean;
@@ -43,19 +43,29 @@ interface Tick {
 }
 
 // What the seconds contribute to the rest of the time: the words that
-// take the place of "every minute", and the words that go before anything
-// else.
+// take the place of "every minute", the words that go before a time part
+// that does not begin with it, and the words before a stray clock time
+// that follows a window.
 interface SecondsLead {
   before: string;
   every: string;
+  stray: string;
 }
 
 // What a description of the hours is said with.
 interface TimeContext {
-  // The single second that every clock time carries, if there is one.
-  carried?: number;
   lead: SecondsLead;
   minute: Tick;
+  // The single second that clock times can carry, if there is one.
+  riding: {second?: number};
+}
+
+// A way of saying the time. `carry` is the same phrase with the single
+// second riding on its clock times, or null if it names none.
+interface TimePhrase extends Spoken {
+  carry: string | null;
+  idiom: boolean;
+  yields: boolean;
 }
 
 function onlyValue(description: SetDescription): number | null {
@@ -80,7 +90,8 @@ function isPortion(description: SetDescription): boolean {
 // them to what follows. A run from the start is "for the first N minutes
 // of", a run to the end "for the last N minutes of", and anything else is
 // counted "minutes past".
-function anchored(chosen: Choice, field: 'minute' | 'second'): string {
+function anchored(chosen: Choice, field: 'minute' | 'second',
+  everyOne: string): string {
   const {description} = chosen;
 
   if (description.kind !== 'range' || !isPortion(description)) {
@@ -92,54 +103,57 @@ function anchored(chosen: Choice, field: 'minute' | 'second'): string {
     `${lexicon.nthWords[1].text} ${description.to + 1}` :
     `${words.last.text} ${60 - description.from}`;
 
-  return `${words.every.text} ${unit(field, 1)} ${extraWords.for} ` +
-    `${words.the.text} ${which} ${unit(field, 0)} ${words.of.text}`;
+  return `${everyOne} ${extraWords.for} ${words.the.text} ${which} ` +
+    `${unit(field, 0)} ${words.of.text}`;
 }
 
+// `everyOne` is what every value of the field is said as: "every second",
+// and "every minute" unless finer seconds take its place.
 function tick(
   candidates: SetDescription[],
   field: 'minute' | 'second',
+  everyOne: string,
   opts: EnglishOptions
 ): Tick {
-  const chosen = choose(candidates, withinTheHour(field, opts), opts);
+  const chosen = choose(candidates, withinTheHour(field, everyOne, opts),
+    opts);
   const {description} = chosen;
-  const every = description.kind === 'all';
-  const continuous = every ||
+  const continuous = description.kind === 'all' ||
     description.kind === 'cadence' && chosen.length === 1;
 
   return {
     continuous,
     description,
-    every,
     length: chosen.length,
     only: onlyValue(description),
+    opens: opensWithEvery(description, field),
     portion: isPortion(description),
-    text: continuous ? chosen.text : anchored(chosen, field)
+    text: continuous ? chosen.text : anchored(chosen, field, everyOne)
   };
 }
 
-// A single second is silent here: zero says nothing, and any other rides
-// on the clock times. A continuous cadence of seconds replaces "every
-// minute", or else runs "for one minute" at each time. Any other seconds
-// are counted past the minute.
-function secondsLead(second: Tick, rides: boolean): SecondsLead {
+// Second 0 is silent. A continuous cadence of seconds takes the place of
+// "every minute", or else runs "for one minute" at each time. Any other
+// seconds are counted past every minute, or past the minute and set off
+// by a comma.
+function secondsLead(second: Tick): SecondsLead {
   const everyMinute = `${words.every.text} ${unit('minute', 1)}`;
 
-  if (rides || second.only === 0) {
-    return {before: '', every: everyMinute};
+  if (second.only === 0) {
+    return {before: '', every: everyMinute, stray: ''};
   }
 
   if (second.continuous) {
     return {
       before: `${second.text} ${words.forOneMinute.text}`,
-      every: second.text
+      every: second.text,
+      stray: words.forOneMinute.text
     };
   }
 
-  return {
-    before: `${second.text} ${words.the.text} ${unit('minute', 1)},`,
-    every: `${second.text} ${everyMinute}`
-  };
+  const before = `${second.text} ${words.the.text} ${unit('minute', 1)},`;
+
+  return {before, every: `${second.text} ${everyMinute}`, stray: before};
 }
 
 // A run of minutes inside one named hour is a window of clock times.
@@ -149,49 +163,75 @@ function minuteWindow(
   opts: EnglishOptions
 ): Phrase | null {
   const hour = onlyValue(hours);
-  const {description} = context.minute;
+  const {lead, minute} = context;
 
-  return hour === null || description.kind === 'values' ?
+  return hour === null || minute.description.kind === 'values' ?
     null :
-    say(description, minutesOfOneHour(hour, context.lead, opts), opts);
+    say(
+      minute.description,
+      minutesOfOneHour(hour, {
+        every: lead.every,
+        stray: minute.opens ? lead.stray : lead.before
+      }, opts),
+      opts);
+}
+
+// A single minute rides on each hour as a moment, and a single second
+// can ride there with it.
+function momentsWith(
+  hours: SetDescription,
+  context: TimeContext,
+  opts: EnglishOptions
+): TimePhrase | null {
+  const {lead, minute, riding} = context;
+
+  if (minute.only === null) {
+    return null;
+  }
+
+  const at = {minute: minute.only};
+  const moments = say(hours, hoursAsMoments(at, opts), opts);
+  const carrying = say(hours, hoursAsMoments({...at, ...riding}, opts), opts);
+
+  return moments && {
+    ...moments,
+    carry: carrying && carrying.text,
+    text: join(lead.before, moments.text)
+  };
 }
 
 // The time said with one description of the hours, by the first of these
-// that applies. A single minute rides on each hour as a moment, with any
-// carried second. Continuous minutes lead and the hours confine them. A
-// run of minutes in one hour is a window. Any other minutes are counted
-// past the hours.
+// that applies. A single minute rides on each hour as a moment.
+// Continuous minutes lead and the hours confine them. A run of minutes in
+// one hour is a window. Any other minutes are counted past the hours.
 function timeWith(
   hours: SetDescription,
   context: TimeContext,
   opts: EnglishOptions
-): Spoken[] {
-  const {carried, lead, minute} = context;
-  const moments = minute.only === null ?
-    null :
-    say(hours, hoursAsMoments({minute: minute.only, second: carried}, opts),
-      opts);
+): TimePhrase[] {
+  const {lead, minute} = context;
+  const moments = momentsWith(hours, context, opts);
 
-  if (moments || typeof carried === 'number') {
-    return moments ? [{...moments, text: join(lead.before, moments.text)}] : [];
+  if (moments) {
+    return [moments];
   }
 
   const window = minute.continuous ? null : minuteWindow(hours, context, opts);
-  const rest = say(hours,
+  const rest = window || say(hours,
     minute.continuous ?
       hoursAsStretches(opts) :
       hoursAsNouns(minute.portion, opts),
     opts);
 
   if (window || !rest) {
-    return window ? [window] : [];
+    return window ? [{...window, carry: null}] : [];
   }
 
   return [{
+    ...rest,
+    carry: null,
     length: minute.length + rest.length,
-    text: minute.every ?
-      join(lead.every, rest.text) :
-      join(lead.before, minute.text, rest.text)
+    text: join(minute.opens ? '' : lead.before, minute.text, rest.text)
   }];
 }
 
@@ -199,11 +239,14 @@ function timeWith(
  * The time of day. Within a single clock time, seconds that are not a
  * plain list are a window of it. Otherwise each description of the hours
  * is said with the minutes, and competes with the plain list of clock
- * times, which wins a tie; a single second rides on every clock time.
+ * times, which wins a tie. A single second does not affect the choice:
+ * it rides on the clock times of the chosen phrase if it names any, and
+ * is otherwise counted past the minute in front of it.
  */
 function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
   const {candidates} = facts.analyses;
-  const second = tick(candidates.second!, 'second', opts);
+  const everySecond = `${words.every.text} ${unit('second', 1)}`;
+  const second = tick(candidates.second!, 'second', everySecond, opts);
   const times = clockTimes(facts, mostClockTimes);
 
   if (times?.length === 1 && second.description.kind !== 'values') {
@@ -211,23 +254,43 @@ function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): string {
       opts) as Phrase).text;
   }
 
+  const lead = secondsLead(second);
   const context = {
-    carried: times?.[0].second,
-    lead: secondsLead(second, times !== null && second.only !== null),
-    minute: tick(candidates.minute!, 'minute', opts)
+    lead,
+    minute: tick(candidates.minute!, 'minute', lead.every, opts),
+    riding: second.only ? {second: second.only} : {}
   };
-  const listed = times ?
-    [{
-      length: times.length,
-      text: join(context.lead.before, words.at.text,
-        list(timeNames(times, opts), opts))
-    }] :
-    [];
+  const listed = clockList(times, lead, opts);
   const others = candidates.hour!.flatMap(function sayWith(hours) {
     return timeWith(hours, context, opts);
   });
+  const best = shortestSpoken([...listed, ...inTieOrder(others)]);
 
-  return shortestSpoken([...listed, ...others]).text;
+  return second.only && best.carry ? best.carry : best.text;
+}
+
+// The plain list of clock times, when there are few enough to list.
+function clockList(
+  times: ClockTime[] | null,
+  lead: SecondsLead,
+  opts: EnglishOptions
+): TimePhrase[] {
+  if (!times) {
+    return [];
+  }
+
+  const at = words.at.text;
+  const bare = times.map(function withoutSecond(time) {
+    return {hour: time.hour, minute: time.minute};
+  });
+
+  return [{
+    carry: `${at} ${list(timeNames(times, opts), opts)}`,
+    idiom: false,
+    length: times.length,
+    text: join(lead.before, at, list(timeNames(bare, opts), opts)),
+    yields: false
+  }];
 }
 
 function sayForm<Form>(rows: Array<Idiom<Form>>, form: Form,
@@ -260,7 +323,8 @@ const namesDays = ['pieces', 'range', 'values'];
 // Days of the month with the months they fall in. One month makes dates
 // of numbered days ("on June 1 and 15"); several months follow them after
 // "of" ("on the 1st and 15th of January and July"). Any other phrase for
-// the days takes the months after "in".
+// the days takes the months after "in", and they belong to the base of
+// an exception: "on every day in June except the 15th".
 function daysWithMonths(
   days: SetDescription[],
   months: SetDescription[],
@@ -273,19 +337,24 @@ function daysWithMonths(
 
   const alone = choose(months, monthsAlone(opts), opts);
   const month = onlyValue(alone.description);
-  const date = choose(days, daysOfTheMonth(month, lead, opts), opts);
+  const voice = daysOfTheMonth(month, lead, opts);
+  const date = choose(days, voice, opts);
+  const {description} = date;
 
   if (alone.description.kind === 'all' || date.named && month !== null) {
     return date.text;
   }
 
-  if (!namesDays.includes(date.description.kind)) {
-    return `${date.text} ${alone.text}`;
+  if (namesDays.includes(description.kind)) {
+    return choose(months, monthsOfDays(
+      {day: onlyValue(description), lead, phrase: date.text}, opts), opts)
+      .text;
   }
 
-  return choose(months, monthsOfDays(
-    {day: onlyValue(date.description), lead, phrase: date.text}, opts), opts)
-    .text;
+  return description.kind === 'except' ?
+    join((say(description.base, voice, opts) as Phrase).text, alone.text,
+      voice.exception(description.removed, description.base)) :
+    `${date.text} ${alone.text}`;
 }
 
 // The day-of-month part with its months. A Quartz form is an idiom

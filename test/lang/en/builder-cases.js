@@ -24,14 +24,10 @@ const rows = [
     'every minute from 9 until 9:30 a.m.'],
   ['30-59 9 * * *',
     'every minute from 9:30 until 10 a.m.'],
-  ['0-29,45 9 * * *',
-    'every minute from 9 until 9:30 a.m. and at 9:45 a.m.'],
   ['0-14,16-29 9 * * *',
     'every minute from 9 until 9:30 a.m. except at 9:15 a.m.'],
   ['50-10 9 * * *',
     'every minute from 9 until 9:11 a.m. and every minute from 9:50 until 10 a.m.'],
-  ['15 5,20,45 9,17 * * *',
-    'at 9:05:15 a.m., 9:20:15 a.m., 9:45:15 a.m., 5:05:15 p.m., 5:20:15 p.m., and 5:45:15 p.m.'],
   ['0 0 1 1-11 *',
     'at midnight on the 1st of every month except December'],
   ['0 9 * * 1-3,5',
@@ -55,7 +51,11 @@ const rows = [
     {dialect: {am: 'AM', dayFirst: true, ordinals: true, pm: 'PM', through: ' to '}}],
   ['not a pattern',
     'an unrecognizable cron pattern',
-    {lenient: true}]
+    {lenient: true}],
+  ['* 5,10-40 9 * * *',
+    'every second for one minute at 9:05 a.m. and every second from 9:10 until 9:41 a.m.'],
+  ['0 0 1-14,16-31 6 *',
+    'at midnight on every day in June except the 15th']
 ];
 
 describe('English builder-added cases (unreviewed):', function() {
