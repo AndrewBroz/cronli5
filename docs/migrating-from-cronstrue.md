@@ -72,6 +72,17 @@ is the point of switching. Each cRonstrue option is either mapped onto a
 error** that says so. It never quietly ignores an option:
 
 <!-- BEGIN GENERATED: cronstrue-options -->
+| cRonstrue option | In cronli5 | Notes |
+| --- | --- | --- |
+| `locale` | `lang` | `pt_BR` becomes `pt-BR`. A language cronli5 does not ship is an error; cRonstrue answers in English. |
+| `use24HourTimeFormat` | `style: {hour12: false}` | 24-hour times are zero-padded (`09:00`). |
+| `throwExceptionOnParseError` | `lenient: true` when `false` | cronli5 returns its fallback text, not the parser's message. |
+| `dayOfWeekStartIndexZero` | `weekdaysFrom: 1` when `false` | 1 is Sunday through 7 for Saturday. |
+| `trimHoursLeadingZero` | accepted | cronli5's 12-hour times never have a leading zero. Refused together with `use24HourTimeFormat`, whose times always do. |
+| `verbose` | refused | cronli5 says "every day" where it helps and is otherwise brief. |
+| `monthStartIndexZero` | refused | cronli5 always reads 1 as January. |
+| `logicalAndDayFields` | refused | cronli5 reads a day of the month and a weekday as "either", as classic cron does. |
+| `tzOffset` | refused | cronli5 describes the fields as written and does not shift times. |
 <!-- END GENERATED: cronstrue-options -->
 
 `?` in a day field is read as `*` under any settings, as cRonstrue reads
@@ -143,17 +154,10 @@ in lenient mode, where cRonstrue ignores options it does not know.
 
 ## Options
 
-| cRonstrue | cronli5 | Notes |
-| --- | --- | --- |
-| `locale: "en"` | `lang: "en"` | A code, with an optional region (`"en-GB"`). See [Locale &rarr; language](#locale--language). |
-| `use24HourTimeFormat: true` | `style: { hour12: false }` | 24-hour times are zero-padded (`09:00`). |
-| `throwExceptionOnParseError: false` | `lenient: true` | `cronli5` returns a fixed fallback; cRonstrue returns an error sentence. |
-| `dayOfWeekStartIndexZero: false` | `weekdaysFrom: 1` | 1 is Sunday through 7 for Saturday. `cron: "quartz"` sets this and accepts `?`. |
-| `verbose: true` | none | `cronli5` says "every day" where it helps and is otherwise brief. |
-| `monthStartIndexZero: true` | none | `cronli5` always reads `1` as January. |
-| `trimHoursLeadingZero` | not needed | 12-hour times never have a leading zero (`9 a.m.`); 24-hour times always do. |
-| `logicalAndDayFields: true` | none yet | `cronli5` reads a day of the month and a weekday as "either", as classic cron does. |
-| `tzOffset` | none | `cronli5` describes the fields as written. |
+The table under [The quickest way to switch](#the-quickest-way-to-switch)
+lists every cRonstrue option and what it becomes. In `cronli5`'s own API
+the mapped ones are `lang`, `style: { hour12: false }`, `lenient: true` and
+`weekdaysFrom: 1` (or `cron: "quartz"`, which sets that and accepts `?`).
 
 `cronli5` options with no cRonstrue counterpart: `style` (every field of a
 language's style table), `form`, `cron`, `questionMark`, `seconds`, `years`,

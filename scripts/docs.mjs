@@ -29,6 +29,7 @@ import {
   comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
+import {table as cronstrueOptions} from '../src/cronstrue/table.js';
 import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
@@ -168,6 +169,16 @@ function renderStyleTable() {
   }).join(' | ') + ' |', rows);
 }
 
+// What the cRonstrue adapter does with each of cRonstrue's options, from
+// the table the adapter itself runs on.
+function renderCronstrueOptions() {
+  return tableFrom('| cRonstrue option | In cronli5 | Notes |',
+    cronstrueOptions.map(function row(entry) {
+      return '| `' + entry.option + '` | ' + entry.becomes + ' | ' +
+        entry.note + ' |';
+    }));
+}
+
 // Replace the body between a table's BEGIN/END markers.
 function inject(content, name, body, docName) {
   const begin = '<!-- BEGIN GENERATED: ' + name + ' -->';
@@ -252,7 +263,10 @@ const tableJobs = {
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},
   'docs/cronli5-vs-cronstrue.md': {comparison: renderComparison()},
-  'docs/styles.md': {styles: renderStyleTable()}
+  'docs/styles.md': {styles: renderStyleTable()},
+  'docs/migrating-from-cronstrue.md': {
+    'cronstrue-options': renderCronstrueOptions()
+  }
 };
 
 for (const language of languages) {
@@ -263,7 +277,7 @@ for (const language of languages) {
 
 const docs = [
   'README.md', 'docs/language-status.md', 'docs/cronli5-vs-cronstrue.md',
-  'docs/styles.md',
+  'docs/styles.md', 'docs/migrating-from-cronstrue.md',
   ...languages.map((language) => 'docs/lang/' + language.code + '.md')
 ];
 
@@ -303,7 +317,7 @@ const removedApi = [
   [/\.sentence\(/u, '`.sentence(`'],
   [/\.fragment\(/u, '`.fragment(`']
 ];
-const userFacing = [...docs, 'docs/migrating-from-cronstrue.md'];
+const userFacing = docs;
 const outdated = userFacing.flatMap(function scan(doc) {
   const text = readFileSync(new URL('../' + doc, import.meta.url), 'utf8');
 

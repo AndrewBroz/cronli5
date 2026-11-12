@@ -55,6 +55,22 @@ await esbuild.build({
   footer: unwrapDefault
 });
 
+// The stand-in for cRonstrue's `toString`, in both formats.
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/cronstrue/index.ts'],
+  format: 'esm',
+  outfile: 'dist/cronstrue.js'
+});
+
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/cronstrue/index.ts'],
+  format: 'cjs',
+  outfile: 'dist/cronstrue.cjs',
+  footer: unwrapDefault
+});
+
 // Minified browser global (`<script>` usage exposes `window.cronli5`).
 await esbuild.build({
   entryPoints: ['src/browser.ts'],

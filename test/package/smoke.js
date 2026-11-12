@@ -90,6 +90,16 @@ describe('Built package artifacts:', function() {
     });
   });
 
+  it('the cRonstrue stand-in builds take cRonstrue\'s call', async function() {
+    const cjs = require('../../dist/cronstrue.cjs');
+    const esm = await import('../../dist/cronstrue.js');
+
+    expect(cjs.toString('0 9 * * 1')).to.equal('At 9 a.m. on Mondays');
+    expect(esm.default.toString('30 17 * * *', {use24HourTimeFormat: true}))
+      .to.equal('At 17:30 every day');
+    expect(esm.toString('0 9 ? * 1')).to.equal('At 9 a.m. on Mondays');
+  });
+
   it('a language build carries its named styles', async function() {
     const cjs = require('../../dist/lang/en.cjs');
     const esm = await import('../../dist/lang/en.js');

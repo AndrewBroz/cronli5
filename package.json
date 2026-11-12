@@ -22,6 +22,11 @@
       "import": "./dist/all.js",
       "require": "./dist/all.cjs"
     },
+    "./cronstrue": {
+      "types": "./types/cronstrue/index.d.ts",
+      "import": "./dist/cronstrue.js",
+      "require": "./dist/cronstrue.cjs"
+    },
     "./lang/en": {
       "types": "./types/lang/en/index.d.ts",
       "import": "./dist/lang/en.js",
