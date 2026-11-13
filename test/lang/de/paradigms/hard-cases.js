@@ -765,7 +765,77 @@ const rows = [
     'Uhr'],
   ['0 0 31W */2 *',
     'im Januar, März, Mai und Juli jeweils am Wochentag (Montag bis ' +
-    'Freitag), der dem 31. im selben Monat am nächsten liegt, um 0:00 Uhr']
+    'Freitag), der dem 31. im selben Monat am nächsten liegt, um 0:00 Uhr'],
+
+  // Written without the star, a step from the start is a union: the days
+  // that match either field, whatever the other says. These are the
+  // sentences the starred spellings had before both had to match.
+  ['*/15 9-17 1-31/2 * 1-5',
+    'montags bis freitags und zusätzlich an den ungeraden Tagen jedes ' +
+    'Monats (1., 3., 5. … 31.), jeweils von 9:00 bis 17:45 Uhr alle 15 ' +
+    'Minuten'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'montags bis freitags und zusätzlich am 1., 6., 11., 16., 21., 26. und ' +
+    '31. jedes Monats, jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten'],
+
+  // A field written from a star beside a restricted one: both must match,
+  // so the dates are said first and the weekdays are a condition on them,
+  // never an addition. `0 0 */2 * 1` is the Mondays that are odd days of
+  // the month; `0 0 15 * */2` is the 15th where it is a Sunday, Tuesday,
+  // Thursday or Saturday.
+  ['0 0 */2 * 1',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf ' +
+    'einen Montag fallen, jeweils um 0:00 Uhr'],
+  ['0 9 */2 * 1,3,5',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf ' +
+    'einen Montag, Mittwoch oder Freitag fallen, jeweils um 9:00 Uhr'],
+  ['0 0 15 * */2',
+    'am 15. jedes Monats, wenn er auf einen Dienstag, Donnerstag, Samstag ' +
+    'oder Sonntag fällt, jeweils um 0:00 Uhr'],
+  ['0 0 */2 6 1',
+    'an den ungeraden Tagen im Juni (1., 3., 5. … 29.), wenn sie auf einen ' +
+    'Montag fallen, jeweils um 0:00 Uhr'],
+  ['0 0 */5 * 1-5',
+    'am 1., 6., 11., 16., 21., 26. und 31. jedes Monats, wenn sie auf ' +
+    'einen Tag von Montag bis Freitag fallen, jeweils um 0:00 Uhr'],
+  // A date that falls on a weekday is not a date that comes round every
+  // year, so there is no «jährlich».
+  ['0 0 15 6 */2',
+    'am 15. Juni, wenn er auf einen Dienstag, Donnerstag, Samstag oder ' +
+    'Sonntag fällt, jeweils um 0:00 Uhr'],
+  ['0 0 13 * */5',
+    'am 13. jedes Monats, wenn er auf einen Freitag oder Sonntag fällt, ' +
+    'jeweils um 0:00 Uhr'],
+  // All the weekdays but one are the one that is left out; runs and
+  // single days stand side by side.
+  ['0 0 */2 * 0-2,4-6',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie ' +
+    'nicht auf einen Mittwoch fallen, jeweils um 0:00 Uhr'],
+  ['0 0 */2 * 2-4,6',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf ' +
+    'einen Tag von Dienstag bis Donnerstag oder einen Samstag fallen, ' +
+    'jeweils um 0:00 Uhr'],
+  // A weekday counted in its month is the one the dates must fall on.
+  ['0 0 */2 * 5L',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf ' +
+    'den letzten Freitag fallen, jeweils um 0:00 Uhr'],
+  ['0 0 */2 * 1#2',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf ' +
+    'den zweiten Montag fallen, jeweils um 0:00 Uhr'],
+  // The months lead, and a year with them; a date that no month has is no
+  // day at all.
+  ['0 9 */3 1,7 1-5',
+    'im Januar und Juli am 1., 4., 7. … und 31., wenn sie auf einen Tag ' +
+    'von Montag bis Freitag fallen, jeweils um 9:00 Uhr'],
+  ['0 0 0 */2 * 1 2030',
+    'im Jahr 2030 an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), ' +
+    'wenn sie auf einen Montag fallen, jeweils um 0:00 Uhr'],
+  ['0 0 31 6 */2', 'nie (einen solchen Tag gibt es nicht)'],
+  // A run of dates takes no «täglich» before the time, whatever the hours.
+  ['*/15 9-17 1-7 * */2',
+    'vom 1. bis 7. jedes Monats, wenn sie auf einen Dienstag, Donnerstag, ' +
+    'Samstag oder Sonntag fallen, jeweils von 9:00 bis 17:45 Uhr alle 15 ' +
+    'Minuten']
 ];
 
 export {rows};

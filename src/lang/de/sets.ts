@@ -37,10 +37,10 @@ const runEnds = 2;
 // What a cadence said with both its ends, or as a series, names.
 const boundedCadence = 3;
 
-/** Items joined as German lists them: commas, then «und». */
-function list(items: string[]): string {
+/** Items joined as German lists them: commas, then «und» or what is given. */
+function list(items: string[], last: string = words.and): string {
   return [items.slice(0, -1).join(', '), ...items.slice(-1)]
-    .filter(Boolean).join(` ${words.and} `);
+    .filter(Boolean).join(` ${last} `);
 }
 
 /** The parts that are there, with single spaces between them. */

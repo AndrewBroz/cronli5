@@ -52,9 +52,12 @@ function firesOn(pattern, options) {
   try {
     const schedule = analyze(prepare(pattern, readingOf({...options})));
 
-    return JSON.stringify(fieldOrder.map(function fieldOf(field) {
-      return schedule.analyses.candidates[field] || schedule.pattern[field];
-    }));
+    // Whether both day fields must match is part of what fires: `*/2` and
+    // `0/2` are the same weekdays, and a different schedule beside a date.
+    return JSON.stringify([schedule.analyses.day.both,
+      ...fieldOrder.map(function fieldOf(field) {
+        return schedule.analyses.candidates[field] || schedule.pattern[field];
+      })]);
   }
   catch {
     return null;

@@ -137,8 +137,9 @@ const rows = [
     'montags bis freitags und zusätzlich an den geraden Tagen jedes Monats ' +
     '(2., 4., 6. … 30.), jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten'],
   ['*/15 9-17 */5 * 1-5',
-    'montags bis freitags und zusätzlich am 1., 6., 11., 16., 21., 26. und ' +
-    '31. jedes Monats, jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten'],
+    'am 1., 6., 11., 16., 21., 26. und 31. jedes Monats, wenn sie auf ' +
+    'einen Tag von Montag bis Freitag fallen, jeweils von 9:00 bis 17:45 ' +
+    'Uhr alle 15 Minuten'],
   ['*/15 9-17 L * 1-5',
     'montags bis freitags und zusätzlich am letzten Tag jedes Monats, ' +
     'jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten'],
