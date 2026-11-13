@@ -319,7 +319,7 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Language | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
 | English | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| Ukrainian | о 9:30:05 та 9:30:10 по понеділках | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
+| Ukrainian | щопонеділка о 9:30:05 та 9:30:10 | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
 | Chinese (Simplified) | 每周一9:30:05、9:30:10 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
 | Spanish | los lunes a las 9:30:05 y 9:30:10 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | Japanese | 毎週月曜日の9:30:05・9:30:10 | 毎分 5と 10 秒過ぎ 30 分過ぎ, 次において実施 09:00月曜日 にのみ |

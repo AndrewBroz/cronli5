@@ -1,13 +1,13 @@
-// The copy-editor choices Ukrainian offers, as a table of word-level
-// conventions: 12- or 24-hour times, and short names for weekdays and
-// months. Neither moves a part of the sentence.
+// The choices Ukrainian offers a caller, as a table of word-level
+// conventions: 12- or 24-hour times, and short names. Neither moves a part
+// of the sentence.
 
 import {Cronli5OptionError} from '../../core/errors.js';
 import type {NormalizedOptions} from '../../core/schedule.js';
 
-/** The word-level conventions of one style. */
+/** The word-level conventions of a Ukrainian description. */
 export interface UkrainianStyle {
-  // Whether times are 12-hour with the part of the day, or 24-hour.
+  // Whether times are 12-hour, each with its part of the day, or 24-hour.
   hour12: boolean;
   // Whether weekday and month names are abbreviated.
   short: boolean;
@@ -16,12 +16,14 @@ export interface UkrainianStyle {
 /** The options a Ukrainian description is rendered under. */
 export type UkrainianOptions = NormalizedOptions<UkrainianStyle>;
 
-// Timetables and interfaces: the 24-hour clock and full names.
 const standard: UkrainianStyle = {hour12: false, short: false};
 
 /** The named Ukrainian styles, each a whole table. */
 const styles: Readonly<Record<'standard', Readonly<UkrainianStyle>>> =
 Object.freeze({standard: Object.freeze(standard)});
+
+/** Ukrainian has no regional styles. */
+const regions: {[region: string]: string} = {};
 
 const fields = Object.keys(standard).sort();
 
@@ -53,4 +55,4 @@ function style(base: string, overrides?: unknown): UkrainianStyle {
   return table as unknown as UkrainianStyle;
 }
 
-export {style, styles};
+export {regions, style, styles};

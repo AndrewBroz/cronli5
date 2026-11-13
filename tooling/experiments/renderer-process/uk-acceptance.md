@@ -1,5 +1,25 @@
 # Ukrainian, rebuilt through the process: acceptance record
 
+> **Superseded in part, 2026-11-12 (later the same day).** Everything below
+> describes the first build. The maintainer ruled that devices carried over
+> from English do not bind another language; the rule book was redecided
+> natively (calendar first, the time last; no tie and no bare hour
+> cadence; rules in words followed by their clock times in brackets; the
+> union «щоп'ятниці, а також щомісяця 1-го числа, о 0:00») after schedule
+> reads and blind fluency reads, the first renderer was discarded, and a
+> fresh agent rebuilt it: every held-out row on the first judged run, 0
+> throws over about 96,000 swept renders, 60 branches, about 1,700
+> logical lines. The builder did not stop on four rules it could not
+> follow as written and read them more loosely instead; these are open:
+> when an exception beats pieces (it built "strictly fewer things
+> named"); an exception before a wrapping run of hours (the answers say
+> it only for months and dates; one effect is `0 20-15 * * *` said as
+> «щогодини, крім 16:00, 17:00, 18:00 та 19:00»); minutes 15 and 45 said
+> as two minutes although 3.8 calls them a cadence; the order of pieces.
+> Hours unwrapped by a calendar field (3.5) are not declared in the
+> continuity suite, which passes only because no pair there exercises
+> it. Blind recovery has not been re-run.
+
 2026-11-12. Ukrainian was the second language taken through the process
 in [the design](../../../docs/superpowers/specs/2026-11-11-renderer-process-design.md),
 and the first one not written by ear: the orchestrating model reads and

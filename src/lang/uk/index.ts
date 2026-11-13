@@ -1,78 +1,88 @@
-// The Ukrainian renderer. One frame: time, then day, then month, then
-// year, joined by single spaces. The time part is built in ./time.ts, the
-// calendar parts in ./calendar.ts, and every word is in ./lexicon.ts. The
-// rules are the answers in ./answers.md.
+// The Ukrainian renderer: one sentence frame, the coarsest part first.
+// A description is its year, its month, its day and its time, and after
+// them the note one Quartz form adds.
 
-import type {Language, ScheduleFacts} from '../../core/schedule.js';
+import type {
+  Language, Schedule, SetDescription
+} from '../../core/schedule.js';
 import type {UkrainianOptions, UkrainianStyle} from './options.js';
-import {calendarParts, isAll, unwrapped} from './calendar.js';
-import {style, styles} from './options.js';
-import type {Part} from './calendar.js';
+import {hoursOf, timeOf} from './time.js';
+import {regions, style, styles} from './options.js';
+import {calendarOf} from './calendar.js';
 import lexicon from './lexicon.js';
-import {timePart} from './time.js';
+import {spell} from './spelling.js';
+import {wraps} from './sets.js';
 
 const {words} = lexicon;
 
-/** The four parts of a description, each empty when it is silent. */
+/** The parts of a description, in the order they are said. */
 export interface Parts {
-  time: string;
   day: string;
   month: string;
+  note: string;
+  time: string;
   year: string;
 }
 
+// The words that say on their own how the days go.
+const everyWords = [words.everyHour, words.everyMinute, words.everySecond];
+
 /**
- * The parts of the sentence in spoken order. A part that ends in an
- * exception, or that is followed by a part set off from it, is closed by
- * a comma when another part follows.
+ * The parts of a description, each spelled as it stands after the part
+ * before it and closed by its mark; joined by spaces they are the
+ * description.
  */
-function describeParts(
-  schedule: ScheduleFacts,
-  opts: UkrainianOptions
-): Parts {
+function describeParts(schedule: Schedule, opts: UkrainianOptions): Parts {
   const {candidates} = schedule.analyses;
-  const calendarOpen = ['date', 'weekday', 'month', 'year'].every(
-    function open(field) {
-      return isAll(candidates[field as 'date']);
-    }
-  );
-  const spoken = timePart(
-    schedule, unwrapped(schedule, 'hour', calendarOpen), opts.style);
-  const time: Part = {...spoken, named: false, setOff: false};
-  const calendar = calendarParts(schedule, time,
-    !isAll(candidates.hour) && !spoken.round, opts.style);
-  const parts = [time, calendar.day, calendar.month, calendar.year];
-  const [timeText, day, month, year] = parts.map(
-    function close(part, index) {
-      const next = parts.slice(index + 1).find(function said(later) {
-        return later.text !== '';
+  const calendar = calendarOf(schedule.analyses, opts.style.short);
+  const hours = hoursOf(candidates.hour as SetDescription[], calendar.open);
+  const time = timeOf({
+    hour: candidates.hour as SetDescription[],
+    minute: candidates.minute as SetDescription[],
+    second: candidates.second as SetDescription[]
+  }, hours, opts.style.hour12);
+  // «Щодня» fills the level a restricted hour would skip, where nothing
+  // else says how the days go: no day, no "every" word, and no run of
+  // hours through the night (clock times listed one by one are no run).
+  const listed = time.startsWith(`${words.at} `);
+  const daily = calendar.day === '' && hours.kind !== 'all' &&
+    (listed || !wraps(hours)) && !everyWords.some(function opens(word) {
+      return time.startsWith(word);
+    });
+  const day = [calendar.day, words.everyDay][Number(daily)];
+  let before = '';
+  const [year, month, dayPart, timePart, note] =
+    [calendar.year, calendar.month, day, time, calendar.note]
+      .map(function spelled(part) {
+        const text = spell(part, before);
+
+        before = text.split(' ').pop() || before;
+
+        return text;
       });
 
-      return part.text && next && (part.exception || next.setOff) ?
-        `${part.text},` :
-        part.text;
-    }
-  );
-
-  return {day, month, time: timeText, year};
+  return {day: dayPart, month, note, time: timePart, year};
 }
 
-function describe(schedule: ScheduleFacts, opts: UkrainianOptions): string {
+function describe(schedule: Schedule, opts: UkrainianOptions): string {
   const parts = describeParts(schedule, opts);
 
-  return [parts.time, parts.day, parts.month, parts.year]
-    .filter(Boolean)
-    .join(' ');
+  return [parts.year, parts.month, parts.day, parts.time, parts.note]
+    .filter(Boolean).join(' ');
 }
 
+// A label starts with a capital letter.
 function label(description: string): string {
   return description.charAt(0).toUpperCase() + description.slice(1);
 }
 
+// The lead ends in a vowel, so the description's first word is spelled
+// after it; a description that ends in a short name's full stop gets no
+// second one.
 function sentence(description: string): string {
-  const stop = description.endsWith('.') ? '' : '.';
+  const text = `${words.runs} ${spell(description, words.runs)}`;
 
-  return `${words.runs} ${description}${stop}`;
+  return text + '.'.repeat(Number(!text.endsWith('.')));
 }
 
 function reboot(): string {
@@ -90,7 +100,7 @@ const ukrainian: Language<UkrainianStyle> = {
   fallback,
   label,
   reboot,
-  regions: {},
+  regions,
   sentence,
   style,
   styles

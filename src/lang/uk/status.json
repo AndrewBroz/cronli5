@@ -2,6 +2,6 @@
   "name": "Ukrainian",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "rebuilt 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms (tooling/experiments/renderer-process/uk-acceptance.md)",
+  "modelReview": "rebuilt a second time 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after the rule book was redecided natively with schedule reads and blind fluency reads of the rows; every held-out row passes on the first judged run; the builder read four rules more loosely than written (tooling/experiments/renderer-process/uk-acceptance.md)",
   "branchBudget": 90
 }
