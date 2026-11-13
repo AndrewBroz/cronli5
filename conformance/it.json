@@ -4387,6 +4387,34 @@
    "pattern": "0 0 31 6 */2"
   },
   {
+   "expected": "al minuto 5 e ogni minuto dal minuto 10 al 20 di ogni ora, al secondo 30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 5,10-20 * * * *"
+  },
+  {
+   "expected": "ogni minuto dal minuto 10 al 20 e una volta al minuto 45 di ogni ora, al secondo 30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 10-20,45 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, al minuto 0, ogni minuto dal minuto 5 al 10 e poi ai minuti 20, 30, 40 e 50 delle ore 9, al secondo 30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 */10,5-9 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dal minuto 0 al 29 e una volta al minuto 45 di ciascuna ora dalle 9 alle 17, al secondo 30 (prima volta alle 9:00:30, ultima alle 17:45:30)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0-29,45 9-17 * * *"
+  },
+  {
    "expected": "tutti i giorni alle 9:00 del mattino",
    "options": {
     "lang": "it",
