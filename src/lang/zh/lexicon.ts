@@ -1,7 +1,7 @@
 // The Chinese (Simplified) lexicon: every word the renderer says, and
 // nothing else. Chinese words do not change form, so each is one string.
 
-/** A part of a clock time, always two digits: "05", "30". */
+/** The minutes or seconds of a clock time, always two digits: "05". */
 function twoDigits(value: number): string {
   return String(value).padStart(2, '0');
 }
@@ -24,70 +24,74 @@ const units = {
   day: '天',
   hour: '小时',
   hourNamed: '点',
+  hoursCounted: '个小时',
   minute: '分钟',
-  minuteOfHour: '分',
   month: '月',
+  round: '轮',
   second: '秒',
   year: '年'
 };
 
 // The function words and fixed phrases.
 const words = {
-  also: '以及',
-  and: '及',
-  during: '期间',
+  alsoPoints: '以及',
+  andDays: '和',
+  andExceptions: '及',
+  at: '在',
+  eachHour: '每小时',
+  eachHourOf: '每小时的',
   eachMinuteOf: '每分钟的',
-  eachTimeLasting: '每次持续1分钟',
-  eachTimeOf: '每次的',
+  eachRound: '每轮',
+  eachTime: '每次',
   eachYear: '每年',
-  evenDays: '偶数日',
-  evenHours: '偶数点',
-  evenMonths: '偶数月',
+  evenDays: '逢双日',
+  evenMonths: '双月',
   evenYears: '偶数年',
   every: '每',
   everyDay: '每天',
   everyHourOnTheHour: '每小时整点',
-  everyMinute: '每分钟',
   everyMonth: '每月',
-  everySecond: '每秒',
   except: '除',
   excepted: '除外',
   exceptedEnd: '外',
-  first: '前',
-  fromOn: '起',
-  last: '最后',
   lastDay: '最后一天',
   lastOne: '最后一个',
-  nearest: '最接近',
+  mondayToFriday: '周一至周五',
+  nearestFridayOrMonday: '遇周六、周日改在最近的周五或周一',
   nextDay: '次日',
-  nextMonth: '次月',
   nextYear: '次年',
   nth: '第',
   nthFromLast: '倒数第',
   nthOne: '个',
-  oddDays: '奇数日',
-  oddHours: '奇数点',
-  oddMonths: '奇数月',
+  oddDays: '逢单日',
+  oddMonths: '单月',
   oddYears: '奇数年',
   of: '的',
-  runs: '执行',
+  once: '一次',
+  oneRound: '一轮',
+  runsAt: '执行时间',
+  sameDay: '当天',
+  sameMonth: '当月',
   startup: '系统启动时',
+  thatMinute: '该分钟',
+  these: '这',
+  theseMinutes: '这些分钟',
+  thisHour: '这一小时',
+  thisMinute: '这一分钟',
   to: '至',
   unrecognizable: '无法识别的cron表达式',
   week: '周',
-  slot: '时段',
-  thisMinute: '这一分钟',
-  mondayToFriday: '周一至周五',
-  meanwhile: '期间',
   within: '内',
   workingDay: '工作日'
 };
 
-// Punctuation, all full-width.
+// Punctuation, all full-width but the colon of a clock time.
 const marks = {
   close: '）',
   colon: ':',
   comma: '，',
+  ellipsis: '……',
+  lead: '：',
   list: '、',
   open: '（',
   stop: '。'
