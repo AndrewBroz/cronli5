@@ -21,12 +21,14 @@ const FIELDS =
 // «щомісяця» into the day part and makes a month a heading («у червні:
 // щоп'ятниці, а також 1-го числа»), and a single year follows a month's
 // name wherever that stands («у червні 2030 року», «1 січня 2030 року»).
-// No calendar edit touches the time.
+// No calendar edit touches the time. One Quartz day form adds a note in
+// brackets after the time («(28-го, якщо в місяці 31 день)»); it belongs
+// to the day of the month, so only the calendar fields may change it.
 const MAY_CHANGE = {
-  date: ['year', 'month', 'day'],
+  date: ['year', 'month', 'day', 'note'],
   hour: ['time'],
   minute: ['time'],
-  month: ['year', 'month', 'day'],
+  month: ['year', 'month', 'day', 'note'],
   second: ['time'],
   weekday: ['year', 'month', 'day'],
   year: ['year', 'month', 'day']
@@ -113,18 +115,18 @@ function leaks(pairList) {
 }
 
 // Continuity, measured directly. A description is four parts in one order:
-// year, month, day, time. Editing one field of the pattern may rewrite
+// year, month, day, time (and, for one Quartz form, a note after them). Editing one field of the pattern may rewrite
 // that field's part and nothing else, apart from the declared fusions
 // above. This is the constraint itself, where a count of changed words is
 // only a rough sign of it: a longer sentence, or a wrong one, cannot make
 // this pass.
 describe('Ukrainian continuity:', function() {
-  it('says a description as its four parts, joined in order', function() {
+  it('says a description as its parts, joined in order', function() {
     pairs().forEach(function joined(pair) {
       const {opts, schedule} = parse(pair[1]);
       const parts = ukrainian.describeParts(schedule, opts);
 
-      expect([parts.year, parts.month, parts.day, parts.time]
+      expect([parts.year, parts.month, parts.day, parts.time, parts.note]
         .filter(Boolean).join(' '))
         .to.equal(ukrainian.default.describe(schedule, opts));
     });
@@ -167,5 +169,7 @@ describe('Ukrainian continuity:', function() {
     expect(say('0 9-17 * * *'))
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
     expect(say('30 * * * *')).to.equal(say('30 0-23 * * *'));
+    expect(say('30 * * * *'))
+      .to.equal('щогодини на 30-й хвилині (0:30, 1:30 … 23:30)');
   });
 });
