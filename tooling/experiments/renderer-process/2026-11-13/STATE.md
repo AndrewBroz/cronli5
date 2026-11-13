@@ -60,7 +60,7 @@ The conciseness gate had checked English only (`LANGS = ['en']`) since the
 other languages were rebuilt, so "no over-budget shapes" was true of one
 language in ten. It now runs for every language, with two measures (things
 named against the pattern's budget, a clock time or date counting once;
-length against 2.25 times the language's own median), and records what
+length against a ceiling fixed at 2.25 times the language's median when the gate was first held to it), and records what
 fails in `tooling/docs/length-gate.json`. Distinct failing shapes when it
 was turned on (over budget / over length): cs 205/114, de 5/0, en 0/0,
 es 4/0, fr 0/34, it 259/0, ja 36/0, pt 20/30, uk 167/19, zh 60/92.

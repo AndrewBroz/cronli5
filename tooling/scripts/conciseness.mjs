@@ -17,9 +17,11 @@
 // the same in every language: the reader's task does not change with the
 // language. The second is a ceiling on length, which does change: Japanese
 // says in fifty characters what French says in a hundred and thirty. So the
-// ceiling is a multiple of the language's own median over the sweep, and
-// catches what the count cannot, a dozen clock times each written to the
-// second.
+// ceiling is 2.25 times the language's median over the sweep, taken once,
+// when the language is first held to the gate, and kept on record. It does
+// not follow the median afterwards: a ceiling that fell every time a
+// language was shortened could never be met. It catches what the count
+// cannot, a dozen clock times each written to the second.
 //
 // A failure is a failure. The languages that fail today are recorded with
 // their counts in tooling/docs/length-gate.json, and the gate fails when a
@@ -40,9 +42,9 @@ const LANGS = readdirSync(new URL('../../src/lang/', import.meta.url))
   .sort();
 const RECORD = new URL('../docs/length-gate.json', import.meta.url);
 
-// No description may be longer than this many times the median length of
-// its language's descriptions over the sweep. (English, the language the
-// budget was first held to, reaches about twice its median.)
+// A language's ceiling, when it is first held to the gate: this many times
+// the median length of its descriptions over the sweep. (English, the
+// language the budget was first held to, reaches about twice its median.)
 const CEILING = 2.25;
 
 // Up to this many fires, naming each as an explicit clock time ("9:05 a.m.,
@@ -173,9 +175,9 @@ function distinct(hits, measure) {
   }).sort((a, b) => measure(b) - measure(a));
 }
 
-async function sweep(code, threshold) {
+async function sweep(code, threshold, recorded) {
   const all = await described(code);
-  const ceiling = Math.round(CEILING *
+  const ceiling = recorded || Math.round(CEILING *
     median(all.map((hit) => hit.description.length)));
 
   return {
@@ -196,13 +198,18 @@ function show(title, hits, label) {
 }
 
 // Returns each language's counts so callers can gate on them.
-async function main(codes, threshold) {
+async function main(codes, threshold, record) {
   const counts = {};
 
   for (const lang of codes) {
-    const {ceiling, overBudget, overLong} = await sweep(lang, threshold);
+    const {ceiling, overBudget, overLong} =
+      await sweep(lang, threshold, record[lang]?.ceiling);
 
-    counts[lang] = {overBudget: overBudget.length, overLong: overLong.length};
+    counts[lang] = {
+      ceiling,
+      overBudget: overBudget.length,
+      overLong: overLong.length
+    };
     console.log('\n=== ' + lang + ' ===');
     show('distinct shapes naming more than budget + ' + threshold,
       overBudget, (hit) => '+' + hit.excess);
@@ -235,8 +242,8 @@ if (process.argv[1] &&
   const code = process.argv.find((arg) => LANGS.includes(arg));
   const flag = process.argv.find((arg) => arg.startsWith('--threshold='));
   const threshold = flag ? Number(flag.slice('--threshold='.length)) : 6;
-  const counts = await main(code ? [code] : LANGS, threshold);
   const record = JSON.parse(readFileSync(RECORD, 'utf8'));
+  const counts = await main(code ? [code] : LANGS, threshold, record);
   const drifted = drift(counts, record);
   const failing = Object.keys(counts).filter((lang) =>
     counts[lang].overBudget + counts[lang].overLong > 0);

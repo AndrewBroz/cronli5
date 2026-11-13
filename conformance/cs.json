@@ -786,7 +786,7 @@
    "pattern": "0 9 L * *"
   },
   {
-   "expected": "vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 9:00",
+   "expected": "vždy 15. dne v měsíci, o víkendu místo toho v nejbližší pátek nebo pondělí, v 9:00",
    "options": {
     "lang": "cs"
    },
@@ -1325,7 +1325,7 @@
    "pattern": "0 0 L * *"
   },
   {
-   "expected": "vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 0:00",
+   "expected": "vždy 15. dne v měsíci, o víkendu místo toho v nejbližší pátek nebo pondělí, v 0:00",
    "options": {
     "lang": "cs"
    },
@@ -1591,7 +1591,7 @@
    "pattern": "* * L * *"
   },
   {
-   "expected": "vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, každou minutu",
+   "expected": "vždy 15. dne v měsíci, o víkendu místo toho v nejbližší pátek nebo pondělí, každou minutu",
    "options": {
     "lang": "cs"
    },
@@ -1959,49 +1959,49 @@
    "pattern": "0 0 1 * ?"
   },
   {
-   "expected": "vždy poslední den v měsíci, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "expected": "vždy poslední den v měsíci, o víkendu místo toho v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0 0 LW * *"
   },
   {
-   "expected": "vždy 1. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho následující pondělí, v 0:00",
+   "expected": "vždy 1. dne v měsíci, o víkendu místo toho následující pondělí, v 0:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0 0 1W * *"
   },
   {
-   "expected": "vždy 1. června, a připadne-li na sobotu nebo neděli, místo toho následující pondělí, v 0:00",
+   "expected": "vždy 1. června, o víkendu místo toho následující pondělí, v 0:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0 0 1W 6 *"
   },
   {
-   "expected": "vždy 15. června, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 0:00",
+   "expected": "vždy 15. června, o víkendu místo toho v nejbližší pátek nebo pondělí, v 0:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0 0 15W 6 *"
   },
   {
-   "expected": "vždy 31. dne v měsíci (jen v měsících, které ho mají), a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "expected": "vždy 31. dne v měsíci (jen v měsících, které ho mají), o víkendu místo toho v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0 0 31W * *"
   },
   {
-   "expected": "vždy 28. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek před ním, v 0:00",
+   "expected": "vždy 28. dne v měsíci, o víkendu místo toho v nejbližší pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0 0 28W * *"
   },
   {
-   "expected": "vždy 30. června, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "expected": "vždy 30. června, o víkendu místo toho v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },
@@ -2430,7 +2430,7 @@
    "pattern": "0 0 31 6 */2"
   },
   {
-   "expected": "v červnu každé pondělí a navíc 15. června, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, vždy v 9:00",
+   "expected": "v červnu každé pondělí a navíc 15. června, o víkendu místo toho v nejbližší pátek nebo pondělí, vždy v 9:00",
    "options": {
     "lang": "cs"
    },
@@ -4160,7 +4160,7 @@
    "pattern": "* 30,42 3-10 * 7,9,10,12 1,3,4,5"
   },
   {
-   "expected": "v březnu, červnu, září a prosinci vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 18:00",
+   "expected": "v březnu, červnu, září a prosinci vždy 15. dne v měsíci, o víkendu místo toho v nejbližší pátek nebo pondělí, v 18:00",
    "options": {
     "lang": "cs"
    },
@@ -4231,14 +4231,14 @@
    "pattern": "0 0 31 6 1"
   },
   {
-   "expected": "v červenci a srpnu vždy 31. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "expected": "v červenci a srpnu vždy 31. dne v měsíci, o víkendu místo toho v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0 0 31W 6-8 *"
   },
   {
-   "expected": "v přestupných letech vždy 29. února, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "expected": "v přestupných letech vždy 29. února, o víkendu místo toho v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },
@@ -4519,7 +4519,7 @@
    "pattern": "0 0 L-3 6-8 *"
   },
   {
-   "expected": "vždy 29. dne v měsíci (jen v měsících, které ho mají), a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek před ním, v 0:00",
+   "expected": "vždy 29. dne v měsíci (jen v měsících, které ho mají), o víkendu místo toho v nejbližší pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },
@@ -4568,7 +4568,7 @@
    "pattern": "0 9 1-14,16-31 * 5L"
   },
   {
-   "expected": "vždy poslední den v červnu, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "expected": "vždy poslední den v červnu, o víkendu místo toho v pátek před ním, v 0:00",
    "options": {
     "lang": "cs"
    },

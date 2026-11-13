@@ -1,41 +1,51 @@
 {
   "cs": {
+    "ceiling": 268,
     "overBudget": 0,
-    "overLong": 66
+    "overLong": 0
   },
   "de": {
+    "ceiling": 288,
     "overBudget": 5,
     "overLong": 0
   },
   "en": {
+    "ceiling": 250,
     "overBudget": 0,
     "overLong": 0
   },
   "es": {
+    "ceiling": 261,
     "overBudget": 4,
     "overLong": 0
   },
   "fr": {
+    "ceiling": 290,
     "overBudget": 0,
     "overLong": 34
   },
   "it": {
+    "ceiling": 281,
     "overBudget": 259,
     "overLong": 0
   },
   "ja": {
+    "ceiling": 117,
     "overBudget": 36,
     "overLong": 0
   },
   "pt": {
+    "ceiling": 281,
     "overBudget": 20,
     "overLong": 30
   },
   "uk": {
+    "ceiling": 261,
     "overBudget": 167,
     "overLong": 19
   },
   "zh": {
+    "ceiling": 104,
     "overBudget": 60,
     "overLong": 92
   }

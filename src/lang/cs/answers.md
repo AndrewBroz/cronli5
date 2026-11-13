@@ -988,7 +988,7 @@ a second device for the same thing.)
 | one range | «od 1. do 7. dne v měsíci» | «od 1. do 7. června» |
 | odd, even | «každý lichý den v měsíci» | «každý lichý den v červnu» |
 | a cadence | «od 1. dne v měsíci každý třetí den» | not fused, the month leads: «v červnu od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále)» («od 1. června každý třetí den» reads as a start date: schedule reader 2) |
-| Quartz and nth weekdays | «… v měsíci» | «vždy poslední den v červnu», «vždy druhé pondělí v červnu», «vždy 15. června, a připadne-li na sobotu nebo neděli, …»; `L-n` by 5.7 («vždy 27. června») |
+| Quartz and nth weekdays | «… v měsíci» | «vždy poslední den v červnu», «vždy druhé pondělí v červnu», «vždy 15. června, o víkendu místo toho …»; `L-n` by 5.7 («vždy 27. června») |
 | removed days | «denně kromě 15. dne v měsíci» | the month leads and the removed day is a date: «v červnu denně kromě 15. června» |
 
 With any other month part the month leads and the days keep «dne
@@ -1133,9 +1133,9 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
 | `L` | «vždy poslední den v měsíci» | «vždy poslední den v červnu» |
 | `L-1` | «vždy předposlední den v měsíci» | «… v červnu» |
 | `L-n`, n ≥ 2 | below | below |
-| `1W` (`firstWeekday`) | «vždy 1. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho následující pondělí,» | «vždy 1. června, a připadne-li …,» |
-| `LW` | «vždy poslední den v měsíci, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním,» | «vždy poslední den v červnu, a připadne-li …,» |
-| `nW` | «vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho …,» (three endings, below) | «vždy 15. června, a připadne-li …,» |
+| `1W` (`firstWeekday`) | «vždy 1. dne v měsíci, o víkendu místo toho následující pondělí,» | «vždy 1. června, o víkendu místo toho …,» |
+| `LW` | «vždy poslední den v měsíci, o víkendu místo toho v pátek před ním,» | «vždy poslední den v červnu, o víkendu místo toho …,» |
+| `nW` | «vždy 15. dne v měsíci, o víkendu místo toho …,» (three endings, below) | «vždy 15. června, o víkendu místo toho …,» |
 | `1#2` | «vždy druhé pondělí v měsíci» | «vždy druhé pondělí v červnu» |
 | `5L` | «vždy poslední pátek v měsíci» | «vždy poslední pátek v červnu» |
 
@@ -1146,29 +1146,32 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
   judge 2); «všední den (pondělí až pátek, i když je svátek)» (the
   gloss has to correct the word just used, „si protiřečí“: judge 4, and
   usage §1.1 had warned of exactly that promise). So the three forms
-  say what happens, in the days themselves: the date; the condition «a
-  připadne-li na sobotu nebo neděli»; «místo toho» and the day it moves
-  to.
+  say what happens, in the days themselves: the date; «o víkendu místo
+  toho» and the day it moves to. (Until 2026-11-13 the condition was
+  spelled out, «a připadne-li na sobotu nebo neděli, místo toho»: 79
+  characters with its ending, which put every sentence with a `W` day and
+  a full time part over the length ceiling. The maintainer, a native
+  speaker, chose «o víkendu místo toho» over «a připadne-li na víkend,
+  místo toho». «víkend» names Saturday and Sunday and no category of
+  working day, so the objection above does not touch it.)
   * `LW`: the last day can only move back: «v pátek před ním».
   * `1W`: the first day can only move forward: «následující pondělí».
   * `nW`, by `analyses.day.nearestDayIsLast`:
     * `'never'` (the Monday after always exists): «v nejbližší pátek
-      nebo pondělí». `15W` → «vždy 15. dne v měsíci, a připadne-li na
-      sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí,».
+      nebo pondělí». `15W` → «vždy 15. dne v měsíci, o víkendu místo toho v nejbližší pátek nebo pondělí,».
     * `'always'` (n is the last day of every month it fires in; there
       is never a Monday): only the Friday, «v pátek před ním». `31W` →
       «vždy 31. dne v měsíci (jen v měsících, které ho mají),
-      a připadne-li na sobotu nebo neděli, místo toho v pátek před
+      o víkendu místo toho v pátek před
       ním,». The fifth-read form offered a Monday that never comes,
       and the reader read «v pondělí» (judge 5).
     * `'sometimes'`: both, and when it is the Friday: «v nejbližší
       pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek
-      před ním». `28W` → «vždy 28. dne v měsíci, a připadne-li na
-      sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí,
+      před ním». `28W` → «vždy 28. dne v měsíci, o víkendu místo toho v nejbližší pátek nebo pondělí,
       z posledního dne měsíce ale vždy v pátek před ním,».
   * A comma closes the clause whenever anything follows.
-  * The condition verb is «připadne-li na», the one verb of 4.3. An
-    earlier judge could not tell whose «připadne» was; here it stands
+  * Where a condition is spelled out elsewhere its verb is «připadne-li
+    na», the one verb of 4.3; here «o víkendu» stands in its place,
     straight after the date it is said of. «když je to» (sixth version)
     was colloquial and, with a range or a date after it, not Czech
     (judges 4 and 5, who both write «připadne-li na»). «v pondělí
@@ -1203,8 +1206,8 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
   `dateReach.leapYears` is not empty, and the month field is
   unrestricted; `L-n` needs no note, its months are named or its day is
   worked): «(jen v měsících, které ho mají)» straight after «dne
-  v měsíci»: «vždy 31. dne v měsíci (jen v měsících, které ho mají), a
-  připadne-li na sobotu nebo neděli, …». A plain day («vždy 31. dne
+  v měsíci»: «vždy 31. dne v měsíci (jen v měsících, které ho mají), o
+  víkendu místo toho …». A plain day («vždy 31. dne
   v měsíci») and a fifth weekday take no note: there the reader sees the
   day itself. Under a restricted month field the months that never fire
   are simply not named (4.4).
@@ -1212,7 +1215,7 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
   the day (7.2), the day, «v měsíci». Not «každé druhé pondělí
   v měsíci»: «každé druhé pondělí» is every other Monday.
   `0 0 L * *` → «vždy poslední den v měsíci v 0:00»; `0 0 15W * *` →
-  «vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo
+  «vždy 15. dne v měsíci, o víkendu místo
   toho v nejbližší pátek nebo pondělí, v 0:00»; `0 0 * * 1#2` →
   «vždy druhé pondělí v měsíci v 0:00»; `0 0 * * 5L` → «vždy poslední
   pátek v měsíci v 0:00».

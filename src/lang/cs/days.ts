@@ -287,7 +287,7 @@ function moved(date: string, to: string): Phrase {
     clause: true,
     fused: true,
     opener: words.always,
-    text: `${date}, ${words.ifItFallsOnAWeekend}, ${words.instead} ${to},`
+    text: `${date}, ${words.onAWeekend} ${words.instead} ${to},`
   };
 }
 
