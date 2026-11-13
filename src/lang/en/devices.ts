@@ -282,7 +282,7 @@ function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
 function sayMixed(mixed: CadencePieces, voice: Voice, opts: EnglishOptions):
   Phrase | null {
   const each = voice.inPieces || {...voice, lead: ''};
-  const strides = voice.mixed === undefined ? voice : voice.mixed;
+  const {mixed: strides = voice} = voice;
   const bounded = {bare: false, open: false, pair: false, tiles: true};
   const said = mixed.parts.map(function sayPart(part, at) {
     const kinds = {

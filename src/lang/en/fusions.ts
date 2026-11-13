@@ -106,7 +106,7 @@ interface TimeContext {
   halves: boolean;
   lead: SecondsLead;
   minute: Tick;
-  riding: number | undefined;
+  riding?: number;
 }
 
 // A stretch of the sentence, and whether it ends in an exception.
@@ -532,7 +532,7 @@ function timesWith(
   const minute = withSecond(tick(minutes, 'minute',
     {alone: lead.everyAlone, one: lead.every, stray: lead.within}, opts),
   riding);
-  const context = {halves, lead, minute, riding: fronted ? undefined : riding};
+  const context = {halves, lead, minute, ...!fronted && {riding}};
 
   return [
     ...clockList(times, spoken.before, opts),
@@ -679,61 +679,84 @@ interface DatePhrase extends Said {
 interface DayFields {
   date: DateArm | null;
   dates: Described[];
-  // Whether the day part fires only in leap years.
-  leapOnly: boolean;
+  // What is said after the years when the day part fires only in leap
+  // years.
+  leap: string;
   months: Described[];
   union: boolean;
   weekday: WeekdayArm | null;
   weekdays: Described[];
 }
 
+const whole: Described[] = [{kind: 'all'}];
+
 // In a date-or-weekday pair an exception on one side is heard as taking
 // its days from the other side too ("on the 15th as well as Monday
 // through Saturday except Thursday" loses a Thursday the 15th). A week is
 // short enough to name without one.
-function withoutExceptions(candidates: Described[]): Described[] {
-  return candidates.filter(function plain(description) {
-    return description.kind !== 'except';
+function weekdaysBeside(candidates: Described[], union: boolean): Described[] {
+  return candidates.filter(function sayable(description) {
+    return !union || description.kind !== 'except';
   });
 }
 
+// The days of the month as they can be described. The days the months
+// really have come first, so that on a tie nothing names a day that does
+// not exist. The field's own set is still on offer: "odd-numbered days
+// in June" names no 31st.
+function datesOf(facts: ScheduleFacts, date: DateArm | null): Described[] {
+  const own = candidatesOf(facts, 'date');
+  const real = facts.analyses.dateReach?.days?.candidates[0];
+
+  if (date === null) {
+    return whole;
+  }
+
+  return real ?
+    [...waysToSay(denote(real, domainOf('date')), 'date', facts), ...own] :
+    own;
+}
+
+// The months as they can be described: where they are named and the day
+// of the month never comes in some of them, only those it can fire in.
+function monthsOf(facts: ScheduleFacts, reach: DateReach | null):
+  Described[] {
+  const named = facts.analyses.candidates.month![0].kind !== 'all';
+
+  return reach && named && reach.never.length > 0 ?
+    waysToSay([...reach.everyYear, ...reach.leapYears].sort(
+      function ascending(a, b) {
+        return a - b;
+      }
+    ), 'month', facts) :
+    candidatesOf(facts, 'month');
+}
+
+// What follows the years when the day part comes in leap years alone.
+function leapWords(reach: DateReach | null): string {
+  return reach && reach.everyYear.length === 0 ? words.leapYears : '';
+}
+
 function dayFields(facts: ScheduleFacts): DayFields {
-  const {candidates, dateReach: reach, day} = facts.analyses;
-  const everyDay = reach?.days?.everyDay === true;
-  const fires = !everyDay && (reach === null || reach.fires);
-  const date = fires ? day.date : null;
+  const {candidates, dateReach, day} = facts.analyses;
+  const everyDay = dateReach?.days?.everyDay === true;
+  const date = everyDay || dateReach?.fires === false ? null : day.date;
   const weekday = everyDay ? null : day.weekday;
   const union = date !== null && weekday !== null;
-  const reached = date !== null && reach !== null && !union;
-  const firing = reach ? [...reach.everyYear, ...reach.leapYears] : [];
-  const named = candidates.month![0].kind !== 'all';
-  const own = candidatesOf(facts, 'date');
-  // The days the months really have come first, so that on a tie nothing
-  // names a day that does not exist. The field's own set is still on
-  // offer: "odd-numbered days in June" names no 31st.
-  const dates = date && reach && reach.days ?
-    [
-      ...waysToSay(denote(reach.days.candidates[0], domainOf('date')), 'date',
-        facts),
-      ...own
-    ] :
-    own;
-  const sides = union ? withoutExceptions : Array.from<Described>;
+  // What the calendar says of the day of the month counts where that
+  // arm is said and stands alone.
+  const reach = date === null || union ? null : dateReach;
 
   return {
     date,
-    dates: date ? dates : [{kind: 'all'}],
-    leapOnly: reached && reach.everyYear.length === 0,
-    months: reached && named && reach.never.length > 0 ?
-      waysToSay(firing.sort(function ascending(a, b) {
-        return a - b;
-      }), 'month', facts) :
-      candidatesOf(facts, 'month'),
+    dates: datesOf(facts, date),
+    leap: leapWords(reach),
+    months: monthsOf(facts, reach),
     union,
     weekday,
     weekdays: weekday ?
-      sides(candidates.weekday || []) :
-      [{kind: 'all'}]
+      weekdaysBeside(candidates.weekday || whole, union) :
+      whole
   };
 }
 
@@ -929,27 +952,33 @@ function neverFires(
   return join(`${words.never},`, words.because, reason, year);
 }
 
+// The years after a part that is closed with a comma. A cadence of years
+// cannot hang on a day across the comma, and takes "in" there.
+function acrossComma(hung: Choice, closes: boolean, opts: EnglishOptions):
+  Choice {
+  return closes && hangsOnTheDay(hung) ?
+    {...hung, ...say(hung.description, yearsByNumber(false, opts), opts)} :
+    hung;
+}
+
 // The time, the day, the month and the year of a schedule that runs. A
 // day of the month and a day of the week are joined by "as well as". Each
 // takes the months into its phrase, so the month has its own part only
 // when neither kind of day is restricted, or when both are and the month
 // phrase is longer than one month: then it is said once after the two.
 // A part that ends in an exception, or is several pieces, or is such a
-// pair of days, is closed with a comma when anything follows it. A
-// cadence of years cannot hang on a day across that comma, and takes
-// "in" there.
+// pair of days, is closed with a comma when anything follows it.
 function partsThatRun(facts: ScheduleFacts, opts: EnglishOptions): Parts {
   const fields = dayFields(facts);
   const {months, union} = fields;
   const alone = choose(months, monthsAlone(opts), opts);
   const oneMonth = onlyValue(alone.description) !== null;
   const after = union && !oneMonth ? unlessEvery(alone) : '';
-  const beside: Described[] = after ? [{kind: 'all'}] : months;
   const hung =
     choose(candidatesOf(facts, 'year'), yearsByNumber(true, opts), opts);
   const hangs = hangsOnTheDay(hung);
   // A day of the month before "of every other year" says its month.
-  const days = daysOf(fields, beside, hangs && !union, opts);
+  const days = daysOf(fields, after ? whole : months, hangs && !union, opts);
   const time = timeOfDay(facts, opts);
   // A time of day with no day named skips a level, unless it runs round
   // the clock; and a cadence of years needs a day to hang on.
@@ -960,28 +989,22 @@ function partsThatRun(facts: ScheduleFacts, opts: EnglishOptions): Parts {
     excepts: setOff(alone).excepts,
     text: days.text ? after : unlessEvery(alone)
   };
-  const closes = month.text ? month.excepts : days.excepts;
-  const years = closes && hangs ?
-    {...hung, ...say(hung.description, yearsByNumber(false, opts), opts)} :
-    hung;
-  const year = yearOf(years, {dated: days.dated, oneMonth, union}, opts);
-  const leap = fields.leapOnly ? words.leapYears : '';
+  const year = yearOf(
+    acrossComma(hung, month.text ? month.excepts : days.excepts, opts),
+    {dated: days.dated, oneMonth, union}, opts);
   const [timePart, dayPart, monthPart, yearPart] = closed([
     time,
-    {
-      excepts: days.excepts || year.comma,
-      text: days.text || everyDay
-    },
+    {excepts: days.excepts || year.comma, text: days.text || everyDay},
     month,
-    {excepts: leap !== '', text: year.text},
-    {excepts: false, text: leap}
+    {excepts: true, text: year.text},
+    {excepts: false, text: fields.leap}
   ]);
 
   return {
     day: dayPart,
     month: monthPart,
     time: timePart,
-    year: join(yearPart, leap)
+    year: join(yearPart, fields.leap)
   };
 }
 
