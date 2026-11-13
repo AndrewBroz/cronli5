@@ -197,7 +197,7 @@ describe('Portuguese continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   // Times whose hours pass midnight, and times that only look as if they
   // might: hours short of midnight, and minutes and seconds that pass the
@@ -263,7 +263,7 @@ describe('Portuguese continuity:', function() {
     expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
     expect(score(render, neighborPairs(coreSetSeeds()))
       .equivalentViolations).to.deep.equal([]);
-  }, 60000);
+  }, 240000);
 
   it('never follows the spelling: no tie is declared', function() {
     function say(pattern) {

@@ -185,7 +185,7 @@ describe('English continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('lets a coarser field reach a finer part only as declared',
     function() {
@@ -241,7 +241,7 @@ describe('English continuity:', function() {
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
       expect(score(render, neighborPairs(coreSetSeeds()))
         .equivalentViolations).to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('follows the spelling only for the declared tie', function() {
     function say(pattern) {

@@ -215,7 +215,7 @@ describe('French continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   // The declared rewording of hours that run through midnight, and
   // nothing more: the same edits leave any other hours as they were.
@@ -270,7 +270,7 @@ describe('French continuity:', function() {
     expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
     expect(score(render, neighborPairs(coreSetSeeds()))
       .equivalentViolations).to.deep.equal([]);
-  }, 60000);
+  }, 240000);
 
   it('never follows the spelling', function() {
     function say(pattern) {

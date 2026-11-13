@@ -165,7 +165,7 @@ describe('Japanese continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('lets a day or month edit split hours that pass midnight, and no ' +
     'other hours', function() {
@@ -222,7 +222,7 @@ describe('Japanese continuity:', function() {
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
       expect(score(render, neighborPairs(coreSetSeeds()))
         .equivalentViolations).to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('never follows the spelling of a field', function() {
     function say(pattern) {

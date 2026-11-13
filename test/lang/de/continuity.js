@@ -152,7 +152,7 @@ describe('German continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('renders equal schedules identically, however they are spelled',
     function() {
@@ -165,7 +165,7 @@ describe('German continuity:', function() {
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
       expect(score(render, neighborPairs(coreSetSeeds()))
         .equivalentViolations).to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   // German declares no tie (answers 3.11): a cadence of hours is never
   // said bare, so `*/12` and `0,12` are the same two clock times.

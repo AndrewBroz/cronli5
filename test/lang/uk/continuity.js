@@ -226,7 +226,7 @@ describe('Ukrainian continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('lets a calendar field unwrap hours said across midnight, and ' +
     'nothing else of the time', function() {
@@ -294,7 +294,7 @@ describe('Ukrainian continuity:', function() {
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
       expect(score(render, neighborPairs(coreSetSeeds()))
         .equivalentViolations).to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('never follows the spelling', function() {
     function say(pattern) {

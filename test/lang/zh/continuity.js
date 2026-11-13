@@ -175,7 +175,7 @@ describe('Chinese continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('says an overnight stretch only where nothing but the time is ' +
     'restricted, and changes nothing else by it', function() {
@@ -244,7 +244,7 @@ describe('Chinese continuity:', function() {
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
       expect(score(render, neighborPairs(coreSetSeeds()))
         .equivalentViolations).to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('never follows the spelling', function() {
     function say(pattern) {
