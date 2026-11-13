@@ -30,6 +30,8 @@ type YearValues = ValuesDescription;
 // One stretch of years: what it asks for before a month, and whether it
 // has no end.
 interface YearTerm {
+  // Whether it is every year but a few, said as 除…外.
+  excepted?: boolean;
   kind: YearKind;
   open: boolean;
   text: string;
@@ -47,6 +49,11 @@ interface Side {
 export interface Part<Kind> {
   kind: Kind;
   text: string;
+}
+
+/** A year part, and whether it is every year but a few. */
+export interface YearPart extends Part<YearKind> {
+  excepted: boolean;
 }
 
 /** A month part, and what joins the year part to it. */
@@ -228,6 +235,7 @@ function yearValues(values: number[]): YearTerm {
 function yearTerm(part: SetDescription, removed: number[] = []): YearTerm {
   const terms: {[kind: string]: () => YearTerm} = {
     all: () => ({
+      excepted: true,
       kind: 'range',
       open: false,
       text: words.except + yearsListed(removed) + words.exceptedEnd
@@ -240,23 +248,25 @@ function yearTerm(part: SetDescription, removed: number[] = []): YearTerm {
   return terms[part.kind]();
 }
 
-// Stretches of years together. Lone years and runs that end are a list;
-// beside a run with no end, or a cadence said with its rule, they are
-// joined by 以及, and such a cadence ends the whole in 当年.
-function yearsTogether(terms: YearTerm[]): Part<YearKind> {
+// Stretches of years together, as a list. Where any is a run with no end
+// or a cadence said with its rule, the last is joined by 以及, and such a
+// cadence ends the whole in 当年.
+function yearsTogether(terms: YearTerm[]): YearPart {
   const ruled = terms.some((term) => term.kind === 'cycle');
   const open = terms.some((term) => term.open);
 
   return {
+    excepted: terms[0].excepted === true,
     kind: first<YearKind>([
       [ruled, 'cycle'],
       [terms.length === 1, terms[0].kind],
       [open, 'range'],
       [true, 'several']
     ]),
-    text: terms.map((term) => term.text).join(
-      ruled || open ? words.alsoPoints : marks.list) +
-      when(ruled, marks.comma + words.thatYear)
+    text: series(terms.slice(0, -1).map((term) => term.text)) +
+      when(terms.length > 1,
+        ruled || open ? words.alsoPoints : marks.list) +
+      lastOf(terms).text + when(ruled, marks.comma + words.thatYear)
   };
 }
 
@@ -311,13 +321,14 @@ function manyYears(schedule: Schedule): YearTerm[] {
  * listed; a single run or cadence is said as one; anything else is
  * several stretches.
  */
-function yearOf(schedule: Schedule): Part<YearKind> {
+function yearOf(schedule: Schedule): YearPart {
   const found = schedule.analyses.candidates.year as SetDescription[];
   const [shortest] = found;
   const all = lastOf(found) as YearValues;
 
-  return first<() => Part<YearKind>>([
-    [shortest.kind === 'all', () => ({kind: 'none', text: ''})],
+  return first<() => YearPart>([
+    [shortest.kind === 'all',
+      () => ({excepted: false, kind: 'none', text: ''})],
     [all.values?.length <= LISTED && !(shortest as YearRange).open,
       () => yearsTogether([yearValues(all.values)])],
     [shortest.kind === 'range' || shortest.kind === 'cadence',
@@ -345,12 +356,15 @@ function monthsOf(schedule: Schedule): number[] {
 }
 
 /**
- * The month part, and what joins a year part of the given kind to it:
+ * The month part, and what joins the given year part to it:
  * nothing when no month is named. A run of months may cross the new year
- * only when every year fires.
+ * only when every year fires. After years that are all but a few, no
+ * exception is said of the months.
  */
-function monthOf(values: number[], year: YearKind): MonthPart {
+function monthOf(values: number[], years: YearPart): MonthPart {
   const domain = domainOf('month');
+  const year = years.kind;
+  const plain = years.excepted;
   const wraps = year === 'none';
 
   if (values.length === 0) {
@@ -358,7 +372,7 @@ function monthOf(values: number[], year: YearKind): MonthPart {
   }
 
   const picked = chosen(values, domain, function mostMonths(exception, kept) {
-    return kept.length > LISTED && exception.base.kind === 'all';
+    return !plain && kept.length > LISTED && exception.base.kind === 'all';
   });
   const runs = runsOf(values, domain, wraps, RANGE);
   const excepted = picked.removed.length > 0;

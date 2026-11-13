@@ -426,6 +426,9 @@ values before one stretched to the ends of the field.
   日、5日……17日.
 * Months, more than eight that are not one run: 除6月外, after 每年. 每年除6
   月外每天9:00; 每年除6月外每月1日0:00. (Not 每年7月至次年5月.)
+* **After every year but one or two (除2030年外, 5.8) the months take no
+  exception**, for the same reason as the next rule: 除2030年外每年1月至5
+  月、7月至12月每天9:00.
 * **After months excepted, neither the dates nor the weekdays take an
   exception**: 每年除6月外每周一、周二、周四至周日9:00; 每年除6月外每月1日
   至14日、16日至31日的9:00. (The audit left 每年除6月外除周三外每天9:00,
@@ -840,8 +843,8 @@ holidays. 周末 is not used either (it can take in Friday evening).
 5.3 None. Noon and midnight are 12:00 and 0:00. 午夜 "不能用": 1日午夜 is
 read as the end of the 1st.
 
-5.4 Minute 0 with every hour is 每小时整点, and with a second, 每小时整点过
-30秒 (4.2).
+5.4 Minute 0 with every hour is 每小时整点. Once a second is said it is a
+minute like any other, 每小时的0分30秒 (4.2).
 
 5.5 Every second hour, more than eight of them, where the hours are whole
 hours (4.1): 偶数小时（0点、2点、4点……22点） for hours 0, 2 … 22 and 奇数小
@@ -869,7 +872,8 @@ the top: 每年1月、3月、5月、7月、9月、11月. **Contested**: 奇数�
 months; the third read the list at once. Every other interval is a digit:
 每15分钟一次.
 
-5.6 Parts of the day are used only with `hour12: true` (1.2).
+5.6 Parts of the day are used only with `hour12: true` (1.2). A leap year
+is 闰年, said only in （仅闰年） (4.4).
 
 5.7 Quartz forms, each after 每月, or joined to the month as in 4.4.
 
@@ -938,8 +942,13 @@ More than eight years that are none of these take the first that applies:
    年、2031年以及自2032年起每2年中的一年（2032年、2034年、2036年……），当年
    每天9:00.
 4. **Runs and cadences together**, as the core gives them: each said as
-   it would be alone, in the order of their first years, joined by 以及,
-   and 当年 after the last if any is a cadence said with its rule. 2030年
+   it would be alone (a cadence of up to eight years that ends is its
+   years), in the order of their first years. They are a list with 、;
+   where any has no end or is a cadence said with its rule, the last is
+   joined by 以及 instead, and such a cadence puts 当年 after the whole.
+   2030年至2040年、2050年、2052年、2054年、2056年、2058年、2060年、2062年、
+   2070年至2080年每天9:00; 2030年至2040年、2050年至2090年每2年中的一年
+   （2050年、2052年、2054年……2090年）以及2100年至2110年，当年每天9:00. 2030年
    至2040年以及自2045年起每5年中的一年（2045年、2050年、2055年……），当年每
    天9:00; 自2030年起每3年中的一年（2030年、2033年、2036年……）以及2040
    年、2050年，当年每天9:00. (These were lists of thousands of years until

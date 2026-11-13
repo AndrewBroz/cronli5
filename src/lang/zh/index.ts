@@ -45,7 +45,7 @@ function describeParts(schedule: Schedule, opts: ChineseOptions):
   ChineseParts {
   const {dateReach, day} = schedule.analyses;
   const years = yearOf(schedule);
-  const months = monthOf(monthsOf(schedule), years.kind);
+  const months = monthOf(monthsOf(schedule), years);
   const days = dayOf(schedule, months);
   const year = years.text + months.lead;
   const month = months.text;
