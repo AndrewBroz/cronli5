@@ -32,7 +32,8 @@ cadence of minutes off the beat as a list (3.8); runs and cadences
 together (3.12); years with no end, with a hole, and several series of
 them (5.8); neither side of «а також» as an exception (4.3); weekdays
 never in pieces (3.6); what is left out of the hours or the minutes
-said ahead of «щоразу» (4.5); the months a date is said with are the months it fires in (4.4).
+said ahead of «щоразу» (4.5); the months a date is said with are the
+months it fires in (4.4).
 Section 9 sets the rule book beside the usage notes.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
@@ -43,8 +44,8 @@ Six rules run through everything:
 
 * **The sentence runs from the coarsest part to the finest**: year, month,
   day, time. «У червні щопонеділка о 9:00» (2.4).
-* **A field that takes every value is silent**, with two exceptions:
-  «щодня» (2.5) and «щомісяця» (2.6).
+* **A field that takes every value is silent**, with three exceptions:
+  «щодня» (2.5), «щомісяця» (2.6) and «щороку» (2.9).
 * **A reader is told when it fires, not how to work it out.** A regular
   set of four or fewer is listed. A longer one is a cadence that names its
   first and its last firing. A cadence of hours is never said without
@@ -740,14 +741,15 @@ Under any other hours the minute rides in every clock time named.
 | every hour with exceptions | «щогодини, крім 3:00» | «щогодини на 30-й хвилині (0:30, 1:30 … 23:30), крім 3:30» |
 
 **M is continuous**: every minute, or a cadence whose interval divides 60
-(3.8). The lead is «щохвилини» or «кожні N хвилин», followed by H as
+and that is said as a cadence (3.8: on the beat, or with five values or
+more). The lead is «щохвилини» or «кожні N хвилин», followed by H as
 windows, each from its first firing to its last.
 
 | H | After the lead |
 | --- | --- |
 | every hour | nothing if the cadence starts at 0; otherwise the day's window, «кожні 10 хвилин з 0:05 до 23:55». A seconds cadence that leads in place of «щохвилини» (4.2) is the same: off the beat it keeps its window beside any exception, «кожні 10 секунд з 0:00:05 до 23:59:55, крім 29-ї хвилини кожної години (0:29:05–0:29:55, 1:29:05–1:29:55 … 23:29:05–23:29:55)» |
 | one hour | «щохвилини з 9:00 до 9:59»; «кожні 10 хвилин з 9:00 до 9:50» |
-| a range | «щохвилини з 9:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45»; «кожні 15 хвилин з 9:05 до 17:50» |
+| a range | «щохвилини з 9:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45»; «кожні 10 хвилин з 9:05 до 17:55» |
 | two windows | joined by «і»: «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45 і з 22:00 до 22:45» |
 | three or more windows | commas and a final «і»: «кожні 15 хвилин з 8:00 до 8:45, з 12:00 до 12:45 і з 18:00 до 18:45» |
 | a cadence of four hours or fewer | its windows, each named: «щохвилини з 0:00 до 0:59, із 6:00 до 6:59, з 12:00 до 12:59 і з 18:00 до 18:59» |
@@ -1399,7 +1401,7 @@ heading with a colon, so it is read over both: «у червні: щоп'ятн�
 «Щохвилини» is not said after «щосекунди». «Щодня» is not said before
 another "every" word (2.5). «Включно» is not said at the grain of minutes
 and seconds, except after a stretch left out. A field that takes every
-value is not said, apart from «щодня» and «щомісяця».
+value is not said, apart from «щодня», «щомісяця» and «щороку».
 
 8.5 `range-boundary` — The close of a window is the last firing, always:
 «кожні 15 хвилин з 9:00 до 17:45»; «щохвилини з 9:00 до 17:59». Whole
