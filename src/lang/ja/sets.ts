@@ -49,10 +49,15 @@ export interface Spread {
   strays: number[];
 }
 
-const empty: Spread = {runs: [], step: 1, strays: []};
+/**
+ * Whether a spread, said aloud, ends in stray values after its runs. What
+ * is said straight after such an end is read with the strays alone.
+ */
+function trails(spread: Spread): boolean {
+  return spread.runs.length > 0 && spread.strays.length > 0;
+}
 
-// Further than any field reaches: puts a run that wraps before the rest.
-const beyond = 1e6;
+const empty: Spread = {runs: [], step: 1, strays: []};
 
 /** The answer a table gives for a description's kind. */
 function match<D extends SetDescription, R>(
@@ -158,18 +163,16 @@ function positive(values: number[], say: Say): SetDescription {
   return chosen.kind === 'except' ? pick(values, plainly) : chosen;
 }
 
-// Where a part stands among the others: by its first value, a run that
-// wraps before all.
+// Where a part stands among the others: by its first value. A run that
+// wraps starts after every other part, and so comes last.
 function rank(part: Part): number {
-  const first = (part as Partial<RangeDescription>).from ??
+  return (part as Partial<RangeDescription>).from ??
     Math.min(...(part as ValuesDescription).values);
-
-  return first - Number(wraps(part)) * beyond;
 }
 
 /**
  * The parts of a set said in pieces, in the order they are said: ascending
- * by first value, a run that wraps first.
+ * by first value, so that a run that wraps is last.
  */
 function inOrder(parts: Part[]): Part[] {
   return parts.map(function tidy(part): Part {
@@ -180,10 +183,7 @@ function inOrder(parts: Part[]): Part[] {
 }
 
 function runsInOrder(runs: Array<[number, number]>): Array<[number, number]> {
-  return runs.slice().sort(function byStart(a, b) {
-    return a[0] - Number(a[0] > a[1]) * beyond -
-      (b[0] - Number(b[0] > b[1]) * beyond);
-  });
+  return runs.slice().sort((a, b) => a[0] - b[0]);
 }
 
 /**
@@ -275,5 +275,5 @@ function tiling(values: number[], size: number): number {
 
 export {
   cost, gather, inOrder, lift, match, pick, positive, spreadOf, stepsOf, tiling,
-  wraps
+  trails, wraps
 };

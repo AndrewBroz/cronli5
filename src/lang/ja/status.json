@@ -2,6 +2,6 @@
   "name": "Japanese",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/ja-acceptance.md)",
+  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/ja-acceptance.md); audited 2026-11-13 by Claude Fable 5.2, which read some 3,500 rendered sentences against their fire times and the renderer against the answers, then repaired seven forms that could be taken to fire differently (rules and rows first); the new forms have had no blind fluency read",
   "branchBudget": 100
 }
