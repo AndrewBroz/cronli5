@@ -121,7 +121,6 @@ const articles = {
 };
 
 // The part of the day after a 12-hour time, by the first hour it covers.
-// Where the style has no «madrugada», its hours take the next part.
 const dayParts = [
   {from: 0, text: 'da madrugada'},
   {from: 6, text: 'da manhã'},
@@ -135,11 +134,12 @@ const words = {
   and: 'e',
   after: 'depois',
   andSoOn: 'e assim por diante',
+  andThen: 'e depois',
   before: 'antes',
-  businessDay: 'dia útil',
   closest: 'mais próximo',
   during: 'durante',
   each: 'a cada',
+  eachTime: 'de cada vez',
   every: {feminine: 'todas as', masculine: 'todos os'},
   everyDay: 'todos os dias',
   everyDayOf: 'todos os dias de',
@@ -148,7 +148,7 @@ const words = {
   first: 'primeiros',
   firstMark: 'º',
   from: 'de',
-  fullHour: 'hora cheia',
+  ifItFallsOn: 'se cair num',
   in: 'em',
   last: 'últimos',
   lastOne: {feminine: 'última', masculine: 'último'},
@@ -158,8 +158,14 @@ const words = {
   noon: 'meio-dia',
   ofEach: 'de cada',
   ofTheMonth: 'do mês',
+  ofTheSameMonth: 'do mesmo mês',
+  ofTheYear: 'do ano',
+  ofThoseMonths: 'desses meses',
+  ofThoseYears: 'desses anos',
+  onTheDot: 'em ponto',
   oneHour: 'uma hora',
   oneMinute: 'um minuto',
+  or: 'ou',
   penultimate: 'penúltimo',
   runs: 'Ocorre',
   startingFrom: 'a partir',
@@ -168,7 +174,8 @@ const words = {
   theOdd: 'ímpares',
   to: 'a',
   unrecognizable: 'um padrão cron não reconhecido',
-  until: 'até'
+  until: 'até',
+  weekdayDay: 'dia de semana'
 };
 
 const lexicon = {

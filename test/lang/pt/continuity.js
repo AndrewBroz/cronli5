@@ -34,7 +34,8 @@ const MAY_CHANGE = {
 // the days are «todos os dias» if the hours are restricted, and nothing if
 // the hours, the month and the year all take every value (answers 2.5).
 // So an edit to the hours may add or remove exactly those words, with the
-// join's comma. An edit to the minute or the second never can.
+// join's comma where the join has one. An edit to the minute or the
+// second never can.
 const HOUR_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
 
 const SETUP = {languages: [portuguese.default], options: {}, styles: {}};
@@ -83,9 +84,10 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
-    // The comma between the days and the time belongs to the join, and
-    // so does the comma that closes an exception or sets off a range of
-    // years. It is set aside before two parts are compared.
+    // The join between the days and the time is a space or a comma
+    // (answers 2.1), and belongs to neither part; so does the comma that
+    // closes an exception or sets off a year phrase. A trailing comma is
+    // set aside before two parts are compared.
     function words(part) {
       return String(part).replace(/,$/u, '');
     }
@@ -154,7 +156,7 @@ describe('Portuguese continuity:', function() {
       return portuguese.default.describe(schedule, opts);
     }
 
-    expect(say('0 */12 * * *')).to.equal('todos os dias, às 00:00 e 12:00');
+    expect(say('0 */12 * * *')).to.equal('todos os dias às 00:00 e 12:00');
     expect(say('0 0,12 * * *')).to.equal(say('0 */12 * * *'));
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
     expect(say('0 9-17 * * *'))

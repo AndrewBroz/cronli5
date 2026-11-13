@@ -22,14 +22,12 @@ describe('Portuguese styles:', function() {
       feira: false,
       firstOrdinal: true,
       hour12: false,
-      madrugada: true,
       short: false
     });
     expect(styles.pt).to.deep.equal({
       feira: true,
       firstOrdinal: false,
       hour12: false,
-      madrugada: false,
       short: false
     });
     expect(Object.isFrozen(styles)).to.equal(true);
@@ -42,7 +40,6 @@ describe('Portuguese styles:', function() {
       feira: true,
       firstOrdinal: false,
       hour12: false,
-      madrugada: false,
       short: true
     });
   });
@@ -63,11 +60,11 @@ describe('Portuguese styles:', function() {
     function() {
       const opts = {style: styles.br};
 
-      expect(pt.label('todos os dias, às 09:00', opts))
-        .to.equal('Todos os dias, às 09:00');
+      expect(pt.label('todos os dias às 09:00', opts))
+        .to.equal('Todos os dias às 09:00');
       expect(pt.label('às 09:00', opts)).to.equal('Às 09:00');
-      expect(pt.sentence('todos os dias, às 09:00', opts))
-        .to.equal('Ocorre todos os dias, às 09:00.');
+      expect(pt.sentence('todos os dias às 09:00', opts))
+        .to.equal('Ocorre todos os dias às 09:00.');
       expect(pt.sentence('todos os dias de jun.', opts))
         .to.equal('Ocorre todos os dias de jun.');
       expect(pt.reboot(opts)).to.equal('ao iniciar o sistema');
