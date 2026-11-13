@@ -1,10 +1,44 @@
 # The language questionnaire
 
-A new language starts here, not from another language's renderer or corpus.
+A new language starts from itself: not from another language's renderer,
+corpus or rule book, and not from this questionnaire either.
+
+## First, the usage notes
+
+Before any question here is answered, `src/lang/<code>/usage.md` is
+written, in the language, by a writer briefed in the language who is told
+nothing of cron, of this project or of any other language. It describes
+how the language already writes times that recur, in text made to be read
+(timetables, opening hours, programme listings, notices, reminders), and
+it is organised the way the language itself thinks about time: what units
+and groupings its readers have, in what order information comes, what is
+ambiguous and how careful writers cure it, what sounds natural and what
+sounds official or translated, and which authority sets the norms.
+
+The notes exist because every question below was written in English, and
+a question carries its author's categories with it. "Weekdays and the
+weekend", "noon and midnight", "half past", even "a long list is hard to
+hold" are how one language cuts time and judges effort. An author who
+only answers questions fills another language's categories with native
+words, and the result has an accent. Only two things are the same for
+every language: the facts of the pattern (which moments fire) and the
+reader's task (say the description, work out when it fires, keep its
+parts in mind). How easy each of those is depends on how the language
+says a thing, so it is observed in the language, never assumed.
+
+## Then, the questions
+
 Answer every question for the target language in
-`src/lang/<code>/answers.md`, repeating each question's number. The answers,
-the lexicon and the paradigms are the durable description of the language;
-its renderer is built from them and must be rebuildable from them.
+`src/lang/<code>/answers.md`, repeating each question's number. The
+questions exist for coverage: a pattern can hold every kind of set they
+name, so the rule book must say what the language does with each. They
+are not a list of concepts the language is expected to have. The usage
+notes, the answers, the lexicon and the paradigms are the durable
+description of the language; its renderer is built from the last three
+and must be rebuildable from them.
+
+Rule books written before 2026-11-13 keep the earlier numbering of
+section 5 and have no usage notes, until their native review.
 
 ## How to answer
 
@@ -21,6 +55,11 @@ its renderer is built from them and must be rebuildable from them.
   overturn it later.
 * **Say "cannot be said naturally" when that is the answer.** A device the
   language lacks is information, not a gap to paper over.
+* **Start from the usage notes, and answer what the language has.** Where
+  a question presupposes a notion the language does not have, say so and
+  describe what its readers have instead. Where the language has a
+  grouping, an order or a way of counting that no question asks about, add
+  it: the rule book is not limited to the questions.
 
 The patterns in brackets are prompts: say each one aloud in the language.
 
@@ -154,41 +193,52 @@ alone, several years, a cadence of years.
 
 4.5 Are there other pairs of fields this language says as one phrase?
 
-## 5. Idioms
+## 5. Groupings and fixed phrases
 
-An idiom is a fixed, shorter way of saying a particular set. For each one
-the language has, give the phrase and the exact set of values it stands
-for.
+An idiom is a fixed, shorter way of saying a particular set of moments. A
+set earns one only if the phrase means exactly that set to the language's
+readers, wherever the language is written.
 
-5.1 Odd and even. [`0 0 */2 * *`] [`0 0 2/2 * *`]
+5.1 From the usage notes, list every grouping and fixed phrase the
+language's readers have for a set of moments: of days in the week (which
+day the week starts on, the order days are listed in, any word for the
+days people work or rest), of hours in the day (named parts of the day,
+names for particular moments), of minutes in the hour, of days in the
+month, of months in the year, and anything else. For each give the
+phrase; the exact set it means; whether that set is the same in every
+region where the language is written; and anything it carries that a
+pattern does not know (public holidays, a Saturday that counts, a day
+that begins at sunset). A phrase that differs by region is either left
+unused or made a regional style.
 
-5.2 The week as its readers live it. On which day does a reader take the
-week to start, and in what order are the days listed? Which days, if any,
-do readers group under one word (a working week, days of rest), and which
-exact days does that word mean where the language is written: is it the
-same set in every region, and does it carry anything the pattern does not
-know (public holidays, a Saturday that counts)? A set earns such a word
-only if the word means exactly that set to those readers. Monday to
-Friday is one culture's answer, not the question. [`0 9 * * 1-5`]
-[`0 9 * * 0,6`] [`0 9 * * 0-4`] [`0 9 * * 5,6`] [`0 9 * * 1-6`]
+5.2 Patterns often hold the sets below. For each, say whether the language
+has a phrase for exactly that set, or a phrase for a different set that
+would mislead, or nothing. "Nothing" is a full answer.
 
-5.3 Noon and midnight. Are they names for a moment only, or for an hour?
-[`0 0 * * *`] [`0 12 * * *`] [`30 0 * * *`]
+* Every second value of a field, from its first or from its second.
+  [`0 0 */2 * *`] [`0 0 2/2 * *`] [`0 */2 * * *`] [`0 1/2 * * *`]
+  [`0 0 1 */2 *`]
+* Runs and pairs of days of the week. Which of these, if any, is a unit
+  to the language's readers depends on their week. [`0 9 * * 1-5`]
+  [`0 9 * * 0-4`] [`0 9 * * 1-6`] [`0 9 * * 0,6`] [`0 9 * * 5,6`]
+  [`0 9 * * 6-1`]
+* The first moment of the day and its middle. Is there a name, is it a
+  moment or a stretch, and which day does the first moment belong to when
+  it stands beside a date? [`0 0 * * *`] [`0 12 * * *`] [`30 0 * * *`]
+  [`0 0 1 * *`]
+* The start of each hour and fixed points inside it. [`0 * * * *`]
+  [`30 * * * *`] [`15,45 * * * *`]
 
-5.4 On the hour, half past, quarter past and to. [`0 * * * *`]
-[`30 * * * *`] [`15,45 * * * *`]
-
-5.5 Every other, every third. [`0 */2 * * *`] [`0 0 * */2 *`]
-
-5.6 Named parts of the day, if the language uses them instead of or beside
-a.m. and p.m. Give each one's hours.
-
-5.7 Quartz forms: the last day, the nearest day from Monday to Friday
-(the scheduler fixes those five days whatever the local week, so a word
-for "working day" is right only where it means them), the nth weekday of
-the month. [`0 0 L * *`] [`0 0 15W * *`] [`0 0 * * 1#2`] [`0 0 * * 5L`]
-
-5.8 Any other fixed phrase a speaker would reach for.
+5.3 Forms some schedulers add. These are facts about days, fixed by the
+scheduler whatever the local week or calendar: the last day of the month;
+so many days before the last; the day from Monday to Friday nearest a
+date, never leaving the month (so, from the 1st, the month's first such
+day), firing only in months that have that date; the last such day of the
+month; the nth of a weekday in the month; the last of a weekday in the
+month. Say each exactly. A word for "working day" is right here only if
+it means Monday to Friday, and nothing more, to every reader.
+[`0 0 L * *`] [`0 0 L-3 * *`] [`0 0 15W * *`] [`0 0 1W * *`]
+[`0 0 31W * *`] [`0 0 LW * *`] [`0 0 * * 1#2`] [`0 0 * * 5L`]
 
 ## 6. Words
 
@@ -205,8 +255,8 @@ length. Is the short form ever spoken, or only written?
 6.4 Units (second, minute, hour, day, month, year) in every form the
 answers above use.
 
-6.5 The function words the answers above use (at, on, in, every, from, to,
-through, and, or, except), each with its spoken length.
+6.5 The function words, particles or endings the answers above use, each
+with its spoken length.
 
 ## 7. Agreement
 

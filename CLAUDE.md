@@ -52,8 +52,15 @@ a behavior change, run `npm run docs` and let it rewrite.
 
 ## A language is its artifacts; the renderer is built from them
 
-Each language is described by three hand-written artifacts, in this order:
+Each language is described by hand-written artifacts, in this order:
 
+0. **Usage notes** (`src/lang/<code>/usage.md`), written in the language
+   by a writer told nothing of cron or of any other language: how the
+   language already writes times that recur, organised by its own
+   categories. Everything after starts from these, because the
+   questionnaire was written in English and a question carries its
+   author's categories. (Languages built before 2026-11-13 lack them
+   until their native review.)
 1. **Answers** (`src/lang/<code>/answers.md`) to the fixed
    [language questionnaire](tooling/docs/language-questionnaire.md): the one
    frame, the device for every kind of set, the fusions, the idioms, the
