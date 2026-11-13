@@ -62,9 +62,6 @@ interface Months {
 interface Arm {
   day: string;
   gloss: string;
-  // Whether it ends in an exception, and so comes first beside the other
-  // kind of day.
-  leads: boolean;
   // The mark that closes the day part.
   mark: string;
   month: string;
@@ -380,8 +377,13 @@ function isListable(description: SetDescription): description is Listable {
 // The days a pattern names that some month it reaches has, and the
 // description they are said by. Seven days of a regular set are listed,
 // a run of days never wraps round the month, and «щодня, крім» is said
-// of every day the months have.
-function daysOf(facts: ScheduleFacts, reached: Reached): DayDescription {
+// of every day the months have, but never beside the other kind of day,
+// where an exception would be read against both.
+function daysOf(
+  facts: ScheduleFacts,
+  reached: Reached,
+  alone: boolean
+): DayDescription {
   const {candidates, dateReach: reach} = facts.analyses;
   const own = reach && reach.days ?
     reach.days.candidates :
@@ -399,7 +401,8 @@ function daysOf(facts: ScheduleFacts, reached: Reached): DayDescription {
   });
 
   return choose<DayDescription>(offered, dateDomain, {
-    base: (base) => base.kind === 'all' || isParity(base, reached),
+    base: (base) => alone &&
+      (base.kind === 'all' || isParity(base, reached)),
     cadence: (cadence, count) => count > 7,
     pieces: always
   });
@@ -523,7 +526,6 @@ function datesArm(
   const own = {
     day: say(dayWords, description, reached),
     gloss: '',
-    leads: excepted,
     mark: ','.repeat(Number(excepted || description.kind === 'cadence' &&
       !idiom)),
     month: [words.everyMonth].slice(0, Number(opens)).join(),
@@ -645,7 +647,6 @@ function quartzArm(
     day: say(quartzDays, form, of, naming),
     gloss: [mondayToFriday(naming)]
       .slice(0, Number(countsWeekdays.includes(form.kind))).join(),
-    leads: false,
     mark: '',
     month: [words.everyMonth].slice(0, Number(monthly)).join(),
     note: notes[Number(of.restricted)]
@@ -699,7 +700,7 @@ function weekdaysArm(
     candidatesAs(facts, 'weekday', {first: 1}) as SetDescription[];
   const [whole] = described;
   const days = denote(whole, week);
-  const plain = {gloss: '', leads: false, mark: '', note: ''};
+  const plain = {gloss: '', mark: '', note: ''};
 
   if (alone && days.length === 6) {
     const missing = denote({kind: 'all'}, week).filter(function absent(day) {
@@ -747,7 +748,6 @@ function quartzWeekdayArm(
       ofMonths(of, naming)
     ].join(' '),
     gloss: '',
-    leads: false,
     mark: '',
     note: ''
   };
@@ -798,7 +798,7 @@ function armsOf(
   const beside = days.dated && days.weekly ? anyMonth : of;
   const reached = reachedBy(facts);
   const date = days.dated && (facet.date as {kind: string}).kind === 'values' ?
-    datesArm(daysOf(facts, reached), reached, beside, naming) :
+    datesArm(daysOf(facts, reached, !days.weekly), reached, beside, naming) :
     days.dated &&
       quartzArm((facet.date as {form: QuartzDate}).form, beside, days, naming);
   const weekday = days.weekly &&
@@ -817,19 +817,15 @@ function armsOf(
 }
 
 // A weekday and a day of the month: the weekdays, «а також» the days of
-// the month, set off by commas, under the months as a heading. Days of
-// the month that end in an exception come first, so that it is not read
-// against the weekdays too. Under a heading the days are not «щомісяця».
+// the month, set off by commas, under the months as a heading. Under a
+// heading the days are not «щомісяця».
 function either(weekday: Arm, date: Arm, of: Months, naming: Naming): Arm {
-  const dates = [...[date.month].slice(Number(of.restricted)), date.day]
-    .filter(Boolean).join(' ');
-  const sides = [weekday.day, dates];
-  const [first, second] = date.leads ? sides.reverse() : sides;
+  const monthly = [date.month].slice(Number(of.restricted)).join();
 
   return {
-    day: `${first}, ${words.also} ${second}`,
+    day: [`${weekday.day},`, words.also, monthly, date.day]
+      .filter(Boolean).join(' '),
     gloss: date.gloss,
-    leads: false,
     mark: ',',
     month: monthPart(of.description, naming, true),
     note: date.note
@@ -888,7 +884,7 @@ function calendarOf(facts: ScheduleFacts, short: boolean): Calendar {
 
   const {date, weekday} = armsOf(facts, days, of, naming);
   const none = {
-    ...nothing, leads: false, month: monthPart(of.description, naming, false)
+    ...nothing, month: monthPart(of.description, naming, false)
   };
   const arm = date && weekday ?
     either(weekday, date, of, naming) :

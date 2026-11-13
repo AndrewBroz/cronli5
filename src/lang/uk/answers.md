@@ -690,9 +690,15 @@ they are joined as pieces are (3.6).
   «кожні 2 хвилини від початку до 20-ї хвилини й кожні 3 хвилини з 21-ї
   до 57-ї хвилини кожної години (0:00–0:20, 0:21–0:57, 1:00–1:20 …
   23:21–23:57)». Seconds are the same, with «кожної хвилини».
-* Inside named hours: windows, each with its lead: `0-20/2,21-59/3 9 *
-  * *` is «щодня кожні 2 хвилини з 9:00 до 9:20 і кожні 3 хвилини з 9:21
-  до 9:57».
+* Inside one named hour: windows, each with its lead, and a stray
+  minute as its clock time: `0-20/2,21-59/3 9 * * *` is «щодня кожні 2
+  хвилини з 9:00 до 9:20 і кожні 3 хвилини з 9:21 до 9:57»; `0-20/2,45
+  9 * * *` is «щодня кожні 2 хвилини з 9:00 до 9:20 і о 9:45». In
+  several named hours the windows would be said over for each hour, so
+  the words are said once, as under a range of hours, with a window for
+  each hour: `0-20/2,21-59/3 9,17 * * *` is «щодня кожні 2 хвилини від
+  початку до 20-ї хвилини й кожні 3 хвилини з 21-ї до 57-ї хвилини
+  кожної години, з 9:00 до 9:57 і з 17:00 до 17:57».
 * Hours as points: `0 0-12/2,13-23/3 * * *` is «щодня кожні 2 години з
   0:00 до 12:00 включно й кожні 3 години з 13:00 до 22:00 включно»; a
   run among them takes «щогодини», a single hour «о». Minutes that are
@@ -873,30 +879,32 @@ judge: the main thing should not be hidden in the middle) and because
 «щомісяця» then stands beside the dates and cannot be read over the
 weekdays.
 
-**An exception never stands last under «а також».** There it is read
-against both sides: «щоп'ятниці, а також щодня, крім 15-го числа» says
-to most readers that the 15th is always skipped, and a Friday the 15th
-fires. So:
+**Neither side of «а також» is said as an exception.** Under «а також»
+a «крім» is read against both sides: «щоп'ятниці, а також щодня, крім
+15-го числа» says to most readers that the 15th is always skipped, and
+a Friday the 15th fires. Turned round, «щодня, крім 15-го числа, а також
+щоп'ятниці» is the common pattern «крім X, а також Y», two things left
+out. So each side says when it fires, with no subtraction:
 
-* **days of the month said as an exception lead**, and the weekdays
-  follow «а також»: `0 9 1-14,16-31 * 5` is «щодня, крім 15-го числа, а
-  також щоп'ятниці, о 9:00»; `*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,
-  27,29,31 * 1-5` is «щомісяця по непарних числах, крім 15-го, а також
-  щотижня з понеділка до п'ятниці включно, кожні 15 хвилин з 9:00 до
-  17:45». The exception closes inside its own side, and what follows «а
-  також» is added whole. A weekday phrase («що-», «щотижня з», «в
-  останню») cannot be taken for a second thing left out, because it is
-  not a genitive;
-* **six days of the week are said as their run, not as an exception**,
-  and stay first: «щотижня з понеділка до суботи включно, а також
-  щомісяця 1-го числа, о 0:00»; `0 0 15 * 0-2,4-6` is «щотижня з
-  четверга до вівторка включно, а також щомісяця 15-го числа, о 0:00».
-  («Щодня, крім неділі, а також 1-го числа» would be heard as a second
-  exception: a date is a genitive.)
+* **days of the month are their runs or their list**: `0 9 1-14,16-31 *
+  5` is «щоп'ятниці, а також щомісяця з 1-го до 14-го числа включно й із
+  16-го до 31-го числа включно, о 9:00»; `*/15 9-17 1,3,5,7,9,11,13,17,
+  19,21,23,25,27,29,31 * 1-5` is «щотижня з понеділка до п'ятниці
+  включно, а також щомісяця 1-го, 3-го, 5-го, 7-го, 9-го, 11-го, 13-го,
+  17-го, 19-го, 21-го, 23-го, 25-го, 27-го, 29-го та 31-го числа, кожні
+  15 хвилин з 9:00 до 17:45». Fifteen dates are long, and they are what
+  is true; alone, the same days are «щомісяця по непарних числах, крім
+  15-го» (3.9). «По непарних числах» with nothing left out is no
+  exception and is said here too;
+* **six days of the week are their run**: «щотижня з понеділка до суботи
+  включно, а також щомісяця 1-го числа, о 0:00»; `0 0 15 * 0-2,4-6` is
+  «щотижня з четверга до вівторка включно, а також щомісяця 15-го числа,
+  о 0:00».
 
-(The first rule is new. The answers used to keep the weekdays first
-always, "because an exception among the dates then ends the phrase";
-ending the phrase is exactly where it is read over both sides.)
+(The second rule was here before. The first is new: the answers used to
+say that the weekdays lead "because an exception among the dates then
+ends the phrase instead of running into «а також»", and ending the
+phrase is exactly where it is read over both sides.)
 
 **Where the day of the month is no restriction or never fires, there is
 no «а також»** (2.8): days that are every day of the months reached are
@@ -912,8 +920,8 @@ is «у червні: щоп'ятниці, а також 1-го числа, о 0
 is «у січні та липні: щотижня з понеділка до п'ятниці включно, а також
 1-го та 15-го числа, о 0:00»; `0 0 L 6 1-5` is «у червні: щотижня з
 понеділка до п'ятниці включно, а також в останній день місяця, о 0:00»;
-`0 9 1-14,16-31 6 1` is «у червні: щодня, крім 15-го числа, а також
-щопонеділка, о 9:00». Both judges and the reader read the version
+`0 9 1-14,16-31 6 1` is «у червні: щопонеділка, а також з 1-го до 14-го
+числа включно й із 16-го до 30-го числа включно, о 9:00». Both judges and the reader read the version
 without the colon as weekdays all year round. The second judge would
 also move the time ahead of the days («у січні та липні о 0:00 — у
 будні, а ще 1-го й 15-го числа»); that was not done, because the time is
