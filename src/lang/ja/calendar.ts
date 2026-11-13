@@ -925,15 +925,31 @@ function fallingOn(context: Context, phrase: DayPhrase, weekday: DaySide):
   };
 }
 
+// Whether the weekday side of a pair can name its months as those just
+// named: every year, several months listed before the dates, and the
+// dates firing in each month the weekdays are said of, every year.
+function theseMonths(contexts: Context[]): boolean {
+  const [date, weekday] = contexts;
+
+  return date.year.kind === 'all' && date.months.length > 1 &&
+    monthsOf(date, false).listed && date.reach.leapYears.length === 0 &&
+    date.months.join() === weekday.months.join();
+}
+
 // A date and a weekday together: each side carries the month, and the
-// year when it is named; 毎年 is said once, at the head.
+// year when it is named; 毎年 is said once, at the head. Several months
+// that are the same on both sides are named once, and the weekday side
+// says これらの月.
 function together(contexts: Context[], sides: DaySide[]): Calendar {
   const date = sideOf(contexts[0], sides[0]);
   const weekday = sideOf({...contexts[1], again: true}, sides[1]);
+  const months = theseMonths(contexts) ?
+    words.theseMonths + words.of :
+    weekday.year + weekday.month;
 
   return {
     ...date,
-    day: date.day + words.also + weekday.year + weekday.month + weekday.day,
+    day: date.day + words.also + months + weekday.day,
     lead: 'shared'
   };
 }
