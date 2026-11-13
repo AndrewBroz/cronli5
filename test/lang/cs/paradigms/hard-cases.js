@@ -159,9 +159,80 @@ const rows = [
     'denně, ale ve středu jen tehdy, připadne-li na 15. den v měsíci, v ' +
     '0:00'],
   ['0 0 1 6 1#2', 'druhé pondělí v červnu a navíc 1. června, vždy v 0:00'],
-  ['0 0 */2 6 0,6',
+
+  // Written without the star the days of the month are a union: the same
+  // sentences the starred patterns had before they had to match both.
+  // `*/2` in the date field is `1-31/2`, `*/5` is `1-31/5`.
+  ['*/15 9-17 1-31/2 * 1-5',
+    'od pondělí do pátku a navíc každý lichý den v měsíci, vždy každých 15 ' +
+    'minut od 9:00 do 17:45'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'od pondělí do pátku a navíc 1., 6., 11., 16., 21., 26. a 31. dne v ' +
+    'měsíci, vždy každých 15 minut od 9:00 do 17:45'],
+  ['0 0 1-31/2 6 0,6',
     'v červnu každou sobotu a neděli a navíc každý lichý den v červnu, ' +
     'vždy v 0:00'],
+
+  // A day field written from a star (`*/2`, `*/5`) and the other one
+  // restricted: both must match. The days of the month as they are said
+  // alone, «jen tehdy, připadne-li na» and the weekdays, then the time.
+  // `*/2` is the odd days (1, 3 … 31), `*/5` is 1, 6, 11, 16, 21, 26 and
+  // 31, a weekday `*/2` is Sunday, Tuesday, Thursday and Saturday.
+  // The odd days that are Mondays.
+  ['0 0 */2 * 1',
+    'každý lichý den v měsíci jen tehdy, připadne-li na pondělí, v 0:00'],
+  // The odd days that are Monday, Wednesday or Friday.
+  ['0 9 */2 * 1,3,5',
+    'každý lichý den v měsíci jen tehdy, připadne-li na pondělí, středu ' +
+    'nebo pátek, v 9:00'],
+  // The 15th when it is a Tuesday, Thursday, Saturday or Sunday.
+  ['0 0 15 * */2',
+    '15. dne v měsíci jen tehdy, připadne-li na úterý, čtvrtek, sobotu ' +
+    'nebo neděli, v 0:00'],
+  // The odd days of June that are Mondays.
+  ['0 0 */2 6 1',
+    'každý lichý den v červnu jen tehdy, připadne-li na pondělí, v 0:00'],
+  // The odd days of June that are a Saturday or a Sunday.
+  ['0 0 */2 6 0,6',
+    'každý lichý den v červnu jen tehdy, připadne-li na sobotu nebo ' +
+    'neděli, v 0:00'],
+  // Days 1, 6, 11, 16, 21, 26 and 31 that are Monday to Friday.
+  ['0 0 */5 * 1-5',
+    '1., 6., 11., 16., 21., 26. a 31. dne v měsíci jen tehdy, připadne-li ' +
+    'na pondělí až pátek, v 0:00'],
+  // The odd days that are Saturday or Sunday (the week runs from Monday).
+  ['0 0 */2 * 6,0',
+    'každý lichý den v měsíci jen tehdy, připadne-li na sobotu nebo ' +
+    'neděli, v 0:00'],
+  // Two star steps: the odd days that are a Tuesday, Thursday, Saturday
+  // or Sunday.
+  ['0 0 */2 * */2',
+    'každý lichý den v měsíci jen tehdy, připadne-li na úterý, čtvrtek, ' +
+    'sobotu nebo neděli, v 0:00'],
+  // The odd days that are not a Friday or a Saturday.
+  ['0 0 */2 * 0,1,2,3,4',
+    'každý lichý den v měsíci jen tehdy, nepřipadne-li na pátek ani ' +
+    'sobotu, v 0:00'],
+  // Days 1, 4, 7 … 31 of January and July that are Monday to Friday.
+  ['0 9 */3 1,7 1-5',
+    'v lednu a červenci od 1. dne v měsíci každý třetí den (1., 4., 7. a ' +
+    'tak dále) jen tehdy, připadne-li na pondělí až pátek, v 9:00'],
+  // The second Monday when it is an odd day: the 9th, 11th or 13th.
+  ['0 0 */2 * 1#2',
+    'každý lichý den v měsíci jen tehdy, připadne-li na druhé pondělí v ' +
+    'měsíci, v 0:00'],
+  // The last Friday when it is an odd day: the 23rd, 25th, 27th, 29th or
+  // 31st.
+  ['0 0 */2 * 5L',
+    'každý lichý den v měsíci jen tehdy, připadne-li na poslední pátek v ' +
+    'měsíci, v 0:00'],
+  // The odd days of 2030 that are Mondays.
+  ['0 0 0 */2 * 1 2030',
+    'v roce 2030 každý lichý den v měsíci jen tehdy, připadne-li na ' +
+    'pondělí, v 0:00',
+    {years: true}],
+  // A date that no month has fires never, whatever the weekday.
+  ['0 0 31 6 */2', 'jen 31. června, tedy nikdy'],
   ['0 9 15W 6 1',
     'v červnu každé pondělí a navíc 15. června, a připadne-li na sobotu ' +
     'nebo neděli, místo toho v nejbližší pátek nebo pondělí, vždy v 9:00'],
