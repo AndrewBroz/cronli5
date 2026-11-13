@@ -11,30 +11,31 @@ const {expect} = chai;
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];
 
-// A description is three parts in one order, from the calendar to the
+// A description is four parts in one order, from the calendar to the
 // clock (answers 2.1): a leading frame (the years and months that stand
 // apart: «en 2030,», «de junio a agosto,»), the day («todos los días»,
-// «los lunes de junio», «el día 1 de cada mes, y también los viernes,»)
-// and the time. `describeParts` gives them as `{frame, day, time}`, each
-// with the comma that follows it, if any.
+// «los lunes de junio»), the time, and, only when a day of the month and
+// a weekday are both restricted, the addition («y además el día 1 de
+// cada mes», answers 4.3). `describeParts` gives them as `{frame, day,
+// time, also}`, each with the comma that follows it, if any.
 //
 // A time field changes the time. A day, month or year field changes the
 // frame and the day: the month and a single year stand in the frame or
 // join a date or a weekday phrase («en junio, de lunes a viernes» against
 // «los lunes de junio»), days a named month lacks are not said, in a
-// union under named months the date side drops «de cada mes» and the
-// weekday side says «de ese mes», and six weekdays are an exception alone
-// and a run beside a day of the month. Those are the fusions answers 2.7
-// declares; all of them stay inside the frame and the day. Nothing else
-// may cross, with the two exceptions below.
+// union the days of the month move from the day to the addition and
+// under named months say «de ese mes», and six weekdays are an exception
+// alone and a run in a union. Those are the fusions answers 2.7
+// declares; all of them stay inside the frame, the day and the addition.
+// Nothing else may cross, with the two exceptions below.
 const MAY_CHANGE = {
-  date: ['frame', 'day'],
+  date: ['frame', 'day', 'also'],
   hour: ['time'],
   minute: ['time'],
-  month: ['frame', 'day'],
+  month: ['frame', 'day', 'also'],
   second: ['time'],
-  weekday: ['frame', 'day'],
-  year: ['frame', 'day']
+  weekday: ['frame', 'day', 'also'],
+  year: ['frame', 'day', 'also']
 };
 
 // The first place a time field reaches another part: when the hours are
@@ -133,19 +134,19 @@ function leaks(pairList) {
   return found;
 }
 
-// Continuity, measured directly. A description is three parts in one
-// order: leading frame, day, time. Editing one field of the pattern may
+// Continuity, measured directly. A description is four parts in one
+// order: leading frame, day, time, addition. Editing one field of the pattern may
 // rewrite that field's part and nothing else, apart from the declared
 // fusions above. This is the constraint itself, where a count of changed words is
 // only a rough sign of it: a longer sentence, or a wrong one, cannot make
 // this pass.
 describe('Spanish continuity:', function() {
-  it('says a description as its three parts, joined in order', function() {
+  it('says a description as its four parts, joined in order', function() {
     pairs().forEach(function joined(pair) {
       const {opts, schedule} = parse(pair[1]);
       const parts = spanish.describeParts(schedule, opts);
 
-      expect([parts.frame, parts.day, parts.time]
+      expect([parts.frame, parts.day, parts.time, parts.also]
         .filter(Boolean).join(' '))
         .to.equal(spanish.default.describe(schedule, opts));
     });
