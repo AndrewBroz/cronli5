@@ -202,13 +202,15 @@ const dateSayers: {[Kind in Plain['kind']]: DateSayer} = {
 };
 
 // Every second day from the 1st or the 2nd is one thing; any other
-// cadence names both its ends, and is listed while it is short.
-function dateRules(length: number): Rules {
+// cadence names both its ends, and is listed while it is short. Beside
+// weekdays the days take no exception, where it would be taken for the
+// whole pair.
+function dateRules(length: number, paired: boolean): Rules {
   return {
     cadence: (cadence) => Number(alternate(cadence, length)) ||
       withEnds(longestList)(cadence),
     domain: {cyclic: false, max: length, min: 1},
-    excepts: () => true,
+    excepts: () => !paired,
     piecesOver: 0,
     wrap: false
   };
@@ -297,7 +299,8 @@ function dateSide(analyses: Analyses, facts: MonthFacts): Side {
   const [kept, size] = inMonth.length > 0 ?
     [inMonth, length] :
     [days, longestMonth];
-  const {removed, said} = choose(kept, dateRules(size));
+  const {removed, said} =
+    choose(kept, dateRules(size, analyses.day.union));
   const whole = said.kind === 'all';
 
   return {

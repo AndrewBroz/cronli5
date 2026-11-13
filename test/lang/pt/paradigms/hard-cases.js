@@ -441,6 +441,8 @@ const rows = [
     'minuto 30 de cada hora'],
   ['* 0-28,30-59 * * * *',
     'a cada segundo, exceto durante o minuto 29 de cada hora'],
+  ['* 0-9,11-28,30-59 * * * *',
+    'a cada segundo, exceto durante os minutos 10 e 29 de cada hora'],
   ['* 0-28,30-59 9 * * *',
     'todos os dias, a cada segundo das 09:00:00 às 09:59:59, exceto das ' +
     '09:29:00 às 09:29:59'],
@@ -561,6 +563,161 @@ const rows = [
     'todas as segundas, quartas, quintas e sextas de julho, setembro, ' +
     'outubro e dezembro, nos minutos 30 e 42 de cada hora, das 03:30 às ' +
     '10:42, repetindo a cada segundo durante o minuto inteiro'],
+
+  // Neither side of a day of the month and a weekday takes an exception,
+  // which would be taken for the whole pair: a Friday the 15th fires.
+  ['0 9 1-14,16-31 * 5',
+    'todas as sextas e também do dia 1º ao dia 14 e do dia 16 ao dia 31 de ' +
+    'cada mês, sempre às 09:00'],
+  ['0 9 5-9,11-25 * 1',
+    'todas as segundas e também do dia 5 ao dia 9 e do dia 11 ao dia 25 de ' +
+    'cada mês, sempre às 09:00'],
+  ['0 9 1-14,16-31 6 1',
+    'em junho, todas as segundas e também do dia 1º ao dia 14 e do dia 16 ' +
+    'ao dia 30, sempre às 09:00'],
+  ['0 9 15 1-5,7-12 1',
+    'todas as segundas e também no dia 15 de cada mês, exceto em junho, ' +
+    'sempre às 09:00'],
+
+  // Every day the one named month has, beside weekdays, is every day.
+  ['0 9 1-30 4 1', 'todos os dias de abril às 09:00'],
+  ['*/15 9-17 1-29 2 1-5',
+    'todos os dias de fevereiro, a cada 15 minutos das 09:00 às 17:45'],
+
+  // Minutes and seconds never wrap: a run that passes the top of the hour
+  // is its two stretches, whatever the hours and the days are.
+  ['50-10 * * * *',
+    'a cada minuto durante os primeiros 11 minutos e durante os últimos 10 ' +
+    'minutos de cada hora'],
+  ['50-10 * * * 1',
+    'todas as segundas, a cada minuto durante os primeiros 11 minutos e ' +
+    'durante os últimos 10 minutos de cada hora'],
+  ['50-10 9-17 * * *',
+    'todos os dias, a cada minuto durante os primeiros 11 minutos e ' +
+    'durante os últimos 10 minutos de cada hora, das 09:00 às 17:59'],
+  ['45-15 * * * * *',
+    'a cada segundo durante os primeiros 16 segundos e durante os últimos ' +
+    '15 segundos de cada minuto'],
+  ['58-1 * * * *', 'nos minutos 0, 1, 58 e 59 de cada hora'],
+
+  // Hours that pass midnight: one run only when every day is meant, where
+  // it counts as three things, so that an exception naming two is said in
+  // its place; beside a day the hours are in ascending order.
+  ['0 12-10 * * *', 'todos os dias, a cada hora, em ponto, exceto às 11:00'],
+  ['0 0-9,12-23 * * *', 'todos os dias, a cada hora das 12:00 às 09:00'],
+  ['0 0-9,12-23 * * 1',
+    'todas as segundas, a cada hora, em ponto, exceto às 10:00 e 11:00'],
+  ['0 20-10,12-17 * * *',
+    'todos os dias, a cada hora das 20:00 às 17:00, exceto às 11:00'],
+  ['0 0-2,5,20-23 * * *',
+    'todos os dias, a cada hora das 20:00 às 02:00 e às 05:00'],
+  ['0 22-2 * * 1',
+    'todas as segundas, a cada hora das 00:00 às 02:00 e às 22:00 e 23:00'],
+  ['* 22-2 * 6 *',
+    'todos os dias de junho, a cada minuto das 00:00 às 02:59 e das 22:00 ' +
+    'às 23:59'],
+
+  // The order of pieces: strays before a run are said before it, and a
+  // run of weekdays that passes from Sunday into Monday is said first.
+  ['0 5,7,9-17 * * *',
+    'todos os dias às 05:00 e 07:00 e a cada hora das 09:00 às 17:00'],
+  ['0 1,9-17,20-23 * * *',
+    'todos os dias à 01:00 e a cada hora das 09:00 às 17:00 e das 20:00 às ' +
+    '23:00'],
+  ['0 9 * * 0,1,3,5,6', 'de sexta a segunda e todas as quartas às 09:00'],
+  ['0 23-1 * * *', 'todos os dias às 00:00, à 01:00 e às 23:00'],
+
+  // A run that wraps counts three things: it gives way to an exception
+  // that names two, and is said against one that names three.
+  ['0 9 * * 0-4', 'de domingo a quinta às 09:00'],
+  ['0 9 * * 1,2,4-6',
+    'todos os dias, exceto às quartas e aos domingos, às 09:00'],
+  ['0 9 * 12-10 *', 'todos os dias, exceto em novembro, às 09:00'],
+  ['0 9 * 8-5 *', 'todos os dias de agosto a maio às 09:00'],
+
+  // An exception is for a set of more than four values that it says in
+  // fewer things than the set's runs.
+  ['0 9-12,14-17 * * *',
+    'todos os dias, a cada hora das 09:00 às 17:00, exceto às 13:00'],
+  ['* 9-11,13-17 * * *',
+    'todos os dias, a cada minuto das 09:00 às 17:59, exceto das 12:00 às ' +
+    '12:59'],
+  ['0 9 5-9,11-25 * *',
+    'do dia 5 ao dia 25 de cada mês, exceto no dia 10, às 09:00'],
+
+  // Under one named month the days are those the month has.
+  ['0 9 1-30 4 *', 'todos os dias de abril às 09:00'],
+  ['0 9 2-31 4 *', 'do dia 2 ao dia 30 de abril às 09:00'],
+  ['0 9 29-31 2 *', 'no dia 29 de fevereiro às 09:00'],
+  ['0 9 31 2 *', 'no dia 31 de fevereiro às 09:00'],
+
+  // Runs of minutes and cadences with ends inside one hour or two are
+  // windows; with strays and two hours, the minute phrase and a window for
+  // each hour.
+  ['5/5 9,17 * * *',
+    'todos os dias, a cada 5 minutos das 09:05 às 09:55 e das 17:05 às ' +
+    '17:55'],
+  ['5-10,20 9 * * *',
+    'todos os dias, a cada minuto das 09:05 às 09:10 e às 09:20'],
+  ['5-10,20 9,17 * * *',
+    'todos os dias, a cada minuto do minuto 5 ao 10 e no minuto 20 de cada ' +
+    'hora, das 09:05 às 09:20 e das 17:05 às 17:20'],
+
+  // More than four hours on a cadence, under minutes that are not a list:
+  // «de N em N horas» with the windows of the first two hours and of the
+  // last in brackets, never a window for each hour.
+  ['0-29 */2 * * *',
+    'todos os dias, a cada minuto durante os primeiros 30 minutos, de 2 em ' +
+    '2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às 22:29)'],
+  ['5/5 */2 * * *',
+    'todos os dias, a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas ' +
+    '(das 00:05 às 00:55, das 02:05 às 02:55 … das 22:05 às 22:55)'],
+  ['0-29,45 1/2 * * *',
+    'todos os dias, a cada minuto durante os primeiros 30 minutos e no ' +
+    'minuto 45, de 2 em 2 horas (da 01:00 à 01:45, das 03:00 às 03:45 … ' +
+    'das 23:00 às 23:45)'],
+  ['0-29 0,2,4,6,10,12,14,16,18,20,22 * * *',
+    'todos os dias, a cada minuto durante os primeiros 30 minutos, de 2 em ' +
+    '2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às ' +
+    '22:29), exceto das 08:00 às 08:59'],
+  ['0-29 */6 * * *',
+    'todos os dias, a cada minuto durante os primeiros 30 minutos de cada ' +
+    'hora, das 00:00 às 00:29, das 06:00 às 06:29, das 12:00 às 12:29 e ' +
+    'das 18:00 às 18:29'],
+  ['15 0-29 */2 * * *',
+    'todos os dias, a cada minuto durante os primeiros 30 minutos, de 2 em ' +
+    '2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às ' +
+    '22:29), 15 segundos depois'],
+  ['* 0-29 */2 * * *',
+    'todos os dias, a cada segundo durante os primeiros 30 minutos, de 2 ' +
+    'em 2 horas (das 00:00:00 às 00:29:59, das 02:00:00 às 02:29:59 … das ' +
+    '22:00:00 às 22:29:59)'],
+
+  // A list of minutes beside hours on a cadence: clock times in the
+  // bracket for up to three minutes, which shows seven; windows for more;
+  // and no «de N em N horas» for fewer hours than leave something to omit.
+  ['5,20,45 0,8,16 * * *',
+    'todos os dias, nos minutos 5, 20 e 45, de 8 em 8 horas (00:05, 00:20, ' +
+    '00:45, 08:05, 08:20, 08:45 … 16:45)'],
+  ['5,20,35,50 */2 * * *',
+    'todos os dias, nos minutos 5, 20, 35 e 50, de 2 em 2 horas (das 00:05 ' +
+    'às 00:50, das 02:05 às 02:50 … das 22:05 às 22:50)'],
+  ['5,20,35,50 0,8,16 * * *',
+    'todos os dias, nos minutos 5, 20, 35 e 50 de cada hora, das 00:05 às ' +
+    '00:50, das 08:05 às 08:50 e das 16:05 às 16:50'],
+  ['5,20,35,50 0,12 * * *',
+    'todos os dias, nos minutos 5, 20, 35 e 50 de cada hora, das 00:05 às ' +
+    '00:50 e das 12:05 às 12:50'],
+
+  // Seconds under one run of minutes are said in place of «a cada minuto».
+  ['* 0-29 9 * * *', 'todos os dias, a cada segundo das 09:00:00 às 09:29:59'],
+  ['* 0-29 9-17 * * *',
+    'todos os dias, a cada segundo durante os primeiros 30 minutos de cada ' +
+    'hora, das 09:00:00 às 17:29:59'],
+
+  // One month and every second year lead together, as one month and one
+  // year do.
+  ['0 0 9 * 6 1-5 */2', 'em junho dos anos pares, de segunda a sexta, às 09:00'],
 
   // The grid's contexts, and the patterns the option rows use, in the
   // default style.
