@@ -19,8 +19,9 @@ export default defineConfig({
       'test/paradigms/grid.js',
       'test/paradigms/check.js',
       'test/lang/en/paradigms/**',
-      'test/lang/uk/paradigms/**', 'test/lang/zh/paradigms/**',
-      'test/lang/es/paradigms/**',
+      'test/lang/uk/paradigms/**',
+      'test/lang/zh/paradigms/**',
+      'test/lang/es/**',
       'test/core/bad_input/error-types.js'
     ],
     setupFiles: ['./test/vitest.setup.ts'],
@@ -29,7 +30,12 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: ['src/**/*.ts'],
-      exclude: ['src/browser.ts', 'src/core/schedule.ts', 'src/types.ts'],
+      // Spanish has its rule book, words and rows but no renderer yet, so
+      // nothing can exercise its lexicon.
+      exclude: [
+        'src/browser.ts', 'src/core/schedule.ts', 'src/types.ts',
+        'src/lang/es/**'
+      ],
       reportsDirectory: './coverage',
       // The floors sit just below what the core and the English renderer
       // achieve. Statements, lines and branches leave a little room because

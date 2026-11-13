@@ -161,8 +161,9 @@ function valuesOf(candidates: SetDescription[], domain: Domain): number[] {
 
 /**
  * The sayable shape that names the fewest things. On a tie the earliest
- * candidate wins. `sayable` is the field's own say in what it has a
- * device for; it must accept a plain list of values.
+ * candidate wins, but a run that wraps round gives way to an exception.
+ * `sayable` is the field's own say in what it has a device for; it must
+ * accept a plain list of values.
  */
 function choose(
   candidates: SetDescription[],
@@ -183,7 +184,10 @@ function choose(
   });
 
   return shapes.reduce(function fewer(best, shape) {
-    return shape.length < best.length ? shape : best;
+    const tieBroken = shape.length === best.length &&
+      shape.removed.length > 0 && ranges(best).some(wrapsRound);
+
+    return shape.length < best.length || tieBroken ? shape : best;
   });
 }
 
@@ -221,13 +225,16 @@ function arranged(
   return [...offered.filter(isCadence), ...ascending.filter(notCadence)];
 }
 
-/** A field's candidates, arranged. A Quartz field has none of its own. */
+/**
+ * A field's candidates, arranged. Never asked of a Quartz field, which
+ * has none.
+ */
 function setsOf(
   facts: ScheduleFacts,
   field: Field,
   mayWrap: boolean
 ): SetDescription[] {
-  return arranged(facts.analyses.candidates[field] ?? [{kind: 'all'}],
+  return arranged(facts.analyses.candidates[field] as SetDescription[],
     domainOf(field), mayWrap);
 }
 
@@ -294,11 +301,15 @@ function listed(
   }));
 }
 
+/** Names with words around them; nothing when there are no names. */
+function around(before: string, names: string, after: string): string {
+  return names ? before + names + after : '';
+}
+
 /** What is taken out, in brackets; nothing when nothing is. */
 function excepted(groups: string[]): string {
-  const out = groups.filter(Boolean).join(words.and);
-
-  return out ? marks.open + out + words.excepted + marks.close : '';
+  return around(marks.open, groups.filter(Boolean).join(words.and),
+    words.excepted + marks.close);
 }
 
 /** One of two words, by whether a cadence starts on an even value. */
@@ -307,6 +318,6 @@ function parity(shape: Shape, even: string, odd: string): string {
 }
 
 export {
-  andLast, choose, excepted, listed, parity, ranges, scales, setsOf, span,
-  strays, unrestricted, valuesOf, weekSets
+  andLast, around, choose, excepted, listed, parity, ranges, scales, setsOf,
+  span, strays, unrestricted, valuesOf, weekSets
 };

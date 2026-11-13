@@ -10,14 +10,17 @@ const LANG_ROOT = new URL('../../src/lang/', import.meta.url);
 // is how a renderer comes to treat equal schedules differently.
 const FORBIDDEN = /\.(?:pattern|shapes|segments|plan)\b/u;
 
-// Every directory under the language root that holds a lexicon, with the
-// language directory it belongs to.
+// Every directory under the language root that holds a lexicon and a
+// renderer built from it, with the language directory it belongs to. A
+// language whose artifacts are written but whose renderer is not yet built
+// has nothing to check.
 function rebuiltRenderers() {
   return readdirSync(LANG_ROOT).flatMap(function perLanguage(code) {
     const home = new URL(`${code}/`, LANG_ROOT);
 
-    return [home, new URL('next/', home)].filter(function hasLexicon(dir) {
-      return existsSync(new URL('lexicon.ts', dir));
+    return [home, new URL('next/', home)].filter(function isBuilt(dir) {
+      return existsSync(new URL('lexicon.ts', dir)) &&
+        existsSync(new URL('index.ts', dir));
     }).map(function describeIt(dir) {
       return {code, dir, home};
     });

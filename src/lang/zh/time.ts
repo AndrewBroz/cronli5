@@ -7,7 +7,7 @@ import type {
   NormalizedOptions, RangeDescription, ScheduleFacts
 } from '../../core/schedule.js';
 import {
-  type Sayable, type Shape, andLast, choose, excepted, listed, parity,
+  type Sayable, type Shape, andLast, around, choose, excepted, parity,
   ranges, scales, setsOf, span, strays, unrestricted, valuesOf
 } from './shape.js';
 import type {ChineseStyle} from './options.js';
@@ -64,6 +64,8 @@ interface Moment {
   lead: string;
   minute: Shape;
   minutes: number[];
+  // What joins every hour to a minute taken out of it.
+  ofHour: string;
   opts: Options;
   second: Shape;
   seconds: number[];
@@ -74,6 +76,8 @@ interface Moment {
   // Whether the hours are evenly spaced, however they are named.
   spaced: boolean;
   to: Second;
+  // What a minute taken out is called when seconds fill the stretch.
+  wholeMinute: string;
 }
 
 const noon = 12;
@@ -153,7 +157,7 @@ function window(
 
 // Stretches with what happens in them said once, then stray values.
 function spread(stretches: string[], lead: string, others: string[]): string {
-  const filled = stretches.length > 0 ? stretches.join(marks.list) + lead : '';
+  const filled = around('', stretches.join(marks.list), lead);
 
   return andLast([filled, others.join(marks.list)].filter(Boolean));
 }
@@ -202,11 +206,25 @@ function within(
   return spread(ranges(shape).map(stretch), lead, strays(shape).map(name));
 }
 
+// Seconds taken out of every second: clock times inside one named
+// minute, and otherwise seconds of every minute.
+function secondGaps(t: Moment): string {
+  const {removed} = t.second;
+  const names = removed.map(function name(second) {
+    return twoDigits(second) + units.second;
+  }).join(marks.list);
+
+  return t.hours.length * t.minutes.length === 1 ?
+    times(t, t.hours, t.minutes, removed) :
+    around(words.eachMinuteOf, names, '');
+}
+
 // The seconds after a time part that could not carry them: what happens
 // on each occasion.
 function eachTime(t: Moment): string {
   return marks.comma + (t.second.round ?
-    words.eachTimeLasting + marks.comma + words.meanwhile + secondLead(t) :
+    words.eachTimeLasting + marks.comma + words.meanwhile + secondLead(t) +
+      excepted([secondGaps(t)]) :
     words.eachTimeOf + within(t.second, secondOfMinute, true, secondLead(t)));
 }
 
@@ -259,10 +277,6 @@ function hourFormOf(minutes: number[], single: boolean): HourForm {
   return minutes[0] === 0 && !single ? 'points' : 'offset';
 }
 
-function unbroken(shape: Shape): boolean {
-  return shape.removed.length === 0;
-}
-
 function anyShape(): boolean {
   return true;
 }
@@ -271,7 +285,7 @@ function momentOf(facts: ScheduleFacts, opts: Options): Moment {
   const mayWrap = unrestricted(facts, ['date', 'weekday', 'month', 'year']);
   const hourSets = setsOf(facts, 'hour', mayWrap);
   const second = choose(setsOf(facts, 'second', false), scales.second,
-    unbroken);
+    anyShape);
   const minute = choose(setsOf(facts, 'minute', false), scales.minute,
     anyShape);
   const seconds = valuesOf(setsOf(facts, 'second', false),
@@ -284,19 +298,30 @@ function momentOf(facts: ScheduleFacts, opts: Options): Moment {
   const tie = quiet && facts.analyses.written.hour === 'cadence';
   const filled = second.round && minute.interval === 1 &&
     strays(minute).length === 0;
-  const carried: Second[] = single ? [seconds[0], seconds[0]] : [null, null];
-  const [from, to] = filled ? [0, ranges(second)[0].to] : carried;
+  const carried: Second = single ? seconds[0] : null;
+  const fine = filled ?
+    {
+      from: 0,
+      lead: leadOf(second, words.everySecond, units.second),
+      ofHour: '',
+      to: ranges(second)[0].to,
+      wholeMinute: words.thisMinute
+    } :
+    {
+      from: carried,
+      lead: leadOf(minute, words.everyMinute, units.minute),
+      ofHour: words.of,
+      to: carried,
+      wholeMinute: ''
+    };
 
   return {
+    ...fine,
     filled,
-    from,
     hour: choose(hourSets, scales.hour,
       sayableHours(hourFormOf(minutes, single), tie)),
     hourRuns: runsOf(hours, mayWrap),
     hours,
-    lead: filled ?
-      leadOf(second, words.everySecond, units.second) :
-      leadOf(minute, words.everyMinute, units.minute),
     minute,
     minutes,
     opts,
@@ -305,8 +330,7 @@ function momentOf(facts: ScheduleFacts, opts: Options): Moment {
     shown: quiet ? [null] : seconds,
     single,
     spaced: choose(hourSets, scales.hour, sayableHours('points', false))
-      .interval > 1,
-    to
+      .interval > 1
   };
 }
 
@@ -329,32 +353,46 @@ function namedGaps(t: Moment): string {
 
 // Hours taken out of every hour, each as the window it would have filled.
 function windowGaps(t: Moment): string {
-  const gaps = t.hour.alternate ? [] : t.hour.removed;
+  const hours = t.hour.alternate ? [] : t.hour.removed;
 
-  return gaps.map(function gap(hour) {
+  return hours.map(function gap(hour) {
     return window(instant(hour), wholeHour, t);
   }).join(marks.list);
 }
 
-// Minutes taken out of every minute. Under every second a missing minute
-// is a whole minute, and is called one.
+// Minutes taken out of every minute: clock times inside one named hour,
+// and otherwise minutes of every hour. Under every second a missing
+// minute is a whole minute, and is called one.
 function minuteGaps(t: Moment): string {
-  const names = t.minute.removed.map(function name(minute) {
+  const {removed} = t.minute;
+  const names = removed.map(function name(minute) {
     return minutePoint(minute, null);
   }).join(marks.list);
 
-  if (!names) {
-    return '';
-  }
-
-  return t.filled ?
-    everyHour() + names + words.thisMinute :
-    everyHour() + words.of + names;
+  return t.hours.length === 1 ?
+    around('', times(t, t.hours, removed, [null]), t.wholeMinute) :
+    around(everyHour() + t.ofHour, names, t.wholeMinute);
 }
 
-// The hours as the owner of the minutes named after them.
+// Everything taken out of a filled stretch: hours, then minutes, then
+// seconds where the seconds are what fills it.
+function gaps(t: Moment): string {
+  return excepted(
+    [windowGaps(t), minuteGaps(t), t.filled ? secondGaps(t) : '']);
+}
+
+// The hours as the owner of the minutes named after them. Stretches of
+// hours are windows from the first time that fires to the last; separate
+// hours are named.
 function owningHours(t: Moment): string {
-  const names = listed(t.hour.parts, hourName(t), words.nextDay);
+  const firing: RangeDescription = {
+    from: t.minutes[0],
+    kind: 'range',
+    to: t.minutes[t.minutes.length - 1]
+  };
+  const windows = t.hourRuns.map(function eachRun(run) {
+    return window(run, firing, t);
+  }).join(marks.list);
 
   if (t.hour.alternate) {
     return parity(t.hour, words.evenHours, words.oddHours) + namedGaps(t) +
@@ -362,10 +400,10 @@ function owningHours(t: Moment): string {
   }
 
   if (ranges(t.hour).length > 0) {
-    return (t.hour.round ? '' : names) + everyHour() + words.of;
+    return (t.hour.round ? '' : windows) + everyHour() + words.of;
   }
 
-  return names + words.slot + words.of;
+  return t.hours.map(hourName(t)).join(marks.list) + words.slot + words.of;
 }
 
 // The hours as a confinement that is not a window: nothing for every
@@ -398,7 +436,7 @@ function pointHours(t: Moment): TimeSaid {
     everyHour();
   const whole = onTheHour ? words.everyHourOnTheHour : everyHour();
   const lead = leadOf(t.hour, whole, units.hour);
-  const gaps = excepted([times(t, t.hour.removed, t.minutes, [t.from])]);
+  const out = excepted([times(t, t.hour.removed, t.minutes, [t.from])]);
 
   if (!t.hour.round && !idiom) {
     return {
@@ -409,7 +447,7 @@ function pointHours(t: Moment): TimeSaid {
         }),
         lead,
         [times(t, strays(t.hour), t.minutes, [t.from])].filter(Boolean)
-      ) + gaps
+      ) + out
     };
   }
 
@@ -417,7 +455,7 @@ function pointHours(t: Moment): TimeSaid {
     allDay: true,
     text: (onTheHour ?
       lead :
-      owner + words.of + minutePoint(minute, t.from)) + gaps
+      owner + words.of + minutePoint(minute, t.from)) + out
   };
 }
 
@@ -425,7 +463,7 @@ function pointHours(t: Moment): TimeSaid {
 function ownedMinutes(t: Moment, minutes: string): TimeSaid {
   return {
     allDay: roundTheClock(t),
-    text: owningHours(t) + minutes + excepted([windowGaps(t)])
+    text: owningHours(t) + minutes + gaps(t)
   };
 }
 
@@ -456,7 +494,7 @@ function filledHours(t: Moment): TimeSaid {
         }),
         t.lead,
         [times(t, t.hours, strays(t.minute), [t.from])].filter(Boolean)
-      ) + excepted([minuteGaps(t)])
+      ) + gaps(t)
     };
   }
 
@@ -469,8 +507,7 @@ function filledHours(t: Moment): TimeSaid {
 
   return {
     allDay: roundTheClock(t),
-    text: confiningHours(t) + t.lead + ofSecond +
-      excepted([windowGaps(t), minuteGaps(t)])
+    text: confiningHours(t) + t.lead + ofSecond + gaps(t)
   };
 }
 
@@ -493,7 +530,7 @@ function listedTimes(t: Moment): string {
       }),
       secondLead(t),
       [times(t, t.hours, t.minutes, strays(t.second))].filter(Boolean)
-    );
+    ) + excepted([secondGaps(t)]);
   }
 
   if (stretches.length === 0 &&

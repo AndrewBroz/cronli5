@@ -78,7 +78,7 @@ const years: Naming = {
   next: '',
   odd: words.oddYears,
   rest: '',
-  unit: units.year + words.once
+  unit: units.year
 };
 
 // How the month was said, which decides what joins it to a date: nothing
@@ -98,6 +98,9 @@ const pairedDateLead: Record<Link, string> = {
   ...dateLead,
   listed: words.everyMonth
 };
+
+// All but a few days follows its months directly.
+const exceptedDateLead: Record<Link, string> = {...dateLead, listed: ''};
 
 const quartzLead: Record<Link, string> = {
   listed: '',
@@ -200,7 +203,8 @@ function dateWords(
 
   const mayWrap = unrestricted(facts, ['month', 'year']);
   const shape = choose(setsOf(facts, 'date', mayWrap), scales.date, anyShape);
-  const lead = (union ? pairedDateLead : dateLead)[link];
+  const alone = shape.round ? exceptedDateLead : dateLead;
+  const lead = (union ? pairedDateLead : alone)[link];
 
   return {
     open: ranges(shape).length > 0 && !shape.round && !shape.alternate,

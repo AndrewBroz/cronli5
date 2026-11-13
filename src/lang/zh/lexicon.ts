@@ -78,7 +78,6 @@ const words = {
   slot: '时段',
   thisMinute: '这一分钟',
   mondayToFriday: '周一至周五',
-  once: '一次',
   meanwhile: '期间',
   within: '内',
   workingDay: '工作日'
