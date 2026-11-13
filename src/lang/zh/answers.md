@@ -64,8 +64,8 @@ Corrections, for what has to be worked out:
   moment, to the precision of what fires, and both fire.** Chinese 至 is
   read as including its end, so nothing else is needed: 9:00至17:59每分钟;
   9:00:00至17:59:59每秒; 9:00至17:45每15分钟. Where the minutes are a list
-  inside each hour, the hours are named as hours, not as a window of times
-  that do not fire: 9点至17点每小时的05分、20分、45分.
+  inside each hour, the window runs from the first time that fires to the
+  last: 9:05至17:45每小时的05分、20分、45分.
 * **Where one part could be read as running into the next, a comma parts
   them** (2.1).
 * **A cadence of hours, minutes or seconds never names a start alone.**
@@ -384,8 +384,8 @@ minute phrase from section 3 follows 每小时的:
 | H | Before the minute phrase |
 | --- | --- |
 | every hour | 每小时的: 每小时的05分、20分、45分 |
-| a range | the hours by name, then 每小时的: 9点至17点每小时的05分、20分、45分. (9:00至17:59 would name two moments that do not fire.) |
-| pieces | 9点至17点及22点每小时的05分、20分、45分 |
+| a range | a window from the first time that fires to the last, then 每小时的: 9:05至17:45每小时的05分、20分、45分; 9:00至17:29每小时的前30分钟内每分钟. (9:00至17:59 names two moments that do not fire, and a blind reader was unsure whether 9点至17点 includes the 17 o'clock hour.) |
+| pieces | windows the same way: 9:05至17:45、22:05至22:45每小时的05分、20分、45分 |
 | separate hours | no minute phrase: the clock times are listed, while there are at most twelve (9:05、9:20、9:45、17:05、17:20、17:45). Beyond twelve: 8点、10点、12点、14点、16点、18点时段的05分、20分、45分 |
 | every second hour | 偶数点的15分、45分; 奇数点的05分、20分 |
 | another cadence | the hours by name: 0点、4点、8点、12点、16点、20点时段的15分、45分 |
@@ -504,11 +504,11 @@ working days are moved around public holidays, so it is always followed by
 what it means here: （周一至周五）.
 
 5.8 Years. Years 1970, 1972 … : 偶数年. Years 1971, 1973 … : 奇数年. Any
-other cadence of years names its start, and its end if it stops early,
-and says 一次 so that it is not read with the cadence after it: 2030年起每2
-年一次; 2028年起每4年一次; 2030年至2040年每2年一次. Like every year phrase
-that is not a single year, it is closed by a comma: 2028年起每4年一次，1月1
-日0:00; 2028年起每4年一次，每5分钟.
+other cadence of years names its start, and its end if it stops early:
+2030年起每2年; 2028年起每4年; 2030年至2040年每2年. Like every year phrase
+that is not a single year, it is closed by a comma, which keeps it from
+being read with the cadence after it: 2028年起每4年，1月1日0:00; 2028年起每4
+年，每5分钟. (一次 was tried after it and clashed with 每天.)
 
 ## 6. Words
 
