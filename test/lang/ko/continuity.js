@@ -13,17 +13,19 @@ const FIELDS =
 
 // A description is three parts in one order, from large to small
 // (answers 2.1): the calendar (the year, the month and the day: «매년
-// 6월 매주 월요일», «매월 1일과 매주 금요일 각각»), the fill (one of
-// «매일», «하루 종일», «내내», «그해 내내», or nothing), and the time.
+// 6월 매주 월요일», «매월 1일과 매주 금요일, 각각»), the fill (one of
+// «매일», «하루 종일», «내내», or nothing), and the time.
 // `describeParts` gives them as `{calendar, fill, time}`.
 //
 // A second or a minute changes the time. An hour changes the time and
 // the fill. A day, month or year field changes the calendar and the
 // fill. Inside the calendar the fields answer to one another in the ways
 // answers 2.6 declares: «매년» and «매월» stand by which coarser field
-// is free or said as a range, a union under a month or a year takes
-// «에는», and a year phrase ending in «마다» takes a comma. All of that
-// stays inside the calendar. Nothing else may cross.
+// is free or said as a range, a union says its month and year on both
+// arms or becomes one «매일(… 제외)», a year phrase ending in «마다»
+// takes «, 그해», and the month and day phrases name only what the
+// calendar has. All of that stays inside the calendar. Nothing else may
+// cross.
 const MAY_CHANGE = {
   date: ['calendar', 'fill'],
   hour: ['time', 'fill'],
@@ -36,7 +38,7 @@ const MAY_CHANGE = {
 
 // The fill says what the level between the calendar and the time does
 // (answers 2.5), so it is one of these and nothing else.
-const FILLS = ['', '매일', '하루 종일', '내내', '그해 내내'];
+const FILLS = ['', '매일', '하루 종일', '내내'];
 
 const SETUP = {languages: [korean.default], options: {}, styles: {}};
 
