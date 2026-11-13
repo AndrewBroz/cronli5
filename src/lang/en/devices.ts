@@ -521,8 +521,8 @@ function withinTheHour(
 
 // A voice for values that fall inside one stretch of clock time: a run
 // is a window, and stray values are clock times. (A run that crosses the
-// end of the hour or minute reaches here as two runs, since something
-// coarser is always restricted.) `moment` is the moment a value starts
+// end of the hour or minute reaches here as two runs: numbers are never
+// said as wrapping.) `moment` is the moment a value starts
 // at, as an end of a window or as a stray. `close` is how a window
 // closes: with which word, and on the moment how many values after its
 // last.
@@ -747,9 +747,10 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
  * with "through" on the cadence's last run, which `close` gives within
  * the last hour: "from 9 a.m. through 5:45 p.m." Any cadence of hours
  * but every other hour runs "for one hour" at each of the moments it
- * names: "for one hour every 6 hours". One with a named end is not said
- * at all, since "for one hour ... through 6 p.m." is heard as stopping
- * at 6; its hours are left to be named.
+ * names: "for one hour every 6 hours". One with a named end names each
+ * end as an hour, since "for one hour ... through 6 p.m." is heard as
+ * stopping at 6: "during every other hour from the 8 a.m. hour through
+ * the 6 p.m. hour".
  */
 function hoursAsStretches(close: {minute: number} | null,
   opts: EnglishOptions): Voice {

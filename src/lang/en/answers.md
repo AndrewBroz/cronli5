@@ -521,12 +521,13 @@ at 8 a.m. on the 1st" can be taken to run every day and skip 8 a.m. on the
 1st only, and "on every day except the 15th as well as on Mondays" to
 skip Mondays too. So an exception is closed with a comma whenever
 anything follows it: the day, "every day", the month, the year, or "as
-well as" and a weekday.
+well as" and a weekday (which then says more: 4.3).
 
 * "every 2 hours except at 8 a.m., on the 1st"
 * "every minute except at 29 minutes past the hour, on Mondays"
 * "every hour from 3 a.m. through 11 p.m. except at 6 a.m., every day"
-* "at midnight on every day except the 15th, as well as on Mondays"
+* "at midnight on every day except the 15th, as well as on Mondays
+  whatever the date"
 * "at midnight Monday through Saturday except Thursday, in June"
 * "at midnight on the 1st of every month except June, in 2030"
 
@@ -847,9 +848,9 @@ Counted past the hour, a stray minute beside a run of minutes says what
 the seconds do in it, as a stray clock time does: "every second from 0
 through 29 and for one minute at 45 minutes past the hour"; "every second
 for one minute at 5, every second from 10 through 40, and for one minute
-at 50 minutes past the hour"; "at 30 seconds past every minute from 0
-through 29 and at 30 seconds past the minute, at 45 minutes past the
-hour". A bare "and at 45 minutes past the hour" was read as one firing at
+at 50 minutes past the hour". (Seconds that are not continuous are said
+once in front of such minutes, as above.) A bare "and at 45 minutes past
+the hour" was read as one firing at
 :45:00.
 
 **A list of clock times to the second is also sayable**, on the same terms
@@ -930,10 +931,11 @@ most widely used library.
   June 1 through 7"; "on June 1 through 7 and on June 15". British style
   puts the day first: "on 1 June", "on 1 and 15 June", "on 1 to 7 June".
   An idiom or a cadence keeps its own words and takes "in": "on
-  odd-numbered days in June"; "every 5 days from the 1st in June"; "every
-  3 days from the 5th through the 20th in June". (A cadence was first
-  said from a date, "every 5 days from June 1", which reads as a run that
-  starts on June 1 and carries on, when the schedule stops with June.)
+  odd-numbered days in June"; "every 5 days from the 1st of the month in
+  June"; "every 3 days from the 5th through the 20th of the month in
+  June". (A cadence was first said from a date, "every 5 days from June
+  1", which reads as a run that starts on June 1 and carries on, when the
+  schedule stops with June.)
 * One day with a list of months: each date in full. "On January 1 and July
   1"; "on March 1, June 1, September 1, and December 1".
 * Otherwise, with several months: the day in its ordinal form, "of", then
@@ -1001,7 +1003,8 @@ past the hour", "at 15 and 45 minutes past the hour". Digits keep the
 description comparable with the pattern.
 
 5.5 Interval words. A cadence uses a digit: "every 2 hours", "every 15
-minutes", "every 5 days from the 1st". The only interval word is "every
+minutes", "every 5 days from the 1st of the month". The only interval
+word is "every
 other", and it appears in exactly three phrases: "during every other hour"
 (4.1's confinement table), "of every other month" (4.4) and "of every other
 year from 2033" (5.8). An interval is an ordinal in two places, both
@@ -1087,7 +1090,7 @@ And the day it hangs on must not be taken for a day of the year. "On the
 under every month says the month before a cadence of years, in the form
 its phrase takes with months (4.4): "on the 1st of every month of every
 other year from 2030"; "on the 1st and 15th of every month of every 4th
-year from 2030"; "every 5 days from the 1st in every month of every other
+year from 2030"; "on odd-numbered days in every month of every other
 year from 2030"; "on the weekday nearest the 15th of every month of every
 other year from 2030". Any other years leave the month unsaid: "on the
 1st in 2030 and 2031".
@@ -1105,7 +1108,7 @@ Anything else keeps "in" before the year: several months ("in June and
 July in 2030"), several years ("in June in 2030 and 2031"), a month said
 inside a date ("on June 1 and 15 in 2030"), and a day of the month beside
 a weekday, where the month is said on each side. So does a phrase that
-does not end in the month's name ("on every day in June except the 15th
+does not end in the month's name ("on every day in June except the 15th,
 in 2030"), the nearest-weekday form ("on the weekday nearest June 15 in
 2030": the day it names is not always the day it fires, so it is not made
 a full date), and a Quartz form under every month ("on the last day of the
@@ -1150,7 +1153,8 @@ minutes". After "every" with no number the unit is singular: "every
 minute".
 
 The unit agrees with the last number said before it: "except at 1 minute
-past the hour"; "from 58 through 1 minute past the hour".
+past the hour"; "every 15 minutes from 0 through 45 and at 1 minute past
+the hour".
 
 7.2 None beyond number. A recurring weekday in a list is plural ("on
 Mondays"); in a range it is singular with no "on" ("Monday through
