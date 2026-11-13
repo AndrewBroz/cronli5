@@ -401,14 +401,22 @@ const rows = [
 
   // The nearest weekday to a day some named month lacks, under a heading:
   // the day is not said with its months, so the note stays.
-  ['0 9 31W 1-11 1-5',
-    'із січня до листопада включно: щотижня з понеділка до п\'ятниці ' +
+  ['0 9 31W 1-11 1-4',
+    'із січня до листопада включно: щотижня з понеділка до четверга ' +
     'включно, а також у найближчий до 31-го числа будній день того ж місяця ' +
     '(понеділок–п\'ятниця), о 9:00 (лише в місяцях, де є 31-ше число)'],
-  ['0 9 31W 1,3 1-5',
-    'у січні та березні: щотижня з понеділка до п\'ятниці включно, а також ' +
+  ['0 9 31W 1,3 1-4',
+    'у січні та березні: щотижня з понеділка до четверга включно, а також ' +
     'у найближчий до 31-го числа будній день того ж місяця ' +
     '(понеділок–п\'ятниця), о 9:00'],
+  // Corrected 2026-11-13: a nearest weekday falls Monday to Friday, which
+  // the weekdays already hold, so «а також» added no day (4.3). The note
+  // under a heading is kept by the rows with Monday to Thursday below.
+  ['0 9 31W 1-11 1-5',
+    'із січня до листопада включно, щотижня з понеділка до п\'ятниці ' +
+    'включно, о 9:00'],
+  ['0 9 31W 1,3 1-5',
+    'у січні та березні щотижня з понеділка до п\'ятниці включно, о 9:00'],
 
   // A note about the day stands beside the day where the time ends in
   // brackets of its own.
@@ -891,7 +899,32 @@ const rows = [
     '(0:05, 0:20, 0:35, 0:50 … 23:50)'],
   // The boundary: three items keep the next cycle's first.
   ['5,20,45 * * * *',
-    'щогодини на 5-й, 20-й та 45-й хвилині (0:05, 0:20, 0:45, 1:05 … 23:45)']
+    'щогодини на 5-й, 20-й та 45-й хвилині (0:05, 0:20, 0:45, 1:05 … 23:45)'],
+
+  // A day that only ever falls Monday to Friday (the nearest weekday, the
+  // first or the last weekday of the month) beside weekdays that hold all
+  // five adds no day: the weekdays are said alone (4.3). Said with
+  // «а також», the sentence named a second set of days that changes
+  // nothing, and a reader looks for what it adds.
+  ['*/7 */2 15W */3 MON-FRI',
+    'у січні, квітні, липні та жовтні щотижня з понеділка до п\'ятниці ' +
+    'включно, кожні 2 години з 0:00 до 22:00 включно, щоразу кожні 7 ' +
+    'хвилин від початку до 56-ї хвилини (0:00–0:56, 2:00–2:56 … ' +
+    '22:00–22:56)'],
+  ['0 9 LW * 1-5', 'щотижня з понеділка до п\'ятниці включно, о 9:00'],
+  ['0 9 1W 6 1-5', 'у червні щотижня з понеділка до п\'ятниці включно, о 9:00'],
+  ['0 9 15W * 1-6', 'щодня, крім неділі, о 9:00'],
+  // The boundary: weekdays without Friday, and a day that can fall on any
+  // day of the week, keep both sides.
+  ['0 9 15W * 1-4',
+    'щотижня з понеділка до четверга включно, а також щомісяця в ' +
+    'найближчий до 15-го числа будній день (понеділок–п\'ятниця), о 9:00'],
+  ['0 9 15 * 1-5',
+    'щотижня з понеділка до п\'ятниці включно, а також щомісяця 15-го ' +
+    'числа, о 9:00'],
+  ['0 9 L * 1-5',
+    'щотижня з понеділка до п\'ятниці включно, а також в останній день ' +
+    'місяця, о 9:00']
 ];
 
 export {rows};

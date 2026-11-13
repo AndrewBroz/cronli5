@@ -974,7 +974,23 @@ phrase is exactly where it is read over both sides.)
 
 **Where the day of the month is no restriction or never fires, there is
 no «а також»** (2.8): days that are every day of the months reached are
-«щодня»; a date no reached month has leaves the weekdays alone.
+«щодня»; a date no reached month has leaves the weekdays alone. **Nor is
+there one where the day of the month adds no day**: a form that only
+ever falls Monday to Friday (the nearest weekday, the first or the last
+weekday of the month, 5.7) beside weekdays that hold all five of them
+(the core's `dateAddsNothing`). The weekdays are said alone, as they
+would be without it: `*/15 9-17 15W * 1-5` is «щотижня з понеділка до
+п'ятниці включно, кожні 15 хвилин з 9:00 до 17:45»; `0 9 1W 6 1-5` is «у
+червні щотижня з понеділка до п'ятниці включно, о 9:00»; `0 9 15W * 1-6`
+is «щодня, крім неділі, о 9:00». (It used to be «щотижня з понеділка до
+п'ятниці включно, а також щомісяця в найближчий до 15-го числа будній
+день (понеділок–п'ятниця)»: «а також» promises a second set of days, and
+a reader looks for what it adds, which is nothing; the sentence ran past
+two hundred and sixty characters with a heading and a cadence of hours.)
+Monday to Thursday beside the same form keep both sides, since the
+nearest weekday can be a Friday, and so does any plain date or «в
+останній день місяця», which fall on every day of the week over the
+years.
 
 The «а також» phrase is set off by commas on both sides, as an added
 member of the sentence is, so the time is read with both sides. The
@@ -1306,8 +1322,8 @@ in no month reached is 2.8.
   найближчий до 31 липня та 31 серпня будній день…»: the months without
   the day are simply not named). It is said under a heading of months
   (4.3) if any of them can lack the day, because there the day stands
-  without its months: `0 9 31W 1-11 1-5` is «із січня до листопада
-  включно: щотижня з понеділка до п'ятниці включно, а також у найближчий
+  without its months: `0 9 31W 1-11 1-4` is «із січня до листопада
+  включно: щотижня з понеділка до четверга включно, а також у найближчий
   до 31-го числа будній день того ж місяця (понеділок–п'ятниця), о 9:00
   (лише в місяцях, де є 31-ше число)». (Under a heading the note used to
   be dropped, and nothing told the reader that April has no such day.)
