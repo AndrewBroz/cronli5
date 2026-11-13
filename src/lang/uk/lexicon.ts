@@ -183,6 +183,8 @@ const endings = {
 const words = {
   after: 'після',
   afterCount: 'через',
+  afterEachHour: 'після кожної з цих годин',
+  afterEachMinute: 'після кожної з цих хвилин',
   afterHourStart: 'після початку години',
   also: 'а також',
   and: 'та',

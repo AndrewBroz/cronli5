@@ -11,7 +11,7 @@ import type {
 } from '../../core/schedule.js';
 import type {Describing, Part, Plain, Table, Taste} from './sets.js';
 import {
-  choose, partsOf, runsOf, say, unwrapped, walk
+  choose, partsOf, runsOf, say, unwrapped, walk, wraps
 } from './sets.js';
 import {denote, describeSet} from '../../core/describe-set.js';
 import {list, pieces} from './spelling.js';
@@ -34,6 +34,8 @@ interface Face {
 
 // One level of the time: a finer field inside the slots of a coarser one.
 interface Level {
+  // What follows counts from each slot named: «після кожної з цих годин».
+  afterEach: string;
   // The word for every slot: «щогодини».
   cycle: string;
   // What closes a phrase about a place inside the slot: «кожної години».
@@ -201,12 +203,18 @@ const classes: Table<SetDescription, FineClass> = {
   values: valuesClass
 };
 
+// What a minute or a second field may say where it stands: an
+// exception, a running cadence of three or four values, and the pair
+// that halves the cycle from zero as a cadence.
+interface FineTaste {
+  except: boolean;
+  lenient: boolean;
+  pair: boolean;
+}
+
 // The description a minute or a second field says. A run never wraps
-// inside its cycle, and two values that halve it from zero are a cadence.
-function fineOf(
-  candidates: SetDescription[],
-  taste: {except: boolean; lenient: boolean}
-): Fine {
+// inside its cycle.
+function fineOf(candidates: SetDescription[], taste: FineTaste): Fine {
   const values = denote(candidates[0], cycle);
   const description = choose([
     ...describeSet(values, cycle),
@@ -216,7 +224,7 @@ function fineOf(
   ], cycle, {
     base: (base) => taste.except && say(classes, base) === 'lead',
     cadence: (cadence, count) => count > 4 || taste.lenient &&
-      continuous(cadence) && (count > 2 || cadence.start === 0),
+      continuous(cadence) && (count > 2 || taste.pair && cadence.start === 0),
     pieces: () => true
   });
 
@@ -343,9 +351,12 @@ function windows(coarse: SetDescription, fine: Fine, level: Level): string {
 }
 
 // A filled stretch or a running cadence leads, and the slots follow as
-// windows; none are said when it runs round the clock from zero.
+// windows; none are said when it runs round the clock from zero. (One
+// second carried in every clock time is said after the phrase, so it
+// does not make a window either.)
 function led(coarse: SetDescription, fine: Fine, level: Level): Said {
-  const whole = coarse.kind === 'all' && fine.values[0] === 0;
+  const whole = coarse.kind === 'all' && fine.values[0] === 0 &&
+    [0, level.hi].includes(level.lo);
 
   return said(
     [opener(fine, level), windows(coarse, fine, level)]
@@ -426,14 +437,25 @@ const slotPieces: Table<Part, string, [number, Level]> = {
   }), level)
 };
 
-// One value rides in every clock time the slots name.
+// One value rides in every clock time the slots name. The word that
+// opens a run stands before the first run, after any single clock times
+// that come ahead of it.
 function points(coarse: Some, fine: Fine, level: Level): Said {
-  const named = partsOf(coarse, level.slots).map(function each(part) {
-    return say(slotPieces, part, fine.values[0], level);
+  const parts = partsOf(coarse, level.slots);
+  const cycleWord = say(slotOpeners, coarse, level);
+  const firstRun = parts.findIndex(function isRun(part) {
+    return part.kind === 'range';
+  });
+  const named = parts.map(function each(part, index) {
+    return [
+      ...cycleWord.filter(function atFirstRun() {
+        return index === firstRun;
+      }),
+      say(slotPieces, part, fine.values[0], level)
+    ].join(' ');
   });
 
-  return said(
-    [...say(slotOpeners, coarse, level), pieces(named)].join(' '), true);
+  return said(pieces(named), true);
 }
 
 // A part of the finer field inside one named slot, as clock times.
@@ -449,29 +471,51 @@ function piecesAt(part: Part, slot: number, level: Level): string[] {
     });
 }
 
-// Named slots: a few clock times are listed; a list of counts follows
-// the slots; anything else is said slot by slot.
+// «Через 5, 20 та 45 хвилин»: the unit follows the last count.
+function countsAfter(values: number[], level: Level): string {
+  return [
+    words.afterCount, list(values),
+    level.unit[category(values[values.length - 1])]
+  ].join(' ');
+}
+
+// A list of counts in named slots: six clock times or fewer are listed;
+// more are the counts after the slots, and where the list holds the
+// slot's own start, the slots are said first and the rest follows after
+// each of them.
+function countsInSlots(slots: number[], fine: Fine, level: Level): Said {
+  const starts = slots.map(function start(slot) {
+    return startOf(slot, 0, level);
+  });
+
+  if (fine.values.length * slots.length <= 6) {
+    return timesIn(slots, fine, level);
+  }
+
+  return said(fine.values[0] === 0 ?
+    [
+      at(starts, level), words.andPiece,
+      countsAfter(fine.values.slice(1), level), level.afterEach
+    ].join(' ') :
+    [
+      countsAfter(fine.values, level), words.after,
+      list(starts.map(function write(moment) {
+        return clock(moment, level.face);
+      }))
+    ].join(' '), true);
+}
+
+// Named slots: a list of counts is said with the slots; anything else is
+// said slot by slot, as windows.
 function inNamedSlots(
   coarse: ValuesDescription,
   fine: Fine,
   level: Level
 ): Said {
   const slots = coarse.values;
-  const listed = fine.description.kind === 'values';
 
-  if (fine.values.length * slots.length <= 6 ||
-      listed && fine.values[0] === 0) {
-    return timesIn(slots, fine, level);
-  }
-
-  if (listed) {
-    return said([
-      words.afterCount, list(fine.values),
-      level.unit[category(fine.values[fine.values.length - 1])],
-      words.after, list(slots.map(function write(slot) {
-        return clock(startOf(slot, 0, level), level.face);
-      }))
-    ].join(' '), true);
+  if (fine.description.kind === 'values') {
+    return countsInSlots(slots, fine, level);
   }
 
   const parts = partsOf(fine.description as Plain, cycle);
@@ -629,6 +673,7 @@ function build(fine: Fine, coarse: SetDescription, level: Level): Said {
 // when the seconds are said with the minutes.
 function minuteLevel(lo: number, hi: number, every: string, face: Face) {
   return {
+    afterEach: words.afterEachHour,
     cycle: words.everyHour,
     each: words.eachHour,
     every,
@@ -646,6 +691,7 @@ function minuteLevel(lo: number, hi: number, every: string, face: Face) {
 // Seconds inside the minutes of the day.
 function secondLevel(face: Face): Level {
   return {
+    afterEach: words.afterEachMinute,
     cycle: words.everyMinute,
     each: words.eachMinute,
     every: words.everySecond,
@@ -685,20 +731,27 @@ function eachMinute(
   });
 }
 
+// Beside a run across midnight, four hours left out or fewer are an
+// exception; more, and the run is said.
 const hourTaste: Taste = {
   base: () => true,
   cadence: (cadence, count) => count > 4,
+  gap: (count) => count <= 4,
   pieces: () => true
 };
 
 /**
  * The hours as they are said. A run across midnight is true only when
- * nothing coarser is restricted.
+ * nothing coarser is restricted; elsewhere the hours it would be said
+ * for are described inside one day. Hours said with no such run are
+ * said alike under any calendar.
  */
 function hoursOf(candidates: SetDescription[], overnight: boolean) {
-  return choose(
-    overnight ? candidates : unwrapped(candidates, hourDomain),
-    hourDomain, hourTaste);
+  const round = choose(candidates, hourDomain, hourTaste);
+
+  return overnight || !wraps(round) ?
+    round :
+    choose(unwrapped(candidates, hourDomain), hourDomain, hourTaste);
 }
 
 /** The time part of a description, for hours already chosen. */
@@ -726,7 +779,10 @@ function timeOf(
 
   const beat = hours.kind === 'cadence' ||
     hours.kind === 'except' && hours.base.kind === 'cadence';
-  const minutes = fineOf(fields.minute, {except: !beat, lenient: true});
+  // After a cadence of hours the minutes take no exception, and two of
+  // them are two places.
+  const minutes = fineOf(fields.minute,
+    {except: !beat, lenient: true, pair: !beat});
   const rest = build(minutes, hours, minuteLevel(carried, carried,
     words.everyMinute, {hour12, seconds: carried > 0}));
 
@@ -734,7 +790,8 @@ function timeOf(
     return finish(rest);
   }
 
-  const seconds = fineOf(fields.second, {except: true, lenient: true});
+  const seconds = fineOf(fields.second,
+    {except: true, lenient: true, pair: true});
 
   if (slots.length === minutesOfDay.max + 1) {
     return finish(build(seconds, {kind: 'all'}, bySecond));
@@ -753,7 +810,8 @@ function timeOf(
   }
 
   return eachMinute(rest,
-    fineOf(fields.second, {except: false, lenient: false}), slots, bySecond);
+    fineOf(fields.second, {except: false, lenient: false, pair: false}),
+    slots, bySecond);
 }
 
 export {hoursOf, timeOf};

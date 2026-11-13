@@ -31,6 +31,9 @@ export interface Taste {
   base(base: SetDescription): boolean;
   // Whether a regular set of so many values is said as a cadence.
   cadence(cadence: Describing<'cadence'>, count: number): boolean;
+  // Whether leaving out so many values is said before a run that wraps
+  // round the cycle; any number, where a field does not say.
+  gap?(count: number): boolean;
   // Whether a set of so many values may be said in pieces.
   pieces(count: number): boolean;
 }
@@ -81,16 +84,20 @@ interface Measure {
   count: number;
   domain: Domain;
   pieces: number;
+  // Whether the set is one run that wraps round the cycle.
+  wrapping: boolean;
 }
 
 // A run of two is never a range, and an exception is worth its
 // subtraction only above four values and where it names fewer things
-// than the pieces would.
+// than the pieces would. Beside a run that wraps, the field says how
+// many values may be left out.
 const sayable: Table<SetDescription, boolean, [Measure, Taste]> = {
   all: () => true,
   cadence: (cadence, measure, taste) => taste.cadence(cadence, measure.count),
   except: (except, measure, taste) => measure.count > 4 &&
-    thingsNamed(except) < measure.pieces && taste.base(except.base),
+    thingsNamed(except) < measure.pieces && taste.base(except.base) &&
+    (!measure.wrapping || !taste.gap || taste.gap(except.removed.length)),
   pieces: (parts, measure, taste) => taste.pieces(measure.count),
   range: (range, measure) => lengthOf(range, measure.domain) >= 3,
   values: () => true
@@ -166,7 +173,8 @@ function choose<D extends SetDescription = SetDescription>(
   const measure = {
     count: denote(candidates[0], domain).length,
     domain,
-    pieces: Math.min(Infinity, ...offered.filter(isPieces).map(thingsNamed))
+    pieces: Math.min(Infinity, ...offered.filter(isPieces).map(thingsNamed)),
+    wrapping: candidates[0].kind === 'range' && wraps(candidates[0])
   };
 
   return offered.filter(function canSay(candidate) {
