@@ -1,4 +1,12 @@
+import {existsSync, readdirSync} from 'node:fs';
 import {defineConfig} from 'vitest/config';
+
+// A language whose rule book, words and rows are written but whose
+// renderer is not yet built: its suites cannot run, and nothing can
+// exercise its lexicon.
+const unbuilt = readdirSync('src/lang').filter(function noRenderer(code) {
+  return !existsSync(`src/lang/${code}/index.ts`);
+});
 
 // The source uses NodeNext-style explicit `.js` import specifiers that point at
 // `.ts` files; extensionAlias makes Vite resolve those `.js` specifiers to the
@@ -18,10 +26,10 @@ export default defineConfig({
       'test/runner.js',
       'test/paradigms/grid.js',
       'test/paradigms/check.js',
-      'test/lang/en/paradigms/**',
-      'test/lang/uk/paradigms/**',
-      'test/lang/zh/paradigms/**',
-      'test/lang/es/**',
+      'test/lang/*/paradigms/**',
+      ...unbuilt.map(function suites(code) {
+        return `test/lang/${code}/**`;
+      }),
       'test/core/bad_input/error-types.js'
     ],
     setupFiles: ['./test/vitest.setup.ts'],
@@ -30,11 +38,11 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: ['src/**/*.ts'],
-      // Spanish has its rule book, words and rows but no renderer yet, so
-      // nothing can exercise its lexicon.
       exclude: [
         'src/browser.ts', 'src/core/schedule.ts', 'src/types.ts',
-        'src/lang/es/**'
+        ...unbuilt.map(function sources(code) {
+          return `src/lang/${code}/**`;
+        })
       ],
       reportsDirectory: './coverage',
       // The floors sit just below what the core and the English renderer
