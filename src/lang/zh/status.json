@@ -2,6 +2,6 @@
   "name": "Chinese (Simplified)",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "rebuilt 2026-11-12 by Claude Fable 5.2 from a rule book redecided natively after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/zh-acceptance.md)",
+  "modelReview": "rebuilt 2026-11-12 by Claude Fable 5.2 from a rule book redecided natively after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/zh-acceptance.md); audited 2026-11-13 by Claude Fable 5.2 (an adversarial read of the renderer and of every row against its schedule, a 950-pattern sweep and a fuzz): no row said a wrong schedule; the overnight stretch was declared in continuity, unbounded lists of seconds were bounded, and rules a builder had guessed were written into the answers. The sentence forms the audit changed have had no blind fluency read",
   "branchBudget": 90
 }

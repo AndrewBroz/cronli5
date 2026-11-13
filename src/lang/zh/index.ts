@@ -9,7 +9,7 @@ import type {
 } from '../../core/schedule.js';
 import {denote} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
-import {beforeMonth, dayOf, monthOf, yearOf} from './days.js';
+import {dayOf, monthOf, yearOf} from './days.js';
 import lexicon from './lexicon.js';
 import type {ChineseOptions, ChineseStyle} from './options.js';
 import {regions, style, styles} from './options.js';
@@ -43,11 +43,9 @@ function describeParts(schedule: Schedule, opts: ChineseOptions):
   ChineseParts {
   const {candidates} = schedule.analyses;
   const years = yearOf(candidates.year as SetDescription[]);
-  const months = monthOf(candidates.month as SetDescription[],
-    years.kind === 'none');
+  const months = monthOf(candidates.month as SetDescription[], years.kind);
   const days = dayOf(schedule, months);
-  const year = years.text +
-    when(months.kind !== 'none', beforeMonth[years.kind]);
+  const year = years.text + months.lead;
   const month = months.text;
   const time = timeOf({
     hour: valuesOf(schedule, 'hour'),
