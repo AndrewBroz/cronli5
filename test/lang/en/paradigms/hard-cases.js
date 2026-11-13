@@ -448,10 +448,13 @@ const rows = [
   ['0 0 */3 6 * 2030',
     'at midnight every 3 days from the 1st of the month in June 2030',
     {years: true}],
-  ['0 0 */5 6 1',
+  // Written without the star, the days are a union: cron takes a day field
+  // for unrestricted only when it begins with `*`. The explicit days of
+  // `*/5` and `*/3` beside a weekday say either.
+  ['0 0 1-31/5 6 1',
     'at midnight on June 1, 6, 11, 16, 21, and 26 as well as on Mondays ' +
     'in June'],
-  ['0 0 */3 6 1',
+  ['0 0 1-31/3 6 1',
     'at midnight every 3 days from the 1st of the month in June as well ' +
     'as on Mondays in June'],
   ['0 0 */5 6,7 *',
@@ -784,7 +787,97 @@ const rows = [
   ['0-29,31-59 0-28,30-59 9,17 * * *',
     'every second during the 9 a.m. and 5 p.m. hours except during the ' +
     'minute at 29 minutes past the hour, and except at 30 seconds past the ' +
-    'minute, every day']
+    'minute, every day'],
+
+  // Written without the star, the days of the month are a union with the
+  // weekdays (cron takes a day field for unrestricted only when it begins
+  // with `*`). These are the sentences the grid rows `*/15 9-17 */2 * 1-5`
+  // and `*/15 9-17 */5 * 1-5` had while the star was read as a union.
+  ['*/15 9-17 1-31/2 * 1-5',
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered ' +
+    'days as well as on weekdays'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st, 6th, ' +
+    '11th, 16th, 21st, 26th, and 31st as well as on weekdays'],
+
+  // A day field written from a star (`*/2`) beside another restricted day
+  // field: cron fires only on days that match both. The union's "as well
+  // as" becomes ", but only": the days of the month, then the weekdays
+  // they are restricted to, each said as it is alone.
+  // The odd-numbered days that are a Monday.
+  ['0 0 */2 * 1', 'at midnight on odd-numbered days, but only on Mondays'],
+  // The odd-numbered days that are a Monday, Wednesday or Friday.
+  ['0 9 */2 * 1,3,5',
+    'at 9 a.m. on odd-numbered days, but only on Mondays, Wednesdays, and ' +
+    'Fridays'],
+  // The odd-numbered days that are a Saturday or a Sunday.
+  ['0 0 */2 * 6,0', 'at midnight on odd-numbered days, but only on weekends'],
+  // The 15th, when it is a Sunday, Tuesday, Thursday or Saturday.
+  ['0 0 15 * */2',
+    'at midnight on the 15th, but only on Tuesdays, Thursdays, Saturdays, ' +
+    'and Sundays'],
+  // The last day of the month, when it is a Sunday, Tuesday, Thursday or
+  // Saturday.
+  ['0 0 L * */2',
+    'at midnight on the last day of the month, but only on Tuesdays, ' +
+    'Thursdays, Saturdays, and Sundays'],
+  // The 1st, 6th, 11th, 16th, 21st, 26th and 31st, when a weekday.
+  ['0 0 */5 * 1-5',
+    'at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st, but ' +
+    'only on weekdays'],
+  // Every day but the 15th, when it is a Sunday, Tuesday, Thursday or
+  // Saturday. Nothing is said to keep the exception from the weekdays:
+  // the comma and "but only" part them.
+  ['0 0 1-14,16-31 * */2',
+    'at midnight on every day except the 15th, but only on Tuesdays, ' +
+    'Thursdays, Saturdays, and Sundays'],
+  // The Mondays, Tuesdays and Wednesdays, and the Fridays and Saturdays
+  // that are odd-numbered days.
+  ['0 0 */2 * 1-3,5-6',
+    'at midnight on odd-numbered days, but only Monday through Wednesday ' +
+    'and on Fridays and Saturdays'],
+  // The odd-numbered days that are the last Friday of the month.
+  ['0 0 */2 * 5L',
+    'at midnight on odd-numbered days, but only on the last Friday of the ' +
+    'month'],
+  // Every third day from the 1st, in January and July, when a weekday:
+  // the months are said once after the pair.
+  ['0 9 */3 1,7 1-5',
+    'at 9 a.m. every 3 days from the 1st of the month, but only on ' +
+    'weekdays, in January and July'],
+  // The odd-numbered days of June that are a Monday: one month goes on
+  // each side, as in a union.
+  ['0 0 */2 6 1',
+    'at midnight on odd-numbered days in June, but only on Mondays in June'],
+  // The 1st, 6th, 11th, 16th, 21st and 26th of June, when a Monday.
+  ['0 0 */5 6 1',
+    'at midnight on June 1, 6, 11, 16, 21, and 26, but only on Mondays in ' +
+    'June'],
+  // Every third day from the 1st of June (1, 4 ... 28), when a Monday.
+  ['0 0 */3 6 1',
+    'at midnight every 3 days from the 1st of the month in June, but only ' +
+    'on Mondays in June'],
+  // The odd-numbered days that are a Monday, from June to August.
+  ['0 0 */2 6-8 1',
+    'at midnight on odd-numbered days, but only on Mondays, in June ' +
+    'through August'],
+  // The odd-numbered days that are a Monday, in 2030.
+  ['0 0 0 */2 * 1 2030',
+    'at midnight on odd-numbered days, but only on Mondays, in 2030'],
+  // February 29, which comes only in leap years, when it is a Sunday,
+  // Tuesday, Thursday or Saturday: the calendar still narrows the days.
+  ['0 0 29 2 */2',
+    'at midnight on February 29, but only on Tuesdays, Thursdays, ' +
+    'Saturdays, and Sundays in February, in leap years'],
+  // March 30, when it is a Sunday, Tuesday, Thursday or Saturday: February
+  // has no 30th, so only March is left of the months.
+  ['0 0 30 2-3 */2',
+    'at midnight on March 30, but only on Tuesdays, Thursdays, ' +
+    'Saturdays, and Sundays in March'],
+  // April has 30 days, so `1-30` is every day of it and only the weekdays
+  // are left: the Sundays, Tuesdays, Thursdays and Saturdays of April.
+  ['0 0 1-30 4 */2',
+    'at midnight on Tuesdays, Thursdays, Saturdays, and Sundays in April']
 ];
 
 export {rows};

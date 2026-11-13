@@ -88,7 +88,7 @@ const rows = [
     'and 20th as well as on weekdays'],
   ['*/15 9-17 */2 * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered ' +
-    'days as well as on weekdays'],
+    'days, but only on weekdays'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered ' +
     'days except the 15th, as well as on weekdays whatever the date'],
