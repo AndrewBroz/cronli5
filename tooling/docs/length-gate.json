@@ -16,13 +16,13 @@
   },
   "es": {
     "ceiling": 261,
-    "overBudget": 4,
+    "overBudget": 0,
     "overLong": 0
   },
   "fr": {
     "ceiling": 290,
     "overBudget": 0,
-    "overLong": 34
+    "overLong": 3
   },
   "it": {
     "ceiling": 281,
@@ -37,16 +37,16 @@
   "pt": {
     "ceiling": 281,
     "overBudget": 20,
-    "overLong": 30
+    "overLong": 8
   },
   "uk": {
     "ceiling": 261,
-    "overBudget": 167,
-    "overLong": 19
+    "overBudget": 115,
+    "overLong": 7
   },
   "zh": {
     "ceiling": 104,
-    "overBudget": 60,
-    "overLong": 92
+    "overBudget": 0,
+    "overLong": 46
   }
 }
