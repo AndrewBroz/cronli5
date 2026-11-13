@@ -676,6 +676,9 @@ month by name, "of June"; several in the forms of 4.4's last bullet).
 
 * `L` — "on the last day of the month"
 * `LW` — "on the last weekday of the month"
+* `1W` — "on the first weekday of the month". The weekday nearest a day
+  never leaves the month, so "the weekday nearest the 1st" would name the
+  wrong day whenever the 1st falls on a Saturday.
 * `L-3` — "3 days before the last day of the month"
 * `15W` — "on the weekday nearest the 15th", the day said as any day of
   the month is, so with June it is "on the weekday nearest June 15"

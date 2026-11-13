@@ -1846,6 +1846,13 @@
    "pattern": "0 0 LW * *"
   },
   {
+   "expected": "每月第1个工作日（周一至周五）0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1W * *"
+  },
+  {
    "expected": "每月倒数第4天0:00",
    "options": {
     "lang": "zh"

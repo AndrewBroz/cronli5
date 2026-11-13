@@ -21,11 +21,13 @@ export type Shapes = Record<Field, Shape>;
 
 /**
  * A Quartz day-of-month form: the last day (`L`), the last weekday (`LW`),
- * so many days before the last (`L-3`), or the weekday nearest a day
- * (`15W`).
+ * so many days before the last (`L-3`), the weekday nearest a day
+ * (`15W`), or the first weekday (`1W`: the nearest weekday never leaves
+ * its month, so the one nearest the 1st is the month's first).
  */
 export type QuartzDate =
   | {kind: 'last'}
+  | {kind: 'firstWeekday'}
   | {kind: 'lastWeekday'}
   | {kind: 'beforeLast'; days: number}
   | {kind: 'nearestWeekday'; day: number};

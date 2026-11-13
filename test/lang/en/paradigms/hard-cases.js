@@ -21,6 +21,8 @@ const rows = [
   // Quartz forms.
   ['0 0 1 * ?', 'at midnight on the 1st', {cron: 'quartz'}],
   ['0 0 LW * *', 'at midnight on the last weekday of the month'],
+  ['0 0 1W * *', 'at midnight on the first weekday of the month'],
+  ['0 0 1W 6 *', 'at midnight on the first weekday of June'],
   ['0 0 L-3 * *', 'at midnight 3 days before the last day of the month'],
   ['0 0 L 6 *', 'at midnight on the last day of June'],
   ['0 0 15W 6 *', 'at midnight on the weekday nearest June 15'],

@@ -124,6 +124,9 @@ const quartzDateIdioms: Array<Idiom<QuartzDate>> = [
   quartzForm('lastWeekday', function lastWeekdayOfMonth() {
     return `${onTheLast} ${words.weekday}`;
   }),
+  quartzForm('firstWeekday', function firstWeekdayOfMonth() {
+    return `${words.on} ${words.the} ${lexicon.nthWords[0]} ${words.weekday}`;
+  }),
   quartzForm('beforeLast', function daysBeforeLast(form) {
     return `${form.days} ${unit('day', form.days)} ${words.before} ${lastDay}`;
   }),

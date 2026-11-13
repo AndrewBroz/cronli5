@@ -599,6 +599,9 @@ several named months.
 
 * `L` — «в останній день місяця»
 * `LW` — «в останній робочий день місяця»
+* `1W` — «у перший робочий день місяця». The nearest working day never
+  leaves the month, so «найближчий до 1-го числа» would name the wrong day
+  whenever the 1st falls on a Saturday.
 * `L-3` — «за 3 дні до останнього дня місяця»; `L-1` is «у передостанній
   день місяця»
 * `15W` — «у найближчий до 15-го числа робочий день»; with June, «у

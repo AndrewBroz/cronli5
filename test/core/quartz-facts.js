@@ -18,6 +18,12 @@ describe('Quartz day facts:', function() {
       .to.deep.equal({form: {kind: 'last'}, kind: 'quartz'});
     expect(day('0 0 LW * *').date.form).to.deep.equal({kind: 'lastWeekday'});
     expect(day('0 0 WL * *').date.form).to.deep.equal({kind: 'lastWeekday'});
+    // The weekday nearest the 1st never leaves its month, so it is the
+    // month's first weekday.
+    expect(day('0 0 1W * *').date.form)
+      .to.deep.equal({kind: 'firstWeekday'});
+    expect(day('0 0 W1 * *').date.form)
+      .to.deep.equal({kind: 'firstWeekday'});
     expect(day('0 0 L-3 * *').date.form)
       .to.deep.equal({days: 3, kind: 'beforeLast'});
     expect(day('0 0 15W * *').date.form)

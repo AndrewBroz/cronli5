@@ -207,6 +207,7 @@ const words = {
   inAfterVowel: 'в',
   inclusive: 'включно',
   last: 'останніх',
+  firstWorkingDay: 'перший робочий день',
   lastDay: 'останній день',
   lastFeminine: 'останню',
   lastMasculine: 'останній',

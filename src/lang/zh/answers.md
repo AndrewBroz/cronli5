@@ -493,6 +493,9 @@ restricted, with no 的 (每年6月最后一天; 每年1月、7月最后一个�
 
 * `L` — 每月最后一天
 * `LW` — 每月最后一个工作日（周一至周五）
+* `1W` — 每月第1个工作日（周一至周五）. The nearest working day never leaves
+  the month, so 最接近1日的工作日 would name the wrong day whenever the 1st
+  falls on a Saturday.
 * `L-3` — 每月倒数第4天 (three days before the last is the fourth from the
   end)
 * `15W` — 每月最接近15日的工作日（周一至周五）

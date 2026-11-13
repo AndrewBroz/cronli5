@@ -32,6 +32,10 @@ function quartzDate(field: string): QuartzDate {
 
   const digits = +field.replace(/\D/gu, '');
 
+  if (!field.startsWith('L-') && digits === 1) {
+    return {kind: 'firstWeekday'};
+  }
+
   return field.startsWith('L-') ?
     {days: digits, kind: 'beforeLast'} :
     {day: digits, kind: 'nearestWeekday'};

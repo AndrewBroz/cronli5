@@ -182,6 +182,8 @@ function quartzDateWords(form: QuartzDate): string {
       return words.lastDay;
     case 'lastWeekday':
       return words.lastOne + working;
+    case 'firstWeekday':
+      return words.nth + 1 + words.nthOne + working;
     case 'beforeLast':
       return words.nthFromLast + (form.days + 1) + units.day;
     default:

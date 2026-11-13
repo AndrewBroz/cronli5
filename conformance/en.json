@@ -1734,6 +1734,20 @@
    "pattern": "0 0 LW * *"
   },
   {
+   "expected": "at midnight on the first weekday of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1W * *"
+  },
+  {
+   "expected": "at midnight on the first weekday of June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1W 6 *"
+  },
+  {
    "expected": "at midnight 3 days before the last day of the month",
    "options": {
     "lang": "en"

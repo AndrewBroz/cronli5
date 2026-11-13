@@ -259,6 +259,9 @@ function quartzDate(
     last: function last() {
       return `${withIn(before, words.lastDay)} ${ofMonth}`;
     },
+    firstWeekday: function firstWeekday() {
+      return `${withIn(before, words.firstWorkingDay)} ${ofMonth}`;
+    },
     lastWeekday: function lastWeekday() {
       return `${withIn(before, words.lastWorkingDay)} ${ofMonth}`;
     },
