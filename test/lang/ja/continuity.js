@@ -13,9 +13,9 @@ const FIELDS =
 
 // The parts of the sentence an edit to each field may change. A time
 // field changes the time. A day field changes the day part, and the month
-// before it changes with it: 毎月1日 becomes 6月1日, and before a date and
-// a weekday together the month is closed with 中、 or の間、. A month with
-// no year before it brings 毎年. So a day, month or year edit may move
+// before it changes with it: 毎月1日 becomes 6月1日, and with a date and a
+// weekday together each side carries the month. A month with no year
+// before it brings 毎年. So a day, month or year edit may move
 // text among those three parts. Nothing else may cross: none of them
 // touches the time, and no time edit touches anything but the time, with
 // the two exceptions below.
@@ -29,18 +29,21 @@ const MAY_CHANGE = {
   year: ['day', 'month', 'year']
 };
 
-// The first place a time field reaches another part (answers 2.5): when
-// the hours are restricted, a day part that is empty says 毎日. So an hour
-// edit may add or remove exactly that word.
+// The first place a time field reaches another part (answers 2.5): a day
+// part that is empty says 毎日 when the hours are restricted, and when a
+// cadence of minutes or seconds runs all day under a month or a year. So
+// an edit to the hours, the minutes or the seconds may add or remove
+// exactly that word.
 const EVERY_DAY = /^毎日$/u;
+const TIME_FIELDS = ['hour', 'minute', 'second'];
 
-// The second (answers 2.6): what joins a part to the next is の, or は終
-// 日、 before a cadence of minutes or seconds through every hour; a day
-// part with a range of dates, and a date and a weekday together, end 、い
-// ずれも before any other time. The join belongs to neither part, so it is
+// The second (answers 2.6): what joins a part to the next is の, 、 or
+// nothing; a day part with a range of dates, and a date and a weekday
+// together, end 、いずれも; and 終日 follows before a cadence of minutes or
+// seconds through every hour. The join belongs to neither part, so it is
 // set aside before two parts are compared; a time edit may change it and
 // nothing else.
-const JOIN = /(?:の|は終日、|、いずれも)$/u;
+const JOIN = /(?:の|、|、いずれも)?(?:終日)?$/u;
 
 const SETUP = {languages: [japanese.default], options: {}, styles: {}};
 
@@ -93,7 +96,7 @@ function leaks(pairList) {
     function words(part, name) {
       const joined = String(part).replace(JOIN, '');
 
-      return changed[0] === 'hour' && name === 'day' ?
+      return TIME_FIELDS.includes(changed[0]) && name === 'day' ?
         joined.replace(EVERY_DAY, '').replace(JOIN, '') :
         joined;
     }

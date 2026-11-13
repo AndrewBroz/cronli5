@@ -58,8 +58,8 @@ describe('Japanese styles:', function() {
 
     expect(ja.sentence('毎日9:00', opts)).to.equal('毎日9:00に実行します。');
     expect(ja.sentence('1分ごと', opts)).to.equal('1分ごとに実行します。');
-    expect(ja.sentence('毎月1日は終日、1分ごと', opts))
-      .to.equal('毎月1日は終日、1分ごとに実行します。');
+    expect(ja.sentence('毎月1日、終日1分ごと', opts))
+      .to.equal('毎月1日、終日1分ごとに実行します。');
     expect(ja.sentence('毎時0分（3:00を除く）', opts))
       .to.equal('毎時0分（3:00を除く）に実行します。');
     expect(ja.sentence('システム起動時', opts))
