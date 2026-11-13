@@ -15,7 +15,7 @@ const rows = [
   ['0 0 9 * * * 2030', 'tous les jours à 9 h en 2030'],
   ['0 0 9 * * * 2030,2035', 'tous les jours à 9 h en 2030 et en 2035'],
   ['0 0 9 * * * 2028-2031', 'tous les jours à 9 h, de 2028 à 2031'],
-  ['0 0 9 * 6 * 2030', 'tous les jours en juin 2030 à 9 h'],
+  ['0 0 9 * 6 * 2030', 'tous les jours de juin 2030 à 9 h'],
   ['0 0 9 * 6 1 2030', 'tous les lundis de juin 2030 à 9 h'],
   ['0 0 9 * * 1 2030', 'tous les lundis à 9 h en 2030'],
   ['0 0 9 1,15 6 * 2030', 'le 1er et le 15 juin 2030 à 9 h'],
@@ -23,8 +23,8 @@ const rows = [
   ['0 0 9 * 6-8 * 2030', 'tous les jours de juin à août à 9 h en 2030'],
   ['0 0 0 1 1,7 * 2030', 'le 1er janvier et le 1er juillet à 0 h en 2030'],
   ['0 0 9 * 1-11 * 2030', 'tous les jours, sauf en décembre, à 9 h en 2030'],
-  ['0 0 9 * 6 * 2030,2031', 'tous les jours en juin à 9 h en 2030 et en 2031'],
-  ['0 0 9 * 6 * 2030-2032', 'tous les jours en juin à 9 h, de 2030 à 2032'],
+  ['0 0 9 * 6 * 2030,2031', 'tous les jours de juin à 9 h en 2030 et en 2031'],
+  ['0 0 9 * 6 * 2030-2032', 'tous les jours de juin à 9 h, de 2030 à 2032'],
   ['0 0 9 L 6 * 2030', 'le dernier jour de juin 2030 à 9 h'],
   ['0 0 9 L * * 2030', 'le dernier jour du mois à 9 h en 2030'],
   ['0 0 9 1 * * 2030', 'le 1er de chaque mois à 9 h en 2030'],
@@ -91,20 +91,28 @@ const rows = [
   ['* * 15W * *',
     'le jour ouvré le plus proche du 15 de chaque mois, toutes les minutes'],
   ['0 0 L-3 * *',
-    'le jour qui tombe trois jours avant le dernier jour du mois à 0 h'],
+    'trois jours avant le dernier jour du mois (le 28 d\'un mois de 31 ' +
+    'jours) à 0 h'],
+  ['0 0 L-3 2 *',
+    'trois jours avant le dernier jour de février (le 25, ou le 26 les ' +
+    'années bissextiles) à 0 h'],
+  ['0 0 L-3 1,7 *',
+    'trois jours avant le dernier jour de janvier et de juillet (le 28 ' +
+    'd\'un mois de 31 jours) à 0 h'],
   ['0 9 L-2 * *',
-    'le jour qui tombe deux jours avant le dernier jour du mois à 9 h'],
+    'deux jours avant le dernier jour du mois (le 29 d\'un mois de 31 ' +
+    'jours) à 9 h'],
   ['0 0 L-27 * *',
-    'le jour qui tombe vingt-sept jours avant le dernier jour du mois à 0 h'],
+    'vingt-sept jours avant le dernier jour du mois (le 4 d\'un mois de 31 ' +
+    'jours) à 0 h'],
   ['0 0 L-28 * *',
-    'le jour qui tombe vingt-huit jours avant le dernier jour du mois, ' +
-    'quand le mois compte plus de 28 jours, à 0 h'],
+    'vingt-huit jours avant le dernier jour du mois (le 3 d\'un mois de 31 ' +
+    'jours), quand le mois compte plus de 28 jours, à 0 h'],
   ['0 0 L-30 * *',
-    'le jour qui tombe trente jours avant le dernier jour du mois, quand ' +
-    'le mois compte plus de 30 jours, à 0 h'],
+    'trente jours avant le dernier jour du mois (le 1er d\'un mois de 31 ' +
+    'jours), quand le mois compte plus de 30 jours, à 0 h'],
   ['0 0 L-1 * *', 'l\'avant-dernier jour du mois à 0 h'],
-  ['0 0 L-3 6 *',
-    'le jour qui tombe trois jours avant le dernier jour de juin à 0 h'],
+  ['0 0 L-3 6 *', 'trois jours avant le dernier jour de juin (le 27) à 0 h'],
   ['0 0 L 6 *', 'le dernier jour de juin à 0 h'],
   ['0 0 L 4 *', 'le dernier jour d\'avril à 0 h'],
   ['0 0 L 1,7 *', 'le dernier jour de janvier et de juillet à 0 h'],
@@ -148,41 +156,36 @@ const rows = [
     {form: 'sentence', style: {hour12: true}}],
   ['not a pattern', 'une expression cron non reconnue', {lenient: true}],
 
-  // A day of the month and a weekday: each side whole, then the time for both.
-  ['0 0 1 * 5',
-    'le 1er de chaque mois, ainsi que tous les vendredis, dans les deux ' +
-    'cas à 0 h'],
-  ['0 0 1 6 5',
-    'le 1er juin, ainsi que tous les vendredis de juin, dans les deux cas ' +
-    'à 0 h'],
+  // A day of the month and a weekday: months, time, weekdays, then the dates.
+  ['0 0 1 * 5', 'à 0 h, tous les vendredis ainsi que le 1er de chaque mois'],
+  ['0 0 1 6 5', 'en juin, à 0 h, tous les vendredis ainsi que le 1er'],
   ['0 0 1 6,7 5',
-    'le 1er juin et le 1er juillet, ainsi que tous les vendredis en juin ' +
-    'et en juillet, dans les deux cas à 0 h'],
+    'en juin et en juillet, à 0 h, tous les vendredis ainsi que le 1er'],
   ['0 0 1,15 1,7 1-5',
-    'le 1er et le 15 du mois, en janvier et en juillet, ainsi que du lundi ' +
-    'au vendredi en janvier et en juillet, dans les deux cas à 0 h'],
+    'en janvier et en juillet, à 0 h, du lundi au vendredi ainsi que le ' +
+    '1er et le 15'],
   ['52 7-16 1,19,23,28 5-7 3-4',
-    'les 1er, 19, 23 et 28 du mois, de mai à juillet, ainsi que le ' +
-    'mercredi et le jeudi de mai à juillet, dans les deux cas toutes les ' +
-    'heures de 7 h 52 à 16 h 52'],
+    'de mai à juillet, toutes les heures de 7 h 52 à 16 h 52, le mercredi ' +
+    'et le jeudi ainsi que les 1er, 19, 23 et 28'],
   ['30 4 1-7 * 1',
-    'du 1er au 7 de chaque mois, ainsi que tous les lundis, dans les deux ' +
-    'cas à 4 h 30'],
+    'à 4 h 30, tous les lundis ainsi que du 1er au 7 de chaque mois'],
   ['0 0 1 1-11 5',
-    'le 1er du mois, de janvier à novembre, ainsi que tous les vendredis ' +
-    'de janvier à novembre, dans les deux cas à 0 h'],
-  ['0 0 L * 5',
-    'le dernier jour du mois, ainsi que tous les vendredis, dans les deux ' +
-    'cas à 0 h'],
+    'de janvier à novembre, à 0 h, tous les vendredis ainsi que le 1er'],
+  ['0 0 L * 5', 'à 0 h, tous les vendredis ainsi que le dernier jour du mois'],
+  ['0 0 L 6 5',
+    'en juin, à 0 h, tous les vendredis ainsi que le dernier jour du mois'],
   ['0 0 15 * 0-2,4-6',
-    'le 15 de chaque mois, ainsi que du jeudi au mardi, dans les deux cas ' +
-    'à 0 h'],
+    'à 0 h, du jeudi au mardi ainsi que le 15 de chaque mois'],
   ['* * 1 * 5',
-    'le 1er de chaque mois, ainsi que tous les vendredis, dans les deux ' +
-    'cas toutes les minutes'],
+    'toutes les minutes, tous les vendredis ainsi que le 1er de chaque mois'],
   ['0 0 0 1 * 5 2030',
-    'le 1er de chaque mois, ainsi que tous les vendredis, dans les deux ' +
-    'cas à 0 h en 2030'],
+    'à 0 h, tous les vendredis ainsi que le 1er de chaque mois, en 2030'],
+  ['0 0 0 1 6 5 2030',
+    'en juin 2030, à 0 h, tous les vendredis ainsi que le 1er'],
+  ['0 0,2,4,6,10,12,14,16,18,20,22 1 * 5',
+    'toutes les 2 heures de 0 h à 6 h et de 10 h à 22 h, tous les ' +
+    'vendredis ainsi que le 1er de chaque mois'],
+  ['0 9 * * 5', 'tous les vendredis à 9 h'],
 
   // A month with its dates.
   ['0 0 1,15 6 *', 'le 1er et le 15 juin à 0 h'],
@@ -237,7 +240,7 @@ const rows = [
   ['0 9 * 1-3,6,9-11 *',
     'tous les jours de janvier à mars, en juin et de septembre à novembre ' +
     'à 9 h'],
-  ['0 9 * 4 *', 'tous les jours en avril à 9 h'],
+  ['0 9 * 4 *', 'tous les jours d\'avril à 9 h'],
   ['0 9 * 4-6 *', 'tous les jours d\'avril à juin à 9 h'],
   ['0 9 * 8-10 *', 'tous les jours d\'août à octobre à 9 h'],
   ['0 9 * 6-8,10 *', 'tous les jours de juin à août et en octobre à 9 h'],
@@ -308,14 +311,17 @@ const rows = [
   ['30 */8 * * *', 'tous les jours à 0 h 30, 8 h 30 et 16 h 30'],
   ['23 1/2 * * *', 'tous les jours, toutes les 2 heures de 1 h 23 à 23 h 23'],
   ['15,45 */2 * * *',
-    'tous les jours, toutes les 2 heures de 0 h 15 à 22 h 15 et de 0 h 45 ' +
-    'à 22 h 45'],
+    'tous les jours à 0 h 15 et à 0 h 45, à 2 h 15 et à 2 h 45, et ainsi ' +
+    'de suite toutes les 2 heures jusqu\'à 22 h 45'],
   ['15,45 */4 * * *',
-    'tous les jours, toutes les 4 heures de 0 h 15 à 20 h 15 et de 0 h 45 ' +
-    'à 20 h 45'],
+    'tous les jours à 0 h 15 et à 0 h 45, à 4 h 15 et à 4 h 45, et ainsi ' +
+    'de suite toutes les 4 heures jusqu\'à 20 h 45'],
+  ['5,20,45 */3 * * *',
+    'tous les jours à 0 h 05, 0 h 20 et 0 h 45, à 3 h 05, 3 h 20 et 3 h ' +
+    '45, et ainsi de suite toutes les 3 heures jusqu\'à 21 h 45'],
   ['15,45 1/2 * * 1',
-    'tous les lundis, toutes les 2 heures de 1 h 15 à 23 h 15 et de 1 h 45 ' +
-    'à 23 h 45'],
+    'tous les lundis à 1 h 15 et à 1 h 45, à 3 h 15 et à 3 h 45, et ainsi ' +
+    'de suite toutes les 2 heures jusqu\'à 23 h 45'],
   ['15,45 */6 * * *',
     'tous les jours à 0 h 15, 0 h 45, 6 h 15, 6 h 45, 12 h 15, 12 h 45, 18 ' +
     'h 15 et 18 h 45'],
@@ -354,17 +360,17 @@ const rows = [
 
   // Hours as a confinement.
   ['*/15 8-18/2 * * *',
-    'tous les jours, toutes les 15 minutes de 8 h à 8 h 45, et de même ' +
-    'toutes les 2 heures jusqu\'à 18 h 45'],
+    'tous les jours, toutes les 15 minutes de 8 h à 8 h 45, de 10 h à 10 h ' +
+    '45, et ainsi de suite toutes les 2 heures jusqu\'à 18 h 45'],
   ['*/15 1/3 * * *',
-    'tous les jours, toutes les 15 minutes de 1 h à 1 h 45, et de même ' +
-    'toutes les 3 heures jusqu\'à 22 h 45'],
+    'tous les jours, toutes les 15 minutes de 1 h à 1 h 45, de 4 h à 4 h ' +
+    '45, et ainsi de suite toutes les 3 heures jusqu\'à 22 h 45'],
   ['*/15 */3 * * *',
-    'tous les jours, toutes les 15 minutes de 0 h à 0 h 45, et de même ' +
-    'toutes les 3 heures jusqu\'à 21 h 45'],
+    'tous les jours, toutes les 15 minutes de 0 h à 0 h 45, de 3 h à 3 h ' +
+    '45, et ainsi de suite toutes les 3 heures jusqu\'à 21 h 45'],
   ['* */2 * 6 *',
-    'tous les jours en juin, toutes les minutes de 0 h à 0 h 59, et de ' +
-    'même toutes les 2 heures jusqu\'à 22 h 59'],
+    'tous les jours de juin, toutes les minutes de 0 h à 0 h 59, de 2 h à ' +
+    '2 h 59, et ainsi de suite toutes les 2 heures jusqu\'à 22 h 59'],
   ['*/30 */8 * * *',
     'tous les jours à 0 h, 0 h 30, 8 h, 8 h 30, 16 h et 16 h 30'],
   ['0 9-17,20,22 * * *',
@@ -382,8 +388,8 @@ const rows = [
     'h à 19 h 50'],
   ['*/20 */2 */2 */3 *',
     'les jours impairs de janvier, avril, juillet et octobre, toutes les ' +
-    '20 minutes de 0 h à 0 h 40, et de même toutes les 2 heures jusqu\'à 22 ' +
-    'h 40'],
+    '20 minutes de 0 h à 0 h 40, de 2 h à 2 h 40, et ainsi de suite toutes ' +
+    'les 2 heures jusqu\'à 22 h 40'],
   ['5,20,45 9-17,22 * * *',
     'tous les jours, à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 ' +
     'et de 22 h 05 à 22 h 45'],
@@ -392,8 +398,8 @@ const rows = [
     'de 10 h 05 à 10 h 45, de 13 h 05 à 13 h 45, de 16 h 05 à 16 h 45 et ' +
     'de 19 h 05 à 19 h 45'],
   ['0-29 */2 * * *',
-    'tous les jours, toutes les minutes de 0 h à 0 h 29, et de même toutes ' +
-    'les 2 heures jusqu\'à 22 h 29'],
+    'tous les jours, toutes les minutes de 0 h à 0 h 29, de 2 h à 2 h 29, ' +
+    'et ainsi de suite toutes les 2 heures jusqu\'à 22 h 29'],
 
   // Minutes inside the hour.
   ['50-10 9 * * *',
@@ -437,8 +443,8 @@ const rows = [
     'tous les jours, toutes les secondes de 9 h 30 min 10 s à 9 h 30 min ' +
     '20 s'],
   ['10-20 */15 * * * *',
-    'toutes les 15 minutes de 00 min 10 s à 45 min 10 s de chaque heure, ' +
-    'et à chaque fois toutes les secondes pendant 11 secondes'],
+    'toutes les 15 minutes, avec 10 secondes de décalage, et à chaque fois ' +
+    'toutes les secondes pendant 11 secondes'],
   ['0,10,45 0 9 * * *',
     'tous les jours à 9 h, 9 h 00 min 10 s et 9 h 00 min 45 s'],
   ['* * 9 * * *',
@@ -457,9 +463,11 @@ const rows = [
   ['* 0 9,17 * * *',
     'tous les jours à 9 h et à 17 h, et à chaque fois toutes les secondes ' +
     'pendant une minute'],
-  ['30 0 * * * *', 'à 00 min 30 s de chaque heure'],
-  ['15 30 * * * *', 'à 30 min 15 s de chaque heure'],
-  ['15 5,30 * * * *', 'à 05 min 15 s et à 30 min 15 s de chaque heure'],
+  ['30 0 * * * *', 'toutes les heures, avec 30 secondes de décalage'],
+  ['15 30 * * * *', 'à 30 de chaque heure, avec 15 secondes de décalage'],
+  ['15 5,30 * * * *',
+    'à 05 et à 30 de chaque heure, avec 15 secondes de décalage'],
+  ['1 30 * * * *', 'à 30 de chaque heure, avec 1 seconde de décalage'],
   ['0-9 0 * * * *',
     'toutes les heures, et à chaque fois toutes les secondes pendant 10 ' +
     'secondes'],
@@ -472,12 +480,13 @@ const rows = [
   ['*/15 */15 * * * *',
     'toutes les 15 minutes, et à chaque fois toutes les 15 secondes ' +
     'pendant une minute'],
-  ['30 */15 * * * *',
-    'toutes les 15 minutes de 00 min 30 s à 45 min 30 s de chaque heure'],
+  ['30 */15 * * * *', 'toutes les 15 minutes, avec 30 secondes de décalage'],
   ['0,30 */15 * * * *',
-    'toutes les 15 minutes, et à chaque fois 30 secondes plus tard'],
+    'toutes les 15 minutes, et à chaque fois de nouveau 30 secondes plus ' +
+    'tard'],
   ['0,10,45 */15 * * * *',
-    'toutes les 15 minutes, et à chaque fois 10 et 45 secondes plus tard'],
+    'toutes les 15 minutes, et à chaque fois de nouveau 10 et 45 secondes ' +
+    'plus tard'],
   ['0-9 */15 * * * *',
     'toutes les 15 minutes, et à chaque fois toutes les secondes pendant ' +
     '10 secondes'],
@@ -485,17 +494,18 @@ const rows = [
     'toutes les 15 minutes, et à chaque fois toutes les secondes pendant ' +
     '29 secondes, puis de nouveau 30 secondes plus tard pendant 30 secondes'],
   ['0,10,45 30 9,17 * * *',
-    'tous les jours à 9 h 30 et à 17 h 30, et à chaque fois 10 et 45 ' +
-    'secondes plus tard'],
+    'tous les jours à 9 h 30 et à 17 h 30, et à chaque fois de nouveau 10 ' +
+    'et 45 secondes plus tard'],
   ['5/10 */15 * * * *',
-    'toutes les 15 minutes de 00 min 05 s à 45 min 05 s de chaque heure, ' +
-    'et à chaque fois toutes les 10 secondes pendant une minute'],
+    'toutes les 15 minutes, avec 5 secondes de décalage, et à chaque fois ' +
+    'toutes les 10 secondes pendant une minute'],
   ['8 5,30 */2 * * *',
-    'tous les jours, toutes les 2 heures de 0 h 05 min 08 s à 22 h 05 min ' +
-    '08 s et de 0 h 30 min 08 s à 22 h 30 min 08 s'],
+    'tous les jours à 0 h 05 min 08 s et à 0 h 30 min 08 s, à 2 h 05 min ' +
+    '08 s et à 2 h 30 min 08 s, et ainsi de suite toutes les 2 heures ' +
+    'jusqu\'à 22 h 30 min 08 s'],
   ['30 5,20 9-17 * * *',
-    'tous les jours, à 05 min 30 s et à 20 min 30 s de chaque heure, de 9 ' +
-    'h 05 min 30 s à 17 h 20 min 30 s'],
+    'tous les jours, à 05 et à 20 de chaque heure, de 9 h 05 min 30 s à 17 ' +
+    'h 20 min 30 s'],
   ['*/10 24 */8 * * *',
     'tous les jours à 0 h 24, 8 h 24 et 16 h 24, et à chaque fois toutes ' +
     'les 10 secondes pendant une minute'],
@@ -517,19 +527,19 @@ const rows = [
   // « Tous les jours » fills the level a restricted hour would skip, and is
   // not said of a schedule that runs every hour.
   ['*/5 * * 6 *', 'en juin, toutes les 5 minutes'],
-  ['0 */6 * 6 *', 'tous les jours en juin à 0 h, 6 h, 12 h et 18 h'],
-  ['0 */3 * 6 *', 'tous les jours en juin, toutes les 3 heures de 0 h à 21 h'],
+  ['0 */6 * 6 *', 'tous les jours de juin à 0 h, 6 h, 12 h et 18 h'],
+  ['0 */3 * 6 *', 'tous les jours de juin, toutes les 3 heures de 0 h à 21 h'],
   ['0 * * 4 *', 'en avril, toutes les heures'],
 
   // Several fields at once.
   ['*/10 24 */3 23-25 * 1-2',
-    'du 23 au 25 de chaque mois, ainsi que le lundi et le mardi, dans les ' +
-    'deux cas toutes les 3 heures de 0 h 24 à 21 h 24, et à chaque fois ' +
-    'toutes les 10 secondes pendant une minute'],
+    'toutes les 3 heures de 0 h 24 à 21 h 24, et à chaque fois toutes les ' +
+    '10 secondes pendant une minute, le lundi et le mardi ainsi que du 23 ' +
+    'au 25 de chaque mois'],
   ['*/30 23 */12 * 6-7 6#2 2030/4',
     'le deuxième samedi de juin et de juillet à 0 h 23 et à 12 h 23, et à ' +
-    'chaque fois 30 secondes plus tard, une année sur quatre à partir de ' +
-    '2030'],
+    'chaque fois de nouveau 30 secondes plus tard, une année sur quatre à ' +
+    'partir de 2030'],
   ['0 35 2,15 * * * 2028,2030',
     'tous les jours à 2 h 35 et à 15 h 35 en 2028 et en 2030'],
   ['* 30,42 3-10 * 7,9,10,12 1,3,4,5',

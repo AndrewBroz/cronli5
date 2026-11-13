@@ -45,7 +45,7 @@ const rows = [
   ['0 9 15W * *', 'le jour ouvré le plus proche du 15 de chaque mois à 9 h'],
 
   // clock / month
-  ['0 9 * 6 *', 'tous les jours en juin à 9 h'],
+  ['0 9 * 6 *', 'tous les jours de juin à 9 h'],
   ['0 9 * 1,7 *', 'tous les jours en janvier et en juillet à 9 h'],
   ['0 9 * 6-8 *', 'tous les jours de juin à août à 9 h'],
   ['0 9 * 6-8,12 *', 'tous les jours de juin à août et en décembre à 9 h'],
@@ -66,7 +66,7 @@ const rows = [
     '45 min 30 s'],
   ['0,30 */15 9-17 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, et à ' +
-    'chaque fois 30 secondes plus tard'],
+    'chaque fois de nouveau 30 secondes plus tard'],
   ['*/15 */15 9-17 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, et à ' +
     'chaque fois toutes les 15 secondes pendant une minute'],
@@ -106,43 +106,44 @@ const rows = [
     'du lundi au vendredi, toutes les 15 minutes de 8 h à 8 h 45, de 12 h ' +
     'à 12 h 45 et de 18 h à 18 h 45'],
   ['*/15 */2 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, et de ' +
-    'même toutes les 2 heures jusqu\'à 22 h 45'],
+    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, de 2 h à ' +
+    '2 h 45, et ainsi de suite toutes les 2 heures jusqu\'à 22 h 45'],
   ['*/15 */6 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, de 6 h à ' +
     '6 h 45, de 12 h à 12 h 45 et de 18 h à 18 h 45'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, et de ' +
-    'même toutes les 2 heures jusqu\'à 22 h 45, sauf de 8 h à 8 h 45'],
+    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, de 2 h à ' +
+    '2 h 45, et ainsi de suite toutes les 2 heures jusqu\'à 22 h 45, sauf ' +
+    'de 8 h à 8 h 45'],
   ['*/15 22-2 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 0 h à 2 h 45 et de 22 ' +
     'h à 23 h 45'],
 
   // window / date
   ['*/15 9-17 15 * 1-5',
-    'le 15 de chaque mois, ainsi que du lundi au vendredi, dans les deux ' +
-    'cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que le 15 de chaque mois'],
   ['*/15 9-17 1,15 * 1-5',
-    'le 1er et le 15 de chaque mois, ainsi que du lundi au vendredi, dans ' +
-    'les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que le 1er et le 15 de chaque mois'],
   ['*/15 9-17 1-7 * 1-5',
-    'du 1er au 7 de chaque mois, ainsi que du lundi au vendredi, dans les ' +
-    'deux cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que du 1er au 7 de chaque mois'],
   ['*/15 9-17 1-7,15 * 1-5',
-    'du 1er au 7 et le 15 de chaque mois, ainsi que du lundi au vendredi, ' +
-    'dans les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que du 1er au 7 et le 15 de chaque mois'],
   ['*/15 9-17 2/2 * 1-5',
-    'les jours pairs de chaque mois, ainsi que du lundi au vendredi, dans ' +
-    'les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que les jours pairs de chaque mois'],
   ['*/15 9-17 */5 * 1-5',
-    'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois, ainsi que du lundi ' +
-    'au vendredi, dans les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois'],
   ['*/15 9-17 L * 1-5',
-    'le dernier jour du mois, ainsi que du lundi au vendredi, dans les ' +
-    'deux cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que le dernier jour du mois'],
   ['*/15 9-17 15W * 1-5',
-    'le jour ouvré le plus proche du 15 de chaque mois, ainsi que du lundi ' +
-    'au vendredi, dans les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que le jour ouvré le plus proche du 15 de chaque mois'],
 
   // window / month
   ['*/15 9-17 * 6 1-5',
@@ -231,24 +232,17 @@ const rows = [
   ['0 0 1 1-11 *', 'le 1er de chaque mois, sauf en décembre, à 0 h'],
 
   // monthly / weekday
-  ['0 0 1 * 0',
-    'le 1er de chaque mois, ainsi que tous les dimanches, dans les deux ' +
-    'cas à 0 h'],
+  ['0 0 1 * 0', 'à 0 h, tous les dimanches ainsi que le 1er de chaque mois'],
   ['0 0 1 * 1,3,5',
-    'le 1er de chaque mois, ainsi que le lundi, le mercredi et le ' +
-    'vendredi, dans les deux cas à 0 h'],
+    'à 0 h, le lundi, le mercredi et le vendredi ainsi que le 1er de ' +
+    'chaque mois'],
   ['0 0 1 * 0,6',
-    'le 1er de chaque mois, ainsi que le samedi et le dimanche, dans les ' +
-    'deux cas à 0 h'],
-  ['0 0 1 * 1-6',
-    'le 1er de chaque mois, ainsi que du lundi au samedi, dans les deux ' +
-    'cas à 0 h'],
+    'à 0 h, le samedi et le dimanche ainsi que le 1er de chaque mois'],
+  ['0 0 1 * 1-6', 'à 0 h, du lundi au samedi ainsi que le 1er de chaque mois'],
   ['0 0 1 * 5L',
-    'le 1er de chaque mois, ainsi que le dernier vendredi du mois, dans ' +
-    'les deux cas à 0 h'],
+    'à 0 h, le dernier vendredi du mois ainsi que le 1er de chaque mois'],
   ['0 0 1 * 1#2',
-    'le 1er de chaque mois, ainsi que le deuxième lundi du mois, dans les ' +
-    'deux cas à 0 h'],
+    'à 0 h, le deuxième lundi du mois ainsi que le 1er de chaque mois'],
 
   // open / second — context `* * * * *`
   ['30 * * * * *', '30 secondes après le début de chaque minute'],
@@ -276,14 +270,15 @@ const rows = [
     'et de 18 h à 18 h 59'],
   ['* 9-17 * * *', 'tous les jours, toutes les minutes de 9 h à 17 h 59'],
   ['* */2 * * *',
-    'tous les jours, toutes les minutes de 0 h à 0 h 59, et de même toutes ' +
-    'les 2 heures jusqu\'à 22 h 59'],
+    'tous les jours, toutes les minutes de 0 h à 0 h 59, de 2 h à 2 h 59, ' +
+    'et ainsi de suite toutes les 2 heures jusqu\'à 22 h 59'],
   ['* */6 * * *',
     'tous les jours, toutes les minutes de 0 h à 0 h 59, de 6 h à 6 h 59, ' +
     'de 12 h à 12 h 59 et de 18 h à 18 h 59'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'tous les jours, toutes les minutes de 0 h à 0 h 59, et de même toutes ' +
-    'les 2 heures jusqu\'à 22 h 59, sauf de 8 h à 8 h 59'],
+    'tous les jours, toutes les minutes de 0 h à 0 h 59, de 2 h à 2 h 59, ' +
+    'et ainsi de suite toutes les 2 heures jusqu\'à 22 h 59, sauf de 8 h à ' +
+    '8 h 59'],
   ['* 22-2 * * *', 'tous les jours, toutes les minutes de 22 h à 2 h 59'],
 
   // open / date

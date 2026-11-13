@@ -7,18 +7,22 @@ fluent reviewer can overturn a call.
 
 The evidence behind the calls, cited below by these names:
 
-* **judge 1** and **judge 2**: two fluent readers who each graded a
-  sample of sentences blind (natural, stiff or odd), said what they
-  understood each to mean, and offered rewrites. Judge 1 read 46
+* **judge 1**, **judge 2** and **judge 3**: three fluent readers who each
+  graded a sample of sentences blind (natural, stiff or odd), said what
+  they understood each to mean, and offered rewrites. Judge 1 read 46
   sentences of a time-first draft; judge 2 read 56 of the draft that
-  followed.
+  followed; judge 3 read 57 of the draft after that (39 natural, and
+  every simple sentence understood at first reading).
 * **the reader**: an independent reader who worked every row against its
   pattern, twice.
 
 A form is treated as settled when both judges accept it, and as contested
 when they disagree; a rewrite offered by one judge is a suggestion, and
 several such suggestions were adopted in one draft and graded odd by the
-next judge. No fluent human has reviewed the result.
+next judge. After judge 3 a form was changed only where a reader's stated
+understanding was wrong, split, or reached on a second reading; a form
+understood at once was left, whatever its grade. No fluent human has
+reviewed the result.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. The **calendar part** is the day and the month; the
@@ -113,9 +117,9 @@ What they prescribe, and what is done here:
   down to its last unit that is not zero: « 9 h », « 9 h 30 », « 9 h 00
   min 30 s ».
 * **Minutes and seconds are always two digits** after an hour or a
-  minute: « 9 h 05 », « 9 h 00 min 05 s », « à 05 de chaque heure », « à
-  00 min 30 s de chaque heure ». A count is never padded: « 5 secondes »,
-  « toutes les 5 minutes ».
+  minute: « 9 h 05 », « 9 h 00 min 05 s », « à 05 de chaque heure ». A
+  count is never padded: « 5 secondes », « toutes les 5 minutes », « avec
+  5 secondes de décalage ».
 * The first day of a month is the ordinal « 1er »; every other day is a
   cardinal: « le 1er juin », « le 2 juin ». Nothing stands between the
   day, the month and the year: « le 1er janvier 2030 ».
@@ -194,7 +198,7 @@ month.
 
 2.2 A month joins the calendar part, after the day. Nothing moves.
 
-* `0 9 * 6 *` — « tous les jours en juin à 9 h »
+* `0 9 * 6 *` — « tous les jours de juin à 9 h »
 * `0 9 * * 1` — « tous les lundis à 9 h »
 * `0 9 * 6 1` — « tous les lundis de juin à 9 h »
 
@@ -236,12 +240,12 @@ of the month nor the weekday is, the calendar part says « tous les
 jours », so that a time is never left without its days:
 
 * `0 9 * * *` — « tous les jours à 9 h »
-* `0 9 * 6 *` — « tous les jours en juin à 9 h »
+* `0 9 * 6 *` — « tous les jours de juin à 9 h »
 * `0 0 9 * * * 2030` — « tous les jours à 9 h en 2030 »
 * `0 9-17 * * *` — « tous les jours, toutes les heures de 9 h à 17 h »
 * `0 */6 * * *` — « tous les jours à 0 h, 6 h, 12 h et 18 h »
-* `* */2 * * *` — « tous les jours, toutes les minutes de 0 h à 0 h 59, et
-  de même toutes les 2 heures jusqu'à 22 h 59 »
+* `* */2 * * *` — « tous les jours, toutes les minutes de 0 h à 0 h 59, de
+  2 h à 2 h 59, et ainsi de suite toutes les 2 heures jusqu'à 22 h 59 »
 
 It is not said when H is every hour, with or without exceptions: the time
 part then runs round the clock and says so. A month then stands alone at
@@ -253,8 +257,9 @@ the head of the sentence:
 
 The condition is on H alone. A named day of either kind, or a Quartz
 form, replaces « tous les jours ». An edit to the hours may add or remove
-those three words; no other word of the calendar part depends on the
-time. (Judge 2 would as soon drop « tous les jours » before a cadence and
+those three words, and with them the lead of a single month, which is
+« en juin » alone and « de juin » after « tous les jours » (4.4); no
+other word of the calendar part depends on the time. (Judge 2 would as soon drop « tous les jours » before a cadence and
 add it before « toutes les heures »; both were graded natural as they
 stand, and this rule is the one that never leaves a clock time without
 its days.)
@@ -262,10 +267,9 @@ its days.)
 2.6 Punctuation that belongs to the join between parts, not to a part:
 
 * **Between the calendar part and the time part** there is a comma,
-  unless one of these holds: the time part begins with a clock time (« à
-  9 h … », « à minuit ») and the calendar part does not itself end in a
-  comma; or the calendar part is a union, which ends « dans les deux
-  cas » and takes no comma after it (4.3). « Tous les jours à 9 h »;
+  unless the time part begins with a clock time (« à 9 h … », « à
+  minuit ») and the calendar part does not itself end in a comma. (A
+  union has its own order and its own commas: 2.8.) « Tous les jours à 9 h »;
   « tous les lundis de juin à 9 h »; « le 1er de chaque mois à 0 h et à
   12 h »; but « tous les jours, toutes les minutes de 9 h à 17 h 59 »;
   « tous les lundis, toutes les heures »; « en juin, à 30 de chaque
@@ -286,7 +290,7 @@ else.
 2.7 The one fusion across the frame: **a single year after a single
 month's name is written into the date**, before the time, as a date is:
 « le 1er janvier 2030 à 0 h »; « le 1er et le 15 juin 2030 à 9 h »;
-« tous les jours en juin 2030 à 9 h »; « tous les lundis de juin 2030 à
+« tous les jours de juin 2030 à 9 h »; « tous les lundis de juin 2030 à
 9 h »; « le dernier jour de juin 2030 à 9 h »; « en juin 2030, toutes
 les 5 minutes ». In every other case the year part is last: several
 months (« tous les jours en juin et en juillet à 9 h en 2030 »; « le 1er
@@ -297,14 +301,34 @@ no month (« tous les jours à 9 h en 2030 »; « le 1er de chaque mois à
 janvier à 0 h en 2030 et en 2035 »; « le 1er janvier à 0 h, de 2030 à
 2035 »).
 
+2.8 **The union has its own order.** When a day of the month and a
+weekday are both restricted, cron fires on either, and the sentence is:
+**the month phrase if there is one, the time part, the weekdays, « ainsi
+que », the days of the month, the year part** (4.3). « À 0 h, tous les
+vendredis ainsi que le 1er de chaque mois »; « en janvier et en juillet,
+à 0 h, du lundi au vendredi ainsi que le 1er et le 15 ».
+
+This is a second order, and it is declared as one. Three drafts kept the
+frame's order for the union and each was misread or re-read: with the
+time last, by position (judge 2, the reader), then behind « dans les
+deux cas » with the month on each side (judge 3 took the repeated month
+for two periods, and could attach « ainsi que du lundi au vendredi » to
+nothing). In all four of judge 3's rewrites the time comes first and a
+month before it. With the time first there is nothing for it to attach
+to but both sets of days; with the month first, the same. What it costs
+in continuity: making a pattern a union, or undoing one, by an edit to
+the day of the month or the weekday, moves the time and the month ahead
+of the days. No other edit moves a part.
+
 ## 3. Devices, field by field
 
 Numbers are digits, with three exceptions: the count in « une année sur
-quatre » (5.8), the count of days in « le jour qui tombe trois jours
-avant le dernier jour du mois » (5.7), and the ordinals of « deuxième
-lundi » (5.7). Judge 1 asked for the words. The lexicon has them from
-two to thirty; beyond thirty, which only an interval of years can reach,
-the digit is written (« une année sur 40 »).
+quatre » (5.8), the count of days in « trois jours avant le dernier jour
+du mois » (5.7), and the ordinals of « deuxième lundi » (5.7). Judge 1
+asked for the words. The lexicon has them from two to thirty; beyond
+thirty, which only an interval of years can reach, the digit is written
+(« une année sur 40 »). An interval after « toutes les » is always a
+digit, « et ainsi de suite toutes les 2 heures » included.
 
 3.1 Every value: silent, except that a time with nothing else to say is
 « toutes les minutes », and with S every second, « toutes les secondes ».
@@ -332,8 +356,9 @@ the digit is written (« une année sur 40 »).
 * Day of the month: « le 15 de chaque mois »; « le 1er de chaque mois ».
   A day some months lack is said the same way: « le 31 de chaque mois »
   is read as skipping the short months (judge 2, unprompted).
-* Month: « en juin »; after a single recurring weekday, « tous les lundis
-  de juin » (4.4).
+* Month: « en juin »; after « tous les jours » or a single recurring
+  weekday, « tous les jours de juin », « tous les lundis de juin »
+  (4.4).
 * Weekday: « tous les lundis » (judge 1 ranked it first of four; judge 2:
   natural).
 * Second, with M every minute and H every hour: « 30 secondes après le
@@ -483,9 +508,11 @@ things. A comma comes before « sauf ».
   les 2 heures de 0 h à 6 h et de 10 h à 22 h en 2030 ».
 * In the calendar part: only the time and the year may follow it, after a
   closing comma: « tous les jours, sauf le mercredi, à 9 h »; « tous les
-  jours, sauf en décembre, à 9 h en 2030 ». It is never one side of a
-  union, never before a month phrase, and never before a year that is
-  written into the date (2.7): there the days or months are named.
+  jours, sauf en décembre, à 9 h en 2030 ». It is never said in a union
+  and never before a month phrase: there the days or months are named.
+* In a union the time part is not last, so it takes no exception either
+  (« toutes les 2 heures de 0 h à 6 h et de 10 h à 22 h, tous les
+  vendredis ainsi que le 1er de chaque mois »).
 
 The forms:
 
@@ -515,23 +542,23 @@ The forms:
 * Days of the month: « les jours impairs de chaque mois, sauf le 15 »;
   « tous les jours du mois, sauf le 15 »; « tous les jours du mois, sauf
   le 15 et le 16 »; in one month, « tous les jours de juin, sauf le 15 ».
-  In a union the dates are named, each piece whole: « les jours impairs
-  du 1er au 13 et les jours impairs du 17 au 31 de chaque mois, ainsi que
-  … ».
+  In a union the dates are named, each piece whole: « … ainsi que les
+  jours impairs du 1er au 13 et les jours impairs du 17 au 31 de chaque
+  mois ».
 * Months: « sauf en décembre », after a day part: « tous les jours, sauf
   en décembre, à 9 h »; « le 1er de chaque mois, sauf en décembre, à
   0 h »; « du lundi au vendredi, sauf en décembre, … »; « tous les
   lundis, sauf en décembre, à 9 h ». With no day part there is nothing to
   except from, and the months are named: « de janvier à novembre, toutes
-  les minutes ». In a union they are named on each side (4.3).
+  les minutes ». In a union they are named, at the head (4.3).
 * **Six days of the week.** A run that does not wrap the week, counted
   from Monday, is said as the run: « du lundi au samedi »; « du mardi au
   dimanche ». The other five sets are « tous les jours, sauf » and the
   seventh: « tous les jours, sauf le mercredi, à 9 h ». Both judges found
   both natural. Where an exception is not allowed (a month follows, or a
   union) the six days are the run, which then wraps: « du jeudi au mardi
-  en juin à 9 h »; « le 15 de chaque mois, ainsi que du jeudi au mardi,
-  dans les deux cas à 0 h ». This is the only exception a set of weekdays
+  en juin à 9 h »; « à 0 h, du jeudi au mardi ainsi que le 15 de chaque
+  mois ». This is the only exception a set of weekdays
   takes.
 
 For a cadence, and only for a cadence, an exception is for a hole in the
@@ -575,20 +602,23 @@ by H as a confinement.
 | one hour | « toutes les minutes de 9 h à 9 h 59 »; « toutes les 15 minutes de 9 h à 9 h 45 » |
 | a range | « toutes les minutes de 9 h à 17 h 59 »; « toutes les 15 minutes de 9 h à 17 h 45 » |
 | separate hours and runs that are not a cadence, however many; and a cadence of four hours or fewer | each a window: « toutes les 15 minutes de 8 h à 8 h 45, de 12 h à 12 h 45 et de 18 h à 18 h 45 »; « toutes les minutes de 9 h à 17 h 59, de 20 h à 20 h 59 et de 22 h à 22 h 59 » |
-| a cadence of more than four hours, whatever its start, interval and end | the first hour's window, then « , et de même toutes les N heures jusqu'à » and the last time that fires: « toutes les 15 minutes de 0 h à 0 h 45, et de même toutes les 2 heures jusqu'à 22 h 45 »; « toutes les minutes de 1 h à 1 h 59, et de même toutes les 2 heures jusqu'à 23 h 59 »; « toutes les 15 minutes de 8 h à 8 h 45, et de même toutes les 2 heures jusqu'à 18 h 45 » |
+| a cadence of more than four hours, whatever its start, interval and end | the windows of its first two hours, then « , et ainsi de suite toutes les N heures jusqu'à » and the last time that fires: « toutes les 15 minutes de 0 h à 0 h 45, de 2 h à 2 h 45, et ainsi de suite toutes les 2 heures jusqu'à 22 h 45 »; « toutes les minutes de 1 h à 1 h 59, de 3 h à 3 h 59, et ainsi de suite toutes les 2 heures jusqu'à 23 h 59 »; « toutes les 15 minutes de 8 h à 8 h 45, de 10 h à 10 h 45, et ainsi de suite toutes les 2 heures jusqu'à 18 h 45 » |
 | every hour with exceptions | « toutes les 10 minutes, sauf de 3 h à 3 h 50 » |
-| a cadence of hours with exceptions | the form above, then the exception: « …, et de même toutes les 2 heures jusqu'à 22 h 45, sauf de 8 h à 8 h 45 » |
+| a cadence of hours with exceptions | the form above, then the exception: « …, et ainsi de suite toutes les 2 heures jusqu'à 22 h 45, sauf de 8 h à 8 h 45 » |
 
 The windows are settled: judge 1 chose them over « les heures commençant
-à » and « entre 8 h et 9 h », and judge 2 read them right (« clair mais
-long »). The cadence of stretches is not: « pendant les heures paires »
-made judge 1 stop (« 0 h est-elle paire ? »); « une heure sur deux à
-partir de 0 h », which judge 1 suggested, made judge 2 stop, left the
-reader unsure whether 1 h 00 fires, names a start alone, and needed a
-second device for a cadence that does not go round the day. « Et de
-même » is built from the two forms both judges accept, a window and
-« toutes les 2 heures »; it shows one stretch exactly, says how it
-repeats, and ends on the last moment that fires. No judge has read it.
+à » and « entre 8 h et 9 h », and judges 2 and 3 read them right at once
+(« clair mais long »). The cadence of stretches took four tries.
+« Pendant les heures paires » made judge 1 stop (« 0 h est-elle
+paire ? »); « une heure sur deux à partir de 0 h » made judge 2 stop and
+left the reader unsure whether 1 h 00 fires; « de 0 h à 0 h 59, et de
+même toutes les 2 heures jusqu'à 22 h 59 » was first read by judge 3 as
+one hour of minutes and then a single run every two hours. Judge 3's
+cure is to show the stretches and say « et ainsi de suite ». Two windows
+show what repeats, « toutes les N heures » says how often, and the end
+is the last moment that fires. Judge 3 also put « une heure sur deux : »
+ahead of the windows; it is left out, because two judges stopped on it
+and the windows say the same.
 
 An hour is never named by a bare number for a stretch (« l'heure 8 »): a
 reader cannot tell whether it begins or ends at 8 h.
@@ -610,8 +640,8 @@ is followed by H:
 | a range | a comma and a window from the first time that fires to the last: « à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 »; « toutes les minutes pendant les 30 premières minutes de chaque heure, de 9 h à 17 h 29 ». (A window of hours, « de 9 h à 17 h », would be read as stopping before the last hour's minutes.) |
 | pieces | windows the same way: « à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 et de 22 h 05 à 22 h 45 » |
 | separate hours, or a cadence of four hours or fewer | no minute phrase: the clock times are listed, while there are at most twelve (« à 9 h 05, 9 h 20, 9 h 45, 17 h 05, 17 h 20 et 17 h 45 »). Beyond twelve, each hour is a window as a piece is: « à 05, 20 et 45 de chaque heure, de 8 h 05 à 8 h 45, de 10 h 05 à 10 h 45, … et de 19 h 05 à 19 h 45 » |
-| a cadence of more than four hours, with a list of minutes | no minute phrase: one cadence of hours with both ends for each minute, joined as a list: « toutes les 2 heures de 0 h 15 à 22 h 15 et de 0 h 45 à 22 h 45 » |
-| a cadence of more than four hours, with any other minute phrase | no minute phrase: the first hour as if it stood alone, then « et de même » as for continuous minutes: « toutes les minutes de 0 h à 0 h 29, et de même toutes les 2 heures jusqu'à 22 h 29 » |
+| a cadence of more than four hours, with a list of minutes | no minute phrase: the clock times of its first hour, those of its second, then « et ainsi de suite » as for continuous minutes, ending on the last time that fires: « à 0 h 15 et à 0 h 45, à 4 h 15 et à 4 h 45, et ainsi de suite toutes les 4 heures jusqu'à 20 h 45 »; « à 0 h 05, 0 h 20 et 0 h 45, à 3 h 05, 3 h 20 et 3 h 45, et ainsi de suite toutes les 3 heures jusqu'à 21 h 45 ». (One cadence per minute, « toutes les 4 heures de 0 h 15 à 20 h 15 et de 0 h 45 à 20 h 45 », was first seen by judge 3 as two windows that overlap.) |
+| a cadence of more than four hours, with any other minute phrase | no minute phrase: the first two hours as windows, then « et ainsi de suite »: « toutes les minutes de 0 h à 0 h 29, de 2 h à 2 h 29, et ainsi de suite toutes les 2 heures jusqu'à 22 h 29 » |
 | every hour with exceptions | « à 05, 20 et 45 de chaque heure, sauf de 3 h 05 à 3 h 45 » |
 
 **A list of clock times is also sayable** whenever neither M nor H is
@@ -670,19 +700,25 @@ Then:
     17 h 45 min 30 s »; « toutes les minutes de 9 h 00 min 30 s à 9 h 59
     min 30 s »; « toutes les 2 heures de 0 h 05 min 08 s à 22 h 05 min
     08 s »;
-  * positions inside the hour: « à 30 min 15 s de chaque heure »; « à 05
-    min 30 s et à 20 min 30 s de chaque heure, de 9 h 05 min 30 s à 17 h
-    20 min 30 s »;
-  * a phrase that names no time is given one: « toutes les heures »
-    becomes « à 00 min 30 s de chaque heure »; a bare « toutes les 15
-    minutes » becomes « toutes les 15 minutes de 00 min 30 s à 45 min
-    30 s de chaque heure ».
+  * when the time part names a window after positions inside the hour,
+    the window carries it and the positions do not: « à 05 et à 20 de
+    chaque heure, de 9 h 05 min 30 s à 17 h 20 min 30 s »;
+  * **when the time part names no clock time at all**, it is followed by
+    « , avec N secondes de décalage »: « toutes les heures, avec 30
+    secondes de décalage »; « à 30 de chaque heure, avec 15 secondes de
+    décalage »; « toutes les 15 minutes, avec 30 secondes de décalage »;
+    « avec 1 seconde de décalage ». (« À 00 min 30 s de chaque heure »
+    was first read by judge 3 as 0 h 30. « Décalage » is judge 3's own
+    word for a run that comes so many seconds late. All three judges
+    would write « 30 secondes après l'heure pile » for the first of
+    these; it serves minute 0 only, and one rule is kept.)
 * **If there is more than one second, add a clause for the rest.** After
   a single clock time it follows a comma (« tous les jours à 9 h, toutes
   les secondes pendant une minute »). After anything that fires more than
   once a day it follows « , et à chaque fois » (judge 2's wording: « du
   lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, et à chaque
-  fois toutes les secondes pendant une minute »). The clause is:
+  fois toutes les secondes pendant une minute »), and that comes after
+  « avec N secondes de décalage » when both are said. The clause is:
   * for seconds evenly spaced, three or more: « toutes les N secondes
     pendant » and the span they cover, which is the interval times their
     number: « toutes les secondes pendant une minute » (60 of them);
@@ -691,11 +727,15 @@ Then:
     into the time); « toutes les secondes pendant 10 secondes » (ten);
     « toutes les secondes pendant 11 secondes ». Sixty seconds are « une
     minute »;
-  * for two seconds, or seconds unevenly spaced: how much later than the
-    first the others come: « 30 secondes plus tard »; « 10 et 45 secondes
-    plus tard ». (Two seconds are not « toutes les 30 secondes pendant
-    une minute », which promises a cadence and gives two runs; judge 2
-    wrote « deux exécutions à 30 secondes d'intervalle ».)
+  * for two seconds, or seconds unevenly spaced: « de nouveau » and how
+    much later than the first the others come: « de nouveau 30 secondes
+    plus tard »; « de nouveau 10 et 45 secondes plus tard »; so « toutes
+    les 15 minutes de 9 h à 17 h 45, et à chaque fois de nouveau 30
+    secondes plus tard ». « De nouveau » is what says the run at the time
+    named happens too: without it judge 3 took « et à chaque fois 30
+    secondes plus tard » for one run, thirty seconds late. (Two seconds
+    are not « toutes les 30 secondes pendant une minute », which promises
+    a cadence and gives two runs.)
   * for runs with a gap: the first run as above, then « puis de nouveau »
     with how much later the next begins and how long it lasts: « toutes
     les secondes pendant 29 secondes, puis de nouveau 30 secondes plus
@@ -711,45 +751,57 @@ Then:
   9 h 30 min 45 s »; « à 9 h, 9 h 00 min 10 s et 9 h 00 min 45 s ». But
   `0,20,40 0 9` is « à 9 h, toutes les 20 secondes pendant une minute »
   (two things against three), and `*/30 23 */12` is « à 0 h 23 et à
-  12 h 23, et à chaque fois 30 secondes plus tard » (three against four).
+  12 h 23, et à chaque fois de nouveau 30 secondes plus tard » (three
+  against four).
 
 A window before a clause is the window of the minutes: it names the
 first and the last time at which the clause applies.
 
 A time part with a clause takes no exception (3.9).
 
-4.3 A day of the month and a weekday. Cron fires on either. **Each side
-is said whole, as it would stand alone, with its own month; then « dans
-les deux cas » and the time.**
+4.3 A day of the month and a weekday. Cron fires on either. The order is
+that of 2.8:
 
-* « le 1er de chaque mois, ainsi que tous les vendredis, dans les deux
-  cas à 0 h »
-* « du 1er au 7 et le 15 de chaque mois, ainsi que du lundi au vendredi,
-  dans les deux cas toutes les 15 minutes de 9 h à 17 h 45 »
-* « le 1er juin, ainsi que tous les vendredis de juin, dans les deux cas
-  à 0 h »
-* « le 1er juin et le 1er juillet, ainsi que tous les vendredis en juin
-  et en juillet, dans les deux cas à 0 h »
-* « le 1er et le 15 du mois, en janvier et en juillet, ainsi que du lundi
-  au vendredi en janvier et en juillet, dans les deux cas à 0 h »
-* « le 1er du mois, de janvier à novembre, ainsi que tous les vendredis
-  de janvier à novembre, dans les deux cas à 0 h »
+1. **The month phrase**, as it would stand alone, then a comma: « en
+   juin, »; « en janvier et en juillet, »; « de mai à juillet, »; with
+   one year after one month, « en juin 2030, » (2.7). Months with some
+   missing are named: « de janvier à novembre, ». With every month,
+   nothing.
+2. **The time part**, then a comma, whatever it is: « à 0 h, »; « toutes
+   les 15 minutes de 9 h à 17 h 45, ». It takes no exception (3.9).
+3. **The weekdays**, as they would stand alone with no month: « tous les
+   vendredis »; « du lundi au vendredi »; « le mercredi et le jeudi »;
+   « du jeudi au mardi » (six days are a run here, 3.9); a Quartz
+   weekday, « le dernier vendredi du mois ».
+4. **« ainsi que »**, with no comma before it.
+5. **The days of the month.** With every month, as they would stand
+   alone: « le 1er de chaque mois »; « du 1er au 7 de chaque mois »; « le
+   dernier jour du mois »; « le jour ouvré le plus proche du 15 de chaque
+   mois ». When a month phrase leads the sentence, without « de chaque
+   mois »: « le 1er »; « le 1er et le 15 »; « les 1er, 19, 23 et 28 »
+   (a form that ends « du mois » keeps it: « le dernier jour du mois »).
+   No exception: the days are named, each piece whole (3.6).
+6. **The year part**, always after a comma here: « , en 2030 ».
 
-The day-of-month side comes first, then a comma and « ainsi que », then
-the weekday side, then a comma and « dans les deux cas », then the time
-with no comma. A year part follows the time as anywhere (« … dans les
-deux cas à 0 h en 2030 »).
+* `0 0 1 * 5` — « à 0 h, tous les vendredis ainsi que le 1er de chaque
+  mois »
+* `*/15 9-17 1 * 1-5` — « toutes les 15 minutes de 9 h à 17 h 45, du lundi
+  au vendredi ainsi que le 1er de chaque mois »
+* `0 0 1 6 5` — « en juin, à 0 h, tous les vendredis ainsi que le 1er »
+* `0 0 1,15 1,7 1-5` — « en janvier et en juillet, à 0 h, du lundi au
+  vendredi ainsi que le 1er et le 15 »
+* `0 0 1 1-11 5` — « de janvier à novembre, à 0 h, tous les vendredis
+  ainsi que le 1er »
+* `0 0 0 1 * 5 2030` — « à 0 h, tous les vendredis ainsi que le 1er de
+  chaque mois, en 2030 »
 
-Reasons. « Ainsi que »: judge 2 ranked it above « et aussi » and a bare
-« et » (« et seul se lit facilement comme une condition double »); judge
-1 used it. « Dans les deux cas »: a comma before the time shows that it
-covers both sides only when the time is a clock time, because a cadence
-takes a comma anyway (the reader); these words say it for every time
-part, and the reader proposed them. A month on each side: said once
-after both, a month phrase was read by judge 2 three ways. No exception
-stands on either side (3.9). Judge 2 would put the weekdays first and
-add « quel que soit le jour » to the date; the order here is the frame's,
-and no sentence in the new form has been judged.
+Reasons. The weekdays come first because they are the rule and the dates
+the addition; judge 3 wrote « à 0 h, du lundi au vendredi ainsi que le
+1er de chaque mois ». « Ainsi que »: judge 2 ranked it above « et aussi »
+and a bare « et » (« et seul se lit facilement comme une condition
+double »); judges 1 and 3 used it. No comma before it, so that the two
+sets of days are one group after the time (the reader). No sentence in
+this order has been judged.
 
 Not built into any renderer yet: when both must match, a weekday that
 falls on a date is « tous les vendredis 13 », and the first Monday is
@@ -767,10 +819,15 @@ falls on a date is « tous les vendredis 13 », and the first Monday is
   have is not said). After a noun the name takes « de »: « les jours
   impairs de juin »; « tous les jours de juin, sauf le 15 »; « le dernier
   jour de juin ».
-* **A single recurring weekday takes a single month with « de »**:
-  « tous les lundis de juin » (both judges: natural). Everything else
-  keeps « en »: « tous les jours en juin »; « le lundi et le jeudi en
-  juin »; « du lundi au vendredi en janvier ».
+* **« Tous les jours » and a single recurring weekday take a single month
+  with « de »**: « tous les jours de juin »; « tous les lundis de juin »
+  (all three judges: natural, and judges 2 and 3 corrected « tous les
+  jours en juin » to it). A list or a run of weekdays keeps « en »: « le
+  lundi et le jeudi en juin »; « du lundi au vendredi en janvier ». A
+  list of months keeps « en » after anything: « tous les jours en janvier
+  et en juillet »; « tous les lundis en janvier et en juillet ». A range
+  of months is « de … à … » after anything: « tous les jours de juin à
+  août ».
 * **One day of the month with several months: every date is written in
   full, while there are six or fewer.** « Le 1er janvier et le 1er
   juillet »; « le 1er juin, le 1er juillet et le 1er août »; « le 1er
@@ -849,17 +906,23 @@ noun does (4.4), unless said otherwise.
   dernier jour de janvier et de juillet »; « le dernier jour du mois, de
   juin à août, »
 * `L-1` — « l'avant-dernier jour du mois » (both judges: natural)
-* `L-3` — « le jour qui tombe trois jours avant le dernier jour du
-  mois »; « … de juin ». Judge 1 wrote « trois jours avant le dernier
-  jour du mois »; judge 2 read that right but found two other readings
-  (the three days before the last, and a count off by one). « Le jour qui
-  tombe » makes it one day; the count is literal, the last day minus
-  three.
+* `L-3` — « trois jours avant le dernier jour du mois (le 28 d'un mois de
+  31 jours) ». Every wording tried drew an objection: three days of runs
+  (judge 2), a count off by one (judges 2 and 3, who « a dû compter sur
+  ses doigts »), padding (judge 3, of « le jour qui tombe »). The words
+  are those judges 1 and 3 wrote; the bracket gives the answer for one
+  month, which no reading can take wrongly. The day in the bracket is 31
+  less the count. With one named month it is that month's own day: « …
+  de juin (le 27) »; for February, « … de février (le 25, ou le 26 les
+  années bissextiles) ». With several named months the bracket is the
+  general one: « … de janvier et de juillet (le 28 d'un mois de 31
+  jours) ».
 * `L-28`, `L-29`, `L-30` — the day does not exist in a month too short,
-  and the pattern then skips the month. From 28 up the sentence says so:
-  « le jour qui tombe trente jours avant le dernier jour du mois, quand
-  le mois compte plus de 30 jours, à 0 h ». (The number after « plus de »
-  is the count of days, as a digit.) Below 28 every month is long enough.
+  and the pattern then skips the month. From 28 up the sentence says so,
+  after the bracket: « trente jours avant le dernier jour du mois (le
+  1er d'un mois de 31 jours), quand le mois compte plus de 30 jours, à
+  0 h ». (The number after « plus de » is the count of days, as a
+  digit.) Below 28 every month is long enough.
 * `1#2` — « le deuxième lundi du mois »; « le deuxième lundi de juin »
 * `5L` — « le dernier vendredi du mois »
 * `LW` — « le dernier jour ouvré du mois »; « le dernier jour ouvré de
@@ -929,12 +992,13 @@ written, not spoken.
 6.4 seconde(s), minute(s), heure(s), jour(s), mois, année(s); the symbols
 h, min, s.
 
-6.5 à, de, du, au, d', le, la, les, l', et, ainsi que, dans les deux cas,
-en, pendant, sauf, puis, puis de nouveau, plus tard, et de même,
-jusqu'à, et à chaque fois, chaque, tous les, toutes les, tous les jours,
-à partir de, après le début de chaque minute, premières, dernières, le
-jour qui tombe, avant le dernier jour, le plus proche du, jour ouvré,
-dans le même mois, quand le mois compte plus de, sur.
+6.5 à, de, du, au, d', le, la, les, l', et, ainsi que,
+en, pendant, sauf, puis, puis de nouveau, plus tard,
+jusqu'à, et à chaque fois, de nouveau, avec … de décalage, et ainsi de
+suite, chaque, tous les, toutes les, tous les jours, à partir de, après
+le début de chaque minute, premières, dernières, avant le dernier jour,
+d'un mois de 31 jours, les années bissextiles, le plus proche du, jour
+ouvré, dans le même mois, quand le mois compte plus de, sur.
 
 ## 7. Agreement
 
@@ -973,16 +1037,19 @@ spaces, a straight apostrophe (1.1).
 
 ## 8. Traps
 
-8.1 `union-connective` — « , ainsi que »: « le 1er de chaque mois, ainsi
-que tous les vendredis, dans les deux cas à 0 h ».
+8.1 `union-connective` — « ainsi que », the weekdays before it and the
+dates after: « à 0 h, tous les vendredis ainsi que le 1er de chaque
+mois ».
 
-8.2 `shared-qualifier-scope` — Nothing is shared by position. The time
-follows « dans les deux cas »; a month is said on each side.
+8.2 `shared-qualifier-scope` — The month and the time lead a union, so
+each covers both sets of days: « en juin, à 0 h, tous les vendredis ainsi
+que le 1er ».
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window (« de … à
-… »), « et de même toutes les N heures jusqu'à … », or the clause of
-seconds. The commas of a sentence are those of 2.6, the one before
-« sauf », the one before « et de même », the one before « puis », the
+… »), « et ainsi de suite toutes les N heures jusqu'à … », or the clause
+of seconds. The commas of a sentence are those of 2.6 and 2.8, the one
+before « sauf », the one before « et ainsi de suite », the one before
+« avec N secondes de décalage », the one before « puis », the
 one before a window that follows « de chaque heure », and the one before
 a clause of seconds.
 

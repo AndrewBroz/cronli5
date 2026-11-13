@@ -23,6 +23,11 @@ const FIELDS =
 // «tous les jours, sauf le mercredi» into «du jeudi au mardi». Nothing
 // else may cross: no day, month or year edit touches the time, and no
 // time edit touches anything but the time, with the exceptions below.
+//
+// A union (a day of the month and a weekday both restricted) has its own
+// order: month, time, days, year (answers 2.8). An edit that makes or
+// undoes a union moves the time and the month ahead of the days; the
+// parts themselves are compared as everywhere else.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year'],
   hour: ['time'],
@@ -35,13 +40,17 @@ const MAY_CHANGE = {
 
 // The one place a time field reaches the calendar: when the hours are
 // restricted and no day is named, the day part says «tous les jours», so
-// an hour edit may add or remove exactly those words.
+// an hour edit may add or remove exactly those words, and with them the
+// lead of a single month: «en juin» alone, «de juin» after «tous les
+// jours».
 const HOUR_MAY_SET_DAY = ['', 'tous les jours'];
+const MONTH_LEAD = /^(?:en |de |d')/u;
 
 // An exception among the times is said only when nothing follows the time
-// part (answers 3.9). So adding or removing a year part may reword a time
-// part that has one: «toutes les 2 heures de 0 h à 22 h, sauf à 8 h»
-// against «toutes les 2 heures de 0 h à 6 h et de 10 h à 22 h en 2030».
+// part (answers 3.9). So adding or removing a year part, or making or
+// undoing a union, may reword a time part that has one: «toutes les 2
+// heures de 0 h à 22 h, sauf à 8 h» against «toutes les 2 heures de 0 h
+// à 6 h et de 10 h à 22 h en 2030».
 const EXCEPTION = /\bsauf\b/u;
 
 const SETUP = {languages: [french.default], options: {}, styles: {}};
@@ -75,6 +84,26 @@ function fieldsChanged(a, b, options) {
   });
 }
 
+// Whether an edit to `field` may change `part` from `was` to `now`: the
+// part is the field's own, or the change is one of the declared ones.
+function declared(field, part, was, now) {
+  const both = [String(was), String(now)];
+  const everyDay = field === 'hour' && part === 'day' &&
+    both.every(function allowed(text) {
+      return HOUR_MAY_SET_DAY.includes(text);
+    });
+  const monthLead = field === 'hour' && part === 'month' &&
+    both[0].replace(MONTH_LEAD, '') === both[1].replace(MONTH_LEAD, '');
+  const exception = part === 'time' &&
+    ['date', 'weekday', 'year'].includes(field) &&
+    both.some(function excepted(text) {
+      return EXCEPTION.test(text);
+    });
+
+  return MAY_CHANGE[field].includes(part) || everyDay || monthLead ||
+    exception;
+}
+
 // Every pair in which a part changed that the edited field may not change.
 function leaks(pairList) {
   const found = [];
@@ -100,15 +129,8 @@ function leaks(pairList) {
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const everyDay = changed[0] === 'hour' && part === 'day' &&
-        HOUR_MAY_SET_DAY.includes(before[part]) &&
-        HOUR_MAY_SET_DAY.includes(after[part]);
-
-      const exception = changed[0] === 'year' && part === 'time' &&
-        (EXCEPTION.test(before[part]) || EXCEPTION.test(after[part]));
-
-      if (words(before[part]) !== words(after[part]) && !everyDay &&
-          !exception && !MAY_CHANGE[changed[0]].includes(part)) {
+      if (words(before[part]) !== words(after[part]) &&
+          !declared(changed[0], part, before[part], after[part])) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -120,7 +142,8 @@ function leaks(pairList) {
 
 // Continuity, measured directly. A description is four parts in one order:
 // day, month, time, year (the calendar, then the time, then the year; one
-// year after one month's name sits in the month part). Editing one field of the pattern may rewrite that field's
+// year after one month's name sits in the month part), or for a union
+// month, time, day, year. Editing one field of the pattern may rewrite that field's
 // part and nothing else, apart from the declared fusions above. This is
 // the constraint itself, where a count of changed words is only a rough
 // sign of it: a longer sentence, or a wrong one, cannot make this pass.
@@ -130,8 +153,11 @@ describe('French continuity:', function() {
       const {opts, schedule} = parse(pair[1]);
       const parts = french.describeParts(schedule, opts);
 
-      expect([parts.day, parts.month, parts.time, parts.year]
-        .filter(Boolean).join(' '))
+      const order = schedule.analyses.day.union ?
+        [parts.month, parts.time, parts.day, parts.year] :
+        [parts.day, parts.month, parts.time, parts.year];
+
+      expect(order.filter(Boolean).join(' '))
         .to.equal(french.default.describe(schedule, opts));
     });
   });
