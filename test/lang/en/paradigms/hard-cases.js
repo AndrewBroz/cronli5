@@ -72,7 +72,8 @@ const rows = [
   // June 1 and carrying on, when the schedule stops with June. So did
   // "every 5 days from the 1st in June", less badly: a cadence of days
   // says that it starts again each month.
-  ['0 0 */5 6 *', 'at midnight every 5 days from the 1st of the month in June'],
+  ['0 0 */5 6 *', 'at midnight on June 1, 6, 11, 16, 21, and 26'],
+  ['0 0 */3 6 *', 'at midnight every 3 days from the 1st of the month in June'],
   ['0 0 1 1,3 *', 'at midnight on January 1 and March 1'],
 
   // Weekday order and wrap-arounds.
@@ -139,7 +140,7 @@ const rows = [
     'every 20 minutes during every other hour on odd-numbered days in ' +
     'January, April, July, and October'],
   ['7 4-22/6 1 */2 *',
-    'at 7 minutes past the hour, every 6 hours from 4 a.m. on the 1st of ' +
+    'at 4:07 a.m., 10:07 a.m., 4:07 p.m., and 10:07 p.m. on the 1st of ' +
     'every other month'],
   ['0 12 1-5,10,20-25 * *',
     'at noon on the 1st through the 5th, on the 10th, and on the 20th ' +
@@ -188,9 +189,12 @@ const rows = [
   ['0-28,30-59 9 * * *',
     'every minute during the 9 a.m. hour except at 29 minutes past the ' +
       'hour, every day'],
-  ['0,10,20,40,50 9-17 * * *',
-    'every 10 minutes from 9 a.m. through 5:50 p.m. except at 30 minutes ' +
+  ['0,5,10,15,20,25,35,40,45,50,55 9-17 * * *',
+    'every 5 minutes from 9 a.m. through 5:55 p.m. except at 30 minutes ' +
     'past the hour, every day'],
+  ['0,10,20,40,50 9-17 * * *',
+    'at 0, 10, 20, 40, and 50 minutes past the hour from 9 a.m. through 5 ' +
+    'p.m. every day'],
   ['0-28,30-59 * * * *', 'every minute except at 29 minutes past the hour'],
   ['* 0-28,30-59 * * * *',
     'every second except during the minute at 29 minutes past the hour'],
@@ -432,17 +436,29 @@ const rows = [
   ['0 0 5-23/2 6 *',
     'at midnight every 2 days from the 5th through the 23rd of the month ' +
     'in June'],
-  ['0 0 1,6,11,21,26,31 6 *',
-    'at midnight every 5 days from the 1st of the month in June except ' +
-    'the 16th'],
+  // Every fifth day is seven days, which are named; every third is
+  // eleven, and keeps the cadence in the same places.
+  ['0 0 1,6,11,21,26,31 6 *', 'at midnight on June 1, 6, 11, 21, and 26'],
+  ['0 0 1,4,7,10,16,19,22,25,28,31 6 *',
+    'at midnight every 3 days from the 1st of the month in June except ' +
+    'the 13th'],
   ['0 0 */5 6 * 2030',
-    'at midnight every 5 days from the 1st of the month in June 2030',
+    'at midnight on June 1, 6, 11, 16, 21, and 26 in 2030',
+    {years: true}],
+  ['0 0 */3 6 * 2030',
+    'at midnight every 3 days from the 1st of the month in June 2030',
     {years: true}],
   ['0 0 */5 6 1',
-    'at midnight every 5 days from the 1st of the month in June as well ' +
+    'at midnight on June 1, 6, 11, 16, 21, and 26 as well as on Mondays ' +
+    'in June'],
+  ['0 0 */3 6 1',
+    'at midnight every 3 days from the 1st of the month in June as well ' +
     'as on Mondays in June'],
   ['0 0 */5 6,7 *',
-    'at midnight every 5 days from the 1st of the month in June and July'],
+    'at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
+    'June and July'],
+  ['0 0 */3 6,7 *',
+    'at midnight every 3 days from the 1st of the month in June and July'],
 
   // A cadence of years hangs on the day with "of"; a day of the month
   // with no month would be heard as a day of the year ("the 1st of every
@@ -455,7 +471,11 @@ const rows = [
     'from 2030',
     {years: true}],
   ['0 0 */5 * * 2030/2',
-    'at midnight every 5 days from the 1st of the month of every other ' +
+    'at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
+    'every month of every other year from 2030',
+    {years: true}],
+  ['0 0 */3 * * 2030/2',
+    'at midnight every 3 days from the 1st of the month of every other ' +
     'year from 2030',
     {years: true}],
   ['0 0 */2 * * 2030/2',
@@ -570,8 +590,7 @@ const rows = [
     'at midnight on April 1, June 1, September 1, and November 1'],
   ['0 0 25-31 6 *', 'at midnight on June 25 through 30'],
   ['0 0 31 * *', 'at midnight on the 31st'],
-  ['0 0 */10 6 *',
-    'at midnight every 10 days from the 1st of the month in June'],
+  ['0 0 */10 6 *', 'at midnight on June 1, 11, and 21'],
 
   // Days that are every day of their months are no restriction, and no
   // union.
@@ -644,15 +663,27 @@ const rows = [
   ['0 0 5,10,15,20 * *', 'at midnight on the 5th, 10th, 15th, and 20th'],
   ['0 0 4-22/3 * *',
     'at midnight on the 4th, 7th, 10th, 13th, 16th, 19th, and 22nd'],
-  // A cadence of days that runs to the end of the month names only its
-  // start, and is said as before whatever its length. (A row here once
-  // listed these seven days, taking the cadence for one with both ends
-  // named.)
-  ['0 0 4-28/4 * *', 'at midnight every 4 days from the 4th of the month'],
-  // A value missing at an end is a bound, never an exception, even
-  // beside a hole.
+  // A cadence that names only its start is worked out in the same way,
+  // and takes the same rule: up to eight values are listed.
+  ['0 0 4-28/4 * *',
+    'at midnight on the 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
+  ['0 0 */4 * *',
+    'at midnight on the 1st, 5th, 9th, 13th, 17th, 21st, 25th, and 29th'],
+  ['0 1/6 * * *', 'at 1 a.m., 7 a.m., 1 p.m., and 7 p.m. every day'],
+  ['0 1/3 * * *',
+    'at 1 a.m., 4 a.m., 7 a.m., 10 a.m., 1 p.m., 4 p.m., 7 p.m., and 10 ' +
+    'p.m. every day'],
+  ['* 1/6 * * *',
+    'every minute during the 1 a.m., 7 a.m., 1 p.m., and 7 p.m. hours ' +
+    'every day'],
+  ['0 0 1 2/2 *',
+    'at midnight on February 1, April 1, June 1, August 1, October 1, and ' +
+    'December 1'],
+  // Beside a hole, a value missing at an end may be an exception too.
+  // And an exception out of a cadence has to leave more than eight
+  // values, or they are listed.
   ['0 2,4,8,10,12,14,16,18,20,22 * * *',
-    'every 2 hours from 2 a.m. through 10 p.m. except at 6 a.m., every day'],
+    'every 2 hours except at midnight and 6 a.m.'],
   ['0 0,3,9,12,15,18 * * *',
     'at midnight, 3 a.m., 9 a.m., noon, 3 p.m., and 6 p.m. every day'],
   ['0 0 1-25/3 * *',

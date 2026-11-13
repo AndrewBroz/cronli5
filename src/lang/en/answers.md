@@ -30,9 +30,12 @@ Amended a third time on 2026-11-13, on the maintainer's ruling from
 direct comparisons. A cadence with both ends named was counted as three
 things and so replaced a list of four; runs and cadences together
 replaced a list of nine by naming eight things, with two cadences run
-through each other. Both are now said only for more than eight values,
-and cadences that run through each other are not said together (the
-notes on counting, 3.7, 3.8, 3.12, 4.1, 4.2, 5.8, 9.6, 9.8).
+through each other. A cadence that has to be worked out from a start,
+with or without a named end, is now said only for more than eight
+values, and so are runs and cadences together and an exception taken
+out of a cadence; cadences that run through each other are not said
+together (the notes on counting, 3.7, 3.8, 3.9, 3.12, 4.1, 4.2, 4.4,
+5.8, 9.6, 9.8).
 
 Shorthand used below: **M** is the set of minutes, **H** the set of hours,
 **S** the set of seconds. "Said" means the phrase a speaker uses; "silent"
@@ -95,12 +98,12 @@ Notes on counting, and the corrections:
   subtraction).
 * Runs and cadences together (3.12) lose a tie in the same way: they
   have to be worked out.
-* **A cadence with both ends named must also replace a list of more than
-  eight items**, and so must every phrase built on one: runs and cadences
-  together (3.12), and such a cadence with an exception. The table counts
-  it as three things, which leaves out what the listener does with them:
-  three numbers and a rule have to be kept while the rule is applied, and
-  each value it gives kept too. A list is told outright and stays on the
+* **A cadence that names its start, with or without its end, must also
+  replace a list of more than eight items**, and so must runs and
+  cadences together (3.12) and an exception taken out of any cadence.
+  The table counts such a cadence as two or three things, which leaves
+  out what the listener does with them: the numbers and a rule have to
+  be kept while the rule is applied, and each value it gives kept too. A list is told outright and stays on the
   page to be read again. Up to eight values are listed: minutes 5, 20, 35
   and 50 are "at 5, 20, 35, and 50 minutes past the hour"; hours 0, 5,
   10, 15 and 20 are "at midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m.";
@@ -111,8 +114,13 @@ Notes on counting, and the corrections:
   minutes past the hour"; days 1, 5, 10 … 25 were "on the 1st and every 5
   days from the 5th through the 25th of the month". The maintainer
   compared these with their lists, at four, five, six, seven and eight
-  values, and chose the list each time.) Nothing else changes: a cadence
-  that tiles, and one that names only its start, are said as before. One
+  values, and chose the list each time; and chose it again for a
+  cadence that names only its start, so that hours 1, 7, 13 and 19 are
+  "at 1 a.m., 7 a.m., 1 p.m., and 7 p.m.", not "every 6 hours from 1
+  a.m.", and days 1, 6, 11 … 31 are "on the 1st, 6th, 11th, 16th, 21st,
+  26th, and 31st", not "every 5 days from the 1st of the month".) A
+  cadence that tiles from the start of its cycle is said as before,
+  whatever its length: "every 6 hours" has nothing to add to. One
   form is exempt, seconds inside one clock time (4.2), where every item
   of the list would be a clock time to the second, three numbers apiece.
 * **Cadences that run through each other are not said together.** Days 2,
@@ -474,10 +482,12 @@ hours, 12 months) and the cadence starts within its first interval.
   (hours 0 and 12 are the tie of 3.11).
 * Days of the month never tile, since months differ in length. A cadence
   is always said with its start, and says that it starts again each
-  month: "every 5 days from the 1st of the month". ("Every 5 days from
+  month: "every 3 days from the 1st of the month". ("Every 3 days from
   the 1st" was said before, and reads as a count that began on some 1st
   and has run on ever since, across the ends of months; the pattern goes
-  back to the 1st every month.) For odd and even see 5.1.
+  back to the 1st every month.) Up to eight days are listed (the notes on
+  counting): every fifth day is "on the 1st, 6th, 11th, 16th, 21st, 26th,
+  and 31st". For odd and even see 5.1.
 * Months have one cadence phrase, and only after a day of the month: "on
   the 1st of every other month". Any other set of months is named, and two
   months are never called a cadence. Without a day of the month no month
@@ -492,15 +502,19 @@ stops earlier names both ends, where it has more than eight days to
 say: "every 2 days from the 5th through the 23rd of the month". (Six
 days, the 5th, 8th … 20th, are listed.) This is the one place "of the month" follows a plain
 day (8.4), and it is said after every cadence of days, whatever the
-months: "every 5 days from the 1st of the month in June".
+months: "every 3 days from the 1st of the month in June".
 
-The month cadence may start in February: "on the 1st of every other month
-from February".
+A month cadence that starts in February has a start to add to and at
+most six months, so the months are named: "on February 1, April 1, June
+1, August 1, October 1, and December 1". ("On the 1st of every other
+month from February" was said before.)
 
 3.8 A cadence that does not divide evenly, or starts off the beat.
 
 * Hours that start off the beat but tile: name the start. "Every 2 hours
-  from 1 a.m."
+  from 1 a.m." Only every second hour has more than eight values; any
+  longer interval off the beat is listed: "at 1 a.m., 7 a.m., 1 p.m., and
+  7 p.m."
 * Minutes and seconds that start off the beat, and any cadence that does
   not tile or stops early: name both ends, so nobody assumes it carries
   on. "Every 7 minutes from 0 through 56 minutes past the hour"; "every 4
@@ -538,18 +552,20 @@ cadence with exceptions: hours 0, 2 … 20 are "every 2 hours through 8
 p.m." in the bounded form ("every 2 hours from midnight through 8 p.m."),
 never "every 2 hours except at 10 p.m."
 
-A value missing at an end is never an exception, even beside a hole: only
-the hole is one. Hours 2, 4, 8, 10 … 22 are "every 2 hours from 2 a.m.
-through 10 p.m. except at 6 a.m.", not "every 2 hours except at midnight
-and 6 a.m.", which says a moment only to take it back. (The rule was
-silent on a set with both, and the second was said. It came to matter
-when a cadence with both ends named stopped being said for eight values
-or fewer: hours 0, 2, 4, 6, 10, 12, 14 and 16 under "every minute" would
-have been "during every other hour except the 8 a.m., 6 p.m., 8 p.m.,
-and 10 p.m. hours", three of the four being hours after the last one
-that fires.) Where the bounded cadence then has too few values to be
-said, the values are listed: hours 0, 3, 9, 12, 15 and 18 are "at
-midnight, 3 a.m., 9 a.m., noon, 3 p.m., and 6 p.m."
+Beside a hole, a value missing at an end may be an exception too, where
+that names fewer things: hours 2, 4, 8, 10 … 22 are "every 2 hours
+except at midnight and 6 a.m." (The maintainer compared it with "every 2
+hours from 2 a.m. through 10 p.m. except at 6 a.m." and chose it.)
+
+An exception taken out of a cadence must leave more than eight values,
+like the cadences of the notes on counting: it is a rule and then a
+subtraction. Hours 0, 3, 9, 12, 15 and 18 are "at midnight, 3 a.m., 9
+a.m., noon, 3 p.m., and 6 p.m.", not "every 3 hours except at 6 a.m. and
+9 p.m."; minutes 0, 10, 20, 40 and 50 are listed, not "every 10 minutes
+except at 30"; and hours 0, 2, 4, 6, 10, 12, 14 and 16 under "every
+minute" are "during the midnight, 2 a.m., … and 4 p.m. hours", where the
+exception would have been "during every other hour except the 8 a.m., 6
+p.m., 8 p.m., and 10 p.m. hours". (Five values were enough before.)
 
 The same holds for any set of minutes or seconds. They are numbered from
 the start of their hour or minute, so a set that misses only its first
@@ -635,12 +651,12 @@ minutes against "the hour":
 * "every minute except at 29 minutes past the hour" (every hour);
 * "every minute during the 9 a.m. and 5 p.m. hours except at 29 minutes
   past the hour";
-* "every 10 minutes from 9 a.m. through 5:50 p.m. except at 30 minutes past the hour";
+* "every 5 minutes from 9 a.m. through 5:55 p.m. except at 30 minutes past the hour";
 * one hour is no different: "every minute during the 9 a.m. hour except at
   29 minutes past the hour", not two abutting windows.
 
 The base is said as the continuous form of 4.1 with its confinement. If
-the hours have an exception of their own, it comes first: "every 10
+the hours have an exception of their own, it comes first: "every 5
 minutes except during the 3 a.m. hour, and except at 30 minutes past the
 hour". Under seconds of any kind, an excepted minute is a whole minute,
 said as one: "every second except during the minute at 29 minutes past
@@ -754,7 +770,7 @@ confinement:
 | range, under a cadence | closes on the last run: "every 15 minutes from 9 a.m. through 5:45 p.m." |
 | pieces | "from 9 a.m. until 6 p.m. and during the 10 p.m. hour"; under a cadence, "from 9 a.m. through 5:45 p.m. and during the 10 p.m. hour" |
 | every second hour | "during every other hour"; off the beat, "during every other hour from 1 a.m." |
-| any other cadence that runs through the day | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours"; "for one hour every 3 hours from 1 a.m." It names what that cadence names. |
+| any other cadence that runs through the day | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours". It names what that cadence names. Off the beat such a cadence has eight hours at most, and they are named: "during the 1 a.m., 7 a.m., 1 p.m., and 7 p.m. hours". ("For one hour every 3 hours from 1 a.m." was said before.) |
 | a cadence with a named end | each end named as an hour: "during every other hour from the 2 a.m. hour through the 10 p.m. hour"; for a longer interval, which comes only among other parts (3.12), "during every 3rd hour from the 1 p.m. hour through the 10 p.m. hour". "For one hour every 2 hours from 2 a.m. through 10 p.m." is misheard as stopping at 10; "through the 10 p.m. hour" takes the whole hour in. Like every cadence with both ends named it is said only for more than eight hours: six are "during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours". (The hours were all listed at first, up to eleven of them, which nobody holds; then every cadence of four or more was said as one, which asked the listener to work out what six names would have told.) |
 
 Hours 0 and 12 are "the midnight hour" and "the noon hour".
@@ -989,9 +1005,9 @@ most widely used library.
   June 1 through 7"; "on June 1 through 7 and on June 15". British style
   puts the day first: "on 1 June", "on 1 and 15 June", "on 1 to 7 June".
   An idiom or a cadence keeps its own words and takes "in": "on
-  odd-numbered days in June"; "every 5 days from the 1st of the month in
-  June"; "every 3 days from the 5th through the 20th of the month in
-  June". (A cadence was first said from a date, "every 5 days from June
+  odd-numbered days in June"; "every 3 days from the 1st of the month in
+  June"; "every 2 days from the 5th through the 23rd of the month in
+  June". (A cadence was first said from a date, "every 3 days from June
   1", which reads as a run that starts on June 1 and carries on, when the
   schedule stops with June.)
 * One day with a list of months: each date in full. "On January 1 and July
@@ -1006,7 +1022,7 @@ most widely used library.
   follows the month: "on January 1 in 2030 and 2035".
 
 An idiom or a cadence of days takes "in" with any set of months: "on
-odd-numbered days in March and June"; "every 5 days from the 1st of the
+odd-numbered days in March and June"; "every 3 days from the 1st of the
 month in June and July".
 
 **Only days that exist are named, and only months they exist in.** The
@@ -1025,7 +1041,7 @@ can fire in.
   `0 9 1-30 6 *` is "at 9 a.m. every day in June"; `1-29` in February
   likewise. `1-28` in February is not, because of the 29th.
 * A phrase that names no day keeps its own words, since it promises
-  nothing false: "on odd-numbered days in June", "every 10 days from the
+  nothing false: "on odd-numbered days in June", "every 3 days from the
   1st of the month in June", "on every day in June except the 15th".
   Where the two descriptions name as many things, the one made of days
   that exist is said.
@@ -1061,7 +1077,7 @@ past the hour", "at 15 and 45 minutes past the hour". Digits keep the
 description comparable with the pattern.
 
 5.5 Interval words. A cadence uses a digit: "every 2 hours", "every 15
-minutes", "every 5 days from the 1st of the month". The only interval
+minutes", "every 3 days from the 1st of the month". The only interval
 word is "every
 other", and it appears in exactly three phrases: "during every other hour"
 (4.1's confinement table), "of every other month" (4.4) and "of every other
@@ -1186,7 +1202,7 @@ every other year from 2030". ("…on every day in every month except the
 15th, of every other year from 2030" was said before: "in every month
 except the 15th" is not English, and "of" had nothing to hold.) A cadence
 of days has said "of the month" already and takes no other month: "every
-5 days from the 1st of the month of every other year from 2030".
+3 days from the 1st of the month of every other year from 2030".
 
 ## 6. Words
 

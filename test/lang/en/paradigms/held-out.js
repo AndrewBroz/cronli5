@@ -45,7 +45,8 @@ const rows = [
   ['0 9 1-7 * *', 'at 9 a.m. on the 1st through the 7th'],
   ['0 9 1-7,15 * *', 'at 9 a.m. on the 1st through the 7th and on the 15th'],
   ['0 9 2/2 * *', 'at 9 a.m. on even-numbered days'],
-  ['0 9 */5 * *', 'at 9 a.m. every 5 days from the 1st of the month'],
+  ['0 9 */5 * *',
+    'at 9 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st'],
   ['0 9 L * *', 'at 9 a.m. on the last day of the month'],
   ['0 9 15W * *', 'at 9 a.m. on the weekday nearest the 15th'],
 
@@ -133,8 +134,8 @@ const rows = [
     'every 15 minutes from 9 a.m. through 5:45 p.m. on even-numbered ' +
     'days as well as on weekdays'],
   ['*/15 9-17 */5 * 1-5',
-    'every 15 minutes from 9 a.m. through 5:45 p.m. every 5 days from ' +
-    'the 1st of the month as well as on weekdays'],
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st, 6th, ' +
+    '11th, 16th, 21st, 26th, and 31st as well as on weekdays'],
   ['*/15 9-17 L * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on the last day of ' +
     'the month as well as on weekdays'],
@@ -218,7 +219,8 @@ const rows = [
   ['0 0 1-7,15 * *',
     'at midnight on the 1st through the 7th and on the 15th'],
   ['0 0 2/2 * *', 'at midnight on even-numbered days'],
-  ['0 0 */5 * *', 'at midnight every 5 days from the 1st of the month'],
+  ['0 0 */5 * *',
+    'at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st'],
   ['0 0 L * *', 'at midnight on the last day of the month'],
   ['0 0 15W * *', 'at midnight on the weekday nearest the 15th'],
 
@@ -281,7 +283,8 @@ const rows = [
   ['* * 1-7,15 * *',
     'every minute on the 1st through the 7th and on the 15th'],
   ['* * 2/2 * *', 'every minute on even-numbered days'],
-  ['* * */5 * *', 'every minute every 5 days from the 1st of the month'],
+  ['* * */5 * *',
+    'every minute on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st'],
   ['* * L * *', 'every minute on the last day of the month'],
   ['* * 15W * *', 'every minute on the weekday nearest the 15th'],
 
