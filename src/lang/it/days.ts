@@ -440,10 +440,11 @@ function sayWeekdayArm(asked: DayAsked, facts: ScheduleFacts): DaySaid {
     sayWeekdays(chooseWeekdays(facts), weekdayWords(asked.speech));
 }
 
-// Every day but one or two dates, beside plain weekdays: every day, and
-// those dates only when they fall on the weekdays.
-function saySwallowed(dates: number[], asked: DayAsked, facts: ScheduleFacts):
-  DaySaid {
+// The condition that dates fall on the weekdays, by the form the weekdays
+// are said in: «se cade di venerdì», «se cadono tra il lunedì e il
+// venerdì», «se non cade di mercoledì».
+function sayFalling(several: boolean, asked: DayAsked, facts: ScheduleFacts):
+  string {
   const say = weekdayWords(asked.speech);
   const candidates = candidatesAs(facts, 'weekday',
     {first: 1, linear: true}) as [];
@@ -451,11 +452,10 @@ function saySwallowed(dates: number[], asked: DayAsked, facts: ScheduleFacts):
   const named = denote(candidates[candidates.length - 1],
     domainOf('weekday'));
   const less = form.kind === 'except' && form.base.kind === 'all';
-  const several = Number(dates.length > 1);
   const falls = [
     [words.ifItFalls, words.ifTheyFall],
     [words.ifItFallsNot, words.ifTheyFallNot]
-  ][Number(less)][several];
+  ][Number(less)][Number(several)];
   const where = firstOf<string>([
     form.kind === 'range' &&
       `${words.between} ${say.the(form.from)} ${words.and} ` +
@@ -463,6 +463,14 @@ function saySwallowed(dates: number[], asked: DayAsked, facts: ScheduleFacts):
     less && say.falling((form as Exception).removed),
     say.falling(named)
   ]);
+
+  return `${falls} ${where}`;
+}
+
+// Every day but one or two dates, beside plain weekdays: every day, and
+// those dates only when they fall on the weekdays.
+function saySwallowed(dates: number[], asked: DayAsked, facts: ScheduleFacts):
+  DaySaid {
   const those = phrase(list(theDays(dates)),
     asked.place.kind === 'every' && words.ofEachMonth);
 
@@ -470,7 +478,7 @@ function saySwallowed(dates: number[], asked: DayAsked, facts: ScheduleFacts):
     fused: false,
     glossed: false,
     text: `${words.everyDay} (${words.but} ${those} ${words.only} ` +
-      `${falls} ${where})`
+      `${sayFalling(dates.length > 1, asked, facts)})`
   };
 }
 
@@ -499,10 +507,52 @@ function sayUnion(asked: DayAsked, facts: ScheduleFacts): DaySaid {
   };
 }
 
+// The condition that days of the month fall on the weekdays, or on the one
+// the month names: «se cade di lunedì», «se coincide con l'ultimo venerdì
+// del mese».
+function sayCondition(several: boolean, asked: DayAsked, facts: ScheduleFacts):
+  string {
+  return asked.weekday?.kind === 'quartz' ?
+    phrase([words.ifItCoincides, words.ifTheyCoincide][Number(several)],
+      sayWeekdayArm(asked, facts).text) :
+    sayFalling(several, asked, facts);
+}
+
+// A day of the month and a weekday that must both match: the days of the
+// month, said as they are alone, and the condition that they fall on the
+// weekdays. A date side that is every day less some dates is said the
+// other way: the weekdays, less those dates.
+function sayBoth(asked: DayAsked, facts: ScheduleFacts): DaySaid {
+  const reached = daysReached(facts, {linear: true});
+  const form = reached && chooseDates(reached.candidates, reached.domain);
+
+  if (form?.kind === 'except' && form.base.kind === 'all') {
+    return {
+      fused: false,
+      glossed: true,
+      text: phrase(sayWeekdayArm(asked, facts).text, words.except,
+        list(theDays(form.removed)),
+        asked.place.kind === 'every' && words.ofEachMonth)
+    };
+  }
+
+  const date = sayDateArm(asked, facts);
+  const gloss = leapGloss(facts.analyses.dateReach, asked.speech, true);
+  const several = asked.date?.kind !== 'quartz' &&
+    (form as {values?: number[]}).values?.length !== 1;
+
+  return {
+    fused: false,
+    glossed: true,
+    text: phrase(date.text + gloss + (date.glossed || gloss ? ',' : ''),
+      words.only, sayCondition(several, asked, facts))
+  };
+}
+
 /** The day part of a description. */
 function sayDay(asked: DayAsked, facts: ScheduleFacts): DaySaid {
   if (asked.date && asked.weekday) {
-    return sayUnion(asked, facts);
+    return (facts.analyses.day.both ? sayBoth : sayUnion)(asked, facts);
   }
 
   if (asked.weekday) {

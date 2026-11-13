@@ -88,8 +88,8 @@ const rows = [
     'dal lunedì al venerdì e in più il 1º, il 10 e il 20 di ogni mese, ' +
     'sempre ogni 15 minuti dalle 9:00 alle 17:45'],
   ['*/15 9-17 */2 * 1-5',
-    'dal lunedì al venerdì e in più nei giorni dispari di ogni mese, ' +
-    'sempre ogni 15 minuti dalle 9:00 alle 17:45'],
+    'nei giorni dispari di ogni mese solo se cadono tra il lunedì e il ' +
+    'venerdì, ogni 15 minuti dalle 9:00 alle 17:45'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
     'dal lunedì al venerdì e in più nei giorni dispari di ogni mese tranne ' +
     'il 15, sempre ogni 15 minuti dalle 9:00 alle 17:45'],
