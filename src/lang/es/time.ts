@@ -6,7 +6,9 @@
 import type {Clock, Moment, Piece, Unit} from './wording.js';
 import type {Part, Policy, Said} from './sets.js';
 import {byCount, every, led, list, pick, spaced} from './wording.js';
-import {isRange, isValues, mapParts, say, thingsNamed} from './sets.js';
+import {
+  isRange, isValues, linearRuns, mapParts, say, thingsNamed
+} from './sets.js';
 import lexicon from './lexicon.js';
 
 const {units, words} = lexicon;
@@ -72,6 +74,10 @@ const MOST_TIMES = 12;
 
 // With the seconds, a list of clock times goes up to this many.
 const MOST_TIMES_TO_THE_SECOND = 4;
+
+// Excepted minutes are clock times while they name this many things at
+// most: one for a time, two for a window.
+const MOST_EXCEPTED = 4;
 
 const EACH: [string, string] = [words.each, words.each];
 const ONCE: [string, string] = [words.oncePer, words.onceEach];
@@ -266,6 +272,17 @@ function timesListed(scene: Scene): boolean {
   return times <= MOST_TIMES && (apart || times <= rivalCost(scene));
 }
 
+// Whether hours that stand apart are named by when they begin, after the
+// minute phrase: too many hours for a window each, minutes named one by
+// one, or minutes in several parts inside more than one hour, which a
+// window for each part in each hour would multiply.
+function hoursNamed(scene: Scene): boolean {
+  const {facts, hourKind, minutes} = scene;
+
+  return hourKind === 'many' || listed(minutes) ||
+    stretchesOf(minutes).length > 1 && facts.hour.length > 1;
+}
+
 function formOf(scene: Scene, silent: boolean): Form {
   const {facts, hourKind, minutes} = scene;
   const single = facts.minute.length === 1;
@@ -281,8 +298,7 @@ function formOf(scene: Scene, silent: boolean): Form {
     ['clocks', timesListed(scene)],
     ['bracket', onCadence && tiles(minutes)],
     ['points', onCadence && facts.minute.length <= FEW_HOURS],
-    ['phraseHours', onCadence || apart && (hourKind === 'many' ||
-      listed(minutes))],
+    ['phraseHours', onCadence || apart && hoursNamed(scene)],
     ['windows', tiles(minutes) || hourKind === 'few'],
     ['phraseWindows', true]
   ]);
@@ -525,21 +541,26 @@ function hourHoles(scene: Scene): string[] {
 }
 
 // The excepted minutes: inside a few separate hours they are clock times
-// (whole minutes, under a seconds lead), and otherwise minutes of every
-// hour.
+// (under a seconds lead, a window over each run of whole minutes) while
+// those name few things, and otherwise minutes of every hour.
 function minuteHoles(scene: Scene): string[] {
   const {clock, facts, hourKind, mode, voice} = scene;
 
   return holes(scene.minutes.removed, function said(removed) {
     const few = hourKind === 'few';
+    const runs = linearRuns(removed);
+    const hours = facts.hour.length;
 
     return pick([
       [scene.spans.flatMap(function inSpan(span) {
-        return removed.map(function whole(minute) {
-          return windowOf(scene, span, [minute, minute], voice.edge);
+        return runs.map(function whole(run) {
+          return windowOf(
+            scene, span, [run[0], run[run.length - 1]], voice.edge);
         });
-      }), few && mode === 'lead'],
-      [[clock.at(momentsOf(scene, facts.hour, removed))], few],
+      }), few && mode === 'lead' &&
+        2 * runs.length * hours <= MOST_EXCEPTED],
+      [[clock.at(momentsOf(scene, facts.hour, removed))],
+        few && mode !== 'lead' && removed.length * hours <= MOST_EXCEPTED],
       [[`${named(units.minute, removed, voice.on)} ${words.ofEachHour}`],
         true]
     ]);

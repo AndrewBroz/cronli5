@@ -71,6 +71,7 @@ const words = {
   during: 'durante',
   each: 'cada',
   everyDay: 'todos los días',
+  everyYear: 'todos los años',
   except: 'excepto',
   first: 'primeros',
   firstOne: 'primer',

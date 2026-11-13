@@ -24,9 +24,13 @@ const FIELDS =
 // join a date or a weekday phrase («en junio, de lunes a viernes» against
 // «los lunes de junio»), days a named month lacks are not said, in a
 // union the days of the month move from the day to the addition and
-// under named months say «de ese mes», and six weekdays are an exception
-// alone and a run in a union. Those are the fusions answers 2.7
-// declares; all of them stay inside the frame, the day and the addition.
+// under named months say «de ese mes», six weekdays are an exception
+// alone and a run in a union, days of the month that cover every day of
+// the named months silence the weekdays, and a Quartz day that a month
+// may lack makes the months lead with the months that fire after them
+// («de junio a agosto, en los meses que tienen día 31, …»). Those are
+// the fusions answers 2.7 declares; all of them stay inside the frame,
+// the day and the addition.
 // Nothing else may cross, with the two exceptions below.
 const MAY_CHANGE = {
   date: ['frame', 'day', 'also'],

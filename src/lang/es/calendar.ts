@@ -29,8 +29,8 @@ export interface Calendar {
 // A phrase for the day of the month or the weekday. `suffix` is how it
 // is tied to the months («de cada mes», «de junio»); `inserted` are the
 // phrases set off by commas after it; `closed` asks for a comma after it
-// in any case; `lead` is what the sentence must open with when no month
-// is named, and `bare` the suffix that goes with that opening.
+// in any case; `lead` names the months that fire, where a month in reach
+// may lack the day, and `bare` is the suffix that goes with it.
 interface DayPhrase {
   main: string;
   suffix: string;
@@ -55,16 +55,21 @@ interface DayFacts {
   dated: boolean;
   // Whether a set of weekdays may be said as an exception.
   alone: boolean;
+  // Whether a month in reach may lack the day a Quartz form names.
+  scarce: boolean;
   style: SpanishStyle;
 }
 
 // The days in the longest year's months; there is no month 0.
 const MONTH_LENGTHS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+// The fewest days each month can have.
+const SHORTEST_LENGTHS = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 // A cadence of this many values or more names both its ends.
 const LONG_CADENCE = 8;
 
-// From this many days before the last, some month is too short to fire.
+// From this day of the month on, the day can be a month's last.
 const SHORTEST_MONTH = 28;
 
 const WEEK = 7;
@@ -128,8 +133,11 @@ function numbered(days: number[]): string {
 // with its start or both ends when it does not run from the first year
 // to the last; a longer cadence shows its first three years.
 const yearPhrasers = {
-  all(): string {
-    return '';
+  all(said: Said): string {
+    return pick([
+      ['', said.removed.length === 0],
+      [words.everyYear, true]
+    ]);
   },
   cadence(said: Said): string {
     const {max, min} = domainOf('year');
@@ -158,12 +166,22 @@ const yearPhrasers = {
   }
 };
 
+// The years with the years excepted from them: «en los años pares de
+// 2000 a 2098, excepto en 2030».
+function yearPhrase(years: Said): string {
+  const excepted = years.removed.length > 0 ?
+    `, ${words.except} ${words.in} ${list(years.removed)}` :
+    '';
+
+  return yearPhrasers[years.kind](years) + excepted;
+}
+
 const yearPolicy: Policy = {
   cadence(cadence, count) {
     return cadence.interval === 2 || count >= LONG_CADENCE;
   },
   domain: domainOf('year'),
-  holeCost: 0,
+  holeCost: 1,
   minRun: 3,
   pairWraps: false,
   wraps: false
@@ -270,7 +288,7 @@ const datePhrasers = {
           closed: true,
           lead: pick([
             [`${words.inMonthsLongerThan} ${days} ${units.day.many}`,
-              days >= SHORTEST_MONTH],
+              facts.scarce],
             ['', true]
           ]),
           suffix: facts.suffix
@@ -307,7 +325,7 @@ const datePhrasers = {
       {suffix: facts.suffix});
   },
   // «el día laborable más cercano al 15»; from day 28 the search is said
-  // to stay inside the month, and from day 29 only some months fire.
+  // to stay inside the month, and a month without the day does not fire.
   nearestWeekday(facts: DayFacts): DayPhrase {
     const {day} = facts.form;
 
@@ -318,7 +336,7 @@ const datePhrasers = {
           return day >= SHORTEST_MONTH;
         }),
         lead: pick([
-          [`${words.inMonthsWithDay} ${day}`, day > SHORTEST_MONTH],
+          [`${words.inMonthsWithDay} ${day}`, facts.scarce],
           ['', true]
         ]),
         suffix: facts.suffix
@@ -406,8 +424,8 @@ const weekdayPhrasers = {
   }
 };
 
-// A day phrase as text, tied to the months as given unless it opens the
-// sentence with the months that fire.
+// A day phrase as text, tied to the months as given unless the months
+// that fire are said before it.
 function textOf(said: DayPhrase, leads: boolean): string {
   const suffix = pick([[said.bare, leads], [said.suffix, true]]);
 
@@ -417,6 +435,8 @@ function textOf(said: DayPhrase, leads: boolean): string {
 // The years and months, and how the year meets the months.
 interface Leading {
   years: Said;
+  // Whether the years are every year, with none excepted.
+  everyYear: boolean;
   months: Said;
   monthValues: number[];
   monthNamed: boolean;
@@ -437,17 +457,21 @@ interface Days {
   length: number;
   // Whether one day of the month is left to say.
   oneDate: boolean;
+  // Whether a month in reach may lack the day a Quartz form names.
+  scarce: boolean;
 }
 
 function leadingOf(candidates: Analyses['candidates']): Leading {
   const yearValues = valuesOf(candidates.year, 'year');
   const years = say(yearValues, yearPolicy);
+  const everyYear = years.kind === 'all' && years.removed.length === 0;
   const monthValues = valuesOf(candidates.month, 'month');
-  const months = say(monthValues, monthPolicy(years.kind === 'all'));
+  const months = say(monthValues, monthPolicy(everyYear));
   const monthNamed = months.kind !== 'all';
   const yearJoins = yearValues.length === 1 && monthNamed;
 
   return {
+    everyYear,
     monthNamed,
     monthValues,
     months,
@@ -472,6 +496,15 @@ function quartzForms(day: Analyses['day']):
   };
 }
 
+// Whether a month whose shortest length is given may lack the day a
+// Quartz form names: the day the nearest weekday is sought for, or the
+// day so many days before the last.
+function lacksDay(form: QuartzDate | null, shortest: number): boolean {
+  const reach = {day: 0, days: 0, ...form};
+
+  return reach.day > shortest || reach.days >= shortest;
+}
+
 function daysOf(analyses: Analyses, leading: Leading): Days {
   const {candidates} = analyses;
   const {quartzDate, quartzDay} = quartzForms(analyses.day);
@@ -490,7 +523,7 @@ function daysOf(analyses: Analyses, leading: Leading): Days {
     [kept, written].find(function some(values) {
       return values.length > 0;
     }) as number[],
-    datePolicy(length, leading.years.kind === 'all' && !leading.monthNamed));
+    datePolicy(length, leading.everyYear && !leading.monthNamed));
   const everyDate = quartzDate === null && dates.kind === 'all' &&
     dates.removed.length === 0;
 
@@ -514,20 +547,24 @@ function daysOf(analyses: Analyses, leading: Leading): Days {
     length,
     oneDate: kept.length === 1,
     quartzDate,
+    scarce: lacksDay(quartzDate, Math.min(
+      ...leading.monthValues.map(function fewest(month) {
+        return SHORTEST_LENGTHS[month];
+      }))),
     quartzDay,
     weekdays
   };
 }
 
 // The months join a date phrase, or a weekday phrase with no run in it,
-// when they have no run themselves and there is no union; otherwise they
-// lead.
+// when they have no run themselves, there is no union, and every one of
+// them has the day a Quartz form names; otherwise they lead.
 function monthsJoin(leading: Leading, days: Days): boolean {
   const listed = days.quartzDay !== null ||
     days.weekdays.parts.every(isValues);
 
   return leading.monthNamed && leading.months.parts.every(isValues) &&
-    days.everyDate !== days.everyWeekday &&
+    days.everyDate !== days.everyWeekday && !days.scarce &&
     (!days.everyDate || listed);
 }
 
@@ -558,7 +595,7 @@ function dayPhrases(leading: Leading, days: Days, style: SpanishStyle):
   })) + leading.yearTail;
   const those = `${words.of} ` +
     byCount([words.thatMonth, words.thoseMonths], monthValues.length);
-  const shared = {length: days.length, style};
+  const shared = {length: days.length, scarce: days.scarce, style};
 
   // Weekdays have no cadence, so a plain set is every day or parts.
   const weekdayKind = (days.quartzDay ?? days.weekdays).kind as
@@ -604,9 +641,10 @@ function calendarOf(
   const phrases = dayPhrases(leading, days, style);
   const union = !days.everyDate && !days.everyWeekday;
 
-  // The months that fire open the sentence only when no month is named
-  // and no weekday stands beside the date.
-  const leads = phrases.date.lead !== '' && !union && !leading.monthNamed;
+  // The months that fire are said before the date they limit: in the
+  // leading frame, or inside the addition of a union.
+  const {lead} = phrases.date;
+  const leads = lead !== '' && !union;
   const said = pick([
     [phrases.weekday, !days.everyWeekday],
     [phrases.date, !days.everyDate],
@@ -615,6 +653,8 @@ function calendarOf(
 
   return {
     also: pick([
+      [`${words.also}, ${lead}, ${textOf(phrases.date, true)}`,
+        union && lead !== ''],
       [`${words.also} ${textOf(phrases.date, false)}`, union],
       ['', true]
     ]),
@@ -623,14 +663,14 @@ function calendarOf(
     frame: [
       pick([
         ['', leading.yearJoins],
-        [yearPhrasers[leading.years.kind](leading.years), true]
+        [yearPhrase(leading.years), true]
       ]),
-      pick([[phrases.date.lead, leads], ['', true]]),
       pick([
         [monthLead(leading, style), leading.monthNamed &&
           !monthsJoin(leading, days)],
         ['', true]
-      ])
+      ]),
+      pick([[lead, leads], ['', true]])
     ].filter(Boolean)
   };
 }
