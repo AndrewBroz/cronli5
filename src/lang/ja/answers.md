@@ -570,10 +570,13 @@ pattern says the opposite.
   および, like a run and its strays: 毎時0分から20分まで2分ごと、および21分
   から57分まで3分ごと; 毎日9:00から9:20まで2分ごと、および9:21から9:57まで3
   分ごと; 毎日0:00から10:00まで2時間ごと、および11:00から23:00まで3時間ご
-  と; 毎分0秒から20秒まで2秒ごと、および21秒から57秒まで3秒ごと. A run of
-  seven values or fewer (four clock times or fewer) is its values, and
-  stands with the strays: 毎分11秒から59秒まで3秒ごと、および0秒・2秒・4秒・6
-  秒・8秒・10秒. This is said for minutes, for seconds and for hours as
+  と; 毎分0秒から20秒まで2秒ごと、および21秒から57秒まで3秒ごと. Where
+  minutes or seconds are positions (after 毎時 or 毎分, or after hours with
+  台), a run of seven values or fewer is its values, as a cadence alone is
+  (3.8), and stands with the strays: 毎分11秒から59秒まで3秒ごと、および0
+  秒・2秒・4秒・6秒・8秒・10秒. On the clock every run keeps its two ends:
+  毎日0:00から4:00まで2時間ごと、および5:00から23:00まで3時間ごと. This is
+  said for minutes, for seconds and for hours as
   points on the clock (not for hours as stretches, which are named), when
   it names fewer things than any other way, and **only when the runs lie
   apart**, each stopping before the next starts: runs that interleave
@@ -1439,6 +1442,9 @@ the writer's judgment. That weight is given where it decided something.
   times. 翌日 is used for a stretch that passes midnight, as the notes
   ask (翌 is never dropped).
 * **毎時0分, not 毎正時** (5.4): the notes agree.
+* **末日の3日前 counts as the notes say 前 counts**: the day itself is
+  not one of the three (the guide's 前 and 後 leave out the starting
+  point; 〜日目, which counts it, is never used).
 * **A range inside a named month is not said with 上旬 or a count of
   days, and an end is never said to be included**: the notes confirm
   that 〜 and から…まで include both ends for dates and days, and that
