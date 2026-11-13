@@ -133,6 +133,7 @@ const words = {
   ofMonthOf31Days: 'd\'un mois de 31 jours',
   oneMinute: 'une minute',
   oneYearIn: 'une année sur',
+  only: 'seulement',
   or: 'ou',
   penultimateDay: 'l\'avant-dernier jour',
   runs: 'S\'exécute',
