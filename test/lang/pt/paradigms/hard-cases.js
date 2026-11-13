@@ -757,6 +757,8 @@ const rows = [
   ['0-20/2,21-59/3 * * * * *',
     'a cada 2 segundos do segundo 0 ao 20 e a cada 3 segundos do segundo ' +
     '21 ao 57 de cada minuto'],
+  ['0 */2,17 * * *',
+    'todos os dias, a cada 2 horas das 00:00 às 22:00 e às 17:00'],
   ['0 0-10/2,11-23/3 * * *',
     'todos os dias, a cada 2 horas das 00:00 às 10:00 e a cada 3 horas das ' +
     '11:00 às 23:00'],
@@ -787,6 +789,13 @@ const rows = [
     'todos os dias, de 4 em 4 anos a partir de 2030 (2030, 2034, 2038…) e ' +
     'de 4 em 4 anos a partir de 2031 (2031, 2035, 2039…), às 09:00'],
   ['0 0 9 * * * 2030,2031', 'todos os dias de 2030 e 2031 às 09:00'],
+  ['0 0 9 * * * 2030,2031,2033,2034',
+    'todos os dias de 2030, 2031, 2033 e 2034 às 09:00'],
+  // Seven years, so an exception may be said, and it names three things
+  // where the two runs name four. (The row first written here said the
+  // two runs, against the rule.)
+  ['0 0 9 * * * 2030-2032,2034-2036',
+    'todos os dias, de 2030 a 2036, exceto em 2033, às 09:00'],
   ['0 0 9 * 1-5,7-12 * 1970-2029,2031/1',
     'todos os dias, exceto em junho e em 2030, às 09:00'],
   ['0 0 9 * * * 2039-2040,2077/2',

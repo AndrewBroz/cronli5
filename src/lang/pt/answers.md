@@ -525,19 +525,21 @@ comma: «a cada 5 minutos, do minuto 5 ao 55 de cada hora»; «a cada 7
 minutos, do minuto 0 ao 56 de cada hora». Inside one named hour it is a
 window of clock times: «a cada 7 minutos das 09:00 às 09:56».
 
-**Runs and cadences together.** A list of more than seven values is hard
-to hold. Where it is runs and cadences side by side (the core's
-`cadencePieces`), or one cadence with holes in it, it is said in those
-parts, each with its own lead, when that names fewer things than the list
-has values, a cadence counting three: «a cada 2 minutos do minuto 0 ao 20
+**Runs and cadences together.** A set that names more than seven things,
+as a list or as runs and strays, is hard to hold. Where it is runs and
+cadences side by side (the core's `cadencePieces`), or one cadence with
+holes in it, it is said in those parts, each with its own lead, when that
+names fewer things, a cadence counting three: «a cada 2 minutos do minuto 0 ao 20
 e a cada 3 minutos do minuto 21 ao 57 de cada hora»; inside one named
 hour, «a cada 2 minutos das 09:00 às 09:20 e a cada 3 minutos das 09:21
 às 09:57»; «a cada 2 horas das 00:00 às 10:00 e a cada 3 horas das 11:00
 às 23:00»; «nos dias ímpares do dia 1º ao dia 11 e de 3 em 3 dias do dia
 14 ao dia 29 de cada mês»; seconds the same. Parts that share a lead say
 it once: «nos dias ímpares do dia 1º ao dia 13 e do dia 17 ao dia 31 de
-cada mês». Parts whose values fall among one another's are never said
-(two cadences woven together cannot be held): the values are listed.
+cada mês». A run or cadence whose values fall among another's is never said
+(two cadences woven together cannot be held), and the set stays as it
+was; stray values may fall anywhere: «a cada 2 horas das 00:00 às 22:00 e
+às 17:00».
 Minutes, seconds, hours and days of the month are said this way; months
 and weekdays are named, never counted. Under minutes that fill their
 hours, hours in such parts are a window for each run of hours, as any
@@ -546,7 +548,8 @@ separate hours are (4.1).
 3.9 A set with values missing is said as the simpler set «exceto» the
 missing ones, when all of these hold:
 
-1. the set has more than four values, and the exception names fewer
+1. the set has more than four values, the exception excepts seven values
+   or fewer (the longest list, rule 3 of the opening), and it names fewer
    things than the set said by its runs or its cadence. Hours 9 to 12 and
    14 to 17 are two runs, four things, and «a cada hora das 09:00 às
    17:00, exceto às 13:00» names three;

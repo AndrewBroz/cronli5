@@ -72,7 +72,8 @@ const shortestRun = 3;
 // An exception replaces a list of more values than this.
 const longestListKept = 4;
 
-// Runs and cadences together replace a list of more values than this.
+// Runs and cadences together replace a set that names more things than
+// this, and an exception excepts no more values than this.
 const longestListHeld = 7;
 
 // A cadence inside several pieces names its interval and both its ends.
@@ -171,8 +172,9 @@ function thingsIn(said: Plain | SetDescription, rules: Rules): number {
 }
 
 // Whether an offered description is an exception this set may be said as:
-// it replaces a long enough list, its base can be said, every value it
-// excepts lies inside the set, and it names fewer things than the limit.
+// it replaces a long enough list, excepts no more values than a list may
+// hold, its base can be said, every value it excepts lies inside the set,
+// and it names fewer things than the limit.
 function isHole(
   offered: SetDescription,
   values: number[],
@@ -180,6 +182,7 @@ function isHole(
   limit: number
 ): offered is Except {
   return offered.kind === 'except' && values.length > longestListKept &&
+    offered.removed.length <= longestListHeld &&
     rules.excepts(offered.base) && thingsIn(offered.base, rules) > 0 &&
     thingsIn(offered, rules) < limit &&
     (offered.base.kind !== 'range' ||
@@ -222,11 +225,13 @@ function betweenHoles(hole: Except, domain: Domain): Part[] {
 }
 
 // How many things runs and cadences together name, and none at all where
-// one part's values fall among another's: nobody holds those.
+// one run or cadence has values among another's: nobody holds two
+// cadences woven together. Stray values may fall anywhere.
 function namedBy(parts: Part[], rules: Rules): number {
-  const apart = parts.every((part, index) => index === 0 ||
-    Math.max(...denote(parts[index - 1], rules.domain)) <
-      Math.min(...denote(part, rules.domain)));
+  const spans = parts.filter((part) => part.kind !== 'values')
+    .map((part) => denote(part, rules.domain));
+  const apart = spans.every((span, index) => index === 0 ||
+    Math.max(...spans[index - 1]) < span[0]);
 
   return apart ?
     parts.reduce((sum, part) => sum +
@@ -234,14 +239,16 @@ function namedBy(parts: Part[], rules: Rules): number {
     Infinity;
 }
 
-// A long list as runs and cadences together, where the field says those
-// and they name fewer things than the list has values: the core's own
-// split, or a cadence cut at its holes, whichever names fewer.
+// A set that names more things than a list may hold, as runs and cadences
+// together, where the field says those and they name fewer: the core's
+// own split, or a cadence cut at its holes, whichever names fewer.
 function stepped(
-  values: number[],
+  plain: Plain,
   offered: SetDescription[],
   rules: Rules
 ): Plain | null {
+  const values = denote(plain as SetDescription, rules.domain);
+  const held = thingsIn(plain, rules);
   const found = describeCadencePieces(
     values, rules.domain, {first: rules.first});
   const [best] = [
@@ -252,8 +259,7 @@ function stepped(
   ].map((parts) => ({named: namedBy(parts, rules), parts}))
     .sort((a, b) => a.named - b.named);
 
-  return rules.steps && values.length > longestListHeld && best &&
-    best.named < values.length ?
+  return rules.steps && held > longestListHeld && best && best.named < held ?
     {kind: 'pieces', parts: best.parts} :
     null;
 }
@@ -281,7 +287,7 @@ function choose(values: number[], rules: Rules): Chosen {
       isHole(candidate, values, rules, limit))
     .sort((a, b) => thingsIn(a, rules) - thingsIn(b, rules));
   const {base, removed} = hole || {
-    base: plain.kind === 'values' && stepped(values, offered, rules) || plain,
+    base: stepped(plain, offered, rules) || plain,
     removed: []
   };
 
