@@ -7,10 +7,12 @@ import {denote} from '../../core/describe-set.js';
 import lexicon from './lexicon.js';
 import type {JapaneseStyle} from './options.js';
 import {bracketed, leftOut, listOf, saySpread, when} from './phrases.js';
-import type {Cadence, Core, Described, Part, Say, Spread} from './sets.js';
+import type {
+  Cadence, Core, Described, Piece, Plain, Say, Spread
+} from './sets.js';
 import {
-  cost, gather, inOrder, lift, match, pick, spreadOf, stepsOf, tiling, trails,
-  wraps
+  cost, gather, inOrder, lift, match, paced, pick, spreadOf, stepsOf, tiling,
+  trails, wraps
 } from './sets.js';
 
 const {marks, twoDigits, units, words} = lexicon;
@@ -102,10 +104,11 @@ const plainly: Mode = {
   fill: 0, positions: false, second: null, stretch: false
 };
 
-// What several things before it share.
-const shared = marks.comma + words.inEach;
+// What several times before it share, each of them.
+const shared = marks.comma + words.eachOne;
 
 const hourSeconds = 3600;
+const noon = 43200;
 const minuteSeconds = 60;
 
 // The most minutes or seconds named one by one, and the most hours named
@@ -120,6 +123,7 @@ const fine: Say = {
   cadence: () => 2,
   domain: {cyclic: false, max: 59, min: 0},
   exceptions: true,
+  mixed: true,
   shortestRange: 3
 };
 
@@ -137,18 +141,19 @@ function stretchCost(cadence: Cadence): number {
   return [stepsOf(cadence), 2][Number(isRule(cadence))];
 }
 
-// The hours as points on the clock, as stretches filled by the minutes
-// (where a run of two is one window), and as stretches minutes are named
-// inside.
+// The hours as points on the clock (where runs and cadences may be said
+// together), as stretches filled by the minutes (where a run of two is
+// one window), and as stretches minutes are named inside.
 function hourSays(wrap: boolean): {[use: string]: Say} {
   const domain = {cyclic: wrap, max: 23, min: 0};
   const stretches = {
-    cadence: stretchCost, domain, exceptions: true, shortestRange: 3
+    cadence: stretchCost, domain, exceptions: true, mixed: false,
+    shortestRange: 3
   };
 
   return {
     filled: {...stretches, shortestRange: 2},
-    points: {...stretches, cadence: () => 2},
+    points: {...stretches, cadence: () => 2, mixed: true},
     stretches
   };
 }
@@ -205,12 +210,17 @@ function hourOf(hour: number, style: JapaneseStyle): string {
 
 // A moment of the day, counted in seconds, as a time. With a colon the
 // minutes always show; with units a minute of zero shows only beside
-// seconds.
+// seconds. On the 12-hour clock twelve in the day is 正午, unless seconds
+// show.
 function sayClock(
   moment: number,
   precise: boolean,
   style: JapaneseStyle
 ): string {
+  if (style.hour12 && !precise && moment === noon) {
+    return words.noon;
+  }
+
   const hour = hourOf(Math.floor(moment / hourSeconds), style);
   const minute = Math.floor(moment / minuteSeconds) % minuteSeconds;
   const second = moment % minuteSeconds;
@@ -324,7 +334,7 @@ function windowForm(clock: Clock, mode: Mode): Rest {
     hourSeconds, [first, end], true);
 
   return {
-    body: saySpread({...spread, step: mode.fill || clock.minutes.tile},
+    body: saySpread(paced(spread, mode.fill || clock.minutes.tile),
       clockSayer(clock, mode), unitOf(mode), words.nextDay),
     dropped: [
       stretchDrops(clock.hours.dropped, clock),
@@ -344,8 +354,8 @@ function hourForm(clock: Clock, mode: Mode): Rest {
     clock.hours.values.map((hour) => hour * hourSeconds));
 
   return {
-    body: saySpread({...spread, step: mode.fill || within.step},
-      clockSayer(clock, mode), unitOf(mode)),
+    body: saySpread(paced(spread, mode.fill), clockSayer(clock, mode),
+      unitOf(mode)),
     dropped: [minuteDrops(clock, mode, true)],
     kind: 'clock',
     link: words.of,
@@ -379,7 +389,7 @@ function namedHours(hours: number[], clock: Clock): Confinement {
 }
 
 // Runs of hours, each from its first stretch to its last.
-function spanOf(parts: Part[], hours: Facet, clock: Clock): Confinement {
+function spanOf(parts: Piece[], hours: Facet, clock: Clock): Confinement {
   function say(hour: number): string {
     return sayStretch(hour, clock.style);
   }
@@ -419,8 +429,9 @@ function ruleOf(cadence: Cadence, hours: Facet, clock: Clock): Confinement {
   };
 }
 
+// Hours as stretches are never said as runs and cadences together.
 function confinementOf(hours: Facet, clock: Clock): Confinement {
-  return match<Core, Confinement>(hours.core, {
+  return match<Plain, Confinement>(hours.core as Plain, {
     all: () => everyHour(hours),
     cadence(cadence) {
       return isRule(cadence) ?
@@ -478,7 +489,7 @@ const minuteWays: Array<Way<[Clock, Mode, Confinement], Rest>> = [
 
       return {
         body: hours.text + hours.named + saySpread(
-          {...lifted, step: mode.fill || lifted.step},
+          paced(lifted, mode.fill),
           (position) => sayMinute(position, isPrecise(mode)), unitOf(mode)),
         dropped: [when(!listing, minuteDrops(clock, mode, false))],
         kind: hours.kind,

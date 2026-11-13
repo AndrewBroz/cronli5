@@ -4,26 +4,36 @@
 // reader has to hold for each way of saying it.
 
 import type {
-  Domain, RangeDescription, SetDescription, ValuesDescription
+  CadencePieces, Domain, RangeDescription, SetDescription, ValuesDescription
 } from '../../core/schedule.js';
-import {denote, describeSet} from '../../core/describe-set.js';
+import {denote, describeCadencePieces, describeSet}
+  from '../../core/describe-set.js';
+
+/** A way of describing a set: one of the core's, or runs and cadences. */
+export type Chosen = SetDescription | CadencePieces;
 
 /** The kinds of description the core offers. */
-export type Kind = SetDescription['kind'];
+export type Kind = Chosen['kind'];
 
 /** The description of one kind. */
-export type Described<K extends Kind> = Extract<SetDescription, {kind: K}>;
+export type Described<K extends Kind> = Extract<Chosen, {kind: K}>;
 
 /** An evenly spaced set. */
 export type Cadence = Described<'cadence'>;
 
-/** One piece of a set said in pieces. */
-export type Part = RangeDescription | ValuesDescription;
+/** One piece of a set said in pieces: a run, or values that stand alone. */
+export type Piece = RangeDescription | ValuesDescription;
+
+/** One part of a set said as runs and cadences together. */
+export type Part = Cadence | Piece;
 
 /** A description that is not an exception: what one is taken from. */
-export type Core = Exclude<SetDescription, Described<'except'>>;
+export type Core = Exclude<Chosen, Described<'except'>>;
 
-type Cases<D extends SetDescription, R> = {
+/** Such a description where runs and cadences together are not offered. */
+export type Plain = Exclude<Core, CadencePieces>;
+
+type Cases<D extends Chosen, R> = {
   [K in D['kind']]: (description: Extract<D, {kind: K}>) => R
 };
 
@@ -35,6 +45,10 @@ export interface Say {
   domain: Domain;
   // Whether a set may be said as a simpler one with values left out.
   exceptions: boolean;
+  // Whether a set may be said as runs and cadences together.
+  mixed: boolean;
+  // Whether a value may be named as left out; any may when this is absent.
+  removable?: (value: number) => boolean;
   // The fewest values a run needs before it is said as a range.
   shortestRange: number;
 }
@@ -44,23 +58,38 @@ export interface Say {
  * values that stand alone.
  */
 export interface Spread {
-  runs: Array<[number, number]>;
-  step: number;
+  runs: Run[];
   strays: number[];
 }
 
-/**
- * Whether a spread, said aloud, ends in stray values after its runs. What
- * is said straight after such an end is read with the strays alone.
- */
-function trails(spread: Spread): boolean {
-  return spread.runs.length > 0 && spread.strays.length > 0;
+/** A run: its first value, its last, and the step between its values. */
+export type Run = [from: number, to: number, step: number];
+
+/** Whether every run of a spread has the same step. */
+function even(spread: Spread): boolean {
+  return spread.runs.every((run) => run[2] === spread.runs[0][2]);
 }
 
-const empty: Spread = {runs: [], step: 1, strays: []};
+/**
+ * Whether a spread, said aloud, ends in something joined on after its
+ * first run: stray values, or a run with a step of its own. What is said
+ * straight after such an end is read with that last piece alone.
+ */
+function trails(spread: Spread): boolean {
+  return spread.runs.length > 0 && spread.strays.length > 0 || !even(spread);
+}
+
+/** A spread with every run at one step; as it stands when that is zero. */
+function paced(spread: Spread, step: number): Spread {
+  return step > 0 ?
+    {...spread, runs: spread.runs.map(([from, to]): Run => [from, to, step])} :
+    spread;
+}
+
+const empty: Spread = {runs: [], strays: []};
 
 /** The answer a table gives for a description's kind. */
-function match<D extends SetDescription, R>(
+function match<D extends Chosen, R>(
   description: D,
   cases: Cases<D, R>
 ): R {
@@ -80,12 +109,15 @@ function wraps(description: SetDescription): boolean {
   return description.kind === 'range' && description.from > description.to;
 }
 
-function isRange(part: Part): part is RangeDescription {
-  return part.kind === 'range';
-}
-
 function isList(part: Part): part is ValuesDescription {
   return part.kind === 'values';
+}
+
+// How many values a range has.
+function lengthOf(range: RangeDescription, domain: Domain): number {
+  return range.from <= range.to ?
+    range.to - range.from + 1 :
+    denote(range, domain).length;
 }
 
 function ascending(a: number, b: number): number {
@@ -95,27 +127,33 @@ function ascending(a: number, b: number): number {
 // How many things a description names: a range its two ends, a list each
 // of its values, an exception its base and each value left out, and every
 // value nothing.
-function cost(description: SetDescription, say: Say): number {
+function cost(description: Chosen, say: Say): number {
+  function total(parts: Part[]): number {
+    return parts.reduce((sum, part) => sum + cost(part, say), 0);
+  }
+
   return match(description, {
     all: () => 0,
     cadence: say.cadence,
+    cadencePieces: (pieces) => total(pieces.parts),
     except: (exception) => cost(exception.base, say) +
       exception.removed.length,
-    pieces: (pieces) => pieces.parts.reduce(
-      (sum, part) => sum + cost(part, say), 0),
+    pieces: (pieces) => total(pieces.parts),
     range: () => 2,
     values: (list) => list.values.length
   });
 }
 
 function sayable(description: SetDescription, say: Say): boolean {
+  const removable = say.removable ?? (() => true);
+
   return match(description, {
     all: () => true,
     cadence: (cadence) => say.cadence(cadence) < Infinity,
-    except: (exception) => say.exceptions && sayable(exception.base, say),
+    except: (exception) => say.exceptions &&
+      exception.removed.every(removable) && sayable(exception.base, say),
     pieces: () => say.shortestRange < Infinity,
-    range: (range) =>
-      denote(range, say.domain).length >= say.shortestRange,
+    range: (range) => lengthOf(range, say.domain) >= say.shortestRange,
     values: () => true
   });
 }
@@ -127,32 +165,60 @@ function cheapest(offered: SetDescription[], say: Say): SetDescription {
   }, offered[0]);
 }
 
+/** A set as the core describes it, in every layout a choice looks at. */
+export interface Offer {
+  // How many values the set has.
+  count: number;
+  // Its descriptions as the field lays them out, where a run may wrap.
+  described: SetDescription[];
+  // Its descriptions with nothing wrapped.
+  linear: SetDescription[];
+  // The set as runs and cadences together, if it is that.
+  mixed: () => CadencePieces | null;
+}
+
 /**
- * The description a field says its values by. A plain range is always the
- * range. An exception is said when it replaces more than four values and
- * names fewer things than any other way, a range that wraps aside;
- * otherwise the way that names the fewest things.
+ * The description a set is said by, among those offered. A plain range is
+ * always the range. An exception is said when it replaces more than four
+ * values and names fewer things than any way that does not wrap; otherwise
+ * the way that names the fewest things. Runs and cadences together are
+ * said where the field can say them and they name fewer things still.
  */
-function pick(values: number[], say: Say): SetDescription {
-  const offered = describeSet(values, say.domain).filter(
-    (description) => sayable(description, say));
-  const plain = offered.filter(
-    (description) => description.kind !== 'except');
-  const straight = plain.filter((description) => !wraps(description));
-  const exceptions = offered.filter(
-    (description) => description.kind === 'except');
-  const replaces = exceptions.length > 0 && values.length > 4 &&
+function choose(offer: Offer, say: Say): Chosen {
+  function able(descriptions: SetDescription[], excepted: boolean):
+    SetDescription[] {
+    return descriptions.filter((description) => sayable(description, say) &&
+      description.kind === 'except' === excepted);
+  }
+
+  const exceptions = able(offer.described, true);
+  const straight = able(offer.linear, false);
+  const replaces = exceptions.length > 0 && offer.count > 4 &&
     straight[0].kind !== 'range' &&
     cost(cheapest(exceptions, say), say) < cost(cheapest(straight, say), say);
+  const best = replaces ?
+    cheapest(exceptions, say) :
+    cheapest(able(offer.described, false), say);
+  const mixed = say.mixed ? offer.mixed() : null;
 
-  return replaces ? cheapest(exceptions, say) : cheapest(plain, say);
+  return mixed && cost(mixed, say) < cost(best, say) ? mixed : best;
+}
+
+/** The description a field says a set of its values by. */
+function pick(values: number[], say: Say): Chosen {
+  return choose({
+    count: values.length,
+    described: describeSet(values, say.domain),
+    linear: describeSet(values, say.domain, {linear: true}),
+    mixed: () => describeCadencePieces(values, say.domain)
+  }, say);
 }
 
 /**
  * The description of a set where nothing may be left out: what would be
  * an exception is said as the runs that remain, in ascending order.
  */
-function positive(values: number[], say: Say): SetDescription {
+function positive(values: number[], say: Say): Chosen {
   const chosen = pick(values, say);
   const plainly = {
     ...say,
@@ -166,60 +232,69 @@ function positive(values: number[], say: Say): SetDescription {
 // Where a part stands among the others: by its first value. A run that
 // wraps starts after every other part, and so comes last.
 function rank(part: Part): number {
-  return (part as Partial<RangeDescription>).from ??
-    Math.min(...(part as ValuesDescription).values);
+  return match(part, {
+    cadence: (cadence) => cadence.start,
+    range: (range) => range.from,
+    values: (list) => Math.min(...list.values)
+  });
 }
 
 /**
  * The parts of a set said in pieces, in the order they are said: ascending
  * by first value, so that a run that wraps is last.
  */
-function inOrder(parts: Part[]): Part[] {
-  return parts.map(function tidy(part): Part {
+function inOrder<P extends Part>(parts: P[]): P[] {
+  return parts.map(function tidy(part): P {
     return {...part, ...isList(part) && {
       values: part.values.slice().sort(ascending)
     }};
   }).sort((a, b) => rank(a) - rank(b));
 }
 
-function runsInOrder(runs: Array<[number, number]>): Array<[number, number]> {
+function runsInOrder(runs: Run[]): Run[] {
   return runs.slice().sort((a, b) => a[0] - b[0]);
 }
 
 /**
  * A description laid out. A cadence of no more than `listed` values is
- * its values; a longer one is a run with a step.
+ * its values; a longer one is a run with a step. Runs and cadences
+ * together are each laid out so, the runs in order and the values that
+ * stand alone after them.
  */
 function spreadOf(description: Core, domain: Domain, listed: number): Spread {
+  function together(parts: Part[]): Spread {
+    const spreads = parts.map((part) => spreadOf(part, domain, listed));
+
+    return {
+      runs: runsInOrder(spreads.flatMap((spread) => spread.runs)),
+      strays: spreads.flatMap((spread) => spread.strays).sort(ascending)
+    };
+  }
+
   return match<Core, Spread>(description, {
-    all: () => ({...empty, runs: [[domain.min, domain.max]]}),
+    all: () => ({...empty, runs: [[domain.min, domain.max, 1]]}),
     cadence(cadence) {
       return stepsOf(cadence) > listed ?
-        {...empty, runs: [[cadence.start, cadence.last]],
-          step: cadence.interval} :
+        {...empty,
+          runs: [[cadence.start, cadence.last, cadence.interval]]} :
         {...empty, strays: denote(cadence, domain)};
     },
-    pieces: (pieces) => ({
-      ...empty,
-      runs: runsInOrder(pieces.parts.filter(isRange).map(
-        (range): [number, number] => [range.from, range.to])),
-      strays: pieces.parts.filter(isList).flatMap((list) => list.values)
-        .sort(ascending)
-    }),
-    range: (range) => ({...empty, runs: [[range.from, range.to]]}),
+    cadencePieces: (pieces) => together(pieces.parts),
+    pieces: (pieces) => together(pieces.parts),
+    range: (range) => ({...empty, runs: [[range.from, range.to, 1]]}),
     values: (list) => ({...empty, strays: list.values})
   });
 }
 
-// Runs in order, with a run that starts where the one before it stops
-// taken into it.
-function joinedRuns(runs: Array<[number, number]>): Array<[number, number]> {
-  return runsInOrder(runs).reduce<Array<[number, number]>>(
+// Runs in order, with a run that starts where the one before it stops,
+// at the same step, taken into it.
+function joinedRuns(runs: Run[]): Run[] {
+  return runsInOrder(runs).reduce<Run[]>(
     function join(joined, run) {
       const before = joined[joined.length - 1];
 
-      return before && run[0] === before[1] + 1 ?
-        [...joined.slice(0, -1), [before[0], run[1]]] :
+      return before && run[0] === before[1] + 1 && run[2] === before[2] ?
+        [...joined.slice(0, -1), [before[0], run[1], run[2]]] :
         [...joined, run];
     }, []);
 }
@@ -238,12 +313,12 @@ function lift(
 ): Spread {
   const [lo, hi] = edges;
   const filled = spread.strays.filter(() => whole).map(
-    (value): [number, number] => [value, value]);
+    (value): Run => [value, value, 1]);
 
   return {
     ...spread,
     runs: joinedRuns([...spread.runs, ...filled]).map(
-      ([from, to]) => [from * size + lo, to * size + hi]),
+      ([from, to, step]) => [from * size + lo, to * size + hi, step]),
     strays: spread.strays.filter(() => !whole).map(
       (value) => value * size + lo)
   };
@@ -254,7 +329,7 @@ function gather(spread: Spread, offsets: number[]): Spread {
   return {
     ...spread,
     runs: offsets.flatMap((offset) => spread.runs.map(
-      ([from, to]): [number, number] => [from + offset, to + offset])),
+      ([from, to, step]): Run => [from + offset, to + offset, step])),
     strays: offsets.flatMap(
       (offset) => spread.strays.map((value) => value + offset))
   };
@@ -274,6 +349,6 @@ function tiling(values: number[], size: number): number {
 }
 
 export {
-  cost, gather, inOrder, lift, match, pick, positive, spreadOf, stepsOf, tiling,
-  trails, wraps
+  choose, cost, even, gather, inOrder, lift, match, paced, pick, positive,
+  spreadOf, stepsOf, tiling, trails, wraps
 };
