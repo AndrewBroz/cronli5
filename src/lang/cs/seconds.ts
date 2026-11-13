@@ -37,6 +37,9 @@ const mostListedTimes = 6;
 const nightFalls = 22;
 const nightEnds = 6;
 
+// How many hours a cadence beside several minutes needs to be said as one.
+const enoughForACadence = 5;
+
 // The hours. A run past midnight is kept whole only as a night, and only
 // when no day, month or year is restricted; otherwise nothing wraps.
 // Hours of runs and cadences together are said as their parts only at
@@ -47,10 +50,18 @@ function hoursOf(facts: ScheduleFacts, free: boolean, alone: boolean): Clock {
   const night = free && run && run.from > run.to &&
     run.from >= nightFalls && run.to <= nightEnds;
 
-  return clockField(night ?
+  const candidates = night ?
     own :
-    candidatesAs(facts, 'hour', {linear: true}) as SetDescription[], 'hour',
-    alone);
+    candidatesAs(facts, 'hour', {linear: true}) as SetDescription[];
+  const field = clockField(candidates, 'hour', alone);
+  const cadence = ofKind(candidates, 'cadence');
+
+  // Beside several minutes a cadence of hours is said as one, also where
+  // alone it would be a list.
+  return cadence && !alone && field.form.kind === 'values' &&
+    field.values.length >= enoughForACadence ?
+    {...field, form: cadence} :
+    field;
 }
 
 // A phrase with the seconds set after its head and before its stretches
@@ -219,13 +230,16 @@ function joinsOf(seconds: Clock, told: Told, one: number | undefined) {
 
   return {
     // The seconds are written into a list of clock times.
-    listed: Boolean(told.times) &&
-      (form.kind === 'values' && few || !windowable(seconds, times)),
+    listed: Boolean(told.times) && few &&
+      (form.kind === 'values' || !windowable(seconds, times)),
     // There is nothing to say: the second is zero.
     silent: !many && !one,
     // A whole minute of seconds, said after «po dobu jedné minuty».
     throughout: seconds.tiles &&
-      (seconds.step === 1 || form.kind !== 'values')
+      (seconds.step === 1 || form.kind !== 'values'),
+    // Each clock time becomes a window of seconds.
+    windows: Boolean(told.times) && times.length <= mostListedTimes &&
+      windowable(seconds, times)
   };
 }
 
@@ -266,7 +280,7 @@ function timePart(facts: ScheduleFacts, free: boolean, style: CzechStyle):
     {
       say: () => composed(
         windowed(seconds, slotsOf(times), secondLevel(style), {style})),
-      when: told.times
+      when: joins.windows
     },
     {
       say: () => composed(told.say(
