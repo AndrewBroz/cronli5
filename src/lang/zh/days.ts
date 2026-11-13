@@ -2,9 +2,10 @@
 // and what the day part asks to stand between it and a clock time.
 
 import type {
-  Domain, QuartzDate, QuartzWeekday, Schedule, SetDescription
+  Domain, QuartzDate, QuartzWeekday, RangeDescription,
+  Schedule, SetDescription, ValuesDescription
 } from '../../core/schedule.js';
-import {denote} from '../../core/describe-set.js';
+import {denote, describeSet} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {Cadence, Exception} from './sets.js';
@@ -23,6 +24,19 @@ type YearKind = 'none' | 'single' | 'range' | 'several' | 'cycle';
 // weekday together under a month, the 每逢 that leads both.
 type Context = 'none' | 'one' | 'list' | 'ranged' | 'both';
 
+type YearRange = RangeDescription;
+type YearValues = ValuesDescription;
+
+// One stretch of years: what it asks for before a month, and whether it
+// has no end.
+interface YearTerm {
+  // Whether it is every year but a few, said as 除…外.
+  excepted?: boolean;
+  kind: YearKind;
+  open: boolean;
+  text: string;
+}
+
 // One side of the day part: dates or weekdays.
 interface Side {
   kind: 'plain' | 'parity' | 'except' | 'week' | 'free';
@@ -37,8 +51,15 @@ export interface Part<Kind> {
   text: string;
 }
 
+/** A year part, and whether it is every year but a few. */
+export interface YearPart extends Part<YearKind> {
+  excepted: boolean;
+}
+
 /** A month part, and what joins the year part to it. */
 export interface MonthPart extends Part<Context> {
+  // Whether the months are said as all but a few.
+  excepted: boolean;
   lead: string;
 }
 
@@ -56,29 +77,29 @@ const beforeMonth: Record<YearKind, string> = {
 // What joins the months, or 每逢, to each kind of day phrase.
 const beforeDays: Record<Side['kind'], Record<Context, string>> = {
   except: {
-    both: '',
+    both: words.eachOfDays,
     list: words.eachOfTheMonths,
     none: words.everyMonth,
     one: '',
     ranged: words.everyMonth
   },
-  free: {both: '', list: '', none: '', one: '', ranged: ''},
+  free: {both: words.eachOfDays, list: '', none: '', one: '', ranged: ''},
   parity: {
-    both: '',
+    both: words.eachOfDays,
     list: words.of,
     none: words.everyMonth,
     one: words.of,
     ranged: words.everyMonth
   },
   plain: {
-    both: '',
+    both: words.eachOfDays,
     list: words.of,
     none: words.everyMonth,
     one: '',
     ranged: words.everyMonth
   },
   week: {
-    both: '',
+    both: words.eachOfDays,
     list: words.every,
     none: words.every,
     one: words.every,
@@ -95,13 +116,6 @@ const everyOtherDay: Record<Context, string[]> = {
   one: [words.evenDaysOfMonth, words.oddDaysOfMonth],
   ranged: [words.evenDays, words.oddDays]
 };
-
-// The last date of the months that have fewer than 31, February at its
-// longest.
-const shorterMonths: {[month: number]: number} =
-  {2: 29, 4: 30, 6: 30, 9: 30, 11: 30};
-
-const weekdayGloss = marks.open + words.mondayToFriday + marks.close;
 
 function yearName(year: number): string {
   return String(year) + units.year;
@@ -124,96 +138,247 @@ function isAll(found: SetDescription[] | null): boolean {
   return found !== null && found[0].kind === 'all';
 }
 
+// What closes a phrase in brackets, or nothing.
+function bracketed(notes: string[]): string {
+  const said = notes.filter(Boolean).join(marks.comma);
+
+  return when(said !== '', marks.open + said + marks.close);
+}
+
 // The first three values, ……, and where the cadence has an end, the last.
 function abbreviated(values: string[], last: string): string {
   return series(values.slice(0, 3)) + marks.ellipsis + last;
 }
 
-// A cadence of years too long to list: its start (and its end, if it has
-// one), its step, the years it begins with, and 当年 to carry on from.
-function yearCycle(cadence: Cadence, values: number[], open: boolean): string {
+// Years named one by one, a run of three as a range.
+function yearsListed(values: number[]): string {
+  return series(listed(linearRuns(values), RANGE, yearName));
+}
+
+// Years excepted, as they close a bracket.
+function yearsExcepted(removed: number[]): string {
+  return when(removed.length > 0, yearsListed(removed) + words.excepted);
+}
+
+// Whether a cadence is all the even or all the odd years there are.
+function isEveryOtherYear(cadence: Cadence): boolean {
+  return cadence.interval === 2 && cadence.open === true &&
+    cadence.start <= domainOf('year').min + 1;
+}
+
+// A cadence of years. All the even or odd years have their word, and up
+// to eight that end are listed. Any other is said with its rule: its
+// start, and its end if it has one, its step, and the years it begins
+// with, after which 当年 carries on.
+function yearCadence(cadence: Cadence, removed: number[]): YearTerm {
+  const open = cadence.open === true;
+  const count = (cadence.last - cadence.start) / cadence.interval + 1;
+  const shown = [0, 1, 2].map(
+    (nth) => yearName(cadence.start + nth * cadence.interval));
   const head = open ?
     words.fromYear + yearName(cadence.start) + words.onwards :
     yearName(cadence.start) + words.to + yearName(cadence.last);
 
-  return head + words.every + String(cadence.interval) + units.year +
-    words.oneYearIn + marks.open + abbreviated(values.map(yearName),
-    when(!open, yearName(cadence.last))) + marks.close + marks.comma +
-    words.thatYear;
-}
-
-// Years as a list in which a run of three is a range, and a run to the
-// last year there is has no end: it is said from its first year on.
-function yearList(runs: number[][], top: number): string {
-  const endless = runs.filter(
-    (run) => lastOf(run) === top && run.length >= RANGE);
-  const ended = runs.slice(0, runs.length - endless.length);
-
-  return series([
-    ...listed(ended, RANGE, yearName),
-    ...endless.map(
-      (run) => words.fromYear + yearName(run[0]) + words.onwards)
-  ]);
-}
-
-/** The year part: nothing when every year fires. */
-function yearOf(found: SetDescription[]): Part<YearKind> {
-  const domain = domainOf('year');
-
-  if (isAll(found)) {
-    return {kind: 'none', text: ''};
-  }
-
-  const values = denote(found[0], domain);
-  const cadence = cadenceOf(values, domain);
-  const runs = linearRuns(values);
-
-  if (everyOther(values, domain)) {
-    return {
+  return first<() => YearTerm>([
+    [isEveryOtherYear(cadence), () => ({
       kind: 'several',
-      text: [words.evenYears, words.oddYears][values[0] % 2]
-    };
-  }
+      open: false,
+      text: [words.evenYears, words.oddYears][cadence.start % 2] +
+        bracketed([yearsExcepted(removed)])
+    })],
+    [!open && count <= LISTED, () => ({
+      kind: 'several',
+      open: false,
+      text: yearsListed(denote(cadence, domainOf('year')))
+    })],
+    [true, () => ({
+      kind: 'cycle',
+      open,
+      text: head + words.every + String(cadence.interval) + units.year +
+        words.oneYearIn + bracketed([
+        abbreviated(shown, when(!open, yearName(cadence.last))),
+        yearsExcepted(removed)
+      ])
+    })]
+  ])();
+}
 
-  if (values.length <= LISTED || typeof cadence === 'undefined') {
-    return {
-      kind: first<YearKind>([
-        [values.length === 1, 'single'],
-        [runs.length === 1 && values.length >= RANGE, 'range'],
-        [true, 'several']
-      ]),
-      text: yearList(runs, domain.max)
-    };
-  }
+// A run of years: one with no end is said from its first year on.
+function yearRun(range: YearRange, removed: number[]): YearTerm {
+  const open = range.open === true;
 
   return {
-    kind: 'cycle',
-    text: yearCycle(cadence, values,
-      cadence.last + cadence.interval > domain.max)
+    kind: 'range',
+    open,
+    text: (open ?
+      words.fromYear + yearName(range.from) + words.onwards :
+      yearName(range.from) + words.to + yearName(range.to)) +
+      bracketed([yearsExcepted(removed)])
   };
 }
 
+// Years named one by one.
+function yearValues(values: number[]): YearTerm {
+  return {
+    kind: first<YearKind>([
+      [values.length === 1, 'single'],
+      [linearRuns(values).length === 1 && values.length >= RANGE, 'range'],
+      [true, 'several']
+    ]),
+    open: false,
+    text: yearsListed(values)
+  };
+}
+
+// One stretch of years, with any years excepted from it. Every year but
+// one or two is 除…外.
+function yearTerm(part: SetDescription, removed: number[] = []): YearTerm {
+  const terms: {[kind: string]: () => YearTerm} = {
+    all: () => ({
+      excepted: true,
+      kind: 'range',
+      open: false,
+      text: words.except + yearsListed(removed) + words.exceptedEnd
+    }),
+    cadence: () => yearCadence(part as Cadence, removed),
+    range: () => yearRun(part as YearRange, removed),
+    values: () => yearValues((part as YearValues).values)
+  };
+
+  return terms[part.kind]();
+}
+
+// Stretches of years together, as a list. Where any is a run with no end
+// or a cadence said with its rule, the last is joined by 以及, and such a
+// cadence ends the whole in 当年.
+function yearsTogether(terms: YearTerm[]): YearPart {
+  const ruled = terms.some((term) => term.kind === 'cycle');
+  const open = terms.some((term) => term.open);
+
+  return {
+    excepted: terms[0].excepted === true,
+    kind: first<YearKind>([
+      [ruled, 'cycle'],
+      [terms.length === 1, terms[0].kind],
+      [open, 'range'],
+      [true, 'several']
+    ]),
+    text: series(terms.slice(0, -1).map((term) => term.text)) +
+      when(terms.length > 1,
+        ruled || open ? words.alsoPoints : marks.list) +
+      lastOf(terms).text + when(ruled, marks.comma + words.thatYear)
+  };
+}
+
+// A few lone years and then one run or cadence, where the years are
+// that: the fewest lone years that leave one. Nothing where they are not.
+function leadingYears(values: number[]): YearTerm[] {
+  const domain = domainOf('year');
+  const splits = [...Array(LISTED).keys()].map((at) => at + 1).map(
+    (lone) => ({
+      lone: values.slice(0, lone),
+      rest: describeSet(values.slice(lone), domain)[0]
+    }));
+  const found = splits.filter(
+    (split) => ['range', 'cadence'].includes(split.rest.kind));
+
+  return found.slice(0, 1).flatMap(
+    (split) => [yearValues(split.lone), yearTerm(split.rest)]);
+}
+
+// More than eight years that are no single run or cadence: one or two
+// missing from one, else up to eight runs and lone years, else a few lone
+// years before one run or cadence, else runs and cadences together as
+// the core gives them, else the list.
+function manyYears(schedule: Schedule): YearTerm[] {
+  const found = schedule.analyses.candidates.year as SetDescription[];
+  const together = schedule.analyses.cadencePieces.year?.parts ?? [];
+  const [shortest] = found;
+  const all = lastOf(found) as YearValues;
+  const excepted = found.find(function fewMissing(candidate) {
+    return candidate.kind === 'except' && candidate.removed.length <= 2 &&
+      ['all', 'range', 'cadence'].includes(candidate.base.kind);
+  }) as Exception | undefined;
+  const parts = shortest.kind === 'pieces' ? shortest.parts : [];
+  const items = parts.reduce((total, part) => total +
+    (part.kind === 'range' ? 1 : part.values.length), 0);
+
+  return first<() => YearTerm[]>([
+    [typeof excepted !== 'undefined', () => [yearTerm(
+      (excepted as Exception).base, (excepted as Exception).removed)]],
+    [items > 0 && items <= LISTED,
+      () => parts.map((part) => yearTerm(part))],
+    [true, () => [
+      leadingYears(all.values),
+      together.map((part) => yearTerm(part)),
+      [yearValues(all.values)]
+    ].filter((terms) => terms.length > 0)[0]]
+  ])();
+}
+
 /**
- * The month part, and what joins a year part of the given kind to it:
- * nothing when every month fires. A run of months may cross the new year
- * only when every year fires.
+ * The year part: nothing when every year fires. Up to eight years are
+ * listed; a single run or cadence is said as one; anything else is
+ * several stretches.
  */
-function monthOf(found: SetDescription[], year: YearKind): MonthPart {
+function yearOf(schedule: Schedule): YearPart {
+  const found = schedule.analyses.candidates.year as SetDescription[];
+  const [shortest] = found;
+  const all = lastOf(found) as YearValues;
+
+  return first<() => YearPart>([
+    [shortest.kind === 'all',
+      () => ({excepted: false, kind: 'none', text: ''})],
+    [all.values?.length <= LISTED && !(shortest as YearRange).open,
+      () => yearsTogether([yearValues(all.values)])],
+    [shortest.kind === 'range' || shortest.kind === 'cadence',
+      () => yearsTogether([yearTerm(shortest)])],
+    [true, () => yearsTogether(manyYears(schedule))]
+  ])();
+}
+
+/**
+ * The months the description names: none when every month fires, and
+ * otherwise those in which the schedule can fire. A month that never has
+ * the date is left out, except beside a weekday, which fires there, and
+ * where no month has it, which is said another way.
+ */
+function monthsOf(schedule: Schedule): number[] {
+  const {candidates, dateReach, day} = schedule.analyses;
+  const named = isAll(candidates.month) ?
+    [] :
+    denote((candidates.month as SetDescription[])[0], domainOf('month'));
+  const skipped = dateReach?.fires === true && !day.union ?
+    dateReach.never :
+    [];
+
+  return named.filter((month) => !skipped.includes(month));
+}
+
+/**
+ * The month part, and what joins the given year part to it:
+ * nothing when no month is named. A run of months may cross the new year
+ * only when every year fires. After years that are all but a few, no
+ * exception is said of the months.
+ */
+function monthOf(values: number[], years: YearPart): MonthPart {
   const domain = domainOf('month');
+  const year = years.kind;
+  const plain = years.excepted;
   const wraps = year === 'none';
 
-  if (isAll(found)) {
-    return {kind: 'none', lead: '', text: ''};
+  if (values.length === 0) {
+    return {excepted: false, kind: 'none', lead: '', text: ''};
   }
 
-  const values = denote(found[0], domain);
   const picked = chosen(values, domain, function mostMonths(exception, kept) {
-    return kept.length > LISTED && exception.base.kind === 'all';
+    return !plain && kept.length > LISTED && exception.base.kind === 'all';
   });
   const runs = runsOf(values, domain, wraps, RANGE);
   const excepted = picked.removed.length > 0;
 
   return {
+    excepted,
     kind: first<Context>([
       [excepted || runs.some((run) => run.length >= RANGE), 'ranged'],
       [values.length === 1, 'one'],
@@ -227,21 +392,34 @@ function monthOf(found: SetDescription[], year: YearKind): MonthPart {
   };
 }
 
-// A Quartz day-of-month form, as it follows 每月 or a month.
-function quartzDate(form: QuartzDate): string {
+// A Quartz day-of-month form as it is named, before any bracket.
+function quartzHead(form: QuartzDate): string {
   const numbers = form as {day?: number; days?: number};
-  const forms: Record<QuartzDate['kind'], string> = {
+  const heads: Record<QuartzDate['kind'], string> = {
     beforeLast: words.nthFromLast + String((numbers.days ?? 0) + 1) +
       units.day,
-    firstWeekday: words.nth + '1' + words.nthOne + words.workingDay +
-      weekdayGloss,
+    firstWeekday: dateName(1),
     last: words.lastDay,
-    lastWeekday: words.lastOne + words.workingDay + weekdayGloss,
-    nearestWeekday: dateName(numbers.day ?? 0) + marks.open +
-      words.nearestFridayOrMonday + marks.close
+    lastWeekday: words.lastDay,
+    nearestWeekday: dateName(numbers.day ?? 0)
   };
 
-  return forms[form.kind];
+  return heads[form.kind];
+}
+
+// A Quartz day-of-month form, as it follows 每月 or a month: the date,
+// and in a bracket what the calendar says of it and which way it moves
+// off a Saturday or Sunday.
+function quartzDate(form: QuartzDate, note: string): string {
+  const moves: Record<QuartzDate['kind'], string> = {
+    beforeLast: '',
+    firstWeekday: words.movedOnToMonday,
+    last: '',
+    lastWeekday: words.movedBackToFriday,
+    nearestWeekday: words.nearestFridayOrMonday
+  };
+
+  return quartzHead(form) + bracketed([note, moves[form.kind]]);
 }
 
 // A Quartz day-of-week form, as it follows 每月 or a month.
@@ -255,14 +433,19 @@ function quartzWeekday(form: QuartzWeekday): string {
   return forms[form.kind] + weekdayName(form.weekday);
 }
 
+// The dates of the month as one unbroken line: no run of them wraps.
+function dateDomain(): Domain {
+  return {...domainOf('date'), cyclic: false};
+}
+
 // An exception among dates: one or two missing from every day, or from
 // the odd or the even days, of more than eight.
-function dateException(domain: Domain) {
-  return function fewMissing(exception: Exception, kept: number[]): boolean {
-    return kept.length > LISTED && exception.removed.length <= 2 &&
-      (exception.base.kind === 'all' ||
-        everyOther(denote(exception.base, domain), domain));
-  };
+function dateException(exception: Exception, kept: number[]): boolean {
+  const domain = dateDomain();
+
+  return kept.length > LISTED && exception.removed.length <= 2 &&
+    (exception.base.kind === 'all' ||
+      everyOther(denote(exception.base, domain), domain));
 }
 
 // Dates as a list in which a run of three is a range. One range alone is
@@ -281,57 +464,78 @@ function dateList(days: number[]): Side {
   };
 }
 
-// The dates. Under one named month a date the month never has is left
-// out, and the month's own length bounds what is every day, or every
-// second day, of it. `together` is a date beside a weekday, where no
-// exception is said.
-function dateSide(schedule: Schedule, context: Context, together: boolean):
+// What the calendar says of the date where the months cannot say it:
+// that February fires in leap years only, or, where no month can be
+// left out, that a month without the date is skipped.
+function calendarNote(schedule: Schedule): string {
+  const {candidates, dateReach, day} = schedule.analyses;
+  const reach = dateReach ?? {everyYear: [], leapYears: [], never: []};
+  const narrowed = !isAll(candidates.month) && !day.union;
+  const skips = reach.never.length + reach.leapYears.length > 0;
+
+  return narrowed ?
+    when(reach.everyYear.length > 0,
+      reach.leapYears.map(monthName).join('')) +
+      when(reach.leapYears.length > 0, words.leapYearsOnly) :
+    when(skips, words.skippedWhereMissing);
+}
+
+// The dates. They are those the months named have, as the core gives
+// them. The device is chosen from the dates as written, so that the odd
+// days of a short month are still the odd days; a date is excepted only
+// where it surely exists, which under a named month is before the last
+// date that fires. `plain` is where no exception is said.
+function dateSide(schedule: Schedule, context: Context, plain: boolean):
   Side {
-  const {candidates, day} = schedule.analyses;
+  const {candidates, dateReach, day} = schedule.analyses;
+  const note = bracketed([calendarNote(schedule)]);
 
   if (candidates.date === null) {
     return {
       kind: 'plain',
-      text: quartzDate((day.date as {form: QuartzDate}).form),
+      text: quartzDate((day.date as {form: QuartzDate}).form,
+        calendarNote(schedule)),
       tie: ''
     };
   }
 
-  const months = denote((candidates.month as SetDescription[])[0],
-    domainOf('month'));
-  const max = months.length === 1 && shorterMonths[months[0]] || 31;
-  const domain = {cyclic: false, max, min: 1};
-  const every = denote(candidates.date[0], domainOf('date'));
-  const fitting = every.filter((date) => date <= max);
-  const days = fitting.length > 0 ? fitting : every;
-  const picked = chosen(days, domain,
-    together ? never : dateException(domain));
-  const removed = series(picked.removed.map(dateName));
-
-  return first<Side>([
-    [everyOther(picked.values, domain), {
+  const domain = dateDomain();
+  const written = denote(candidates.date[0], domain);
+  const days = dateReach?.days ?
+    denote(dateReach.days.candidates[0], domain) :
+    written;
+  const picked = chosen(written, domain, plain ? never : dateException);
+  const sure = picked.removed.every(
+    (date) => context === 'none' || date < lastOf(days));
+  const removed = series(picked.removed.filter(() => sure).map(dateName));
+  const side = first<() => Side>([
+    [sure && everyOther(picked.values, domain), () => ({
       kind: 'parity',
-      text: everyOtherDay[context][picked.values[0] % 2] + when(
-        removed !== '', marks.open + removed + words.excepted + marks.close),
+      text: everyOtherDay[context][picked.values[0] % 2] +
+        bracketed([when(removed !== '', removed + words.excepted)]),
       tie: ''
-    }],
-    [removed !== '', {
+    })],
+    [removed !== '', () => ({
       kind: 'except',
       text: words.except + removed + words.exceptedEnd + words.everyDay,
       tie: ''
-    }],
-    [days.length > LISTED && typeof cadenceOf(days, domain) !== 'undefined', {
-      kind: 'plain',
-      text: abbreviated(days.map(dateName), dateName(lastOf(days))),
-      tie: ''
-    }],
-    [true, dateList(days)]
-  ]);
+    })],
+    [days.length > LISTED && typeof cadenceOf(days, domain) !== 'undefined',
+      () => ({
+        kind: 'plain',
+        text: abbreviated(days.map(dateName), dateName(lastOf(days))),
+        tie: ''
+      })],
+    [true, () => dateList(days)]
+  ])();
+
+  return {...side, text: side.text + note};
 }
 
 // The weekdays, in the week that runs from Monday to Sunday. Exactly six
-// days that are not one run are every day but one, except beside a date.
-function weekSide(schedule: Schedule, together: boolean): Side {
+// days that are not one run are every day but one, except where no
+// exception is said.
+function weekSide(schedule: Schedule, plain: boolean): Side {
   const {candidates, day} = schedule.analyses;
 
   if (candidates.weekday === null) {
@@ -346,7 +550,7 @@ function weekSide(schedule: Schedule, together: boolean): Side {
   const days = denote(candidates.weekday[0], domainOf('weekday'))
     .map((weekday) => weekday || 7).sort();
   const picked = chosen(days, domain, function allButOne(exception) {
-    return !together && exception.base.kind === 'all' &&
+    return !plain && exception.base.kind === 'all' &&
       exception.removed.length === 1;
   });
 
@@ -368,22 +572,29 @@ function weekSide(schedule: Schedule, together: boolean): Side {
  * The day part after a month part, and its tie: what it asks to stand
  * before a clock time. With no day the tie is 每天, which fills the level
  * a time of day would otherwise skip. A date and a weekday together are
- * joined by 和 and tied to the time by 的; under a month, 每逢 leads both
- * after a comma.
+ * each marked for itself, joined by 以及, and tied to the time by 的;
+ * under a month, 每逢 leads each after a comma. Dates that are every day
+ * the months have are not said, nor the weekday beside them; a date no
+ * month has leaves the weekday alone.
  */
-function dayOf(schedule: Schedule, month: Part<Context>):
+function dayOf(schedule: Schedule, month: MonthPart):
   {text: string; tie: string} {
-  const {candidates, day} = schedule.analyses;
-  const context = day.union && month.kind !== 'none' ? 'both' : month.kind;
+  const {candidates, dateReach} = schedule.analyses;
+  const everyDay = dateReach?.days?.everyDay === true;
+  const dated = !isAll(candidates.date) && !everyDay &&
+    dateReach?.fires !== false;
+  const weekly = !isAll(candidates.weekday) && !everyDay;
+  const together = dated && weekly;
+  const context = together && month.kind !== 'none' ? 'both' : month.kind;
+  const plain = together || month.excepted;
   const sides = [
-    ...[candidates.date].filter((found) => !isAll(found)).map(
-      () => dateSide(schedule, context, day.union)),
-    ...[candidates.weekday].filter((found) => !isAll(found)).map(
-      () => weekSide(schedule, day.union))
+    ...[dated].filter(Boolean).map(
+      () => dateSide(schedule, context, plain)),
+    ...[weekly].filter(Boolean).map(() => weekSide(schedule, plain))
   ];
 
   return {
-    text: when(context === 'both', marks.comma + words.eachOfDays) +
+    text: when(context === 'both', marks.comma) +
       sides.map((side) => beforeDays[side.kind][context] + side.text)
         .join(words.andDays),
     tie: [
@@ -394,4 +605,18 @@ function dayOf(schedule: Schedule, month: Part<Context>):
   };
 }
 
-export {dayOf, monthOf, yearOf};
+/**
+ * Why a schedule never fires: the months named, in the years named, have
+ * none of the dates.
+ */
+function neverOf(schedule: Schedule, months: string): string {
+  const {candidates, day} = schedule.analyses;
+  const dates = candidates.date === null ?
+    quartzHead((day.date as {form: QuartzDate}).form) :
+    series(listed(linearRuns(denote(candidates.date[0], dateDomain())),
+      RANGE, dateName));
+
+  return words.neverRuns + bracketed([months + words.hasNo + dates]);
+}
+
+export {dayOf, monthOf, monthsOf, neverOf, yearOf};
