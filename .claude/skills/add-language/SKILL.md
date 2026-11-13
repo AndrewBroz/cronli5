@@ -1,7 +1,14 @@
 ---
 name: add-language
-description: Use when adding a new language to cronli5, or re-validating one. It follows the usage-notes-first process: native usage notes, then a rule book, lexicon and hand-written rows, then a renderer built from those alone.
+description: Use when adding a new language to cronli5, or re-validating one. It follows the usage-notes-first process: native usage notes, then the language's answers, lexicon and hand-written rows, then a renderer built from those alone.
 ---
+
+**Before anything else, read "What all of this is for" in `CLAUDE.md`.** The
+steps below are a way of getting sentences a reader understands at once;
+they are not the goal, and neither is any count a tool prints. Brief every
+agent with the purpose and with examples of what is wrong, never with a
+number to reach or a rule to satisfy, and compare each new sentence with
+the one it replaces, blind, before calling it better.
 
 # Adding a language to cronli5
 
@@ -29,7 +36,7 @@ the working briefs (usage notes, author, reader, builder, revise, fix).
 5. **Build the renderer** with `briefs/builder-brief.md` and
    `briefs/setup_build.sh` (the builder's checkout has no other renderer, no
    `held-out.js`, no `conformance/<code>.json`). Have it report every place
-   the rule book is silent or contradicts a row.
+   the answers are silent or contradict a row.
 6. **Judge** on the held-out rows and `test/lang/<code>/continuity.js`. For
    each failing row: amend the answers, or fix the row with a reason, or add
    an idiom row, in that order. Never a code path special to one example.

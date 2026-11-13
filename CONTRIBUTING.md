@@ -51,15 +51,16 @@ nothing of cron, of this project or of any other language. It describes how
 the language already writes times that recur, organised by the language's
 own categories. Everything after starts from it: the questionnaire was
 written in English, and a question carries its author's categories. The
-author of the rule book does not edit the notes.
+author of the answers does not edit the notes.
 
 ### 2. Answers
 
 `src/lang/<code>/answers.md` answers the
 [language questionnaire](tooling/docs/language-questionnaire.md): the one
 sentence frame, the device for every kind of set, the fusions, the idioms
-and the options. It is the rule book. Record the reason for every taste
-call; taste calls are made by the orchestrating frontier model or a fluent
+and the options. It is the language's record of its own choices, to reason from and to
+test again, not a rule book. Record the reason and the evidence for every
+taste call; taste calls are made by the orchestrating frontier model or a fluent
 human, never by a panel.
 
 ### 3. Lexicon

@@ -17,6 +17,36 @@ only shared dependency is the core. The *why* is in
 [docs/i18n-design.md](docs/i18n-design.md) and
 [the process design](docs/superpowers/specs/2026-11-11-renderer-process-design.md).
 
+## What all of this is for
+
+A person reads a description, perhaps aloud, and knows exactly when the
+schedule fires, with little effort and no second reading. Everything else
+here (the artifacts, the rows, the tools, the gates) exists to serve that,
+and none of it is the goal. Use it accordingly:
+
+- **Start from the purpose and from examples of the defect**, when you
+  work and when you brief an agent. "This sentence names fifteen clock
+  times; a reader cannot hold it" directs work. "Bring the count to zero"
+  and "amend the rule" do not: on 2026-11-13 a discovery tool was made a
+  target that way, and eight agents shortened thousands of sentences it
+  had never flagged, many into forms readers misread.
+- **A tool's output is a list of places to look.** Counts and scores
+  (`npm run conciseness`, `npm run edit-diff`) find candidates; a person
+  or a blind reader decides whether each is a defect. Ask what a check was
+  written to catch before acting on it.
+- **What a language's notes record is evidence, not law.** `answers.md`
+  says what a language does and why, with the reader or source behind each
+  choice and its date. A recorded reason can be tested again and can be
+  wrong. "The notes say so" and "the maintainer chose it" are never
+  reasons; the reason is what makes the choice right for a reader.
+- **When a device exists to repair a symptom, question what causes the
+  symptom.** If one language needs a bracket, a gloss or a marker that
+  the others do not, look first at the choice underneath it, and at how
+  the native usage notes and the other languages avoid the problem.
+- **A change is better only if a reader finds it so.** Compare the new
+  sentence with the one it replaces, blind, before calling it an
+  improvement. Shorter is not better; neither is longer.
+
 ## The contract
 
 [`src/core/schedule.ts`](src/core/schedule.ts) is the typed contract between
@@ -64,7 +94,8 @@ Each language is described by hand-written artifacts, in this order:
 1. **Answers** (`src/lang/<code>/answers.md`) to the fixed
    [language questionnaire](tooling/docs/language-questionnaire.md): the one
    frame, the device for every kind of set, the fusions, the idioms, the
-   options. This is the rule book.
+   options, each with why and on what evidence. These are the language's
+   notes on its own choices: a record to reason from, not a rule book.
 2. **Lexicon** (`src/lang/<code>/lexicon.ts`): the words.
 3. **Paradigms** (`test/lang/<code>/paradigms/`): expected descriptions for
    the language-independent grid (`test/paradigms/grid.js`), in families that
@@ -80,9 +111,9 @@ test of whether the artifacts are sufficient.
 **Paradigms are hand-written, never produced by running a renderer.** They
 are checked without one (`oracleProblems` in `test/paradigms/check.js`).
 
-**A failing row has three allowed responses, in this order:** the rule in
-the answers is wrong or silent (amend the answers); the row is wrong (fix
-the row, with a reason); a new idiom row is needed. A code path special to
+**A failing row has three allowed responses, in this order:** what the
+answers say of the form is wrong or silent (amend the answers); the row is
+wrong (fix the row, with a reason); a new idiom row is needed. A code path special to
 one example is never allowed. Bug fixes are test-first: the intended output
 goes into a paradigm or hard-case row, fails, and then the answers and
 renderer change.
@@ -110,9 +141,10 @@ renderer change.
   tie, and only there, it may ask which kind of description a field was
   written as (`analyses.written`).
 - **Taste calls are made by the orchestrating frontier model or a fluent
-  human**, recorded with reasons in the answers. No persona panels.
+  human**, recorded in the answers with the reason and the evidence, so
+  that the next person can test them again. No persona panels.
 - **What carries between languages is the concern, never the device.** A
-  ruling made for one language says how that language gives a reader a
+  choice made for one language says how that language gives a reader a
   concise, clear, exact statement of when the schedule fires. Every other
   language meets that concern natively: its own frame order, thresholds,
   idioms and ties (or none). A reader's or judge's rewrite is weighed the
