@@ -35,8 +35,9 @@ const rows = [
   ['0 9 * 1 *', 'às 09:00 todos os dias em janeiro'],
   ['0 9 * 3,6,9,12 *',
     'às 09:00 todos os dias em março, junho, setembro e dezembro'],
-  ['0 9 * */2 *', 'às 09:00 todos os dias nos meses ímpares'],
-  ['0 9 * 11-2 *', 'às 09:00 todos os dias de novembro a fevereiro'],
+  ['0 9 * */2 *',
+    'às 09:00 todos os dias, de 2 em 2 meses a partir de janeiro'],
+  ['0 9 * 11-2 *', 'às 09:00 todos os dias, de novembro a fevereiro'],
 
   // clock / weekday
   ['0 9 * * 1', 'às 09:00 todas as segundas'],
@@ -51,8 +52,8 @@ const rows = [
     'a cada 6 segundos durante um minuto a cada 15 minutos das 09:00:00 às ' +
     '17:45:54 de segunda a sexta'],
   ['5/10 */15 9-17 * * 1-5',
-    'a cada 10 segundos do segundo 5 ao 55 a cada 15 minutos das 09:00 às ' +
-    '17:45 de segunda a sexta'],
+    'a cada 10 segundos do segundo 5 ao 55 de um minuto a cada 15 minutos ' +
+    'das 09:00:05 às 17:45:55 de segunda a sexta'],
 
   // window / minute
   ['* 9-17 * * 1-5', 'a cada minuto das 09:00 às 17:59 de segunda a sexta'],
@@ -96,11 +97,11 @@ const rows = [
     'a cada 15 minutos das 09:00 às 17:45 de segunda a sexta em março, ' +
     'junho, setembro e dezembro'],
   ['*/15 9-17 * */2 1-5',
-    'a cada 15 minutos das 09:00 às 17:45 de segunda a sexta nos meses ' +
-    'ímpares'],
+    'a cada 15 minutos das 09:00 às 17:45 de segunda a sexta, de 2 em 2 ' +
+    'meses a partir de janeiro'],
   ['*/15 9-17 * 11-2 1-5',
-    'a cada 15 minutos das 09:00 às 17:45 de segunda a sexta de novembro a ' +
-    'fevereiro'],
+    'a cada 15 minutos das 09:00 às 17:45 de segunda a sexta, de novembro ' +
+    'a fevereiro'],
 
   // window / weekday
   ['*/15 9-17 * * *', 'a cada 15 minutos das 09:00 às 17:45 todos os dias'],
@@ -142,8 +143,9 @@ const rows = [
   // monthly / month
   ['0 0 1 1 *', 'às 00:00 no dia 1º de janeiro'],
   ['0 0 1 3,6,9,12 *',
-    'às 00:00 no dia 1º de março, junho, setembro e dezembro'],
-  ['0 0 1 */2 *', 'às 00:00 no dia 1º dos meses ímpares'],
+    'às 00:00 no dia 1º de março, de junho, de setembro e de dezembro'],
+  ['0 0 1 */2 *',
+    'às 00:00 no dia 1º do mês, de 2 em 2 meses a partir de janeiro'],
   ['0 0 1 11-2 *', 'às 00:00 no dia 1º de cada mês, de novembro a fevereiro'],
 
   // monthly / weekday
@@ -181,7 +183,7 @@ const rows = [
   // open / month
   ['* * * 1 *', 'a cada minuto em janeiro'],
   ['* * * 3,6,9,12 *', 'a cada minuto em março, junho, setembro e dezembro'],
-  ['* * * */2 *', 'a cada minuto nos meses ímpares'],
+  ['* * * */2 *', 'a cada minuto, de 2 em 2 meses a partir de janeiro'],
   ['* * * 11-2 *', 'a cada minuto de novembro a fevereiro'],
 
   // open / weekday

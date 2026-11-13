@@ -31,10 +31,14 @@ const MAY_CHANGE = {
 };
 
 // The one place a time field reaches another part: when the hours are
-// restricted and no day is named, the day part says «todos os dias», so
-// an hour edit may add or remove exactly those words (with the join's
+// restricted and no day is named, the day part says «todos os dias»
+// unless the time part says the schedule runs round the clock. How the
+// hours are said depends on the minute and the second too («a cada 6
+// horas» against four listed times), so an edit to the second, the minute
+// or the hour may add or remove exactly those words (with the join's
 // comma, when a part that is set off follows them).
-const HOUR_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
+const TIME_FIELDS = ['second', 'minute', 'hour'];
+const TIME_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
 
 // The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
 // the field was written. Both wordings are reduced to one before equal
@@ -89,18 +93,19 @@ function leaks(pairList) {
 
     // A part that ends in an exception is closed by a comma when another
     // part follows it, and so is a part ahead of a month or year phrase
-    // that is set off (a range of months after «de cada mês», a month
-    // phrase after a date and a weekday together, a range of years after a
-    // month's name, a cadence of years). That comma belongs to the join,
-    // not to the part, so it is set aside before two parts are compared.
+    // that is set off (answers 2.6: a range, pieces or cadence of months,
+    // the months after a date and a weekday together, a range of years, a
+    // year after a cadence of months, a cadence of years). That comma
+    // belongs to the join, not to the part, so it is set aside before two
+    // parts are compared.
     function words(part) {
       return String(part).replace(/,$/u, '');
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const everyDay = changed[0] === 'hour' && part === 'day' &&
-        HOUR_MAY_SET_DAY.includes(before[part]) &&
-        HOUR_MAY_SET_DAY.includes(after[part]);
+      const everyDay = TIME_FIELDS.includes(changed[0]) && part === 'day' &&
+        TIME_MAY_SET_DAY.includes(before[part]) &&
+        TIME_MAY_SET_DAY.includes(after[part]);
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&
           !MAY_CHANGE[changed[0]].includes(part)) {

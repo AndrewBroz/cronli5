@@ -18,18 +18,33 @@ describe('Portuguese styles:', function() {
     expect(pt.regions)
       .to.deep.equal({AO: 'pt', BR: 'br', MZ: 'pt', PT: 'pt'});
     expect(pt.styles).to.equal(styles);
-    expect(styles.br).to.deep.equal(
-      {feira: false, firstOrdinal: true, hour12: false, short: false});
-    expect(styles.pt).to.deep.equal(
-      {feira: false, firstOrdinal: false, hour12: false, short: false});
+    expect(styles.br).to.deep.equal({
+      feira: false,
+      firstOrdinal: true,
+      hour12: false,
+      madrugada: true,
+      short: false
+    });
+    expect(styles.pt).to.deep.equal({
+      feira: false,
+      firstOrdinal: false,
+      hour12: false,
+      madrugada: false,
+      short: false
+    });
     expect(Object.isFrozen(styles)).to.equal(true);
     expect(Object.isFrozen(styles.br)).to.equal(true);
   });
 
   it('applies overrides to a named table', function() {
     expect(pt.style('br')).to.deep.equal(styles.br);
-    expect(pt.style('pt', {short: true})).to.deep.equal(
-      {feira: false, firstOrdinal: false, hour12: false, short: true});
+    expect(pt.style('pt', {short: true})).to.deep.equal({
+      feira: false,
+      firstOrdinal: false,
+      hour12: false,
+      madrugada: false,
+      short: true
+    });
   });
 
   it('rejects a field it does not have, naming the fields', function() {
@@ -54,7 +69,7 @@ describe('Portuguese styles:', function() {
         .to.equal('À 01:00 todos os dias');
       expect(pt.sentence('às 09:00 todos os dias', opts))
         .to.equal('Ocorre às 09:00 todos os dias.');
-      expect(pt.sentence('às 09:00 todas as seg', opts))
+      expect(pt.sentence('às 09:00 todas as seg.', opts))
         .to.equal('Ocorre às 09:00 todas as seg.');
       expect(pt.reboot(opts)).to.equal('ao iniciar o sistema');
       expect(pt.fallback(opts)).to.equal('um padrão cron não reconhecido');

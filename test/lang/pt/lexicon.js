@@ -7,8 +7,8 @@ const {expect} = chai;
 describe('Portuguese lexicon:', function() {
   it('names months in full and in short', function() {
     expect(lexicon.months[9]).to.deep.equal(
-      {full: 'setembro', short: 'set'});
-    expect(lexicon.months[5]).to.deep.equal({full: 'maio', short: 'mai'});
+      {full: 'setembro', short: 'set.'});
+    expect(lexicon.months[5]).to.deep.equal({full: 'maio', short: 'mai.'});
     expect(lexicon.months).to.have.length(13);
   });
 
@@ -18,7 +18,7 @@ describe('Portuguese lexicon:', function() {
         full: 'segunda-feira',
         fullPlural: 'segundas-feiras',
         gender: 'feminine',
-        short: 'seg',
+        short: 'seg.',
         spoken: 'segunda',
         spokenPlural: 'segundas'
       });
@@ -26,7 +26,7 @@ describe('Portuguese lexicon:', function() {
         full: 'sábado',
         fullPlural: 'sábados',
         gender: 'masculine',
-        short: 'sáb',
+        short: 'sáb.',
         spoken: 'sábado',
         spokenPlural: 'sábados'
       });
@@ -57,6 +57,12 @@ describe('Portuguese lexicon:', function() {
       {feminine: 'segunda', masculine: 'segundo'});
   });
 
+  it('counts back from the last day in ordinal words', function() {
+    expect(lexicon.ordinals.units).to.have.length(9);
+    expect(lexicon.ordinals.units[2]).to.equal('terceiro');
+    expect(lexicon.ordinals.tens[0]).to.equal('décimo');
+  });
+
   it('names the parts of the day in order', function() {
     expect(lexicon.dayParts.map(function start(part) {
       return part.from;
@@ -78,5 +84,6 @@ describe('Portuguese lexicon:', function() {
     check(lexicon.nthWords);
     check(lexicon.contractions);
     check(lexicon.articles);
+    check(lexicon.ordinals);
   });
 });

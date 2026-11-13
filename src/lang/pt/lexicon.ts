@@ -6,7 +6,7 @@ type Gender = 'feminine' | 'masculine';
 /** A word that agrees in gender with the noun after it. */
 type Gendered = Record<Gender, string>;
 
-/** A name in its full and short written forms. */
+/** A name in its full and short written forms; the short ends in a stop. */
 interface Name {
   full: string;
   short: string;
@@ -31,7 +31,7 @@ function twoDigits(value: number): string {
 }
 
 function month(full: string): Name {
-  return {full, short: full.slice(0, 3)};
+  return {full, short: `${full.slice(0, 3)}.`};
 }
 
 // Monday to Friday: a feminine ordinal and «-feira», both of which take
@@ -67,13 +67,13 @@ const months: Name[] = [
 
 // Indexed by cron's weekday number: 0 is Sunday.
 const weekdays: WeekdayName[] = [
-  restDay('domingo', 'dom'),
-  feira('segunda', 'seg'),
-  feira('terça', 'ter'),
-  feira('quarta', 'qua'),
-  feira('quinta', 'qui'),
-  feira('sexta', 'sex'),
-  restDay('sábado', 'sáb')
+  restDay('domingo', 'dom.'),
+  feira('segunda', 'seg.'),
+  feira('terça', 'ter.'),
+  feira('quarta', 'qua.'),
+  feira('quinta', 'qui.'),
+  feira('sexta', 'sex.'),
+  restDay('sábado', 'sáb.')
 ];
 
 // Each unit, alone and after a number other than one.
@@ -95,6 +95,18 @@ const nthWords: Gendered[] = [
   {feminine: 'quarta', masculine: 'quarto'},
   {feminine: 'quinta', masculine: 'quinto'}
 ];
+
+// The masculine ordinal words that count days back from the last day of a
+// month («terceiro dia antes do último dia»): the units from the first,
+// and the tens from the tenth. Above ten the tens word comes first,
+// «décimo segundo», «vigésimo».
+const ordinals = {
+  tens: ['décimo', 'vigésimo', 'trigésimo'],
+  units: [
+    'primeiro', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto',
+    'sétimo', 'oitavo', 'nono'
+  ]
+};
 
 // The article after each preposition it contracts with, by the gender and
 // number of the noun. A clock time is feminine, and singular only when its
@@ -121,6 +133,7 @@ const articles = {
 };
 
 // The part of the day after a 12-hour time, by the first hour it covers.
+// Where the style has no «madrugada», its hours take the next part.
 const dayParts = [
   {from: 0, text: 'da madrugada'},
   {from: 6, text: 'da manhã'},
@@ -132,6 +145,7 @@ const dayParts = [
 const words = {
   also: 'e também',
   and: 'e',
+  antepenultimate: 'antepenúltimo',
   before: 'antes',
   closest: 'mais próximo',
   during: 'durante',
@@ -147,8 +161,12 @@ const words = {
   in: 'em',
   last: 'últimos',
   lastOne: {feminine: 'última', masculine: 'último'},
-  noon: 'ao meio-dia',
+  // The two exact moments of a 12-hour clock: «a meia-noite» is feminine,
+  // «o meio-dia» masculine.
+  midnight: 'meia-noite',
+  noon: 'meio-dia',
   ofEach: 'de cada',
+  ofTheMonth: 'do mês',
   oneMinute: 'um minuto',
   penultimate: 'penúltimo',
   runs: 'Ocorre',
@@ -163,8 +181,8 @@ const words = {
 };
 
 const lexicon = {
-  articles, contractions, dayParts, months, nthWords, twoDigits, units,
-  weekdays, words
+  articles, contractions, dayParts, months, nthWords, ordinals, twoDigits,
+  units, weekdays, words
 };
 
 export type {Gender, Gendered, Name, WeekdayName};
