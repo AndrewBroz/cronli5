@@ -940,8 +940,13 @@ function neverFires(
   const days = form?.kind === 'nearestWeekday' ?
     [form.day] :
     denote((candidates.date || [{kind: 'all'}])[0], domainOf('date'));
-  const year = unlessEvery(choose(candidatesOf(facts, 'year'),
-    yearsByNumber(false, opts), opts));
+  const years =
+    choose(candidatesOf(facts, 'year'), yearsByNumber(false, opts), opts);
+  // One year is named; "there is no February 29 in every 4th year from
+  // 2031" is not English, so any other years are only pointed to.
+  const year = onlyValue(years.description) === null ?
+    words.anyYearNamed :
+    years.text;
   const reason = form?.kind === 'beforeLast' ?
     join(words.noDayIs, sayForm(quartzDateIdioms, form, opts), words.of,
       either(monthNames(reach.never, opts), opts)) :
@@ -949,7 +954,8 @@ function neverFires(
       return dayNames(days, month, false, opts);
     }), opts));
 
-  return join(`${words.never},`, words.because, reason, year);
+  return join(`${words.never},`, words.because, reason,
+    unlessEvery({...years, text: year}));
 }
 
 // The years after a part that is closed with a comma. A cadence of years

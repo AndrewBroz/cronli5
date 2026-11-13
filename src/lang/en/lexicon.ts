@@ -69,6 +69,7 @@ const units = {
 // forms and the words for 12:00 and 0:00 belong to the style table.
 const words = {
   and: 'and',
+  anyYearNamed: 'in any of the years named',
   asWellAs: 'as well as',
   at: 'at',
   because: 'because',

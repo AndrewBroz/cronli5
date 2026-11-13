@@ -653,7 +653,32 @@ const rows = [
     'during the minute at 29 minutes past the hour'],
   ['30 0-28,30-59 * * * *',
     'at 30 seconds past every minute except during the minute at 29 ' +
-    'minutes past the hour']
+    'minutes past the hour'],
+
+  // Rules the renderer followed before the answers said them (section 9).
+  ['0 0 31 6-8 1',
+    'at midnight on the 31st as well as on Mondays, in June through August'],
+  ['0 0 29 2 1', 'at midnight on February 29 as well as on Mondays in February'],
+  ['*/15,1 * * * *',
+    'every 15 minutes from 0 through 45 and at 1 minute past the hour'],
+  ['0-20/2,21-59/3 0 9 * * *',
+    'every 2 seconds from 9:00:00 a.m. through 9:00:20 a.m. and every 3 ' +
+    'seconds from 9:00:21 a.m. through 9:00:57 a.m. every day'],
+  ['* 0,2,4,6,10,12,14,16 * * *',
+    'every minute during every other hour from the midnight hour through ' +
+    'the 4 p.m. hour except the 8 a.m. hour, every day'],
+  ['* 0-12/2,13-23/3 * * *',
+    'every minute during every other hour from the midnight hour through ' +
+    'the noon hour and during every 3rd hour from the 1 p.m. hour through ' +
+    'the 10 p.m. hour every day'],
+  ['0 0 0 * * * 2030-2040,2045/1',
+    'at midnight every day in 2030 through 2040 and from 2045 onward'],
+  ['0 0 0 29 2 * 2031/4',
+    'never, because there is no February 29 in any of the years named'],
+  ['0-29,31-59 0-28,30-59 9,17 * * *',
+    'every second during the 9 a.m. and 5 p.m. hours except during the ' +
+    'minute at 29 minutes past the hour, and except at 30 seconds past the ' +
+    'minute, every day']
 ];
 
 export {rows};

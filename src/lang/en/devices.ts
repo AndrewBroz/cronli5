@@ -219,6 +219,10 @@ function inSpokenOrder(pieces: Pieces,
   const order = inCycleOrder(denote(pieces, domainOf(voice.field)), rank,
     wrapped && wrapped.from);
   const shortest = voice.pairs ? 2 : 3;
+  // The first values of the runs that have no end.
+  const endless = pieces.parts.flatMap(function startOf(part) {
+    return part.kind === 'range' && part.open ? [part.from] : [];
+  });
   const runs = order.reduce(function gather(found: number[][], value) {
     const run = found[found.length - 1] || [];
     const next = (rank(run[run.length - 1]) + 1) % (max - min + 1);
@@ -237,7 +241,12 @@ function inSpokenOrder(pieces: Pieces,
     const previous = parts[parts.length - 1];
 
     if (run.length >= shortest) {
-      parts.push({from: run[0], kind: 'range', to: run[run.length - 1]});
+      parts.push({
+        from: run[0],
+        kind: 'range',
+        to: run[run.length - 1],
+        ...endless.includes(run[0]) && {open: true}
+      });
     }
     else if (previous && previous.kind === 'values') {
       previous.values.push(...run);
@@ -258,7 +267,7 @@ function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
   const count = denote(pieces, domainOf(voice.field)).length;
   const said = inSpokenOrder(pieces, voice).map(function sayPart(part, at) {
     return part.kind === 'range' ?
-      plain(each.range(part.from, part.to), 2) :
+      sayRange(part, {...voice, pairs: true, range: each.range}) as Phrase :
       plain(each.values(part.values, at > 0), part.values.length);
   });
 
@@ -776,7 +785,6 @@ function hoursAsStretches(close: {minute: number} | null,
         theHours(removed, opts));
     },
     field: 'hour',
-    mixed: null,
     pairs: true,
     range(from, to) {
       const [opens] = hourNames([from], onTheHour, opts);

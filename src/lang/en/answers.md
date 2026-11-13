@@ -233,9 +233,11 @@ there:
   is said)
 
 The dates are written as dates in a month are (4.4), each month with its
-days, joined by "or"; the years follow as they would in any sentence, with
-"in". The time is not said: there is no time at which it runs. In the
-sentence form this is "Runs never, because there is no June 31."
+days, joined by "or". A single year follows with "in"; any other
+restriction of the years is only pointed to, "in any of the years named"
+("there is no February 29 in every 4th year from 2030" is not English).
+The time is not said: there is no time at which it runs. In the sentence
+form this is "Runs never, because there is no June 31."
 
 Rejected: "at midnight on June 31", which was said before and names a
 day that does not exist; and a bare "never", which leaves the reader to
@@ -650,10 +652,13 @@ that has none.
 
 It counts the things its parts name and loses a tie, so it is chosen
 only where it is clearly shorter: 24 listed minutes against 6 things. It
-is sayable for seconds, minutes, hours said as times on the hour, days of
-the month and years. Hours that carry a minute, hours after "past" and
-hours as stretches have no phrase for it, and take their next phrasing.
-Before it was offered, such a set of years was a list of thousands.
+is sayable for seconds, minutes, hours said as times on the hour, hours
+as stretches ("every minute during every other hour from the midnight
+hour through the noon hour and during every 3rd hour from the 1 p.m. hour
+through the 10 p.m. hour"), days of the month and years. Hours that carry
+a minute and hours after "past" have no phrase for it, and take their
+next phrasing. Before it was offered, such a set of years was a list of
+thousands.
 
 ## 4. Fusions
 
@@ -1047,6 +1052,9 @@ Years that never stop name only their start (3.4): "from 2030 onward".
 A cadence that never stops names its start and no end: "of every other
 year from 2030". The core says which these are; 9999 is never said.
 
+Among several runs of years, one with no end is said the same way: "in
+2030 through 2040 and from 2045 onward"; "in 2030 and from 2035 onward".
+
 Years in several runs and cadences (3.12) are a list of year phrases,
 each with "in", a cadence among them too, so that the parts match: "in
 every other year from 2030 and in 2031"; "in 2030 through 2040 and in
@@ -1202,3 +1210,59 @@ sayable forms. `0 0 1 */3 *` is "at midnight on January 1, April 1, July
 month"; `0 */6 * * *` is "every 6 hours"; `0 0,6,12,18 * * *` is "every 6
 hours" too, because the cadence is clearly easier than four times and the
 spelling only settles ties (3.11).
+
+## 9. Rules the renderer followed that were not written down
+
+Found by reading the renderer against these answers in the second repair.
+Each is a decision a second builder would otherwise have to guess.
+
+9.1 **Where two descriptions of the days name as many things**, the one
+made of days the months really have is said (4.4). Everywhere else a tie
+goes to the earlier candidate in the core's order, an idiom first, and an
+exception, a cadence with both ends named or runs and cadences together
+last (the opening notes).
+
+9.2 **The order of exceptions in the time.** An exception to the hours
+is said with the hours; an exception to the minutes follows it; an
+exception to the seconds comes last. The first follows directly, each
+later one after ", and": "every second during the 9 a.m. and 5 p.m. hours
+except during the minute at 29 minutes past the hour, and except at 30
+seconds past the minute".
+
+9.3 **What a single month with its dates counts as, for the year.** One
+day in one month with one year is a full date ("on June 1, 2030"). Two or
+more days said as dates keep "in" before the year ("on June 1 and 15 in
+2030"), and so does every phrase that does not end in the month's name.
+A day part that is several pieces, or a day of the month beside a
+weekday, is closed with a comma first (3.6, 4.3).
+
+9.4 **Which months are narrowed.** Months are cut down to those a day
+can fire in only where the months are named and the day of the month
+stands alone. Beside a weekday the months belong to both sides and are
+said as written: `0 0 31 6-8 1` is "on the 31st as well as on Mondays, in
+June through August".
+
+9.5 **When "in leap years" is said.** Only when the whole day part fires
+in leap years alone and no weekday stands beside it. "On February 29 as
+well as on Mondays in February" says nothing of leap years: the Mondays
+come every year.
+
+9.6 **A cadence beside other parts** (3.12) names both ends even where
+alone it would name none: minutes 0, 1, 15, 30 and 45 are "every 15
+minutes from 0 through 45 and at 1 minute past the hour".
+
+9.7 **Seconds inside one clock time** follow 3.12 too, each part as a
+window to the second: "every 2 seconds from 9:00:00 a.m. through 9:00:20
+a.m. and every 3 seconds from 9:00:21 a.m. through 9:00:57 a.m."
+
+9.8 **A cadence of hours with a named end keeps its exception form under
+minutes**: "every minute during every other hour from the midnight hour
+through the 4 p.m. hour except the 8 a.m. hour".
+
+9.9 **What is not said, and is left to the reader.** Under every month a
+day some months lack is said alone ("on the 31st", "on the weekday in the
+same month nearest the 31st", "30 days before the last day of the
+month"). Where February fires only in leap years and other months fire
+every year, nothing marks February ("on February 29 and March 29"; "28
+days before the last day of February and March").
+
