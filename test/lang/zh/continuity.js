@@ -17,16 +17,16 @@ const ORDER = ['year', 'month', 'day', 'join', 'time'];
 
 // The join stands between the day and the time and is one of these, and
 // nothing else: nothing; a comma before a time that runs round the clock;
-// 每天 where a restricted hour would skip the day, or after a range of
-// dates; 的 after a date and a weekday together; a comma and 当天 after a
-// cadence of dates.
-const JOINS = ['', '，', '每天', '的', '，当天'];
+// 每天 where a restricted hour would skip the day, or after one range of
+// dates; 的 after a date and a weekday together, or after dates in
+// several pieces.
+const JOINS = ['', '，', '每天', '的'];
 
 // The parts of the sentence an edit to each field may change. A minute or
 // a second changes the time and nothing else. A day field changes the day
 // part, and the month before it changes with it: 每月1日 becomes 6月1日,
-// and a weekday beside a date gains 当月. A month with no year before it
-// brings 每年. So a day, month or year edit may move text among those
+// and before a date and a weekday together the month ends in a colon. A
+// month with no year before it brings 每年. So a day, month or year edit may move text among those
 // three parts. The join depends on what stands before the time and on
 // whether the hours are restricted, so an edit to the hours, or to a day,
 // month or year, may change it. Nothing else may cross: no day, month or
