@@ -95,7 +95,9 @@ const countWords = [
 
 // The function words and fixed phrases.
 const words = {
+  a: 'un',
   afterEachMinuteStart: 'après le début de chaque minute',
+  afterStart: 'après le début',
   afternoon: 'de l\'après-midi',
   again: 'de nouveau',
   also: 'ainsi que',
@@ -104,7 +106,6 @@ const words = {
   andSoOn: 'et ainsi de suite',
   at: 'à',
   beforeLastDay: 'avant le dernier jour',
-  closest: 'le plus proche du',
   daysOfMonth: 'du mois',
   during: 'pendant',
   evenDays: 'les jours pairs',
@@ -112,7 +113,9 @@ const words = {
   evening: 'du soir',
   everyDay: 'tous les jours',
   except: 'sauf',
+  falls: 'ou, s\'il tombe',
   first: 'premières',
+  follows: 'qui suit',
   from: 'de',
   fromThe: 'du',
   in: 'en',
@@ -124,6 +127,10 @@ const words = {
   leapYears: 'les années bissextiles',
   midnight: 'minuit',
   morning: 'du matin',
+  nearest: 'le plus proche',
+  never: 'jamais',
+  neverRuns: 'Ne s\'exécute',
+  noDate: 'aucune date ne correspond',
   noon: 'midi',
   oddDays: 'les jours impairs',
   oddYears: 'les années impaires',
@@ -133,9 +140,9 @@ const words = {
   ofMonthOf31Days: 'd\'un mois de 31 jours',
   oneMinute: 'une minute',
   oneYearIn: 'une année sur',
-  only: 'seulement',
   or: 'ou',
   penultimateDay: 'l\'avant-dernier jour',
+  precedes: 'qui précède',
   runs: 'S\'exécute',
   sameMonth: 'dans le même mois',
   since: 'à partir de',
@@ -143,13 +150,14 @@ const words = {
   the: 'le',
   thePlural: 'les',
   then: 'puis',
+  thisTime: 'cette fois',
   to: 'à',
   toThe: 'au',
   unrecognizable: 'une expression cron non reconnue',
   until: 'jusqu\'à',
+  untilMinuteEnd: 'jusqu\'à la fin de la minute',
   whenMonthHasMoreThan: 'quand le mois compte plus de',
-  with: 'avec',
-  workingDay: 'jour ouvré'
+  with: 'avec'
 };
 
 const lexicon = {

@@ -42,7 +42,9 @@ const rows = [
   ['0 9 2/2 * *', 'les jours pairs de chaque mois à 9 h'],
   ['0 9 */5 * *', 'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois à 9 h'],
   ['0 9 L * *', 'le dernier jour du mois à 9 h'],
-  ['0 9 15W * *', 'le jour ouvré le plus proche du 15 de chaque mois à 9 h'],
+  ['0 9 15W * *',
+    'le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, le ' +
+    'vendredi ou le lundi le plus proche, à 9 h'],
 
   // clock / month
   ['0 9 * 6 *', 'tous les jours de juin à 9 h'],
@@ -143,7 +145,8 @@ const rows = [
     'que le dernier jour du mois'],
   ['*/15 9-17 15W * 1-5',
     'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
-    'que le jour ouvré le plus proche du 15 de chaque mois'],
+    'que le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, ' +
+    'le vendredi ou le lundi le plus proche'],
 
   // window / month
   ['*/15 9-17 * 6 1-5',
@@ -219,7 +222,9 @@ const rows = [
   ['0 0 2/2 * *', 'les jours pairs de chaque mois à 0 h'],
   ['0 0 */5 * *', 'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois à 0 h'],
   ['0 0 L * *', 'le dernier jour du mois à 0 h'],
-  ['0 0 15W * *', 'le jour ouvré le plus proche du 15 de chaque mois à 0 h'],
+  ['0 0 15W * *',
+    'le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, le ' +
+    'vendredi ou le lundi le plus proche, à 0 h'],
 
   // monthly / month
   ['0 0 1 6 *', 'le 1er juin à 0 h'],
@@ -291,7 +296,8 @@ const rows = [
     'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois, toutes les minutes'],
   ['* * L * *', 'le dernier jour du mois, toutes les minutes'],
   ['* * 15W * *',
-    'le jour ouvré le plus proche du 15 de chaque mois, toutes les minutes'],
+    'le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, le ' +
+    'vendredi ou le lundi le plus proche, toutes les minutes'],
 
   // open / month
   ['* * * 6 *', 'en juin, toutes les minutes'],
