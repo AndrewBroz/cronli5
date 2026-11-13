@@ -69,11 +69,15 @@ const words = {
   atOne: 'a la',
   because: 'porque',
   before: 'antes del',
+  coincide: 'coinciden con',
+  coincides: 'coincide con',
   during: 'durante',
   each: 'cada',
   everyDay: 'todos los días',
   everyYear: 'todos los años',
   except: 'excepto',
+  fall: 'caen',
+  falls: 'cae',
   first: 'primeros',
   following: 'siguiente',
   from: 'de',
@@ -124,7 +128,9 @@ const words = {
   toThe: 'al',
   unrecognizable: 'un patrón cron no reconocido',
   until: 'hasta',
-  weekends: 'los fines de semana'
+  weekend: 'fin de semana',
+  weekends: 'los fines de semana',
+  when: 'cuando'
 };
 
 const lexicon = {months, nthWords, twoDigits, units, weekdays, words};
