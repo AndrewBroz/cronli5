@@ -48,6 +48,12 @@ const HOUR_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
 // pattern, and of no other.
 const CALENDAR = ['date', 'month', 'weekday', 'year'];
 
+// And one more: a schedule that never fires (answers 4.4). A day of the
+// month no reached month has («31» in June) leaves nothing to say a time
+// for, so the description is «nunca (junho não tem dia 31)» with no time
+// part. An edit to a calendar field that makes a schedule never fire, or
+// fire again, therefore removes or restores the whole time part.
+
 const SETUP = {languages: [portuguese.default], options: {}, styles: {}};
 
 function parse(pattern, options) {
@@ -104,6 +110,21 @@ function midnightHours(a, b, options) {
   return passesMidnight(left) && isOpen(left) !== isOpen(right);
 }
 
+// Whether a pattern never fires: its day of the month never comes, and
+// no weekday fires beside it.
+function neverFires(schedule) {
+  const {dateReach, day} = schedule.analyses;
+
+  return Boolean(dateReach) && !dateReach.fires && !day.union;
+}
+
+// Whether an edit to a calendar field made a schedule never fire, or fire
+// again.
+function stoppedOrStarted(a, b, options) {
+  return neverFires(parse(a, options).schedule) !==
+    neverFires(parse(b, options).schedule);
+}
+
 // Every pair in which a part changed that the edited field may not change.
 function leaks(pairList) {
   const found = [];
@@ -136,7 +157,7 @@ function leaks(pairList) {
         HOUR_MAY_SET_DAY.includes(after[part]);
 
       const midnight = part === 'time' && CALENDAR.includes(changed[0]) &&
-        midnightHours(a, b, options);
+        (midnightHours(a, b, options) || stoppedOrStarted(a, b, options));
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&
           !midnight && !MAY_CHANGE[changed[0]].includes(part)) {
@@ -214,6 +235,23 @@ describe('Portuguese continuity:', function() {
       expect(partsOf('0 0 22-2 * * * 2030').time)
         .to.equal(partsOf('0 22-2 * * 1').time);
     });
+
+  it('drops the time part only where a schedule never fires', function() {
+    expect(partsOf('*/15 9-17 31 6 *')).to.deep.equal({
+      day: 'nunca (junho não tem dia 31)', month: '', time: '', year: ''
+    });
+    expect(leaks([
+      ['*/15 9-17 30 6 *', '*/15 9-17 31 6 *'],
+      ['*/15 9-17 31 7 *', '*/15 9-17 31 6 *'],
+      ['0 0 0 29 2 * 2032', '0 0 0 29 2 * 2031']
+    ])).to.deep.equal([]);
+
+    // Beside weekdays the schedule still fires, and the time stays.
+    expect(partsOf('*/15 9-17 31 6 1').time)
+      .to.equal(partsOf('*/15 9-17 30 6 1').time);
+    // A time edit never reaches a schedule that does not fire.
+    expect(partsOf('0 9 31 6 *')).to.deep.equal(partsOf('30 17 31 6 *'));
+  });
 
   it('renders equal schedules identically', function() {
     function render(pattern, options) {

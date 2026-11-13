@@ -10,7 +10,7 @@ import {at, fromTo, timeOf} from './clock.js';
 import {choose, firesOn, partsOf, steps, stretchesOf, withEnds}
   from './sets.js';
 import {continuous, numbered, stretch, tiles} from './stretch.js';
-import {counted, led, list} from './phrases.js';
+import {counted, led, list, spaced} from './phrases.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 
@@ -24,6 +24,10 @@ const longestList = 7;
 
 // More windows than this, of one hour each on a cadence, are a series.
 const mostWindows = 4;
+
+// A run of hours through midnight is one run only when it is no longer
+// than this: a longer one reads backwards.
+const halfDay = 12;
 
 // The last minute of an hour, and the last second of a minute.
 const lastOfSixty = 59;
@@ -135,7 +139,8 @@ function series(c: Moments, shown: string[]): string {
 
 // One window for each run of hours.
 function windows(c: Moments): string {
-  return list(stretchesOf(c.hours.said).map((run) => across(c, run)));
+  return list(stretchesOf(c.hours.said, domainOf('hour'))
+    .map((run) => across(c, run)));
 }
 
 // The windows of a series: those of its first two hours and of its last.
@@ -168,29 +173,31 @@ function everyHour(c: Moments): Said {
     `${numbered([minute], units.minute)} ${ofEachHour}`, false);
 }
 
-// One minute of hours on a cadence, which names both its ends.
-function everyFewHours(c: Moments): Said {
-  const said = c.hours.said as Cadence;
-
-  return saying(c, `${words.each} ${counted(said.interval, units.hour)} ` +
-    across(c, [said.start, said.last]), true);
-}
+// One minute of a piece of the hours: a run, a cadence with its two ends,
+// or stray hours as clock times.
+const hourPiece = {
+  cadence: (c: Moments, part: Cadence) => [{
+    lead: `${words.each} ${counted(part.interval, units.hour)}`,
+    text: across(c, [part.start, part.last])
+  }],
+  range: (c: Moments, part: {from: number; to: number}) =>
+    [{lead: eachHour, text: across(c, [part.from, part.to])}],
+  values: (c: Moments, part: {values: number[]}) =>
+    part.values.map((hour) => moment(c, hour, c.minutes.values[0]))
+};
 
 // One minute of runs of hours and of stray hours, each with its own lead.
 function hourPieces(c: Moments): Said {
   const parts = partsOf(c.hours.said);
-  const [minute] = c.minutes.values;
 
-  return saying(c, led(parts.flatMap(function items(part) {
-    return part.kind === 'range' ?
-      [{lead: eachHour, text: across(c, [part.from, part.to])}] :
-      part.values.map((hour) => moment(c, hour, minute));
-  })), true, parts[0].kind === 'values');
+  return saying(c, led(parts.flatMap(
+    (part) => hourPiece[part.kind as 'range'](c, part as never))),
+  true, parts[0].kind === 'values');
 }
 
 const onTheMinute: ByHours<(c: Moments) => Said> = {
   all: everyHour,
-  cadence: everyFewHours,
+  cadence: hourPieces,
   pieces: hourPieces,
   range: hourPieces,
   values: hourPieces
@@ -231,7 +238,7 @@ function hourByHour(c: Moments): boolean {
 }
 
 function insideHours(c: Moments): Said {
-  const parts = partsOf(c.minutes.said) as Array<Exclude<Plain, {kind: 'all'}>>;
+  const parts = partsOf(c.minutes.said);
 
   return saying(c, led(c.hours.values.flatMap((hour) => parts.flatMap(
     (part) => insideAnHour[part.kind as 'range'](c, part as never, hour)))),
@@ -381,10 +388,16 @@ const secondForms: Form[] = [
     when: (c) => c.minutes.said.kind === 'all'
   },
   {
+    // A time said in more than one piece carries the seconds to every
+    // piece with «sempre».
     say(c) {
       const time = toTheMinute({...c, dot: false});
+      const every = time.text.includes(` ${words.and} `) && words.always;
 
-      return {...time, text: `${time.text}, ${clause(c.seconds)}`};
+      return {
+        ...time,
+        text: `${time.text}, ${spaced([every, clause(c.seconds)])}`
+      };
     },
     when: () => true
   }
@@ -400,7 +413,7 @@ function hourHoles(c: Moments): string {
 
   return c.minutes.values.length * c.seconds.values.length === 1 ?
     led(removed.map((hour) => at(timeOf(hour, minute, c.second, c.style)))) :
-    list(stretchesOf({kind: 'values', values: removed}).map(
+    list(stretchesOf({kind: 'values', values: removed}, domainOf('hour')).map(
       (run) => window(whole, [run[0], 0], [run[1], lastOfSixty])));
 }
 
@@ -471,7 +484,9 @@ const sixtieths: Rules = {
     withEnds(longestList)(cadence),
   domain: domainOf('minute'),
   excepts: () => true,
+  longestWrap: 0,
   piecesOver: 0,
+  steps: true,
   wrap: false
 };
 
@@ -490,7 +505,9 @@ function hourRules(minutes: Chosen, wrap: boolean): Rules {
     cadence: withEnds(mostHoursListed(minutes)),
     domain: domainOf('hour'),
     excepts: () => true,
+    longestWrap: halfDay,
     piecesOver: 0,
+    steps: true,
     wrap
   };
 }

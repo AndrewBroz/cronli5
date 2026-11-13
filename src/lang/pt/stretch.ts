@@ -69,6 +69,10 @@ const sayers: {[Kind in Plain['kind']]: Sayer<Kind>} = {
 };
 
 const pieceSayers = {
+  cadence: (part: Cadence, unit: Unit) => ({
+    lead: `${words.each} ${counted(part.interval, unit)}`,
+    text: ends(part.start, part.last, unit)
+  }),
   range: (part: RangeDescription, unit: Unit, every: string) =>
     ({lead: every, text: reach(part, unit)}),
   values: (part: ValuesDescription, unit: Unit) =>

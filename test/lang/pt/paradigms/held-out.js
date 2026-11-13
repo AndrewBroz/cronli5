@@ -44,8 +44,8 @@ const rows = [
   ['0 9 */5 * *', 'nos dias 1º, 6, 11, 16, 21, 26 e 31 de cada mês às 09:00'],
   ['0 9 L * *', 'no último dia de cada mês às 09:00'],
   ['0 9 15W * *',
-    'no dia 15 de cada mês ou, se cair num sábado ou domingo, no dia de ' +
-    'semana mais próximo, às 09:00'],
+    'no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta ' +
+    'ou segunda mais próxima, às 09:00'],
 
   // clock / month
   ['0 9 * 6 *', 'todos os dias de junho às 09:00'],
@@ -221,8 +221,8 @@ const rows = [
   ['0 0 */5 * *', 'nos dias 1º, 6, 11, 16, 21, 26 e 31 de cada mês às 00:00'],
   ['0 0 L * *', 'no último dia de cada mês às 00:00'],
   ['0 0 15W * *',
-    'no dia 15 de cada mês ou, se cair num sábado ou domingo, no dia de ' +
-    'semana mais próximo, às 00:00'],
+    'no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta ' +
+    'ou segunda mais próxima, às 00:00'],
 
   // monthly / month
   ['0 0 1 6 *', 'no dia 1º de junho às 00:00'],
@@ -297,8 +297,8 @@ const rows = [
     'nos dias 1º, 6, 11, 16, 21, 26 e 31 de cada mês, a cada minuto'],
   ['* * L * *', 'no último dia de cada mês, a cada minuto'],
   ['* * 15W * *',
-    'no dia 15 de cada mês ou, se cair num sábado ou domingo, no dia de ' +
-    'semana mais próximo, a cada minuto'],
+    'no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta ' +
+    'ou segunda mais próxima, a cada minuto'],
 
   // open / month
   ['* * * 6 *', 'todos os dias de junho, a cada minuto'],

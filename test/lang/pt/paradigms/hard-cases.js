@@ -526,8 +526,8 @@ const rows = [
     'no minuto 30 de cada hora, 2 vezes: no horário exato e 30 segundos ' +
     'depois'],
   ['* 0 9,17 * * *',
-    'todos os dias às 09:00 e 17:00, repetindo a cada segundo durante o ' +
-    'minuto inteiro'],
+    'todos os dias às 09:00 e 17:00, sempre repetindo a cada segundo ' +
+    'durante o minuto inteiro'],
   ['10-20 30 9 * * *',
     'todos os dias às 09:30, repetindo a cada segundo do segundo 10 ao 20'],
   ['5/5 0 9 * * *',
@@ -547,7 +547,7 @@ const rows = [
     'todos os dias, a cada 30 segundos das 09:00:00 às 09:59:30'],
   ['15 5,20 9-17 * * *',
     'todos os dias, nos minutos 5 e 20 de cada hora, das 09:05 às 17:20, ' +
-    '15 segundos depois'],
+    'sempre 15 segundos depois'],
   ['30 * 9 * * *', 'todos os dias, a cada minuto das 09:00:30 às 09:59:30'],
   ['5/10 * 9 * * *',
     'todos os dias, nos segundos 5, 15, 25, 35, 45 e 55 de cada minuto, ' +
@@ -569,7 +569,7 @@ const rows = [
   ['* 30,42 3-10 * 7,9,10,12 1,3,4,5',
     'todas as segundas, quartas, quintas e sextas de julho, setembro, ' +
     'outubro e dezembro, nos minutos 30 e 42 de cada hora, das 03:30 às ' +
-    '10:42, repetindo a cada segundo durante o minuto inteiro'],
+    '10:42, sempre repetindo a cada segundo durante o minuto inteiro'],
 
   // Neither side of a day of the month and a weekday takes an exception,
   // which would be taken for the whole pair: a Friday the 15th fires.
@@ -662,7 +662,11 @@ const rows = [
   // Under one named month the days are those the month has.
   ['0 9 1-30 4 *', 'todos os dias de abril às 09:00'],
   ['0 9 2-31 4 *', 'do dia 2 ao dia 30 de abril às 09:00'],
-  ['0 9 29-31 2 *', 'no dia 29 de fevereiro às 09:00'],
+  ['0 9 29-31 2 *', 'no dia 29 de fevereiro dos anos bissextos às 09:00'],
+  ['0 0 1-14,16-30 6 *',
+    'do dia 1º ao dia 30 de junho, exceto no dia 15, às 00:00'],
+  ['0 0 1-14,16-30 * *',
+    'todos os dias, exceto nos dias 15 e 31 de cada mês, às 00:00'],
   ['0 9 31 2 *', 'nunca (fevereiro não tem dia 31)'],
   ['0 9 1-30 4,6 *', 'todos os dias de abril e junho às 09:00'],
   ['0 9 1-30 4,6 1', 'todos os dias de abril e junho às 09:00'],
