@@ -384,7 +384,7 @@ these cases in order.
 | every second hour from 1 | «кожні 2 години з 1:00 до 23:00 включно» | «о :30 кожної непарної години» |
 | another tiling cadence, more than four hours | «кожні 3 години» | «о :30 кожні 3 години» |
 | a tiling cadence of three or four hours | «кожні 6 годин» | the times: «о 0:30, 6:30, 12:30 та 18:30» |
-| a cadence with named ends | «кожні 5 годин з 0:00 до 20:00 включно» | «о :30 кожні 5 годин з 0:00 до 20:00 включно» |
+| a cadence with named ends | «кожні 5 годин з 0:00 до 20:00 включно» | the ends carry the minute, as a range's do: «кожні 5 годин з 0:30 до 20:30 включно». («О :30 кожні 5 годин з 0:00 до 20:00 включно» names an end, 20:00, that is not the last time it fires.) |
 | a cadence with exceptions | «кожні 2 години, крім 8:00» | «о :30 кожної парної години, крім 8:30» |
 | every hour with exceptions | «щогодини, крім 3:00» | «о :30 кожної години, крім 3:30» |
 
