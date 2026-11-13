@@ -3368,35 +3368,35 @@
    "pattern": "0 1/2 * * 1"
   },
   {
-   "expected": "täglich um 0:15, 0:45, 2:15, 2:45 … 22:15 und 22:45 Uhr",
+   "expected": "täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :15 und :45",
    "options": {
     "lang": "de"
    },
    "pattern": "15,45 */2 * * *"
   },
   {
-   "expected": "täglich um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr",
+   "expected": "täglich alle 4 Stunden (0, 4, 8, 12, 16 und 20 Uhr), jeweils um :15 und :45",
    "options": {
     "lang": "de"
    },
    "pattern": "15,45 */4 * * *"
   },
   {
-   "expected": "täglich um 0:00, 0:15, 0:45, 4:00, 4:15, 4:45 … 20:00, 20:15 und 20:45 Uhr",
+   "expected": "täglich alle 4 Stunden (0, 4, 8, 12, 16 und 20 Uhr), jeweils um :00, :15 und :45",
    "options": {
     "lang": "de"
    },
    "pattern": "0,15,45 */4 * * *"
   },
   {
-   "expected": "täglich in den geraden Stunden (0:05–0:55, 2:05–2:55 … 22:05–22:55 Uhr) jeweils um :05, :15, :25, :35, :45 und :55",
+   "expected": "täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :05, :15, :25, :35, :45 und :55",
    "options": {
     "lang": "de"
    },
    "pattern": "5/10 */2 * * *"
   },
   {
-   "expected": "täglich von 8:05 bis 8:50, von 10:05 bis 10:50 … und von 18:05 bis 18:50 Uhr jeweils um :05, :20, :35 und :50",
+   "expected": "täglich alle 2 Stunden (8, 10, 12, 14, 16 und 18 Uhr), jeweils um :05, :20, :35 und :50",
    "options": {
     "lang": "de"
    },
@@ -3571,7 +3571,7 @@
    "pattern": "0-28,30-59 0 9 * * *"
   },
   {
-   "expected": "täglich von 8:00 bis 8:45, von 10:00 bis 10:45 … und von 18:00 bis 18:45 Uhr alle 15 Minuten",
+   "expected": "täglich alle 2 Stunden (8, 10, 12, 14, 16 und 18 Uhr), jeweils von :00 bis :45 alle 15 Minuten",
    "options": {
     "lang": "de"
    },
@@ -3893,7 +3893,7 @@
    "pattern": "15,45 */15 9-17 * * *"
   },
   {
-   "expected": "täglich um 0:05:08, 0:30:08, 2:05:08, 2:30:08 … 22:05:08 und 22:30:08 Uhr",
+   "expected": "täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :05:08 und :30:08",
    "options": {
     "lang": "de"
    },
@@ -4189,7 +4189,7 @@
    "pattern": "0 0-10/2,11-23/3 * * *"
   },
   {
-   "expected": "täglich von 0:00 bis 0:59, von 2:00 bis 2:59 … und von 10:00 bis 10:59 sowie von 11:00 bis 11:59, von 14:00 bis 14:59 … und von 23:00 bis 23:59 Uhr jede Minute",
+   "expected": "täglich alle 2 Stunden (0, 2, 4, 6, 8 und 10 Uhr) und alle 3 Stunden (11, 14, 17, 20 und 23 Uhr), jeweils von :00 bis :59 jede Minute",
    "options": {
     "lang": "de"
    },
@@ -4460,6 +4460,198 @@
     "lang": "de"
    },
    "pattern": "*/15 9-17 1-7 * */2"
+  },
+  {
+   "expected": "täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 2/6 * * *"
+  },
+  {
+   "expected": "täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 2,8,14,20 * * *"
+  },
+  {
+   "expected": "täglich alle 5 Stunden (2, 7, 12, 17 und 22 Uhr), jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 2/5 * * *"
+  },
+  {
+   "expected": "täglich alle 6 Stunden (0, 6, 12 und 18 Uhr), jeweils um :05, :15, :25, :35, :45 und :55",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/10 0,6,12,18 * * *"
+  },
+  {
+   "expected": "täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :10, :30 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "10/20 2/6 * * *"
+  },
+  {
+   "expected": "täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05 und :35",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,35 2/6 * * *"
+  },
+  {
+   "expected": "an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 2/6 */2 * *"
+  },
+  {
+   "expected": "an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50, jeweils in den Sekunden 0 bis 10",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0-10 5/15 2/6 */2 * *"
+  },
+  {
+   "expected": "täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05:30, :20:30, :35:30 und :50:30",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "30 5/15 2/6 * * *"
+  },
+  {
+   "expected": "täglich alle 5 Stunden (2, 7, 12, 17 und 22 Uhr), jeweils von :00 bis :59 jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "* 2/5 * * *"
+  },
+  {
+   "expected": "täglich alle 3 Stunden (0, 3, 6, 9, 12, 15, 18 und 21 Uhr), jeweils um :05 und :35",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,35 */3 * * *"
+  },
+  {
+   "expected": "täglich alle 2 Stunden (2, 4, 6 … 18 Uhr), jeweils um :05 und :35",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,35 2-18/2 * * *"
+  },
+  {
+   "expected": "täglich in den ungeraden Stunden (1, 3, 5 … 23 Uhr), jeweils um :15 und :45",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "15,45 1/2 * * *"
+  },
+  {
+   "expected": "täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :15 und :45, außer von 8:15 bis 8:45 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "15,45 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "täglich alle 3 Stunden (0, 3, 6, 9 und 12 Uhr) und alle 4 Stunden (14, 18 und 22 Uhr), jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,20,35,50 0-12/3,14-22/4 * * *"
+  },
+  {
+   "expected": "täglich alle 4 Stunden (1, 5, 9, 13, 17 und 21 Uhr), jeweils um :00 und :30",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0,30 1/4 * * *"
+  },
+  {
+   "expected": "täglich alle 3 Stunden (1, 4, 7, 10, 13, 16, 19 und 22 Uhr), jeweils um :05, :20, :35 und :50, außer von 7:05 bis 7:50 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 1,4,10,13,16,19,22 * * *"
+  },
+  {
+   "expected": "täglich alle 3 Stunden (0, 3, 6, 9 und 12 Uhr) sowie 20 Uhr, jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 0-12/3,20 * * *"
+  },
+  {
+   "expected": "täglich alle 3 Stunden (0, 3, 6, 9 und 12 Uhr) und stündlich (15, 16 und 17 Uhr), jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 0-12/3,15-17 * * *"
+  },
+  {
+   "expected": "täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "5/15 2/6 * * *"
+  },
+  {
+   "expected": "täglich in den ungeraden Stunden (1:00–1:45, 3:00–3:45 … 23:00–23:45 Uhr) alle 15 Minuten, jeweils 30 Sekunden nach der vollen Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "30 */15 1/2 * * *"
+  },
+  {
+   "expected": "täglich von 2:05 bis 2:50, von 11:05 bis 11:50 und von 20:05 bis 20:50 Uhr jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 2/9 * * *"
+  },
+  {
+   "expected": "täglich von 2:00 bis 2:45, von 8:00 bis 8:45, von 14:00 bis 14:45 und von 20:00 bis 20:45 Uhr alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 2/6 * * *"
+  },
+  {
+   "expected": "täglich von 2:05 bis 2:53, von 8:05 bis 8:53, von 14:05 bis 14:53 und von 20:05 bis 20:53 Uhr alle 8 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/8 2/6 * * *"
+  },
+  {
+   "expected": "täglich von 1:05 bis 1:50, von 3:05 bis 3:50, von 8:05 bis 8:50 und von 20:05 bis 20:50 Uhr jeweils um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 1,3,8,20 * * *"
+  },
+  {
+   "expected": "täglich von 2:05 bis 3:50, von 8:05 bis 9:50, von 14:05 bis 15:50 und von 20:05 bis 21:50 Uhr stündlich um :05, :20, :35 und :50",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5/15 2-3,8-9,14-15,20-21 * * *"
+  },
+  {
+   "expected": "täglich von 2:05 bis 22:05 Uhr alle 5 Stunden",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5 2/5 * * *"
   },
   {
    "expected": "täglich um 9:00 Uhr morgens",
