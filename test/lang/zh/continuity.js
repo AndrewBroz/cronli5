@@ -25,8 +25,9 @@ const JOINS = ['', '，', '每天', '的'];
 // The parts of the sentence an edit to each field may change. A minute or
 // a second changes the time and nothing else. A day field changes the day
 // part, and the month before it changes with it: 每月1日 becomes 6月1日,
-// and before a date and a weekday together the month ends in a colon. A
-// month with no year before it brings 每年. So a day, month or year edit may move text among those
+// and before a date and a weekday together the month ends in a comma
+// and the days begin with 每逢. A month with no year before it brings
+// 每年. So a day, month or year edit may move text among those
 // three parts. The join depends on what stands before the time and on
 // whether the hours are restricted, so an edit to the hours, or to a day,
 // month or year, may change it. Nothing else may cross: no day, month or
