@@ -742,8 +742,8 @@ The base:
 * It is «ogni minuto» alone: «al secondo 30 di ogni minuto».
 * It is a phrase of 4.1 D (minutes named inside the hour): **the second
   is said in words in the phrase**, and any window or bracket carries it
-  too. A run or pieces: «ogni minuto» becomes «al secondo 30 di ogni
-  minuto»: `30 0-29 9-17` — «al secondo 30 di ogni minuto dal minuto 0 al
+  too. One run: «ogni minuto» becomes «al secondo 30 di ogni
+  minuto» (several pieces: below): `30 0-29 9-17` — «al secondo 30 di ogni minuto dal minuto 0 al
   29 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:00:30, ultima
   alle 17:29:30)». A cadence: «, al secondo 30» after the hours and
   before the bracket: `30 */7 9-17` — «ogni 7 minuti dal minuto 0 al 56
