@@ -871,9 +871,18 @@ const rows = [
   ['0 0 15 6,7 */2',
     'le 15 juin et le 15 juillet quand ils tombent un mardi, un jeudi, un ' +
     'samedi ou un dimanche, à 0 h'],
+  // The verb agrees with the day as it is said: «le 15 du mois» is one
+  // subject, however many months follow. (The row said «quand ils
+  // tombent», an agreement error noted when it was written.)
   ['0 0 15 6-12 */2',
-    'le 15 du mois, de juin à décembre, quand ils tombent un mardi, un ' +
+    'le 15 du mois, de juin à décembre, quand il tombe un mardi, un ' +
     'jeudi, un samedi ou un dimanche, à 0 h'],
+  ['0 0 L 6-12 */2',
+    'le dernier jour du mois, de juin à décembre, quand il tombe un ' +
+    'mardi, un jeudi, un samedi ou un dimanche, à 0 h'],
+  ['0 0 1,15 6-12 */2',
+    'le 1er et le 15 du mois, de juin à décembre, quand ils tombent un ' +
+    'mardi, un jeudi, un samedi ou un dimanche, à 0 h'],
   ['0 0 29 2 */2',
     'le 29 février quand il tombe un mardi, un jeudi, un samedi ou un ' +
     'dimanche, à 0 h, les années bissextiles'],

@@ -62,6 +62,8 @@ interface Joined {
   closes: boolean;
   head: string;
   setOff: string[];
+  // Whether the phrase, as said, names several days.
+  several: boolean;
   tail: string;
 }
 
@@ -69,6 +71,8 @@ interface Attached {
   head?: string;
   inline: string;
   setOff: string[];
+  // Whether the months make the phrase name a day in each.
+  several?: boolean;
 }
 
 type Attach = (months: Months, day: DayPhrase) => Attached;
@@ -254,7 +258,10 @@ function standing(months: Months): Attached {
 }
 
 function ofMonths(months: Months): Attached {
-  return inline(series(months.names, lexicon.of));
+  return {
+    ...inline(series(months.names, lexicon.of)),
+    several: months.names.length > 1
+  };
 }
 
 // One day with a few months is every date in full; any other phrase that
@@ -263,7 +270,7 @@ function several(months: Months, day: DayPhrase): Attached {
   const dates = months.names.map((name) => phrase(day.head, name));
 
   return day.single && dates.length <= 6 ?
-    {head: conjoin(dates), inline: '', setOff: []} :
+    {head: conjoin(dates), inline: '', setOff: [], several: true} :
     aside(w.daysOfMonth, months);
 }
 
@@ -314,6 +321,7 @@ function join(day: DayPhrase, months: Months, shape: Shape): Joined {
     closes: day.closes,
     head: made.head ?? day.head,
     setOff: [...made.setOff, ...day.setOff],
+    several: Boolean(made.several),
     tail: phrase(made.inline, day.after)
   };
 }
@@ -699,8 +707,7 @@ function datesOnWeekdays(c: Context, months: Months): Joined {
   const dates = datePhrase(c, months, false);
   const joined = join(dates, months, months.shape);
   const quartz = (c.day.date as {kind: string}).kind === 'quartz';
-  const many = !quartz && !dates.single ||
-    ['list', 'span'].includes(months.shape);
+  const many = !quartz && !dates.single || joined.several;
   const condition = phrase(w.when, many ? w.theyFall : w.itFalls,
     fallsOn(c));
   const apart = joined.setOff.length > 0 || joined.closes;
