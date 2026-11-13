@@ -222,6 +222,16 @@ function secondVoice(speech: Speech, second: number): Voice {
       minutesAfter([words.ofMinute, words.ofMinutes], minutes);
   }
 
+  // Minutes in pieces are said as they are without the second, which
+  // follows the whole phrase and so belongs to every piece.
+  const plain = plainVoice(speech);
+
+  function within(form: Form): string {
+    return form.kind === 'pieces' ? plain.within(form) : inside(form);
+  }
+
+  const inside = withinOf(MINUTE, {eachIn, listed});
+
   return {
     ...wholeMinuteVoice(speech),
     alone(rate, single) {
@@ -234,7 +244,7 @@ function secondVoice(speech: Speech, second: number): Voice {
     out: point,
     point,
     tail: `, ${atSecond}`,
-    within: withinOf(MINUTE, {eachIn, listed})
+    within
   };
 }
 

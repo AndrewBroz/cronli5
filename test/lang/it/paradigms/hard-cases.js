@@ -762,7 +762,26 @@ const rows = [
     'il martedì, il giovedì, il sabato e la domenica tranne il 15 di ogni ' +
     'mese, alle 0:00'],
   // A date that no reached month has never fires, whatever the weekday.
-  ['0 0 31 6 */2', 'mai: la data indicata non esiste']
+  ['0 0 31 6 */2', 'mai: la data indicata non esiste'],
+
+  // One second with minutes that are several pieces: the second follows
+  // the whole phrase, so it belongs to every piece. Said inside the run
+  // («al minuto 5 e al secondo 30 di ogni minuto dal minuto 10 al 20»),
+  // the single minutes read as firing on the minute. The builder
+  // reported it and it was registered unfixed.
+  ['30 5,10-20 * * * *',
+    'al minuto 5 e ogni minuto dal minuto 10 al 20 di ogni ora, al secondo ' +
+    '30'],
+  ['30 10-20,45 * * * *',
+    'ogni minuto dal minuto 10 al 20 e una volta al minuto 45 di ogni ora, ' +
+    'al secondo 30'],
+  ['30 */10,5-9 9 * * *',
+    'tutti i giorni, al minuto 0, ogni minuto dal minuto 5 al 10 e poi ai ' +
+    'minuti 20, 30, 40 e 50 delle ore 9, al secondo 30'],
+  ['30 0-29,45 9-17 * * *',
+    'tutti i giorni, ogni minuto dal minuto 0 al 29 e una volta al minuto ' +
+    '45 di ciascuna ora dalle 9 alle 17, al secondo 30 (prima volta alle ' +
+    '9:00:30, ultima alle 17:45:30)']
 ];
 
 export {rows};
