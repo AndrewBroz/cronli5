@@ -853,8 +853,11 @@ const rows = [
   ['0 0-10/2,11-23/3 * * *',
     'tous les jours, toutes les 2 heures de 0 h à 10 h et toutes les 3 ' +
     'heures de 11 h à 23 h'],
+  // The 11th begins the every-third-day part, as the pattern writes it:
+  // the row once ran the odd days through the 11th, which the core no
+  // longer offers.
   ['0 0 1-10/2,11-31/3 * *',
-    'les jours impairs du 1er au 11 et tous les 3 jours du 14 au 29 de ' +
+    'les jours impairs du 1er au 9 et tous les 3 jours du 11 au 29 de ' +
     'chaque mois à 0 h'],
   ['0-20/2,21-59/3 * * * * *',
     'toutes les 2 secondes de 0 à 20 et toutes les 3 secondes de 21 à 57 ' +

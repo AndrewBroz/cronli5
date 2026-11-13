@@ -563,8 +563,8 @@ a run two, a value one):
   have more than four hours, as a cadence of hours must anywhere (3.7):
   hours 8, 10, 13, 16 and 19 are their five times. With several minutes:
   4.1, « Hours in several parts »;
-* days of the month: « les jours impairs du 1er au 11 et tous les 3 jours
-  du 14 au 29 de chaque mois ». A cadence inside such pieces always names
+* days of the month: « les jours impairs du 1er au 9 et tous les 3 jours
+  du 11 au 29 de chaque mois ». A cadence inside such pieces always names
   both ends, every second day included (no piece borrows);
 * seconds, with M and H every value: « toutes les 2 secondes de 0 à 20 et
   toutes les 3 secondes de 21 à 57 secondes après le début de chaque

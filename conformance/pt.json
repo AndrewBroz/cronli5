@@ -4368,7 +4368,7 @@
    "pattern": "0 0 2/2 6 *"
   },
   {
-   "expected": "nos dias ímpares do dia 1º ao dia 11 e de 3 em 3 dias do dia 14 ao dia 29 de cada mês às 00:00",
+   "expected": "nos dias ímpares do dia 1º ao dia 9 e de 3 em 3 dias do dia 11 ao dia 29 de cada mês às 00:00",
    "options": {
     "lang": "pt"
    },

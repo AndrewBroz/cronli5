@@ -81,6 +81,7 @@ function reachOf(schedule: Schedule): DateReach & {stated: boolean} {
     days: null,
     everyYear: [],
     fires: true,
+    firesInOtherYears: true,
     leapYears: [],
     never: [],
     ...dateReach,

@@ -4196,7 +4196,7 @@
    "pattern": "* 0-10/2,11-23/3 * * *"
   },
   {
-   "expected": "am 1., 3., 5. … und 11. sowie am 14., 17., 20. … und 29. jedes Monats um 0:00 Uhr",
+   "expected": "am 1., 3., 5. … und 9. sowie am 11., 14., 17. … und 29. jedes Monats um 0:00 Uhr",
    "options": {
     "lang": "de"
    },

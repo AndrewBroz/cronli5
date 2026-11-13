@@ -399,7 +399,8 @@ its list.
   against five, and stay 每小时的0分至20分、30分至50分，每分钟一次，以及25
   分.
 * It names fewer things than the set would as stretches each with its
-  own step (3.8), where the core finds such stretches: there a stretch
+  own step (3.8), where the core finds such stretches, two or more (one
+  cadence with stray values is not such a set: 3.8): there a stretch
   counts its two ends. `*/2,43-7` would except seventeen minutes, and is
   three stretches instead.
 * **Hours that cross midnight are counted as the two runs they are inside

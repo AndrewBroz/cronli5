@@ -610,9 +610,12 @@ const rows = [
   ['0 0-12/2,13-23/3 * * *',
     'every 2 hours from midnight through noon and every 3 hours from 1 ' +
     'p.m. through 10 p.m. every day'],
+  // The 11th begins the every-third-day part, as the pattern writes it:
+  // the row once ran the odd days through the 11th, which the core no
+  // longer offers.
   ['0 0 1-10/2,11-31/3 * *',
-    'at midnight every 2 days from the 1st through the 11th of the month ' +
-    'and every 3 days from the 14th through the 29th of the month'],
+    'at midnight every 2 days from the 1st through the 9th of the month ' +
+    'and every 3 days from the 11th through the 29th of the month'],
 
   // A cadence of hours that stops early, under minutes: each end is
   // named as an hour.

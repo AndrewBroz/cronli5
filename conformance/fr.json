@@ -4665,7 +4665,7 @@
    "pattern": "0 0-10/2,11-23/3 * * *"
   },
   {
-   "expected": "les jours impairs du 1er au 11 et tous les 3 jours du 14 au 29 de chaque mois à 0 h",
+   "expected": "les jours impairs du 1er au 9 et tous les 3 jours du 11 au 29 de chaque mois à 0 h",
    "options": {
     "lang": "fr"
    },

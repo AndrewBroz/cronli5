@@ -3575,7 +3575,7 @@
    "pattern": "0 0-12/2,13-23/3 * * *"
   },
   {
-   "expected": "at midnight every 2 days from the 1st through the 11th of the month and every 3 days from the 14th through the 29th of the month",
+   "expected": "at midnight every 2 days from the 1st through the 9th of the month and every 3 days from the 11th through the 29th of the month",
    "options": {
     "lang": "en"
    },

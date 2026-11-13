@@ -696,8 +696,11 @@ const rows = [
     'täglich von 0:00 bis 0:59, von 2:00 bis 2:59 … und von 10:00 bis ' +
     '10:59 sowie von 11:00 bis 11:59, von 14:00 bis 14:59 … und von 23:00 ' +
     'bis 23:59 Uhr jede Minute'],
+  // The 11th begins the every-third-day part, as the pattern writes it:
+  // the row once ran the odd days through the 11th, which the core no
+  // longer offers.
   ['0 0 1-10/2,11-31/3 * *',
-    'am 1., 3., 5. … und 11. sowie am 14., 17., 20. … und 29. jedes Monats ' +
+    'am 1., 3., 5. … und 9. sowie am 11., 14., 17. … und 29. jedes Monats ' +
     'um 0:00 Uhr'],
   ['0 0 1-20/2,24-30/3 * *',
     'am 1., 3., 5. … und 19. sowie am 24., 27. und 30. jedes Monats um ' +

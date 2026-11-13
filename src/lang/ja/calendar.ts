@@ -983,7 +983,8 @@ function calendarPart(
   const months = denote((candidates.month as SetDescription[])[0],
     domainOf('month'));
   const reach = dateReach ?? {
-    days: null, everyYear: months, fires: true, leapYears: [], never: []
+    days: null, everyYear: months, fires: true, firesInOtherYears: true,
+    leapYears: [], never: []
   };
   const context: Context = {
     again: false, facts, leap: false, months, needs, reach, style,

@@ -217,14 +217,15 @@ function shapeOf(base: number[], runs: Run[], pace: Pace): Shape {
 }
 
 // Whether an exception names fewer things than the set would as
-// stretches that each have their own step, where it is such stretches: a
-// stretch names its two ends, as a cadence does.
+// stretches that each have their own step, where it is such stretches
+// (two or more: one cadence with strays is no such set): a stretch names
+// its two ends, as a cadence does.
 function beatsStretches(exception: Exception, kept: number[], domain: Domain):
   boolean {
   const {strays, windows} = stretchesOf(kept, domain);
   const ends = 2 * Number(exception.base.kind === 'cadence');
 
-  return windows.length === 0 ||
+  return windows.length < 2 ||
     ends + exception.removed.length < 2 * windows.length + strays.length;
 }
 

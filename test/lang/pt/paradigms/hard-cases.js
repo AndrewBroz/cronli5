@@ -739,8 +739,11 @@ const rows = [
   ['0 0 2/2 6 *', 'nos dias pares de junho às 00:00'],
 
   // A long list that is runs and cadences together is said in those.
+  // The 11th begins the every-third-day part, as the pattern writes it:
+  // the row once ran the odd days through the 11th, which the core no
+  // longer offers.
   ['0 0 1-10/2,11-31/3 * *',
-    'nos dias ímpares do dia 1º ao dia 11 e de 3 em 3 dias do dia 14 ao ' +
+    'nos dias ímpares do dia 1º ao dia 9 e de 3 em 3 dias do dia 11 ao ' +
     'dia 29 de cada mês às 00:00'],
   ['0-56/8,3-59/8 * * * *',
     'nos minutos 0, 3, 8, 11, 16, 19, 24, 27, 32, 35, 40, 43, 48, 51, 56 e ' +
