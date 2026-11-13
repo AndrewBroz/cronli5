@@ -99,9 +99,9 @@ With `short: true` the names are «lun, mar, mié, jue, vie, sáb, dom» and
 mié y vie», «de lun a vie», «en jun», «el 1 de jun», «de jun a ago». «Los
 fines de semana» is not a name and does not change.
 
-1.3 Regions. Spain (`es`, `es-ES`) is the default. Mexico (`MX`) and the
-United States (`US`) set `hour12: true`. Any other region takes the
-default.
+1.3 Regions. There are two named styles: `es`, the default, and `mx`,
+which sets `hour12: true`. Spain (`ES`) selects `es`; Mexico (`MX`) and
+the United States (`US`) select `mx`. Any other region takes the default.
 
 ## 2. Frame
 
