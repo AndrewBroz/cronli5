@@ -229,6 +229,7 @@ docs below.
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
 | Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
 | Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
+| Italian | `cronli5/lang/it` | Accademia della Crusca and the dictionaries of use; Serianni's grammar; CLDR for clock times | [docs/lang/it.md](./docs/lang/it.md) |
 | French | `cronli5/lang/fr` | Lexique de l'Imprimerie nationale for « 9 h 30 »; interface practice | [docs/lang/fr.md](./docs/lang/fr.md) |
 | German | `cronli5/lang/de` | Interface practice for «9:00 Uhr» (DIN 5008 for the colon); Austria (`'de-AT'`) and Switzerland (`'de-CH'`) | [docs/lang/de.md](./docs/lang/de.md) |
 | Portuguese | `cronli5/lang/pt` | CLDR and interface practice; Brazil by default, Portugal (`'pt-PT'`) | [docs/lang/pt.md](./docs/lang/pt.md) |
@@ -252,6 +253,7 @@ Sonnet instances. It graduates to **stable** only on review by a fluent human:
 | English | beta |
 | Spanish | beta |
 | French | beta |
+| Italian | beta |
 | Japanese | beta |
 | Portuguese | beta |
 | Ukrainian | beta |
@@ -326,6 +328,7 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Portuguese | todas as segundas às 09:30:05 e 09:30:10 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
 | German | montags um 9:30:05 und 9:30:10 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | French | tous les lundis à 9 h 30 min 05 s et à 9 h 30 min 10 s | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
+| Italian | il lunedì alle 9:30:05 e alle 9:30:10 | Al 5 e 10 secondo passato il minuto, al 30 minuto passata l'ora, alle 09:00, solo il lunedì |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for

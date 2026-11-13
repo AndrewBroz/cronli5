@@ -1,0 +1,4580 @@
+{
+ "language": "it",
+ "rows": [
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:00:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 6 secondi dalle 9:00:00 alle 9:00:54",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/6 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 secondi dalle 9:00:05 alle 9:00:55",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/10 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 9:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:05, alle 9:20 e alle 9:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, alle 9:15, alle 9:30 e alle 9:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, alle 9:15 e alle 9:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,15,45 9 * * *"
+  },
+  {
+   "expected": "a ogni ora in punto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00 e alle 17:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 9:00 alle 17:00 e una volta alle 22:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 ore dall'1:00 alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1 * *"
+  },
+  {
+   "expected": "il 1º, il 10 e il 20 di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1,10,20 * *"
+  },
+  {
+   "expected": "nei giorni dispari di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "nei giorni dispari di ogni mese tranne il 15, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "a gennaio, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 1 *"
+  },
+  {
+   "expected": "a marzo, giugno, settembre e dicembre, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 3,6,9,12 *"
+  },
+  {
+   "expected": "ogni 2 mesi a partire da gennaio, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * */2 *"
+  },
+  {
+   "expected": "da novembre a febbraio, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "il lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "dal lunedì al venerdì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "il martedì e il giovedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 2,4"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni volta per un minuto intero, secondo per secondo",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni volta dal secondo 0 al 54, a intervalli di 6 secondi",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/6 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni volta dal secondo 5 al 55, a intervalli di 10 secondi",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/10 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni minuto dalle 9:00 alle 17:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 30 minuti dalle 9:00 alle 17:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni minuto dal minuto 0 al 29 e una volta al minuto 45 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:00, ultima alle 17:45)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ai minuti 0, 15 e 45 di ogni ora, dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,15,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 * * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì alle 12:00, alle 12:15, alle 12:30 e alle 12:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 12 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45 e dalle 22:00 alle 22:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17,22 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dall'1:00 all'1:45, dalle 3:00 alle 3:45 e così via ogni 2 ore fino alle 23:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 1/2 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più il 1º di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 1 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più il 1º, il 10 e il 20 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 1,10,20 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più nei giorni dispari di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 */2 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più nei giorni dispari di ogni mese tranne il 15, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5"
+  },
+  {
+   "expected": "a gennaio, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 1 1-5"
+  },
+  {
+   "expected": "a marzo, giugno, settembre e dicembre, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 3,6,9,12 1-5"
+  },
+  {
+   "expected": "ogni 2 mesi a partire da gennaio, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * */2 1-5"
+  },
+  {
+   "expected": "da novembre a febbraio, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 11-2 1-5"
+  },
+  {
+   "expected": "tutti i giorni, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * *"
+  },
+  {
+   "expected": "il lunedì, il mercoledì e il venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 1,3,5"
+  },
+  {
+   "expected": "il martedì e il giovedì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 2,4"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni secondo dalle 0:00:00 alle 0:00:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni 6 secondi dalle 0:00:00 alle 0:00:54",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/6 0 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni 10 secondi dalle 0:00:05 alle 0:00:55",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/10 0 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni minuto dalle 0:00 alle 0:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:05, alle 0:20 e alle 0:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00, alle 0:15, alle 0:30 e alle 0:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00, alle 0:15 e alle 0:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,15,45 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, a ogni ora in punto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 * 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 9:00 e alle 17:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9,17 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni ora dalle 9:00 alle 17:00 e una volta alle 22:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-17,22 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni 2 ore dall'1:00 alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 1/2 1 * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "il 1º, il 10 e il 20 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,10,20 * *"
+  },
+  {
+   "expected": "nei giorni dispari di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */2 * *"
+  },
+  {
+   "expected": "nei giorni dispari di ogni mese tranne il 15, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 1 *"
+  },
+  {
+   "expected": "a marzo, giugno, settembre e dicembre, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 3,6,9,12 *"
+  },
+  {
+   "expected": "ogni 2 mesi a partire da gennaio, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 */2 *"
+  },
+  {
+   "expected": "da novembre a febbraio, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 11-2 *"
+  },
+  {
+   "expected": "il lunedì e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 1"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 1-5"
+  },
+  {
+   "expected": "il martedì e il giovedì e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 2,4"
+  },
+  {
+   "expected": "ogni secondo",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "ogni 6 secondi",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/6 * * * * *"
+  },
+  {
+   "expected": "ogni 10 secondi a partire dal secondo 5 di ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/10 * * * * *"
+  },
+  {
+   "expected": "ai minuti 5, 20 e 45 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 * * * *"
+  },
+  {
+   "expected": "ogni 15 minuti",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "ai minuti 0, 15 e 45 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,15,45 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 0:00 alle 0:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 9:59 e dalle 17:00 alle 17:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 17:59 e dalle 22:00 alle 22:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 9-17,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dall'1:00 all'1:59, dalle 3:00 alle 3:59 e così via ogni 2 ore fino alle 23:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 1/2 * * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "il 1º, il 10 e il 20 di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 1,10,20 * *"
+  },
+  {
+   "expected": "nei giorni dispari di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * */2 * *"
+  },
+  {
+   "expected": "nei giorni dispari di ogni mese tranne il 15, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "a gennaio, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 1 *"
+  },
+  {
+   "expected": "a marzo, giugno, settembre e dicembre, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 3,6,9,12 *"
+  },
+  {
+   "expected": "ogni 2 mesi a partire da gennaio, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * */2 *"
+  },
+  {
+   "expected": "da novembre a febbraio, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 11-2 *"
+  },
+  {
+   "expected": "il lunedì, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 1"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 1-5"
+  },
+  {
+   "expected": "il martedì e il giovedì, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 2,4"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00:00 e alle 9:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00:00, alle 9:00:15, alle 9:00:30 e alle 9:00:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:00:09",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-9 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00 e alle 9:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 9:29",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 9:29 e una volta alle 9:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29,45 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 7 minuti dalle 9:00 alle 9:56",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/7 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:05, alle 9:20, alle 9:35 e alle 9:50",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/15 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:10, alle 9:20, alle 9:30 e alle 9:40",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "10-40/10 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 8:00, alle 12:00 e alle 18:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 9:00 alle 17:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 ore dalle 0:00 alle 22:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00, alle 6:00, alle 12:00 e alle 18:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */6 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 ore dalle 0:00 alle 22:00, tranne alle 8:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 22:00 alle 2:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "il 15 di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 15 * *"
+  },
+  {
+   "expected": "il 1º e il 15 di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1,15 * *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1-7 * *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 e il 15 di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1-7,15 * *"
+  },
+  {
+   "expected": "nei giorni pari di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 2/2 * *"
+  },
+  {
+   "expected": "il 1º, il 6, l'11, il 16, il 21, il 26 e il 31 di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 */5 * *"
+  },
+  {
+   "expected": "l'ultimo giorno di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 15 di ogni mese (dal lunedì al venerdì, festivi compresi) alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "a giugno, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6 *"
+  },
+  {
+   "expected": "a gennaio e luglio, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 1,7 *"
+  },
+  {
+   "expected": "da giugno ad agosto, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "da giugno ad agosto e poi a dicembre, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6-8,12 *"
+  },
+  {
+   "expected": "a gennaio, aprile, luglio e ottobre, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * */3 *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, tranne a dicembre",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "la domenica alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "il lunedì, il mercoledì e il venerdì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "il sabato e la domenica alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "dal lunedì al sabato alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "l'ultimo venerdì di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "il secondo lunedì di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00:30 alle 17:45:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, e in quel minuto ai secondi 0 e 30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, e in quel minuto ai secondi 0, 15, 30 e 45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni volta dal secondo 0 al 9, secondo per secondo",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-9 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni ora dalle 9:00 alle 17:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni ora dalle 9:30 alle 17:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ai minuti 5, 20 e 45 di ogni ora, dalle 9:05 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni minuto dal minuto 0 al 29 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:00, ultima alle 17:29)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 7 minuti dal minuto 0 al 56 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:00, ultima alle 17:56)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/7 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:05 alle 17:50",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ai minuti 10, 20, 30 e 40 di ogni ora, dalle 9:10 alle 17:40",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "10-40/10 9-17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì alle 0:00, alle 0:15, alle 0:30 e alle 0:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì alle 9:00, alle 9:15, alle 9:30 e alle 9:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 9:45 e dalle 17:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9,17 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 8:00 alle 8:45, dalle 12:00 alle 12:45 e dalle 18:00 alle 18:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 8,12,18 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 0:00 alle 0:45, dalle 2:00 alle 2:45 e così via ogni 2 ore fino alle 22:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */2 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 0:00 alle 0:45, dalle 6:00 alle 6:45, dalle 12:00 alle 12:45 e dalle 18:00 alle 18:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */6 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 0:00 alle 0:45, dalle 2:00 alle 2:45 e così via ogni 2 ore fino alle 22:45, tranne dalle 8:00 alle 8:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 0:00 alle 2:45 e dalle 22:00 alle 23:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 22-2 * * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più il 15 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 15 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più il 1º e il 15 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 1,15 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più tutti i giorni dal 1º al 7 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 1-7 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più tutti i giorni dal 1º al 7 e il 15 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 1-7,15 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più nei giorni pari di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 2/2 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più il 1º, il 6, l'11, il 16, il 21, il 26 e il 31 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 */5 * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì e in più l'ultimo giorno di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 L * 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 15W * 1-5"
+  },
+  {
+   "expected": "a giugno, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 6 1-5"
+  },
+  {
+   "expected": "a gennaio e luglio, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 1,7 1-5"
+  },
+  {
+   "expected": "da giugno ad agosto, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 6-8 1-5"
+  },
+  {
+   "expected": "da giugno ad agosto e poi a dicembre, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 6-8,12 1-5"
+  },
+  {
+   "expected": "a gennaio, aprile, luglio e ottobre, dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * */3 1-5"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, tranne a dicembre",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * 1-11 1-5"
+  },
+  {
+   "expected": "il lunedì, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 1"
+  },
+  {
+   "expected": "la domenica, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 0"
+  },
+  {
+   "expected": "il sabato e la domenica, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 0,6"
+  },
+  {
+   "expected": "dal lunedì al sabato, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 1-6"
+  },
+  {
+   "expected": "l'ultimo venerdì di ogni mese, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 5L"
+  },
+  {
+   "expected": "il secondo lunedì di ogni mese, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 * * 1#2"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00:00 e alle 0:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 0 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00:00, alle 0:00:15, alle 0:00:30 e alle 0:00:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni secondo dalle 0:00:00 alle 0:00:09",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-9 0 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00 e alle 0:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni minuto dalle 0:00 alle 0:29",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni minuto dalle 0:00 alle 0:29 e una volta alle 0:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29,45 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni 7 minuti dalle 0:00 alle 0:56",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/7 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:05, alle 0:20, alle 0:35 e alle 0:50",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/15 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:10, alle 0:20, alle 0:30 e alle 0:40",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "10-40/10 0 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 12 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 8:00, alle 12:00 e alle 18:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 8,12,18 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni ora dalle 9:00 alle 17:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-17 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni 2 ore dalle 0:00 alle 22:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */2 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00, alle 6:00, alle 12:00 e alle 18:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */6 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni 2 ore dalle 0:00 alle 22:00, tranne alle 8:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni ora dalle 0:00 alle 2:00, poi alle 22:00 e alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 22-2 1 * *"
+  },
+  {
+   "expected": "il 15 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 15 * *"
+  },
+  {
+   "expected": "il 1º e il 15 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,15 * *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 e il 15 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-7,15 * *"
+  },
+  {
+   "expected": "nei giorni pari di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 2/2 * *"
+  },
+  {
+   "expected": "il 1º, il 6, l'11, il 16, il 21, il 26 e il 31 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */5 * *"
+  },
+  {
+   "expected": "l'ultimo giorno di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 15 di ogni mese (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "il 1º giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "a gennaio e luglio, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 1,7 *"
+  },
+  {
+   "expected": "da giugno ad agosto, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 6-8 *"
+  },
+  {
+   "expected": "da giugno ad agosto e poi a dicembre, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 6-8,12 *"
+  },
+  {
+   "expected": "a gennaio, aprile, luglio e ottobre, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 */3 *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00, tranne a dicembre",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 1-11 *"
+  },
+  {
+   "expected": "la domenica e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 0"
+  },
+  {
+   "expected": "il lunedì, il mercoledì e il venerdì e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 1,3,5"
+  },
+  {
+   "expected": "il sabato e la domenica e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "dal lunedì al sabato e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 1-6"
+  },
+  {
+   "expected": "l'ultimo venerdì di ogni mese e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 5L"
+  },
+  {
+   "expected": "il secondo lunedì di ogni mese e in più il 1º di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * 1#2"
+  },
+  {
+   "expected": "al secondo 30 di ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 * * * * *"
+  },
+  {
+   "expected": "ogni 30 secondi",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 * * * * *"
+  },
+  {
+   "expected": "ogni 15 secondi",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 * * * * *"
+  },
+  {
+   "expected": "ogni secondo dal secondo 0 al 9 di ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-9 * * * * *"
+  },
+  {
+   "expected": "al minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "ogni 30 minuti",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 * * * *"
+  },
+  {
+   "expected": "ogni minuto dal minuto 0 al 29 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 * * * *"
+  },
+  {
+   "expected": "ogni minuto dal minuto 0 al 29 e una volta al minuto 45 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "ogni 7 minuti dal minuto 0 al 56, ripartendo a ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/7 * * * *"
+  },
+  {
+   "expected": "ai minuti 5, 20, 35 e 50 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/15 * * * *"
+  },
+  {
+   "expected": "ai minuti 10, 20, 30 e 40 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "10-40/10 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 12:00 alle 12:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 12 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 8:00 alle 8:59, dalle 12:00 alle 12:59 e dalle 18:00 alle 18:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 17:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 0:00 alle 0:59, dalle 2:00 alle 2:59 e così via ogni 2 ore fino alle 22:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 0:00 alle 0:59, dalle 6:00 alle 6:59, dalle 12:00 alle 12:59 e dalle 18:00 alle 18:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* */6 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 0:00 alle 0:59, dalle 2:00 alle 2:59 e così via ogni 2 ore fino alle 22:59, tranne dalle 8:00 alle 8:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 22:00 alle 2:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "il 15 di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 15 * *"
+  },
+  {
+   "expected": "il 1º e il 15 di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 1,15 * *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 1-7 * *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 e il 15 di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 1-7,15 * *"
+  },
+  {
+   "expected": "nei giorni pari di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 2/2 * *"
+  },
+  {
+   "expected": "il 1º, il 6, l'11, il 16, il 21, il 26 e il 31 di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * */5 * *"
+  },
+  {
+   "expected": "l'ultimo giorno di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * L * *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 15 di ogni mese (dal lunedì al venerdì, festivi compresi), ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 15W * *"
+  },
+  {
+   "expected": "a giugno, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 6 *"
+  },
+  {
+   "expected": "a gennaio e luglio, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 1,7 *"
+  },
+  {
+   "expected": "da giugno ad agosto, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 6-8 *"
+  },
+  {
+   "expected": "da giugno ad agosto e poi a dicembre, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 6-8,12 *"
+  },
+  {
+   "expected": "a gennaio, aprile, luglio e ottobre, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * */3 *"
+  },
+  {
+   "expected": "ogni minuto, tranne a dicembre",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * 1-11 *"
+  },
+  {
+   "expected": "la domenica, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 0"
+  },
+  {
+   "expected": "il lunedì, il mercoledì e il venerdì, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 1,3,5"
+  },
+  {
+   "expected": "il sabato e la domenica, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 0,6"
+  },
+  {
+   "expected": "dal lunedì al sabato, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 1-6"
+  },
+  {
+   "expected": "l'ultimo venerdì di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 5L"
+  },
+  {
+   "expected": "il secondo lunedì di ogni mese, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 1#2"
+  },
+  {
+   "expected": "nel 2030, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "nel 2030 e nel 2035, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 1 * 2030,2035"
+  },
+  {
+   "expected": "dal 2030 al 2035, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2035"
+  },
+  {
+   "expected": "negli anni pari, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * */2"
+  },
+  {
+   "expected": "nel 2030, il 1º giugno alle 9:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 9 1 6 * 2030"
+  },
+  {
+   "expected": "nel 2030, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2030"
+  },
+  {
+   "expected": "dal 2028 al 2031, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2028-2031"
+  },
+  {
+   "expected": "nel 2030, a giugno, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * 6 * 2030"
+  },
+  {
+   "expected": "nel 2030, a giugno, il lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * 6 1 2030"
+  },
+  {
+   "expected": "nel 2030, il 1º e il 15 giugno alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 1,15 6 * 2030"
+  },
+  {
+   "expected": "nel 2030, a giugno e luglio, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * 6,7 * 2030"
+  },
+  {
+   "expected": "nel 2030 e nel 2031, a giugno, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * 6 * 2030,2031"
+  },
+  {
+   "expected": "nel 2030, l'ultimo giorno di giugno alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 L 6 * 2030"
+  },
+  {
+   "expected": "nel 2030, il 1º di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 1 * * 2030"
+  },
+  {
+   "expected": "negli anni pari dal 2030 in poi, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2030/2"
+  },
+  {
+   "expected": "un anno su 4 a partire dal 2028, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2028/4"
+  },
+  {
+   "expected": "un anno su 4 a partire dal 2028, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 1 * 2028/4"
+  },
+  {
+   "expected": "un anno su 4 a partire dal 2028, ogni 5 minuti",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */5 * * * * 2028/4"
+  },
+  {
+   "expected": "un anno su 4 dal 2028 al 2060, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2028-2060/4"
+  },
+  {
+   "expected": "un anno su 4 dal 2028 al 2048, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2028-2048/4"
+  },
+  {
+   "expected": "negli anni pari dal 2030 al 2040, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2"
+  },
+  {
+   "expected": "nel 2028, nel 2032 e nel 2036, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2028-2036/4"
+  },
+  {
+   "expected": "negli anni pari, ogni 5 minuti",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */5 * * * * */2"
+  },
+  {
+   "expected": "negli anni dispari, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 1971/2"
+  },
+  {
+   "expected": "dal 2030 al 2032 e nel 2035, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2032,2035"
+  },
+  {
+   "expected": "dal 2030 al 2035, il 1º di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 * * 2030-2035"
+  },
+  {
+   "expected": "nel 2030, da giugno ad agosto, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 6-8 * 2030"
+  },
+  {
+   "expected": "nel 2030, tutti i giorni alle 9:00, tranne a dicembre",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * 1-11 * 2030"
+  },
+  {
+   "expected": "dal 2030 in poi, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 1 * 2030-9999"
+  },
+  {
+   "expected": "fino al 2030 compreso, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 1 * 1970-2030"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, tranne nel 2030",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 1970-2029,2031-9999"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, tranne a giugno e tranne nel 2030",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * 1-5,7-12 * 1970-2029,2031-9999"
+  },
+  {
+   "expected": "dal 2030 al 2040 e un anno su 5 a partire dal 2045, il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2040,2045/5"
+  },
+  {
+   "expected": "mai: la data indicata non esiste",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 0 29 2 * 2031"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00",
+   "options": {
+    "cron": "quartz",
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * ?"
+  },
+  {
+   "expected": "l'ultimo giorno lavorativo di ogni mese (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "il primo giorno lavorativo di ogni mese (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1W * *"
+  },
+  {
+   "expected": "il primo giorno lavorativo di giugno (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1W 6 *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 15 giugno (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 15W 6 *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino all'8 di ogni mese (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 8W * *"
+  },
+  {
+   "expected": "l'ultimo giorno lavorativo dei mesi di 31 giorni (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 31W * *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 28 di ogni mese, senza uscire dal mese (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 28W * *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 30 di ogni mese, senza uscire dal mese (dal lunedì al venerdì, festivi compresi) alle 0:00, tranne a febbraio",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30W * *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 30 giugno, senza uscire dal mese (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30W 6 *"
+  },
+  {
+   "expected": "3 giorni prima dell'ultimo giorno di ogni mese (il 28 nei mesi di 31 giorni, il 27 in quelli di 30, il 25 o il 26 a febbraio) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-3 * *"
+  },
+  {
+   "expected": "il 27 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-3 6 *"
+  },
+  {
+   "expected": "il penultimo giorno di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-1 * *"
+  },
+  {
+   "expected": "il terzultimo giorno di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-2 * *"
+  },
+  {
+   "expected": "il 1º dei mesi di 31 giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-30 * *"
+  },
+  {
+   "expected": "l'ultimo giorno di giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L 6 *"
+  },
+  {
+   "expected": "da giugno ad agosto e poi a dicembre, l'ultimo giorno del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L 6-8,12 *"
+  },
+  {
+   "expected": "da giugno ad agosto, il venerdì e in più l'ultimo giorno del mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L 6-8 5"
+  },
+  {
+   "expected": "il secondo lunedì di giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 * 6 1#2"
+  },
+  {
+   "expected": "a gennaio e luglio, l'ultimo venerdì del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 * 1,7 5L"
+  },
+  {
+   "expected": "il primo mercoledì di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 3#1"
+  },
+  {
+   "expected": "il terzo giovedì di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 4#3"
+  },
+  {
+   "expected": "l'ultimo sabato di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 6L"
+  },
+  {
+   "expected": "la quarta domenica di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0#4"
+  },
+  {
+   "expected": "la prima domenica di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0#1"
+  },
+  {
+   "expected": "l'ultima domenica di ogni mese alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0L"
+  },
+  {
+   "expected": "il quinto lunedì dei mesi che ne hanno cinque, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1#5"
+  },
+  {
+   "expected": "a luglio e agosto, l'ultimo giorno lavorativo del mese (dal lunedì al venerdì, festivi compresi) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 31W 6-8 *"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 29 di ogni mese, senza uscire dal mese (dal lunedì al venerdì, festivi compresi), a febbraio solo negli anni bisestili, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 29W * *"
+  },
+  {
+   "expected": "29 giorni prima dell'ultimo giorno di ogni mese (il 2 nei mesi di 31 giorni, il 1º in quelli di 30) alle 0:00, tranne a febbraio",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-29 * *"
+  },
+  {
+   "expected": "mai: la data indicata non esiste",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-30 6 *"
+  },
+  {
+   "expected": "il lunedì alle 9:00",
+   "options": {
+    "cron": "quartz",
+    "lang": "it"
+   },
+   "pattern": "0 0 9 ? * 2"
+  },
+  {
+   "expected": "dal lunedì al venerdì alle 9:00",
+   "options": {
+    "cron": "quartz",
+    "lang": "it"
+   },
+   "pattern": "0 0 9 ? * 2-6"
+  },
+  {
+   "expected": "il 25 febbraio (il 26 negli anni bisestili) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-3 2 *"
+  },
+  {
+   "expected": "ad aprile e giugno, il 27 del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-3 4,6 *"
+  },
+  {
+   "expected": "il 27 giugno e il 28 luglio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-3 6,7 *"
+  },
+  {
+   "expected": "il 1º febbraio, solo negli anni bisestili, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-28 2 *"
+  },
+  {
+   "expected": "il 28 gennaio e il 25 febbraio (il 26 negli anni bisestili) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-3 1,2 *"
+  },
+  {
+   "expected": "da giugno a settembre, 3 giorni prima dell'ultimo giorno del mese (il 28 nei mesi di 31 giorni, il 27 in quelli di 30) alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 L-3 6-9 *"
+  },
+  {
+   "expected": "a ogni ora in punto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "@hourly"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "@daily"
+  },
+  {
+   "expected": "la domenica alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "@weekly"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "@monthly"
+  },
+  {
+   "expected": "il 1º gennaio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "@yearly"
+  },
+  {
+   "expected": "all'avvio del sistema",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "Viene eseguito tutti i giorni alle 9:00.",
+   "options": {
+    "form": "sentence",
+    "lang": "it"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "Tutti i giorni alle 9:00",
+   "options": {
+    "form": "label",
+    "lang": "it"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "Ogni minuto",
+   "options": {
+    "form": "label",
+    "lang": "it"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "Il 1º di ogni mese alle 0:00",
+   "options": {
+    "form": "label",
+    "lang": "it"
+   },
+   "pattern": "0 0 1 * *"
+  },
+  {
+   "expected": "L'ultimo giorno di ogni mese alle 0:00",
+   "options": {
+    "form": "label",
+    "lang": "it"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "Viene eseguito all'avvio del sistema.",
+   "options": {
+    "form": "sentence",
+    "lang": "it"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "un'espressione cron non riconosciuta",
+   "options": {
+    "lang": "it",
+    "lenient": true
+   },
+   "pattern": "not a pattern"
+  },
+  {
+   "expected": "il venerdì e in più il 13 di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 13 * 5"
+  },
+  {
+   "expected": "a giugno, il venerdì e in più il 1º del mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "a gennaio e luglio, dal lunedì al venerdì e in più il 1º e il 15 del mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,15 1,7 1-5"
+  },
+  {
+   "expected": "da gennaio a novembre, il venerdì e in più il 1º del mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 1-11 5"
+  },
+  {
+   "expected": "da maggio a luglio, il mercoledì e il giovedì e in più il 1º, il 19, il 23 e il 28 del mese, sempre ogni ora dalle 7:52 alle 16:52",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "52 7-16 1,19,23,28 5-7 3-4"
+  },
+  {
+   "expected": "il lunedì e in più tutti i giorni dal 1º al 7 di ogni mese, sempre alle 4:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 4 1-7 * 1"
+  },
+  {
+   "expected": "tutti i giorni tranne il mercoledì, e in più il 15 di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 15 * 0-2,4-6"
+  },
+  {
+   "expected": "a giugno, il secondo lunedì del mese e in più il 1º del mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 6 1#2"
+  },
+  {
+   "expected": "da gennaio a maggio e da luglio a dicembre, il venerdì e in più il 1º del mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 1-5,7-12 5"
+  },
+  {
+   "expected": "tutti i giorni (ma il 15 di ogni mese solo se cade di venerdì) alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1-14,16-31 * 5"
+  },
+  {
+   "expected": "il lunedì e in più il 30 di ogni mese, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30 * 1"
+  },
+  {
+   "expected": "a giugno, il lunedì alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 31 6 1"
+  },
+  {
+   "expected": "a giugno, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1-30 6 1"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1-31 * 1"
+  },
+  {
+   "expected": "a febbraio, il lunedì e in più il 29 del mese, che c'è solo negli anni bisestili, sempre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 29 2 1"
+  },
+  {
+   "expected": "a giugno, tutti i giorni (ma il 15 e il 16 solo se cadono tra il lunedì e il venerdì) alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1-14,17-31 6 1-5"
+  },
+  {
+   "expected": "tutti i giorni (ma il 15 di ogni mese solo se cade di lunedì o di mercoledì) alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 1-14,16-31 * 1,3"
+  },
+  {
+   "expected": "tutti i giorni (ma il 15 di ogni mese solo se non cade di mercoledì), ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 9-17 1-14,16-31 * 0-2,4-6"
+  },
+  {
+   "expected": "il 1º e il 15 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,15 6 *"
+  },
+  {
+   "expected": "il 1º, il 10 e il 20 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,10,20 6 *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 7 e il 15 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-7,15 6 *"
+  },
+  {
+   "expected": "nei giorni dispari di giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "il 1º, il 6, l'11, il 16, il 21, il 26 e il 31 luglio alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */5 7 *"
+  },
+  {
+   "expected": "il 1º, il 6, l'11, il 16, il 21 e il 26 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */5 6 *"
+  },
+  {
+   "expected": "tutti i giorni dal 25 al 30 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 25-31 6 *"
+  },
+  {
+   "expected": "ad aprile e giugno, il 30 del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30,31 4,6 *"
+  },
+  {
+   "expected": "il 31 dei mesi di 31 giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 31 * *"
+  },
+  {
+   "expected": "il 30 di ogni mese alle 0:00, tranne a febbraio",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30 * *"
+  },
+  {
+   "expected": "il 30 e il 31 di ogni mese alle 0:00, tranne a febbraio",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30,31 * *"
+  },
+  {
+   "expected": "il 29 di ogni mese, a febbraio solo negli anni bisestili, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 29 * *"
+  },
+  {
+   "expected": "il 29 febbraio, solo negli anni bisestili, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 29 2 *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 3 e dal 28 al 31 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 28-3 * *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 3 e dal 28 al 30 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 28-3 6 *"
+  },
+  {
+   "expected": "a gennaio e luglio, il 1º e il 15 del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,15 1,7 *"
+  },
+  {
+   "expected": "il 31 dicembre alle 23:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "59 23 31 12 *"
+  },
+  {
+   "expected": "tutti i giorni tranne il 15 di ogni mese, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-14,16-31 * *"
+  },
+  {
+   "expected": "a giugno, tutti i giorni tranne il 15, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-14,16-31 6 *"
+  },
+  {
+   "expected": "tutti i giorni tranne il 15 e il 16 di ogni mese, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-14,17-31 * *"
+  },
+  {
+   "expected": "tutti i giorni tranne il 31 di ogni mese, alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-30 * *"
+  },
+  {
+   "expected": "ogni 2 mesi a partire da febbraio, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 2/2 *"
+  },
+  {
+   "expected": "tutti i giorni dal 1º al 5, il 10 e dal 20 al 25 di ogni mese alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 12 1-5,10,20-25 * *"
+  },
+  {
+   "expected": "il 1º, l'11, il 21 e il 31 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */10 * *"
+  },
+  {
+   "expected": "il 1º e il 22 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */21 * *"
+  },
+  {
+   "expected": "il 5, l'8, l'11, il 14, il 17 e il 20 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 5-20/3 * *"
+  },
+  {
+   "expected": "ogni 3 giorni a partire dal 1º di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */3 * *"
+  },
+  {
+   "expected": "nei giorni pari dall'8 al 30 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 8/2 * *"
+  },
+  {
+   "expected": "il 1º e tutti i giorni dal 10 al 15 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,10-15 * *"
+  },
+  {
+   "expected": "l'8 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 8 * *"
+  },
+  {
+   "expected": "l'11 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 11 * *"
+  },
+  {
+   "expected": "il 1º, l'8 e l'11 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,8,11 * *"
+  },
+  {
+   "expected": "tutti i giorni dall'8 all'11 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 8-11 * *"
+  },
+  {
+   "expected": "l'8 agosto alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 8 8 *"
+  },
+  {
+   "expected": "il 1º ottobre alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 10 *"
+  },
+  {
+   "expected": "mai: la data indicata non esiste",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "Non viene mai eseguito: la data indicata non esiste.",
+   "options": {
+    "form": "sentence",
+    "lang": "it"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "a gennaio, marzo e maggio, il 31 del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 31 1-6 *"
+  },
+  {
+   "expected": "a gennaio e marzo, il 30 del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30 1-3 *"
+  },
+  {
+   "expected": "il 30 di ogni mese alle 0:00, tranne a febbraio e giugno",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 30 1-5,7-12 *"
+  },
+  {
+   "expected": "ad aprile, giugno, settembre e novembre, il 1º del mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1,31 4,6,9,11 *"
+  },
+  {
+   "expected": "ogni 3 giorni dal 1º al 28 giugno alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */3 6 *"
+  },
+  {
+   "expected": "ogni 4 giorni a partire dal 1º di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 */4 * *"
+  },
+  {
+   "expected": "Mai: la data indicata non esiste",
+   "options": {
+    "form": "label",
+    "lang": "it"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "da gennaio a marzo, poi a giugno e da settembre a novembre, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 1-3,6,9-11 *"
+  },
+  {
+   "expected": "a dicembre e gennaio, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 12,1 *"
+  },
+  {
+   "expected": "nel 2030, a gennaio, febbraio, novembre e dicembre, tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it",
+    "years": true
+   },
+   "pattern": "0 0 * 11-2 * 2030"
+  },
+  {
+   "expected": "ad agosto, tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 * 8 *"
+  },
+  {
+   "expected": "ad aprile e agosto, tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 * 4,8 *"
+  },
+  {
+   "expected": "da aprile ad agosto, tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 * 4-8 *"
+  },
+  {
+   "expected": "da giugno a ottobre, tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 * 6-10 *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, tranne a giugno",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 1-5,7-12 *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, tranne a febbraio",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 3-1 *"
+  },
+  {
+   "expected": "il lunedì alle 9:00, tranne ad agosto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 1-7,9-12 1"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00, tranne a giugno e dicembre",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1 1-5,7-11 *"
+  },
+  {
+   "expected": "ogni 5 minuti, tranne ad agosto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/5 * * 1-7,9-12 *"
+  },
+  {
+   "expected": "nel 2030, a gennaio e dicembre, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it",
+    "years": true
+   },
+   "pattern": "0 9 * 12,1 * 2030"
+  },
+  {
+   "expected": "dal venerdì al lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "dal sabato al lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 6-1"
+  },
+  {
+   "expected": "dal martedì al giovedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 2-4"
+  },
+  {
+   "expected": "la domenica e il lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0,1"
+  },
+  {
+   "expected": "il venerdì e il sabato alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 5,6"
+  },
+  {
+   "expected": "il venerdì e la domenica alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0,5"
+  },
+  {
+   "expected": "dal martedì al giovedì e la domenica alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0,2-4"
+  },
+  {
+   "expected": "dal lunedì al mercoledì e il sabato alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1,2,3,6"
+  },
+  {
+   "expected": "il lunedì, il martedì, il giovedì e la domenica alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0,1,2,4"
+  },
+  {
+   "expected": "tutti i giorni tranne il lunedì e il sabato, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0,2-5"
+  },
+  {
+   "expected": "tutti i giorni tranne il mercoledì e la domenica, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1,2,4,5,6"
+  },
+  {
+   "expected": "dal lunedì al venerdì tranne il giovedì, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1,2,3,5"
+  },
+  {
+   "expected": "dal lunedì al venerdì tranne il martedì, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 1,3,4,5"
+  },
+  {
+   "expected": "dal martedì alla domenica alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0,2-6"
+  },
+  {
+   "expected": "tutti i giorni tranne il sabato, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "tutti i giorni tranne il venerdì e il sabato, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0-4"
+  },
+  {
+   "expected": "tutti i giorni tranne il mercoledì, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * 0-2,4-6"
+  },
+  {
+   "expected": "a giugno, tutti i giorni tranne il mercoledì, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6 0-2,4-6"
+  },
+  {
+   "expected": "tutti i giorni tranne il mercoledì, ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * * * 0-2,4-6"
+  },
+  {
+   "expected": "il lunedì alle 0:00, all'1:00, alle 22:00 e alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0,1,22,23 * * 1"
+  },
+  {
+   "expected": "a giugno, il lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "a giugno, il lunedì, il mercoledì e il venerdì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6 1,3,5"
+  },
+  {
+   "expected": "a giugno, il sabato e la domenica alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6 0,6"
+  },
+  {
+   "expected": "a gennaio e luglio, il lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 1,7 1"
+  },
+  {
+   "expected": "da giugno ad agosto, il lunedì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6-8 1"
+  },
+  {
+   "expected": "a giugno, dal lunedì al venerdì alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6 1-5"
+  },
+  {
+   "expected": "a giugno, tutti i giorni tranne il lunedì e il sabato, alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * 6 0,2-5"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, alle 9:30, alle 17:00 e alle 17:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:05, alle 9:20, alle 17:05 e alle 17:20",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:05, alle 9:20, alle 9:45, alle 17:05, alle 17:20 e alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ai minuti 5, 20 e 45 delle ore 8, 12 e 18",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 8,12,18 * * *"
+  },
+  {
+   "expected": "tutti i giorni all'1:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 1 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 13:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 13 * * *"
+  },
+  {
+   "expected": "tutti i giorni all'1:30 e alle 13:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 1,13 * * *"
+  },
+  {
+   "expected": "tutti i giorni all'1:00, alle 5:00 e alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 1,5,9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00 e alle 13:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9,13 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00 e alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0,23 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 0 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 12:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 12 * * *"
+  },
+  {
+   "expected": "al minuto 1 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "1 * * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, alle 10:00, alle 11:00 e alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-12 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 9:00 alle 13:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-13 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dall'1:00 alle 5:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 1-5 * * *"
+  },
+  {
+   "expected": "tutti i giorni all'1:00, alle 5:00, alle 9:00, alle 14:00 e alle 20:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 1,5,9,14,20 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 22:00 alle 23:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "il martedì, ogni 30 minuti dalle 0:00 alle 17:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/30 0-17 * * 2"
+  },
+  {
+   "expected": "tutti i giorni alle 5:00 e ogni ora dalle 9:00 alle 17:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 5,9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 minuti dalle 9:05 alle 9:55 e dalle 17:05 alle 17:55",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/10 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, alle 9:20 e alle 9:40",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,20,40 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 8:00, alle 8:30, alle 12:00, alle 12:30, alle 18:00 e alle 18:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 8,12,18 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, alle 9:20, alle 9:40, alle 17:00, alle 17:20 e alle 17:40",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/20 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 30 minuti dalle 9:00 alle 11:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 9-11 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 8:00, alle 8:30, alle 12:00, alle 12:30, alle 16:00, alle 16:30, alle 20:00 e alle 20:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 8,12,16,20 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:05, alle 9:20, alle 9:45, alle 10:05, alle 10:20 e alle 10:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 9-10 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 22:00 alle 6:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0-6,22,23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 15 minuti dalle 22:00 alle 5:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0-5,22-23 * * *"
+  },
+  {
+   "expected": "il lunedì, ogni ora dalle 0:00 alle 6:00, poi alle 22:00 e alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0-6,22,23 * * 1"
+  },
+  {
+   "expected": "il venerdì alle 0:00, all'1:00 e ogni ora dalle 21:00 alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 21-1 * * 5"
+  },
+  {
+   "expected": "il venerdì, ogni minuto dalle 0:00 alle 2:59 e dalle 22:00 alle 23:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 22-2 * * 5"
+  },
+  {
+   "expected": "a giugno, tutti i giorni, ogni ora dalle 0:00 alle 2:00, poi alle 22:00 e alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 22-2 * 6 *"
+  },
+  {
+   "expected": "nel 2030, tutti i giorni, ogni ora dalle 0:00 alle 2:00, poi alle 22:00 e alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 22-2 * * * 2030"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00, alle 6:00 e alle 18:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0,6,18 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 4 ore dalle 0:00 alle 20:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */4 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 3 ore dalle 0:00 alle 21:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */3 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 5 ore dalle 0:00 alle 20:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */5 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 ore dalle 0:00 alle 20:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0-20/2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 ore dalle 0:30 alle 22:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 */2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 3 ore dalle 0:30 alle 21:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 */3 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 5 ore dalle 0:30 alle 20:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 */5 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:23, alle 6:23, alle 12:23 e alle 18:23",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "23 */6 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 ore dall'1:23 alle 23:23",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "23 1/2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ai minuti 15 e 45 delle ore 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 e 22",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15,45 */2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ai minuti 15 e 45 delle ore 0, 4, 8, 12, 16 e 20",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:15, alle 0:45, alle 6:15, alle 6:45, alle 12:15, alle 12:45, alle 18:15 e alle 18:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15,45 */6 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 30 minuti dalle 9:15 alle 17:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15,45 9-17 * * *"
+  },
+  {
+   "expected": "ai minuti 15 e 45 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15,45 * * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:23 e alle 12:23",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "23 */12 * * *"
+  },
+  {
+   "expected": "tutti i giorni all'1:00 e alle 13:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 1/12 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 15 minuti dalle 0:00 alle 0:45 e dalle 12:00 alle 12:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */12 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00 e alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */12 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00 e alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0/12 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00 e alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "il 1º di ogni mese alle 0:00 e alle 12:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */12 1 * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni 3 ore dalle 0:00 alle 21:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */3 1 * *"
+  },
+  {
+   "expected": "tutti i giorni, a ogni ora in punto, tranne alle 3:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, a ogni ora in punto, tranne alle 3:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 4-2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, a ogni ora in punto, tranne alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0-22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, a ogni ora in punto, tranne alle 22:00 e alle 23:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0-21 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto, tranne dalle 23:00 alle 23:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, al minuto 30 di ogni ora, tranne alle 3:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ai minuti 5, 20 e 45 di ogni ora, tranne dalle 3:00 alle 3:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 minuti, tranne dalle 3:00 alle 3:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto, tranne dalle 3:00 alle 4:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-2,5-23 * * *"
+  },
+  {
+   "expected": "ogni minuto, tranne al minuto 29 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-28,30-59 * * * *"
+  },
+  {
+   "expected": "ogni minuto, tranne al minuto 59 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-58 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 9:59 e dalle 17:00 alle 17:59, tranne alle 9:29 e alle 17:29",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 5 minuti dalle 9:00 alle 17:55, tranne al minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 5 minuti dalle 9:00 alle 9:55, tranne alle 9:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 5 minuti, tranne dalle 3:00 alle 3:59 e tranne al minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 minuti dalle 9:00 alle 17:50, tranne al minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,10,20,40,50 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 minuti dalle 9:00 alle 9:50, tranne alle 9:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,10,20,40,50 9 * * *"
+  },
+  {
+   "expected": "ogni 10 minuti, tranne al minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,10,20,40,50 * * * *"
+  },
+  {
+   "expected": "ogni 7 minuti dal minuto 0 al 56, ripartendo a ogni ora, tranne al minuto 28",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,7,14,21,35,42,49,56 * * * *"
+  },
+  {
+   "expected": "ogni secondo, tranne durante il minuto 29 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:59:59, tranne dalle 9:29:00 alle 9:29:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-28,30-59 9 * * *"
+  },
+  {
+   "expected": "ogni secondo, tranne al secondo 29 di ogni minuto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-28,30-59 * * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:00:59, tranne alle 9:00:29",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-28,30-59 0 9 * * *"
+  },
+  {
+   "expected": "ogni minuto, tranne ai minuti 0 e 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "1-29,31-59 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dal minuto 1 al 29 e dal minuto 31 al 59 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:01, ultima alle 17:59)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "1-29,31-59 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo, tranne dalle 3:00:00 alle 3:59:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 7 minuti dal minuto 0 al 56 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:00, ultima alle 17:56), tranne al minuto 28",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,7,14,21,35,42,49,56 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 15 minuti dalle 0:00 alle 0:45 e così via ogni 2 ore fino alle 22:45, tranne dalle 2:00 alle 2:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0,4,6,8,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 15 minuti dalle 8:00 alle 8:45, dalle 10:00 alle 10:45 e così via ogni 2 ore fino alle 18:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 9:00 alle 17:00, poi alle 20:00 e alle 22:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 9-17,20,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 17:59, dalle 20:00 alle 20:59 e dalle 22:00 alle 22:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 9-17,20,22 * * *"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 10 minuti dalle 6:00 alle 8:50 e dalle 17:00 alle 19:50",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/10 6-8,17-19 * * 1-5"
+  },
+  {
+   "expected": "a gennaio, aprile, luglio e ottobre, nei giorni dispari del mese, ai minuti 0, 20 e 40 delle ore 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 e 22",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/20 */2 */2 */3 *"
+  },
+  {
+   "expected": "tutti i giorni, ai minuti 5, 20 e 45 di ogni ora, dalle 9:05 alle 17:45 e dalle 22:05 alle 22:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 9-17,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 8:00 alle 8:29, dalle 12:00 alle 12:29 e dalle 18:00 alle 18:29",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 8,12,18 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 6:00 alle 6:59, dalle 8:00 alle 8:59, dalle 12:00 alle 12:59, dalle 18:00 alle 18:59 e dalle 20:00 alle 20:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 6,8,12,18,20 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 0:00 alle 0:59, dalle 3:00 alle 3:59 e così via ogni 3 ore fino alle 21:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* */3 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 15 minuti dalle 0:00 alle 0:45, dalle 2:00 alle 2:45 e così via ogni 2 ore fino alle 20:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 0-20/2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 minuti dalle 0:05 alle 0:55, dalle 2:05 alle 2:55 e così via ogni 2 ore fino alle 22:55",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/10 */2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ai minuti 5, 20 e 45 di ogni ora, dalle 8:05 alle 10:45, dalle 14:05 alle 14:45 e dalle 20:05 alle 20:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,20,45 8-10,14,20 * * *"
+  },
+  {
+   "expected": "il 1º di ogni mese, ogni minuto dal minuto 0 al 29 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:00, ultima alle 17:29)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 9-17 1 * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dal minuto 0 al 29 di ciascuna ora dalle 9 alle 17 comprese e delle ore 22",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 9-17,22 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 9:10 e dalle 9:50 alle 9:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "50-10 9 * * *"
+  },
+  {
+   "expected": "ogni minuto dal minuto 0 al 10 e dal minuto 50 al 59 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "50-10 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:10 alle 9:40",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "10-40 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:30 alle 9:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30-59 9 * * *"
+  },
+  {
+   "expected": "ogni minuto dal minuto 5 al 10 e una volta al minuto 20 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5-10,20 * * * *"
+  },
+  {
+   "expected": "ogni minuto dal minuto 45 al 59 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "45-59 * * * *"
+  },
+  {
+   "expected": "ogni minuto dal minuto 10 al 40 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "10-40 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00 alle 9:29 e dalle 17:00 alle 17:29",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 9,17 * * *"
+  },
+  {
+   "expected": "ai minuti 0 e 1 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-1 * * * *"
+  },
+  {
+   "expected": "ai minuti 0, 21 e 42 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/21 * * * *"
+  },
+  {
+   "expected": "ai minuti 9, 14, 47 e 56 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "9,14,47,56 * * * *"
+  },
+  {
+   "expected": "ogni 10 minuti a partire dal minuto 5 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5/10 * * * *"
+  },
+  {
+   "expected": "ogni 10 minuti dal minuto 0 al 40, ripartendo a ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-40/10 * * * *"
+  },
+  {
+   "expected": "ogni 6 minuti dal minuto 0 al 42, ripartendo a ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-42/6 * * * *"
+  },
+  {
+   "expected": "ogni 2 minuti a partire dal minuto 1 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "1/2 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 minuti dalle 9:01 alle 17:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "1/2 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 0:00 alle 0:29, dalle 2:00 alle 2:29 e così via ogni 2 ore fino alle 22:29",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-29 */2 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:30:15",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:30:15 e alle 17:30:15",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15 30 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:30:15 e alle 9:30:45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15,45 30 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00:00, alle 9:00:20 e alle 9:00:40",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,20,40 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00:05",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5-10/60 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00:15 e alle 12:00:15",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15 0 */12 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00:15, alle 6:00:15, alle 12:00:15 e alle 18:00:15",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15 0 */6 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 ore dalle 0:00:15 alle 22:00:15",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15 0 */2 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:30:10 alle 9:30:20",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:00:59 e dalle 17:00:00 alle 17:00:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 8:00, alle 12:00, alle 16:00 e alle 20:00, ogni volta per un minuto intero, secondo per secondo",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0 8,12,16,20 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:59:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 17:59:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* * 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:29:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-29 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 9:00:30 alle 17:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 9-17 * * *"
+  },
+  {
+   "expected": "ogni secondo durante il minuto 0 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0 * * * *"
+  },
+  {
+   "expected": "al secondo 30 del minuto 0 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 * * * *"
+  },
+  {
+   "expected": "ogni secondo dal secondo 0 al 9 del minuto 0 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-9 0 * * * *"
+  },
+  {
+   "expected": "al secondo 15 del minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "15 30 * * * *"
+  },
+  {
+   "expected": "ogni secondo durante il minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 30 * * * *"
+  },
+  {
+   "expected": "ai secondi 0 e 30 dei minuti 5 e 20 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0,30 5,20 * * * *"
+  },
+  {
+   "expected": "ogni 15 minuti, e in quel minuto ai secondi 0, 15, 30 e 45",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */15 * * * *"
+  },
+  {
+   "expected": "ogni 15 minuti, al secondo 30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 */15 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, al secondo 8 dei minuti 5 e 30 delle ore 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 e 22",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "8 5,30 */2 * * *"
+  },
+  {
+   "expected": "ogni secondo durante i minuti da 0 a 29 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-29 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 9:00:30 alle 17:59:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 * 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 15 minuti dalle 9:00 alle 17:45, e in quel minuto ai secondi 5, 15 e 25",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,15,25 */15 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, al secondo 30 di ogni minuto, tranne dalle 3:00:00 alle 3:59:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 * 0-2,4-23 * * *"
+  },
+  {
+   "expected": "al secondo 30 di ogni minuto, tranne durante il minuto 29 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, al secondo 30 del minuto 0 di ogni ora, tranne alle 3:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, al secondo 30 di ogni minuto dal minuto 0 al 29 di ciascuna ora dalle 9 alle 17 (prima volta alle 9:00:30, ultima alle 17:29:30)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0-29 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 5 minuti dalle 9:00:30 alle 9:55:30, tranne alle 9:30:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0,5,10,15,20,25,35,40,45,50,55 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 minuti, e in quel minuto ai secondi 0, 15, 30 e 45, tranne dalle 3:00:00 alle 3:59:59",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni, al secondo 30 dei minuti 5, 20 e 45 di ogni ora, dalle 9:05:30 alle 17:45:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 5,20,45 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 7 minuti dal minuto 0 al 56 di ciascuna ora dalle 9 alle 17, al secondo 30 (prima volta alle 9:00:30, ultima alle 17:56:30)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 */7 9-17 * * *"
+  },
+  {
+   "expected": "a giugno, ogni 5 minuti",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/5 * * 6 *"
+  },
+  {
+   "expected": "a giugno, tutti i giorni alle 0:00, alle 6:00, alle 12:00 e alle 18:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 */6 * 6 *"
+  },
+  {
+   "expected": "a giugno, al minuto 30 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 * * 6 *"
+  },
+  {
+   "expected": "il lunedì, a ogni ora in punto",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 * * * 1"
+  },
+  {
+   "expected": "nel 2030, ogni 5 minuti",
+   "options": {
+    "lang": "it",
+    "years": true
+   },
+   "pattern": "*/5 * * * * 2030"
+  },
+  {
+   "expected": "il lunedì e il martedì e in più tutti i giorni dal 23 al 25 di ogni mese, sempre ogni 3 ore dalle 0:24 alle 21:24, ogni volta dal secondo 0 al 50, a intervalli di 10 secondi",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/10 24 */3 23-25 * 1-2"
+  },
+  {
+   "expected": "un anno su 4 a partire dal 2030, a giugno e luglio, il secondo sabato del mese alle 0:23:00, alle 0:23:30, alle 12:23:00 e alle 12:23:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/30 23 */12 * 6-7 6#2 2030/4"
+  },
+  {
+   "expected": "nel 2028 e nel 2030, tutti i giorni alle 2:35 e alle 15:35",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 35 2,15 * * * 2028,2030"
+  },
+  {
+   "expected": "a luglio, settembre, ottobre e dicembre, dal lunedì al venerdì tranne il martedì, ogni secondo durante i minuti 30 e 42 di ciascuna ora dalle 3 alle 10 (prima volta alle 3:30:00, ultima alle 10:42:59)",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 30,42 3-10 * 7,9,10,12 1,3,4,5"
+  },
+  {
+   "expected": "a marzo, giugno, settembre e dicembre, il giorno lavorativo più vicino al 15 del mese (dal lunedì al venerdì, festivi compresi) alle 18:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 18 15W 3,6,9,12 *"
+  },
+  {
+   "expected": "ogni 2 mesi a partire da gennaio, il 1º del mese alle 4:07, alle 10:07, alle 16:07 e alle 22:07",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "ogni 2 minuti dal minuto 0 al 20 e ogni 3 minuti dal minuto 21 al 57 di ogni ora, ogni volta per un minuto intero, secondo per secondo",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-20/2,21-59/3 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 minuti dalle 9:00 alle 9:20 e ogni 3 minuti dalle 9:21 alle 9:57, ogni volta per un minuto intero, secondo per secondo",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-20/2,21-59/3 9 * * *"
+  },
+  {
+   "expected": "negli anni pari dal 2030 al 2040 tranne nel 2038, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2030-2036/2,2040"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 minuti dalle 9:00 alle 9:20 e ogni 3 minuti dalle 9:21 alle 9:57",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-20/2,21-59/3 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 2 secondi dalle 9:00:00 alle 9:00:20 e ogni 3 secondi dalle 9:00:21 alle 9:00:57",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-20/2,21-59/3 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 10 secondi dalle 9:05:00 alle 9:05:50 e dalle 9:20:00 alle 9:20:50",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/10 5,20 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni secondo dalle 9:00:00 alle 9:00:09 e una volta alle 9:00:30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0-9,30 0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00:05, alle 9:00:15, alle 9:00:25, alle 17:00:05, alle 17:00:15 e alle 17:00:25",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,15,25 0 9,17 * * *"
+  },
+  {
+   "expected": "ogni secondo durante i minuti da 0 a 10 e durante i minuti da 50 a 59 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 50-10 * * * *"
+  },
+  {
+   "expected": "ogni secondo durante i minuti da 0 a 29 e durante il minuto 45 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 0-29,45 * * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni 5 minuti, tranne dalle 3:00 alle 3:59 e tranne a dicembre",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/5 0-2,4-23 * 1-11 *"
+  },
+  {
+   "expected": "il 1º, il 3, il 5 e il 7 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-7/2 * *"
+  },
+  {
+   "expected": "nei giorni dispari dal 1º al 9 e tutti i giorni dal 12 al 14 di ogni mese alle 0:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 1-9/2,12-14 * *"
+  },
+  {
+   "expected": "ogni 2 minuti dal minuto 1 al 9 e ogni minuto dal minuto 30 al 40 di ogni ora",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "1-9/2,30-40 * * * *"
+  },
+  {
+   "expected": "ogni 2 minuti dal minuto 0 al 20 e ogni 3 minuti dal minuto 21 al 57 di ogni ora, al secondo 30",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "30 0-20/2,21-59/3 * * * *"
+  },
+  {
+   "expected": "negli anni pari dal 2030 al 2038 e in tutti gli anni dal 2040 al 2045, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2,2041-2045"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00 del mattino",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 0:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 12:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "tutti i giorni all'1:00 del pomeriggio",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 13 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 3:00 del mattino e alle 8:00 di sera",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 3,20 * * *"
+  },
+  {
+   "expected": "il lunedì alle 0:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0 * * 1"
+  },
+  {
+   "expected": "il lunedì alle 3:00 del mattino",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 3 * * 1"
+  },
+  {
+   "expected": "tutti i giorni alle 9:30 del mattino e alle 5:30 del pomeriggio",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 9:00 del mattino alle 5:00 del pomeriggio",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "tutti i giorni, ogni ora dalle 9:00 del mattino alle 5:00 del pomeriggio e una volta alle 10:00 di sera",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9:00 del mattino alle 5:45 del pomeriggio",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 10:00 di sera alle 11:59 di sera",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:30:15 del mattino",
+   "options": {
+    "lang": "it",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9.00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9.30 e alle 17.30",
+   "options": {
+    "lang": "it",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9.30.15",
+   "options": {
+    "lang": "it",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "il 1º giugno alle 0.00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "tutti i giorni alle 9.30 e alle 17.30",
+   "options": {
+    "lang": "it-CH"
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "dal lunedì al venerdì, ogni 15 minuti dalle 9.00 alle 17.45",
+   "options": {
+    "lang": "it-CH"
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "tutti i giorni, ogni minuto dalle 22.00 alle 23.59",
+   "options": {
+    "lang": "it-CH"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "il lunedì, il mercoledì e il venerdì alle 9.00",
+   "options": {
+    "lang": "it-CH"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "tutti i giorni alle 9:30 e alle 17:30",
+   "options": {
+    "lang": "it-IT"
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "il lun, il mer e il ven alle 9:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "la dom alle 9:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "a giu, il lun alle 9:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "da giu ad ago, tutti i giorni alle 9:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "il 1º giu alle 0:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "l'ultimo ven di ogni mese alle 9:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "il giorno lavorativo più vicino al 15 di ogni mese (dal lun al ven, festivi compresi) alle 9:00",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "tutti i giorni alle 9:00, tranne ad ago",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 1-7,9-12 *"
+  },
+  {
+   "expected": "dal lun al ven, ogni 15 minuti dalle 9:00 alle 17:45",
+   "options": {
+    "lang": "it",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  }
+ ]
+}

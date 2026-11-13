@@ -1,0 +1,7 @@
+{
+  "name": "Italian",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "built 2026-11-13 by Claude Fable 5.2 from usage notes written in Italian with no knowledge of cron, a rule book derived from them, the lexicon and the visible paradigms, after two schedule reads and five blind fluency reads of the rows and seven author passes; the renderer was built by an agent that saw no other renderer and no held-out row: 152 of 153 held-out rows passed on the first judged run, and the one that failed was the row's fault (a nearest working day beside Monday to Friday adds nothing; the row was corrected). After the build, coverage found a pattern family no row had covered (every second, or one second, through minutes that are two cadences together, and a run that follows a cadence): one output printed an object and others said the wrong schedule; rows were written first and the renderer repaired by kind of part. The builder also listed about twenty places where the rule book was silent and it chose a general rule. The four sentence forms changed after the last blind read, and the built output beyond the rows, have had no independent read; no blind recovery has been run",
+  "branchBudget": 110
+}
