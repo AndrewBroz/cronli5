@@ -2,9 +2,12 @@
 // the day first and what happens in it second.
 
 import {denote} from '../../core/describe-set.js';
-import type {Domain, Schedule, SetDescription} from '../../core/schedule.js';
+import type {
+  CadencePieces, Domain, Field, Schedule, SetDescription
+} from '../../core/schedule.js';
+import {candidatesAs} from '../../core/set-views.js';
 import lexicon from './lexicon.js';
-import type {Counting, Described} from './sets.js';
+import type {Counting, Described, Sayable} from './sets.js';
 import {
   boundedCadence, join, list, longerThan, restOf, runsOf, settle,
   settleUnwrapped, thingsNamed
@@ -72,14 +75,16 @@ interface Clockwork {
   carry: number[];
   // The minute and second of the last moment of an hour, and the first.
   high: number[];
-  hours: SetDescription;
+  hours: Sayable;
   // Whether the seconds take the place of «jede Minute».
   leads: boolean;
+  // Each field's candidates with nothing wrapped.
+  linear: {[field in 'hour' | 'minute' | 'second']: SetDescription[]};
   low: number[];
-  minutes: SetDescription;
+  minutes: Sayable;
   // Whether the seconds need no words of their own.
   quiet: boolean;
-  seconds: SetDescription;
+  seconds: Sayable;
   voice: Voice;
 }
 
@@ -157,7 +162,7 @@ function every(interval: number, unit: Unit): string {
     `${words.each} ${unit.one}`;
 }
 
-function stepOf(description: SetDescription): number {
+function stepOf(description: Sayable): number {
   return (description as Partial<Described<'cadence'>>).interval ?? 1;
 }
 
@@ -213,8 +218,8 @@ function stretch(
 }
 
 const shapes: {
-  [Kind in Exclude<SetDescription['kind'], 'except'>]:
-  (description: Described<Kind>, level: Level) => string
+  [Kind in Exclude<Sayable['kind'], 'except'>]:
+  (description: Extract<Sayable, {kind: Kind}>, level: Level) => string
 } = {
   all(_all, level) {
     return stretch([0, level.top], level.whole, level.open, level);
@@ -223,6 +228,24 @@ const shapes: {
     return stretch([cadence.start, cadence.last],
       every(cadence.interval, level.unit), level.open && level.tiling &&
       tiles(cadence), level);
+  },
+  // Each stretch with what happens in it, and single points after them.
+  cadencePieces(pieces, level) {
+    const stretches = pieces.parts.flatMap(function stretchOf(part) {
+      const {interval, last, start, from = start, to = last} =
+        part as Partial<Described<'cadence'> & Described<'range'>>;
+
+      return part.kind === 'values' ? [] : [
+        `${span([from as number, to as number], level)}${level.oClock} ` +
+        `${interval ? every(interval, level.unit) : level.each}`
+      ];
+    });
+    const strays = pieces.parts.flatMap(function straysOf(part) {
+      return (part as Described<'values'>).values ?? [];
+    });
+
+    return join([level.lead + list(stretches),
+      strays.length > 0 && `${words.also} ${points(strays, level)}`]);
   },
   // The runs share what happens in them, and single points follow.
   pieces(pieces, level) {
@@ -245,7 +268,7 @@ const shapes: {
 };
 
 // A set of one field's values, said at its level.
-function spread(description: SetDescription, level: Level): Said {
+function spread(description: Sayable, level: Level): Said {
   const {base, removed} = restOf(description);
 
   return {
@@ -284,7 +307,7 @@ function hourLevel(work: Clockwork): Level {
 }
 
 // Whether no window of hours holds a second hour.
-function standApart(hours: SetDescription): boolean {
+function standApart(hours: Sayable): boolean {
   const {base} = restOf(hours);
 
   return base.kind !== 'all' &&
@@ -347,43 +370,49 @@ function isListed(work: Clockwork): boolean {
     times <= windowed;
 }
 
-// The hours as stretches, each from its first moment to its last: every
-// window, or for a cadence the first two and the last. Every second hour
-// of the whole day has a name, and the windows are its gloss.
-function hourStretches(
-  base: SetDescription,
-  spans: Spans,
-  work: Clockwork
-): string {
+// The windows of a set of hours, without «Uhr»: every one, or for a
+// cadence too long to list the first two and the last.
+function windowsOf(part: Sayable, spans: Spans): string {
+  const hours = denote(part, hoursOfDay);
+  const [first, second, last] =
+    [hours[0], hours[1], hours[hours.length - 1]].map(function toSpan(hour) {
+      return span([hour, hour], spans);
+    });
+
+  return part.kind === 'cadence' && hours.length > heldInSeries ?
+    `${first}, ${second} ${words.ellipsis} ${words.and} ${last}` :
+    list(runsOf(hours).map(function toSpan(run) {
+      return span(run, spans);
+    }));
+}
+
+// The hours as stretches, each from its first moment to its last. Every
+// second hour of the whole day has a name, and the windows are its gloss.
+// Runs and cadences together are said one after another.
+function hourStretches(base: Sayable, spans: Spans, work: Clockwork): string {
+  const {interval, last = 0, start = 0} = base as Partial<Described<'cadence'>>;
+  const parts = base.kind === 'cadencePieces' ? base.parts : [base];
+  const hours = denote(base, hoursOfDay);
+  const gloss = [hours[0], hours[1], hours[hours.length - 1]].map(
+    function toGloss(hour) {
+      return `${clock24(hour, work.low)}–${clock24(hour, work.high)}`;
+    });
+
   if (base.kind === 'all') {
     return '';
   }
 
-  const hours = denote(base, hoursOfDay);
-
-  if (base.kind !== 'cadence') {
-    return windows(hours, spans);
-  }
-
-  const shown = [hours[0], hours[1], hours[hours.length - 1]];
-  const [first, second, last] = shown.map(function toSpan(hour) {
-    return span([hour, hour], spans);
-  });
-  const gloss = shown.map(function toGloss(hour) {
-    return `${clock24(hour, work.low)}–${clock24(hour, work.high)}`;
-  });
-
-  return base.interval === 2 && base.start < 2 &&
-    base.last + base.interval > hoursOfDay.max ?
-    `${[words.inEvenHours, words.inOddHours][base.start]} (${gloss[0]}, ` +
+  return interval === 2 && start < 2 && last + 2 > hoursOfDay.max ?
+    `${[words.inEvenHours, words.inOddHours][start]} (${gloss[0]}, ` +
       `${gloss[1]} ${words.ellipsis} ${gloss[2]} ${words.oClock})` :
-    `${first}, ${second} ${words.ellipsis} ${words.and} ${last}` +
-      `${spans.oClock}`;
+    parts.map(function say(part) {
+      return windowsOf(part, spans);
+    }).join(` ${words.also} `) + spans.oClock;
 }
 
 // A series of clock times: every time of the first two hours and of the
 // last.
-function seriesOfTimes(base: SetDescription, work: Clockwork): string {
+function seriesOfTimes(base: Sayable, work: Clockwork): string {
   const {M, carry, voice} = work;
   const hours = denote(base, hoursOfDay);
 
@@ -463,7 +492,8 @@ function minutesAndHours(
 function toTheSecond(work: Clockwork): Said | null {
   const {S, voice} = work;
   const times = clockTimes(work);
-  const {base, removed} = restOf(settle(S, sixty, onTheClock));
+  const {base, removed} = restOf(settle(work.linear.second, onTheClock,
+    beatOf(work.linear.second)));
   const reach = denote(base, sixty);
 
   function stamps(seconds: number[]): string[] {
@@ -504,7 +534,7 @@ function toTheSecond(work: Clockwork): Said | null {
 
 // A burst too long to list: how many times and how far apart, and its
 // first second where that is not the full minute.
-function burst(base: SetDescription): string {
+function burst(base: Sayable): string {
   const seconds = denote(base, sixty);
   const start = seconds.slice(0, 1).filter(function isLater(second) {
     return second > 0;
@@ -516,21 +546,31 @@ function burst(base: SetDescription): string {
     `${amount([stepOf(base)], units.second)}${start.join('')}`;
 }
 
-// Seconds in several stretches, by their number in the minute: each run
-// by its ends and each second between them, in ascending order.
-function numbered(pieces: Described<'pieces'>): string {
-  const items = pieces.parts.flatMap(function split(part) {
-    return part.kind === 'range' ? [[part.from, part.to]] :
-      part.values.map(function single(second) {
-        return [second];
-      });
+// Seconds by their number in the minute: each run by its ends, each
+// cadence as a series and each second between them, in ascending order.
+// A series stands apart from its neighbours.
+function numbered(base: Sayable): string {
+  const {parts = [base]} = base as Partial<CadencePieces>;
+  const items = parts.flatMap(function split(part): Array<[number, string]> {
+    const seconds = denote(part, sixty);
+
+    return part.kind === 'values' ?
+      seconds.map(function single(second) {
+        return [second, String(second)];
+      }) :
+      [[seconds[0], part.kind === 'range' ?
+        `${part.from} ${words.to} ${part.to}` :
+        `${seconds.slice(0, boundedCadence).join(', ')} ${words.ellipsis} ` +
+          `${seconds[seconds.length - 1]}`]];
   }).sort(function ascending(a, b) {
     return a[0] - b[0];
+  }).map(function text(item) {
+    return item[1];
   });
 
-  return `${words.inSeconds} ${list(items.map(function say(item) {
-    return item.join(` ${words.to} `);
-  }))}`;
+  return `${words.inSeconds} ` + (base.kind === 'cadencePieces' ?
+    items.join(` ${words.also} `) :
+    list(items));
 }
 
 const bursts: {[kind: string]: (base: never) => string} = {
@@ -538,15 +578,16 @@ const bursts: {[kind: string]: (base: never) => string} = {
     return `${words.oneMinuteLong} ${every(1, units.second)}`;
   },
   cadence: burst,
+  cadencePieces: numbered,
   pieces: numbered,
-  range: burst,
+  range: numbered,
   values(base) {
     return offset(denote(base, sixty), theMinute);
   }
 };
 
 // The seconds that follow a time part said whole.
-function trailing(S: number[], seconds: SetDescription, voice: Voice) {
+function trailing(S: number[], seconds: Sayable, voice: Voice) {
   const {base, removed} = restOf(seconds);
 
   return S.length > held ?
@@ -559,7 +600,7 @@ function trailing(S: number[], seconds: SetDescription, voice: Voice) {
 
 // Whether the seconds take the place of «jede Minute»: they run without
 // a break, through every minute of a stretch.
-function runThrough(seconds: SetDescription, minutes: SetDescription) {
+function runThrough(seconds: Sayable, minutes: Sayable) {
   const beat = restOf(seconds).base;
   const run = restOf(minutes).base;
   const steady = beat.kind === 'all' || beat.kind === 'cadence' && tiles(beat);
@@ -570,17 +611,50 @@ function runThrough(seconds: SetDescription, minutes: SetDescription) {
     }));
 }
 
+// Two values that halve the cycle are a cadence too (minutes 0 and 30),
+// which a field that does not wrap is not offered.
+function beatOf(candidates: SetDescription[]): Sayable[] {
+  const {values = []} =
+    candidates[candidates.length - 1] as Partial<Described<'values'>>;
+  const half = (sixty.max + 1) / 2;
+
+  return values.join() === `0,${half}` ?
+    [{interval: half, kind: 'cadence', last: half, start: 0}] :
+    [];
+}
+
+// A field's candidates with nothing wrapped, and its runs and cadences
+// together where it has them.
+function unwrapped(schedule: Schedule, field: Field): SetDescription[] {
+  return candidatesAs(schedule, field, {linear: true}) as SetDescription[];
+}
+
+function together(schedule: Schedule, field: Field): Sayable[] {
+  return [schedule.analyses.cadencePieces[field]].filter(Boolean) as
+    Sayable[];
+}
+
 // The three fields of the clock, each with the description it is said
 // by, and what the seconds do to the rest.
 function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
   const {candidates} = schedule.analyses;
-  const S = denote((candidates.second as SetDescription[])[0], sixty);
-  const M = denote((candidates.minute as SetDescription[])[0], sixty);
-  const H = denote((candidates.hour as SetDescription[])[0], hoursOfDay);
-  const seconds = settle(S, sixty, inTheHour);
+  const linear = {
+    hour: unwrapped(schedule, 'hour'),
+    minute: unwrapped(schedule, 'minute'),
+    second: unwrapped(schedule, 'second')
+  };
+  const [S, M] = [linear.second, linear.minute].map(function valuesOf(field) {
+    return denote(field[field.length - 1], sixty);
+  });
+  const H = denote(linear.hour[linear.hour.length - 1], hoursOfDay);
+  const seconds = settle(linear.second, inTheHour,
+    [...beatOf(linear.second), ...together(schedule, 'second')]);
+  const minuteOthers =
+    [...beatOf(linear.minute), ...together(schedule, 'minute')];
   const minutes = H.length === 1 ?
-    settle(M, sixty, onTheClock) :
-    settleUnwrapped(M, sixty, inTheHour);
+    settle(linear.minute, onTheClock, minuteOthers) :
+    settleUnwrapped(candidates.minute as SetDescription[], linear.minute,
+      inTheHour, minuteOthers);
   const lone = S.length === 1;
   const pointed = minutes.kind === 'values';
   const leads = runThrough(seconds, minutes);
@@ -598,9 +672,11 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
       return lone && pointed && second > 0;
     }),
     high: [M[M.length - 1], ...toSecond.filter(whereLeading)],
-    hours: settle(H, hoursOfDay,
-      M.length === 1 ? hoursAsPoints : hoursAsWindows),
+    hours: settle(linear.hour,
+      M.length === 1 ? hoursAsPoints : hoursAsWindows,
+      together(schedule, 'hour')),
     leads,
+    linear,
     low: [M[0], ...[0].filter(whereLeading)],
     minutes,
     // One second is silent at 0 and carried by points.

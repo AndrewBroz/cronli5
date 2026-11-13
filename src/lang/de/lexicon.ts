@@ -128,6 +128,7 @@ const words = {
   hourly: 'stündlich',
   in: 'im',
   inAllMonths: 'in allen Monaten',
+  inAllYears: 'in allen Jahren',
   inEvenHours: 'in den geraden Stunden',
   inEvenYears: 'in geraden Jahren',
   inMonthsWith: 'in Monaten mit',
@@ -139,6 +140,7 @@ const words = {
   inYears: 'in den Jahren',
   lastDay: 'am letzten Tag',
   nearest: 'am nächsten liegt',
+  never: 'nie (einen solchen Tag gibt es nicht)',
   oClock: 'Uhr',
   ofTheseMonths: 'dieser Monate',
   ofEachMonth: 'jedes Monats',
@@ -148,6 +150,7 @@ const words = {
   onTheFirst: 'am ersten',
   onTheLast: 'am letzten',
   oneMinuteLong: 'eine Minute lang',
+  onlyLeapYears: 'nur in Schaltjahren',
   penultimateDay: 'am vorletzten Tag',
   runs: 'Läuft',
   since: 'ab',
@@ -157,7 +160,9 @@ const words = {
   unrecognizable: 'ein unbekanntes Cron-Muster',
   whichThe: 'der dem',
   withDays: 'Tagen',
-  workday: 'Werktag'
+  without: 'ohne den',
+  workday: 'Wochentag',
+  yearly: 'jährlich'
 };
 
 const lexicon = {

@@ -29,9 +29,10 @@ export interface GermanParts {
 function describeParts(schedule: Schedule, opts: GermanOptions): GermanParts {
   const voice = voiceOf(opts.style);
   const time = timePart(schedule, voice);
-  const {day, lead, month, year} = calendar(schedule, time, voice);
+  const {day, lead, month, never, year} = calendar(schedule, time, voice);
 
-  return {day, month, time: lead + time.text, year};
+  // A schedule that never runs has no time to say.
+  return {day, month, time: never ? '' : lead + time.text, year};
 }
 
 function describe(schedule: Schedule, opts: GermanOptions): string {

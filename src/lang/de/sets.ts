@@ -2,8 +2,7 @@
 // description of a set; a field counts the things each one names and the
 // fewest wins, under the limits the answers give for that field.
 
-import {describeSet} from '../../core/describe-set.js';
-import type {Domain, SetDescription} from '../../core/schedule.js';
+import type {CadencePieces, SetDescription} from '../../core/schedule.js';
 import lexicon from './lexicon.js';
 
 const {words} = lexicon;
@@ -11,6 +10,9 @@ const {words} = lexicon;
 /** A set description of one kind. */
 export type Described<Kind extends SetDescription['kind']> =
   Extract<SetDescription, {kind: Kind}>;
+
+/** Anything a set is said as: a description, or runs and cadences. */
+export type Sayable = CadencePieces | SetDescription;
 
 /** A part of a set said in pieces: a run, or values on their own. */
 export type Piece = Described<'pieces'>['parts'][number];
@@ -22,6 +24,9 @@ export interface Counting {
   cadence(cadence: Described<'cadence'>, count: number): number;
   // Pieces replace a list only when it has more values than this.
   listed: number;
+  // Where a value stands in the cycle as the field's readers walk it, if
+  // not at its own number: a run wraps when it ends before it starts.
+  place?(value: number): number;
   // The most values an exception may take away from every value.
   removable: number;
 }
@@ -62,11 +67,15 @@ function runsOf(values: number[]): number[][] {
 }
 
 /** The set a description rests on, and the values taken away from it. */
-function restOf(description: SetDescription) {
+function restOf(description: Sayable): {base: Sayable; removed: number[]} {
   const {base = description, removed = []} =
     description as Partial<Described<'except'>>;
 
   return {base, removed};
+}
+
+function asItIs(value: number): number {
+  return value;
 }
 
 /**
@@ -84,9 +93,27 @@ function unsayable(): number {
   return Infinity;
 }
 
+// What a part of runs and cadences together names: a run its ends, a
+// cadence its ends and its step (or its few values), values themselves.
+const partNamed = {
+  cadence(cadence: Described<'cadence'>): number {
+    return Math.min((cadence.last - cadence.start) / cadence.interval + 1,
+      boundedCadence);
+  },
+  range(): number {
+    return runEnds;
+  },
+  values(values: Described<'values'>): number {
+    return values.values.length;
+  }
+};
+
 const naming: {
-  [Kind in SetDescription['kind']]:
-  (description: Described<Kind>, count: number, counting: Counting) => number
+  [Kind in Sayable['kind']]: (
+    description: Extract<Sayable, {kind: Kind}>,
+    count: number,
+    counting: Counting
+  ) => number
 } = {
   all() {
     return 0;
@@ -94,6 +121,14 @@ const naming: {
   cadence(cadence, _count, counting) {
     return counting.cadence(
       cadence, (cadence.last - cadence.start) / cadence.interval + 1);
+  },
+  // Runs and cadences together replace a list as pieces do.
+  cadencePieces(pieces, count, counting) {
+    return count > counting.listed ?
+      pieces.parts.reduce(function sum(total, part) {
+        return total + partNamed[part.kind](part as never);
+      }, 0) :
+      Infinity;
   },
   // Only every value and a cadence are bases an exception is said from,
   // and a cadence that is only missing its first or last values is said
@@ -118,10 +153,11 @@ const naming: {
   },
   // A run that stays inside its cycle is always said as the run, and a
   // run of two values is the two values. A run that wraps names its ends.
-  range(range, count) {
+  range(range, count, counting) {
     const inside = count > runEnds ? -1 : Infinity;
+    const place = counting.place ?? asItIs;
 
-    return range.from > range.to ? runEnds : inside;
+    return place(range.from) > place(range.to) ? runEnds : inside;
   },
   values(_values, count) {
     return count;
@@ -129,70 +165,69 @@ const naming: {
 };
 
 function thingsNamed(
-  description: SetDescription,
+  description: Sayable,
   count: number,
   counting: Counting
 ): number {
   return naming[description.kind](description as never, count, counting);
 }
 
+/** How many values a set holds, from the candidates that describe it. */
+function sizeOf(candidates: SetDescription[]): number {
+  const {values = []} =
+    candidates[candidates.length - 1] as Partial<Described<'values'>>;
+
+  return values.length;
+}
+
 /**
- * The description of a set that names the fewest things. A tie goes to a
- * wrapped run, then to the list of values, then to the core's order.
+ * The description of a set that names the fewest things, from the core's
+ * candidates and any others the field can say. A tie goes to a run, then
+ * to the list of values, then to the core's order, then to the others.
  */
 function settle(
-  values: number[],
-  domain: Domain,
-  counting: Counting
-): SetDescription {
-  const step = (domain.max + 1) / values.length;
-  const tiling = values.length > 1 && values.every(function onBeat(value, at) {
-    return value === at * step;
-  });
-  // Two values that halve the cycle are a cadence too (minutes 0 and 30),
-  // which a field that does not wrap would not be offered.
-  const beat: SetDescription[] = [
-    {interval: step, kind: 'cadence' as const, last: domain.max + 1 - step,
-      start: 0}
-  ].filter(function onBeat() {
-    return tiling;
-  });
-  const described = describeSet(values, domain);
-  const runs = described.filter(function isRun(description) {
+  candidates: SetDescription[],
+  counting: Counting,
+  others: Sayable[] = []
+): Sayable {
+  const count = sizeOf(candidates);
+  const runs = candidates.filter(function isRun(description) {
     return description.kind === 'range';
   });
 
-  return [...runs, ...described.slice(-1), ...beat, ...described].reduce(
+  return [...runs, ...candidates.slice(-1), ...candidates, ...others].reduce(
     function fewer(best, description) {
-      return thingsNamed(description, values.length, counting) <
-        thingsNamed(best, values.length, counting) ? description : best;
+      return thingsNamed(description, count, counting) <
+        thingsNamed(best, count, counting) ? description : best;
     }
   );
 }
 
 /**
- * The same for a field whose runs may not wrap round its cycle. A set
- * that is one run only by wrapping, and whose two stretches are each a
- * run, is then an exception or pieces, never a list.
+ * The same for a field whose runs may not wrap round its cycle, from its
+ * candidates as the cycle has them and with nothing wrapped. A set that is
+ * one run only by wrapping, and whose two stretches are each a run, is
+ * then an exception or pieces, never a list.
  */
 function settleUnwrapped(
-  values: number[],
-  domain: Domain,
-  counting: Counting
-): SetDescription {
-  const [round] = describeSet(values, {...domain, cyclic: true});
-  const split = round.kind === 'range' && round.from > round.to &&
-    describeSet(values, domain).some(function allRuns(description) {
+  round: SetDescription[],
+  linear: SetDescription[],
+  counting: Counting,
+  others: Sayable[] = []
+): Sayable {
+  const [whole] = round;
+  const split = whole.kind === 'range' && whole.from > whole.to &&
+    linear.some(function allRuns(description) {
       return description.kind === 'pieces' &&
         description.parts.every(function isRun(part) {
           return part.kind === 'range';
         });
     });
 
-  return settle(values, domain, split ? {...counting, listed: 0} : counting);
+  return settle(linear, split ? {...counting, listed: 0} : counting, others);
 }
 
 export {
   boundedCadence, join, list, longerThan, restOf, runsOf, settle,
-  settleUnwrapped, thingsNamed, unsayable
+  settleUnwrapped, sizeOf, thingsNamed, unsayable
 };
