@@ -1,0 +1,97 @@
+// The Korean lexicon: every word the renderer says, and nothing else.
+// Numbers are written as digits and months are their numbers, so there are
+// no numeral or month tables.
+
+/** A weekday in its full and short written forms. */
+interface Name {
+  full: string;
+  short: string;
+}
+
+// The suffix a full weekday name carries; a list or a range says it once,
+// after its last name.
+const weekdaySuffix = '요일';
+
+function weekday(short: string): Name {
+  return {full: `${short}${weekdaySuffix}`, short};
+}
+
+// Indexed by cron's weekday number: 0 is Sunday.
+const weekdays: Name[] = ['일', '월', '화', '수', '목', '금', '토'].map(weekday);
+
+// The order a list of weekdays is said in: Monday first, Sunday last.
+const weekOrder = [1, 2, 3, 4, 5, 6, 0];
+
+// Each unit as it follows a numeral. An hour is `hour` as a point on the
+// clock and `hours` as a length; `hourBlock` is the whole hour from :00
+// to :59.
+const units = {
+  date: '일',
+  hour: '시',
+  hourBlock: '시대',
+  hours: '시간',
+  minute: '분',
+  month: '월',
+  second: '초',
+  year: '년'
+};
+
+// The ordinal words a Quartz "nth weekday" uses, from the first.
+const nthWords = ['첫째', '둘째', '셋째', '넷째', '다섯째'];
+
+// The function words and fixed phrases.
+const words = {
+  allDay: '하루 종일',
+  also: '그리고',
+  am: '오전',
+  among: '중',
+  andAfterConsonant: '과',
+  andAfterVowel: '와',
+  at: '에',
+  before: '전',
+  each: '각각',
+  eachTime: '매번',
+  evenDates: '짝수일',
+  evenMonths: '짝수 달',
+  evenYears: '짝수 해',
+  every: '마다',
+  everyDay: '매일',
+  everyHour: '매시',
+  everyMinute: '매분',
+  everyMonth: '매월',
+  everyWeek: '매주',
+  everyYear: '매년',
+  except: '제외',
+  firstDay: '첫날',
+  forOneMinute: '1분간',
+  from: '부터',
+  ifWeekend: '주말이면',
+  last: '마지막',
+  lastDate: '말일',
+  lastDay: '마지막 날',
+  listMark: '·',
+  nearestInMonth: '같은 달의 가장 가까운',
+  noon: '낮',
+  oddDates: '홀수일',
+  oddMonths: '홀수 달',
+  oddYears: '홀수 해',
+  onTheHour: '정각',
+  pm: '오후',
+  rangeMark: '~',
+  runs: '실행됩니다',
+  skipped: '없는 달은 건너뜀',
+  spaced: '간격으로',
+  startup: '시스템 시작 시',
+  thatYear: '그해',
+  throughout: '내내',
+  topic: '에는',
+  unrecognizable: '알 수 없는 cron 패턴',
+  until: '까지'
+};
+
+const lexicon = {
+  nthWords, units, weekOrder, weekdaySuffix, weekdays, words
+};
+
+export type {Name};
+export default lexicon;

@@ -1,0 +1,7 @@
+{
+  "name": "Korean",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "artifacts written 2026-11-13 by Claude Fable 5.2 from the Korean usage notes: answers, lexicon and hand-written paradigm rows, each row worked against its pattern by the author; no renderer built, no independent schedule read and no blind fluency read yet",
+  "branchBudget": 110
+}
