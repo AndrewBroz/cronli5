@@ -89,8 +89,11 @@ function leaks(pairList) {
     // A part that ends in an exception is closed by a comma when another
     // part follows it. That comma belongs to the join, not to the part,
     // so it is set aside before two parts are compared.
+    // «У» and «в» are one preposition, spelled by the sound before it, so
+    // the word that opens a part follows the part ahead of it. That is
+    // spelling too, and is set aside the same way.
     function words(part) {
-      return String(part).replace(/,$/u, '');
+      return String(part).replace(/,$/u, '').replace(/^в /u, 'у ');
     }
 
     Object.keys(before).forEach(function compare(part) {

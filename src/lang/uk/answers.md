@@ -324,14 +324,19 @@ four items and names fewer things.
 * Every day of the month but a few: «щодня, крім 15-го числа»; in one
   month, «щодня в червні, крім 15-го числа».
 * **Six days of the week are «щодня, крім» and the seventh**, in the
-  genitive: «щодня, крім неділі»; «щодня, крім середи». It is what a
+  genitive: «щодня, крім неділі»; «щодня, крім середи». This is the only
+  exception a set of weekdays takes; five days or fewer are a run, a list
+  or pieces. It is what a
   speaker says, and it saves the listener from working out which day a run
   such as «від четверга до вівторка» leaves out.
 
 An exception is for a hole in the middle. A cadence that is only missing
 values at its end or its start is said with its bounds.
 
-An exception to minutes is said last, after the hours:
+An exception to minutes is said last, after the hours. It says «кожної
+години» unless the phrase before it already ends with those words, and
+inside one named hour it is the clock time (`0,10,20,40,50 9` is «кожні 10
+хвилин з 9:00 до 9:50 включно, крім 9:30»):
 
 * «щохвилини, крім :29 кожної години»;
 * «щохвилини з 9:00 до 10:00 і з 17:00 до 18:00, крім :29 кожної години»;
@@ -432,12 +437,18 @@ So `5,20,45 9-17 * * *` is «о :05, :20 та :45 кожної години з 9
 
 **A list of clock times is also sayable** whenever neither M nor H is
 every value and there are at most 24 times: «о 9:05, 9:20 та 9:45». It
-names one thing per time and competes with the other form. On a tie the
-list of times wins, and four times or fewer are always the list. `0,30 9 *
-* *` is «о 9:00 та 9:30»; `*/15 9 * * *` is «кожні 15 хвилин з 9:00 до
-9:45 включно» (three things against four times, and a tiling cadence under
-one hour is not an hour cadence carrying a minute); `0,30 9,17 * * *` is
-«о 9:00, 9:30, 17:00 та 17:30».
+names one thing per time and competes with the other form by the count of
+things named. On a tie the list of times wins. `0,30 9 * * *` is «о 9:00
+та 9:30»; `*/15 9 * * *` is «кожні 15 хвилин з 9:00 до 9:45 включно»
+(three things against four times); `0,30 9,17 * * *` is «о 9:00, 9:30,
+17:00 та 17:30» (four times against five things). A minute carried inside
+a clock time is not counted when the hours' own form is chosen, so moving
+the minute never changes how the hours are said.
+
+Under a tiling cadence of hours, the times are listed only while there
+are four or fewer of them, whether one minute or several: `23 */6` is «о
+0:23, 6:23, 12:23 та 18:23»; `15,45 */6` is eight times and is «о :15 та
+:45 кожні 6 годин».
 
 The minute phrase is settled before the hours are considered: a
 continuous M is always its lead, whatever the hours are. Only the list of
@@ -462,7 +473,9 @@ said once and takes its form from the first time: «об 11:00 та 17:00», «�
   включно». If S is a cadence with both ends named, so is the window:
   «кожні 10 секунд з 9:00:05 до 9:00:55 включно».
 * Two clock times and continuous S: two windows, «щосекунди з 9:00 до 9:01
-  і з 17:00 до 17:01».
+  і з 17:00 до 17:01». The list of times to the second still competes, and
+  wins a tie: seconds 0 and 30 at 0:23 and 12:23 are four times against
+  five things, «о 0:23, 0:23:30, 12:23 та 12:23:30».
 * Otherwise, when S is continuous the lead is «щосекунди» or «кожні N
   секунд». If the rest of the time begins «щохвилини», that word is
   dropped: «щосекунди з 9:00 до 18:00», «щосекунди з 9:00 до 10:00». If
@@ -646,6 +659,12 @@ Otherwise «у» before a word that begins with «в» or «ф» («у вере�
 «включно в грудні», «щодня в парні роки»); «у» in every other case,
 including after digits and at the start («по понеділках у червні», «о
 9:00 у другий понеділок місяця»).
+
+This is the one way the words of one part depend on another: the
+preposition that opens the month or the year follows the sound that ends
+the part before it («кожні 5 хвилин у червні», «о :30 кожної години в
+червні»). It is spelling, not wording, and the continuity check sets it
+aside.
 
 7.4 A list: commas, then «та» before the last item, with no comma before
 it. Two items: «A та B». Pieces: «і» (3.6). «Та» does not change with the
