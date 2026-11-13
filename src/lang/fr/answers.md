@@ -741,8 +741,9 @@ when no « avec N secondes de décalage » would have to follow it
 (« toutes les heures, sauf à 3 h, avec 30 secondes de décalage » would
 put the exception before the end, and « sauf à 3 h 00 min 30 s » excepts
 a time « toutes les heures » never named; the hours are then said as
-what is left, « toutes les heures de 0 h 00 min 30 s à 2 h 00 min 30 s et de 4 h
-00 min 30 s à 23 h 00 min 30 s »). For minutes: only from every minute
+what is left, « toutes les heures de 0 h à 2 h et de 4 h à 23 h, avec 30
+secondes de décalage », the seconds said once because the windows name
+four times, 4.2). For minutes: only from every minute
 or a tiling cadence; under every hour when it replaces more than six
 minutes; beside any other hours whenever it names fewer things than the
 list, because the list would there need a window as well (« toutes les
@@ -848,6 +849,24 @@ up, the phrase under two (« à 05, 20 et 45 de chaque heure, de 0 h 05 à
 10 h 45, puis de 11 h 05 à 11 h 45, … », where twelve clock times would
 be shown).
 
+**A cadence of minutes under a cadence of more than four hours** is a
+stretch, however few its minutes, and so may be a window in each hour
+shown: « toutes les 15 minutes de 9 h 05 à 9 h 50, de 11 h 05 à 11 h 50,
+et ainsi de suite toutes les 2 heures jusqu'à 17 h 50 » (five things,
+where the clock times of two hours were eight: « à 9 h 05, 9 h 20, 9 h 35
+et 9 h 50, à 11 h 05, … »); « toutes les 20 minutes de 0 h 05 à 0 h 45, de
+2 h 05 à 2 h 45, et ainsi de suite … ». The count above decides, so a
+cadence of two minutes keeps its clock times (four against five: « à
+0 h 15 et à 0 h 45, à 4 h 15 et à 4 h 45, … »), and so does a list of
+minutes that is no cadence, which has no interval to say (« à 0 h 05,
+0 h 20, 0 h 35 et 0 h 55, à 2 h 05, … »). The window says the interval
+once, where the clock times made the reader find it in every hour. Inside
+one named hour and under separate hours a cadence of four minutes or
+fewer is still its clock times while they can be listed (3.8, and the
+table below): there no « et ainsi de suite » follows, and four times are
+read at a glance. Beyond twelve clock times under separate hours the
+cadence leads the windows in the same way (the table below).
+
 **M is a single run of minutes and H is one hour.** A window of clock
 times: « toutes les minutes de 9 h à 9 h 29 »; « de 9 h 10 à 9 h 40 ». A
 run with a stray minute: « toutes les minutes de 9 h à 9 h 29, puis à
@@ -881,8 +900,8 @@ is followed by H:
 | every hour | nothing |
 | a range | a comma and a window from the first time that fires to the last: « à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 »; « toutes les minutes pendant les 30 premières minutes de chaque heure, de 9 h à 17 h 29 ». (A window of hours, « de 9 h à 17 h », would be read as stopping before the last hour's minutes.) |
 | pieces | windows the same way, two hours in a row being one window: « à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 et de 22 h 05 à 22 h 45 » |
-| separate hours, or a cadence of four hours or fewer | no minute phrase: the clock times are listed, while there are at most twelve (« à 9 h 05, 9 h 20, 9 h 45, 17 h 05, 17 h 20 et 17 h 45 »). Beyond twelve, each hour is a window as a piece is: « à 05, 20 et 45 de chaque heure, de 8 h 05 à 8 h 45, de 10 h 05 à 10 h 45, … et de 19 h 05 à 19 h 45 » |
-| a cadence of more than four hours, with a list of minutes | no minute phrase: the clock times of its first hour, those of its second, then « et ainsi de suite » as for continuous minutes, ending on the last time that fires: « à 0 h 15 et à 0 h 45, à 4 h 15 et à 4 h 45, et ainsi de suite toutes les 4 heures jusqu'à 20 h 45 »; « à 0 h 05, 0 h 20 et 0 h 45, à 3 h 05, 3 h 20 et 3 h 45, et ainsi de suite toutes les 3 heures jusqu'à 21 h 45 ». (One cadence per minute, « toutes les 4 heures de 0 h 15 à 20 h 15 et de 0 h 45 à 20 h 45 », was first seen by judge 3 as two windows that overlap.) |
+| separate hours, or a cadence of four hours or fewer | no minute phrase: the clock times are listed, while there are at most twelve (« à 9 h 05, 9 h 20, 9 h 45, 17 h 05, 17 h 20 et 17 h 45 »). Beyond twelve, each hour is a window as a piece is: « à 05, 20 et 45 de chaque heure, de 8 h 05 à 8 h 45, de 10 h 05 à 10 h 45, … et de 19 h 05 à 19 h 45 »; and a cadence of three minutes or more, a stretch, says its interval before the windows instead of its minutes: « toutes les 15 minutes de 2 h 05 à 2 h 50, de 8 h 05 à 8 h 50, de 14 h 05 à 14 h 50 et de 20 h 05 à 20 h 50 » (nine things against twelve) |
+| a cadence of more than four hours, with a list of minutes (a cadence of three minutes or more is a window instead, as said above) | no minute phrase: the clock times of its first hour, those of its second, then « et ainsi de suite » as for continuous minutes, ending on the last time that fires: « à 0 h 15 et à 0 h 45, à 4 h 15 et à 4 h 45, et ainsi de suite toutes les 4 heures jusqu'à 20 h 45 »; « à 0 h 05, 0 h 20 et 0 h 45, à 3 h 05, 3 h 20 et 3 h 45, et ainsi de suite toutes les 3 heures jusqu'à 21 h 45 ». (One cadence per minute, « toutes les 4 heures de 0 h 15 à 20 h 15 et de 0 h 45 à 20 h 45 », was first seen by judge 3 as two windows that overlap.) |
 | a cadence of more than four hours, with any other minute phrase | no minute phrase: the first two hours as windows, then « et ainsi de suite »: « toutes les minutes de 0 h à 0 h 29, de 2 h à 2 h 29, et ainsi de suite toutes les 2 heures jusqu'à 22 h 29 » |
 | every hour with exceptions | « à 05, 20 et 45 de chaque heure, sauf de 3 h 05 à 3 h 45 » |
 
@@ -935,7 +954,10 @@ les secondes pendant les 30 premières minutes de chaque heure ».
 **4. Everything else.** Say the time part to the minute, as if S were 0.
 Then:
 
-* **Write the first second into every time it names**, if it is not 0:
+* **Write the first second into every time it names**, if it is not 0,
+  **while it names three clock times or fewer** (each time of a list,
+  each end of a window, the time an exception names and the time after
+  « et ainsi de suite … jusqu'à » count one):
   * clock times: « à 9 h 30 min 15 s »; « à 9 h 30 min 15 s et à 17 h 30
     min 15 s »;
   * both ends of a window: « toutes les 15 minutes de 9 h 00 min 30 s à
@@ -954,6 +976,61 @@ Then:
     word for a run that comes so many seconds late. All three judges
     would write « 30 secondes après l'heure pile » for the first of
     these; it serves minute 0 only, and one rule is kept.)
+  * **when the time part names more than three clock times**, they are
+    written to the minute and followed by the same « , avec N secondes
+    de décalage »: « tous les jours à 9 h 05, 9 h 20, 9 h 45 et 9 h 50,
+    avec 30 secondes de décalage »; « à 2 h, 2 h 25, 2 h 50, 8 h, … et
+    20 h 50, avec 5 secondes de décalage, et à chaque fois de nouveau 25
+    secondes plus tard »; « toutes les minutes pendant les 31 premières
+    minutes de chaque heure, de 9 h à 20 h 30 et de 22 h à 22 h 30, avec
+    5 secondes de décalage »; « à 0 h 05 et à 0 h 30, à 2 h 05 et à
+    2 h 30, et ainsi de suite toutes les 2 heures jusqu'à 22 h 30, avec 8
+    secondes de décalage ». The same seconds in every time are one fact
+    said again and again: the reader has to check each time for a second
+    that differs, and three groups of digits a time make a dozen times
+    impossible to hold (the length gate found twelve times written to
+    the second). Said once, they are held once, and the times are read
+    as times are anywhere.
+    **Why three.** A time written to the second needs no working out,
+    and an offset makes the reader add it to every time and can be
+    forgotten: a blind reader (2026-11-13) found « à 9 h 05 min 30 s,
+    9 h 20 min 30 s et 9 h 45 min 30 s » faster and safer than the same
+    times with « avec 30 secondes de décalage » (« les heures sont
+    exactes et il n'y a rien à additionner »), and the written form too
+    heavy at twelve. So the seconds stay in the times as long as such a
+    list is held. French holds four clock times to the minute (the
+    opening section); a time to the second is three groups of digits
+    where one to the minute is two, and four of them were tried and
+    found over the length ceiling where two windows to the second sit
+    beside a moved day (« le 15 de chaque mois ou, s'il tombe … , toutes
+    les minutes pendant les 31 premières minutes de chaque heure, de 9 h
+    00 min 05 s à 20 h 30 min 05 s et de 22 h 00 min 05 s à 22 h 30 min
+    05 s, … », 301 characters). Three is the most that both reads at
+    once and fits.
+    Three times or fewer keep the seconds in them: « à 9 h 05 min 30 s,
+    9 h 20 min 30 s et 9 h 45 min 30 s »; « toutes les 2 heures de 0 h 30
+    min 05 s à 22 h 30 min 05 s, sauf à 8 h 30 min 05 s ». Beyond three
+    an exception is not said among the times, since the offset follows
+    it (3.9): what is left each side is said, « toutes les 2 heures de
+    0 h 30 à 6 h 30, de 10 h 30 à 14 h 30 et de 18 h 30 à 22 h 30, avec 5
+    secondes de décalage ». Under one clock time the windows to the
+    second (below) are not an offset, and stay. The list of every time to
+    the second does not compete with this form when all its times carry
+    the one same second: it is the form this replaces.
+    **« Décalage » was weighed again** against that reader's remarks: they
+    read it right, as a delay added to each time, but asked whether it
+    might be a tolerance or a random delay, called it computer jargon,
+    and offered « 30 secondes après » or « à la 30e seconde ». It stays.
+    « À la 30e seconde » is an ordinal, and « la 1re seconde » is the
+    first second of the minute, which is second 0 to a clock. « Chaque
+    fois 30 secondes après » reads well after a list of times, but after
+    « toutes les 15 minutes » or « toutes les heures » it has nothing
+    named to come after, as « 30 secondes après le début de la minute »
+    had (above), and it cannot carry the rest of the seconds: « chaque
+    fois 5 secondes après, et à chaque fois de nouveau 25 secondes plus
+    tard » says « chaque fois » twice, and runs or cadences of seconds
+    after it would each need a new form. The word is judge 3's own, and
+    the device is used the same way everywhere it stands.
 * **If there is more than one second, add a clause for the rest.** After
   a single clock time it follows a comma (« tous les jours à 9 h, toutes
   les secondes pendant une minute »). After anything that fires more than
