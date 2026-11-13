@@ -119,11 +119,16 @@ const mostStretches = 8;
 // The most clock times listed whatever else could be said.
 const mostTimes = 4;
 
+const lastOfSixty = 59;
+
+// Minutes and seconds. The first and the last of them are never named as
+// left out: a window would name the moment and then take it away.
 const fine: Say = {
   cadence: () => 2,
-  domain: {cyclic: false, max: 59, min: 0},
+  domain: {cyclic: false, max: lastOfSixty, min: 0},
   exceptions: true,
   mixed: 'apart',
+  removable: (value) => value > 0 && value < lastOfSixty,
   shortestRange: 3
 };
 

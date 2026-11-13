@@ -167,12 +167,11 @@ function cheapest(offered: SetDescription[], say: Say): SetDescription {
 }
 
 // Whether a description holds a run that passes the end of its field.
-function turns(description: SetDescription): boolean {
+function turns(description: Plain): boolean {
   return match(description, {
     all: () => false,
     cadence: () => false,
-    except: (exception) => turns(exception.base),
-    pieces: (pieces) => pieces.parts.some(turns),
+    pieces: (pieces) => pieces.parts.some(wraps),
     range: wraps,
     values: () => false
   });
@@ -189,6 +188,8 @@ function apart(parts: Part[]): boolean {
   return spans.every(
     (span, index) => index === 0 || spans[index - 1][1] < span[0]);
 }
+
+const fewestMixed = 3;
 
 /** A set as the core describes it, in every layout a choice looks at. */
 export interface Offer {
@@ -223,9 +224,12 @@ function choose(offer: Offer, say: Say): Chosen {
     able(offer.linear, false)[0].kind !== 'range' &&
     cost(cheapest(exceptions, say), say) < cost(straight, say);
   // The layout in which a run may wrap is for saying a run that does.
-  const plain = turns(around) ? around : straight;
+  const plain = turns(around as Plain) ? around : straight;
   const best = replaces ? cheapest(exceptions, say) : plain;
-  const mixed = say.mixed === 'never' ? null : offer.mixed();
+  // Runs and cadences together name three things at the least.
+  const mixed = say.mixed === 'never' || cost(best, say) <= fewestMixed ?
+    null :
+    offer.mixed();
   const better = mixed !== null && cost(mixed, say) < cost(best, say) &&
     (say.mixed === 'any' || apart(mixed.parts));
 
@@ -234,10 +238,14 @@ function choose(offer: Offer, say: Say): Chosen {
 
 /** The description a field says a set of its values by. */
 function pick(values: number[], say: Say): Chosen {
+  const described = describeSet(values, say.domain);
+
   return choose({
     count: values.length,
-    described: describeSet(values, say.domain),
-    linear: describeSet(values, say.domain, {linear: true}),
+    described,
+    linear: say.domain.cyclic ?
+      describeSet(values, say.domain, {linear: true}) :
+      described,
     mixed: () => describeCadencePieces(values, say.domain)
   }, say);
 }

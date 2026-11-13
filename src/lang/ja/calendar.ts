@@ -932,8 +932,9 @@ function never(context: Context): Calendar {
     dayNames(denote(candidates.date[0], dates)) :
     quartzPhrase(quartzDates, (day.date as {form: QuartzDate}).form,
       context.style).text;
-  const year = when(context.year.kind !== 'all',
-    yearLead(context, 'month').text);
+  // The years are said where they are named; 毎年 is not.
+  const year = [yearLead(context, 'month').text].filter(
+    (text) => text !== words.everyYear).join('');
 
   return {
     day: words.never + marks.open + year + monthNames(context.months) +
