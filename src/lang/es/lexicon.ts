@@ -48,8 +48,7 @@ const units = {
   day: {many: 'días', one: 'día'},
   hour: {many: 'horas', one: 'hora'},
   minute: {many: 'minutos', one: 'minuto'},
-  second: {many: 'segundos', one: 'segundo'},
-  year: {many: 'años', one: 'año'}
+  second: {many: 'segundos', one: 'segundo'}
 };
 
 // The ordinal words a Quartz "nth weekday" uses, from the first. Every
@@ -72,8 +71,6 @@ const words = {
   during: 'durante',
   each: 'cada',
   everyDay: 'todos los días',
-  everyDayOf: 'todos los días de',
-  everyDayOfMonth: 'todos los días del mes',
   except: 'excepto',
   first: 'primeros',
   firstOne: 'primer',

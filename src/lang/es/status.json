@@ -1,0 +1,7 @@
+{
+  "name": "Spanish",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "built 2026-11-13 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass, 19 of which the builder had seen by the orchestrator's error (tooling/experiments/renderer-process/es-acceptance.md)",
+  "branchBudget": 110
+}

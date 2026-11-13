@@ -119,8 +119,8 @@ function leaks(pairList) {
 
     Object.keys(before).forEach(function compare(part) {
       const everyDay = changed[0] === 'hour' && part === 'day' &&
-        HOUR_MAY_SET_DAY.includes(before[part]) &&
-        HOUR_MAY_SET_DAY.includes(after[part]);
+        HOUR_MAY_SET_DAY.includes(words(before[part])) &&
+        HOUR_MAY_SET_DAY.includes(words(after[part]));
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&
           !(wrapped && part === 'time') &&

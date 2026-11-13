@@ -25,6 +25,7 @@ import cronli5 from '../src/cronli5.js';
 import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
 import en, {styles as englishStyles} from '../src/lang/en/index.js';
+import es from '../src/lang/es/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
@@ -41,7 +42,8 @@ const cronstrueVersion = JSON.parse(readFileSync(
 const languages = [
   {code: 'en', extras: [], lang: en},
   {code: 'uk', extras: [], lang: uk},
-  {code: 'zh', cronstrueLocale: 'zh_CN', extras: [], lang: zh}
+  {code: 'zh', cronstrueLocale: 'zh_CN', extras: [], lang: zh},
+  {code: 'es', cronstrueLocale: 'es', extras: [], lang: es}
 ];
 
 function describe(fn, pattern) {
@@ -137,7 +139,8 @@ const headToHead = '5,10 30 9 * * MON';
 const headToHeadRows = [
   {name: 'English', code: 'en'},
   {name: 'Ukrainian', code: 'uk'},
-  {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'}
+  {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
+  {name: 'Spanish', code: 'es', cronstrueLocale: 'es'}
 ];
 
 function renderHeadToHead() {

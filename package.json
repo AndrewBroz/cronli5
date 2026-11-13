@@ -32,6 +32,11 @@
       "import": "./dist/lang/en.js",
       "require": "./dist/lang/en.cjs"
     },
+    "./lang/es": {
+      "types": "./types/lang/es/index.d.ts",
+      "import": "./dist/lang/es.js",
+      "require": "./dist/lang/es.cjs"
+    },
     "./lang/uk": {
       "types": "./types/lang/uk/index.d.ts",
       "import": "./dist/lang/uk.js",
