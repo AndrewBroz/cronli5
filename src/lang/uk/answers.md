@@ -545,7 +545,7 @@ while of eight clock times the first judge said they cannot be held.
   Seconds are the same: `5/10 * * * * *` is «кожні 10 секунд з 0:00:05
   до 23:59:55». **Four values or fewer off the beat are a list**, as a
   regular set of four is everywhere else: `5/15 * * * *` is «щогодини на
-  5-й, 20-й, 35-й та 50-й хвилині (0:05, 0:20, 0:35, 0:50, 1:05 …
+  5-й, 20-й, 35-й та 50-й хвилині (0:05, 0:20, 0:35, 0:50 …
   23:50)»; `5/15 9-17 * * *` is «щогодини на 5-й, 20-й, 35-й та 50-й
   хвилині, з 9:05 до 17:50». (These used to be «кожні 15 хвилин з 0:05
   до 23:50». The usage notes: a cadence counted from a start that is not
@@ -573,7 +573,7 @@ while of eight clock times the first judge said they cannot be held.
   хвилин з 3-ї до 48-ї хвилини кожної години (0:03–0:48, 1:03–1:48 …
   23:03–23:48)». With four values or fewer they are listed: `10-40/10 * *
   * *` is «щогодини на 10-й, 20-й, 30-й та 40-й хвилині (0:10, 0:20, 0:30,
-  0:40, 1:10 … 23:40)».
+  0:40 … 23:40)».
 * Inside one named hour such a cadence is a window of clock times: «кожні
   7 хвилин з 9:00 до 9:56».
 
@@ -820,8 +820,8 @@ said once and takes its form from the first time: «об 11:00 та 17:00», «�
   9:00:20, 9:00:30 та 9:00:45»), as a list of minutes in one hour is
   (4.1). In two or three clock times it follows «щоразу», as under
   "anything else" below: `0,15,45 0,20,40 9 * * *` is «щодня о 9:00,
-  9:20 та 9:40, щоразу рівно, на 15-й та на 45-й секунді (9:00:00,
-  9:00:15, 9:00:45, 9:20:00 … 9:40:45)». (The renderer said «о 9:00:00,
+  9:20 та 9:40, щоразу рівно й через 15 та 45 секунд» (below). (The
+  renderer once said «о 9:00:00,
   9:20:00 та 9:40:00 і через 15 та 45 секунд після кожної з цих хвилин»:
   a moment written to the second is not a minute to count from.)
 * **The rest is one clock time**: the seconds are a window or a cadence to
@@ -883,6 +883,44 @@ keeps the bracket: clock times listed («о 9:05, 9:10, 17:05 та 17:10,
 whole hours («щогодини з 9:30 до 17:30 включно, щоразу…»: a window with
 «включно» names hours, not firings), every hour, a cadence of hours, or
 a rest with something left out.
+
+**Where the rest names every minute it fires at outright** (clock times
+listed, «о 9:05, 9:10, 17:05 та 17:10»; counts after named hours, «через
+5, 20, 35 та 50 хвилин після 2:00, 8:00, 14:00 та 20:00»; or two minutes
+or more listed under every hour, «щогодини на 5-й, 20-й, 35-й та 50-й
+хвилині»), two things follow from it:
+
+* **A list of seconds is counted from each of those moments**, as the
+  minutes are counted from the hours, and a count from a named moment
+  needs no pin (9.10). Second 0 is «рівно», joined to the counts by «і»
+  as the hours are joined to their counts in 4.1: `*/15 5/15 2/6 * * *`
+  is «щодня через 5, 20, 35 та 50 хвилин після 2:00, 8:00, 14:00 та
+  20:00, щоразу рівно й через 15, 30 та 45 секунд»; `0,30 5,10 9,17 * *
+  *` is «щодня о 9:05, 9:10, 17:05 та 17:10, щоразу рівно й через 30
+  секунд»; `5,30 5,10,30 2/6 * * *` is «…, щоразу через 5 та 30 секунд».
+  (These used to be ordinals with a bracket of instances, «щоразу рівно,
+  на 15-й, на 30-й та на 45-й секунді (2:05:00, 2:05:15, 2:05:30,
+  2:05:45, 2:20:00 … 20:50:45)»: sixteen clock times named and then five
+  more to settle four seconds. «Рівно й через 30 секунд» is the third
+  judge's own «двічі: рівно і через 30 секунд».) Under every hour the
+  minutes are ordinals, not moments, so the seconds stay ordinals there.
+* **Any other seconds keep their bracket without the next minute's
+  first item** (4.5): that item shows how one minute follows another,
+  which the words have already said. `* 5/15 2/6 1 * *` is «щомісяця
+  1-го числа через 5, 20, 35 та 50 хвилин після 2:00, 8:00, 14:00 та
+  20:00, щоразу щосекунди протягом хвилини (2:05:00–2:05:59 …
+  20:50:00–20:50:59)»; `* 5/15 * * * *` is «щогодини на 5-й, 20-й, 35-й
+  та 50-й хвилині, щоразу щосекунди протягом хвилини (0:05:00–0:05:59 …
+  23:50:00–23:50:59)»: the first clock time settles how every ordinal of
+  the list is read, and the last says where it ends. A single minute
+  under every hour keeps the next item («щогодини на 30-й хвилині,
+  щоразу на 15-й секунді (0:30:15, 1:30:15 … 23:30:15)»): there it is the
+  next hour, the one thing the bracket shows that the words do not
+  write out, as it is in «(0:30, 1:30 … 23:30)». So do minutes said as a
+  stretch or a cadence («кожні 7 хвилин від початку до 56-ї хвилини
+  кожної години, щоразу щосекунди протягом хвилини (0:00:00–0:00:59,
+  0:07:00–0:07:59 … 23:56:00–23:56:59)»), whose next minute shows the
+  step.
 
 If «щоразу» is needed twice (seconds inside minutes inside a cadence of
 hours), it is said twice and the one pin comes last: «кожні 2 години з
@@ -1081,15 +1119,24 @@ stretch of firings, written first–last with an en dash and no spaces
 seconds. The bracket holds:
 
 1. every item of the first cycle that fires;
-2. the first item after that cycle;
+2. the first item after that cycle, where the first cycle has three
+   items or fewer;
 3. a space, «…» and a space, with no comma;
 4. the last item of all.
 
-«(0:30, 1:30 … 23:30)»; «(0:05, 0:20, 0:45, 1:05 … 23:45)»; «(0:00–0:29,
+«(0:30, 1:30 … 23:30)»; «(0:05, 0:20, 0:45, 1:05 … 23:45)»; «(0:05,
+0:20, 0:35, 0:50 … 23:50)»; «(0:00–0:29,
 1:00–1:29 … 23:00–23:29)»; «(0:00–0:29, 0:45, 1:00–1:29 … 23:45)»;
 «(9:00:00, 9:00:30, 9:15:00 … 17:45:30)»; «(3:30:00–3:30:59,
 3:42:00–3:42:59 … 10:42:00–10:42:59)». For an exception the items are
-the moments or stretches left out: «(0:29, 1:29 … 23:29)». Anything that
+the moments or stretches left out: «(0:29, 1:29 … 23:29)». **Four items in
+the first cycle show how it is filled**, and the words already say that
+it comes round («щогодини», «кожної години», «щоразу»); a fifth item
+before «…» is past what a reader holds (3.10), so the next cycle's
+first is not shown: `9,14,47,56 * * * *` is «щогодини на 9-й, 14-й,
+47-й та 56-й хвилині (0:09, 0:14, 0:47, 0:56 … 23:56)». (It used to
+be shown whatever the count, «…0:56, 1:09 … 23:56».) After «щоразу»,
+words that name every minute leave it out too (4.2). Anything that
 follows the time phrase (an exception to the hours) comes after the
 bracket.
 

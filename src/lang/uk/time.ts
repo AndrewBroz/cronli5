@@ -66,6 +66,9 @@ interface Said {
   // Whether the words themselves name a clock time.
   clocked: boolean;
   exceptions: string[];
+  // Whether the words name every minute it fires at outright: as clock
+  // times, as counts after named hours, or as a list under every hour.
+  outright: boolean;
   pin: string;
   // Whether the words name every firing as windows of clock times.
   windowed: boolean;
@@ -161,8 +164,15 @@ const extents: Table<Part, Extent[], [number, Level]> = {
 };
 
 // The clock times that settle words about a place inside the slot: every
-// item of the first slot, the next slot's first, and the last of all.
-function bracket(slots: number[], fine: Placed, level: Level): string {
+// item of the first slot, the next slot's first, and the last of all. Four
+// items or more show how the slot is filled without the next one, and
+// words that name every slot outright leave it out too.
+function bracket(
+  slots: number[],
+  fine: Placed,
+  level: Level,
+  next = true
+): string {
   function itemsOf(slot: number): string[] {
     return partsOf(fine, cycle).flatMap(function each(part) {
       return say(extents, part, slot, level);
@@ -171,7 +181,10 @@ function bracket(slots: number[], fine: Placed, level: Level): string {
     });
   }
 
-  const shown = [...itemsOf(slots[0]), itemsOf(slots[1])[0]].join(', ');
+  const first = itemsOf(slots[0]);
+  const shown = [
+    ...first, ...itemsOf(slots[1]).slice(0, Number(next && first.length < 4))
+  ].join(', ');
 
   return ` (${shown} … ${itemsOf(slots[slots.length - 1]).pop()})`;
 }
@@ -342,7 +355,9 @@ function said(
   pin = '',
   windowed = false
 ): Said {
-  return {clocked, exceptions: [], pin, windowed, words: wordsSaid};
+  return {
+    clocked, exceptions: [], outright: false, pin, windowed, words: wordsSaid
+  };
 }
 
 function finish(phrase: Said): string {
@@ -408,11 +423,14 @@ function timesIn(slots: number[], fine: Fine, level: Level): Said {
     return a - b;
   });
 
-  return said(at(ascending.flatMap(function eachSlot(slot) {
-    return fine.values.map(function eachValue(value) {
-      return startOf(slot, value, level);
-    });
-  }), level), true);
+  return {
+    ...said(at(ascending.flatMap(function eachSlot(slot) {
+      return fine.values.map(function eachValue(value) {
+        return startOf(slot, value, level);
+      });
+    }), level), true),
+    outright: true
+  };
 }
 
 // Places inside the slot, said in words and pinned: by clock times in
@@ -433,8 +451,10 @@ function positioned(coarse: Plain, fine: Fine, level: Level): Said {
   }
 
   if (coarse.kind === 'all') {
-    return said(head, false,
-      bracket(slots, fine.description as Placed, level));
+    return {
+      ...said(head, false, bracket(slots, fine.description as Placed, level)),
+      outright: fine.description.kind === 'values' && fine.values.length > 1
+    };
   }
 
   return said(`${head}, ${windows(coarse, fine, level)}`, true, '', true);
@@ -544,7 +564,7 @@ function countsInSlots(slots: number[], fine: Fine, level: Level): Said {
     return timesIn(slots, fine, level);
   }
 
-  return said(fine.values[0] === 0 ?
+  const counts = said(fine.values[0] === 0 ?
     [
       at(starts, level), words.andPiece,
       countsAfter(fine.values.slice(1), level), level.afterEach
@@ -555,6 +575,8 @@ function countsInSlots(slots: number[], fine: Fine, level: Level): Said {
         return clock(moment, level.face);
       }))
     ].join(' '), true);
+
+  return {...counts, outright: true};
 }
 
 // The lead of each stretch said in named slots: one for them all,
@@ -793,6 +815,18 @@ function secondLevel(face: Face): Level {
   };
 }
 
+// «Щоразу рівно й через 15, 30 та 45 секунд»: seconds counted from each
+// clock time named.
+function sharpAndCounts(values: number[], level: Level): string {
+  const others = values.filter(Boolean);
+
+  return [
+    words.eachTime,
+    ...[words.sharp, words.andPiece].slice(0, 2 * Number(values[0] === 0)),
+    countsAfter(others, level)
+  ].join(' ');
+}
+
 // The seconds as what happens each time the rest fires, pinned to the
 // second. What is left out of the rest stays with it, ahead of «щоразу».
 // One second after «щогодини» alone is counted from the hour. Where the
@@ -810,6 +844,11 @@ function eachMinute(
     ].join(' ');
   }
 
+  if (rest.outright && rest.clocked &&
+      seconds.description.kind === 'values') {
+    return [finish(rest), sharpAndCounts(seconds.values, level)].join(', ');
+  }
+
   const [second] = seconds.values;
   const counts = seconds.values.length === 1 &&
     rest.words === words.everyHour;
@@ -820,7 +859,8 @@ function eachMinute(
     ].join(' ') :
     `, ${words.eachTime} ${positionsOf(seconds, level)}`;
 
-  const pin = bracket(slots, seconds.description as Placed, level);
+  const pin = bracket(slots, seconds.description as Placed, level,
+    !rest.outright);
 
   return counts ?
     finish({...rest, pin, words: rest.words + phrase}) :
