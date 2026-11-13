@@ -81,6 +81,17 @@ fault was in the artifacts:
 It also reported ten places the rule book was silent; the answers now
 cover the ones with a row to pin them.
 
+A fourth round added rules the builder had been left to guess (exceptions
+among seconds, an exception against a run that wraps, a stray year beside
+a range), each pinned by a new row first.
+
+**A flaw in the setup, reported by the builder itself:** the two
+language builders running that night shared one scratch directory. A
+helper script of the Ukrainian builder's was overwritten there, and
+running it printed seven lines of Chinese output. It saw no renderer code
+and no rows, and Ukrainian's held-out rows had already passed by then.
+Builders now need a scratch directory each.
+
 ## Continuity's declared exceptions
 
 * An hour edit may add or remove «щодня».
@@ -92,8 +103,8 @@ cover the ones with a row to pin them.
 
 | | Ukrainian | English |
 | --- | --- | --- |
-| Logical lines | about 1,610 | 1,564 |
-| Branches | 90 | 95 |
+| Logical lines | about 1,660 | 1,564 |
+| Branches | 89 | 95 |
 
 Ukrainian carries case, number agreement and two alternating prepositions
 that English does not, in about the same amount of code.
@@ -101,7 +112,7 @@ that English does not, in about the same amount of code.
 | Step | Tokens, in the agent's own context |
 | --- | --- |
 | Independent read of the rows | about 124,000 |
-| Renderer build, three rounds | about 325,000 |
+| Renderer build, four rounds | about 347,000 |
 | Blind recovery | about 71,000 |
 
 The rule book, lexicon and rows were written by the orchestrating model in

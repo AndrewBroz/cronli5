@@ -128,13 +128,14 @@ function nameOf<Form extends string>(
   return style.short ? entry.short : entry[form];
 }
 
-// The part of the day a 12-hour time carries.
+// The part of the day a 12-hour time carries: the last one begun, and
+// the first begins at hour 0.
 function dayPartOf(hour: number): string {
   return lexicon.dayParts.filter(function begun(part) {
     return part.from <= hour;
   }).map(function wordOf(part) {
     return part.word;
-  }).pop() ?? '';
+  }).pop() as string;
 }
 
 /** A time as a clock writes it: «9:00», «17:30:15», «5:30 вечора». */
@@ -229,9 +230,19 @@ function hasNoEdgeMissing(description: SetDescription): boolean {
       description.base.last;
 }
 
+function wrapsRound(description: SetDescription): boolean {
+  return description.kind === 'range' && description.from > description.to;
+}
+
+function runsForward(description: SetDescription): boolean {
+  return !wrapsRound(description);
+}
+
 /**
  * The phrase that names the fewest things among the candidates that can
- * be said, the earliest on a tie. Null when none can be said.
+ * be said, the earliest on a tie; a run that wraps round its cycle is
+ * tried last, so that an exception it ties with is said instead. Null
+ * when none can be said.
  */
 function choose<Spoken extends Phrase>(
   candidates: SetDescription[],
@@ -239,7 +250,11 @@ function choose<Spoken extends Phrase>(
 ): Spoken | null {
   const last = candidates[candidates.length - 1];
   const items = last.kind === 'values' ? last.values.length : 0;
-  const sayable = candidates.filter(hasNoEdgeMissing).map(say)
+  const inOrder = [
+    ...candidates.filter(runsForward),
+    ...candidates.filter(wrapsRound)
+  ];
+  const sayable = inOrder.filter(hasNoEdgeMissing).map(say)
     .filter(present).filter(function worthSaying(spoken) {
       return !spoken.laboured ||
         items > EASY_TO_HOLD && spoken.length < items;

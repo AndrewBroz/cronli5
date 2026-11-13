@@ -73,12 +73,15 @@ export interface TimePhrase extends Phrase {
   spelledOut: boolean;
 }
 
+// A description that is not itself a set with values taken out.
+type Unexcepted = Exclude<SetDescription, {kind: 'except'}>;
+
 // A phrase for the minutes of the hour, or the seconds of the minute.
 interface FinePhrase extends Phrase {
   // Whether it fills its cycle evenly, so that hours confine it.
   continuous: boolean;
   // What the phrase describes, apart from the values excepted from it.
-  description: SetDescription;
+  description: Unexcepted;
   excepted: number[];
   led: boolean;
 }
@@ -151,11 +154,11 @@ const secondUnit: FineUnit = {
 
 // How the minutes of the hour, or the seconds of the minute, are said on
 // their own, whatever confines them.
-function fineSayer(unit: FineUnit, exceptions: boolean) {
+function fineSayer(unit: FineUnit) {
   function fine(
     text: string,
     length: number,
-    description: SetDescription
+    description: Unexcepted
   ): FinePhrase {
     return {
       ...phrase(text, length),
@@ -184,7 +187,7 @@ function fineSayer(unit: FineUnit, exceptions: boolean) {
     return span(run.from, run.to);
   }
 
-  function all(description: SetDescription): FinePhrase {
+  function all(description: {kind: 'all'}): FinePhrase {
     return {...fine(unit.every, 0, description), continuous: true, led: true};
   }
 
@@ -214,7 +217,7 @@ function fineSayer(unit: FineUnit, exceptions: boolean) {
       .filter(present);
 
     return {
-      ...fine('', 0, description as SetDescription),
+      ...fine('', 0, description as Unexcepted),
       ...combined(parts),
       led: parts[0].led
     };
@@ -225,14 +228,12 @@ function fineSayer(unit: FineUnit, exceptions: boolean) {
   ): FinePhrase | null {
     const base = say(description.base);
 
-    return exceptions && base ?
-      {
-        ...base,
-        excepted: description.removed,
-        laboured: true,
-        length: base.length + description.removed.length
-      } :
-      null;
+    return base && {
+      ...base,
+      excepted: description.removed,
+      laboured: true,
+      length: base.length + description.removed.length
+    };
   }
 
   function say(description: SetDescription): FinePhrase | null {
@@ -289,9 +290,20 @@ function hourCadence(
 // The hours as points on the clock, each carrying the one minute.
 function pointHours(minute: number, context: TimeContext) {
   const onTheHour = minute === 0 && typeof context.second !== 'number';
-  const carried = onTheHour ?
-    [] :
-    [`${words.at} ${minuteUnit(context).point(minute)}`];
+  // On the hour nothing is carried and every hour has its own word; any
+  // other minute is said before the hours it belongs to.
+  const sayings: {
+    carried: string[];
+    each: string;
+    mode: 'onTheHour' | 'underMinutes';
+  } = onTheHour ?
+    {carried: [], each: context.leads.everyHour, mode: 'onTheHour'} :
+    {
+      carried: [`${words.at} ${minuteUnit(context).point(minute)}`],
+      each: words.eachHour,
+      mode: 'underMinutes'
+    };
+  const {carried, each, mode} = sayings;
 
   function moment(hour: number): Moment {
     return {hour, minute, second: context.second};
@@ -302,8 +314,6 @@ function pointHours(minute: number, context: TimeContext) {
   }
 
   function all(): TimePhrase {
-    const each = onTheHour ? context.leads.everyHour : words.eachHour;
-
     return {
       ...timePhrase(phrase(join([...carried, each]), 0), true),
       led: onTheHour
@@ -325,8 +335,7 @@ function pointHours(minute: number, context: TimeContext) {
   }
 
   function cadence(description: Cadence): TimePhrase | null {
-    const spoken = hourCadence(description,
-      onTheHour ? 'onTheHour' : 'underMinutes', moment, context);
+    const spoken = hourCadence(description, mode, moment, context);
 
     // Named ends carry the minute themselves, as a range's do.
     return spoken && {
@@ -393,7 +402,7 @@ function minuteFrame(time: Moment): Frame {
 // end of its frame closes on the boundary; any other names its last
 // moment.
 function windowed(
-  fine: SetDescription,
+  fine: Unexcepted,
   frames: Frame[],
   unit: FineUnit,
   style: UkrainianStyle
@@ -453,11 +462,7 @@ function windowed(
     }), style);
   }
 
-  function except(): string {
-    return '';
-  }
-
-  return dispatch(fine, {all, cadence, except, pieces, range, values});
+  return dispatch(fine, {all, cadence, pieces, range, values});
 }
 
 // The hours as what confines a phrase of minutes: windows, «у години з
@@ -571,18 +576,31 @@ function confiningHours(minute: FinePhrase, context: TimeContext) {
   return say;
 }
 
-// The minutes excepted from every hour, said last: «…, крім :29 кожної
-// години». Inside one named hour they are clock times («крім 9:30»), and
-// «кожної години» is not said twice running.
+// A time with values excepted from it, said last: «…, крім :29 кожної
+// години». After another exception it is joined by «і».
+function exceptingLast(
+  time: TimePhrase,
+  count: number,
+  excepted: Array<string | false>
+): TimePhrase {
+  if (count === 0) {
+    return time;
+  }
+
+  const clause = join(
+    [time.exception && words.andPiece, words.except, ...excepted]);
+
+  return {...time, exception: true, text: `${time.text}, ${clause}`};
+}
+
+// The minutes excepted from every hour. Inside one named hour they are
+// clock times («крім 9:30»), and «кожної години» is not said twice
+// running.
 function exceptingMinutes(
   time: TimePhrase,
   minute: FinePhrase,
   context: TimeContext
 ): TimePhrase {
-  if (minute.excepted.length === 0) {
-    return time;
-  }
-
   const [hour, ...otherHours] = denote(context.hours[0], domainOf('hour'));
   const oneHour = otherHours.length === 0;
   const excepted = oneHour ?
@@ -590,15 +608,34 @@ function exceptingMinutes(
       return clock({hour, minute: value}, context.style);
     }) :
     minute.excepted.map(minuteUnit(context).point);
-  const clause = join([
-    time.exception && words.andPiece,
-    words.except,
+
+  return exceptingLast(time, excepted.length, [
     context.wholeMinutes && words.minuteOf,
     listed(excepted),
     !oneHour && !time.text.endsWith(words.eachHour) && words.eachHour
   ]);
+}
 
-  return {...time, exception: true, text: `${time.text}, ${clause}`};
+// The seconds excepted from every minute, as ordinals («крім 29-ї секунди
+// кожної хвилини»). Inside one named minute they are clock times («крім
+// 9:00:29»).
+function exceptingSeconds(
+  time: TimePhrase,
+  second: FinePhrase,
+  style: UkrainianStyle
+): TimePhrase {
+  const [minute, ...otherMinutes] = time.times ?? [];
+  const noun = second.excepted.length > 1 ?
+    units.second.genitiveRest :
+    units.second.genitiveOne;
+  const ordinals = listed(second.excepted.map(secondUnit.point));
+
+  return exceptingLast(time, second.excepted.length,
+    minute && otherMinutes.length === 0 ?
+      [listed(second.excepted.map(function inTheMinute(value) {
+        return clock({...minute, second: value}, style);
+      }))] :
+      [`${ordinals} ${noun}`, words.eachMinute]);
 }
 
 function isMidnight(times: Moment[]): boolean {
@@ -630,7 +667,7 @@ function minutesAndHours(
   const candidates = facts.analyses.candidates.minute as SetDescription[];
   const minutes = denote(candidates[0], domainOf('minute'));
   const minute = choose(
-    candidates, fineSayer(minuteUnit(context), true)) as FinePhrase;
+    candidates, fineSayer(minuteUnit(context))) as FinePhrase;
   const single = minutes.length === 1;
   const counting = {...context, minutes: minutes.length};
   const hours = choose(context.hours, single ?
@@ -657,7 +694,7 @@ function withSeconds(
   seconds: number[]
 ): TimePhrase {
   const second = choose(facts.analyses.candidates.second as SetDescription[],
-    fineSayer(secondUnit, false)) as FinePhrase;
+    fineSayer(secondUnit)) as FinePhrase;
   const prefix = join(
     [second.text, second.continuous && words.forAMinute]);
   const leads = second.continuous ?
@@ -693,7 +730,11 @@ function withSeconds(
 
   return shortestSpoken([
     toTheSecond && timesPhrase(toTheSecond, context.style),
-    {...rest, ...led(), exception: rest.exception, times: null}
+    {
+      ...exceptingSeconds({...rest, ...led(), exception: rest.exception},
+        second, context.style),
+      times: null
+    }
   ].filter(present));
 }
 

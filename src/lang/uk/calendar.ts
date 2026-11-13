@@ -480,9 +480,10 @@ function yearSayer(before: string, named: boolean) {
         ordinal(description.last))}`, 3);
   }
 
+  // A year beside a run of years is said as a year alone is.
   function pieces(description: {parts: Piece[]}): Phrase {
-    return combined(
-      ordered(description.parts, identity).map(say).filter(present));
+    return combined(ordered(description.parts, identity)
+      .map(yearSayer(before, false)).filter(present));
   }
 
   function say(description: SetDescription): Phrase | null {
