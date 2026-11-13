@@ -22,7 +22,7 @@ const FIELDS =
 // fill. Inside the calendar the fields answer to one another in the ways
 // answers 2.6 declares: «매년» and «매월» stand by which coarser field
 // is free or said as a range, a union says its month and year on both
-// arms or becomes one «매일(… 제외)», a year phrase ending in «마다»
+// arms or becomes one «매일(단, …)», a year phrase ending in «마다»
 // takes «, 그해», and the month and day phrases name only what the
 // calendar has. All of that stays inside the calendar. Nothing else may
 // cross.
