@@ -1,0 +1,4278 @@
+{
+ "language": "ja",
+ "rows": [
+  {
+   "expected": "毎日9:00からの1分間、1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:00からの1分間、6秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/6 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:00:05から9:00:55まで10秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/10 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "毎日9:05・9:20・9:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 9 * * *"
+  },
+  {
+   "expected": "毎日9:00・9:15・9:30・9:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9 * * *"
+  },
+  {
+   "expected": "毎日9:00・9:15・9:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,15,45 9 * * *"
+  },
+  {
+   "expected": "毎時0分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "毎日9:00・17:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9,17 * * *"
+  },
+  {
+   "expected": "毎日9:00から17:00まで1時間ごと、および22:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "毎日1:00から23:00まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "毎月1日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1 * *"
+  },
+  {
+   "expected": "毎月1日・10日・20日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1,10,20 * *"
+  },
+  {
+   "expected": "毎月奇数日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "毎月奇数日（15日を除く）の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "毎年1月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1 *"
+  },
+  {
+   "expected": "毎年3月・6月・9月・12月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 3,6,9,12 *"
+  },
+  {
+   "expected": "毎年奇数月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * */2 *"
+  },
+  {
+   "expected": "毎年11月〜翌年2月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "毎週月曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "毎週火曜日・木曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 2,4"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:45まで15分ごとに1分間ずつ、その間は1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:45まで15分ごとに1分間ずつ、その間は6秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/6 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分・15分・30分・45分の5秒・15秒・25秒・35秒・45秒・55秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/10 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:30まで30分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分から29分まで1分ごと、および45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分・15分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,15,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日、終日15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 * * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の12:00・12:15・12:30・12:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 12 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:45までと22:00から22:45まで、いずれも15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17,22 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日、奇数の時間帯（1時台・3時台…23時台）の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 1/2 * * 1-5"
+  },
+  {
+   "expected": "毎月1日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 1 * 1-5"
+  },
+  {
+   "expected": "毎月1日・10日・20日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 1,10,20 * 1-5"
+  },
+  {
+   "expected": "毎月奇数日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 */2 * 1-5"
+  },
+  {
+   "expected": "毎月1日〜13日の奇数日と17日〜31日の奇数日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5"
+  },
+  {
+   "expected": "毎年1月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 1 1-5"
+  },
+  {
+   "expected": "毎年3月・6月・9月・12月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 3,6,9,12 1-5"
+  },
+  {
+   "expected": "毎年奇数月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * */2 1-5"
+  },
+  {
+   "expected": "毎年11月〜翌年2月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 11-2 1-5"
+  },
+  {
+   "expected": "毎日9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * *"
+  },
+  {
+   "expected": "毎週月曜日・水曜日・金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 1,3,5"
+  },
+  {
+   "expected": "毎週火曜日・木曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 2,4"
+  },
+  {
+   "expected": "毎月1日の0:00からの1分間、1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00からの1分間、6秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/6 0 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00:05から0:00:55まで10秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/10 0 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00から0:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:05・0:20・0:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00・0:15・0:30・0:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00・0:15・0:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,15,45 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の毎時0分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 * 1 * *"
+  },
+  {
+   "expected": "毎月1日の9:00・17:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9,17 1 * *"
+  },
+  {
+   "expected": "毎月1日の9:00から17:00まで1時間ごと、および22:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-17,22 1 * *"
+  },
+  {
+   "expected": "毎月1日の1:00から23:00まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 1/2 1 * *"
+  },
+  {
+   "expected": "毎日0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "毎月1日・10日・20日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,10,20 * *"
+  },
+  {
+   "expected": "毎月奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */2 * *"
+  },
+  {
+   "expected": "毎月奇数日（15日を除く）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "毎年1月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 1 *"
+  },
+  {
+   "expected": "毎年3月1日・6月1日・9月1日・12月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 3,6,9,12 *"
+  },
+  {
+   "expected": "毎年奇数月の1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 */2 *"
+  },
+  {
+   "expected": "毎年1月1日・2月1日・11月1日・12月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 11-2 *"
+  },
+  {
+   "expected": "毎月1日および毎週月曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 1"
+  },
+  {
+   "expected": "毎月1日および毎週月曜日〜金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 1-5"
+  },
+  {
+   "expected": "毎月1日および毎週火曜日・木曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 2,4"
+  },
+  {
+   "expected": "1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "6秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/6 * * * * *"
+  },
+  {
+   "expected": "毎分5秒・15秒・25秒・35秒・45秒・55秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/10 * * * * *"
+  },
+  {
+   "expected": "毎時5分・20分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 * * * *"
+  },
+  {
+   "expected": "15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "毎時0分・15分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,15,45 * * * *"
+  },
+  {
+   "expected": "毎日0:00から0:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:59までと17:00から17:59まで、いずれも1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "毎日9:00から17:59までと22:00から22:59まで、いずれも1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 9-17,22 * * *"
+  },
+  {
+   "expected": "毎日、奇数の時間帯（1時台・3時台…23時台）に1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 1/2 * * *"
+  },
+  {
+   "expected": "毎月1日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "毎月1日・10日・20日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 1,10,20 * *"
+  },
+  {
+   "expected": "毎月奇数日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * */2 * *"
+  },
+  {
+   "expected": "毎月奇数日（15日を除く）、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "毎年1月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 1 *"
+  },
+  {
+   "expected": "毎年3月・6月・9月・12月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 3,6,9,12 *"
+  },
+  {
+   "expected": "毎年奇数月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * */2 *"
+  },
+  {
+   "expected": "毎年11月〜翌年2月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 11-2 *"
+  },
+  {
+   "expected": "毎週月曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 1"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 1-5"
+  },
+  {
+   "expected": "毎週火曜日・木曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 2,4"
+  },
+  {
+   "expected": "毎日9:00:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:00:00・9:00:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:00:00・9:00:15・9:00:30・9:00:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:00:00から9:00:09まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-9 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "毎日9:00・9:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 9 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:29まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29 9 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:29まで1分ごと、および9:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29,45 9 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:56まで7分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/7 9 * * *"
+  },
+  {
+   "expected": "毎日9:05・9:20・9:35・9:50",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/15 9 * * *"
+  },
+  {
+   "expected": "毎日9:10・9:20・9:30・9:40",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "10-40/10 9 * * *"
+  },
+  {
+   "expected": "毎日12:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "毎日8:00・12:00・18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "毎日9:00から17:00まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "毎日0:00から22:00まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "毎日0:00・6:00・12:00・18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */6 * * *"
+  },
+  {
+   "expected": "毎日0:00から22:00まで2時間ごと（8:00を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "毎日22:00から翌日2:00まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "毎月15日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 15 * *"
+  },
+  {
+   "expected": "毎月1日・15日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1,15 * *"
+  },
+  {
+   "expected": "毎月1日〜7日、いずれも9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1-7 * *"
+  },
+  {
+   "expected": "毎月1日〜7日と15日、いずれも9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1-7,15 * *"
+  },
+  {
+   "expected": "毎月偶数日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 2/2 * *"
+  },
+  {
+   "expected": "毎月1日・6日・11日・16日・21日・26日・31日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 */5 * *"
+  },
+  {
+   "expected": "毎月末日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "毎月15日に最も近い平日（月曜日〜金曜日）の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "毎年6月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 6 *"
+  },
+  {
+   "expected": "毎年1月・7月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1,7 *"
+  },
+  {
+   "expected": "毎年6月〜8月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "毎年6月〜8月と12月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 6-8,12 *"
+  },
+  {
+   "expected": "毎年1月・4月・7月・10月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * */3 *"
+  },
+  {
+   "expected": "毎年1月〜11月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "毎週日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "毎週月曜日・水曜日・金曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "毎週土曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "毎週月曜日〜土曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "毎月最終金曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "毎月第2月曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00:30から17:45:30まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分・15分・30分・45分の0秒・30秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分・15分・30分・45分の0秒・15秒・30秒・45秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分・15分・30分・45分の0秒から9秒まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-9 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:00まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:30から17:30まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時5分・20分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分から29分まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時0分から56分まで7分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/7 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時5分・20分・35分・50分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時台から17時台まで、毎時10分・20分・30分・40分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "10-40/10 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の0:00・0:15・0:30・0:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 0 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00・9:15・9:30・9:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から9:45までと17:00から17:45まで、いずれも15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9,17 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の8時台・12時台・18時台の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 8,12,18 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日、偶数の時間帯（0時台・2時台…22時台）の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 */2 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の0時台・6時台・12時台・18時台の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 */6 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日、8時台を除く偶数の時間帯（0時台・2時台…22時台）の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の0:00から2:45までと22:00から23:45まで、いずれも15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 22-2 * * 1-5"
+  },
+  {
+   "expected": "毎月15日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 15 * 1-5"
+  },
+  {
+   "expected": "毎月1日・15日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 1,15 * 1-5"
+  },
+  {
+   "expected": "毎月1日〜7日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 1-7 * 1-5"
+  },
+  {
+   "expected": "毎月1日〜7日と15日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 1-7,15 * 1-5"
+  },
+  {
+   "expected": "毎月偶数日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 2/2 * 1-5"
+  },
+  {
+   "expected": "毎月1日・6日・11日・16日・21日・26日・31日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 */5 * 1-5"
+  },
+  {
+   "expected": "毎月末日および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 L * 1-5"
+  },
+  {
+   "expected": "毎月15日に最も近い平日（月曜日〜金曜日）および毎週月曜日〜金曜日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 15W * 1-5"
+  },
+  {
+   "expected": "毎年6月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 6 1-5"
+  },
+  {
+   "expected": "毎年1月・7月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 1,7 1-5"
+  },
+  {
+   "expected": "毎年6月〜8月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 6-8 1-5"
+  },
+  {
+   "expected": "毎年6月〜8月と12月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 6-8,12 1-5"
+  },
+  {
+   "expected": "毎年1月・4月・7月・10月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * */3 1-5"
+  },
+  {
+   "expected": "毎年1月〜11月の毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * 1-11 1-5"
+  },
+  {
+   "expected": "毎週月曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 1"
+  },
+  {
+   "expected": "毎週日曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 0"
+  },
+  {
+   "expected": "毎週土曜日・日曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 0,6"
+  },
+  {
+   "expected": "毎週月曜日〜土曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 1-6"
+  },
+  {
+   "expected": "毎月最終金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 5L"
+  },
+  {
+   "expected": "毎月第2月曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 * * 1#2"
+  },
+  {
+   "expected": "毎月1日の0:00:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00:00・0:00:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 0 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00:00・0:00:15・0:00:30・0:00:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 0 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00:00から0:00:09まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-9 0 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00・0:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00から0:29まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00から0:29まで1分ごと、および0:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29,45 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00から0:56まで7分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/7 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:05・0:20・0:35・0:50",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/15 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:10・0:20・0:30・0:40",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "10-40/10 0 1 * *"
+  },
+  {
+   "expected": "毎月1日の12:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 12 1 * *"
+  },
+  {
+   "expected": "毎月1日の8:00・12:00・18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 8,12,18 1 * *"
+  },
+  {
+   "expected": "毎月1日の9:00から17:00まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-17 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00から22:00まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */2 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00・6:00・12:00・18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */6 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00から22:00まで2時間ごと（8:00を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
+  },
+  {
+   "expected": "毎月1日の0:00から2:00まで1時間ごと、および22:00・23:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 22-2 1 * *"
+  },
+  {
+   "expected": "毎月15日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 15 * *"
+  },
+  {
+   "expected": "毎月1日・15日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,15 * *"
+  },
+  {
+   "expected": "毎月1日〜7日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "毎月1日〜7日と15日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-7,15 * *"
+  },
+  {
+   "expected": "毎月偶数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 2/2 * *"
+  },
+  {
+   "expected": "毎月1日・6日・11日・16日・21日・26日・31日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */5 * *"
+  },
+  {
+   "expected": "毎月末日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "毎月15日に最も近い平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "毎年6月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "毎年1月1日・7月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 1,7 *"
+  },
+  {
+   "expected": "毎年6月1日・7月1日・8月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 6-8 *"
+  },
+  {
+   "expected": "毎年6月1日・7月1日・8月1日・12月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 6-8,12 *"
+  },
+  {
+   "expected": "毎年1月1日・4月1日・7月1日・10月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 */3 *"
+  },
+  {
+   "expected": "12月を除く毎月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 1-11 *"
+  },
+  {
+   "expected": "毎月1日および毎週日曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 0"
+  },
+  {
+   "expected": "毎月1日および毎週月曜日・水曜日・金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 1,3,5"
+  },
+  {
+   "expected": "毎月1日および毎週土曜日・日曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "毎月1日および毎週月曜日〜土曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 1-6"
+  },
+  {
+   "expected": "毎月1日および毎月最終金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 5L"
+  },
+  {
+   "expected": "毎月1日および毎月第2月曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 1#2"
+  },
+  {
+   "expected": "毎分30秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * * * * *"
+  },
+  {
+   "expected": "30秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 * * * * *"
+  },
+  {
+   "expected": "15秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 * * * * *"
+  },
+  {
+   "expected": "毎分0秒から9秒まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-9 * * * * *"
+  },
+  {
+   "expected": "毎時30分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "30分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 * * * *"
+  },
+  {
+   "expected": "毎時0分から29分まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29 * * * *"
+  },
+  {
+   "expected": "毎時0分から29分まで1分ごと、および45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "毎時0分から56分まで7分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/7 * * * *"
+  },
+  {
+   "expected": "毎時5分・20分・35分・50分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/15 * * * *"
+  },
+  {
+   "expected": "毎時10分・20分・30分・40分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "10-40/10 * * * *"
+  },
+  {
+   "expected": "毎日12:00から12:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 12 * * *"
+  },
+  {
+   "expected": "毎日8時台・12時台・18時台、1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "毎日9:00から17:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 9-17 * * *"
+  },
+  {
+   "expected": "毎日、偶数の時間帯（0時台・2時台…22時台）に1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "毎日0時台・6時台・12時台・18時台、1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* */6 * * *"
+  },
+  {
+   "expected": "毎日、8時台を除く偶数の時間帯（0時台・2時台…22時台）に1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "毎日22:00から翌日2:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "毎月15日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 15 * *"
+  },
+  {
+   "expected": "毎月1日・15日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 1,15 * *"
+  },
+  {
+   "expected": "毎月1日〜7日、いずれも終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 1-7 * *"
+  },
+  {
+   "expected": "毎月1日〜7日と15日、いずれも終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 1-7,15 * *"
+  },
+  {
+   "expected": "毎月偶数日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 2/2 * *"
+  },
+  {
+   "expected": "毎月1日・6日・11日・16日・21日・26日・31日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * */5 * *"
+  },
+  {
+   "expected": "毎月末日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * L * *"
+  },
+  {
+   "expected": "毎月15日に最も近い平日（月曜日〜金曜日）、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 15W * *"
+  },
+  {
+   "expected": "毎年6月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 6 *"
+  },
+  {
+   "expected": "毎年1月・7月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 1,7 *"
+  },
+  {
+   "expected": "毎年6月〜8月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 6-8 *"
+  },
+  {
+   "expected": "毎年6月〜8月と12月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 6-8,12 *"
+  },
+  {
+   "expected": "毎年1月・4月・7月・10月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * */3 *"
+  },
+  {
+   "expected": "毎年1月〜11月の毎日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 1-11 *"
+  },
+  {
+   "expected": "毎週日曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 0"
+  },
+  {
+   "expected": "毎週月曜日・水曜日・金曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 1,3,5"
+  },
+  {
+   "expected": "毎週土曜日・日曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 0,6"
+  },
+  {
+   "expected": "毎週月曜日〜土曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 1-6"
+  },
+  {
+   "expected": "毎月最終金曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 5L"
+  },
+  {
+   "expected": "毎月第2月曜日、終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * 1#2"
+  },
+  {
+   "expected": "2030年1月1日の0:00",
+   "options": {
+    "lang": "ja",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "2030年・2035年の1月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1 1 * 2030,2035"
+  },
+  {
+   "expected": "2030年〜2035年の毎年1月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2035"
+  },
+  {
+   "expected": "偶数年の1月1日の0:00",
+   "options": {
+    "lang": "ja",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * */2"
+  },
+  {
+   "expected": "2030年6月1日の9:00:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0 9 1 6 * 2030"
+  },
+  {
+   "expected": "2030年の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2030"
+  },
+  {
+   "expected": "2028年〜2031年の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2028-2031"
+  },
+  {
+   "expected": "2030年〜2035年の毎年6月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * 6 * 2030-2035"
+  },
+  {
+   "expected": "2030年6月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * 6 * 2030"
+  },
+  {
+   "expected": "2030年6月の毎週月曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * 6 1 2030"
+  },
+  {
+   "expected": "2030年6月1日・15日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 1,15 6 * 2030"
+  },
+  {
+   "expected": "2030年6月・7月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * 6,7 * 2030"
+  },
+  {
+   "expected": "2030年・2031年の6月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * 6 * 2030,2031"
+  },
+  {
+   "expected": "2030年6月末日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 L 6 * 2030"
+  },
+  {
+   "expected": "2030年の毎月1日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 1 * * 2030"
+  },
+  {
+   "expected": "2030年以降の偶数年の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2030/2"
+  },
+  {
+   "expected": "2028年から4年ごとの年（2028年・2032年…）の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2028/4"
+  },
+  {
+   "expected": "2028年から4年ごとの年（2028年・2032年…）の1月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1 1 * 2028/4"
+  },
+  {
+   "expected": "2028年から4年ごとの年（2028年・2032年…）の毎日、終日5分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */5 * * * * 2028/4"
+  },
+  {
+   "expected": "2030年〜2040年の偶数年の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2"
+  },
+  {
+   "expected": "2028年・2032年・2036年・2040年の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2028-2040/4"
+  },
+  {
+   "expected": "2028年から2060年まで4年ごとの年（2028年・2032年…2060年）の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2028-2060/4"
+  },
+  {
+   "expected": "偶数年の毎日、終日5分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */5 * * * * */2"
+  },
+  {
+   "expected": "奇数年の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 1971/2"
+  },
+  {
+   "expected": "2030年〜2032年と2035年の毎年1月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2032,2035"
+  },
+  {
+   "expected": "2030年6月1日〜7日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1-7 6 * 2030"
+  },
+  {
+   "expected": "2030年6月1日・7月1日・8月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1 6-8 * 2030"
+  },
+  {
+   "expected": "毎月1日の0:00",
+   "options": {
+    "cron": "quartz",
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * ?"
+  },
+  {
+   "expected": "毎月最後の平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "毎月末日の3日前の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L-3 * *"
+  },
+  {
+   "expected": "毎月末日の前日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L-1 * *"
+  },
+  {
+   "expected": "毎年6月末日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L 6 *"
+  },
+  {
+   "expected": "毎年1月・7月の末日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L 1,7 *"
+  },
+  {
+   "expected": "毎年6月・7月・8月の末日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L 6-8 *"
+  },
+  {
+   "expected": "毎年6月末日の3日前の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L-3 6 *"
+  },
+  {
+   "expected": "毎年6月の最後の平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 LW 6 *"
+  },
+  {
+   "expected": "毎年6月15日に最も近い平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 15W 6 *"
+  },
+  {
+   "expected": "毎月最初の平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1W * *"
+  },
+  {
+   "expected": "毎年6月の最初の平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1W 6 *"
+  },
+  {
+   "expected": "毎年1月・7月の最初の平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1W 1,7 *"
+  },
+  {
+   "expected": "31日のある月の、31日に月内で最も近い平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 31W * *"
+  },
+  {
+   "expected": "29日のある月の、29日に月内で最も近い平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 29W * *"
+  },
+  {
+   "expected": "毎月28日に月内で最も近い平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 28W * *"
+  },
+  {
+   "expected": "毎年1月31日に月内で最も近い平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 31W 1 *"
+  },
+  {
+   "expected": "31日のある月の、末日の30日前の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L-30 * *"
+  },
+  {
+   "expected": "29日のある月の、末日の28日前の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L-28 * *"
+  },
+  {
+   "expected": "毎月末日の27日前の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L-27 * *"
+  },
+  {
+   "expected": "毎年1月・7月の最後の平日（月曜日〜金曜日）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 LW 1,7 *"
+  },
+  {
+   "expected": "毎年6月の第2月曜日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 * 6 1#2"
+  },
+  {
+   "expected": "毎年1月・7月の最終金曜日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 * 1,7 5L"
+  },
+  {
+   "expected": "毎年6月・7月・8月の最終金曜日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 * 6-8 5L"
+  },
+  {
+   "expected": "毎月第1水曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 3#1"
+  },
+  {
+   "expected": "毎月第3木曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 4#3"
+  },
+  {
+   "expected": "毎月最終土曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 6L"
+  },
+  {
+   "expected": "毎月第4日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0#4"
+  },
+  {
+   "expected": "毎月第5火曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 2#5"
+  },
+  {
+   "expected": "毎月末日、終日15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 * L * *"
+  },
+  {
+   "expected": "毎時0分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "@hourly"
+  },
+  {
+   "expected": "毎日0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "@daily"
+  },
+  {
+   "expected": "毎週日曜日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "@weekly"
+  },
+  {
+   "expected": "毎月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "@monthly"
+  },
+  {
+   "expected": "毎年1月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "@yearly"
+  },
+  {
+   "expected": "システム起動時",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "毎日9:00に実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "毎日9:00",
+   "options": {
+    "form": "label",
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "1分ごと",
+   "options": {
+    "form": "label",
+    "lang": "ja"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "1分ごとに実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "1秒ごとに実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "5分ごとに実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "*/5 * * * *"
+  },
+  {
+   "expected": "毎時0分に実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:59まで1分ごとに実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎月1日、終日1分ごとに実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "毎時0分（3:00を除く）に実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "土曜日を除く毎日9:00に実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "システム起動時に実行します。",
+   "options": {
+    "form": "sentence",
+    "lang": "ja"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "認識できないcron式",
+   "options": {
+    "lang": "ja",
+    "lenient": true
+   },
+   "pattern": "not a pattern"
+  },
+  {
+   "expected": "毎月1日および毎週金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 5"
+  },
+  {
+   "expected": "毎月1日〜14日と16日〜末日および毎週金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-14,16-31 * 5"
+  },
+  {
+   "expected": "毎月13日および毎週金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 13 * 5"
+  },
+  {
+   "expected": "毎月1日・15日および毎週月曜日〜金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,15 * 1-5"
+  },
+  {
+   "expected": "毎年6月1日および6月の毎週金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "毎年1月1日・1月15日・7月1日・7月15日および1月・7月の毎週月曜日〜金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,15 1,7 1-5"
+  },
+  {
+   "expected": "毎年5月・6月・7月の1日・19日・23日・28日および5月〜7月の毎週水曜日・木曜日、いずれも7:52から16:52まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "52 7-16 1,19,23,28 5-7 3-4"
+  },
+  {
+   "expected": "毎月1日〜7日および毎週月曜日、いずれも4:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 4 1-7 * 1"
+  },
+  {
+   "expected": "毎月1日および毎週金曜日、いずれも9:00・17:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9,17 1 * 5"
+  },
+  {
+   "expected": "毎月1日および毎週金曜日、いずれも終日1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 1 * 5"
+  },
+  {
+   "expected": "毎月1日および毎週金曜日、いずれも終日1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * 1 * 5"
+  },
+  {
+   "expected": "毎月1日および毎週金曜日、いずれも終日15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 * 1 * 5"
+  },
+  {
+   "expected": "毎月1日および毎週金曜日、いずれも毎時30分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * 1 * 5"
+  },
+  {
+   "expected": "毎年6月1日〜7日および6月の毎週月曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-7 6 1"
+  },
+  {
+   "expected": "毎月1日および毎週金曜日、いずれも0:00から22:00まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */2 1 * 5"
+  },
+  {
+   "expected": "毎月末日および毎週月曜日〜金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 L * 1-5"
+  },
+  {
+   "expected": "2030年6月1日および2030年6月の毎週金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1 6 5 2030"
+  },
+  {
+   "expected": "2030年の毎月1日および2030年の毎週金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1 * 5 2030"
+  },
+  {
+   "expected": "毎年6月1日・15日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,15 6 *"
+  },
+  {
+   "expected": "毎年6月1日・10日・20日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,10,20 6 *"
+  },
+  {
+   "expected": "毎年6月1日〜7日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "毎年6月1日〜7日と15日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-7,15 6 *"
+  },
+  {
+   "expected": "毎年6月の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "毎年6月1日・6日・11日・16日・21日・26日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */5 6 *"
+  },
+  {
+   "expected": "毎年1月・7月の1日・6日・11日・16日・21日・26日・31日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */5 1,7 *"
+  },
+  {
+   "expected": "毎年6月・7月・8月の1日・6日・11日・16日・21日・26日・31日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */5 6-8 *"
+  },
+  {
+   "expected": "毎年1月1日・1月15日・7月1日・7月15日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,15 1,7 *"
+  },
+  {
+   "expected": "毎年12月31日の23:59",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "59 23 31 12 *"
+  },
+  {
+   "expected": "毎月15日を除く毎日0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-14,16-31 * *"
+  },
+  {
+   "expected": "15日を除く毎年6月の毎日0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-14,16-31 6 *"
+  },
+  {
+   "expected": "毎月15日・16日を除く毎日0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-14,17-31 * *"
+  },
+  {
+   "expected": "15日を除く毎年1月・7月の毎日0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-14,16-31 1,7 *"
+  },
+  {
+   "expected": "毎月15日を除く2030年の毎日0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1-14,16-31 * * 2030"
+  },
+  {
+   "expected": "毎年偶数月の1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 2/2 *"
+  },
+  {
+   "expected": "毎月1日〜5日と10日と20日〜25日、いずれも12:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 12 1-5,10,20-25 * *"
+  },
+  {
+   "expected": "毎月5日・8日・11日・14日・17日・20日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 5-20/3 * *"
+  },
+  {
+   "expected": "毎月1日・4日・7日…31日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */3 * *"
+  },
+  {
+   "expected": "毎月8日〜30日の偶数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 8/2 * *"
+  },
+  {
+   "expected": "毎月5日〜19日の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 5-19/2 * *"
+  },
+  {
+   "expected": "毎月1日・22日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */21 * *"
+  },
+  {
+   "expected": "毎月1日・2日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,2 * *"
+  },
+  {
+   "expected": "毎月25日〜末日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 25-31 * *"
+  },
+  {
+   "expected": "毎月28日〜翌月3日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 28-3 * *"
+  },
+  {
+   "expected": "毎年6月1日〜3日と28日〜30日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 28-3 6 *"
+  },
+  {
+   "expected": "毎年6月25日〜30日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 25-31 6 *"
+  },
+  {
+   "expected": "毎月1日・15日の9:00・17:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9,17 1,15 * *"
+  },
+  {
+   "expected": "毎月1日〜7日、いずれも偶数の時間帯（0時台・2時台…22時台）に1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* */2 1-7 * *"
+  },
+  {
+   "expected": "毎年3月・6月・9月・12月の1日・15日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,15 3,6,9,12 *"
+  },
+  {
+   "expected": "毎月1日〜7日、いずれも終日15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 * 1-7 * *"
+  },
+  {
+   "expected": "毎月1日〜7日、いずれも9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 9-17 1-7 * *"
+  },
+  {
+   "expected": "毎月1日〜7日、いずれも毎時0分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 * 1-7 * *"
+  },
+  {
+   "expected": "毎年1月〜3月と6月と9月〜11月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1-3,6,9-11 *"
+  },
+  {
+   "expected": "2030年1月・2月・11月・12月の毎日0:00",
+   "options": {
+    "lang": "ja",
+    "years": true
+   },
+   "pattern": "0 0 * 11-2 * 2030"
+  },
+  {
+   "expected": "毎年1月〜10月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1-10 *"
+  },
+  {
+   "expected": "11月・12月を除く毎月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 1-10 *"
+  },
+  {
+   "expected": "1月・12月を除く毎月1日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 2-11 *"
+  },
+  {
+   "expected": "毎年6月8日〜30日の偶数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 8/2 6 *"
+  },
+  {
+   "expected": "毎年6月の奇数日（15日を除く）の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 6 *"
+  },
+  {
+   "expected": "毎週月曜日・金曜日・土曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "毎週火曜日〜木曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 2-4"
+  },
+  {
+   "expected": "毎週月曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0,1"
+  },
+  {
+   "expected": "毎週月曜日・土曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 6-1"
+  },
+  {
+   "expected": "毎週金曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0,5"
+  },
+  {
+   "expected": "毎週火曜日・水曜日・木曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0,2-4"
+  },
+  {
+   "expected": "毎週月曜日・火曜日・金曜日・土曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 5-2"
+  },
+  {
+   "expected": "毎週火曜日・水曜日・木曜日・金曜日・日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0,2-5"
+  },
+  {
+   "expected": "毎週月曜日・火曜日・水曜日・金曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 1,2,3,5"
+  },
+  {
+   "expected": "水曜日を除く毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0-2,4-6"
+  },
+  {
+   "expected": "土曜日を除く毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "毎週火曜日〜日曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * * 0,2-6"
+  },
+  {
+   "expected": "毎週月曜日の0:00・1:00・22:00・23:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0,1,22,23 * * 1"
+  },
+  {
+   "expected": "水曜日を除く毎日、終日15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 * * * 0-2,4-6"
+  },
+  {
+   "expected": "土曜日を除く毎日の毎時30分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * * * 0-5"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の毎時30分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * * * 1-5"
+  },
+  {
+   "expected": "毎年6月の毎週月曜日〜土曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 6 1-6"
+  },
+  {
+   "expected": "土曜日を除く毎年6月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 6 0-5"
+  },
+  {
+   "expected": "土曜日を除く毎年6月〜8月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 6-8 0-5"
+  },
+  {
+   "expected": "土曜日を除く毎年1月〜11月の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1-11 0-5"
+  },
+  {
+   "expected": "6月を除く毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1-5,7-12 *"
+  },
+  {
+   "expected": "6月を除く毎週月曜日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1-5,7-12 1"
+  },
+  {
+   "expected": "6月と土曜日を除く毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 * 1-5,7-12 0-5"
+  },
+  {
+   "expected": "毎月1日および毎週月曜日・火曜日・木曜日・金曜日・土曜日・日曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1 * 0-2,4-6"
+  },
+  {
+   "expected": "毎日9:00・9:30・17:00・17:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,30 9,17 * * *"
+  },
+  {
+   "expected": "毎日9:05・9:20・17:05・17:20",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20 9,17 * * *"
+  },
+  {
+   "expected": "毎日9時台・17時台の5分・20分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 9,17 * * *"
+  },
+  {
+   "expected": "毎日8時台・12時台・18時台の5分・20分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 8,12,18 * * *"
+  },
+  {
+   "expected": "毎日1:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 1 * * *"
+  },
+  {
+   "expected": "毎日1:30・13:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 1,13 * * *"
+  },
+  {
+   "expected": "毎日9:00・13:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9,13 * * *"
+  },
+  {
+   "expected": "毎日9:00・10:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9,10 * * *"
+  },
+  {
+   "expected": "毎日9:00・10:00・11:00・12:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-12 * * *"
+  },
+  {
+   "expected": "毎日9:00から13:00まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-13 * * *"
+  },
+  {
+   "expected": "毎日0:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "毎日0:00:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0 0 * * *"
+  },
+  {
+   "expected": "毎日12:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 12 * * *"
+  },
+  {
+   "expected": "毎時1分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "1 * * * *"
+  },
+  {
+   "expected": "毎日22:00から23:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "毎週火曜日の0:00から17:30まで30分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/30 0-17 * * 2"
+  },
+  {
+   "expected": "毎日22:00から翌日6:00まで1時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0-6,22,23 * * *"
+  },
+  {
+   "expected": "毎日22:00から翌日5:45まで15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 0-5,22-23 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:50まで10分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/10 9 * * *"
+  },
+  {
+   "expected": "毎日0:00・6:00・12:00・18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0,6,12,18 * * *"
+  },
+  {
+   "expected": "毎日0:00・6:00・18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0,6,18 * * *"
+  },
+  {
+   "expected": "毎日0:00・8:00・16:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */8 * * *"
+  },
+  {
+   "expected": "毎日0:00から21:00まで3時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */3 * * *"
+  },
+  {
+   "expected": "毎日0:00から20:00まで4時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */4 * * *"
+  },
+  {
+   "expected": "毎日0:00から20:00まで5時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */5 * * *"
+  },
+  {
+   "expected": "毎日0:30から22:30まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 */2 * * *"
+  },
+  {
+   "expected": "毎日0:30から21:30まで3時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 */3 * * *"
+  },
+  {
+   "expected": "毎日0:30から20:30まで5時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 */5 * * *"
+  },
+  {
+   "expected": "毎日0:23・6:23・12:23・18:23",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "23 */6 * * *"
+  },
+  {
+   "expected": "毎日1:23から23:23まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "23 1/2 * * *"
+  },
+  {
+   "expected": "毎日、偶数の時間帯（0時台・2時台…22時台）の15分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15,45 */2 * * *"
+  },
+  {
+   "expected": "毎日0時台・4時台・8時台・12時台・16時台・20時台の15分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "毎日0:23・12:23",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "23 */12 * * *"
+  },
+  {
+   "expected": "毎日1:00・13:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 1/12 * * *"
+  },
+  {
+   "expected": "毎日0:00から0:45までと12:00から12:45まで、いずれも15分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 */12 * * *"
+  },
+  {
+   "expected": "毎日0:00・12:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */12 * * *"
+  },
+  {
+   "expected": "毎日0:00・12:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "毎月1日の0:00・12:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */12 1 * *"
+  },
+  {
+   "expected": "毎日8:00から18:00まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 8-18/2 * * *"
+  },
+  {
+   "expected": "毎年6月の毎日0:00・6:00・12:00・18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */6 * 6 *"
+  },
+  {
+   "expected": "毎週月曜日の0:00から22:00まで2時間ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 */2 * * 1"
+  },
+  {
+   "expected": "毎時0分（3:00を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "毎時30分（3:30を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "毎時5分・20分・45分（3時台を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 0-2,4-23 * * *"
+  },
+  {
+   "expected": "10分ごと（3時台を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "1分ごと（3時台を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0-2,4-23 * * *"
+  },
+  {
+   "expected": "毎日0:30から22:30まで2時間ごと（8:30を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "1分ごと（毎時29分を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-28,30-59 * * * *"
+  },
+  {
+   "expected": "毎日9:00から17:59まで1分ごと（毎時29分を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-28,30-59 9-17 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:59までと17:00から17:59まで、いずれも1分ごと（9:29・17:29を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "毎日9:00から17:50まで10分ごと（毎時30分を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,10,20,40,50 9-17 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:50まで10分ごと（9:30を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,10,20,40,50 9 * * *"
+  },
+  {
+   "expected": "10分ごと（3時台と毎時30分を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,10,20,40,50 0-2,4-23 * * *"
+  },
+  {
+   "expected": "1秒ごと（毎時29分の1分間を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "毎日9:00:00から9:59:59まで1秒ごと（9:29の1分間を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0-28,30-59 9 * * *"
+  },
+  {
+   "expected": "1秒ごと（毎分29秒を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-28,30-59 * * * * *"
+  },
+  {
+   "expected": "毎日9:00:00から9:00:59まで1秒ごと（9:00:29を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-28,30-59 0 9 * * *"
+  },
+  {
+   "expected": "毎月1日、終日1分ごと（毎時29分を除く）",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-28,30-59 * 1 * *"
+  },
+  {
+   "expected": "毎日8時台・10時台・12時台・14時台・16時台・18時台の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "毎日8時台・12時台・18時台の0分・10分・20分・30分・40分・50分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/10 8,12,18 * * *"
+  },
+  {
+   "expected": "毎日8時台・12時台・18時台、5分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/5 8,12,18 * * *"
+  },
+  {
+   "expected": "毎日9:00から17:00まで1時間ごと、および20:00・22:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9-17,20,22 * * *"
+  },
+  {
+   "expected": "毎日9:00から17:59までと20:00から20:59までと22:00から22:59まで、いずれも1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 9-17,20,22 * * *"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の6:00から8:50までと17:00から19:50まで、いずれも10分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/10 6-8,17-19 * * 1-5"
+  },
+  {
+   "expected": "毎年1月・4月・7月・10月の奇数日、偶数の時間帯（0時台・2時台…22時台）の0分・20分・40分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/20 */2 */2 */3 *"
+  },
+  {
+   "expected": "毎日22時台から翌日2時台まで、毎時5分・20分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 22-2 * * *"
+  },
+  {
+   "expected": "毎日9時台から17時台までと22時台、毎時5分・20分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5,20,45 9-17,22 * * *"
+  },
+  {
+   "expected": "毎月1日、奇数の時間帯（1時台・3時台…23時台）の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 1/2 1 * *"
+  },
+  {
+   "expected": "毎日、6時台から22時台までの偶数の時間帯（6時台・8時台…22時台）に1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 6-22/2 * * *"
+  },
+  {
+   "expected": "毎日0時台・3時台・6時台・9時台・12時台・15時台・18時台・21時台、1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* */3 * * *"
+  },
+  {
+   "expected": "毎月1日の8時台・12時台・18時台、1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 8,12,18 1 * *"
+  },
+  {
+   "expected": "土曜日を除く毎日8時台・12時台・18時台の0分・15分・30分・45分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 8,12,18 * * 0-5"
+  },
+  {
+   "expected": "毎日9:00から9:10までと9:50から9:59まで、いずれも1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "50-10 9 * * *"
+  },
+  {
+   "expected": "毎日9:10から9:40まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "10-40 9 * * *"
+  },
+  {
+   "expected": "毎日9:30から9:59まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30-59 9 * * *"
+  },
+  {
+   "expected": "毎時5分から10分まで1分ごと、および20分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5-10,20 * * * *"
+  },
+  {
+   "expected": "毎時45分から59分まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "45-59 * * * *"
+  },
+  {
+   "expected": "毎時10分から40分まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "10-40 * * * *"
+  },
+  {
+   "expected": "毎時0分から10分までと50分から59分まで、いずれも1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "50-10 * * * *"
+  },
+  {
+   "expected": "毎日9:00から9:29までと17:00から17:29まで、いずれも1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29 9,17 * * *"
+  },
+  {
+   "expected": "毎日9:00から9:56までと17:00から17:56まで、いずれも7分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/7 9,17 * * *"
+  },
+  {
+   "expected": "毎日8時台・12時台・18時台の0分から56分まで7分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/7 8,12,18 * * *"
+  },
+  {
+   "expected": "毎日、偶数の時間帯（0時台・2時台…22時台）の0分から29分まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29 */2 * * *"
+  },
+  {
+   "expected": "毎時0分・1分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-1 * * * *"
+  },
+  {
+   "expected": "毎時0分・21分・42分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/21 * * * *"
+  },
+  {
+   "expected": "毎時9分・14分・47分・56分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "9,14,47,56 * * * *"
+  },
+  {
+   "expected": "毎時5分・15分・25分・35分・45分・55分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5/10 * * * *"
+  },
+  {
+   "expected": "毎時2分から58分まで8分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "2/8 * * * *"
+  },
+  {
+   "expected": "毎月1日の毎時30分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * 1 * *"
+  },
+  {
+   "expected": "毎月1日の毎時0分から29分まで1分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-29 * 1 * *"
+  },
+  {
+   "expected": "毎日9:30:15",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "毎日9:30:15・17:30:15",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15 30 9,17 * * *"
+  },
+  {
+   "expected": "毎日9:30:15・9:30:45",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15,45 30 9 * * *"
+  },
+  {
+   "expected": "毎日9:00:00から9:59:59まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 9 * * *"
+  },
+  {
+   "expected": "毎日9:00:00から17:59:59まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 9-17 * * *"
+  },
+  {
+   "expected": "毎時0分30秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 0 * * * *"
+  },
+  {
+   "expected": "毎時30分15秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15 30 * * * *"
+  },
+  {
+   "expected": "毎時0分の0秒から9秒まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0-9 0 * * * *"
+  },
+  {
+   "expected": "毎日9:00・17:00に1分間ずつ、その間は1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0 9,17 * * *"
+  },
+  {
+   "expected": "毎日8:00・12:00・18:00に1分間ずつ、その間は1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0 8,12,18 * * *"
+  },
+  {
+   "expected": "毎時0分・15分・30分・45分の0秒・15秒・30秒・45秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 */15 * * * *"
+  },
+  {
+   "expected": "15分ごとに1分間ずつ、その間は1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* */15 * * * *"
+  },
+  {
+   "expected": "毎時0分30秒・15分30秒・30分30秒・45分30秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 */15 * * * *"
+  },
+  {
+   "expected": "毎日、偶数の時間帯（0時台・2時台…22時台）の5分8秒・30分8秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "8 5,30 */2 * * *"
+  },
+  {
+   "expected": "毎時0分0秒から29分59秒まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0-29 * * * *"
+  },
+  {
+   "expected": "毎日9時台から17時台まで、毎時0分0秒から29分59秒まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0-29 9-17 * * *"
+  },
+  {
+   "expected": "毎時30分からの1分間、1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 30 * * * *"
+  },
+  {
+   "expected": "毎時30分の0秒・15秒・30秒・45秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/15 30 * * * *"
+  },
+  {
+   "expected": "毎時30分からの1分間、10秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/10 30 * * * *"
+  },
+  {
+   "expected": "毎日9時台から17時台まで、毎時5分8秒・20分8秒・45分8秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "8 5,20,45 9-17 * * *"
+  },
+  {
+   "expected": "毎時30分・42分に1分間ずつ、その間は1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 30,42 * * * *"
+  },
+  {
+   "expected": "毎日9:00:00から9:29:59までと9:45:00から9:45:59まで、いずれも1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 0-29,45 9 * * *"
+  },
+  {
+   "expected": "毎日8時台・12時台・18時台、1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * 8,12,18 * * *"
+  },
+  {
+   "expected": "毎時0分・15分・30分・45分の15秒・45秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15,45 */15 * * * *"
+  },
+  {
+   "expected": "毎日9時台の毎分15秒・45秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15,45 * 9 * * *"
+  },
+  {
+   "expected": "毎時0分から55分まで5分ごとの15秒・45秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15,45 */5 * * * *"
+  },
+  {
+   "expected": "毎日8:00・12:00・18:00の15秒・45秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15,45 0 8,12,18 * * *"
+  },
+  {
+   "expected": "毎日9:00:00・9:00:20・9:00:40",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0,20,40 0 9 * * *"
+  },
+  {
+   "expected": "毎日9:30:10から9:30:20まで1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "毎日9:00:05",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "5-10/60 0 9 * * *"
+  },
+  {
+   "expected": "毎日0:00:15・12:00:15",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "15 0 */12 * * *"
+  },
+  {
+   "expected": "毎週月曜日の毎分30秒",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * * * * 1"
+  },
+  {
+   "expected": "毎週月曜日、終日1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* * * * * 1"
+  },
+  {
+   "expected": "毎年6月の毎日、終日5分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/5 * * 6 *"
+  },
+  {
+   "expected": "毎年6月の毎時30分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "30 * * 6 *"
+  },
+  {
+   "expected": "毎週月曜日の毎時0分",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 * * * 1"
+  },
+  {
+   "expected": "2030年の毎日、終日5分ごと",
+   "options": {
+    "lang": "ja",
+    "years": true
+   },
+   "pattern": "*/5 * * * * 2030"
+  },
+  {
+   "expected": "2030年の毎時0分",
+   "options": {
+    "lang": "ja",
+    "years": true
+   },
+   "pattern": "0 * * * * 2030"
+  },
+  {
+   "expected": "毎月1日、終日5分ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/5 * 1 * *"
+  },
+  {
+   "expected": "毎月23日〜25日および毎週月曜日・火曜日、いずれも0:24から21:24まで3時間ごとに1分間ずつ、その間は10秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/10 24 */3 23-25 * 1-2"
+  },
+  {
+   "expected": "2030年から4年ごとの年（2030年・2034年…）の6月・7月の第2土曜日の0:23:00・0:23:30・12:23:00・12:23:30",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "*/30 23 */12 * 6-7 6#2 2030/4"
+  },
+  {
+   "expected": "2028年・2030年の毎日2:35・15:35",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 35 2,15 * * * 2028,2030"
+  },
+  {
+   "expected": "毎年7月・9月・10月・12月の毎週月曜日・水曜日・木曜日・金曜日の3時台から10時台まで、毎時30分・42分に1分間ずつ、その間は1秒ごと",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "* 30,42 3-10 * 7,9,10,12 1,3,4,5"
+  },
+  {
+   "expected": "毎年3月・6月・9月・12月の15日に最も近い平日（月曜日〜金曜日）の18:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 18 15W 3,6,9,12 *"
+  },
+  {
+   "expected": "毎年奇数月の1日の4:07・10:07・16:07・22:07",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "毎日午前0:00・午後0:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "毎日午後0:30",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 12 * * *"
+  },
+  {
+   "expected": "毎日午前0:30",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "毎日午後10:00から翌日午前2:59まで1分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "毎日、偶数の時間帯（午前0時台・午前2時台…午後10時台）に1分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "毎日午前8時台・午後0時台・午後6時台、1分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "10分ごと（午前3時台を除く）",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "毎日午前9時台から午後5時台まで、毎時5分・20分・45分",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "5,20,45 9-17 * * *"
+  },
+  {
+   "expected": "毎日午前9:30:15",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "毎日9時30分",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "毎日0時",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "毎日9時から9時59分まで1分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "毎日9時からの1分間、1秒ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "毎日22時から翌日2時まで1時間ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "毎日8時台・12時台・18時台、1分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "毎時30分（3時30分を除く）",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "毎週土曜・日曜の9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "毎月最後の平日（月曜〜金曜）の0:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "2030年〜2040年（2035年を除く）の毎日9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 9 * * * 2030-2034,2036-2040"
+  },
+  {
+   "expected": "毎月1日・3日と7日〜31日の奇数日および毎週金曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1,3,7-31/2 * 5"
+  },
+  {
+   "expected": "毎日午前9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "毎日午前9:30・午後5:30",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "毎日午前9:00から午後5:00まで1時間ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "毎日午前0:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "毎日午後0:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "毎日午後1:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 13 * * *"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の午前9:00から午後5:45まで15分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎日午後10:00から午後11:59まで1分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "毎日午後10:00から翌日午前2:00まで1時間ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "毎日午前9:00:30",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "毎日9時",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "毎日9時30分・17時30分",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "毎日9時から17時まで1時間ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "毎日0時",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9時から17時45分まで15分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎日22時から23時59分まで1分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "毎日9時0分30秒",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "毎年6月1日の0時",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "毎日午前9時",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true,
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "毎日午前9時30分・午後5時30分",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true,
+     "kanjiTime": true
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "毎日午後0時",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true,
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の午前9時から午後5時45分まで15分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true,
+     "kanjiTime": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎日午後10時から翌日午前2時まで1時間ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "hour12": true,
+     "kanjiTime": true
+    }
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "毎週月曜・水曜・金曜の9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "毎年6月の毎週月曜の9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "毎年6月〜8月の毎日9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "毎月最終金曜の9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "毎月第2月曜の9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "土曜を除く毎日9:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "毎月15日に最も近い平日（月曜〜金曜）の0:00",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "毎週月曜〜金曜の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "毎日9:00",
+   "options": {
+    "lang": "ja-JP"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "毎週月曜日〜金曜日の9:00から17:45まで15分ごと",
+   "options": {
+    "lang": "ja-JP"
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  }
+ ]
+}

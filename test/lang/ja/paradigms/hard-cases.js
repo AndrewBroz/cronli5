@@ -421,7 +421,16 @@ const rows = [
     '毎時30分（3時30分を除く）',
     {style: {kanjiTime: true}}],
   ['0 9 * * 0,6', '毎週土曜・日曜の9:00', {style: {short: true}}],
-  ['0 0 LW * *', '毎月最後の平日（月曜〜金曜）の0:00', {style: {short: true}}]
+  ['0 0 LW * *', '毎月最後の平日（月曜〜金曜）の0:00', {style: {short: true}}],
+
+  // Pinned after the build, each from the rule and not from the output.
+  // Ten years with one left out is an exception in brackets after the
+  // range (answers 3.9); the odd days with one taken out, beside a weekday,
+  // are the runs that remain, and two days left alone are listed (3.9, 5.1,
+  // 3.6).
+  ['0 0 9 * * * 2030-2034,2036-2040', '2030年〜2040年（2035年を除く）の毎日9:00'],
+  ['0 0 1,3,7-31/2 * 5',
+    '毎月1日・3日と7日〜31日の奇数日および毎週金曜日、いずれも0:00']
 ];
 
 export {rows};

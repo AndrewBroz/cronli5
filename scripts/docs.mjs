@@ -26,6 +26,7 @@ import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
 import en, {styles as englishStyles} from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
+import ja from '../src/lang/ja/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
@@ -43,7 +44,8 @@ const languages = [
   {code: 'en', extras: [], lang: en},
   {code: 'uk', extras: [], lang: uk},
   {code: 'zh', cronstrueLocale: 'zh_CN', extras: [], lang: zh},
-  {code: 'es', cronstrueLocale: 'es', extras: [], lang: es}
+  {code: 'es', cronstrueLocale: 'es', extras: [], lang: es},
+  {code: 'ja', cronstrueLocale: 'ja', extras: [], lang: ja}
 ];
 
 function describe(fn, pattern) {
@@ -140,7 +142,8 @@ const headToHeadRows = [
   {name: 'English', code: 'en'},
   {name: 'Ukrainian', code: 'uk'},
   {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
-  {name: 'Spanish', code: 'es', cronstrueLocale: 'es'}
+  {name: 'Spanish', code: 'es', cronstrueLocale: 'es'},
+  {name: 'Japanese', code: 'ja', cronstrueLocale: 'ja'}
 ];
 
 function renderHeadToHead() {
