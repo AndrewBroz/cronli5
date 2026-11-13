@@ -2,8 +2,8 @@
 // and the two together when a pattern restricts both.
 
 import type {
-  CadenceDescription, Domain, QuartzDate, RangeDescription, ScheduleFacts,
-  SetDescription, ValuesDescription
+  CadenceDescription, CadencePieces, Domain, QuartzDate, RangeDescription,
+  ScheduleFacts, SetDescription, ValuesDescription
 } from '../../core/schedule.js';
 import {candidatesAs, daysReached, domainOf} from '../../core/index.js';
 import type {CzechStyle} from './options.js';
@@ -13,7 +13,8 @@ import {
 } from './calendar.js';
 import type {Described} from './sets.js';
 import {
-  chosen, counted, enoughForARun, listed, ofKind, spaced
+  chosen, counted, enoughForARun, listed, ofKind, spaced, stretchOf,
+  togetherIn
 } from './sets.js';
 import lexicon from './lexicon.js';
 
@@ -93,12 +94,29 @@ function pieceItems(form: Pieces): string[] {
   });
 }
 
+// Every odd day or every even day, from the day it starts on.
+function parityOf(start: number): string {
+  return start % parityStep ? words.oddDay : words.evenDay;
+}
+
+// A run or a cadence of days with both ends: «od 1. do 9. dne v měsíci»,
+// «každý lichý den od 1. do 9. dne v měsíci», «každý třetí den od 11. do
+// 29. dne v měsíci».
+function daysWithEnds(part: RangeDescription | CadenceDescription,
+  refs: Refs): string {
+  const {first, last, step} = stretchOf(part);
+  const rhythm = {1: '', [parityStep]: parityOf(first)}[step] ??
+    spaced(words.everyNth, stepWord(step), units.day.one);
+
+  return spaced(rhythm, words.from, `${first}.`, words.to,
+    refs.general.date(`${last}.`));
+}
+
 // A cadence of days: the parity word when its step is two, with both ends
 // unless it is every odd or every even day; any other step after its
 // start, with its first three members, and its end when it stops early.
 function cadenceOfDays(form: CadenceDescription, refs: Refs, domain: Domain):
   Phrase {
-  const parity = form.start % parityStep ? words.oddDay : words.evenDay;
   const whole = form.start - domain.min < form.interval &&
     form.last + form.interval > domain.max;
   const stops = form.last + form.interval <= domain.max;
@@ -107,8 +125,11 @@ function cadenceOfDays(form: CadenceDescription, refs: Refs, domain: Domain):
 
   if (form.interval === parityStep) {
     return whole ?
-      {fused: true, text: spaced(parity, refs.own.within)} :
-      {text: spaced(parity, words.from, ends)};
+      {
+        fused: true,
+        text: spaced(parityOf(form.start), refs.own.within)
+      } :
+      {text: daysWithEnds(form, refs)};
   }
 
   return {
@@ -123,6 +144,15 @@ const dateKinds: {
   [kind: string]: (form: never, refs: Refs, domain: Domain) => Phrase;
 } = {
   cadence: cadenceOfDays,
+  cadencePieces(form: CadencePieces, refs: Refs) {
+    return {
+      text: listed(form.parts.map(function say(part) {
+        return part.kind === 'values' ?
+          refs.general.date(ordinals(part.values)) :
+          daysWithEnds(part, refs);
+      }))
+    };
+  },
   except(form: Except, refs: Refs, domain: Domain) {
     const base = form.base.kind === 'all' ?
       {text: ''} :
@@ -452,7 +482,12 @@ function dateArm(facts: ScheduleFacts, refs: Refs):
   }
 
   const form = chosen(reached.candidates,
-    {domain: reached.domain, exceptions: true, rounds: false});
+    {
+      domain: reached.domain,
+      exceptions: true,
+      rounds: false,
+      together: togetherIn(reached.candidates, reached.domain)
+    });
 
   return {...daysSaid(form, refs, reached.domain), form};
 }

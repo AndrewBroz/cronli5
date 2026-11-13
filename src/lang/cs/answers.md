@@ -527,6 +527,45 @@ groups.)
 | minute 30 | «každou hodinu v půl» (idiom, 5.4) |
 | anything else | the places of M, 4.1a |
 
+**4.1b A set that is two rhythms together.** When the minutes, the
+seconds, the hours at one minute, or the days of the month are more than
+seven values, and the core gives them as runs and cadences together
+(`cadencePieces`) in at most three parts, the parts are said, each with its
+own rhythm and its own stretch, so long as no more than two single values
+stand beside the runs and rhythms. With more the set is a list: eight
+scattered minutes with a rhythm of three among them by chance are
+scattered, and the list shows it. A list of
+two dozen cannot be held; two rhythms can. The parts are joined by «a pak»
+where they are places in the hour or the minute and each begins after the
+one before it has ended, by «a také» where such parts run through one
+another («každých 15 minut od 5 do 50 minut po celé hodině (:05–:50) a
+také každých 15 minut od 10 do 55 minut po celé hodině (:10–:55)»: «a pak»
+would say that one follows the other), and by «a» where they are clock
+times or days; a part of one or two single values is said as it is
+in 4.1a («a pak ještě 45 minut po celé hodině (:45)»).
+
+* Minutes of every hour: «v každé hodině» once, then each part as its
+  rhythm and its places: `0-20/2,21-59/3 * * * *` — «v každé hodině každé 2
+  minuty od celé hodiny do 20 minut po ní (:00–:20) a pak každé 3 minuty
+  od 21 do 57 minut po celé hodině (:21–:57)». Restricted hours follow as
+  they follow any places («…, od 9:00 do 17:57»), and seconds as they
+  follow any minutes («…, pokaždé po dobu jedné minuty každou sekundu»).
+* Minutes of one hour, or seconds of one minute: each part is a window of
+  clock times: «denně každé 2 minuty od 9:00 do 9:20 a každé 3 minuty od
+  9:21 do 9:57»; «denně každé 2 sekundy od 9:00:00 do 9:00:20 a každé 3
+  sekundy od 9:00:21 do 9:00:57».
+* Seconds of every minute: «v každé minutě každé 2 sekundy od začátku do
+  20 sekund po něm a pak každé 3 sekundy od 21 do 57 sekund po začátku
+  minuty».
+* Hours at one minute: «denně každé 2 hodiny od 0:00 do 10:00 a každé 3
+  hodiny od 11:00 do 23:00».
+* Days of the month: each part by 3.7's forms with both ends: «každý lichý
+  den od 1. do 9. dne v měsíci a každý třetí den od 11. do 29. dne v
+  měsíci».
+
+(The first built renderer listed every value, up to two dozen, and the
+note that recorded it as a "known limit" was a defect left standing.)
+
 **4.1a The places of M.** One form, used by T2 and by T5.
 
 | M | Said |
