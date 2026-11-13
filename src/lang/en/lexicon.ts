@@ -74,6 +74,7 @@ const words = {
   at: 'at',
   because: 'because',
   before: 'before',
+  butOnly: 'but only',
   during: 'during',
   each: 'each',
   evenDays: 'even-numbered days',

@@ -135,7 +135,7 @@ const rows = [
     'days as well as on weekdays'],
   ['*/15 9-17 */5 * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st, 6th, ' +
-    '11th, 16th, 21st, 26th, and 31st as well as on weekdays'],
+    '11th, 16th, 21st, 26th, and 31st, but only on weekdays'],
   ['*/15 9-17 L * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on the last day of ' +
     'the month as well as on weekdays'],

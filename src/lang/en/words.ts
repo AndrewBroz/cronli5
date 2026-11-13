@@ -12,7 +12,7 @@ const {words} = lexicon;
 const secondsInDay = 86400;
 
 /** Words joined by single spaces, leaving out any part that is silent. */
-function join(...parts: string[]): string {
+function join(...parts: Array<string | false>): string {
   return parts.filter(Boolean).join(' ');
 }
 
