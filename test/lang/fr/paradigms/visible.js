@@ -90,8 +90,8 @@ const rows = [
     'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
     'que les 1er, 10 et 20 de chaque mois'],
   ['*/15 9-17 */2 * 1-5',
-    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
-    'que les jours impairs de chaque mois'],
+    'les jours impairs de chaque mois quand ils tombent un jour du lundi ' +
+    'au vendredi, toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
     'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
     'que les jours impairs du 1er au 13 et les jours impairs du 17 au 31 ' +

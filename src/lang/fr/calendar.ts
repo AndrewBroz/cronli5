@@ -12,12 +12,12 @@ import {weekdayView} from './context.js';
 import lexicon from './lexicon.js';
 import {conjoin, every, given, led, phrase, series} from './say.js';
 import type {
-  Cadence, Counts, Excepted, Sayers, Stretch, View
+  Cadence, Counts, Described, Excepted, Sayers, Stretch, View
 } from './sets.js';
 import {
   around, choose, countOf, described, interior, isRun, lengthOf,
   members,
-  partsCount, say, spoken, viewOf, when
+  partsCount, say, singles, spoken, stretchesOf, viewOf, when
 } from './sets.js';
 
 const {countWords, dayNumber, nthWords, units, words: w} = lexicon;
@@ -579,30 +579,40 @@ function datePhrase(c: Context, months: Months, excepting: boolean): DayPhrase {
     plainDate(c, excepting);
 }
 
-// Plain weekdays, counted from Monday. A run of two is listed in the
-// order of the run; pieces are said only of more than four days; and six
-// days that wrap the week are every day but the seventh, where an
-// exception may be said.
-function plainWeekdays(c: Context, excepting: boolean): DayPhrase {
-  const view = weekdayView(c);
-  const plural = ({full: 'plural', short: 'short'} as const)[c.names];
-
-  function the(day: number): string {
-    return phrase(w.the, lexicon.weekdays[day % 7][c.names]);
-  }
-
-  function run(days: RangeDescription): string {
-    return phrase(w.fromThe, lexicon.weekdays[days.from % 7][c.names],
-      w.toThe, lexicon.weekdays[days.to % 7][c.names]);
-  }
-
-  const description = choose(view, {
+// How a set of weekdays is said, counted from Monday. A run of two is
+// listed in the order of the run; pieces are said only of more than four
+// days; and six days that wrap the week are every day but the seventh,
+// where an exception may be said.
+function weekdaysChosen(view: View, excepting: boolean): Described {
+  return choose(view, {
     except: (excepted) => when(excepting && excepted.removed.length === 1 &&
       excepted.base.kind === 'all' && excepted.removed[0] % 7 > 1, 1),
     pieces: (pieces) => when(view.values.length > 4, partsCount(pieces)),
     range: () => 2,
     values: (listed) => listed.values.length
   });
+}
+
+function weekdayNamed(c: Context, day: number): string {
+  return lexicon.weekdays[day % 7][c.names];
+}
+
+function weekdayRun(c: Context, days: RangeDescription): string {
+  return phrase(w.fromThe, weekdayNamed(c, days.from), w.toThe,
+    weekdayNamed(c, days.to));
+}
+
+// Plain weekdays: one recurring is «tous les lundis», several are each
+// said with their article, and a run of more than two is said by its ends.
+function plainWeekdays(c: Context, excepting: boolean): DayPhrase {
+  const view = weekdayView(c);
+  const plural = ({full: 'plural', short: 'short'} as const)[c.names];
+
+  function the(day: number): string {
+    return phrase(w.the, weekdayNamed(c, day));
+  }
+
+  const description = weekdaysChosen(view, excepting);
 
   // One day recurs: «tous les lundis». Several each take their article.
   function named(days: number[]): DayPhrase {
@@ -617,7 +627,7 @@ function plainWeekdays(c: Context, excepting: boolean): DayPhrase {
 
   function ranged(days: RangeDescription): DayPhrase {
     return lengthOf(days, view.domain) > 2 ?
-      {...plainDays, head: run(days)} :
+      {...plainDays, head: weekdayRun(c, days)} :
       named([days.from, days.to]);
   }
 
@@ -629,7 +639,10 @@ function plainWeekdays(c: Context, excepting: boolean): DayPhrase {
     }),
     pieces: (pieces) => ({
       ...plainDays,
-      head: inPieces(pieces.parts, {range: run, value: the})
+      head: inPieces(pieces.parts, {
+        range: (run) => weekdayRun(c, run),
+        value: the
+      })
     }),
     range: ranged,
     values: (listed) => named(listed.values)
@@ -655,6 +668,51 @@ function weekdayPhrase(c: Context, excepting: boolean): DayPhrase {
   };
 }
 
+// The weekdays a date must fall on, each with its article: «un lundi, un
+// mercredi ou un vendredi». A run of more than two is said by its ends,
+// and a Quartz weekday as it stands.
+function fallsOn(c: Context): string {
+  const arm = c.day.weekday as {kind: string};
+
+  function items(stretch: RangeDescription): string[] {
+    return lengthOf(stretch, weekdayView(c).domain) > 2 ?
+      [phrase(w.a, units.day.one, weekdayRun(c, stretch))] :
+      [...new Set([stretch.from, stretch.to])].map(
+        (day) => phrase(w.a, weekdayNamed(c, day)));
+  }
+
+  return arm.kind === 'quartz' ?
+    phrase(weekdayPhrase(c, false).head, w.daysOfMonth) :
+    conjoin(stretchesOf(weekdaysChosen(weekdayView(c), false), singles)
+      .flatMap(items), w.or);
+}
+
+/**
+ * The days of a schedule whose two day fields must both match: the days
+ * of the month as they are said alone, and when they fall on the
+ * weekdays. The condition ends the phrase: after the months where those
+ * are set off from it, and set off itself after a clause that ends in a
+ * comma. No exception is said among the days or the months,
+ * for it would read as taking days from the weekdays.
+ */
+function datesOnWeekdays(c: Context, months: Months): Joined {
+  const dates = datePhrase(c, months, false);
+  const joined = join(dates, months, months.shape);
+  const quartz = (c.day.date as {kind: string}).kind === 'quartz';
+  const many = !quartz && !dates.single ||
+    ['list', 'span'].includes(months.shape);
+  const condition = phrase(w.when, many ? w.theyFall : w.itFalls,
+    fallsOn(c));
+  const apart = joined.setOff.length > 0 || joined.closes;
+
+  return {
+    ...joined,
+    closes: true,
+    setOff: apart ? [...joined.setOff, condition] : joined.setOff,
+    tail: apart ? joined.tail : phrase(joined.tail, condition)
+  };
+}
+
 /**
  * The days of a schedule that is not a union. An exception among the
  * days is the last thing in the calendar part, so it is said only where
@@ -676,4 +734,7 @@ function dayPhrase(c: Context, months: Months): DayPhrase {
 }
 
 export type {DayPhrase, Joined, Months};
-export {datePhrase, dayPhrase, join, monthsOf, weekdayPhrase, yearPart};
+export {
+  datePhrase, datesOnWeekdays, dayPhrase, join, monthsOf, weekdayPhrase,
+  yearPart
+};

@@ -1105,9 +1105,36 @@ ainsi que du 1er au 14 et du 16 au 31 de chaque mois », and `0 0 15 *
 0-2,4-6` is « à 0 h, du jeudi au mardi ainsi que le 15 de chaque
 mois ».
 
-Not built into any renderer yet: when both must match, a weekday that
-falls on a date is « tous les vendredis 13 », and the first Monday is
-« le premier lundi du mois ».
+**When both day fields must match** (`analyses.day.both`: one field is
+written from a star, `*/2`, and the other is restricted too), the days
+are the dates that fall on the weekdays, and the sentence says them in
+that order, in the frame's own order (no second order, as the union has):
+the days of the month as they are said alone, then « quand il tombe » or
+« quand ils tombent » (one date, or several) and the weekdays, each with
+« un » and joined by « ou »: « les jours impairs de chaque mois quand
+ils tombent un lundi, à 0 h »; « le 15 de chaque mois quand il tombe un
+mardi, un jeudi, un samedi ou un dimanche, à 0 h »; « les 1er, 6, 11,
+16, 21, 26 et 31 de chaque mois quand ils tombent un jour du lundi au
+vendredi, toutes les 15 minutes de 9 h à 17 h 45 ». A run of more than
+two weekdays is « un jour du … au … » (never « ainsi que » or a bare
+list of weekdays, which would be read as the union); a Quartz weekday as
+it stands, « quand ils tombent le dernier vendredi du mois ». A comma
+closes the condition before the time. Where months are set off from the
+days (« le 15 du mois, de juin à décembre »), the condition is set off
+after them. No exception is said among the days or the months (3.9): it
+would read as taking days away from the weekdays. The choice depends on
+the form of the two sets and never on the values. `0 0 */2 * 1` and
+`0 0 1-31/2 * 1` differ in meaning, and so in words: the second is the
+union. Not yet judged by a fluent reader. « Un jour du lundi au
+vendredi » is the form most in doubt (no word for a working day is used);
+« tous les vendredis 13 » is the idiom for one date and one weekday, and
+is not said, because it does not carry to a cadence of days.
+
+Continuity: editing the date field or the weekday field may change the
+day part and the month part, as everywhere, and nothing else, so this
+needs no declaration beyond 2.8's: an edit that turns a union into this
+(`1-31/2` to `*/2`) moves the time and the month back behind the days, as
+undoing a union does.
 
 4.4 A day of the month and a month.
 
