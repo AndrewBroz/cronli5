@@ -11,34 +11,35 @@ const {expect} = chai;
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];
 
-// The parts of the sentence an edit to each field may change. A time
-// field changes the time. A day field changes the day part, and takes the
-// month into it: «у червні» becomes «1 червня», «по понеділках у червні»,
-// «в останній день червня». So a day or month edit may move text between
-// those two parts, and a single year follows a month's name directly («1
-// січня 2030 року», «у червні 2030 року»), so those edits can change the
-// year's form too. Nothing else may cross: no day, month or year edit
-// touches the time, and no time edit touches anything but the time, with
-// the one exception below.
+// The parts of the sentence an edit to each field may change. A
+// description is four parts, coarsest first: year, month, day, time. A
+// time field changes the time and nothing else, with the one exception
+// below. The calendar fields share their three parts, because they are
+// said together: a date takes its month into the day part («1 червня»,
+// «1-го та 15-го числа січня та липня»), days named by number put
+// «щомісяця» in the month part, a weekday beside a day of the month takes
+// «щомісяця» into the day part and makes a month a heading («у червні:
+// щоп'ятниці, а також 1-го числа»), and a single year follows a month's
+// name wherever that stands («у червні 2030 року», «1 січня 2030 року»).
+// No calendar edit touches the time. One Quartz day form adds a note in
+// brackets after the time («(28-го, якщо в місяці 31 день)»); it belongs
+// to the day of the month, so only the calendar fields may change it.
 const MAY_CHANGE = {
-  date: ['day', 'month', 'year'],
+  date: ['year', 'month', 'day', 'note'],
   hour: ['time'],
   minute: ['time'],
-  month: ['day', 'month', 'year'],
+  month: ['year', 'month', 'day', 'note'],
   second: ['time'],
-  weekday: ['day', 'month', 'year'],
-  year: ['day', 'year']
+  weekday: ['year', 'month', 'day'],
+  year: ['year', 'month', 'day']
 };
 
-// The one place a time field reaches another part: when the hours are
-// restricted and no day is named, the day part says «щодня», so an hour
-// edit may add or remove exactly that word.
-const HOUR_MAY_SET_DAY = ['', 'щодня'];
-
-// The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
-// the field was written. Both wordings are reduced to one before equal
-// schedules are compared, so any other difference still fails.
-const TIE = /о 0:00 та 12:00(?: щодня)?|кожні 12 годин/u;
+// The one place a time field reaches another part: the day part says
+// «щодня» when the hours are restricted, no day is named, and the time
+// does not itself open with an "every" word. So an edit to the seconds,
+// the minutes or the hours may add or remove exactly that word.
+const TIME_FIELDS = ['second', 'minute', 'hour'];
+const TIME_MAY_SET_DAY = ['', 'щодня'];
 
 const SETUP = {languages: [ukrainian.default], options: {}, styles: {}};
 
@@ -86,20 +87,21 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
-    // A part that ends in an exception is closed by a comma when another
-    // part follows it. That comma belongs to the join, not to the part,
-    // so it is set aside before two parts are compared.
-    // «У» and «в» are one preposition, spelled by the sound before it, so
-    // the word that opens a part follows the part ahead of it. That is
-    // spelling too, and is set aside the same way.
+    // A part may be closed by a comma or a colon when another part
+    // follows it (answers 2.1). The mark belongs to the join, not to the
+    // part, so it is set aside before two parts are compared.
+    // «У» and «в», and «з» and «із», are each one preposition, spelled by
+    // the sound before it, so the word that opens a part follows the part
+    // ahead of it. That is spelling too, and is set aside the same way.
     function words(part) {
-      return String(part).replace(/,$/u, '').replace(/^в /u, 'у ');
+      return String(part).replace(/[,:]$/u, '').replace(/^в /u, 'у ')
+        .replace(/^із /u, 'з ');
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const everyDay = changed[0] === 'hour' && part === 'day' &&
-        HOUR_MAY_SET_DAY.includes(before[part]) &&
-        HOUR_MAY_SET_DAY.includes(after[part]);
+      const everyDay = TIME_FIELDS.includes(changed[0]) && part === 'day' &&
+        TIME_MAY_SET_DAY.includes(before[part]) &&
+        TIME_MAY_SET_DAY.includes(after[part]);
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&
           !MAY_CHANGE[changed[0]].includes(part)) {
@@ -113,18 +115,18 @@ function leaks(pairList) {
 }
 
 // Continuity, measured directly. A description is four parts in one order:
-// time, day, month, year. Editing one field of the pattern may rewrite
+// year, month, day, time (and, for one Quartz form, a note after them). Editing one field of the pattern may rewrite
 // that field's part and nothing else, apart from the declared fusions
 // above. This is the constraint itself, where a count of changed words is
 // only a rough sign of it: a longer sentence, or a wrong one, cannot make
 // this pass.
 describe('Ukrainian continuity:', function() {
-  it('says a description as its four parts, joined in order', function() {
+  it('says a description as its parts, joined in order', function() {
     pairs().forEach(function joined(pair) {
       const {opts, schedule} = parse(pair[1]);
       const parts = ukrainian.describeParts(schedule, opts);
 
-      expect([parts.time, parts.day, parts.month, parts.year]
+      expect([parts.year, parts.month, parts.day, parts.time, parts.note]
         .filter(Boolean).join(' '))
         .to.equal(ukrainian.default.describe(schedule, opts));
     });
@@ -141,13 +143,12 @@ describe('Ukrainian continuity:', function() {
         .to.deep.equal([]);
     }, 60000);
 
-  it('renders equal schedules identically, but for the declared tie',
+  it('renders equal schedules identically: there is no declared tie',
     function() {
       function render(pattern, options) {
         const {opts, schedule} = parse(pattern, options);
 
-        return ukrainian.default.describe(schedule, opts)
-          .replace(TIE, 'двічі на добу');
+        return ukrainian.default.describe(schedule, opts);
       }
 
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
@@ -155,16 +156,20 @@ describe('Ukrainian continuity:', function() {
         .equivalentViolations).to.deep.equal([]);
     }, 60000);
 
-  it('follows the spelling only for the declared tie', function() {
+  it('never follows the spelling', function() {
     function say(pattern) {
       const {opts, schedule} = parse(pattern);
 
       return ukrainian.default.describe(schedule, opts);
     }
 
-    expect(say('0 */12 * * *')).to.equal('кожні 12 годин');
-    expect(say('0 0,12 * * *')).to.equal('о 0:00 та 12:00 щодня');
+    expect(say('0 */12 * * *')).to.equal('щодня о 0:00 та 12:00');
+    expect(say('0 0,12 * * *')).to.equal(say('0 */12 * * *'));
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
-    expect(say('0 9-17 * * *')).to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
+    expect(say('0 9-17 * * *'))
+      .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
+    expect(say('30 * * * *')).to.equal(say('30 0-23 * * *'));
+    expect(say('30 * * * *'))
+      .to.equal('щогодини на 30-й хвилині (0:30, 1:30 … 23:30)');
   });
 });

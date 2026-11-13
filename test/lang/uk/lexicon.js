@@ -20,18 +20,18 @@ describe('Ukrainian lexicon:', function() {
     expect(lexicon.months).to.have.length(13);
     expect(lexicon.weekdays[1]).to.deep.equal({
       accusative: 'понеділок',
+      every: 'щопонеділка',
       feminine: false,
       genitive: 'понеділка',
-      locativePlural: 'понеділках',
       short: 'пн'
     });
-    expect(lexicon.weekdays[5].locativePlural).to.equal('п\'ятницях');
+    expect(lexicon.weekdays[5].every).to.equal('щоп\'ятниці');
     expect(lexicon.weekdays).to.have.length(7);
   });
 
   it('has each unit in the forms a cadence takes', function() {
     expect(lexicon.units.minute).to.include(
-      {few: 'хвилини', many: 'хвилин', one: 'хвилину'});
+      {few: 'хвилини', locative: 'хвилині', many: 'хвилин', one: 'хвилину'});
     expect(lexicon.units.day).to.include(
       {few: 'дні', many: 'днів', one: 'день'});
   });
