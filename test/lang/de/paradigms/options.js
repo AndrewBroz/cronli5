@@ -6,7 +6,7 @@
 // Written by hand from src/lang/de/answers.md section 1.2.
 
 const defaultParts = {
-  '*/15 9-17 * * 1-5': ['montags', 'freitags', '15 Minuten', '9:00', '17:45 Uhr'],
+  '*/15 9-17 * * 1-5': ['montags', 'freitags', '9:00', '17:45 Uhr', '15 Minuten'],
   '* 22-23 * * *': ['22:00', '23:59 Uhr'],
   '0 0 * * *': ['0:00 Uhr'],
   '30 0 * * *': ['0:30 Uhr'],
@@ -17,16 +17,16 @@ const defaultParts = {
   '0 9 * * *': ['9:00 Uhr'],
   '0 9 * * 1,3,5': ['montags', 'mittwochs', 'freitags', '9:00 Uhr'],
   '0 9 * * 5L': ['Freitag', '9:00 Uhr'],
-  '0 9 * 6 1': ['montags', 'Juni', '9:00 Uhr'],
+  '0 9 * 6 1': ['Juni', 'montags', '9:00 Uhr'],
   '0 9 * 6-8 *': ['Juni', 'August', '9:00 Uhr'],
   '0 9 * 1 *': ['Januar', '9:00 Uhr'],
+  '0 9 * 3 *': ['März', '9:00 Uhr'],
   '0 9-17 * * *': ['9:00', '17:00 Uhr'],
   '30 9,17 * * *': ['9:30', '17:30 Uhr'],
   '0 8,12,18 * * *': ['8:00', '12:00', '18:00 Uhr'],
   '0 9 * * 0-2,4-6': ['außer', 'mittwochs', '9:00 Uhr'],
   '0 0-2,4-23 * * *': ['außer', '3:00 Uhr'],
-  '0 0 LW * *': ['Montag', 'Freitag', '0:00 Uhr'],
-  '0 9 * 3 *': ['März', '9:00 Uhr']
+  '0 0 LW * *': ['Montag', 'Freitag', '0:00 Uhr']
 };
 
 const sets = [
@@ -50,8 +50,8 @@ const sets = [
         pattern: '0 8,12,18 * * *'
       },
       {
-        expected: 'täglich stündlich von 9:00 Uhr morgens bis 5:00 Uhr ' +
-          'nachmittags',
+        expected: 'täglich von 9:00 Uhr morgens bis 5:00 Uhr nachmittags ' +
+          'stündlich',
         parts: ['9:00 Uhr morgens', '5:00 Uhr nachmittags'],
         pattern: '0 9-17 * * *'
       },
@@ -76,14 +76,14 @@ const sets = [
         pattern: '0 13 * * *'
       },
       {
-        expected: 'montags bis freitags alle 15 Minuten von 9:00 Uhr ' +
-          'morgens bis 5:45 Uhr nachmittags',
-        parts: ['montags', 'freitags', '15 Minuten', '9:00 Uhr morgens', '5:45 Uhr nachmittags'],
+        expected: 'montags bis freitags von 9:00 Uhr morgens bis 5:45 Uhr ' +
+          'nachmittags alle 15 Minuten',
+        parts: ['montags', 'freitags', '9:00 Uhr morgens', '5:45 Uhr nachmittags', '15 Minuten'],
         pattern: '*/15 9-17 * * 1-5'
       },
       {
-        expected: 'täglich jede Minute von 10:00 Uhr abends bis 11:59 Uhr ' +
-          'nachts',
+        expected: 'täglich von 10:00 Uhr abends bis 11:59 Uhr nachts jede ' +
+          'Minute',
         parts: ['10:00 Uhr abends', '11:59 Uhr nachts'],
         pattern: '* 22-23 * * *'
       },
@@ -103,17 +103,17 @@ const sets = [
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'Mo. im Jun. um 9:00 Uhr',
-        parts: ['Mo.', 'Jun.', '9:00 Uhr'],
+        expected: 'im Jun. Mo. um 9:00 Uhr',
+        parts: ['Jun.', 'Mo.', '9:00 Uhr'],
         pattern: '0 9 * 6 1'
       },
       {
-        expected: 'täglich von Jun. bis Aug. jeweils um 9:00 Uhr',
+        expected: 'von Jun. bis Aug. täglich um 9:00 Uhr',
         parts: ['Jun.', 'Aug.', '9:00 Uhr'],
         pattern: '0 9 * 6-8 *'
       },
       {
-        expected: 'täglich im März um 9:00 Uhr',
+        expected: 'im März täglich um 9:00 Uhr',
         parts: ['März', '9:00 Uhr'],
         pattern: '0 9 * 3 *'
       },
@@ -139,8 +139,8 @@ const sets = [
         pattern: '0 0 LW * *'
       },
       {
-        expected: 'Mo. bis Fr. alle 15 Minuten von 9:00 bis 17:45 Uhr',
-        parts: ['Mo.', 'Fr.', '15 Minuten', '9:00', '17:45 Uhr'],
+        expected: 'Mo. bis Fr. von 9:00 bis 17:45 Uhr alle 15 Minuten',
+        parts: ['Mo.', 'Fr.', '9:00', '17:45 Uhr', '15 Minuten'],
         pattern: '*/15 9-17 * * 1-5'
       }
     ]
@@ -149,7 +149,7 @@ const sets = [
     options: {style: {jaenner: true}},
     rows: [
       {
-        expected: 'täglich im Jänner um 9:00 Uhr',
+        expected: 'im Jänner täglich um 9:00 Uhr',
         parts: ['Jänner', '9:00 Uhr'],
         pattern: '0 9 * 1 *'
       },
@@ -159,8 +159,8 @@ const sets = [
         pattern: '0 0 1 1 *'
       },
       {
-        expected: 'montags im Juni um 9:00 Uhr',
-        parts: ['montags', 'Juni', '9:00 Uhr'],
+        expected: 'im Juni montags um 9:00 Uhr',
+        parts: ['Juni', 'montags', '9:00 Uhr'],
         pattern: '0 9 * 6 1'
       }
     ]
@@ -169,7 +169,7 @@ const sets = [
     options: {lang: 'de-AT'},
     rows: [
       {
-        expected: 'täglich im Jänner um 9:00 Uhr',
+        expected: 'im Jänner täglich um 9:00 Uhr',
         parts: ['Jänner', '9:00 Uhr'],
         pattern: '0 9 * 1 *'
       },
@@ -184,7 +184,7 @@ const sets = [
     options: {lang: 'de-AT', style: {short: true}},
     rows: [
       {
-        expected: 'täglich im Jän. um 9:00 Uhr',
+        expected: 'im Jän. täglich um 9:00 Uhr',
         parts: ['Jän.', '9:00 Uhr'],
         pattern: '0 9 * 1 *'
       }
@@ -214,7 +214,7 @@ const sets = [
         pattern: '0 9 * * 0-2,4-6'
       },
       {
-        expected: 'täglich im Januar um 9:00 Uhr',
+        expected: 'im Januar täglich um 9:00 Uhr',
         parts: ['Januar', '9:00 Uhr'],
         pattern: '0 9 * 1 *'
       }
