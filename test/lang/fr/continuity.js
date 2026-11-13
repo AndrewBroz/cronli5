@@ -1,5 +1,7 @@
 import chai from 'chai';
 import {analyze, prepare} from '../../../src/core/index.js';
+import {denote} from '../../../src/core/describe-set.js';
+import {domainOf} from '../../../src/core/specs.js';
 import * as french from '../../../src/lang/fr/index.js';
 import {coreSetSeeds, neighborPairs, optionsFor, score}
   from '../../../tooling/scripts/edit-diff.mjs';
@@ -52,6 +54,21 @@ const MONTH_LEAD = /^(?:en |de |d')/u;
 // heures de 0 h à 22 h, sauf à 8 h» against «toutes les 2 heures de 0 h
 // à 6 h et de 10 h à 22 h en 2030».
 const EXCEPTION = /\bsauf\b/u;
+
+// Hours that run through midnight are one run only when every day fires
+// (answers 3.5): «toutes les heures de 22 h à 2 h» beside a named day
+// would be read as ending on the next one, so there the hours are said in
+// ascending order. Naming or freeing a day, a month or a year may
+// therefore reword the hours of a pattern whose hours hold both 0 h and
+// 23 h without holding every hour.
+const CALENDAR = ['date', 'month', 'weekday', 'year'];
+
+function throughMidnight(pattern, options) {
+  const hours = parse(pattern, options).schedule.analyses.candidates.hour;
+  const values = denote(hours[hours.length - 1], domainOf('hour'));
+
+  return values.length < 24 && values.includes(0) && values.includes(23);
+}
 
 const SETUP = {languages: [french.default], options: {}, styles: {}};
 
@@ -131,9 +148,17 @@ function leaks(pairList) {
       return String(part).replace(/,$/u, '');
     }
 
+    // The hours of a pattern that runs through midnight, reworded by an
+    // edit to the calendar.
+    function reworded(part) {
+      return part === 'time' && CALENDAR.includes(changed[0]) &&
+        throughMidnight(a, options);
+    }
+
     Object.keys(before).forEach(function compare(part) {
       if (words(before[part]) !== words(after[part]) &&
-          !declared(changed[0], part, before[part], after[part])) {
+          !declared(changed[0], part, before[part], after[part]) &&
+          !reworded(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -175,6 +200,29 @@ describe('French continuity:', function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
     }, 60000);
+
+  // The declared rewording of hours that run through midnight, and
+  // nothing more: the same edits leave any other hours as they were.
+  it('says hours through midnight as one run only when every day fires',
+    function() {
+      function time(pattern) {
+        return partsOf(pattern).time;
+      }
+
+      expect(time('0 22-2 * * *')).to.equal('toutes les heures de 22 h à 2 h');
+      ['0 22-2 1 * *', '0 22-2 * 6 *', '0 22-2 * * 1'].forEach(
+        function named(pattern) {
+          expect(time(pattern), pattern)
+            .to.equal('toutes les heures de 0 h à 2 h, à 22 h et à 23 h');
+        });
+      expect(leaks([
+        ['0 22-2 * * *', '0 22-2 1 * *'],
+        ['0 22-2 * * *', '0 22-2 * 6 *'],
+        ['*/15 22-2 * * 1', '*/15 22-2 * * *']
+      ])).to.deep.equal([]);
+      expect(leaks([['0 9-17 * * *', '0 9-17 1 * *']])).to.deep.equal([]);
+      expect(leaks([['0 22-23 * * *', '0 22-23 1 * *']])).to.deep.equal([]);
+    });
 
   // French declares no tie (answers 3.11): equal schedules are always
   // worded the same, however the pattern was written.

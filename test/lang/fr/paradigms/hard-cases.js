@@ -614,12 +614,9 @@ const rows = [
   ['0 0 1-10,20-31 * *', 'du 1er au 10 et du 20 au 31 de chaque mois à 0 h'],
   ['0 0 20-4 * *', 'du 1er au 4 et du 20 au 31 de chaque mois à 0 h'],
   ['0 0 20-3 * *', 'du 20 au 3 de chaque mois à 0 h'],
-  ['*/5 * * 1-4,6-12 *',
-    'de janvier à avril et de juin à décembre, toutes les 5 minutes'],
-  ['*/5 * * 1,3-12 *', 'en janvier et de mars à décembre, toutes les 5 minutes'],
-  ['0 9 * 10-3 *', 'tous les jours d\'octobre à mars à 9 h'],
-  ['0 9 * 9-3 *',
-    'tous les jours de janvier à mars et de septembre à décembre à 9 h'],
+  // Months have names, as weekdays do, and wrap whatever the length.
+  ['*/5 * * 1-4,6-12 *', 'de juin à avril, toutes les 5 minutes'],
+  ['0 9 * 9-6 *', 'tous les jours de septembre à juin à 9 h'],
   ['* 0 0-2,4-23 * * *',
     'toutes les heures de 0 h à 2 h et de 4 h à 23 h, et à chaque fois ' +
     'toutes les secondes pendant une minute'],
@@ -632,7 +629,7 @@ const rows = [
   ['0 0-5,18-23 * * *', 'tous les jours, toutes les heures de 18 h à 5 h'],
   ['0 0-5,17-23 * * *',
     'tous les jours, toutes les heures de 0 h à 5 h et de 17 h à 23 h'],
-  // Weekdays wrap whatever the length of the run.
+  // Weekdays too.
   ['0 9 * * 4-1', 'du jeudi au lundi à 9 h'],
 
   // Two hours in a row: two times, or one window.
@@ -674,6 +671,17 @@ const rows = [
     'secondes, puis de nouveau 20 secondes plus tard, puis de nouveau 30 ' +
     'secondes plus tard pendant 11 secondes'],
 
+  // A single second before the first run: the run is said where it comes.
+  ['4,20-52 0 * * * *',
+    'toutes les heures, avec 4 secondes de décalage, et à chaque fois de ' +
+    'nouveau 16 secondes plus tard, toutes les secondes pendant 33 secondes'],
+  ['0,10-20 0 9 * * *',
+    'tous les jours à 9 h, de nouveau 10 secondes plus tard, toutes les ' +
+    'secondes pendant 11 secondes'],
+  ['0,10-20 * * * * *',
+    'à 0 et toutes les secondes de 10 à 20 secondes après le début de ' +
+    'chaque minute'],
+
   // Several stretches of minutes under several hours: a window for each
   // stretch in each hour while that names no more than the minute phrase
   // and one window an hour.
@@ -701,6 +709,12 @@ const rows = [
   ['0 0 31 6 *', 'le 31 juin à 0 h'],
   ['0 0 1-30 6 *', 'tous les jours de juin à 0 h'],
   ['0 0 1-28 2 *', 'tous les jours de février, sauf le 29, à 0 h'],
+
+  // A cadence of days with a hole, where no exception may be said: what
+  // is left each side, a stretch of one or two days named day by day.
+  ['0 0 1,3,7-31/2 * 5',
+    'à 0 h, tous les vendredis ainsi que le 1er, le 3 et les jours ' +
+    'impairs du 7 au 31 de chaque mois'],
 
   // An exception among the minutes beside hours that are not every hour.
   ['0,12,24,48 9-17 * * *',

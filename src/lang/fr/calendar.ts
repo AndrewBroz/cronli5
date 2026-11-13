@@ -295,7 +295,8 @@ function cadenceDays(cadence: Cadence, view: View): DayPhrase {
 // The days of the month, as the days one named month has when there is
 // one, and described afresh.
 function dateView(c: Context, months: Months): View {
-  const whole = viewOf(c.schedule, 'date', c.months.all && c.years.all);
+  const whole =
+    viewOf(c.schedule, 'date', {round: c.months.all && c.years.all});
   const length = months.shape === 'one' && monthDays[months.values[0]] || 31;
   const kept = whole.values.filter(function inMonth(day) {
     return day <= length || whole.values[0] > length;

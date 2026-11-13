@@ -309,12 +309,11 @@ function minuteCounts(c: Context): Counts {
   };
 }
 
-// The things the seconds after the first name, said as a clause. Pieces
-// are said from a run: what comes later is counted from its first second.
+// The things the seconds after the first name, said as a clause.
 const restCounts: Counts = {
   all: () => 1,
   cadence: () => 1,
-  pieces: (pieces) => when(isRange(pieces.parts[0]), partsCount(pieces)),
+  pieces: partsCount,
   range: (run) => when(run.to - run.from > 1, 1),
   values: (listed) => listed.values.length - 1
 };
@@ -620,16 +619,26 @@ function restSayers(c: Context): Sayers<string> {
   return {
     all: () => evenly(1, 60),
     cadence: (cadence) => evenly(cadence.interval, members(cadence)),
+    // The first run says what repeats; a later one only how long it
+    // lasts, and a single second only how much later it comes. The first
+    // second of all is the time itself.
     pieces(pieces) {
-      const [first, ...others] = stretchesOf(pieces, singles);
+      const stretches = stretchesOf(pieces, singles);
+      const firstRun = stretches.findIndex(isRun);
 
-      return [
-        evenly(1, first.to - first.from + 1),
-        ...others.map((run) => phrase(w.then, w.again,
-          counted(run.from - c.offset, units.second), w.later,
-          given(isRun(run),
-            phrase(w.during, lasting(run.to - run.from + 1)))))
-      ].join(', ');
+      return stretches.map(function item(run, index) {
+        const length = run.to - run.from + 1;
+        const later = given(index > 0, phrase(w.again,
+          counted(run.from - c.offset, units.second), w.later));
+        const sweep = index === firstRun ?
+          evenly(1, length) :
+          given(isRun(run), phrase(w.during, lasting(length)));
+
+        return [later, sweep].filter(Boolean)
+          .join(given(index === firstRun, ',') + ' ');
+      }).filter(Boolean).map(function joined(item, index) {
+        return phrase(given(index > 0, w.then), item);
+      }).join(', ');
     },
     range: (run) => evenly(1, run.to - run.from + 1),
     values: (listed) => phrase(w.again, tally(

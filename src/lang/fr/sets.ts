@@ -119,12 +119,16 @@ function described(values: number[], domain: Domain, anyLength = false):
  * A plain field's values and their descriptions. Where a run may not wrap
  * round the end of the cycle, the values are described in ascending order.
  */
-function viewOf(schedule: Schedule, field: Field, wraps: boolean): View {
+function viewOf(
+  schedule: Schedule,
+  field: Field,
+  wraps: {anyLength?: boolean; round: boolean}
+): View {
   const domain = domainOf(field);
   const given = schedule.analyses.candidates[field] as SetDescription[];
 
   return described(denote(given[given.length - 1], domain),
-    {...domain, cyclic: domain.cyclic && wraps});
+    {...domain, cyclic: domain.cyclic && wraps.round}, wraps.anyLength);
 }
 
 function sizeOf(domain: Domain): number {
