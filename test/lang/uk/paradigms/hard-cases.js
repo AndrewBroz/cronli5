@@ -575,9 +575,85 @@ const rows = [
   ['0 9 5-9,11-25 * 1',
     'щопонеділка, а також щомісяця з 5-го до 9-го числа включно й з 11-го ' +
     'до 25-го числа включно, о 9:00'],
-  ['0 0 */3 * 1',
+
+  // Written without the star the days are a union, whatever the star
+  // would have made them: `1-31/2` is the odd days and also the weekdays.
+  // The same sentences as the starred patterns had before they became an
+  // intersection.
+  ['*/15 9-17 1-31/2 * 1-5',
+    'щотижня з понеділка до п\'ятниці включно, а також щомісяця по непарних ' +
+    'числах, кожні 15 хвилин з 9:00 до 17:45'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'щотижня з понеділка до п\'ятниці включно, а також щомісяця 1-го, 6-го, ' +
+    '11-го, 16-го, 21-го, 26-го та 31-го числа, кожні 15 хвилин з 9:00 до ' +
+    '17:45'],
+  ['0 0 1-31/3 * 1',
     'щопонеділка, а також щомісяця 1-го, 4-го, 7-го числа й так далі до ' +
     'кінця місяця, о 0:00'],
+
+  // A day field written from a star (`*/2`) beside a restricted one means
+  // both must match, as cron has it: the days of the month as they are
+  // said alone, then «якщо це» and the weekdays they must fall on. No «а
+  // також»: that would be the union.
+  // `0 0 */2 * 1`: the odd days of the month that are Mondays.
+  ['0 0 */2 * 1', 'щомісяця по непарних числах, якщо це понеділок, о 0:00'],
+  // The odd days that are a Monday, a Wednesday or a Friday.
+  ['0 9 */2 * 1,3,5',
+    'щомісяця по непарних числах, якщо це понеділок, середа або п\'ятниця, ' +
+    'о 9:00'],
+  // The 15th, when it is a Sunday, Tuesday, Thursday or Saturday.
+  ['0 0 15 * */2',
+    'щомісяця 15-го числа, якщо це вівторок, четвер, субота або неділя, ' +
+    'о 0:00'],
+  // The odd days of June that are Mondays.
+  ['0 0 */2 6 1',
+    'у червні по непарних числах, якщо це понеділок, о 0:00'],
+  // The 1st, 6th, 11th, 16th, 21st, 26th and 31st, on a Monday to Friday.
+  ['0 0 */5 * 1-5',
+    'щомісяця 1-го, 6-го, 11-го, 16-го, 21-го, 26-го та 31-го числа, якщо ' +
+    'це день з понеділка до п\'ятниці включно, о 0:00'],
+  // The 1st, 4th, 7th … 31st that are Mondays.
+  ['0 0 */3 * 1',
+    'щомісяця 1-го, 4-го, 7-го числа й так далі до кінця місяця, якщо це ' +
+    'понеділок, о 0:00'],
+  // The odd days that are a Saturday or a Sunday.
+  ['0 0 */2 * 6,0',
+    'щомісяця по непарних числах, якщо це субота або неділя, о 0:00'],
+  // The odd days that are a Monday to a Saturday.
+  ['0 0 */2 * 1-6',
+    'щомісяця по непарних числах, якщо це день з понеділка до суботи ' +
+    'включно, о 0:00'],
+  // The 1st, 4th … 31st of January and July that are a Monday to Friday.
+  ['0 9 */3 1,7 1-5',
+    'у січні та липні 1-го, 4-го, 7-го числа й так далі до кінця місяця, ' +
+    'якщо це день з понеділка до п\'ятниці включно, о 9:00'],
+  // The odd days of January, April, July and October that are Mondays.
+  ['0 0 */2 */3 1',
+    'у січні, квітні, липні та жовтні по непарних числах, якщо це ' +
+    'понеділок, о 0:00'],
+  // The 15th of June, when it is a Sunday, Tuesday, Thursday or Saturday.
+  ['0 0 15 6 */2',
+    'щороку 15 червня, якщо це вівторок, четвер, субота або неділя, о 0:00'],
+  // The odd days of 2030 that are Mondays.
+  ['0 0 0 */2 * 1 2030',
+    'у 2030 році щомісяця по непарних числах, якщо це понеділок, о 0:00'],
+  // The odd days that are the last Friday of the month.
+  ['0 0 */2 * 5L',
+    'щомісяця по непарних числах, якщо це остання п\'ятниця місяця, о 0:00'],
+  // The odd days that are the second Monday of the month.
+  ['0 0 */2 * 1#2',
+    'щомісяця по непарних числах, якщо це другий понеділок місяця, о 0:00'],
+  // The last day of the month, when it is a Sunday, Tuesday, Thursday or
+  // Saturday.
+  ['0 0 L * */2',
+    'в останній день місяця, якщо це вівторок, четвер, субота або неділя, ' +
+    'о 0:00'],
+  // The 29th of February, in a leap year, when it is one of those days.
+  ['0 0 29 2 */2',
+    'щороку 29 лютого, якщо це вівторок, четвер, субота або неділя, о 0:00 ' +
+    '(лише у високосні роки)'],
+  // No 31st of February: the weekdays do not bring the day back.
+  ['0 0 31 2 */2', 'ніколи: такої дати в календарі немає'],
 
   // Years with no end, with no start, with a hole, and several series.
   ['0 0 9 * * * 2030/1', 'починаючи з 2030 року, щодня о 9:00'],

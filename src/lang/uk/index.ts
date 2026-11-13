@@ -64,8 +64,11 @@ function describeParts(schedule: Schedule, opts: UkrainianOptions): Parts {
   const aside = Number(time.endsWith(')'));
   const beside = [calendar.gloss, ...[calendar.note].slice(1 - aside)]
     .filter(Boolean).join('; ');
+  const asked = [calendar.condition].filter(Boolean).map(function ask(text) {
+    return `, ${text}`;
+  });
   const day = [days, ...[beside].filter(Boolean).map(bracketed)].join(' ') +
-    calendar.mark;
+    asked.join() + calendar.mark;
   const after = [calendar.note].slice(aside).filter(Boolean).map(bracketed)
     .join();
   let before = '';
