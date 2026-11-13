@@ -78,10 +78,6 @@ const FEW_HOURS = 4;
 // A list of clock times goes up to this many.
 const MOST_TIMES = 12;
 
-// Beside several seconds named after it, a list of clock times goes up
-// to this many, the limit of any other list.
-const MOST_TIMES_BESIDE_SECONDS = 7;
-
 // With the seconds, a list of clock times goes up to this many.
 const MOST_TIMES_TO_THE_SECOND = 4;
 
@@ -295,22 +291,30 @@ function rivalCost(scene: Scene): number {
     things + 2 * spans.length;
 }
 
-// Whether the clock times are listed (answers 4.1): at most twelve, or
-// seven where several seconds are named after them, and either the hours
-// stand apart with no window to offer, or the list names no more than its
-// rival.
+// The seconds a clause names after a list of clock times, counted as
+// things the reader multiplies the list by: none for one second or a
+// stretch, one for the odd ones, and one for each second named.
+function secondsBeside(scene: Scene): number {
+  const {facts, seconds} = scene;
+
+  return pick([
+    [0, facts.second.length === 1 || fillsStretch(seconds)],
+    [1, oddOnes(seconds)],
+    [facts.second.length, true]
+  ]);
+}
+
+// Whether the clock times are listed (answers 4.1): at most twelve,
+// counting the seconds named after them, and either the hours stand apart
+// with no window to offer, or the list names no more than its rival.
 function timesListed(scene: Scene): boolean {
-  const {facts, hourKind, minutes, seconds} = scene;
+  const {facts, hourKind, minutes} = scene;
   const times = facts.minute.length * facts.hour.length;
   const apart = hourKind === 'many' || hourKind === 'cadence' ||
     hourKind === 'few' && listed(minutes);
-  const most = pick([
-    [MOST_TIMES_BESIDE_SECONDS,
-      facts.second.length > 1 && !fillsStretch(seconds)],
-    [MOST_TIMES, true]
-  ]);
 
-  return times <= most && (apart || times <= rivalCost(scene));
+  return times + secondsBeside(scene) <= MOST_TIMES &&
+    (apart || times <= rivalCost(scene));
 }
 
 // Whether hours that stand apart are named by when they begin, after the

@@ -763,27 +763,40 @@ const rows = [
 
   // Beside several seconds named after it, a list of clock times is no
   // longer the list of firings: each time fires once for every second,
-  // and the reader multiplies. It is then held to seven, the limit of any
-  // other list; beyond, minutes, hours and seconds are said apart, each
-  // field once.
+  // and the reader multiplies. The list stays while the clock times and
+  // the seconds named after them are twelve things at most; beyond,
+  // minutes, hours and seconds are said apart, each field once.
+  // «Los segundos impares» name one thing.
   ['*/15 */25 2/6 * * *',
     'todos los días, en los segundos 0, 15, 30 y 45 de los minutos 0, 25 y ' +
     '50 de las horas que empiezan a las 2:00, 8:00, 14:00 y 20:00'],
   ['*/15 */25 2/6 1 * *',
     'el día 1 de cada mes, en los segundos 0, 15, 30 y 45 de los minutos 0, ' +
     '25 y 50 de las horas que empiezan a las 2:00, 8:00, 14:00 y 20:00'],
-  ['0,30 15,45 */6 * * *',
-    'todos los días, en los segundos 0 y 30 de los minutos 15 y 45 de las ' +
-    'horas que empiezan a las 0:00, 6:00, 12:00 y 18:00'],
-  ['1/2 */25 2/8 * * *',
+  ['*/15 */25 2/8 * * *',
+    'todos los días, en los segundos 0, 15, 30 y 45 de los minutos 0, 25 y ' +
+    '50 de las horas que empiezan a las 2:00, 10:00 y 18:00'],
+  ['1/2 */25 2/6 * * *',
     'todos los días, en los segundos impares de los minutos 0, 25 y 50 de ' +
-    'las horas que empiezan a las 2:00, 10:00 y 18:00'],
+    'las horas que empiezan a las 2:00, 8:00, 14:00 y 20:00'],
   ['0,30 15,45 */4 * * *',
     'todos los días, cada 4 horas de 0:15 a 20:15 y de 0:45 a 20:45, ' +
     'siempre en los segundos 0 y 30'],
-  // Seven times or fewer are still listed; one second is a tail on each
+  // Twelve things or fewer stay a list. One second is a tail on each
   // time, and a stretch of seconds is one burst after each, so neither
-  // multiplies the list.
+  // multiplies the list, and twelve times still hold beside them.
+  ['0,30 15,45 */6 * * *',
+    'todos los días a las 0:15, 0:45, 6:15, 6:45, 12:15, 12:45, 18:15 y ' +
+    '18:45, siempre en los segundos 0 y 30'],
+  ['*/15 15,45 */6 * * *',
+    'todos los días a las 0:15, 0:45, 6:15, 6:45, 12:15, 12:45, 18:15 y ' +
+    '18:45, siempre en los segundos 0, 15, 30 y 45'],
+  ['0,30 */25 2/8 * * *',
+    'todos los días a las 2:00, 2:25, 2:50, 10:00, 10:25, 10:50, 18:00, ' +
+    '18:25 y 18:50, siempre en los segundos 0 y 30'],
+  ['1/2 */25 2/8 * * *',
+    'todos los días a las 2:00, 2:25, 2:50, 10:00, 10:25, 10:50, 18:00, ' +
+    '18:25 y 18:50, siempre en los segundos impares'],
   ['0,30 5,10,15,20,25,35,40 9 * * *',
     'todos los días a las 9:05, 9:10, 9:15, 9:20, 9:25, 9:35 y 9:40, ' +
     'siempre en los segundos 0 y 30'],
