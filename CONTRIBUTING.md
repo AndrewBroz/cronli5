@@ -21,148 +21,159 @@ copied per language.
 
 ## Adding a language
 
-**Always derive a new language from existing renderers — never from scratch.**
-You pick a **primary donor** you port and translate the corpus from, and consult
-**reference donors** for specific shared mechanics. The primary donor is the
-nearest *validated* same-family sibling when one exists; absent a family, it is
-**English**, the universal anchor — the plan/Schedule layer is language-neutral
-and the English renderer is the most-developed reference, so its *structure*
-(plan handling, the OR-union frame, confinement, cadence-vs-enumeration)
-transfers to any language. There is never "no anchor." A same-family sibling is
-the *fast path* (it maximizes transfer — structure, words, and morphology), not
-a precondition. The order is load-bearing — **corpus → review → port → TDD** —
-so the new language never grades itself.
+A language is built from hand-written artifacts, in order, and its renderer
+is built from those artifacts alone. The reasons and the full rules are in
+[CLAUDE.md](./CLAUDE.md) (sections "A language is its artifacts" and "What a
+renderer must hold to"); the checklist the maintainers follow is
+[`.claude/skills/add-language`](./.claude/skills/add-language/SKILL.md), and
+what the process has taught so far is in
+[the latest process notes](tooling/experiments/renderer-process/2026-11-13/STATE.md).
 
-This section is the contributor-friendly summary; the full mechanics, donor
-selection, and objective gates live in
-[tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md) and the
-automation in [`.claude/skills/add-language`](./.claude/skills/add-language).
+A new language does not start from another language's renderer, rows or rule
+book, and not from English. Every language is primary and is held to
+first-language standards.
 
 ### 0. Read first
 
-- [`src/core/schedule.ts`](./src/core/schedule.ts) is the entire contract you
-  render: the `Schedule`, the `PlanNode` discriminated union (the rendering
-  strategy the core picked), `NormalizedOptions`, and the `Language` interface
-  you implement.
-- [`src/lang/en/index.ts`](./src/lang/en/index.ts) is the reference renderer;
-  your **donor** (the validated sibling you derive from, e.g. es for the
-  Romance languages) is the one you actually port.
+- [`src/core/schedule.ts`](./src/core/schedule.ts) is the contract: the core
+  hands a renderer `ScheduleFacts` (what is true of the schedule, including
+  every compact description of each field's set of values), `SetDescription`,
+  `NormalizedOptions`, and the `Language` interface you implement. There is no
+  plan: the core says what is true, never how to say it.
+- [`tooling/docs/core-calendar-facts.md`](tooling/docs/core-calendar-facts.md)
+  says what the core tells a renderer about the calendar (dates a month lacks,
+  leap years, open ranges, cadence pieces).
 
-### 1. Pick the donor and translate its corpus to a *candidate*
+### 1. Usage notes
 
-Choose the primary donor: the nearest validated same-family sibling (same
-family, most-validated renderer — pt ← es, fr ← es) when one exists, otherwise
-**English**, the universal anchor. **Translate the donor's reviewed corpus**
-into a target candidate — a better candidate-drafting method than authoring
-from scratch, but still only a candidate. Translate to natural *target idiom*,
-not donor-with-translated-words.
+`src/lang/<code>/usage.md` is written in the language by a writer who is told
+nothing of cron, of this project or of any other language. It describes how
+the language already writes times that recur, organised by the language's
+own categories. Everything after starts from it: the questionnaire was
+written in English, and a question carries its author's categories. The
+author of the rule book does not edit the notes.
 
-When the target shares specific *mechanics* with a language outside its family,
-also consult a **reference donor** for those mechanics while authoring the
-grammar fresh (e.g. zh's CJK mechanics — spaceless joining, numerals,
-day-period bands — for Japanese). The shorthand is "English + neighbors":
-structure from English (or the sibling), mechanics from typological neighbors.
-See the pipeline doc for the full donor-selection guidance.
+### 2. Answers
 
-### 2. Review the candidate into the contract
+`src/lang/<code>/answers.md` answers the
+[language questionnaire](tooling/docs/language-questionnaire.md): the one
+sentence frame, the device for every kind of set, the fusions, the idioms
+and the options. It is the rule book. Record the reason for every taste
+call; taste calls are made by the orchestrating frontier model or a fluent
+human, never by a panel.
 
-`test/lang/<code>/corpus.js` is a table of cron patterns and their **exact**
-expected output — the oracle that makes the module trustworthy. The candidate
-becomes the contract only after independent review by a target-native reader or
-the blind Claude Sonnet persona panel,
-and is **finalized before you port the renderer** — never regenerated from the
-renderer afterward (that would only prove the code agrees with itself). See
-`test/lang/en/` for the shape and `test/lang/<code>/REVIEW.md` for the
-reviewer's notes.
+### 3. Lexicon
 
-### 3. Port the donor's renderer and TDD to green
+`src/lang/<code>/lexicon.ts` holds every word the renderer may say.
+`test/lang/<code>/lexicon.js` checks that the renderer uses only these.
 
-Create `src/lang/<code>/index.ts` and `src/lang/<code>/dialects.ts` by porting
-the donor's structure (plan override, OR-union frame, dialect scaffold, …) and
-translating its lexicon. The default export implements `Language`:
+### 4. Paradigms
 
-```ts
-import type {Language} from '../../core/schedule.js';
+`test/lang/<code>/paradigms/` holds the expected descriptions for the
+language-independent grid (`test/paradigms/grid.js`), in families that vary
+one field at a time: rows a builder may see (`visible.js`), rows held out to
+judge the builder (`held-out.js`), hard cases and option sets. **Rows are
+hand-written, never produced by running a renderer.** They are checked without
+one (`oracleProblems` in `test/paradigms/check.js`).
 
-const xx: Language = {
-  describe,            // (schedule: Schedule, opts: NormalizedOptions) => string
-  fallback: '…',       // shown for unparseable input in lenient mode
-  options: normalizeOptions,  // (options?) => NormalizedOptions
-  reboot: '…',         // the phrase for `@reboot`
-  sentence: (d) => '…' + d + '.'  // wrap a fragment as a complete sentence
-};
+### 5. Read the rows
 
-export default xx;
-```
+Before any renderer exists, the rows get two independent reads:
 
-`describe` dispatches on `schedule.plan.kind` (the `PlanNode` union). Write one
-renderer per kind, typed `(schedule: Schedule, plan: Extract<PlanNode,
-{kind: '…'}>, opts: NormalizedOptions): string`. Use the core primitives —
-`clockDigits`, `numeral`, `pad` from `core/format.ts` — for the mechanical
-digit work, and own everything linguistic (number words, articles, separators,
-am/pm or 24-hour conventions, noon/midnight, list joining, ordering of
-qualifiers). Run the tests against the reviewed corpus and drive them to green.
+- An **adversarial schedule read**: a fluent reader works out when each
+  pattern fires, covers the pattern, reads the sentence as someone who has
+  never seen cron would, and reports every row that says a different
+  schedule. Every earlier language's first draft had some.
+- **Blind fluency reads**: a judge briefed in the target language, told
+  nothing of patterns, rules or generation, reads the sentences as text people
+  wrote for a screen.
 
-### 4. Wire it up
+Revise the rows and the answers until no reader misunderstands a sentence.
+A sentence you doubt is a defect to fix, not a row to flag.
 
-- Add a `./lang/<code>` entry to `exports` in `package.json` (mirror the
-  existing `./lang/en` block). The build (`scripts/build.mjs`) and the docs
-  generator (`scripts/docs.mjs`) both discover `src/lang/*` automatically.
-- Add `docs/lang/<code>.md`. Its comparison table against the matching
-  cRonstrue locale is generated — run `npm run docs`, never hand-edit it.
-- Add `src/lang/<code>/status.json` recording the `experimental`/`beta` status
-  and the review evidence (the status tables are generated from it).
+### 6. Build the renderer
 
-### 5. Validate
+`src/lang/<code>/index.ts` is built from the usage notes, answers, lexicon
+and the visible rows by someone who sees no other renderer and no held-out
+row. It must be rebuildable from them: that is the test of whether the
+artifacts are sufficient. Where the answers are silent or contradict a row,
+the builder stops on that item and reports it; it does not invent a special
+case. The default export implements `Language` (see an existing
+`src/lang/<code>/index.ts` for the shape, after the build, not before it).
+A renderer never reads `pattern` or `shapes`
+(`test/lang/renderer-rules.js`), and it takes every word from the lexicon.
+Use `clockDigits`, `numeral`, `pad` from
+[`src/core/format.ts`](./src/core/format.ts) for mechanical digit work.
 
-Correctness and naturalness are checked separately:
+### 7. Judge it
 
-- **Objective gates, independent of the corpus** — round-trip recovery, the
-  fuzz dropped-value detector (`npm run fuzz <code>`), the both-side OR-scope
-  check, and the cRonstrue comparison reference (`npm run divergence`).
-  "Green against the corpus" is the dev loop; these gates are the trust.
-- **Blind Sonnet persona panel** — three Sonnet personas (everyday native
-  speaker, copy-editor, technical communicator) blind-judge naturalness and
-  comprehension over the spanning set with no knowledge of the renderer's
-  provenance. Critics surface what to fix; detectors guarantee coverage.
+Run the held-out rows against the finished renderer, and the continuity
+suite (`test/lang/<code>/continuity.js`): editing one field may change only
+that field's part of the sentence, apart from fusions the answers declare.
+
+A failing row has three allowed responses, in this order:
+
+1. The rule in the answers is wrong or silent: amend the answers.
+2. The row is wrong: fix the row, with a reason.
+3. A new idiom row is needed.
+
+A code path special to one example is never allowed. Bug fixes are
+test-first: the intended output goes into a paradigm or hard-case row, fails,
+and then the answers and renderer change.
+
+### 8. Register and run the gate
+
+- Add the language to `src/all.ts`, `src/languages.ts` and the `exports` of
+  `package.json` (mirror an existing language); the build and the docs
+  generator find `src/lang/*` automatically.
+- Add `docs/lang/<code>.md`. Its tables are generated: run `npm run docs`,
+  never hand-edit them.
+- Run `npm run conformance` to write `conformance/<code>.json`, the
+  language's rows as plain data for implementations in other programming
+  languages.
+- Run `npm run verify`, the single gate CI runs.
+
+### 9. Keep `status.json` honest
+
+`src/lang/<code>/status.json` records who has reviewed what, including what
+has not been read yet: which forms have had a blind fluency read, who saw
+which held-out rows, and whether a fluent human has read the language. Review
+is tracked; it does not gate a release. A language ships as **beta** at most
+until a fluent human speaker (not a model) has reviewed it.
 
 ## Fixing a bug (test-first)
 
-The corpus is the spec, so a fix starts in the corpus, not the renderer:
+The paradigm rows are the spec, so a fix starts in the rows, not the
+renderer:
 
 1. Decide the **intended** output (for a language module, the wording a fluent
    speaker would bless).
-2. Put it in `test/lang/<code>/corpus.js` — a new entry, or correcting an
-   existing one — and **run the tests and watch it fail.**
-3. Fix the renderer until that test passes.
+2. Put it in a row under `test/lang/<code>/paradigms/` (a hard case, or a row
+   in the matching family), written by hand, and **run the tests and watch it
+   fail.**
+3. If the rule in `src/lang/<code>/answers.md` is wrong or silent, amend it.
+4. Fix the renderer until that row passes.
 
-Never edit the renderer first and then update the corpus to match its new
+Never edit the renderer first and then update the row to match its new
 output: that makes the code grade itself and can enshrine a subtly-wrong fix.
 The intended output, not the code's actual output, is the source of truth.
+A code path special to one example is never allowed; the fix is a rule about
+the set of values.
 
-**Expanding the test surface.** Two different surfaces grow under different
-rules:
-
-- The **corpus** (`test/lang/<code>/corpus.js`) is the full regression suite —
-  cheap, so **every** bug earns a pinned entry, and new behavior earns
-  coverage. Grow it freely.
-- The **review spanning set** (`tooling/scripts/spanning-set.mjs`) is what the
-  blind Sonnet persona panel reads, and the panel is slow, so keep it a *minimal*
-  spanning set. Add to it only when (a) `spanning-set.mjs` reports an
-  uncovered `PlanNode` kind or a linguistic feature is unexercised, or (b) a
-  *naturalness* defect appears in a pattern shape the set doesn't represent —
-  add one representative so future panels catch the class. A plain
-  *correctness* bug needs only a corpus regression test, not a panel re-run.
+Run `npm run docs` and `npm run conformance` afterwards and let them rewrite
+what they generate.
 
 ## Conventions (enforced by the linter)
 
 - **`opts` is the last parameter** of any function that takes it (a callback,
   if present, comes after it). The custom `param-tail-order` ESLint rule
   enforces this.
-- **Type against the contract** — `schedule: Schedule`, `plan: PlanNode`,
-  `opts: NormalizedOptions`. `npm run typecheck` must pass with zero errors.
+- **Type against the contract** — `ScheduleFacts`, `SetDescription`,
+  `NormalizedOptions` from `src/core/schedule.ts`. `npm run typecheck` must
+  pass with zero errors.
 - **Generated, never hand-edited** — the docs tables, inline doc examples,
-  and the published `.d.ts` are all generated. Run `npm run docs` after a
+  the conformance suites (`conformance/<code>.json`) and the published `.d.ts`
+  are all generated. Run `npm run docs` and `npm run conformance` after a
   behavior change; CI rejects drift.
 - **Comments** — `//` for prose; `/** */` is reserved for JSDoc on exported
   declarations (types and the public API), where it powers editor tooltips.
@@ -171,20 +182,16 @@ rules:
 ## Before opening a PR
 
 Development requires **Node.js 20 or newer** (the Vitest 4 test runner needs
-it). Run the full gate (CI runs the same):
+it). Run the single gate; CI and the pre-push hook run the same:
 
 ```sh
-npm run lint        # style + param-tail-order
-npm run typecheck   # the Schedule contract, end to end
-npm run test:types  # public API types (tsd)
-npm test            # unit + corpus + property tests
-npm run coverage    # thresholds
-npm run docs -- --check   # generated docs are current
-npm run build       # dual ESM/CJS + the type tree
+npm run verify
 ```
 
-A new language merges as **beta** when it passes the objective gates
-(round-trip, fuzz, OR-scope, the cRonstrue comparison), the blind panel of
-Claude Sonnet instances, and the full gate above is green. The only human step
-is the **beta → stable** graduation: a review by a fluent human speaker (not a
-model), which the Sonnet panel cannot stand in for.
+Its steps (lint, typecheck, public type tests, the coverage run that executes
+the full test suite, conciseness, `docs --check`, `conformance --check`, and
+the build) are listed once, in the `verify` script of `package.json`.
+
+A new language merges as **beta** at most. Graduating beyond beta needs a
+review by a fluent human speaker (not a model), which no model read can stand
+in for.

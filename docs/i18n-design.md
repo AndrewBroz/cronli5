@@ -296,7 +296,7 @@ Conclusions:
 
 *(Adopted July 2026 as a hard constraint, ranked above point-wise
 naturalness. This section is the source of truth for what "continuity"
-means; the improve-renderer skill and the add-language pipeline enforce it.)*
+means; each language's `test/lang/<code>/continuity.js` enforces it.)*
 
 Nobody reads a cron description in a vacuum. The tool exists for
 verification and comparison — two crontab lines, a before/after edit, "what
