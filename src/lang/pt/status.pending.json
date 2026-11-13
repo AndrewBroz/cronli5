@@ -1,0 +1,7 @@
+{
+  "name": "Portuguese",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2, which reads and writes Portuguese but is not a native speaker; no renderer built yet, and no independent read of the rows yet",
+  "branchBudget": 110
+}
