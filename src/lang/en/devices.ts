@@ -1052,6 +1052,7 @@ function yearsByNumber(hung: boolean, opts: EnglishOptions): Voice {
 
 export {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,
-  opensWithEvery, say, secondsOfOneMinute, withinTheHour, yearsByNumber
+  hoursAsStretches, inSpokenOrder, inTieOrder, minutesOfOneHour, monthsAlone,
+  monthsOfDays, opensWithEvery, say, secondsOfOneMinute, withinTheHour,
+  yearsByNumber
 };

@@ -513,12 +513,28 @@ const rows = [
   // Under seconds, a stray minute beside a run of minutes says what the
   // seconds do in it: "and at 45 minutes past the hour" was read as one
   // firing at :45:00.
+  // Each piece names its own unit: «every second from 0 through 29 and
+  // for one minute at 45 minutes past the hour» was read, blind, as
+  // seconds 0 through 29 of every minute. A run from the top of the hour
+  // is "the first N minutes of every hour", as it is alone.
   ['* 0-29,45 * * * *',
-    'every second from 0 through 29 and for one minute at 45 minutes past ' +
-    'the hour'],
+    'every second for the first 30 minutes of every hour and for one ' +
+    'minute at 45 minutes past the hour'],
+  ['*/10 0-29,45 * * * *',
+    'every 10 seconds for the first 30 minutes of every hour and for one ' +
+    'minute at 45 minutes past the hour'],
+  ['* 10-29,45 * * * *',
+    'every second from 10 through 29 minutes past the hour and for one ' +
+    'minute at 45 minutes past the hour'],
+  // Under hours named one by one, each piece is said as it is alone
+  // under those hours: "of every hour" would be false of two hours.
+  ['* 0-29,45 9,17 * * *',
+    'every second for the first 30 minutes of the 9 a.m. and 5 p.m. hours ' +
+    'and for one minute at 9:45 a.m. and 5:45 p.m. every day'],
   ['* 5,10-40,50 * * * *',
-    'every second for one minute at 5, every second from 10 through 40, ' +
-    'and for one minute at 50 minutes past the hour'],
+    'every second for one minute at 5 minutes past the hour, every second ' +
+    'from 10 through 40 minutes past the hour, and for one minute at 50 ' +
+    'minutes past the hour'],
   ['30 0-29,45 * * * *',
     'at 30 seconds past the minute, every minute from 0 through 29 and at ' +
     '45 minutes past the hour'],
