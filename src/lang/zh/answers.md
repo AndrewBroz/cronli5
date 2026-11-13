@@ -67,8 +67,9 @@ set of seconds.
   that are runs and cadences together are said as those (3.8, 5.8), so
   that no list of them passes what the field holds in a day, an hour or a
   minute. And what is bounded is a list made by multiplying two lists:
-  clock times each with its seconds, or minutes each with its seconds, are
-  written out only while that names eight things or fewer (4.2).
+  separate hours each with a window of minutes (4.1), and clock times or
+  minutes each with their seconds (4.2), are written out only while that
+  names six things or fewer, a window counting two.
 * **A cadence of minutes or seconds that tiles from 0 is 每N分钟一次 / 每N
   秒一次 with no ends** when nothing confines it: 每15分钟一次. Neither
   judge asked where it starts; everyone takes it from the hour.
@@ -533,7 +534,8 @@ then 每分钟一次 or 每N分钟一次.
 | a range (two consecutive hours count) | 9:00至17:59，每分钟一次; 9:00至17:45，每15分钟一次; 22:00至23:59，每分钟一次 |
 | one hour | 9:00至9:59，每分钟一次; 9:00至9:55，每5分钟一次 |
 | every second hour, more than eight of them (5.5) | the idiom of 5.5, with 内: 偶数小时（0点、2点、4点……22点）内，每分钟一次; 奇数小时（1点、3点、5点……23点）内，每15分钟一次; 偶数小时（2点、4点、6点……22点）内，每分钟一次 |
-| any other separate hours or stretches | each a window, however many: 9:00至9:59、17:00至17:59，每分钟一次; 8:00至8:45、12:00至12:45、18:00至18:45，每15分钟一次; 9:00至17:59、20:00至20:59、22:00至22:59，每分钟一次; 8:00至8:45、10:00至10:45、12:00至12:45、14:00至14:45、16:00至16:45、18:00至18:45，每15分钟一次 |
+| up to three separate hours, or stretches of hours | each a window: 9:00至9:59、17:00至17:59，每分钟一次; 8:00至8:45、12:00至12:45、18:00至18:45，每15分钟一次; 9:00至17:59、20:00至20:59、22:00至22:59，每分钟一次 |
+| four or more separate hours | the hours by name, then 的 and the minutes as a stretch of positions that names both ends, then the rhythm: 0点、6点、12点、18点的0分至59分，每分钟一次; 8点、10点、12点、14点、16点、18点的0分至45分，每15分钟一次 |
 | every hour with exceptions | 每10分钟一次（3:00至3:59除外） |
 | every second hour with exceptions | the idiom, then the bracket: 偶数小时（0点、2点、4点……22点）内，每分钟一次（8:00至8:59除外） |
 
@@ -542,12 +544,29 @@ Named hours with a count (8点、12点、18点这3个小时内; 0点、2点、4�
 个小时内 for one continuous stretch. The second judge ranked the plain
 windows first. Windows for every second hour, abbreviated with ……, were
 tried next and dropped: the third judge stopped at the …… and went back.
-For every second hour the idiom of 5.5 is said; every other set of hours
-is written out in full, however long.
+For every second hour the idiom of 5.5 is said.
 
-**M is a single run of minutes.** Under one hour or separate hours, a
-window of clock times for each, as above: 9:00至9:29，每分钟一次; 9:00至
-9:29、17:00至17:29，每分钟一次.
+**Four or more separate hours are not a window each.** A window for each
+hour is a list made by multiplying: every hour with the two ends of the
+minutes. Like every such list (4.2) it is written out only while it names
+six things or fewer, a window counting two for the two clock times it
+names, so three hours are windows and four are not. Past that the hours
+are named once and the minutes once, as positions in the hour, the way
+anchored minutes are said below (8点、12点、18点的5分、20分、45分), with
+both ends of the stretch named as every stretch's are: 每天0点、5点、10
+点、15点、20点的0分至45分，每15分钟一次. A second goes with the minutes:
+0点、5点、10点、15点、20点的0分30秒至45分30秒，每15分钟一次; 的0分0秒至59分
+59秒，每秒一次; under rounds, 的0分至59分，每分钟一轮，每轮2次，在所在分钟的5
+秒、30秒. (Five such windows were ten clock times, 0:00至0:45、5:00至5:45、
+…20:00至20:45, and beside a long day part ran past a hundred characters.
+N点的M分 cannot be read as one continuous stretch, which is what sank 这3
+个小时内 above.) Stretches of hours stay windows however many: a stretch
+cannot be named as one hour before 的.
+
+**M is a single run of minutes.** Under one hour or up to three separate
+hours, a window of clock times for each, as above: 9:00至9:29，每分钟一次;
+9:00至9:29、17:00至17:29，每分钟一次. Under four or more separate hours it
+is anchored, as above: 9点、11点、13点、15点、17点的0分至30分，每分钟一次.
 
 **Inside one named hour every minute phrase is clock times**, whatever
 the minutes are: a run with a stray minute, 9:00至9:29，每分钟一次，以及
@@ -602,17 +621,25 @@ window where any time has seconds, every time shows them (9:00:00、
 
 **A bound on all of it.** Seconds are written into the times (a clock
 time with its second, a minute with its second, a window to the second)
-only while that names eight things or fewer, a listed time and a window
-each counting one; or where there is a single clock time or a single
-minute to carry them, which is then a plain list or its windows however
-long. Past that, each clock time or each minute is a round, 各一轮 follows
-the list, and the round is said by its count as in case 6: 每天9:05、
-9:20、9:45、17:05、17:20、17:45各一轮，每轮2次，在所在分钟的15秒、45秒; 每
-小时的5分、20分、35分、50分、55分各一轮，每轮2次，在所在分钟的15秒、45
-秒. (The
-audit found six clock times with eight seconds each written out as 48
-times, and a list of 24 windows. Nobody holds that; the round says the
-same in two short lists.)
+only while that names six things or fewer, a listed time counting one
+and a window two, for the two times it names; or where there is a single
+clock time or a single minute to carry them, which is then a plain list
+or its windows however long. Past that, each clock time or each minute
+is a round, 各一轮 follows the list, and the round is said by its count
+as in case 6: 每天9:05、9:20、9:45、17:05、17:20、17:45各一轮，每轮2次，在所
+在分钟的15秒、45秒; 每小时的5分、20分、35分、50分、55分各一轮，每轮2次，在所
+在分钟的15秒、45秒; 每天9:05、9:20、17:05、17:20各一轮，每轮2次，在所在分钟
+的15秒、45秒; 每天0:00、6:00、12:00、18:00各一轮，每轮60次，每秒一次; 每天9
+点至17点，每小时的0分、45分各一轮，每轮4次，间隔15秒（首轮9:00，末轮17:45）.
+Six are still written out: 每小时的5分15秒、5分45秒、20分15秒、20分45秒、50
+分15秒、50分45秒; 每天8:00:00至8:00:59、12:00:00至12:00:59、18:00:00至
+18:00:59，每秒一次. (The audit found six clock times with eight seconds
+each written out as 48 times, and a list of 24 windows, and bounded them
+at eight. The length gate then found eight still too many: eight minutes
+with their seconds, 0分0秒、0分15秒……45分45秒, or eight windows to the
+second, hide the two short lists they are made of, and a reader has to
+find them again. At six the written list and the round name about as
+many things; past it the round names fewer and shows both lists.)
 
 1. S is 0: silent.
 2. **Eight exact times to the second or fewer, not a run of five or more

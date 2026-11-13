@@ -18,6 +18,11 @@ const {marks, units, words} = lexicon;
 // How many consecutive clock times, minutes or seconds make a window.
 const WINDOW = 5;
 
+// How many things a list made by multiplying may name: windows of clock
+// times one for each hour, or clock times and minutes each with their
+// seconds. A window counts two, for the two clock times it names.
+const MULTIPLIED = 6;
+
 // A moment by the parts that are named: an hour makes it a clock time
 // (9:05, 9:05:30), and without one it is a position in the hour or the
 // minute (5分, 5分30秒, 30秒).
@@ -273,26 +278,35 @@ function isLone(S: Level): boolean {
   return S.values.length === 1 && !isSilent(S);
 }
 
+// Whether restricted hours are each a window of clock times: under
+// minutes that flow, any minutes inside one hour, or one run under
+// separate hours; but separate hours only while their windows multiply
+// to no more than six things.
+function isClocked(H: Level, M: Level): boolean {
+  const lone = H.runs.every((run) => run.length === 1);
+  const crowded = lone && 2 * H.runs.length > MULTIPLIED;
+
+  return !crowded && (M.flows ||
+    lone && (H.values.length === 1 || isSteady(M.shape)));
+}
+
 // The first row that applies. Exact times that can be counted are points.
-// One minute under restricted hours is a rhythm of hours. Minutes that
-// flow, or any minutes inside one hour, or one run under separate hours,
-// are windows of clock times. Under every hour or every second hour a
-// flowing minute is its rhythm alone, unless a single second has to be
-// carried by a window of minutes. Anything else names its minutes after
-// its hours.
+// One minute under restricted hours is a rhythm of hours. Then windows of
+// clock times, where the hours are clocked. Under every hour or every
+// second hour a flowing minute is its rhythm alone, unless a single second
+// has to be carried by a window of minutes. Anything else names its
+// minutes after its hours.
 function kindOf(levels: Level[], parity: boolean): Kind {
   const [H, M, S] = levels;
   const plain = H.every || parity;
   const carried = M.every || !isLone(S);
-  const lone = H.runs.every((run) => run.length === 1);
   const counted = H.values.length * M.values.length <= LISTED &&
     H.shape.windows.length === 0 && !M.runs.some(isWindow);
 
   return first<Kind>([
     [counted, 'points'],
     [M.values.length === 1 && !H.every, 'hourly'],
-    [!plain && (M.flows ||
-      lone && (H.values.length === 1 || isSteady(M.shape))), 'clocked'],
+    [!plain && isClocked(H, M), 'clocked'],
     [plain && M.flows && carried, 'bare'],
     [true, 'named']
   ]);
@@ -304,16 +318,16 @@ function endsEveryMinute(M: Level): boolean {
     M.shape.step === 1;
 }
 
-// How many things the seconds are said as: each window and each stray
-// second is one.
+// How many things the seconds are said as: each window two, for its two
+// ends, and each stray second one.
 function partsOf(S: Level): number {
-  return S.shape.windows.length + S.shape.strays.length;
+  return 2 * S.shape.windows.length + S.shape.strays.length;
 }
 
 // Whether so many clock times or minutes can each carry the seconds: one
-// always can, and several while that names no more than can be listed.
+// always can, and several while that multiplies to no more than six.
 function carries(anchors: number, S: Level): boolean {
-  return anchors === 1 || anchors * partsOf(S) <= LISTED;
+  return anchors === 1 || anchors * partsOf(S) <= MULTIPLIED;
 }
 
 // Whether the minutes are a plain list after their hours, whose seconds
