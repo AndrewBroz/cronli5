@@ -24,9 +24,9 @@ const FIELDS =
 // date («co roku 1 czerwca»), a single year joins a named month («w
 // czerwcu 2030 r.»), the month tail of a day phrase follows the month
 // field («każdego miesiąca», «miesiąca», «tego miesiąca»), a wrapping run
-// of months is cut when a year is restricted, weekday exceptions are
-// positive forms in a union, and a schedule that never fires is one fixed
-// phrase. Those are the fusions answers 2.6 declares; all of them stay inside the frame and the day. Nothing else
+// of months is cut when a year is restricted, a union is said from its
+// larger side when one day field leaves out a day or two, and a schedule
+// that never fires is one fixed phrase. Those are the fusions answers 2.6 declares; all of them stay inside the frame and the day. Nothing else
 // may cross, with the two exceptions below.
 const MAY_CHANGE = {
   date: ['frame', 'day'],

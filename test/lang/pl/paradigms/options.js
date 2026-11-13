@@ -35,7 +35,7 @@ const defaultParts = {
   '5,20,45 * * * *': ['45 minut', 'pełnej godzinie'],
   '*/6 * * * * *': ['6 sekund'],
   '* * * * *': ['minutę'],
-  '0-29 * * * *': ['minutę', ':00', ':29']
+  '* */2 * * *': ['0:00–0:59', '2:00–2:59', '22:00–22:59']
 };
 
 const sets = [
@@ -115,9 +115,10 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'co minutę od :00 do :29 każdej godziny',
-        parts: ['minutę', ':00', ':29'],
-        pattern: '0-29 * * * *'
+        expected: 'codziennie co minutę w co drugiej godzinie: 0:00–0:59 w ' +
+          'nocy, 2:00–2:59 w nocy … 10:00–10:59 wieczorem',
+        parts: ['0:00–0:59 w nocy', '2:00–2:59 w nocy', '10:00–10:59 wieczorem'],
+        pattern: '* */2 * * *'
       }
     ]
   },
@@ -248,9 +249,10 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'co minutę od :00 do :29 każdej godziny',
-        parts: ['minutę', ':00', ':29'],
-        pattern: '0-29 * * * *'
+        expected: 'codziennie co minutę w co drugiej godzinie: 0.00–0.59, ' +
+          '2.00–2.59 … 22.00–22.59',
+        parts: ['0.00–0.59', '2.00–2.59', '22.00–22.59'],
+        pattern: '* */2 * * *'
       }
     ]
   },

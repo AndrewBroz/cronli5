@@ -109,8 +109,8 @@ const units: Record<'day' | 'hour' | 'minute' | 'second' | 'year', Unit> = {
 
 // The stems of the ordinals of the days of a month, indexed by the
 // number up to 19, and of the tens. A day from 21 on is the ten and the
-// unit («dwudziestego pierwszego»). Every stem takes the same ending:
-// «-ego» in the genitive, «-emu» in the dative.
+// unit («dwudziestego pierwszego»). Every stem takes the genitive
+// ending «-ego».
 const dayStems = [
   '', 'pierwsz', 'drug', 'trzeci', 'czwart', 'piąt', 'szóst', 'siódm', 'ósm',
   'dziewiąt', 'dziesiąt', 'jedenast', 'dwunast', 'trzynast', 'czternast',
@@ -120,29 +120,23 @@ const tenStems = ['', '', 'dwudziest', 'trzydziest'];
 const ten = 10;
 const firstCompound = 20;
 
-function dayWords(day: number, ending: string): string {
+/** The ordinal of a day of the month in the genitive: «piętnastego». */
+function dayOrdinal(day: number): string {
   const stems = day < firstCompound ?
     [dayStems[day]] :
     [tenStems[Math.floor(day / ten)], dayStems[day % ten]];
 
   return stems.filter(Boolean).map(function ended(stem) {
-    return stem + ending;
+    return `${stem}ego`;
   }).join(' ');
 }
 
-/** The ordinal of a day of the month in the genitive: «piętnastego». */
-function dayOrdinal(day: number): string {
-  return dayWords(day, 'ego');
-}
-
-/** The same in the dative, which «najbliższy» takes: «piętnastemu». */
-function dayOrdinalDative(day: number): string {
-  return dayWords(day, 'emu');
-}
-
 // The ordinal of the nth weekday of a month, from the first, after «w»:
-// masculine («w drugi poniedziałek») and feminine («w drugą środę»).
+// masculine («w drugi poniedziałek») and feminine («w drugą środę»). And
+// of every nth hour, from the second, in the locative: «w co drugiej
+// godzinie».
 const ordinals = {
+  everyHour: ['drugiej', 'trzeciej', 'czwartej', 'piątej'],
   nthFeminine: ['pierwszą', 'drugą', 'trzecią', 'czwartą', 'piątą'],
   nthMasculine: ['pierwszy', 'drugi', 'trzeci', 'czwarty', 'piąty']
 };
@@ -161,14 +155,13 @@ const words = {
   also: 'a także',
   and: 'i',
   andPieces: 'oraz',
-  andThen: 'a wtedy',
   at: 'o',
+  atLeast: 'co najmniej',
   before: 'przed',
-  butSameMonth: 'ale w tym samym miesiącu',
-  countingFrom: 'licząc od',
+  butNot: 'ale nie',
   daily: 'codziennie',
   day: 'dnia',
-  dayDative: 'dniu',
+  dayFalling: 'w dniu wypadającym',
   days: 'dni',
   eachFullHour: 'każdej pełnej godzinie',
   eachFullMinute: 'każdej pełnej minucie',
@@ -176,6 +169,7 @@ const words = {
   eachOfTheHours: 'każdej z godzin',
   eachOfThoseMonths: 'każdego z tych miesięcy',
   eachTime: 'za każdym razem',
+  ellipsis: '…',
   even: 'parzyste',
   evenYears: 'latach parzystych',
   every: 'co',
@@ -185,10 +179,18 @@ const words = {
   except: 'oprócz',
   first: 'pierwszy',
   five: 'pięć',
+  forExample: 'np.',
+  fridayOrMonday: 'piątek lub poniedziałek',
   from: 'od',
   fullHour: 'pełnej godzinie',
+  fullHourGenitive: 'pełnej godziny',
   fullMinute: 'pełnej minucie',
+  further: 'i dalej',
+  hourLocative: 'godzinie',
+  ifMonthHasThatDay: 'o ile miesiąc ma dany dzień',
+  ifWeekend: 'a jeśli to sobota lub niedziela –',
   in: 'w',
+  inDays: 'dniach',
   inLeapYearsAlso: 'a w latach przestępnych także',
   inWhichThereAre: 'w którym jest ich',
   inYears: 'latach',
@@ -199,35 +201,43 @@ const words = {
   lastMasculine: 'ostatni',
   later: 'później',
   leapYears: 'latach przestępnych',
+  minuteStartingAt: 'przez minutę zaczynającą się',
   minutesPast: 'po',
+  minutesPastIt: 'po niej',
   monthGeneric: 'miesiąca',
-  nearest: 'najbliższy',
-  never: 'nigdy (takiego dnia nie ma w kalendarzu)',
+  nearest: 'w najbliższy',
+  never: 'nigdy (takiej daty nie ma w kalendarzu)',
   neverRuns: 'Nie uruchamia się',
+  nor: 'ani',
   odd: 'nieparzyste',
   oddYears: 'latach nieparzystych',
-  ofEachHour: 'każdej godziny',
-  ofEachMinute: 'każdej minuty',
-  on: 'na',
+  onFullHour: 'o pełnej godzinie',
+  or: 'lub',
   penultimateDay: 'przedostatniego dnia',
   runs: 'Uruchamia się',
+  sameMonth: 'tego samego miesiąca',
+  secondsPastIt: 'po nim',
+  startOfEachMinute: 'początku każdej minuty',
+  startOfItsMinute: 'jej początku',
+  startOfMinute: 'początku minuty',
   startup: 'po starcie systemu',
-  thatHasSuchADay: 'który ma taki dzień',
+  thatHas: 'który ma',
   thatMonth: 'tego miesiąca',
   to: 'do',
-  unlessOnANamedWeekday: 'chyba że wypada w wymieniony dzień tygodnia',
+  unlessItFalls: 'chyba że wypada on',
+  unlessTheyFall: 'chyba że wypadają',
+  unlessTheyFallOn: 'chyba że wypadają one',
   unrecognizable: 'nierozpoznany wzorzec cron',
   weekdayNoun: 'dzień powszedni',
-  whenTheMonthHas31Days: 'gdy miesiąc ma 31 dni',
-  wholeHour: 'przez całą godzinę',
   wholeMinute: 'przez całą minutę',
   wholeYear: 'przez cały rok',
+  withStartOf: 'z początkiem',
   year: 'r.',
   yearly: 'co roku'
 };
 
 const lexicon = {
-  dayOrdinal, dayOrdinalDative, dayParts, months, ordinals, twoDigits, units,
+  dayOrdinal, dayParts, months, ordinals, twoDigits, units,
   weekdays, weekOrder, words
 };
 
