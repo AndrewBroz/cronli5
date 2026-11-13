@@ -134,8 +134,8 @@ const rows = [
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
     'días pares de cada mes'],
   ['*/15 9-17 */5 * 1-5',
-    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
-    'días 1, 6, 11, 16, 21, 26 y 31 de cada mes'],
+    'los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, cuando caen de lunes ' +
+    'a viernes, cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 L * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además el ' +
     'último día de cada mes'],

@@ -52,9 +52,12 @@ function firesOn(pattern, options) {
   try {
     const schedule = analyze(prepare(pattern, readingOf({...options})));
 
-    return JSON.stringify(fieldOrder.map(function fieldOf(field) {
-      return schedule.analyses.candidates[field] || schedule.pattern[field];
-    }));
+    // Two day fields that must both match fire on other days than the
+    // same two as a union, so the fact is part of the answer.
+    return JSON.stringify([schedule.analyses.day.both,
+      ...fieldOrder.map(function fieldOf(field) {
+        return schedule.analyses.candidates[field] || schedule.pattern[field];
+      })]);
   }
   catch {
     return null;

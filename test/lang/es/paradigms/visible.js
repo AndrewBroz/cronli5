@@ -85,9 +85,12 @@ const rows = [
   ['*/15 9-17 1,10,20 * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
     'días 1, 10 y 20 de cada mes'],
+  // Written with the star, the two day fields must both match: the odd
+  // days of the month that fall from Monday to Friday. Written without
+  // it, `1-31/2`, they are a union (hard-cases.js).
   ['*/15 9-17 */2 * 1-5',
-    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
-    'días impares de cada mes'],
+    'los días impares de cada mes, cuando caen de lunes a viernes, cada ' +
+    '15 minutos de 9:00 a 17:45'],
   // Changed 2026-11-13: «…, y además los días impares de cada mes,
   // excepto el día 15» was read as excepting the 15th from the weekdays
   // too, and a weekday that falls on the 15th fires. In a union the days
