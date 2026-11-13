@@ -95,11 +95,15 @@ const rows = [
   ['5,20,45 11 * * *', 'at 11:05 a.m., 11:20 a.m., and 11:45 a.m. every day'],
   ['0 0,6,12,18 * * *', 'every 6 hours'],
   ['0 */8 * * *', 'every 8 hours'],
-  ['0 */5 * * *', 'every 5 hours from midnight through 8 p.m. every day'],
+  // Five hours are told outright; a cadence with both ends named is said
+  // only for more than eight values.
+  ['0 */5 * * *',
+    'at midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m. every day'],
+  ['0 0-20/2 * * *', 'every 2 hours from midnight through 8 p.m. every day'],
   ['30 */2 * * *', 'at 30 minutes past the hour, every 2 hours'],
   ['30 */5 * * *',
-    'at 30 minutes past the hour, every 5 hours from midnight through 8 ' +
-    'p.m. every day'],
+    'at 12:30 a.m., 5:30 a.m., 10:30 a.m., 3:30 p.m., and 8:30 p.m. every ' +
+    'day'],
   ['15,45 * * * *',
     'at 15 and 45 minutes past the hour'],
   ['1 * * * *',
@@ -123,8 +127,8 @@ const rows = [
   ['15,45 */4 * * *', 'at 15 and 45 minutes past the hour, every 4 hours'],
   ['5,20 */2 * * *', 'at 5 and 20 minutes past the hour, every 2 hours'],
   ['5-10,20 9-17/2 * * *',
-    'every minute from 5 through 10 and at 20 minutes past the hour, every ' +
-    '2 hours from 9 a.m. through 5 p.m. every day'],
+    'every minute from 5 through 10 and at 20 minutes past 9 a.m., 11 ' +
+    'a.m., 1 p.m., 3 p.m., and 5 p.m. every day'],
   ['*/10 6-8,17-19 * * 1-5',
     'every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. ' +
     'through 7:50 p.m. on weekdays'],
@@ -144,17 +148,17 @@ const rows = [
     'at 6 a.m. and 6 p.m. on the 1st through the 7th and on the 15th ' +
     'through the 21st'],
   ['0 9-17/2 * 1-6 1-5',
-    'every 2 hours from 9 a.m. through 5 p.m. on weekdays in January ' +
-    'through June'],
+    'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. on weekdays in ' +
+    'January through June'],
   ['0 18 15W 3,6,9,12 *',
     'at 6 p.m. on the weekday nearest March 15, June 15, September 15, ' +
     'and December 15'],
   ['0,30 8-18/2 1,15 * 1-5',
-    'every 30 minutes during every other hour from the 8 a.m. hour ' +
-    'through the 6 p.m. hour on the 1st and 15th as well as on weekdays'],
+    'every 30 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., ' +
+    'and 6 p.m. hours on the 1st and 15th as well as on weekdays'],
   ['* 8-18/2 * * *',
-    'every minute during every other hour from the 8 a.m. hour through ' +
-    'the 6 p.m. hour every day'],
+    'every minute during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 ' +
+    'p.m. hours every day'],
   ['15,45 */4 1-10 1,4,7,10 *',
     'at 15 and 45 minutes past the hour, every 4 hours on the 1st through ' +
     'the 10th of January, April, July, and October'],
@@ -191,11 +195,11 @@ const rows = [
   ['* 0-28,30-59 * * * *',
     'every second except during the minute at 29 minutes past the hour'],
   ['*/15 8-18/2 * * *',
-    'every 15 minutes during every other hour from the 8 a.m. hour ' +
-    'through the 6 p.m. hour every day'],
+    'every 15 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., ' +
+    'and 6 p.m. hours every day'],
   ['*/15 8-20/2 * * *',
-    'every 15 minutes during every other hour from the 8 a.m. hour ' +
-    'through the 8 p.m. hour every day'],
+    'every 15 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., 6 ' +
+    'p.m., and 8 p.m. hours every day'],
   ['0 0-2,4-23 * * *', 'every hour except at 3 a.m.'],
   ['30 0-2,4-23 * * *', 'at 30 minutes past every hour except 3 a.m.'],
   ['30 0 * * * *', 'at 30 seconds past every hour'],
@@ -282,7 +286,9 @@ const rows = [
   ['0 0 9 * * * 2030/3', 'at 9 a.m. every day of every 3rd year from 2030'],
   ['0 0 9 * * * 2028/4', 'at 9 a.m. every day of every 4th year from 2028'],
   ['0 0 9 * * * 2030-2040/2',
-    'at 9 a.m. every day of every other year from 2030 through 2040'],
+    'at 9 a.m. every day in 2030, 2032, 2034, 2036, 2038, and 2040'],
+  ['0 0 9 * * * 2030-2050/2',
+    'at 9 a.m. every day of every other year from 2030 through 2050'],
   ['0 0 0 1 1 * 2028/4',
     'at midnight on January 1 of every 4th year from 2028'],
   ['0 0 9 * 6 * 2030/2',
@@ -422,7 +428,9 @@ const rows = [
   ['0 0 8/2 6 *',
     'at midnight every 2 days from the 8th of the month in June'],
   ['0 0 5-20/3 6 *',
-    'at midnight every 3 days from the 5th through the 20th of the month ' +
+    'at midnight on June 5, 8, 11, 14, 17, and 20'],
+  ['0 0 5-23/2 6 *',
+    'at midnight every 2 days from the 5th through the 23rd of the month ' +
     'in June'],
   ['0 0 1,6,11,21,26,31 6 *',
     'at midnight every 5 days from the 1st of the month in June except ' +
@@ -616,6 +624,39 @@ const rows = [
   ['0 0 1-10/2,11-31/3 * *',
     'at midnight every 2 days from the 1st through the 9th of the month ' +
     'and every 3 days from the 11th through the 29th of the month'],
+  // Nine days with no pattern a listener would hear. They can be cut into
+  // two days and two cadences of six that run through each other (the 5th
+  // to the 23rd, the 7th to the 19th), which names eight things against
+  // nine. That is not clearly shorter, and cadences that interleave have
+  // to be worked out and then merged, so the days are listed.
+  ['0 0 2,3,5,7,11,13,17,19,23 * *',
+    'at midnight on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, and ' +
+    '23rd'],
+  // One stray day beside a cadence. The cadence has to be worked out and
+  // the stray day kept apart from it while that is done; six dates, and
+  // eight, are told outright and stay on the page to be read again.
+  ['0 0 1,5,10,15,20,25 * *',
+    'at midnight on the 1st, 5th, 10th, 15th, 20th, and 25th'],
+  ['0 0 1,4,8,12,16,20,24,28 * *',
+    'at midnight on the 1st, 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
+  // The same holds for a cadence alone: up to eight values are listed,
+  // and nine are a cadence.
+  ['0 0 5,10,15,20 * *', 'at midnight on the 5th, 10th, 15th, and 20th'],
+  ['0 0 4-28/4 * *',
+    'at midnight on the 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
+  ['0 0 1-25/3 * *',
+    'at midnight every 3 days from the 1st through the 25th of the month'],
+  ['2-58/4 * * * *',
+    'every 4 minutes from 2 through 58 minutes past the hour'],
+  // Eleven days are too many to hold, and a stray day beside one cadence
+  // is said; but two cadences that run through each other are not, at
+  // any length.
+  ['0 0 1,3,6,9,12,15,18,21,24,27,30 * *',
+    'at midnight on the 1st and every 3 days from the 3rd through the 30th ' +
+    'of the month'],
+  ['0 0 2,3,5,7,11,13,17,19,23,29,31 * *',
+    'at midnight on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, 23rd, ' +
+    '29th, and 31st'],
 
   // A cadence of hours that stops early, under minutes: each end is
   // named as an hour.
@@ -623,11 +664,11 @@ const rows = [
     'every minute during every other hour from the 2 a.m. hour through ' +
     'the 10 p.m. hour every day'],
   ['* 0-12/3 * * *',
-    'every minute during every 3rd hour from the midnight hour through ' +
-    'the noon hour every day'],
+    'every minute during the midnight, 3 a.m., 6 a.m., 9 a.m., and noon ' +
+    'hours every day'],
   ['* 0-9/3 * * *',
-    'every minute during every 3rd hour from the midnight hour through ' +
-    'the 9 a.m. hour every day'],
+    'every minute during the midnight, 3 a.m., 6 a.m., and 9 a.m. hours ' +
+    'every day'],
   ['* 0,3,6 * * *',
     'every minute during the midnight, 3 a.m., and 6 a.m. hours every day'],
 
@@ -652,8 +693,8 @@ const rows = [
   // Under seconds a minute taken out is a whole minute, whatever the
   // seconds are.
   ['5/10 0-28,30-59 * * * *',
-    'every 10 seconds from 5 through 55 seconds past every minute except ' +
-    'during the minute at 29 minutes past the hour'],
+    'at 5, 15, 25, 35, 45, and 55 seconds past every minute except during ' +
+    'the minute at 29 minutes past the hour'],
   ['30 0-28,30-59 * * * *',
     'at 30 seconds past every minute except during the minute at 29 ' +
     'minutes past the hour'],
@@ -662,14 +703,18 @@ const rows = [
   ['0 0 31 6-8 1',
     'at midnight on the 31st as well as on Mondays, in June through August'],
   ['0 0 29 2 1', 'at midnight on February 29 as well as on Mondays in February'],
-  ['*/15,1 * * * *',
-    'every 15 minutes from 0 through 45 and at 1 minute past the hour'],
+  ['*/15,1 * * * *', 'at 0, 1, 15, 30, and 45 minutes past the hour'],
+  ['*/5,1 * * * *',
+    'every 5 minutes from 0 through 55 and at 1 minute past the hour'],
   ['0-20/2,21-59/3 0 9 * * *',
     'every 2 seconds from 9:00:00 a.m. through 9:00:20 a.m. and every 3 ' +
     'seconds from 9:00:21 a.m. through 9:00:57 a.m. every day'],
   ['* 0,2,4,6,10,12,14,16 * * *',
+    'every minute during the midnight, 2 a.m., 4 a.m., 6 a.m., 10 a.m., ' +
+    'noon, 2 p.m., and 4 p.m. hours every day'],
+  ['* 0,2,4,6,10,12,14,16,18 * * *',
     'every minute during every other hour from the midnight hour through ' +
-    'the 4 p.m. hour except the 8 a.m. hour, every day'],
+    'the 6 p.m. hour except the 8 a.m. hour, every day'],
   ['* 0-12/2,13-23/3 * * *',
     'every minute during every other hour from the midnight hour through ' +
     'the noon hour and during every 3rd hour from the 1 p.m. hour through ' +

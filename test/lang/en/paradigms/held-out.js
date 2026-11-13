@@ -94,11 +94,11 @@ const rows = [
     'every 7 minutes from 0 through 56 minutes past the hour from 9 ' +
     'a.m. through 5 p.m. on weekdays'],
   ['5/15 9-17 * * 1-5',
-    'every 15 minutes from 5 through 50 minutes past the hour from 9 ' +
-    'a.m. through 5 p.m. on weekdays'],
+    'at 5, 20, 35, and 50 minutes past the hour from 9 a.m. through 5 ' +
+    'p.m. on weekdays'],
   ['10-40/10 9-17 * * 1-5',
-    'every 10 minutes from 10 through 40 minutes past the hour from 9 ' +
-    'a.m. through 5 p.m. on weekdays'],
+    'at 10, 20, 30, and 40 minutes past the hour from 9 a.m. through 5 ' +
+    'p.m. on weekdays'],
 
   // window / hour
   ['*/15 0 * * 1-5', 'every 15 minutes during the midnight hour on weekdays'],
@@ -260,10 +260,8 @@ const rows = [
     'every minute from 0 through 29 and at 45 minutes past the hour'],
   ['*/7 * * * *',
     'every 7 minutes from 0 through 56 minutes past the hour'],
-  ['5/15 * * * *',
-    'every 15 minutes from 5 through 50 minutes past the hour'],
-  ['10-40/10 * * * *',
-    'every 10 minutes from 10 through 40 minutes past the hour'],
+  ['5/15 * * * *', 'at 5, 20, 35, and 50 minutes past the hour'],
+  ['10-40/10 * * * *', 'at 10, 20, 30, and 40 minutes past the hour'],
 
   // open / hour
   ['* 12 * * *', 'every minute during the noon hour every day'],

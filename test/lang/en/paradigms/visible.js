@@ -56,8 +56,8 @@ const rows = [
     'every 6 seconds for one minute every 15 minutes from 9 a.m. ' +
     'through 5:45 p.m. on weekdays'],
   ['5/10 */15 9-17 * * 1-5',
-    'every 10 seconds from 5 through 55 seconds past the minute, every ' +
-    '15 minutes from 9 a.m. through 5:45 p.m. on weekdays'],
+    'at 5, 15, 25, 35, 45, and 55 seconds past the minute, every 15 ' +
+    'minutes from 9 a.m. through 5:45 p.m. on weekdays'],
 
   // window / minute
   ['* 9-17 * * 1-5', 'every minute from 9 a.m. until 6 p.m. on weekdays'],
@@ -163,7 +163,7 @@ const rows = [
   ['* * * * * *', 'every second'],
   ['*/6 * * * * *', 'every 6 seconds'],
   ['5/10 * * * * *',
-    'every 10 seconds from 5 through 55 seconds past the minute'],
+    'at 5, 15, 25, 35, 45, and 55 seconds past the minute'],
 
   // open / minute
   ['5,20,45 * * * *',
