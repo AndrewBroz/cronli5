@@ -216,9 +216,24 @@ function shapeOf(base: number[], runs: Run[], pace: Pace): Shape {
     plain;
 }
 
+// Whether an exception names fewer things than the set would as
+// stretches that each have their own step, where it is such stretches: a
+// stretch names its two ends, as a cadence does.
+function beatsStretches(exception: Exception, kept: number[], domain: Domain):
+  boolean {
+  const {strays, windows} = stretchesOf(kept, domain);
+  const ends = 2 * Number(exception.base.kind === 'cadence');
+
+  return windows.length === 0 ||
+    ends + exception.removed.length < 2 * windows.length + strays.length;
+}
+
 function levelOf(values: number[], field: Field, traits: Traits): Level {
   const domain = domainOf(field);
-  const picked = chosen(values, domain, traits.allowed);
+  const picked = chosen(values, domain, function allowed(exception, kept) {
+    return traits.allowed(exception, kept) &&
+      beatsStretches(exception, kept, domain);
+  });
   const base = picked.values;
   const cadence = cadenceOf(base, domain);
   const every = base.length > domain.max - domain.min;
@@ -576,15 +591,17 @@ function suffixOf(scene: Scene): string {
 
 // What is excepted, closing the time: the hours, then the minutes, then
 // the seconds. Excepted minutes and seconds are clock times where those
-// can be counted, and positions otherwise. Where several seconds fire in
-// a minute, the voice makes an excepted time the whole stretch of them.
-function exceptionsOf(scene: Scene, voice: Voice): string {
+// can be counted, and positions otherwise. A whole hour is written as
+// the windows of the sentence are. An excepted clock time or minute is
+// written in the `whole` voice: where several seconds fire in a minute,
+// it is the stretch from the first of them to the last.
+function exceptionsOf(scene: Scene, windowed: Voice, voice: Voice): string {
   const {H, M, S} = scene;
   const [minute] = M.values;
   const hours = M.values.length === 1 ?
     H.removed.map((h) => point({h, m: minute}, voice)) :
     linearRuns(H.removed).map((run) => between(
-      [{h: run[0], m: 0}, {h: lastOf(run), m: 59}], voice));
+      [{h: run[0], m: 0}, {h: lastOf(run), m: 59}], windowed));
   const minutes = H.values.length * M.removed.length <= LISTED ?
     series(H.values.flatMap((h) => M.removed.map(
       (m) => point({h, m}, voice)))) :
@@ -634,7 +651,7 @@ function timeOf(sets: TimeSets, wraps: boolean, style: ChineseStyle):
   return {
     allDay: scene.H.every,
     text: leadOf(scene, exact) + body + suffixOf(scene) +
-      exceptionsOf(scene, voiceOf(scene, !scene.silent, style)) +
+      exceptionsOf(scene, voice, voiceOf(scene, !scene.silent, style)) +
       bracketOf(scene, exact)
   };
 }

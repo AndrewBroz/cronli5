@@ -2,10 +2,10 @@
 // and what the day part asks to stand between it and a clock time.
 
 import type {
-  CadencePieces, Domain, QuartzDate, QuartzWeekday, RangeDescription,
+  Domain, QuartzDate, QuartzWeekday, RangeDescription,
   Schedule, SetDescription, ValuesDescription
 } from '../../core/schedule.js';
-import {denote} from '../../core/describe-set.js';
+import {denote, describeSet} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {Cadence, Exception} from './sets.js';
@@ -260,13 +260,31 @@ function yearsTogether(terms: YearTerm[]): Part<YearKind> {
   };
 }
 
+// A few lone years and then one run or cadence, where the years are
+// that: the fewest lone years that leave one. Nothing where they are not.
+function leadingYears(values: number[]): YearTerm[] {
+  const domain = domainOf('year');
+  const splits = [...Array(LISTED).keys()].map((at) => at + 1).map(
+    (lone) => ({
+      lone: values.slice(0, lone),
+      rest: describeSet(values.slice(lone), domain)[0]
+    }));
+  const found = splits.filter(
+    (split) => ['range', 'cadence'].includes(split.rest.kind));
+
+  return found.slice(0, 1).flatMap(
+    (split) => [yearValues(split.lone), yearTerm(split.rest)]);
+}
+
 // More than eight years that are no single run or cadence: one or two
-// missing from one, else up to eight runs and lone years, else runs and
-// cadences together as the core gives them, else the list.
+// missing from one, else up to eight runs and lone years, else a few lone
+// years before one run or cadence, else runs and cadences together as
+// the core gives them, else the list.
 function manyYears(schedule: Schedule): YearTerm[] {
   const found = schedule.analyses.candidates.year as SetDescription[];
-  const together = schedule.analyses.cadencePieces.year;
+  const together = schedule.analyses.cadencePieces.year?.parts ?? [];
   const [shortest] = found;
+  const all = lastOf(found) as YearValues;
   const excepted = found.find(function fewMissing(candidate) {
     return candidate.kind === 'except' && candidate.removed.length <= 2 &&
       ['all', 'range', 'cadence'].includes(candidate.base.kind);
@@ -280,9 +298,11 @@ function manyYears(schedule: Schedule): YearTerm[] {
       (excepted as Exception).base, (excepted as Exception).removed)]],
     [items > 0 && items <= LISTED,
       () => parts.map((part) => yearTerm(part))],
-    [together !== null,
-      () => (together as CadencePieces).parts.map((part) => yearTerm(part))],
-    [true, () => [yearTerm(lastOf(found))]]
+    [true, () => [
+      leadingYears(all.values),
+      together.map((part) => yearTerm(part)),
+      [yearValues(all.values)]
+    ].filter((terms) => terms.length > 0)[0]]
   ])();
 }
 
