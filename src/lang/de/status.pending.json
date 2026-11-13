@@ -2,6 +2,6 @@
   "name": "German",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2 from the questionnaire, and revised the same day after an independent adversarial read of the rows; no renderer built yet",
+  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2 from the questionnaire, and revised after two independent schedule reads and two fluency judgments by other model instances; no renderer built yet",
   "branchBudget": 100
 }

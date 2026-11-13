@@ -7,6 +7,7 @@ const {expect} = chai;
 describe('German lexicon:', function() {
   it('names months and weekdays in full and in short', function() {
     expect(lexicon.months[3]).to.deep.equal({full: 'März', short: 'März'});
+    expect(lexicon.months[6]).to.deep.equal({full: 'Juni', short: 'Juni'});
     expect(lexicon.months[9]).to.deep.equal(
       {full: 'September', short: 'Sept.'});
     expect(lexicon.months).to.have.length(13);
@@ -35,8 +36,8 @@ describe('German lexicon:', function() {
     const {dayParts} = lexicon;
 
     expect(dayParts[dayParts.length - 1].until).to.equal(23);
-    expect(dayParts[0].word).to.equal('nachts');
-    expect(dayParts[dayParts.length - 1].word).to.equal('nachts');
+    expect(dayParts[0].word).to.equal('morgens');
+    expect(dayParts[dayParts.length - 1].word).to.equal('abends');
     dayParts.slice(1).forEach(function later(part, index) {
       expect(part.until).to.be.above(dayParts[index].until);
     });
@@ -48,7 +49,7 @@ describe('German lexicon:', function() {
     });
 
     Object.values(lexicon.words)
-      .concat(lexicon.nthWords, lexicon.fromLastWords, partWords)
+      .concat(lexicon.nthWords, partWords)
       .forEach(function isWord(word) {
         expect(word).to.be.a('string').and.not.equal('');
       });

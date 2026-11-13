@@ -40,8 +40,8 @@ const months: Name[] = [
   {full: 'März', short: 'März'},
   {full: 'April', short: 'Apr.'},
   {full: 'Mai', short: 'Mai'},
-  {full: 'Juni', short: 'Jun.'},
-  {full: 'Juli', short: 'Jul.'},
+  {full: 'Juni', short: 'Juni'},
+  {full: 'Juli', short: 'Juli'},
   {full: 'August', short: 'Aug.'},
   {full: 'September', short: 'Sept.'},
   {full: 'Oktober', short: 'Okt.'},
@@ -64,8 +64,8 @@ const weekdays: WeekdayName[] = [
 ];
 
 // Each unit after the number one, and after any other number. No phrase
-// here needs another case form: «alle 5 Minuten», «5 Minuten nach», «10
-// Sekunden lang», «alle 2 Tage», «11 Tage vor».
+// here needs another case form: «alle 5 Minuten», «30 Sekunden nach», «im
+// Abstand von 6 Sekunden», «3 Tage vor».
 const units = {
   day: {many: 'Tage', one: 'Tag'},
   hour: {many: 'Stunden', one: 'Stunde'},
@@ -77,29 +77,20 @@ const units = {
 // dative that «am» takes.
 const nthWords = ['ersten', 'zweiten', 'dritten', 'vierten', 'fünften'];
 
-// The words for a day counted from the end of the month, from one day
-// before the last (`L-1`) to nine before it, in the same dative.
-const fromLastWords = [
-  'vorletzten', 'drittletzten', 'viertletzten', 'fünftletzten',
-  'sechstletzten', 'siebtletzten', 'achtletzten', 'neuntletzten',
-  'zehntletzten'
-];
-
 // The parts of the day a 12-hour time is said with (`hour12`), in order:
-// each covers the hours after the one before it, up to `until`.
+// each covers the hours after the one before it, up to `until`. They start
+// at hour 1: hour 0 is written «0:00 Uhr» and takes none.
 const dayParts: DayPart[] = [
-  {until: 4, word: 'nachts'},
   {until: 9, word: 'morgens'},
   {until: 11, word: 'vormittags'},
-  {until: 13, word: 'mittags'},
+  {until: 12, word: 'mittags'},
   {until: 17, word: 'nachmittags'},
-  {until: 22, word: 'abends'},
-  {until: 23, word: 'nachts'}
+  {until: 23, word: 'abends'}
 ];
 
 // The function words and fixed phrases.
 const words = {
-  after: 'nach',
+  additionally: 'und zusätzlich',
   afterEachHour: 'nach jeder vollen Stunde',
   afterEachMinute: 'nach jeder vollen Minute',
   afterThat: 'danach',
@@ -107,52 +98,58 @@ const words = {
   also: 'sowie',
   and: 'und',
   andSoOn: 'usw.',
+  apart: 'im Abstand von',
   at: 'um',
   atEachHour: 'zu jeder vollen Stunde',
   atEachMinute: 'zu jeder vollen Minute',
-  before: 'vor',
+  atLeast: 'mindestens',
   beforeLastDay: 'vor dem letzten Tag',
   daily: 'täglich',
-  day: 'Tag',
   each: 'jede',
   eachTime: 'jeweils',
+  ellipsis: '…',
   every: 'alle',
   except: 'außer',
   exceptSwiss: 'ausser',
   first: 'erstmals',
   from: 'von',
   fromDate: 'vom',
-  fromEachHour: 'ab jeder vollen Stunde',
-  fromEachMinute: 'ab jeder vollen Minute',
   hourly: 'stündlich',
   in: 'im',
   inAllMonths: 'in allen Monaten',
+  inEvenHours: 'in den geraden Stunden',
   inEvenYears: 'in geraden Jahren',
+  inMonthsWith: 'in Monaten mit',
+  inOddHours: 'in den ungeraden Stunden',
   inOddYears: 'in ungeraden Jahren',
   inSameMonth: 'im selben Monat',
   inYear: 'im Jahr',
   inYears: 'in den Jahren',
-  lastly: 'zuletzt',
-  long: 'lang',
+  lastDay: 'am letzten Tag',
   nearest: 'am nächsten liegt',
   oClock: 'Uhr',
   ofEachMonth: 'jedes Monats',
   on: 'am',
+  onEvenDays: 'an den geraden Tagen',
+  onOddDays: 'an den ungeraden Tagen',
   onTheFirst: 'am ersten',
   onTheLast: 'am letzten',
   oneMinuteLong: 'eine Minute lang',
+  penultimateDay: 'am vorletzten Tag',
   runs: 'Läuft',
   since: 'ab',
   startup: 'beim Systemstart',
+  times: '-mal',
   to: 'bis',
   unrecognizable: 'ein unbekanntes Cron-Muster',
   whichThe: 'der dem',
+  withDays: 'Tagen',
   workday: 'Werktag'
 };
 
 const lexicon = {
-  dayParts, fromLastWords, januaryAustrian, months, nthWords, twoDigits,
-  units, weekdays, words
+  dayParts, januaryAustrian, months, nthWords, twoDigits, units, weekdays,
+  words
 };
 
 export type {DayPart, Name, WeekdayName};

@@ -20,17 +20,17 @@ const rows = [
   ['0 * * * *', 'zu jeder vollen Stunde'],
   ['0 9,17 * * *', 'täglich um 9:00 und 17:00 Uhr'],
   ['0 9-17,22 * * *',
-    'täglich von 9:00 bis 17:00 Uhr stündlich und um 22:00 Uhr'],
+    'täglich von 9:00 bis 17:00 Uhr stündlich sowie um 22:00 Uhr'],
   ['0 1/2 * * *', 'täglich von 1:00 bis 23:00 Uhr alle 2 Stunden'],
 
   // clock / date
   ['0 9 1 * *', 'am 1. jedes Monats um 9:00 Uhr'],
   ['0 9 1,10,20 * *', 'am 1., 10. und 20. jedes Monats um 9:00 Uhr'],
   ['0 9 */2 * *',
-    'alle 2 Tage vom 1. bis 31. jedes Monats jeweils um 9:00 Uhr'],
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) um 9:00 Uhr'],
   ['0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'alle 2 Tage vom 1. bis 31. jedes Monats, außer am 15., jeweils um ' +
-    '9:00 Uhr'],
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), außer am 15., ' +
+    'um 9:00 Uhr'],
 
   // clock / month
   ['0 9 * 1 *', 'im Januar täglich um 9:00 Uhr'],
@@ -51,7 +51,7 @@ const rows = [
     'eine Minute lang jede Sekunde'],
   ['*/6 */15 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils ' +
-    'eine Minute lang alle 6 Sekunden'],
+    '10-mal im Abstand von 6 Sekunden'],
   ['5/10 */15 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils ' +
     '5, 15, 25, 35, 45 und 55 Sekunden nach der vollen Minute'],
@@ -61,12 +61,11 @@ const rows = [
   ['0,30 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:30 Uhr alle 30 Minuten'],
   ['0-29,45 9-17 * * 1-5',
-    'montags bis freitags von 9:00 bis 17:59 Uhr jede Minute ab jeder ' +
-    'vollen Stunde, zuletzt 29 Minuten danach, sowie 45 Minuten nach jeder ' +
-    'vollen Stunde'],
+    'montags bis freitags von 9:00 bis 17:45 Uhr stündlich von :00 bis :29 ' +
+    'jede Minute sowie um :45'],
   ['0,15,45 9-17 * * 1-5',
-    'montags bis freitags von 9:00 bis 17:59 Uhr zu jeder vollen Stunde ' +
-    'sowie 15 und 45 Minuten danach'],
+    'montags bis freitags von 9:00 bis 17:45 Uhr stündlich um :00, :15 und ' +
+    ':45'],
 
   // window / hour
   ['*/15 * * * 1-5', 'montags bis freitags alle 15 Minuten'],
@@ -76,22 +75,24 @@ const rows = [
     'montags bis freitags von 9:00 bis 17:45 und von 22:00 bis 22:45 Uhr ' +
     'alle 15 Minuten'],
   ['*/15 1/2 * * 1-5',
-    'montags bis freitags von 1:00 bis 1:45, von 3:00 bis 3:45 usw. bis ' +
-    '23:45 Uhr alle 15 Minuten'],
+    'montags bis freitags in den ungeraden Stunden (1:00–1:45, 3:00–3:45 … ' +
+    '23:00–23:45 Uhr) alle 15 Minuten'],
 
   // window / date
   ['*/15 9-17 1 * 1-5',
-    'am 1. jedes Monats sowie montags bis freitags, jeweils von 9:00 bis ' +
-    '17:45 Uhr alle 15 Minuten'],
+    'montags bis freitags und zusätzlich am 1. jedes Monats, jeweils von ' +
+    '9:00 bis 17:45 Uhr alle 15 Minuten'],
   ['*/15 9-17 1,10,20 * 1-5',
-    'am 1., 10. und 20. jedes Monats sowie montags bis freitags, jeweils ' +
-    'von 9:00 bis 17:45 Uhr alle 15 Minuten'],
-  ['*/15 9-17 */2 * 1-5',
-    'alle 2 Tage vom 1. bis 31. jedes Monats sowie montags bis freitags, ' +
+    'montags bis freitags und zusätzlich am 1., 10. und 20. jedes Monats, ' +
     'jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten'],
+  ['*/15 9-17 */2 * 1-5',
+    'montags bis freitags und zusätzlich an den ungeraden Tagen jedes ' +
+    'Monats (1., 3., 5. … 31.), jeweils von 9:00 bis 17:45 Uhr alle 15 ' +
+    'Minuten'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
-    'alle 2 Tage vom 1. bis 31. jedes Monats, außer am 15., sowie montags ' +
-    'bis freitags, jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten'],
+    'montags bis freitags und zusätzlich an den ungeraden Tagen jedes ' +
+    'Monats (1., 3., 5. … 31.), außer am 15., jeweils von 9:00 bis 17:45 ' +
+    'Uhr alle 15 Minuten'],
 
   // window / month
   ['*/15 9-17 * 1 1-5',
@@ -131,17 +132,17 @@ const rows = [
   ['0 * 1 * *', 'am 1. jedes Monats zu jeder vollen Stunde'],
   ['0 9,17 1 * *', 'am 1. jedes Monats um 9:00 und 17:00 Uhr'],
   ['0 9-17,22 1 * *',
-    'am 1. jedes Monats von 9:00 bis 17:00 Uhr stündlich und um 22:00 Uhr'],
+    'am 1. jedes Monats von 9:00 bis 17:00 Uhr stündlich sowie um 22:00 Uhr'],
   ['0 1/2 1 * *', 'am 1. jedes Monats von 1:00 bis 23:00 Uhr alle 2 Stunden'],
 
   // monthly / date
   ['0 0 * * *', 'täglich um 0:00 Uhr'],
   ['0 0 1,10,20 * *', 'am 1., 10. und 20. jedes Monats um 0:00 Uhr'],
   ['0 0 */2 * *',
-    'alle 2 Tage vom 1. bis 31. jedes Monats jeweils um 0:00 Uhr'],
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) um 0:00 Uhr'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'alle 2 Tage vom 1. bis 31. jedes Monats, außer am 15., jeweils um ' +
-    '0:00 Uhr'],
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), außer am 15., ' +
+    'um 0:00 Uhr'],
 
   // monthly / month
   ['0 0 1 1 *', 'am 1. Januar um 0:00 Uhr'],
@@ -153,12 +154,14 @@ const rows = [
   ['0 0 1 11-2 *', 'von November bis Februar jeweils am 1. um 0:00 Uhr'],
 
   // monthly / weekday
-  ['0 0 1 * 1', 'am 1. jedes Monats sowie montags, jeweils um 0:00 Uhr'],
+  ['0 0 1 * 1',
+    'montags und zusätzlich am 1. jedes Monats, jeweils um 0:00 Uhr'],
   ['0 0 1 * 1-5',
-    'am 1. jedes Monats sowie montags bis freitags, jeweils um 0:00 Uhr'],
+    'montags bis freitags und zusätzlich am 1. jedes Monats, jeweils um ' +
+    '0:00 Uhr'],
   ['0 0 1 * 2,4',
-    'am 1. jedes Monats sowie dienstags und donnerstags, jeweils um 0:00 ' +
-    'Uhr'],
+    'dienstags und donnerstags und zusätzlich am 1. jedes Monats, jeweils ' +
+    'um 0:00 Uhr'],
 
   // open / second — context `* * * * *`
   ['* * * * * *', 'jede Sekunde'],
@@ -167,9 +170,9 @@ const rows = [
     '5, 15, 25, 35, 45 und 55 Sekunden nach jeder vollen Minute'],
 
   // open / minute
-  ['5,20,45 * * * *', '5, 20 und 45 Minuten nach jeder vollen Stunde'],
+  ['5,20,45 * * * *', 'stündlich um :05, :20 und :45'],
   ['*/15 * * * *', 'alle 15 Minuten'],
-  ['0,15,45 * * * *', 'zu jeder vollen Stunde sowie 15 und 45 Minuten danach'],
+  ['0,15,45 * * * *', 'stündlich um :00, :15 und :45'],
 
   // open / hour
   ['* 0 * * *', 'täglich von 0:00 bis 0:59 Uhr jede Minute'],
@@ -178,15 +181,17 @@ const rows = [
   ['* 9-17,22 * * *',
     'täglich von 9:00 bis 17:59 und von 22:00 bis 22:59 Uhr jede Minute'],
   ['* 1/2 * * *',
-    'täglich von 1:00 bis 1:59, von 3:00 bis 3:59 usw. bis 23:59 Uhr jede ' +
-    'Minute'],
+    'täglich in den ungeraden Stunden (1:00–1:59, 3:00–3:59 … 23:00–23:59 ' +
+    'Uhr) jede Minute'],
 
   // open / date
   ['* * 1 * *', 'am 1. jedes Monats jede Minute'],
   ['* * 1,10,20 * *', 'am 1., 10. und 20. jedes Monats jede Minute'],
-  ['* * */2 * *', 'alle 2 Tage vom 1. bis 31. jedes Monats jede Minute'],
+  ['* * */2 * *',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) jede Minute'],
   ['* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'alle 2 Tage vom 1. bis 31. jedes Monats, außer am 15., jede Minute'],
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), außer am 15., ' +
+    'jede Minute'],
 
   // open / month
   ['* * * 1 *', 'im Januar jede Minute'],

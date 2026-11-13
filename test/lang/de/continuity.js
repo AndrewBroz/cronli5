@@ -74,10 +74,11 @@ function fieldsChanged(a, b, options) {
 // (answers 2.6). Two things do. A part that ends in an exception or in a
 // relative clause is closed by a comma when another part follows it, and
 // so is a date and a weekday together ahead of the time. And «jeweils»
-// opens a date after several months or years, and opens the time after a
-// date and a weekday together, after pieces or a cadence of dates ahead
-// of a clock time, and ahead of an offset that begins with a number.
-// Both are set aside before two parts are compared.
+// opens a month or a date after several years or months, and opens the
+// time after a weekday and a date together, after pieces of dates that
+// hold a range ahead of a clock time, and ahead of an offset in seconds
+// that begins with a number. Both are set aside before two parts are
+// compared.
 function words(part) {
   return String(part).replace(/,$/u, '').replace(/^jeweils /u, '');
 }

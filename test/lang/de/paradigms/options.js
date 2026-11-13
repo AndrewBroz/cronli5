@@ -56,13 +56,13 @@ const sets = [
         pattern: '0 9-17 * * *'
       },
       {
-        expected: 'täglich um 12:00 Uhr nachts',
-        parts: ['12:00 Uhr nachts'],
+        expected: 'täglich um 0:00 Uhr',
+        parts: ['0:00 Uhr'],
         pattern: '0 0 * * *'
       },
       {
-        expected: 'täglich um 12:30 Uhr nachts',
-        parts: ['12:30 Uhr nachts'],
+        expected: 'täglich um 0:30 Uhr',
+        parts: ['0:30 Uhr'],
         pattern: '30 0 * * *'
       },
       {
@@ -71,8 +71,8 @@ const sets = [
         pattern: '0 12 * * *'
       },
       {
-        expected: 'täglich um 1:00 Uhr mittags',
-        parts: ['1:00 Uhr mittags'],
+        expected: 'täglich um 1:00 Uhr nachmittags',
+        parts: ['1:00 Uhr nachmittags'],
         pattern: '0 13 * * *'
       },
       {
@@ -82,14 +82,14 @@ const sets = [
         pattern: '*/15 9-17 * * 1-5'
       },
       {
-        expected: 'täglich von 10:00 Uhr abends bis 11:59 Uhr nachts jede ' +
+        expected: 'täglich von 10:00 Uhr abends bis 11:59 Uhr abends jede ' +
           'Minute',
-        parts: ['10:00 Uhr abends', '11:59 Uhr nachts'],
+        parts: ['10:00 Uhr abends', '11:59 Uhr abends'],
         pattern: '* 22-23 * * *'
       },
       {
-        expected: 'am 1. Juni um 12:00 Uhr nachts',
-        parts: ['1. Juni', '12:00 Uhr nachts'],
+        expected: 'am 1. Juni um 0:00 Uhr',
+        parts: ['1. Juni', '0:00 Uhr'],
         pattern: '0 0 1 6 *'
       }
     ]
@@ -103,13 +103,13 @@ const sets = [
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'im Jun. Mo. um 9:00 Uhr',
-        parts: ['Jun.', 'Mo.', '9:00 Uhr'],
+        expected: 'im Juni Mo. um 9:00 Uhr',
+        parts: ['Juni', 'Mo.', '9:00 Uhr'],
         pattern: '0 9 * 6 1'
       },
       {
-        expected: 'von Jun. bis Aug. täglich um 9:00 Uhr',
-        parts: ['Jun.', 'Aug.', '9:00 Uhr'],
+        expected: 'von Juni bis Aug. täglich um 9:00 Uhr',
+        parts: ['Juni', 'Aug.', '9:00 Uhr'],
         pattern: '0 9 * 6-8 *'
       },
       {
@@ -118,8 +118,8 @@ const sets = [
         pattern: '0 9 * 3 *'
       },
       {
-        expected: 'am 1. Jun. um 0:00 Uhr',
-        parts: ['1. Jun.', '0:00 Uhr'],
+        expected: 'am 1. Juni um 0:00 Uhr',
+        parts: ['1. Juni', '0:00 Uhr'],
         pattern: '0 0 1 6 *'
       },
       {
