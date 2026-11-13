@@ -328,9 +328,11 @@ function hoursAsNumbers(ends: Rate, work: Clockwork):
 }
 
 // A single second is said in words with a list, a run, or pieces of
-// those; a phrase with a cadence in it says the second after itself.
+// those; a phrase with a cadence in it, or in pieces, says the second
+// after itself.
 function tailOf(form: Form, voice: Voice): string {
-  return phrase(kindOf(form) === 'rate' && voice.tail);
+  return phrase((kindOf(form) === 'rate' || form.kind === 'pieces') &&
+    voice.tail);
 }
 
 // The unit named inside the hour, and the hours it holds in.
