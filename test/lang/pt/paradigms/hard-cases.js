@@ -742,6 +742,9 @@ const rows = [
   ['0 0 1-10/2,11-31/3 * *',
     'nos dias ímpares do dia 1º ao dia 11 e de 3 em 3 dias do dia 14 ao ' +
     'dia 29 de cada mês às 00:00'],
+  ['0-56/8,3-59/8 * * * *',
+    'nos minutos 0, 3, 8, 11, 16, 19, 24, 27, 32, 35, 40, 43, 48, 51, 56 e ' +
+    '59 de cada hora'],
   ['0-20/2,21-59/3 * * * *',
     'a cada 2 minutos do minuto 0 ao 20 e a cada 3 minutos do minuto 21 ao ' +
     '57 de cada hora'],
@@ -784,6 +787,17 @@ const rows = [
     'todos os dias, de 4 em 4 anos a partir de 2030 (2030, 2034, 2038…) e ' +
     'de 4 em 4 anos a partir de 2031 (2031, 2035, 2039…), às 09:00'],
   ['0 0 9 * * * 2030,2031', 'todos os dias de 2030 e 2031 às 09:00'],
+  ['0 0 9 * 1-5,7-12 * 1970-2029,2031/1',
+    'todos os dias, exceto em junho e em 2030, às 09:00'],
+  ['0 0 9 * * * 2039-2040,2077/2',
+    'todos os dias, em 2039 e 2040 e nos anos ímpares a partir de 2077, às ' +
+    '09:00'],
+  ['0 0 9 * * * 2020,2030/2',
+    'todos os dias, em 2020 e nos anos pares a partir de 2030, às 09:00'],
+  ['0 0 9 * * * 2020,2022,2031/3',
+    'todos os dias, em 2020 e 2022 e de 3 em 3 anos a partir de 2031 ' +
+    '(2031, 2034, 2037…), às 09:00'],
+  ['0 0 0 31 6 * */2', 'nunca (junho não tem dia 31 nos anos pares)'],
   ['0 0 9 * * * 2030-2034/2',
     'todos os dias de 2030, 2032 e 2034 às 09:00'],
 
