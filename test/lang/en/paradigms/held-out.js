@@ -110,7 +110,7 @@ const rows = [
   ['*/15 */2 * * 1-5', 'every 15 minutes during every other hour on weekdays'],
   ['*/15 */6 * * 1-5', 'every 15 minutes for one hour every 6 hours on weekdays'],
   [`*/15 ${EVEN_HOURS_BUT_8} * * 1-5`,
-    'every 15 minutes during every other hour except the 8 a.m. hour on ' +
+    'every 15 minutes during every other hour except the 8 a.m. hour, on ' +
     'weekdays'],
   ['*/15 22-2 * * 1-5',
     'every 15 minutes from midnight through 2:45 a.m. and from 10 p.m. ' +
@@ -206,7 +206,7 @@ const rows = [
   ['0 9-17 1 * *', 'every hour from 9 a.m. through 5 p.m. on the 1st'],
   ['0 */2 1 * *', 'every 2 hours on the 1st'],
   ['0 */6 1 * *', 'every 6 hours on the 1st'],
-  [`0 ${EVEN_HOURS_BUT_8} 1 * *`, 'every 2 hours except at 8 a.m. on the 1st'],
+  [`0 ${EVEN_HOURS_BUT_8} 1 * *`, 'every 2 hours except at 8 a.m., on the 1st'],
   ['0 22-2 1 * *',
     'every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. ' +
     'on the 1st'],

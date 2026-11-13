@@ -4,6 +4,15 @@ Answered by the orchestrating model (Claude Fable 5.2), 2026-11-11, for US
 English as the default style. Every example is what a speaker would say
 aloud. Reasons are given so a fluent reviewer can overturn a call.
 
+Amended 2026-11-13 after an adversarial read of the rules, the rows and
+the renderer's output against each schedule's fire times. Each amendment
+says what was said before and why it was wrong: the comma that closes an
+exception (3.9), wraps in minutes and seconds (3.5), hours beside a range
+after "past the hour" (4.1), seconds beside hours on the hour and stray
+minutes under seconds (4.2), a cadence of days in one month (4.4), the
+weekday nearest a month's last days (5.7), and a day of the month before
+a cadence of years (5.8).
+
 Shorthand used below: **M** is the set of minutes, **H** the set of hours,
 **S** the set of seconds. "Said" means the phrase a speaker uses; "silent"
 means the field contributes no words.
@@ -52,10 +61,15 @@ Notes on counting, and the corrections:
   still be a window ("from 10 p.m. until midnight").
 * An idiom wins a tie with any other candidate.
 * An exception, and a cadence with both ends named, must name strictly
-  fewer things than the plain list to be chosen. On a tie the list wins:
-  days 5, 10 and 15 are "on the 5th, 10th, and 15th", not "every 5 days
-  from the 5th through the 15th", and days 3, 5 … 31 are "every 2 days
-  from the 3rd", not "on odd-numbered days except the 1st".
+  fewer things than every other sayable phrasing to be chosen. On a tie
+  they lose, to the list and to pieces alike: days 5, 10 and 15 are "on
+  the 5th, 10th, and 15th", not "every 5 days from the 5th through the
+  15th"; days 3, 5 … 31 are "every 2 days from the 3rd", not "on
+  odd-numbered days except the 1st"; hours 0 to 3 and 6 to 9 are "every
+  hour from midnight through 3 a.m. and every hour from 6 a.m. through 9
+  a.m.", not "every hour from midnight through 9 a.m. except at 4 a.m.
+  and 5 a.m." (four things either way, and the pieces need no
+  subtraction).
 * **An exception must also replace a list of more than four items.** Four
   names are easy to hold and need no subtraction: Monday, Wednesday,
   Thursday and Friday are "on Mondays, Wednesdays, Thursdays, and
@@ -76,45 +90,34 @@ Notes on counting, and the corrections:
 style guide for British style.
 
 1.2 Options. Each changes words or the form of one phrase, never the order
-of the sentence.
+of the sentence. They are the fields of one style table, passed as `style`
+(a whole table, or the fields to override). The region of the language
+code picks the table to start from: `en` and `en-US` the `us` table,
+`en-GB` the `gb` table. `house` is a third named table, exported for a
+caller to pass.
 
-| Option | Values | Default | What it changes |
-| --- | --- | --- | --- |
-| `ampm` | `true`, `false` | `true` | 12-hour times with a.m./p.m. and the words noon and midnight; `false` gives 24-hour times, zero-padded, always with minutes (`09:00`, `17:30`, `00:00`) and no noon or midnight |
-| `short` | `true`, `false` | `false` | Weekday and month names in their three-letter forms (`Mon`, `Jun`), with no full stop and no plural: "on Mon, Wed, and Fri" |
-| `dialect` | `us`, `gb`, `house`, or a custom object | `us` | The style table below |
+| Field | `us` | `gb` | `house` | What it changes |
+| --- | --- | --- | --- | --- |
+| `hour12` | `true` | `true` | `true` | 12-hour times with a.m./p.m. and the words for 12:00 and 0:00; `false` gives 24-hour times, zero-padded, always with minutes (`09:00`, `17:30`, `00:00`) and no noon or midnight |
+| `am` / `pm` | `a.m.` / `p.m.` | `am` / `pm` | `AM` / `PM` | the words |
+| `closeUp` | `false` (`9 a.m.`) | `true` (`9am`) | `false` (`9 AM`) | whether they are joined to the time |
+| `sep` | `:` | `.` (`9.30am`) | `:` | the hour-minute separator |
+| `midday` | noon | midday | noon | the word for 12:00 |
+| `midnight` | midnight | midnight | midnight | the word for 0:00 |
+| `through` | through | to | through | the inclusive range word |
+| `serialComma` | `true` | `false` | `true` | the comma before a list's "and" |
+| `dayFirst` | `false` (`June 1`) | `true` (`1 June`) | `false` | a single month with its dates |
+| `ordinals` | `false` | `false` | `true` (`June 1st`) | whether a day beside its month keeps its suffix |
+| `short` | `false` | `false` | `false` | weekday and month names in their three-letter forms (`Mon`, `Jun`), with no full stop and no plural: "on Mon, Wed, and Fri" |
 
-Style table:
+Every field is a word-level choice. None switches numbers, hyphenates
+ranges or rearranges anything, and whether a range's end is included is
+decided by what is being described (3.4), not by a style.
 
-| Field | `us` | `gb` | `house` |
-| --- | --- | --- | --- |
-| a.m. / p.m. | `a.m.` / `p.m.`, spaced (`9 a.m.`) | `am` / `pm`, closed up (`9am`) | `AM` / `PM`, spaced (`9 AM`) |
-| hour-minute separator | `:` | `.` (`9.30am`) | `:` |
-| 12:00 | noon | midday | noon |
-| inclusive range word | through | to | through |
-| serial comma | yes | no | yes |
-| a single month with its dates | month first (`June 1`) | day first (`1 June`) | month first with ordinals (`June 1st`) |
-
-Kept: `house` and custom objects, because every field of the table is a
-word-level choice. A custom object overrides fields of the `us` table.
-
-Dropped, because they changed sentence structure or meaning:
-
-* `short` no longer switches numbers, hyphenates ranges or rearranges
-  anything. It abbreviates names only.
-* The style fields `inclusiveThrough` and `until` are gone. Whether a
-  range's end is included is decided by what is being described (3.4), not
-  by a dialect. The `house` range word is "through", not a hyphen.
-* `uk` as an alias for `gb` is gone; `uk` is the Ukrainian language code.
-
-A custom object's range word may be given with surrounding spaces (the
-earlier style tables wrote `' through '`); they are trimmed. An unknown
-dialect name is treated as `us`.
-
-A custom object may also set the word for midnight.
-
-A custom field that is missing, undefined or of the wrong type is ignored,
-and the default stands. No option can make the renderer throw.
+The range word may be given with surrounding spaces (the earlier style
+tables wrote `' through '`); they are trimmed. A field the table does not
+have, or a value of another kind than the table holds, is an error with a
+message naming the field: a mistyped style must not pass in silence.
 
 1.3 None beyond `gb`.
 
@@ -188,6 +191,11 @@ from 2028".
 
 This is the one place a time field changes another part: an edit to the
 hours may add or remove "every day". No other field's words depend on it.
+Two things reach the other way, from a coarser field to a finer part, both
+because the sentence would otherwise be untrue: a run that wraps is
+unwrapped under a coarser restriction (3.5), and an exception is closed
+with a comma when anything follows it (3.9). Both are declared in the
+continuity suite, and nothing else crosses.
 
 ## 3. Devices, field by field
 
@@ -290,16 +298,23 @@ hours and Monday's last. So:
 * days of the month wrap only when the month and the year are;
 * months wrap only when the year is;
 * weekdays may always wrap, because they name days, not a stretch of time;
-* minutes and seconds follow 3.6 (two windows inside one hour) and are
-  otherwise said as written.
+* minutes wrap only when the hours and everything coarser are every
+  value, and seconds only when the minutes and everything coarser are.
+  "Every minute from 50 through 10 minutes past the hour" is true round
+  the clock; "from 9 a.m. through 5 p.m." it was read as starting at 9:50
+  and ending at 6:10, when the pattern means the first eleven minutes and
+  the last ten of each of those hours. (The earlier rule said minutes
+  and seconds as written.)
 
 Where a wrap is not allowed, the set is described as if the field did not
-wrap, in ascending order: `0 22-2 1 * *` is "every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st"; `*/15 22-2 * * 1-5` is
+wrap, in ascending order: `50-10 9-17 * * *` is "every minute from 0
+through 10 and every minute from 50 through 59 minutes past the hour from
+9 a.m. through 5 p.m. every day"; `0 22-2 1 * *` is "every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st"; `*/15 22-2 * * 1-5` is
 "every 15 minutes from midnight through 2:45 a.m. and from 10 p.m. through 11:45 p.m. on weekdays".
 
 3.6 A range and a stray value: the range, then "and", then the stray value
 in its list form. "Every minute from 0 through 29 and at 45 minutes past
-every hour"; "every hour from 9 a.m. through 5 p.m. and at 10 p.m."; "on
+the hour"; "every hour from 9 a.m. through 5 p.m. and at 10 p.m."; "on
 the 1st through the 7th and on the 15th". Every piece of days or months
 leads with its own "on" or "in": "on the 1st through the 5th, on the 10th,
 and on the 20th through the 25th"; "in June through August and in
@@ -381,6 +396,34 @@ values at its end or its start is said with its bounds, not as the full
 cadence with exceptions: hours 0, 2 … 20 are "every 2 hours through 8
 p.m." in the bounded form ("every 2 hours from midnight through 8 p.m."),
 never "every 2 hours except at 10 p.m."
+
+**Nothing follows an exception without a comma.** Whatever comes straight
+after "except …" is heard as part of the exception: "every 2 hours except
+at 8 a.m. on the 1st" can be taken to run every day and skip 8 a.m. on the
+1st only, and "on every day except the 15th as well as on Mondays" to
+skip Mondays too. So an exception is closed with a comma whenever
+anything follows it: the day, "every day", the month, the year, or "as
+well as" and a weekday.
+
+* "every 2 hours except at 8 a.m., on the 1st"
+* "every minute except at 29 minutes past the hour, on Mondays"
+* "every hour from 3 a.m. through 11 p.m. except at 6 a.m., every day"
+* "at midnight on every day except the 15th, as well as on Mondays"
+* "at midnight Monday through Saturday except Thursday, in June"
+* "at midnight on the 1st of every month except June, in 2030"
+
+An exception that ends the sentence takes no comma, and a month that
+belongs to an exception's base still comes before it ("on every day in
+June except the 15th"). Where that month phrase ends in an exception of
+its own, the second is set off as a second exception in the time is: "on
+every day in every month except June, and except the 15th".
+
+Rejected: moving the exception to the end of the sentence ("every 2 hours
+on the 1st except at 8 a.m."), which reads well but splits the time
+around the day and breaks the one order; and a pair of commas ("every 2
+hours, except at 8 a.m., on the 1st"), which changes more of the time's
+own words for the same effect. The comma is the one mark a later part
+adds to an earlier one, and is declared in the continuity suite.
 
 An exception to minutes is said last, after the hours, so that the hours
 belong to the whole phrase and not to the exception, and it names its
@@ -493,9 +536,9 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 | every hour | "the hour" |
 | values | "9 a.m."; "9 a.m. and 5 p.m." |
 | range | "the hour from 9 a.m. through 5 p.m." |
-| pieces | "the hour from 9 a.m. through 5 p.m. and at 10 p.m." |
+| pieces | "the hour from 9 a.m. through 5 p.m. and during the 10 p.m. hour"; a stray hour first, "the hour during the 1 a.m. hour and from 9 a.m. through 5 p.m." |
 | any cadence | not a noun phrase. The minute phrase ends "past the hour" (or "of the hour"), then a comma and the cadence as it is said for points: "at 15 and 45 minutes past the hour, every 4 hours"; "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m."; "…past the hour, every 2 hours from 9 a.m. through 5 p.m." |
-| except | "every hour except 3 a.m." (the one place "every hour" follows "past") |
+| except | "every hour except 3 a.m." (the one place "every hour" follows "past"); out of a range, "the hour from 9 a.m. through 5 p.m. except during the noon hour" |
 
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m."
 
@@ -526,7 +569,10 @@ precision of the other end: "from noon through 12:00:09 p.m."
 After "past", every hour is "the hour", and a range of hours follows it
 directly: "at 30 minutes past the hour"; "at 5, 20, and 45 minutes past
 the hour from 9 a.m. through 5 p.m."; with pieces, "…past the hour from 7
-a.m. through 1 p.m. and at 11 p.m." Listed hours are still named ("past 9
+a.m. through 1 p.m. and during the 11 p.m. hour". An hour beside a range,
+or taken out of one, is named as an hour: "and at 11 p.m." was read as
+one more firing at 11:00, and "except at noon" as sparing only 12:00
+itself. Listed hours are still named ("past 9
 a.m. and 5 p.m."), and "every hour" is kept only where an exception needs
 something to except from ("at 30 minutes past every hour except 3 a.m.").
 Seconds likewise say "past the minute": "at 30 seconds past the minute".
@@ -582,6 +628,25 @@ hour"; "every second for the first 10 seconds of every hour". With another
 single minute: "at 30 minutes and 15 seconds past every hour". A stray
 clock time carries a single second like any other: "…and at 9:45:08 a.m."
 
+The same holds before any hours named on the hour that cannot carry the
+seconds (a cadence, an exception, or several seconds against a run or a
+list): the seconds are counted past "the hour", not "the minute". "At 30
+seconds past the hour, every 2 hours"; "at 15 and 45 seconds past the
+hour, every hour from 9 a.m. through 5 p.m."; "every second for the first
+10 seconds of the hour, every hour from 9 a.m. through 5 p.m." "Past the
+minute" names no minute there, and standing alone it means every minute.
+Hours that carry another minute keep it: "at 15 and 45 seconds past the
+minute, every hour from 9:30 a.m. through 5:30 p.m."
+
+Counted past the hour, a stray minute beside a run of minutes says what
+the seconds do in it, as a stray clock time does: "every second from 0
+through 29 and for one minute at 45 minutes past the hour"; "every second
+for one minute at 5, every second from 10 through 40, and for one minute
+at 50 minutes past the hour"; "at 30 seconds past every minute from 0
+through 29 and at 30 seconds past the minute, at 45 minutes past the
+hour". A bare "and at 45 minutes past the hour" was read as one firing at
+:45:00.
+
 **A list of clock times to the second is also sayable**, on the same terms
 as a list of clock times to the minute (4.1): whenever S is not every
 second, the minutes and hours are clock times, and there are at most 24
@@ -619,10 +684,13 @@ most widely used library.
 * With every month: the day alone, "on the 1st".
 * With a single month: one date phrase, month first in US style, cardinal
   numbers. "On June 1"; "on June 1 and 15"; "on June 1, 10, and 20"; "on
-  June 1 through 7"; "on June 1 through 7 and on June 15"; "every 5 days
-  from June 1". British style puts the day first: "on 1 June", "on 1 and 15
-  June", "on 1 to 7 June". An idiom keeps its own words and takes "in":
-  "on odd-numbered days in June".
+  June 1 through 7"; "on June 1 through 7 and on June 15". British style
+  puts the day first: "on 1 June", "on 1 and 15 June", "on 1 to 7 June".
+  An idiom or a cadence keeps its own words and takes "in": "on
+  odd-numbered days in June"; "every 5 days from the 1st in June"; "every
+  3 days from the 5th through the 20th in June". (A cadence was first
+  said from a date, "every 5 days from June 1", which reads as a run that
+  starts on June 1 and carries on, when the schedule stops with June.)
 * One day with a list of months: each date in full. "On January 1 and July
   1"; "on March 1, June 1, September 1, and December 1".
 * Otherwise, with several months: the day in its ordinal form, "of", then
@@ -682,6 +750,12 @@ month by name, "of June"; several in the forms of 4.4's last bullet).
 * `L-3` — "3 days before the last day of the month"
 * `15W` — "on the weekday nearest the 15th", the day said as any day of
   the month is, so with June it is "on the weekday nearest June 15"
+* `31W`, and any day from the 28th on — "on the weekday in the same month
+  nearest the 31st"; "on the weekday in the same month nearest June 30".
+  From the 28th a day can be its month's last, and the nearest weekday
+  would be looked for in the next month (the Monday after a Sunday the
+  31st), where it never is: it is the Friday before. This is an idiom by
+  value, the one place a day's number decides its words
 * `1#2` — "on the second Monday of the month"
 * `5L` — "on the last Friday of the month"
 
@@ -707,6 +781,16 @@ and odd years above keep their own words.
 "Of" needs a day to hang on. So when the year is said this way and neither
 day field is restricted, the day part says "every day" whatever the hours
 are (2.5): "every 5 minutes every day of every 4th year from 2028".
+
+And the day it hangs on must not be taken for a day of the year. "On the
+1st of every other year" is heard as January 1, so a day of the month
+under every month says the month before a cadence of years, in the form
+its phrase takes with months (4.4): "on the 1st of every month of every
+other year from 2030"; "on the 1st and 15th of every month of every 4th
+year from 2030"; "every 5 days from the 1st in every month of every other
+year from 2030"; "on the weekday nearest the 15th of every month of every
+other year from 2030". Any other years leave the month unsaid: "on the
+1st in 2030 and 2031".
 
 One month and one year are said together, as one day, one month and one
 year are a full date: where a single month's phrase stands alone ("in

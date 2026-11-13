@@ -81,7 +81,8 @@ export interface Voice {
   pairs: boolean;
   exception(removed: number[], base: SetDescription): string;
   range(from: number, to: number): string;
-  values(values: number[]): string;
+  // `later` marks a list that follows another piece of the same set.
+  values(values: number[], later?: boolean): string;
   // Where a value falls in its cycle as it is said, when that is not its
   // own number: the week is said from Monday, which cron numbers 1.
   rank?(value: number): number;
@@ -222,10 +223,10 @@ function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
   Phrase | null {
   const each = voice.inPieces || {...voice, lead: ''};
   const count = denote(pieces, domainOf(voice.field)).length;
-  const said = inSpokenOrder(pieces, voice).map(function sayPart(part) {
+  const said = inSpokenOrder(pieces, voice).map(function sayPart(part, at) {
     return part.kind === 'range' ?
       plain(each.range(part.from, part.to), 2) :
-      plain(each.values(part.values), part.values.length);
+      plain(each.values(part.values, at > 0), part.values.length);
   });
 
   return count < (voice.fewestInPieces ?? 0) ?
@@ -395,15 +396,17 @@ function listing(spec: Listing, opts: EnglishOptions): Voice {
  * "at 5, 20, and 45", "every minute from 10 through 40". A cadence that
  * fills the hour or minute from zero stands alone as "every 15 minutes".
  * `everyOne` is what "every minute" is said as: finer seconds take its
- * place. Each number said is added to `heard`, so that the unit after
- * the phrase can agree with the last of them.
+ * place. `stray` is what the seconds say before a list of minutes that
+ * follows a run of them, where "every second" no longer reaches: "and for
+ * one minute at 45". Each number said is added to `heard`, so that the
+ * unit after the phrase can agree with the last of them.
  */
 function withinTheHour(
   field: 'minute' | 'second',
-  spoken: {everyOne: string; heard: number[]},
+  spoken: {everyOne: string; heard: number[]; stray: string},
   opts: EnglishOptions
 ): Voice {
-  return listing({
+  const numbered = listing({
     all: spoken.everyOne,
     at: words.at,
     exceptAt: words.at,
@@ -416,13 +419,22 @@ function withinTheHour(
     run: `${spoken.everyOne} ${words.from}`,
     stride: {bare: true, open: false, pair: true, tiles: true, unit: field}
   }, opts);
+
+  return {
+    ...numbered,
+    values(values, later) {
+      return join(later ? spoken.stray : '', numbered.values(values));
+    }
+  };
 }
 
 // A voice for values that fall inside one stretch of clock time: a run
-// is a window, and stray values are clock times. A run that wraps is two
-// windows. `moment` is the moment a value starts at, as an end of a
-// window or as a stray. `close` is how a window closes: with which word,
-// and on the moment how many values after its last.
+// is a window, and stray values are clock times. (A run that crosses the
+// end of the hour or minute reaches here as two runs, since something
+// coarser is always restricted.) `moment` is the moment a value starts
+// at, as an end of a window or as a stray. `close` is how a window
+// closes: with which word, and on the moment how many values after its
+// last.
 function clockWindows(
   spec: {
     close: {after: number; word: string};
@@ -432,8 +444,6 @@ function clockWindows(
   },
   opts: EnglishOptions
 ): Voice {
-  const {max, min} = domainOf(spec.field);
-
   function window(from: number, to: number): string {
     const ends = [from, to + spec.close.after];
     const [opens, closes] = timeNames(ends.map(function end(value) {
@@ -458,11 +468,7 @@ function clockWindows(
       run: '',
       stride: null
     }, opts),
-    range(from, to) {
-      return from > to ?
-        list([window(min, to), window(from, max)], opts) :
-        window(from, to);
-    }
+    range: window
   };
 }
 
@@ -588,7 +594,10 @@ function theHours(hours: number[], opts: EnglishOptions): string {
  * Hours as a noun phrase. After "past", a range follows "the hour"
  * directly ("past the hour from 9 a.m. through 5 p.m."), listed hours
  * are named ("past 9 a.m. and 5 p.m."), and "every hour" is what an
- * exception excepts from. After "the first 30 minutes of",
+ * exception excepts from. An hour beside a range, or taken out of one, is
+ * named as an hour ("and during the 10 p.m. hour", "except during the
+ * noon hour"): "and at 10 p.m." would be one more firing, on the hour.
+ * After "the first 30 minutes of",
  * which is a part of an hour and not a point in it (`asHours`), "every
  * hour" stands and listed hours are named as hours: "the 9 a.m. and 5
  * p.m. hours". A cadence of hours is never a noun phrase: what came
@@ -598,7 +607,11 @@ function theHours(hours: number[], opts: EnglishOptions): string {
 function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
   const moments = hoursAsMoments({minute: 0, pair: false}, opts);
   const nouns = hoursByName({minute: 0, pair: false}, '', opts);
+  const stretches = hoursAsStretches(null, opts);
   const theHour = `${words.the} ${units.hour.one}`;
+  // What an exception is said as, by what it is taken out of.
+  const excepting: {[kind: string]: Voice | undefined} =
+    {all: nouns, cadence: moments};
   const shared: Voice = {
     ...nouns,
     cadence: {
@@ -608,7 +621,7 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
       }
     },
     exception(removed, base) {
-      return (base.kind === 'all' ? nouns : moments).exception(removed, base);
+      return (excepting[base.kind] || stretches).exception(removed, base);
     }
   };
 
@@ -625,7 +638,8 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
     } :
     {
       ...shared,
-      inPieces: {lead: theHour, range: fromThrough, values: moments.values},
+      inPieces:
+        {lead: theHour, range: fromThrough, values: stretches.values},
       range(from, to) {
         return `${theHour} ${fromThrough(from, to)}`;
       }

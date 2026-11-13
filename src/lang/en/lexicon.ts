@@ -93,6 +93,7 @@ const words = {
   other: 'other',
   past: 'past',
   runs: 'Runs',
+  sameMonth: 'in the same month',
   startup: 'at system startup',
   the: 'the',
   unrecognizable: 'an unrecognizable cron pattern',
