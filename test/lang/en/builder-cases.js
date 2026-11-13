@@ -5,6 +5,10 @@
 // read every row before any of them is trusted. Every row reaches code
 // that no paradigm row does. A row's third element is the options it is
 // rendered with.
+//
+// Read against each pattern's fire times in the audit of 2026-11-13 (a
+// model's read, not a fluent human's); two rows gained the comma that
+// closes an exception.
 
 import english from '../../../src/lang/en/index.js';
 import {checkRows} from '../../paradigms/check.js';
@@ -23,7 +27,7 @@ const rows = [
   ['30-59 9 * * *',
     'every minute from 9:30 a.m. until 10 a.m. every day'],
   ['0-14,16-29 9 * * *',
-    'every minute from 9 a.m. until 9:30 a.m. except at 15 minutes past the hour every day'],
+    'every minute from 9 a.m. until 9:30 a.m. except at 15 minutes past the hour, every day'],
   ['50-10 9 * * *',
     'every minute from 9 a.m. until 9:11 a.m. and every minute from 9:50 a.m. until 10 a.m. every day'],
   ['0 0 1 1-11 *',
@@ -61,7 +65,7 @@ const rows = [
   ['0,10,20,40,50 0-2,4-23 * * *',
     'every 10 minutes except during the 3 a.m. hour, and except at 30 minutes past the hour'],
   ['0-29,31-59 * 9 * * *',
-    'every second during the 9 a.m. hour except at 30 seconds past the minute every day'],
+    'every second during the 9 a.m. hour except at 30 seconds past the minute, every day'],
   ['58-1 * * * *',
     'every minute from 58 through 1 minute past the hour'],
   ['* 5,10-40 9 * * *',

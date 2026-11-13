@@ -112,11 +112,17 @@ function weekdayOf(day: number, opts: EnglishOptions): string {
   return named(lexicon.weekdays[day], 'full', opts);
 }
 
+// The earliest day that can be a month's last. The weekday nearest a day
+// never leaves the month, and from here on a reader could look for it in
+// the next one.
+const earliestLastDay = 28;
+
 const onTheLast = `${words.on} ${words.the} ${words.last}`;
 const lastDay = `${words.the} ${words.last} ${units.day.one}`;
 
 // Each is followed by "of the month" or "of" and the months, except the
-// nearest weekday, which is followed by the day it is nearest to.
+// nearest weekday, which is followed by the day it is nearest to. The
+// first row that applies is said.
 const quartzDateIdioms: Array<Idiom<QuartzDate>> = [
   quartzForm('last', function lastDayOfMonth() {
     return `${words.on} ${lastDay}`;
@@ -130,6 +136,15 @@ const quartzDateIdioms: Array<Idiom<QuartzDate>> = [
   quartzForm('beforeLast', function daysBeforeLast(form) {
     return `${form.days} ${unit('day', form.days)} ${words.before} ${lastDay}`;
   }),
+  {
+    applies(form) {
+      return form.kind === 'nearestWeekday' && form.day >= earliestLastDay;
+    },
+    say() {
+      return `${words.on} ${words.the} ${words.weekday} ${words.sameMonth} ` +
+        words.nearest;
+    }
+  },
   quartzForm('nearestWeekday', function weekdayNearest() {
     return `${words.on} ${words.the} ${words.weekday} ${words.nearest}`;
   })

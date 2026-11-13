@@ -36,6 +36,27 @@ const MAY_CHANGE = {
 // hour edit may add or remove exactly those words.
 const HOUR_MAY_SET_DAY = ['', 'every day'];
 
+// A sentence must first be true, and twice that reaches across parts
+// (answers 3.5 and 3.9), each time declared here.
+//
+// A run that wraps round its cycle ("from 10 p.m. through 2 a.m.", "in
+// November through February") is only true when nothing coarser is
+// restricted: on Mondays those hours are Monday's first and Monday's
+// last. So an edit to a coarser field may change how a wrapping set in a
+// finer field is said, in that field's own part.
+const WRAP_MAY_CHANGE = {
+  date: ['time'],
+  month: ['time'],
+  weekday: ['time'],
+  year: ['time', 'month']
+};
+
+// Whatever follows an exception is heard as part of it, so a part that
+// ends in one is closed with a comma when another part follows. An edit
+// that adds or removes a later part may add or remove that comma, and
+// nothing else.
+const CLOSING_COMMA = /,$/u;
+
 // The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
 // the field was written. Both wordings are reduced to one before equal
 // schedules are compared, so any other difference still fails.
@@ -72,6 +93,24 @@ function fieldsChanged(a, b, options) {
   });
 }
 
+// Whether a description wraps round its cycle, or holds one that does.
+function wraps(description) {
+  return description.kind === 'range' && description.from > description.to ||
+    [description.base, ...description.parts || []].filter(Boolean)
+      .some(wraps);
+}
+
+// Whether some field of either pattern is a set that wraps.
+function eitherWraps(a, b, options) {
+  return [a, b].some(function inPattern(pattern) {
+    const {candidates} = parse(pattern, options).schedule.analyses;
+
+    return Object.values(candidates).some(function inField(set) {
+      return set !== null && set.some(wraps);
+    });
+  });
+}
+
 // Every pair in which a part changed that the edited field may not change.
 function leaks(pairList) {
   const found = [];
@@ -91,9 +130,13 @@ function leaks(pairList) {
       const everyDay = changed[0] === 'hour' && part === 'day' &&
         HOUR_MAY_SET_DAY.includes(before[part]) &&
         HOUR_MAY_SET_DAY.includes(after[part]);
+      const same = before[part].replace(CLOSING_COMMA, '') ===
+        after[part].replace(CLOSING_COMMA, '');
 
-      if (before[part] !== after[part] && !everyDay &&
-          !MAY_CHANGE[changed[0]].includes(part)) {
+      const unwrapped = (WRAP_MAY_CHANGE[changed[0]] || []).includes(part);
+
+      if (!same && !everyDay && !MAY_CHANGE[changed[0]].includes(part) &&
+          !(unwrapped && eitherWraps(a, b, options))) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -131,6 +174,35 @@ describe('English continuity:', function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
     }, 60000);
+
+  it('lets a coarser field reach a finer part only as declared',
+    function() {
+      // A wrap is unwrapped under a coarser restriction.
+      expect(leaks([
+        ['0 22-2 * * *', '0 22-2 * * 1'],
+        ['0 22-2 * * *', '0 22-2 1 * *'],
+        ['0 22-2 * * *', '0 22-2 * 6 *'],
+        ['50-10 * * * *', '50-10 * * * 1'],
+        ['0 0 0 * 11-2 * *', '0 0 0 * 11-2 * 2030']
+      ])).to.deep.equal([]);
+      expect(partsOf('0 22-2 * * 1').time).to.equal(
+        'every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m.');
+      // The same edits to a set that does not wrap leave its part alone.
+      expect(partsOf('0 9-17 * * 1').time)
+        .to.equal(partsOf('0 9-17 * 6 *').time);
+
+      // An exception is closed with a comma when a part follows it.
+      expect(leaks([
+        ['0 0-7,9-23 * * *', '0 0-7,9-23 1 * *'],
+        ['0 0-7,9-23 * * *', '0 0-7,9-23 * * 1'],
+        ['0-28,30-59 * * * *', '0-28,30-59 * * 6 *'],
+        ['0 0 0 * 1-11 * *', '0 0 0 * 1-11 * 2030']
+      ])).to.deep.equal([]);
+      expect(partsOf('0 0-7,9-23 * * *').time)
+        .to.equal('every hour except at 8 a.m.');
+      expect(partsOf('0 0-7,9-23 1 * *').time)
+        .to.equal('every hour except at 8 a.m.,');
+    });
 
   it('renders equal schedules identically, but for the declared tie',
     function() {

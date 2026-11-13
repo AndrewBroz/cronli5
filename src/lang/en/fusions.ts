@@ -31,11 +31,15 @@ const {words} = lexicon;
 
 // The fields whose restriction makes a wrap-around in a field untrue:
 // hours from 10 p.m. through 2 a.m. run through the night, but "on
-// Mondays" they are Monday's first hours and Monday's last.
+// Mondays" they are Monday's first hours and Monday's last. Minutes and
+// seconds are held to the same: "from 50 through 10 minutes past the
+// hour from 9 a.m. through 5 p.m." would start at 9:50 and end at 6:10.
 const coarser: {[field in Field]?: Field[]} = {
   date: ['month', 'year'],
   hour: ['date', 'weekday', 'month', 'year'],
-  month: ['year']
+  minute: ['hour', 'date', 'weekday', 'month', 'year'],
+  month: ['year'],
+  second: ['minute', 'hour', 'date', 'weekday', 'month', 'year']
 };
 
 // The unit each of these fields is counted within.
@@ -69,8 +73,10 @@ interface Tick {
 // What the seconds contribute to the rest of the time.
 interface SecondsLead {
   // The words that go before a time part that does not begin "every
-  // minute".
+  // minute", and before hours named on the hour, which give the seconds
+  // no minute to be counted past.
   before: string;
+  beforeHours: string;
   // The words that take the place of "every minute", of "every minute"
   // when nothing else is said of the time, and of "every hour".
   every: string;
@@ -82,6 +88,9 @@ interface SecondsLead {
   // comes first.
   stray: string;
   strayFirst: string;
+  // The words before stray minutes counted past the hour, after a run of
+  // minutes.
+  within: string;
 }
 
 // What a description of the hours is said with. `riding` is the single
@@ -92,6 +101,12 @@ interface TimeContext {
   lead: SecondsLead;
   minute: Tick;
   riding: number | undefined;
+}
+
+// A stretch of the sentence, and whether it ends in an exception.
+interface Said {
+  excepts: boolean;
+  text: string;
 }
 
 // A way of saying the time. `carry` is the same phrase with the single
@@ -110,6 +125,15 @@ function onlyValue(description: SetDescription): number | null {
   return description.kind === 'values' && description.values.length === 1 ?
     description.values[0] :
     null;
+}
+
+// A description as the set that is said first and the values an
+// exception then takes out of it, if it is one.
+function apart(description: SetDescription):
+  {base: SetDescription; removed: number[]} {
+  return description.kind === 'except' ?
+    description :
+    {base: description, removed: []};
 }
 
 // A field that takes every value has nothing to say.
@@ -184,18 +208,16 @@ function anchored(
 function tick(
   candidates: SetDescription[],
   field: 'minute' | 'second',
-  every: {alone: string; one: string},
+  every: {alone: string; one: string; stray: string},
   opts: EnglishOptions
 ): Tick {
-  const everyOne = every.one;
+  const {one: everyOne, stray} = every;
   const chosen = choose(candidates,
-    withinTheHour(field, {everyOne, heard: []}, opts), opts);
-  const {base, removed} = chosen.description.kind === 'except' ?
-    chosen.description :
-    {base: chosen.description, removed: []};
+    withinTheHour(field, {everyOne, heard: [], stray}, opts), opts);
+  const {base, removed} = apart(chosen.description);
   const heard: number[] = [];
-  const said = say(base, withinTheHour(field, {everyOne, heard}, opts),
-    opts) as Phrase;
+  const said = say(base,
+    withinTheHour(field, {everyOne, heard, stray}, opts), opts) as Phrase;
   const continuous = base.kind === 'all' ||
     base.kind === 'cadence' && said.length === 1;
   const only = onlyValue(base);
@@ -265,12 +287,14 @@ function secondsLead(second: Tick, rides: boolean): SecondsLead {
   if (second.only === 0) {
     return {
       before: '',
+      beforeHours: '',
       every: everyMinute,
       everyAlone: everyMinute,
       everyHour,
       exceptAt,
       stray: '',
-      strayFirst: ''
+      strayFirst: '',
+      within: ''
     };
   }
 
@@ -279,6 +303,7 @@ function secondsLead(second: Tick, rides: boolean): SecondsLead {
 
     return {
       before,
+      beforeHours: before,
       every: second.text,
       everyAlone: second.whole,
       everyHour: `${before} ${everyHour}`,
@@ -288,7 +313,8 @@ function secondsLead(second: Tick, rides: boolean): SecondsLead {
           `${unit('minute', count)} ${words.at}`;
       },
       stray: words.forOneMinute,
-      strayFirst: before
+      strayFirst: before,
+      within: words.forOneMinute
     };
   }
 
@@ -297,12 +323,14 @@ function secondsLead(second: Tick, rides: boolean): SecondsLead {
 
   return {
     before,
+    beforeHours: `${second.text} ${words.the} ${unit('hour', 1)},`,
     every: `${second.text} ${everyMinute}`,
     everyAlone: second.whole,
     everyHour: `${second.text} ${everyHour}`,
     exceptAt,
     stray,
-    strayFirst: stray
+    strayFirst: stray,
+    within: before
   };
 }
 
@@ -354,7 +382,8 @@ function minutesWith(
 
 // A single minute rides on each hour as a moment, and a single second
 // can ride there with it. "Every hour" has no moment for a second to
-// ride on, so the seconds are said against the hour.
+// ride on, so the seconds are said against the hour, as they are before
+// any hours named on the hour that do not carry them.
 function momentsWith(
   hours: SetDescription,
   context: TimeContext,
@@ -377,7 +406,7 @@ function momentsWith(
     excepts: hours.kind === 'except',
     text: hours.kind === 'all' ?
       lead.everyHour :
-      join(lead.before, moments.text)
+      join(minute.only === 0 ? lead.beforeHours : lead.before, moments.text)
   };
 }
 
@@ -445,7 +474,7 @@ function timesWith(
   times: Moment[],
   opts: EnglishOptions
 ): TimePhrase[] {
-  const {candidates, clockSecond: riding, written} = facts.analyses;
+  const {clockSecond: riding, written} = facts.analyses;
   // Hours 0 and 12 on the hour, to the second, are as easy to take in as
   // "every 12 hours" as they are as two times, so they are said the way
   // they were written. Nothing else is decided by how a field was written.
@@ -460,8 +489,9 @@ function timesWith(
   }
 
   const lead = secondsLead(second, typeof riding === 'number');
-  const minute = withSecond(tick(candidates.minute!, 'minute',
-    {alone: lead.everyAlone, one: lead.every}, opts), riding);
+  const minute = withSecond(tick(candidatesOf(facts, 'minute'), 'minute',
+    {alone: lead.everyAlone, one: lead.every, stray: lead.within}, opts),
+  riding);
 
   return [
     ...clockList(times, lead.before, opts),
@@ -482,8 +512,8 @@ function timesWith(
 function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): TimePhrase {
   const {candidates, clockSecond} = facts.analyses;
   const everySecond = `${words.every} ${unit('second', 1)}`;
-  const second = tick(candidates.second!, 'second',
-    {alone: everySecond, one: everySecond}, opts);
+  const second = tick(candidatesOf(facts, 'second'), 'second',
+    {alone: everySecond, one: everySecond, stray: ''}, opts);
   const tail = exceptions(second.excepted, 'second',
     `${words.except} ${words.at}`, opts);
   const seconds = denote(candidates.second![0], domainOf('second'));
@@ -504,6 +534,7 @@ function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): TimePhrase {
 
     return {
       ...said,
+      excepts: said.excepts || tail.length > 0,
       length: second.length + said.length,
       text: closedBy(carried || said.text, said.excepts, tail)
     };
@@ -519,91 +550,148 @@ function sayForm<Form>(rows: Array<Idiom<Form>>, form: Form,
   }) as Idiom<Form>).say(form, opts);
 }
 
+// Stretches said one after another, each as it will stand in the
+// sentence. Whatever follows an exception is heard as part of it ("except
+// at 8 a.m. on the 1st"), so a stretch that ends in one is closed with a
+// comma when anything follows it.
+function closed(stretches: Said[]): string[] {
+  return stretches.map(function close(stretch, index) {
+    const followed = stretches.slice(index + 1).some(function said(later) {
+      return later.text !== '';
+    });
+    const closes = stretch.text !== '' && stretch.excepts && followed;
+
+    return stretch.text + (closes ? ',' : '');
+  });
+}
+
+// Stretches joined into one, which ends in an exception if its last does.
+function inARow(stretches: Said[]): Said {
+  const said = stretches.filter(function present(stretch) {
+    return stretch.text !== '';
+  });
+
+  return {
+    excepts: said.length > 0 && said[said.length - 1].excepts,
+    text: closed(said).join(' ')
+  };
+}
+
+// A phrase with the months said in it, and whether those months end it
+// in an exception.
+function withMonths(choice: Choice): Said {
+  return {excepts: choice.description.kind === 'except', text: choice.text};
+}
+
 // A phrase that picks a day out of the month ("on the last Friday") and
 // the months it applies to: "of the month", or "of" and the months.
 function ofTheMonth(
   phrase: string,
   months: SetDescription[],
   opts: EnglishOptions
-): string {
+): Said {
   const theMonth = `${words.of} ${words.the} ${unit('month', 1)}`;
 
   return months[0].kind === 'all' ?
-    `${phrase} ${theMonth}` :
-    choose(months, monthsOfDays({day: null, lead: '', phrase}, opts), opts)
-      .text;
+    {excepts: false, text: `${phrase} ${theMonth}`} :
+    withMonths(choose(months,
+      monthsOfDays({day: null, lead: '', phrase}, opts), opts));
 }
 
-// The kinds of description that name days of the month outright, and so
-// can be followed by "of" and several months. An exception or a cadence
-// before "of" would be misheard ("except the 15th of March").
+// The kinds of description that name days of the month outright. They
+// are said as dates in a single month ("on June 1 and 15"), and can be
+// followed by "of" and several months. An exception or a cadence before
+// "of" would be misheard ("except the 15th of March"), and a cadence
+// said from a date reads as a run with no end ("every 5 days from June
+// 1"), so those keep their own words and take the months after "in".
 const namesDays = ['pieces', 'range', 'values'];
 
-// Days of the month with the months they fall in, and how many days were
-// said as dates in one month (two standing for any more). One month makes
-// dates of numbered days ("on June 1 and 15"); several months follow them
-// after "of" ("on the 1st and 15th of January and July"). Any other
-// phrase for the days takes the months after "in", and they belong to
-// the base of an exception: "on every day in June except the 15th".
+// The day-of-month part with its months. `dated` is how many days were
+// said as dates in one month (two standing for any more, and for a phrase
+// that no longer ends in the month's name).
+interface DatePhrase extends Said {
+  dated: number;
+}
+
+// Days of the month with the months they fall in. One month makes dates
+// of numbered days ("on June 1 and 15"); several months follow them after
+// "of" ("on the 1st and 15th of January and July"). Any other phrase for
+// the days takes the months after "in", and they belong to the base of an
+// exception: "on every day in June except the 15th". `spelled` asks for
+// every month to be said too ("on the 1st of every month"), where the
+// days alone would be taken for days of something longer.
 function daysWithMonths(
   days: SetDescription[],
   months: SetDescription[],
-  lead: string,
+  how: {lead: string; spelled: boolean},
   opts: EnglishOptions
-): [string, number] {
+): DatePhrase {
   if (days[0].kind === 'all') {
-    return ['', 0];
+    return {dated: 0, excepts: false, text: ''};
   }
 
   const alone = choose(months, monthsAlone(opts), opts);
   const month = onlyValue(alone.description);
-  const voice = daysOfTheMonth(month, lead, opts);
-  const date = choose(days, voice, opts);
-  const {description} = date;
+  const {description} =
+    choose(days, daysOfTheMonth(null, how.lead, opts), opts);
+  const {base, removed} = apart(description);
+  const outright = namesDays.includes(base.kind);
+  const voice = daysOfTheMonth(outright ? month : null, how.lead, opts);
+  const date = say(description, voice, opts) as Phrase;
+  const excepts = removed.length > 0;
   const count = denote(description, domainOf('date')).length;
+  const unsaid = alone.description.kind === 'all' && !how.spelled;
 
-  if (alone.description.kind === 'all' || date.named && month !== null) {
-    return [date.text, Math.min(count, 2)];
+  if (unsaid || outright && month !== null) {
+    return {dated: Math.min(count, 2), excepts, text: date.text};
   }
 
   if (namesDays.includes(description.kind)) {
-    return [choose(months, monthsOfDays(
-      {day: onlyValue(description), lead, phrase: date.text}, opts), opts)
-      .text, 0];
+    return {dated: 0, ...withMonths(choose(months, monthsOfDays(
+      {day: onlyValue(description), lead: how.lead, phrase: date.text},
+      opts), opts))};
   }
 
-  // After an exception the month no longer closes the phrase, so a year
-  // cannot follow it directly.
-  return description.kind === 'except' ?
-    [join((say(description.base, voice, opts) as Phrase).text, alone.text,
-      voice.exception(description.removed, description.base)), 2] :
-    [`${date.text} ${alone.text}`, 0];
+  const inMonths = withMonths(alone);
+
+  return excepts ?
+    {
+      dated: 2,
+      excepts,
+      text: closedBy(
+        join((say(base, voice, opts) as Phrase).text, inMonths.text),
+        inMonths.excepts, [voice.exception(removed, base)])
+    } :
+    {dated: 0, ...inMonths, text: `${date.text} ${inMonths.text}`};
 }
 
-// The day-of-month part with its months, counted as `daysWithMonths`
-// counts. A Quartz form is an idiom followed by its months, except the
-// weekday nearest a day, which is followed by that day said as any day
-// of the month is; the day it names is not the day it fires, so it is
-// never a full date.
+// The day-of-month part with its months. A Quartz form is an idiom
+// followed by its months, except the weekday nearest a day, which is
+// followed by that day said as any day of the month is; the day it names
+// is not the day it fires, so it is never a full date.
 function dateWithMonths(
   facts: ScheduleFacts,
   months: SetDescription[],
+  spelled: boolean,
   opts: EnglishOptions
-): [string, number] {
+): DatePhrase {
   const {day} = facts.analyses;
 
   if (day.date?.kind !== 'quartz') {
-    return daysWithMonths(candidatesOf(facts, 'date'), months, words.on,
-      opts);
+    return daysWithMonths(candidatesOf(facts, 'date'), months,
+      {lead: words.on, spelled}, opts);
   }
 
   const {form} = day.date;
-  const phrase = sayForm(quartzDateIdioms, form, opts);
+  const lead = sayForm(quartzDateIdioms, form, opts);
 
   return form.kind === 'nearestWeekday' ?
-    [daysWithMonths([{kind: 'values', values: [form.day]}], months, phrase,
-      opts)[0], 2] :
-    [ofTheMonth(phrase, months, opts), 0];
+    {
+      ...daysWithMonths([{kind: 'values', values: [form.day]}], months,
+        {lead, spelled}, opts),
+      dated: 2
+    } :
+    {dated: 0, ...ofTheMonth(lead, months, opts)};
 }
 
 // The day-of-week part with its months: "on Fridays in June", "on the
@@ -612,7 +700,7 @@ function weekdayWithMonths(
   facts: ScheduleFacts,
   months: SetDescription[],
   opts: EnglishOptions
-): string {
+): Said {
   const {candidates, day} = facts.analyses;
 
   if (day.weekday?.kind === 'quartz') {
@@ -621,38 +709,60 @@ function weekdayWithMonths(
   }
 
   const days = candidates.weekday!;
+  const inMonths = choose(months, monthsAlone(opts), opts);
 
   return days[0].kind === 'all' ?
-    '' :
-    join(choose(days, daysOfTheWeek(opts), opts).text,
-      unlessEvery(choose(months, monthsAlone(opts), opts)));
+    {excepts: false, text: ''} :
+    inARow([
+      withMonths(choose(days, daysOfTheWeek(opts), opts)),
+      {...withMonths(inMonths), text: unlessEvery(inMonths)}
+    ]);
 }
 
-// The year part, and what it asks of the day part. One month and one
-// year are said together, the year directly after the month's name or
-// after the one date in it ("in June 2030", "on January 1, 2030", where
-// the date closes with a comma). A cadence of years hangs on the day
-// with "of", so it needs a day to be said. Any other years follow "in".
-// `dated` is how many days were said as dates in one month.
-function yearOf(
+// The day part: a day of the month and a day of the week, each with its
+// months, joined by "as well as" when both are restricted.
+function daysOf(
   facts: ScheduleFacts,
-  oneMonth: boolean,
-  dated: number,
+  months: SetDescription[],
+  spelled: boolean,
   opts: EnglishOptions
-): {comma: boolean; hangs: boolean; text: string} {
-  const year = choose(candidatesOf(facts, 'year'), yearsByNumber(opts), opts);
-  const oneYear = onlyValue(year.description);
-  const together = !facts.analyses.day.union && oneMonth &&
-    oneYear !== null && dated < 2;
-  // A cadence said by its interval, with or without exceptions; the even
-  // and odd years have their own words and hang on nothing.
-  const base = year.description.kind === 'except' ?
-    year.description.base :
-    year.description;
+): DatePhrase {
+  const date = dateWithMonths(facts, months, spelled, opts);
+  const weekday = weekdayWithMonths(facts, months, opts);
 
   return {
-    comma: together && dated === 1 && !opts.style.dayFirst,
-    hangs: base.kind === 'cadence' && year.named,
+    dated: date.dated,
+    ...inARow([date, {
+      ...weekday,
+      text: join(date.text && weekday.text && words.asWellAs, weekday.text)
+    }])
+  };
+}
+
+// Whether the years are said as a cadence by its interval, with or
+// without exceptions. Such a cadence hangs on the day with "of", so it
+// needs a day to be said; the even and odd years have their own words
+// and hang on nothing.
+function hangsOnTheDay(year: Choice): boolean {
+  return apart(year.description).base.kind === 'cadence' && year.named;
+}
+
+// The year part. One month and one year are said together, the year
+// directly after the month's name or after the one date in it ("in June
+// 2030", "on January 1, 2030", where the date closes with a comma). Any
+// other years follow "in", or "of" for a cadence. `dated` is how many
+// days were said as dates in one month.
+function yearOf(
+  year: Choice,
+  beside: {dated: number; oneMonth: boolean; union: boolean},
+  opts: EnglishOptions
+): {comma: boolean; text: string} {
+  const oneYear = onlyValue(year.description);
+  const together = !beside.union && beside.oneMonth && oneYear !== null &&
+    beside.dated < 2;
+
+  return {
+    comma: together && beside.dated === 1 && !opts.style.dayFirst,
     text: together ? String(oneYear) : unlessEvery(year)
   };
 }
@@ -663,33 +773,39 @@ function yearOf(
  * takes the months into its phrase, so the month has its own part only
  * when neither kind of day is restricted, or when both are and the month
  * phrase is longer than one month: then it is said once after the two,
- * set off by a comma that closes the day part.
+ * set off by a comma that closes the day part. A part that ends in an
+ * exception is closed with a comma too, when anything follows it.
  */
 function partsOf(facts: ScheduleFacts, opts: EnglishOptions): Parts {
+  const {union} = facts.analyses.day;
   const months = candidatesOf(facts, 'month');
   const alone = choose(months, monthsAlone(opts), opts);
   const oneMonth = onlyValue(alone.description) !== null;
-  const after = facts.analyses.day.union && !oneMonth ?
-    unlessEvery(alone) :
-    '';
+  const after = union && !oneMonth ? unlessEvery(alone) : '';
   const beside: SetDescription[] = after ? [{kind: 'all'}] : months;
-  const [date, dated] = dateWithMonths(facts, beside, opts);
-  const weekday = weekdayWithMonths(facts, beside, opts);
-  const days = join(date, date && weekday && words.asWellAs, weekday);
-  const year = yearOf(facts, oneMonth, dated, opts);
+  const years = choose(candidatesOf(facts, 'year'), yearsByNumber(opts), opts);
+  const hangs = hangsOnTheDay(years);
+  // A day of the month before "of every other year" says its month.
+  const days = daysOf(facts, beside, hangs && !after, opts);
+  const year = yearOf(years, {dated: days.dated, oneMonth, union}, opts);
   const time = timeOfDay(facts, opts);
   // A time of day with no day named skips a level, unless it runs round
   // the clock; and a cadence of years needs a day to hang on.
-  const everyDay = time.fills && !year.hangs ?
+  const everyDay = time.fills && !hangs ?
     '' :
     `${words.every} ${unit('day', 1)}`;
+  const month = days.text ? after : unlessEvery(alone);
+  const [timePart, dayPart, monthPart, yearPart] = closed([
+    time,
+    {
+      excepts: days.excepts || after !== '' || year.comma,
+      text: days.text || everyDay
+    },
+    {excepts: withMonths(alone).excepts, text: month},
+    {excepts: false, text: year.text}
+  ]);
 
-  return {
-    day: (days || everyDay) + (after || year.comma ? ',' : ''),
-    month: days ? after : unlessEvery(alone),
-    time: time.text,
-    year: year.text
-  };
+  return {day: dayPart, month: monthPart, time: timePart, year: yearPart};
 }
 
 export {partsOf};
