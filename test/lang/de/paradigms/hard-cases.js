@@ -699,9 +699,18 @@ const rows = [
   ['0 0 1-10/2,11-31/3 * *',
     'am 1., 3., 5. … und 11. sowie am 14., 17., 20. … und 29. jedes Monats ' +
     'um 0:00 Uhr'],
+  ['0 0 1-20/2,24-30/3 * *',
+    'am 1., 3., 5. … und 19. sowie am 24., 27. und 30. jedes Monats um ' +
+    '0:00 Uhr'],
+  ['0 0 1-10,12-30/2 * *',
+    'vom 1. bis 10. sowie am 12., 14., 16. … und 30. jedes Monats jeweils ' +
+    'um 0:00 Uhr'],
   ['0-20/2,21-59/3 * * * * *',
     'jede Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … ' +
     '57'],
+  ['0-20/2,30-45/5 * * * * *',
+    'jede Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 30, 35, 40 ' +
+    'und 45'],
 
   // One year follows one name, one list or one run of months, never
   // pieces.

@@ -57,7 +57,7 @@ they are said only where they name strictly fewer things.
 | a cadence of minutes or seconds that tiles from 0 («alle 15 Minuten») | 1 |
 | a cadence with both ends named, or a series | 3 |
 | pieces | the sum of the parts |
-| runs and cadences together | the sum of the parts: a run 2, a cadence 3 (or its values, if they are fewer), a stray value 1 |
+| runs and cadences together | the sum of the parts: a run 2, a cadence of more than four values 3 and of fewer its values, a stray value 1 |
 | a base with exceptions | the base, plus one for each exception |
 
 The count never depends on *which* values are named, only on how many and
@@ -131,7 +131,7 @@ Corrections, for what has to be worked out:
   * hours as points: «von 0:00 bis 10:00 Uhr alle 2 Stunden und von
     11:00 bis 23:00 Uhr alle 3 Stunden»; a run among them is «…
     stündlich»;
-  * hours as windows: each part's windows, a cadence of more than three
+  * hours as windows: each part's windows, a cadence of more than four
     as its first two and its last, the parts joined by «sowie» and «Uhr»
     once at the end: «von 0:00 bis 0:59, von 2:00 bis 2:59 … und von
     10:00 bis 10:59 sowie von 11:00 bis 11:59, von 14:00 bis 14:59 … und
@@ -366,8 +366,8 @@ things named before it. The cases, complete:
    «in den Jahren 2030, 2034, 2038 usw. jeweils im Juni und Juli am
    zweiten Samstag».
 3. **Before a clock time («um»), after a date phrase that is pieces
-   holding a range**: «vom 1. bis 7. und am 15. jedes Monats jeweils um
-   9:00 Uhr». Without it «bis … um 9:00 Uhr» is heard as a span that ends
+   holding a range** (or runs and cadences together that hold one):
+   «vom 1. bis 7. und am 15. jedes Monats jeweils um 9:00 Uhr». Without it «bis … um 9:00 Uhr» is heard as a span that ends
    at 9:00. (A single range takes «täglich», 2.5.) Where the second case
    is due in the same sentence, «jeweils» is said once, here, after a
    comma, and not before the date: «im Januar und Juli vom 1. bis 5., am
@@ -810,7 +810,8 @@ never «24:00».
     0 bis 10, 30 und 50 bis 59»; «jede Minute, jeweils in den Sekunden 1
     bis 3, 5, 8, 13 und 21». Runs and cadences together (the opening
     corrections) are said the same way, each cadence as the first three
-    seconds, «…» and the last, and the parts joined by «sowie»: «jede
+    seconds, «…» and the last (four or fewer in full, with «und»), and
+    the parts joined by «sowie»: «jede
     Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57».
     This form is used under every rest,
     one clock time included («täglich um 9:00 Uhr, jeweils in den

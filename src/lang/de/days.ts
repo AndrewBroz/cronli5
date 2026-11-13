@@ -277,9 +277,6 @@ function series(cadence: Described<'cadence'>, naming: Naming): string {
 
 const datesSaid: {[kind: string]: (
   description: never, tail: DateTail, naming: Naming) => string} = {
-  all() {
-    return '';
-  },
   // Every second day of the whole month has a name, and its gloss; any
   // other cadence is a series.
   cadence(cadence: Described<'cadence'>, tail, naming) {

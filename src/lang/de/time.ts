@@ -552,7 +552,7 @@ function secondSeries(seconds: number[]): string {
   return seconds.length > boundedCadence + 1 ?
     `${seconds.slice(0, boundedCadence).join(', ')} ${words.ellipsis} ` +
       `${seconds[seconds.length - 1]}` :
-    seconds.join(', ');
+    list(seconds.map(String));
 }
 
 // Seconds by their number in the minute: each run by its ends, each
