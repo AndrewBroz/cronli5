@@ -1110,7 +1110,7 @@ written from a star, `*/2`, and the other is restricted too), the days
 are the dates that fall on the weekdays, and the sentence says them in
 that order, in the frame's own order (no second order, as the union has):
 the days of the month as they are said alone, then « quand il tombe » or
-« quand ils tombent » (one date, or several) and the weekdays, each with
+« quand ils tombent » (by the day phrase as it is said: singular when it names one day, « le 15 du mois », « le dernier jour du mois », even with several months after it; plural when it names several, « les jours impairs », « le 1er et le 15 », « le 15 juin et le 15 juillet ») and the weekdays, each with
 « un » and joined by « ou »: « les jours impairs de chaque mois quand
 ils tombent un lundi, à 0 h »; « le 15 de chaque mois quand il tombe un
 mardi, un jeudi, un samedi ou un dimanche, à 0 h »; « les 1er, 6, 11,
