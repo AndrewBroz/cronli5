@@ -15,14 +15,14 @@ const FIELDS =
 // field changes the time. A day field changes the day part, and takes the
 // month into it: «en juin» becomes «le 1er juin», «tous les lundis de
 // juin», «le 1er du mois, de juin à août». So a day or month edit may
-// move text between those two parts, and a single year follows a month's
-// name («le 1er janvier 2030», «tous les lundis de juin 2030»), so those
-// edits can change the year's form too. An exception is the last thing in
-// the calendar part, so adding a month or a year can turn «tous les
-// jours, sauf le mercredi» into «du jeudi au mardi» and «sauf en
-// décembre» into «de janvier à novembre». Nothing else may cross: no
-// day, month or year edit touches the time, and no time edit touches
-// anything but the time, with the one exception below.
+// move text between those two parts. The year is last, except that one
+// year after one month's name is written into the date («le 1er janvier
+// 2030», «tous les jours en juin 2030»), so a day, month or year edit can
+// move the year between the month part and the year part. An exception
+// is the last thing in the calendar part, so adding a month can turn
+// «tous les jours, sauf le mercredi» into «du jeudi au mardi». Nothing
+// else may cross: no day, month or year edit touches the time, and no
+// time edit touches anything but the time, with the exceptions below.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year'],
   hour: ['time'],
@@ -37,6 +37,12 @@ const MAY_CHANGE = {
 // restricted and no day is named, the day part says «tous les jours», so
 // an hour edit may add or remove exactly those words.
 const HOUR_MAY_SET_DAY = ['', 'tous les jours'];
+
+// An exception among the times is said only when nothing follows the time
+// part (answers 3.9). So adding or removing a year part may reword a time
+// part that has one: «toutes les 2 heures de 0 h à 22 h, sauf à 8 h»
+// against «toutes les 2 heures de 0 h à 6 h et de 10 h à 22 h en 2030».
+const EXCEPTION = /\bsauf\b/u;
 
 const SETUP = {languages: [french.default], options: {}, styles: {}};
 
@@ -85,9 +91,10 @@ function leaks(pairList) {
     const after = partsOf(b, options);
 
     // A part may end in a comma that belongs to the join and not to the
-    // part (answers 2.6): before a time part that is not clock times,
-    // after an exception, a union or a phrase that is set off. It is set
-    // aside before two parts are compared.
+    // part (answers 2.6): before a time part that does not begin with a
+    // clock time, after an exception or a phrase that is set off, and
+    // before a year part that does not begin with «en». It is set aside
+    // before two parts are compared.
     function words(part) {
       return String(part).replace(/,$/u, '');
     }
@@ -97,8 +104,11 @@ function leaks(pairList) {
         HOUR_MAY_SET_DAY.includes(before[part]) &&
         HOUR_MAY_SET_DAY.includes(after[part]);
 
+      const exception = changed[0] === 'year' && part === 'time' &&
+        (EXCEPTION.test(before[part]) || EXCEPTION.test(after[part]));
+
       if (words(before[part]) !== words(after[part]) && !everyDay &&
-          !MAY_CHANGE[changed[0]].includes(part)) {
+          !exception && !MAY_CHANGE[changed[0]].includes(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -109,8 +119,8 @@ function leaks(pairList) {
 }
 
 // Continuity, measured directly. A description is four parts in one order:
-// day, month, year, time (the calendar, as a French date orders it, then
-// the time). Editing one field of the pattern may rewrite that field's
+// day, month, time, year (the calendar, then the time, then the year; one
+// year after one month's name sits in the month part). Editing one field of the pattern may rewrite that field's
 // part and nothing else, apart from the declared fusions above. This is
 // the constraint itself, where a count of changed words is only a rough
 // sign of it: a longer sentence, or a wrong one, cannot make this pass.
@@ -120,7 +130,7 @@ describe('French continuity:', function() {
       const {opts, schedule} = parse(pair[1]);
       const parts = french.describeParts(schedule, opts);
 
-      expect([parts.day, parts.month, parts.year, parts.time]
+      expect([parts.day, parts.month, parts.time, parts.year]
         .filter(Boolean).join(' '))
         .to.equal(french.default.describe(schedule, opts));
     });

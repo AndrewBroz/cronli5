@@ -15,20 +15,17 @@ describe('French styles:', function() {
   it('declares its code, its regions and its named tables', function() {
     expect(fr.code).to.equal('fr');
     expect(fr.defaultStyle).to.equal('fr');
-    expect(fr.regions).to.deep.equal({CA: 'ca', FR: 'fr'});
+    expect(fr.regions).to.deep.equal({FR: 'fr'});
     expect(fr.styles).to.equal(styles);
-    expect(styles.fr).to.deep.equal(
-      {hour12: false, short: false, weekend: 'le week-end'});
-    expect(styles.ca).to.deep.equal(
-      {hour12: false, short: false, weekend: 'la fin de semaine'});
+    expect(styles.fr).to.deep.equal({hour12: false, short: false});
     expect(Object.isFrozen(styles)).to.equal(true);
     expect(Object.isFrozen(styles.fr)).to.equal(true);
   });
 
   it('applies overrides to a named table', function() {
     expect(fr.style('fr')).to.deep.equal(styles.fr);
-    expect(fr.style('ca', {short: true})).to.deep.equal(
-      {hour12: false, short: true, weekend: 'la fin de semaine'});
+    expect(fr.style('fr', {short: true}))
+      .to.deep.equal({hour12: false, short: true});
   });
 
   it('rejects a field it does not have, naming the fields', function() {
@@ -41,9 +38,6 @@ describe('French styles:', function() {
     throwsOption(function build() {
       fr.style('fr', {short: 'oui'});
     }, /short/u);
-    throwsOption(function build() {
-      fr.style('fr', {weekend: true});
-    }, /weekend/u);
   });
 
   it('capitalises a label, wraps a sentence, and has its fixed texts',

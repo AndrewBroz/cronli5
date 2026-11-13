@@ -10,11 +10,9 @@ const rows = [
   ['30 0 9 * * *', 'tous les jours à 9 h 00 min 30 s'],
   ['0,30 0 9 * * *', 'tous les jours à 9 h et à 9 h 00 min 30 s'],
   ['*/15 0 9 * * *',
-    'tous les jours à 9 h, chaque fois toutes les 15 secondes pendant une ' +
-    'minute'],
+    'tous les jours à 9 h, toutes les 15 secondes pendant une minute'],
   ['0-9 0 9 * * *',
-    'tous les jours à 9 h, chaque fois toutes les secondes pendant 10 ' +
-    'secondes'],
+    'tous les jours à 9 h, toutes les secondes pendant 10 secondes'],
 
   // clock / minute
   ['30 9 * * *', 'tous les jours à 9 h 30'],
@@ -44,9 +42,7 @@ const rows = [
   ['0 9 2/2 * *', 'les jours pairs de chaque mois à 9 h'],
   ['0 9 */5 * *', 'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois à 9 h'],
   ['0 9 L * *', 'le dernier jour du mois à 9 h'],
-  ['0 9 15W * *',
-    'le jour le plus proche du 15 de chaque mois, hors samedi et dimanche, ' +
-    'à 9 h'],
+  ['0 9 15W * *', 'le jour ouvré le plus proche du 15 de chaque mois à 9 h'],
 
   // clock / month
   ['0 9 * 6 *', 'tous les jours en juin à 9 h'],
@@ -59,24 +55,24 @@ const rows = [
   // clock / weekday
   ['0 9 * * 0', 'tous les dimanches à 9 h'],
   ['0 9 * * 1,3,5', 'le lundi, le mercredi et le vendredi à 9 h'],
-  ['0 9 * * 0,6', 'le week-end à 9 h'],
+  ['0 9 * * 0,6', 'le samedi et le dimanche à 9 h'],
   ['0 9 * * 1-6', 'du lundi au samedi à 9 h'],
   ['0 9 * * 5L', 'le dernier vendredi du mois à 9 h'],
   ['0 9 * * 1#2', 'le deuxième lundi du mois à 9 h'],
 
   // window / second — context `*/15 9-17 * * 1-5`
   ['30 */15 9-17 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, chaque ' +
-    'fois 30 secondes après le début de la minute'],
+    'du lundi au vendredi, toutes les 15 minutes de 9 h 00 min 30 s à 17 h ' +
+    '45 min 30 s'],
   ['0,30 */15 9-17 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, chaque ' +
-    'fois au début de la minute et 30 secondes après'],
+    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, et à ' +
+    'chaque fois 30 secondes plus tard'],
   ['*/15 */15 9-17 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, chaque ' +
-    'fois toutes les 15 secondes pendant une minute'],
+    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, et à ' +
+    'chaque fois toutes les 15 secondes pendant une minute'],
   ['0-9 */15 9-17 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, chaque ' +
-    'fois toutes les secondes pendant 10 secondes'],
+    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, et à ' +
+    'chaque fois toutes les secondes pendant 10 secondes'],
 
   // window / minute
   ['0 9-17 * * 1-5', 'du lundi au vendredi, toutes les heures de 9 h à 17 h'],
@@ -110,43 +106,43 @@ const rows = [
     'du lundi au vendredi, toutes les 15 minutes de 8 h à 8 h 45, de 12 h ' +
     'à 12 h 45 et de 18 h à 18 h 45'],
   ['*/15 */2 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes, une heure sur deux à ' +
-    'partir de 0 h'],
+    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, et de ' +
+    'même toutes les 2 heures jusqu\'à 22 h 45'],
   ['*/15 */6 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, de 6 h à ' +
     '6 h 45, de 12 h à 12 h 45 et de 18 h à 18 h 45'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes, une heure sur deux à ' +
-    'partir de 0 h, sauf entre 8 h et 8 h 45'],
+    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, et de ' +
+    'même toutes les 2 heures jusqu\'à 22 h 45, sauf de 8 h à 8 h 45'],
   ['*/15 22-2 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 0 h à 2 h 45 et de 22 ' +
     'h à 23 h 45'],
 
   // window / date
   ['*/15 9-17 15 * 1-5',
-    'le 15 de chaque mois, ainsi que du lundi au vendredi, toutes les 15 ' +
-    'minutes de 9 h à 17 h 45'],
+    'le 15 de chaque mois, ainsi que du lundi au vendredi, dans les deux ' +
+    'cas toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 1,15 * 1-5',
-    'le 1er et le 15 de chaque mois, ainsi que du lundi au vendredi, ' +
-    'toutes les 15 minutes de 9 h à 17 h 45'],
+    'le 1er et le 15 de chaque mois, ainsi que du lundi au vendredi, dans ' +
+    'les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 1-7 * 1-5',
-    'du 1er au 7 de chaque mois, ainsi que du lundi au vendredi, toutes ' +
-    'les 15 minutes de 9 h à 17 h 45'],
+    'du 1er au 7 de chaque mois, ainsi que du lundi au vendredi, dans les ' +
+    'deux cas toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 1-7,15 * 1-5',
     'du 1er au 7 et le 15 de chaque mois, ainsi que du lundi au vendredi, ' +
-    'toutes les 15 minutes de 9 h à 17 h 45'],
+    'dans les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 2/2 * 1-5',
-    'les jours pairs de chaque mois, ainsi que du lundi au vendredi, ' +
-    'toutes les 15 minutes de 9 h à 17 h 45'],
+    'les jours pairs de chaque mois, ainsi que du lundi au vendredi, dans ' +
+    'les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 */5 * 1-5',
     'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois, ainsi que du lundi ' +
-    'au vendredi, toutes les 15 minutes de 9 h à 17 h 45'],
+    'au vendredi, dans les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 L * 1-5',
-    'le dernier jour du mois, ainsi que du lundi au vendredi, toutes les ' +
-    '15 minutes de 9 h à 17 h 45'],
+    'le dernier jour du mois, ainsi que du lundi au vendredi, dans les ' +
+    'deux cas toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 15W * 1-5',
-    'le jour le plus proche du 15 de chaque mois, hors samedi et dimanche, ' +
-    'ainsi que du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45'],
+    'le jour ouvré le plus proche du 15 de chaque mois, ainsi que du lundi ' +
+    'au vendredi, dans les deux cas toutes les 15 minutes de 9 h à 17 h 45'],
 
   // window / month
   ['*/15 9-17 * 6 1-5',
@@ -172,7 +168,8 @@ const rows = [
     'tous les lundis, toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 * * 0',
     'tous les dimanches, toutes les 15 minutes de 9 h à 17 h 45'],
-  ['*/15 9-17 * * 0,6', 'le week-end, toutes les 15 minutes de 9 h à 17 h 45'],
+  ['*/15 9-17 * * 0,6',
+    'le samedi et le dimanche, toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 * * 1-6',
     'du lundi au samedi, toutes les 15 minutes de 9 h à 17 h 45'],
   ['*/15 9-17 * * 5L',
@@ -184,11 +181,9 @@ const rows = [
   ['30 0 0 1 * *', 'le 1er de chaque mois à 0 h 00 min 30 s'],
   ['0,30 0 0 1 * *', 'le 1er de chaque mois à 0 h et à 0 h 00 min 30 s'],
   ['*/15 0 0 1 * *',
-    'le 1er de chaque mois à 0 h, chaque fois toutes les 15 secondes ' +
-    'pendant une minute'],
+    'le 1er de chaque mois à 0 h, toutes les 15 secondes pendant une minute'],
   ['0-9 0 0 1 * *',
-    'le 1er de chaque mois à 0 h, chaque fois toutes les secondes pendant ' +
-    '10 secondes'],
+    'le 1er de chaque mois à 0 h, toutes les secondes pendant 10 secondes'],
 
   // monthly / minute
   ['30 0 1 * *', 'le 1er de chaque mois à 0 h 30'],
@@ -223,29 +218,37 @@ const rows = [
   ['0 0 2/2 * *', 'les jours pairs de chaque mois à 0 h'],
   ['0 0 */5 * *', 'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois à 0 h'],
   ['0 0 L * *', 'le dernier jour du mois à 0 h'],
-  ['0 0 15W * *',
-    'le jour le plus proche du 15 de chaque mois, hors samedi et dimanche, ' +
-    'à 0 h'],
+  ['0 0 15W * *', 'le jour ouvré le plus proche du 15 de chaque mois à 0 h'],
 
   // monthly / month
   ['0 0 1 6 *', 'le 1er juin à 0 h'],
-  ['0 0 1 1,7 *', 'le 1er janvier et juillet à 0 h'],
-  ['0 0 1 6-8 *', 'le 1er du mois, de juin à août, à 0 h'],
-  ['0 0 1 6-8,12 *', 'le 1er du mois, de juin à août et en décembre, à 0 h'],
-  ['0 0 1 */3 *', 'le 1er janvier, avril, juillet et octobre à 0 h'],
+  ['0 0 1 1,7 *', 'le 1er janvier et le 1er juillet à 0 h'],
+  ['0 0 1 6-8 *', 'le 1er juin, le 1er juillet et le 1er août à 0 h'],
+  ['0 0 1 6-8,12 *',
+    'le 1er juin, le 1er juillet, le 1er août et le 1er décembre à 0 h'],
+  ['0 0 1 */3 *',
+    'le 1er janvier, le 1er avril, le 1er juillet et le 1er octobre à 0 h'],
   ['0 0 1 1-11 *', 'le 1er de chaque mois, sauf en décembre, à 0 h'],
 
   // monthly / weekday
-  ['0 0 1 * 0', 'le 1er de chaque mois, ainsi que tous les dimanches, à 0 h'],
+  ['0 0 1 * 0',
+    'le 1er de chaque mois, ainsi que tous les dimanches, dans les deux ' +
+    'cas à 0 h'],
   ['0 0 1 * 1,3,5',
     'le 1er de chaque mois, ainsi que le lundi, le mercredi et le ' +
-    'vendredi, à 0 h'],
-  ['0 0 1 * 0,6', 'le 1er de chaque mois, ainsi que le week-end, à 0 h'],
-  ['0 0 1 * 1-6', 'le 1er de chaque mois, ainsi que du lundi au samedi, à 0 h'],
+    'vendredi, dans les deux cas à 0 h'],
+  ['0 0 1 * 0,6',
+    'le 1er de chaque mois, ainsi que le samedi et le dimanche, dans les ' +
+    'deux cas à 0 h'],
+  ['0 0 1 * 1-6',
+    'le 1er de chaque mois, ainsi que du lundi au samedi, dans les deux ' +
+    'cas à 0 h'],
   ['0 0 1 * 5L',
-    'le 1er de chaque mois, ainsi que le dernier vendredi du mois, à 0 h'],
+    'le 1er de chaque mois, ainsi que le dernier vendredi du mois, dans ' +
+    'les deux cas à 0 h'],
   ['0 0 1 * 1#2',
-    'le 1er de chaque mois, ainsi que le deuxième lundi du mois, à 0 h'],
+    'le 1er de chaque mois, ainsi que le deuxième lundi du mois, dans les ' +
+    'deux cas à 0 h'],
 
   // open / second — context `* * * * *`
   ['30 * * * * *', '30 secondes après le début de chaque minute'],
@@ -272,13 +275,15 @@ const rows = [
     'tous les jours, toutes les minutes de 8 h à 8 h 59, de 12 h à 12 h 59 ' +
     'et de 18 h à 18 h 59'],
   ['* 9-17 * * *', 'tous les jours, toutes les minutes de 9 h à 17 h 59'],
-  ['* */2 * * *', 'toutes les minutes, une heure sur deux à partir de 0 h'],
+  ['* */2 * * *',
+    'tous les jours, toutes les minutes de 0 h à 0 h 59, et de même toutes ' +
+    'les 2 heures jusqu\'à 22 h 59'],
   ['* */6 * * *',
     'tous les jours, toutes les minutes de 0 h à 0 h 59, de 6 h à 6 h 59, ' +
     'de 12 h à 12 h 59 et de 18 h à 18 h 59'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'toutes les minutes, une heure sur deux à partir de 0 h, sauf entre 8 ' +
-    'h et 8 h 59'],
+    'tous les jours, toutes les minutes de 0 h à 0 h 59, et de même toutes ' +
+    'les 2 heures jusqu\'à 22 h 59, sauf de 8 h à 8 h 59'],
   ['* 22-2 * * *', 'tous les jours, toutes les minutes de 22 h à 2 h 59'],
 
   // open / date
@@ -291,8 +296,7 @@ const rows = [
     'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois, toutes les minutes'],
   ['* * L * *', 'le dernier jour du mois, toutes les minutes'],
   ['* * 15W * *',
-    'le jour le plus proche du 15 de chaque mois, hors samedi et dimanche, ' +
-    'toutes les minutes'],
+    'le jour ouvré le plus proche du 15 de chaque mois, toutes les minutes'],
 
   // open / month
   ['* * * 6 *', 'en juin, toutes les minutes'],
@@ -305,7 +309,7 @@ const rows = [
   // open / weekday
   ['* * * * 0', 'tous les dimanches, toutes les minutes'],
   ['* * * * 1,3,5', 'le lundi, le mercredi et le vendredi, toutes les minutes'],
-  ['* * * * 0,6', 'le week-end, toutes les minutes'],
+  ['* * * * 0,6', 'le samedi et le dimanche, toutes les minutes'],
   ['* * * * 1-6', 'du lundi au samedi, toutes les minutes'],
   ['* * * * 5L', 'le dernier vendredi du mois, toutes les minutes'],
   ['* * * * 1#2', 'le deuxième lundi du mois, toutes les minutes']

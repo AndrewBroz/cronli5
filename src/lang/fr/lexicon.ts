@@ -82,9 +82,9 @@ const symbols = {hour: 'h', minute: 'min', second: 's'};
 const nthWords =
   ['premier', 'deuxième', 'troisième', 'quatrième', 'cinquième'];
 
-// The count in «une heure sur deux», «une année sur quatre» and «trois
-// jours avant le dernier jour», indexed by the number, from two to
-// thirty. Beyond thirty the digit is written.
+// The count in «une année sur quatre» and «trois jours avant le dernier
+// jour», indexed by the number, from two to thirty. Beyond thirty the
+// digit is written.
 const countWords = [
   '', '', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf',
   'dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize',
@@ -95,26 +95,25 @@ const countWords = [
 
 // The function words and fixed phrases.
 const words = {
-  afterMinuteStart: 'après le début de la minute',
   afterEachMinuteStart: 'après le début de chaque minute',
   afternoon: 'de l\'après-midi',
+  again: 'puis de nouveau',
   also: 'ainsi que',
   and: 'et',
+  andEachTime: 'et à chaque fois',
   at: 'à',
-  atMinuteStart: 'au début de la minute',
   beforeLastDay: 'avant le dernier jour',
-  between: 'entre',
+  bothCases: 'dans les deux cas',
   closest: 'le plus proche du',
+  dayThatFalls: 'le jour qui tombe',
   daysOfMonth: 'du mois',
   during: 'pendant',
-  eachTime: 'chaque fois',
   evenDays: 'les jours pairs',
   evenYears: 'les années paires',
   evening: 'du soir',
   everyDay: 'tous les jours',
   everyDayOfMonth: 'tous les jours du mois',
   except: 'sauf',
-  excludingWeekend: 'hors',
   first: 'premières',
   from: 'de',
   fromThe: 'du',
@@ -122,30 +121,31 @@ const words = {
   last: 'dernières',
   lastDay: 'le dernier jour',
   lastOne: 'dernier',
+  later: 'plus tard',
+  likewise: 'et de même',
   midnight: 'minuit',
   morning: 'du matin',
   noon: 'midi',
   oddDays: 'les jours impairs',
   oddYears: 'les années impaires',
   ofEachHour: 'de chaque heure',
-  ofEachMinute: 'de chaque minute',
   ofEachMonth: 'de chaque mois',
-  oneHourIn: 'une heure sur',
   oneMinute: 'une minute',
   oneYearIn: 'une année sur',
   penultimateDay: 'l\'avant-dernier jour',
   runs: 'S\'exécute',
+  sameMonth: 'dans le même mois',
   since: 'à partir de',
   startup: 'au démarrage du système',
   the: 'le',
-  theDay: 'le jour',
   thePlural: 'les',
   then: 'puis',
   to: 'à',
   toThe: 'au',
   unrecognizable: 'une expression cron non reconnue',
-  weekend: 'le week-end',
-  weekendCanada: 'la fin de semaine'
+  until: 'jusqu\'à',
+  whenMonthHasMoreThan: 'quand le mois compte plus de',
+  workingDay: 'jour ouvré'
 };
 
 const lexicon = {
