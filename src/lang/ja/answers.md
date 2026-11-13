@@ -995,12 +995,52 @@ with の. 毎年 is said once, at the head.
 
 * 毎年6月1日および6月の毎週金曜日、いずれも0:00
 * 毎年6月1日〜7日および6月の毎週月曜日、いずれも0:00
-* 毎年1月1日・1月15日・7月1日・7月15日および1月・7月の毎週月曜日〜金曜日、い
-  ずれも0:00
-* 毎年5月・6月・7月の1日・19日・23日・28日および5月〜7月の毎週水曜日・木曜
-  日、いずれも7:52から16:52まで1時間ごと
 * 2030年6月1日および2030年6月の毎週金曜日、いずれも0:00
 * 2030年の毎月1日および2030年の毎週金曜日、いずれも0:00
+
+**Several named months, the same on both sides, are named once.** Where
+the year is every year (毎年), the months are two or more named months
+(a list or a range; not a word such as 奇数月, and not Xを除く毎月), and
+the dates fire in every one of the months the weekdays are said of, in
+every year, the
+date side names the months as 4.4 writes them and the weekday side says
+同じ月の in their place: the months just named.
+
+* 毎年1月1日・1月15日・7月1日・7月15日および同じ月の毎週月曜日〜金曜日、い
+  ずれも0:00
+* 毎年5月・6月・7月の1日・19日・23日・28日および同じ月の毎週水曜日・木曜
+  日、いずれも7:52から16:52まで1時間ごと
+* 毎年1月・4月・7月・10月の1日・15日および同じ月の毎週月曜日、いずれも0時
+  台・5時台・10時台・15時台・20時台の0分・15分・30分・45分
+* 毎年6月1日・6月15日・7月1日・7月15日・8月1日・8月15日および同じ月の第2月
+  曜日、いずれも0:00
+* 毎年1月・7月の末日および同じ月の毎週金曜日、いずれも0:00
+
+The last version named the months again (毎年1月・4月・7月・10月の1日・15日
+および1月・4月・7月・10月の毎週月曜日): eight month names where there are
+four, and the reader had to compare the two lists to learn that they are
+the same, which is the one thing worth knowing about them. 同じ月 says it
+outright; it points back within the same sentence, as 翌日 does (the
+usage notes ask that what such a word counts from stand in the same
+sentence), and it cannot escape the months, which was the schedule
+reader's concern above. It is not used:
+
+* for one month, where 6月の is as short and is the fluent reader's own
+  form (毎年7月1日および7月の毎週月曜日、いずれも0:00);
+* where the dates fire in fewer months than the weekdays, since the
+  months are then not the same: 毎年1月31日・3月31日および1月〜4月の毎週月
+  曜日、いずれも0:00;
+* where the dates fire in one of the months only in leap years: after
+  （2月はうるう年のみ）, 同じ月 could be read as carrying the leap years
+  to the weekdays, whose Februaries come every year (毎年2月29日・3月29日
+  （2月はうるう年のみ）および2月・3月の毎週月曜日、いずれも0:00);
+* for months said by a word or as every month but some, where 同じ月
+  could be taken for the months left out, and the word is short
+  (毎年奇数月の1日および奇数月の毎週金曜日; 11月・12月を除く毎月1日および1
+  月〜10月の毎週金曜日);
+* where a year is named, which each side carries with its months as
+  above (2030年6月1日・7月1日および2030年6月・7月の毎週金曜日、いずれも0:00):
+  同じ月 would leave the reader to decide whether the year comes with it.
 
 This is a fluent reader's own correction (毎年6月1日と6月の毎週金曜日、いず
 れも0:00). It keeps the date whole, so 1日 cannot be read いちにち, and
@@ -1011,8 +1051,9 @@ concern. Two earlier forms failed: 毎年6月の、1日および毎週金曜日 
 list as belonging to the last month only).
 
 Months before a pair are said on each side as that side would say them
-alone (4.4): on the weekday side a range of months stays a range (5月〜7
-月の毎週水曜日), and before a date most of the year is Xを除く毎月. The
+alone (4.4): on the weekday side, where the months are said again, a
+range of months stays a range (1月31日・3月31日および1月〜4月の毎週月曜日),
+and before a date most of the year is Xを除く毎月. The
 ban on を除く inside a pair is about days, where the other side can
 override it; a month binds both sides, and each side says it: 12月を除く
 毎月1日および1月〜11月の毎週金曜日、いずれも0:00; 6月を除く毎月1日および6

@@ -97,6 +97,8 @@ const words = {
   pm: '午後',
   runs: '実行します',
   runsAt: 'に',
+  // The months just named, said again on the weekday side of a pair.
+  sameMonths: '同じ月',
   startup: 'システム起動時',
   subject: 'が',
   to: 'まで',
