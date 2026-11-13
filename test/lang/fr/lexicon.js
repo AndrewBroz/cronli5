@@ -11,9 +11,9 @@ describe('French lexicon:', function() {
     expect(lexicon.months[6]).to.deep.equal({full: 'juin', short: 'juin'});
     expect(lexicon.months).to.have.length(13);
     expect(lexicon.weekdays[1]).to.deep.equal(
-      {full: 'lundi', short: 'lun.'});
+      {full: 'lundi', plural: 'lundis', short: 'lun.'});
     expect(lexicon.weekdays[0]).to.deep.equal(
-      {full: 'dimanche', short: 'dim.'});
+      {full: 'dimanche', plural: 'dimanches', short: 'dim.'});
     expect(lexicon.weekdays).to.have.length(7);
   });
 
@@ -33,7 +33,19 @@ describe('French lexicon:', function() {
     expect(lexicon.dayNumber(1)).to.equal('1er');
     expect(lexicon.dayNumber(2)).to.equal('2');
     expect(lexicon.dayNumber(21)).to.equal('21');
-    expect(lexicon.nthFromEnd(3)).to.equal('3e');
+  });
+
+  it('has the count words from two to thirty', function() {
+    expect(lexicon.countWords[2]).to.equal('deux');
+    expect(lexicon.countWords[4]).to.equal('quatre');
+    expect(lexicon.countWords[21]).to.equal('vingt et un');
+    expect(lexicon.countWords[30]).to.equal('trente');
+    expect(lexicon.countWords).to.have.length(31);
+  });
+
+  it('has the symbols of a written time', function() {
+    expect(lexicon.symbols).to.deep.equal(
+      {hour: 'h', minute: 'min', second: 's'});
   });
 
   it('has each unit alone and in the plural, with its «tous les»',
