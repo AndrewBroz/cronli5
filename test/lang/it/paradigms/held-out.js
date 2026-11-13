@@ -141,8 +141,9 @@ const rows = [
     'dal lunedì al venerdì e in più nei giorni pari di ogni mese, sempre ' +
     'ogni 15 minuti dalle 9:00 alle 17:45'],
   ['*/15 9-17 */5 * 1-5',
-    'dal lunedì al venerdì e in più il 1º, il 6, l\'11, il 16, il 21, il 26 ' +
-    'e il 31 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45'],
+    'il 1º, il 6, l\'11, il 16, il 21, il 26 e il 31 di ogni mese solo se ' +
+    'cadono tra il lunedì e il venerdì, ogni 15 minuti dalle 9:00 alle ' +
+    '17:45'],
   ['*/15 9-17 L * 1-5',
     'dal lunedì al venerdì e in più l\'ultimo giorno di ogni mese, sempre ' +
     'ogni 15 minuti dalle 9:00 alle 17:45'],
