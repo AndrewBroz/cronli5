@@ -459,26 +459,30 @@ const rows = [
   ['23 1/2 * * *', 'täglich von 1:23 bis 23:23 Uhr alle 2 Stunden'],
   ['0 1/2 * * 1', 'montags von 1:00 bis 23:00 Uhr alle 2 Stunden'],
   // Corrected: these were a series of clock times, «um 0:15, 0:45, 2:15,
-  // 2:45 … 22:15 und 22:45 Uhr», whose «…» a reader could take for every
-  // hour between. Every second hour has its name and its gloss; any other
-  // cadence of hours is said once, with its step in words, and the
-  // minutes once after it.
+  // 2:45 … 22:15 und 22:45 Uhr», whose «…» stated no step. A cadence of
+  // hours beside listed minutes says its step in words, or its name, with
+  // its hours in a bracket as hours, and the minutes once after it.
   ['15,45 */2 * * *',
-    'täglich in den geraden Stunden (0:15–0:45, 2:15–2:45 … 22:15–22:45 ' +
-    'Uhr) jeweils um :15 und :45'],
+    'täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :15 und ' +
+    ':45'],
   ['15,45 */4 * * *',
-    'täglich von 0 bis 20 Uhr alle 4 Stunden, jeweils um :15 und :45'],
+    'täglich alle 4 Stunden (0, 4, 8, 12, 16 und 20 Uhr), jeweils um :15 ' +
+    'und :45'],
   ['0,15,45 */4 * * *',
-    'täglich von 0 bis 20 Uhr alle 4 Stunden, jeweils um :00, :15 und :45'],
+    'täglich alle 4 Stunden (0, 4, 8, 12, 16 und 20 Uhr), jeweils um :00, ' +
+    ':15 und :45'],
+  // Corrected: was «in den geraden Stunden (0:05–0:55, 2:05–2:55 …
+  // 22:05–22:55 Uhr) jeweils um …»: a dash window reads as continuous,
+  // and listed minutes then contradict it.
   ['5/10 */2 * * *',
-    'täglich in den geraden Stunden (0:05–0:55, 2:05–2:55 … 22:05–22:55 ' +
-    'Uhr) jeweils um :05, :15, :25, :35, :45 und :55'],
+    'täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :05, ' +
+    ':15, :25, :35, :45 und :55'],
   // Corrected: was «von 8:05 bis 8:50, von 10:05 bis 10:50 … und von
   // 18:05 bis 18:50 Uhr jeweils …», whose «…» could be read as every hour
   // from 10 to 18.
   ['5,20,35,50 8-18/2 * * *',
-    'täglich von 8 bis 18 Uhr alle 2 Stunden, jeweils um :05, :20, :35 und ' +
-    ':50'],
+    'täglich alle 2 Stunden (8, 10, 12, 14, 16 und 18 Uhr), jeweils um ' +
+    ':05, :20, :35 und :50'],
   ['15,45 */12 * * *', 'täglich um 0:15, 0:45, 12:15 und 12:45 Uhr'],
   ['23 */12 * * *', 'täglich um 0:23 und 12:23 Uhr'],
   ['0 1/12 * * *', 'täglich um 1:00 und 13:00 Uhr'],
@@ -521,8 +525,8 @@ const rows = [
   // both their ends, since a bare «alle 15 Minuten» after them would have
   // no end.
   ['*/15 8-18/2 * * *',
-    'täglich von 8 bis 18 Uhr alle 2 Stunden, jeweils von :00 bis :45 alle ' +
-    '15 Minuten'],
+    'täglich alle 2 Stunden (8, 10, 12, 14, 16 und 18 Uhr), jeweils von ' +
+    ':00 bis :45 alle 15 Minuten'],
   ['0 9-17,20,22 * * *',
     'täglich von 9:00 bis 17:00 Uhr stündlich sowie um 20:00 und 22:00 Uhr'],
   ['* 9-17,20,22 * * *',
@@ -606,10 +610,10 @@ const rows = [
     'Sekunden nach der vollen Minute'],
   // Corrected: was the series «um 0:05:08, 0:30:08, 2:05:08, 2:30:08 …
   // 22:05:08 und 22:30:08 Uhr», whose «…» stated no step. The even hours
-  // say theirs by name.
+  // say theirs by name, with the hours in the bracket.
   ['8 5,30 */2 * * *',
-    'täglich in den geraden Stunden (0:05–0:30, 2:05–2:30 … 22:05–22:30 ' +
-    'Uhr) jeweils um :05:08 und :30:08'],
+    'täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :05:08 ' +
+    'und :30:08'],
   ['* 0-29 * * * *', 'stündlich von :00:00 bis :29:59 jede Sekunde'],
   ['* 30 * * * *', 'stündlich um :30, jeweils eine Minute lang jede Sekunde'],
   ['* */15 8,12,18 * * *',
@@ -709,8 +713,8 @@ const rows = [
   // 23:00 bis 23:59 Uhr jede Minute», two «…» that stated no step. Each
   // cadence is said once with its step, as the hours as points say it.
   ['* 0-10/2,11-23/3 * * *',
-    'täglich von 0 bis 10 Uhr alle 2 Stunden und von 11 bis 23 Uhr alle 3 ' +
-    'Stunden, jeweils von :00 bis :59 jede Minute'],
+    'täglich alle 2 Stunden (0, 2, 4, 6, 8 und 10 Uhr) und alle 3 Stunden ' +
+    '(11, 14, 17, 20 und 23 Uhr), jeweils von :00 bis :59 jede Minute'],
   // The 11th begins the every-third-day part, as the pattern writes it:
   // the row once ran the odd days through the 11th, which the core no
   // longer offers.
@@ -852,60 +856,85 @@ const rows = [
     'Samstag oder Sonntag fallen, jeweils von 9:00 bis 17:45 Uhr alle 15 ' +
     'Minuten'],
   // A cadence of hours beside several minutes is said once, as hours,
-  // with its step in words, where its windows would be more than a reader
-  // holds: more than four windows where the minutes run through each of
-  // them, more than three where the minutes are listed after them (each
-  // window then shows two clock times beside the list). The hours are
-  // bare, «von 2 bis 20 Uhr», since no minute of them is a time that
-  // fires, and the minutes follow once after «, jeweils», always with
-  // their ends. The windows' «…» it replaces could be read as every hour
-  // between; every second hour of the day keeps its name and gloss.
+  // where its windows would be more than a reader holds: more than four
+  // windows where the minutes run through each of them, more than three
+  // where the minutes are listed after them. The step is said in words
+  // («alle 6 Stunden»), or the name of every second hour, and the hours
+  // follow in a bracket as hours, never as times that fire: «um» and
+  // «von … bis … Uhr» would name 2:00 or end at 20:00, where the last
+  // minutes fire later. Up to eight hours are all listed (every step of
+  // three or more); a longer cadence shows its first three, «…» and the
+  // last, beside the step that states it. The minutes follow once after
+  // «, jeweils», always with both ends.
   ['5/15 2/6 * * *',
-    'täglich von 2 bis 20 Uhr alle 6 Stunden, jeweils um :05, :20, :35 und ' +
-    ':50'],
+    'täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, ' +
+    ':35 und :50'],
   ['5/15 2,8,14,20 * * *',
-    'täglich von 2 bis 20 Uhr alle 6 Stunden, jeweils um :05, :20, :35 und ' +
-    ':50'],
+    'täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, ' +
+    ':35 und :50'],
   ['5/15 2/5 * * *',
-    'täglich von 2 bis 22 Uhr alle 5 Stunden, jeweils um :05, :20, :35 und ' +
-    ':50'],
+    'täglich alle 5 Stunden (2, 7, 12, 17 und 22 Uhr), jeweils um :05, ' +
+    ':20, :35 und :50'],
   ['5/10 0,6,12,18 * * *',
-    'täglich von 0 bis 18 Uhr alle 6 Stunden, jeweils um :05, :15, :25, ' +
-    ':35, :45 und :55'],
+    'täglich alle 6 Stunden (0, 6, 12 und 18 Uhr), jeweils um :05, :15, ' +
+    ':25, :35, :45 und :55'],
   ['10/20 2/6 * * *',
-    'täglich von 2 bis 20 Uhr alle 6 Stunden, jeweils um :10, :30 und :50'],
+    'täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :10, :30 und ' +
+    ':50'],
   ['5,35 2/6 * * *',
-    'täglich von 2 bis 20 Uhr alle 6 Stunden, jeweils um :05 und :35'],
+    'täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05 und :35'],
   ['5/15 2/6 */2 * *',
-    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) von 2 bis 20 ' +
-    'Uhr alle 6 Stunden, jeweils um :05, :20, :35 und :50'],
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) alle 6 Stunden ' +
+    '(2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50'],
   ['0-10 5/15 2/6 */2 * *',
-    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) von 2 bis 20 ' +
-    'Uhr alle 6 Stunden, jeweils um :05, :20, :35 und :50, jeweils in den ' +
-    'Sekunden 0 bis 10'],
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) alle 6 Stunden ' +
+    '(2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50, jeweils in ' +
+    'den Sekunden 0 bis 10'],
   ['30 5/15 2/6 * * *',
-    'täglich von 2 bis 20 Uhr alle 6 Stunden, jeweils um :05:30, :20:30, ' +
-    ':35:30 und :50:30'],
+    'täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05:30, ' +
+    ':20:30, :35:30 und :50:30'],
   ['* 2/5 * * *',
-    'täglich von 2 bis 22 Uhr alle 5 Stunden, jeweils von :00 bis :59 jede ' +
-    'Minute'],
+    'täglich alle 5 Stunden (2, 7, 12, 17 und 22 Uhr), jeweils von :00 bis ' +
+    ':59 jede Minute'],
+  ['5,35 */3 * * *',
+    'täglich alle 3 Stunden (0, 3, 6, 9, 12, 15, 18 und 21 Uhr), jeweils um ' +
+    ':05 und :35'],
+  ['5,35 2-18/2 * * *',
+    'täglich alle 2 Stunden (2, 4, 6 … 18 Uhr), jeweils um :05 und :35'],
+  ['15,45 1/2 * * *',
+    'täglich in den ungeraden Stunden (1, 3, 5 … 23 Uhr), jeweils um :15 ' +
+    'und :45'],
+  ['15,45 0,2,4,6,10,12,14,16,18,20,22 * * *',
+    'täglich in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :15 und ' +
+    ':45, außer von 8:15 bis 8:45 Uhr'],
   ['5,20,35,50 0-12/3,14-22/4 * * *',
-    'täglich von 0 bis 12 Uhr alle 3 Stunden und von 14 bis 22 Uhr alle 4 ' +
-    'Stunden, jeweils um :05, :20, :35 und :50'],
+    'täglich alle 3 Stunden (0, 3, 6, 9 und 12 Uhr) und alle 4 Stunden (14, ' +
+    '18 und 22 Uhr), jeweils um :05, :20, :35 und :50'],
   // Two minutes that halve the hour are listed after the hours once: with
   // both its ends a cadence would name more.
   ['0,30 1/4 * * *',
-    'täglich von 1 bis 21 Uhr alle 4 Stunden, jeweils um :00 und :30'],
+    'täglich alle 4 Stunden (1, 5, 9, 13, 17 und 21 Uhr), jeweils um :00 ' +
+    'und :30'],
   ['5/15 1,4,10,13,16,19,22 * * *',
-    'täglich von 1 bis 22 Uhr alle 3 Stunden, jeweils um :05, :20, :35 und ' +
-    ':50, außer von 7:05 bis 7:50 Uhr'],
+    'täglich alle 3 Stunden (1, 4, 7, 10, 13, 16, 19 und 22 Uhr), jeweils ' +
+    'um :05, :20, :35 und :50, außer von 7:05 bis 7:50 Uhr'],
   ['5/15 0-12/3,20 * * *',
-    'täglich von 0 bis 12 Uhr alle 3 Stunden sowie um 20 Uhr, jeweils um ' +
-    ':05, :20, :35 und :50'],
+    'täglich alle 3 Stunden (0, 3, 6, 9 und 12 Uhr) sowie 20 Uhr, jeweils ' +
+    'um :05, :20, :35 und :50'],
+  ['5/15 0-12/3,15-17 * * *',
+    'täglich alle 3 Stunden (0, 3, 6, 9 und 12 Uhr) und stündlich (15, 16 ' +
+    'und 17 Uhr), jeweils um :05, :20, :35 und :50'],
+  // A bracket of hours is a gloss, and stays in 24-hour form in every
+  // style.
   ['5/15 2/6 * * *',
-    'täglich von 2 Uhr morgens bis 8 Uhr abends alle 6 Stunden, jeweils um ' +
-    ':05, :20, :35 und :50',
+    'täglich alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, ' +
+    ':35 und :50',
     {style: {hour12: true}}],
+  // Every second hour with minutes that run through each hour keeps its
+  // dash windows.
+  ['30 */15 1/2 * * *',
+    'täglich in den ungeraden Stunden (1:00–1:45, 3:00–3:45 … 23:00–23:45 ' +
+    'Uhr) alle 15 Minuten, jeweils 30 Sekunden nach der vollen Minute'],
   // The boundary. Three windows with minutes listed, four that the
   // minutes run through, hours that are no cadence, and windows that are
   // not single hours stay windows; one minute keeps the hours as points.

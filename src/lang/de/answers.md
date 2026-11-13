@@ -134,10 +134,11 @@ Corrections, for what has to be worked out:
     stündlich»;
   * hours as windows: each part's windows, the parts joined by «sowie»
     and «Uhr» once at the end; where a part is a cadence too long for
-    its windows (4.1), the hours are said once, each part as the hours
-    as points say it, with bare hours: «von 0 bis 10 Uhr alle 2 Stunden
-    und von 11 bis 23 Uhr alle 3 Stunden, jeweils von :00 bis :59 jede
-    Minute»; a single hour among them is «sowie um 20 Uhr»;
+    its windows (4.1), the hours are said once, each part by its rule
+    with its hours in a bracket: «alle 2 Stunden (0, 2, 4, 6, 8 und 10
+    Uhr) und alle 3 Stunden (11, 14, 17, 20 und 23 Uhr), jeweils von :00
+    bis :59 jede Minute»; a run is «stündlich (15, 16 und 17 Uhr)», and a
+    single hour follows bare, «sowie 20 Uhr»;
   * dates: each cadence as a series (the first three, «…», «und» and the
     last; four or fewer in full), each run as a run, joined by «sowie»,
     each with its own «am» or «vom»: «am 1., 3., 5. … und 11. sowie am
@@ -646,7 +647,7 @@ it.
 | a range (two hours or more) | «von 9:00 bis 17:59 Uhr jede Minute»; «von 9:00 bis 17:45 Uhr alle 15 Minuten» |
 | any other set of hours that is not a cadence of more than four | each window named, a cadence of four included: «von 9:00 bis 9:45 und von 17:00 bis 17:45 Uhr alle 15 Minuten»; «von 8:00 bis 8:45, von 12:00 bis 12:45 und von 18:00 bis 18:45 Uhr alle 15 Minuten»; «von 0:00 bis 2:59 und von 22:00 bis 23:59 Uhr jede Minute» |
 | every second hour, from 0 or from 1 to the end of the day | «in den geraden Stunden (0:00–0:59, 2:00–2:59 … 22:00–22:59 Uhr) jede Minute»; «in den ungeraden Stunden (1:00–1:45, 3:00–3:45 … 23:00–23:45 Uhr) alle 15 Minuten» |
-| any other cadence of more than four hours | the hours once (see below), then «, jeweils» and the minutes with both their ends: «von 8 bis 18 Uhr alle 2 Stunden, jeweils von :00 bis :45 alle 15 Minuten»; «von 2 bis 22 Uhr alle 5 Stunden, jeweils von :00 bis :59 jede Minute» |
+| any other cadence of more than four hours | the hours once (see below), then «, jeweils» and the minutes with both their ends: «alle 2 Stunden (8, 10, 12, 14, 16 und 18 Uhr), jeweils von :00 bis :45 alle 15 Minuten»; «alle 5 Stunden (2, 7, 12, 17 und 22 Uhr), jeweils von :00 bis :59 jede Minute» |
 | a cadence of hours with exceptions | the same, the lead, then the excepted window: «in den geraden Stunden (0:00–0:45, 2:00–2:45 … 22:00–22:45 Uhr) alle 15 Minuten, außer von 8:00 bis 8:45 Uhr» |
 | every hour with exceptions | «alle 10 Minuten, außer von 3:00 bis 3:50 Uhr» |
 
@@ -668,36 +669,51 @@ windows are written with an en dash and no spaces, and «Uhr» once at the
 end.
 
 **Any other cadence of hours too long for its windows is said once, as
-hours, with its step in words.** «Von 2 bis 22 Uhr alle 5 Stunden,
-jeweils um :05, :20, :35 und :50»; «von 8 bis 18 Uhr alle 2 Stunden,
-jeweils von :00 bis :45 alle 15 Minuten». Too long is more than four
-windows where the minutes run through each of them (every minute, a
-run, a cadence: the window is then all there is to say of its hour, and
-four are held as four clock times are), and more than three where
-minutes are listed after the windows (each window then shows two clock
-times beside the list; three show six, the limit, and four showed
-twelve things with four minutes). The hours are said as the hours as
-points say a cadence (4.1, M a single minute), both ends and the step,
-but **bare**, «2 Uhr» and not «2:00 Uhr»: no minute of them is a time
-that fires, and «2:00» would claim one. The minutes follow once, after a
-comma and «jeweils», and always with both ends, since a bare «alle 15
-Minuten» after a cadence of hours could run on to the next. Runs and
-cadences together say each part so («von 0 bis 12 Uhr alle 3 Stunden
-und von 14 bis 22 Uhr alle 4 Stunden, jeweils …»; a run «von 15 bis 17
-Uhr stündlich», a single hour «sowie um 20 Uhr»). This replaces the
-first two windows, «…» and the last («von 2:05 bis 2:50, von 7:05 bis
-7:50 … und von 22:05 bis 22:50 Uhr jeweils um :05, :20, :35 und :50»)
-and the series of clock times («um 0:15, 0:45, 4:15, 4:45 … 20:15 und
-20:45 Uhr»). A blind native reader (2026-11-13) recovered those, and
-said the «…» could as well mean every hour from 7 to 22, so that 13:20
-would fire: an ellipsis states no step, and in an exact statement of
-times it has two readings. The reader's own rewrite named the step in
-words and the hours bare. The «…» of every second hour's gloss and of a
-series of dates stays: there the rule is stated in words beside it («in
-den geraden Stunden», «an den ungeraden Tagen»), and the «…» only
-illustrates it. Not yet read blind in this form; the doubt to read for
-is whether «von 2 bis 20 Uhr alle 6 Stunden, jeweils um :05 …» is ever
-taken to fire at 2:00 as well.
+hours: its step in words and its hours in a bracket.** «Alle 5 Stunden
+(2, 7, 12, 17 und 22 Uhr), jeweils um :05, :20, :35 und :50»; «alle 2
+Stunden (8, 10, 12, 14, 16 und 18 Uhr), jeweils von :00 bis :45 alle 15
+Minuten». Too long is more than four windows where the minutes run
+through each of them (every minute, a run, a cadence: the window is then
+all there is to say of its hour, and four are held as four clock times
+are), and more than three where minutes are listed after the windows
+(each window then shows two clock times beside the list; three show
+six, the limit, and four showed twelve things with four minutes). The
+minutes follow once, after a comma and «jeweils», and always with both
+ends, since a bare «alle 15 Minuten» after a cadence of hours could run
+on to the next.
+
+The hours in the bracket are hours, not times that fire: bare numbers
+with «Uhr» once at the end, in 24-hour form in every style, as a gloss
+is. Three forms were given up for them, each after a blind native
+reader (2026-11-13):
+* the first two windows, «…» and the last («von 2:05 bis 2:50, von 7:05
+  bis 7:50 … und von 22:05 bis 22:50 Uhr jeweils …») and the series of
+  clock times («um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr»): the
+  «…» states no step, and could mean every hour from 7 to 22;
+* «von 2 bis 20 Uhr alle 6 Stunden, jeweils um :05 …»: every schedule
+  was recovered, but «bis 20 Uhr» "klingt nach Ende um 20:00, aber
+  20:50 läuft noch"; a «von … bis … Uhr» round hours whose last minutes
+  fire after the named end gives the end wrongly;
+* «um 2, 8, 14 und 20 Uhr, jeweils …», which both readers wrote: «um»
+  asserts that 2:00 fires.
+The bracket answers all three: the step is in words, the hours are
+shown as hours, and there is no «bis». **A bracket lists up to eight
+hours in full**, with «und» before the last; that is every cadence with a
+step of three or more (from 0, 1 or 2 it has eight). Eight short numbers
+are a check against the rule beside them, not a list to hold, and eight
+clock times were "at the limit of what can be read". A longer cadence,
+every second hour of part of the day, shows its first three hours, «…»
+and the last, «alle 2 Stunden (2, 4, 6 … 18 Uhr)», as a gloss of dates
+does: the step in words states the rule, and the «…» only illustrates
+it. Every second hour of the whole day says its name in place of the
+step, «in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :15 und
+:45», wherever minutes are listed after it (below). Runs and cadences
+together say each part so, joined by «und» («alle 3 Stunden (0, 3, 6, 9
+und 12 Uhr) und alle 4 Stunden (14, 18 und 22 Uhr), jeweils …»; a run
+«stündlich (15, 16 und 17 Uhr)»), and a single hour among them follows
+bare after «sowie» («sowie 20 Uhr»). An hour taken from the cadence is
+the excepted window after everything: «alle 3 Stunden (1, 4, 7 … und 22
+Uhr), jeweils um :05, :20, :35 und :50, außer von 7:05 bis 7:50 Uhr».
 
 **M is a single run of minutes and H is one hour.** A window of clock
 times: «von 9:00 bis 9:29 Uhr jede Minute»; «von 9:10 bis 9:40 Uhr jede
@@ -717,8 +733,8 @@ opens with «stündlich».
 | separate hours, six clock times or fewer | the clock times: «um 9:05, 9:20, 9:45, 17:05, 17:20 und 17:45 Uhr» |
 | separate hours, more than six clock times | a window for each hour, and «jeweils» in place of «stündlich», since no window holds a second hour: «von 9:05 bis 9:50 und von 17:05 bis 17:50 Uhr jeweils um :05, :20, :35 und :50» |
 | a cadence of hours, six clock times or fewer | the clock times |
-| every second hour of the day | the name and its gloss, each window from its first time to its last, then «jeweils» and the minutes once: «in den geraden Stunden (0:05–0:55, 2:05–2:55 … 22:05–22:55 Uhr) jeweils um :05, :15, :25, :35, :45 und :55»; «in den geraden Stunden (0:15–0:45, 2:15–2:45 … 22:15–22:45 Uhr) jeweils um :15 und :45» |
-| any other cadence of more than three hours | the hours once, bare, with their step, then «, jeweils» and the minutes once: «von 2 bis 20 Uhr alle 6 Stunden, jeweils um :05, :20, :35 und :50»; «von 0 bis 20 Uhr alle 4 Stunden, jeweils um :15 und :45»; «von 8 bis 18 Uhr alle 2 Stunden, jeweils um :05, :20, :35 und :50». (This replaced a series of clock times, «um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr», and windows with «…»; see «Any other cadence of hours» above. One window of the hour cadence for each minute, «von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden», was the third judge's one odd grade: two overlapping windows look like periods.) |
+| every second hour of the day | the name and the hours in a bracket, then «, jeweils» and the minutes once: «in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um :05, :15, :25, :35, :45 und :55»; «in den ungeraden Stunden (1, 3, 5 … 23 Uhr), jeweils um :15 und :45». A gloss of dash windows («(0:15–0:45, 2:15–2:45 … 22:15–22:45 Uhr) jeweils um :15 und :45») read to a blind reader as one continuous stretch that the listed minutes then contradict, so that 2:30 would seem to fire; a dash window is kept only where the minutes run through it |
+| any other cadence of more than three hours | the step and the hours in a bracket, then «, jeweils» and the minutes once: «alle 6 Stunden (2, 8, 14 und 20 Uhr), jeweils um :05, :20, :35 und :50»; «alle 4 Stunden (0, 4, 8, 12, 16 und 20 Uhr), jeweils um :15 und :45»; «alle 2 Stunden (8, 10, 12, 14, 16 und 18 Uhr), jeweils um :05, :20, :35 und :50». (This replaced a series of clock times, «um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr», and windows with «…»; see «Any other cadence of hours» above. One window of the hour cadence for each minute, «von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden», was the third judge's one odd grade: two overlapping windows look like periods.) |
 | a cadence of three hours, M a list | each window, then «jeweils» and the minutes: «von 2:05 bis 2:50, von 11:05 bis 11:50 und von 20:05 bis 20:50 Uhr jeweils um :05, :20, :35 und :50» |
 | a cadence of hours, M a run or a cadence | the hours as in the table for continuous minutes, each window from its first run to its last, then the lead: «in den geraden Stunden (0:00–0:29, 2:00–2:29 … 22:00–22:29 Uhr) jede Minute» |
 | every hour with exceptions | «stündlich um :05, :20 und :45, außer von 3:05 bis 3:45 Uhr» |
@@ -730,15 +746,17 @@ Minuten» needs adding from :05, and the start is easily lost), and said
 of windows with a list after them that the two say the first and last
 minute twice, and that a window can look continuous until the list
 comes. They offered the hours once, «täglich um 2, 8, 14 und 20 Uhr,
-jeweils um :05, :20, :35 und :50». For a cadence that is now the form,
-with the hours in a «von … bis … alle N Stunden» that says a rhythm of
-hours. For a plain list it is not taken: «um 2, 8, 14 und 20 Uhr» is the
-form of four times that fire at the full hour, and with minutes after it
-a reader has to undo a claim the sentence just made (2:00 does not
-fire); the window names the first and last time that do fire, and
-«jeweils um» before the minutes tells it is not continuous. That is a
-judgment on the reader's remark, not yet a reading; it is the first
-form to put before the next blind reader.
+jeweils um :05, :20, :35 und :50». For a cadence the hours
+are now said once, with the step in words and the hours in a bracket
+(above). For a plain list «um 2, 8, 14 und 20 Uhr» is not taken: it is
+the form of four times that fire at the full hour, and with minutes
+after it a reader has to undo a claim the sentence just made (2:00 does
+not fire). A second blind reader said the same of these windows («klingt
+nach einem durchgehenden Zeitraum … Es sind aber nur vier Zeitpunkte pro
+Stunde»). The bracket would extend to them without a step, «in den
+Stunden 1, 3, 8 und 20 Uhr» or «zu den Stunden (1, 3, 8 und 20 Uhr),
+jeweils …»; that is proposed, not adopted, and is the first form to put
+before the next blind reader.
 
 How this form was reached. With the minutes said as «5, 20 und 45
 Minuten nach jeder vollen Stunde», a window was misread in two opposite
@@ -785,8 +803,8 @@ never «24:00».
     stündlich»; «von 0:00:30 bis 22:00:30 Uhr alle 2 Stunden»; «um
     0:00:15, 6:00:15, 12:00:15 und 18:00:15 Uhr»;
   * minutes of the hour: «stündlich um :30:15»; «stündlich um :05:30 und
-    :20:30»; «in den geraden Stunden (0:05–0:30, 2:05–2:30 … 22:05–22:30
-    Uhr) jeweils um :05:08 und :30:08»;
+    :20:30»; «in den geraden Stunden (0, 2, 4 … 22 Uhr), jeweils um
+    :05:08 und :30:08»;
   * every hour on the hour: «30 Sekunden nach jeder vollen Stunde»
     (graded natural twice).
 * **The rest is nothing, or «jede Minute» in windows** (M is every
@@ -1297,12 +1315,13 @@ brackets are «(Mo. bis Fr.)».
   exception is the shortest true thing to say of years with one hole.
   None of these forms has been judged by a fluent reader.)
 
-Series, by field: a gloss of hours shows two windows and the last, and
-stands only beside the name of the hours it shows; a series of dates
+Series, by field: a gloss of hours shows two windows and the last, or
+three hours and the last, and stands only beside the words that state
+its rule (a name, or a step); a series of dates
 shows three dates and the last; a series of years shows three years, and
-its end only if it has one. Dates and windows use «…»; years use «usw.»,
-because their series has no end to show. A cadence of hours with no name
-is never a series: it says its step in words (4.1).
+its end only if it has one. Dates, hours and windows use «…»; years use
+«usw.», because their series has no end to show. A cadence of hours is
+never a series without its step or name in words beside it (4.1).
 
 ## 6. Words
 

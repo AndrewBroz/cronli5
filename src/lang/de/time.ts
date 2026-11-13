@@ -107,6 +107,10 @@ const heldBeforeCadence = 4;
 // The most windows of single hours written out: six clock times.
 const windowsHeld = held / 2;
 
+// The most hours a bracket lists in full: every cadence with a step of
+// three or more.
+const bracketHeld = 8;
+
 const eachHour: Wording =
   {after: words.afterEachHour, at: words.atEachHour};
 const eachMinute: Wording =
@@ -293,13 +297,12 @@ function spread(description: Sayable, level: Level): Said {
   };
 }
 
-// The hours as points, each at the pattern's one minute, or as bare hours
-// where the minutes are said after them.
-function hourLevel(work: Clockwork, bare: boolean): Level {
+// The hours as points, each at the pattern's one minute.
+function hourLevel(work: Clockwork): Level {
   const {M, carry, voice} = work;
 
   function at(hour: number): string {
-    return voice.clock(hour, bare ? [] : [M[0], ...carry]);
+    return voice.clock(hour, [M[0], ...carry]);
   }
 
   return {
@@ -393,19 +396,70 @@ function everySecond(base: Sayable): boolean {
   return interval === 2 && start < 2 && last + 2 > hoursOfDay.max;
 }
 
-// Whether the hours beside several minutes are said once, as hours: they
-// hold a cadence that would need more windows than are held, and have no
-// name. A window that the minutes run through is all there is to say of
+// Whether the hours hold a cadence that would need more windows than are
+// held. A window that the minutes run through is all there is to say of
 // its hour, and four are held, as four clock times are; beside minutes
 // listed after them each window shows two clock times, and three are.
-function saidOnce(hours: Sayable, limit: number): boolean {
-  const {base} = restOf(hours);
+function tooManyWindows(base: Sayable, limit: number): boolean {
   const parts = base.kind === 'cadencePieces' ? base.parts : [base];
 
-  return !everySecond(base) && parts.some(function long(part) {
+  return parts.some(function long(part) {
     return part.kind === 'cadence' &&
       denote(part, hoursOfDay).length > limit;
   });
+}
+
+// Whether the hours beside several minutes are said once, as hours,
+// whatever the minutes: a cadence with no name too long for windows that
+// the minutes run through.
+function longCadence(hours: Sayable): boolean {
+  const {base} = restOf(hours);
+
+  return !everySecond(base) && tooManyWindows(base, heldBeforeCadence);
+}
+
+// Whether they are said once beside listed minutes: a cadence too long
+// for windows with a list after them, and every second hour, whose gloss
+// of windows would read as continuous.
+function cadenceBesideList(hours: Sayable): boolean {
+  const {base} = restOf(hours);
+
+  return everySecond(base) || tooManyWindows(base, windowsHeld);
+}
+
+// Hours named as hours, in 24-hour form in every style, as a gloss is:
+// all of them up to eight, and otherwise the first three, «…» and the
+// last, beside the words that state the rule.
+function hoursAsHours(hours: number[]): string {
+  return (hours.length > bracketHeld ?
+    `${hours.slice(0, 3).join(', ')} ${words.ellipsis} ` +
+      `${hours[hours.length - 1]}` :
+    list(hours.map(String))) + ` ${words.oClock}`;
+}
+
+// The hours said once, each stretch by its rule with its hours in a
+// bracket: «alle 6 Stunden (2, 8, 14 und 20 Uhr)», «in den geraden
+// Stunden (0, 2, 4 … 22 Uhr)»; single hours after them.
+function hoursOnce(base: Sayable, work: Clockwork): string {
+  const parts = base.kind === 'cadencePieces' ? base.parts : [base];
+  const rules = parts.filter(function isStretch(part) {
+    return part.kind !== 'values';
+  }).map(function ruleOf(part) {
+    const {interval = 1, start = 0} = part as Partial<Described<'cadence'>>;
+    const named = everySecond(part) ?
+      [words.inEvenHours, words.inOddHours][start] :
+      [words.hourly, every(interval, units.hour)][Number(interval > 1)];
+
+    return `${named} (${hoursAsHours(denote(part, hoursOfDay))})`;
+  });
+  const strays = parts.flatMap(function straysOf(part) {
+    return (part as Described<'values'>).values ?? [];
+  });
+
+  return join([list(rules), strays.length > 0 &&
+    `${words.also} ${list(strays.map(function bare(hour) {
+      return work.voice.clock(hour, []);
+    }))}${work.voice.oClock}`]);
 }
 
 // The windows of a set of hours, without «Uhr»: one for each run.
@@ -466,7 +520,7 @@ function minutesAndHours(
   }
 
   if (M.length === 1) {
-    return spread(hours, hourLevel(work, false));
+    return spread(hours, hourLevel(work));
   }
 
   const said = spread(minutes, minuteLevel(work, each));
@@ -492,8 +546,7 @@ function minutesAndHours(
   return {
     excepts: [...gone, ...said.excepts],
     text: once ?
-      `${shapes[base.kind as 'all'](base as never, hourLevel(work, true))}` +
-        `, ${said.text}` :
+      `${hoursOnce(base, work)}, ${said.text}` :
       join([hourStretches(base, spans, work), said.text])
   };
 }
@@ -675,12 +728,12 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     M.length === 1 ? hoursAsPoints : hoursAsWindows,
     together(schedule, 'hour', M.length === 1));
   const several = M.length > 1 && H.length > 1;
-  const long = several && saidOnce(hours, heldBeforeCadence);
+  const long = several && longCadence(hours);
   const minutes = H.length === 1 ?
     settle(linear.minute, onTheClock, minuteOthers) :
     settleUnwrapped(candidates.minute as SetDescription[], linear.minute,
       long ? afterHours : inTheHour, minuteOthers);
-  const listed = ['values', 'pieces', 'cadencePieces']
+  const listed = several && ['values', 'pieces', 'cadencePieces']
     .includes(restOf(minutes).base.kind);
   const lone = S.length === 1;
   const pointed = minutes.kind === 'values';
@@ -704,7 +757,7 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     linear,
     low: [M[0], ...[0].filter(whereLeading)],
     minutes,
-    once: long || several && listed && saidOnce(hours, windowsHeld),
+    once: long || listed && cadenceBesideList(hours),
     // One second is silent at 0 and carried by points.
     quiet: lone && (S[0] === 0 || pointed),
     seconds,
