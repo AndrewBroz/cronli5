@@ -390,9 +390,12 @@ const rows = [
   ['23 */6 * * *',
     'tutti i giorni alle 0:23, alle 6:23, alle 12:23 e alle 18:23'],
   ['23 1/2 * * *', 'tutti i giorni, ogni 2 ore dall\'1:23 alle 23:23'],
+  // Twelve hours named one by one were more than a reader holds; a
+  // cadence of more than eight hours named as numbers is its first three
+  // «e così via fino a» the last (answers 4.1 D.6).
   ['15,45 */2 * * *',
-    'tutti i giorni, ai minuti 15 e 45 delle ore 0, 2, 4, 6, 8, 10, 12, ' +
-    '14, 16, 18, 20 e 22'],
+    'tutti i giorni, ai minuti 15 e 45 delle ore 0, 2, 4 e così via fino ' +
+    'a 22'],
   ['15,45 */4 * * *',
     'tutti i giorni, ai minuti 15 e 45 delle ore 0, 4, 8, 12, 16 e 20'],
   ['15,45 */6 * * *',
@@ -487,9 +490,11 @@ const rows = [
   ['*/10 6-8,17-19 * * 1-5',
     'dal lunedì al venerdì, ogni 10 minuti dalle 6:00 alle 8:50 e dalle ' +
     '17:00 alle 19:50'],
+  // Twelve hours named one by one: now the first three and the last
+  // (answers 4.1 D.6).
   ['*/20 */2 */2 */3 *',
     'a gennaio, aprile, luglio e ottobre, nei giorni dispari del mese, ai ' +
-    'minuti 0, 20 e 40 delle ore 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 e 22'],
+    'minuti 0, 20 e 40 delle ore 0, 2, 4 e così via fino a 22'],
   ['5,20,45 9-17,22 * * *',
     'tutti i giorni, ai minuti 5, 20 e 45 di ogni ora, dalle 9:05 alle ' +
     '17:45 e dalle 22:05 alle 22:45'],
@@ -581,9 +586,11 @@ const rows = [
   ['*/15 */15 * * * *',
     'ogni 15 minuti, e in quel minuto ai secondi 0, 15, 30 e 45'],
   ['30 */15 * * * *', 'ogni 15 minuti, al secondo 30'],
+  // Twelve hours named one by one: now the first three and the last
+  // (answers 4.1 D.6).
   ['8 5,30 */2 * * *',
-    'tutti i giorni, al secondo 8 dei minuti 5 e 30 delle ore 0, 2, 4, 6, ' +
-    '8, 10, 12, 14, 16, 18, 20 e 22'],
+    'tutti i giorni, al secondo 8 dei minuti 5 e 30 delle ore 0, 2, 4 e ' +
+    'così via fino a 22'],
   ['* 0-29 * * * *', 'ogni secondo durante i minuti da 0 a 29 di ogni ora'],
   ['30 * 9-17 * * *',
     'tutti i giorni, ogni minuto dalle 9:00:30 alle 17:59:30'],
@@ -781,7 +788,62 @@ const rows = [
   ['30 0-29,45 9-17 * * *',
     'tutti i giorni, ogni minuto dal minuto 0 al 29 e una volta al minuto ' +
     '45 di ciascuna ora dalle 9 alle 17, al secondo 30 (prima volta alle ' +
-    '9:00:30, ultima alle 17:45:30)']
+    '9:00:30, ultima alle 17:45:30)'],
+  // A cadence of more than eight hours, where hours are named as numbers
+  // after a phrase inside the hour, is not named hour by hour: eight is
+  // the most this rule book lists. Its first three hours show the step
+  // and «e così via fino a» the last says where it ends; the hours stay
+  // numbers, so nothing reads as a stretch of time. A window around a few
+  // listed minutes was read as a continuous stretch by a blind reader
+  // (answers 4.1 D.6, 4.2).
+  ['*/25 */2 31 * *',
+    'il 31 dei mesi di 31 giorni, ai minuti 0, 25 e 50 delle ore 0, 2, 4 e ' +
+    'così via fino a 22'],
+  ['0,25,50 1-23/2 * * *',
+    'tutti i giorni, ai minuti 0, 25 e 50 delle ore 1, 3, 5 e così via ' +
+    'fino a 23'],
+  ['15,45 0-16/2 * * *',
+    'tutti i giorni, ai minuti 15 e 45 delle ore 0, 2, 4 e così via fino ' +
+    'a 16'],
+  ['5,30 */25 */2 31 * *',
+    'il 31 dei mesi di 31 giorni, ai secondi 5 e 30 dei minuti 0, 25 e 50 ' +
+    'delle ore 0, 2, 4 e così via fino a 22'],
+  ['5,30 * */2 * * *',
+    'tutti i giorni, ai secondi 5 e 30 di ogni minuto delle ore 0, 2, 4 e ' +
+    'così via fino a 22'],
+  ['* */25 */2 * * *',
+    'tutti i giorni, ogni secondo durante i minuti 0, 25 e 50 delle ore 0, ' +
+    '2, 4 e così via fino a 22'],
+  ['0-10 */25 */2 * * *',
+    'tutti i giorni, ogni secondo dal secondo 0 al 10 dei minuti 0, 25 e ' +
+    '50 delle ore 0, 2, 4 e così via fino a 22'],
+  ['*/10 */25 */2 * * *',
+    'tutti i giorni, ogni 10 secondi dal secondo 0 al 50 dei minuti 0, 25 ' +
+    'e 50 delle ore 0, 2, 4 e così via fino a 22'],
+  ['0-10 * */2 * * *',
+    'tutti i giorni, ogni secondo dal secondo 0 al 10 di ogni minuto delle ' +
+    'ore 0, 2, 4 e così via fino a 22'],
+  ['0-29,45 */2 * * *',
+    'tutti i giorni, ogni minuto dal minuto 0 al 29 e una volta al minuto ' +
+    '45 delle ore 0, 2, 4 e così via fino a 22'],
+  // A cadence less an hour has no step to show in its first three: it
+  // stays listed.
+  ['15,45 0,4,6,8,10,12,14,16,18,20,22 * * *',
+    'tutti i giorni, ai minuti 15 e 45 delle ore 0, 4, 6, 8, 10, 12, 14, ' +
+    '16, 18, 20 e 22'],
+  // Eight hours or fewer stay named as numbers.
+  ['0,25,50 */3 * * *',
+    'tutti i giorni, ai minuti 0, 25 e 50 delle ore 0, 3, 6, 9, 12, 15, 18 ' +
+    'e 21'],
+  ['15,45 0-14/2 * * *',
+    'tutti i giorni, ai minuti 15 e 45 delle ore 0, 2, 4, 6, 8, 10, 12 e ' +
+    '14'],
+  ['0-10 */25 */4 * * *',
+    'tutti i giorni, ogni secondo dal secondo 0 al 10 dei minuti 0, 25 e ' +
+    '50 delle ore 0, 4, 8, 12, 16 e 20'],
+  ['0-10 * */4 * * *',
+    'tutti i giorni, ogni secondo dal secondo 0 al 10 di ogni minuto delle ' +
+    'ore 0, 4, 8, 12, 16 e 20']
 ];
 
 export {rows};

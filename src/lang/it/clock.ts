@@ -85,6 +85,19 @@ function longCadence(cadence: Cadence): boolean {
   return countOf(cadence) >= LONG_CADENCE;
 }
 
+// Hours named as numbers: each one, or, for a cadence longer than a list
+// holds, the first three to show the step and the last after «e così via
+// fino a».
+function hourNumbers(values: number[], hours: Hours): string {
+  const long = hours.form.kind === 'cadence' &&
+    values.length > MOST_TIMES_LISTED;
+
+  return long ?
+    `${values.slice(0, 2).join(', ')}, ${values[2]} ` +
+      `${words.andSoOnUpTo} ${values[values.length - 1]}` :
+    list(values.map(String));
+}
+
 /** The hours, from their candidates under the view they are read in. */
 function hoursOf(set: FieldSet): Hours {
   const form = choose(set.candidates, HOURS,
@@ -319,7 +332,7 @@ function hoursAsNumbers(ends: Rate, work: Clockwork):
     bracket: phrase(!several && !items[0].alone && bracket),
     text: list(items.map(function name(item) {
       return item.alone ?
-        `${words.ofHours} ${list(item.hours.map(String))}` :
+        `${words.ofHours} ${hourNumbers(item.hours, hours)}` :
         phrase(words.ofEachHourFrom, words.fromHours, String(item.hours[0]),
           words.toHours, String(item.hours[item.hours.length - 1]),
           several && words.includedHours);
@@ -372,7 +385,7 @@ function sayInHour(form: Form, work: Clockwork): TimeSaid {
     hours.nearly && said(everyHour,
       [hoursOut(hours.removed, work), ...unitOut]),
     listed && hours.alone && said(phrase(within, voice.kept, words.ofHours,
-      list(hours.values.map(String)))),
+      hourNumbers(hours.values, hours))),
     listed &&
       said(`${within} ${unit.ofEach}, ${list(hours.runs.map(window))}`),
     named()

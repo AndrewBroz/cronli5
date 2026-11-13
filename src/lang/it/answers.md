@@ -476,7 +476,9 @@ after another and from the reads of the rows:
 * Clock times: four are held at a glance, whatever the fields look like.
   A list of minutes over a list of hours is listed as clock times up to
   eight times (4.1 D.2); that is the one limit, and beyond it the minutes
-  are said of the hours (D.6).
+  are said of the hours (D.6). The same eight bounds hours named as
+  numbers: a longer cadence of them is its first three and the last
+  (D.6).
 * `23 */6 * * *` — «tutti i giorni alle 0:23, alle 6:23, alle 12:23 e alle
   18:23»: four exact times. Rejected «ogni 6 ore dalle 0:23 alle 18:23»
   (arithmetic for nothing) and «al minuto 23, ogni 6 ore» (does not say
@@ -646,11 +648,41 @@ of the time. Then the hours:
 6. Otherwise the hours are added to the phrase, in one of two ways, by
    the form of the minutes.
 
+   **Hours named as numbers that are a cadence of more than eight** (in
+   (a) and (b) alike, and wherever 4.2 names hours so) are said by their
+   first three, then «e così via fino a» and the last: `15,45 */2` — «ai
+   minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 22»; `0,25,50
+   1-23/2` — «ai minuti 0, 25 e 50 delle ore 1, 3, 5 e così via fino a
+   23»; `15,45 0-16/2` — «…delle ore 0, 2, 4 e così via fino a 16»;
+   `0-29,45 */2` — «ogni minuto dal minuto 0 al 29 e una volta al minuto
+   45 delle ore 0, 2, 4 e così via fino a 22». Eight is the most this
+   rule book lists (D.2), and twelve numbers ask a reader to hold what
+   the pattern says in one step. Three numbers show the step, as in
+   counting; «fino a» with a bare number counts up to it, and it
+   included; the start is the first number. The hours stay numbers, so
+   nothing reads as a stretch of time, and the sentence is the one it
+   is with fewer hours: only the hours change. Eight or fewer are named
+   one by one («delle ore 0, 3, 6, 9, 12, 15, 18 e 21», read at a glance).
+   A cadence less an hour or two is named one by one too: its first
+   three need not show the step (`15,45 0,4,6,…,22` — «delle ore 0, 4, 6,
+   8, 10, 12, 14, 16, 18, 20 e 22»).
+
+   History: the first answer was the windows of a cadence, «ai minuti
+   15 e 45, dalle 0:15 alle 0:45, dalle 2:15 alle 2:45 e così via ogni 2
+   ore fino alle 22:45». A blind native reader took «dalle 0:15 alle
+   0:45» for a continuous stretch, possibly firing at 0:30 too, and of
+   «al secondo 8 dei minuti 5 e 30, dalle 0:05:08 alle 0:30:08…» read
+   twenty-five minutes of activity where there are two instants. So:
+   **a window («dalle… alle…») is said only where firing goes on through
+   it at a stated rhythm (a rate, a run); never to bracket a few listed
+   minutes or seconds inside one hour.** A single time is never written
+   as «dalle… alle…»: the span suggests a duration.
+
    **(a) A list of minutes.** If every hour is alone (no two
    consecutive), the hours replace «di ogni ora» as plain numbers, 0 to
    23: «ai minuti 5, 20 e 45 delle ore 8, 12 e 18»; `15,45 */4` — «ai
    minuti 15 e 45 delle ore 0, 4, 8, 12, 16 e 20»; `15,45 */2` — «ai
-   minuti 15 e 45 delle ore 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 e 22».
+   minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 22».
    Otherwise the phrase keeps «di ogni ora» and a comma and the windows
    of the hours follow (those of case C.3 to C.5: one for each run, an
    hour alone included, each from its first to its last firing):
@@ -756,8 +788,8 @@ The base:
   dalle 9:05:30 alle 17:45:30»; «al secondo 30 del minuto 0
   di ogni ora» (minute 0 is then named: «in punto» is the minute and the
   second together); «al secondo 15 del minuto 30 di ogni ora»; «al secondo
-  8 dei minuti 5 e 30 delle ore 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 e
-  22». (Every judge found «al secondo 30 del minuto 0 di ogni ora»
+  8 dei minuti 5 e 30 delle ore 0, 2, 4 e così via fino a 22» (4.1 D.6:
+  a long cadence of hours as numbers). (Every judge found «al secondo 30 del minuto 0 di ogni ora»
   machine-like and understood it at once; nothing as exact is lighter,
   and the schedule is rare.)
 * Minutes in several pieces (a single minute beside a run, a run beside
@@ -830,7 +862,11 @@ secondi».
    seconds is a phrase with a range of its own, so restricted hours are
    said as in 4.1 D.6(b), never as a window. Anything else takes «del minuto» /
    «dei minuti»: «ai secondi 0 e 30 dei minuti 5 e 20 di ogni ora»; «ogni
-   secondo dal secondo 0 al 9 del minuto 0 di ogni ora».
+   secondo dal secondo 0 al 9 del minuto 0 di ogni ora». Hours that are
+   a cadence of more than eight are named as in 4.1 D.6: `0-10 */25 */2`
+   — «ogni secondo dal secondo 0 al 10 dei minuti 0, 25 e 50 delle ore 0,
+   2, 4 e così via fino a 22»; `5,30 * */2` — «ai secondi 5 e 30 di ogni
+   minuto delle ore 0, 2, 4 e così via fino a 22».
 5. **Any other D** (a rate of minutes, with or without windows; a long
    list of times): D's base, a comma, and the seconds clause; D's
    exceptions come after the clause, so that it cannot be read of what
