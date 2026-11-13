@@ -57,11 +57,49 @@ export type WeekdayArm =
  * Day-field facts: whether the pattern restricts both day fields (cron's
  * DOM-or-DOW union) and each restricted arm's classification (`null` for a
  * wildcard field). Semantic only — words and frames stay per-language.
+ *
+ * `union` says how the two fields combine, not what the months allow:
+ * it stays true when the date arm never fires in a reached month (only
+ * the weekday arm is left) and when the date arm is every day the
+ * reached months have (the union is then every day). `dateReach` says
+ * which. A day field that names every value without a leading `*`
+ * (`1-31`, `0-6`) beside another restricted day field is every day in
+ * cron, and arrives here as two wildcards.
  */
 export interface DayFacts {
   union: boolean;
   date: DateArm | null;
   weekday: WeekdayArm | null;
+}
+
+/**
+ * When the day-of-month arm can fire, given the months and years the
+ * pattern reaches. Present only when there is something to say: the arm
+ * skips a reached month, or fires in it only in leap years, or a plain
+ * set of days holds a day no reached month has, or holds every day the
+ * reached months have. The three month lists are disjoint and together
+ * are the reached months, in ascending order.
+ *
+ * `leapYears` is February when the arm needs its 29th day (`29`, `29W`,
+ * `L-28`) and the pattern reaches both leap and common years. When the
+ * year field reaches only one sort of year, February is in `everyYear` or
+ * `never` accordingly.
+ *
+ * `days` is for a plain set of days (`null` for a Quartz form): the
+ * candidates for the days that exist in at least one reached month, in
+ * the same form as `candidates.date` (empty when none does), and whether
+ * they are every day of every reached month. When `everyDay` is true the
+ * date field restricts nothing: the pattern fires every day of the
+ * reached months, whether or not `day.union` is set.
+ */
+export interface DateReach {
+  // False when the date arm never fires in any reached month. In a union
+  // the weekday arm still fires.
+  fires: boolean;
+  everyYear: number[];
+  leapYears: number[];
+  never: number[];
+  days: {candidates: SetDescription[]; everyDay: boolean} | null;
 }
 
 /** A discrete clock time: an hour and minute, with a second if one is set. */
@@ -71,11 +109,29 @@ export interface ClockTime {
   second: number | undefined;
 }
 
-/** A run of consecutive values; `from > to` wraps around a cyclic field. */
+/**
+ * A run of consecutive values; `from > to` wraps around a cyclic field.
+ * `open` marks a run that reaches the end of a field that does not cycle
+ * (the year): it has no last value worth naming, only a start.
+ */
 export interface RangeDescription {
   kind: 'range';
   from: number;
   to: number;
+  open?: true;
+}
+
+/**
+ * Evenly spaced values, from `start` to `last`. `open` marks a cadence in
+ * a field that does not cycle (the year) with no further value before the
+ * field's end: it goes on for good, and `last` is not worth naming.
+ */
+export interface CadenceDescription {
+  kind: 'cadence';
+  interval: number;
+  start: number;
+  last: number;
+  open?: true;
 }
 
 /** Values named one by one. */
@@ -93,10 +149,41 @@ export interface ValuesDescription {
 export type SetDescription =
   | {kind: 'all'}
   | RangeDescription
-  | {kind: 'cadence'; interval: number; start: number; last: number}
+  | CadenceDescription
   | {kind: 'pieces'; parts: Array<RangeDescription | ValuesDescription>}
   | {kind: 'except'; base: SetDescription; removed: number[]}
   | ValuesDescription;
+
+/**
+ * A set as runs and cadences together, for a set no single description
+ * fits: 2030 through 2032 and then every 2nd year from 2034; every 4th
+ * year from 2030, and 2031; minutes 0 to 20 by twos and 21 to 57 by
+ * threes. It is not among a field's candidates (a renderer written before
+ * it existed never meets it) and is offered beside them.
+ *
+ * The parts are disjoint and together are the set. They are in order of
+ * their first value and never wrap, but they may interleave: a part's
+ * values can fall between another's. At least one part is a cadence, and
+ * there is at most one `values` part.
+ */
+export interface CadencePieces {
+  kind: 'cadencePieces';
+  parts: Array<RangeDescription | CadenceDescription | ValuesDescription>;
+}
+
+/**
+ * How a set's descriptions are to be laid out, when not as the field's own
+ * candidates are. `first` is the value a cyclic field is walked from (the
+ * weekday a language's week starts on): runs, wraps, lists and tie-breaks
+ * are all relative to it, so a range wraps when it passes from the value
+ * before `first` to `first`, whatever its numbers are. `linear` cuts every
+ * run at the edge of the unit, so nothing wraps and the stretches come in
+ * ascending order.
+ */
+export interface SetView {
+  first?: number;
+  linear?: boolean;
+}
 
 /** The values a field can take. */
 export interface Domain {
@@ -111,8 +198,15 @@ export interface Analyses {
   // order: a wildcard field is `[{kind: 'all'}]`, a Quartz field (not a
   // plain set) is `null`.
   candidates: Record<Field, SetDescription[] | null>;
+  // Each field's values as runs and cadences together, when they are
+  // that; `null` otherwise. With it no field's
+  // shortest description is a list of hundreds of values.
+  cadencePieces: Record<Field, CadencePieces | null>;
   // A single non-zero second, which a clock time can carry ("9:00:15").
   clockSecond: number | undefined;
+  // When the day-of-month arm can fire in the months the pattern reaches;
+  // `null` in the common case, where nothing needs saying.
+  dateReach: DateReach | null;
   day: DayFacts;
   // The kind of description each field was written as (`*/12` is a
   // cadence, `0,12` values), `null` for a Quartz form. A language may use

@@ -41,6 +41,9 @@ function applyQuartzAliases(cronPattern: CronLike): void {
 // After this pass every field is a canonical string, so the interpreters
 // never need to coerce.
 function normalizeCronPattern(cronPattern: CronLike): Pattern {
+  const eitherDay = !isStarred(cronPattern.date) &&
+    !isStarred(cronPattern.weekday);
+
   fieldOrder.forEach(function normalize(field) {
     const value = withoutLeadingZeros('' + cronPattern[field]);
 
@@ -55,8 +58,36 @@ function normalizeCronPattern(cronPattern: CronLike): Pattern {
     cronPattern[field] = normalizeField(value, field, fieldSpecs[field]);
   });
 
+  // With neither day field starred the pattern fires when either matches,
+  // so one that names every value makes every day match.
+  if (eitherDay && (namesEveryValue(cronPattern.date, 'date') ||
+      namesEveryValue(cronPattern.weekday, 'weekday'))) {
+    cronPattern.date = '*';
+    cronPattern.weekday = '*';
+  }
+
   // Every field is now a canonical string.
   return cronPattern as Pattern;
+}
+
+// Whether a normalized day field holds every value of its field, in one
+// piece (`*`) or several (`1-15,16-31`). A Quartz form is not a set.
+function namesEveryValue(value: string | number, field: 'date' | 'weekday'):
+  boolean {
+  const spec = fieldSpecs[field];
+  const top = spec.top as number;
+
+  return value === '*' || (/^[\d,/-]+$/u).test('' + value) &&
+    enumerateFires('' + value, spec.min, top).length === top - spec.min + 1;
+}
+
+// Whether a day field is written with a leading `*`, which is what cron
+// takes for "unrestricted" (`*`, and `*/2` too). When either day field is,
+// both must match; when neither is, a day matching either one will do.
+// A range naming every value (`1-31`, `0-6`) is not starred. This is the
+// only place the core asks how a field was written and not what it holds.
+function isStarred(value: string | number): boolean {
+  return ('' + value).startsWith('*');
 }
 
 // A number means the same however many zeros lead it: `00` is `0` and
