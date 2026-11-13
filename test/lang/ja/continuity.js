@@ -18,7 +18,7 @@ const FIELDS =
 // before it brings 毎年. So a day, month or year edit may move
 // text among those three parts. Nothing else may cross: none of them
 // touches the time, and no time edit touches anything but the time, with
-// the three exceptions below.
+// the four exceptions below.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year'],
   hour: ['time'],
@@ -53,6 +53,13 @@ const JOIN = /(?:の|、|、いずれも)?(?:終日)?$/u;
 // まで) into its two halves and back. Only a time that says 翌日 on one
 // side of the edit may change this way.
 const NEXT_DAY = /翌日/u;
+
+// The fourth (answers 3.4): a schedule whose day of the month never comes
+// never runs, and its description says only that, with no time. So an
+// edit to the day of the month, the month or the year that makes the
+// schedule one that never runs, or stops it being one, may change every
+// part.
+const NEVER = /^実行なし/u;
 
 const SETUP = {languages: [japanese.default], options: {}, styles: {}};
 
@@ -114,10 +121,14 @@ function leaks(pairList) {
     const rejoins = !TIME_FIELDS.includes(changed[0]) &&
       NEXT_DAY.test(before.time) !== NEXT_DAY.test(after.time);
 
+    // Whether the edit makes or unmakes a schedule that never runs.
+    const stops = !TIME_FIELDS.includes(changed[0]) &&
+      NEVER.test(before.day) !== NEVER.test(after.day);
+
     Object.keys(before).forEach(function compare(part) {
       if (words(before[part], part) !== words(after[part], part) &&
           !MAY_CHANGE[changed[0]].includes(part) &&
-          !(part === 'time' && rejoins)) {
+          !(part === 'time' && (rejoins || stops))) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -169,7 +180,9 @@ describe('Japanese continuity:', function() {
       ['0 9-17 * * *', '0 9-17 * * 1-5'],
       ['* 0-2,22-23 1 * *', '* 0-2,22-23 1 6 *'],
       ['*/15 9-17,22 * * *', '*/15 9-17,22 1 * *'],
-      ['0 0-2,4-23 * * *', '0 0-2,4-23 * * 1']
+      ['0 0-2,4-23 * * *', '0 0-2,4-23 * * 1'],
+      ['5,20,45 0,9-17,23 * * *', '5,20,45 0,9-17,23 1 * *'],
+      ['0 0,9-17,23 * * *', '0 0,9-17,23 * 6 *']
     ];
 
     expect(leaks(pastMidnight)).to.deep.equal([]);
@@ -179,6 +192,22 @@ describe('Japanese continuity:', function() {
     });
     withinTheDay.forEach(function same([a, b]) {
       expect(partsOf(a).time, a).to.equal(partsOf(b).time);
+    });
+  });
+
+  it('lets a date no month has stop the schedule, and take the time ' +
+    'with it', function() {
+    const stopped = [
+      ['0 9 30 6 *', '0 9 31 6 *'],
+      ['*/15 9-17 29 2 *', '*/15 9-17 30 2 *'],
+      ['0 0 9 29 2 * 2032', '0 0 9 29 2 * 2031']
+    ];
+
+    expect(leaks(stopped)).to.deep.equal([]);
+    stopped.forEach(function stops([runs, never]) {
+      expect(partsOf(runs).time, runs).not.to.equal('');
+      expect(partsOf(never).day, never).to.match(NEVER);
+      expect(partsOf(never).time, never).to.equal('');
     });
   });
 

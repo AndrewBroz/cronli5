@@ -13,6 +13,7 @@ import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {JapaneseOptions, JapaneseStyle} from './options.js';
 import {regions, style, styles} from './options.js';
+import {when} from './phrases.js';
 
 const {marks, words} = lexicon;
 
@@ -71,15 +72,16 @@ function describeParts(schedule: Schedule, opts: JapaneseOptions): Parts {
     seconds: valuesOf(schedule, 'second'),
     wrap
   }, opts.style);
-  const calendar: Calendar = calendarPart(schedule.analyses, {
+  const calendar: Calendar = calendarPart(schedule, {
     allDay: time.kind === 'allDay',
     restricted: !time.everyHour
   }, opts.style);
 
+  // A schedule that never runs says only that.
   return {
-    day: calendar.day + joins[calendar.lead][time.kind],
+    day: calendar.day + when(calendar.runs, joins[calendar.lead][time.kind]),
     month: calendar.month,
-    time: time.text,
+    time: when(calendar.runs, time.text),
     year: calendar.year
   };
 }
@@ -99,8 +101,11 @@ const japanese: Language<JapaneseStyle> = {
   label: (description) => description,
   reboot: () => words.startup,
   regions,
-  sentence: (description) =>
-    description + words.runsAt + words.runs + marks.stop,
+  // A description is closed with に実行します。; one that says the schedule
+  // never runs is itself the statement, and says it as a sentence does.
+  sentence: (description) => (description.startsWith(words.never) ?
+    words.neverRuns + description.slice(words.never.length) :
+    description + words.runsAt + words.runs) + marks.stop,
   style,
   styles
 };
