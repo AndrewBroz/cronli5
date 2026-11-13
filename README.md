@@ -210,10 +210,10 @@ cronli5(weekdaysAt1330, { lang: 'en-GB' });
 
 ## Languages
 
-English is the default, and currently the only language shipped: the other
-languages are being rebuilt for the next major version. Languages are full
-renderers over the same language-independent core, and each ships as its own
-module. You choose what reaches your bundle:
+English is the default. Ten languages ship, listed below; each is a full
+renderer over the same language-independent core, written from that
+language's own conventions, and each ships as its own module. You choose
+what reaches your bundle:
 
 ```js
 import cronli5, {create} from 'cronli5';
@@ -391,9 +391,9 @@ so it works everywhere:
 Language subpaths (`cronli5/lang/en`)
 ship the same dual ESM + CJS builds under `dist/lang/`.
 
-TypeScript type definitions ship in `cronli5.d.ts` (and `lang.d.ts` for the
-language subpaths) and are picked up automatically: no `@types` package
-required.
+TypeScript type definitions ship under `types/`, one declaration per entry
+point (the package's `exports` map points at each), and are picked up
+automatically: no `@types` package required.
 
 ## Development
 

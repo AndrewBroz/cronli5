@@ -28,6 +28,35 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`form: 'label'`**, the description capitalised to stand alone.
 - The named English styles, exported as plain tables (`styles`).
 - `--form` and `--cron` on the command line.
+- **Italian (`it`) and Czech (`cs`)**, at beta. Each was written from usage
+  notes in the language by a writer told nothing of cron, then a rule book,
+  hand-written expected descriptions, independent schedule reads and blind
+  fluency reads, and a renderer built without sight of any other.
+- **Command line:** `--style key=value`, `--crontab`, `--help`,
+  `--version`, and patterns on standard input, one per line.
+- **Calendar facts in the core**, which every language now uses: whether a
+  date can ever fire, in which months, and whether only in leap years.
+
+### Changed (descriptions)
+
+- **Every language was rebuilt from its own rule book** and then repaired
+  twice against independently computed fire times. A schedule that can
+  never run says so (`0 0 31 6 *`); one that runs only in leap years says
+  so; months that lack the day are not named; a set of years with a hole is
+  no longer listed year by year; an exception beside a date-or-weekday pair
+  no longer reads over both.
+- **The Monday-to-Friday forms (`LW`, `1W`, `15W`) name their days** in
+  every language but English, because each language's usage notes showed
+  its "working day" word does not mean Monday to Friday.
+- **Command line exit codes:** 2 for a wrong command, 1 for a pattern that
+  cannot be described (everything used to exit 1).
+
+### Removed
+
+- **Finnish** (`cronli5/lang/fi`) and **Traditional Chinese** (`zh-Hant`),
+  until they are rebuilt by the same process.
+- Spanish `hSuffix` and `workday`; the English `'uk'` dialect alias; the
+  `Cronli5Dialect` type; the plan-based contract for custom languages.
 
 ## [0.10.0]
 
