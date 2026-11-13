@@ -18,9 +18,10 @@ const ORDER = ['year', 'month', 'day', 'join', 'time'];
 // The join stands between the day and the time and is one of these, and
 // nothing else: nothing; a comma before a time that runs round the clock;
 // 每天 where a restricted hour would skip the day, or after one range of
-// dates; 的 after a date and a weekday together, or after dates in
-// several pieces. A schedule that never fires has no join.
-const JOINS = ['', '，', '每天', '的'];
+// dates; 的 after dates in several pieces; ，均在 after a date and a
+// weekday together, so that the time is said of both. A schedule that
+// never fires has no join.
+const JOINS = ['', '，', '每天', '的', '，均在'];
 
 // The parts of the sentence an edit to each field may change. A minute or
 // a second changes the time and nothing else. A day field changes the day

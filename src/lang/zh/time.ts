@@ -18,9 +18,8 @@ const {marks, units, words} = lexicon;
 // How many consecutive clock times, minutes or seconds make a window.
 const WINDOW = 5;
 
-// How many things a list made by multiplying may name: windows of clock
-// times one for each hour, or clock times and minutes each with their
-// seconds. A window counts two, for the two clock times it names.
+// How many things clock times or minutes each with their seconds may
+// name. A window to the second counts two, for the two times it names.
 const MULTIPLIED = 6;
 
 // A moment by the parts that are named: an hour makes it a clock time
@@ -125,6 +124,8 @@ interface Scene extends Seconds {
   M: Level;
   S: Level;
   kind: Kind;
+  // Every minute of separate hours too many to be a window each.
+  hoursWhole: boolean;
   // Minute 0 of every hour, with no second said.
   onTheHour: boolean;
   // Every second hour, said by its idiom.
@@ -278,15 +279,20 @@ function isLone(S: Level): boolean {
   return S.values.length === 1 && !isSilent(S);
 }
 
+// Whether the hours are separate and too many to be a window each: a
+// window names two clock times, and no more than can be listed are.
+function isCrowded(hours: Run[]): boolean {
+  return hours.every((run) => run.length === 1) &&
+    2 * hours.length > LISTED;
+}
+
 // Whether restricted hours are each a window of clock times: under
 // minutes that flow, any minutes inside one hour, or one run under
-// separate hours; but separate hours only while their windows multiply
-// to no more than six things.
+// separate hours; but never hours too many to be a window each.
 function isClocked(H: Level, M: Level): boolean {
   const lone = H.runs.every((run) => run.length === 1);
-  const crowded = lone && 2 * H.runs.length > MULTIPLIED;
 
-  return !crowded && (M.flows ||
+  return !isCrowded(H.runs) && (M.flows ||
     lone && (H.values.length === 1 || isSteady(M.shape)));
 }
 
@@ -351,11 +357,15 @@ function isSpelled(kind: Kind, levels: Level[]): boolean {
     isMinuteList(kind, M, S) || everyMinute;
 }
 
-function secondsOf(kind: Kind, levels: Level[]): Seconds {
+// Under every minute of hours named one by one, the seconds are said as
+// positions in each minute, or as every second.
+function secondsOf(kind: Kind, levels: Level[], whole: boolean): Seconds {
   const [, M, S] = levels;
   const silent = isSilent(S);
-  const replaced = S.flows && endsEveryMinute(M);
-  const spelled = isSpelled(kind, levels);
+  const replaced = whole ? S.every : S.flows && endsEveryMinute(M);
+  const spelled = whole ?
+    !silent && !S.every :
+    isSpelled(kind, levels);
   const shown = replaced || isLone(S) && kind !== 'bare';
 
   return {
@@ -368,21 +378,26 @@ function secondsOf(kind: Kind, levels: Level[]): Seconds {
   };
 }
 
+// Under hours named one by one a cadence of minutes is its minutes, as
+// any other minutes there are, unless it is more than can be listed.
 function sceneOf(sets: TimeSets, wraps: boolean): Scene {
   const single = sets.minute.length === 1;
-  const M = levelOf(sets.minute, 'minute',
-    {allowed: stretchException, tiled: true});
   const H = levelOf(sets.hour, 'hour',
     {allowed: single ? stretchException : hourException, wraps});
-  const S = levelOf(sets.second, 'second', {allowed: stretchException});
   const parity = everySecond(H.base);
+  const crowded = !H.every && !parity && isCrowded(H.runs);
+  const M = levelOf(sets.minute, 'minute',
+    {allowed: stretchException, tiled: !crowded});
+  const S = levelOf(sets.second, 'second', {allowed: stretchException});
   const kind = kindOf([H, M, S], parity);
+  const hoursWhole = crowded && kind === 'named' && M.every;
 
   return {
-    ...secondsOf(kind, [H, M, S]),
+    ...secondsOf(kind, [H, M, S], hoursWhole),
     H,
     M,
     S,
+    hoursWhole,
     kind,
     onTheHour: H.every && sets.minute.join() === '0' && isSilent(S),
     parity,
@@ -527,6 +542,8 @@ function leadOf(scene: Scene, voice: Voice): string {
     [H.every, words.eachHourOf],
     [scene.parity, gloss + words.of],
     [scene.ranged, names + marks.comma + words.eachHourOf],
+    [scene.hoursWhole, names + words.of + when(scene.spelled,
+      words.eachMinuteOfThem + words.of)],
     [H.runs.every((run) => run.length === 1), names + words.of],
     [true, firings + marks.comma + words.eachHourOf]
   ]);
@@ -539,7 +556,8 @@ function spelledBody(scene: Scene, voice: Voice): string {
   const anchors = first<Span[]>([
     [scene.kind === 'points', H.values.flatMap((h) => M.values.map(
       (m): Span => [{h, m}, {h, m}]))],
-    [scene.kind === 'bare' || scene.onTheHour, [[{}, {}]]],
+    [scene.kind === 'bare' || scene.onTheHour || scene.hoursWhole,
+      [[{}, {}]]],
     [true, M.base.map((m): Span => [{m}, {m}])]
   ]);
 
@@ -659,9 +677,13 @@ function timeOf(sets: TimeSets, wraps: boolean, style: ChineseStyle):
   const scene = sceneOf(sets, wraps);
   const voice = voiceOf(scene, scene.shown, style);
   const exact = voiceOf(scene, scene.exact, style);
-  const body = scene.spelled ?
-    spelledBody(scene, voice) :
-    pacedBody(scene, voice);
+  const whole = [words.eachMinuteOfThem, words.eachSecondOfThem][
+    Number(scene.replaced)];
+  const body = first([
+    [scene.spelled, () => spelledBody(scene, voice)],
+    [scene.hoursWhole, () => whole],
+    [true, () => pacedBody(scene, voice)]
+  ])();
 
   return {
     allDay: scene.H.every,
