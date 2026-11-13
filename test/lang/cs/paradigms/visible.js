@@ -83,8 +83,8 @@ const rows = [
     'od pondělí do pátku a navíc 1., 10. a 20. dne v měsíci, vždy každých ' +
     '15 minut od 9:00 do 17:45'],
   ['*/15 9-17 */2 * 1-5',
-    'od pondělí do pátku a navíc každý lichý den v měsíci, vždy každých 15 ' +
-    'minut od 9:00 do 17:45'],
+    'každý lichý den v měsíci jen tehdy, připadne-li na pondělí až pátek, ' +
+    'každých 15 minut od 9:00 do 17:45'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
     'každý lichý den v měsíci kromě 15. dne a navíc od pondělí do pátku (i ' +
     '15.), vždy každých 15 minut od 9:00 do 17:45'],

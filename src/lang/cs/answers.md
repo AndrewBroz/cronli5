@@ -280,6 +280,9 @@ years, months and days; none touches the time.
 * **union**: with both day fields restricted the day part is the
   weekday's phrase, «a navíc», the days of the month, and «, vždy»
   (4.3).
+* **both**: with one day field written from a star and both restricted
+  the day part is the days of the month, «jen tehdy, připadne-li na» and
+  the weekdays, and a comma (4.3).
 * **month wrap under a year**: a run of months that wraps is cut when
   any year is restricted (3.5).
 
@@ -889,8 +892,40 @@ od 9:00 do 17:45».
 When `dateReach.days.everyDay` is true, or a day field names every
 value, there is no union: the schedule fires every day (2.5). (A date arm that never fires in a union is `dateAddsNothing`, above.)
 
-If only days on which **both** match were wanted: «každý pátek 13.» and
-«vždy první pondělí v měsíci». No renderer says this yet.
+**When both must match** (`analyses.day.both`: one day field is written
+from a star, `*/2`, and the other is restricted too). Czech does not
+say «a navíc», which adds days; it says the days of the month as they
+are said alone, then **«jen tehdy, připadne-li na»** and the weekdays,
+a comma, and the time. The condition is the one of this section (an
+arm that adds nothing is not said). It is said by the form of the two
+sets and never by their values; the form of the pattern's text is not
+read.
+
+* the days of the month without their opening «vždy», as in an
+  exception («15. dne v měsíci jen tehdy, …»), under one month a date
+  of it («každý lichý den v červnu», 4.4);
+* the weekdays after «na» as in the exception rule above: one day, a
+  list joined by «nebo», a run «pondělí až pátek», an nth or last
+  weekday («druhé pondělí v měsíci»), and for five or six days that
+  are no run «nepřipadne-li na» and the removed days joined by «ani»;
+* a date that no reached month has is «jen 31. června, tedy nikdy»,
+  whatever the weekday (4.4).
+
+* `0 0 */2 * 1` (the odd days that are Mondays) → «každý lichý den v
+  měsíci jen tehdy, připadne-li na pondělí, v 0:00»
+* `0 0 15 * */2` (the 15th when it is a Tuesday, Thursday, Saturday or
+  Sunday) → «15. dne v měsíci jen tehdy, připadne-li na úterý, čtvrtek,
+  sobotu nebo neděli, v 0:00»
+* `0 0 */2 6 1` → «každý lichý den v červnu jen tehdy, připadne-li na
+  pondělí, v 0:00»
+* `*/15 9-17 */2 * 1-5` → «každý lichý den v měsíci jen tehdy,
+  připadne-li na pondělí až pátek, každých 15 minut od 9:00 do 17:45»
+
+Written without the star the same days are a union, and are said as
+one: `*/15 9-17 1-31/2 * 1-5` → «od pondělí do pátku a navíc každý lichý
+den v měsíci, vždy každých 15 minut od 9:00 do 17:45». (The one
+condition verb is kept: «každé pondělí, které je lichým dnem» would be
+a second device for the same thing.)
 
 ### 4.4 A day and a month; years; what the calendar allows
 
