@@ -16,4 +16,5 @@ drafts and validates a language is described in
 | --- | --- | --- | --- |
 | English | beta | maintainer (native) reviewed the first paradigms, the rules and the wording changes on 2026-11-11; the final rows await a full read | rebuilt 2026-11-11 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms; 153 of 153 held-out rows; regenerates (tooling/experiments/renderer-process/en-acceptance.md) |
 | Ukrainian | beta | — | rebuilt 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms (tooling/experiments/renderer-process/uk-acceptance.md) |
+| Chinese (Simplified) | beta | — | built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms (tooling/experiments/renderer-process/zh-acceptance.md) |
 <!-- END GENERATED: language-status-detail -->

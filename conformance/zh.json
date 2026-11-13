@@ -1,0 +1,2856 @@
+{
+ "language": "zh",
+ "rows": [
+  {
+   "expected": "每天9:00:00至9:00:59每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "每天9:00:00至9:00:54每6秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/6 0 9 * * *"
+  },
+  {
+   "expected": "每天9:00:05至9:00:55每10秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/10 0 9 * * *"
+  },
+  {
+   "expected": "每天9:00至9:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "每天9:05、9:20、9:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20,45 9 * * *"
+  },
+  {
+   "expected": "每天9:00、9:15、9:30、9:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9 * * *"
+  },
+  {
+   "expected": "每天9:00、9:15、9:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,15,45 9 * * *"
+  },
+  {
+   "expected": "每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "每天9:00、17:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9,17 * * *"
+  },
+  {
+   "expected": "每天9:00至17:00每小时整点及22:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "每天1:00至23:00每2小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "每月1日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1 * *"
+  },
+  {
+   "expected": "每月1日、10日、20日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1,10,20 * *"
+  },
+  {
+   "expected": "每月奇数日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "每月奇数日（15日除外）9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "每年1月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 1 *"
+  },
+  {
+   "expected": "每年3月、6月、9月、12月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 3,6,9,12 *"
+  },
+  {
+   "expected": "每年奇数月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * */2 *"
+  },
+  {
+   "expected": "每年11月至次年2月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "每周一9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "每周一至周五9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "每周二、周四9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 2,4"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45每15分钟，每次持续1分钟，期间每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45每15分钟，每次持续1分钟，期间每6秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/6 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45每15分钟，每次的第5秒至第55秒每10秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/10 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:30每30分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9点至17点每小时的前30分钟内每分钟及45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9点至17点每小时的00分、15分、45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,15,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 * * * 1-5"
+  },
+  {
+   "expected": "每周一至周五12:00、12:15、12:30、12:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 12 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45、22:00至22:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17,22 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五奇数点时段内每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 1/2 * * 1-5"
+  },
+  {
+   "expected": "每月1日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 1 * 1-5"
+  },
+  {
+   "expected": "每月1日、10日、20日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 1,10,20 * 1-5"
+  },
+  {
+   "expected": "每月奇数日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 */2 * 1-5"
+  },
+  {
+   "expected": "每月奇数日（15日除外）以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5"
+  },
+  {
+   "expected": "每年1月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 1 1-5"
+  },
+  {
+   "expected": "每年3月、6月、9月、12月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 3,6,9,12 1-5"
+  },
+  {
+   "expected": "每年奇数月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * */2 1-5"
+  },
+  {
+   "expected": "每年11月至次年2月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 11-2 1-5"
+  },
+  {
+   "expected": "每天9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * *"
+  },
+  {
+   "expected": "每周一、周三、周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 1,3,5"
+  },
+  {
+   "expected": "每周二、周四9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 2,4"
+  },
+  {
+   "expected": "每月1日0:00:00至0:00:59每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00:00至0:00:54每6秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/6 0 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00:05至0:00:55每10秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/10 0 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00至0:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:05、0:20、0:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20,45 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00、0:15、0:30、0:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00、0:15、0:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,15,45 0 1 * *"
+  },
+  {
+   "expected": "每月1日每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 * 1 * *"
+  },
+  {
+   "expected": "每月1日9:00、17:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9,17 1 * *"
+  },
+  {
+   "expected": "每月1日9:00至17:00每小时整点及22:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9-17,22 1 * *"
+  },
+  {
+   "expected": "每月1日1:00至23:00每2小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 1/2 1 * *"
+  },
+  {
+   "expected": "每天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "每月1日、10日、20日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1,10,20 * *"
+  },
+  {
+   "expected": "每月奇数日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 */2 * *"
+  },
+  {
+   "expected": "每月奇数日（15日除外）0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "每年1月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 1 *"
+  },
+  {
+   "expected": "每年3月、6月、9月、12月的1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 3,6,9,12 *"
+  },
+  {
+   "expected": "每年奇数月的1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 */2 *"
+  },
+  {
+   "expected": "每年11月至次年2月每月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 11-2 *"
+  },
+  {
+   "expected": "每月1日以及每周一，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 1"
+  },
+  {
+   "expected": "每月1日以及每周一至周五，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 1-5"
+  },
+  {
+   "expected": "每月1日以及每周二、周四，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 2,4"
+  },
+  {
+   "expected": "每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "每6秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/6 * * * * *"
+  },
+  {
+   "expected": "每分钟的05秒至55秒每10秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/10 * * * * *"
+  },
+  {
+   "expected": "每小时的05分、20分、45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20,45 * * * *"
+  },
+  {
+   "expected": "每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "每小时的00分、15分、45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,15,45 * * * *"
+  },
+  {
+   "expected": "每天0:00至0:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0 * * *"
+  },
+  {
+   "expected": "每天9:00至9:59、17:00至17:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "每天9:00至17:59、22:00至22:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 9-17,22 * * *"
+  },
+  {
+   "expected": "奇数点时段内每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 1/2 * * *"
+  },
+  {
+   "expected": "每月1日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "每月1日、10日、20日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 1,10,20 * *"
+  },
+  {
+   "expected": "每月奇数日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * */2 * *"
+  },
+  {
+   "expected": "每月奇数日（15日除外）每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "每年1月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 1 *"
+  },
+  {
+   "expected": "每年3月、6月、9月、12月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 3,6,9,12 *"
+  },
+  {
+   "expected": "每年奇数月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * */2 *"
+  },
+  {
+   "expected": "每年11月至次年2月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 11-2 *"
+  },
+  {
+   "expected": "每周一每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 1"
+  },
+  {
+   "expected": "每周一至周五每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 1-5"
+  },
+  {
+   "expected": "每周二、周四每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 2,4"
+  },
+  {
+   "expected": "每天9:00:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "每天9:00:00、9:00:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 0 9 * * *"
+  },
+  {
+   "expected": "每天9:00:00、9:00:15、9:00:30、9:00:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "每天9:00:00至9:00:09每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-9 0 9 * * *"
+  },
+  {
+   "expected": "每天9:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "每天9:00、9:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 9 * * *"
+  },
+  {
+   "expected": "每天9:00至9:29每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29 9 * * *"
+  },
+  {
+   "expected": "每天9:00至9:29每分钟及9:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29,45 9 * * *"
+  },
+  {
+   "expected": "每天9:00至9:56每7分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/7 9 * * *"
+  },
+  {
+   "expected": "每天9:05、9:20、9:35、9:50",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/15 9 * * *"
+  },
+  {
+   "expected": "每天9:10、9:20、9:30、9:40",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "10-40/10 9 * * *"
+  },
+  {
+   "expected": "每天12:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "每天8:00、12:00、18:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "每天9:00至17:00每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "每2小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "每6小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */6 * * *"
+  },
+  {
+   "expected": "每2小时（8:00除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "每天22:00至次日2:00每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "每月15日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 15 * *"
+  },
+  {
+   "expected": "每月1日、15日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1,15 * *"
+  },
+  {
+   "expected": "每月1日至7日，9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-7 * *"
+  },
+  {
+   "expected": "每月1日至7日及15日，9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-7,15 * *"
+  },
+  {
+   "expected": "每月偶数日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 2/2 * *"
+  },
+  {
+   "expected": "每月1日起每5天，9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 */5 * *"
+  },
+  {
+   "expected": "每月最后一天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "每月最接近15日的工作日（周一至周五）9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "每年6月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 6 *"
+  },
+  {
+   "expected": "每年1月、7月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 1,7 *"
+  },
+  {
+   "expected": "每年6月至8月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "每年6月至8月及12月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 6-8,12 *"
+  },
+  {
+   "expected": "每年1月、4月、7月、10月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * */3 *"
+  },
+  {
+   "expected": "每年除12月外每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "每周日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "每周一、周三、周五9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "每周六、周日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "除周日外每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "每月最后一个周五9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "每月第2个周一9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "每周一至周五9:00:30至17:45:30每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45每15分钟，每次持续1分钟，期间每30秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45每15分钟，每次持续1分钟，期间每15秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45每15分钟，每次的前10秒内每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-9 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至17:00每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:30至17:30每小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9点至17点每小时的05分、20分、45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9点至17点每小时的前30分钟内每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9点至17点每小时的00分至56分每7分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/7 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9点至17点每小时的05分、20分、35分、50分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9点至17点每小时的10分、20分、30分、40分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "10-40/10 9-17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五0:00、0:15、0:30、0:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 0 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00、9:15、9:30、9:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五9:00至9:45、17:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9,17 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五8点、12点、18点时段内每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 8,12,18 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五偶数点时段内每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 */2 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五0点、6点、12点、18点时段内每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 */6 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五偶数点时段内（8点除外）每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
+  },
+  {
+   "expected": "每周一至周五0:00至2:45、22:00至23:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 22-2 * * 1-5"
+  },
+  {
+   "expected": "每月15日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 15 * 1-5"
+  },
+  {
+   "expected": "每月1日、15日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 1,15 * 1-5"
+  },
+  {
+   "expected": "每月1日至7日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 1-7 * 1-5"
+  },
+  {
+   "expected": "每月1日至7日及15日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 1-7,15 * 1-5"
+  },
+  {
+   "expected": "每月偶数日以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 2/2 * 1-5"
+  },
+  {
+   "expected": "每月1日起每5天以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 */5 * 1-5"
+  },
+  {
+   "expected": "每月最后一天以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 L * 1-5"
+  },
+  {
+   "expected": "每月最接近15日的工作日（周一至周五）以及每周一至周五，9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 15W * 1-5"
+  },
+  {
+   "expected": "每年6月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 6 1-5"
+  },
+  {
+   "expected": "每年1月、7月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 1,7 1-5"
+  },
+  {
+   "expected": "每年6月至8月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 6-8 1-5"
+  },
+  {
+   "expected": "每年6月至8月及12月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 6-8,12 1-5"
+  },
+  {
+   "expected": "每年1月、4月、7月、10月每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * */3 1-5"
+  },
+  {
+   "expected": "每年除12月外每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * 1-11 1-5"
+  },
+  {
+   "expected": "每周一9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 1"
+  },
+  {
+   "expected": "每周日9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 0"
+  },
+  {
+   "expected": "每周六、周日9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 0,6"
+  },
+  {
+   "expected": "除周日外每天9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 1-6"
+  },
+  {
+   "expected": "每月最后一个周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 5L"
+  },
+  {
+   "expected": "每月第2个周一9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 9-17 * * 1#2"
+  },
+  {
+   "expected": "每月1日0:00:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00:00、0:00:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 0 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00:00、0:00:15、0:00:30、0:00:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 0 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00:00至0:00:09每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-9 0 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00、0:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00至0:29每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00至0:29每分钟及0:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29,45 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:00至0:56每7分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/7 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:05、0:20、0:35、0:50",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/15 0 1 * *"
+  },
+  {
+   "expected": "每月1日0:10、0:20、0:30、0:40",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "10-40/10 0 1 * *"
+  },
+  {
+   "expected": "每月1日12:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 12 1 * *"
+  },
+  {
+   "expected": "每月1日8:00、12:00、18:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 8,12,18 1 * *"
+  },
+  {
+   "expected": "每月1日9:00至17:00每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9-17 1 * *"
+  },
+  {
+   "expected": "每月1日每2小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */2 1 * *"
+  },
+  {
+   "expected": "每月1日每6小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */6 1 * *"
+  },
+  {
+   "expected": "每月1日每2小时（8:00除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
+  },
+  {
+   "expected": "每月1日0:00至2:00每小时整点及22:00、23:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 22-2 1 * *"
+  },
+  {
+   "expected": "每月15日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 15 * *"
+  },
+  {
+   "expected": "每月1日、15日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1,15 * *"
+  },
+  {
+   "expected": "每月1日至7日，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "每月1日至7日及15日，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1-7,15 * *"
+  },
+  {
+   "expected": "每月偶数日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 2/2 * *"
+  },
+  {
+   "expected": "每月1日起每5天，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 */5 * *"
+  },
+  {
+   "expected": "每月最后一天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "每月最接近15日的工作日（周一至周五）0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "每年6月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "每年1月、7月的1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 1,7 *"
+  },
+  {
+   "expected": "每年6月至8月每月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 6-8 *"
+  },
+  {
+   "expected": "每年6月至8月及12月每月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 6-8,12 *"
+  },
+  {
+   "expected": "每年1月、4月、7月、10月的1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 */3 *"
+  },
+  {
+   "expected": "每年除12月外每月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 1-11 *"
+  },
+  {
+   "expected": "每月1日以及每周日，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 0"
+  },
+  {
+   "expected": "每月1日以及每周一、周三、周五，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 1,3,5"
+  },
+  {
+   "expected": "每月1日以及每周六、周日，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "每月1日以及除周日外每天，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 1-6"
+  },
+  {
+   "expected": "每月1日以及每月最后一个周五，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 5L"
+  },
+  {
+   "expected": "每月1日以及每月第2个周一，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * 1#2"
+  },
+  {
+   "expected": "每分钟的30秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 * * * * *"
+  },
+  {
+   "expected": "每30秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 * * * * *"
+  },
+  {
+   "expected": "每15秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 * * * * *"
+  },
+  {
+   "expected": "每分钟的前10秒内每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-9 * * * * *"
+  },
+  {
+   "expected": "每小时的30分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "每30分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 * * * *"
+  },
+  {
+   "expected": "每小时的前30分钟内每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29 * * * *"
+  },
+  {
+   "expected": "每小时的前30分钟内每分钟及45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "每小时的00分至56分每7分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/7 * * * *"
+  },
+  {
+   "expected": "每小时的05分、20分、35分、50分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/15 * * * *"
+  },
+  {
+   "expected": "每小时的10分、20分、30分、40分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "10-40/10 * * * *"
+  },
+  {
+   "expected": "每天12:00至12:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 12 * * *"
+  },
+  {
+   "expected": "每天8点、12点、18点时段内每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "每天9:00至17:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 9-17 * * *"
+  },
+  {
+   "expected": "偶数点时段内每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "每天0点、6点、12点、18点时段内每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* */6 * * *"
+  },
+  {
+   "expected": "偶数点时段内（8点除外）每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "每天22:00至次日2:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "每月15日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 15 * *"
+  },
+  {
+   "expected": "每月1日、15日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 1,15 * *"
+  },
+  {
+   "expected": "每月1日至7日，每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 1-7 * *"
+  },
+  {
+   "expected": "每月1日至7日及15日，每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 1-7,15 * *"
+  },
+  {
+   "expected": "每月偶数日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 2/2 * *"
+  },
+  {
+   "expected": "每月1日起每5天，每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * */5 * *"
+  },
+  {
+   "expected": "每月最后一天每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * L * *"
+  },
+  {
+   "expected": "每月最接近15日的工作日（周一至周五）每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 15W * *"
+  },
+  {
+   "expected": "每年6月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 6 *"
+  },
+  {
+   "expected": "每年1月、7月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 1,7 *"
+  },
+  {
+   "expected": "每年6月至8月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 6-8 *"
+  },
+  {
+   "expected": "每年6月至8月及12月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 6-8,12 *"
+  },
+  {
+   "expected": "每年1月、4月、7月、10月每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * */3 *"
+  },
+  {
+   "expected": "每年除12月外每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * 1-11 *"
+  },
+  {
+   "expected": "每周日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 0"
+  },
+  {
+   "expected": "每周一、周三、周五每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 1,3,5"
+  },
+  {
+   "expected": "每周六、周日每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 0,6"
+  },
+  {
+   "expected": "除周日外每天每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 1-6"
+  },
+  {
+   "expected": "每月最后一个周五每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 5L"
+  },
+  {
+   "expected": "每月第2个周一每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * * * 1#2"
+  },
+  {
+   "expected": "2030年1月1日0:00",
+   "options": {
+    "lang": "zh",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "2030年、2035年，1月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 0 1 1 * 2030,2035"
+  },
+  {
+   "expected": "2030年至2035年，1月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2035"
+  },
+  {
+   "expected": "偶数年，1月1日0:00",
+   "options": {
+    "lang": "zh",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * */2"
+  },
+  {
+   "expected": "2030年6月1日9:00:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0 9 1 6 * 2030"
+  },
+  {
+   "expected": "2030年每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * * * 2030"
+  },
+  {
+   "expected": "2028年至2031年，每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * * * 2028-2031"
+  },
+  {
+   "expected": "2030年6月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * 6 * 2030"
+  },
+  {
+   "expected": "2030年6月每周一9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * 6 1 2030"
+  },
+  {
+   "expected": "2030年6月1日、15日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 1,15 6 * 2030"
+  },
+  {
+   "expected": "2030年6月、7月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * 6,7 * 2030"
+  },
+  {
+   "expected": "2030年、2031年，6月每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * 6 * 2030,2031"
+  },
+  {
+   "expected": "2030年6月最后一天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 L 6 * 2030"
+  },
+  {
+   "expected": "2030年每月1日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 1 * * 2030"
+  },
+  {
+   "expected": "2030年起每2年一次，每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * * * 2030/2"
+  },
+  {
+   "expected": "2028年起每4年一次，每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * * * 2028/4"
+  },
+  {
+   "expected": "2028年起每4年一次，1月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 0 1 1 * 2028/4"
+  },
+  {
+   "expected": "2028年起每4年一次，每5分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */5 * * * * 2028/4"
+  },
+  {
+   "expected": "2030年至2040年每2年一次，每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2"
+  },
+  {
+   "expected": "偶数年，每5分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */5 * * * * */2"
+  },
+  {
+   "expected": "奇数年，每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 * * * 1971/2"
+  },
+  {
+   "expected": "每月1日0:00",
+   "options": {
+    "cron": "quartz",
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 * ?"
+  },
+  {
+   "expected": "每月最后一个工作日（周一至周五）0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "每月倒数第4天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 L-3 * *"
+  },
+  {
+   "expected": "每月倒数第2天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 L-1 * *"
+  },
+  {
+   "expected": "每年6月最后一天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 L 6 *"
+  },
+  {
+   "expected": "每年6月最接近15日的工作日（周一至周五）0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 15W 6 *"
+  },
+  {
+   "expected": "每年6月第2个周一0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 * 6 1#2"
+  },
+  {
+   "expected": "每年1月、7月最后一个周五0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 * 1,7 5L"
+  },
+  {
+   "expected": "每月第1个周三9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 3#1"
+  },
+  {
+   "expected": "每月最后一个周六9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 6L"
+  },
+  {
+   "expected": "每月第4个周日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0#4"
+  },
+  {
+   "expected": "每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "@hourly"
+  },
+  {
+   "expected": "每天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "@daily"
+  },
+  {
+   "expected": "每周日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "@weekly"
+  },
+  {
+   "expected": "每月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "@monthly"
+  },
+  {
+   "expected": "每年1月1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "@yearly"
+  },
+  {
+   "expected": "系统启动时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "每天9:00执行。",
+   "options": {
+    "form": "sentence",
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "每天9:00",
+   "options": {
+    "form": "label",
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "每5分钟执行。",
+   "options": {
+    "form": "sentence",
+    "lang": "zh"
+   },
+   "pattern": "*/5 * * * *"
+  },
+  {
+   "expected": "系统启动时执行。",
+   "options": {
+    "form": "sentence",
+    "lang": "zh"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "无法识别的cron表达式",
+   "options": {
+    "lang": "zh",
+    "lenient": true
+   },
+   "pattern": "not a pattern"
+  },
+  {
+   "expected": "每年6月期间，1日以及每周五，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "每年1月、7月期间，每月1日、15日以及每周一至周五，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1,15 1,7 1-5"
+  },
+  {
+   "expected": "每年5月至7月期间，每月1日、19日、23日、28日以及每周三、周四，7:52至16:52每小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "52 7-16 1,19,23,28 5-7 3-4"
+  },
+  {
+   "expected": "每月1日至7日以及每周一，4:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 4 1-7 * 1"
+  },
+  {
+   "expected": "每年6月1日、15日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1,15 6 *"
+  },
+  {
+   "expected": "每年6月1日、10日、20日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1,10,20 6 *"
+  },
+  {
+   "expected": "每年6月1日至7日，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "每年6月1日至7日及15日，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1-7,15 6 *"
+  },
+  {
+   "expected": "每年6月奇数日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "每年6月1日起每5天，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 */5 6 *"
+  },
+  {
+   "expected": "每年1月、7月的1日、15日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1,15 1,7 *"
+  },
+  {
+   "expected": "每年12月31日23:59",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "59 23 31 12 *"
+  },
+  {
+   "expected": "每月除15日外每天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1-14,16-31 * *"
+  },
+  {
+   "expected": "每年6月除15日外每天0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1-14,16-31 6 *"
+  },
+  {
+   "expected": "每年偶数月的1日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 1 2/2 *"
+  },
+  {
+   "expected": "每月1日至5日、10日及20日至25日，12:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 12 1-5,10,20-25 * *"
+  },
+  {
+   "expected": "每月5日至20日每3天，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 5-20/3 * *"
+  },
+  {
+   "expected": "每月8日起每2天，0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 8/2 * *"
+  },
+  {
+   "expected": "每月1日、22日0:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 */21 * *"
+  },
+  {
+   "expected": "2030年1月、2月、11月、12月每天0:00",
+   "options": {
+    "lang": "zh",
+    "years": true
+   },
+   "pattern": "0 0 * 11-2 * 2030"
+  },
+  {
+   "expected": "每周五至周一9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "每周二至周四9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 2-4"
+  },
+  {
+   "expected": "每周日、周一9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0,1"
+  },
+  {
+   "expected": "每周五、周日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0,5"
+  },
+  {
+   "expected": "每周二、周三、周四、周日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0,2-4"
+  },
+  {
+   "expected": "每周二至周五及周日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0,2-5"
+  },
+  {
+   "expected": "每周一、周二、周三、周五9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 1,2,3,5"
+  },
+  {
+   "expected": "除周三外每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 * * 0-2,4-6"
+  },
+  {
+   "expected": "每周一0:00、1:00、22:00、23:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0,1,22,23 * * 1"
+  },
+  {
+   "expected": "每天9:00、9:30、17:00、17:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,30 9,17 * * *"
+  },
+  {
+   "expected": "每天9:05、9:20、17:05、17:20",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20 9,17 * * *"
+  },
+  {
+   "expected": "每天9:05、9:20、9:45、17:05、17:20、17:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20,45 9,17 * * *"
+  },
+  {
+   "expected": "每天0:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "每天0:00:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0 0 * * *"
+  },
+  {
+   "expected": "每小时的01分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "1 * * * *"
+  },
+  {
+   "expected": "每天22:00至23:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "每周二0:00至17:30每30分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/30 0-17 * * 2"
+  },
+  {
+   "expected": "每天22:00至次日6:00每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0-6,22,23 * * *"
+  },
+  {
+   "expected": "每天22:00至次日5:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 0-5,22-23 * * *"
+  },
+  {
+   "expected": "每6小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0,6,12,18 * * *"
+  },
+  {
+   "expected": "每天0:00、6:00、18:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0,6,18 * * *"
+  },
+  {
+   "expected": "每3小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */3 * * *"
+  },
+  {
+   "expected": "每天0:00至20:00每5小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */5 * * *"
+  },
+  {
+   "expected": "偶数点的30分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 */2 * * *"
+  },
+  {
+   "expected": "每天0:30至20:30每5小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 */5 * * *"
+  },
+  {
+   "expected": "每天0:23、6:23、12:23、18:23",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "23 */6 * * *"
+  },
+  {
+   "expected": "奇数点的23分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "23 1/2 * * *"
+  },
+  {
+   "expected": "偶数点的15分、45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "15,45 */2 * * *"
+  },
+  {
+   "expected": "每天0点、4点、8点、12点、16点、20点时段的15分、45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "每天0:23、12:23",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "23 */12 * * *"
+  },
+  {
+   "expected": "每天1:00、13:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 1/12 * * *"
+  },
+  {
+   "expected": "每天0:00至0:45、12:00至12:45每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 */12 * * *"
+  },
+  {
+   "expected": "每12小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */12 * * *"
+  },
+  {
+   "expected": "每12小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0/12 * * *"
+  },
+  {
+   "expected": "每天0:00、12:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "每月1日每12小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */12 1 * *"
+  },
+  {
+   "expected": "每月1日0:00、12:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0,12 1 * *"
+  },
+  {
+   "expected": "每小时整点（3:00除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "每小时的30分（3:30除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "每小时的05分、20分、45分（3:00至3:59除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20,45 0-2,4-23 * * *"
+  },
+  {
+   "expected": "每10分钟（3:00至3:59除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "每分钟（每小时的29分除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-28,30-59 * * * *"
+  },
+  {
+   "expected": "每天9:00至9:59、17:00至17:59每分钟（每小时的29分除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "每天9:00至17:50每10分钟（每小时的30分除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,10,20,40,50 9-17 * * *"
+  },
+  {
+   "expected": "每10分钟（3:00至3:59及每小时的30分除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,10,20,40,50 0-2,4-23 * * *"
+  },
+  {
+   "expected": "每秒（每小时29分这一分钟除外）",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "每天8点、10点、12点、14点、16点、18点时段内每15分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "每天9:00至17:00每小时整点及20:00、22:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9-17,20,22 * * *"
+  },
+  {
+   "expected": "每天9:00至17:59、20:00至20:59、22:00至22:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 9-17,20,22 * * *"
+  },
+  {
+   "expected": "每周一至周五6:00至8:50、17:00至19:50每10分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/10 6-8,17-19 * * 1-5"
+  },
+  {
+   "expected": "每年1月、4月、7月、10月的奇数日偶数点时段内每20分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/20 */2 */2 */3 *"
+  },
+  {
+   "expected": "每天9点至17点及22点每小时的05分、20分、45分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5,20,45 9-17,22 * * *"
+  },
+  {
+   "expected": "每天9:00至9:10、9:50至9:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "50-10 9 * * *"
+  },
+  {
+   "expected": "每天9:10至9:40每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "10-40 9 * * *"
+  },
+  {
+   "expected": "每天9:30至9:59每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30-59 9 * * *"
+  },
+  {
+   "expected": "每小时的05分至10分每分钟及20分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5-10,20 * * * *"
+  },
+  {
+   "expected": "每小时的最后15分钟内每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "45-59 * * * *"
+  },
+  {
+   "expected": "每小时的10分至40分每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "10-40 * * * *"
+  },
+  {
+   "expected": "每天9:00至9:29、17:00至17:29每分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-29 9,17 * * *"
+  },
+  {
+   "expected": "每小时的00分、01分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-1 * * * *"
+  },
+  {
+   "expected": "每小时的00分、21分、42分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/21 * * * *"
+  },
+  {
+   "expected": "每小时的09分、14分、47分、56分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "9,14,47,56 * * * *"
+  },
+  {
+   "expected": "每小时的05分至55分每10分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5/10 * * * *"
+  },
+  {
+   "expected": "每天9:30:15",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "每天9:30:15、17:30:15",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "15 30 9,17 * * *"
+  },
+  {
+   "expected": "每天9:30:15、9:30:45",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "15,45 30 9 * * *"
+  },
+  {
+   "expected": "每天9:00:00至9:59:59每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 9 * * *"
+  },
+  {
+   "expected": "每天9:00:00至17:59:59每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* * 9-17 * * *"
+  },
+  {
+   "expected": "每小时的00分30秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 0 * * * *"
+  },
+  {
+   "expected": "每小时的30分15秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "15 30 * * * *"
+  },
+  {
+   "expected": "每小时的前10秒内每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0-9 0 * * * *"
+  },
+  {
+   "expected": "每天9:00:00至9:00:59、17:00:00至17:00:59每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0 9,17 * * *"
+  },
+  {
+   "expected": "每15分钟，每次持续1分钟，期间每15秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/15 */15 * * * *"
+  },
+  {
+   "expected": "每15分钟的第30秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 */15 * * * *"
+  },
+  {
+   "expected": "偶数点的05分08秒、30分08秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "8 5,30 */2 * * *"
+  },
+  {
+   "expected": "每小时的前30分钟内每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 0-29 * * * *"
+  },
+  {
+   "expected": "每天9:00:00、9:00:20、9:00:40",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0,20,40 0 9 * * *"
+  },
+  {
+   "expected": "每天9:30:10至9:30:20每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "每天9:00:05",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "5-10/60 0 9 * * *"
+  },
+  {
+   "expected": "每天0:00:15、12:00:15",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "15 0 */12 * * *"
+  },
+  {
+   "expected": "每年6月每5分钟",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/5 * * 6 *"
+  },
+  {
+   "expected": "每年6月每6小时",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 */6 * 6 *"
+  },
+  {
+   "expected": "每年6月每小时的30分",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "30 * * 6 *"
+  },
+  {
+   "expected": "每周一每小时整点",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 * * * 1"
+  },
+  {
+   "expected": "2030年每5分钟",
+   "options": {
+    "lang": "zh",
+    "years": true
+   },
+   "pattern": "*/5 * * * * 2030"
+  },
+  {
+   "expected": "2030年起每4年一次，6月、7月第2个周六0:23:00、0:23:30、12:23:00、12:23:30",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "*/30 23 */12 * 6-7 6#2 2030/4"
+  },
+  {
+   "expected": "2028年、2030年，每天2:35、15:35",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 35 2,15 * * * 2028,2030"
+  },
+  {
+   "expected": "每年7月、9月、10月、12月每周一、周三、周四、周五3点至10点每小时的30分、42分，每次持续1分钟，期间每秒",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "* 30,42 3-10 * 7,9,10,12 1,3,4,5"
+  },
+  {
+   "expected": "每年3月、6月、9月、12月最接近15日的工作日（周一至周五）18:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 18 15W 3,6,9,12 *"
+  },
+  {
+   "expected": "每年奇数月的1日4:07、10:07、16:07、22:07",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "每天上午9:00",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "每天上午9:30、下午5:30",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "每天上午9:00至下午5:00每小时整点",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "每天凌晨0:00",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "每天中午12:00",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "每周一至周五上午9:00至下午5:45每15分钟",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每天晚上10:00至晚上11:59每分钟",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "每周一至周五9:00至17:45每15分钟",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "每天9:00",
+   "options": {
+    "lang": "zh",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  }
+ ]
+}

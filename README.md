@@ -228,6 +228,7 @@ docs below.
 | --- | --- | --- | --- |
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
 | Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
+| Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
 
 ### Language maturity
 
@@ -244,6 +245,7 @@ Sonnet instances. It graduates to **stable** only on review by a fluent human:
 | --- | --- |
 | English | beta |
 | Ukrainian | beta |
+| Chinese (Simplified) | beta |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see
@@ -308,6 +310,7 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | --- | --- | --- |
 | English | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | Ukrainian | о 9:30:05 та 9:30:10 по понеділках | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
+| Chinese (Simplified) | 每周一9:30:05、9:30:10 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for

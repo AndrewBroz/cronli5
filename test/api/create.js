@@ -81,6 +81,9 @@ describe('create:', function() {
       create({languages: [en], styles: {uk: {hour12: false}}});
     }, /uk/u);
     throwsOption(function build() {
+      create({languages: [en], styles: {en: 'gb'}});
+    }, /styles\.en/u);
+    throwsOption(function build() {
       create({languages: [en], options: {dialect: 'gb'}});
     }, /en-GB/u);
     throwsOption(function build() {

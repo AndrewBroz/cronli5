@@ -14,9 +14,9 @@ const FIELDS =
 // The parts of the sentence an edit to each field may change. A time
 // field changes the time. A day field changes the day part, and the month
 // before it changes with it: 每月1日 becomes 6月1日, and under a date
-// and a weekday together the month is set apart (6月期间，). A year that
-// is not a single year takes 的 before a date or a month. So a day, month
-// or year edit may move text among those three parts. Nothing else may
+// and a weekday together the month is set apart (6月期间，). A month
+// with no year before it brings 每年. So a day, month or year edit may
+// move text among those three parts. Nothing else may
 // cross: none of them touches the time, and no time edit touches anything
 // but the time, with the one exception below.
 const MAY_CHANGE = {

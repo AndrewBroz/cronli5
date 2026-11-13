@@ -333,6 +333,17 @@ four items and names fewer things.
 An exception is for a hole in the middle. A cadence that is only missing
 values at its end or its start is said with its bounds.
 
+Where an exception ties with a run that wraps round its cycle, the
+exception is said: days 1 to 14 and 17 to 31 are «щодня, крім 15-го та
+16-го числа», not «від 17-го до 14-го числа включно».
+
+Seconds take an exception as minutes do, as an ordinal: «щосекунди, крім
+29-ї секунди кожної хвилини»; inside one named minute it is the clock time,
+«щосекунди з 9:00 до 9:01, крім 9:00:29».
+
+A stray year beside a range of years is said as a year alone is: «від 2030
+до 2032 року включно і у 2035 році».
+
 An exception to minutes is said last, after the hours. It says «кожної
 години» unless the phrase before it already ends with those words, and
 inside one named hour it is the clock time (`0,10,20,40,50 9` is «кожні 10

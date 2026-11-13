@@ -36,6 +36,22 @@ describe('Reading a pattern:', function() {
       .to.include({seconds: true, years: true});
   });
 
+  it('an option error is recognized by instanceof, and nothing else is',
+    function() {
+      let caught = null;
+
+      try {
+        readingOf({cron: 'spring'});
+      }
+      catch (error) {
+        caught = error;
+      }
+
+      expect(caught instanceof Cronli5OptionError).to.equal(true);
+      expect(caught instanceof Cronli5InputError).to.equal(false);
+      expect(new Error('other') instanceof Cronli5OptionError).to.equal(false);
+    });
+
   it('rejects a flavour or flag value it does not know', function() {
     [{cron: 'spring'}, {weekdaysFrom: 2}, {questionMark: 'maybe'},
       {seconds: 'yes'}].forEach(function each(options) {

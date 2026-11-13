@@ -247,9 +247,11 @@ function fineSayer(unit: FineUnit, exceptions: boolean) {
 // години»; and a stretch of minutes takes only that form. Two hours are
 // a cadence only where they were written as one, and under minutes a
 // cadence that tiles the day gives way to the times while they are few.
+// `end` is the time a named end of the cadence falls on.
 function hourCadence(
   description: Cadence,
   mode: 'confining' | 'onTheHour' | 'underMinutes',
+  end: (hour: number) => Moment,
   context: TimeContext
 ): TimePhrase | null {
   const count = (description.last - description.start) /
@@ -272,8 +274,8 @@ function hourCadence(
     count > 2 || context.pairWrittenAsCadence :
     count * context.minutes > EASY_TIMES;
   const bounds = through(
-    clock({hour: description.start, minute: 0}, context.style),
-    clock({hour: description.last, minute: 0}, context.style));
+    clock(end(description.start), context.style),
+    clock(end(description.last), context.style));
 
   if (tiling && !easy) {
     return null;
@@ -323,10 +325,14 @@ function pointHours(minute: number, context: TimeContext) {
   }
 
   function cadence(description: Cadence): TimePhrase | null {
-    const spoken = hourCadence(
-      description, onTheHour ? 'onTheHour' : 'underMinutes', context);
+    const spoken = hourCadence(description,
+      onTheHour ? 'onTheHour' : 'underMinutes', moment, context);
 
-    return spoken && {...spoken, text: join([...carried, spoken.text])};
+    // Named ends carry the minute themselves, as a range's do.
+    return spoken && {
+      ...spoken,
+      text: join([spoken.round && carried.join(''), spoken.text])
+    };
   }
 
   function pieces(description: {parts: Piece[]}): TimePhrase {
@@ -461,8 +467,12 @@ function confiningHours(minute: FinePhrase, context: TimeContext) {
   const mode = minute.continuous ? 'confining' : 'underMinutes';
   const listable = minute.description.kind === 'values';
 
+  function onTheHour(hour: number): Moment {
+    return {hour, minute: 0};
+  }
+
   function time(hour: number): string {
-    return clock({hour, minute: 0}, context.style);
+    return clock(onTheHour(hour), context.style);
   }
 
   // The minutes are counted once, after the hours are chosen.
@@ -481,7 +491,7 @@ function confiningHours(minute: FinePhrase, context: TimeContext) {
   }
 
   function cadence(description: Cadence): TimePhrase | null {
-    const spoken = hourCadence(description, mode, context);
+    const spoken = hourCadence(description, mode, onTheHour, context);
 
     return spoken && {
       ...spoken,

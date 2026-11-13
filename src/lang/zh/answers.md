@@ -298,6 +298,16 @@ months leads, as 除…外.
 An exception is for a hole in the middle. A cadence that is only missing
 values at its end or its start is said with its bounds.
 
+Where an exception ties with a run that wraps round its cycle, the
+exception is said: days 1 to 14 and 17 to 31 are 每月除15日、16日外每天, not
+每月17日至次月14日. A list of months before a day exception takes no 的: 每年1
+月、7月除15日外每天.
+
+Seconds take an exception as minutes do: 每秒（每分钟的29秒除外）. Inside one
+named hour or minute the exception is the clock time: 9:00至9:50每10分钟
+（9:30除外）; 9:00:00至9:59:59每秒（9:29这一分钟除外）; 9:00:00至9:00:59每秒
+（9:00:29除外）.
+
 An exception to minutes: 每分钟（每小时的29分除外）; 9:00至17:50每10分钟（每小时
 的30分除外）. Under 每秒 the excepted minute is a whole minute, and is
 called one: 每秒（每小时29分这一分钟除外）.

@@ -26,6 +26,7 @@ import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
 import en, {styles as englishStyles} from '../src/lang/en/index.js';
 import uk from '../src/lang/uk/index.js';
+import zh from '../src/lang/zh/index.js';
 import {
   comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
@@ -39,7 +40,8 @@ const cronstrueVersion = JSON.parse(readFileSync(
 
 const languages = [
   {code: 'en', extras: [], lang: en},
-  {code: 'uk', extras: [], lang: uk}
+  {code: 'uk', extras: [], lang: uk},
+  {code: 'zh', cronstrueLocale: 'zh_CN', extras: [], lang: zh}
 ];
 
 function describe(fn, pattern) {
@@ -134,7 +136,8 @@ function cronstrueFor(code, pattern) {
 const headToHead = '5,10 30 9 * * MON';
 const headToHeadRows = [
   {name: 'English', code: 'en'},
-  {name: 'Ukrainian', code: 'uk'}
+  {name: 'Ukrainian', code: 'uk'},
+  {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'}
 ];
 
 function renderHeadToHead() {
