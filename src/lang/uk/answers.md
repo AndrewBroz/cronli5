@@ -858,6 +858,38 @@ Seconds 0 and 30 under such a rest were once «щоразу кожні 30 сек
 «рівно та на 30-й секунді» is the third judge's «двічі: рівно і через 30
 секунд».
 
+**Every second of each minute, after a rest that needs no pin of its
+own, has no bracket.** «Щоразу щосекунди протягом хвилини» names no
+place inside the minute, so it has no ordinal to read one off, and it
+writes out no first cycle that could be read as one run per period
+(4.5); after a rest whose words already say when it fires (windows of
+clock times, clock times listed, counts after named hours, a run of
+whole hours, a bare cadence, «щогодини»), nothing is left to settle:
+`* */15 9-17 * * *` is «щодня кожні 15 хвилин з 9:00 до 17:45, щоразу
+щосекунди протягом хвилини»; `* 5,10 9,17 * * *` is «щодня о 9:05, 9:10,
+17:05 та 17:10, щоразу щосекунди протягом хвилини»; `* 5/15 2/6 * * *`
+is «щодня через 5, 20, 35 та 50 хвилин після 2:00, 8:00, 14:00 та
+20:00, щоразу щосекунди протягом хвилини». A blind native reader took
+the bracket that used to follow, «(9:05:00–9:05:59 … 17:10:00–17:10:59)»
+with its middle item gone, for one unbroken span from its first item to
+its last. Where the bracket also pins the rest (minutes under every
+hour, «щогодини на 5-й, 20-й, 35-й та 50-й хвилині, щоразу щосекунди
+протягом хвилини (0:05:00–0:05:59, 0:20:00–0:20:59 …
+23:50:00–23:50:59)»; after a cadence of hours) it stays whole, and so
+does any other seconds phrase: an ordinal («на 15-й секунді»), a
+stretch («перших 11 секунд») and a cadence («кожні 6 секунд протягом
+хвилини», which two readers once counted to the 60th second) each say a
+place or an end that the bracket settles.
+
+Three shorter forms were tried for these sentences on 2026-11-13 and
+withdrawn after a blind native read, each for a second reading: windows
+written to the second («кожні 15 хвилин з 9:00:00 до 17:45:59, щоразу…»
+was read as one unbroken stretch from 9:00:00 to 17:45:59); seconds
+counted after named clock times («щоразу рівно й через 15, 30 та 45
+секунд» could drop the zero second, «рівно» read as "exactly"); and a
+bracket of only its first and last item (read as one span). A bracket
+never has two items.
+
 If «щоразу» is needed twice (seconds inside minutes inside a cadence of
 hours), it is said twice and the one pin comes last: «кожні 2 години з
 0:00 до 22:00 включно, щоразу кожні 15 хвилин протягом години, щоразу
@@ -910,7 +942,23 @@ phrase is exactly where it is read over both sides.)
 
 **Where the day of the month is no restriction or never fires, there is
 no «а також»** (2.8): days that are every day of the months reached are
-«щодня»; a date no reached month has leaves the weekdays alone.
+«щодня»; a date no reached month has leaves the weekdays alone. **Nor is
+there one where the day of the month adds no day**: a form that only
+ever falls Monday to Friday (the nearest weekday, the first or the last
+weekday of the month, 5.7) beside weekdays that hold all five of them
+(the core's `dateAddsNothing`). The weekdays are said alone, as they
+would be without it: `*/15 9-17 15W * 1-5` is «щотижня з понеділка до
+п'ятниці включно, кожні 15 хвилин з 9:00 до 17:45»; `0 9 1W 6 1-5` is «у
+червні щотижня з понеділка до п'ятниці включно, о 9:00»; `0 9 15W * 1-6`
+is «щодня, крім неділі, о 9:00». (It used to be «щотижня з понеділка до
+п'ятниці включно, а також щомісяця в найближчий до 15-го числа будній
+день (понеділок–п'ятниця)»: «а також» promises a second set of days, and
+a reader looks for what it adds, which is nothing; the sentence ran past
+two hundred and sixty characters with a heading and a cadence of hours.)
+Monday to Thursday beside the same form keep both sides, since the
+nearest weekday can be a Friday, and so does any plain date or «в
+останній день місяця», which fall on every day of the week over the
+years.
 
 The «а також» phrase is set off by commas on both sides, as an added
 member of the sentence is, so the time is read with both sides. The
@@ -1048,7 +1096,8 @@ phrase follows, the window stays where it is and a bracket pin is added
 at the end.
 
 **Instances, in brackets**, everywhere else that an ordinal, «перших»,
-«останніх», «протягом години» or «протягом хвилини» is said. An item is
+«останніх», «протягом години» or «протягом хвилини» is said, except
+every second of a minute after a rest that needs no pin (4.2). An item is
 one firing, written as a clock time, or one unbroken or evenly stepped
 stretch of firings, written first–last with an en dash and no spaces
 («0:00–0:29»). The cycle is the hour for minutes and the minute for
@@ -1233,8 +1282,8 @@ in no month reached is 2.8.
   найближчий до 31 липня та 31 серпня будній день…»: the months without
   the day are simply not named). It is said under a heading of months
   (4.3) if any of them can lack the day, because there the day stands
-  without its months: `0 9 31W 1-11 1-5` is «із січня до листопада
-  включно: щотижня з понеділка до п'ятниці включно, а також у найближчий
+  without its months: `0 9 31W 1-11 1-4` is «із січня до листопада
+  включно: щотижня з понеділка до четверга включно, а також у найближчий
   до 31-го числа будній день того ж місяця (понеділок–п'ятниця), о 9:00
   (лише в місяцях, де є 31-ше число)». (Under a heading the note used to
   be dropped, and nothing told the reader that April has no such day.)
