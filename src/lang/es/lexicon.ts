@@ -59,13 +59,15 @@ const nthWords = ['primer', 'segundo', 'tercer', 'cuarto', 'quinto'];
 
 // The function words and fixed phrases.
 const words = {
-  also: 'y también',
+  also: 'y además',
   am: 'a. m.',
   and: 'y',
   andSoOn: 'y así sucesivamente',
   antepenultimateDay: 'antepenúltimo día',
   at: 'a las',
+  atEachTime: 'y en cada ocasión',
   atOne: 'a la',
+  before: 'antes del',
   closest: 'más cercano al',
   during: 'durante',
   each: 'cada',
@@ -75,7 +77,6 @@ const words = {
   except: 'excepto',
   first: 'primeros',
   firstOne: 'primer',
-  forThe: 'para el',
   from: 'de',
   fromThe: 'del',
   in: 'en',
@@ -92,13 +93,14 @@ const words = {
   ofTheNext: 'del siguiente',
   onceEach: 'una vez cada',
   oncePer: 'una vez por',
-  oneMinute: 'un minuto',
+  oneHour: 'una hora',
   penultimateDay: 'penúltimo día',
   pm: 'p. m.',
   runs: 'Se ejecuta',
   since: 'desde',
   startup: 'al iniciar el sistema',
   thatBegin: 'que empiezan',
+  thatMinute: 'todo ese minuto',
   thatMonth: 'ese mes',
   the: 'el',
   theEven: 'pares',
@@ -113,7 +115,6 @@ const words = {
   unrecognizable: 'un patrón cron no reconocido',
   until: 'hasta',
   weekends: 'los fines de semana',
-  whenLeft: 'cuando faltan',
   withinMonth: 'sin salir del mes',
   // The Monday-to-Friday day, by the `workday` style: Spain's word and
   // America's. Neither skips a public holiday (answers 5.7).
