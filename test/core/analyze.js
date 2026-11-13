@@ -69,6 +69,8 @@ describe('Core analyze:', function() {
 
       expect(analyses.day).to.deep.equal({
         date: {kind: 'values'},
+        dateAddsNothing: false,
+        nearestDayIsLast: null,
         union: true,
         weekday: {kind: 'values'}
       });
@@ -79,11 +81,15 @@ describe('Core analyze:', function() {
 
       expect(analyses.day).to.deep.equal({
         date: {form: {kind: 'last'}, kind: 'quartz'},
+        dateAddsNothing: false,
+        nearestDayIsLast: null,
         union: true,
         weekday: {form: {kind: 'last', weekday: 5}, kind: 'quartz'}
       });
       expect(ir('0 0 * * *').analyses.day).to.deep.equal({
         date: null,
+        dateAddsNothing: false,
+        nearestDayIsLast: null,
         union: false,
         weekday: null
       });

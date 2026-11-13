@@ -36,8 +36,13 @@ describe('a day field that names every value without `*`:', function() {
   it('says so in every fact', function() {
     const {analyses, shapes} = schedule('0 9 1-31 * 1');
 
-    expect(analyses.day).to.deep.equal(
-      {date: null, union: false, weekday: null});
+    expect(analyses.day).to.deep.equal({
+      date: null,
+      dateAddsNothing: false,
+      nearestDayIsLast: null,
+      union: false,
+      weekday: null
+    });
     expect(analyses.candidates.weekday).to.deep.equal([{kind: 'all'}]);
     expect(analyses.candidates.date).to.deep.equal([{kind: 'all'}]);
     expect(analyses.written.weekday).to.equal('all');

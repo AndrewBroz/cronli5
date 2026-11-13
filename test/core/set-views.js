@@ -182,6 +182,113 @@ describe('runs and cadences together:', function() {
         ]);
     });
 
+  it('leaves a stray value beside a long cadence as a value', function() {
+    // Taking the longest progression from the lowest value first would
+    // start a cadence of 58 at 1984 that runs through the cadence of two
+    // and breaks it into hundreds of parts.
+    expect(describeCadencePieces(
+      [1984].concat(upTo(9999, 2, 2042)), YEARS).parts).to.deep.equal([
+      {kind: 'values', values: [1984]},
+      {interval: 2, kind: 'cadence', last: 9998, open: true, start: 2042}
+    ]);
+    expect(describeCadencePieces(
+      [1970].concat(upTo(9999, 3, 1985)), YEARS).parts).to.deep.equal([
+      {kind: 'values', values: [1970]},
+      {interval: 3, kind: 'cadence', last: 9998, open: true, start: 1985}
+    ]);
+  });
+
+  it('leaves stray values anywhere beside a long cadence as values',
+    function() {
+      // Below it, inside it and above it.
+      expect(describeCadencePieces(
+        [1, 4, 10, 20, 23, 30, 40, 50, 55], MINUTES).parts).to.deep.equal([
+        {kind: 'values', values: [1, 4, 23, 55]},
+        {interval: 10, kind: 'cadence', last: 50, start: 10}
+      ]);
+      // 3 and 5 would start cadences of 7 and 5 through the cadence of
+      // ten.
+      expect(describeCadencePieces(
+        [3, 5, 10, 20, 30, 40, 50], MINUTES).parts).to.deep.equal([
+        {kind: 'values', values: [3, 5]},
+        {interval: 10, kind: 'cadence', last: 50, start: 10}
+      ]);
+      expect(describeCadencePieces(
+        [1971, 1984, 2000].concat(upTo(9999, 5, 2042)), YEARS).parts)
+        .to.deep.equal([
+          {kind: 'values', values: [1971, 1984, 2000]},
+          {interval: 5, kind: 'cadence', last: 9997, open: true,
+            start: 2042}
+        ]);
+    });
+
+  it('reaches a renderer for a year before an open cadence', function() {
+    expect(facts('0 0 9 * * * 2042/2,1984', SEVEN).analyses
+      .cadencePieces.year.parts).to.deep.equal([
+      {kind: 'values', values: [1984]},
+      {interval: 2, kind: 'cadence', last: 9998, open: true, start: 2042}
+    ]);
+    expect(facts('0 0 9 * * * 1985/3,1970', SEVEN).analyses
+      .cadencePieces.year.parts).to.deep.equal([
+      {kind: 'values', values: [1970]},
+      {interval: 3, kind: 'cadence', last: 9998, open: true, start: 1985}
+    ]);
+  });
+
+  it('keeps two cadences that cross as two', function() {
+    // Every 7th year from 2030 and every 11th from 2031 meet at 2086 and
+    // every 77 years after. Neither is broken where they meet: the parts
+    // share those years.
+    const values = [...new Set(
+      upTo(9999, 7, 2030).concat(upTo(9999, 11, 2031))
+    )].sort(ascending);
+    const found = describeCadencePieces(values, YEARS);
+
+    expect(found.parts).to.deep.equal([
+      {interval: 7, kind: 'cadence', last: 9996, open: true, start: 2030},
+      {interval: 11, kind: 'cadence', last: 9995, open: true, start: 2031}
+    ]);
+    expect(denote(found, YEARS)).to.deep.equal(values);
+    expect(facts('0 0 9 * * * 2030/7,2031/11', SEVEN).analyses
+      .cadencePieces.year).to.deep.equal(found);
+  });
+
+  it('keeps two cadences whose values interleave as two', function() {
+    expect(describeCadencePieces(
+      [1, 5, 8, 9, 11, 14, 17, 20, 23], HOURS).parts).to.deep.equal([
+      {interval: 4, kind: 'cadence', last: 9, start: 1},
+      {interval: 3, kind: 'cadence', last: 23, start: 8}
+    ]);
+  });
+
+  it('shares a value between parts only where that names less',
+    function() {
+      // 0, 10, …, 50 and 5, 20, 35, 50 share 20 and 50. Sharing them
+      // names four things, and so do the cadence of ten and 5 and 35
+      // beside it, which share nothing.
+      expect(describeCadencePieces(
+        [0, 5, 10, 20, 30, 35, 40, 50], MINUTES).parts).to.deep.equal([
+        {interval: 10, kind: 'cadence', last: 50, start: 0},
+        {kind: 'values', values: [5, 35]}
+      ]);
+    });
+
+  it('gives a value two cadences both reach to the longer of them',
+    function() {
+      // 1 to 9 by twos would reach 11, where 11 to 29 by threes starts.
+      // Both ways are two cadences; the longer one is kept whole.
+      const values = upTo(10, 2, 1).concat(upTo(31, 3, 11));
+      const parts = [
+        {interval: 2, kind: 'cadence', last: 9, start: 1},
+        {interval: 3, kind: 'cadence', last: 29, start: 11}
+      ];
+
+      expect(describeCadencePieces(values, domainOf('date')).parts)
+        .to.deep.equal(parts);
+      expect(facts('0 0 1-10/2,11-31/3 * *').analyses.cadencePieces.date
+        .parts).to.deep.equal(parts);
+    });
+
   it('walks a cyclic field from the value a view names', function() {
     // Monday, Wednesday, Friday, Sunday and Saturday, in a week from
     // Monday: every second day from Monday through Sunday, and Saturday.

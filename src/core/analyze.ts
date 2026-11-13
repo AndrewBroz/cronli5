@@ -8,8 +8,8 @@ import type {
   Analyses, CadencePieces, Field, Pattern, Schedule, SetDescription, Shape,
   Shapes
 } from './schedule.js';
-import {dateReach} from './date-reach.js';
-import {dayFacts} from './day.js';
+import {dateReach, monthLengths} from './date-reach.js';
+import {dayArms, dayFacts} from './day.js';
 import {describeCadencePieces, describeSet} from './describe-set.js';
 import {enumerateFires, includes} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
@@ -117,15 +117,18 @@ function analyze(pattern: Pattern): Schedule {
     written[field] = fieldWritten(pattern[field], shapes[field]);
   });
 
-  const day = dayFacts(pattern, shapes, candidates);
+  const arms = dayArms(pattern, shapes, candidates);
+  const reach = dateReach(arms.date, candidates);
+  const fired = monthLengths(arms.date, candidates);
 
   return {
     analyses: {
       cadencePieces,
       candidates,
       clockSecond: clockSecond(candidates.second),
-      dateReach: dateReach(day.date, candidates),
-      day,
+      dateReach: reach,
+      day: dayFacts(arms, {fired, reach}, candidates.weekday),
+      monthLengths: fired,
       written
     },
     pattern,
