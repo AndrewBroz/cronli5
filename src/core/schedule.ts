@@ -14,7 +14,16 @@ export type Shape =
   'wildcard' | 'quartz' | 'list' | 'step' | 'range' | 'single';
 
 /** The canonical, normalized cron pattern: every field a string. */
-export type Pattern = Record<Field, string>;
+export type Pattern = Record<Field, string> & {
+
+  /**
+   * Set when a day field was written with a leading `*` and both day
+   * fields still narrow the days: cron then needs both to match. It is
+   * noted before the fields are made canonical, which is the one place the
+   * core asks how a field was written.
+   */
+  bothDays?: true;
+};
 
 /** Per-field shape classification. */
 export type Shapes = Record<Field, Shape>;
@@ -89,6 +98,16 @@ export type WeekdayArm =
  */
 export interface DayFacts {
   union: boolean;
+
+  /**
+   * True when both day fields narrow the days and both must match: one of
+   * them was written with a leading star (a step from the star), which
+   * cron takes for
+   * unrestricted and so combines by "and": a date field of every second
+   * day beside Monday is the Mondays that are odd days of the month. Never
+   * true together with `union`.
+   */
+  both: boolean;
   date: DateArm | null;
   weekday: WeekdayArm | null;
   nearestDayIsLast: 'always' | 'sometimes' | 'never' | null;

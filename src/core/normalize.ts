@@ -66,6 +66,12 @@ function normalizeCronPattern(cronPattern: CronLike): Pattern {
     cronPattern.weekday = '*';
   }
 
+  // With a day field starred, both must match. That matters only while
+  // both still narrow the days: `*/1` beside a weekday is the weekday.
+  if (!eitherDay && cronPattern.date !== '*' && cronPattern.weekday !== '*') {
+    (cronPattern as Pattern).bothDays = true;
+  }
+
   // Every field is now a canonical string.
   return cronPattern as Pattern;
 }

@@ -107,7 +107,16 @@ The Quartz day forms take part in the same way: `0 9 L * 0-6` and
 `0 9 1-31 * 5L` are every day. Quartz itself rejects a pattern with both
 day fields set, so this only arises under a lenient reading.
 
-## Open: `*/n` in a day field
+## Decided 2026-11-13: follow cron
+
+The maintainer chose the first of the choices below. A day field written
+with a leading `*` counts as a star, so `*/n` beside a restricted day field
+means both must match. The core reports it as `analyses.day.both`
+(`tooling/docs/core-calendar-facts.md`, section 12), and every language
+says the intersection. The rest of this section is the record of the
+question as it stood.
+
+## Was open: `*/n` in a day field
 
 Cron takes `*/2` for a star, because it begins with `*`. So
 `0 0 */2 * 1` runs only on Mondays that are odd days of the month.
