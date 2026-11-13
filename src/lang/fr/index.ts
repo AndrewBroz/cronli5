@@ -6,7 +6,8 @@
 import type {Language, Schedule} from '../../core/schedule.js';
 import type {Joined, Months} from './calendar.js';
 import {
-  datePhrase, dayPhrase, join, monthsOf, weekdayPhrase, yearPart
+  datePhrase, datesOnWeekdays, dayPhrase, join, monthsOf, weekdayPhrase,
+  yearPart
 } from './calendar.js';
 import type {Context} from './context.js';
 import {contextOf} from './context.js';
@@ -59,8 +60,10 @@ function yearChunk(c: Context, months: Months): Chunk {
 // before the time unless it begins with a clock time.
 function framed(c: Context, time: Said): Chunk[] {
   const months = monthsOf(c, c.dateMonths,
-    {excepting: c.dated || c.weekdayed || c.daily});
-  const days: Joined = join(dayPhrase(c, months), months, months.shape);
+    {excepting: !c.both && (c.dated || c.weekdayed || c.daily)});
+  const days: Joined = c.both ?
+    datesOnWeekdays(c, months) :
+    join(dayPhrase(c, months), months, months.shape);
 
   return [
     {part: 'day', text: days.head},

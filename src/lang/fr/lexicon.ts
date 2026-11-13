@@ -119,6 +119,7 @@ const words = {
   from: 'de',
   fromThe: 'du',
   in: 'en',
+  itFalls: 'il tombe',
   last: 'dernières',
   lastDay: 'le dernier jour',
   lastOne: 'dernier',
@@ -150,6 +151,7 @@ const words = {
   startup: 'au démarrage du système',
   the: 'le',
   thePlural: 'les',
+  theyFall: 'ils tombent',
   then: 'puis',
   thisTime: 'cette fois',
   to: 'à',
@@ -157,6 +159,7 @@ const words = {
   unrecognizable: 'une expression cron non reconnue',
   until: 'jusqu\'à',
   untilMinuteEnd: 'jusqu\'à la fin de la minute',
+  when: 'quand',
   whenMonthHasMoreThan: 'quand le mois compte plus de',
   with: 'avec'
 };

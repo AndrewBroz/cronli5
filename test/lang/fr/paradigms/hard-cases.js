@@ -826,6 +826,62 @@ const rows = [
   ['0 0 15 * 0-2,4-6',
     'à 0 h, du jeudi au mardi ainsi que le 15 de chaque mois'],
 
+  // Written without the star, a date field of every second or fifth day
+  // beside a weekday is a union: the weekdays, and also those days of the
+  // month. (Written from a star, below, both must match.)
+  ['*/15 9-17 1-31/2 * 1-5',
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que les jours impairs de chaque mois'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois'],
+
+  // Written from a star, a date field beside a weekday means both must
+  // match: the days of the month as they are said alone, and when they
+  // fall on the weekdays. «Quand» never says «ainsi que». (`2/2` has no
+  // star: a union.)
+  ['0 0 */2 * 1',
+    'les jours impairs de chaque mois quand ils tombent un lundi, à 0 h'],
+  ['0 9 */2 * 1,3,5',
+    'les jours impairs de chaque mois quand ils tombent un lundi, un ' +
+    'mercredi ou un vendredi, à 9 h'],
+  ['0 0 15 * */2',
+    'le 15 de chaque mois quand il tombe un mardi, un jeudi, un samedi ou ' +
+    'un dimanche, à 0 h'],
+  ['0 0 */2 * 6,0',
+    'les jours impairs de chaque mois quand ils tombent un samedi ou un ' +
+    'dimanche, à 0 h'],
+  ['0 0 */2 6 1',
+    'les jours impairs de juin quand ils tombent un lundi, à 0 h'],
+  ['0 0 */5 * 1-5',
+    'les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois quand ils tombent un ' +
+    'jour du lundi au vendredi, à 0 h'],
+  ['0 0 */2 * 1-3,5-6',
+    'les jours impairs de chaque mois quand ils tombent un jour du lundi ' +
+    'au mercredi, un vendredi ou un samedi, à 0 h'],
+  ['0 9 */3 1,7 1-5',
+    'tous les 3 jours du 1er au 31 du mois, en janvier et en juillet, ' +
+    'quand ils tombent un jour du lundi au vendredi, à 9 h'],
+  ['0 0 0 */2 * 1 2030',
+    'les jours impairs de chaque mois quand ils tombent un lundi, à 0 h ' +
+    'en 2030'],
+  ['0 0 */2 * 5L',
+    'les jours impairs de chaque mois quand ils tombent le dernier ' +
+    'vendredi du mois, à 0 h'],
+  ['0 0 15 6,7 */2',
+    'le 15 juin et le 15 juillet quand ils tombent un mardi, un jeudi, un ' +
+    'samedi ou un dimanche, à 0 h'],
+  ['0 0 15 6-12 */2',
+    'le 15 du mois, de juin à décembre, quand ils tombent un mardi, un ' +
+    'jeudi, un samedi ou un dimanche, à 0 h'],
+  ['0 0 29 2 */2',
+    'le 29 février quand il tombe un mardi, un jeudi, un samedi ou un ' +
+    'dimanche, à 0 h, les années bissextiles'],
+  ['0 0 31 6 */2', 'jamais : aucune date ne correspond'],
+  ['*/15 9-17 2/2 * 1-5',
+    'toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi ' +
+    'que les jours pairs de chaque mois'],
+
   // Years with no end never name the last year of the field.
   ['0 0 9 * * * 2030/1', 'tous les jours à 9 h, à partir de 2030'],
   ['0 0 9 1 1 * 2030/1', 'le 1er janvier à 9 h, à partir de 2030'],
