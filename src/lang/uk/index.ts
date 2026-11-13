@@ -49,10 +49,16 @@ function describeParts(schedule: Schedule, opts: UkrainianOptions): Parts {
     (listed || !wraps(hours)) && !everyWords.some(function opens(word) {
       return time.startsWith(word);
     });
-  const day = [calendar.day, words.everyDay][Number(daily)];
+  const days = [calendar.day, words.everyDay][Number(daily)];
+  // A note about the day follows the time, unless the time ends in
+  // brackets of its own: then it stands beside the day, inside its mark.
+  const aside = Number(time.endsWith(')'));
+  const notes = [calendar.note, ''];
+  const day = [days, notes[1 - aside]].filter(Boolean).join(' ') +
+    calendar.mark;
   let before = '';
   const [year, month, dayPart, timePart, note] =
-    [calendar.year, calendar.month, day, time, calendar.note]
+    [calendar.year, calendar.month, day, time, notes[aside]]
       .map(function spelled(part) {
         const text = spell(part, before);
 
