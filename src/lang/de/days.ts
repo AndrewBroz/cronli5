@@ -43,6 +43,9 @@ interface Naming {
 interface MonthTail {
   noun: string;
   ord: string;
+  // The days of the shortest month it stands for, where the months are
+  // not said with the date itself.
+  shortest: number;
 }
 
 // The months of a schedule.
@@ -50,6 +53,8 @@ interface Months {
   every: boolean;
   // The days of the longest of them.
   length: number;
+  // The days the shortest of them has in every year.
+  least: number;
   one: boolean;
   said: SetDescription;
   values: number[];
@@ -99,11 +104,13 @@ const monthLengths = [0, longest, 29, longest, 30, longest, 30, longest,
 // The last date that every month of every year has.
 const inEveryMonth = 28;
 
+// The month that has its last day only in some years.
+const february = 2;
+
 // What a date says of its month where every month is meant, and where no
 // month is said with it.
 const everyMonthTail: MonthTail =
-  {noun: words.ofEachMonth, ord: words.ofEachMonth};
-const noTail: MonthTail = {noun: '', ord: ''};
+  {noun: words.ofEachMonth, ord: words.ofEachMonth, shortest: inEveryMonth};
 
 // The most dates a list holds.
 const heldDates = 7;
@@ -131,21 +138,13 @@ const dateCounting: Counting = {
   removable: Infinity
 };
 
-// Years in step are said as even or odd years or as a series, and a short
-// series that stops is its list. No exception is said of years.
-const yearCounting: Counting = {
-  cadence(cadence, count) {
-    return cadence.interval === 2 || runsOn(cadence) || count > heldYears ?
-      boundedCadence :
-      Infinity;
-  },
-  listed: 0,
-  removable: 0
-};
-
-// Whether a cadence of years has no end to name.
-function runsOn(cadence: Described<'cadence'>): boolean {
-  return cadence.last + cadence.interval > lastYear;
+// Years said together: a year on its own (a step of 0), a run (a step of
+// 1), or a series in step.
+interface YearTerm {
+  count: number;
+  first: number;
+  last: number;
+  step: number;
 }
 
 function ordinal(day: number): string {
@@ -327,10 +326,11 @@ const quartzDates: {
     return join([`${words.onTheLast} ${workday(voice)}`, tail.noun]);
   },
   // A date that can be the last of its month keeps the weekday inside
-  // the month, and one that some months lack says which months have it.
+  // the month, and one that some of the months lack says which months
+  // have it.
   nearestWeekday(form, tail, voice) {
     const {day} = form;
-    const lacking = day > inEveryMonth && tail === everyMonthTail;
+    const lacking = day > tail.shortest;
 
     return join([
       lacking && words.inMonthsWith,
@@ -358,35 +358,165 @@ function quartzWeekday(
   return join([`${which} ${voice.weekdayNoun(form.weekday)}`, tail.noun]);
 }
 
-const yearForms: {[kind: string]: (
-  description: never, naming: Naming) => string} = {
-  cadence(cadence: Described<'cadence'>) {
-    const open = runsOn(cadence);
-    const first = domainOf('year').min + 1;
-    const series = denote(cadence, domainOf('year'))
-      .slice(0, boundedCadence).join(', ');
+// The years that follow a year at one spacing, as far as none is missing.
+function reach(first: number, step: number, left: Set<number>): YearTerm {
+  let last = first;
 
-    return cadence.interval === 2 ?
-      join([[words.inEvenYears, words.inOddYears][cadence.start % 2],
-        open && cadence.start > first && `${words.since} ${cadence.start}`,
-        !open && `${words.from} ${cadence.start} ${words.to} ` +
-          `${cadence.last}`]) :
-      join([`${words.inYears} ${series} ${words.andSoOn}`,
-        !open && `${words.to} ${cadence.last}`]);
-  },
-  plain(description, naming) {
-    return `${words.inYears} ${names(description, naming)}`;
+  while (left.has(last + step)) {
+    last += step;
   }
-};
+
+  return {count: (last - first) / step + 1, first, last, step};
+}
+
+// Whether years in step are said as a series: more of them not yet said
+// than a list holds, or as many where they never stop.
+function inSeries(term: YearTerm, left: Set<number>): boolean {
+  let unsaid = 0;
+
+  for (let year = term.first; year <= term.last; year += term.step) {
+    unsaid += Number(left.has(year));
+  }
+
+  return unsaid > heldYears - Number(term.last + term.step > lastYear);
+}
+
+// The stretches of three or more years in a row among the years not yet
+// said, each handed to `take`.
+function runsAmong(
+  years: number[],
+  left: Set<number>,
+  take: (term: YearTerm) => void
+): void {
+  years.filter(function unsaid(first) {
+    return left.has(first) && left.has(first + 2);
+  }).forEach(function open(first) {
+    const run = reach(first, 1, left);
+
+    if (left.has(first) && run.count > 2) {
+      take(run);
+    }
+  });
+}
+
+// The series among the years: each year not yet said opens one at the
+// closest spacing at which the years in step from it make a series. A
+// year already said may be a step on the way.
+function seriesAmong(
+  years: number[],
+  left: Set<number>,
+  take: (term: YearTerm) => void
+): void {
+  const all = new Set(years);
+
+  years.forEach(function open(first, at) {
+    const next = left.has(first) && years.slice(at + 1).find(
+      function opens(year) {
+        return year > first + 1 &&
+          inSeries(reach(first, year - first, all), left);
+      });
+
+    if (next) {
+      take(reach(first, next - first, all));
+    }
+  });
+}
+
+// Years taken apart into runs, series and the years left alone, in the
+// order of their first years. The runs are found first, or the series.
+function yearTerms(years: number[], runsFirst: boolean): YearTerm[] {
+  const left = new Set(years);
+  const terms: YearTerm[] = [];
+  const passes = [runsAmong, seriesAmong];
+
+  function take(term: YearTerm): void {
+    terms.push(term);
+
+    for (let year = term.first; year <= term.last; year += term.step || 1) {
+      left.delete(year);
+    }
+  }
+
+  passes[Number(!runsFirst)](years, left, take);
+  passes[Number(runsFirst)](years, left, take);
+  years.forEach(function alone(first) {
+    if (left.has(first)) {
+      take({count: 1, first, last: first, step: 0});
+    }
+  });
+
+  return terms.sort(function byFirst(a, b) {
+    return a.first - b.first;
+  });
+}
+
+// A series of years: three of them and «usw.», and its end if it has one.
+function yearSeries(term: YearTerm): string {
+  const opening = [0, 1, 2].map(function at(place) {
+    return term.first + place * term.step;
+  }).join(', ');
+
+  return join([opening, words.andSoOn, term.last + term.step <= lastYear &&
+    `${words.to} ${term.last}`]);
+}
+
+// A year on its own, and a run by its ends; a run that reaches the last
+// year a pattern can name has only a start.
+function yearNamed(term: YearTerm): string {
+  const run = term.last < lastYear ?
+    `${term.first} ${words.to} ${term.last}` :
+    `${words.since} ${term.first}`;
+
+  return [String(term.first), run][term.step];
+}
+
+// Every second year, when the years are nothing else: even or odd years,
+// from their start unless that is the first such year, to their end if
+// they have one.
+function alternateYears(term: YearTerm): string {
+  const open = term.last + 2 > lastYear;
+  const first = domainOf('year').min + 1;
+
+  return join([[words.inEvenYears, words.inOddYears][term.first % 2],
+    open && term.first > first && `${words.since} ${term.first}`,
+    !open && `${words.from} ${term.first} ${words.to} ${term.last}`]);
+}
 
 // The years of a schedule that names more than every year, where no
 // month's name carries the one year.
-function yearPart(Y: number[], naming: Naming): string {
-  const said = settle(Y, domainOf('year'), yearCounting);
+function yearPart(years: number[]): string {
+  const [whole] = [reach(years[0], 2, new Set(years))].filter(
+    function isAll(term) {
+      return term.count === years.length && term.count >= heldYears;
+    });
+  const said: string[][] = [[]];
 
-  return Y.length === 1 ?
-    `${words.inYear} ${Y[0]}` :
-    (yearForms[said.kind] || yearForms.plain)(said as never, naming);
+  if (years.length === 1) {
+    return `${words.inYear} ${years[0]}`;
+  }
+
+  if (whole) {
+    return alternateYears(whole);
+  }
+
+  // Runs first, unless finding the series first leaves fewer parts.
+  const [byRuns, bySeries] = [true, false].map(function apart(runsFirst) {
+    return yearTerms(years, runsFirst);
+  });
+  const terms = bySeries.length < byRuns.length ? bySeries : byRuns;
+
+  // Years and runs side by side are one list; a series stands apart.
+  terms.forEach(function place(term) {
+    if (term.step > 1) {
+      said.push([yearSeries(term)], []);
+    }
+    else {
+      said[said.length - 1].push(yearNamed(term));
+    }
+  });
+
+  return `${words.inYears} ${said.map(list).filter(Boolean)
+    .join(` ${words.also} `)}`;
 }
 
 // The months, and how long the longest of them is.
@@ -397,6 +527,9 @@ function monthsOf(schedule: Schedule, everyYear: boolean): Months {
 
   return {
     every: values.length === monthLengths.length - 1,
+    least: Math.min(...values.map(function leastOf(month) {
+      return monthLengths[month] - Number(month === february);
+    })),
     length: Math.max(...values.map(function lengthOf(month) {
       return monthLengths[month];
     })),
@@ -410,7 +543,11 @@ function monthsOf(schedule: Schedule, everyYear: boolean): Months {
 
 // The dates the named months have, described afresh. Dates that cover
 // the whole of those months leave the weekdays nothing to add.
-function datesOf(schedule: Schedule, length: number): Dates {
+function datesOf(
+  schedule: Schedule,
+  length: number,
+  counting: Counting
+): Dates {
   const {candidates, day} = schedule.analyses;
   const {form} = {...day.date} as {form?: QuartzDate};
   const [written] = candidates.date || [everyValue];
@@ -422,7 +559,7 @@ function datesOf(schedule: Schedule, length: number): Dates {
     [fitting, length] :
     [values, longest];
   const said = settleUnwrapped(held, {cyclic: false, max: top, min: 1},
-    dateCounting);
+    counting);
   const there = Boolean(form) || said.kind !== 'all';
 
   return {form, said, there, top, whole: !there && written.kind !== 'all'};
@@ -461,9 +598,14 @@ function frameOf(schedule: Schedule): Frame {
     return denote(description, domainOf('year'));
   });
   const months = monthsOf(schedule, years.length === 0);
-  const dates = datesOf(schedule, months.length);
-  const weekdays = weekdaysOf(schedule, dates);
-  const union = dates.there && weekdays.there;
+  const alone = datesOf(schedule, months.length, dateCounting);
+  const weekdays = weekdaysOf(schedule, alone);
+  const union = alone.there && weekdays.there;
+  // Beside weekdays, every day but a few is said as its stretches: after
+  // «und zusätzlich täglich» an exception would reach the weekdays too.
+  const dates = union ?
+    datesOf(schedule, months.length, {...dateCounting, removable: 0}) :
+    alone;
   // Every day but a few is no date phrase: «täglich, außer am 15.».
   const phrase = !union && (dates.there && !dailyBut(dates.said) ||
     Boolean(weekdays.form));
@@ -498,13 +640,14 @@ function yearAfter(frame: Frame, carried: boolean): string {
 function tailOf(frame: Frame, again: boolean, voice: Voice): MonthTail {
   const {fused, months} = frame;
   const name = voice.month(months.values[0]) + yearAfter(frame, fused);
-  const own = {noun: `${words.in} ${name}`, ord: name};
-  const these = {noun: words.ofTheseMonths, ord: words.ofTheseMonths};
+  const own = {noun: `${words.in} ${name}`, ord: name, shortest: longest};
+  const these =
+    {noun: words.ofTheseMonths, ord: words.ofTheseMonths, shortest: longest};
 
   return months.every && everyMonthTail ||
     (again || fused) && months.one && own ||
     again && these ||
-    noTail;
+    {noun: '', ord: '', shortest: months.least};
 }
 
 // The day part without its joins: the dates, the weekdays, or the
@@ -602,7 +745,7 @@ function calendar(
     monthPart(frame, naming, voice)]);
   const year = years.length === 0 || yearAfter(frame, fused || monthNamed) ?
     '' :
-    yearPart(years, {...naming, from: '', name: String, one: ''});
+    yearPart(years);
   const shared = union || due.pieces ||
     time.offset && year + month + day !== '';
 

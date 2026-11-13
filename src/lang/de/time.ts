@@ -97,6 +97,9 @@ const held = 6;
 // The most clock times a list holds before a cadence replaces it.
 const heldBeforeCadence = 4;
 
+// The most minutes to the hour a series of clock times shows.
+const heldInSeries = 3;
+
 const eachHour: Wording =
   {after: words.afterEachHour, at: words.atEachHour};
 const eachMinute: Wording =
@@ -137,10 +140,6 @@ const hoursAsPoints: Counting =
 
 // Every stretch of hours is a window, however few hours it has.
 const hoursAsWindows: Counting = {...hoursAsPoints, listed: 0};
-
-// Seconds are never said in pieces.
-const secondsInTheMinute: Counting = {...inTheHour, listed: Infinity};
-const secondsOnTheClock: Counting = {...onTheClock, listed: Infinity};
 
 function nonEmpty(values: unknown[]): boolean {
   return values.length > 0;
@@ -449,7 +448,8 @@ function minutesAndHours(
     return windows(values, spans);
   });
 
-  return base.kind === 'cadence' && minutes.kind === 'values' ?
+  return base.kind === 'cadence' && minutes.kind === 'values' &&
+    M.length <= heldInSeries ?
     {excepts: gone, text: seriesOfTimes(base, work)} :
     {
       excepts: [...gone, ...said.excepts],
@@ -463,7 +463,7 @@ function minutesAndHours(
 function toTheSecond(work: Clockwork): Said | null {
   const {S, voice} = work;
   const times = clockTimes(work);
-  const {base, removed} = restOf(settle(S, sixty, secondsOnTheClock));
+  const {base, removed} = restOf(settle(S, sixty, onTheClock));
   const reach = denote(base, sixty);
 
   function stamps(seconds: number[]): string[] {
@@ -480,7 +480,7 @@ function toTheSecond(work: Clockwork): Said | null {
       {excepts: [], text: atTimes(stamps(S), voice.oClock)};
   }
 
-  if (times.length > 2) {
+  if (times.length > 2 || base.kind === 'pieces') {
     return null;
   }
 
@@ -516,11 +516,29 @@ function burst(base: SetDescription): string {
     `${amount([stepOf(base)], units.second)}${start.join('')}`;
 }
 
-const bursts: {[kind: string]: (base: SetDescription) => string} = {
+// Seconds in several stretches, by their number in the minute: each run
+// by its ends and each second between them, in ascending order.
+function numbered(pieces: Described<'pieces'>): string {
+  const items = pieces.parts.flatMap(function split(part) {
+    return part.kind === 'range' ? [[part.from, part.to]] :
+      part.values.map(function single(second) {
+        return [second];
+      });
+  }).sort(function ascending(a, b) {
+    return a[0] - b[0];
+  });
+
+  return `${words.inSeconds} ${list(items.map(function say(item) {
+    return item.join(` ${words.to} `);
+  }))}`;
+}
+
+const bursts: {[kind: string]: (base: never) => string} = {
   all() {
     return `${words.oneMinuteLong} ${every(1, units.second)}`;
   },
   cadence: burst,
+  pieces: numbered,
   range: burst,
   values(base) {
     return offset(denote(base, sixty), theMinute);
@@ -532,7 +550,7 @@ function trailing(S: number[], seconds: SetDescription, voice: Voice) {
   const {base, removed} = restOf(seconds);
 
   return S.length > held ?
-    bursts[base.kind](base) + exceptTail(
+    bursts[base.kind](base as never) + exceptTail(
       [removed].filter(nonEmpty).map(function say(gone) {
         return offset(gone, theMinute);
       }), voice) :
@@ -559,7 +577,7 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
   const S = denote((candidates.second as SetDescription[])[0], sixty);
   const M = denote((candidates.minute as SetDescription[])[0], sixty);
   const H = denote((candidates.hour as SetDescription[])[0], hoursOfDay);
-  const seconds = settle(S, sixty, secondsInTheMinute);
+  const seconds = settle(S, sixty, inTheHour);
   const minutes = H.length === 1 ?
     settle(M, sixty, onTheClock) :
     settleUnwrapped(M, sixty, inTheHour);

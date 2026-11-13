@@ -134,6 +134,7 @@ const words = {
   inOddHours: 'in den ungeraden Stunden',
   inOddYears: 'in ungeraden Jahren',
   inSameMonth: 'im selben Monat',
+  inSeconds: 'in den Sekunden',
   inYear: 'im Jahr',
   inYears: 'in den Jahren',
   lastDay: 'am letzten Tag',

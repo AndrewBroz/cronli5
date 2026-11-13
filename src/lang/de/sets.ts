@@ -22,7 +22,7 @@ export interface Counting {
   cadence(cadence: Described<'cadence'>, count: number): number;
   // Pieces replace a list only when it has more values than this.
   listed: number;
-  // The most values an exception may take away.
+  // The most values an exception may take away from every value.
   removable: number;
 }
 
@@ -102,7 +102,8 @@ const naming: {
     const {base, removed} = exception;
     const {last, start} = base as Partial<Described<'cadence'>>;
 
-    return removed.length > counting.removable || base.kind === 'range' ||
+    return base.kind === 'all' && removed.length > counting.removable ||
+      base.kind === 'range' ||
       removed.includes(start as number) || removed.includes(last as number) ?
       Infinity :
       removed.length + thingsNamed(base, count, counting);
@@ -171,8 +172,8 @@ function settle(
 
 /**
  * The same for a field whose runs may not wrap round its cycle. A set
- * that is one run only by wrapping is then an exception or pieces, never
- * a list where it can be pieces.
+ * that is one run only by wrapping, and whose two stretches are each a
+ * run, is then an exception or pieces, never a list.
  */
 function settleUnwrapped(
   values: number[],
@@ -180,7 +181,13 @@ function settleUnwrapped(
   counting: Counting
 ): SetDescription {
   const [round] = describeSet(values, {...domain, cyclic: true});
-  const split = round.kind === 'range' && round.from > round.to;
+  const split = round.kind === 'range' && round.from > round.to &&
+    describeSet(values, domain).some(function allRuns(description) {
+      return description.kind === 'pieces' &&
+        description.parts.every(function isRun(part) {
+          return part.kind === 'range';
+        });
+    });
 
   return settle(values, domain, split ? {...counting, listed: 0} : counting);
 }

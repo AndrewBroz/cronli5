@@ -2,6 +2,6 @@
   "name": "German",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/de-acceptance.md)",
+  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/de-acceptance.md); audited 2026-11-13 by Claude Fable 5.2 against independently computed fire times (about 4,100 patterns), which found wrong schedules the rows had not caught (a run of years said as two years, a nearest-weekday date in months that lack it, an exception beside weekdays) and unholdable lists of years and seconds; the rule book, 46 new hard-case rows and the renderer were amended, and none of the new forms has had a blind fluency read",
   "branchBudget": 100
 }
