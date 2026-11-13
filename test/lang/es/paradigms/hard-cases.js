@@ -51,19 +51,43 @@ const rows = [
 
   // Quartz forms.
   ['0 0 1 * ?', 'el día 1 de cada mes a las 0:00', {cron: 'quartz'}],
-  ['0 0 LW * *', 'el último día laborable de cada mes a las 0:00'],
-  ['0 0 1W * *', 'el primer día laborable de cada mes a las 0:00'],
-  ['0 0 1W 6 *', 'el primer día laborable de junio a las 0:00'],
-  ['0 0 15W 6 *', 'el día laborable más cercano al 15 de junio a las 0:00'],
-  ['0 0 31W * *',
-    'en los meses que tienen día 31, el día laborable más cercano al 31, ' +
-    'sin salir del mes, a las 0:00'],
-  ['0 0 28W * *',
-    'el día laborable más cercano al 28 de cada mes, sin salir del mes, a ' +
+  // The Monday-to-Friday forms name their days (answers 5.7): «día
+  // laborable» may count Saturday and skips public holidays, and the
+  // pattern does neither.
+  ['0 0 LW * *',
+    'el último día de cada mes o, si cae en sábado o domingo, el viernes ' +
+    'anterior, a las 0:00'],
+  ['0 0 1W * *',
+    'el día 1 de cada mes o, si cae en sábado o domingo, el lunes ' +
+    'siguiente, a las 0:00'],
+  ['0 0 1W 6 *',
+    'el 1 de junio o, si cae en sábado o domingo, el lunes siguiente, a ' +
     'las 0:00'],
+  ['0 0 LW 6 *',
+    'el último día de junio o, si cae en sábado o domingo, el viernes ' +
+    'anterior, a las 0:00'],
+  ['0 0 15W 6 *',
+    'el 15 de junio o, si cae en sábado o domingo, el viernes o el lunes ' +
+    'más cercano, a las 0:00'],
+  ['0 0 31W * *',
+    'el día 31 de cada mes o, si cae en sábado o domingo, el viernes o el ' +
+    'lunes más cercano del mismo mes, a las 0:00'],
+  ['0 0 28W * *',
+    'el día 28 de cada mes o, si cae en sábado o domingo, el viernes o el ' +
+    'lunes más cercano del mismo mes, a las 0:00'],
+  ['0 0 27W * *',
+    'el día 27 de cada mes o, si cae en sábado o domingo, el viernes o el ' +
+    'lunes más cercano, a las 0:00'],
   ['0 0 30W 6 *',
-    'el día laborable más cercano al 30 de junio, sin salir del mes, a las ' +
-    '0:00'],
+    'el 30 de junio o, si cae en sábado o domingo, el viernes o el lunes ' +
+    'más cercano del mismo mes, a las 0:00'],
+  ['0 0 15W * 5',
+    'los viernes a las 0:00, y además el día 15 de cada mes o, si cae en ' +
+    'sábado o domingo, el viernes o el lunes más cercano'],
+  ['0 9 LW * *',
+    'el último día de cada mes o, si cae en sáb o dom, el vie anterior, a ' +
+    'las 9:00',
+    {style: {short: true}}],
   ['0 0 L-3 * *', '3 días antes del último día de cada mes, a las 0:00'],
   ['0 0 L-3 6 *', '3 días antes del último día de junio, a las 0:00'],
   ['0 0 L-1 * *', 'el penúltimo día de cada mes a las 0:00'],
@@ -84,48 +108,111 @@ const rows = [
   ['0 9 * * 6L', 'el último sábado de cada mes a las 9:00'],
   ['0 9 * * 0#4', 'el cuarto domingo de cada mes a las 9:00'],
 
-  // A Quartz day that a month in reach may lack: the months that fire are
-  // said, under named months and in a union too.
+  // A day of the month that a named month lacks: only the months that
+  // fire are said (answers 4.4). The rows of the first audit said the
+  // months as written and then «en los meses que tienen día 31»; the
+  // core now states which months fire.
   ['0 0 31W 6-8 *',
-    'de junio a agosto, en los meses que tienen día 31, el día laborable ' +
-    'más cercano al 31, sin salir del mes, a las 0:00'],
+    'el día 31 de julio y agosto o, si cae en sábado o domingo, el viernes ' +
+    'o el lunes más cercano del mismo mes, a las 0:00'],
   ['0 0 30W 2,4 *',
-    'en febrero y abril, en los meses que tienen día 30, el día laborable ' +
-    'más cercano al 30, sin salir del mes, a las 0:00'],
-  ['0 0 29W 2 *',
-    'en febrero, en los meses que tienen día 29, el día laborable más ' +
-    'cercano al 29, sin salir del mes, a las 0:00'],
+    'el 30 de abril o, si cae en sábado o domingo, el viernes o el lunes ' +
+    'más cercano del mismo mes, a las 0:00'],
   ['0 0 31W 7 *',
-    'el día laborable más cercano al 31 de julio, sin salir del mes, a las ' +
-    '0:00'],
+    'el 31 de julio o, si cae en sábado o domingo, el viernes o el lunes ' +
+    'más cercano del mismo mes, a las 0:00'],
   ['0 0 0 31W 6-8 * 2030',
-    'de junio a agosto de 2030, en los meses que tienen día 31, el día ' +
-    'laborable más cercano al 31, sin salir del mes, a las 0:00'],
+    'el día 31 de julio y agosto de 2030 o, si cae en sábado o domingo, el ' +
+    'viernes o el lunes más cercano del mismo mes, a las 0:00'],
   ['0 0 L-30 6-8 *',
-    'de junio a agosto, en los meses de más de 30 días, 30 días antes del ' +
-    'último día del mes, a las 0:00'],
-  ['0 0 L-29 2,4 *',
-    'en febrero y abril, en los meses de más de 29 días, 29 días antes del ' +
-    'último día del mes, a las 0:00'],
+    '30 días antes del último día de julio y agosto, a las 0:00'],
+  ['0 0 L-29 2,4 *', '29 días antes del último día de abril, a las 0:00'],
   ['0 0 L-30 7 *', '30 días antes del último día de julio, a las 0:00'],
+  ['0 0 30 2-3 *', 'el 30 de marzo a las 0:00'],
+  ['0 0 31 1-6 *', 'el día 31 de enero, marzo y mayo a las 0:00'],
+  ['0 0 30 2-6 *', 'de marzo a junio, el día 30 de cada mes a las 0:00'],
+  ['0 0 1,31 4,6,9,11 *',
+    'el día 1 de abril, junio, septiembre y noviembre a las 0:00'],
   ['0 0 31W * 5',
-    'los viernes a las 0:00, y además, en los meses que tienen día 31, el ' +
-    'día laborable más cercano al 31, sin salir del mes'],
+    'los viernes a las 0:00, y además el día 31 de cada mes o, si cae en ' +
+    'sábado o domingo, el viernes o el lunes más cercano del mismo mes'],
   ['0 0 L-30 * 5',
     'los viernes a las 0:00, y además, en los meses de más de 30 días, 30 ' +
     'días antes del último día del mes'],
+  ['0 0 L-28 2,3 *',
+    'en febrero y marzo, en los meses de más de 28 días, 28 días antes del ' +
+    'último día del mes, a las 0:00'],
+
+  // In a union the weekdays keep the months as written, and the date
+  // names the months it fires in.
   ['0 0 31W 6,7 5',
-    'en junio y julio, los viernes a las 0:00, y además, en los meses que ' +
-    'tienen día 31, el día laborable más cercano al 31, sin salir del mes'],
+    'en junio y julio, los viernes a las 0:00, y además el 31 de julio o, ' +
+    'si cae en sábado o domingo, el viernes o el lunes más cercano del ' +
+    'mismo mes'],
+  ['0 0 31 4,5 1',
+    'en abril y mayo, los lunes a las 0:00, y además el 31 de mayo'],
+  ['0 0 30 2-12 1',
+    'de febrero a diciembre, los lunes a las 0:00, y además, de marzo a ' +
+    'diciembre, el día 30 de cada mes'],
+  ['0 0 L-30 6-8 5',
+    'de junio a agosto, los viernes a las 0:00, y además 30 días antes del ' +
+    'último día de julio y agosto'],
+
+  // A day no month in reach has: the schedule never fires, and says so.
+  // Beside weekdays, only the weekdays are left.
+  ['0 0 31 6 *', 'nunca, porque junio no tiene día 31'],
+  ['0 0 30,31 2 *', 'nunca, porque febrero no tiene día 30 ni 31'],
+  ['0 0 31 4,6 *', 'nunca, porque abril y junio no tienen día 31'],
+  ['0 0 31W 6 *', 'nunca, porque junio no tiene día 31'],
+  ['0 0 L-30 6 *', 'nunca, porque junio no tiene más de 30 días'],
+  ['0 0 0 29 2 * 2031', 'nunca, porque febrero de 2031 no tiene día 29'],
+  ['0 0 0 29 2 * 2031,2033',
+    'nunca, porque en 2031 y 2033 febrero no tiene día 29'],
+  ['*/5 9-17 31 6 *', 'nunca, porque junio no tiene día 31'],
+  ['0 0 31 6 1', 'los lunes de junio a las 0:00'],
+  ['0 0 31W 6 5', 'los viernes de junio a las 0:00'],
+  ['0 0 31 6 *',
+    'No se ejecuta nunca, porque junio no tiene día 31.',
+    {form: 'sentence'}],
+  ['0 0 31 6 *', 'Nunca, porque junio no tiene día 31', {form: 'label'}],
+
+  // A 29th of February alone fires in leap years only.
+  ['0 0 29 2 *', 'en los años bisiestos, el 29 de febrero a las 0:00'],
+  ['0 0 29,30 2 *', 'en los años bisiestos, el 29 de febrero a las 0:00'],
+  ['0 0 29W 2 *',
+    'en los años bisiestos, el 29 de febrero o, si cae en sábado o ' +
+    'domingo, el viernes o el lunes más cercano del mismo mes, a las 0:00'],
+  ['0 0 L-28 2 *',
+    'en los años bisiestos, 28 días antes del último día de febrero, a las ' +
+    '0:00'],
+  ['0 0 0 29 2 * 2030-2040',
+    'de 2030 a 2040, en los años bisiestos, el 29 de febrero a las 0:00'],
+  ['0 0 0 29 2 * 2032', 'el 29 de febrero de 2032 a las 0:00'],
+  ['0 0 29 2 1',
+    'en febrero, los lunes a las 0:00, y además, en los años bisiestos, el ' +
+    'día 29 de ese mes'],
+  ['0 0 29 2,3 *', 'el día 29 de febrero y marzo a las 0:00'],
   ['0 0 L-3 * 1',
     'los lunes a las 0:00, y además 3 días antes del último día de cada mes'],
 
   // Days of the month that cover every day of the named months leave the
   // weekdays nothing to add.
   ['0 0 1-30 6 1', 'en junio, todos los días a las 0:00'],
-  ['0 0 1-30 * 1',
-    'los lunes a las 0:00, y además todos los días de cada mes, excepto el ' +
-    'día 31'],
+  ['0 0 0 1-28 2 * 2031', 'en febrero de 2031, todos los días a las 0:00'],
+  ['0 9 1-30 4 1', 'en abril, todos los días a las 9:00'],
+
+  // In a union the days of the month take no exception: «…, y además
+  // todos los días de cada mes, excepto el día 15» was read as excepting
+  // the 15th from the Fridays too, and a Friday the 15th fires.
+  ['0 0 1-30 * 1', 'los lunes a las 0:00, y además del 1 al 30 de cada mes'],
+  ['0 9 1-14,16-31 * 5',
+    'los viernes a las 9:00, y además del 1 al 14 y del 16 al 31 de cada ' +
+    'mes'],
+  ['0 9 1-14,16-31 6 1',
+    'en junio, los lunes a las 9:00, y además del 1 al 14 y del 16 al 30 ' +
+    'de ese mes'],
+  ['0 0 15 * 0-2,4-6',
+    'de jueves a martes a las 0:00, y además el día 15 de cada mes'],
 
   // Minutes in several parts inside more than one hour keep their phrase.
   ['0-29,45 9,17 * * *',
@@ -188,16 +275,19 @@ const rows = [
     'todos los días, cada hora de 20:00 a 4:00 y de 9:00 a 12:00'],
 
   // An exception against a run, a run that wraps, and pieces.
-  ['0 0-2,5-23 * * *', 'cada hora, excepto a las 3:00 y 4:00'],
+  ['0 0-2,5-23 * * *', 'cada hora en punto, excepto a las 3:00 y 4:00'],
   ['* 0-2,5-23 * * *', 'todos los días, cada minuto de 5:00 a 2:59'],
   ['* 0-2,4-23 * * 1', 'los lunes, cada minuto, excepto de 3:00 a 3:59'],
   ['* 0-2,5-23 * * 1',
     'los lunes, cada minuto de 0:00 a 2:59 y de 5:00 a 23:59'],
   ['0 0 8-6 * *', 'todos los días de cada mes, excepto el día 7, a las 0:00'],
-  ['0 0 6-2 * *', 'del 6 de cada mes al 2 del siguiente a las 0:00'],
+  // Changed 2026-11-13: days of the month no longer wrap into the next
+  // month (answers 3.5), so three days short is an exception by the count.
+  ['0 0 6-2 * *',
+    'todos los días de cada mes, excepto los días 3, 4 y 5, a las 0:00'],
 
   // Macros, startup, and the three forms.
-  ['@hourly', 'cada hora'],
+  ['@hourly', 'cada hora en punto'],
   ['@daily', 'todos los días a las 0:00'],
   ['@weekly', 'los domingos a las 0:00'],
   ['@monthly', 'el día 1 de cada mes a las 0:00'],
@@ -239,7 +329,15 @@ const rows = [
   ['0 0 25-31 6 *', 'del 25 al 30 de junio a las 0:00'],
   ['0 0 30,31 4,6 *', 'el día 30 de abril y junio a las 0:00'],
   ['0 0 31 * *', 'el día 31 de cada mes a las 0:00'],
-  ['0 0 28-3 * *', 'del 28 de cada mes al 3 del siguiente a las 0:00'],
+  // Changed 2026-11-13: «del 28 de cada mes al 3 del siguiente» was the
+  // rule for a wrap. «Del 29 de cada mes al 2 del siguiente» promises
+  // nothing after a February of 28 days, yet the 1st and 2nd of March
+  // fire, and «del 20 de cada mes al 10 del siguiente» reads as a
+  // mistake. Days of the month are always in ascending order.
+  ['0 0 28-3 * *', 'del 1 al 3 y del 28 al 31 de cada mes a las 0:00'],
+  ['0 0 29-2 * *', 'los días 1 y 2, y del 29 al 31 de cada mes a las 0:00'],
+  ['0 0 31,1-3 * *', 'del 1 al 3 y el día 31 de cada mes a las 0:00'],
+  ['0 0 1-10,20-31 * *', 'del 1 al 10 y del 20 al 31 de cada mes a las 0:00'],
   ['0 0 28-3 6 *', 'del 1 al 3 y del 28 al 30 de junio a las 0:00'],
   ['0 0 1,15 1,7 *', 'los días 1 y 15 de enero y julio a las 0:00'],
   ['59 23 31 12 *', 'el 31 de diciembre a las 23:59'],
@@ -349,8 +447,8 @@ const rows = [
   ['0 */3 1 * *', 'el día 1 de cada mes, cada 3 horas de 0:00 a 21:00'],
 
   // Exceptions.
-  ['0 0-2,4-23 * * *', 'cada hora, excepto a las 3:00'],
-  ['0 0-22 * * *', 'cada hora, excepto a las 23:00'],
+  ['0 0-2,4-23 * * *', 'cada hora en punto, excepto a las 3:00'],
+  ['0 0-22 * * *', 'cada hora en punto, excepto a las 23:00'],
   ['0 0-21 * * *', 'todos los días, cada hora de 0:00 a 21:00'],
   ['* 0-22 * * *', 'todos los días, cada minuto de 0:00 a 22:59'],
   ['30 0-2,4-23 * * *', 'en el minuto 30 de cada hora, excepto a las 3:30'],
@@ -475,7 +573,7 @@ const rows = [
   ['*/5 * * 6 *', 'en junio, cada 5 minutos'],
   ['0 */6 * 6 *', 'en junio, todos los días a las 0:00, 6:00, 12:00 y 18:00'],
   ['30 * * 6 *', 'en junio, en el minuto 30 de cada hora'],
-  ['0 * * * 1', 'los lunes, cada hora'],
+  ['0 * * * 1', 'los lunes, cada hora en punto'],
   ['*/5 * * * * 2030', 'en 2030, cada 5 minutos', {years: true}],
 
   // Several fields at once.
@@ -493,11 +591,122 @@ const rows = [
     'viernes, cada segundo durante los minutos 30 y 42 de cada hora, de ' +
     '3:30 a 10:42'],
   ['0 18 15W 3,6,9,12 *',
-    'el día laborable más cercano al 15 de marzo, junio, septiembre y ' +
-    'diciembre a las 18:00'],
+    'el día 15 de marzo, junio, septiembre y diciembre o, si cae en sábado ' +
+    'o domingo, el viernes o el lunes más cercano, a las 18:00'],
   ['7 4-22/6 1 */2 *',
     'el día 1 de enero, marzo, mayo, julio, septiembre y noviembre a las ' +
-    '4:07, 10:07, 16:07 y 22:07']
+    '4:07, 10:07, 16:07 y 22:07'],
+
+  // Years with no end, and from the first year there is.
+  ['0 0 9 * * * 2030/1', 'desde 2030, todos los días a las 9:00'],
+  ['0 0 9 1 1 * 2030/1', 'desde 2030, el 1 de enero a las 9:00'],
+  ['0 0 9 * * * 1971/1', 'desde 1971, todos los días a las 9:00'],
+  ['0 0 9 * * * 1970-2030', 'hasta 2030, todos los días a las 9:00'],
+  ['0 0 9 * * * 1970-2030/2',
+    'en los años pares hasta 2030, todos los días a las 9:00'],
+  ['0 0 9 * * * 2030,2031,2033/1',
+    'en 2030 y 2031, y desde 2033, todos los días a las 9:00'],
+
+  // Years in runs and series together.
+  ['0 0 9 * * * 2030/2,2031',
+    'en los años pares desde 2030 y en 2031, todos los días a las 9:00'],
+  ['0 0 9 * * * 2030-2040,2045/5',
+    'de 2030 a 2040 y en 2045, 2050, 2055 y así sucesivamente, todos los ' +
+    'días a las 9:00'],
+  ['0 0 9 * * * 2030/4,2031/4',
+    'en 2030, 2034, 2038 y así sucesivamente, y en 2031, 2035, 2039 y así ' +
+    'sucesivamente, todos los días a las 9:00'],
+  ['0 0 9 * * * 2028-2060/4,2031',
+    'en 2028, 2032, 2036 y así sucesivamente hasta 2060, y en 2031, todos ' +
+    'los días a las 9:00'],
+
+  // An exception never removes a year the series shows.
+  ['0 0 0 1 1 * 2028,2036-2060/4',
+    'en 2028 y en 2036, 2040, 2044 y así sucesivamente hasta 2060, el 1 de ' +
+    'enero a las 0:00'],
+
+  ['0 0 0 1 1 * 2028,2036/4',
+    'en 2028 y en 2036, 2040, 2044 y así sucesivamente, el 1 de enero a ' +
+    'las 0:00'],
+
+  // A single year after months in several pieces would be heard with
+  // the last piece only, so it leads.
+  ['0 0 9 * 1-5,7-12 * 2030',
+    'en 2030, de enero a mayo y de julio a diciembre, todos los días a las ' +
+    '9:00'],
+  ['0 0 9 * 6-8,12 * 2030',
+    'en 2030, de junio a agosto y en diciembre, todos los días a las 9:00'],
+
+  // Minutes, seconds and days in runs and cadences together.
+  ['0-20/2,21-59/3 * * * *',
+    'cada 2 minutos del minuto 0 al 20 y cada 3 minutos del minuto 21 al ' +
+    '57 de cada hora'],
+  ['0-20/2,21-59/3 9 * * *',
+    'todos los días, cada 2 minutos de 9:00 a 9:20 y cada 3 minutos de ' +
+    '9:21 a 9:57'],
+  ['0-20/2,21-59/3 * * * * *',
+    'cada 2 segundos del segundo 0 al 20 y cada 3 segundos del segundo 21 ' +
+    'al 57 de cada minuto'],
+  ['*/5,7 * * * *',
+    'cada 5 minutos del minuto 0 al 55 y en el minuto 7 de cada hora'],
+  ['0 0 1-15/2,16-31/3 * *',
+    'los días impares del 1 al 15 y los días 16, 19, 22, 25, 28 y 31 de ' +
+    'cada mes a las 0:00'],
+  ['0 0 1,2,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31 * *',
+    'los días impares y el día 2 de cada mes a las 0:00'],
+
+  // A window never names a moment that an exception then removes: a
+  // minute missing at the edge of the hour moves the end of the window.
+  ['1-59 9 * * *', 'todos los días, cada minuto de 9:01 a 9:59'],
+  ['0-58 9-17 * * *',
+    'todos los días, cada minuto durante los primeros 59 minutos de cada ' +
+    'hora, de 9:00 a 17:58'],
+  ['1-59 * * * * *', 'cada segundo, excepto en el segundo 0 de cada minuto'],
+  ['1-59 0 9 * * *',
+    'todos los días a las 9:00, una vez por segundo durante los últimos 59 ' +
+    'segundos'],
+
+  // A run of minutes inside every Nth hour says how long it is.
+  ['0-29 */2 * * *',
+    'todos los días, cada minuto durante 30 minutos cada 2 horas (de 0:00 ' +
+    'a 0:29, de 2:00 a 2:29… hasta las 22:29)'],
+  ['* 10-40 */2 * * *',
+    'todos los días, cada segundo durante 31 minutos cada 2 horas (de ' +
+    '0:10:00 a 0:40:59, de 2:10:00 a 2:40:59… hasta las 22:40:59)'],
+
+  // Hours named by when they begin: listed up to seven, and a cadence
+  // of eight or more names its ends.
+  ['0-29,45 */2 * * *',
+    'todos los días, cada minuto durante los primeros 30 minutos y en el ' +
+    'minuto 45 de las horas que empiezan cada 2 horas de 0:00 a 22:00'],
+  ['5,10,20,30,50 */4 * * *',
+    'todos los días, en los minutos 5, 10, 20, 30 y 50 de las horas que ' +
+    'empiezan a las 0:00, 4:00, 8:00, 12:00, 16:00 y 20:00'],
+  ['5,10,20,30,50 0-6/2,10-22/2 * * *',
+    'todos los días, en los minutos 5, 10, 20, 30 y 50 de las horas que ' +
+    'empiezan cada 2 horas de 0:00 a 22:00, excepto de 8:05 a 8:50'],
+
+  // An excepted hour is never one of the two the bracket shows.
+  ['* 0,4-22/2 * * *',
+    'todos los días, cada minuto durante las horas que empiezan a las ' +
+    '0:00, 4:00, 6:00, 8:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00 y ' +
+    '22:00'],
+  ['* 0-6/2,10-22/2 * * *',
+    'todos los días, cada minuto durante una hora cada 2 horas (de 0:00 a ' +
+    '0:59, de 2:00 a 2:59… hasta las 22:59), excepto de 8:00 a 8:59'],
+
+  // Named seconds after a time part in several pieces cover all of it.
+  ['15,45 0-29,45 9 * * *',
+    'todos los días, cada minuto de 9:00 a 9:29 y a las 9:45, siempre en ' +
+    'los segundos 15 y 45'],
+
+  // A piece with an «y» of its own is closed by a comma before the «y»
+  // that joins the last piece.
+  ['0 0 * 1-2,6-8 *',
+    'en enero y febrero, y de junio a agosto, todos los días a las 0:00'],
+  ['0 0,1,5-9 * * *',
+    'todos los días a las 0:00 y 1:00, y cada hora de 5:00 a 9:00'],
+  ['0 0 * * 1,2,4-6', 'los lunes y martes, y de jueves a sábado a las 0:00']
 ];
 
 export {rows};

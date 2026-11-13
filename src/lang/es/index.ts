@@ -6,7 +6,7 @@ import type {Language, Schedule, SetDescription} from '../../core/schedule.js';
 import type {SpanishOptions, SpanishStyle} from './options.js';
 import {regions, style, styles} from './options.js';
 import {calendarOf} from './calendar.js';
-import {clockOf} from './wording.js';
+import {clockOf, pick} from './wording.js';
 import {denote} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
@@ -62,14 +62,20 @@ function describeParts(schedule: Schedule, opts: SpanishOptions): Parts {
   // how «a las» begins.
   const clockTime = time.text.startsWith(words.atOne);
 
-  return {
-    also: calendar.also,
-    day: closed(calendar.day, calendar.dayClosed || !clockTime),
-    frame: calendar.frame.map(function leading(phrase) {
-      return `${phrase},`;
-    }).join(' '),
-    time: closed(time.text, calendar.also !== '')
-  };
+  // A schedule that never fires says so in place of the day, and has no
+  // time to say (answers 4.4).
+  return pick([
+    [{also: '', day: calendar.day, frame: '', time: ''},
+      calendar.never],
+    [{
+      also: calendar.also,
+      day: closed(calendar.day, calendar.dayClosed || !clockTime),
+      frame: calendar.frame.map(function leading(phrase) {
+        return `${phrase},`;
+      }).join(' '),
+      time: closed(time.text, calendar.also !== '')
+    }, true]
+  ]);
 }
 
 function describe(schedule: Schedule, opts: SpanishOptions): string {
@@ -94,11 +100,15 @@ const spanish: Language<SpanishStyle> = {
   },
   regions,
   // A description that already ends in a full stop, as «p. m.» does,
-  // takes no second one.
+  // takes no second one. A schedule that never fires takes the negative
+  // before the verb: «No se ejecuta nunca, porque …».
   sentence(description) {
     const stop = description.endsWith('.') ? '' : '.';
+    const verb = description.startsWith(words.never) ?
+      words.neverRuns :
+      words.runs;
 
-    return `${words.runs} ${description}${stop}`;
+    return `${verb} ${description}${stop}`;
   },
   style,
   styles

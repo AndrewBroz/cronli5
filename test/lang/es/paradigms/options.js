@@ -77,7 +77,8 @@ const sets = [
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'el último día hábil de cada mes a las 9:00 a. m.',
+        expected: 'el último día de cada mes o, si cae en sábado o ' +
+          'domingo, el viernes anterior, a las 9:00 a. m.',
         parts: ['último día', '9:00 a. m.'],
         pattern: '0 9 LW * *'
       }

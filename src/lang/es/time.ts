@@ -5,9 +5,12 @@
 
 import type {Clock, Moment, Piece, Unit} from './wording.js';
 import type {Part, Policy, Said} from './sets.js';
-import {byCount, every, led, list, pick, spaced} from './wording.js';
 import {
-  isRange, isValues, linearRuns, mapParts, say, thingsNamed
+  byCount, every, led, list, phrases, pick, spaced
+} from './wording.js';
+import {
+  countOf, isRange, isStepped, isValues, linearRuns, mapParts, runOf, say,
+  thingsNamed
 } from './sets.js';
 import lexicon from './lexicon.js';
 
@@ -66,6 +69,9 @@ interface Scene {
 // The length of an hour in minutes and of a minute in seconds.
 const SIXTY = 60;
 
+// A cadence of this many values or more names both its ends.
+const LONG_CADENCE = 8;
+
 // Inside up to this many separate hours, minutes are clock times.
 const FEW_HOURS = 4;
 
@@ -108,7 +114,11 @@ function oddOnes(said: {interval: number; start: number; last: number}):
 // Minutes and seconds never wrap. A cadence is said as one when it tiles
 // (from `bareLeast` values), when it is the odd ones, or from `least`
 // values with both its ends.
-function subHourPolicy(least: number, bareLeast: number): Policy {
+function subHourPolicy(
+  least: number,
+  bareLeast: number,
+  edgeHoles: boolean
+): Policy {
   return {
     cadence(cadence, count) {
       const bare = cadence.start === 0 &&
@@ -118,9 +128,12 @@ function subHourPolicy(least: number, bareLeast: number): Policy {
         !bare && count >= least;
     },
     domain: {cyclic: true, max: SIXTY - 1, min: 0},
+    edgeHoles,
     holeCost: 1,
     minRun: 3,
+    mixes: true,
     pairWraps: false,
+    shown: 1,
     wraps: false
   };
 }
@@ -128,11 +141,12 @@ function subHourPolicy(least: number, bareLeast: number): Policy {
 // Hours under a single minute are points: a run has three hours, a
 // cadence eight, and an excepted hour is one clock time. Hours filled by
 // more than one minute are stretches: two hours make a window, a cadence
-// has five hours, and an excepted hour is a window of two times.
+// has five hours, an excepted hour is a window of two times, and the
+// cadence shows its first two stretches.
 function hourPolicy(single: boolean, wraps: boolean): Policy {
   const judged = pick([
-    [{holeCost: 1, least: 8, minRun: 3}, single],
-    [{holeCost: 2, least: 5, minRun: 2}, true]
+    [{holeCost: 1, least: 8, minRun: 3, shown: 1}, single],
+    [{holeCost: 2, least: 5, minRun: 2, shown: 2}, true]
   ]);
 
   return {
@@ -140,9 +154,12 @@ function hourPolicy(single: boolean, wraps: boolean): Policy {
       return count >= judged.least;
     },
     domain: {cyclic: true, max: 23, min: 0},
+    edgeHoles: true,
     holeCost: judged.holeCost,
     minRun: judged.minRun,
+    mixes: false,
     pairWraps: false,
+    shown: judged.shown,
     wraps
   };
 }
@@ -161,7 +178,7 @@ function hourKindOf(hours: Said, count: number): HourKind {
 function stretchesOf(said: Said): Part[] {
   return said.kind === 'parts' ?
     said.parts :
-    [{from: said.start, kind: 'range', to: said.last}];
+    [runOf(said.start, said.last)];
 }
 
 // «del minuto 10 al 40».
@@ -206,8 +223,16 @@ const phrasers = {
     ]);
   },
   parts(said: Said, unit: Unit, voice: Voice): string {
-    return list(led(mapParts(said.parts, function run(from, to): Piece {
-      return {body: stretch(unit, from, to), lead: voice.each(1)};
+    return phrases(led(mapParts(said.parts, function run(
+      from, to, part
+    ): Piece {
+      return {
+        body: pick([
+          [reach(unit, from, to), part.interval > 1],
+          [stretch(unit, from, to), true]
+        ]),
+        lead: voice.each(part.interval)
+      };
     }, function strays(values) {
       return {body: named(unit, values, voice.on), lead: voice.named};
     })));
@@ -242,6 +267,12 @@ const clauseVoice: Voice = {
     return every(units.second, interval, ONCE);
   }
 };
+
+// Whether the minutes are one unbroken run that is not the whole hour.
+function oneRun(minutes: Said): boolean {
+  return minutes.parts.length === 1 && isRange(minutes.parts[0]) &&
+    !isStepped(minutes.parts[0]);
+}
 
 // Whether the minutes are values named one by one.
 function listed(minutes: Said): boolean {
@@ -296,7 +327,7 @@ function formOf(scene: Scene, silent: boolean): Form {
     ['clocks', single && apart],
     ['points', single],
     ['clocks', timesListed(scene)],
-    ['bracket', onCadence && tiles(minutes)],
+    ['bracket', onCadence && (tiles(minutes) || oneRun(minutes))],
     ['points', onCadence && facts.minute.length <= FEW_HOURS],
     ['phraseHours', onCadence || apart && hoursNamed(scene)],
     ['windows', tiles(minutes) || hourKind === 'few'],
@@ -318,7 +349,8 @@ function modeOf(scene: Scene, silent: boolean): Mode {
 
   return pick<Mode>([
     ['plain', silent],
-    ['lead', leadable && steady && minutes.kind !== 'cadence'],
+    ['lead', leadable && steady && minutes.kind !== 'cadence' &&
+      !minutes.parts.some(isStepped)],
     ['joined', leadable && !steady &&
       (minutes.kind === 'all' || listed(minutes))],
     ['carried', form === 'clocks' && times <= MOST_TIMES_TO_THE_SECOND],
@@ -381,10 +413,10 @@ function minuteEnds(scene: Scene): [number, number] {
 function minuteStretches(scene: Scene): Part[] {
   const stretches = stretchesOf(scene.minutes);
   const whole: Part[] = mapParts(stretches, function run(from, to): Part[] {
-    return [{from, kind: 'range', to}];
+    return [runOf(from, to)];
   }, function eachOne(values) {
     return values.map(function alone(value): Part {
-      return {from: value, kind: 'range', to: value};
+      return runOf(value, value);
     });
   }).flat();
 
@@ -396,10 +428,10 @@ function windowPieces(scene: Scene, stretches: Part[]): Piece[] {
   const {clock, minutes, voice} = scene;
 
   return scene.spans.flatMap(function inSpan(span) {
-    return mapParts(stretches, function run(from, to): Piece {
+    return mapParts(stretches, function run(from, to, part): Piece {
       return {
         body: windowOf(scene, span, [from, to], voice.edge),
-        lead: voice.each(minutes.interval)
+        lead: voice.each(minutes.interval * part.interval)
       };
     }, function strays(values) {
       return {
@@ -431,10 +463,12 @@ const HOURS_THAT_BEGIN = spaced([
 // The time part in each form, before exceptions and a seconds clause.
 const forms: {[form in Form]: (scene: Scene) => string} = {
   // «cada minuto durante una hora cada 2 horas (de 0:00 a 0:59, de 2:00
-  // a 2:59… hasta las 22:59)».
+  // a 2:59… hasta las 22:59)»; a run of minutes says how long it is,
+  // «cada minuto durante 30 minutos cada 2 horas (de 0:00 a 0:29, …)».
   bracket(scene) {
     const {clock, hours, minutes, voice} = scene;
     const ends = minuteEnds(scene);
+    const length = ends[1] - ends[0] + 1;
     const shown = [0, 1].map(function nth(index) {
       const hour = hours.start + index * hours.interval;
 
@@ -444,9 +478,12 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
       {hour: hours.last, minute: ends[1], tail: voice.edge[1]});
 
     return spaced([
-      unitPhrase(minutes, units.minute, voice),
+      voice.each(minutes.interval),
       words.during,
-      words.oneHour,
+      pick([
+        [words.oneHour, tiles(minutes)],
+        [`${length} ${units.minute.many}`, true]
+      ]),
       every(units.hour, hours.interval, EACH),
       `(${shown.join(', ')}… ${last})`
     ]);
@@ -456,8 +493,9 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
 
     return scene.clock.at(momentsOf(scene, facts.hour, facts.minute));
   },
+  // «cada hora en punto».
   hourly() {
-    return every(units.hour, 1, EACH);
+    return `${every(units.hour, 1, EACH)} ${words.onTheDot}`;
   },
   // «cada 15 minutos»; «en los minutos 5, 20 y 45 de cada hora».
   phrase(scene) {
@@ -466,17 +504,26 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
       pick([['', tiles(scene.minutes)], [words.ofEachHour, true]])
     ]);
   },
-  // «cada minuto durante las horas que empiezan a las 6:00, 8:00, …».
+  // «cada minuto durante las horas que empiezan a las 6:00, 8:00, …»;
+  // hours on a cadence too long to list begin «cada 2 horas de 0:00 a
+  // 22:00».
   phraseHours(scene) {
-    const {clock, facts, minutes, voice} = scene;
+    const {clock, facts, hours, minutes, voice} = scene;
+
+    function onTheHour(hour: number): Moment {
+      return {hour, minute: 0, tail: []};
+    }
 
     return spaced([
       unitPhrase(minutes, units.minute, voice),
       pick([[words.during, tiles(minutes)], [words.of, true]]),
       HOURS_THAT_BEGIN,
-      clock.at(facts.hour.map(function onTheHour(hour) {
-        return {hour, minute: 0, tail: []};
-      }))
+      pick([
+        [`${every(units.hour, hours.interval, EACH)} ` +
+          clock.span(onTheHour(hours.start), onTheHour(hours.last)),
+        hours.kind === 'cadence' && countOf(hours) >= LONG_CADENCE],
+        [clock.at(facts.hour.map(onTheHour)), true]
+      ])
     ]);
   },
   // «en los minutos 5, 20 y 45 de cada hora, de 9:05 a 17:45».
@@ -494,7 +541,7 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
     const {clock, facts, hours} = scene;
     const [tail] = scene.carry;
 
-    return list(led(mapParts(stretchesOf(hours),
+    return phrases(led(mapParts(stretchesOf(hours),
       function run(from, to): Piece {
         return {
           body: list(facts.minute.map(function carried(minute) {
@@ -513,7 +560,7 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
   },
   // «cada 15 minutos de 9:00 a 17:45 y de 22:00 a 22:45».
   windows(scene) {
-    return list(led(windowPieces(scene, minuteStretches(scene))));
+    return phrases(led(windowPieces(scene, minuteStretches(scene))));
   }
 };
 
@@ -589,13 +636,17 @@ function fillsStretch(seconds: Said): boolean {
 }
 
 // The seconds as a clause after the time part (answers 4.2, rule 4).
-// Named seconds follow a comma; a stretch of seconds does so only after
-// clock times, and otherwise says «y en cada ocasión».
-function clause(scene: Scene): string {
+// Named seconds follow a comma, and say «siempre» after a time part in
+// several pieces, which they cover whole; a stretch of seconds follows a
+// bare comma only after clock times, and otherwise says «y en cada
+// ocasión».
+function clause(scene: Scene, several: boolean): string {
   const {form, seconds} = scene;
+  const fills = fillsStretch(seconds);
   const burst = spaced([
     pick([
-      [words.atEachTime, fillsStretch(seconds) && form !== 'clocks'],
+      [words.atEachTime, fills && form !== 'clocks'],
+      [words.always, !fills && several],
       ['', true]
     ]),
     unitPhrase(seconds, units.second, clauseVoice),
@@ -629,13 +680,19 @@ function sceneOf(facts: TimeFacts, clock: Clock): Scene {
   const single = facts.minute.length === 1;
   const hours = say(facts.hour, hourPolicy(single, facts.hoursWrap));
   const hourKind = hourKindOf(hours, facts.hour.length);
+
+  // A minute missing at the edge of the hour is an exception only under
+  // every hour; inside named hours a window would name it. The same for a
+  // second, under every minute of every hour.
+  const everyHour = hourKind === 'all';
   const minutes = say(facts.minute, subHourPolicy(
-    pick([[FEW_HOURS, hourKind === 'few'], [8, true]]), 0));
+    pick([[FEW_HOURS, hourKind === 'few'], [8, true]]), 0, everyHour));
 
   // Beside minutes that are not every minute, a cadence of four seconds
   // or fewer is named.
   const seconds = say(facts.second, subHourPolicy(
-    8, pick([[0, minutes.kind === 'all'], [5, true]])));
+    8, pick([[0, minutes.kind === 'all'], [5, true]]),
+    everyHour && facts.minute.length === SIXTY));
   const silent = facts.second.length === 1 && facts.second[0] === 0;
   const scene: Scene = {
     carry: [[]],
@@ -680,10 +737,12 @@ function timePart(facts: TimeFacts, clock: Clock): TimePart {
     ...hourHoles(scene), ...minuteHoles(scene), ...secondHoles(scene)
   ]);
 
+  const several = excepted !== '' || body.includes(` ${words.and} `);
+
   return {
     everyHour: scene.hourKind === 'all',
     text: body + excepted +
-      pick([[clause(scene), scene.mode === 'clause'], ['', true]])
+      pick([[clause(scene, several), scene.mode === 'clause'], ['', true]])
   };
 }
 
