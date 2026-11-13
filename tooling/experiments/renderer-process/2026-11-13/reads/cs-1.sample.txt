@@ -1,0 +1,60 @@
+1. denně v 9:00
+2. od pondělí do pátku každých 15 minut od 9:00 do 17:45
+3. vždy 1. dne v měsíci v 0:00
+4. každou hodinu, vždy 30 minut po celé
+5. denně každou minutu od 9:00 do 17:59
+6. denně v 8:00, 12:00 a 18:00
+7. denně každé 2 hodiny od 1:00 do 23:00
+8. od pondělí do pátku každých 15 minut od 8:00 do 8:45, od 12:00 do 12:45 a od 18:00 do 18:45
+9. denně každou minutu od 0:00 do 0:59, od 2:00 do 2:59 a tak dále až do 22:59
+10. od pondělí do pátku každou hodinu od 9:05 do 17:45, vždy 5, 20 a 45 minut po celé
+11. vždy 1. dne v měsíci každé 2 hodiny od 0:00 do 22:00 kromě 8:00
+12. denně každých 10 minut kromě doby od 3:00 do 3:50
+13. denně kromě středy, v 9:00
+14. od pondělí do soboty v 9:00
+15. každý pátek a také vždy 1. dne v měsíci, pokaždé v 0:00
+16. v lednu a červenci od pondělí do pátku a také vždy 1. a 15. dne těchto měsíců, pokaždé v 0:00
+17. v červnu každý pátek a také vždy 1. dne toho měsíce, pokaždé v 0:00
+18. každý lichý den v měsíci kromě 15., v 9:00
+19. každý 5. den od 1. do 31. dne v měsíci v 0:00
+20. od června do srpna vždy 1. dne v měsíci v 0:00
+21. v lednu, březnu, květnu, červenci, září a listopadu vždy 1. dne v měsíci v 0:00
+22. od ledna do listopadu denně v 9:00
+23. vždy poslední den v měsíci, který nepřipadá na víkend, v 0:00
+24. vždy 15. dne v měsíci, a pokud připadne na víkend, v nejbližší pátek nebo pondělí téhož měsíce, v 9:00
+25. vždy předposlední den v měsíci v 0:00
+26. vždy 3 dny před posledním dnem v měsíci v 0:00
+27. vždy druhé pondělí v červnu v 0:00
+28. denně v 1:30 a 13:30
+29. denně v 0:00 a 12:00
+30. denně v 0:00, 6:00, 12:00 a 18:00
+31. denně každé 2 hodiny od 0:00 do 22:00
+32. denně každou sekundu od 9:00:00 do 9:00:59
+33. každou hodinu, vždy 30 sekund po celé
+34. od pondělí do pátku každých 15 minut od 9:00 do 17:45, a to každou sekundu po celou tu minutu
+35. od pondělí do pátku každých 15 minut od 9:00 do 17:45, a to každých 30 sekund po celou tu minutu
+36. v letech 2030 až 2035 vždy 1. ledna v 0:00
+37. každý 4. rok od roku 2028, denně v 9:00
+38. v sudých letech od roku 2030, denně v 9:00
+39. každou minutu, vždy od celé do 29 minut po celé
+40. každých 10 minut, vždy od 5 do 55 minut po celé
+41. v červnu každé pondělí v 9:00
+42. o víkendech každou minutu
+43. denně každou hodinu od 22:00 do 2:00
+44. denně každé 3 hodiny od 0:30 do 21:30
+45. vždy první den v měsíci, který nepřipadá na víkend, v 0:00
+46. každé pondělí, středu a pátek v 9:00
+47. vždy 1. až 7. dne v měsíci v 9:00
+48. od června do srpna denně v 9:00
+49. každou celou hodinu
+50. každých 15 minut
+51. vždy 1. dne v měsíci každou minutu
+52. každé pondělí v 9:00
+53. od pondělí do pátku a také vždy 1. dne v měsíci, pokaždé v 0:00
+54. v červnu denně v 9:00
+55. v roce 2030 denně v 9:00
+56. vždy 1. ledna v 0:00
+57. denně každé 4 hodiny od 0:15 do 20:45, vždy 15 a 45 minut po celé
+58. denně každou hodinu od 9:00 do 17:00
+59. denně v 9:00, 9:15, 9:30 a 9:45
+60. vždy 1. a 15. dne v měsíci v 0:00

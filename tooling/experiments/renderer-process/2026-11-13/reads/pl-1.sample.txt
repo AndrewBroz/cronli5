@@ -1,0 +1,59 @@
+1. codziennie o 9:00
+2. od poniedziałku do piątku co 15 minut od 9:00 do 17:45
+3. 1. dnia każdego miesiąca o 0:00
+4. 30 minut po każdej pełnej godzinie
+5. codziennie co minutę od 9:00 do 17:59
+6. codziennie o 8:00, 12:00 i 18:00
+7. codziennie co 2 godziny od 1:00 do 23:00
+8. od poniedziałku do piątku co 15 minut od 8:00 do 8:45, od 12:00 do 12:45 oraz od 18:00 do 18:45
+9. codziennie co minutę w co drugiej godzinie, od 0:00 do 22:59
+10. od poniedziałku do piątku 5, 20 i 45 minut po każdej pełnej godzinie, od 9:05 do 17:45
+11. 1. dnia każdego miesiąca co 2 godziny od 0:00 do 22:00 oprócz 8:00
+12. codziennie co 10 minut, oprócz godziny zaczynającej się o 3:00
+13. codziennie oprócz śród o 9:00
+14. codziennie oprócz niedziel o 9:00
+15. w styczniu i lipcu od poniedziałku do piątku, a także 1. i 15. dnia każdego z tych miesięcy, o 0:00
+16. w czerwcu w piątki, a także 1. dnia tego miesiąca, o 0:00
+17. w dni nieparzyste oprócz 15. dnia każdego miesiąca o 9:00
+18. co 5 dni od 1. do 31. dnia każdego miesiąca o 0:00
+19. od czerwca do sierpnia 1. dnia miesiąca o 0:00
+20. w co drugim miesiącu od stycznia do listopada 1. dnia miesiąca o 0:00
+21. od stycznia do listopada codziennie o 9:00
+22. w ostatni dzień każdego miesiąca wypadający od poniedziałku do piątku o 0:00
+23. w dzień od poniedziałku do piątku najbliższy 15. dnia każdego miesiąca o 9:00
+24. przedostatniego dnia każdego miesiąca o 0:00
+25. 3 dni przed ostatnim dniem każdego miesiąca o 0:00
+26. co roku w drugi poniedziałek czerwca o 0:00
+27. codziennie o 1:30 i 13:30
+28. codziennie o 0:00 i 12:00
+29. codziennie o 0:00, 6:00, 12:00 i 18:00
+30. codziennie co 2 godziny od 0:00 do 22:00
+31. codziennie co sekundę od 9:00:00 do 9:00:59
+32. 30 sekund po każdej pełnej godzinie
+33. od poniedziałku do piątku co 15 minut od 9:00 do 17:45, za każdym razem co sekundę przez całą minutę
+34. od poniedziałku do piątku co 15 minut od 9:00 do 17:45, za każdym razem co 30 sekund przez całą minutę
+35. w latach 2030–2035, 1 stycznia o 0:00
+36. w co czwartym roku od 2028 r. codziennie o 9:00
+37. w latach parzystych od 2030 r. codziennie o 9:00
+38. co minutę od 0 do 29 minut po każdej pełnej godzinie
+39. co 10 minut od 5 do 55 minut po każdej pełnej godzinie
+40. w czerwcu w poniedziałki o 9:00
+41. w soboty i niedziele co minutę
+42. codziennie co godzinę od 22:00 do 2:00
+43. codziennie co 3 godziny od 0:30 do 21:30
+44. w pierwszy dzień każdego miesiąca wypadający od poniedziałku do piątku o 0:00
+45. w poniedziałki, środy i piątki o 9:00
+46. od 1. do 7. dnia każdego miesiąca codziennie o 9:00
+47. od czerwca do sierpnia codziennie o 9:00
+48. o każdej pełnej godzinie
+49. co 15 minut
+50. 1. dnia każdego miesiąca co minutę
+51. w poniedziałki o 9:00
+52. od poniedziałku do piątku, a także 1. dnia każdego miesiąca, o 0:00
+53. w czerwcu codziennie o 9:00
+54. w 2030 r. codziennie o 9:00
+55. co roku 1 stycznia o 0:00
+56. codziennie 15 i 45 minut po co czwartej pełnej godzinie, od 0:15 do 20:45
+57. codziennie co godzinę od 9:00 do 17:00
+58. codziennie o 9:00, 9:15, 9:30 i 9:45
+59. 1. i 15. dnia każdego miesiąca o 0:00

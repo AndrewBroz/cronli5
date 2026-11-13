@@ -1,0 +1,57 @@
+1. tutti i giorni alle 9:00
+2. al minuto 30 di ogni ora
+3. tutti i giorni, ogni minuto dalle 9:00 alle 17:59
+4. tutti i giorni alle 8:00, 12:00 e 18:00
+5. tutti i giorni, ogni 2 ore dall'1:00 alle 23:00
+6. dal lunedì al venerdì, ogni 15 minuti dalle 8:00 alle 8:45, dalle 12:00 alle 12:45 e dalle 18:00 alle 18:45
+7. tutti i giorni, ogni minuto nelle ore pari
+8. dal lunedì al venerdì, ai minuti 5, 20 e 45 di ogni ora, dalle 9:05 alle 17:45
+9. il 1° di ogni mese, ogni 2 ore dalle 0:00 alle 22:00, tranne alle 8:00
+10. tutti i giorni, ogni 10 minuti, tranne dalle 3:00 alle 3:50
+11. tutti i giorni tranne il mercoledì, alle 9:00
+12. dal lunedì al sabato alle 9:00
+13. a gennaio e luglio, il 1° e il 15 del mese e inoltre dal lunedì al venerdì, alle 0:00
+14. a giugno, il 1° del mese e inoltre il venerdì, alle 0:00
+15. nei giorni dispari di ogni mese tranne il 15, alle 9:00
+16. ogni 5 giorni dal 1° al 31 di ogni mese alle 0:00
+17. da giugno ad agosto, il 1° del mese alle 0:00
+18. a gennaio, marzo, maggio, luglio, settembre e novembre, il 1° del mese alle 0:00
+19. da gennaio a novembre, tutti i giorni alle 9:00
+20. l'ultimo giorno tra lunedì e venerdì di ogni mese alle 0:00
+21. il giorno tra lunedì e venerdì più vicino al 15 di ogni mese alle 9:00
+22. il penultimo giorno di ogni mese alle 0:00
+23. 3 giorni prima dell'ultimo giorno di ogni mese alle 0:00
+24. il secondo lunedì di giugno alle 0:00
+25. tutti i giorni all'1:30 e alle 13:30
+26. tutti i giorni alle 0:00 e 12:00
+27. tutti i giorni alle 0:00, 6:00, 12:00 e 18:00
+28. tutti i giorni, ogni 2 ore dalle 0:00 alle 22:00
+29. tutti i giorni, ogni secondo dalle 9:00:00 alle 9:00:59
+30. al secondo 30 del minuto 0 di ogni ora
+31. dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni volta per un minuto intero, una volta al secondo
+32. dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni volta per un minuto intero, ogni 30 secondi
+33. dal 2030 al 2035, il 1° gennaio alle 0:00
+34. ogni 4 anni dal 2028, tutti i giorni alle 9:00
+35. negli anni pari dal 2030, tutti i giorni alle 9:00
+36. ogni minuto dal minuto 0 al minuto 29 di ogni ora
+37. ogni 10 minuti dal minuto 5 al minuto 55 di ogni ora
+38. a giugno, il lunedì alle 9:00
+39. il sabato e la domenica, ogni minuto
+40. tutti i giorni, ogni ora dalle 22:00 alle 2:00
+41. tutti i giorni, ogni 3 ore dalle 0:30 alle 21:30
+42. il primo giorno tra lunedì e venerdì di ogni mese alle 0:00
+43. il lunedì, il mercoledì e il venerdì alle 9:00
+44. tutti i giorni dal 1° al 7 di ogni mese alle 9:00
+45. da giugno ad agosto, tutti i giorni alle 9:00
+46. ogni ora in punto
+47. ogni 15 minuti
+48. il 1° di ogni mese, ogni minuto
+49. il lunedì alle 9:00
+50. il 1° di ogni mese e inoltre dal lunedì al venerdì, alle 0:00
+51. a giugno, tutti i giorni alle 9:00
+52. nel 2030, tutti i giorni alle 9:00
+53. il 1° gennaio alle 0:00
+54. tutti i giorni, ai minuti 15 e 45 delle ore 0, 4, 8, 12, 16 e 20
+55. tutti i giorni, ogni ora dalle 9:00 alle 17:00
+56. tutti i giorni alle 9:00, 9:15, 9:30 e 9:45
+57. il 1° e il 15 di ogni mese alle 0:00
