@@ -740,7 +740,40 @@ const rows = [
   // A day part that opens with «vždy» is not followed by a second one:
   // the built renderer said «vždy 1. dne v měsíci vždy 20 minut po…».
   ['20 * 1 * *', 'vždy 1. dne v měsíci 20 minut po každé celé hodině'],
-  ['5,20 * 1 6 *', 'vždy 1. června 5 a 20 minut po každé celé hodině']
+  ['5,20 * 1 6 *', 'vždy 1. června 5 a 20 minut po každé celé hodině'],
+
+  // A set that is two rhythms together is said as its two rhythms, each
+  // with its own stretch, never as a list of two dozen values. (The built
+  // renderer listed them all; the maintainer saw the note that said so.)
+  ['0-20/2,21-59/3 * * * *',
+    'v každé hodině každé 2 minuty od celé hodiny do 20 minut po ní ' +
+    '(:00–:20) a pak každé 3 minuty od 21 do 57 minut po celé hodině ' +
+    '(:21–:57)'],
+  ['0-20/2,21-59/3 9 * * *',
+    'denně každé 2 minuty od 9:00 do 9:20 a každé 3 minuty od 9:21 do 9:57'],
+  ['0-20/2,21-59/3 9-17 * * *',
+    'denně v každé hodině každé 2 minuty od celé hodiny do 20 minut po ní ' +
+    '(:00–:20) a pak každé 3 minuty od 21 do 57 minut po celé hodině ' +
+    '(:21–:57), od 9:00 do 17:57'],
+  ['* 0-20/2,21-59/3 * * * *',
+    'v každé hodině každé 2 minuty od celé hodiny do 20 minut po ní ' +
+    '(:00–:20) a pak každé 3 minuty od 21 do 57 minut po celé hodině ' +
+    '(:21–:57), pokaždé po dobu jedné minuty každou sekundu'],
+  ['0-20/2,45 * * * *',
+    'v každé hodině každé 2 minuty od celé hodiny do 20 minut po ní ' +
+    '(:00–:20) a pak ještě 45 minut po celé hodině (:45)'],
+  ['0-20/2,21-59/3 * * * * *',
+    'v každé minutě každé 2 sekundy od začátku do 20 sekund po něm a pak ' +
+    'každé 3 sekundy od 21 do 57 sekund po začátku minuty'],
+  ['0-20/2,21-59/3 0 9 * * *',
+    'denně každé 2 sekundy od 9:00:00 do 9:00:20 a každé 3 sekundy od ' +
+    '9:00:21 do 9:00:57'],
+  ['0 0-10/2,11-23/3 * * *',
+    'denně každé 2 hodiny od 0:00 do 10:00 a každé 3 hodiny od 11:00 do ' +
+    '23:00'],
+  ['0 0 1-10/2,11-31/3 * *',
+    'každý lichý den od 1. do 9. dne v měsíci a každý třetí den od 11. do ' +
+    '29. dne v měsíci v 0:00']
 ];
 
 export {rows};
