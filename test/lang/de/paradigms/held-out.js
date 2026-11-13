@@ -44,8 +44,8 @@ const rows = [
     'am 1., 6., 11., 16., 21., 26. und 31. jedes Monats um 9:00 Uhr'],
   ['0 9 L * *', 'am letzten Tag jedes Monats um 9:00 Uhr'],
   ['0 9 15W * *',
-    'am Werktag (Montag bis Freitag), der dem 15. jedes Monats am nächsten ' +
-    'liegt, um 9:00 Uhr'],
+    'am Wochentag (Montag bis Freitag), der dem 15. jedes Monats am ' +
+    'nächsten liegt, um 9:00 Uhr'],
 
   // clock / month
   ['0 9 * 6 *', 'im Juni täglich um 9:00 Uhr'],
@@ -75,7 +75,7 @@ const rows = [
     'zur vollen Minute sowie 15, 30 und 45 Sekunden danach'],
   ['0-9 */15 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils ' +
-    '10-mal im Abstand von 1 Sekunde'],
+    'in den Sekunden 0 bis 9'],
 
   // window / minute
   ['0 9-17 * * 1-5', 'montags bis freitags von 9:00 bis 17:00 Uhr stündlich'],
@@ -143,9 +143,9 @@ const rows = [
     'montags bis freitags und zusätzlich am letzten Tag jedes Monats, ' +
     'jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten'],
   ['*/15 9-17 15W * 1-5',
-    'montags bis freitags und zusätzlich am Werktag (Montag bis Freitag), ' +
-    'der dem 15. jedes Monats am nächsten liegt, jeweils von 9:00 bis ' +
-    '17:45 Uhr alle 15 Minuten'],
+    'montags bis freitags und zusätzlich am Wochentag (Montag bis ' +
+    'Freitag), der dem 15. jedes Monats am nächsten liegt, jeweils von ' +
+    '9:00 bis 17:45 Uhr alle 15 Minuten'],
 
   // window / month
   ['*/15 9-17 * 6 1-5',
@@ -220,11 +220,11 @@ const rows = [
     'am 1., 6., 11., 16., 21., 26. und 31. jedes Monats um 0:00 Uhr'],
   ['0 0 L * *', 'am letzten Tag jedes Monats um 0:00 Uhr'],
   ['0 0 15W * *',
-    'am Werktag (Montag bis Freitag), der dem 15. jedes Monats am nächsten ' +
-    'liegt, um 0:00 Uhr'],
+    'am Wochentag (Montag bis Freitag), der dem 15. jedes Monats am ' +
+    'nächsten liegt, um 0:00 Uhr'],
 
   // monthly / month
-  ['0 0 1 6 *', 'am 1. Juni um 0:00 Uhr'],
+  ['0 0 1 6 *', 'jährlich am 1. Juni um 0:00 Uhr'],
   ['0 0 1 1,7 *', 'im Januar und Juli jeweils am 1. um 0:00 Uhr'],
   ['0 0 1 6-8 *', 'von Juni bis August jeweils am 1. um 0:00 Uhr'],
   ['0 0 1 6-8,12 *',
@@ -256,7 +256,7 @@ const rows = [
   ['30 * * * * *', '30 Sekunden nach jeder vollen Minute'],
   ['0,30 * * * * *', 'alle 30 Sekunden'],
   ['*/15 * * * * *', 'alle 15 Sekunden'],
-  ['0-9 * * * * *', 'jede Minute, jeweils 10-mal im Abstand von 1 Sekunde'],
+  ['0-9 * * * * *', 'jede Minute, jeweils in den Sekunden 0 bis 9'],
 
   // open / minute
   ['30 * * * *', 'stündlich um :30'],
@@ -296,8 +296,8 @@ const rows = [
     'am 1., 6., 11., 16., 21., 26. und 31. jedes Monats jede Minute'],
   ['* * L * *', 'am letzten Tag jedes Monats jede Minute'],
   ['* * 15W * *',
-    'am Werktag (Montag bis Freitag), der dem 15. jedes Monats am nächsten ' +
-    'liegt, jede Minute'],
+    'am Wochentag (Montag bis Freitag), der dem 15. jedes Monats am ' +
+    'nächsten liegt, jede Minute'],
 
   // open / month
   ['* * * 6 *', 'im Juni jede Minute'],

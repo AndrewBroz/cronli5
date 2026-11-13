@@ -12,6 +12,15 @@ every read that saw it accepted it, and **contested** where they
 disagreed; for a contested form the reason for the choice and the form
 given up are recorded.
 
+Revised 2026-11-13, twice. The second revision had three things the
+first did not: the core's calendar facts (which months a date exists in,
+leap years, sets with no end, runs and cadences together), a list of
+traps found across eight languages, and usage notes written in German by
+a writer who was told nothing of cron (`usage.md`). The rule book was
+read against the notes section by section; what it took from them and
+where it departs from them is in the last section. None of the forms
+introduced in either revision has had a blind fluency read.
+
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds.
 
@@ -36,7 +45,9 @@ Four rules run through everything:
 What is held is counted as things named: a value, a clock time, an end of
 a range, an interval. Where several phrasings are sayable, the one that
 names the fewest things wins, subject to the corrections below. Ties go
-to the earlier candidate in the core's order.
+to a run, then to the list of values, then to the earlier candidate in
+the core's order; runs and cadences together come after all of them, so
+they are said only where they name strictly fewer things.
 
 | Phrase | Things named |
 | --- | --- |
@@ -46,6 +57,7 @@ to the earlier candidate in the core's order.
 | a cadence of minutes or seconds that tiles from 0 («alle 15 Minuten») | 1 |
 | a cadence with both ends named, or a series | 3 |
 | pieces | the sum of the parts |
+| runs and cadences together | the sum of the parts: a run 2, a cadence of more than four values 3 and of fewer its values, a stray value 1 |
 | a base with exceptions | the base, plus one for each exception |
 
 The count never depends on *which* values are named, only on how many and
@@ -104,6 +116,44 @@ Corrections, for what has to be worked out:
   times were written out by them, eight were "at the limit of what can be
   read"; seven dates were written out and graded natural; six minutes
   were written out.
+* **A set that is no run, no cadence and no list short enough to hold is
+  said as runs and cadences together**, as the core takes it apart
+  (`cadencePieces`), where that names strictly fewer things than the
+  list and than any exception. The limits are the list limits above (a
+  field that lists up to six never says five values this way). Each part
+  is said the way the field says that kind of part, in ascending order:
+  * minutes: «stündlich von :00 bis :20 alle 2 Minuten und von :21 bis
+    :57 alle 3 Minuten»; inside one named hour, «von 9:00 bis 9:20 Uhr
+    alle 2 Minuten und von 9:21 bis 9:57 Uhr alle 3 Minuten», each
+    window with its own «Uhr» because each has its own step; a part that
+    is a run is «… jede Minute», and stray minutes follow after «sowie
+    um»;
+  * hours as points: «von 0:00 bis 10:00 Uhr alle 2 Stunden und von
+    11:00 bis 23:00 Uhr alle 3 Stunden»; a run among them is «…
+    stündlich»;
+  * hours as windows: each part's windows, a cadence of more than four
+    as its first two and its last, the parts joined by «sowie» and «Uhr»
+    once at the end: «von 0:00 bis 0:59, von 2:00 bis 2:59 … und von
+    10:00 bis 10:59 sowie von 11:00 bis 11:59, von 14:00 bis 14:59 … und
+    von 23:00 bis 23:59 Uhr jede Minute»;
+  * dates: each cadence as a series (the first three, «…», «und» and the
+    last; four or fewer in full), each run as a run, joined by «sowie»,
+    each with its own «am» or «vom»: «am 1., 3., 5. … und 11. sowie am
+    14., 17., 20. … und 29. jedes Monats»;
+  * seconds that trail: by their number in the minute (4.2): «jeweils in
+    den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57»;
+  * years: 5.8.
+  Before this rule such a set was a list of up to fifty-nine values.
+  **The parts must follow one another**: each begins after the one
+  before it has ended. The core takes the longest cadence first, so its
+  parts can run through one another (hours 1, 5, 9 and 8, 11, 14 … 23),
+  and a reader cannot follow two stretches at once; such a set is said
+  as the field says it without this rule (its list, its pieces, each of
+  its windows). Stray single values are counted as parts for this,
+  except minutes and hours as points, whose strays are said after
+  everything else («sowie um :45») and may fall anywhere. Years are the
+  one field where parts may run through one another (5.8): two series
+  of years are told apart by their first years.
 * **A cadence of hours always names both ends, each a full clock time**:
   «von 0:00 bis 22:00 Uhr alle 2 Stunden»; «von 0:30 bis 21:30 Uhr alle
   3 Stunden». A bare «alle 6 Stunden» or «alle 12 Stunden» is an interval
@@ -174,7 +224,7 @@ in place of the adverb and of the noun alike, and the months are «Jan.,
 Feb., März, Apr., Mai, Juni, Juli, Aug., Sept., Okt., Nov., Dez.»: a name
 of four letters or fewer is not shortened, as in Duden and CLDR. «Mo.,
 Mi. und Fr. um 9:00 Uhr»; «Mo. bis Fr.»; «täglich, außer Mi.,»; «am
-letzten Fr. jedes Monats»; «am letzten Werktag (Mo. bis Fr.) jedes
+letzten Fr. jedes Monats»; «am letzten Wochentag (Mo. bis Fr.) jedes
 Monats»; «im Aug.»; «am 1. Aug.»; «von Juni bis Aug.». The full stop is
 part of the short form. A sentence never ends in two stops, and none can
 here: the time part is always last and ends in a word or a digit. (The
@@ -209,8 +259,13 @@ sentences natural.
 * `* * * * *` — «jede Minute»
 
 Two fusions keep a German date whole (4.4): one month follows a date
-(«am 1. Juni», «am letzten Tag im Juni»), and one year follows a month's
-name («im Juni 2030», «am 1. Juni 2030»).
+(«jährlich am 1. Juni», «jährlich am letzten Tag im Juni»), and one year
+follows a month's name («im Juni 2030», «am 1. Juni 2030»).
+
+**A schedule that never runs is «nie (einen solchen Tag gibt es
+nicht)»**, and nothing else is said: no month, no year and no time
+(4.4). It is the one description that is not four parts in order, and
+`continuity.js` declares it by name.
 
 2.2 A month is added before the day; a weekday takes the day's place.
 Nothing else moves.
@@ -252,6 +307,25 @@ span: «vom 1. bis 7. jedes Monats täglich um 9:00 Uhr» (graded natural);
 «vom 1. bis 7. jedes Monats täglich von 9:00 bis 17:45 Uhr alle 15
 Minuten». Not inside a date and a weekday together (4.3).
 
+**«Jährlich» fills the year's level in the same way.** A date fused
+with its one month («am 1. Juni um 0:00 Uhr») has no word that says it
+comes round again: no «jedes Monats», no «jeweils», no adverb in «-s».
+Standing alone it reads as one appointment, and the usage notes give
+«jährlich am 1. März» and «jedes Jahr am 1. März» as the forms for a date
+that recurs (3.3 there; «am Montag» alone is their example of the same
+doubt). So where the year is every year and the day part is a date
+phrase fused with its month, the year part says «jährlich»: «jährlich am
+1. Juni um 0:00 Uhr»; «jährlich am letzten Tag im Juni um 0:00 Uhr»;
+«jährlich am zweiten Montag im Juni um 0:00 Uhr»; «jährlich vom 1. bis
+7. Juni täglich um 0:00 Uhr»; `@yearly` is «jährlich am 1. Januar um
+0:00 Uhr». It is not said where a month leads («im Juni täglich», «im
+Juni montags», «im Januar und Juli jeweils am 1.»: «täglich», the adverb
+and «jeweils» carry the recurrence), nor where the date exists only in
+leap years, which the date phrase says itself (4.4). («Jedes Jahr» says
+the same in two words; «jährlich» stands beside «täglich» and
+«stündlich».) A date, month or year edit may add or remove it; it is the
+year part and nothing else's.
+
 It is not said when the hours are every hour, with or without
 exceptions: such a schedule has no daily rhythm to name.
 
@@ -292,8 +366,8 @@ things named before it. The cases, complete:
    «in den Jahren 2030, 2034, 2038 usw. jeweils im Juni und Juli am
    zweiten Samstag».
 3. **Before a clock time («um»), after a date phrase that is pieces
-   holding a range**: «vom 1. bis 7. und am 15. jedes Monats jeweils um
-   9:00 Uhr». Without it «bis … um 9:00 Uhr» is heard as a span that ends
+   holding a range** (or runs and cadences together that hold one):
+   «vom 1. bis 7. und am 15. jedes Monats jeweils um 9:00 Uhr». Without it «bis … um 9:00 Uhr» is heard as a span that ends
    at 9:00. (A single range takes «täglich», 2.5.) Where the second case
    is due in the same sentence, «jeweils» is said once, here, after a
    comma, and not before the date: «im Januar und Juli vom 1. bis 5., am
@@ -478,11 +552,19 @@ set: with their own preposition and, for clock times, their own «Uhr».
 
 * **Days of the month.** From odd or even days: «an den ungeraden Tagen
   jedes Monats (1., 3., 5. … 31.), außer am 15.,». Every day but a few in
-  the middle: the base is «täglich», and with every month the exception
-  names it: «täglich, außer am 15. jedes Monats,»; «täglich, außer am 15.
-  und 16. jedes Monats,»; with a named month, «im Juni täglich, außer am
-  15.,». **Not beside weekdays** (4.3): there the days are said as
-  their stretches.
+  the middle: the base is «täglich», and the exception names every
+  month: «täglich, außer am 15. jedes Monats,»; «täglich, außer am 15.
+  und 16. jedes Monats,». **Under named months the days are said as
+  their stretches** («jährlich vom 1. bis 14. und vom 16. bis 30. Juni
+  jeweils um 0:00 Uhr»; «im Juni und Juli vom 1. bis 14. und vom 16. bis
+  31., jeweils um 0:00 Uhr»): the days taken away from every day are counted against
+  thirty-one, and the core does not say which of them the named months
+  have, so «im Juni täglich, außer am 15. und 31.,» would name a day
+  that does not exist. (The earlier text had «im Juni täglich, außer am
+  15.,», which the renderer reached by counting the days of the month
+  for itself.) **Beside weekdays** (4.3) every day but a few is its
+  stretches too, and the days taken from odd or even days stand inside
+  the gloss.
 * **Months**, where the exception names strictly fewer things than the
   wrapped run or the pieces: «in allen Monaten, außer im Juni,»; «in
   allen Monaten, außer im April und September,». It leads like any month
@@ -520,7 +602,8 @@ A cadence that is only missing values at its end or its start is said
 with its bounds. An exception may stand on either side of a date and a
 weekday together (4.3), except «täglich, außer» on the date side.
 
-**Years take no exception.** Years with a hole are taken apart (5.8).
+**Years** take an exception from every year and from years in step
+(5.8).
 
 3.10 The limits are those of the opening section. They rest on a few
 choices by two judges and have not been checked with a fluent human.
@@ -665,8 +748,8 @@ never «24:00».
     windows of minutes, which stay as they are, «von 9:00 bis 9:59 Uhr
     jeweils 30 Sekunden nach jeder vollen Minute»;
   * anything else trails after «jede Minute» (below): «jede Minute,
-    jeweils 10-mal im Abstand von 1 Sekunde»; «von 9:00 bis 9:59 Uhr
-    jede Minute, jeweils 10-mal im Abstand von 1 Sekunde».
+    jeweils in den Sekunden 0 bis 9»; «von 9:00 bis 9:59 Uhr jede
+    Minute, jeweils 10-mal im Abstand von 6 Sekunden».
 * **The rest is a run of minutes (or runs) with the lead «jede Minute»,
   and S is every second or a tiling cadence**: the seconds' lead takes
   the place of «jede Minute», and the stretches are written to the
@@ -701,14 +784,23 @@ never «24:00».
   * every second: «…, jeweils eine Minute lang jede Sekunde» (understood
     by all three judges as sixty runs; the one length that cannot be
     miscounted in a way that matters);
-  * a run or a cadence of more than six seconds from second 0, as a
-    count and a spacing, which fixes the first run and the last: «…,
-    jeweils 10-mal im Abstand von 6 Sekunden»; «…, jeweils 10-mal im
-    Abstand von 1 Sekunde» (seconds 0 to 9). The count is written with
-    digits and «-mal»;
-  * a run or a cadence of more than six seconds from a later second,
-    with its first run named: «…, jeweils 11-mal im Abstand von 1
-    Sekunde, erstmals 10 Sekunden nach der vollen Minute»;
+  * a cadence of more than six seconds from second 0, as a count and a
+    spacing, which fixes the first run and the last: «…, jeweils 10-mal
+    im Abstand von 6 Sekunden». The count is written with digits and
+    «-mal»;
+  * a cadence of more than six seconds from a later second, with its
+    first run named: «…, jeweils 11-mal im Abstand von 5 Sekunden,
+    erstmals 3 Sekunden nach der vollen Minute»;
+  * **a run of more than six seconds, by its number in the minute, with
+    both ends**: «…, jeweils in den Sekunden 0 bis 9»; «jede Minute,
+    jeweils in den Sekunden 1 bis 59»; «alle 15 Minuten, jeweils in den
+    Sekunden 10 bis 20». (Until the second revision a run was a count
+    and a spacing too: «jeweils 59-mal im Abstand von 1 Sekunde,
+    erstmals 1 Sekunde nach der vollen Minute». That names no last
+    second, against the rule that every stretch names both its ends,
+    and the reader has to add 58 to 1 to find it. The count and spacing
+    stay for a cadence, where the judged form is and the last second
+    cannot be named without a series.)
   * more than six seconds in several stretches (a run with other runs
     or stray seconds beside it), where naming the ends of each run and
     each stray second names fewer things than the seconds themselves:
@@ -716,7 +808,12 @@ never «24:00».
     and each stray second between them, in ascending order: «…, jeweils
     in den Sekunden 0 bis 10 und 50 bis 59»; «…, jeweils in den Sekunden
     0 bis 10, 30 und 50 bis 59»; «jede Minute, jeweils in den Sekunden 1
-    bis 3, 5, 8, 13 und 21». This form is used under every rest,
+    bis 3, 5, 8, 13 und 21». Runs and cadences together (the opening
+    corrections) are said the same way, each cadence as the first three
+    seconds, «…» and the last (four or fewer in full, with «und»), and
+    the parts joined by «sowie»: «jede
+    Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57».
+    This form is used under every rest,
     one clock time included («täglich um 9:00 Uhr, jeweils in den
     Sekunden 0 bis 10 und 30»): the windows to the second above are for
     one run or one cadence. (Before this rule such seconds were a list
@@ -754,9 +851,17 @@ fall on. «Oder» is read as a choice; «und jeden Freitag um 0:00 Uhr»
 lets the time go with one side.
 
 A month, and a year, lead. The weekdays follow them directly, as they
-would alone («im Juni freitags»). **The date side says the months
-again**, so that it cannot be heard as holding in every month: one month
-by name, in the form a date takes (4.4), and several as «dieser Monate»:
+would alone («im Juni freitags»). The month part names every month the
+pattern reaches, since the weekdays run in all of them. **The date side
+says the months again**, so that it cannot be heard as holding in every
+month: one month by name, in the form a date takes (4.4), and several as
+«dieser Monate»; where the date exists in only some of the months said
+(4.4) the date side names those, one by name on the date and several
+before it: «von Juni bis August montags und zusätzlich im Juli und
+August am 31., jeweils um 0:00 Uhr»; «im Januar und Juni montags und
+zusätzlich am 31. Januar, jeweils um 0:00 Uhr». Where it exists in none
+of them only the weekdays are left, and they are all that is said: `0 0
+31 6 1` is «im Juni montags um 0:00 Uhr». The ordinary cases:
 «im Juni freitags und zusätzlich am 1. Juni, jeweils um 0:00 Uhr»; «im
 Juni freitags und zusätzlich am letzten Tag im Juni, jeweils …»; «im
 Januar und Juli montags bis freitags und zusätzlich am 1. und 15. dieser
@@ -776,24 +881,40 @@ the date. The form with every month («montags bis freitags und
 zusätzlich am 1. jedes Monats, jeweils um 0:00 Uhr») was graded natural
 and read once.
 
-Either side may be an exception: «täglich, außer mittwochs, und
-zusätzlich am 15. jedes Monats, jeweils um 9:00 Uhr»; «montags bis
-freitags und zusätzlich an den ungeraden Tagen jedes Monats (1., 3., 5.
-… 31.), außer am 15., jeweils …». After «und zusätzlich» an exception
-can only be heard inside the addition. **The one exception not said here
-is «täglich, außer» on the date side**: «montags und zusätzlich täglich,
-außer am 15. jedes Monats» adds every day to Mondays, which makes no
-sense as an addition, so a reader takes the exception for the whole and
-loses the Mondays that fall on the 15th. Every day but a few is said
-there as its stretches: «montags und zusätzlich vom 1. bis 14. und vom
-16. bis 31. jedes Monats, jeweils um 9:00 Uhr»; «im Juni montags und
-zusätzlich vom 1. bis 14. und vom 16. bis 30. Juni, jeweils …». Inside
-a union a single range of dates takes no «täglich», and a date phrase
-takes no «jeweils» of its own (2.6).
+**An exception on one side must not be heard as taken from both.** A
+day that one side leaves out still runs when the other side has it: with
+`0 0 15 * 0-2,4-6` a Wednesday the 15th runs, and with odd days less the
+15th beside Monday to Friday, a Friday the 15th runs.
 
-Dates that are every day the named months have are no restriction, and
-then there is no union and no date phrase: `0 9 1-30 6 1` and `0 9 1-30
-6 *` are both «im Juni täglich um 9:00 Uhr».
+* The weekday side comes first, so its exception is closed before the
+  addition begins, and the addition is heard to add: «täglich, außer
+  mittwochs, und zusätzlich am 15. jedes Monats, jeweils um 9:00 Uhr».
+* **The date side never ends in «außer»**: it is the last thing before
+  «, jeweils» and the time, where an exception is heard against
+  everything before it. (The earlier text held that after «und
+  zusätzlich» an exception can only be heard inside the addition, and
+  had «… an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), außer
+  am 15., jeweils …». Read cold, that sentence never runs on a 15th.)
+  Days taken from odd or even days stand **inside the gloss**, after
+  «ohne den», where the brackets hold them to the dates: «montags bis
+  freitags und zusätzlich an den ungeraden Tagen jedes Monats (1., 3.,
+  5. … 31., ohne den 15.), jeweils von 9:00 bis 17:45 Uhr alle 15
+  Minuten»; two are «ohne den 15. und 17.». Every day but a few is its
+  stretches: «montags und zusätzlich vom 1. bis 14. und vom 16. bis 31.
+  jedes Monats, jeweils um 9:00 Uhr»; «im Juni montags und zusätzlich
+  vom 1. bis 14. und vom 16. bis 30. Juni, jeweils …» («montags und
+  zusätzlich täglich, außer am 15.» adds every day to Mondays, which
+  makes no sense as an addition, so the exception is taken for the
+  whole). A series of dates with one missing has no gloss to hold the
+  exception and is said as runs and cadences together, or as the list.
+
+Inside a union a single range of dates takes no «täglich», and a date
+phrase takes no «jeweils» of its own (2.6).
+
+Dates that are every day the reached months have (the core says so:
+`dateReach.days.everyDay`) are no restriction, and then there is no
+union and no date phrase: `0 9 1-30 6 1` and `0 9 1-30 6 *` are both «im
+Juni täglich um 9:00 Uhr».
 
 Not built into any renderer yet: when both must match, a weekday that
 falls on a date is «an jedem Freitag, der auf den 13. fällt», and the
@@ -823,24 +944,62 @@ the month:
 | Months | The date phrase | Example |
 | --- | --- | --- |
 | every month | carries «jedes Monats» | «am 1. jedes Monats»; «vom 1. bis 7. jedes Monats»; «an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.)»; «am letzten Tag jedes Monats»; «am zweiten Montag jedes Monats» |
-| one month | fuses with it, and the month does not lead: the bare name after an ordinal number, «im» and the name after a noun | «am 1. Juni»; «am 1. und 15. Juni»; «vom 1. bis 7. Juni»; «am 8., 10., 12. … und 30. Juni»; «an den ungeraden Tagen im Juni (1., 3., 5. … 29.)»; «am letzten Tag im Juni»; «am zweiten Montag im Juni»; «am ersten Werktag (Montag bis Freitag) im Juni»; «am viertletzten Tag im Juni (3 Tage vor dem letzten)» |
+| one month | fuses with it, and the month does not lead: the bare name after an ordinal number, «im» and the name after a noun. With every year the year part is «jährlich» (2.5) | «am 1. Juni»; «am 1. und 15. Juni»; «vom 1. bis 7. Juni»; «am 8., 10., 12. … und 30. Juni»; «an den ungeraden Tagen im Juni (1., 3., 5. … 29.)»; «am letzten Tag im Juni»; «am zweiten Montag im Juni»; «am ersten Wochentag (Montag bis Freitag) im Juni»; «am viertletzten Tag im Juni (3 Tage vor dem letzten)» |
 | any other month part | follows it after «jeweils» (2.6), with nothing in place of «jedes Monats» | «im Januar und Juli jeweils am 1.»; «von Juni bis August jeweils am 1.»; «im Januar und Juli jeweils am letzten Freitag»; «im Januar und Juli jeweils an den ungeraden Tagen (1., 3., 5. … 31.)»; «von Juni bis August jeweils vom 1. bis 7.»; «in allen Monaten, außer im April und September, jeweils am 1.» |
 
 The gloss of odd or even days stands at the end of the date phrase,
 after the month.
 
-**Dates a month does not have.** A date that a month lacks does not fire
-there, and the sentence may name it: «am 31. jedes Monats» is read as
-skipping the shorter months (the second judge read «am 1., 6., … und 31.
-jedes Monats» so). Under **one named month** only the dates that month
-has are named, February counted with 29 days: «am 1., 6., 11., 16., 21.
-und 26. Juni»; «an den ungeraden Tagen im Juni (1., 3., 5. … 29.)». Under
-every month the full set is named, and under several named months the set
-that the longest of them has: «im April und Juni jeweils am 1., 4., 7. …
-und 28.». Where the named months have none of the dates the schedule
-never runs, and the dates are said as they are written, so that the
-sentence shows why: «am 31. Juni um 9:00 Uhr»; «im April und Juni
-jeweils am 31.».
+**Dates a month does not have.** Which months a date, a nearest
+weekday or a day counted from the end exists in, and which only in leap
+years, is the core's fact (`dateReach`); the renderer counts no days. The
+rules, for plain dates and Quartz forms alike:
+
+* **Under every month a plain date is said as written**: «am 31. jedes
+  Monats» is read as skipping the shorter months (the second judge read
+  «am 1., 6., … und 31. jedes Monats» so). A Quartz form that some
+  months lack says which months have it (5.7).
+* **Under named months only what runs is named.** The dates are those
+  that at least one of the months has: «jährlich am 1., 6., 11., 16.,
+  21. und 26. Juni»; «jährlich an den ungeraden Tagen im Juni (1., 3., 5.
+  … 29.)»; «im April und Juni jeweils am 1., 4., 7. … und 28.»; `0 0 1,31
+  4,6,9,11 *` is «im April, Juni, September und November jeweils am 1.».
+  And **the months are those in which the date arm runs at all**: `0 0
+  30 2-3 *` is «jährlich am 30. März um 0:00 Uhr»; `0 0 31 1,6 *` is
+  «jährlich am 31. Januar um 0:00 Uhr»; `0 0 31W 6-8 *` is «im Juli und
+  August jeweils am Wochentag (Montag bis Freitag), der dem 31. im
+  selben Monat am nächsten liegt, um 0:00 Uhr»; `0 0 L-30 6-8 *` is «im
+  Juli und August jeweils 30 Tage vor dem letzten Tag um 0:00 Uhr». (The
+  first revision said «von Juni bis August jeweils in Monaten mit 31
+  Tagen am Werktag …», which is true and makes the reader find out that
+  June is not one of them; and for `L-30` it promised June.) So a date
+  or month edit may change the month part, as the fusions already allow.
+  Odd or even days keep their word when the months only cut the last
+  days off what the pattern writes (`*/2` in June); a cadence the
+  pattern itself stops early (`1-29/2` in June) is a series, «jährlich am
+  1., 3., 5. … und 29. Juni», because the core does not say that the
+  29th is June's last odd day.
+* **A date that exists only in leap years says so in a gloss at the end
+  of the date phrase**, after any other gloss: «am 29. Februar (nur in
+  Schaltjahren) um 0:00 Uhr»; «28 Tage vor dem letzten Tag im Februar
+  (nur in Schaltjahren) um 0:00 Uhr»; «am Wochentag (Montag bis
+  Freitag), der dem 29. Februar im selben Monat am nächsten liegt (nur
+  in Schaltjahren), um 0:00 Uhr». Where other months are said beside
+  February the gloss names it: «von Januar bis März jeweils am 29. (im
+  Februar nur in Schaltjahren) um 0:00 Uhr». «Jährlich» is not said
+  beside it (2.5). Under every month nothing is added: «am 29. jedes
+  Monats» is read like «am 31. jedes Monats». (A reader knows that the
+  29th of February is a leap day; a reader does not know it of «28 Tage
+  vor dem letzten Tag im Februar», and one rule serves both.)
+* **A schedule whose date exists in none of its months, in none of its
+  years, never runs, and says only that**: «nie (einen solchen Tag gibt
+  es nicht)». `0 0 31 6 *`, `0 0 30 2 *`, `0 0 31W 6 *` (Quartz), `0 0
+  L-30 6 *`, `0 0 0 29 2 * 2031`. The brackets say why in words that
+  hold for each of these, and no date that does not exist is named.
+  (The first revision said «am 31. Juni um 9:00 Uhr», "so that the
+  sentence shows why": it showed a schedule.) As a sentence it is «Läuft
+  nie (einen solchen Tag gibt es nicht).» Beside weekdays the weekdays
+  still run and are all that is said (4.3).
 
 **The year part.**
 
@@ -848,12 +1007,16 @@ jeweils am 31.».
   then does not lead: «am 1. Januar 2030»; «im Juni 2030 täglich»; «im
   Juni und Juli 2030 täglich»; «von Juni bis August 2030 täglich»; «am
   letzten Tag im Juni 2030»; «im Juni 2030 freitags und zusätzlich am
-  1.».
+  1. Juni». **Only after one name, one list or one run of months.**
+  After pieces the year would be heard with the last piece alone («von
+  Juni bis August und im Dezember 2030»: December 2030, and June to
+  August of every year?), so there it leads: «im Jahr 2030 von Juni bis
+  August und im Dezember täglich um 9:00 Uhr».
 * Otherwise the year part leads the sentence: «im Jahr 2030 täglich um
   9:00 Uhr»; «im Jahr 2030 am 1. jedes Monats»; «im Jahr 2030 alle 5
   Minuten»; «in den Jahren 2028 und 2030 täglich»; «in den Jahren 2028
-  bis 2031 täglich»; «in den Jahren 2030 bis 2032 und 2035 täglich». How
-  several years are said is in 5.8.
+  bis 2031 täglich»; «in den Jahren 2030 bis 2032 und 2035 täglich»; «ab
+  2030 täglich». How several years are said is in 5.8.
 * A month part that ends in an exception is not a month's name, and one
   year leads it: «im Jahr 2030 in allen Monaten, außer im Juni, täglich
   um 9:00 Uhr». («Außer im Juni 2030» would put the year inside the
@@ -862,7 +1025,8 @@ jeweils am 31.».
   date fused with its month takes «jeweils» (2.6): «in den Jahren 2030
   und 2031 jeweils im Juni täglich um 9:00 Uhr»; «in den Jahren 2030 bis
   2035 jeweils am 1. Januar um 0:00 Uhr» (graded natural); «in geraden
-  Jahren jeweils am 1. Januar».
+  Jahren jeweils am 1. Januar»; «ab 2030 jeweils am 1. Januar um 0:00
+  Uhr».
 
 4.5 None.
 
@@ -930,57 +1094,74 @@ named.
   kept for want of a word.
 * Where a month is too short to have such a day nothing fires, as with a
   date the month lacks.
-* `LW` — «am letzten Werktag (Montag bis Freitag) jedes Monats»
-* `1W` — «am ersten Werktag (Montag bis Freitag) jedes Monats». The
+* `LW` — «am letzten Wochentag (Montag bis Freitag) jedes Monats»
+* `1W` — «am ersten Wochentag (Montag bis Freitag) jedes Monats». The
   nearest such day never leaves its month, so for the 1st it is the
   first one of the month.
-* `2W` to `27W` — «am Werktag (Montag bis Freitag), der dem 15. jedes
-  Monats am nächsten liegt,»; with June, «…, der dem 15. Juni am nächsten
-  liegt,»; after several months, «im März, Juni, September und Dezember
-  jeweils am Werktag (Montag bis Freitag), der dem 15. am nächsten
-  liegt,». The relative clause is closed by a comma whenever anything
-  follows it, and something always does. (Graded acceptable and heavy by
-  all three judges, and read twice by the third because of the bracket,
-  the relative clause and the time trailing after them. It is exact, and
-  it is kept: every rewrite offered puts the time before the day, which
-  the frame does not allow.)
-* `28W` to `31W` — an idiom by the number named, for two facts. The date
-  can be the last of its month, where the nearer day would lie in the
-  next month, so the clause says «im selben Monat». And a month without
-  that date is skipped, which «dem 31. jedes Monats» would hide, so for
-  29, 30 and 31 the months are said first: `31W` is «in Monaten mit 31
-  Tagen am Werktag (Montag bis Freitag), der dem 31. im selben Monat am
-  nächsten liegt,»; `30W` and `29W` name their own number, as in «in
-  Monaten mit mindestens 30 Tagen am Werktag (Montag bis Freitag), der
-  dem 30. im selben Monat am nächsten liegt,»; `28W`, which every month has, is «am Werktag (Montag
-  bis Freitag), der dem 28. jedes Monats im selben Monat am nächsten
-  liegt,». With one named month the date carries its name and «in
-  Monaten mit …» is not said: «…, der dem 30. Juni im selben Monat am
-  nächsten liegt,». After several named months it is said when one of
-  them lacks the date in some year (February counted with 28 days
-  here), and not when all of them have it: «im Januar und Juni jeweils
-  in Monaten mit 31 Tagen am Werktag (Montag bis Freitag), der dem 31.
-  im selben Monat am nächsten liegt,»; «im Februar und März jeweils in
-  Monaten mit mindestens 30 Tagen am Werktag …»; «im Januar und März
-  jeweils am Werktag (Montag bis Freitag), der dem 31. im selben Monat
-  am nächsten liegt,». (Without it, «im Januar und Juni jeweils am
-  Werktag, der dem 31. im selben Monat am nächsten liegt» is read as
-  the last working day of June too, and nothing runs in June.) Two
-  cases keep the plain form and its doubt: one named month that lacks
-  the date («…, der dem 31. Juni im selben Monat am nächsten liegt,»,
-  which never runs, and «dem 29. Februar», which runs in leap years
-  only), and the date side of a union («… und zusätzlich am Werktag …,
-  der dem 31. dieser Monate im selben Monat am nächsten liegt»).
+* `2W` to `27W` — «am Wochentag (Montag bis Freitag), der dem 15. jedes
+  Monats am nächsten liegt,»; with June, «jährlich am Wochentag (Montag
+  bis Freitag), der dem 15. Juni am nächsten liegt,»; after several
+  months, «im März, Juni, September und Dezember jeweils am Wochentag
+  (Montag bis Freitag), der dem 15. am nächsten liegt,». The relative
+  clause is closed by a comma whenever anything follows it, and
+  something always does. (Graded acceptable and heavy by all three
+  judges, and read twice by the third because of the bracket, the
+  relative clause and the time trailing after them. It is exact, and it
+  is kept: every rewrite offered puts the time before the day, which the
+  frame does not allow.)
+* `28W` to `31W` — the date can be the last of its month, where the
+  nearer day would lie in the next month, so the clause says «im selben
+  Monat»: `28W` is «am Wochentag (Montag bis Freitag), der dem 28. jedes
+  Monats im selben Monat am nächsten liegt,». (That a 28th can be a
+  month's last day is the one thing about the length of months this
+  rule book knows for itself: the core has no fact for it.)
+* **A form that some months lack, under every month, says first which
+  months have it**, by the day the form needs: `31W` is «in Monaten mit
+  31 Tagen am Wochentag (Montag bis Freitag), der dem 31. im selben
+  Monat am nächsten liegt,»; `30W` and `29W` name their own number, «in
+  Monaten mit mindestens 30 Tagen am Wochentag …»; `L-30` needs
+  thirty-one days, «in Monaten mit 31 Tagen 30 Tage vor dem letzten
+  Tag»; `L-29` and `L-28` need thirty and twenty-nine, «in Monaten mit
+  mindestens 29 Tagen 28 Tage vor dem letzten Tag». «Jedes Monats» is
+  not said beside it. It is said whenever the core reports that the form
+  skips a month or needs a leap year (`dateReach` is not empty), and
+  beside weekdays too: «donnerstags und zusätzlich in Monaten mit 31
+  Tagen am Wochentag (Montag bis Freitag), der dem 31. im selben Monat
+  am nächsten liegt, jeweils um 0:00 Uhr».
+* Under named months only the months that have the form are named, and
+  a leap-year gloss follows where it is due (4.4): `0 9 31W 1,6 *` is
+  «jährlich am Wochentag (Montag bis Freitag), der dem 31. Januar im
+  selben Monat am nächsten liegt, um 9:00 Uhr»; `0 9 29W 1,2 *` is «im
+  Januar und Februar jeweils am Wochentag (Montag bis Freitag), der dem
+  29. im selben Monat am nächsten liegt (im Februar nur in
+  Schaltjahren), um 9:00 Uhr»; `0 9 31W 1,3 *` is «im Januar und März
+  jeweils am Wochentag (Montag bis Freitag), der dem 31. im selben Monat
+  am nächsten liegt, um 9:00 Uhr». («In Monaten mit …» after named
+  months, the first revision's form, is given up: the months can simply
+  be the right ones.)
 * `1#2` — «am zweiten Montag jedes Monats»
 * `5L` — «am letzten Freitag jedes Monats»
 
-The ordinals are «ersten, zweiten, dritten, vierten, fünften». **«Werktag
-(Montag bis Freitag)» is settled**: both judges ranked it first when set
-beside the bare word, «Arbeitstag», «Wochentag» and a relative clause;
-both called the brackets official and necessary, because «Werktag» alone
-includes Saturday. One doubt remains with every wording: a reader may
-assume public holidays are left out, and the pattern does not know them.
-With `short: true` the brackets are «(Mo. bis Fr.)».
+The ordinals are «ersten, zweiten, dritten, vierten, fünften».
+
+**«Wochentag (Montag bis Freitag)»** replaces «Werktag (Montag bis
+Freitag)», which both judges had ranked first. The usage notes (1.1)
+give the reason: «Werktag» is by law every day that is not a Sunday or a
+public holiday, so the word itself leaves holidays out, and the brackets
+mend only its Saturday. A pattern knows no holidays: `LW` runs on a
+Friday that is a holiday. «Wochentag» in its first sense is any of the
+seven days named by its place in the week, and the brackets then say
+which five; in its second sense (a day that is not Sunday, or not the
+weekend) the brackets say the same five. Either way the phrase means
+Monday to Friday and promises nothing about holidays. The notes call the
+bare «wochentags» unfit for an exact statement and the translation of
+*weekday* by «Wochentag» the commonest error of the field; that is the
+bare word, and here it never stands without its brackets. (Not taken: a
+relative clause, «am letzten Tag jedes Monats, der auf Montag bis
+Freitag fällt», which can be read as a condition on the last day; «am
+letzten Tag von Montag bis Freitag», which is Friday. Still a doubt: the
+word with brackets has had no fluency read.) With `short: true` the
+brackets are «(Mo. bis Fr.)».
 
 5.8 Years.
 
@@ -997,38 +1178,46 @@ With `short: true` the brackets are «(Mo. bis Fr.)».
   would open with «ab 2028 alle vier Jahre» and gloss the series.)
 * A run of years is «in den Jahren 2030 bis 2035», however long it is,
   and two years in a row are the two years («in den Jahren 2030 und
-  2031»). **A run that reaches the last year a pattern can name has no
-  end to say**: «in den Jahren ab 2030»; «in den Jahren 2030 bis 2034
-  und ab 2036». (The field ends at 9999, and «2030 bis 9999» names a
-  year nobody meant.) A run from the first year of the field is said
-  with that year, «in den Jahren 1970 bis 2029»: it is true, and the
-  past is not what a reader looks for.
-* **Any other set of years is taken apart.** First every stretch of
-  three or more years in a row is a run. Then each year not yet said,
-  from the earliest on, opens a series at the closest spacing at which
-  the years in step from it that are not yet said are more than four, or
-  are four in a step that never stops. A year already said may
-  be a step on the way, and the series says every year at that spacing
-  until one is missing. A year that opens
-  nothing stands alone. Where finding the series before the runs leaves
-  fewer parts, that is said instead: the years 2030, 2031, 2032, 2034,
-  2035, 2036, 2038 … are «in den Jahren 2030, 2032, 2034 usw. sowie
-  2031, 2035, 2039 usw.», not two thousand runs of three. The parts are
-  said in the order of their first years. Years and runs side by side
-  are one list, joined as a list is; **a series stands apart, after «sowie» and before
-  «sowie»**, so that its «usw.» or its «bis» cannot take in a neighbour:
-  «in den Jahren 2030 bis 2032 sowie 2034, 2036, 2038 usw.» (even years
-  from 2030, and 2031); «in den Jahren 2030, 2034, 2038 usw. sowie
-  2031»; «in den Jahren 2030, 2032, 2034 usw. bis 2060 sowie 2071»; «in
-  den Jahren 2030, 2033, 2036 usw. sowie 2031, 2034, 2037 usw.»; «in den
-  Jahren 2030 bis 2040 sowie 2045, 2050, 2055 usw.»; even years with one
-  missing, «in den Jahren 2030, 2032, 2034 usw. bis 2038 sowie 2042,
-  2044, 2046 usw. bis 2050». The words «gerade» and «ungerade» are for
-  years that are nothing else. (Before this rule such a set was a list
-  of every year to 9999, about four thousand of them. An exception,
-  «in geraden Jahren, außer 2040,», would be shorter for the last
-  example and was not taken: one device says every such set, and none of
-  these forms has been judged by a fluent reader.)
+  2031»). **A run that has no end** (the core marks it `open`: it
+  reaches the last year a pattern can name) **is «ab 2030»**, alone:
+  «ab 2030 täglich um 9:00 Uhr»; «ab 2030 jeweils am 1. Januar um 0:00
+  Uhr». Among other years it is an item of their list: «in den Jahren
+  2030 bis 2034 und ab 2036». (The first revision said «in den Jahren
+  ab 2030»; «ab 2030» is what is written, and includes its first year.)
+  A run from the first year of the field is said with that year, «in
+  den Jahren 1970 bis 2029»: it is true, and the past is not what a
+  reader looks for.
+* **Any other set of years is said in the way that names the fewest
+  things**, among those the core offers (its candidates, and its runs
+  and cadences together):
+  * **an exception**, from every year or from years in step, never from
+    a run: «in allen Jahren, außer 2030, täglich um 9:00 Uhr» (`1970-2029,
+    2031/1`); «in geraden Jahren von 2000 bis 2098, außer 2030, täglich
+    um 9:00 Uhr» (`2000-2028/2,2032-2098/2`); «in geraden Jahren von
+    2030 bis 2050, außer 2040,». The years taken away are bare numbers,
+    and a comma closes the exception;
+  * **pieces**, runs and single years in one list: «in den Jahren 2030
+    bis 2032 und 2035»; «in den Jahren 2030 bis 2034 und ab 2036»;
+  * **runs and cadences together**: years and runs side by side are one
+    list, joined as a list is, and **a series stands apart, after
+    «sowie» and before «sowie»**, so that its «usw.» or its «bis» cannot
+    take in a neighbour: «in den Jahren 2030, 2032, 2034 usw. sowie 2031»
+    (`2030/2,2031`); «in den Jahren 2030 bis 2040 sowie 2045, 2050, 2055
+    usw.»; «in den Jahren 2030, 2033, 2036 usw. sowie 2031, 2034, 2037
+    usw.»; «in den Jahren 2030, 2032, 2034 usw. bis 2060 sowie 2071». A
+    cadence among them is a series if it never stops or has more than
+    four years, and otherwise its years, which join the list beside
+    them in ascending order. The words «gerade» and «ungerade» are for
+    years that are nothing else, or the base of an exception. The parts
+    are the core's and are said as it gives them, however many: two
+    series that meet (`2030/7,2031/11`) come apart into fifteen parts
+    and a sentence nobody holds, and nothing shorter that is true can be
+    built from what the core says.
+  (Before the first revision such a set was a list of every year to
+  9999. The first revision took it apart by a procedure of its own and
+  allowed no exception; the core now does the taking apart, and the
+  exception is the shortest true thing to say of years with one hole.
+  None of these forms has been judged by a fluent reader.)
 
 Series, by field: a gloss of hours shows two windows and the last; a
 series of clock times shows every time of the first two hours and of the
@@ -1053,9 +1242,9 @@ forms are written, and read aloud as the full word.
 fixed phrases.
 
 6.5 um, Uhr, am, vom, im, von, bis, ab, nach, danach, erstmals, usw., in
-den Sekunden,
-und, sowie, und zusätzlich, außer, jeweils, jede, alle, täglich,
-stündlich, -mal, im Abstand von, and the fixed phrases of the lexicon.
+den Sekunden, und, sowie, und zusätzlich, außer, ohne den, jeweils,
+jede, alle, täglich, stündlich, jährlich, nie, nur in Schaltjahren,
+-mal, im Abstand von, and the fixed phrases of the lexicon.
 
 ## 7. Agreement
 
@@ -1158,3 +1347,118 @@ is «täglich um 0:00, 8:00 und 16:00 Uhr»; `0 */3 * * *` is «täglich von
   window attaches to. In a language that puts the time last it decided
   more rows than any other rule.
 * The branch budget is 100.
+* Three things the core's facts do not say, which the rules above work
+  round: which of the days taken away from every day a named month has
+  (3.9), whether a cadence the pattern stops early ends on the month's
+  last such day (4.4), and that a 28th can be a month's last day (5.7).
+
+## Where this rule book departs from the usage notes
+
+The usage notes (`usage.md`) were written after this rule book, in
+German, by a writer told nothing of cron. They were read against every
+section above. Marks in square brackets are the notes' own: [Q] found in
+a source, [R] a rule from memory, [U] the writer's judgment.
+
+**Taken from the notes.**
+
+* **«Werktag» is gone** (notes 1.1, [Q] for the legal sense): the word
+  leaves out public holidays by definition, and a pattern runs on them.
+  The Monday-to-Friday forms are now «Wochentag (Montag bis Freitag)»
+  (5.7), and the plain range was already «montags bis freitags».
+* **«Jährlich» before a date fused with its month** (notes 3.3, 7.4,
+  8.3, [U]): «jährlich am 1. Januar», where the rule book had a bare
+  «am 1. Januar um 0:00 Uhr» that reads as one appointment (2.5).
+* **«Ohne»** (notes 6, [U]) for days taken away inside a gloss (4.3).
+* **«Ab 2030»** bare, as the notes write «ab» (4.1, 4.2 there), in place
+  of «in den Jahren ab 2030» (5.8).
+
+**Where the notes confirm the rule book**, so that no departure is
+recorded: days before the clock, and a month or a year as a frame in
+front (2.1 there); the window before the cadence it bounds («zwischen 6
+und 20 Uhr alle 10 Minuten»); the weekday adverb «montags» for
+recurrence; «alle N» only from two on, «jede Minute» and «stündlich» for
+one; the end of a window as the last moment that fires (the notes' cure
+for «alle 10 Minuten von 8 bis 18 Uhr» is «letztmals um 17:50 Uhr»,
+which is what a window here ends on); the end of a range of days, months
+or years counted in, with no «einschließlich»; «um 12:00 Uhr» and «um
+0:00 Uhr» for noon and midnight, never «mittags» or «Mitternacht»; no
+spoken quarter or half hours; a union of two kinds of day never said
+with «oder» and never by setting the two side by side, with «und
+zusätzlich» among the notes' own connectives («montags und zusätzlich am
+Monatsersten»); «an den ungeraden Tagen des Monats» for every second day
+that starts anew each month, and the clock times named where a cadence
+of hours breaks off at the end of the day; no «alle 8 Tage» or «alle 15
+Tage» (cadences of dates are their dates); «im Jahr 2030», never «in
+2030»; «:30» as a minute of the hour («jede Stunde um :15» is the notes'
+own form); «jeweils … nach der vollen Minute» for seconds.
+
+**Departures, each with its reason.**
+
+1. **Full hours keep their minutes: «um 9:00 Uhr», not «um 9 Uhr».** The
+   notes (9.4, [U]) drop «:00» in running text and keep it "in lists and
+   where times with and without minutes stand together". A description
+   here is one time form in every sentence: a window sets a full hour
+   beside a minute («von 9:00 bis 17:45 Uhr»), and an edit of the minute
+   field from 0 to 30 must change the minute and nothing else. «9:00
+   Uhr» is correct by DIN 5008 and Duden, and every judge read it
+   without remark.
+2. **«Montags bis freitags» does not say «auch an Feiertagen».** The
+   notes (1.1, [U]) hold that readers of timetables and opening hours
+   take Monday to Friday as "except on public holidays", and that a
+   writer who means otherwise must say so. That would hold of every
+   weekday named («mittwochs» on a holiday is a Sunday in a timetable),
+   so the addition would stand in every sentence with a weekday. The
+   reader here reads a job schedule, which has no holiday calendar; the
+   one word that carried the holiday sense by definition is removed. A
+   doubt that remains, for a fluent reviewer.
+3. **«Jeweils» is not set before every time that follows a list of
+   days.** The notes (5, 7.8, [U]) call «dienstags und donnerstags,
+   jeweils von 14 bis 16 Uhr» the safe form, and say of the form without
+   it that the time "meist" goes with both. The rule book says it where
+   a time could be heard with one item only (2.6: a date and a weekday
+   together, pieces of dates that hold a range, seconds that trail) and
+   not after a plain list of weekdays or months, where the first judge
+   found it set mechanically. Kept: the cases are the ones with a real
+   second reading.
+4. **A pair of commas round «außer».** The notes write «täglich außer
+   montags, 10–18 Uhr» with no comma before «außer». Both judges found
+   that smoother too. The pair stays (3.9): it is correct, and the
+   closing comma is what keeps the time out of the exception, which the
+   notes' own example needs as well.
+5. **«Jedes Monats» after the nth weekday** («am zweiten Montag jedes
+   Monats»), where the notes (9.3, [U]) call «im Monat» the more usual
+   and «des Monats» the more formal. «Am ersten Montag im Monat» has the
+   doubt the notes raise for «am Montag» (once, or every time); «jedes
+   Monats» is the mark of recurrence every other date phrase here has.
+6. **A run of weekdays across the end of the week is said as the run**:
+   «freitags bis montags», «samstags bis montags», «sonntags und
+   montags». The notes (1.1, [R/U]) want every list of weekdays to begin
+   with Monday and call «So, Mo, Di» translated. Lists here do begin
+   with Monday, Sunday last («dienstags, donnerstags und sonntags»). A
+   run is no list: «Freitag bis Montag» is how a long weekend is
+   written, and cut at Monday it would be «montags und freitags bis
+   sonntags», which hides that the days follow one another. The week is
+   walked from Monday in every other respect (the core's view with
+   `first: 1`).
+7. **No «Takt», no «KW», no «in der Nacht von … auf …», no «24 Uhr».**
+   The notes show each as a device German has and English lacks. «Im
+   10-Minuten-Takt» is a transport word for what «alle 10 Minuten» says.
+   A pattern has no calendar weeks. Hours never wrap past midnight here
+   (3.5), so no night belongs to two days and no window ends at the
+   day's end: its last moment is «23:59» or «23:00», a moment that
+   fires, where «24:00 Uhr» would be one that does not.
+8. **`hour12` exists.** The notes (1.4, 8.3) say the 12-hour clock is
+   not written and that «um 9 Uhr morgens» is translated German. It is
+   an option, off by default, for a caller who asks for it.
+9. **The clock with a colon in Switzerland too.** The notes ([Q]) give
+   «8.30 Uhr» as the Swiss official form and add that apps and
+   timetables there often use the colon. The full stop is still not
+   offered (1.2).
+10. **Numbers are digits everywhere**, where the notes (9.3, [R/U])
+    write «alle zwei Stunden» in running text and digits in clipped
+    text. A description is clipped text.
+
+The notes' claims marked [U] are one writer's judgment and were weighed
+as that; the two the rule book now rests on most (the holiday sense of
+«Werktag», and «jährlich» for a date that recurs) are also [Q] and plain
+usage respectively.

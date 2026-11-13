@@ -1,15 +1,20 @@
 // The parts before the time: the year, the month and the day, coarsest
 // first, with the fusions a German date makes and the joins between them.
 
-import {denote} from '../../core/describe-set.js';
+import {
+  denote, describeCadencePieces, describeSet
+} from '../../core/describe-set.js';
 import type {
-  QuartzDate, QuartzWeekday, Schedule, SetDescription
+  CadencePieces, DateReach, QuartzDate, QuartzWeekday, Schedule,
+  SetDescription
 } from '../../core/schedule.js';
+import {candidatesAs} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
-import type {Counting, Described, Piece} from './sets.js';
+import type {Counting, Described, Piece, Sayable} from './sets.js';
 import {
-  boundedCadence, join, list, longerThan, settle, settleUnwrapped, unsayable
+  boundedCadence, inSuccession, join, list, longerThan, restOf, settle,
+  settleUnwrapped, sizeOf, unsayable
 } from './sets.js';
 import type {TimeSaid} from './time.js';
 import type {Voice} from './voice.js';
@@ -22,6 +27,8 @@ export interface CalendarSaid {
   // «jeweils », where the time is shared out over what stands before it.
   lead: string;
   month: string;
+  // Whether the schedule never runs, and so has no time to say.
+  never: boolean;
   year: string;
 }
 
@@ -33,52 +40,76 @@ interface Naming {
   name(value: number): string;
   // What opens single values: «im», «am».
   one: string;
+  // Where a value stands in the cycle as its readers walk it.
+  place(value: number): number;
   size: number;
   // Every value of the field, as the base of an exception.
   whole: string;
 }
 
-// What follows a date to say its month: after an ordinal number («am 1.
-// Juni») and after a noun («am letzten Tag im Juni»).
-interface MonthTail {
+// The words of the fields that are named.
+interface Namings {
+  date: Naming;
+  month: Naming;
+}
+
+// What a date phrase says besides its days: its month, after an ordinal
+// number («am 1. Juni») and after a noun («am letzten Tag im Juni»).
+interface DateTail {
+  // Whether the days are every second day of the whole month.
+  alternate: boolean;
+  // Whether the phrase stands beside weekdays, as their addition.
+  beside: boolean;
+  // The dates taken away inside a gloss, where there are any.
+  less: string;
   noun: string;
   ord: string;
-  // The days of the shortest month it stands for, where the months are
-  // not said with the date itself.
-  shortest: number;
 }
 
 // The months of a schedule.
 interface Months {
   every: boolean;
-  // The days of the longest of them.
-  length: number;
-  // The days the shortest of them has in every year.
-  least: number;
-  one: boolean;
-  said: SetDescription;
+  // The months the date arm fires in, and how they are said.
+  firing: number[];
+  firingSaid: Sayable;
+  said: Sayable;
+  // The months the month part names.
   values: number[];
 }
 
 // The days of the month a schedule names: a Quartz form or a set.
 interface Dates {
+  alternate: boolean;
   form?: QuartzDate;
-  said: SetDescription;
+  said: Sayable;
   there: boolean;
-  // The last date the named months have.
-  top: number;
-  // Whether the dates named are every day the named months have.
-  whole: boolean;
 }
 
 interface Weekdays {
   form?: QuartzWeekday;
-  said: SetDescription;
+  said: Sayable;
   there: boolean;
 }
 
+interface Years {
+  // The one year, where the schedule names just one.
+  one: number[];
+  said: Sayable;
+  several: boolean;
+}
+
+// Which of the two day fields have something to say.
+interface DayArms {
+  dated: boolean;
+  // Whether no day the schedule names exists.
+  never: boolean;
+  // Whether a date and a weekday are said together.
+  union: boolean;
+  weekly: boolean;
+}
+
 // The fields before the time, and how their parts stand to one another.
-interface Frame {
+interface Frame extends DayArms {
   dates: Dates;
   // Whether a date phrase carries its one month.
   fused: boolean;
@@ -88,29 +119,20 @@ interface Frame {
   months: Months;
   // Whether the day part is a date phrase on its own.
   phrase: boolean;
-  // Whether a date and a weekday are said together.
-  union: boolean;
+  reach: DateReach | null;
   weekdays: Weekdays;
-  years: number[];
+  years: Years;
 }
 
 const everyValue: SetDescription = {kind: 'all'};
 
-// The days of the longest month, and of each month, February with 29.
-const longest = 31;
-const monthLengths = [0, longest, 29, longest, 30, longest, 30, longest,
-  longest, 30, longest, 30, longest];
+const dateDomain = domainOf('date');
+const monthDomain = domainOf('month');
+const yearDomain = domainOf('year');
 
-// The last date that every month of every year has.
+// The last date at which the nearest weekday could lie in the next month,
+// if the form did not keep it in its own.
 const inEveryMonth = 28;
-
-// The month that has its last day only in some years.
-const february = 2;
-
-// What a date says of its month where every month is meant, and where no
-// month is said with it.
-const everyMonthTail: MonthTail =
-  {noun: words.ofEachMonth, ord: words.ofEachMonth, shortest: inEveryMonth};
 
 // The most dates a list holds.
 const heldDates = 7;
@@ -118,19 +140,25 @@ const heldDates = 7;
 // The most years of a cadence that stops which are still listed.
 const heldYears = 4;
 
-const lastYear = domainOf('year').max;
-
 // Monday and Friday, as cron numbers them.
 const workWeek = [1, 5];
 
-// A week from Monday (1) to Sunday (7), as German lists its days.
-const week = {cyclic: true, max: 7, min: 1};
+function asItIs(value: number): number {
+  return value;
+}
 
 const monthCounting: Counting =
   {cadence: unsayable, listed: 0, removable: Infinity};
 
-// An exception names the one day of the week that is missing.
-const weekCounting: Counting = {...monthCounting, removable: 1};
+// An exception names the one day of the week that is missing, and the
+// week is walked from Monday.
+const weekCounting: Counting = {
+  ...monthCounting,
+  place(weekday) {
+    return (weekday + 6) % 7;
+  },
+  removable: 1
+};
 
 const dateCounting: Counting = {
   cadence: longerThan(heldDates),
@@ -138,14 +166,19 @@ const dateCounting: Counting = {
   removable: Infinity
 };
 
-// Years said together: a year on its own (a step of 0), a run (a step of
-// 1), or a series in step.
-interface YearTerm {
-  count: number;
-  first: number;
-  last: number;
-  step: number;
-}
+// Years in step are a word or a series where they never stop or are too
+// many to list; every second year has a word, which replaces one year
+// fewer than a series does.
+const yearCounting: Counting = {
+  cadence(cadence, count) {
+    return cadence.open ||
+      count > heldYears - Number(cadence.interval === 2) ?
+      boundedCadence :
+      Infinity;
+  },
+  listed: 0,
+  removable: Infinity
+};
 
 function ordinal(day: number): string {
   return `${day}.`;
@@ -174,11 +207,11 @@ function itemsOf(pieces: Described<'pieces'>): Piece[] {
 
 // Where an item stands among the others: in ascending order of its first
 // value, a run that wraps round the cycle before the rest.
-function standing(item: Piece): number {
+function standing(item: Piece, place: Naming['place']): number {
   const {values = []} = item as Partial<Described<'values'>>;
   const {from = values[0], to = from} = item as Partial<Described<'range'>>;
 
-  return from - lastYear * Number(from > to);
+  return place(from) - yearDomain.max * Number(place(from) > place(to));
 }
 
 const itemNames = {
@@ -207,7 +240,7 @@ const named: {[kind: string]: (
   },
   pieces(pieces: Described<'pieces'>, naming: Naming): string {
     const items = itemsOf(pieces).sort(function byStanding(a, b) {
-      return standing(a) - standing(b);
+      return standing(a, naming.place) - standing(b, naming.place);
     });
 
     return list(items.map(function nameOf(item, at) {
@@ -228,49 +261,62 @@ const named: {[kind: string]: (
 };
 
 // A set of named values: a list, a run, pieces, or all but a few.
-function names(description: SetDescription, naming: Naming): string {
+function names(description: Sayable, naming: Naming): string {
   return named[description.kind](description as never, naming);
 }
 
-// The first three values of a series and its last.
-function shown(cadence: SetDescription, top: number): string[] {
-  const days = denote(cadence, {cyclic: false, max: top, min: 1});
+// A series of dates: the first three and the last, or all of a few.
+function series(cadence: Described<'cadence'>, naming: Naming): string {
+  const days = denote(cadence, dateDomain).map(ordinal);
 
-  return [...days.slice(0, boundedCadence), ...days.slice(-1)].map(ordinal);
+  return days.length > boundedCadence + 1 ?
+    `${naming.one}${days.slice(0, boundedCadence).join(', ')} ` +
+      `${words.ellipsis} ${words.and} ${days[days.length - 1]}` :
+    naming.one + list(days);
 }
 
-const dated: {[kind: string]: (
-  description: never, tail: MonthTail, naming: Naming) => string} = {
-  all() {
-    return '';
-  },
+const datesSaid: {[kind: string]: (
+  description: never, tail: DateTail, naming: Naming) => string} = {
   // Every second day of the whole month has a name, and its gloss; any
   // other cadence is a series.
   cadence(cadence: Described<'cadence'>, tail, naming) {
-    const [first, second, third, last] = shown(cadence, naming.size);
-    const run = `${first}, ${second}, ${third} ${words.ellipsis}`;
+    const days = denote(cadence, dateDomain).map(ordinal);
+    const gloss = `(${days.slice(0, boundedCadence).join(', ')} ` +
+      `${words.ellipsis} ${days[days.length - 1]}${tail.less})`;
 
-    return cadence.interval === 2 && cadence.start <= 2 &&
-      cadence.last + 2 > naming.size ?
+    return tail.alternate ?
       join([[words.onOddDays, words.onEvenDays][cadence.start - 1],
-        tail.noun, `(${run} ${last})`]) :
-      join([`${naming.one}${run} ${words.and} ${last}`, tail.ord]);
+        tail.noun, gloss]) :
+      join([series(cadence, naming), tail.ord]);
+  },
+  // Runs and series side by side, each with what opens it.
+  cadencePieces(pieces: CadencePieces, tail, naming) {
+    return join([pieces.parts.map(function say(part) {
+      return part.kind === 'cadence' ?
+        series(part, naming) :
+        names(part, naming);
+    }).join(` ${words.also} `), tail.ord]);
   },
   // Every day but a few names the month with the days taken away; a
-  // cadence names it itself.
+  // cadence names it itself. Beside weekdays the days taken away stand
+  // inside the gloss, where they cannot reach the weekdays.
   except(exception: Described<'except'>, tail, naming) {
     const {base, removed} = exception;
+    const gone = list(removed.map(naming.name));
 
-    return base.kind === 'all' ?
-      plainDates(exception as never, tail, naming) :
-      `${dateText(base, tail, naming)}, ${naming.except} ${naming.one}` +
-        `${list(removed.map(naming.name))}`;
+    if (base.kind === 'all') {
+      return plainDates(exception as never, tail, naming);
+    }
+
+    return tail.beside ?
+      dateText(base, {...tail, less: `, ${words.without} ${gone}`}, naming) :
+      `${dateText(base, tail, naming)}, ${naming.except} ${naming.one}${gone}`;
   }
 };
 
 function plainDates(
   description: never,
-  tail: MonthTail,
+  tail: DateTail,
   naming: Naming
 ): string {
   return join([names(description, naming), tail.ord]);
@@ -278,16 +324,16 @@ function plainDates(
 
 // The days of the month a set of dates names, with their month.
 function dateText(
-  description: SetDescription,
-  tail: MonthTail,
+  description: Sayable,
+  tail: DateTail,
   naming: Naming
 ): string {
-  return (dated[description.kind] || plainDates)(
+  return (datesSaid[description.kind] || plainDates)(
     description as never, tail, naming);
 }
 
-// «Werktag (Montag bis Freitag)»: the brackets say that Saturday is not
-// meant.
+// «Wochentag (Montag bis Freitag)»: the brackets say which days are
+// meant, and the word says nothing of public holidays.
 function workday(voice: Voice): string {
   const [monday, friday] = workWeek.map(voice.weekdayNoun);
 
@@ -297,7 +343,7 @@ function workday(voice: Voice): string {
 const quartzDates: {
   [Kind in QuartzDate['kind']]: (
     form: Extract<QuartzDate, {kind: Kind}>,
-    tail: MonthTail,
+    tail: DateTail,
     voice: Voice
   ) => string
 } = {
@@ -326,20 +372,13 @@ const quartzDates: {
     return join([`${words.onTheLast} ${workday(voice)}`, tail.noun]);
   },
   // A date that can be the last of its month keeps the weekday inside
-  // the month, and one that some of the months lack says which months
-  // have it.
+  // the month.
   nearestWeekday(form, tail, voice) {
-    const {day} = form;
-    const lacking = day > tail.shortest;
-
     return join([
-      lacking && words.inMonthsWith,
-      lacking && day < longest && words.atLeast,
-      lacking && `${day} ${words.withDays}`,
       `${words.on} ${workday(voice)},`,
-      `${words.whichThe} ${ordinal(day)}`,
-      !lacking && tail.ord,
-      day >= inEveryMonth && words.inSameMonth,
+      `${words.whichThe} ${ordinal(form.day)}`,
+      tail.ord,
+      form.day >= inEveryMonth && words.inSameMonth,
       words.nearest
     ]);
   }
@@ -347,7 +386,7 @@ const quartzDates: {
 
 function quartzWeekday(
   form: QuartzWeekday,
-  tail: MonthTail,
+  tail: DateTail,
   voice: Voice
 ): string {
   const {nth = 0} = form as {nth?: number};
@@ -358,268 +397,240 @@ function quartzWeekday(
   return join([`${which} ${voice.weekdayNoun(form.weekday)}`, tail.noun]);
 }
 
-// The years that follow a year at one spacing, as far as none is missing.
-function reach(first: number, step: number, left: Set<number>): YearTerm {
-  let last = first;
-
-  while (left.has(last + step)) {
-    last += step;
-  }
-
-  return {count: (last - first) / step + 1, first, last, step};
-}
-
-// Whether years in step are said as a series: more of them not yet said
-// than a list holds, or as many where they never stop.
-function inSeries(term: YearTerm, left: Set<number>): boolean {
-  let unsaid = 0;
-
-  for (let year = term.first; year <= term.last; year += term.step) {
-    unsaid += Number(left.has(year));
-  }
-
-  return unsaid > heldYears - Number(term.last + term.step > lastYear);
-}
-
-// The stretches of three or more years in a row among the years not yet
-// said, each handed to `take`.
-function runsAmong(
-  years: number[],
-  left: Set<number>,
-  take: (term: YearTerm) => void
-): void {
-  years.filter(function unsaid(first) {
-    return left.has(first) && left.has(first + 2);
-  }).forEach(function open(first) {
-    const run = reach(first, 1, left);
-
-    if (left.has(first) && run.count > 2) {
-      take(run);
-    }
-  });
-}
-
-// The series among the years: each year not yet said opens one at the
-// closest spacing at which the years in step from it make a series. A
-// year already said may be a step on the way.
-function seriesAmong(
-  years: number[],
-  left: Set<number>,
-  take: (term: YearTerm) => void
-): void {
-  const all = new Set(years);
-
-  years.forEach(function open(first, at) {
-    const next = left.has(first) && years.slice(at + 1).find(
-      function opens(year) {
-        return year > first + 1 &&
-          inSeries(reach(first, year - first, all), left);
-      });
-
-    if (next) {
-      take(reach(first, next - first, all));
-    }
-  });
-}
-
-// Years taken apart into runs, series and the years left alone, in the
-// order of their first years. The runs are found first, or the series.
-function yearTerms(years: number[], runsFirst: boolean): YearTerm[] {
-  const left = new Set(years);
-  const terms: YearTerm[] = [];
-  const passes = [runsAmong, seriesAmong];
-
-  function take(term: YearTerm): void {
-    terms.push(term);
-
-    for (let year = term.first; year <= term.last; year += term.step || 1) {
-      left.delete(year);
-    }
-  }
-
-  passes[Number(!runsFirst)](years, left, take);
-  passes[Number(runsFirst)](years, left, take);
-  years.forEach(function alone(first) {
-    if (left.has(first)) {
-      take({count: 1, first, last: first, step: 0});
-    }
-  });
-
-  return terms.sort(function byFirst(a, b) {
-    return a.first - b.first;
-  });
+// Whether years in step are said as a series: they never stop, or are
+// more than a list holds.
+function inSeries(cadence: Described<'cadence'>): boolean {
+  return cadence.open === true ||
+    (cadence.last - cadence.start) / cadence.interval >= heldYears;
 }
 
 // A series of years: three of them and «usw.», and its end if it has one.
-function yearSeries(term: YearTerm): string {
+function yearSeries(cadence: Described<'cadence'>): string {
   const opening = [0, 1, 2].map(function at(place) {
-    return term.first + place * term.step;
+    return cadence.start + place * cadence.interval;
   }).join(', ');
 
-  return join([opening, words.andSoOn, term.last + term.step <= lastYear &&
-    `${words.to} ${term.last}`]);
+  return join([opening, words.andSoOn,
+    !cadence.open && `${words.to} ${cadence.last}`]);
 }
 
-// A year on its own, and a run by its ends; a run that reaches the last
-// year a pattern can name has only a start.
-function yearNamed(term: YearTerm): string {
-  const run = term.last < lastYear ?
-    `${term.first} ${words.to} ${term.last}` :
-    `${words.since} ${term.first}`;
-
-  return [String(term.first), run][term.step];
+// A run of years by its ends; one that has no end, by its start.
+function yearRun(run: Described<'range'>): string {
+  return run.open ?
+    `${words.since} ${run.from}` :
+    `${run.from} ${words.to} ${run.to}`;
 }
 
-// Every second year, when the years are nothing else: even or odd years,
-// from their start unless that is the first such year, to their end if
-// they have one.
-function alternateYears(term: YearTerm): string {
-  const open = term.last + 2 > lastYear;
-  const first = domainOf('year').min + 1;
+// Years in step: every second year has a word, said from its start
+// unless that is the first such year, to its end if it has one; any
+// other step is a series.
+function yearsInStep(cadence: Described<'cadence'>): string {
+  const late = cadence.start - yearDomain.min >= cadence.interval;
 
-  return join([[words.inEvenYears, words.inOddYears][term.first % 2],
-    open && term.first > first && `${words.since} ${term.first}`,
-    !open && `${words.from} ${term.first} ${words.to} ${term.last}`]);
+  return cadence.interval === 2 ?
+    join([[words.inEvenYears, words.inOddYears][cadence.start % 2],
+      cadence.open === true && late && `${words.since} ${cadence.start}`,
+      !cadence.open &&
+        `${words.from} ${cadence.start} ${words.to} ${cadence.last}`]) :
+    `${words.inYears} ${yearSeries(cadence)}`;
 }
 
-// The years of a schedule that names more than every year, where no
-// month's name carries the one year.
-function yearPart(years: number[]): string {
-  const [whole] = [reach(years[0], 2, new Set(years))].filter(
-    function isAll(term) {
-      return term.count === years.length && term.count >= heldYears;
-    });
-  const said: string[][] = [[]];
-
-  if (years.length === 1) {
-    return `${words.inYear} ${years[0]}`;
-  }
-
-  if (whole) {
-    return alternateYears(whole);
-  }
-
-  // Runs first, unless finding the series first leaves fewer parts.
-  const [byRuns, bySeries] = [true, false].map(function apart(runsFirst) {
-    return yearTerms(years, runsFirst);
-  });
-  const terms = bySeries.length < byRuns.length ? bySeries : byRuns;
-
+const yearSaid: {[kind: string]: (
+  description: never, except: string) => string} = {
+  cadence: yearsInStep,
   // Years and runs side by side are one list; a series stands apart.
-  terms.forEach(function place(term) {
-    if (term.step > 1) {
-      said.push([yearSeries(term)], []);
-    }
-    else {
-      said[said.length - 1].push(yearNamed(term));
-    }
+  cadencePieces(pieces: CadencePieces) {
+    const said: string[][] = [[]];
+
+    pieces.parts.forEach(function place(part) {
+      if (part.kind === 'cadence' && inSeries(part)) {
+        said.push([yearSeries(part)], []);
+      }
+      else {
+        said[said.length - 1].push(...part.kind === 'range' ?
+          [yearRun(part)] :
+          denote(part, yearDomain).map(String));
+      }
+    });
+
+    return `${words.inYears} ${said.map(function inOrder(group) {
+      return list(group.sort());
+    }).filter(Boolean).join(` ${words.also} `)}`;
+  },
+  except(exception: Described<'except'>, except) {
+    const {base, removed} = exception;
+
+    return `${base.kind === 'all' ?
+      words.inAllYears :
+      yearsInStep(base as never)}, ${except} ${list(removed.map(String))},`;
+  },
+  pieces(pieces: Described<'pieces'>) {
+    const items = itemsOf(pieces).sort(function byFirst(a, b) {
+      return standing(a, asItIs) - standing(b, asItIs);
+    });
+
+    return `${words.inYears} ${list(items.map(function say(item) {
+      return item.kind === 'range' ? yearRun(item) : String(item.values[0]);
+    }))}`;
+  },
+  range(run: Described<'range'>) {
+    return join([!run.open && words.inYears, yearRun(run)]);
+  },
+  values(years: Described<'values'>) {
+    return [words.inYear, words.inYears][Number(years.values.length > 1)] +
+      ` ${list(years.values.map(String))}`;
+  }
+};
+
+// The years, as the core's candidates and its runs and cadences together
+// offer them.
+function yearsOf(schedule: Schedule): Years {
+  const {cadencePieces, candidates} = schedule.analyses;
+  const offered = candidates.year as SetDescription[];
+  const said = settle(offered, yearCounting,
+    [cadencePieces.year].filter(Boolean) as Sayable[]);
+  const one = [offered[offered.length - 1]].flatMap(function lone(last) {
+    return sizeOf(offered) === 1 ? (last as Described<'values'>).values : [];
   });
 
-  return `${words.inYears} ${said.map(list).filter(Boolean)
-    .join(` ${words.also} `)}`;
+  return {one, said, several: said.kind !== 'all' && one.length === 0};
 }
 
-// The months, and how long the longest of them is.
-function monthsOf(schedule: Schedule, everyYear: boolean): Months {
-  const values = denote(
-    (schedule.analyses.candidates.month as SetDescription[])[0],
-    domainOf('month'));
+// The months as a list, a run, pieces or all but a few. They wrap round
+// the end of the year only where no year is named.
+function monthsSaid(values: number[], linear: boolean): Sayable {
+  return settle(describeSet(values, monthDomain, {linear}), monthCounting);
+}
+
+// The months: those the pattern reaches, and of them those the date arm
+// fires in. Beside weekdays the month part names every month reached;
+// otherwise only those in which the schedule runs.
+function monthsOf(schedule: Schedule, linear: boolean, union: boolean): Months {
+  const {candidates, dateReach: reach} = schedule.analyses;
+  const offered = candidates.month as SetDescription[];
+  const reached = denote(offered[offered.length - 1], monthDomain);
+  const firing = reach?.fires ?
+    [...reach.everyYear, ...reach.leapYears].sort(ascending) :
+    reached;
+  const values = union ? reached : firing;
 
   return {
-    every: values.length === monthLengths.length - 1,
-    least: Math.min(...values.map(function leastOf(month) {
-      return monthLengths[month] - Number(month === february);
-    })),
-    length: Math.max(...values.map(function lengthOf(month) {
-      return monthLengths[month];
-    })),
-    one: values.length === 1,
-    // They wrap round the end of the year only where no year is named.
-    said: settle(values, {cyclic: everyYear, max: 12, min: 1},
-      monthCounting),
+    every: offered[0].kind === 'all',
+    firing,
+    firingSaid: monthsSaid(firing, linear),
+    said: monthsSaid(values, linear),
     values
   };
 }
 
-// The dates the named months have, described afresh. Dates that cover
-// the whole of those months leave the weekdays nothing to add.
-function datesOf(
-  schedule: Schedule,
-  length: number,
-  counting: Counting
-): Dates {
-  const {candidates, day} = schedule.analyses;
-  const {form} = {...day.date} as {form?: QuartzDate};
-  const [written] = candidates.date || [everyValue];
-  const values = denote(written, domainOf('date'));
-  const fitting = values.filter(function fits(date) {
-    return date <= length;
-  });
-  const [held, top] = fitting.length > 0 ?
-    [fitting, length] :
-    [values, longest];
-  const said = settleUnwrapped(held, {cyclic: false, max: top, min: 1},
-    counting);
-  const there = Boolean(form) || said.kind !== 'all';
+// Whether a set is every second day of the whole month.
+function isAlternate(description: Sayable): boolean {
+  const {interval, last = 0, start = 0} =
+    description as Partial<Described<'cadence'>>;
 
-  return {form, said, there, top, whole: !there && written.kind !== 'all'};
+  return interval === 2 && start <= 2 && last + 2 > dateDomain.max;
 }
 
-// The weekdays, counted from Monday.
-function weekdaysOf(schedule: Schedule, dates: Dates): Weekdays {
-  const {candidates, day} = schedule.analyses;
-  const {form} = {...day.weekday} as {form?: QuartzWeekday};
-  const [written] = candidates.weekday || [everyValue];
-  const values = denote(written, domainOf('weekday'))
-    .map(function fromMonday(weekday) {
-      return (weekday + week.max - 1) % week.max + 1;
-    }).sort(ascending);
-  const said = settle(values, week, weekCounting);
+// The dates the reached months have. Beside weekdays an exception is said
+// only inside the gloss of every second day; and every day but a few is
+// said only of every month, since the core does not say which of the days
+// taken away the named months have.
+function datesOf(schedule: Schedule, there: boolean, frame: {
+  everyMonth: boolean;
+  union: boolean;
+}): Dates {
+  const {candidates, dateReach: reach, day} = schedule.analyses;
+  const {form} = {...day.date} as {form?: QuartzDate};
+  const written = candidates.date || [everyValue];
+  const clipped = reach?.days?.candidates || [];
+  const round = clipped.length > 0 ? clipped : written;
+  const values = denote(round[round.length - 1], dateDomain);
+  // Every second day of the whole month is what the pattern writes; the
+  // months may have cut its last days off.
+  const cut = clipped.length > 0 && isAlternate(restOf(written[0]).base);
+
+  function alternate(description: Sayable): boolean {
+    return isAlternate(description) || cut && description.kind === 'cadence';
+  }
+
+  const linear = describeSet(values, dateDomain, {linear: true}).filter(
+    function sayable(description) {
+      const {base = everyValue} = description as Partial<Described<'except'>>;
+
+      return description.kind !== 'except' ||
+        (frame.union ? alternate(base) :
+          base.kind !== 'all' || frame.everyMonth);
+    });
+  const said = there && !form ?
+    settleUnwrapped(round, linear, dateCounting,
+      inSuccession(describeCadencePieces(values, dateDomain), false)) :
+    everyValue;
+
+  return {alternate: alternate(restOf(said).base), form, said, there};
+}
+
+// The weekdays, in a week that starts on Monday.
+function weekdaysOf(schedule: Schedule, there: boolean): Weekdays {
+  const {form} = {...schedule.analyses.day.weekday} as
+    {form?: QuartzWeekday};
+  const offered = candidatesAs(schedule, 'weekday', {first: 1});
 
   return {
     form,
-    said,
-    there: !dates.whole && (Boolean(form) || said.kind !== 'all')
+    said: there && offered ? settle(offered, weekCounting) : everyValue,
+    there
   };
 }
 
 // Whether dates are every day but a few.
-function dailyBut(dates: SetDescription): boolean {
+function dailyBut(dates: Sayable): boolean {
   return dates.kind === 'except' && dates.base.kind === 'all';
 }
 
 // What is said of the days, and what fuses: a date phrase with its one
 // month, and one year with a month's name.
+// Which day fields speak. Dates that are every day the reached months
+// have restrict nothing, and a date no reached month has leaves the
+// weekdays, or nothing.
+function armsOf(schedule: Schedule): DayArms {
+  const {dateReach: reach, day} = schedule.analyses;
+  const whole = reach?.days?.everyDay === true;
+  const fires = reach?.fires !== false;
+  const dated = day.date !== null && fires && !whole;
+  const weekly = day.weekday !== null && !whole;
+
+  return {
+    dated,
+    never: day.date !== null && !fires && !weekly,
+    union: dated && weekly,
+    weekly
+  };
+}
+
 function frameOf(schedule: Schedule): Frame {
-  const [written] = schedule.analyses.candidates.year as SetDescription[];
-  const years = [written].filter(function narrowed(description) {
-    return description.kind !== 'all';
-  }).flatMap(function valuesOf(description) {
-    return denote(description, domainOf('year'));
-  });
-  const months = monthsOf(schedule, years.length === 0);
-  const alone = datesOf(schedule, months.length, dateCounting);
-  const weekdays = weekdaysOf(schedule, alone);
-  const union = alone.there && weekdays.there;
-  // Beside weekdays, every day but a few is said as its stretches: after
-  // «und zusätzlich täglich» an exception would reach the weekdays too.
-  const dates = union ?
-    datesOf(schedule, months.length, {...dateCounting, removable: 0}) :
-    alone;
+  const arms = armsOf(schedule);
+  const {dated, union, weekly} = arms;
+  const years = yearsOf(schedule);
+  const months = monthsOf(schedule, years.said.kind !== 'all', union);
+  const dates = datesOf(schedule, dated, {everyMonth: months.every, union});
+  const weekdays = weekdaysOf(schedule, weekly);
   // Every day but a few is no date phrase: «täglich, außer am 15.».
-  const phrase = !union && (dates.there && !dailyBut(dates.said) ||
+  const phrase = !union && (dated && !dailyBut(dates.said) ||
     Boolean(weekdays.form));
-  const fused = phrase && months.one;
+  const fused = phrase && !months.every && months.values.length === 1;
   const monthLeads = !months.every && !fused;
 
   return {
+    ...arms,
     dates,
     fused,
     monthLeads,
-    monthNamed: monthLeads && months.said.kind !== 'except',
+    // A year follows one name, a list or a run of months; pieces and an
+    // exception would take it for their last item alone.
+    monthNamed: monthLeads && ['range', 'values'].includes(months.said.kind),
     months,
     phrase,
-    union,
+    reach: schedule.analyses.dateReach,
     weekdays,
     years
   };
@@ -627,100 +638,175 @@ function frameOf(schedule: Schedule): Frame {
 
 // The one year, where a month's name carries it.
 function yearAfter(frame: Frame, carried: boolean): string {
-  return frame.years.slice(0, Number(frame.years.length === 1 && carried))
-    .map(function say(year) {
-      return ` ${year}`;
-    }).join('');
+  return frame.years.one.filter(function due() {
+    return carried;
+  }).map(function say(year) {
+    return ` ${year}`;
+  }).join('');
 }
 
 // What a date says of its month. Every month is «jedes Monats». One
 // month is named after a date that is fused with it, and after the date
 // beside a weekday, where several months are «dieser Monate». A month
 // that leads is not said again.
-function tailOf(frame: Frame, again: boolean, voice: Voice): MonthTail {
-  const {fused, months} = frame;
-  const name = voice.month(months.values[0]) + yearAfter(frame, fused);
-  const own = {noun: `${words.in} ${name}`, ord: name, shortest: longest};
-  const these =
-    {noun: words.ofTheseMonths, ord: words.ofTheseMonths, shortest: longest};
+function tailOf(frame: Frame, again: boolean, voice: Voice): DateTail {
+  const {dates, fused, months} = frame;
+  const mine = again ? months.firing : months.values;
+  const name = voice.month(mine[0]) + yearAfter(frame, fused);
+  const bare = {alternate: dates.alternate, beside: again, less: '',
+    noun: '', ord: ''};
 
-  return months.every && everyMonthTail ||
-    (again || fused) && months.one && own ||
-    again && these ||
-    {noun: '', ord: '', shortest: months.least};
+  return months.every &&
+      {...bare, noun: words.ofEachMonth, ord: words.ofEachMonth} ||
+    (again || fused) && mine.length === 1 &&
+      {...bare, noun: `${words.in} ${name}`, ord: name} ||
+    again && mine.length === months.values.length &&
+      {...bare, noun: words.ofTheseMonths, ord: words.ofTheseMonths} ||
+    bare;
+}
+
+// What a date phrase says of leap years, where February has the day
+// only in them.
+function leapGloss(frame: Frame, voice: Voice): string {
+  const {months, reach} = frame;
+  const leap = months.every ? [] : [...reach?.leapYears || []];
+
+  return leap.map(function say(month) {
+    return `(${join([months.firing.length > 1 &&
+      `${words.in} ${voice.month(month)}`, words.onlyLeapYears])})`;
+  }).join('');
+}
+
+// Which months have a Quartz form that some months lack, where every
+// month is meant: those with the day the form needs.
+function monthsWith(frame: Frame): string {
+  const {dates, months, reach} = frame;
+  const {days = 0, day = days + 1} =
+    {...dates.form} as {day?: number; days?: number};
+  const lacking = Boolean(dates.form) && months.every && reach !== null;
+
+  return join([
+    lacking && words.inMonthsWith,
+    lacking && day < dateDomain.max && words.atLeast,
+    lacking && `${day} ${words.withDays}`
+  ]);
+}
+
+// The date phrase: the days, with the months they fire in where those
+// are fewer than the months said before, and what is true of leap years.
+function dateSide(frame: Frame, namings: Namings, voice: Voice): string {
+  const {dates, months, union} = frame;
+  const tail = tailOf(frame, union, voice);
+  const having = monthsWith(frame);
+  const fewer = union && !months.every && months.firing.length > 1 &&
+    months.firing.length < months.values.length;
+
+  return join([
+    fewer && names(months.firingSaid, namings.month),
+    having,
+    dates.form ?
+      quartzDates[dates.form.kind](dates.form as never,
+        having ? {...tail, noun: '', ord: ''} : tail, voice) :
+      dateText(dates.said, tail, namings.date),
+    leapGloss(frame, voice)
+  ]);
 }
 
 // The day part without its joins: the dates, the weekdays, or the
 // weekdays and in addition the dates.
-function daysSaid(frame: Frame, naming: Naming, voice: Voice): string {
+function daysSaid(frame: Frame, namings: Namings, voice: Voice): string {
   const {dates, union, weekdays} = frame;
-  const dateTail = tailOf(frame, union, voice);
-  const dateSide = dates.form ?
-    quartzDates[dates.form.kind](dates.form as never, dateTail, voice) :
-    dateText(dates.said, dateTail, {...naming, size: dates.top});
   const weekNames = weekdays.form ?
     quartzWeekday(weekdays.form, tailOf(frame, false, voice), voice) :
-    names(weekdays.said, {...naming, from: '', name(weekday) {
-      return voice.weekday(weekday % week.max);
-    }, one: '', size: week.max});
+    names(weekdays.said, {...namings.date, from: '', name: voice.weekday,
+      one: '', place: weekCounting.place as Naming['place'], size: 7});
 
   return join([
     weekdays.there && weekNames +
       (union && weekdays.said.kind === 'except' ? ',' : ''),
     union && words.additionally,
-    dateSide
+    dates.there && dateSide(frame, namings, voice)
   ]);
+}
+
+// Whether dates are said in parts of which one is a run.
+function holdsRun(dates: Sayable): boolean {
+  const {parts = []} = dates as Partial<CadencePieces>;
+
+  return parts.some(function isRun(part) {
+    return part.kind === 'range';
+  });
 }
 
 // Where «jeweils» is due: before a month part or a date fused with its
 // month after several years, and before a date phrase after several
-// months; once, at the first place. Pieces of dates that hold a run take
+// months; once, at the first place. Parts of dates that hold a run take
 // it before a clock time instead.
 function sharing(frame: Frame, time: TimeSaid) {
   const {dates, fused, monthLeads, months, phrase, union, years} = frame;
-  const several = years.length > 1;
-  const month = several && monthLeads && !union;
+  const month = years.several && monthLeads && !union;
 
   return {
     day: phrase && !month &&
-      (several && fused || !months.every && !months.one),
+      (years.several && fused || !months.every && months.values.length > 1),
     month,
-    pieces: !union && dates.said.kind === 'pieces' && time.clock
+    pieces: !union && holdsRun(dates.said) && time.clock
   };
 }
 
 // Whether a comma closes the day part: after a date and a weekday
-// together, an exception, a relative clause, and pieces of dates whose
+// together, an exception, a relative clause, and parts of dates whose
 // «jeweils» has moved to the time.
 function closes(frame: Frame, moved: boolean): boolean {
   const {dates, union, weekdays} = frame;
 
   return union || moved || dates.said.kind === 'except' ||
-    weekdays.there && weekdays.said.kind === 'except' ||
-    dates.form?.kind === 'nearestWeekday';
+    weekdays.said.kind === 'except' ||
+    dates.there && dates.form?.kind === 'nearestWeekday';
 }
 
-function monthPart(frame: Frame, naming: Naming, voice: Voice): string {
+function monthPart(frame: Frame, namings: Namings): string {
   const {monthLeads, monthNamed, months} = frame;
 
-  return join([monthLeads && names(months.said, {...naming,
-    from: `${words.from} `, name: voice.month, one: `${words.in} `,
-    size: 12, whole: words.inAllMonths}) + yearAfter(frame, monthNamed)]) +
+  return join([monthLeads && names(months.said, namings.month) +
+    yearAfter(frame, monthNamed)]) +
     (monthLeads && months.said.kind === 'except' ? ',' : '');
 }
 
 // The day part with its joins. «Täglich» fills the level a restricted
 // hour would skip, and follows a single run of dates, which a bare time
 // would seem to end.
-function dayPart(frame: Frame, time: TimeSaid, naming: Naming, voice: Voice) {
+function dayPart(
+  frame: Frame,
+  time: TimeSaid,
+  namings: Namings,
+  voice: Voice
+): string {
   const {dates, union} = frame;
   const due = sharing(frame, time);
-  const said = daysSaid(frame, naming, voice);
+  const said = daysSaid(frame, namings, voice);
   const filler = time.daily &&
     (said === '' || !union && dates.said.kind === 'range') && words.daily;
 
   return join([due.day && !due.pieces && words.eachTime, said, filler]) +
     (closes(frame, due.pieces && (due.month || due.day)) ? ',' : '');
+}
+
+// The year part. One year that a month's name carries is not said here.
+// Every year is silent, but for a date fused with its month, which has
+// no other mark that it comes round again: «jährlich am 1. Juni». Where
+// the date comes only in leap years the gloss says so instead.
+function yearPart(frame: Frame, voice: Voice): string {
+  const {fused, monthNamed, years} = frame;
+  const yearly = fused && leapGloss(frame, voice) === '' && words.yearly;
+
+  if (yearAfter(frame, fused || monthNamed)) {
+    return '';
+  }
+
+  return years.said.kind === 'all' ?
+    yearly || '' :
+    yearSaid[years.said.kind](years.said as never, voice.except);
 }
 
 /** The year, the month and the day of a schedule, as it will be said. */
@@ -730,26 +816,25 @@ function calendar(
   voice: Voice
 ): CalendarSaid {
   const frame = frameOf(schedule);
-  const {fused, monthNamed, union, years} = frame;
-  const naming: Naming = {
-    except: voice.except,
-    from: `${words.fromDate} `,
-    name: ordinal,
-    one: `${words.on} `,
-    size: longest,
-    whole: words.daily
+  const base = {except: voice.except, place: asItIs};
+  const namings: Namings = {
+    date: {...base, from: `${words.fromDate} `, name: ordinal,
+      one: `${words.on} `, size: dateDomain.max, whole: words.daily},
+    month: {...base, from: `${words.from} `, name: voice.month,
+      one: `${words.in} `, size: monthDomain.max, whole: words.inAllMonths}
   };
   const due = sharing(frame, time);
-  const day = dayPart(frame, time, naming, voice);
+  const day = dayPart(frame, time, namings, voice);
   const month = join([due.month && !due.pieces && words.eachTime,
-    monthPart(frame, naming, voice)]);
-  const year = years.length === 0 || yearAfter(frame, fused || monthNamed) ?
-    '' :
-    yearPart(years);
-  const shared = union || due.pieces ||
+    monthPart(frame, namings)]);
+  const year = yearPart(frame, voice);
+  const shared = frame.union || due.pieces ||
     time.offset && year + month + day !== '';
 
-  return {day, lead: shared ? `${words.eachTime} ` : '', month, year};
+  return frame.never ?
+    {day: words.never, lead: '', month: '', never: true, year: ''} :
+    {day, lead: shared ? `${words.eachTime} ` : '', month, never: false,
+      year};
 }
 
 export {calendar};

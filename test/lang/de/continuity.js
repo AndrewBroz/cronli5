@@ -39,6 +39,13 @@ const MAY_CHANGE = {
 // day part.
 const DAILY = /(?:^| )täglich$/u;
 
+// The one description that is not four parts: a schedule whose date
+// exists in none of its months never runs, and says only that («nie
+// (einen solchen Tag gibt es nicht)», answers 2.1 and 4.4). It has no
+// time to say, so an edit that makes a schedule never run, or run again,
+// changes the whole sentence.
+const NEVER = /^nie /u;
+
 const SETUP = {languages: [german.default], options: {}, styles: {}};
 
 function parse(pattern, options) {
@@ -97,6 +104,10 @@ function leaks(pairList) {
 
     const before = partsOf(a, options);
     const after = partsOf(b, options);
+
+    if (NEVER.test(before.day) || NEVER.test(after.day)) {
+      return;
+    }
 
     Object.keys(before).forEach(function compare(part) {
       const everyDay = changed[0] === 'hour' && part === 'day' &&
