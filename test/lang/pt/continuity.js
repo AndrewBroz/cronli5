@@ -11,15 +11,15 @@ const {expect} = chai;
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];
 
-// The parts of the sentence an edit to each field may change. A time
-// field changes the time. A day field changes the day part, and takes the
-// month into it: «em junho» becomes «no dia 1º de junho», «no último dia
-// de junho». So a day or month edit may move text between those two
-// parts, and a single year follows a month's name («no dia 1º de janeiro
-// de 2030», «em junho de 2030»), so those edits can change the year's form
-// too. Nothing else may cross: no day, month or year edit touches the
-// time, and no time edit touches anything but the time, with the one
-// exception below.
+// The parts of the sentence an edit to each field may change. The
+// sentence is the days, then the time (answers 2.1). The days carry their
+// month and year the way a date does («todas as segundas de junho de
+// 2030»), and a month or year with no noun to attach to leads the sentence
+// («em junho, de segunda a sexta,»), so a day, month or year edit may move
+// text among those three parts; a renderer may hold the fused calendar
+// wholly in the day part. Nothing else may cross: no day, month or year
+// edit touches the time, and no time edit touches anything but the time,
+// with the one exception below.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year'],
   hour: ['time'],
@@ -30,20 +30,13 @@ const MAY_CHANGE = {
   year: ['day', 'month', 'year']
 };
 
-// The one place a time field reaches another part: when the hours are
-// restricted and no day is named, the day part says «todos os dias»
-// unless the time part says the schedule runs round the clock. How the
-// hours are said depends on the minute and the second too («a cada 6
-// horas» against four listed times), so an edit to the second, the minute
-// or the hour may add or remove exactly those words (with the join's
-// comma, when a part that is set off follows them).
-const TIME_FIELDS = ['second', 'minute', 'hour'];
-const TIME_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
-
-// The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
-// the field was written. Both wordings are reduced to one before equal
-// schedules are compared, so any other difference still fails.
-const TIE = /às 00:00 e 12:00(?: todos os dias)?|a cada 12 horas/u;
+// The one place a time field reaches another part: when no day is named,
+// the days are «todos os dias» if the hours are restricted, and nothing if
+// the hours, the month and the year all take every value (answers 2.5).
+// So an edit to the hours may add or remove exactly those words, with the
+// join's comma where the join has one. An edit to the minute or the
+// second never can.
+const HOUR_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
 
 const SETUP = {languages: [portuguese.default], options: {}, styles: {}};
 
@@ -91,21 +84,21 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
-    // A part that ends in an exception is closed by a comma when another
-    // part follows it, and so is a part ahead of a month or year phrase
-    // that is set off (answers 2.6: a range, pieces or cadence of months,
-    // the months after a date and a weekday together, a range of years, a
-    // year after a cadence of months, a cadence of years). That comma
-    // belongs to the join, not to the part, so it is set aside before two
-    // parts are compared.
+    // The join between the days and the time is a space or a comma
+    // (answers 2.1), and belongs to neither part; so does the comma that
+    // closes an exception or sets off a year phrase. A trailing comma is
+    // set aside before two parts are compared. The «, sempre» that joins
+    // a day of the month and a weekday to their time (answers 4.3) is
+    // carried at the end of the day part, so the time part stays word for
+    // word what it is without the pair.
     function words(part) {
       return String(part).replace(/,$/u, '');
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const everyDay = TIME_FIELDS.includes(changed[0]) && part === 'day' &&
-        TIME_MAY_SET_DAY.includes(before[part]) &&
-        TIME_MAY_SET_DAY.includes(after[part]);
+      const everyDay = changed[0] === 'hour' && part === 'day' &&
+        HOUR_MAY_SET_DAY.includes(before[part]) &&
+        HOUR_MAY_SET_DAY.includes(after[part]);
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&
           !MAY_CHANGE[changed[0]].includes(part)) {
@@ -119,7 +112,7 @@ function leaks(pairList) {
 }
 
 // Continuity, measured directly. A description is four parts in one order:
-// time, day, month, year. Editing one field of the pattern may rewrite
+// day, month, year, time. Editing one field of the pattern may rewrite
 // that field's part and nothing else, apart from the declared fusions
 // above. This is the constraint itself, where a count of changed words is
 // only a rough sign of it: a longer sentence, or a wrong one, cannot make
@@ -130,7 +123,7 @@ describe('Portuguese continuity:', function() {
       const {opts, schedule} = parse(pair[1]);
       const parts = portuguese.describeParts(schedule, opts);
 
-      expect([parts.time, parts.day, parts.month, parts.year]
+      expect([parts.day, parts.month, parts.year, parts.time]
         .filter(Boolean).join(' '))
         .to.equal(portuguese.default.describe(schedule, opts));
     });
@@ -147,31 +140,29 @@ describe('Portuguese continuity:', function() {
         .to.deep.equal([]);
     }, 60000);
 
-  it('renders equal schedules identically, but for the declared tie',
-    function() {
-      function render(pattern, options) {
-        const {opts, schedule} = parse(pattern, options);
+  it('renders equal schedules identically', function() {
+    function render(pattern, options) {
+      const {opts, schedule} = parse(pattern, options);
 
-        return portuguese.default.describe(schedule, opts)
-          .replace(TIE, 'duas vezes por dia');
-      }
+      return portuguese.default.describe(schedule, opts);
+    }
 
-      expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
-      expect(score(render, neighborPairs(coreSetSeeds()))
-        .equivalentViolations).to.deep.equal([]);
-    }, 60000);
+    expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
+    expect(score(render, neighborPairs(coreSetSeeds()))
+      .equivalentViolations).to.deep.equal([]);
+  }, 60000);
 
-  it('follows the spelling only for the declared tie', function() {
+  it('never follows the spelling: no tie is declared', function() {
     function say(pattern) {
       const {opts, schedule} = parse(pattern);
 
       return portuguese.default.describe(schedule, opts);
     }
 
-    expect(say('0 */12 * * *')).to.equal('a cada 12 horas');
-    expect(say('0 0,12 * * *'))
-      .to.equal('às 00:00 e 12:00 todos os dias');
+    expect(say('0 */12 * * *')).to.equal('todos os dias às 00:00 e 12:00');
+    expect(say('0 0,12 * * *')).to.equal(say('0 */12 * * *'));
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
-    expect(say('0 9-17 * * *')).to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
+    expect(say('0 9-17 * * *'))
+      .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
   });
 });

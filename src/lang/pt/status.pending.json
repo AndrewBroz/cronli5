@@ -2,6 +2,6 @@
   "name": "Portuguese",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2, which reads and writes Portuguese but is not a native speaker; revised the same day after one independent adversarial read of every row; no renderer built yet",
+  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2, which reads and writes Portuguese but is not a native speaker; fifth version, after two independent reads of the rows against their schedules and three blind fluency readings by fluent Brazilian readers; no renderer built yet",
   "branchBudget": 110
 }

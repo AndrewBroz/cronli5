@@ -96,18 +96,6 @@ const nthWords: Gendered[] = [
   {feminine: 'quinta', masculine: 'quinto'}
 ];
 
-// The masculine ordinal words that count days back from the last day of a
-// month («terceiro dia antes do último dia»): the units from the first,
-// and the tens from the tenth. Above ten the tens word comes first,
-// «décimo segundo», «vigésimo».
-const ordinals = {
-  tens: ['décimo', 'vigésimo', 'trigésimo'],
-  units: [
-    'primeiro', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto',
-    'sétimo', 'oitavo', 'nono'
-  ]
-};
-
 // The article after each preposition it contracts with, by the gender and
 // number of the noun. A clock time is feminine, and singular only when its
 // hour is 1 («à 01:00», «da 01:00»; «às 09:00», «das 09:00»).
@@ -133,7 +121,6 @@ const articles = {
 };
 
 // The part of the day after a 12-hour time, by the first hour it covers.
-// Where the style has no «madrugada», its hours take the next part.
 const dayParts = [
   {from: 0, text: 'da madrugada'},
   {from: 6, text: 'da manhã'},
@@ -144,8 +131,9 @@ const dayParts = [
 // The function words and fixed phrases.
 const words = {
   also: 'e também',
+  always: 'sempre',
   and: 'e',
-  antepenultimate: 'antepenúltimo',
+  after: 'depois',
   before: 'antes',
   closest: 'mais próximo',
   during: 'durante',
@@ -153,11 +141,12 @@ const words = {
   every: {feminine: 'todas as', masculine: 'todos os'},
   everyDay: 'todos os dias',
   everyDayOf: 'todos os dias de',
-  everyDayOfMonth: 'todos os dias do mês',
+  exactTime: 'no horário exato',
   except: 'exceto',
   first: 'primeiros',
   firstMark: 'º',
   from: 'de',
+  ifItFallsOn: 'se cair num',
   in: 'em',
   last: 'últimos',
   lastOne: {feminine: 'última', masculine: 'último'},
@@ -167,22 +156,29 @@ const words = {
   noon: 'meio-dia',
   ofEach: 'de cada',
   ofTheMonth: 'do mês',
+  ofTheSameMonth: 'do mesmo mês',
+  onTheDot: 'em ponto',
+  oneHour: 'uma hora',
   oneMinute: 'um minuto',
+  or: 'ou',
   penultimate: 'penúltimo',
+  repeating: 'repetindo',
   runs: 'Ocorre',
   startingFrom: 'a partir',
+  thatFalls: 'que fica',
   startup: 'ao iniciar o sistema',
-  thatBegin: 'que começam',
   theEven: 'pares',
   theOdd: 'ímpares',
+  times: 'vezes',
   to: 'a',
   unrecognizable: 'um padrão cron não reconhecido',
-  weekdayDay: 'dia de semana'
+  weekdayDay: 'dia de semana',
+  wholeMinute: 'o minuto inteiro'
 };
 
 const lexicon = {
-  articles, contractions, dayParts, months, nthWords, ordinals, twoDigits,
-  units, weekdays, words
+  articles, contractions, dayParts, months, nthWords, twoDigits, units,
+  weekdays, words
 };
 
 export type {Gender, Gendered, Name, WeekdayName};
