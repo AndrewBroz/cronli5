@@ -1029,13 +1029,14 @@ const rows = [
     'toutes les minutes pendant les 29 premières et les 30 dernières ' +
     'minutes de chaque heure, avec 30 secondes de décalage'],
 
-  // The first second is written into a clock time while the time part
-  // names one or two (a time, two times, one window). Beyond that the same
-  // seconds would be read again in every time, and they are said once,
-  // after the times, as «avec N secondes de décalage».
-  ['30 5,20,45 9 * * *',
-    'tous les jours à 9 h 05, 9 h 20 et 9 h 45, avec 30 secondes de ' +
-    'décalage'],
+  // The first second is written into the clock times while the time part
+  // names three or fewer, the most times to the second a list holds.
+  // Beyond that the same seconds would be read again in every time, and
+  // they are said once, after the times, as «avec N secondes de
+  // décalage».
+  ['30 5,20,45,50 9 * * *',
+    'tous les jours à 9 h 05, 9 h 20, 9 h 45 et 9 h 50, avec 30 secondes ' +
+    'de décalage'],
   ['30 */25 2/6 * * *',
     'tous les jours à 2 h, 2 h 25, 2 h 50, 8 h, 8 h 25, 8 h 50, 14 h, ' +
     '14 h 25, 14 h 50, 20 h, 20 h 25 et 20 h 50, avec 30 secondes de ' +
@@ -1053,11 +1054,17 @@ const rows = [
     '22 h 30, avec 5 secondes de décalage, et à chaque fois de nouveau 25 ' +
     'secondes plus tard'],
   // A hole in a cadence of hours cannot be an exception before the
-  // seconds; what is left each side is said.
+  // offset; what is left each side is said.
+  ['5 30 0-6/2,10-14/2,18-22/2 * * *',
+    'tous les jours, toutes les 2 heures de 0 h 30 à 6 h 30, de 10 h 30 à ' +
+    '14 h 30 et de 18 h 30 à 22 h 30, avec 5 secondes de décalage'],
+  // Three clock times or fewer keep the seconds in them, an exception's
+  // time included.
+  ['30 5,20,45 9 * * *',
+    'tous les jours à 9 h 05 min 30 s, 9 h 20 min 30 s et 9 h 45 min 30 s'],
   ['5 30 0-6/2,10-22/2 * * *',
-    'tous les jours, toutes les 2 heures de 0 h 30 à 6 h 30 et de 10 h 30 ' +
-    'à 22 h 30, avec 5 secondes de décalage'],
-  // Two clock times, or one window, keep the seconds in them.
+    'tous les jours, toutes les 2 heures de 0 h 30 min 05 s à 22 h 30 min ' +
+    '05 s, sauf à 8 h 30 min 05 s'],
   ['30 5,20 9 * * *', 'tous les jours à 9 h 05 min 30 s et à 9 h 20 min 30 s'],
   ['5 30 */2 * * *',
     'tous les jours, toutes les 2 heures de 0 h 30 min 05 s à 22 h 30 min ' +
