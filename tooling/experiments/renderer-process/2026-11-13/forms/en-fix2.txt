@@ -1,0 +1,209 @@
+# FIRST AUDIT: the comma that closes an exception
+0 0-7,9-23 1 * * → every hour except at 8 a.m., on the 1st
+0 0-7,9-23 * * 1 → every hour except at 8 a.m., on Mondays
+30 0-7,9-23 * 6 * → at 30 minutes past every hour except 8 a.m., in June
+* 0-7,9-23 1 * * → every minute except during the 8 a.m. hour, on the 1st
+0-28,30-59 * * * 1 → every minute except at 29 minutes past the hour, on Mondays
+0-28,30-59 * * * * 1 → every second except at 29 seconds past the minute, on Mondays
+0 3-5,7-23 * * * → every hour from 3 a.m. through 11 p.m. except at 6 a.m., every day
+0 0 * 6 1-3,5-6 → at midnight Monday through Saturday except Thursday, in June
+0 0 0 1 1-5,7-12 * 2030 → at midnight on the 1st of every month except June, in 2030
+0 0 0 * 1-5,7-12 * 2030 → at midnight every day in every month except June, in 2030
+0 0 0 1-14,16-31 * * 2030 → at midnight on every day except the 15th, in 2030
+0 0-7,9-23 1-14,16-31 * * → every hour except at 8 a.m., on every day except the 15th
+0 0 1 1-11 1 → at midnight on the 1st as well as on Mondays, in every month except December
+0 9 1-14,16-31 1-5,7-12 * → at 9 a.m. on every day in every month except June, and except the 15th
+0-28,30-59 9,17 * * * → every minute during the 9 a.m. and 5 p.m. hours except at 29 minutes past the hour, every day
+0,10,20,40,50 9-17 * * * → every 10 minutes from 9 a.m. through 5:50 p.m. except at 30 minutes past the hour, every day
+0-14,16-29 9 * * * → every minute from 9 a.m. until 9:30 a.m. except at 15 minutes past the hour, every day
+0-29,31-59 * 9 * * * → every second during the 9 a.m. hour except at 30 seconds past the minute, every day
+# FIRST AUDIT: hours that wrap beside a day, month or year
+0 22-2 * * 1 → every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. on Mondays
+0 22-2 1 * * → every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st
+0 0 22-2 * * * 2030 → every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. every day in 2030
+*/15 22-2 * * 1-5 → every 15 minutes from midnight through 2:45 a.m. and from 10 p.m. through 11:45 p.m. on weekdays
+5,20,45 22-2 * * 1 → at 5, 20, and 45 minutes past the hour from midnight through 2 a.m. and during the 10 p.m. and 11 p.m. hours on Mondays
+0 0 0 * 11-2 * 2030 → at midnight every day in January, February, November, and December in 2030
+# FIRST AUDIT: an hour beside a range after "past the hour"
+5,20,45 9-17,22 * * * → at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. and during the 10 p.m. hour every day
+5,20,45 1,9-17 * * * → at 5, 20, and 45 minutes past the hour during the 1 a.m. hour and from 9 a.m. through 5 p.m. every day
+5,20,45 9-11,13-17 * * * → at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. except during the noon hour, every day
+0-29 9-11,13-17 * * * → every minute for the first 30 minutes of every hour from 9 a.m. through 5 p.m. except during the noon hour, every day
+# FIRST AUDIT: a day of the month before a cadence of years
+0 0 0 1 * * 2030/2 → at midnight on the 1st of every month of every other year from 2030
+0 0 0 1,15 * * 2030/4 → at midnight on the 1st and 15th of every month of every 4th year from 2030
+0 0 0 */2 * * 2030/2 → at midnight on odd-numbered days in every month of every other year from 2030
+0 0 0 15W * * 2030/2 → at midnight on the weekday nearest the 15th of every month of every other year from 2030
+# FIRST AUDIT: the weekday nearest a late day
+0 0 31W * * → at midnight on the weekday in the same month nearest the 31st
+0 0 28W * * → at midnight on the weekday in the same month nearest the 28th
+0 0 30W 6 * → at midnight on the weekday in the same month nearest June 30
+0 0 27W * * → at midnight on the weekday nearest the 27th
+# FIRST AUDIT: stray minutes under seconds
+* 0-29,45 * * * * → every second from 0 through 29 and for one minute at 45 minutes past the hour
+* 5,10-40,50 * * * * → every second for one minute at 5, every second from 10 through 40, and for one minute at 50 minutes past the hour
+*/10 0-29,45 * * * * → every 10 seconds from 0 through 29 and for one minute at 45 minutes past the hour
+# FIRST AUDIT: seconds beside hours named on the hour
+30 0 */2 * * * → at 30 seconds past the hour, every 2 hours
+15,45 0 9-17 * * * → at 15 and 45 seconds past the hour, every hour from 9 a.m. through 5 p.m. every day
+0-9 0 9-17 * * * → every second for the first 10 seconds of the hour, every hour from 9 a.m. through 5 p.m. every day
+30 0 0-7,9-23 * * * → at 30 seconds past the hour, every hour except at 8 a.m.
+15,45 30 9-17 * * * → at 15 and 45 seconds past the minute, every hour from 9:30 a.m. through 5:30 p.m. every day
+# THIS ROUND: a schedule that never runs
+0 0 31 6 * → never, because there is no June 31
+0 0 30,31 2 * → never, because there is no February 30 or 31
+0 0 31 4,6 * → never, because there is no April 31 or June 31
+0 0 31 2,4,6 * → never, because there is no February 31, April 31, or June 31
+0 0 0 29 2 * 2031 → never, because there is no February 29 in 2031
+0 0 0 29 2 * 2031/4 → never, because there is no February 29 in any of the years named
+0 0 31W 6 * → never, because there is no June 31
+0 0 L-30 6 * → never, because no day is 30 days before the last day of June
+0 0 L-30 4,6 * → never, because no day is 30 days before the last day of April or June
+0 0 31 6 1 → at midnight on Mondays in June
+# THIS ROUND: leap years
+0 0 29 2 * → at midnight on February 29 in leap years
+0 0 29W 2 * → at midnight on the weekday in the same month nearest February 29 in leap years
+0 0 L-28 2 * → at midnight 28 days before the last day of February in leap years
+0 0 0 29 2 * 2030-2040 → at midnight on February 29 in 2030 through 2040, in leap years
+0 0 29 2,3 * → at midnight on February 29 and March 29
+0 0 29 2 1 → at midnight on February 29 as well as on Mondays in February
+# THIS ROUND: only the days and months that exist
+0 0 31W 6-8 * → at midnight on the weekday in the same month nearest July 31 and August 31
+0 0 30W 2,4 * → at midnight on the weekday in the same month nearest April 30
+0 0 L-30 6-8 * → at midnight 30 days before the last day of July and August
+0 0 31W */2 * → at midnight on the weekday in the same month nearest January 31, March 31, May 31, and July 31
+0 0 30 2-3 * → at midnight on March 30
+0 0 1,31 4,6,9,11 * → at midnight on April 1, June 1, September 1, and November 1
+0 0 25-31 6 * → at midnight on June 25 through 30
+0 0 30-2 6 * → at midnight on June 1, 2, and 30
+0 0 31 * * → at midnight on the 31st
+0 0 31 6-8 1 → at midnight on the 31st as well as on Mondays, in June through August
+0 9 1-30 6 * → at 9 a.m. every day in June
+0 9 1-30 4 1 → at 9 a.m. every day in April
+0 9 1-29 2 * → at 9 a.m. every day in February
+0 9 1-28 2 * → at 9 a.m. on February 1 through 28
+0 9 1-31 * 1 → at 9 a.m. every day
+# THIS ROUND: numbers never wrap
+50-10 * * * * → every minute from 0 through 10 and every minute from 50 through 59 minutes past the hour
+58-1 * * * * → at 0, 1, 58, and 59 minutes past the hour
+50-10 * * * * * → every second from 0 through 10 and every second from 50 through 59 seconds past the minute
+0 0 20-10 * * → at midnight on the 1st through the 10th and on the 20th through the 31st
+0 0 29-2 * * → at midnight on the 1st and 2nd and on the 29th through the 31st
+0 0 31,1-3 * * → at midnight on the 1st through the 3rd and on the 31st
+0 0 20-10 6 * → at midnight on June 1 through 10 and on June 20 through 30
+0 0-5,17-23 * * * → every hour from 5 p.m. through 5 a.m. every day
+58-1 9 * * * → at 9 a.m., 9:01 a.m., 9:58 a.m., and 9:59 a.m. every day
+# THIS ROUND: a run that only starts late or stops early
+1-59 9 * * * → every minute from 9:01 a.m. until 10 a.m. every day
+1-59 * * * * → every minute for the last 59 minutes of every hour
+0-58 * * * * → every minute for the first 59 minutes of every hour
+0-58 9-17 * * * → every minute for the first 59 minutes of every hour from 9 a.m. through 5 p.m. every day
+1-59 * * * * * → every second for the last 59 seconds of every minute
+* 1-59 * * * * → every second for the last 59 minutes of every hour
+# THIS ROUND: years with no end, and years in several runs
+0 0 9 * * * 2030/1 → at 9 a.m. every day from 2030 onward
+0 0 0 1 1 * 2030/1 → at midnight on January 1 from 2030 onward
+0 */5 * * * * 2030/1 → every 5 minutes from 2030 onward
+0 0 0 * * 1 2030/1 → at midnight on Mondays from 2030 onward
+0 0 9 * * * 2030/2,2031 → at 9 a.m. every day in every other year from 2030 and in 2031
+0 0 9 * * * 2030-2040,2045/5 → at 9 a.m. every day in 2030 through 2040 and in every 5th year from 2045
+0 0 9 * * * 2030/4,2031/4 → at 9 a.m. every day in every 4th year from 2030 and in every 4th year from 2031
+0 0 0 * * * 2030-2040,2045/1 → at midnight every day in 2030 through 2040 and from 2045 onward
+0 0 0 * * * 2030,2035/1 → at midnight every day in 2030 and from 2035 onward
+0 0 0 15 * * 2030/2,2031 → at midnight on the 15th in every other year from 2030 and in 2031
+0 0 9 * * * 2000-2028/2,2032-2098/2 → at 9 a.m. every day of every other year from 2000 through 2098 except 2030
+0 0 9 * * * 1970-2029,2031/1 → at 9 a.m. every day in every year except 2030
+# THIS ROUND: runs and cadences together
+0-20/2,21-59/3 * * * * → every 2 minutes from 0 through 20 and every 3 minutes from 21 through 57 minutes past the hour
+0-20/2,21-59/3 9 * * * → every 2 minutes from 0 through 20 and every 3 minutes from 21 through 57 minutes past 9 a.m. every day
+0-20/2,21-59/3 9-17 * * * → every 2 minutes from 0 through 20 and every 3 minutes from 21 through 57 minutes past the hour from 9 a.m. through 5 p.m. every day
+*/15,1 * * * * → every 15 minutes from 0 through 45 and at 1 minute past the hour
+0 0-12/2,13-23/3 * * * → every 2 hours from midnight through noon and every 3 hours from 1 p.m. through 10 p.m. every day
+0 */3,1 * * * → every 3 hours from midnight through 9 p.m. and at 1 a.m. every day
+0 0 1-10/2,11-31/3 * * → at midnight every 2 days from the 1st through the 11th of the month and every 3 days from the 14th through the 29th of the month
+0-20/2,21-59/3 * * * * * → every 2 seconds from 0 through 20 and every 3 seconds from 21 through 57 seconds past the minute
+0-20/2,21-59/3 0 9 * * * → every 2 seconds from 9:00:00 a.m. through 9:00:20 a.m. and every 3 seconds from 9:00:21 a.m. through 9:00:57 a.m. every day
+* 0-12/2,13-23/3 * * * → every minute during every other hour from the midnight hour through the noon hour and during every 3rd hour from the 1 p.m. hour through the 10 p.m. hour every day
+# THIS ROUND: a cadence of hours that stops early, under minutes
+* 2/2 * * * → every minute during every other hour from the 2 a.m. hour through the 10 p.m. hour every day
+* 0-20/2 * * * → every minute during every other hour from the midnight hour through the 8 p.m. hour every day
+*/15 8-18/2 * * * → every 15 minutes during every other hour from the 8 a.m. hour through the 6 p.m. hour every day
+0,30 8-18/2 1,15 * 1-5 → every 30 minutes during every other hour from the 8 a.m. hour through the 6 p.m. hour on the 1st and 15th as well as on weekdays
+* 0-12/3 * * * → every minute during every 3rd hour from the midnight hour through the noon hour every day
+* 0,2,4,6,10,12,14,16 * * * → every minute during every other hour from the midnight hour through the 4 p.m. hour except the 8 a.m. hour, every day
+* * 2/2 * * * → every second during every other hour from the 2 a.m. hour through the 10 p.m. hour every day
+# THIS ROUND: a cadence of days
+0 0 */5 * * → at midnight every 5 days from the 1st of the month
+0 0 3/5 * * → at midnight every 5 days from the 3rd of the month
+0 0 */5 6 * → at midnight every 5 days from the 1st of the month in June
+0 0 */5 6,7 * → at midnight every 5 days from the 1st of the month in June and July
+0 0 8/2 6 * → at midnight every 2 days from the 8th of the month in June
+0 0 5-20/3 6 * → at midnight every 3 days from the 5th through the 20th of the month in June
+0 0 1,6,11,21,26,31 6 * → at midnight every 5 days from the 1st of the month in June except the 16th
+0 0 0 */5 6 * 2030 → at midnight every 5 days from the 1st of the month in June 2030
+0 0 */5 6 1 → at midnight every 5 days from the 1st of the month in June as well as on Mondays in June
+0 0 0 */5 * * 2030/2 → at midnight every 5 days from the 1st of the month of every other year from 2030
+*/15 9-17 */5 * 1-5 → every 15 minutes from 9 a.m. through 5:45 p.m. every 5 days from the 1st of the month as well as on weekdays
+0 0 */7 * * → at midnight every 7 days from the 1st of the month
+0 0 */15 * * → at midnight every 15 days from the 1st of the month
+# THIS ROUND: an exception beside a weekday
+0 9 1-14,16-31 * 5 → at 9 a.m. on every day except the 15th, as well as on Fridays whatever the date
+0 9 1-14,16-31 6 1 → at 9 a.m. on every day in June except the 15th, as well as on Mondays in June whatever the date
+0 9 5-9,11-25 * 1 → at 9 a.m. on the 5th through the 25th except the 10th, as well as on Mondays whatever the date
+*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5 → every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered days except the 15th, as well as on weekdays whatever the date
+0 0 1 * 1-3,5-6 → at midnight on the 1st as well as Monday through Wednesday and on Fridays and Saturdays
+0 0 15 * 1-3,5-6 → at midnight on the 15th as well as Monday through Wednesday and on Fridays and Saturdays
+0 0 15 * 0-2,4-6 → at midnight on the 15th as well as Thursday through Tuesday
+0 0 1-14,16-31 * 5L → at midnight on every day except the 15th, as well as on the last Thursday of the month whatever the date
+# THIS ROUND: what follows several pieces, or a day of the month beside a weekday
+0 0 9 * 6-8,12 * 2030 → at 9 a.m. every day in June through August and in December, in 2030
+0 0 0 1-5,10 * * 2030 → at midnight on the 1st through the 5th and on the 10th, in 2030
+0 0 0 1-5,10 6 * 2030 → at midnight on June 1 through 5 and on June 10, in 2030
+0 0 1-5,10 6,7 * → at midnight on the 1st through the 5th and on the 10th, in June and July
+0 0 0 1 * 5 2030 → at midnight on the 1st as well as on Fridays, in 2030
+0 0 0 1 6 5 2030 → at midnight on June 1 as well as on Fridays in June, in 2030
+0 9 * 6 0,2-5 → at 9 a.m. Tuesday through Friday and on Sundays, in June
+0 0 0 1 6-8,12 * 2030 → at midnight on the 1st of each month from June through August and on December 1, in 2030
+0 0 9 * 6-8,12 * 2030/2 → at 9 a.m. every day in June through August and in December, in every other year from 2030
+# THIS ROUND: a cadence of years across a comma
+0 0 0 1 * 1-5 2030/4 → at midnight on the 1st as well as on weekdays, in every 4th year from 2030
+0 0 0 1-14,16-31 * * 2030/2 → at midnight on every day except the 15th, in every other year from 2030
+0 0 0 * 1-5,7-12 * 2030/2 → at midnight every day in every month except June, in every other year from 2030
+0 0 0 * * 0,2-5 2030/2 → at midnight Tuesday through Friday and on Sundays, in every other year from 2030
+# THIS ROUND: seconds before a run of minutes with strays
+30 0-29,45 * * * * → at 30 seconds past the minute, every minute from 0 through 29 and at 45 minutes past the hour
+15,45 0-29,45 9 * * * → at 15 and 45 seconds past the minute, every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m. every day
+8 0-29,45 9 * * * → at 8 seconds past the minute, every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m. every day
+15,45 5,10-40,50 * * * * → at 15 and 45 seconds past the minute, at 5, every minute from 10 through 40, and at 50 minutes past the hour
+0-9 0-29,45 * * * * → every second for the first 10 seconds of the minute, every minute from 0 through 29 and at 45 minutes past the hour
+5,10 0-29,45 9-17 * * * → at 5 and 10 seconds past the minute, every minute from 0 through 29 and at 45 minutes past the hour from 9 a.m. through 5 p.m. every day
+# THIS ROUND: a minute taken out under seconds
+5/10 0-28,30-59 * * * * → every 10 seconds from 5 through 55 seconds past every minute except during the minute at 29 minutes past the hour
+30 0-28,30-59 * * * * → at 30 seconds past every minute except during the minute at 29 minutes past the hour
+* 0-28,30-59 * * * * → every second except during the minute at 29 minutes past the hour
+0-29,31-59 0-28,30-59 9,17 * * * → every second during the 9 a.m. and 5 p.m. hours except during the minute at 29 minutes past the hour, and except at 30 seconds past the minute, every day
+# ALTERNATIVES for the scope of an exception (answers 3.9). For each pattern the first line is what the renderer says, the second is the structural cure that was rejected, and the third is the control. A blind reader should be asked when each fires.
+0 0-7,9-23 1 * * → [comma] every hour except at 8 a.m., on the 1st
+0 0-7,9-23 1 * * → [coarser part first] on the 1st, every hour except at 8 a.m.
+0 0-7,9-23 1 * * → [no comma] every hour except at 8 a.m. on the 1st
+0 0,2,4,6,10,12,14,16,18,20,22 1 * * → [comma] every 2 hours except at 8 a.m., on the 1st
+0 0,2,4,6,10,12,14,16,18,20,22 1 * * → [coarser part first] on the 1st, every 2 hours except at 8 a.m.
+0 0,2,4,6,10,12,14,16,18,20,22 1 * * → [no comma] every 2 hours except at 8 a.m. on the 1st
+0-28,30-59 * * * 1 → [comma] every minute except at 29 minutes past the hour, on Mondays
+0-28,30-59 * * * 1 → [coarser part first] on Mondays, every minute except at 29 minutes past the hour
+0-28,30-59 * * * 1 → [no comma] every minute except at 29 minutes past the hour on Mondays
+0 3-5,7-23 * * * → [comma] every hour from 3 a.m. through 11 p.m. except at 6 a.m., every day
+0 3-5,7-23 * * * → [coarser part first] every day, every hour from 3 a.m. through 11 p.m. except at 6 a.m.
+0 3-5,7-23 * * * → [no comma] every hour from 3 a.m. through 11 p.m. except at 6 a.m. every day
+0 0 * 6 1-3,5-6 → [comma] at midnight Monday through Saturday except Thursday, in June
+0 0 * 6 1-3,5-6 → [coarser part first] in June, at midnight Monday through Saturday except Thursday
+0 0 * 6 1-3,5-6 → [no comma] at midnight Monday through Saturday except Thursday in June
+0 0 0 1 1-5,7-12 * 2030 → [comma] at midnight on the 1st of every month except June, in 2030
+0 0 0 1 1-5,7-12 * 2030 → [coarser part first] in 2030, at midnight on the 1st of every month except June
+0 0 0 1 1-5,7-12 * 2030 → [no comma] at midnight on the 1st of every month except June in 2030
+0 0 0 1-14,16-31 * * 2030 → [comma] at midnight on every day except the 15th, in 2030
+0 0 0 1-14,16-31 * * 2030 → [coarser part first] in 2030, at midnight on every day except the 15th
+0 0 0 1-14,16-31 * * 2030 → [no comma] at midnight on every day except the 15th in 2030
+0 9 1-14,16-31 * 5 → [comma and "whatever the date"] at 9 a.m. on every day except the 15th, as well as on Fridays whatever the date
+0 9 1-14,16-31 * 5 → [weekday first] at 9 a.m. on Fridays as well as on every day except the 15th
+0 9 1-14,16-31 * 5 → [neither] at 9 a.m. on every day except the 15th as well as on Fridays
