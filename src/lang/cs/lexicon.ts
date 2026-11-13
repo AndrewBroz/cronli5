@@ -201,6 +201,7 @@ const words = {
   exceptYears: 'kromě let',
   forOneMinute: 'po dobu jedné minuty',
   from: 'od',
+  fromTheStart: 'od začátku',
   fromTheFullHour: 'od celé hodiny',
   fromYear: 'od roku',
   inEachHourAnew: 'v každé hodině znovu',

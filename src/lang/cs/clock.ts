@@ -4,14 +4,15 @@
 // how the seconds join it (seconds.ts).
 
 import type {
-  Domain, RangeDescription, SetDescription
+  CadencePieces, Domain, RangeDescription, SetDescription
 } from '../../core/schedule.js';
 import {denote, domainOf} from '../../core/index.js';
 import type {CzechStyle} from './options.js';
 import type {Described} from './sets.js';
 import {
   cadenceCount, chosen, comesRound, counted, enoughForARun, everyUnit,
-  listed, ofKind, runsOf, spaced
+  listed, ofKind, runsOf, spaced, stretchOf,
+  togetherIn
 } from './sets.js';
 import type {Unit} from './lexicon.js';
 import lexicon from './lexicon.js';
@@ -108,10 +109,15 @@ function rhythmStep(found: Described | undefined, domain: Domain): number {
   return tilingStep(found, domain) || offset || 0;
 }
 
-/** A field of the clock from its candidates. */
+/**
+ * A field of the clock from its candidates. A long set of runs and
+ * cadences is said as its parts unless `listable` says the field keeps to
+ * the generic order.
+ */
 function clockField(
   candidates: SetDescription[],
-  field: 'hour' | 'minute' | 'second'
+  field: 'hour' | 'minute' | 'second',
+  joined = true
 ): Clock {
   const domain = domainOf(field);
   const values = denote(candidates[candidates.length - 1], domain);
@@ -120,7 +126,12 @@ function clockField(
 
   return {
     domain,
-    form: chosen(candidates, {domain, exceptions: true, rounds: true}),
+    form: chosen(candidates, {
+      domain,
+      exceptions: true,
+      rounds: true,
+      together: joined && togetherIn(candidates, domain) || null
+    }),
     step,
     tiles: step > 0 && values[0] === domain.min,
     unit: units[field],
@@ -254,18 +265,60 @@ function runPlace(run: RangeDescription, shown: Shown): string {
 const noPlace: Said =
   {after: '', except: [], head: '', main: '', opening: ''};
 
-// The places of the minutes inside every hour, by the kind of set.
+// A cadence of minutes from its first place to its last.
+function cadenceSpan(form: Extract<Described, {kind: 'cadence'}>): string {
+  return form.start === 0 ?
+    spaced(words.fromTheFullHour, words.to, String(form.last),
+      units.minute.many, words.afterIt) :
+    spaced(words.from, String(form.start), words.to, String(form.last),
+      units.minute.many, words.afterTheFullHour);
+}
+
+// Pieces of the minutes: runs, and single minutes after «ještě». Where
+// cadences sit among them (`own`) every part has its own rhythm and the
+// whole is said «v každé hodině».
+function piecePlaces(form: Extract<Described, {kind: 'pieces'}> |
+  CadencePieces, shown: Shown): Said {
+  const own = form.kind === 'cadencePieces';
+  const firstRun = form.parts.findIndex(function isRun(part) {
+    return part.kind === 'range';
+  });
+
+  return {
+    ...noPlace,
+    main: spaced(own && words.inEveryHour || '', form.parts.map(
+      function place(part, index) {
+        const kinds = {
+          cadence: () => spaced(
+            everyUnit((part as {interval: number}).interval, units.minute),
+            cadenceSpan(part as Extract<Described, {kind: 'cadence'}>),
+            bracket((part as {start: number}).start,
+              (part as {last: number}).last, shown)),
+          range: () => spaced(own || index === firstRun ?
+            everyUnit(1, units.minute) : '',
+          runPlace(part as RangeDescription, shown)),
+          values: () => spaced(index ? words.still : '',
+            counted((part as {values: number[]}).values, units.minute),
+            words.afterTheFullHour,
+            `(${listed((part as {values: number[]}).values.map(
+              function momentOf(minute) {
+                return mark(minute);
+              }))})`)
+        };
+
+        return kinds[part.kind]();
+      }
+    ).join(` ${words.andThen} `))
+  };
+}
+
 const places: {[kind: string]: (form: never, shown: Shown) => Said} = {
+  cadencePieces: piecePlaces,
   cadence(form: Extract<Described, {kind: 'cadence'}>, shown: Shown) {
-    const fromHour = form.start === 0;
-    const whole = form.last + form.interval > lastOfUnit;
-    const where =
-      fromHour && whole && spaced(words.inEachHourAnew,
-        words.fromTheFullHour) ||
-      fromHour && spaced(words.inEveryHour, words.fromTheFullHour, words.to,
-        String(form.last), units.minute.many, words.afterIt) ||
-      spaced(words.inEveryHour, words.from, String(form.start), words.to,
-        String(form.last), units.minute.many, words.afterTheFullHour);
+    const whole = form.start === 0 && form.last + form.interval > lastOfUnit;
+    const where = whole ?
+      spaced(words.inEachHourAnew, words.fromTheFullHour) :
+      spaced(words.inEveryHour, cadenceSpan(form));
 
     return {
       ...noPlace,
@@ -278,25 +331,7 @@ const places: {[kind: string]: (form: never, shown: Shown) => Said} = {
 
     return {...base, except: [removedPlaces(form.removed, shown)]};
   },
-  pieces(form: Extract<Described, {kind: 'pieces'}>, shown: Shown) {
-    const firstRun = form.parts.findIndex(function isRun(part) {
-      return part.kind === 'range';
-    });
-
-    return {
-      ...noPlace,
-      main: form.parts.map(function place(part, index) {
-        return part.kind === 'range' ?
-          spaced(index === firstRun ? everyUnit(1, units.minute) : '',
-            runPlace(part, shown)) :
-          spaced(index ? words.still : '', counted(part.values, units.minute),
-            words.afterTheFullHour,
-            `(${listed(part.values.map(function momentOf(minute) {
-              return mark(minute);
-            }))})`);
-      }).join(` ${words.andThen} `)
-    };
-  },
+  pieces: piecePlaces,
   range(form: RangeDescription, shown: Shown) {
     return {
       ...noPlace,
@@ -361,17 +396,62 @@ function hourLevel(shown: Shown): Level {
 
 // Ranges with their head before the first of them, and single moments
 // each with its own preposition, in the order of the day.
-function mixed(head: string, items: Time[][], shown: Shown): string {
+// A stretch of a part has its own rhythm where cadences sit among them.
+function mixed(
+  head: string,
+  parts: {items: Time[][]; rhythms: string[]},
+  shown: Shown
+): string {
+  const {items, rhythms} = parts;
   const firstRun = items.findIndex(function isRun(item) {
     return item.length > 1;
   });
 
   return listed(items.map(function say(item, index) {
     return item.length > 1 ?
-      spaced(index === firstRun ? head : '',
+      spaced(rhythms[index] ?? (index === firstRun ? head : ''),
         between(item[0], item[1], shown.style)) :
       at(item, shown.style);
   }));
+}
+
+// What the parts of runs and cadences are said from, in each slot: the
+// times of each stretch and of each single value, and the rhythm of each
+// part when it has its own.
+function partsOf(
+  form: Extract<Described, {kind: 'cadencePieces' | 'pieces'}>,
+  unit: Unit,
+  slots: number[],
+  say: {
+    single: (slot: number, value: number) => Time[];
+    time: (slot: number, value: number, end?: boolean) => Time;
+  }
+): {items: Time[][]; rhythms: string[]} {
+  const entries = slots.flatMap(function inSlot(slot) {
+    return form.parts.flatMap(function entry(part) {
+      if (part.kind === 'values') {
+        return part.values.map(function one(value) {
+          return {rhythm: '', times: say.single(slot, value)};
+        });
+      }
+
+      const {first, last, step} = stretchOf(part);
+
+      return [{
+        rhythm: everyUnit(step, unit),
+        times: [say.time(slot, first), say.time(slot, last, true)]
+      }];
+    });
+  });
+
+  return {
+    items: entries.map(function timesOf(each) {
+      return each.times;
+    }),
+    rhythms: form.kind === 'pieces' ? [] : entries.map(function own(each) {
+      return each.rhythm;
+    })
+  };
 }
 
 // A single moment: itself, or the stretch it covers.
@@ -467,18 +547,13 @@ function windowed(inner: Clock, outer: Clock, level: Level, shown: Shown):
     }), shown) :
     [level.removed(removed, shown)];
 
-  return form.kind === 'pieces' ?
+  return 'parts' in form ?
     {
       ...noPlace,
       except: tail.except,
-      main: mixed(head, outer.values.flatMap(function inSlot(slot) {
-        return form.parts.flatMap(function items(part) {
-          return part.kind === 'range' ?
-            [[level.time(slot, part.from), level.time(slot, part.to, true)]] :
-            part.values.map(function single(value) {
-              return moment(level, slot, value, shown);
-            });
-        });
+      main: mixed(head, partsOf(form, inner.unit, outer.values, {
+        single: (slot, value) => moment(level, slot, value, shown),
+        time: (slot, value, end) => level.time(slot, value, end)
       }), shown)
     } :
     {...noPlace, except: [...except, ...tail.except], head, main: tail.main};
@@ -507,17 +582,12 @@ function hourly(minute: number, hours: Clock, shown: Shown): Said {
     }),
     pieces: () => ({
       ...noPlace,
-      main: mixed(everyUnit(1, units.hour),
-        (base as Extract<Described, {kind: 'pieces'}>).parts.flatMap(
-          function items(part) {
-            return part.kind === 'range' ?
-              [[level.time(part.from, minute),
-                level.time(part.to, minute, true)]] :
-              part.values.map(function single(hour) {
-                return [level.time(hour, minute)];
-              });
-          }
-        ), shown)
+      main: mixed(everyUnit(1, units.hour), partsOf(
+        base as Extract<Described, {kind: 'cadencePieces' | 'pieces'}>,
+        units.hour, [minute], {
+          single: (past, hour) => [level.time(hour, past)],
+          time: (past, hour, end) => level.time(hour, past, end)
+        }), shown)
     }),
     range: () => ({
       ...noPlace,
@@ -526,6 +596,8 @@ function hourly(minute: number, hours: Clock, shown: Shown): Said {
         (base as RangeDescription).to)
     })
   };
+
+  bodies.cadencePieces = bodies.pieces;
 
   return {
     ...bodies[base.kind](),
@@ -612,7 +684,7 @@ function waysOf(minutes: Clock, hours: Clock): Ways {
   }) || minutes.values.length * hours.values.length <= mostListedTimes;
   const windows = hourBase.kind !== 'all';
   const stretch = apart(hours) && ['range', 'cadence'].includes(form.kind) ||
-    named && form.kind === 'pieces';
+    named && ['pieces', 'cadencePieces'].includes(form.kind);
 
   return {
     inWindows: rhythmic(minutes, windows) || stretch,

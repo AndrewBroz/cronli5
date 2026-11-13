@@ -3,7 +3,9 @@
 // into a window, take the place of «každou minutu», or follow as a place
 // in the minute after «pokaždé».
 
-import type {ScheduleFacts, SetDescription} from '../../core/schedule.js';
+import type {
+  CadencePieces, ScheduleFacts, SetDescription
+} from '../../core/schedule.js';
 import {candidatesAs} from '../../core/index.js';
 import type {CzechStyle} from './options.js';
 import type {
@@ -13,7 +15,7 @@ import {
   apart, at, clockField, minutesAndHours, rhythmStep, windowed
 } from './clock.js';
 import {
-  counted, everyUnit, longestListedCadence, ofKind, spaced
+  counted, everyUnit, longestListedCadence, ofKind, spaced, stretchOf
 } from './sets.js';
 import lexicon from './lexicon.js';
 
@@ -36,7 +38,9 @@ const nightEnds = 6;
 
 // The hours. A run past midnight is kept whole only as a night, and only
 // when no day, month or year is restricted; otherwise nothing wraps.
-function hoursOf(facts: ScheduleFacts, free: boolean): Clock {
+// Hours of runs and cadences together are said as their parts only at
+// one minute.
+function hoursOf(facts: ScheduleFacts, free: boolean, alone: boolean): Clock {
   const own = facts.analyses.candidates.hour as SetDescription[];
   const run = ofKind(own, 'range');
   const night = free && run && run.from > run.to &&
@@ -44,7 +48,8 @@ function hoursOf(facts: ScheduleFacts, free: boolean): Clock {
 
   return clockField(night ?
     own :
-    candidatesAs(facts, 'hour', {linear: true}) as SetDescription[], 'hour');
+    candidatesAs(facts, 'hour', {linear: true}) as SetDescription[], 'hour',
+    alone);
 }
 
 // A phrase with the seconds set after its head and before its stretches
@@ -64,6 +69,35 @@ function composed(said: Said, seconds = ''): {opening: Opening; text: string} {
 // stands alone, and the stretch first after «pokaždé».
 function ordered(rhythm: string, stretch: string, alone: boolean): string {
   return alone ? spaced(rhythm, stretch) : `${stretch}, ${rhythm}`;
+}
+
+// Runs and cadences of seconds together, each part with its own rhythm
+// and its own stretch from the start; single seconds follow «ještě». Said
+// of every minute it opens «v každé minutě», and the stretches then count
+// from «začátku» of the minute without naming it again.
+function partsInMinute(form: CadencePieces, of: string, alone: boolean):
+  string {
+  const where = {[words.ofEveryMinute]: words.ofTheMinute}[of] ?? of;
+  const start = {[words.ofEveryMinute]: words.fromTheStart}[of] ??
+    spaced(words.fromTheStart, of);
+  const parts = form.parts.map(function say(part, index) {
+    if (part.kind === 'values') {
+      return spaced(index ? words.still : '', counted(part.values,
+        units.second), words.afterTheStartOf, where);
+    }
+
+    const {first, last, step} = stretchOf(part);
+    const span = first ?
+      spaced(words.from, String(first), words.to, String(last),
+        units.second.many, words.afterTheStartOf, where) :
+      spaced(start, words.to, String(last), units.second.many,
+        words.afterItMasculine);
+
+    return ordered(everyUnit(step, units.second), span, alone);
+  });
+
+  return spaced({[words.ofEveryMinute]: words.inEveryMinute}[of] ?? '',
+    parts.join(` ${words.andThen} `));
 }
 
 // A run or a cadence of seconds inside the minute, and an exception of a
@@ -94,6 +128,8 @@ function stretchInMinute(seconds: Clock, of: string): string {
     except: `${rhythm}, ${spaced(words.except, words.theMoment,
       counted(form.kind === 'except' ? form.removed : [], units.second),
       words.afterTheStartOf, of)}`,
+    cadencePieces: form.kind === 'cadencePieces' ?
+      partsInMinute(form, of, alone) : '',
     range: alone && fromStart ?
       spaced(rhythm, inFirst) :
       fromStart || ordered(rhythm, span, alone)
@@ -168,7 +204,8 @@ function windowable(seconds: Clock, times: Time[]): boolean {
 
   return seconds.step > 0 ||
     form.kind === 'except' && rhythmStep(form.base, seconds.domain) > 0 ||
-    apart(slotsOf(times)) && ['range', 'cadence', 'pieces'].includes(form.kind);
+    apart(slotsOf(times)) &&
+      ['range', 'cadence', 'pieces', 'cadencePieces'].includes(form.kind);
 }
 
 // Which way the seconds join the minutes and hours.
@@ -203,7 +240,7 @@ function timePart(facts: ScheduleFacts, free: boolean, style: CzechStyle):
   const minutes = clockField(
     candidatesAs(facts, 'minute', {linear: true}) as SetDescription[],
     'minute');
-  const hours = hoursOf(facts, free);
+  const hours = hoursOf(facts, free, minutes.values.length === 1);
   const told = minutesAndHours(minutes, hours);
   const one = facts.analyses.clockSecond;
   const shown: Shown = {many: seconds.values.length > 1, one, style};

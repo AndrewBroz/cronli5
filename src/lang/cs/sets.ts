@@ -7,6 +7,7 @@ import type {
   SetDescription, ValuesDescription
 } from '../../core/schedule.js';
 import type {Unit} from './lexicon.js';
+import {denote, describeCadencePieces} from '../../core/index.js';
 import lexicon from './lexicon.js';
 
 const {words} = lexicon;
@@ -26,6 +27,9 @@ const shortList = 4;
 
 // A cadence that does not come round is listed up to this many values.
 const longestListedCadence = 7;
+
+// Runs and cadences together are said when they are at most this many parts.
+const mostParts = 3;
 
 // An exception to the whole field names at most this many values.
 const fewMissing = 2;
@@ -74,6 +78,14 @@ function ofKind<Kind extends Described['kind']>(
   return candidates.find(function isKind(candidate) {
     return candidate.kind === kind;
   }) as OfKind<Kind> | undefined;
+}
+
+/** A run or a cadence as its first and last value and its step. */
+function stretchOf(part: RangeDescription | CadenceDescription):
+  {first: number; last: number; step: number} {
+  return 'interval' in part ?
+    {first: part.start, last: part.last, step: part.interval} :
+    {first: part.from, last: part.to, step: 1};
 }
 
 /** How many values a cadence has. */
@@ -125,6 +137,19 @@ function named(found: Described): number {
   };
 
   return (counts[found.kind] || (() => 0))();
+}
+
+/**
+ * The runs and cadences a long set is made of, when they are few: more
+ * than seven values in at most three parts, and null for any other set.
+ */
+function togetherIn(candidates: SetDescription[], domain: Domain):
+  CadencePieces | null {
+  const values = denote(candidates[candidates.length - 1], domain);
+  const found = values.length > longestListedCadence &&
+    describeCadencePieces(values, domain);
+
+  return found && found.parts.length <= mostParts ? found : null;
 }
 
 const tieOrder = ['pieces', 'except', 'cadencePieces', 'values'];
@@ -199,5 +224,5 @@ function chosen(candidates: SetDescription[], order: Order): Described {
 export {
   cadenceCount, chosen, comesRound, counted, enoughForARun, everyUnit,
   fewestNamed, listed, longestListedCadence, ofKind, runsOf, spaced,
-  unitAfter
+  stretchOf, togetherIn, unitAfter
 };
