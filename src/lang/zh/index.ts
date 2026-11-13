@@ -9,7 +9,7 @@ import type {
 } from '../../core/schedule.js';
 import {denote} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
-import {dayOf, monthOf, yearOf} from './days.js';
+import {dayOf, monthOf, monthsOf, neverOf, yearOf} from './days.js';
 import lexicon from './lexicon.js';
 import type {ChineseOptions, ChineseStyle} from './options.js';
 import {regions, style, styles} from './options.js';
@@ -37,13 +37,15 @@ function valuesOf(schedule: Schedule, field: Field): number[] {
  * The pieces of a description. The join stands between the day and the
  * time. Before a time that runs round the clock it is a comma, unless
  * nothing stands before it or only a cadence of years that ends in 当年.
- * Before a clock time it is whatever the day part asks for.
+ * Before a clock time it is whatever the day part asks for. A schedule
+ * whose dates exist in none of its months has one piece, which says that
+ * it never fires.
  */
 function describeParts(schedule: Schedule, opts: ChineseOptions):
   ChineseParts {
-  const {candidates} = schedule.analyses;
-  const years = yearOf(candidates.year as SetDescription[]);
-  const months = monthOf(candidates.month as SetDescription[], years.kind);
+  const {dateReach, day} = schedule.analyses;
+  const years = yearOf(schedule);
+  const months = monthOf(monthsOf(schedule), years.kind);
   const days = dayOf(schedule, months);
   const year = years.text + months.lead;
   const month = months.text;
@@ -55,13 +57,21 @@ function describeParts(schedule: Schedule, opts: ChineseOptions):
   const paused = year + month + days.text !== '' &&
     !(years.kind === 'cycle' && month + days.text === '');
 
-  return {
-    day: days.text,
-    join: time.allDay ? when(paused, marks.comma) : days.tie,
-    month,
-    time: time.text,
-    year
-  };
+  return dateReach?.fires === false && !day.union ?
+    {
+      day: neverOf(schedule, when(years.kind !== 'none', year) + month),
+      join: '',
+      month: '',
+      time: '',
+      year: ''
+    } :
+    {
+      day: days.text,
+      join: time.allDay ? when(paused, marks.comma) : days.tie,
+      month,
+      time: time.text,
+      year
+    };
 }
 
 function describe(schedule: Schedule, opts: ChineseOptions): string {

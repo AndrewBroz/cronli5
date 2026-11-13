@@ -2,8 +2,8 @@
 // the seconds say together. It depends on nothing but those three sets
 // and on whether a run of hours may cross midnight.
 
-import type {Field} from '../../core/schedule.js';
-import {denote} from '../../core/describe-set.js';
+import type {Domain, Field} from '../../core/schedule.js';
+import {denote, describeCadencePieces} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {ChineseStyle} from './options.js';
@@ -30,17 +30,21 @@ interface Moment {
 // A stretch from its first firing to its last.
 type Span = [Moment, Moment];
 
-// A set as the time part says it: windows that share one rhythm, and the
-// stray values listed beside them.
+// A set as the time part says it: windows, each with its step, and the
+// stray values listed beside them. `step` is the one step the windows
+// share, or 0 where they differ.
 interface Shape {
   step: number;
+  steps: number[];
   strays: number[];
   windows: Run[];
 }
 
-// The windows and stray moments of a phrase, and whether it has a rhythm.
+// The windows and stray moments of a phrase, each window with its step,
+// and whether it has a rhythm.
 interface Grid {
   paced: boolean;
+  steps: number[];
   strays: Moment[];
   windows: Span[];
 }
@@ -65,6 +69,15 @@ interface Level {
   runs: Run[];
   shape: Shape;
   values: number[];
+}
+
+// What decides a set's arrangement: its cadence if it has one, whether
+// that is said as one window, and whether nothing is excepted from it.
+interface Pace {
+  cadence: Cadence | undefined;
+  domain: Domain;
+  stepped: boolean;
+  whole: boolean;
 }
 
 interface Traits {
@@ -100,8 +113,6 @@ interface Seconds {
   silent: boolean;
   // The seconds are named after each minute or clock time.
   spelled: boolean;
-  // One second after each firing of a bare cadence.
-  ticked: boolean;
 }
 
 interface Scene extends Seconds {
@@ -109,7 +120,7 @@ interface Scene extends Seconds {
   M: Level;
   S: Level;
   kind: Kind;
-  // Minute 0 of every hour, with seconds that are listed.
+  // Minute 0 of every hour, with no second said.
   onTheHour: boolean;
   // Every second hour, said by its idiom.
   parity: boolean;
@@ -155,6 +166,56 @@ function hourException(exception: Exception, kept: number[]): boolean {
     everySecond(denote(exception.base, domainOf('hour'))));
 }
 
+// How many things a shape names: each window and each stray value is one.
+function thingsIn(shape: Shape): number {
+  return shape.windows.length + shape.strays.length;
+}
+
+// A set as the runs and cadences the core finds in it together, each a
+// window with its own step; or, where the core finds none, as nothing
+// that could be said.
+function stretchesOf(values: number[], domain: Domain): Shape {
+  const parts = describeCadencePieces(values, domain)?.parts ?? [];
+  const stretches = parts.filter((part) => part.kind !== 'values');
+  const steps = stretches.map(
+    (part) => (part as {interval?: number}).interval ?? 1);
+
+  return {
+    step: new Set(steps).size === 1 ? steps[0] : 0,
+    steps,
+    strays: parts.length > 0 ?
+      values.filter((value) => !stretches.some(
+        (part) => denote(part, domain).includes(value))) :
+      values,
+    windows: stretches.map((part) => denote(part, domain))
+  };
+}
+
+// The arrangement a set is said in. A cadence of more than can be listed,
+// or one that tiles where that counts, is one window. Otherwise the runs
+// long enough are windows and the rest strays, unless the set is more
+// than can be listed and its stretches, each with its own step, name
+// fewer things.
+function shapeOf(base: number[], runs: Run[], pace: Pace): Shape {
+  const {cadence} = pace;
+  const windows = pace.stepped ? [base] : runs.filter(isWindow);
+  const step = cadence?.interval ?? 1;
+  const plain: Shape = {
+    step,
+    steps: windows.map(() => step),
+    strays: base.filter((value) => !windows.some(
+      (run) => run.includes(value))),
+    windows
+  };
+  const pieced = pace.stepped || !pace.whole ?
+    plain :
+    stretchesOf(base, pace.domain);
+
+  return base.length > LISTED && thingsIn(pieced) < thingsIn(plain) ?
+    pieced :
+    plain;
+}
+
 function levelOf(values: number[], field: Field, traits: Traits): Level {
   const domain = domainOf(field);
   const picked = chosen(values, domain, traits.allowed);
@@ -166,7 +227,6 @@ function levelOf(values: number[], field: Field, traits: Traits): Level {
   const runs = runsOf(base, domain, traits.wraps === true);
   const stepped = typeof cadence !== 'undefined' &&
     (base.length > LISTED || flows && traits.tiled === true);
-  const windows = stepped ? [base] : runs.filter(isWindow);
 
   return {
     base,
@@ -175,12 +235,8 @@ function levelOf(values: number[], field: Field, traits: Traits): Level {
     flows,
     removed: picked.removed,
     runs,
-    shape: {
-      step: cadence?.interval ?? 1,
-      strays: base.filter((value) => !windows.some(
-        (run) => run.includes(value))),
-      windows
-    },
+    shape: shapeOf(base, runs,
+      {cadence, domain, stepped, whole: picked.removed.length === 0}),
     values
   };
 }
@@ -191,14 +247,27 @@ function isSteady(shape: Shape): boolean {
     shape.step === 1;
 }
 
+// Second 0 alone is not said.
+function isSilent(S: Level): boolean {
+  return S.values.join() === '0';
+}
+
+// One second that is said, which a window or a clock time carries.
+function isLone(S: Level): boolean {
+  return S.values.length === 1 && !isSilent(S);
+}
+
 // The first row that applies. Exact times that can be counted are points.
 // One minute under restricted hours is a rhythm of hours. Minutes that
 // flow, or any minutes inside one hour, or one run under separate hours,
 // are windows of clock times. Under every hour or every second hour a
-// flowing minute is its rhythm alone. Anything else names its minutes
-// after its hours.
-function kindOf(H: Level, M: Level, parity: boolean): Kind {
+// flowing minute is its rhythm alone, unless a single second has to be
+// carried by a window of minutes. Anything else names its minutes after
+// its hours.
+function kindOf(levels: Level[], parity: boolean): Kind {
+  const [H, M, S] = levels;
   const plain = H.every || parity;
+  const carried = M.every || !isLone(S);
   const lone = H.runs.every((run) => run.length === 1);
   const counted = H.values.length * M.values.length <= LISTED &&
     H.shape.windows.length === 0 && !M.runs.some(isWindow);
@@ -208,7 +277,7 @@ function kindOf(H: Level, M: Level, parity: boolean): Kind {
     [M.values.length === 1 && !H.every, 'hourly'],
     [!plain && (M.flows ||
       lone && (H.values.length === 1 || isSteady(M.shape))), 'clocked'],
-    [plain && M.flows, 'bare'],
+    [plain && M.flows && carried, 'bare'],
     [true, 'named']
   ]);
 }
@@ -241,11 +310,6 @@ function isMinuteList(kind: Kind, M: Level, S: Level): boolean {
     (length === 1 || S.shape.windows.length === 0 && carries(length, S));
 }
 
-// Second 0 alone is not said.
-function isSilent(S: Level): boolean {
-  return S.values.join() === '0';
-}
-
 // Whether the seconds are named after each clock time, each listed
 // minute, or (where they are said and do not flow) every minute.
 function isSpelled(kind: Kind, levels: Level[]): boolean {
@@ -260,20 +324,17 @@ function isSpelled(kind: Kind, levels: Level[]): boolean {
 function secondsOf(kind: Kind, levels: Level[]): Seconds {
   const [, M, S] = levels;
   const silent = isSilent(S);
-  const lone = S.values.length === 1 && !silent;
   const replaced = S.flows && endsEveryMinute(M);
   const spelled = isSpelled(kind, levels);
-  const shown = replaced || lone && kind !== 'bare';
-  const told = silent || spelled || shown;
+  const shown = replaced || isLone(S) && kind !== 'bare';
 
   return {
     exact: shown || spelled && !silent,
     replaced,
-    rounds: !told && !lone,
+    rounds: !(silent || spelled || shown),
     shown,
     silent,
-    spelled,
-    ticked: !told && lone
+    spelled
   };
 }
 
@@ -285,7 +346,7 @@ function sceneOf(sets: TimeSets, wraps: boolean): Scene {
     {allowed: single ? stretchException : hourException, wraps});
   const S = levelOf(sets.second, 'second', {allowed: stretchException});
   const parity = everySecond(H.base);
-  const kind = kindOf(H, M, parity);
+  const kind = kindOf([H, M, S], parity);
 
   return {
     ...secondsOf(kind, [H, M, S]),
@@ -293,8 +354,7 @@ function sceneOf(sets: TimeSets, wraps: boolean): Scene {
     M,
     S,
     kind,
-    onTheHour: H.every && sets.minute.join() === '0' &&
-      S.shape.windows.length === 0,
+    onTheHour: H.every && sets.minute.join() === '0' && isSilent(S),
     parity,
     ranged: kind === 'named' && !H.every && !parity && H.runs.length === 1
   };
@@ -370,6 +430,7 @@ function point(moment: Moment, voice: Voice): string {
 function cross(anchors: Span[], shape: Shape, part: keyof Moment): Grid {
   return {
     paced: shape.windows.length > 0,
+    steps: anchors.flatMap(() => shape.steps),
     strays: anchors.flatMap((anchor) => shape.strays.map(
       (value) => ({...anchor[0], [part]: value}))),
     windows: anchors.flatMap((anchor) => shape.windows.map(
@@ -386,22 +447,26 @@ function rhythm(beat: Beat, voice: Voice): string {
 }
 
 // Windows, then their rhythm, then the stray moments after 以及; or the
-// moments alone as a list. Under rounds a list ends in 各一轮, and a
-// single moment in 一轮.
+// moments alone as a list. Windows whose steps differ are each followed
+// directly by their own rhythm, and parted by commas. Under rounds a
+// list ends in 各一轮, and a single moment in 一轮.
 function phrase(grid: Grid, beat: Beat, voice: Voice): string {
   const strays = series(grid.strays.map((moment) => say(moment, voice)));
   const each = [words.oneRound, words.eachOneRound][
     Number(grid.strays.length > 1)];
+  const mixed = new Set(grid.steps).size > 1;
+  const windows = grid.windows.map((span, at) => between(span, voice) +
+    when(mixed, rhythm({...beat, step: grid.steps[at]}, voice)));
 
   return [
-    series(grid.windows.map((span) => between(span, voice))),
-    when(grid.paced, rhythm(beat, voice)),
+    windows.join(mixed ? marks.comma : marks.list),
+    when(grid.paced && !mixed, rhythm(beat, voice)),
     when(strays !== '', when(grid.paced, words.alsoPoints) + strays +
       when(voice.round, each))
   ].filter(Boolean).join(marks.comma);
 }
 
-// Every second hour by its idiom, with the hours it means.
+// Every second hour by its idiom, with the hours of it that fire.
 function glossOf(hours: number[], voice: Voice): string {
   const shown = hours.slice(0, 3).map(
     (hour) => hourOf(hour, voice) + units.hourNamed);
@@ -415,7 +480,7 @@ function glossOf(hours: number[], voice: Voice): string {
 // inside it.
 function leadOf(scene: Scene, voice: Voice): string {
   const {H, M} = scene;
-  const gloss = glossOf(H.base, voice);
+  const gloss = glossOf(H.values, voice);
   const names = series(listed(H.runs, 2,
     (hour) => hourOf(hour, voice) + units.hourNamed, words.nextDay));
   const firings = series(H.runs.map((run) => between([
@@ -428,8 +493,7 @@ function leadOf(scene: Scene, voice: Voice): string {
       when(scene.parity, gloss + words.inside + marks.comma) +
       when(scene.spelled, words.eachMinuteOf)],
     [scene.kind !== 'named', ''],
-    [scene.onTheHour,
-      [words.everyHourOnTheHour, words.onTheHourPlus][Number(!scene.silent)]],
+    [scene.onTheHour, words.everyHourOnTheHour],
     [H.every, words.eachHourOf],
     [scene.parity, gloss + words.of],
     [scene.ranged, names + marks.comma + words.eachHourOf],
@@ -467,7 +531,7 @@ function pacedBody(scene: Scene, voice: Voice): string {
     points: H.values.map((h): Span => [{h}, {h}])
   };
   const minutes: Shape = scene.kind === 'points' ?
-    {step: 1, strays: M.values, windows: []} :
+    {step: 1, steps: [], strays: M.values, windows: []} :
     M.shape;
   const beat = scene.replaced ?
     {step: S.shape.step, unit: units.second} :
@@ -492,11 +556,11 @@ function roundOf(seconds: number[]): string {
     words.everySecondOnce;
   const told = regular ?
     [
-      when(start > 0, words.firstAt + words.onTheMinutePlus + String(start) +
+      when(start > 0, words.firstAt + words.inItsMinute + String(start) +
         units.second),
       pace
     ].filter(Boolean).join(marks.comma) :
-    words.at + words.onTheMinutePlus + series(listed(level.runs, WINDOW,
+    words.at + words.inItsMinute + series(listed(level.runs, WINDOW,
       (second) => String(second) + units.second));
 
   return marks.comma + words.eachRound + String(seconds.length) +
@@ -507,16 +571,13 @@ function roundOf(seconds: number[]): string {
 // written into it. A round is that of the set the seconds are said as,
 // and what is excepted from it closes the time.
 function suffixOf(scene: Scene): string {
-  const {base, values} = scene.S;
-
-  return when(scene.rounds, roundOf(base)) + when(scene.ticked,
-    marks.comma + words.every + words.times + words.at +
-    words.onTheMinutePlus + String(values[0]) + units.second);
+  return when(scene.rounds, roundOf(scene.S.base));
 }
 
 // What is excepted, closing the time: the hours, then the minutes, then
 // the seconds. Excepted minutes and seconds are clock times where those
-// can be counted, and positions otherwise.
+// can be counted, and positions otherwise. Where several seconds fire in
+// a minute, the voice makes an excepted time the whole stretch of them.
 function exceptionsOf(scene: Scene, voice: Voice): string {
   const {H, M, S} = scene;
   const [minute] = M.values;
@@ -573,7 +634,8 @@ function timeOf(sets: TimeSets, wraps: boolean, style: ChineseStyle):
   return {
     allDay: scene.H.every,
     text: leadOf(scene, exact) + body + suffixOf(scene) +
-      exceptionsOf(scene, voice) + bracketOf(scene, exact)
+      exceptionsOf(scene, voiceOf(scene, !scene.silent, style)) +
+      bracketOf(scene, exact)
   };
 }
 

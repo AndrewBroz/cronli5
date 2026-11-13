@@ -19,7 +19,7 @@ const ORDER = ['year', 'month', 'day', 'join', 'time'];
 // nothing else: nothing; a comma before a time that runs round the clock;
 // 每天 where a restricted hour would skip the day, or after one range of
 // dates; 的 after a date and a weekday together, or after dates in
-// several pieces.
+// several pieces. A schedule that never fires has no join.
 const JOINS = ['', '，', '每天', '的'];
 
 // The parts of the sentence an edit to each field may change. A minute or
@@ -30,8 +30,8 @@ const JOINS = ['', '，', '每天', '的'];
 // 每年. So a day, month or year edit may move text among those
 // three parts. The join depends on what stands before the time and on
 // whether the hours are restricted, so an edit to the hours, or to a day,
-// month or year, may change it. Nothing else may cross, apart from the one
-// fusion declared below: no day, month or year edit touches the time, and
+// month or year, may change it. Nothing else may cross, apart from the two
+// fusions declared below: no day, month or year edit touches the time, and
 // no time edit touches the day, the month or the year.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year', 'join'],
@@ -50,6 +50,13 @@ const MAY_CHANGE = {
 // leave out the day's own. So where the hours cross midnight, an edit to
 // a day, a month or a year may change the time.
 const OVERNIGHT = ['date', 'month', 'weekday', 'year'];
+
+// The schedule that never fires (answers 2.5, 4.4), the other declared
+// fusion. Where the dates named exist in none of the months and years
+// named, the whole description is 永不执行（…）: there is no year, month,
+// join or time to keep. So an edit to the date, the month or the year
+// that makes or unmakes that case may change every part.
+const NEVER = ['date', 'month', 'year'];
 
 const SETUP = {languages: [chinese.default], options: {}, styles: {}};
 
@@ -75,10 +82,24 @@ function crossesMidnight(pattern, options) {
   });
 }
 
-// Whether a changed part is one the edited field may change.
-function allowed(field, part, pattern, options) {
+// Whether the dates exist in none of the months and years named, with no
+// weekday beside them to fire instead.
+function neverFires(pattern, options) {
+  const {dateReach, day} = parse(pattern, options).schedule.analyses;
+
+  return dateReach !== null && !dateReach.fires && !day.union;
+}
+
+// Whether a changed part is one the edited field may change, in a
+// pattern or between a pattern and its edit.
+function allowed(field, part, patterns, options) {
+  const pair = [].concat(patterns);
+
   return MAY_CHANGE[field].includes(part) || part === 'time' &&
-    OVERNIGHT.includes(field) && crossesMidnight(pattern, options);
+    OVERNIGHT.includes(field) && crossesMidnight(pair[0], options) ||
+    NEVER.includes(field) && pair.some(function never(pattern) {
+      return neverFires(pattern, options);
+    });
 }
 
 // The fields on which two patterns fire differently.
@@ -115,7 +136,7 @@ function leaks(pairList) {
 
     ORDER.forEach(function compare(part) {
       if (before[part] !== after[part] &&
-          !allowed(changed[0], part, a, options)) {
+          !allowed(changed[0], part, [a, b], options)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -183,6 +204,33 @@ describe('Chinese continuity:', function() {
     // An exception among the hours is the same with a day as without.
     expect(partsOf('0 0-8,10-23 * * *').time)
       .to.equal(partsOf('0 0-8,10-23 * * 1').time);
+  });
+
+  it('says that a schedule never fires in one piece, and changes nothing ' +
+    'else by it', function() {
+    const never = [
+      ['0 9 30 6 *', '0 9 31 6 *'],
+      ['0 9 31 7 *', '0 9 31 6 *'],
+      ['0 0 9 29 2 * 2032', '0 0 9 29 2 * 2031'],
+      ['*/5 9-17 1 6 *', '*/5 9-17 31 6 *']
+    ];
+
+    expect(leaks(never)).to.deep.equal([]);
+    expect(partsOf('0 9 31 6 *')).to.deep.equal({
+      day: '永不执行（6月没有31日）', join: '', month: '', time: '', year: ''
+    });
+
+    // The time has no say in it, and a pattern that fires is not covered:
+    // there a date edit that changed the time would still be a leak.
+    expect(partsOf('30 9 31 6 *')).to.deep.equal(partsOf('0 9 31 6 *'));
+    expect(allowed('date', 'time', '0 9 1 6 *')).to.equal(false);
+    expect(allowed('date', 'time', ['0 9 1 6 *', '0 9 31 6 *']))
+      .to.equal(true);
+    expect(allowed('hour', 'day', '0 9 31 6 *')).to.equal(false);
+
+    // Beside a weekday the dates that never come leave the weekday alone.
+    expect(neverFires('0 9 31 6 1')).to.equal(false);
+    expect(partsOf('0 9 31 6 1').time).to.equal('9:00');
   });
 
   it('renders equal schedules identically: no tie is declared',
