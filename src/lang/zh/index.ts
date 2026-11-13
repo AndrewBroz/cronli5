@@ -36,7 +36,8 @@ function valuesOf(schedule: Schedule, field: Field): number[] {
 /**
  * The pieces of a description. The join stands between the day and the
  * time. Before a time that runs round the clock it is a comma, unless
- * nothing stands before it or only a cadence of years that ends in 当年.
+ * nothing stands before it or only a cadence of years that ends in 当年;
+ * after a date and a weekday together it is ，均为.
  * Before a clock time it is whatever the day part asks for. A schedule
  * whose dates exist in none of its months has one piece, which says that
  * it never fires.
@@ -67,7 +68,9 @@ function describeParts(schedule: Schedule, opts: ChineseOptions):
     } :
     {
       day: days.text,
-      join: time.allDay ? when(paused, marks.comma) : days.tie,
+      join: time.allDay ?
+        when(paused, marks.comma) + when(days.joined, words.bothAre) :
+        days.tie,
       month,
       time: time.text,
       year

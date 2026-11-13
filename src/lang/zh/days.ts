@@ -607,14 +607,16 @@ function sidesText(sides: Side[], context: Context, meet: boolean): string {
  * The day part after a month part, and its tie: what it asks to stand
  * before a clock time. With no day the tie is 每天, which fills the level
  * a time of day would otherwise skip. A date and a weekday together are
- * each marked for itself, joined by 以及, and tied to the time by 的;
+ * each marked for itself, joined by 以及, and tied to the time by ，均在,
+ * which says the time of both (where both must match, by 的), or by
+ * ，均为 before a time that begins with 每;
  * under a month, 每逢 leads each after a comma. Where both must match,
  * the dates are said, then that they fall on the weekdays. Dates that are
  * every day the months have are not said, nor the weekday beside them; a
  * date no month has leaves the weekday alone.
  */
 function dayOf(schedule: Schedule, month: MonthPart):
-  {text: string; tie: string} {
+  {joined: boolean; text: string; tie: string} {
   const {candidates, dateReach, day} = schedule.analyses;
   const everyDay = dateReach?.days?.everyDay === true;
   const dated = !isAll(candidates.date) && !everyDay &&
@@ -632,11 +634,12 @@ function dayOf(schedule: Schedule, month: MonthPart):
   const lead = when(together && month.kind !== 'none', marks.comma);
 
   return {
+    joined: sides.length === 2 && !meet,
     text: lead + sidesText(sides, context, meet),
     tie: [
       words.everyDay,
       sides.map((side) => side.tie).join(''),
-      words.of
+      [marks.comma + words.bothAt, words.of][Number(meet)]
     ][sides.length]
   };
 }

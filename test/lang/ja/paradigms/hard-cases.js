@@ -111,11 +111,14 @@ const rows = [
   ['0 0 13 * 5', '毎月13日および毎週金曜日、いずれも0:00'],
   ['0 0 1,15 * 1-5', '毎月1日・15日および毎週月曜日〜金曜日、いずれも0:00'],
   ['0 0 1 6 5', '毎年6月1日および6月の毎週金曜日、いずれも0:00'],
+  // Several months, the same on both sides, are named once: the weekday
+  // side says これらの月の (answers 4.3). These rows named the months again,
+  // 1月・7月の and 5月〜7月の, a list said twice.
   ['0 0 1,15 1,7 1-5',
-    '毎年1月1日・1月15日・7月1日・7月15日および1月・7月の毎週月曜' +
+    '毎年1月1日・1月15日・7月1日・7月15日およびこれらの月の毎週月曜' +
     '日〜金曜日、いずれも0:00'],
   ['52 7-16 1,19,23,28 5-7 3-4',
-    '毎年5月・6月・7月の1日・19日・23日・28日および5月〜7月の毎週' +
+    '毎年5月・6月・7月の1日・19日・23日・28日およびこれらの月の毎週' +
     '水曜日・木曜日、いずれも7:52から16:52まで1時間ごと'],
   ['30 4 1-7 * 1', '毎月1日〜7日および毎週月曜日、いずれも4:30'],
   ['0 9,17 1 * 5', '毎月1日および毎週金曜日、いずれも9:00・17:00'],
@@ -717,7 +720,41 @@ const rows = [
   ['0 0 12 30W * ?',
     '毎月30日（30日のある月のみ、土曜日の場合は前日の金曜日、日曜日の場合は' +
     '翌日の月曜日、ただし30日が末日で日曜日の場合は直前の金曜日）の12:00',
-    {cron: 'quartz'}]
+    {cron: 'quartz'}],
+  // A date and a weekday under several named months, every year, where
+  // the dates fire in every one of them: the months are named once, on
+  // the date side, and the weekday side says これらの月の, the months just
+  // named. Said again, a list of four months is eight names to hold, and
+  // the reader has to check that the two lists are the same.
+  ['*/15 */5 1,15 */3 1',
+    '毎年1月・4月・7月・10月の1日・15日およびこれらの月の毎週月曜日、いずれも' +
+    '0時台・5時台・10時台・15時台・20時台の0分・15分・30分・45分'],
+  ['* 9,17 1-5 */3 5',
+    '毎年1月・4月・7月・10月の1日〜5日およびこれらの月の毎週金曜日、いずれも' +
+    '9:00から9:59までと17:00から17:59まで、それぞれ1分ごと'],
+  ['0 0 1,15 6-8 1#2',
+    '毎年6月1日・6月15日・7月1日・7月15日・8月1日・8月15日およびこれらの月の' +
+    '第2月曜日、いずれも0:00'],
+  ['0 0 L 1,7 5', '毎年1月・7月の末日およびこれらの月の毎週金曜日、いずれも0:00'],
+  // The months stay named on the weekday side where they are one month
+  // (as short as これらの月の, and a fluent reader's own form), where the
+  // dates fire in fewer months than the weekdays (the 31st in January and
+  // March only, the Mondays in all four), where a date fires in one of
+  // the months only in leap years (これらの月 after （2月はうるう年のみ）
+  // could be read as February of leap years only, where the Mondays of
+  // February come every year), where the months are a word or every
+  // month but some, and where a year is named.
+  ['0 0 1 7 1', '毎年7月1日および7月の毎週月曜日、いずれも0:00'],
+  ['0 0 31 1-4 1',
+    '毎年1月31日・3月31日および1月〜4月の毎週月曜日、いずれも0:00'],
+  ['0 0 29 2,3 1',
+    '毎年2月29日・3月29日（2月はうるう年のみ）および2月・3月の毎週月曜日、' +
+    'いずれも0:00'],
+  ['0 0 1 */2 5', '毎年奇数月の1日および奇数月の毎週金曜日、いずれも0:00'],
+  ['0 0 1 1-10 5',
+    '11月・12月を除く毎月1日および1月〜10月の毎週金曜日、いずれも0:00'],
+  ['0 0 0 1 6,7 5 2030',
+    '2030年6月1日・7月1日および2030年6月・7月の毎週金曜日、いずれも0:00']
 ];
 
 export {rows};
