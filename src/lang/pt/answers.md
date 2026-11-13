@@ -11,6 +11,14 @@ tell, told wrongly, or told on a second reading; a form that was merely
 called stiff and understood at once was left alone. Reasons are given so a fluent reviewer can overturn a
 call.
 
+An audit on 2026-11-13 read the renderer against these answers and every
+sentence against its schedule. It found one wrong schedule, in a row as
+well as in the renderer (an exception on the dates beside weekdays, 3.9
+and 4.3), two places where the renderer did what no answer said (a run of
+minutes said round the turn of the hour, 3.5; a calendar edit that changed
+the time part without being declared, 2.6), and several choices the
+answers left open, which are now written down where they belong.
+
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. A **moment** is one firing inside a day.
 
@@ -42,9 +50,9 @@ overrides a count of things named:
    listed. (A cadence of minutes or seconds that tiles from zero, «a cada
    15 minutos», needs no ends and is not subject to this: it is said for
    any number of moments above four.)
-4. **An exception replaces a list of more than four**, is only for a hole
-   inside a set, and must name fewer things than any other way of saying
-   the set (3.9).
+4. **An exception is for a set of more than four values**, is only for a
+   hole inside a set, and must name fewer things than the set said by its
+   runs or its cadence (3.9).
 5. **A run of exactly two values is listed, not said as a range**: «todos
    os sábados e domingos»; «de junho e julho». Two hours filled by minutes
    are still one window.
@@ -56,7 +64,9 @@ overrides a count of things named:
 Where none of these decides between two forms, the one that names fewer
 things is said, and a list wins a tie. A value, a clock time or an end of
 a range is one thing; a cadence that tiles is one; an exception is its
-base plus one for each value excepted.
+base plus one for each value excepted. A run that passes the end of its
+cycle (hours through midnight, weekdays from Sunday into Monday, months
+through the turn of the year) counts one more than its two ends (3.5).
 
 ## 1. Anchors
 
@@ -222,9 +232,10 @@ they are a day of the month and a weekday together (4.3).
 
 The leading phrase is the month phrase as it stands alone: «em junho»; «em
 janeiro e julho»; «de junho a agosto»; «de junho a agosto e em dezembro».
-With one year and one month it is «em junho de 2030»; with a year and any
-other month phrase the year leads on its own, then the months: «em 2030,
-de junho a agosto, de segunda a sexta, às 09:00». A year alone leads as
+With one year and one month it is «em junho de 2030», and likewise «em
+junho dos anos pares» (5.8); with a year and any other month phrase the
+year leads on its own, then the months: «em 2030, de junho a agosto, de
+segunda a sexta, às 09:00». A year alone leads as
 «em 2030», «de 2030 a 2035», «nos anos pares», «de 4 em 4 anos a partir de
 2028 (2028, 2032, 2036…)» (4.4, 5.8).
 
@@ -253,6 +264,21 @@ the day of the month, the weekday, the month or the year changes only the
 calendar part. The join (2.1) belongs to neither; the «, sempre» of a
 pair (4.3) is carried at the end of the calendar part, so that the time
 part is word for word what it would be without the pair.
+
+**One more exception is declared: hours that pass midnight.** A set of
+hours that holds both 23 and 0 is said as a run through midnight only
+when every day of every month and year is meant (3.5): «todos os dias, a
+cada hora das 22:00 às 02:00». Beside any day, month or year it is said in
+ascending order: «todas as segundas, a cada hora das 00:00 às 02:00 e às
+22:00 e 23:00». So an edit to the day of the month, the weekday, the month
+or the year that opens or closes the calendar may change how such hours
+are said, and nothing else in the time part. The reason is truth, which
+ranks above continuity: «todas as segundas, das 22:00 às 02:00» is heard
+as running into Tuesday, and the pattern fires in the first hours of
+Monday. The alternative, to say every such set in ascending order, was
+rejected: «todos os dias, a cada hora das 00:00 às 02:00 e às 22:00 e
+23:00» hides the one stretch a reader is looking for. No set of hours that
+lacks 23 or 0 is touched by this, and minutes and seconds never are.
 
 ## 3. Devices, field by field
 
@@ -354,9 +380,31 @@ segunda». As a window: «a cada minuto das 22:00 às 02:59».
 A wrap is only true when nothing coarser is restricted: hours wrap only
 when the day of the month, the weekday, the month and the year are all
 every value; months only when the year is; weekdays always; days of the
-month never. Where a wrap is not allowed, the set is described in
-ascending order: `0 22-2 1 * *` is «no dia 1º de cada mês, a cada hora das
-00:00 às 02:00 e às 22:00 e 23:00».
+month never. **Minutes and seconds never wrap**: «do minuto 50 ao 10 de
+cada hora» names no stretch that lies inside an hour, and in a hurry is
+taken for minutes 10 to 50, the opposite set. A run of minutes that passes
+the top of the hour is its two stretches, in ascending order: «a cada
+minuto durante os primeiros 11 minutos e durante os últimos 10 minutos de
+cada hora»; seconds the same, «a cada segundo durante os primeiros 16
+segundos e durante os últimos 15 segundos de cada minuto».
+
+Where a wrap is not allowed, the set is described in ascending order:
+`0 22-2 1 * *` is «no dia 1º de cada mês, a cada hora das 00:00 às 02:00
+e às 22:00 e 23:00».
+
+A run that wraps asks the reader to carry it across the end of the day,
+the week or the year, so it counts as three things, not two. It therefore
+gives way to an exception that names two: hours 12 to 10 are «a cada
+hora, em ponto, exceto às 11:00», not «a cada hora das 12:00 às 10:00»;
+Sunday to Friday is «todos os dias, exceto aos sábados»; December to
+October is «todos os dias, exceto em novembro». With two values missing
+the count is three against three, and the run is said: «a cada hora das
+12:00 às 09:00»; «de domingo a quinta»; «de agosto a maio». A run of hours
+through midnight can itself be the base of an exception: hours 20 to 17
+without 11 are «a cada hora das 20:00 às 17:00, exceto às 11:00».
+
+Four moments or fewer are listed in the order of the clock, whatever run
+they came from: hours 23 to 1 are «às 00:00, à 01:00 e às 23:00».
 
 3.6 Pieces are joined as a list is, each with its own lead: «a cada hora
 das 09:00 às 17:00 e às 22:00»; «a cada minuto das 09:00 às 17:59 e das
@@ -365,9 +413,14 @@ ao dia 5, no dia 10 e do dia 20 ao dia 25 de cada mês»; «de junho a agosto
 e de dezembro»; «de terça a sexta e todos os domingos».
 
 Pieces are said in ascending order of their first value, unless one of the
-runs wraps round the cycle, in which case the wrapped run comes first.
-Weekday pieces follow the week order of 3.3, and are said only for more
-than four days: four or fewer that are not one run are listed.
+runs wraps round the cycle, in which case the wrapped run comes first:
+«a cada hora das 20:00 às 02:00 e às 05:00». Stray values that come before
+a run are said before it: «às 05:00 e 07:00 e a cada hora das 09:00 às
+17:00». Weekday pieces follow the week order of 3.3, except that a run
+which passes from Sunday into Monday holds both ends of the week and is
+said first: «de sexta a segunda e todas as quartas». Weekday pieces are
+said only for more than four days: four or fewer that are not one run are
+listed.
 
 A run of minutes with a stray minute: «a cada minuto durante os primeiros
 30 minutos e no minuto 45 de cada hora»; «a cada minuto do minuto 5 ao 10
@@ -391,6 +444,13 @@ is two windows: «a cada minuto das 09:00 às 09:10 e das 09:50 às 09:59».
   counts 29): «de 3 em 3 dias do dia 1º ao dia 28 de junho». Seven days or
   fewer are listed. Every second day from the 1st or the 2nd is an idiom
   (5.1).
+* **Under one named month the days are those the month has**, described
+  afresh, for every kind of set and not only a cadence: days 1 to 30 of
+  April are «todos os dias de abril»; days 2 to 31 of April are «do dia 2
+  ao dia 30 de abril»; days 29 to 31 of February are «no dia 29 de
+  fevereiro». If the month has none of the days, they are said as written,
+  and the sentence names a date that does not exist, as the pattern does:
+  «no dia 31 de fevereiro».
 * **Months have no cadence.** They are named, as a list or as runs: every
   second month is «de janeiro, março, maio, julho, setembro e novembro».
 * **Weekdays have no cadence.** The days are listed.
@@ -406,8 +466,10 @@ window of clock times: «a cada 7 minutos das 09:00 às 09:56».
 3.9 A set with values missing is said as the simpler set «exceto» the
 missing ones, when all of these hold:
 
-1. it replaces a list of more than four items and names fewer things than
-   any other way of saying the set;
+1. the set has more than four values, and the exception names fewer
+   things than the set said by its runs or its cadence. Hours 9 to 12 and
+   14 to 17 are two runs, four things, and «a cada hora das 09:00 às
+   17:00, exceto às 13:00» names three;
 2. **the set is not one run.** A run is said as a run: hours 0 to 22 are
    «a cada hora das 00:00 às 22:00»; days 2 to 31, «do dia 2 ao dia 31 de
    cada mês»; months 1 to 11, «de janeiro a novembro»; minutes 1 to 59,
@@ -416,10 +478,12 @@ missing ones, when all of these hold:
    weekdays the run must lie inside the week that starts on Monday («de
    segunda a sábado», «de terça a domingo»); any other six days are an
    exception;
-3. for weekdays, they are not one side of a day of the month and a weekday
-   together (4.3), where the exception would be taken for the whole pair.
-   There the days are said as a run, which may wrap: «de quinta a terça e
-   também no dia 1º de cada mês».
+3. the days are not one side of a day of the month and a weekday together
+   (4.3), where the exception would be taken for the whole pair. That
+   holds for both sides. There the weekdays are said as a run, which may
+   wrap: «de quinta a terça e também no dia 1º de cada mês». The days of
+   the month are said as their runs, or listed: «todas as sextas e também
+   do dia 1º ao dia 14 e do dia 16 ao dia 31 de cada mês».
 
 A comma comes before «exceto», and another closes the exception when
 anything follows it.
@@ -522,9 +586,16 @@ written as anywhere else, each with its own «da», «das», «à», «às», an
 the mark between the second and the last is « … », an ellipsis with a
 space on each side.
 
-**Case 4. M is a single run of minutes and H is one hour.** A window of
-clock times: «a cada minuto das 09:00 às 09:29»; with a stray minute, «a
-cada minuto das 09:00 às 09:29 e às 09:45»; with two hours, two windows.
+**Case 4. M is a run of minutes or a cadence with ends, and H is one hour
+or two.** A window of clock times for each hour: «a cada minuto das 09:00
+às 09:29»; «a cada minuto das 09:00 às 09:29 e das 17:00 às 17:29»; «a
+cada 5 minutos das 09:05 às 09:55 e das 17:05 às 17:55». Inside one hour
+the same holds for runs with stray minutes: «a cada minuto das 09:00 às
+09:29 e às 09:45»; «a cada minuto das 09:00 às 09:10 e das 09:50 às
+09:59». With two hours such pieces go to case 5, because said hour by
+hour they are a string of windows and times with no shape: «a cada minuto
+do minuto 5 ao 10 e no minuto 20 de cada hora, das 09:05 às 09:20 e das
+17:05 às 17:20».
 
 **Case 5. Otherwise M is anchored**: a list, a run, pieces, an exception,
 or a cadence with ends. The minute phrase from section 3 is followed by H:
@@ -534,7 +605,8 @@ or a cadence with ends. The minute phrase from section 3 is followed by H:
 | every hour | «de cada hora» |
 | a range or pieces | «de cada hora», a comma, and a window from the first moment to the last: «nos minutos 5, 20 e 45 de cada hora, das 09:05 às 17:45»; «a cada minuto durante os primeiros 30 minutos de cada hora, das 09:00 às 17:29»; «…, das 09:05 às 17:45 e das 22:05 às 22:45» |
 | separate hours, seven clock times or fewer | no minute phrase: the clock times, listed («às 09:05, 09:20, 09:45, 17:05, 17:20 e 17:45») |
-| separate hours that are a cadence, more than seven clock times, M a list | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the clock times of the first two hours, « … », and the last clock time of all: «nos minutos 15 e 45, de 2 em 2 horas (00:15, 00:45, 02:15, 02:45 … 22:45)»; «nos minutos 15 e 45, de 4 em 4 horas (00:15, 00:45, 04:15, 04:45 … 20:45)». (Two cadences side by side, «a cada 4 horas das 00:15 às 20:15 e das 00:45 às 20:45», looked like a typing error to the third reader.) |
+| separate hours that are a cadence, more than seven clock times, M a list of up to three minutes | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the clock times of the first two hours, « … », and the last clock time of all: «nos minutos 15 e 45, de 2 em 2 horas (00:15, 00:45, 02:15, 02:45 … 22:45)»; «nos minutos 15 e 45, de 4 em 4 horas (00:15, 00:45, 04:15, 04:45 … 20:45)». (Two cadences side by side, «a cada 4 horas das 00:15 às 20:15 e das 00:45 às 20:45», looked like a typing error to the third reader.) Three minutes is the limit because the bracket then shows seven clock times, the longest list (rule 3 of the opening); and since seven clock times or fewer are listed outright, the hours here are always three or more, so the « … » always stands for something. |
+| separate hours that are a cadence, more than four of them, M anything else (a run, pieces, a cadence with ends, or a list of four minutes or more) | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the windows of the first two hours, « … », and the window of the last, each from the hour's first moment to its last: «a cada minuto durante os primeiros 30 minutos, de 2 em 2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às 22:29)»; «a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas (das 00:05 às 00:55, das 02:05 às 02:55 … das 22:05 às 22:55)»; «nos minutos 5, 20, 35 e 50, de 2 em 2 horas (das 00:05 às 00:50, das 02:05 às 02:50 … das 22:05 às 22:50)». A hole in the cadence is an exception after the bracket. (One window for each of twelve hours is a sentence nobody can hold; four windows is the limit of case 3, and it is the limit here. A list of four minutes or more is said this way, and not with clock times in the bracket, because the bracket would hold nine clock times or more; and with the two hours 0 and 12 it would end «… 12:50» after 12:50 had been said.) |
 | separate hours otherwise | the minute phrase, «de cada hora», a comma, and one window for each hour, from its first moment to its last |
 | every hour with a hole | «de cada hora, exceto das 03:00 às 03:59» |
 
@@ -575,23 +647,25 @@ rides in every time named. «A cada hora das 09:00:30 às 17:00:30»; «a cada
 15 minutos das 09:00:30 às 17:45:30»; «a cada 2 horas das 00:00:30 às
 22:00:30»; «nos minutos 5 e 30, de 2 em 2 horas (00:05:08, 00:30:08,
 02:05:08, 02:30:08 … 22:30:08)». It does not ride where a minute phrase
-stands before a window («nos minutos 5 e 20 de cada hora, das 09:05 às
-17:20»): there case 6 applies.
+stands before a window, alone or in brackets («nos minutos 5 e 20 de cada
+hora, das 09:05 às 17:20»; «a cada minuto durante os primeiros 30 minutos,
+de 2 em 2 horas (das 00:00 às 00:29 …)»): there case 6 applies.
 
 **Case 4. S is one second, M is minute 0 and H is every hour**: «30
 segundos depois de cada hora em ponto»; «1 segundo depois de cada hora em
 ponto»; with a hole, «…, exceto às 03:00:30».
 
-**Case 5. M is every minute.** The seconds are said in place of «a cada
-minuto»:
+**Case 5. M is every minute, or, for the first form below, one run of
+minutes.** The seconds are said in place of «a cada minuto»:
 
-* S is every second or tiles (seconds 0 and 30 included): «a cada
+* S is every second or tiles (seconds 0 and 30 included), and the time
+  has more than four moments to the minute: «a cada
   segundo», «a cada 15 segundos», «a cada 30 segundos», and every window
   of the time part is written to the second, closed on the last second
   that fires: «a cada segundo das 09:00:00 às 17:59:59»; «a cada 15
   segundos das 09:00:00 às 09:59:45»; «a cada 30 segundos das 09:00:00 às
   09:59:30»; «a cada segundo durante os primeiros 30 minutos de cada
-  hora».
+  hora»; «a cada segundo das 09:00:00 às 09:29:59».
 * S is anything else: the seconds phrase with «de cada minuto», then, if
   the hours are restricted, a comma and the windows as they were, to the
   minute: «no segundo 30 de cada minuto»; «nos segundos 5, 15, 25, 35, 45
@@ -675,8 +749,26 @@ Each of the three devices answers something a reader got wrong:
   schedule without its dates would find the whole sentence turned round.
   «Sempre» does the same work inside the one frame.
 
-The weekday side never takes an exception (3.9): «de quinta a terça e
-também no dia 1º de cada mês, sempre às 00:00».
+**Neither side takes an exception** (3.9). «De segunda a sexta e também
+nos dias ímpares de cada mês, exceto no dia 15» was an earlier row, and it
+says the wrong schedule: it is read as never firing on the 15th, and a
+15th that is a weekday fires. The weekdays are said as a run, «de quinta a
+terça e também no dia 1º de cada mês, sempre às 00:00»; the days of the
+month as their runs, «todas as sextas e também do dia 1º ao dia 14 e do
+dia 16 ao dia 31 de cada mês, sempre às 09:00», or one by one, however
+many: «de segunda a sexta e também nos dias 1º, 3, 5, 7, 9, 11, 13, 17,
+19, 21, 23, 25, 27, 29 e 31 de cada mês». The list is long and cannot be
+misread. (The exception in brackets, «nos dias ímpares de cada mês (exceto
+o dia 15)», was considered and rejected: it is shorter, but whether the
+bracket holds the exception to its own side is the reader's guess.) A
+month excepted is no danger, since a month applies to both sides: «todas
+as segundas e também no dia 15 de cada mês, exceto em junho, sempre às
+09:00».
+
+**If the days of the month are every day the one named month has, there
+is no pair**: the schedule is every day of that month, and is said so.
+Days 1 to 30 of April beside Mondays are «todos os dias de abril às
+09:00», not «em abril, todas as segundas e também todos os dias».
 
 **A month or a year applies to both sides and leads the sentence** (2.4),
 so that both sides stand inside it. When a month leads, the day-of-month

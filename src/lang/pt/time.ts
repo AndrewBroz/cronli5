@@ -221,6 +221,15 @@ const insideAnHour = {
     part.values.map((minute) => moment(c, hour, minute))
 };
 
+// Whether the minutes are said hour by hour: a run or a cadence with ends
+// in one hour or two, and runs with stray minutes in one hour only.
+function hourByHour(c: Moments): boolean {
+  const {kind} = c.minutes.said;
+
+  return kind !== 'values' &&
+    c.hours.values.length <= (kind === 'pieces' ? 1 : 2);
+}
+
 function insideHours(c: Moments): Said {
   const parts = partsOf(c.minutes.said) as Array<Exclude<Plain, {kind: 'all'}>>;
 
@@ -242,9 +251,22 @@ function separate(c: Moments, phrase: string): Said {
     windowed(c, phrase);
 }
 
-// The minute phrase, then the hours on a cadence with the clock times of
-// its first two hours and the last of all in brackets.
+// Whether the minutes are a list short enough for the clock times of two
+// hours and one more to make a list that can be held.
+function shortList(minutes: Chosen): boolean {
+  return minutes.said.kind === 'values' &&
+    2 * minutes.values.length < longestList;
+}
+
+// The minute phrase, then the hours on a cadence with what they hold in
+// brackets: for a short list of minutes the clock times of the first two
+// hours and the last of all, for any other minutes a window for each of
+// the first two hours and for the last.
 function timeSeries(c: Moments, phrase: string): Said {
+  if (!shortList(c.minutes)) {
+    return saying(c, `${phrase}, ${windowSeries(c)}`, false);
+  }
+
   const hours = landings(c);
   const times = hours.slice(0, 2).flatMap(
     (hour) => c.minutes.values.map((minute) => [hour, minute]));
@@ -277,11 +299,7 @@ const minuteForms: Form[] = [
     when: (c) => c.minutes.values.length === 1
   },
   {say: confined, when: (c) => continuous(c.minutes.said)},
-  {
-    say: insideHours,
-    when: (c) => c.hours.values.length <= 2 &&
-      c.minutes.said.kind !== 'values'
-  },
+  {say: insideHours, when: hourByHour},
   {say: anchored, when: () => true}
 ];
 
@@ -447,33 +465,29 @@ function excepted(c: Moments): string {
 
 // Minutes and seconds: a cadence that fills the cycle from zero is one
 // thing and needs no ends; any other needs both, and is listed while short.
-function sixtieths(wrap: boolean): Rules {
-  return {
-    cadence: (cadence) => Number(tiles(cadence)) ||
-      withEnds(longestList)(cadence),
-    domain: domainOf('minute'),
-    excepts: () => true,
-    piecesOver: 0,
-    wrap
-  };
-}
+// A run never passes the turn of the hour or the minute.
+const sixtieths: Rules = {
+  cadence: (cadence) => Number(tiles(cadence)) ||
+    withEnds(longestList)(cadence),
+  domain: domainOf('minute'),
+  excepts: () => true,
+  piecesOver: 0,
+  wrap: false
+};
 
 // The most hours on a cadence that are still said one by one, by what the
-// minutes beside them are: a stretch is a window for each hour, a single
-// minute a clock time, and a list of minutes that many clock times.
-const mostHoursListed: {[Kind in Plain['kind']]: (m: Chosen) => number} = {
-  all: () => mostWindows,
-  cadence(minutes) {
-    return continuous(minutes.said) ? mostWindows : Infinity;
-  },
-  pieces: () => Infinity,
-  range: () => Infinity,
-  values: (minutes) => Math.floor(longestList / minutes.values.length)
-};
+// minutes beside them are: a single minute is a clock time and a short
+// list of minutes that many clock times, and anything else is a window
+// for each hour.
+function mostHoursListed(minutes: Chosen): number {
+  return shortList(minutes) ?
+    Math.floor(longestList / minutes.values.length) :
+    mostWindows;
+}
 
 function hourRules(minutes: Chosen, wrap: boolean): Rules {
   return {
-    cadence: withEnds(mostHoursListed[minutes.said.kind](minutes)),
+    cadence: withEnds(mostHoursListed(minutes)),
     domain: domainOf('hour'),
     excepts: () => true,
     piecesOver: 0,
@@ -488,27 +502,22 @@ function valuesOf(analyses: Analyses, field: Field): number[] {
 /**
  * The time part, and whether it begins with a clock time. `open` is
  * whether every day of every month and year is meant: only then may a run
- * of hours pass midnight, and a run of minutes or seconds the turn of its
- * cycle when everything coarser takes every value too.
+ * of hours pass midnight.
  */
 function timePart(
   analyses: Analyses,
   open: boolean,
   style: PortugueseStyle
 ): {clock: boolean; text: string} {
-  const hours = valuesOf(analyses, 'hour');
-  const minutes = valuesOf(analyses, 'minute');
-  const hourly = open && hours.length === 24;
-  const minuteChoice = choose(minutes, sixtieths(hourly));
+  const minutes = choose(valuesOf(analyses, 'minute'), sixtieths);
   const c: Moments = {
     dot: true,
     ends: [],
     every: eachMinute,
-    hours: choose(hours, hourRules(minuteChoice, open)),
-    minutes: minuteChoice,
+    hours: choose(valuesOf(analyses, 'hour'), hourRules(minutes, open)),
+    minutes,
     second: analyses.clockSecond,
-    seconds: choose(valuesOf(analyses, 'second'),
-      sixtieths(hourly && minutes.length === 60)),
+    seconds: choose(valuesOf(analyses, 'second'), sixtieths),
     style
   };
   const said = firstMatch(secondForms, c);

@@ -147,7 +147,11 @@ function calendarPart(
   const named = (['weekday', 'date'] as const)
     .filter((field) => restricts(candidates[field]))
     .map((field) => sideMakers[field](analyses, facts));
-  const sides = named.length > 0 ? named : [everyDay];
+  // Days of the month that are every day the month has leave no pair:
+  // with or without weekdays beside them, the schedule is every day.
+  const whole = named.filter((side) => side.text === words.everyDay);
+  const sides = [whole, named, [everyDay]].find((found) => found.length > 0) as
+    Side[];
   const laid = sides.length > 1 || sides[0].leads ?
     ledByMonth(sides, facts) :
     fused(sides[0], facts);

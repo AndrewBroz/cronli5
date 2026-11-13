@@ -2,6 +2,6 @@
   "name": "Portuguese",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run, after three rows the builder stopped on were corrected (tooling/experiments/renderer-process/pt-acceptance.md)",
+  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run, after three rows the builder stopped on were corrected (tooling/experiments/renderer-process/pt-acceptance.md); audited 2026-11-13 by Claude Fable 5.2, reading the renderer against the answers and about 800 sentences against their schedules: one wrong schedule found in a visible row and in the renderer (an exception on the dates beside weekdays) and repaired, with the rules the answers had left open written down; the changed sentences have not yet had a blind fluency read",
   "branchBudget": 110
 }

@@ -1,5 +1,6 @@
 import chai from 'chai';
 import {analyze, prepare} from '../../../src/core/index.js';
+import {denote} from '../../../src/core/describe-set.js';
 import * as portuguese from '../../../src/lang/pt/index.js';
 import {coreSetSeeds, neighborPairs, optionsFor, score}
   from '../../../tooling/scripts/edit-diff.mjs';
@@ -38,6 +39,15 @@ const MAY_CHANGE = {
 // second never can.
 const HOUR_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
 
+// The other place: hours that pass midnight (answers 2.6, 3.5). A set of
+// hours holding both 23 and 0 is one run through midnight only when every
+// day of every month and year is meant, and is said in ascending order
+// beside any day, month or year: «todas as segundas, das 22:00 às 02:00»
+// would be heard as running into Tuesday. So an edit to a calendar field
+// that opens or closes the calendar may change the time part of such a
+// pattern, and of no other.
+const CALENDAR = ['date', 'month', 'weekday', 'year'];
+
 const SETUP = {languages: [portuguese.default], options: {}, styles: {}};
 
 function parse(pattern, options) {
@@ -67,6 +77,31 @@ function fieldsChanged(a, b, options) {
   return FIELDS.filter(function differs(field) {
     return facts(left, field) !== facts(right, field);
   });
+}
+
+function isOpen(schedule) {
+  return CALENDAR.every(function unrestricted(field) {
+    const candidates = schedule.analyses.candidates[field];
+
+    return candidates !== null && candidates[0].kind === 'all';
+  });
+}
+
+// Whether a pattern's hours hold both 23 and 0 without being every hour.
+function passesMidnight(schedule) {
+  const [hours] = schedule.analyses.candidates.hour;
+  const values = denote(hours, {cyclic: true, max: 23, min: 0});
+
+  return values.length < 24 && values.includes(0) && values.includes(23);
+}
+
+// Whether an edit to a calendar field opened or closed the calendar under
+// hours that pass midnight.
+function midnightHours(a, b, options) {
+  const left = parse(a, options).schedule;
+  const right = parse(b, options).schedule;
+
+  return passesMidnight(left) && isOpen(left) !== isOpen(right);
 }
 
 // Every pair in which a part changed that the edited field may not change.
@@ -100,8 +135,11 @@ function leaks(pairList) {
         HOUR_MAY_SET_DAY.includes(before[part]) &&
         HOUR_MAY_SET_DAY.includes(after[part]);
 
+      const midnight = part === 'time' && CALENDAR.includes(changed[0]) &&
+        midnightHours(a, b, options);
+
       if (words(before[part]) !== words(after[part]) && !everyDay &&
-          !MAY_CHANGE[changed[0]].includes(part)) {
+          !midnight && !MAY_CHANGE[changed[0]].includes(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -139,6 +177,43 @@ describe('Portuguese continuity:', function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
     }, 60000);
+
+  // Times whose hours pass midnight, and times that only look as if they
+  // might: hours short of midnight, and minutes and seconds that pass the
+  // turn of their own cycle, which never wrap.
+  const NIGHTS = ['0 22-2', '* 22-2', '*/15 20-5', '0 0-9,12-23', '0 12-10',
+    '5,20,45 22-2', '0 0-2,5,20-23', '0 20-10,12-17'];
+  const DAYS = ['0 9-17', '0 0-5', '0 20-23', '50-10 *', '50-10 9-17',
+    '55-5 9', '0 0-2,4-23'];
+  const CALENDARS = [['* * 1', 'weekday'], ['1 * *', 'date'],
+    ['* 6 *', 'month'], ['* * 1-5', 'weekday'], ['L * *', 'date']];
+
+  function calendarEdits(times) {
+    return times.flatMap(function eachTime(time) {
+      return CALENDARS.map(function eachCalendar([calendar]) {
+        return [`${time} * * *`, `${time} ${calendar}`];
+      });
+    });
+  }
+
+  it('lets a calendar edit change only hours that pass midnight',
+    function() {
+      expect(leaks(calendarEdits(NIGHTS))).to.deep.equal([]);
+      expect(leaks(calendarEdits(DAYS))).to.deep.equal([]);
+
+      calendarEdits(DAYS).forEach(function same([a, b]) {
+        expect(partsOf(b).time, b).to.equal(partsOf(a).time);
+      });
+
+      expect(partsOf('0 22-2 * * *').time)
+        .to.equal('a cada hora das 22:00 às 02:00');
+      expect(partsOf('0 22-2 * * 1').time)
+        .to.equal('a cada hora das 00:00 às 02:00 e às 22:00 e 23:00');
+      expect(partsOf('0 22-2 * 6 1').time)
+        .to.equal(partsOf('0 22-2 * * 1').time);
+      expect(partsOf('0 0 22-2 * * * 2030').time)
+        .to.equal(partsOf('0 22-2 * * 1').time);
+    });
 
   it('renders equal schedules identically', function() {
     function render(pattern, options) {
