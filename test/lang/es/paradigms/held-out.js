@@ -7,222 +7,233 @@
 
 const rows = [
   // clock / second — context `0 9 * * *`
-  ['30 0 9 * * *', 'a las 9:00:30 todos los días'],
-  ['0,30 0 9 * * *', 'a las 9:00:00 y 9:00:30 todos los días'],
-  ['*/15 0 9 * * *', 'cada 15 segundos de 9:00:00 a 9:00:45 todos los días'],
-  ['0-9 0 9 * * *', 'cada segundo de 9:00:00 a 9:00:09 todos los días'],
+  ['30 0 9 * * *', 'todos los días a las 9:00:30'],
+  ['0,30 0 9 * * *', 'todos los días a las 9:00:00 y 9:00:30'],
+  ['*/15 0 9 * * *',
+    'todos los días a las 9:00:00, 9:00:15, 9:00:30 y 9:00:45'],
+  ['0-9 0 9 * * *',
+    'todos los días a las 9:00, cada segundo durante los primeros 10 ' +
+    'segundos'],
 
   // clock / minute
-  ['30 9 * * *', 'a las 9:30 todos los días'],
-  ['0,30 9 * * *', 'a las 9:00 y 9:30 todos los días'],
-  ['0-29 9 * * *', 'cada minuto de 9:00 a 9:29 todos los días'],
-  ['0-29,45 9 * * *', 'cada minuto de 9:00 a 9:29 y a las 9:45 todos los días'],
-  ['*/7 9 * * *', 'cada 7 minutos de 9:00 a 9:56 todos los días'],
-  ['5/15 9 * * *', 'a las 9:05, 9:20, 9:35 y 9:50 todos los días'],
-  ['10-40/10 9 * * *', 'a las 9:10, 9:20, 9:30 y 9:40 todos los días'],
+  ['30 9 * * *', 'todos los días a las 9:30'],
+  ['0,30 9 * * *', 'todos los días a las 9:00 y 9:30'],
+  ['0-29 9 * * *', 'todos los días, cada minuto de 9:00 a 9:29'],
+  ['0-29,45 9 * * *',
+    'todos los días, cada minuto de 9:00 a 9:29 y a las 9:45'],
+  ['*/7 9 * * *', 'todos los días, cada 7 minutos de 9:00 a 9:56'],
+  ['5/15 9 * * *', 'todos los días, cada 15 minutos de 9:05 a 9:50'],
+  ['10-40/10 9 * * *', 'todos los días, cada 10 minutos de 9:10 a 9:40'],
 
   // clock / hour
-  ['0 12 * * *', 'a las 12:00 todos los días'],
-  ['0 8,12,18 * * *', 'a las 8:00, 12:00 y 18:00 todos los días'],
-  ['0 9-17 * * *', 'cada hora de 9:00 a 17:00 todos los días'],
-  ['0 */2 * * *', 'cada 2 horas'],
-  ['0 */6 * * *', 'cada 6 horas'],
-  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *', 'cada 2 horas, excepto a las 8:00'],
-  ['0 22-2 * * *', 'cada hora de 22:00 a 2:00 todos los días'],
+  ['0 12 * * *', 'todos los días a las 12:00'],
+  ['0 8,12,18 * * *', 'todos los días a las 8:00, 12:00 y 18:00'],
+  ['0 9-17 * * *', 'todos los días, cada hora de 9:00 a 17:00'],
+  ['0 */2 * * *', 'todos los días, cada 2 horas de 0:00 a 22:00'],
+  ['0 */6 * * *', 'todos los días a las 0:00, 6:00, 12:00 y 18:00'],
+  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *',
+    'todos los días, cada 2 horas de 0:00 a 22:00, excepto a las 8:00'],
+  ['0 22-2 * * *', 'todos los días, cada hora de 22:00 a 2:00'],
 
   // clock / date
-  ['0 9 15 * *', 'a las 9:00 el día 15 de cada mes'],
-  ['0 9 1,15 * *', 'a las 9:00 los días 1 y 15 de cada mes'],
-  ['0 9 1-7 * *', 'a las 9:00 del 1 al 7 de cada mes'],
-  ['0 9 1-7,15 * *', 'a las 9:00 del 1 al 7 y el día 15 de cada mes'],
-  ['0 9 2/2 * *', 'a las 9:00 los días pares de cada mes'],
-  ['0 9 */5 * *', 'a las 9:00 cada 5 días desde el día 1 de cada mes'],
-  ['0 9 L * *', 'a las 9:00 el último día del mes'],
+  ['0 9 15 * *', 'el día 15 de cada mes a las 9:00'],
+  ['0 9 1,15 * *', 'los días 1 y 15 de cada mes a las 9:00'],
+  ['0 9 1-7 * *', 'del 1 al 7 de cada mes a las 9:00'],
+  ['0 9 1-7,15 * *', 'del 1 al 7 y el día 15 de cada mes a las 9:00'],
+  ['0 9 2/2 * *', 'los días pares de cada mes a las 9:00'],
+  ['0 9 */5 * *', 'los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, a las 9:00'],
+  ['0 9 L * *', 'el último día del mes a las 9:00'],
   ['0 9 15W * *',
-    'a las 9:00 el día entre semana más cercano al 15 de cada mes'],
+    'el día laborable (de lunes a viernes) más cercano al 15 de cada mes a ' +
+    'las 9:00'],
 
   // clock / month
-  ['0 9 * 6 *', 'a las 9:00 todos los días en junio'],
-  ['0 9 * 1,7 *', 'a las 9:00 todos los días en enero y julio'],
-  ['0 9 * 6-8 *', 'a las 9:00 todos los días de junio a agosto'],
+  ['0 9 * 6 *', 'en junio, todos los días a las 9:00'],
+  ['0 9 * 1,7 *', 'en enero y julio, todos los días a las 9:00'],
+  ['0 9 * 6-8 *', 'de junio a agosto, todos los días a las 9:00'],
   ['0 9 * 6-8,12 *',
-    'a las 9:00 todos los días de junio a agosto y en diciembre'],
-  ['0 9 * */3 *', 'a las 9:00 todos los días en enero, abril, julio y octubre'],
-  ['0 9 * 1-11 *', 'a las 9:00 todos los días, excepto en diciembre'],
+    'de junio a agosto y en diciembre, todos los días a las 9:00'],
+  ['0 9 * */3 *',
+    'en enero, abril, julio y octubre, todos los días a las 9:00'],
+  ['0 9 * 1-11 *', 'de enero a noviembre, todos los días a las 9:00'],
 
   // clock / weekday
-  ['0 9 * * 0', 'a las 9:00 los domingos'],
-  ['0 9 * * 1,3,5', 'a las 9:00 los lunes, miércoles y viernes'],
-  ['0 9 * * 0,6', 'a las 9:00 los fines de semana'],
-  ['0 9 * * 1-6', 'a las 9:00 de lunes a sábado'],
-  ['0 9 * * 5L', 'a las 9:00 el último viernes del mes'],
-  ['0 9 * * 1#2', 'a las 9:00 el segundo lunes del mes'],
+  ['0 9 * * 0', 'los domingos a las 9:00'],
+  ['0 9 * * 1,3,5', 'los lunes, miércoles y viernes, a las 9:00'],
+  ['0 9 * * 0,6', 'los fines de semana a las 9:00'],
+  ['0 9 * * 1-6', 'de lunes a sábado a las 9:00'],
+  ['0 9 * * 5L', 'el último viernes del mes a las 9:00'],
+  ['0 9 * * 1#2', 'el segundo lunes del mes a las 9:00'],
 
   // window / second — context `*/15 9-17 * * 1-5`
   ['30 */15 9-17 * * 1-5',
-    'cada 15 minutos de 9:00:30 a 17:45:30 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y cada vez en el ' +
+    'segundo 30'],
   ['0,30 */15 9-17 * * 1-5',
-    'cada 30 segundos durante un minuto cada 15 minutos de 9:00:00 a ' +
-    '17:45:30 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y cada vez en ' +
+    'los segundos 0 y 30'],
   ['*/15 */15 9-17 * * 1-5',
-    'cada 15 segundos durante un minuto cada 15 minutos de 9:00:00 a ' +
-    '17:45:45 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y cada vez en ' +
+    'los segundos 0, 15, 30 y 45'],
   ['0-9 */15 9-17 * * 1-5',
-    'cada segundo durante los primeros 10 segundos cada 15 minutos de 9:00 ' +
-    'a 17:45 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y cada vez cada ' +
+    'segundo durante los primeros 10 segundos'],
 
   // window / minute
-  ['0 9-17 * * 1-5', 'cada hora de 9:00 a 17:00 de lunes a viernes'],
-  ['30 9-17 * * 1-5', 'cada hora de 9:30 a 17:30 de lunes a viernes'],
+  ['0 9-17 * * 1-5', 'de lunes a viernes, cada hora de 9:00 a 17:00'],
+  ['30 9-17 * * 1-5', 'de lunes a viernes, cada hora de 9:30 a 17:30'],
   ['5,20,45 9-17 * * 1-5',
-    'en los minutos 5, 20 y 45 de cada hora de 9:05 a 17:45 de lunes a ' +
-    'viernes'],
+    'de lunes a viernes, en los minutos 5, 20 y 45 de cada hora, de 9:05 a ' +
+    '17:45'],
   ['0-29 9-17 * * 1-5',
-    'cada minuto durante los primeros 30 minutos de cada hora de 9:00 a ' +
-    '17:29 de lunes a viernes'],
+    'de lunes a viernes, cada minuto durante los primeros 30 minutos de ' +
+    'cada hora, de 9:00 a 17:29'],
   ['*/7 9-17 * * 1-5',
-    'cada 7 minutos del minuto 0 al 56 de cada hora de 9:00 a 17:56 de ' +
-    'lunes a viernes'],
+    'de lunes a viernes, cada 7 minutos del minuto 0 al 56 de cada hora, ' +
+    'de 9:00 a 17:56'],
   ['5/15 9-17 * * 1-5',
-    'en los minutos 5, 20, 35 y 50 de cada hora de 9:05 a 17:50 de lunes a ' +
-    'viernes'],
+    'de lunes a viernes, en los minutos 5, 20, 35 y 50 de cada hora, de ' +
+    '9:05 a 17:50'],
   ['10-40/10 9-17 * * 1-5',
-    'en los minutos 10, 20, 30 y 40 de cada hora de 9:10 a 17:40 de lunes ' +
-    'a viernes'],
+    'de lunes a viernes, en los minutos 10, 20, 30 y 40 de cada hora, de ' +
+    '9:10 a 17:40'],
 
   // window / hour
-  ['*/15 0 * * 1-5', 'cada 15 minutos de 0:00 a 0:45 de lunes a viernes'],
-  ['*/15 9 * * 1-5', 'cada 15 minutos de 9:00 a 9:45 de lunes a viernes'],
+  ['*/15 0 * * 1-5', 'de lunes a viernes, cada 15 minutos de 0:00 a 0:45'],
+  ['*/15 9 * * 1-5', 'de lunes a viernes, cada 15 minutos de 9:00 a 9:45'],
   ['*/15 9,17 * * 1-5',
-    'cada 15 minutos de 9:00 a 9:45 y de 17:00 a 17:45 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 9:00 a 9:45 y de 17:00 a 17:45'],
   ['*/15 8,12,18 * * 1-5',
-    'cada 15 minutos durante las horas que empiezan a las 8:00, 12:00 y ' +
-    '18:00 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 8:00 a 8:45, de 12:00 a 12:45 ' +
+    'y de 18:00 a 18:45'],
   ['*/15 */2 * * 1-5',
-    'cada 15 minutos durante las horas pares de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos en horas alternas desde las 0:00'],
   ['*/15 */6 * * 1-5',
-    'cada 15 minutos durante las horas que empiezan a las 0:00, 6:00, ' +
-    '12:00 y 18:00 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 0:00 a 0:45, de 6:00 a 6:45, ' +
+    'de 12:00 a 12:45 y de 18:00 a 18:45'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'cada 15 minutos durante las horas pares, excepto de 8:00 a 8:45, de ' +
-    'lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos en horas alternas desde las 0:00, ' +
+    'excepto de 8:00 a 8:45'],
   ['*/15 22-2 * * 1-5',
-    'cada 15 minutos de 0:00 a 2:45 y de 22:00 a 23:45 de lunes a viernes'],
+    'de lunes a viernes, cada 15 minutos de 0:00 a 2:45 y de 22:00 a 23:45'],
 
   // window / date
   ['*/15 9-17 15 * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 el día 15 de cada mes, y también de ' +
-    'lunes a viernes'],
+    'el día 15 de cada mes, y también de lunes a viernes, cada 15 minutos ' +
+    'de 9:00 a 17:45'],
   ['*/15 9-17 1,15 * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 los días 1 y 15 de cada mes, y ' +
-    'también de lunes a viernes'],
+    'los días 1 y 15 de cada mes, y también de lunes a viernes, cada 15 ' +
+    'minutos de 9:00 a 17:45'],
   ['*/15 9-17 1-7 * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 del 1 al 7 de cada mes, y también de ' +
-    'lunes a viernes'],
+    'del 1 al 7 de cada mes, y también de lunes a viernes, cada 15 minutos ' +
+    'de 9:00 a 17:45'],
   ['*/15 9-17 1-7,15 * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 del 1 al 7 y el día 15 de cada mes, y ' +
-    'también de lunes a viernes'],
+    'del 1 al 7 y el día 15 de cada mes, y también de lunes a viernes, ' +
+    'cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 2/2 * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 los días pares de cada mes, y también ' +
-    'de lunes a viernes'],
+    'los días pares de cada mes, y también de lunes a viernes, cada 15 ' +
+    'minutos de 9:00 a 17:45'],
   ['*/15 9-17 */5 * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 cada 5 días desde el día 1 de cada ' +
-    'mes, y también de lunes a viernes'],
+    'los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, y también de lunes a ' +
+    'viernes, cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 L * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 el último día del mes, y también de ' +
-    'lunes a viernes'],
+    'el último día del mes, y también de lunes a viernes, cada 15 minutos ' +
+    'de 9:00 a 17:45'],
   ['*/15 9-17 15W * 1-5',
-    'cada 15 minutos de 9:00 a 17:45 el día entre semana más cercano al 15 ' +
-    'de cada mes, y también de lunes a viernes'],
+    'el día laborable (de lunes a viernes) más cercano al 15 de cada mes, ' +
+    'y también de lunes a viernes, cada 15 minutos de 9:00 a 17:45'],
 
   // window / month
   ['*/15 9-17 * 6 1-5',
-    'cada 15 minutos de 9:00 a 17:45 de lunes a viernes en junio'],
+    'en junio, de lunes a viernes, cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 * 1,7 1-5',
-    'cada 15 minutos de 9:00 a 17:45 de lunes a viernes en enero y julio'],
+    'en enero y julio, de lunes a viernes, cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 * 6-8 1-5',
-    'cada 15 minutos de 9:00 a 17:45 de lunes a viernes de junio a agosto'],
+    'de junio a agosto, de lunes a viernes, cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 * 6-8,12 1-5',
-    'cada 15 minutos de 9:00 a 17:45 de lunes a viernes de junio a agosto ' +
-    'y en diciembre'],
+    'de junio a agosto y en diciembre, de lunes a viernes, cada 15 minutos ' +
+    'de 9:00 a 17:45'],
   ['*/15 9-17 * */3 1-5',
-    'cada 15 minutos de 9:00 a 17:45 de lunes a viernes en enero, abril, ' +
-    'julio y octubre'],
+    'en enero, abril, julio y octubre, de lunes a viernes, cada 15 minutos ' +
+    'de 9:00 a 17:45'],
   ['*/15 9-17 * 1-11 1-5',
-    'cada 15 minutos de 9:00 a 17:45 de lunes a viernes, excepto en ' +
-    'diciembre'],
+    'de enero a noviembre, de lunes a viernes, cada 15 minutos de 9:00 a ' +
+    '17:45'],
 
   // window / weekday
-  ['*/15 9-17 * * 1', 'cada 15 minutos de 9:00 a 17:45 los lunes'],
-  ['*/15 9-17 * * 0', 'cada 15 minutos de 9:00 a 17:45 los domingos'],
-  ['*/15 9-17 * * 0,6', 'cada 15 minutos de 9:00 a 17:45 los fines de semana'],
-  ['*/15 9-17 * * 1-6', 'cada 15 minutos de 9:00 a 17:45 de lunes a sábado'],
+  ['*/15 9-17 * * 1', 'los lunes, cada 15 minutos de 9:00 a 17:45'],
+  ['*/15 9-17 * * 0', 'los domingos, cada 15 minutos de 9:00 a 17:45'],
+  ['*/15 9-17 * * 0,6', 'los fines de semana, cada 15 minutos de 9:00 a 17:45'],
+  ['*/15 9-17 * * 1-6', 'de lunes a sábado, cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 * * 5L',
-    'cada 15 minutos de 9:00 a 17:45 el último viernes del mes'],
+    'el último viernes del mes, cada 15 minutos de 9:00 a 17:45'],
   ['*/15 9-17 * * 1#2',
-    'cada 15 minutos de 9:00 a 17:45 el segundo lunes del mes'],
+    'el segundo lunes del mes, cada 15 minutos de 9:00 a 17:45'],
 
   // monthly / second — context `0 0 1 * *`
-  ['30 0 0 1 * *', 'a las 0:00:30 el día 1 de cada mes'],
-  ['0,30 0 0 1 * *', 'a las 0:00:00 y 0:00:30 el día 1 de cada mes'],
+  ['30 0 0 1 * *', 'el día 1 de cada mes a las 0:00:30'],
+  ['0,30 0 0 1 * *', 'el día 1 de cada mes a las 0:00:00 y 0:00:30'],
   ['*/15 0 0 1 * *',
-    'cada 15 segundos de 0:00:00 a 0:00:45 el día 1 de cada mes'],
-  ['0-9 0 0 1 * *', 'cada segundo de 0:00:00 a 0:00:09 el día 1 de cada mes'],
+    'el día 1 de cada mes a las 0:00:00, 0:00:15, 0:00:30 y 0:00:45'],
+  ['0-9 0 0 1 * *',
+    'el día 1 de cada mes a las 0:00, cada segundo durante los primeros 10 ' +
+    'segundos'],
 
   // monthly / minute
-  ['30 0 1 * *', 'a las 0:30 el día 1 de cada mes'],
-  ['0,30 0 1 * *', 'a las 0:00 y 0:30 el día 1 de cada mes'],
-  ['0-29 0 1 * *', 'cada minuto de 0:00 a 0:29 el día 1 de cada mes'],
+  ['30 0 1 * *', 'el día 1 de cada mes a las 0:30'],
+  ['0,30 0 1 * *', 'el día 1 de cada mes a las 0:00 y 0:30'],
+  ['0-29 0 1 * *', 'el día 1 de cada mes, cada minuto de 0:00 a 0:29'],
   ['0-29,45 0 1 * *',
-    'cada minuto de 0:00 a 0:29 y a las 0:45 el día 1 de cada mes'],
-  ['*/7 0 1 * *', 'cada 7 minutos de 0:00 a 0:56 el día 1 de cada mes'],
-  ['5/15 0 1 * *', 'a las 0:05, 0:20, 0:35 y 0:50 el día 1 de cada mes'],
-  ['10-40/10 0 1 * *', 'a las 0:10, 0:20, 0:30 y 0:40 el día 1 de cada mes'],
+    'el día 1 de cada mes, cada minuto de 0:00 a 0:29 y a las 0:45'],
+  ['*/7 0 1 * *', 'el día 1 de cada mes, cada 7 minutos de 0:00 a 0:56'],
+  ['5/15 0 1 * *', 'el día 1 de cada mes, cada 15 minutos de 0:05 a 0:50'],
+  ['10-40/10 0 1 * *', 'el día 1 de cada mes, cada 10 minutos de 0:10 a 0:40'],
 
   // monthly / hour
-  ['0 12 1 * *', 'a las 12:00 el día 1 de cada mes'],
-  ['0 8,12,18 1 * *', 'a las 8:00, 12:00 y 18:00 el día 1 de cada mes'],
-  ['0 9-17 1 * *', 'cada hora de 9:00 a 17:00 el día 1 de cada mes'],
-  ['0 */2 1 * *', 'cada 2 horas el día 1 de cada mes'],
-  ['0 */6 1 * *', 'cada 6 horas el día 1 de cada mes'],
+  ['0 12 1 * *', 'el día 1 de cada mes a las 12:00'],
+  ['0 8,12,18 1 * *', 'el día 1 de cada mes a las 8:00, 12:00 y 18:00'],
+  ['0 9-17 1 * *', 'el día 1 de cada mes, cada hora de 9:00 a 17:00'],
+  ['0 */2 1 * *', 'el día 1 de cada mes, cada 2 horas de 0:00 a 22:00'],
+  ['0 */6 1 * *', 'el día 1 de cada mes a las 0:00, 6:00, 12:00 y 18:00'],
   ['0 0,2,4,6,10,12,14,16,18,20,22 1 * *',
-    'cada 2 horas, excepto a las 8:00, el día 1 de cada mes'],
+    'el día 1 de cada mes, cada 2 horas de 0:00 a 22:00, excepto a las 8:00'],
   ['0 22-2 1 * *',
-    'cada hora de 0:00 a 2:00 y a las 22:00 y 23:00 el día 1 de cada mes'],
+    'el día 1 de cada mes, cada hora de 0:00 a 2:00 y a las 22:00 y 23:00'],
 
   // monthly / date
-  ['0 0 15 * *', 'a las 0:00 el día 15 de cada mes'],
-  ['0 0 1,15 * *', 'a las 0:00 los días 1 y 15 de cada mes'],
-  ['0 0 1-7 * *', 'a las 0:00 del 1 al 7 de cada mes'],
-  ['0 0 1-7,15 * *', 'a las 0:00 del 1 al 7 y el día 15 de cada mes'],
-  ['0 0 2/2 * *', 'a las 0:00 los días pares de cada mes'],
-  ['0 0 */5 * *', 'a las 0:00 cada 5 días desde el día 1 de cada mes'],
-  ['0 0 L * *', 'a las 0:00 el último día del mes'],
+  ['0 0 15 * *', 'el día 15 de cada mes a las 0:00'],
+  ['0 0 1,15 * *', 'los días 1 y 15 de cada mes a las 0:00'],
+  ['0 0 1-7 * *', 'del 1 al 7 de cada mes a las 0:00'],
+  ['0 0 1-7,15 * *', 'del 1 al 7 y el día 15 de cada mes a las 0:00'],
+  ['0 0 2/2 * *', 'los días pares de cada mes a las 0:00'],
+  ['0 0 */5 * *', 'los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, a las 0:00'],
+  ['0 0 L * *', 'el último día del mes a las 0:00'],
   ['0 0 15W * *',
-    'a las 0:00 el día entre semana más cercano al 15 de cada mes'],
+    'el día laborable (de lunes a viernes) más cercano al 15 de cada mes a ' +
+    'las 0:00'],
 
   // monthly / month
-  ['0 0 1 6 *', 'a las 0:00 el 1 de junio'],
-  ['0 0 1 1,7 *', 'a las 0:00 el día 1 de enero y julio'],
-  ['0 0 1 6-8 *', 'a las 0:00 el día 1 de cada mes de junio a agosto'],
+  ['0 0 1 6 *', 'el 1 de junio a las 0:00'],
+  ['0 0 1 1,7 *', 'el día 1 de enero y julio a las 0:00'],
+  ['0 0 1 6-8 *', 'de junio a agosto, el día 1 de cada mes a las 0:00'],
   ['0 0 1 6-8,12 *',
-    'a las 0:00 el día 1 de cada mes de junio a agosto y el 1 de diciembre'],
-  ['0 0 1 */3 *', 'a las 0:00 el día 1 de enero, abril, julio y octubre'],
-  ['0 0 1 1-11 *', 'a las 0:00 el día 1 de cada mes, excepto en diciembre'],
+    'de junio a agosto y en diciembre, el día 1 de cada mes a las 0:00'],
+  ['0 0 1 */3 *', 'el día 1 de enero, abril, julio y octubre, a las 0:00'],
+  ['0 0 1 1-11 *', 'de enero a noviembre, el día 1 de cada mes a las 0:00'],
 
   // monthly / weekday
-  ['0 0 1 * 0', 'a las 0:00 el día 1 de cada mes, y también los domingos'],
+  ['0 0 1 * 0', 'el día 1 de cada mes, y también los domingos, a las 0:00'],
   ['0 0 1 * 1,3,5',
-    'a las 0:00 el día 1 de cada mes, y también los lunes, miércoles y ' +
-    'viernes'],
+    'el día 1 de cada mes, y también los lunes, miércoles y viernes, a las ' +
+    '0:00'],
   ['0 0 1 * 0,6',
-    'a las 0:00 el día 1 de cada mes, y también los fines de semana'],
+    'el día 1 de cada mes, y también los fines de semana, a las 0:00'],
   ['0 0 1 * 1-6',
-    'a las 0:00 el día 1 de cada mes, y también de lunes a sábado'],
+    'el día 1 de cada mes, y también de lunes a sábado, a las 0:00'],
   ['0 0 1 * 5L',
-    'a las 0:00 el día 1 de cada mes, y también el último viernes del mes'],
+    'el día 1 de cada mes, y también el último viernes del mes, a las 0:00'],
   ['0 0 1 * 1#2',
-    'a las 0:00 el día 1 de cada mes, y también el segundo lunes del mes'],
+    'el día 1 de cada mes, y también el segundo lunes del mes, a las 0:00'],
 
   // open / second — context `* * * * *`
   ['30 * * * * *', 'en el segundo 30 de cada minuto'],
@@ -243,45 +254,49 @@ const rows = [
   ['10-40/10 * * * *', 'en los minutos 10, 20, 30 y 40 de cada hora'],
 
   // open / hour
-  ['* 12 * * *', 'cada minuto de 12:00 a 12:59 todos los días'],
+  ['* 12 * * *', 'todos los días, cada minuto de 12:00 a 12:59'],
   ['* 8,12,18 * * *',
-    'cada minuto durante las horas que empiezan a las 8:00, 12:00 y 18:00 ' +
-    'todos los días'],
-  ['* 9-17 * * *', 'cada minuto de 9:00 a 17:59 todos los días'],
-  ['* */2 * * *', 'cada minuto durante las horas pares'],
+    'todos los días, cada minuto de 8:00 a 8:59, de 12:00 a 12:59 y de ' +
+    '18:00 a 18:59'],
+  ['* 9-17 * * *', 'todos los días, cada minuto de 9:00 a 17:59'],
+  ['* */2 * * *',
+    'todos los días, cada minuto en horas alternas desde las 0:00'],
   ['* */6 * * *',
-    'cada minuto durante las horas que empiezan a las 0:00, 6:00, 12:00 y ' +
-    '18:00 todos los días'],
+    'todos los días, cada minuto de 0:00 a 0:59, de 6:00 a 6:59, de 12:00 ' +
+    'a 12:59 y de 18:00 a 18:59'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'cada minuto durante las horas pares, excepto de 8:00 a 8:59'],
-  ['* 22-2 * * *', 'cada minuto de 22:00 a 2:59 todos los días'],
+    'todos los días, cada minuto en horas alternas desde las 0:00, excepto ' +
+    'de 8:00 a 8:59'],
+  ['* 22-2 * * *', 'todos los días, cada minuto de 22:00 a 2:59'],
 
   // open / date
-  ['* * 15 * *', 'cada minuto el día 15 de cada mes'],
-  ['* * 1,15 * *', 'cada minuto los días 1 y 15 de cada mes'],
-  ['* * 1-7 * *', 'cada minuto del 1 al 7 de cada mes'],
-  ['* * 1-7,15 * *', 'cada minuto del 1 al 7 y el día 15 de cada mes'],
-  ['* * 2/2 * *', 'cada minuto los días pares de cada mes'],
-  ['* * */5 * *', 'cada minuto cada 5 días desde el día 1 de cada mes'],
-  ['* * L * *', 'cada minuto el último día del mes'],
+  ['* * 15 * *', 'el día 15 de cada mes, cada minuto'],
+  ['* * 1,15 * *', 'los días 1 y 15 de cada mes, cada minuto'],
+  ['* * 1-7 * *', 'del 1 al 7 de cada mes, cada minuto'],
+  ['* * 1-7,15 * *', 'del 1 al 7 y el día 15 de cada mes, cada minuto'],
+  ['* * 2/2 * *', 'los días pares de cada mes, cada minuto'],
+  ['* * */5 * *',
+    'los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, cada minuto'],
+  ['* * L * *', 'el último día del mes, cada minuto'],
   ['* * 15W * *',
-    'cada minuto el día entre semana más cercano al 15 de cada mes'],
+    'el día laborable (de lunes a viernes) más cercano al 15 de cada mes, ' +
+    'cada minuto'],
 
   // open / month
-  ['* * * 6 *', 'cada minuto en junio'],
-  ['* * * 1,7 *', 'cada minuto en enero y julio'],
-  ['* * * 6-8 *', 'cada minuto de junio a agosto'],
-  ['* * * 6-8,12 *', 'cada minuto de junio a agosto y en diciembre'],
-  ['* * * */3 *', 'cada minuto en enero, abril, julio y octubre'],
-  ['* * * 1-11 *', 'cada minuto, excepto en diciembre'],
+  ['* * * 6 *', 'en junio, cada minuto'],
+  ['* * * 1,7 *', 'en enero y julio, cada minuto'],
+  ['* * * 6-8 *', 'de junio a agosto, cada minuto'],
+  ['* * * 6-8,12 *', 'de junio a agosto y en diciembre, cada minuto'],
+  ['* * * */3 *', 'en enero, abril, julio y octubre, cada minuto'],
+  ['* * * 1-11 *', 'de enero a noviembre, cada minuto'],
 
   // open / weekday
-  ['* * * * 0', 'cada minuto los domingos'],
-  ['* * * * 1,3,5', 'cada minuto los lunes, miércoles y viernes'],
-  ['* * * * 0,6', 'cada minuto los fines de semana'],
-  ['* * * * 1-6', 'cada minuto de lunes a sábado'],
-  ['* * * * 5L', 'cada minuto el último viernes del mes'],
-  ['* * * * 1#2', 'cada minuto el segundo lunes del mes']
+  ['* * * * 0', 'los domingos, cada minuto'],
+  ['* * * * 1,3,5', 'los lunes, miércoles y viernes, cada minuto'],
+  ['* * * * 0,6', 'los fines de semana, cada minuto'],
+  ['* * * * 1-6', 'de lunes a sábado, cada minuto'],
+  ['* * * * 5L', 'el último viernes del mes, cada minuto'],
+  ['* * * * 1#2', 'el segundo lunes del mes, cada minuto']
 ];
 
 export {rows};
