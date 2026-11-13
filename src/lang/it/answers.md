@@ -760,6 +760,15 @@ The base:
   22». (Every judge found «al secondo 30 del minuto 0 di ogni ora»
   machine-like and understood it at once; nothing as exact is lighter,
   and the schedule is rare.)
+* Minutes in several pieces (a single minute beside a run, a run beside
+  single minutes): the minutes as they are said without the second, then
+  «, al secondo 30» after the whole phrase and its hours, so that the
+  second belongs to every piece: «al minuto 5 e ogni minuto dal minuto 10
+  al 20 di ogni ora, al secondo 30»; «…e una volta al minuto 45 di
+  ciascuna ora dalle 9 alle 17, al secondo 30 (prima volta alle 9:00:30,
+  ultima alle 17:45:30)». Said inside the run, the single minutes read as
+  firing on the minute. One run alone keeps «al secondo 30 di ogni minuto
+  dal minuto 0 al 29…».
 * A rate of minutes with no window: the rate and «, al secondo 30»:
   «ogni 15 minuti, al secondo 30».
 
