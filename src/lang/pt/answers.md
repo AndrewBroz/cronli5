@@ -908,9 +908,35 @@ tie it to the leading month. With the weekdays now standing straight
 after the month, as in «em junho, de segunda a sexta», the tie is not
 needed, and the third reader found those words in the way.)
 
-Not built into any renderer yet: when both must match, a weekday that
-falls on a date is «nas sextas-feiras que caem no dia 13», and the first
-Monday is «na primeira segunda-feira de cada mês».
+**When both day fields must match** (one is written as a step from the
+star, `*/2`; the core says `day.both`), the pair is one phrase and not
+two: **the days of the month, said as they are said alone, then the
+weekdays they must fall on, as a condition**. The weekdays are no longer
+days of their own, so there is no «e também» and no «sempre». With
+several days of the month the condition is «que caem»; with one, «, se
+cair». The weekdays after it have «num» or «numa» (agreeing with the
+first), «ou» before the last, and a run is «de segunda a sexta». Neither
+field takes an exception, as in a union. If the days of the month are
+every day the months have, only the weekdays are left, and are said
+alone. The month and the year stay where a date has them, before the
+condition.
+
+* `0 0 */2 * 1` — «nos dias ímpares de cada mês que caem numa segunda, às
+  00:00»
+* `0 9 */2 * 1,3,5` — «nos dias ímpares de cada mês que caem numa
+  segunda, quarta ou sexta, às 09:00»
+* `0 0 15 * */2` — «no dia 15 de cada mês, se cair numa terça, quinta,
+  sábado ou domingo, às 00:00»
+* `0 0 */2 6 1` — «nos dias ímpares de junho que caem numa segunda, às
+  00:00»
+* `*/15 9-17 */2 * 1-5` — «nos dias ímpares de cada mês que caem de
+  segunda a sexta, a cada 15 minutos das 09:00 às 17:45»
+
+(«E» alone, «nas segundas que são dias ímpares» and the weekdays first
+were not chosen: the union's «e também» must never be heard, and the days
+of the month are the longer and more exact part, so they come first and
+the weekdays narrow them.) The same days written without the star, as
+`1-31/2`, are a union and are said as one.
 
 4.4 The days, the month and the year.
 
