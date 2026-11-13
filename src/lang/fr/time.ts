@@ -19,7 +19,7 @@ import {
   when
 } from './sets.js';
 
-const {twoDigits, units, words: w} = lexicon;
+const {symbols, twoDigits, units, words: w} = lexicon;
 
 /** A moment inside an hour. */
 interface Tick {
@@ -60,6 +60,9 @@ interface Beat {
   span: Span;
   // Minutes that fire after its stretches.
   strays: Tick[];
+  // The stretch a cadence of three minutes or more sweeps, even one short
+  // enough to list.
+  sweeps: Span[];
   // Its moments, when they are few enough to be clock times.
   ticks: Tick[];
 }
@@ -82,6 +85,7 @@ const still = {
   removed: [] as number[],
   runs: [] as Span[],
   strays: [] as Tick[],
+  sweeps: [] as Span[],
   ticks: [] as Tick[]
 };
 
@@ -216,7 +220,8 @@ function cadenceBeat(c: Context, cadence: Cadence): Beat {
     head,
     headCount: 1,
     phrase: text,
-    runs: [listed.span].filter(() => minutes.length > 4)
+    runs: [listed.span].filter(() => minutes.length > 4),
+    sweeps: [listed.span].filter(() => minutes.length > 2)
   };
 }
 
@@ -496,8 +501,13 @@ function onStretches(
   }
 
   const runs = stretchesOf(description, runsOf);
-  const [first, ...others] = hourlyForms(c, beat,
-    {apart: apart.every(isSingle), count: apart.length, limit: 12})
+  const hours = {apart: apart.every(isSingle), count: apart.length, limit: 12};
+  // Beyond the clock times that can be listed, a cadence of minutes is a
+  // stretch, said before its windows.
+  const unlisted = hours.apart && beat.runs.length === 0 &&
+    hours.count * beat.ticks.length > hours.limit;
+  const [first, ...others] = hourlyForms(c,
+    unlisted ? {...beat, runs: beat.sweeps} : beat, hours)
     .map(function said(form): Said {
       const stretches = form.merged ? runs : apart;
 
@@ -517,9 +527,12 @@ function onStretches(
 // together. A cadence shows its first two hours and says how the rest go
 // on, to the last time that fires; each part after the first follows
 // «puis». Of the ways to say an hour, the one that names the fewest
-// things over the hours shown is said, the earlier on a tie.
-function onParts(c: Context, beat: Beat, parts: Stretch[]): Said {
+// things over the hours shown is said, the earlier on a tie. A cadence of
+// minutes is a stretch here however few its minutes: the window says its
+// interval once, where clock times leave it to be found in every hour.
+function onParts(c: Context, shown: Beat, parts: Stretch[]): Said {
   const {domain} = c.hours;
+  const beat = shown.runs.length > 0 ? shown : {...shown, runs: shown.sweeps};
 
   function hoursOf(part: Stretch, merged: boolean): RangeDescription[] {
     return say(part, {
@@ -785,11 +798,15 @@ function restSayers(c: Context): Sayers<string> {
 }
 
 // Every time the pattern fires at, when there are few enough to list.
+// More than two times that all carry the one same second are not listed:
+// that second is said once, after them.
 function allTimes(c: Context): Said {
   const count = c.hours.values.length * c.minutes.values.length *
     c.seconds.values.length;
+  const repeated = c.seconds.values.length === 1 && c.offset > 0 &&
+    count > 2;
   const sayable = !c.hours.all && !c.minutes.all && !c.seconds.all &&
-    count <= 24;
+    count <= 24 && !repeated;
   const times = c.hours.values.slice(0, Number(sayable) * 24).flatMap(
     (hour) => c.minutes.values.flatMap(
       (minute) => c.seconds.values.map(
@@ -798,24 +815,57 @@ function allTimes(c: Context): Said {
   return {clock: true, count: when(sayable, count), text: clockList(c, times)};
 }
 
-// The time part of a pattern that names a minute or an hour.
-function clockPart(c: Context): Said {
+// How many clock times a phrase writes to the second: each has one
+// «min», always followed by its seconds.
+function toTheSecond(text: string): number {
+  return text.split(' ').filter((word) => word === symbols.minute).length;
+}
+
+/** The minutes and the hours said together, and how. */
+interface DayTime {
+  beat: Beat;
+  hours: ReturnType<typeof choose>;
+  said: Said;
+}
+
+function dayTime(c: Context): DayTime {
   const beat = beatOf(c);
   const hours = choose(c.hours, hourCounts(c, {
     excepted: (description) => excepts(c, beat, description),
     single: beat.ticks.length === 1,
     split: (description) => splits(c, beat, description)
   }));
-  const said = minuteException(c, beat, say(hours, hourForms(c, beat)));
+
+  return {
+    beat,
+    hours,
+    said: minuteException(c, beat, say(hours, hourForms(c, beat)))
+  };
+}
+
+// The time part of a pattern that names a minute or an hour. The first
+// second is written into one or two clock times; into more, it would be
+// read again in each, so they are said to the minute and the second once
+// after them, as an offset, before which no exception may stand.
+function clockPart(c: Context): Said {
+  const carried = dayTime(c);
+  const spread = !carried.beat.consumed &&
+    toTheSecond(carried.said.text) > 2;
+  const {beat, hours, said} = spread ?
+    dayTime({...c, bare: false, offset: 0}) :
+    carried;
   const rest = choose(c.seconds, restCounts);
   const more = !beat.consumed && c.seconds.values.length > 1;
-  const late = given(!beat.consumed && c.offset > 0 && hours.kind === 'all',
+  const offset = !beat.consumed && c.offset > 0 &&
+    (spread || hours.kind === 'all');
+  const late = given(offset,
     phrase(w.with, counted(c.offset, units.second), w.late));
   const again = given(more,
     phrase(given(!c.once, w.andEachTime), say(rest, restSayers(c))));
   const full = {
     clock: said.clock,
-    count: said.count + Number(more) * countOf(rest, restCounts),
+    count: said.count + Number(spread) +
+      Number(more) * countOf(rest, restCounts),
     text: said.text + after(', ', late) + after(', ', again)
   };
   const list = allTimes(c);

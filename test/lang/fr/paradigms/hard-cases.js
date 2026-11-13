@@ -533,10 +533,12 @@ const rows = [
   ['5/10 */15 * * * *',
     'toutes les 15 minutes, avec 5 secondes de décalage, et à chaque fois ' +
     'toutes les 10 secondes pendant une minute'],
+  // Five clock times would each carry the same eight seconds; the
+  // seconds are said once, after them (answers 4.2).
   ['8 5,30 */2 * * *',
-    'tous les jours à 0 h 05 min 08 s et à 0 h 30 min 08 s, à 2 h 05 min ' +
-    '08 s et à 2 h 30 min 08 s, et ainsi de suite toutes les 2 heures ' +
-    'jusqu\'à 22 h 30 min 08 s'],
+    'tous les jours à 0 h 05 et à 0 h 30, à 2 h 05 et à 2 h 30, et ainsi ' +
+    'de suite toutes les 2 heures jusqu\'à 22 h 30, avec 8 secondes de ' +
+    'décalage'],
   ['30 5,20 9-17 * * *',
     'tous les jours, à 05 et à 20 de chaque heure, de 9 h 05 min 30 s à 17 ' +
     'h 20 min 30 s'],
@@ -660,9 +662,11 @@ const rows = [
   ['* 0 0-2,4-23 * * *',
     'toutes les heures de 0 h à 2 h et de 4 h à 23 h, et à chaque fois ' +
     'toutes les secondes pendant une minute'],
+  // Two windows are four clock times; the thirty seconds are said once,
+  // after them (answers 4.2).
   ['30 0 0-2,4-23 * * *',
-    'toutes les heures de 0 h 00 min 30 s à 2 h 00 min 30 s et de 4 h 00 ' +
-    'min 30 s à 23 h 00 min 30 s'],
+    'toutes les heures de 0 h à 2 h et de 4 h à 23 h, avec 30 secondes de ' +
+    'décalage'],
   ['0 0-3,7-23 * * *', 'toutes les heures, sauf à 4 h, 5 h et 6 h'],
   ['0 0-3,9-23 * * *',
     'tous les jours, toutes les heures de 0 h à 3 h et de 9 h à 23 h'],
@@ -1023,7 +1027,92 @@ const rows = [
     'chaque heure'],
   ['30 0-28,30-59 * * * *',
     'toutes les minutes pendant les 29 premières et les 30 dernières ' +
-    'minutes de chaque heure, avec 30 secondes de décalage']
+    'minutes de chaque heure, avec 30 secondes de décalage'],
+
+  // The first second is written into a clock time while the time part
+  // names one or two (a time, two times, one window). Beyond that the same
+  // seconds would be read again in every time, and they are said once,
+  // after the times, as «avec N secondes de décalage».
+  ['30 5,20,45 9 * * *',
+    'tous les jours à 9 h 05, 9 h 20 et 9 h 45, avec 30 secondes de ' +
+    'décalage'],
+  ['30 */25 2/6 * * *',
+    'tous les jours à 2 h, 2 h 25, 2 h 50, 8 h, 8 h 25, 8 h 50, 14 h, ' +
+    '14 h 25, 14 h 50, 20 h, 20 h 25 et 20 h 50, avec 30 secondes de ' +
+    'décalage'],
+  ['5,30 */25 2/6 15W * *',
+    'le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, le ' +
+    'vendredi ou le lundi le plus proche, à 2 h, 2 h 25, 2 h 50, 8 h, 8 h ' +
+    '25, 8 h 50, 14 h, 14 h 25, 14 h 50, 20 h, 20 h 25 et 20 h 50, avec 5 ' +
+    'secondes de décalage, et à chaque fois de nouveau 25 secondes plus ' +
+    'tard'],
+  ['5,30 0-30 9-20,22 15W * *',
+    'le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, le ' +
+    'vendredi ou le lundi le plus proche, toutes les minutes pendant les ' +
+    '31 premières minutes de chaque heure, de 9 h à 20 h 30 et de 22 h à ' +
+    '22 h 30, avec 5 secondes de décalage, et à chaque fois de nouveau 25 ' +
+    'secondes plus tard'],
+  // A hole in a cadence of hours cannot be an exception before the
+  // seconds; what is left each side is said.
+  ['5 30 0-6/2,10-22/2 * * *',
+    'tous les jours, toutes les 2 heures de 0 h 30 à 6 h 30 et de 10 h 30 ' +
+    'à 22 h 30, avec 5 secondes de décalage'],
+  // Two clock times, or one window, keep the seconds in them.
+  ['30 5,20 9 * * *', 'tous les jours à 9 h 05 min 30 s et à 9 h 20 min 30 s'],
+  ['5 30 */2 * * *',
+    'tous les jours, toutes les 2 heures de 0 h 30 min 05 s à 22 h 30 min ' +
+    '05 s'],
+  ['5,30 0-30 9-20 * * *',
+    'tous les jours, toutes les minutes pendant les 31 premières minutes de ' +
+    'chaque heure, de 9 h 00 min 05 s à 20 h 30 min 05 s, et à chaque fois ' +
+    'de nouveau 25 secondes plus tard'],
+
+  // A cadence of minutes under a cadence of more than four hours is a
+  // window in each hour shown, from its first minute to its last, when
+  // that names fewer things than its clock times: three minutes or more.
+  ['5/15 9-17/2 * * *',
+    'tous les jours, toutes les 15 minutes de 9 h 05 à 9 h 50, de 11 h 05 ' +
+    'à 11 h 50, et ainsi de suite toutes les 2 heures jusqu\'à 17 h 50'],
+  ['5/20 */2 * * *',
+    'tous les jours, toutes les 20 minutes de 0 h 05 à 0 h 45, de 2 h 05 à ' +
+    '2 h 45, et ainsi de suite toutes les 2 heures jusqu\'à 22 h 45'],
+  ['5/15 9-17/2 LW */3 MON#2',
+    'en janvier, avril, juillet et octobre, toutes les 15 minutes de 9 h 05 ' +
+    'à 9 h 50, de 11 h 05 à 11 h 50, et ainsi de suite toutes les 2 heures ' +
+    'jusqu\'à 17 h 50, le deuxième lundi du mois ainsi que le dernier jour ' +
+    'du mois ou, s\'il tombe un samedi ou un dimanche, le vendredi qui ' +
+    'précède'],
+  ['5,30 5/15 */2 15W * *',
+    'le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, le ' +
+    'vendredi ou le lundi le plus proche, toutes les 15 minutes de 0 h 05 à ' +
+    '0 h 50, de 2 h 05 à 2 h 50, et ainsi de suite toutes les 2 heures ' +
+    'jusqu\'à 22 h 50, avec 5 secondes de décalage, et à chaque fois de ' +
+    'nouveau 25 secondes plus tard'],
+  // The same under separate hours, once there are more than twelve clock
+  // times to list: the cadence leads the windows, where the minutes were
+  // listed before them.
+  ['5/15 2/6 * * *',
+    'tous les jours, toutes les 15 minutes de 2 h 05 à 2 h 50, de 8 h 05 à ' +
+    '8 h 50, de 14 h 05 à 14 h 50 et de 20 h 05 à 20 h 50'],
+  ['5,30 5/15 2/6 15W * *',
+    'le 15 de chaque mois ou, s\'il tombe un samedi ou un dimanche, le ' +
+    'vendredi ou le lundi le plus proche, toutes les 15 minutes de 2 h 05 à ' +
+    '2 h 50, de 8 h 05 à 8 h 50, de 14 h 05 à 14 h 50 et de 20 h 05 à 20 h ' +
+    '50, avec 5 secondes de décalage, et à chaque fois de nouveau 25 ' +
+    'secondes plus tard'],
+  // A list of minutes that is no cadence keeps its clock times, and so do
+  // four hours or fewer while there are twelve times or fewer, and a list
+  // that is no cadence keeps its minute phrase beyond twelve.
+  ['5,20,35,55 2/6 * * *',
+    'tous les jours, à 05, 20, 35 et 55 de chaque heure, de 2 h 05 à 2 h ' +
+    '55, de 8 h 05 à 8 h 55, de 14 h 05 à 14 h 55 et de 20 h 05 à 20 h 55'],
+  ['5,20,35,55 */2 * * *',
+    'tous les jours à 0 h 05, 0 h 20, 0 h 35 et 0 h 55, à 2 h 05, 2 h 20, ' +
+    '2 h 35 et 2 h 55, et ainsi de suite toutes les 2 heures jusqu\'à 22 h ' +
+    '55'],
+  ['5/20 */6 * * *',
+    'tous les jours à 0 h 05, 0 h 25, 0 h 45, 6 h 05, 6 h 25, 6 h 45, 12 h ' +
+    '05, 12 h 25, 12 h 45, 18 h 05, 18 h 25 et 18 h 45']
 ];
 
 export {rows};
