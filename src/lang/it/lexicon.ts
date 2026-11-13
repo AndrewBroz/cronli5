@@ -145,7 +145,6 @@ const words = {
 
   // Times.
   andSoOnEvery: 'e così via ogni',
-  andSoOnUpTo: 'e così via fino a',
   atIntervalsOf: 'a intervalli di',
   atMinute: 'al minuto',
   atMinutes: 'ai minuti',

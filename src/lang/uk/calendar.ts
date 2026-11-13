@@ -814,8 +814,7 @@ function weekdayCondition(facts: ScheduleFacts, naming: Naming): string {
 
 // Which kinds of day are left to say. Days of the month that are every
 // day the months have restrict nothing, and then neither kind of day is
-// said; days no month reached has are not said either, nor a day that
-// falls on weekdays already said.
+// said; days no month reached has are not said either.
 function daysNamed(facts: ScheduleFacts): Days {
   const {candidates, dateReach: reach, day} = facts.analyses;
   const found = reach ?? {
@@ -827,7 +826,6 @@ function daysNamed(facts: ScheduleFacts): Days {
       const described = candidates[field] ?? [];
 
       return day[field] !== null && !everyDay &&
-        !(field === 'date' && day.dateAddsNothing) &&
         described.slice(0, 1).every(function some(first) {
           return first.kind !== 'all';
         });

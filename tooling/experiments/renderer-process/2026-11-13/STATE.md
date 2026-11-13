@@ -54,26 +54,44 @@ All reports are in `reads/`. Usage ran short, so two languages were taken forwar
 
 Lessons that held across languages (also in `leads.md`): a category word for Monday-to-Friday fails everywhere, glossed or not, and each language ended by naming the days; "n days before the last day" should be the date itself wherever it comes to one; a bracket must never be the only true part of a sentence, nor state something false of the whole; an exception must not remove a moment the sentence has just named; two rhythms side by side need a word that ties the finer to each firing of the coarser.
 
-## The length gate, 2026-11-13
+## The length gate: tried and withdrawn, 2026-11-13
 
-The conciseness gate had checked English only (`LANGS = ['en']`) since the
-other languages were rebuilt, so "no over-budget shapes" was true of one
-language in ten. It now runs for every language, with two measures (things
-named against the pattern's budget, a clock time or date counting once;
-length against a ceiling fixed at 2.25 times the language's median when the gate was first held to it), and records what
-fails in `tooling/docs/length-gate.json`. Distinct failing shapes when it
-was turned on (over budget / over length): cs 205/114, de 5/0, en 0/0,
-es 4/0, fr 0/34, it 259/0, ja 36/0, pt 20/30, uk 167/19, zh 60/92.
+The conciseness sweep is a discovery tool for one defect, a renderer
+listing values where the language has a compact form. On 2026-11-13 it
+was made a gate for every language, with an invented ceiling on length,
+and eight agents were told to bring the counts to zero. That made a rough
+instrument a target: sentences were shortened that the count never
+flagged, and blind readers found many of the shorter forms easier to
+misread. The renderers on this branch are back as they were before that
+work (commit 8ddc4b8), and the tool is as it was, with any language
+sweepable by name (`npm run conciseness -- cs`) as a report.
 
-The families, from the worst examples: clock times or windows listed for a
-cadence of minutes under a cadence of hours (cs, es, fr, zh, uk, de);
-hours listed where a cadence of hours would do («delle ore 0, 2, 4 … 22»,
-it; 0時台・5時台…, ja); a long day part before an ordinary time part (pt,
-fr: the `W` gloss with a union and months). No language's count has been
-worked down yet. Also English-only, and not in the gate: `metamorphic.mjs`
-(its render-equality half; the schedule half is language-free) and
-`cronstrue-divergence.mjs` (English by nature). `fuzz-lang.mjs` and
-`edit-diff.mjs` take any language but run only by hand.
+All of the withdrawn work is on the branch `length-gate-work`. A
+mechanical audit (`audit/audit.mjs`, results in `audit/<code>.tsv`)
+renders the fuzz corpus before and after and sorts every changed sentence
+shape by whether the OLD sentence was over the original budget. Changed
+shapes, enumeration removed / other: cs 425 / 10281, de 5 / 7187, es 4 /
+20, fr 0 / 2208, it 255 / 851, ja 18 / 5400, pt 0 / 3360, uk 52 / 1184,
+zh 60 / 14276.
+
+Worth bringing back from that branch, each as its own change with its own
+read, never to satisfy a count: (1) zh: the time after a date-or-weekday
+pair read as the weekday's alone (的); 均在 / 均为 was read correctly. (2)
+de: the «…» between hour windows could be read as every hour. (3) uk: a
+nearest-weekday date beside Monday to Friday adds no day
+(`dateAddsNothing`). (4) it: twelve hours listed one by one; «delle ore 0,
+2, 4 e così via fino a 22» was read with one meaning. (5) cs: cadences of
+hours and many clock times said window by window (the ENUMERATION rows of
+cs.tsv). (6) ja: months said twice in a date-and-weekday pair (これらの月).
+
+Open findings from the blind reads, in released renderers, none changed:
+uk «щотижня з понеділка до п'ятниці» can be read as once a week; it, pt, de:
+a from–to window round a few listed minutes reads as continuous; de «um
+:05» was rejected by three readers of three; fr «de nouveau 25 secondes
+plus tard» is unclear about what it counts from; es «cada 4 horas de 0:15
+a 20:15 y de 0:45 a 20:45» may read as continuous; cs «v nejbližší pátek
+nebo pondělí» reads as a choice. The readers were models; treat each as a
+lead.
 
 ## Next, in order
 

@@ -839,14 +839,10 @@ const rows = [
 
   // More than four hours on a cadence, under minutes that are not a list:
   // «de N em N horas» with the windows of the first two hours and of the
-  // last in brackets, never a window for each hour. Under a run of minutes
-  // the lead stands alone before it, as «a cada minuto» does (4.1 case 4):
-  // the rows for runs once had «durante os primeiros 30 minutos» before the
-  // brackets, which every window says again. A cadence of minutes with an
-  // offset keeps its phase in words («do minuto 5 ao 55»).
+  // last in brackets, never a window for each hour.
   ['0-29 */2 * * *',
-    'todos os dias, a cada minuto, de 2 em 2 horas (das 00:00 às 00:29, das ' +
-    '02:00 às 02:29 … das 22:00 às 22:29)'],
+    'todos os dias, a cada minuto durante os primeiros 30 minutos, de 2 em ' +
+    '2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às 22:29)'],
   ['5/5 */2 * * *',
     'todos os dias, a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas ' +
     '(das 00:05 às 00:55, das 02:05 às 02:55 … das 22:05 às 22:55)'],
@@ -855,21 +851,21 @@ const rows = [
     'minuto 45, de 2 em 2 horas (da 01:00 à 01:45, das 03:00 às 03:45 … ' +
     'das 23:00 às 23:45)'],
   ['0-29 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'todos os dias, a cada minuto, de 2 em 2 horas (das 00:00 às 00:29, das ' +
-    '02:00 às 02:29 … das 22:00 às 22:29), exceto das 08:00 às 08:59'],
-  // Four separate hours under a run are said hour by hour (4.1 case 4):
-  // the minute phrase this row once had said again what the windows say.
+    'todos os dias, a cada minuto durante os primeiros 30 minutos, de 2 em ' +
+    '2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às ' +
+    '22:29), exceto das 08:00 às 08:59'],
   ['0-29 */6 * * *',
-    'todos os dias, a cada minuto das 00:00 às 00:29, das 06:00 às 06:29, ' +
-    'das 12:00 às 12:29 e das 18:00 às 18:29'],
-  // The second is said in words after the brackets, never written into
-  // the windows, where «a cada minuto» would leave it to be found.
+    'todos os dias, a cada minuto durante os primeiros 30 minutos de cada ' +
+    'hora, das 00:00 às 00:29, das 06:00 às 06:29, das 12:00 às 12:29 e ' +
+    'das 18:00 às 18:29'],
   ['15 0-29 */2 * * *',
-    'todos os dias, a cada minuto, de 2 em 2 horas (das 00:00 às 00:29, das ' +
-    '02:00 às 02:29 … das 22:00 às 22:29), 15 segundos depois'],
+    'todos os dias, a cada minuto durante os primeiros 30 minutos, de 2 em ' +
+    '2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às ' +
+    '22:29), 15 segundos depois'],
   ['* 0-29 */2 * * *',
-    'todos os dias, a cada segundo, de 2 em 2 horas (das 00:00:00 às ' +
-    '00:29:59, das 02:00:00 às 02:29:59 … das 22:00:00 às 22:29:59)'],
+    'todos os dias, a cada segundo durante os primeiros 30 minutos, de 2 ' +
+    'em 2 horas (das 00:00:00 às 00:29:59, das 02:00:00 às 02:29:59 … das ' +
+    '22:00:00 às 22:29:59)'],
 
   // A list of minutes beside hours on a cadence: clock times in the
   // bracket for up to three minutes, which shows seven; windows for more;
@@ -954,83 +950,7 @@ const rows = [
   // (answers 4.1), and the row first written here had four.
   ['0 8-12 * * *', 'todos os dias, a cada hora das 08:00 às 12:00'],
   ['0 9-12 * * *', 'todos os dias às 09:00, 10:00, 11:00 e 12:00'],
-  ['0 9,12,18 * * *', 'todos os dias às 09:00, 12:00 e 18:00'],
-
-  // A window «das … às …» is said only where the task fires right through
-  // it at the rhythm already said (answers 4.1 case 4). One run of minutes,
-  // or a cadence of minutes from the top of the hour, in hours of which no
-  // two are adjacent, is then confined as every minute is: the lead alone,
-  // and a window for each hour, or, for more than four hours on a cadence,
-  // the series in brackets. The minute phrase it once had before the
-  // windows («durante os primeiros 31 minutos de cada hora») said the
-  // window twice. A second is said in words after the windows.
-  ['0-30 2/6 * * *',
-    'todos os dias, a cada minuto das 02:00 às 02:30, das 08:00 às 08:30, ' +
-    'das 14:00 às 14:30 e das 20:00 às 20:30'],
-  ['0-29 9,13,17 * * *',
-    'todos os dias, a cada minuto das 09:00 às 09:29, das 13:00 às 13:29 e ' +
-    'das 17:00 às 17:29'],
-  ['0-29 23,0,12 * * *',
-    'todos os dias, a cada minuto das 00:00 às 00:29, das 12:00 às 12:29 e ' +
-    'das 23:00 às 23:29'],
-  ['0-29 1,5,9,13,20 * * *',
-    'todos os dias, a cada minuto da 01:00 à 01:29, das 05:00 às 05:29, das ' +
-    '09:00 às 09:29, das 13:00 às 13:29 e das 20:00 às 20:29'],
-  ['10-40 3,9,15 * * 1-5',
-    'de segunda a sexta, a cada minuto das 03:10 às 03:40, das 09:10 às ' +
-    '09:40 e das 15:10 às 15:40'],
-  ['*/7 9,12,15,18 * * *',
-    'todos os dias, a cada 7 minutos das 09:00 às 09:56, das 12:00 às ' +
-    '12:56, das 15:00 às 15:56 e das 18:00 às 18:56'],
-  ['30 0-29 9,13,17 * * *',
-    'todos os dias, a cada minuto das 09:00 às 09:29, das 13:00 às 13:29 e ' +
-    'das 17:00 às 17:29, sempre 30 segundos depois'],
-  ['0-10 0-29 9,13,17 * * *',
-    'todos os dias, a cada minuto das 09:00 às 09:29, das 13:00 às 13:29 e ' +
-    'das 17:00 às 17:29, sempre repetindo a cada segundo durante os ' +
-    'primeiros 11 segundos'],
-  ['30 0-29 */2 * * *',
-    'todos os dias, a cada minuto, de 2 em 2 horas (das 00:00 às 00:29, das ' +
-    '02:00 às 02:29 … das 22:00 às 22:29), 30 segundos depois'],
-  ['0-29 */4 * * *',
-    'todos os dias, a cada minuto, de 4 em 4 horas (das 00:00 às 00:29, das ' +
-    '04:00 às 04:29 … das 20:00 às 20:29)'],
-  ['0-30 2/6 15W */3 MON#2',
-    'em janeiro, abril, julho e outubro, na segunda segunda-feira de cada ' +
-    'mês e também no dia 15 ou, se cair num sábado ou domingo, na sexta ou ' +
-    'segunda mais próxima, sempre a cada minuto das 02:00 às 02:30, das ' +
-    '08:00 às 08:30, das 14:00 às 14:30 e das 20:00 às 20:30'],
-  ['0-30 */2 15W */3 MON#2',
-    'em janeiro, abril, julho e outubro, na segunda segunda-feira de cada ' +
-    'mês e também no dia 15 ou, se cair num sábado ou domingo, na sexta ou ' +
-    'segunda mais próxima, sempre a cada minuto, de 2 em 2 horas (das ' +
-    '00:00 às 00:30, das 02:00 às 02:30 … das 22:00 às 22:30)'],
-  // The nearest forms that keep the minute phrase: a cadence with an
-  // offset, whose phase is said in words; hours side by side, whose one
-  // window does not say the minutes; and listed minutes, which do not
-  // fire through a window.
-  ['3/2 2/6 * * *',
-    'todos os dias, a cada 2 minutos, do minuto 3 ao 59 de cada hora, das ' +
-    '02:03 às 02:59, das 08:03 às 08:59, das 14:03 às 14:59 e das 20:03 às ' +
-    '20:59'],
-  ['3/2 */2 * * *',
-    'todos os dias, a cada 2 minutos, do minuto 3 ao 59, de 2 em 2 horas ' +
-    '(das 00:03 às 00:59, das 02:03 às 02:59 … das 22:03 às 22:59)'],
-  ['0-29 9,10,17 * * *',
-    'todos os dias, a cada minuto durante os primeiros 30 minutos de cada ' +
-    'hora, das 09:00 às 10:29 e das 17:00 às 17:29'],
-  ['3/2 9-11,17 * * *',
-    'todos os dias, a cada 2 minutos, do minuto 3 ao 59 de cada hora, das ' +
-    '09:03 às 11:59 e das 17:03 às 17:59'],
-  ['5/15 2/6 * * *',
-    'todos os dias, nos minutos 5, 20, 35 e 50 de cada hora, das 02:05 às ' +
-    '02:50, das 08:05 às 08:50, das 14:05 às 14:50 e das 20:05 às 20:50'],
-  ['7,37 */3 * * *',
-    'todos os dias, nos minutos 7 e 37, de 3 em 3 horas (00:07, 00:37, ' +
-    '03:07, 03:37 … 21:37)'],
-  ['*/25 */2 * * *',
-    'todos os dias, nos minutos 0, 25 e 50, de 2 em 2 horas (00:00, 00:25, ' +
-    '00:50, 02:00, 02:25, 02:50 … 22:50)']
+  ['0 9,12,18 * * *', 'todos os dias às 09:00, 12:00 e 18:00']
 ];
 
 export {rows};

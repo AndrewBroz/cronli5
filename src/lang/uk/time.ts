@@ -786,9 +786,7 @@ function secondLevel(face: Face): Level {
 
 // The seconds as what happens each time the rest fires, pinned to the
 // second. What is left out of the rest stays with it, ahead of «щоразу».
-// One second after «щогодини» alone is counted from the hour. Every
-// second of a minute names no place in it, so after a rest that needs no
-// pin of its own nothing follows to settle it.
+// One second after «щогодини» alone is counted from the hour.
 function eachMinute(
   rest: Said,
   seconds: Fine,
@@ -805,10 +803,7 @@ function eachMinute(
     ].join(' ') :
     `, ${words.eachTime} ${positionsOf(seconds, level)}`;
 
-  const settled = seconds.description.kind === 'all' && rest.pin === '';
-  const pin = settled ?
-    '' :
-    bracket(slots, seconds.description as Placed, level);
+  const pin = bracket(slots, seconds.description as Placed, level);
 
   return counts ?
     finish({...rest, pin, words: rest.words + phrase}) :

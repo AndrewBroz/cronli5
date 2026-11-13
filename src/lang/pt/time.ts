@@ -237,37 +237,6 @@ function hourByHour(c: Moments): boolean {
     c.hours.values.length <= (kind === 'pieces' ? 1 : 2);
 }
 
-// Whether no two of the hours are adjacent, so that every window is one
-// hour's stretch.
-function apart(c: Moments): boolean {
-  return c.hours.said.kind !== 'all' &&
-    stretchesOf(c.hours.said, domainOf('hour'))
-      .every((run) => run[0] === run[1]);
-}
-
-// Whether the minutes fire right through each window at the rhythm the
-// lead says: a run, or a cadence from the top of the hour, whose phase
-// «a cada N minutos» already states.
-function throughTheWindow(c: Moments): boolean {
-  const said = c.minutes.said;
-
-  return said.kind === 'range' ||
-    said.kind === 'cadence' && said.start === 0;
-}
-
-// Such minutes in hours apart, confined as every minute is: the lead
-// alone, since each window is where they fire. The second is said after,
-// in words, never written into the windows.
-function stretchConfined(c: Moments): Said {
-  const said = c.minutes.said as Cadence;
-  const lead = said.kind === 'cadence' ?
-    `${words.each} ${counted(said.interval, units.minute)}` :
-    c.every;
-  const gap = c.hours.said.kind === 'cadence' ? ', ' : ' ';
-
-  return saying(c, `${lead}${gap}${confinement(c)}`, false);
-}
-
 function insideHours(c: Moments): Said {
   const parts = partsOf(c.minutes.said);
 
@@ -338,7 +307,6 @@ const minuteForms: Form[] = [
   },
   {say: confined, when: (c) => continuous(c.minutes.said)},
   {say: insideHours, when: hourByHour},
-  {say: stretchConfined, when: (c) => throughTheWindow(c) && apart(c)},
   {say: anchored, when: () => true}
 ];
 

@@ -291,30 +291,16 @@ function rivalCost(scene: Scene): number {
     things + 2 * spans.length;
 }
 
-// The seconds a clause names after a list of clock times, counted as
-// things the reader multiplies the list by: none for one second or a
-// stretch, one for the odd ones, and one for each second named.
-function secondsBeside(scene: Scene): number {
-  const {facts, seconds} = scene;
-
-  return pick([
-    [0, facts.second.length === 1 || fillsStretch(seconds)],
-    [1, oddOnes(seconds)],
-    [facts.second.length, true]
-  ]);
-}
-
-// Whether the clock times are listed (answers 4.1): at most twelve,
-// counting the seconds named after them, and either the hours stand apart
-// with no window to offer, or the list names no more than its rival.
+// Whether the clock times are listed (answers 4.1): at most twelve, and
+// either the hours stand apart with no window to offer, or the list names
+// no more than its rival.
 function timesListed(scene: Scene): boolean {
   const {facts, hourKind, minutes} = scene;
   const times = facts.minute.length * facts.hour.length;
   const apart = hourKind === 'many' || hourKind === 'cadence' ||
     hourKind === 'few' && listed(minutes);
 
-  return times + secondsBeside(scene) <= MOST_TIMES &&
-    (apart || times <= rivalCost(scene));
+  return times <= MOST_TIMES && (apart || times <= rivalCost(scene));
 }
 
 // Whether hours that stand apart are named by when they begin, after the
