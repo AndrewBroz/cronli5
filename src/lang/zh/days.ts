@@ -37,8 +37,14 @@ export interface Part<Kind> {
   text: string;
 }
 
+/** A month part, and what joins the year part to it. */
+export interface MonthPart extends Part<Context> {
+  lead: string;
+}
+
 // What joins a year part to a month. With no year, a month reads as a
-// single occasion unless 每年 says it recurs.
+// single occasion unless 每年 says it recurs. 的 gives way before months
+// excepted, which begin with 除.
 const beforeMonth: Record<YearKind, string> = {
   cycle: '',
   none: words.eachYear,
@@ -136,6 +142,20 @@ function yearCycle(cadence: Cadence, values: number[], open: boolean): string {
     words.thatYear;
 }
 
+// Years as a list in which a run of three is a range, and a run to the
+// last year there is has no end: it is said from its first year on.
+function yearList(runs: number[][], top: number): string {
+  const endless = runs.filter(
+    (run) => lastOf(run) === top && run.length >= RANGE);
+  const ended = runs.slice(0, runs.length - endless.length);
+
+  return series([
+    ...listed(ended, RANGE, yearName),
+    ...endless.map(
+      (run) => words.fromYear + yearName(run[0]) + words.onwards)
+  ]);
+}
+
 /** The year part: nothing when every year fires. */
 function yearOf(found: SetDescription[]): Part<YearKind> {
   const domain = domainOf('year');
@@ -162,7 +182,7 @@ function yearOf(found: SetDescription[]): Part<YearKind> {
         [runs.length === 1 && values.length >= RANGE, 'range'],
         [true, 'several']
       ]),
-      text: series(listed(runs, RANGE, yearName))
+      text: yearList(runs, domain.max)
     };
   }
 
@@ -174,21 +194,23 @@ function yearOf(found: SetDescription[]): Part<YearKind> {
 }
 
 /**
- * The month part: nothing when every month fires. A run of months may
- * cross the new year only when `wraps` allows.
+ * The month part, and what joins a year part of the given kind to it:
+ * nothing when every month fires. A run of months may cross the new year
+ * only when every year fires.
  */
-function monthOf(found: SetDescription[], wraps: boolean): Part<Context> {
+function monthOf(found: SetDescription[], year: YearKind): MonthPart {
   const domain = domainOf('month');
+  const wraps = year === 'none';
 
   if (isAll(found)) {
-    return {kind: 'none', text: ''};
+    return {kind: 'none', lead: '', text: ''};
   }
 
   const values = denote(found[0], domain);
   const picked = chosen(values, domain, function mostMonths(exception, kept) {
     return kept.length > LISTED && exception.base.kind === 'all';
   });
-  const runs = runsOf(values, domain, wraps);
+  const runs = runsOf(values, domain, wraps, RANGE);
   const excepted = picked.removed.length > 0;
 
   return {
@@ -197,6 +219,7 @@ function monthOf(found: SetDescription[], wraps: boolean): Part<Context> {
       [values.length === 1, 'one'],
       [true, 'list']
     ]),
+    lead: when(!(excepted && year === 'several'), beforeMonth[year]),
     text: excepted ?
       words.except + series(picked.removed.map(monthName)) +
         words.exceptedEnd :
@@ -371,4 +394,4 @@ function dayOf(schedule: Schedule, month: Part<Context>):
   };
 }
 
-export {beforeMonth, dayOf, monthOf, yearOf};
+export {dayOf, monthOf, yearOf};

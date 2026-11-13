@@ -30,9 +30,9 @@ const JOINS = ['', '，', '每天', '的'];
 // 每年. So a day, month or year edit may move text among those
 // three parts. The join depends on what stands before the time and on
 // whether the hours are restricted, so an edit to the hours, or to a day,
-// month or year, may change it. Nothing else may cross: no day, month or
-// year edit touches the time, and no time edit touches the day, the month
-// or the year.
+// month or year, may change it. Nothing else may cross, apart from the one
+// fusion declared below: no day, month or year edit touches the time, and
+// no time edit touches the day, the month or the year.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year', 'join'],
   hour: ['time', 'join'],
@@ -42,6 +42,14 @@ const MAY_CHANGE = {
   weekday: ['day', 'month', 'year', 'join'],
   year: ['day', 'month', 'year', 'join']
 };
+
+// The overnight stretch (answers 2.5, 3.5), the one declared fusion of the
+// time with the rest. Hours that run past midnight are one stretch to 次日
+// only when nothing but the time is restricted: beside a day, a month or
+// a year the stretch would promise the small hours of the day after and
+// leave out the day's own. So where the hours cross midnight, an edit to
+// a day, a month or a year may change the time.
+const OVERNIGHT = ['date', 'month', 'weekday', 'year'];
 
 const SETUP = {languages: [chinese.default], options: {}, styles: {}};
 
@@ -55,6 +63,22 @@ function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);
 
   return chinese.describeParts(schedule, opts);
+}
+
+// Whether the hours fire on both sides of midnight without firing all day.
+function crossesMidnight(pattern, options) {
+  const [first] = parse(pattern, options).schedule.analyses.candidates.hour;
+  const pieces = first.kind === 'pieces' ? first.parts : [first];
+
+  return pieces.some(function wraps(piece) {
+    return piece.kind === 'range' && piece.from > piece.to;
+  });
+}
+
+// Whether a changed part is one the edited field may change.
+function allowed(field, part, pattern, options) {
+  return MAY_CHANGE[field].includes(part) || part === 'time' &&
+    OVERNIGHT.includes(field) && crossesMidnight(pattern, options);
 }
 
 // The fields on which two patterns fire differently.
@@ -91,7 +115,7 @@ function leaks(pairList) {
 
     ORDER.forEach(function compare(part) {
       if (before[part] !== after[part] &&
-          !MAY_CHANGE[changed[0]].includes(part)) {
+          !allowed(changed[0], part, a, options)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -131,6 +155,35 @@ describe('Chinese continuity:', function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
     }, 60000);
+
+  it('says an overnight stretch only where nothing but the time is ' +
+    'restricted, and changes nothing else by it', function() {
+    const overnight = [
+      ['0 22-2 * * *', '0 22-2 * * 1'],
+      ['0 22-2 * * *', '0 22-2 1 * *'],
+      ['* 22-2 * * *', '* 22-2 * 6 *'],
+      ['0 0 22-2 * * * *', '0 0 22-2 * * * 2030'],
+      ['*/15 22-2,10 * * *', '*/15 22-2,10 * * 1-5']
+    ];
+
+    expect(leaks(overnight)).to.deep.equal([]);
+    expect(partsOf('0 22-2 * * *').time).to.equal('22:00至次日2:00，每小时一次');
+    expect(partsOf('0 22-2 * * 1').time)
+      .to.equal('0:00、1:00、2:00、22:00、23:00');
+    expect(partsOf('* 22-2 * 6 *').time)
+      .to.equal('0:00至2:59、22:00至23:59，每分钟一次');
+
+    // Hours that do not cross midnight are not covered by it: there a
+    // day edit that changed the time would still be a leak.
+    expect(crossesMidnight('0 9-17 * * *')).to.equal(false);
+    expect(allowed('weekday', 'time', '0 9-17 * * *')).to.equal(false);
+    expect(allowed('weekday', 'time', '0 22-2 * * *')).to.equal(true);
+    expect(allowed('minute', 'day', '0 22-2 * * *')).to.equal(false);
+
+    // An exception among the hours is the same with a day as without.
+    expect(partsOf('0 0-8,10-23 * * *').time)
+      .to.equal(partsOf('0 0-8,10-23 * * 1').time);
+  });
 
   it('renders equal schedules identically: no tie is declared',
     function() {
