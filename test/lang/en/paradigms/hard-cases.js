@@ -526,6 +526,11 @@ const rows = [
   ['* 10-29,45 * * * *',
     'every second from 10 through 29 minutes past the hour and for one ' +
     'minute at 45 minutes past the hour'],
+  // Under hours named one by one, each piece is said as it is alone
+  // under those hours: "of every hour" would be false of two hours.
+  ['* 0-29,45 9,17 * * *',
+    'every second for the first 30 minutes of the 9 a.m. and 5 p.m. hours ' +
+    'and for one minute at 9:45 a.m. and 5:45 p.m. every day'],
   ['* 5,10-40,50 * * * *',
     'every second for one minute at 5 minutes past the hour, every second ' +
     'from 10 through 40 minutes past the hour, and for one minute at 50 ' +

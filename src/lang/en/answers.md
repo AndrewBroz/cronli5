@@ -926,7 +926,12 @@ minutes past the hour and for one minute at 45 minutes past the hour";
 "every second for one minute at 5 minutes past the hour, every second from
 10 through 40 minutes past the hour, and for one minute at 50 minutes past
 the hour". A run from minute 0 is "for the first N minutes of every hour",
-as it is alone. (With the unit said once at the end, a blind reader took
+as it is alone. Under a run of hours the hours follow once, after the last
+piece ("…and for one minute at 45 minutes past the hour from 9 a.m. through
+5 p.m."). Under hours named one by one, each piece is said as it is alone
+under those hours, since "every hour" would be false: "every second for the
+first 30 minutes of the 9 a.m. and 5 p.m. hours and for one minute at 9:45
+a.m. and 5:45 p.m." (With the unit said once at the end, a blind reader took
 "every second from 0 through 29 and for one minute at 45 minutes past the
 hour" for seconds 0 through 29 of every minute.) (Seconds that are not continuous are said
 once in front of such minutes, as above.) A bare "and at 45 minutes past
