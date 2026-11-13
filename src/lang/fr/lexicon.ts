@@ -6,7 +6,12 @@ interface Name {
   short: string;
 }
 
-/** A part of a clock time, always two digits: "05", "30". */
+/** A weekday, with the plural «tous les» takes («tous les lundis»). */
+interface WeekdayName extends Name {
+  plural: string;
+}
+
+/** The minutes of a time, always two digits: "05", "30". */
 function twoDigits(value: number): string {
   return String(value).padStart(2, '0');
 }
@@ -27,9 +32,8 @@ function dayNumber(day: number): string {
   return day === 1 ? '1er' : String(day);
 }
 
-/** A count back from the end of the month: «2e», «3e». */
-function nthFromEnd(count: number): string {
-  return `${count}e`;
+function weekday(full: string, short: string): WeekdayName {
+  return {full, plural: `${full}s`, short};
 }
 
 // Indexed by month number; there is no month 0. A short form that cuts
@@ -51,15 +55,15 @@ const months: Name[] = [
 ];
 
 // Indexed by cron's weekday number: 0 is Sunday. Every weekday is
-// masculine and is said in the singular.
-const weekdays: Name[] = [
-  {full: 'dimanche', short: 'dim.'},
-  {full: 'lundi', short: 'lun.'},
-  {full: 'mardi', short: 'mar.'},
-  {full: 'mercredi', short: 'mer.'},
-  {full: 'jeudi', short: 'jeu.'},
-  {full: 'vendredi', short: 'ven.'},
-  {full: 'samedi', short: 'sam.'}
+// masculine. A short form takes no plural.
+const weekdays: WeekdayName[] = [
+  weekday('dimanche', 'dim.'),
+  weekday('lundi', 'lun.'),
+  weekday('mardi', 'mar.'),
+  weekday('mercredi', 'mer.'),
+  weekday('jeudi', 'jeu.'),
+  weekday('vendredi', 'ven.'),
+  weekday('samedi', 'sam.')
 ];
 
 // Each unit, alone and after a number other than one, with the form of
@@ -71,24 +75,40 @@ const units = {
   second: {every: 'toutes les', many: 'secondes', one: 'seconde'}
 };
 
+// The symbols a written time takes: «9 h 30 min 15 s».
+const symbols = {hour: 'h', minute: 'min', second: 's'};
+
 // The ordinal words a Quartz "nth weekday" uses, from the first.
 const nthWords =
   ['premier', 'deuxième', 'troisième', 'quatrième', 'cinquième'];
 
+// The count in «une année sur quatre» and «trois jours avant le dernier
+// jour», indexed by the number, from two to thirty. Beyond thirty the
+// digit is written.
+const countWords = [
+  '', '', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf',
+  'dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize',
+  'dix-sept', 'dix-huit', 'dix-neuf', 'vingt', 'vingt et un', 'vingt-deux',
+  'vingt-trois', 'vingt-quatre', 'vingt-cinq', 'vingt-six', 'vingt-sept',
+  'vingt-huit', 'vingt-neuf', 'trente'
+];
+
 // The function words and fixed phrases.
 const words = {
+  afterEachMinuteStart: 'après le début de chaque minute',
   afternoon: 'de l\'après-midi',
-  also: 'et aussi',
+  again: 'de nouveau',
+  also: 'ainsi que',
   and: 'et',
+  andEachTime: 'et à chaque fois',
+  andSoOn: 'et ainsi de suite',
   at: 'à',
-  atThe: 'à la',
-  atThePlural: 'aux',
-  before: 'avant le',
-  beginningAt: 'commençant à',
+  beforeLastDay: 'avant le dernier jour',
   closest: 'le plus proche du',
+  daysOfMonth: 'du mois',
   during: 'pendant',
-  evenFeminine: 'paires',
-  evenMasculine: 'pairs',
+  evenDays: 'les jours pairs',
+  evenYears: 'les années paires',
   evening: 'du soir',
   everyDay: 'tous les jours',
   everyDayOfMonth: 'tous les jours du mois',
@@ -96,51 +116,45 @@ const words = {
   first: 'premières',
   from: 'de',
   fromThe: 'du',
-  fromTheFeminine: 'de la',
-  hour: 'h',
   in: 'en',
   last: 'dernières',
-  lastDay: 'dernier jour',
+  lastDay: 'le dernier jour',
   lastOne: 'dernier',
+  late: 'de décalage',
+  later: 'plus tard',
+  leapYears: 'les années bissextiles',
   midnight: 'minuit',
   morning: 'du matin',
   noon: 'midi',
-  oddFeminine: 'impaires',
-  oddMasculine: 'impairs',
+  oddDays: 'les jours impairs',
+  oddYears: 'les années impaires',
   ofEachHour: 'de chaque heure',
-  ofEachMinute: 'de chaque minute',
   ofEachMonth: 'de chaque mois',
-  ofEachYear: 'de chaque année',
-  ofEveryOtherMonth: 'd\'un mois sur deux',
-  ofMonth: 'du mois',
-  ofOneMinute: 'd\'une minute',
-  ofTheMonths: 'des mois',
-  ofThePlural: 'des',
+  ofMonthOf31Days: 'd\'un mois de 31 jours',
   oneMinute: 'une minute',
-  oneMonthInTwo: 'un mois sur deux',
   oneYearIn: 'une année sur',
+  or: 'ou',
   penultimateDay: 'l\'avant-dernier jour',
   runs: 'S\'exécute',
+  sameMonth: 'dans le même mois',
   since: 'à partir de',
-  sinceThe: 'à partir du',
   startup: 'au démarrage du système',
   the: 'le',
-  theFeminine: 'la',
-  theHours: 'les heures',
   thePlural: 'les',
-  theYears: 'les années',
+  then: 'puis',
   to: 'à',
   toThe: 'au',
   unrecognizable: 'une expression cron non reconnue',
-  weekdayDay: 'jour de semaine',
-  weekend: 'le week-end',
-  weekendCanada: 'la fin de semaine'
+  until: 'jusqu\'à',
+  whenMonthHasMoreThan: 'quand le mois compte plus de',
+  with: 'avec',
+  workingDay: 'jour ouvré'
 };
 
 const lexicon = {
-  dayNumber, months, nthFromEnd, nthWords, of, twoDigits, units, weekdays,
-  words
+  countWords, dayNumber, months, nthWords, of, symbols, twoDigits, units,
+  weekdays, words
 };
 
-export type {Name};
+export type {Name, WeekdayName};
 export default lexicon;

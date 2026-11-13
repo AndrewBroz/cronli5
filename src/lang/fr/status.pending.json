@@ -2,6 +2,6 @@
   "name": "French",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2 from the questionnaire; no renderer built yet, and no independent read of the rows yet",
+  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2 from the questionnaire, then revised after two independent reads of the rows against their schedules and two blind fluency judgments; no renderer built yet",
   "branchBudget": 100
 }
