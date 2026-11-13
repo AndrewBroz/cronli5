@@ -316,6 +316,42 @@ function standApart(hours: Sayable): boolean {
     });
 }
 
+// How many windows the hours write out, where each holds one hour: every
+// one, or for a cadence of more than four the first two and the last.
+function windowsShown(hours: Sayable): number {
+  const {base} = restOf(hours);
+  const parts = base.kind === 'cadencePieces' ? base.parts : [base];
+
+  return standApart(hours) ?
+    parts.reduce(function count(total, part) {
+      const size = denote(part, hoursOfDay).length;
+
+      return total + (part.kind === 'cadence' && size > heldBeforeCadence ?
+        boundedCadence :
+        size);
+    }, 0) :
+    0;
+}
+
+// Beside windows of single hours that show more clock times than a list
+// holds, a cadence of three minutes or more is said by its step alone:
+// every window already names its first minute and its last.
+function stepInWindows(
+  chosen: Sayable,
+  candidates: SetDescription[],
+  hours: Sayable
+): Sayable {
+  const cadence = candidates.find(function isCadence(description) {
+    return description.kind === 'cadence' &&
+      denote(description, sixty).length > 2;
+  });
+
+  return chosen.kind === 'values' && cadence &&
+    windowsShown(hours) * 2 > held ?
+    cadence :
+    chosen;
+}
+
 // The minutes: clock times inside one named hour, and otherwise places in
 // the hour («:05»).
 function minuteLevel(work: Clockwork, each: string): Level {
@@ -659,10 +695,13 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     [...beatOf(linear.second), ...together(schedule, 'second', false)]);
   const minuteOthers =
     [...beatOf(linear.minute), ...together(schedule, 'minute', true)];
+  const hours = settle(linear.hour,
+    M.length === 1 ? hoursAsPoints : hoursAsWindows,
+    together(schedule, 'hour', M.length === 1));
   const minutes = H.length === 1 ?
     settle(linear.minute, onTheClock, minuteOthers) :
-    settleUnwrapped(candidates.minute as SetDescription[], linear.minute,
-      inTheHour, minuteOthers);
+    stepInWindows(settleUnwrapped(candidates.minute as SetDescription[],
+      linear.minute, inTheHour, minuteOthers), linear.minute, hours);
   const lone = S.length === 1;
   const pointed = minutes.kind === 'values';
   const leads = runThrough(seconds, minutes);
@@ -680,9 +719,7 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
       return lone && pointed && second > 0;
     }),
     high: [M[M.length - 1], ...toSecond.filter(whereLeading)],
-    hours: settle(linear.hour,
-      M.length === 1 ? hoursAsPoints : hoursAsWindows,
-      together(schedule, 'hour', M.length === 1)),
+    hours,
     leads,
     linear,
     low: [M[0], ...[0].filter(whereLeading)],

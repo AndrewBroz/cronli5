@@ -835,7 +835,54 @@ const rows = [
   ['*/15 9-17 1-7 * */2',
     'vom 1. bis 7. jedes Monats, wenn sie auf einen Dienstag, Donnerstag, ' +
     'Samstag oder Sonntag fallen, jeweils von 9:00 bis 17:45 Uhr alle 15 ' +
-    'Minuten']
+    'Minuten'],
+  // Windows of single hours that show more than six clock times (four
+  // windows or more) are as much as a reader holds, so a cadence of three
+  // minutes or more beside them is said by its step alone: each window
+  // already names its first minute and its last, and «alle 15 Minuten»
+  // adds one thing where the minutes listed added four to six.
+  ['5/15 2/6 * * *',
+    'täglich von 2:05 bis 2:50, von 8:05 bis 8:50, von 14:05 bis 14:50 und ' +
+    'von 20:05 bis 20:50 Uhr alle 15 Minuten'],
+  ['5/15 2,8,14,20 * * *',
+    'täglich von 2:05 bis 2:50, von 8:05 bis 8:50, von 14:05 bis 14:50 und ' +
+    'von 20:05 bis 20:50 Uhr alle 15 Minuten'],
+  ['5/10 0,6,12,18 * * *',
+    'täglich von 0:05 bis 0:55, von 6:05 bis 6:55, von 12:05 bis 12:55 und ' +
+    'von 18:05 bis 18:55 Uhr alle 10 Minuten'],
+  ['10/20 2/6 * * *',
+    'täglich von 2:10 bis 2:50, von 8:10 bis 8:50, von 14:10 bis 14:50 und ' +
+    'von 20:10 bis 20:50 Uhr alle 20 Minuten'],
+  ['5/15 2/6 */2 * *',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) von 2:05 bis ' +
+    '2:50, von 8:05 bis 8:50, von 14:05 bis 14:50 und von 20:05 bis 20:50 ' +
+    'Uhr alle 15 Minuten'],
+  ['0-10 5/15 2/6 */2 * *',
+    'an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.) von 2:05 bis ' +
+    '2:50, von 8:05 bis 8:50, von 14:05 bis 14:50 und von 20:05 bis 20:50 ' +
+    'Uhr alle 15 Minuten, jeweils in den Sekunden 0 bis 10'],
+  ['5,20,35,50 0-12/3,14-22/4 * * *',
+    'täglich von 0:05 bis 0:50, von 3:05 bis 3:50 … und von 12:05 bis ' +
+    '12:50 sowie von 14:05 bis 14:50, von 18:05 bis 18:50 und von 22:05 ' +
+    'bis 22:50 Uhr alle 15 Minuten'],
+  // The boundary. Three windows, or a cadence of hours shown as its first
+  // two windows and its last, keep the minutes listed; so do minutes that
+  // are no cadence, and a cadence of two, which is only the window's ends.
+  ['5/15 2/9 * * *',
+    'täglich von 2:05 bis 2:50, von 11:05 bis 11:50 und von 20:05 bis ' +
+    '20:50 Uhr jeweils um :05, :20, :35 und :50'],
+  ['5/15 2/4 * * *',
+    'täglich von 2:05 bis 2:50, von 6:05 bis 6:50 … und von 22:05 bis ' +
+    '22:50 Uhr jeweils um :05, :20, :35 und :50'],
+  ['5,10,20,40 2/6 * * *',
+    'täglich von 2:05 bis 2:40, von 8:05 bis 8:40, von 14:05 bis 14:40 und ' +
+    'von 20:05 bis 20:40 Uhr jeweils um :05, :10, :20 und :40'],
+  ['5,35 2/6 * * *',
+    'täglich von 2:05 bis 2:35, von 8:05 bis 8:35, von 14:05 bis 14:35 und ' +
+    'von 20:05 bis 20:35 Uhr jeweils um :05 und :35'],
+  ['5/15 2-3,8-9,14-15,20-21 * * *',
+    'täglich von 2:05 bis 3:50, von 8:05 bis 9:50, von 14:05 bis 15:50 und ' +
+    'von 20:05 bis 21:50 Uhr stündlich um :05, :20, :35 und :50']
 ];
 
 export {rows};

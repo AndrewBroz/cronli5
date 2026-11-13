@@ -111,7 +111,10 @@ Corrections, for what has to be worked out:
   * clock times that multiply minutes by hours: **more than six**;
   * a series of clock times (4.1) shows **three minutes to the hour at
     most**, nine times in all; with more, the minutes are said once
-    after the hours' windows.
+    after the hours' windows;
+  * minutes said after windows of single hours: where those windows
+    show **more than six** clock times, a cadence of three minutes or
+    more is said by its step (4.1, «alle 15 Minuten»).
   Each limit was read off the judges' own choices: four and five clock
   times were written out by them, eight were "at the limit of what can be
   read"; seven dates were written out and graded natural; six minutes
@@ -686,6 +689,7 @@ opens with «stündlich».
 | a cadence of hours, six clock times or fewer | the clock times |
 | a cadence of hours, more than six clock times, M a list of three minutes or fewer | a series of clock times: every time of the first two hours, «…», and every time of the last hour, with «und» before the last time: «um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr»; «um 0:00, 0:15, 0:45, 4:00, 4:15, 4:45 … 20:00, 20:15 und 20:45 Uhr». (One window of the hour cadence for each minute, «von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden», was the third judge's one odd grade: two overlapping windows look like periods, and one reading gives six runs for twelve.) |
 | a cadence of hours, M a list of four to six minutes | the hours as in the table for continuous minutes, each window from its first time to its last, then «jeweils» and the minutes once: «in den geraden Stunden (0:05–0:55, 2:05–2:55 … 22:05–22:55 Uhr) jeweils um :05, :15, :25, :35, :45 und :55»; «von 8:05 bis 8:50, von 10:05 bis 10:50 … und von 18:05 bis 18:50 Uhr jeweils um :05, :20, :35 und :50». (As a series these showed twelve to eighteen clock times, which nobody holds; the judged series show six and nine.) |
+| hours each in a window of its own, the windows written out showing more than six clock times (four windows or more), M a cadence of three minutes or more | the windows, then the minutes by their step alone, as for continuous minutes; this takes precedence over the two rows above it and over separate hours: «von 2:05 bis 2:50, von 8:05 bis 8:50, von 14:05 bis 14:50 und von 20:05 bis 20:50 Uhr alle 15 Minuten»; «von 0:05 bis 0:55, von 6:05 bis 6:55, von 12:05 bis 12:55 und von 18:05 bis 18:55 Uhr alle 10 Minuten». Eight clock times in the windows are already as much as a reader holds, and four to six minutes listed after them made twelve to fourteen things; the step adds one, and needs no start to add to, since every window names the cadence's first minute and its last. Three windows, or a cadence of hours shown as its first two windows and its last (six clock times), keep the minutes listed, as above; so do minutes that are no cadence, and a cadence of two minutes, which is only each window's two ends: «von 2:05 bis 2:35, … Uhr jeweils um :05 und :35» |
 | a cadence of hours, M a run or a cadence | the hours as in the table for continuous minutes, each window from its first run to its last, then the lead: «in den geraden Stunden (0:00–0:29, 2:00–2:29 … 22:00–22:29 Uhr) jede Minute» |
 | every hour with exceptions | «stündlich um :05, :20 und :45, außer von 3:05 bis 3:45 Uhr» |
 
