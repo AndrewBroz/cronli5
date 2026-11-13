@@ -158,7 +158,7 @@ another part follows it; the mark belongs to the join, not to the part:
 * a comma after a part that says «і так далі» (3.7, 5.8), after a year
   part that opens «починаючи з» or holds «крім» or «а також» (5.8): «у
   2028, 2032, 2036 роках і так далі, щодня о 9:00»; «щомісяця 1-го,
-  4-го, 7-го числа і так далі до кінця місяця, о 0:00»; «починаючи з
+  4-го, 7-го числа й так далі до кінця місяця, о 0:00»; «починаючи з
   2030 року, щодня о 9:00»;
 * a colon after a month part that stands as a heading (2.7): «у червні:
   щоп'ятниці, а також 1-го числа, о 0:00».
@@ -510,10 +510,10 @@ two windows, «щохвилини з 9:00 до 9:10 і з 9:50 до 9:59».
   word beside «щомісяця» («щомісяця кожні 5 днів»: two frequencies in a
   row). **More than seven days are the first three and «і так далі»**,
   to the month's end or to the last day: `*/3` is «щомісяця 1-го, 4-го,
-  7-го числа і так далі до кінця місяця, о 0:00»; `8/2` is «щомісяця
-  8-го, 10-го, 12-го числа і так далі до кінця місяця, о 0:00»; one
+  7-го числа й так далі до кінця місяця, о 0:00»; `8/2` is «щомісяця
+  8-го, 10-го, 12-го числа й так далі до кінця місяця, о 0:00»; one
   that stops before the month's end names its last day, `1-25/2` is
-  «щомісяця 1-го, 3-го, 5-го числа і так далі до 25-го включно, о 0:00».
+  «щомісяця 1-го, 3-го, 5-го числа й так далі до 25-го включно, о 0:00».
   «До кінця місяця» holds in a month of any length and says that the
   count starts again. The step is read off the three days, as it is for
   years (5.8). (This used to be «щомісяця 1-го числа, а далі кожні 3 дні
@@ -932,7 +932,7 @@ first Monday is «у перший понеділок місяця».
   червня включно й 15 червня». An idiom, an exception or a long cadence
   of days keeps its own words after the month: «у червні по непарних
   числах»; «у червні щодня, крім 15-го числа»; «у червні 1-го, 4-го,
-  7-го числа і так далі до кінця місяця».
+  7-го числа й так далі до кінця місяця».
 * **Only what fires is named** (2.8). A day no reached month has is not
   said: `0 0 */5 6 *` is «щороку 1, 6, 11, 16, 21 та 26 червня о 0:00»;
   `0 0 1,31 4,6,9,11 *` is «щороку 1 квітня, 1 червня, 1 вересня та 1
@@ -1058,7 +1058,7 @@ nor the off-by-one open, and it is the shape all three judges wrote when
 they rewrote these sentences themselves.
 
 Days of the month have their own form for a long cadence (3.7):
-«щомісяця 1-го, 4-го, 7-го числа і так далі до кінця місяця». It has no
+«щомісяця 1-го, 4-го, 7-го числа й так далі до кінця місяця». It has no
 «так само» and no first cycle to mistake.
 
 ## 5. Idioms
@@ -1334,8 +1334,10 @@ was left out before, and the sentence form said «Виконується уве�
 written in letters that ends in a vowel («включно й о 22:00», «10-го
 числа й з 20-го», «у червні й з вересня»). «І» everywhere else: after a
 consonant, after digits, after a comma («до 9:59 і з 17:00», «…до 17:45,
-і о 22:05»). The fixed phrase «і так далі» does not change. «Та» in a
-list never changes; that is why it is the list word.
+і о 22:05»). «І так далі» follows the same rule: «у 2030, 2032, 2034
+роках і так далі», «1-го, 4-го, 7-го числа й так далі». (It was called a
+fixed phrase that does not change while it only ever followed «роках».)
+«Та» in a list never changes; that is why it is the list word.
 
 **«З» and «із».** «Із» before a word that begins with з, с, ц, ч, ш or щ,
 unless the word before ends in a vowel letter. In these sentences that

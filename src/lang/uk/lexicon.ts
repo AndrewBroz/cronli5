@@ -20,6 +20,8 @@ interface WeekdayName {
   every: string;
   // After «з», «до», «крім»: «з вівторка до четверга», «крім неділі».
   genitive: string;
+  // In a gloss of which days count: «понеділок–п'ятниця».
+  nominative: string;
   short: string;
 }
 
@@ -71,6 +73,7 @@ const weekdays: WeekdayName[] = [
     every: 'щонеділі',
     feminine: true,
     genitive: 'неділі',
+    nominative: 'неділя',
     short: 'нд'
   },
   {
@@ -78,6 +81,7 @@ const weekdays: WeekdayName[] = [
     every: 'щопонеділка',
     feminine: false,
     genitive: 'понеділка',
+    nominative: 'понеділок',
     short: 'пн'
   },
   {
@@ -85,6 +89,7 @@ const weekdays: WeekdayName[] = [
     every: 'щовівторка',
     feminine: false,
     genitive: 'вівторка',
+    nominative: 'вівторок',
     short: 'вт'
   },
   {
@@ -92,6 +97,7 @@ const weekdays: WeekdayName[] = [
     every: 'щосереди',
     feminine: true,
     genitive: 'середи',
+    nominative: 'середа',
     short: 'ср'
   },
   {
@@ -99,6 +105,7 @@ const weekdays: WeekdayName[] = [
     every: 'щочетверга',
     feminine: false,
     genitive: 'четверга',
+    nominative: 'четвер',
     short: 'чт'
   },
   {
@@ -106,6 +113,7 @@ const weekdays: WeekdayName[] = [
     every: 'щоп\'ятниці',
     feminine: true,
     genitive: 'п\'ятниці',
+    nominative: 'п\'ятниця',
     short: 'пт'
   },
   {
@@ -113,11 +121,12 @@ const weekdays: WeekdayName[] = [
     every: 'щосуботи',
     feminine: true,
     genitive: 'суботи',
+    nominative: 'субота',
     short: 'сб'
   }
 ];
 
-// Each unit after a number, by the number's category («кожні 21
+// Each unit after a number, by the number's category («через 21
 // хвилину», «через 2 хвилини», «кожні 5 хвилин», «за 3 дні», «31 день»);
 // in the genitive after «протягом перших» or «останніх» (one against the
 // rest: «першої хвилини», «перших 30 хвилин»); and, for a minute or a
@@ -190,6 +199,7 @@ const words = {
   and: 'та',
   andPiece: 'і',
   andPieceAfterVowel: 'й',
+  allYears: 'усі роки',
   andSoOn: 'і так далі',
   at: 'о',
   atBeforeVowel: 'об',
@@ -199,7 +209,7 @@ const words = {
   eachHour: 'кожної години',
   eachMinute: 'кожної хвилини',
   eachTime: 'щоразу',
-  evenDays: 'парні числа',
+  evenDays: 'парних числах',
   evenYears: 'парні роки',
   every: 'кожні',
   everyDay: 'щодня',
@@ -208,6 +218,7 @@ const words = {
   everyMonth: 'щомісяця',
   everySecond: 'щосекунди',
   everyWeek: 'щотижня',
+  everyYear: 'щороку',
   except: 'крім',
   first: 'перших',
   firstWeekday: 'перший будній день',
@@ -225,8 +236,12 @@ const words = {
   lastFeminine: 'останню',
   lastMasculine: 'останній',
   lastWeekday: 'останній будній день',
+  leapYearsOnly: 'лише у високосні роки',
   nearest: 'найближчий до',
-  oddDays: 'непарні числа',
+  never: 'ніколи',
+  neverRuns: 'Не виконується',
+  noSuchDate: 'такої дати в календарі немає',
+  oddDays: 'непарних числах',
   oddYears: 'непарні роки',
   ofMonth: 'місяця',
   on: 'на',
@@ -236,20 +251,22 @@ const words = {
   runs: 'Виконується',
   sameMonth: 'того ж місяця',
   sharp: 'рівно',
+  startingFrom: 'починаючи з',
   startup: 'під час запуску системи',
   stretch: 'проміжку',
-  thenEvery: 'а далі',
+  through: '–',
   throughout: 'протягом',
   toEndOfMonth: 'до кінця місяця',
   unrecognizable: 'нерозпізнаний шаблон cron',
   until: 'до',
   weekday: 'будній день',
-  weekdays: 'будні',
-  weekends: 'вихідні',
+  whole: 'увесь',
+  wholeAfterVowel: 'весь',
   wholeYear: 'увесь рік',
   within: 'за',
   year: 'року',
   yearLocative: 'році',
+  years: 'років',
   yearsLocative: 'роках'
 };
 
