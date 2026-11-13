@@ -162,7 +162,15 @@ for.
 
 5.1 Odd and even. [`0 0 */2 * *`] [`0 0 2/2 * *`]
 
-5.2 Working days and the weekend. [`0 9 * * 1-5`] [`0 9 * * 0,6`]
+5.2 The week as its readers live it. On which day does a reader take the
+week to start, and in what order are the days listed? Which days, if any,
+do readers group under one word (a working week, days of rest), and which
+exact days does that word mean where the language is written: is it the
+same set in every region, and does it carry anything the pattern does not
+know (public holidays, a Saturday that counts)? A set earns such a word
+only if the word means exactly that set to those readers. Monday to
+Friday is one culture's answer, not the question. [`0 9 * * 1-5`]
+[`0 9 * * 0,6`] [`0 9 * * 0-4`] [`0 9 * * 5,6`] [`0 9 * * 1-6`]
 
 5.3 Noon and midnight. Are they names for a moment only, or for an hour?
 [`0 0 * * *`] [`0 12 * * *`] [`30 0 * * *`]
@@ -175,7 +183,9 @@ for.
 5.6 Named parts of the day, if the language uses them instead of or beside
 a.m. and p.m. Give each one's hours.
 
-5.7 Quartz forms: the last day, the nearest working day, the nth weekday of
+5.7 Quartz forms: the last day, the nearest day from Monday to Friday
+(the scheduler fixes those five days whatever the local week, so a word
+for "working day" is right only where it means them), the nth weekday of
 the month. [`0 0 L * *`] [`0 0 15W * *`] [`0 0 * * 1#2`] [`0 0 * * 5L`]
 
 5.8 Any other fixed phrase a speaker would reach for.

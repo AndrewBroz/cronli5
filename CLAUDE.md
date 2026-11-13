@@ -110,6 +110,10 @@ renderer change.
   language meets that concern natively: its own frame order, thresholds,
   idioms and ties (or none). A reader's or judge's rewrite is weighed the
   same way, against the concern and against what that reader was not told.
+  Even the concepts are a language's own: which days make a working week,
+  which day a week starts on, what counts as one thing to hold in mind.
+  Only the reader's task is universal, and how hard a phrase is to hold
+  depends on how the language says it.
 - **Fluency is judged blind.** The judge is briefed in the target language,
   sees the sentences as something people wrote for a screen, and is told
   nothing of patterns, rules or generation. This is a separate read from
