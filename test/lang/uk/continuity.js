@@ -15,12 +15,13 @@ const FIELDS =
 // description is four parts, coarsest first: year, month, day, time. A
 // time field changes the time and nothing else, with the one exception
 // below. The calendar fields share their three parts, because they are
-// said together: a date takes its month into the day part («1 червня»),
-// days named by number put «щомісяця» in the month part, a day of the
-// month beside a weekday gives the month back («у червні 1-го числа, а
-// також щоп'ятниці»), and a single year follows a month's name wherever
-// that stands («у червні 2030 року», «1 січня 2030 року»). No calendar
-// edit touches the time.
+// said together: a date takes its month into the day part («1 червня»,
+// «1-го та 15-го числа січня та липня»), days named by number put
+// «щомісяця» in the month part, a weekday beside a day of the month takes
+// «щомісяця» into the day part and makes a month a heading («у червні:
+// щоп'ятниці, а також 1-го числа»), and a single year follows a month's
+// name wherever that stands («у червні 2030 року», «1 січня 2030 року»).
+// No calendar edit touches the time.
 const MAY_CHANGE = {
   date: ['year', 'month', 'day'],
   hour: ['time'],
@@ -31,10 +32,12 @@ const MAY_CHANGE = {
   year: ['year', 'month', 'day']
 };
 
-// The one place a time field reaches another part: when the hours are
-// restricted and no day is named, the day part says «щодня», so an hour
-// edit may add or remove exactly that word.
-const HOUR_MAY_SET_DAY = ['', 'щодня'];
+// The one place a time field reaches another part: the day part says
+// «щодня» when the hours are restricted, no day is named, and the time
+// does not itself open with an "every" word. So an edit to the seconds,
+// the minutes or the hours may add or remove exactly that word.
+const TIME_FIELDS = ['second', 'minute', 'hour'];
+const TIME_MAY_SET_DAY = ['', 'щодня'];
 
 const SETUP = {languages: [ukrainian.default], options: {}, styles: {}};
 
@@ -82,21 +85,21 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
-    // A part that ends in an exception, in an «а також» phrase or in «і
-    // так далі» is closed by a comma when another part follows it. That
-    // comma belongs to the join, not to the part, so it is set aside
-    // before two parts are compared.
-    // «У» and «в» are one preposition, spelled by the sound before it, so
-    // the word that opens a part follows the part ahead of it. That is
-    // spelling too, and is set aside the same way.
+    // A part may be closed by a comma or a colon when another part
+    // follows it (answers 2.1). The mark belongs to the join, not to the
+    // part, so it is set aside before two parts are compared.
+    // «У» and «в», and «з» and «із», are each one preposition, spelled by
+    // the sound before it, so the word that opens a part follows the part
+    // ahead of it. That is spelling too, and is set aside the same way.
     function words(part) {
-      return String(part).replace(/,$/u, '').replace(/^в /u, 'у ');
+      return String(part).replace(/[,:]$/u, '').replace(/^в /u, 'у ')
+        .replace(/^із /u, 'з ');
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const everyDay = changed[0] === 'hour' && part === 'day' &&
-        HOUR_MAY_SET_DAY.includes(before[part]) &&
-        HOUR_MAY_SET_DAY.includes(after[part]);
+      const everyDay = TIME_FIELDS.includes(changed[0]) && part === 'day' &&
+        TIME_MAY_SET_DAY.includes(before[part]) &&
+        TIME_MAY_SET_DAY.includes(after[part]);
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&
           !MAY_CHANGE[changed[0]].includes(part)) {
@@ -163,5 +166,6 @@ describe('Ukrainian continuity:', function() {
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
     expect(say('0 9-17 * * *'))
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
+    expect(say('30 * * * *')).to.equal(say('30 0-23 * * *'));
   });
 });
