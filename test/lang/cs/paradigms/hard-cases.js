@@ -773,7 +773,22 @@ const rows = [
     '23:00'],
   ['0 0 1-10/2,11-31/3 * *',
     'každý lichý den od 1. do 9. dne v měsíci a každý třetí den od 11. do ' +
-    '29. dne v měsíci v 0:00']
+    '29. dne v měsíci v 0:00'],
+
+  // The parts are said only where they name fewer things than the list:
+  // eight scattered minutes with a rhythm of three among them by chance
+  // stay a list, which shows that they are scattered. Parts that run
+  // through one another are joined by «a také», never «a pak», which
+  // would say that one comes after the other.
+  ['0,3,7,12,18,25,33,42 * * * *',
+    'v každou celou hodinu a 3, 7, 12, 18, 25, 33 a 42 minut po ní'],
+  ['5,10,20,25,35,40,50,55 * * * *',
+    'v každé hodině každých 15 minut od 5 do 50 minut po celé hodině ' +
+    '(:05–:50) a také každých 15 minut od 10 do 55 minut po celé hodině ' +
+    '(:10–:55)'],
+  ['5,10,20,25,35,40,50,55 * * * * *',
+    'v každé minutě každých 15 sekund od 5 do 50 sekund po začátku minuty ' +
+    'a také každých 15 sekund od 10 do 55 sekund po začátku minuty']
 ];
 
 export {rows};

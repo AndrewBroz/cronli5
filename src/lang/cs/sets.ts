@@ -149,7 +149,34 @@ function togetherIn(candidates: SetDescription[], domain: Domain):
   const found = values.length > longestListedCadence &&
     describeCadencePieces(values, domain);
 
-  return found && found.parts.length <= mostParts ? found : null;
+  const singles = found ? found.parts.flatMap(function single(part) {
+    return 'values' in part ? part.values : [];
+  }) : [];
+
+  return found && found.parts.length <= mostParts &&
+    singles.length <= fewMissing ? found : null;
+}
+
+// The first and last value of a part.
+function endsOf(part: CadencePieces['parts'][number]): number[] {
+  const values = 'values' in part ?
+    part.values :
+    [stretchOf(part).first, stretchOf(part).last];
+
+  return [values[0], values[values.length - 1]];
+}
+
+/**
+ * What joins the parts of a set said as its parts: «a pak» where each
+ * begins after the one before it has ended, «a také» where they run
+ * through one another.
+ */
+function partsJoiner(parts: CadencePieces['parts']): string {
+  const follow = parts.every(function after(part, index) {
+    return index === 0 || endsOf(part)[0] > endsOf(parts[index - 1])[1];
+  });
+
+  return follow ? words.andThen : words.andAlso;
 }
 
 const tieOrder = ['pieces', 'except', 'cadencePieces', 'values'];
@@ -223,6 +250,7 @@ function chosen(candidates: SetDescription[], order: Order): Described {
 
 export {
   cadenceCount, chosen, comesRound, counted, enoughForARun, everyUnit,
-  fewestNamed, listed, longestListedCadence, ofKind, runsOf, spaced,
+  fewestNamed, listed, longestListedCadence, ofKind, partsJoiner, runsOf,
+  spaced,
   stretchOf, togetherIn, unitAfter
 };

@@ -531,10 +531,17 @@ groups.)
 seconds, the hours at one minute, or the days of the month are more than
 seven values, and the core gives them as runs and cadences together
 (`cadencePieces`) in at most three parts, the parts are said, each with its
-own rhythm and its own stretch, and the values are never listed. A list of
+own rhythm and its own stretch, so long as no more than two single values
+stand beside the runs and rhythms. With more the set is a list: eight
+scattered minutes with a rhythm of three among them by chance are
+scattered, and the list shows it. A list of
 two dozen cannot be held; two rhythms can. The parts are joined by «a pak»
-where they are places in the hour or the minute, and by «a» where they are
-clock times or days; a part of one or two single values is said as it is
+where they are places in the hour or the minute and each begins after the
+one before it has ended, by «a také» where such parts run through one
+another («každých 15 minut od 5 do 50 minut po celé hodině (:05–:50) a
+také každých 15 minut od 10 do 55 minut po celé hodině (:10–:55)»: «a pak»
+would say that one follows the other), and by «a» where they are clock
+times or days; a part of one or two single values is said as it is
 in 4.1a («a pak ještě 45 minut po celé hodině (:45)»).
 
 * Minutes of every hour: «v každé hodině» once, then each part as its

@@ -15,7 +15,8 @@ import {
   apart, at, clockField, minutesAndHours, rhythmStep, windowed
 } from './clock.js';
 import {
-  counted, everyUnit, longestListedCadence, ofKind, spaced, stretchOf
+  counted, everyUnit, longestListedCadence, ofKind, partsJoiner, spaced,
+  stretchOf
 } from './sets.js';
 import lexicon from './lexicon.js';
 
@@ -97,7 +98,7 @@ function partsInMinute(form: CadencePieces, of: string, alone: boolean):
   });
 
   return spaced({[words.ofEveryMinute]: words.inEveryMinute}[of] ?? '',
-    parts.join(` ${words.andThen} `));
+    parts.join(` ${partsJoiner(form.parts)} `));
 }
 
 // A run or a cadence of seconds inside the minute, and an exception of a

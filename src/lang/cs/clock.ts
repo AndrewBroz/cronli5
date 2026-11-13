@@ -11,7 +11,7 @@ import type {CzechStyle} from './options.js';
 import type {Described} from './sets.js';
 import {
   cadenceCount, chosen, comesRound, counted, enoughForARun, everyUnit,
-  listed, ofKind, runsOf, spaced, stretchOf,
+  listed, ofKind, partsJoiner, runsOf, spaced, stretchOf,
   togetherIn
 } from './sets.js';
 import type {Unit} from './lexicon.js';
@@ -308,7 +308,7 @@ function piecePlaces(form: Extract<Described, {kind: 'pieces'}> |
 
         return kinds[part.kind]();
       }
-    ).join(` ${words.andThen} `))
+    ).join(` ${partsJoiner(form.parts)} `))
   };
 }
 

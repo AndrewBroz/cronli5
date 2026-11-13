@@ -171,6 +171,7 @@ const words = {
   afterTheFullHour: 'po celé hodině',
   always: 'vždy',
   and: 'a',
+  andAlso: 'a také',
   andBesides: 'a navíc',
   andSoOn: 'a tak dále',
   but: 'ale',
