@@ -371,7 +371,7 @@ function isListed(work: Clockwork): boolean {
 }
 
 // The windows of a set of hours, without «Uhr»: every one, or for a
-// cadence too long to list the first two and the last.
+// cadence of more than four the first two and the last.
 function windowsOf(part: Sayable, spans: Spans): string {
   const hours = denote(part, hoursOfDay);
   const [first, second, last] =
@@ -379,7 +379,7 @@ function windowsOf(part: Sayable, spans: Spans): string {
       return span([hour, hour], spans);
     });
 
-  return part.kind === 'cadence' && hours.length > heldInSeries ?
+  return part.kind === 'cadence' && hours.length > heldBeforeCadence ?
     `${first}, ${second} ${words.ellipsis} ${words.and} ${last}` :
     list(runsOf(hours).map(function toSpan(run) {
       return span(run, spans);
@@ -546,6 +546,15 @@ function burst(base: Sayable): string {
     `${amount([stepOf(base)], units.second)}${start.join('')}`;
 }
 
+// Seconds in step, by number: the first three and the last, or all of a
+// few.
+function secondSeries(seconds: number[]): string {
+  return seconds.length > boundedCadence + 1 ?
+    `${seconds.slice(0, boundedCadence).join(', ')} ${words.ellipsis} ` +
+      `${seconds[seconds.length - 1]}` :
+    seconds.join(', ');
+}
+
 // Seconds by their number in the minute: each run by its ends, each
 // cadence as a series and each second between them, in ascending order.
 // A series stands apart from its neighbours.
@@ -560,8 +569,7 @@ function numbered(base: Sayable): string {
       }) :
       [[seconds[0], part.kind === 'range' ?
         `${part.from} ${words.to} ${part.to}` :
-        `${seconds.slice(0, boundedCadence).join(', ')} ${words.ellipsis} ` +
-          `${seconds[seconds.length - 1]}`]];
+        secondSeries(seconds)]];
   }).sort(function ascending(a, b) {
     return a[0] - b[0];
   }).map(function text(item) {

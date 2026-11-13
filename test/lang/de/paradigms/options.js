@@ -88,7 +88,7 @@ const sets = [
         pattern: '* 22-23 * * *'
       },
       {
-        expected: 'am 1. Juni um 0:00 Uhr',
+        expected: 'jährlich am 1. Juni um 0:00 Uhr',
         parts: ['1. Juni', '0:00 Uhr'],
         pattern: '0 0 1 6 *'
       }
@@ -118,7 +118,7 @@ const sets = [
         pattern: '0 9 * 3 *'
       },
       {
-        expected: 'am 1. Juni um 0:00 Uhr',
+        expected: 'jährlich am 1. Juni um 0:00 Uhr',
         parts: ['1. Juni', '0:00 Uhr'],
         pattern: '0 0 1 6 *'
       },
@@ -133,8 +133,8 @@ const sets = [
         pattern: '0 9 * * 0-2,4-6'
       },
       {
-        expected: 'am letzten Werktag (Mo. bis Fr.) jedes Monats um 0:00 ' +
-          'Uhr',
+        expected: 'am letzten Wochentag (Mo. bis Fr.) jedes Monats um ' +
+          '0:00 Uhr',
         parts: ['Mo.', 'Fr.', '0:00 Uhr'],
         pattern: '0 0 LW * *'
       },
@@ -154,7 +154,7 @@ const sets = [
         pattern: '0 9 * 1 *'
       },
       {
-        expected: 'am 1. Jänner um 0:00 Uhr',
+        expected: 'jährlich am 1. Jänner um 0:00 Uhr',
         parts: ['1. Jänner', '0:00 Uhr'],
         pattern: '0 0 1 1 *'
       },

@@ -93,13 +93,23 @@ interface Weekdays {
 
 interface Years {
   // The one year, where the schedule names just one.
-  one?: number;
+  one: number[];
   said: Sayable;
   several: boolean;
 }
 
+// Which of the two day fields have something to say.
+interface DayArms {
+  dated: boolean;
+  // Whether no day the schedule names exists.
+  never: boolean;
+  // Whether a date and a weekday are said together.
+  union: boolean;
+  weekly: boolean;
+}
+
 // The fields before the time, and how their parts stand to one another.
-interface Frame {
+interface Frame extends DayArms {
   dates: Dates;
   // Whether a date phrase carries its one month.
   fused: boolean;
@@ -107,13 +117,9 @@ interface Frame {
   // Whether the month part ends in a month's name, which a year follows.
   monthNamed: boolean;
   months: Months;
-  // Whether no day the schedule names exists.
-  never: boolean;
   // Whether the day part is a date phrase on its own.
   phrase: boolean;
   reach: DateReach | null;
-  // Whether a date and a weekday are said together.
-  union: boolean;
   weekdays: Weekdays;
   years: Years;
 }
@@ -269,7 +275,7 @@ function series(cadence: Described<'cadence'>, naming: Naming): string {
     naming.one + list(days);
 }
 
-const dated: {[kind: string]: (
+const datesSaid: {[kind: string]: (
   description: never, tail: DateTail, naming: Naming) => string} = {
   all() {
     return '';
@@ -325,7 +331,7 @@ function dateText(
   tail: DateTail,
   naming: Naming
 ): string {
-  return (dated[description.kind] || plainDates)(
+  return (datesSaid[description.kind] || plainDates)(
     description as never, tail, naming);
 }
 
@@ -473,8 +479,8 @@ const yearSaid: {[kind: string]: (
     return join([!run.open && words.inYears, yearRun(run)]);
   },
   values(years: Described<'values'>) {
-    return `${[words.inYear, words.inYears][Number(years.values.length > 1)]} ` +
-      `${list(years.values.map(String))}`;
+    return [words.inYear, words.inYears][Number(years.values.length > 1)] +
+      ` ${list(years.values.map(String))}`;
   }
 };
 
@@ -485,11 +491,11 @@ function yearsOf(schedule: Schedule): Years {
   const offered = candidates.year as SetDescription[];
   const said = settle(offered, yearCounting,
     [cadencePieces.year].filter(Boolean) as Sayable[]);
-  const [one] = [offered[offered.length - 1]].flatMap(function lone(last) {
+  const one = [offered[offered.length - 1]].flatMap(function lone(last) {
     return sizeOf(offered) === 1 ? (last as Described<'values'>).values : [];
   });
 
-  return {one, said, several: said.kind !== 'all' && one === undefined};
+  return {one, said, several: said.kind !== 'all' && one.length === 0};
 }
 
 // The months as a list, a run, pieces or all but a few. They wrap round
@@ -586,13 +592,27 @@ function dailyBut(dates: Sayable): boolean {
 
 // What is said of the days, and what fuses: a date phrase with its one
 // month, and one year with a month's name.
-function frameOf(schedule: Schedule): Frame {
+// Which day fields speak. Dates that are every day the reached months
+// have restrict nothing, and a date no reached month has leaves the
+// weekdays, or nothing.
+function armsOf(schedule: Schedule): DayArms {
   const {dateReach: reach, day} = schedule.analyses;
   const whole = reach?.days?.everyDay === true;
   const fires = reach?.fires !== false;
   const dated = day.date !== null && fires && !whole;
   const weekly = day.weekday !== null && !whole;
-  const union = dated && weekly;
+
+  return {
+    dated,
+    never: day.date !== null && !fires && !weekly,
+    union: dated && weekly,
+    weekly
+  };
+}
+
+function frameOf(schedule: Schedule): Frame {
+  const arms = armsOf(schedule);
+  const {dated, union, weekly} = arms;
   const years = yearsOf(schedule);
   const months = monthsOf(schedule, years.said.kind !== 'all', union);
   const dates = datesOf(schedule, dated, {everyMonth: months.every, union});
@@ -604,6 +624,7 @@ function frameOf(schedule: Schedule): Frame {
   const monthLeads = !months.every && !fused;
 
   return {
+    ...arms,
     dates,
     fused,
     monthLeads,
@@ -611,10 +632,8 @@ function frameOf(schedule: Schedule): Frame {
     // exception would take it for their last item alone.
     monthNamed: monthLeads && ['range', 'values'].includes(months.said.kind),
     months,
-    never: day.date !== null && !fires && !weekly,
     phrase,
-    reach,
-    union,
+    reach: schedule.analyses.dateReach,
     weekdays,
     years
   };
@@ -622,8 +641,8 @@ function frameOf(schedule: Schedule): Frame {
 
 // The one year, where a month's name carries it.
 function yearAfter(frame: Frame, carried: boolean): string {
-  return [frame.years.one].filter(function due(year) {
-    return year !== undefined && carried;
+  return frame.years.one.filter(function due() {
+    return carried;
   }).map(function say(year) {
     return ` ${year}`;
   }).join('');
@@ -661,26 +680,36 @@ function leapGloss(frame: Frame, voice: Voice): string {
   }).join('');
 }
 
-// The date phrase: the days, with the months they fire in where those
-// are fewer than the months said before, and what is true of leap years.
-function dateSide(frame: Frame, namings: Namings, voice: Voice): string {
-  const {dates, months, reach, union} = frame;
-  const tail = tailOf(frame, union, voice);
-  // The day a Quartz form needs its month to have.
+// Which months have a Quartz form that some months lack, where every
+// month is meant: those with the day the form needs.
+function monthsWith(frame: Frame): string {
+  const {dates, months, reach} = frame;
   const {days = 0, day = days + 1} =
     {...dates.form} as {day?: number; days?: number};
   const lacking = Boolean(dates.form) && months.every && reach !== null;
+
+  return join([
+    lacking && words.inMonthsWith,
+    lacking && day < dateDomain.max && words.atLeast,
+    lacking && `${day} ${words.withDays}`
+  ]);
+}
+
+// The date phrase: the days, with the months they fire in where those
+// are fewer than the months said before, and what is true of leap years.
+function dateSide(frame: Frame, namings: Namings, voice: Voice): string {
+  const {dates, months, union} = frame;
+  const tail = tailOf(frame, union, voice);
+  const having = monthsWith(frame);
   const fewer = union && !months.every && months.firing.length > 1 &&
     months.firing.length < months.values.length;
 
   return join([
     fewer && names(months.firingSaid, namings.month),
-    lacking && words.inMonthsWith,
-    lacking && day < dateDomain.max && words.atLeast,
-    lacking && `${day} ${words.withDays}`,
+    having,
     dates.form ?
       quartzDates[dates.form.kind](dates.form as never,
-        lacking ? {...tail, noun: '', ord: ''} : tail, voice) :
+        having ? {...tail, noun: '', ord: ''} : tail, voice) :
       dateText(dates.said, tail, namings.date),
     leapGloss(frame, voice)
   ]);

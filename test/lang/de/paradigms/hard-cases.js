@@ -56,20 +56,30 @@ const rows = [
     'in den Jahren 2030 bis 2040 und 2050 bis 2081 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030-2034,2036-2040',
     'in den Jahren 2030 bis 2034 und 2036 bis 2040 täglich um 9:00 Uhr'],
-  ['0 0 9 * * * 2030/1', 'in den Jahren ab 2030 täglich um 9:00 Uhr'],
+  // A run with no end is «ab», alone.
+  ['0 0 9 * * * 2030/1', 'ab 2030 täglich um 9:00 Uhr'],
+  ['0 0 0 1 1 * 2030/1', 'ab 2030 jeweils am 1. Januar um 0:00 Uhr'],
+  ['0 0 9 * * 1 2030-9999', 'ab 2030 montags um 9:00 Uhr'],
   ['0 0 9 * * * 2030-2034,2036/1',
     'in den Jahren 2030 bis 2034 und ab 2036 täglich um 9:00 Uhr'],
+  // An exception from every year, and from years in step.
   ['0 0 9 * * * 1970-2029,2031/1',
-    'in den Jahren 1970 bis 2029 und ab 2031 täglich um 9:00 Uhr'],
-
-  // Years that are neither one run nor one series are taken apart from
-  // the earliest year on, and each series follows «sowie».
-  ['0 0 9 * * * 2030/2,2031',
-    'in den Jahren 2030 bis 2032 sowie 2034, 2036, 2038 usw. täglich um ' +
-    '9:00 Uhr'],
-  ['0 0 0 1 1 * 2030/2,2031',
-    'in den Jahren 2030 bis 2032 sowie 2034, 2036, 2038 usw. jeweils am 1. ' +
+    'in allen Jahren, außer 2030, täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 1970-2029,2031-2040,2042-9999',
+    'in allen Jahren, außer 2030 und 2041, täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2000-2028/2,2032-2098/2',
+    'in geraden Jahren von 2000 bis 2098, außer 2030, täglich um 9:00 Uhr'],
+  ['0 0 0 1 1 * 2000-2028/2,2032-2098/2',
+    'in geraden Jahren von 2000 bis 2098, außer 2030, jeweils am 1. ' +
     'Januar um 0:00 Uhr'],
+
+  // Years that are neither one run nor one series are the core's runs
+  // and cadences together, and each series stands apart after «sowie».
+  ['0 0 9 * * * 2030/2,2031',
+    'in den Jahren 2030, 2032, 2034 usw. sowie 2031 täglich um 9:00 Uhr'],
+  ['0 0 0 1 1 * 2030/2,2031',
+    'in den Jahren 2030, 2032, 2034 usw. sowie 2031 jeweils am 1. Januar ' +
+    'um 0:00 Uhr'],
   ['0 0 9 * * * 2030/4,2031',
     'in den Jahren 2030, 2034, 2038 usw. sowie 2031 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030/3,2031/3',
@@ -82,8 +92,7 @@ const rows = [
     'in den Jahren 2030 bis 2040 sowie 2045, 2050, 2055 usw. täglich um ' +
     '9:00 Uhr'],
   ['0 0 9 * * * 2030,2032,2034,2036,2038,2042,2044,2046,2048,2050',
-    'in den Jahren 2030, 2032, 2034 usw. bis 2038 sowie 2042, 2044, 2046 ' +
-    'usw. bis 2050 täglich um 9:00 Uhr'],
+    'in geraden Jahren von 2030 bis 2050, außer 2040, täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030/2,2031/4',
     'in den Jahren 2030, 2032, 2034 usw. sowie 2031, 2035, 2039 usw. ' +
     'täglich um 9:00 Uhr'],
@@ -95,46 +104,60 @@ const rows = [
   ['0 0 9 * * * 2030,9999',
     'in den Jahren 2030 und 9999 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030,2032,2034,2038,2040',
-    'in den Jahren 2030, 2032, 2034, 2038 und 2040 täglich um 9:00 Uhr'],
+    'in geraden Jahren von 2030 bis 2040, außer 2036, täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030-2036/2',
     'in geraden Jahren von 2030 bis 2036 täglich um 9:00 Uhr'],
 
   // Quartz forms.
   ['0 0 1 * ?', 'am 1. jedes Monats um 0:00 Uhr', {cron: 'quartz'}],
   ['0 0 LW * *',
-    'am letzten Werktag (Montag bis Freitag) jedes Monats um 0:00 Uhr'],
+    'am letzten Wochentag (Montag bis Freitag) jedes Monats um 0:00 Uhr'],
   ['0 0 L-3 * *',
     'am viertletzten Tag jedes Monats (3 Tage vor dem letzten) um 0:00 Uhr'],
   ['0 0 L-2 * *',
     'am drittletzten Tag jedes Monats (2 Tage vor dem letzten) um 0:00 Uhr'],
   ['0 0 L-1 * *', 'am vorletzten Tag jedes Monats um 0:00 Uhr'],
-  ['0 0 L 6 *', 'am letzten Tag im Juni um 0:00 Uhr'],
+  ['0 0 L 6 *', 'jährlich am letzten Tag im Juni um 0:00 Uhr'],
   ['0 0 L-3 6 *',
-    'am viertletzten Tag im Juni (3 Tage vor dem letzten) um 0:00 Uhr'],
+    'jährlich am viertletzten Tag im Juni (3 Tage vor dem letzten) um ' +
+    '0:00 Uhr'],
   ['0 0 L 1,7 *', 'im Januar und Juli jeweils am letzten Tag um 0:00 Uhr'],
-  ['0 0 LW 6 *', 'am letzten Werktag (Montag bis Freitag) im Juni um 0:00 Uhr'],
+  ['0 0 LW 6 *',
+    'jährlich am letzten Wochentag (Montag bis Freitag) im Juni um 0:00 Uhr'],
   ['0 0 15W 6 *',
-    'am Werktag (Montag bis Freitag), der dem 15. Juni am nächsten liegt, ' +
-    'um 0:00 Uhr'],
+    'jährlich am Wochentag (Montag bis Freitag), der dem 15. Juni am ' +
+    'nächsten liegt, um 0:00 Uhr'],
   ['0 0 1W * *',
-    'am ersten Werktag (Montag bis Freitag) jedes Monats um 0:00 Uhr'],
-  ['0 0 1W 6 *', 'am ersten Werktag (Montag bis Freitag) im Juni um 0:00 Uhr'],
+    'am ersten Wochentag (Montag bis Freitag) jedes Monats um 0:00 Uhr'],
+  ['0 0 1W 6 *',
+    'jährlich am ersten Wochentag (Montag bis Freitag) im Juni um 0:00 Uhr'],
   ['0 0 31W * *',
-    'in Monaten mit 31 Tagen am Werktag (Montag bis Freitag), der dem 31. ' +
-    'im selben Monat am nächsten liegt, um 0:00 Uhr'],
+    'in Monaten mit 31 Tagen am Wochentag (Montag bis Freitag), der dem ' +
+    '31. im selben Monat am nächsten liegt, um 0:00 Uhr'],
   ['0 0 30W * *',
-    'in Monaten mit mindestens 30 Tagen am Werktag (Montag bis Freitag), ' +
+    'in Monaten mit mindestens 30 Tagen am Wochentag (Montag bis Freitag), ' +
     'der dem 30. im selben Monat am nächsten liegt, um 0:00 Uhr'],
   ['0 0 28W * *',
-    'am Werktag (Montag bis Freitag), der dem 28. jedes Monats im selben ' +
+    'am Wochentag (Montag bis Freitag), der dem 28. jedes Monats im selben ' +
     'Monat am nächsten liegt, um 0:00 Uhr'],
+  // A day counted from the end that some months lack.
+  ['0 0 L-30 * *',
+    'in Monaten mit 31 Tagen 30 Tage vor dem letzten Tag um 0:00 Uhr'],
+  ['0 0 L-28 * *',
+    'in Monaten mit mindestens 29 Tagen 28 Tage vor dem letzten Tag um ' +
+    '0:00 Uhr'],
+  ['0 0 L-30 6-8 *',
+    'im Juli und August jeweils 30 Tage vor dem letzten Tag um 0:00 Uhr'],
+  ['0 0 L-28 2 *',
+    '28 Tage vor dem letzten Tag im Februar (nur in Schaltjahren) um 0:00 ' +
+    'Uhr'],
   ['0 0 L-10 * *', '10 Tage vor dem letzten Tag jedes Monats um 0:00 Uhr'],
   ['0 0 L-9 * *',
     'am zehntletzten Tag jedes Monats (9 Tage vor dem letzten) um 0:00 Uhr'],
   ['0 0 L-3 1,7 *',
     'im Januar und Juli jeweils am viertletzten Tag (3 Tage vor dem ' +
     'letzten) um 0:00 Uhr'],
-  ['0 0 * 6 1#2', 'am zweiten Montag im Juni um 0:00 Uhr'],
+  ['0 0 * 6 1#2', 'jährlich am zweiten Montag im Juni um 0:00 Uhr'],
   ['0 0 * 1,7 5L', 'im Januar und Juli jeweils am letzten Freitag um 0:00 Uhr'],
   ['0 9 * * 3#1', 'am ersten Mittwoch jedes Monats um 9:00 Uhr'],
   ['0 9 * * 4#3', 'am dritten Donnerstag jedes Monats um 9:00 Uhr'],
@@ -142,29 +165,74 @@ const rows = [
   ['0 9 * * 0#4', 'am vierten Sonntag jedes Monats um 9:00 Uhr'],
   ['0 9 * * 2#5', 'am fünften Dienstag jedes Monats um 9:00 Uhr'],
 
-  // A weekday nearest a date that some of the named months lack.
+  // A weekday nearest a date that some of the named months lack: only
+  // the months that have it are named.
   ['0 9 31W 1,6 *',
-    'im Januar und Juni jeweils in Monaten mit 31 Tagen am Werktag (Montag ' +
-    'bis Freitag), der dem 31. im selben Monat am nächsten liegt, um 9:00 ' +
-    'Uhr'],
+    'jährlich am Wochentag (Montag bis Freitag), der dem 31. Januar im ' +
+    'selben Monat am nächsten liegt, um 9:00 Uhr'],
   ['0 9 30W 2,3 *',
-    'im Februar und März jeweils in Monaten mit mindestens 30 Tagen am ' +
-    'Werktag (Montag bis Freitag), der dem 30. im selben Monat am nächsten ' +
-    'liegt, um 9:00 Uhr'],
+    'jährlich am Wochentag (Montag bis Freitag), der dem 30. März im ' +
+    'selben Monat am nächsten liegt, um 9:00 Uhr'],
   ['0 9 29W 1,2 *',
-    'im Januar und Februar jeweils in Monaten mit mindestens 29 Tagen am ' +
-    'Werktag (Montag bis Freitag), der dem 29. im selben Monat am nächsten ' +
-    'liegt, um 9:00 Uhr'],
+    'im Januar und Februar jeweils am Wochentag (Montag bis Freitag), der ' +
+    'dem 29. im selben Monat am nächsten liegt (im Februar nur in ' +
+    'Schaltjahren), um 9:00 Uhr'],
   ['0 9 31W 1,3 *',
-    'im Januar und März jeweils am Werktag (Montag bis Freitag), der dem ' +
+    'im Januar und März jeweils am Wochentag (Montag bis Freitag), der dem ' +
     '31. im selben Monat am nächsten liegt, um 9:00 Uhr'],
+  ['0 0 31W 6-8 *',
+    'im Juli und August jeweils am Wochentag (Montag bis Freitag), der dem ' +
+    '31. im selben Monat am nächsten liegt, um 0:00 Uhr'],
+  ['0 0 29W 2 *',
+    'am Wochentag (Montag bis Freitag), der dem 29. Februar im selben ' +
+    'Monat am nächsten liegt (nur in Schaltjahren), um 0:00 Uhr'],
+  ['0 0 31W * 5',
+    'freitags und zusätzlich in Monaten mit 31 Tagen am Wochentag (Montag ' +
+    'bis Freitag), der dem 31. im selben Monat am nächsten liegt, jeweils ' +
+    'um 0:00 Uhr'],
+  ['0 0 31W 6-8 1',
+    'von Juni bis August montags und zusätzlich im Juli und August am ' +
+    'Wochentag (Montag bis Freitag), der dem 31. im selben Monat am ' +
+    'nächsten liegt, jeweils um 0:00 Uhr'],
+
+  // A schedule that never runs says only that; beside weekdays the
+  // weekdays are left.
+  ['0 9 31 6 *', 'nie (einen solchen Tag gibt es nicht)'],
+  ['0 0 30 2 *', 'nie (einen solchen Tag gibt es nicht)'],
+  ['0 0 31 4,6,9,11 *', 'nie (einen solchen Tag gibt es nicht)'],
+  ['0 0 31W 6 *', 'nie (einen solchen Tag gibt es nicht)'],
+  ['0 0 L-30 6 *', 'nie (einen solchen Tag gibt es nicht)'],
+  ['0 0 0 29 2 * 2031', 'nie (einen solchen Tag gibt es nicht)'],
+  ['0 0 31 6 1', 'im Juni montags um 0:00 Uhr'],
+
+  // Leap years, and months that lack the date.
+  ['0 0 29 2 *', 'am 29. Februar (nur in Schaltjahren) um 0:00 Uhr'],
+  ['0 0 0 29 2 * 2032', 'am 29. Februar 2032 um 0:00 Uhr'],
+  ['0 0 29 1-3 *',
+    'von Januar bis März jeweils am 29. (im Februar nur in Schaltjahren) ' +
+    'um 0:00 Uhr'],
+  ['0 0 29 2 1',
+    'im Februar montags und zusätzlich am 29. Februar (nur in ' +
+    'Schaltjahren), jeweils um 0:00 Uhr'],
+  ['0 0 30 2-3 *', 'jährlich am 30. März um 0:00 Uhr'],
+  ['0 0 31 1,6 *', 'jährlich am 31. Januar um 0:00 Uhr'],
+  ['0 0 1,31 4,6,9,11 *',
+    'im April, Juni, September und November jeweils am 1. um 0:00 Uhr'],
+  ['0 0 31 * *', 'am 31. jedes Monats um 0:00 Uhr'],
+  ['0 0 29 * *', 'am 29. jedes Monats um 0:00 Uhr'],
+  ['0 0 31 6-8 1',
+    'von Juni bis August montags und zusätzlich im Juli und August am 31., ' +
+    'jeweils um 0:00 Uhr'],
+  ['0 0 31 1,6 1',
+    'im Januar und Juni montags und zusätzlich am 31. Januar, jeweils um ' +
+    '0:00 Uhr'],
 
   // Macros, startup, and the three forms.
   ['@hourly', 'zu jeder vollen Stunde'],
   ['@daily', 'täglich um 0:00 Uhr'],
   ['@weekly', 'sonntags um 0:00 Uhr'],
   ['@monthly', 'am 1. jedes Monats um 0:00 Uhr'],
-  ['@yearly', 'am 1. Januar um 0:00 Uhr'],
+  ['@yearly', 'jährlich am 1. Januar um 0:00 Uhr'],
   ['@reboot', 'beim Systemstart'],
   ['0 9 * * *', 'Läuft täglich um 9:00 Uhr.', {form: 'sentence'}],
   ['0 0-2,4-23 * * *',
@@ -226,34 +294,42 @@ const rows = [
   // Dates that are every day of the named month leave nothing to add.
   ['0 9 1-30 6 1', 'im Juni täglich um 9:00 Uhr'],
   ['0 9 1-30 6 *', 'im Juni täglich um 9:00 Uhr'],
-  // A date the named month lacks is left out; where it has none of
-  // them, they are said as written.
-  ['0 9 30,31 6 *', 'am 30. Juni um 9:00 Uhr'],
-  ['0 9 31 6 *', 'am 31. Juni um 9:00 Uhr'],
+  // A date the named month lacks is left out.
+  ['0 9 30,31 6 *', 'jährlich am 30. Juni um 9:00 Uhr'],
 
   // A month with its dates.
-  ['0 0 1,15 6 *', 'am 1. und 15. Juni um 0:00 Uhr'],
-  ['0 0 1,10,20 6 *', 'am 1., 10. und 20. Juni um 0:00 Uhr'],
-  ['0 0 1-7 6 *', 'vom 1. bis 7. Juni täglich um 0:00 Uhr'],
-  ['0 0 1-7,15 6 *', 'vom 1. bis 7. und am 15. Juni jeweils um 0:00 Uhr'],
+  ['0 0 1,15 6 *', 'jährlich am 1. und 15. Juni um 0:00 Uhr'],
+  ['0 0 1,10,20 6 *', 'jährlich am 1., 10. und 20. Juni um 0:00 Uhr'],
+  ['0 0 1-7 6 *', 'jährlich vom 1. bis 7. Juni täglich um 0:00 Uhr'],
+  ['0 0 1-7,15 6 *',
+    'jährlich vom 1. bis 7. und am 15. Juni jeweils um 0:00 Uhr'],
   ['0 0 1-7 6-8 *',
     'von Juni bis August jeweils vom 1. bis 7. täglich um 0:00 Uhr'],
   ['0 0 */2 6 *',
-    'an den ungeraden Tagen im Juni (1., 3., 5. … 29.) um 0:00 Uhr'],
+    'jährlich an den ungeraden Tagen im Juni (1., 3., 5. … 29.) um 0:00 ' +
+    'Uhr'],
+  // A cadence the pattern itself stops early is a series.
+  ['0 0 1-29/2 6 *', 'jährlich am 1., 3., 5. … und 29. Juni um 0:00 Uhr'],
   ['0 0 */2 1,7 *',
     'im Januar und Juli jeweils an den ungeraden Tagen (1., 3., 5. … 31.) ' +
     'um 0:00 Uhr'],
-  ['0 0 */5 6 *', 'am 1., 6., 11., 16., 21. und 26. Juni um 0:00 Uhr'],
-  ['0 0 */3 2 *', 'am 1., 4., 7. … und 28. Februar um 0:00 Uhr'],
-  ['0 0 8/2 6 *', 'am 8., 10., 12. … und 30. Juni um 0:00 Uhr'],
+  ['0 0 */5 6 *',
+    'jährlich am 1., 6., 11., 16., 21. und 26. Juni um 0:00 Uhr'],
+  ['0 0 */3 2 *', 'jährlich am 1., 4., 7. … und 28. Februar um 0:00 Uhr'],
+  ['0 0 8/2 6 *', 'jährlich am 8., 10., 12. … und 30. Juni um 0:00 Uhr'],
   ['0 0 */5 1,7 *',
     'im Januar und Juli jeweils am 1., 6., 11., 16., 21., 26. und 31. um ' +
     '0:00 Uhr'],
   ['0 0 1,15 1,7 *', 'im Januar und Juli jeweils am 1. und 15. um 0:00 Uhr'],
-  ['59 23 31 12 *', 'am 31. Dezember um 23:59 Uhr'],
+  ['59 23 31 12 *', 'jährlich am 31. Dezember um 23:59 Uhr'],
   ['0 0 1,2 * *', 'am 1. und 2. jedes Monats um 0:00 Uhr'],
   ['0 0 1-14,16-31 * *', 'täglich, außer am 15. jedes Monats, um 0:00 Uhr'],
-  ['0 0 1-14,16-31 6 *', 'im Juni täglich, außer am 15., um 0:00 Uhr'],
+  // Under named months every day but a few is its stretches.
+  ['0 0 1-14,16-31 6 *',
+    'jährlich vom 1. bis 14. und vom 16. bis 30. Juni jeweils um 0:00 Uhr'],
+  ['0 0 1-14,16-31 6,7 *',
+    'im Juni und Juli vom 1. bis 14. und vom 16. bis 31., jeweils um 0:00 ' +
+    'Uhr'],
   ['0 0 1-14,17-31 * *',
     'täglich, außer am 15. und 16. jedes Monats, um 0:00 Uhr'],
   ['0 0 2-31 * *', 'vom 2. bis 31. jedes Monats täglich um 0:00 Uhr'],
@@ -496,7 +572,7 @@ const rows = [
   ['15 30 * * * *', 'stündlich um :30:15'],
   ['30 5,20 * * * *', 'stündlich um :05:30 und :20:30'],
   ['0-9 0 * * * *',
-    'zu jeder vollen Stunde, jeweils 10-mal im Abstand von 1 Sekunde'],
+    'zu jeder vollen Stunde, jeweils in den Sekunden 0 bis 9'],
   ['* 0 9,17 * * *',
     'täglich von 9:00:00 bis 9:00:59 und von 17:00:00 bis 17:00:59 Uhr ' +
     'jede Sekunde'],
@@ -534,18 +610,19 @@ const rows = [
   ['15,45 * * * * *', '15 und 45 Sekunden nach jeder vollen Minute'],
   ['1 * * * * *', '1 Sekunde nach jeder vollen Minute'],
   ['45-59 * * * * *',
-    'jede Minute, jeweils 15-mal im Abstand von 1 Sekunde, erstmals 45 ' +
-    'Sekunden nach der vollen Minute'],
+    'jede Minute, jeweils in den Sekunden 45 bis 59'],
   ['10-40 * * * * *',
-    'jede Minute, jeweils 31-mal im Abstand von 1 Sekunde, erstmals 10 ' +
+    'jede Minute, jeweils in den Sekunden 10 bis 40'],
+  ['1-59 * * * * *', 'jede Minute, jeweils in den Sekunden 1 bis 59'],
+  ['3/5 * * * * *',
+    'jede Minute, jeweils 12-mal im Abstand von 5 Sekunden, erstmals 3 ' +
     'Sekunden nach der vollen Minute'],
   ['0-9 * 9 * * *',
-    'täglich von 9:00 bis 9:59 Uhr jede Minute, jeweils 10-mal im Abstand ' +
-    'von 1 Sekunde'],
+    'täglich von 9:00 bis 9:59 Uhr jede Minute, jeweils in den Sekunden 0 ' +
+    'bis 9'],
   ['*/7 * * * * *', 'jede Minute, jeweils 9-mal im Abstand von 7 Sekunden'],
   ['10-20 */15 * * * *',
-    'alle 15 Minuten, jeweils 11-mal im Abstand von 1 Sekunde, erstmals 10 ' +
-    'Sekunden nach der vollen Minute'],
+    'alle 15 Minuten, jeweils in den Sekunden 10 bis 20'],
   ['* 0 8,12,18 * * *',
     'täglich um 8:00, 12:00 und 18:00 Uhr, jeweils eine Minute lang jede ' +
     'Sekunde'],
@@ -596,11 +673,87 @@ const rows = [
     'freitags von 3:30 bis 10:42 Uhr stündlich um :30 und :42, jeweils ' +
     'eine Minute lang jede Sekunde'],
   ['0 18 15W 3,6,9,12 *',
-    'im März, Juni, September und Dezember jeweils am Werktag (Montag bis ' +
-    'Freitag), der dem 15. am nächsten liegt, um 18:00 Uhr'],
+    'im März, Juni, September und Dezember jeweils am Wochentag (Montag ' +
+    'bis Freitag), der dem 15. am nächsten liegt, um 18:00 Uhr'],
   ['7 4-22/6 1 */2 *',
     'im Januar, März, Mai, Juli, September und November jeweils am 1. um ' +
-    '4:07, 10:07, 16:07 und 22:07 Uhr']
+    '4:07, 10:07, 16:07 und 22:07 Uhr'],
+
+  // Runs and cadences together, field by field.
+  ['0-20/2,21-59/3 * * * *',
+    'stündlich von :00 bis :20 alle 2 Minuten und von :21 bis :57 alle 3 ' +
+    'Minuten'],
+  ['0-20/2,21-59/3 9 * * *',
+    'täglich von 9:00 bis 9:20 Uhr alle 2 Minuten und von 9:21 bis 9:57 ' +
+    'Uhr alle 3 Minuten'],
+  ['0-20/2,21-59/3 9-17 * * *',
+    'täglich von 9:00 bis 17:57 Uhr stündlich von :00 bis :20 alle 2 ' +
+    'Minuten und von :21 bis :57 alle 3 Minuten'],
+  ['0 0-10/2,11-23/3 * * *',
+    'täglich von 0:00 bis 10:00 Uhr alle 2 Stunden und von 11:00 bis 23:00 ' +
+    'Uhr alle 3 Stunden'],
+  ['* 0-10/2,11-23/3 * * *',
+    'täglich von 0:00 bis 0:59, von 2:00 bis 2:59 … und von 10:00 bis ' +
+    '10:59 sowie von 11:00 bis 11:59, von 14:00 bis 14:59 … und von 23:00 ' +
+    'bis 23:59 Uhr jede Minute'],
+  ['0 0 1-10/2,11-31/3 * *',
+    'am 1., 3., 5. … und 11. sowie am 14., 17., 20. … und 29. jedes Monats ' +
+    'um 0:00 Uhr'],
+  ['0-20/2,21-59/3 * * * * *',
+    'jede Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … ' +
+    '57'],
+
+  // One year follows one name, one list or one run of months, never
+  // pieces.
+  ['0 0 9 * 6-8,12 * 2030',
+    'im Jahr 2030 von Juni bis August und im Dezember täglich um 9:00 Uhr'],
+  ['0 0 9 1 6-8,12 * 2030',
+    'im Jahr 2030 von Juni bis August und im Dezember jeweils am 1. um ' +
+    '9:00 Uhr'],
+
+  // An exception on one side of a date and a weekday is not taken from
+  // both: a Wednesday the 15th and a Friday the 15th run.
+  ['0 0 15 * 0-2,4-6',
+    'täglich, außer mittwochs, und zusätzlich am 15. jedes Monats, jeweils ' +
+    'um 0:00 Uhr'],
+  ['0 9 1-14,16-31 * 5',
+    'freitags und zusätzlich vom 1. bis 14. und vom 16. bis 31. jedes ' +
+    'Monats, jeweils um 9:00 Uhr'],
+  ['0 9 2,4,6,8,10,12,14,18,20,22,24,26,28,30 * 5',
+    'freitags und zusätzlich an den geraden Tagen jedes Monats (2., 4., 6. ' +
+    '… 30., ohne den 16.), jeweils um 9:00 Uhr'],
+  ['0 9 2,4,6,8,10,12,14,18,20,22,24,26,28,30 * *',
+    'an den geraden Tagen jedes Monats (2., 4., 6. … 30.), außer am 16., ' +
+    'um 9:00 Uhr'],
+
+  // What trails covers everything before it, and an excepted hour under
+  // seconds is the whole hour.
+  ['* 0 0-2,4-23 * * *',
+    'zu jeder vollen Stunde, außer um 3:00 Uhr, jeweils eine Minute lang ' +
+    'jede Sekunde'],
+  ['* * 0-2,4-23 * * *', 'jede Sekunde, außer von 3:00:00 bis 3:59:59 Uhr'],
+  ['15,45 0-29,45 9 * * *',
+    'täglich von 9:00 bis 9:29 Uhr jede Minute sowie um 9:45 Uhr, jeweils ' +
+    '15 und 45 Sekunden nach der vollen Minute'],
+
+  // Runs that wrap are cut at the edge of their unit, and hours beside a
+  // named day stay in that day.
+  ['0 22-2 * * 1', 'montags um 0:00, 1:00, 2:00, 22:00 und 23:00 Uhr'],
+  ['*/15 22-2 * * 1',
+    'montags von 0:00 bis 2:45 und von 22:00 bis 23:45 Uhr alle 15 Minuten'],
+  ['45-15 * * * * *',
+    'jede Minute, jeweils in den Sekunden 0 bis 15 und 45 bis 59'],
+  ['0 0 20-10 * *',
+    'vom 1. bis 10. und vom 20. bis 31. jedes Monats jeweils um 0:00 Uhr'],
+
+  // «Jährlich» with other time parts, and with February's odd days.
+  ['*/5 * 1 6 *', 'jährlich am 1. Juni alle 5 Minuten'],
+  ['0 0 */2 2 *',
+    'jährlich an den ungeraden Tagen im Februar (1., 3., 5. … 29.) um 0:00 ' +
+    'Uhr'],
+  ['0 0 31W */2 *',
+    'im Januar, März, Mai und Juli jeweils am Wochentag (Montag bis ' +
+    'Freitag), der dem 31. im selben Monat am nächsten liegt, um 0:00 Uhr']
 ];
 
 export {rows};

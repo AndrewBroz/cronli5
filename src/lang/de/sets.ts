@@ -93,12 +93,14 @@ function unsayable(): number {
   return Infinity;
 }
 
-// What a part of runs and cadences together names: a run its ends, a
-// cadence its ends and its step (or its few values), values themselves.
+// What a part of runs and cadences together names: a run its ends,
+// values themselves, and a cadence its ends and its step, or its values
+// where they are few enough to be said in full.
 const partNamed = {
   cadence(cadence: Described<'cadence'>): number {
-    return Math.min((cadence.last - cadence.start) / cadence.interval + 1,
-      boundedCadence);
+    const steps = (cadence.last - cadence.start) / cadence.interval + 1;
+
+    return steps > boundedCadence + 1 ? boundedCadence : steps;
   },
   range(): number {
     return runEnds;
