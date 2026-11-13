@@ -24,6 +24,12 @@ understanding was wrong, split, or reached on a second reading; a form
 understood at once was left, whatever its grade. No fluent human has
 reviewed the result.
 
+* **the audit**: a later adversarial read (2026-11-13) of the rule book,
+  the renderer and some three thousand sentences set beside their fire
+  times. It found sentences that said the wrong thing or could not be
+  held, and choices the renderer made that this book did not state. Rules
+  it added or changed are marked « the audit », with what was said before.
+
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. The **calendar part** is the day and the month; the
 **time part** is everything finer; the **year part** comes last.
@@ -52,7 +58,11 @@ What is held is counted as things named: a value, a clock time, an end of
 a range, an interval, or an idiom such as « les jours impairs ». Where
 several phrasings are sayable, the one that names the fewest things wins,
 subject to the corrections below. Ties go to the earlier candidate in the
-core's order, with an idiom before all of them.
+core's order, with an idiom before all of them. That order is: one run; a
+cadence; pieces; an exception (from every value, then from the run
+between the first value and the last, then from a cadence); the list. So
+pieces are said before an exception that names as many things, and an
+exception before a list that does.
 
 | Phrase | Things named |
 | --- | --- |
@@ -74,10 +84,12 @@ judgment, with its reason:
 * A run of exactly two values is listed, not said as a range (« le
   dimanche et le lundi »; « à 9 h et à 10 h »). Two hours can still be a
   window.
-* An idiom wins a tie with any other candidate. Where an exception ties
-  with a run that wraps round its cycle, the exception is said: « tous les
-  jours du mois, sauf le 15 et le 16 », never « du 17 au 14 de chaque
-  mois », which makes the reader work out which days are missing.
+* An idiom wins a tie with any other candidate.
+* **A run wraps round its cycle only the shorter way** (3.5): never « du
+  17 au 14 de chaque mois », which makes the reader work out which days
+  are missing. Those days are « tous les jours du mois, sauf le 15 et le
+  16 », or two runs where no exception may be said. Weekdays and months,
+  which have names, wrap whatever the length.
 * **Hours on a cadence: four times a day or fewer are listed; more are
   the cadence with both ends** (« toutes les 3 heures de 0 h à 21 h »;
   « toutes les 3 heures de 0 h 30 à 21 h 30 »). Both judges found the
@@ -99,7 +111,8 @@ judgment, with its reason:
   a count of years (5.8), which has no end to name.
 * **Weekdays**: pieces are said only for more than four days; four or
   fewer that are not one run are listed.
-* **An exception is the last thing in its part** (3.9).
+* **An exception is the last thing in its part** (3.9), and it never
+  takes away a moment that a window names (3.9).
 
 ## 1. Anchors
 
@@ -418,12 +431,45 @@ mois » natural.
   « toutes les 7 secondes de 1 à 57 secondes après le début de chaque
   minute »; several runs are joined, each with its own « de », « toutes
   les secondes de 0 à 9 et de 30 à 39 secondes après le début de chaque
-  minute ».
+  minute ». When single seconds stand among the runs, each takes « à »
+  and each run its own « toutes les secondes », so that no run borrows
+  across a single second: « toutes les secondes de 0 à 9 et à 20 secondes
+  après le début de chaque minute »; « toutes les secondes de 10 à 20, à
+  30 et toutes les secondes de 40 à 50 secondes après le début de chaque
+  minute ». (The audit: these were lists of up to twenty-three seconds.)
+  Seconds counted from the start of the minute take no exception at
+  either end of the minute: seconds 1 to 59 are the run « de 1 à 59
+  secondes après le début de chaque minute », and seconds 0 to 58 are
+  « pendant les 59 premières secondes de chaque minute ». (The audit:
+  « sauf 0 secondes après le début de chaque minute » was said.) The
+  kinds of set are then all covered: every second; one; a tiling cadence;
+  any other cadence, listed up to six values and with both ends beyond;
+  a run; several runs; runs and single seconds; every second or a tiling
+  cadence with a hole in the middle (3.9); and any other set, listed.
 
 3.5 A range that wraps is said from its start to its end, the same way:
 « toutes les heures de 22 h à 2 h », « de novembre à février », « du
 vendredi au lundi », « du 30 au 2 de chaque mois ». As a window:
 « toutes les minutes de 22 h à 2 h 59 ».
+
+**A run of numbers wraps only the shorter way round**: hours and days of
+the month, when the run holds no more than half of its cycle (twelve
+hours, fifteen days). « Du 30 au 2 de chaque mois » and « de 22 h à
+6 h » name a short stretch across the turn of the cycle. A longer one is
+every value but a few, and said from its start to its end it reads as a
+mistake and leaves the reader to find the few: « du 16 au 14 de chaque
+mois », « toutes les heures de 4 h à 2 h ». Such a set is said as an
+exception where one may be said (3.9) and otherwise in ascending order:
+« du 1er au 14 et du 16 au 31 de chaque mois »; « toutes les heures de
+0 h à 2 h et de 4 h à 23 h ». Names wrap whatever the length, because a
+name shows which way the run goes: « du jeudi au lundi », six days where
+no exception may be said, « du jeudi au mardi » (3.9), and months, « de
+septembre à juin », « de juin à avril ». (The audit.
+Before it a wrapped run of any length was said, and an exception beat it
+only on a tie; the rule above leaves no such tie to settle. The
+alternative of keeping « du 16 au 14 » where an exception is not allowed
+was rejected on the ground this book already gives against « du 17 au
+14 ».)
 
 A wrap is only true when nothing coarser is restricted:
 
@@ -434,6 +480,16 @@ A wrap is only true when nothing coarser is restricted:
 * weekdays may always wrap;
 * minutes and seconds never wrap: the two stretches are said in ascending
   order (3.6).
+
+**This is a declared exception to continuity.** Naming or freeing a day
+of the month, a weekday, a month or a year may reword hours that run
+through midnight, and nothing else in the time part: « tous les jours,
+toutes les heures de 22 h à 2 h » against « le 1er de chaque mois,
+toutes les heures de 0 h à 2 h, à 22 h et à 23 h ». Beside a named day
+the wrapped run would be read as ending on the day after, which is a
+wrong schedule; the reworded hours are the price. In the same way an
+edit to the month may reword days of the month that wrap, and an edit to
+the year months that wrap; those stay inside the calendar part.
 
 Where a wrap is not allowed, the set is described in ascending order:
 `0 22-2 1 * *` is « le 1er de chaque mois, toutes les heures de 0 h à
@@ -454,9 +510,28 @@ it is « les jours impairs du 1er au 13 et les jours impairs du 17 au
 31 ».
 
 Pieces are said in ascending order of their first value, unless one of
-the runs wraps round the cycle, in which case the wrapped run comes first.
+the runs wraps round the cycle (the shorter way, 3.5), in which case the
+wrapped run comes first: « toutes les heures de 20 h à 3 h et à 12 h ».
 Weekday pieces follow the week order of 3.3: « du mardi au vendredi et le
 dimanche ».
+
+Two hours in a row are two times, as any run of two is, when one
+minute fires in each: « à 9 h et à 10 h », and so « à 9 h et à 10 h, et à
+chaque fois toutes les secondes pendant une minute ». As a stretch they
+are one window, after continuous minutes (« toutes les 15 minutes de 9 h
+à 10 h 45 ») and after a minute phrase alike: « à 05 et à 20 de chaque
+heure, de 0 h 05 à 2 h 20 et de 22 h 05 à 23 h 20 ». (The audit: « toutes
+les heures de 9 h à 10 h, et à chaque fois … » and « de 22 h 05 à 22 h
+20 et de 23 h 05 à 23 h 20 » were said.)
+
+Minutes in any other pieces (several runs; runs with single minutes
+among them; a run that does not come first) are joined under every hour
+as a list is, each run with its own « toutes les minutes » and each
+single minute with « à », the whole closed by « de chaque heure »:
+« toutes les minutes de 00 à 10 et toutes les minutes de 30 à 40 de
+chaque heure »; « toutes les minutes de 10 à 20, à 30 et toutes les
+minutes de 40 à 50 de chaque heure ». A run inside such a list is always
+« de 00 à 10 », never « pendant les 11 premières minutes ».
 
 A run of minutes with stray minutes after it: the strays follow « puis
 à »: « toutes les minutes pendant les 30 premières minutes de chaque
@@ -570,6 +645,33 @@ The forms:
   mois ». This is the only exception a set of weekdays
   takes.
 
+**An exception never takes away a moment that a window names.** Beside
+hours that are not every hour the minutes are said inside windows, which
+name their first and their last moment (8.5); so there the first and the
+last minute of the hour are never excepted, and the minutes are said as
+the run they are: minutes 1 to 59 of hour 9 are « toutes les minutes de
+9 h 01 à 9 h 59 », and under hours 9 to 17, « toutes les minutes pendant
+les 59 dernières minutes de chaque heure, de 9 h 01 à 17 h 59 ». With
+every hour no window is named and the exception stands: « toutes les
+minutes, sauf à 00 de chaque heure ». (The audit: « toutes les minutes
+de 9 h à 9 h 59, sauf à 9 h » named a time and then took it away.)
+
+**When an exception among the times is said.** For hours: when it
+replaces more than four hours, when nothing follows the time part, and
+when no « avec N secondes de décalage » would have to follow it
+(« toutes les heures, sauf à 3 h, avec 30 secondes de décalage » would
+put the exception before the end, and « sauf à 3 h 00 min 30 s » excepts
+a time « toutes les heures » never named; the hours are then said as
+what is left, « toutes les heures de 0 h 00 min 30 s à 2 h 00 min 30 s et de 4 h
+00 min 30 s à 23 h 00 min 30 s »). For minutes: only from every minute
+or a tiling cadence; under every hour when it replaces more than six
+minutes; beside any other hours whenever it names fewer things than the
+list, because the list would there need a window as well (« toutes les
+10 minutes de 9 h à 17 h 50, sauf à 30 de chaque heure », five minutes);
+and never before an offset or a clause of seconds, except that under
+seconds that fill the minute a whole minute is excepted (« sauf pendant
+une minute à 29 de chaque heure »).
+
 For a cadence, and only for a cadence, an exception is for a hole in the
 middle: a cadence that is only missing values at its end or its start is
 a cadence with its bounds. A range, or every value, with values missing
@@ -610,7 +712,7 @@ by H as a confinement.
 | every hour | none |
 | one hour | « toutes les minutes de 9 h à 9 h 59 »; « toutes les 15 minutes de 9 h à 9 h 45 » |
 | a range | « toutes les minutes de 9 h à 17 h 59 »; « toutes les 15 minutes de 9 h à 17 h 45 » |
-| separate hours and runs that are not a cadence, however many; and a cadence of four hours or fewer | each a window: « toutes les 15 minutes de 8 h à 8 h 45, de 12 h à 12 h 45 et de 18 h à 18 h 45 »; « toutes les minutes de 9 h à 17 h 59, de 20 h à 20 h 59 et de 22 h à 22 h 59 » |
+| separate hours and runs that are not a cadence, however many (hours in a row are one window); and a cadence of four hours or fewer | each a window: « toutes les 15 minutes de 8 h à 8 h 45, de 12 h à 12 h 45 et de 18 h à 18 h 45 »; « toutes les minutes de 9 h à 17 h 59, de 20 h à 20 h 59 et de 22 h à 22 h 59 » |
 | a cadence of more than four hours, whatever its start, interval and end | the windows of its first two hours, then « , et ainsi de suite toutes les N heures jusqu'à » and the last time that fires: « toutes les 15 minutes de 0 h à 0 h 45, de 2 h à 2 h 45, et ainsi de suite toutes les 2 heures jusqu'à 22 h 45 »; « toutes les minutes de 1 h à 1 h 59, de 3 h à 3 h 59, et ainsi de suite toutes les 2 heures jusqu'à 23 h 59 »; « toutes les 15 minutes de 8 h à 8 h 45, de 10 h à 10 h 45, et ainsi de suite toutes les 2 heures jusqu'à 18 h 45 » |
 | every hour with exceptions | « toutes les 10 minutes, sauf de 3 h à 3 h 50 » |
 | a cadence of hours with exceptions | the form above, then the exception: « …, et ainsi de suite toutes les 2 heures jusqu'à 22 h 45, sauf de 8 h à 8 h 45 » |
@@ -638,6 +740,23 @@ run with a stray minute: « toutes les minutes de 9 h à 9 h 29, puis à
 9 h 45 ». With two hours, two windows: « toutes les minutes de 9 h à
 9 h 29 et de 17 h à 17 h 29 ».
 
+**M is stretches of minutes (one run, several runs, or a cadence too long
+to list) and H is separate hours.** Each stretch is a window in each
+hour, while that names no more things than the minute phrase followed by
+one window an hour would (a window is two things; the minute phrase is
+counted as in the opening section). One run is always windows. Two runs
+are windows for one hour or two (« toutes les minutes de 9 h à 9 h 10,
+de 9 h 50 à 9 h 59, de 17 h à 17 h 10 et de 17 h 50 à 17 h 59 ») and the
+phrase beyond: « toutes les minutes pendant les 11 premières et les 10
+dernières minutes de chaque heure, de 0 h à 0 h 59, de 6 h à 6 h 59, de
+12 h à 12 h 59 et de 18 h à 18 h 59 ». Three runs are windows inside one
+hour only. (The audit: twelve and fifteen windows in a row were said.) A
+run with stray minutes is windows inside one hour only, the strays after
+« puis à ». Minutes in pieces with a single minute among them have no
+windows: they keep their phrase and one window, inside one hour too
+(« toutes les minutes de 01 à 05, à 10 et toutes les minutes de 20 à 25
+de chaque heure, de 9 h 01 à 9 h 25 »).
+
 **Otherwise M is anchored**: a list, a run, pieces, an exception, or a
 cadence that is bounded or off the beat. The minute phrase from section
 3, which always ends « de chaque heure » (or in « puis à 45 » after it),
@@ -647,7 +766,7 @@ is followed by H:
 | --- | --- |
 | every hour | nothing |
 | a range | a comma and a window from the first time that fires to the last: « à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 »; « toutes les minutes pendant les 30 premières minutes de chaque heure, de 9 h à 17 h 29 ». (A window of hours, « de 9 h à 17 h », would be read as stopping before the last hour's minutes.) |
-| pieces | windows the same way: « à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 et de 22 h 05 à 22 h 45 » |
+| pieces | windows the same way, two hours in a row being one window: « à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 et de 22 h 05 à 22 h 45 » |
 | separate hours, or a cadence of four hours or fewer | no minute phrase: the clock times are listed, while there are at most twelve (« à 9 h 05, 9 h 20, 9 h 45, 17 h 05, 17 h 20 et 17 h 45 »). Beyond twelve, each hour is a window as a piece is: « à 05, 20 et 45 de chaque heure, de 8 h 05 à 8 h 45, de 10 h 05 à 10 h 45, … et de 19 h 05 à 19 h 45 » |
 | a cadence of more than four hours, with a list of minutes | no minute phrase: the clock times of its first hour, those of its second, then « et ainsi de suite » as for continuous minutes, ending on the last time that fires: « à 0 h 15 et à 0 h 45, à 4 h 15 et à 4 h 45, et ainsi de suite toutes les 4 heures jusqu'à 20 h 45 »; « à 0 h 05, 0 h 20 et 0 h 45, à 3 h 05, 3 h 20 et 3 h 45, et ainsi de suite toutes les 3 heures jusqu'à 21 h 45 ». (One cadence per minute, « toutes les 4 heures de 0 h 15 à 20 h 15 et de 0 h 45 à 20 h 45 », was first seen by judge 3 as two windows that overlap.) |
 | a cadence of more than four hours, with any other minute phrase | no minute phrase: the first two hours as windows, then « et ainsi de suite »: « toutes les minutes de 0 h à 0 h 29, de 2 h à 2 h 29, et ainsi de suite toutes les 2 heures jusqu'à 22 h 29 » |
@@ -749,9 +868,21 @@ Then:
     with how much later the next begins and how long it lasts: « toutes
     les secondes pendant 29 secondes, puis de nouveau 30 secondes plus
     tard pendant 30 secondes ».
+  A single second among the runs, or after them, is « puis de nouveau »
+  with how much later it comes and no length: « toutes les secondes
+  pendant 10 secondes, puis de nouveau 20 secondes plus tard »; « toutes
+  les secondes pendant 11 secondes, puis de nouveau 20 secondes plus
+  tard, puis de nouveau 30 secondes plus tard pendant 11 secondes ». This
+  is said under one clock time too (« tous les jours à 9 h, toutes les
+  secondes pendant 10 secondes, puis de nouveau 20 secondes plus tard »).
+  (The audit: these were lists of up to twenty-three clock times.) When
+  one or two single seconds come before the first run, the run is said
+  where it comes, after a comma: « toutes les heures, avec 4 secondes de
+  décalage, et à chaque fois de nouveau 16 secondes plus tard, toutes les
+  secondes pendant 33 secondes ».
 * **Under one clock time, two things are said without a clause**: a run
-  of seconds that does not start at 0, and runs with a gap, are windows
-  to the second: « toutes les secondes de 9 h 30 min 10 s à 9 h 30 min
+  of seconds that does not start at 0, and runs with a gap and no single
+  second among them, are windows to the second: « toutes les secondes de 9 h 30 min 10 s à 9 h 30 min
   20 s »; « toutes les secondes de 9 h à 9 h 00 min 28 s et de 9 h 00 min
   30 s à 9 h 00 min 59 s ».
 * **The list of clock times to the second competes** with all of case 4
@@ -825,7 +956,9 @@ falls on a date is « tous les vendredis 13 », and the first Monday is
   chaque mois », with nothing between a day number and the name. « Le 1er
   juin »; « le 15 août »; « le 1er et le 15 juin »; « du 1er au 7 juin »;
   « les 1er, 6, 11, 16, 21 et 26 juin » (a day the named month does not
-  have is not said). After a noun the name takes « de »: « les jours
+  have is not said: `15,31` in June is « le 15 juin ». When the month has
+  none of the days, they are said as written, « le 31 juin », a date the
+  reader can see does not exist). After a noun the name takes « de »: « les jours
   impairs de juin »; « tous les jours de juin, sauf le 15 »; « le dernier
   jour de juin ».
 * **« Tous les jours » and a single recurring weekday take a single month
@@ -923,15 +1056,25 @@ noun does (4.4), unless said otherwise.
   month, which no reading can take wrongly. The day in the bracket is 31
   less the count. With one named month it is that month's own day: « …
   de juin (le 27) »; for February, « … de février (le 25, ou le 26 les
-  années bissextiles) ». With several named months the bracket is the
-  general one: « … de janvier et de juillet (le 28 d'un mois de 31
-  jours) ».
+  années bissextiles) », and with years named, only the days those years
+  give: « … de février 2030 (le 25) ». With several named months the
+  bracket is the general one: « … de janvier et de juillet (le 28 d'un
+  mois de 31 jours) ».
 * `L-28`, `L-29`, `L-30` — the day does not exist in a month too short,
   and the pattern then skips the month. From 28 up the sentence says so,
   after the bracket: « trente jours avant le dernier jour du mois (le
   1er d'un mois de 31 jours), quand le mois compte plus de 30 jours, à
   0 h ». (The number after « plus de » is the count of days, as a
-  digit.) Below 28 every month is long enough.
+  digit.) Below 28 every month is long enough. With one named month the
+  sentence says what that month does. Long enough, its own day and no
+  condition: « vingt-huit jours avant le dernier jour de juin (le 2) ».
+  February at 28, which only a leap year reaches: « vingt-huit jours
+  avant le dernier jour de février (le 1er, les années bissextiles
+  seulement) ». Never long enough, no day and the condition it fails:
+  « trente jours avant le dernier jour de juin, quand le mois compte
+  plus de 30 jours ». (The audit: « … de février (le 3 d'un mois de 31
+  jours), quand le mois compte plus de 28 jours » named a day February
+  cannot have.)
 * `1#2` — « le deuxième lundi du mois »; « le deuxième lundi de juin »
 * `5L` — « le dernier vendredi du mois »
 * `LW` — « le dernier jour ouvré du mois »; « le dernier jour ouvré de
@@ -980,8 +1123,10 @@ partir de 2030 » right.) Every second year from a later start names the
 start, or both ends if it stops early: « les années paires à partir de
 2030 »; « les années paires de 2030 à 2040 ». Any other cadence of more
 than four years is « une année sur quatre à partir de 2028 »; « une année
-sur quatre de 2028 à 2048 ». Four years or fewer are listed: « en 2028,
-2032, 2036 et 2040 ».
+sur quatre de 2028 à 2048 ». Four years or fewer are listed, every second
+year included: « en 2028, 2032, 2036 et 2040 »; « en 2030, 2032 et
+2034 ». (The audit: « les années paires de 2030 à 2034 » was said for
+three years; a list of three needs no working out.)
 
 A count of years is the year part: last, after a comma (2.6). « Tous les
 jours à 9 h, une année sur quatre à partir de 2028 » is the sentence both
@@ -1001,8 +1146,8 @@ written, not spoken.
 6.4 seconde(s), minute(s), heure(s), jour(s), mois, année(s); the symbols
 h, min, s.
 
-6.5 à, de, du, au, d', le, la, les, l', et, ainsi que,
-en, pendant, sauf, puis, puis de nouveau, plus tard,
+6.5 à, de, du, au, d', le, la, les, l', et, ou, ainsi que,
+en, pendant, sauf, seulement, puis, puis de nouveau, plus tard,
 jusqu'à, et à chaque fois, de nouveau, avec … de décalage, et ainsi de
 suite, chaque, tous les, toutes les, tous les jours, à partir de, après
 le début de chaque minute, premières, dernières, avant le dernier jour,

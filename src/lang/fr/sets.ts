@@ -58,25 +58,10 @@ function countOf(description: SetDescription, counts: Counts): number {
   return say(description, counts, Infinity);
 }
 
-// Whether a description is a run that wraps round the end of its cycle.
-function wrapsRound(description: SetDescription): boolean {
-  return say(description, {range: (run) => run.from > run.to}, false);
-}
-
-/**
- * The description that names the fewest things, the earliest on a tie.
- * One tie goes the other way: an exception is said in place of a run that
- * wraps round its cycle, which leaves the reader to work out what is
- * missing.
- */
+/** The description that names the fewest things, the earliest on a tie. */
 function choose(view: View, counts: Counts): SetDescription {
   return view.options.reduce(function fewer(best, option) {
-    const count = countOf(option, counts);
-    const least = countOf(best, counts);
-    const overWrap = count === least && count < Infinity &&
-      option.kind === 'except' && wrapsRound(best);
-
-    return count < least || overWrap ? option : best;
+    return countOf(option, counts) < countOf(best, counts) ? option : best;
   });
 }
 
@@ -101,9 +86,30 @@ function inSpokenOrder(option: SetDescription, domain: Domain):
   }, option);
 }
 
-/** A set of values, described afresh in a domain. */
-function described(values: number[], domain: Domain): View {
-  const options = describeSet(values, domain).map(
+// Whether the run through the end of the cycle is the longer way round:
+// it holds more than half the cycle. Such a run is every value but a few,
+// and said from its start to its end it leaves the reader to work out
+// which few.
+function wrapsTheLongWay(values: number[], domain: Domain): boolean {
+  const runs = runsOf(values);
+  const [first] = runs;
+  const last = runs[runs.length - 1];
+  const joins = runs.length > 1 && first.from === domain.min &&
+    last.to === domain.max;
+  const through = first.to - first.from + last.to - last.from + 2;
+
+  return joins && through * 2 > sizeOf(domain);
+}
+
+/**
+ * A set of values, described afresh in a domain. A run wraps round the
+ * end of a cycle only the shorter way, unless a run of `anyLength` may.
+ */
+function described(values: number[], domain: Domain, anyLength = false):
+  View {
+  const cyclic = domain.cyclic &&
+    (anyLength || !wrapsTheLongWay(values, domain));
+  const options = describeSet(values, {...domain, cyclic}).map(
     (option) => inSpokenOrder(option, domain));
 
   return {all: options[0].kind === 'all', domain, options, values};
@@ -113,12 +119,16 @@ function described(values: number[], domain: Domain): View {
  * A plain field's values and their descriptions. Where a run may not wrap
  * round the end of the cycle, the values are described in ascending order.
  */
-function viewOf(schedule: Schedule, field: Field, wraps: boolean): View {
+function viewOf(
+  schedule: Schedule,
+  field: Field,
+  wraps: {anyLength?: boolean; round: boolean}
+): View {
   const domain = domainOf(field);
   const given = schedule.analyses.candidates[field] as SetDescription[];
 
   return described(denote(given[given.length - 1], domain),
-    {...domain, cyclic: domain.cyclic && wraps});
+    {...domain, cyclic: domain.cyclic && wraps.round}, wraps.anyLength);
 }
 
 function sizeOf(domain: Domain): number {
@@ -241,6 +251,12 @@ function interior(excepted: Excepted): boolean {
   }, true);
 }
 
+/** Whether an exception leaves the first and the last value of a cycle. */
+function keepsEnds(excepted: Excepted, domain: Domain): boolean {
+  return !excepted.removed.includes(domain.min) &&
+    !excepted.removed.includes(domain.max);
+}
+
 /**
  * A cadence with holes, as what is left each side of them: a stretch of
  * three values or more by its two ends, anything shorter value by value.
@@ -267,7 +283,7 @@ function around(excepted: Excepted, domain: Domain): RangeDescription[] {
 export type {Cadence, Counts, Excepted, Of, Part, Sayers, View};
 export {
   around, choose, countOf, described, interior, isRange, isRun, isSingle,
-  lengthOf,
+  keepsEnds, lengthOf,
   members, partsCount, runsOf, say, single, singles, spoken, stretchesOf,
   tiling, viewOf, when
 };

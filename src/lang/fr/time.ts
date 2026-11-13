@@ -12,9 +12,9 @@ import {
 } from './say.js';
 import type {Cadence, Counts, Excepted, Of, Part, Sayers} from './sets.js';
 import {
-  around, choose, countOf, interior, isRange, isRun, isSingle, members,
-  partsCount,
-  runsOf, say, singles, stretchesOf, tiling, when
+  around, choose, countOf, interior, isRange, isRun, isSingle, keepsEnds,
+  lengthOf, members, partsCount, runsOf, say, singles, stretchesOf, tiling,
+  when
 } from './sets.js';
 
 const {twoDigits, units, words: w} = lexicon;
@@ -68,6 +68,8 @@ interface HourlyForm {
   count(stretches: RangeDescription[]): number;
   item(stretches: RangeDescription[]): string;
   lead: string;
+  // Whether hours in a row are one stretch.
+  merged: boolean;
 }
 
 const still = {
@@ -284,7 +286,8 @@ function fills(base: Excepted['base']): number {
 // The things each description of the minutes names. An exception is said
 // only of minutes that fill the hour, only when it replaces a list too
 // long to hold, and only when nothing follows it: no clause of seconds
-// and no offset.
+// and no offset. Beside hours that are not every hour a window names the
+// first and the last minute, so neither may be the one excepted.
 function minuteCounts(c: Context): Counts {
   const quiet = c.seconds.values.length === 1 &&
     (c.offset === 0 || !c.hours.all);
@@ -295,6 +298,7 @@ function minuteCounts(c: Context): Counts {
     except(excepted) {
       const interval = fills(excepted.base);
       const sayable = c.bare && long && interval > 0 && interior(excepted) &&
+        (c.hours.all || keepsEnds(excepted, c.minutes.domain)) &&
         (quiet || c.sweep > 0 && interval === 1);
 
       return when(sayable, Number(interval > 1) + excepted.removed.length);
@@ -309,13 +313,13 @@ function minuteCounts(c: Context): Counts {
 const restCounts: Counts = {
   all: () => 1,
   cadence: () => 1,
-  pieces: (pieces) =>
-    when(pieces.parts.every(isRange), 2 * pieces.parts.length),
+  pieces: partsCount,
   range: (run) => when(run.to - run.from > 1, 1),
   values: (listed) => listed.values.length - 1
 };
 
-// Under one clock time, runs of seconds are windows to the second.
+// Under one clock time, runs of seconds are windows to the second, and
+// there is no other way to say them.
 function secondsBeat(c: Context, ranges: RangeDescription[]): Beat {
   const [minute] = c.minutes.values;
   const runs = ranges.map(function toSpan(run): Span {
@@ -325,7 +329,7 @@ function secondsBeat(c: Context, ranges: RangeDescription[]): Beat {
   return {
     ...still,
     consumed: true,
-    count: 0,
+    count: Infinity,
     head: every(1, units.second),
     phrase: '',
     runs,
@@ -336,7 +340,7 @@ function secondsBeat(c: Context, ranges: RangeDescription[]): Beat {
 function beatOf(c: Context): Beat {
   const rest = choose(c.seconds, restCounts);
   const windowed = c.once && say(rest, {
-    pieces: () => true,
+    pieces: (pieces) => pieces.parts.every(isRange),
     range: (run) => run.from > 0
   }, false);
   const filling = tiling(c.minutes);
@@ -386,14 +390,14 @@ function hourPieces(
   };
 }
 
-// How a beat of more than one minute is said hour by hour: its stretches
-// as windows; its minutes as clock times; or, when neither can be done,
-// its own phrase and then a window from its first moment to its last.
-function hourlyForm(
+// How a beat of more than one minute may be said hour by hour, the first
+// way first: its stretches as windows; its minutes as clock times; and
+// its own phrase with a window from its first moment to its last.
+function hourlyForms(
   c: Context,
   beat: Beat,
   hours: {apart: boolean; count: number; limit: number}
-): HourlyForm {
+): HourlyForm[] {
   const swept = beat.continuous || hours.apart && beat.runs.length > 0 &&
     (beat.strays.length === 0 || hours.count === 1);
   const listed = hours.apart && beat.ticks.length > 0 &&
@@ -406,27 +410,34 @@ function hourlyForm(
       item: (stretches) => conjoin(windows(c, stretches, beat.runs)) +
         after(`, ${w.then} `, clockList(c,
           beat.strays.map((stray) => at(c, stretches[0].from, stray)))),
-      lead: `${beat.head} `
+      lead: `${beat.head} `,
+      merged: beat.continuous
     }],
     [listed, {
       clock: true,
       count: (stretches) => stretches.length * beat.ticks.length,
       item: (stretches) => clockList(c, stretches.flatMap(
         (hour) => beat.ticks.map((moment) => at(c, hour.from, moment)))),
-      lead: ''
+      lead: '',
+      merged: false
     }],
     [true, {
       clock: false,
       count: (stretches) => beat.count + 2 * stretches.length,
       item: (stretches) => conjoin(windows(c, stretches, [beat.span])),
-      lead: `${beat.phrase}, `
+      lead: `${beat.phrase}, `,
+      merged: true
     }]
   ];
 
-  return forms.filter((form) => form[0])[0][1];
+  return forms.filter((form) => form[0]).map((form) => form[1]);
 }
 
-// Hours that are values, a range or pieces.
+// Hours that are values, a range or pieces. With one minute, two hours in
+// a row are two times. With more, the first way that can be said is said,
+// unless that is a window for each stretch of minutes in each hour and
+// the minute phrase with one window for each run of hours names fewer
+// things.
 function onStretches(
   c: Context,
   beat: Beat,
@@ -435,18 +446,29 @@ function onStretches(
   const apart = stretchesOf(description, singles);
 
   if (beat.ticks.length === 1) {
-    return hourPieces(c, beat, apart, 1);
+    return hourPieces(c, beat, apart.flatMap(function listed(hours) {
+      return lengthOf(hours, c.hours.domain) === 2 ?
+        singles([hours.from, hours.to]) :
+        [hours];
+    }), 1);
   }
 
-  const form = hourlyForm(c, beat,
-    {apart: apart.every(isSingle), count: apart.length, limit: 12});
-  const stretches = beat.continuous ? stretchesOf(description, runsOf) : apart;
+  const runs = stretchesOf(description, runsOf);
+  const [first, ...others] = hourlyForms(c, beat,
+    {apart: apart.every(isSingle), count: apart.length, limit: 12})
+    .map(function said(form): Said {
+      const stretches = form.merged ? runs : apart;
 
-  return {
-    clock: form.clock,
-    count: form.count(stretches),
-    text: form.lead + form.item(stretches)
-  };
+      return {
+        clock: form.clock,
+        count: form.count(stretches),
+        text: form.lead + form.item(stretches)
+      };
+    });
+
+  return others.reduce(function fewer(best, phrased) {
+    return !best.clock && phrased.count < best.count ? phrased : best;
+  }, first);
 }
 
 // Hours on a cadence too long to list. One minute is the cadence with
@@ -461,7 +483,7 @@ function onCadence(c: Context, beat: Beat, cadence: Cadence): Said {
       cadence.interval);
   }
 
-  const form = hourlyForm(c, beat,
+  const [form] = hourlyForms(c, beat,
     {apart: true, count: hours.length, limit: Infinity});
   const onward = phrase(w.andSoOn, every(cadence.interval, units.hour),
     w.until, at(c, cadence.last, beat.span[1]));
@@ -597,15 +619,26 @@ function restSayers(c: Context): Sayers<string> {
   return {
     all: () => evenly(1, 60),
     cadence: (cadence) => evenly(cadence.interval, members(cadence)),
+    // The first run says what repeats; a later one only how long it
+    // lasts, and a single second only how much later it comes. The first
+    // second of all is the time itself.
     pieces(pieces) {
-      const [first, ...others] = stretchesOf(pieces, singles);
+      const stretches = stretchesOf(pieces, singles);
+      const firstRun = stretches.findIndex(isRun);
 
-      return [
-        evenly(1, first.to - first.from + 1),
-        ...others.map((run) => phrase(w.then, w.again,
-          counted(run.from - c.offset, units.second), w.later, w.during,
-          lasting(run.to - run.from + 1)))
-      ].join(', ');
+      return stretches.map(function item(run, index) {
+        const length = run.to - run.from + 1;
+        const later = given(index > 0, phrase(w.again,
+          counted(run.from - c.offset, units.second), w.later));
+        const sweep = index === firstRun ?
+          evenly(1, length) :
+          given(isRun(run), phrase(w.during, lasting(length)));
+
+        return [later, sweep].filter(Boolean)
+          .join(given(index === firstRun, ',') + ' ');
+      }).filter(Boolean).map(function joined(item, index) {
+        return phrase(given(index > 0, w.then), item);
+      }).join(', ');
     },
     range: (run) => evenly(1, run.to - run.from + 1),
     values: (listed) => phrase(w.again, tally(
@@ -666,10 +699,9 @@ function secondsAlone(c: Context): Said {
     cadence: (cadence) => when(members(cadence) > 6, 3),
     except: (excepted) => when(
       c.bare && c.seconds.values.length > 6 && fills(excepted.base) > 0 &&
-      interior(excepted),
+      interior(excepted) && keepsEnds(excepted, c.seconds.domain),
       Number(fills(excepted.base) > 1) + excepted.removed.length),
-    pieces: (pieces) =>
-      when(pieces.parts.every(isRange), 2 * pieces.parts.length),
+    pieces: partsCount,
     range: (run) => when(run.to - run.from > 1, 2),
     values: (listed) => listed.values.length
   });
@@ -683,6 +715,19 @@ function secondsAlone(c: Context): Said {
       phrase(each, w.from, String(run.from), w.to, fromStart([run.to]));
   }
 
+  // Runs share «toutes les secondes» while nothing but runs is said; a
+  // single second among them makes each run take its own.
+  function several(pieces: Of<'pieces'>): string {
+    const shared = pieces.parts.every(isRange);
+
+    return phrase(conjoin(pieces.parts.flatMap((part, index) => say(part, {
+      range: (run) => [phrase(given(index === 0 || !shared, each),
+        spanned(run.from, run.to))],
+      values: (listed) =>
+        listed.values.map((second) => phrase(w.at, String(second)))
+    }, []))), units.second.many, w.afterEachMinuteStart);
+  }
+
   return {
     clock: false,
     count: 0,
@@ -692,9 +737,7 @@ function secondsAlone(c: Context): Said {
       except: (excepted) =>
         `${every(fills(excepted.base), units.second)}, ` +
         phrase(w.except, fromStart(excepted.removed)),
-      pieces: (pieces) => phrase(each, conjoin(
-        stretchesOf(pieces, singles).map((run) => spanned(run.from, run.to))),
-      units.second.many, w.afterEachMinuteStart),
+      pieces: several,
       range: opening,
       values: (listed) => fromStart(listed.values)
     })

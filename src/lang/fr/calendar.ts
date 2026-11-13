@@ -117,8 +117,7 @@ function yearSpan(run: RangeDescription): string {
 /** The year part, or nothing when every year fires. */
 function yearPart(c: Context): string {
   const description = choose(c.years, {
-    cadence: (cadence) =>
-      when(cadence.interval === 2 || members(cadence) > 4, 3),
+    cadence: (cadence) => when(members(cadence) > 4, 3),
     pieces: partsCount,
     range: (run) => when(run.to - run.from > 1, 2),
     values: (listed) => listed.values.length
@@ -296,7 +295,8 @@ function cadenceDays(cadence: Cadence, view: View): DayPhrase {
 // The days of the month, as the days one named month has when there is
 // one, and described afresh.
 function dateView(c: Context, months: Months): View {
-  const whole = viewOf(c.schedule, 'date', c.months.all && c.years.all);
+  const whole =
+    viewOf(c.schedule, 'date', {round: c.months.all && c.years.all});
   const length = months.shape === 'one' && monthDays[months.values[0]] || 31;
   const kept = whole.values.filter(function inMonth(day) {
     return day <= length || whole.values[0] > length;
@@ -377,39 +377,65 @@ function plainDate(c: Context, months: Months, excepting: boolean): DayPhrase {
   return say(choose(view, dateCounts(view, excepting)), sayers);
 }
 
-// The day an `L-n` form lands on. With one named month it is that
-// month's own day (two days for February); otherwise the day of a month
-// of 31 days, and from 28 up the months too short are said to be skipped.
-function landing(days: number, months: Months): Partial<DayPhrase> {
-  const [month] = months.values;
-  const february = month === 2;
-  const own = monthDays[month] - Number(february) - days;
-  const leap = [phrase(w.or, theDay(own + 1), w.leapYears)]
-    .filter(() => february);
+// The lengths one month can have: February's depend on the years named.
+function lengthsOf(month: number, years: View): number[] {
+  return month === 2 ?
+    [28, 29].filter((length) => years.values.some(
+      (year) => Number(year % 4 === 0) === length - 28)) :
+    [monthDays[month]];
+}
 
-  return months.shape === 'one' && own > 0 ?
-    {after: `(${[theDay(own), ...leap].join(', ')})`} :
-    {
+// The day an `L-n` form lands on. With one named month it is that
+// month's own day: two days for February across leap years and others,
+// one of them where only a leap year is long enough, and none where the
+// month never is, which is then said as the condition it fails. With
+// any other months it is the day of a month of 31 days, and from 28 up
+// the months too short are said to be skipped.
+function landing(days: number, months: Months, years: View):
+  Partial<DayPhrase> {
+  const lengths = lengthsOf(months.values[0], years);
+  const [day, leapDay] = lengths.map((length) => length - days)
+    .filter((landed) => landed > 0).map(theDay);
+  const skipped =
+    [phrase(w.whenMonthHasMoreThan, String(days), units.day.many)];
+
+  if (months.shape !== 'one') {
+    return {
       after: `(${phrase(theDay(31 - days), w.ofMonthOf31Days)})`,
-      setOff: [phrase(w.whenMonthHasMoreThan, String(days), units.day.many)]
-        .filter(() => days > 27)
+      setOff: skipped.filter(() => days > 27)
     };
+  }
+
+  if (!day) {
+    return {setOff: skipped};
+  }
+
+  // One day in every year named; or two, the later in leap years; or one
+  // that only a leap year reaches.
+  const both = given(Boolean(leapDay),
+    `, ${w.or} ${leapDay} ${w.leapYears}`);
+  const leapOnly = given(lengths.length > 1 && !leapDay,
+    `, ${w.leapYears} ${w.only}`);
+
+  return {after: `(${day}${both}${leapOnly})`};
 }
 
 // So many days before the last: the day before it has its own word.
-function beforeLast(days: number, months: Months): DayPhrase {
+function beforeLast(days: number, months: Months, years: View): DayPhrase {
   return days === 1 ?
     {...afterNoun, head: w.penultimateDay} :
     {
       ...afterNoun,
       head: phrase(countWords[days], units.day.many, w.beforeLastDay),
-      ...landing(days, months)
+      ...landing(days, months, years)
     };
 }
 
-function quartzDate(form: QuartzDate, months: Months): DayPhrase {
+function quartzDate(form: QuartzDate, months: Months, years: View):
+  DayPhrase {
   const forms: {[kind: string]: (said: never) => DayPhrase} = {
-    beforeLast: (said: {days: number}) => beforeLast(said.days, months),
+    beforeLast: (said: {days: number}) =>
+      beforeLast(said.days, months, years),
     firstWeekday: () =>
       ({...afterNoun, head: phrase(w.the, nthWords[0], w.workingDay)}),
     last: () => ({...afterNoun, head: w.lastDay}),
@@ -430,7 +456,7 @@ function datePhrase(c: Context, months: Months, excepting: boolean): DayPhrase {
   const arm = c.day.date as {form: QuartzDate; kind: string};
 
   return arm.kind === 'quartz' ?
-    quartzDate(arm.form, months) :
+    quartzDate(arm.form, months, c.years) :
     plainDate(c, months, excepting);
 }
 

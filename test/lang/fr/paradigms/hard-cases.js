@@ -555,7 +555,174 @@ const rows = [
     'minute'],
   ['0-9,30-39 * * * * *',
     'toutes les secondes de 0 à 9 et de 30 à 39 secondes après le début ' +
-    'de chaque minute']
+    'de chaque minute'],
+
+  // A day counted from the end of one named month is that month's own
+  // day. February has two lengths: twenty-eight days before its last day
+  // is the 1st of a leap year and no day of any other year. A month that
+  // is always too short gets no day at all, only the condition it fails.
+  ['0 0 L-28 2 *',
+    'vingt-huit jours avant le dernier jour de février (le 1er, les ' +
+    'années bissextiles seulement) à 0 h'],
+  ['0 0 L-29 2 *',
+    'vingt-neuf jours avant le dernier jour de février, quand le mois ' +
+    'compte plus de 29 jours, à 0 h'],
+  ['0 0 L-30 6 *',
+    'trente jours avant le dernier jour de juin, quand le mois compte ' +
+    'plus de 30 jours, à 0 h'],
+  ['0 0 L-30 1 *', 'trente jours avant le dernier jour de janvier (le 1er) à 0 h'],
+  ['0 0 L-28 6 *', 'vingt-huit jours avant le dernier jour de juin (le 2) à 0 h'],
+  ['0 0 L-30 1,7 *',
+    'trente jours avant le dernier jour de janvier et de juillet (le 1er ' +
+    'd\'un mois de 31 jours), quand le mois compte plus de 30 jours, à 0 h'],
+  // 2030 has no 29 February and 2032 has one.
+  ['0 0 9 L-3 2 * 2030',
+    'trois jours avant le dernier jour de février 2030 (le 25) à 9 h'],
+  ['0 0 9 L-3 2 * 2032',
+    'trois jours avant le dernier jour de février 2032 (le 26) à 9 h'],
+  ['0 0 9 L-28 2 * 2032',
+    'vingt-huit jours avant le dernier jour de février 2032 (le 1er) à 9 h'],
+
+  // An exception never takes away a moment a window names. Minutes 1 to
+  // 59 of hour 9 run from 9 h 01, not « de 9 h à 9 h 59, sauf à 9 h ».
+  ['1-59 9 * * *', 'tous les jours, toutes les minutes de 9 h 01 à 9 h 59'],
+  ['0-58 9 * * *', 'tous les jours, toutes les minutes de 9 h à 9 h 58'],
+  ['1-59 9-17 * * *',
+    'tous les jours, toutes les minutes pendant les 59 dernières minutes ' +
+    'de chaque heure, de 9 h 01 à 17 h 59'],
+  ['0-58 9-17 * * *',
+    'tous les jours, toutes les minutes pendant les 59 premières minutes ' +
+    'de chaque heure, de 9 h à 17 h 58'],
+  ['* 1-59 9 * * *',
+    'tous les jours, toutes les minutes de 9 h 01 à 9 h 59, et à chaque ' +
+    'fois toutes les secondes pendant une minute'],
+  // With no window there is no end to take away.
+  ['1-59 * * * *', 'toutes les minutes, sauf à 00 de chaque heure'],
+  ['0-58 * * * *', 'toutes les minutes, sauf à 59 de chaque heure'],
+  // Seconds are placed from the start of the minute, which is no place
+  // for an exception: the run says the same with its two ends.
+  ['1-59 * * * * *',
+    'toutes les secondes de 1 à 59 secondes après le début de chaque minute'],
+  ['0-58 * * * * *',
+    'toutes les secondes pendant les 59 premières secondes de chaque minute'],
+
+  // A run that wraps is said only the shorter way round. Every day but
+  // the 15th, where no exception may be said, is two runs.
+  ['0 0 1-14,16-31 * 5',
+    'à 0 h, tous les vendredis ainsi que du 1er au 14 et du 16 au 31 de ' +
+    'chaque mois'],
+  ['0 0 1-10,20-31 * *', 'du 1er au 10 et du 20 au 31 de chaque mois à 0 h'],
+  ['0 0 20-4 * *', 'du 1er au 4 et du 20 au 31 de chaque mois à 0 h'],
+  ['0 0 20-3 * *', 'du 20 au 3 de chaque mois à 0 h'],
+  // Months have names, as weekdays do, and wrap whatever the length.
+  ['*/5 * * 1-4,6-12 *', 'de juin à avril, toutes les 5 minutes'],
+  ['0 9 * 9-6 *', 'tous les jours de septembre à juin à 9 h'],
+  ['* 0 0-2,4-23 * * *',
+    'toutes les heures de 0 h à 2 h et de 4 h à 23 h, et à chaque fois ' +
+    'toutes les secondes pendant une minute'],
+  ['30 0 0-2,4-23 * * *',
+    'toutes les heures de 0 h 00 min 30 s à 2 h 00 min 30 s et de 4 h 00 ' +
+    'min 30 s à 23 h 00 min 30 s'],
+  ['0 0-3,7-23 * * *', 'toutes les heures, sauf à 4 h, 5 h et 6 h'],
+  ['0 0-3,9-23 * * *',
+    'tous les jours, toutes les heures de 0 h à 3 h et de 9 h à 23 h'],
+  ['0 0-5,18-23 * * *', 'tous les jours, toutes les heures de 18 h à 5 h'],
+  ['0 0-5,17-23 * * *',
+    'tous les jours, toutes les heures de 0 h à 5 h et de 17 h à 23 h'],
+  // Weekdays too.
+  ['0 9 * * 4-1', 'du jeudi au lundi à 9 h'],
+
+  // Two hours in a row: two times, or one window.
+  ['* 0 9,10 * * *',
+    'tous les jours à 9 h et à 10 h, et à chaque fois toutes les secondes ' +
+    'pendant une minute'],
+  ['* 30 9,10 * * *',
+    'tous les jours à 9 h 30 et à 10 h 30, et à chaque fois toutes les ' +
+    'secondes pendant une minute'],
+  ['5,20 22-2 1 * *',
+    'le 1er de chaque mois, à 05 et à 20 de chaque heure, de 0 h 05 à 2 h ' +
+    '20 et de 22 h 05 à 23 h 20'],
+  ['5,20,45 9,10,13,16,19 * * *',
+    'tous les jours, à 05, 20 et 45 de chaque heure, de 9 h 05 à 10 h 45, ' +
+    'de 13 h 05 à 13 h 45, de 16 h 05 à 16 h 45 et de 19 h 05 à 19 h 45'],
+
+  // Four years or fewer are listed, every second year included.
+  ['0 0 0 * * * 2030-2034/2', 'tous les jours à 0 h en 2030, 2032 et 2034'],
+  ['0 0 0 * * * 2030-2036/2',
+    'tous les jours à 0 h en 2030, 2032, 2034 et 2036'],
+  ['0 0 0 * * * 2030-2038/2',
+    'tous les jours à 0 h, les années paires de 2030 à 2038'],
+
+  // Seconds in runs with single seconds among them.
+  ['10-20,30,40-50 * * * * *',
+    'toutes les secondes de 10 à 20, à 30 et toutes les secondes de 40 à ' +
+    '50 secondes après le début de chaque minute'],
+  ['0-9,20 * * * * *',
+    'toutes les secondes de 0 à 9 et à 20 secondes après le début de ' +
+    'chaque minute'],
+  ['0-9,20 0 * * * *',
+    'toutes les heures, et à chaque fois toutes les secondes pendant 10 ' +
+    'secondes, puis de nouveau 20 secondes plus tard'],
+  ['0-9,20 0 9 * * *',
+    'tous les jours à 9 h, toutes les secondes pendant 10 secondes, puis ' +
+    'de nouveau 20 secondes plus tard'],
+  ['10-20,30,40-50 0 9 * * *',
+    'tous les jours à 9 h 00 min 10 s, toutes les secondes pendant 11 ' +
+    'secondes, puis de nouveau 20 secondes plus tard, puis de nouveau 30 ' +
+    'secondes plus tard pendant 11 secondes'],
+
+  // A single second before the first run: the run is said where it comes.
+  ['4,20-52 0 * * * *',
+    'toutes les heures, avec 4 secondes de décalage, et à chaque fois de ' +
+    'nouveau 16 secondes plus tard, toutes les secondes pendant 33 secondes'],
+  ['0,10-20 0 9 * * *',
+    'tous les jours à 9 h, de nouveau 10 secondes plus tard, toutes les ' +
+    'secondes pendant 11 secondes'],
+  ['0,10-20 * * * * *',
+    'à 0 et toutes les secondes de 10 à 20 secondes après le début de ' +
+    'chaque minute'],
+
+  // Several stretches of minutes under several hours: a window for each
+  // stretch in each hour while that names no more than the minute phrase
+  // and one window an hour.
+  ['50-10 9,17 * * *',
+    'tous les jours, toutes les minutes de 9 h à 9 h 10, de 9 h 50 à 9 h ' +
+    '59, de 17 h à 17 h 10 et de 17 h 50 à 17 h 59'],
+  ['50-10 */6 * * *',
+    'tous les jours, toutes les minutes pendant les 11 premières et les ' +
+    '10 dernières minutes de chaque heure, de 0 h à 0 h 59, de 6 h à 6 h ' +
+    '59, de 12 h à 12 h 59 et de 18 h à 18 h 59'],
+  ['0-4,10-14,20-24 9,17 * * *',
+    'tous les jours, toutes les minutes de 00 à 04, toutes les minutes de ' +
+    '10 à 14 et toutes les minutes de 20 à 24 de chaque heure, de 9 h à 9 ' +
+    'h 24 et de 17 h à 17 h 24'],
+  ['0-4,10-14,20-24 9 * * *',
+    'tous les jours, toutes les minutes de 9 h à 9 h 04, de 9 h 10 à 9 h ' +
+    '14 et de 9 h 20 à 9 h 24'],
+  // Minutes in pieces with a single minute among them keep their phrase.
+  ['1-5,10,20-25 9-17 * * *',
+    'tous les jours, toutes les minutes de 01 à 05, à 10 et toutes les ' +
+    'minutes de 20 à 25 de chaque heure, de 9 h 01 à 17 h 25'],
+
+  // A day the one named month lacks is not said, unless it lacks them all.
+  ['0 0 15,31 6 *', 'le 15 juin à 0 h'],
+  ['0 0 31 6 *', 'le 31 juin à 0 h'],
+  ['0 0 1-30 6 *', 'tous les jours de juin à 0 h'],
+  ['0 0 1-28 2 *', 'tous les jours de février, sauf le 29, à 0 h'],
+
+  // A cadence of days with a hole, where no exception may be said: what
+  // is left each side, a stretch of one or two days named day by day.
+  ['0 0 1,3,7-31/2 * 5',
+    'à 0 h, tous les vendredis ainsi que le 1er, le 3 et les jours ' +
+    'impairs du 7 au 31 de chaque mois'],
+
+  // An exception among the minutes beside hours that are not every hour.
+  ['0,12,24,48 9-17 * * *',
+    'tous les jours, toutes les 12 minutes de 9 h à 17 h 48, sauf à 36 de ' +
+    'chaque heure'],
+  ['30 0-28,30-59 * * * *',
+    'toutes les minutes pendant les 29 premières et les 30 dernières ' +
+    'minutes de chaque heure, avec 30 secondes de décalage']
 ];
 
 export {rows};
