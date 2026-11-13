@@ -39,6 +39,8 @@ interface YearTerm {
 
 // One side of the day part: dates or weekdays.
 interface Side {
+  // The weekdays one by one, where they can be said after 或.
+  items?: string[];
   kind: 'plain' | 'parity' | 'except' | 'week' | 'free';
   text: string;
   // What this side asks for before a clock time.
@@ -554,6 +556,8 @@ function weekSide(schedule: Schedule, plain: boolean): Side {
       exception.removed.length === 1;
   });
 
+  const items = listed(linearRuns(days), RANGE, weekdayName);
+
   return picked.removed.length > 0 ?
     {
       kind: 'free',
@@ -562,10 +566,41 @@ function weekSide(schedule: Schedule, plain: boolean): Side {
       tie: ''
     } :
     {
+      items,
       kind: 'week',
-      text: series(listed(linearRuns(days), RANGE, weekdayName)),
+      text: series(items),
       tie: ''
     };
+}
+
+// Dates and weekdays that must both match: the dates, then that they fall
+// on the weekdays. 每逢 leads the dates, 为 and 时 close the condition,
+// and the last weekday follows 或.
+function meeting(dates: Side, weekdays: Side): string {
+  const items = weekdays.items ?? [weekdays.text];
+
+  return words.eachOfDays + dates.text + words.being +
+    series(items.slice(0, -1)) + when(items.length > 1, words.or) +
+    lastOf(items) + words.whenItIs;
+}
+
+// What stands before the days: a date and a weekday together under a
+// month, or that must both match, are led by 每逢.
+function dayContext(month: MonthPart, together: boolean, meet: boolean):
+  Context {
+  return first<Context>([
+    [together && (month.kind !== 'none' || meet), 'both'],
+    [true, month.kind]
+  ]);
+}
+
+// The sides of the day part, each marked for itself and joined by 以及,
+// or, where both must match, said as a condition.
+function sidesText(sides: Side[], context: Context, meet: boolean): string {
+  return meet ?
+    meeting(sides[0], sides[1]) :
+    sides.map((side) => beforeDays[side.kind][context] + side.text)
+      .join(words.andDays);
 }
 
 /**
@@ -573,30 +608,31 @@ function weekSide(schedule: Schedule, plain: boolean): Side {
  * before a clock time. With no day the tie is 每天, which fills the level
  * a time of day would otherwise skip. A date and a weekday together are
  * each marked for itself, joined by 以及, and tied to the time by 的;
- * under a month, 每逢 leads each after a comma. Dates that are every day
- * the months have are not said, nor the weekday beside them; a date no
- * month has leaves the weekday alone.
+ * under a month, 每逢 leads each after a comma. Where both must match,
+ * the dates are said, then that they fall on the weekdays. Dates that are
+ * every day the months have are not said, nor the weekday beside them; a
+ * date no month has leaves the weekday alone.
  */
 function dayOf(schedule: Schedule, month: MonthPart):
   {text: string; tie: string} {
-  const {candidates, dateReach} = schedule.analyses;
+  const {candidates, dateReach, day} = schedule.analyses;
   const everyDay = dateReach?.days?.everyDay === true;
   const dated = !isAll(candidates.date) && !everyDay &&
     dateReach?.fires !== false;
   const weekly = !isAll(candidates.weekday) && !everyDay;
   const together = dated && weekly;
-  const context = together && month.kind !== 'none' ? 'both' : month.kind;
+  const meet = together && day.both;
+  const context = dayContext(month, together, meet);
   const plain = together || month.excepted;
   const sides = [
     ...[dated].filter(Boolean).map(
       () => dateSide(schedule, context, plain)),
     ...[weekly].filter(Boolean).map(() => weekSide(schedule, plain))
   ];
+  const lead = when(together && month.kind !== 'none', marks.comma);
 
   return {
-    text: when(context === 'both', marks.comma) +
-      sides.map((side) => beforeDays[side.kind][context] + side.text)
-        .join(words.andDays),
+    text: lead + sidesText(sides, context, meet),
     tie: [
       words.everyDay,
       sides.map((side) => side.tie).join(''),
