@@ -597,6 +597,15 @@ note that recorded it as a "known limit" was a defect left standing.)
   pieces and an exception, and never for a plain list.
 * The cadences here are those generic rule 7 says as a cadence; a
   cadence of seven values or fewer that does not come round is a list.
+  **The hours are the exception when more than one minute fires in the
+  hour:** a cadence of five hours or more is then said as a cadence
+  whether or not it comes round, because hour by hour every clock time
+  and every window would be said again (`*/25 */5`: fifteen clock times;
+  «denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50»). At
+  one minute the hours stay a list («denně v 0:00, 5:00, 10:00, 15:00 a
+  20:00»), and four hours or fewer are always said one by one: four
+  windows, each exact, are still held («od 0:00 do 0:59, od 6:00 do 6:59,
+  od 12:00 do 12:59 a od 18:00 do 18:59»).
 
 **T3. M is an even rhythm, or an exception whose base is an even
 rhythm (or, when every window is a single hour, anything that reads as
@@ -720,8 +729,11 @@ seconds is `H:MM:SS`, and then every time in the same phrase shows them.
   seconds are written into the times. `15 30 9 * * *` → «denně
   v 9:30:15»; `0,30 0 9 * * *` → «denně v 9:00:00 a 9:00:30»;
   `*/15 0 9 * * *` → «denně v 9:00:00, 9:00:15, 9:00:30 a 9:00:45».
-* **S2.** D is a list of times and S1 does not apply: each time becomes
-  a window. «každou sekundu od 9:00:00 do 9:00:59», «každých 6 sekund od
+* **S2.** D is a list of six times or fewer and S1 does not apply: each
+  time becomes a window. (With more than six times, and where a list of
+  seconds would make more than six of them, S7 says the seconds once: a
+  dozen windows to the second cannot be held, «denně ve 2:00, 2:25, 2:50,
+  8:00 … a 20:50, pokaždé po dobu jedné minuty každou sekundu» can.) «každou sekundu od 9:00:00 do 9:00:59», «každých 6 sekund od
   9:00:00 do 9:00:54», «každou sekundu od 9:00:00 do 9:00:09», «každých
   10 sekund od 9:00:05 do 9:00:55», «každou sekundu od 9:00:00 do
   9:00:59 a od 17:00:00 do 17:00:59», «… od 9:00:00 do 9:00:59, kromě

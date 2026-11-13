@@ -18,6 +18,7 @@
 //
 // Usage: conciseness.mjs [code] [--threshold=N]  (run via node --import tsx)
 
+import {readdirSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import cronli5 from '../../src/cronli5.js';
 import {enumerateFires} from '../../src/core/util.js';
@@ -91,7 +92,10 @@ function budget(cron) {
 
 // Digit-groups carried by the description — the blowup signal.
 function outputNumbers(description) {
-  return (description.match(/\d+/gu) || []).length;
+  // A clock time or a date written as several groups of digits («9:00:30»,
+  // « 2 h 05 », 6月1日) is one thing named, as "9 a.m." is.
+  return (description.match(
+    /\d+(?:(?::|\.(?=\d)| h | min |[時时点分月])\d+)*/gu) || []).length;
 }
 
 function describe(cron, langModule) {
@@ -159,6 +163,17 @@ if (process.argv[1] &&
   const code = process.argv.slice(2).find((arg) => (/^[a-z]{2}$/u).test(arg));
   const flag = process.argv.find((arg) => arg.startsWith('--threshold='));
   const threshold = flag ? Number(flag.slice('--threshold='.length)) : 6;
+  // `--all` reports every language, worst first, for review: a discovery
+  // report, never a target. Only the languages in LANGS are gated.
+  const all = process.argv.includes('--all') ?
+    readdirSync(new URL('../../src/lang/', import.meta.url))
+      .filter((name) => !name.includes('.') && !LANGS.includes(name)) :
+    [];
+
+  for (const lang of all) {
+    await main(lang, threshold);
+  }
+
   const total = await main(code, threshold);
 
   // Gate: any over-budget shape is a verbosity regression.
