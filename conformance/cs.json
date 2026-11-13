@@ -4701,6 +4701,27 @@
    "pattern": "0 0 1-10/2,11-31/3 * *"
   },
   {
+   "expected": "v každou celou hodinu a 3, 7, 12, 18, 25, 33 a 42 minut po ní",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,3,7,12,18,25,33,42 * * * *"
+  },
+  {
+   "expected": "v každé hodině každých 15 minut od 5 do 50 minut po celé hodině (:05–:50) a také každých 15 minut od 10 do 55 minut po celé hodině (:10–:55)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,10,20,25,35,40,50,55 * * * *"
+  },
+  {
+   "expected": "v každé minutě každých 15 sekund od 5 do 50 sekund po začátku minuty a také každých 15 sekund od 10 do 55 sekund po začátku minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,10,20,25,35,40,50,55 * * * * *"
+  },
+  {
    "expected": "denně v 9:00 dopoledne",
    "options": {
     "lang": "cs",
