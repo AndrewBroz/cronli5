@@ -994,8 +994,8 @@ Then:
   puis de nouveau 30 secondes après le début pendant 11 secondes ». (It
   was « puis de nouveau » with no length, and a blind reader took the
   single second for a second burst as long as the first.) This is said under one clock time too (« tous
-  les jours à 9 h, toutes les secondes pendant 10 secondes, puis de
-  nouveau 20 secondes après le début »).
+  les jours à 9 h, toutes les secondes pendant 10 secondes, puis une
+  fois 20 secondes après le début »).
   **Once a run has been said, what follows is counted « après le
   début », not « plus tard »** (the second audit). « Pendant 10
   secondes, puis de nouveau 20 secondes plus tard » can be counted from
