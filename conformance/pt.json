@@ -254,7 +254,7 @@
    "pattern": "*/15 9-17 */2 * 1-5"
   },
   {
-   "expected": "de segunda a sexta e também nos dias 1º, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 29 e 31 de cada mês, sempre a cada 15 minutos das 09:00 às 17:45",
+   "expected": "de segunda a sexta e também nos dias ímpares do dia 1º ao dia 13 e do dia 17 ao dia 31 de cada mês, sempre a cada 15 minutos das 09:00 às 17:45",
    "options": {
     "lang": "pt"
    },
@@ -786,7 +786,7 @@
    "pattern": "0 9 L * *"
   },
   {
-   "expected": "no dia 15 de cada mês ou, se cair num sábado ou domingo, no dia de semana mais próximo, às 09:00",
+   "expected": "no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima, às 09:00",
    "options": {
     "lang": "pt"
    },
@@ -1059,7 +1059,7 @@
    "pattern": "*/15 9-17 L * 1-5"
   },
   {
-   "expected": "de segunda a sexta e também no dia 15 de cada mês ou, se cair num sábado ou domingo, no dia de semana mais próximo, sempre a cada 15 minutos das 09:00 às 17:45",
+   "expected": "de segunda a sexta e também no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima, sempre a cada 15 minutos das 09:00 às 17:45",
    "options": {
     "lang": "pt"
    },
@@ -1325,7 +1325,7 @@
    "pattern": "0 0 L * *"
   },
   {
-   "expected": "no dia 15 de cada mês ou, se cair num sábado ou domingo, no dia de semana mais próximo, às 00:00",
+   "expected": "no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima, às 00:00",
    "options": {
     "lang": "pt"
    },
@@ -1591,7 +1591,7 @@
    "pattern": "* * L * *"
   },
   {
-   "expected": "no dia 15 de cada mês ou, se cair num sábado ou domingo, no dia de semana mais próximo, a cada minuto",
+   "expected": "no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima, a cada minuto",
    "options": {
     "lang": "pt"
    },
@@ -1987,18 +1987,32 @@
    "pattern": "0 0 1 * ?"
   },
   {
-   "expected": "no último dia de semana (segunda a sexta) de cada mês às 00:00",
+   "expected": "no último dia de cada mês que não seja sábado nem domingo, às 00:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0 LW * *"
   },
   {
-   "expected": "no último dia de semana (segunda a sexta) de junho às 00:00",
+   "expected": "no último dia de junho que não seja sábado nem domingo, às 00:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0 LW 6 *"
+  },
+  {
+   "expected": "no último dia de junho de 2030 que não seja sábado nem domingo, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 0 LW 6 * 2030"
+  },
+  {
+   "expected": "todas as sextas e também no último dia de cada mês que não seja sábado nem domingo, sempre às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 LW * 5"
   },
   {
    "expected": "no penúltimo dia de cada mês às 00:00",
@@ -2057,28 +2071,28 @@
    "pattern": "0 0 L */2 *"
   },
   {
-   "expected": "no dia 15 de junho ou, se cair num sábado ou domingo, no dia de semana mais próximo, às 00:00",
+   "expected": "no dia 15 de junho ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima, às 00:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0 15W 6 *"
   },
   {
-   "expected": "no primeiro dia de semana (segunda a sexta) de cada mês às 00:00",
+   "expected": "no primeiro dia de cada mês que não seja sábado nem domingo, às 00:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0 1W * *"
   },
   {
-   "expected": "no primeiro dia de semana (segunda a sexta) de junho às 00:00",
+   "expected": "no primeiro dia de junho que não seja sábado nem domingo, às 00:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0 1W 6 *"
   },
   {
-   "expected": "no dia 31 de cada mês ou, se cair num sábado ou domingo, no dia de semana mais próximo do mesmo mês, às 00:00",
+   "expected": "no dia 31 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do mesmo mês, às 00:00",
    "options": {
     "lang": "pt"
    },
@@ -2127,7 +2141,7 @@
    "pattern": "0 9 * * 0#4"
   },
   {
-   "expected": "no dia 15 de março, junho, setembro e dezembro ou, se cair num sábado ou domingo, no dia de semana mais próximo, às 18:00",
+   "expected": "no dia 15 de março, junho, setembro e dezembro ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima, às 18:00",
    "options": {
     "lang": "pt"
    },
@@ -2141,21 +2155,21 @@
    "pattern": "0 0 L-30 * *"
   },
   {
-   "expected": "no dia 30 de janeiro e de julho ou, se cair num sábado ou domingo, no dia de semana mais próximo do mesmo mês, às 00:00",
+   "expected": "no dia 30 de janeiro e de julho ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do mesmo mês, às 00:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0 30W 1,7 *"
   },
   {
-   "expected": "no dia 28 de cada mês ou, se cair num sábado ou domingo, no dia de semana mais próximo do mesmo mês, às 00:00",
+   "expected": "no dia 28 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do mesmo mês, às 00:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0 28W * *"
   },
   {
-   "expected": "no dia 27 de cada mês ou, se cair num sábado ou domingo, no dia de semana mais próximo, às 00:00",
+   "expected": "no dia 27 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima, às 00:00",
    "options": {
     "lang": "pt"
    },
@@ -2572,7 +2586,7 @@
    "pattern": "0 0 5-20/3 * *"
   },
   {
-   "expected": "de 2 em 2 dias do dia 8 ao dia 30 de cada mês às 00:00",
+   "expected": "nos dias pares do dia 8 ao dia 30 de cada mês às 00:00",
    "options": {
     "lang": "pt"
    },
@@ -2819,35 +2833,35 @@
    "pattern": "0 9 * * 6"
   },
   {
-   "expected": "todas as segundas e todos os domingos às 09:00",
+   "expected": "todas as segundas e domingos às 09:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 9 * * 0,1"
   },
   {
-   "expected": "todas as sextas e todos os domingos às 09:00",
+   "expected": "todas as sextas e domingos às 09:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 9 * * 0,5"
   },
   {
-   "expected": "todas as sextas e todos os sábados às 09:00",
+   "expected": "todas as sextas e sábados às 09:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 9 * * 5,6"
   },
   {
-   "expected": "todas as quintas e todos os sábados e domingos às 09:00",
+   "expected": "todas as quintas, sábados e domingos às 09:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 9 * * 0,4,6"
   },
   {
-   "expected": "todas as terças, quartas e quintas e todos os domingos às 09:00",
+   "expected": "todas as terças, quartas, quintas e domingos às 09:00",
    "options": {
     "lang": "pt"
    },
@@ -3722,7 +3736,7 @@
    "pattern": "0,30 30 * * * *"
   },
   {
-   "expected": "todos os dias às 09:00 e 17:00, repetindo a cada segundo durante o minuto inteiro",
+   "expected": "todos os dias às 09:00 e 17:00, sempre repetindo a cada segundo durante o minuto inteiro",
    "options": {
     "lang": "pt"
    },
@@ -3785,7 +3799,7 @@
    "pattern": "0,30 * 9 * * *"
   },
   {
-   "expected": "todos os dias, nos minutos 5 e 20 de cada hora, das 09:05 às 17:20, 15 segundos depois",
+   "expected": "todos os dias, nos minutos 5 e 20 de cada hora, das 09:05 às 17:20, sempre 15 segundos depois",
    "options": {
     "lang": "pt"
    },
@@ -3834,7 +3848,7 @@
    "pattern": "0 35 2,15 * * * 2028,2030"
   },
   {
-   "expected": "todas as segundas, quartas, quintas e sextas de julho, setembro, outubro e dezembro, nos minutos 30 e 42 de cada hora, das 03:30 às 10:42, repetindo a cada segundo durante o minuto inteiro",
+   "expected": "todas as segundas, quartas, quintas e sextas de julho, setembro, outubro e dezembro, nos minutos 30 e 42 de cada hora, das 03:30 às 10:42, sempre repetindo a cada segundo durante o minuto inteiro",
    "options": {
     "lang": "pt"
    },
@@ -3925,11 +3939,32 @@
    "pattern": "0 12-10 * * *"
   },
   {
-   "expected": "todos os dias, a cada hora das 12:00 às 09:00",
+   "expected": "todos os dias, a cada hora, em ponto, exceto às 10:00 e 11:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 0-9,12-23 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada hora das 18:00 às 05:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 18-5 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada hora das 00:00 às 05:00 e das 17:00 às 23:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0-5,17-23 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada hora das 22:00 às 09:00, exceto às 03:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 22-2,4-9 * * *"
   },
   {
    "expected": "todas as segundas, a cada hora, em ponto, exceto às 10:00 e 11:00",
@@ -3939,7 +3974,7 @@
    "pattern": "0 0-9,12-23 * * 1"
   },
   {
-   "expected": "todos os dias, a cada hora das 20:00 às 17:00, exceto às 11:00",
+   "expected": "todos os dias, a cada hora, em ponto, exceto às 11:00, 18:00 e 19:00",
    "options": {
     "lang": "pt"
    },
@@ -3981,7 +4016,7 @@
    "pattern": "0 1,9-17,20-23 * * *"
   },
   {
-   "expected": "de sexta a segunda e todas as quartas às 09:00",
+   "expected": "todos os dias, exceto às terças e quintas, às 09:00",
    "options": {
     "lang": "pt"
    },
@@ -4002,7 +4037,7 @@
    "pattern": "0 9 * * 0-4"
   },
   {
-   "expected": "todos os dias, exceto às quartas e aos domingos, às 09:00",
+   "expected": "todos os dias, exceto às quartas e domingos, às 09:00",
    "options": {
     "lang": "pt"
    },
@@ -4058,18 +4093,503 @@
    "pattern": "0 9 2-31 4 *"
   },
   {
-   "expected": "no dia 29 de fevereiro às 09:00",
+   "expected": "no dia 29 de fevereiro dos anos bissextos às 09:00",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 9 29-31 2 *"
   },
   {
-   "expected": "no dia 31 de fevereiro às 09:00",
+   "expected": "do dia 1º ao dia 30 de junho, exceto no dia 15, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 1-14,16-30 6 *"
+  },
+  {
+   "expected": "todos os dias, exceto nos dias 15 e 31 de cada mês, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 1-14,16-30 * *"
+  },
+  {
+   "expected": "nunca (fevereiro não tem dia 31)",
    "options": {
     "lang": "pt"
    },
    "pattern": "0 9 31 2 *"
+  },
+  {
+   "expected": "todos os dias de abril e junho às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 9 1-30 4,6 *"
+  },
+  {
+   "expected": "todos os dias de abril e junho às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 9 1-30 4,6 1"
+  },
+  {
+   "expected": "no dia 1º de abril, junho, setembro e novembro às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 1,31 4,6,9,11 *"
+  },
+  {
+   "expected": "em abril e junho, todas as segundas e também no dia 30, sempre às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 30,31 4,6 1"
+  },
+  {
+   "expected": "no dia 31 de cada mês às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31 * *"
+  },
+  {
+   "expected": "no dia 30 de março às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 30 2-3 *"
+  },
+  {
+   "expected": "no dia 31 de janeiro, março, maio, julho, agosto e outubro às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31 1-11 *"
+  },
+  {
+   "expected": "no dia 31 de julho e de agosto ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do mesmo mês, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31W 6-8 *"
+  },
+  {
+   "expected": "no dia 30 de abril ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do mesmo mês, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 30W 2,4 *"
+  },
+  {
+   "expected": "no dia que fica 30 dias antes do último dia de julho e de agosto às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 L-30 6-8 *"
+  },
+  {
+   "expected": "todas as sextas e também no dia 31 de cada mês ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do mesmo mês, sempre às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31W * 5"
+  },
+  {
+   "expected": "nunca (junho não tem dia 31)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "nunca (junho não tem dia 31)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "*/15 9-17 31 6 *"
+  },
+  {
+   "expected": "nunca (fevereiro não tem dia 30)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 30 2 *"
+  },
+  {
+   "expected": "nunca (fevereiro não tem dias 30 e 31)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 30,31 2 *"
+  },
+  {
+   "expected": "nunca (abril e junho não têm dia 31)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31 4,6 *"
+  },
+  {
+   "expected": "nunca (fevereiro não tem dia 29 em 2031)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 0 29 2 * 2031"
+  },
+  {
+   "expected": "nunca (junho não tem dia 31)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31W 6 *"
+  },
+  {
+   "expected": "nunca (junho não tem 31 dias)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 L-30 6 *"
+  },
+  {
+   "expected": "Nunca (junho não tem dia 31)",
+   "options": {
+    "form": "label",
+    "lang": "pt"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "Nunca ocorre (junho não tem dia 31).",
+   "options": {
+    "form": "sentence",
+    "lang": "pt"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "todas as segundas de junho às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 31 6 1"
+  },
+  {
+   "expected": "em fevereiro, de segunda a sexta, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 9 31 2 1-5"
+  },
+  {
+   "expected": "no dia 29 de fevereiro dos anos bissextos às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 29 2 *"
+  },
+  {
+   "expected": "no dia 29 de fevereiro de 2032 às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 0 29 2 * 2032"
+  },
+  {
+   "expected": "no dia 29 de fevereiro dos anos bissextos, de 2030 a 2040, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 0 29 2 * 2030-2040"
+  },
+  {
+   "expected": "no dia 29 de fevereiro dos anos bissextos, nos anos pares, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 0 29 2 * */2"
+  },
+  {
+   "expected": "no dia que fica 28 dias antes do último dia de fevereiro dos anos bissextos às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 L-28 2 *"
+  },
+  {
+   "expected": "no dia 29 de fevereiro dos anos bissextos ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do mesmo mês, às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 29W 2 *"
+  },
+  {
+   "expected": "em fevereiro, todas as segundas e também no dia 29 dos anos bissextos, sempre às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 29 2 1"
+  },
+  {
+   "expected": "no dia 29 de fevereiro e de março às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 29 2,3 *"
+  },
+  {
+   "expected": "no dia 29 de cada mês às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 29 * *"
+  },
+  {
+   "expected": "nos dias ímpares do dia 1º ao dia 29 de fevereiro às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 1-29/2 2 *"
+  },
+  {
+   "expected": "nos dias ímpares do dia 3 ao dia 29 de junho às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 3-31/2 6 *"
+  },
+  {
+   "expected": "nos dias pares de junho às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 2/2 6 *"
+  },
+  {
+   "expected": "nos dias ímpares do dia 1º ao dia 11 e de 3 em 3 dias do dia 14 ao dia 29 de cada mês às 00:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 1-10/2,11-31/3 * *"
+  },
+  {
+   "expected": "nos minutos 0, 3, 8, 11, 16, 19, 24, 27, 32, 35, 40, 43, 48, 51, 56 e 59 de cada hora",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0-56/8,3-59/8 * * * *"
+  },
+  {
+   "expected": "a cada 2 minutos do minuto 0 ao 20 e a cada 3 minutos do minuto 21 ao 57 de cada hora",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0-20/2,21-59/3 * * * *"
+  },
+  {
+   "expected": "todos os dias, a cada 2 minutos das 09:00 às 09:20 e a cada 3 minutos das 09:21 às 09:57",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0-20/2,21-59/3 9 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada 2 minutos do minuto 0 ao 20 e a cada 3 minutos do minuto 21 ao 57 de cada hora, das 09:00 às 17:57",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0-20/2,21-59/3 9-17 * * *"
+  },
+  {
+   "expected": "a cada 2 segundos do segundo 0 ao 20 e a cada 3 segundos do segundo 21 ao 57 de cada minuto",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0-20/2,21-59/3 * * * * *"
+  },
+  {
+   "expected": "todos os dias, a cada 2 horas das 00:00 às 22:00 e às 17:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 */2,17 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada 2 horas das 00:00 às 10:00 e a cada 3 horas das 11:00 às 23:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0-10/2,11-23/3 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada minuto das 00:00 às 00:59, das 02:00 às 02:59, das 04:00 às 04:59, das 06:00 às 06:59, das 08:00 às 08:59, das 10:00 às 11:59, das 14:00 às 14:59, das 17:00 às 17:59, das 20:00 às 20:59 e das 23:00 às 23:59",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "* 0-10/2,11-23/3 * * *"
+  },
+  {
+   "expected": "todos os dias, a partir de 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030/1"
+  },
+  {
+   "expected": "a partir de 2030, de segunda a sexta, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * 1-5 2030/1"
+  },
+  {
+   "expected": "no dia 1º de janeiro, a partir de 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 1 1 * 2030/1"
+  },
+  {
+   "expected": "todos os dias de junho, a partir de 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * 6 * 2030/1"
+  },
+  {
+   "expected": "todos os dias, nos anos pares a partir de 2030 e em 2031, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030/2,2031"
+  },
+  {
+   "expected": "todos os dias, nos anos pares de 2000 a 2098, exceto em 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2000-2028/2,2032-2098/2"
+  },
+  {
+   "expected": "todos os dias, exceto em 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 1970-2029,2031/1"
+  },
+  {
+   "expected": "de segunda a sexta, exceto em 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * 1-5 1970-2029,2031/1"
+  },
+  {
+   "expected": "todos os dias, a partir de 2020, exceto em 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2020-2029,2031/1"
+  },
+  {
+   "expected": "todos os dias, de 2030 a 2040 e de 5 em 5 anos a partir de 2045 (2045, 2050, 2055…), às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030-2040,2045/5"
+  },
+  {
+   "expected": "todos os dias, de 4 em 4 anos a partir de 2030 (2030, 2034, 2038…) e de 4 em 4 anos a partir de 2031 (2031, 2035, 2039…), às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030/4,2031/4"
+  },
+  {
+   "expected": "todos os dias de 2030 e 2031 às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030,2031"
+  },
+  {
+   "expected": "todos os dias de 2030, 2031, 2033 e 2034 às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030,2031,2033,2034"
+  },
+  {
+   "expected": "todos os dias, de 2030 a 2036, exceto em 2033, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030-2032,2034-2036"
+  },
+  {
+   "expected": "todos os dias, exceto em junho e em 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * 1-5,7-12 * 1970-2029,2031/1"
+  },
+  {
+   "expected": "todos os dias, em 2039 e 2040 e nos anos ímpares a partir de 2077, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2039-2040,2077/2"
+  },
+  {
+   "expected": "todos os dias, em 2020 e nos anos pares a partir de 2030, às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2020,2030/2"
+  },
+  {
+   "expected": "todos os dias, em 2020 e 2022 e de 3 em 3 anos a partir de 2031 (2031, 2034, 2037…), às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2020,2022,2031/3"
+  },
+  {
+   "expected": "nunca (junho não tem dia 31 nos anos pares)",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 0 31 6 * */2"
+  },
+  {
+   "expected": "todos os dias de 2030, 2032 e 2034 às 09:00",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "0 0 9 * * * 2030-2034/2"
+  },
+  {
+   "expected": "todos os dias, a cada minuto das 09:00 às 09:29 e às 09:45, sempre 2 vezes: 15 e 45 segundos depois",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "15,45 0-29,45 9 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada hora das 09:00 às 17:00 e às 22:00, sempre repetindo a cada segundo durante o minuto inteiro",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "* 0 9-17,22 * * *"
+  },
+  {
+   "expected": "todos os dias, a cada hora das 09:00 às 17:00, repetindo a cada segundo durante o minuto inteiro",
+   "options": {
+    "lang": "pt"
+   },
+   "pattern": "* 0 9-17 * * *"
   },
   {
    "expected": "todos os dias, a cada 5 minutos das 09:05 às 09:55 e das 17:05 às 17:55",
@@ -4542,7 +5062,7 @@
    "pattern": "0 9 * * 0-2,4-6"
   },
   {
-   "expected": "no último dia de semana (seg. a sex.) de cada mês às 00:00",
+   "expected": "no último dia de cada mês que não seja sáb. nem dom., às 00:00",
    "options": {
     "lang": "pt",
     "style": {
@@ -4562,7 +5082,7 @@
    "pattern": "*/15 9-17 * * 1-5"
   },
   {
-   "expected": "no dia 15 de cada mês ou, se cair num sáb. ou dom., no dia de semana mais próximo, às 09:00",
+   "expected": "no dia 15 de cada mês ou, se cair num sáb. ou dom., na sex. ou seg. mais próxima, às 09:00",
    "options": {
     "lang": "pt",
     "style": {
@@ -4622,7 +5142,7 @@
    "pattern": "0 9 * * 0-2,4-6"
   },
   {
-   "expected": "no último dia de semana (segunda-feira a sexta-feira) de cada mês às 00:00",
+   "expected": "no último dia de cada mês que não seja sábado nem domingo, às 00:00",
    "options": {
     "lang": "pt",
     "style": {
@@ -4630,6 +5150,16 @@
     }
    },
    "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "no dia 15 de cada mês ou, se cair num sábado ou domingo, na sexta-feira ou segunda-feira mais próxima, às 09:00",
+   "options": {
+    "lang": "pt",
+    "style": {
+     "feira": true
+    }
+   },
+   "pattern": "0 9 15W * *"
   },
   {
    "expected": "de segunda-feira a sexta-feira, a cada 15 minutos das 09:00 às 17:45",
