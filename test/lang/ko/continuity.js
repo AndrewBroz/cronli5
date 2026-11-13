@@ -11,29 +11,34 @@ const {expect} = chai;
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];
 
-// A description is three parts in one order, from large to small
+// A description is three parts in one order (and at times a fourth), from large to small
 // (answers 2.1): the calendar (the year, the month and the day: «매년
 // 6월 매주 월요일», «매월 1일과 매주 금요일, 각각»), the fill (one of
-// «매일», «하루 종일», «내내», or nothing), and the time.
-// `describeParts` gives them as `{calendar, fill, time}`.
+// «매일», «하루 종일», «내내», or nothing), and the time. One kind of
+// schedule has a fourth, the note: when a day of the month and a weekday
+// are both restricted and one of them is every day but a few, the
+// condition «(단, 15일은 월요일인 경우에만)» closes the sentence, written
+// straight after the time with no space (answers 4.3). `describeParts`
+// gives them as `{calendar, fill, time, note}`, the note an empty string
+// when there is none.
 //
 // A second or a minute changes the time. An hour changes the time and
-// the fill. A day, month or year field changes the calendar and the
-// fill. Inside the calendar the fields answer to one another in the ways
+// the fill. A day, month or year field changes the calendar, the fill
+// and the note. Inside the calendar the fields answer to one another in the ways
 // answers 2.6 declares: «매년» and «매월» stand by which coarser field
 // is free or said as a range, a union says its month and year on both
-// arms or becomes one «매일(단, …)», a year phrase ending in «마다»
+// arms or becomes «매일» with its note, a year phrase ending in «마다»
 // takes «, 그해», and the month and day phrases name only what the
-// calendar has. All of that stays inside the calendar. Nothing else may
-// cross.
+// calendar has. All of that stays inside the calendar and the note.
+// Nothing else may cross.
 const MAY_CHANGE = {
-  date: ['calendar', 'fill'],
+  date: ['calendar', 'fill', 'note'],
   hour: ['time', 'fill'],
   minute: ['time'],
-  month: ['calendar', 'fill'],
+  month: ['calendar', 'fill', 'note'],
   second: ['time'],
-  weekday: ['calendar', 'fill'],
-  year: ['calendar', 'fill']
+  weekday: ['calendar', 'fill', 'note'],
+  year: ['calendar', 'fill', 'note']
 };
 
 // The fill says what the level between the calendar and the time does
@@ -98,20 +103,20 @@ function leaks(pairList) {
   return found;
 }
 
-// Continuity, measured directly. A description is three parts in one
-// order: calendar, fill, time. Editing one field of the pattern may
+// Continuity, measured directly. A description is its parts in one
+// order: calendar, fill, time, note. Editing one field of the pattern may
 // rewrite that field's part and nothing else, apart from the declared
 // fusions above. This is the constraint itself, where a count of changed
 // words is only a rough sign of it: a longer sentence, or a wrong one,
 // cannot make this pass.
 describe('Korean continuity:', function() {
-  it('says a description as its three parts, joined in order', function() {
+  it('says a description as its parts, joined in order', function() {
     pairs().forEach(function joined(pair) {
       const {opts, schedule} = parse(pair[1]);
       const parts = korean.describeParts(schedule, opts);
 
       expect([parts.calendar, parts.fill, parts.time]
-        .filter(Boolean).join(' '))
+        .filter(Boolean).join(' ') + parts.note)
         .to.equal(korean.default.describe(schedule, opts));
       expect(FILLS).to.include(parts.fill);
     });

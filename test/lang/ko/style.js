@@ -46,8 +46,8 @@ describe('Korean styles:', function() {
 
   // A label is the description unchanged: Hangul has no capitals. A
   // sentence ends in «실행됩니다.», after «에» unless the description's
-  // last word, a closing bracket aside, ends in «마다» or «에» (answers
-  // 8.8).
+  // last word, a closing bracket aside, ends in «마다», «에», «회» or
+  // «매초» (answers 8.8).
   it('leaves a label alone, wraps a sentence, and has its fixed texts',
     function() {
       const opts = {style: styles.ko};
@@ -58,8 +58,8 @@ describe('Korean styles:', function() {
       expect(ko.sentence('매시 정각', opts))
         .to.equal('매시 정각에 실행됩니다.');
       expect(ko.sentence('15분마다', opts)).to.equal('15분마다 실행됩니다.');
-      expect(ko.sentence('매시 5·20분, 그때와 30초 뒤에', opts))
-        .to.equal('매시 5·20분, 그때와 30초 뒤에 실행됩니다.');
+      expect(ko.sentence('매시 5·20분에 2회(해당 시각과 30초 뒤)', opts))
+        .to.equal('매시 5·20분에 2회(해당 시각과 30초 뒤) 실행됩니다.');
       expect(ko.sentence('매시 정각(오전 3시 제외)', opts))
         .to.equal('매시 정각(오전 3시 제외)에 실행됩니다.');
       expect(ko.sentence('10분마다(오전 3시대 제외)', opts))

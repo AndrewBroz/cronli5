@@ -24,7 +24,6 @@ describe('Korean lexicon:', function() {
       hourBlock: '시대',
       hours: '시간',
       minute: '분',
-      minuteBlock: '분대',
       month: '월',
       second: '초',
       year: '년'
