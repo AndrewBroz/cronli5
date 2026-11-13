@@ -548,7 +548,14 @@ const rows = [
     '42, et à chaque fois toutes les secondes pendant une minute'],
   ['7 4-22/6 1 */2 *',
     'le 1er janvier, le 1er mars, le 1er mai, le 1er juillet, le 1er ' +
-    'septembre et le 1er novembre à 4 h 07, 10 h 07, 16 h 07 et 22 h 07']
+    'septembre et le 1er novembre à 4 h 07, 10 h 07, 16 h 07 et 22 h 07'],
+  // Seconds that are neither a tiling cadence nor one run (3.4).
+  ['1/7 * * * * *',
+    'toutes les 7 secondes de 1 à 57 secondes après le début de chaque ' +
+    'minute'],
+  ['0-9,30-39 * * * * *',
+    'toutes les secondes de 0 à 9 et de 30 à 39 secondes après le début ' +
+    'de chaque minute']
 ];
 
 export {rows};

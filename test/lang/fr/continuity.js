@@ -87,7 +87,10 @@ function fieldsChanged(a, b, options) {
 // Whether an edit to `field` may change `part` from `was` to `now`: the
 // part is the field's own, or the change is one of the declared ones.
 function declared(field, part, was, now) {
-  const both = [String(was), String(now)];
+  // The join comma a part may carry is not part of its words.
+  const both = [was, now].map(function bare(text) {
+    return String(text).replace(/,$/u, '');
+  });
   const everyDay = field === 'hour' && part === 'day' &&
     both.every(function allowed(text) {
       return HOUR_MAY_SET_DAY.includes(text);

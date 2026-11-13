@@ -74,7 +74,10 @@ judgment, with its reason:
 * A run of exactly two values is listed, not said as a range (« le
   dimanche et le lundi »; « à 9 h et à 10 h »). Two hours can still be a
   window.
-* An idiom wins a tie with any other candidate.
+* An idiom wins a tie with any other candidate. Where an exception ties
+  with a run that wraps round its cycle, the exception is said: « tous les
+  jours du mois, sauf le 15 et le 16 », never « du 17 au 14 de chaque
+  mois », which makes the reader work out which days are missing.
 * **Hours on a cadence: four times a day or fewer are listed; more are
   the cadence with both ends** (« toutes les 3 heures de 0 h à 21 h »;
   « toutes les 3 heures de 0 h 30 à 21 h 30 »). Both judges found the
@@ -410,6 +413,12 @@ mois » natural.
 * A run of seconds, with M and H every value: « toutes les secondes
   pendant les 10 premières secondes de chaque minute »; « toutes les
   secondes de 10 à 40 secondes après le début de chaque minute ».
+  Seconds outside these keep the same close and are counted as minutes
+  are: a cadence of more than six values names its step and both ends,
+  « toutes les 7 secondes de 1 à 57 secondes après le début de chaque
+  minute »; several runs are joined, each with its own « de », « toutes
+  les secondes de 0 à 9 et de 30 à 39 secondes après le début de chaque
+  minute ».
 
 3.5 A range that wraps is said from its start to its end, the same way:
 « toutes les heures de 22 h à 2 h », « de novembre à février », « du
