@@ -18,7 +18,7 @@ const FIELDS =
 // before it brings 毎年. So a day, month or year edit may move
 // text among those three parts. Nothing else may cross: none of them
 // touches the time, and no time edit touches anything but the time, with
-// the two exceptions below.
+// the three exceptions below.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year'],
   hour: ['time'],
@@ -44,6 +44,15 @@ const TIME_FIELDS = ['hour', 'minute', 'second'];
 // set aside before two parts are compared; a time edit may change it and
 // nothing else.
 const JOIN = /(?:の|、|、いずれも)?(?:終日)?$/u;
+
+// The third (answers 3.5) is the one place the calendar reaches the time. A
+// stretch of hours that runs past midnight is only true when every day
+// fires: under a named day, month or year its second half belongs to days
+// the pattern does not name. So an edit to the day of the month, the
+// weekday, the month or the year may turn such a stretch (22:00から翌日2:59
+// まで) into its two halves and back. Only a time that says 翌日 on one
+// side of the edit may change this way.
+const NEXT_DAY = /翌日/u;
 
 const SETUP = {languages: [japanese.default], options: {}, styles: {}};
 
@@ -101,9 +110,14 @@ function leaks(pairList) {
         joined;
     }
 
+    // Whether the edit splits or rejoins hours that pass midnight.
+    const rejoins = !TIME_FIELDS.includes(changed[0]) &&
+      NEXT_DAY.test(before.time) !== NEXT_DAY.test(after.time);
+
     Object.keys(before).forEach(function compare(part) {
       if (words(before[part], part) !== words(after[part], part) &&
-          !MAY_CHANGE[changed[0]].includes(part)) {
+          !MAY_CHANGE[changed[0]].includes(part) &&
+          !(part === 'time' && rejoins)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -141,6 +155,32 @@ describe('Japanese continuity:', function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
     }, 60000);
+
+  it('lets a day or month edit split hours that pass midnight, and no ' +
+    'other hours', function() {
+    const pastMidnight = [
+      ['0 22-2 * * *', '0 22-2 * * 1-5'],
+      ['* 22-2 * * *', '* 22-2 1 * *'],
+      ['*/15 22-2 * * *', '*/15 22-2 * 6 *'],
+      ['5,20,45 22-2 * * *', '5,20,45 22-2 * * 1'],
+      ['* 22-2,9-12 * * *', '* 22-2,9-12 15 * *']
+    ];
+    const withinTheDay = [
+      ['0 9-17 * * *', '0 9-17 * * 1-5'],
+      ['* 0-2,22-23 1 * *', '* 0-2,22-23 1 6 *'],
+      ['*/15 9-17,22 * * *', '*/15 9-17,22 1 * *'],
+      ['0 0-2,4-23 * * *', '0 0-2,4-23 * * 1']
+    ];
+
+    expect(leaks(pastMidnight)).to.deep.equal([]);
+    pastMidnight.forEach(function splits([whole, halved]) {
+      expect(partsOf(whole).time, whole).to.match(NEXT_DAY);
+      expect(partsOf(halved).time, halved).not.to.match(NEXT_DAY);
+    });
+    withinTheDay.forEach(function same([a, b]) {
+      expect(partsOf(a).time, a).to.equal(partsOf(b).time);
+    });
+  });
 
   it('renders equal schedules identically: there is no declared tie',
     function() {
