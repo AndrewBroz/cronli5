@@ -17,9 +17,12 @@ const FIELDS =
 // juin», «le 1er des mois de juin à août». So a day or month edit may
 // move text between those two parts, and a single year follows a month's
 // name («le 1er janvier 2030», «en juin 2030»), so those edits can change
-// the year's form too. Nothing else may cross: no day, month or year edit
-// touches the time, and no time edit touches anything but the time, with
-// the one exception below.
+// the year's form too. An exception to weekdays or months is said only
+// at the end of the sentence, so adding a month or a year can turn «tous
+// les jours, sauf le mercredi» into «du jeudi au mardi» and «sauf en
+// décembre» into «de janvier à novembre». Nothing else may cross: no
+// day, month or year edit touches the time, and no time edit touches
+// anything but the time, with the one exception below.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year'],
   hour: ['time'],

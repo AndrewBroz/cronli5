@@ -6,11 +6,11 @@
 
 const rows = [
   // clock / second — context `0 9 * * *`
-  ['* 0 9 * * *', 'toutes les secondes de 9:00:00 à 9:00:59 tous les jours'],
+  ['* 0 9 * * *', 'toutes les secondes de 09:00:00 à 09:00:59 tous les jours'],
   ['*/6 0 9 * * *',
-    'toutes les 6 secondes de 9:00:00 à 9:00:54 tous les jours'],
+    'toutes les 6 secondes de 09:00:00 à 09:00:54 tous les jours'],
   ['5/10 0 9 * * *',
-    'toutes les 10 secondes de 9:00:05 à 9:00:55 tous les jours'],
+    'toutes les 10 secondes de 09:00:05 à 09:00:55 tous les jours'],
 
   // clock / minute
   ['* 9 * * *', 'toutes les minutes de 9 h à 9 h 59 tous les jours'],
@@ -35,8 +35,8 @@ const rows = [
   // clock / month
   ['0 9 * 1 *', 'à 9 h tous les jours en janvier'],
   ['0 9 * 3,6,9,12 *',
-    'à 9 h tous les jours en mars, juin, septembre et décembre'],
-  ['0 9 * */2 *', 'à 9 h tous les jours pendant les mois impairs'],
+    'à 9 h tous les jours en mars, en juin, en septembre et en décembre'],
+  ['0 9 * */2 *', 'à 9 h tous les jours un mois sur deux à partir de janvier'],
   ['0 9 * 11-2 *', 'à 9 h tous les jours de novembre à février'],
 
   // clock / weekday
@@ -47,13 +47,13 @@ const rows = [
   // window / second — context `*/15 9-17 * * 1-5`
   ['* */15 9-17 * * 1-5',
     'toutes les secondes pendant une minute toutes les 15 minutes de ' +
-    '9:00:00 à 17:45:59 du lundi au vendredi'],
+    '09:00:00 à 17:45:59 du lundi au vendredi'],
   ['*/6 */15 9-17 * * 1-5',
     'toutes les 6 secondes pendant une minute toutes les 15 minutes de ' +
-    '9:00:00 à 17:45:54 du lundi au vendredi'],
+    '09:00:00 à 17:45:54 du lundi au vendredi'],
   ['5/10 */15 9-17 * * 1-5',
-    'toutes les 10 secondes de la seconde 5 à la seconde 55 toutes les 15 ' +
-    'minutes de 9 h à 17 h 45 du lundi au vendredi'],
+    'toutes les 10 secondes pendant une minute toutes les 15 minutes de ' +
+    '09:00:05 à 17:45:55 du lundi au vendredi'],
 
   // window / minute
   ['* 9-17 * * 1-5',
@@ -96,10 +96,10 @@ const rows = [
     'toutes les 15 minutes de 9 h à 17 h 45 du lundi au vendredi en janvier'],
   ['*/15 9-17 * 3,6,9,12 1-5',
     'toutes les 15 minutes de 9 h à 17 h 45 du lundi au vendredi en mars, ' +
-    'juin, septembre et décembre'],
+    'en juin, en septembre et en décembre'],
   ['*/15 9-17 * */2 1-5',
-    'toutes les 15 minutes de 9 h à 17 h 45 du lundi au vendredi pendant ' +
-    'les mois impairs'],
+    'toutes les 15 minutes de 9 h à 17 h 45 du lundi au vendredi un mois ' +
+    'sur deux à partir de janvier'],
   ['*/15 9-17 * 11-2 1-5',
     'toutes les 15 minutes de 9 h à 17 h 45 du lundi au vendredi de ' +
     'novembre à février'],
@@ -114,11 +114,11 @@ const rows = [
 
   // monthly / second — context `0 0 1 * *`
   ['* 0 0 1 * *',
-    'toutes les secondes de 0:00:00 à 0:00:59 le 1er de chaque mois'],
+    'toutes les secondes de 00:00:00 à 00:00:59 le 1er de chaque mois'],
   ['*/6 0 0 1 * *',
-    'toutes les 6 secondes de 0:00:00 à 0:00:54 le 1er de chaque mois'],
+    'toutes les 6 secondes de 00:00:00 à 00:00:54 le 1er de chaque mois'],
   ['5/10 0 0 1 * *',
-    'toutes les 10 secondes de 0:00:05 à 0:00:55 le 1er de chaque mois'],
+    'toutes les 10 secondes de 00:00:05 à 00:00:55 le 1er de chaque mois'],
 
   // monthly / minute
   ['* 0 1 * *', 'toutes les minutes de 0 h à 0 h 59 le 1er de chaque mois'],
@@ -144,8 +144,8 @@ const rows = [
   // monthly / month
   ['0 0 1 1 *', 'à 0 h le 1er janvier'],
   ['0 0 1 3,6,9,12 *',
-    'à 0 h le 1er des mois de mars, juin, septembre et décembre'],
-  ['0 0 1 */2 *', 'à 0 h le 1er des mois impairs'],
+    'à 0 h le 1er des mois de mars, de juin, de septembre et de décembre'],
+  ['0 0 1 */2 *', 'à 0 h le 1er d\'un mois sur deux à partir de janvier'],
   ['0 0 1 11-2 *', 'à 0 h le 1er des mois de novembre à février'],
 
   // monthly / weekday
@@ -184,8 +184,8 @@ const rows = [
   // open / month
   ['* * * 1 *', 'toutes les minutes en janvier'],
   ['* * * 3,6,9,12 *',
-    'toutes les minutes en mars, juin, septembre et décembre'],
-  ['* * * */2 *', 'toutes les minutes pendant les mois impairs'],
+    'toutes les minutes en mars, en juin, en septembre et en décembre'],
+  ['* * * */2 *', 'toutes les minutes un mois sur deux à partir de janvier'],
   ['* * * 11-2 *', 'toutes les minutes de novembre à février'],
 
   // open / weekday

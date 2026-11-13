@@ -10,8 +10,11 @@ const defaultParts = {
   '*/15 9-17 * * 1-5': ['15 minutes', '9 h', '17 h 45', 'lundi', 'vendredi'],
   '0 0 * * *': ['0 h'],
   '0 0 1 2 *': ['0 h', '1er février'],
+  '0 0 1 4,8 *': ['0 h', 'd\'avril', 'd\'août'],
   '0 0 LW * *': ['0 h', 'lundi', 'vendredi'],
+  '0 0,9 * * *': ['0 h', '9 h'],
   '0 12 * * *': ['12 h'],
+  '0 12,18 * * *': ['12 h', '18 h'],
   '0 13 * * *': ['13 h'],
   '0 9 * * *': ['9 h'],
   '0 9 * * 0,6': ['9 h', 'le week-end'],
@@ -19,11 +22,14 @@ const defaultParts = {
   '0 9 * * 5L': ['9 h', 'vendredi'],
   '0 9 * 1 1': ['9 h', 'lundi', 'janvier'],
   '0 9 * 10-12 *': ['9 h', 'd\'octobre', 'décembre'],
+  '0 9 * 4-8 *': ['9 h', 'd\'avril', 'août'],
+  '0 9 * 7,9 *': ['9 h', 'juillet', 'septembre'],
   '0 9-17 * * *': ['9 h', '17 h'],
   '30 0 * * *': ['0 h 30'],
   '30 0 17 * * *': ['17:00:30'],
   '30 12 * * *': ['12 h 30'],
-  '30 9,17 * * *': ['9 h 30', '17 h 30']
+  '30 9,17 * * *': ['9 h 30', '17 h 30'],
+  '5 12 * * *': ['12 h 05']
 };
 
 const sets = [
@@ -36,7 +42,7 @@ const sets = [
         pattern: '0 9 * * *'
       },
       {
-        expected: 'à 9 h 30 du matin et 5 h 30 de l\'après-midi tous les ' +
+        expected: 'à 9 h 30 du matin et à 5 h 30 de l\'après-midi tous les ' +
           'jours',
         parts: ['9 h 30 du matin', '5 h 30 de l\'après-midi'],
         pattern: '30 9,17 * * *'
@@ -53,9 +59,14 @@ const sets = [
         pattern: '0 0 * * *'
       },
       {
-        expected: 'à minuit 30 tous les jours',
-        parts: ['minuit 30'],
+        expected: 'à 0 h 30 tous les jours',
+        parts: ['0 h 30'],
         pattern: '30 0 * * *'
+      },
+      {
+        expected: 'à 0 h et à 9 h du matin tous les jours',
+        parts: ['0 h', '9 h du matin'],
+        pattern: '0 0,9 * * *'
       },
       {
         expected: 'à midi tous les jours',
@@ -63,9 +74,19 @@ const sets = [
         pattern: '0 12 * * *'
       },
       {
-        expected: 'à midi 30 tous les jours',
-        parts: ['midi 30'],
+        expected: 'à 12 h 30 tous les jours',
+        parts: ['12 h 30'],
         pattern: '30 12 * * *'
+      },
+      {
+        expected: 'à 12 h 05 tous les jours',
+        parts: ['12 h 05'],
+        pattern: '5 12 * * *'
+      },
+      {
+        expected: 'à 12 h et à 6 h du soir tous les jours',
+        parts: ['12 h', '6 h du soir'],
+        pattern: '0 12,18 * * *'
       },
       {
         expected: 'à 1 h de l\'après-midi tous les jours',
@@ -113,6 +134,21 @@ const sets = [
         expected: 'à 0 h le 1er févr.',
         parts: ['0 h', '1er févr.'],
         pattern: '0 0 1 2 *'
+      },
+      {
+        expected: 'à 9 h tous les jours en juill. et en sept.',
+        parts: ['9 h', 'juill.', 'sept.'],
+        pattern: '0 9 * 7,9 *'
+      },
+      {
+        expected: 'à 9 h tous les jours d\'avr. à août',
+        parts: ['9 h', 'd\'avr.', 'août'],
+        pattern: '0 9 * 4-8 *'
+      },
+      {
+        expected: 'à 0 h le 1er des mois d\'avr. et d\'août',
+        parts: ['0 h', 'd\'avr.', 'd\'août'],
+        pattern: '0 0 1 4,8 *'
       },
       {
         expected: 'à 9 h le dernier ven. du mois',
