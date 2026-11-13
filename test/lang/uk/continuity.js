@@ -26,15 +26,25 @@ const FIELDS =
 // day form may add a note in brackets («(28-го, якщо в місяці 31 день)»);
 // it belongs to the day of the month, so only the calendar fields may
 // change it.
+// The note may also say that a date comes round only in leap years, which
+// depends on the months and the years reached and is not said beside a
+// weekday, so every calendar field may change it.
 const MAY_CHANGE = {
   date: ['year', 'month', 'day', 'note'],
   hour: ['time'],
   minute: ['time'],
   month: ['year', 'month', 'day', 'note'],
   second: ['time'],
-  weekday: ['year', 'month', 'day'],
-  year: ['year', 'month', 'day']
+  weekday: ['year', 'month', 'day', 'note'],
+  year: ['year', 'month', 'day', 'note']
 };
+
+// A schedule that never fires (a date no month reached has, answers 2.8)
+// is one statement, «ніколи: такої дати в календарі немає», with no
+// year, month or time. An edit to a calendar field that gives or takes
+// away the only day a pattern could fire on therefore changes every
+// part. That is a fact about the schedule, not a choice of words.
+const NEVER = 'ніколи';
 
 // The one place a time field reaches another part: the day part says
 // «щодня» when the hours are restricted, no day is named, and the time
@@ -51,6 +61,11 @@ const TIME_MAY_SET_DAY = ['', 'щодня'];
 // та 23:00») and back. That is a fact about the schedule (answers 3.5).
 // It can only happen where the hours hold both 23:00 and 0:00 without
 // being every hour.
+//
+// The year part reaches no further than the calendar, but it may hold
+// «щороку»: a date said with its month takes it when no year is named
+// (answers 2.9), so the date, the month and the weekday fields may each
+// add or remove that word. They may already change the year part.
 const CALENDAR_FIELDS = ['date', 'month', 'weekday', 'year'];
 const HOURS = {cyclic: true, max: 23, min: 0};
 
@@ -59,7 +74,10 @@ const HOURS = {cyclic: true, max: 23, min: 0};
 // brackets, so that two brackets never meet. A time edit may so move the
 // note between the end of the day part and the place after the time; it
 // may not change the note or the day's own words. The day part and the
-// note are therefore compared together for a time edit.
+// note are therefore compared together for a time edit. Where the day
+// has a gloss in brackets of its own («(понеділок–п'ятниця)»), the note
+// joins it there after a semicolon instead of standing in a second pair
+// beside it; the two are the same words either way.
 
 const SETUP = {languages: [ukrainian.default], options: {}, styles: {}};
 
@@ -131,6 +149,12 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
+    if ([before, after].some(function neverFires(parts) {
+      return parts.day.startsWith(NEVER);
+    }) && CALENDAR_FIELDS.includes(changed[0])) {
+      return;
+    }
+
     // A part may be closed by a comma or a colon when another part
     // follows it (answers 2.1). The mark belongs to the join, not to the
     // part, so it is set aside before two parts are compared.
@@ -147,7 +171,8 @@ function leaks(pairList) {
     function shown(parts, part) {
       const timeEdit = TIME_FIELDS.includes(changed[0]);
       const joined = {
-        day: `${words(parts.day)} ${parts.note}`.trim(),
+        day: `${words(parts.day)} ${parts.note}`.trim()
+          .replace(') (', '; '),
         note: ''
       };
 

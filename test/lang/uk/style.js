@@ -50,12 +50,17 @@ describe('Ukrainian styles:', function() {
       // The lead ends in a vowel, so an opening «у» or «із» is respelled
       // after it, and a description that already ends in a full stop gets
       // no second one.
-      expect(uk.sentence('у будні о 9:00', opts))
-        .to.equal('Виконується в будні о 9:00.');
-      expect(uk.sentence('у вихідні о 9:00', opts))
-        .to.equal('Виконується у вихідні о 9:00.');
-      expect(uk.sentence('із червня до серпня включно щодня о 9:00', opts))
-        .to.equal('Виконується з червня до серпня включно щодня о 9:00.');
+      expect(uk.sentence('у червні щодня о 9:00', opts))
+        .to.equal('Виконується в червні щодня о 9:00.');
+      expect(uk.sentence('у вересні щодня о 9:00', opts))
+        .to.equal('Виконується у вересні щодня о 9:00.');
+      expect(uk.sentence('із червня до серпня включно, щодня о 9:00', opts))
+        .to.equal('Виконується з червня до серпня включно, щодня о 9:00.');
+      expect(uk.sentence('увесь рік, крім червня, щодня о 9:00', opts))
+        .to.equal('Виконується весь рік, крім червня, щодня о 9:00.');
+      // A schedule that never fires takes the negated lead.
+      expect(uk.sentence('ніколи: такої дати в календарі немає', opts))
+        .to.equal('Не виконується ніколи: такої дати в календарі немає.');
       expect(uk.sentence('у груд.', opts)).to.equal('Виконується в груд.');
       expect(uk.reboot(opts)).to.equal('під час запуску системи');
       expect(uk.fallback(opts)).to.equal('нерозпізнаний шаблон cron');

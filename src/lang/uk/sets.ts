@@ -2,7 +2,8 @@
 // the answers give, and walking a description in the order it is said.
 
 import type {
-  Domain, RangeDescription, SetDescription, ValuesDescription
+  CadenceDescription, CadencePieces, Domain, RangeDescription,
+  SetDescription, ValuesDescription
 } from '../../core/schedule.js';
 import {denote, describeSet} from '../../core/describe-set.js';
 
@@ -15,6 +16,12 @@ export type Plain = Exclude<SetDescription, {kind: 'except'}>;
 
 /** A piece of a set: a run, or values named one by one. */
 export type Part = RangeDescription | ValuesDescription;
+
+/** A part of runs and cadences said together. */
+export type Stepped = CadenceDescription | Part;
+
+/** Anything a field may be said as. */
+export type Said = SetDescription | CadencePieces;
 
 interface Tagged {
   kind: string;
@@ -120,82 +127,61 @@ function isPieces(
 }
 
 // The same pieces in the order they are said: ascending, and from the
-// run that wraps round the cycle where one does. The set is turned so
-// that it starts there, described with no wrap, and turned back.
+// run that wraps round the cycle where one does, which is the set walked
+// from that run's first value; with no such run nothing wraps.
 function inOrder(
   found: Describing<'pieces'>,
   domain: Domain
 ): SetDescription[] {
-  const size = sizeOf(domain);
   const wrapped = found.parts.find(wraps) as RangeDescription | undefined;
-  const turn = (wrapped ?? {from: domain.min}).from - domain.min;
 
-  function turned(by: number): (value: number) => number {
-    return function shift(value) {
-      return (value - domain.min + by + size) % size + domain.min;
-    };
-  }
-
-  const back = turned(turn);
-  const turnBack: Table<Part, Part> = {
-    range: (range) =>
-      ({from: back(range.from), kind: 'range', to: back(range.to)}),
-    values: (listed) => ({kind: 'values', values: listed.values.map(back)})
-  };
-  const ahead = denote(found, domain).map(turned(-turn))
-    .sort(function ascending(a, b) {
-      return a - b;
-    });
-
-  return describeSet(ahead, {...domain, cyclic: false}).filter(isPieces)
-    .map(function turnedBack(pieces) {
-      return {
-        kind: 'pieces',
-        parts: pieces.parts.map(function each(part) {
-          return say(turnBack, part);
-        })
-      };
-    });
+  return describeSet(denote(found, domain), domain,
+    wrapped ? {first: wrapped.from} : {linear: true}).filter(isPieces);
 }
+
+// The longest list a reader is given before runs and cadences together
+// are said in its place.
+const LONGEST_LIST = 7;
 
 /**
  * The description a field says, among the core's candidates, by the
- * order of choice.
+ * order of choice. Runs and cadences together, where the core offers
+ * them, are said in place of a longer list that names more things.
  */
-function choose<D extends SetDescription = SetDescription>(
+function choose<D extends Said = SetDescription>(
   candidates: SetDescription[],
   domain: Domain,
-  taste: Taste
+  taste: Taste,
+  stepped: CadencePieces | null = null
 ): D {
   const offered = candidates.flatMap(function ordered(candidate) {
     return isPieces(candidate) ? inOrder(candidate, domain) : [candidate];
   });
+  const count = denote(candidates[0], domain).length;
+  const rival = stepped && count > LONGEST_LIST ?
+    stepped.parts.reduce(function sum(total, part) {
+      return total + thingsNamed(part);
+    }, 0) :
+    Infinity;
   const measure = {
-    count: denote(candidates[0], domain).length,
+    count,
     domain,
-    pieces: Math.min(Infinity, ...offered.filter(isPieces).map(thingsNamed)),
+    pieces: Math.min(rival, ...offered.filter(isPieces).map(thingsNamed)),
     wrapping: candidates[0].kind === 'range' && wraps(candidates[0])
   };
-
-  return offered.filter(function canSay(candidate) {
+  const [best] = offered.filter(function canSay(candidate) {
     return say(sayable, candidate, measure, taste);
   }).sort(function byRank(a, b) {
     return rank(a) - rank(b);
-  })[0] as D;
+  });
+
+  return (rival < thingsNamed(best) ? stepped : best) as D;
 }
 
-/** The candidates of the same set where no run may wrap round. */
-function unwrapped(
-  candidates: SetDescription[],
-  domain: Domain
-): SetDescription[] {
-  return describeSet(denote(candidates[0], domain),
-    {...domain, cyclic: false});
-}
-
-const walks: Table<SetDescription, number[], [Domain]> = {
+const walks: Table<Said, number[], [Domain]> = {
   all: denote,
   cadence: denote,
+  cadencePieces: denote,
   except: (except, domain) =>
     walk(except.base, domain).filter(function kept(value) {
       return !except.removed.includes(value);
@@ -211,7 +197,7 @@ const walks: Table<SetDescription, number[], [Domain]> = {
 };
 
 /** The values of a description in the order they are said. */
-function walk(description: SetDescription, domain: Domain): number[] {
+function walk(description: Said, domain: Domain): number[] {
   return say(walks, description, domain);
 }
 
@@ -234,23 +220,30 @@ function runsOf(values: number[], domain: Domain): number[][] {
   return runs;
 }
 
-const parting: Table<Plain, Part[], [Domain]> = {
+function ends(cadence: CadenceDescription): Part[] {
+  return [{from: cadence.start, kind: 'range', to: cadence.last}];
+}
+
+const parting: Table<Plain | CadencePieces, Part[], [Domain]> = {
   all: (all, domain) => [{from: domain.min, kind: 'range', to: domain.max}],
-  cadence: (cadence) =>
-    [{from: cadence.start, kind: 'range', to: cadence.last}],
+  cadence: ends,
+  cadencePieces: (parts, domain) => parts.parts.flatMap(function each(part) {
+    return partsOf(part, domain);
+  }),
   pieces: (parts) => parts.parts,
   range: (range) => [range],
   values: (named) => [named]
 };
 
 /** A description as the stretches and the single values it is said in. */
-function partsOf(description: Plain, domain: Domain): Part[] {
+function partsOf(description: Plain | CadencePieces, domain: Domain): Part[] {
   return say(parting, description, domain);
 }
 
-const wrapping: Table<SetDescription, boolean> = {
+const wrapping: Table<Said, boolean> = {
   all: () => false,
   cadence: () => false,
+  cadencePieces: () => false,
   except: (except) => wraps(except.base),
   pieces: (parts) => parts.parts.some(wraps),
   range: (range) => range.from > range.to,
@@ -258,8 +251,8 @@ const wrapping: Table<SetDescription, boolean> = {
 };
 
 /** Whether a description is said with a run that wraps round its cycle. */
-function wraps(description: SetDescription): boolean {
+function wraps(description: Said): boolean {
   return say(wrapping, description);
 }
 
-export {choose, partsOf, runsOf, say, unwrapped, walk, wraps};
+export {choose, partsOf, runsOf, say, walk, wraps};

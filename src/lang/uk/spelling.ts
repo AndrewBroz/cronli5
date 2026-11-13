@@ -1,5 +1,5 @@
 // Joining words: the two series (a list and its «та», pieces and their
-// «і»), and the four words whose spelling follows the sounds on either
+// «і»), and the five words whose spelling follows the sounds on either
 // side of them.
 
 import lexicon from './lexicon.js';
@@ -41,6 +41,11 @@ function andWord(before: string): string {
     endsInVowel.test(before));
 }
 
+// «Весь» after a vowel, «увесь» elsewhere.
+function wholeWord(before: string): string {
+  return pick(words.whole, words.wholeAfterVowel, endsInVowel.test(before));
+}
+
 // «Об» before 11, which is read with a vowel first.
 function atWord(before: string, after: string): string {
   return pick(words.at, words.atBeforeVowel, after.startsWith('11:'));
@@ -56,7 +61,9 @@ const respellings = new Map<string, Respelling>([
   [words.andPiece, andWord],
   [words.andPieceAfterVowel, andWord],
   [words.at, atWord],
-  [words.atBeforeVowel, atWord]
+  [words.atBeforeVowel, atWord],
+  [words.whole, wholeWord],
+  [words.wholeAfterVowel, wholeWord]
 ]);
 
 /**
