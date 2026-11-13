@@ -95,9 +95,14 @@ function list(items: Array<string | number>): string {
   return series(items.map(String), words.and);
 }
 
+/** A choice: «A, B або C». */
+function choice(items: string[]): string {
+  return series(items, words.or);
+}
+
 /** Pieces of a set: «A, B і C». */
 function pieces(items: string[]): string {
   return series(items, words.andPiece);
 }
 
-export {list, pieces, spell};
+export {choice, list, pieces, spell};

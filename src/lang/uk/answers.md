@@ -929,9 +929,43 @@ also move the time ahead of the days («у січні та липні о 0:00 �
 будні, а ще 1-го й 15-го числа»); that was not done, because the time is
 last in every other sentence.
 
-Not built into any renderer yet: when both must match, a weekday that
-falls on a date is «у п'ятницю, що припадає на 13-те число», and the
-first Monday is «у перший понеділок місяця».
+**When both must match** (the core's `day.both`: a day field written from
+a star, `*/2`, beside a restricted one; written without the star, `1-31/2`,
+the same days are the union above). The days that fire are those of the
+month that fall on the weekdays, so the days of the month are said first,
+exactly as they are said alone (months, «щомісяця» and idioms included),
+and the weekdays follow as a condition on them: a comma, «якщо це», the
+weekdays, and the comma that closes the day part. The usage notes give the
+form: «13 числа, якщо це п'ятниця» (7.2). The weekdays are said as a
+list, joined by «або», since any one of them will do («та» would say they
+must all be the day): «якщо це понеділок, середа або п'ятниця»; a run of
+three or more is «якщо це день з понеділка до п'ятниці включно» (3.4's
+run, with the noun that «з … до» needs); a Quartz weekday is «якщо це
+остання п'ятниця місяця». «Якщо це» takes no agreement, so one date or
+several, a day («в останній день місяця») or a number, are said alike. The
+union's «а також» is never said here, and nothing is read as the union:
+«по непарних числах, якщо це понеділок» is the odd days that are Mondays.
+Each of the days is said as it would be alone, except that a date said
+with a weekday never takes «щодня, крім» (as in 4.3). Months are said as
+they are alone («у червні по непарних числах…»), not as a heading, since
+nothing is said of the weekdays outside the condition. A date no month
+reached has gives no day at all, so the schedule never fires, where the
+union would have left the weekdays: «ніколи: такої дати в календарі
+немає».
+
+* `0 0 */2 * 1` — «щомісяця по непарних числах, якщо це понеділок, о 0:00»
+* `0 9 */2 * 1,3,5` — «щомісяця по непарних числах, якщо це понеділок,
+  середа або п'ятниця, о 9:00»
+* `0 0 15 * */2` — «щомісяця 15-го числа, якщо це вівторок, четвер,
+  субота або неділя, о 0:00»
+* `0 0 */2 6 1` — «у червні по непарних числах, якщо це понеділок, о 0:00»
+* `*/15 9-17 */2 * 1-5` — «щомісяця по непарних числах, якщо це день з
+  понеділка до п'ятниці включно, кожні 15 хвилин з 9:00 до 17:45»
+* `0 0 */2 * 5L` — «щомісяця по непарних числах, якщо це остання п'ятниця
+  місяця, о 0:00»
+
+The first Monday is not a form of this: it is a Quartz weekday, «у перший
+понеділок місяця» (5.7).
 
 4.4 A day of the month, a month, and a year.
 
@@ -1373,8 +1407,7 @@ genitive: «1-го», «15-го» (every day takes «-го»). A minute or a sec
 in the locative: «30-й» (every one takes «-й»); in the genitive, «30-ї».
 A day of the month in
 the nominative, only in a note of 5.7: «29-те», «30-те», «31-ше».
-The 13th in the accusative, for the both-must-match form: «13-те». A day
-beside its month takes no ending: «1 червня». A year takes none: «до 2040
+A day beside its month takes no ending: «1 червня». A year takes none: «до 2040
 року».
 
 7.6 Left to right, Western digits, words separated by single spaces. The
