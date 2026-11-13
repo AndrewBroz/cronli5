@@ -54,6 +54,27 @@ All reports are in `reads/`. Usage ran short, so two languages were taken forwar
 
 Lessons that held across languages (also in `leads.md`): a category word for Monday-to-Friday fails everywhere, glossed or not, and each language ended by naming the days; "n days before the last day" should be the date itself wherever it comes to one; a bracket must never be the only true part of a sentence, nor state something false of the whole; an exception must not remove a moment the sentence has just named; two rhythms side by side need a word that ties the finer to each firing of the coarser.
 
+## The length gate, 2026-11-13
+
+The conciseness gate had checked English only (`LANGS = ['en']`) since the
+other languages were rebuilt, so "no over-budget shapes" was true of one
+language in ten. It now runs for every language, with two measures (things
+named against the pattern's budget, a clock time or date counting once;
+length against 2.25 times the language's own median), and records what
+fails in `tooling/docs/length-gate.json`. Distinct failing shapes when it
+was turned on (over budget / over length): cs 205/114, de 5/0, en 0/0,
+es 4/0, fr 0/34, it 259/0, ja 36/0, pt 20/30, uk 167/19, zh 60/92.
+
+The families, from the worst examples: clock times or windows listed for a
+cadence of minutes under a cadence of hours (cs, es, fr, zh, uk, de);
+hours listed where a cadence of hours would do («delle ore 0, 2, 4 … 22»,
+it; 0時台・5時台…, ja); a long day part before an ordinary time part (pt,
+fr: the `W` gloss with a union and months). No language's count has been
+worked down yet. Also English-only, and not in the gate: `metamorphic.mjs`
+(its render-equality half; the schedule half is language-free) and
+`cronstrue-divergence.mjs` (English by nature). `fuzz-lang.mjs` and
+`edit-diff.mjs` take any language but run only by hand.
+
 ## Next, in order
 
 1. Italian and Czech are built and registered. Each still needs a blind read of its built output (not only the rows), a blind recovery, and a ruling on the places its builder reported the rule book silent (the build reports are in the session transcript; the Czech builder listed thirty, the Italian about twenty).

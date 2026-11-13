@@ -1,0 +1,42 @@
+{
+  "cs": {
+    "overBudget": 205,
+    "overLong": 114
+  },
+  "de": {
+    "overBudget": 5,
+    "overLong": 0
+  },
+  "en": {
+    "overBudget": 0,
+    "overLong": 0
+  },
+  "es": {
+    "overBudget": 4,
+    "overLong": 0
+  },
+  "fr": {
+    "overBudget": 0,
+    "overLong": 34
+  },
+  "it": {
+    "overBudget": 259,
+    "overLong": 0
+  },
+  "ja": {
+    "overBudget": 36,
+    "overLong": 0
+  },
+  "pt": {
+    "overBudget": 20,
+    "overLong": 30
+  },
+  "uk": {
+    "overBudget": 167,
+    "overLong": 19
+  },
+  "zh": {
+    "overBudget": 60,
+    "overLong": 92
+  }
+}

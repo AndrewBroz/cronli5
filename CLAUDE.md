@@ -132,6 +132,13 @@ renderer change.
   independent, adversarial read of the rows and of the renderer is part of
   the process, not an extra.
 
+- **Very long output is a failure, caught by machine.** `npm run
+  conciseness` (part of the gate) holds every language to a budget of
+  things named and to a ceiling on length. The languages that fail today
+  are counted in `tooling/docs/length-gate.json`; a count may only fall,
+  and a language is not finished until it is zero. Fix a failure rows
+  first, like any other; never by widening the budget for a class.
+
 `src/lang/<code>/status.json` records who has reviewed what, honestly.
 Review is tracked; it does not gate a release.
 

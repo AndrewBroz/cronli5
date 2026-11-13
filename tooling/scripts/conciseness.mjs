@@ -9,21 +9,41 @@
 // something that had a compact idiom — a verbosity defect (a missing or
 // unreached idiom), the class that turns `3/2 1/2` into sixty words.
 //
-// Necessary-not-sufficient, and a DISCOVERY tool first: it ranks the worst
-// offenders for review and counts them so a fix's progress is measurable. The
-// budget is read from the cron field strings (a `/` is a step → 3, no need to
-// know the core enumerated it); the actual is digit-groups in the output
-// (enumerations are always digits; compact forms spell or use one or two, so a
-// language that spells its numbers only ever under-counts, never over-flags).
+// Two measures, for every shipped language. The first counts the things a
+// description names against that budget; a clock time or a date written
+// with several groups of digits («9:00:30», « 2 h 00 min 05 s », 6月1日) is
+// one thing, as "9 a.m." is. The budget is read from the cron field strings
+// (a `/` is a step → 3, with no need to know the core enumerated it) and is
+// the same in every language: the reader's task does not change with the
+// language. The second is a ceiling on length, which does change: Japanese
+// says in fifty characters what French says in a hundred and thirty. So the
+// ceiling is a multiple of the language's own median over the sweep, and
+// catches what the count cannot, a dozen clock times each written to the
+// second.
 //
-// Usage: conciseness.mjs [code] [--threshold=N]  (run via node --import tsx)
+// A failure is a failure. The languages that fail today are recorded with
+// their counts in tooling/docs/length-gate.json, and the gate fails when a
+// count rises or when a recorded count is no longer true; a language at
+// zero has no allowance at all. `--update` rewrites the record.
+//
+// Usage: conciseness.mjs [code] [--threshold=N] [--update]
+// (run via node --import tsx)
 
+import {readFileSync, readdirSync, writeFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import cronli5 from '../../src/cronli5.js';
 import {enumerateFires} from '../../src/core/util.js';
 import {patterns} from '../../scripts/fuzz-lang.mjs';
 
-const LANGS = ['en'];
+const LANGS = readdirSync(new URL('../../src/lang/', import.meta.url))
+  .filter((name) => !name.includes('.'))
+  .sort();
+const RECORD = new URL('../docs/length-gate.json', import.meta.url);
+
+// No description may be longer than this many times the median length of
+// its language's descriptions over the sweep. (English, the language the
+// budget was first held to, reaches about twice its median.)
+const CEILING = 2.25;
 
 // Up to this many fires, naming each as an explicit clock time ("9:05 a.m.,
 // 9:10 a.m., …") is the accepted readable form rather than a defect; beyond it
@@ -89,9 +109,13 @@ function budget(cron) {
   return additive + clockTimeAllowance(cron);
 }
 
-// Digit-groups carried by the description — the blowup signal.
+// One thing named: a group of digits, or a clock time or date written as
+// several groups.
+const THING = /\d+(?:(?::|\.(?=\d)| h | min |[時时点分月])\d+)*/gu;
+
+// The things a description names — the blowup signal.
 function outputNumbers(description) {
-  return (description.match(/\d+/gu) || []).length;
+  return (description.match(THING) || []).length;
 }
 
 function describe(cron, langModule) {
@@ -109,62 +133,126 @@ function describe(cron, langModule) {
   }
 }
 
-async function sweep(code, threshold) {
+function median(lengths) {
+  return [...lengths].sort((a, b) => a - b)[Math.floor(lengths.length / 2)];
+}
+
+// Every description of the sweep with what it names and what it may name.
+async function described(code) {
   const langModule = code === 'en' ?
     null :
     (await import('../../src/lang/' + code + '/index.js')).default;
-  const seen = new Set();
-  const hits = [];
+  const all = [];
 
   for (const cron of patterns()) {
     const description = describe(cron, langModule);
-    const want = budget(cron);
-    const got = description ? outputNumbers(description) : 0;
-    const shape = description ? description.replace(/\d+/gu, 'N') : '';
 
-    if (description && got - want > threshold && !seen.has(shape)) {
-      seen.add(shape);
-      hits.push({cron, want, got, excess: got - want, description});
+    if (description) {
+      all.push({
+        cron,
+        description,
+        excess: outputNumbers(description) - budget(cron),
+        shape: description.replace(/\d+/gu, 'N')
+      });
     }
   }
 
-  return hits.sort((a, b) => b.excess - a.excess);
+  return all;
 }
 
-// Returns the total over-budget shape count so callers can gate on it.
-async function main(code, threshold) {
-  let total = 0;
+// One hit per distinct shape, the worst first by `measure`.
+function distinct(hits, measure) {
+  const seen = new Set();
 
-  for (const lang of code ? [code] : LANGS) {
-    const hits = await sweep(lang, threshold);
+  return hits.filter(function fresh(hit) {
+    const isNew = !seen.has(hit.shape);
 
-    total += hits.length;
-    console.log('\n=== ' + lang + ': ' + hits.length +
-      ' distinct over-budget shapes (excess > ' + threshold + ') ===');
-    hits.slice(0, 12).forEach((h) => {
-      console.log('  +' + h.excess + ' (budget ' + h.want + ', got ' + h.got +
-        ')  ' + h.cron + '\n       ' + h.description);
-    });
+    seen.add(hit.shape);
+
+    return isNew;
+  }).sort((a, b) => measure(b) - measure(a));
+}
+
+async function sweep(code, threshold) {
+  const all = await described(code);
+  const ceiling = Math.round(CEILING *
+    median(all.map((hit) => hit.description.length)));
+
+  return {
+    ceiling,
+    overBudget: distinct(all.filter((hit) => hit.excess > threshold),
+      (hit) => hit.excess),
+    overLong: distinct(all.filter((hit) => hit.description.length > ceiling),
+      (hit) => hit.description.length)
+  };
+}
+
+function show(title, hits, label) {
+  console.log('  ' + hits.length + ' ' + title);
+  hits.slice(0, 3).forEach((hit) => {
+    console.log('    ' + label(hit) + '  ' + hit.cron + '\n       ' +
+      hit.description);
+  });
+}
+
+// Returns each language's counts so callers can gate on them.
+async function main(codes, threshold) {
+  const counts = {};
+
+  for (const lang of codes) {
+    const {ceiling, overBudget, overLong} = await sweep(lang, threshold);
+
+    counts[lang] = {overBudget: overBudget.length, overLong: overLong.length};
+    console.log('\n=== ' + lang + ' ===');
+    show('distinct shapes naming more than budget + ' + threshold,
+      overBudget, (hit) => '+' + hit.excess);
+    show('distinct shapes longer than ' + ceiling + ' characters',
+      overLong, (hit) => '[' + hit.description.length + ']');
   }
 
-  return total;
+  return counts;
 }
 
-export {budget, fieldBudget, outputNumbers, sweep};
+// What differs between the counts found and the counts on record: a rise
+// is a regression, and a fall must be recorded so it cannot come back.
+function drift(counts, record) {
+  return Object.keys(counts).flatMap(function ofLanguage(lang) {
+    const allowed = record[lang] || {overBudget: 0, overLong: 0};
+
+    return ['overBudget', 'overLong'].filter(function differs(key) {
+      return counts[lang][key] !== allowed[key];
+    }).map(function line(key) {
+      return lang + ' ' + key + ': ' + counts[lang][key] + ' (on record: ' +
+        allowed[key] + ')';
+    });
+  });
+}
+
+export {budget, drift, fieldBudget, outputNumbers, sweep};
 
 if (process.argv[1] &&
     import.meta.url === pathToFileURL(process.argv[1]).href) {
   const code = process.argv.find((arg) => LANGS.includes(arg));
   const flag = process.argv.find((arg) => arg.startsWith('--threshold='));
   const threshold = flag ? Number(flag.slice('--threshold='.length)) : 6;
-  const total = await main(code, threshold);
+  const counts = await main(code ? [code] : LANGS, threshold);
+  const record = JSON.parse(readFileSync(RECORD, 'utf8'));
+  const drifted = drift(counts, record);
+  const failing = Object.keys(counts).filter((lang) =>
+    counts[lang].overBudget + counts[lang].overLong > 0);
 
-  // Gate: any over-budget shape is a verbosity regression.
-  if (total > 0) {
-    console.log('\nFAIL: ' + total + ' over-budget shape(s).');
+  if (process.argv.includes('--update')) {
+    writeFileSync(RECORD,
+      JSON.stringify({...record, ...counts}, null, 2) + '\n');
+    console.log('\nRecorded.');
+  }
+  else if (drifted.length > 0) {
+    console.log('\nFAIL: the counts differ from the record ' +
+      '(tooling/docs/length-gate.json):\n  ' + drifted.join('\n  '));
     process.exitCode = 1;
   }
-  else {
-    console.log('\nOK: no over-budget shapes.');
-  }
+
+  console.log(failing.length > 0 ?
+    '\nNOT CONCISE: ' + failing.join(', ') + '.' :
+    '\nOK: no description over budget or over length.');
 }
