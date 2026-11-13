@@ -43,12 +43,12 @@ describe('Ukrainian styles:', function() {
     function() {
       const opts = {style: styles.standard};
 
-      expect(uk.label('о 9:00 щодня', opts)).to.equal('О 9:00 щодня');
+      expect(uk.label('щодня о 9:00', opts)).to.equal('Щодня о 9:00');
       expect(uk.label('щохвилини', opts)).to.equal('Щохвилини');
-      expect(uk.sentence('о 9:00 щодня', opts))
-        .to.equal('Виконується о 9:00 щодня.');
-      expect(uk.sentence('о 9:00 щодня в груд.', opts))
-        .to.equal('Виконується о 9:00 щодня в груд.');
+      expect(uk.sentence('щодня о 9:00', opts))
+        .to.equal('Виконується щодня о 9:00.');
+      // A description that already ends in a full stop gets no second one.
+      expect(uk.sentence('у груд.', opts)).to.equal('Виконується у груд.');
       expect(uk.reboot(opts)).to.equal('під час запуску системи');
       expect(uk.fallback(opts)).to.equal('нерозпізнаний шаблон cron');
     });

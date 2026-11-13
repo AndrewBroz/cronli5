@@ -3,7 +3,7 @@
 
 /** A month in the cases its phrases take, and its short form. */
 interface MonthName {
-  // After a date or «від», «до», «крім»: «1 червня», «від червня».
+  // After a date or «з», «до», «крім»: «1 червня», «з червня».
   genitive: string;
   // After «у»: «у червні».
   locative: string;
@@ -16,10 +16,10 @@ interface WeekdayName {
   accusative: string;
   // Whether its ordinal and «останній» take the feminine form.
   feminine: boolean;
-  // After «від», «до»: «від вівторка до четверга».
+  // The recurring day, one word: «щопонеділка».
+  every: string;
+  // After «з», «до», «крім»: «з вівторка до четверга», «крім неділі».
   genitive: string;
-  // After «по», for a recurring day: «по понеділках».
-  locativePlural: string;
   short: string;
 }
 
@@ -68,58 +68,60 @@ const months: MonthName[] = [
 const weekdays: WeekdayName[] = [
   {
     accusative: 'неділю',
+    every: 'щонеділі',
     feminine: true,
     genitive: 'неділі',
-    locativePlural: 'неділях',
     short: 'нд'
   },
   {
     accusative: 'понеділок',
+    every: 'щопонеділка',
     feminine: false,
     genitive: 'понеділка',
-    locativePlural: 'понеділках',
     short: 'пн'
   },
   {
     accusative: 'вівторок',
+    every: 'щовівторка',
     feminine: false,
     genitive: 'вівторка',
-    locativePlural: 'вівторках',
     short: 'вт'
   },
   {
     accusative: 'середу',
+    every: 'щосереди',
     feminine: true,
     genitive: 'середи',
-    locativePlural: 'середах',
     short: 'ср'
   },
   {
     accusative: 'четвер',
+    every: 'щочетверга',
     feminine: false,
     genitive: 'четверга',
-    locativePlural: 'четвергах',
     short: 'чт'
   },
   {
     accusative: 'п\'ятницю',
+    every: 'щоп\'ятниці',
     feminine: true,
     genitive: 'п\'ятниці',
-    locativePlural: 'п\'ятницях',
     short: 'пт'
   },
   {
     accusative: 'суботу',
+    every: 'щосуботи',
     feminine: true,
     genitive: 'суботи',
-    locativePlural: 'суботах',
     short: 'сб'
   }
 ];
 
 // Each unit after «кожні» and a number (by the number's category:
-// «кожні 21 хвилину», «кожні 2 хвилини», «кожні 5 хвилин»), and in the
-// genitive after «протягом перших» or «останніх» (one against the rest).
+// «кожні 21 хвилину», «кожні 2 хвилини», «кожні 5 хвилин»), in the
+// genitive after «протягом перших» or «останніх» (one against the rest),
+// and, for a minute or a second named by its ordinal, in the locative
+// («на 30-й хвилині») and the genitive singular («до 55-ї хвилини»).
 const units = {
   day: {
     few: 'дні',
@@ -135,6 +137,7 @@ const units = {
     few: 'хвилини',
     genitiveOne: 'хвилини',
     genitiveRest: 'хвилин',
+    locative: 'хвилині',
     many: 'хвилин',
     one: 'хвилину'
   },
@@ -143,7 +146,6 @@ const units = {
     genitiveOne: 'секунди',
     genitiveRest: 'секунд',
     locative: 'секунді',
-    locativePlural: 'секундах',
     many: 'секунд',
     one: 'секунду'
   }
@@ -164,13 +166,13 @@ const dayParts = [
   {from: 17, word: 'вечора'}
 ];
 
-// The endings a numeral takes after a hyphen: a day of the month or a year
-// in the genitive («15-го», «2030-го»), a second in the locative («30-й»)
-// and in the genitive («30-ї»).
+// The endings a numeral takes after a hyphen: a day of the month in the
+// genitive («15-го»), a minute or a second in the locative («30-й») and
+// in the genitive («30-ї»).
 const endings = {
-  genitive: '-го',
-  secondGenitive: '-ї',
-  secondLocative: '-й'
+  dayGenitive: '-го',
+  ordinalGenitive: '-ї',
+  ordinalLocative: '-й'
 };
 
 // The function words and fixed phrases.
@@ -178,60 +180,59 @@ const words = {
   also: 'а також',
   and: 'та',
   andPiece: 'і',
+  andSoOn: 'і так далі',
   at: 'о',
   atBeforeVowel: 'об',
+  atStart: 'на початку',
+  after: 'після',
   beforeLastDayOf: 'до останнього дня',
   daysOfMonth: 'числа',
-  eachEvenHour: 'кожної парної години',
   eachHour: 'кожної години',
   eachMinute: 'кожної хвилини',
-  eachMonth: 'кожного місяця',
-  eachOddHour: 'кожної непарної години',
+  eachTime: 'щоразу',
   evenDays: 'по парних числах',
   evenYears: 'парні роки',
+  every: 'кожні',
   everyDay: 'щодня',
   everyHour: 'щогодини',
   everyMinute: 'щохвилини',
-  every: 'кожні',
   everyMonth: 'щомісяця',
-  everyNthYear: 'кожного',
-  everyOtherMonth: 'кожного другого місяця',
   everySecond: 'щосекунди',
+  everyWeek: 'щотижня',
   except: 'крім',
   first: 'перших',
+  firstOne: 'першої',
+  firstWeekday: 'перший будній день',
   forAMinute: 'протягом хвилини',
   from: 'з',
-  hoursBeginning: 'години з початком',
-  fromCalendar: 'від',
+  fromStart: 'від початку',
   in: 'у',
   inAfterVowel: 'в',
   inclusive: 'включно',
   last: 'останніх',
-  firstWorkingDay: 'перший робочий день',
   lastDay: 'останній день',
   lastFeminine: 'останню',
   lastMasculine: 'останній',
-  lastWorkingDay: 'останній робочий день',
-  midnight: 'опівночі',
+  lastOne: 'останньої',
+  lastWeekday: 'останній будній день',
   nearest: 'найближчий до',
   oddDays: 'по непарних числах',
   oddYears: 'непарні роки',
   ofMonth: 'місяця',
-  penultimateDay: 'передостанній день',
-  minuteOf: 'хвилини',
   on: 'на',
   onDays: 'по',
-  otherYear: 'другого року',
+  penultimateDay: 'передостанній день',
   runs: 'Виконується',
   startup: 'під час запуску системи',
   stretch: 'проміжку',
   throughout: 'протягом',
+  toEndOfMonth: 'до кінця місяця',
   unrecognizable: 'нерозпізнаний шаблон cron',
   until: 'до',
-  weekdays: 'по буднях',
-  weekends: 'по вихідних',
+  weekday: 'будній день',
+  weekdays: 'будні',
+  weekends: 'вихідні',
   within: 'за',
-  workingDay: 'робочий день',
   year: 'року',
   yearLocative: 'році',
   yearsLocative: 'роках'
