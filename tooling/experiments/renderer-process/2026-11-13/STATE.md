@@ -16,7 +16,9 @@ Branch `renderer-process` is green (`npm run verify`, 6,227 tests) at `fbf3a9e`.
 ## Decisions waiting for the maintainer
 
 1. `docs/day-field-semantics.md`: `*/n` in a day field beside a restricted one (Vixie cron intersects; cronli5 says a union). Every language has rows that say the union.
-2. Czech: «po–pá» or «Po až Pá» in the short style (two readers disagree); earlier, «po celé» vs «po celé hodině».
+2. Czech, earlier question still open: «po celé» vs «po celé hodině».
+
+Ruled by the maintainer (native Czech), 2026-11-13: in the short style the capitalised forms are normal, «Po až Pá» and also the dashed «Po-Pá» / «PO-PÁ»; lower case exists but is much rarer. The Czech rows keep «Po až Pá», «Po, St a Pá»; record this in the Czech answers at the next author pass.
 
 ## New languages (branches `<code>-art`, worktrees under `.superpowers/worktrees/`)
 
