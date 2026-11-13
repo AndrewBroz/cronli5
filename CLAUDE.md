@@ -104,6 +104,16 @@ renderer change.
   written as (`analyses.written`).
 - **Taste calls are made by the orchestrating frontier model or a fluent
   human**, recorded with reasons in the answers. No persona panels.
+- **What carries between languages is the concern, never the device.** A
+  ruling made for one language says how that language gives a reader a
+  concise, clear, exact statement of when the schedule fires. Every other
+  language meets that concern natively: its own frame order, thresholds,
+  idioms and ties (or none). A reader's or judge's rewrite is weighed the
+  same way, against the concern and against what that reader was not told.
+- **Fluency is judged blind.** The judge is briefed in the target language,
+  sees the sentences as something people wrote for a screen, and is told
+  nothing of patterns, rules or generation. This is a separate read from
+  the one that checks a sentence against its schedule.
 
 - **Green gates are not proof.** Held-out rows, regeneration, blind
   recovery and fuzzing all passed for English while it said the wrong

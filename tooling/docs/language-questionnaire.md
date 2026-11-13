@@ -117,7 +117,9 @@ exception needs subtraction. Compare these directly, changing nothing else:
 [`0 */6 * * *` against its four times] [`23 */6 * * *` as a cadence with a
 start, as four times, and with the minute said apart from the hours]
 
-3.11 Which pairs of phrasings are equally easy? List them by the form of
+3.11 Which pairs of phrasings are equally easy, if any? A language may
+have none: a pair is a tie only if a reader of this language gets the
+schedule as surely and as quickly from either. List them by the form of
 the set, not by its values. For these pairs only, the phrasing that mirrors
 how the field was written is said (the core reports which kind of
 description each field was written as). Everywhere else the easier

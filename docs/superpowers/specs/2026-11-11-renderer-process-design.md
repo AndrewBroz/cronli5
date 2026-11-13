@@ -204,8 +204,9 @@ that fact only to settle a tie its answers declare. Equal schedules may
 now be worded differently, on exactly the declared ties; the check that
 counts them allows that list and nothing else.
 
-**Judgments from the maintainer that calibrate this**, each from a direct
-comparison with nothing else varying:
+**Judgments from the maintainer that calibrate this for English**, each
+from a direct comparison with nothing else varying. They are English
+judgments. None of them is a rule for another language:
 
 | Set | Easier | Than |
 | --- | --- | --- |
@@ -231,6 +232,31 @@ Rules of thumb these support, to be tested per language and not assumed:
 
 Each language states its own judgments and ties in its questionnaire
 answers.
+
+**What carries from one language to another is the concern, never the
+device.** A ruling made for English says how English meets a concern: the
+reader should get a concise, clear, exact statement of when the schedule
+fires. Another language meets the same concern in its own way, and may
+choose a different order for its frame, different thresholds, different
+idioms, a different tie or none. The first five languages after English
+were first drafted with English's devices carried over as if they were
+project rules (the tie on hours 0 and 12, a bare cadence for round hours,
+the time-first order, a word for "weekday" with a gloss, odd and even
+hours). Fluent readers objected to each of those in most of the languages,
+and the drafts had to be redone.
+
+The same care applies to a reader's or a judge's suggestion. It is shaped
+by what that reader was told. Its grade and its understanding of a
+sentence are evidence; its rewrite is one way to meet the concern, to be
+weighed against what the reader did not know.
+
+**Two reads, with different briefs.** A schedule read needs the pattern:
+the reader works out when it fires and looks for any reading of the
+sentence that fires differently. A fluency read must not have it: the
+judge is briefed in the target language, is shown the sentences as
+something people wrote for a screen, and is told nothing of patterns,
+rules or generation. A reader who believes text was generated judges it
+by a different standard. Both reads happen before a renderer is built.
 
 ### 5.6 Idioms are rows
 
