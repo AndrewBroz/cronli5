@@ -24,9 +24,9 @@ const FIELDS =
 // date («co roku 1 czerwca»), a single year joins a named month («w
 // czerwcu 2030 r.»), the month tail of a day phrase follows the month
 // field («każdego miesiąca», «miesiąca», «tego miesiąca»), a wrapping run
-// of months is cut when a year is restricted, and six weekdays are an
-// exception alone and a run in a union. Those are the fusions answers 2.6
-// declares; all of them stay inside the frame and the day. Nothing else
+// of months is cut when a year is restricted, weekday exceptions are
+// positive forms in a union, and a schedule that never fires is one fixed
+// phrase. Those are the fusions answers 2.6 declares; all of them stay inside the frame and the day. Nothing else
 // may cross, with the two exceptions below.
 const MAY_CHANGE = {
   date: ['frame', 'day'],
@@ -109,12 +109,14 @@ function leaks(pairList) {
       (hoursWrap(parse(a, options).schedule) ||
         hoursWrap(parse(b, options).schedule));
 
-    // The comma after a part belongs to the join, not to the part: the
-    // frame takes one between a year and a numeral, the day takes one in
-    // a union and after a comma clause (answers 2.6), so it is set aside
-    // before two parts are compared.
+    // The comma or colon after a part belongs to the join, not to the
+    // part: a frame takes a colon before a union and a comma when it is
+    // pieces or an exception or meets a range or a date, and the day
+    // takes a comma before the time when it is compound (answers,
+    // "Punctuation between the parts"), so it is set aside before two
+    // parts are compared.
     function words(part) {
-      return String(part).replace(/,$/u, '');
+      return String(part).replace(/[,:]$/u, '');
     }
 
     // The day part without the daily word an hour edit may set.

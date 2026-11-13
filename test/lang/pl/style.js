@@ -50,8 +50,10 @@ describe('Polish styles:', function() {
 
       expect(pl.label('codziennie o 9:00', opts))
         .to.equal('Codziennie o 9:00');
-      expect(pl.label('1. dnia każdego miesiąca o 0:00', opts))
-        .to.equal('1. dnia każdego miesiąca o 0:00');
+      expect(pl.label('pierwszego dnia każdego miesiąca o 0:00', opts))
+        .to.equal('Pierwszego dnia każdego miesiąca o 0:00');
+      expect(pl.label('5, 20 i 45 minut po każdej pełnej godzinie', opts))
+        .to.equal('5, 20 i 45 minut po każdej pełnej godzinie');
       expect(pl.sentence('codziennie o 9:00', opts))
         .to.equal('Uruchamia się codziennie o 9:00.');
       expect(pl.sentence('codziennie co 2 godz.', opts))

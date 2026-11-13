@@ -24,18 +24,20 @@ const rows = [
   ['0 1/2 * * *', 'codziennie co 2 godziny od 1:00 do 23:00'],
 
   // clock / date — context `0 9 * * *`
-  ['0 9 1 * *', '1. dnia każdego miesiąca o 9:00'],
-  ['0 9 1,10,20 * *', '1., 10. i 20. dnia każdego miesiąca o 9:00'],
-  ['0 9 */2 * *', 'w dni nieparzyste każdego miesiąca o 9:00'],
+  ['0 9 1 * *', 'pierwszego dnia każdego miesiąca o 9:00'],
+  ['0 9 1,10,20 * *',
+    'pierwszego, dziesiątego i dwudziestego dnia każdego miesiąca o 9:00'],
+  ['0 9 */2 * *', 'w nieparzyste dni każdego miesiąca o 9:00'],
   ['0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'w dni nieparzyste oprócz 15. dnia każdego miesiąca o 9:00'],
+    'w nieparzyste dni każdego miesiąca oprócz piętnastego, o 9:00'],
 
   // clock / month — context `0 9 * * *`
   ['0 9 * 1 *', 'w styczniu codziennie o 9:00'],
   ['0 9 * 3,6,9,12 *',
     'w marcu, czerwcu, wrześniu i grudniu codziennie o 9:00'],
   ['0 9 * */2 *',
-    'w co drugim miesiącu od stycznia do listopada codziennie o 9:00'],
+    'w styczniu, marcu, maju, lipcu, wrześniu i listopadzie codziennie o ' +
+    '9:00'],
   ['0 9 * 11-2 *', 'od listopada do lutego codziennie o 9:00'],
 
   // clock / weekday — context `0 9 * * *`
@@ -52,15 +54,15 @@ const rows = [
     'razem co 6 sekund przez całą minutę'],
   ['5/10 */15 9-17 * * 1-5',
     'od poniedziałku do piątku co 15 minut od 9:00 do 17:45, za każdym ' +
-    'razem co 10 sekund od 5 do 55 sekund po pełnej minucie'],
+    'razem co 10 sekund od :05 do :55'],
 
   // window / minute — context `*/15 9-17 * * 1-5`
   ['* 9-17 * * 1-5', 'od poniedziałku do piątku co minutę od 9:00 do 17:59'],
   ['0,30 9-17 * * 1-5',
     'od poniedziałku do piątku co 30 minut od 9:00 do 17:30'],
   ['0-29,45 9-17 * * 1-5',
-    'od poniedziałku do piątku co minutę od 0 do 29 minut oraz 45 minut po ' +
-    'każdej pełnej godzinie, od 9:00 do 17:45'],
+    'od poniedziałku do piątku co minutę od :00 do :29 oraz o :45 każdej ' +
+    'godziny, od 9:00 do 17:45'],
   ['0,15,45 9-17 * * 1-5',
     'od poniedziałku do piątku o każdej pełnej godzinie oraz 15 i 45 minut ' +
     'później, od 9:00 do 17:45'],
@@ -73,22 +75,23 @@ const rows = [
     'od poniedziałku do piątku co 15 minut od 9:00 do 17:45 oraz od 22:00 ' +
     'do 22:45'],
   ['*/15 1/2 * * 1-5',
-    'od poniedziałku do piątku co 15 minut w co drugiej godzinie, od 1:00 ' +
-    'do 23:45'],
+    'od poniedziałku do piątku co 2 godziny od 1:00 do 23:00, za każdym ' +
+    'razem o pełnej godzinie oraz 15, 30 i 45 minut później'],
 
   // window / date — context `*/15 9-17 * * 1-5`
   ['*/15 9-17 1 * 1-5',
-    'od poniedziałku do piątku, a także 1. dnia każdego miesiąca, co 15 ' +
-    'minut od 9:00 do 17:45'],
+    'od poniedziałku do piątku, a także pierwszego dnia każdego miesiąca, ' +
+    'co 15 minut od 9:00 do 17:45'],
   ['*/15 9-17 1,10,20 * 1-5',
-    'od poniedziałku do piątku, a także 1., 10. i 20. dnia każdego ' +
-    'miesiąca, co 15 minut od 9:00 do 17:45'],
+    'od poniedziałku do piątku, a także pierwszego, dziesiątego i ' +
+    'dwudziestego dnia każdego miesiąca, co 15 minut od 9:00 do 17:45'],
   ['*/15 9-17 */2 * 1-5',
-    'od poniedziałku do piątku, a także w dni nieparzyste każdego ' +
+    'od poniedziałku do piątku, a także w nieparzyste dni każdego ' +
     'miesiąca, co 15 minut od 9:00 do 17:45'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
-    'od poniedziałku do piątku, a także w dni nieparzyste oprócz 15. dnia ' +
-    'każdego miesiąca, co 15 minut od 9:00 do 17:45'],
+    'od poniedziałku do piątku, a także w nieparzyste dni każdego miesiąca ' +
+    'oprócz piętnastego, chyba że wypada w wymieniony dzień tygodnia, co ' +
+    '15 minut od 9:00 do 17:45'],
 
   // window / month — context `*/15 9-17 * * 1-5`
   ['*/15 9-17 * 1 1-5',
@@ -97,10 +100,10 @@ const rows = [
     'w marcu, czerwcu, wrześniu i grudniu od poniedziałku do piątku co 15 ' +
     'minut od 9:00 do 17:45'],
   ['*/15 9-17 * */2 1-5',
-    'w co drugim miesiącu od stycznia do listopada od poniedziałku do ' +
-    'piątku co 15 minut od 9:00 do 17:45'],
+    'w styczniu, marcu, maju, lipcu, wrześniu i listopadzie od ' +
+    'poniedziałku do piątku co 15 minut od 9:00 do 17:45'],
   ['*/15 9-17 * 11-2 1-5',
-    'od listopada do lutego od poniedziałku do piątku co 15 minut od 9:00 ' +
+    'od listopada do lutego, od poniedziałku do piątku co 15 minut od 9:00 ' +
     'do 17:45'],
 
   // window / weekday — context `*/15 9-17 * * 1-5`
@@ -110,50 +113,58 @@ const rows = [
   ['*/15 9-17 * * 2,4', 'we wtorki i czwartki co 15 minut od 9:00 do 17:45'],
 
   // monthly / second — context `0 0 1 * *`
-  ['* 0 0 1 * *', '1. dnia każdego miesiąca co sekundę od 0:00:00 do 0:00:59'],
+  ['* 0 0 1 * *',
+    'pierwszego dnia każdego miesiąca co sekundę od 0:00:00 do 0:00:59'],
   ['*/6 0 0 1 * *',
-    '1. dnia każdego miesiąca co 6 sekund od 0:00:00 do 0:00:54'],
+    'pierwszego dnia każdego miesiąca co 6 sekund od 0:00:00 do 0:00:54'],
   ['5/10 0 0 1 * *',
-    '1. dnia każdego miesiąca co 10 sekund od 0:00:05 do 0:00:55'],
+    'pierwszego dnia każdego miesiąca co 10 sekund od 0:00:05 do 0:00:55'],
 
   // monthly / minute — context `0 0 1 * *`
-  ['* 0 1 * *', '1. dnia każdego miesiąca co minutę od 0:00 do 0:59'],
-  ['5,20,45 0 1 * *', '1. dnia każdego miesiąca o 0:05, 0:20 i 0:45'],
-  ['*/15 0 1 * *', '1. dnia każdego miesiąca o 0:00, 0:15, 0:30 i 0:45'],
-  ['0,15,45 0 1 * *', '1. dnia każdego miesiąca o 0:00, 0:15 i 0:45'],
+  ['* 0 1 * *', 'pierwszego dnia każdego miesiąca co minutę od 0:00 do 0:59'],
+  ['5,20,45 0 1 * *', 'pierwszego dnia każdego miesiąca o 0:05, 0:20 i 0:45'],
+  ['*/15 0 1 * *',
+    'pierwszego dnia każdego miesiąca o 0:00, 0:15, 0:30 i 0:45'],
+  ['0,15,45 0 1 * *', 'pierwszego dnia każdego miesiąca o 0:00, 0:15 i 0:45'],
 
   // monthly / hour — context `0 0 1 * *`
-  ['0 * 1 * *', '1. dnia każdego miesiąca o każdej pełnej godzinie'],
-  ['0 9,17 1 * *', '1. dnia każdego miesiąca o 9:00 i 17:00'],
+  ['0 * 1 * *', 'pierwszego dnia każdego miesiąca o każdej pełnej godzinie'],
+  ['0 9,17 1 * *', 'pierwszego dnia każdego miesiąca o 9:00 i 17:00'],
   ['0 9-17,22 1 * *',
-    '1. dnia każdego miesiąca co godzinę od 9:00 do 17:00 oraz o 22:00'],
-  ['0 1/2 1 * *', '1. dnia każdego miesiąca co 2 godziny od 1:00 do 23:00'],
+    'pierwszego dnia każdego miesiąca co godzinę od 9:00 do 17:00 oraz o ' +
+    '22:00'],
+  ['0 1/2 1 * *',
+    'pierwszego dnia każdego miesiąca co 2 godziny od 1:00 do 23:00'],
 
   // monthly / date — context `0 0 1 * *`
-  ['0 0 1,10,20 * *', '1., 10. i 20. dnia każdego miesiąca o 0:00'],
-  ['0 0 */2 * *', 'w dni nieparzyste każdego miesiąca o 0:00'],
+  ['0 0 1,10,20 * *',
+    'pierwszego, dziesiątego i dwudziestego dnia każdego miesiąca o 0:00'],
+  ['0 0 */2 * *', 'w nieparzyste dni każdego miesiąca o 0:00'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'w dni nieparzyste oprócz 15. dnia każdego miesiąca o 0:00'],
+    'w nieparzyste dni każdego miesiąca oprócz piętnastego, o 0:00'],
 
   // monthly / month — context `0 0 1 * *`
   ['0 0 1 1 *', 'co roku 1 stycznia o 0:00'],
   ['0 0 1 3,6,9,12 *',
-    'w marcu, czerwcu, wrześniu i grudniu 1. dnia miesiąca o 0:00'],
+    'w marcu, czerwcu, wrześniu i grudniu pierwszego dnia miesiąca o 0:00'],
   ['0 0 1 */2 *',
-    'w co drugim miesiącu od stycznia do listopada 1. dnia miesiąca o 0:00'],
-  ['0 0 1 11-2 *', 'od listopada do lutego 1. dnia miesiąca o 0:00'],
+    'w styczniu, marcu, maju, lipcu, wrześniu i listopadzie pierwszego ' +
+    'dnia miesiąca o 0:00'],
+  ['0 0 1 11-2 *', 'od listopada do lutego pierwszego dnia miesiąca o 0:00'],
 
   // monthly / weekday — context `0 0 1 * *`
-  ['0 0 1 * 1', 'w poniedziałki, a także 1. dnia każdego miesiąca, o 0:00'],
+  ['0 0 1 * 1',
+    'w poniedziałki, a także pierwszego dnia każdego miesiąca, o 0:00'],
   ['0 0 1 * 1-5',
-    'od poniedziałku do piątku, a także 1. dnia każdego miesiąca, o 0:00'],
+    'od poniedziałku do piątku, a także pierwszego dnia każdego miesiąca, ' +
+    'o 0:00'],
   ['0 0 1 * 2,4',
-    'we wtorki i czwartki, a także 1. dnia każdego miesiąca, o 0:00'],
+    'we wtorki i czwartki, a także pierwszego dnia każdego miesiąca, o 0:00'],
 
   // open / second — context `* * * * *`
   ['* * * * * *', 'co sekundę'],
   ['*/6 * * * * *', 'co 6 sekund'],
-  ['5/10 * * * * *', 'co 10 sekund od 5 do 55 sekund po każdej pełnej minucie'],
+  ['5/10 * * * * *', 'co 10 sekund od :05 do :55 każdej minuty'],
 
   // open / minute — context `* * * * *`
   ['5,20,45 * * * *', '5, 20 i 45 minut po każdej pełnej godzinie'],
@@ -167,19 +178,22 @@ const rows = [
   ['* 9-17,22 * * *',
     'codziennie co minutę od 9:00 do 17:59 oraz od 22:00 do 22:59'],
   ['* 1/2 * * *',
-    'codziennie co minutę w co drugiej godzinie, od 1:00 do 23:59'],
+    'codziennie co 2 godziny od 1:00 do 23:00, za każdym razem co minutę ' +
+    'przez całą godzinę'],
 
   // open / date — context `* * * * *`
-  ['* * 1 * *', '1. dnia każdego miesiąca co minutę'],
-  ['* * 1,10,20 * *', '1., 10. i 20. dnia każdego miesiąca co minutę'],
-  ['* * */2 * *', 'w dni nieparzyste każdego miesiąca co minutę'],
+  ['* * 1 * *', 'pierwszego dnia każdego miesiąca co minutę'],
+  ['* * 1,10,20 * *',
+    'pierwszego, dziesiątego i dwudziestego dnia każdego miesiąca co minutę'],
+  ['* * */2 * *', 'w nieparzyste dni każdego miesiąca co minutę'],
   ['* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'w dni nieparzyste oprócz 15. dnia każdego miesiąca co minutę'],
+    'w nieparzyste dni każdego miesiąca oprócz piętnastego, co minutę'],
 
   // open / month — context `* * * * *`
   ['* * * 1 *', 'w styczniu co minutę'],
   ['* * * 3,6,9,12 *', 'w marcu, czerwcu, wrześniu i grudniu co minutę'],
-  ['* * * */2 *', 'w co drugim miesiącu od stycznia do listopada co minutę'],
+  ['* * * */2 *',
+    'w styczniu, marcu, maju, lipcu, wrześniu i listopadzie co minutę'],
   ['* * * 11-2 *', 'od listopada do lutego co minutę'],
 
   // open / weekday — context `* * * * *`

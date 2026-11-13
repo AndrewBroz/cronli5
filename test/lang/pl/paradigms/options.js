@@ -29,11 +29,13 @@ const defaultParts = {
   '0 0 1,15 9 *': ['1 i 15 września', '0:00'],
   '0 9 * * 5L': ['ostatni piątek', '9:00'],
   '0 9 * * 3#1': ['pierwszą środę', '9:00'],
-  '0 0 1 * 0': ['niedziele', '1. dnia', '0:00'],
+  '0 0 1 * 0': ['niedziele', 'pierwszego dnia', '0:00'],
+  '0 0 LW * *': ['dzień powszedni', 'od poniedziałku do piątku', '0:00'],
   '0 */2 * * *': ['2 godziny', '0:00', '22:00'],
   '5,20,45 * * * *': ['45 minut', 'pełnej godzinie'],
   '*/6 * * * * *': ['6 sekund'],
-  '* * * * *': ['minutę']
+  '* * * * *': ['minutę'],
+  '0-29 * * * *': ['minutę', ':00', ':29']
 };
 
 const sets = [
@@ -111,6 +113,11 @@ const sets = [
         expected: 'codziennie o 9:00:30 rano',
         parts: ['9:00:30 rano'],
         pattern: '30 0 9 * * *'
+      },
+      {
+        expected: 'co minutę od :00 do :29 każdej godziny',
+        parts: ['minutę', ':00', ':29'],
+        pattern: '0-29 * * * *'
       }
     ]
   },
@@ -128,7 +135,7 @@ const sets = [
         pattern: '0 9 * * 2,4'
       },
       {
-        expected: 'codziennie oprócz niedz. o 9:00',
+        expected: 'codziennie oprócz niedz., o 9:00',
         parts: ['niedz.', '9:00'],
         pattern: '0 9 * * 1-6'
       },
@@ -163,9 +170,16 @@ const sets = [
         pattern: '0 9 * * 3#1'
       },
       {
-        expected: 'w niedz., a także 1. dnia każdego miesiąca, o 0:00',
-        parts: ['niedz.', '1. dnia', '0:00'],
+        expected: 'w niedz., a także pierwszego dnia każdego miesiąca, o ' +
+          '0:00',
+        parts: ['niedz.', 'pierwszego dnia', '0:00'],
         pattern: '0 0 1 * 0'
+      },
+      {
+        expected: 'w ostatni dzień powszedni (od pon. do pt.) każdego ' +
+          'miesiąca o 0:00',
+        parts: ['dzień powszedni', 'od pon. do pt.', '0:00'],
+        pattern: '0 0 LW * *'
       },
       {
         expected: 'od pon. do pt. co 15 min od 9:00 do 17:45',
@@ -223,14 +237,20 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'w niedziele, a także 1. dnia każdego miesiąca, o 0.00',
-        parts: ['niedziele', '1. dnia', '0.00'],
+        expected: 'w niedziele, a także pierwszego dnia każdego miesiąca, ' +
+          'o 0.00',
+        parts: ['niedziele', 'pierwszego dnia', '0.00'],
         pattern: '0 0 1 * 0'
       },
       {
         expected: 'codziennie o 9:00:30',
         parts: ['9:00:30'],
         pattern: '30 0 9 * * *'
+      },
+      {
+        expected: 'co minutę od :00 do :29 każdej godziny',
+        parts: ['minutę', ':00', ':29'],
+        pattern: '0-29 * * * *'
       }
     ]
   },
