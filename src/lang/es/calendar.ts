@@ -2,7 +2,7 @@
 // months that stand apart), the day, and the days of the month a union
 // adds after the time (answers 2.1, 4.3 to 4.5, 5.7, 5.8).
 
-import type {Policy, Run, Said} from './sets.js';
+import type {Part, Policy, Run, Said} from './sets.js';
 import type {
   Analyses, QuartzDate, QuartzWeekday, Schedule, SetDescription
 } from '../../core/schedule.js';
@@ -523,6 +523,10 @@ interface Days {
   quartzDay: QuartzWeekday | null;
   everyDate: boolean;
   everyWeekday: boolean;
+  // Whether both day fields narrow the days and a day must match both, or
+  // match either one (a union).
+  both: boolean;
+  union: boolean;
   // The length of the longest month named.
   length: number;
   // Whether one day of the month is left to say.
@@ -601,6 +605,13 @@ function reachedDates(analyses: Analyses): number[] {
     [offered, true]]), 'date');
 }
 
+// How two day fields that still narrow the days combine: both must match,
+// or either will do. Where either is silent there is nothing to combine.
+function restriction(day: Analyses['day'], silent: boolean):
+  {both: boolean; union: boolean} {
+  return {both: day.both && !silent, union: day.union && !silent};
+}
+
 function daysOf(analyses: Analyses, leading: Leading): Days {
   const {candidates, day, dateReach} = analyses;
   const {quartzDate, quartzDay} = quartzForms(day);
@@ -643,6 +654,7 @@ function daysOf(analyses: Analyses, leading: Leading): Days {
   const scarce = form.kind === 'beforeLast' && unsettled && !leapOnly;
 
   return {
+    ...restriction(day, everyDate || everyWeekday),
     dates,
     everyDate,
     everyWeekday,
@@ -669,7 +681,7 @@ function monthsJoin(leading: Leading, days: Days): boolean {
     days.weekdays.parts.every(isValues);
 
   return leading.monthNamed && leading.months.parts.every(isValues) &&
-    days.everyDate !== days.everyWeekday && !days.scarce &&
+    (days.everyDate !== days.everyWeekday || days.both) && !days.scarce &&
     (!days.everyDate || listed);
 }
 
@@ -719,7 +731,7 @@ function addedMonths(leading: Leading, days: Days, style: SpanishStyle):
 function dayPhrases(leading: Leading, days: Days, style: SpanishStyle):
   {date: DayPhrase; weekday: DayPhrase; addedLead: string} {
   const {monthValues} = leading;
-  const union = !days.everyDate && !days.everyWeekday;
+  const {both, union} = days;
   const joins = monthsJoin(leading, days);
   const tied = union && leading.monthNamed;
   const quartzDay = days.quartzDay !== null;
@@ -751,11 +763,13 @@ function dayPhrases(leading: Leading, days: Days, style: SpanishStyle):
     }),
     weekday: weekdayPhrasers[weekdayKind]({
       ...shared,
-      alone: !union,
+      alone: !union && !both,
       dated: false,
       form: {...NO_FORM, ...days.quartzDay},
       said: days.weekdays,
       suffix: pick([
+        [words.ofMonth, both && quartzDay],
+        ['', both],
         [joined, joins],
         [words.ofMonth, tied && quartzDay],
         [words.ofEachMonth, quartzDay],
@@ -791,6 +805,41 @@ function neverText(analyses: Analyses, leading: Leading, style: SpanishStyle):
   ]);
 }
 
+// What a date must fall on when both day fields must match: «cuando cae
+// en lunes o jueves», «cuando caen de lunes a viernes», «cuando cae en
+// fin de semana»; «cuando coinciden con el último viernes del mes» for a
+// weekday of the month. A run needs no «en»; the rest of the days follow
+// it in the same list.
+function condition(days: Days, weekday: DayPhrase, style: SpanishStyle):
+  string {
+  const plural = days.quartzDate === null && !days.oneDate;
+  const {parts} = days.weekdays;
+  const [first = {kind: 'values', values: []} as Part] = parts;
+  const weekend = parts.length === 1 && isValues(first) &&
+    first.values.join() === `${SATURDAY},${SUNDAY}`;
+  const items = mapParts(parts, function run(from, to) {
+    return [fromTo(weekdayName(from, 'name', style),
+      weekdayName(to, 'name', style))];
+  }, function named(values) {
+    return values.map(function name(value) {
+      return weekdayName(value, 'name', style);
+    });
+  }).flat();
+
+  return spaced([
+    words.when,
+    pick([
+      [byCount([words.coincides, words.coincide], Number(plural) + 1) + ' ' +
+        textOf(weekday), days.quartzDay !== null],
+      [spaced([
+        byCount([words.falls, words.fall], Number(plural) + 1),
+        pick([['', !isValues(first)], [words.in, true]]),
+        list(pick([[[words.weekend], weekend], [items, true]]), words.or)
+      ]), true]
+    ])
+  ]);
+}
+
 /** The leading frame, the day, and what a union adds after the time. */
 function calendarOf(
   schedule: Schedule,
@@ -801,13 +850,15 @@ function calendarOf(
   const leading = leadingOf(analyses);
   const days = daysOf(analyses, leading);
   const spoken = dayPhrases(leading, days, style);
-  const union = !days.everyDate && !days.everyWeekday;
+  const {union} = days;
   const neverFires = analyses.dateReach !== null &&
     !analyses.dateReach.fires && !analyses.day.union;
 
   // What limits the date beyond the months is said before it: in the
   // leading frame, or inside the addition of a union.
   const said = pick([
+    [phrase(`${textOf(spoken.date)}, ${condition(days, spoken.weekday, style)}`,
+      {closed: true}), days.both],
     [spoken.weekday, !days.everyWeekday],
     [spoken.date, !days.everyDate],
     [phrase(pick([['', everyHour], [words.everyDay, true]]), {}), true]

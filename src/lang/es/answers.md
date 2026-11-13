@@ -961,9 +961,34 @@ unchanged in its words: «el día 1 de cada mes a las 0:00» becomes «los
 viernes a las 0:00, y además el día 1 de cada mes». Restricting the day
 of the month of a weekday schedule only appends.
 
-Not built into any renderer yet: when both must match, a weekday that
-falls on a date is «los viernes que caen en día 13», and the first Monday
-is «el primer lunes del mes».
+**When both day fields must match, the date leads and the weekdays are
+a condition on it.** The core says it (`day.both`): a field written from a
+star (`*/2`) beside a restricted one. The days of the month are said as
+they are said alone, with their months, and after them, between commas,
+«cuando cae en» (one date) or «cuando caen en» (several) and the
+weekdays, then the time. The days take no exception and the weekdays are
+no exception either; the words «y además» never appear, so the sentence
+cannot be heard as a union. `0 0 */2 * 1` is «los días impares de cada
+mes, cuando caen en lunes, a las 0:00»; `0 9 */2 * 1,3,5`, «los días
+impares de cada mes, cuando caen en lunes, miércoles o viernes, a las
+9:00»; `0 0 15 * */2`, «el día 15 de cada mes, cuando cae en martes,
+jueves, sábado o domingo, a las 0:00»; `0 0 */2 6 1`, «los días impares
+de junio, cuando caen en lunes, a las 0:00»; `*/15 9-17 */2 * 1-5`, «los
+días impares de cada mes, cuando caen de lunes a viernes, cada 15 minutos
+de 9:00 a 17:45». The weekdays are a list joined by «o»; a run is «de
+lunes a viernes» and takes no «en», other days follow it in the same
+list («de lunes a miércoles, viernes o sábado»); Saturday and Sunday are
+«en fin de semana». A weekday of the month is not a set to fall on: «los
+días impares de cada mes, cuando coinciden con el último viernes del
+mes». A date of a Quartz form leads as it would alone: `0 0 L * */2`,
+«el último día de cada mes, cuando cae en martes, jueves, sábado o
+domingo». Months and years sit where they always do. Written without the
+star (`1-31/2`) the same days are a union, and say «y además» as before.
+The seed said «los viernes que caen en día 13», the weekday first; the
+date leads instead because its phrase is then the one it has alone, for
+every kind of set (a cadence, a run, a Quartz form), and the weekdays
+stay one short list. This is a declared fusion (2.7): editing either day
+field changes the day part only, as in a union.
 
 4.4 A day of the month, a month, and a year. A **date phrase** is a
 day-of-month phrase («el día 1 de cada mes») or a Quartz form («el último

@@ -976,10 +976,52 @@ is said: `0 0 31 6 1` — «a giugno, il lunedì alle 0:00»; `*/15 9-17 15W *
 mentioned: `0 9 1-30 6 1` — «a giugno, tutti i giorni alle 9:00». A day
 field written as every value (`1-31`, `0-6`) arrives as unrestricted.
 
-Both at once (no renderer says this yet): juxtaposition and condition, the
-fixed Italian means (usage §10). `0 0 13 * 5`, both — «ogni venerdì 13 alle
-0:00»; `0 0 1-7 * 1`, both — «il primo lunedì di ogni mese alle 0:00»; in
-general «il 15 del mese, se cade di lunedì».
+**Both must match** (`day.both`: one of the two day fields is written
+from a star, as `*/2` is, and both still narrow the days). Not a union:
+the days of the month that fall on the weekdays. Italian's means is the
+condition (usage §10, «se cade di lunedì»), said after the days, which are
+worded exactly as they are alone:
+
+**date phrase «solo se» («cade» | «cadono») weekdays «,» time**
+
+«Solo se» and never «e in più» joins the two, so the sentence cannot be
+read as the union, and no «sempre» follows. The verb agrees with the days
+of the month: «cade» for one date (a single value, a Quartz date),
+«cadono» for any set of dates. The weekdays after it are said as after
+the «solo se cade» of the swallowed union above, by the form 5.2 chooses
+for them: «di lunedì», «di lunedì, di mercoledì o di venerdì», «tra il
+lunedì e il venerdì», «non cade di mercoledì». A Quartz weekday is not a
+weekday to fall on but an occasion to coincide with: «solo se coincide
+(coincidono) con l'ultimo venerdì di ogni mese». A comma follows the
+condition, so the time is not read as part of it.
+
+* `0 0 */2 * 1` — «nei giorni dispari di ogni mese solo se cadono di
+  lunedì, alle 0:00»
+* `0 9 */2 * 1,3,5` — «nei giorni dispari di ogni mese solo se cadono di
+  lunedì, di mercoledì o di venerdì, alle 9:00»
+* `0 0 15 * */2` — «il 15 di ogni mese solo se cade di martedì, di
+  giovedì, di sabato o di domenica, alle 0:00»
+* `0 0 */2 6 1` — «a giugno, nei giorni dispari del mese solo se cadono
+  di lunedì, alle 0:00» (the months lead and the days say «del mese», as
+  in a union)
+* `*/15 9-17 */5 * 1-5` — «il 1º, il 6, l'11, il 16, il 21, il 26 e il 31
+  di ogni mese solo se cadono tra il lunedì e il venerdì, ogni 15 minuti
+  dalle 9:00 alle 17:45»
+* `0 0 */2 * 5L` — «nei giorni dispari di ogni mese solo se coincidono
+  con l'ultimo venerdì di ogni mese, alle 0:00»
+
+A leap-year gloss is the relative clause on the date, as in a union, with
+a comma after it before «solo se». When the date side is every day less
+some dates (`0 0 1-14,16-31 * */2`), «solo se» would be read as
+conditioning the exception, so it is said from the weekdays: «il martedì,
+il giovedì, il sabato e la domenica tranne il 15 di ogni mese, alle
+0:00». A date that no reached month has is «mai», as ever. The same days
+written without the star (`1-31/2`) are the union, said as above.
+
+Considered and left: «ogni venerdì 13» (juxtaposition) says the
+intersection only for one date and one weekday, and a set of dates has
+no such form; «il 15 del mese, se cade di lunedì» (the first seed) has
+no «solo», and a bare «se» is read as a choice.
 
 ### 4.4 A day and a month; years
 

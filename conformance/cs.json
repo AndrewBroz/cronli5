@@ -254,7 +254,7 @@
    "pattern": "*/15 9-17 1,10,20 * 1-5"
   },
   {
-   "expected": "od pondělí do pátku a navíc každý lichý den v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "expected": "každý lichý den v měsíci jen tehdy, připadne-li na pondělí až pátek, každých 15 minut od 9:00 do 17:45",
    "options": {
     "lang": "cs"
    },
@@ -1045,7 +1045,7 @@
    "pattern": "*/15 9-17 2/2 * 1-5"
   },
   {
-   "expected": "od pondělí do pátku a navíc 1., 6., 11., 16., 21., 26. a 31. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "expected": "1., 6., 11., 16., 21., 26. a 31. dne v měsíci jen tehdy, připadne-li na pondělí až pátek, každých 15 minut od 9:00 do 17:45",
    "options": {
     "lang": "cs"
    },
@@ -2310,11 +2310,124 @@
    "pattern": "0 0 1 6 1#2"
   },
   {
+   "expected": "od pondělí do pátku a navíc každý lichý den v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1-31/2 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1., 6., 11., 16., 21., 26. a 31. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1-31/5 * 1-5"
+  },
+  {
    "expected": "v červnu každou sobotu a neděli a navíc každý lichý den v červnu, vždy v 0:00",
    "options": {
     "lang": "cs"
    },
+   "pattern": "0 0 1-31/2 6 0,6"
+  },
+  {
+   "expected": "každý lichý den v měsíci jen tehdy, připadne-li na pondělí, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 * 1"
+  },
+  {
+   "expected": "každý lichý den v měsíci jen tehdy, připadne-li na pondělí, středu nebo pátek, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 */2 * 1,3,5"
+  },
+  {
+   "expected": "15. dne v měsíci jen tehdy, připadne-li na úterý, čtvrtek, sobotu nebo neděli, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 15 * */2"
+  },
+  {
+   "expected": "každý lichý den v červnu jen tehdy, připadne-li na pondělí, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 6 1"
+  },
+  {
+   "expected": "každý lichý den v červnu jen tehdy, připadne-li na sobotu nebo neděli, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
    "pattern": "0 0 */2 6 0,6"
+  },
+  {
+   "expected": "1., 6., 11., 16., 21., 26. a 31. dne v měsíci jen tehdy, připadne-li na pondělí až pátek, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */5 * 1-5"
+  },
+  {
+   "expected": "každý lichý den v měsíci jen tehdy, připadne-li na sobotu nebo neděli, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 * 6,0"
+  },
+  {
+   "expected": "každý lichý den v měsíci jen tehdy, připadne-li na úterý, čtvrtek, sobotu nebo neděli, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 * */2"
+  },
+  {
+   "expected": "každý lichý den v měsíci jen tehdy, nepřipadne-li na pátek ani sobotu, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 * 0,1,2,3,4"
+  },
+  {
+   "expected": "v lednu a červenci od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále) jen tehdy, připadne-li na pondělí až pátek, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 */3 1,7 1-5"
+  },
+  {
+   "expected": "každý lichý den v měsíci jen tehdy, připadne-li na druhé pondělí v měsíci, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 * 1#2"
+  },
+  {
+   "expected": "každý lichý den v měsíci jen tehdy, připadne-li na poslední pátek v měsíci, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 * 5L"
+  },
+  {
+   "expected": "v roce 2030 každý lichý den v měsíci jen tehdy, připadne-li na pondělí, v 0:00",
+   "options": {
+    "lang": "cs",
+    "years": true
+   },
+   "pattern": "0 0 0 */2 * 1 2030"
+  },
+  {
+   "expected": "jen 31. června, tedy nikdy",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 31 6 */2"
   },
   {
    "expected": "v červnu každé pondělí a navíc 15. června, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, vždy v 9:00",

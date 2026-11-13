@@ -734,8 +734,24 @@ every day, and the weekday is not said: `0 9 1-30 4 1` is 每年4月每天
 9:00. A date that none of its months has leaves the weekday alone: `0 0
 31 6 1` is 每年6月每周一0:00.
 
-Not built into any renderer yet: when both must match, a weekday that
-falls on a date is 每逢13日为周五时, and the first Monday is 每月第1个周一.
+**Where both day fields must match** (the core's `day.both`: one of the
+two was written from a star, and both still narrow the days), there is no
+union, and 以及 is never said. The days of the month are said as they are
+said under 每逢, then that they fall on the weekdays: 每逢, the dates, 为,
+the weekdays, 时. The weekdays are said as they are said alone, but the
+last of several follows 或, not 、, because 或 says that any one of them
+will do: 每逢单日为周一时的0:00; 每逢单日为周一、周三或周五时的9:00; 每逢
+1日、6日、11日、16日、21日、26日、31日为周一至周五时的0:00 (a run is one
+item, so 周一至周三或周五); 每逢15日为周二、周四、周六或周日时的0:00;
+*/15 9-17 */2 * 1-5 is 每逢单日为周一至周五时的9:00至17:45，每15分钟一次.
+The join before a clock time is 的, as for the union, and under a month the
+month is said first, closed by a comma: 每年6月，每逢单日为周一时的0:00.
+The rule goes by the form of the two sets, never by which values they
+hold; a Quartz form takes its place among the dates or the weekdays
+(每逢单日为最后一个周五时的0:00). Written without the star the same days
+are a union and read as above: `1-31/2` is 每月逢单日以及每周一至周五….
+Neither side is excepted here either. (Not built into any renderer yet:
+the first Monday is 每月第1个周一.)
 
 4.4 A day of the month, a month, and a year. Because the order is year,
 month, day, they join as a date does. "Day phrase" below is whatever

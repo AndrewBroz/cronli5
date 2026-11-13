@@ -19,6 +19,9 @@ interface Wraps {
 interface Context {
   // Whether the time part may end in an exception: nothing follows it.
   bare: boolean;
+  // Whether both day fields must match: the dates, when they fall on the
+  // weekdays.
+  both: boolean;
   // The months the day of the month can fire in: the months, but for
   // those among named months that never have the day.
   dateMonths: View;
@@ -104,6 +107,7 @@ function daysOf(schedule: Schedule, months: View, wraps: Wraps): Days {
   const everyDay = isEveryDay(schedule);
   const dated = restricts(candidates.date) && !everyDay && reach.fires;
   const union = day.union && dated;
+  const weekdayed = restricts(candidates.weekday) && !everyDay;
   const fired = [...reach.everyYear, ...reach.leapYears].sort(
     function ascending(a, b) {
       return a - b;
@@ -116,7 +120,7 @@ function daysOf(schedule: Schedule, months: View, wraps: Wraps): Days {
     leap: dated && !union && reach.stated && reach.everyYear.length === 0,
     never: !reach.fires && !day.union,
     union,
-    weekdayed: restricts(candidates.weekday) && !everyDay
+    weekdayed
   };
 }
 
@@ -139,6 +143,7 @@ function contextOf(schedule: Schedule, style: FrenchStyle): Context {
   return {
     ...days,
     bare: years.all && !days.union,
+    both: schedule.analyses.day.both && days.dated && days.weekdayed,
     daily: false,
     day: schedule.analyses.day,
     hours,

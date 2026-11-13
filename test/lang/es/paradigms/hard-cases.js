@@ -597,6 +597,59 @@ const rows = [
     'el día 1 de enero, marzo, mayo, julio, septiembre y noviembre a las ' +
     '4:07, 10:07, 16:07 y 22:07'],
 
+  // Written without the star, the days of the month and the weekdays are a
+  // union: a day fires if either field has it. The same two patterns with
+  // a star, `*/2` and `*/5`, are in the grid, and there both must match.
+  ['*/15 9-17 1-31/2 * 1-5',
+    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
+    'días impares de cada mes'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
+    'días 1, 6, 11, 16, 21, 26 y 31 de cada mes'],
+  ['0 0 1-31/2 * 1',
+    'los lunes a las 0:00, y además los días impares de cada mes'],
+  ['0 0 15 * 0,2,4,6',
+    'los martes, jueves, sábados y domingos a las 0:00, y además el día ' +
+    '15 de cada mes'],
+
+  // A star in one day field and the other restricted: both must match, and
+  // the sentence says the days of the month that fall on the weekdays.
+  // The days are said as they are said alone and the weekdays follow as a
+  // condition («cuando cae en…»): «cae» for one date, «caen» for several.
+  ['0 0 */2 * 1',
+    'los días impares de cada mes, cuando caen en lunes, a las 0:00'],
+  ['0 9 */2 * 1,3,5',
+    'los días impares de cada mes, cuando caen en lunes, miércoles o ' +
+    'viernes, a las 9:00'],
+  ['0 0 15 * */2',
+    'el día 15 de cada mes, cuando cae en martes, jueves, sábado o ' +
+    'domingo, a las 0:00'],
+  ['0 0 */2 6 1',
+    'los días impares de junio, cuando caen en lunes, a las 0:00'],
+  ['0 0 */5 * 1-5',
+    'los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, cuando caen de lunes ' +
+    'a viernes, a las 0:00'],
+  ['0 0 */2 * 6,0',
+    'los días impares de cada mes, cuando caen en fin de semana, a las 0:00'],
+  ['0 9 */3 1,7 1-5',
+    'cada 3 días del 1 al 31 de enero y julio, cuando caen de lunes a ' +
+    'viernes, a las 9:00'],
+  ['0 0 */2 6-8 1',
+    'de junio a agosto, los días impares de cada mes, cuando caen en ' +
+    'lunes, a las 0:00'],
+  ['0 0 */2 * 1-3,5,6',
+    'los días impares de cada mes, cuando caen de lunes a miércoles, ' +
+    'viernes o sábado, a las 0:00'],
+  ['0 0 0 */2 * 1 2030',
+    'en 2030, los días impares de cada mes, cuando caen en lunes, a las ' +
+    '0:00', {years: true}],
+  ['0 0 */2 * 5L',
+    'los días impares de cada mes, cuando coinciden con el último viernes ' +
+    'del mes, a las 0:00'],
+  ['0 0 L * */2',
+    'el último día de cada mes, cuando cae en martes, jueves, sábado o ' +
+    'domingo, a las 0:00'],
+
   // Years with no end, and from the first year there is.
   ['0 0 9 * * * 2030/1', 'desde 2030, todos los días a las 9:00'],
   ['0 0 9 1 1 * 2030/1', 'desde 2030, el 1 de enero a las 9:00'],

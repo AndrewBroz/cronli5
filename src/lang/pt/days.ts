@@ -18,11 +18,16 @@ const {contractions, nthWords, units, weekdays, words} = lexicon;
 
 /** One side of the calendar part: the days it names and what trails them. */
 export interface Side {
+  // The weekdays as what a day of the month falls on, where both day
+  // fields must match.
+  condition: string;
   // What follows «exceto» for the days this side leaves out.
   excepted: string[];
   // Whether a month or a year has no noun here to attach to with «de»,
   // and so leads the sentence.
   leads: boolean;
+  // Whether the side names more than one day of the month.
+  several: boolean;
   // How the side stands to its month. A date says «de cada mês» when no
   // month is named and nothing under a leading month; a Quartz form
   // cannot stand without its month; anything else takes a named month only.
@@ -42,8 +47,15 @@ export interface MonthFacts {
   unnamed: boolean;
 }
 
-const bare: Side =
-  {excepted: [], leads: false, month: 'none', tail: '', text: ''};
+const bare: Side = {
+  condition: '',
+  excepted: [],
+  leads: false,
+  month: 'none',
+  several: false,
+  tail: '',
+  text: ''
+};
 
 const eachMonth = `${words.ofEach} ${units.month.one}`;
 
@@ -79,7 +91,9 @@ function weekRules(paired: boolean): Rules {
   };
 }
 
-type WeekSayer = (said: never, style: PortugueseStyle) => string;
+// How the weekdays are said: as the days a schedule fires on, or, with
+// `on`, as what a day of the month falls on.
+type WeekSayer = (said: never, style: PortugueseStyle, on: boolean) => string;
 
 // Several weekdays under one lead, which agrees with the first of them.
 function weekdayList(
@@ -89,6 +103,13 @@ function weekdayList(
 ): string {
   return `${leads[weekdays[days[0]].gender]} ` +
     list(days.map((day) => weekdayName(day, 'many', style)));
+}
+
+// Several weekdays as what a day falls on: one lead, which agrees with
+// the first of them, and «ou» before the last.
+function fallsOn(days: number[], style: PortugueseStyle): string {
+  return `${words.inA[weekdays[days[0]].gender]} ` +
+    list(days.map((day) => weekdayName(day, 'one', style)), words.or);
 }
 
 function weekdayRun(said: RangeDescription, style: PortugueseStyle): string {
@@ -101,12 +122,17 @@ type WeekKind = Exclude<Plain['kind'], 'cadence'>;
 
 const weekSayers: {[Kind in WeekKind]: WeekSayer} = {
   all: () => words.everyDay,
-  pieces: (said: Pieces, style) => list(
+  pieces: (said: Pieces, style, on) => list(
     said.parts.map((part) => weekSayers[part.kind as WeekKind](
-      part as never, style))),
+      part as never, style, on))),
   range: weekdayRun,
-  values: (said: {values: number[]}, style) =>
-    weekdayList(said.values, words.every, style)
+  values: (said: {values: number[]}, style, on) => {
+    if (on) {
+      return fallsOn(said.values, style);
+    }
+
+    return weekdayList(said.values, words.every, style);
+  }
 };
 
 // The nth or the last such weekday of the month. The ordinal agrees with
@@ -122,25 +148,34 @@ function nthWeekday(form: QuartzWeekday, style: PortugueseStyle): string {
     weekdayName(form.weekday, 'one', {...style, feira: true});
 }
 
+// Whether a day of the month and a weekday are said as a pair, neither
+// taking an exception: a union, or two fields that both must match.
+function pairedDays(analyses: Analyses): boolean {
+  return analyses.day.union || analyses.day.both;
+}
+
 /** The weekday side of the calendar part. */
 function weekdaySide(analyses: Analyses, facts: MonthFacts): Side {
-  const {union} = analyses.day;
   const weekday = analyses.day.weekday as WeekdayArm;
   const {style} = facts;
 
   if (weekday.kind === 'quartz') {
-    return {...bare, month: 'quartz', text: nthWeekday(weekday.form, style)};
+    const text = nthWeekday(weekday.form, style);
+
+    return {...bare, condition: text, month: 'quartz', text};
   }
 
   const days = firesOn(analyses.candidates.weekday, domainOf('weekday'));
-  const {removed, said} = choose(days, weekRules(union));
+  const {removed, said} = choose(days, weekRules(pairedDays(analyses)));
+  const say = weekSayers[said.kind as WeekKind] as WeekSayer;
 
   return {
     ...bare,
+    condition: say(said as never, style, true),
     excepted: ifAny(removed,
       (holes) => weekdayList(holes, contractions.a.plural, style)),
     leads: ['pieces', 'range'].includes(said.kind),
-    text: weekSayers[said.kind as WeekKind](said as never, style)
+    text: say(said as never, style, false)
   };
 }
 
@@ -301,9 +336,8 @@ function holdsAnywhere(written: Chosen): boolean {
 function daysSaid(analyses: Analyses, unnamed: boolean): Chosen {
   const reach = analyses.dateReach;
   const domain = domainOf('date');
-  const {union} = analyses.day;
   const days = firesOn(analyses.candidates.date, domain);
-  const written = choose(days, dateRules(union, true));
+  const written = choose(days, dateRules(pairedDays(analyses), true));
 
   if (reach && reach.days && reach.days.everyDay) {
     return {...written, removed: [], said: {kind: 'all'}};
@@ -313,7 +347,7 @@ function daysSaid(analyses: Analyses, unnamed: boolean): Chosen {
     written :
     choose(reach && reach.days ?
       firesOn(reach.days.candidates, domain) :
-      days, dateRules(union, false));
+      days, dateRules(pairedDays(analyses), false));
 }
 
 /** The day-of-month side of the calendar part. */
@@ -337,9 +371,24 @@ function dateSide(analyses: Analyses, facts: MonthFacts): Side {
     excepted: ifAny(removed, (values) => spaced(
       [onDays({values}, style), whole && unnamed && eachMonth])),
     month: whole ? 'none' : 'date',
+    several: firesOn(analyses.candidates.date, domainOf('date')).length > 1,
     text: whole ?
       words.everyDay :
       dateParts(partsOf(said), style)
+  };
+}
+
+/**
+ * Two day fields that must both match: the days of the month as they are
+ * said alone, and then the weekdays they fall on, as a condition on one
+ * day or on several. The weekdays are not said as days of their own.
+ */
+function fallingOn(date: Side, weekday: Side): Side {
+  return {
+    ...date,
+    tail: `${date.tail}${date.several ?
+      ` ${words.thatFall}` :
+      `, ${words.ifItFalls}`} ${weekday.condition}`
   };
 }
 
@@ -367,4 +416,4 @@ function missing(analyses: Analyses): string {
   return missed[form.kind as 'values'](analyses, form as never);
 }
 
-export {dateSide, eachMonth, missing, weekdaySide};
+export {dateSide, eachMonth, fallingOn, missing, weekdaySide};

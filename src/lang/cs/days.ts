@@ -531,6 +531,21 @@ function union(facts: ScheduleFacts, setting: Setting): DayPart {
   }) as (typeof rules)[number]).said();
 }
 
+// A day of the month and a weekday that must both match: the days of
+// the month as they are said alone, and the condition that they fall on
+// the weekdays. It is never «a navíc», which is the union's.
+function both(facts: ScheduleFacts, refs: Refs, fused: boolean): DayPart {
+  const date = dateArm(facts, refs);
+  const week = weekdaysSaid(facts, refs.style, anyMonth.within);
+
+  return {
+    close: 'plain',
+    consumed: fused && Boolean(date.fused) || Boolean(date.consumed),
+    never: false,
+    text: `${spaced(date.text, words.onlyThen)}, ${week.after},`
+  };
+}
+
 // A date that exists in no reached month: «jen», the days as written,
 // and «, tedy nikdy».
 function never(facts: ScheduleFacts, setting: Setting): DayPart {
@@ -595,8 +610,12 @@ function dayPart(facts: ScheduleFacts, setting: Setting): DayPart {
   const rules: Array<{when: unknown; said: () => DayPart}> = [
     {
       said: () => never(facts, setting),
-      when: arms.date && !arms.weekday &&
+      when: arms.date && (!arms.weekday || facts.analyses.day.both) &&
         facts.analyses.dateReach?.fires === false
+    },
+    {
+      said: () => both(facts, refs, single),
+      when: arms.date && arms.weekday && facts.analyses.day.both
     },
     {said: () => union(facts, setting), when: arms.date && arms.weekday},
     {said: () => alone(dateArm(facts, refs)), when: arms.date},

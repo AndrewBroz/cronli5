@@ -162,9 +162,12 @@ const units = {
 };
 
 // The ordinal words a Quartz "nth weekday" uses, from the first, in the
-// accusative: before a masculine weekday and before a feminine one.
+// accusative: before a masculine weekday and before a feminine one. A
+// masculine weekday takes the same word in the nominative; a feminine one
+// takes its own.
 const nthWords = {
   feminine: ['першу', 'другу', 'третю', 'четверту', 'п\'яту'],
+  feminineNominative: ['перша', 'друга', 'третя', 'четверта', 'п\'ята'],
   masculine: ['перший', 'другий', 'третій', 'четвертий', 'п\'ятий']
 };
 
@@ -228,12 +231,14 @@ const words = {
   fromBeforeSibilant: 'із',
   fromStart: 'від початку',
   ifMonthHas: 'якщо в місяці',
+  ifItIs: 'якщо це',
   in: 'у',
   inAfterVowel: 'в',
   inclusive: 'включно',
   last: 'останніх',
   lastDay: 'останній день',
   lastFeminine: 'останню',
+  lastFeminineNominative: 'остання',
   lastMasculine: 'останній',
   lastWeekday: 'останній будній день',
   leapYearsOnly: 'лише у високосні роки',
@@ -247,7 +252,9 @@ const words = {
   on: 'на',
   onDays: 'по',
   onlyInMonthsWith: 'лише в місяцях, де є',
+  or: 'або',
   penultimateDay: 'передостанній день',
+  runOfDays: 'день',
   runs: 'Виконується',
   sameMonth: 'того ж місяця',
   sharp: 'рівно',

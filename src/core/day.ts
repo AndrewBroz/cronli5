@@ -11,7 +11,7 @@ import {denote} from './describe-set.js';
 import {nearestDayIsLast} from './date-reach.js';
 import {toFieldNumber} from './util.js';
 
-type DayArms = Pick<DayFacts, 'date' | 'union' | 'weekday'>;
+type DayArms = Pick<DayFacts, 'both' | 'date' | 'union' | 'weekday'>;
 
 // Classify the date arm; null for a wildcard.
 function dateArm(field: string, shape: Shape): DateArm | null {
@@ -75,16 +75,21 @@ function restricts(candidates: SetDescription[] | null): boolean {
   return candidates === null || candidates[0].kind !== 'all';
 }
 
-// The day fields as written: each arm, and whether both narrow the days
-// (cron then fires when either matches).
+// The day fields as written: each arm, and how two that both narrow the
+// days combine (cron fires when either matches, or, with one written
+// from a star, only when both do).
 function dayArms(
   pattern: Pattern,
   shapes: Record<'date' | 'weekday', Shape>,
   candidates: Record<'date' | 'weekday', SetDescription[] | null>
 ): DayArms {
+  const narrowed = restricts(candidates.date) && restricts(candidates.weekday);
+  const both = narrowed && pattern.bothDays === true;
+
   return {
+    both,
     date: dateArm(pattern.date, shapes.date),
-    union: restricts(candidates.date) && restricts(candidates.weekday),
+    union: narrowed && !both,
     weekday: weekdayArm(pattern.weekday, shapes.weekday)
   };
 }

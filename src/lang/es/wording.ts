@@ -48,12 +48,15 @@ function spaced(texts: string[]): string {
   return texts.filter(Boolean).join(' ');
 }
 
-/** «A», «A y B», «A, B y C». */
-function list(items: Array<number | string>): string {
+/** «A», «A y B», «A, B y C»; with «o», «A o B». */
+function list(
+  items: Array<number | string>,
+  joiner: string = words.and
+): string {
   const texts = items.map(String);
 
   return [texts.slice(0, -1).join(', '), ...texts.slice(-1)]
-    .filter(Boolean).join(` ${words.and} `);
+    .filter(Boolean).join(` ${joiner} `);
 }
 
 /** «30 ni 31», «29, 30 ni 31»: a list after a negation. */

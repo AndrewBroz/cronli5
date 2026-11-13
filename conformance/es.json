@@ -247,7 +247,7 @@
    "pattern": "*/15 9-17 1,10,20 * 1-5"
   },
   {
-   "expected": "de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los días impares de cada mes",
+   "expected": "los días impares de cada mes, cuando caen de lunes a viernes, cada 15 minutos de 9:00 a 17:45",
    "options": {
     "lang": "es"
    },
@@ -1045,7 +1045,7 @@
    "pattern": "*/15 9-17 2/2 * 1-5"
   },
   {
-   "expected": "de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los días 1, 6, 11, 16, 21, 26 y 31 de cada mes",
+   "expected": "los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, cuando caen de lunes a viernes, cada 15 minutos de 9:00 a 17:45",
    "options": {
     "lang": "es"
    },
@@ -3872,6 +3872,119 @@
     "lang": "es"
    },
    "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los días impares de cada mes",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "*/15 9-17 1-31/2 * 1-5"
+  },
+  {
+   "expected": "de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los días 1, 6, 11, 16, 21, 26 y 31 de cada mes",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "*/15 9-17 1-31/5 * 1-5"
+  },
+  {
+   "expected": "los lunes a las 0:00, y además los días impares de cada mes",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 1-31/2 * 1"
+  },
+  {
+   "expected": "los martes, jueves, sábados y domingos a las 0:00, y además el día 15 de cada mes",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 15 * 0,2,4,6"
+  },
+  {
+   "expected": "los días impares de cada mes, cuando caen en lunes, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 */2 * 1"
+  },
+  {
+   "expected": "los días impares de cada mes, cuando caen en lunes, miércoles o viernes, a las 9:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 9 */2 * 1,3,5"
+  },
+  {
+   "expected": "el día 15 de cada mes, cuando cae en martes, jueves, sábado o domingo, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 15 * */2"
+  },
+  {
+   "expected": "los días impares de junio, cuando caen en lunes, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 */2 6 1"
+  },
+  {
+   "expected": "los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, cuando caen de lunes a viernes, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 */5 * 1-5"
+  },
+  {
+   "expected": "los días impares de cada mes, cuando caen en fin de semana, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 */2 * 6,0"
+  },
+  {
+   "expected": "cada 3 días del 1 al 31 de enero y julio, cuando caen de lunes a viernes, a las 9:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 9 */3 1,7 1-5"
+  },
+  {
+   "expected": "de junio a agosto, los días impares de cada mes, cuando caen en lunes, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 */2 6-8 1"
+  },
+  {
+   "expected": "los días impares de cada mes, cuando caen de lunes a miércoles, viernes o sábado, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 */2 * 1-3,5,6"
+  },
+  {
+   "expected": "en 2030, los días impares de cada mes, cuando caen en lunes, a las 0:00",
+   "options": {
+    "lang": "es",
+    "years": true
+   },
+   "pattern": "0 0 0 */2 * 1 2030"
+  },
+  {
+   "expected": "los días impares de cada mes, cuando coinciden con el último viernes del mes, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 */2 * 5L"
+  },
+  {
+   "expected": "el último día de cada mes, cuando cae en martes, jueves, sábado o domingo, a las 0:00",
+   "options": {
+    "lang": "es"
+   },
+   "pattern": "0 0 L * */2"
   },
   {
    "expected": "desde 2030, todos los días a las 9:00",

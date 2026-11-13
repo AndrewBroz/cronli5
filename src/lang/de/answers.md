@@ -916,9 +916,36 @@ Dates that are every day the reached months have (the core says so:
 union and no date phrase: `0 9 1-30 6 1` and `0 9 1-30 6 *` are both «im
 Juni täglich um 9:00 Uhr».
 
-Not built into any renderer yet: when both must match, a weekday that
-falls on a date is «an jedem Freitag, der auf den 13. fällt», and the
-first Monday is «am ersten Montag jedes Monats».
+**When both day fields must match** (the core says so: `analyses.day.both`;
+a field written from a star, `*/2`, beside a restricted one), the days are
+the dates that fall on the weekdays, and **the weekdays are a condition on
+the dates, never an addition**. The date phrase is said as it is alone, with
+its month and year where they stand (4.4), then a comma, then «wenn er/sie
+auf … fällt/fallen», then a comma and «jeweils» before the time. The
+weekdays follow «auf» as nouns, the way a condition names a day, with one
+«einen» for single days and «oder» before the last: «auf einen Montag,
+Mittwoch oder Freitag»; a run of three or more is «auf einen Tag von
+Montag bis Freitag», and runs and single days side by side are «auf einen
+Tag von Dienstag bis Donnerstag oder einen Samstag». Every day but one is
+the one that is left out: «nicht auf einen Mittwoch». A weekday counted in
+its month is «auf den letzten Freitag», «auf den zweiten Montag». The verb
+agrees with the dates: «er fällt» where they are one date in each month (a
+date, the last day, the weekday nearest a date), «sie fallen» where they
+are several. The union's «und zusätzlich» is never said, and the weekdays
+do not lead. Examples: `0 0 */2 * 1` is «an den ungeraden Tagen jedes
+Monats (1., 3., 5. … 31.), wenn sie auf einen Montag fallen, jeweils um
+0:00 Uhr»; `0 0 15 * */2` is «am 15. jedes Monats, wenn er auf einen
+Dienstag, Donnerstag, Samstag oder Sonntag fällt, jeweils um 0:00 Uhr»;
+`0 0 */5 * 1-5` is «am 1., 6., 11., 16., 21., 26. und 31. jedes Monats,
+wenn sie auf einen Tag von Montag bis Freitag fallen, jeweils um 0:00
+Uhr». A date that falls on a weekday does not come round every year, so
+the date is not «jährlich» (`0 0 15 6 */2` is «am 15. Juni, wenn er auf
+einen Dienstag … fällt, …»), and a date that no month has is «nie», as
+alone. Written without the star (`1-31/2`, `0,2,4,6`) the same days are a
+union and are said as one. Editing the date or the weekday field changes
+only the day part, as before, so the continuity suite needs no new
+declaration. «Wenn Montag ist» was the other candidate; it cannot carry a
+run. No fluent reader has read these forms yet.
 
 4.4 A day, a month, and a year.
 

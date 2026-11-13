@@ -37,6 +37,11 @@ out of a cadence; cadences that run through each other are not said
 together (the notes on counting, 3.7, 3.8, 3.9, 3.12, 4.1, 4.2, 4.4,
 5.8, 9.6, 9.8).
 
+Amended a fourth time on 2026-11-13, when the core began to follow cron
+where a day field is written from a star: the two day fields then both
+have to match, and 4.3 says how ("on odd-numbered days, but only on
+Mondays").
+
 Shorthand used below: **M** is the set of minutes, **H** the set of hours,
 **S** the set of seconds. "Said" means the phrase a speaker uses; "silent"
 means the field contributes no words.
@@ -1008,6 +1013,53 @@ well as on weekdays, in January and July". Repeating the month range
 on both sides was the one sentence a blind ranking put behind the
 most widely used library.
 
+**When a day has to match both** (the core says so: a day field written
+from a star, `*/2`, beside another restricted day field, and cron then
+needs both to match), the days of the month are said exactly as in the
+pair above and the weekdays follow as a restriction, joined by a comma
+and "but only" in the place of "as well as". The weekday phrase is the
+one it is alone, and the months go where they go in the pair (a single
+month on each side, any longer phrase once after both, set off by a
+comma). Nothing else changes, which is the whole of the rule: the
+reader sees the same two phrases and one connective, and "but only" is
+never heard as adding days. `0 0 */2 * 1` is "at midnight on
+odd-numbered days, but only on Mondays" (the Mondays that are odd days
+of the month); `0 9 */2 * 1,3,5` is "at 9 a.m. on odd-numbered days, but
+only on Mondays, Wednesdays, and Fridays"; `0 0 15 * */2` is "at
+midnight on the 15th, but only on Tuesdays, Thursdays, Saturdays, and
+Sundays"; `0 0 */5 * 1-5` is "at midnight on the 1st, 6th, 11th, 16th,
+21st, 26th, and 31st, but only on weekdays"; `0 0 */3 6 1` is "at
+midnight every 3 days from the 1st of the month in June, but only on
+Mondays in June"; `0 0 */2 * 5L` is "at midnight on odd-numbered days,
+but only on the last Friday of the month". Written without the star the
+same fields are a union and keep "as well as" (`0 0 1-31/2 * 1` is "on
+odd-numbered days as well as on Mondays").
+
+The two cases need no more apparatus than that. An exception on the days
+of the month needs no "whatever the date": the comma and "but only" part
+the two, and nothing is heard as covering the weekdays ("on every day
+except the 15th, but only on Tuesdays, Thursdays, Saturdays, and
+Sundays"). The weekdays keep the form they have beside a union, with no
+exception taken out of them. A set of days that is every day of the
+months reached (`0 0 1-30 4 */2`) is no restriction, and the weekdays
+stand alone. The calendar narrows the days as it does for one arm: a
+day that comes only in leap years says so after the pair (`0 0 29 2 */2`
+is "at midnight on February 29, but only on Tuesdays, Thursdays,
+Saturdays, and Sundays in February, in leap years"), and months the day
+never comes in are left out (`0 0 30 2-3 */2` is "on March 30, but only
+on Tuesdays, Thursdays, Saturdays, and Sundays in March").
+
+Rejected: a relative clause on the days, "on odd-numbered days that fall
+on a Monday", "on the 15th when it falls on a Sunday". It needs a second
+phrase for the weekdays ("a Monday, Wednesday, or Friday", "a weekday")
+and a verb that agrees with one date or several, and it attaches badly
+to the other phrases of the day part: after a cadence it is heard with
+the month ("every 3 days from the 1st of the month that fall on a
+Monday"), and after an exception with the one day ("except the 15th that
+falls…"). It also changes the weekday phrase for the days of a schedule
+that only changed how a field was spelled, where "but only" changes one
+connective.
+
 4.4 A day of the month, a month, and a year.
 
 * With every month: the day alone, "on the 1st".
@@ -1259,7 +1311,8 @@ style; "A, B and C" in British style.
 ## 8. Traps
 
 8.1 `union-connective` — "as well as" between the two day phrases: "on
-the 1st as well as on Fridays". See 4.3.
+the 1st as well as on Fridays". See 4.3. Where a day has to match both,
+", but only": "on odd-numbered days, but only on Mondays".
 
 8.2 `shared-qualifier-scope` — The time leads, so it covers both arms. A
 month is said on each arm: "at midnight on June 1 as well as on Fridays in

@@ -376,3 +376,22 @@ day with a month length.
 `*/2` in a day field beside a restricted one (`0 0 */2 * 1`) is an
 intersection in cron and is still delivered as a union. That is an open
 decision, recorded in `docs/day-field-semantics.md`.
+
+## 12. Two day fields that must both match (`day.both`)
+
+Cron takes a day field for unrestricted when its text begins with `*`,
+and that includes a step from the star (`*/2`). When one day field is
+written so and both still narrow the days, the job runs only on days that
+match **both**: `0 0 */2 * 1` is the Mondays that are odd days of the
+month. Written without the star (`0 0 1-31/2 * 1`) the same days are a
+union. See `docs/day-field-semantics.md`.
+
+`analyses.day.both` is true in that case and `analyses.day.union` is then
+false; the two are never true together. Both arms and their candidates are
+given as usual.
+
+How a renderer uses it: where `day.both` is true it says the days of the
+month that fall on the weekdays (or the weekdays that fall on those days),
+by the language's own means for a condition, and never the union's "and
+also". It does not look at how the field was written: the fact is all it
+needs.

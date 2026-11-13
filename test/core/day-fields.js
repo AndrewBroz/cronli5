@@ -38,6 +38,7 @@ describe('a day field that names every value without `*`:', function() {
 
     expect(analyses.day).to.deep.equal({
       date: null,
+      both: false,
       dateAddsNothing: false,
       nearestDayIsLast: null,
       union: false,
@@ -76,3 +77,43 @@ describe('a day field that names every value without `*`:', function() {
       {date: '1', hour: '*', minute: '*', month: '*', weekday: '1'});
   });
 });
+
+// A day field written with a leading `*` that is not every day (`*/2`)
+// counts as a star to cron: the job then runs only when both day fields
+// match. Written without the star (`1-31/2`), the same days are a union.
+describe('a day field that starts with `*` beside a restricted one:',
+  function() {
+    function both(pattern) {
+      const {day} = schedule(pattern).analyses;
+
+      return [day.both, day.union];
+    }
+
+    it('makes both fields have to match', function() {
+      expect(both('0 0 */2 * 1')).to.deep.equal([true, false]);
+      expect(both('0 0 15 * */2')).to.deep.equal([true, false]);
+      expect(both('0 0 */2 * */2')).to.deep.equal([true, false]);
+      expect(both('0 0 0 */5 6 1-5 2030')).to.deep.equal([true, false]);
+    });
+
+    it('leaves the same days a union when no star is written', function() {
+      expect(both('0 0 1-31/2 * 1')).to.deep.equal([false, true]);
+      expect(both('0 0 1,3,5 * 1')).to.deep.equal([false, true]);
+      expect(both('0 0 15 * 0,2,4,6')).to.deep.equal([false, true]);
+    });
+
+    it('is neither when only one day field narrows the days', function() {
+      expect(both('0 0 */2 * *')).to.deep.equal([false, false]);
+      expect(both('0 0 * * 1')).to.deep.equal([false, false]);
+      expect(both('0 0 */1 * 1')).to.deep.equal([false, false]);
+      expect(both('0 0 */2 * 0-6')).to.deep.equal([false, false]);
+    });
+
+    it('keeps both arms and what each holds', function() {
+      const {analyses} = schedule('0 0 */2 * 1');
+
+      expect(analyses.day.date).to.deep.equal({kind: 'values'});
+      expect(analyses.day.weekday).to.deep.equal({kind: 'values'});
+      expect(analyses.day.dateAddsNothing).to.equal(false);
+    });
+  });

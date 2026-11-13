@@ -90,8 +90,8 @@ const rows = [
     'de segunda a sexta e também nos dias 1º, 10 e 20 de cada mês, sempre ' +
     'a cada 15 minutos das 09:00 às 17:45'],
   ['*/15 9-17 */2 * 1-5',
-    'de segunda a sexta e também nos dias ímpares de cada mês, sempre a ' +
-    'cada 15 minutos das 09:00 às 17:45'],
+    'nos dias ímpares de cada mês que caem de segunda a sexta, a cada 15 ' +
+    'minutos das 09:00 às 17:45'],
   // Neither side of a day of the month and a weekday takes an exception
   // (answers 4.3). This row first said «nos dias ímpares de cada mês,
   // exceto no dia 15», which is read as never firing on the 15th; a 15th

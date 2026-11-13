@@ -893,6 +893,46 @@ const rows = [
   // year do.
   ['0 0 9 * 6 1-5 */2', 'em junho dos anos pares, de segunda a sexta, às 09:00'],
 
+  // Written without the star, the same days are a union (answers 4.3): the
+  // sentences the grid's `*/2` and `*/5` rows had before cron's rule was
+  // followed. Every second day is `1-31/2`, every fifth `1-31/5`, and
+  // every second weekday `0,2,4,6`.
+  ['*/15 9-17 1-31/2 * 1-5',
+    'de segunda a sexta e também nos dias ímpares de cada mês, sempre a ' +
+    'cada 15 minutos das 09:00 às 17:45'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'de segunda a sexta e também nos dias 1º, 6, 11, 16, 21, 26 e 31 de ' +
+    'cada mês, sempre a cada 15 minutos das 09:00 às 17:45'],
+  ['0 0 1-31/2 * 1',
+    'todas as segundas e também nos dias ímpares de cada mês, sempre às ' +
+    '00:00'],
+  ['0 0 15 * 0,2,4,6',
+    'todas as terças, quintas, sábados e domingos e também no dia 15 de ' +
+    'cada mês, sempre às 00:00'],
+  // A step from the star in one day field, beside a restricted other: cron
+  // fires only where both match (answers 4.3). The days of the month are
+  // said as they are said alone, then the weekdays they fall on. A step
+  // that does not start at the star is still a union.
+  ['0 0 */2 * 1',
+    'nos dias ímpares de cada mês que caem numa segunda, às 00:00'],
+  ['0 9 */2 * 1,3,5',
+    'nos dias ímpares de cada mês que caem numa segunda, quarta ou sexta, ' +
+    'às 09:00'],
+  ['0 0 15 * */2',
+    'no dia 15 de cada mês, se cair numa terça, quinta, sábado ou domingo, ' +
+    'às 00:00'],
+  ['0 0 */2 6 1',
+    'nos dias ímpares de junho que caem numa segunda, às 00:00'],
+  ['0 0 */5 * 1-5',
+    'nos dias 1º, 6, 11, 16, 21, 26 e 31 de cada mês que caem de segunda ' +
+    'a sexta, às 00:00'],
+  // Every day April has, with both fields to match, is only the weekdays.
+  ['0 0 1-30 4 */2',
+    'todas as terças, quintas, sábados e domingos de abril às 00:00'],
+  ['*/15 9-17 2/2 * 1-5',
+    'de segunda a sexta e também nos dias pares de cada mês, sempre a ' +
+    'cada 15 minutos das 09:00 às 17:45'],
+
   // The grid's contexts, and the patterns the option rows use, in the
   // default style.
   ['0 9 * * *', 'todos os dias às 09:00'],

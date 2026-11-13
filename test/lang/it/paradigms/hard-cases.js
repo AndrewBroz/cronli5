@@ -707,7 +707,62 @@ const rows = [
     'di ogni ora, al secondo 30'],
   ['0 0 9 * * * 2030-2040/2,2041-2045',
     'negli anni pari dal 2030 al 2038 e in tutti gli anni dal 2040 al ' +
-    '2045, tutti i giorni alle 9:00']
+    '2045, tutti i giorni alle 9:00'],
+
+  // Written without the star, a day of the month and a weekday are a union
+  // (either fires): `1-31/2` is the odd days of the month, as `*/2` is,
+  // but the two fields are added, not both required.
+  ['*/15 9-17 1-31/2 * 1-5',
+    'dal lunedì al venerdì e in più nei giorni dispari di ogni mese, ' +
+    'sempre ogni 15 minuti dalle 9:00 alle 17:45'],
+  ['*/15 9-17 1-31/5 * 1-5',
+    'dal lunedì al venerdì e in più il 1º, il 6, l\'11, il 16, il 21, il 26 ' +
+    'e il 31 di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45'],
+
+  // A day field written from a star (`*/2`, `*/5`) and a restricted
+  // weekday: both must match. The days of the month, said as they are
+  // alone, and the condition that they fall on the weekdays. «Solo se»
+  // never joins two sides, so it cannot be heard as the union's «e in più».
+  ['0 0 */2 * 1',
+    'nei giorni dispari di ogni mese solo se cadono di lunedì, alle 0:00'],
+  ['0 9 */2 * 1,3,5',
+    'nei giorni dispari di ogni mese solo se cadono di lunedì, di ' +
+    'mercoledì o di venerdì, alle 9:00'],
+  ['0 0 */5 * 1-5',
+    'il 1º, il 6, l\'11, il 16, il 21, il 26 e il 31 di ogni mese solo se ' +
+    'cadono tra il lunedì e il venerdì, alle 0:00'],
+  ['0 0 15 * */2',
+    'il 15 di ogni mese solo se cade di martedì, di giovedì, di sabato o ' +
+    'di domenica, alle 0:00'],
+  ['0 0 */2 6 1',
+    'a giugno, nei giorni dispari del mese solo se cadono di lunedì, ' +
+    'alle 0:00'],
+  ['0 9 */3 1,7 1-5',
+    'a gennaio e luglio, ogni 3 giorni a partire dal 1º del mese solo se ' +
+    'cadono tra il lunedì e il venerdì, alle 9:00'],
+  ['0 0 */2 * 0-2,4-6',
+    'nei giorni dispari di ogni mese solo se non cadono di mercoledì, ' +
+    'alle 0:00'],
+  ['0 0 0 */2 * 1 2030',
+    'nel 2030, nei giorni dispari di ogni mese solo se cadono di lunedì, ' +
+    'alle 0:00'],
+  ['0 0 */2 * 5L',
+    'nei giorni dispari di ogni mese solo se coincidono con l\'ultimo ' +
+    'venerdì di ogni mese, alle 0:00'],
+  ['0 0 L * */2',
+    'l\'ultimo giorno di ogni mese solo se cade di martedì, di giovedì, ' +
+    'di sabato o di domenica, alle 0:00'],
+  ['0 0 29 * */2',
+    'il 29 di ogni mese, che a febbraio c\'è solo negli anni bisestili, ' +
+    'solo se cade di martedì, di giovedì, di sabato o di domenica, ' +
+    'alle 0:00'],
+  // A date side that is every day less a date is said the other way: the
+  // weekdays, less that date.
+  ['0 0 1-14,16-31 * */2',
+    'il martedì, il giovedì, il sabato e la domenica tranne il 15 di ogni ' +
+    'mese, alle 0:00'],
+  // A date that no reached month has never fires, whatever the weekday.
+  ['0 0 31 6 */2', 'mai: la data indicata non esiste']
 ];
 
 export {rows};
