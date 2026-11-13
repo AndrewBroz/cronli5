@@ -59,14 +59,9 @@ interface Hours {
  */
 type TimeKind = 'times' | 'named' | 'ranged' | 'rate';
 
-/**
- * A time of day: what fires, and what is left out of it. `crowded` says
- * that it names as numbers hours that are a cadence too long to list,
- * which a caller with another way to say them avoids.
- */
+/** A time of day: what fires, and what is left out of it. */
 interface TimeSaid {
   base: string;
-  crowded?: boolean;
   exceptions: string[];
   kind: TimeKind;
 }
@@ -90,16 +85,17 @@ function longCadence(cadence: Cadence): boolean {
   return countOf(cadence) >= LONG_CADENCE;
 }
 
-/**
- * Whether the hours are a cadence, or a cadence less one or two, with
- * more hours than a list holds.
- */
-function longHourCadence(hours: Hours): boolean {
-  const {form} = hours;
-  const cadenced = form.kind === 'cadence' ||
-    form.kind === 'except' && form.base.kind === 'cadence';
+// Hours named as numbers: each one, or, for a cadence longer than a list
+// holds, the first three to show the step and the last after «e così via
+// fino a».
+function hourNumbers(values: number[], hours: Hours): string {
+  const long = hours.form.kind === 'cadence' &&
+    values.length > MOST_TIMES_LISTED;
 
-  return cadenced && hours.values.length > MOST_TIMES_LISTED;
+  return long ?
+    `${values.slice(0, 2).join(', ')}, ${values[2]} ` +
+      `${words.andSoOnUpTo} ${values[values.length - 1]}` :
+    list(values.map(String));
 }
 
 /** The hours, from their candidates under the view they are read in. */
@@ -336,7 +332,7 @@ function hoursAsNumbers(ends: Rate, work: Clockwork):
     bracket: phrase(!several && !items[0].alone && bracket),
     text: list(items.map(function name(item) {
       return item.alone ?
-        `${words.ofHours} ${list(item.hours.map(String))}` :
+        `${words.ofHours} ${hourNumbers(item.hours, hours)}` :
         phrase(words.ofEachHourFrom, words.fromHours, String(item.hours[0]),
           words.toHours, String(item.hours[item.hours.length - 1]),
           several && words.includedHours);
@@ -352,26 +348,9 @@ function tailOf(form: Form, voice: Voice): string {
     voice.tail);
 }
 
-// A list of the unit, said of the hours: hours alone as numbers, unless
-// they are a cadence too long to list; otherwise the windows of the
-// hours, where «di ogni ora» says nothing before windows of one hour
-// each.
-function sayListed(within: string, ends: Rate, work: Clockwork): TimeSaid {
-  const {hours, voice} = work;
-  const {unit} = voice;
-  const container = hours.alone && unit.key === 'minute' ?
-    '' :
-    ` ${unit.ofEach}`;
-
-  return hours.alone && !longHourCadence(hours) ?
-    said(phrase(within, voice.kept, words.ofHours,
-      list(hours.values.map(String)))) :
-    sayWindows(`${within}${container},`, ends, work);
-}
-
 // The unit named inside the hour, and the hours it holds in.
 function sayInHour(form: Form, work: Clockwork): TimeSaid {
-  const {hours, inner, voice} = work;
+  const {hours, inner, speech, voice} = work;
   const {unit} = voice;
   const ends = {
     first: inner.values[0],
@@ -387,15 +366,17 @@ function sayInHour(form: Form, work: Clockwork): TimeSaid {
     `${within}, ${unit.restart}${tail}` :
     `${within} ${unit.ofEach}${tail}`;
 
+  function window(run: number[]): string {
+    return speech.span(voice.first(run[0], ends.first),
+      voice.last(run[run.length - 1], ends.last));
+  }
+
   function named(): TimeSaid {
     const numbers = hoursAsNumbers(ends, work);
 
-    return {
-      ...said(phrase(within, voice.kept, numbers.text) +
-        tail + phrase(numbers.bracket && ' ') +
-        numbers.bracket, unitOut),
-      crowded: longHourCadence(hours)
-    };
+    return said(phrase(within, voice.kept, numbers.text) +
+      tail + phrase(numbers.bracket && ' ') +
+      numbers.bracket, unitOut);
   }
 
   const listed = form.kind === 'values' && !voice.ranged;
@@ -403,7 +384,10 @@ function sayInHour(form: Form, work: Clockwork): TimeSaid {
     hours.open && said(everyHour, unitOut),
     hours.nearly && said(everyHour,
       [hoursOut(hours.removed, work), ...unitOut]),
-    listed && sayListed(within, ends, work),
+    listed && hours.alone && said(phrase(within, voice.kept, words.ofHours,
+      hourNumbers(hours.values, hours))),
+    listed &&
+      said(`${within} ${unit.ofEach}, ${list(hours.runs.map(window))}`),
     named()
   ]);
 

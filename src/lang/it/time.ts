@@ -170,12 +170,6 @@ function secondsClause(seconds: Seconds): string {
   return (clauses[form.kind] || listed)();
 }
 
-// Whether the clause after the minutes can say these seconds: every
-// second, a run, a cadence or a plain list.
-function clauseSays(seconds: Seconds): boolean {
-  return ['all', 'range', 'cadence', 'values'].includes(seconds.bare.kind);
-}
-
 // Several seconds, by what the minutes and hours are said as.
 function saySeveral(seconds: Seconds, plain: Clockwork): TimeSaid {
   const {speech} = plain;
@@ -213,18 +207,10 @@ function saySeveral(seconds: Seconds, plain: Clockwork): TimeSaid {
     return {...found, base: `${found.base}, ${secondsClause(seconds)}`};
   }
 
-  // Seconds in front of minutes named inside the hour, unless that would
-  // name a long cadence of hours as numbers.
-  function inFrontFitting(): TimeSaid | false {
-    const found = inFront();
-
-    return !(found.crowded && clauseSays(seconds)) && found;
-  }
-
   return firstOf<TimeSaid>([
     seconds.rate && minutes.kind === 'ranged' && running(),
     minutes.kind === 'times' && sayInMinutes(seconds, plain),
-    minutes.kind === 'named' && inFrontFitting(),
+    minutes.kind === 'named' && inFront(),
     afterwards()
   ]);
 }
@@ -283,12 +269,8 @@ function sayTime(facts: ScheduleFacts, speech: Speech, free: boolean):
         {...plain, voice: secondVoice(speech, clockSecond as number)});
     },
     minutes.values.length > LAST && function everyMinute() {
-      const inMinute = sayWithin(
+      return sayWithin(
         {hours, inner: second, speech, voice: secondsVoice(speech)});
-
-      return inMinute.crowded && clauseSays(seconds) ?
-        saySeveral(seconds, plain) :
-        inMinute;
     },
     function severalSeconds() {
       return saySeveral(seconds, plain);
