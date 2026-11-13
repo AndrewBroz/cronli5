@@ -81,7 +81,7 @@ many more rows lives in
 | `0 12 * 11-2 *` | at noon every day in November through February | At 12:00 PM, November through February |
 | `0 0 * * 5L` | at midnight on the last Friday of the month | At 12:00 AM, on the last Friday of the month |
 | `5,10 30 9 * * MON` | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| `1/1 * * * *` | every minute except at 0 minutes past the hour | Every 1 minutes, starting at 1 minutes past the hour |
+| `1/1 * * * *` | every minute for the last 59 minutes of every hour | Every 1 minutes, starting at 1 minutes past the hour |
 <!-- END GENERATED: comparison -->
 
 ## Internals

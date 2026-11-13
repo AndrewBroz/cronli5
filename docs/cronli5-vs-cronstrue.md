@@ -101,7 +101,7 @@ a specific schedule, or an advanced operator.
 | Pattern | cronli5 (sentence form) | cRonstrue 3.14.0 |
 | --- | --- | --- |
 | `0 0 1,15 * 3` | Runs at midnight on the 1st and 15th as well as on Wednesdays. | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday |
-| `0 0 9-17/2 * *` | Runs at midnight every 2 days from the 9th through the 17th. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
+| `0 0 9-17/2 * *` | Runs at midnight every 2 days from the 9th through the 17th of the month. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
 | `23 0-20/2 * * *` | Runs at 23 minutes past the hour, every 2 hours from midnight through 8 p.m. every day. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
 | `0 0 * * 5L` | Runs at midnight on the last Friday of the month. | At 12:00 AM, on the last Friday of the month |
 | `5,10 30 9 * * MON` | Runs at 9:30:05 a.m. and 9:30:10 a.m. on Mondays. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
@@ -110,7 +110,7 @@ a specific schedule, or an advanced operator.
 | `15 30 9 * * MON` | Runs at 9:30:15 a.m. on Mondays. | At 09:30:15 AM, only on Monday |
 | `7 4-22/6 1 */2 *` | Runs at 7 minutes past the hour, every 6 hours from 4 a.m. on the 1st of every other month. | At 7 minutes past the hour, every 6 hours, between 04:00 AM and 10:59 PM, on day 1 of the month, every 2 months |
 | `15,45 */4 1-10 1,4,7,10 *` | Runs at 15 and 45 minutes past the hour, every 4 hours on the 1st through the 10th of January, April, July, and October. | At 15 and 45 minutes past the hour, every 4 hours, between day 1 and 10 of the month, only in January, April, July, and October |
-| `0,30 8-18/2 1,15 * 1-5` | Runs every 30 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours on the 1st and 15th as well as on weekdays. | At 0 and 30 minutes past the hour, every 2 hours, between 08:00 AM and 06:59 PM, on day 1 and 15 of the month, Monday through Friday |
+| `0,30 8-18/2 1,15 * 1-5` | Runs every 30 minutes during every other hour from the 8 a.m. hour through the 6 p.m. hour on the 1st and 15th as well as on weekdays. | At 0 and 30 minutes past the hour, every 2 hours, between 08:00 AM and 06:59 PM, on day 1 and 15 of the month, Monday through Friday |
 | `0 18 15W 3,6,9,12 *` | Runs at 6 p.m. on the weekday nearest March 15, June 15, September 15, and December 15. | At 06:00 PM, on the weekday nearest day 15 of the month, only in March, June, September, and December |
 | `30 4 1-7 * 1` | Runs at 4:30 a.m. on the 1st through the 7th as well as on Mondays. | At 04:30 AM, between day 1 and 7 of the month, and on Monday |
 | `0 9-17/2 * 1-6 1-5` | Runs every 2 hours from 9 a.m. through 5 p.m. on weekdays in January through June. | On the hour, every 2 hours, between 09:00 AM and 05:00 PM, Monday through Friday, January through June |
