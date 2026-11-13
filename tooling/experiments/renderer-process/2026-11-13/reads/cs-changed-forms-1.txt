@@ -1,0 +1,288 @@
+0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * * → každý lichý den v měsíci, kromě 15. dne, v 9:00
+0 9 * * 1-5 → od pondělí do pátku vždy v 9:00
+0 9 * * 2,4 → každé úterý a každý čtvrtek v 9:00
+* */15 9-17 * * 1-5 → od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé každou sekundu po dobu jedné minuty
+*/6 */15 9-17 * * 1-5 → od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé každých 6 sekund po dobu jedné minuty
+5/10 */15 9-17 * * 1-5 → od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé každých 10 sekund od 5. do 55. sekundy
+0-29,45 9-17 * * 1-5 → od pondělí do pátku každou hodinu v 0. až 29. a 45. minutě, a to od 9:00 do 17:45
+0,15,45 9-17 * * 1-5 → od pondělí do pátku každou hodinu v 0., 15. a 45. minutě, a to od 9:00 do 17:45
+*/15 12 * * 1-5 → od pondělí do pátku vždy ve 12:00, 12:15, 12:30 a 12:45
+*/15 1/2 * * 1-5 → od pondělí do pátku každých 15 minut, a to v každé druhé hodině: od 1:00 do 1:45, od 3:00 do 3:45 a tak dále až do 23:45
+*/15 9-17 1 * 1-5 → od pondělí do pátku a navíc 1. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 1,10,20 * 1-5 → od pondělí do pátku a navíc 1., 10. a 20. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 */2 * 1-5 → od pondělí do pátku a navíc každý lichý den v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5 → od pondělí do pátku a navíc každý lichý den v měsíci, kromě 15. dne, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 * * 2,4 → každé úterý a každý čtvrtek každých 15 minut od 9:00 do 17:45
+0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * * → každý lichý den v měsíci, kromě 15. dne, v 0:00
+0 0 1 * 1 → každé pondělí a navíc 1. dne v měsíci, vždy v 0:00
+0 0 1 * 1-5 → od pondělí do pátku a navíc 1. dne v měsíci, vždy v 0:00
+0 0 1 * 2,4 → každé úterý a každý čtvrtek a navíc 1. dne v měsíci, vždy v 0:00
+5/10 * * * * * → každých 10 sekund počínaje 5. sekundou každé minuty
+5,20,45 * * * * → každou hodinu v 5., 20. a 45. minutě
+0,15,45 * * * * → každou hodinu v 0., 15. a 45. minutě
+* 1/2 * * * → denně každou minutu, a to v každé druhé hodině: od 1:00 do 1:59, od 3:00 do 3:59 a tak dále až do 23:59
+* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * * → každý lichý den v měsíci, kromě 15. dne, každou minutu
+* * * * 2,4 → každé úterý a každý čtvrtek každou minutu
+0 0,2,4,6,10,12,14,16,18,20,22 * * * → denně každé 2 hodiny od 0:00 do 22:00, kromě 8:00
+0 9 1-7 * * → od 1. do 7. dne v měsíci vždy v 9:00
+0 9 */5 * * → vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci v 9:00
+0 9 15W * * → vždy v den od pondělí do pátku, který je v měsíci nejblíž 15. dni, v 9:00
+0 9 * 6-8,12 * → od června do srpna a v prosinci, a to denně v 9:00
+0 9 * * 0,6 → každou sobotu a neděli v 9:00
+0 9 * * 1-6 → od pondělí do soboty vždy v 9:00
+0,30 */15 9-17 * * 1-5 → od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé v 0. a 30. sekundě
+*/15 */15 9-17 * * 1-5 → od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé v 0., 15., 30. a 45. sekundě
+0-9 */15 9-17 * * 1-5 → od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé v 0. až 9. sekundě
+5,20,45 9-17 * * 1-5 → od pondělí do pátku každou hodinu v 5., 20. a 45. minutě, a to od 9:05 do 17:45
+0-29 9-17 * * 1-5 → od pondělí do pátku každou hodinu v 0. až 29. minutě, a to od 9:00 do 17:29
+*/7 9-17 * * 1-5 → od pondělí do pátku každých 7 minut, vždy znovu od celé hodiny, a to od 9:00 do 17:56
+10-40/10 9-17 * * 1-5 → od pondělí do pátku každou hodinu v 10., 20., 30. a 40. minutě, a to od 9:10 do 17:40
+*/15 0 * * 1-5 → od pondělí do pátku vždy v 0:00, 0:15, 0:30 a 0:45
+*/15 9 * * 1-5 → od pondělí do pátku vždy v 9:00, 9:15, 9:30 a 9:45
+*/15 */2 * * 1-5 → od pondělí do pátku každých 15 minut, a to v každé druhé hodině: od 0:00 do 0:45, od 2:00 do 2:45 a tak dále až do 22:45
+*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5 → od pondělí do pátku každých 15 minut, a to v každé druhé hodině: od 0:00 do 0:45, od 2:00 do 2:45 a tak dále až do 22:45, kromě doby od 8:00 do 8:59
+*/15 9-17 15 * 1-5 → od pondělí do pátku a navíc 15. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 1,15 * 1-5 → od pondělí do pátku a navíc 1. a 15. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 1-7 * 1-5 → od pondělí do pátku a navíc od 1. do 7. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 1-7,15 * 1-5 → od pondělí do pátku a navíc 1. až 7. a 15. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 2/2 * 1-5 → od pondělí do pátku a navíc každý sudý den v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 */5 * 1-5 → od pondělí do pátku a navíc 1., 6., 11., 16., 21., 26. a 31. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 L * 1-5 → od pondělí do pátku a navíc poslední den v měsíci, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 15W * 1-5 → od pondělí do pátku a navíc v den od pondělí do pátku, který je v měsíci nejblíž 15. dni, vždy každých 15 minut od 9:00 do 17:45
+*/15 9-17 * 6-8,12 1-5 → od června do srpna a v prosinci, a to od pondělí do pátku každých 15 minut od 9:00 do 17:45
+*/15 9-17 * * 0,6 → každou sobotu a neděli každých 15 minut od 9:00 do 17:45
+0 0,2,4,6,10,12,14,16,18,20,22 1 * * → vždy 1. dne v měsíci každé 2 hodiny od 0:00 do 22:00, kromě 8:00
+0 0 1-7 * * → od 1. do 7. dne v měsíci vždy v 0:00
+0 0 */5 * * → vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci v 0:00
+0 0 15W * * → vždy v den od pondělí do pátku, který je v měsíci nejblíž 15. dni, v 0:00
+0 0 1 6-8,12 * → od června do srpna a v prosinci, a to vždy 1. dne v měsíci v 0:00
+0 0 1 * 0 → každou neděli a navíc 1. dne v měsíci, vždy v 0:00
+0 0 1 * 1,3,5 → každé pondělí, středu a pátek a navíc 1. dne v měsíci, vždy v 0:00
+0 0 1 * 0,6 → každou sobotu a neděli a navíc 1. dne v měsíci, vždy v 0:00
+0 0 1 * 1-6 → od pondělí do soboty a navíc 1. dne v měsíci, vždy v 0:00
+0 0 1 * 5L → poslední pátek v měsíci a navíc 1. dne v měsíci, vždy v 0:00
+0 0 1 * 1#2 → druhé pondělí v měsíci a navíc 1. dne v měsíci, vždy v 0:00
+30 * * * * * → každou minutu ve 30. sekundě
+0-9 * * * * * → každou minutu v 0. až 9. sekundě
+30 * * * * → každou hodinu v půl
+0-29 * * * * → každou hodinu v 0. až 29. minutě
+0-29,45 * * * * → každou hodinu v 0. až 29. a 45. minutě
+*/7 * * * * → každých 7 minut, vždy znovu od celé hodiny
+5/15 * * * * → každou hodinu v 5., 20., 35. a 50. minutě
+10-40/10 * * * * → každou hodinu v 10., 20., 30. a 40. minutě
+* */2 * * * → denně každou minutu, a to v každé druhé hodině: od 0:00 do 0:59, od 2:00 do 2:59 a tak dále až do 22:59
+* 0,2,4,6,10,12,14,16,18,20,22 * * * → denně každou minutu, a to v každé druhé hodině: od 0:00 do 0:59, od 2:00 do 2:59 a tak dále až do 22:59, kromě doby od 8:00 do 8:59
+* * 1-7 * * → od 1. do 7. dne v měsíci každou minutu
+* * */5 * * → vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci každou minutu
+* * 15W * * → vždy v den od pondělí do pátku, který je v měsíci nejblíž 15. dni, každou minutu
+* * * 6-8,12 * → od června do srpna a v prosinci, a to každou minutu
+* * * * 0,6 → každou sobotu a neděli každou minutu
+0 0 9 * * * 2030/2 → v sudých letech počínaje rokem 2030 denně v 9:00
+0 0 9 * * * 2028/4 → každý čtvrtý rok počínaje rokem 2028 denně v 9:00
+0 0 0 1 1 * 2028/4 → každý čtvrtý rok počínaje rokem 2028 vždy 1. ledna v 0:00
+0 */5 * * * * 2028/4 → každý čtvrtý rok počínaje rokem 2028 každých 5 minut
+0 0 9 * * * 2028-2060/4 → v letech 2028 až 2060 každý čtvrtý rok denně v 9:00
+0 0 9 * * * 2028-2048/4 → v letech 2028, 2032, 2036, 2040, 2044 a 2048 denně v 9:00
+0 0 9 * * * 2030-2040/2 → v letech 2030, 2032, 2034, 2036, 2038 a 2040 denně v 9:00
+0 0 9 * 6-8,12 * 2030 → v roce 2030 od června do srpna a v prosinci, a to denně v 9:00
+0 0 9 * * * 1970-2029,2031-9999 → každý rok, kromě roku 2030, denně v 9:00
+0 0 LW * * → vždy poslední den od pondělí do pátku v měsíci v 0:00
+0 0 1W * * → vždy první den od pondělí do pátku v měsíci v 0:00
+0 0 1W 6 * → vždy první den od pondělí do pátku v červnu v 0:00
+0 0 15W 6 * → vždy v den od pondělí do pátku, který je v červnu nejblíž 15. dni, v 0:00
+0 0 31W * * → vždy v den od pondělí do pátku, který je v měsíci nejblíž 31. dni, pokud ho měsíc má, v 0:00
+0 0 28W * * → vždy v den od pondělí do pátku, který je v měsíci nejblíž 28. dni, v 0:00
+0 0 30W 6 * → vždy v den od pondělí do pátku, který je v červnu nejblíž 30. dni, v 0:00
+0 0 L-30 * * → vždy 30 dní před posledním dnem v měsíci, pokud ho měsíc má, v 0:00
+0 0 L 6-8,12 * → od června do srpna a v prosinci, a to vždy poslední den v měsíci v 0:00
+0 0 L 6-8 5 → od června do srpna každý pátek a navíc poslední den těchto měsíců, vždy v 0:00
+0 0 1 6 5 {"form": "sentence"} → Spouští se v červnu každý pátek a navíc 1. června, vždy v 0:00.
+not a pattern {"lenient": true} → nerozpoznaný cronový výraz
+0 0 1 * 5 → každý pátek a navíc 1. dne v měsíci, vždy v 0:00
+0 0 13 * 5 → každý pátek a navíc 13. dne v měsíci, vždy v 0:00
+0 0 1,15 * 1-5 → od pondělí do pátku a navíc 1. a 15. dne v měsíci, vždy v 0:00
+0 0 1 6 5 → v červnu každý pátek a navíc 1. června, vždy v 0:00
+0 0 1,15 1,7 1-5 → v lednu a červenci od pondělí do pátku a navíc 1. a 15. dne těchto měsíců, vždy v 0:00
+0 0 1 1-11 5 → od ledna do listopadu každý pátek a navíc 1. dne těchto měsíců, vždy v 0:00
+52 7-16 1,19,23,28 5-7 3-4 → od května do července každou středu a každý čtvrtek a navíc 1., 19., 23. a 28. dne těchto měsíců, vždy každou hodinu od 7:52 do 16:52
+30 4 1-7 * 1 → každé pondělí a navíc od 1. do 7. dne v měsíci, vždy ve 4:30
+0 0 15 * 0-2,4-6 → denně, kromě středy, a navíc 15. dne v měsíci, vždy v 0:00
+0 0 1 6 1#2 → druhé pondělí v červnu a navíc 1. června, vždy v 0:00
+0 0 */2 6 0,6 → v červnu každou sobotu a neděli a navíc každý lichý den v červnu, vždy v 0:00
+0 9 15W 6 1 → v červnu každé pondělí a navíc v den od pondělí do pátku, který je v červnu nejblíž 15. dni, vždy v 9:00
+0 0 1-7 6 * → od 1. do 7. června vždy v 0:00
+0 0 */5 7 * → vždy 1., 6., 11., 16., 21., 26. a 31. července v 0:00
+0 0 */5 6 * → vždy 1., 6., 11., 16., 21. a 26. června v 0:00
+0 0 25-31 6 * → od 25. do 30. června vždy v 0:00
+0 0 29 2 * → v přestupných letech vždy 29. února v 0:00
+0 0 30 2 * → jen 30. února, tedy nikdy
+0 0 1-14,16-31 * * → denně, kromě 15. dne v měsíci, v 0:00
+0 0 1-14,16-31 6 * → v červnu denně, kromě 15. června, v 0:00
+0 0 1-14,17-31 * * → denně, kromě 15. a 16. dne v měsíci, v 0:00
+0 0 1-30 * * → denně, kromě 31. dne v měsíci, v 0:00
+0 0 1-12,14-20 * * → od 1. do 20. dne v měsíci, kromě 13. dne, v 0:00
+0 0 5-20/3 * * → vždy 5., 8., 11., 14., 17. a 20. dne v měsíci v 0:00
+0 0 */3 * * → každý třetí den v měsíci počínaje 1. dnem v 0:00
+0 0 8/2 * * → každý druhý den v měsíci počínaje 8. dnem v 0:00
+0 9 * 1-3,6,9-11 * → od ledna do března, v červnu a od září do listopadu, a to denně v 9:00
+0 9 * 12,1 * → v lednu a prosinci denně v 9:00
+0 9 * 1-5,7-12 * → každý měsíc, kromě června, denně v 9:00
+0 9 * 1-5,8-12 * → každý měsíc, kromě června a července, denně v 9:00
+0 0 1 1-5,7-12 * → každý měsíc, kromě června, vždy 1. dne v měsíci v 0:00
+0 9 * * 5,6 → každý pátek a každou sobotu v 9:00
+0 9 * * 5-1 → každé pondělí, pátek, sobotu a neděli v 9:00
+0 9 * * 6-1 → každé pondělí, sobotu a neděli v 9:00
+0 9 * * 0-3 → každé pondělí, úterý, středu a neděli v 9:00
+0 9 * * 2-4 → od úterý do čtvrtka vždy v 9:00
+0 9 * * 3-0 → od středy do neděle vždy v 9:00
+0 9 * * 4-6 → od čtvrtka do soboty vždy v 9:00
+0 9 * * 0,1 → každé pondělí a každou neděli v 9:00
+0 9 * * 0,5 → každý pátek a každou neděli v 9:00
+0 9 * * 0,2-5 → denně, kromě pondělí a soboty, v 9:00
+0 9 * * 0,2-6 → od úterý do neděle vždy v 9:00
+0 9 * * 0-5 → denně, kromě soboty, v 9:00
+0 9 * * 0-4 → denně, kromě pátku a soboty, v 9:00
+0 9 * * 5-2 → denně, kromě středy a čtvrtka, v 9:00
+0 9 * * 0-2,4-6 → denně, kromě středy, v 9:00
+0 9 * * 0-3,5-6 → denně, kromě čtvrtka, v 9:00
+0 9 * 6 0-2,4-6 → v červnu denně, kromě středy, v 9:00
+0 9 * 6 0,6 → v červnu každou sobotu a neděli v 9:00
+0 9 * 6-8 1-5 → od června do srpna od pondělí do pátku vždy v 9:00
+0 9 * 6 1-5 → v červnu od pondělí do pátku vždy v 9:00
+0 9 * 6 0,2-5 → v červnu denně, kromě pondělí a soboty, v 9:00
+*/15 9-17 * * 0-5 → denně, kromě soboty, každých 15 minut od 9:00 do 17:45
+5,20,45 8,12,18 * * * → denně každou hodinu v 5., 20. a 45. minutě, a to od 8:05 do 8:45, od 12:05 do 12:45 a od 18:05 do 18:45
+0,15,45 8,12,18 * * * → denně každou hodinu v 0., 15. a 45. minutě, a to od 8:00 do 8:45, od 12:00 do 12:45 a od 18:00 do 18:45
+5,20,45 8,12,18 * * 1 → každé pondělí každou hodinu v 5., 20. a 45. minutě, a to od 8:05 do 8:45, od 12:05 do 12:45 a od 18:05 do 18:45
+0 */5 * * * → denně v 0:00, 5:00, 10:00, 15:00 a 20:00
+30 */5 * * * → denně v 0:30, 5:30, 10:30, 15:30 a 20:30
+15,45 */2 * * * → denně každé 2 hodiny v 15. a 45. minutě, a to od 0:15 do 22:45
+15,45 */4 * * * → denně každé 4 hodiny v 15. a 45. minutě, a to od 0:15 do 20:45
+15,45 */6 * * * → denně každou hodinu v 15. a 45. minutě, a to od 0:15 do 0:45, od 6:15 do 6:45, od 12:15 do 12:45 a od 18:15 do 18:45
+0 0-2,4-23 * * * → denně každou celou hodinu, kromě 3:00
+0 0-2,5-23 * * * → denně každou celou hodinu, kromě 3:00 a 4:00
+0 0-22 * * * → denně každou celou hodinu, kromě 23:00
+0 0-21 * * * → denně každou celou hodinu, kromě 22:00 a 23:00
+0 9-11,13-17 * * * → denně každou hodinu od 9:00 do 17:00, kromě 12:00
+* 0-22 * * * → denně každou minutu, kromě doby od 23:00 do 23:59
+* 0-2,4-23 * * * → denně každou minutu, kromě doby od 3:00 do 3:59
+* 0-2,5-23 * * * → denně každou minutu, kromě doby od 3:00 do 4:59
+30 0-2,4-23 * * * → denně každou hodinu v půl, kromě 3:30
+5,20,45 0-2,4-23 * * * → denně každou hodinu v 5., 20. a 45. minutě, kromě doby od 3:00 do 3:59
+*/10 0-2,4-23 * * * → denně každých 10 minut, kromě doby od 3:00 do 3:59
+0-28,30-59 * * * * → každou minutu, kromě 29. minuty každé hodiny
+1-29,31-59 * * * * → každou minutu, kromě 0. a 30. minuty každé hodiny
+0-58 * * * * → každou minutu, kromě 59. minuty každé hodiny
+0-28,30-59 9,17 * * * → denně každou minutu od 9:00 do 9:59 a od 17:00 do 17:59, kromě 9:29 a 17:29
+0,5,10,15,20,25,35,40,45,50,55 * * * * → každých 5 minut, kromě 30. minuty každé hodiny
+0,5,10,15,20,25,35,40,45,50,55 9-17 * * * → denně každých 5 minut od 9:00 do 17:55, kromě 30. minuty každé hodiny
+0,5,10,15,20,25,35,40,45,50,55 9 * * * → denně každých 5 minut od 9:00 do 9:55, kromě 9:30
+0,5,10,15,20,25,35,40,45,50,55 0-2,4-23 * * * → denně každých 5 minut, kromě 30. minuty každé hodiny a kromě doby od 3:00 do 3:59
+0,10,20,40,50 9-17 * * * → denně každých 10 minut od 9:00 do 17:50, kromě 30. minuty každé hodiny
+0,10,20,40,50 9 * * * → denně každých 10 minut od 9:00 do 9:50, kromě 9:30
+* 0-28,30-59 * * * * → každou sekundu, kromě 29. minuty každé hodiny
+* 0-28,30-59 9 * * * → denně každou sekundu od 9:00:00 do 9:59:59, kromě doby od 9:29:00 do 9:29:59
+0-28,30-59 * * * * * → každou sekundu, kromě 29. sekundy každé minuty
+0-28,30-59 0 9 * * * → denně každou sekundu od 9:00:00 do 9:00:59, kromě 9:00:29
+*/15 8-18/2 * * * → denně každých 15 minut od 8:00 do 8:45, od 10:00 do 10:45, od 12:00 do 12:45, od 14:00 do 14:45, od 16:00 do 16:45 a od 18:00 do 18:45
+*/20 */2 */2 */3 * → v lednu, dubnu, červenci a říjnu každý lichý den v měsíci každých 20 minut, a to v každé druhé hodině: od 0:00 do 0:40, od 2:00 do 2:40 a tak dále až do 22:40
+5,20,45 9-17,22 * * * → denně každou hodinu v 5., 20. a 45. minutě, a to od 9:05 do 17:45 a od 22:05 do 22:45
+50-10 * * * * → každou hodinu v 0. až 10. a 50. až 59. minutě
+5-10,20 * * * * → každou hodinu v 5. až 10. a 20. minutě
+45-59 * * * * → každou hodinu ve 45. až 59. minutě
+10-40 * * * * → každou hodinu v 10. až 40. minutě
+0-1 * * * * → každou hodinu v 0. a 1. minutě
+1 * * * * → každou hodinu v 1. minutě
+2 * * * * → každou hodinu ve 2. minutě
+1,2 * * * * → každou hodinu v 1. a 2. minutě
+22 * * * * → každou hodinu ve 22. minutě
+15,45 * * * * → každou hodinu v 15. a 45. minutě
+*/21 * * * * → každou hodinu v 0., 21. a 42. minutě
+9,14,47,56 * * * * → každou hodinu v 9., 14., 47. a 56. minutě
+5/10 * * * * → každých 10 minut počínaje 5. minutou každé hodiny
+0-40/10 * * * * → každou hodinu v 0., 10., 20., 30. a 40. minutě
+0-42/6 * * * * → každou hodinu každých 6 minut od 0. do 42. minuty
+1/2 * * * * → každé 2 minuty počínaje 1. minutou každé hodiny
+* */3 * * * * → každé 3 minuty, pokaždé každou sekundu po dobu jedné minuty
+* 0 * * * * → každou celou hodinu, pokaždé každou sekundu po dobu jedné minuty
+30 0 * * * * → každou hodinu v 0. minutě a 30. sekundě
+0-9 0 * * * * → každou celou hodinu, pokaždé v 0. až 9. sekundě
+15 30 * * * * → každou hodinu ve 30. minutě a 15. sekundě
+* 30 * * * * → každou hodinu v půl, pokaždé každou sekundu po dobu jedné minuty
+0,30 5,20 * * * * → každou hodinu v 5. a 20. minutě, pokaždé v 0. a 30. sekundě
+*/15 */15 * * * * → každých 15 minut, pokaždé v 0., 15., 30. a 45. sekundě
+30 */15 * * * * → každých 15 minut, pokaždé ve 30. sekundě
+8 5,30 */2 * * * → denně každé 2 hodiny v 5. a 30. minutě, a to od 0:05 do 22:30, pokaždé v 8. sekundě
+* 0-29 * * * * → každou hodinu v 0. až 29. minutě, pokaždé každou sekundu po dobu jedné minuty
+1 * * * * * → každou minutu v 1. sekundě
+2 * * * * * → každou minutu ve 2. sekundě
+5,15,25 * * * * * → každou minutu v 5., 15. a 25. sekundě
+0,20,45 * * * * * → každou minutu v 0., 20. a 45. sekundě
+5,15,25 */15 * * * * → každých 15 minut, pokaždé v 5., 15. a 25. sekundě
+10-20 * * * * * → každou minutu v 10. až 20. sekundě
+*/7 * * * * * → každých 7 sekund, vždy znovu od celé minuty
+30 * * 6 * → v červnu každou hodinu v půl
+*/10 24 */3 23-25 * 1-2 → každé pondělí a úterý a navíc od 23. do 25. dne v měsíci, vždy každé 3 hodiny od 0:24 do 21:24, pokaždé každých 10 sekund po dobu jedné minuty
+*/30 23 */12 * 6-7 6#2 2030/4 → každý čtvrtý rok počínaje rokem 2030 v červnu a červenci vždy druhou sobotu v měsíci v 0:23:00, 0:23:30, 12:23:00 a 12:23:30
+* 30,42 3-10 * 7,9,10,12 1,3,4,5 → v červenci, září, říjnu a prosinci každé pondělí, středu, čtvrtek a pátek každou hodinu ve 30. a 42. minutě, a to od 3:30 do 10:42, pokaždé každou sekundu po dobu jedné minuty
+0 18 15W 3,6,9,12 * → v březnu, červnu, září a prosinci vždy v den od pondělí do pátku, který je v měsíci nejblíž 15. dni, v 18:00
+30 8 1 1 1 → v lednu každé pondělí a navíc 1. ledna, vždy v 8:30
+0 0 1-30 6 * → v červnu denně v 0:00
+0 0 30 2-3 * → vždy 30. března v 0:00
+0 0 31 6 * → jen 31. června, tedy nikdy
+0 0 31 4,6 * → jen 31. dne v dubnu a červnu, tedy nikdy
+0 0 30 2 * {"form": "sentence"} → Spouští se jen 30. února, tedy nikdy.
+0 0 31 6 1 → v červnu každé pondělí v 0:00
+0 0 31W 6-8 * → v červenci a srpnu vždy v den od pondělí do pátku, který je v měsíci nejblíž 31. dni, v 0:00
+0 0 29W 2 * → v přestupných letech vždy v den od pondělí do pátku, který je v únoru nejblíž 29. dni, v 0:00
+0 9 1-31 * 1 → denně v 9:00
+0 9 15 * 0-6 → denně v 9:00
+0 0 9 * * * 2030/1 → od roku 2030 denně v 9:00
+0 0 9 * * * 2030-2050/2 → v sudých letech 2030 až 2050 denně v 9:00
+0 0 9 * * * 2030/2,2031 → v sudých letech počínaje rokem 2030 a v roce 2031, a to denně v 9:00
+0 9 1-14,16-31 * 5 → denně, kromě 15. dne v měsíci, pokud nepřipadne na pátek, v 9:00
+0 9 1-14,16-31 * 1-5 → denně, kromě 15. dne v měsíci, pokud nepřipadne na pondělí až pátek, v 9:00
+0 9 1-14,16-31 * 1,3 → denně, kromě 15. dne v měsíci, pokud nepřipadne na pondělí nebo středu, v 9:00
+0 9 * * 5,6,0 → od pátku do neděle vždy v 9:00
+0 9 * * 1,2 → každé pondělí a úterý v 9:00
+0 9 * * 3,6 → každou středu a sobotu v 9:00
+20 * * * * → každou hodinu ve 20. minutě
+20 0-2,5-23 * * * → denně každou hodinu ve 20. minutě, kromě 3:20 a 4:20
+30 0 0-2,4-23 * * * → denně každou hodinu v 0. minutě a 30. sekundě, kromě 3:00:30
+5,20 9-11,13-17 * * * → denně každou hodinu v 5. a 20. minutě, a to od 9:05 do 17:20, kromě doby od 12:00 do 12:59
+5-55/5 9-17 * * * → denně každou hodinu každých 5 minut od 5. do 55. minuty, a to od 9:05 do 17:55
+0-29 9-17 * * * → denně každou hodinu v 0. až 29. minutě, a to od 9:00 do 17:29
+*/7 9-17 * * * → denně každých 7 minut, vždy znovu od celé hodiny, a to od 9:00 do 17:56
+0 9-17/2 * * * → denně v 9:00, 11:00, 13:00, 15:00 a 17:00
+0 0 1-7 * * {"form": "sentence"} → Spouští se od 1. do 7. dne v měsíci vždy v 0:00.
+*/15 1,2,5,7,11,13,17,19,23 * * * → denně každých 15 minut od 1:00 do 2:45, od 5:00 do 5:45, od 7:00 do 7:45, od 11:00 do 11:45, od 13:00 do 13:45, od 17:00 do 17:45, od 19:00 do 19:45 a od 23:00 do 23:45
+0 9 * * * {"style": {"hour12": true}} → denně v 9:00 dopoledne
+30 9,17 * * * {"style": {"hour12": true}} → denně v 9:30 dopoledne a 5:30 odpoledne
+0 9-17 * * * {"style": {"hour12": true}} → denně každou hodinu od 9:00 dopoledne do 5:00 odpoledne
+0 0 * * * {"style": {"hour12": true}} → denně ve 12:00 o půlnoci
+0 12 * * * {"style": {"hour12": true}} → denně ve 12:00 v poledne
+0 13 * * * {"style": {"hour12": true}} → denně v 1:00 odpoledne
+*/15 9-17 * * 1-5 {"style": {"hour12": true}} → od pondělí do pátku každých 15 minut od 9:00 dopoledne do 5:45 odpoledne
+* 22-23 * * * {"style": {"hour12": true}} → denně každou minutu od 10:00 v noci do 11:59 v noci
+30 0 9 * * * {"style": {"hour12": true}} → denně v 9:00:30 dopoledne
+0 9 * * 1 {"style": {"short": true}} → po v 9:00
+0 9 * * 1,3,5 {"style": {"short": true}} → po, st a pá v 9:00
+0 9 * * 1-5 {"style": {"short": true}} → po až pá vždy v 9:00
+0 9 * * 0-5 {"style": {"short": true}} → denně, kromě soboty, v 9:00
+0 9 * 6 1 {"style": {"short": true}} → v červnu po v 9:00
+0 9 * 6-8 * {"style": {"short": true}} → od června do srpna denně v 9:00
+0 0 1 6 * {"style": {"short": true}} → vždy 1. 6. v 0:00
+0 0 1-7 6 * {"style": {"short": true}} → od 1. do 7. 6. vždy v 0:00
+0 9 * * 5L {"style": {"short": true}} → vždy poslední pátek v měsíci v 9:00
+*/15 9-17 * * 1-5 {"style": {"short": true}} → po až pá každých 15 minut od 9:00 do 17:45
+* 0 9 * * * {"style": {"second": "vteřina"}} → denně každou vteřinu od 9:00:00 do 9:00:59
+*/6 * * * * * {"style": {"second": "vteřina"}} → každých 6 vteřin
+30 * * * * * {"style": {"second": "vteřina"}} → každou minutu ve 30. vteřině
+0 9 * * * {"style": {"separator": "."}} → denně v 9.00
+30 9,17 * * * {"style": {"separator": "."}} → denně v 9.30 a 17.30
+*/15 9-17 * * 1-5 {"style": {"separator": "."}} → od pondělí do pátku každých 15 minut od 9.00 do 17.45
+0 0 1 6 * {"style": {"separator": "."}} → vždy 1. června v 0.00
+30 0 9 * * * {"style": {"separator": "."}} → denně v 9:00:30
+*/15 9-17 * * 1-5 {"style": {"hour12": true, "separator": ".", "short": true}} → po až pá každých 15 minut od 9.00 dopoledne do 5.45 odpoledne
+0 9 * * 1,3,5 {"lang": "cs-CZ"} → každé pondělí, středu a pátek v 9:00
+30 9,17 * * * {"lang": "cs-CZ"} → denně v 9:30 a 17:30

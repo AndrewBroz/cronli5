@@ -16,7 +16,7 @@ First drafts are committed there as `wip(<code>)`. Reports are in `reads/`.
 | he | done | done | done, committed on `he-art` (98ee69d); needs a second blind fluency read (forms listed in its report; ten the author still doubts) |
 | nl | done | done | done, committed on `nl-art` (d9c67e6); needs a second blind fluency read (twelve forms the author still doubts) |
 | it | done | done | done, committed on `it-art` (d887e84); needs a second blind fluency read (eleven forms the author still doubts) |
-| cs | done | done | running when this was written; partial work checkpointed as `wip(<code>): checkpoint of revision 1 in progress` |
+| cs | done | done | done, committed on `cs-art` (d9123a2); needs a second blind fluency read (`reads/cs-changed-forms-1.txt`; eleven forms the author still doubts). The maintainer is a native Czech reader. |
 | ar | done (`reads/ar-read-1.md`) | done (32/60 natural) | NOT started: send the author `REVISE-1` |
 | pl | done (`reads/pl-read-1.md`) | done (`reads/pl-1.md`) | NOT started: send the author `REVISE-1` |
 
@@ -30,3 +30,5 @@ Revision brief: `briefs/revise-brief.md` (per language in the session scratchpad
 3. English: test the closing-comma cure for exception scope with a blind reader who must state when it fires.
 4. Blind recovery and a regeneration run per language; rewrite or remove the stale `add-language` and `improve-renderer` skills; acceptance records; launch prep.
 5. After launch: ports to other programming languages (Python, Ruby, C#, PHP, Rust, Java, Go; Swift possible), using `conformance/<code>.json`.
+
+No agents were running when this file was last updated. The session scratchpad (specs, per-language briefs) is under /private/tmp and may not survive; each author's spec builders are there, the rows themselves are in the worktrees.
