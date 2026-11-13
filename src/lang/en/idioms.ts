@@ -4,7 +4,7 @@
 // it stands for.
 
 import type {
-  Field, QuartzDate, QuartzWeekday, SetDescription
+  CadencePieces, Field, QuartzDate, QuartzWeekday, SetDescription
 } from '../../core/schedule.js';
 import type {EnglishOptions} from './options.js';
 import {domainOf} from '../../core/specs.js';
@@ -18,7 +18,7 @@ export interface Idiom<Subject> {
 }
 
 /** An idiom for a set of one field's values. */
-export interface SetIdiom extends Idiom<SetDescription> {
+export interface SetIdiom extends Idiom<SetDescription | CadencePieces> {
   field: Field;
 }
 

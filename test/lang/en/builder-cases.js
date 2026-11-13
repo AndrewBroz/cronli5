@@ -9,6 +9,10 @@
 // Read against each pattern's fire times in the audit of 2026-11-13 (a
 // model's read, not a fluent human's); two rows gained the comma that
 // closes an exception.
+//
+// Read again in the second repair of 2026-11-13: seconds before a run of
+// minutes with a stray are said once in front, and minutes are never said
+// as a run that wraps (answers 4.2 and 3.5).
 
 import english from '../../../src/lang/en/index.js';
 import {checkRows} from '../../paradigms/check.js';
@@ -55,7 +59,7 @@ const rows = [
   ['15 30 * * * *',
     'at 30 minutes and 15 seconds past every hour'],
   ['8 0-29,45 9 * * *',
-    'at 8 seconds past every minute from 9 a.m. until 9:30 a.m. and at 9:45:08 a.m. every day'],
+    'at 8 seconds past the minute, every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m. every day'],
   ['0 22-2 1 * *',
     'every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st'],
   ['*/15 22-2 * * 1-5',
@@ -67,7 +71,7 @@ const rows = [
   ['0-29,31-59 * 9 * * *',
     'every second during the 9 a.m. hour except at 30 seconds past the minute, every day'],
   ['58-1 * * * *',
-    'every minute from 58 through 1 minute past the hour'],
+    'at 0, 1, 58, and 59 minutes past the hour'],
   ['* 5,10-40 9 * * *',
     'every second for one minute at 9:05 a.m. and every second from 9:10 a.m. until 9:41 a.m. every day'],
   ['0 0 1-14,16-31 6 *',

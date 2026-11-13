@@ -71,6 +71,7 @@ const words = {
   and: 'and',
   asWellAs: 'as well as',
   at: 'at',
+  because: 'because',
   before: 'before',
   during: 'during',
   each: 'each',
@@ -85,22 +86,29 @@ const words = {
   from: 'from',
   in: 'in',
   last: 'last',
+  leapYears: 'in leap years',
   nearest: 'nearest',
+  never: 'never',
+  noDayIs: 'no day is',
   oddDays: 'odd-numbered days',
   oddYears: 'odd-numbered years',
   of: 'of',
   on: 'on',
+  onward: 'onward',
+  or: 'or',
   other: 'other',
   past: 'past',
   runs: 'Runs',
   sameMonth: 'in the same month',
   startup: 'at system startup',
   the: 'the',
+  thereIsNo: 'there is no',
   unrecognizable: 'an unrecognizable cron pattern',
   until: 'until',
   weekday: 'weekday',
   weekdays: 'weekdays',
-  weekends: 'weekends'
+  weekends: 'weekends',
+  whateverTheDate: 'whatever the date'
 };
 
 // The ordinal words a Quartz "nth weekday" uses, from the first: "the
