@@ -1,31 +1,36 @@
-// The copy-editor choices Chinese offers. Neither moves a part of the
-// sentence.
+// The copy-editor choices Chinese offers, as a table of word-level
+// conventions. Neither moves a part of the sentence.
 
 import {Cronli5OptionError} from '../../core/errors.js';
 import type {NormalizedOptions} from '../../core/schedule.js';
 
-/** The word-level conventions of the Chinese style. */
+/** The word-level conventions of the one Chinese style. */
 export interface ChineseStyle {
-  // Whether times are 12-hour with the part of the day, or 24-hour.
+  // Whether times are 12-hour, each with its part of the day before it.
   hour12: boolean;
-  // Changes nothing: Chinese weekday and month names have no shorter
-  // form. It exists so a caller can set it for every language alike.
+  // Accepted so a caller can set it for every language alike: Chinese
+  // names of weekdays and months have no shorter written form.
   short: boolean;
 }
 
 /** The options a Chinese description is rendered under. */
 export type ChineseOptions = NormalizedOptions<ChineseStyle>;
 
+// Mainland software and timetables: the 24-hour clock.
 const standard: ChineseStyle = {hour12: false, short: false};
 
 /** The named Chinese styles, each a whole table. */
 const styles: Readonly<Record<'standard', Readonly<ChineseStyle>>> =
-  Object.freeze({standard: Object.freeze(standard)});
+Object.freeze({standard: Object.freeze(standard)});
+
+/** The region codes Chinese knows: none yet. */
+const regions: {[region: string]: string} = {};
 
 const fields = Object.keys(standard).sort();
 
 // A named table with a caller's overrides applied. A field the table does
-// not have, or a value of another kind than the table holds, is an error.
+// not have, or a value of another kind than the table holds, is an error:
+// a mistyped style must not pass in silence.
 function style(base: string, overrides?: unknown): ChineseStyle {
   const named: {[name: string]: Readonly<ChineseStyle>} = styles;
   const table: {[field: string]: unknown} = {...named[base]};
@@ -51,4 +56,4 @@ function style(base: string, overrides?: unknown): ChineseStyle {
   return table as unknown as ChineseStyle;
 }
 
-export {style, styles};
+export {regions, style, styles};

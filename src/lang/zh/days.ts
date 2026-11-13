@@ -1,272 +1,374 @@
-// The year, month and day parts of the sentence. They join as a Chinese
-// date does, coarsest first, so what leads a date depends on how the
-// month before it was said.
+// The year, month and day parts of a Chinese description, coarsest first,
+// and what the day part asks to stand between it and a clock time.
 
-import type {QuartzDate, ScheduleFacts} from '../../core/schedule.js';
-import {
-  type Shape, choose, excepted, listed, parity, ranges, scales,
-  setsOf, unrestricted, weekSets
-} from './shape.js';
+import type {
+  Domain, QuartzDate, QuartzWeekday, Schedule, SetDescription
+} from '../../core/schedule.js';
+import {denote} from '../../core/describe-set.js';
+import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
+import type {Cadence, Exception} from './sets.js';
+import {
+  LISTED, RANGE, cadenceOf, chosen, everyOther, first, lastOf, linearRuns,
+  listed, never, runsOf, series, when
+} from './sets.js';
 
-const {marks, units, weekdays, words} = lexicon;
+const {marks, units, words} = lexicon;
 
-/** The three parts that say which days. */
-export interface DaysSaid {
-  day: string;
-  month: string;
-  year: string;
+// What a year part is, which decides what joins it to a month.
+type YearKind = 'none' | 'single' | 'range' | 'several' | 'cycle';
+
+// What stands before the days: no month, one month, a list of months, or
+// months with a range or an exception among them; or, for a date and a
+// weekday together under a month, the 每逢 that leads both.
+type Context = 'none' | 'one' | 'list' | 'ranged' | 'both';
+
+// One side of the day part: dates or weekdays.
+interface Side {
+  kind: 'plain' | 'parity' | 'except' | 'week' | 'free';
+  text: string;
+  // What this side asks for before a clock time.
+  tie: string;
 }
 
-// How one field's values are named, and the words around them.
-interface Naming {
-  // What leads a plain list or run.
-  each: string;
-  even: string;
-  name: (value: number) => string;
-  // What marks the end of a run that wraps round.
-  next: string;
-  odd: string;
-  // What follows "all but these".
-  rest: string;
-  // What a cadence counts in.
-  unit: string;
+/** A year or month part. */
+export interface Part<Kind> {
+  kind: Kind;
+  text: string;
 }
 
-const dates: Naming = {
-  each: '',
-  even: words.evenDays,
-  name(value) {
-    return value + units.date;
+// What joins a year part to a month. With no year, a month reads as a
+// single occasion unless 每年 says it recurs.
+const beforeMonth: Record<YearKind, string> = {
+  cycle: '',
+  none: words.eachYear,
+  range: words.eachYear,
+  several: words.of,
+  single: ''
+};
+
+// What joins the months, or 每逢, to each kind of day phrase.
+const beforeDays: Record<Side['kind'], Record<Context, string>> = {
+  except: {
+    both: '',
+    list: words.eachOfTheMonths,
+    none: words.everyMonth,
+    one: '',
+    ranged: words.everyMonth
   },
-  next: words.nextMonth,
-  odd: words.oddDays,
-  rest: words.everyDay,
-  unit: units.day
-};
-
-const months: Naming = {
-  each: '',
-  even: words.evenMonths,
-  name(value) {
-    return value + units.month;
+  free: {both: '', list: '', none: '', one: '', ranged: ''},
+  parity: {
+    both: '',
+    list: words.of,
+    none: words.everyMonth,
+    one: words.of,
+    ranged: words.everyMonth
   },
-  next: words.nextYear,
-  odd: words.oddMonths,
-  rest: '',
-  unit: units.month
-};
-
-const days: Naming = {
-  each: words.every,
-  even: '',
-  name(value) {
-    return words.week + weekdays[value % weekdays.length];
+  plain: {
+    both: '',
+    list: words.of,
+    none: words.everyMonth,
+    one: '',
+    ranged: words.everyMonth
   },
-  next: '',
-  odd: '',
-  rest: words.everyDay,
-  unit: units.day
+  week: {
+    both: '',
+    list: words.every,
+    none: words.every,
+    one: words.every,
+    ranged: words.every
+  }
 };
 
-const years: Naming = {
-  each: '',
-  even: words.evenYears,
-  name(value) {
-    return value + units.year;
-  },
-  next: '',
-  odd: words.oddYears,
-  rest: '',
-  unit: units.year
+// The even and the odd days: 逢 marks them after 每月, and gives way after
+// a named month or 每逢.
+const everyOtherDay: Record<Context, string[]> = {
+  both: [words.evenDaysOfMonth, words.oddDaysOfMonth],
+  list: [words.evenDaysOfMonth, words.oddDaysOfMonth],
+  none: [words.evenDays, words.oddDays],
+  one: [words.evenDaysOfMonth, words.oddDaysOfMonth],
+  ranged: [words.evenDays, words.oddDays]
 };
 
-// How the month was said, which decides what joins it to a date: nothing
-// said, one month, several listed, or a stretch of them.
-type Link = 'listed' | 'none' | 'single' | 'spanning';
+// The last date of the months that have fewer than 31, February at its
+// longest.
+const shorterMonths: {[month: number]: number} =
+  {2: 29, 4: 30, 6: 30, 9: 30, 11: 30};
 
-// What leads a date standing alone after the month, and what leads it
-// when a weekday is said beside it. A Quartz form has its own lead.
-const dateLead: Record<Link, string> = {
-  listed: words.of,
-  none: words.everyMonth,
-  single: '',
-  spanning: words.everyMonth
-};
+const weekdayGloss = marks.open + words.mondayToFriday + marks.close;
 
-const pairedDateLead: Record<Link, string> = {
-  ...dateLead,
-  listed: words.everyMonth
-};
-
-// All but a few days follows its months directly.
-const exceptedDateLead: Record<Link, string> = {...dateLead, listed: ''};
-
-const quartzLead: Record<Link, string> = {
-  listed: '',
-  none: words.everyMonth,
-  single: '',
-  spanning: ''
-};
-
-function anyShape(): boolean {
-  return true;
+function yearName(year: number): string {
+  return String(year) + units.year;
 }
 
-function unbroken(shape: Shape): boolean {
-  return shape.removed.length === 0;
+function monthName(month: number): string {
+  return String(month) + units.month;
 }
 
-// Months have no cadence but the odd and the even ones.
-function monthSayable(shape: Shape): boolean {
-  return shape.interval === 1 || shape.alternate;
+function dateName(date: number): string {
+  return String(date) + units.date;
 }
 
-// Weekdays that are not one run are listed up to this many.
-const listedWeekdays = 4;
-
-// Weekdays have no cadence; only six days are said as all but one; and
-// pieces are said only of more than four days.
-function weekdaySayable(shape: Shape, count: number): boolean {
-  return shape.interval === 1 && shape.removed.length <= 1 &&
-    (shape.parts.length === 1 || count > listedWeekdays);
+// A weekday by cron's number or, for Sunday at the end of the week, 7.
+function weekdayName(weekday: number): string {
+  return words.week + lexicon.weekdays[weekday % 7];
 }
 
-function setWords(shape: Shape, naming: Naming): string {
-  const [run] = ranges(shape);
+function isAll(found: SetDescription[] | null): boolean {
+  return found !== null && found[0].kind === 'all';
+}
 
-  if (shape.interval === 1) {
-    return listed(shape.parts, naming.name, naming.next);
+// The first three values, ……, and where the cadence has an end, the last.
+function abbreviated(values: string[], last: string): string {
+  return series(values.slice(0, 3)) + marks.ellipsis + last;
+}
+
+// A cadence of years too long to list: its start (and its end, if it has
+// one), its step, the years it begins with, and 当年 to carry on from.
+function yearCycle(cadence: Cadence, values: number[], open: boolean): string {
+  const head = open ?
+    words.fromYear + yearName(cadence.start) + words.onwards :
+    yearName(cadence.start) + words.to + yearName(cadence.last);
+
+  return head + words.every + String(cadence.interval) + units.year +
+    words.oneYearIn + marks.open + abbreviated(values.map(yearName),
+    when(!open, yearName(cadence.last))) + marks.close + marks.comma +
+    words.thatYear;
+}
+
+/** The year part: nothing when every year fires. */
+function yearOf(found: SetDescription[]): Part<YearKind> {
+  const domain = domainOf('year');
+
+  if (isAll(found)) {
+    return {kind: 'none', text: ''};
   }
 
-  if (shape.alternate) {
-    return parity(shape, naming.even, naming.odd);
+  const values = denote(found[0], domain);
+  const cadence = cadenceOf(values, domain);
+  const runs = linearRuns(values);
+
+  if (everyOther(values, domain)) {
+    return {
+      kind: 'several',
+      text: [words.evenYears, words.oddYears][values[0] % 2]
+    };
   }
 
-  return naming.name(run.from) +
-    (shape.open ? words.fromOn : words.to + naming.name(run.to)) +
-    words.every + shape.interval + naming.unit;
-}
-
-// A restricted field in words: all but a few, or the set itself with
-// anything taken out of it in brackets.
-function fieldWords(shape: Shape, naming: Naming): string {
-  const removed = shape.removed.map(naming.name).join(marks.list);
-
-  if (shape.round && removed) {
-    return words.except + removed + words.exceptedEnd + naming.rest;
+  if (values.length <= LISTED || typeof cadence === 'undefined') {
+    return {
+      kind: first<YearKind>([
+        [values.length === 1, 'single'],
+        [runs.length === 1 && values.length >= RANGE, 'range'],
+        [true, 'several']
+      ]),
+      text: series(listed(runs, RANGE, yearName))
+    };
   }
-
-  return naming.each + setWords(shape, naming) + excepted([removed]);
-}
-
-function linkOf(month: Shape): Link {
-  if (month.length === 0) {
-    return 'none';
-  }
-
-  if (month.removed.length > 0 ||
-      month.interval === 1 && ranges(month).length > 0) {
-    return 'spanning';
-  }
-
-  return month.length === 1 && month.interval === 1 ? 'single' : 'listed';
-}
-
-function quartzDateWords(form: QuartzDate): string {
-  const working = words.workingDay + marks.open + words.mondayToFriday +
-    marks.close;
-
-  switch (form.kind) {
-    case 'last':
-      return words.lastDay;
-    case 'lastWeekday':
-      return words.lastOne + working;
-    case 'firstWeekday':
-      return words.nth + 1 + words.nthOne + working;
-    case 'beforeLast':
-      return words.nthFromLast + (form.days + 1) + units.day;
-    default:
-      return words.nearest + dates.name(form.day) + words.of + working;
-  }
-}
-
-// The date, with what leads it, and whether a comma must close it: a
-// range or a cadence of dates would otherwise run into the time.
-function dateWords(
-  facts: ScheduleFacts,
-  link: Link
-): {open: boolean; text: string} {
-  const {date, union} = facts.analyses.day;
-
-  if (date?.kind === 'quartz') {
-    return {open: false, text: quartzLead[link] + quartzDateWords(date.form)};
-  }
-
-  const mayWrap = unrestricted(facts, ['month', 'year']);
-  const shape = choose(setsOf(facts, 'date', mayWrap), scales.date, anyShape);
-  const alone = shape.round ? exceptedDateLead : dateLead;
-  const lead = (union ? pairedDateLead : alone)[link];
 
   return {
-    open: ranges(shape).length > 0 && !shape.round && !shape.alternate,
-    text: shape.length === 0 ? '' : lead + fieldWords(shape, dates)
+    kind: 'cycle',
+    text: yearCycle(cadence, values,
+      cadence.last + cadence.interval > domain.max)
   };
-}
-
-function weekdayWords(facts: ScheduleFacts, link: Link): string {
-  const {weekday} = facts.analyses.day;
-
-  if (weekday?.kind === 'quartz') {
-    const {form} = weekday;
-    const which = form.kind === 'nth' ?
-      words.nth + form.nth + words.nthOne :
-      words.lastOne;
-
-    return quartzLead[link] + which + days.name(form.weekday);
-  }
-
-  const shape = choose(weekSets(facts), scales.weekday, weekdaySayable);
-
-  return shape.length === 0 ? '' : fieldWords(shape, days);
-}
-
-// A single year leads as in a date; any other year phrase is closed by a
-// comma. With a month and no year, the year part says every year.
-function yearWords(year: Shape, monthSaid: boolean): string {
-  if (year.length === 0) {
-    return monthSaid ? words.eachYear : '';
-  }
-
-  const single = year.length === 1 && year.interval === 1;
-
-  return fieldWords(year, years) + (single ? '' : marks.comma);
 }
 
 /**
- * The year, month and day parts. `allDay` is whether the time part already
- * says the schedule runs round the clock: otherwise, with no day named,
- * the day part says every day.
+ * The month part: nothing when every month fires. A run of months may
+ * cross the new year only when `wraps` allows.
  */
-function describeDays(facts: ScheduleFacts, allDay: boolean): DaysSaid {
-  const {union} = facts.analyses.day;
-  const year = choose(setsOf(facts, 'year', false), scales.year, unbroken);
-  const month = choose(
-    setsOf(facts, 'month', unrestricted(facts, ['year'])), scales.month,
-    monthSayable);
-  const link = linkOf(month);
-  const date = dateWords(facts, link);
-  const named = [date.text, weekdayWords(facts, link)].filter(Boolean);
-  const everyDay = allDay ? '' : words.everyDay;
-  const apart = union ? words.during + marks.comma : '';
+function monthOf(found: SetDescription[], wraps: boolean): Part<Context> {
+  const domain = domainOf('month');
+
+  if (isAll(found)) {
+    return {kind: 'none', text: ''};
+  }
+
+  const values = denote(found[0], domain);
+  const picked = chosen(values, domain, function mostMonths(exception, kept) {
+    return kept.length > LISTED && exception.base.kind === 'all';
+  });
+  const runs = runsOf(values, domain, wraps);
+  const excepted = picked.removed.length > 0;
 
   return {
-    day: named.length === 0 ?
-      everyDay :
-      named.join(words.also) + (union || date.open ? marks.comma : ''),
-    month: link === 'none' ? '' : fieldWords(month, months) + apart,
-    year: yearWords(year, link !== 'none')
+    kind: first<Context>([
+      [excepted || runs.some((run) => run.length >= RANGE), 'ranged'],
+      [values.length === 1, 'one'],
+      [true, 'list']
+    ]),
+    text: excepted ?
+      words.except + series(picked.removed.map(monthName)) +
+        words.exceptedEnd :
+      series(listed(runs, RANGE, monthName, words.nextYear))
   };
 }
 
-export {describeDays};
+// A Quartz day-of-month form, as it follows 每月 or a month.
+function quartzDate(form: QuartzDate): string {
+  const numbers = form as {day?: number; days?: number};
+  const forms: Record<QuartzDate['kind'], string> = {
+    beforeLast: words.nthFromLast + String((numbers.days ?? 0) + 1) +
+      units.day,
+    firstWeekday: words.nth + '1' + words.nthOne + words.workingDay +
+      weekdayGloss,
+    last: words.lastDay,
+    lastWeekday: words.lastOne + words.workingDay + weekdayGloss,
+    nearestWeekday: dateName(numbers.day ?? 0) + marks.open +
+      words.nearestFridayOrMonday + marks.close
+  };
+
+  return forms[form.kind];
+}
+
+// A Quartz day-of-week form, as it follows 每月 or a month.
+function quartzWeekday(form: QuartzWeekday): string {
+  const numbers = form as {nth?: number};
+  const forms: Record<QuartzWeekday['kind'], string> = {
+    last: words.lastOne,
+    nth: words.nth + String(numbers.nth) + words.nthOne
+  };
+
+  return forms[form.kind] + weekdayName(form.weekday);
+}
+
+// An exception among dates: one or two missing from every day, or from
+// the odd or the even days, of more than eight.
+function dateException(domain: Domain) {
+  return function fewMissing(exception: Exception, kept: number[]): boolean {
+    return kept.length > LISTED && exception.removed.length <= 2 &&
+      (exception.base.kind === 'all' ||
+        everyOther(denote(exception.base, domain), domain));
+  };
+}
+
+// Dates as a list in which a run of three is a range. One range alone is
+// followed by 每天 before a time, and pieces with a range by 的.
+function dateList(days: number[]): Side {
+  const runs = linearRuns(days);
+
+  return {
+    kind: 'plain',
+    text: series(listed(runs, RANGE, dateName)),
+    tie: first([
+      [runs.length === 1 && days.length >= RANGE, words.everyDay],
+      [runs.some((run) => run.length >= RANGE), words.of],
+      [true, '']
+    ])
+  };
+}
+
+// The dates. Under one named month a date the month never has is left
+// out, and the month's own length bounds what is every day, or every
+// second day, of it. `together` is a date beside a weekday, where no
+// exception is said.
+function dateSide(schedule: Schedule, context: Context, together: boolean):
+  Side {
+  const {candidates, day} = schedule.analyses;
+
+  if (candidates.date === null) {
+    return {
+      kind: 'plain',
+      text: quartzDate((day.date as {form: QuartzDate}).form),
+      tie: ''
+    };
+  }
+
+  const months = denote((candidates.month as SetDescription[])[0],
+    domainOf('month'));
+  const max = months.length === 1 && shorterMonths[months[0]] || 31;
+  const domain = {cyclic: false, max, min: 1};
+  const every = denote(candidates.date[0], domainOf('date'));
+  const fitting = every.filter((date) => date <= max);
+  const days = fitting.length > 0 ? fitting : every;
+  const picked = chosen(days, domain,
+    together ? never : dateException(domain));
+  const removed = series(picked.removed.map(dateName));
+
+  return first<Side>([
+    [everyOther(picked.values, domain), {
+      kind: 'parity',
+      text: everyOtherDay[context][picked.values[0] % 2] + when(
+        removed !== '', marks.open + removed + words.excepted + marks.close),
+      tie: ''
+    }],
+    [removed !== '', {
+      kind: 'except',
+      text: words.except + removed + words.exceptedEnd + words.everyDay,
+      tie: ''
+    }],
+    [days.length > LISTED && typeof cadenceOf(days, domain) !== 'undefined', {
+      kind: 'plain',
+      text: abbreviated(days.map(dateName), dateName(lastOf(days))),
+      tie: ''
+    }],
+    [true, dateList(days)]
+  ]);
+}
+
+// The weekdays, in the week that runs from Monday to Sunday. Exactly six
+// days that are not one run are every day but one, except beside a date.
+function weekSide(schedule: Schedule, together: boolean): Side {
+  const {candidates, day} = schedule.analyses;
+
+  if (candidates.weekday === null) {
+    return {
+      kind: 'plain',
+      text: quartzWeekday((day.weekday as {form: QuartzWeekday}).form),
+      tie: ''
+    };
+  }
+
+  const domain = {cyclic: false, max: 7, min: 1};
+  const days = denote(candidates.weekday[0], domainOf('weekday'))
+    .map((weekday) => weekday || 7).sort();
+  const picked = chosen(days, domain, function allButOne(exception) {
+    return !together && exception.base.kind === 'all' &&
+      exception.removed.length === 1;
+  });
+
+  return picked.removed.length > 0 ?
+    {
+      kind: 'free',
+      text: words.except + series(picked.removed.map(weekdayName)) +
+        words.exceptedEnd + words.everyDay,
+      tie: ''
+    } :
+    {
+      kind: 'week',
+      text: series(listed(linearRuns(days), RANGE, weekdayName)),
+      tie: ''
+    };
+}
+
+/**
+ * The day part after a month part, and its tie: what it asks to stand
+ * before a clock time. With no day the tie is 每天, which fills the level
+ * a time of day would otherwise skip. A date and a weekday together are
+ * joined by 和 and tied to the time by 的; under a month, 每逢 leads both
+ * after a comma.
+ */
+function dayOf(schedule: Schedule, month: Part<Context>):
+  {text: string; tie: string} {
+  const {candidates, day} = schedule.analyses;
+  const context = day.union && month.kind !== 'none' ? 'both' : month.kind;
+  const sides = [
+    ...[candidates.date].filter((found) => !isAll(found)).map(
+      () => dateSide(schedule, context, day.union)),
+    ...[candidates.weekday].filter((found) => !isAll(found)).map(
+      () => weekSide(schedule, day.union))
+  ];
+
+  return {
+    text: when(context === 'both', marks.comma + words.eachOfDays) +
+      sides.map((side) => beforeDays[side.kind][context] + side.text)
+        .join(words.andDays),
+    tie: [
+      words.everyDay,
+      sides.map((side) => side.tie).join(''),
+      words.of
+    ][sides.length]
+  };
+}
+
+export {beforeMonth, dayOf, monthOf, yearOf};

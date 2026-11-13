@@ -27,6 +27,7 @@ const units = {
   minute: '分钟',
   minuteOfHour: '分',
   month: '月',
+  round: '轮',
   second: '秒',
   year: '年'
 };
@@ -37,7 +38,6 @@ const words = {
   at: '在',
   andDays: '和',
   andExceptions: '及',
-  eachHour: '每小时',
   eachHourOf: '每小时的',
   eachMinuteOf: '每分钟的',
   eachOfTheMonths: '各月',
@@ -50,7 +50,6 @@ const words = {
   evenHours: '偶数小时',
   evenYears: '每逢偶数年',
   every: '每',
-  everyMinuteOnce: '每分钟一次',
   everySecondOnce: '每秒一次',
   everyDay: '每天',
   everyHourOnTheHour: '每小时整点',

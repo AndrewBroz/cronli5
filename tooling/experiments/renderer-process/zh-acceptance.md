@@ -1,5 +1,22 @@
 # Chinese (Simplified), rebuilt through the process: acceptance record
 
+> **Superseded in part, 2026-11-12 (later the same day).** Everything below
+> describes the first build. A blind fluency read, briefed in Chinese and
+> told nothing of how the sentences were made, then graded 18 of 46 of its
+> output natural, and the maintainer ruled that devices carried over from
+> English do not bind another language. The rule book was redecided
+> natively over three rounds (two schedule reads, three fluency reads: 18 of
+> 46, then 32 of 54, then 39 of 54 natural), the first renderer was
+> discarded, and a fresh agent rebuilt it: 153 of 153 held-out rows on the
+> first judged run, 0 throws over 30,192 swept patterns, 32 branches, about
+> 975 logical lines. What changed: a comma and 一次 before every frequency;
+> no tie and no bare hour cadence (每天0:00、12:00); plain closed windows in
+> place of 时段内; 每小时的30分; counts for seconds rounds (每轮60次，每秒一
+> 次); 偶数小时 always with its hours in brackets; the union 每月1日和每周五
+> 的0:00, which passed its judge without reordering. The builder's readings
+> of rules it found imprecise (when an exception beats pieces; the hour wrap
+> against continuity) are open. Blind recovery has not been re-run.
+
 2026-11-12. Chinese was the third language taken through the process in
 [the design](../../../docs/superpowers/specs/2026-11-11-renderer-process-design.md),
 built the same night as Ukrainian. The orchestrating model reads and
