@@ -147,7 +147,9 @@ same reason «nachts» is not used at all: «montags um 2:00 Uhr nachts» is
 heard by many as the night after Monday evening, and «2:00 Uhr morgens»
 cannot be. No other device changes with `hour12`, and seconds are written
 the same way («9:00:30 Uhr morgens»). The minutes of an hour («:30») have
-no part of the day and do not change.
+no part of the day and do not change, and the windows inside a gloss of
+hours («(0:00–0:59, 2:00–2:59 … 22:00–22:59 Uhr)») stay in 24-hour form
+in every style: a gloss is there to be exact at a glance.
 
 With `short: true` the weekdays are «Mo., Di., Mi., Do., Fr., Sa., So.»,
 in place of the adverb and of the noun alike, and the months are «Jan.,
@@ -562,7 +564,7 @@ opens with «stündlich».
 | separate hours, six clock times or fewer | the clock times: «um 9:05, 9:20, 9:45, 17:05, 17:20 und 17:45 Uhr» |
 | separate hours, more than six clock times | a window for each hour, and «jeweils» in place of «stündlich», since no window holds a second hour: «von 9:05 bis 9:50 und von 17:05 bis 17:50 Uhr jeweils um :05, :20, :35 und :50» |
 | a cadence of hours, six clock times or fewer | the clock times |
-| a cadence of hours, more than six clock times, M a list | one window of the hour cadence for each minute: «von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden»; «von 0:00 bis 20:00, von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden» |
+| a cadence of hours, more than six clock times, M a list | a series of clock times: every time of the first two hours, «…», and every time of the last hour, with «und» before the last time: «um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr»; «um 0:00, 0:15, 0:45, 4:00, 4:15, 4:45 … 20:00, 20:15 und 20:45 Uhr». (One window of the hour cadence for each minute, «von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden», was the third judge's one odd grade: two overlapping windows look like periods, and one reading gives six runs for twelve.) |
 | a cadence of hours, M a run or a cadence | the hours as in the table for continuous minutes, each window from its first run to its last, then the lead: «in den geraden Stunden (0:00–0:29, 2:00–2:29 … 22:00–22:29 Uhr) jede Minute» |
 | every hour with exceptions | «stündlich um :05, :20 und :45, außer von 3:05 bis 3:45 Uhr» |
 
@@ -609,8 +611,8 @@ never «24:00».
   rest names clock times or minutes of the hour as points:
   * clock times: «um 9:30:15 Uhr»; «von 9:00:30 bis 17:00:30 Uhr
     stündlich»; «von 0:00:30 bis 22:00:30 Uhr alle 2 Stunden»; «um
-    0:00:15, 6:00:15, 12:00:15 und 18:00:15 Uhr»; «von 0:05:08 bis
-    22:05:08 und von 0:30:08 bis 22:30:08 Uhr alle 2 Stunden»;
+    0:00:15, 6:00:15, 12:00:15 und 18:00:15 Uhr»; «um 0:05:08, 0:30:08,
+    2:05:08, 2:30:08 … 22:05:08 und 22:30:08 Uhr»;
   * minutes of the hour: «stündlich um :30:15»; «stündlich um :05:30 und
     :20:30»;
   * every hour on the hour: «30 Sekunden nach jeder vollen Stunde»
@@ -648,31 +650,35 @@ never «24:00».
 * **Everywhere else the seconds trail.** The rest is said whole, with
   its windows to the minute, and the seconds follow after a comma and
   «jeweils», in one of four forms:
-  * one second, or a list of up to six that does not hold second 0:
-    «alle 15 Minuten, jeweils 30 Sekunden nach der vollen Minute»; «von
-    9:00 bis 17:45 Uhr alle 15 Minuten, jeweils 15 und 45 Sekunden nach
-    der vollen Minute»; «…, jeweils 5, 15, 25, 35, 45 und 55 Sekunden
-    nach der vollen Minute»;
+  * one second, or a list of up to six: «alle 15 Minuten, jeweils 30
+    Sekunden nach der vollen Minute»; «von 9:00 bis 17:45 Uhr alle 15
+    Minuten, jeweils 15 und 45 Sekunden nach der vollen Minute»; «…,
+    jeweils 5, 15, 25, 35, 45 und 55 Sekunden nach der vollen Minute».
+    **A cadence or a run of six seconds or fewer is such a list.** Where
+    the list holds second 0, the full minute is named as the point it
+    is and the rest after it: «…, jeweils zur vollen Minute sowie 30
+    Sekunden danach» (seconds 0 and 30); «…, jeweils zur vollen Minute
+    sowie 15, 30 und 45 Sekunden danach»; «…, jeweils zur vollen Minute
+    sowie 10, 20, 30, 40 und 50 Sekunden danach»;
   * every second: «…, jeweils eine Minute lang jede Sekunde» (understood
-    by both judges as sixty runs; the one length that cannot be
+    by all three judges as sixty runs; the one length that cannot be
     miscounted in a way that matters);
-  * a run or a cadence from second 0, as a count and a spacing, which
-    fixes the first run and the last: «…, jeweils 2-mal im Abstand von
-    30 Sekunden» (seconds 0 and 30); «…, jeweils 4-mal im Abstand von 15
-    Sekunden»; «…, jeweils 10-mal im Abstand von 6 Sekunden»; «…, jeweils
-    10-mal im Abstand von 1 Sekunde» (seconds 0 to 9). The count is
-    written with digits and «-mal». A list that holds second 0 and is no
-    cadence: «…, jeweils zur vollen Minute sowie 15 Sekunden danach».
-  * a run or a cadence from a later second, with its first run named:
-    «…, jeweils 11-mal im Abstand von 1 Sekunde, erstmals 10 Sekunden
-    nach der vollen Minute».
+  * a run or a cadence of more than six seconds from second 0, as a
+    count and a spacing, which fixes the first run and the last: «…,
+    jeweils 10-mal im Abstand von 6 Sekunden»; «…, jeweils 10-mal im
+    Abstand von 1 Sekunde» (seconds 0 to 9). The count is written with
+    digits and «-mal»;
+  * a run or a cadence of more than six seconds from a later second,
+    with its first run named: «…, jeweils 11-mal im Abstand von 1
+    Sekunde, erstmals 10 Sekunden nach der vollen Minute».
 
   A rest that already trails takes the seconds after it the same way.
 
   «Jeweils eine Minute lang alle 30 Sekunden» was read as two runs or
-  three by the second judge and the second reader, and is given up with
-  its family; the count is the second judge's own device («jeweils
-  zweimal im Abstand von 30 Sekunden»).
+  three by the second judge and the second reader. «Jeweils 2-mal im
+  Abstand von 30 Sekunden» was understood by the third judge only on a
+  second read, where the two moments themselves need none; so the count
+  is kept for bursts too long to list.
 
 A window on a cadence of minutes is never moved to the second to carry a
 second, nor stretched to the last second of a burst: its end would be
@@ -691,18 +697,28 @@ with "the exception standing before the rule", and wrote this one.
 fall on. «Oder» is read as a choice; «und jeden Freitag um 0:00 Uhr»
 lets the time go with one side.
 
-A month, and a year, lead and are said once. The weekdays follow them
-directly, as they would alone («im Juni freitags»), and the date side
-then names no month: «im Juni freitags und zusätzlich am 1., jeweils um
-0:00 Uhr»; «im Januar und Juli montags bis freitags und zusätzlich am 1.
-und 15., jeweils um 0:00 Uhr»; «im Juni 2030 freitags und zusätzlich am
-1., jeweils um 0:00 Uhr»; «im Jahr 2030 freitags und zusätzlich am 1.
-jedes Monats, jeweils um 0:00 Uhr». Settled as a fault, contested as a
-cure: with the date first («im Juni am 1. sowie freitags») both the
-second judge and the second reader heard the weekdays as running all
-year. The reader proposed «sowohl … als auch»; the judge's order is
-taken because it also puts the rule first, and a bare «am 1.» after «im
-Juni freitags und zusätzlich» has no month of its own to claim.
+A month, and a year, lead. The weekdays follow them directly, as they
+would alone («im Juni freitags»). **The date side says the months
+again**, so that it cannot be heard as holding in every month: one month
+by name, in the form a date takes (4.4), and several as «dieser Monate»:
+«im Juni freitags und zusätzlich am 1. Juni, jeweils um 0:00 Uhr»; «im
+Juni freitags und zusätzlich am letzten Tag im Juni, jeweils …»; «im
+Januar und Juli montags bis freitags und zusätzlich am 1. und 15. dieser
+Monate, jeweils um 0:00 Uhr»; «im Januar und Juli freitags und
+zusätzlich am letzten Tag dieser Monate, jeweils …». A year is said
+once, where it leads: «im Juni 2030 freitags und zusätzlich am 1. Juni,
+jeweils um 0:00 Uhr»; «im Jahr 2030 freitags und zusätzlich am 1. jedes
+Monats, jeweils um 0:00 Uhr».
+
+How this was reached. With the date first («im Juni am 1. sowie
+freitags») the second judge and the second reader heard the weekdays as
+running all year. With the weekdays first and a bare date («… und
+zusätzlich am 1. und 15.») the third judge read the two-month sentence
+twice and could not rule out the 1st and 15th of every month, and found
+that «am 1.» "hangs in the air" under one month; it wrote the month on
+the date. The form with every month («montags bis freitags und
+zusätzlich am 1. jedes Monats, jeweils um 0:00 Uhr») was graded natural
+and read once.
 
 Either side may be an exception: «täglich, außer mittwochs, und
 zusätzlich am 15. jedes Monats, jeweils um 9:00 Uhr»; «montags bis
@@ -740,7 +756,7 @@ the month:
 | Months | The date phrase | Example |
 | --- | --- | --- |
 | every month | carries «jedes Monats» | «am 1. jedes Monats»; «vom 1. bis 7. jedes Monats»; «an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.)»; «am letzten Tag jedes Monats»; «am zweiten Montag jedes Monats» |
-| one month | fuses with it, and the month does not lead: the bare name after an ordinal number, «im» and the name after a noun | «am 1. Juni»; «am 1. und 15. Juni»; «vom 1. bis 7. Juni»; «am 8., 10., 12. … und 30. Juni»; «an den ungeraden Tagen im Juni (1., 3., 5. … 29.)»; «am letzten Tag im Juni»; «am zweiten Montag im Juni»; «am ersten Werktag (Montag bis Freitag) im Juni»; «3 Tage vor dem letzten Tag im Juni» |
+| one month | fuses with it, and the month does not lead: the bare name after an ordinal number, «im» and the name after a noun | «am 1. Juni»; «am 1. und 15. Juni»; «vom 1. bis 7. Juni»; «am 8., 10., 12. … und 30. Juni»; «an den ungeraden Tagen im Juni (1., 3., 5. … 29.)»; «am letzten Tag im Juni»; «am zweiten Montag im Juni»; «am ersten Werktag (Montag bis Freitag) im Juni»; «am viertletzten Tag im Juni (3 Tage vor dem letzten)» |
 | any other month part | follows it after «jeweils» (2.6), with nothing in place of «jedes Monats» | «im Januar und Juli jeweils am 1.»; «von Juni bis August jeweils am 1.»; «im Januar und Juli jeweils am letzten Freitag»; «im Januar und Juli jeweils an den ungeraden Tagen (1., 3., 5. … 31.)»; «von Juni bis August jeweils vom 1. bis 7.»; «in allen Monaten, außer im April und September, jeweils am 1.» |
 
 The gloss of odd or even days stands at the end of the date phrase,
@@ -821,16 +837,24 @@ named.
 
 * `L` — «am letzten Tag jedes Monats»
 * `L-1` — «am vorletzten Tag jedes Monats» (graded natural twice).
-* `L-2` and beyond — «2 Tage vor dem letzten Tag jedes Monats»; «3 Tage
-  vor dem letzten Tag jedes Monats»; with months, «3 Tage vor dem
-  letzten Tag im Juni», «im Januar und Juli jeweils 3 Tage vor dem
-  letzten Tag». **Contested.** The first judge found that this has to be
-  worked out and wrote «am viertletzten Tag»; the second found
-  «viertletzten» has to be counted and can be read as four days before
-  the last, and wrote «drei Tage vor dem Monatsletzten». Each form was
-  misread once. The count of days is chosen because it is the number in
-  the pattern and one device for every number. Where a month is too
-  short to have such a day nothing fires, as with a date the month lacks.
+* `L-2` to `L-9` — the day counted from the end, as one word, with the
+  count of days in a gloss at the end of the date phrase: «am
+  drittletzten Tag jedes Monats (2 Tage vor dem letzten)»; «am
+  viertletzten Tag jedes Monats (3 Tage vor dem letzten)»; with months,
+  «am viertletzten Tag im Juni (3 Tage vor dem letzten)», «im Januar und
+  Juli jeweils am viertletzten Tag (3 Tage vor dem letzten)»; and so on
+  to «am zehntletzten Tag jedes Monats (9 Tage vor dem letzten)».
+  **Contested; both misreadings are on record.** Alone, «am viertletzten
+  Tag» was taken by the second judge as possibly four days before the
+  last, and alone, «3 Tage vor dem letzten Tag» was taken by the third
+  judge as possibly the third-last day ("a real risk"). Each wording
+  excludes the other's misreading, so both are said: the word names the
+  day and the gloss shows the count that is in the pattern.
+* `L-10` and beyond have no such word: «10 Tage vor dem letzten Tag
+  jedes Monats». This form carries the third judge's misreading and is
+  kept for want of a word.
+* Where a month is too short to have such a day nothing fires, as with a
+  date the month lacks.
 * `LW` — «am letzten Werktag (Montag bis Freitag) jedes Monats»
 * `1W` — «am ersten Werktag (Montag bis Freitag) jedes Monats». The
   nearest such day never leaves its month, so for the 1st it is the
@@ -841,17 +865,19 @@ named.
   jeweils am Werktag (Montag bis Freitag), der dem 15. am nächsten
   liegt,». The relative clause is closed by a comma whenever anything
   follows it, and something always does. (Graded acceptable and heavy by
-  both judges; their rewrites put the time in the middle of the
-  sentence, which the frame does not allow.)
+  all three judges, and read twice by the third because of the bracket,
+  the relative clause and the time trailing after them. It is exact, and
+  it is kept: every rewrite offered puts the time before the day, which
+  the frame does not allow.)
 * `28W` to `31W` — an idiom by the number named, for two facts. The date
   can be the last of its month, where the nearer day would lie in the
   next month, so the clause says «im selben Monat». And a month without
   that date is skipped, which «dem 31. jedes Monats» would hide, so for
   29, 30 and 31 the months are said first: `31W` is «in Monaten mit 31
   Tagen am Werktag (Montag bis Freitag), der dem 31. im selben Monat am
-  nächsten liegt,»; `30W` and `29W` are «in Monaten mit mindestens 30
-  Tagen am Werktag (Montag bis Freitag), der dem 30. im selben Monat am
-  nächsten liegt,»; `28W`, which every month has, is «am Werktag (Montag
+  nächsten liegt,»; `30W` and `29W` name their own number, as in «in
+  Monaten mit mindestens 30 Tagen am Werktag (Montag bis Freitag), der
+  dem 30. im selben Monat am nächsten liegt,»; `28W`, which every month has, is «am Werktag (Montag
   bis Freitag), der dem 28. jedes Monats im selben Monat am nächsten
   liegt,». With a named month the month phrase is said as usual and «in
   Monaten mit …» is not.
@@ -880,14 +906,17 @@ With `short: true` the brackets are «(Mo. bis Fr.)».
   would open with «ab 2028 alle vier Jahre» and gloss the series.)
 
 Series, by field: a gloss of hours shows two windows and the last; a
-series of dates shows three dates and the last; a series of years shows
-three years, and its end only if it has one.
+series of clock times shows every time of the first two hours and of the
+last; a series of dates shows three dates and the last; a series of
+years shows three years, and its end only if it has one. Dates, windows
+and clock times use «…»; years use «usw.», because their series has no
+end to show.
 
 ## 6. Words
 
 6.1 Syllables.
 
-6.2 Numbers are written as digits («1 Sekunde», «2-mal»); a day of the
+6.2 Numbers are written as digits («1 Sekunde», «10-mal»); a day of the
 month takes the ordinal's full stop; a minute of the hour is «:05».
 
 6.3 Months and weekdays are in the lexicon, with their short forms. A
@@ -936,7 +965,7 @@ Uhr»).
 7.6 Left to right, Western digits, words separated by single spaces. No
 space before a comma or inside brackets. An en dash with no spaces joins
 the two ends of a window in a gloss. A count is a digit, a hyphen and
-«mal»: «2-mal».
+«mal»: «10-mal».
 
 ## 8. Traps
 
@@ -946,9 +975,9 @@ jeweils um 0:00 Uhr».
 
 8.2 `shared-qualifier-scope` — The time comes last, after a comma and
 «jeweils», so it covers both sides. A month and a year come first, the
-weekdays follow them directly, and the date side names no month of its
-own, so they cover both too: «im Juni freitags und zusätzlich am 1.,
-jeweils um 0:00 Uhr».
+weekdays follow them directly, and the date side says the months again
+(«am 1. Juni», «dieser Monate»), so they cover both: «im Juni freitags
+und zusätzlich am 1. Juni, jeweils um 0:00 Uhr».
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window, and it
 stands before what it confines: «von 9:00 bis 17:45 Uhr alle 15

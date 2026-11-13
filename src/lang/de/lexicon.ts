@@ -77,6 +77,14 @@ const units = {
 // dative that «am» takes.
 const nthWords = ['ersten', 'zweiten', 'dritten', 'vierten', 'fünften'];
 
+// The words for a day counted from the end of the month, in the same
+// dative, from two days before the last (`L-2`) to nine before it. One
+// day before it is the fixed phrase «am vorletzten Tag».
+const fromLastWords = [
+  'drittletzten', 'viertletzten', 'fünftletzten', 'sechstletzten',
+  'siebtletzten', 'achtletzten', 'neuntletzten', 'zehntletzten'
+];
+
 // The parts of the day a 12-hour time is said with (`hour12`), in order:
 // each covers the hours after the one before it, up to `until`. They start
 // at hour 1: hour 0 is written «0:00 Uhr» and takes none.
@@ -102,9 +110,12 @@ const words = {
   at: 'um',
   atEachHour: 'zu jeder vollen Stunde',
   atEachMinute: 'zu jeder vollen Minute',
+  atTheMinute: 'zur vollen Minute',
   atLeast: 'mindestens',
+  beforeLast: 'vor dem letzten',
   beforeLastDay: 'vor dem letzten Tag',
   daily: 'täglich',
+  day: 'Tag',
   each: 'jede',
   eachTime: 'jeweils',
   ellipsis: '…',
@@ -128,6 +139,7 @@ const words = {
   lastDay: 'am letzten Tag',
   nearest: 'am nächsten liegt',
   oClock: 'Uhr',
+  ofTheseMonths: 'dieser Monate',
   ofEachMonth: 'jedes Monats',
   on: 'am',
   onEvenDays: 'an den geraden Tagen',
@@ -148,8 +160,8 @@ const words = {
 };
 
 const lexicon = {
-  dayParts, januaryAustrian, months, nthWords, twoDigits, units, weekdays,
-  words
+  dayParts, fromLastWords, januaryAustrian, months, nthWords, twoDigits,
+  units, weekdays, words
 };
 
 export type {DayPart, Name, WeekdayName};

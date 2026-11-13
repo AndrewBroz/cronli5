@@ -69,10 +69,10 @@ const rows = [
     '30 Sekunden nach der vollen Minute'],
   ['0,30 */15 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils ' +
-    '2-mal im Abstand von 30 Sekunden'],
+    'zur vollen Minute sowie 30 Sekunden danach'],
   ['*/15 */15 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils ' +
-    '4-mal im Abstand von 15 Sekunden'],
+    'zur vollen Minute sowie 15, 30 und 45 Sekunden danach'],
   ['0-9 */15 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils ' +
     '10-mal im Abstand von 1 Sekunde'],

@@ -49,7 +49,7 @@ describe('German lexicon:', function() {
     });
 
     Object.values(lexicon.words)
-      .concat(lexicon.nthWords, partWords)
+      .concat(lexicon.nthWords, lexicon.fromLastWords, partWords)
       .forEach(function isWord(word) {
         expect(word).to.be.a('string').and.not.equal('');
       });

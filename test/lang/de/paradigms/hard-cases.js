@@ -52,11 +52,14 @@ const rows = [
   ['0 0 1 * ?', 'am 1. jedes Monats um 0:00 Uhr', {cron: 'quartz'}],
   ['0 0 LW * *',
     'am letzten Werktag (Montag bis Freitag) jedes Monats um 0:00 Uhr'],
-  ['0 0 L-3 * *', '3 Tage vor dem letzten Tag jedes Monats um 0:00 Uhr'],
-  ['0 0 L-2 * *', '2 Tage vor dem letzten Tag jedes Monats um 0:00 Uhr'],
+  ['0 0 L-3 * *',
+    'am viertletzten Tag jedes Monats (3 Tage vor dem letzten) um 0:00 Uhr'],
+  ['0 0 L-2 * *',
+    'am drittletzten Tag jedes Monats (2 Tage vor dem letzten) um 0:00 Uhr'],
   ['0 0 L-1 * *', 'am vorletzten Tag jedes Monats um 0:00 Uhr'],
   ['0 0 L 6 *', 'am letzten Tag im Juni um 0:00 Uhr'],
-  ['0 0 L-3 6 *', '3 Tage vor dem letzten Tag im Juni um 0:00 Uhr'],
+  ['0 0 L-3 6 *',
+    'am viertletzten Tag im Juni (3 Tage vor dem letzten) um 0:00 Uhr'],
   ['0 0 L 1,7 *', 'im Januar und Juli jeweils am letzten Tag um 0:00 Uhr'],
   ['0 0 LW 6 *', 'am letzten Werktag (Montag bis Freitag) im Juni um 0:00 Uhr'],
   ['0 0 15W 6 *',
@@ -75,8 +78,11 @@ const rows = [
     'am Werktag (Montag bis Freitag), der dem 28. jedes Monats im selben ' +
     'Monat am nächsten liegt, um 0:00 Uhr'],
   ['0 0 L-10 * *', '10 Tage vor dem letzten Tag jedes Monats um 0:00 Uhr'],
+  ['0 0 L-9 * *',
+    'am zehntletzten Tag jedes Monats (9 Tage vor dem letzten) um 0:00 Uhr'],
   ['0 0 L-3 1,7 *',
-    'im Januar und Juli jeweils 3 Tage vor dem letzten Tag um 0:00 Uhr'],
+    'im Januar und Juli jeweils am viertletzten Tag (3 Tage vor dem ' +
+    'letzten) um 0:00 Uhr'],
   ['0 0 * 6 1#2', 'am zweiten Montag im Juni um 0:00 Uhr'],
   ['0 0 * 1,7 5L', 'im Januar und Juli jeweils am letzten Freitag um 0:00 Uhr'],
   ['0 9 * * 3#1', 'am ersten Mittwoch jedes Monats um 9:00 Uhr'],
@@ -104,13 +110,14 @@ const rows = [
   ['not a pattern', 'ein unbekanntes Cron-Muster', {lenient: true}],
 
   // A day of the month and a weekday, alone and under a month.
-  ['0 0 1 6 5', 'im Juni freitags und zusätzlich am 1., jeweils um 0:00 Uhr'],
+  ['0 0 1 6 5',
+    'im Juni freitags und zusätzlich am 1. Juni, jeweils um 0:00 Uhr'],
   ['0 0 1,15 1,7 1-5',
-    'im Januar und Juli montags bis freitags und zusätzlich am 1. und 15., ' +
-    'jeweils um 0:00 Uhr'],
+    'im Januar und Juli montags bis freitags und zusätzlich am 1. und 15. ' +
+    'dieser Monate, jeweils um 0:00 Uhr'],
   ['52 7-16 1,19,23,28 5-7 3-4',
     'von Mai bis Juli mittwochs und donnerstags und zusätzlich am 1., 19., ' +
-    '23. und 28., jeweils von 7:52 bis 16:52 Uhr stündlich'],
+    '23. und 28. dieser Monate, jeweils von 7:52 bis 16:52 Uhr stündlich'],
   ['30 4 1-7 * 1',
     'montags und zusätzlich vom 1. bis 7. jedes Monats, jeweils um 4:30 Uhr'],
   ['0 9 15 * 1-6',
@@ -127,8 +134,14 @@ const rows = [
     'freitags und zusätzlich am letzten Tag jedes Monats, jeweils um 0:00 ' +
     'Uhr'],
   ['0 0 1 6 5 2030',
-    'im Juni 2030 freitags und zusätzlich am 1., jeweils um 0:00 Uhr',
+    'im Juni 2030 freitags und zusätzlich am 1. Juni, jeweils um 0:00 Uhr',
     {years: true}],
+  ['0 0 L 6 5',
+    'im Juni freitags und zusätzlich am letzten Tag im Juni, jeweils um ' +
+    '0:00 Uhr'],
+  ['0 0 L 1,7 5',
+    'im Januar und Juli freitags und zusätzlich am letzten Tag dieser ' +
+    'Monate, jeweils um 0:00 Uhr'],
   ['0 0 0 1 * 5 2030',
     'im Jahr 2030 freitags und zusätzlich am 1. jedes Monats, jeweils um ' +
     '0:00 Uhr'],
@@ -268,12 +281,12 @@ const rows = [
   ['23 1/2 * * *', 'täglich von 1:23 bis 23:23 Uhr alle 2 Stunden'],
   ['0 1/2 * * 1', 'montags von 1:00 bis 23:00 Uhr alle 2 Stunden'],
   ['15,45 */2 * * *',
-    'täglich von 0:15 bis 22:15 und von 0:45 bis 22:45 Uhr alle 2 Stunden'],
+    'täglich um 0:15, 0:45, 2:15, 2:45 … 22:15 und 22:45 Uhr'],
   ['15,45 */4 * * *',
-    'täglich von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden'],
+    'täglich um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr'],
   ['0,15,45 */4 * * *',
-    'täglich von 0:00 bis 20:00, von 0:15 bis 20:15 und von 0:45 bis 20:45 ' +
-    'Uhr alle 4 Stunden'],
+    'täglich um 0:00, 0:15, 0:45, 4:00, 4:15, 4:45 … 20:00, 20:15 und ' +
+    '20:45 Uhr'],
   ['15,45 */12 * * *', 'täglich um 0:15, 0:45, 12:15 und 12:45 Uhr'],
   ['23 */12 * * *', 'täglich um 0:23 und 12:23 Uhr'],
   ['0 1/12 * * *', 'täglich um 1:00 und 13:00 Uhr'],
@@ -378,7 +391,12 @@ const rows = [
     'täglich von 9:00:00 bis 9:00:59 und von 17:00:00 bis 17:00:59 Uhr ' +
     'jede Sekunde'],
   ['*/15 */15 * * * *',
-    'alle 15 Minuten, jeweils 4-mal im Abstand von 15 Sekunden'],
+    'alle 15 Minuten, jeweils zur vollen Minute sowie 15, 30 und 45 ' +
+    'Sekunden danach'],
+  ['*/6 */15 * * * *',
+    'alle 15 Minuten, jeweils 10-mal im Abstand von 6 Sekunden'],
+  ['0,15 */15 * * * *',
+    'alle 15 Minuten, jeweils zur vollen Minute sowie 15 Sekunden danach'],
   ['30 */15 * * * *',
     'alle 15 Minuten, jeweils 30 Sekunden nach der vollen Minute'],
   ['30 */15 */2 * * *',
@@ -392,8 +410,8 @@ const rows = [
     'täglich von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils 15 und 45 ' +
     'Sekunden nach der vollen Minute'],
   ['8 5,30 */2 * * *',
-    'täglich von 0:05:08 bis 22:05:08 und von 0:30:08 bis 22:30:08 Uhr ' +
-    'alle 2 Stunden'],
+    'täglich um 0:05:08, 0:30:08, 2:05:08, 2:30:08 … 22:05:08 und 22:30:08 ' +
+    'Uhr'],
   ['* 0-29 * * * *', 'stündlich von :00:00 bis :29:59 jede Sekunde'],
   ['* 30 * * * *', 'stündlich um :30, jeweils eine Minute lang jede Sekunde'],
   ['* */15 8,12,18 * * *',
@@ -436,8 +454,8 @@ const rows = [
   // Several fields at once.
   ['*/10 24 */3 23-25 * 1-2',
     'montags und dienstags und zusätzlich vom 23. bis 25. jedes Monats, ' +
-    'jeweils von 0:24 bis 21:24 Uhr alle 3 Stunden, jeweils 6-mal im ' +
-    'Abstand von 10 Sekunden'],
+    'jeweils von 0:24 bis 21:24 Uhr alle 3 Stunden, jeweils zur vollen ' +
+    'Minute sowie 10, 20, 30, 40 und 50 Sekunden danach'],
   ['*/30 23 */12 * 6-7 6#2 2030/4',
     'in den Jahren 2030, 2034, 2038 usw. jeweils im Juni und Juli am ' +
     'zweiten Samstag um 0:23:00, 0:23:30, 12:23:00 und 12:23:30 Uhr'],
