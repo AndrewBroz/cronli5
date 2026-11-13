@@ -143,10 +143,17 @@ Corrections, for what has to be worked out:
   * seconds that trail: by their number in the minute (4.2): «jeweils in
     den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57»;
   * years: 5.8.
-  Before this rule such a set was a list of up to fifty-nine values. The
-  core's parts are not always the ones a reader would choose (it takes
-  the longest cadence first, so parts may interleave), and they are said
-  as given: the count decides whether they are said at all.
+  Before this rule such a set was a list of up to fifty-nine values.
+  **The parts must follow one another**: each begins after the one
+  before it has ended. The core takes the longest cadence first, so its
+  parts can run through one another (hours 1, 5, 9 and 8, 11, 14 … 23),
+  and a reader cannot follow two stretches at once; such a set is said
+  as the field says it without this rule (its list, its pieces, each of
+  its windows). Stray single values are counted as parts for this,
+  except minutes and hours as points, whose strays are said after
+  everything else («sowie um :45») and may fall anywhere. Years are the
+  one field where parts may run through one another (5.8): two series
+  of years are told apart by their first years.
 * **A cadence of hours always names both ends, each a full clock time**:
   «von 0:00 bis 22:00 Uhr alle 2 Stunden»; «von 0:30 bis 21:30 Uhr alle
   3 Stunden». A bare «alle 6 Stunden» or «alle 12 Stunden» is an interval
@@ -1198,9 +1205,13 @@ brackets are «(Mo. bis Fr.)».
     usw.»; «in den Jahren 2030, 2033, 2036 usw. sowie 2031, 2034, 2037
     usw.»; «in den Jahren 2030, 2032, 2034 usw. bis 2060 sowie 2071». A
     cadence among them is a series if it never stops or has more than
-    four years, and otherwise its years. The words «gerade» and
-    «ungerade» are for years that are nothing else, or the base of an
-    exception.
+    four years, and otherwise its years, which join the list beside
+    them in ascending order. The words «gerade» and «ungerade» are for
+    years that are nothing else, or the base of an exception. The parts
+    are the core's and are said as it gives them, however many: two
+    series that meet (`2030/7,2031/11`) come apart into fifteen parts
+    and a sentence nobody holds, and nothing shorter that is true can be
+    built from what the core says.
   (Before the first revision such a set was a list of every year to
   9999. The first revision took it apart by a procedure of its own and
   allowed no exception; the core now does the taking apart, and the

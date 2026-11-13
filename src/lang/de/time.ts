@@ -9,8 +9,8 @@ import {candidatesAs} from '../../core/set-views.js';
 import lexicon from './lexicon.js';
 import type {Counting, Described, Sayable} from './sets.js';
 import {
-  boundedCadence, join, list, longerThan, restOf, runsOf, settle,
-  settleUnwrapped, thingsNamed
+  boundedCadence, inSuccession, join, list, longerThan, restOf, runsOf,
+  settle, settleUnwrapped, thingsNamed
 } from './sets.js';
 import type {Voice} from './voice.js';
 import {clock24, mark} from './voice.js';
@@ -631,15 +631,15 @@ function beatOf(candidates: SetDescription[]): Sayable[] {
     [];
 }
 
-// A field's candidates with nothing wrapped, and its runs and cadences
-// together where it has them.
+// A field's candidates with nothing wrapped.
 function unwrapped(schedule: Schedule, field: Field): SetDescription[] {
   return candidatesAs(schedule, field, {linear: true}) as SetDescription[];
 }
 
-function together(schedule: Schedule, field: Field): Sayable[] {
-  return [schedule.analyses.cadencePieces[field]].filter(Boolean) as
-    Sayable[];
+// A field's runs and cadences together, where they follow one another.
+// Single points may stand anywhere where they are said after the rest.
+function together(schedule: Schedule, field: Field, loose: boolean) {
+  return inSuccession(schedule.analyses.cadencePieces[field], loose);
 }
 
 // The three fields of the clock, each with the description it is said
@@ -656,9 +656,9 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
   });
   const H = denote(linear.hour[linear.hour.length - 1], hoursOfDay);
   const seconds = settle(linear.second, inTheHour,
-    [...beatOf(linear.second), ...together(schedule, 'second')]);
+    [...beatOf(linear.second), ...together(schedule, 'second', false)]);
   const minuteOthers =
-    [...beatOf(linear.minute), ...together(schedule, 'minute')];
+    [...beatOf(linear.minute), ...together(schedule, 'minute', true)];
   const minutes = H.length === 1 ?
     settle(linear.minute, onTheClock, minuteOthers) :
     settleUnwrapped(candidates.minute as SetDescription[], linear.minute,
@@ -682,7 +682,7 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     high: [M[M.length - 1], ...toSecond.filter(whereLeading)],
     hours: settle(linear.hour,
       M.length === 1 ? hoursAsPoints : hoursAsWindows,
-      together(schedule, 'hour')),
+      together(schedule, 'hour', M.length === 1)),
     leads,
     linear,
     low: [M[0], ...[0].filter(whereLeading)],

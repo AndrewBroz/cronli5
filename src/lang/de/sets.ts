@@ -174,6 +174,39 @@ function thingsNamed(
   return naming[description.kind](description as never, count, counting);
 }
 
+/**
+ * Runs and cadences together, where they can be said one after another:
+ * each stretch begins after the one before it has ended. The core's parts
+ * may run through one another, and a reader cannot follow those. Single
+ * values count as stretches unless they are `loose`, said after the rest.
+ */
+function inSuccession(
+  pieces: CadencePieces | null,
+  loose: boolean
+): Sayable[] {
+  const extents = [pieces].flatMap(function partsOf(found) {
+    return found ? found.parts : [];
+  }).flatMap(function extentOf(part) {
+    const {last, start, from = start, to = last, values = []} =
+      part as Partial<Described<'cadence'> & Described<'range'> &
+      Described<'values'>>;
+
+    return part.kind === 'values' ?
+      values.filter(function counted() {
+        return !loose;
+      }).map(function single(value) {
+        return [value, value];
+      }) :
+      [[from as number, to as number]];
+  }).sort(function byFirst(a, b) {
+    return a[0] - b[0];
+  });
+
+  return extents.length > 0 && extents.every(function after(extent, at) {
+    return at === 0 || extent[0] > extents[at - 1][1];
+  }) ? [pieces as CadencePieces] : [];
+}
+
 /** How many values a set holds, from the candidates that describe it. */
 function sizeOf(candidates: SetDescription[]): number {
   const {values = []} =
@@ -230,6 +263,7 @@ function settleUnwrapped(
 }
 
 export {
-  boundedCadence, join, list, longerThan, restOf, runsOf, settle,
+  boundedCadence, inSuccession, join, list, longerThan, restOf, runsOf,
+  settle,
   settleUnwrapped, sizeOf, thingsNamed, unsayable
 };

@@ -13,8 +13,8 @@ import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {Counting, Described, Piece, Sayable} from './sets.js';
 import {
-  boundedCadence, join, list, longerThan, restOf, settle, settleUnwrapped,
-  sizeOf, unsayable
+  boundedCadence, inSuccession, join, list, longerThan, restOf, settle,
+  settleUnwrapped, sizeOf, unsayable
 } from './sets.js';
 import type {TimeSaid} from './time.js';
 import type {Voice} from './voice.js';
@@ -456,8 +456,9 @@ const yearSaid: {[kind: string]: (
       }
     });
 
-    return `${words.inYears} ${said.map(list).filter(Boolean)
-      .join(` ${words.also} `)}`;
+    return `${words.inYears} ${said.map(function inOrder(group) {
+      return list(group.sort());
+    }).filter(Boolean).join(` ${words.also} `)}`;
   },
   except(exception: Described<'except'>, except) {
     const {base, removed} = exception;
@@ -563,10 +564,9 @@ function datesOf(schedule: Schedule, there: boolean, frame: {
         (frame.union ? alternate(base) :
           base.kind !== 'all' || frame.everyMonth);
     });
-  const others = [describeCadencePieces(values, dateDomain)]
-    .filter(Boolean) as Sayable[];
   const said = there && !form ?
-    settleUnwrapped(round, linear, dateCounting, others) :
+    settleUnwrapped(round, linear, dateCounting,
+      inSuccession(describeCadencePieces(values, dateDomain), false)) :
     everyValue;
 
   return {alternate: alternate(restOf(said).base), form, said, there};
