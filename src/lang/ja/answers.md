@@ -2,12 +2,12 @@
 
 Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, for
 Japanese as written in software interfaces and timetables in Japan. This
-is the third version: the second followed an independent read of every
-row for sentences that say the wrong schedule, and this one follows a
-fluent reader's blind judgment of 46 sentences. Every
-choice here was made for Japanese; where an earlier version carried a
-device over from another language, the note says what replaced it and
-why. No fluent human has reviewed these answers yet.
+is the fourth version. Between versions the rows were read by two
+independent readers who worked each pattern's fire times and looked for
+sentences that could be taken to say another schedule, and by two fluent
+readers who graded samples blind for how natural they are. Every choice
+here was made for Japanese; where a reader's evidence decided it, the
+note says so. No fluent human has reviewed these answers yet.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. Japanese is written without spaces: an example that runs
@@ -30,29 +30,31 @@ What the rules below are for:
   (2.5) and 毎年 (2.7).
 
 How many is "few". These are judgments about Japanese, taken from the
-fluent reader's grades, and they depend only on how many values there are
+fluent readers' grades, and they depend only on how many values there are
 and how they are arranged:
 
 | What is listed | Listed up to | Beyond that |
 | --- | --- | --- |
 | clock times (9:00・17:00) | 4 | a window with both ends and an interval |
-| positions inside a unit: minutes of the hour, seconds of the minute, days of the month, years | 7 | both ends and an interval, or the first three, …, and the last (3.7) |
-| hours named as stretches (8時台) | 7 | the first three, …, and the last |
-| weekdays and months | any number | (six weekdays, and eleven months, are an exception, 3.9) |
+| minutes of the hour, seconds of the minute | 7 | both ends and an interval |
+| days of the month | 7 | the first three, …, and the last (3.7) |
+| years | 7 | the rule in words, then its first years in brackets (5.8) |
+| hours named as stretches (8時台) | 8 | 偶数時 or 奇数時 with its first hours in brackets (5.5) |
+| weekdays | 5 | six are a range or an exception (3.9) |
+| months | any number | (an exception when that names fewer, 3.9) |
 
 A clock time is heavier to hold than a bare number, which is why its
-limit is lower: the reader judged a list of eight clock times too long
-and a list of seven dates the fastest form there is.
+limit is lower: a list of eight clock times was judged too long and a
+list of seven dates the form a person would write.
 
 Other general choices:
 
-* A run of exactly two values is listed, not said as a range (毎週日曜日・
-  月曜日; 9:00・10:00).
+* A run of exactly two values is listed, not said as a range (9:00・
+  10:00; 毎月1日・2日).
 * **Every cadence is written with ごと**, including one minute and one
-  second: 1分ごと, 1秒ごと, 15分ごと. (毎分 and 毎秒 were used in earlier
-  versions. They are adverbs, so they read as cramped after まで, could
-  not follow a day without help, and made the sentence form of 8.8 depend
-  on the last word. The reader rewrote every one of them as 1分ごと.)
+  second: 1分ごと, 1秒ごと, 15分ごと. (毎分 and 毎秒 are adverbs: they read
+  as cramped after まで, cannot follow a day without help, and would make
+  the sentence form of 8.8 depend on the last word.)
 * **A cadence of minutes or seconds that tiles its cycle from 0 is said
   with no ends** when the hours are every hour: 15分ごと, 10分ごと, 30秒ご
   と. A reader takes it to start on the hour, and is right.
@@ -60,16 +62,24 @@ Other general choices:
   or fewer are listed (毎日0:00・6:00・12:00・18:00), more are a window (毎
   日0:00から22:00まで2時間ごと). A bare 2時間ごと or 12時間ごと was judged
   to have no starting point. So there is no cadence of hours without
-  ends, no declared tie, and no parity word for hours (5.5).
+  ends and no declared tie.
 * **Every range of times is closed: it names its first and its last
   moment, to the precision of what fires, and both fire.** から…まで is
   read as including its end. There is no form in which a time that is
   named does not fire.
-* **An hour is named as a stretch only with 台**: 9時台 is the hour from
-  9:00 to 9:59. A bare 9時 is a moment.
-* **An exception is always the same device**: what is left out, in
-  full-width brackets with を除く, straight after what it is taken from
-  (3.9).
+* **An hour is named as a stretch only with 台 or as 1時間**: 9時台 is the
+  hour from 9:00 to 9:59. A bare 9時 is a moment.
+* **Where a set has to be said by a rule, the rule is said in words and
+  its first values follow in brackets**: 偶数時（0時・2時…22時）; 2028年から
+  4年ごとの年（2028年・2032年…）. Both fluent readers wrote this form
+  themselves. The mark … is used only there and in a long list of dates
+  (3.7).
+* **An exception always uses を除く** (3.9): before 毎日 and 毎月, which
+  Japanese modifies from the front (水曜日を除く毎日), and in brackets
+  after any other base (奇数日（15日を除く）; 10分ごと（3時台を除く）).
+* **、いずれも leads what several things share** (2.6): the time after a
+  range or pieces of dates, the time after a date and a weekday together,
+  and the cadence after several windows.
 
 ## 1. Anchors
 
@@ -101,9 +111,8 @@ never the order of the sentence.
 | `kanjiTime` | boolean | `false` | `false`: times with a colon (9:00, 9:30, 9:00:30). `true`: times with units, as running prose writes them (9時, 9時30分, 9時0分30秒) |
 | `short` | boolean | `false` | Weekday names without 日 (月曜, 火曜 … 日曜). Nothing else: months and dates have no shorter form |
 
-The default clock is the colon on the 24-hour clock. The reader ranked
-毎月1日の0:00 above 毎月1日の午前0時 for a screen ("in running text the
-second is natural; on a 24-hour display it stands out"), and 毎日8:00・
+The default clock is the colon on the 24-hour clock. A fluent reader
+ranked 毎月1日の0:00 above 毎月1日の午前0時 for a screen, and 毎日8:00・
 12:00・18:00 above 毎日8時・12時・18時. 午前9時 is the prose and broadcast
 form; it is offered by the two fields together.
 
@@ -115,18 +124,20 @@ it is never shared: 午前9:00から午後5:45まで. 翌日 comes before it: �
 same way: 午前8時台・午後0時台・午後6時台; 午前9時台から午後5時台まで. (午後
 12:00 and 午前12:00 were rejected: each is read both ways. 正午 is exact,
 but it would give one time in a list a different form from the rest.) 毎
-時 does not change.
+時, and 偶数時 and 奇数時 with their brackets, do not change: an even hour
+is even on either clock, and the hours in the brackets stay 0時 to 23時.
 
 With `kanjiTime: true` a time is the hour and 時, then the minute and 分
 unless the minute is 0, then the second and 秒 when seconds are shown; a
 time that shows seconds always shows its minute: 9時, 9時30分, 9時0分30秒,
 0時, 17時45分. Nothing else changes: 9時から17時45分まで15分ごと; 毎日9時・
-17時; 22時から翌日2時まで1時間ごと; with `hour12`, 午前9時, 午後5時45分, 午
-後0時. 毎時30分, 9時台 and 15分ごと are the same under both values.
+17時; 22時から翌日2時まで1時間ごと; 9時からの1分間、1秒ごと; with `hour12`,
+午前9時, 午後5時45分, 午後0時. 毎時30分, 9時台 and 15分ごと are the same
+under both values.
 
 With `short: true` the weekday names are 月曜, 火曜, 水曜, 木曜, 金曜, 土
 曜, 日曜, wherever a weekday is named: 毎週月曜・水曜・金曜; 毎週月曜〜金
-曜; 毎月第2月曜; 毎月最終金曜; 毎日（日曜を除く）; 平日（月曜〜金曜）. (The
+曜; 毎月第2月曜; 毎月最終金曜; 土曜を除く毎日; 平日（月曜〜金曜）. (The
 one-character forms 月, 火 … were rejected: 月 and 日 are also "month" and
 "day", and a single one cannot stand alone after 毎週.)
 
@@ -154,11 +165,11 @@ another with no space; 2.6 gives what stands between them.
 2.3 Seconds close the time, as the finest part.
 
 * `30 0 9 * * *` — 毎日9:00:30
-* `*/6 0 9 * * *` — 毎日9:00:00から9:00:54まで6秒ごと
-* `* 0 9 * * *` — 毎日9:00:00から9:00:59まで1秒ごと
+* `*/6 0 9 * * *` — 毎日9:00からの1分間、6秒ごと
+* `* 0 9 * * *` — 毎日9:00からの1分間、1秒ごと
 
 2.4 No second order was adopted, and no other was wanted: every rewrite
-the fluent reader offered kept this order. A time-first order (9:00に毎
+the fluent readers offered kept this order. A time-first order (9:00に毎
 日) is not Japanese. Inside the time part the order is also coarse to
 fine: the stretch of hours first, then what happens in it.
 
@@ -172,82 +183,87 @@ neither the day of the month nor the weekday is, the day part says 毎日:
 * `0 */2 * * *` — 毎日0:00から22:00まで2時間ごと
 * `0 */6 * 6 *` — 毎年6月の毎日0:00・6:00・12:00・18:00
 * `* 8,12,18 * * *` — 毎日8時台・12時台・18時台、1分ごと
-* `* */2 * * *` — 毎日0時台・2時台・4時台…22時台、1分ごと
 
-It is not said when the hours are every hour: 毎時30分; 15分ごと; 毎年6月の
-毎時30分; 毎年6月は終日、5分ごと. A named day of either kind, or a Quartz
-form, replaces it.
+It is not said when the hours are every hour (毎時30分; 15分ごと; 毎年6月の
+毎時30分; 毎年6月は終日、5分ごと), nor when they are every second hour
+said as 偶数時 or 奇数時 (5.5), which already says the schedule runs round
+the clock. A named day of either kind, or a Quartz form, replaces it. An
+edit to the hours may add or remove 毎日; no other field's words depend
+on the time.
 
-**The same word closes a single range of dates.** 毎月1日〜7日の9:00 is
-natural, but it also looks like a period on a notice, which is how the
-first independent reader took it. The fluent reader's fix was 毎日, as a
-speaker says it (1日から7日まで毎日9時). So under the same condition, hours
-restricted, a day part that is one range of dates is followed by の毎日:
-毎月1日〜7日の毎日9:00; 毎年6月1日〜7日の毎日0:00; 毎月28日〜翌月3日の毎日
-0:00; 毎月1日〜7日の毎日9:00から17:45まで15分ごと. Where the hours are
-every hour it is not said, and the period reading is then the true one:
-毎月1日〜7日の毎時0分; 毎月1日〜7日は終日、15分ごと. (各日 was tried and
-judged the language of forms. 1日から7日まで毎日 was the reader's first
-choice; the wave dash was kept so that a range of dates is written one
-way everywhere, and so that から…まで is left to times.)
-
-It is not said after a range of weekdays, after pieces, or inside a date
-and a weekday together. 毎週月曜日〜金曜日の9:00 is how the reader wrote
-that schedule every time; days of the week are a class of days, not a
-period on the calendar. In pieces (毎月1日〜7日と15日の9:00) the stray day
-breaks the period.
-
-An edit to the hours may add or remove 毎日, or の毎日 after a range of
-dates; no other field's words depend on the time.
+毎日 is also the word an exception to the days or the months rests on
+(3.9): 水曜日を除く毎日; 6月を除く毎日. There it is said whatever the
+hours are.
 
 2.6 What stands between two parts. A part is joined to the next part that
 is said (a date inside a single month, 4.4, is one part and takes nothing
-inside it):
+inside it). The join depends on what comes before it and on how the next
+part begins:
 
-| The next part | Join |
-| --- | --- |
-| a time of day that begins with an interval (15分ごと, 1分ごと, 10秒ごと): a cadence of minutes or seconds through every hour | は終日、 |
-| anything else: a clock time, 毎時, 毎分 before a second's number, 8時台, 毎日, 毎週, 毎月, a date, a month | の |
+| Before the join | The next part is a cadence of minutes or seconds through every hour (15分ごと, 1分ごと, 10秒ごと) | The next part is anything else |
+| --- | --- | --- |
+| a day part that contains a range of dates, or is a date and a weekday together | は終日、 | 、いずれも |
+| 毎日 | は終日、 | nothing before a digit, 午前 or 午後; の before a word (毎時, 毎分 with a second, 偶数時, 奇数時) |
+| a month or a year standing before a date and a weekday together, or before days with a を除く exception in front | (the same) | 中、 after a single month, a list of months, or a single year; の間、 after a range or pieces |
+| anything else | は終日、 | の |
 
-* 毎月1日の9:00; 毎月1日の9:00から17:45まで15分ごと; 毎月1日の毎時30分; 毎月
-  1日の8時台・12時台・18時台、1分ごと; 毎週月曜日の毎分30秒
-* 毎月1日は終日、1分ごと; 毎週土曜日・日曜日は終日、15分ごと; 毎年6月は終
-  日、5分ごと; 2030年は終日、5分ごと; 毎月1日は終日、1分ごと（毎時29分を除
-  く）
-* 毎年6月の毎日9:00; 2030年の毎月1日の9:00; 毎年6月の毎週月曜日の9:00
+* の: 毎月1日の9:00; 毎月1日の9:00から17:45まで15分ごと; 毎月1日の毎時30分;
+  毎月1日の8時台・12時台・18時台、1分ごと; 毎週月曜日の毎分30秒; 毎週月曜
+  日〜金曜日の9:00; 毎年6月の毎日9:00; 2030年の毎月1日の9:00; 毎年6月の毎
+  週月曜日の9:00; 毎月8日〜30日の偶数日の0:00.
+* は終日、: 毎月1日は終日、1分ごと; 毎週土曜日・日曜日は終日、15分ごと; 毎
+  年6月は終日、5分ごと; 2030年は終日、5分ごと; 毎月1日〜7日は終日、15分ご
+  と; 毎月1日および毎週金曜日は終日、1分ごと; 水曜日を除く毎日は終日、15分
+  ごと; 毎月1日は終日、1分ごと（毎時29分を除く）.
+* 、いずれも: 毎月1日〜7日、いずれも9:00; 毎月1日〜7日と15日、いずれも
+  9:00; 毎月28日〜翌月3日、いずれも0:00; 毎年6月1日〜3日と28日〜30日、いずれ
+  も0:00; 毎月1日〜7日、いずれも毎時0分; 毎月1日〜7日、いずれも9:00から
+  17:45まで15分ごと; 毎月1日および毎週金曜日、いずれも0:00.
+* After 毎日: 毎日9:00; 水曜日を除く毎日9:00; 毎日午前9:00; 土曜日を除く毎
+  日8時台・12時台・18時台の0分・15分・30分・45分; 土曜日を除く毎日の毎時30
+  分.
+* 中、 and の間、: 4.3 and 3.9.
 
-は終日、 is the reader's own wording (毎月1日は終日、1分ごと). An interval
-straight after a day has no stretch to run in, and after の it reads as a
-length (1日の15分); 終日 gives it the whole day, as a window gives it part
-of one. Because the hours are every hour, "all day" is exact. With
-nothing before it the cadence stands alone: 1分ごと; 15分ごと.
+Why each:
 
-Three exceptions, each a rule:
+* **は終日、** is a fluent reader's own wording (毎月1日は終日、1分ごと),
+  and the next reader graded it natural. An interval straight after a
+  day has no stretch to run in, and after の it reads as a length (1日の
+  15分); 終日 gives it the whole day, as a window gives it part of one.
+  Because the hours are every hour, "all day" is exact. With nothing
+  before it the cadence stands alone: 1分ごと; 15分ごと. (After a month or
+  a year alone, 毎年1月は終日、1分ごと, one reader would add 毎日. It was
+  left: 終日 already says the day, and 毎日終日 is a clump of four
+  characters of the kind another reader marked.)
+* **、いずれも after a range of dates.** Two schedule readers took 毎月1
+  日〜7日の9:00, and pieces such as 6月1日〜3日と28日〜30日の0:00, as a span
+  that ends at that time, or the time as belonging to the last piece
+  only. One fluent reader cured it with 毎日 (1日〜7日の毎日9:00) and the
+  next marked that as a doubled 毎; 各日 was judged the language of
+  forms. いずれも is the word of a careful notice, means "each of them"
+  for any number, doubles nothing, and cannot be read into a span because
+  the comma closes the dates. It is the same word in the three places
+  where several things share what follows, so a reader learns it once. It
+  is used only where a range of dates is present: a plain list (毎月1日・
+  15日の9:00) binds with の as the middle dot does.
+* **A range of weekdays takes の.** 毎週月曜日〜金曜日の9:00 is how both
+  fluent readers wrote that schedule, and the last schedule reader rated
+  the span reading low. It is safe because of 3.3: the only weekday range
+  ever said runs forward inside the week from Monday, and a run that
+  crosses the weekend, where "from Friday until Monday 9:00" is a live
+  reading, is a list.
 
-* **After 毎日 there is no の**: 毎日9:00; 毎日（水曜日を除く）9:00; 毎月1
-  日〜7日の毎日9:00; 毎日（土曜日を除く）毎時30分. Before an interval the
-  table holds: 毎日（水曜日を除く）は終日、15分ごと.
-* **A day part that is a date and a weekday together** ends 、どちらも
-  before a time, and は終日、 before an interval as any day does (4.3): 毎
-  月1日および毎週金曜日、どちらも0:00; 毎月1日および毎週金曜日は終日、1分ご
-  と.
-* **The part before a date and a weekday together** ends の、 (4.3), the
-  comma showing that it owns both sides: 毎年6月の、1日および毎週金曜日、ど
-  ちらも0:00.
-
-Nothing stands between 毎年 and its month (2.7), or between a single year
-and its month (2030年6月).
-
-The join belongs to neither part. An edit to the time may change の to は
-終日、 or back, and nothing else outside the time but 毎日 (2.5).
+The join belongs to neither part. An edit to the time may change the join
+between the first column and the second, and nothing else outside the
+time but 毎日 (2.5).
 
 2.7 毎年. A date or a month with no year before it reads as a single
 occasion: 1月1日の0:00 looks like one New Year. So when the month is
 restricted and the year is not, the year part says 毎年, with nothing
 between it and the month: 毎年1月1日の0:00; 毎年6月の毎日9:00; 毎年6月〜8月
 の毎週月曜日〜金曜日の9:00; 毎年奇数月の1日の0:00. A named year replaces
-it. Months said with an exception already begin 毎月 and take no 毎年
-(3.9).
+it. It is not said before months given by an exception, which lean on 毎
+日 or 毎月 instead (6月を除く毎日; 12月を除く毎月1日).
 
 ## 3. Devices, field by field
 
@@ -273,21 +289,37 @@ time written with a colon.
 * Weekday: 毎週月曜日.
 
 3.3 A list. Items are whole (each with its own unit) and joined by the
-middle dot ・, with nothing before the last item. The reader ranked the
-middle dot first for a list of times: it shows at a glance that the items
-are parallel, where 、 is taken for a break between phrases. It binds
-more tightly than の, so a list on either side of の is read whole: 毎月1
-日・15日の9:00・17:00.
+middle dot ・, with nothing before the last item. A fluent reader ranked
+the middle dot first for a list of times: it shows at a glance that the
+items are parallel, where 、 is taken for a break between phrases. It
+binds more tightly than の, so a list on either side of の is read whole:
+毎月1日・15日の9:00・17:00.
 
 * Minutes: 毎時15分・45分; 毎時5分・20分・45分.
 * Hours with minute 0: 8:00・12:00・18:00.
 * Days of the month: 毎月1日・10日・20日. One 毎月 for the list.
 * Months: 1月・7月.
 * Years: 2030年・2035年.
-* Weekdays: 毎週月曜日・水曜日・金曜日. One 毎週 for the list. The list is
-  in week order starting on Monday, with Sunday last (as 土日 has it). The
-  one exception is a single unbroken run crossing from Sunday into Monday,
-  said in the order of the run: 毎週日曜日・月曜日; 毎週土曜日〜月曜日.
+* Weekdays: 毎週月曜日・水曜日・金曜日. One 毎週 for the list.
+
+**Weekdays are always in week order starting on Monday, with Sunday
+last** (as 土日 has it): 毎週月曜日・日曜日; 毎週金曜日・日曜日; 毎週月曜日・
+土曜日・日曜日. A set of weekdays is said in one of four ways, by its
+arrangement in that order:
+
+* one day, or a list of up to five days: 毎週月曜日; 毎週火曜日・木曜日; 毎
+  週火曜日・水曜日・木曜日・日曜日; 毎週火曜日・水曜日・木曜日・金曜日・日曜日;
+* three or more days in a row in that order, and nothing else: the range,
+  毎週月曜日〜金曜日; 毎週火曜日〜木曜日; 毎週月曜日〜土曜日; 毎週火曜日〜日
+  曜日;
+* six days that are not such a run: the seventh, excepted (3.9), 土曜日を
+  除く毎日; 水曜日を除く毎日;
+* all seven: silent.
+
+A run that crosses from Sunday into Monday is never a range: `5-1` is 毎週
+月曜日・金曜日・土曜日・日曜日. A range beside other days is never said
+either (no 火曜日〜金曜日と日曜日): the days are listed, so the same days
+are not a range in one schedule and a list in the next.
 
 3.4 A range. Both ends are named and both fire.
 
@@ -297,14 +329,20 @@ more tightly than の, so a list on either side of の is read whole: 毎月1
 * **Everything measured on the clock** takes から…まで: clock times (9:00
   から17:00まで1時間ごと), hours as stretches (9時台から17時台まで), the
   minutes of an hour (毎時0分から29分まで1分ごと) and the seconds of a
-  minute (毎分0秒から9秒まで1秒ごと). The reader rejected 〜 before の and a
-  cadence (9:00〜17:45の15分ごと).
-* **A range of days of the month that ends on the 31st ends 末日** when
-  the month is not a single named month, so that no month is given a date
-  it lacks: 毎月25日〜末日の毎日0:00. Under a single named month the dates
-  that month never has are left out of every list and range, and the
-  range ends on its real last day: 毎年6月25日〜30日の毎日0:00; 毎年6月1日・
-  6日・11日・16日・21日・26日の0:00.
+  minute (毎分0秒から9秒まで1秒ごと). A fluent reader rejected 〜 before の
+  and a cadence (9:00〜17:45の15分ごと).
+* **Dates a month lacks.** 毎月31日 is read as "in the months that have a
+  31st", and both fluent readers read lists that way without being told
+  (毎月1日・6日…31日: "the 31st only in months that have one"). So a list,
+  an idiom (奇数日, 8日〜30日の偶数日) and a Quartz form name the date as
+  the pattern has it. Two things are done so that no reader is told a
+  date fires when it cannot: a **range** of days that ends on the 31st
+  ends 末日 when the month is not a single named month (毎月25日〜末日、い
+  ずれも0:00), because 25日〜31日 would be taken to stop short in June;
+  and under **a single named month** the dates that month never has are
+  left out of every list and range, and a range ends on its real last
+  day (毎年6月25日〜30日、いずれも0:00; 毎年6月1日・6日・11日・16日・21日・26
+  日の0:00). February keeps the 29th.
 * A stretch of time filled by a finer cadence is a window that names its
   last moment: hours 9 to 17 under every minute are 9:00から17:59まで1分ご
   と; under every second, 9:00:00から17:59:59まで1秒ごと; under a cadence
@@ -317,32 +355,31 @@ more tightly than の, so a list on either side of の is read whole: 毎月1
 
 3.5 A range that wraps says so with 翌 before the unit it crosses: 22:00か
 ら翌日2:00まで1時間ごと; 22:00から翌日2:59まで1分ごと; 22時台から翌日2時台
-まで; 11月〜翌年2月; 毎月28日〜翌月3日の毎日. Weekdays wrap plainly: 毎週金
-曜日〜月曜日.
+まで; 11月〜翌年2月; 毎月28日〜翌月3日. Weekdays do not wrap (3.3).
 
 A wrap is only true when nothing coarser is restricted:
 
 * hours wrap only when the day of the month, the weekday, the month and
   the year are all every value;
 * days of the month wrap only when the month and the year are;
-* months wrap only when the year is;
-* weekdays may always wrap;
+* months wrap only when the year is, and only where the months are said
+  as a range (4.4 lists them before a date);
 * minutes and seconds follow 3.6.
 
 Where a wrap is not allowed, the set is described in ascending order:
 `0 22-2 1 * *` is 毎月1日の0:00から2:00まで1時間ごと、および22:00・23:00;
 `*/15 22-2 * * 1-5` is 毎週月曜日〜金曜日の0:00から2:45までと22:00から
-23:45まで、いずれも15分ごと; `0 0 28-3 6 *` is 毎年6月1日〜3日と28日〜30日
-の0:00.
+23:45まで、いずれも15分ごと; `0 0 28-3 6 *` is 毎年6月1日〜3日と28日〜30
+日、いずれも0:00.
 
 3.6 Pieces.
 
-* **Days, months, years and weekdays**: the pieces are joined by と, each
-  piece a range or a list of single values joined by ・: 毎月1日〜7日と15
-  日; 毎月1日〜5日と10日と20日〜25日; 6月〜8月と12月; 1月〜3月と6月と9月〜11
-  月; 2030年〜2032年と2035年; 毎週火曜日〜金曜日と日曜日. (A middle dot
-  beside a wave dash, 1日〜7日・15日, can be read as a span that ends on
-  either of two days.)
+* **Days of the month, months and years**: the pieces are joined by と,
+  each piece a range or a list of single values joined by ・: 毎月1日〜7日
+  と15日; 毎月1日〜5日と10日と20日〜25日; 6月〜8月と12月; 1月〜3月と6月と9
+  月〜11月; 2030年〜2032年と2035年. (A middle dot beside a wave dash, 1日〜
+  7日・15日, can be read as a span that ends on either of two days.)
+  Weekdays have no pieces (3.3).
 * **Windows of time that share what happens in them**: each ends まで,
   they are joined by と, and the cadence follows 、いずれも, so that it
   cannot be read with the last window only: 9:00から17:45までと22:00から
@@ -359,17 +396,13 @@ Where a wrap is not allowed, the set is described in ascending order:
 
 Pieces are said in ascending order of their first value, unless one of
 the runs wraps round the cycle, in which case the wrapped run comes first.
-Weekday pieces follow the week order of 3.3. Pieces of weekdays are said
-whenever two or more days are missing and the days present are not one
-run (with one day missing, 3.9); four days or fewer that are not one run
-are a plain list.
 
 A run of minutes that wraps inside one hour is two windows: 9:00から9:10
 までと9:50から9:59まで、いずれも1分ごと.
 
-3.7 A cadence is the interval and ごと. (おき was rejected: the reader
-confirmed that 5日おき is taken by some for every sixth day and 4年おき
-for every fifth year.)
+3.7 A cadence is the interval and ごと. (おき was rejected: a fluent
+reader confirmed that 5日おき is taken by some for every sixth day and 4
+年おき for every fifth year.)
 
 * **Minutes and seconds, tiling from 0, through every hour**: 15分ごと;
   30分ごと; 1分ごと; 15秒ごと. In a window: 9:00から17:45まで15分ごと.
@@ -381,21 +414,20 @@ for every fifth year.)
   in both ends: 毎日0:23・6:23・12:23・18:23; 毎日0:30から22:30まで2時間ご
   と; 毎日0:30から21:30まで3時間ごと.
 * **Days of the month** have no cadence phrase: 5日ごとの日 is a coined
-  noun that has to be counted out, and the reader chose the list. Seven
-  dates or fewer are listed (毎月1日・6日・11日・16日・21日・26日・31日; 毎月
-  5日・8日・11日・14日・17日・20日). More are written as the first three, …,
-  and the last, which shows the interval and both ends: 毎月1日・4日・7日…
-  31日. Every second day is an idiom (5.1).
+  noun that has to be counted out, and both fluent readers accepted the
+  list. Seven dates or fewer are listed (毎月1日・6日・11日・16日・21日・26
+  日・31日; 毎月5日・8日・11日・14日・17日・20日). More are written as the
+  first three, …, and the last, which shows the interval and both ends
+  (graded natural: "there is an end, so the rule can be read through the
+  …"): 毎月1日・4日・7日…31日. Every second day is an idiom (5.1).
 * **Years**: 5.8.
 * **Months** have no cadence. Every second month is an idiom (5.5); any
   other set is named.
-* **Weekdays** have no cadence. The days are listed.
+* **Weekdays** have no cadence.
 
-The mark … (U+2026) is used only in this way: after the first three items
-of an evenly spaced list too long to give in full, and before its last
-item, or before nothing when the list has no end (5.8). It is a device of
-ordinary Japanese (0時・2時…22時), and it is exact because three items fix
-the interval.
+The mark … (U+2026) is used in only two places: in a list of dates as
+above, and inside the brackets that follow a rule said in words (5.5,
+5.8).
 
 3.8 A cadence of minutes or seconds that does not divide evenly, or
 starts off the beat, is a set of positions inside the hour or minute.
@@ -409,38 +441,58 @@ Seven or fewer are listed; more name both ends.
   Inside two hours, two windows: 9:00から9:56までと17:00から17:56まで、いず
   れも7分ごと.
 
-3.9 A set with values missing. **One device: what is left out, in
-full-width brackets with を除く, straight after what it is taken from.**
-The reader found three devices in the last version (X以外の, （…を除く）, and
-a range for Monday to Saturday) and asked for one; the brackets were the
-one graded best in every place they appeared, and they close themselves,
-so nothing after them is read into the exception.
+3.9 A set with values missing.
 
-An exception is said when it replaces a list of more than four items and
-names fewer things than any other way of saying the set (a range counts
-as two, a list as one for each item, an exception as its base plus one
-for each thing left out, and a base of "every" as nothing). A tie between
-an exception and a plain range goes to the range (1月〜10月); one between
-an exception and a range that wraps goes to the exception.
+**When.** A set that is one plain range is always said as the range (1月〜
+11月; 月曜日〜土曜日; 1日〜30日): an exception is for a hole in the middle.
+Otherwise an exception is said when it replaces a list of more than four
+items and names fewer things than any other way of saying the set (a
+range counts as two, a list as one for each item, an exception as its
+base plus one for each thing left out, and a base of "every" as nothing).
+Between an exception and a range that wraps, the exception is said.
+Weekdays take an exception only when exactly one day is missing (3.3).
 
-* **Days of the week, one missing**: 毎日（水曜日を除く）; 毎日（日曜日を除
-  く）; 毎日（土曜日を除く）. Every six-day week is said this way, Monday to
-  Saturday included, so that the same kind of set is always the same kind
-  of sentence. With two days missing the days present are said.
-* **Days of the month**: 毎日（毎月15日を除く）; 毎日（毎月15日・16日を除
-  く）; under a month the bracket needs no 毎月, 毎年6月の毎日（15日を除く）;
-  毎年1月・7月の毎日（15日を除く）. (X以外の毎日 was dropped: 6月の15日以外の
-  毎日 can be read as every day of the year but 15 June. The bracket
-  after 毎日 cannot.)
-* **Months**: 毎月（12月を除く）, which takes the place of 毎年 and of the
-  毎月 of a date: 毎月（12月を除く）の毎日9:00; 毎月（12月を除く）1日の0:00;
-  毎月（12月を除く）の毎週月曜日〜金曜日の9:00; 毎月（12月を除く）は終日、1分
-  ごと.
-* **Any other base**: 毎月奇数日（15日を除く）の9:00; 毎年6月の奇数日（15日
-  を除く）の0:00.
+**How.** The word is always を除く. Where it goes depends on what the
+exception is taken from, because Japanese modifies 毎日 and 毎月 from the
+front and other nouns from behind. (One fluent reader asked that
+exclusions be said one way and suggested brackets; the next found
+brackets straight after 毎日 or 毎月 translated, 毎月（12月を除く）の毎日
+"not written in Japanese", and brackets after a noun or at the end
+natural. Both wrote 水曜日を除く毎日 or 水曜日以外の毎日 themselves.)
 
-An exception is for a hole in the middle. A cadence that is only missing
-values at its end or its start is said with its bounds.
+* **Taken from every day or every month: in front.**
+  * A day of the week: 水曜日を除く毎日9:00; 土曜日を除く毎日は終日、15分ご
+    と; 土曜日を除く毎日の毎時30分.
+  * Days of the month: 毎月15日を除く毎日0:00; 毎月15日・16日を除く毎日
+    0:00.
+  * Months, before a date or a Quartz form: Xを除く毎月, which takes the
+    place of 毎年 and of the 毎月 of the day phrase. 12月を除く毎月1日の
+    0:00; 11月・12月を除く毎月1日の0:00; 6月を除く毎月末日の0:00.
+  * Months, before a weekday phrase: 6月を除く毎週月曜日の9:00.
+  * Months, with no day named: the exception rests on 毎日, which is then
+    said whatever the hours are. 6月を除く毎日9:00; 6月を除く毎日は終日、5
+    分ごと.
+  * Months and a day of the week or days of the month together: one を除
+    く, the coarser first, joined by と. 6月と土曜日を除く毎日9:00; 6月と
+    毎月15日を除く毎日0:00.
+* **A month or a year before days excepted in front is set apart**, so
+  that it is not read into the exception (6月の15日を除く毎日 is every day
+  of the year but 15 June). It takes 中、 or の間、 as 2.6 says, and a
+  date after a single month or a list of months drops 毎月: 毎年6月中、15日
+  を除く毎日0:00; 毎年1月・7月中、15日を除く毎日0:00; 2030年中、毎月15日を除
+  く毎日0:00; 毎年6月中、土曜日を除く毎日9:00; 毎年6月〜8月の間、土曜日を除
+  く毎日9:00; 毎年1月〜11月の間、土曜日を除く毎日9:00.
+* **Taken from anything else: in full-width brackets straight after
+  it.** 毎月奇数日（15日を除く）の9:00; 毎年6月の奇数日（15日を除く）の0:00;
+  and every exception inside the time part, below.
+* **Inside a date and a weekday together no exception is said.** The
+  other side can override it: 毎月1日および日曜日を除く毎日 would be read as
+  never on a Sunday, though it fires on a 1st that is one. Each side says
+  the days it has: six days of the week are listed (毎月1日および毎週月曜
+  日・火曜日・木曜日・金曜日・土曜日・日曜日、いずれも0:00); days of the month
+  are the runs that remain (毎月1日〜14日と16日〜末日および毎週金曜日、いずれ
+  も0:00; 毎月1日〜13日の奇数日と17日〜31日の奇数日および毎週月曜日〜金曜日、
+  いずれも…).
 
 Every exception inside the time part comes last in it, in one pair of
 brackets.
@@ -455,22 +507,24 @@ brackets.
   and is called one: 1秒ごと（毎時29分の1分間を除く）; inside one hour,
   9:00:00から9:59:59まで1秒ごと（9:29の1分間を除く）.
 * An exception to seconds: 1秒ごと（毎分29秒を除く）; inside one named
-  minute, 9:00:00から9:00:59まで1秒ごと（9:00:29を除く）.
+  minute the seconds are a window, so that the exception has exact times
+  to be taken from: 9:00:00から9:00:59まで1秒ごと（9:00:29を除く）.
 * An exception to the hours is a clock time where the hours are points
   (毎時0分（3:00を除く）; 毎時30分（3:30を除く）; 0:00から22:00まで2時間ごと
-  （8:00を除く）) and the hour as a stretch where they are filled (10分ごと
-  （3時台を除く）; 1分ごと（3時台を除く）; 毎時5分・20分・45分（3時台を除く）).
-  After a list of stretches it follows the list at once: 0時台・2時台・4時
-  台…22時台（8時台を除く）、1分ごと.
+  （8:00を除く）; 0:30から22:30まで2時間ごと（8:30を除く）) and the hour as a
+  stretch where they are filled (10分ごと（3時台を除く）; 1分ごと（3時台を除
+  く）; 毎時5分・20分・45分（3時台を除く）; 偶数時（0時・2時…22時）の各1時間、
+  1分ごと（8時台を除く）; 偶数時（0時・2時…22時）の0分・15分・30分・45分（8時台
+  を除く）).
 * If both the hours and the minutes have one, the hours' comes first and
   と joins them: 10分ごと（3時台と毎時30分を除く）.
 
-3.10 Direct comparisons, from the fluent reader's grades:
+3.10 Direct comparisons, from the fluent readers' grades:
 
 * `0 */6 * * *`: 毎日0:00・6:00・12:00・18:00, not 6時間ごと. "Probably 0:00,
   6:00, 12:00, 18:00; the starting point is not given."
 * `0 */2 * * *`: 毎日0:00から22:00まで2時間ごと; the form with both ends
-  was graded best wherever it appeared.
+  was graded natural by both readers wherever it appeared.
 * `23 */6 * * *`: 毎日0:23・6:23・12:23・18:23.
 * `30 */3 * * *`: 毎日0:30から21:30まで3時間ごと, above the list of eight
   times ("exact, but eight is long") and above 3時間ごとの30分 ("cannot be
@@ -501,26 +555,30 @@ these cases in order.
 | any other set | the times, listed | the times, listed |
 
 **M is continuous** (every minute, or a tiling cadence starting at 0).
-The hours come first, as a confinement, and then the interval.
+The hours come first, as a confinement, and then the minutes.
 
-| H | Confinement, with the interval |
+| H | Confinement, with the minutes |
 | --- | --- |
 | every hour | none: 15分ごと |
 | one hour | a window: 9:00から9:59まで1分ごと; 9:00から9:50まで10分ごと. With four times or fewer, the list: 9:00・9:15・9:30・9:45 |
 | a range | 9:00から17:59まで1分ごと; 9:00から17:45まで15分ごと |
 | two windows | 9:00から9:59までと17:00から17:59まで、いずれも1分ごと; 9:00から17:45までと22:00から22:45まで、いずれも15分ごと |
 | three or more windows, at least one longer than an hour | each a window: 9:00から17:59までと20:00から20:59までと22:00から22:59まで、いずれも1分ごと |
-| three or more separate hours and nothing longer | the hours with 台, then the minutes: seven or fewer in each hour are named after の (8時台・12時台・18時台の0分・15分・30分・45分; …の0分・10分・20分・30分・40分・50分), more follow a comma as the interval (8時台・12時台・18時台、1分ごと; …、5分ごと) |
-| the same, more than seven hours on a cadence | the first three, …, and the last: 0時台・2時台・4時台…22時台、1分ごと; 1時台・3時台・5時台…23時台の0分・15分・30分・45分 |
+| three to eight separate hours and nothing longer | the hours with 台, then the minutes (below): 8時台・12時台・18時台、1分ごと; 0時台・3時台・6時台・9時台・12時台・15時台・18時台・21時台、1分ごと |
+| every second hour, more than eight of them | 偶数時 or 奇数時 with its brackets (5.5), then の各1時間、 and the minutes (below): 偶数時（0時・2時…22時）の各1時間、1分ごと |
 | every hour with exceptions | 10分ごと（3時台を除く） |
 
-One or two separate hours are windows, which name the moments that fire.
-Three or more are named once each. Under named hours the minutes are
-listed where they can be, because the reader hesitated over whether 8時
-台・12時台・18時台、15分ごと starts at minute 0.
+The minutes after named hours. Seven or fewer in each hour are named,
+after の: 8時台・12時台・18時台の0分・15分・30分・45分; 8時台・12時台・18時台
+の0分・10分・20分・30分・40分・50分; 偶数時（0時・2時…22時）の0分・15分・30
+分・45分. More are the interval: after hours with 台 it follows a comma (8
+時台・12時台・18時台、5分ごと), and after 偶数時 or 奇数時 it follows の各1
+時間、 (奇数時（1時・3時…23時）の各1時間、1分ごと). The minutes are named
+where they can be because a fluent reader hesitated over whether 8時台・
+12時台・18時台、15分ごと starts at minute 0.
 
-偶数時台 and 奇数時台 are gone: "there is no such word". The reader's
-first choice for those hours was the list with … .
+One or two separate hours are windows, which name the moments that fire.
+Three or more are named once each.
 
 **M is a single run of minutes and H is one hour.** A window of clock
 times: 9:00から9:29まで1分ごと; 9:10から9:40まで1分ごと. A run with a stray
@@ -536,7 +594,8 @@ minute phrase of section 3 follows:
 | every hour | 毎時: 毎時5分・20分・45分 |
 | a range | the hours as stretches, a comma, then 毎時: 9時台から17時台まで、毎時5分・20分・45分; 9時台から17時台まで、毎時0分から29分まで1分ごと; 9時台から17時台まで、毎時0分から29分まで1分ごと、および45分; 9時台から17時台まで、毎時0分から56分まで7分ごと |
 | pieces | 9時台から17時台までと22時台、毎時5分・20分・45分 |
-| separate hours, or hours on a cadence | the hours with 台 (all of them up to seven, else the first three, …, the last), の, and the minute phrase without 毎時: 9時台・17時台の5分・20分・45分; 0時台・4時台・8時台・12時台・16時台・20時台の15分・45分; 0時台・2時台・4時台…22時台の15分・45分; 8時台・12時台・18時台の0分から56分まで7分ごと |
+| up to eight separate hours, or hours on a cadence | the hours with 台, の, and the minute phrase without 毎時: 9時台・17時台の5分・20分・45分; 0時台・4時台・8時台・12時台・16時台・20時台の15分・45分; 8時台・12時台・18時台の0分から56分まで7分ごと |
+| every second hour, more than eight of them | 偶数時（0時・2時…22時）の15分・45分; 偶数時（0時・2時…22時）の0分から29分まで1分ごと |
 | every hour with exceptions | 毎時5分・20分・45分（3時台を除く） |
 
 **A list of clock times is also sayable** whenever neither M nor H is
@@ -553,88 +612,97 @@ window where any time has seconds, every time shows them (9:00:00・
 9:00:30). There are no words for noon or midnight: 0:00, 12:00.
 
 4.2 Seconds. The time part is first chosen without regard to S; call it
-the rest.
+the rest. The cases, in order:
 
-* S is 0: silent.
-* **The rest is one clock time.** Four seconds or fewer are clock times
-  to the second: 毎日9:30:15; 毎日9:00:00・9:00:30; 毎日9:00:00・9:00:15・
-  9:00:30・9:00:45. More are a window to the second: 9:00:00から9:00:59ま
-  で1秒ごと; 9:00:00から9:00:54まで6秒ごと; 9:00:00から9:00:09まで1秒ごと;
-  9:00:05から9:00:55まで10秒ごと.
-* **The rest is several clock times and S is one second, or the times to
-  the second are four or fewer**: the list to the second. 毎日9:30:15・
-  17:30:15; 0:23:00・0:23:30・12:23:00・12:23:30.
-* **There is no rest** (M and H are every value). Continuous: 1秒ごと; 15
-  秒ごと; 30秒ごと. Otherwise the seconds are positions in every minute,
-  after 毎分: 毎分30秒; 毎分15秒・45秒; 毎分0秒から9秒まで1秒ごと; 毎分5秒・
-  15秒・25秒・35秒・45秒・55秒.
-* **The rest ends 1分ごと, and S is continuous**: the interval of seconds
-  takes the place of 1分ごと, and every range in the rest is written to
-  the second, from the first second that fires to the last. 9:00:00から
-  17:59:59まで1秒ごと; 毎時0分0秒から29分59秒まで1秒ごと; 9時台から17時台ま
-  で、毎時0分0秒から29分59秒まで1秒ごと; 8時台・12時台・18時台、1秒ごと; 毎月
-  1日は終日、1秒ごと; a stray minute beside a run becomes its own window:
-  9:00:00から9:29:59までと9:45:00から9:45:59まで、いずれも1秒ごと.
-* **A single second under minutes that are named or in a window** rides
-  on them. In a window of a cadence it moves into the ends: 9:00:30から
-  17:45:30まで15分ごと. After a minute of the hour it follows the minute:
-  毎時0分30秒; 毎時30分15秒; 毎時0分30秒・15分30秒・30分30秒・45分30秒; 0時
-  台・2時台・4時台…22時台の5分8秒・30分8秒; 9時台から17時台まで、毎時5分8秒・
-  20分8秒・45分8秒. (Under a cadence of minutes through every hour, the
-  minutes are named so that the second has something to follow: `30 */15
-  * * * *` is the four of them.)
-* **Any other case**: the rest is said first, then に、, then what happens
-  in each of the minutes it names.
-  * S is every second, or a cadence of more than four seconds tiling from
-    0: それぞれ1分間、 and the interval. 9:00から17:45まで15分ごとに、それぞ
-    れ1分間、1秒ごと; …に、それぞれ1分間、6秒ごと; 15分ごとに、それぞれ1分
-    間、1秒ごと; 毎日9:00・17:00に、それぞれ1分間、1秒ごと; 毎時30分に、それ
-    ぞれ1分間、10秒ごと; 0:24から21:24まで3時間ごとに、それぞれ1分間、10秒ご
-    と.
-  * Otherwise the seconds are positions in that minute, after その分の:
-    seven or fewer are listed, a run or a longer cadence names both ends.
-    …15分ごとに、その分の0秒・30秒; …に、その分の0秒・15秒・30秒・45秒; …に、
-    その分の5秒・15秒・25秒・35秒・45秒・55秒; …に、その分の0秒から9秒まで1秒
-    ごと; 毎時30分に、その分の0秒・15秒・30秒・45秒; 毎時0分に、その分の0秒か
-    ら9秒まで1秒ごと.
+1. S is 0: silent.
+2. **There is no rest** (M and H are every value). Continuous: 1秒ごと;
+   15秒ごと; 30秒ごと. Otherwise the seconds are positions in every
+   minute, after 毎分: 毎分30秒; 毎分15秒・45秒; 毎分0秒から9秒まで1秒ごと;
+   毎分5秒・15秒・25秒・35秒・45秒・55秒. With an exception: 1秒ごと（毎分29秒
+   を除く）.
+3. **S is one second.** It rides on whatever names the minute. Clock
+   times are written to the second (毎日9:30:15; 毎日9:30:15・17:30:15). In
+   the window of a cadence of minutes it moves into both ends (9:00:30か
+   ら17:45:30まで15分ごと). After a minute of the hour it follows the
+   minute (毎時0分30秒; 毎時30分15秒; 偶数時（0時・2時…22時）の5分8秒・30分8
+   秒; 9時台から17時台まで、毎時5分8秒・20分8秒・45分8秒). Under a cadence of
+   minutes through every hour the minutes are named so that it has
+   something to follow: `30 */15 * * * *` is 毎時0分30秒・15分30秒・30分30
+   秒・45分30秒.
+4. **The clock times to the second are four or fewer**: they are listed.
+   毎日9:00:00・9:00:30; 毎日9:00:00・9:00:15・9:00:30・9:00:45; 0:23:00・
+   0:23:30・12:23:00・12:23:30.
+5. **The rest ends 1分ごと, and S is every second or a cadence tiling
+   from 0**: the interval of seconds takes the place of 1分ごと, and every
+   range in the rest is written to the second, from the first second that
+   fires to the last. 9:00:00から17:59:59まで1秒ごと; 毎時0分0秒から29分59
+   秒まで1秒ごと; 9時台から17時台まで、毎時0分0秒から29分59秒まで1秒ごと; 8
+   時台・12時台・18時台、1秒ごと; 毎月1日は終日、1秒ごと; a stray minute
+   beside a run becomes its own window: 9:00:00から9:29:59までと9:45:00か
+   ら9:45:59まで、いずれも1秒ごと.
+6. **S is every second, or a cadence of more than four seconds tiling
+   from 0** (6秒ごと, 10秒ごと): the rest, then "for one minute", then the
+   interval. Where the rest is one clock time or one minute of every
+   hour: からの1分間、 (毎日9:00からの1分間、1秒ごと; 毎日9:00からの1分間、6
+   秒ごと; 毎時30分からの1分間、10秒ごと). Where it names several occasions:
+   に、各1分間、 (9:00から17:45まで15分ごとに、各1分間、1秒ごと; 15分ごと
+   に、各1分間、1秒ごと; 毎日9:00・17:00に、各1分間、1秒ごと; 毎時30分・42分
+   に、各1分間、1秒ごと; 0:24から21:24まで3時間ごとに、各1分間、10秒ごと).
+   Both fluent readers wrote 9:00からの1分間 for the first and one wrote 各
+   1分間 for the second; a window to the second (9:00:00から9:00:59まで)
+   was graded exact and mechanical.
+7. **Any other S** (a run, a cadence off the beat, a list of more than
+   four, an exception):
+   * Where the rest is one clock time, a window or list to the second:
+     9:00:00から9:00:09まで1秒ごと; 9:00:05から9:00:55まで10秒ごと; 9:30:10
+     から9:30:20まで1秒ごと; 9:00:00から9:00:59まで1秒ごと（9:00:29を除く）.
+   * Otherwise the rest, then に、その分の and the seconds as positions in
+     that minute, seven or fewer listed, a run or a longer cadence with
+     both ends: …15分ごとに、その分の0秒・30秒; …に、その分の0秒・15秒・30秒・
+     45秒; …に、その分の5秒・15秒・25秒・35秒・45秒・55秒; …に、その分の0秒から
+     9秒まで1秒ごと; 毎時30分に、その分の0秒・15秒・30秒・45秒; 毎時0分に、そ
+     の分の0秒から9秒まで1秒ごと.
 
-それぞれ1分間 is the reader's own wording for this (15分ごとに、それぞれ1分
-間、毎秒). It is kept to cadences of more than four seconds, where "for
-one minute" leaves no doubt about the last one; four or fewer are always
-named, so 30秒ごと is never said of a single minute. その各分の0秒〜59秒の
-毎秒 was the last version's one device and was judged unreadable.
+Case 4 comes before case 6, so "for one minute" is never said of two,
+three or four seconds, where a reader cannot tell whether the last one is
+inside the minute.
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
-first, then および, then the weekday phrase exactly as it would stand
-alone, then 、どちらも before the time, so that the time is read with
-both: 毎月1日および毎週金曜日、どちらも0:00; 毎月1日〜7日と15日および毎週月
-曜日〜金曜日、どちらも9:00から17:45まで15分ごと; 毎月1日および毎日（日曜日
-を除く）、どちらも0:00; 毎月1日および毎月最終金曜日、どちらも0:00. Before a
-cadence through every hour the pair takes は終日、 as any day does, and
-needs no どちらも: 毎月1日および毎週金曜日は終日、1分ごと.
+first, then および, then the weekday phrase, then 、いずれも before the
+time, so that the time is read with both: 毎月1日および毎週金曜日、いずれも
+0:00; 毎月1日〜7日と15日および毎週月曜日〜金曜日、いずれも9:00から17:45まで
+15分ごと; 毎月1日および毎週月曜日〜土曜日、いずれも0:00; 毎月1日および毎月
+最終金曜日、いずれも0:00. Before a cadence through every hour the pair
+takes は終日、 as any day does: 毎月1日および毎週金曜日は終日、1分ごと.
 
-The reader ranked 毎月1日と毎週金曜日の0:00 first as the most ordinary,
-and offered 毎月1日と毎週金曜日、どちらも0:00 "to be sure". The sure form
-is taken, because two earlier readers attached a time after の to the
-second side only. と is not the connective, because it already joins the
-pieces of one set (毎月1日〜7日と15日), and three と in a row would not
-show which two things どちらも means; および was the reader's second
-choice and stands a level above と. に加えて…いずれも (the last version)
-was ranked third. または is read as "one or the other" and was ruled
-out.
+* **Each side says the days it has, positively** (3.9): no を除く inside
+  a pair.
+* **および, not と.** Both fluent readers found 毎月1日と毎週金曜日の0:00
+  the most ordinary form. と is not used because it already joins the
+  pieces of one set (毎月1日〜7日と15日), and because three schedule
+  readers attached a time after の to the second side only.
+* **いずれも, not どちらも.** どちらも means "both of two" and is spoken;
+  the sides are often lists.
 
-A month, or a year when no month is said, applies to both sides. It is
-said first and closed with の、. The comma after の is how a Japanese
-writer shows that what follows, all of it, belongs to the month; the
-reader wrote both corrections this way (毎年6月の、…). The topic marker は
-used in the last version suggested that other months have some other
-schedule, and left it open whether the Fridays were in June. After の、
-the date is said without 毎月 under a single month or a list of months,
-and with 毎月 after a range, pieces or a year alone, as in 4.4: 毎年6月の、
-1日および毎週金曜日、どちらも0:00; 毎年1月・7月の、1日・15日および毎週月曜
-日〜金曜日、どちらも0:00; 毎年5月〜7月の、毎月1日・19日・23日・28日および毎
-週水曜日・木曜日、どちらも7:52から16:52まで1時間ごと; 2030年の、毎月1日およ
-び毎週金曜日、どちらも0:00.
+**A month, or a year when no month is said, applies to both sides.** It
+is said first and closed by a word that cannot run into the date: 中、
+after a single month, a list of months or a single year, の間、 after a
+range or pieces (after a list, の間 would read as "between"). 毎年6月の、1
+日および毎週金曜日 was tried: 6月の、1日 is still heard as 6月1日, and 毎週金
+曜日 then stands free all year, which one fluent reader and one schedule
+reader both read. After 中、 the date is said without 毎月; after の間、
+or a year, with it:
+
+* 毎年6月中、1日および毎週金曜日、いずれも0:00
+* 毎年1月・7月中、1日・15日および毎週月曜日〜金曜日、いずれも0:00
+* 毎年6月中、1日〜7日および毎週月曜日、いずれも0:00
+* 毎年5月〜7月の間、毎月1日・19日・23日・28日および毎週水曜日・木曜日、いずれ
+  も7:52から16:52まで1時間ごと
+* 2030年6月中、1日および毎週金曜日、いずれも0:00
+* 2030年中、毎月1日および毎週金曜日、いずれも0:00
+
+Months before a pair are always said positively (a list, a range or
+pieces), never with を除く.
 
 Not built into any renderer yet: when both must match, a weekday that
 falls on a date is 毎月13日が金曜日の場合 (the idiom 13日の金曜日), and the
@@ -643,43 +711,45 @@ first Monday is 毎月第1月曜日.
 4.4 A day of the month, a month, and a year. Because the order is year,
 month, day, they join as a date does.
 
-* **Every month**: 毎月1日; 毎月1日・15日; 毎月1日〜7日; 毎月奇数日; 毎月の
-  末日; 毎月第2月曜日.
+* **Every month**: 毎月1日; 毎月1日・15日; 毎月1日〜7日; 毎月奇数日; 毎月末
+  日; 毎月第2月曜日.
 * **A single month**: there is no 毎月. A list, a range or pieces of
-  dates, a run of dates before 偶数日 or 奇数日, and the nearest-weekday
-  form follow the month with nothing between, as a date is written: 6月1
-  日; 6月1日・15日; 6月1日〜7日; 6月1日〜7日と15日; 6月8日〜30日の偶数日; 6月
-  15日に最も近い平日（月曜日〜金曜日）. Anything else takes の: 6月の奇数日;
-  6月の奇数日（15日を除く）; 6月の毎日（15日を除く）; 6月の末日; 6月の末日の3
-  日前; 6月の第2月曜日; 6月の最初の平日（月曜日〜金曜日）.
-* **A list of months, or the odd or even months**: the months, の, and
-  the day phrase without 毎月. 3月・6月・9月・12月の1日; 1月・7月の1日・15
-  日; 奇数月の1日; 1月・7月の末日; 1月・7月の最終金曜日; 1月・4月・7月・10月の
-  奇数日; 3月・6月・9月・12月の15日に最も近い平日（月曜日〜金曜日）; 1月・7月
-  の毎日（15日を除く）.
-* **A range of months or pieces**: the months, の, and the day phrase
-  with 毎月, because 6月〜8月の1日 could be the first day of that span. 6
-  月〜8月の毎月1日; 6月〜8月と12月の毎月1日; 11月〜翌年2月の毎月1日; 6月〜8
-  月の毎月の末日; 6月〜8月の毎月最終金曜日. (各月 was the last version's
-  word here and after lists; with 毎年 before it, it was judged double.)
-* **Months with an exception** are themselves 毎月（…を除く） and take the
-  day directly: 毎月（12月を除く）1日 (3.9).
-* A weekday phrase follows any month phrase with の and keeps 毎週: 6月の
-  毎週月曜日; 6月〜8月の毎週月曜日〜金曜日.
+  dates, a run of dates before 偶数日 or 奇数日, 末日 (with or without 前
+  日 or 日前 after it) and the nearest-weekday form follow the month with
+  nothing between, as a date is written: 6月1日; 6月1日・15日; 6月1日〜7日;
+  6月1日〜7日と15日; 6月8日〜30日の偶数日; 6月末日; 6月末日の3日前; 6月15日に
+  最も近い平日（月曜日〜金曜日）. Anything else takes の: 6月の奇数日; 6月の
+  奇数日（15日を除く）; 6月の第2月曜日; 6月の最初の平日（月曜日〜金曜日）.
+* **Several months**: the months are **listed**, whether the pattern
+  gives them as a list, a range or pieces, then の, then the day phrase
+  without 毎月. 3月・6月・9月・12月の1日; 6月・7月・8月の1日; 6月・7月・8月・12
+  月の1日; 1月・2月・11月・12月の1日; 1月・7月の1日・15日; 1月・7月の末日; 6
+  月・7月・8月の最終金曜日; 1月・4月・7月・10月の奇数日; 3月・6月・9月・12月の
+  15日に最も近い平日（月曜日〜金曜日）. A range is not kept before a date:
+  6月〜8月の1日 could be the first day of that span, 6月〜8月の毎月1日 was
+  marked as a doubled 毎 after 毎年, and 各月 was called the language of
+  forms by one reader and offered by the other. Both wrote the list.
+* **The odd or even months**: 奇数月の1日; 偶数月の1日.
+* **Months with an exception** before a date are Xを除く毎月 (3.9), when
+  that names fewer things than the list: 12月を除く毎月1日; 11月・12月を除
+  く毎月1日.
+* A weekday phrase, or 毎日, follows any month phrase with の and keeps
+  its own 毎; here a range of months stays a range: 6月の毎週月曜日; 6月〜8
+  月の毎週月曜日〜金曜日; 6月〜8月の毎日9:00; 1月〜11月の毎日9:00.
 * **A single year** comes first, as in a date, with nothing after it
   before a month: 2030年1月1日; 2030年6月の毎日9:00; 2030年6月・7月の毎日
-  9:00; 2030年6月〜8月の毎月1日; 2030年6月1日〜7日の毎日0:00. Before
+  9:00; 2030年6月・7月・8月の1日; 2030年6月1日〜7日、いずれも0:00. Before
   anything else it takes の: 2030年の毎日9:00; 2030年の毎月1日の9:00.
 * **A list of years** before a month takes の: 2030年・2035年の1月1日の
   0:00; 2030年・2031年の6月の毎日9:00.
-* **A range or pieces of years** before a month takes の毎年, for the
-  reason a range of months takes 毎月 (the reader's own correction):
-  2030年〜2035年の毎年1月1日の0:00; 2030年〜2032年と2035年の毎年1月1日の
-  0:00; 2030年〜2035年の毎年6月の毎日9:00. Before anything else it is
-  joined as 2.6 says: 2028年〜2031年の毎日9:00.
-* **Years said by an idiom or as a spaced list** (5.8) are joined as 2.6
-  says: 偶数年の1月1日の0:00; 偶数年は終日、5分ごと; 2028年・2032年・2036年…
-  の毎日9:00.
+* **A range or pieces of years** before a month takes の毎年, so that the
+  span is not read as ending on that date (a fluent reader's correction,
+  graded natural by the next): 2030年〜2035年の毎年1月1日の0:00; 2030年〜
+  2032年と2035年の毎年1月1日の0:00; 2030年〜2035年の毎年6月の毎日9:00.
+  Before anything else it is joined as 2.6 says: 2028年〜2031年の毎日9:00.
+* **Years said by an idiom or a rule** (5.8) are joined as 2.6 says: 偶数
+  年の1月1日の0:00; 偶数年は終日、5分ごと; 2028年から4年ごとの年（2028年・
+  2032年…）の毎日9:00.
 
 4.5 None.
 
@@ -688,8 +758,9 @@ month, day, they join as a date does.
 5.1 Days of the month 1, 3, 5 … 31: 毎月奇数日. Days 2, 4 … 30: 毎月偶数日.
 Each can take exceptions (3.9). Every second day over part of the month
 keeps the idiom inside the run it covers: 毎月8日〜30日の偶数日; 毎月5日〜
-19日の奇数日. 奇数日 and 偶数日 are everyday words (the reader graded 毎月
-奇数日（15日を除く）の9:00 without a mark against it).
+19日の奇数日; and so do the runs left when days are taken out of them
+inside a pair (毎月1日〜13日の奇数日と17日〜31日の奇数日). 奇数日 and 偶数日
+are everyday words.
 
 5.2 None. Monday to Friday is the range 毎週月曜日〜金曜日 and the weekend
 is the list 毎週土曜日・日曜日. 平日 is not used for a set of weekdays: it
@@ -697,42 +768,57 @@ leaves out public holidays, which the pattern does not know, and the
 range is as short as any gloss would be.
 
 5.3 None. Noon and midnight are 12:00 and 0:00, which cannot be mistaken
-beside a date: the reader took 毎月1日の0:00 as "the moment the 1st
+beside a date: a fluent reader took 毎月1日の0:00 as "the moment the 1st
 begins".
 
 5.4 Minute 0 with every hour is 毎時0分.
 
-5.5 Odd and even. 奇数月 and 偶数月, 奇数年 and 偶数年 are ordinary words
-and are used: 毎年奇数月の1日の0:00; 2030年以降の偶数年の毎日9:00 (graded
-best as it stood). For hours there is no such idiom. 偶数時台 is not a
-word; 偶数時 is, in timetables, but every use of it here can be said with
-both ends or by naming the hours, which needs no knowledge of the idiom:
-0:30から22:30まで2時間ごと; 0時台・2時台・4時台…22時台.
+5.5 Odd and even.
+
+* 奇数月 and 偶数月, 奇数年 and 偶数年 are ordinary words and are used: 毎
+  年奇数月の1日の0:00; 2030年以降の偶数年の毎日9:00 (graded natural as it
+  stood).
+* **Hours.** Where every second hour is a set of points, it is a window
+  with both ends, which needs no idiom (0:00から22:00まで2時間ごと; 0:30か
+  ら22:30まで2時間ごと). Where the hours are filled with minutes, or carry
+  several minutes each, and there are more than eight of them, they are
+  偶数時 or 奇数時, followed at once by the first two hours, …, and the
+  last in brackets: 偶数時（0時・2時…22時）; 奇数時（1時・3時…23時）. A run of
+  them names its ends first: 6時から22時までの偶数時（6時・8時…22時）. As
+  stretches they take の各1時間: 偶数時（0時・2時…22時）の各1時間、1分ごと.
+  With minutes named they take の: 偶数時（0時・2時…22時）の15分・45分.
+  偶数時台 was called "not a word" and the bare list 0時台・2時台・4時台…22
+  時台 was graded odd by the next reader; each then wrote the idiom with
+  its hours in brackets (one with 各1時間, one with の間). 0時 counts as
+  even.
+
+Every other interval is a digit and ごと: 15分ごと, 2時間ごと.
 
 5.6 午前 and 午後 are used only with `hour12: true` (1.2). No other part
 of the day is named.
 
 5.7 Quartz forms, each after 毎月, or after the month as 4.4 says.
 
-* `L` — 毎月の末日
-* `L-3` — 毎月の末日の3日前; `L-1` is 毎月の末日の前日
+* `L` — 毎月末日
+* `L-3` — 毎月末日の3日前; `L-1` is 毎月末日の前日
 * `LW` — 毎月最後の平日（月曜日〜金曜日）
 * `1W` — 毎月最初の平日（月曜日〜金曜日）
 * `15W` — 毎月15日に最も近い平日（月曜日〜金曜日）
-* `31W` — 毎月31日に月内で最も近い平日（月曜日〜金曜日）
+* `28W` — 毎月28日に月内で最も近い平日（月曜日〜金曜日）
+* `31W` — 31日のある月の、31日に月内で最も近い平日（月曜日〜金曜日）
 * `1#2` — 毎月第2月曜日
 * `5L` — 毎月最終金曜日
 
-毎月の末日 has の because 毎月末日 is seen as 毎月末 and 日 (the reader's
-remark). 末日 was kept over 月末, which also means the last few days of a
-month.
+毎月末日 is the ordinary word (one reader saw 毎月末 and 日 in it; the
+next, and the schedule reader, asked for it back, and 毎月の末日の前日 was
+marked for its row of の).
 
 The Monday-to-Friday day. 平日 is the word a Japanese reader expects, and
 by itself it leaves out public holidays, which the pattern does not know.
-The reader ranked 最後の平日（月曜日〜金曜日） first of four, above 最終平
-日, 最後の月〜金の日 and 最終営業日, and said why: "the brackets remove the
-question about holidays". So the gloss stays; here it is information, not
-decoration. 営業日 depends on the business.
+A fluent reader ranked 最後の平日（月曜日〜金曜日） first of four, above 最
+終平日, 最後の月〜金の日 and 最終営業日, because "the brackets remove the
+question about holidays", and the next read it as "holidays are not
+considered". So the gloss stays. 営業日 depends on the business.
 
 The nearest-weekday form never leaves its month. For day 1 it is simply
 the month's first day from Monday to Friday, and is said as that, the
@@ -740,14 +826,29 @@ pair of `LW`: 最初の and 最後の. For a day that can be the month's last
 (28 to 31) the nearest such day might otherwise be taken to fall in the
 next month, so 月内で is said; for the days between, nothing can cross.
 
+The form fires only in months that have the named day, and a month
+without it is skipped: it is never the nearest weekday to the end of a
+shorter month. A plain 毎月31日 is read that way without help, but here a
+schedule reader could not tell whether April fires. So for a day that
+some months lack (29, 30, 31), 毎月 gives way to the months that have it:
+29日のある月の、29日に月内で最も近い平日（月曜日〜金曜日）. Under a single
+named month the date is simply written: 毎年1月31日に月内で最も近い平日（月
+曜日〜金曜日）.
+
+`L-n` likewise fires only in months long enough to have that day. 末日の
+30日前 says a day that a 30-day month does not have, and is read as 毎月
+31日 is; nothing is added.
+
 5.8 Years. Years 1970, 1972 … : 偶数年. Years 1971, 1973 … : 奇数年. Every
 second year from a later start keeps the idiom and names the start, or
 both ends if it stops early: 2030年以降の偶数年; 2030年〜2040年の偶数年. Any
-other cadence of years is the years themselves: seven or fewer listed
-(2028年・2032年・2036年・2040年), more as the first three, …, and the last
-(2028年・2032年・2036年…2060年), and with no last year the list is left
-open (2028年・2032年・2036年…). The reader ranked this above every phrase
-with ごと, おき or 4年に1度の年.
+other cadence of years: seven or fewer are listed (2028年・2032年・2036
+年・2040年). More are said by the rule, as a kind of year, with the first
+two years, …, and the last, if there is one, in brackets: 2028年から4年ご
+との年（2028年・2032年…）; 2028年から2060年まで4年ごとの年（2028年・2032年…
+2060年）. Both fluent readers wrote exactly this for the open case; an
+open list with no rule (2028年・2032年・2036年…) was taken by some for the
+leap years.
 
 ## 6. Words
 
@@ -763,14 +864,15 @@ the digits and the unit are written the same.
 as written.
 
 6.4 秒; 分 (both a minute of the hour, 30分, and a length, 15分ごと); 時
-(an hour of the day), 時台 (that hour as a stretch), 時間 (a length); 日; 
-月; 年. There are no plural forms. 1分間 is "for one minute".
+(an hour of the day), 時台 (that hour as a stretch), 時間 (a length); 日;
+月; 年. There are no plural forms. 1分間 is "for one minute" and 各1時間
+"each for its hour".
 
 6.5 毎 (in 毎時, 毎分 before a second, 毎日, 毎週, 毎月, 毎年), ごと, から,
-まで, の, と, および, どちらも, いずれも, それぞれ, その分の, に, は, 終日,
-以降, を除く, 翌日, 翌月, 翌年, 第, 最終, 最初の, 最後の, 末日, 前日, 日
-前, に最も近い, 月内で, 平日, 奇数日, 偶数日, 奇数月, 偶数月, 奇数年, 偶数
-年, 午前, 午後.
+まで, からの, の, と, および, いずれも, 各, その分の, に, は, 終日, 中, の
+間, 以降, を除く, 翌日, 翌月, 翌年, 第, 最終, 最初の, 最後の, 末日, 前日,
+日前, に最も近い, 月内で, 平日, 奇数日, 偶数日, 奇数月, 偶数月, 奇数年, 偶
+数年, 奇数時, 偶数時, ごとの年, 午前, 午後.
 
 ## 7. Agreement
 
@@ -783,7 +885,7 @@ as written.
 7.4 A list of single nouns: ・ between items, nothing before the last.
 Pieces, and windows of time: と between them. A cadence in a window and
 stray times: 、および. A date and a weekday together: および. Two
-exceptions of different kinds inside one pair of brackets: と.
+exceptions inside one pair of brackets, or in front of 毎日: と.
 
 7.5 Units follow their numbers directly, with no space: 15分, 1日, 9:00か
 ら17:45まで. 第 precedes the number of a weekday in the month (第2月曜
@@ -799,22 +901,23 @@ characters.
 
 8.1 `union-connective` — および: 毎月1日および毎週金曜日.
 
-8.2 `shared-qualifier-scope` — The time closes the sentence, after 、ど
-ちらも, so that it is read with both sides. A month is said first, with
-の、: 毎年6月の、1日および毎週金曜日、どちらも0:00.
+8.2 `shared-qualifier-scope` — The time closes the sentence, after 、い
+ずれも, so that it is read with both sides. A month is said first, closed
+by 中、 or の間、: 毎年6月中、1日および毎週金曜日、いずれも0:00. No を除く
+is said inside the pair.
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window before the
 interval (9:00から17:59まで1分ごと), hours with 台 (8時台・12時台・18時台、1
-分ごと), 終日, or に、それぞれ1分間、.
+分ごと), の各1時間、, 終日, からの1分間、 or に、各1分間、.
 
-8.4 `redundancy` — 毎月 is not said after a single named month or a list
-of months. 毎週 is said once for a list or a range. No part is quantified
-twice (no 各日, 各月 or 各年 after 毎週 or 毎年). A field that takes every
-value is not said.
+8.4 `redundancy` — 毎月 is not said after a named month or months before
+a date. 毎週 is said once for a list or a range. No part is quantified
+twice (no 各日, 各月 or 各年; no 毎月 after 毎年 and a range of months).
+A field that takes every value is not said.
 
 8.5 `range-boundary` — Every range of times is closed and names its last
-moment, to the second where seconds fire (3.4). A single range of dates
-before a time of day is followed by の毎日 (2.5).
+moment, to the second where seconds fire (3.4). A range of dates before
+a time is closed by 、いずれも (2.6).
 
 8.6 `recurrence-marking` — 毎週 before a weekday, once for a list or a
 range; 毎月 before a date; 毎日; 毎年 before a month.
