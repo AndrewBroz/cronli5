@@ -61,7 +61,7 @@ Generated from live output of both libraries (`npm run docs`).
 | `0 22-2 * * *` | täglich um 0:00, 1:00, 2:00, 22:00 und 23:00 Uhr | Jede Stunde, zwischen 22:00 und 02:00 |
 | `*/15 9-17 * * *` | täglich von 9:00 bis 17:45 Uhr alle 15 Minuten | Alle 15 Minuten, zwischen 09:00 und 17:59 |
 | `0 0 1,15 * *` | am 1. und 15. jedes Monats um 0:00 Uhr | Um 00:00, an Tag 1 und 15 des Monats |
-| `0 12 1 1 *` | am 1. Januar um 12:00 Uhr | Um 12:00, an Tag 1 des Monats, nur im Januar |
+| `0 12 1 1 *` | jährlich am 1. Januar um 12:00 Uhr | Um 12:00, an Tag 1 des Monats, nur im Januar |
 | `0 12 * 11-2 *` | von November bis Februar täglich um 12:00 Uhr | Um 12:00, November bis Februar |
 | `0 0 * * 5L` | am letzten Freitag jedes Monats um 0:00 Uhr | Um 00:00, am letzten Freitag des Monats |
 | `5,10 30 9 * * MON` | montags um 9:30:05 und 9:30:10 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
