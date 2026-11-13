@@ -19,8 +19,9 @@ import {candidatesAs} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, inTieOrder, minutesOfOneHour, monthsAlone, monthsOfDays,
-  opensWithEvery, say, secondsOfOneMinute, withinTheHour, yearsByNumber
+  hoursAsStretches, inSpokenOrder, inTieOrder, minutesOfOneHour, monthsAlone,
+  monthsOfDays, opensWithEvery, say, secondsOfOneMinute, withinTheHour,
+  yearsByNumber
 } from './devices.js';
 import {quartzDateIdioms, quartzWeekdayIdioms} from './idioms.js';
 import lexicon from './lexicon.js';
@@ -33,6 +34,8 @@ import {
 const mostClockTimes = 24;
 
 const {words} = lexicon;
+
+type Pieces = Extract<SetDescription, {kind: 'pieces'}>;
 
 // The fields whose restriction makes a wrap-around in a field untrue:
 // hours from 10 p.m. through 2 a.m. run through the night, but "on
@@ -64,6 +67,8 @@ interface Tick {
   only: number | null;
   // Whether the phrase begins "every minute" (or "every second").
   opens: boolean;
+  // Whether the phrase is pieces that each name their own unit.
+  pieced: boolean;
   // Whether the phrase is a part of the hour or minute ("for the first
   // 30 minutes of") and not a count past it.
   portion: boolean;
@@ -106,6 +111,8 @@ interface TimeContext {
   halves: boolean;
   lead: SecondsLead;
   minute: Tick;
+  // How one piece of the minutes is said by itself.
+  piece(part: Described): Tick;
   riding?: number;
 }
 
@@ -355,6 +362,7 @@ function tick(
     length: only === null ? chosen.length : 0,
     only,
     opens: opensWithEvery(base, field),
+    pieced: Boolean(closing),
     portion: portionOf(closing, base, field),
     text,
     whole: chosen.description.kind === 'all' ?
@@ -531,6 +539,41 @@ function momentsWith(
   };
 }
 
+// Pieces of minutes under hours named one by one: each piece is said as
+// it is alone under those hours, and the pieces are joined, since hours
+// said once for all of them would not say which piece they belong to.
+function minutePieces(
+  hours: Described,
+  context: TimeContext,
+  opts: EnglishOptions
+): TimePhrase | null {
+  const {lead, minute} = context;
+  const named = minute.pieced && hours.kind === 'values' &&
+    hours.values.length > 1;
+  const parts = named && inSpokenOrder(minute.description as Pieces,
+    {field: 'minute', pairs: false}) || [];
+  const alone = parts.map(function each(part) {
+    return context.piece(part as Described);
+  });
+  const phrases = alone.flatMap(function said(piece, at) {
+    const later = {...lead, before: lead.within, beforeHours: lead.within};
+
+    return timeWith(hours, {...context, lead: [lead, later][Number(at > 0)],
+      minute: piece}, opts);
+  });
+
+  return named && phrases.length === parts.length && {
+    ...phrases[0],
+    carry: null,
+    length: alone.reduce(function total(sum, piece) {
+      return sum + piece.length;
+    }, phrases[0].length - alone[0].length),
+    text: list(phrases.map(function textOf(phrase) {
+      return phrase.text;
+    }), opts)
+  } || null;
+}
+
 // The time said with one description of the hours, by the first of these
 // that applies. A single minute rides on each hour as a moment. A run of
 // minutes in one hour is a window. Otherwise the minutes are said with
@@ -542,7 +585,8 @@ function timeWith(
 ): TimePhrase[] {
   const {lead, minute} = context;
   const moments = momentsWith(hours, context, opts);
-  const phrase = minuteWindow(hours, context, opts) ||
+  const phrase = minutePieces(hours, context, opts) ||
+    minuteWindow(hours, context, opts) ||
     minutesWith(hours, context, opts);
   const clauses = exceptions(minute.excepted, 'minute',
     lead.exceptAt(minute.excepted.length), opts);
@@ -624,7 +668,15 @@ function timesWith(
     {alone: lead.everyAlone, named: second.continuous, one: lead.every,
       stray: lead.within}, opts),
   riding);
-  const context = {halves, lead, minute, ...!fronted && {riding}};
+  const context = {
+    halves, lead, minute,
+    piece(part: Described) {
+      return withSecond(tick([part], 'minute',
+        {alone: lead.everyAlone, one: lead.every, stray: lead.within}, opts),
+      riding);
+    },
+    ...!fronted && {riding}
+  };
 
   return [
     ...clockList(times, spoken.before, opts),
