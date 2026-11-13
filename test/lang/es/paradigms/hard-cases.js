@@ -84,6 +84,118 @@ const rows = [
   ['0 9 * * 6L', 'el último sábado de cada mes a las 9:00'],
   ['0 9 * * 0#4', 'el cuarto domingo de cada mes a las 9:00'],
 
+  // A Quartz day that a month in reach may lack: the months that fire are
+  // said, under named months and in a union too.
+  ['0 0 31W 6-8 *',
+    'de junio a agosto, en los meses que tienen día 31, el día laborable ' +
+    'más cercano al 31, sin salir del mes, a las 0:00'],
+  ['0 0 30W 2,4 *',
+    'en febrero y abril, en los meses que tienen día 30, el día laborable ' +
+    'más cercano al 30, sin salir del mes, a las 0:00'],
+  ['0 0 29W 2 *',
+    'en febrero, en los meses que tienen día 29, el día laborable más ' +
+    'cercano al 29, sin salir del mes, a las 0:00'],
+  ['0 0 31W 7 *',
+    'el día laborable más cercano al 31 de julio, sin salir del mes, a las ' +
+    '0:00'],
+  ['0 0 0 31W 6-8 * 2030',
+    'de junio a agosto de 2030, en los meses que tienen día 31, el día ' +
+    'laborable más cercano al 31, sin salir del mes, a las 0:00'],
+  ['0 0 L-30 6-8 *',
+    'de junio a agosto, en los meses de más de 30 días, 30 días antes del ' +
+    'último día del mes, a las 0:00'],
+  ['0 0 L-29 2,4 *',
+    'en febrero y abril, en los meses de más de 29 días, 29 días antes del ' +
+    'último día del mes, a las 0:00'],
+  ['0 0 L-30 7 *', '30 días antes del último día de julio, a las 0:00'],
+  ['0 0 31W * 5',
+    'los viernes a las 0:00, y además, en los meses que tienen día 31, el ' +
+    'día laborable más cercano al 31, sin salir del mes'],
+  ['0 0 L-30 * 5',
+    'los viernes a las 0:00, y además, en los meses de más de 30 días, 30 ' +
+    'días antes del último día del mes'],
+  ['0 0 31W 6,7 5',
+    'en junio y julio, los viernes a las 0:00, y además, en los meses que ' +
+    'tienen día 31, el día laborable más cercano al 31, sin salir del mes'],
+  ['0 0 L-3 * 1',
+    'los lunes a las 0:00, y además 3 días antes del último día de cada mes'],
+
+  // Days of the month that cover every day of the named months leave the
+  // weekdays nothing to add.
+  ['0 0 1-30 6 1', 'en junio, todos los días a las 0:00'],
+  ['0 0 1-30 * 1',
+    'los lunes a las 0:00, y además todos los días de cada mes, excepto el ' +
+    'día 31'],
+
+  // Minutes in several parts inside more than one hour keep their phrase.
+  ['0-29,45 9,17 * * *',
+    'todos los días, cada minuto durante los primeros 30 minutos y en el ' +
+    'minuto 45 de las horas que empiezan a las 9:00 y 17:00'],
+  ['50-10 8,12,18 * * *',
+    'todos los días, cada minuto durante los primeros 11 minutos y durante ' +
+    'los últimos 10 minutos de las horas que empiezan a las 8:00, 12:00 y ' +
+    '18:00'],
+  ['* 0-29,45 9,17 * * *',
+    'todos los días, cada segundo durante los primeros 30 minutos y ' +
+    'durante el minuto 45 de las horas que empiezan a las 9:00 y 17:00'],
+
+  // Excepted minutes inside named hours: clock times or windows while
+  // they name four things at most, and minutes of each hour beyond that.
+  ['28-24 9 * * *',
+    'todos los días, cada minuto de 9:00 a 9:59, excepto a las 9:25, 9:26 ' +
+    'y 9:27'],
+  ['0-24,28-59 9,17 * * *',
+    'todos los días, cada minuto de 9:00 a 9:59 y de 17:00 a 17:59, ' +
+    'excepto en los minutos 25, 26 y 27 de cada hora'],
+  ['0-28,30-59 */6 * * *',
+    'todos los días, cada minuto de 0:00 a 0:59, de 6:00 a 6:59, de 12:00 ' +
+    'a 12:59 y de 18:00 a 18:59, excepto a las 0:29, 6:29, 12:29 y 18:29'],
+  ['* 28-24 9 * * *',
+    'todos los días, cada segundo de 9:00:00 a 9:59:59, excepto de 9:25:00 ' +
+    'a 9:27:59'],
+  ['* 0-9,11-19,21-59 9 * * *',
+    'todos los días, cada segundo de 9:00:00 a 9:59:59, excepto de 9:10:00 ' +
+    'a 9:10:59 y de 9:20:00 a 9:20:59'],
+  ['* 0-28,30-59 */6 * * *',
+    'todos los días, cada segundo de 0:00:00 a 0:59:59, de 6:00:00 a ' +
+    '6:59:59, de 12:00:00 a 12:59:59 y de 18:00:00 a 18:59:59, excepto ' +
+    'durante el minuto 29 de cada hora'],
+
+  // Years with a hole in a cadence, and every year but one.
+  ['0 0 9 * * * 2000-2028/2,2032-2098/2',
+    'en los años pares de 2000 a 2098, excepto en 2030, todos los días a ' +
+    'las 9:00'],
+  ['0 0 9 * * * 2028-2036/4,2044-2060/4',
+    'en 2028, 2032, 2036 y así sucesivamente hasta 2060, excepto en 2040, ' +
+    'todos los días a las 9:00'],
+  ['0 0 9 * * * 1970-2029,2031-9999',
+    'todos los años, excepto en 2030, todos los días a las 9:00'],
+  ['0 0 0 1 1 * 2030-2034,2036-2040',
+    'de 2030 a 2034 y de 2036 a 2040, el 1 de enero a las 0:00'],
+
+  // Weekday pieces with a run across Sunday and Monday: the run leads.
+  ['0 9 * * 0,1,2,4', 'de domingo a martes y los jueves a las 9:00'],
+  ['0 9 * * 0,1,3,5', 'los lunes, miércoles, viernes y domingos a las 9:00'],
+
+  // Hours that run past midnight beside a day, a month or a year are in
+  // ascending order.
+  ['0 22-2 * * 1',
+    'los lunes, cada hora de 0:00 a 2:00 y a las 22:00 y 23:00'],
+  ['* 22-2 * 6 *',
+    'en junio, todos los días, cada minuto de 0:00 a 2:59 y de 22:00 a ' +
+    '23:59'],
+  ['0 20-4,9-12 * * *',
+    'todos los días, cada hora de 20:00 a 4:00 y de 9:00 a 12:00'],
+
+  // An exception against a run, a run that wraps, and pieces.
+  ['0 0-2,5-23 * * *', 'cada hora, excepto a las 3:00 y 4:00'],
+  ['* 0-2,5-23 * * *', 'todos los días, cada minuto de 5:00 a 2:59'],
+  ['* 0-2,4-23 * * 1', 'los lunes, cada minuto, excepto de 3:00 a 3:59'],
+  ['* 0-2,5-23 * * 1',
+    'los lunes, cada minuto de 0:00 a 2:59 y de 5:00 a 23:59'],
+  ['0 0 8-6 * *', 'todos los días de cada mes, excepto el día 7, a las 0:00'],
+  ['0 0 6-2 * *', 'del 6 de cada mes al 2 del siguiente a las 0:00'],
+
   // Macros, startup, and the three forms.
   ['@hourly', 'cada hora'],
   ['@daily', 'todos los días a las 0:00'],

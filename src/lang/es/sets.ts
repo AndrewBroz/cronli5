@@ -77,7 +77,7 @@ function mapParts<T>(
   });
 }
 
-// The maximal runs of consecutive values, in ascending order.
+/** The maximal runs of consecutive values, in ascending order. */
 function linearRuns(values: number[]): number[][] {
   const runs: number[][] = [];
 
@@ -227,4 +227,6 @@ function say(values: number[], policy: Policy): Said {
     {...whole, kind: 'parts', parts};
 }
 
-export {countOf, isRange, isValues, mapParts, say, thingsNamed};
+export {
+  countOf, isRange, isValues, linearRuns, mapParts, say, thingsNamed
+};
