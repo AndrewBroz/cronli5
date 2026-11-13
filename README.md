@@ -113,17 +113,33 @@ const description: string = cronli5('30 13 * * MON-FRI', options);
 
 As a command line tool:
 ```bash
-$ cronli5 "*/5 * * * *"
-Runs every 5 minutes.
+$ cronli5 '*/15 9-17 * * 1-5'
+Runs every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays.
 
-# --fragment prints the bare, embeddable fragment instead of a sentence:
-$ cronli5 --fragment "*/5 * * * *"
-every 5 minutes
+# In another language, and as a bare fragment to embed:
+$ cronli5 --lang cs --fragment '30 9 * * MON-FRI'
+od pondělí do pátku vždy v 9:30
+
+# A choice from the language's style table:
+$ cronli5 --style hour12=false '30 9 * * *'
+Runs at 09:30 every day.
+
+# A whole crontab: each job's schedule, a tab, and its command:
+$ crontab -l | cronli5 --crontab
+Runs every 5 minutes.	/usr/bin/job --flag
+Runs at midnight on weekdays.	/bin/backup
+
+# Or one pattern per line on standard input, each followed by a tab and
+# its description:
+$ cronli5 < patterns.txt
 ```
 
-The CLI takes `--lang <code>` (with an optional region, such as `en-GB`),
-`--form fragment|label|sentence`, `--cron standard|quartz`, and
-`--fragment` as a short form of `--form fragment`.
+Quote the pattern, or the shell will expand its stars. The CLI takes
+`--lang <code>` (with an optional region, such as `en-GB`), `--form
+fragment|label|sentence` (and `--fragment` as a short form), `--cron
+standard|quartz`, `--style <key=value>` (repeatable; a bare key is `true`),
+`--crontab`, `--help` and `--version`. It exits 0 on success, 1 if a
+pattern could not be described, and 2 if the command itself was wrong.
 
 ## Input Formats
 
