@@ -38,12 +38,6 @@ const MAY_CHANGE = {
 // edit may add or remove exactly that word.
 const HOUR_MAY_SET_DAY = ['', 'täglich'];
 
-// The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
-// the field was written. Both wordings are reduced to one before equal
-// schedules are compared, so any other difference still fails.
-const TIE =
-  /(?:täglich )?(?:jeweils )?(?:um 0:00 und 12:00 Uhr|alle 12 Stunden)/u;
-
 const SETUP = {languages: [german.default], options: {}, styles: {}};
 
 function parse(pattern, options) {
@@ -147,13 +141,12 @@ describe('German continuity:', function() {
         .to.deep.equal([]);
     }, 60000);
 
-  it('renders equal schedules identically, but for the declared tie',
+  it('renders equal schedules identically, however they are spelled',
     function() {
       function render(pattern, options) {
         const {opts, schedule} = parse(pattern, options);
 
-        return german.default.describe(schedule, opts)
-          .replace(TIE, 'zweimal täglich');
+        return german.default.describe(schedule, opts);
       }
 
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
@@ -161,15 +154,17 @@ describe('German continuity:', function() {
         .equivalentViolations).to.deep.equal([]);
     }, 60000);
 
-  it('follows the spelling only for the declared tie', function() {
+  // German declares no tie (answers 3.11): a cadence of hours is never
+  // said bare, so `*/12` and `0,12` are the same two clock times.
+  it('never follows the spelling', function() {
     function say(pattern) {
       const {opts, schedule} = parse(pattern);
 
       return german.default.describe(schedule, opts);
     }
 
-    expect(say('0 */12 * * *')).to.equal('alle 12 Stunden');
-    expect(say('0 0,12 * * *')).to.equal('täglich um 0:00 und 12:00 Uhr');
+    expect(say('0 */12 * * *')).to.equal('täglich um 0:00 und 12:00 Uhr');
+    expect(say('0 0,12 * * *')).to.equal(say('0 */12 * * *'));
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
     expect(say('0 9-17 * * *'))
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));

@@ -31,40 +31,41 @@ function weekday(full: string, short: string): WeekdayName {
 }
 
 // Indexed by month number; there is no month 0. The short forms are the
-// three-letter ones of calendars and interfaces, written with no full stop.
+// abbreviations of Duden and CLDR, each with its full stop; a name of four
+// letters or fewer is not shortened.
 const months: Name[] = [
   {full: '', short: ''},
-  {full: 'Januar', short: 'Jan'},
-  {full: 'Februar', short: 'Feb'},
-  {full: 'März', short: 'Mär'},
-  {full: 'April', short: 'Apr'},
+  {full: 'Januar', short: 'Jan.'},
+  {full: 'Februar', short: 'Feb.'},
+  {full: 'März', short: 'März'},
+  {full: 'April', short: 'Apr.'},
   {full: 'Mai', short: 'Mai'},
-  {full: 'Juni', short: 'Jun'},
-  {full: 'Juli', short: 'Jul'},
-  {full: 'August', short: 'Aug'},
-  {full: 'September', short: 'Sep'},
-  {full: 'Oktober', short: 'Okt'},
-  {full: 'November', short: 'Nov'},
-  {full: 'Dezember', short: 'Dez'}
+  {full: 'Juni', short: 'Jun.'},
+  {full: 'Juli', short: 'Jul.'},
+  {full: 'August', short: 'Aug.'},
+  {full: 'September', short: 'Sept.'},
+  {full: 'Oktober', short: 'Okt.'},
+  {full: 'November', short: 'Nov.'},
+  {full: 'Dezember', short: 'Dez.'}
 ];
 
 // January as Austria names it (the style field `jaenner`).
-const januaryAustrian: Name = {full: 'Jänner', short: 'Jän'};
+const januaryAustrian: Name = {full: 'Jänner', short: 'Jän.'};
 
 // Indexed by cron's weekday number: 0 is Sunday.
 const weekdays: WeekdayName[] = [
-  weekday('Sonntag', 'So'),
-  weekday('Montag', 'Mo'),
-  weekday('Dienstag', 'Di'),
-  weekday('Mittwoch', 'Mi'),
-  weekday('Donnerstag', 'Do'),
-  weekday('Freitag', 'Fr'),
-  weekday('Samstag', 'Sa')
+  weekday('Sonntag', 'So.'),
+  weekday('Montag', 'Mo.'),
+  weekday('Dienstag', 'Di.'),
+  weekday('Mittwoch', 'Mi.'),
+  weekday('Donnerstag', 'Do.'),
+  weekday('Freitag', 'Fr.'),
+  weekday('Samstag', 'Sa.')
 ];
 
 // Each unit after the number one, and after any other number. No phrase
-// here needs another case form: «alle 5 Minuten», «5 Minuten nach», «10
-// Sekunden lang», «3 Tage vor».
+// here needs another case form: «alle 5 Minuten», «5 Minuten nach», «in
+// den ersten 30 Minuten», «10 Sekunden lang», «3 Tage vor».
 const units = {
   day: {many: 'Tage', one: 'Tag'},
   hour: {many: 'Stunden', one: 'Stunde'},
@@ -84,24 +85,26 @@ const dayParts: DayPart[] = [
   {until: 11, word: 'vormittags'},
   {until: 13, word: 'mittags'},
   {until: 17, word: 'nachmittags'},
-  {until: 23, word: 'abends'}
+  {until: 22, word: 'abends'},
+  {until: 23, word: 'nachts'}
 ];
 
 // The function words and fixed phrases.
 const words = {
   after: 'nach',
-  afterEachEvenHour: 'nach jeder geraden Stunde',
   afterEachHour: 'nach jeder vollen Stunde',
   afterEachMinute: 'nach jeder vollen Minute',
-  afterEachOddHour: 'nach jeder ungeraden Stunde',
+  afterEachOfTheseHours: 'nach jeder dieser Stunden',
+  afterEachOfTheseMinutes: 'nach jeder dieser Minuten',
   afterTheMinute: 'nach der vollen Minute',
+  afterThat: 'danach',
   also: 'sowie',
   and: 'und',
   at: 'um',
   atEachHour: 'zu jeder vollen Stunde',
-  atEachOddHour: 'zu jeder ungeraden Stunde',
+  atEachMinute: 'zu jeder vollen Minute',
+  before: 'vor',
   beforeLastDay: 'vor dem letzten Tag',
-  begin: 'beginnen',
   daily: 'täglich',
   each: 'jede',
   eachTime: 'jeweils',
@@ -110,46 +113,45 @@ const words = {
   exceptSwiss: 'ausser',
   from: 'von',
   fromDate: 'vom',
+  fromEachHour: 'ab jeder vollen Stunde',
+  fromEachMinute: 'ab jeder vollen Minute',
+  fromTheMinute: 'ab der vollen Minute',
+  hourly: 'stündlich',
   in: 'im',
   inAllMonths: 'in allen Monaten',
-  inEvenHours: 'in den geraden Stunden',
-  inEvenMonths: 'in geraden Monaten',
   inEvenYears: 'in geraden Jahren',
   inEvery: 'in jedem',
-  inOddHours: 'in den ungeraden Stunden',
-  inOddMonths: 'in ungeraden Monaten',
   inOddYears: 'in ungeraden Jahren',
+  inSameMonth: 'im selben Monat',
   inTheFirst: 'in den ersten',
-  inTheHoursThatAt: 'in den Stunden, die um',
-  inTheLast: 'in den letzten',
   inYear: 'im Jahr',
   inYears: 'in den Jahren',
   lastDay: 'am letzten Tag',
+  lastly: 'zuletzt',
   long: 'lang',
+  month: 'Monat',
   nearest: 'am nächsten liegt',
   oClock: 'Uhr',
-  ofEachEvenMonth: 'jedes geraden Monats',
-  ofEachHour: 'jeder Stunde',
-  ofEachMinute: 'jeder Minute',
   ofEachMonth: 'jedes Monats',
-  ofEachOddMonth: 'jedes ungeraden Monats',
-  ofTheMonth: 'des Monats',
+  ofEvery: 'jedes',
+  ofMonth: 'Monats',
   ofTheMonths: 'der Monate',
   ofTheYears: 'der Jahre',
   on: 'am',
   onEvenDays: 'an geraden Tagen',
   onOddDays: 'an ungeraden Tagen',
+  onTheFirst: 'am ersten',
   onTheLast: 'am letzten',
+  oneHourLong: 'eine Stunde lang',
   oneMinuteLong: 'eine Minute lang',
   penultimateDay: 'am vorletzten Tag',
   runs: 'Läuft',
   since: 'ab',
-  sinceDate: 'ab dem',
   startup: 'beim Systemstart',
   to: 'bis',
   unrecognizable: 'ein unbekanntes Cron-Muster',
-  weekdayDay: 'Wochentag',
   whichThe: 'der dem',
+  workday: 'Werktag',
   year: 'Jahr'
 };
 

@@ -23,10 +23,10 @@ const defaultParts = {
   '0 9-17 * * *': ['9:00', '17:00 Uhr'],
   '30 9,17 * * *': ['9:30', '17:30 Uhr'],
   '0 8,12,18 * * *': ['8:00', '12:00', '18:00 Uhr'],
-  '0 9 * * 1-6': ['außer', 'sonntags', '9:00 Uhr'],
+  '0 9 * * 0-2,4-6': ['außer', 'mittwochs', '9:00 Uhr'],
   '0 0-2,4-23 * * *': ['außer', '3:00 Uhr'],
   '0 0 LW * *': ['Montag', 'Freitag', '0:00 Uhr'],
-  '0 9 * 1-11 *': ['außer', 'Dezember', '9:00 Uhr']
+  '0 9 * 3 *': ['März', '9:00 Uhr']
 };
 
 const sets = [
@@ -50,19 +50,19 @@ const sets = [
         pattern: '0 8,12,18 * * *'
       },
       {
-        expected: 'täglich jede Stunde von 9:00 Uhr morgens bis 5:00 Uhr ' +
+        expected: 'täglich stündlich von 9:00 Uhr morgens bis 5:00 Uhr ' +
           'nachmittags',
         parts: ['9:00 Uhr morgens', '5:00 Uhr nachmittags'],
         pattern: '0 9-17 * * *'
       },
       {
-        expected: 'täglich um 0:00 Uhr nachts',
-        parts: ['0:00 Uhr nachts'],
+        expected: 'täglich um 12:00 Uhr nachts',
+        parts: ['12:00 Uhr nachts'],
         pattern: '0 0 * * *'
       },
       {
-        expected: 'täglich um 0:30 Uhr nachts',
-        parts: ['0:30 Uhr nachts'],
+        expected: 'täglich um 12:30 Uhr nachts',
+        parts: ['12:30 Uhr nachts'],
         pattern: '30 0 * * *'
       },
       {
@@ -83,13 +83,13 @@ const sets = [
       },
       {
         expected: 'täglich jede Minute von 10:00 Uhr abends bis 11:59 Uhr ' +
-          'abends',
-        parts: ['10:00 Uhr abends', '11:59 Uhr abends'],
+          'nachts',
+        parts: ['10:00 Uhr abends', '11:59 Uhr nachts'],
         pattern: '* 22-23 * * *'
       },
       {
-        expected: 'am 1. Juni um 0:00 Uhr nachts',
-        parts: ['1. Juni', '0:00 Uhr nachts'],
+        expected: 'am 1. Juni um 12:00 Uhr nachts',
+        parts: ['1. Juni', '12:00 Uhr nachts'],
         pattern: '0 0 1 6 *'
       }
     ]
@@ -98,44 +98,49 @@ const sets = [
     options: {style: {short: true}},
     rows: [
       {
-        expected: 'Mo, Mi und Fr um 9:00 Uhr',
-        parts: ['Mo', 'Mi', 'Fr', '9:00 Uhr'],
+        expected: 'Mo., Mi. und Fr. um 9:00 Uhr',
+        parts: ['Mo.', 'Mi.', 'Fr.', '9:00 Uhr'],
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'Mo im Jun um 9:00 Uhr',
-        parts: ['Mo', 'Jun', '9:00 Uhr'],
+        expected: 'Mo. im Jun. um 9:00 Uhr',
+        parts: ['Mo.', 'Jun.', '9:00 Uhr'],
         pattern: '0 9 * 6 1'
       },
       {
-        expected: 'täglich von Jun bis Aug jeweils um 9:00 Uhr',
-        parts: ['Jun', 'Aug', '9:00 Uhr'],
+        expected: 'täglich von Jun. bis Aug. jeweils um 9:00 Uhr',
+        parts: ['Jun.', 'Aug.', '9:00 Uhr'],
         pattern: '0 9 * 6-8 *'
       },
       {
-        expected: 'am 1. Jun um 0:00 Uhr',
-        parts: ['1. Jun', '0:00 Uhr'],
+        expected: 'täglich im März um 9:00 Uhr',
+        parts: ['März', '9:00 Uhr'],
+        pattern: '0 9 * 3 *'
+      },
+      {
+        expected: 'am 1. Jun. um 0:00 Uhr',
+        parts: ['1. Jun.', '0:00 Uhr'],
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'am letzten Fr jedes Monats um 9:00 Uhr',
-        parts: ['Fr', '9:00 Uhr'],
+        expected: 'am letzten Fr. jedes Monats um 9:00 Uhr',
+        parts: ['Fr.', '9:00 Uhr'],
         pattern: '0 9 * * 5L'
       },
       {
-        expected: 'täglich, außer So, um 9:00 Uhr',
-        parts: ['außer', 'So', '9:00 Uhr'],
-        pattern: '0 9 * * 1-6'
+        expected: 'täglich, außer Mi., um 9:00 Uhr',
+        parts: ['außer', 'Mi.', '9:00 Uhr'],
+        pattern: '0 9 * * 0-2,4-6'
       },
       {
-        expected: 'am letzten Wochentag (Mo bis Fr) jedes Monats um 0:00 ' +
+        expected: 'am letzten Werktag (Mo. bis Fr.) jedes Monats um 0:00 ' +
           'Uhr',
-        parts: ['Mo', 'Fr', '0:00 Uhr'],
+        parts: ['Mo.', 'Fr.', '0:00 Uhr'],
         pattern: '0 0 LW * *'
       },
       {
-        expected: 'Mo bis Fr alle 15 Minuten von 9:00 bis 17:45 Uhr',
-        parts: ['Mo', 'Fr', '15 Minuten', '9:00', '17:45 Uhr'],
+        expected: 'Mo. bis Fr. alle 15 Minuten von 9:00 bis 17:45 Uhr',
+        parts: ['Mo.', 'Fr.', '15 Minuten', '9:00', '17:45 Uhr'],
         pattern: '*/15 9-17 * * 1-5'
       }
     ]
@@ -169,9 +174,9 @@ const sets = [
         pattern: '0 9 * 1 *'
       },
       {
-        expected: 'täglich, außer sonntags, um 9:00 Uhr',
-        parts: ['außer', 'sonntags', '9:00 Uhr'],
-        pattern: '0 9 * * 1-6'
+        expected: 'täglich, außer mittwochs, um 9:00 Uhr',
+        parts: ['außer', 'mittwochs', '9:00 Uhr'],
+        pattern: '0 9 * * 0-2,4-6'
       }
     ]
   },
@@ -179,8 +184,8 @@ const sets = [
     options: {lang: 'de-AT', style: {short: true}},
     rows: [
       {
-        expected: 'täglich im Jän um 9:00 Uhr',
-        parts: ['Jän', '9:00 Uhr'],
+        expected: 'täglich im Jän. um 9:00 Uhr',
+        parts: ['Jän.', '9:00 Uhr'],
         pattern: '0 9 * 1 *'
       }
     ]
@@ -189,9 +194,9 @@ const sets = [
     options: {style: {eszett: false}},
     rows: [
       {
-        expected: 'täglich, ausser sonntags, um 9:00 Uhr',
-        parts: ['ausser', 'sonntags', '9:00 Uhr'],
-        pattern: '0 9 * * 1-6'
+        expected: 'täglich, ausser mittwochs, um 9:00 Uhr',
+        parts: ['ausser', 'mittwochs', '9:00 Uhr'],
+        pattern: '0 9 * * 0-2,4-6'
       },
       {
         expected: 'zu jeder vollen Stunde, ausser um 3:00 Uhr',
@@ -204,10 +209,9 @@ const sets = [
     options: {lang: 'de-CH'},
     rows: [
       {
-        expected: 'täglich in allen Monaten, ausser im Dezember, um 9:00 ' +
-          'Uhr',
-        parts: ['ausser', 'Dezember', '9:00 Uhr'],
-        pattern: '0 9 * 1-11 *'
+        expected: 'täglich, ausser mittwochs, um 9:00 Uhr',
+        parts: ['ausser', 'mittwochs', '9:00 Uhr'],
+        pattern: '0 9 * * 0-2,4-6'
       },
       {
         expected: 'täglich im Januar um 9:00 Uhr',
