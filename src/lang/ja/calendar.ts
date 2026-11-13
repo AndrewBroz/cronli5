@@ -486,8 +486,8 @@ function moved(from: number[], to: string, style: JapaneseStyle): string {
 // A day kept to Monday through Friday inside its month, said as the day
 // and where it moves to from a Saturday or a Sunday. The last day of a
 // month moves back to Friday, the first forward to Monday, and any other
-// to the nearer of the two, except that a Sunday which is its month's
-// last day moves back.
+// to the nearer of the two, except that a day which is its month's last
+// moves back from a Sunday too.
 function keptToTheWeek(day: number, style: JapaneseStyle): string[] {
   const back = words.justBefore + weekdayName(friday, style);
   const on = words.justAfter + weekdayName(monday, style);
@@ -496,8 +496,8 @@ function keptToTheWeek(day: number, style: JapaneseStyle): string[] {
       weekdayName(friday, style), style),
     moved([sunday], words.nextDay + words.of + weekdayName(monday, style),
       style),
-    when(day >= firstLast, words.but + words.lastDay + words.of +
-      moved([sunday], back, style))
+    when(day >= firstLast, words.but + day + units.day + words.subject +
+      words.lastDay + words.alsoBeing + moved([sunday], back, style))
   ];
   const ends: {[at: number]: string[]} = {
     [dates.max]: [moved([saturday, sunday], back, style)],
