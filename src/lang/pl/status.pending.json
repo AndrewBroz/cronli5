@@ -1,0 +1,7 @@
+{
+  "name": "Polish",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "artifacts written 2026-11-13 by Claude Fable 5.2 (not a native speaker) from the Polish usage notes (src/lang/pl/usage.md); no renderer built yet; the rows have had their author's own schedule read and no independent schedule read or blind fluency read; the PWN rulings the notes cite could not be opened and are unverified",
+  "branchBudget": 120
+}
