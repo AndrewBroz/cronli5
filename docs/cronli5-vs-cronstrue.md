@@ -108,7 +108,7 @@ a specific schedule, or an advanced operator.
 | `59 23 31 12 5` | Runs at 11:59 p.m. on December 31 as well as on Fridays in December. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
 | `30 9 15W 6 *` | Runs at 9:30 a.m. on the weekday nearest June 15. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
 | `15 30 9 * * MON` | Runs at 9:30:15 a.m. on Mondays. | At 09:30:15 AM, only on Monday |
-| `7 4-22/6 1 */2 *` | Runs at 7 minutes past the hour, every 6 hours from 4 a.m. on the 1st of every other month. | At 7 minutes past the hour, every 6 hours, between 04:00 AM and 10:59 PM, on day 1 of the month, every 2 months |
+| `7 4-22/6 1 */2 *` | Runs at 4:07 a.m., 10:07 a.m., 4:07 p.m., and 10:07 p.m. on the 1st of every other month. | At 7 minutes past the hour, every 6 hours, between 04:00 AM and 10:59 PM, on day 1 of the month, every 2 months |
 | `15,45 */4 1-10 1,4,7,10 *` | Runs at 15 and 45 minutes past the hour, every 4 hours on the 1st through the 10th of January, April, July, and October. | At 15 and 45 minutes past the hour, every 4 hours, between day 1 and 10 of the month, only in January, April, July, and October |
 | `0,30 8-18/2 1,15 * 1-5` | Runs every 30 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours on the 1st and 15th as well as on weekdays. | At 0 and 30 minutes past the hour, every 2 hours, between 08:00 AM and 06:59 PM, on day 1 and 15 of the month, Monday through Friday |
 | `0 18 15W 3,6,9,12 *` | Runs at 6 p.m. on the weekday nearest March 15, June 15, September 15, and December 15. | At 06:00 PM, on the weekday nearest day 15 of the month, only in March, June, September, and December |

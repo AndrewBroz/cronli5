@@ -66,8 +66,11 @@ const rows = [
     'every 15 minutes from midnight through 2:45 a.m. and from 10 p.m. through 11:45 p.m. on weekdays'],
   ['0 0,12 1 * *',
     'at midnight and noon on the 1st'],
+  ['0,5,10,15,20,25,35,40,45,50,55 0-2,4-23 * * *',
+    'every 5 minutes except during the 3 a.m. hour, and except at 30 minutes past the hour'],
+  // Five minutes left of a cadence are listed, not excepted.
   ['0,10,20,40,50 0-2,4-23 * * *',
-    'every 10 minutes except during the 3 a.m. hour, and except at 30 minutes past the hour'],
+    'at 0, 10, 20, 40, and 50 minutes past every hour except 3 a.m.'],
   ['0-29,31-59 * 9 * * *',
     'every second during the 9 a.m. hour except at 30 seconds past the minute, every day'],
   ['58-1 * * * *',

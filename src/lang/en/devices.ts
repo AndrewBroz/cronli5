@@ -189,14 +189,16 @@ function sayRange(range: Range, voice: Voice): Phrase | null {
   return count === 2 && !voice.pairs ? null : plain(voice.range(from, to), 2);
 }
 
-// A cadence with both ends named gives the listener three numbers and a
-// rule to apply, and every value the rule gives has to be kept. A list is
-// told outright, so up to this many values are listed, and the cadence,
-// like every phrase built on one, is said only for more.
+// A cadence that names its start gives the listener numbers and a rule
+// to apply, and every value the rule gives has to be kept. A list is told
+// outright, so up to this many values are listed, and such a cadence,
+// like an exception taken out of any cadence, is said only for more. A
+// cadence that tiles from the start of its cycle has nothing to add to,
+// and is said at any length.
 const mostListed = 8;
 
-// Whether a set is small enough to list in place of a phrase built on a
-// cadence with both ends named.
+// Whether a set is small enough to list in place of a phrase that has to
+// be worked out from a cadence.
 function listable(description: Described,
   voice: Pick<Voice, 'cadence' | 'field'>): boolean {
   return !voice.cadence.anyLength &&
@@ -211,7 +213,7 @@ function sayCadence(
   const text = voice.cadence.say(cadence, ends);
   const two = cadence.last - cadence.start === cadence.interval;
   const halves = voice.cadence.pair && ends.length === 0;
-  const few = ends.length === 2 && listable(cadence, voice);
+  const few = ends.length > 0 && listable(cadence, voice);
 
   return text === null || few || two && !halves ?
     null :
@@ -377,12 +379,11 @@ function opensWithEvery(description: Described,
     inSpokenOrder(description, {field, pairs: false})[0].kind === 'range';
 }
 
-// An exception is for holes in the middle: a cadence that stops early or
-// starts late is said with its bounds, so every value taken out of one
-// has to lie between values that are kept. And it has to replace a
-// list too long to hold, since it costs the listener a subtraction. Taken
-// out of a cadence with both ends named, it has to leave more values than
-// are listed in place of such a cadence.
+// An exception is for a hole in the middle: a cadence that only stops
+// early or starts late is said with its bounds. And it has to replace a
+// list too long to hold, since it costs the listener a subtraction: taken
+// out of a cadence, a rule and then a subtraction, it has to leave more
+// values than are listed in place of a cadence.
 const fewestExcepted = 5;
 
 function sayException(
@@ -391,18 +392,18 @@ function sayException(
   opts: EnglishOptions
 ): Phrase | null {
   const kept = denote(exception, domainOf(voice.field));
-  const holes = exception.removed.every(function inside(value) {
+  const hole = exception.removed.some(function inside(value) {
     return value > kept[0] && value < kept[kept.length - 1];
   });
-  const few = kept.length < fewestExcepted;
-  const inside = voice.holesOnly || exception.base.kind === 'cadence';
-  const base = few || inside && !holes ?
+  const stepped = exception.base.kind === 'cadence';
+  const few = kept.length < fewestExcepted ||
+    stepped && listable(exception, voice);
+  const inside = voice.holesOnly || stepped;
+  const base = few || inside && !hole ?
     null :
     say(exception.base, voice, opts);
-  const sayable = base && !(base.yields && listable(exception, voice)) ||
-    null;
 
-  return sayable && base && {
+  return base && {
     ...base,
     idiom: false,
     length: base.length + exception.removed.length,
