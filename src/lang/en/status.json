@@ -2,8 +2,8 @@
   "name": "English",
   "status": "beta",
   "humanReview": "maintainer (native) reviewed the first paradigms, the rules and the wording changes on 2026-11-11; the final rows await a full read",
-  "modelReview": "rebuilt 2026-11-11 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms; 153 of 153 held-out rows; regenerates (tooling/experiments/renderer-process/en-acceptance.md). Audited adversarially 2026-11-13 by Claude Fable 5.2 (about 960 patterns read against independently computed fire times, every row re-read); the answers, rows and renderer were amended for what it found, and the amended sentences await a blind fluency read",
-  "branchBudget": 95,
+  "modelReview": "rebuilt 2026-11-11 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms; 153 of 153 held-out rows; regenerates (tooling/experiments/renderer-process/en-acceptance.md). Audited adversarially 2026-11-13 by Claude Fable 5.2 (about 960 patterns read against independently computed fire times, every row re-read); the answers, rows and renderer were amended for what it found, and the amended sentences await a blind fluency read. Repaired a second time 2026-11-13 by Claude Fable 5.2 against the core's calendar and set facts and the cross-language trap list (about 3,600 patterns swept); the branch budget rose from 95 to 123 for the decisions those facts bring (a schedule that never runs, leap years, days and months the calendar lacks, years with no end, runs and cadences together, an exception beside a weekday); every sentence form changed in either repair is listed for a blind read and none has had one",
+  "branchBudget": 123,
   "dialects": {
     "gb": {
       "anchor": "Guardian style guide",

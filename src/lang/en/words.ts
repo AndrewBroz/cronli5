@@ -16,17 +16,28 @@ function join(...parts: string[]): string {
   return parts.filter(Boolean).join(' ');
 }
 
-/** "A", "A and B", "A, B, and C". */
-function list(items: string[], opts: EnglishOptions): string {
-  const and = ` ${words.and} `;
+// Items joined by commas and one last word before the final item.
+function joined(items: string[], last: string, opts: EnglishOptions): string {
+  const word = ` ${last} `;
 
   if (items.length < 3) {
-    return items.join(and);
+    return items.join(word);
   }
 
   const comma = opts.style.serialComma ? ',' : '';
 
-  return items.slice(0, -1).join(', ') + comma + and + items[items.length - 1];
+  return items.slice(0, -1).join(', ') + comma + word +
+    items[items.length - 1];
+}
+
+/** "A", "A and B", "A, B, and C". */
+function list(items: string[], opts: EnglishOptions): string {
+  return joined(items, words.and, opts);
+}
+
+/** "A", "A or B", "A, B, or C": after "no", where "and" would be wrong. */
+function either(items: string[], opts: EnglishOptions): string {
+  return joined(items, words.or, opts);
 }
 
 /**
@@ -212,6 +223,6 @@ function weekdayNames(days: number[], form: 'full' | 'plural',
 }
 
 export {
-  dayNames, hourNames, inCycleOrder, join, list, momentAt, monthNames, span,
-  through, timeNames, walkWeek, weekdayNames, weekRank
+  dayNames, either, hourNames, inCycleOrder, join, list, momentAt, monthNames,
+  span, through, timeNames, walkWeek, weekdayNames, weekRank
 };

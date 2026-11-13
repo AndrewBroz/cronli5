@@ -36,14 +36,14 @@ const MAY_CHANGE = {
 // hour edit may add or remove exactly those words.
 const HOUR_MAY_SET_DAY = ['', 'every day'];
 
-// A sentence must first be true, and twice that reaches across parts
-// (answers 3.5 and 3.9), each time declared here.
+// A sentence must first be true, and three times that reaches across
+// parts (answers 2.6, 3.5 and 3.9), each time declared here.
 //
-// A run that wraps round its cycle ("from 10 p.m. through 2 a.m.", "in
-// November through February") is only true when nothing coarser is
-// restricted: on Mondays those hours are Monday's first and Monday's
-// last. So an edit to a coarser field may change how a wrapping set in a
-// finer field is said, in that field's own part.
+// A run of hours or months that wraps round its cycle ("from 10 p.m.
+// through 2 a.m.", "in November through February") is only true when
+// nothing coarser is restricted: on Mondays those hours are Monday's
+// first and Monday's last. So an edit to a coarser field may change how
+// a wrapping set in a finer field is said, in that field's own part.
 const WRAP_MAY_CHANGE = {
   date: ['time'],
   month: ['time'],
@@ -54,8 +54,19 @@ const WRAP_MAY_CHANGE = {
 // Whatever follows an exception is heard as part of it, so a part that
 // ends in one is closed with a comma when another part follows. An edit
 // that adds or removes a later part may add or remove that comma, and
-// nothing else.
+// nothing else. The same comma closes a part said as several pieces, and
+// a day of the month beside a weekday.
 const CLOSING_COMMA = /,$/u;
+
+// A schedule that can never run (June 31) says only that, and why, in
+// place of the whole sentence. An edit to the day, the month or the year
+// that makes a schedule impossible, or possible again, may therefore
+// change every part.
+function neverRuns(pattern, options) {
+  const {dateReach, day} = parse(pattern, options).schedule.analyses;
+
+  return dateReach !== null && !dateReach.fires && !day.union;
+}
 
 // The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
 // the field was written. Both wordings are reduced to one before equal
@@ -119,7 +130,8 @@ function leaks(pairList) {
     const [a, b, options] = pair;
     const changed = fieldsChanged(a, b, options);
 
-    if (changed.length !== 1) {
+    if (changed.length !== 1 || neverRuns(a, options) ||
+        neverRuns(b, options)) {
       return;
     }
 
@@ -190,6 +202,19 @@ describe('English continuity:', function() {
       // The same edits to a set that does not wrap leave its part alone.
       expect(partsOf('0 9-17 * * 1').time)
         .to.equal(partsOf('0 9-17 * 6 *').time);
+
+      // Numbers never wrap, so nothing coarser changes how they are said.
+      expect(partsOf('50-10 * * * *').time)
+        .to.equal(partsOf('50-10 * * * 1').time);
+
+      // A schedule that can never run says only that.
+      expect(partsOf('0 0 31 6 *')).to.deep.equal({
+        day: '',
+        month: '',
+        time: 'never, because there is no June 31',
+        year: ''
+      });
+      expect(partsOf('0 0 30 6 *').time).to.equal('at midnight');
 
       // An exception is closed with a comma when a part follows it.
       expect(leaks([
