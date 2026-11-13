@@ -2,6 +2,6 @@
   "name": "Japanese",
   "status": "beta",
   "humanReview": null,
-  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2, which reads and writes Japanese but is not a native speaker; no renderer built and no independent read of the rows yet",
+  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2, which reads and writes Japanese but is not a native speaker; revised the same day after one independent adversarial read of the rows; no renderer built yet",
   "branchBudget": 100
 }

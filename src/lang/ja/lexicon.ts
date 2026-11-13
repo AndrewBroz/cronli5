@@ -25,7 +25,8 @@ const weekdays: WeekdayName[] = [
 
 // Units, as they follow a number.
 const units = {
-  // A day of the month (15日) and a length in days (5日ごと).
+  // A day of the month (15日), a length in days (5日ごと), and the noun
+  // a cadence of days ends in (5日ごとの日).
   day: '日',
   // An hour of the day, as a moment (9時).
   hour: '時',
@@ -45,10 +46,15 @@ const words = {
   also: 'に加えて',
   am: '午前',
   and: 'および',
-  before: '前',
+  allDay: '終日',
   bothAt: 'いずれも',
+  dayBefore: '前日',
+  daysBefore: '日前',
   each: 'ごと',
-  eachTime: '各回',
+  eachDay: '各日',
+  eachMonth: '各月',
+  eachOfThoseMinutes: 'その各分',
+  eachYear: '各年',
   evenDays: '偶数日',
   evenHours: '偶数時',
   evenMonths: '偶数月',
@@ -61,7 +67,7 @@ const words = {
   everyWeek: '毎週',
   everyYear: '毎年',
   excepted: 'を除く',
-  exceptedAnd: 'と',
+  firstOf: '最初の',
   forOneMinute: '1分間',
   from: 'から',
   fromOn: '以降',
@@ -78,6 +84,7 @@ const words = {
   oddMonths: '奇数月',
   oddYears: '奇数年',
   of: 'の',
+  onceInYears: '年に1度の年',
   otherThan: '以外',
   pm: '午後',
   runs: '実行します',
@@ -85,6 +92,8 @@ const words = {
   startup: 'システム起動時',
   to: 'まで',
   topic: 'は',
+  with: 'と',
+  withinMonth: '月内で',
   unrecognizable: '認識できないcron式',
   workingDay: '平日'
 };

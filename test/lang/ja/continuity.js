@@ -34,11 +34,11 @@ const MAY_CHANGE = {
 // edit may add or remove exactly that word.
 const HOUR_MAY_SET_DAY = ['', '毎日'];
 
-// The second (answers 2.6): what joins a part to the next is の, or 、
-// before an interval, 毎分 or 毎秒. The join belongs to neither part, so
-// it is set aside before two parts are compared; a time edit may change
-// it and nothing else.
-const JOIN = /[の、]$/u;
+// The second (answers 2.6): what joins a part to the next is の, 、
+// before an interval, and 、終日 before 毎分 or 毎秒 (after いずれも, 終日
+// alone). The join belongs to neither part, so it is set aside before two
+// parts are compared; a time edit may change it and nothing else.
+const JOIN = /(?:の|、終日|終日|、)$/u;
 
 // The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
 // the field was written. Both wordings, each with the join or the 毎日
