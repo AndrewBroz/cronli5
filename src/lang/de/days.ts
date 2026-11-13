@@ -19,7 +19,7 @@ import {
 import type {TimeSaid} from './time.js';
 import type {Voice} from './voice.js';
 
-const {fromLastWords, nthWords, units, words} = lexicon;
+const {fallingOn, fromLastWords, nthWords, units, words} = lexicon;
 
 /** The parts before the time, and what opens the time after them. */
 export interface CalendarSaid {
@@ -34,6 +34,8 @@ export interface CalendarSaid {
 
 // The words one field names its values with.
 interface Naming {
+  // What joins the last of a list to the rest: «und», where not «oder».
+  and?: string;
   except: string;
   // What opens a run: «von», «vom».
   from: string;
@@ -82,6 +84,8 @@ interface Dates {
   alternate: boolean;
   form?: QuartzDate;
   said: Sayable;
+  // Whether the dates are one day, in each month they name.
+  single: boolean;
   there: boolean;
 }
 
@@ -100,10 +104,14 @@ interface Years {
 
 // Which of the two day fields have something to say.
 interface DayArms {
+  // Whether the days are those of the dates that fall on the weekdays.
+  both: boolean;
   dated: boolean;
+  // Whether a date and a weekday are said together, in either way.
+  joint: boolean;
   // Whether no day the schedule names exists.
   never: boolean;
-  // Whether a date and a weekday are said together.
+  // Whether the days are the dates, and in addition the weekdays.
   union: boolean;
   weekly: boolean;
 }
@@ -245,7 +253,7 @@ const named: {[kind: string]: (
 
     return list(items.map(function nameOf(item, at) {
       return itemNames[item.kind](item as never, naming, items[at - 1]);
-    }));
+    }), naming.and);
   },
   // A run of two values is the two values, in the order of the run.
   range(run: Described<'range'>, naming: Naming): string {
@@ -253,10 +261,10 @@ const named: {[kind: string]: (
 
     return (run.to - run.from + naming.size) % naming.size > 1 ?
       `${naming.from}${ends[0]} ${words.to} ${ends[1]}` :
-      naming.one + list(ends);
+      naming.one + list(ends, naming.and);
   },
   values(values: Described<'values'>, naming: Naming): string {
-    return naming.one + list(values.values.map(naming.name));
+    return naming.one + list(values.values.map(naming.name), naming.and);
   }
 };
 
@@ -566,7 +574,13 @@ function datesOf(schedule: Schedule, there: boolean, frame: {
       inSuccession(describeCadencePieces(values, dateDomain), false)) :
     everyValue;
 
-  return {alternate: alternate(restOf(said).base), form, said, there};
+  return {
+    alternate: alternate(restOf(said).base),
+    form,
+    said,
+    single: Boolean(form) || values.length === 1,
+    there
+  };
 }
 
 // The weekdays, in a week that starts on Monday.
@@ -587,6 +601,15 @@ function dailyBut(dates: Sayable): boolean {
   return dates.kind === 'except' && dates.base.kind === 'all';
 }
 
+// Whether the date arm fires in some reached month, and whether it is
+// every day the reached months have.
+function reachOf(reach: DateReach | null) {
+  return {
+    fires: reach?.fires !== false,
+    whole: reach?.days?.everyDay === true
+  };
+}
+
 // What is said of the days, and what fuses: a date phrase with its one
 // month, and one year with a month's name.
 // Which day fields speak. Dates that are every day the reached months
@@ -594,15 +617,20 @@ function dailyBut(dates: Sayable): boolean {
 // weekdays, or nothing.
 function armsOf(schedule: Schedule): DayArms {
   const {dateReach: reach, day} = schedule.analyses;
-  const whole = reach?.days?.everyDay === true;
-  const fires = reach?.fires !== false;
+  const {fires, whole} = reachOf(reach);
   const dated = day.date !== null && fires && !whole;
   const weekly = day.weekday !== null && !whole;
+  const joint = dated && weekly;
+  // A date no month has leaves the weekdays in a union, and nothing where
+  // both must match.
+  const left = day.both || !weekly;
 
   return {
+    both: joint && day.both,
     dated,
-    never: day.date !== null && !fires && !weekly,
-    union: dated && weekly,
+    joint,
+    never: day.date !== null && !fires && left,
+    union: joint && !day.both,
     weekly
   };
 }
@@ -712,20 +740,45 @@ function dateSide(frame: Frame, namings: Namings, voice: Voice): string {
   ]);
 }
 
+// The weekdays the dates must fall on, after «wenn er»: «auf einen Montag,
+// Mittwoch oder Freitag», «auf einen Tag von Montag bis Freitag», «nicht
+// auf einen Mittwoch», «auf den letzten Freitag».
+function fallsOn(frame: Frame, namings: Namings, voice: Voice): string {
+  const {dates, weekdays} = frame;
+  const {nth = 0} = {...weekdays.form} as {nth?: number};
+  const {removed = []} = weekdays.said as Partial<Described<'except'>>;
+  const negated = weekdays.said.kind === 'except';
+  const {subject, verb} = fallingOn[Number(dates.single)];
+  const naming: Naming = {...namings.date, and: words.or,
+    from: `${words.oneOf} ${words.day} ${words.from} `, name: voice.weekdayNoun,
+    one: `${words.oneOf} `, place: weekCounting.place as Naming['place'],
+    size: 7};
+  const said = weekdays.form ?
+    `${words.ontoThe} ${[words.lastOrdinal, ...nthWords][nth]} ` +
+      voice.weekdayNoun(weekdays.form.weekday) :
+    join([negated && words.not, words.onto,
+      names(negated ? {kind: 'values', values: removed} : weekdays.said,
+        naming)]);
+
+  return `${words.when} ${subject} ${said} ${verb}`;
+}
+
 // The day part without its joins: the dates, the weekdays, or the
-// weekdays and in addition the dates.
+// weekdays and in addition the dates, or the dates that fall on the
+// weekdays.
 function daysSaid(frame: Frame, namings: Namings, voice: Voice): string {
-  const {dates, union, weekdays} = frame;
+  const {both, dates, union, weekdays} = frame;
   const weekNames = weekdays.form ?
     quartzWeekday(weekdays.form, tailOf(frame, false, voice), voice) :
     names(weekdays.said, {...namings.date, from: '', name: voice.weekday,
       one: '', place: weekCounting.place as Naming['place'], size: 7});
 
   return join([
-    weekdays.there && weekNames +
+    weekdays.there && !both && weekNames +
       (union && weekdays.said.kind === 'except' ? ',' : ''),
     union && words.additionally,
-    dates.there && dateSide(frame, namings, voice)
+    dates.there && dateSide(frame, namings, voice) +
+      (both ? `, ${fallsOn(frame, namings, voice)}` : '')
   ]);
 }
 
@@ -743,14 +796,14 @@ function holdsRun(dates: Sayable): boolean {
 // months; once, at the first place. Parts of dates that hold a run take
 // it before a clock time instead.
 function sharing(frame: Frame, time: TimeSaid) {
-  const {dates, fused, monthLeads, months, phrase, union, years} = frame;
-  const month = years.several && monthLeads && !union;
+  const {dates, fused, monthLeads, months, phrase, joint, years} = frame;
+  const month = years.several && monthLeads && !joint;
 
   return {
-    day: phrase && !month &&
+    day: phrase && !joint && !month &&
       (years.several && fused || !months.every && months.values.length > 1),
     month,
-    pieces: !union && holdsRun(dates.said) && time.clock
+    pieces: !joint && holdsRun(dates.said) && time.clock
   };
 }
 
@@ -758,9 +811,9 @@ function sharing(frame: Frame, time: TimeSaid) {
 // together, an exception, a relative clause, and parts of dates whose
 // «jeweils» has moved to the time.
 function closes(frame: Frame, moved: boolean): boolean {
-  const {dates, union, weekdays} = frame;
+  const {dates, joint, weekdays} = frame;
 
-  return union || moved || dates.said.kind === 'except' ||
+  return joint || moved || dates.said.kind === 'except' ||
     weekdays.said.kind === 'except' ||
     dates.there && dates.form?.kind === 'nearestWeekday';
 }
@@ -782,11 +835,11 @@ function dayPart(
   namings: Namings,
   voice: Voice
 ): string {
-  const {dates, union} = frame;
+  const {dates, joint} = frame;
   const due = sharing(frame, time);
   const said = daysSaid(frame, namings, voice);
   const filler = time.daily &&
-    (said === '' || !union && dates.said.kind === 'range') && words.daily;
+    (said === '' || !joint && dates.said.kind === 'range') && words.daily;
 
   return join([due.day && !due.pieces && words.eachTime, said, filler]) +
     (closes(frame, due.pieces && (due.month || due.day)) ? ',' : '');
@@ -795,10 +848,13 @@ function dayPart(
 // The year part. One year that a month's name carries is not said here.
 // Every year is silent, but for a date fused with its month, which has
 // no other mark that it comes round again: «jährlich am 1. Juni». Where
-// the date comes only in leap years the gloss says so instead.
+// the date comes only in leap years the gloss says so instead. A date
+// that must fall on a weekday does not come round every year, and the
+// condition says as much.
 function yearPart(frame: Frame, voice: Voice): string {
-  const {fused, monthNamed, years} = frame;
-  const yearly = fused && leapGloss(frame, voice) === '' && words.yearly;
+  const {both, fused, monthNamed, years} = frame;
+  const yearly = fused && !both && leapGloss(frame, voice) === '' &&
+    words.yearly;
 
   if (yearAfter(frame, fused || monthNamed)) {
     return '';
@@ -828,7 +884,7 @@ function calendar(
   const month = join([due.month && !due.pieces && words.eachTime,
     monthPart(frame, namings)]);
   const year = yearPart(frame, voice);
-  const shared = frame.union || due.pieces ||
+  const shared = frame.joint || due.pieces ||
     time.offset && year + month + day !== '';
 
   return frame.never ?
