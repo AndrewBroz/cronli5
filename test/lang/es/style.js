@@ -17,8 +17,10 @@ describe('Spanish styles:', function() {
     expect(es.defaultStyle).to.equal('es');
     expect(es.regions).to.deep.equal({ES: 'es', MX: 'mx', US: 'mx'});
     expect(es.styles).to.equal(styles);
-    expect(styles.es).to.deep.equal({hour12: false, short: false});
-    expect(styles.mx).to.deep.equal({hour12: true, short: false});
+    expect(styles.es).to.deep.equal(
+      {hour12: false, short: false, workday: 'laborable'});
+    expect(styles.mx).to.deep.equal(
+      {hour12: true, short: false, workday: 'hábil'});
     expect(Object.isFrozen(styles)).to.equal(true);
     expect(Object.isFrozen(styles.es)).to.equal(true);
   });
@@ -26,7 +28,7 @@ describe('Spanish styles:', function() {
   it('applies overrides to a named table', function() {
     expect(es.style('es')).to.deep.equal(styles.es);
     expect(es.style('mx', {short: true}))
-      .to.deep.equal({hour12: true, short: true});
+      .to.deep.equal({hour12: true, short: true, workday: 'hábil'});
   });
 
   it('rejects a field it does not have, naming the fields', function() {
@@ -39,6 +41,9 @@ describe('Spanish styles:', function() {
     throwsOption(function build() {
       es.style('es', {short: 'sí'});
     }, /short/u);
+    throwsOption(function build() {
+      es.style('es', {workday: 'entre semana'});
+    }, /workday/u);
   });
 
   it('capitalises a label, wraps a sentence, and has its fixed texts',

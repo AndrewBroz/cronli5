@@ -6,15 +6,17 @@ variant for the clock. Every example is what a careful writer would put on
 a screen. Reasons are given, with the alternative that was rejected, so a
 fluent reviewer can overturn a call.
 
-These answers are a second version. The first put the time before the
+These answers are a third version. The first put the time before the
 day and leaned on arithmetic words («las horas pares», «los meses
-impares», «cada 12 horas», «un año de cada 4»). A fluent reader then
-judged forty-five of its sentences without knowing how they were made.
-Where a decision below rests on that reading it says **(reader)**, with
-what the reader understood or stumbled on. The reader's rewrites were
-taken as suggestions: the reader did not know that the pattern ignores
-public holidays, that every sentence has to follow from general rules, or
-that one fixed order helps someone compare two schedules.
+impares», «cada 12 horas», «un año de cada 4»). A fluent reader judged
+forty-five of its sentences without knowing how they were made, and the
+second version followed. A second fluent reader then judged fifty-six of
+its sentences the same way, and a third reader worked every row against
+its pattern. Where a decision below rests on those readings it says
+**(reader 1)**, **(reader 2)** or **(schedule reader)**, with what was
+understood or stumbled on. Rewrites were taken as suggestions: the
+readers did not know that every sentence has to follow from general
+rules, or that one fixed order helps someone compare two schedules.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds.
@@ -28,16 +30,18 @@ Four things run through everything:
   los días» (2.5).
 * **A series is never left without an anchor.** A reader cannot tell when
   «cada 2 horas» or «cada 12 horas» lands, or whether 8:00 is in it
-  **(reader:** "no dice desde qué hora se cuenta"; "el único defecto que
+  **(reader 1:** "no dice desde qué hora se cuenta"; "el único defecto que
   afecta al sentido"**)**. So a cadence is said bare only where the unit
   above it anchors it for every speaker: minutes on the hour («cada 15
   minutos») and seconds on the minute («cada 15 segundos»). A cadence of
   hours, days or years is listed, or names both its ends.
 * **Calendar words before arithmetic words.** A speaker lists, or uses the
   words of the clock and the calendar; nobody knows a month or an hour by
-  whether its number is odd **(reader)**. Parity is kept only where it is
-  really said: «los días pares/impares» of the month and «los años
-  pares/impares».
+  whether its number is odd **(reader 1)**. Parity is said only of things
+  a speaker knows by their number: the days of the month, years, and the
+  minutes and seconds of 3.7.
+* **A long series is shown, not computed**: its first three terms, «y así
+  sucesivamente», and its last term where it has one (4.1, 5.8).
 
 ## How a form is chosen
 
@@ -54,7 +58,7 @@ named, only on how many there are and how they are arranged.
   listed: «los días 1, 6, 11, 16, 21, 26 y 31 de cada mes»; «a las 0:00,
   4:00, 8:00, 12:00, 16:00 y 20:00»; «en los minutos 5, 15, 25, 35, 45 y
   55 de cada hora». From eight values it is a cadence with both ends:
-  «cada 3 horas de 0:00 a 21:00». **(Reader:** seven days listed were
+  «cada 3 horas de 0:00 a 21:00». **(Reader 1:** seven days listed were
   preferred to «cada 5 días desde el día 1», where "el lector tiene que
   hacer la cuenta y no sabe qué pasa con el 31"; eight clock times listed
   were marked down, "el lector tiene que descubrir él el patrón"**.)**
@@ -64,15 +68,16 @@ named, only on how many there are and how they are arranged.
   times and need no working out, so the limit is lower than seven.
 * **A list of clock times goes up to twelve** where nothing shorter says
   the same (4.1).
-* **Up to four separate hours filled by minutes are each a window**;
-  beyond four they are named by when they begin (4.1).
+* **Up to four separate hours filled by minutes are each a window.**
+  Beyond four, a cadence of hours is a series, and hours with no cadence
+  are named by when they begin (4.1).
 * **A run of exactly two values is listed**, not said as a range («los
   domingos y lunes»; «a las 9:00 y 10:00»). Outside the weekdays, two
   values that wrap are listed in ascending order: «a las 0:00 y 23:00»;
   «en enero y diciembre». Two hours can still be a window.
 * **Pieces are said wherever the set has a run of three or more**: «de
   martes a jueves y los domingos»; «los lunes y de miércoles a viernes»
-  **(reader** rewrote «los lunes, miércoles, jueves y viernes» this
+  **(reader 1** rewrote «los lunes, miércoles, jueves y viernes» this
   way**)**.
 * **An exception** is taken from every value or from a cadence, never
   from a run; it must replace a list of more than seven values; and it
@@ -81,7 +86,7 @@ named, only on how many there are and how they are arranged.
 * **Every range of times is closed: it names its first and its last
   moment, and both fire.** «De … a …» is read as including its end:
   «cada minuto de 9:00 a 17:59»; «cada 15 minutos de 9:00 a 17:45». There
-  is no form in which a time that is named does not fire. **(Reader**
+  is no form in which a time that is named does not fire. **(Reader 1**
   understood every such window exactly, and noted that 17:59 "huele a
   máquina, pero es exacto"**.)**
 * **There is no declared tie.** Hours 0 and 12 are «a las 0:00 y 12:00»
@@ -103,6 +108,7 @@ never the order of the sentence.
 | --- | --- | --- | --- |
 | `hour12` | boolean | `false` | `false`: 24-hour times («a las 17:30»). `true`: 12-hour times with «a. m.» or «p. m.» after each: «a las 5:30 p. m.» |
 | `short` | boolean | `false` | Weekday and month names in their three-letter forms («lun», «jun»), with no full stop; nothing else changes |
+| `workday` | `'laborable'` or `'hábil'` | `'laborable'` | The word for a Monday-to-Friday day (5.7): «día laborable» or «día hábil» |
 
 With `hour12: true` the hour is 12, 1 … 11 and every time carries its own
 «a. m.» or «p. m.»; it is never shared: «de 9:00 a. m. a 5:45 p. m.». Hour
@@ -113,12 +119,26 @@ With `short: true` the names are «lun, mar, mié, jue, vie, sáb, dom» and
 «ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic»: «los lun,
 mié y vie», «de lun a vie», «en jun», «los lun de jun», «el 1 de jun»,
 «de jun a ago». «Los fines de semana» is not a name and does not change.
-The gloss of 5.7 is made of names and does: «el último día laborable (de
-lun a vie) del mes».
+These are not the abbreviations of the *Ortografía*, which take a full
+stop («lun.», «jun.»); they are the unpunctuated forms of calendar
+headers and narrow columns, and the authority for this one style is that
+practice **(schedule reader:** "not a sentence anyone writes"**)**. The
+style is for a caller short of room; with full stops a list would read
+«los lun., mié. y vie.». A fluent reviewer may prefer the stops.
+
+With `hour12: true`, 0:00 and 12:00 are «12:00 a. m.» and «12:00 p. m.».
+The *Diccionario panhispánico de dudas* advises against both as doubtful
+**(schedule reader)**. They are kept because the alternatives mislead
+more beside a date («a medianoche el día 1», «a las 12 de la noche del
+día 1» are read by many as the night that ends the 1st), and because this
+is what a phone or a computer in Mexico or the United States shows at
+those two moments. Unresolved until a fluent reader from there has seen
+it.
 
 1.3 Regions. There are two named styles: `es`, the default, and `mx`,
-which sets `hour12: true`. Spain (`ES`) selects `es`; Mexico (`MX`) and
-the United States (`US`) select `mx`. Any other region takes the default.
+which sets `hour12: true` and `workday: 'hábil'`. Spain (`ES`) selects
+`es`; Mexico (`MX`) and the United States (`US`) select `mx`. Any other
+region takes the default.
 
 ## 2. Frame
 
@@ -133,19 +153,32 @@ years and months, when they stand apart), then the day, then the time**.
 * `0 0 9 * * * 2030` — «en 2030, todos los días a las 9:00»
 * `* * * * *` — «cada minuto»
 
-The joins:
+The joins. There are three, and each has one rule.
 
-* Every phrase of the leading frame is followed by a comma: «en 2030 y
-  2031, en junio, todos los días a las 9:00».
-* The day and the time are joined by a space when the time part begins
-  with a clock time («a las», «a la») and the day part has no comma in
-  it: «los lunes a las 9:00»; «todos los días a las 5:00 y cada hora de
-  9:00 a 17:00». Otherwise by a comma: «los lunes, cada hora»; «de lunes a
-  viernes, cada 15 minutos de 9:00 a 17:45»; «el día 1 de cada mes, y
-  también los viernes, a las 0:00»; «todos los días, excepto los
-  miércoles, a las 9:00».
+* **After the leading frame: always a comma**, after each of its phrases:
+  «en 2030 y 2031, en junio, todos los días a las 9:00».
+* **Between the day and the time: a space before a clock time, a comma
+  before anything else.** A time part that begins «a las» or «a la»
+  follows the day with a space: «los lunes a las 9:00»; «los lunes,
+  miércoles y viernes a las 9:00»; «los días 1, 10 y 20 de cada mes a las
+  9:00»; «el día 1 de marzo, junio, septiembre y diciembre a las 0:00»;
+  «todos los días a las 5:00 y cada hora de 9:00 a 17:00». Any other time
+  part follows a comma: «los lunes, cada hora»; «de lunes a viernes, cada
+  15 minutos de 9:00 a 17:45»; «el día 1 de cada mes, cada minuto». The
+  commas inside a list in the day part have nothing to do with it, and
+  neither has any option.
+* **An inserted phrase is closed by a comma when anything follows it.**
+  The inserted phrases are an exception («, excepto …»), the second side
+  of a union («, y también …») and «, sin salir del mes» (5.7). So a
+  clock time after one of them follows a comma after all: «todos los
+  días, excepto los miércoles, a las 9:00»; «el día 1 de cada mes, y
+  también los viernes, a las 0:00».
 * With no day part, the leading frame is followed by the time: «en junio,
   cada 5 minutos».
+
+**(Reader 2** and the **schedule reader** both found the second version
+putting a comma before «a las» after some lists and not others; it made
+the comma depend on whether the day part held a comma of its own.**)**
 
 2.2 Each coarser part is added in front of the parts finer than it.
 Nothing moves, apart from the month and the single year that a date takes
@@ -163,7 +196,7 @@ minuto».
 2.4 Why this order. The first version said the time first («a las 9:00
 todos los días»). It was changed for three reasons.
 
-* It is the spontaneous order **(reader:** «todos los días a las 9:00»,
+* It is the spontaneous order **(reader 1:** «todos los días a las 9:00»,
   «el día 1 de cada mes a las 0:00» and «los lunes de junio a las 9:00»
   were each ranked first; "un hablante pone primero el marco"**)**.
 * It removes a wrong reading. «Cada 2 horas, excepto a las 8:00, el día 1
@@ -191,8 +224,8 @@ the day part says «todos los días»:
 * `0 9 * * *` — «todos los días a las 9:00»
 * `0 9-17 * * *` — «todos los días, cada hora de 9:00 a 17:00»
 * `0 */2 * * *` — «todos los días, cada 2 horas de 0:00 a 22:00»
-* `* */2 * * *` — «todos los días, cada minuto en horas alternas desde las
-  0:00»
+* `* 9,17 * * *` — «todos los días, cada minuto de 9:00 a 9:59 y de 17:00
+  a 17:59»
 * `0 9 * 6 *` — «en junio, todos los días a las 9:00»
 
 It is not said when the hours are every hour, with or without exceptions:
@@ -202,18 +235,18 @@ either kind, or a Quartz form, replaces it. An edit to the hours may add
 or remove «todos los días», and with it the join; no other field's words
 depend on the time.
 
-2.6 Punctuation that belongs to a join and not to a part: the comma after
-each phrase of the leading frame; the comma or space between the day and
-the time (2.1); the comma that closes an exception before something
-follows it (3.9); the commas round «y también …» (4.3).
+2.6 Punctuation that belongs to a join and not to a part: the three
+joins of 2.1.
 
 2.7 What one part takes from another, all declared here and in
 `continuity.js`:
 
 * the month, and a single year after it, join a date or a weekday phrase
   in place of leading (4.4, 4.5);
-* a day of the month says «de cada mes» unless the sentence names exactly
-  one month (4.3, 4.4);
+* a day list or range under named months loses the days those months do
+  not have (4.4);
+* in a union under named months, the date side drops «de cada mes» and
+  the weekday side says «de ese mes» or «de esos meses» (4.3);
 * a set of weekdays missing one day is an exception alone and a run
   beside a day of the month (3.9);
 * hours that run past midnight are said as one run only when no day,
@@ -235,7 +268,7 @@ a Quartz «segundo lunes» (5.7).
 
 * Minute, with H every hour: «en el minuto 30 de cada hora». Spanish
   numbers the minutes of an hour from 0, so «el minuto 0» and «el minuto
-  1» mean :00 and :01 with no doubt. **(Reader:** "clara pero suena a
+  1» mean :00 and :01 with no doubt. **(Reader 1:** "clara pero suena a
   técnico"; against «a y media de cada hora», «cada hora a los 30
   minutos» and «a las y media de cada hora» it was ranked first, "la
   única que nadie entiende mal".**)**
@@ -288,7 +321,11 @@ A wrap is only true when nothing coarser is restricted:
 
 * hours wrap only when the day of the month, the weekday, the month and
   the year are all every value;
-* days of the month wrap only when the month and the year are;
+* days of the month wrap only when the month and the year are, and then
+  the sentence says that the run crosses into the next month: `0 0 28-3 *
+  *` is «del 28 de cada mes al 3 del siguiente a las 0:00». Under a named
+  month or year the days are in ascending order: «del 1 al 3 y del 28 al
+  30 de junio»;
 * months wrap only when the year is;
 * weekdays may always wrap;
 * minutes and seconds follow 3.6.
@@ -326,49 +363,51 @@ one hour is two windows: «cada minuto de 9:00 a 9:10 y de 9:50 a 9:59».
 
 * **Minutes** are bare when the cadence tiles the hour (the interval
   divides 60 and it starts at 0): «cada 15 minutos»; minutes 0 and 30 are
-  «cada 30 minutos». Every speaker counts minutes from the hour, and the
-  reader took «cada 15 minutos de 9:00 a 17:45» exactly. A cadence that
+  «cada 30 minutos». Every speaker counts minutes from the hour, and both
+  readers took «cada 15 minutos de 9:00 a 17:45» exactly. A cadence that
   does not tile, starts off the hour, or starts on it and stops early is
   listed up to seven minutes and from eight names both ends: `5/10` is «en
   los minutos 5, 15, 25, 35, 45 y 55 de cada hora»; `0-40/10` «en los
   minutos 0, 10, 20, 30 y 40 de cada hora»; `*/7` «cada 7 minutos del
   minuto 0 al 56 de cada hora»; `0-42/6` «cada 6 minutos del minuto 0 al
   42 de cada hora». A start at 0 does not make a cadence bare: only
-  tiling does. Inside a named hour it is a window of clock times (4.1).
+  tiling does. Every second minute from 1 is «en los minutos impares de
+  cada hora». Inside a named hour a cadence is a window of clock times
+  (4.1).
 * **Seconds** the same, on the minute: «cada 15 segundos»; «en los
-  segundos 5, 15, 25, 35, 45 y 55 de cada minuto».
+  segundos 5, 15, 25, 35, 45 y 55 de cada minuto»; «en los segundos
+  impares de cada minuto».
 * **Hours are never bare.** Up to seven hours are listed as times: `*/6`
   is «a las 0:00, 6:00, 12:00 y 18:00»; `*/12` «a las 0:00 y 12:00». From
   eight the cadence names both ends as clock times, and carries the
   minute: `*/2` is «cada 2 horas de 0:00 a 22:00»; `1/2` «cada 2 horas de
   1:00 a 23:00»; `0-20/2` «cada 2 horas de 0:00 a 20:00»; `30 */3` «cada 3
-  horas de 0:30 a 21:30». **(Reader** took «cada 2 horas de 1:00 a 23:00»
-  exactly, and asked for «cada 3 horas de 0:30 a 21:30» in place of eight
-  listed times.**)** Rejected: «cada 2 horas desde las 0:00», which names
-  the start and leaves the reader to find the last; «las horas pares».
-* **Days of the month** never tile. Every second day is an idiom (5.1).
-  Any other cadence is listed up to seven days, `*/5` «los días 1, 6, 11,
-  16, 21, 26 y 31 de cada mes», and from eight names both ends: `*/3` is
-  «cada 3 días del 1 al 31 de cada mes»; `8/2` «cada 2 días del 8 al 30
-  de cada mes».
+  horas de 0:30 a 21:30». **(Both readers** took these exactly.**)**
+  Rejected: «cada 2 horas desde las 0:00», which names the start and
+  leaves the reader to find the last; «las horas pares».
+* **Days of the month** never tile. Every second day is an idiom (5.1),
+  and one that starts late or stops early keeps it between its ends, from
+  eight days: `8/2` is «los días pares del 8 al 30 de cada mes». Any
+  other cadence is listed up to seven days, `*/5` «los días 1, 6, 11, 16,
+  21, 26 y 31 de cada mes», and from eight names both ends: `*/3` is
+  «cada 3 días del 1 al 31 de cada mes».
 * **Months** have no cadence and no idiom. The months are named, every
   second month too: «en enero, marzo, mayo, julio, septiembre y
-  noviembre». **(Reader** on «los meses impares»: "nadie piensa en meses
+  noviembre». **(Reader 1** on «los meses impares»: "nadie piensa en meses
   impares; hay que numerar los meses".**)**
 * **Weekdays** have no cadence. The days are listed.
 * **Years**: 5.8.
 
 3.8 Where the hours of a cadence are filled by minutes (M is every minute
 or a bare cadence), they are not points and take the forms of 4.1:
-windows for up to four hours, «en horas alternas» for every second hour,
-and otherwise the hours by when they begin.
+windows for up to four hours, and beyond four a series of windows.
 
 3.9 A set with values missing is said as a simpler set «excepto» the
 missing ones. A comma comes before «excepto», and another closes the
 exception when anything follows it: «los días impares de cada mes,
 excepto el día 15, a las 9:00»; «todos los días, excepto los miércoles, a
 las 9:00». At the end of the sentence there is no closing comma: «cada
-hora, excepto a las 3:00». **(Reader:** the comma before «excepto» is
+hora, excepto a las 3:00». **(Reader 1:** the comma before «excepto» is
 needed; «salvo» is as good and a little more formal; «menos» is misread
 at first as "cada 2 horas menos".**)**
 
@@ -387,7 +426,7 @@ counts two; a run counts two.
   of points one value short of everything is one thing as an exception
   and two as a run: `0 0-22 * * *` is «cada hora, excepto a las 23:00»;
   `0-58 * * * *` «cada minuto, excepto en el minuto 59 de cada hora»; `0 0
-  1-30 * *` «todos los días del mes, excepto el día 31, a las 0:00». Two
+  1-30 * *` «todos los días de cada mes, excepto el día 31, a las 0:00». Two
   values short at one end tie with the run, and a run that does not wrap
   wins a tie: `0 0-21 * * *` is «todos los días, cada hora de 0:00 a
   21:00». Filled hours one short at an end tie as well, and are the run:
@@ -403,13 +442,13 @@ counts two; a run counts two.
 * Hours as points: «cada hora, excepto a las 3:00»; «en el minuto 30 de
   cada hora, excepto a las 3:30»; from a cadence, «cada 2 horas de 0:00 a
   22:00, excepto a las 8:00». The cadence names its ends, so the reader
-  can see that 8:00 was in it **(reader:** with a bare «cada 2 horas» "el
+  can see that 8:00 was in it **(reader 1:** with a bare «cada 2 horas» "el
   lector no sabe si las 8:00 estaban en ella"**)**.
 * Hours that are filled: a window from the first time that would have
   fired in that hour to the last. «Cada 10 minutos, excepto de 3:00 a
   3:50»; «cada minuto, excepto de 3:00 a 3:59»; «en los minutos 5, 20 y 45
-  de cada hora, excepto de 3:05 a 3:45»; «cada 15 minutos en horas
-  alternas desde las 0:00, excepto de 8:00 a 8:45».
+  de cada hora, excepto de 3:05 a 3:45»; after a series, «… y así
+  sucesivamente hasta las 22:45, excepto de 8:00 a 8:45».
 * Minutes: said last in the time part. Under every hour or a stretch of
   hours, «cada minuto, excepto en el minuto 29 de cada hora»; «cada 10
   minutos de 9:00 a 17:50, excepto en el minuto 30 de cada hora». Inside
@@ -419,14 +458,15 @@ counts two; a run counts two.
   too, «excepto» is said once and the hours' comes first: «cada 10
   minutos, excepto de 3:00 a 3:50 y en el minuto 30 de cada hora».
 * Seconds: «cada segundo, excepto en el segundo 29 de cada minuto»; after
-  «durante un minuto», «excepto en el segundo 29». Under «cada segundo»
+  «durante un minuto», «excepto en el segundo 29»: «a las 9:00, una vez
+  por segundo durante un minuto, excepto en el segundo 29». Under «cada segundo»
   an excepted minute is a whole minute: «cada segundo, excepto durante el
   minuto 29 de cada hora»; inside one hour, a window to the second,
   «excepto de 9:29:00 a 9:29:59».
 * Days of the month: «los días impares de cada mes, excepto el día 15»;
-  every day but a few, «todos los días del mes, excepto el día 15»;
-  «todos los días del mes, excepto los días 15 y 16»; in one month,
-  «todos los días de junio, excepto el día 15». **(Reader:** "mejor aún
+  every day but a few, «todos los días de cada mes, excepto el día 15»;
+  «todos los días de cada mes, excepto los días 15 y 16»; in one month,
+  «todos los días de junio, excepto el día 15». **(Reader 1:** "mejor aún
   «excepto el día 15»".**)**
 * Weekdays: six days are «todos los días, excepto» and the seventh,
   «todos los días, excepto los miércoles». This is the only exception a
@@ -472,19 +512,23 @@ hours, and an hour standing alone, is a window.
 | a range | «cada minuto de 9:00 a 17:59»; «cada 15 minutos de 9:00 a 17:45» |
 | pieces, at least one of them a run | each a window: «cada 15 minutos de 9:00 a 17:45 y de 22:00 a 22:45»; «cada minuto de 9:00 a 17:59, de 20:00 a 20:59 y de 22:00 a 22:59» |
 | separate hours, four or fewer | each a window: «cada minuto de 9:00 a 9:59 y de 17:00 a 17:59»; «cada 15 minutos de 8:00 a 8:45, de 12:00 a 12:45 y de 18:00 a 18:45»; hours 0, 6, 12 and 18, «cada minuto de 0:00 a 0:59, de 6:00 a 6:59, de 12:00 a 12:59 y de 18:00 a 18:59» |
-| every second hour | «en horas alternas desde las 0:00»; from hour 1, «en horas alternas desde la 1:00»: «cada minuto en horas alternas desde las 0:00» |
-| every second hour, with exceptions | «cada 15 minutos en horas alternas desde las 0:00, excepto de 8:00 a 8:45» |
-| any other separate hours, more than four | the hours by when they begin: «cada 15 minutos durante las horas que empiezan a las 8:00, 10:00, 12:00, 14:00, 16:00 y 18:00» |
+| a cadence of more than four hours | a series: the first three windows, «y así sucesivamente», and «hasta las» with the last moment that fires. `* */2` is «cada minuto de 0:00 a 0:59, de 2:00 a 2:59, de 4:00 a 4:59 y así sucesivamente hasta las 22:59»; `*/15 1/2`, «cada 15 minutos de 1:00 a 1:45, de 3:00 a 3:45, de 5:00 a 5:45 y así sucesivamente hasta las 23:45»; `*/15 8-18/2`, «cada 15 minutos de 8:00 a 8:45, de 10:00 a 10:45, de 12:00 a 12:45 y así sucesivamente hasta las 18:45» |
+| a cadence of more than four hours, with exceptions | the series, then the exception: «… y así sucesivamente hasta las 22:45, excepto de 8:00 a 8:45» |
+| more than four separate hours that form no cadence | the hours by when they begin: «cada minuto durante las horas que empiezan a las 6:00, 8:00, 12:00, 18:00 y 20:00» |
 | every hour with exceptions | «cada 10 minutos, excepto de 3:00 a 3:50» |
 
-**(Reader:** three windows were ranked above «durante las horas que
-empiezan a las 8:00, 12:00 y 18:00», which "obliga a releer" though it
-"es inequívoca"; «las horas 8, 12 y 18» "no es español". «Horas alternas»
-"es español real y fija el arranque", against «las horas pares», where
-"el lector duda de si las 0 cuentan".**)** «Las horas que empiezan a las»
-is kept only beyond four hours, where the windows would name ten clock
-times or more; it is clumsy and it cannot be misread. An hour is never
-named by a bare number.
+The series is the third attempt at every second hour. «Las horas pares»:
+"nadie dice horas pares, y el lector duda de si las 0 cuentan" **(reader
+1)**. «En horas alternas desde las 0:00»: "no dice cuánto dura cada tramo
+y «desde las 0:00» parece el arranque de «cada minuto»" **(reader 2**, who
+asked for the stretches to be shown: «de 0:00 a 0:59, de 2:00 a 2:59…
+hasta las 22:59»**)**. The series shows three stretches and the end; it
+is long, it needs no arithmetic, and it is the same device as the windows
+it continues, so going from four hours to six does not change the device
+**(schedule reader:** "three devices for hours filled by minutes"**)**.
+«Las horas que empiezan a las» remains only for five or more hours with
+no pattern to show; it is clumsy and cannot be misread. An hour is never
+named by a bare number («las horas 8, 12 y 18» "no es español").
 
 **M is a single run of minutes, or a cadence that is not bare, and H is
 one hour or up to four separate hours.** A window of clock times in each
@@ -506,8 +550,8 @@ H:
 | every hour | «de cada hora» |
 | a range, of two hours or more | «de cada hora», a comma, and a window from the first time that fires to the last: «en los minutos 5, 20 y 45 de cada hora, de 9:05 a 17:45»; «cada minuto durante los primeros 30 minutos de cada hora, de 9:00 a 17:29»; «en los minutos 5, 20 y 45 de cada hora, de 9:05 a 10:45». (A window of hours, «de 9:00 a 17:00», would be read as stopping before the last hour's minutes.) |
 | pieces | windows the same way: «de cada hora, de 9:05 a 17:45 y de 22:05 a 22:45» |
-| separate hours | no minute phrase: the clock times are listed, while there are at most twelve («a las 9:05, 9:20, 9:45, 17:05, 17:20 y 17:45»). Beyond twelve: «de las horas que empiezan a las 8:00, 10:00, 12:00, 14:00, 16:00 y 18:00» |
-| every second hour, beyond twelve times | «de las horas alternas desde las 0:00»: «en los minutos 15 y 45 de las horas alternas desde las 0:00» |
+| separate hours, four or fewer, or with no cadence | no minute phrase: the clock times are listed, while there are at most twelve («a las 9:05, 9:20, 9:45, 17:05, 17:20 y 17:45»; `15,45 */6`, «a las 0:15, 0:45, 6:15, 6:45, 12:15, 12:45, 18:15 y 18:45»). Beyond twelve: «de las horas que empiezan a las 6:00, 8:00, 12:00, 18:00 y 20:00» |
+| a cadence of more than four hours | no minute phrase: a series of clock times, those of the first three hours, «y así sucesivamente», and «hasta las» with the last: `15,45 */2` is «a las 0:15, 0:45, 2:15, 2:45, 4:15, 4:45 y así sucesivamente hasta las 22:45»; `15,45 */4`, «a las 0:15, 0:45, 4:15, 4:45, 8:15, 8:45 y así sucesivamente hasta las 20:45». **(Reader 2** on the twelve times listed in full: "el lector tiene que descubrir el patrón solo".**)** |
 | every hour with exceptions | «de cada hora, excepto de 3:05 a 3:45» |
 
 The comma before the window is the reader's: «en los minutos 5, 20 y 45
@@ -531,7 +575,7 @@ no article («de 1:00 a 13:00»).
 
 In a list the preposition and article take their form from the first
 time and are said once: «a las 9:00 y 17:00»; «a las 0:00, 1:00, 22:00 y
-23:00»; «a la 1:05 y 1:20». **(Reader:** repeating them before each time
+23:00»; «a la 1:05 y 1:20». **(Reader 1:** repeating them before each time
 is "correcta pero pesada"; "en una lista nadie echa de menos «a la
 1:00»".**)** They are said again only when the list begins at hour 1 and
 goes on to another hour, where «a la» cannot cover what follows; then
@@ -546,78 +590,106 @@ the list without a shape.) The hour is taken as it is written, so with
 are added to it by the first of these that applies. The windows of the
 time part stay as they are, to the minute, in every case but the first:
 the first version wrote them to the second («de 9:00:00 a 17:45:59»), and
-the reader called that the precision of a machine.
+reader 1 called that the precision of a machine. Such a window names the
+first and the last minute in which the schedule fires; the seconds
+phrase says when inside each of those minutes (8.5).
 
-1. **M is every minute, or every minute with exceptions.** The seconds lead in place of «cada minuto».
-   Every second or a bare cadence: «cada segundo»; «cada 30 segundos»;
-   with hours, the window is written to the second, because «cada segundo
-   de 9:00 a 17:59» would leave the last minute in doubt: «cada segundo de
-   9:00:00 a 17:59:59». A run of minutes is taken the same way: «cada
-   segundo durante los primeros 30 minutos de cada hora»; «cada segundo de
-   9:00:00 a 9:29:59». Anchored seconds: «en el segundo 30 de cada
-   minuto»; «en los segundos 5, 15, 25, 35, 45 y 55 de cada minuto»; «cada
-   segundo durante los primeros 10 segundos de cada minuto»; with hours,
-   after a comma, «en el segundo 30 de cada minuto, de 9:00 a 17:59».
+1. **M is every minute, or every minute with exceptions.** The seconds
+   lead in place of «cada minuto». Every second or a bare cadence: «cada
+   segundo»; «cada 30 segundos»; with hours, the window is written to the
+   second, because «cada segundo de 9:00 a 17:59» would leave the last
+   minute in doubt: «cada segundo de 9:00:00 a 17:59:59». A run of
+   minutes is taken the same way: «cada segundo durante los primeros 30
+   minutos de cada hora»; «cada segundo de 9:00:00 a 9:29:59». Anchored
+   seconds: «en el segundo 30 de cada minuto»; «en los segundos 5, 15,
+   25, 35, 45 y 55 de cada minuto»; «cada segundo durante los primeros 10
+   segundos de cada minuto»; with hours, after a comma, «en el segundo 30
+   de cada minuto, de 9:00 a 17:59».
 2. **The time part names minutes of the hour by number.** The seconds
    join the minute phrase: «en el segundo 15 del minuto 30 de cada hora»;
    «en los segundos 0 y 30 de los minutos 5 y 20 de cada hora»; «cada
    segundo durante el minuto 30 de cada hora»; «cada segundo durante los
-   minutos 30 y 42 de cada hora, de 3:30 a 10:42»; «en el segundo 8 de
-   los minutos 5 y 30 de las horas alternas desde las 0:00».
+   minutos 30 y 42 de cada hora, de 3:30 a 10:42».
 3. **The time part is a list of clock times, and with the seconds it is
    still four times or fewer.** The times carry the seconds: «a las
    9:00:30»; «a las 9:00:00 y 9:00:30»; «a las 0:00:15, 6:00:15, 12:00:15
    y 18:00:15».
-4. **Otherwise the seconds are a clause after the time part.** After a
-   time part that is only clock times the clause follows a comma: «a las
-   9:00, cada segundo durante un minuto». After anything else it follows
-   «, y cada vez»: «cada 15 minutos de 9:00 a 17:45, y cada vez cada
-   segundo durante un minuto»; «cada hora, y cada vez en el segundo 30».
-   The clause:
-   * every second: «cada segundo durante un minuto»;
-   * a bare cadence of five seconds or more: «cada 6 segundos durante un
-     minuto»;
+4. **Otherwise the seconds are a clause after the time part, after a
+   comma**, whatever the time part is: «a las 9:00, una vez por segundo
+   durante un minuto»; «cada 15 minutos de 9:00 a 17:45, una vez por
+   segundo durante un minuto»; «cada hora, en el segundo 30». The clause:
+   * every second: «una vez por segundo durante un minuto»;
+   * a bare cadence of five seconds or more: «una vez cada 6 segundos
+     durante un minuto»;
    * **a bare cadence of four seconds or fewer is named, never a
      cadence**: «en los segundos 0 y 30»; «en los segundos 0, 15, 30 y
      45». Two moments are not worth a second cadence to work out;
    * one second, or any other set of up to seven: «en el segundo 30»; «en
-     los segundos 5, 15, 25, 35, 45 y 55»;
-   * a run: «cada segundo durante los primeros 10 segundos»; «cada
-     segundo del segundo 10 al 20»;
-   * a cadence of eight or more that is not bare: «cada 7 segundos del
-     segundo 0 al 56».
+     los segundos 5, 15, 25, 35, 45 y 55»; every second second from 1,
+     «en los segundos impares»;
+   * a run: «una vez por segundo durante los primeros 10 segundos»; «una
+     vez por segundo del segundo 10 al 20»;
+   * a cadence of eight or more that is not bare: «una vez cada 7
+     segundos del segundo 0 al 56».
 
 **Minute 0 under every hour is «cada hora» whatever the seconds are**,
-and the seconds follow by rule 4: `* 0 * * * *` is «cada hora, y cada vez
-cada segundo durante un minuto»; `30 0 * * * *` «cada hora, y cada vez en
-el segundo 30»; `15 0 */2 * * *` «todos los días, cada 2 horas de 0:00 a
-22:00, y cada vez en el segundo 15». A first renderer said «cada hora»
-alone for these and lost the seconds; the clause cannot be dropped.
+and the seconds follow by rule 4: `* 0 * * * *` is «cada hora, una vez
+por segundo durante un minuto»; `30 0 * * * *` «cada hora, en el segundo
+30»; `15 0 */2 * * *` «todos los días, cada 2 horas de 0:00 a 22:00, en
+el segundo 15». A first renderer said «cada hora» alone for these and
+lost the seconds; the clause cannot be dropped.
 
-«Y cada vez» is the reader's, who rewrote «cada segundo durante un minuto
-cada 15 minutos de 9:00:00 a 17:45:59» (two «cada» and two «de … a» with
-no comma) as «cada 15 minutos de 9:00 a 17:45, y cada vez cada segundo
-durante un minuto». Rejected: the reader's «30 segundos después de la
-hora en punto», which does not extend to a list or a run of seconds.
+The clause had a connector in the second version, «, y cada vez», and
+both later readers rejected it: "no lo escribe nadie; hace pensar en algo
+que se repite dentro de cada vez", and «y cada vez cada segundo» is
+"tres «cada» en cinco palabras". «Una vez por segundo durante un minuto»
+is reader 2's own wording, and «a las 9:00, cada segundo durante un
+minuto» was read as natural with a bare comma, so the comma alone
+carries the clause. Rejected: «30 segundos después de la hora en punto»
+and «dos veces seguidas: en punto y 30 segundos después», which are
+right for those values and do not extend to a list or a run.
 
 4.3 A day of the month and a weekday. Cron fires when either matches. The
 day-of-month phrase comes first, then a comma and «y también», then the
 weekday phrase exactly as it would stand alone, then a comma, then the
 time: «el día 1 de cada mes, y también los viernes, a las 0:00»; «del 1
 al 7 y el día 15 de cada mes, y también de lunes a viernes, cada 15
-minutos de 9:00 a 17:45». **(Reader:** «y también» "deja claro que son
+minutos de 9:00 a 17:45». **(Reader 1:** «y también» "deja claro que son
 dos condiciones sumadas"; a bare «y» is "menos marcada"; «o» "sugiere
 alternativa o duda".**)**
 
-Any month leads the sentence and so covers both sides; neither side takes
-it in: `0 0 1 6 5` is «en junio, el día 1, y también los viernes, a las
-0:00»; «en enero y julio, los días 1 y 15 de cada mes, y también de lunes
-a viernes, a las 0:00»; «de junio a agosto, el último día del mes, y
-también los viernes, a las 0:00». The day of the month says «de cada mes»
-unless the sentence names exactly one month, where «cada» would be false.
-A Quartz form keeps «del mes», which is true of one month too.
+**Under named months, the month leads and each side is tied to it.**
+Both later readers found that a leading month alone does not hold the
+weekday side: «en junio, el día 1, y también los viernes, a las 0:00» was
+read with "los viernes de todo el año", and «en enero y julio, los días 1
+y 15 de cada mes, y también de lunes a viernes» was read three ways, with
+«de cada mes» sounding false after two named months. So:
+
+* the date side drops «de cada mes»: «el día 1», «los días 1 y 15», «del
+  1 al 7». A Quartz form says «del mes»: «el último día del mes»;
+* the weekday side ends with the months again, as a pronoun: «de ese mes»
+  for one month, «de esos meses» for several, after a phrase that begins
+  «los» or is a Quartz form; «durante ese mes», «durante esos meses»
+  after a phrase with a range in it.
+
+`0 0 1 6 5` is «en junio, el día 1, y también los viernes de ese mes, a
+las 0:00»; `0 0 1,15 1,7 1-5`, «en enero y julio, los días 1 y 15, y
+también de lunes a viernes durante esos meses, a las 0:00»; `0 0 L 6-8
+5`, «de junio a agosto, el último día del mes, y también los viernes de
+esos meses, a las 0:00»; `0 0 1 6 1#2`, «en junio, el día 1, y también el
+segundo lunes de ese mes, a las 0:00».
 
 The side that is a set of weekdays never takes an exception (3.9).
+
+Evidence against «y también» itself, not acted on: reader 2 called it a
+seam of a template and saw a second reading of «el día 1 de cada mes, y
+también de lunes a viernes» as a condition (the 1st only if it is a
+working day). Reader 1 ranked it first of four for making plain that the
+two are added, and the schedule reader found every union row correct.
+The alternatives offered («y, además,», «así como») add in the same way,
+and «tanto … como …» is heavier. The schedule reader also noted, as low
+risk, that before a time part that is not a clock time the closing comma
+is the same comma that part would have anyway.
 
 Not built into any renderer yet: when both must match, a weekday that
 falls on a date is «los viernes que caen en día 13», and the first Monday
@@ -625,23 +697,37 @@ is «el primer lunes del mes».
 
 4.4 A day of the month, a month, and a year. A **date phrase** is a
 day-of-month phrase («el día 1 de cada mes») or a Quartz form («el último
-día del mes», «el segundo lunes del mes»).
+día de cada mes», «el segundo lunes de cada mes»). Every date phrase says
+«de cada mes» when no month is named **(schedule reader:** the second
+version said «del mes» for some forms and «de cada mes» for others, both
+in one sentence in a union**)**.
 
 * With every month: «el día 1 de cada mes»; «los días 1 y 15 de cada mes»;
   «del 1 al 7 de cada mes»; «los días impares de cada mes».
 * **A month phrase with no range in it (one month, or a list of months)
   joins the date phrase**, «de» and the months in place of «de cada mes»
-  or «del mes», as a date is written. One month: «el 1 de junio» (one day
+, as a date is written. One month: «el 1 de junio» (one day
   takes no «día»); «los días 1 y 15 de junio»; «del 1 al 7 de junio»;
   «del 1 al 7 y el 15 de junio»; «los días impares de junio»; «el último
-  día de junio»; «cada 2 días del 8 al 30 de junio». A list: «el día 1 de
+  día de junio»; «los días pares del 8 al 30 de junio». A single day
+  inside pieces keeps «día», so that adding the month changes only the
+  month's words: «del 1 al 7 y el día 15 de junio». A list: «el día 1 de
   enero y julio»; «el día 1 de marzo, junio, septiembre y diciembre»; «los
   días 1 y 15 de enero y julio»; «el último viernes de enero y julio»;
   every second month, «el día 1 de enero, marzo, mayo, julio, septiembre
   y noviembre».
+* **Days the named months do not have are not said.** A plain day that a
+  month lacks does not fire, so under named months a list, range or
+  cadence of days is cut to the length of the longest of them (30 for
+  April, June, September and November; 29 for February) and what is left
+  is described afresh: `0 0 */5 6 *` is «los días 1, 6, 11, 16, 21 y 26
+  de junio»; `0 0 25-31 6 *`, «del 25 al 30 de junio»; `0 0 30,31 4,6 *`,
+  «el día 30 de abril y junio». With every month nothing is cut: «el día
+  31 de cada mes» is taken by every reader as skipping the months without
+  one, and so is a list that ends in 31.
 * **A month phrase with a range in it leads**, and the date phrase stays
   whole: «de junio a agosto, el día 1 de cada mes a las 0:00»; «de junio a
-  agosto y en diciembre, el último día del mes a las 0:00». **(Reader**
+  agosto y en diciembre, el último día de cada mes a las 0:00». **(Reader 1**
   stumbled on «el día 1 de cada mes de junio a agosto», "se lee «cada mes
   de junio»".**)** A range cannot join the date: «el día 1 de junio a
   agosto» reads as a range of dates.
@@ -654,7 +740,7 @@ día del mes», «el segundo lunes del mes»).
   2030, todos los días a las 9:00»; «en 2030, el día 1 de cada mes a las
   9:00»; «en 2030 y 2035, el 1 de enero a las 0:00»; «de 2030 a 2035, el 1
   de enero a las 0:00»; «de 2030 a 2032 y en 2035, …»; «en 2030 y 2031, en
-  junio, todos los días a las 9:00». **(Reader** on «en junio de 2030 y de
+  junio, todos los días a las 9:00». **(Reader 1** on «en junio de 2030 y de
   2031»: "un lector rápido puede dudar de si es todo 2031".**)** A single
   year with no month named leads too.
 
@@ -663,7 +749,7 @@ a list of days (also «los fines de semana») takes a month phrase with no
 range in it, with «de»: `0 9 * 6 1` is «los lunes de junio a las 9:00»;
 «los lunes, miércoles y viernes de junio»; «los fines de semana de
 junio»; «los lunes de enero y julio»; with a year, «los lunes de junio de
-2030». **(Reader:** «los lunes en junio» "es calco del inglés"; «los
+2030». **(Reader 1:** «los lunes en junio» "es calco del inglés"; «los
 lunes de junio» "es lo único idiomático".**)** A weekday phrase with a
 range in it does not take the month, which leads: «en junio, de lunes a
 viernes a las 9:00»; «en junio, de martes a viernes y los domingos a las
@@ -676,7 +762,7 @@ part or it is «todos los días»: «en junio, todos los días a las 9:00»;
 ## 5. Idioms
 
 5.1 Days of the month 1, 3, 5 … 31: «los días impares». Days 2, 4 … 30:
-«los días pares». Each can take exceptions (3.9). **(Reader** read «los
+«los días pares». Each can take exceptions (3.9). **(Reader 1** read «los
 días impares de cada mes, excepto el 15» exactly and without
 complaint.**)**
 
@@ -686,94 +772,112 @@ says.
 
 5.3 Midnight and noon are written as times, «a las 0:00» and «a las
 12:00», in both clock styles (with `hour12: true`, «a las 12:00 a. m.»
-and «a las 12:00 p. m.»). **(Reader:** «a medianoche el día 1» "es
-peligrosa: muchos la leen como la noche del 1 al 2".**)** The first
-version used «a medianoche» and «a mediodía» with `hour12: true`; they
-are dropped, because the day now stands right beside the time and that
-is where the word misleads. The cost is «12:00 a. m.», which some
-readers doubt; a fluent Mexican or United States reviewer should check
-it.
+and «a las 12:00 p. m.»; 1.2 has the doubt about those). **(Reader 1:**
+«a medianoche el día 1» "es peligrosa: muchos la leen como la noche del 1
+al 2".**)** Reader 2 missed «mediodía» and «medianoche», and also noted
+that «a las 0:00» of a named day does not say which midnight; 0:00 is the
+first minute of the day it is written with, and both readers took it so.
 
 5.4 Minute 0 with every hour is «cada hora».
 
-5.5 Every second hour, when the hours are filled, is «en horas alternas
-desde las 0:00» or «desde la 1:00» (4.1). Every second hour as points
-names both ends (3.7). Every second month is listed. Every second year
-is «los años pares/impares» (5.8). Every other interval is a digit.
+5.5 Every second hour as points names both ends (3.7); filled by minutes
+it is a series of windows (4.1). Every second month is listed. Every
+second day, year, and off-beat minute or second is «pares» or «impares»
+(5.1, 5.8, 3.7). Every other interval is a digit.
 
 5.6 None by default. «A. m.» and «p. m.» are used only with `hour12:
 true`.
 
-5.7 Quartz forms. Each ends «del mes», or with «de» and the months where
-they join it (4.4).
+5.7 Quartz forms. Each ends «de cada mes», or with «de» and the months
+where they join it (4.4).
 
-* `L` — «el último día del mes»; «el último día de junio»
-* `LW` — «el último día laborable (de lunes a viernes) del mes»
-* `L-1` — «el penúltimo día del mes»
-* `L-3`, and every other number — «3 días antes del último día del mes»;
-  with June, «3 días antes del último día de junio». **(Reader** read it
-  exactly; the complaint, «a las 0:00 3 días antes», was two numerals
-  side by side, which the new order removes. The reader's «tres días
-  antes de fin de mes» was not taken: it can be counted from the day
-  after the last.**)**
-* `15W` — «el día laborable (de lunes a viernes) más cercano al 15 de
-  cada mes»; with June, «… más cercano al 15 de junio». **The day never
-  leaves its month**: a 1st that falls on a Saturday gives Monday the
-  3rd, not Friday. So the form depends on whether the day can stand at
-  an edge of a month:
-  * days 2 to 27 cannot, and are said as above;
-  * `1W` is «el primer día laborable (de lunes a viernes) del mes»,
-    parallel to `LW`; with June, «… de junio». The core reports it as
-    its own form;
-  * days 28 to 31 can be the last day of a month, so the month comes
-    before the day and bounds the search: `31W` is «el día laborable (de
-    lunes a viernes) del mes más cercano al 31»; `30W` in June, «el día
-    laborable (de lunes a viernes) de junio más cercano al 30». In a month
-    without that day the pattern does not fire, as «el día 31 de cada mes»
-    does not.
-* `1#2` — «el segundo lunes del mes»; «el segundo lunes de junio»
-* `5L` — «el último viernes del mes»
+* `L` — «el último día de cada mes»; «el último día de junio»
+* `LW` — «el último día laborable de cada mes»
+* `L-1` — «el penúltimo día de cada mes»; `L-2` — «el antepenúltimo día
+  de cada mes»
+* `L-3`, and every larger number — «cuando faltan 3 días para el último
+  día de cada mes»; with June, «cuando faltan 3 días para el último día de
+  junio». Both readers stumbled on «3 días antes del último día del mes»:
+  it makes the reader subtract, and "habrá quien entienda el
+  antepenúltimo", which is a different day. «Cuando faltan 3 días» cannot
+  be counted from the wrong end, and a label does not begin with a digit.
+  Rejected: «tres días antes de fin de mes», which can be counted from
+  the day after the last, and a worked example in brackets.
+  A month too short has no such day and is skipped. Every month has 28
+  days, so from `L-28` up the sentence leads with the months that fire:
+  `L-30` is «en los meses de más de 30 días, cuando faltan 30 días para
+  el último día del mes».
+* `15W` — «el día laborable más cercano al 15 de cada mes»; with June,
+  «el día laborable más cercano al 15 de junio». Two facts about it bind
+  the wording: **the day never leaves its month** (a 1st that falls on a
+  Saturday gives Monday the 3rd, not Friday), and **a month without day n
+  is skipped**, never answered with the end of the shorter month. So:
+  * days 2 to 27 cannot reach an edge of any month, and are said as
+    above;
+  * `1W` is «el primer día laborable de cada mes», parallel to `LW`; with
+    June, «el primer día laborable de junio». The core reports it as its
+    own form;
+  * days 28 to 31 can be a month's last day, so the sentence says the
+    search stays inside: `28W` is «el día laborable más cercano al 28 de
+    cada mes, sin salir del mes»; `30W` in June, «el día laborable más
+    cercano al 30 de junio, sin salir del mes»;
+  * days 29 to 31 are missing from some months, so with no month named
+    the sentence leads with the months that fire and drops «de cada mes»:
+    `31W` is «en los meses que tienen día 31, el día laborable más cercano
+    al 31, sin salir del mes». **(Schedule reader:** the second version's
+    «el día laborable del mes más cercano al 31» promised a fire in April
+    and misparsed as "the month closest to the 31st".**)**
+* `1#2` — «el segundo lunes de cada mes»; «el segundo lunes de junio»
+* `5L` — «el último viernes de cada mes»
 
 The ordinals are «primer, segundo, tercer, cuarto, quinto»; every weekday
 is masculine.
 
-The Monday-to-Friday day is «día laborable (de lunes a viernes)», gloss
-included. **(Reader:** «día entre semana», the first version's choice,
-"chirría": «entre semana» is adverbial. «Día laborable» is the natural
-word in Spain and «día hábil» in America, "pero ambos prometen saltarse
-festivos, y si la tarea no los conoce prometen algo falso".**)** The
-pattern knows no public holidays, and a reader who is told «el último día
-laborable» will expect a holiday to be skipped: that is a different day,
-so the plain word alone is not exact. The gloss costs four words and says
-which days are meant. Rejected: the plain word; «día hábil», which has
-also included Saturdays; the reader's exact alternative «el último día
-del mes que caiga de lunes a viernes», which is as long, and does not
-carry over to «el día … más cercano al 15»; «día de lunes a viernes»,
-which "no se dice". The gloss is the range of 3.4 in parentheses and
-follows the `short` style.
+**The Monday-to-Friday day is «día laborable»; in the `mx` style, «día
+hábil».** These are the words a speaker writes: reader 2, asked to rank
+them, put «el último día laborable del mes» and «el último día hábil del
+mes» above every alternative, "como se escribe de verdad", «laborable» in
+Spain and «hábil» in America and in administrative language.
+
+**What the word does not say, and the sentence does not either: public
+holidays are not skipped.** The pattern knows only Monday to Friday; if
+the last such day of a month is a holiday, the schedule fires on it,
+where a reader of «día laborable» may expect the day before. Both readers
+raised this. The second version met it with a gloss in every sentence,
+«día laborable (de lunes a viernes)», and reader 2 marked each such
+sentence down: the bracket "parte el sintagma por la mitad". A caveat
+that matters on a handful of days a year does not belong in every
+sentence; it belongs here and in the documentation of the Quartz `W`
+forms. Also rejected: «día entre semana», which reader 1 found grating
+(«entre semana» is adverbial) and reader 2 preferred, so the two readers
+cancel; «el último día del mes que caiga de lunes a viernes», exact but
+it does not carry over to «más cercano al 15»; «día de lunes a viernes»,
+which "no se dice".
 
 5.8 Years. Years 1970, 1972 … : «en los años pares». Years 1971, 1973 … :
-«en los años impares». **(Reader:** "«años pares» sí se dice".**)** Every
+«en los años impares». **(Reader 1:** "«años pares» sí se dice".**)** Every
 second year from a later start keeps the idiom and names the start, or
 both ends if it stops early: «en los años pares desde 2030»; «en los años
 impares desde 2031»; «en los años pares de 2030 a 2040».
 
 Any other cadence of years is listed up to seven years, «en 2028, 2032,
-2036 y 2040». From eight it names its first three years and then the
-interval: «en 2028, 2032, 2036 y así cada 4 años»; one that stops, «en
-2028, 2032, 2036 y así cada 4 años hasta 2060». Three years show the
-series, and nothing has to be added up.
+2036 y 2040». From eight it is a series: its first three years, «y así
+sucesivamente», and its last year if it has one: «en 2028, 2032, 2036 y
+así sucesivamente»; «en 2028, 2032, 2036 y así sucesivamente hasta 2060».
 
-* `0 0 9 * * * 2028/4` — «en 2028, 2032, 2036 y así cada 4 años, todos los
-  días a las 9:00»
-* `0 */5 * * * * 2028/4` — «en 2028, 2032, 2036 y así cada 4 años, cada 5
-  minutos»
+* `0 0 9 * * * 2028/4` — «en 2028, 2032, 2036 y así sucesivamente, todos
+  los días a las 9:00»
+* `0 */5 * * * * 2028/4` — «en 2028, 2032, 2036 y así sucesivamente, cada
+  5 minutos»
 
-This is the reader's own wording. «En un año de cada 4 desde 2028», the
-first version, "obliga a releer"; «cada 4 años desde 2028» after «todos
-los días» "se contradice" and can be read as once every four years; «en
-2028 y luego cada 4 años» was the best of three offered but "deja
-implícito que es el año entero".
+The history: «en un año de cada 4 desde 2028» "obliga a releer" (reader
+1); «cada 4 años desde 2028» after «todos los días» "se contradice"
+(reader 1); «en 2028, 2032, 2036 y así cada 4 años», the second version,
+was understood exactly but «y así» alone "es de conversación, no de
+pantalla" (reader 2). «Y así sucesivamente» is the written form of the
+same thing. Reader 2's «cada 4 años a partir de 2028 (2028, 2032, 2036…)»
+was not taken: it says the interval and then the list, and needs a
+bracket.
 
 ## 6. Words
 
@@ -787,25 +891,29 @@ sábados» and «los domingos» do.
 
 6.4 segundo(s), minuto(s), hora(s), día(s), mes(es), año(s).
 
-6.5 a, a la, a las, en, el, los, las, de, del, al, y, y también, y cada
-vez, y así, cada, durante, desde, hasta, excepto, todos los días,
-primeros, últimos, primer, último, penúltimo, que empiezan, en horas
-alternas, las horas alternas, un minuto, día laborable, más cercano al,
-antes del, de cada hora, de cada minuto, de cada mes, del mes.
+6.5 a, a la, a las, en, el, los, las, de, del, al, y, y también, y así
+sucesivamente, cada, una vez por, una vez cada, durante, desde, hasta,
+hasta las, excepto, todos los días, primeros, últimos, primer, último,
+penúltimo, antepenúltimo, pares, impares, que empiezan, un minuto, día
+laborable, día hábil, más cercano al, sin salir del mes, cuando faltan,
+para el, del siguiente, de ese mes, de esos meses, en los meses que tienen día, en los
+meses de más de, de cada hora, de cada minuto, de cada mes, del mes.
 
 ## 7. Agreement
 
 7.1 Singular for 1, plural otherwise: «1 día», «3 días». After «cada» with
 no number the unit is singular: «cada minuto». No stretch of one is ever
 said: a first or last stretch of one minute is that minute («en el minuto
-0 de cada hora»), and one day before the last is «el penúltimo día».
+0 de cada hora»), and one day before the last is «el penúltimo día». So
+«cuando faltan» is always plural.
 
 7.2 Gender and number: «el minuto», «los minutos»; «la hora», «las horas»;
 «el día», «los días»; «el segundo». «Primeros» and «últimos» agree with
 «minutos» and «segundos».
 
 7.3 «De» and «el» contract to «del», «a» and «el» to «al»: «del 1 al 7»,
-«del minuto 10 al 40», «del mes». «A la» and «desde la» before hour 1.
+«del minuto 10 al 40», «del mes». «A la» before hour 1; «hasta las»
+before any hour, and «hasta la» before hour 1.
 
 7.4 A list: commas, then «y» before the last item, with no comma before
 it. Two items: «A y B».
@@ -819,21 +927,28 @@ it. Two items: «A y B».
 8.1 `union-connective` — «, y también …,»: «el día 1 de cada mes, y
 también los viernes, a las 0:00».
 
-8.2 `shared-qualifier-scope` — The time comes last, after a comma, and
-covers both sides. A month leads and covers both sides: «en junio, el día
-1, y también los viernes, a las 0:00».
+8.2 `shared-qualifier-scope` — The time comes last, after the comma that
+closes the union, and covers both sides. A month leads, and the weekday
+side points back to it: «en junio, el día 1, y también los viernes de ese
+mes, a las 0:00».
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window («de … a
-…»), «en horas alternas desde …», «durante las horas que empiezan a las
-…», or «durante un minuto». The commas are those of 2.6, the one before a
+…»), a series of windows, «durante las horas que empiezan a las …», or
+«durante un minuto». The commas are those of 2.1, the one before a
 window after «de cada hora», and the one before the seconds clause.
 
 8.4 `redundancy` — «De cada mes» is not said beside a single named month.
 «Cada minuto» is not said after «cada segundo». A field that takes every
 value is not said.
 
-8.5 `range-boundary` — Every range of times is closed and names its last
-moment. There is no form in which a time that is named does not fire.
+8.5 `range-boundary` — Every range of times is closed, to the precision
+of the phrase it bounds. Under «cada minuto», a cadence of minutes or a
+minute phrase, it names the first and the last minute in which the
+schedule fires; under a seconds lead («cada segundo de 9:00:00 a
+17:59:59») it names the first and last second. A seconds clause after a
+window to the minute says when inside each minute («…, de 3:30 a 10:42»
+after «cada segundo durante los minutos 30 y 42 de cada hora» ends at
+10:42:59). There is no form in which a time that is named does not fire.
 
 8.6 `recurrence-marking` — «Los» and the plural for single days and lists
 («los lunes y miércoles»); «de … a …» with no article for a run; «todos

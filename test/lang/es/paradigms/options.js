@@ -14,6 +14,7 @@ const defaultParts = {
   '0 9 * * *': ['9:00'],
   '0 9 * * 1,3,5': ['lunes', 'miércoles', 'viernes', '9:00'],
   '0 9 * * 5L': ['viernes', '9:00'],
+  '0 9 LW * *': ['último día', '9:00'],
   '0 9 * 6 1': ['lunes', 'junio', '9:00'],
   '0 9 * 6-8 *': ['junio', 'agosto', '9:00'],
   '0 9-17 * * *': ['9:00', '17:00'],
@@ -74,6 +75,11 @@ const sets = [
         expected: 'los lunes, miércoles y viernes a las 9:00 a. m.',
         parts: ['lunes', 'miércoles', 'viernes', '9:00 a. m.'],
         pattern: '0 9 * * 1,3,5'
+      },
+      {
+        expected: 'el último día hábil de cada mes a las 9:00 a. m.',
+        parts: ['último día', '9:00 a. m.'],
+        pattern: '0 9 LW * *'
       }
     ]
   },
@@ -101,7 +107,7 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'el último vie del mes a las 9:00',
+        expected: 'el último vie de cada mes a las 9:00',
         parts: ['vie', '9:00'],
         pattern: '0 9 * * 5L'
       },

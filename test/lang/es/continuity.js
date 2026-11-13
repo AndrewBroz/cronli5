@@ -21,9 +21,10 @@ const FIELDS =
 // A time field changes the time. A day, month or year field changes the
 // frame and the day: the month and a single year stand in the frame or
 // join a date or a weekday phrase («en junio, de lunes a viernes» against
-// «los lunes de junio»), a day of the month says «de cada mes» unless
-// exactly one month is named, and six weekdays are an exception alone and
-// a run beside a day of the month. Those are the fusions answers 2.7
+// «los lunes de junio»), days a named month lacks are not said, in a
+// union under named months the date side drops «de cada mes» and the
+// weekday side says «de ese mes», and six weekdays are an exception alone
+// and a run beside a day of the month. Those are the fusions answers 2.7
 // declares; all of them stay inside the frame and the day. Nothing else
 // may cross, with the two exceptions below.
 const MAY_CHANGE = {
@@ -108,8 +109,9 @@ function leaks(pairList) {
 
     // The comma after a part belongs to the join, not to the part: the
     // day is followed by a space before a clock time and by a comma
-    // before anything else (answers 2.1), so an edit to the time may add
-    // or remove it. It is set aside before two parts are compared.
+    // before anything else, or after an inserted phrase (answers 2.1), so
+    // an edit to the time may add or remove it. It is set aside before
+    // two parts are compared.
     function words(part) {
       return String(part).replace(/,$/u, '');
     }

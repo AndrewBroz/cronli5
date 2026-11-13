@@ -60,26 +60,27 @@ const nthWords = ['primer', 'segundo', 'tercer', 'cuarto', 'quinto'];
 // The function words and fixed phrases.
 const words = {
   also: 'y también',
-  alternateHours: 'horas alternas',
   am: 'a. m.',
   and: 'y',
-  andSoOn: 'y así',
+  andSoOn: 'y así sucesivamente',
+  antepenultimateDay: 'antepenúltimo día',
   at: 'a las',
   atOne: 'a la',
-  before: 'antes del',
   closest: 'más cercano al',
   during: 'durante',
   each: 'cada',
-  eachTime: 'y cada vez',
   everyDay: 'todos los días',
   everyDayOf: 'todos los días de',
   everyDayOfMonth: 'todos los días del mes',
   except: 'excepto',
   first: 'primeros',
   firstOne: 'primer',
+  forThe: 'para el',
   from: 'de',
   fromThe: 'del',
   in: 'en',
+  inMonthsLongerThan: 'en los meses de más de',
+  inMonthsWithDay: 'en los meses que tienen día',
   last: 'últimos',
   lastDay: 'último día',
   lastOne: 'último',
@@ -88,6 +89,9 @@ const words = {
   ofEachMinute: 'de cada minuto',
   ofEachMonth: 'de cada mes',
   ofMonth: 'del mes',
+  ofTheNext: 'del siguiente',
+  onceEach: 'una vez cada',
+  oncePer: 'una vez por',
   oneMinute: 'un minuto',
   penultimateDay: 'penúltimo día',
   pm: 'p. m.',
@@ -95,21 +99,26 @@ const words = {
   since: 'desde',
   startup: 'al iniciar el sistema',
   thatBegin: 'que empiezan',
+  thatMonth: 'ese mes',
   the: 'el',
   theEven: 'pares',
   theHour: 'la',
   theHours: 'las',
   theOdd: 'impares',
   thePlural: 'los',
+  thoseMonths: 'esos meses',
   theYears: 'los años',
   to: 'a',
   toThe: 'al',
   unrecognizable: 'un patrón cron no reconocido',
   until: 'hasta',
   weekends: 'los fines de semana',
-  // Always followed by its gloss in parentheses, the range from Monday to
-  // Friday, so that it is not taken to skip public holidays.
-  workingDay: 'día laborable'
+  whenLeft: 'cuando faltan',
+  withinMonth: 'sin salir del mes',
+  // The Monday-to-Friday day, by the `workday` style: Spain's word and
+  // America's. Neither skips a public holiday (answers 5.7).
+  workdayBusiness: 'día hábil',
+  workdayWorking: 'día laborable'
 };
 
 const lexicon = {months, nthWords, twoDigits, units, weekdays, words};
