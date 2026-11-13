@@ -13,9 +13,10 @@ First drafts are committed there as `wip(<code>)`. Reports are in `reads/`.
 | Language | Schedule read | Blind fluency read | Revision 1 |
 | --- | --- | --- | --- |
 | ko | done | done | done, committed on `ko-art` (2eca427); needs a second blind fluency read of the changed forms (listed in its report; twelve forms the author still doubts) |
-| nl, he, it, cs | done | done | running when this was written; may be unfinished and uncommitted |
+| he | done | done | done, committed on `he-art` (98ee69d); needs a second blind fluency read (forms listed in its report; ten the author still doubts) |
+| nl, it, cs | done | done | running when this was written; partial work checkpointed as `wip(<code>): checkpoint of revision 1 in progress` |
 | ar | done (`reads/ar-read-1.md`) | done (32/60 natural) | NOT started: send the author `REVISE-1` |
-| pl | running | done (`reads/pl-1.md`) | not started |
+| pl | done (`reads/pl-read-1.md`) | done (`reads/pl-1.md`) | NOT started: send the author `REVISE-1` |
 
 The Arabic reader also found that the bidi reasoning in the Arabic usage notes and answers 7.6 about a hyphen between times is wrong (after an Arabic letter both numbers are AN, so the order does not flip); the conclusion (no hyphen) stands.
 
