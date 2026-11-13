@@ -278,7 +278,7 @@ digits behave in right-to-left text.
 ## 8. Traps
 
 Each of these has cost an earlier language. The full statement of each is in
-`.claude/skills/add-language/playbook.md` under the same identifier.
+`tooling/docs/playbook.md` under the same identifier.
 
 8.1 `union-connective` — With a day of the month and a weekday both set,
 which connective or construction is heard as "either one", and which

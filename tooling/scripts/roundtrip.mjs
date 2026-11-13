@@ -5,8 +5,8 @@
 // clear, correct description round-trips to the same schedule; a mismatch
 // flags prose that is unclear or wrong. The agent is the reverse parser; the
 // comparison here is exact. Quartz operators (L/W/#) have no value set and
-// are skipped. Driven by .claude/workflows/add-language.js — no standalone
-// CLI, no model client of its own.
+// are skipped. No standalone CLI and no model client of its own: a caller
+// renders, has a reader recover, and tallies.
 
 import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
