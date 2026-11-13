@@ -270,7 +270,7 @@ const rows = [
     'de segunda a sexta, exceto em junho, a cada 15 minutos das 09:00 às ' +
     '17:45'],
   ['0 0 1,15 6 * 2030-2035',
-    'nos dias 1º e 15 de junho, de 2030 a 2035, às 00:00'],
+    'nos dias 1º e 15 de junho, de 2030 a 2035, às 00:00', {years: true}],
   ['0 0 * 5 *', 'todos os dias de maio às 00:00'],
   ['*/5 * * 6 *', 'todos os dias de junho, a cada 5 minutos'],
   ['0 */6 * 6 *', 'todos os dias de junho às 00:00, 06:00, 12:00 e 18:00'],
@@ -575,7 +575,10 @@ const rows = [
   ['0 5,6,18,19 * * *', 'todos os dias às 05:00, 06:00, 18:00 e 19:00'],
   ['0 9 * 6 1', 'todas as segundas de junho às 09:00'],
   ['0 9 * 5 *', 'todos os dias de maio às 09:00'],
-  ['0 9-12 * * *', 'todos os dias, a cada hora das 09:00 às 12:00'],
+  // Five hours, so a range: four moments or fewer are always listed
+  // (answers 4.1), and the row first written here had four.
+  ['0 8-12 * * *', 'todos os dias, a cada hora das 08:00 às 12:00'],
+  ['0 9-12 * * *', 'todos os dias às 09:00, 10:00, 11:00 e 12:00'],
   ['0 9,12,18 * * *', 'todos os dias às 09:00, 12:00 e 18:00']
 ];
 

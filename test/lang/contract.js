@@ -2,6 +2,7 @@ import chai from 'chai';
 import en from '../../src/lang/en/index.js';
 import es from '../../src/lang/es/index.js';
 import ja from '../../src/lang/ja/index.js';
+import pt from '../../src/lang/pt/index.js';
 import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
 
@@ -11,7 +12,7 @@ const {expect} = chai;
 // code, pick a regional style, and present a description in each form.
 
 describe('Language contract:', function() {
-  const languages = [en, es, ja, uk, zh];
+  const languages = [en, es, ja, pt, uk, zh];
 
   languages.forEach(function each(lang) {
     describe(lang.code, function() {

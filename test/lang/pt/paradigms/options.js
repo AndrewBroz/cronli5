@@ -28,7 +28,7 @@ const defaultParts = {
   '0 9 * 6-8 *': ['junho', 'agosto', '09:00'],
   '0 9 1,15 * *': ['dias 1º e 15', '09:00'],
   '0 9 1-7 * *': ['dia 1º ao dia 7', '09:00'],
-  '0 9-12 * * *': ['09:00', '12:00'],
+  '0 8-12 * * *': ['08:00', '12:00'],
   '0 9-17 * * *': ['09:00', '17:00'],
   '0 9,12,18 * * *': ['09:00', '12:00', '18:00'],
   '0,30 12 * * *': ['12:00', '12:30'],
@@ -90,9 +90,9 @@ const sets = [
         pattern: '0 9,12,18 * * *'
       },
       {
-        expected: 'todos os dias, a cada hora das 9:00 da manhã ao meio-dia',
-        parts: ['9:00 da manhã', 'meio-dia'],
-        pattern: '0 9-12 * * *'
+        expected: 'todos os dias, a cada hora das 8:00 da manhã ao meio-dia',
+        parts: ['8:00 da manhã', 'meio-dia'],
+        pattern: '0 8-12 * * *'
       },
       {
         expected: 'todos os dias, a cada minuto da meia-noite às 0:59 da ' +

@@ -229,6 +229,7 @@ docs below.
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
 | Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
 | Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
+| Portuguese | `cronli5/lang/pt` | CLDR and interface practice; Brazil by default, Portugal (`'pt-PT'`) | [docs/lang/pt.md](./docs/lang/pt.md) |
 | Japanese | `cronli5/lang/ja` | Interface and timetable practice; 24-hour colon times | [docs/lang/ja.md](./docs/lang/ja.md) |
 | Spanish | `cronli5/lang/es` | RAE Ortografía (2010); interface practice; Mexico and the United States (`'es-MX'`, `'es-US'`) | [docs/lang/es.md](./docs/lang/es.md) |
 
@@ -248,6 +249,7 @@ Sonnet instances. It graduates to **stable** only on review by a fluent human:
 | English | beta |
 | Spanish | beta |
 | Japanese | beta |
+| Portuguese | beta |
 | Ukrainian | beta |
 | Chinese (Simplified) | beta |
 <!-- END GENERATED: language-status -->
@@ -317,6 +319,7 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Chinese (Simplified) | 每周一9:30:05、9:30:10 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
 | Spanish | los lunes a las 9:30:05 y 9:30:10 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | Japanese | 毎週月曜日の9:30:05・9:30:10 | 毎分 5と 10 秒過ぎ 30 分過ぎ, 次において実施 09:00月曜日 にのみ |
+| Portuguese | todas as segundas às 09:30:05 e 09:30:10 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for

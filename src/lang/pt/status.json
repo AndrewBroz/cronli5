@@ -1,0 +1,7 @@
+{
+  "name": "Portuguese",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run, after three rows the builder stopped on were corrected (tooling/experiments/renderer-process/pt-acceptance.md)",
+  "branchBudget": 110
+}
