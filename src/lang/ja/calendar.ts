@@ -63,9 +63,10 @@ interface DayPhrase {
 }
 
 // One of the two day fields: its phrase when it names days after a month
-// (dates and Quartz forms), 毎週 and its weekdays, and what it leaves out
-// of every day.
+// (dates and Quartz forms), 毎週 and its weekdays, the weekdays or form
+// named alone, and what it leaves out of every day.
 interface DaySide {
+  named: string;
   out: string;
   phrase: DayPhrase | null;
   weekly: string;
@@ -149,7 +150,7 @@ const noPhrase: DayPhrase = {
   dates: [], direct: true, notes: [], rare: '', shared: false, text: ''
 };
 
-const noSide: DaySide = {out: '', phrase: null, weekly: ''};
+const noSide: DaySide = {named: '', out: '', phrase: null, weekly: ''};
 
 // Months have a word for every second one, and no other cadence. Before a
 // date they are never a range.
@@ -760,11 +761,10 @@ function weekdaySide(context: Context): DaySide {
   }
 
   if (!candidates.weekday) {
-    return {
-      ...noSide,
-      phrase: quartzPhrase(quartzWeekdays,
-        (day.weekday as {form: QuartzWeekday}).form, context.style)
-    };
+    const phrase = quartzPhrase(quartzWeekdays,
+      (day.weekday as {form: QuartzWeekday}).form, context.style);
+
+    return {...noSide, named: phrase.text, phrase};
   }
 
   const offered = candidatesAs(context.facts, 'weekday', {first: monday}) as
@@ -787,6 +787,7 @@ function weekdaySide(context: Context): DaySide {
 
   return {
     ...noSide,
+    named: text,
     out: when(sixth, listOf(missing.map(name))),
     weekly: when(days.length > 0 && !sixth, words.everyWeek + text)
   };
@@ -911,6 +912,19 @@ function sideOf(context: Context, side: DaySide): Calendar {
     loose(context, [noSide, side]);
 }
 
+// A date and a weekday that must both match: the dates, and of them the
+// days that fall on the weekdays, said as a condition on the dates.
+function fallingOn(context: Context, phrase: DayPhrase, weekday: DaySide):
+  Calendar {
+  const date = dated(context, phrase);
+
+  return {
+    ...date,
+    day: date.day + words.among + weekday.named + words.falling,
+    lead: 'other'
+  };
+}
+
 // A date and a weekday together: each side carries the month, and the
 // year when it is named; 毎年 is said once, at the head.
 function together(contexts: Context[], sides: DaySide[]): Calendar {
@@ -947,12 +961,14 @@ function never(context: Context): Calendar {
 }
 
 // The parts for a schedule that runs. Days that are every day of their
-// months are no restriction, beside a weekday too; a day that never comes
+// months are no restriction: beside a weekday they are every day, or, where
+// both must match, the weekday alone. A date that must match a weekday is
+// said with the weekdays as a condition on it; a day that never comes
 // leaves a weekday beside it to stand alone; and the months a day of the
 // month is said of are those it fires in.
 function running(context: Context): Calendar {
   const {reach} = context;
-  const {union} = context.facts.analyses.day;
+  const {both, union} = context.facts.analyses.day;
   const everyDay = reach.days?.everyDay === true;
   const paired = union && reach.fires && !everyDay;
   const firing = [...reach.everyYear, ...reach.leapYears].sort(ascending);
@@ -962,10 +978,12 @@ function running(context: Context): Calendar {
     months: context.months.length < everyMonth ? firing : context.months
   };
   const date = reach.fires && !everyDay ? dateSide(forDates) : noSide;
-  const weekday = everyDay ? noSide : weekdaySide(context);
+  const weekday = everyDay && !both ? noSide : weekdaySide(context);
 
   function alone(): Calendar {
-    return date.phrase && dated(forDates, date.phrase) ||
+    return both && date.phrase &&
+      fallingOn(forDates, date.phrase, weekday) ||
+      date.phrase && dated(forDates, date.phrase) ||
       weekday.phrase && dated(context, weekday.phrase) ||
       loose(context, [date, weekday]);
   }

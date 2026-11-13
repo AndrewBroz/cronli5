@@ -1031,9 +1031,38 @@ leaves the weekdays alone (3.4).
 A year left out of every year is carried by each side, like a month: 2030
 年を除く毎年6月1日および2030年を除く6月の毎週火曜日、いずれも0:00.
 
-Not built into any renderer yet: when both must match, a weekday that
-falls on a date is 毎月13日が金曜日の場合 (the idiom 13日の金曜日), and the
-first Monday is 毎月第1月曜日.
+**When both must match.** A day field written from a star (`*/2`) beside
+a restricted other one is not a pair: the job runs only on the days that
+are in both. The dates are said as they are said alone (4.4), and a
+condition follows them, のうち then the weekdays then にあたる日: the
+days of the month, of which those that fall on the weekdays. The weekdays
+are named as 3.4 names them, with no 毎週 (it would say each week), so a
+run stays a run and a list a list; a Quartz weekday keeps its own words
+(最終金曜日, 第2月曜日). The time follows with の as after any one day
+phrase, never with 、いずれも, and および is never used: it is the word of
+the union, and a reader who meets it takes the days as two sets. The form
+is the same for one date and for several, and the same whichever of the
+two fields was written from the star; it is chosen by the fact that both
+must match, never by a value. A month or a year is said once, in front of
+the dates, as for any dates.
+
+* `0 0 */2 * 1`: 毎月奇数日のうち月曜日にあたる日の0:00
+* `0 9 */2 * 1,3,5`: 毎月奇数日のうち月曜日・水曜日・金曜日にあたる日の
+  9:00
+* `0 0 15 * */2`: 毎月15日のうち火曜日・木曜日・土曜日・日曜日にあたる日
+  の0:00
+* `0 0 */2 6 1`: 毎年6月の奇数日のうち月曜日にあたる日の0:00
+* `0 0 */5 * 1-5`: 毎月1日・6日・11日・16日・21日・26日・31日のうち月曜日〜
+  金曜日にあたる日の0:00
+* `*/15 9-17 */2 * 1-5`: 毎月奇数日のうち月曜日〜金曜日にあたる日の9:00か
+  ら17:45まで15分ごと
+
+Where the dates never come in the months reached, the schedule never runs
+(3.4); where the date field is every day of them, the weekdays stand
+alone. Written without the star the same days are a pair, and the pair is
+said as before: `0 0 1-31/2 * 1` is 毎月奇数日および毎週月曜日、いずれも
+0:00. No fusion needs declaring: editing either day field changes only the
+day part, as 4.3 already allows.
 
 4.4 A day of the month, a month, and a year. Because the order is year,
 month, day, they join as a date does.
