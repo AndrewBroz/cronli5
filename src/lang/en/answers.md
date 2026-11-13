@@ -538,6 +538,19 @@ cadence with exceptions: hours 0, 2 … 20 are "every 2 hours through 8
 p.m." in the bounded form ("every 2 hours from midnight through 8 p.m."),
 never "every 2 hours except at 10 p.m."
 
+A value missing at an end is never an exception, even beside a hole: only
+the hole is one. Hours 2, 4, 8, 10 … 22 are "every 2 hours from 2 a.m.
+through 10 p.m. except at 6 a.m.", not "every 2 hours except at midnight
+and 6 a.m.", which says a moment only to take it back. (The rule was
+silent on a set with both, and the second was said. It came to matter
+when a cadence with both ends named stopped being said for eight values
+or fewer: hours 0, 2, 4, 6, 10, 12, 14 and 16 under "every minute" would
+have been "during every other hour except the 8 a.m., 6 p.m., 8 p.m.,
+and 10 p.m. hours", three of the four being hours after the last one
+that fires.) Where the bounded cadence then has too few values to be
+said, the values are listed: hours 0, 3, 9, 12, 15 and 18 are "at
+midnight, 3 a.m., 9 a.m., noon, 3 p.m., and 6 p.m."
+
 The same holds for any set of minutes or seconds. They are numbered from
 the start of their hour or minute, so a set that misses only its first
 or last values is a run, and is said as one (3.4, 4.1). The exception was

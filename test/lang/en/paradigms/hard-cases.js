@@ -642,8 +642,19 @@ const rows = [
   // The same holds for a cadence alone: up to eight values are listed,
   // and nine are a cadence.
   ['0 0 5,10,15,20 * *', 'at midnight on the 5th, 10th, 15th, and 20th'],
-  ['0 0 4-28/4 * *',
-    'at midnight on the 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
+  ['0 0 4-22/3 * *',
+    'at midnight on the 4th, 7th, 10th, 13th, 16th, 19th, and 22nd'],
+  // A cadence of days that runs to the end of the month names only its
+  // start, and is said as before whatever its length. (A row here once
+  // listed these seven days, taking the cadence for one with both ends
+  // named.)
+  ['0 0 4-28/4 * *', 'at midnight every 4 days from the 4th of the month'],
+  // A value missing at an end is a bound, never an exception, even
+  // beside a hole.
+  ['0 2,4,8,10,12,14,16,18,20,22 * * *',
+    'every 2 hours from 2 a.m. through 10 p.m. except at 6 a.m., every day'],
+  ['0 0,3,9,12,15,18 * * *',
+    'at midnight, 3 a.m., 9 a.m., noon, 3 p.m., and 6 p.m. every day'],
   ['0 0 1-25/3 * *',
     'at midnight every 3 days from the 1st through the 25th of the month'],
   ['2-58/4 * * * *',

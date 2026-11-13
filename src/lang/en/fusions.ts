@@ -231,19 +231,23 @@ function anchored(
 // said as when nothing coarser is restricted: "every second", and "every
 // minute" unless finer seconds take its place. An exception is split
 // into its base, said here, and the values it takes out, said last.
+// `every.anyLength` is whether a cadence with both ends named is said
+// however few values it has.
 function tick(
   candidates: Described[],
   field: 'minute' | 'second',
-  every: {alone: string; one: string; stray: string},
+  every: {alone: string; anyLength?: boolean; one: string; stray: string},
   opts: EnglishOptions
 ): Tick {
-  const {one: everyOne, stray} = every;
+  const {anyLength, one: everyOne, stray} = every;
   const chosen = choose(candidates,
-    withinTheHour(field, {everyOne, heard: [], stray}, opts), opts);
+    withinTheHour(field, {anyLength, everyOne, heard: [], stray}, opts),
+    opts);
   const {base, removed} = apart(chosen.description);
   const heard: number[] = [];
   const said = say(base,
-    withinTheHour(field, {everyOne, heard, stray}, opts), opts) as Phrase;
+    withinTheHour(field, {anyLength, everyOne, heard, stray}, opts),
+    opts) as Phrase;
   const continuous = base.kind === 'all' ||
     base.kind === 'cadence' && said.length === 1;
   const only = onlyValue(base);
@@ -558,15 +562,22 @@ function timesWith(
 function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): TimePhrase {
   const {candidates, clockSecond} = facts.analyses;
   const everySecond = `${words.every} ${unit('second', 1)}`;
-  const second = tick(candidatesOf(facts, 'second'), 'second',
-    {alone: everySecond, one: everySecond, stray: ''}, opts);
-  const tail = exceptions(second.excepted, 'second',
-    `${words.except} ${words.at}`, opts);
-  const seconds = denote(candidates.second![0], domainOf('second'));
   const times = (clockTimes(facts, mostClockTimes) || [])
     .map(function toTheMinute(time) {
       return {hour: time.hour, minute: time.minute};
     });
+  // Inside one clock time the seconds are a window of it, where a list
+  // would be of clock times to the second, so a cadence with both ends
+  // named is kept for any number of them.
+  const second = tick(candidatesOf(facts, 'second'), 'second', {
+    alone: everySecond,
+    anyLength: times.length === 1,
+    one: everySecond,
+    stray: ''
+  }, opts);
+  const tail = exceptions(second.excepted, 'second',
+    `${words.except} ${words.at}`, opts);
+  const seconds = denote(candidates.second![0], domainOf('second'));
   const toTheSecond = times.flatMap(function eachSecond(time) {
     // A time that falls on the minute is written without its seconds.
     return seconds.map(function at(value) {

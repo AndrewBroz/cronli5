@@ -56,6 +56,10 @@ export interface Choice extends Phrase {
 
 // Which ends of a cadence a voice has to name.
 interface Stride {
+  // Whether a cadence with both ends named is said however few values it
+  // has. Ordinarily that few are listed, but where each item of the list
+  // would be a clock time to the second the cadence is easier.
+  anyLength?: boolean;
   // Whether a cadence that fills its cycle from the very start needs no
   // bounds: "every 15 minutes".
   bare: boolean;
@@ -185,6 +189,20 @@ function sayRange(range: Range, voice: Voice): Phrase | null {
   return count === 2 && !voice.pairs ? null : plain(voice.range(from, to), 2);
 }
 
+// A cadence with both ends named gives the listener three numbers and a
+// rule to apply, and every value the rule gives has to be kept. A list is
+// told outright, so up to this many values are listed, and the cadence,
+// like every phrase built on one, is said only for more.
+const mostListed = 8;
+
+// Whether a set is small enough to list in place of a phrase built on a
+// cadence with both ends named.
+function listable(description: Described,
+  voice: Pick<Voice, 'cadence' | 'field'>): boolean {
+  return !voice.cadence.anyLength &&
+    denote(description, domainOf(voice.field)).length <= mostListed;
+}
+
 function sayCadence(
   cadence: Cadence,
   voice: Pick<Voice, 'cadence' | 'field'>
@@ -193,8 +211,9 @@ function sayCadence(
   const text = voice.cadence.say(cadence, ends);
   const two = cadence.last - cadence.start === cadence.interval;
   const halves = voice.cadence.pair && ends.length === 0;
+  const few = ends.length === 2 && listable(cadence, voice);
 
-  return text === null || two && !halves ?
+  return text === null || few || two && !halves ?
     null :
     {
       ...plain(text, 1 + ends.length),
@@ -287,12 +306,30 @@ function sayPieces(pieces: Pieces, voice: Voice, opts: EnglishOptions):
 // as a list is. A cadence beside other parts always names where it stops,
 // unless it has no end: bare, "every 15 minutes" would be heard as the
 // whole of what is said. Like a cadence with both ends named, the phrase
-// has to be worked out, and loses a tie.
+// has to be worked out, and loses a tie; and it is said only for a set
+// too long to list, however few values each of its cadences has. Two
+// cadences that run through each other, one starting before the other has
+// stopped, would have to be worked out and then merged, and are not said
+// together. A cadence with no end is said all the same, since no list can
+// say its set.
 function sayMixed(mixed: CadencePieces, voice: Voice, opts: EnglishOptions):
   Phrase | null {
   const each = voice.inPieces || {...voice, lead: ''};
   const {mixed: strides = voice} = voice;
-  const bounded = {bare: false, open: false, pair: false, tiles: true};
+  const bounded = {anyLength: true, bare: false, open: false, pair: false,
+    tiles: true};
+  const cadences = mixed.parts.filter(function stepped(part) {
+    return part.kind === 'cadence';
+  }) as Cadence[];
+  const endless = cadences.some(function unending(cadence) {
+    return cadence.open;
+  });
+  const entwined = cadences.some(function crossed(cadence) {
+    return cadences.some(function crosses(other) {
+      return cadence.start < other.start && other.start < cadence.last;
+    });
+  });
+  const unsaid = !endless && (entwined || listable(mixed, voice));
   const said = mixed.parts.map(function sayPart(part, at) {
     const kinds = {
       cadence(cadence: Cadence) {
@@ -313,7 +350,7 @@ function sayMixed(mixed: CadencePieces, voice: Voice, opts: EnglishOptions):
     return (kinds[part.kind] as (found: typeof part) => Phrase | null)(part);
   });
 
-  return said.includes(null) ?
+  return unsaid || said.includes(null) ?
     null :
     {
       ...plain(
@@ -340,9 +377,12 @@ function opensWithEvery(description: Described,
     inSpokenOrder(description, {field, pairs: false})[0].kind === 'range';
 }
 
-// An exception is for a hole in the middle: a cadence that only stops
-// early or starts late is said with its bounds. And it has to replace a
-// list too long to hold, since it costs the listener a subtraction.
+// An exception is for holes in the middle: a cadence that stops early or
+// starts late is said with its bounds, so every value taken out of one
+// has to lie between values that are kept. And it has to replace a
+// list too long to hold, since it costs the listener a subtraction. Taken
+// out of a cadence with both ends named, it has to leave more values than
+// are listed in place of such a cadence.
 const fewestExcepted = 5;
 
 function sayException(
@@ -351,16 +391,18 @@ function sayException(
   opts: EnglishOptions
 ): Phrase | null {
   const kept = denote(exception, domainOf(voice.field));
-  const hole = exception.removed.some(function inside(value) {
+  const holes = exception.removed.every(function inside(value) {
     return value > kept[0] && value < kept[kept.length - 1];
   });
   const few = kept.length < fewestExcepted;
   const inside = voice.holesOnly || exception.base.kind === 'cadence';
-  const base = few || inside && !hole ?
+  const base = few || inside && !holes ?
     null :
     say(exception.base, voice, opts);
+  const sayable = base && !(base.yields && listable(exception, voice)) ||
+    null;
 
-  return base && {
+  return sayable && base && {
     ...base,
     idiom: false,
     length: base.length + exception.removed.length,
@@ -489,11 +531,18 @@ function listing(spec: Listing, opts: EnglishOptions): Voice {
  * place. `stray` is what the seconds say before a list of minutes that
  * follows a run of them, where "every second" no longer reaches: "and for
  * one minute at 45". Each number said is added to `heard`, so that the
- * unit after the phrase can agree with the last of them.
+ * unit after the phrase can agree with the last of them. `anyLength` is
+ * whether a cadence with both ends named is said however few values it
+ * has.
  */
 function withinTheHour(
   field: 'minute' | 'second',
-  spoken: {everyOne: string; heard: number[]; stray: string},
+  spoken: {
+    anyLength?: boolean;
+    everyOne: string;
+    heard: number[];
+    stray: string;
+  },
   opts: EnglishOptions
 ): Voice {
   const numbered = listing({
@@ -507,7 +556,14 @@ function withinTheHour(
       return values.map(String);
     },
     run: `${spoken.everyOne} ${words.from}`,
-    stride: {bare: true, open: false, pair: true, tiles: true, unit: field}
+    stride: {
+      anyLength: spoken.anyLength,
+      bare: true,
+      open: false,
+      pair: true,
+      tiles: true,
+      unit: field
+    }
   }, opts);
 
   return {
@@ -616,6 +672,7 @@ function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
     }, opts),
     all: `${everySecond} ${theMinute}`,
     cadence: {
+      anyLength: true,
       bare: true,
       open: false,
       pair: true,
