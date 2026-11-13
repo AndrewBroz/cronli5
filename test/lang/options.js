@@ -1,6 +1,7 @@
 import chai from 'chai';
 import cronli5, {Cronli5InputError} from '../../src/cronli5.js';
 import en from '../../src/lang/en/index.js';
+import de from '../../src/lang/de/index.js';
 import es from '../../src/lang/es/index.js';
 import ja from '../../src/lang/ja/index.js';
 import pt from '../../src/lang/pt/index.js';
@@ -17,7 +18,7 @@ const {expect} = chai;
 // job — this catches the option × language combinations the corpora don't
 // reach (only English has per-option expectation files).
 
-const languages = {en, es, ja, pt, uk, zh};
+const languages = {en, de, es, ja, pt, uk, zh};
 
 // Every public option flag, alone and in the pairs most likely to interact.
 // `seconds`/`years` change field parsing, not just wording, so they run

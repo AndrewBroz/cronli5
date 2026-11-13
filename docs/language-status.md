@@ -14,6 +14,7 @@ drafts and validates a language is described in
 <!-- BEGIN GENERATED: language-status-detail -->
 | Language | Status | Human review | Model review |
 | --- | --- | --- | --- |
+| German | beta | — | built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/de-acceptance.md) |
 | English | beta | maintainer (native) reviewed the first paradigms, the rules and the wording changes on 2026-11-11; the final rows await a full read | rebuilt 2026-11-11 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms; 153 of 153 held-out rows; regenerates (tooling/experiments/renderer-process/en-acceptance.md) |
 | Spanish | beta | — | built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass, 19 of which the builder had seen by the orchestrator's error (tooling/experiments/renderer-process/es-acceptance.md) |
 | Japanese | beta | — | built 2026-11-12 by Claude Fable 5.2 from the questionnaire answers, lexicon and visible paradigms, after two schedule reads and three blind fluency reads of the rows; 153 of 153 held-out rows pass on the first judged run (tooling/experiments/renderer-process/ja-acceptance.md) |
