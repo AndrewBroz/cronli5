@@ -732,7 +732,8 @@ interface Sweep {
 // how long it lasts, and a single second only how much later it comes.
 // The first second of all is the time itself. Once a part has swept,
 // «plus tard» could be counted from its end, so what follows is counted
-// «après le début».
+// «après le début». A single second after a run is «une fois», so that
+// it is not taken for another run.
 function sweeping(c: Context, parts: Stretch[]): string {
   const sweeps = parts.flatMap((part) => say<Sweep[]>(part, {
     cadence: (cadence) => [{
@@ -749,7 +750,8 @@ function sweeping(c: Context, parts: Stretch[]): string {
 
   return sweeps.map(function item(sweep, index) {
     const begun = index > first && first >= 0;
-    const later = given(index > 0, phrase(w.again,
+    const single = begun && sweep.howMany === 1;
+    const later = given(index > 0, phrase(single ? w.once : w.again,
       counted(sweep.from - c.offset, units.second),
       begun ? w.afterStart : w.later));
     const named = sweep.howMany > 1 &&

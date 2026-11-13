@@ -987,12 +987,13 @@ Then:
     with how long after the start the next begins and how long it lasts:
     « toutes les secondes pendant 29 secondes, puis de nouveau 30
     secondes après le début pendant 30 secondes ».
-  A single second among the runs, or after them, is « puis de nouveau »
-  with how long after the start it comes and no length: « toutes les
-  secondes pendant 10 secondes, puis de nouveau 20 secondes après le
-  début »; « toutes les secondes pendant 11 secondes, puis de nouveau 20
-  secondes après le début, puis de nouveau 30 secondes après le début
-  pendant 11 secondes ». This is said under one clock time too (« tous
+  A single second among the runs, or after them, is « puis une fois »
+  with how long after the start it comes: « toutes les secondes pendant
+  10 secondes, puis une fois 20 secondes après le début »; « toutes les
+  secondes pendant 11 secondes, puis une fois 20 secondes après le début,
+  puis de nouveau 30 secondes après le début pendant 11 secondes ». (It
+  was « puis de nouveau » with no length, and a blind reader took the
+  single second for a second burst as long as the first.) This is said under one clock time too (« tous
   les jours à 9 h, toutes les secondes pendant 10 secondes, puis de
   nouveau 20 secondes après le début »).
   **Once a run has been said, what follows is counted « après le

@@ -704,15 +704,17 @@ const rows = [
   // plus tard» could be counted from the end of the run. (These rows,
   // and the one for seconds 0 to 28 and 30 to 59 above, said «plus
   // tard».)
+  // A single second after a run is «une fois»: «puis de nouveau 20
+  // secondes après le début» was read, blind, as a second burst of ten.
   ['0-9,20 0 * * * *',
     'toutes les heures, et à chaque fois toutes les secondes pendant 10 ' +
-    'secondes, puis de nouveau 20 secondes après le début'],
+    'secondes, puis une fois 20 secondes après le début'],
   ['0-9,20 0 9 * * *',
     'tous les jours à 9 h, toutes les secondes pendant 10 secondes, puis ' +
-    'de nouveau 20 secondes après le début'],
+    'une fois 20 secondes après le début'],
   ['10-20,30,40-50 0 9 * * *',
     'tous les jours à 9 h 00 min 10 s, toutes les secondes pendant 11 ' +
-    'secondes, puis de nouveau 20 secondes après le début, puis de ' +
+    'secondes, puis une fois 20 secondes après le début, puis de ' +
     'nouveau 30 secondes après le début pendant 11 secondes'],
 
   // A single second before the first run: the run is said where it comes.
