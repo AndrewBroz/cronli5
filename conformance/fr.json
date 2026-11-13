@@ -4258,21 +4258,21 @@
    "pattern": "0-9,20 * * * * *"
   },
   {
-   "expected": "toutes les heures, et à chaque fois toutes les secondes pendant 10 secondes, puis de nouveau 20 secondes après le début",
+   "expected": "toutes les heures, et à chaque fois toutes les secondes pendant 10 secondes, puis une fois 20 secondes après le début",
    "options": {
     "lang": "fr"
    },
    "pattern": "0-9,20 0 * * * *"
   },
   {
-   "expected": "tous les jours à 9 h, toutes les secondes pendant 10 secondes, puis de nouveau 20 secondes après le début",
+   "expected": "tous les jours à 9 h, toutes les secondes pendant 10 secondes, puis une fois 20 secondes après le début",
    "options": {
     "lang": "fr"
    },
    "pattern": "0-9,20 0 9 * * *"
   },
   {
-   "expected": "tous les jours à 9 h 00 min 10 s, toutes les secondes pendant 11 secondes, puis de nouveau 20 secondes après le début, puis de nouveau 30 secondes après le début pendant 11 secondes",
+   "expected": "tous les jours à 9 h 00 min 10 s, toutes les secondes pendant 11 secondes, puis une fois 20 secondes après le début, puis de nouveau 30 secondes après le début pendant 11 secondes",
    "options": {
     "lang": "fr"
    },

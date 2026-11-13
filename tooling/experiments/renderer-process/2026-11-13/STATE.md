@@ -13,6 +13,24 @@ Branch `renderer-process` is green (`npm run verify`, 7,629 tests, ten languages
   - Renderers repaired before these facts still carry workarounds that can now go: a month-length table in es and fr (`MONTH_LENGTHS`, `lengthsOf`), `earliestLastDay = 28` in en, `inEveryMonth = 28` in de, uk's direct call of `dateReach()` on hypothetical sets, the refusal of interleaved parts in ja/es/pt, pt's and zh's own handling of a lone year before a cadence. No output is wrong because of them.
 - Usage notes for all fourteen languages; the questionnaire and CLAUDE.md start a language from them.
 
+## Blind recovery, 2026-11-13 (Sonnet readers)
+
+One reader per language recovered a cron pattern from each of 110 sentences
+(the second-repair forms for the eight earlier languages; a sample of hard
+cases for Italian and Czech), compared mechanically by schedule
+(`release/compare.mjs`, results in `release/blind-recovery-sonnet.txt`).
+After removing differences that are the same schedule written another way,
+two forms were really misread and were repaired test-first: English «every
+second from 0 through 29 and for one minute at 45 minutes past the hour»
+(read as seconds), and French «puis de nouveau 20 secondes après le début»
+(read as a second burst). Left, as deliberate rules a reader tripped on:
+English «every minute from 9 a.m. until 9:30 a.m.» was read as including
+9:30 (the rule book ends an every-minute window with «until» at the moment
+it ends); Spanish states the time after the first side of a union, and one
+reader noted the second side's time is then unstated; Portuguese «exceto em
+junho e em 2030» can be heard as June 2030 only. This is a comprehension
+check, not a fluency judgment.
+
 ## Decisions waiting for the maintainer
 
 1. `docs/day-field-semantics.md`: `*/n` in a day field beside a restricted one (Vixie cron intersects; cronli5 says a union). Every language has rows that say the union.
