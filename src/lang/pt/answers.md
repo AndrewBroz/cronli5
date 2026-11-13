@@ -687,6 +687,52 @@ hour they are a string of windows and times with no shape: «a cada minuto
 do minuto 5 ao 10 e no minuto 20 de cada hora, das 09:05 às 09:20 e das
 17:05 às 17:20».
 
+**A window «das … às …» is said only where the task fires right through
+it at the rhythm already said.** It is never used to bracket a few listed
+minutes inside one hour, and a rhythm that does not start at the top of
+the hour has its phase said in words («a cada 2 minutos, do minuto 3 ao
+59»), not left to a window or a bracket to show. So one run of minutes,
+or a cadence of minutes from the top of the hour, **in more than two
+hours, no two of them adjacent, is confined as in case 3**: the lead
+alone («a cada minuto», «a cada N minutos», or the seconds said in its
+place), then one window for each hour, or, for more than four hours on a
+cadence, «de N em N horas» and the series in brackets. «A cada minuto das
+02:00 às 02:30, das 08:00 às 08:30, das 14:00 às 14:30 e das 20:00 às
+20:30»; «a cada minuto das 03:10 às 03:40, das 09:10 às 09:40 e das 15:10
+às 15:40»; «a cada 7 minutos das 09:00 às 09:56, das 12:00 às 12:56, das
+15:00 às 15:56 e das 18:00 às 18:56»; «a cada minuto, de 2 em 2 horas (das
+00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às 22:29)». A second is
+said after them in words, by 4.2 case 6, and never written into the
+windows: «…, sempre 30 segundos depois».
+
+History. These forms once had a minute phrase before the windows («a cada
+minuto durante os primeiros 31 minutos de cada hora, das 02:00 às 02:30,
+…»), which said each window twice and, beside a long day part, ran past
+the length a sentence can be held at. A first repair (2026-11-13) also
+dropped the minute phrase before a cadence with an offset («a cada 2
+minutos, de 2 em 2 horas (das 00:03 às 00:59, …)»), dropped «de cada
+hora» before windows that bracket listed minutes («nos minutos 5, 20 e
+45, das 00:05 às 00:45, …»), wrote three listed minutes beside a cadence
+of hours as windows in the brackets, and wrote one second into the
+windows («das 00:00:15 às 00:29:15»). A blind native reader recovered
+every schedule but found that each of those invited a continuous
+reading: «"Das 00:05 às 00:45" soa como intervalo contínuo»; the phase of
+«a cada 2 minutos» «só aparece dentro do parêntese»; «"a cada minuto" não
+diz em que segundo roda». The bracket of clock times («nos minutos 7 e
+37, de 3 em 3 horas (00:07, 00:37, 03:07, 03:37 … 21:37)») was the form
+that reader found clearest. All four were reverted, and the rule above
+was written so that a window always means what it seems to.
+
+The same reader, unprompted, said listed minutes in separate hours as
+the hours once and the minutes once, «às 9h, 10h e 17h, nos minutos 5,
+20 e 45». It is not adopted: in this rule book's notation it would be
+«às 09:00, 10:00 e 17:00, nos minutos 5, 20 e 45», where «às 09:00»
+names the instant 09:00:00 and the minutes then contradict it (the usage
+notes: «a hora é um instante, não um bloco»); «9h» would bring a second
+way of writing a time into one sentence. The windows after «de cada
+hora» remain for those minutes, the one place a window still holds
+listed minutes, and the first thing a fluent reviewer should rule on.
+
 **Case 5. Otherwise M is anchored**: a list, a run, pieces, an exception,
 or a cadence with ends. The minute phrase from section 3 is followed by H:
 
@@ -696,8 +742,8 @@ or a cadence with ends. The minute phrase from section 3 is followed by H:
 | a range or pieces | «de cada hora», a comma, and a window from the first moment to the last: «nos minutos 5, 20 e 45 de cada hora, das 09:05 às 17:45»; «a cada minuto durante os primeiros 30 minutos de cada hora, das 09:00 às 17:29»; «…, das 09:05 às 17:45 e das 22:05 às 22:45» |
 | separate hours, seven clock times or fewer | no minute phrase: the clock times, listed («às 09:05, 09:20, 09:45, 17:05, 17:20 e 17:45») |
 | separate hours that are a cadence, more than seven clock times, M a list of up to three minutes | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the clock times of the first two hours, « … », and the last clock time of all: «nos minutos 15 e 45, de 2 em 2 horas (00:15, 00:45, 02:15, 02:45 … 22:45)»; «nos minutos 15 e 45, de 4 em 4 horas (00:15, 00:45, 04:15, 04:45 … 20:45)». (Two cadences side by side, «a cada 4 horas das 00:15 às 20:15 e das 00:45 às 20:45», looked like a typing error to the third reader.) Three minutes is the limit because the bracket then shows seven clock times, the longest list (rule 3 of the opening); and since seven clock times or fewer are listed outright, the hours here are always three or more, so the « … » always stands for something. |
-| separate hours that are a cadence, more than four of them, M anything else (a run, pieces, a cadence with ends, or a list of four minutes or more) | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the windows of the first two hours, « … », and the window of the last, each from the hour's first moment to its last: «a cada minuto durante os primeiros 30 minutos, de 2 em 2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às 22:29)»; «a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas (das 00:05 às 00:55, das 02:05 às 02:55 … das 22:05 às 22:55)»; «nos minutos 5, 20, 35 e 50, de 2 em 2 horas (das 00:05 às 00:50, das 02:05 às 02:50 … das 22:05 às 22:50)». A hole in the cadence is an exception after the bracket. (One window for each of twelve hours is a sentence nobody can hold; four windows is the limit of case 3, and it is the limit here. A list of four minutes or more is said this way, and not with clock times in the bracket, because the bracket would hold nine clock times or more; and with the two hours 0 and 12 it would end «… 12:50» after 12:50 had been said.) |
-| separate hours otherwise | the minute phrase, «de cada hora», a comma, and one window for each hour, from its first moment to its last |
+| separate hours that are a cadence, more than four of them, M anything else (pieces, a cadence with an offset, or a list of four minutes or more; a run or a cadence from the top of the hour is case 4) | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the windows of the first two hours, « … », and the window of the last, each from the hour's first moment to its last: «a cada minuto durante os primeiros 30 minutos e no minuto 45, de 2 em 2 horas (da 01:00 à 01:45, das 03:00 às 03:45 … das 23:00 às 23:45)»; «a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas (das 00:05 às 00:55, das 02:05 às 02:55 … das 22:05 às 22:55)»; «nos minutos 5, 20, 35 e 50, de 2 em 2 horas (das 00:05 às 00:50, das 02:05 às 02:50 … das 22:05 às 22:50)». A hole in the cadence is an exception after the bracket. (One window for each of twelve hours is a sentence nobody can hold; four windows is the limit of case 3, and it is the limit here. A list of four minutes or more is said this way, and not with clock times in the bracket, because the bracket would hold nine clock times or more; and with the two hours 0 and 12 it would end «… 12:50» after 12:50 had been said.) |
+| separate hours otherwise (pieces, a cadence with an offset, or a list; a run or a cadence from the top of the hour in hours apart is case 4) | the minute phrase, «de cada hora», a comma, and one window for each hour, from its first moment to its last |
 | every hour with a hole | «de cada hora, exceto das 03:00 às 03:59» |
 
 The count in this table is of clock times, not of hours: minutes 15 and 45
@@ -732,7 +778,8 @@ e 12:23:30»; «às 00:00:30, 06:00:30, 12:00:30 e 18:00:30».
 **Case 3. S is one second, and every moment of the time part is a named
 clock time or a step of a cadence between two named clock times** (4.1
 case 1, the range, pieces and cadence rows of case 2, case 3 with windows
-or brackets, and the listed and bracketed rows of case 5): the second
+or brackets, case 4 in one hour or two, and the listed and bracketed rows
+of case 5): the second
 rides in every time named. «A cada hora das 09:00:30 às 17:00:30»; «a cada
 15 minutos das 09:00:30 às 17:45:30»; «a cada 2 horas das 00:00:30 às
 22:00:30»; «nos minutos 5 e 30, de 2 em 2 horas (00:05:08, 00:30:08,
