@@ -19,6 +19,17 @@ minutes said round the turn of the hour, 3.5; a calendar edit that changed
 the time part without being declared, 2.6), and several choices the
 answers left open, which are now written down where they belong.
 
+A second repair on 2026-11-13 had three things the first did not: the
+core's own calendar and set facts (which months a day comes in, a set of
+years with no end, runs and cadences together, the week walked from
+Monday), a list of traps found across eight languages, and usage notes
+written in Portuguese by a fluent writer who was told nothing of cron
+(`usage.md`). It found sentences that named dates no month has («no dia 31
+de junho»), promised a `31W` in June, listed thousands of years, and ran
+«de 2030 a 9999»; it replaced the contested «dia de semana (segunda a
+sexta)» by naming the days; and it wrote down the places where this rule
+book keeps its own form against the notes (the last section).
+
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. A **moment** is one firing inside a day.
 
@@ -63,10 +74,14 @@ overrides a count of things named:
 
 Where none of these decides between two forms, the one that names fewer
 things is said, and a list wins a tie. A value, a clock time or an end of
-a range is one thing; a cadence that tiles is one; an exception is its
-base plus one for each value excepted. A run that passes the end of its
-cycle (hours through midnight, weekdays from Sunday into Monday, months
-through the turn of the year) counts one more than its two ends (3.5).
+a range is one thing; a cadence that tiles is one; a cadence with its two
+ends is three; an exception is its base plus one for each value excepted.
+A run that passes the end of its cycle (hours through midnight, weekdays
+from Sunday into Monday, months through the turn of the year) counts one
+more than its two ends, wherever it is said: alone, among pieces, or as
+the base of an exception (3.5). Where an exception and a plain form name
+as many things, the plain form is said; where two exceptions do, the one
+whose base is the whole cycle.
 
 ## 1. Anchors
 
@@ -129,15 +144,16 @@ never the order of the sentence.
 dom.» and «jan., fev., mar., abr., mai., jun., jul., ago., set., out.,
 nov., dez.», the same in the singular and the plural: «todas as seg.,
 qua. e sex.», «de seg. a sex.», «na última sex. de cada mês», «todos os
-dias de jun.», «no dia 1º de jun.», «num sáb. ou dom.». It takes
-precedence over `feira`.
+dias de jun.», «no dia 1º de jun.», «num sáb. ou dom.», «que não seja
+sáb. nem dom.», «na sex. ou seg. mais próxima». It takes precedence over
+`feira`.
 
 **`feira: true`.** Monday to Friday are «segunda-feira … sexta-feira»,
 plural «segundas-feiras»; «sábado» and «domingo» do not change: «todas as
 segundas-feiras, quartas-feiras e sextas-feiras»; «de segunda-feira a
-sexta-feira»; «exceto às quartas-feiras»; «dia de semana (segunda-feira a
-sexta-feira)». A weekday after an ordinal has «-feira» in both settings
-(5.7).
+sexta-feira»; «exceto às quartas-feiras»; «na sexta-feira ou
+segunda-feira mais próxima». A weekday after an ordinal has «-feira» in
+both settings (5.7).
 
 **`firstOrdinal`.** Only the day 1 of a month changes, wherever it is
 named: «no dia 1º de cada mês», «nos dias 1º e 15», «do dia 1º ao dia 7»,
@@ -151,8 +167,12 @@ the European norm, select `pt`. Any other region takes the default.
 What a reader in Portugal would still find Brazilian, and is not offered
 because it is not a change of words inside one phrase: «a cada 15 minutos»
 where Portugal prefers «de 15 em 15 minutos»; «todas as segundas-feiras»
-where Portugal also says «às segundas-feiras»; and «09:00» where running
-text in Portugal writes «9h00».
+where Portugal also says «às segundas-feiras»; «09:00» where running
+text in Portugal writes «9h00»; «se cair num sábado» where Portugal says
+«se calhar a um sábado»; and «no horário exato» where Portugal says «à
+hora exata». The usage notes (`usage.md`, 4.1, 1.6, 10.1) add «até às»
+against Brazil's «até as» and the ordinal «1.º» with a full stop; this
+rule book says neither «até» nor an ordinal with a stop.
 
 ## 2. Frame
 
@@ -171,8 +191,8 @@ a space when the time part begins with a clock time («às», «à», «ao»)
 *and* nothing in the calendar part is set off by a comma; a comma in every
 other case. The commas inside a list are not counted: «segundas, quartas
 e sextas» is one phrase. What counts is a leading month or year (2.4), an
-exception (3.9), a year phrase that is set off (4.4), and the `nW` phrase
-(5.7). A day of the month and a weekday together have a join of their own,
+exception (3.9), a year phrase that is set off (4.4), and the clause that
+closes the `nW`, `LW` and `1W` phrases (5.7). A day of the month and a weekday together have a join of their own,
 «, sempre» (4.3).
 
 * A space: «todos os dias às 09:00»; «todas as segundas às 09:00»; «todas
@@ -280,6 +300,16 @@ rejected: «todos os dias, a cada hora das 00:00 às 02:00 e às 22:00 e
 23:00» hides the one stretch a reader is looking for. No set of hours that
 lacks 23 or 0 is touched by this, and minutes and seconds never are.
 
+**And one more: a schedule that never fires has no time part.** A day of
+the month that no reached month has (the 31st in June; the 29th of
+February in a year that is not a leap year) leaves nothing to say a time
+for: the whole description is «nunca (junho não tem dia 31)» (4.4). So an
+edit to the day of the month, the month or the year that makes a schedule
+never fire, or fire again, removes or restores the time part, and no edit
+to a time field changes anything in a schedule that never fires. The
+alternative, to keep the time («no dia 31 de junho às 00:00»), names a
+moment that does not exist and was the sentence this replaces.
+
 ## 3. Devices, field by field
 
 Numbers are digits everywhere. The only number words are the ordinals
@@ -337,7 +367,9 @@ before it.
   «todos os dias de janeiro e julho».
 * Weekdays: «todas as segundas, quartas e sextas»; «todos os sábados e
   domingos». The list is always in week order starting on Monday, with
-  Sunday last: «todas as segundas e todos os domingos».
+  Sunday last: «todas as segundas e domingos». (Brazilian calendars start
+  the week on Sunday and Portuguese ones on Monday; a list that ends with
+  the weekend is read without effort in both.)
 
 **What leads a list is said once for each group of neighbouring items
 that share its form.** The list is cut into groups wherever the lead
@@ -349,9 +381,18 @@ group.
   às 13:00»; «às 00:00 e à 01:00»; «às 00:00, à 01:00 e às 22:00 e 23:00».
   With `hour12: true`, «à meia-noite» and «ao meio-dia» are leads of their
   own: «ao meio-dia e às 12:30 da tarde».
-* The lead of a list of weekdays is «todas as» before Monday to Friday and
-  «todos os» before Saturday and Sunday: «todas as sextas e todos os
-  sábados»; «todas as terças, quartas e quintas e todos os domingos».
+* **The lead of a list of weekdays is said once, and agrees with the first
+  day named**: «todas as» where the list starts between Monday and Friday,
+  «todos os» where it starts on Saturday or Sunday: «todas as sextas e
+  sábados»; «todas as terças, quartas, quintas e domingos»; «todos os
+  sábados e domingos». The same holds after «exceto»: «exceto às quartas e
+  sábados». (This is how the language lists days of both genders: «às
+  terças, quintas e sábados», «aos sábados, domingos e feriados», usage
+  notes 5. An earlier version restated the lead at each change of gender,
+  «todas as sextas e todos os sábados», which is correct, heavier, and is
+  kept by careful writers for setting two groups apart.) A lead that
+  changes its preposition is always restated: «de terça a sexta e todos os
+  domingos».
 
 3.4 A range.
 
@@ -380,7 +421,12 @@ segunda». As a window: «a cada minuto das 22:00 às 02:59».
 A wrap is only true when nothing coarser is restricted: hours wrap only
 when the day of the month, the weekday, the month and the year are all
 every value; months only when the year is; weekdays always; days of the
-month never. **Minutes and seconds never wrap**: «do minuto 50 ao 10 de
+month never. **A run of hours through midnight is one run only when it is
+twelve hours or fewer**: «das 22:00 às 02:00» is a night, and is read as
+one; «das 12:00 às 09:00» is most of a day said backwards, and was taken
+for a slip. A longer one is said in ascending order, or by what it leaves
+out: hours 17 to 5 are «a cada hora das 00:00 às 05:00 e das 17:00 às
+23:00». **Minutes and seconds never wrap**: «do minuto 50 ao 10 de
 cada hora» names no stretch that lies inside an hour, and in a hurry is
 taken for minutes 10 to 50, the opposite set. A run of minutes that passes
 the top of the hour is its two stretches, in ascending order: «a cada
@@ -393,15 +439,20 @@ Where a wrap is not allowed, the set is described in ascending order:
 e às 22:00 e 23:00».
 
 A run that wraps asks the reader to carry it across the end of the day,
-the week or the year, so it counts as three things, not two. It therefore
-gives way to an exception that names two: hours 12 to 10 are «a cada
-hora, em ponto, exceto às 11:00», not «a cada hora das 12:00 às 10:00»;
-Sunday to Friday is «todos os dias, exceto aos sábados»; December to
-October is «todos os dias, exceto em novembro». With two values missing
-the count is three against three, and the run is said: «a cada hora das
-12:00 às 09:00»; «de domingo a quinta»; «de agosto a maio». A run of hours
-through midnight can itself be the base of an exception: hours 20 to 17
-without 11 are «a cada hora das 20:00 às 17:00, exceto às 11:00».
+the week or the year, so it counts as three things, not two, wherever it
+stands. It therefore gives way to an exception that names two: Sunday to
+Friday is «todos os dias, exceto aos sábados»; December to October is
+«todos os dias, exceto em novembro». With two values missing the count is
+three against three, and the run is said: «de domingo a quinta»; «de
+agosto a maio». Among pieces it counts three as well: Friday to Monday
+with Wednesday would be four things, and «todos os dias, exceto às terças
+e quintas» is three. A run of hours through midnight, of twelve hours or
+fewer, can be the base of an exception: hours 22 to 9 without 3 are «a
+cada hora das 22:00 às 09:00, exceto às 03:00». Hours that are most of
+the day go by what they leave out: hours 12 to 10 are «a cada hora, em
+ponto, exceto às 11:00»; hours 12 to 9, «a cada hora, em ponto, exceto às
+10:00 e 11:00»; hours 20 to 17 without 11, «a cada hora, em ponto, exceto
+às 11:00, 18:00 e 19:00».
 
 Four moments or fewer are listed in the order of the clock, whatever run
 they came from: hours 23 to 1 are «às 00:00, à 01:00 e às 23:00».
@@ -416,11 +467,11 @@ Pieces are said in ascending order of their first value, unless one of the
 runs wraps round the cycle, in which case the wrapped run comes first:
 «a cada hora das 20:00 às 02:00 e às 05:00». Stray values that come before
 a run are said before it: «às 05:00 e 07:00 e a cada hora das 09:00 às
-17:00». Weekday pieces follow the week order of 3.3, except that a run
-which passes from Sunday into Monday holds both ends of the week and is
-said first: «de sexta a segunda e todas as quartas». Weekday pieces are
-said only for more than four days: four or fewer that are not one run are
-listed.
+17:00». Weekday pieces follow the week order of 3.3 («de terça a sexta e todos os
+domingos») and are said only for more than four days: four or fewer that
+are not one run are listed. A run that passes from Sunday into Monday is
+said alone («de sexta a segunda»); with other days beside it an exception
+always names fewer things.
 
 A run of minutes with a stray minute: «a cada minuto durante os primeiros
 30 minutos e no minuto 45 de cada hora»; «a cada minuto do minuto 5 ao 10
@@ -437,20 +488,31 @@ is two windows: «a cada minuto das 09:00 às 09:10 e das 09:50 às 09:59».
   das 00:00 às 22:00»; «a cada 2 horas da 01:00 às 23:00»; «a cada 3 horas
   das 00:30 às 21:30». Seven clock times or fewer are listed instead (rule
   3 of the opening): «às 00:00, 04:00, 08:00, 12:00, 16:00 e 20:00».
-* **Days of the month** name both ends inside the month: «de 2 em 2 dias
-  do dia 8 ao dia 30 de cada mês»; «de 3 em 3 dias do dia 1º ao dia 31 de
-  cada mês». The last day named is the last value of the set, except under
-  one named month, where it is the last value that month has (February
-  counts 29): «de 3 em 3 dias do dia 1º ao dia 28 de junho». Seven days or
-  fewer are listed. Every second day from the 1st or the 2nd is an idiom
-  (5.1).
-* **Under one named month the days are those the month has**, described
-  afresh, for every kind of set and not only a cadence: days 1 to 30 of
-  April are «todos os dias de abril»; days 2 to 31 of April are «do dia 2
-  ao dia 30 de abril»; days 29 to 31 of February are «no dia 29 de
-  fevereiro». If the month has none of the days, they are said as written,
-  and the sentence names a date that does not exist, as the pattern does:
-  «no dia 31 de fevereiro».
+* **Days of the month** name both ends inside the month: «de 3 em 3 dias
+  do dia 1º ao dia 31 de cada mês». Seven days or fewer are listed. Every
+  second day is said by its number being odd or even (5.1), with both ends
+  where it does not run the length of the month: «nos dias pares do dia 8
+  ao dia 30 de cada mês». No cadence of days longer than seven has a step
+  above four, so «de 8 em 8 dias» and «de 15 em 15 dias», which the
+  language hears as "weekly" and "fortnightly" (usage notes 1.3), are never
+  said: `*/8` is «nos dias 1º, 9, 17 e 25 de cada mês».
+* **Under named months the days are those the months have** (the core's
+  `dateReach`), for every kind of set: days 1 to 30 of April, or of April
+  and June, are «todos os dias de abril», «todos os dias de abril e
+  junho»; days 2 to 31 of April are «do dia 2 ao dia 30 de abril»; every
+  third day in June ends on the 28th, «de 3 em 3 dias do dia 1º ao dia 28
+  de junho»; days 1 and 31 of April, June, September and November are «no
+  dia 1º de abril, junho, setembro e novembro». Two statements about the
+  days as written hold in a month of any length and are kept as they are:
+  every second day the length of the month («nos dias ímpares de junho»),
+  and every day but some that every month has, the 28th or earlier («todos
+  os dias de junho, exceto no dia 15»). «Todos os dias, exceto» counts to
+  the 31st, so under named months it is said of nothing else: days 1 to 14
+  and 16 to 30 of June are «do dia 1º ao dia 30 de junho, exceto no dia
+  15». With every month the days are said as written, and read as a date
+  is: «no dia 31 de cada mês» fires in the months that have a 31st. A
+  month that has none of the days, and a schedule that therefore never
+  fires, are in 4.4.
 * **Months have no cadence.** They are named, as a list or as runs: every
   second month is «de janeiro, março, maio, julho, setembro e novembro».
 * **Weekdays have no cadence.** The days are listed.
@@ -463,10 +525,31 @@ comma: «a cada 5 minutos, do minuto 5 ao 55 de cada hora»; «a cada 7
 minutos, do minuto 0 ao 56 de cada hora». Inside one named hour it is a
 window of clock times: «a cada 7 minutos das 09:00 às 09:56».
 
+**Runs and cadences together.** A set that names more than seven things,
+as a list or as runs and strays, is hard to hold. Where it is runs and
+cadences side by side (the core's `cadencePieces`), or one cadence with
+holes in it, it is said in those parts, each with its own lead, when that
+names fewer things, a cadence counting three: «a cada 2 minutos do minuto 0 ao 20
+e a cada 3 minutos do minuto 21 ao 57 de cada hora»; inside one named
+hour, «a cada 2 minutos das 09:00 às 09:20 e a cada 3 minutos das 09:21
+às 09:57»; «a cada 2 horas das 00:00 às 10:00 e a cada 3 horas das 11:00
+às 23:00»; «nos dias ímpares do dia 1º ao dia 11 e de 3 em 3 dias do dia
+14 ao dia 29 de cada mês»; seconds the same. Parts that share a lead say
+it once: «nos dias ímpares do dia 1º ao dia 13 e do dia 17 ao dia 31 de
+cada mês». A run or cadence whose values fall among another's is never said
+(two cadences woven together cannot be held), and the set stays as it
+was; stray values may fall anywhere: «a cada 2 horas das 00:00 às 22:00 e
+às 17:00».
+Minutes, seconds, hours and days of the month are said this way; months
+and weekdays are named, never counted. Under minutes that fill their
+hours, hours in such parts are a window for each run of hours, as any
+separate hours are (4.1).
+
 3.9 A set with values missing is said as the simpler set «exceto» the
 missing ones, when all of these hold:
 
-1. the set has more than four values, and the exception names fewer
+1. the set has more than four values, the exception excepts seven values
+   or fewer (the longest list, rule 3 of the opening), and it names fewer
    things than the set said by its runs or its cadence. Hours 9 to 12 and
    14 to 17 are two runs, four things, and «a cada hora das 09:00 às
    17:00, exceto às 13:00» names three;
@@ -482,11 +565,16 @@ missing ones, when all of these hold:
    (4.3), where the exception would be taken for the whole pair. That
    holds for both sides. There the weekdays are said as a run, which may
    wrap: «de quinta a terça e também no dia 1º de cada mês». The days of
-   the month are said as their runs, or listed: «todas as sextas e também
-   do dia 1º ao dia 14 e do dia 16 ao dia 31 de cada mês».
+   the month are said as their runs, as a cadence cut at its holes, or
+   listed: «todas as sextas e também do dia 1º ao dia 14 e do dia 16 ao
+   dia 31 de cada mês».
+
+Years take an exception too (5.8): «todos os dias, exceto em 2030».
 
 A comma comes before «exceto», and another closes the exception when
-anything follows it.
+anything follows it. Everything excepted in the calendar part is said
+under one «exceto», each with its own lead, in the order days, months,
+years: «todos os dias, exceto em junho e em 2030, às 09:00».
 
 **An exception in the time part is always the last thing in the
 sentence**, after the seconds clause if there is one (4.2).
@@ -495,7 +583,9 @@ What follows «exceto»:
 
 * **A day, a month or a weekday**, with the lead it would have standing
   alone: «exceto no dia 15», «exceto nos dias 15 e 16», «exceto em junho».
-  A weekday after «exceto» is «às quartas», «aos sábados», «aos domingos».
+  A weekday after «exceto» is «às quartas», «aos sábados», «aos domingos»,
+  and several share the lead of the first: «às terças e quintas», «às
+  quartas e domingos».
   Days of the month: «nos dias ímpares de cada mês, exceto no dia 15»;
   «todos os dias, exceto no dia 15 de cada mês»; in one month, «todos os
   dias de junho, exceto no dia 15». Months: «todos os dias, exceto em
@@ -700,6 +790,18 @@ that what follows happens inside each of the moments already named:
   «2 vezes: no horário exato e 30 segundos depois»; «6 vezes: 5, 15, 25,
   35, 45 e 55 segundos depois».
 
+**Where the time before the clause has an «e» in it, the clause opens with
+«sempre»**, which carries the seconds to every piece: «a cada hora das
+09:00 às 17:00 e às 22:00, sempre repetindo a cada segundo durante o
+minuto inteiro»; «a cada minuto das 09:00 às 09:29 e às 09:45, sempre 2
+vezes: 15 e 45 segundos depois»; «às 09:00 e 17:00, sempre repetindo a
+cada segundo durante o minuto inteiro»; «nos minutos 5 e 20 de cada hora,
+das 09:05 às 17:20, sempre 15 segundos depois». Without it the clause was
+read as belonging to the last piece only (22:00, 09:45). The test is the
+word «e», not what kind of time it is, so that two builders place it
+alike; after a day of the month and a weekday together the sentence then
+has «sempre» twice, once for each thing it distributes.
+
 «Todos os dias às 09:00, repetindo a cada segundo durante o minuto
 inteiro»; «a cada 15 minutos das 09:00 às 17:45, repetindo a cada segundo
 durante o minuto inteiro»; «a cada 15 minutos das 09:00 às 17:45, 2
@@ -765,10 +867,22 @@ month excepted is no danger, since a month applies to both sides: «todas
 as segundas e também no dia 15 de cada mês, exceto em junho, sempre às
 09:00».
 
-**If the days of the month are every day the one named month has, there
-is no pair**: the schedule is every day of that month, and is said so.
+**If the days of the month are every day the named months have, there is
+no pair**: the schedule is every day of those months, and is said so.
 Days 1 to 30 of April beside Mondays are «todos os dias de abril às
-09:00», not «em abril, todas as segundas e também todos os dias».
+09:00», not «em abril, todas as segundas e também todos os dias»; of April
+and June, «todos os dias de abril e junho às 09:00».
+
+**If the day of the month never comes in the months named, there is no
+pair either**: only the weekdays fire. The 31st of June beside Mondays is
+«todas as segundas de junho às 00:00». Days no named month has are left
+out: the 30th and 31st of April and June beside Mondays are «em abril e
+junho, todas as segundas e também no dia 30, sempre às 00:00». A month
+that lacks the day is still named, since it leads both sides: «de junho a
+agosto, todas as segundas e também no dia 31, sempre às 00:00» is read as
+a date is, and June has none. A day that only leap years have says so,
+«em fevereiro, todas as segundas e também no dia 29 dos anos bissextos,
+sempre às 00:00».
 
 **A month or a year applies to both sides and leads the sentence** (2.4),
 so that both sides stand inside it. When a month leads, the day-of-month
@@ -823,6 +937,45 @@ segundas», «no dia 1º», «no último dia»), the month follows with «de»:
 * months excepted (3.9): «todos os dias, exceto em junho»; «no dia 1º de
   cada mês, exceto em junho».
 
+**A day of the month, or a Quartz form counted from one, names only the
+months it comes in** (the core's `dateReach`), when months are named and
+it stands alone. `31W` from June to August is «no dia 31 de julho e de
+agosto ou, se cair …»; `30W` in February and April, «no dia 30 de abril
+ou, se cair …»; `L-30` from June to August, «no dia que fica 30 dias antes
+do último dia de julho e de agosto»; the 30th in February and March, «no
+dia 30 de março»; the 31st from January to November, «no dia 31 de
+janeiro, março, maio, julho, agosto e outubro». With every month, and with
+all months but some excepted, nothing is left out: «no dia 31 de cada
+mês», «no dia 31 de cada mês, exceto em junho».
+
+**A day that comes only in leap years says so**, with «dos anos
+bissextos» after the month, where a year would stand: «no dia 29 de
+fevereiro dos anos bissextos às 00:00»; «no dia que fica 28 dias antes do
+último dia de fevereiro dos anos bissextos»; «no dia 29 de fevereiro dos
+anos bissextos ou, se cair num sábado ou domingo, …». A year phrase beside
+it is then always set off: «no dia 29 de fevereiro dos anos bissextos, de
+2030 a 2040, às 00:00». It is said only when the day comes in no other
+month: «no dia 29 de fevereiro e de março» is read as two dates are, and a
+reader knows which of them every year has. Where the years named are all
+leap years the date is a plain one («no dia 29 de fevereiro de 2032»).
+
+**A schedule that never fires says «nunca», and in brackets what its
+months lack.** It has no time part (2.6). The months are listed by name,
+the verb agrees with them («não tem», «não têm»), and what they lack is
+the day or days as written, or for `L-n` the number of days the month
+would need; a year phrase follows where the years are restricted:
+
+* `0 0 31 6 *` — «nunca (junho não tem dia 31)»
+* `0 0 30,31 2 *` — «nunca (fevereiro não tem dias 30 e 31)»
+* `0 0 31 4,6 *` — «nunca (abril e junho não têm dia 31)»
+* `0 0 31W 6 *` — «nunca (junho não tem dia 31)»
+* `0 0 L-30 6 *` — «nunca (junho não tem 31 dias)»
+* `0 0 0 29 2 * 2031` — «nunca (fevereiro não tem dia 29 em 2031)»
+
+(«Em nenhuma data» and a bare «nunca» were weighed. The first cannot
+follow «Ocorre»; the second leaves the reader to find the reason in a
+pattern they may not have. The reason costs four words.)
+
 **After a run of weekdays, weekday pieces, or a day of the month and a
 weekday together**, the month leads the sentence (2.4). Months excepted
 stay after the days: «de segunda a sexta, exceto em junho,».
@@ -845,8 +998,11 @@ stay after the days: «de segunda a sexta, exceto em junho,».
   * a range or pieces of years, anywhere: «no dia 1º de janeiro, de 2030 a
     2035,»; «todos os dias, de 2028 a 2031,»; «no dia 1º de janeiro, de
     2030 a 2032 e em 2035,»;
-  * odd or even years with a start or two ends, and any other cadence of
-    years (5.8).
+  * odd or even years with a start or two ends, any other cadence of
+    years, a run with no end («, a partir de 2030,»), and runs and
+    cadences together (5.8).
+* Years excepted are an exception of the calendar part, after the days:
+  «todos os dias, exceto em 2030, às 09:00» (5.8).
 * Where the month leads (2.4), so does the year.
 
 4.5 None.
@@ -855,7 +1011,14 @@ stay after the days: «de segunda a sexta, exceto em junho,».
 
 5.1 Days of the month 1, 3, 5 … 31: «os dias ímpares». Days 2, 4 … 30: «os
 dias pares». Each can take exceptions (3.9). Both fluency readers graded
-this natural. It is not extended to hours, because an hour cadence is
+this natural, and the usage notes give it as the exact form where «de
+dois em dois dias» leaves the reader asking whether the count starts
+again on the 1st (3.3, 8). So every second day is always said this way.
+Where it does not run the length of the month (it starts after the 2nd,
+or stops before the last odd or even day there can be) it names both
+ends, and is listed while it has seven days or fewer: «nos dias pares do
+dia 8 ao dia 30 de cada mês»; «nos dias ímpares do dia 1º ao dia 29 de
+fevereiro». It is not extended to hours, because an hour cadence is
 already said with its two ends (rule 2 of the opening), nor to months,
 which are named.
 
@@ -886,38 +1049,46 @@ true` (1.2).
   skipped, and the phrase is read that way, as «no dia 31 de cada mês» is:
   «no dia que fica 30 dias antes do último dia de cada mês» fires in
   months of 31 days only.
-* `LW` — «no último dia de semana (segunda a sexta) de cada mês»
-* `1W` — «no primeiro dia de semana (segunda a sexta) de cada mês». A `W`
-  never leaves its month, so the day nearest the 1st is the month's first
-  day from Monday to Friday.
+* `LW` — «no último dia de cada mês que não seja sábado nem domingo». The
+  clause follows the month and its year, and is always closed by a comma:
+  «no último dia de junho de 2030 que não seja sábado nem domingo, às
+  00:00»; in a pair, «em junho, todas as sextas e também no último dia do
+  mês que não seja sábado nem domingo, sempre às 00:00».
+* `1W` — «no primeiro dia de cada mês que não seja sábado nem domingo». A
+  `W` never leaves its month, so the day nearest the 1st is the month's
+  first day from Monday to Friday.
 * `15W`, and every other `nW` — **the day itself, then what happens if it
   is a Saturday or a Sunday**: «no dia 15 de cada mês ou, se cair num
-  sábado ou domingo, no dia de semana mais próximo». With a month: «no dia
-  15 de junho ou, se cair …»; with two months, «no dia 30 de janeiro e de
-  julho ou, se cair …». The phrase is always closed by a comma. It starts
-  from the plain date so that it is read as a plain date is: `31W` does
-  not fire in a month with no 31st, and never looks for the end of a
-  shorter month. **«Do mesmo mês» is added only when the day is the 28th
-  or later**, the days that can be a month's last, where the nearest
-  weekday might otherwise be looked for in the next month: «no dia 31 de
-  cada mês ou, se cair num sábado ou domingo, no dia de semana mais
-  próximo do mesmo mês». For any earlier day it cannot matter, and it sent
-  a reader looking for a case that does not exist.
+  sábado ou domingo, na sexta ou segunda mais próxima». With a month: «no
+  dia 15 de junho ou, se cair …»; with two months, «no dia 30 de janeiro e
+  de julho ou, se cair …». The phrase is always closed by a comma. It
+  starts from the plain date so that it is read as a plain date is: `31W`
+  does not fire in a month with no 31st, and never looks for the end of a
+  shorter month (and under named months those without the day are not
+  named, 4.4). **«Do mesmo mês» is added only when the day is the 28th or
+  later**, the days that can be a month's last, where the nearest Monday
+  might otherwise be looked for in the next month: «no dia 31 de cada mês
+  ou, se cair num sábado ou domingo, na sexta ou segunda mais próxima do
+  mesmo mês». For any earlier day it cannot matter, and it sent a reader
+  looking for a case that does not exist. The two days share one article,
+  as any list of days does (3.3), and take the style in force: «na
+  sexta-feira ou segunda-feira mais próxima», «na sex. ou seg. mais
+  próxima».
 * `1#2` — «na segunda segunda-feira de cada mês»
 * `5L` — «na última sexta-feira de cada mês»
 
-**«Dia de semana (segunda a sexta)».** *Contested.* The word must mean
-Monday to Friday whether or not the day is a public holiday, which the
-pattern does not know. «Dia útil» is the most natural word and promises
-to skip holidays; both fluency readers said so. «Dia de semana» makes no
-such promise, but is one letter from «dia da semana», any day of the
-week. So the word needs a gloss whichever it is. The third version said
-«dia útil (de segunda a sexta)»; the second reader called that a word
-chosen and then corrected, and wrote «dia de semana (segunda a sexta)»,
-where the gloss confirms the word instead of overruling it. That form is
-used. The gloss is written in the style in force, «(seg. a sex.)»,
-«(segunda-feira a sexta-feira)», and is left out only in the `nW` phrase,
-where «sábado ou domingo» has just said the same thing.
+**No word for a working day is used.** The pattern's Monday-to-Friday
+forms mean exactly those five days, public holidays included, which the
+pattern does not know. «Dia útil» is the natural word and excludes
+holidays, and in Brazil may include Saturday (usage notes 1.1). «Dia de
+semana», which earlier versions used with a gloss, «dia de semana (segunda
+a sexta)», is one letter from «dia da semana», any of the seven, and
+needed its bracket to be safe; the notes list no word for these days that
+does not drag the holidays in (11). So the days are named: the last day
+«que não seja sábado nem domingo», and after a Saturday or Sunday «a sexta
+ou segunda mais próxima», which also tells the reader which way the day
+moves. The relative clause is in the subjunctive, which picks the last
+day of that kind and is not read as a condition on the month's last day.
 
 The ordinals before a weekday agree with it: «primeira, segunda, terceira,
 quarta, quinta» and «última» before Monday to Friday, «primeiro, segundo,
@@ -927,7 +1098,32 @@ terceiro, quarto, quinto» and «último» before «sábado» and «domingo», w
 ordinals themselves. With `short: true` it is the short name, «na segunda
 seg. de cada mês».
 
-5.8 Years.
+5.8 Years. The years do not cycle and have no last one worth naming. Of
+the descriptions of a set of years (a list, a run, a cadence, pieces, an
+exception, runs and cadences together) the one that names the fewest
+things is said, and a list wins a tie. A year or an end is one thing; a
+start with no end is one; a cadence adds one for its step, except every
+second year from the start of the calendar, which is one thing in all;
+an exception is its base and each year excepted, and is only for more
+than four years.
+
+* A run with no end: «a partir de 2030», always set off by commas, or
+  leading: «todos os dias, a partir de 2030, às 09:00»; «a partir de 2030,
+  de segunda a sexta, às 09:00». 9999 is never named.
+* A run of two years is the two listed: «todos os dias de 2030 e 2031».
+* Every year but a few: «todos os dias, exceto em 2030, às 09:00»; from a
+  start, «todos os dias, a partir de 2020, exceto em 2030,»; of a cadence,
+  «nos anos pares de 2000 a 2098, exceto em 2030,». The exception stands
+  with the other exceptions of the calendar part, after the days.
+* Runs and cadences together, each as it is said alone, joined as a list:
+  «nos anos pares a partir de 2030 e em 2031»; «de 2030 a 2040 e de 5 em 5
+  anos a partir de 2045 (2045, 2050, 2055…)»; «de 4 em 4 anos a partir de
+  2030 (2030, 2034, 2038…) e de 4 em 4 anos a partir de 2031 (2031, 2035,
+  2039…)». These never fuse with «de».
+* Where a long set still names more than two things, its first years (up
+  to seven) are tried as a list before the rest, and the form that names
+  fewest is said: «em 2039 e 2040 e nos anos ímpares a partir de 2077»;
+  «em 2020 e nos anos pares a partir de 2030».
 
 * Every second year from the start of the calendar: «dos anos pares»,
   «dos anos ímpares», fused after the day phrase or a single month's name
@@ -940,7 +1136,9 @@ seg. de cada mês».
   anos pares de 2030 a 2040, às 09:00». (Fused, «a partir de 2030 às
   09:00» looked like a starting date and time.)
 * Any other cadence of years, seven years or fewer: the years, listed, as
-  any list of years.
+  any list of years. Three even or odd years are listed too («todos os
+  dias de 2030, 2032 e 2034»): the list names as many things as «nos anos
+  pares de 2030 a 2034», and wins the tie.
 * Any other cadence of years, longer or without end: «de 4 em 4 anos a
   partir de 2028» and, in brackets, its first three years and «…»: «todos
   os dias, de 4 em 4 anos a partir de 2028 (2028, 2032, 2036…), às 09:00».
@@ -968,8 +1166,8 @@ not spoken.
 na, nos, nas, num, e, ou, e também, durante, exceto, todos os, todas as,
 todos os dias, de cada, sempre, repetindo, o minuto inteiro, vezes, no
 horário exato, primeiros, últimos, em ponto, depois de, antes do, que
-fica, mais próximo, do mesmo mês, do mês, se cair, dia de semana, a
-partir de.
+fica, mais próxima, do mesmo mês, do mês, se cair, que não seja, nem, a
+partir de, bissextos, nunca, não tem, não têm, Nunca ocorre.
 
 ## 7. Agreement
 
@@ -1034,7 +1232,7 @@ clause follows a window (4.2 case 6), the window's last moment is the last
 run, and the clause says which seconds of that run fire.
 
 8.6 `recurrence-marking` — «Todas as», «todos os» and the plural for
-single days and lists; «de … a …» with no article and the singular for a
+single days and lists, said once for a list; «de … a …» with no article and the singular for a
 run; «todos os dias, exceto às quartas» for six days with a hole inside
 the week; «na», «no» and the singular after an ordinal.
 
@@ -1047,7 +1245,9 @@ weekday.
 the description and a full stop after: «Ocorre todos os dias às 09:00.»
 If a description ends in a full stop of its own, no second one is added;
 none does today, since the time part comes last and never ends in a short
-name. The description for `@reboot` is «ao iniciar o sistema». The lenient
+name. A schedule that never fires puts «nunca» before the verb: the label
+is «Nunca (junho não tem dia 31)» and the sentence «Nunca ocorre (junho
+não tem dia 31).» The description for `@reboot` is «ao iniciar o sistema». The lenient
 fallback is «um padrão cron não reconhecido», which is never wrapped.
 
 8.9 `cardinality-rendering` — `0 0 1 */3 *` is «no dia 1º de janeiro,
@@ -1055,6 +1255,102 @@ abril, julho e outubro, às 00:00»; `0 0 1 */2 *` is «no dia 1º de janeiro,
 março, maio, julho, setembro e novembro, às 00:00»; `0 */6 * * *` is
 «todos os dias às 00:00, 06:00, 12:00 e 18:00»; `0 */2 * * *` is «todos os
 dias, a cada 2 horas das 00:00 às 22:00».
+
+8.10 `calendar-reach` — A date no reached month has is never named: the
+months that lack it are left out, a schedule that cannot fire says
+«nunca» and why, and a day only leap years have says «dos anos bissextos»
+(4.4). Years with no end say «a partir de», never 9999 (5.8).
+
+8.11 `unholdable-list` — No list is said where the set is runs and
+cadences together, an exception, or (for years) strays before a cadence
+(3.8, 5.8). The lists that remain are of irregular values, which have no
+shorter true form.
+
+## Where this rule book departs from the usage notes
+
+`usage.md` was written after this rule book, by a fluent writer told
+nothing of cron or of this project. The rule book was read against it
+section by section on 2026-11-13. What changed is said where it belongs
+above; this section records each place the two still differ, and why.
+The notes mark what is a found citation and what is their writer's own
+judgment, and much of what bears on these choices is the second kind.
+
+**Adopted from the notes.**
+
+* No word for a working day (notes 1.1, 8, 11): the days are named (5.7).
+* A list of weekdays says its lead once, with the gender of the first
+  (notes 5; 3.3 here).
+* Every second day of the month is always «dias ímpares», «dias pares»,
+  never «de 2 em 2 dias» (notes 3.3, 8; 5.1 here).
+* No day cadence that the inclusive count would turn into "weekly" or
+  "fortnightly" is ever said (notes 1.3; 3.7 here).
+* A date the month does not have is not named (notes 8, «no dia 31 de
+  cada mês: nem todos os meses o têm»; 4.4 here). With every month the
+  notes' cure, «no último dia de cada mês, se é isso», is not ours to
+  apply: the pattern says the 31st and means the months that have one.
+
+**Kept against the notes.**
+
+* **The days come before the time** (2.1). The notes' own rule 1 of
+  section 2 puts the frequency first («de 10 em 10 minutos, das 7h às
+  20h, nos dias úteis»), but they give that as judgment, and every source
+  they quote for a recurring thing leads with the days («de segunda a
+  sexta-feira, das 8h às 18h»; «todos os sábados, das 6h às 13h»). Days
+  first is also what lets an exception among the hours end the sentence,
+  and what keeps one frame.
+* **«No minuto 30 de cada hora»** (3.2), where the notes say «aos 30
+  minutos de cada hora» and call «no minuto 15 de cada hora» a calque
+  (3.4, 9; judgment, no source). The notes' form is the more natural for
+  one value in the middle of the hour. It is not kept because it cannot
+  say the whole system: «aos 1 minutos» is not Portuguese and «a 1 minuto
+  de cada hora» is heard as one minute before; a run needs the minutes
+  numbered anyway («do minuto 10 ao 40», «durante o minuto 29»); and one
+  blind reader took «aos 30 minutos de cada hora» for "every 30 minutes".
+  Two ways of naming a minute in one sentence would be worse than one
+  that is a little stiff. This is the first thing a fluent reviewer
+  should rule on; the alternative is «aos 30 minutos de cada hora», «aos
+  5, 20 e 45 minutos de cada hora», with «no minuto 1» kept for that one
+  value.
+* **«Todas as segundas»** (3.2), where the notes call «às segundas» the
+  neutral form and «todas as segundas» the one with stress on "without
+  fail" (3.1). For a scheduler "without fail" is the truth, the form is
+  good in both countries, and it gives one lead for every list and for
+  Saturday and Sunday. «A cada segunda-feira», which the notes call
+  translated, is never said.
+* **«A cada 15 minutos»**, not «de 15 em 15 minutos» (3). The notes hold
+  both correct, the first dominant on Brazilian screens and the second
+  livelier in Portugal (3.2). The division of scales in section 3 uses
+  «de N em N» for the larger step, and one sentence often needs both.
+* **«09:00», not «9h»** (1.1). The notes list both traditions and give
+  the clock form for seconds, «às 09:30:15» (3.4, 10.3), which this rule
+  book needs.
+* **«De segunda a sexta» with nothing about holidays.** The notes say a
+  careful writer adds «exceto feriados» or «incluindo feriados» where it
+  matters (1.1, 8). Every sentence here is mechanical and holidays are in
+  none of them; «incluindo feriados» on one form would suggest the others
+  leave them out. A caller who needs it should say it around the
+  description.
+* **Windows closed on the last moment that fires, not «primeira às 9h,
+  última às 17h45»** (rule 6 of the opening). The notes give both cures
+  for the same doubt (4.2); the closed window is the one that fits inside
+  a sentence with a cadence in front of it.
+* **Hours through midnight beside a named day are said in ascending
+  order** (2.6), not as «das 22h de sexta às 4h de sábado» or «na noite de
+  sexta para sábado» (notes 4.3, 1.4). Those say a night that belongs to
+  two days; cron's hours 22 to 2 on Mondays are Monday's first hours and
+  Monday's last, which is what the ascending order says.
+* **«E também», with «sempre» before the time** (4.3). The notes' safe
+  forms are «às sextas-feiras e no dia 13 de cada mês», «e também», «e
+  ainda» (7), and they warn against juxtaposition, which this rule book
+  never uses. «E também» is the one of theirs that cannot run into the
+  «e» of a list.
+* **The parts of the day with `hour12`** are «da tarde» to 18:59 and «da
+  noite» from 19:00 in every region (1.2). The notes report the Senate's
+  18:00 for Brazil and a later evening in Portugal (1.4); one boundary
+  between the two is used, and a time on a screen is 24-hour by default.
+* **«Ocorre»** for the sentence form. The notes find «efetua-se»,
+  «realiza-se» strange in an application (9) and offer no verb for a
+  thing that merely runs.
 
 ## A note on the branch budget
 

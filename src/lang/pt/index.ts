@@ -37,14 +37,16 @@ function describeParts(schedule: Schedule, opts: PortugueseOptions): Parts {
     calendarPart(analyses, restricts(candidates.hour), opts.style);
   const marks = {
     comma: ',',
+    never: '',
     open: time.clock ? '' : ',',
     pair: `, ${words.always}`
   };
 
+  // A schedule that never fires has no time to say.
   return {
     day: calendar.text === '' ? '' : calendar.text + marks[calendar.join],
     month: '',
-    time: time.text,
+    time: calendar.join === 'never' ? '' : time.text,
     year: ''
   };
 }
@@ -64,7 +66,10 @@ const portuguese: Language<PortugueseStyle> = {
     description.charAt(0).toLocaleUpperCase('pt') + description.slice(1),
   reboot: () => words.startup,
   regions,
-  sentence: (description) => `${words.runs} ${description}` +
+  // «Nunca» goes before the verb: «Nunca ocorre (…).»
+  sentence: (description) => (description.startsWith(`${words.never} `) ?
+    words.neverRuns + description.slice(words.never.length) :
+    `${words.runs} ${description}`) +
     (description.endsWith('.') ? '' : '.'),
   style,
   styles
