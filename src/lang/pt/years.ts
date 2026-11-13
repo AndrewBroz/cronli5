@@ -10,10 +10,12 @@ import type {
   SetDescription, ValuesDescription
 } from '../../core/schedule.js';
 import {counted, list, spaced} from './phrases.js';
-import {denote} from '../../core/describe-set.js';
+import {describeCadencePieces, describeSet}
+  from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
-import {steps} from './sets.js';
+import type {Part} from './sets.js';
+import {merged, steps} from './sets.js';
 
 const {contractions, units, words} = lexicon;
 
@@ -41,6 +43,10 @@ const noYear: Year = {excepted: [], fused: '', fuses: 0, lead: ''};
 
 // A list no longer than this is said in place of a cadence of years.
 const longestList = 7;
+
+// A long set said in more things than this may be said in fewer as its
+// first years and then the rest.
+const fewest = 2;
 
 // An exception replaces a list of more years than this.
 const longestListKept = 4;
@@ -79,14 +85,12 @@ function span(start: number, last: number, open: boolean): string {
 // A cadence of years. Every second year from the start of the calendar
 // with no end fuses like a year; any other names where it starts, or its
 // two ends, and one that is not every second year shows its first years.
+// (A short cadence with an end never comes here: it names as many things
+// as its years listed, and the list wins.)
 function everyFewYears(said: CadenceDescription): Year {
   const {interval, last, start} = said;
   const open = Boolean(said.open);
   const reach = span(start, last, open);
-
-  if (!counts(said)) {
-    return listed(denote(said, domainOf('year')));
-  }
 
   if (interval === 2) {
     const years = `${units.year.many} ` +
@@ -173,10 +177,49 @@ function named(said: Described, size: number): number {
   return count(said, size);
 }
 
+// The descriptions of a set that name things, cheapest first.
+function ranked(offered: Described[], size: number):
+  Array<{count: number; said: Described}> {
+  return offered.map((said) => ({count: named(said, size), said}))
+    .sort((a, b) => a.count - b.count);
+}
+
+// Runs and cadences together, for years: what the core offers for a set
+// beside its plain descriptions, with no exception among them.
+function inParts(years: number[]): Described[] {
+  const domain = domainOf('year');
+
+  return [
+    ...describeSet(years, domain).slice(0, -1),
+    describeCadencePieces(years, domain)
+  ].filter((found): found is Described =>
+    found !== null && found.kind !== 'except');
+}
+
+// A set as its first few years, listed, and then the rest. The core
+// splits a set from its lowest year, and a year that stands before a
+// cadence can be taken with far later ones into a stride of its own,
+// which breaks the cadence into hundreds of parts; with the first years
+// set aside the rest is described whole.
+function afterStrays(years: number[]): Described[] {
+  return years.slice(1, longestList + 1).flatMap(function rest(year, at) {
+    const [tail] = ranked(inParts(years.slice(at + 1)), 0);
+    const strays: Part = {kind: 'values', values: years.slice(0, at + 1)};
+    const others = tail && 'parts' in tail.said ? tail.said.parts : [];
+    const whole = tail && others.length === 0 ? [tail.said as Part] : [];
+
+    return tail ? [{
+      kind: 'cadencePieces',
+      parts: [strays, ...others, ...whole].reduce(merged, [])
+    } as CadencePieces] : [];
+  });
+}
+
 /**
  * The year phrase of a schedule; empty when every year is meant. Of the
  * descriptions the core offers, the one that names the fewest things is
- * said, and a list wins a tie.
+ * said, and a list wins a tie. Where even that names more than a list
+ * may hold, the first years are tried as a list before the rest.
  */
 function yearOf(analyses: Analyses): Year {
   const candidates = analyses.candidates.year as SetDescription[];
@@ -188,10 +231,12 @@ function yearOf(analyses: Analyses): Year {
     ...[analyses.cadencePieces.year].filter(
       (found): found is CadencePieces => found !== null)
   ];
-  const [best] = offered.map((said) => ({count: named(said, size), said}))
-    .sort((a, b) => a.count - b.count);
+  const [best] = ranked(offered, size);
+  const [better] = size > longestList && best.count > fewest ?
+    ranked([best.said, ...afterStrays(values.values)], size) :
+    [best];
 
-  return say(best.said);
+  return say(better.said);
 }
 
 export {yearOf};

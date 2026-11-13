@@ -110,7 +110,7 @@ function wrappedRun(layout: SetDescription[], rules: Rules):
       runLength(part, rules.domain) <= rules.longestWrap);
 }
 
-// Lists that have come to stand side by side are one list.
+/** Lists that have come to stand side by side are one list. */
 function merged(parts: Part[], part: Part): Part[] {
   const previous = parts[parts.length - 1];
 
@@ -362,5 +362,6 @@ function firesOn(candidates: SetDescription[] | null, domain: Domain):
 }
 
 export {
-  choose, firesOn, inOrder, partsOf, restricts, steps, stretchesOf, withEnds
+  choose, firesOn, inOrder, merged, partsOf, restricts, steps, stretchesOf,
+  withEnds
 };
