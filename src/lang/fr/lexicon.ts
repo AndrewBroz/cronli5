@@ -138,6 +138,7 @@ const words = {
   ofEachMinute: 'de chaque minute',
   ofEachMonth: 'de chaque mois',
   ofMonthOf31Days: 'd\'un mois de 31 jours',
+  once: 'une fois',
   oneMinute: 'une minute',
   oneYearIn: 'une année sur',
   or: 'ou',
