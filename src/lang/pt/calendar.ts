@@ -8,7 +8,9 @@ import type {PortugueseStyle} from './options.js';
 import type {Chosen, Rules} from './sets.js';
 import type {Year} from './years.js';
 import {choose, firesOn, inOrder, restricts} from './sets.js';
-import {dateSide, eachMonth, missing, weekdaySide} from './days.js';
+import {
+  dateSide, eachMonth, fallingOn, missing, weekdaySide
+} from './days.js';
 import {ifAny, list, spaced} from './phrases.js';
 import {monthName, runsAs} from './names.js';
 import {domainOf} from '../../core/specs.js';
@@ -153,16 +155,20 @@ function monthsOf(analyses: Analyses, wrap: boolean): Chosen {
     months;
 }
 
-// The sides that name the days. A day of the month that never comes
+// The sides that name the days. Two day fields that both must match are
+// one side, unless the days of the month are every day the months have,
+// when the weekdays alone are left. A day of the month that never comes
 // leaves the weekdays alone; days of the month that are every day the
 // months have leave no pair, with or without weekdays beside them; and
 // with no day named the days are «todos os dias», where that is needed.
 function sidesOf(analyses: Analyses, facts: Facts, needed: boolean): Side[] {
   const {candidates, dateReach: reach} = analyses;
   const everyDay: Side = {
+    condition: '',
     excepted: [],
     leads: false,
     month: 'none',
+    several: false,
     tail: '',
     text: needed ? words.everyDay : ''
   };
@@ -171,9 +177,13 @@ function sidesOf(analyses: Analyses, facts: Facts, needed: boolean): Side[] {
       (field === 'weekday' || !reach || reach.fires))
     .map((field) => sideMakers[field](analyses, facts));
   const whole = named.filter((side) => side.text === words.everyDay);
+  const [weekday, date] = named;
+  const meeting = analyses.day.both ?
+    [whole.length > 0 ? weekday : fallingOn(date, weekday)] :
+    [];
 
-  return [whole, named, [everyDay]].find((found) => found.length > 0) as
-    Side[];
+  return [meeting, whole, named, [everyDay]]
+    .find((found) => found.length > 0) as Side[];
 }
 
 /**

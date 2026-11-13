@@ -47,14 +47,18 @@ function canonical(pattern, options) {
 // field's candidate descriptions, or its normalized text where the field
 // is a Quartz form with no plain value set. Null when the core rejects the
 // pattern. Field text alone would miss `*/2` against `0/2`, or `1,2`
-// against `1-2`.
+// against `1-2`. Whether both day fields must match is part of it: `*/2`
+// beside a weekday is not `1-31/2` beside it.
 function firesOn(pattern, options) {
   try {
     const schedule = analyze(prepare(pattern, readingOf({...options})));
 
-    return JSON.stringify(fieldOrder.map(function fieldOf(field) {
-      return schedule.analyses.candidates[field] || schedule.pattern[field];
-    }));
+    return JSON.stringify([
+      ...fieldOrder.map(function fieldOf(field) {
+        return schedule.analyses.candidates[field] || schedule.pattern[field];
+      }),
+      schedule.analyses.day.both
+    ]);
   }
   catch {
     return null;
