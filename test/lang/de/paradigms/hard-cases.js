@@ -48,6 +48,57 @@ const rows = [
   ['0 0 9 * * * 2030-2032,2035',
     'in den Jahren 2030 bis 2032 und 2035 täglich um 9:00 Uhr'],
 
+  // A run of years is said with its two ends, however long it is, and a
+  // run that reaches the last year a pattern can name is «ab».
+  ['0 0 9 * * * 2030-2061', 'in den Jahren 2030 bis 2061 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030-2062', 'in den Jahren 2030 bis 2062 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030-2040,2050-2081',
+    'in den Jahren 2030 bis 2040 und 2050 bis 2081 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030-2034,2036-2040',
+    'in den Jahren 2030 bis 2034 und 2036 bis 2040 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030/1', 'in den Jahren ab 2030 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030-2034,2036/1',
+    'in den Jahren 2030 bis 2034 und ab 2036 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 1970-2029,2031/1',
+    'in den Jahren 1970 bis 2029 und ab 2031 täglich um 9:00 Uhr'],
+
+  // Years that are neither one run nor one series are taken apart from
+  // the earliest year on, and each series follows «sowie».
+  ['0 0 9 * * * 2030/2,2031',
+    'in den Jahren 2030 bis 2032 sowie 2034, 2036, 2038 usw. täglich um ' +
+    '9:00 Uhr'],
+  ['0 0 0 1 1 * 2030/2,2031',
+    'in den Jahren 2030 bis 2032 sowie 2034, 2036, 2038 usw. jeweils am 1. ' +
+    'Januar um 0:00 Uhr'],
+  ['0 0 9 * * * 2030/4,2031',
+    'in den Jahren 2030, 2034, 2038 usw. sowie 2031 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030/3,2031/3',
+    'in den Jahren 2030, 2033, 2036 usw. sowie 2031, 2034, 2037 usw. ' +
+    'täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030-2060/2,2071',
+    'in den Jahren 2030, 2032, 2034 usw. bis 2060 sowie 2071 täglich um ' +
+    '9:00 Uhr'],
+  ['0 0 9 * * * 2030-2040,2045/5',
+    'in den Jahren 2030 bis 2040 sowie 2045, 2050, 2055 usw. täglich um ' +
+    '9:00 Uhr'],
+  ['0 0 9 * * * 2030,2032,2034,2036,2038,2042,2044,2046,2048,2050',
+    'in den Jahren 2030, 2032, 2034 usw. bis 2038 sowie 2042, 2044, 2046 ' +
+    'usw. bis 2050 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030/2,2031/4',
+    'in den Jahren 2030, 2032, 2034 usw. sowie 2031, 2035, 2039 usw. ' +
+    'täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030,2040,2050,2045-2060',
+    'in den Jahren 2030, 2040 und 2045 bis 2060 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2054,2037,2023,2049,2053,2028,2030,2057',
+    'in den Jahren 2023, 2028, 2030, 2037, 2049, 2053, 2054 und 2057 ' +
+    'täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030,9999',
+    'in den Jahren 2030 und 9999 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030,2032,2034,2038,2040',
+    'in den Jahren 2030, 2032, 2034, 2038 und 2040 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030-2036/2',
+    'in geraden Jahren von 2030 bis 2036 täglich um 9:00 Uhr'],
+
   // Quartz forms.
   ['0 0 1 * ?', 'am 1. jedes Monats um 0:00 Uhr', {cron: 'quartz'}],
   ['0 0 LW * *',
@@ -90,6 +141,23 @@ const rows = [
   ['0 9 * * 6L', 'am letzten Samstag jedes Monats um 9:00 Uhr'],
   ['0 9 * * 0#4', 'am vierten Sonntag jedes Monats um 9:00 Uhr'],
   ['0 9 * * 2#5', 'am fünften Dienstag jedes Monats um 9:00 Uhr'],
+
+  // A weekday nearest a date that some of the named months lack.
+  ['0 9 31W 1,6 *',
+    'im Januar und Juni jeweils in Monaten mit 31 Tagen am Werktag (Montag ' +
+    'bis Freitag), der dem 31. im selben Monat am nächsten liegt, um 9:00 ' +
+    'Uhr'],
+  ['0 9 30W 2,3 *',
+    'im Februar und März jeweils in Monaten mit mindestens 30 Tagen am ' +
+    'Werktag (Montag bis Freitag), der dem 30. im selben Monat am nächsten ' +
+    'liegt, um 9:00 Uhr'],
+  ['0 9 29W 1,2 *',
+    'im Januar und Februar jeweils in Monaten mit mindestens 29 Tagen am ' +
+    'Werktag (Montag bis Freitag), der dem 29. im selben Monat am nächsten ' +
+    'liegt, um 9:00 Uhr'],
+  ['0 9 31W 1,3 *',
+    'im Januar und März jeweils am Werktag (Montag bis Freitag), der dem ' +
+    '31. im selben Monat am nächsten liegt, um 9:00 Uhr'],
 
   // Macros, startup, and the three forms.
   ['@hourly', 'zu jeder vollen Stunde'],
@@ -145,6 +213,23 @@ const rows = [
   ['0 0 0 1 * 5 2030',
     'im Jahr 2030 freitags und zusätzlich am 1. jedes Monats, jeweils um ' +
     '0:00 Uhr'],
+
+  // Beside weekdays, every day but a few is said as its stretches: «und
+  // zusätzlich täglich, außer am 15.» lets the exception reach the
+  // weekdays too.
+  ['0 9 1-14,16-31 * 1',
+    'montags und zusätzlich vom 1. bis 14. und vom 16. bis 31. jedes ' +
+    'Monats, jeweils um 9:00 Uhr'],
+  ['0 9 1-14,16-31 6 1',
+    'im Juni montags und zusätzlich vom 1. bis 14. und vom 16. bis 30. ' +
+    'Juni, jeweils um 9:00 Uhr'],
+  // Dates that are every day of the named month leave nothing to add.
+  ['0 9 1-30 6 1', 'im Juni täglich um 9:00 Uhr'],
+  ['0 9 1-30 6 *', 'im Juni täglich um 9:00 Uhr'],
+  // A date the named month lacks is left out; where it has none of
+  // them, they are said as written.
+  ['0 9 30,31 6 *', 'am 30. Juni um 9:00 Uhr'],
+  ['0 9 31 6 *', 'am 31. Juni um 9:00 Uhr'],
 
   // A month with its dates.
   ['0 0 1,15 6 *', 'am 1. und 15. Juni um 0:00 Uhr'],
@@ -223,6 +308,23 @@ const rows = [
   ['0 9 * 6 0-2,4-6', 'im Juni täglich, außer mittwochs, um 9:00 Uhr'],
   ['0 9 * 6 1', 'im Juni montags um 9:00 Uhr'],
 
+  // One run only by wrapping: the two stretches where each is a run of
+  // three or more, and otherwise whatever the field's limits give.
+  ['0 9 29-2 * *', 'am 1., 2., 29., 30. und 31. jedes Monats um 9:00 Uhr'],
+  ['58-2 * * * *', 'stündlich um :00, :01, :02, :58 und :59'],
+  ['57-2 * * * *',
+    'stündlich von :00 bis :02 und von :57 bis :59 jede Minute'],
+  // Pieces win a tie with an exception, which has to be subtracted.
+  ['0 0-8,13-23 * * *',
+    'täglich von 0:00 bis 8:00 und von 13:00 bis 23:00 Uhr stündlich'],
+  ['0 0-8,12-23 * * *',
+    'zu jeder vollen Stunde, außer um 9:00, 10:00 und 11:00 Uhr'],
+  // Two months across the turn of the year, with and without a year.
+  ['0 9 1 12-1 *', 'im Dezember und Januar jeweils am 1. um 9:00 Uhr'],
+  ['0 0 9 * 12,1 * 2030', 'im Januar und Dezember 2030 täglich um 9:00 Uhr'],
+  ['0 0 9 * 1-5,7-12 * 2030',
+    'im Jahr 2030 in allen Monaten, außer im Juni, täglich um 9:00 Uhr'],
+
   // Weekday order, runs and wrap-arounds.
   ['0 9 * * 5-1', 'freitags bis montags um 9:00 Uhr'],
   ['0 9 * * 2-4', 'dienstags bis donnerstags um 9:00 Uhr'],
@@ -287,6 +389,14 @@ const rows = [
   ['0,15,45 */4 * * *',
     'täglich um 0:00, 0:15, 0:45, 4:00, 4:15, 4:45 … 20:00, 20:15 und ' +
     '20:45 Uhr'],
+  // A series of clock times holds three minutes to the hour at most;
+  // more are said once, after the hours' windows.
+  ['5/10 */2 * * *',
+    'täglich in den geraden Stunden (0:05–0:55, 2:05–2:55 … 22:05–22:55 ' +
+    'Uhr) jeweils um :05, :15, :25, :35, :45 und :55'],
+  ['5,20,35,50 8-18/2 * * *',
+    'täglich von 8:05 bis 8:50, von 10:05 bis 10:50 … und von 18:05 bis ' +
+    '18:50 Uhr jeweils um :05, :20, :35 und :50'],
   ['15,45 */12 * * *', 'täglich um 0:15, 0:45, 12:15 und 12:45 Uhr'],
   ['23 */12 * * *', 'täglich um 0:23 und 12:23 Uhr'],
   ['0 1/12 * * *', 'täglich um 1:00 und 13:00 Uhr'],
@@ -440,6 +550,26 @@ const rows = [
     'täglich um 8:00, 12:00 und 18:00 Uhr, jeweils eine Minute lang jede ' +
     'Sekunde'],
   ['0,15 * * * * *', 'zu jeder vollen Minute sowie 15 Sekunden danach'],
+
+  // Seconds in several stretches are named by their number.
+  ['0-10,50-59 * * * * *',
+    'jede Minute, jeweils in den Sekunden 0 bis 10 und 50 bis 59'],
+  ['0-10,30,50-59 */15 9-17 * * *',
+    'täglich von 9:00 bis 17:45 Uhr alle 15 Minuten, jeweils in den ' +
+    'Sekunden 0 bis 10, 30 und 50 bis 59'],
+  ['0-10,30 0 9 * * *',
+    'täglich um 9:00 Uhr, jeweils in den Sekunden 0 bis 10 und 30'],
+  ['1,2,3,5,8,13,21 * * * * *',
+    'jede Minute, jeweils in den Sekunden 1 bis 3, 5, 8, 13 und 21'],
+  // Eight times to the second are more than a list holds: the seconds
+  // trail.
+  ['15,45 0 9,12,15,18 * * *',
+    'täglich um 9:00, 12:00, 15:00 und 18:00 Uhr, jeweils 15 und 45 ' +
+    'Sekunden nach der vollen Minute'],
+  // Scattered seconds with no run among them are said in full.
+  ['1,4,9,16,25,36,49 * * * * *',
+    'jede Minute, jeweils 1, 4, 9, 16, 25, 36 und 49 Sekunden nach der ' +
+    'vollen Minute'],
 
   // «Täglich» fills the level a restricted hour would skip, and is
   // not said of a schedule that runs every hour of the day.
