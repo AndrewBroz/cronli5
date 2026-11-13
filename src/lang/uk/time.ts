@@ -67,6 +67,8 @@ interface Said {
   clocked: boolean;
   exceptions: string[];
   pin: string;
+  // Whether the words name every firing as windows of clock times.
+  windowed: boolean;
   words: string;
 }
 
@@ -334,8 +336,13 @@ function positionsOf(fine: Fine, level: Level): string {
   return say(positions, fine.description as Placed, level);
 }
 
-function said(wordsSaid: string, clocked: boolean, pin = ''): Said {
-  return {clocked, exceptions: [], pin, words: wordsSaid};
+function said(
+  wordsSaid: string,
+  clocked: boolean,
+  pin = '',
+  windowed = false
+): Said {
+  return {clocked, exceptions: [], pin, windowed, words: wordsSaid};
 }
 
 function finish(phrase: Said): string {
@@ -387,7 +394,7 @@ function led(coarse: SetDescription, fine: Fine, level: Level): Said {
   return said(
     [opener(fine, level), windows(coarse, fine, level)]
       .slice(0, 2 - Number(whole)).join(' '),
-    !whole);
+    !whole, '', !whole);
 }
 
 function onTheCycle(coarse: SetDescription, fine: Fine, level: Level): Said {
@@ -430,7 +437,7 @@ function positioned(coarse: Plain, fine: Fine, level: Level): Said {
       bracket(slots, fine.description as Placed, level));
   }
 
-  return said(`${head}, ${windows(coarse, fine, level)}`, true);
+  return said(`${head}, ${windows(coarse, fine, level)}`, true, '', true);
 }
 
 // A long cadence of slots is said first, as it is for a single value,
@@ -595,7 +602,9 @@ function inNamedSlots(
         [...leads(index, nth), first].join(' '), ...rest
       ];
     });
-  })), true);
+  })), true, '', parts.every(function isRun(part) {
+    return part.kind === 'range';
+  }));
 }
 
 // Slots left out of a simpler set: the simpler set is said, and then
@@ -786,13 +795,21 @@ function secondLevel(face: Face): Level {
 
 // The seconds as what happens each time the rest fires, pinned to the
 // second. What is left out of the rest stays with it, ahead of «щоразу».
-// One second after «щогодини» alone is counted from the hour.
+// One second after «щогодини» alone is counted from the hour. Where the
+// rest names its firings as windows, they are written to the second and
+// settle the seconds' words without a bracket.
 function eachMinute(
   rest: Said,
+  toTheSecond: Said,
   seconds: Fine,
-  slots: number[],
-  level: Level
+  [slots, level]: [number[], Level]
 ): string {
+  if (rest.windowed && rest.exceptions.length === 0) {
+    return [
+      `${toTheSecond.words},`, words.eachTime, positionsOf(seconds, level)
+    ].join(' ');
+  }
+
   const [second] = seconds.values;
   const counts = seconds.values.length === 1 &&
     rest.words === words.everyHour;
@@ -911,8 +928,10 @@ function timeOf(
   }
 
   return eachMinute(rest,
+    build(minutes, hours,
+      minuteLevel(first, last, words.everyMinute, bySecond.face)),
     fineOf(facts, 'second', {except: false, lenient: false, pair: false}),
-    slots, bySecond);
+    [slots, bySecond]);
 }
 
 export {hoursOf, timeOf};

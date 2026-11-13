@@ -858,6 +858,32 @@ Seconds 0 and 30 under such a rest were once «щоразу кожні 30 сек
 «рівно та на 30-й секунді» is the third judge's «двічі: рівно і через 30
 секунд».
 
+**Where the rest names its firings as windows of clock times** (a
+filled or stepped stretch of minutes with its windows, «кожні 15 хвилин з
+9:00 до 17:45»; the window that pins a minute phrase, «…хвилині, з 9:05 до
+17:50»; a window for each named hour), **each window is written to the
+second, from its first firing to its last, and no bracket follows the
+seconds.** The two ends of the window, to the second, settle what the
+seconds' words mean, as one second riding in every clock time already
+does («кожні 15 хвилин з 9:00:30 до 17:45:30»): `* */15 9-17 * * *` is
+«щодня кожні 15 хвилин з 9:00:00 до 17:45:59, щоразу щосекунди протягом
+хвилини»; `*/15 */15 9-17 * * *` is «…з 9:00:00 до 17:45:45, щоразу
+рівно, на 15-й, на 30-й та на 45-й секунді»; `0-10 * 9,17 * * *` is
+«щохвилини з 9:00:00 до 9:59:10 і з 17:00:00 до 17:59:10, щоразу
+щосекунди протягом перших 11 секунд»; `* */15 2/6 1 * *` is «щомісяця
+1-го числа кожні 15 хвилин з 2:00:00 до 2:45:59, з 8:00:00 до 8:45:59,
+із 14:00:00 до 14:45:59 і з 20:00:00 до 20:45:59, щоразу щосекунди
+протягом хвилини». (The windows used to stop at the minute and the
+bracket of 4.5 followed the seconds: four windows and then
+«(2:00:00–2:00:59, 2:15:00–2:15:59 … 20:45:00–20:45:59)», more than
+twenty clock times, of which the bracket's only told the reader what the
+window and the words had already said.) A rest that names no window
+keeps the bracket: clock times listed («о 9:05, 9:10, 17:05 та 17:10,
+щоразу щосекунди протягом хвилини (9:05:00–9:05:59 …)»), points of
+whole hours («щогодини з 9:30 до 17:30 включно, щоразу…»: a window with
+«включно» names hours, not firings), every hour, a cadence of hours, or
+a rest with something left out.
+
 If «щоразу» is needed twice (seconds inside minutes inside a cadence of
 hours), it is said twice and the one pin comes last: «кожні 2 години з
 0:00 до 22:00 включно, щоразу кожні 15 хвилин протягом години, щоразу
