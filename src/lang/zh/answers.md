@@ -122,7 +122,7 @@ one after another with no space.
 
 Between the day and the time stands a **join**, declared here and measured
 by `test/lang/zh/continuity.js`. It is one of: nothing, a comma, 每天, 的,
-，均在.
+，均在, ，均为.
 It depends only on what stands before the time and on whether the hours
 are restricted. Take the first row that applies:
 
@@ -131,7 +131,8 @@ are restricted. Take the first row that applies:
 | any | nothing | none |
 | none: the schedule never fires (4.4) | nothing | none |
 | runs round the clock (H is every hour, with or without exceptions), so it begins with 每 | a year part that ends in 当年 (5.8) | none: …，当年每5分钟一次 |
-| the same | anything else | a comma: 每周一至周五，每15分钟一次; 每月1日，每小时整点; 每年6月，每5分钟一次; 每月1日以及每周五，每分钟一次 |
+| the same | anything else | a comma: 每周一至周五，每15分钟一次; 每月1日，每小时整点; 每年6月，每5分钟一次 |
+| the same | a date and a weekday together (4.3) | ，均为: 每月1日以及每周五，均为每分钟一次 |
 | begins with a clock time or an hour name (H is restricted) | no day part (a month or a year only) | 每天 (2.5): 每天9:00; 每年6月每天9:00 |
 | the same | a date and a weekday together (4.3) | ，均在: 每月1日以及每周五，均在0:00 |
 | the same | a date and a weekday that must both match (4.3) | 的: 每逢单日为周一时的0:00 |
@@ -539,8 +540,8 @@ then 每分钟一次 or 每N分钟一次.
 | a range (two consecutive hours count) | 9:00至17:59，每分钟一次; 9:00至17:45，每15分钟一次; 22:00至23:59，每分钟一次 |
 | one hour | 9:00至9:59，每分钟一次; 9:00至9:55，每5分钟一次 |
 | every second hour, more than eight of them (5.5) | the idiom of 5.5, with 内: 偶数小时（0点、2点、4点……22点）内，每分钟一次; 奇数小时（1点、3点、5点……23点）内，每15分钟一次; 偶数小时（2点、4点、6点……22点）内，每分钟一次 |
-| up to four separate hours, or stretches of hours | each a window: 9:00至9:59、17:00至17:59，每分钟一次; 8:00至8:45、12:00至12:45、18:00至18:45，每15分钟一次; 0:00至0:59、6:00至6:59、12:00至12:59、18:00至18:59，每分钟一次; 9:00至17:59、20:00至20:59、22:00至22:59，每分钟一次 |
-| five or more separate hours | the hours by name, then 的 and the minutes as positions: 每一分钟 for every minute, 0点、4点、8点、12点、16点、20点的每一分钟; a cadence's minutes, 8点、10点、12点、14点、16点、18点的0分、15分、30分、45分 |
+| up to four separate hours, stretches of hours, or any separate hours under a cadence of more than eight minutes | each a window: 9:00至9:59、17:00至17:59，每分钟一次; 8:00至8:45、12:00至12:45、18:00至18:45，每15分钟一次; 0:00至0:59、6:00至6:59、12:00至12:59、18:00至18:59，每分钟一次; 9:00至17:59、20:00至20:59、22:00至22:59，每分钟一次 |
+| five or more separate hours, under every minute or a cadence of eight minutes or fewer | the hours by name, then 的 and the minutes as positions: 每一分钟 for every minute, 0点、4点、8点、12点、16点、20点的每一分钟; a cadence's minutes, 8点、10点、12点、14点、16点、18点的0分、15分、30分、45分 |
 | every hour with exceptions | 每10分钟一次（3:00至3:59除外） |
 | every second hour with exceptions | the idiom, then the bracket: 偶数小时（0点、2点、4点……22点）内，每分钟一次（8:00至8:59除外） |
 
@@ -551,7 +552,8 @@ windows first. Windows for every second hour, abbreviated with ……, were
 tried next and dropped: the third judge stopped at the …… and went back.
 For every second hour the idiom of 5.5 is said.
 
-**Five or more separate hours are not a window each.** A window for each
+**Five or more separate hours under every minute, or under a cadence of
+eight minutes or fewer, are not a window each.** A window for each
 hour is a list made by multiplying: every hour with the two ends of the
 minutes. It is written out while it is four windows or fewer, which are
 eight clock times, the most that are listed (the table at the top). A
@@ -573,10 +575,18 @@ what sank 这3个小时内 above):
   one second each minute carries it, 的0分30秒、15分30秒、30分30秒、45分30
   秒; with more, each is a round, 的0分、15分、30分、45分各一轮，每轮60次，每
   秒一次.
-* A run of minutes, or a cadence of more than eight, names its ends, as
-  under every hour (3.4, 3.8): 每周一至周五9点、11点、13点、15点、17点的0分至
-  30分，每分钟一次; 的0分至55分，每5分钟一次; with a second, 的0分0秒至30分45
-  秒，每15秒一次.
+* **A run of minutes, or a cadence of more than eight said by its ends,
+  stays a window for each hour, however many**: 每周一至周五9:00至9:30、
+  11:00至11:30、13:00至13:30、15:00至15:30、17:00至17:30，每分钟一次; 每天
+  0:00至0:55、5:00至5:55、10:00至10:55、15:00至15:55、20:00至20:55，每5分钟
+  一次. Named, as 9点、11点、13点、15点、17点的0分至30分，每分钟一次, a blind
+  reader took it as one stretch from 9:00 to 17:30: the 至 comes after the
+  last hour of a list, and a quick read joins them (「"至"又跟在最后，粗读很
+  容易连起来」). 每小时的0分至30分 after the hours can be every hour of the
+  day, and 这几个小时里 is what two earlier readers took for one stretch.
+  No form was found with one reading, and a long sentence with one reading
+  is better than a short one with two. These sentences are longer than
+  the length gate allows; that is recorded, not hidden.
 
 The first form tried here was 的0分至59分，每分钟一次 for every minute,
 and the reader gave it a second reading: 0分至59分 looks like nothing
@@ -590,8 +600,8 @@ many: a stretch cannot be named as one hour before 的.
 
 **M is a single run of minutes.** Under one hour or up to four separate
 hours, a window of clock times for each, as above: 9:00至9:29，每分钟一次;
-9:00至9:29、17:00至17:29，每分钟一次. Under five or more separate hours it
-is anchored, as above: 9点、11点、13点、15点、17点的0分至30分，每分钟一次.
+9:00至9:29、17:00至17:29，每分钟一次. So too under five or more, as above:
+9:00至9:30、11:00至11:30……17:00至17:30，每分钟一次.
 
 **Inside one named hour every minute phrase is clock times**, whatever
 the minutes are: a run with a stray minute, 9:00至9:29，每分钟一次，以及
@@ -751,7 +761,7 @@ elsewhere. (It was 整分过N秒 until the second repair: a coined word and a
 first, then 以及, then the weekday phrase exactly as it would stand alone;
 the join before a clock time is ，均在, so that the time is said of both:
 每月1日以及每周五，均在0:00; 每月1日至7日、15日以及每周一至周五，均在9:00
-至17:45，每15分钟一次; 每月1日以及每周五，每分钟一次. Neither side is ever
+至17:45，每15分钟一次; 每月1日以及每周五，均为每分钟一次. Neither side is ever
 an exception (3.9): 每月1日以及每周一、周二、周四至周日，均在0:00; 每月1日
 至14日、16日至31日以及每周五，均在9:00 (a Friday the 15th fires, and
 nothing here says it does not).
@@ -781,16 +791,23 @@ The first judge's objection was to a bare time after the comma, which 均
 在 removes. The reader's own rewrite was 每月1日和每周五，在0:00; 和 is
 the word the notes warn of (above), and 在 alone after the comma does not
 say that the time is the 1st's too. Before a time that runs round the
-clock, which begins with 每, the join stays a comma (每月1日以及每周五，每分
-钟一次): there 的 never stood, and 每 does not attach to the last side.
+clock, which begins with 每 and says a rate, 在 does not fit, and the join
+is ，均为: 每月1日以及每周五，均为每分钟一次; 每月1日以及每周五，均为每小
+时的30分. It was a bare comma, and a second blind reader read 每月1日 as a
+day with no time and the rate as Friday's alone (「"每分钟一次"归谁就不清
+楚了」). Their rewrite, 每月1日和每周五，全天每分钟一次, uses 和; 全天
+says the rate runs all day, which 每分钟一次 already says, but not that
+it is the 1st's too. So after a date and a weekday the time part always
+opens with 均, the one rule: 均在 before a time that says when, 均为
+before one that says a rate.
 
 A month applies to both sides. It is said once, with its year part, and
 closed by a comma; then 每逢 leads each side, the dates without 每月 and
 the weekdays without 每周 or 每月: 每年6月，每逢1日以及每逢周五，均在0:00;
 每年1月、7月，每逢1日、15日以及每逢周一至周五，均在0:00; 每年5月至7月，每
 逢1日、19日、23日、28日以及每逢周三、周四，均在7:52至16:52，每小时一次; 每
-年除6月外，每逢1日以及每逢周五，均在0:00; 每年6月，每逢1日以及每逢周五，每
-分钟一次. A colon after the month was tried and
+年除6月外，每逢1日以及每逢周五，均在0:00; 每年6月，每逢1日以及每逢周五，均
+为每分钟一次. A colon after the month was tried and
 dropped: the third judge found it odd in a fragment and had to take 1月、7
 月：1日、15日 apart; 每逢 is that judge's form, and it marks where the days
 begin. (的1日…和当月每周… had needed two reads before that.)
@@ -1098,7 +1115,8 @@ between digits and characters.
 ## 8. Traps
 
 8.1 `union-connective` — 以及, each side with its own 每月, 每周 or 每逢,
-and ，均在 before the time: 每月1日以及每周五，均在0:00.
+and ，均在 before the time: 每月1日以及每周五，均在0:00; ，均为 before a
+rate: 每月1日以及每周五，均为每分钟一次.
 
 8.2 `shared-qualifier-scope` — 均 after the pair makes the time belong to
 both sides, where 的 could take the last side alone. A month is said

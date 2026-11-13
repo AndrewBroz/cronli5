@@ -288,11 +288,16 @@ function isCrowded(hours: Run[]): boolean {
 
 // Whether restricted hours are each a window of clock times: under
 // minutes that flow, any minutes inside one hour, or one run under
-// separate hours; but never hours too many to be a window each.
+// separate hours. Hours too many to be a window each are named instead,
+// where the minutes after them are every minute or few enough to list;
+// a run or a longer cadence after named hours reads as one stretch, so
+// those stay windows however many.
 function isClocked(H: Level, M: Level): boolean {
   const lone = H.runs.every((run) => run.length === 1);
+  const named = isCrowded(H.runs) && M.flows &&
+    (M.every || M.values.length <= LISTED);
 
-  return !isCrowded(H.runs) && (M.flows ||
+  return !named && (M.flows ||
     lone && (H.values.length === 1 || isSteady(M.shape)));
 }
 

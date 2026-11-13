@@ -40,6 +40,7 @@ const words = {
   being: '为',
   andDays: '以及',
   andExceptions: '及',
+  bothAre: '均为',
   bothAt: '均在',
   eachHourOf: '每小时的',
   eachMinuteOf: '每分钟的',

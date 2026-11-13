@@ -74,7 +74,11 @@ const rows = [
   // A date and a weekday are tied to the time by ，均在, not 的: 的 could
   // be read with the weekday alone, leaving the date with no time.
   ['0 0 1 * 5', '每月1日以及每周五，均在0:00'],
-  ['* * 1 * 5', '每月1日以及每周五，每分钟一次'],
+  // Before a time that begins with 每 the join is ，均为: a bare comma left
+  // the rate to the weekday alone, and the date with no time.
+  ['* * 1 * 5', '每月1日以及每周五，均为每分钟一次'],
+  ['*/10 0-2,4-23 1 * 5', '每月1日以及每周五，均为每10分钟一次（3:00至3:59除外）'],
+  ['30 * 1 * 5', '每月1日以及每周五，均为每小时的30分'],
   ['0 0 1 6 5', '每年6月，每逢1日以及每逢周五，均在0:00'],
   ['0 0 1,15 1,7 1-5', '每年1月、7月，每逢1日、15日以及每逢周一至周五，均在0:00'],
   ['52 7-16 1,19,23,28 5-7 3-4',
@@ -84,7 +88,7 @@ const rows = [
   ['0 0 1 * 0-2,4-6', '每月1日以及每周一、周二、周四至周日，均在0:00'],
   ['0 0 0 1 * 5 2030', '2030年每月1日以及每周五，均在0:00'],
   ['0 0 0 1 6 5 2030', '2030年6月，每逢1日以及每逢周五，均在0:00'],
-  ['* * 1 6 5', '每年6月，每逢1日以及每逢周五，每分钟一次'],
+  ['* * 1 6 5', '每年6月，每逢1日以及每逢周五，均为每分钟一次'],
   ['0 0 1 1-5,7-12 5', '每年除6月外，每逢1日以及每逢周五，均在0:00'],
 
   // A month with its dates.
@@ -578,16 +582,22 @@ const rows = [
 
   // Up to four separate hours under minutes that flow, or under one run
   // of minutes, are a window each (eight clock times, the most that are
-  // listed). Five or more are named once, then 的 and the minutes as
+  // listed). Five or more under every minute, or under a cadence of eight
+  // minutes or fewer, are named once, then 的 and the minutes as
   // positions in the hour, as named minutes are after separate hours:
-  // every minute is 每一分钟 (每一秒 with every second), a cadence of eight
-  // or fewer is its minutes, and a run or a longer cadence names its ends.
-  // Stretches of hours stay windows.
+  // every minute is 每一分钟 (每一秒 with every second), and the cadence is
+  // its minutes. A run of minutes, or a cadence said by its ends, stays a
+  // window for each hour however many: after a list of hours its 至 was
+  // read as running from the first hour to the last. Stretches of hours
+  // stay windows.
   ['* */5 1 */3 *', '每年1月、4月、7月、10月的1日0点、5点、10点、15点、20点的每一分钟'],
   ['*/15 */5 * * *', '每天0点、5点、10点、15点、20点的0分、15分、30分、45分'],
-  ['*/5 */5 * * *', '每天0点、5点、10点、15点、20点的0分至55分，每5分钟一次'],
+  ['*/5 */5 * * *',
+    '每天0:00至0:55、5:00至5:55、10:00至10:55、15:00至15:55、20:00至20:55，每5' +
+    '分钟一次'],
   ['0-30 9-17/2 * * 1-5',
-    '每周一至周五9点、11点、13点、15点、17点的0分至30分，每分钟一次'],
+    '每周一至周五9:00至9:30、11:00至11:30、13:00至13:30、15:00至15:30、17:00至' +
+    '17:30，每分钟一次'],
   ['30 */15 */5 * * *',
     '每天0点、5点、10点、15点、20点的0分30秒、15分30秒、30分30秒、45分30秒'],
   ['* * */5 * * *', '每天0点、5点、10点、15点、20点的每一秒'],
@@ -596,7 +606,8 @@ const rows = [
   ['*/15 * */5 * * *',
     '每天0点、5点、10点、15点、20点的每一分钟的0秒、15秒、30秒、45秒'],
   ['*/15 0-30 */5 * * *',
-    '每天0点、5点、10点、15点、20点的0分0秒至30分45秒，每15秒一次'],
+    '每天0:00:00至0:30:45、5:00:00至5:30:45、10:00:00至10:30:45、15:00:00至15' +
+    ':30:45、20:00:00至20:30:45，每15秒一次'],
   ['* */15 */5 * * *',
     '每天0点、5点、10点、15点、20点的0分、15分、30分、45分各一轮，每轮60次，每秒' +
     '一次'],
