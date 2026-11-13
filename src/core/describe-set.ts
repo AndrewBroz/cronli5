@@ -252,6 +252,26 @@ function firstOf(part: Part): number {
   return part.kind === 'range' ? part.from : part.start;
 }
 
+// A progression as a part, a range when it steps by one; its values are
+// placed.
+function placeProgression(
+  taken: number[],
+  unplaced: Set<number>,
+  domain: Domain,
+  ends: boolean
+): Part {
+  const [start, second] = taken;
+  const last = taken[taken.length - 1];
+
+  taken.forEach(function placed(member) {
+    unplaced.delete(member);
+  });
+
+  return second - start === 1 ?
+    rangeBetween(start, last, domain, ends) :
+    cadenceFrom({interval: second - start, last, start}, domain, ends);
+}
+
 // The values still unplaced as progressions: from the lowest, the longest
 // progression there is, and so on; values on no progression gathered into
 // one list. Parts already found are kept, and all are put in order of
@@ -272,7 +292,6 @@ function progressionParts(
     }
 
     const taken = longestProgression(values, at, unplaced);
-    const last = taken[taken.length - 1];
 
     if (taken.length < minProgression) {
       unplaced.delete(value);
@@ -281,13 +300,7 @@ function progressionParts(
       return;
     }
 
-    taken.forEach(function placed(member) {
-      unplaced.delete(member);
-    });
-    parts.push(taken[1] - value === 1 ?
-      rangeBetween(value, last, domain, ends) :
-      cadenceFrom({interval: taken[1] - value, last, start: value},
-        domain, ends));
+    parts.push(placeProgression(taken, unplaced, domain, ends));
   });
 
   return [
@@ -297,13 +310,150 @@ function progressionParts(
   });
 }
 
-// The set as runs and cadences together, two ways: with every long run
-// taken as a range first, and with the longest progression taken from
-// each value in turn, which finds a cadence that passes through runs
-// (every 2nd year from 2030, and 2031). The one that names fewer things
-// is offered, the runs-first one on a tie, and only when it has a cadence
-// among several parts. Nothing wraps here: a wrapped run is kept whole by
-// the plain pieces.
+// A set while its progressions are being taken: every value, and those
+// no part has yet.
+interface Placing {
+  present: Set<number>;
+  unplaced: Set<number>;
+}
+
+// The progression from a value by an interval through every value of the
+// set, placed or not, cut after the last member still unplaced, with how
+// many of its members are unplaced.
+function progressionThrough(start: number, interval: number, set: Placing):
+  {covers: number; taken: number[]} {
+  const members = [];
+  let covers = 0;
+  let length = 0;
+
+  for (let value = start; set.present.has(value); value += interval) {
+    members.push(value);
+
+    if (set.unplaced.has(value)) {
+      covers += 1;
+      length = members.length;
+    }
+  }
+
+  return {covers, taken: members.slice(0, length)};
+}
+
+// The progression from `values[at]` to one of the next few values that
+// takes in most of the values still unplaced. It may pass through values
+// another part has: two cadences that cross share the values where they
+// meet. With `fresh`, a progression that the value one step below is also
+// on is passed over: it is the tail of a longer one, which is found from
+// where that one starts.
+function widestProgression(
+  values: number[],
+  at: number,
+  set: Placing,
+  fresh = false
+): {covers: number; taken: number[]} {
+  const start = values[at];
+
+  return values.slice(at + 1, at + 1 + intervalsTried)
+    .map(function interval(next) {
+      return next - start;
+    })
+    .filter(function starts(interval) {
+      return !(fresh && set.present.has(start - interval));
+    })
+    .reduce(function widest(best, interval) {
+      const found = progressionThrough(start, interval, set);
+
+      return found.covers > best.covers ? found : best;
+    }, {covers: 1, taken: [start]});
+}
+
+// The progressions of a set taken widest first, wherever each starts, and
+// what they leave unplaced. Taking from the lowest value first lets a
+// stray value claim a few members of a long cadence above it (1984, then
+// every 2nd year from 2042: 1984, 2042, 2100 are 58 apart) and break that
+// cadence into many, and lets the first of two cadences that cross break
+// the second. Every value is queued under how many unplaced values the
+// widest progression starting at it takes in; that can only fall as
+// values are placed, so one that has fallen is queued again lower down.
+function widestFirst(values: number[], domain: Domain, ends: boolean):
+  {parts: Part[]; unplaced: Set<number>} {
+  const set = {present: new Set(values), unplaced: new Set(values)};
+  const parts: Part[] = [];
+  const queued: number[][] = [];
+
+  function queue(at: number, covers: number): void {
+    queued[covers] = [...queued[covers] || [], at];
+  }
+
+  values.forEach(function measure(value, at) {
+    queue(at, widestProgression(values, at, set, true).covers);
+  });
+
+  for (let covers = queued.length - 1; covers >= minProgression;
+    covers -= 1) {
+    (queued[covers] || []).sort(ascending).forEach(function take(at) {
+      const found = set.unplaced.has(values[at]) ?
+        widestProgression(values, at, set) :
+        {covers: 0, taken: []};
+
+      if (found.covers >= covers) {
+        parts.push(placeProgression(found.taken, set.unplaced, domain,
+          ends));
+      }
+      else {
+        queue(at, found.covers);
+      }
+    });
+  }
+
+  return {parts, unplaced: set.unplaced};
+}
+
+// How many values a part holds. No part wraps.
+function sizeOfPart(part: Part): number {
+  if (part.kind === 'values') {
+    return part.values.length;
+  }
+
+  return part.kind === 'range' ?
+    part.to - part.from + 1 :
+    (part.last - part.start) / part.interval + 1;
+}
+
+// What a way of splitting a set of so many values costs a reader, most
+// important first: how many things it names, how many values two parts
+// both hold, and how many values are left in a list.
+function costOf(parts: Part[], count: number): number[] {
+  const sum = {held: 0, loose: 0, named: 0};
+
+  parts.forEach(function add(part) {
+    sum.held += sizeOfPart(part);
+    sum.loose += part.kind === 'values' ? part.values.length : 0;
+    sum.named += namedBy(part);
+  });
+
+  return [sum.named, sum.held - count, sum.loose];
+}
+
+// Whether one cost is less than another, by the first number that
+// differs.
+function costsLess(cost: number[], other: number[]): boolean {
+  const differs = cost.findIndex(function unequal(amount, at) {
+    return amount !== other[at];
+  });
+
+  return differs >= 0 && cost[differs] < other[differs];
+}
+
+// The set as runs and cadences together, three ways: with every long run
+// taken as a range first, where there is one; with the widest
+// progressions in the whole set taken first, which keeps a long cadence
+// whole beside stray values and keeps two cadences that cross as two; and
+// with the longest progression taken from each value in turn, lowest
+// first. The last two find a cadence that passes through runs (every 2nd
+// year from 2030, and 2031). The one that costs least is offered, the
+// earlier of these on a tie, and only when it has a cadence among several
+// parts. Only the widest-first way has parts that share a value. Nothing
+// wraps here: a wrapped run is kept whole by the plain pieces.
 function cadencePiecesOf(values: number[], domain: Domain, ends: boolean):
   CadencePieces | null {
   const long = linearRuns(values).filter(function isLong(run) {
@@ -313,21 +463,19 @@ function cadencePiecesOf(values: number[], domain: Domain, ends: boolean):
     return rangeBetween(run[0], run[run.length - 1], domain, ends);
   });
   const layouts = [
-    {parts: ranges, unplaced: new Set(without(values, long.flat()))},
+    ...long.length ?
+      [{parts: ranges, unplaced: new Set(without(values, long.flat()))}] :
+      [],
+    widestFirst(values, domain, ends),
     {parts: [], unplaced: new Set(values)}
   ].map(function split(found) {
     const parts = progressionParts(values, found, domain, ends);
 
-    return {
-      named: parts.reduce(function count(sum, part) {
-        return sum + namedBy(part);
-      }, 0),
-      parts
-    };
+    return {cost: costOf(parts, values.length), parts};
   });
-  const {parts} = layouts[1].named < layouts[0].named ?
-    layouts[1] :
-    layouts[0];
+  const {parts} = layouts.reduce(function cheapest(best, layout) {
+    return costsLess(layout.cost, best.cost) ? layout : best;
+  });
   const hasCadence = parts.some(function isCadence(part) {
     return part.kind === 'cadence';
   });
@@ -560,9 +708,12 @@ function denote(description: Described, domain: Domain): number[] {
         aroundTheTop(description, domain);
     case 'pieces':
     case 'cadencePieces':
-      return description.parts.flatMap(function partValues(part) {
-        return denote(part, domain);
-      }).sort(ascending);
+      // Two cadences that cross share a value, which is one value.
+      return [...new Set(description.parts.flatMap(
+        function partValues(part) {
+          return denote(part, domain);
+        }
+      ))].sort(ascending);
     case 'except':
       return without(denote(description.base, domain), description.removed);
     default:

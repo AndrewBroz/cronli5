@@ -65,11 +65,34 @@ export type WeekdayArm =
  * which. A day field that names every value without a leading `*`
  * (`1-31`, `0-6`) beside another restricted day field is every day in
  * cron, and arrives here as two wildcards.
+ *
+ * `nearestDayIsLast` is for the weekday nearest a day (`15W`; `null` for
+ * every other date arm). The scheduler never leaves the month, so where
+ * the day is a month's last and falls on a Sunday the day used is the
+ * Friday before, and there is no "Monday after". It says whether the day
+ * is the last day of the months the form fires in, over the years the
+ * pattern reaches: `always` (`31W`; `30W` in June; `29W` in February,
+ * which fires in leap years only), `never` (`15W`; `30W` in July; also a
+ * form that fires in no reached month), or `sometimes` (`30W` in every
+ * month; `28W`, which ends February in common years only; `29W`, which
+ * ends it in leap years only).
+ *
+ * `dateAddsNothing` is true only in a union, when every day the date arm
+ * can fire on is a day the weekday arm fires on anyway, so the pattern is
+ * the weekday arm alone. That is so in exactly two cases: the date arm
+ * never fires in any reached month (`dateReach.fires` is false: `31 6 1`),
+ * or it is a form that only lands on Monday to Friday (`1W`, `15W`, `LW`)
+ * and the weekday arm is a plain set holding all of Monday to Friday
+ * (`15W * 1-5`). It is false for every other union, including a plain
+ * date beside Monday to Friday: a date falls on every day of the week
+ * over the years. `union` is not changed by it.
  */
 export interface DayFacts {
   union: boolean;
   date: DateArm | null;
   weekday: WeekdayArm | null;
+  nearestDayIsLast: 'always' | 'sometimes' | 'never' | null;
+  dateAddsNothing: boolean;
 }
 
 /**
@@ -96,10 +119,42 @@ export interface DateReach {
   // False when the date arm never fires in any reached month. In a union
   // the weekday arm still fires.
   fires: boolean;
+  // Why it never fires. True when `fires` is false only because of the
+  // years reached: the date arm would fire in a reached month in some
+  // other year (29 February when no reached year is a leap year). False
+  // when the date exists in no year (31 June), and whenever `fires` is
+  // true.
+  firesInOtherYears: boolean;
   everyYear: number[];
   leapYears: number[];
   never: number[];
   days: {candidates: SetDescription[]; everyDay: boolean} | null;
+}
+
+/**
+ * The months of one length that the day-of-month arm fires in. `years` is
+ * `every` except for February when the pattern reaches both leap and
+ * common years: it is then in two groups, 28 days in `common` years and
+ * 29 in `leap` years. When the year field reaches only one sort of year
+ * February is in one group, marked `every`.
+ */
+export interface MonthLengths {
+  length: number;
+  months: number[];
+  years: 'every' | 'common' | 'leap';
+}
+
+/**
+ * Days of a plain day-of-month set that the same reached months have:
+ * `months` are the groups, by length, of every reached month that has
+ * these days, and `everyMonth` says they are all the reached months in
+ * all the years reached. A day February has only in leap years has
+ * February's `leap` group and not its `common` one.
+ */
+export interface DaysInMonths {
+  days: number[];
+  months: MonthLengths[];
+  everyMonth: boolean;
 }
 
 /** A discrete clock time: an hour and minute, with a second if one is set. */
@@ -161,10 +216,25 @@ export type SetDescription =
  * threes. It is not among a field's candidates (a renderer written before
  * it existed never meets it) and is offered beside them.
  *
- * The parts are disjoint and together are the set. They are in order of
- * their first value and never wrap, but they may interleave: a part's
- * values can fall between another's. At least one part is a cadence, and
- * there is at most one `values` part.
+ * What it promises: the parts together are exactly the set. They are in
+ * order of their first value and never wrap. At least one part is a
+ * cadence, there are at least two parts, and there is at most one
+ * `values` part. Parts may interleave (a part's values can fall between
+ * another's), and two parts may share a value where two cadences cross
+ * (every 7th year from 2030 and every 11th from 2031 both hold 2086):
+ * a value is never left out of a cadence it lies on to keep the parts
+ * disjoint, when that would break the cadence into more parts.
+ *
+ * Of the ways to split a set, the one that names fewest things is
+ * offered (a range or a cadence names two, a list each of its values).
+ * It is found by trying three orders of taking, not by an exhaustive
+ * search, so it is the fewest of those. A tie is settled by the set
+ * alone, never by how the field was written, by the first of these that
+ * tells the ways apart: no value held by two parts; fewest values left
+ * in the list; long runs taken as ranges first; the widest progression
+ * taken first, so that a value two cadences could both take goes to the
+ * longer of them (days 1 to 9 by twos and 11 to 29 by threes, not 1 to
+ * 11 and 14 to 29).
  */
 export interface CadencePieces {
   kind: 'cadencePieces';
@@ -208,6 +278,16 @@ export interface Analyses {
   // `null` in the common case, where nothing needs saying.
   dateReach: DateReach | null;
   day: DayFacts;
+  // The months the day-of-month arm fires in, grouped by how many days
+  // they have, shortest first: every reached month when the field is
+  // unrestricted, none when the arm never fires. A group is left out when
+  // the arm cannot fire in a month that short (`L-30` fires only in the
+  // group of 31; `29`, `29W` and `L-28` in February only in its leap-year
+  // group). The last day of a group's months is its `length`, so the day
+  // `L-3` comes to there is `length - 3`. The first group's length is the
+  // greatest day every firing month has, the last group's the greatest
+  // any has. Always present, whatever `dateReach` is.
+  monthLengths: MonthLengths[];
   // The kind of description each field was written as (`*/12` is a
   // cadence, `0,12` values), `null` for a Quartz form. A language may use
   // it only to choose between phrasings it judges equally easy.

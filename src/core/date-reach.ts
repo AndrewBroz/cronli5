@@ -4,7 +4,7 @@
 // arithmetic, the same for every language.
 
 import type {
-  DateArm, DateReach, QuartzDate, SetDescription
+  DateArm, DateReach, DayFacts, MonthLengths, QuartzDate, SetDescription
 } from './schedule.js';
 import {denote, describeSet} from './describe-set.js';
 import {domainOf} from './specs.js';
@@ -12,6 +12,7 @@ import {domainOf} from './specs.js';
 const february = 2;
 const longestMonth = 31;
 const shortMonths = [4, 6, 9, 11];
+const anyYear = {common: true, leap: true};
 
 function isLeap(year: number): boolean {
   return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
@@ -91,7 +92,12 @@ function dateReach(
   const shortest = arm.kind === 'quartz' ? shortestForForm(arm.form) :
     (dates as number[])[0];
   const reach: DateReach = {
-    days: null, everyYear: [], fires: true, leapYears: [], never: []
+    days: null,
+    everyYear: [],
+    fires: true,
+    firesInOtherYears: false,
+    leapYears: [],
+    never: []
   };
   let longest = 0;
 
@@ -115,6 +121,10 @@ function dateReach(
   });
 
   reach.fires = reach.never.length < months.length;
+  reach.firesInOtherYears = !reach.fires &&
+    months.some(function inAnyYear(month) {
+      return shortest <= lengthsOf(month, anyYear).slice(-1)[0];
+    });
   reach.days = dates && reachedDays(dates, longest);
 
   const asWritten = !dates || !reach.days!.everyDay &&
@@ -125,4 +135,76 @@ function dateReach(
     reach;
 }
 
-export {dateReach};
+// The shortest month the date arm fires in: a Quartz form's, a plain
+// set's lowest day, and one day when the field is unrestricted.
+function shortestFor(arm: DateArm | null, dates: SetDescription[] | null):
+  number {
+  if (arm?.kind === 'quartz') {
+    return shortestForForm(arm.form);
+  }
+
+  return arm ?
+    denote((dates as SetDescription[])[0], domainOf('date'))[0] :
+    1;
+}
+
+/**
+ * The months the date arm fires in, grouped by how many days they have, in
+ * ascending order of length. February is in a group of its own for each
+ * length it has in the years reached. Every reached month is here when the
+ * day-of-month is unrestricted.
+ */
+function monthLengths(
+  arm: DateArm | null,
+  candidates: Record<'date' | 'month' | 'year', SetDescription[] | null>
+): MonthLengths[] {
+  const shortest = shortestFor(arm, candidates.date);
+  const years = yearsReached(candidates.year as SetDescription[]);
+  const groups = new Map<number, MonthLengths>();
+
+  denote((candidates.month as SetDescription[])[0], domainOf('month'))
+    .forEach(function place(month) {
+      const lengths = lengthsOf(month, years);
+
+      lengths.forEach(function group(length) {
+        const sort = length === lengths[0] ? 'common' : 'leap';
+        const found = groups.get(length) || {
+          length, months: [], years: lengths.length > 1 ? sort : 'every'
+        };
+
+        if (shortest <= length) {
+          found.months.push(month);
+          groups.set(length, found);
+        }
+      });
+    });
+
+  return [...groups.values()].sort(function byLength(a, b) {
+    return a.length - b.length;
+  });
+}
+
+/**
+ * For the weekday nearest a day: whether that day is the last day of the
+ * months the form fires in, over the years the pattern reaches. Null for
+ * any other date arm.
+ */
+function nearestDayIsLast(arm: DateArm | null, fired: MonthLengths[]):
+  DayFacts['nearestDayIsLast'] {
+  if (arm?.kind !== 'quartz' || arm.form.kind !== 'nearestWeekday') {
+    return null;
+  }
+
+  const {day} = arm.form;
+  const ending = fired.filter(function ends(group) {
+    return group.length === day;
+  });
+
+  if (!ending.length) {
+    return 'never';
+  }
+
+  return ending.length === fired.length ? 'always' : 'sometimes';
+}
+
+export {dateReach, monthLengths, nearestDayIsLast};
