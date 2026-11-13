@@ -841,6 +841,30 @@ const nothing = {
   open: false, year: ''
 };
 
+// The months a pattern is said with: alone, days of the month are said
+// with the months they fire in.
+function monthsFor(facts: ScheduleFacts, days: Days, view: SetView): Months {
+  const reaching = monthsSaid(
+    candidatesAs(facts, 'month', view) as SetDescription[]);
+
+  return days.dated && !days.weekly ?
+    firingMonths(reaching, facts.analyses.dateReach, view) :
+    reaching;
+}
+
+// The year part, and the year that follows a month's name. A single year
+// follows the last month named, in the genitive, where the months are a
+// list or one run: after pieces or an exception it would be read with
+// the last month alone.
+function yearAndTail(years: Said, of: Months): string[] {
+  const attached = ['range', 'values'].includes(of.description.kind) &&
+    years.kind === 'values' && years.values.length === 1;
+
+  return attached ?
+    ['', ` ${walk(years, yearDomain)[0]} ${words.year}`] :
+    [yearPart(years), ''];
+}
+
 /**
  * The year, the month and the day of a description, each closed by its
  * mark, and the note that follows the time.
@@ -850,23 +874,10 @@ function calendarOf(facts: ScheduleFacts, short: boolean): Calendar {
   const years = choose<Said>(analyses.candidates.year as SetDescription[],
     yearDomain, yearTaste, analyses.cadencePieces.year);
   const everyYear = years.kind === 'all';
-  // A run of months wraps round the year only when every year is meant.
-  const view = {linear: !everyYear};
   const days = daysNamed(facts);
-  const reaching = monthsSaid(
-    candidatesAs(facts, 'month', view) as SetDescription[]);
-  // Alone, days of the month are said with the months they fire in.
-  const of = days.dated && !days.weekly ?
-    firingMonths(reaching, analyses.dateReach, view) :
-    reaching;
-  // A single year follows the last month named, in the genitive, where
-  // the months are a list or one run: after pieces or an exception it
-  // would be read with the last month alone.
-  const attached = ['range', 'values'].includes(of.description.kind) &&
-    years.kind === 'values' && years.values.length === 1;
-  const [year, tail] = attached ?
-    ['', ` ${walk(years, yearDomain)[0]} ${words.year}`] :
-    [yearPart(years), ''];
+  // A run of months wraps round the year only when every year is meant.
+  const of = monthsFor(facts, days, {linear: !everyYear});
+  const [year, tail] = yearAndTail(years, of);
   const naming = {short, tail};
 
   if (days.dead && !days.weekly) {
@@ -887,11 +898,11 @@ function calendarOf(facts: ScheduleFacts, short: boolean): Calendar {
   const yearly = everyYear && of.restricted && arm.month === '';
 
   return {
+    ...nothing,
     day: arm.day,
     gloss: arm.gloss,
     mark: arm.mark,
     month: arm.month,
-    never: false,
     note: [arm.note, words.leapYearsOnly][Number(days.leap)],
     open: arm === none && !of.restricted && everyYear,
     year: [year, words.everyYear][Number(yearly)]

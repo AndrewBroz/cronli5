@@ -31,8 +31,8 @@ Monday to Friday and Saturday and Sunday named as the days they are
 cadence of minutes off the beat as a list (3.8); runs and cadences
 together (3.12); years with no end, with a hole, and several series of
 them (5.8); neither side of «а також» as an exception (4.3); weekdays
-never in pieces (3.6); what is left out under seconds as a stretch
-(4.5); the months a date is said with are the months it fires in (4.4).
+never in pieces (3.6); what is left out of the hours or the minutes
+said ahead of «щоразу» (4.5); the months a date is said with are the months it fires in (4.4).
 Section 9 sets the rule book beside the usage notes.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
@@ -1026,29 +1026,36 @@ bracket.
 **An exception keeps its own bracket.** "One pin" is one pin for what
 fires. An exception that names a place inside the hour («крім 29-ї
 хвилини кожної години») is words about a position too, and is pinned by
-the moments left out, so a time part can hold two brackets: the first
-for what fires, the second, after «крім», for what does not. `30
-0-28,30-59 * * * *` is «щохвилини, щоразу на 30-й секунді (0:00:30,
-0:01:30 … 23:59:30), крім 29-ї хвилини кожної години (0:29:30, 1:29:30 …
-23:29:30)»; `* 0,10,20,40,50 9-17 * * *` is «щодня кожні 10 хвилин з
-9:00 до 17:50, щоразу щосекунди протягом хвилини (9:00:00–9:00:59,
-9:10:00–9:10:59 … 17:50:00–17:50:59), крім 30-ї хвилини кожної години
-(9:30:00–9:30:59, 10:30:00–10:30:59 … 17:30:00–17:30:59)». The two were weighed against saying the minutes
-with no exception («щохвилини протягом перших 29 хвилин і протягом
-останніх 30 хвилин кожної години, щоразу…»), which has one bracket and
-hides the one minute that matters. The brackets never stand side by
-side: «крім» and its words are between them.
+the moments left out, so a time part can hold two brackets: one for what
+fires and one, after «крім», for what does not. The brackets never stand
+side by side.
 
-**Under seconds, what is left out is written to the second**, as
-everything else in such a time part is: a whole minute left out is its
-stretch, a moment in it is a moment. `* 0,10,20,40,50 9-17 * * *` ends
-«…крім 30-ї хвилини кожної години (9:30:00–9:30:59, 10:30:00–10:30:59 …
-17:30:00–17:30:59)»; `* 0 0-2,4-23 * * *` is «щогодини, щоразу щосекунди
-протягом хвилини (0:00:00–0:00:59, 1:00:00–1:00:59 … 23:00:00–23:00:59),
-крім проміжку з 3:00:00 до 3:00:59 включно». (A minute left out used to
-be written to the minute, «крім 3:00», «(9:30, 10:30 … 17:30)». Among
-times written to the second «3:00» reads as the one moment 3:00:00, and
-sixty firings are left out, not one.)
+**Under «щоразу», what is left out of the hours or the minutes stays
+with them**, ahead of «щоразу», as an exception to a cadence of hours
+already does (4.1): the hours and minutes are said whole, with what they
+leave out, and the seconds then say what happens each time. `* 0
+0-2,4-23 * * *` is «щогодини, крім 3:00, щоразу щосекунди протягом
+хвилини (0:00:00–0:00:59, 1:00:00–1:00:59 … 23:00:00–23:00:59)»; `* 0,10,
+20,40,50 9-17 * * *` is «щодня кожні 10 хвилин з 9:00 до 17:50, крім
+30-ї хвилини кожної години (9:30, 10:30 … 17:30), щоразу щосекунди
+протягом хвилини (9:00:00–9:00:59, 9:10:00–9:10:59 … 17:50:00–17:50:59)»;
+`30 0-28,30-59 * * * *` is «щохвилини, крім 29-ї хвилини кожної години
+(0:29:30, 1:29:30 … 23:29:30), щоразу на 30-й секунді (0:00:30, 0:01:30
+… 23:59:30)». (The exception used to close the sentence, after the
+seconds and their pin: «…(0:00:00–0:00:59 … 23:00:00–23:00:59), крім
+3:00». Straight after times written to the second, «3:00» reads as the
+one moment 3:00:00, and sixty firings are left out, not one. Before
+«щоразу» it is a firing of the hours, and whatever happens each time
+goes with it.) Where the seconds lead instead («щосекунди з 9:00:00 до
+9:59:59»), what is left out is a stretch to the second, as 3.9 says.
+
+**In named hours what is left out is named outright while that is four
+clock times or fewer** (a stretch is two of them), and always in one or
+two hours: «…крім 9:29 та 17:29». More, and it is the place inside the
+hour with its pin, as under a range of hours: `0,10,20,40,50 8,10,12,
+15,18 * * *` ends «…крім 30-ї хвилини кожної години (8:30, 10:30 …
+18:30)». (Five clock times, or four stretches «проміжку з … до …
+включно», used to trail the sentence.)
 
 The previous version wrote the first cycle out and said «а далі так само
 щогодини до 17:45». The third judge re-read every such sentence and each

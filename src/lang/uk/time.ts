@@ -579,6 +579,11 @@ function inNamedSlots(
     return countsInSlots(slots, fine, level);
   }
 
+  // Runs and cadences together are said once for several slots.
+  if (fine.description.kind === 'cadencePieces' && slots.length > 1) {
+    return positioned(coarse, fine, level);
+  }
+
   const parts = partsOf(fine.description as Placed, cycle);
   const leads = leadsOf(fine, level);
 
@@ -656,7 +661,10 @@ function valuesLeftOut(coarse: SetDescription, fine: Fine, level: Level) {
     coarse, level);
   const gone: ValuesDescription = {kind: 'values', values: removed};
   const slots = walk(coarse, level.slots);
-  const gaps = coarse.kind === 'values' ?
+  // In one or two named slots, and wherever four clock times or fewer
+  // would say it (a stretch is two), what is left out is named outright.
+  const named = slots.length * removed.length * (1 + Math.sign(level.hi));
+  const gaps = coarse.kind === 'values' && (slots.length < 3 || named <= 4) ?
     list(slots.flatMap(function each(slot) {
       return say(extents, gone, slot, level);
     }).map(function write(extent) {
@@ -777,7 +785,8 @@ function secondLevel(face: Face): Level {
 }
 
 // The seconds as what happens each time the rest fires, pinned to the
-// second. One second after «щогодини» alone is counted from the hour.
+// second. What is left out of the rest stays with it, ahead of «щоразу».
+// One second after «щогодини» alone is counted from the hour.
 function eachMinute(
   rest: Said,
   seconds: Fine,
@@ -794,11 +803,11 @@ function eachMinute(
     ].join(' ') :
     `, ${words.eachTime} ${positionsOf(seconds, level)}`;
 
-  return finish({
-    ...rest,
-    pin: bracket(slots, seconds.description as Placed, level),
-    words: rest.words + phrase
-  });
+  const pin = bracket(slots, seconds.description as Placed, level);
+
+  return counts ?
+    finish({...rest, pin, words: rest.words + phrase}) :
+    finish({...rest, pin: ''}) + phrase + pin;
 }
 
 // Beside a run across midnight, four hours left out or fewer are an
@@ -901,8 +910,7 @@ function timeOf(
     return finish(spanned);
   }
 
-  // What is left out of the minutes is written to the second too.
-  return eachMinute({...rest, exceptions: spanned.exceptions},
+  return eachMinute(rest,
     fineOf(facts, 'second', {except: false, lenient: false, pair: false}),
     slots, bySecond);
 }
