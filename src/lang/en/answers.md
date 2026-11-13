@@ -919,10 +919,16 @@ Hours that carry another minute keep it: "at 15 and 45 seconds past the
 minute, every hour from 9:30 a.m. through 5:30 p.m."
 
 Counted past the hour, a stray minute beside a run of minutes says what
-the seconds do in it, as a stray clock time does: "every second from 0
-through 29 and for one minute at 45 minutes past the hour"; "every second
-for one minute at 5, every second from 10 through 40, and for one minute
-at 50 minutes past the hour". (Seconds that are not continuous are said
+the seconds do in it, as a stray clock time does, and every piece names
+its own unit: "every second for the first 30 minutes of every hour and for
+one minute at 45 minutes past the hour"; "every second from 10 through 29
+minutes past the hour and for one minute at 45 minutes past the hour";
+"every second for one minute at 5 minutes past the hour, every second from
+10 through 40 minutes past the hour, and for one minute at 50 minutes past
+the hour". A run from minute 0 is "for the first N minutes of every hour",
+as it is alone. (With the unit said once at the end, a blind reader took
+"every second from 0 through 29 and for one minute at 45 minutes past the
+hour" for seconds 0 through 29 of every minute.) (Seconds that are not continuous are said
 once in front of such minutes, as above.) A bare "and at 45 minutes past
 the hour" was read as one firing at
 :45:00.
