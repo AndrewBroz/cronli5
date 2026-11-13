@@ -26,7 +26,7 @@ describe('Portuguese styles:', function() {
       short: false
     });
     expect(styles.pt).to.deep.equal({
-      feira: false,
+      feira: true,
       firstOrdinal: false,
       hour12: false,
       madrugada: false,
@@ -39,7 +39,7 @@ describe('Portuguese styles:', function() {
   it('applies overrides to a named table', function() {
     expect(pt.style('br')).to.deep.equal(styles.br);
     expect(pt.style('pt', {short: true})).to.deep.equal({
-      feira: false,
+      feira: true,
       firstOrdinal: false,
       hour12: false,
       madrugada: false,
@@ -63,14 +63,13 @@ describe('Portuguese styles:', function() {
     function() {
       const opts = {style: styles.br};
 
-      expect(pt.label('às 09:00 todos os dias', opts))
-        .to.equal('Às 09:00 todos os dias');
-      expect(pt.label('à 01:00 todos os dias', opts))
-        .to.equal('À 01:00 todos os dias');
-      expect(pt.sentence('às 09:00 todos os dias', opts))
-        .to.equal('Ocorre às 09:00 todos os dias.');
-      expect(pt.sentence('às 09:00 todas as seg.', opts))
-        .to.equal('Ocorre às 09:00 todas as seg.');
+      expect(pt.label('todos os dias, às 09:00', opts))
+        .to.equal('Todos os dias, às 09:00');
+      expect(pt.label('às 09:00', opts)).to.equal('Às 09:00');
+      expect(pt.sentence('todos os dias, às 09:00', opts))
+        .to.equal('Ocorre todos os dias, às 09:00.');
+      expect(pt.sentence('todos os dias de jun.', opts))
+        .to.equal('Ocorre todos os dias de jun.');
       expect(pt.reboot(opts)).to.equal('ao iniciar o sistema');
       expect(pt.fallback(opts)).to.equal('um padrão cron não reconhecido');
     });

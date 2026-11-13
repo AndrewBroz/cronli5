@@ -57,12 +57,6 @@ describe('Portuguese lexicon:', function() {
       {feminine: 'segunda', masculine: 'segundo'});
   });
 
-  it('counts back from the last day in ordinal words', function() {
-    expect(lexicon.ordinals.units).to.have.length(9);
-    expect(lexicon.ordinals.units[2]).to.equal('terceiro');
-    expect(lexicon.ordinals.tens[0]).to.equal('décimo');
-  });
-
   it('names the parts of the day in order', function() {
     expect(lexicon.dayParts.map(function start(part) {
       return part.from;
@@ -84,6 +78,5 @@ describe('Portuguese lexicon:', function() {
     check(lexicon.nthWords);
     check(lexicon.contractions);
     check(lexicon.articles);
-    check(lexicon.ordinals);
   });
 });

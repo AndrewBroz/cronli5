@@ -96,18 +96,6 @@ const nthWords: Gendered[] = [
   {feminine: 'quinta', masculine: 'quinto'}
 ];
 
-// The masculine ordinal words that count days back from the last day of a
-// month («terceiro dia antes do último dia»): the units from the first,
-// and the tens from the tenth. Above ten the tens word comes first,
-// «décimo segundo», «vigésimo».
-const ordinals = {
-  tens: ['décimo', 'vigésimo', 'trigésimo'],
-  units: [
-    'primeiro', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto',
-    'sétimo', 'oitavo', 'nono'
-  ]
-};
-
 // The article after each preposition it contracts with, by the gender and
 // number of the noun. A clock time is feminine, and singular only when its
 // hour is 1 («à 01:00», «da 01:00»; «às 09:00», «das 09:00»).
@@ -145,8 +133,10 @@ const dayParts = [
 const words = {
   also: 'e também',
   and: 'e',
-  antepenultimate: 'antepenúltimo',
+  after: 'depois',
+  andSoOn: 'e assim por diante',
   before: 'antes',
+  businessDay: 'dia útil',
   closest: 'mais próximo',
   during: 'durante',
   each: 'a cada',
@@ -158,6 +148,7 @@ const words = {
   first: 'primeiros',
   firstMark: 'º',
   from: 'de',
+  fullHour: 'hora cheia',
   in: 'em',
   last: 'últimos',
   lastOne: {feminine: 'última', masculine: 'último'},
@@ -167,22 +158,22 @@ const words = {
   noon: 'meio-dia',
   ofEach: 'de cada',
   ofTheMonth: 'do mês',
+  oneHour: 'uma hora',
   oneMinute: 'um minuto',
   penultimate: 'penúltimo',
   runs: 'Ocorre',
   startingFrom: 'a partir',
   startup: 'ao iniciar o sistema',
-  thatBegin: 'que começam',
   theEven: 'pares',
   theOdd: 'ímpares',
   to: 'a',
   unrecognizable: 'um padrão cron não reconhecido',
-  weekdayDay: 'dia de semana'
+  until: 'até'
 };
 
 const lexicon = {
-  articles, contractions, dayParts, months, nthWords, ordinals, twoDigits,
-  units, weekdays, words
+  articles, contractions, dayParts, months, nthWords, twoDigits, units,
+  weekdays, words
 };
 
 export type {Gender, Gendered, Name, WeekdayName};
