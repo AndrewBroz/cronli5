@@ -1,0 +1,7 @@
+{
+  "name": "Japanese",
+  "status": "beta",
+  "humanReview": null,
+  "modelReview": "answers, lexicon and paradigm rows written 2026-11-12 by Claude Fable 5.2, which reads and writes Japanese but is not a native speaker; revised the same day after an independent adversarial read of the rows and again after three fluent readers graded samples blind and a second schedule reader read every row; no renderer built yet",
+  "branchBudget": 100
+}
