@@ -39,12 +39,12 @@ describe('Chinese styles:', function() {
     }, /short/u);
   });
 
-  it('has no capitals for a label, closes a sentence, and has its fixed texts',
+  it('has no capitals for a label, leads a sentence, and has its fixed texts',
     function() {
       const opts = {style: styles.standard};
 
       expect(zh.label('每天9:00', opts)).to.equal('每天9:00');
-      expect(zh.sentence('每天9:00', opts)).to.equal('每天9:00执行。');
+      expect(zh.sentence('每天9:00', opts)).to.equal('执行时间：每天9:00。');
       expect(zh.reboot(opts)).to.equal('系统启动时');
       expect(zh.fallback(opts)).to.equal('无法识别的cron表达式');
     });
