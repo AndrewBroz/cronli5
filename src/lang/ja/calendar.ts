@@ -928,7 +928,7 @@ function fallingOn(context: Context, phrase: DayPhrase, weekday: DaySide):
 // Whether the weekday side of a pair can name its months as those just
 // named: every year, several months listed before the dates, and the
 // dates firing in each month the weekdays are said of, every year.
-function sameMonths(contexts: Context[]): boolean {
+function theseMonths(contexts: Context[]): boolean {
   const [date, weekday] = contexts;
 
   return date.year.kind === 'all' && date.months.length > 1 &&
@@ -939,12 +939,12 @@ function sameMonths(contexts: Context[]): boolean {
 // A date and a weekday together: each side carries the month, and the
 // year when it is named; 毎年 is said once, at the head. Several months
 // that are the same on both sides are named once, and the weekday side
-// says 同じ月.
+// says これらの月.
 function together(contexts: Context[], sides: DaySide[]): Calendar {
   const date = sideOf(contexts[0], sides[0]);
   const weekday = sideOf({...contexts[1], again: true}, sides[1]);
-  const months = sameMonths(contexts) ?
-    words.sameMonths + words.of :
+  const months = theseMonths(contexts) ?
+    words.theseMonths + words.of :
     weekday.year + weekday.month;
 
   return {
