@@ -142,7 +142,7 @@ const rows = [
     '15 minutos das 09:00 às 17:45'],
   ['*/15 9-17 15W * 1-5',
     'de segunda a sexta e também no dia 15 de cada mês ou, se cair num ' +
-    'sábado ou domingo, no dia de semana mais próximo, sempre a cada 15 ' +
+    'sábado ou domingo, na sexta ou segunda mais próxima, sempre a cada 15 ' +
     'minutos das 09:00 às 17:45'],
 
   // window / month

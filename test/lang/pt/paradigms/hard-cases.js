@@ -83,8 +83,15 @@ const rows = [
   // Quartz forms.
   ['0 0 1 * ?', 'no dia 1º de cada mês às 00:00', {cron: 'quartz'}],
   ['0 0 LW * *',
-    'no último dia de semana (segunda a sexta) de cada mês às 00:00'],
-  ['0 0 LW 6 *', 'no último dia de semana (segunda a sexta) de junho às 00:00'],
+    'no último dia de cada mês que não seja sábado nem domingo, às 00:00'],
+  ['0 0 LW 6 *',
+    'no último dia de junho que não seja sábado nem domingo, às 00:00'],
+  ['0 0 0 LW 6 * 2030',
+    'no último dia de junho de 2030 que não seja sábado nem domingo, às ' +
+    '00:00'],
+  ['0 0 LW * 5',
+    'todas as sextas e também no último dia de cada mês que não seja ' +
+    'sábado nem domingo, sempre às 00:00'],
   ['0 0 L-1 * *', 'no penúltimo dia de cada mês às 00:00'],
   ['0 0 L-2 * *',
     'no dia que fica 2 dias antes do último dia de cada mês às 00:00'],
@@ -100,15 +107,15 @@ const rows = [
     'no último dia de janeiro, março, maio, julho, setembro e novembro às ' +
     '00:00'],
   ['0 0 15W 6 *',
-    'no dia 15 de junho ou, se cair num sábado ou domingo, no dia de ' +
-    'semana mais próximo, às 00:00'],
+    'no dia 15 de junho ou, se cair num sábado ou domingo, na sexta ou ' +
+    'segunda mais próxima, às 00:00'],
   ['0 0 1W * *',
-    'no primeiro dia de semana (segunda a sexta) de cada mês às 00:00'],
+    'no primeiro dia de cada mês que não seja sábado nem domingo, às 00:00'],
   ['0 0 1W 6 *',
-    'no primeiro dia de semana (segunda a sexta) de junho às 00:00'],
+    'no primeiro dia de junho que não seja sábado nem domingo, às 00:00'],
   ['0 0 31W * *',
-    'no dia 31 de cada mês ou, se cair num sábado ou domingo, no dia de ' +
-    'semana mais próximo do mesmo mês, às 00:00'],
+    'no dia 31 de cada mês ou, se cair num sábado ou domingo, na sexta ou ' +
+    'segunda mais próxima do mesmo mês, às 00:00'],
   ['0 0 * 6 1#2', 'na segunda segunda-feira de junho às 00:00'],
   ['0 0 * 1,7 5L', 'na última sexta-feira de janeiro e de julho às 00:00'],
   ['0 9 * * 3#1', 'na primeira quarta-feira de cada mês às 09:00'],
@@ -117,18 +124,18 @@ const rows = [
   ['0 9 * * 0#4', 'no quarto domingo de cada mês às 09:00'],
   ['0 18 15W 3,6,9,12 *',
     'no dia 15 de março, junho, setembro e dezembro ou, se cair num sábado ' +
-    'ou domingo, no dia de semana mais próximo, às 18:00'],
+    'ou domingo, na sexta ou segunda mais próxima, às 18:00'],
   ['0 0 L-30 * *',
     'no dia que fica 30 dias antes do último dia de cada mês às 00:00'],
   ['0 0 30W 1,7 *',
-    'no dia 30 de janeiro e de julho ou, se cair num sábado ou domingo, no ' +
-    'dia de semana mais próximo do mesmo mês, às 00:00'],
+    'no dia 30 de janeiro e de julho ou, se cair num sábado ou domingo, na ' +
+    'sexta ou segunda mais próxima do mesmo mês, às 00:00'],
   ['0 0 28W * *',
-    'no dia 28 de cada mês ou, se cair num sábado ou domingo, no dia de ' +
-    'semana mais próximo do mesmo mês, às 00:00'],
+    'no dia 28 de cada mês ou, se cair num sábado ou domingo, na sexta ou ' +
+    'segunda mais próxima do mesmo mês, às 00:00'],
   ['0 0 27W * *',
-    'no dia 27 de cada mês ou, se cair num sábado ou domingo, no dia de ' +
-    'semana mais próximo, às 00:00'],
+    'no dia 27 de cada mês ou, se cair num sábado ou domingo, na sexta ou ' +
+    'segunda mais próxima, às 00:00'],
 
   // An ordinal before a weekday agrees with it, and the weekday keeps
   // «-feira», because the bare names are ordinals themselves.
@@ -238,7 +245,7 @@ const rows = [
     'do dia 1º ao dia 5, no dia 10 e do dia 20 ao dia 25 de cada mês às ' +
     '12:00'],
   ['0 0 5-20/3 * *', 'nos dias 5, 8, 11, 14, 17 e 20 de cada mês às 00:00'],
-  ['0 0 8/2 * *', 'de 2 em 2 dias do dia 8 ao dia 30 de cada mês às 00:00'],
+  ['0 0 8/2 * *', 'nos dias pares do dia 8 ao dia 30 de cada mês às 00:00'],
   ['0 0 */3 * *', 'de 3 em 3 dias do dia 1º ao dia 31 de cada mês às 00:00'],
   ['0 0 */3 6 *', 'de 3 em 3 dias do dia 1º ao dia 28 de junho às 00:00'],
   ['0 0 */4 2 *', 'de 4 em 4 dias do dia 1º ao dia 29 de fevereiro às 00:00'],
@@ -292,12 +299,12 @@ const rows = [
   ['0 9 * * 2-4', 'de terça a quinta às 09:00'],
   ['0 9 * * 6-1', 'de sábado a segunda às 09:00'],
   ['0 9 * * 6', 'todos os sábados às 09:00'],
-  ['0 9 * * 0,1', 'todas as segundas e todos os domingos às 09:00'],
-  ['0 9 * * 0,5', 'todas as sextas e todos os domingos às 09:00'],
-  ['0 9 * * 5,6', 'todas as sextas e todos os sábados às 09:00'],
-  ['0 9 * * 0,4,6', 'todas as quintas e todos os sábados e domingos às 09:00'],
+  ['0 9 * * 0,1', 'todas as segundas e domingos às 09:00'],
+  ['0 9 * * 0,5', 'todas as sextas e domingos às 09:00'],
+  ['0 9 * * 5,6', 'todas as sextas e sábados às 09:00'],
+  ['0 9 * * 0,4,6', 'todas as quintas, sábados e domingos às 09:00'],
   ['0 9 * * 0,2-4',
-    'todas as terças, quartas e quintas e todos os domingos às 09:00'],
+    'todas as terças, quartas, quintas e domingos às 09:00'],
   ['0 9 * * 0,2-5', 'de terça a sexta e todos os domingos às 09:00'],
   ['0 9 * * 1,2,3,5', 'todas as segundas, terças, quartas e sextas às 09:00'],
   ['0 9 * * 0-2,4-6', 'todos os dias, exceto às quartas, às 09:00'],
@@ -604,11 +611,17 @@ const rows = [
   // it counts as three things, so that an exception naming two is said in
   // its place; beside a day the hours are in ascending order.
   ['0 12-10 * * *', 'todos os dias, a cada hora, em ponto, exceto às 11:00'],
-  ['0 0-9,12-23 * * *', 'todos os dias, a cada hora das 12:00 às 09:00'],
+  ['0 0-9,12-23 * * *',
+    'todos os dias, a cada hora, em ponto, exceto às 10:00 e 11:00'],
+  ['0 18-5 * * *', 'todos os dias, a cada hora das 18:00 às 05:00'],
+  ['0 0-5,17-23 * * *',
+    'todos os dias, a cada hora das 00:00 às 05:00 e das 17:00 às 23:00'],
+  ['0 22-2,4-9 * * *',
+    'todos os dias, a cada hora das 22:00 às 09:00, exceto às 03:00'],
   ['0 0-9,12-23 * * 1',
     'todas as segundas, a cada hora, em ponto, exceto às 10:00 e 11:00'],
   ['0 20-10,12-17 * * *',
-    'todos os dias, a cada hora das 20:00 às 17:00, exceto às 11:00'],
+    'todos os dias, a cada hora, em ponto, exceto às 11:00, 18:00 e 19:00'],
   ['0 0-2,5,20-23 * * *',
     'todos os dias, a cada hora das 20:00 às 02:00 e às 05:00'],
   ['0 22-2 * * 1',
@@ -624,14 +637,15 @@ const rows = [
   ['0 1,9-17,20-23 * * *',
     'todos os dias à 01:00 e a cada hora das 09:00 às 17:00 e das 20:00 às ' +
     '23:00'],
-  ['0 9 * * 0,1,3,5,6', 'de sexta a segunda e todas as quartas às 09:00'],
+  ['0 9 * * 0,1,3,5,6',
+    'todos os dias, exceto às terças e quintas, às 09:00'],
   ['0 23-1 * * *', 'todos os dias às 00:00, à 01:00 e às 23:00'],
 
   // A run that wraps counts three things: it gives way to an exception
   // that names two, and is said against one that names three.
   ['0 9 * * 0-4', 'de domingo a quinta às 09:00'],
   ['0 9 * * 1,2,4-6',
-    'todos os dias, exceto às quartas e aos domingos, às 09:00'],
+    'todos os dias, exceto às quartas e domingos, às 09:00'],
   ['0 9 * 12-10 *', 'todos os dias, exceto em novembro, às 09:00'],
   ['0 9 * 8-5 *', 'todos os dias de agosto a maio às 09:00'],
 
@@ -649,7 +663,137 @@ const rows = [
   ['0 9 1-30 4 *', 'todos os dias de abril às 09:00'],
   ['0 9 2-31 4 *', 'do dia 2 ao dia 30 de abril às 09:00'],
   ['0 9 29-31 2 *', 'no dia 29 de fevereiro às 09:00'],
-  ['0 9 31 2 *', 'no dia 31 de fevereiro às 09:00'],
+  ['0 9 31 2 *', 'nunca (fevereiro não tem dia 31)'],
+  ['0 9 1-30 4,6 *', 'todos os dias de abril e junho às 09:00'],
+  ['0 9 1-30 4,6 1', 'todos os dias de abril e junho às 09:00'],
+  ['0 0 1,31 4,6,9,11 *',
+    'no dia 1º de abril, junho, setembro e novembro às 00:00'],
+  ['0 0 30,31 4,6 1',
+    'em abril e junho, todas as segundas e também no dia 30, sempre às ' +
+    '00:00'],
+
+  // A day no named month has is not named, and a month that lacks the
+  // day is not named either. With every month the day is said as a date
+  // is, and read as one.
+  ['0 0 31 * *', 'no dia 31 de cada mês às 00:00'],
+  ['0 0 30 2-3 *', 'no dia 30 de março às 00:00'],
+  ['0 0 31 1-11 *',
+    'no dia 31 de janeiro, março, maio, julho, agosto e outubro às 00:00'],
+  ['0 0 31W 6-8 *',
+    'no dia 31 de julho e de agosto ou, se cair num sábado ou domingo, na ' +
+    'sexta ou segunda mais próxima do mesmo mês, às 00:00'],
+  ['0 0 30W 2,4 *',
+    'no dia 30 de abril ou, se cair num sábado ou domingo, na sexta ou ' +
+    'segunda mais próxima do mesmo mês, às 00:00'],
+  ['0 0 L-30 6-8 *',
+    'no dia que fica 30 dias antes do último dia de julho e de agosto às ' +
+    '00:00'],
+  ['0 0 31W * 5',
+    'todas as sextas e também no dia 31 de cada mês ou, se cair num sábado ' +
+    'ou domingo, na sexta ou segunda mais próxima do mesmo mês, sempre às ' +
+    '00:00'],
+
+  // A schedule that never fires says so and why, and has no time. Beside
+  // weekdays, a date that never comes leaves the weekdays alone.
+  ['0 0 31 6 *', 'nunca (junho não tem dia 31)'],
+  ['*/15 9-17 31 6 *', 'nunca (junho não tem dia 31)'],
+  ['0 0 30 2 *', 'nunca (fevereiro não tem dia 30)'],
+  ['0 0 30,31 2 *', 'nunca (fevereiro não tem dias 30 e 31)'],
+  ['0 0 31 4,6 *', 'nunca (abril e junho não têm dia 31)'],
+  ['0 0 0 29 2 * 2031', 'nunca (fevereiro não tem dia 29 em 2031)'],
+  ['0 0 31W 6 *', 'nunca (junho não tem dia 31)'],
+  ['0 0 L-30 6 *', 'nunca (junho não tem 31 dias)'],
+  ['0 0 31 6 *', 'Nunca (junho não tem dia 31)', {form: 'label'}],
+  ['0 0 31 6 *', 'Nunca ocorre (junho não tem dia 31).', {form: 'sentence'}],
+  ['0 0 31 6 1', 'todas as segundas de junho às 00:00'],
+  ['0 9 31 2 1-5', 'em fevereiro, de segunda a sexta, às 09:00'],
+
+  // A day that only leap years have.
+  ['0 0 29 2 *', 'no dia 29 de fevereiro dos anos bissextos às 00:00'],
+  ['0 0 0 29 2 * 2032', 'no dia 29 de fevereiro de 2032 às 00:00'],
+  ['0 0 0 29 2 * 2030-2040',
+    'no dia 29 de fevereiro dos anos bissextos, de 2030 a 2040, às 00:00'],
+  ['0 0 0 29 2 * */2',
+    'no dia 29 de fevereiro dos anos bissextos, nos anos pares, às 00:00'],
+  ['0 0 L-28 2 *',
+    'no dia que fica 28 dias antes do último dia de fevereiro dos anos ' +
+    'bissextos às 00:00'],
+  ['0 0 29W 2 *',
+    'no dia 29 de fevereiro dos anos bissextos ou, se cair num sábado ou ' +
+    'domingo, na sexta ou segunda mais próxima do mesmo mês, às 00:00'],
+  ['0 0 29 2 1',
+    'em fevereiro, todas as segundas e também no dia 29 dos anos ' +
+    'bissextos, sempre às 00:00'],
+  ['0 0 29 2,3 *', 'no dia 29 de fevereiro e de março às 00:00'],
+  ['0 0 29 * *', 'no dia 29 de cada mês às 00:00'],
+
+  // Every second day is said by its number being odd or even, with both
+  // ends where it does not run the length of the month.
+  ['0 0 1-29/2 2 *',
+    'nos dias ímpares do dia 1º ao dia 29 de fevereiro às 00:00'],
+  ['0 0 3-31/2 6 *', 'nos dias ímpares do dia 3 ao dia 29 de junho às 00:00'],
+  ['0 0 2/2 6 *', 'nos dias pares de junho às 00:00'],
+
+  // A long list that is runs and cadences together is said in those.
+  ['0 0 1-10/2,11-31/3 * *',
+    'nos dias ímpares do dia 1º ao dia 11 e de 3 em 3 dias do dia 14 ao ' +
+    'dia 29 de cada mês às 00:00'],
+  ['0-20/2,21-59/3 * * * *',
+    'a cada 2 minutos do minuto 0 ao 20 e a cada 3 minutos do minuto 21 ao ' +
+    '57 de cada hora'],
+  ['0-20/2,21-59/3 9 * * *',
+    'todos os dias, a cada 2 minutos das 09:00 às 09:20 e a cada 3 minutos ' +
+    'das 09:21 às 09:57'],
+  ['0-20/2,21-59/3 9-17 * * *',
+    'todos os dias, a cada 2 minutos do minuto 0 ao 20 e a cada 3 minutos ' +
+    'do minuto 21 ao 57 de cada hora, das 09:00 às 17:57'],
+  ['0-20/2,21-59/3 * * * * *',
+    'a cada 2 segundos do segundo 0 ao 20 e a cada 3 segundos do segundo ' +
+    '21 ao 57 de cada minuto'],
+  ['0 0-10/2,11-23/3 * * *',
+    'todos os dias, a cada 2 horas das 00:00 às 10:00 e a cada 3 horas das ' +
+    '11:00 às 23:00'],
+  ['* 0-10/2,11-23/3 * * *',
+    'todos os dias, a cada minuto das 00:00 às 00:59, das 02:00 às 02:59, ' +
+    'das 04:00 às 04:59, das 06:00 às 06:59, das 08:00 às 08:59, das ' +
+    '10:00 às 11:59, das 14:00 às 14:59, das 17:00 às 17:59, das 20:00 às ' +
+    '20:59 e das 23:00 às 23:59'],
+
+  // Years with no end, with a hole, and as runs and cadences together.
+  ['0 0 9 * * * 2030/1', 'todos os dias, a partir de 2030, às 09:00'],
+  ['0 0 9 * * 1-5 2030/1', 'a partir de 2030, de segunda a sexta, às 09:00'],
+  ['0 0 9 1 1 * 2030/1', 'no dia 1º de janeiro, a partir de 2030, às 09:00'],
+  ['0 0 9 * 6 * 2030/1', 'todos os dias de junho, a partir de 2030, às 09:00'],
+  ['0 0 9 * * * 2030/2,2031',
+    'todos os dias, nos anos pares a partir de 2030 e em 2031, às 09:00'],
+  ['0 0 9 * * * 2000-2028/2,2032-2098/2',
+    'todos os dias, nos anos pares de 2000 a 2098, exceto em 2030, às 09:00'],
+  ['0 0 9 * * * 1970-2029,2031/1', 'todos os dias, exceto em 2030, às 09:00'],
+  ['0 0 9 * * 1-5 1970-2029,2031/1',
+    'de segunda a sexta, exceto em 2030, às 09:00'],
+  ['0 0 9 * * * 2020-2029,2031/1',
+    'todos os dias, a partir de 2020, exceto em 2030, às 09:00'],
+  ['0 0 9 * * * 2030-2040,2045/5',
+    'todos os dias, de 2030 a 2040 e de 5 em 5 anos a partir de 2045 ' +
+    '(2045, 2050, 2055…), às 09:00'],
+  ['0 0 9 * * * 2030/4,2031/4',
+    'todos os dias, de 4 em 4 anos a partir de 2030 (2030, 2034, 2038…) e ' +
+    'de 4 em 4 anos a partir de 2031 (2031, 2035, 2039…), às 09:00'],
+  ['0 0 9 * * * 2030,2031', 'todos os dias de 2030 e 2031 às 09:00'],
+  ['0 0 9 * * * 2030-2034/2',
+    'todos os dias de 2030, 2032 e 2034 às 09:00'],
+
+  // Seconds after a time said in more than one piece: «sempre» carries
+  // them to every piece.
+  ['15,45 0-29,45 9 * * *',
+    'todos os dias, a cada minuto das 09:00 às 09:29 e às 09:45, sempre 2 ' +
+    'vezes: 15 e 45 segundos depois'],
+  ['* 0 9-17,22 * * *',
+    'todos os dias, a cada hora das 09:00 às 17:00 e às 22:00, sempre ' +
+    'repetindo a cada segundo durante o minuto inteiro'],
+  ['* 0 9-17 * * *',
+    'todos os dias, a cada hora das 09:00 às 17:00, repetindo a cada ' +
+    'segundo durante o minuto inteiro'],
 
   // Runs of minutes and cadences with ends inside one hour or two are
   // windows; with strays and two hours, the minute phrase and a window for

@@ -95,11 +95,12 @@ const rows = [
   // Neither side of a day of the month and a weekday takes an exception
   // (answers 4.3). This row first said «nos dias ímpares de cada mês,
   // exceto no dia 15», which is read as never firing on the 15th; a 15th
-  // from Monday to Friday fires.
+  // from Monday to Friday fires. It then listed all fifteen days, which
+  // nobody holds; the odd days on each side of the 15th say the same.
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
-    'de segunda a sexta e também nos dias 1º, 3, 5, 7, 9, 11, 13, 17, 19, ' +
-    '21, 23, 25, 27, 29 e 31 de cada mês, sempre a cada 15 minutos das ' +
-    '09:00 às 17:45'],
+    'de segunda a sexta e também nos dias ímpares do dia 1º ao dia 13 e do ' +
+    'dia 17 ao dia 31 de cada mês, sempre a cada 15 minutos das 09:00 às ' +
+    '17:45'],
 
   // window / month
   ['*/15 9-17 * 1 1-5',

@@ -12,7 +12,7 @@ const defaultParts = {
   '0 0 * * *': ['00:00'],
   '0 0 1 * *': ['dia 1º', '00:00'],
   '0 0 1 6 *': ['dia 1º de junho', '00:00'],
-  '0 0 LW * *': ['segunda a sexta', '00:00'],
+  '0 0 LW * *': ['sábado', 'domingo', '00:00'],
   '0 0,12 * * *': ['00:00', '12:00'],
   '0 12 * * *': ['12:00'],
   '0 13 * * *': ['13:00'],
@@ -35,7 +35,7 @@ const defaultParts = {
   '30 0 * * *': ['00:30'],
   '30 1,13 * * *': ['01:30', '13:30'],
   '30 9,17 * * *': ['09:30', '17:30'],
-  '0 9 15W * *': ['sábado', 'domingo', '09:00']
+  '0 9 15W * *': ['sábado', 'domingo', 'sexta', 'segunda', '09:00']
 };
 
 const sets = [
@@ -184,9 +184,9 @@ const sets = [
         pattern: '0 9 * * 0-2,4-6'
       },
       {
-        expected: 'no último dia de semana (seg. a sex.) de cada mês às ' +
-          '00:00',
-        parts: ['seg. a sex.', '00:00'],
+        expected: 'no último dia de cada mês que não seja sáb. nem dom., ' +
+          'às 00:00',
+        parts: ['sáb.', 'dom.', '00:00'],
         pattern: '0 0 LW * *'
       },
       {
@@ -195,9 +195,9 @@ const sets = [
         pattern: '*/15 9-17 * * 1-5'
       },
       {
-        expected: 'no dia 15 de cada mês ou, se cair num sáb. ou dom., no ' +
-          'dia de semana mais próximo, às 09:00',
-        parts: ['sáb.', 'dom.', '09:00'],
+        expected: 'no dia 15 de cada mês ou, se cair num sáb. ou dom., na ' +
+          'sex. ou seg. mais próxima, às 09:00',
+        parts: ['sáb.', 'dom.', 'sex.', 'seg.', '09:00'],
         pattern: '0 9 15W * *'
       }
     ]
@@ -232,10 +232,16 @@ const sets = [
         pattern: '0 9 * * 0-2,4-6'
       },
       {
-        expected: 'no último dia de semana (segunda-feira a sexta-feira) ' +
-          'de cada mês às 00:00',
-        parts: ['segunda-feira a sexta-feira', '00:00'],
+        expected: 'no último dia de cada mês que não seja sábado nem ' +
+          'domingo, às 00:00',
+        parts: ['sábado', 'domingo', '00:00'],
         pattern: '0 0 LW * *'
+      },
+      {
+        expected: 'no dia 15 de cada mês ou, se cair num sábado ou ' +
+          'domingo, na sexta-feira ou segunda-feira mais próxima, às 09:00',
+        parts: ['sábado', 'domingo', 'sexta-feira', 'segunda-feira', '09:00'],
+        pattern: '0 9 15W * *'
       },
       {
         expected: 'de segunda-feira a sexta-feira, a cada 15 minutos das ' +
