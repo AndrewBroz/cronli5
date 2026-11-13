@@ -49,6 +49,13 @@ compare whole sentences will need new expectations. Two changes of meaning
 are worth knowing: a schedule whose date never exists (`0 0 31 6 *`) now
 says that it never runs, and one that exists only in leap years says so.
 
+One pattern family changed what it **means**. A day-of-month or weekday
+field that begins with `*` and is not every day (`*/2`, `*/5`), beside
+another restricted day field, now needs both to match, as cron itself
+does: `0 0 */2 * 1` is the Mondays that are odd days of the month. It used
+to be read as those days and also every Monday. Written without the star
+(`0 0 1-31/2 * 1`) the two are still added together.
+
 ## What will stop you, on purpose
 
 **An option 1.0 does not have is an error.** Passing `dialect`, `ampm`,

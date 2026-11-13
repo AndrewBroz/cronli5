@@ -1,0 +1,16 @@
+1. každý lichý den v měsíci jen tehdy, připadne-li na pondělí, v 0:00
+2. každé pondělí a navíc každý lichý den v měsíci, vždy v 0:00
+3. každý lichý den v měsíci jen tehdy, připadne-li na pondělí, středu nebo pátek, v 9:00
+4. 15. dne v měsíci jen tehdy, připadne-li na úterý, čtvrtek, sobotu nebo neděli, v 0:00
+5. každé úterý, čtvrtek, sobotu a neděli a navíc 15. dne v měsíci, vždy v 0:00
+6. každý lichý den v měsíci jen tehdy, připadne-li na pondělí až pátek, každých 15 minut od 9:00 do 17:45
+7. od pondělí do pátku a navíc každý lichý den v měsíci, vždy každých 15 minut od 9:00 do 17:45
+8. 1., 6., 11., 16., 21., 26. a 31. dne v měsíci jen tehdy, připadne-li na pondělí až pátek, v 0:00
+9. od pondělí do pátku a navíc 1. a 15. dne v měsíci, vždy v 0:00
+10. každý lichý den v červnu jen tehdy, připadne-li na pondělí, v 0:00
+11. každý pátek a navíc 1. dne v měsíci, vždy v 0:00
+12. každý lichý den v měsíci jen tehdy, připadne-li na sobotu nebo neděli, v 0:00
+13. 15. dne v měsíci jen tehdy, připadne-li na úterý, čtvrtek, sobotu nebo neděli, v 9:30
+14. každý pátek a navíc 13. dne v měsíci, vždy v 0:00
+15. v lednu a červenci od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále) jen tehdy, připadne-li na pondělí až pátek, v 9:00
+16. každé pondělí a navíc od 1. do 7. dne v měsíci, vždy v 0:00

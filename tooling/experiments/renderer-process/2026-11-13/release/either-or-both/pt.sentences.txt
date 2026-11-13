@@ -1,0 +1,16 @@
+1. nos dias ímpares de cada mês que caem numa segunda, às 00:00
+2. todas as segundas e também nos dias ímpares de cada mês, sempre às 00:00
+3. nos dias ímpares de cada mês que caem numa segunda, quarta ou sexta, às 09:00
+4. no dia 15 de cada mês, se cair numa terça, quinta, sábado ou domingo, às 00:00
+5. todas as terças, quintas, sábados e domingos e também no dia 15 de cada mês, sempre às 00:00
+6. nos dias ímpares de cada mês que caem de segunda a sexta, a cada 15 minutos das 09:00 às 17:45
+7. de segunda a sexta e também nos dias ímpares de cada mês, sempre a cada 15 minutos das 09:00 às 17:45
+8. nos dias 1º, 6, 11, 16, 21, 26 e 31 de cada mês que caem de segunda a sexta, às 00:00
+9. de segunda a sexta e também nos dias 1º e 15 de cada mês, sempre às 00:00
+10. nos dias ímpares de junho que caem numa segunda, às 00:00
+11. todas as sextas e também no dia 1º de cada mês, sempre às 00:00
+12. nos dias ímpares de cada mês que caem num sábado ou domingo, às 00:00
+13. no dia 15 de cada mês, se cair numa terça, quinta, sábado ou domingo, às 09:30
+14. todas as sextas e também no dia 13 de cada mês, sempre às 00:00
+15. de 3 em 3 dias do dia 1º ao dia 31 de janeiro e de julho que caem de segunda a sexta, às 09:00
+16. todas as segundas e também do dia 1º ao dia 7 de cada mês, sempre às 00:00

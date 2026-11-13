@@ -1,0 +1,16 @@
+1. an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf einen Montag fallen, jeweils um 0:00 Uhr
+2. montags und zusätzlich an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), jeweils um 0:00 Uhr
+3. an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf einen Montag, Mittwoch oder Freitag fallen, jeweils um 9:00 Uhr
+4. am 15. jedes Monats, wenn er auf einen Dienstag, Donnerstag, Samstag oder Sonntag fällt, jeweils um 0:00 Uhr
+5. dienstags, donnerstags, samstags und sonntags und zusätzlich am 15. jedes Monats, jeweils um 0:00 Uhr
+6. an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf einen Tag von Montag bis Freitag fallen, jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten
+7. montags bis freitags und zusätzlich an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), jeweils von 9:00 bis 17:45 Uhr alle 15 Minuten
+8. am 1., 6., 11., 16., 21., 26. und 31. jedes Monats, wenn sie auf einen Tag von Montag bis Freitag fallen, jeweils um 0:00 Uhr
+9. montags bis freitags und zusätzlich am 1. und 15. jedes Monats, jeweils um 0:00 Uhr
+10. an den ungeraden Tagen im Juni (1., 3., 5. … 29.), wenn sie auf einen Montag fallen, jeweils um 0:00 Uhr
+11. freitags und zusätzlich am 1. jedes Monats, jeweils um 0:00 Uhr
+12. an den ungeraden Tagen jedes Monats (1., 3., 5. … 31.), wenn sie auf einen Samstag oder Sonntag fallen, jeweils um 0:00 Uhr
+13. am 15. jedes Monats, wenn er auf einen Dienstag, Donnerstag, Samstag oder Sonntag fällt, jeweils um 9:30 Uhr
+14. freitags und zusätzlich am 13. jedes Monats, jeweils um 0:00 Uhr
+15. im Januar und Juli am 1., 4., 7. … und 31., wenn sie auf einen Tag von Montag bis Freitag fallen, jeweils um 9:00 Uhr
+16. montags und zusätzlich vom 1. bis 7. jedes Monats, jeweils um 0:00 Uhr

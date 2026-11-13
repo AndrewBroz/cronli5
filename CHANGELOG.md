@@ -39,6 +39,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed (descriptions)
 
+- **BREAKING: a day field written from a star makes both day fields have
+  to match**, as in Vixie cron and cronie. `0 0 */2 * 1` is the Mondays
+  that are odd days of the month ("at midnight on odd-numbered days, but
+  only on Mondays"), no longer those days and also every Monday. Written
+  without the star (`0 0 1-31/2 * 1`) the days are still a union. Every
+  language says the difference. See `docs/day-field-semantics.md`.
+
 - **Every language was rebuilt from its own rule book** and then repaired
   twice against independently computed fire times. A schedule that can
   never run says so (`0 0 31 6 *`); one that runs only in leap years says

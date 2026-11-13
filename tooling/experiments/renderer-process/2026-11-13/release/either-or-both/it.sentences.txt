@@ -1,0 +1,16 @@
+1. nei giorni dispari di ogni mese solo se cadono di lunedì, alle 0:00
+2. il lunedì e in più nei giorni dispari di ogni mese, sempre alle 0:00
+3. nei giorni dispari di ogni mese solo se cadono di lunedì, di mercoledì o di venerdì, alle 9:00
+4. il 15 di ogni mese solo se cade di martedì, di giovedì, di sabato o di domenica, alle 0:00
+5. il martedì, il giovedì, il sabato e la domenica e in più il 15 di ogni mese, sempre alle 0:00
+6. nei giorni dispari di ogni mese solo se cadono tra il lunedì e il venerdì, ogni 15 minuti dalle 9:00 alle 17:45
+7. dal lunedì al venerdì e in più nei giorni dispari di ogni mese, sempre ogni 15 minuti dalle 9:00 alle 17:45
+8. il 1º, il 6, l'11, il 16, il 21, il 26 e il 31 di ogni mese solo se cadono tra il lunedì e il venerdì, alle 0:00
+9. dal lunedì al venerdì e in più il 1º e il 15 di ogni mese, sempre alle 0:00
+10. a giugno, nei giorni dispari del mese solo se cadono di lunedì, alle 0:00
+11. il venerdì e in più il 1º di ogni mese, sempre alle 0:00
+12. nei giorni dispari di ogni mese solo se cadono di sabato o di domenica, alle 0:00
+13. il 15 di ogni mese solo se cade di martedì, di giovedì, di sabato o di domenica, alle 9:30
+14. il venerdì e in più il 13 di ogni mese, sempre alle 0:00
+15. a gennaio e luglio, ogni 3 giorni a partire dal 1º del mese solo se cadono tra il lunedì e il venerdì, alle 9:00
+16. il lunedì e in più tutti i giorni dal 1º al 7 di ogni mese, sempre alle 0:00

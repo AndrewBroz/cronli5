@@ -1,0 +1,16 @@
+1. at midnight on odd-numbered days, but only on Mondays
+2. at midnight on odd-numbered days as well as on Mondays
+3. at 9 a.m. on odd-numbered days, but only on Mondays, Wednesdays, and Fridays
+4. at midnight on the 15th, but only on Tuesdays, Thursdays, Saturdays, and Sundays
+5. at midnight on the 15th as well as on Tuesdays, Thursdays, Saturdays, and Sundays
+6. every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered days, but only on weekdays
+7. every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered days as well as on weekdays
+8. at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st, but only on weekdays
+9. at midnight on the 1st and 15th as well as on weekdays
+10. at midnight on odd-numbered days in June, but only on Mondays in June
+11. at midnight on the 1st as well as on Fridays
+12. at midnight on odd-numbered days, but only on weekends
+13. at 9:30 a.m. on the 15th, but only on Tuesdays, Thursdays, Saturdays, and Sundays
+14. at midnight on the 13th as well as on Fridays
+15. at 9 a.m. every 3 days from the 1st of the month, but only on weekdays, in January and July
+16. at midnight on the 1st through the 7th as well as on Mondays

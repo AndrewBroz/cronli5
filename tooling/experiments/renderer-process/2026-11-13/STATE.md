@@ -33,7 +33,7 @@ check, not a fluency judgment.
 
 ## Decisions waiting for the maintainer
 
-1. `docs/day-field-semantics.md`: `*/n` in a day field beside a restricted one (Vixie cron intersects; cronli5 says a union). Every language has rows that say the union.
+1. (Decided 2026-11-13: follow Vixie. `analyses.day.both`; every language says the intersection. Rows, rules and renderers by Sonnet agents from each rule book's seed, reviewed; a blind either-or-both read scored 16 of 16 in all ten languages; no fluency read.)
 2. Czech, earlier question still open: «po celé» vs «po celé hodině».
 
 Ruled by the maintainer (native Czech), 2026-11-13: in the short style the capitalised forms are normal, «Po až Pá» and also the dashed «Po-Pá» / «PO-PÁ»; lower case exists but is much rarer. The Czech rows keep «Po až Pá», «Po, St a Pá»; record this in the Czech answers at the next author pass.

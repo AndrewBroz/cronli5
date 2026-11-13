@@ -1,0 +1,16 @@
+1. les jours impairs de chaque mois quand ils tombent un lundi, à 0 h
+2. à 0 h, tous les lundis ainsi que les jours impairs de chaque mois
+3. les jours impairs de chaque mois quand ils tombent un lundi, un mercredi ou un vendredi, à 9 h
+4. le 15 de chaque mois quand il tombe un mardi, un jeudi, un samedi ou un dimanche, à 0 h
+5. à 0 h, le mardi, le jeudi, le samedi et le dimanche ainsi que le 15 de chaque mois
+6. les jours impairs de chaque mois quand ils tombent un jour du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45
+7. toutes les 15 minutes de 9 h à 17 h 45, du lundi au vendredi ainsi que les jours impairs de chaque mois
+8. les 1er, 6, 11, 16, 21, 26 et 31 de chaque mois quand ils tombent un jour du lundi au vendredi, à 0 h
+9. à 0 h, du lundi au vendredi ainsi que le 1er et le 15 de chaque mois
+10. les jours impairs de juin quand ils tombent un lundi, à 0 h
+11. à 0 h, tous les vendredis ainsi que le 1er de chaque mois
+12. les jours impairs de chaque mois quand ils tombent un samedi ou un dimanche, à 0 h
+13. le 15 de chaque mois quand il tombe un mardi, un jeudi, un samedi ou un dimanche, à 9 h 30
+14. à 0 h, tous les vendredis ainsi que le 13 de chaque mois
+15. tous les 3 jours du 1er au 31 du mois, en janvier et en juillet, quand ils tombent un jour du lundi au vendredi, à 9 h
+16. à 0 h, tous les lundis ainsi que du 1er au 7 de chaque mois
