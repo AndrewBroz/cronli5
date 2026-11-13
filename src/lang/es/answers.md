@@ -89,7 +89,8 @@ named, only on how many there are and how they are arranged.
   listed, «a las 9:00, 9:20 y 9:40». The ends of such a window are clock
   times and need no working out, so the limit is lower than seven.
 * **A list of clock times goes up to twelve** where nothing shorter says
-  the same (4.1).
+  the same (4.1), **and to seven beside several seconds named after it**
+  (4.1).
 * **Up to four separate hours filled by minutes are each a window.**
   Beyond four, a cadence of hours is said by its rule with the stretches
   in brackets, and hours with no cadence are named by when they begin
@@ -775,6 +776,32 @@ the count of things named (a value or a clock time one each, a range or a
 window two). On a tie the list of times wins. `0,30 9,17 * * *` is «a las
 9:00, 9:30, 17:00 y 17:30»; `5,20,45 9-10 * * *` is the anchored form,
 five things against six times.
+
+**Beside several seconds named after it, a list of clock times goes up
+to seven.** Twelve times are taken at a first reading because each is a
+firing that needs no working out. When the seconds clause names more
+than one second (a list, «en los segundos 0, 15, 30 y 45», or «en los
+segundos impares»), the list is no longer the list of firings: every
+time fires once for each second, and the reader multiplies. The list is
+then held to seven, as long as a list of plain values gets (see «How a
+form is chosen»), and beyond seven the time part takes the form it
+takes beyond twelve, so that minutes, hours and seconds are each said
+once, apart. `*/15 */25 2/6 * * *` was
+«a las 2:00, 2:25, 2:50, 8:00, 8:25, 8:50, 14:00, 14:25, 14:50, 20:00,
+20:25 y 20:50, siempre en los segundos 0, 15, 30 y 45», sixteen things
+standing for forty-eight firings; it is «en los segundos 0, 15, 30 y 45
+de los minutos 0, 25 y 50 de las horas que empiezan a las 2:00, 8:00,
+14:00 y 20:00» (4.2, rule 2, the seconds joined to the minutes).
+`0,30 15,45 */6 * * *` is «en los segundos 0 y 30 de los minutos 15 y 45
+de las horas que empiezan a las 0:00, 6:00, 12:00 y 18:00»; `0,30 15,45
+*/4 * * *`, twelve times in a cadence of six hours, is «cada 4 horas de
+0:15 a 20:15 y de 0:45 a 20:45, siempre en los segundos 0 y 30». Seven
+times or fewer stay a list: `*/15 */25 2,8 * * *` is «a las 2:00, 2:25,
+2:50, 8:00, 8:25 y 8:50, siempre en los segundos 0, 15, 30 y 45». One
+second is a tail on each time and a stretch of seconds is one burst
+after each, so neither multiplies the list, and twelve times still
+hold: «…, siempre en el segundo 30»; «…, una vez por segundo durante
+todo ese minuto».
 
 Writing a time: hours without a leading zero, always with minutes, a
 colon between: «9:00», «17:30», «0:05». With seconds, «9:00:30»; in a
