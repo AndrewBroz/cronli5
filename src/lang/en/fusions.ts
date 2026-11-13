@@ -7,7 +7,7 @@ import type {
 } from '../../core/schedule.js';
 import type {Spoken} from '../../core/select.js';
 import type {EnglishOptions} from './options.js';
-import type {Choice, Described, Phrase} from './devices.js';
+import type {Choice, Described, Phrase, Voice} from './devices.js';
 import type {Idiom, Moment} from './idioms.js';
 import type {Parts} from './frame.js';
 import {
@@ -225,6 +225,87 @@ function anchored(
   ];
 }
 
+// Minutes or seconds that are not continuous, up to the word that ties
+// them to what follows. Pieces that each name their own unit (`closing`
+// is the article the last of them takes) are already complete, and
+// only lose the words that close the last.
+function tied(
+  said: string,
+  closing: string | false | undefined,
+  about: {description: Described; everyOne: string; last: number},
+  field: 'minute' | 'second'
+): [string, string] {
+  const tail = join(closing || '', unit(within[field], 1));
+
+  return closing && [said.slice(0, -tail.length - 1), closing] ||
+    anchored(said, about, field);
+}
+
+// Whether a phrase is a part of its hour or minute, given the article
+// that the last of its pieces, if they name their own units, takes.
+function portionOf(
+  closing: string | false | undefined,
+  description: Described,
+  field: 'minute' | 'second'
+): boolean {
+  return closing === words.every || !closing && isPortion(description, field);
+}
+
+// A voice whose pieces each name their own unit, as they do when they
+// stand alone: "for the first 30 minutes of every hour and for one
+// minute at 45 minutes past the hour". The words that tie the last piece
+// to what follows are left for the caller, and the article they take
+// is added to `articles`.
+function eachNamingItsUnit(
+  voice: Voice,
+  about: {articles: string[]; everyOne: string},
+  field: 'minute' | 'second'
+): Voice {
+  const closing = unit(within[field], 1);
+
+  function named(said: string, description: Described, last: number): string {
+    const [text, article] = anchored(said,
+      {description, everyOne: about.everyOne, last}, field);
+
+    about.articles.push(article);
+
+    return join(text, article, closing);
+  }
+
+  return {
+    ...voice,
+    inPieces: {
+      lead: '',
+      range(from, to) {
+        return named(voice.range(from, to),
+          {from, kind: 'range', to} as Described, to);
+      },
+      values(values, later) {
+        return named(voice.values(values, later),
+          {kind: 'values', values}, values[values.length - 1]);
+      }
+    }
+  };
+}
+
+// The voice of the seconds or the minutes, its pieces naming their own
+// units where `named` says so.
+function voiceOf(
+  field: 'minute' | 'second',
+  spoken: {
+    anyLength?: boolean; articles: string[]; heard: number[];
+    named?: boolean; one: string; stray: string;
+  },
+  opts: EnglishOptions
+): Voice {
+  const {anyLength, articles, heard, named, one: everyOne, stray} = spoken;
+  const voice = withinTheHour(field, {anyLength, everyOne, heard, stray},
+    opts);
+
+  return named && eachNamingItsUnit(voice, {articles, everyOne}, field) ||
+    voice;
+}
+
 // How the seconds or the minutes are said: the phrase naming the fewest
 // things, settled before anything coarser is considered. `every.one` is
 // what every value of the field is said as, and `every.alone` what it is
@@ -236,25 +317,31 @@ function anchored(
 function tick(
   candidates: Described[],
   field: 'minute' | 'second',
-  every: {alone: string; anyLength?: boolean; one: string; stray: string},
+  every: {
+    alone: string; anyLength?: boolean; named?: boolean; one: string;
+    stray: string;
+  },
   opts: EnglishOptions
 ): Tick {
-  const {anyLength, one: everyOne, stray} = every;
+  const {named, one: everyOne} = every;
+  const articles: string[] = [];
   const chosen = choose(candidates,
-    withinTheHour(field, {anyLength, everyOne, heard: [], stray}, opts),
-    opts);
+    voiceOf(field, {...every, articles, heard: []}, opts), opts);
   const {base, removed} = apart(chosen.description);
   const heard: number[] = [];
-  const said = say(base,
-    withinTheHour(field, {anyLength, everyOne, heard, stray}, opts),
+
+  articles.length = 0;
+
+  const said = say(base, voiceOf(field, {...every, articles, heard}, opts),
     opts) as Phrase;
   const continuous = base.kind === 'all' ||
     base.kind === 'cadence' && said.length === 1;
   const only = onlyValue(base);
   const last = heard[heard.length - 1];
+  const closing = named && base.kind === 'pieces' && articles.pop();
   const [text, article] = continuous ?
     [said.text, ''] :
-    anchored(said.text, {description: base, everyOne, last}, field);
+    tied(said.text, closing, {description: base, everyOne, last}, field);
 
   return {
     close: continuous && base.kind === 'cadence' ?
@@ -268,7 +355,7 @@ function tick(
     length: only === null ? chosen.length : 0,
     only,
     opens: opensWithEvery(base, field),
-    portion: isPortion(base, field),
+    portion: portionOf(closing, base, field),
     text,
     whole: chosen.description.kind === 'all' ?
       every.alone :
@@ -534,7 +621,8 @@ function timesWith(
       .description.kind === 'pieces';
   const lead = fronted ? {...noSeconds, exceptAt: spoken.exceptAt} : spoken;
   const minute = withSecond(tick(minutes, 'minute',
-    {alone: lead.everyAlone, one: lead.every, stray: lead.within}, opts),
+    {alone: lead.everyAlone, named: second.continuous, one: lead.every,
+      stray: lead.within}, opts),
   riding);
   const context = {halves, lead, minute, ...!fronted && {riding}};
 
