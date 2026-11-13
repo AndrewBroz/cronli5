@@ -25,6 +25,10 @@ const longestList = 7;
 // More windows than this, of one hour each on a cadence, are a series.
 const mostWindows = 4;
 
+// The windows a series of hours shows in its brackets: the first two hours
+// and the last.
+const shownWindows = 3;
+
 // A run of hours through midnight is one run only when it is no longer
 // than this: a longer one reads backwards.
 const halfDay = 12;
@@ -237,6 +241,34 @@ function hourByHour(c: Moments): boolean {
     c.hours.values.length <= (kind === 'pieces' ? 1 : 2);
 }
 
+// Whether no two of the hours are adjacent, so that every window is one
+// hour's stretch.
+function apart(c: Moments): boolean {
+  return c.hours.said.kind !== 'all' &&
+    stretchesOf(c.hours.said, domainOf('hour'))
+      .every((run) => run[0] === run[1]);
+}
+
+// Whether the minutes are one stretch: a run, or a cadence with its ends.
+function oneStretch(c: Moments): boolean {
+  const {kind} = c.minutes.said;
+
+  return kind === 'range' || kind === 'cadence';
+}
+
+// One stretch of minutes in hours apart, confined as every minute is: the
+// lead alone, since each window says which minutes.
+function stretchConfined(c: Moments): Said {
+  const said = c.minutes.said as Cadence;
+  const lead = said.kind === 'cadence' ?
+    `${words.each} ${counted(said.interval, units.minute)}` :
+    c.every;
+
+  return saying(c, `${lead}` +
+    `${c.hours.said.kind === 'cadence' ? ', ' : ' '}${confinement(c)}`,
+  true);
+}
+
 function insideHours(c: Moments): Said {
   const parts = partsOf(c.minutes.said);
 
@@ -245,9 +277,12 @@ function insideHours(c: Moments): Said {
   true, parts[0].kind === 'values');
 }
 
-// The minute phrase, then one window for each run of hours.
+// The minute phrase, then one window for each run of hours; where every
+// window is one hour, without «de cada hora».
 function windowed(c: Moments, phrase: string): Said {
-  return saying(c, `${phrase} ${ofEachHour}, ${windows(c)}`, false);
+  const each = apart(c) ? '' : ` ${ofEachHour}`;
+
+  return saying(c, `${phrase}${each}, ${windows(c)}`, false);
 }
 
 // Separate hours: the clock times while they are few enough to list.
@@ -258,11 +293,12 @@ function separate(c: Moments, phrase: string): Said {
     windowed(c, phrase);
 }
 
-// Whether the minutes are a list short enough for the clock times of two
-// hours and one more to make a list that can be held.
+// Whether the minutes are a list short enough that the clock times of two
+// hours and the last of all name fewer things than the two ends of each of
+// three windows.
 function shortList(minutes: Chosen): boolean {
   return minutes.said.kind === 'values' &&
-    2 * minutes.values.length < longestList;
+    2 * minutes.values.length + 1 < 2 * shownWindows;
 }
 
 // The minute phrase, then the hours on a cadence with what they hold in
@@ -307,6 +343,7 @@ const minuteForms: Form[] = [
   },
   {say: confined, when: (c) => continuous(c.minutes.said)},
   {say: insideHours, when: hourByHour},
+  {say: stretchConfined, when: (c) => oneStretch(c) && apart(c)},
   {say: anchored, when: () => true}
 ];
 
