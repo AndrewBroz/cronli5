@@ -2,12 +2,15 @@
 // months that stand apart), the day, and the days of the month a union
 // adds after the time (answers 2.1, 4.3 to 4.5, 5.7, 5.8).
 
-import type {Policy, Said} from './sets.js';
+import type {Policy, Run, Said} from './sets.js';
 import type {
   Analyses, QuartzDate, QuartzWeekday, Schedule, SetDescription
 } from '../../core/schedule.js';
-import {byCount, list, pick, spaced} from './wording.js';
-import {isRange, isValues, mapParts, say} from './sets.js';
+import type {Piece} from './wording.js';
+import {
+  byCount, led, list, norList, phrases, pick, spaced
+} from './wording.js';
+import {isValues, mapParts, say} from './sets.js';
 import type {SpanishStyle} from './options.js';
 import {denote} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
@@ -24,20 +27,22 @@ export interface Calendar {
   dayClosed: boolean;
   // The days of the month a union adds after the time, or nothing.
   also: string;
+  // Whether the schedule never fires: the day says so, and no time is
+  // said.
+  never: boolean;
 }
 
 // A phrase for the day of the month or the weekday. `suffix` is how it
-// is tied to the months («de cada mes», «de junio»); `inserted` are the
-// phrases set off by commas after it; `closed` asks for a comma after it
-// in any case; `lead` names the months that fire, where a month in reach
-// may lack the day, and `bare` is the suffix that goes with it.
+// is tied to the months («de cada mes», «de junio»); `after` follows the
+// months with no comma («o, si cae en sábado o domingo, …»); `inserted`
+// are the phrases set off by commas after it; `closed` asks for a comma
+// after it in any case.
 interface DayPhrase {
   main: string;
   suffix: string;
+  after: string;
   inserted: string[];
   closed: boolean;
-  lead: string;
-  bare: string;
 }
 
 // What a day phrase is built from.
@@ -55,16 +60,14 @@ interface DayFacts {
   dated: boolean;
   // Whether a set of weekdays may be said as an exception.
   alone: boolean;
-  // Whether a month in reach may lack the day a Quartz form names.
-  scarce: boolean;
   style: SpanishStyle;
 }
 
-// The days in the longest year's months; there is no month 0.
+// The most days each month can have; there is no month 0. The core says
+// which days and months fire (`dateReach`), but not how long the months
+// in reach are, and «todos los días de junio, excepto el día 15» and
+// «los días impares de junio» are only true of a month of that length.
 const MONTH_LENGTHS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-// The fewest days each month can have.
-const SHORTEST_LENGTHS = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 // A cadence of this many values or more names both its ends.
 const LONG_CADENCE = 8;
@@ -74,7 +77,11 @@ const SHORTEST_MONTH = 28;
 
 const WEEK = 7;
 
-const LONGEST_MONTH = 31;
+// The weekdays a Quartz form moves between, counted from Monday.
+const MONDAY = 0;
+const FRIDAY = 4;
+const SATURDAY = 5;
+const SUNDAY = 6;
 
 const NO_FORM = {day: 0, days: 0, nth: 0, weekday: 0};
 
@@ -129,9 +136,44 @@ function numbered(days: number[]): string {
   ]);
 }
 
-// The years (answers 5.8): every second year is «pares» or «impares»,
-// with its start or both ends when it does not run from the first year
-// to the last; a longer cadence shows its first three years.
+// A cadence of years (answers 5.8): every second year is «pares» or
+// «impares», with its start, or both ends when it stops; a longer cadence
+// shows its first three years.
+function yearCadence(
+  cadence: {interval: number; start: number; last: number; endless: boolean}
+): string {
+  const {endless, interval, last, start} = cadence;
+  const second = interval === 2;
+  const parity = spaced([
+    words.in, words.theYears, [words.theEven, words.theOdd][start % 2]
+  ]);
+  const shown = `${words.in} ` +
+    [start, start + interval, start + 2 * interval].join(', ') +
+    ` ${words.andSoOn}`;
+
+  const unbegun = start - interval < domainOf('year').min;
+
+  return pick([
+    [parity, second && endless && unbegun],
+    [`${parity} ${words.since} ${start}`, second && endless],
+    [`${parity} ${words.until} ${last}`, second && unbegun],
+    [`${parity} ${fromTo(start, last)}`, second],
+    [shown, endless],
+    [`${shown} ${words.until} ${last}`, true]
+  ]);
+}
+
+// A run of years: «de 2030 a 2035»; one with no end, «desde 2030»; one
+// from the first year there is, «hasta 2030».
+function yearRun(run: Run): string {
+  return pick([
+    [yearCadence({...run, last: run.to, start: run.from}), run.interval > 1],
+    [`${words.since} ${run.from}`, run.endless],
+    [`${words.until} ${run.to}`, run.unbegun],
+    [fromTo(run.from, run.to), true]
+  ]);
+}
+
 const yearPhrasers = {
   all(said: Said): string {
     return pick([
@@ -139,28 +181,11 @@ const yearPhrasers = {
       [words.everyYear, true]
     ]);
   },
-  cadence(said: Said): string {
-    const {max, min} = domainOf('year');
-    const {interval, last, start} = said;
-    const open = last + interval > max;
-    const second = interval === 2;
-    const parity = spaced([
-      words.in, words.theYears, [words.theEven, words.theOdd][start % 2]
-    ]);
-    const shown = `${words.in} ` +
-      [start, start + interval, start + 2 * interval].join(', ') +
-      ` ${words.andSoOn}`;
-
-    return pick([
-      [parity, second && open && start - interval < min],
-      [`${parity} ${words.since} ${start}`, second && open],
-      [`${parity} ${fromTo(start, last)}`, second],
-      [shown, open],
-      [`${shown} ${words.until} ${last}`, true]
-    ]);
-  },
+  cadence: yearCadence,
   parts(said: Said): string {
-    return list(mapParts(said.parts, fromTo, function named(values) {
+    return phrases(mapParts(said.parts, function run(from, to, part) {
+      return yearRun(part);
+    }, function named(values) {
       return `${words.in} ${list(values)}`;
     }));
   }
@@ -176,14 +201,18 @@ function yearPhrase(years: Said): string {
   return yearPhrasers[years.kind](years) + excepted;
 }
 
+// A series of years shows its first three, and none of them is excepted.
 const yearPolicy: Policy = {
   cadence(cadence, count) {
     return cadence.interval === 2 || count >= LONG_CADENCE;
   },
   domain: domainOf('year'),
+  edgeHoles: true,
   holeCost: 1,
   minRun: 3,
+  mixes: true,
   pairWraps: false,
+  shown: 3,
   wraps: false
 };
 
@@ -193,9 +222,12 @@ function monthPolicy(wraps: boolean): Policy {
   return {
     cadence: never,
     domain: domainOf('month'),
+    edgeHoles: true,
     holeCost: 0,
     minRun: 3,
+    mixes: false,
     pairWraps: false,
+    shown: 1,
     wraps
   };
 }
@@ -205,9 +237,12 @@ function monthPolicy(wraps: boolean): Policy {
 const weekdayPolicy: Policy = {
   cadence: never,
   domain: {cyclic: true, max: WEEK - 1, min: 0},
+  edgeHoles: true,
   holeCost: 0,
   minRun: 3,
+  mixes: false,
   pairWraps: true,
+  shown: 1,
   wraps: true
 };
 
@@ -221,38 +256,71 @@ function fullMonth(
 }
 
 // Days of the month, in a month of the length given. Every second day is
-// an idiom; any other cadence is one from eight days.
-function datePolicy(length: number, wraps: boolean): Policy {
+// an idiom; any other cadence is one from eight days. They never wrap
+// into the next month, and in a union they take no exception.
+function datePolicy(length: number, excepts: boolean): Policy {
   return {
     cadence(cadence, count) {
       return cadence.interval === 2 && fullMonth(cadence, length) ||
         count >= LONG_CADENCE;
     },
     domain: {cyclic: true, max: length, min: 1},
-    holeCost: 1,
+    edgeHoles: true,
+    holeCost: Number(excepts),
     minRun: 3,
+    mixes: true,
     pairWraps: false,
-    wraps
+    shown: 1,
+    wraps: false
   };
 }
 
 function phrase(main: string, more: Partial<DayPhrase>): DayPhrase {
   return {
-    bare: '',
+    after: '',
     closed: false,
     inserted: [],
-    lead: '',
     main,
     suffix: '',
     ...more
   };
 }
 
-function workdayOf(style: SpanishStyle): string {
-  return {
-    hábil: words.workdayBusiness,
-    laborable: words.workdayWorking
-  }[style.workday];
+// «o, si cae en sábado o domingo, » and the day the schedule moves to.
+function orOffTheWeekend(landing: string, style: SpanishStyle): string {
+  return `${words.orIfItFallsOn} ${weekdayName(SATURDAY, 'name', style)} ` +
+    `${words.or} ${weekdayName(SUNDAY, 'name', style)}, ${landing}`;
+}
+
+// «el viernes», «el lunes».
+function theDay(day: number, style: SpanishStyle): string {
+  return `${words.the} ${weekdayName(day, 'name', style)}`;
+}
+
+// «el día 15»; written as a date, «el 15».
+function theDate(day: number, dated: boolean): string {
+  return pick([[`${words.the} ${day}`, dated], [numbered([day]), true]]);
+}
+
+// A cadence of days as what leads it and its two ends: «los días
+// impares» and «del 1 al 15», «cada 3 días» and «del 1 al 31». Every
+// second day of the whole month is «los días impares» alone.
+function steppedDays(
+  cadence: {interval: number; start: number; last: number},
+  length: number
+): Piece {
+  const {interval, last, start} = cadence;
+  const second = interval === 2;
+  const parity = spaced([
+    words.thePlural, units.day.many, [words.theEven, words.theOdd][start % 2]
+  ]);
+  const ends = fromThe(start, last);
+
+  return pick([
+    [{body: '', lead: parity}, second && fullMonth(cadence, length)],
+    [{body: ends, lead: parity}, second],
+    [{body: ends, lead: `${words.each} ${interval} ${units.day.many}`}, true]
+  ]);
 }
 
 // The excepted days of the month, as an inserted phrase.
@@ -283,85 +351,83 @@ const datePhrasers = {
         days < names.length],
       [phrase(
         `${days} ${units.day.many} ${words.before} ${words.lastDay}`,
-        {
-          bare: words.ofMonth,
-          closed: true,
-          lead: pick([
-            [`${words.inMonthsLongerThan} ${days} ${units.day.many}`,
-              facts.scarce],
-            ['', true]
-          ]),
-          suffix: facts.suffix
-        }), true]
+        {closed: true, suffix: facts.suffix}), true]
     ]);
   },
   // «los días impares», «los días pares del 8 al 30», «cada 3 días del 1
   // al 31».
   cadence(facts: DayFacts): DayPhrase {
-    const {interval, last, start} = facts.said;
-    const second = interval === 2;
-    const parity = spaced([
-      words.thePlural, units.day.many, [words.theEven, words.theOdd][start % 2]
-    ]);
-    const ends = fromThe(start, last);
+    const said = steppedDays(facts.said, facts.length);
 
-    return phrase(pick([
-      [parity, second && fullMonth(facts.said, facts.length)],
-      [`${parity} ${ends}`, second],
-      [`${words.each} ${interval} ${units.day.many} ${ends}`, true]
-    ]), {inserted: exceptDays(facts.said.removed), suffix: facts.suffix});
+    return phrase(spaced([said.lead, said.body]), {
+      inserted: exceptDays(facts.said.removed),
+      suffix: facts.suffix
+    });
   },
+  // The first day from Monday to Friday: the 1st, or the Monday after a
+  // 1st that falls on the weekend.
   firstWeekday(facts: DayFacts): DayPhrase {
-    return phrase(
-      `${words.the} ${words.firstOne} ${workdayOf(facts.style)}`,
-      {suffix: facts.suffix});
+    const {style} = facts;
+
+    return phrase(theDate(1, facts.dated), {
+      after: orOffTheWeekend(
+        `${theDay(MONDAY, style)} ${words.following}`, style),
+      closed: true,
+      suffix: facts.suffix
+    });
   },
   last(facts: DayFacts): DayPhrase {
     return phrase(`${words.the} ${words.lastDay}`, {suffix: facts.suffix});
   },
+  // The last day from Monday to Friday: the last day, or the Friday
+  // before one that falls on the weekend.
   lastWeekday(facts: DayFacts): DayPhrase {
-    return phrase(
-      `${words.the} ${words.lastOne} ${workdayOf(facts.style)}`,
-      {suffix: facts.suffix});
-  },
-  // «el día laborable más cercano al 15»; from day 28 the search is said
-  // to stay inside the month, and a month without the day does not fire.
-  nearestWeekday(facts: DayFacts): DayPhrase {
-    const {day} = facts.form;
+    const {style} = facts;
 
-    return phrase(
-      `${words.the} ${workdayOf(facts.style)} ${words.closest} ${day}`,
-      {
-        inserted: [words.withinMonth].filter(function atAnEdge() {
-          return day >= SHORTEST_MONTH;
-        }),
-        lead: pick([
-          [`${words.inMonthsWithDay} ${day}`, facts.scarce],
-          ['', true]
-        ]),
-        suffix: facts.suffix
-      });
-  },
-  // «del 1 al 7 y el día 15»; a run that crosses into the next month
-  // says so, and is not tied to the months again.
-  parts(facts: DayFacts): DayPhrase {
-    const {parts} = facts.said;
-    const crosses = parts.some(function backwards(part) {
-      return isRange(part) && part.from > part.to;
+    return phrase(`${words.the} ${words.lastDay}`, {
+      after: orOffTheWeekend(
+        `${theDay(FRIDAY, style)} ${words.previous}`, style),
+      closed: true,
+      suffix: facts.suffix
     });
+  },
+  // The day from Monday to Friday nearest a date: the date, or the Friday
+  // or Monday nearest one that falls on the weekend. From day 28 the date
+  // can be a month's last, and the search is said to stay in the month.
+  nearestWeekday(facts: DayFacts): DayPhrase {
+    const {style} = facts;
+    const {day} = facts.form;
+    const landing = spaced([
+      theDay(FRIDAY, style), words.or, theDay(MONDAY, style), words.nearest,
+      pick([[words.ofSameMonth, day >= SHORTEST_MONTH], ['', true]])
+    ]);
 
-    return phrase(list(mapParts(parts, function run(from, to) {
-      return pick([
-        [`${words.fromThe} ${from} ${words.ofEachMonth} ${words.toThe} ` +
-          `${to} ${words.ofTheNext}`, from > to],
-        [fromThe(from, to), true]
-      ]);
-    }, function named(days) {
-      return pick([
-        [`${words.the} ${days[0]}`, facts.dated],
-        [numbered(days), true]
-      ]);
-    })), {suffix: pick([['', crosses], [facts.suffix, true]])});
+    return phrase(theDate(day, facts.dated), {
+      after: orOffTheWeekend(landing, style),
+      closed: true,
+      suffix: facts.suffix
+    });
+  },
+  // «del 1 al 7 y el día 15»; with a cadence among them, «los días
+  // impares del 1 al 15 y los días 16, 19, 22, 25, 28 y 31».
+  parts(facts: DayFacts): DayPhrase {
+    return phrase(phrases(led(mapParts(facts.said.parts,
+      function run(from, to, part): Piece {
+        return pick([
+          [steppedDays({...part, last: to, start: from}, facts.length),
+            part.interval > 1],
+          [{body: fromThe(from, to), lead: ''}, true]
+        ]);
+      },
+      function named(days) {
+        return {
+          body: pick([
+            [`${words.the} ${days[0]}`, facts.dated],
+            [numbered(days), true]
+          ]),
+          lead: ''
+        };
+      }))), {suffix: facts.suffix});
   }
 };
 
@@ -397,9 +463,14 @@ const weekdayPhrasers = {
     }, function named(values) {
       return values.length;
     });
-    const missing = parts.flatMap(function after(part) {
-      return isRange(part) ? [(part.to + 1) % WEEK] : [];
-    });
+    const missing = mapParts(parts, function after(from, to) {
+      return [(to + 1) % WEEK];
+    }, function none(): number[] {
+      return [];
+    }).flat();
+    const wrapped = mapParts(parts, function backwards(from, to) {
+      return from > to;
+    }, never)[0];
 
     function plural(day: number): string {
       return weekdayName(day, 'plural', style);
@@ -408,15 +479,14 @@ const weekdayPhrasers = {
     return pick([
       [phrase(words.everyDay, {inserted: [
         `${words.except} ${words.thePlural} ${missing.map(plural).join()}`
-      ]}), facts.alone && days[0] === WEEK - 1 && parts[0].kind === 'range' &&
-        parts[0].from > parts[0].to],
-      [phrase(list(mapParts(parts, function run(from, to) {
+      ]}), facts.alone && days[0] === WEEK - 1 && wrapped],
+      [phrase(phrases(mapParts(parts, function run(from, to) {
         return fromTo(weekdayName(from, 'name', style),
           weekdayName(to, 'name', style));
       }, function named(values) {
         // Saturday and Sunday on their own are the weekend.
         return pick([
-          [words.weekends, values.join() === `${WEEK - 2},${WEEK - 1}`],
+          [words.weekends, values.join() === `${SATURDAY},${SUNDAY}`],
           [`${words.thePlural} ${list(values.map(plural))}`, true]
         ]);
       })), {suffix: facts.suffix}), true]
@@ -424,12 +494,10 @@ const weekdayPhrasers = {
   }
 };
 
-// A day phrase as text, tied to the months as given unless the months
-// that fire are said before it.
-function textOf(said: DayPhrase, leads: boolean): string {
-  const suffix = pick([[said.bare, leads], [said.suffix, true]]);
-
-  return [spaced([said.main, suffix]), ...said.inserted].join(', ');
+// A day phrase as text.
+function textOf(said: DayPhrase): string {
+  return [spaced([said.main, said.suffix, said.after]), ...said.inserted]
+    .join(', ');
 }
 
 // The years and months, and how the year meets the months.
@@ -440,6 +508,8 @@ interface Leading {
   months: Said;
   monthValues: number[];
   monthNamed: boolean;
+  // The months the day of the month fires in, where they are named.
+  firing: number[];
   // A single year follows a month's name; any other year phrase leads.
   yearJoins: boolean;
   yearTail: string;
@@ -457,21 +527,46 @@ interface Days {
   length: number;
   // Whether one day of the month is left to say.
   oneDate: boolean;
-  // Whether a month in reach may lack the day a Quartz form names.
+  // What limits the date beyond the months named: the leap years, or the
+  // months long enough for a day counted from the last.
+  lead: string;
+  // Whether that lead is the months, so that the date says «del mes».
   scarce: boolean;
 }
 
-function leadingOf(candidates: Analyses['candidates']): Leading {
+function sorted(values: number[]): number[] {
+  return values.slice().sort(function ascending(a, b) {
+    return a - b;
+  });
+}
+
+// The years and the months. Where the day of the month cannot fire in
+// every month named, the months it does fire in are the months said
+// (answers 4.4); in a union the weekdays keep the months as written.
+function leadingOf(analyses: Analyses): Leading {
+  const {candidates, dateReach} = analyses;
   const yearValues = valuesOf(candidates.year, 'year');
   const years = say(yearValues, yearPolicy);
   const everyYear = years.kind === 'all' && years.removed.length === 0;
-  const monthValues = valuesOf(candidates.month, 'month');
+  const written = valuesOf(candidates.month, 'month');
+  const monthNamed = written.length < domainOf('month').max;
+  const reach = {everyYear: written, fires: false, leapYears: [], ...dateReach};
+  const firing = pick([
+    [sorted([...reach.everyYear, ...reach.leapYears]),
+      monthNamed && reach.fires],
+    [written, true]
+  ]);
+  const monthValues = pick([[written, analyses.day.union], [firing, true]]);
   const months = say(monthValues, monthPolicy(everyYear));
-  const monthNamed = months.kind !== 'all';
-  const yearJoins = yearValues.length === 1 && monthNamed;
+
+  // A year after months in several pieces would be heard with the last
+  // piece only, so there it leads.
+  const yearJoins = yearValues.length === 1 && monthNamed &&
+    months.parts.length === 1;
 
   return {
     everyYear,
+    firing,
     monthNamed,
     monthValues,
     months,
@@ -496,69 +591,79 @@ function quartzForms(day: Analyses['day']):
   };
 }
 
-// Whether a month whose shortest length is given may lack the day a
-// Quartz form names: the day the nearest weekday is sought for, or the
-// day so many days before the last.
-function lacksDay(form: QuartzDate | null, shortest: number): boolean {
-  const reach = {day: 0, days: 0, ...form};
+// The days of the month that exist in a month in reach, as the core
+// states them; the field's own days where every one of them does.
+function reachedDates(analyses: Analyses): number[] {
+  const reached = analyses.dateReach && analyses.dateReach.days;
+  const offered = reached ? reached.candidates : analyses.candidates.date;
 
-  return reach.day > shortest || reach.days >= shortest;
+  return valuesOf(pick([[null, offered !== null && offered.length === 0],
+    [offered, true]]), 'date');
 }
 
 function daysOf(analyses: Analyses, leading: Leading): Days {
-  const {candidates} = analyses;
-  const {quartzDate, quartzDay} = quartzForms(analyses.day);
+  const {candidates, day, dateReach} = analyses;
+  const {quartzDate, quartzDay} = quartzForms(day);
+  const form = {days: 0, kind: '', ...quartzDate};
+  const reach = {
+    days: null, everyYear: [0], fires: true, leapYears: [], never: [],
+    ...dateReach
+  };
 
-  // Days of the month, cut to the length of the longest named month and
-  // described afresh (answers 4.4). They wrap into the next month only
-  // when no month or year is named.
+  // The date arm is silent when the field is every day, when its days
+  // are every day the months in reach have, and when it never fires
+  // beside weekdays that do.
+  const everyDay = reach.days !== null && reach.days.everyDay;
+  const everyDate = day.date === null || everyDay || !reach.fires;
+  const everyWeekday = day.weekday === null || everyDay;
   const length = Math.max(...leading.monthValues.map(function days(month) {
     return MONTH_LENGTHS[month];
   }));
-  const written = valuesOf(candidates.date, 'date');
-  const kept = written.filter(function exists(date) {
-    return date <= length;
-  });
-  const dates = say(
-    [kept, written].find(function some(values) {
-      return values.length > 0;
-    }) as number[],
-    datePolicy(length, leading.everyYear && !leading.monthNamed));
-  const everyDate = quartzDate === null && dates.kind === 'all' &&
-    dates.removed.length === 0;
+  const values = reachedDates(analyses);
+
+  // In a union the days take no exception: it would be heard as an
+  // exception to the weekdays too (answers 4.3).
+  const dates = say(values, datePolicy(length, everyWeekday));
 
   // Weekdays, counted from Monday.
   const weekdays = say(
-    valuesOf(candidates.weekday, 'weekday').map(function fromMonday(value) {
-      return (value + WEEK - 1) % WEEK;
-    }).sort(function ascending(a, b) {
-      return a - b;
-    }),
+    sorted(valuesOf(candidates.weekday, 'weekday').map(
+      function fromMonday(value) {
+        return (value + WEEK - 1) % WEEK;
+      })),
     weekdayPolicy);
 
-  // Days of the month that cover every day of the named months leave
-  // nothing for the weekdays to add.
-  const covered = everyDate && written.length < LONGEST_MONTH;
+  // A day counted from the last needs a month long enough. Where the
+  // months said do not settle that (every month, or a February beside
+  // others), the months that fire are said; a February alone fires in
+  // leap years.
+  const leapOnly = reach.everyYear.length === 0 && reach.fires;
+  const unsettled = reach.leapYears.length +
+    Number(!leading.monthNamed) * reach.never.length > 0;
+  const scarce = form.kind === 'beforeLast' && unsettled && !leapOnly;
 
   return {
     dates,
     everyDate,
-    everyWeekday: quartzDay === null && weekdays.kind === 'all' || covered,
+    everyWeekday,
+    lead: pick([
+      [words.inLeapYears, leapOnly],
+      [`${words.inMonthsLongerThan} ${form.days} ${units.day.many}`, scarce],
+      ['', true]
+    ]),
     length,
-    oneDate: kept.length === 1,
+    oneDate: values.length === 1 || form.kind === 'nearestWeekday' ||
+      form.kind === 'firstWeekday',
     quartzDate,
-    scarce: lacksDay(quartzDate, Math.min(
-      ...leading.monthValues.map(function fewest(month) {
-        return SHORTEST_LENGTHS[month];
-      }))),
     quartzDay,
+    scarce,
     weekdays
   };
 }
 
 // The months join a date phrase, or a weekday phrase with no run in it,
-// when they have no run themselves, there is no union, and every one of
-// them has the day a Quartz form names; otherwise they lead.
+// when they have no run themselves, there is no union, and they settle
+// which months fire; otherwise they lead.
 function monthsJoin(leading: Leading, days: Days): boolean {
   const listed = days.quartzDay !== null ||
     days.weekdays.parts.every(isValues);
@@ -568,48 +673,78 @@ function monthsJoin(leading: Leading, days: Days): boolean {
     (!days.everyDate || listed);
 }
 
-// The months as a leading phrase: «en enero y julio», «de junio a agosto
-// y en diciembre».
-function monthLead(leading: Leading, style: SpanishStyle): string {
+// Months as a leading phrase: «en enero y julio», «de junio a agosto y
+// en diciembre».
+function monthsLeading(months: Said, style: SpanishStyle): string {
   function name(month: number): string {
     return monthName(month, style);
   }
 
-  return list(mapParts(leading.months.parts, function run(from, to) {
+  return phrases(mapParts(months.parts, function run(from, to) {
     return fromTo(name(from), name(to));
   }, function named(values) {
     return `${words.in} ${list(values.map(name))}`;
-  })) + leading.yearTail;
+  }));
+}
+
+// Months as they join a date: «de enero y julio».
+function monthsJoined(months: number[], style: SpanishStyle): string {
+  return `${words.of} ` + list(months.map(function name(month) {
+    return monthName(month, style);
+  }));
+}
+
+// How the date a union adds is tied to its months. Where it fires in
+// every month named it points back at them, «de ese mes»; where it does
+// not, it names its own, joined to it («el 31 de mayo») or, with a run
+// among them, leading it.
+function addedMonths(leading: Leading, days: Days, style: SpanishStyle):
+  {suffix: string; lead: string; own: boolean} {
+  const {firing, monthValues} = leading;
+  const own = firing.length < monthValues.length;
+  const months = say(firing, monthPolicy(false));
+  const joins = months.parts.every(isValues);
+  const those = `${words.of} ` +
+    byCount([words.thatMonth, words.thoseMonths], monthValues.length);
+
+  return pick([
+    [{lead: '', own, suffix: those}, !own],
+    [{lead: '', own, suffix: monthsJoined(firing, style)}, joins],
+    [{lead: monthsLeading(months, style), own, suffix: words.ofEachMonth},
+      true]
+  ]);
 }
 
 // The two day phrases, each tied to the months as its place asks.
 function dayPhrases(leading: Leading, days: Days, style: SpanishStyle):
-  {date: DayPhrase; weekday: DayPhrase} {
+  {date: DayPhrase; weekday: DayPhrase; addedLead: string} {
   const {monthValues} = leading;
   const union = !days.everyDate && !days.everyWeekday;
   const joins = monthsJoin(leading, days);
   const tied = union && leading.monthNamed;
   const quartzDay = days.quartzDay !== null;
-  const joined = `${words.of} ` + list(monthValues.map(function name(month) {
-    return monthName(month, style);
-  })) + leading.yearTail;
-  const those = `${words.of} ` +
-    byCount([words.thatMonth, words.thoseMonths], monthValues.length);
-  const shared = {length: days.length, scarce: days.scarce, style};
+  const joined = monthsJoined(monthValues, style) + leading.yearTail;
+  const added = addedMonths(leading, days, style);
+  const shared = {length: days.length, style};
 
   // Weekdays have no cadence, so a plain set is every day or parts.
   const weekdayKind = (days.quartzDay ?? days.weekdays).kind as
     keyof typeof weekdayPhrasers;
 
   return {
+    addedLead: added.lead,
     date: datePhrasers[(days.quartzDate ?? days.dates).kind]({
       ...shared,
       alone: false,
-      dated: joins && monthValues.length === 1 && days.oneDate,
+      dated: days.oneDate && pick([
+        [leading.firing.length === 1, tied && added.own],
+        [joins && monthValues.length === 1, true]
+      ]),
       form: {...NO_FORM, ...days.quartzDate},
       said: days.dates,
       suffix: pick([
-        [those, tied],
+        [words.ofMonth, days.scarce],
+        [added.suffix, tied],
         [joined, joins],
         [words.ofEachMonth, true]
       ])
@@ -630,49 +765,89 @@ function dayPhrases(leading: Leading, days: Days, style: SpanishStyle):
   };
 }
 
+// A schedule whose day of the month no month in reach has: «nunca,
+// porque junio no tiene día 31». The years are said with the months, as
+// the reason holds of them.
+function neverText(analyses: Analyses, leading: Leading, style: SpanishStyle):
+  string {
+  const form = {day: 0, days: 0, kind: '', ...quartzForms(analyses.day)
+    .quartzDate};
+  const months = leading.monthValues;
+  const lacking = pick([
+    [`${words.moreThan} ${form.days} ${units.day.many}`,
+      form.kind === 'beforeLast'],
+    [`${units.day.one} ${form.day}`, form.kind === 'nearestWeekday'],
+    [`${units.day.one} ` +
+      norList(valuesOf(analyses.candidates.date, 'date')), true]
+  ]);
+
+  return `${words.never}, ${words.because} ` + spaced([
+    pick([['', leading.yearJoins], [yearPhrase(leading.years), true]]),
+    list(months.map(function name(month) {
+      return monthName(month, style);
+    })) + leading.yearTail,
+    byCount([words.hasNo, words.haveNo], months.length),
+    lacking
+  ]);
+}
+
 /** The leading frame, the day, and what a union adds after the time. */
 function calendarOf(
   schedule: Schedule,
   everyHour: boolean,
   style: SpanishStyle
 ): Calendar {
-  const leading = leadingOf(schedule.analyses.candidates);
-  const days = daysOf(schedule.analyses, leading);
-  const phrases = dayPhrases(leading, days, style);
+  const {analyses} = schedule;
+  const leading = leadingOf(analyses);
+  const days = daysOf(analyses, leading);
+  const spoken = dayPhrases(leading, days, style);
   const union = !days.everyDate && !days.everyWeekday;
+  const neverFires = analyses.dateReach !== null &&
+    !analyses.dateReach.fires && !analyses.day.union;
 
-  // The months that fire are said before the date they limit: in the
+  // What limits the date beyond the months is said before it: in the
   // leading frame, or inside the addition of a union.
-  const {lead} = phrases.date;
-  const leads = lead !== '' && !union;
   const said = pick([
-    [phrases.weekday, !days.everyWeekday],
-    [phrases.date, !days.everyDate],
+    [spoken.weekday, !days.everyWeekday],
+    [spoken.date, !days.everyDate],
     [phrase(pick([['', everyHour], [words.everyDay, true]]), {}), true]
   ]);
+  const addedLead = days.lead || spoken.addedLead;
 
-  return {
-    also: pick([
-      [`${words.also}, ${lead}, ${textOf(phrases.date, true)}`,
-        union && lead !== ''],
-      [`${words.also} ${textOf(phrases.date, false)}`, union],
-      ['', true]
-    ]),
-    day: textOf(said, leads),
-    dayClosed: said.closed || said.inserted.length > 0,
-    frame: [
-      pick([
-        ['', leading.yearJoins],
-        [yearPhrase(leading.years), true]
-      ]),
-      pick([
-        [monthLead(leading, style), leading.monthNamed &&
-          !monthsJoin(leading, days)],
+  return pick([
+    [{
+      also: '',
+      day: neverText(analyses, leading, style),
+      dayClosed: false,
+      frame: [],
+      never: true
+    }, neverFires],
+    [{
+      also: pick([
+        [`${words.also}, ${addedLead}, ${textOf(spoken.date)}`,
+          union && addedLead !== ''],
+        [`${words.also} ${textOf(spoken.date)}`, union],
         ['', true]
       ]),
-      pick([[lead, leads], ['', true]])
-    ].filter(Boolean)
-  };
+      day: textOf(said),
+      dayClosed: said.closed || said.inserted.length > 0,
+      frame: [
+        pick([
+          ['', leading.yearJoins],
+          [yearPhrase(leading.years), true]
+        ]),
+        pick([[days.lead, days.lead === words.inLeapYears && !union],
+          ['', true]]),
+        pick([
+          [monthsLeading(leading.months, style) + leading.yearTail,
+            leading.monthNamed && !monthsJoin(leading, days)],
+          ['', true]
+        ]),
+        pick([[days.lead, days.scarce && !union], ['', true]])
+      ].filter(Boolean),
+      never: false
+    }, true]
+  ]);
 }
 
 export {calendarOf};

@@ -56,6 +56,30 @@ function list(items: Array<number | string>): string {
     .filter(Boolean).join(` ${words.and} `);
 }
 
+/** «30 ni 31», «29, 30 ni 31»: a list after a negation. */
+function norList(items: Array<number | string>): string {
+  const texts = items.map(String);
+
+  return [texts.slice(0, -1).join(', '), ...texts.slice(-1)]
+    .filter(Boolean).join(` ${words.nor} `);
+}
+
+/**
+ * Pieces joined as a list is. Where a piece before the last has an «y» of
+ * its own, a comma comes before the «y» that joins the last: «en 2030 y
+ * 2031, y desde 2033».
+ */
+function phrases(pieces: string[]): string {
+  const inner = pieces.slice(0, -1).some(function joined(piece) {
+    return piece.includes(` ${words.and} `);
+  });
+
+  return inner ?
+    `${pieces.slice(0, -1).join(', ')}, ${words.and} ` +
+      `${pieces[pieces.length - 1]}` :
+    list(pieces);
+}
+
 /** The singular or the plural of a pair, by how many there are. */
 function byCount<T>(forms: [T, T], count: number): T {
   return forms[Number(count !== 1)];
@@ -151,4 +175,6 @@ function clockOf(style: SpanishStyle): Clock {
   };
 }
 
-export {byCount, clockOf, every, led, list, pick, spaced};
+export {
+  byCount, clockOf, every, led, list, norList, phrases, pick, spaced
+};

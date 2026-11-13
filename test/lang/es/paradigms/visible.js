@@ -21,7 +21,7 @@ const rows = [
   ['0,15,45 9 * * *', 'todos los días a las 9:00, 9:15 y 9:45'],
 
   // clock / hour
-  ['0 * * * *', 'cada hora'],
+  ['0 * * * *', 'cada hora en punto'],
   ['0 9,17 * * *', 'todos los días a las 9:00 y 17:00'],
   ['0 9-17,22 * * *',
     'todos los días, cada hora de 9:00 a 17:00 y a las 22:00'],
@@ -88,9 +88,13 @@ const rows = [
   ['*/15 9-17 */2 * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
     'días impares de cada mes'],
+  // Changed 2026-11-13: «…, y además los días impares de cada mes,
+  // excepto el día 15» was read as excepting the 15th from the weekdays
+  // too, and a weekday that falls on the 15th fires. In a union the days
+  // take no exception (answers 4.3).
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
-    'días impares de cada mes, excepto el día 15'],
+    'días impares del 1 al 13 y del 17 al 31 de cada mes'],
 
   // window / month
   ['*/15 9-17 * 1 1-5',
@@ -129,7 +133,7 @@ const rows = [
   ['0,15,45 0 1 * *', 'el día 1 de cada mes a las 0:00, 0:15 y 0:45'],
 
   // monthly / hour
-  ['0 * 1 * *', 'el día 1 de cada mes, cada hora'],
+  ['0 * 1 * *', 'el día 1 de cada mes, cada hora en punto'],
   ['0 9,17 1 * *', 'el día 1 de cada mes a las 9:00 y 17:00'],
   ['0 9-17,22 1 * *',
     'el día 1 de cada mes, cada hora de 9:00 a 17:00 y a las 22:00'],
