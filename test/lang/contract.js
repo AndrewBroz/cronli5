@@ -1,5 +1,6 @@
 import chai from 'chai';
 import en from '../../src/lang/en/index.js';
+import uk from '../../src/lang/uk/index.js';
 
 const {expect} = chai;
 
@@ -7,7 +8,7 @@ const {expect} = chai;
 // code, pick a regional style, and present a description in each form.
 
 describe('Language contract:', function() {
-  const languages = [en];
+  const languages = [en, uk];
 
   languages.forEach(function each(lang) {
     describe(lang.code, function() {

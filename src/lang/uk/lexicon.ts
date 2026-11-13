@@ -135,8 +135,6 @@ const units = {
     few: 'хвилини',
     genitiveOne: 'хвилини',
     genitiveRest: 'хвилин',
-    locative: 'хвилині',
-    locativePlural: 'хвилинах',
     many: 'хвилин',
     one: 'хвилину'
   },
@@ -166,6 +164,15 @@ const dayParts = [
   {from: 17, word: 'вечора'}
 ];
 
+// The endings a numeral takes after a hyphen: a day of the month or a year
+// in the genitive («15-го», «2030-го»), a second in the locative («30-й»)
+// and in the genitive («30-ї»).
+const endings = {
+  genitive: '-го',
+  secondGenitive: '-ї',
+  secondLocative: '-й'
+};
+
 // The function words and fixed phrases.
 const words = {
   also: 'а також',
@@ -173,8 +180,7 @@ const words = {
   andPiece: 'і',
   at: 'о',
   atBeforeVowel: 'об',
-  before: 'до',
-  beforeLastDay: 'до останнього дня місяця',
+  beforeLastDayOf: 'до останнього дня',
   daysOfMonth: 'числа',
   eachEvenHour: 'кожної парної години',
   eachHour: 'кожної години',
@@ -193,10 +199,9 @@ const words = {
   everySecond: 'щосекунди',
   except: 'крім',
   first: 'перших',
-  firstOne: 'першої',
   forAMinute: 'протягом хвилини',
   from: 'з',
-  hoursBeginning: 'години з початком о',
+  hoursBeginning: 'години з початком',
   fromCalendar: 'від',
   in: 'у',
   inAfterVowel: 'в',
@@ -205,7 +210,6 @@ const words = {
   lastDay: 'останній день',
   lastFeminine: 'останню',
   lastMasculine: 'останній',
-  lastOne: 'останньої',
   lastWorkingDay: 'останній робочий день',
   midnight: 'опівночі',
   nearest: 'найближчий до',
@@ -235,6 +239,7 @@ const words = {
 const lexicon = {
   category,
   dayParts,
+  endings,
   months,
   nthWords,
   twoDigits,

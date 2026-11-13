@@ -61,8 +61,9 @@ describe('The options:', function() {
 
     it('rejects a language it does not have, saying what it does have',
       function() {
-        throwsOption({lang: 'uk'}, /does not ship 'uk'/u);
-        throwsOption({lang: 'uk', lenient: true}, /ships: en/u);
+        throwsOption({lang: 'tlh'}, /does not ship 'tlh'/u);
+        throwsOption({lang: 'tlh', lenient: true}, /ships: en/u);
+        throwsOption({lang: 'uk'}, /cronli5\/lang\/uk.*cronli5\/all/su);
         throwsOption({lang: ''}, /lang/u);
         throwsOption({lang: 5}, /lang/u);
       });

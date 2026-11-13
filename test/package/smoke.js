@@ -281,7 +281,7 @@ describe('Built package artifacts:', function() {
 
       // The available list is derived from the built languages (sorted), not
       // hardcoded, so it never drifts when a language is added.
-      expect(stderr).to.match(/Unknown language: xx \(available: en\)/u);
+      expect(stderr).to.match(/Unknown language: xx \(available: en\b/u);
     });
 
     it('takes a region with the language', function() {

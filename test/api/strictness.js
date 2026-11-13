@@ -40,11 +40,11 @@ describe('Strictness:', function() {
         none('0 9 * * *', {lang: 'en'});
       }, /cronli5\/lang\/en.*cronli5\/all/su);
       throwsOption(function describeIt() {
-        cronli5('0 9 * * *', {lang: 'fr'});
-      }, /does not ship 'fr'.*ships: en/su);
+        cronli5('0 9 * * *', {lang: 'tlh'});
+      }, /does not ship 'tlh'.*ships: en/su);
       expect(function describeIt() {
-        cronli5('0 9 * * *', {lang: 'fr'});
-      }).to.not.throw(/import fr/u);
+        cronli5('0 9 * * *', {lang: 'tlh'});
+      }).to.not.throw(/import tlh/u);
     });
 
   it('refuses a code that is not shaped like one', function() {

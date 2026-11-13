@@ -227,6 +227,7 @@ docs below.
 | Language | Module | Anchors | Doc |
 | --- | --- | --- | --- |
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
+| Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
 
 ### Language maturity
 
@@ -242,6 +243,7 @@ Sonnet instances. It graduates to **stable** only on review by a fluent human:
 | Language | Status |
 | --- | --- |
 | English | beta |
+| Ukrainian | beta |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see
@@ -305,6 +307,7 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Language | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
 | English | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| Ukrainian | о 9:30:05 та 9:30:10 по понеділках | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for

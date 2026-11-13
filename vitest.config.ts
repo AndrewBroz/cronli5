@@ -19,6 +19,7 @@ export default defineConfig({
       'test/paradigms/grid.js',
       'test/paradigms/check.js',
       'test/lang/en/paradigms/**',
+      'test/lang/uk/paradigms/**',
       'test/core/bad_input/error-types.js'
     ],
     setupFiles: ['./test/vitest.setup.ts'],
