@@ -5,16 +5,22 @@
 // arranged, never on which they are.
 
 import type {
-  Domain, Field, RangeDescription, Schedule, SetDescription,
-  ValuesDescription
+  CadencePieces, Domain, Field, RangeDescription, Schedule, SetDescription,
+  SetView, ValuesDescription
 } from '../../core/schedule.js';
-import {denote, describeSet} from '../../core/describe-set.js';
+import {
+  denote, describeCadencePieces, describeSet
+} from '../../core/describe-set.js';
+import {candidatesAs} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 
-type Kind = SetDescription['kind'];
+/** A set as the core describes it: one description, or runs and cadences. */
+type Described = SetDescription | CadencePieces;
+
+type Kind = Described['kind'];
 
 /** The description of one kind. */
-type Of<K extends Kind> = Extract<SetDescription, {kind: K}>;
+type Of<K extends Kind> = Extract<Described, {kind: K}>;
 
 type Cadence = Of<'cadence'>;
 
@@ -22,6 +28,9 @@ type Excepted = Of<'except'>;
 
 /** One piece of a set said in pieces. */
 type Part = RangeDescription | ValuesDescription;
+
+/** One piece of a set said as runs and cadences together. */
+type Stretch = CadencePieces['parts'][number];
 
 /** What to do with a description of each kind. */
 type Sayers<T> = {[K in Kind]?: (description: Of<K>) => T};
@@ -33,18 +42,18 @@ type Counts = Sayers<number>;
 interface View {
   all: boolean;
   domain: Domain;
-  options: SetDescription[];
+  options: Described[];
   values: number[];
 }
 
 /** Apply the entry for the description's kind, if there is one. */
 function say<T>(
-  description: SetDescription,
+  description: Described,
   sayers: Sayers<T>,
   otherwise?: T
 ): T {
   const sayer = sayers[description.kind] as
-    ((given: SetDescription) => T) | undefined;
+    ((given: Described) => T) | undefined;
 
   return sayer?.(description) ?? otherwise as T;
 }
@@ -54,34 +63,58 @@ function when(condition: boolean, count: number): number {
   return condition ? count : Infinity;
 }
 
-function countOf(description: SetDescription, counts: Counts): number {
+function countOf(description: Described, counts: Counts): number {
   return say(description, counts, Infinity);
 }
 
 /** The description that names the fewest things, the earliest on a tie. */
-function choose(view: View, counts: Counts): SetDescription {
+function choose(view: View, counts: Counts): Described {
   return view.options.reduce(function fewer(best, option) {
     return countOf(option, counts) < countOf(best, counts) ? option : best;
   });
 }
 
-// Where a part comes when pieces are said: in ascending order of its
-// first value, a run that wraps round the cycle before all the others.
-function placeOf(part: Part, domain: Domain): number {
-  return say(part, {
-    range: (run) => run.from - Number(run.from > run.to) * sizeOf(domain),
-    values: (listed) => listed.values[0]
-  });
+// Where a value comes when a cycle is walked from `first`.
+function placeIn(value: number, domain: Domain, first: number): number {
+  return (value - first + sizeOf(domain)) % sizeOf(domain);
 }
 
-function inSpokenOrder(option: SetDescription, domain: Domain):
-  SetDescription {
-  return say(option, {
+// Pieces in the order they are said: ascending from the cycle's first
+// value, a run that wraps round the cycle before all the others. Values
+// listed together that turn the cycle are no run (two values in a row
+// across the turn are listed), so each is a piece where it comes.
+function inSpokenOrder(option: Described, domain: Domain, first: number):
+  Described {
+  function place(value: number): number {
+    return placeIn(value, domain, first);
+  }
+
+  function placeOf(part: Part): number {
+    return say(part, {
+      range: (run) => place(run.from) -
+        Number(place(run.from) > place(run.to)) * sizeOf(domain),
+      values: (listed) => place(listed.values[0])
+    });
+  }
+
+  function turns(part: Part): boolean {
+    return say(part, {
+      values: (listed) => place(listed.values[0]) > place(listed.values[1])
+    }, false);
+  }
+
+  function apart(part: Part): Part[] {
+    return turns(part) ?
+      (part as ValuesDescription).values.map(
+        (value): Part => ({kind: 'values', values: [value]})) :
+      [part];
+  }
+
+  return say<Described>(option, {
     pieces: (pieces) => ({
       ...pieces,
-      parts: pieces.parts.slice().sort(function earlier(a, b) {
-        return placeOf(a, domain) - placeOf(b, domain);
-      })
+      parts: pieces.parts.flatMap(apart)
+        .sort((a, b) => placeOf(a) - placeOf(b))
     })
   }, option);
 }
@@ -101,34 +134,77 @@ function wrapsTheLongWay(values: number[], domain: Domain): boolean {
   return joins && through * 2 > sizeOf(domain);
 }
 
-/**
- * A set of values, described afresh in a domain. A run wraps round the
- * end of a cycle only the shorter way, unless a run of `anyLength` may.
- */
-function described(values: number[], domain: Domain, anyLength = false):
-  View {
-  const cyclic = domain.cyclic &&
-    (anyLength || !wrapsTheLongWay(values, domain));
-  const options = describeSet(values, {...domain, cyclic}).map(
-    (option) => inSpokenOrder(option, domain));
+// Whether the descriptions of a set are laid out with nothing wrapping:
+// where no run may wrap, and where the only wrap is the longer way round.
+function linearly(
+  values: number[],
+  round: boolean,
+  wraps: {anyLength?: boolean; domain: Domain}
+): boolean {
+  return !round ||
+    wraps.anyLength !== true && wrapsTheLongWay(values, wraps.domain);
+}
 
-  return {all: options[0].kind === 'all', domain, options, values};
+// A view from the core's descriptions, the runs and cadences last.
+function viewed(
+  values: number[],
+  domain: Domain,
+  found: {options: SetDescription[]; pieces: CadencePieces | null}
+): View {
+  const {options} = found;
+
+  return {
+    all: options[0].kind === 'all',
+    domain,
+    options: [...options, ...[found.pieces].filter(Boolean) as Described[]],
+    values
+  };
 }
 
 /**
- * A plain field's values and their descriptions. Where a run may not wrap
- * round the end of the cycle, the values are described in ascending order.
+ * A set of values, described afresh. A run wraps round the end of its
+ * cycle only where `round` allows, and then only the shorter way unless
+ * a run of `anyLength` may.
+ */
+function described(
+  values: number[],
+  domain: Domain,
+  wraps: {anyLength?: boolean; round: boolean}
+): View {
+  const layout: SetView =
+    {linear: linearly(values, wraps.round, {...wraps, domain})};
+
+  return viewed(values, domain, {
+    options: describeSet(values, domain, layout).map(
+      (option) => inSpokenOrder(option, domain, domain.min) as
+        SetDescription),
+    pieces: describeCadencePieces(values, domain, layout)
+  });
+}
+
+/**
+ * A plain field's values and their descriptions, as the core lays them
+ * out: with nothing wrapping where a run may not wrap round the end of
+ * the cycle, and walked from `first` where the cycle has another start.
  */
 function viewOf(
   schedule: Schedule,
   field: Field,
-  wraps: {anyLength?: boolean; round: boolean}
+  wraps: {anyLength?: boolean; first?: number; round: boolean}
 ): View {
   const domain = domainOf(field);
-  const given = schedule.analyses.candidates[field] as SetDescription[];
+  const own = schedule.analyses.candidates[field] as SetDescription[];
+  const values = denote(own[own.length - 1], domain);
+  const options = candidatesAs(schedule, field, {
+    first: wraps.first,
+    linear: linearly(values, wraps.round, {...wraps, domain})
+  }) as SetDescription[];
 
-  return described(denote(given[given.length - 1], domain),
-    {...domain, cyclic: domain.cyclic && wraps.round}, wraps.anyLength);
+  return viewed(values, domain, {
+    options: options.map((option) => inSpokenOrder(option, domain,
+      wraps.first ?? domain.min) as SetDescription),
+    pieces: schedule.analyses.cadencePieces[field]
+  });
 }
 
 function sizeOf(domain: Domain): number {
@@ -147,17 +223,21 @@ function members(cadence: Cadence): number {
   return (cadence.last - cadence.start) / cadence.interval + 1;
 }
 
-/** The things a set in pieces names: two for a range, one for a value. */
-function partsCount(pieces: Of<'pieces'>): number {
+/**
+ * The things a set in pieces names: three for a cadence, two for a range
+ * (one when it has no end), one for a value.
+ */
+function partsCount(pieces: {parts: Stretch[]}): number {
   return pieces.parts.reduce(function add(sum, part) {
     return sum + say(part, {
-      range: () => 2,
+      cadence: () => 3,
+      range: (run) => 2 - Number(run.open === true),
       values: (listed) => listed.values.length
     });
   }, 0);
 }
 
-function isRange(part: Part): part is RangeDescription {
+function isRange(part: Stretch): part is RangeDescription {
   return part.kind === 'range';
 }
 
@@ -201,7 +281,7 @@ function runsOf(values: number[]): RangeDescription[] {
  * whole, and its listed values gathered as `gather` gathers them.
  */
 function stretchesOf(
-  description: SetDescription,
+  description: Described,
   gather: (values: number[]) => RangeDescription[]
 ): RangeDescription[] {
   return say(description, {
@@ -213,7 +293,7 @@ function stretchesOf(
 }
 
 /** The values of a description in the order they are said. */
-function spoken(description: SetDescription, domain: Domain): number[] {
+function spoken(description: Described, domain: Domain): number[] {
   return say(description, {
     pieces: (pieces) => pieces.parts.flatMap((part) => spoken(part, domain)),
     range: (range) => Array.from(
@@ -280,7 +360,9 @@ function around(excepted: Excepted, domain: Domain): RangeDescription[] {
   });
 }
 
-export type {Cadence, Counts, Excepted, Of, Part, Sayers, View};
+export type {
+  Cadence, Counts, Described, Excepted, Of, Part, Sayers, Stretch, View
+};
 export {
   around, choose, countOf, described, interior, isRange, isRun, isSingle,
   keepsEnds, lengthOf,

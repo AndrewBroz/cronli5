@@ -42,6 +42,9 @@ function setOff(part: PartName, texts: string[]): Chunk[] {
 // The year part. One year after one month's name is already written into
 // the name. Otherwise it follows a space when it begins with «en» and a
 // comma when it does not; in a union, always a comma.
+//
+// The union's own order, below, has the days of the month name the
+// months they can fire in when those are not all the months at its head.
 function yearChunk(c: Context, months: Months): Chunk {
   const text = given(!months.fused, yearPart(c));
 
@@ -55,15 +58,17 @@ function yearChunk(c: Context, months: Months): Chunk {
 // The frame: the day, the month, the time, the year. A comma comes
 // before the time unless it begins with a clock time.
 function framed(c: Context, time: Said): Chunk[] {
-  const months = monthsOf(c, c.dated || c.weekdayed || c.daily);
+  const months = monthsOf(c, c.dateMonths,
+    {excepting: c.dated || c.weekdayed || c.daily});
   const days: Joined = join(dayPhrase(c, months), months, months.shape);
 
   return [
     {part: 'day', text: days.head},
-    {part: 'month', text: days.tail},
+    {close: days.closes, part: 'month', text: days.tail},
     ...setOff('month', days.setOff),
     {open: !time.clock, part: 'time', text: time.text},
-    yearChunk(c, months)
+    yearChunk(c, months),
+    {open: true, part: 'year', text: given(c.leap, w.leapYears)}
   ];
 }
 
@@ -71,10 +76,13 @@ function framed(c: Context, time: Said): Chunk[] {
 // both sets of days; the weekdays are said as with every month, and the
 // days of the month without a month that has already been said.
 function united(c: Context, time: Said): Chunk[] {
-  const months = monthsOf(c, false);
+  const months = monthsOf(c, c.months, {excepting: false});
   const weekdays = join(weekdayPhrase(c, false), months, 'all');
-  const dates = join(datePhrase(c, months, false), months,
-    months.shape === 'all' ? 'all' : 'led');
+  const shared = c.dateMonths === c.months;
+  const theirs = monthsOf(c, c.dateMonths, {apart: true, excepting: false});
+  const led = months.shape === 'all' ? 'all' : 'led';
+  const dates = join(datePhrase(c, shared ? months : theirs, false),
+    theirs, shared ? led : theirs.shape);
 
   return [
     {close: true, part: 'month', text: months.alone},
@@ -99,7 +107,10 @@ function compose(schedule: Schedule, opts: FrenchOptions):
     daily: !read.dated && !read.weekdayed && !roundTheClock(read)
   };
   const time = timePart(c);
-  const chunks = (c.union ? united(c, time) : framed(c, time))
+  const never: Chunk[] =
+    [{part: 'day', text: `${w.never} : ${w.noDate}`}];
+  const said = c.union ? united(c, time) : framed(c, time);
+  const chunks = (c.never ? never : said)
     .filter((chunk) => chunk.text !== '');
   const texts = chunks.map(function closed(chunk, index) {
     const next: Chunk | undefined = chunks[index + 1];
@@ -136,14 +147,25 @@ function describe(schedule: Schedule, opts: FrenchOptions): string {
   return compose(schedule, opts).text;
 }
 
+/**
+ * Whether a description is in the union's order: both a day of the month
+ * and a weekday narrow the days, and both fire.
+ */
+function unites(schedule: Schedule, opts: FrenchOptions): boolean {
+  return contextOf(schedule, opts.style).union;
+}
+
 // A label starts with a capital letter, which keeps its accent.
 function label(description: string): string {
   return description.charAt(0).toUpperCase() + description.slice(1);
 }
 
-// A sentence leads with its verb and ends in one full stop.
+// A sentence leads with its verb and ends in one full stop. What never
+// fires takes the negative verb: «Ne s'exécute jamais».
 function sentence(description: string): string {
-  return `${w.runs} ${description}` + given(!description.endsWith('.'), '.');
+  const verb = description.startsWith(w.never) ? w.neverRuns : w.runs;
+
+  return `${verb} ${description}` + given(!description.endsWith('.'), '.');
 }
 
 function reboot(): string {
@@ -168,5 +190,5 @@ const french: Language<FrenchStyle> = {
 };
 
 export type {FrenchStyle};
-export {describeParts, styles};
+export {describeParts, styles, unites};
 export default french;

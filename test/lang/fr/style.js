@@ -54,6 +54,8 @@ describe('French styles:', function() {
         .to.equal('S\'exécute tous les jours à 9 h.');
       expect(fr.sentence('en déc.', opts))
         .to.equal('S\'exécute en déc.');
+      expect(fr.sentence('jamais : aucune date ne correspond', opts))
+        .to.equal('Ne s\'exécute jamais : aucune date ne correspond.');
       expect(fr.reboot(opts)).to.equal('au démarrage du système');
       expect(fr.fallback(opts)).to.equal('une expression cron non reconnue');
     });
