@@ -139,7 +139,7 @@ const sets = [
     options: {style: {short: true}},
     rows: [
       {
-        expected: 'todas as seg., qua. e sex., às 09:00',
+        expected: 'todas as seg., qua. e sex. às 09:00',
         parts: ['seg.', 'qua.', 'sex.', '09:00'],
         pattern: '0 9 * * 1,3,5'
       },
@@ -196,7 +196,7 @@ const sets = [
       },
       {
         expected: 'no dia 15 de cada mês ou, se cair num sáb. ou dom., no ' +
-          'dia de semana mais próximo do mesmo mês, às 09:00',
+          'dia de semana mais próximo, às 09:00',
         parts: ['sáb.', 'dom.', '09:00'],
         pattern: '0 9 15W * *'
       }
@@ -207,7 +207,7 @@ const sets = [
     rows: [
       {
         expected: 'todas as segundas-feiras, quartas-feiras e ' +
-          'sextas-feiras, às 09:00',
+          'sextas-feiras às 09:00',
         parts: ['segundas-feiras', 'quartas-feiras', 'sextas-feiras', '09:00'],
         pattern: '0 9 * * 1,3,5'
       },
@@ -249,7 +249,7 @@ const sets = [
     options: {style: {feira: true, short: true}},
     rows: [
       {
-        expected: 'todas as seg., qua. e sex., às 09:00',
+        expected: 'todas as seg., qua. e sex. às 09:00',
         parts: ['seg.', 'qua.', 'sex.', '09:00'],
         pattern: '0 9 * * 1,3,5'
       }
@@ -295,7 +295,7 @@ const sets = [
       },
       {
         expected: 'todas as segundas-feiras, quartas-feiras e ' +
-          'sextas-feiras, às 09:00',
+          'sextas-feiras às 09:00',
         parts: ['segundas-feiras', 'quartas-feiras', 'sextas-feiras', '09:00'],
         pattern: '0 9 * * 1,3,5'
       },
@@ -346,7 +346,7 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'todas as segundas, quartas e sextas, às 09:00',
+        expected: 'todas as segundas, quartas e sextas às 09:00',
         parts: ['segundas', 'quartas', 'sextas', '09:00'],
         pattern: '0 9 * * 1,3,5'
       }

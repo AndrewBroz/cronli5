@@ -87,7 +87,10 @@ function leaks(pairList) {
     // The join between the days and the time is a space or a comma
     // (answers 2.1), and belongs to neither part; so does the comma that
     // closes an exception or sets off a year phrase. A trailing comma is
-    // set aside before two parts are compared.
+    // set aside before two parts are compared. The «, sempre» that joins
+    // a day of the month and a weekday to their time (answers 4.3) is
+    // carried at the end of the day part, so the time part stays word for
+    // word what it is without the pair.
     function words(part) {
       return String(part).replace(/,$/u, '');
     }
