@@ -86,16 +86,18 @@ const words = {
   ofEachHour: 'de cada hora',
   ofEachMinute: 'de cada minuto',
   ofEachMonth: 'de cada mes',
+  ofEachYear: 'de cada año',
   ofMonth: 'del mes',
   oneMinute: 'un minuto',
+  oneYearIn: 'un año de cada',
   penultimateDay: 'penúltimo día',
   pm: 'p. m.',
   runs: 'Se ejecuta',
   since: 'desde',
   startup: 'al iniciar el sistema',
+  thatBegin: 'que empiezan',
   the: 'el',
   theEven: 'pares',
-  theHour: 'la hora',
   theHours: 'las horas',
   theMonths: 'los meses',
   theOdd: 'impares',
@@ -104,8 +106,8 @@ const words = {
   to: 'a',
   toThe: 'al',
   unrecognizable: 'un patrón cron no reconocido',
-  weekends: 'los fines de semana',
-  workingDay: 'día hábil'
+  weekdayDay: 'día entre semana',
+  weekends: 'los fines de semana'
 };
 
 const lexicon = {months, nthWords, twoDigits, units, weekdays, words};

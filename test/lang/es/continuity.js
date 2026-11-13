@@ -85,12 +85,20 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
+    // A part that ends in an exception is closed by a comma when another
+    // part follows it, and so is a part ahead of a month or year phrase
+    // that is set off. That comma belongs to the join, not to the part,
+    // so it is set aside before two parts are compared.
+    function words(part) {
+      return String(part).replace(/,$/u, '');
+    }
+
     Object.keys(before).forEach(function compare(part) {
       const everyDay = changed[0] === 'hour' && part === 'day' &&
         HOUR_MAY_SET_DAY.includes(before[part]) &&
         HOUR_MAY_SET_DAY.includes(after[part]);
 
-      if (before[part] !== after[part] && !everyDay &&
+      if (words(before[part]) !== words(after[part]) && !everyDay &&
           !MAY_CHANGE[changed[0]].includes(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);

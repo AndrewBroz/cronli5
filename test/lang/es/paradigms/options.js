@@ -8,8 +8,8 @@
 const defaultParts = {
   '*/15 9-17 * * 1-5': ['15 minutos', '9:00', '17:45', 'lunes', 'viernes'],
   '* 22-23 * * *': ['22:00', '23:59'],
-  '0 0 * * *': ['medianoche'],
-  '0 0 1 6 *': ['medianoche', '1 de junio'],
+  '0 0 * * *': ['0:00'],
+  '0 0 1 6 *': ['0:00', '1 de junio'],
   '0 13 * * *': ['13:00'],
   '0 9 * * *': ['9:00'],
   '0 9 * * 1,3,5': ['9:00', 'lunes', 'miércoles', 'viernes'],
@@ -96,8 +96,8 @@ const sets = [
         pattern: '0 9 * 6-8 *'
       },
       {
-        expected: 'a medianoche el 1 de jun',
-        parts: ['medianoche', '1 de jun'],
+        expected: 'a las 0:00 el 1 de jun',
+        parts: ['0:00', '1 de jun'],
         pattern: '0 0 1 6 *'
       },
       {
