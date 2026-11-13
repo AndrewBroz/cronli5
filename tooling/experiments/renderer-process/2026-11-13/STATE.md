@@ -12,9 +12,13 @@ Branch `renderer-process` is green (`npm run verify`, 5,592 tests) at the commit
 First drafts are committed there as `wip(<code>)`. Reports are in `reads/`.
 | Language | Schedule read | Blind fluency read | Revision 1 |
 | --- | --- | --- | --- |
-| ko, nl, he, it, cs | done | done | running when this was written; may be unfinished and uncommitted |
-| ar | running | done (32/60 natural) | not started |
-| pl | running | running | not started |
+| ko | done | done | done, committed on `ko-art` (2eca427); needs a second blind fluency read of the changed forms (listed in its report; twelve forms the author still doubts) |
+| nl, he, it, cs | done | done | running when this was written; may be unfinished and uncommitted |
+| ar | done (`reads/ar-read-1.md`) | done (32/60 natural) | NOT started: send the author `REVISE-1` |
+| pl | running | done (`reads/pl-1.md`) | not started |
+
+The Arabic reader also found that the bidi reasoning in the Arabic usage notes and answers 7.6 about a hyphen between times is wrong (after an Arabic letter both numbers are AN, so the order does not flip); the conclusion (no hyphen) stands.
+
 Revision brief: `briefs/revise-brief.md` (per language in the session scratchpad as `<code>-author/REVISE-1.md`). Each author must restore `usage.md` to its original text and move its additions into the answers.
 
 ## Next, in order
