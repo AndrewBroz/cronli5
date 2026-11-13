@@ -37,6 +37,7 @@ const units = {
 const words = {
   alsoPoints: '以及',
   at: '在',
+  being: '为',
   andDays: '以及',
   andExceptions: '及',
   eachHourOf: '每小时的',
@@ -83,6 +84,7 @@ const words = {
   oddHours: '奇数小时',
   oddYears: '每逢奇数年',
   of: '的',
+  or: '或',
   once: '一次',
   oneRound: '一轮',
   oneYearIn: '中的一年',
@@ -94,7 +96,8 @@ const words = {
   times: '次',
   to: '至',
   unrecognizable: '无法识别的cron表达式',
-  week: '周'
+  week: '周',
+  whenItIs: '时'
 };
 
 // Punctuation, all full-width but the colon of a clock time.
