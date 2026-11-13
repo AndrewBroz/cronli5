@@ -10,6 +10,7 @@
 import type {Cronli5, Cronli5AnyStyle} from './types.js';
 import {create} from './cronli5.js';
 import en from './lang/en/index.js';
+import cs from './lang/cs/index.js';
 import de from './lang/de/index.js';
 import es from './lang/es/index.js';
 import fr from './lang/fr/index.js';
@@ -20,7 +21,7 @@ import uk from './lang/uk/index.js';
 import zh from './lang/zh/index.js';
 
 const cronli5: Cronli5<Cronli5AnyStyle> = create({
-  languages: [en, de, es, fr, it, ja, pt, uk, zh]
+  languages: [en, cs, de, es, fr, it, ja, pt, uk, zh]
 });
 
 export default cronli5;

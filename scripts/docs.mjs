@@ -31,6 +31,7 @@ import pt from '../src/lang/pt/index.js';
 import de from '../src/lang/de/index.js';
 import fr from '../src/lang/fr/index.js';
 import it from '../src/lang/it/index.js';
+import cs from '../src/lang/cs/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
@@ -53,7 +54,8 @@ const languages = [
   {code: 'pt', cronstrueLocale: 'pt_BR', extras: [], lang: pt},
   {code: 'de', cronstrueLocale: 'de', extras: [], lang: de},
   {code: 'fr', cronstrueLocale: 'fr', extras: [], lang: fr},
-  {code: 'it', cronstrueLocale: 'it', extras: [], lang: it}
+  {code: 'it', cronstrueLocale: 'it', extras: [], lang: it},
+  {code: 'cs', cronstrueLocale: 'cs', extras: [], lang: cs}
 ];
 
 function describe(fn, pattern) {
@@ -155,7 +157,8 @@ const headToHeadRows = [
   {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
   {name: 'German', code: 'de', cronstrueLocale: 'de'},
   {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
-  {name: 'Italian', code: 'it', cronstrueLocale: 'it'}
+  {name: 'Italian', code: 'it', cronstrueLocale: 'it'},
+  {name: 'Czech', code: 'cs', cronstrueLocale: 'cs'}
 ];
 
 function renderHeadToHead() {

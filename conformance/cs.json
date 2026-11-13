@@ -1,0 +1,4794 @@
+{
+ "language": "cs",
+ "rows": [
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:00:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "denně každých 6 sekund od 9:00:00 do 9:00:54",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/6 0 9 * * *"
+  },
+  {
+   "expected": "denně každých 10 sekund od 9:00:05 do 9:00:55",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/10 0 9 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "denně v 9:05, 9:20 a 9:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 9 * * *"
+  },
+  {
+   "expected": "denně v 9:00, 9:15, 9:30 a 9:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9 * * *"
+  },
+  {
+   "expected": "denně v 9:00, 9:15 a 9:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,15,45 9 * * *"
+  },
+  {
+   "expected": "každou celou hodinu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "denně v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "denně v 9:00 a 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9,17 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 9:00 do 17:00 a ve 22:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "denně každé 2 hodiny od 1:00 do 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1 * *"
+  },
+  {
+   "expected": "vždy 1., 10. a 20. dne v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1,10,20 * *"
+  },
+  {
+   "expected": "každý lichý den v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "každý lichý den v měsíci kromě 15. dne vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "v lednu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 1 *"
+  },
+  {
+   "expected": "v březnu, červnu, září a prosinci denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 3,6,9,12 *"
+  },
+  {
+   "expected": "v lednu, březnu, květnu, červenci, září a listopadu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * */2 *"
+  },
+  {
+   "expected": "od listopadu do února denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "každé pondělí v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "od pondělí do pátku vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "každé úterý a každý čtvrtek v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 2,4"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé po dobu jedné minuty každou sekundu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé po dobu jedné minuty každých 6 sekund",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/6 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé 5, 15, 25, 35, 45 a 55 sekund po začátku minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/10 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každou minutu od 9:00 do 17:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 30 minut od 9:00 do 17:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každou minutu v prvních 30 minutách každé hodiny (:00–:29) a pak ještě 45 minut po celé hodině (:45), od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku v každou celou hodinu a 15 a 45 minut po ní, od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,15,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 * * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku vždy ve 12:00, 12:15, 12:30 a 12:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 12 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45 a od 22:00 do 22:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17,22 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 1:00 do 1:45, od 3:00 do 3:45 a tak dále každé 2 hodiny až do 23:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 1/2 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1., 10. a 20. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1,10,20 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc každý lichý den v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 */2 * 1-5"
+  },
+  {
+   "expected": "každý lichý den v měsíci kromě 15. dne a navíc od pondělí do pátku (i 15.), vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5"
+  },
+  {
+   "expected": "v lednu od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 1 1-5"
+  },
+  {
+   "expected": "v březnu, červnu, září a prosinci od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 3,6,9,12 1-5"
+  },
+  {
+   "expected": "v lednu, březnu, květnu, červenci, září a listopadu od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * */2 1-5"
+  },
+  {
+   "expected": "od listopadu do února od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 11-2 1-5"
+  },
+  {
+   "expected": "denně každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * *"
+  },
+  {
+   "expected": "každé pondělí, středu a pátek každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 1,3,5"
+  },
+  {
+   "expected": "každé úterý a každý čtvrtek každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 2,4"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou sekundu od 0:00:00 do 0:00:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každých 6 sekund od 0:00:00 do 0:00:54",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/6 0 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každých 10 sekund od 0:00:05 do 0:00:55",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/10 0 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou minutu od 0:00 do 0:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:05, 0:20 a 0:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00, 0:15, 0:30 a 0:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00, 0:15 a 0:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,15,45 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou celou hodinu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 * 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 9:00 a 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9,17 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou hodinu od 9:00 do 17:00 a ve 22:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-17,22 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každé 2 hodiny od 1:00 do 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 1/2 1 * *"
+  },
+  {
+   "expected": "vždy 1., 10. a 20. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,10,20 * *"
+  },
+  {
+   "expected": "každý lichý den v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 * *"
+  },
+  {
+   "expected": "každý lichý den v měsíci kromě 15. dne vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "vždy 1. ledna v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 1 *"
+  },
+  {
+   "expected": "v březnu, červnu, září a prosinci vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 3,6,9,12 *"
+  },
+  {
+   "expected": "v lednu, březnu, květnu, červenci, září a listopadu vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 */2 *"
+  },
+  {
+   "expected": "od listopadu do února vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 11-2 *"
+  },
+  {
+   "expected": "každé pondělí a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 1"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 1-5"
+  },
+  {
+   "expected": "každé úterý a každý čtvrtek a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 2,4"
+  },
+  {
+   "expected": "každou sekundu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "každých 6 sekund",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/6 * * * * *"
+  },
+  {
+   "expected": "vždy 5, 15, 25, 35, 45 a 55 sekund po začátku každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/10 * * * * *"
+  },
+  {
+   "expected": "vždy 5, 20 a 45 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 * * * *"
+  },
+  {
+   "expected": "každých 15 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "v každou celou hodinu a 15 a 45 minut po ní",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,15,45 * * * *"
+  },
+  {
+   "expected": "denně každou minutu od 0:00 do 0:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:59 a od 17:00 do 17:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 17:59 a od 22:00 do 22:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 9-17,22 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 1:00 do 1:59, od 3:00 do 3:59 a tak dále každé 2 hodiny až do 23:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 1/2 * * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "vždy 1., 10. a 20. dne v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 1,10,20 * *"
+  },
+  {
+   "expected": "každý lichý den v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * */2 * *"
+  },
+  {
+   "expected": "každý lichý den v měsíci kromě 15. dne každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "v lednu každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 1 *"
+  },
+  {
+   "expected": "v březnu, červnu, září a prosinci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 3,6,9,12 *"
+  },
+  {
+   "expected": "v lednu, březnu, květnu, červenci, září a listopadu každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * */2 *"
+  },
+  {
+   "expected": "od listopadu do února každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 11-2 *"
+  },
+  {
+   "expected": "každé pondělí každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 1"
+  },
+  {
+   "expected": "od pondělí do pátku každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 1-5"
+  },
+  {
+   "expected": "každé úterý a každý čtvrtek každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 2,4"
+  },
+  {
+   "expected": "denně v 9:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "denně v 9:00:00 a 9:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 0 9 * * *"
+  },
+  {
+   "expected": "denně v 9:00:00, 9:00:15, 9:00:30 a 9:00:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:00:09",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-9 0 9 * * *"
+  },
+  {
+   "expected": "denně v 9:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "denně v 9:00 a 9:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 9 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 9 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:29 a v 9:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29,45 9 * * *"
+  },
+  {
+   "expected": "denně každých 7 minut od 9:00 do 9:56",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/7 9 * * *"
+  },
+  {
+   "expected": "denně v 9:05, 9:20, 9:35 a 9:50",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/15 9 * * *"
+  },
+  {
+   "expected": "denně v 9:10, 9:20, 9:30 a 9:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-40/10 9 * * *"
+  },
+  {
+   "expected": "denně ve 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "denně v 8:00, 12:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 9:00 do 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "denně každé 2 hodiny od 0:00 do 22:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "denně v 0:00, 6:00, 12:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */6 * * *"
+  },
+  {
+   "expected": "denně každé 2 hodiny od 0:00 do 22:00, kromě 8:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "každou noc každou hodinu od 22:00 do 2:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "vždy 15. dne v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 15 * *"
+  },
+  {
+   "expected": "vždy 1. a 15. dne v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1,15 * *"
+  },
+  {
+   "expected": "od 1. do 7. dne v měsíci vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-7 * *"
+  },
+  {
+   "expected": "vždy 1. až 7. a 15. dne v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-7,15 * *"
+  },
+  {
+   "expected": "každý sudý den v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 2/2 * *"
+  },
+  {
+   "expected": "vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 */5 * *"
+  },
+  {
+   "expected": "vždy poslední den v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "v červnu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6 *"
+  },
+  {
+   "expected": "v lednu a červenci denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 1,7 *"
+  },
+  {
+   "expected": "od června do srpna denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "od června do srpna a v prosinci, a to denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6-8,12 *"
+  },
+  {
+   "expected": "v lednu, dubnu, červenci a říjnu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * */3 *"
+  },
+  {
+   "expected": "od ledna do listopadu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "každou neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "každé pondělí, středu a pátek v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "každou sobotu a neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "od pondělí do soboty vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "vždy poslední pátek v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "vždy druhé pondělí v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00:30 do 17:45:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé na začátku minuty a 30 sekund po něm",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé na začátku minuty a 15, 30 a 45 sekund po něm",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45, pokaždé v prvních 10 sekundách minuty každou sekundu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-9 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každou hodinu od 9:00 do 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každou hodinu od 9:30 do 17:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku vždy 5, 20 a 45 minut po každé celé hodině, od 9:05 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každou minutu v prvních 30 minutách každé hodiny (:00–:29), od 9:00 do 17:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 7 minut, v každé hodině znovu od celé hodiny (:00–:56), od 9:00 do 17:56",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/7 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:05 do 17:50",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku vždy 10, 20, 30 a 40 minut po každé celé hodině, od 9:10 do 17:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-40/10 9-17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku vždy v 0:00, 0:15, 0:30 a 0:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 0 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku vždy v 9:00, 9:15, 9:30 a 9:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 9:45 a od 17:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9,17 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 8:00 do 8:45, od 12:00 do 12:45 a od 18:00 do 18:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 8,12,18 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 0:00 do 0:45, od 2:00 do 2:45 a tak dále každé 2 hodiny až do 22:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 */2 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 0:00 do 0:45, od 6:00 do 6:45, od 12:00 do 12:45 a od 18:00 do 18:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 */6 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 0:00 do 0:45, od 2:00 do 2:45 a tak dále každé 2 hodiny až do 22:45, kromě doby od 8:00 do 8:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 0:00 do 2:45 a od 22:00 do 23:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 22-2 * * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 15. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 15 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1. a 15. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1,15 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc od 1. do 7. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1-7 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1. až 7. a 15. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 1-7,15 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc každý sudý den v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 2/2 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1., 6., 11., 16., 21., 26. a 31. dne v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 */5 * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc poslední den v měsíci, vždy každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 L * 1-5"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 15W * 1-5"
+  },
+  {
+   "expected": "v červnu od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 6 1-5"
+  },
+  {
+   "expected": "v lednu a červenci od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 1,7 1-5"
+  },
+  {
+   "expected": "od června do srpna od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 6-8 1-5"
+  },
+  {
+   "expected": "od června do srpna a v prosinci, a to od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 6-8,12 1-5"
+  },
+  {
+   "expected": "v lednu, dubnu, červenci a říjnu od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * */3 1-5"
+  },
+  {
+   "expected": "od ledna do listopadu od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * 1-11 1-5"
+  },
+  {
+   "expected": "každé pondělí každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 1"
+  },
+  {
+   "expected": "každou neděli každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 0"
+  },
+  {
+   "expected": "každou sobotu a neděli každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 0,6"
+  },
+  {
+   "expected": "od pondělí do soboty každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 1-6"
+  },
+  {
+   "expected": "vždy poslední pátek v měsíci každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 5L"
+  },
+  {
+   "expected": "vždy druhé pondělí v měsíci každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 1#2"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00:00 a 0:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 0 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00:00, 0:00:15, 0:00:30 a 0:00:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 0 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou sekundu od 0:00:00 do 0:00:09",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-9 0 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00 a 0:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou minutu od 0:00 do 0:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou minutu od 0:00 do 0:29 a v 0:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29,45 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každých 7 minut od 0:00 do 0:56",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/7 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:05, 0:20, 0:35 a 0:50",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/15 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:10, 0:20, 0:30 a 0:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-40/10 0 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci ve 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 12 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 8:00, 12:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 8,12,18 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou hodinu od 9:00 do 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-17 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každé 2 hodiny od 0:00 do 22:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */2 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00, 6:00, 12:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */6 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každé 2 hodiny od 0:00 do 22:00, kromě 8:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každou hodinu od 0:00 do 2:00, ve 22:00 a ve 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 22-2 1 * *"
+  },
+  {
+   "expected": "vždy 15. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 15 * *"
+  },
+  {
+   "expected": "vždy 1. a 15. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,15 * *"
+  },
+  {
+   "expected": "od 1. do 7. dne v měsíci vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "vždy 1. až 7. a 15. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-7,15 * *"
+  },
+  {
+   "expected": "každý sudý den v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 2/2 * *"
+  },
+  {
+   "expected": "vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */5 * *"
+  },
+  {
+   "expected": "vždy poslední den v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "vždy 1. června v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "v lednu a červenci vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 1,7 *"
+  },
+  {
+   "expected": "od června do srpna vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 6-8 *"
+  },
+  {
+   "expected": "od června do srpna a v prosinci, a to vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 6-8,12 *"
+  },
+  {
+   "expected": "v lednu, dubnu, červenci a říjnu vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 */3 *"
+  },
+  {
+   "expected": "od ledna do listopadu vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 1-11 *"
+  },
+  {
+   "expected": "každou neděli a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 0"
+  },
+  {
+   "expected": "každé pondělí, středu a pátek a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 1,3,5"
+  },
+  {
+   "expected": "každou sobotu a neděli a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "od pondělí do soboty a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 1-6"
+  },
+  {
+   "expected": "poslední pátek v měsíci a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 5L"
+  },
+  {
+   "expected": "druhé pondělí v měsíci a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 1#2"
+  },
+  {
+   "expected": "vždy 30 sekund po začátku každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 * * * * *"
+  },
+  {
+   "expected": "každých 30 sekund",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 * * * * *"
+  },
+  {
+   "expected": "každých 15 sekund",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 * * * * *"
+  },
+  {
+   "expected": "každou sekundu v prvních 10 sekundách každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-9 * * * * *"
+  },
+  {
+   "expected": "každou hodinu v půl",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "každých 30 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 * * * *"
+  },
+  {
+   "expected": "každou minutu v prvních 30 minutách každé hodiny (:00–:29)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 * * * *"
+  },
+  {
+   "expected": "každou minutu v prvních 30 minutách každé hodiny (:00–:29) a pak ještě 45 minut po celé hodině (:45)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "každých 7 minut, v každé hodině znovu od celé hodiny (:00–:56)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/7 * * * *"
+  },
+  {
+   "expected": "vždy 5, 20, 35 a 50 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/15 * * * *"
+  },
+  {
+   "expected": "vždy 10, 20, 30 a 40 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-40/10 * * * *"
+  },
+  {
+   "expected": "denně každou minutu od 12:00 do 12:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 12 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 8:00 do 8:59, od 12:00 do 12:59 a od 18:00 do 18:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 17:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 9-17 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 0:00 do 0:59, od 2:00 do 2:59 a tak dále každé 2 hodiny až do 22:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 0:00 do 0:59, od 6:00 do 6:59, od 12:00 do 12:59 a od 18:00 do 18:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* */6 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 0:00 do 0:59, od 2:00 do 2:59 a tak dále každé 2 hodiny až do 22:59, kromě doby od 8:00 do 8:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "každou noc každou minutu od 22:00 do 2:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "vždy 15. dne v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 15 * *"
+  },
+  {
+   "expected": "vždy 1. a 15. dne v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 1,15 * *"
+  },
+  {
+   "expected": "od 1. do 7. dne v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 1-7 * *"
+  },
+  {
+   "expected": "vždy 1. až 7. a 15. dne v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 1-7,15 * *"
+  },
+  {
+   "expected": "každý sudý den v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 2/2 * *"
+  },
+  {
+   "expected": "vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * */5 * *"
+  },
+  {
+   "expected": "vždy poslední den v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * L * *"
+  },
+  {
+   "expected": "vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 15W * *"
+  },
+  {
+   "expected": "v červnu každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 6 *"
+  },
+  {
+   "expected": "v lednu a červenci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 1,7 *"
+  },
+  {
+   "expected": "od června do srpna každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 6-8 *"
+  },
+  {
+   "expected": "od června do srpna a v prosinci, a to každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 6-8,12 *"
+  },
+  {
+   "expected": "v lednu, dubnu, červenci a říjnu každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * */3 *"
+  },
+  {
+   "expected": "od ledna do listopadu každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * 1-11 *"
+  },
+  {
+   "expected": "každou neděli každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 0"
+  },
+  {
+   "expected": "každé pondělí, středu a pátek každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 1,3,5"
+  },
+  {
+   "expected": "každou sobotu a neděli každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 0,6"
+  },
+  {
+   "expected": "od pondělí do soboty každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 1-6"
+  },
+  {
+   "expected": "vždy poslední pátek v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 5L"
+  },
+  {
+   "expected": "vždy druhé pondělí v měsíci každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * 1#2"
+  },
+  {
+   "expected": "denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * *"
+  },
+  {
+   "expected": "každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "denně v 9:30 a 17:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "1. ledna 2030 v 0:00",
+   "options": {
+    "lang": "cs",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "v letech 2030 a 2035 vždy 1. ledna v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 1 1 * 2030,2035"
+  },
+  {
+   "expected": "v letech 2030 až 2035 vždy 1. ledna v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2035"
+  },
+  {
+   "expected": "v sudých letech vždy 1. ledna v 0:00",
+   "options": {
+    "lang": "cs",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * */2"
+  },
+  {
+   "expected": "1. června 2030 v 9:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 9 1 6 * 2030"
+  },
+  {
+   "expected": "v roce 2030 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030"
+  },
+  {
+   "expected": "v letech 2028 až 2031 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2028-2031"
+  },
+  {
+   "expected": "v červnu 2030 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * 6 * 2030"
+  },
+  {
+   "expected": "v červnu 2030 každé pondělí v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * 6 1 2030"
+  },
+  {
+   "expected": "1. a 15. června 2030 v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 1,15 6 * 2030"
+  },
+  {
+   "expected": "v roce 2030 v červnu a červenci denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * 6,7 * 2030"
+  },
+  {
+   "expected": "v letech 2030 a 2031 v červnu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * 6 * 2030,2031"
+  },
+  {
+   "expected": "poslední den v červnu 2030 v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 L 6 * 2030"
+  },
+  {
+   "expected": "druhé pondělí v červnu 2030 v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * 6 1#2 2030"
+  },
+  {
+   "expected": "každý lichý den v červnu 2030 v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 */2 6 * 2030"
+  },
+  {
+   "expected": "v roce 2030 vždy 1. dne v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 1 * * 2030"
+  },
+  {
+   "expected": "od roku 2030 v sudých letech denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030/2"
+  },
+  {
+   "expected": "od roku 2028 každý čtvrtý rok (2028, 2032, 2036 a tak dále) denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2028/4"
+  },
+  {
+   "expected": "od roku 2028 každý čtvrtý rok (2028, 2032, 2036 a tak dále) vždy 1. ledna v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 1 1 * 2028/4"
+  },
+  {
+   "expected": "od roku 2028 každý čtvrtý rok (2028, 2032, 2036 a tak dále) každých 5 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */5 * * * * 2028/4"
+  },
+  {
+   "expected": "v letech 2028 až 2060 každý čtvrtý rok (2028, 2032, 2036 a tak dále) denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2028-2060/4"
+  },
+  {
+   "expected": "v letech 2028, 2032, 2036, 2040, 2044 a 2048 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2028-2048/4"
+  },
+  {
+   "expected": "v letech 2030, 2032, 2034, 2036, 2038 a 2040 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2"
+  },
+  {
+   "expected": "v letech 2030, 2032, 2034 a 2036 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030-2036/2"
+  },
+  {
+   "expected": "v sudých letech každých 5 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */5 * * * * */2"
+  },
+  {
+   "expected": "v lichých letech denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 1971/2"
+  },
+  {
+   "expected": "v letech 2030, 2031, 2032 a 2035 vždy 1. ledna v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2032,2035"
+  },
+  {
+   "expected": "v letech 2030 až 2035 vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 1 * * 2030-2035"
+  },
+  {
+   "expected": "v roce 2030 od června do srpna vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 1 6-8 * 2030"
+  },
+  {
+   "expected": "v roce 2030 od ledna do listopadu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * 1-11 * 2030"
+  },
+  {
+   "expected": "v roce 2030 od června do srpna a v prosinci, a to denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * 6-8,12 * 2030"
+  },
+  {
+   "expected": "v roce 2030 v lednu, únoru, listopadu a prosinci denně v 0:00",
+   "options": {
+    "lang": "cs",
+    "years": true
+   },
+   "pattern": "0 0 * 11-2 * 2030"
+  },
+  {
+   "expected": "každý rok kromě roku 2030 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 1970-2029,2031-9999"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "cron": "quartz",
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * ?"
+  },
+  {
+   "expected": "vždy poslední den v měsíci, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho následující pondělí, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1W * *"
+  },
+  {
+   "expected": "vždy 1. června, a připadne-li na sobotu nebo neděli, místo toho následující pondělí, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1W 6 *"
+  },
+  {
+   "expected": "vždy 15. června, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 15W 6 *"
+  },
+  {
+   "expected": "vždy 31. dne v měsíci (jen v měsících, které ho mají), a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 31W * *"
+  },
+  {
+   "expected": "vždy 28. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 28W * *"
+  },
+  {
+   "expected": "vždy 30. června, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 30W 6 *"
+  },
+  {
+   "expected": "vždy 3 dny před posledním dnem měsíce (např. 28. v měsíci s 31 dny) v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-3 * *"
+  },
+  {
+   "expected": "vždy 27. června v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-3 6 *"
+  },
+  {
+   "expected": "vždy předposlední den v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-1 * *"
+  },
+  {
+   "expected": "vždy 2 dny před posledním dnem měsíce (např. 29. v měsíci s 31 dny) v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-2 * *"
+  },
+  {
+   "expected": "vždy 5 dní před posledním dnem měsíce (např. 26. v měsíci s 31 dny) v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-5 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsících s 31 dny v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-30 * *"
+  },
+  {
+   "expected": "vždy poslední den v červnu v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L 6 *"
+  },
+  {
+   "expected": "od června do srpna a v prosinci, a to vždy poslední den v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L 6-8,12 *"
+  },
+  {
+   "expected": "od června do srpna každý pátek a navíc poslední den těchto měsíců, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L 6-8 5"
+  },
+  {
+   "expected": "vždy druhé pondělí v červnu v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 * 6 1#2"
+  },
+  {
+   "expected": "v lednu a červenci vždy poslední pátek v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 * 1,7 5L"
+  },
+  {
+   "expected": "vždy první středu v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 3#1"
+  },
+  {
+   "expected": "vždy třetí čtvrtek v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 4#3"
+  },
+  {
+   "expected": "vždy poslední sobotu v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 6L"
+  },
+  {
+   "expected": "vždy čtvrtou neděli v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0#4"
+  },
+  {
+   "expected": "vždy páté úterý v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 2#5"
+  },
+  {
+   "expected": "vždy druhou sobotu v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 6#2"
+  },
+  {
+   "expected": "vždy čtvrtý pátek v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 5#4"
+  },
+  {
+   "expected": "vždy druhý čtvrtek v měsíci v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 4#2"
+  },
+  {
+   "expected": "každou celou hodinu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "@hourly"
+  },
+  {
+   "expected": "denně v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "@daily"
+  },
+  {
+   "expected": "každou neděli v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "@weekly"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "@monthly"
+  },
+  {
+   "expected": "vždy 1. ledna v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "@yearly"
+  },
+  {
+   "expected": "při startu systému",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "Spouští se denně v 9:00.",
+   "options": {
+    "form": "sentence",
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "Denně v 9:00",
+   "options": {
+    "form": "label",
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "Každou minutu",
+   "options": {
+    "form": "label",
+    "lang": "cs"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "1. ledna 2030 v 0:00",
+   "options": {
+    "form": "label",
+    "lang": "cs",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "Spouští se v červnu každý pátek a navíc 1. června, vždy v 0:00.",
+   "options": {
+    "form": "sentence",
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "Spouští se při startu systému.",
+   "options": {
+    "form": "sentence",
+    "lang": "cs"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "nerozpoznaný cronový výraz",
+   "options": {
+    "lang": "cs",
+    "lenient": true
+   },
+   "pattern": "not a pattern"
+  },
+  {
+   "expected": "každý pátek a navíc 1. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 * 5"
+  },
+  {
+   "expected": "každý pátek a navíc 13. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 13 * 5"
+  },
+  {
+   "expected": "od pondělí do pátku a navíc 1. a 15. dne v měsíci, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,15 * 1-5"
+  },
+  {
+   "expected": "v červnu každý pátek a navíc 1. června, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "v lednu a červenci od pondělí do pátku a navíc 1. a 15. dne těchto měsíců, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,15 1,7 1-5"
+  },
+  {
+   "expected": "od ledna do listopadu každý pátek a navíc 1. dne těchto měsíců, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 1-11 5"
+  },
+  {
+   "expected": "od května do července každou středu a každý čtvrtek a navíc 1., 19., 23. a 28. dne těchto měsíců, vždy každou hodinu od 7:52 do 16:52",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "52 7-16 1,19,23,28 5-7 3-4"
+  },
+  {
+   "expected": "každé pondělí a navíc od 1. do 7. dne v měsíci, vždy ve 4:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 4 1-7 * 1"
+  },
+  {
+   "expected": "denně, ale ve středu jen tehdy, připadne-li na 15. den v měsíci, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 15 * 0-2,4-6"
+  },
+  {
+   "expected": "druhé pondělí v červnu a navíc 1. června, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 6 1#2"
+  },
+  {
+   "expected": "v červnu každou sobotu a neděli a navíc každý lichý den v červnu, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 6 0,6"
+  },
+  {
+   "expected": "v červnu každé pondělí a navíc 15. června, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 15W 6 1"
+  },
+  {
+   "expected": "vždy 1. a 15. června v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,15 6 *"
+  },
+  {
+   "expected": "vždy 1., 10. a 20. června v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,10,20 6 *"
+  },
+  {
+   "expected": "od 1. do 7. června vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "vždy 1. až 7. a 15. června v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-7,15 6 *"
+  },
+  {
+   "expected": "každý lichý den v červnu v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "každý sudý den v únoru v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 2/2 2 *"
+  },
+  {
+   "expected": "vždy 1., 6., 11., 16., 21., 26. a 31. července v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */5 7 *"
+  },
+  {
+   "expected": "vždy 1., 6., 11., 16., 21. a 26. června v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */5 6 *"
+  },
+  {
+   "expected": "od 25. do 30. června vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 25-31 6 *"
+  },
+  {
+   "expected": "v dubnu a červnu vždy 30. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 30,31 4,6 *"
+  },
+  {
+   "expected": "vždy 31. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 31 * *"
+  },
+  {
+   "expected": "v přestupných letech vždy 29. února v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 29 2 *"
+  },
+  {
+   "expected": "jen 30. února, tedy nikdy",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 30 2 *"
+  },
+  {
+   "expected": "vždy 15. března v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 15 3 *"
+  },
+  {
+   "expected": "vždy 1. až 3. a 28. až 31. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 28-3 * *"
+  },
+  {
+   "expected": "vždy 1. až 3. a 28. až 30. června v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 28-3 6 *"
+  },
+  {
+   "expected": "v lednu a červenci vždy 1. a 15. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1,15 1,7 *"
+  },
+  {
+   "expected": "vždy 31. prosince ve 23:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "59 23 31 12 *"
+  },
+  {
+   "expected": "denně kromě 15. dne v měsíci vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-14,16-31 * *"
+  },
+  {
+   "expected": "v červnu denně kromě 15. června vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-14,16-31 6 *"
+  },
+  {
+   "expected": "denně kromě 15. a 16. dne v měsíci vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-14,17-31 * *"
+  },
+  {
+   "expected": "denně kromě 31. dne v měsíci vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-30 * *"
+  },
+  {
+   "expected": "od 1. do 20. dne v měsíci kromě 13. dne vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-12,14-20 * *"
+  },
+  {
+   "expected": "v únoru, dubnu, červnu, srpnu, říjnu a prosinci vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 2/2 *"
+  },
+  {
+   "expected": "vždy 1. až 5., 10. a 20. až 25. dne v měsíci ve 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 12 1-5,10,20-25 * *"
+  },
+  {
+   "expected": "vždy 1., 11., 21. a 31. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */10 * *"
+  },
+  {
+   "expected": "vždy 1. a 22. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */21 * *"
+  },
+  {
+   "expected": "vždy 5., 8., 11., 14., 17. a 20. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 5-20/3 * *"
+  },
+  {
+   "expected": "od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále) v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */3 * *"
+  },
+  {
+   "expected": "každý sudý den od 8. do 30. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 8/2 * *"
+  },
+  {
+   "expected": "v únoru denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 2 *"
+  },
+  {
+   "expected": "v květnu a srpnu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 5,8 *"
+  },
+  {
+   "expected": "od září do listopadu denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 9-11 *"
+  },
+  {
+   "expected": "od ledna do března, v červnu a od září do listopadu, a to denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 1-3,6,9-11 *"
+  },
+  {
+   "expected": "v lednu a prosinci denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 12,1 *"
+  },
+  {
+   "expected": "každý měsíc kromě června denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 1-5,7-12 *"
+  },
+  {
+   "expected": "každý měsíc kromě června a července denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 1-5,8-12 *"
+  },
+  {
+   "expected": "každý měsíc kromě června vždy 1. dne v měsíci v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1 1-5,7-12 *"
+  },
+  {
+   "expected": "každé úterý v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 2"
+  },
+  {
+   "expected": "každou středu v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 3"
+  },
+  {
+   "expected": "každý čtvrtek v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 4"
+  },
+  {
+   "expected": "každou sobotu v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 6"
+  },
+  {
+   "expected": "každý pátek a každou sobotu v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 5,6"
+  },
+  {
+   "expected": "každou středu a neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0,3"
+  },
+  {
+   "expected": "každé pondělí, pátek, sobotu a neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "každé pondělí, sobotu a neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 6-1"
+  },
+  {
+   "expected": "každé pondělí, úterý, středu a neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0-3"
+  },
+  {
+   "expected": "od úterý do čtvrtka vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 2-4"
+  },
+  {
+   "expected": "od středy do neděle vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 3-0"
+  },
+  {
+   "expected": "od čtvrtka do soboty vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 4-6"
+  },
+  {
+   "expected": "každé pondělí a každou neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0,1"
+  },
+  {
+   "expected": "každý pátek a každou neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0,5"
+  },
+  {
+   "expected": "každé úterý, středu, čtvrtek a neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0,2-4"
+  },
+  {
+   "expected": "denně kromě pondělí a soboty vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0,2-5"
+  },
+  {
+   "expected": "každé pondělí, úterý, středu a pátek v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1,2,3,5"
+  },
+  {
+   "expected": "každé pondělí, středu, čtvrtek a pátek v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1,3,4,5"
+  },
+  {
+   "expected": "od úterý do neděle vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0,2-6"
+  },
+  {
+   "expected": "denně kromě soboty vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "denně kromě pátku a soboty vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0-4"
+  },
+  {
+   "expected": "denně kromě středy a čtvrtka vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 5-2"
+  },
+  {
+   "expected": "denně kromě středy vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0-2,4-6"
+  },
+  {
+   "expected": "denně kromě čtvrtka vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 0-3,5-6"
+  },
+  {
+   "expected": "v červnu denně kromě středy vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6 0-2,4-6"
+  },
+  {
+   "expected": "každé pondělí v 0:00, 1:00, 22:00 a 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,1,22,23 * * 1"
+  },
+  {
+   "expected": "každou noc každou hodinu od 22:00 do 1:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,1,22,23 * * *"
+  },
+  {
+   "expected": "v červnu každé pondělí v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "v červnu každé pondělí, středu a pátek v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6 1,3,5"
+  },
+  {
+   "expected": "v červnu každou sobotu a neděli v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6 0,6"
+  },
+  {
+   "expected": "v lednu a červenci každé pondělí v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 1,7 1"
+  },
+  {
+   "expected": "od června do srpna každé pondělí v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6-8 1"
+  },
+  {
+   "expected": "od června do srpna od pondělí do pátku vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6-8 1-5"
+  },
+  {
+   "expected": "v červnu od pondělí do pátku vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6 1-5"
+  },
+  {
+   "expected": "v červnu denně kromě pondělí a soboty vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * 6 0,2-5"
+  },
+  {
+   "expected": "denně kromě soboty každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 9-17 * * 0-5"
+  },
+  {
+   "expected": "denně v 9:00, 9:30, 17:00 a 17:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 9,17 * * *"
+  },
+  {
+   "expected": "denně v 9:05, 9:20, 17:05 a 17:20",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20 9,17 * * *"
+  },
+  {
+   "expected": "denně v 9:05, 9:20, 9:45, 17:05, 17:20 a 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 9,17 * * *"
+  },
+  {
+   "expected": "denně v 9:05, 9:20, 9:45, 10:05, 10:20 a 10:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 9-10 * * *"
+  },
+  {
+   "expected": "denně v 9:00, 9:20, 9:40, 17:00, 17:20 a 17:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,20,40 9,17 * * *"
+  },
+  {
+   "expected": "denně v 8:00, 8:30, 12:00, 12:30, 18:00 a 18:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 8,12,18 * * *"
+  },
+  {
+   "expected": "denně v 8:05, 8:20, 8:45, 12:05, 12:20, 12:45, 18:05, 18:20 a 18:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 8,12,18 * * *"
+  },
+  {
+   "expected": "denně v 8:00, 8:15, 8:45, 12:00, 12:15, 12:45, 18:00, 18:15 a 18:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,15,45 8,12,18 * * *"
+  },
+  {
+   "expected": "každé pondělí v 8:05, 8:20, 8:45, 12:05, 12:20, 12:45, 18:05, 18:20 a 18:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 8,12,18 * * 1"
+  },
+  {
+   "expected": "denně v 1:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 1 * * *"
+  },
+  {
+   "expected": "denně ve 2:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 2 * * *"
+  },
+  {
+   "expected": "denně ve 3:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 3 * * *"
+  },
+  {
+   "expected": "denně ve 4:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 4 * * *"
+  },
+  {
+   "expected": "denně v 5:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 5 * * *"
+  },
+  {
+   "expected": "denně v 11:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 11 * * *"
+  },
+  {
+   "expected": "denně ve 13:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 13 * * *"
+  },
+  {
+   "expected": "denně ve 14:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 14 * * *"
+  },
+  {
+   "expected": "denně v 15:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 15 * * *"
+  },
+  {
+   "expected": "denně v 19:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 19 * * *"
+  },
+  {
+   "expected": "denně ve 20:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 20 * * *"
+  },
+  {
+   "expected": "denně ve 21:30 a 23:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 21,23 * * *"
+  },
+  {
+   "expected": "denně v 5:00 a 14:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 5,14 * * *"
+  },
+  {
+   "expected": "denně ve 2:00 a 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 2,17 * * *"
+  },
+  {
+   "expected": "denně v 1:30 a 13:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 1,13 * * *"
+  },
+  {
+   "expected": "denně v 1:00, 5:00 a 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 1,5,9 * * *"
+  },
+  {
+   "expected": "denně v 9:00 a 13:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9,13 * * *"
+  },
+  {
+   "expected": "denně v 0:00 a 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,23 * * *"
+  },
+  {
+   "expected": "denně v 0:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "denně v 0:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 0 * * *"
+  },
+  {
+   "expected": "denně ve 12:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 12 * * *"
+  },
+  {
+   "expected": "denně v 6:00, 8:00, 12:00, 18:00 a 20:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 6,8,12,18,20 * * *"
+  },
+  {
+   "expected": "denně v 9:09, 9:14, 9:47, 9:56 a 9:58",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "9,14,47,56,58 9 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 22:00 do 23:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "každé úterý každých 30 minut od 0:00 do 17:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/30 0-17 * * 2"
+  },
+  {
+   "expected": "každou noc každou hodinu od 22:00 do 6:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0-6,22,23 * * *"
+  },
+  {
+   "expected": "každou noc každých 15 minut od 22:00 do 5:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 0-5,22-23 * * *"
+  },
+  {
+   "expected": "v červnu denně každých 15 minut od 0:00 do 5:45 a od 22:00 do 23:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 0-5,22-23 * 6 *"
+  },
+  {
+   "expected": "denně v 5:00 a každou hodinu od 9:00 do 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 5,9-17 * * *"
+  },
+  {
+   "expected": "denně každých 10 minut od 9:05 do 9:55 a od 17:05 do 17:55",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/10 9,17 * * *"
+  },
+  {
+   "expected": "denně v 9:00, 9:20 a 9:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,20,40 9 * * *"
+  },
+  {
+   "expected": "denně každých 10 minut od 9:00 do 9:50",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/10 9 * * *"
+  },
+  {
+   "expected": "denně v 0:00, 6:00, 12:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,6,12,18 * * *"
+  },
+  {
+   "expected": "denně v 0:00, 6:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,6,18 * * *"
+  },
+  {
+   "expected": "denně v 0:00, 8:00 a 16:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */8 * * *"
+  },
+  {
+   "expected": "denně každé 4 hodiny od 0:00 do 20:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */4 * * *"
+  },
+  {
+   "expected": "denně každé 3 hodiny od 0:00 do 21:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */3 * * *"
+  },
+  {
+   "expected": "denně v 0:00, 5:00, 10:00, 15:00 a 20:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */5 * * *"
+  },
+  {
+   "expected": "denně každé 2 hodiny od 0:00 do 20:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0-20/2 * * *"
+  },
+  {
+   "expected": "denně každé 2 hodiny od 0:30 do 22:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 */2 * * *"
+  },
+  {
+   "expected": "denně každé 3 hodiny od 0:30 do 21:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 */3 * * *"
+  },
+  {
+   "expected": "denně v 0:30, 5:30, 10:30, 15:30 a 20:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 */5 * * *"
+  },
+  {
+   "expected": "denně v 0:23, 6:23, 12:23 a 18:23",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "23 */6 * * *"
+  },
+  {
+   "expected": "denně každé 2 hodiny od 1:23 do 23:23",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "23 1/2 * * *"
+  },
+  {
+   "expected": "denně v 0:15 a 0:45 a tak dále každé 2 hodiny až do 22:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15,45 */2 * * *"
+  },
+  {
+   "expected": "denně v 0:15 a 0:45 a tak dále každé 4 hodiny až do 20:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "denně v 0:15, 0:45, 6:15, 6:45, 12:15, 12:45, 18:15 a 18:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15,45 */6 * * *"
+  },
+  {
+   "expected": "denně v 0:23 a 12:23",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "23 */12 * * *"
+  },
+  {
+   "expected": "denně v 1:00 a 13:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 1/12 * * *"
+  },
+  {
+   "expected": "denně každých 15 minut od 0:00 do 0:45 a od 12:00 do 12:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 */12 * * *"
+  },
+  {
+   "expected": "denně v 0:00 a 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */12 * * *"
+  },
+  {
+   "expected": "denně v 0:00 a 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0/12 * * *"
+  },
+  {
+   "expected": "denně v 0:00 a 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci v 0:00 a 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */12 1 * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci každé 3 hodiny od 0:00 do 21:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */3 1 * *"
+  },
+  {
+   "expected": "denně každou hodinu od 9:00 do 11:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-11 * * *"
+  },
+  {
+   "expected": "denně každou celou hodinu, kromě 3:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně každou celou hodinu, kromě 3:00 a 4:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0-2,5-23 * * *"
+  },
+  {
+   "expected": "denně každou celou hodinu, kromě 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0-22 * * *"
+  },
+  {
+   "expected": "denně každou celou hodinu, kromě 22:00 a 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0-21 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 9:00 do 17:00, kromě 12:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-11,13-17 * * *"
+  },
+  {
+   "expected": "denně každou minutu, kromě doby od 23:00 do 23:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-22 * * *"
+  },
+  {
+   "expected": "denně každou minutu, kromě doby od 3:00 do 3:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně každou minutu, kromě doby od 3:00 do 4:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-2,5-23 * * *"
+  },
+  {
+   "expected": "denně každou hodinu v půl, kromě 3:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně 5, 20 a 45 minut po každé celé hodině, kromě doby od 3:00 do 3:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně každých 10 minut, kromě doby od 3:00 do 3:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "každou minutu, kromě okamžiku 29 minut po každé celé hodině (:29)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-28,30-59 * * * *"
+  },
+  {
+   "expected": "každou minutu, kromě každé celé hodiny a okamžiku 30 minut po ní (:00 a :30)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "1-29,31-59 * * * *"
+  },
+  {
+   "expected": "každou minutu, kromě okamžiku 59 minut po každé celé hodině (:59)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-58 * * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:59 a od 17:00 do 17:59, kromě 9:29 a 17:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "každých 5 minut, kromě okamžiku 30 minut po každé celé hodině (:30)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 * * * *"
+  },
+  {
+   "expected": "denně každých 5 minut od 9:00 do 17:55, kromě okamžiku 30 minut po každé celé hodině (:30)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9-17 * * *"
+  },
+  {
+   "expected": "denně každých 5 minut od 9:00 do 9:55, kromě 9:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9 * * *"
+  },
+  {
+   "expected": "denně každých 5 minut, kromě okamžiku 30 minut po každé celé hodině (:30) a kromě doby od 3:00 do 3:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně každých 10 minut od 9:00 do 17:50, kromě okamžiku 30 minut po každé celé hodině (:30)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,10,20,40,50 9-17 * * *"
+  },
+  {
+   "expected": "denně každých 10 minut od 9:00 do 9:50, kromě 9:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,10,20,40,50 9 * * *"
+  },
+  {
+   "expected": "každou sekundu, kromě minuty, která začíná 29 minut po každé celé hodině (:29:00–:29:59)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:59:59, kromě doby od 9:29:00 do 9:29:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-28,30-59 9 * * *"
+  },
+  {
+   "expected": "každou sekundu, kromě okamžiku 29 sekund po začátku každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-28,30-59 * * * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:00:59, kromě 9:00:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-28,30-59 0 9 * * *"
+  },
+  {
+   "expected": "denně každých 15 minut od 8:00 do 8:45, od 10:00 do 10:45, od 12:00 do 12:45, od 14:00 do 14:45, od 16:00 do 16:45 a od 18:00 do 18:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 9:00 do 17:00, ve 20:00 a ve 22:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-17,20,22 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 17:59, od 20:00 do 20:59 a od 22:00 do 22:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 9-17,20,22 * * *"
+  },
+  {
+   "expected": "od pondělí do pátku každých 10 minut od 6:00 do 8:50 a od 17:00 do 19:50",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/10 6-8,17-19 * * 1-5"
+  },
+  {
+   "expected": "v lednu, dubnu, červenci a říjnu každý lichý den v měsíci každých 20 minut od 0:00 do 0:40, od 2:00 do 2:40 a tak dále každé 2 hodiny až do 22:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/20 */2 */2 */3 *"
+  },
+  {
+   "expected": "denně 5, 20 a 45 minut po každé celé hodině, od 9:05 do 17:45 a ve 22:05, 22:20 a 22:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,45 9-17,22 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 8:00 do 8:29, od 12:00 do 12:29 a od 18:00 do 18:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 8,12,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 6:00 do 6:59, od 8:00 do 8:59, od 12:00 do 12:59, od 18:00 do 18:59 a od 20:00 do 20:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 6,8,12,18,20 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:29, v 9:45, od 17:00 do 17:29 a v 17:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29,45 9,17 * * *"
+  },
+  {
+   "expected": "denně v 9:05 a každou minutu od 9:20 do 9:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20-40 9 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:10 a od 9:50 do 9:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "50-10 9 * * *"
+  },
+  {
+   "expected": "každou minutu v prvních 11 minutách každé hodiny (:00–:10) a pak v posledních 10 minutách každé hodiny (:50–:59)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "50-10 * * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:10 do 9:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-40 9 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:30 do 9:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30-59 9 * * *"
+  },
+  {
+   "expected": "každou minutu od 5 do 10 minut po každé celé hodině (:05–:10) a pak ještě 20 minut po celé hodině (:20)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5-10,20 * * * *"
+  },
+  {
+   "expected": "každou minutu v posledních 15 minutách každé hodiny (:45–:59)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "45-59 * * * *"
+  },
+  {
+   "expected": "každou minutu od 10 do 40 minut po každé celé hodině (:10–:40)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-40 * * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00 do 9:29 a od 17:00 do 17:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 9,17 * * *"
+  },
+  {
+   "expected": "v každou celou hodinu a 1 minutu po ní",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-1 * * * *"
+  },
+  {
+   "expected": "vždy 1 minutu po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "1 * * * *"
+  },
+  {
+   "expected": "vždy 2 minuty po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "2 * * * *"
+  },
+  {
+   "expected": "vždy 1 a 2 minuty po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "1,2 * * * *"
+  },
+  {
+   "expected": "vždy 22 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "22 * * * *"
+  },
+  {
+   "expected": "vždy 15 a 45 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15,45 * * * *"
+  },
+  {
+   "expected": "každé 2 minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/2 * * * *"
+  },
+  {
+   "expected": "každé 3 minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/3 * * * *"
+  },
+  {
+   "expected": "každé 4 minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/4 * * * *"
+  },
+  {
+   "expected": "každých 5 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/5 * * * *"
+  },
+  {
+   "expected": "každých 20 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/20 * * * *"
+  },
+  {
+   "expected": "v každou celou hodinu a 21 a 42 minut po ní",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/21 * * * *"
+  },
+  {
+   "expected": "vždy 9, 14, 47 a 56 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "9,14,47,56 * * * *"
+  },
+  {
+   "expected": "každých 10 minut, v každé hodině od 5 do 55 minut po celé hodině (:05–:55)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5/10 * * * *"
+  },
+  {
+   "expected": "v každou celou hodinu a 10, 20, 30 a 40 minut po ní",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-40/10 * * * *"
+  },
+  {
+   "expected": "každých 6 minut, v každé hodině od celé hodiny do 42 minut po ní (:00–:42)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-42/6 * * * *"
+  },
+  {
+   "expected": "každé 2 minuty, v každé hodině od 1 do 59 minut po celé hodině (:01–:59)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "1/2 * * * *"
+  },
+  {
+   "expected": "denně v 9:30:15",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "denně v 9:30:15 a 17:30:15",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15 30 9,17 * * *"
+  },
+  {
+   "expected": "denně v 9:30:15 a 9:30:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15,45 30 9 * * *"
+  },
+  {
+   "expected": "denně v 9:00:00, 9:00:20 a 9:00:40",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,20,40 0 9 * * *"
+  },
+  {
+   "expected": "denně v 9:00:05",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5-10/60 0 9 * * *"
+  },
+  {
+   "expected": "denně v 0:00:15 a 12:00:15",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15 0 */12 * * *"
+  },
+  {
+   "expected": "denně v 0:00:15, 6:00:15, 12:00:15 a 18:00:15",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15 0 */6 * * *"
+  },
+  {
+   "expected": "denně každé 2 hodiny od 0:00:15 do 22:00:15",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15 0 */2 * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:30:10 do 9:30:20",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:00:59 a od 17:00:00 do 17:00:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0 9,17 * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:59:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 9 * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 17:59:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* * 9-17 * * *"
+  },
+  {
+   "expected": "denně každých 6 sekund od 9:00:00 do 9:59:54",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/6 * 9 * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:29:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-29 9 * * *"
+  },
+  {
+   "expected": "každé 3 minuty, pokaždé po dobu jedné minuty každou sekundu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* */3 * * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 9:00:30 do 17:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 9-17 * * *"
+  },
+  {
+   "expected": "každou sekundu v první minutě každé hodiny",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0 * * * *"
+  },
+  {
+   "expected": "vždy 30 sekund po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 * * * *"
+  },
+  {
+   "expected": "každou sekundu v prvních 10 sekundách každé hodiny",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-9 0 * * * *"
+  },
+  {
+   "expected": "vždy 30 minut a 15 sekund po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15 30 * * * *"
+  },
+  {
+   "expected": "každou hodinu v půl, pokaždé po dobu jedné minuty každou sekundu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 30 * * * *"
+  },
+  {
+   "expected": "vždy 5 a 20 minut po každé celé hodině, pokaždé na začátku minuty a 30 sekund po něm",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,30 5,20 * * * *"
+  },
+  {
+   "expected": "každých 15 minut, pokaždé na začátku minuty a 15, 30 a 45 sekund po něm",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 */15 * * * *"
+  },
+  {
+   "expected": "každých 15 minut, pokaždé 30 sekund po začátku minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 */15 * * * *"
+  },
+  {
+   "expected": "denně v 0:05:08 a 0:30:08 a tak dále každé 2 hodiny až do 22:30:08",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "8 5,30 */2 * * *"
+  },
+  {
+   "expected": "každou sekundu v prvních 30 minutách každé hodiny (:00:00–:29:59)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-29 * * * *"
+  },
+  {
+   "expected": "denně každou minutu od 9:00:30 do 17:59:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 * 9-17 * * *"
+  },
+  {
+   "expected": "vždy 1 sekundu po začátku každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "1 * * * * *"
+  },
+  {
+   "expected": "vždy 2 sekundy po začátku každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "2 * * * * *"
+  },
+  {
+   "expected": "vždy 5, 15 a 25 sekund po začátku každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,15,25 * * * * *"
+  },
+  {
+   "expected": "na začátku každé minuty a 20 a 45 sekund po něm",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,20,45 * * * * *"
+  },
+  {
+   "expected": "každých 15 minut, pokaždé 5, 15 a 25 sekund po začátku minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,15,25 */15 * * * *"
+  },
+  {
+   "expected": "každou sekundu od 10 do 20 sekund po začátku každé minuty včetně",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-20 * * * * *"
+  },
+  {
+   "expected": "každé 2 sekundy",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/2 * * * * *"
+  },
+  {
+   "expected": "každých 7 sekund, v každé minutě znovu od začátku",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/7 * * * * *"
+  },
+  {
+   "expected": "v červnu každých 5 minut",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/5 * * 6 *"
+  },
+  {
+   "expected": "v červnu denně v 0:00, 6:00, 12:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 */6 * 6 *"
+  },
+  {
+   "expected": "v červnu každou hodinu v půl",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 * * 6 *"
+  },
+  {
+   "expected": "v červnu každou celou hodinu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 * * 6 *"
+  },
+  {
+   "expected": "každé pondělí každou celou hodinu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 * * * 1"
+  },
+  {
+   "expected": "v roce 2030 každých 5 minut",
+   "options": {
+    "lang": "cs",
+    "years": true
+   },
+   "pattern": "*/5 * * * * 2030"
+  },
+  {
+   "expected": "každou celou hodinu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0-23 * * *"
+  },
+  {
+   "expected": "každou minutu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/1 * * * *"
+  },
+  {
+   "expected": "každé pondělí a úterý a navíc od 23. do 25. dne v měsíci, vždy každé 3 hodiny od 0:24 do 21:24, pokaždé po dobu jedné minuty každých 10 sekund",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/10 24 */3 23-25 * 1-2"
+  },
+  {
+   "expected": "od roku 2030 každý čtvrtý rok (2030, 2034, 2038 a tak dále) v červnu a červenci vždy druhou sobotu v měsíci v 0:23:00, 0:23:30, 12:23:00 a 12:23:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/30 23 */12 * 6-7 6#2 2030/4"
+  },
+  {
+   "expected": "v letech 2028 a 2030 denně ve 2:35 a 15:35",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 35 2,15 * * * 2028,2030"
+  },
+  {
+   "expected": "v červenci, září, říjnu a prosinci každé pondělí, středu, čtvrtek a pátek vždy 30 a 42 minut po každé celé hodině, pokaždé po dobu jedné minuty každou sekundu, od 3:30:00 do 10:42:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 30,42 3-10 * 7,9,10,12 1,3,4,5"
+  },
+  {
+   "expected": "v březnu, červnu, září a prosinci vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, v 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 18 15W 3,6,9,12 *"
+  },
+  {
+   "expected": "v lednu, březnu, květnu, červenci, září a listopadu vždy 1. dne v měsíci ve 4:07, 10:07, 16:07 a 22:07",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "každý pátek každou hodinu od 0:00 do 2:00, ve 22:00 a ve 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 22-2 * * 5"
+  },
+  {
+   "expected": "v lednu každé pondělí a navíc 1. ledna, vždy v 8:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 8 1 1 1"
+  },
+  {
+   "expected": "v červnu denně v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-30 6 *"
+  },
+  {
+   "expected": "vždy 30. března v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 30 2-3 *"
+  },
+  {
+   "expected": "jen 31. června, tedy nikdy",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "jen 31. dne v dubnu a červnu, tedy nikdy",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 31 4,6 *"
+  },
+  {
+   "expected": "Spouští se jen 30. února, tedy nikdy.",
+   "options": {
+    "form": "sentence",
+    "lang": "cs"
+   },
+   "pattern": "0 0 30 2 *"
+  },
+  {
+   "expected": "v červnu každé pondělí v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 31 6 1"
+  },
+  {
+   "expected": "v červenci a srpnu vždy 31. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 31W 6-8 *"
+  },
+  {
+   "expected": "v přestupných letech vždy 29. února, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 29W 2 *"
+  },
+  {
+   "expected": "denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-31 * 1"
+  },
+  {
+   "expected": "denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 15 * 0-6"
+  },
+  {
+   "expected": "od roku 2030 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030/1"
+  },
+  {
+   "expected": "v sudých letech 2030 až 2050 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030-2050/2"
+  },
+  {
+   "expected": "od roku 2030 v sudých letech a navíc v roce 2031, a to denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030/2,2031"
+  },
+  {
+   "expected": "denně, ale 15. dne v měsíci jen tehdy, připadne-li na pátek, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 * 5"
+  },
+  {
+   "expected": "denně, ale 15. dne v měsíci jen tehdy, připadne-li na pondělí až pátek, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 * 1-5"
+  },
+  {
+   "expected": "denně, ale 15. dne v měsíci jen tehdy, připadne-li na pondělí nebo středu, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 * 1,3"
+  },
+  {
+   "expected": "od pátku do neděle vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 5,6,0"
+  },
+  {
+   "expected": "každé pondělí a úterý v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 1,2"
+  },
+  {
+   "expected": "každou středu a sobotu v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 * * 3,6"
+  },
+  {
+   "expected": "vždy 20 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "20 * * * *"
+  },
+  {
+   "expected": "denně 20 minut po každé celé hodině, kromě 3:20 a 4:20",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "20 0-2,5-23 * * *"
+  },
+  {
+   "expected": "denně 30 sekund po každé celé hodině, kromě 3:00:30",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně 5 a 20 minut po každé celé hodině, od 9:05 do 17:20, kromě doby od 12:00 do 12:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20 9-11,13-17 * * *"
+  },
+  {
+   "expected": "denně každých 5 minut, v každé hodině od 5 do 55 minut po celé hodině (:05–:55), od 9:05 do 17:55",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5-55/5 9-17 * * *"
+  },
+  {
+   "expected": "denně každou minutu v prvních 30 minutách každé hodiny (:00–:29), od 9:00 do 17:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 9-17 * * *"
+  },
+  {
+   "expected": "denně každých 7 minut, v každé hodině znovu od celé hodiny (:00–:56), od 9:00 do 17:56",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/7 9-17 * * *"
+  },
+  {
+   "expected": "denně v 9:00, 11:00, 13:00, 15:00 a 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9-17/2 * * *"
+  },
+  {
+   "expected": "Spouští se od 1. do 7. dne v měsíci vždy v 0:00.",
+   "options": {
+    "form": "sentence",
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "denně každých 15 minut od 1:00 do 2:45, od 5:00 do 5:45, od 7:00 do 7:45, od 11:00 do 11:45, od 13:00 do 13:45, od 17:00 do 17:45, od 19:00 do 19:45 a od 23:00 do 23:45",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 1,2,5,7,11,13,17,19,23 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 0:00 do 5:00 a od 10:00 do 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 10-5 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 0:00 do 5:00 a od 17:00 do 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 17-5 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 0:00 do 9:00 a od 18:00 do 23:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 18-9 * * *"
+  },
+  {
+   "expected": "od 1. do 20. dne v měsíci kromě 13. dne a navíc každý pátek (i 13.), vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-12,14-20 * 5"
+  },
+  {
+   "expected": "denně, ale 15. dne v měsíci jen tehdy, nepřipadne-li na středu, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 * 0-2,4-6"
+  },
+  {
+   "expected": "denně kromě 15. dne v měsíci vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 * 1#2"
+  },
+  {
+   "expected": "v červnu denně, ale 15. června jen tehdy, připadne-li na pátek, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 6 5"
+  },
+  {
+   "expected": "v lednu a červenci denně, ale 15. dne těchto měsíců jen tehdy, připadne-li na pátek, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 1,7 5"
+  },
+  {
+   "expected": "v červnu 2030 každý pátek a navíc 1. června, vždy v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 1 6 5 2030"
+  },
+  {
+   "expected": "denně každých 10 minut, pokaždé 30 sekund po začátku minuty, kromě doby od 3:00 do 3:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 */10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně 30 sekund po začátku každé minuty, kromě doby od 3:00 do 3:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 * 0-2,4-23 * * *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:29:59 a od 9:45:00 do 9:45:59",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 0-29,45 9 * * *"
+  },
+  {
+   "expected": "vždy 30 sekund po začátku každé minuty, kromě okamžiku 29 minut a 30 sekund po každé celé hodině (:29:30)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "30 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "od roku 1970 každý čtvrtý rok (1970, 1974, 1978 a tak dále) denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * */4"
+  },
+  {
+   "expected": "v červnu od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále) v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 */3 6 *"
+  },
+  {
+   "expected": "vždy 3 dny před posledním dnem února (25., v přestupném roce 26. února) v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-3 2 *"
+  },
+  {
+   "expected": "v přestupných letech vždy 1. února v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-28 2 *"
+  },
+  {
+   "expected": "vždy 27. června, 28. července a 28. srpna v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-3 6-8 *"
+  },
+  {
+   "expected": "vždy 29. dne v měsíci (jen v měsících, které ho mají), a připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 29W * *"
+  },
+  {
+   "expected": "v letech 2030 až 2040 vždy 29. února v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 0 29 2 * 2030-2040"
+  },
+  {
+   "expected": "denně každou minutu v prvních 30 minutách každé hodiny (:00–:29), od 9:00 do 10:29",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 9,10 * * *"
+  },
+  {
+   "expected": "každých 15 minut, pokaždé od 10 do 20 sekund po začátku minuty včetně, každou sekundu",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-20 */15 * * * *"
+  },
+  {
+   "expected": "denně, ale 8. dne v měsíci jen tehdy, připadne-li na druhé pondělí v měsíci, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-7,9-31 * 1#2"
+  },
+  {
+   "expected": "denně, ale 25. dne v měsíci jen tehdy, připadne-li na poslední pátek v měsíci, v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-24,26-31 * 5L"
+  },
+  {
+   "expected": "denně kromě 15. dne v měsíci vždy v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 9 1-14,16-31 * 5L"
+  },
+  {
+   "expected": "vždy poslední den v červnu, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 LW 6 *"
+  },
+  {
+   "expected": "v letech 2030 až 2040 a 2042 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030-2040,2042"
+  },
+  {
+   "expected": "v letech 2030 až 2032 a od roku 2040 denně v 9:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 9 * * * 2030-2032,2040/1"
+  },
+  {
+   "expected": "každou minutu v prvních 21 minutách každé hodiny (:00–:20), kromě okamžiku 5 minut po každé celé hodině (:05)",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-4,6-20 * * * *"
+  },
+  {
+   "expected": "denně, ale ve středu jen tehdy, připadne-li na 1. až 7. nebo 15. den v měsíci, v 0:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 1-7,15 * 0-2,4-6"
+  },
+  {
+   "expected": "jen 30 dní před posledním dnem v červnu, tedy nikdy",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 L-30 6 *"
+  },
+  {
+   "expected": "jen 30. února, tedy nikdy",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0 0 30W 2 *"
+  },
+  {
+   "expected": "denně každou sekundu od 9:00:00 do 9:01:59, kromě okamžiku 29 sekund po začátku každé minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-28,30-59 0,1 9 * * *"
+  },
+  {
+   "expected": "vždy 1. dne v měsíci 20 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "20 * 1 * *"
+  },
+  {
+   "expected": "vždy 1. června 5 a 20 minut po každé celé hodině",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20 * 1 6 *"
+  },
+  {
+   "expected": "denně v 9:00 dopoledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "denně v 9:30 dopoledne a 5:30 odpoledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "denně každou hodinu od 9:00 dopoledne do 5:00 odpoledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "denně ve 12:00 o půlnoci",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "denně ve 12:00 v poledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "denně v 1:00 odpoledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 13 * * *"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9:00 dopoledne do 5:45 odpoledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "denně každou minutu od 10:00 v noci do 11:59 v noci",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "denně v 9:00:30 dopoledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "každé pondělí v 9:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "Po, St a Pá v 9:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "Po až Pá vždy v 9:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "denně kromě soboty vždy v 9:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "v červnu každé pondělí v 9:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "od června do srpna denně v 9:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "vždy 1. 6. v 0:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "od 1. do 7. 6. vždy v 0:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "vždy poslední pátek v měsíci v 9:00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "Po až Pá každých 15 minut od 9:00 do 17:45",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "denně v 9.00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "denně v 9.30 a 17.30",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut od 9.00 do 17.45",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "vždy 1. června v 0.00",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "denně v 9:00:30",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "separator": "."
+    }
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "Po až Pá každých 15 minut od 9.00 dopoledne do 5.45 odpoledne",
+   "options": {
+    "lang": "cs",
+    "style": {
+     "hour12": true,
+     "separator": ".",
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "každé pondělí, středu a pátek v 9:00",
+   "options": {
+    "lang": "cs-CZ"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "denně v 9:30 a 17:30",
+   "options": {
+    "lang": "cs-CZ"
+   },
+   "pattern": "30 9,17 * * *"
+  }
+ ]
+}

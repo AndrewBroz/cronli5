@@ -1,6 +1,6 @@
 # State of the work, 2026-11-13 (second checkpoint, usage limited for the week)
 
-Branch `renderer-process` is green (`npm run verify`, 6,227 tests) at `fbf3a9e`. Nothing is pushed or merged.
+Branch `renderer-process` is green (`npm run verify`, 7,629 tests, ten languages) at the commit that registers Czech. Nothing is pushed or merged.
 
 ## Done and on this branch
 
@@ -26,8 +26,8 @@ All reports are in `reads/`. Usage ran short, so two languages were taken forwar
 
 | Language | Tip | State | Open findings to send the author |
 | --- | --- | --- | --- |
-| it | `387545a` (+ merge of this branch) | **building** (`it-build`); six author passes, two schedule reads, five blind reads; the four forms changed after the last read are unread | none known; judge on held-out rows, then a post-build read |
-| cs | `f35e842` | sixth version; fifth blind read running; build next | whatever `reads/cs-5.md` finds |
+| it | on this branch (`fb3a8d1`) | **built and registered**; 152 of 153 held-out rows on the first judged run (the miss was the row's fault); coverage then exposed a pattern family with wrong output, repaired test-first | an independent read of the built output; a blind recovery; the builder's list of places where the rule book was silent |
+| cs | on this branch | **built and registered**; 153 of 153 held-out rows on the first judged run; one stutter repaired after the build | the same three; known limit: minutes or seconds that are two cadences together are listed whole (rule book uses the core's pieces for years only); the maintainer's native read |
 | nl | `6624669` | parked after `reads/nl-4.md` | union exception in brackets read two ways (8, 41); cadence-of-hours forms understood only through the bracket and in the wrong order (3, 5, 14, 15, 35, 48, 53); «vanaf de 8e» as a start date; «om de 3 dagen» counted two ways; a named end that is not the last firing (7); «X minuten over elk heel uur» |
 | ko | `7e55cc3` | parked after `reads/ko-4.md` | «3시간마다 제외» and «…3일마다, 그리고 31일 제외» read two ways (46, 68, 4); «1분마다 9회(…)» (14); «~에 각각 2회(15초, 45초 뒤)» (31); `L-n` riddles (say the date where it is one); «그 시간의 ○분» |
 | pl | `061195a` | parked after `reads/pl-3.md`, `reads/pl-read-2.md` | «dzień powszedni» carries holidays (1 January, 1 May, 1 November are firsts of the month); `15W` beside Monday to Friday reads as an addition; a 31st "of every month" unflagged beside another day; «wypada on od poniedziałku do piątku» is not Polish; `*/7 9-17` and `0-29 9-17` read as two schedules; year after an excepted or pieced month frame; an exception at a window's edge |
@@ -38,8 +38,8 @@ Lessons that held across languages (also in `leads.md`): a category word for Mon
 
 ## Next, in order
 
-1. Italian: judge the build on held-out rows; register (`register_lang.py`, `lang_doc.py` in the scratchpad, or by hand as for uk/fr); `npm run docs`, `npm run conformance`, `npm run verify`; commit. Then a blind read of the built output and a blind recovery.
-2. Czech: triage `reads/cs-5.md`; one more author pass only for misreadings; merge this branch into `cs-art`; build; judge; register.
+1. Italian and Czech are built and registered. Each still needs a blind read of its built output (not only the rows), a blind recovery, and a ruling on the places its builder reported the rule book silent (the build reports are in the session transcript; the Czech builder listed thirty, the Italian about twenty).
+2. (done)
 3. Blind fluency reads of the second-repair forms in the eight existing languages (none done).
 4. Resume nl, ko, pl, ar, he, one at a time, from the table above.
 5. Remove the renderer workarounds the new core facts make unnecessary (test-first, no output change).
