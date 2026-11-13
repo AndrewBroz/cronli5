@@ -13,12 +13,12 @@ const FIELDS =
 
 // The parts of the sentence an edit to each field may change. A time
 // field changes the time. A day field changes the day part, and the month
-// before it changes with it: 毎月1日 becomes 6月1日, and under a date and
-// a weekday together, or a cadence of days, the month is set apart as the
-// topic (6月は、). A month with no year before it brings 毎年. So a day, month or
-// year edit may move text among those three parts. Nothing else may
-// cross: none of them touches the time, and no time edit touches anything
-// but the time, with the two exceptions below.
+// before it changes with it: 毎月1日 becomes 6月1日, and before a date and
+// a weekday together the month is closed with の、. A month with no year
+// before it brings 毎年. So a day, month or year edit may move text among
+// those three parts. Nothing else may cross: none of them touches the
+// time, and no time edit touches anything but the time, with the two
+// exceptions below.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year'],
   hour: ['time'],
@@ -29,22 +29,18 @@ const MAY_CHANGE = {
   year: ['day', 'month', 'year']
 };
 
-// The first place a time field reaches another part: when the hours are
-// restricted and no day is named, the day part says 毎日, so an hour
-// edit may add or remove exactly that word.
-const HOUR_MAY_SET_DAY = ['', '毎日'];
+// The first place a time field reaches another part (answers 2.5): when
+// the hours are restricted, a day part that is empty says 毎日, and one
+// that is a single range of dates is followed by の毎日. So an hour edit
+// may add or remove exactly that word at the end of the day part.
+const EVERY_DAY = /(?:^|の)毎日$/u;
 
-// The second (answers 2.6): what joins a part to the next is の, 、
-// before an interval, and 、終日 before 毎分 or 毎秒 (after いずれも, 終日
-// alone). The join belongs to neither part, so it is set aside before two
-// parts are compared; a time edit may change it and nothing else.
-const JOIN = /(?:の|、終日|終日|、)$/u;
-
-// The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
-// the field was written. Both wordings, each with the join or the 毎日
-// before it, are reduced to one before equal schedules are compared, so
-// any other difference still fails.
-const TIE = /(?:毎日|の)?(?<!\d)0:00・12:00(?!:)|、?12時間ごと/u;
+// The second (answers 2.6): what joins a part to the next is の, or は終
+// 日、 before a cadence of minutes or seconds through every hour; a date
+// and a weekday together end 、どちらも before a time. The join belongs to
+// neither part, so it is set aside before two parts are compared; a time
+// edit may change it and nothing else.
+const JOIN = /(?:の|は終日、|、どちらも)$/u;
 
 const SETUP = {languages: [japanese.default], options: {}, styles: {}};
 
@@ -92,16 +88,18 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
-    function words(part) {
-      return String(part).replace(JOIN, '');
+    // A part without its join, and the day part without the 毎日 an hour
+    // edit may set.
+    function words(part, name) {
+      const joined = String(part).replace(JOIN, '');
+
+      return changed[0] === 'hour' && name === 'day' ?
+        joined.replace(EVERY_DAY, '').replace(JOIN, '') :
+        joined;
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const everyDay = changed[0] === 'hour' && part === 'day' &&
-        HOUR_MAY_SET_DAY.includes(words(before[part])) &&
-        HOUR_MAY_SET_DAY.includes(words(after[part]));
-
-      if (words(before[part]) !== words(after[part]) && !everyDay &&
+      if (words(before[part], part) !== words(after[part], part) &&
           !MAY_CHANGE[changed[0]].includes(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
@@ -141,13 +139,12 @@ describe('Japanese continuity:', function() {
         .to.deep.equal([]);
     }, 60000);
 
-  it('renders equal schedules identically, but for the declared tie',
+  it('renders equal schedules identically: there is no declared tie',
     function() {
       function render(pattern, options) {
         const {opts, schedule} = parse(pattern, options);
 
-        return japanese.default.describe(schedule, opts)
-          .replace(TIE, '1日2回');
+        return japanese.default.describe(schedule, opts);
       }
 
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
@@ -155,17 +152,15 @@ describe('Japanese continuity:', function() {
         .equivalentViolations).to.deep.equal([]);
     }, 60000);
 
-  it('follows the spelling only for the declared tie', function() {
+  it('never follows the spelling of a field', function() {
     function say(pattern) {
       const {opts, schedule} = parse(pattern);
 
       return japanese.default.describe(schedule, opts);
     }
 
-    expect(say('0 */12 * * *')).to.equal('12時間ごと');
+    expect(say('0 */12 * * *')).to.equal('毎日0:00・12:00');
     expect(say('0 0,12 * * *')).to.equal('毎日0:00・12:00');
-    expect(say('0 */12 1 * *')).to.equal('毎月1日、12時間ごと');
-    expect(say('0 0,12 1 * *')).to.equal('毎月1日の0:00・12:00');
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
     expect(say('0 9-17 * * *')).to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
   });

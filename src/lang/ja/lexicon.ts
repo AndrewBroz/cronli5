@@ -25,8 +25,7 @@ const weekdays: WeekdayName[] = [
 
 // Units, as they follow a number.
 const units = {
-  // A day of the month (15日), a length in days (5日ごと), and the noun
-  // a cadence of days ends in (5日ごとの日).
+  // A day of the month (15日).
   day: '日',
   // An hour of the day, as a moment (9時).
   hour: '時',
@@ -43,27 +42,22 @@ const units = {
 
 // The function words and fixed phrases.
 const words = {
-  also: 'に加えて',
-  am: '午前',
-  and: 'および',
   allDay: '終日',
-  bothAt: 'いずれも',
+  also: 'および',
+  am: '午前',
+  and: 'と',
+  both: 'どちらも',
   dayBefore: '前日',
   daysBefore: '日前',
   each: 'ごと',
-  eachDay: '各日',
-  eachMonth: '各月',
-  eachOfThoseMinutes: 'その各分',
-  eachYear: '各年',
+  eachOfThem: 'それぞれ',
   evenDays: '偶数日',
-  evenHours: '偶数時',
   evenMonths: '偶数月',
   evenYears: '偶数年',
   everyDay: '毎日',
   everyHour: '毎時',
   everyMinute: '毎分',
   everyMonth: '毎月',
-  everySecond: '毎秒',
   everyWeek: '毎週',
   everyYear: '毎年',
   excepted: 'を除く',
@@ -71,6 +65,7 @@ const words = {
   forOneMinute: '1分間',
   from: 'から',
   fromOn: '以降',
+  inEach: 'いずれも',
   lastDay: '末日',
   lastNamed: '最終',
   lastOf: '最後の',
@@ -80,21 +75,17 @@ const words = {
   nextYear: '翌年',
   nth: '第',
   oddDays: '奇数日',
-  oddHours: '奇数時',
   oddMonths: '奇数月',
   oddYears: '奇数年',
   of: 'の',
-  onceInYears: '年に1度の年',
-  otherThan: '以外',
-  pm: '午後',
+  ofThatMinute: 'その分の',
   runs: '実行します',
   runsAt: 'に',
   startup: 'システム起動時',
   to: 'まで',
   topic: 'は',
-  with: 'と',
-  withinMonth: '月内で',
   unrecognizable: '認識できないcron式',
+  withinMonth: '月内で',
   workingDay: '平日'
 };
 
@@ -104,6 +95,7 @@ const marks = {
   close: '）',
   colon: ':',
   comma: '、',
+  ellipsis: '…',
   list: '・',
   open: '（',
   range: '〜',

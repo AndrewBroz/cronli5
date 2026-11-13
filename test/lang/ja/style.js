@@ -53,19 +53,16 @@ describe('Japanese styles:', function() {
     expect(ja.fallback(opts)).to.equal('認識できないcron式');
   });
 
-  it('closes a sentence with に, but not after 毎分 or 毎秒', function() {
+  it('closes a sentence with に実行します。, whatever it ends in', function() {
     const opts = {style: styles.standard};
 
     expect(ja.sentence('毎日9:00', opts)).to.equal('毎日9:00に実行します。');
-    expect(ja.sentence('15分ごと', opts)).to.equal('15分ごとに実行します。');
-    expect(ja.sentence('2時間ごと（8:00を除く）', opts))
-      .to.equal('2時間ごと（8:00を除く）に実行します。');
+    expect(ja.sentence('1分ごと', opts)).to.equal('1分ごとに実行します。');
+    expect(ja.sentence('毎月1日は終日、1分ごと', opts))
+      .to.equal('毎月1日は終日、1分ごとに実行します。');
+    expect(ja.sentence('毎時0分（3:00を除く）', opts))
+      .to.equal('毎時0分（3:00を除く）に実行します。');
     expect(ja.sentence('システム起動時', opts))
       .to.equal('システム起動時に実行します。');
-    expect(ja.sentence('毎分', opts)).to.equal('毎分実行します。');
-    expect(ja.sentence('毎日9:00:00から9:00:59まで毎秒', opts))
-      .to.equal('毎日9:00:00から9:00:59まで毎秒実行します。');
-    expect(ja.sentence('毎分（毎時29分を除く）', opts))
-      .to.equal('毎分（毎時29分を除く）実行します。');
   });
 });
