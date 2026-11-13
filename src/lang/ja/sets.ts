@@ -45,8 +45,9 @@ export interface Say {
   domain: Domain;
   // Whether a set may be said as a simpler one with values left out.
   exceptions: boolean;
-  // Whether a set may be said as runs and cadences together.
-  mixed: boolean;
+  // Whether a set may be said as runs and cadences together: never, only
+  // where each run stops before the next starts, or however they lie.
+  mixed: 'apart' | 'any' | 'never';
   // Whether a value may be named as left out; any may when this is absent.
   removable?: (value: number) => boolean;
   // The fewest values a run needs before it is said as a range.
@@ -165,6 +166,30 @@ function cheapest(offered: SetDescription[], say: Say): SetDescription {
   }, offered[0]);
 }
 
+// Whether a description holds a run that passes the end of its field.
+function turns(description: SetDescription): boolean {
+  return match(description, {
+    all: () => false,
+    cadence: () => false,
+    except: (exception) => turns(exception.base),
+    pieces: (pieces) => pieces.parts.some(turns),
+    range: wraps,
+    values: () => false
+  });
+}
+
+// Whether runs and cadences lie apart: each stops before the next starts.
+function apart(parts: Part[]): boolean {
+  const spans = parts.flatMap((part) => match<Part, number[][]>(part, {
+    cadence: (cadence) => [[cadence.start, cadence.last]],
+    range: (range) => [[range.from, range.to]],
+    values: () => []
+  }));
+
+  return spans.every(
+    (span, index) => index === 0 || spans[index - 1][1] < span[0]);
+}
+
 /** A set as the core describes it, in every layout a choice looks at. */
 export interface Offer {
   // How many values the set has.
@@ -192,16 +217,19 @@ function choose(offer: Offer, say: Say): Chosen {
   }
 
   const exceptions = able(offer.described, true);
-  const straight = able(offer.linear, false);
+  const straight = cheapest(able(offer.linear, false), say);
+  const around = cheapest(able(offer.described, false), say);
   const replaces = exceptions.length > 0 && offer.count > 4 &&
-    straight[0].kind !== 'range' &&
-    cost(cheapest(exceptions, say), say) < cost(cheapest(straight, say), say);
-  const best = replaces ?
-    cheapest(exceptions, say) :
-    cheapest(able(offer.described, false), say);
-  const mixed = say.mixed ? offer.mixed() : null;
+    able(offer.linear, false)[0].kind !== 'range' &&
+    cost(cheapest(exceptions, say), say) < cost(straight, say);
+  // The layout in which a run may wrap is for saying a run that does.
+  const plain = turns(around) ? around : straight;
+  const best = replaces ? cheapest(exceptions, say) : plain;
+  const mixed = say.mixed === 'never' ? null : offer.mixed();
+  const better = mixed !== null && cost(mixed, say) < cost(best, say) &&
+    (say.mixed === 'any' || apart(mixed.parts));
 
-  return mixed && cost(mixed, say) < cost(best, say) ? mixed : best;
+  return better ? mixed : best;
 }
 
 /** The description a field says a set of its values by. */

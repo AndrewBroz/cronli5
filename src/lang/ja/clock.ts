@@ -123,7 +123,7 @@ const fine: Say = {
   cadence: () => 2,
   domain: {cyclic: false, max: 59, min: 0},
   exceptions: true,
-  mixed: true,
+  mixed: 'apart',
   shortestRange: 3
 };
 
@@ -147,13 +147,13 @@ function stretchCost(cadence: Cadence): number {
 function hourSays(wrap: boolean): {[use: string]: Say} {
   const domain = {cyclic: wrap, max: 23, min: 0};
   const stretches = {
-    cadence: stretchCost, domain, exceptions: true, mixed: false,
+    cadence: stretchCost, domain, exceptions: true, mixed: 'never' as const,
     shortestRange: 3
   };
 
   return {
     filled: {...stretches, shortestRange: 2},
-    points: {...stretches, cadence: () => 2, mixed: true},
+    points: {...stretches, cadence: () => 2, mixed: 'apart' as const},
     stretches
   };
 }
@@ -541,8 +541,10 @@ const restWays: Array<Way<[Clock, Mode], Rest>> = [
     say: windowForm
   },
   {
+    // Minutes with intervals of their own are said once, not hour by hour.
     fits: (clock) => clock.minutes.tile === 0 && clock.hours.count <= 2 &&
-      clock.minutes.core.kind !== 'values',
+      clock.minutes.core.kind !== 'values' && (clock.hours.count === 1 ||
+      clock.minutes.core.kind !== 'cadencePieces'),
     say: hourForm
   },
   {
