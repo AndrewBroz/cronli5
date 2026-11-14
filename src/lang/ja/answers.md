@@ -52,6 +52,12 @@ the words before it say, as noise. Now:
   毎日 (毎月1日の1:00から2時間ごと; 毎年6月の毎日1:00から2時間ごと), since
   毎年6月の1:00から reads as one moment in June.
 
+* **Later the same day: an exception never takes back an end.** 毎年偶数
+  月（2月を除く）の1日の0:00 named February only to take it away. An
+  exception is now never said of the first or last value of the cadence,
+  idiom or range it is taken from, in any field; the set is said by the
+  next rule: 毎年4月1日・6月1日・8月1日・10月1日・12月1日の0:00 (3.9).
+
 Every passage below that these change has been changed with them.
 
 Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, for
@@ -715,8 +721,10 @@ reader confirmed that 5日おき is taken by some for every sixth day and 4
   then what is left out in brackets, or in front of the even or odd hours:
   2時間ごと（8:00を除く）; 1:00から2時間ごと（7:00を除く）; 8時台を除く偶数
   の時間帯に1分ごと; 3時間ごとに1時間ずつ、その間は1分ごと（6時台を除く）.
-  The first hour is never the one left out: that would move the start, and
-  the set is then a cadence of its own (毎日2:00から22:00まで2時間ごと).
+  The first or the last hour is never the one left out (3.9): the set is
+  then a shorter cadence of its own that does not tile, with both ends
+  (毎日2:00から22:00まで2時間ごと; 毎日0:00から20:00まで2時間ごと; 毎日1:00
+  から17:00まで4時間ごと).
 * **Any other cadence of hours** names its times when they are four or
   fewer, and a window with both ends when they are more: 毎日0:00・12:00
   (`*/12`, and `0,12`: the same words); 毎日1:00・13:00; 毎日5:00から23:00
@@ -786,6 +794,18 @@ take it away. Minutes 1 to 30 and 32 to 59 are 毎日9:01から9:59まで1分ご
 （9:31を除く） and 毎時1分から59分まで1分ごと（毎時31分を除く）, not 9:00から
 9:59まで1分ごと（9:00・9:31を除く）. What is left out of a window is always
 inside it.
+
+**Nor is the first or the last value of a cadence, an idiom or a range
+ever named as left out** (amended 2026-11-14): the set is then a
+shorter cadence or run, and it is said by the next rule that fits.
+April to December by twos is 4月・6月・8月・10月・12月 (with a date, 毎年4
+月1日・6月1日・8月1日・10月1日・12月1日の0:00), not 偶数月（2月を除く）, which
+names February only to take it back; the odd days from the 3rd are 毎月3日
+〜31日の奇数日, not 奇数日（1日を除く）; the even hours from 2 are 毎日2:00か
+ら22:00まで2時間ごと, not 2時間ごと（0:00を除く）. A value left out of the
+middle is still an exception: 毎年奇数月（3月を除く）の1日; 2時間ごと（8:00を
+除く）. An exception taken from every value is not affected (水曜日を除く毎
+日; 12月を除く毎月1日): every value has no first or last to take back.
 
 Under named months a day from the 29th on is named as left out only
 where the days themselves show where the months end (3.4): `1-14,16-31`
