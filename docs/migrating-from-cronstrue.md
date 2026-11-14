@@ -19,7 +19,7 @@ guide links to it rather than duplicating its tables.
   are simple cadences that divide their unit (`* * * * *` &rarr; "Every
   minute"; `*/15 * * * *` &rarr; "Every 15 minutes"). Outside English, and
   for steps like `*/45` ("Every 45 minutes", though it runs at :00 and
-  :45), see the [README](../README.md#why-not-cronstrue).
+  :45), see the [README](../README.md#cronli5-and-cronstrue).
 * You need a **language `cronli5` doesn't have yet**. cRonstrue carries **39
   locales**, built from per-locale string tables; `cronli5` ships ten, each
   a full renderer. If your locale is not on
@@ -56,11 +56,11 @@ guide links to it rather than duplicating its tables.
 
 ## The quickest way to switch
 
-`cronli5/cronstrue` takes the same `toString(pattern, options)` call that
+`cronli5/compat` takes the same `toString(pattern, options)` call that
 cRonstrue does, with the same options:
 
 ```js
-import cronli5 from "cronli5/cronstrue";
+import cronli5 from "cronli5/compat";
 
 cronli5.toString("0 9 * * 1");                               // 'At 9 a.m. on Mondays'
 cronli5.toString("30 17 * * *", { use24HourTimeFormat: true }); // 'At 17:30 every day'

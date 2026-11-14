@@ -51,13 +51,13 @@ instead of throwing on a bad pattern). A bad pattern throws
 Command line: `npx cronli5 '*/15 9-17 * * 1-5'`, or
 `crontab -l | npx cronli5 --crontab`.
 
-## Replacing cRonstrue
+## Coming from cRonstrue
 
-`cronli5/cronstrue` takes the same `toString(pattern, options)` call as
+`cronli5/compat` takes the same `toString(pattern, options)` call as
 cRonstrue. Each cRonstrue option is mapped or refused with an error.
 
 ```js
-import cronli5 from 'cronli5/cronstrue';
+import cronli5 from 'cronli5/compat';
 
 cronli5.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
 ```

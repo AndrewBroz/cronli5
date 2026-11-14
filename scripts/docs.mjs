@@ -38,8 +38,8 @@ import {
   comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
-import {table as cronstrueOptions} from '../src/cronstrue/table.js';
-import cronstrueAdapter from '../src/cronstrue/index.js';
+import {table as cronstrueOptions} from '../src/compat/table.js';
+import cronstrueAdapter from '../src/compat/index.js';
 import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
@@ -177,10 +177,10 @@ function renderHeadToHead() {
     ' |', rows);
 }
 
-// The README's case for switching: patterns where the two libraries'
-// descriptions are worth comparing side by side. The author chooses the
-// rows; both outputs are live.
-const whyRows = [
+// The README's side-by-side rows: patterns where the two libraries'
+// descriptions are worth comparing. The author chooses the rows; both
+// outputs are live.
+const sideBySideRows = [
   {
     code: 'en',
     pattern: '*/45 * * * *'
@@ -229,9 +229,9 @@ const languageNames = {
   ja: 'Japanese', zh: 'Chinese'
 };
 
-function renderWhy() {
+function renderSideBySide() {
   const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
-  const rows = whyRows.map(function row(entry) {
+  const rows = sideBySideRows.map(function row(entry) {
     const lang = entry.code === 'en' ? en : byCode[entry.code].lang;
 
     return '| `' + entry.pattern + '` | ' + languageNames[entry.code] +
@@ -361,7 +361,7 @@ function rewriteExamples(text) {
 const tableJobs = {
   'README.md': {
     'cronstrue-head-to-head': renderHeadToHead(),
-    'why-not-cronstrue': renderWhy(),
+    'cronstrue-side-by-side': renderSideBySide(),
     'language-status': statusSummary()
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},
