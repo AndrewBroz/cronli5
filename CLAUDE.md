@@ -47,40 +47,70 @@ and none of it is the goal. Use it accordingly:
   sentence with the one it replaces, blind, before calling it an
   improvement. Shorter is not better; neither is longer.
 
-## How readers go wrong (true in every language)
+## The reader's mind
 
-These are about the reader, not about any language. Each was learned from
-a reader who got a schedule wrong. A language meets each in its own way;
-the concern carries, the device never does.
+The reader is a person, and you are a language model. The two read
+differently, and the differences decide what a good description is. They
+hold in every language.
 
-- **A reader holds a few things.** Exact clock times need no working out.
-  A rhythm with a start to add to needs arithmetic. A long list cannot be
-  held. A product ("these seconds of these minutes of these hours") makes
-  the reader multiply. Choose by how much the reader must hold and work
-  out, never by which values are named.
-- **One reading beats brevity.** A long sentence a reader takes one way is
-  better than a short one a reader can take two ways. Shorter is not
-  better, and neither is longer.
-- **A from–to window says "it goes on through here".** Use one only where
-  firing really continues through it at the stated rhythm. Round a few
-  listed minutes it is read as a continuous stretch, and its end is read
-  as the last firing.
-- **A point must be said as a point.** An ordinal ("on the 1st minute")
-  is heard as a stretch, and counts from one where the clock counts from
-  zero. A clock mark or a count from a named moment is a point. A named
-  hour ("at 2") asserts that it fires at 2:00.
-- **What is said once must visibly belong to everything it governs.** A
-  time after two day parts is taken for the nearer one unless marked as
-  both. A clause after a list is taken for the last item.
-- **Never make the reader infer a rule from a gap.** An ellipsis or "and
-  so on" between two items hides the step; say the step in words, or show
-  enough of the pattern that it cannot be mistaken, and name where it ends.
-- **Saying the same set twice makes the reader compare the two.** Say it
-  once.
-- **A list of counts is read cumulatively** ("after 5, 20 and 45 minutes":
-  5, then 20 more) unless what they count from is unmistakable.
-- **An illustration added to repair a phrase means the phrase is wrong.**
-  Look for the phrase that needs no repair.
+**How a person reads**
+
+- **Once, in order, at about the pace of speech.** A person builds the
+  meaning as the words arrive and keeps it. A model sees the whole
+  sentence at once and can re-read it for nothing.
+- **Holding about four things at a time.** A person keeps a handful of
+  items in mind while reading on. A model holds a list of thirty as easily
+  as a list of three.
+- **Recognising far faster than working out.** A clock time, a date, a
+  weekday are recognised at a glance. Adding, counting on and multiplying
+  take effort and attention. For a model, arithmetic costs nothing.
+- **Taking the first meaning that makes sense, and keeping it.** A person
+  does not list the possible readings and choose; the first good fit is
+  the meaning. A model can hold several readings and rule some out by
+  logic.
+- **Hearing familiar phrases whole, with their everyday meaning.** "From
+  9 to 5" is a stretch of time. "The first minute" is a minute that
+  lasts. "At 2" is two o'clock exactly. A model can read each word
+  literally; a person hears what the phrase usually means.
+- **Seeing time as a picture.** People carry a clock face, a day, a week,
+  a month. What fits that picture lands at once.
+- **Completing patterns.** Shown the start of a series, a person
+  continues it in the simplest way and feels sure of it.
+- **Joining what is near.** A phrase attaches to the words beside it.
+
+**What people are very good at, and a description should use**
+
+- Recognising clock times and dates written the way their language writes
+  them.
+- Grasping a rhythm from one phrase: "every 15 minutes", "every other
+  hour".
+- Taking a stretch as one thing: "from 9:00 to 17:45", "Monday to Friday".
+- Holding a simple rule with one exception.
+- Trusting the conventions of their own language, read aloud or on a
+  screen.
+
+**So a description**
+
+- names few things, and lets the reader recognise rather than work out:
+  exact times where there are few, one rhythm where there is one;
+- says a moment as a moment (a clock time, a count from a named moment)
+  and a stretch as a stretch (from–to, only where firing really goes on
+  through it);
+- uses each familiar phrase for what it usually means;
+- puts what governs several things where it plainly reaches all of them;
+- states a step in words, and shows a series only to illustrate a step
+  already stated;
+- says each thing once;
+- has one first reading, which is the right one, even if that takes more
+  words.
+
+**For the model doing the work.** What is easy for you is not evidence of
+what is easy for the reader: you will find a long list, a product of
+three fields or a rule left to inference perfectly clear. Do not judge by
+your own ease. Ask what a person reading once, at speed, would take the
+sentence to mean, and test it with readers as the next section says. A
+language meets each of these points with its own means; the point
+carries between languages, the wording never does.
 
 ## How quality is judged: by an automated pipeline
 
