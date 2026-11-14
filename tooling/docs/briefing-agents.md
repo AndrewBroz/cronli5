@@ -29,6 +29,10 @@ agent will optimise, so lead with the purpose.
 
 Then, before merging: a blind reader, briefed in the language and told
 nothing of patterns or generation, answers questions about when each new
-sentence fires AND compares it with the sentence it replaces. Merge only
-what the reader finds at least as clear. A reader who reports a second
-reading has found a defect; one who reports stiffness has left a note.
+sentence fires, scored against the true schedule. A wrong answer, or a
+second reading of the words themselves, is a defect. A preference, a
+report of stiffness, or a wish to be told more (a stated start, a
+bracket of examples) is a note: model readers favour verbose wording that
+people do not. Whether the change is more concise and more natural is the
+orchestrator's call, against how native writers write (CLAUDE.md, "How
+quality is judged").
