@@ -77,6 +77,9 @@ const languages = {
       'Samstag|Sonntag|Januar|Jänner|Februar|März|April|Mai|Juni|Juli|' +
       'August|September|Oktober|November|Dezember)\\w*', 'giu'),
     nearest: /am nächsten liegt|nächstgelegenen/giu,
+    // A place in the hour written «:05»: three of three blind readers
+    // called it not ordinary German (2026-11-13 and 14).
+    unfamiliar: /(?<![\d:]):\d{2}(?::\d{2})?(?!\d)/gu,
     chunks: [/montags bis freitags/giu, /werktags/giu, /täglich/giu,
       /stündlich/giu, /jede Minute/giu, /jede Sekunde/giu,
       /zur vollen Stunde/giu, /in den (?:un)?geraden Stunden/giu,
@@ -231,6 +234,12 @@ function operationsIn(spec, text, defects) {
   if ((text.match(spec.nearest) || []).length > 0) {
     found.push('nearest weekday');
   }
+
+  // A notation the language's readers do not use in prose must be
+  // deciphered each time it is met.
+  (text.match(spec.unfamiliar || /$^/u) || []).forEach(function each() {
+    found.push('unfamiliar notation');
+  });
 
   (text.match(spec.product) || []).forEach(function each() {
     found.push('product');
