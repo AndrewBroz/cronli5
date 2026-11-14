@@ -484,6 +484,13 @@ const rows = [
     'il 2, il 6, il 10, il 14, il 18 e il 22 di ogni mese alle 0:00'],
   ['0 0 1 4/2 *',
     'ad aprile, giugno, agosto, ottobre e dicembre, il 1º del mese alle 0:00'],
+  // A cadence of months less a month or two is never an exception: the
+  // four or five months left are listed (answers, rule 6 and 3.7).
+  ['0 0 1 1,3,7,9,11 *',
+    'a gennaio, marzo, luglio, settembre e novembre, il 1º del mese alle ' +
+    '0:00'],
+  ['0 9 * 2,4,8,12 *',
+    'a febbraio, aprile, agosto e dicembre, tutti i giorni alle 9:00'],
   ['0-28,30-59 0 9 * * *',
     'tutti i giorni, ogni secondo dalle 9:00:00 alle 9:00:59, tranne alle ' +
     '9:00:29'],

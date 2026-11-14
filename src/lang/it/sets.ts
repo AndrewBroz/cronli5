@@ -39,6 +39,8 @@ interface Limits {
   mixed?: CadencePieces | null;
   // Whether an exception may be said at all.
   plain?: boolean;
+  // Whether a cadence less some values is listed rather than excepted.
+  listedLess?: boolean;
 }
 
 // The most values an exception leaves out.
@@ -153,7 +155,8 @@ function exceptionIn(
     return !limits.plain && candidate.kind === 'except' &&
       candidate.removed.length <= MOST_REMOVED &&
       candidate.base.kind === base &&
-      (base === 'all' || limits.cadence(candidate.base as Cadence) &&
+      (base === 'all' || !limits.listedLess &&
+        limits.cadence(candidate.base as Cadence) &&
         keepsEnds(candidate.base as Cadence, candidate.removed));
   }) as Exception | undefined;
 }

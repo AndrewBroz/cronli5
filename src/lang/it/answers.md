@@ -59,6 +59,9 @@ Last, on the same day: an exception no longer removes a cadence's first
 or last value (rule 6; `17/11` named second 6 only to take it back), and
 a cadence of seconds that tiles the minute from 0 is said by its rate,
 «ogni 10 secondi durante il minuto 0 di ogni ora», not by its ends (4.2).
+And a cadence of months is never said with an exception: the months left
+are listed, «a gennaio, marzo, luglio, settembre e novembre», not «ogni 2
+mesi a partire da gennaio tranne a maggio» (rule 6, 3.7).
 
 What Italian does its own way, and the rest of this file relies on:
 
@@ -127,7 +130,15 @@ facts, field, {linear: true})`), except in the three places 3.5 names.
    aprile, giugno, agosto, ottobre e dicembre»; `0 0 2-25/4 * *` had been
    «ogni 4 giorni a partire dal 2 … tranne il 26 e il 30» and is «il 2, il
    6, il 10, il 14, il 18 e il 22 di ogni mese». (Every value less its
-   first, «tranne al minuto 0», stays: «ogni minuto» names no end.)
+   first, «tranne al minuto 0», stays: «ogni minuto» names no end.) **A
+   cadence of months is never said with an exception**: a cadence of
+   months has six values at most (3.7), so what is left is four or five
+   months, and five names are read at a glance where «ogni 2 mesi a
+   partire da gennaio tranne a maggio» asks the reader to work out the
+   months and take one away: `0 0 1 1,3,7,9,11 *` — «a gennaio, marzo,
+   luglio, settembre e novembre, il 1º del mese alle 0:00». Every month
+   less one or two is still the closing exception («…, tranne a
+   giugno»).
 7. **Pieces**: when some run has three or more values, the runs as ranges
    and the other values singly, in ascending order, joined as a list
    (7.4).
@@ -498,7 +509,10 @@ one firing.)
   months. Any other cadence of months is listed: `0 0 1 */3 *` — «a
   gennaio, aprile, luglio e ottobre, il 1º del mese alle 0:00». (The first
   draft listed the six months; the judge called that laborious and wrote
-  this form.)
+  this form.) Such a cadence less a month or two is not an exception but
+  the months left, listed (rule 6, amended 2026-11-14): `0 0 1
+  1,3,7,9,11 *` — «a gennaio, marzo, luglio, settembre e novembre, il 1º
+  del mese alle 0:00».
 * years, five or more: «un anno su 4 a partire dal 2028,» when the core
   marks the cadence `open`, «un anno su 4 dal 2028 al 2060,» otherwise.
   «Un anno su 4» (the idiom, the second judge's correction of «un anno
