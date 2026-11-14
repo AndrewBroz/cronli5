@@ -39,8 +39,8 @@ const rows = [
   ['0 9 */5 * *', 'vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci v 9:00'],
   ['0 9 L * *', 'vždy poslední den v měsíci v 9:00'],
   ['0 9 15W * *',
-    'vždy 15. dne v měsíci (připadne-li na sobotu, posouvá se na pátek 14.; ' +
-    'připadne-li na neděli, na pondělí 16.) v 9:00'],
+    'vždy 15. dne v měsíci, a připadne-li na víkend, místo toho ve všední ' +
+    'den nejbližší tomuto dni, v 9:00'],
 
   // clock / month
   ['0 9 * 6 *', 'v červnu denně v 9:00'],
@@ -205,8 +205,8 @@ const rows = [
   ['0 0 */5 * *', 'vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci v 0:00'],
   ['0 0 L * *', 'vždy poslední den v měsíci v 0:00'],
   ['0 0 15W * *',
-    'vždy 15. dne v měsíci (připadne-li na sobotu, posouvá se na pátek 14.; ' +
-    'připadne-li na neděli, na pondělí 16.) v 0:00'],
+    'vždy 15. dne v měsíci, a připadne-li na víkend, místo toho ve všední ' +
+    'den nejbližší tomuto dni, v 0:00'],
 
   // monthly / month
   ['0 0 1 6 *', 'vždy 1. června v 0:00'],
@@ -272,8 +272,8 @@ const rows = [
     'vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci každou minutu'],
   ['* * L * *', 'vždy poslední den v měsíci každou minutu'],
   ['* * 15W * *',
-    'vždy 15. dne v měsíci (připadne-li na sobotu, posouvá se na pátek 14.; ' +
-    'připadne-li na neděli, na pondělí 16.) každou minutu'],
+    'vždy 15. dne v měsíci, a připadne-li na víkend, místo toho ve všední ' +
+    'den nejbližší tomuto dni, každou minutu'],
 
   // open / month
   ['* * * 6 *', 'v červnu každou minutu'],

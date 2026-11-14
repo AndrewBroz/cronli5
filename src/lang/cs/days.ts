@@ -53,6 +53,8 @@ export interface Setting {
 
 // A phrase for one arm of the day.
 interface Phrase {
+  // Whether it ends in a clause closed by a comma.
+  clause?: boolean;
   close?: Close;
   consumed?: boolean;
   fused?: boolean;
@@ -278,51 +280,23 @@ function beforeLast(days: number, facts: ScheduleFacts, refs: Refs): Phrase {
   }) as (typeof rules)[number]).said();
 }
 
-// A date that moves off a weekend: the date, and after it in brackets
-// any note, then each weekend day with the day it moves to («posouvá se
-// na»). The brackets keep the time after them for every day.
-function moved(date: string, notes: string[]): Phrase {
+// A date that moves off a weekend: the date, the condition, and the
+// weekday nearest it, kept in the month where the month can end on it;
+// closed by a comma.
+function moved(date: string, monthEnds: boolean): Phrase {
   return {
+    clause: true,
     fused: true,
     opener: words.always,
-    text: `${date} (${notes.join('; ')})`
+    text: `${date}, ${words.ifItFallsOnAWeekend}, ${spaced(words.instead,
+      words.onTheWeekdayNearestThisDay,
+      monthEnds ? words.inTheSameMonth : '')},`
   };
 }
 
-// The weekend days, each with the day it moves to; one day for both
-// when they move to the same one.
-function moves(saturday: string, sunday?: string): string[] {
-  if (!sunday) {
-    return [`${words.ifItFallsOnAWeekend}, ${spaced(words.itMovesTo,
-      saturday)}`];
-  }
-
-  return [
-    `${spaced(words.ifItFallsOn, weekdays[6].accusative)}, ${
-      spaced(words.itMovesTo, saturday)}`,
-    `${spaced(words.ifItFallsOn, weekdays[0].accusative)}, ${
-      spaced(words.onto, sunday)}`
-  ];
-}
-
-// The weekday nearest a day of the month, by dates: the Saturday moves
-// to the Friday before, the Sunday to the Monday after, or, where the
-// day is the month's last, to the Friday two days before.
-function nearestMoves(day: number, last: string): string[] {
-  function friday(shift: number): string {
-    return `${weekdays[5].accusative} ${day - shift}.`;
-  }
-
-  const monday = `${weekdays[1].accusative} ${day + 1}.`;
-  const sunday = {
-    always: friday(2),
-    never: monday,
-    sometimes: `${monday}, ${spaced(words.butIfItIs, `${day}.`,
-      words.theLastDayOfTheMonth)}, ${spaced(
-      words.onto, friday(2))}`
-  }[last];
-
-  return moves(friday(1), sunday);
+// The first or last weekday of the months named.
+function weekdayOf(which: string, within: string): Phrase {
+  return {fused: true, opener: words.always, text: spaced(which, within)};
 }
 
 // The Quartz forms of the day of the month.
@@ -333,22 +307,27 @@ function quartzDate(form: QuartzDate, facts: ScheduleFacts, refs: Refs):
     reach && reach.never.length + reach.leapYears.length > 0;
   const forms: {[kind: string]: () => Phrase} = {
     beforeLast: () => beforeLast((form as {days: number}).days, facts, refs),
-    firstWeekday: () => moved(refs.own.date('1.'),
-      moves(words.theFollowingMonday)),
+    firstWeekday: () => weekdayOf(words.firstWeekday, refs.own.within),
     last: () => ({
       fused: true,
       opener: words.always,
       text: spaced(words.lastDay, refs.own.within)
     }),
-    lastWeekday: () => moved(spaced(words.lastDay, refs.own.within),
-      moves(words.theFridayBeforeIt)),
+    lastWeekday: () => weekdayOf(words.lastWeekday, refs.own.within),
     nearestWeekday: () => {
       const date = (form as {day: number}).day;
 
-      return moved(refs.own.date(`${date}.`), [
-        ...lacking ? [words.onlyInMonthsThatHaveIt] : [],
-        ...nearestMoves(date, day.nearestDayIsLast || 'never')
-      ]);
+      // A day that is the last of every month it fires in is the last
+      // weekday of those months.
+      if (day.nearestDayIsLast === 'always') {
+        return weekdayOf(words.lastWeekday, lacking ?
+          spaced(words.inMonthsOf, String(date), units.day.few) :
+          refs.own.within);
+      }
+
+      return moved(spaced(refs.own.date(`${date}.`),
+        lacking ? words.onlyInMonthsThatHaveIt : ''),
+      day.nearestDayIsLast === 'sometimes');
     }
   };
 
@@ -587,7 +566,8 @@ function union(facts: ScheduleFacts, setting: Setting): DayPart {
         ...part,
         close: 'always',
         consumed: single && Boolean(week.fused),
-        text: `${spaced(week.text, words.andBesides, date.text)},`
+        text: `${spaced(week.text, words.andBesides, date.text)}${
+          date.clause ? '' : ','}`
       }),
       when: true
     }
