@@ -39,7 +39,8 @@ interface Level {
   // Whether one place inside the slot is counted from its start: not
   // where the other field of the sentence is a list, said by ordinals.
   counts: boolean;
-  // The word for every slot: «щогодини».
+  // The word for every slot: «щогодини»; or the words of a cadence of
+  // slots said bare in its place, «кожні 2 години».
   cycle: string;
   // What closes a phrase about a place inside the slot: «кожної години».
   each: string;
@@ -50,12 +51,17 @@ interface Level {
   forA: string;
   // The seconds a firing of one value runs from and to.
   hi: number;
+  // The cycle as it stands before what follows it, closed by a comma
+  // where it ends in a phrase set off by commas.
+  lead: string;
   lo: number;
   // The seconds one value of the finer field stands for.
   scale: number;
   slots: Domain;
   // The seconds in a slot.
   span: number;
+  // Whether a cadence of the slots is said by the cycle words.
+  tiled: boolean;
   unit: typeof units.minute;
 }
 
@@ -65,13 +71,12 @@ interface Fine {
   values: number[];
 }
 
-// A time phrase in its parts: the words, the clock times in brackets
-// that pin them, and what is left out, which follows the brackets.
+// A time phrase in its parts: the words, and what is left out, which
+// follows them.
 interface Said {
   // Whether the words themselves name a clock time.
   clocked: boolean;
   exceptions: string[];
-  pin: string;
   words: string;
 }
 
@@ -143,10 +148,6 @@ function between(
   return extent[0] === extent[1] ? from : stretch(from, to);
 }
 
-function dashed(from: string, to: string): string {
-  return `${from}–${to}`;
-}
-
 // A stretch that is left out says where it ends: nothing fires there to
 // show it.
 function leftOutStretch(from: string, to: string): string {
@@ -163,31 +164,9 @@ const extents: Table<Part, Extent[], [number, Level]> = {
   })
 };
 
-// The clock times that settle words about a place inside the slot: every
-// item of the first slot, the next slot's first, and the last of all.
-function bracket(slots: number[], fine: Placed, level: Level): string {
-  function itemsOf(slot: number): string[] {
-    return partsOf(fine, cycle).flatMap(function each(part) {
-      return say(extents, part, slot, level);
-    }).map(function write(extent) {
-      return between(extent, level, dashed);
-    });
-  }
-
-  const shown = [...itemsOf(slots[0]), itemsOf(slots[1])[0]].join(', ');
-
-  return ` (${shown} … ${itemsOf(slots[slots.length - 1]).pop()})`;
-}
-
 // Whether a set is one place said as a count from the slot's start.
 function oneCount(fine: Described, level: Level): boolean {
   return fine.kind === 'values' && fine.values.length === 1 && level.counts;
-}
-
-// The pin of words about places inside the slot. One place counted from
-// the slot's start needs none: a count cannot be read one off.
-function pinOf(slots: number[], fine: Placed, level: Level): string {
-  return oneCount(fine, level) ? '' : bracket(slots, fine, level);
 }
 
 // Whether a cadence runs on from one slot into the next.
@@ -351,15 +330,13 @@ function positionsOf(fine: Fine, level: Level): string {
   return say(positions, fine.description as Placed, level);
 }
 
-function said(wordsSaid: string, clocked: boolean, pin = ''): Said {
-  return {clocked, exceptions: [], pin, words: wordsSaid};
+function said(wordsSaid: string, clocked: boolean): Said {
+  return {clocked, exceptions: [], words: wordsSaid};
 }
 
 function finish(phrase: Said): string {
-  return [
-    phrase.words + phrase.pin,
-    phrase.exceptions.join(`, ${words.andPiece} `)
-  ].filter(Boolean).join(', ');
+  return [phrase.words, phrase.exceptions.join(`, ${words.andPiece} `)]
+    .filter(Boolean).join(', ');
 }
 
 // «Щохвилини», or «кожні 15 хвилин».
@@ -425,15 +402,15 @@ function timesIn(slots: number[], fine: Fine, level: Level): Said {
   }), level), true);
 }
 
-// Places inside the slot, said in words: counted from its start, or
-// pinned by clock times in brackets under every slot. Under the rest a
-// window says which slots. Six clock times or fewer are listed instead.
+// Places inside the slot, said in words: under every slot nothing
+// follows them; under the rest a window says which slots. Six clock
+// times or fewer are listed instead.
 function positioned(coarse: Plain, fine: Fine, level: Level): Said {
   const position = positionsOf(fine, level);
   const slots = walk(coarse, level.slots);
   const lead = coarse.kind === 'cadence' ?
     everyN(coarse.interval, units.hour) :
-    level.cycle;
+    level.lead;
   const head = fine.description.kind === 'values' ?
     `${lead} ${position}` :
     `${position} ${level.each}`;
@@ -444,22 +421,31 @@ function positioned(coarse: Plain, fine: Fine, level: Level): Said {
 
   // One count carries a second as a clock time would.
   if (coarse.kind === 'all') {
-    return said(head, oneCount(fine.description, level) && level.lo > 0,
-      pinOf(slots, fine.description as Placed, level));
+    return said(head, oneCount(fine.description, level) && level.lo > 0);
   }
 
   return said(`${head}, ${windows(coarse, fine, level)}`, true);
 }
 
 // A long cadence of slots is said first, as it is for a single value,
-// and the finer field follows as what happens each time.
+// and the finer field follows as what happens each time. Any clock time
+// it names is a slot's, not a firing's, so a second is not carried in it.
 function eachTime(coarse: Described, fine: Fine, level: Level): Said {
   const slots = finish(build(onTheHour, coarse, level));
 
-  return said(
-    `${slots}, ${words.eachTime} ${positionsOf(fine, level)}`,
-    true,
-    pinOf(walk(coarse, level.slots), fine.description as Placed, level));
+  return said(`${slots}, ${words.eachTime} ${positionsOf(fine, level)}`,
+    false);
+}
+
+// A cadence of slots said by the cycle words is said as every slot is.
+function tiledOr<C extends Described>(
+  form: (coarse: C, fine: Fine, level: Level) => Said
+) {
+  return function onTheBeat(coarse: C, fine: Fine, level: Level): Said {
+    return level.tiled ?
+      build(fine, {kind: 'all'}, level) :
+      form(coarse, fine, level);
+  };
 }
 
 // Slots that are not every slot.
@@ -643,12 +629,9 @@ function leftOut(
     ], level, leftOutStretch);
   });
 
-  // The clock times that pin the simpler set are firings of this one.
   return {
     ...base,
-    exceptions: [...base.exceptions, `${words.except} ${list(gaps)}`],
-    pin: base.pin && bracket(walk(coarse, level.slots),
-      fine.description as Placed, level)
+    exceptions: [...base.exceptions, `${words.except} ${list(gaps)}`]
   };
 }
 
@@ -683,7 +666,7 @@ function eachTimeOrLeftOut(
 }
 
 // Values left out of a filled stretch or a running cadence: clock times
-// inside named slots, and a place inside the slot, pinned, elsewhere.
+// inside named slots, and a place inside the slot elsewhere.
 function valuesLeftOut(coarse: SetDescription, fine: Fine, level: Level) {
   const {base, removed} = fine.description as Describing<'except'>;
   const whole = build({description: base, values: denote(base, cycle)},
@@ -704,7 +687,7 @@ function valuesLeftOut(coarse: SetDescription, fine: Fine, level: Level) {
         return value + endings.ordinalGenitive;
       })),
       level.unit.genitiveOne,
-      level.each + bracket(slots, gone, level)
+      level.each
     ].join(' ');
 
   return {
@@ -736,7 +719,7 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
   },
   list: {
     all: positioned,
-    cadence: positioned,
+    cadence: tiledOr(positioned),
     cadencePieces: eachTime,
     except: stretchesLeftOut,
     pieces: positioned,
@@ -754,7 +737,7 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
   },
   single: {
     all: positioned,
-    cadence: points,
+    cadence: tiledOr(points),
     cadencePieces: steppedPoints,
     except: slotsLeftOut,
     pieces: points,
@@ -763,7 +746,7 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
   },
   zero: {
     all: onTheCycle,
-    cadence: points,
+    cadence: tiledOr(points),
     cadencePieces: steppedPoints,
     except: slotsLeftOut,
     pieces: points,
@@ -776,13 +759,29 @@ function build(fine: Fine, coarse: Described, level: Level): Said {
   return say(forms[say(classes, fine.description)], coarse, fine, level);
 }
 
+// How every hour is said where the minutes follow: «щогодини», or a
+// cadence of hours said bare in its place.
+interface HourCycle {
+  cycle: string;
+  lead: string;
+  tiled: boolean;
+}
+
+const everyHourCycle: HourCycle =
+  {cycle: words.everyHour, lead: words.everyHour, tiled: false};
+
 // Minutes inside hours. A clock time carries seconds from `lo` to `hi`
 // when the seconds are said with the minutes.
-function minuteLevel(lo: number, hi: number, every: string, face: Face) {
+function minuteLevel(
+  [lo, hi]: Extent,
+  every: string,
+  face: Face,
+  hourCycle: HourCycle
+) {
   return {
+    ...hourCycle,
     afterEach: words.afterEachHour,
     afterStart: words.afterHourStart,
-    cycle: words.everyHour,
     each: words.eachHour,
     every,
     face,
@@ -808,54 +807,54 @@ function secondLevel(face: Face, counts: boolean): Level {
     face,
     forA: words.forAMinute,
     hi: 0,
+    lead: words.everyMinute,
     lo: 0,
     scale: 1,
     slots: minutesOfDay,
     span: 60,
+    tiled: false,
     unit: units.second
   };
 }
 
-// The seconds as what happens each time the rest fires, pinned to the
-// second. What is left out of the rest stays with it, ahead of «щоразу».
-// One second after «щогодини» alone is counted from the hour. Every
-// second of a minute names no place in it, so after a rest that needs no
-// pin of its own nothing follows to settle it.
+// The seconds as what happens each time the rest fires. What is left out
+// of the rest stays with it, ahead of «щоразу». One second after the
+// hours' cycle alone («щогодини», «кожні 2 години») is counted from the
+// hour.
 function eachMinute(
   rest: Said,
   seconds: Fine,
-  slots: number[],
+  hourCycle: HourCycle,
   level: Level
 ): string {
   const [second] = seconds.values;
-  const counts = seconds.values.length === 1 &&
-    rest.words === words.everyHour;
-  const phrase = counts ?
-    [
-      '', words.afterCount, second, units.second[category(second)],
-      words.afterHourStart
-    ].join(' ') :
-    `, ${words.eachTime} ${positionsOf(seconds, level)}`;
 
-  const settled = seconds.description.kind === 'all' && rest.pin === '';
-  const pin = settled ?
-    '' :
-    pinOf(slots, seconds.description as Placed, level);
+  if (seconds.values.length === 1 && rest.words === hourCycle.cycle) {
+    return finish({
+      ...rest,
+      words: [
+        hourCycle.lead, words.afterCount, second,
+        units.second[category(second)], words.afterHourStart
+      ].join(' ')
+    });
+  }
 
-  // Seconds counted from the minute need no pin, and the rest keeps its
-  // own; otherwise the one pin, to the second, settles both.
-  const restPin = pin === '' ? rest.pin : '';
+  return `${finish(rest)}, ${words.eachTime} ${positionsOf(seconds, level)}`;
+}
 
-  return counts ?
-    finish({...rest, pin, words: rest.words + phrase}) :
-    finish({...rest, pin: restPin}) + phrase + pin;
+// Whether a cadence of hours tiles the day: it runs to the day's end and
+// the gap across midnight is its own interval, so it never stops.
+function tilesTheDay(cadence: CadenceDescription): boolean {
+  return cadence.start + 24 - cadence.last === cadence.interval;
 }
 
 // Beside a run across midnight, four hours left out or fewer are an
-// exception; more, and the run is said.
+// exception; more, and the run is said. A cadence that tiles the day
+// from midnight is a cadence from three hours.
 const hourTaste: Taste = {
   base: () => true,
-  cadence: (cadence, count) => count > 4,
+  cadence: (cadence, count) => count > 4 ||
+    cadence.start === 0 && count > 2 && tilesTheDay(cadence),
   gap: (count) => count <= 4,
   pieces: () => true
 };
@@ -883,6 +882,54 @@ function hoursOf(facts: ScheduleFacts, overnight: boolean): Described {
 function isBeat(hours: Described): boolean {
   return ['cadence', 'cadencePieces'].includes(hours.kind) ||
     hours.kind === 'except' && hours.base.kind === 'cadence';
+}
+
+// The cadence of hours said, itself or with hours left out of it.
+function beatOf(hours: Described): CadenceDescription | null {
+  const beat = hours.kind === 'except' ? hours.base : hours;
+
+  return beat.kind === 'cadence' ? beat : null;
+}
+
+/**
+ * Whether the hours are a cadence that tiles the day, said bare with no
+ * end: it runs round the clock, with no daily rhythm of its own.
+ */
+function roundTheClock(hours: Described): boolean {
+  const beat = beatOf(hours);
+
+  return beat !== null && tilesTheDay(beat);
+}
+
+// «Кожні 2 години», with its start where that is not midnight:
+// «кожні 2 години, починаючи з 1:00».
+function hourCycleOf(hours: Described, hour12: boolean): HourCycle {
+  const beat = beatOf(hours);
+
+  if (beat === null || !roundTheClock(hours)) {
+    return everyHourCycle;
+  }
+
+  const start = [
+    `, ${words.startingFrom}`,
+    clock(beat.start * 3600, {hour12, seconds: false})
+  ].slice(0, 2 * Math.sign(beat.start)).join(' ');
+  const cycleWords = everyN(beat.interval, units.hour) + start;
+
+  return {
+    cycle: cycleWords,
+    lead: cycleWords + ','.repeat(Math.sign(beat.start)),
+    tiled: true
+  };
+}
+
+// Whether a seconds lead took the place of «щохвилини»: where the minutes
+// open with it, or follow «щоразу» with it.
+function takesTheLead(spanned: Said, lead: string): boolean {
+  return [spanned.words, ...spanned.words.split(`${words.eachTime} `)
+    .slice(1)].some(function opens(phrase) {
+    return phrase.startsWith(lead);
+  });
 }
 
 /** The time part of a description, for hours already chosen. */
@@ -925,8 +972,12 @@ function timeOf(
       return hour * 60 + minute;
     });
   });
+  const hourCycle = hourCycleOf(hours, hour12);
+  // How many clock times the hours name, where they could be listed: a
+  // cadence said bare is never listed.
+  const few = [slots.length, Infinity][Number(hourCycle.tiled)];
 
-  if (everySecond.length * slots.length <= 4) {
+  if (everySecond.length * few <= 4) {
     return finish(timesIn(slots,
       {description: everySeconds, values: everySecond}, bySecond));
   }
@@ -935,12 +986,12 @@ function timeOf(
   // second rides in the clock times the minutes name, if they name any.
   function restAt(second: number): Said {
     const byMinute = {
-      ...minuteLevel(second, second, words.everyMinute,
-        {hour12, seconds: second > 0}),
+      ...minuteLevel([second, second], words.everyMinute,
+        {hour12, seconds: second > 0}, hourCycle),
       counts
     };
 
-    return slots.length <= 4 ?
+    return few <= 4 ?
       timesIn(everyHour, {...minutes, values: everyMinute}, byMinute) :
       build(minutes, hours, byMinute);
   }
@@ -963,21 +1014,20 @@ function timeOf(
 
   // In one clock time the seconds are its times or its windows; in two
   // or three, windows, but a list of seconds follows each time instead.
-  if (slots.length === 1 ||
-      slots.length <= 3 && seconds.description.kind !== 'values') {
+  if (few === 1 || few <= 3 && seconds.description.kind !== 'values') {
     return finish(build(seconds, {kind: 'values', values: slots}, bySecond));
   }
 
   const lead = opener(seconds, bySecond);
   const spanned = build(minutes, hours,
-    {...minuteLevel(first, last, lead, bySecond.face), counts});
+    {...minuteLevel([first, last], lead, bySecond.face, hourCycle), counts});
 
   if (say(classes, seconds.description) === 'lead' &&
-      spanned.words.startsWith(lead)) {
+      takesTheLead(spanned, lead)) {
     return finish(spanned);
   }
 
-  return eachMinute(rest, eachSeconds, slots, bySecond);
+  return eachMinute(rest, eachSeconds, hourCycle, bySecond);
 }
 
-export {hoursOf, timeOf};
+export {hoursOf, roundTheClock, timeOf};
