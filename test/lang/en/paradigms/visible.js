@@ -8,9 +8,10 @@
 
 const rows = [
   // clock / second — context `0 9 * * *`
-  ['* 0 9 * * *', 'every second from 9:00 a.m. until 9:01 a.m. every day'],
-  ['*/6 0 9 * * *', 'every 6 seconds from 9:00 a.m. until 9:01 a.m. every ' +
-    'day'],
+  ['* 0 9 * * *', 'every second from 9:00:00 a.m. through 9:00:59 a.m. ' +
+    'every day'],
+  ['*/6 0 9 * * *', 'every 6 seconds from 9:00:00 a.m. through 9:00:54 a.m. ' +
+    'every day'],
   ['5/10 0 9 * * *',
     'every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m. every day'],
 
@@ -60,7 +61,7 @@ const rows = [
     'minutes from 9 a.m. through 5:45 p.m. on weekdays'],
 
   // window / minute
-  ['* 9-17 * * 1-5', 'every minute from 9 a.m. until 6 p.m. on weekdays'],
+  ['* 9-17 * * 1-5', 'every minute from 9 a.m. through 5:59 p.m. on weekdays'],
   ['0,30 9-17 * * 1-5',
     'every 30 minutes from 9 a.m. through 5:30 p.m. on weekdays'],
   ['0-29,45 9-17 * * 1-5',
@@ -118,18 +119,20 @@ const rows = [
     'Thursdays'],
 
   // monthly / second — context `0 0 1 * *`
-  ['* 0 0 1 * *', 'every second from midnight until 12:01 a.m. on the 1st'],
+  ['* 0 0 1 * *', 'every second from 12:00:00 a.m. through 12:00:59 a.m. on ' +
+    'the 1st'],
   ['*/6 0 0 1 * *',
-    'every 6 seconds from midnight until 12:01 a.m. on the 1st'],
+    'every 6 seconds from 12:00:00 a.m. through 12:00:54 a.m. on ' +
+      'the 1st'],
   ['5/10 0 0 1 * *',
     'every 10 seconds from 12:00:05 a.m. through 12:00:55 a.m. on the ' +
     '1st'],
 
   // monthly / minute
-  ['* 0 1 * *', 'every minute during the midnight hour on the 1st'],
+  ['* 0 1 * *', 'every minute during the 12 a.m. hour on the 1st'],
   ['5,20,45 0 1 * *', 'at 12:05 a.m., 12:20 a.m., and 12:45 a.m. on the 1st'],
-  ['*/15 0 1 * *', 'every 15 minutes during the midnight hour on the 1st'],
-  ['0,15,45 0 1 * *', 'at midnight, 12:15 a.m., and 12:45 a.m. on the 1st'],
+  ['*/15 0 1 * *', 'every 15 minutes during the 12 a.m. hour on the 1st'],
+  ['0,15,45 0 1 * *', 'at 12 a.m., 12:15 a.m., and 12:45 a.m. on the 1st'],
 
   // monthly / hour
   ['0 * 1 * *', 'every hour on the 1st'],
@@ -140,27 +143,27 @@ const rows = [
 
   // monthly / date
   ['0 0 * * *', 'at midnight every day'],
-  ['0 0 1,10,20 * *', 'at midnight on the 1st, 10th, and 20th'],
-  ['0 0 */2 * *', 'at midnight on odd-numbered days'],
+  ['0 0 1,10,20 * *', 'at 12 a.m. on the 1st, 10th, and 20th'],
+  ['0 0 */2 * *', 'at 12 a.m. on odd-numbered days'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'at midnight on odd-numbered days except the 15th'],
+    'at 12 a.m. on odd-numbered days except the 15th'],
 
   // monthly / month
-  ['0 0 1 1 *', 'at midnight on January 1'],
+  ['0 0 1 1 *', 'at 12 a.m. on January 1'],
   // One day with several months says the day once, as several days do:
   // "on" marks a date, so the day reaches every month (maintainer,
   // 2026-11-14).
   ['0 0 1 3,6,9,12 *',
-    'at midnight on the 1st of March, June, September, and December'],
-  ['0 0 1 */2 *', 'at midnight on the 1st of every other month'],
+    'at 12 a.m. on the 1st of March, June, September, and December'],
+  ['0 0 1 */2 *', 'at 12 a.m. on the 1st of every other month'],
   ['0 0 1 11-2 *',
-    'at midnight on the 1st of each month from November through February'],
+    'at 12 a.m. on the 1st of each month from November through February'],
 
   // monthly / weekday
-  ['0 0 1 * 1', 'at midnight on the 1st as well as on Mondays'],
-  ['0 0 1 * 1-5', 'at midnight on the 1st as well as on weekdays'],
+  ['0 0 1 * 1', 'at 12 a.m. on the 1st as well as on Mondays'],
+  ['0 0 1 * 1-5', 'at 12 a.m. on the 1st as well as on weekdays'],
   ['0 0 1 * 2,4',
-    'at midnight on the 1st as well as on Tuesdays and Thursdays'],
+    'at 12 a.m. on the 1st as well as on Tuesdays and Thursdays'],
 
   // open / second — context `* * * * *`
   ['* * * * * *', 'every second'],
@@ -176,11 +179,11 @@ const rows = [
     'at 0, 15, and 45 minutes past the hour'],
 
   // open / hour
-  ['* 0 * * *', 'every minute during the midnight hour every day'],
+  ['* 0 * * *', 'every minute during the 12 a.m. hour every day'],
   ['* 9,17 * * *', 'every minute during the 9 a.m. and 5 p.m. hours every ' +
     'day'],
   ['* 9-17,22 * * *',
-    'every minute from 9 a.m. until 6 p.m. and during the 10 p.m. hour ' +
+    'every minute from 9 a.m. through 5:59 p.m. and during the 10 p.m. hour ' +
       'every day'],
   ['* 1/2 * * *', 'every minute during every other hour from 1 a.m.'],
 

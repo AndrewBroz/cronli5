@@ -106,7 +106,6 @@ const words = {
   the: 'the',
   thereIsNo: 'there is no',
   unrecognizable: 'an unrecognizable cron pattern',
-  until: 'until',
   weekday: 'weekday',
   weekdays: 'weekdays',
   weekends: 'weekends',

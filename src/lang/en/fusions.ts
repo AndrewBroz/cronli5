@@ -19,15 +19,15 @@ import {candidatesAs} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, inSpokenOrder, inTieOrder, minutesOfOneHour, monthsAlone,
-  monthsOfDays, opensWithEvery, say, secondsOfOneMinute, withinTheHour,
-  yearsByNumber
+  hoursAsStretches, inSpokenOrder, inTieOrder, lastMinute, minutesOfOneHour,
+  monthsAlone, monthsOfDays, opensWithEvery, say, secondsOfOneMinute,
+  withinTheHour, yearsByNumber
 } from './devices.js';
 import {quartzDateIdioms, quartzWeekdayIdioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {unit} from './forms.js';
 import {
-  dayNames, either, join, list, monthNames, timeNames
+  asTime, dayNames, either, join, list, monthNames, timeNames
 } from './words.js';
 
 // The most clock times a list of them may hold.
@@ -111,6 +111,9 @@ interface TimeContext {
   halves: boolean;
   lead: SecondsLead;
   minute: Tick;
+  // The last second of each minute that seconds running through the
+  // minute fire on, if they do.
+  last?: number;
   // How one piece of the minutes is said by itself.
   piece(part: Described): Tick;
   riding?: number;
@@ -154,18 +157,32 @@ function unlessEvery(choice: Choice): string {
   return choice.description.kind === 'all' ? '' : choice.text;
 }
 
+// Whether something coarser than a field is restricted.
+function confined(facts: ScheduleFacts, field: Field): boolean {
+  const {candidates} = facts.analyses;
+
+  return (coarser[field] || []).some(function restricts(other) {
+    const set = candidates[other];
+
+    return set === null || set[0].kind !== 'all';
+  });
+}
+
 // Whether a field's set is laid out with nothing wrapping: always for a
 // numbered field, and for hours or months under something coarser that
 // is restricted.
 function isLinear(facts: ScheduleFacts, field: Field): boolean {
-  const {candidates} = facts.analyses;
+  return numbered.includes(field) || confined(facts, field);
+}
 
-  return numbered.includes(field) ||
-    (coarser[field] || []).some(function restricts(other) {
-      const set = candidates[other];
-
-      return set === null || set[0].kind !== 'all';
-    });
+// The options a time is said under. "Midnight" beside a restricted day,
+// month or year is also said of the end of that day ("due by midnight
+// on Friday"), so there 0:00 is written as the time that starts the
+// day, "12 a.m.", whatever the style's word. Every day of every month,
+// both readings are the same schedule, and the word stands.
+function timeOptions(facts: ScheduleFacts, opts: EnglishOptions):
+  EnglishOptions {
+  return confined(facts, 'hour') ? asTime(opts) : opts;
 }
 
 // Every way to describe a field's set: the core's candidates, laid out
@@ -480,6 +497,7 @@ function minuteWindow(
 
   const window = say(minute.description, minutesOfOneHour(hour, {
     every: lead.every,
+    last: context.last,
     second: context.riding,
     stray: minute.opens ? lead.stray : lead.strayFirst
   }, opts), opts);
@@ -488,16 +506,20 @@ function minuteWindow(
 }
 
 // Continuous minutes lead and the hours confine them; any other minutes
-// are counted past the hours.
+// are counted past the hours. A stretch of hours closes on its last
+// firing: the last run of a cadence of minutes, or else the last minute,
+// to the second when the seconds run through it.
 function minutesWith(
   hours: Described,
   context: TimeContext,
   opts: EnglishOptions
 ): Phrase | null {
-  const {lead, minute} = context;
+  const {last, lead, minute} = context;
+  const close = minute.close ||
+    {...lastMinute, ...typeof last === 'number' && {second: last}};
   const rest = say(hours,
     minute.continuous ?
-      hoursAsStretches(minute.close, opts) :
+      hoursAsStretches(close, opts) :
       hoursAsNouns(minute.portion, opts),
     opts);
 
@@ -670,6 +692,9 @@ function timesWith(
   riding);
   const context = {
     halves, lead, minute,
+    ...second.continuous && {
+      last: second.close ? second.close.minute : domainOf('second').max
+    },
     piece(part: Described) {
       return withSecond(tick([part], 'minute',
         {alone: lead.everyAlone, one: lead.every, stray: lead.within}, opts),
@@ -1156,7 +1181,7 @@ function partsThatRun(facts: ScheduleFacts, opts: EnglishOptions): Parts {
   const hangs = hangsOnTheDay(hung);
   // A day of the month before "of every other year" says its month.
   const days = daysOf(fields, after ? whole : months, hangs && !pair, opts);
-  const time = timeOfDay(facts, opts);
+  const time = timeOfDay(facts, timeOptions(facts, opts));
   // A time of day with no day named skips a level, unless it runs round
   // the clock; and a cadence of years needs a day to hang on.
   const everyDay = time.fills && !hangs ?

@@ -58,6 +58,18 @@ const WRAP_MAY_CHANGE = {
 // a day of the month beside a weekday.
 const CLOSING_COMMA = /,$/u;
 
+// "Midnight" beside a restricted day, month or year is also said of the
+// end of that day, so there 0:00 is "12 a.m." (answers 4.1). An edit to
+// a coarser field that restricts the days, or frees them, may change
+// that word in the time part, and nothing else: both wordings are
+// reduced to one before the parts are compared.
+const DAY_FIELDS = ['date', 'weekday', 'month', 'year'];
+const START_OF_DAY = /\b12(?::00){0,2} a\.m\./gu;
+
+function startOfDay(part) {
+  return part.replace(START_OF_DAY, 'midnight');
+}
+
 // A schedule that can never run (June 31) says only that, and why, in
 // place of the whole sentence. An edit to the day, the month or the year
 // that makes a schedule impossible, or possible again, may therefore
@@ -71,7 +83,8 @@ function neverRuns(pattern, options) {
 // The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
 // the field was written. Both wordings are reduced to one before equal
 // schedules are compared, so any other difference still fails.
-const TIE = /at midnight and noon(?: every day)?|every 12 hours/u;
+const TIE =
+  /at (?:midnight|12 a\.m\.) and noon(?: every day)?|every 12 hours/u;
 
 const SETUP = {languages: [english.default], options: {}, styles: {}};
 
@@ -142,8 +155,11 @@ function leaks(pairList) {
       const everyDay = changed[0] === 'hour' && part === 'day' &&
         HOUR_MAY_SET_DAY.includes(before[part]) &&
         HOUR_MAY_SET_DAY.includes(after[part]);
-      const same = before[part].replace(CLOSING_COMMA, '') ===
-        after[part].replace(CLOSING_COMMA, '');
+      const named = DAY_FIELDS.includes(changed[0]) && part === 'time' ?
+        startOfDay :
+        String;
+      const same = named(before[part].replace(CLOSING_COMMA, '')) ===
+        named(after[part].replace(CLOSING_COMMA, ''));
 
       const unwrapped = (WRAP_MAY_CHANGE[changed[0]] || []).includes(part);
 
@@ -198,7 +214,7 @@ describe('English continuity:', function() {
         ['0 0 0 * 11-2 * *', '0 0 0 * 11-2 * 2030']
       ])).to.deep.equal([]);
       expect(partsOf('0 22-2 * * 1').time).to.equal(
-        'every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m.');
+        'every hour from 12 a.m. through 2 a.m. and at 10 p.m. and 11 p.m.');
       // The same edits to a set that does not wrap leave its part alone.
       expect(partsOf('0 9-17 * * 1').time)
         .to.equal(partsOf('0 9-17 * 6 *').time);
@@ -214,7 +230,20 @@ describe('English continuity:', function() {
         time: 'never, because there is no June 31',
         year: ''
       });
-      expect(partsOf('0 0 30 6 *').time).to.equal('at midnight');
+      expect(partsOf('0 0 30 6 *').time)
+        .to.equal('at 12 a.m.');
+
+      // Beside a restricted day, month or year, 0:00 is "12 a.m.", and
+      // nothing else changes.
+      expect(leaks([
+        ['0 0 * * *', '0 0 1 * *'],
+        ['0 0 * * *', '0 0 * * 1'],
+        ['* 0 * * *', '* 0 * 6 *'],
+        ['0 0 0 * * * *', '0 0 0 * * * 2030']
+      ])).to.deep.equal([]);
+      expect(partsOf('0 0 * * *').time).to.equal('at midnight');
+      expect(partsOf('0 0 * 6 *').time)
+        .to.equal('at 12 a.m.');
 
       // An exception is closed with a comma when a part follows it.
       expect(leaks([

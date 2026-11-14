@@ -90,8 +90,9 @@ function writeTime(moment: Moment, opts: EnglishOptions):
     };
   }
 
+  // A style with no word for a moment writes it as a time.
   const idiom = momentIdioms.find(function fits(row) {
-    return row.applies(moment);
+    return row.applies(moment) && row.say(moment, opts) !== '';
   });
 
   if (idiom) {
@@ -106,6 +107,16 @@ function writeTime(moment: Moment, opts: EnglishOptions):
     meridiem: moment.hour < 12 ? style.am : style.pm,
     text: [String(moment.hour % 12 || 12), ...shown].join(style.separator)
   };
+}
+
+/**
+ * The options under which a time that bounds a stretch, or names an
+ * hour, is written: 0:00 as a time, "12 a.m.", never as a word. "From
+ * midnight" can open a stretch at the end of a day as well as at its
+ * start, and "the midnight hour" was read as the hour before midnight.
+ */
+function asTime(opts: EnglishOptions): EnglishOptions {
+  return {...opts, style: {...opts.style, midnight: ''}};
 }
 
 /** Times of day, each numbered one with its own a.m. or p.m. */
@@ -223,6 +234,6 @@ function weekdayNames(days: number[], form: 'full' | 'plural',
 }
 
 export {
-  dayNames, either, hourNames, inCycleOrder, join, list, momentAt, monthNames,
-  span, through, timeNames, walkWeek, weekdayNames, weekRank
+  asTime, dayNames, either, hourNames, inCycleOrder, join, list, momentAt,
+  monthNames, span, through, timeNames, walkWeek, weekdayNames, weekRank
 };

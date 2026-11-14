@@ -56,7 +56,7 @@ describe('The cRonstrue adapter:', function() {
 
   it('describes a macro under either weekday numbering', function() {
     expect(cronstrue.toString('@weekly', {dayOfWeekStartIndexZero: false}))
-      .to.equal('At midnight on Sundays');
+      .to.equal('At 12 a.m. on Sundays');
   });
 
   it('throws on a bad pattern unless told not to, as cRonstrue does',
