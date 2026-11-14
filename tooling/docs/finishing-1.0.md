@@ -11,12 +11,17 @@ mind" and "How quality is judged" are the centre of the project.
   the maintainer's call.
 - Ten languages ship: en, cs, de, es, fr, it, ja, pt, uk, zh. The gate
   (`npm run verify`) is green.
-- Branch `length-gate-work` holds a day of withdrawn work (2026-11-13): a
-  length gate that was made a target and did harm. Its history, a
-  mechanical before/after audit, and what is worth taking from it are in
-  `tooling/experiments/renderer-process/2026-11-13/STATE.md` and
-  `…/audit/`. Do not merge that branch; take single changes from it, each
-  with its own blind comparison.
+- Branch `length-gate-work` (pushed) holds the withdrawn length-gate work
+  of 2026-11-13; its history and a before/after audit are in
+  `tooling/experiments/renderer-process/2026-11-13/`. Its genuine fixes
+  are back on `develop` (zh 均在/均为 and its enumeration forms, it, ja,
+  uk, cs) except German, whose replacement for the «…» was itself read
+  two ways (see below). Do not merge the branch.
+- Local branches left on purpose: the parked languages (`nl-art`,
+  `ko-art`, `pl-art`, `ar-art`, `he-art`), and builder branches whose work
+  reached `develop` by other routes; three builder worktrees
+  (`cs-build`, `it-build`, `en-fix3-build`) hold uncommitted edits and
+  were not removed.
 - `npm run conciseness -- --all` reports enumeration in every language,
   worst first. It is a list of places to look, never a number to reach.
 
@@ -42,9 +47,13 @@ time.
 ## Known defects, still in (a reader can get the schedule wrong)
 
 - **de**: «…» between hour windows («von 7:05 bis 7:50 … und von 22:05
-  bis 22:50») can be read as every hour. A fix is on `length-gate-work`
-  (the step in words, the hours in a bracket); three readers recovered the
-  schedule from it but found it stiff. «um :05» was rejected as not
+  bis 22:50») can be read as every hour. The candidate on
+  `length-gate-work` («täglich alle 6 Stunden (2, 8, 14 und 20 Uhr),
+  jeweils um :05, :20, :35 und :50») was recovered correctly by three
+  readers, but the third said «alle 6 Stunden» can be heard as once every
+  six hours and «jeweils um» as pairing hours with minutes; both readers
+  of the plain list wrote «um 2, 8, 14 und 20 Uhr, jeweils zu den Minuten
+  …». Needs a fresh pass with the probe pipeline. «um :05» was rejected as not
   ordinary German by three readers of three; candidate «zu den Minuten
   05, 20 …».
 - **it, pt, de**: a from–to window round a few listed minutes reads as
@@ -75,22 +84,23 @@ and single-second count; the both-day-fields-must-match wording in all ten
 languages; about fifty places where the Italian and Czech builders chose a
 form because the notes were silent.
 
-## Decisions before 1.0 (breaking if changed later)
+## Decisions before 1.0
 
-`sep` versus `separator`; what `short` means, and that zh ignores it;
-`zh-Hant` silently giving Simplified; `describeParts` exported in ESM
-only; TypeScript types that know only English styles.
+Made on 2026-11-14: `separator` everywhere; `short` is each language's
+conventional abbreviations where it uses them (none in Chinese);
+`zh-Hant`, `zh-TW`, `zh-HK`, `zh-MO` warn and describe in Simplified
+until Traditional is written; `describeParts` is internal; `style` is
+typed by the language a call names. Writing Traditional Chinese as a
+variant of the Simplified renderer is open.
 
 ## Housekeeping
 
 - `CHANGELOG.md` and `docs/migrating-to-1.0.md` do not yet describe the
-  kept changes of 2026-11-13 (cs, it, ja, uk, and zh's 均在, which changes
-  about forty sentences).
+  wording changes of 2026-11-13 and 14 (cs, it, ja, uk, and zh's 均在,
+  which changes about forty sentences).
 - The ten `answers.md` files still call themselves rule books and speak of
   rulings. Reframe each as it is next worked on: a record of choices with
   their evidence, to test again.
-- About sixty stale worktrees under `.superpowers/worktrees/` and their
-  branches.
 
 ## A way to release
 
