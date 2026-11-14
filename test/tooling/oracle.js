@@ -52,6 +52,28 @@ describe('the firing oracle:', function() {
     expect(firesAt('5/20 * * * *', at(2030, 6, 3, 4, 46))).to.equal(false);
   });
 
+  it('numbers Quartz weekdays from 1 for Sunday', function() {
+    const quartz = {cron: 'quartz'};
+
+    // 2030-06-03 is a Monday.
+    expect(firesAt('0 0 9 ? * 2', at(2030, 6, 3, 9, 0), quartz))
+      .to.equal(true);
+    expect(firesAt('0 0 9 ? * 2', at(2030, 6, 4, 9, 0), quartz))
+      .to.equal(false);
+    expect(firesAt('0 0 9 ? * 2-6', at(2030, 6, 7, 9, 0), quartz))
+      .to.equal(true);
+    expect(firesAt('0 0 9 ? * 2-6', at(2030, 6, 8, 9, 0), quartz))
+      .to.equal(false);
+    expect(firesAt('0 0 9 ? * 1/2', at(2030, 6, 2, 9, 0), quartz))
+      .to.equal(true);
+    expect(firesAt('0 0 9 ? * 6L', at(2030, 6, 28, 9, 0), quartz))
+      .to.equal(true);
+    expect(firesAt('0 0 9 ? * 2#1', at(2030, 6, 3, 9, 0), quartz))
+      .to.equal(true);
+    expect(firesAt('0 0 9 ? * MON', at(2030, 6, 3, 9, 0), quartz))
+      .to.equal(true);
+  });
+
   it('reads seconds first and a year last', function() {
     expect(firesAt('30 0 9 * * *', at(2030, 6, 3, 9, 0, 30))).to.equal(true);
     expect(firesAt('30 0 9 * * *', at(2030, 6, 3, 9, 0, 0))).to.equal(false);

@@ -188,10 +188,16 @@ on such readers' preferences, and can be reopened. So:
   with the library (`tooling/scripts/reading/oracle.mjs`) knows when a
   pattern fires; `tooling/scripts/reading/run.mjs` asks readers about
   chosen moments (true firings, and near-misses aimed at the misreadings
-  above) and scores them. A wrong answer is a defect, located. On
-  2026-11-14 it read all 657 German rows with 99.9% of answers right,
-  which is why it checks correctness, not ease. Readers of one model and
-  prompt answer alike; vary them if agreement is to mean anything.
+  above) and scores them. On 2026-11-14 it read every row of all ten
+  languages with about 99.9% of answers right, which is why it checks
+  correctness, not ease. A wrong answer in a list is a place to look, not
+  yet a defect: readers answer a question differently beside others (the
+  last one in a list, a moment on another date). So
+  `tooling/scripts/reading/recheck.mjs` asks each misread question again
+  alone, of readers of two models; one still misread by most readers of
+  both is a defect, located. Readers of one model and prompt answer alike,
+  and one model alone also errs on plain sentences; vary them if agreement
+  is to mean anything.
 - **A reported second reading is a defect; a report of stiffness, a
   ranking or a preference is a note.** Above all, a wish for more words
   ("it doesn't say where it starts", "the bracket helps") decides

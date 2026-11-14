@@ -41,7 +41,10 @@ function tasksOf(code, sample) {
   return rows.filter((_, index) => index % every === 0)
     .slice(0, sample || rows.length)
     .flatMap(function task(row, index) {
-      const options = {years: Boolean(row.options.years)};
+      const options = {
+        cron: row.options.cron,
+        years: Boolean(row.options.years)
+      };
 
       try {
         return [{

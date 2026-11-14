@@ -7,9 +7,11 @@
 // the month, month, weekday), six with seconds first (or a year last when
 // asked), seven with both; names (JAN, MON); weekday 7 as Sunday; ranges
 // that wrap; steps; lists; and the Quartz day forms L, L-n, nW, LW, nL and
-// n#k. When both day fields are restricted the pattern fires on either,
-// except that a field written from a star that is not every day (`*/2`)
-// makes both have to match, as Vixie cron does.
+// n#k; and Quartz's weekday numbers, from 1 for Sunday to 7 for Saturday,
+// when `options.cron` is 'quartz'. When both day fields are restricted
+// the pattern fires on either, except that a field written from a star
+// that is not every day (`*/2`) makes both have to match, as Vixie cron
+// does.
 
 const MONTHS = [
   'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
@@ -178,6 +180,13 @@ function isEvery(text) {
   return text === '*' || text === '?' || text === '*/1';
 }
 
+// A Quartz weekday field in standard numbers: each weekday number (not a
+// step, and not the k of n#k) is one less.
+function fromQuartz(weekday) {
+  return weekday.replace(/(^|[,-])(\d+)/gu,
+    (_, before, number) => before + String(Number(number) - 1));
+}
+
 // The pattern's fields by name.
 function fieldsOf(pattern, options = {}) {
   const parts = pattern.trim().split(/\s+/u);
@@ -200,6 +209,10 @@ function fieldsOf(pattern, options = {}) {
   names.forEach(function name(field, index) {
     fields[field] = parts[index];
   });
+
+  if (options.cron === 'quartz') {
+    fields.weekday = fromQuartz(fields.weekday);
+  }
 
   return fields;
 }
