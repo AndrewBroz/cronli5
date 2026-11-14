@@ -416,6 +416,22 @@ describe('Built package artifacts:', function() {
             'Runs at midnight on weekdays.\t/bin/backup\n' +
             'Runs at midnight every day.\t/bin/rotate\n');
         });
+
+      it('gives a crontab line with no command an empty command', function() {
+        const result = piped('0 0 * * *\n', '--crontab');
+
+        expect(result.status).to.equal(0);
+        expect(result.stdout).to.equal('Runs at midnight every day.\t\n');
+      });
+
+      it('refuses a pattern argument beside --crontab, which reads standard ' +
+        'input', function() {
+        const result = piped('0 0 * * * /bin/x\n', '--crontab', '*/5 * * * *');
+
+        expect(result.status).to.equal(2);
+        expect(result.stderr).to.match(/--crontab/u);
+        expect(result.stdout).to.equal('');
+      });
     });
 
     it('reports a bad flag value with the library\'s own message',

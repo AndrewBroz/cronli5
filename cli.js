@@ -8,7 +8,7 @@
 // It runs against the built dist/, so a plain `node` invocation works as
 // published; in a source checkout, run `npm run build` first.
 import {readFileSync, readdirSync} from 'node:fs';
-import humanize, {Cronli5OptionError} from './dist/all.js';
+import humanize, {Cronli5InputError, Cronli5OptionError} from './dist/all.js';
 
 const usage = `Usage: cronli5 [options] '<pattern>'
        cronli5 [options] < patterns.txt
@@ -136,18 +136,25 @@ function readFlags(args) {
 
 // The description of one pattern, or the reason there is none. The wording,
 // the form and every check of a flag's value are the library's own, so the
-// CLI stays a thin shell over the API.
+// CLI stays a thin shell over the API. Anything else that goes wrong is a
+// fault in cronli5, not in the pattern, and is not dressed up as one.
 function describe(pattern, options) {
   try {
     return {text: humanize(pattern, options)};
   }
   catch (error) {
-    return error instanceof Cronli5OptionError ?
-      {status: BAD_USAGE, trouble: error.message} :
-      {
+    if (error instanceof Cronli5OptionError) {
+      return {status: BAD_USAGE, trouble: error.message};
+    }
+
+    if (error instanceof Cronli5InputError) {
+      return {
         status: BAD_PATTERN,
         trouble: 'Problem parsing the cron pattern provided: ' + error.message
       };
+    }
+
+    throw error;
   }
 }
 
@@ -160,7 +167,8 @@ function jobOf(line) {
   return (/^\w+\s*[=]/u).test(line) ?
     null :
     {
-      command: line.replace(new RegExp(`^(?:\\S+\\s+){${fields}}`, 'u'), ''),
+      command: words.slice(fields).join(' ') &&
+        line.replace(new RegExp(`^(?:\\S+\\s+){${fields}}`, 'u'), ''),
       pattern: words.slice(0, fields).join(' ')
     };
 }
@@ -220,10 +228,13 @@ function versionOf() {
 }
 
 // What is wrong with the command itself, if anything.
-function refusal(options, problem) {
+function refusal(options, problem, rest) {
   const [language] = (options.lang || 'en').toLowerCase().split(/[-_]/u);
+  const both = options.crontab && rest.length > 0 &&
+    '--crontab reads the crontab from standard input; give no pattern ' +
+    'beside it';
 
-  return problem || (availableLanguages().includes(language) ?
+  return problem || both || (availableLanguages().includes(language) ?
     '' :
     'Unknown language: ' + options.lang + ' (available: ' +
       availableLanguages().join(', ') + ')');
@@ -252,7 +263,7 @@ function describeAll(rest, options) {
 function run(args) {
   const {options, problem, rest} = readFlags(args);
   const {help, version, ...asked} = options;
-  const refused = refusal(options, problem);
+  const refused = refusal(options, problem, rest);
 
   if (help || version) {
     console.log(help ? usage : versionOf());
