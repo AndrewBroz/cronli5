@@ -1,5 +1,77 @@
 # Czech: answers to the language questionnaire
 
+**Amended 2026-11-14 on the maintainer's rulings** (by Claude Opus 5.5;
+rows rewritten by hand before the renderer changed; nothing blind-read).
+What was said before, and why it was wrong:
+
+* **An hour cadence that tiles the day was given a window.** `0 */2 * *
+  *` was «denně každé 2 hodiny od 0:00 do 22:00», `0 */6 * * *` four
+  clock times, `0 1/2 * * *` «denně každé 2 hodiny od 1:00 do 23:00».
+  The window and the list repeat what the cadence already says: an
+  interval that divides 24, counted from midnight, runs round the clock,
+  and the README ("Description Accuracy") states that the library does
+  not qualify a cadence that begins on the first second, minute or hour
+  of its cycle. The usage notes themselves attest the bare form
+  («každých 6 hodin nebo … každých 8 hodin», usage §3.1) and ask for an
+  anchor only where the step does not divide the day (usage §9). So
+  such a cadence is now said bare, «každé 2 hodiny», with no «denně»
+  (it runs round the clock); one from a later start inside the first
+  interval names only its start, «každé 2 hodiny od 1:00»; a cadence
+  that does not tile keeps both ends (`0 5/2 * * *` still «denně každé 2
+  hodiny od 5:00 do 23:00»: its night gap is six hours). A minute or
+  second beside such hours is said after the cadence, apart from it
+  (4.1, T0), so that editing the minute changes only the minute.
+* **Number series in brackets.** «od 1. dne v měsíci každý třetí den
+  (1., 4., 7. a tak dále)» and «od roku 2028 každý čtvrtý rok (2028,
+  2032, 2036 a tak dále)» showed a series the words already state:
+  the start is named and the step is said in words. The brackets are
+  gone.
+* **Clock digits in brackets** after a place in the hour («každou minutu
+  v prvních 30 minutách každé hodiny (:00–:29)», «každých 10 minut,
+  v každé hodině od 5 do 55 minut po celé hodině (:05–:55)», «a pak ještě
+  45 minut po celé hodině (:45)», «kromě okamžiku 29 minut po každé celé
+  hodině (:29)», and the same written to the second) restated what the
+  words say, and the rule book itself called them never needed. They are
+  gone everywhere. The one thing a bracket said that the words did not
+  was whether the last place of a from–to fires («od 5 do 55 minut»: is
+  :55 in it?); that is now said in words, with «včetně» at the end of
+  the from–to, as the places in the minute already did (4.2): «od 5 do
+  55 minut po celé hodině včetně».
+* Found while doing so: minute 0 among pieces was said «0 minut po celé
+  hodině», which no one writes; it is now «v každou celou hodinu» (4.1a)
+  and, beside hours that tile the day, «v celou hodinu» (T0).
+* **Every other hour, as a stretch.** `* */2 * * *` was «každé 2
+  hodiny, vždy po dobu jedné hodiny každou minutu»: exact, but heavy for
+  what Czech says in three words. A step of two that tiles the day is
+  the even or the odd hours, and Czech has the words, as German («in
+  den geraden Stunden») and Portuguese («nas horas pares») do: «každou
+  minutu v sudých hodinách», «každých 15 minut v lichých hodinách»,
+  «každou minutu v prvních 30 minutách každé sudé hodiny» (T0). The
+  idiom 5.1 had refused hours because «v sudých hodinách» says nothing
+  of where the count starts; for a step of two over the whole day the
+  parity is the start. Longer steps keep «vždy po dobu jedné hodiny»:
+  «v každé šesté hodině» could be counted from 1, and nothing shorter is
+  natural.
+* **Minute 30 beside hours that tile the day is «v půl».** Until the
+  amendment above it was «každé 2 hodiny, vždy 30 minut po celé hodině»,
+  to keep minute 30 in the same form as minute 15. Under every hour
+  minute 30 is «každou hodinu v půl» (5.4), and the maintainer ruled
+  (2026-11-14) that the minute keeps its words when only the hours
+  change: `30 */2 * * *` → «každé 2 hodiny v půl», `30 1/2 * * *` →
+  «každé 2 hodiny od 1:00 v půl», and with hours removed «každé 2 hodiny
+  v půl, kromě 8:30». A list that contains 30 keeps the count form
+  («vždy 15 a 45 minut po celé hodině»), and a single second still joins
+  the place («vždy 30 minut a 15 sekund po celé hodině»), as under every
+  hour (S6).
+* The earlier reader evidence for these windows, lists and glosses
+  (judge 4 counting «každý třetí den» two ways; the judges reading
+  «každé 2 hodiny od 1:00 do 23:00» at once; «každých 12 hodin» lacking
+  an anchor) is overruled where it argued for the longer form: isolated
+  model readers have proven to favour verbose, over-qualified wording
+  that people do not. Where it argued against a misreading of a short
+  form it still stands: midnight and noon alone (`0 */12 * * *`, two
+  values) are still listed, and every other interval keeps its form.
+
 Answered by the authoring model (Claude Fable 5.2), 2026-11-13, for Czech
 as written in the Czech Republic. The ground is `usage.md` in this
 directory: how Czech already writes times that recur, written by someone
@@ -18,8 +90,8 @@ blind way by another fluent editor **(judge 2, judge 3)**. What any of
 them understood wrongly, in two ways, or only on a second reading was
 changed by rule; what was understood and only called stiff was left
 unless something as exact was plainly easier. Rewrites were weighed as
-suggestions: the judges did not know that the schedule ignores public
-holidays or that every sentence must follow from general rules. A
+suggestions: the judges did not know that every sentence must follow
+from general rules. A
 second adversarial read of the fourth version, rows and rule book
 **(schedule reader 2)**, led to the fifth, and a fourth blind fluency
 read **(judge 4)** to the sixth, and a fifth **(judge 5)**, who
@@ -46,9 +118,12 @@ Seven things run through everything:
 * **A stretch is said by the first and the last moment that fire.**
   Czech „do 17 hodin“ means the moment 17:00 (usage §4.2).
 * **A cadence is bare only where the unit above anchors it**: minutes
-  that tile the hour from :00 («každých 15 minut») and seconds that tile
-  the minute. Every other cadence names its ends, or is said after its
-  start («od roku 2028 každý čtvrtý rok»), or is listed.
+  that tile the hour from :00 («každých 15 minut»), seconds that tile
+  the minute, and hours that tile the day from 0:00 («každé 2 hodiny»,
+  three values or more). Hours that tile the day from a later start
+  name only that start («každé 2 hodiny od 1:00»). Every other cadence
+  names its ends, or is said after its start («od roku 2028 každý
+  čtvrtý rok»), or is listed.
 * **A place inside the hour is said in words: «5 minut po každé celé
   hodině».** Three notations were tried. «5 minut po celé» (first
   version) was unfinished without its noun, a riddle in a range («od
@@ -59,13 +134,12 @@ Seven things run through everything:
   one minute or a list, and the only objection to it there was the
   missing noun; so that form is said, with its noun. A run from the
   hour is said as «v prvních 30 minutách každé hodiny». Clock digits
-  appear only in brackets, as an illustration the rule can always
-  produce («(:00–:29)»).
-* **No word of the calendar is used that promises more than the pattern
-  knows.** «pracovní den» and «všední den» promise that a public holiday
-  is skipped (usage §1.1), so Monday to Friday is always «od pondělí do
-  pátku»; «o půlnoci» beside a weekday is the wrong night for half the
-  readers (usage §9), so midnight is «v 0:00».
+  of a place are not written at all (2026-11-14); a from–to of places
+  ends in «včetně».
+* **Monday to Friday is «od pondělí do pátku»** in the weekday field
+  (2026-11-14: this choice rested on public holidays, which are no longer
+  a reason; it is open to revision). «o půlnoci» beside a weekday is the
+  wrong night for half the readers (usage §9), so midnight is «v 0:00».
 
 Czech declares **no tie** (3.11): no wording depends on how a field was
 written.
@@ -116,11 +190,12 @@ Why four, and why seven. Direct comparisons, nothing else varying:
 
 | Set | Said | Rejected | Why |
 | --- | --- | --- | --- |
-| `0 */6 * * *` | «denně v 0:00, 6:00, 12:00 a 18:00» | «každých 6 hodin od 0:00 do 18:00» | four moments are read off |
-| `0 */4 * * *` | «denně každé 4 hodiny od 0:00 do 20:00» | six times | an even rhythm between two ends holds better than six items (judge read «každé 2 hodiny od 1:00 do 23:00» at once) |
+| `0 */6 * * *` | «každých 6 hodin» | «denně v 0:00, 6:00, 12:00 a 18:00» | an interval that divides the day, from midnight, needs no anchor (README "Description Accuracy"; usage §3.1 attests «každých 6 hodin»); 2026-11-14 |
+| `0 */4 * * *` | «každé 4 hodiny» | «denně každé 4 hodiny od 0:00 do 20:00», six times | the same; the window only repeated the cadence; 2026-11-14 |
+| `0 1/6 * * *` | «denně v 1:00, 7:00, 13:00 a 19:00» | «každých 6 hodin od 1:00» | four values from a later start are read off as a list, as every list of four is |
 | `0 */5 * * *` | «denně v 0:00, 5:00, 10:00, 15:00 a 20:00» | «každých 5 hodin od 0:00 do 20:00» | the cadence hides the four-hour gap at the end (schedule reader; usage §9) |
-| `0 */12 * * *` | «denně v 0:00 a 12:00» | «každých 12 hodin» | no anchor (usage §9) |
-| `23 */6 * * *` | «denně v 0:23, 6:23, 12:23 a 18:23» | «každých 6 hodin od 0:23» | a start to add to is the dearest form |
+| `0 */12 * * *` | «denně v 0:00 a 12:00» | «každých 12 hodin» | two values are a list; the maintainer kept this form (2026-11-14) |
+| `23 */6 * * *` | «každých 6 hodin, vždy 23 minut po celé hodině» | «denně v 0:23, 6:23, 12:23 a 18:23», «každých 6 hodin od 0:23» | the cadence stays bare and the minute is said apart; a start to add to is the dearest form; 2026-11-14 |
 | `0 0 */5 * *` | «vždy 1., 6., 11., 16., 21., 26. a 31. dne v měsíci v 0:00» | «každý 5. den od 1. do 31. dne v měsíci» | the judge read the cadence as 5, 10, 15 … as well; „výčet je tu kratší a jistější“ |
 | `0 0 */3 * *` | «od 1. dne v měsíci každý třetí den v 0:00» | eleven day numbers | eleven are too many to hold; the start is said first (usage §9) |
 | `0 9 * */2 *` | six month names | «v lichých měsících» | a month is known by its name, not by the parity of its number |
@@ -202,8 +277,8 @@ them:
 * **Exceptions.** An exception in the days, months or years takes no
   comma: «denně kromě neděle vždy v 9:00», «každý měsíc kromě června
   denně v 9:00». An exception that closes the time part takes one
-  before it: «denně každé 2 hodiny od 0:00 do 22:00, kromě 8:00»,
-  «každou minutu, kromě okamžiku 29 minut po každé celé hodině (:29)».
+  before it: «každé 2 hodiny, kromě 8:00»,
+  «každou minutu, kromě okamžiku 29 minut po každé celé hodině».
   (The first version wrote a
   lone closing comma, the second both; judge 2 read the first form
   rightly in both judges' own rewrites and found the commas heavy.)
@@ -223,9 +298,12 @@ them:
   «denně kromě soboty každých 15 minut …»).
 * **Inside the day part**, the commas of the `nW` clause (5.7), of
   «denně, … jen …,» and the closing «, vždy» of a union (4.3).
-* **Inside the time part**, the comma before «pokaždé» (4.2) and inside
-  a cadence of 4.1a; brackets are preceded by a space and followed by
-  whatever would follow the word before them.
+* **Inside the time part**, the comma before «pokaždé» (4.2), inside
+  a cadence of 4.1a, and after a bare cadence of hours before the
+  minutes said apart (T0). The few brackets left (5.7's «(jen
+  v měsících, které ho mají)», the worked day of `L-n`, 4.3's «(i 13.)»)
+  are preceded by a space and followed by whatever would follow the word
+  before them.
 
 **2.2** The month goes in front of the day; the weekday is the day part.
 Nothing already there moves.
@@ -247,15 +325,20 @@ and the order of 2.1 possible and asks that one set of texts keep one.
 skip the days, so the day part says **«denně»** when **the hours are
 restricted (H is not every hour) and neither day field is restricted**.
 When H is every hour nothing is said: «každých 5 minut» has no daily
-rhythm. A day field that names every value, or every day the reached
-months have (`dateReach.days.everyDay`), restricts nothing.
+rhythm. Nor is anything said when H is a bare cadence that tiles the
+day (T0: «každé 2 hodiny», «každé 2 hodiny od 1:00»): it runs round the
+clock and has no daily rhythm either (2026-11-14). A day field that
+names every value, or every day the reached months have
+(`dateReach.days.everyDay`), restricts nothing.
 
 * `0 9 * * *` → «denně v 9:00»
 * `0 9 * 6 *` → «v červnu denně v 9:00»
 * `0 0 9 * * * 2030` → «v roce 2030 denně v 9:00»
 * `0 9-17 * * *` → «denně každou hodinu od 9:00 do 17:00»
 * `*/5 * * 6 *` → «v červnu každých 5 minut»
-* `0 */6 * * *` → «denně v 0:00, 6:00, 12:00 a 18:00»
+* `0 */6 * * *` → «každých 6 hodin»; `0 */2 * 6 *` → «v červnu každé 2
+  hodiny»
+* `0 5/2 * * *` → «denně každé 2 hodiny od 5:00 do 23:00» (no tiling)
 * `0 0 1-30 6 *` → «v červnu denně v 0:00»
 
 **The night.** When the hours are kept as one stretch past midnight
@@ -319,7 +402,7 @@ minut po každé celé hodině»; `0 9 * * *` → «denně v 9:00»; `0 0 15 * *
 pondělí, středu a pátek v 0:00». Joined as in 7.4.
 
 **3.4** `0-29 * * * *` → «každou minutu v prvních 30 minutách každé
-hodiny (:00–:29)»;
+hodiny»;
 `0 9-17 * * *` → «denně každou hodinu od 9:00 do 17:00»; `0 0 1-7 * *` →
 «od 1. do 7. dne v měsíci vždy v 0:00»; `0 0 * 6-8 *` → «od června do
 srpna denně v 0:00»; `0 0 * * 1-5` → «od pondělí do pátku vždy v 0:00».
@@ -349,26 +432,28 @@ v lednu, únoru, listopadu a prosinci denně v 0:00». Minutes, seconds and days
 the month are always linear.
 
 **3.6** `0-29,45 * * * *` → «každou minutu v prvních 30 minutách každé
-hodiny (:00–:29) a pak ještě 45 minut po celé hodině (:45)»;
+hodiny a pak ještě 45 minut po celé hodině»;
 `0 9-17,22 * * *` → «denně každou hodinu od 9:00 do 17:00 a ve 22:00».
 
-**3.7** `*/15 * * * *` → «každých 15 minut»; `0 */2 * * *` → «denně
-každé 2 hodiny od 0:00 do 22:00»; `0 0 */5 * *` → seven days listed;
+**3.7** `*/15 * * * *` → «každých 15 minut»; `0 */2 * * *` → «každé 2
+hodiny» (T0); `0 0 */5 * *` → seven days listed;
 `0 0 1 */3 *` → «v lednu, dubnu, červenci a říjnu vždy 1. dne v měsíci
 v 0:00».
 
 **3.8** `*/7 * * * *` → «každých 7 minut, v každé hodině znovu od celé
-hodiny (:00–:56)» (usage §9); `5/15 * * * *` → «vždy 5, 20, 35 a 50
+hodiny» (usage §9); `5/15 * * * *` → «vždy 5, 20, 35 a 50
 minut po každé celé hodině»; `5/10 * * * *` → «každých 10 minut,
-v každé hodině od 5 do 55 minut po celé hodině (:05–:55)»;
-`0 1/2 * * *` → «denně každé 2 hodiny od 1:00 do 23:00».
+v každé hodině od 5 do 55 minut po celé hodině včetně»;
+`0 1/2 * * *` → «každé 2 hodiny od 1:00» (T0: it tiles the day from a
+later start); `0 5/2 * * *` → «denně každé 2 hodiny od 5:00 do 23:00»
+(it does not tile: six hours pass from 23:00 to 5:00).
 
 **3.9** A speaker names what is missing when one or two values are
 missing from the whole field, or when the base is a cadence or a range
 that would otherwise be a long list. `0,15,45 * * * *` → «v každou
 celou hodinu a 15 a 45 minut po ní» (three values: a list);
-`0 0,2,4,6,10,12,14,16,18,20,22 * * *` → «denně každé 2 hodiny od 0:00
-do 22:00, kromě 8:00»; the odd days without the 15th → «každý lichý den
+`0 0,2,4,6,10,12,14,16,18,20,22 * * *` → «každé 2 hodiny, kromě 8:00»
+(T0); the odd days without the 15th → «každý lichý den
 v měsíci kromě 15. dne vždy v 0:00»; `0 0 1 1-11 *` → «od ledna do
 listopadu vždy 1. dne v měsíci v 0:00»; `0 0 * * 1-6` → «od pondělí do
 soboty vždy v 0:00» (months and weekdays keep a run that does not wrap).
@@ -376,7 +461,7 @@ The word is **«kromě»**, and what follows it is always something that
 cannot be read as a length of time: a clock time («kromě 8:00»), a day
 or a month («kromě neděle», «kromě 15. dne v měsíci»), «doby od … do
 …» for whole hours, or «okamžiku …» for a place in the hour or the
-minute («kromě okamžiku 29 minut po každé celé hodině (:29)»): the word
+minute («kromě okamžiku 29 minut po každé celé hodině»): the word
 «okamžik» is what stops «29 minut po …» from being read as the first
 29 minutes (schedule reader).
 
@@ -402,7 +487,7 @@ Days are ordinals in digits with a full stop, read in the genitive
 | one range | «od 1. do 7. dne v měsíci» (and «vždy» before a list of times, 2.1) |
 | pieces | «vždy 1. až 7. a 15. dne v měsíci», «vždy 1. až 5., 10. a 20. až 25. dne v měsíci», «vždy 1. až 3. a 28. až 31. dne v měsíci» (`28-3`) |
 | odd, even (5.1) | «každý lichý den v měsíci», «každý sudý den v měsíci» |
-| a cadence of more than seven days | a step of two is the parity word with both ends, «každý sudý den od 8. do 30. dne v měsíci», «každý lichý den od 5. do 21. dne v měsíci»; any other step shows its first three members, «od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále)», and names its end as well when it stops before the last day it could reach, «od 2. do 20. dne v měsíci každý třetí den (2., 5., 8. a tak dále)». A bare «každý třetí den» was counted two ways (judge 4). |
+| a cadence of more than seven days | a step of two is the parity word with both ends, «každý sudý den od 8. do 30. dne v měsíci», «každý lichý den od 5. do 21. dne v měsíci»; any other step is said after its start, «od 1. dne v měsíci každý třetí den», and names its end as well when it stops before the last day it could reach, «od 2. do 20. dne v měsíci každý třetí den». A bare «každý třetí den» was counted two ways (judge 4), so the start is always named; the bracket of its first three members that followed until 2026-11-14 («(1., 4., 7. a tak dále)») repeated what the start and the step say, and is gone. |
 | a cadence of seven or fewer | a list |
 | one or two days missing | «denně kromě 15. dne v měsíci», «denně kromě 15. a 16. dne v měsíci» |
 | an exception, base a cadence or range | «každý lichý den v měsíci kromě 15. dne», «od 1. do 20. dne v měsíci kromě 13. dne» |
@@ -505,8 +590,118 @@ order, say the minutes and hours (this section), then add the seconds
 zero. In a list the preposition is said once and follows the first time
 (7.3, 7.4), and the times are in the order of the day.
 
-The rules are tried in this order: with every hour, T2; otherwise T1,
-then T3, then T4, then T5.
+The rules are tried in this order: with every hour, T2; with hours that
+tile the day, T0; otherwise T1, then T3, then T4, then T5.
+
+**T0. Hours that tile the day** (2026-11-14). H tiles the day when it
+is a cadence that comes round evenly (its step divides 24 and its start
+lies inside the first step: `*/2`, `*/3`, `1/2`, `2/3`, `3/4`), and
+either starts at 0 and has **three values or more**, or starts later
+and has **more than four** (fewer are a list by the generic order, and
+stay one: `0 1/6 * * *` → «denně v 1:00, 7:00, 13:00 a 19:00»). Two
+values from midnight stay a list too: `0 */12 * * *` → «denně v 0:00
+a 12:00». An exception whose base so tiles (one or two hours removed)
+is T0 as well. Whatever M is, the hours are then said **first and
+bare**, as the head of the time part, with no «denně» (2.5):
+
+* from 0: «každé 2 hodiny», «každé 3 hodiny», «každých 6 hodin»,
+  «každých 8 hodin»;
+* from a later start, the start and no end: «každé 2 hodiny od 1:00»,
+  «každé 3 hodiny od 2:00».
+
+Then, after a comma, the minutes **apart from the hours**, with «vždy»
+and in the short forms below, where the hour is «celá hodina» without
+«každá» (the hours are already said). Minute 0 says nothing.
+
+| M | Said after «každé 2 hodiny,» |
+| --- | --- |
+| minute 30 | no comma and no «vždy»: «v půl» after the hours, «každé 2 hodiny v půl», «každé 2 hodiny od 1:00 v půl» (idiom, 5.4) |
+| one minute, a list without minute 0 | «vždy 20 minut po celé hodině», «vždy 15 a 45 minut po celé hodině» |
+| a list with minute 0 | «vždy v celou hodinu a 15 a 45 minut po ní» |
+| every minute | «vždy po dobu jedné hodiny každou minutu» |
+| tiles from zero | «vždy po dobu jedné hodiny každých 15 minut» |
+| a run from minute 0 | «vždy v prvních 30 minutách hodiny každou minutu» |
+| a run to minute 59 | «vždy v posledních 15 minutách hodiny každou minutu» |
+| any other run | «vždy od 10 do 40 minut po celé hodině včetně, každou minutu» |
+| a cadence from 0 | «vždy od celé hodiny do 56 minut po ní včetně, každých 7 minut» |
+| any other cadence | «vždy od 5 do 55 minut po celé hodině včetně, každých 10 minut» |
+| pieces, and runs and cadences together | the parts in these forms, joined as in 4.1b by «a pak» or «a také»; single minutes after the first part with «ještě», minute 0 as «v celou hodinu»: «vždy v prvních 30 minutách hodiny každou minutu a pak ještě 45 minut po celé hodině», «každé 3 hodiny od 1:00, vždy v celou hodinu a pak v posledních 25 minutách hodiny každou minutu» |
+| one or two minutes missing | «vždy po dobu jedné hodiny každou minutu, kromě okamžiku 29 minut po celé hodině»; minute 0 missing is «kromě každé celé hodiny» |
+| an exception with another base | the base, then «, kromě okamžiku …» in the same way |
+
+These are the short forms of the place in the minute (4.2, S7) said of
+the hour: a stretch stands before its rhythm, so that two frequency
+words never meet, and «včetně» closes a from–to. «po dobu jedné hodiny»
+is the hour's «po dobu jedné minuty». No clock digits in brackets: the
+words say the places, and a cadence is said by its two ends.
+
+Removed hours (an exception whose base tiles) are the same cadence with
+hours taken out: the base is said bare, as above, and the removed hours
+close the part, at one minute as clock times, «každé 2 hodiny, kromě
+8:00», «každé 2 hodiny od 1:00, kromě 9:00», «každé 2 hodiny v půl,
+kromě 8:30», «každé 4 hodiny, vždy 20 minut po celé hodině, kromě
+12:20»; otherwise as whole hours, «každých 6 hodin, vždy po dobu jedné
+hodiny každou minutu, kromě doby od 12:00 do 12:59», «každou minutu
+v sudých hodinách, kromě doby od 8:00 do 8:59». No window and no «denně» is said there either.
+
+Seconds, beside T0:
+
+* second 0: nothing;
+* one second and one minute: the second joins the minute's place, «vždy
+  15 sekund po celé hodině» (minute 0), «vždy 30 minut a 15 sekund po
+  celé hodině»; removed hours show it («kromě 8:00:15»);
+* seconds that tile the minute where the minutes are every minute or a
+  run: the rhythm of the seconds takes the place of «každou minutu»,
+  «vždy po dobu jedné hodiny každou sekundu», «vždy od 10 do 40 minut po
+  celé hodině včetně, každou sekundu»;
+* anything else: S7, after the minutes and before an exception: «každé 2
+  hodiny, vždy 5 a 30 minut po celé hodině, pokaždé 8 sekund po začátku
+  minuty»; «každé 2 hodiny, pokaždé po dobu jedné minuty každou
+  sekundu» (minute 0).
+
+* `0 */2 * * *` → «každé 2 hodiny»; `0 1/2 * * *` → «každé 2 hodiny od
+  1:00»; `30 */2 * * *` → «každé 2 hodiny v půl»; `23 1/2 * * *` → «každé 2 hodiny od 1:00, vždy 23 minut po
+  celé hodině»; `* */6 * * *` → «každých 6 hodin, vždy po dobu jedné
+  hodiny každou minutu»; `*/15 */2 * * 1-5` → «od pondělí do pátku každé
+  2 hodiny, vždy po dobu jedné hodiny každých 15 minut» was said until
+  the even and odd hours below.
+
+**Even and odd hours.** When the step is two (`*/2`, `1/2`, and the
+same with hours removed), and M is a stretch said with a rhythm (every
+minute, a rhythm that tiles the hour from zero, a run, or one of these
+with a minute or two removed), the rhythm leads and the hours are their
+parity; no «každé 2 hodiny», no «od 1:00»:
+
+| M | Said |
+| --- | --- |
+| a rhythm | «každou minutu v sudých hodinách», «každých 15 minut v lichých hodinách» |
+| a run from minute 0 | «každou minutu v prvních 30 minutách každé sudé hodiny» |
+| a run to minute 59 | «každou minutu v posledních 15 minutách každé liché hodiny» |
+| any other run | «každou minutu od 10 do 40 minut po každé sudé hodině včetně» |
+| a minute or two removed | the phrase, then «, kromě okamžiku 29 minut po celé hodině», «, kromě každé celé hodiny» |
+
+Removed hours close it as above («každou minutu v sudých hodinách, kromě
+doby od 8:00 do 8:59»); seconds as above: a rhythm of seconds takes the
+place of «každou minutu» («každou sekundu v sudých hodinách»), anything
+else follows after «pokaždé». Every other M keeps the form above
+(«každé 2 hodiny v půl», «každé 2 hodiny, vždy 20 minut po celé
+hodině», «každé 2 hodiny, vždy
+od celé hodiny do 56 minut po ní včetně, každých 7 minut»): a place is
+a moment, and «30 minut po každé sudé hodině» would be a second device
+for what «každé 2 hodiny» already says.
+
+Why the hours lead here, when elsewhere the minutes do: the order of
+usage §2 is from the large to the small, and the hours are the one
+part of this schedule that is a plain rhythm the reader takes at once.
+Said after the minutes, «vždy 30 minut po každé celé hodině, každé 2
+hodiny» first promises every hour and then takes it back. The minute
+idiom «každou celou hodinu» is T2's and is not said here (minute 0 is
+the bare cadence); minute 30 keeps its «v půl», as it has under every
+hour (5.4). (Rejected: «v každé šesté
+hodině», which could be the sixth hour, 5:00; and the clock windows of
+T3, which listed what the cadence already says. A stretch over a step
+of two is the exception above: its rhythm leads, because «v sudých
+hodinách» is how Czech says it.)
 
 **T1. A list of times.** When M and H are both listable and together
 make **six times or fewer**; or one of them is a single value and the
@@ -540,16 +735,16 @@ scattered, and the list shows it. A list of
 two dozen cannot be held; two rhythms can. The parts are joined by «a pak»
 where they are places in the hour or the minute and each begins after the
 one before it has ended, by «a také» where such parts run through one
-another («každých 15 minut od 5 do 50 minut po celé hodině (:05–:50) a
-také každých 15 minut od 10 do 55 minut po celé hodině (:10–:55)»: «a pak»
+another («každých 15 minut od 5 do 50 minut po celé hodině včetně a
+také každých 15 minut od 10 do 55 minut po celé hodině včetně»: «a pak»
 would say that one follows the other), and by «a» where they are clock
 times or days; a part of one or two single values is said as it is
-in 4.1a («a pak ještě 45 minut po celé hodině (:45)»).
+in 4.1a («a pak ještě 45 minut po celé hodině»).
 
 * Minutes of every hour: «v každé hodině» once, then each part as its
   rhythm and its places: `0-20/2,21-59/3 * * * *` — «v každé hodině každé 2
-  minuty od celé hodiny do 20 minut po ní (:00–:20) a pak každé 3 minuty
-  od 21 do 57 minut po celé hodině (:21–:57)». Restricted hours follow as
+  minuty od celé hodiny do 20 minut po ní včetně a pak každé 3 minuty
+  od 21 do 57 minut po celé hodině včetně». Restricted hours follow as
   they follow any places («…, od 9:00 do 17:57»), and seconds as they
   follow any minutes («…, pokaždé po dobu jedné minuty každou sekundu»).
 * Minutes of one hour, or seconds of one minute: each part is a window of
@@ -574,15 +769,15 @@ note that recorded it as a "known limit" was a defect left standing.)
 | --- | --- |
 | one minute, a list without minute 0 | «vždy 20 minut po každé celé hodině», «vždy 5, 20 a 45 minut po každé celé hodině» |
 | a list with minute 0 | «v každou celou hodinu a 15 a 45 minut po ní» |
-| a run from minute 0 (n minutes) | «každou minutu v prvních 30 minutách každé hodiny (:00–:29)» |
-| a run to minute 59 (n minutes) | «každou minutu v posledních 15 minutách každé hodiny (:45–:59)» |
-| any other run | «každou minutu od 10 do 40 minut po každé celé hodině (:10–:40)» |
-| a cadence from 0 that runs as far as the hour lets it | «každých 7 minut, v každé hodině znovu od celé hodiny (:00–:56)» |
-| a cadence from 0 that stops earlier | «každých 6 minut, v každé hodině od celé hodiny do 42 minut po ní (:00–:42)» |
-| any other cadence | «každých 10 minut, v každé hodině od 5 do 55 minut po celé hodině (:05–:55)» |
-| pieces | the pieces in order, joined by «a pak»; a run as above (with «každou minutu» each time); single minutes as «ještě 45 minut po celé hodině (:45)», or without «ještě» when they come first: «každou minutu v prvních 30 minutách každé hodiny (:00–:29) a pak ještě 45 minut po celé hodině (:45)»; «každou minutu v prvních 11 minutách každé hodiny (:00–:10) a pak v posledních 10 minutách každé hodiny (:50–:59)» |
-| one or two minutes missing | «každou minutu, kromě okamžiku 29 minut po každé celé hodině (:29)»; minute 0 missing is «kromě každé celé hodiny»: «každou minutu, kromě každé celé hodiny a okamžiku 30 minut po ní (:00 a :30)» |
-| an exception with another base | the base, then «, kromě okamžiku …» in the same way: «každých 5 minut, kromě okamžiku 30 minut po každé celé hodině (:30)» |
+| a run from minute 0 (n minutes) | «každou minutu v prvních 30 minutách každé hodiny» |
+| a run to minute 59 (n minutes) | «každou minutu v posledních 15 minutách každé hodiny» |
+| any other run | «každou minutu od 10 do 40 minut po každé celé hodině včetně» |
+| a cadence from 0 that runs as far as the hour lets it | «každých 7 minut, v každé hodině znovu od celé hodiny» |
+| a cadence from 0 that stops earlier | «každých 6 minut, v každé hodině od celé hodiny do 42 minut po ní včetně» |
+| any other cadence | «každých 10 minut, v každé hodině od 5 do 55 minut po celé hodině včetně» |
+| pieces | the pieces in order, joined by «a pak»; a run as above (with «každou minutu» each time); single minutes as «ještě 45 minut po celé hodině», or without «ještě» when they come first, and minute 0 as «v každou celou hodinu» (2026-11-14; it had been «0 minut po celé hodině»): «v každou celou hodinu a pak každou minutu v posledních 25 minutách každé hodiny»; «každou minutu v prvních 30 minutách každé hodiny a pak ještě 45 minut po celé hodině»; «každou minutu v prvních 11 minutách každé hodiny a pak v posledních 10 minutách každé hodiny» |
+| one or two minutes missing | «každou minutu, kromě okamžiku 29 minut po každé celé hodině»; minute 0 missing is «kromě každé celé hodiny»: «každou minutu, kromě každé celé hodiny a okamžiku 30 minut po ní» |
+| an exception with another base | the base, then «, kromě okamžiku …» in the same way: «každých 5 minut, kromě okamžiku 30 minut po každé celé hodině» |
 
 * The opening «vždy» of a list is not said directly after «denně»
   («denně 20 minut po každé celé hodině, kromě 3:20 a 4:20»): two
@@ -590,11 +785,15 @@ note that recorded it as a "known limit" was a defect left standing.)
 * The unit follows the last number (7.2): «1 minutu», «2 minuty», «5
   minut»; after «do» it is «minut». «v prvních N minutách» and «v
   posledních N minutách» are the same for every N.
-* The illustration is the places as the clock shows them, a colon and
-  two digits: a run or a cadence as «(:A–:B)» with an en dash and no
-  spaces, single minutes as «(:45)», «(:00 a :30)». These brackets are
-  never needed to understand the words; it is always written for a run, a cadence,
-  pieces and an exception, and never for a plain list.
+* No clock digits are written for a place. Until 2026-11-14 a run, a
+  cadence, pieces and an exception were followed by the places as the
+  clock shows them in brackets («(:00–:29)», «(:45)», «(:00 a :30)»);
+  they were never needed to understand the words, and are gone. A
+  from–to of places that does not run to the edge of the hour ends in
+  «včetně», so that its last place plainly fires: «od 10 do 40 minut po
+  každé celé hodině včetně», «od celé hodiny do 42 minut po ní včetně».
+  «v prvních N minutách», «v posledních N minutách» and «znovu od celé
+  hodiny» need nothing.
 * The cadences here are those generic rule 7 says as a cadence; a
   cadence of seven values or fewer that does not come round is a list.
   **The hours are the exception when more than one minute fires in the
@@ -604,8 +803,9 @@ note that recorded it as a "known limit" was a defect left standing.)
   «denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50»). At
   one minute the hours stay a list («denně v 0:00, 5:00, 10:00, 15:00 a
   20:00»), and four hours or fewer are always said one by one: four
-  windows, each exact, are still held («od 0:00 do 0:59, od 6:00 do 6:59,
-  od 12:00 do 12:59 a od 18:00 do 18:59»).
+  windows, each exact, are still held («od 2:00 do 2:59, od 8:00 do 8:59,
+  od 14:00 do 14:59 a od 20:00 do 20:59»). Hours that tile the day are
+  T0's, not this.
 
 **T3. M is an even rhythm, or an exception whose base is an even
 rhythm (or, when every window is a single hour, anything that reads as
@@ -621,8 +821,8 @@ it is kept (3.5).
 | one hour | «každou minutu od 9:00 do 9:59», «každých 10 minut od 9:05 do 9:55» |
 | one run | «každou minutu od 9:00 do 17:59», «každých 15 minut od 9:00 do 17:45», «každých 15 minut od 9:05 do 17:50», «každých 15 minut od 22:00 do 5:45» |
 | a list or pieces | every window, joined as a list (7.4): «každou minutu od 9:00 do 9:59 a od 17:00 do 17:59», «každých 15 minut od 9:00 do 17:45 a od 22:00 do 22:45» |
-| a cadence (said as one by generic rule 7) | the head, the first two windows, «a tak dále každé k hodiny až do» and the last firing: «každou minutu od 0:00 do 0:59, od 2:00 do 2:59 a tak dále každé 2 hodiny až do 22:59», «každých 15 minut od 0:00 do 0:45, od 2:00 do 2:45 a tak dále každé 2 hodiny až do 22:45» |
-| an exception | the base as above (base «all»: just the head), then «, kromě doby» and the removed hours as whole clock hours, to the minute: «každou minutu, kromě doby od 3:00 do 3:59», «každých 10 minut, kromě doby od 3:00 do 3:59», «… a tak dále každé 2 hodiny až do 22:45, kromě doby od 8:00 do 8:59». Two removed hours that are neighbours are one stretch («od 3:00 do 4:59»). |
+| a cadence that does not tile the day (said as one by generic rule 7) | the head, the first two windows, «a tak dále každé k hodiny až do» and the last firing: «každou minutu od 5:00 do 5:59, od 7:00 do 7:59 a tak dále každé 2 hodiny až do 23:59», «každých 15 minut od 5:00 do 5:45, od 7:00 do 7:45 a tak dále každé 2 hodiny až do 23:45». A cadence that tiles the day is T0's. |
+| an exception | the base as above (base «all»: just the head), then «, kromě doby» and the removed hours as whole clock hours, to the minute: «každou minutu, kromě doby od 3:00 do 3:59», «každých 10 minut, kromě doby od 3:00 do 3:59», «každých 15 minut od 9:00 do 17:45, kromě doby od 12:00 do 12:59». Two removed hours that are neighbours are one stretch («od 3:00 do 4:59»). |
 
 (The first version said «a tak dále» with no rule in words; the second
 put the rule in front as «a to v každé druhé hodině:», which judge 2
@@ -652,9 +852,9 @@ An exception in M, in T3: after the windows, «, kromě» and the removed
 minutes, as clock times when every window is a single hour («…od 9:00
 do 9:55, kromě 9:30»; «… od 9:00 do 9:59 a od 17:00 do 17:59, kromě 9:29
 a 17:29»), otherwise as places («… od 9:00 do 17:55, kromě okamžiku 30 minut po
-každé celé hodině (:30)»). A window's ends are the first and last moments of the
+každé celé hodině»). A window's ends are the first and last moments of the
 set itself, never of its base. Exceptions in both M and H: «každých 5
-minut, kromě okamžiku 30 minut po každé celé hodině (:30) a kromě doby
+minut, kromě okamžiku 30 minut po každé celé hodině a kromě doby
 od 3:00 do 3:59».
 
 **T4. M is one minute and H is not listable.**
@@ -662,13 +862,13 @@ od 3:00 do 3:59».
 | H | Said |
 | --- | --- |
 | one run | «každou hodinu od 9:00 do 17:00», «každou hodinu od 9:30 do 17:30», «každou hodinu od 22:00 do 2:00» |
-| a cadence | «každé 2 hodiny od 0:00 do 22:00», «každé 3 hodiny od 0:30 do 21:30» |
+| a cadence that does not tile the day | «každé 2 hodiny od 5:00 do 23:00», «každé 2 hodiny od 5:30 do 23:30» (one that tiles is T0's) |
 | pieces | the pieces are the core's (linear): a run of three or more hours is a range, shorter runs are single hours (so 22 and 23 are «ve 22:00 a ve 23:00» here, though T3 would make them one window). Each range as «každou hodinu od A do B» (the head once, before the first range) and each single hour as «v T» with its own preposition, in the order of the day: «každou hodinu od 9:00 do 17:00 a ve 22:00», «v 5:00 a každou hodinu od 9:00 do 17:00», «každou hodinu od 9:00 do 17:00, ve 20:00 a ve 22:00» |
 | one or two hours missing | T2's phrase, then «, kromě» and the removed times: «každou celou hodinu, kromě 3:00», «každou hodinu v půl, kromě 3:30», «vždy 20 minut po každé celé hodině, kromě 3:20 a 4:20» |
-| an exception, another base | «každé 2 hodiny od 0:00 do 22:00, kromě 8:00», «každou hodinu od 9:00 do 17:00, kromě 12:00» |
+| an exception, another base | «každou hodinu od 9:00 do 17:00, kromě 12:00» (a base that tiles the day is T0's: «každé 2 hodiny, kromě 8:00») |
 
 **T5. Everything else: M is places and H is restricted.** Two parts:
-the places of M exactly as T2 says them (4.1a, with its illustration), then a comma and the hours as **stretches**, each
+the places of M exactly as T2 says them (4.1a), then a comma and the hours as **stretches**, each
 from the first to the last moment that really fires in it.
 
 * The stretches are the windows of T3 (maximal runs of hours; the
@@ -678,10 +878,10 @@ from the first to the last moment that really fires in it.
   a list («…, od 9:05 do 17:45 a ve 22:05, 22:20 a 22:45», the
   preposition by its first time), and as its window when M is a run, a
   cadence or pieces (there the window is a real stretch).
-* H a cadence (said as one by generic rule 7) and M a list: no places
-  are said at all. The first hour's clock times, «a tak dále každé k
-  hodiny až do» and the last firing: «v 0:15 a 0:45 a tak dále každé 4
-  hodiny až do 20:45». With any other M: the places, then the first two
+* H a cadence that does not tile the day (said as one by generic rule
+  7) and M a list: no places are said at all. The first hour's clock
+  times, «a tak dále každé k hodiny až do» and the last firing: «v 5:15
+  a 5:45 a tak dále každé 2 hodiny až do 23:45». With any other M: the places, then the first two
   stretches and the same close, as in T3.
 * H one or two hours missing: no stretches; «, kromě doby od 3:00 do
   3:59». H an exception with another base: the stretches of the base,
@@ -692,14 +892,14 @@ from the first to the last moment that really fires in it.
   minut po každé celé hodině».
 
 «vždy 5, 20 a 45 minut po každé celé hodině, od 9:05 do 17:45»; «každou
-minutu v prvních 30 minutách každé hodiny (:00–:29), od 9:00 do 17:29»;
-«každou minutu v prvních 30 minutách každé hodiny (:00–:29) a pak ještě
-45 minut po celé hodině (:45), od 9:00 do 17:45»; «každých 7 minut,
-v každé hodině znovu od celé hodiny (:00–:56), od 9:00 do 17:56»;
+minutu v prvních 30 minutách každé hodiny, od 9:00 do 17:29»;
+«každou minutu v prvních 30 minutách každé hodiny a pak ještě
+45 minut po celé hodině, od 9:00 do 17:45»; «každých 7 minut,
+v každé hodině znovu od celé hodiny, od 9:00 do 17:56»;
 «v každou celou hodinu a 15 a 45 minut po ní, od 9:00 do 17:45»; «denně
 5, 20 a 45 minut po každé celé hodině, od 9:05 do 17:45 a ve 22:05,
-22:20 a 22:45»; «denně v 0:15 a 0:45 a tak dále každé 4 hodiny až do
-20:45».
+22:20 a 22:45»; «denně v 5:15 a 5:45 a tak dále každé 2 hodiny až do
+23:45».
 
 (Rejected, each after a reader took it wrongly: «každou hodinu od 9:05
 do 17:45, vždy …» (judge 1: once an hour from 9:05); «…, a to od 9:05 do
@@ -745,15 +945,15 @@ seconds is `H:MM:SS`, and then every time in the same phrase shows them.
   becomes its window («od 9:45:00 do 9:45:59»), and a removed minute
   becomes the stretch it covers: a clock minute «kromě doby od 9:29:00
   do 9:29:59», a place «kromě minuty, která začíná 29 minut po každé
-  celé hodině (:29:00–:29:59)». The same holds when D is «každou
-  minutu» with a run of 4.1a: its illustration is written to the
-  second. «každou sekundu», «každých 15 sekund», «každou sekundu od
+  celé hodině». The same holds when D is «každou
+  minutu» with a run of 4.1a: «každou sekundu v prvních 30 minutách
+  každé hodiny». «každou sekundu», «každých 15 sekund», «každou sekundu od
   9:00:00 do 9:59:59», «každou sekundu od 9:00:00 do 9:29:59 a od
   9:45:00 do 9:45:59», «každých 6 sekund od 9:00:00 do 9:59:54», «každou
   sekundu od 9:00:00 do 9:59:59, kromě doby od 9:29:00 do 9:29:59»,
   «každou sekundu, kromě minuty, která začíná 29 minut po každé celé
-  hodině (:29:00–:29:59)», «každou sekundu v prvních 30 minutách každé
-  hodiny (:00:00–:29:59)».
+  hodině», «každou sekundu v prvních 30 minutách každé
+  hodiny».
 * **The place in the minute**, used by S4 and S7. Czech has «celá
   hodina» and no «celá minuta» (judge 4, who read the fifth version's
   «po celé minutě», «v celou minutu a 30 sekund po ní» twice), so a
@@ -792,7 +992,7 @@ seconds is `H:MM:SS`, and then every time in the same phrase shows them.
   count) and D has no places: every clock time in D shows the second,
   also after «kromě». «každých 15 minut od 9:00:30 do 17:45:30», «každou
   hodinu od 9:00:30 do 17:00:30», «každou minutu od 9:00:30 do
-  17:59:30», «každé 2 hodiny od 0:00:15 do 22:00:15».
+  17:59:30», «každé 2 hodiny od 5:00:15 do 23:00:15».
 * **S6.** S is one second, not 0, and D is T2's «každou celou hodinu»,
   «každou hodinu v půl» or one minute (with or without an exception of
   hours): the second joins the place, and the idioms give way to it:
@@ -828,7 +1028,7 @@ seconds is `H:MM:SS`, and then every time in the same phrase shows them.
   jedné minuty každou sekundu, od 3:30:00 do 10:42:59». A removed
   **place** in the hour after a single second takes the second with it
   («vždy 30 sekund po začátku každé minuty, kromě okamžiku 29 minut
-  a 30 sekund po každé celé hodině (:29:30)»); after any other S it is
+  a 30 sekund po každé celé hodině»); after any other S it is
   «kromě minuty, která začíná …» as in S3.
 
 `* */15 9-17 * * 1-5` → «od pondělí do pátku každých 15 minut od 9:00
@@ -989,8 +1189,8 @@ a second device for the same thing.)
 | one, a list, pieces | «vždy 1. dne v měsíci» | «vždy 1. června», «vždy 1. a 15. června», «vždy 1. až 7. a 15. června» |
 | one range | «od 1. do 7. dne v měsíci» | «od 1. do 7. června» |
 | odd, even | «každý lichý den v měsíci» | «každý lichý den v červnu» |
-| a cadence | «od 1. dne v měsíci každý třetí den» | not fused, the month leads: «v červnu od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále)» («od 1. června každý třetí den» reads as a start date: schedule reader 2) |
-| Quartz and nth weekdays | «… v měsíci» | «vždy poslední den v červnu», «vždy druhé pondělí v červnu», «vždy 15. června, a připadne-li na sobotu nebo neděli, …»; `L-n` by 5.7 («vždy 27. června») |
+| a cadence | «od 1. dne v měsíci každý třetí den» | not fused, the month leads: «v červnu od 1. dne v měsíci každý třetí den» («od 1. června každý třetí den» reads as a start date: schedule reader 2) |
+| Quartz and nth weekdays | «… v měsíci» | «vždy poslední den v červnu», «vždy druhé pondělí v červnu», «vždy 15. června, a připadne-li na víkend, …»; `L-n` by 5.7 («vždy 27. června») |
 | removed days | «denně kromě 15. dne v měsíci» | the month leads and the removed day is a date: «v červnu denně kromě 15. června» |
 
 With any other month part the month leads and the days keep «dne
@@ -1044,23 +1244,26 @@ continued to a range of months.)
 | a range | «v letech 2030 až 2035»; with no end (`open`): «od roku 2030» |
 | pieces (five values or more; four or fewer are a list, as everywhere: «v letech 2030, 2031, 2032 a 2035») | «v letech 2030 až 2033 a 2035» |
 | every second year with no end (idiom) | «v sudých letech», «v lichých letech»; from a later first year: «od roku 2030 v sudých letech». A cadence of two years **with an end** is a list when it has seven years or fewer (generic rule 7 comes first), otherwise the parity word with its ends, two rows down. |
-| another cadence with no end (`open`) | the first year, the step, and the first three years in brackets: «od roku 2028 každý čtvrtý rok (2028, 2032, 2036 a tak dále)» |
+| another cadence with no end (`open`) | the first year and the step: «od roku 2028 každý čtvrtý rok» |
 | a cadence of two years with an end, more than seven years | the parity word with both ends: «v sudých letech 2030 až 2050», «v lichých letech 2031 až 2051» |
-| another cadence with an end, more than seven years | «v letech 2028 až 2060 každý čtvrtý rok (2028, 2032, 2036 a tak dále)» |
+| another cadence with an end, more than seven years | «v letech 2028 až 2060 každý čtvrtý rok» |
 | a cadence with an end, seven years or fewer | a list: «v letech 2028, 2032, 2036, 2040, 2044 a 2048» |
 | an exception | «každý rok kromě roku 2030», «každý rok kromě let 2030 a 2031», «v letech 2030 až 2040 kromě roku 2035» |
 | runs and cadences together (`cadencePieces`) | each part by the rows above, in the order the core gives them except that the part of single years comes last, after «a navíc»; the others are joined as a list; then «, a to»: «od roku 2030 v sudých letech a navíc v roce 2031, a to» |
 
 The step is an ordinal word up to «desátý» and digits beyond («každý
-25. rok»). A cadence always names its first year, and names it first; unless it
-is said by parity, it also shows its first three years, because «každý
-čtvrtý rok» from a start was counted two ways and «každý druhý rok»
-between two ends was read as the odd years (judge 4). A cadence needs
-its members visible or an anchor nobody can count differently. From the
-field's own first year that is «od roku 1970 každý čtvrtý rok (1970,
-1974, 1978 a tak dále)»: 1970 looks strange on a screen (judge 4), but
-it is where the count starts, and a bare «každý čtvrtý rok» would be
-taken for leap years (schedule reader 2).
+25. rok»). A cadence always names its first year, and names it first.
+A step of two is said by parity, because «každý druhý rok» between two
+ends was read as the odd years (judge 4). Until 2026-11-14 every other
+cadence also showed its first three years in brackets, «(2028, 2032,
+2036 a tak dále)», because «každý čtvrtý rok» from a start was counted
+two ways (judge 4); the named first year and the step in words already
+say the series, and the bracket of numbers was noise, so it is gone
+(the reader evidence for it is overruled, as the note at the top says).
+From the field's own first year that is «od roku 1970 každý čtvrtý
+rok»: 1970 looks strange on a screen (judge 4), but it is where the
+count starts, and a bare «každý čtvrtý rok» would be taken for leap
+years (schedule reader 2).
 
 **year-suffix.** A single year is written after the month part when
 that is **exactly one month** («v červnu 2030»), or after a fused date
@@ -1090,14 +1293,16 @@ range of months, where it sat on the last month only.)
 
 **5.1 Odd and even.** Days of the month only, and years (4.4): «každý
 lichý den v měsíci» is exactly 1, 3, …, 31 and «každý sudý den v měsíci»
-exactly 2, 4, …, 30 (usage §9: „v liché dny“, not «obden»). Not hours,
-minutes or months. `0 0 */2 * *` → «každý lichý den v měsíci v 0:00»;
+exactly 2, 4, …, 30 (usage §9: „v liché dny“, not «obden»). Hours
+only as the stretches under a finer rhythm in T0 («každou minutu
+v sudých hodinách», 2026-11-14). Not minutes or months. `0 0 */2 * *` → «každý lichý den v měsíci v 0:00»;
 `0 0 2/2 * *` → «každý sudý den v měsíci v 0:00».
 
 **5.2 The week.** Monday first, Sunday last; every list in that order.
 No set of days has a word of its own here. Monday to Friday is «od
-pondělí do pátku», because «pracovní den» and «všední den» promise that
-a public holiday is skipped (usage §1.1); Saturday and Sunday are
+pondělí do pátku» (2026-11-14: chosen over «všední dny» for a reason
+that rested on public holidays, which are no longer a reason; it is open
+to revision); Saturday and Sunday are
 «každou sobotu a neděli» (3-weekday). `0 9 * * 1-5` → «od pondělí do
 pátku vždy v 9:00»; `0 9 * * 0,6` → «každou sobotu a neděli v 9:00»;
 `0 9 * * 0-4` → «denně kromě pátku a soboty vždy v 9:00»; `0 9 * * 5,6` →
@@ -1113,8 +1318,9 @@ naming noon alone would write two neighbouring moments in two notations.
 **5.4 On the hour and at the half.** «každou celou hodinu» is exactly
 minute 0 of every hour, and «každou hodinu v půl» exactly minute 30 of
 every hour, second 0 (usage §3.3; the judge's own rewrite). Both are
-said only in T2 and as the base of T4's exception; in a list or beside a
-second the minute is a place (4.1a, S6). Judges 2 and 3 found «každou
+said only in T2 and as the base of T4's exception, and «v půl» also
+after hours that tile the day («každé 2 hodiny v půl», T0, 2026-11-14);
+in a list or beside a second the minute is a place (4.1a, S6). Judges 2 and 3 found «každou
 hodinu v půl» natural. The folk quarters («čtvrt na osm», «půl osmé») are not
 written (usage §1.4). `0 * * * *` → «každou celou hodinu»;
 `30 * * * *` → «každou hodinu v půl»; `15,45 * * * *` → «vždy 15 a 45 minut
@@ -1123,8 +1329,10 @@ po každé celé hodině».
 **5.5 Every other.** «obden», «ob týden» and «každou druhou hodinu» do
 not say where the count starts (usage §9); the ordinal word is used only
 after a stated start («od 1. dne v měsíci každý třetí den», «od roku
-2028 každý čtvrtý rok»). `0 */2 * * *` → «denně každé 2
-hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
+2028 každý čtvrtý rok»). Hours are said by the digit step, «každé 2
+hodiny», which counts from midnight when no start is named (README
+"Description Accuracy"), and «od 1:00» when it starts later (T0):
+`0 */2 * * *` → «každé 2 hodiny»; `0 0 * */2 *` → six months listed.
 
 **5.6 Parts of the day.** Only under `hour12` (1.2).
 
@@ -1135,46 +1343,72 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
 | `L` | «vždy poslední den v měsíci» | «vždy poslední den v červnu» |
 | `L-1` | «vždy předposlední den v měsíci» | «… v červnu» |
 | `L-n`, n ≥ 2 | below | below |
-| `1W` (`firstWeekday`) | «vždy 1. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho následující pondělí,» | «vždy 1. června, a připadne-li …,» |
-| `LW` | «vždy poslední den v měsíci, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním,» | «vždy poslední den v červnu, a připadne-li …,» |
-| `nW` | «vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho …,» (three endings, below) | «vždy 15. června, a připadne-li …,» |
+| `1W` (`firstWeekday`) | «vždy první všední den v měsíci» | «vždy první všední den v červnu» |
+| `LW` | «vždy poslední všední den v měsíci» | «vždy poslední všední den v červnu» |
+| `nW` | «vždy 15. dne v měsíci, a připadne-li na víkend, místo toho ve všední den nejbližší tomuto dni,» (and below) | «vždy 15. června, a připadne-li na víkend, …,» |
 | `1#2` | «vždy druhé pondělí v měsíci» | «vždy druhé pondělí v červnu» |
 | `5L` | «vždy poslední pátek v měsíci» | «vždy poslední pátek v červnu» |
 
-* **The Monday-to-Friday forms name no category of day.** Every way of
-  naming one has failed with an independent reader: «den, který
-  nepřipadá na víkend» (a condition on the last day: both first
-  readers); «den od pondělí do pátku» (falls apart as an attribute:
-  judge 2); «všední den (pondělí až pátek, i když je svátek)» (the
-  gloss has to correct the word just used, „si protiřečí“: judge 4, and
-  usage §1.1 had warned of exactly that promise). So the three forms
-  say what happens, in the days themselves: the date; the condition «a
-  připadne-li na sobotu nebo neděli»; «místo toho» and the day it moves
-  to.
-  * `LW`: the last day can only move back: «v pátek před ním».
-  * `1W`: the first day can only move forward: «následující pondělí».
-  * `nW`, by `analyses.day.nearestDayIsLast`:
-    * `'never'` (the Monday after always exists): «v nejbližší pátek
-      nebo pondělí». `15W` → «vždy 15. dne v měsíci, a připadne-li na
-      sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí,».
-    * `'always'` (n is the last day of every month it fires in; there
-      is never a Monday): only the Friday, «v pátek před ním». `31W` →
-      «vždy 31. dne v měsíci (jen v měsících, které ho mají),
-      a připadne-li na sobotu nebo neděli, místo toho v pátek před
-      ním,». The fifth-read form offered a Monday that never comes,
-      and the reader read «v pondělí» (judge 5).
-    * `'sometimes'`: both, and when it is the Friday: «v nejbližší
-      pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek
-      před ním». `28W` → «vždy 28. dne v měsíci, a připadne-li na
-      sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí,
-      z posledního dne měsíce ale vždy v pátek před ním,».
-  * A comma closes the clause whenever anything follows.
-  * The condition verb is «připadne-li na», the one verb of 4.3. An
-    earlier judge could not tell whose «připadne» was; here it stands
-    straight after the date it is said of. «když je to» (sixth version)
-    was colloquial and, with a range or a date after it, not Czech
-    (judges 4 and 5, who both write «připadne-li na»). «v pondělí
-    potom» and «v pátek předtím» were not Czech either (judge 5).
+* **The Monday-to-Friday forms say «všední den»**, Monday to Friday,
+  as the reader takes it beside «víkend».
+  * `1W` is the first Monday-to-Friday day of the month (the 1st, or
+    after a weekend the Monday): «vždy první všední den v měsíci».
+  * `LW` is the last: «vždy poslední všední den v měsíci».
+  * `nW`: the date, the condition «a připadne-li na víkend», and
+    «místo toho ve všední den nejbližší tomuto dni», closed by a comma.
+    The dative «nejbližší tomuto dni» says nearest in distance (a
+    Saturday goes to the Friday, a Sunday to the Monday), and «tomuto
+    dni» can only be the date, since a weekend is not a «den». By
+    `analyses.day.nearestDayIsLast`:
+    * `'never'`: as above. `15W` → «vždy 15. dne v měsíci, a připadne-li
+      na víkend, místo toho ve všední den nejbližší tomuto dni, v 9:00».
+    * `'sometimes'` (the day ends some of its months): «v témže
+      měsíci» after «tomuto dni», since the scheduler never leaves the
+      month (a Sunday 28 February goes to Friday 26th). `28W` → «vždy
+      28. dne v měsíci, a připadne-li na víkend, místo toho ve všední
+      den nejbližší tomuto dni v témže měsíci,».
+    * `'always'` (the day is the last of every month it fires in): it
+      is the last weekday of those months, said as `LW`; with the
+      month field unrestricted the months are named by their length,
+      as for `L-n`. `30W 6` → «vždy poslední všední den v červnu»;
+      `31W` → «vždy poslední všední den v měsících s 31 dny»; `29W 2`
+      → «v přestupných letech vždy poslední všední den v únoru».
+  * A union closes with the comma of the clause before «vždy» and the
+    time: «v červnu každé pondělí a navíc 15. června, a připadne-li na
+    víkend, místo toho ve všední den nejbližší tomuto dni, vždy
+    v 9:00».
+  * **Why (2026-11-14).** The form before said «…, a připadne-li na
+    sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí,
+    v 9:00». Two isolated readers (Opus 5.5 and Sonnet 5.5, briefed in
+    Czech) found second readings: «nejbližší pátek» as the coming
+    Friday, «pátek nebo pondělí» as a free choice, and «v 9:00» as the
+    moved day's time only. A bracketed form naming each weekend day's
+    date read one way but was far too long (maintainer). The maintainer
+    approved «…, a připadne-li na víkend, ve všední den nejbližší tomuto
+    dni, …»: with the coordinator's readers «v nejbližší všední den»
+    had two readings (nearest, or the next one: a Saturday to Monday
+    17th) and «ve všední den nejbližší 15. dni v měsíci» one. The two
+    readers of this pass read 15W, 28W, 29W, 2W, LW, 1W, 31W and a union
+    in that shape: Sonnet found one reading in each; Opus found one
+    weaker extra reading, that the task runs on the weekend day and on
+    the weekday as well («a» joining two times). With «místo toho»
+    added (three syllables, the word of the version before) both found
+    one reading in 15W, 28W, 29W, 2W and the union. In that run Opus
+    called «nejbližší» as "next" a marginal reading that the dative
+    weakens but does not exclude; in the first run it had said the
+    dative excludes it, and Sonnet never raised it. Both took the time
+    at the end as every day's, the comma closing the condition.
+    «poslední všední den», «první všední den» and «poslední všední den
+    v měsících s 31 dny» each had one reading with both.
+  * Earlier versions, with the reasons they went: «o víkendu místo toho»
+    (2026-11-13) was taken at first for something every weekend; «den,
+    který nepřipadá na víkend» was a condition on the last day (both
+    first readers); «den od pondělí do pátku» fell apart as an
+    attribute (judge 2). An earlier objection to «všední den», that it
+    promises public holidays are skipped, is withdrawn: a reader does
+    not think of public holidays when reading a schedule. The
+    condition verb is «připadne-li na», the one verb of 4.3; «když je
+    to» was colloquial (judges 4 and 5).
 * **`L-n`** says a date wherever the form comes to one. The day it
   comes to is `length − n` for each group of `analyses.monthLengths`
   (the months the form fires in, by length; February of common and of
@@ -1204,23 +1438,27 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
 * **Months that lack the day**, for `nW` (`dateReach.never` or
   `dateReach.leapYears` is not empty, and the month field is
   unrestricted; `L-n` needs no note, its months are named or its day is
-  worked): «(jen v měsících, které ho mají)» straight after «dne
-  v měsíci»: «vždy 31. dne v měsíci (jen v měsících, které ho mají), a
-  připadne-li na sobotu nebo neděli, …». A plain day («vždy 31. dne
-  v měsíci») and a fifth weekday take no note: there the reader sees the
+  worked; an `nW` that is the last weekday names its months, above):
+  «(jen v měsících, které ho mají)» straight after «dne v měsíci»:
+  «vždy 29. dne v měsíci (jen v měsících, které ho mají), a připadne-li
+  na víkend, …». A plain day («vždy 31. dne v měsíci») and a fifth
+  weekday take no note: there the reader sees the
   day itself. Under a restricted month field the months that never fire
   are simply not named (4.4).
 * The nth weekday is «vždy», the ordinal in the accusative agreeing with
   the day (7.2), the day, «v měsíci». Not «každé druhé pondělí
   v měsíci»: «každé druhé pondělí» is every other Monday.
   `0 0 L * *` → «vždy poslední den v měsíci v 0:00»; `0 0 15W * *` →
-  «vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo
-  toho v nejbližší pátek nebo pondělí, v 0:00»; `0 0 * * 1#2` →
+  «vždy 15. dne v měsíci, a připadne-li na víkend, místo toho ve všední
+  den nejbližší tomuto dni, v 0:00»; `0 0 * * 1#2` →
   «vždy druhé pondělí v měsíci v 0:00»; `0 0 * * 5L` → «vždy poslední
   pátek v měsíci v 0:00».
 
-**5.8** «a tak dále každé k hodiny až do» for a cadence of hours filled
-by an even rhythm (T3). «každou noc» for hours kept past midnight
+**5.8** «a tak dále každé k hodiny až do» for a cadence of hours that
+does not tile the day, filled by an even rhythm (T3). «po dobu jedné
+hodiny» for every minute of each hour of a cadence that tiles the day
+(T0), and «v sudých hodinách» / «v lichých hodinách» when its step is
+two. «každou noc» for hours kept past midnight
 (3.5: from 22 or later to 6 or earlier). «při startu systému» for `@reboot`.
 
 ## 6. Words
@@ -1270,7 +1508,10 @@ minuty», «po něm», «v každé minutě znovu od začátku», «po dobu jedn�
 minuty», «kromě minuty, která začíná». hodina: hodinu, hodiny, hodin;
 «po každé celé hodině», «po celé hodině», «v každou celou hodinu»,
 «každé hodiny», «v každé hodině», «od celé hodiny», «kromě každé celé
-hodiny». den: «den» («každý třetí den», «poslední den», «každý sudý
+hodiny»; beside hours that tile the day (T0) «v celou hodinu», «v
+prvních 30 minutách hodiny», «po dobu jedné hodiny», «v sudých
+hodinách», «v lichých hodinách», «každé sudé hodiny», «každé liché
+hodiny», «po každé sudé hodině», «po každé liché hodině». den: «den» («každý třetí den», «poslední den», «každý sudý
 den»), «dne» («dne v měsíci», «od 1. dne»), «dny» / «dní» («3 dny
 před», «s 31 dny»), «dnem» («před posledním dnem»). měsíc: «v měsíci»,
 «měsíce» («posledním dnem měsíce»), «těchto měsíců»,
@@ -1362,8 +1603,9 @@ days; «celou» when the hours are a window.
 
 **8.5 range-boundary.** The last firing, everywhere: `*/15 9-17 * * *` →
 «denně každých 15 minut od 9:00 do 17:45»; `* 9-17 * * *` → «… od 9:00
-do 17:59». Where the minutes are uneven the hours are named as hours
-and the last firing stands in the brackets (T5). A removed hour is the one thing said as a whole clock hour
+do 17:59». Where the minutes are uneven, T5's stretches run from the
+first to the last firing, and a from–to of places ends in «včetně»
+(4.1a). A removed hour is the one thing said as a whole clock hour
 («kromě doby od 3:00 do 3:59»), because what is removed has no firing
 to name.
 
@@ -1386,9 +1628,10 @@ startu systému», and the lenient fallback is «nerozpoznaný cronový
 výraz» («výraz cron», undeclined, was jargon: schedule reader).
 
 **8.9 cardinality-rendering.** By count, as in „How a form is chosen“:
-`0 0 1 */3 *` and `0 0 1 */6 *` list their months; `0 */6 * * *` lists
-four times; `0 */8 * * *` three; `0 */4 * * *` and finer are a cadence
-between two ends; `0 */5 * * *` is listed because it does not come
+`0 0 1 */3 *` and `0 0 1 */6 *` list their months; `0 */12 * * *` lists
+two times; `0 */8 * * *`, `0 */6 * * *`, `0 */4 * * *` and finer are a
+bare cadence (T0), and `0 1/4 * * *` a cadence from its start; `0 1/6 *
+* *` lists four times; `0 */5 * * *` is listed because it does not come
 round.
 
 ## Where this rule book departs from the usage notes
@@ -1418,8 +1661,9 @@ departure, with its reason:
    zero. The idioms «každou celou hodinu» and «každou hodinu v půl» are
    the notes' own. What the notes do not have: «v prvních 30 minutách
    každé hodiny» for a run from the hour (judges 1, 2 and 3 each wrote
-   «v první půlhodině»; the count serves every length), and the digits
-   in brackets.
+   «v první půlhodině»; the count serves every length), and «včetně»
+   after a from–to of places (the digits in brackets that stood there
+   until 2026-11-14 are gone).
 4. **«každých 7 minut, vždy od celé hodiny» (usage §9)** is said as
    «každých 7 minut, v každé hodině znovu od celé hodiny», judge 3's
    wording of the same thing.
@@ -1428,7 +1672,9 @@ departure, with its reason:
    Monday, and one form has to serve every ordinal (5.7).
 6. **A step that does not divide the day (usage §9)** is listed up to
    seven values and otherwise named with both ends; «počínaje půlnocí»
-   is not used for hours because the ends already say it.
+   is not used for hours because the ends already say it. A step that
+   divides it, from midnight, is said bare (T0), as the notes' own
+   «každých 6 hodin» (usage §3.1) is.
 7. **The order «každých 15 minut od 9:00 do 17:45», cadence before its
    window, against the notes' example «od 8 do 17 hodin každých 15
    minut» (usage §2):** the rhythm is the head so that the same order
@@ -1447,10 +1693,11 @@ departure, with its reason:
     translation. It is offered because the API gives every language the
     field; its words are CLDR's, complete, with «v poledne» and «o
     půlnoci» for the two exact moments.
-11. *(Withdrawn.)* The fifth version named the scheduler's
-    Monday-to-Friday day «všední den» with a gloss, against usage §1.1.
-    No category of day is named any more (5.7), so there is no
-    departure.
+11. **«všední den» for the Quartz weekday forms (5.7), against usage
+    §1.1, which warns it may promise that public holidays are
+    skipped.** A reader of a schedule does not think of public
+    holidays (maintainer, 2026-11-14), and beside «víkend» it is
+    Monday to Friday.
 12. **«o víkendech» is not used for the weekday field (usage §1.1 calls
     it fully at home).** It is exact as a set of days, but before a time
     it can be read as once in each weekend; «každou sobotu a neděli»

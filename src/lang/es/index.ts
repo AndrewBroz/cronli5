@@ -59,7 +59,7 @@ function describeParts(schedule: Schedule, opts: SpanishOptions): Parts {
     minute: timeValues(schedule, 'minute'),
     second: timeValues(schedule, 'second')
   }, clockOf(opts.style));
-  const calendar = calendarOf(schedule, time.everyHour, opts.style);
+  const calendar = calendarOf(schedule, time.roundTheClock, opts.style);
 
   // A clock time follows the day with a space; anything else, and
   // anything after an inserted phrase, follows a comma. «A la» is also

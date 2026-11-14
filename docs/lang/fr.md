@@ -44,8 +44,7 @@ reviewed it yet.**
   ainsi que le 1er de chaque mois ».
 * **Midnight is « à 0 h »**: « le 1er à minuit » is often read as the night
   that ends the 1st.
-* **Quartz `W` is « jour ouvré »**, meaning Monday to Friday. The pattern
-  knows no public holidays.
+* **Quartz `W` is « jour ouvré »**, meaning Monday to Friday.
 
 ## cronli5 vs. cRonstrue (fr locale)
 
@@ -65,5 +64,5 @@ Generated from live output of both libraries (`npm run docs`).
 | `0 12 * 11-2 *` | tous les jours de novembre à février à 12 h | À 12:00, de novembre à février |
 | `0 0 * * 5L` | le dernier vendredi du mois à 0 h | À 00:00, le dernier vendredi du mois |
 | `5,10 30 9 * * MON` | tous les lundis à 9 h 30 min 05 s et à 9 h 30 min 10 s | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
-| `1/1 * * * *` | toutes les minutes, sauf à 00 de chaque heure | Toutes les 1 minutes, à partir de 1 minutes après l'heure |
+| `1/1 * * * *` | toutes les minutes, sauf à la minute 0 de chaque heure | Toutes les 1 minutes, à partir de 1 minutes après l'heure |
 <!-- END GENERATED: comparison -->

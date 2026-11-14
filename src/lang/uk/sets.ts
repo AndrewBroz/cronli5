@@ -224,8 +224,10 @@ function ends(cadence: CadenceDescription): Part[] {
   return [{from: cadence.start, kind: 'range', to: cadence.last}];
 }
 
-const parting: Table<Plain | CadencePieces, Part[], [Domain]> = {
-  all: (all, domain) => [{from: domain.min, kind: 'range', to: domain.max}],
+/** A description that names some of its values, not all of them. */
+export type SomeValues = Exclude<Plain, {kind: 'all'}> | CadencePieces;
+
+const parting: Table<SomeValues, Part[], [Domain]> = {
   cadence: ends,
   cadencePieces: (parts, domain) => parts.parts.flatMap(function each(part) {
     return partsOf(part, domain);
@@ -236,7 +238,7 @@ const parting: Table<Plain | CadencePieces, Part[], [Domain]> = {
 };
 
 /** A description as the stretches and the single values it is said in. */
-function partsOf(description: Plain | CadencePieces, domain: Domain): Part[] {
+function partsOf(description: SomeValues, domain: Domain): Part[] {
   return say(parting, description, domain);
 }
 

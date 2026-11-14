@@ -70,5 +70,5 @@ Generated from live output of both libraries (`npm run docs`).
 | `0 12 * 11-2 *` | od listopadu do února denně ve 12:00 | V 12:00, od Listopad do Únor |
 | `0 0 * * 5L` | vždy poslední pátek v měsíci v 0:00 | V 00:00, poslední Pátek v měsíci |
 | `5,10 30 9 * * MON` | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
-| `1/1 * * * *` | každou minutu, kromě každé celé hodiny (:00) | Každých 1 minut, začínající v 1 minut |
+| `1/1 * * * *` | každou minutu, kromě každé celé hodiny | Každých 1 minut, začínající v 1 minut |
 <!-- END GENERATED: comparison -->

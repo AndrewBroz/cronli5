@@ -11,7 +11,7 @@ interface WeekdayName extends Name {
   plural: string;
 }
 
-/** The minutes of a time, always two digits: "05", "30". */
+/** The minutes or seconds inside a time, always two digits: "05", "30". */
 function twoDigits(value: number): string {
   return String(value).padStart(2, '0');
 }
@@ -105,6 +105,10 @@ const words = {
   andEachTime: 'et à chaque fois',
   andSoOn: 'et ainsi de suite',
   at: 'à',
+  atTheMinute: 'à la minute',
+  atTheMinutes: 'aux minutes',
+  atTheSecond: 'à la seconde',
+  atTheSeconds: 'aux secondes',
   beforeLastDay: 'avant le dernier jour',
   daysOfMonth: 'du mois',
   during: 'pendant',
@@ -117,6 +121,8 @@ const words = {
   first: 'premières',
   follows: 'qui suit',
   from: 'de',
+  fromTheMinute: 'de la minute',
+  fromTheSecond: 'de la seconde',
   fromThe: 'du',
   in: 'en',
   itFalls: 'il tombe',
@@ -138,8 +144,10 @@ const words = {
   ofEachHour: 'de chaque heure',
   ofEachMinute: 'de chaque minute',
   ofEachMonth: 'de chaque mois',
+  ofTheHour: 'de l\'heure',
   ofMonthOf31Days: 'd\'un mois de 31 jours',
   once: 'une fois',
+  oneHourIn: 'une heure sur',
   oneMinute: 'une minute',
   oneYearIn: 'une année sur',
   or: 'ou',
@@ -150,6 +158,8 @@ const words = {
   since: 'à partir de',
   startup: 'au démarrage du système',
   the: 'le',
+  theMinute: 'la minute',
+  theMinutes: 'les minutes',
   thePlural: 'les',
   theyFall: 'ils tombent',
   then: 'puis',

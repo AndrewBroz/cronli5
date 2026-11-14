@@ -4,12 +4,12 @@
 // times, or follow it as a clause.
 
 import type {Clock, Moment, Piece, Unit} from './wording.js';
-import type {Part, Policy, Said} from './sets.js';
+import type {Part, Policy, Run, Said} from './sets.js';
 import {
   byCount, every, led, list, phrases, pick, spaced
 } from './wording.js';
 import {
-  countOf, isRange, isStepped, isValues, linearRuns, mapParts, runOf, say,
+  isRange, isStepped, isValues, linearRuns, mapParts, runOf, say,
   thingsNamed
 } from './sets.js';
 import lexicon from './lexicon.js';
@@ -25,14 +25,17 @@ export interface TimeFacts {
   hoursWrap: boolean;
 }
 
-/** The time part, and whether it runs every hour of the day. */
+/**
+ * The time part, and whether it runs round the clock: every hour, or a
+ * cadence of hours that tiles the day.
+ */
 export interface TimePart {
   text: string;
-  everyHour: boolean;
+  roundTheClock: boolean;
 }
 
-type Form = 'bracket' | 'clocks' | 'hourly' | 'phrase' | 'phraseHours' |
-  'phraseWindows' | 'points' | 'windows';
+type Form = 'clocks' | 'hourly' | 'instant' | 'phrase' | 'phraseHours' |
+  'phraseWindows' | 'points' | 'rhythm' | 'windows';
 
 type Mode = 'carried' | 'clause' | 'joined' | 'lead' | 'plain';
 
@@ -69,8 +72,12 @@ interface Scene {
 // The length of an hour in minutes and of a minute in seconds.
 const SIXTY = 60;
 
-// A cadence of this many values or more names both its ends.
-const LONG_CADENCE = 8;
+// The hours in a day.
+const DAY = 24;
+
+// A cadence of hours from midnight that tiles the day is bare from this
+// many values: midnight and noon alone are listed.
+const FEWEST_BARE_HOURS = 3;
 
 // Inside up to this many separate hours, minutes are clock times.
 const FEW_HOURS = 4;
@@ -138,20 +145,37 @@ function subHourPolicy(
   };
 }
 
+// Whether a cadence of hours tiles the day: its interval divides the day
+// and it starts inside the first interval and runs to the last, so the
+// gap across midnight is the interval too (answers 3.7).
+function tilesDay(cadence: {interval: number; start: number; last: number}):
+  boolean {
+  return cadence.interval > 1 && DAY % cadence.interval === 0 &&
+    cadence.start < cadence.interval &&
+    cadence.last + cadence.interval >= DAY;
+}
+
+// Whether hours are a cadence that tiles the day, said by its rule alone
+// or with its start.
+function roundsDay(hours: Said): boolean {
+  return hours.kind === 'cadence' && tilesDay(hours);
+}
+
 // Hours under a single minute are points: a run has three hours, a
 // cadence eight, and an excepted hour is one clock time. Hours filled by
 // more than one minute are stretches: two hours make a window, a cadence
-// has five hours, an excepted hour is a window of two times, and the
-// cadence shows its first two stretches.
+// has five hours, and an excepted hour is a window of two times. A
+// cadence that tiles the day from midnight is one from three hours.
 function hourPolicy(single: boolean, wraps: boolean): Policy {
   const judged = pick([
-    [{holeCost: 1, least: 8, minRun: 3, shown: 1}, single],
-    [{holeCost: 2, least: 5, minRun: 2, shown: 2}, true]
+    [{holeCost: 1, least: 8, minRun: 3}, single],
+    [{holeCost: 2, least: 5, minRun: 2}, true]
   ]);
 
   return {
     cadence(cadence, count) {
-      return count >= judged.least;
+      return count >= judged.least || cadence.start === 0 &&
+        tilesDay(cadence) && count >= FEWEST_BARE_HOURS;
     },
     domain: {cyclic: true, max: 23, min: 0},
     edgeHoles: true,
@@ -159,7 +183,7 @@ function hourPolicy(single: boolean, wraps: boolean): Policy {
     minRun: judged.minRun,
     mixes: false,
     pairWraps: false,
-    shown: judged.shown,
+    shown: 1,
     wraps
   };
 }
@@ -268,15 +292,58 @@ const clauseVoice: Voice = {
   }
 };
 
-// Whether the minutes are one unbroken run that is not the whole hour.
-function oneRun(minutes: Said): boolean {
-  return minutes.parts.length === 1 && isRange(minutes.parts[0]) &&
-    !isStepped(minutes.parts[0]);
-}
-
 // Whether the minutes are values named one by one.
 function listed(minutes: Said): boolean {
   return minutes.kind === 'parts' && minutes.parts.every(isValues);
+}
+
+// Whether seconds fill one stretch with nothing beside it: every second,
+// a cadence said as one, or a single run, with or without exceptions.
+function oneStretch(seconds: Said): boolean {
+  return fillsStretch(seconds) &&
+    stretchesOf(seconds).length === 1 && isRange(stretchesOf(seconds)[0]);
+}
+
+// Whether the time part is one clock time whose seconds fill a stretch.
+function oneInstant(scene: Scene): boolean {
+  const {facts, seconds} = scene;
+
+  return facts.hour.length === 1 && facts.minute.length === 1 &&
+    oneStretch(seconds);
+}
+
+// Whether named seconds fall in minute 0, and so are said from the hour:
+// «a los 15 segundos de la hora en punto» (answers 4.2).
+function fromTheHour(scene: Scene): boolean {
+  const {facts, mode, seconds} = scene;
+
+  return mode === 'joined' && listed(seconds) && facts.minute.length === 1 &&
+    facts.minute[0] === 0;
+}
+
+// Named seconds counted from the hour: «a los 15 segundos», «a los 15 y
+// 45 segundos»; the first second alone, where «a 1 segundo» would be
+// heard as one second away, is «al segundo 1».
+function secondsAfter(values: number[]): string {
+  const count = Math.max(values.length, values[0]);
+
+  return byCount([
+    `${words.toThe} ${units.second.one} ${list(values)}`,
+    `${words.to} ${words.thePlural} ${list(values)} ${units.second.many}`
+  ], count);
+}
+
+// Every second hour by its parity: «las horas pares», «las horas
+// impares».
+function parityHours(hours: Said): string {
+  return spaced([words.theHours, units.hour.many,
+    [words.theEven, words.theOdd][hours.start % 2]]);
+}
+
+// Whether hours are every second hour said as a cadence, which a finer
+// field fills.
+function everyOther(hours: Said): boolean {
+  return hours.kind === 'cadence' && hours.interval === 2;
 }
 
 // How many things the form that rivals a list of clock times names: a
@@ -315,7 +382,7 @@ function hoursNamed(scene: Scene): boolean {
 }
 
 function formOf(scene: Scene, silent: boolean): Form {
-  const {facts, hourKind, minutes} = scene;
+  const {facts, hourKind, hours, minutes} = scene;
   const single = facts.minute.length === 1;
   const everyHour = hourKind === 'all';
   const onCadence = hourKind === 'cadence';
@@ -324,10 +391,12 @@ function formOf(scene: Scene, silent: boolean): Form {
   return pick<Form>([
     ['hourly', everyHour && silent && facts.minute[0] === 0 && single],
     ['phrase', everyHour],
+    ['instant', oneInstant(scene)],
+    ['rhythm', roundsDay(hours)],
     ['clocks', single && apart],
     ['points', single],
     ['clocks', timesListed(scene)],
-    ['bracket', onCadence && (tiles(minutes) || oneRun(minutes))],
+    ['rhythm', onCadence && tiles(minutes)],
     ['points', onCadence && facts.minute.length <= FEW_HOURS],
     ['phraseHours', onCadence || apart && hoursNamed(scene)],
     ['windows', tiles(minutes) || hourKind === 'few'],
@@ -337,7 +406,7 @@ function formOf(scene: Scene, silent: boolean): Form {
 
 // The forms whose minutes a seconds phrase can lead or join.
 const LEADABLE: Form[] =
-  ['bracket', 'phrase', 'phraseHours', 'phraseWindows', 'windows'];
+  ['phrase', 'phraseHours', 'phraseWindows', 'rhythm', 'windows'];
 
 // How the seconds meet the time part (answers 4.2), first that applies.
 function modeOf(scene: Scene, silent: boolean): Mode {
@@ -348,7 +417,7 @@ function modeOf(scene: Scene, silent: boolean): Mode {
     facts.second.length;
 
   return pick<Mode>([
-    ['plain', silent],
+    ['plain', silent || form === 'instant'],
     ['lead', leadable && steady && minutes.kind !== 'cadence' &&
       !minutes.parts.some(isStepped)],
     ['joined', leadable && !steady &&
@@ -456,38 +525,18 @@ function momentsOf(scene: Scene, hours: number[], minutes: number[]):
   });
 }
 
+// A second of the one clock time the time part names.
+function instantAt(scene: Scene, second: number): Moment {
+  return {hour: scene.facts.hour[0], minute: scene.facts.minute[0],
+    tail: [second]};
+}
+
 const HOURS_THAT_BEGIN = spaced([
   words.theHours, units.hour.many, words.thatBegin
 ]);
 
 // The time part in each form, before exceptions and a seconds clause.
 const forms: {[form in Form]: (scene: Scene) => string} = {
-  // «cada minuto durante una hora cada 2 horas (de 0:00 a 0:59, de 2:00
-  // a 2:59… hasta las 22:59)»; a run of minutes says how long it is,
-  // «cada minuto durante 30 minutos cada 2 horas (de 0:00 a 0:29, …)».
-  bracket(scene) {
-    const {clock, hours, minutes, voice} = scene;
-    const ends = minuteEnds(scene);
-    const length = ends[1] - ends[0] + 1;
-    const shown = [0, 1].map(function nth(index) {
-      const hour = hours.start + index * hours.interval;
-
-      return windowOf(scene, [hour, hour], ends, voice.edge);
-    });
-    const last = clock.until(
-      {hour: hours.last, minute: ends[1], tail: voice.edge[1]});
-
-    return spaced([
-      voice.each(minutes.interval),
-      words.during,
-      pick([
-        [words.oneHour, tiles(minutes)],
-        [`${length} ${units.minute.many}`, true]
-      ]),
-      every(units.hour, hours.interval, EACH),
-      `(${shown.join(', ')}… ${last})`
-    ]);
-  },
   clocks(scene) {
     const {facts} = scene;
 
@@ -499,14 +548,17 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
   },
   // «cada 15 minutos»; «en los minutos 5, 20 y 45 de cada hora».
   phrase(scene) {
-    return spaced([
-      unitPhrase(scene.minutes, units.minute, scene.voice),
-      pick([['', tiles(scene.minutes)], [words.ofEachHour, true]])
+    return pick([
+      [`${words.ofEachHour} ${words.onTheDot}`, fromTheHour(scene)],
+      [spaced([
+        unitPhrase(scene.minutes, units.minute, scene.voice),
+        pick([['', tiles(scene.minutes)], [words.ofEachHour, true]])
+      ]), true]
     ]);
   },
   // «cada minuto durante las horas que empiezan a las 6:00, 8:00, …»;
-  // hours on a cadence too long to list begin «cada 2 horas de 0:00 a
-  // 22:00».
+  // hours on a cadence too long to list begin «cada 2 horas de 5:00 a
+  // 23:00».
   phraseHours(scene) {
     const {clock, facts, hours, minutes, voice} = scene;
 
@@ -514,15 +566,14 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
       return {hour, minute: 0, tail: []};
     }
 
+    const span = clock.span(onTheHour(hours.start), onTheHour(hours.last));
+
     return spaced([
       unitPhrase(minutes, units.minute, voice),
       pick([[words.during, tiles(minutes)], [words.of, true]]),
-      HOURS_THAT_BEGIN,
       pick([
-        [`${every(units.hour, hours.interval, EACH)} ` +
-          clock.span(onTheHour(hours.start), onTheHour(hours.last)),
-        hours.kind === 'cadence' && countOf(hours) >= LONG_CADENCE],
-        [clock.at(facts.hour.map(onTheHour)), true]
+        [`${parityHours(hours)} ${span}`, everyOther(hours)],
+        [`${HOURS_THAT_BEGIN} ${clock.at(facts.hour.map(onTheHour))}`, true]
       ])
     ]);
   },
@@ -536,7 +587,7 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
       }));
   },
   // Hours as points, each minute carried: «cada hora de 9:30 a 17:30 y a
-  // las 22:30»; «cada 2 horas de 0:15 a 22:15 y de 0:45 a 22:45».
+  // las 22:30»; «cada 2 horas de 5:15 a 23:15 y de 5:45 a 23:45».
   points(scene) {
     const {clock, facts, hours} = scene;
     const [tail] = scene.carry;
@@ -557,6 +608,49 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
           lead: ''
         };
       })));
+  },
+  // Hours by their rule, the minutes apart before it: «cada 2 horas»;
+  // «en el minuto 30, cada 2 horas desde la 1:00»; filled, «cada minuto
+  // durante una hora cada 2 horas», and where the cadence does not tile
+  // the day, with the window from its first moment to its last.
+  rhythm(scene) {
+    const {clock, facts, hours, minutes, voice} = scene;
+    const window = windowOf(scene, [hours.start, hours.last],
+      minuteEnds(scene), voice.edge);
+    const rule = spaced([
+      every(units.hour, hours.interval, EACH),
+      pick([
+        ['', tilesDay(hours) && hours.start === 0],
+        [clock.since({hour: hours.start, minute: 0, tail: []}),
+          tilesDay(hours)],
+        [window, true]
+      ])
+    ]);
+    const filled = pick([
+      [spaced([words.in, parityHours(hours),
+        pick([['', tilesDay(hours)], [window, true]])]), everyOther(hours)],
+      [`${words.during} ${words.oneHour} ${rule}`, true]
+    ]);
+
+    return pick([
+      [rule, scene.mode === 'plain' && facts.minute.length === 1 &&
+        facts.minute[0] === 0],
+      [`${words.of} ${words.theHour} ${units.hour.one} ${words.onTheDot}, ` +
+        rule, fromTheHour(scene)],
+      [spaced([voice.each(minutes.interval), filled]), tiles(minutes)],
+      [`${unitPhrase(minutes, units.minute, voice)}, ${rule}`, true]
+    ]);
+  },
+  // Seconds filling a stretch of one clock time, as a window to the
+  // second: «cada 10 segundos de 9:30:00 a 9:30:50».
+  instant(scene) {
+    const {clock, seconds} = scene;
+    const run = stretchesOf(seconds)[0] as Run;
+
+    return `${every(units.second, seconds.interval * run.interval, EACH)} ` +
+      clock.span(...[run.from, run.to].map(function at(second) {
+        return instantAt(scene, second);
+      }) as [Moment, Moment]);
   },
   // «cada 15 minutos de 9:00 a 17:45 y de 22:00 a 22:45».
   windows(scene) {
@@ -619,6 +713,9 @@ function secondHoles(scene: Scene): string[] {
   return holes(scene.seconds.removed, function said(removed) {
     return pick([
       [[], scene.mode === 'clause'],
+      [[scene.clock.at(removed.map(function at(second) {
+        return instantAt(scene, second);
+      }))], scene.form === 'instant'],
       [[`${named(units.second, removed, 'in')} ${words.ofEachMinute}`],
         true]
     ]);
@@ -635,7 +732,7 @@ function fillsStretch(seconds: Said): boolean {
     seconds.kind === 'cadence' && !oddOnes(seconds);
 }
 
-// The seconds as a clause after the time part (answers 4.2, rule 4).
+// The seconds as a clause after the time part (answers 4.2, rule 5).
 // Named seconds follow a comma, and say «siempre» after a time part in
 // several pieces, which they cover whole; a stretch of seconds follows a
 // bare comma only after clock times, and otherwise says «y en cada
@@ -670,6 +767,8 @@ function head(scene: Scene): {text: string; join: string} {
 
   return pick([
     [{join: '', text: ''}, scene.mode !== 'joined'],
+    [{join: ' ', text: secondsAfter(scene.facts.second)},
+      fromTheHour(scene)],
     [{join: ', ', text: `${phrase} ${words.ofEachMinute}`},
       scene.minutes.kind === 'all'],
     [{join: ' ', text: phrase}, true]
@@ -740,7 +839,7 @@ function timePart(facts: TimeFacts, clock: Clock): TimePart {
   const several = excepted !== '' || body.includes(` ${words.and} `);
 
   return {
-    everyHour: scene.hourKind === 'all',
+    roundTheClock: scene.hourKind === 'all' || roundsDay(scene.hours),
     text: body + excepted +
       pick([[clause(scene, several), scene.mode === 'clause'], ['', true]])
   };

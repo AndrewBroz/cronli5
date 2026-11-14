@@ -64,8 +64,9 @@ const words = {
   excepted: '除外',
   exceptedEnd: '外',
   first: '首',
+  firstHourOf: '的第1个小时',
   firstAt: '首次在',
-  fromYear: '自',
+  since: '自',
   hasNo: '没有',
   inItsMinute: '所在分钟的',
   inside: '内',
@@ -91,7 +92,7 @@ const words = {
   or: '或',
   once: '一次',
   oneRound: '一轮',
-  oneYearIn: '中的一年',
+  firstYearIn: '中的第1年',
   onwards: '起',
   runsAt: '执行时间',
   skippedWhereMissing: '当月无此日则不执行',
@@ -101,7 +102,8 @@ const words = {
   to: '至',
   unrecognizable: '无法识别的cron表达式',
   week: '周',
-  whenItIs: '时'
+  whenItIs: '时',
+  within: '其中'
 };
 
 // Punctuation, all full-width but the colon of a clock time.

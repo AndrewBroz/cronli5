@@ -186,9 +186,32 @@ function sidesOf(analyses: Analyses, facts: Facts, needed: boolean): Side[] {
     .find((found) => found.length > 0) as Side[];
 }
 
+// Whether a month or a year is named.
+function monthOrYearNamed(months: Chosen, dated: boolean): boolean {
+  return months.values.length < 12 || dated;
+}
+
+// Whether named months or years lead with no days after them: the hours
+// run round the clock (they do not keep the days busy), a month or a year
+// is named, no day is, and nothing is excepted from the months or years,
+// so that there are no days to say.
+function leadsAlone(
+  analyses: Analyses,
+  facts: Facts,
+  busy: boolean,
+  dated: boolean
+): boolean {
+  const {candidates} = analyses;
+
+  return !busy && monthOrYearNamed(facts.months, dated) &&
+    facts.months.removed.length + facts.year.excepted.length === 0 &&
+    !restricts(candidates.date) && !restricts(candidates.weekday);
+}
+
 /**
  * The calendar part. `busy` is whether the hours give unrestricted days
- * work to do, so that «todos os dias» is said for them.
+ * work to do, so that «todos os dias» is said for them; where they do not
+ * and a month or year is named, the month or year leads instead.
  */
 function calendarPart(
   analyses: Analyses,
@@ -215,7 +238,12 @@ function calendarPart(
     return never(analyses, facts);
   }
 
-  const needed = busy || months.values.length < 12 || dated;
+  const needed = busy || monthOrYearNamed(months, dated);
+
+  if (leadsAlone(analyses, facts, busy, dated)) {
+    return {join: 'comma', text: ledByMonth([], facts).leads.join(', ')};
+  }
+
   const sides = sidesOf(analyses, facts, needed);
   const laid = sides.length > 1 || sides[0].leads ?
     ledByMonth(sides, facts) :

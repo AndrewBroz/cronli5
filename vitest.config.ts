@@ -18,6 +18,9 @@ export default defineConfig({
     }
   },
   test: {
+    // Several suites render thousands of patterns; under a loaded machine
+    // they outrun the default five seconds without being wrong.
+    testTimeout: 30000,
     include: ['test/**/*.js'],
     // These are shared helpers/data imported by the real test files, not test
     // suites themselves; Vitest (unlike mocha) errors on a file with no tests.

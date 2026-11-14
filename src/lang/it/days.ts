@@ -287,13 +287,13 @@ function chooseDates(candidates: SetDescription[], domain: Domain): Form {
   });
 }
 
-// The Monday-to-Friday day is a working day, with the days and the
-// holidays said beside it in brackets.
+// The Monday-to-Friday day is a working day, with the days said beside
+// it in brackets.
 function workdayBracket(speech: Speech): string {
   const mondayToFriday = weekdayWords(speech).span(
     {from: 1, kind: 'range', to: 5});
 
-  return `(${mondayToFriday}, ${words.workdayGloss})`;
+  return `(${mondayToFriday})`;
 }
 
 // So many days before the last, for a distance with no name of its own:

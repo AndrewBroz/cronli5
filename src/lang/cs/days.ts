@@ -9,7 +9,7 @@ import {candidatesAs, daysReached, domainOf} from '../../core/index.js';
 import type {CzechStyle} from './options.js';
 import type {MonthRef} from './calendar.js';
 import {
-  anyMonth, oneMonth, parityStep, sample, stepWord, theseMonths
+  anyMonth, oneMonth, parityStep, stepWord, theseMonths
 } from './calendar.js';
 import type {Described} from './sets.js';
 import {
@@ -114,7 +114,7 @@ function daysWithEnds(part: RangeDescription | CadenceDescription,
 
 // A cadence of days: the parity word when its step is two, with both ends
 // unless it is every odd or every even day; any other step after its
-// start, with its first three members, and its end when it stops early.
+// start, with its end when it stops early.
 function cadenceOfDays(form: CadenceDescription, refs: Refs, domain: Domain):
   Phrase {
   const whole = form.start - domain.min < form.interval &&
@@ -135,7 +135,7 @@ function cadenceOfDays(form: CadenceDescription, refs: Refs, domain: Domain):
   return {
     text: spaced(words.from,
       stops ? ends : refs.general.date(`${form.start}.`), words.everyNth,
-      stepWord(form.interval), units.day.one, sample(form, '.'))
+      stepWord(form.interval), units.day.one)
   };
 }
 
@@ -280,15 +280,23 @@ function beforeLast(days: number, facts: ScheduleFacts, refs: Refs): Phrase {
   }) as (typeof rules)[number]).said();
 }
 
-// A date that moves off a weekend: the date, the condition, and the day
-// it moves to, closed by a comma.
-function moved(date: string, to: string): Phrase {
+// A date that moves off a weekend: the date, the condition, and the
+// weekday nearest it, kept in the month where the month can end on it;
+// closed by a comma.
+function moved(date: string, monthEnds: boolean): Phrase {
   return {
     clause: true,
     fused: true,
     opener: words.always,
-    text: `${date}, ${words.ifItFallsOnAWeekend}, ${words.instead} ${to},`
+    text: `${date}, ${words.ifItFallsOnAWeekend}, ${spaced(words.instead,
+      words.onTheWeekdayNearestThisDay,
+      monthEnds ? words.inTheSameMonth : '')},`
   };
+}
+
+// The first or last weekday of the months named.
+function weekdayOf(which: string, within: string): Phrase {
+  return {fused: true, opener: words.always, text: spaced(which, within)};
 }
 
 // The Quartz forms of the day of the month.
@@ -297,26 +305,30 @@ function quartzDate(form: QuartzDate, facts: ScheduleFacts, refs: Refs):
   const {dateReach: reach, day} = facts.analyses;
   const lacking = facts.analyses.candidates.month?.[0].kind === 'all' &&
     reach && reach.never.length + reach.leapYears.length > 0;
-  const nearest = {
-    always: words.onTheFridayBeforeIt,
-    never: words.onTheNearestFridayOrMonday,
-    sometimes: `${words.onTheNearestFridayOrMonday}, ${
-      words.butFromTheLastDayAlwaysTheFridayBefore}`
-  }[day.nearestDayIsLast || 'never'];
   const forms: {[kind: string]: () => Phrase} = {
     beforeLast: () => beforeLast((form as {days: number}).days, facts, refs),
-    firstWeekday: () => moved(refs.own.date('1.'), words.theFollowingMonday),
+    firstWeekday: () => weekdayOf(words.firstWeekday, refs.own.within),
     last: () => ({
       fused: true,
       opener: words.always,
       text: spaced(words.lastDay, refs.own.within)
     }),
-    lastWeekday: () => moved(spaced(words.lastDay, refs.own.within),
-      words.onTheFridayBeforeIt),
-    nearestWeekday: () => moved(
-      spaced(refs.own.date(`${(form as {day: number}).day}.`),
+    lastWeekday: () => weekdayOf(words.lastWeekday, refs.own.within),
+    nearestWeekday: () => {
+      const date = (form as {day: number}).day;
+
+      // A day that is the last of every month it fires in is the last
+      // weekday of those months.
+      if (day.nearestDayIsLast === 'always') {
+        return weekdayOf(words.lastWeekday, lacking ?
+          spaced(words.inMonthsOf, String(date), units.day.few) :
+          refs.own.within);
+      }
+
+      return moved(spaced(refs.own.date(`${date}.`),
         lacking ? words.onlyInMonthsThatHaveIt : ''),
-      nearest)
+      day.nearestDayIsLast === 'sometimes');
+    }
   };
 
   return forms[form.kind]();

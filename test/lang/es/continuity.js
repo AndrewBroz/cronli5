@@ -46,8 +46,9 @@ const MAY_CHANGE = {
 };
 
 // The first place a time field reaches another part: when the hours are
-// restricted and no day is named, the day part says «todos los días», so
-// an hour edit may add or remove exactly those words.
+// restricted and no day is named, the day part says «todos los días»
+// (unless they still run round the clock: a cadence that tiles the day,
+// «cada 2 horas»), so an hour edit may add or remove exactly those words.
 const HOUR_MAY_SET_DAY = ['', 'todos los días'];
 
 // The second: hours that run past midnight are one run («cada hora de

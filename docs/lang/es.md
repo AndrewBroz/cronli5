@@ -43,7 +43,7 @@ before the renderer was built. **No fluent human has reviewed it yet.**
 * **Midnight is «a las 0:00»**: «a medianoche el día 1» is heard by many as
   the night that ends the 1st.
 * **Quartz `W` is «día laborable»** (`'es-MX'`: «día hábil»), meaning Monday
-  to Friday. The pattern knows no public holidays.
+  to Friday.
 
 ## cronli5 vs. cRonstrue (es locale)
 

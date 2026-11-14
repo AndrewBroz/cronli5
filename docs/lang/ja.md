@@ -41,8 +41,7 @@ reviewed it yet.**
   time.
 * **A day of the month together with a weekday**: 毎月1日および毎週金曜日、
   いずれも0:00.
-* **Quartz `W` is 平日（月曜日〜金曜日）**; the gloss is there because 平日
-  alone leaves out public holidays, which the pattern does not know.
+* **Quartz `W` is 平日（月曜日〜金曜日）**.
 
 ## cronli5 vs. cRonstrue (ja locale)
 

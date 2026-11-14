@@ -88,6 +88,14 @@ const weekdaysAfterVe = [3, 4];
 // The hours, as written, before which «v» is «ve»: «ve 2:00», «ve 12:30».
 const hoursAfterVe = [2, 3, 4, 12, 13, 14, 20, 21, 22, 23];
 
+// The hours of a step of two that tiles the day, by its start: the even
+// hours from midnight, the odd ones from 1:00.
+const hourParity = {
+  after: ['po každé sudé hodině', 'po každé liché hodině'],
+  each: ['každé sudé hodiny', 'každé liché hodiny'],
+  within: ['v sudých hodinách', 'v lichých hodinách']
+};
+
 // The counted units.
 const units = {
   day: {few: 'dny', many: 'dní', one: 'den'},
@@ -136,19 +144,18 @@ const dayPeriods = [
 
 // The function words and fixed phrases.
 const words = {
-  butFromTheLastDayAlwaysTheFridayBefore:
-    'z posledního dne měsíce ale vždy v pátek před ním',
+  firstWeekday: 'první všední den',
   ifItDoesNotFallOn: 'nepřipadne-li na',
   ifItFallsOn: 'připadne-li na',
-  ifItFallsOnAWeekend: 'a připadne-li na sobotu nebo neděli',
+  ifItFallsOnAWeekend: 'a připadne-li na víkend',
   inTheFirstMinuteOfEveryHour: 'v první minutě každé hodiny',
+  inTheSameMonth: 'v témže měsíci',
   instead: 'místo toho',
   nor: 'ani',
-  onTheFridayBeforeIt: 'v pátek před ním',
-  onTheNearestFridayOrMonday: 'v nejbližší pátek nebo pondělí',
+  lastWeekday: 'poslední všední den',
+  onTheWeekdayNearestThisDay: 've všední den nejbližší tomuto dni',
   onlyThen: 'jen tehdy',
   secondsLocative: 'sekundách',
-  theFollowingMonday: 'následující pondělí',
   afterIt: 'po ní',
   afterItMasculine: 'po něm',
   afterTheStartOf: 'po začátku',
@@ -234,11 +241,16 @@ const words = {
   until: 'až do',
   upTo: 'až',
   year: 'rok',
-  yearGenitive: 'roku'
+  yearGenitive: 'roku',
+
+  atTheHalf: 'v půl',
+  forOneHour: 'po dobu jedné hodiny',
+  ofTheHour: 'hodiny',
+  onTheFullHour: 'v celou hodinu'
 };
 
 const lexicon = {
-  dayPeriods, every, hoursAfterVe, months, nthWords, stepWords,
+  dayPeriods, every, hourParity, hoursAfterVe, months, nthWords, stepWords,
   twoDigits, units, weekdays, weekdaysAfterVe, words
 };
 

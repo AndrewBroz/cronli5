@@ -684,12 +684,13 @@ function recurring(named: ValuesDescription, naming: Naming): string {
     }));
 }
 
-// «Щотижня» says that a run comes round.
+// A run of weekdays as schedules say it, the last day included by «по»:
+// «з понеділка по п'ятницю».
 function weekRange(range: Describing<'range'>, naming: Naming): string {
-  return inclusive(
-    words.everyWeek,
+  return [
     words.from, weekdayName(range.from, 'genitive', naming),
-    words.until, weekdayName(range.to, 'genitive', naming));
+    words.throughDay, weekdayName(range.to, 'accusative', naming)
+  ].join(' ');
 }
 
 const weekWords: Table<Part, string, [Naming]> =
@@ -787,12 +788,10 @@ function quartzWeekdayArm(
 
 // The weekdays that days of the month must fall on, where both kinds of
 // day must match, after «якщо це»: «понеділок, середа або п'ятниця»,
-// «день з понеділка до п'ятниці включно», «остання п'ятниця місяця».
+// «день з понеділка по п'ятницю», «остання п'ятниця місяця».
 const conditionWords: Table<Part, string, [Naming]> = {
-  range: (range, naming) => inclusive(
-    words.runOfDays,
-    words.from, weekdayName(range.from, 'genitive', naming),
-    words.until, weekdayName(range.to, 'genitive', naming)),
+  range: (range, naming) =>
+    `${words.runOfDays} ${weekRange(range, naming)}`,
   values: (named, naming) => choice(
     named.values.map(function name(day) {
       return weekdayName(day, 'nominative', naming);
