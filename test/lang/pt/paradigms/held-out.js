@@ -29,10 +29,9 @@ const rows = [
   ['0 12 * * *', 'todos os dias às 12:00'],
   ['0 8,12,18 * * *', 'todos os dias às 08:00, 12:00 e 18:00'],
   ['0 9-17 * * *', 'todos os dias, a cada hora das 09:00 às 17:00'],
-  ['0 */2 * * *', 'todos os dias, a cada 2 horas das 00:00 às 22:00'],
-  ['0 */6 * * *', 'todos os dias às 00:00, 06:00, 12:00 e 18:00'],
-  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'todos os dias, a cada 2 horas das 00:00 às 22:00, exceto às 08:00'],
+  ['0 */2 * * *', 'de 2 em 2 horas'],
+  ['0 */6 * * *', 'de 6 em 6 horas'],
+  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *', 'de 2 em 2 horas, exceto às 08:00'],
   ['0 22-2 * * *', 'todos os dias, a cada hora das 22:00 às 02:00'],
 
   // clock / date
@@ -104,16 +103,13 @@ const rows = [
   ['*/15 8,12,18 * * 1-5',
     'de segunda a sexta, a cada 15 minutos das 08:00 às 08:45, das 12:00 ' +
     'às 12:45 e das 18:00 às 18:45'],
-  ['*/15 */2 * * 1-5',
-    'de segunda a sexta, a cada 15 minutos, de 2 em 2 horas (das 00:00 às ' +
-    '00:45, das 02:00 às 02:45 … das 22:00 às 22:45)'],
+  ['*/15 */2 * * 1-5', 'de segunda a sexta, a cada 15 minutos nas horas pares'],
   ['*/15 */6 * * 1-5',
-    'de segunda a sexta, a cada 15 minutos das 00:00 às 00:45, das 06:00 ' +
-    'às 06:45, das 12:00 às 12:45 e das 18:00 às 18:45'],
+    'de segunda a sexta, a cada 15 minutos durante uma hora, de 6 em 6 ' +
+    'horas'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'de segunda a sexta, a cada 15 minutos, de 2 em 2 horas (das 00:00 às ' +
-    '00:45, das 02:00 às 02:45 … das 22:00 às 22:45), exceto das 08:00 às ' +
-    '08:59'],
+    'de segunda a sexta, a cada 15 minutos nas horas pares, exceto das ' +
+    '08:00 às 08:59'],
   ['*/15 22-2 * * 1-5',
     'de segunda a sexta, a cada 15 minutos das 00:00 às 02:45 e das 22:00 ' +
     'às 23:45'],
@@ -203,11 +199,10 @@ const rows = [
   ['0 12 1 * *', 'no dia 1º de cada mês às 12:00'],
   ['0 8,12,18 1 * *', 'no dia 1º de cada mês às 08:00, 12:00 e 18:00'],
   ['0 9-17 1 * *', 'no dia 1º de cada mês, a cada hora das 09:00 às 17:00'],
-  ['0 */2 1 * *', 'no dia 1º de cada mês, a cada 2 horas das 00:00 às 22:00'],
-  ['0 */6 1 * *', 'no dia 1º de cada mês às 00:00, 06:00, 12:00 e 18:00'],
+  ['0 */2 1 * *', 'no dia 1º de cada mês, de 2 em 2 horas'],
+  ['0 */6 1 * *', 'no dia 1º de cada mês, de 6 em 6 horas'],
   ['0 0,2,4,6,10,12,14,16,18,20,22 1 * *',
-    'no dia 1º de cada mês, a cada 2 horas das 00:00 às 22:00, exceto às ' +
-    '08:00'],
+    'no dia 1º de cada mês, de 2 em 2 horas, exceto às 08:00'],
   ['0 22-2 1 * *',
     'no dia 1º de cada mês, a cada hora das 00:00 às 02:00 e às 22:00 e ' +
     '23:00'],
@@ -275,15 +270,10 @@ const rows = [
     'todos os dias, a cada minuto das 08:00 às 08:59, das 12:00 às 12:59 e ' +
     'das 18:00 às 18:59'],
   ['* 9-17 * * *', 'todos os dias, a cada minuto das 09:00 às 17:59'],
-  ['* */2 * * *',
-    'todos os dias, a cada minuto, de 2 em 2 horas (das 00:00 às 00:59, ' +
-    'das 02:00 às 02:59 … das 22:00 às 22:59)'],
-  ['* */6 * * *',
-    'todos os dias, a cada minuto das 00:00 às 00:59, das 06:00 às 06:59, ' +
-    'das 12:00 às 12:59 e das 18:00 às 18:59'],
+  ['* */2 * * *', 'a cada minuto nas horas pares'],
+  ['* */6 * * *', 'a cada minuto durante uma hora, de 6 em 6 horas'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'todos os dias, a cada minuto, de 2 em 2 horas (das 00:00 às 00:59, ' +
-    'das 02:00 às 02:59 … das 22:00 às 22:59), exceto das 08:00 às 08:59'],
+    'a cada minuto nas horas pares, exceto das 08:00 às 08:59'],
   ['* 22-2 * * *', 'todos os dias, a cada minuto das 22:00 às 02:59'],
 
   // open / date
