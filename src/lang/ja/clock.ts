@@ -24,11 +24,15 @@ const {marks, twoDigits, units, words} = lexicon;
  */
 export type TimeKind = 'allDay' | 'clock' | 'hourly' | 'rule';
 
-/** The time part, and whether it runs through every hour. */
+/**
+ * The time part, whether it runs through every hour, and whether its hours
+ * tile the day on a cadence, which runs round the clock as every hour does.
+ */
 export interface TimePart {
   everyHour: boolean;
   kind: TimeKind;
   text: string;
+  tiles: boolean;
 }
 
 /** The values the time fields fire on, and whether the hours may wrap. */
@@ -51,7 +55,17 @@ interface Facet {
   values: number[];
 }
 
+// A cadence of hours that tiles the day: its interval divides the day,
+// and it starts inside the first interval. Hours taken out of it leave it
+// the same cadence, with those hours left out.
+interface Cycle {
+  dropped: number[];
+  interval: number;
+  start: number;
+}
+
 interface Clock {
+  cycle: Cycle | null;
   hours: Facet;
   listed: boolean;
   minutes: Facet;
@@ -136,14 +150,22 @@ function sizeOf(domain: Domain): number {
   return domain.max - domain.min + 1;
 }
 
+// Whether a cadence of three hours or more tiles the day, so that the gap
+// across midnight is the interval.
+function tilesDay(cadence: Cadence): boolean {
+  return 24 % cadence.interval === 0 && cadence.start < cadence.interval &&
+    cadence.last + cadence.interval > 23 && stepsOf(cadence) >= 3;
+}
+
 // Every second hour, too many of them to name: said by its rule.
 function isRule(cadence: Cadence): boolean {
   return cadence.interval === 2 && stepsOf(cadence) > mostStretches;
 }
 
-// A cadence of hours as stretches names each hour, unless it is a rule.
+// A cadence of hours as stretches names each hour, unless it is a rule or
+// tiles the day, which are said by their interval.
 function stretchCost(cadence: Cadence): number {
-  return [stepsOf(cadence), 2][Number(isRule(cadence))];
+  return [stepsOf(cadence), 2][Number(isRule(cadence) || tilesDay(cadence))];
 }
 
 // The hours as points on the clock (where runs and cadences may be said
@@ -161,6 +183,20 @@ function hourSays(wrap: boolean): {[use: string]: Say} {
     points: {...stretches, cadence: () => 2, mixed: 'apart' as const},
     stretches
   };
+}
+
+// The hours as a cadence that tiles the day, with any hours left out of it;
+// a first hour left out would move its start.
+function cycleOf(hours: Facet): Cycle | null {
+  const base = denote(hours.core, hours.domain);
+  const interval = 24 / base.length;
+  const [start] = base;
+  const tiles = interval > 1 && tilesDay({
+    interval, kind: 'cadence', last: base[base.length - 1], start
+  }) && base.every((hour, index) => hour === start + index * interval) &&
+    !hours.dropped.includes(start);
+
+  return tiles ? {dropped: hours.dropped, interval, start} : null;
 }
 
 function facetOf(values: number[], say: Say): Facet {
@@ -192,11 +228,14 @@ function clockOf(facts: TimeFacts, style: JapaneseStyle): Clock {
     minutes.tile > 0 && 'filled' || 'stretches';
   const hours = facetOf(facts.hours, says[use]);
   const times = minutes.count * hours.count;
+  const cycle = cycleOf(hours);
 
   return {
+    cycle,
     hours,
-    // A list of clock times wins a tie with any other way of saying them.
-    listed: minutes.count < sizeOf(fine.domain) &&
+    // A list of clock times wins a tie with any other way of saying them,
+    // but hours that tile the day are said by their interval.
+    listed: cycle === null && minutes.count < sizeOf(fine.domain) &&
       hours.count < sizeOf(says[use].domain) && (times <= mostTimes ||
       times <= named(minutes, fine) + named(hours, says[use])),
     minutes,
@@ -325,6 +364,31 @@ function pointsForm(clock: Clock, mode: Mode): Rest {
   };
 }
 
+// The interval of hours, from the first time that fires where that is
+// not the first moment of the day.
+function cycleText(cycle: Cycle, first: number, mode: Mode, clock: Clock):
+  string {
+  return when(first > 0, sayClock(first, isPrecise(mode), clock.style) +
+    words.from) + cycle.interval + units.hourLength + words.each;
+}
+
+// One minute on hours that tile the day: the interval, from its first
+// time unless that is 0:00, with no end.
+function cycleForm(clock: Clock, mode: Mode): Rest {
+  const cycle = clock.cycle as Cycle;
+  const at = clock.minutes.values[0] * minuteSeconds + (mode.second ?? 0);
+  const first = cycle.start * hourSeconds + at;
+
+  return {
+    body: cycleText(cycle, first, mode, clock),
+    dropped: [listOf(cycle.dropped.map((hour) => clockSayer(clock, mode)(
+      hour * hourSeconds + at) + wholeMinute(mode)))],
+    kind: first > 0 ? 'clock' : 'allDay',
+    link: words.of,
+    trails: false
+  };
+}
+
 function spans(hours: Facet): boolean {
   return hours.core.kind === 'range' || hours.core.kind === 'pieces';
 }
@@ -411,10 +475,10 @@ function spanOf(parts: Piece[], hours: Facet, clock: Clock): Confinement {
   };
 }
 
-// Every second hour by its rule, with its first hours and its last in
-// brackets, its ends first where it does not cover the day, and an hour
-// taken out of it in front.
-function ruleOf(cadence: Cadence, hours: Facet, clock: Clock): Confinement {
+// Every second hour by its rule, its ends first where it does not cover
+// the day, and an hour taken out of it in front.
+function ruleOf(cadence: Omit<Cadence, 'kind'>, hours: Facet, clock: Clock):
+  Confinement {
   function say(hour: number): string {
     return sayStretch(hour, clock.style);
   }
@@ -428,14 +492,39 @@ function ruleOf(cadence: Cadence, hours: Facet, clock: Clock): Confinement {
     bare: words.runsAt,
     kind: 'rule',
     text: leftOut([stretchDrops(hours.dropped, clock)]) + when(!whole, ends) +
-      [words.evenHours, words.oddHours][cadence.start % 2] + marks.open +
-      listOf([say(cadence.start), say(cadence.start + cadence.interval)]) +
-      marks.ellipsis + say(cadence.last) + marks.close
+      [words.evenHours, words.oddHours][cadence.start % 2]
   };
+}
+
+// Any other cadence of hours that tiles the day, as stretches: one hour at
+// each interval, and the minutes inside it said as under every hour.
+function cycleStretches(cycle: Cycle, clock: Clock): Confinement {
+  const first = cycle.start * hourSeconds;
+
+  return {
+    ...everyHour(clock.hours),
+    dropped: cycle.dropped,
+    kind: first > 0 ? 'clock' : 'allDay',
+    text: cycleText(cycle, first, plainly, clock) + words.runsAt + 1 +
+      units.hourLength + words.eachGets + marks.comma + words.allTheWhile
+  };
+}
+
+// Hours that tile the day by twos are the even or odd hours.
+function cycleConfinement(cycle: Cycle, hours: Facet, clock: Clock):
+  Confinement {
+  return cycle.interval === 2 ?
+    ruleOf({...cycle, last: 24 - 2 + cycle.start},
+      {...hours, dropped: cycle.dropped}, clock) :
+    cycleStretches(cycle, clock);
 }
 
 // Hours as stretches are never said as runs and cadences together.
 function confinementOf(hours: Facet, clock: Clock): Confinement {
+  if (clock.cycle !== null) {
+    return cycleConfinement(clock.cycle, hours, clock);
+  }
+
   return match<Plain, Confinement>(hours.core as Plain, {
     all: () => everyHour(hours),
     cadence(cadence) {
@@ -458,13 +547,17 @@ function isBare(mode: Mode): boolean {
 // as positions in the hour.
 const minuteWays: Array<Way<[Clock, Mode, Confinement], Rest>> = [
   {
+    // After every hour, a rule or その間は a cadence from the hour needs no
+    // naming; after hours with 台, and after a rule where each minute is a
+    // stretch of its own, a few minutes are named.
     fits: (clock, mode, hours) => clock.minutes.tile > 0 && isBare(mode) &&
-      (hours.every || clock.minutes.count > mostPositions),
+      (hours.every || hours.kind === 'rule' && !mode.stretch ||
+      clock.minutes.count > mostPositions),
     say: (clock, mode, hours) => ({
       body: hours.text + hours.bare + (mode.fill || clock.minutes.tile) +
         unitOf(mode) + words.each,
       dropped: [minuteDrops(clock, mode, false)],
-      kind: hours.every && 'allDay' || hours.kind,
+      kind: hours.kind === 'hourly' ? 'allDay' : hours.kind,
       link: words.of,
       trails: false
     })
@@ -528,6 +621,11 @@ function stretchForm(clock: Clock, mode: Mode): Rest {
 // they put it in.
 const restWays: Array<Way<[Clock, Mode], Rest>> = [
   {
+    fits: (clock, mode) => clock.cycle !== null &&
+      clock.minutes.count === 1 && !mode.positions,
+    say: cycleForm
+  },
+  {
     fits: (clock, mode) => clock.listed && !mode.positions,
     say: listForm
   },
@@ -586,15 +684,20 @@ function evenSeconds(clock: Clock): number {
 }
 
 // For one minute after a single occasion; a minute for each of several,
-// which after a stray time is said of them all.
+// which after a stray time is said of them all. Where その間は already
+// ties the minutes to an hour, the seconds are tied to その1分間, so that
+// the second is not read with the first.
 function forOneMinute(clock: Clock, rest: Rest): string {
   const once = clock.minutes.count === 1 &&
     (clock.hours.count === 1 || clock.hours.core.kind === 'all');
+  const tie = rest.body.includes(words.allTheWhile) ?
+    words.allThatMinute :
+    words.allTheWhile;
 
   return once ?
     words.fromThen + words.forOneMinute + marks.comma :
     (rest.trails ? shared : words.runsAt) + words.forOneMinute +
-      words.eachGets + marks.comma + words.allTheWhile;
+      words.eachGets + marks.comma + tie;
 }
 
 // Seconds arranged inside one clock time: windows and times to the second.
@@ -723,6 +826,7 @@ function timePart(facts: TimeFacts, style: JapaneseStyle): TimePart {
   return {
     everyHour: clock.hours.core.kind === 'all',
     kind: said.kind,
+    tiles: clock.cycle !== null,
     text: said.trails ?
       leftOut(said.dropped) + said.body :
       said.body + bracketed(said.dropped)
