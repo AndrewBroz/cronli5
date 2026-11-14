@@ -56,16 +56,14 @@ guide links to it rather than duplicating its tables.
 
 ## The quickest way to switch
 
-`cronli5/cronstrue` takes cRonstrue's call as it is:
+`cronli5/cronstrue` takes the same `toString(pattern, options)` call that
+cRonstrue does, with the same options:
 
 ```js
-// before
-import cronstrue from "cronstrue";
-// after
-import cronstrue from "cronli5/cronstrue";
+import cronli5 from "cronli5/cronstrue";
 
-cronstrue.toString("0 9 * * 1");                               // 'At 9 a.m. on Mondays'
-cronstrue.toString("30 17 * * *", { use24HourTimeFormat: true }); // 'At 17:30 every day'
+cronli5.toString("0 9 * * 1");                               // 'At 9 a.m. on Mondays'
+cronli5.toString("30 17 * * *", { use24HourTimeFormat: true }); // 'At 17:30 every day'
 ```
 
 It translates the call and nothing else. The wording is `cronli5`'s, which

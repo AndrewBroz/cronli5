@@ -309,10 +309,11 @@ function collectVars(text) {
   return vars;
 }
 
-// Evaluate a `cronli5(<args>)` or `cronstrue.toString(<args>)` example (the
-// latter through cronli5's cRonstrue adapter) with the language modules and
-// any doc-local bindings in scope; returns the description string, or null
-// if the args reference something we cannot evaluate.
+// Evaluate a `cronli5(<args>)` or `cronli5.toString(<args>)` example (the
+// latter through cronli5's cRonstrue adapter, imported as `cronli5`) with
+// the language modules and any doc-local bindings in scope; returns the
+// description string, or null if the args reference something we cannot
+// evaluate.
 function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
@@ -320,10 +321,11 @@ function evaluateExample(callee, args, vars) {
     const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh};
     const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
-    const run = Function('cronli5', 'cronstrue', ...codes, ...names,
+    const run = Function('cronli5', ...codes, ...names,
       'return ' + callee + '(' + args + ');');
+    const callable = callee === 'cronli5' ? cronli5 : cronstrueAdapter;
 
-    return run(cronli5, cronstrueAdapter,
+    return run(callable,
       ...codes.map((code) => modules[code]),
       ...names.map((n) => vars[n]));
   }
@@ -333,12 +335,12 @@ function evaluateExample(callee, args, vars) {
 }
 
 // Rewrite the `// 'output'` comment after each `cronli5(<args>)` or
-// `cronstrue.toString(<args>)` example
+// `cronli5.toString(<args>)` example
 // from live output. The author chooses the example; the machine owns the
 // result.
 function rewriteExamples(text) {
   const vars = collectVars(text);
-  const re = new RegExp('((cronli5|cronstrue\\.toString)\\(([^)]*)\\)' +
+  const re = new RegExp('((cronli5(?:\\.toString)?)\\(([^)]*)\\)' +
     '[^\\S\\n]*;?[^\\S\\n]*(?:\\n[^\\S\\n]*)?\\/\\/ \')([^\']*)(\')', 'gu');
   let result = '';
   let last = 0;

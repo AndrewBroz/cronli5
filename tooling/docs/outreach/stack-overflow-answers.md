@@ -57,12 +57,13 @@ issue to link) before mentioning the alternative.
 >
 > If switching is an option: cronli5 (disclosure: I wrote it) writes each
 > language as a full renderer, giving "od pondělí do pátku vždy v 9:30".
-> Its `cronli5/cronstrue` entry point takes cRonstrue's call unchanged:
+> Its `cronli5/cronstrue` entry point takes the same `toString` call and
+> options as cRonstrue:
 >
 > ```js
-> import cronstrue from 'cronli5/cronstrue'; // was: from 'cronstrue/i18n'
+> import cronli5 from 'cronli5/cronstrue';
 >
-> cronstrue.toString('30 9 * * 1-5', { locale: 'cs' });
+> cronli5.toString('30 9 * * 1-5', { locale: 'cs' });
 > // 'Od pondělí do pátku vždy v 9:30'
 > ```
 >

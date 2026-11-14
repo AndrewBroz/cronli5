@@ -55,13 +55,14 @@ ungrammatical in languages that inflect:
 and its expected sentences are checked against an independent answer key
 of when each pattern fires.
 
-Switching is one import. `cronli5/cronstrue` takes cRonstrue's
-`toString(pattern, options)` call as it is:
+Switching is quick. `cronli5/cronstrue` takes the same
+`toString(pattern, options)` call that cRonstrue does, with the same
+options:
 
 ```js
-import cronstrue from 'cronli5/cronstrue'; // was: from 'cronstrue'
+import cronli5 from 'cronli5/cronstrue';
 
-cronstrue.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
+cronli5.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
 ```
 
 Stay with cRonstrue if you need a language `cronli5` doesn't have yet. See the
