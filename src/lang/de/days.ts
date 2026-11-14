@@ -62,7 +62,8 @@ interface DateTail {
   alternate: boolean;
   // Whether the phrase stands beside weekdays, as their addition.
   beside: boolean;
-  // The dates taken away inside a gloss, where there are any.
+  // The dates taken away from every second day, in a bracket of words,
+  // where there are any.
   less: string;
   noun: string;
   ord: string;
@@ -285,16 +286,12 @@ function series(cadence: Described<'cadence'>, naming: Naming): string {
 
 const datesSaid: {[kind: string]: (
   description: never, tail: DateTail, naming: Naming) => string} = {
-  // Every second day of the whole month has a name, and its gloss; any
-  // other cadence is a series.
+  // Every second day of the whole month has a name; any other cadence is
+  // a series.
   cadence(cadence: Described<'cadence'>, tail, naming) {
-    const days = denote(cadence, dateDomain).map(ordinal);
-    const gloss = `(${days.slice(0, boundedCadence).join(', ')} ` +
-      `${words.ellipsis} ${days[days.length - 1]}${tail.less})`;
-
     return tail.alternate ?
       join([[words.onOddDays, words.onEvenDays][cadence.start - 1],
-        tail.noun, gloss]) :
+        tail.noun, tail.less]) :
       join([series(cadence, naming), tail.ord]);
   },
   // Runs and series side by side, each with what opens it.
@@ -306,8 +303,8 @@ const datesSaid: {[kind: string]: (
     }).join(` ${words.also} `), tail.ord]);
   },
   // Every day but a few names the month with the days taken away; a
-  // cadence names it itself. Beside weekdays the days taken away stand
-  // inside the gloss, where they cannot reach the weekdays.
+  // cadence names it itself. Beside weekdays the days taken away stand in
+  // a bracket after the days, where they cannot reach the weekdays.
   except(exception: Described<'except'>, tail, naming) {
     const {base, removed} = exception;
     const gone = list(removed.map(naming.name));
@@ -317,7 +314,7 @@ const datesSaid: {[kind: string]: (
     }
 
     return tail.beside ?
-      dateText(base, {...tail, less: `, ${words.without} ${gone}`}, naming) :
+      dateText(base, {...tail, less: `(${words.without} ${gone})`}, naming) :
       `${dateText(base, tail, naming)}, ${naming.except} ${naming.one}${gone}`;
   }
 };
@@ -540,7 +537,7 @@ function isAlternate(description: Sayable): boolean {
 }
 
 // The dates the reached months have. Beside weekdays an exception is said
-// only inside the gloss of every second day; and every day but a few is
+// only in the bracket after every second day; and every day but a few is
 // said only of every month, since the core does not say which of the days
 // taken away the named months have.
 function datesOf(schedule: Schedule, there: boolean, frame: {

@@ -23,14 +23,9 @@ export interface Voice {
   weekdayNoun(weekday: number): string;
 }
 
-/** A time as a 24-hour clock shows it, in every style: «17:05». */
-function clock24(hour: number | string, rest: number[]): string {
+// A time as a 24-hour clock shows it: «17:05».
+function clock24(hour: number, rest: number[]): string {
   return [hour, ...rest.map(twoDigits)].join(':');
-}
-
-/** A minute of the hour, with a second if one is given: «:05», «:05:30». */
-function mark(rest: number[]): string {
-  return clock24('', rest);
 }
 
 // Hour 0 is written as on the 24-hour clock and has no part of the day.
@@ -71,4 +66,4 @@ function voiceOf(style: GermanStyle): Voice {
   };
 }
 
-export {clock24, mark, voiceOf};
+export {voiceOf};

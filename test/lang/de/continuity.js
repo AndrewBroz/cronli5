@@ -167,8 +167,9 @@ describe('German continuity:', function() {
         .equivalentViolations).to.deep.equal([]);
     }, 240000);
 
-  // German declares no tie (answers 3.11): a cadence of hours is never
-  // said bare, so `*/12` and `0,12` are the same two clock times.
+  // German declares no tie (answers 3.11): hours are said from their set,
+  // so `*/12` and `0,12` are the same two clock times, and `*/6` and
+  // `0,6,12,18` the same cadence.
   it('never follows the spelling', function() {
     function say(pattern) {
       const {opts, schedule} = parse(pattern);
