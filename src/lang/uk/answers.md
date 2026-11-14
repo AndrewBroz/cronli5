@@ -1362,16 +1362,13 @@ here. Monday to Friday is the range it is, «з понеділка по п'ят�
 
 These answers used to say «у будні» and «у вихідні». The first was both
 judges' first choice and four words shorter in the commonest schedule
-there is. The usage notes are plain about what the words carry: «будні»
-is the nearest word to Monday to Friday, "but a reader may wonder
-whether a holiday that falls on Wednesday counts", and the careful
-writer's cure is to name the days if holidays are not taken into account;
-«вихідні» is both Saturday with Sunday and "the days a place is closed"
-(a museum writes «вихідний — понеділок» and opens on Saturday). The
-scheduler knows no holidays and no opening hours: it fires on those five
-days, or those two, whatever they are. A word that lets a reader expect
-a quiet 1 January is wrong for it, and four words are the price. «У
-робочі дні» was rejected before, for the same reason more strongly.
+there is, and was given up. (2026-11-14: this choice rested on public
+holidays, which are no longer a reason; it is open to revision.) The
+usage notes are plain about what the second carries: «вихідні» is both
+Saturday with Sunday and "the days a place is closed" (a museum writes
+«вихідний — понеділок» and opens on Saturday). The scheduler knows no
+opening hours: it fires on those two days, whatever they are. «У робочі
+дні» was rejected before, for the same reason more strongly.
 
 5.3 Midnight and noon have no words here. 0:00 is «о 0:00» everywhere, and
 12:00 is «о 12:00». This is contested. The first judge noted that
@@ -1457,17 +1454,15 @@ in no month reached is 2.8.
 * `1#2` — «у другий понеділок місяця»
 * `5L` — «в останню п'ятницю місяця»
 
-**«Будній день» is glossed.** The form counts Monday to Friday and knows
-no holidays; both judges chose «будній день» over «робочий день» for
-that reason. But the dictionary's «будень» is a day that is not a
-holiday, and the usage notes say a reader may hesitate over exactly
-that (5.2). The phrase cannot be replaced by a range of days as 5.2
-does («останній день місяця з понеділка до п'ятниці» parses two ways,
-and «…день, що припадає на понеділок–п'ятницю» can be read as "the last
-day, when it falls on one"), so it keeps its word and says, once, in
-brackets right after the day phrase, which days count: «(понеділок–
-п'ятниця)», with short names «(пн–пт)». The en dash without spaces is
-the usage notes' mark for such a span. The gloss belongs to the day
+**«Будній день» is glossed.** The form counts Monday to Friday; both judges
+chose «будній день» over «робочий день». The phrase cannot be replaced by a
+range of days as 5.2 does («останній день місяця з понеділка до п'ятниці» parses
+two ways, and «…день, що припадає на понеділок–п'ятницю» can be read as "the
+last day, when it falls on one"), so it keeps its word and says, once, in
+brackets right after the day phrase, which days count: «(понеділок–п'ятниця)»,
+with short names «(пн–пт)». (2026-11-14: this choice rested on public holidays,
+which are no longer a reason; it is open to revision.) The en dash without
+spaces is the usage notes' mark for such a span. The gloss belongs to the day
 part and never moves. A note about the day (above) follows the time, in
 brackets of its own: `0-29 * 31W * *` is «щомісяця в найближчий до 31-го
 числа будній день того ж місяця (понеділок–п'ятниця) щохвилини протягом

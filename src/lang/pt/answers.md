@@ -1275,13 +1275,13 @@ true` (1.2).
 * `5L` — «na última sexta-feira de cada mês»
 
 **No word for a working day is used.** The pattern's Monday-to-Friday
-forms mean exactly those five days, public holidays included, which the
-pattern does not know. «Dia útil» is the natural word and excludes
-holidays, and in Brazil may include Saturday (usage notes 1.1). «Dia de
-semana», which earlier versions used with a gloss, «dia de semana (segunda
-a sexta)», is one letter from «dia da semana», any of the seven, and
-needed its bracket to be safe; the notes list no word for these days that
-does not drag the holidays in (11). So the days are named: the last day
+forms mean exactly those five days. «Dia útil» is the natural word and
+in Brazil may include Saturday (usage notes 1.1). «Dia de semana», which
+earlier versions used with a gloss, «dia de semana (segunda a sexta)»,
+is one letter from «dia da semana», any of the seven, and needed its
+bracket to be safe. (2026-11-14: this choice rested on public holidays,
+which are no longer a reason; it is open to revision.) So the days are
+named: the last day
 «que não seja sábado nem domingo», and after a Saturday or Sunday «a sexta
 ou segunda mais próxima», which also tells the reader which way the day
 moves. The relative clause is in the subjunctive, which picks the last
@@ -1526,12 +1526,6 @@ judgment, and much of what bears on these choices is the second kind.
 * **«09:00», not «9h»** (1.1). The notes list both traditions and give
   the clock form for seconds, «às 09:30:15» (3.4, 10.3), which this rule
   book needs.
-* **«De segunda a sexta» with nothing about holidays.** The notes say a
-  careful writer adds «exceto feriados» or «incluindo feriados» where it
-  matters (1.1, 8). Every sentence here is mechanical and holidays are in
-  none of them; «incluindo feriados» on one form would suggest the others
-  leave them out. A caller who needs it should say it around the
-  description.
 * **Windows closed on the last moment that fires, not «primeira às 9h,
   última às 17h45»** (rule 6 of the opening). The notes give both cures
   for the same doubt (4.2); the closed window is the one that fits inside

@@ -1516,19 +1516,17 @@ every weekday is masculine.
 **No word for a working day** (the second audit, from the usage notes).
 These three forms were « le dernier jour ouvré du mois », « le premier
 jour ouvré du mois » and « le jour ouvré le plus proche du 15 ». « Jour
-ouvré » is the word judges 1 and 2 chose, and it means a day worked: it
-leaves out public holidays, which the pattern does not know (`LW` fires
-on a Friday 25 December), and outside France it is hardly used, while
-« jour ouvrable » counts Saturday in French law and not in Quebec usage
-(the notes, 1.1 and 6.1: « ces mots conviennent à un délai, jamais à un
-horaire : on nomme les jours »). The first rule book knew the holiday
-reading was wrong on a few days a year and kept the word because the
-alternative then tried, « hors samedi et dimanche », was read as an
-exclusion. The notes give French's own verb for a date meeting a day of
-the week, *tomber*, and with it the form says what the scheduler does
-and names the days: the date itself, or, when it falls on a Saturday or
-a Sunday, the Friday or the Monday it moves to. It is longer by a
-clause; it needs no definition, and a holiday does not enter into it.
+ouvré » is the word judges 1 and 2 chose, and it means a day worked:
+outside France it is hardly used, while « jour ouvrable » counts
+Saturday in French law and not in Quebec usage (the notes, 1.1 and 6.1:
+« ces mots conviennent à un délai, jamais à un horaire : on nomme les
+jours »). The first rule book kept the word because the alternative
+then tried, « hors samedi et dimanche », was read as an exclusion. The
+notes give French's own verb for a date meeting a day of the week,
+*tomber*, and with it the form says what the scheduler does and names
+the days: the date itself, or, when it falls on a Saturday or a Sunday,
+the Friday or the Monday it moves to. It is longer by a clause; it
+needs no definition.
 (Rejected: « le dernier jour du mois qui n'est ni un samedi ni un
 dimanche », exact for `LW` but for `15W` the relative clause attaches to
 the date, « le 15 juin qui n'est ni … »; « le jour, du lundi au

@@ -1395,16 +1395,14 @@ named.
 The ordinals are «ersten, zweiten, dritten, vierten, fünften».
 
 **«Wochentag (Montag bis Freitag)»** replaces «Werktag (Montag bis
-Freitag)», which both judges had ranked first. The usage notes (1.1)
-give the reason: «Werktag» is by law every day that is not a Sunday or a
-public holiday, so the word itself leaves holidays out, and the brackets
-mend only its Saturday. A pattern knows no holidays: `LW` runs on a
-Friday that is a holiday. «Wochentag» in its first sense is any of the
-seven days named by its place in the week, and the brackets then say
-which five; in its second sense (a day that is not Sunday, or not the
-weekend) the brackets say the same five. Either way the phrase means
-Monday to Friday and promises nothing about holidays. The notes call the
-bare «wochentags» unfit for an exact statement and the translation of
+Freitag)», which both judges had ranked first. (2026-11-14: this choice
+rested on public holidays, which are no longer a reason; it is open to
+revision.) «Wochentag» in its first sense is any of the seven days
+named by its place in the week, and the brackets then say which five;
+in its second sense (a day that is not Sunday, or not the weekend) the
+brackets say the same five. Either way the phrase means Monday to
+Friday. The notes call the bare «wochentags» unfit for an exact
+statement and the translation of
 *weekday* by «Wochentag» the commonest error of the field; that is the
 bare word, and here it never stands without its brackets. (Not taken: a
 relative clause, «am letzten Tag jedes Monats, der auf Montag bis
@@ -1615,10 +1613,11 @@ a source, [R] a rule from memory, [U] the writer's judgment.
 
 **Taken from the notes.**
 
-* **«Werktag» is gone** (notes 1.1, [Q] for the legal sense): the word
-  leaves out public holidays by definition, and a pattern runs on them.
-  The Monday-to-Friday forms are now «Wochentag (Montag bis Freitag)»
-  (5.7), and the plain range was already «montags bis freitags».
+* **«Werktag» is gone** (notes 1.1). The Monday-to-Friday forms are now
+  «Wochentag (Montag bis Freitag)» (5.7), and the plain range was
+  already «montags bis freitags». (2026-11-14: this choice rested on
+  public holidays, which are no longer a reason; it is open to
+  revision.)
 * **«Jährlich» before a date fused with its month** (notes 3.3, 7.4,
   8.3, [U]): «jährlich am 1. Januar», where the rule book had a bare
   «am 1. Januar um 0:00 Uhr» that reads as one appointment (2.5).
@@ -1661,16 +1660,7 @@ Minute» for seconds.
    as an hour, whose minutes follow it (4.1): «um 9, 13 und 17 Uhr,
    jeweils zu den Minuten 5, 20 und 45». There «9:00» would name a
    moment at which nothing fires.
-2. **«Montags bis freitags» does not say «auch an Feiertagen».** The
-   notes (1.1, [U]) hold that readers of timetables and opening hours
-   take Monday to Friday as "except on public holidays", and that a
-   writer who means otherwise must say so. That would hold of every
-   weekday named («mittwochs» on a holiday is a Sunday in a timetable),
-   so the addition would stand in every sentence with a weekday. The
-   reader here reads a job schedule, which has no holiday calendar; the
-   one word that carried the holiday sense by definition is removed. A
-   doubt that remains, for a fluent reviewer.
-3. **«Jeweils» is not set before every time that follows a list of
+2. **«Jeweils» is not set before every time that follows a list of
    days.** The notes (5, 7.8, [U]) call «dienstags und donnerstags,
    jeweils von 14 bis 16 Uhr» the safe form, and say of the form without
    it that the time "meist" goes with both. The rule book says it where
@@ -1679,17 +1669,17 @@ Minute» for seconds.
    not after a plain list of weekdays or months, where the first judge
    found it set mechanically. Kept: the cases are the ones with a real
    second reading.
-4. **A pair of commas round «außer».** The notes write «täglich außer
+3. **A pair of commas round «außer».** The notes write «täglich außer
    montags, 10–18 Uhr» with no comma before «außer». Both judges found
    that smoother too. The pair stays (3.9): it is correct, and the
    closing comma is what keeps the time out of the exception, which the
    notes' own example needs as well.
-5. **«Jedes Monats» after the nth weekday** («am zweiten Montag jedes
+4. **«Jedes Monats» after the nth weekday** («am zweiten Montag jedes
    Monats»), where the notes (9.3, [U]) call «im Monat» the more usual
    and «des Monats» the more formal. «Am ersten Montag im Monat» has the
    doubt the notes raise for «am Montag» (once, or every time); «jedes
    Monats» is the mark of recurrence every other date phrase here has.
-6. **A run of weekdays across the end of the week is said as the run**:
+5. **A run of weekdays across the end of the week is said as the run**:
    «freitags bis montags», «samstags bis montags», «sonntags und
    montags». The notes (1.1, [R/U]) want every list of weekdays to begin
    with Monday and call «So, Mo, Di» translated. Lists here do begin
@@ -1699,25 +1689,24 @@ Minute» for seconds.
    sonntags», which hides that the days follow one another. The week is
    walked from Monday in every other respect (the core's view with
    `first: 1`).
-7. **No «Takt», no «KW», no «in der Nacht von … auf …», no «24 Uhr».**
+6. **No «Takt», no «KW», no «in der Nacht von … auf …», no «24 Uhr».**
    The notes show each as a device German has and English lacks. «Im
    10-Minuten-Takt» is a transport word for what «alle 10 Minuten» says.
    A pattern has no calendar weeks. Hours never wrap past midnight here
    (3.5), so no night belongs to two days and no window ends at the
    day's end: its last moment is «23:59» or «23:00», a moment that
    fires, where «24:00 Uhr» would be one that does not.
-8. **`hour12` exists.** The notes (1.4, 8.3) say the 12-hour clock is
+7. **`hour12` exists.** The notes (1.4, 8.3) say the 12-hour clock is
    not written and that «um 9 Uhr morgens» is translated German. It is
    an option, off by default, for a caller who asks for it.
-9. **The clock with a colon in Switzerland too.** The notes ([Q]) give
+8. **The clock with a colon in Switzerland too.** The notes ([Q]) give
    «8.30 Uhr» as the Swiss official form and add that apps and
    timetables there often use the colon. The full stop is still not
    offered (1.2).
-10. **Numbers are digits everywhere**, where the notes (9.3, [R/U])
-    write «alle zwei Stunden» in running text and digits in clipped
-    text. A description is clipped text.
+9. **Numbers are digits everywhere**, where the notes (9.3, [R/U])
+   write «alle zwei Stunden» in running text and digits in clipped
+   text. A description is clipped text.
 
 The notes' claims marked [U] are one writer's judgment and were weighed
-as that; the two the rule book now rests on most (the holiday sense of
-«Werktag», and «jährlich» for a date that recurs) are also [Q] and plain
-usage respectively.
+as that; the one the rule book now rests on most («jährlich» for a date
+that recurs) is also plain usage.

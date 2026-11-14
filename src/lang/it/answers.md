@@ -69,9 +69,8 @@ What Italian does its own way, and the rest of this file relies on:
   next Monday (usage §6). A recurring weekday always carries its article,
   a range carries it fused («dal lunedì al venerdì»).
 * **The week runs from Monday to Sunday**, and no word for a group of days
-  is exact: «feriale» includes Saturday for some readers, and «feriali»,
-  «lavorativi» and «festivi» all turn on public holidays, which a pattern
-  does not know (usage §1). Days are always named.
+  is exact: «feriale» includes Saturday for some readers (usage §1). Days
+  are always named.
 * **A rate comes with its first and last time**, the timetable's «prima
   partenza… ultima partenza…» (usage §6, §7): «ogni 15 minuti dalle 9:00
   alle 17:45». Where a run of minutes inside the hour is confined to
@@ -173,7 +172,7 @@ texts; ISO 8601 and CLDR for the numeric form of times on screens.
 | Field | Values | Default | What it changes |
 | --- | --- | --- | --- |
 | `hour12` | boolean | `false` | The clock. Written Italian uses the 24-hour clock and has no a.m. or p.m. (usage §3). `true` gives the 12-hour clock as it is spoken, with the part of the day after each time (below). |
-| `short` | boolean | `false` | Weekday and month names in their three-letter forms, with no full stop: lun, mar, mer, gio, ven, sab, dom; gen, feb, mar, apr, mag, giu, lug, ago, set, ott, nov, dic. Nothing else abbreviates. Articles and prepositions stay («il lun», «la dom», «a giu», «ad ago», «(dal lun al ven, festivi compresi)»). |
+| `short` | boolean | `false` | Weekday and month names in their three-letter forms, with no full stop: lun, mar, mer, gio, ven, sab, dom; gen, feb, mar, apr, mag, giu, lug, ago, set, ott, nov, dic. Nothing else abbreviates. Articles and prepositions stay («il lun», «la dom», «a giu», «ad ago», «(dal lun al ven)»). |
 | `separator` | `':'` or `'.'` | `':'` | The sign between hours, minutes and seconds: «9:30», «9:30:15» or «9.30», «9.30.15». Houses differ (usage §3): the colon is what screens show, the point is the print tradition. |
 
 `hour12: true` writes each clock time so:
@@ -1411,9 +1410,10 @@ values:
 
 5.2 **The week.** It starts on Monday and ends on Sunday; days are listed
 in that order. No word groups days: «feriali» may or may not include
-Saturday, «festivi» adds public holidays, «fine settimana» and «weekend»
-do not say whether a holiday counts, and there is no word for Monday to
-Friday (usage §1). The days are named:
+Saturday, and there is no word for Monday to Friday (usage §1). Saturday
+and Sunday are not «il fine settimana» or «il weekend». (2026-11-14:
+this choice rested on public holidays, which are no longer a reason; it
+is open to revision.) The days are named:
 
 * `0 9 * * 1-5` — «dal lunedì al venerdì alle 9:00»
 * `0 9 * * 0,6` — «il sabato e la domenica alle 9:00»
@@ -1498,15 +1498,14 @@ and leap years of `dateReach` as a plain date does.
   in: the day the form comes to** (equivalently the month's last day,
   with February's two). `dateReach` gives the months, not that day; the
   rule is written over it as the core is to supply it.
-* **The Monday-to-Friday day** is «giorno lavorativo», with the days and
-  the holidays said beside it in brackets: **«(dal lunedì al venerdì,
-  festivi compresi)»**.
+* **The Monday-to-Friday day** is «giorno lavorativo», with the days
+  said beside it in brackets: **«(dal lunedì al venerdì)»**.
   * `1W` (`firstWeekday`) — «il primo giorno lavorativo di ogni mese (dal
-    lunedì al venerdì, festivi compresi) alle 0:00»
+    lunedì al venerdì) alle 0:00»
   * `LW` — «l'ultimo giorno lavorativo di ogni mese (dal lunedì al
-    venerdì, festivi compresi) alle 0:00»
+    venerdì) alle 0:00»
   * `15W` — «il giorno lavorativo più vicino al 15 di ogni mese (dal
-    lunedì al venerdì, festivi compresi) alle 9:00»; «all'8», «all'11»;
+    lunedì al venerdì) alle 9:00»; «all'8», «all'11»;
     with a month «…più vicino al 15 giugno (…)», under leading months
     «…più vicino al 15 del mese (…)».
   * The nearest day never leaves its month, and this is said only where
@@ -1514,13 +1513,13 @@ and leap years of `dateReach` as a plain date does.
     the nearest Monday-to-Friday day inside the month is simply the
     month's last one, and it is said as `LW` is, with the months it fires
     in: «l'ultimo giorno lavorativo dei mesi di 31 giorni (dal lunedì al
-    venerdì, festivi compresi) alle 0:00»; `0 0 31W 6-8 *` — «a luglio e
+    venerdì) alle 0:00»; `0 0 31W 6-8 *` — «a luglio e
     agosto, l'ultimo giorno lavorativo del mese (…) alle 0:00». **`28W`,
     `29W`, `30W`** (under every or several months), and day n under one
     named month whose last day it is: «, senza uscire dal mese» after the
     suffix and before the bracket: «il giorno lavorativo più vicino al 30
-    di ogni mese, senza uscire dal mese (dal lunedì al venerdì, festivi
-    compresi) alle 0:00, tranne a febbraio»; «…più vicino al 30 giugno,
+    di ogni mese, senza uscire dal mese (dal lunedì al venerdì) alle
+    0:00, tranne a febbraio»; «…più vicino al 30 giugno,
     senza uscire dal mese (…) alle 0:00»; `29W` — «…più vicino al 29 di
     ogni mese, senza uscire dal mese (…), a febbraio solo negli anni
     bisestili, alle 0:00». (The second revision said «il giorno
@@ -1531,7 +1530,7 @@ and leap years of `dateReach` as a plain date does.
   * The bracket follows the month suffix and is not a gloss for the
     joins: the time follows it by the ordinary rule (a space before
     «alle», a comma before a rate). In the short style the days in it
-    abbreviate: «(dal lun al ven, festivi compresi)».
+    abbreviate: «(dal lun al ven)».
 
   How this was decided. Three wordings were read by independent readers.
   «Il giorno tra lunedì e venerdì» (first draft): the schedule reader
@@ -1544,24 +1543,12 @@ and leap years of `dateReach` as a plain date does.
   judges, unprompted, wrote the same cure: a category word with the days
   beside it («giorno lavorativo (dal lunedì al venerdì)», «giorno feriale
   (lun-ven)»). The usage notes warn against exactly these words (§1):
-  «feriale» may include Saturday, and both words leave out public
-  holidays, which this day does not. The two risks are not equal. A
-  reader who takes the last Friday, or skips the month, has the wrong
-  schedule most months of the year. A reader of «giorno lavorativo (dal
-  lunedì al venerdì, festivi compresi)» is told the Saturday answer by
-  the days and the holiday answer by «festivi compresi», the fixed
-  timetable formula (usage §9 has «festivi esclusi», «(anche festivi)»,
-  and «compreso» agreeing as «escluso» does: «festivi compresi» is their
-  positive twin); what is left
-  is a slight oddity, a "working day" that may be a holiday, and the
-  bracket says so in plain words. «Lavorativo» is chosen over «feriale»
-  because «feriale» is by definition "not festivo", so «feriale… festivi
-  compresi» would contradict itself, where «lavorativo» is only loosely
-  tied to holidays. The third judge read all of these forms exactly and
-  still called the bracket a contradiction in terms, offering «giorno tra
-  lunedì e venerdì (anche se festivo)»: the wording two earlier readers
-  took for a Friday. Understood and odd stands against smooth and
-  misread.
+  «feriale» may include Saturday. The two risks are not equal. A reader
+  who takes the last Friday, or skips the month, has the wrong schedule
+  most months of the year. A reader of «giorno lavorativo (dal lunedì al
+  venerdì)» is told the Saturday answer by the days. «Lavorativo» is
+  chosen over «feriale». (2026-11-14: this choice rested on public
+  holidays, which are no longer a reason; it is open to revision.)
 * `1#2` — «il secondo lunedì di ogni mese»; `0#4` — «la quarta domenica di
   ogni mese» (the ordinal agrees). A fifth is not in every month: «il
   quinto lunedì dei mesi che ne hanno cinque,» (a gloss: comma after).
@@ -1705,7 +1692,7 @@ exception of hours leaves out is said as whole hours.
 
 8.6 `recurrence-marking` — the article: «il lunedì», «il lunedì e il
 mercoledì», «dal lunedì al venerdì». The same in a list, in a range and in
-a union, and in the bracket «(dal lunedì al venerdì, festivi compresi)».
+a union, and in the bracket «(dal lunedì al venerdì)».
 A weekday is bare only after «se cade di» (4.3), where Italian has it
 so (usage §10).
 
@@ -1768,12 +1755,12 @@ description ends in a full stop of its own (short names have none).
    difference of form a reader can see.
 5. **No «feriale» or «festivo» for a set of weekdays; «giorno lavorativo»
    only for the scheduler's Monday-to-Friday day, with «(dal lunedì al
-   venerdì, festivi compresi)» beside it** (usage §1 warns that these
-   words turn on Saturday and on public holidays, and documents that
-   careful writers add the days). A set of weekdays is always named. The
-   one day that cannot be named by listing («the nearest…», «the last…»)
-   takes the word with both of its doubts answered in the bracket; the
-   reasoning, after three wordings were misread, is in 5.7.
+   venerdì)» beside it** (usage §1 warns that «feriale» turns on
+   Saturday, and documents that careful writers add the days). A set of
+   weekdays is always named. The one day that cannot be named by listing
+   («the nearest…», «the last…») takes the word with its doubt answered
+   in the bracket; the reasoning, after three wordings were misread, is
+   in 5.7.
 6. **Hours past midnight are split beside a named day** (usage §2: the
    night belongs to the day before). Because readers attribute the small
    hours to the evening before, hours 0 to 2 and 22 to 23 of the same day
@@ -1823,9 +1810,3 @@ description ends in a full stop of its own (short names have none).
     caller asks for `short`, for a table or a narrow column; the article
     or preposition before «mar» tells the two apart («il mar», «a mar»),
     and the default never abbreviates.
-17. **«Giorno lavorativo (…, festivi compresi)»** is built on usage §9's
-    «festivi esclusi» and «(anche festivi)», not quoted from it. «Anche
-    se festivo» was weighed twice: it is as exact, but the present form
-    was read exactly by a blind judge and by the second schedule reader,
-    and one voice for the other is not a reason to change a form that
-    is understood.

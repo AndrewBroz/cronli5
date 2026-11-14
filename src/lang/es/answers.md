@@ -112,10 +112,10 @@ Four things run through everything:
 * **A word means to its readers what the pattern means, or it is not
   used.** The usage notes (`usage.md`, written in Spanish by a writer told
   nothing of schedules) show that «día laborable» may count Saturday and
-  that «día hábil» is set by each country's law; both leave out public
-  holidays. The pattern's Monday-to-Friday forms mean those five days,
-  holidays included, so they are said by naming the days (5.7). The last
-  section lists where this rule book departs from the notes, and why.
+  that «día hábil» is set by each country's law. The pattern's
+  Monday-to-Friday forms mean those five days, so they are said by naming
+  the days (5.7). The last section lists where this rule book departs
+  from the notes, and why.
 * **Stiffness on a rare schedule is accepted; a reading that fires at
   another time is not.** A third fluent reader **(reader 3)** judged
   fifty-six sentences of the third version, and only what that reader
@@ -1278,10 +1278,9 @@ complaint.**)**
 
 5.2 Saturday and Sunday: «los fines de semana». Monday to Friday has no
 idiom: it is the range «de lunes a viernes», which is what a speaker
-says, and which means those five days whatever the calendar of public
-holidays says. No word for a kind of day is used («laborable», «hábil»,
-«entre semana», «festivo»): each means a set of days the pattern does not
-know (5.7).
+says, and which means those five days. No word for a kind of day is
+used («laborable», «hábil», «entre semana», «festivo»): each means a set
+of days the pattern does not know (5.7).
 
 5.3 Midnight and noon are written as times, «a las 0:00» and «a las
 12:00», in both clock styles (with `hour12: true`, «a las 12:00 a. m.»
@@ -1333,18 +1332,17 @@ The ordinals are «primer, segundo, tercer, cuarto, quinto»; every weekday
 is masculine.
 
 **The Monday-to-Friday forms name their days.** `W` means the day from
-Monday to Friday nearest a date, public holidays included. Until the
+Monday to Friday nearest a date. Until the
 second repair these said «día laborable» (and «día hábil» in the `mx`
 style): «el día laborable más cercano al 15 de cada mes», «el último día
 laborable de cada mes». The usage notes show both words mean another set
 of days to their readers. «Laborable» is ambiguous about Saturday (a
 timetable's «laborables» stops on Friday; the labour calendar's includes
 Saturday), and «día hábil» is defined by each country's law, which has
-moved Saturday in and out. Neither includes a public holiday, and the
-pattern fires on one. The notes' advice is to write the days, and their
-device for a date that moves is «caer»: «si cae en festivo, pasa al
-siguiente día hábil». So the form says the date, and where it goes when
-it falls on Saturday or Sunday:
+moved Saturday in and out. The notes' advice is to write the days, and
+their device for a date that moves is «caer»: «si cae en festivo, pasa
+al siguiente día hábil». So the form says the date, and where it goes
+when it falls on Saturday or Sunday:
 
 * `15W` — «el día 15 de cada mes o, si cae en sábado o domingo, el
   viernes o el lunes más cercano». A 15th on a Saturday gives Friday the

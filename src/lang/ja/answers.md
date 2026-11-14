@@ -1336,12 +1336,10 @@ are everyday words.
 
 5.2 None. Monday to Friday is the range 毎週月曜日〜金曜日 and the weekend
 is the list 毎週土曜日・日曜日. 平日 is not used anywhere, for a set of
-weekdays or for a single day (5.7): by the usage notes it means Monday to
-Friday less the public holidays (祝日を除く is part of the word), for some
-readers it takes in Saturday, and the pattern knows neither. A schedule
-that says 平日 and runs on a public holiday says a wrong thing. 週末 is
-not used either: the notes cite a broadcaster's finding that readers
-disagree on whether it holds Friday or Sunday. The days are named.
+weekdays or for a single day (5.7): by the usage notes, for some readers
+it takes in Saturday. 週末 is not used either: the notes cite a
+broadcaster's finding that readers disagree on whether it holds Friday
+or Sunday. The days are named.
 
 5.3 None. Noon and midnight are 12:00 and 0:00, which cannot be mistaken
 beside a date: a fluent reader took 毎月1日の0:00 as "the moment the 1st
@@ -1401,12 +1399,10 @@ marked for its row of の).
 moves to from a Saturday or a Sunday.** These forms name a day of the
 month and then keep it off the weekend without leaving the month. The
 last version said 15日に最も近い平日（月曜日〜金曜日）, 最後の平日（月曜日〜
-金曜日） and 最初の平日（月曜日〜金曜日）, with the gloss to take the
-holidays back out of 平日. The usage notes are against both halves. 平日
-carries 祝日を除く, and a gloss that contradicts its word asks the reader
-to decide which to believe; and of 最も近い平日 the notes say that a
-Japanese reader's first question is "before or after?", and that the
-native device is to write the move out: 土曜なら前日の金曜、日曜なら翌日の
+金曜日） and 最初の平日（月曜日〜金曜日）. The usage notes are against
+it: of 最も近い平日 the notes say that a Japanese reader's first
+question is "before or after?", and that the native device is to write
+the move out: 土曜なら前日の金曜、日曜なら翌日の
 月曜; 祝日の場合は翌日; 直前の平日. That device is exact here, it answers
 the question, and it needs no word for a working day:
 
@@ -1594,12 +1590,10 @@ the writer's judgment. That weight is given where it decided something.
 
 **Changed to follow the notes.**
 
-* **平日 is gone** (5.2, 5.7). 〔原〕 for the holiday law, 〔検〕 for the
-  timetables: 平日 means Monday to Friday less the public holidays, and
-  for some readers takes in Saturday. The Monday-to-Friday forms of a
-  scheduler mean those five days, holidays included. The gloss 平日（月曜
-  日〜金曜日） did not cure the word; the notes say of this very pair that
-  it is "not a question of translation, the meaning changes".
+* **平日 is gone** (5.2, 5.7). 〔憶〕: for some readers 平日 takes in
+  Saturday. The gloss 平日（月曜日〜金曜日） answers that, and was dropped
+  as well. (2026-11-14: this choice rested on public holidays, which are
+  no longer a reason; it is open to revision.)
 * **The nearest-weekday forms are said as a day and where it moves to**
   (5.7), the device the notes call the strength of Japanese notices (祝日
   の場合は翌日; 土曜なら前日の金曜、日曜なら翌日の月曜). 〔判〕 for the
