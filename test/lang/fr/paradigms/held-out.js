@@ -28,10 +28,9 @@ const rows = [
   ['0 12 * * *', 'tous les jours à 12 h'],
   ['0 8,12,18 * * *', 'tous les jours à 8 h, 12 h et 18 h'],
   ['0 9-17 * * *', 'tous les jours, toutes les heures de 9 h à 17 h'],
-  ['0 */2 * * *', 'tous les jours, toutes les 2 heures de 0 h à 22 h'],
-  ['0 */6 * * *', 'tous les jours à 0 h, 6 h, 12 h et 18 h'],
-  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'tous les jours, toutes les 2 heures de 0 h à 22 h, sauf à 8 h'],
+  ['0 */2 * * *', 'toutes les 2 heures'],
+  ['0 */6 * * *', 'toutes les 6 heures'],
+  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *', 'toutes les 2 heures, sauf à 8 h'],
   ['0 22-2 * * *', 'tous les jours, toutes les heures de 22 h à 2 h'],
 
   // clock / date
@@ -81,20 +80,20 @@ const rows = [
   ['30 9-17 * * 1-5',
     'du lundi au vendredi, toutes les heures de 9 h 30 à 17 h 30'],
   ['5,20,45 9-17 * * 1-5',
-    'du lundi au vendredi, à 05, 20 et 45 de chaque heure, de 9 h 05 à 17 ' +
-    'h 45'],
+    'du lundi au vendredi, aux minutes 5, 20 et 45 de chaque heure, de 9 h ' +
+    '05 à 17 h 45'],
   ['0-29 9-17 * * 1-5',
     'du lundi au vendredi, toutes les minutes pendant les 30 premières ' +
     'minutes de chaque heure, de 9 h à 17 h 29'],
   ['*/7 9-17 * * 1-5',
-    'du lundi au vendredi, toutes les 7 minutes de 00 à 56 de chaque ' +
-    'heure, de 9 h à 17 h 56'],
+    'du lundi au vendredi, toutes les 7 minutes de la minute 0 à la minute ' +
+    '56 de chaque heure, de 9 h à 17 h 56'],
   ['5/15 9-17 * * 1-5',
-    'du lundi au vendredi, à 05, 20, 35 et 50 de chaque heure, de 9 h 05 à ' +
-    '17 h 50'],
+    'du lundi au vendredi, aux minutes 5, 20, 35 et 50 de chaque heure, de ' +
+    '9 h 05 à 17 h 50'],
   ['10-40/10 9-17 * * 1-5',
-    'du lundi au vendredi, à 10, 20, 30 et 40 de chaque heure, de 9 h 10 à ' +
-    '17 h 40'],
+    'du lundi au vendredi, aux minutes 10, 20, 30 et 40 de chaque heure, ' +
+    'de 9 h 10 à 17 h 40'],
 
   // window / hour
   ['*/15 0 * * 1-5',
@@ -108,14 +107,11 @@ const rows = [
     'du lundi au vendredi, toutes les 15 minutes de 8 h à 8 h 45, de 12 h ' +
     'à 12 h 45 et de 18 h à 18 h 45'],
   ['*/15 */2 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, de 2 h à ' +
-    '2 h 45, et ainsi de suite toutes les 2 heures jusqu\'à 22 h 45'],
+    'du lundi au vendredi, toutes les 15 minutes, une heure sur deux'],
   ['*/15 */6 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, de 6 h à ' +
-    '6 h 45, de 12 h à 12 h 45 et de 18 h à 18 h 45'],
+    'du lundi au vendredi, toutes les 15 minutes, une heure sur six'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45, de 2 h à ' +
-    '2 h 45, et ainsi de suite toutes les 2 heures jusqu\'à 22 h 45, sauf ' +
+    'du lundi au vendredi, toutes les 15 minutes, une heure sur deux, sauf ' +
     'de 8 h à 8 h 45'],
   ['*/15 22-2 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 0 h à 2 h 45 et de 22 ' +
@@ -206,10 +202,10 @@ const rows = [
   ['0 12 1 * *', 'le 1er de chaque mois à 12 h'],
   ['0 8,12,18 1 * *', 'le 1er de chaque mois à 8 h, 12 h et 18 h'],
   ['0 9-17 1 * *', 'le 1er de chaque mois, toutes les heures de 9 h à 17 h'],
-  ['0 */2 1 * *', 'le 1er de chaque mois, toutes les 2 heures de 0 h à 22 h'],
-  ['0 */6 1 * *', 'le 1er de chaque mois à 0 h, 6 h, 12 h et 18 h'],
+  ['0 */2 1 * *', 'le 1er de chaque mois, toutes les 2 heures'],
+  ['0 */6 1 * *', 'le 1er de chaque mois, toutes les 6 heures'],
   ['0 0,2,4,6,10,12,14,16,18,20,22 1 * *',
-    'le 1er de chaque mois, toutes les 2 heures de 0 h à 22 h, sauf à 8 h'],
+    'le 1er de chaque mois, toutes les 2 heures, sauf à 8 h'],
   ['0 22-2 1 * *',
     'le 1er de chaque mois, toutes les heures de 0 h à 2 h, à 22 h et à 23 ' +
     'h'],
@@ -257,16 +253,17 @@ const rows = [
     'toutes les secondes pendant les 10 premières secondes de chaque minute'],
 
   // open / minute
-  ['30 * * * *', 'à 30 de chaque heure'],
+  ['30 * * * *', 'à la minute 30 de chaque heure'],
   ['0,30 * * * *', 'toutes les 30 minutes'],
   ['0-29 * * * *',
     'toutes les minutes pendant les 30 premières minutes de chaque heure'],
   ['0-29,45 * * * *',
     'toutes les minutes pendant les 30 premières minutes de chaque heure, ' +
-    'puis à 45'],
-  ['*/7 * * * *', 'toutes les 7 minutes de 00 à 56 de chaque heure'],
-  ['5/15 * * * *', 'à 05, 20, 35 et 50 de chaque heure'],
-  ['10-40/10 * * * *', 'à 10, 20, 30 et 40 de chaque heure'],
+    'puis à la minute 45'],
+  ['*/7 * * * *',
+    'toutes les 7 minutes de la minute 0 à la minute 56 de chaque heure'],
+  ['5/15 * * * *', 'aux minutes 5, 20, 35 et 50 de chaque heure'],
+  ['10-40/10 * * * *', 'aux minutes 10, 20, 30 et 40 de chaque heure'],
 
   // open / hour
   ['* 12 * * *', 'tous les jours, toutes les minutes de 12 h à 12 h 59'],
@@ -274,16 +271,10 @@ const rows = [
     'tous les jours, toutes les minutes de 8 h à 8 h 59, de 12 h à 12 h 59 ' +
     'et de 18 h à 18 h 59'],
   ['* 9-17 * * *', 'tous les jours, toutes les minutes de 9 h à 17 h 59'],
-  ['* */2 * * *',
-    'tous les jours, toutes les minutes de 0 h à 0 h 59, de 2 h à 2 h 59, ' +
-    'et ainsi de suite toutes les 2 heures jusqu\'à 22 h 59'],
-  ['* */6 * * *',
-    'tous les jours, toutes les minutes de 0 h à 0 h 59, de 6 h à 6 h 59, ' +
-    'de 12 h à 12 h 59 et de 18 h à 18 h 59'],
+  ['* */2 * * *', 'toutes les minutes, une heure sur deux'],
+  ['* */6 * * *', 'toutes les minutes, une heure sur six'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'tous les jours, toutes les minutes de 0 h à 0 h 59, de 2 h à 2 h 59, ' +
-    'et ainsi de suite toutes les 2 heures jusqu\'à 22 h 59, sauf de 8 h à ' +
-    '8 h 59'],
+    'toutes les minutes, une heure sur deux, sauf de 8 h à 8 h 59'],
   ['* 22-2 * * *', 'tous les jours, toutes les minutes de 22 h à 2 h 59'],
 
   // open / date

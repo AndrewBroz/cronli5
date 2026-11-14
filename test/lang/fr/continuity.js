@@ -51,8 +51,8 @@ const MONTH_LEAD = /^(?:en |de |d')/u;
 // An exception among the times is said only when nothing follows the time
 // part (answers 3.9). So adding or removing a year part, or making or
 // undoing a union, may reword a time part that has one: «toutes les 2
-// heures de 0 h à 22 h, sauf à 8 h» against «toutes les 2 heures de 0 h
-// à 6 h et de 10 h à 22 h en 2030».
+// heures, sauf à 8 h» against «toutes les 2 heures de 0 h à 6 h et de
+// 10 h à 22 h en 2030».
 const EXCEPTION = /\bsauf\b/u;
 
 // Hours that run through midnight are one run only when every day fires
