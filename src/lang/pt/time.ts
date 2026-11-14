@@ -14,7 +14,7 @@ import {counted, led, list, spaced} from './phrases.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 
-const {articles, units, words} = lexicon;
+const {articles, contractions, units, words} = lexicon;
 
 // Up to this many moments in a day are always listed.
 const fewMoments = 4;
@@ -25,9 +25,19 @@ const longestList = 7;
 // More windows than this, of one hour each on a cadence, are a series.
 const mostWindows = 4;
 
+// The hours of a day.
+const dayLength = 24;
+
+// A cadence of hours that tiles the day from midnight is said as its step
+// from this many hours.
+const fewestTiling = 3;
+
 // A run of hours through midnight is one run only when it is no longer
 // than this: a longer one reads backwards.
 const halfDay = 12;
+
+// No seconds, for a time written to the minute.
+const noSeconds: number[] = [];
 
 // The last minute of an hour, and the last second of a minute.
 const lastOfSixty = 59;
@@ -40,6 +50,8 @@ const ofEachMinute = `${words.ofEach} ${units.minute.one}`;
 
 // What the time part is built from, and how its times are to be written.
 interface Moments {
+  // Whether the hours are a cadence that tiles the day, said as its step.
+  bare: boolean;
   // Whether minute 0 of every hour may be said as «em ponto», which
   // promises second 0.
   dot: boolean;
@@ -103,7 +115,8 @@ function across(c: Moments, run: number[]): string {
 }
 
 function few(c: Moments): boolean {
-  return c.hours.values.length * c.minutes.values.length <= fewMoments;
+  return !c.bare &&
+    c.hours.values.length * c.minutes.values.length <= fewMoments;
 }
 
 function momentCount(c: Moments): number {
@@ -118,43 +131,60 @@ function listed(c: Moments): Said {
   true, true);
 }
 
-// The hours a cadence lands on.
-function landings(c: Moments): number[] {
-  const said = c.hours.said as Cadence;
-
-  return Array.from({length: steps(said)},
-    (_, index) => said.start + index * said.interval);
-}
-
-// A cadence that chooses among the hours, with what it lands on in
-// brackets: the first of them, a gap, and the last.
-function series(c: Moments, shown: string[]): string {
-  const {interval} = c.hours.said as Cadence;
-  const step = `${words.from} ${interval} ${words.in} ` +
-    counted(interval, units.hour);
-
-  return `${step} (${shown.slice(0, -1).join(', ')} … ` +
-    `${shown[shown.length - 1]})`;
-}
-
 // One window for each run of hours.
 function windows(c: Moments): string {
   return list(stretchesOf(c.hours.said, domainOf('hour'))
     .map((run) => across(c, run)));
 }
 
-// The windows of a series: those of its first two hours and of its last.
-function windowSeries(c: Moments): string {
-  const hours = landings(c);
+// Whether a cadence of hours tiles the day: its step divides the day and
+// its first hour lies inside the first step, so the gap across midnight is
+// the step too.
+function tilesTheDay(cadence: Cadence): boolean {
+  return cadence.start < cadence.interval &&
+    steps(cadence) * cadence.interval === dayLength;
+}
 
-  return series(c, [...hours.slice(0, 2), ...hours.slice(-1)]
-    .map((hour) => across(c, [hour, hour])));
+// The step of a cadence of hours, «de 2 em 2 horas», and where it starts
+// when that is not midnight, written to the hour: «a partir da 01:00».
+function hourStep(c: Moments, start: boolean): string {
+  const said = c.hours.said as Cadence;
+  const time = timeOf(said.start, 0, noSeconds[0], c.style);
+  const from = `${words.startingFrom} ` +
+    `${contractions.de[time.number][time.gender]} ${time.text}`;
+
+  return spaced([
+    `${words.from} ${said.interval} ${words.in} ` +
+      counted(said.interval, units.hour),
+    start && said.start > 0 && from
+  ]);
+}
+
+// The window of a cadence of hours that does not tile, from its first
+// moment to its last.
+function cadenceEnds(c: Moments): string[] {
+  const said = c.hours.said as Cadence;
+
+  return c.bare ? [] : [across(c, [said.start, said.last])];
+}
+
+// Stretches on a cadence of hours: every second hour by its number being
+// even or odd, any other step as an hour at each step, and the window
+// where the cadence does not tile the day.
+function stretchHours(c: Moments): string {
+  const said = c.hours.said as Cadence;
+  const parity = said.start % 2 === 1 ? words.theOdd : words.theEven;
+  const step = said.interval === 2 ?
+    `${contractions.em.plural.feminine} ${units.hour.many} ${parity}` :
+    `${words.during} ${words.anHour}, ${hourStep(c, c.bare)}`;
+
+  return [step, ...cadenceEnds(c)].join(', ');
 }
 
 // What confines a stretch of minutes to the hours it runs in.
 const confinements: ByHours<(c: Moments) => string> = {
   all: () => '',
-  cadence: windowSeries,
+  cadence: stretchHours,
   pieces: windows,
   range: windows,
   values: windows
@@ -195,9 +225,19 @@ function hourPieces(c: Moments): Said {
   true, parts[0].kind === 'values');
 }
 
+// One minute of hours that tile the day: the minute apart, then the step.
+function tiledHours(c: Moments): Said {
+  const [minute] = c.minutes.values;
+
+  return saying(c, spaced([
+    minute > 0 && `${numbered([minute], units.minute)},`,
+    hourStep(c, true)
+  ]), false);
+}
+
 const onTheMinute: ByHours<(c: Moments) => Said> = {
   all: everyHour,
-  cadence: hourPieces,
+  cadence: (c) => [hourPieces, tiledHours][Number(c.bare)](c),
   pieces: hourPieces,
   range: hourPieces,
   values: hourPieces
@@ -206,11 +246,10 @@ const onTheMinute: ByHours<(c: Moments) => Said> = {
 // Every minute, or a cadence of minutes that needs no ends, confined to
 // the hours.
 function confined(c: Moments): Said {
-  const {kind} = c.hours.said;
   const lead = stretch(c.minutes.said, units.minute, ', ', c.every);
 
-  return saying(c, [lead, confinement(c)].filter(Boolean)
-    .join(kind === 'cadence' ? ', ' : ' '), kind !== 'all');
+  return saying(c, spaced([lead, confinement(c)]),
+    c.hours.said.kind !== 'all' && !c.bare);
 }
 
 // Runs and strays of minutes inside one or two named hours: windows of
@@ -265,27 +304,16 @@ function shortList(minutes: Chosen): boolean {
     2 * minutes.values.length < longestList;
 }
 
-// The minute phrase, then the hours on a cadence with what they hold in
-// brackets: for a short list of minutes the clock times of the first two
-// hours and the last of all, for any other minutes a window for each of
-// the first two hours and for the last.
-function timeSeries(c: Moments, phrase: string): Said {
-  if (!shortList(c.minutes)) {
-    return saying(c, `${phrase}, ${windowSeries(c)}`, false);
-  }
-
-  const hours = landings(c);
-  const times = hours.slice(0, 2).flatMap(
-    (hour) => c.minutes.values.map((minute) => [hour, minute]));
-  const last = [hours[hours.length - 1], ...c.minutes.values.slice(-1)];
-
-  return saying(c, `${phrase}, ` + series(c, [...times, last].map(
-    ([hour, minute]) => moment(c, hour, minute).text)), true);
+// The minute phrase, then the step of the hours, and the window where the
+// cadence does not tile the day.
+function stepped(c: Moments, phrase: string): Said {
+  return saying(c, [phrase, hourStep(c, c.bare), ...cadenceEnds(c)]
+    .join(', '), false);
 }
 
 const anchorings: ByHours<(c: Moments, phrase: string) => Said> = {
   all: (c, phrase) => saying(c, `${phrase} ${ofEachHour}`, false),
-  cadence: timeSeries,
+  cadence: stepped,
   pieces: windowed,
   range: windowed,
   values: separate
@@ -354,7 +382,10 @@ function clause(seconds: Chosen): string {
 // The time with its seconds, by the first form that applies.
 const secondForms: Form[] = [
   {say: toTheMinute, when: (c) => c.seconds.values.join() === '0'},
-  {say: toTheSecond, when: (c) => momentCount(c) <= fewMoments},
+  {
+    say: toTheSecond,
+    when: (c) => !c.bare && momentCount(c) <= fewMoments
+  },
   {
     // One second rides in every time named.
     say: (c) => toTheMinute({...c, ends: [c.second, c.second]}),
@@ -500,9 +531,28 @@ function mostHoursListed(minutes: Chosen): number {
     mostWindows;
 }
 
+// How many things a cadence of hours names: a step that tiles the day
+// from midnight is one, from a later start two where it has more hours
+// than could be listed, and any other cadence names its two ends.
+function hourCadence(minutes: Chosen): (cadence: Cadence) => number {
+  const most = mostHoursListed(minutes);
+
+  return function named(cadence) {
+    const count = steps(cadence);
+
+    if (!tilesTheDay(cadence)) {
+      return withEnds(most)(cadence);
+    }
+
+    return cadence.start === 0 ?
+      Number(count >= fewestTiling) :
+      2 * Number(count > Math.min(fewMoments, most));
+  };
+}
+
 function hourRules(minutes: Chosen, wrap: boolean): Rules {
   return {
-    cadence: withEnds(mostHoursListed(minutes)),
+    cadence: hourCadence(minutes),
     domain: domainOf('hour'),
     excepts: () => true,
     longestWrap: halfDay,
@@ -516,22 +566,38 @@ function valuesOf(analyses: Analyses, field: Field): number[] {
   return firesOn(analyses.candidates[field], domainOf(field));
 }
 
+// Whether the hours run round the clock on a step: a cadence that tiles
+// the day, three hours or more from midnight, more than four from a later
+// start, with or without hours excepted from it. Then the days need no
+// «todos os dias».
+function roundTheClock(chosen: Chosen): boolean {
+  const hours = [...chosen.values, ...chosen.removed].sort((a, b) => a - b);
+  const [start] = hours;
+  const interval = dayLength / hours.length;
+
+  return Number.isInteger(interval) && interval > 1 && start < interval &&
+    hours.every((hour, index) => hour === start + index * interval) &&
+    hours.length >= fewestTiling && (start === 0 || hours.length > fewMoments);
+}
+
 /**
- * The time part, and whether it begins with a clock time. `open` is
- * whether every day of every month and year is meant: only then may a run
- * of hours pass midnight.
+ * The time part, whether it begins with a clock time, and whether its
+ * hours run round the clock. `open` is whether every day of every month
+ * and year is meant: only then may a run of hours pass midnight.
  */
 function timePart(
   analyses: Analyses,
   open: boolean,
   style: PortugueseStyle
-): {clock: boolean; text: string} {
+): {clock: boolean; round: boolean; text: string} {
   const minutes = choose(valuesOf(analyses, 'minute'), sixtieths);
+  const hours = choose(valuesOf(analyses, 'hour'), hourRules(minutes, open));
   const c: Moments = {
+    bare: hours.said.kind === 'cadence' && tilesTheDay(hours.said),
     dot: true,
     ends: [],
     every: eachMinute,
-    hours: choose(valuesOf(analyses, 'hour'), hourRules(minutes, open)),
+    hours,
     minutes,
     second: analyses.clockSecond,
     seconds: choose(valuesOf(analyses, 'second'), sixtieths),
@@ -541,6 +607,7 @@ function timePart(
 
   return {
     clock: said.clock,
+    round: roundTheClock(hours),
     text: said.text + excepted({...c, ends: said.ends})
   };
 }

@@ -131,6 +131,8 @@ const dayParts = [
 // The function words and fixed phrases.
 const words = {
   also: 'e também',
+  // How long each stretch lasts under hours on a step: «durante uma hora».
+  anHour: 'uma hora',
   always: 'sempre',
   and: 'e',
   after: 'depois',
