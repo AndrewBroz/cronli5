@@ -146,16 +146,16 @@ function cost(description: Chosen, say: Say): number {
 }
 
 // The first and the last value of a cadence or a run: never taken back by
-// an exception, since what is left is then a shorter cadence or run.
+// an exception, since what is left is then a shorter cadence or run. Every
+// value has no ends to take back.
 function endsOf(description: SetDescription): number[] {
-  return match(description, {
-    all: () => [],
-    cadence: (cadence) => [cadence.start, cadence.last],
-    except: () => [],
-    pieces: () => [],
-    range: (range) => [range.from, range.to],
-    values: () => []
-  });
+  if (description.kind === 'cadence') {
+    return [description.start, description.last];
+  }
+
+  return description.kind === 'range' ?
+    [description.from, description.to] :
+    [];
 }
 
 function sayable(description: SetDescription, say: Say): boolean {
