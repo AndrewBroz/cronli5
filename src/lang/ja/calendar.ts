@@ -41,9 +41,10 @@ export interface Calendar {
 
 /** What the time asks of the day part: whether to say 毎日. */
 export interface TimeNeeds {
-  // A cadence of minutes or seconds runs through every hour.
+  // Hours that tile the day run from a first time, which under a month or
+  // a year alone would read as one moment in it.
   allDay: boolean;
-  // The hours are anything but every hour.
+  // The hours are anything but every hour or hours that tile the day.
   restricted: boolean;
 }
 

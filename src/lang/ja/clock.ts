@@ -20,7 +20,8 @@ const {marks, twoDigits, units, words} = lexicon;
 /**
  * How a time begins, which decides what joins it to the day before it: a
  * clock time or a named hour, 毎時 or 毎分, the even or odd hours, or a
- * cadence that runs through every hour.
+ * bare cadence that runs round the clock (of minutes or seconds through
+ * every hour, or of hours that tile the day).
  */
 export type TimeKind = 'allDay' | 'clock' | 'hourly' | 'rule';
 
