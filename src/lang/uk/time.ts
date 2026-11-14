@@ -57,6 +57,8 @@ interface Level {
   slots: Domain;
   // The seconds in a slot.
   span: number;
+  // Whether every other slot is said by its parity.
+  paired: boolean;
   // Whether a cadence of the slots is said by the cycle words.
   tiled: boolean;
   unit: typeof units.minute;
@@ -429,6 +431,28 @@ function eachTime(coarse: Described, fine: Fine, level: Level): Said {
   return said(`${slots}, ${eachTimeOf(fine, level)}`, false);
 }
 
+// Every other slot under a finer field: the places, with the slots'
+// parity in place of the whole slot, «щохвилини в парні години», or
+// closed by it, «протягом перших 30 хвилин кожної парної години».
+function byParity(coarse: Described, fine: Fine, level: Level): Said {
+  const position = positionsOf(fine, level);
+
+  return said(position.endsWith(level.forA) ?
+    position :
+    anchored(position, [level.each, `${words.afterStartOf} ${level.each}`]),
+  false);
+}
+
+// What happens each time a long cadence of slots fires, or every other
+// slot by its parity.
+function eachTimeOrParity(
+  coarse: Described,
+  fine: Fine,
+  level: Level
+): Said {
+  return (level.paired ? byParity : eachTime)(coarse, fine, level);
+}
+
 // A cadence of slots said by the cycle words is said as every slot is.
 function tiledOr<C extends Described>(
   form: (coarse: C, fine: Fine, level: Level) => Said
@@ -645,13 +669,14 @@ function stretchesLeftOut(
   return leftOut(coarse, fine, level, runsOf(coarse.removed, level.slots));
 }
 
-// An exception to a long cadence of slots stays with the slots.
+// An exception to a long cadence of slots stays with the slots; under
+// every other slot said by its parity it is the stretch left out.
 function eachTimeOrLeftOut(
   coarse: Describing<'except'>,
   fine: Fine,
   level: Level
 ): Said {
-  return coarse.base.kind === 'cadence' ?
+  return coarse.base.kind === 'cadence' && !level.paired ?
     eachTime(coarse, fine, level) :
     stretchesLeftOut(coarse, fine, level);
 }
@@ -701,7 +726,7 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
   },
   lead: {
     all: led,
-    cadence: eachTime,
+    cadence: eachTimeOrParity,
     cadencePieces: eachTime,
     except: eachTimeOrLeftOut,
     pieces: led,
@@ -719,7 +744,7 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
   },
   shape: {
     all: positioned,
-    cadence: eachTime,
+    cadence: eachTimeOrParity,
     cadencePieces: eachTime,
     except: eachTimeOrLeftOut,
     pieces: positioned,
@@ -751,15 +776,26 @@ function build(fine: Fine, coarse: Described, level: Level): Said {
 }
 
 // How every hour is said where the minutes follow: «щогодини», or a
-// cadence of hours said bare in its place.
+// cadence of hours said bare in its place; and how a finer field says
+// the whole of each such hour, «протягом години», or every other hour by
+// its parity, «у парні години».
 interface HourCycle {
   cycle: string;
+  each: string;
+  forA: string;
   lead: string;
+  paired: boolean;
   tiled: boolean;
 }
 
-const everyHourCycle: HourCycle =
-  {cycle: words.everyHour, lead: words.everyHour, tiled: false};
+const everyHourCycle: HourCycle = {
+  cycle: words.everyHour,
+  each: words.eachHour,
+  forA: words.forAnHour,
+  lead: words.everyHour,
+  paired: false,
+  tiled: false
+};
 
 // Minutes inside hours. A clock time carries seconds from `lo` to `hi`
 // when the seconds are said with the minutes.
@@ -773,10 +809,8 @@ function minuteLevel(
     ...hourCycle,
     afterEach: words.afterEachHour,
     afterStart: words.afterHourStart,
-    each: words.eachHour,
     every,
     face,
-    forA: words.forAnHour,
     hi,
     lo,
     scale: 60,
@@ -799,6 +833,7 @@ function secondLevel(face: Face): Level {
     hi: 0,
     lead: words.everyMinute,
     lo: 0,
+    paired: false,
     scale: 1,
     slots: minutesOfDay,
     span: 60,
@@ -906,9 +941,18 @@ function hourCycleOf(hours: Described, hour12: boolean): HourCycle {
   ].slice(0, 2 * Math.sign(beat.start)).join(' ');
   const cycleWords = everyN(beat.interval, units.hour) + start;
 
+  // Every other hour is the even hours or the odd ones.
+  const paired = beat.interval === 2;
+  const parity = beat.start % 2;
+
   return {
     cycle: cycleWords,
+    each: [words.eachHour, [words.eachEvenHour, words.eachOddHour][parity]][
+      Number(paired)],
+    forA: [words.forAnHour, [words.evenHours, words.oddHours][parity]][
+      Number(paired)],
     lead: cycleWords + ','.repeat(Math.sign(beat.start)),
+    paired,
     tiled: true
   };
 }

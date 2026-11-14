@@ -87,6 +87,22 @@ left out is «крім моменту через 29 хвилин після по
 (3.9); and a second beside several minutes follows after «щоразу»
 (4.2). Durations, «протягом перших 30 хвилин», stay.
 
+Amended a third time the same day, for concision, on two more rulings.
+Every other hour under a finer field was «кожні 2 години, щоразу
+щохвилини протягом години»: two phrases where the language has one.
+It is now the parity of the hours, «щохвилини в парні години», «кожні 15
+хвилин у непарні години», «щохвилини протягом перших 30 хвилин кожної
+парної години» (4.1); a longer step keeps «щоразу … протягом години».
+And a run of weekdays was «щотижня з понеділка до п'ятниці включно»; it
+is now «з понеділка по п'ятницю» (3.4, 9.1, 9.2). Neither old form was
+kept for a misreading on record. The doubt about «парні години» was one
+judge's question, "is 0 even?", not a wrong answer about when it fires;
+the rule book's reason for «щотижня» was its own guess that the run
+would be read as one week, with no reader behind it; and «до … включно»
+was chosen because some editors call «з … по …» a calque, which is a
+preference. The usage notes write «з понеділка по п'ятницю о 9:00» as a
+finished line, with no recurrence word.
+
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. "Said" means the phrase a writer uses; "silent" means the
 field contributes no words.
@@ -179,9 +195,8 @@ With `short: true` the names are «пн, вт, ср, чт, пт, сб, нд» an
 лют., берез., квіт., трав., черв., лип., серп., верес., жовт., листоп.,
 груд.» They are written the same in every position. A short weekday
 cannot take «що-», so a recurring day or list of days is «по» and the
-short names: «по пн, ср та пт». The rest keeps its form: «щотижня з вт до
-чт включно», «в останню пт місяця», «у черв.», «1 черв.», «із черв. до
-серп. включно», «щотижня з пн до пт включно», «по сб та нд». The gloss
+short names: «по пн, ср та пт». The rest keeps its form: «з вт по чт», «в останню пт місяця», «у черв.», «1 черв.», «із черв. до
+серп. включно», «з пн по пт», «по сб та нд». The gloss
 of 5.7 is «(пн–пт)».
 
 1.3 None.
@@ -192,7 +207,7 @@ of 5.7 is «(пн–пт)».
 time**.
 
 * `0 9 * * *` — «щодня о 9:00»
-* `*/15 9-17 * * 1-5` — «щотижня з понеділка до п'ятниці включно, кожні 15 хвилин з 9:00 до 17:45»
+* `*/15 9-17 * * 1-5` — «з понеділка по п'ятницю кожні 15 хвилин з 9:00 до 17:45»
 * `0 0 1 * *` — «щомісяця 1-го числа о 0:00»
 * `* * * * *` — «щохвилини»
 
@@ -206,8 +221,9 @@ another part follows it; the mark belongs to the join, not to the part:
   with «а також» (4.3): «щоп'ятниці, а також щомісяця 1-го числа, о 0:00»;
 * a comma after any part that ends «включно»: «з 2030 до 2035 року
   включно, 1 січня о 0:00»; «із червня до серпня включно, щодня о 9:00»;
-  «щотижня з понеділка до п'ятниці включно, о 9:00»; «щомісяця з 1-го до
-  7-го числа включно, о 9:00». The usage notes punctuate so («З
+  «щомісяця з 1-го до 7-го числа включно, о 9:00». A run of weekdays
+  ends «по п'ятницю», not «включно», and takes no comma: «з понеділка по
+  п'ятницю о 9:00», as the usage notes write it (3.4). The usage notes punctuate so («З
   понеділка по п'ятницю, щогодини…», «З травня по вересень, щосуботи о
   10:00»), and without the comma «включно о 9:00» and «включно щодня»
   run the end of one part into the start of the next. (It used to be
@@ -483,8 +499,7 @@ before it (7.4).
 * Weekdays: «щопонеділка, щосереди та щоп'ятниці». The list is in week
   order starting on Monday, with Sunday last. The one exception is a
   single unbroken run crossing from Sunday into Monday, said in the order
-  of the run: «щонеділі та щопонеділка»; «щотижня з суботи до понеділка
-  включно».
+  of the run: «щонеділі та щопонеділка»; «із суботи по понеділок».
 
 3.4 A range, and where «включно» goes.
 
@@ -501,11 +516,19 @@ avoided as a Russism.
   that stops early, «…до 25-го включно».
 * Months: «із червня до серпня включно».
 * Years: «з 2030 до 2035 року включно»; «і так далі до 2040 року включно».
-* Weekdays: «щотижня з вівторка до четверга включно». «Щотижня» says the
-  run comes round; without it «з вівторка до четверга» reads as one
-  stretch of one week. A range of weekdays takes no «що-» on the names.
-  Monday to Friday is this range like any other (5.2); six days of
-  the week are 3.9.
+* Weekdays are the exception: «з вівторка по четвер», «з понеділка по
+  п'ятницю», with «по» and the accusative, and no «включно» and no
+  «щотижня» (2026-11-14). «З понеділка по п'ятницю» is how schedules and
+  timetables say the working week, and the usage notes give it as a
+  finished line («З понеділка по п'ятницю о 9:00»); in it «по» marks the
+  last day as included, and the days come round without a word for it.
+  The rule book used to say «з понеділка по п'ятницю»,
+  by the general rule for whole units and on its own guess that without
+  «щотижня» the run would read as one week; no reader ever read it so.
+  A range of weekdays takes no «що-» on the names. Monday to Friday is
+  this range like any other (5.2); six days of the week are 3.9. With
+  no «включно» at its end, no comma closes it (2.1): «з понеділка по
+  п'ятницю о 9:00».
 
 The previous version left «включно» off a cadence («кожні 2 години з 0:00
 до 22:00», «кожні 3 дні з 5-го до 20-го числа»). Both fluency judges read
@@ -541,7 +564,7 @@ The word is «з» for every range, written «із» where 7.3 says.
 
 3.5 A range that wraps is said from its start to its end, the same way:
 «щогодини з 22:00 до 2:00 включно», «з листопада до лютого включно»,
-«щотижня з п'ятниці до понеділка включно». As a window: «щохвилини з
+«з п'ятниці по понеділок». As a window: «щохвилини з
 22:00 до 2:59».
 
 A wrap is only true when nothing coarser is restricted:
@@ -557,7 +580,7 @@ So an edit to a coarser field may unwrap the hours; that is the one way a
 calendar field reaches the time, and it is a fact about the schedule, not
 a choice of words. Where a wrap is not allowed, the set is described in
 ascending order: `0 22-2 1 * *` is «щомісяця 1-го числа щогодини з 0:00
-до 2:00 включно й о 22:00 та 23:00»; `*/15 22-2 * * 1-5` is «щотижня з понеділка до п'ятниці включно, кожні 15 хвилин з 0:00 до 2:45 і з 22:00 до 23:45».
+до 2:00 включно й о 22:00 та 23:00»; `*/15 22-2 * * 1-5` is «з понеділка по п'ятницю кожні 15 хвилин з 0:00 до 2:45 і з 22:00 до 23:45».
 
 **Only hours that are said as a run across midnight are unwrapped.**
 Hours said any other way (a list, an exception, runs inside the day) are
@@ -937,18 +960,30 @@ windows, each from its first firing to its last.
 | two windows | joined by «і»: «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45 і з 22:00 до 22:45» |
 | three or more windows | commas and a final «і»: «кожні 15 хвилин з 8:00 до 8:45, з 12:00 до 12:45 і з 18:00 до 18:45» |
 | a cadence of four hours or fewer that is listed | its windows, each named: «щохвилини з 0:00 до 0:59 і з 12:00 до 12:59»; «щохвилини з 1:00 до 1:59, із 7:00 до 7:59, з 13:00 до 13:59 і з 19:00 до 19:59» |
-| a cadence of hours said with words of its own | not a lead: the hours are said first, as they are for minute 0, then «, щоразу» and the minutes «протягом години»: «кожні 2 години, щоразу щохвилини протягом години»; «кожні 6 годин, щоразу щохвилини протягом години»; «кожні 2 години, починаючи з 1:00, щоразу кожні 15 хвилин протягом години»; «кожні 2 години з 5:00 до 23:00 включно, щоразу щохвилини протягом години» |
+| every other hour, tiling the day | the parity of the hours in place of «протягом години»: «щохвилини в парні години»; «кожні 15 хвилин у непарні години» (below) |
+| another cadence of hours said with words of its own | not a lead: the hours are said first, as they are for minute 0, then «, щоразу» and the minutes «протягом години»: «кожні 6 годин, щоразу щохвилини протягом години»; «кожні 3 години, починаючи з 1:00, щоразу кожні 15 хвилин протягом години»; «кожні 2 години з 5:00 до 23:00 включно, щоразу щохвилини протягом години» |
 | every hour with exceptions | «кожні 10 хвилин, крім проміжку з 3:00 до 3:50 включно» |
-| a cadence of hours with exceptions | the exception stays with the hours: «кожні 2 години, крім 8:00, щоразу кожні 15 хвилин протягом години» |
+| a cadence of hours with exceptions | the exception stays with the hours: «кожні 3 години, крім 9:00, щоразу кожні 15 хвилин протягом години»; for every other hour it is the stretch left out, «кожні 15 хвилин у парні години, крім проміжку з 8:00 до 8:45 включно» |
 
-For every second hour the judges gave three answers. The first disliked
-«кожної парної години» (is 0 even?); the second and third wanted «парні
-години» with examples. «Кожні 2 години, щоразу щохвилини протягом
-години» states the step outright, needs no notion of an even hour, and
-serves a step of three or six hours as well. It is the short phrase:
-each firing of the hours is a whole hour of firings. (It used to carry
-the stretches in brackets, «(0:00–0:59, 2:00–2:59 … 22:00–22:59)», and a
-window of hours before it; both repeated what the words say.)
+**Every other hour is said by its parity** (2026-11-14). Where the
+cadence of hours that tiles the day has a step of 2, its hours are the
+even ones from 0:00 or the odd ones from 1:00, and a finer field inside
+them takes «у парні години» or «у непарні години» in place of «протягом
+години», and «кожної парної / непарної години» in place of «кожної
+години»: `* */2 * * *` is «щохвилини в парні години»; `*/15 1/2 * * *`
+is «кожні 15 хвилин у непарні години»; `0-29 */2 * * *` is «щохвилини
+протягом перших 30 хвилин кожної парної години»; `10-40 */2 * * *` is
+«щохвилини з 10 до 40 хвилин після початку кожної парної години». Hours
+left out of them follow as a stretch: «щохвилини в парні години, крім
+проміжку з 8:00 до 8:59 включно». For every second hour the judges gave
+three answers: the first disliked «кожної парної години» (is 0 even?),
+the second and third wanted «парні години». Hour 0 is even, and a
+reader who wonders sees 0:00 among the even hours of any clock face;
+the question was a judge's, not a wrong answer. A longer step has no
+such word and keeps «кожні 3 години, щоразу щохвилини протягом години».
+One minute or a list beside the hours is said as beside «щогодини»
+(«кожні 2 години через 30 хвилин після початку години»), because
+«щогодини»'s own words are what the minute is counted against.
 
 **Otherwise M is anchored**: a list, a run, pieces, an exception, or a
 cadence that starts again each hour. Section 3 gives its words: a list is
@@ -968,7 +1003,7 @@ nothing.
 | two or three separate hours, M not a list | each hour as one hour is said, joined as pieces, with any excepted times gathered at the end: «щохвилини з 9:00 до 9:29 і з 17:00 до 17:29»; «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59, крім 9:29 та 17:29» |
 | every hour | a list after «щогодини», anything else as it is: «щогодини через 5, 20 та 45 хвилин після початку години»; «щохвилини протягом перших 30 хвилин кожної години» |
 | a range of hours | the same words, and the pin is a window from the first firing to the last, after a comma: «щогодини через 5, 20 та 45 хвилин після початку години, з 9:05 до 17:45»; «щохвилини протягом перших 30 хвилин кожної години, з 9:00 до 17:29» |
-| a cadence of hours | a list after the hours' words, with the window where the cadence does not tile the day: «кожні 4 години через 15 та 45 хвилин після початку години»; «кожні 2 години через 15 та 45 хвилин після початку години, з 5:15 до 23:45». Anything else follows the hours after «щоразу», without «кожної години»: «кожні 2 години, щоразу щохвилини протягом перших 30 хвилин» |
+| a cadence of hours | a list after the hours' words, with the window where the cadence does not tile the day: «кожні 4 години через 15 та 45 хвилин після початку години»; «кожні 2 години через 15 та 45 хвилин після початку години, з 5:15 до 23:45». Anything else follows the hours after «щоразу», without «кожної години», «кожні 3 години, щоразу щохвилини протягом перших 30 хвилин»; under every other hour it closes with «кожної парної години», «щохвилини протягом перших 30 хвилин кожної парної години» |
 | pieces of hours | as a range, with a window for each piece joined by «і»: «щогодини через 5, 20 та 45 хвилин після початку години, з 9:05 до 17:45 і з 22:05 до 22:45» |
 | other separate hours | M as a list of counts, then «після» and the hours: «через 5, 20 та 45 хвилин після 8:00, 9:00, 12:00, 15:00 та 18:00». If minute 0 is in the list, the hours are said first as clock times and the other minutes follow after each of them: «о 8:00, 10:00, 12:00, 15:00 та 18:00 і через 15 та 45 хвилин після кожної з цих годин» (said hour by hour this was fifteen clock times in a row, past the six of 3.10). If M is not a list, each hour is said as one hour is |
 | every hour with exceptions | as every hour, then the stretch left out: «щогодини через 5, 20 та 45 хвилин після початку години, крім проміжку з 3:05 до 3:45 включно» |
@@ -1040,9 +1075,10 @@ said once and takes its form from the first time: «об 11:00 та 17:00», «�
   clock time closes to the second. «Щосекунди»; «кожні 6 секунд»; «кожні
   10 секунд з 0:00:05 до 23:59:55»; «щосекунди з 9:00:00 до 17:59:59»;
   «щосекунди протягом перших 30 хвилин кожної години»; `* * */2 * * *` is
-  «кожні 2 години, щоразу щосекунди протягом години» (it used to be
-  «…, щоразу щохвилини протягом години, щоразу щосекунди протягом
-  хвилини»: two «щоразу» for one stretch of firing).
+  «щосекунди в парні години», and `* * */3 * * *` «кожні 3 години,
+  щоразу щосекунди протягом години» (it used to be «…, щоразу щохвилини
+  протягом години, щоразу щосекунди протягом хвилини»: two «щоразу» for
+  one stretch of firing).
 * **S is anchored and the rest is every minute**: the seconds' words end
   «кожної хвилини»: «щосекунди протягом перших 10 секунд кожної хвилини».
 * **Anything else**: the rest, then «, щоразу» and the seconds. The
@@ -1087,7 +1123,7 @@ hours), it is said twice: «кожні 2 години, щоразу кожні 1
 The weekday phrase comes first, exactly as it would stand alone, then a
 comma and «а також», then the day-of-month phrase with its «щомісяця»,
 then a comma, then the time: «щоп'ятниці, а також щомісяця 1-го числа, о
-0:00»; «щотижня з понеділка до п'ятниці включно, а також щомісяця 1-го
+0:00»; «з понеділка по п'ятницю, а також щомісяця 1-го
 числа, кожні 15 хвилин з 9:00 до 17:45»; «щосуботи та щонеділі, а також
 в останній день місяця, о 0:00». «А також» is heard as adding a second
 set of days; the usage notes call it the surest word for this («щоп'ятниці,
@@ -1110,16 +1146,14 @@ out. So each side says when it fires, with no subtraction:
 * **days of the month are their runs or their list**: `0 9 1-14,16-31 *
   5` is «щоп'ятниці, а також щомісяця з 1-го до 14-го числа включно й із
   16-го до 31-го числа включно, о 9:00»; `*/15 9-17 1,3,5,7,9,11,13,17,
-  19,21,23,25,27,29,31 * 1-5` is «щотижня з понеділка до п'ятниці
-  включно, а також щомісяця 1-го, 3-го, 5-го, 7-го, 9-го, 11-го, 13-го,
+  19,21,23,25,27,29,31 * 1-5` is «з понеділка по п'ятницю, а також щомісяця 1-го, 3-го, 5-го, 7-го, 9-го, 11-го, 13-го,
   17-го, 19-го, 21-го, 23-го, 25-го, 27-го, 29-го та 31-го числа, кожні
   15 хвилин з 9:00 до 17:45». Fifteen dates are long, and they are what
   is true; alone, the same days are «щомісяця по непарних числах, крім
   15-го» (3.9). «По непарних числах» with nothing left out is no
   exception and is said here too;
-* **six days of the week are their run**: «щотижня з понеділка до суботи
-  включно, а також щомісяця 1-го числа, о 0:00»; `0 0 15 * 0-2,4-6` is
-  «щотижня з четверга до вівторка включно, а також щомісяця 15-го числа,
+* **six days of the week are their run**: «з понеділка по суботу, а також щомісяця 1-го числа, о 0:00»; `0 0 15 * 0-2,4-6` is
+  «із четверга по вівторок, а також щомісяця 15-го числа,
   о 0:00».
 
 (The second rule was here before. The first is new: the answers used to
@@ -1134,9 +1168,8 @@ there one where the day of the month adds no day**: a form that only
 ever falls Monday to Friday (the nearest weekday, the first or the last
 weekday of the month, 5.7) beside weekdays that hold all five of them
 (the core's `dateAddsNothing`). The weekdays are said alone, as they
-would be without it: `*/15 9-17 15W * 1-5` is «щотижня з понеділка до
-п'ятниці включно, кожні 15 хвилин з 9:00 до 17:45»; `0 9 1W 6 1-5` is «у
-червні щотижня з понеділка до п'ятниці включно, о 9:00»; `0 9 15W * 1-6`
+would be without it: `*/15 9-17 15W * 1-5` is «з понеділка по п'ятницю кожні 15 хвилин з 9:00 до 17:45»; `0 9 1W 6 1-5` is «у
+червні з понеділка по п'ятницю о 9:00»; `0 9 15W * 1-6`
 is «щодня, крім неділі, о 9:00». (It used to be «щотижня з понеділка до
 п'ятниці включно, а також щомісяця в найближчий до 15-го числа будній
 день (понеділок–п'ятниця)»: «а також» promises a second set of days, and
@@ -1154,9 +1187,8 @@ reader found no row where it was not.
 **A month restriction is a heading with a colon** (2.7), and under it
 nothing is fused with the month and «щомісяця» is not said: `0 0 1 6 5`
 is «у червні: щоп'ятниці, а також 1-го числа, о 0:00»; `0 0 1,15 1,7 1-5`
-is «у січні та липні: щотижня з понеділка до п'ятниці включно, а також
-1-го та 15-го числа, о 0:00»; `0 0 L 6 1-5` is «у червні: щотижня з
-понеділка до п'ятниці включно, а також в останній день місяця, о 0:00»;
+is «у січні та липні: з понеділка по п'ятницю, а також
+1-го та 15-го числа, о 0:00»; `0 0 L 6 1-5` is «у червні: з понеділка по п'ятницю, а також в останній день місяця, о 0:00»;
 `0 9 1-14,16-31 6 1` is «у червні: щопонеділка, а також з 1-го до 14-го
 числа включно й із 16-го до 30-го числа включно, о 9:00». Both judges and the reader read the version
 without the colon as weekdays all year round. The second judge would
@@ -1174,8 +1206,8 @@ weekdays, and the comma that closes the day part. The usage notes give the
 form: «13 числа, якщо це п'ятниця» (7.2). The weekdays are said as a
 list, joined by «або», since any one of them will do («та» would say they
 must all be the day): «якщо це понеділок, середа або п'ятниця»; a run of
-three or more is «якщо це день з понеділка до п'ятниці включно» (3.4's
-run, with the noun that «з … до» needs); a Quartz weekday is «якщо це
+three or more is «якщо це день з понеділка по п'ятницю» (3.4's
+run, with the noun that «з … по» needs); a Quartz weekday is «якщо це
 остання п'ятниця місяця». «Якщо це» takes no agreement, so one date or
 several, a day («в останній день місяця») or a number, are said alike. The
 union's «а також» is never said here, and nothing is read as the union:
@@ -1194,8 +1226,7 @@ union would have left the weekdays: «ніколи: такої дати в ка�
 * `0 0 15 * */2` — «щомісяця 15-го числа, якщо це вівторок, четвер,
   субота або неділя, о 0:00»
 * `0 0 */2 6 1` — «у червні по непарних числах, якщо це понеділок, о 0:00»
-* `*/15 9-17 */2 * 1-5` — «щомісяця по непарних числах, якщо це день з
-  понеділка до п'ятниці включно, кожні 15 хвилин з 9:00 до 17:45»
+* `*/15 9-17 */2 * 1-5` — «щомісяця по непарних числах, якщо це день з понеділка по п'ятницю, кожні 15 хвилин з 9:00 до 17:45»
 * `0 0 */2 * 5L` — «щомісяця по непарних числах, якщо це остання п'ятниця
   місяця, о 0:00»
 
@@ -1326,8 +1357,7 @@ over the form nobody had met. Hours and months have no parity words;
 years are «у парні роки» (5.8).
 
 5.2 Monday to Friday and Saturday and Sunday have no word of their own
-here. Monday to Friday is the range it is, «щотижня з понеділка до
-п'ятниці включно» (3.4); Saturday and Sunday are the two days, «щосуботи
+here. Monday to Friday is the range it is, «з понеділка по п'ятницю» (3.4); Saturday and Sunday are the two days, «щосуботи
 та щонеділі» (3.3).
 
 These answers used to say «у будні» and «у вихідні». The first was both
@@ -1420,7 +1450,7 @@ in no month reached is 2.8.
   the day are simply not named). It is said under a heading of months
   (4.3) if any of them can lack the day, because there the day stands
   without its months: `0 9 31W 1-11 1-4` is «із січня до листопада
-  включно: щотижня з понеділка до четверга включно, а також у найближчий
+  включно: з понеділка по четвер, а також у найближчий
   до 31-го числа будній день того ж місяця (понеділок–п'ятниця), о 9:00
   (лише в місяцях, де є 31-ше число)». (Under a heading the note used to
   be dropped, and nothing told the reader that April has no such day.)
@@ -1508,7 +1538,8 @@ lexicon. Short forms are in 1.2.
 
 6.5 о (об), на, по, у (в), з (із), до, від, після, через, за, та, і (й), а
 також, крім, включно, рівно, кожні, кожної, протягом, перших,
-останніх, щоразу, щодня, щотижня, щомісяця, щогодини, щохвилини,
+останніх, щоразу, щодня, щомісяця, по (a run of weekdays), у парні
+години, у непарні години, кожної парної години, кожної непарної години, щогодини, щохвилини,
 щосекунди, увесь рік, числа, проміжку, від початку, після початку години,
 після початку хвилини,
 до кінця місяця, того ж місяця, і так далі, щороку, починаючи з, усі
@@ -1580,7 +1611,7 @@ means the months «січня», «серпня», «червня», the weekday
 «суботи», «четверга», and the numbers 4, 6, 7, 14, 16, 17 and 40 to 49 as
 an hour, a day, a minute or a second («із 6:00», «із 17-го», «із 4 до
 40 хвилин»). «Із червня до серпня включно»; «кожні 10
-хвилин із 6:00 до 8:50 і з 17:00 до 19:50»; «щотижня з середи». «З»
+хвилин із 6:00 до 8:50 і з 17:00 до 19:50»; «із середи по п'ятницю», but «у червні з середи». «З»
 everywhere else.
 
 7.4 A list: commas, then «та» before the last item, with no comma before
@@ -1625,8 +1656,9 @@ value is not said, apart from «щодня», «щомісяця» and «щор�
 units say «включно» (3.4).
 
 8.6 `recurrence-marking` — «Що-» on the day for single days and lists
-(«щопонеділка та щосереди»); «щотижня» and the genitive with «з … до …
-включно» for a run, Monday to Friday among them; «щодня, крім» for six
+(«щопонеділка та щосереди»); «з» and the genitive, «по» and the
+accusative for a run, «з понеділка по п'ятницю» among them, with no
+recurrence word (3.4); «щодня, крім» for six
 days; «щомісяця» before days named by number and «щороку» before a date
 said with its month (2.6, 2.9).
 
@@ -1671,20 +1703,23 @@ What was adopted is in the sections named in the opening of these
 answers. What follows is where the rule book keeps its own form, and
 why.
 
-9.1 **«З … до … включно», not «з … по …».** The notes hold that «по» with
+9.1 **«З … до … включно», not «з … по …», except for weekdays.** The notes hold that «по» with
 the accusative marks an end that is included and is usual in timetables
 («з понеділка по п'ятницю» is attested), and their finished lines use it
 for days, dates and months. They also record that part of the editors
 call it a calque and advise «з … до …», and they name «до п'ятниці
 включно» as what a careful writer writes. Both are exact. «До … включно»
 is the one no editor objects to, and it is one device for every whole
-unit, hours included, where the notes themselves show only «до». Kept.
+unit, hours included, where the notes themselves show only «до». Kept,
+except for a run of weekdays, which is «з понеділка по п'ятницю» since
+2026-11-14 (3.4): there the notes' form is the settled one, and «до …
+включно» was only the objection of some editors.
 
-9.2 **«Щотижня» before a run of weekdays.** The notes write «з
-понеділка по п'ятницю о 9:00» with no recurrence word, and warn against
-a bare «щотижня» that names no day. Here the word stands before named
-days, so the warning does not apply, and without it «з вівторка до
-четверга включно щохвилини» is one stretch of one week (3.4). Kept.
+9.2 **No «щотижня» before a run of weekdays** (2026-11-14). The notes
+write «з понеділка по п'ятницю о 9:00» with no recurrence word. The rule
+book kept «щотижня» on the guess that «з вівторка до четверга
+включно щохвилини» would be one stretch of one week; no reader read it
+so, and the notes' form is now said (3.4).
 
 9.3 **«Та» inside a list, «і» between pieces.** The notes treat «і», «й»
 and «та» as equal and switch them to keep two levels apart; in their
