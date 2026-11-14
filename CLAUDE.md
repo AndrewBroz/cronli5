@@ -47,6 +47,69 @@ and none of it is the goal. Use it accordingly:
   sentence with the one it replaces, blind, before calling it an
   improvement. Shorter is not better; neither is longer.
 
+## How readers go wrong (true in every language)
+
+These are about the reader, not about any language. Each was learned from
+a reader who got a schedule wrong. A language meets each in its own way;
+the concern carries, the device never does.
+
+- **A reader holds a few things.** Exact clock times need no working out.
+  A rhythm with a start to add to needs arithmetic. A long list cannot be
+  held. A product ("these seconds of these minutes of these hours") makes
+  the reader multiply. Choose by how much the reader must hold and work
+  out, never by which values are named.
+- **One reading beats brevity.** A long sentence a reader takes one way is
+  better than a short one a reader can take two ways. Shorter is not
+  better, and neither is longer.
+- **A from–to window says "it goes on through here".** Use one only where
+  firing really continues through it at the stated rhythm. Round a few
+  listed minutes it is read as a continuous stretch, and its end is read
+  as the last firing.
+- **A point must be said as a point.** An ordinal ("on the 1st minute")
+  is heard as a stretch, and counts from one where the clock counts from
+  zero. A clock mark or a count from a named moment is a point. A named
+  hour ("at 2") asserts that it fires at 2:00.
+- **What is said once must visibly belong to everything it governs.** A
+  time after two day parts is taken for the nearer one unless marked as
+  both. A clause after a list is taken for the last item.
+- **Never make the reader infer a rule from a gap.** An ellipsis or "and
+  so on" between two items hides the step; say the step in words, or show
+  enough of the pattern that it cannot be mistaken, and name where it ends.
+- **Saying the same set twice makes the reader compare the two.** Say it
+  once.
+- **A list of counts is read cumulatively** ("after 5, 20 and 45 minutes":
+  5, then 20 more) unless what they count from is unmistakable.
+- **An illustration added to repair a phrase means the phrase is wrong.**
+  Look for the phrase that needs no repair.
+
+## How quality is judged: by an automated pipeline
+
+There will be no native-speaker reviewers. That is not a blocker; it is
+the design problem, and the pipeline is the product. Agents judge, and
+how they are prompted decides whether their judgment is worth anything:
+
+- **Immersed.** A judging agent is briefed entirely in the target
+  language, as a reader of text on a screen. Nothing in English; nothing
+  about cron, patterns, rules or generation.
+- **Context-isolated.** A fresh agent each time, shown only the sentences.
+  It never sees the project, the notes, the author's hypothesis ("could
+  this be read as continuous?" leaks it), or another judge's view.
+- **Scored by machine where possible.** The core knows exactly when a
+  pattern fires. Ask the reader whether it fires at chosen moments (true
+  firings, and near-misses aimed at the misreadings above) and check the
+  answers against the true schedule. A wrong answer is a defect, located.
+- **Every change is compared blind with what it replaces**, by a reader
+  who does not know which is which. Merge only what reads at least as
+  clearly.
+- **Several independent readers**, so a repeatable misreading is told from
+  one reader's speculation. A reported second reading is a defect; a
+  report of stiffness is a note.
+- **Corpus evidence.** Search the open web for a phrase fragment to see
+  how native writers use it.
+
+What is left to do, and the state of every language, is in
+[tooling/docs/finishing-1.0.md](tooling/docs/finishing-1.0.md).
+
 ## The contract
 
 [`src/core/schedule.ts`](src/core/schedule.ts) is the typed contract between
