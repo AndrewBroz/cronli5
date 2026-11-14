@@ -130,9 +130,13 @@ to the next :00 is 4. Such a step is said with where it stops and starts
 again ("every 7 minutes from 0 through 56 minutes past the hour"), or as
 its values.
 
-These costs rank a language's sentences, worst first, and compare two
-wordings that each have one reading. They are evidence for a person to
-weigh, never a target. Whether a sentence has one reading at all is a
+Each cost ranks a language's sentences on its own, and compares two
+wordings that each have one reading. The three are never added into one
+number: one wording is better than another only if it is no worse in
+any column. Where they disagree (four exact times against a rhythm with
+an offset: more objects, no operation), the choice is a judgment, made
+and recorded with its reason. They are evidence for a person to weigh,
+never a target. Whether a sentence has one reading at all is a
 separate question, for a reader (next section).
 
 **For the model doing the work.** What is easy for you is not evidence of

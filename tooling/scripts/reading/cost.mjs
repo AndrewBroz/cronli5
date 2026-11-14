@@ -11,18 +11,21 @@
 // The costs are evidence for a person to weigh, never a target.
 //
 // Usage: node --import tsx tooling/scripts/reading/cost.mjs <code> [N]
-// prints the N costliest sentence shapes of the language (default 30),
-// over its rows and one pattern per distinct shape of the fuzz corpus.
+//   [objects|operations|syllables]
+// prints the N sentence shapes of the language costliest in one column
+// (default 30, by objects), over its rows and one pattern per distinct
+// shape of the fuzz corpus.
 
 import {readFileSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import cronli5 from '../../../src/all.js';
 import {patterns} from '../../../scripts/fuzz-lang.mjs';
 
-// The weight of one operation against one object held, when the two are
-// put in one number to rank by. Provisional: the columns are shown apart.
-const OPERATION = 2;
-const SYLLABLES_PER_OBJECT = 10;
+// The three costs are never added into one number: what one object held
+// is worth against one operation, or against ten syllables, is a judgment,
+// not a constant. One wording is better than another only if it is no
+// worse in any column; where the columns disagree, someone decides.
+const COLUMNS = ['objects', 'operations', 'syllables'];
 
 const englishOnes = ['zero', 'one', 'two', 'three', 'four', 'five', 'six',
   'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
@@ -69,6 +72,10 @@ const languages = {
     // Phrases the reader holds whole: one object however many words.
     // What says where a rhythm stops and starts again.
     bounded: /\bbis\b|\bvon :?\d/iu,
+    names: new RegExp('\\b(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|' +
+      'Samstag|Sonntag|Januar|Jänner|Februar|März|April|Mai|Juni|Juli|' +
+      'August|September|Oktober|November|Dezember)\\w*', 'giu'),
+    nearest: /am nächsten liegt|nächstgelegenen/giu,
     chunks: [/montags bis freitags/giu, /werktags/giu, /täglich/giu,
       /stündlich/giu, /jede Minute/giu, /jede Sekunde/giu,
       /zur vollen Stunde/giu, /in den (?:un)?geraden Stunden/giu,
@@ -80,7 +87,8 @@ const languages = {
     // A step and the unit it steps.
     rhythm: /alle (\d+) (Sekunden|Minuten|Stunden|Tage)/giu,
     // Two of the language's units read one inside the other.
-    product: /\bjeweils\b/giu,
+    product: new RegExp('\\bjeweils\\b|Minuten nach \\d|' +
+      'zur Minute \\d.*\\d Uhr|\\d Uhr.*zur Minute', 'giu'),
     speak(text) {
       return text
         .replace(/(\d{1,2}):(\d{2}):(\d{2})/gu, (_, h, m, s) =>
@@ -97,6 +105,10 @@ const languages = {
   },
   en: {
     bounded: /\bthrough\b|\buntil\b|past the (?:hour|minute)/iu,
+    names: new RegExp('\\b(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\\b|' +
+      '\\b(?:January|February|March|April|May|June|July|August|' +
+      'September|October|November|December)\\b', 'gu'),
+    nearest: /weekday nearest|nearest weekday/giu,
     chunks: [/\bweekdays\b/giu, /\bweekends\b/giu, /every day/giu,
       /every minute/giu, /every second/giu, /every hour/giu,
       /on the hour/giu, /\bnoon\b/giu, /\bmidnight\b/giu,
@@ -144,7 +156,11 @@ function objectsIn(spec, text) {
     });
   });
 
-  const values = (rest.match(/\d+(?:[:.]\d+)*/gu) || []).length;
+  // A value said again is one object held, said twice; the names of days
+  // and months are objects as numbers are.
+  const said = [...rest.match(/\d+(?:[:.]\d+)*/gu) || [],
+    ...rest.match(spec.names) || []].map((item) => item.toLowerCase());
+  const values = new Set(said).size;
 
   return {chunks, values};
 }
@@ -209,6 +225,10 @@ function operationsIn(spec, text, defects) {
     found.push('exception');
   }
 
+  if ((text.match(spec.nearest) || []).length > 0) {
+    found.push('nearest weekday');
+  }
+
   (text.match(spec.product) || []).forEach(function each() {
     found.push('product');
   });
@@ -218,7 +238,7 @@ function operationsIn(spec, text, defects) {
 
 /**
  * The cost of one description: {syllables, objects, operations: [names],
- * defects: [names], total}. A defect is not a cost: it is a wording a
+ * defects: [names]}. A defect is not a cost: it is a wording a
  * reader takes the wrong way. The objects add a phase for every offset
  * rhythm, which the values named do not show.
  */
@@ -235,9 +255,7 @@ function costOf(code, text) {
     defects,
     objects,
     operations,
-    syllables,
-    total: objects + OPERATION * operations.length +
-      syllables / SYLLABLES_PER_OBJECT
+    syllables
   };
 }
 
@@ -265,17 +283,44 @@ function shapes(code) {
   return [...seen.values()];
 }
 
-export {costOf, languages};
+// A cost as its three columns, operations by count.
+function columnsOf(cost) {
+  return {
+    objects: cost.objects,
+    operations: cost.operations.length,
+    syllables: cost.syllables
+  };
+}
+
+/**
+ * How wording `a` compares with wording `b`: 'cheaper' or 'dearer' when it
+ * is no worse, or no better, in every column and differs in one; 'same';
+ * or 'mixed', when the columns disagree and the choice needs judgment.
+ */
+function compare(a, b) {
+  const left = columnsOf(a);
+  const right = columnsOf(b);
+  const less = COLUMNS.some((column) => left[column] < right[column]);
+  const more = COLUMNS.some((column) => left[column] > right[column]);
+  const verdicts = {
+    false: {false: 'same', true: 'dearer'},
+    true: {false: 'cheaper', true: 'mixed'}
+  };
+
+  return verdicts[less][more];
+}
+
+export {COLUMNS, compare, costOf, languages};
 
 if (process.argv[1] &&
     import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const [code, count = '30'] = process.argv.slice(2);
+  const [code, count = '30', by = 'objects'] = process.argv.slice(2);
   const ranked = shapes(code).map((entry) => ({...entry,
     cost: costOf(code, entry.text)}))
-    .sort((a, b) => b.cost.total - a.cost.total);
+    .sort((a, b) => columnsOf(b.cost)[by] - columnsOf(a.cost)[by]);
 
   ranked.slice(0, Number(count)).forEach(function show({cost, pattern, text}) {
-    process.stdout.write(`${cost.total.toFixed(1)}  objects ${cost.objects}` +
+    process.stdout.write(`objects ${cost.objects}` +
       `, operations ${cost.operations.join('+') || 'none'}` +
       (cost.defects.length ? `, DEFECT ${cost.defects.join('+')}` : '') +
       ', syllables ' +

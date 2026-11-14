@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {costOf} from '../../tooling/scripts/reading/cost.mjs';
+import {compare, costOf} from '../../tooling/scripts/reading/cost.mjs';
 
 const {expect} = chai;
 
@@ -57,6 +57,35 @@ describe('the cost model:', function() {
     expect(held('de', 'täglich um 2, 8, 14 und 20 Uhr, jeweils um :05 und ' +
       ':35')[1]).to.include('product');
   });
+
+  it('holds names as objects, and a value said again once', function() {
+    expect(held('en', 'on January 1, April 1, July 1, and October 1')[0])
+      .to.equal(5);
+    expect(held('en', 'on the 1st of January, April, July, and October')[0])
+      .to.equal(5);
+  });
+
+  it('taxes working out the nearest weekday', function() {
+    expect(held('en', 'on the weekday nearest the 15th')[1])
+      .to.include('nearest weekday');
+  });
+
+  it('never ranks across columns: a choice they disagree on is mixed',
+    function() {
+      const four = costOf('en', 'at 5, 20, 35, and 50 minutes past the hour');
+      const six = costOf('en', 'at 5, 15, 25, 35, 45, and 55 minutes past ' +
+        'the hour');
+      const rhythm = costOf('en', 'every 15 minutes from 5 through 50 ' +
+        'minutes past the hour');
+      const longer = costOf('en', 'every 10 minutes from 5 through 55 ' +
+        'minutes past the hour');
+
+      expect(compare(four, rhythm)).to.equal('cheaper');
+      expect(compare(six, longer)).to.equal('mixed');
+      expect(compare(costOf('en', 'every 15 minutes'), rhythm))
+        .to.equal('cheaper');
+      expect(Object.keys(six)).to.not.include('total');
+    });
 
   it('does not hold what a bracket illustrates', function() {
     expect(held('de', 'an den ungeraden Tagen jedes Monats (1., 3., 5. … ' +
