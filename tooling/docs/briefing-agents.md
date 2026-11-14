@@ -35,4 +35,7 @@ new forms for one reading: an isolated reader, briefed in the language
 and told nothing of patterns or generation, lists every reading a fluent
 speaker would accept as a correct sentence and what in the sentence
 supports it. A reading that rests on an ungrammatical parse does not
-count; a plausible second reading is a defect.
+count; a plausible second reading is a defect. A preference, a report of
+stiffness, or a wish to be told more (a stated start, a bracket of
+examples) is a note, not a second reading: model readers favour verbose
+wording that people do not (CLAUDE.md, "How quality is judged").

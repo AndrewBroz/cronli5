@@ -29,23 +29,30 @@ export interface Parts {
 }
 
 const shared = marks.comma + words.inEach;
-const allDay = marks.comma + words.allDay;
 
 // What stands between the day part and the time: by what the day part
 // ends in, then by how the time begins. Several days that share a time
 // close with いずれも; 毎日 runs straight into a clock time; the even or
-// odd hours follow a comma; and a cadence through every hour takes 終日.
+// odd hours and a bare cadence follow a comma.
 const joins: Record<Lead, Record<TimeKind, string>> = {
-  everyDay: {allDay, clock: '', hourly: words.of, rule: marks.comma},
+  everyDay: {
+    allDay: marks.comma, clock: '', hourly: words.of, rule: marks.comma
+  },
   none: {allDay: '', clock: '', hourly: '', rule: ''},
   other: {
-    allDay, clock: words.of, hourly: words.of, rule: marks.comma
+    allDay: marks.comma, clock: words.of, hourly: words.of,
+    rule: marks.comma
   },
-  shared: {
-    allDay: shared + words.allDay, clock: shared, hourly: shared,
-    rule: shared
-  }
+  shared: {allDay: shared, clock: shared, hourly: shared, rule: shared}
 };
+
+// A month or a year with no day after it, before a time that a comma
+// follows: the comma takes the place of its の.
+function closed(part: string, comma: boolean): string {
+  return comma && part.endsWith(words.of) ?
+    part.slice(0, -words.of.length) + marks.comma :
+    part;
+}
 
 // A field's values, when it does not take every one of them.
 function restricted(candidates: SetDescription[] | null): boolean {
@@ -76,17 +83,21 @@ function describeParts(schedule: Schedule, opts: JapaneseOptions): Parts {
     seconds: valuesOf(schedule, 'second'),
     wrap
   }, opts.style);
+  // Hours that tile the day run round the clock, as every hour does; only
+  // a first time under a month or a year needs 毎日 to rest on.
   const calendar: Calendar = calendarPart(schedule, {
-    allDay: time.kind === 'allDay',
-    restricted: !time.everyHour
+    allDay: time.tiles && time.kind === 'clock',
+    restricted: !time.everyHour && !time.tiles
   }, opts.style);
+  const comma = calendar.day === '' &&
+    (time.kind === 'allDay' || time.kind === 'rule');
 
   // A schedule that never runs says only that.
   return {
     day: calendar.day + when(calendar.runs, joins[calendar.lead][time.kind]),
-    month: calendar.month,
+    month: closed(calendar.month, comma),
     time: when(calendar.runs, time.text),
-    year: calendar.year
+    year: closed(calendar.year, comma && calendar.month === '')
   };
 }
 

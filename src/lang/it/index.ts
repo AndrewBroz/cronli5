@@ -123,17 +123,17 @@ function describeParts(facts: ScheduleFacts, opts: ItalianOptions): Parts {
   const speech = speechOf(opts.style);
   const arms = armsOf(facts);
   const months = monthsFor(facts, arms);
+  const fixed = [arms.date, arms.weekday, restricted(facts, 'month'),
+    restricted(facts, 'year')].some(Boolean);
+  const time = sayTime(facts, speech, !fixed);
   const days = sayDay({
     ...arms,
-    hoursNamed: restricted(facts, 'hour'),
+    hoursNamed: restricted(facts, 'hour') && !time.roundTheClock,
     place: months.place,
     speech
   }, facts);
   const years = sayYears(facts);
   const monthsSaid = sayMonths(months.form, speech);
-  const fixed = [arms.date, arms.weekday, restricted(facts, 'month'),
-    restricted(facts, 'year')].some(Boolean);
-  const time = sayTime(facts, speech, !fixed);
   const closing = [monthsSaid.closing, years.closing].filter(Boolean)
     .join(` ${words.andExcept} `);
 

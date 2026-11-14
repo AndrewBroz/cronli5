@@ -4,7 +4,7 @@
 
 import type {Language, Schedule} from '../../core/schedule.js';
 import type {UkrainianOptions, UkrainianStyle} from './options.js';
-import {hoursOf, timeOf} from './time.js';
+import {hoursOf, roundTheClock, timeOf} from './time.js';
 import {regions, style, styles} from './options.js';
 import {calendarOf} from './calendar.js';
 import lexicon from './lexicon.js';
@@ -51,27 +51,24 @@ function describeParts(schedule: Schedule, opts: UkrainianOptions): Parts {
   const hours = hoursOf(schedule, calendar.open);
   const time = timeOf(schedule, hours, opts.style.hour12);
   // «Щодня» fills the level a restricted hour would skip, where nothing
-  // else says how the days go: no day, no "every" word, and no run of
-  // hours through the night (clock times listed one by one are no run).
+  // else says how the days go: no day, no "every" word, no run of hours
+  // through the night (clock times listed one by one are no run), and no
+  // cadence of hours that runs round the clock.
   const listed = time.startsWith(`${words.at} `);
   const daily = calendar.day === '' && hours.kind !== 'all' &&
-    (listed || !wraps(hours)) && !everyWords.some(function opens(word) {
+    (listed || !wraps(hours)) && !roundTheClock(hours) &&
+    !everyWords.some(function opens(word) {
       return time.startsWith(word);
     });
   const days = [calendar.day, words.everyDay][Number(daily)];
-  // A note about the day follows the time, unless the time ends in
-  // brackets of its own: then it stands beside the day, inside its mark,
-  // in the brackets of the day's gloss where there is one.
-  const aside = Number(time.endsWith(')'));
-  const beside = [calendar.gloss, ...[calendar.note].slice(1 - aside)]
-    .filter(Boolean).join('; ');
+  // The gloss stands beside the day, inside its mark; a note about the
+  // day follows the time.
   const asked = [calendar.condition].filter(Boolean).map(function ask(text) {
     return `, ${text}`;
   });
-  const day = [days, ...[beside].filter(Boolean).map(bracketed)].join(' ') +
-    asked.join() + calendar.mark;
-  const after = [calendar.note].slice(aside).filter(Boolean).map(bracketed)
-    .join();
+  const day = [days, ...[calendar.gloss].filter(Boolean).map(bracketed)]
+    .join(' ') + asked.join() + calendar.mark;
+  const after = [calendar.note].filter(Boolean).map(bracketed).join();
   let before = '';
   const [year, month, dayPart, timePart, note] =
     [closed(calendar.year), closed(calendar.month), closed(day), time, after]

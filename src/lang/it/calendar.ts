@@ -131,7 +131,8 @@ function monthCadence(cadence: Cadence): boolean {
 
 /** The form the months are said in. */
 function chooseMonths(facts: ScheduleFacts, asked: MonthsAsked): Months {
-  const limits = {cadence: monthCadence};
+  // A cadence of months less a month or two is the months left, listed.
+  const limits = {cadence: monthCadence, listedLess: true};
   const linear = asked.reached ?
     describeSet(asked.reached, MONTHS, {linear: true}) :
     candidatesAs(facts, 'month', {linear: true}) as SetDescription[];
@@ -181,17 +182,12 @@ function monthWords(speech: Speech) {
 function sayMonths(form: Months, speech: Speech): Placed {
   const say = monthWords(speech);
   const removed = list(say.named((form as Exception).removed || [0]));
-  const whole = form.kind === 'except' && form.base.kind === 'all';
   const sayers = {
     all() {
       return '';
     },
     cadence(cadence: Form) {
       return say.cadence(cadence as Cadence);
-    },
-    except(exception: Form) {
-      return phrase(say.cadence((exception as Exception).base as Cadence),
-        words.except, removed);
     },
     pieces(pieces: Form) {
       return sayPieces((pieces as {parts: Part[]}).parts, {
@@ -209,9 +205,10 @@ function sayMonths(form: Months, speech: Speech): Placed {
     }
   };
 
+  // The only exception of months is every month but one or two.
   return {
-    closing: phrase(whole && removed),
-    lead: phrase(!whole && sayers[form.kind](form))
+    closing: phrase(form.kind === 'except' && removed),
+    lead: phrase(form.kind !== 'except' && sayers[form.kind](form))
   };
 }
 

@@ -39,6 +39,19 @@ const MAY_CHANGE = {
 // second never can.
 const HOUR_MAY_SET_DAY = ['', 'todos os dias', 'todos os dias,'];
 
+// Under a named month or year with no day named, the same choice is
+// between «todos os dias de junho» and the month or year leading, «em
+// junho,»: hours that run round the clock (every hour, or a cadence that
+// tiles the day) have no days to name (answers 2.4, 2.5). So there an edit
+// to the hours may rewrite the calendar part between those two forms.
+function noDayNamed(pattern, options) {
+  const {candidates} = parse(pattern, options).schedule.analyses;
+
+  return ['date', 'weekday'].every(function unrestricted(field) {
+    return candidates[field] !== null && candidates[field][0].kind === 'all';
+  });
+}
+
 // The other place: hours that pass midnight (answers 2.6, 3.5). A set of
 // hours holding both 23 and 0 is one run through midnight only when every
 // day of every month and year is meant, and is said in ascending order
@@ -153,8 +166,8 @@ function leaks(pairList) {
 
     Object.keys(before).forEach(function compare(part) {
       const everyDay = changed[0] === 'hour' && part === 'day' &&
-        HOUR_MAY_SET_DAY.includes(before[part]) &&
-        HOUR_MAY_SET_DAY.includes(after[part]);
+        (HOUR_MAY_SET_DAY.includes(before[part]) &&
+          HOUR_MAY_SET_DAY.includes(after[part]) || noDayNamed(a, options));
 
       const midnight = part === 'time' && CALENDAR.includes(changed[0]) &&
         (midnightHours(a, b, options) || stoppedOrStarted(a, b, options));

@@ -44,8 +44,8 @@ describe('French styles:', function() {
     function() {
       const opts = {style: styles.fr};
 
-      expect(fr.label('à 30 de chaque heure', opts))
-        .to.equal('À 30 de chaque heure');
+      expect(fr.label('à la minute 30 de chaque heure', opts))
+        .to.equal('À la minute 30 de chaque heure');
       expect(fr.label('toutes les minutes', opts))
         .to.equal('Toutes les minutes');
       expect(fr.label('30 secondes après le début de chaque minute', opts))

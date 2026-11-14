@@ -69,15 +69,10 @@ const TIME_MAY_SET_DAY = ['', 'щодня'];
 const CALENDAR_FIELDS = ['date', 'month', 'weekday', 'year'];
 const HOURS = {cyclic: true, max: 23, min: 0};
 
-// The other place a time field reaches: a note about the day follows
-// the time, but stands beside the day where the time itself ends in
-// brackets, so that two brackets never meet. A time edit may so move the
-// note between the end of the day part and the place after the time; it
-// may not change the note or the day's own words. The day part and the
-// note are therefore compared together for a time edit. Where the day
-// has a gloss in brackets of its own («(понеділок–п'ятниця)»), the note
-// joins it there after a semicolon instead of standing in a second pair
-// beside it; the two are the same words either way.
+// A note about the day follows the time, whatever the time is (since
+// 2026-11-14 no time ends in brackets of clock times, so the note no
+// longer moves beside the day). For a time edit the day part and the
+// note are compared together all the same: neither may change.
 
 const SETUP = {languages: [ukrainian.default], options: {}, styles: {}};
 
@@ -264,23 +259,38 @@ describe('Ukrainian continuity:', function() {
     expect(leaks([...night, ...same])).to.deep.equal([]);
   });
 
-  it('lets a time field move the note about the day, and not change it',
+  it('keeps the note about the day after the time, whatever the time',
     function() {
-      const moved = [
+      const edits = [
         ['30 0 L-3 * *', '0-29 * L-3 * *'],
         ['30 9 31W * *', '0-29 * 31W * *'],
         ['0-29 * L-3 * 1-5', '0 * L-3 * 1-5'],
         ['0-29 * L-3 * *', '0-29 9-17 L-3 * *']
       ];
-      const beside = partsOf('0-29 * L-3 * *');
-      const after = partsOf('30 0 L-3 * *');
 
-      expect(beside.day).to.equal(
-        'за 3 дні до останнього дня місяця (28-го, якщо в місяці 31 день)');
-      expect(beside.note).to.equal('');
-      expect(after.day).to.equal('за 3 дні до останнього дня місяця');
-      expect(after.note).to.equal('(28-го, якщо в місяці 31 день)');
-      expect(leaks(moved)).to.deep.equal([]);
+      ['0-29 * L-3 * *', '30 0 L-3 * *'].forEach(function after(pattern) {
+        const parts = partsOf(pattern);
+
+        expect(parts.day, pattern)
+          .to.equal('за 3 дні до останнього дня місяця');
+        expect(parts.note, pattern)
+          .to.equal('(28-го, якщо в місяці 31 день)');
+      });
+      expect(leaks(edits)).to.deep.equal([]);
+    });
+
+  it('says a cadence of hours that tiles the day bare, and a minute ' +
+    'beside it apart', function() {
+      expect(timeOf('0 */2 * * *')).to.equal('кожні 2 години');
+      expect(partsOf('0 */2 * * *').day).to.equal('');
+      expect(timeOf('30 */2 * * *'))
+        .to.equal('кожні 2 години через 30 хвилин після початку години');
+      expect(leaks([
+        ['0 */2 * * *', '30 */2 * * *'],
+        ['0 1/2 * * *', '23 1/2 * * *'],
+        ['0 */2 * * *', '0 */2 * * 1-5'],
+        ['0 */2 * * *', '0 5/2 * * *']
+      ])).to.deep.equal([]);
     });
 
   it('renders equal schedules identically: there is no declared tie',

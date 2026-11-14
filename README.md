@@ -255,13 +255,16 @@ docs below.
 
 ### Language maturity
 
-Languages ship as **experimental** → **beta** → **stable** (model-drafted →
-model-validated → verified by a fluent human). A new language is usually built
-by **sibling-derivation** — deriving it from its nearest validated relative
-(porting that renderer and translating its reviewed corpus, then TDD to green) —
-and reaches **beta** once it passes the objective gates (round-trip, fuzz,
-OR-scope, the cRonstrue comparison) and review by a blind panel of Claude
-Sonnet instances. It graduates to **stable** only on review by a fluent human:
+Every language is built from its own notes on how it writes recurring
+times and from hand-written expected sentences, by an agent that sees no
+other language's code, and is judged by an automated pipeline: readers
+briefed only in that language check that each sentence has one reading,
+and a model of what a sentence costs its reader (how long it takes to say,
+how much it asks you to hold, what it makes you work out) compares
+wordings. **Beta** means a language ships and its sentences are still
+being read; **stable** means every kind of sentence it writes has passed
+those reads. There are no native-speaker reviewers, by design: the
+pipeline is the review.
 
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status |
