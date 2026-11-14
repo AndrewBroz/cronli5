@@ -626,9 +626,9 @@ const rows = [
   // An hour cadence that tiles the day from 0:00 is its step alone, with
   // no window, no list and no 每天 (it was 每天0:00至22:00，每2小时一次, and
   // every third, sixth and eighth hour a list of their times).
-  ['0 */2 * * *', '每2小时一次'],
+  ['0 0-22/2 * * *', '每2小时一次'],
   ['0 */4 * * *', '每4小时一次'],
-  ['0 */6 * * *', '每6小时一次'],
+  ['0 0,6,12,18 * * *', '每6小时一次'],
   ['0 */2 1 * 5', '每月1日以及每周五，均为每2小时一次'],
 
   // Hours taken out of a tiling cadence are the same cadence, said by its
@@ -669,15 +669,15 @@ const rows = [
   // Such hours as stretches under a finer rhythm: the even or odd hours,
   // or the first hour of each step (they were 偶数小时（0点、2点、4点……22
   // 点）内 and four windows).
-  ['* */2 * * *', '偶数小时内，每分钟一次'],
-  ['* */6 * * *', '每6小时的第1个小时内，每分钟一次'],
+  ['* 0-23/2 * * *', '偶数小时内，每分钟一次'],
+  ['* 0-23/6 * * *', '每6小时的第1个小时内，每分钟一次'],
   ['* */3 * * *', '每3小时的第1个小时内，每分钟一次'],
 
   // Seconds that step evenly at one clock time or one minute are a window
   // with the step; two values, and uneven sets, stay listed.
   ['*/10 30 9 * * *', '每天9:30:00至9:30:50，每10秒一次'],
   ['*/10 30 * * * *', '每小时的30分0秒至30分50秒，每10秒一次'],
-  ['0,30 0 9 * * *', '每天9:00:00、9:00:30'],
+  ['0/30 0 9 * * *', '每天9:00:00、9:00:30'],
   ['5,20,50 0 9 * * *', '每天9:00:05、9:00:20、9:00:50']
 ];
 
