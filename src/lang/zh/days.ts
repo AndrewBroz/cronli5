@@ -170,15 +170,13 @@ function isEveryOtherYear(cadence: Cadence): boolean {
 
 // A cadence of years. All the even or odd years have their word, and up
 // to eight that end are listed. Any other is said with its rule: its
-// start, and its end if it has one, its step, and the years it begins
-// with, after which 当年 carries on.
+// start, and its end if it has one, its step, and that the first year of
+// each step fires, after which 当年 carries on.
 function yearCadence(cadence: Cadence, removed: number[]): YearTerm {
   const open = cadence.open === true;
   const count = (cadence.last - cadence.start) / cadence.interval + 1;
-  const shown = [0, 1, 2].map(
-    (nth) => yearName(cadence.start + nth * cadence.interval));
   const head = open ?
-    words.fromYear + yearName(cadence.start) + words.onwards :
+    words.since + yearName(cadence.start) + words.onwards :
     yearName(cadence.start) + words.to + yearName(cadence.last);
 
   return first<() => YearTerm>([
@@ -197,10 +195,7 @@ function yearCadence(cadence: Cadence, removed: number[]): YearTerm {
       kind: 'cycle',
       open,
       text: head + words.every + String(cadence.interval) + units.year +
-        words.oneYearIn + bracketed([
-        abbreviated(shown, when(!open, yearName(cadence.last))),
-        yearsExcepted(removed)
-      ])
+        words.firstYearIn + bracketed([yearsExcepted(removed)])
     })]
   ])();
 }
@@ -213,7 +208,7 @@ function yearRun(range: YearRange, removed: number[]): YearTerm {
     kind: 'range',
     open,
     text: (open ?
-      words.fromYear + yearName(range.from) + words.onwards :
+      words.since + yearName(range.from) + words.onwards :
       yearName(range.from) + words.to + yearName(range.to)) +
       bracketed([yearsExcepted(removed)])
   };
