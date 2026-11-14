@@ -25,10 +25,9 @@ const rows = [
   ['0 12 * * *', 'denně ve 12:00'],
   ['0 8,12,18 * * *', 'denně v 8:00, 12:00 a 18:00'],
   ['0 9-17 * * *', 'denně každou hodinu od 9:00 do 17:00'],
-  ['0 */2 * * *', 'denně každé 2 hodiny od 0:00 do 22:00'],
-  ['0 */6 * * *', 'denně v 0:00, 6:00, 12:00 a 18:00'],
-  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'denně každé 2 hodiny od 0:00 do 22:00, kromě 8:00'],
+  ['0 */2 * * *', 'každé 2 hodiny'],
+  ['0 */6 * * *', 'každých 6 hodin'],
+  ['0 0,2,4,6,10,12,14,16,18,20,22 * * *', 'každé 2 hodiny, kromě 8:00'],
   ['0 22-2 * * *', 'každou noc každou hodinu od 22:00 do 2:00'],
 
   // clock / date
@@ -79,11 +78,11 @@ const rows = [
     'od pondělí do pátku vždy 5, 20 a 45 minut po každé celé hodině, od ' +
     '9:05 do 17:45'],
   ['0-29 9-17 * * 1-5',
-    'od pondělí do pátku každou minutu v prvních 30 minutách každé hodiny ' +
-    '(:00–:29), od 9:00 do 17:29'],
+    'od pondělí do pátku každou minutu v prvních 30 minutách každé ' +
+    'hodiny, od 9:00 do 17:29'],
   ['*/7 9-17 * * 1-5',
     'od pondělí do pátku každých 7 minut, v každé hodině znovu od celé ' +
-    'hodiny (:00–:56), od 9:00 do 17:56'],
+    'hodiny, od 9:00 do 17:56'],
   ['5/15 9-17 * * 1-5',
     'od pondělí do pátku každých 15 minut od 9:05 do 17:50'],
   ['10-40/10 9-17 * * 1-5',
@@ -100,14 +99,14 @@ const rows = [
     'od pondělí do pátku každých 15 minut od 8:00 do 8:45, od 12:00 do ' +
     '12:45 a od 18:00 do 18:45'],
   ['*/15 */2 * * 1-5',
-    'od pondělí do pátku každých 15 minut od 0:00 do 0:45, od 2:00 do 2:45 ' +
-    'a tak dále každé 2 hodiny až do 22:45'],
+    'od pondělí do pátku každé 2 hodiny, vždy po dobu jedné hodiny ' +
+    'každých 15 minut'],
   ['*/15 */6 * * 1-5',
-    'od pondělí do pátku každých 15 minut od 0:00 do 0:45, od 6:00 do ' +
-    '6:45, od 12:00 do 12:45 a od 18:00 do 18:45'],
+    'od pondělí do pátku každých 6 hodin, vždy po dobu jedné hodiny ' +
+    'každých 15 minut'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'od pondělí do pátku každých 15 minut od 0:00 do 0:45, od 2:00 do 2:45 ' +
-    'a tak dále každé 2 hodiny až do 22:45, kromě doby od 8:00 do 8:59'],
+    'od pondělí do pátku každé 2 hodiny, vždy po dobu jedné hodiny ' +
+    'každých 15 minut, kromě doby od 8:00 do 8:59'],
   ['*/15 22-2 * * 1-5',
     'od pondělí do pátku každých 15 minut od 0:00 do 2:45 a od 22:00 do ' +
     '23:45'],
@@ -190,10 +189,10 @@ const rows = [
   ['0 12 1 * *', 'vždy 1. dne v měsíci ve 12:00'],
   ['0 8,12,18 1 * *', 'vždy 1. dne v měsíci v 8:00, 12:00 a 18:00'],
   ['0 9-17 1 * *', 'vždy 1. dne v měsíci každou hodinu od 9:00 do 17:00'],
-  ['0 */2 1 * *', 'vždy 1. dne v měsíci každé 2 hodiny od 0:00 do 22:00'],
-  ['0 */6 1 * *', 'vždy 1. dne v měsíci v 0:00, 6:00, 12:00 a 18:00'],
+  ['0 */2 1 * *', 'vždy 1. dne v měsíci každé 2 hodiny'],
+  ['0 */6 1 * *', 'vždy 1. dne v měsíci každých 6 hodin'],
   ['0 0,2,4,6,10,12,14,16,18,20,22 1 * *',
-    'vždy 1. dne v měsíci každé 2 hodiny od 0:00 do 22:00, kromě 8:00'],
+    'vždy 1. dne v měsíci každé 2 hodiny, kromě 8:00'],
   ['0 22-2 1 * *',
     'vždy 1. dne v měsíci každou hodinu od 0:00 do 2:00, ve 22:00 a ve ' +
     '23:00'],
@@ -242,12 +241,12 @@ const rows = [
   ['30 * * * *', 'každou hodinu v půl'],
   ['0,30 * * * *', 'každých 30 minut'],
   ['0-29 * * * *',
-    'každou minutu v prvních 30 minutách každé hodiny (:00–:29)'],
+    'každou minutu v prvních 30 minutách každé hodiny'],
   ['0-29,45 * * * *',
-    'každou minutu v prvních 30 minutách každé hodiny (:00–:29) a pak ' +
-    'ještě 45 minut po celé hodině (:45)'],
+    'každou minutu v prvních 30 minutách každé hodiny a pak ' +
+    'ještě 45 minut po celé hodině'],
   ['*/7 * * * *',
-    'každých 7 minut, v každé hodině znovu od celé hodiny (:00–:56)'],
+    'každých 7 minut, v každé hodině znovu od celé hodiny'],
   ['5/15 * * * *', 'vždy 5, 20, 35 a 50 minut po každé celé hodině'],
   ['10-40/10 * * * *', 'vždy 10, 20, 30 a 40 minut po každé celé hodině'],
 
@@ -258,14 +257,12 @@ const rows = [
     '18:59'],
   ['* 9-17 * * *', 'denně každou minutu od 9:00 do 17:59'],
   ['* */2 * * *',
-    'denně každou minutu od 0:00 do 0:59, od 2:00 do 2:59 a tak dále každé ' +
-    '2 hodiny až do 22:59'],
+    'každé 2 hodiny, vždy po dobu jedné hodiny každou minutu'],
   ['* */6 * * *',
-    'denně každou minutu od 0:00 do 0:59, od 6:00 do 6:59, od 12:00 do ' +
-    '12:59 a od 18:00 do 18:59'],
+    'každých 6 hodin, vždy po dobu jedné hodiny každou minutu'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'denně každou minutu od 0:00 do 0:59, od 2:00 do 2:59 a tak dále každé ' +
-    '2 hodiny až do 22:59, kromě doby od 8:00 do 8:59'],
+    'každé 2 hodiny, vždy po dobu jedné hodiny každou minutu, kromě doby ' +
+    'od 8:00 do 8:59'],
   ['* 22-2 * * *', 'každou noc každou minutu od 22:00 do 2:59'],
 
   // open / date

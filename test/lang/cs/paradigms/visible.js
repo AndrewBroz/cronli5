@@ -21,7 +21,7 @@ const rows = [
   ['0 0 * * *', 'denně v 0:00'],
   ['0 9,17 * * *', 'denně v 9:00 a 17:00'],
   ['0 9-17,22 * * *', 'denně každou hodinu od 9:00 do 17:00 a ve 22:00'],
-  ['0 1/2 * * *', 'denně každé 2 hodiny od 1:00 do 23:00'],
+  ['0 1/2 * * *', 'každé 2 hodiny od 1:00'],
 
   // clock / date
   ['0 9 1 * *', 'vždy 1. dne v měsíci v 9:00'],
@@ -59,7 +59,7 @@ const rows = [
     'od pondělí do pátku každých 30 minut od 9:00 do 17:30'],
   ['0-29,45 9-17 * * 1-5',
     'od pondělí do pátku každou minutu v prvních 30 minutách každé hodiny ' +
-    '(:00–:29) a pak ještě 45 minut po celé hodině (:45), od 9:00 do 17:45'],
+    'a pak ještě 45 minut po celé hodině, od 9:00 do 17:45'],
   ['0,15,45 9-17 * * 1-5',
     'od pondělí do pátku v každou celou hodinu a 15 a 45 minut po ní, od ' +
     '9:00 do 17:45'],
@@ -72,8 +72,8 @@ const rows = [
     'od pondělí do pátku každých 15 minut od 9:00 do 17:45 a od 22:00 do ' +
     '22:45'],
   ['*/15 1/2 * * 1-5',
-    'od pondělí do pátku každých 15 minut od 1:00 do 1:45, od 3:00 do 3:45 ' +
-    'a tak dále každé 2 hodiny až do 23:45'],
+    'od pondělí do pátku každé 2 hodiny od 1:00, vždy po dobu jedné ' +
+    'hodiny každých 15 minut'],
 
   // window / date
   ['*/15 9-17 1 * 1-5',
@@ -127,7 +127,7 @@ const rows = [
   ['0 9,17 1 * *', 'vždy 1. dne v měsíci v 9:00 a 17:00'],
   ['0 9-17,22 1 * *',
     'vždy 1. dne v měsíci každou hodinu od 9:00 do 17:00 a ve 22:00'],
-  ['0 1/2 1 * *', 'vždy 1. dne v měsíci každé 2 hodiny od 1:00 do 23:00'],
+  ['0 1/2 1 * *', 'vždy 1. dne v měsíci každé 2 hodiny od 1:00'],
 
   // monthly / date
   ['0 0 1,10,20 * *', 'vždy 1., 10. a 20. dne v měsíci v 0:00'],
@@ -167,8 +167,7 @@ const rows = [
   ['* 9-17,22 * * *',
     'denně každou minutu od 9:00 do 17:59 a od 22:00 do 22:59'],
   ['* 1/2 * * *',
-    'denně každou minutu od 1:00 do 1:59, od 3:00 do 3:59 a tak dále každé ' +
-    '2 hodiny až do 23:59'],
+    'každé 2 hodiny od 1:00, vždy po dobu jedné hodiny každou minutu'],
 
   // open / date
   ['* * 1 * *', 'vždy 1. dne v měsíci každou minutu'],

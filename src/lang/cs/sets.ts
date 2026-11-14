@@ -251,6 +251,5 @@ function chosen(candidates: SetDescription[], order: Order): Described {
 export {
   cadenceCount, chosen, comesRound, counted, enoughForARun, everyUnit,
   fewestNamed, listed, longestListedCadence, ofKind, partsJoiner, runsOf,
-  spaced,
-  stretchOf, togetherIn, unitAfter
+  shortList, spaced, stretchOf, togetherIn, unitAfter
 };
