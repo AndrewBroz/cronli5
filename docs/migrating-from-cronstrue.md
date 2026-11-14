@@ -19,7 +19,7 @@ guide links to it rather than duplicating its tables.
   are simple cadences that divide their unit (`* * * * *` &rarr; "Every
   minute"; `*/15 * * * *` &rarr; "Every 15 minutes"). Outside English, and
   for steps like `*/45` ("Every 45 minutes", though it runs at :00 and
-  :45), see the [README](../README.md#cronli5-and-cronstrue).
+  :45), see the [README](../README.md#why-not-cronstrue).
 * You need a **language `cronli5` doesn't have yet**. cRonstrue carries **39
   locales**, built from per-locale string tables; `cronli5` ships ten, each
   a full renderer. If your locale is not on

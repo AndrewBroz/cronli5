@@ -29,8 +29,8 @@ need to do other things with cron patterns, such as scheduling or computing
 future run times, consider a library like [`@breejs/later`][later].
 
 *Alternatives:* The best-known library for descriptions is
-[`cRonstrue`][cronstrue]. See [cronli5 and cRonstrue](#cronli5-and-cronstrue)
-below for how the two compare, and for switching.
+[`cRonstrue`][cronstrue]. See [Why not cRonstrue?](#why-not-cronstrue) below
+for how the two compare, and for switching.
 
 ## Contents
 
@@ -40,7 +40,7 @@ below for how the two compare, and for switching.
 - [Options](#options)
 - [Languages](#languages)
 - [Output Examples](#output-examples)
-- [cronli5 and cRonstrue](#cronli5-and-cronstrue)
+- [Why not cRonstrue?](#why-not-cronstrue)
 - [Description Accuracy](#description-accuracy)
 - [Note on Timezones](#note-on-timezones)
 - [Module Formats and Types](#module-formats-and-types)
@@ -332,13 +332,14 @@ cronli5('0 0 * * 1#2');    // 'at 12 a.m. on the second Monday of the month'
 cronli5('0 0 15W * *');    // 'at 12 a.m. on the weekday nearest the 15th'
 ```
 
-## cronli5 and cRonstrue
+## Why not cRonstrue?
 
 [`cRonstrue`][cronstrue] is the most widely used cron-description library.
 The two are built differently. cRonstrue assembles a description from one
 translated fragment per field, which is how it covers 39 locales. `cronli5`
 writes one sentence per schedule, and each of its languages is a full
-renderer in that language's own words. Some patterns side by side:
+renderer in that language's own words. Patterns where cRonstrue's
+fragments go wrong, in English and in other languages:
 
 <!-- BEGIN GENERATED: cronstrue-side-by-side -->
 | Pattern | Language | cronli5 | cRonstrue 3.14.0 |
