@@ -429,6 +429,16 @@ minutes (3.2 to 3.4). The numbers have no leading zero, «5» and not
   2026-11-14 three of three blind readers called «um :05» not ordinary
   German, and it gave way to this form (4.1). Like the colon, it serves
   one minute, a list and a run alike, and nothing has to be added up.
+* Minute and one second, with H every hour: one count from the full
+  hour, as one second alone is («30 Sekunden nach jeder vollen Stunde»):
+  «5 Minuten und 30 Sekunden nach jeder vollen Stunde». On 2026-11-14 two
+  isolated readers found one reading in it and called it the most
+  natural of four; «stündlich zur Minute 5, jeweils 30 Sekunden nach der
+  vollen Minute» was read one way but called roundabout, and «stündlich
+  zur Minute 5 und Sekunde 30» and «stündlich zur Minute 5, Sekunde 30»
+  were each read as two moments (hh:05:00 and second 30 of every
+  minute). Here the count does not ask to be worked out, since minute and
+  second together name the one moment.
 * Minute with one hour: a clock time, «um 9:30 Uhr» (4.1).
 * Hour with minute 0: «um 9:00 Uhr».
 * Day of the month: «am 15. jedes Monats».

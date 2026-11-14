@@ -80,6 +80,9 @@ interface Clockwork {
   S: number[];
   // The second a point carries, if the pattern has one second.
   carry: number[];
+  // One minute and one second under every hour: one count from the full
+  // hour, «5 Minuten und 30 Sekunden nach jeder vollen Stunde».
+  counted: boolean;
   // The minute and second of the last moment of an hour, and the first.
   high: number[];
   hours: Sayable;
@@ -341,10 +344,25 @@ function spread(description: Sayable, level: Level): Said {
   };
 }
 
+// Every hour at one minute: the full hour and its second, one count of a
+// minute and a second from it, or the minute as a place in the hour.
+function wholeHour(work: Clockwork): string {
+  const {M, S, carry, counted} = work;
+
+  if (M[0] === 0) {
+    return offset([...carry, 0].slice(0, 1), eachHour);
+  }
+
+  return counted ?
+    `${amount(M, units.minute)} ${words.and} ${amount(S, units.second)} ` +
+      words.afterEachHour :
+    `${words.hourly} ${minutePoints(M)}`;
+}
+
 // The hours as points: each at the pattern's one minute, or, where the
 // minutes are said after them, as hours alone («um 9 und 17 Uhr»).
 function hourLevel(work: Clockwork, rest: number[]): Level {
-  const {M, carry, voice} = work;
+  const {voice} = work;
 
   function at(hour: number): string {
     return voice.clock(hour, rest);
@@ -363,9 +381,7 @@ function hourLevel(work: Clockwork, rest: number[]): Level {
     tiling: false,
     top: hoursOfDay.max,
     unit: units.hour,
-    whole: M[0] === 0 ?
-      offset([...carry, 0].slice(0, 1), eachHour) :
-      `${words.hourly} ${minutePoints(M)}`
+    whole: wholeHour(work)
   };
 }
 
@@ -768,6 +784,12 @@ function together(schedule: Schedule, field: Field, loose: boolean) {
 
 // The three fields of the clock, each with the description it is said
 // by, and what the seconds do to the rest.
+// One minute and one non-zero second, the minute a place in every hour.
+function isCounted(S: number[], M: number[], placed: boolean): boolean {
+  return [S.length, M.length].every((length) => length === 1) &&
+    S[0] > 0 && placed;
+}
+
 function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
   const {candidates} = schedule.analyses;
   const linear = {
@@ -798,6 +820,7 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     !listed && H.length > 1;
   const lone = S.length === 1;
   const pointed = minutes.kind === 'values' && !placed;
+  const counted = isCounted(S, M, placed);
   const leads = runThrough(seconds, minutes, placed);
   const toSecond = denote(restOf(seconds).base, sixty).slice(-1);
 
@@ -812,6 +835,7 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     carry: S.filter(function carried(second) {
       return lone && pointed && second > 0;
     }),
+    counted,
     high: [M[M.length - 1], ...toSecond.filter(whereLeading)],
     hourPoints: settle(linear.hour, hoursByNumber,
       together(schedule, 'hour', true)),
@@ -821,8 +845,9 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     listed,
     low: [M[0], ...[0].filter(whereLeading)],
     minutes,
-    // One second is silent at 0 and carried by points.
-    quiet: lone && (S[0] === 0 || pointed),
+    // One second is silent at 0, carried by points, or counted with the
+    // minute.
+    quiet: lone && (S[0] === 0 || pointed || counted),
     seconds,
     voice
   };
