@@ -12,6 +12,10 @@ every read that saw it accepted it, and **contested** where they
 disagreed; for a contested form the reason for the choice and the form
 given up are recorded.
 
+Revised 2026-11-14 for places in the hour and separate hours (3, 4.1,
+4.2): the evidence is in 4.1, under "Places in the hour and separate
+hours".
+
 Revised 2026-11-13, twice. The second revision had three things the
 first did not: the core's calendar facts (which months a date exists in,
 leap years, sets with no end, runs and cadences together), a list of
@@ -79,9 +83,9 @@ Corrections, for what has to be worked out:
      «freitags bis dienstags»; «von Dezember bis September»;
   2. its two stretches in ascending order, **where each of them is a run
      of three values or more**, however few values they hold together:
-     «vom 1. bis 3. und vom 28. bis 31. jedes Monats»; «stündlich von
-     :00 bis :02 und von :57 bis :59 jede Minute»; «von 0:00 bis 8:00
-     und von 13:00 bis 23:00 Uhr stündlich»;
+     «vom 1. bis 3. und vom 28. bis 31. jedes Monats»; «stündlich in den
+     Minuten 0 bis 2 und 57 bis 59 jede Minute»; «von 0:00 bis 8:00 und
+     von 13:00 bis 23:00 Uhr stündlich»;
   3. the exception («in allen Monaten, außer im Juni,»; «täglich, außer
      mittwochs,»; «zu jeder vollen Stunde, außer um 3:00 Uhr»; «täglich,
      außer am 15. jedes Monats,»), under the limits of 3.9.
@@ -94,40 +98,42 @@ Corrections, for what has to be worked out:
   stretches is shorter than three values, nothing special holds and the
   field's ordinary limits decide: days 29 to 2 are five dates, «am 1.,
   2., 29., 30. und 31. jedes Monats», and minutes 58 to 2 are «stündlich
-  um :00, :01, :02, :58 und :59». (As pieces these were «am 1., 2. und
-  vom 29. bis 31.» and «von :00 bis :02 jede Minute sowie um :58 und
-  :59»: longer than the list, and the first hard to parse. Clock times
-  never needed the rule: up to six are always the times, «um 0:00, 1:00,
-  2:00, 22:00 und 23:00 Uhr».)
+  zu den Minuten 0, 1, 2, 58 und 59». (As pieces the dates were «am 1.,
+  2. und vom 29. bis 31.»: longer than the list, and hard to parse.
+  Clock times never needed the rule: up to six are always the times, «um
+  0:00, 1:00, 2:00, 22:00 und 23:00 Uhr».)
 * **A list is replaced only when it is too long to hold**, and only by
   something that names strictly fewer things. The limits differ by what
   is listed:
   * clock times as points: a cadence of hours replaces **more than
     four**; pieces (a run with strays, or two runs) replace **more than
     six**; a single run of three hours or more is always the run;
+  * hours named as hours, with the minutes said once after them (4.1):
+    **more than six**, and then only a cadence, said as a series;
   * minutes inside the hour, and seconds inside the minute: **more than
     six**;
   * dates: **more than seven**;
-  * clock times that multiply minutes by hours: **more than six**;
-  * a series of clock times (4.1) shows **three minutes to the hour at
-    most**, nine times in all; with more, the minutes are said once
-    after the hours' windows.
+  * clock times that multiply minutes by hours: **more than six**.
   Each limit was read off the judges' own choices: four and five clock
   times were written out by them, eight were "at the limit of what can be
   read"; seven dates were written out and graded natural; six minutes
-  were written out.
+  were written out. Hours named as hours take the limit of clock times
+  in a list, six, and not the four of a cadence: a cadence of hours is
+  said with its ends («von 0 bis 20 Uhr alle 4 Stunden»), and a reader
+  of 2026-11-14 took «bis 20 Uhr» as the moment a window closes, leaving
+  out 20:15 and 20:45.
 * **A set that is no run, no cadence and no list short enough to hold is
   said as runs and cadences together**, as the core takes it apart
   (`cadencePieces`), where that names strictly fewer things than the
   list and than any exception. The limits are the list limits above (a
   field that lists up to six never says five values this way). Each part
   is said the way the field says that kind of part, in ascending order:
-  * minutes: «stündlich von :00 bis :20 alle 2 Minuten und von :21 bis
-    :57 alle 3 Minuten»; inside one named hour, «von 9:00 bis 9:20 Uhr
-    alle 2 Minuten und von 9:21 bis 9:57 Uhr alle 3 Minuten», each
-    window with its own «Uhr» because each has its own step; a part that
-    is a run is «… jede Minute», and stray minutes follow after «sowie
-    um»;
+  * minutes: «stündlich in den Minuten 0 bis 20 alle 2 Minuten und in
+    den Minuten 21 bis 57 alle 3 Minuten»; inside one named hour, «von
+    9:00 bis 9:20 Uhr alle 2 Minuten und von 9:21 bis 9:57 Uhr alle 3
+    Minuten», each window with its own «Uhr» because each has its own
+    step; a part that is a run is «… jede Minute», and stray minutes
+    follow after «sowie zur Minute» or «sowie zu den Minuten»;
   * hours as points: «von 0:00 bis 10:00 Uhr alle 2 Stunden und von
     11:00 bis 23:00 Uhr alle 3 Stunden»; a run among them is «…
     stündlich»;
@@ -151,7 +157,7 @@ Corrections, for what has to be worked out:
   as the field says it without this rule (its list, its pieces, each of
   its windows). Stray single values are counted as parts for this,
   except minutes and hours as points, whose strays are said after
-  everything else («sowie um :45») and may fall anywhere. Years are the
+  everything else («sowie zur Minute 45») and may fall anywhere. Years are the
   one field where parts may run through one another (5.8): two series
   of years are told apart by their first years.
 * **A cadence of hours always names both ends, each a full clock time**:
@@ -214,10 +220,14 @@ of the day, which is the reason «Mitternacht» is not used (5.3). For the
 same reason «nachts» is not used at all: «montags um 2:00 Uhr nachts» is
 heard by many as the night after Monday evening, and «2:00 Uhr morgens»
 cannot be. No other device changes with `hour12`, and seconds are written
-the same way («9:00:30 Uhr morgens»). The minutes of an hour («:30») have
-no part of the day and do not change, and the windows inside a gloss of
-hours («(0:00–0:59, 2:00–2:59 … 22:00–22:59 Uhr)») stay in 24-hour form
-in every style: a gloss is there to be exact at a glance.
+the same way («9:00:30 Uhr morgens»). Hours named as hours (4.1) take
+their part of the day the same way: «um 9 Uhr morgens, 1 Uhr nachmittags
+und 5 Uhr nachmittags, jeweils zu den Minuten 5, 20 und 45». Minutes by
+their number in the hour («zur Minute 30») have no part of the day and
+do not change; nor does an hour counted by its number («außer in der
+Stunde 13»), which is a count and not a clock time. The windows inside a
+gloss of hours («(0:00–0:59, 2:00–2:59 … 22:00–22:59 Uhr)») stay in
+24-hour form in every style: a gloss is there to be exact at a glance.
 
 With `short: true` the weekdays are «Mo., Di., Mi., Do., Fr., Sa., So.»,
 in place of the adverb and of the noun alike, and the months are «Jan.,
@@ -330,7 +340,7 @@ It is not said when the hours are every hour, with or without
 exceptions: such a schedule has no daily rhythm to name.
 
 * `*/5 * * 6 *` — «im Juni alle 5 Minuten»
-* `30 * * * *` — «stündlich um :30»
+* `30 * * * *` — «stündlich zur Minute 30»
 * `* * 1-7 * *` — «vom 1. bis 7. jedes Monats jede Minute»
 
 A named day of either kind, or a Quartz form, replaces the filler. An
@@ -377,6 +387,10 @@ things named before it. The cases, complete:
    bis 9:59 Uhr jeweils 30 Sekunden nach jeder vollen Minute».
 5. **Before seconds that trail** (4.2), with a comma: «alle 15 Minuten,
    jeweils 30 Sekunden nach der vollen Minute».
+6. **Before the minutes, after hours named as hours** (4.1), with a
+   comma: «um 9, 13 und 17 Uhr, jeweils zu den Minuten 5, 20 und 45».
+   Seconds that trail after it take their own (case 5): «…, jeweils zu
+   den Minuten 5 und 30, jeweils 8 Sekunden nach der vollen Minute».
 
 Nowhere else. In particular not after a range of months or years ahead
 of «täglich», where the first judge found it set mechanically. In a date
@@ -391,8 +405,11 @@ these commas, and nothing else outside its own parts.
 Numbers are digits everywhere, as a German interface writes a schedule.
 The number words are the ordinals of a Quartz form (5.7) and «eine
 Minute lang». A day of the month is an ordinal, written with a full
-stop: «am 1.», «vom 1. bis 7.». A minute of the hour is written as a
-clock shows it, with a colon and two digits: «:05», «:30».
+stop: «am 1.», «vom 1. bis 7.». **A minute of the hour is said by its
+number, as timetables say it**: «zur Minute 30», «zu den Minuten 5, 20
+und 45» for places, «in den Minuten 0 bis 29» for a run that fills its
+minutes (3.2 to 3.4). The numbers have no leading zero, «5» and not
+«05» (the reasons are in 4.1).
 
 3.1 Every value: silent, except that a time with nothing else to say is
 «jede Minute», and with S every second, «jede Sekunde».
@@ -402,16 +419,16 @@ clock shows it, with a colon and two digits: «:05», «:30».
 
 3.2 One value.
 
-* Minute, with H every hour: «stündlich um :30»; «stündlich um :01».
-  Minute 0 is «zu jeder vollen Stunde» (graded natural). **Contested.**
-  The earlier form, «30 Minuten nach jeder vollen Stunde», was understood
-  by every read and graded stiff by both judges ("one calculates
-  briefly"). Both named «stündlich zur halben Stunde», a phrase for one
-  value, and «jede Stunde um :30»; the first judge thought the colon
-  form ugly as text, the second offered it, and both used it unprompted
-  for lists («um :05, :20 und :45»). It is chosen because it is the one
-  form that serves one minute, a list and a stretch alike, and nothing
-  has to be added up.
+* Minute, with H every hour: «stündlich zur Minute 30»; «stündlich zur
+  Minute 1». Minute 0 is «zu jeder vollen Stunde» (graded natural). The
+  usage notes give this as the timetable form («stündlich zur Minute
+  05», notes 1.4, 7.9, 8.3). History: the first form, «30 Minuten nach
+  jeder vollen Stunde», was understood by every read and graded stiff by
+  both judges ("one calculates briefly"); it gave way on 2026-11-12 to
+  «stündlich um :30», which both judges had written for lists; on
+  2026-11-14 three of three blind readers called «um :05» not ordinary
+  German, and it gave way to this form (4.1). Like the colon, it serves
+  one minute, a list and a run alike, and nothing has to be added up.
 * Minute with one hour: a clock time, «um 9:30 Uhr» (4.1).
 * Hour with minute 0: «um 9:00 Uhr».
 * Day of the month: «am 15. jedes Monats».
@@ -421,9 +438,9 @@ clock shows it, with a colon and two digits: «:05», «:30».
 3.3 A list. Items are joined with commas and a final «und», with no comma
 before it.
 
-* Minutes, up to six: «stündlich um :15 und :45»; «stündlich um :05,
-  :15, :25, :35, :45 und :55»; with minute 0, «stündlich um :00, :15 und
-  :45». «Um» is said once.
+* Minutes, up to six: «stündlich zu den Minuten 15 und 45»; «stündlich
+  zu den Minuten 5, 15, 25, 35, 45 und 55»; with minute 0, «stündlich zu
+  den Minuten 0, 15 und 45». «Zu den Minuten» is said once.
 * Hours with minute 0: «um 8:00, 12:00 und 18:00 Uhr». «Um» is said once,
   before the first time, and «Uhr» once, after the last.
 * Days of the month, up to seven: «am 1., 10. und 20. jedes Monats»; «am
@@ -455,16 +472,23 @@ before it.
   bis 17:45 Uhr»; «von 9:00 bis 9:45 und von 17:00 bis 17:45 Uhr».
 * A run of minutes inside one named hour is a window: «von 9:00 bis 9:29
   Uhr jede Minute».
-* A run of minutes under every hour or several hours is a window of
-  minutes: «stündlich von :00 bis :29 jede Minute»; «stündlich von :10
-  bis :40 jede Minute»; «stündlich von :45 bis :59 jede Minute».
-  **Contested.** «In den ersten 30 Minuten» left the first judge unsure
-  of the edges; «jede Minute ab jeder vollen Stunde, zuletzt 29 Minuten
-  danach» was exact for both readers and "nobody writes that" for the
-  second judge, who wanted «in der ersten halben Stunde jeder Stunde
-  (:00 bis :29)». That is a named stretch for one length, with the edges
-  in a gloss. The gloss is what both judges trusted, so it is said as
-  the text, for a run of any length and place.
+* A run of minutes under every hour or several hours names its minutes
+  by number: «stündlich in den Minuten 0 bis 29 jede Minute»; «stündlich
+  in den Minuten 10 bis 40 jede Minute»; «stündlich in den Minuten 45
+  bis 59 jede Minute». «In den Minuten» says a stretch the way «in den
+  Jahren 2030 bis 2035» and «in den Sekunden 0 bis 9» do, and the reader
+  of 2026-11-14 took the last minute as included, because «Minute 29» is
+  a named minute and not a moment at which something ends. «Jede Minute»
+  stays: without it «stündlich in den Minuten 0 bis 29» could be once an
+  hour, somewhere in that stretch. «Zu den Minuten» is for places, «in
+  den Minuten» for a stretch, and the difference is the one German makes
+  between «zu» and «in». History: «In den ersten 30 Minuten» left the
+  first judge unsure of the edges; «jede Minute ab jeder vollen Stunde,
+  zuletzt 29 Minuten danach» was exact for both readers and "nobody
+  writes that" for the second judge, who wanted «in der ersten halben
+  Stunde jeder Stunde (:00 bis :29)»; from 2026-11-12 to 2026-11-14 the
+  gloss was the text («stündlich von :00 bis :29 jede Minute»), until
+  the colon was given up (3.2).
 
 3.5 Wrapping.
 
@@ -477,8 +501,8 @@ before it.
   22:00 und 23:00 Uhr» are five times on Monday, which is what the
   pattern fires. The hours are said the same way whatever the day part
   is, so continuity has nothing to declare here.
-* Minutes and seconds never wrap. Minutes 50 to 10 are «stündlich von
-  :00 bis :10 und von :50 bis :59 jede Minute», and inside one named
+* Minutes and seconds never wrap. Minutes 50 to 10 are «stündlich in
+  den Minuten 0 bis 10 und 50 bis 59 jede Minute», and inside one named
   hour «von 9:00 bis 9:10 und von 9:50 bis 9:59 Uhr jede Minute».
 
 Where a wrap is not allowed, the opening corrections decide between the
@@ -507,13 +531,19 @@ the points follow after **«sowie»**, never a second «und»:
   stündlich sowie um 22:00 Uhr»; «von 0:00 bis 6:00 Uhr stündlich sowie
   um 22:00 und 23:00 Uhr». Six or fewer are listed: «um 0:00, 1:00, 2:00,
   22:00 und 23:00 Uhr» (the second judge's own rewrite).
-* a run of minutes with stray minutes: «stündlich von :00 bis :29 jede
-  Minute sowie um :45»; «stündlich von :05 bis :10 jede Minute sowie um
-  :20»; inside one named hour, «von 9:00 bis 9:29 Uhr jede Minute sowie
-  um 9:45 Uhr».
+* inside one named hour, a run of minutes with stray minutes: «von 9:00
+  bis 9:29 Uhr jede Minute sowie um 9:45 Uhr».
 
-Two runs of minutes share one lead: «stündlich von :00 bis :10 und von
-:50 bis :59 jede Minute».
+Minutes by their number need no «sowie»: **stray minutes join the runs
+in one list** after «in den Minuten», in ascending order, and «jede
+Minute» fires once in a minute of its own: «stündlich in den Minuten 0
+bis 29 und 45 jede Minute»; «stündlich in den Minuten 5 bis 10 und 20
+jede Minute»; two runs, «stündlich in den Minuten 0 bis 10 und 50 bis
+59 jede Minute». (On 2026-11-14 «täglich um 9 und 17 Uhr, jeweils in den
+Minuten 0 bis 29 jede Minute sowie zur Minute 45» was read by one reader
+with «sowie zur Minute 45» outside «jeweils», as every hour; the folded
+form had one reading. It is the form the seconds already had: «jeweils
+in den Sekunden 0 bis 10, 30 und 50 bis 59».)
 
 3.7 An even cadence.
 
@@ -529,10 +559,12 @@ Two runs of minutes share one lead: «stündlich von :00 bis :10 und von
 * Years: 5.8.
 
 3.8 A cadence of minutes that does not divide the hour, or starts off
-the beat, with more than six values, is a window of minutes with the
-cadence after it, as a run is (3.4): «stündlich von :00 bis :56 alle 7
-Minuten»; «stündlich von :00 bis :40 alle 5 Minuten»; «stündlich von :05
-bis :55 alle 5 Minuten». Inside one named hour it is a window of clock
+the beat, with more than six values, is a stretch of minutes with the
+cadence after it, as a run is (3.4): «stündlich in den Minuten 0 bis 56
+alle 7 Minuten»; «stündlich in den Minuten 0 bis 40 alle 5 Minuten»;
+«stündlich in den Minuten 5 bis 55 alle 5 Minuten». The reader of
+2026-11-14 read the first as starting again each hour, with four minutes
+from minute 56 to the next full hour. Inside one named hour it is a window of clock
 times: «von 9:00 bis 9:56 Uhr alle 7 Minuten»; «von 9:05 bis 9:55 Uhr
 alle 10 Minuten». With six values or fewer the minutes are listed (3.3).
 
@@ -575,28 +607,39 @@ set: with their own preposition and, for clock times, their own «Uhr».
   Saturday and Tuesday to Sunday are ranges. With two or more days
   missing they are a run, pieces or a list.
 * **Hours.** A clock time where the hours are points («zu jeder vollen
-  Stunde, außer um 3:00 Uhr»; «stündlich um :30, außer um 3:30 Uhr»;
-  «von 0:00 bis 22:00 Uhr alle 2 Stunden, außer um 8:00 Uhr») and a
+  Stunde, außer um 3:00 Uhr»; «stündlich zur Minute 30, außer um 3:30
+  Uhr»; «von 0:00 bis 22:00 Uhr alle 2 Stunden, außer um 8:00 Uhr»); a
   window where they are filled, from the first time that would have
   fired in that hour to the last («alle 10 Minuten, außer von 3:00 bis
-  3:50 Uhr»; «stündlich um :05, :20 und :45, außer von 3:05 bis 3:45
-  Uhr»). **Contested**: the first judge read «außer von 3:00 bis 3:50
-  Uhr» exactly and called the 3:50 the thing that makes it clear; the
-  second took it for a slip for 4:00 and wanted «zwischen 3:00 und 4:00
-  Uhr» with the neighbouring runs in a gloss. The window is kept: it
-  follows the rule that both ends are moments of the schedule, and both
-  readers found it exact.
-* **Minutes**, said last in the time part: «jede Minute, außer um :29»;
-  «täglich von 9:00 bis 17:50 Uhr alle 10 Minuten, außer um :30». Inside
-  one named hour it is the clock time: «täglich von 9:00 bis 9:50 Uhr
-  alle 10 Minuten, außer um 9:30 Uhr». If both the hours and the minutes
-  have one, «außer» is said once and the hours' comes first: «alle 10
-  Minuten, außer von 3:00 bis 3:50 Uhr und um :30».
+  3:50 Uhr»); and **the hour by its number where the minutes are places
+  or several parts** («stündlich zu den Minuten 5, 20 und 45, außer in
+  der Stunde 3»; «täglich in den ungeraden Stunden, jeweils zu den
+  Minuten 5, 20 und 45, außer in der Stunde 13»; two hours, «außer in
+  den Stunden 3 und 13»). A window round places is the stretch readers
+  took as continuous (4.1), and on 2026-11-14 one reader left open
+  whether «außer von 13:05 bis 13:45 Uhr» takes away 13:45; «außer um 13
+  Uhr» was read as 13:00 alone where minute 0 fires; «außer zwischen 10
+  und 11 Uhr» left open whether 10:00 is «zwischen»; «außer in der
+  Stunde 13» was read as the whole hour by every reader that saw it,
+  before «jeweils» and at the end alike. It stands at the end, where
+  every exception of the time part stands. **Contested** for the window:
+  the first judge read «außer von 3:00 bis 3:50 Uhr» exactly and called
+  the 3:50 the thing that makes it clear; the second took it for a slip
+  for 4:00 and wanted «zwischen 3:00 und 4:00 Uhr» with the neighbouring
+  runs in a gloss. The window is kept where the minutes run through the
+  hour: it follows the rule that both ends are moments of the schedule.
+* **Minutes**, said last in the time part, as the set would say them:
+  «jede Minute, außer zur Minute 29»; «täglich von 9:00 bis 17:50 Uhr
+  alle 10 Minuten, außer zur Minute 30». Inside one named hour it is the
+  clock time: «täglich von 9:00 bis 9:50 Uhr alle 10 Minuten, außer um
+  9:30 Uhr». If both the hours and the minutes have one, «außer» is said
+  once and the hours' comes first: «alle 10 Minuten, außer von 3:00 bis
+  3:50 Uhr und zur Minute 30».
 * **Seconds**: «jede Sekunde, außer 29 Sekunden nach jeder vollen
   Minute»; inside one minute, «außer um 9:00:29 Uhr». A minute excepted
-  under «jede Sekunde» is a stretch to the second: «jede Sekunde, außer
-  von :29:00 bis :29:59»; inside one hour, «außer von 9:29:00 bis 9:29:59
-  Uhr».
+  under «jede Sekunde» is the minute by its number, which is the whole
+  minute: «jede Sekunde, außer in der Minute 29»; inside one hour, a
+  stretch to the second, «außer von 9:29:00 bis 9:29:59 Uhr».
 
 A cadence that is only missing values at its end or its start is said
 with its bounds. An exception may stand on either side of a date and a
@@ -623,7 +666,7 @@ fires to the last**.
 
 | H | Minute 0 | Minute 30 |
 | --- | --- | --- |
-| every hour | «zu jeder vollen Stunde» | «stündlich um :30» |
+| every hour | «zu jeder vollen Stunde» | «stündlich zur Minute 30» |
 | values | «um 9:00 und 17:00 Uhr» | «um 9:30 und 17:30 Uhr» |
 | a range | «von 9:00 bis 17:00 Uhr stündlich» | «von 9:30 bis 17:30 Uhr stündlich» |
 | pieces, six clock times or fewer | the times: «um 0:00, 1:00, 2:00, 22:00 und 23:00 Uhr» | «um 0:30, 1:30, 2:30, 22:30 und 23:30 Uhr» |
@@ -631,7 +674,7 @@ fires to the last**.
 | a cadence, more than four hours | «von 0:00 bis 22:00 Uhr alle 2 Stunden»; «von 1:00 bis 23:00 Uhr alle 2 Stunden» | «von 0:30 bis 22:30 Uhr alle 2 Stunden»; «von 0:30 bis 21:30 Uhr alle 3 Stunden» |
 | a cadence of four hours or fewer | the times: «um 0:00, 6:00, 12:00 und 18:00 Uhr» | «um 0:30, 6:30, 12:30 und 18:30 Uhr» |
 | a cadence with exceptions | «von 0:00 bis 22:00 Uhr alle 2 Stunden, außer um 8:00 Uhr» | «von 0:30 bis 22:30 Uhr alle 2 Stunden, außer um 8:30 Uhr» |
-| every hour with exceptions | «zu jeder vollen Stunde, außer um 3:00 Uhr» | «stündlich um :30, außer um 3:30 Uhr» |
+| every hour with exceptions | «zu jeder vollen Stunde, außer um 3:00 Uhr» | «stündlich zur Minute 30, außer um 3:30 Uhr» |
 
 **M is continuous** (every minute, or a tiling cadence starting at 0).
 The lead is «jede Minute» or «alle N Minuten»; H gives the windows before
@@ -651,7 +694,9 @@ it.
 Separate hours as plain windows are settled (the first judge's first
 choice; the second graded the row acceptable, "clear but long").
 
-**«In den geraden Stunden» with its gloss is contested, and chosen.** The
+**«In den geraden Stunden» with its gloss is contested, and chosen**,
+where the minutes run through each hour (above). Where they are places,
+the word stands without the gloss (below). The
 first reader held that «gerade Stunde» is not a notion and brings back
 the doubt whether an hour begins or ends at its number. Both judges,
 independently, wrote this very form to replace what they were shown, and
@@ -678,34 +723,73 @@ opens with «stündlich».
 
 | H | The time part |
 | --- | --- |
-| every hour | the minute phrase: «stündlich um :05, :20 und :45»; «stündlich von :00 bis :29 jede Minute» |
+| every hour | the minute phrase: «stündlich zu den Minuten 5, 20 und 45»; «stündlich in den Minuten 0 bis 29 jede Minute» |
 | one hour | a list or a window of clock times: «um 9:05, 9:20 und 9:45 Uhr» |
-| a range, or pieces | windows from the first time that fires to the last, then the minute phrase: «von 9:05 bis 17:45 Uhr stündlich um :05, :20 und :45»; «von 9:00 bis 17:29 Uhr stündlich von :00 bis :29 jede Minute»; «von 9:00 bis 17:45 Uhr stündlich von :00 bis :29 jede Minute sowie um :45»; «von 9:00 bis 17:56 Uhr stündlich von :00 bis :56 alle 7 Minuten»; «von 9:05 bis 17:45 und von 22:05 bis 22:45 Uhr stündlich um :05, :20 und :45» |
-| separate hours, six clock times or fewer | the clock times: «um 9:05, 9:20, 9:45, 17:05, 17:20 und 17:45 Uhr» |
-| separate hours, more than six clock times | a window for each hour, and «jeweils» in place of «stündlich», since no window holds a second hour: «von 9:05 bis 9:50 und von 17:05 bis 17:50 Uhr jeweils um :05, :20, :35 und :50» |
-| a cadence of hours, six clock times or fewer | the clock times |
-| a cadence of hours, more than six clock times, M a list of three minutes or fewer | a series of clock times: every time of the first two hours, «…», and every time of the last hour, with «und» before the last time: «um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr»; «um 0:00, 0:15, 0:45, 4:00, 4:15, 4:45 … 20:00, 20:15 und 20:45 Uhr». (One window of the hour cadence for each minute, «von 0:15 bis 20:15 und von 0:45 bis 20:45 Uhr alle 4 Stunden», was the third judge's one odd grade: two overlapping windows look like periods, and one reading gives six runs for twelve.) |
-| a cadence of hours, M a list of four to six minutes | the hours as in the table for continuous minutes, each window from its first time to its last, then «jeweils» and the minutes once: «in den geraden Stunden (0:05–0:55, 2:05–2:55 … 22:05–22:55 Uhr) jeweils um :05, :15, :25, :35, :45 und :55»; «von 8:05 bis 8:50, von 10:05 bis 10:50 … und von 18:05 bis 18:50 Uhr jeweils um :05, :20, :35 und :50». (As a series these showed twelve to eighteen clock times, which nobody holds; the judged series show six and nine.) |
-| a cadence of hours, M a run or a cadence | the hours as in the table for continuous minutes, each window from its first run to its last, then the lead: «in den geraden Stunden (0:00–0:29, 2:00–2:29 … 22:00–22:29 Uhr) jede Minute» |
-| every hour with exceptions | «stündlich um :05, :20 und :45, außer von 3:05 bis 3:45 Uhr» |
+| a range, or pieces | windows from the first time that fires to the last, then the minute phrase: «von 9:05 bis 17:45 Uhr stündlich zu den Minuten 5, 20 und 45»; «von 9:00 bis 17:29 Uhr stündlich in den Minuten 0 bis 29 jede Minute»; «von 9:00 bis 17:45 Uhr stündlich in den Minuten 0 bis 29 und 45 jede Minute»; «von 9:00 bis 17:56 Uhr stündlich in den Minuten 0 bis 56 alle 7 Minuten»; «von 9:05 bis 17:45 und von 22:05 bis 22:45 Uhr stündlich zu den Minuten 5, 20 und 45» |
+| separate hours (no two side by side), six clock times or fewer | the clock times: «um 9:05, 9:20, 9:45, 17:05, 17:20 und 17:45 Uhr» |
+| separate hours, more than six clock times, M places or several parts | **the hours once, as hours, then «jeweils» and the minutes once**: «um 9, 13 und 17 Uhr, jeweils zu den Minuten 5, 20 und 45»; «um 9 und 17 Uhr, jeweils in den Minuten 0 bis 29 und 45 jede Minute». The hours are listed up to six: «um 0, 4, 8, 12, 16 und 20 Uhr, jeweils …»; more than six in step are a series, the first three, «…», «und» and the last: «um 0, 3, 6 … und 21 Uhr, jeweils zu den Minuten 5, 20 und 45»; every second hour of the whole day is its parity, with no gloss: «in den geraden Stunden, jeweils zu den Minuten 5, 20, 35 und 50». More than six hours with no step are all listed, which is still shorter than anything else: «um 1, 3, 9, 13, 17, 20 und 22 Uhr, jeweils …». An hour taken away is «außer in der Stunde 13» (3.9) |
+| separate hours, M a run or a cadence | each hour's window, from its first run to its last, then the lead, since firing goes on through each window: «von 9:00 bis 9:29 und von 17:00 bis 17:29 Uhr jede Minute»; «von 9:00 bis 9:56 und von 17:00 bis 17:56 Uhr alle 7 Minuten»; a cadence of hours as in the table for continuous minutes: «in den geraden Stunden (0:00–0:29, 2:00–2:29 … 22:00–22:29 Uhr) jede Minute» |
+| every hour with exceptions | «stündlich zu den Minuten 5, 20 und 45, außer in der Stunde 3» |
 
-How this form was reached. With the minutes said as «5, 20 und 45
-Minuten nach jeder vollen Stunde», a window was misread in two opposite
-ways when it trailed («… von 9:05 bis 17:45 Uhr» as choosing the full
-hours; «… von 9:00 bis 17:00 Uhr» as the end of the runs), and when it
-led as the hours' own stretch («von 9:00 bis 17:59 Uhr jeweils …») it
-was read correctly by all and faulted by all for an end at which nothing
-fires. Both judges then wrote, in their own words, «stündlich um :05,
-:20 und :45, erstmals um 9:05, letztmals um 17:45 Uhr». That sentence is
-taken in content and not in order: its minutes («um :05, :20 und :45»),
-its first run and its last, with the first and last said as the window
-that every other row has. The reasons for not taking it whole: after
-«täglich» it sets «täglich stündlich» side by side, which both judges
-heard collide; and «erstmals … letztmals» can only be said of one
-stretch, where hours in two stretches need the window anyway. With the
-minutes written «:05» there is no «volle Stunde» left for a window to
-attach to, which was the cause of the first misreading, and the window
-ends on a run, which removes the second.
+**Places in the hour and separate hours** (2026-11-14). Until this date
+German said a place in the hour with a colon, «stündlich um :05, :20 und
+:45», and listed minutes beside separate hours as one window per hour
+and the minutes again: `5,20,45 9,13,17 * * *` was «täglich von 9:05 bis
+9:45, von 13:05 bis 13:45 und von 17:05 bis 17:45 Uhr jeweils um :05,
+:20 und :45», and `5/15 */2 * * *` «täglich in den geraden Stunden
+(0:05–0:50, 2:05–2:50 … 22:05–22:50 Uhr) jeweils um :05, :20, :35 und
+:50». The evidence against both, from that week:
+
+* three of three blind German readers called «um :05» not ordinary
+  German;
+* two readers read the windows round listed minutes as continuous
+  stretches and called them redundant, and the dash gloss «(0:05–0:50,
+  …)» was read as continuous too: a window says a stretch, and firing
+  does not go on through it;
+* the cost model (`tooling/scripts/reading/cost.mjs de`) ranked this
+  family as German's costliest by far: `5,20,45 1,9,13,17,19,21,23 * *
+  *`, seven windows and the minutes again, cost 31.0 (the form below
+  costs 16.6);
+* two isolated readers compared candidates for `5,20,45 9,13,17`. Both
+  found one reading only in «täglich um 9, 13 und 17 Uhr, jeweils zu den
+  Minuten 5, 20 und 45», the cheapest of those that had one. «5, 20 und
+  45 Minuten nach 9, 13 und 17 Uhr» was read pairwise by one reader
+  (9:05, 13:20, 17:45), because the two lists are as long as each other;
+  «in den Stunden ab 9 …» was read as from 9 onward. Two earlier blind
+  readers had written this same form unprompted.
+
+The maintainer decided the form for separate hours, and, for one way of
+saying places in the hour across the language, the timetable form
+everywhere a colon stood: the usage notes give «jeweils zur Minute 07,
+27 und 47» and «stündlich zur Minute 05» as how timetables and careful
+writers say it (notes 1.4, 7.9, 8.3). What was weighed:
+
+* **«Um 9 Uhr» names the full hour** when it stands alone. Here the
+  hours are named as hours, and «jeweils zu den Minuten …» right after
+  them settles it; every reader of 2026-11-14 read «um 2 Uhr» in «um 2,
+  8, 14 und 20 Uhr, jeweils in den Minuten …» as the hour. No form that
+  names hours as hours without a clock word was found to read better
+  («in den Stunden ab 9 …» was read as from 9 onward). The full hour
+  keeps «9:00» everywhere else (departure 1 at the end).
+* **No leading zero.** Timetables print «zur Minute 07» because their
+  minutes stand in a column; in a sentence on a screen the number is a
+  count after its noun, as «am 7.» and «in den Sekunden 0 bis 9» are,
+  and «05» reads as a field of a form. Every reader of the decided form
+  saw it without zeros.
+* **A cadence of hours with its ends** («von 0 bis 20 Uhr alle 4
+  Stunden, jeweils zu den Minuten 15 und 45») was read by one reader as
+  a window that closes at 20:00, so that 20:15 and 20:45 drop out. A
+  list of up to six hours, and a series beyond, were read one way (the
+  opening corrections). The series continues the step shown, as the
+  series of dates does («am 1., 4., 7. … und 31.»).
+* **The series of clock times** for a cadence of hours with three
+  minutes or fewer («um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr»,
+  from 2026-11-12) is given up for the same form: it showed up to nine
+  clock times and left the step to be inferred, where the new form names
+  the hours and the minutes once.
+* **Where the minutes run through each hour** (a run, or a cadence),
+  the windows stay: firing goes on through them, which is what a window
+  says.
 
 **A list of clock times is also sayable** whenever neither M nor H is
 every value. It names one thing per time and competes with the other
@@ -722,22 +806,28 @@ colon between: «9:00», «17:30», «0:05». With seconds, «9:00:30»; in a
 list or a window where any time has seconds, every time shows them. A
 point is «um … Uhr», a range «von … bis … Uhr», with «Uhr» once at the
 end of each list of times and each list of windows. A minute of the hour
-is «:05», with seconds «:05:30», and takes no «Uhr». Midnight is «0:00»,
-never «24:00».
+is said by its number (3.2) and takes no «Uhr». An hour named as an hour
+(above) is its number alone before «Uhr»: «um 9, 13 und 17 Uhr».
+Midnight is «0:00», never «24:00».
 
 4.2 Seconds. "The rest" is the time part as 4.1 builds it from M and H.
 
 * S is 0: silent.
 * **One second other than 0 joins what the rest names**, wherever the
-  rest names clock times or minutes of the hour as points:
+  rest names clock times as points:
   * clock times: «um 9:30:15 Uhr»; «von 9:00:30 bis 17:00:30 Uhr
     stündlich»; «von 0:00:30 bis 22:00:30 Uhr alle 2 Stunden»; «um
-    0:00:15, 6:00:15, 12:00:15 und 18:00:15 Uhr»; «um 0:05:08, 0:30:08,
-    2:05:08, 2:30:08 … 22:05:08 und 22:30:08 Uhr»;
-  * minutes of the hour: «stündlich um :30:15»; «stündlich um :05:30 und
-    :20:30»;
+    0:00:15, 6:00:15, 12:00:15 und 18:00:15 Uhr»;
   * every hour on the hour: «30 Sekunden nach jeder vollen Stunde»
     (graded natural twice).
+  Minutes by their number cannot carry a second, so there it trails
+  (below): «stündlich zur Minute 30, jeweils 15 Sekunden nach der vollen
+  Minute»; «stündlich zu den Minuten 5 und 20, jeweils 30 Sekunden nach
+  der vollen Minute»; «täglich in den geraden Stunden, jeweils zu den
+  Minuten 5 und 30, jeweils 8 Sekunden nach der vollen Minute». (Until
+  2026-11-14, «stündlich um :30:15».) «Jeweils 15 Sekunden danach» was
+  not taken: after «sowie» the same «danach» adds a moment («zur vollen
+  Minute sowie 15 Sekunden danach»), and here it could be heard to.
 * **The rest is nothing, or «jede Minute» in windows** (M is every
   minute):
   * every second, or a tiling cadence, takes the place of «jede Minute»,
@@ -752,8 +842,21 @@ never «24:00».
     Minute, jeweils 10-mal im Abstand von 6 Sekunden».
 * **The rest is a run of minutes (or runs) with the lead «jede Minute»,
   and S is every second or a tiling cadence**: the seconds' lead takes
-  the place of «jede Minute», and the stretches are written to the
-  second: «stündlich von :00:00 bis :29:59 jede Sekunde».
+  the place of «jede Minute»: «stündlich in den Minuten 0 bis 29 jede
+  Sekunde». Windows of clock times are written to the second: «von
+  9:00:00 bis 17:59:59 Uhr jede Sekunde».
+* **The rest is minutes named as places, and S is every second or a
+  tiling cadence**: each minute is a stretch the seconds fill, said with
+  «in den Minuten» and the seconds' lead: «stündlich in der Minute 30
+  jede Sekunde»; «stündlich in den Minuten 5, 20 und 45 alle 15
+  Sekunden»; «täglich um 2, 8, 14 und 20 Uhr, jeweils in den Minuten 5,
+  20, 35 und 50 alle 15 Sekunden» (read one way on 2026-11-14); under a
+  range of hours the window is written to the second, «von 3:30:00 bis
+  10:42:59 Uhr stündlich in den Minuten 30 und 42 jede Sekunde». Until
+  that date the seconds trailed: «…, jeweils um :05, :20, :35 und :50,
+  jeweils zur vollen Minute sowie 15, 30 und 45 Sekunden danach», where
+  a reader called the second «jeweils» heavy, and «stündlich um :30,
+  jeweils eine Minute lang jede Sekunde».
 * **The rest is one clock time or two, and S is every second, a run or a
   cadence**: a window to the second for each time. «Von 9:00:00 bis
   9:00:59 Uhr jede Sekunde»; «von 9:00:00 bis 9:00:54 Uhr alle 6
@@ -1091,8 +1194,9 @@ day.
 said where a window or a minute of the hour says the minute.
 
 5.5 Odd and even hours, as stretches: «in den geraden Stunden», «in den
-ungeraden Stunden», always with the gloss (4.1). Hours as points are a
-cadence with its ends. Months have no word for odd or even; they are
+ungeraden Stunden», with the gloss where the minutes run through each
+hour, and without it where the minutes are places said after it (4.1).
+Hours as points are a cadence with its ends. Months have no word for odd or even; they are
 named.
 
 5.6 None by default. The parts of the day of 1.2 are used only with
@@ -1247,18 +1351,21 @@ brackets are «(Mo. bis Fr.)».
   None of these forms has been judged by a fluent reader.)
 
 Series, by field: a gloss of hours shows two windows and the last; a
-series of clock times shows every time of the first two hours and of the
-last; a series of dates shows three dates and the last; a series of
-years shows three years, and its end only if it has one. Dates, windows
-and clock times use «…»; years use «usw.», because their series has no
-end to show.
+series of hours named as hours shows three hours, «und» and the last
+(«um 0, 3, 6 … und 21 Uhr»); a series of dates shows three dates and the
+last; a series of years shows three years, and its end only if it has
+one. Dates, windows and hours use «…»; years use «usw.», because their
+series has no end to show. (Until 2026-11-14 a series of clock times
+showed every time of the first two hours and of the last: «um 0:15,
+0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr».)
 
 ## 6. Words
 
 6.1 Syllables.
 
 6.2 Numbers are written as digits («1 Sekunde», «10-mal»); a day of the
-month takes the ordinal's full stop; a minute of the hour is «:05».
+month takes the ordinal's full stop; a minute of the hour is its number
+(«zur Minute 5»).
 
 6.3 Months and weekdays are in the lexicon, with their short forms. A
 recurring weekday is the adverb in lower case («montags», «mittwochs»); a
@@ -1342,10 +1449,11 @@ runs alike («montags», «montags und mittwochs», «montags bis freitags»);
 through «jedes Monats», or through «jeweils» after several months.
 
 8.7 `numeral-register` — Digits for every count and position; ordinals
-with a full stop for dates; «:05» for a minute of the hour.
+with a full stop for dates; a minute of the hour by its number, with no
+leading zero: «zur Minute 5».
 
 8.8 `sentence-wrapper-punctuation` — A label starts with a capital
-letter: «Täglich um 9:00 Uhr», «Jede Minute», «Stündlich um :30»; one
+letter: «Täglich um 9:00 Uhr», «Jede Minute», «Stündlich zur Minute 30»; one
 that starts with a digit is unchanged. A sentence is «Läuft » before the
 description and a full stop after: «Läuft täglich um 9:00 Uhr.» The time
 part is always last and ends in a word or a digit, so no description
@@ -1416,8 +1524,10 @@ Monatsersten»); «an den ungeraden Tagen des Monats» for every second day
 that starts anew each month, and the clock times named where a cadence
 of hours breaks off at the end of the day; no «alle 8 Tage» or «alle 15
 Tage» (cadences of dates are their dates); «im Jahr 2030», never «in
-2030»; «:30» as a minute of the hour («jede Stunde um :15» is the notes'
-own form); «jeweils … nach der vollen Minute» for seconds.
+2030»; a minute of the hour by its number («stündlich zur Minute 05»
+and «jeweils zur Minute 07, 27 und 47» are the notes' own forms, taken
+on 2026-11-14 without the leading zero); «jeweils … nach der vollen
+Minute» for seconds.
 
 **Departures, each with its reason.**
 
@@ -1428,7 +1538,10 @@ own form); «jeweils … nach der vollen Minute» for seconds.
    beside a minute («von 9:00 bis 17:45 Uhr»), and an edit of the minute
    field from 0 to 30 must change the minute and nothing else. «9:00
    Uhr» is correct by DIN 5008 and Duden, and every judge read it
-   without remark.
+   without remark. The one place a bare hour is said is an hour named
+   as an hour, whose minutes follow it (4.1): «um 9, 13 und 17 Uhr,
+   jeweils zu den Minuten 5, 20 und 45». There «9:00» would name a
+   moment at which nothing fires.
 2. **«Montags bis freitags» does not say «auch an Feiertagen».** The
    notes (1.1, [U]) hold that readers of timetables and opening hours
    take Monday to Friday as "except on public holidays", and that a

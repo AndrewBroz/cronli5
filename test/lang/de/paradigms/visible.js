@@ -61,11 +61,11 @@ const rows = [
   ['0,30 9-17 * * 1-5',
     'montags bis freitags von 9:00 bis 17:30 Uhr alle 30 Minuten'],
   ['0-29,45 9-17 * * 1-5',
-    'montags bis freitags von 9:00 bis 17:45 Uhr stündlich von :00 bis :29 ' +
-    'jede Minute sowie um :45'],
+    'montags bis freitags von 9:00 bis 17:45 Uhr stündlich in den Minuten 0 ' +
+    'bis 29 und 45 jede Minute'],
   ['0,15,45 9-17 * * 1-5',
-    'montags bis freitags von 9:00 bis 17:45 Uhr stündlich um :00, :15 und ' +
-    ':45'],
+    'montags bis freitags von 9:00 bis 17:45 Uhr stündlich zu den Minuten ' +
+    '0, 15 und 45'],
 
   // window / hour
   ['*/15 * * * 1-5', 'montags bis freitags alle 15 Minuten'],
@@ -170,9 +170,9 @@ const rows = [
     '5, 15, 25, 35, 45 und 55 Sekunden nach jeder vollen Minute'],
 
   // open / minute
-  ['5,20,45 * * * *', 'stündlich um :05, :20 und :45'],
+  ['5,20,45 * * * *', 'stündlich zu den Minuten 5, 20 und 45'],
   ['*/15 * * * *', 'alle 15 Minuten'],
-  ['0,15,45 * * * *', 'stündlich um :00, :15 und :45'],
+  ['0,15,45 * * * *', 'stündlich zu den Minuten 0, 15 und 45'],
 
   // open / hour
   ['* 0 * * *', 'täglich von 0:00 bis 0:59 Uhr jede Minute'],

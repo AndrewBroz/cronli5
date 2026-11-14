@@ -13,7 +13,7 @@ import {
   settle, settleUnwrapped, thingsNamed
 } from './sets.js';
 import type {Voice} from './voice.js';
-import {clock24, mark} from './voice.js';
+import {clock24} from './voice.js';
 
 const {units, words} = lexicon;
 
@@ -48,17 +48,24 @@ interface Spans {
 
 // How one field of the clock says its set: its points, its stretches and
 // the words that go with them.
-interface Level extends Spans {
+interface Level {
   // Whether a window before the phrase already gives a stretch its ends.
   absorbed: boolean;
   // What happens at every value of a stretch: «jede Minute», «stündlich».
   each: string;
-  gone(values: number[], level: Level): string;
+  // Values taken away from the set.
+  gone(values: number[]): string;
+  // Whether single values join the runs as runs of their own: «in den
+  // Minuten 0 bis 29 und 45».
+  folds: boolean;
   // What opens a phrase that has ends or points of its own.
   lead: string;
   // Whether every value, and a cadence that tiles, need no ends.
   open: boolean;
-  point(value: number): string;
+  // Single values: «um 9:05 und 9:20 Uhr», «zu den Minuten 5 und 20».
+  points(values: number[]): string;
+  // Unbroken runs, each by its first and last value.
+  runs(runs: number[][]): string;
   tiling: boolean;
   top: number;
   unit: Unit;
@@ -78,8 +85,12 @@ interface Clockwork {
   hours: Sayable;
   // Whether the seconds take the place of «jede Minute».
   leads: boolean;
+  // The hours as points, for a time part that names them as hours.
+  hourPoints: Sayable;
   // Each field's candidates with nothing wrapped.
   linear: {[field in 'hour' | 'minute' | 'second']: SetDescription[]};
+  // Whether the time part is a list of clock times.
+  listed: boolean;
   low: number[];
   minutes: Sayable;
   // Whether the seconds need no words of their own.
@@ -96,14 +107,14 @@ interface Wording {
 const sixty: Domain = {cyclic: false, max: 59, min: 0};
 const hoursOfDay: Domain = {cyclic: false, max: 23, min: 0};
 
+// Every second hour of the day, from hour 0 or from hour 1.
+const parity = 2;
+
 // The most clock times a list holds, and the most minutes or seconds.
 const held = 6;
 
 // The most clock times a list holds before a cadence replaces it.
 const heldBeforeCadence = 4;
-
-// The most minutes to the hour a series of clock times shows.
-const heldInSeries = 3;
 
 const eachHour: Wording =
   {after: words.afterEachHour, at: words.atEachHour};
@@ -145,6 +156,11 @@ const hoursAsPoints: Counting =
 
 // Every stretch of hours is a window, however few hours it has.
 const hoursAsWindows: Counting = {...hoursAsPoints, listed: 0};
+
+// Hours named as hours, the minutes said after them, are listed up to
+// six: a cadence said with its ends would end on a clock time.
+const hoursByNumber: Counting =
+  {cadence: longerThan(held), listed: held, removable: Infinity};
 
 function nonEmpty(values: unknown[]): boolean {
   return values.length > 0;
@@ -189,20 +205,58 @@ function atTimes(times: string[], oClock: string): string {
   return `${words.at} ${list(times)}${oClock}`;
 }
 
-function points(values: number[], level: Level): string {
-  return atTimes(values.map(level.point), level.oClock);
-}
-
 function span(ends: number[], spans: Spans): string {
   return `${words.from} ${spans.from(ends[0])} ${words.to} ` +
     `${spans.to(ends[1])}`;
 }
 
-// A window for each unbroken run of the values.
-function windows(values: number[], spans: Spans): string {
-  return list(runsOf(values).map(function toSpan(run) {
+// A window for each run, «Uhr» after the last.
+function spansOf(runs: number[][], spans: Spans): string {
+  return list(runs.map(function toSpan(run) {
     return span(run, spans);
   })) + spans.oClock;
+}
+
+// A window for each unbroken run of the values.
+function windows(values: number[], spans: Spans): string {
+  return spansOf(runsOf(values), spans);
+}
+
+// Minutes by their number in the hour, as timetables give them: «zur
+// Minute 30», «zu den Minuten 5, 20 und 45».
+function minutePoints(minutes: number[]): string {
+  return `${[words.atMinutes, words.atMinute][Number(minutes.length === 1)]}` +
+    ` ${list(minutes.map(String))}`;
+}
+
+// Minutes or hours by their numbers: one word for a single one, another
+// for several or for a run.
+function byNumber(several: string, one: string, items: string[]): string {
+  const single = items.length === 1 && !items[0].includes(words.to);
+
+  return `${[several, one][Number(single)]} ${list(items)}`;
+}
+
+// Runs of minutes by their numbers, each a stretch that fills its minutes:
+// «in der Minute 29», «in den Minuten 0 bis 29», «in den Minuten 0 bis 2
+// und 57 bis 59».
+function minuteRuns(runs: number[][]): string {
+  return byNumber(words.inMinutes, words.inMinute,
+    runs.map(function say(run) {
+      return [...new Set(run)].join(` ${words.to} `);
+    }));
+}
+
+// A level that says its values as clock times.
+function onClock(spans: Spans, point: (value: number) => string) {
+  return {
+    points(values: number[]) {
+      return atTimes(values.map(point), spans.oClock);
+    },
+    runs(runs: number[][]) {
+      return spansOf(runs, spans);
+    }
+  };
 }
 
 // A stretch with what happens in it; bare where its ends go unsaid.
@@ -214,7 +268,7 @@ function stretch(
 ): string {
   return bare || level.absorbed ?
     what :
-    `${level.lead}${span(ends, level)}${level.oClock} ${what}`;
+    `${level.lead}${level.runs([ends])} ${what}`;
 }
 
 const shapes: {
@@ -236,7 +290,7 @@ const shapes: {
         part as Partial<Described<'cadence'> & Described<'range'>>;
 
       return part.kind === 'values' ? [] : [
-        `${span([from as number, to as number], level)}${level.oClock} ` +
+        `${level.runs([[from as number, to as number]])} ` +
         `${interval ? every(interval, level.unit) : level.each}`
       ];
     });
@@ -245,25 +299,35 @@ const shapes: {
     });
 
     return join([level.lead + list(stretches),
-      strays.length > 0 && `${words.also} ${points(strays, level)}`]);
+      strays.length > 0 && `${words.also} ${level.points(strays)}`]);
   },
-  // The runs share what happens in them, and single points follow.
+  // The runs share what happens in them, and single points follow, or
+  // join them where the level folds them in.
   pieces(pieces, level) {
     const runs = pieces.parts.flatMap(function runOf(part) {
-      return part.kind === 'range' ? [span([part.from, part.to], level)] : [];
+      return part.kind === 'range' ? [[part.from, part.to]] : [];
     });
     const strays = pieces.parts.flatMap(function straysOf(part) {
       return (part as Described<'values'>).values ?? [];
     });
+    const folded = strays.filter(function folds() {
+      return level.folds;
+    }).map(function single(value) {
+      return [value, value];
+    });
 
-    return join([`${level.lead}${list(runs)}${level.oClock} ${level.each}`,
-      strays.length > 0 && `${words.also} ${points(strays, level)}`]);
+    return join([`${level.lead}${level.runs([...runs, ...folded].sort(
+      function ascending(a, b) {
+        return a[0] - b[0];
+      }))} ${level.each}`,
+    !level.folds && strays.length > 0 &&
+      `${words.also} ${level.points(strays)}`]);
   },
   range(range, level) {
     return stretch([range.from, range.to], level.each, false, level);
   },
   values(values, level) {
-    return level.lead + points(values.values, level);
+    return level.lead + level.points(values.values);
   }
 };
 
@@ -272,37 +336,36 @@ function spread(description: Sayable, level: Level): Said {
   const {base, removed} = restOf(description);
 
   return {
-    excepts: [removed].filter(nonEmpty).map(function say(values) {
-      return level.gone(values, level);
-    }),
+    excepts: [removed].filter(nonEmpty).map(level.gone),
     text: shapes[base.kind as 'all'](base as never, level)
   };
 }
 
-// The hours as points, each at the pattern's one minute.
-function hourLevel(work: Clockwork): Level {
+// The hours as points: each at the pattern's one minute, or, where the
+// minutes are said after them, as hours alone («um 9 und 17 Uhr»).
+function hourLevel(work: Clockwork, rest: number[]): Level {
   const {M, carry, voice} = work;
 
   function at(hour: number): string {
-    return voice.clock(hour, [M[0], ...carry]);
+    return voice.clock(hour, rest);
   }
+
+  const clock = onClock({from: at, oClock: voice.oClock, to: at}, at);
 
   return {
     absorbed: false,
     each: words.hourly,
-    from: at,
-    gone: points,
+    folds: false,
+    gone: clock.points,
     lead: '',
-    oClock: voice.oClock,
     open: true,
-    point: at,
+    ...clock,
     tiling: false,
-    to: at,
     top: hoursOfDay.max,
     unit: units.hour,
     whole: M[0] === 0 ?
       offset([...carry, 0].slice(0, 1), eachHour) :
-      `${words.hourly} ${words.at} ${mark([M[0], ...carry])}`
+      `${words.hourly} ${minutePoints(M)}`
   };
 }
 
@@ -316,10 +379,36 @@ function standApart(hours: Sayable): boolean {
     });
 }
 
-// The minutes: clock times inside one named hour, and otherwise places in
-// the hour («:05»).
+// Minutes taken away: the minutes themselves, or, where the seconds fill
+// each minute, the stretches they leave out.
+function goneFrom(said: Pick<Level, 'points' | 'runs'>, leads: boolean) {
+  return function gone(minutes: number[]): string {
+    return leads ? said.runs(runsOf(minutes)) : said.points(minutes);
+  };
+}
+
+// The minutes by their number in the hour. Where the seconds fill each
+// minute, a minute is a stretch: «in den Minuten 5 und 20 jede Sekunde».
+function placesInTheHour(work: Clockwork, each: string) {
+  const places = {points: minutePoints, runs: minuteRuns};
+
+  function filled(minutes: number[]): string {
+    return `${minuteRuns(minutes.map(function single(minute) {
+      return [minute, minute];
+    }))} ${each}`;
+  }
+
+  return {
+    gone: goneFrom(places, work.leads),
+    points: work.leads ? filled : minutePoints,
+    runs: minuteRuns
+  };
+}
+
+// The minutes: clock times inside one named hour, and otherwise their
+// number in the hour.
 function minuteLevel(work: Clockwork, each: string): Level {
-  const {H, carry, high, hours, leads, low, voice} = work;
+  const {H, carry, high, hours, low, voice} = work;
   const named = H.length === 1;
   const apart = standApart(hours);
   const lead = apart ? words.eachTime : words.hourly;
@@ -328,27 +417,28 @@ function minuteLevel(work: Clockwork, each: string): Level {
     return voice.clock(H[0], rest);
   }
 
-  const [write, oClock, opening] = named ?
-    [clockTime, voice.oClock, ''] :
-    [mark, '', `${lead} `];
+  const clock = onClock({
+    from(minute) {
+      return clockTime([minute, ...low.slice(1)]);
+    },
+    oClock: voice.oClock,
+    to(minute) {
+      return clockTime([minute, ...high.slice(1)]);
+    }
+  }, function point(minute) {
+    return clockTime([minute, ...carry]);
+  });
+  const said = named ?
+    {...clock, gone: goneFrom(clock, work.leads), lead: ''} :
+    {...placesInTheHour(work, each), lead: `${lead} `};
 
   return {
     absorbed: apart && !named,
     each,
-    from(minute) {
-      return write([minute, ...low.slice(1)]);
-    },
-    gone: leads ? windows : points,
-    lead: opening,
-    oClock,
+    folds: !named,
     open: !named,
-    point(minute) {
-      return write([minute, ...carry]);
-    },
+    ...said,
     tiling: true,
-    to(minute) {
-      return write([minute, ...high.slice(1)]);
-    },
     top: sixty.max,
     unit: units.minute,
     whole: each
@@ -357,8 +447,12 @@ function minuteLevel(work: Clockwork, each: string): Level {
 
 // Whether the time part is a list of clock times: the list is said when
 // it is short enough to hold and names no more than the windows would.
-function isListed(work: Clockwork): boolean {
-  const {H, M, hours, minutes} = work;
+function isListed(
+  H: number[],
+  M: number[],
+  hours: Sayable,
+  minutes: Sayable
+): boolean {
   const times = H.length * M.length;
   const explicit = ['pieces', 'range', 'values'].includes(hours.kind);
   const windowed = runsOf(H).length * 2 +
@@ -386,45 +480,78 @@ function windowsOf(part: Sayable, spans: Spans): string {
     }));
 }
 
+// The name of every second hour of the whole day, from hour 0 or hour 1,
+// and nothing for any other set of hours.
+function parityOf(base: Sayable): string {
+  const {interval, last = 0, start = 0} = base as Partial<Described<'cadence'>>;
+  const named = interval === parity && start < parity &&
+    last + parity > hoursOfDay.max;
+
+  return [named && [words.inEvenHours, words.inOddHours][start]]
+    .filter(Boolean).join('');
+}
+
 // The hours as stretches, each from its first moment to its last. Every
 // second hour of the whole day has a name, and the windows are its gloss.
 // Runs and cadences together are said one after another.
 function hourStretches(base: Sayable, spans: Spans, work: Clockwork): string {
-  const {interval, last = 0, start = 0} = base as Partial<Described<'cadence'>>;
   const parts = base.kind === 'cadencePieces' ? base.parts : [base];
   const hours = denote(base, hoursOfDay);
   const gloss = [hours[0], hours[1], hours[hours.length - 1]].map(
     function toGloss(hour) {
       return `${clock24(hour, work.low)}–${clock24(hour, work.high)}`;
     });
+  const name = parityOf(base);
 
   if (base.kind === 'all') {
     return '';
   }
 
-  return interval === 2 && start < 2 && last + 2 > hoursOfDay.max ?
-    `${[words.inEvenHours, words.inOddHours][start]} (${gloss[0]}, ` +
+  return name ?
+    `${name} (${gloss[0]}, ` +
       `${gloss[1]} ${words.ellipsis} ${gloss[2]} ${words.oClock})` :
     parts.map(function say(part) {
       return windowsOf(part, spans);
     }).join(` ${words.also} `) + spans.oClock;
 }
 
-// A series of clock times: every time of the first two hours and of the
-// last.
-function seriesOfTimes(base: Sayable, work: Clockwork): string {
-  const {M, carry, voice} = work;
+// The hours named as hours, with no minute of their own: their parity,
+// a cadence as a series (the first three, «…», «und» and the last), or
+// their list.
+function hoursAlone(work: Clockwork): string {
+  const {voice} = work;
+  const {base} = restOf(work.hourPoints);
   const hours = denote(base, hoursOfDay);
+  const level = hourLevel(work, []);
 
-  function timesIn(hour: number): string[] {
-    return M.map(function toTime(minute) {
-      return voice.clock(hour, [minute, ...carry]);
-    });
+  function at(hour: number): string {
+    return voice.clock(hour, []);
   }
 
-  return `${words.at} ${[...timesIn(hours[0]), ...timesIn(hours[1])]
-    .join(', ')} ${words.ellipsis} ` +
-    `${list(timesIn(hours[hours.length - 1]))}${voice.oClock}`;
+  return parityOf(base) || (base.kind === 'cadence' ?
+    `${words.at} ${hours.slice(0, boundedCadence).map(at).join(', ')} ` +
+      `${words.ellipsis} ${words.and} ${at(hours[hours.length - 1])}` +
+      voice.oClock :
+    level.points(hours));
+}
+
+// Whether the minutes are points or several parts, which windows round
+// each hour would show as one stretch.
+function dotted(work: Clockwork): boolean {
+  return ['values', 'pieces', 'cadencePieces']
+    .includes(restOf(work.minutes).base.kind);
+}
+
+// Whether the hours are named as hours and the minutes said once after
+// them: the hours stand apart and the minutes are dotted.
+function scattered(work: Clockwork): boolean {
+  return work.H.length > 1 && standApart(work.hours) && dotted(work);
+}
+
+// Hours taken away from dotted minutes, each the whole hour it is: «in
+// der Stunde 3».
+function hoursGone(hours: number[]): string {
+  return byNumber(words.inHours, words.inHour, hours.map(String));
 }
 
 // The clock times of a schedule that names them, hour by hour.
@@ -437,12 +564,8 @@ function clockTimes(work: Clockwork): number[][] {
 }
 
 // Minutes and hours together, before any seconds trail.
-function minutesAndHours(
-  work: Clockwork,
-  each: string,
-  listed: boolean
-): Said {
-  const {H, M, carry, hours, minutes, voice} = work;
+function minutesAndHours(work: Clockwork, each: string): Said {
+  const {H, M, carry, hours, leads, listed, minutes, voice} = work;
 
   if (listed) {
     return {
@@ -453,8 +576,8 @@ function minutesAndHours(
     };
   }
 
-  if (M.length === 1) {
-    return spread(hours, hourLevel(work));
+  if (M.length === 1 && !leads) {
+    return spread(hours, hourLevel(work, [M[0], ...carry]));
   }
 
   const said = spread(minutes, minuteLevel(work, each));
@@ -463,7 +586,7 @@ function minutesAndHours(
     return said;
   }
 
-  const {base, removed} = restOf(hours);
+  const {base, removed} = restOf(scattered(work) ? work.hourPoints : hours);
   const spans: Spans = {
     from(hour) {
       return voice.clock(hour, work.low);
@@ -474,16 +597,15 @@ function minutesAndHours(
     }
   };
   const gone = [removed].filter(nonEmpty).map(function say(values) {
-    return windows(values, spans);
+    return dotted(work) ? hoursGone(values) : windows(values, spans);
   });
 
-  return base.kind === 'cadence' && minutes.kind === 'values' &&
-    M.length <= heldInSeries ?
-    {excepts: gone, text: seriesOfTimes(base, work)} :
-    {
-      excepts: [...gone, ...said.excepts],
-      text: join([hourStretches(base, spans, work), said.text])
-    };
+  return {
+    excepts: [...gone, ...said.excepts],
+    text: scattered(work) ?
+      `${hoursAlone(work)}, ${said.text}` :
+      join([hourStretches(base, spans, work), said.text])
+  };
 }
 
 // Several seconds at a few clock times: every time to the second where
@@ -607,13 +729,15 @@ function trailing(S: number[], seconds: Sayable, voice: Voice) {
 }
 
 // Whether the seconds take the place of «jede Minute»: they run without
-// a break, through every minute of a stretch.
-function runThrough(seconds: Sayable, minutes: Sayable) {
+// a break, through every minute of a stretch, or through each minute named
+// by its number.
+function runThrough(seconds: Sayable, minutes: Sayable, placed: boolean) {
   const beat = restOf(seconds).base;
   const run = restOf(minutes).base;
   const steady = beat.kind === 'all' || beat.kind === 'cadence' && tiles(beat);
 
   return steady && (run.kind === 'all' || run.kind === 'range' ||
+    placed && run.kind === 'values' ||
     run.kind === 'pieces' && run.parts.every(function isRun(part) {
       return part.kind === 'range';
     }));
@@ -663,9 +787,18 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
     settle(linear.minute, onTheClock, minuteOthers) :
     settleUnwrapped(candidates.minute as SetDescription[], linear.minute,
       inTheHour, minuteOthers);
+  const hours = settle(linear.hour,
+    M.length === 1 ? hoursAsPoints : hoursAsWindows,
+    together(schedule, 'hour', M.length === 1));
+  const listed = isListed(H, M, hours, minutes);
+  // One minute is a clock time unless every hour has it; several are,
+  // unless they are said once for many hours.
+  const placed = M.length === 1 ?
+    restOf(hours).base.kind === 'all' && M[0] > 0 :
+    !listed && H.length > 1;
   const lone = S.length === 1;
-  const pointed = minutes.kind === 'values';
-  const leads = runThrough(seconds, minutes);
+  const pointed = minutes.kind === 'values' && !placed;
+  const leads = runThrough(seconds, minutes, placed);
   const toSecond = denote(restOf(seconds).base, sixty).slice(-1);
 
   function whereLeading() {
@@ -680,11 +813,12 @@ function clockworkOf(schedule: Schedule, voice: Voice): Clockwork {
       return lone && pointed && second > 0;
     }),
     high: [M[M.length - 1], ...toSecond.filter(whereLeading)],
-    hours: settle(linear.hour,
-      M.length === 1 ? hoursAsPoints : hoursAsWindows,
-      together(schedule, 'hour', M.length === 1)),
+    hourPoints: settle(linear.hour, hoursByNumber,
+      together(schedule, 'hour', true)),
+    hours,
     leads,
     linear,
+    listed,
     low: [M[0], ...[0].filter(whereLeading)],
     minutes,
     // One second is silent at 0 and carried by points.
@@ -709,13 +843,11 @@ function eachMinuteOf(work: Clockwork, offsets: boolean): string {
 /** The time part of a schedule. */
 function timePart(schedule: Schedule, voice: Voice): TimeSaid {
   const work = clockworkOf(schedule, voice);
-  const {S, hours, leads, minutes, quiet, seconds} = work;
+  const {S, hours, leads, listed, minutes, quiet, seconds} = work;
   const offsets = !quiet && !leads && minutes.kind === 'all' &&
     S.length <= held;
-  const listed = isListed(work);
   const stamped = listed && S.length > 1 ? toTheSecond(work) : null;
-  const said = stamped ||
-    minutesAndHours(work, eachMinuteOf(work, offsets), listed);
+  const said = stamped || minutesAndHours(work, eachMinuteOf(work, offsets));
   const gone = [restOf(seconds).removed].filter(function apply(removed) {
     return leads && removed.length > 0;
   }).map(function say(removed) {

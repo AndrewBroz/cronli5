@@ -81,20 +81,20 @@ const rows = [
   ['0 9-17 * * 1-5', 'montags bis freitags von 9:00 bis 17:00 Uhr stündlich'],
   ['30 9-17 * * 1-5', 'montags bis freitags von 9:30 bis 17:30 Uhr stündlich'],
   ['5,20,45 9-17 * * 1-5',
-    'montags bis freitags von 9:05 bis 17:45 Uhr stündlich um :05, :20 und ' +
-    ':45'],
+    'montags bis freitags von 9:05 bis 17:45 Uhr stündlich zu den Minuten ' +
+    '5, 20 und 45'],
   ['0-29 9-17 * * 1-5',
-    'montags bis freitags von 9:00 bis 17:29 Uhr stündlich von :00 bis :29 ' +
-    'jede Minute'],
+    'montags bis freitags von 9:00 bis 17:29 Uhr stündlich in den Minuten 0 ' +
+    'bis 29 jede Minute'],
   ['*/7 9-17 * * 1-5',
-    'montags bis freitags von 9:00 bis 17:56 Uhr stündlich von :00 bis :56 ' +
-    'alle 7 Minuten'],
+    'montags bis freitags von 9:00 bis 17:56 Uhr stündlich in den Minuten 0 ' +
+    'bis 56 alle 7 Minuten'],
   ['5/15 9-17 * * 1-5',
-    'montags bis freitags von 9:05 bis 17:50 Uhr stündlich um :05, :20, ' +
-    ':35 und :50'],
+    'montags bis freitags von 9:05 bis 17:50 Uhr stündlich zu den Minuten ' +
+    '5, 20, 35 und 50'],
   ['10-40/10 9-17 * * 1-5',
-    'montags bis freitags von 9:10 bis 17:40 Uhr stündlich um :10, :20, ' +
-    ':30 und :40'],
+    'montags bis freitags von 9:10 bis 17:40 Uhr stündlich zu den Minuten ' +
+    '10, 20, 30 und 40'],
 
   // window / hour
   ['*/15 0 * * 1-5',
@@ -260,13 +260,13 @@ const rows = [
   ['0-9 * * * * *', 'jede Minute, jeweils in den Sekunden 0 bis 9'],
 
   // open / minute
-  ['30 * * * *', 'stündlich um :30'],
+  ['30 * * * *', 'stündlich zur Minute 30'],
   ['0,30 * * * *', 'alle 30 Minuten'],
-  ['0-29 * * * *', 'stündlich von :00 bis :29 jede Minute'],
-  ['0-29,45 * * * *', 'stündlich von :00 bis :29 jede Minute sowie um :45'],
-  ['*/7 * * * *', 'stündlich von :00 bis :56 alle 7 Minuten'],
-  ['5/15 * * * *', 'stündlich um :05, :20, :35 und :50'],
-  ['10-40/10 * * * *', 'stündlich um :10, :20, :30 und :40'],
+  ['0-29 * * * *', 'stündlich in den Minuten 0 bis 29 jede Minute'],
+  ['0-29,45 * * * *', 'stündlich in den Minuten 0 bis 29 und 45 jede Minute'],
+  ['*/7 * * * *', 'stündlich in den Minuten 0 bis 56 alle 7 Minuten'],
+  ['5/15 * * * *', 'stündlich zu den Minuten 5, 20, 35 und 50'],
+  ['10-40/10 * * * *', 'stündlich zu den Minuten 10, 20, 30 und 40'],
 
   // open / hour
   ['* 12 * * *', 'täglich von 12:00 bis 12:59 Uhr jede Minute'],
