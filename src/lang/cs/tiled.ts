@@ -17,9 +17,13 @@ import {
 } from './sets.js';
 import lexicon from './lexicon.js';
 
-const {units, words} = lexicon;
+const {hourParity, units, words} = lexicon;
 
 const lastMinute = 59;
+const halfPast = 30;
+
+// The step of the even and the odd hours.
+const stepOfTwo = 2;
 
 /** The cadence the hours tile the day with, and the hours removed from it. */
 export interface Tiling {
@@ -110,7 +114,57 @@ function removedApart(removed: number[]): string {
     removed[0] && words.afterTheFullHour || words.afterIt) || '';
 
   return removed[0] && spaced(words.except, moments) ||
-    listed([words.exceptTheFullHour, moments].filter(Boolean));
+    listed([words.exceptEveryFullHour, moments].filter(Boolean));
+}
+
+// A run of minutes in each even or odd hour, after its rhythm.
+function runInParity(run: RangeDescription, rhythm: string, start: number):
+  string {
+  const length = String(run.to - run.from + 1);
+  const edge =
+    !run.from && words.inTheFirst || run.to === lastMinute && words.inTheLast;
+
+  return edge && spaced(rhythm, edge, length, words.minutesLocative,
+    hourParity.each[start]) ||
+    spaced(rhythm, words.from, String(run.from), words.to, String(run.to),
+      units.minute.many, hourParity.after[start], words.inclusive);
+}
+
+// The rhythm of minutes that fill the hour: every minute, or a rhythm that
+// tiles it from zero, with or without a minute or two removed.
+function rhythmOf(minutes: Clock, rhythm: string): string {
+  const {form} = minutes;
+  const base = form.kind === 'except' && form.base || form;
+  const step = base.kind === 'cadence' && stepFromZero(base) ||
+    form.kind === 'values' && form.values.length > 1 && minutes.tiles &&
+    minutes.step;
+
+  return base.kind === 'all' && rhythm ||
+    step && everyUnit(step, units.minute) || '';
+}
+
+// The step of a cadence of minutes that tiles the hour from zero, or 0.
+function stepFromZero(cadence: CadenceDescription): number {
+  return Number(!cadence.start &&
+    cadence.last + cadence.interval === lastMinute + 1) * cadence.interval;
+}
+
+/**
+ * The minutes over a step of two hours, which are the even or the odd
+ * hours: a rhythm in them or a run in each, and a minute or two removed;
+ * empty for any other set, and for any other step.
+ */
+function parityApart(tiling: Tiling, minutes: Clock, rhythm: string): string {
+  const {form} = minutes;
+  const {interval, start} = tiling.cadence;
+  const base = form.kind === 'except' && form.base || form;
+  const step = rhythmOf(minutes, rhythm);
+  const said = interval === stepOfTwo &&
+    (step && spaced(step, hourParity.within[start]) ||
+      base.kind === 'range' && runInParity(base, rhythm, start));
+
+  return said && [said, form.kind === 'except' && removedApart(form.removed)]
+    .filter(Boolean).join(', ') || '';
 }
 
 /**
@@ -175,4 +229,25 @@ function removedHours(tiling: Tiling, minutes: Clock, shown: {
     )))) || '';
 }
 
-export {minutesApart, removedHours, tiledHours, tilingOf};
+/**
+ * The head of the time part over hours that tile the day: the even or the
+ * odd hours under a rhythm of minutes; the bare cadence with «v půl» for
+ * minute 30; otherwise the bare cadence and the minutes after «vždy».
+ */
+function tiledHead(tiling: Tiling, minutes: Clock, shown: {
+  rhythm: string;
+  second: number[];
+  style: CzechStyle;
+}): string {
+  const {rhythm, second, style} = shown;
+  const hours = tiledHours(tiling, style);
+  const half = !second.length && String(minutes.values) === String(halfPast);
+  const minute = minutesApart(minutes, rhythm, second);
+
+  return parityApart(tiling, minutes, rhythm) ||
+    half && spaced(hours, words.atTheHalf) ||
+    [hours, minute && spaced(words.always, minute)].filter(Boolean)
+      .join(', ');
+}
+
+export {removedHours, tiledHead, tilingOf};
