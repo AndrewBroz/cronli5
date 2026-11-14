@@ -59,12 +59,11 @@ time.
 - **it, pt, de**: a from–to window round a few listed minutes reads as
   continuous (several existing forms; the principle is in the Italian and
   Portuguese notes on the branch).
-- **uk**: «щотижня з понеділка до п'ятниці» can be read as once a week
-  (candidates: «щодня з понеділка до п'ятниці включно», or no recurrence
-  word). Lists of minutes and seconds are ordinals that depend on a
-  bracket of examples; a count list reads cumulatively; untested
-  candidates are clock labels («о хх:05, хх:20 та хх:45») and the usage
-  notes' form. One value is already a count from the start of the hour.
+- **uk**: settled 2026-11-14. A run of weekdays is «з понеділка по
+  п'ятницю»; lists of minutes are counts from the start of the hour said
+  once («щогодини через 5, 20 та 45 хвилин після початку години»), which
+  the maintainer, reading as a native-level Ukrainian reader, judged clear
+  and easy; the suspected cumulative reading is not one a person makes.
 - **en**: "every minute from 9 a.m. until 9:30 a.m." was twice read as
   including 9:30. Put it to readers.
 - **fr**: « avec 5 secondes de décalage, et à chaque fois de nouveau 25

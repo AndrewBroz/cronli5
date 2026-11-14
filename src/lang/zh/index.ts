@@ -55,7 +55,10 @@ function describeParts(schedule: Schedule, opts: ChineseOptions):
     hour: valuesOf(schedule, 'hour'),
     minute: valuesOf(schedule, 'minute'),
     second: valuesOf(schedule, 'second')
-  }, year + month + days.text === '', opts.style);
+  }, {
+    daily: days.daily,
+    wraps: year + month + days.text === ''
+  }, opts.style);
   const paused = year + month + days.text !== '' &&
     !(years.kind === 'cycle' && month + days.text === '');
 

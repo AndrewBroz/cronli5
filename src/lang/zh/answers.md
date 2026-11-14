@@ -33,10 +33,11 @@ a reader who has not read the README is not told where it starts. Asked
 again, the same two readers read 每6小时一次 and 每3小时的15分 two ways as
 well. So no cadence of hours is said by its step alone. Every second hour
 is the even or the odd hours, with 每天: 每天偶数整点, 每天奇数小时的15分,
-每天偶数小时内，每分钟一次. Every third, fourth, sixth or eighth hour is
-eight hours or fewer, and is listed or named, as before the amendment
-above: 每天0:00、6:00、12:00、18:00. The even or odd hours between two
-ends close on their first and last firing in brackets, as one range of
+每天偶数小时内，每分钟一次. Every sixth or eighth hour is four times or
+fewer and is listed (每天0:00、6:00、12:00、18:00); every third or fourth
+hour at one minute is said from its first time with 每天 (每天0:00起每3
+小时一次; third amendment, 3.7), and with several minutes its hours are
+named. The even or odd hours between two ends close on their first and last firing in brackets, as one range of
 hours does: 每天2点至22点，偶数小时的0分至29分，每分钟一次（首次2:00，末
 次22:29）. Both readers read every new form one way. The ruling against
 brackets that show a series stands: none of these does. Passages changed
@@ -397,13 +398,17 @@ A run of minutes that wraps inside one hour is two windows: 9:00至9:10、
 * **Hours are never said by their step alone.** Every second hour of the
   day, from 0 or from 1, is the even or the odd hours (5.5): 每天偶数整点;
   每天奇数整点; 每天偶数小时的30分; 每天奇数小时的15分、45分. Every
-  third, fourth, sixth, eighth or twelfth hour is eight hours or fewer
-  from any start, and is listed by the table at the top: 每天0:00、3:00、
-  6:00、9:00、12:00、15:00、18:00、21:00; 每天0:00、6:00、12:00、18:00;
-  每天1:00、4:00、7:00、10:00、13:00、16:00、19:00、22:00; with minutes,
-  the times while there are eight or fewer, 每天0:23、6:23、12:23、18:23,
-  and past that the hours by name (4.1), 每天0点、3点、6点、9点、12点、15
-  点、18点、21点的5分、35分.
+  third or fourth hour at one minute, which starts again the next day
+  where it started (a first hour within one step of 0:00), is said from
+  its first time with 每天: 每天0:00起每3小时一次; 每天1:00起每3小时一
+  次; 每天0:15起每3小时一次; 每天0:24起每3小时一轮，…. Under a named
+  date or weekday 起 can run on past that day, so there the cadence keeps
+  both ends, as any other does: 每周一2:00至23:00，每3小时一次. Every
+  sixth, eighth or twelfth hour is four times or fewer, which a reader
+  takes in at a glance, and is listed: 每天0:00、6:00、12:00、18:00;
+  每天0:23、6:23、12:23、18:23. With several minutes the hours are named
+  (4.1), 每天0点、3点、6点、9点、12点、15点、18点、21点的5分、35分 (open:
+  see below).
   (2026-11-14, second amendment. That morning these were 每2小时一次, 每6
   小时一次, 每2小时的30分 and 自1点起每2小时的15分. Two readers briefed in
   Chinese read 每2小时一次, 每6小时一次 and 每3小时的15分 as able to count
@@ -413,6 +418,22 @@ A run of minutes that wraps inside one hour is two windows: 9:00至9:10、
   a count to carry on, where 偶数整点 is one word recognised at once; for
   every third hour it would replace a list of eight times, which needs no
   working out.)
+  (2026-11-14, third amendment, by Claude Opus 5.5 on the maintainer's
+  question. The rejection of the stated start was right for every second
+  hour and wrong for longer steps: a list of eight times is eight things
+  to hold, twice what a reader keeps in mind, where a first time and a
+  step are two, with one easy sum from midnight. Two readers briefed in
+  Chinese (Opus 5.5, Sonnet 5.5) read 每天0:00起每3小时一次, 每天1:00起每
+  3小时一次, 每天0:15起每3小时一次, 每天0:00:30起每3小时一次, 每天0:00起
+  每4小时一次 and 每天0:00起每3小时一次（12:00除外） one way. Both read
+  每周一2:00起每3小时一次 and 每月1日0:00起每4小时一次 two ways, the
+  second as running on through the following days, so under a named day
+  the two ends stay. Both also read 每天0点起每4小时的15分、45分 and 每天
+  0点起，每3小时的第1个小时内，每分钟一次 one way; the several minutes
+  and the stretches under such hours are still the hours by name, and
+  are open to the same change. Seven times left of a cadence, as
+  0,3,6,9,15,18,21, are still listed, since an exception is said only of
+  more than eight.)
 * **Any other cadence of hours keeps both ends**: hours 5 to 23, every
   second, run 5:00至23:00 and leave six hours overnight. At one minute:
   每天5:00至23:00，每2小时一次; 每天0:00至20:00，每2小时一次. Under other
@@ -1153,8 +1174,9 @@ noise. The gloss answered the first judge, who called 偶数点 a coined
 word, and an older doubt that 偶数小时 alone can be "an even number of
 hours"; beside 每天 and before 的, 内 or 整点 no other reading fits the
 sentence, and 偶数小时 is the word the second and third judges wrote
-themselves. No other set of hours has an idiom: every third, fourth,
-sixth or eighth hour is listed (3.7). A hole between such hours is an
+themselves. No other set of hours has an idiom: every third or fourth
+hour is said from its first time, and every sixth or eighth is listed
+(3.7). A hole between such hours is an
 exception to them (3.9): 每天偶数小时内，每分钟一次（8:00至8:59除外）.
 
 None for months. Every second month is its six months, by the limit at

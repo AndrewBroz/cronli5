@@ -611,7 +611,7 @@ function sidesText(sides: Side[], context: Context, meet: boolean): string {
  * date no month has leaves the weekday alone.
  */
 function dayOf(schedule: Schedule, month: MonthPart):
-  {joined: boolean; text: string; tie: string} {
+  {daily: boolean; joined: boolean; text: string; tie: string} {
   const {candidates, dateReach, day} = schedule.analyses;
   const everyDay = dateReach?.days?.everyDay === true;
   const dated = !isAll(candidates.date) && !everyDay &&
@@ -629,6 +629,7 @@ function dayOf(schedule: Schedule, month: MonthPart):
   const lead = when(together && month.kind !== 'none', marks.comma);
 
   return {
+    daily: sides.length === 0,
     joined: sides.length === 2 && !meet,
     text: lead + sidesText(sides, context, meet),
     tie: [

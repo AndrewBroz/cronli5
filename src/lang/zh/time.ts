@@ -18,6 +18,10 @@ const {marks, units, words} = lexicon;
 // How many consecutive clock times, minutes or seconds make a window.
 const WINDOW = 5;
 
+// How many clock times a reader takes in at a glance. A cadence of hours
+// that tiles the day with more than this is said from its first time.
+const GLANCED = 4;
+
 // How many things clock times or minutes each with their seconds may
 // name. A window to the second counts two, for the two times it names.
 const MULTIPLIED = 6;
@@ -135,11 +139,22 @@ interface Scene extends Seconds {
   // Minute 0 of every hour, or of the even or odd hours, with no second
   // said.
   onTheHour: boolean;
+  // The day part says every day.
+  daily: boolean;
   // Every second hour, said by its idiom.
   parity: boolean;
   // One stretch of hours before named minutes, or the even or odd hours
   // between two ends: the first and last firing close the time.
   ranged: boolean;
+}
+
+/**
+ * What stands around the time part: whether the day part says every day,
+ * and whether a run of hours may cross midnight.
+ */
+export interface Around {
+  daily: boolean;
+  wraps: boolean;
 }
 
 /** The three sets of the time part, each sorted. */
@@ -318,7 +333,26 @@ function isClocked(H: Level, M: Level): boolean {
     lone && (H.values.length === 1 || isOneWindow(M.shape)));
 }
 
-// The first row that applies. Exact times that can be counted are points.
+// Whether a cadence starts again on the next day where it started on
+// this one: its first value lies within one step of the field's start
+// and its last within one step of the field's end.
+function tilesFromStart(cadence: Cadence | undefined, domain: Domain):
+  boolean {
+  return typeof cadence !== 'undefined' &&
+    cadence.start - domain.min < cadence.interval &&
+    cadence.last + cadence.interval === domain.max + 1 + cadence.start;
+}
+
+// Whether hours at one minute are a cadence that tiles the day with
+// nothing excepted, more than a reader takes in at a glance.
+function isAnchored(H: Level): boolean {
+  return H.removed.length === 0 && H.base.length > GLANCED &&
+    tilesFromStart(H.cadence, domainOf('hour'));
+}
+
+// The first row that applies. A cadence of hours too long to take in at
+// a glance is a rhythm of hours. Exact times that can be counted are
+// points.
 // One minute under restricted hours is a rhythm of hours, unless they are
 // all the even or all the odd hours. Then windows of clock times, where
 // the hours are clocked. Under every hour or the even or odd hours a
@@ -333,6 +367,7 @@ function kindOf(levels: Level[], parity: boolean, filled: boolean): Kind {
     H.shape.windows.length === 0 && !M.runs.some(isWindow);
 
   return first<Kind>([
+    [M.values.length === 1 && !filled && isAnchored(H), 'hourly'],
     [counted, 'points'],
     [M.values.length === 1 && !H.every && !filled, 'hourly'],
     [!plain && isClocked(H, M), 'clocked'],
@@ -424,9 +459,9 @@ function hoursOf(sets: TimeSets, wraps: boolean) {
 // any other minutes there are, unless it is more than can be listed.
 // Seconds that step evenly at one clock time, or at one minute of every
 // hour or of the even or odd hours, are a window with their step.
-function sceneOf(sets: TimeSets, wraps: boolean): Scene {
+function sceneOf(sets: TimeSets, around: Around): Scene {
   const single = sets.minute.length === 1;
-  const {H, crowded, filled, parity} = hoursOf(sets, wraps);
+  const {H, crowded, filled, parity} = hoursOf(sets, around.wraps);
   const round = H.every || filled;
   const M = levelOf(sets.minute, 'minute',
     {allowed: stretchException, tiled: !crowded});
@@ -442,6 +477,7 @@ function sceneOf(sets: TimeSets, wraps: boolean): Scene {
     H,
     M,
     S,
+    daily: around.daily,
     filled,
     hoursWhole,
     kind,
@@ -680,10 +716,23 @@ function pacedBody(scene: Scene, voice: Voice): string {
     grid :
     {...grid, of: again, strays: minutes.strays.map((value) => ({m: value}))};
 
-  return scene.kind === 'hourly' ?
-    phrase(cross(anchors.hourly, H.shape, 'h'),
-      {step: H.shape.step, unit: units.hour}, voice) :
-    phrase(said, beat, voice);
+  const {step} = H.shape;
+  // A cadence of hours too long to take in at a glance: from its first
+  // time under every day, else between its two ends.
+  const anchored = scene.kind === 'hourly' && isAnchored(H);
+  const hours: Shape = anchored ?
+    {step, steps: [step], strays: [], windows: [H.base]} :
+    H.shape;
+  const hourly = {step: hours.step, unit: units.hour};
+
+  return first([
+    [anchored && scene.daily,
+      () => say({h: H.base[0], m}, voice) + words.onwards +
+        rhythm(hourly, voice)],
+    [scene.kind === 'hourly',
+      () => phrase(cross(anchors.hourly, hours, 'h'), hourly, voice)],
+    [true, () => phrase(said, beat, voice)]
+  ])();
 }
 
 // What each round holds: how many firings, and either their rhythm from
@@ -777,9 +826,9 @@ function bracketOf(notes: string[]): string {
  * The time part, and whether it runs round the clock (every hour, with or
  * without exceptions), which decides what joins it to the day.
  */
-function timeOf(sets: TimeSets, wraps: boolean, style: ChineseStyle):
+function timeOf(sets: TimeSets, around: Around, style: ChineseStyle):
   {allDay: boolean; text: string} {
-  const scene = sceneOf(sets, wraps);
+  const scene = sceneOf(sets, around);
   const voice = voiceOf(scene, scene.shown, style);
   const exact = voiceOf(scene, scene.exact, style);
   const whole = [words.eachMinuteOfThem, words.eachSecondOfThem][
