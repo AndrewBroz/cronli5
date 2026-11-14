@@ -142,11 +142,19 @@ function exceptionIn(
   limits: Limits,
   base: 'all' | 'cadence'
 ): Exception | undefined {
+  // A cadence never loses its first or last value: its ends would be said
+  // only to be taken back.
+  function keepsEnds(cadence: Cadence, removed: number[]): boolean {
+    return !removed.includes(cadence.start) &&
+      !removed.includes(cadence.last);
+  }
+
   return candidates.find(function qualifies(candidate) {
     return !limits.plain && candidate.kind === 'except' &&
       candidate.removed.length <= MOST_REMOVED &&
       candidate.base.kind === base &&
-      (base === 'all' || limits.cadence(candidate.base as Cadence));
+      (base === 'all' || limits.cadence(candidate.base as Cadence) &&
+        keepsEnds(candidate.base as Cadence, candidate.removed));
   }) as Exception | undefined;
 }
 
