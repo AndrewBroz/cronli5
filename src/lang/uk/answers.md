@@ -64,9 +64,28 @@ over-qualified wording that people do not; it is overruled. What
 changed: a cadence of hours that tiles the day (3.7, 3.8), «щодня»
 beside it (2.5), a minute or a second beside it (4.1, 4.2), and the
 pin, which is now a window in words only (4.5); with it every passage
-and example that showed a bracket of times. The usage notes' own
-«щогодини о 15-й хвилині» and «о 5, 20, 35 і 50 хвилині кожної години»
-(usage.md) say an ordinal minute with no bracket.
+and example that showed a bracket of times.
+
+Amended again the same day, on a further ruling: with the brackets gone,
+the lists of places were left as bare ordinals, «щогодини на 15-й та 45-й
+хвилині», «кожні 2 години на 15-й та 45-й хвилині», «щоразу на 8-й
+секунді», on the strength of the usage notes' «щогодини о 15-й хвилині»
+and «о 5, 20, 35 і 50 хвилині кожної години». That was wrong, and not a
+matter of taste. The first minute of the hour is minute zero, so to a
+native reader «на 30-й хвилині» is the minute that runs from 0:29 to 0:30,
+as in a football match: an ordinal names every place a minute early.
+That is exactly why one minute was already a count, «через 30 хвилин
+після початку години» (3.2), and the bracket had been hiding the same
+off-by-one in every list. It was a real misreading, not the verbose
+preference of model readers. Now every position inside the hour or the
+minute is a count from its start, said once for a list: «щогодини через
+15 та 45 хвилин після початку години» (3.3); a run that is not from the
+start or to the end is «з 10 до 40 хвилин після початку кожної години»
+(3.4); a cadence that starts again each hour is «протягом перших 57
+хвилин» or «з 3 до 48 хвилин після початку кожної години» (3.8); a place
+left out is «крім моменту через 29 хвилин після початку кожної години»
+(3.9); and a second beside several minutes follows after «щоразу»
+(4.2). Durations, «протягом перших 30 хвилин», stay.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. "Said" means the phrase a writer uses; "silent" means the
@@ -85,11 +104,13 @@ Six rules run through everything:
   that tiles the day from midnight with three values or more, «кожні 2
   години», «кожні 6 годин» (3.7). One that tiles the day from a later
   start names only its start, «кожні 2 години, починаючи з 1:00» (3.8).
-* **One place inside the hour or the minute is counted from its
-  start** (3.2): «щогодини через 30 хвилин після початку години». **Any
-  other position inside the hour or the minute is said in words**, as
-  the usage notes say it: «на 5-й, 20-й та 45-й хвилині», «протягом перших
-  30 хвилин кожної години». Where the hours are a range, pieces or a
+* **Every place inside the hour or the minute is counted from its
+  start** (3.2, 3.3): «щогодини через 30 хвилин після початку години»;
+  «щогодини через 5, 20 та 45 хвилин після початку години». Never an
+  ordinal: the first minute is minute zero, so «на 30-й хвилині» is the
+  minute that ends at :30. A stretch from the start or to the end is a
+  duration, «протягом перших 30 хвилин кожної години». Where the hours
+  are a range, pieces or a
   cadence that does not tile the day, a window of clock times says which
   hours («…, з 9:05 до 17:45», 4.5). No bracket of clock times follows
   any of these.
@@ -374,11 +395,10 @@ a Quartz «другий понеділок» (5.7).
   30 секунд після початку хвилини»; after «щоразу», «кожні 15 хвилин,
   щоразу через 30 секунд після початку хвилини». One minute with one
   second is one count: `8 5 * * * *` is «щогодини через 5 хвилин 8 секунд
-  після початку години». Where the other field of the same sentence
-  names places by ordinals (a list, or pieces holding single places),
-  the one value is an ordinal too, so that the places of one sentence
-  are said alike: `30 5,20,45 * * * *` is «щогодини на 5-й, 20-й та 45-й
-  хвилині, щоразу на 30-й секунді». A cadence of hours that tiles the
+  після початку години». Several places are counted the same way
+  (3.3), and a second beside several minutes follows after «щоразу»:
+  `30 5,20,45 * * * *` is «щогодини через 5, 20 та 45 хвилин після
+  початку години, щоразу через 30 секунд після початку хвилини». A cadence of hours that tiles the
   day takes the count as «щогодини» does (4.1): `30 */2 * * *` is
   «кожні 2 години через 30 хвилин після початку години».
 
@@ -424,35 +444,39 @@ before it (7.4).
 
 * Hours with minute 0: «о 8:00, 12:00 та 18:00». The preposition is said
   once.
-* Minutes under every hour: «щогодини на 5-й, 20-й та 45-й хвилині». One
-  «на» and one «хвилині» for the list. Minute 0 in a list is «рівно», and
-  «на» is then repeated before each of the others (5.4): «щогодини рівно,
-  на 15-й та на 45-й хвилині».
+* Minutes under every hour: counted from the start of the hour, as one
+  minute is (3.2), with «через» and «після початку години» said once
+  for the list and the unit after the last number: «щогодини через 5,
+  20 та 45 хвилин після початку години»; `15,45 * * * *` is «щогодини
+  через 15 та 45 хвилин після початку години». Minute 0 in a list is
+  «рівно», joined to the counts by «й» (5.4): `0,15,45 * * * *` is
+  «щогодини рівно й через 15 та 45 хвилин після початку години»; `0,45
+  * * * *` is «щогодини рівно й через 45 хвилин після початку години».
 
-  **A list of places is ordinals, with no bracket** (decided 2026-11-14).
-  The list used to be followed by its first firings and its last in
-  brackets, «(0:05, 0:20, 0:45, 1:05 … 23:45)», against the doubt that an
-  ordinal counts from one and a clock from zero. The usage notes write
-  the ordinal minute bare, «о 5, 20, 35 і 50 хвилині кожної години»,
-  «на 15-й хвилині кожної години», and so do timetables: a numbered
-  minute beside «щогодини» is the minute the clock shows. Minute 0, the
-  one place the doubt bites, is «рівно». The bracket made a reader wade
-  through seven clock times to learn what three words had said. The
-  record of what was tried before follows. Counts were tried on
-  2026-11-13 and withdrawn after the blind reader's comparison: against
-  the ordinal list with its bracket, the bracket won ("the brackets give
-  ready marks … they cannot be read another way"), and «через 5, 20 та
-  45 хвилин після початку години» "is easily read cumulatively (5, then
-  20 more, so 3:25)", which «після початку години» removes "mostly, but
-  not entirely". Minute 0 among counts, «на початку години й через 15 та
-  45 хвилин після нього», read more naturally than «рівно, на 15-й…», but
-  with a weak second reading (counted from the previous firing) and «на
-  початку години» as possibly "somewhere at the start". After «щоразу»
-  it was dangerous: «щоразу на початку хвилини й через 15, 30 та 45
-  секунд після нього» can be read as "every minute", sixty firings an
-  hour. Untested candidates: the reader's own clock labels, «щогодини о
-  хх:05, хх:20 та хх:45», and the usage notes' «о 5, 20, 35 і 50 хвилині
-  кожної години».
+  **A list of places is counts, not ordinals** (decided 2026-11-14, twice
+  over). The first hour's first minute is minute zero, so to a native
+  reader an ordinal minute is the minute that has just run, as in a
+  football match: «на 30-й хвилині» is 0:29 to 0:30, not 0:30. That is
+  the reason one minute is already a count (3.2), and the same off-by-one
+  holds for every ordinal position in a list, a range or an exception.
+  The list used to be ordinals followed by its first firings and its
+  last in brackets, «(0:05, 0:20, 0:45, 1:05 … 23:45)», which settled the
+  off-by-one in numbers; earlier the same day the bracket was dropped
+  and the ordinals kept, on the usage notes' «о 5, 20, 35 і 50 хвилині
+  кожної години». That left the off-by-one unsettled; it was not a
+  reader's taste for long phrases but a real misreading, and the counts
+  replace the ordinals. The record of what was tried before follows.
+  Counts were tried on 2026-11-13 and withdrawn after the blind reader's
+  comparison: against the ordinal list with its bracket, the bracket won
+  ("the brackets give ready marks … they cannot be read another way"),
+  and «через 5, 20 та 45 хвилин після початку години» "is easily read
+  cumulatively (5, then 20 more, so 3:25)", which «після початку години»
+  removes "mostly, but not entirely". That reader was a model, the kind
+  that prefers the longer form; «після початку години» names the moment
+  every count is measured from, and it stays. Minute 0 among counts was
+  tried as «на початку години й через 15 та 45 хвилин після нього», with
+  a weak second reading (counted from the previous firing); «рівно»
+  needs no «нього» to refer back.
 * Days of the month: «щомісяця 1-го, 10-го та 20-го числа». One «числа»
   for the list.
 * Months: «у січні та липні».
@@ -499,14 +523,15 @@ readers took it so:
   «щосекунди з 9:00:00 до 9:00:59».
 * A cadence inside a window ends on its last run: «кожні 15 хвилин з 9:00
   до 17:45»; «кожні 6 секунд з 9:00:00 до 9:00:54».
-* The window that pins a minute phrase (4.5) is the same: «щогодини на
-  5-й, 20-й та 45-й хвилині, з 9:05 до 17:45».
+* The window that says which hours (4.5) is the same: «щогодини через 5,
+  20 та 45 хвилин після початку години, з 9:05 до 17:45».
 * A run of minutes under every hour or a stretch of hours: one that
-  starts at 0 is «протягом перших 30 хвилин кожної години»; one that ends
-  at 59 is «протягом останніх 15 хвилин кожної години»; any other is «з
-  10-ї до 40-ї хвилини кожної години»: «щохвилини протягом перших 30
-  хвилин кожної години». Under a range of hours a window follows (4.5).
-  Seconds are the same, with «кожної хвилини».
+  starts at 0 is a duration, «протягом перших 30 хвилин кожної години»;
+  one that ends at 59 is «протягом останніх 15 хвилин кожної години»; any
+  other is counted from the start of the hour, «з 10 до 40 хвилин після
+  початку кожної години» (not «з 10-ї до 40-ї хвилини», ordinals that are
+  each read a minute early, 3.3). Under a range of hours a window follows
+  (4.5). Seconds are the same, with «кожної хвилини».
 
 The one exception: **a stretch that is left out says «включно»**, because
 nothing fires there to show where it ends: «крім проміжку з 3:00 до 3:50
@@ -665,32 +690,38 @@ while of eight clock times the first judge said they cannot be held.
   23:55»; `5/10 9-17 * * *` is «щодня кожні 10 хвилин з 9:05 до 17:55».
   Seconds are the same: `5/10 * * * * *` is «кожні 10 секунд з 0:00:05
   до 23:59:55». **Four values or fewer off the beat are a list**, as a
-  regular set of four is everywhere else: `5/15 * * * *` is «щогодини на
-  5-й, 20-й, 35-й та 50-й хвилині»; `5/15 9-17 * * *` is «щогодини на 5-й, 20-й, 35-й та 50-й
-  хвилині, з 9:05 до 17:50». (These used to be «кожні 15 хвилин з 0:05
+  regular set of four is everywhere else: `5/15 * * * *` is «щогодини
+  через 5, 20, 35 та 50 хвилин після початку години»; `5/15 9-17 * * *`
+  is «щогодини через 5, 20, 35 та 50 хвилин після початку години, з 9:05
+  до 17:50». (These used to be «кожні 15 хвилин з 0:05
   до 23:50». The usage notes: a cadence counted from a start that is not
   the hour makes the reader add, and the natural form names the minutes,
-  «о 5, 20, 35 і 50 хвилині кожної години». Six minutes named are too
+  «о 5, 20, 35 і 50 хвилині кожної години», which are counted here
+  (3.3). Six minutes named are too
   many, so the longer cadence keeps its window.) On the beat three or
   four values stay the bare cadence, «кожні 15 хвилин», «кожні 20
   хвилин»: there is nothing to add to.
 * **Two minutes are a cadence only as 0 and 30** («кожні 30 хвилин»,
   3.7). Any other pair is a list, even one half an hour apart: `15,45 *
-  * * *` is «щогодини на 15-й та 45-й хвилині», and `15,45 9-17 * * *` is «щогодини на 15-й та 45-й хвилині, з
-  9:15 до 17:45». Two places named leave nothing to add up; «кожні 30
+  * * *` is «щогодини через 15 та 45 хвилин після початку години», and
+  `15,45 9-17 * * *` is «щогодини через 15 та 45 хвилин після початку
+  години, з 9:15 до 17:45». Two places named leave nothing to add up; «кожні 30
   хвилин з 0:15 до 23:45» was weighed and makes the reader find the
   second place by adding. **After a cadence of hours even
-  0 and 30 are a list**: `0,30 */2 * * *` is «кожні 2 години рівно та на
-  30-й хвилині». («…щоразу кожні 30 хвилин протягом години» was the same
+  0 and 30 are a list**: `0,30 */2 * * *` is «кожні 2 години рівно й
+  через 30 хвилин після початку години». («…щоразу кожні 30 хвилин протягом години» was the same
   phrase that two readers counted to three firings when it was said of
   seconds, 4.2.)
 * A cadence of minutes that starts again each hour (the interval does not
-  divide 60, or it stops before the hour's end) names both its ends as
-  ordinals, «від початку» for minute 0: `*/7 * * * *` is «кожні 7 хвилин
-  від початку до 56-ї хвилини кожної години»; `3-48/5` would be «кожні 5
-  хвилин з 3-ї до 48-ї хвилини кожної години». With four values or fewer
-  they are listed: `10-40/10 * * * *` is «щогодини на 10-й, 20-й, 30-й
-  та 40-й хвилині».
+  divide 60, or it stops before the hour's end) says where it runs. From
+  minute 0 that is a duration, the first so many minutes up to its last
+  firing: `*/7 * * * *` is «кожні 7 хвилин протягом перших 57 хвилин
+  кожної години». From a later minute both ends are counted from the
+  start of the hour: `3-48/5` would be «кожні 5 хвилин з 3 до 48 хвилин
+  після початку кожної години». (It used to be «від початку до 56-ї
+  хвилини», «з 3-ї до 48-ї хвилини»: ordinals, each read a minute early,
+  3.3.) With four values or fewer they are listed: `10-40/10 * * * *` is
+  «щогодини через 10, 20, 30 та 40 хвилин після початку години».
 * Inside one named hour such a cadence is a window of clock times: «кожні
   7 хвилин з 9:00 до 9:56».
 
@@ -749,32 +780,38 @@ Years with a hole or a stray year are in 5.8.
 **An exception among the minutes or the seconds** follows what it is
 taken from. It is not said under a cadence of hours, where the minutes
 follow «щоразу» or stand as a list and an exception would trail the
-whole phrase: `0,10,20,40,50 */2 * * *` is «кожні 2 години рівно, на
-10-й, на 20-й, на 40-й та на 50-й хвилині».
+whole phrase: `0,10,20,40,50 */2 * * *` is «кожні 2 години рівно й
+через 10, 20, 40 та 50 хвилин після початку години».
 
 * inside named hours it is a clock time: `0,10,20,40,50 9` is «кожні 10
   хвилин з 9:00 до 9:50, крім 9:30»; `0-28,30-59 9,17` is «щохвилини з
   9:00 до 9:59 і з 17:00 до 17:59, крім 9:29 та 17:29»;
-* under every hour or a range of hours it is an ordinal «кожної години»:
-  `0-28,30-59 * * * *` is «щохвилини, крім 29-ї хвилини кожної години»;
-  `0,10,20,40,50 9-17 * * *` is «щодня кожні 10 хвилин з 9:00 до 17:50,
-  крім 30-ї хвилини кожної години»;
+* under every hour or a range of hours it is a moment counted from the
+  start of each hour, «крім моменту через N хвилин після початку кожної
+  години» («моментів» for several): `0-28,30-59 * * * *` is «щохвилини,
+  крім моменту через 29 хвилин після початку кожної години»; `0,10,20,40,50
+  9-17 * * *` is «щодня кожні 10 хвилин з 9:00 до 17:50, крім моменту
+  через 30 хвилин після початку кожної години». (It used to be «крім 29-ї
+  хвилини кожної години», an ordinal read a minute early, 3.3. A bare
+  «крім 29 хвилин» would be read as a duration.)
 * seconds: «щосекунди з 9:00:00 до 9:00:59, крім 9:00:29»; «щосекунди,
-  крім 29-ї секунди кожної хвилини»;
-* a whole minute left out under «щосекунди»: «щосекунди з 9:00:00 до
-  9:59:59, крім проміжку з 9:29:00 до 9:29:59 включно»; «щосекунди, крім
-  29-ї хвилини кожної години».
+  крім моменту через 29 секунд після початку кожної хвилини»;
+* a whole minute left out under «щосекунди» is that minute, counted the
+  same way: «щосекунди з 9:00:00 до 9:59:59, крім проміжку з 9:29:00 до
+  9:29:59 включно»; «щосекунди, крім хвилини через 29 хвилин після
+  початку кожної години».
 
 An exception to the hours comes last. It is a clock time where the hours
 are points («щогодини, крім 3:00») and a stretch where they are filled.
 The stretch runs from the first firing left out to the last, and says
 «включно» (3.4): «кожні 10 хвилин, крім проміжку з 3:00 до 3:50 включно»;
-«щохвилини, крім проміжку з 3:00 до 3:59 включно»; «щогодини на 5-й, 20-й
-та 45-й хвилині, крім проміжку з 3:05 до 3:45 включно». (Without
+«щохвилини, крім проміжку з 3:00 до 3:59 включно»; «щогодини через 5, 20
+та 45 хвилин після початку години, крім проміжку з 3:05 до 3:45
+включно». (Without
 «включно» the second judge could not tell whether 3:50 fires.) If the
 minutes have an exception too, the hours' comes first and the minutes'
 follows after «, і крім»: «кожні 10 хвилин, крім проміжку з 3:00 до 3:50
-включно, і крім 30-ї хвилини кожної години».
+включно, і крім моменту через 30 хвилин після початку кожної години».
 
 3.10 What a reader can hold, judged from how the sentences read and from
 both judges' grades:
@@ -806,18 +843,20 @@ things still comes first. Each part is said as it would be alone and
 they are joined as pieces are (3.6).
 
 * Minutes under every hour or a stretch of hours: each part with its
-  own lead, and one «кожної години»: `0-20/2,21-59/3 * * * *` is «кожні 2
-  хвилини від початку до 20-ї хвилини й кожні 3 хвилини з 21-ї до 57-ї
-  хвилини кожної години». Seconds are the same, with «кожної хвилини».
+  own lead, and one close for them all, «після початку кожної години»
+  where any part is counted, «кожної години» otherwise:
+  `0-20/2,21-59/3 * * * *` is «кожні 2 хвилини протягом перших 21
+  хвилини й кожні 3 хвилини з 21 до 57 хвилин після початку кожної
+  години». Seconds are the same, with «хвилини».
 * Inside one named hour: windows, each with its lead, and a stray
   minute as its clock time: `0-20/2,21-59/3 9 * * *` is «щодня кожні 2
   хвилини з 9:00 до 9:20 і кожні 3 хвилини з 9:21 до 9:57»; `0-20/2,45
   9 * * *` is «щодня кожні 2 хвилини з 9:00 до 9:20 і о 9:45». In
   several named hours the windows would be said over for each hour, so
   the words are said once, as under a range of hours, with a window for
-  each hour: `0-20/2,21-59/3 9,17 * * *` is «щодня кожні 2 хвилини від
-  початку до 20-ї хвилини й кожні 3 хвилини з 21-ї до 57-ї хвилини
-  кожної години, з 9:00 до 9:57 і з 17:00 до 17:57».
+  each hour: `0-20/2,21-59/3 9,17 * * *` is «щодня кожні 2 хвилини
+  протягом перших 21 хвилини й кожні 3 хвилини з 21 до 57 хвилин після
+  початку кожної години, з 9:00 до 9:57 і з 17:00 до 17:57».
 * Hours as points: `0 0-12/2,13-23/3 * * *` is «щодня кожні 2 години з
   0:00 до 12:00 включно й кожні 3 години з 13:00 до 22:00 включно»; a
   run among them takes «щогодини», a single hour «о». Minutes that are
@@ -848,16 +887,16 @@ times.
 
 **Hours that are a cadence said bare are said as «щогодини» is**, with
 their own words in its place, and the minutes and seconds follow
-exactly as they follow «щогодини»: one minute counted from the hour, a
-list in ordinals, and anything else after «, щоразу» (below). The
+exactly as they follow «щогодини»: one minute or a list counted from
+the hour, and anything else after «, щоразу» (below). The
 cadence keeps no window and no end, so an edit to the minutes changes
 the minute words and nothing else:
 
 * `30 */2 * * *` — «кожні 2 години через 30 хвилин після початку години»
 * `23 1/2 * * *` — «кожні 2 години, починаючи з 1:00, через 23 хвилини
   після початку години»
-* `15,45 */2 * * *` — «кожні 2 години на 15-й та 45-й хвилині»
-* `0,30 */2 * * *` — «кожні 2 години рівно та на 30-й хвилині»
+* `15,45 */2 * * *` — «кожні 2 години через 15 та 45 хвилин після початку години»
+* `0,30 */2 * * *` — «кожні 2 години рівно й через 30 хвилин після початку години»
 * `15 0 */2 * * *` — «кожні 2 години через 15 секунд після початку
   години»
 
@@ -892,7 +931,7 @@ windows, each from its first firing to its last.
 
 | H | After the lead |
 | --- | --- |
-| every hour | nothing if the cadence starts at 0; otherwise the day's window, «кожні 10 хвилин з 0:05 до 23:55». A seconds cadence that leads in place of «щохвилини» (4.2) is the same: off the beat it keeps its window beside any exception, «кожні 10 секунд з 0:00:05 до 23:59:55, крім 29-ї хвилини кожної години» |
+| every hour | nothing if the cadence starts at 0; otherwise the day's window, «кожні 10 хвилин з 0:05 до 23:55». A seconds cadence that leads in place of «щохвилини» (4.2) is the same: off the beat it keeps its window beside any exception, «кожні 10 секунд з 0:00:05 до 23:59:55, крім хвилини через 29 хвилин після початку кожної години» |
 | one hour | «щохвилини з 9:00 до 9:59»; «кожні 10 хвилин з 9:00 до 9:50» |
 | a range | «щохвилини з 9:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45»; «кожні 10 хвилин з 9:05 до 17:55» |
 | two windows | joined by «і»: «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45 і з 22:00 до 22:45» |
@@ -913,22 +952,26 @@ window of hours before it; both repeated what the words say.)
 
 **Otherwise M is anchored**: a list, a run, pieces, an exception, or a
 cadence that starts again each hour. Section 3 gives its words: a list is
-«на 5-й, 20-й та 45-й хвилині»; anything else ends «кожної години»
-(«щохвилини протягом перших 30 хвилин кожної години», «кожні 7 хвилин від
-початку до 56-ї хвилини кожної години», «щохвилини протягом перших 30
-хвилин і на 45-й хвилині кожної години»).
+counted, «через 5, 20 та 45 хвилин після початку години»; anything else
+ends «після початку кожної години» where it holds a count and «кожної
+години» where it holds only durations («щохвилини протягом перших 30
+хвилин кожної години», «кожні 7 хвилин протягом перших 57 хвилин кожної
+години», «щохвилини з 10 до 40 хвилин після початку кожної години»,
+«щохвилини протягом перших 30 хвилин і через 45 хвилин після початку
+кожної години»). After «щоразу» the close is «після початку години» or
+nothing.
 
 | H | How it is said |
 | --- | --- |
 | one hour | no ordinals, only clock times: a list, however long («о 9:05, 9:20 та 9:45»; counts «після кожної з цих годин» need more than one hour to count from); a window («щохвилини з 9:00 до 9:29», «з 9:10 до 9:40», «з 9:30 до 9:59»); a window and a stray time («щохвилини з 9:00 до 9:29 і о 9:45»); a cadence («кожні 7 хвилин з 9:00 до 9:56»); with an exception («кожні 10 хвилин з 9:00 до 9:50, крім 9:30») |
 | a list of minutes, six clock times or fewer | the clock times are listed, «о 9:05, 9:20, 9:45, 17:05, 17:20 та 17:45». Only a list: a run, pieces or a cadence of minutes in named hours is windows however few its clock times, «щохвилини з 9:01 до 9:05», «щохвилини з 9:00 до 9:02 і з 17:00 до 17:02», «кожні 10 хвилин з 9:10 до 9:50» (five or six consecutive minutes written out one by one were the renderer's first reading of this row) |
 | two or three separate hours, M not a list | each hour as one hour is said, joined as pieces, with any excepted times gathered at the end: «щохвилини з 9:00 до 9:29 і з 17:00 до 17:29»; «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59, крім 9:29 та 17:29» |
-| every hour | a list after «щогодини», anything else as it is: «щогодини на 5-й, 20-й та 45-й хвилині»; «щохвилини протягом перших 30 хвилин кожної години» |
-| a range of hours | the same words, and the pin is a window from the first firing to the last, after a comma: «щогодини на 5-й, 20-й та 45-й хвилині, з 9:05 до 17:45»; «щохвилини протягом перших 30 хвилин кожної години, з 9:00 до 17:29» |
-| a cadence of hours | a list after the hours' words, with the window where the cadence does not tile the day: «кожні 4 години на 15-й та 45-й хвилині»; «кожні 2 години на 15-й та 45-й хвилині, з 5:15 до 23:45». Anything else follows the hours after «щоразу», without «кожної години»: «кожні 2 години, щоразу щохвилини протягом перших 30 хвилин» |
-| pieces of hours | as a range, with a window for each piece joined by «і»: «щогодини на 5-й, 20-й та 45-й хвилині, з 9:05 до 17:45 і з 22:05 до 22:45» |
+| every hour | a list after «щогодини», anything else as it is: «щогодини через 5, 20 та 45 хвилин після початку години»; «щохвилини протягом перших 30 хвилин кожної години» |
+| a range of hours | the same words, and the pin is a window from the first firing to the last, after a comma: «щогодини через 5, 20 та 45 хвилин після початку години, з 9:05 до 17:45»; «щохвилини протягом перших 30 хвилин кожної години, з 9:00 до 17:29» |
+| a cadence of hours | a list after the hours' words, with the window where the cadence does not tile the day: «кожні 4 години через 15 та 45 хвилин після початку години»; «кожні 2 години через 15 та 45 хвилин після початку години, з 5:15 до 23:45». Anything else follows the hours after «щоразу», without «кожної години»: «кожні 2 години, щоразу щохвилини протягом перших 30 хвилин» |
+| pieces of hours | as a range, with a window for each piece joined by «і»: «щогодини через 5, 20 та 45 хвилин після початку години, з 9:05 до 17:45 і з 22:05 до 22:45» |
 | other separate hours | M as a list of counts, then «після» and the hours: «через 5, 20 та 45 хвилин після 8:00, 9:00, 12:00, 15:00 та 18:00». If minute 0 is in the list, the hours are said first as clock times and the other minutes follow after each of them: «о 8:00, 10:00, 12:00, 15:00 та 18:00 і через 15 та 45 хвилин після кожної з цих годин» (said hour by hour this was fifteen clock times in a row, past the six of 3.10). If M is not a list, each hour is said as one hour is |
-| every hour with exceptions | as every hour, then the stretch left out: «щогодини на 5-й, 20-й та 45-й хвилині, крім проміжку з 3:05 до 3:45 включно» |
+| every hour with exceptions | as every hour, then the stretch left out: «щогодини через 5, 20 та 45 хвилин після початку години, крім проміжку з 3:05 до 3:45 включно» |
 
 The minute phrase is settled before the hours are considered: a
 continuous M is always its lead, whatever the hours are.
@@ -946,7 +989,7 @@ said once and takes its form from the first time: «об 11:00 та 17:00», «�
 * **S is one other second.** If the rest names clock times in its words,
   every one of them carries the second: «о 9:30:15»; «о 9:30:15 та
   17:30:15»; «кожні 15 хвилин з 9:00:30 до 17:45:30»; «щогодини з 9:00:30
-  до 17:00:30 включно»; «кожні 2 години на 5-й та 30-й хвилині, з 5:05:08
+  до 17:00:30 включно»; «кожні 2 години через 5 та 30 хвилин після початку години, з 5:05:08
   до 23:30:08» (`8 5,30 5/2 * * *`). One minute counted from the hour
   carries it in the count: «щогодини через 30 хвилин 15 секунд після
   початку години», «…, крім 3:30:15» (3.2). If the rest names none, the
@@ -965,9 +1008,13 @@ said once and takes its form from the first time: «об 11:00 та 17:00», «�
     через 30 секунд після початку хвилини». What the rest leaves out is
     then written to the minute, «крім проміжку з 3:00 до 3:45 включно»,
     since the second is said once, after «щоразу».
-  * where the minutes name places by ordinals, the second is an ordinal
-    too: «щогодини на 5-й, 20-й та 45-й хвилині, щоразу на 30-й секунді»;
-    «кожні 2 години на 5-й та 30-й хвилині, щоразу на 8-й секунді».
+  * where the minutes are several counts, the second follows them after
+    «щоразу», never folded into them («через 5, 20 та 45 хвилин 30 секунд»
+    would leave the reader asking whether the seconds go with each):
+    «щогодини через 5, 20 та 45 хвилин після початку години, щоразу через
+    30 секунд після початку хвилини»; «кожні 2 години через 5 та 30
+    хвилин після початку години, щоразу через 8 секунд після початку
+    хвилини».
 * **A list of clock times to the second** is said on the terms of 4.1:
   four times or fewer. Every time in such a list is written with its
   seconds: `0,30 0 9` is «о 9:00:00 та 9:00:30»; `*/15 0 9` is «о
@@ -976,7 +1023,8 @@ said once and takes its form from the first time: «об 11:00 та 17:00», «�
   9:00:20, 9:00:30 та 9:00:45»), as a list of minutes in one hour is
   (4.1). In two or three clock times it follows «щоразу», as under
   "anything else" below: `0,15,45 0,20,40 9 * * *` is «щодня о 9:00,
-  9:20 та 9:40, щоразу рівно, на 15-й та на 45-й секунді». (The renderer
+  9:20 та 9:40, щоразу рівно й через 15 та 45 секунд після початку
+  хвилини». (The renderer
   said «о 9:00:00, 9:20:00 та 9:40:00 і через 15 та 45 секунд після
   кожної з цих хвилин»: a moment written to the second is not a minute
   to count from.)
@@ -1000,18 +1048,19 @@ said once and takes its form from the first time: «об 11:00 та 17:00», «�
 * **Anything else**: the rest, then «, щоразу» and the seconds. The
   seconds are: every second, «щосекунди протягом хвилини»; a cadence of
   more than four that fills the minute, «кожні 6 секунд протягом
-  хвилини»; a list, with second 0 as «рівно», «на 15-й та 45-й секунді»,
-  «рівно та на 30-й секунді»; a run, «щосекунди протягом перших 10
-  секунд»; a cadence with ends, «кожні 10 секунд з 5-ї до 55-ї секунди».
+  хвилини»; a list, counted, with second 0 as «рівно», «через 15 та 45
+  секунд після початку хвилини», «рівно й через 30 секунд після початку
+  хвилини»; a run, «щосекунди протягом перших 10
+  секунд»; a cadence with ends, «кожні 10 секунд з 5 до 55 секунд після початку хвилини».
   «Кожні 15 хвилин з 9:00 до 17:45, щоразу щосекунди протягом хвилини»;
-  «кожні 15 хвилин з 9:00 до 17:45, щоразу рівно та на 30-й секунді»;
+  «кожні 15 хвилин з 9:00 до 17:45, щоразу рівно й через 30 секунд після початку хвилини»;
   «щогодини, щоразу щосекунди протягом хвилини».
 
 Seconds 0 and 30 under such a rest were once «щоразу кожні 30 секунд
 протягом хвилини»; two readers expected some to count three firings (0,
 30, 60). A regular set of four or fewer is listed here as everywhere:
-«рівно та на 30-й секунді» is the third judge's «двічі: рівно і через 30
-секунд».
+«рівно й через 30 секунд після початку хвилини» is the third judge's
+«двічі: рівно і через 30 секунд».
 
 **No seconds phrase has a bracket of times** (2026-11-14). Every second
 of a minute after a rest that already said when it fires lost its
@@ -1224,8 +1273,8 @@ The first Monday is not a form of this: it is a Quartz weekday, «у перши�
 followed by a window of clock times where the hours are a range, pieces
 or a cadence that does not tile the day, because the words alone do not
 say which hours: a comma, then «з» the first firing «до» the last, with
-no «включно». «Щогодини на 5-й, 20-й та 45-й хвилині, з 9:05 до 17:45»;
-«кожні 2 години на 15-й та 45-й хвилині, з 5:15 до 23:45». It says which
+no «включно». «Щогодини через 5, 20 та 45 хвилин після початку години, з 9:05 до 17:45»;
+«кожні 2 години через 15 та 45 хвилин після початку години, з 5:15 до 23:45». It says which
 hours and where in them at once. If a «щоразу» phrase follows, the
 window stays where it is.
 
@@ -1242,10 +1291,10 @@ all, «(0:05, 0:20, 0:45, 1:05 … 23:45)», «(0:00–0:29, 1:00–1:29 …
 23:29)». It was there against two doubts: that an ordinal is read one
 off, and that a first cycle written out is read as one run per period.
 The second doubt belongs to the form it replaced («а далі так само…»)
-and went with it. The first is settled by the language itself: the
-usage notes write «на 15-й хвилині кожної години» bare, minute 0 is
-«рівно», and «перших 30 хвилин» and «з 10-ї до 40-ї хвилини» are read as
-the clock reads them. The bracket repeated what the words said in a
+and went with it. The first was real, and is settled in words: every
+position inside the hour or the minute is now a count from its start
+(3.2, 3.3), minute 0 is «рівно», and «перших 30 хвилин» is a duration
+that cannot be read a minute off. The bracket repeated what the words said in a
 dozen numbers, and the evidence for it was read by model judges, which
 prefer the longer, over-qualified form; that evidence is overruled.
 With it go the two brackets a time part could hold, and the moving of a
@@ -1306,11 +1355,12 @@ the hour keeps an edit to the hour from changing the kind of phrase.
 
 5.4 Minute 0 with every hour is «щогодини». There are no words for half
 past or quarter past. **Minute 0 or second 0 named beside others is
-«рівно»**, and «на» is then repeated before each of the others: «щогодини
-рівно, на 15-й та на 45-й хвилині»; «щогодини рівно та на 1-й хвилині»;
-«щоразу рівно та на 30-й секунді». «На 0-й хвилині» is not something
-anyone says; «рівно» is the third judge's word. A run or a cadence that
-starts at 0 is «перших» or «від початку» (3.4, 3.8).
+«рівно»**, joined to the counts that follow by «й»: «щогодини рівно й
+через 15 та 45 хвилин після початку години»; «щогодини рівно й через 1
+хвилину після початку години»; «щоразу рівно й через 30 секунд після
+початку хвилини». «Через 0 хвилин» is not something anyone says;
+«рівно» is the third judge's word. A run or a cadence that starts at 0
+is «перших» (3.4, 3.8).
 
 5.5 Interval words. A cadence uses a digit: «кожні 2 години», «кожні 15
 хвилин», «кожні 5 днів». There is no «кожного другого».
@@ -1483,16 +1533,15 @@ everything else.
 «щогодини», «щосекунди», «щодня». A first or last stretch of exactly one
 is «протягом першої хвилини», «протягом останньої хвилини».
 
-7.2 Case. After «о»: a time in digits. After «на»: the locative singular,
-once for a list: «на 30-й секунді», «на 5-й, 20-й та 45-й хвилині». After
+7.2 Case. After «о»: a time in digits. After
 «по»: short weekday names (1.2), and the locative plural in «по непарних
 числах», «по парних числах» (5.1). After «у»: the locative for a month
 or a year («у червні», «у 2030 році», «у 2030 та 2035 роках»), the
 accusative for a Quartz day, for «парні роки» and for «усі роки» («у
 другий понеділок», «у парні роки», «в усі роки»). In the gloss of 5.7
 the two days are in the nominative («понеділок–п'ятниця»). After «з», «до», «від», «крім», «після»: the genitive
-(«до 2040 року», «крім неділі», «з 5-ї до 55-ї хвилини», «крім 29-ї
-хвилини»). After «через»: the accusative. A
+(«до 2040 року», «крім неділі», «з 5 до 55 секунд», «до 21 хвилини»,
+«крім моменту»). After «через»: the accusative. A
 recurring weekday is one word, «щопонеділка».
 
 7.3 Four alternations of the orthography. Each follows the sounds on
@@ -1529,8 +1578,8 @@ fixed phrase that does not change while it only ever followed «роках».)
 unless the word before ends in a vowel letter. In these sentences that
 means the months «січня», «серпня», «червня», the weekdays «середи»,
 «суботи», «четверга», and the numbers 4, 6, 7, 14, 16, 17 and 40 to 49 as
-an hour, a day, a minute or a second («із 6:00», «із 17-го», «із 4-ї до
-40-ї хвилини»). «Із червня до серпня включно»; «кожні 10
+an hour, a day, a minute or a second («із 6:00», «із 17-го», «із 4 до
+40 хвилин»). «Із червня до серпня включно»; «кожні 10
 хвилин із 6:00 до 8:50 і з 17:00 до 19:50»; «щотижня з середи». «З»
 everywhere else.
 
@@ -1582,8 +1631,9 @@ days; «щомісяця» before days named by number and «щороку» befo
 said with its month (2.6, 2.9).
 
 8.7 `numeral-register` — Digits for every count and position. A position
-inside the hour or the minute is an ordinal with its ending («на 30-й
-хвилині»), with no bracket of clock times after it (4.5).
+inside the hour or the minute is a count from its start («через 30
+хвилин після початку години»), never an ordinal, which a reader takes
+for the minute that has just run (3.3).
 
 8.8 `sentence-wrapper-punctuation` — A label starts with a capital
 letter: «Щодня о 9:00», «Щохвилини». A sentence is «Виконується » before
@@ -1680,13 +1730,13 @@ because a list of bare numbers before a time («1, 10 та 20 числа о
 form put two frequency words together before «щодня» and was marked by
 a judge for it (3.9).
 
-9.9 **One minute is counted; other ordinal minutes are kept.** The notes show how an ordinal hour misleads («дев'ята година»
-is 8:00 to 9:00) and warn against «протягом дев'ятої години». These
-answers never name an hour by its ordinal. One place in the hour is
-counted from its start (3.2), not the notes' «щогодини о 15-й хвилині».
-Lists and stretches are still named by ordinals («на 5-й, 20-й та 45-й
-хвилині», the notes' own «о 5, 20, 35 і 50 хвилині кожної години»),
-as the notes write them, with no bracket of clock times (3.3, 4.5).
+9.9 **Every place inside the hour is counted.** The notes show how an
+ordinal hour misleads («дев'ята година» is 8:00 to 9:00) and warn
+against «протягом дев'ятої години». The same holds for a minute: the
+first minute is minute zero, so «на 30-й хвилині» is the minute that
+ends at :30. These answers name no hour and no minute by its ordinal.
+Places in the hour are counted from its start (3.2, 3.3), not the notes'
+«щогодини о 15-й хвилині» or «о 5, 20, 35 і 50 хвилині кожної години».
 
 9.10 **«Через … після».** The notes advise against «через» on a screen,
 because «через день» and «через два дні» count differently. «Через 5,
