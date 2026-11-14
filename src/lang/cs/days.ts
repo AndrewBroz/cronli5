@@ -9,7 +9,7 @@ import {candidatesAs, daysReached, domainOf} from '../../core/index.js';
 import type {CzechStyle} from './options.js';
 import type {MonthRef} from './calendar.js';
 import {
-  anyMonth, oneMonth, parityStep, sample, stepWord, theseMonths
+  anyMonth, oneMonth, parityStep, stepWord, theseMonths
 } from './calendar.js';
 import type {Described} from './sets.js';
 import {
@@ -112,7 +112,7 @@ function daysWithEnds(part: RangeDescription | CadenceDescription,
 
 // A cadence of days: the parity word when its step is two, with both ends
 // unless it is every odd or every even day; any other step after its
-// start, with its first three members, and its end when it stops early.
+// start, with its end when it stops early.
 function cadenceOfDays(form: CadenceDescription, refs: Refs, domain: Domain):
   Phrase {
   const whole = form.start - domain.min < form.interval &&
@@ -133,7 +133,7 @@ function cadenceOfDays(form: CadenceDescription, refs: Refs, domain: Domain):
   return {
     text: spaced(words.from,
       stops ? ends : refs.general.date(`${form.start}.`), words.everyNth,
-      stepWord(form.interval), units.day.one, sample(form, '.'))
+      stepWord(form.interval), units.day.one)
   };
 }
 

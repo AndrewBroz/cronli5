@@ -30,6 +30,47 @@ de junho»), promised a `31W` in June, listed thousands of years, and ran
 sexta)» by naming the days; and it wrote down the places where this rule
 book keeps its own form against the notes (the last section).
 
+**Amended 2026-11-14 on the maintainer's rulings** about cadences of hours
+and brackets of number series. Before, every cadence of hours named both
+its ends («todos os dias, a cada 2 horas das 00:00 às 22:00»), up to four
+or seven such hours were listed as clock times («todos os dias às 00:00,
+06:00, 12:00 e 18:00»), and minutes under such hours carried a bracket
+of windows or clock times («a cada minuto, de 2 em 2 horas (das 00:00 às
+00:59, das 02:00 às 02:59 … das 22:00 às 22:59)»), as did cadences of
+years («de 4 em 4 anos a partir de 2028 (2028, 2032, 2036…)»). That was
+wrong for a reader who reads once. The README's "Description Accuracy"
+says the library does not qualify a cadence that begins on the first
+second, minute or hour of its cycle, and a cadence of hours that tiles
+the day from midnight is exactly that: «de 2 em 2 horas» is the whole
+truth, and the window, the list and «todos os dias» only make the reader
+check what the step already says. A bracket of numbers repeats what its
+words say and is noise to hold. The earlier reader evidence for the
+windows, the lists and the brackets (sections 3.10, 4.1 and 5.8 cited
+it) is overruled: it came from isolated model readers, which have since
+been shown to favour verbose, over-qualified phrasing that people do not.
+What now holds is in rule 2 of the opening, 2.5, 3.7, 4.1 and 5.8: hours
+that tile the day are said bare, «de N em N horas», from a later start
+with «a partir da 01:00» and no end; a minute beside them is said apart
+from the step; stretches under them are «nas horas pares», «nas horas
+ímpares» or «durante uma hora, de N em N horas»; the same cadence with
+hours taken out is said bare with its exception, also without «todos os
+dias»; and no bracket shows a series of numbers.
+
+Two more rulings the same day. **Under a named month or year, a schedule
+that runs round the clock has no «todos os dias»**: the month or year
+leads, as it does before a run of weekdays (2.4), «em junho, de 3 em 3
+horas», «em junho, a cada 5 minutos», «em 2030, de 2 em 2 horas». Before,
+«todos os dias de junho» was said there; with no day named and the hours
+round the clock, «todos os dias» says nothing the reader does not have,
+and the other languages say «in June, every 3 hours». **Seconds that step
+inside one clock time are a window to the second with the step**: «todos
+os dias, a cada 10 segundos das 09:30:00 às 09:30:50», where «todos os
+dias às 09:30, repetindo a cada 10 segundos durante o minuto inteiro» was
+said; under one minute of every hour, or of hours on a step, «a cada 10
+segundos durante o minuto 30 de cada hora». The «repetindo» clause stays
+only where the time before it is a cadence or a window of minutes (4.2). A cadence of hours that does not tile keeps both its
+ends exactly as before.
+
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. A **moment** is one firing inside a day.
 
@@ -48,19 +89,30 @@ What every rule serves:
 The judgments that decide between phrasings. Each is a rule, and each
 overrides a count of things named:
 
-1. **Up to four moments are always listed.** «Às 00:00, 06:00, 12:00 e
-   18:00» needs no working out; «a cada 6 horas» leaves the reader to
-   guess where it starts.
-2. **A cadence of hours always names both ends**, so the reader knows
-   which hours it lands on: «a cada 2 horas das 00:00 às 22:00». There is
-   no bare «a cada 2 horas» and no «horas pares».
+1. **Up to four moments are listed**: «às 09:00, 12:00 e 18:00» needs no
+   working out. The one exception is hours that tile the day from
+   midnight (rule 2): «de 6 em 6 horas» lands on 00:00, 06:00, 12:00 and
+   18:00 without any working out, and is said in place of the four.
+2. **A cadence of hours that tiles the day is said bare.** It tiles when
+   its step divides 24 and its first hour lies inside the first step, so
+   that it runs to the end of the day and the gap across midnight is the
+   step too. From midnight, with three hours or more, it is the step
+   alone: «de 2 em 2 horas», «de 8 em 8 horas». From a later start it
+   names only that start: «de 2 em 2 horas a partir da 01:00». Neither
+   has «todos os dias» (2.5). **Any other cadence of hours names both
+   ends**, so the reader knows which hours it lands on: «a cada 2 horas
+   das 05:00 às 23:00» runs to 23:00 and resumes at 05:00, and «de 2 em 2
+   horas a partir das 05:00» would promise 01:00 and 03:00.
 3. **Seven is the longest list said in place of a cadence that needs its
    ends named.** Seven or fewer clock times, minutes of the hour, seconds
    of the minute, days of the month or years are listed; more are said as
    the cadence with both ends. The count is of the items that would be
    listed. (A cadence of minutes or seconds that tiles from zero, «a cada
    15 minutos», needs no ends and is not subject to this: it is said for
-   any number of moments above four.)
+   any number of moments above four. Nor is a cadence of hours that tiles
+   the day, which needs at most its start: from a later start it is
+   listed only while it has four hours or fewer, and fewer still where
+   the minutes would make more than seven clock times, 4.1.)
 4. **An exception is for a set of more than four values**, is only for a
    hole inside a set, and must name fewer things than the set said by its
    runs or its cadence (3.9).
@@ -74,8 +126,8 @@ overrides a count of things named:
 
 Where none of these decides between two forms, the one that names fewer
 things is said, and a list wins a tie. A value, a clock time or an end of
-a range is one thing; a cadence that tiles is one; a cadence with its two
-ends is three; an exception is its base plus one for each value excepted.
+a range is one thing; a cadence that tiles is one, and two where it names
+a later start; a cadence with its two ends is three; an exception is its base plus one for each value excepted.
 A run that passes the end of its cycle (hours through midnight, weekdays
 from Sunday into Monday, months through the turn of the year) counts one
 more than its two ends, wherever it is said: alone, among pieces, or as
@@ -198,9 +250,10 @@ closes the `nW`, `LW` and `1W` phrases (5.7). A day of the month and a weekday t
 * A space: «todos os dias às 09:00»; «todas as segundas às 09:00»; «todas
   as segundas, quartas e sextas às 09:00»; «nos dias 1º, 10 e 20 de cada
   mês às 00:00»; «no dia 1º de junho, julho e agosto às 00:00»; «todos os
-  dias às 09:00, repetindo a cada segundo durante o minuto inteiro».
+  dias às 09:00, 6 vezes: 5, 15, 25, 35, 45 e 55 segundos depois».
 * A comma: «todos os dias, a cada minuto das 09:00 às 17:59»; «todas as
-  segundas, a cada hora, em ponto»; «nos dias ímpares de cada mês, exceto
+  segundas, a cada hora, em ponto»; «todos os dias, a cada segundo das
+  09:00:00 às 09:00:59»; «nos dias ímpares de cada mês, exceto
   no dia 15, às 09:00»; «em junho, de segunda a sexta, às 09:00»; «no dia
   1º de janeiro, de 2030 a 2035, às 00:00».
 
@@ -218,8 +271,7 @@ pattern's fields:
 * It is the usual order. Both readers graded every simple sentence in
   this order natural.
 * It cures a real ambiguity. An exception among the hours now ends the
-  sentence: «no dia 1º de cada mês, a cada 2 horas das 00:00 às 22:00,
-  exceto às 08:00». Time first, the same schedule was read as "every two
+  sentence: «no dia 1º de cada mês, de 2 em 2 horas, exceto às 08:00». Time first, the same schedule was read as "every two
   hours always, skipping 08:00 only on the 1st". An exception among the
   days is followed by the time, which is harmless: the time is the same
   for every day, so «nos dias ímpares de cada mês, exceto no dia 15, às
@@ -235,20 +287,25 @@ pattern's fields:
 2.3 Seconds close the time part (4.2).
 
 * `30 0 9 * * *` — «todos os dias às 09:00:30»
-* `*/6 0 9 * * *` — «todos os dias às 09:00, repetindo a cada 6 segundos
-  durante o minuto inteiro»
-* `* 0 9 * * *` — «todos os dias às 09:00, repetindo a cada segundo
-  durante o minuto inteiro»
+* `*/6 0 9 * * *` — «todos os dias, a cada 6 segundos das 09:00:00 às
+  09:00:54»
+* `* 0 9 * * *` — «todos os dias, a cada segundo das 09:00:00 às
+  09:00:59»
 
 2.4 One declared change of order inside the calendar part. A month or
 year that has no noun to attach to with «de» **leads the sentence**, with
-«em» or as a range, followed by a comma. That happens in two cases: the
-days are a run of weekdays or weekday pieces («de segunda a sexta»), or
-they are a day of the month and a weekday together (4.3).
+«em» or as a range, followed by a comma. That happens in three cases: the
+days are a run of weekdays or weekday pieces («de segunda a sexta»); they
+are a day of the month and a weekday together (4.3); or no day is named
+and the hours run round the clock, so that there are no days to name
+(2.5).
 
 * `0 9 * 6 1-5` — «em junho, de segunda a sexta, às 09:00»
 * `*/15 9-17 * 11-2 1-5` — «de novembro a fevereiro, de segunda a sexta, a
   cada 15 minutos das 09:00 às 17:45»
+* `0 */3 * 6 *` — «em junho, de 3 em 3 horas»; `*/5 * * 6-8 *` — «de junho
+  a agosto, a cada 5 minutos»; `0 0 */2 * * * 2030` — «em 2030, de 2 em 2
+  horas»
 
 The leading phrase is the month phrase as it stands alone: «em junho»; «em
 janeiro e julho»; «de junho a agosto»; «de junho a agosto e em dezembro».
@@ -257,22 +314,52 @@ junho dos anos pares» (5.8); with a year and any other month phrase the
 year leads on its own, then the months: «em 2030, de junho a agosto, de
 segunda a sexta, às 09:00». A year alone leads as
 «em 2030», «de 2030 a 2035», «nos anos pares», «de 4 em 4 anos a partir de
-2028 (2028, 2032, 2036…)» (4.4, 5.8).
+2028» (4.4, 5.8).
 
 2.5 «Todos os dias». When neither the day of the month nor the weekday is
 restricted, the days are «todos os dias» if anything gives them work to
-do: the hours are restricted, or a month or a year is.
+do: the hours are restricted, other than to a cadence that tiles the day
+(rule 2 of the opening). Where the hours run round the clock (every hour,
+or a cadence that tiles the day) and a month or a year is named, the month
+or year leads instead (2.4). The one exception is months or years taken
+out of every one («todos os dias, exceto em junho, a cada minuto»), which
+have nothing to lead with.
 
 * `0 9 * * *` — «todos os dias às 09:00»
 * `0 9-17 * * *` — «todos os dias, a cada hora das 09:00 às 17:00»
-* `*/5 * * 6 *` — «todos os dias de junho, a cada 5 minutos»
+* `*/5 * * 6 *` — «em junho, a cada 5 minutos»
 * `0 0 9 * * * 2030` — «todos os dias de 2030 às 09:00»
+* `0 */2 * * *` — «de 2 em 2 horas»; `0 */2 * 6 *` — «em junho, de 2 em 2
+  horas»
 
-With every hour, every month and every year the sentence is the time part
-alone: «a cada minuto», «a cada hora, em ponto», «no minuto 30 de cada
-hora». The condition is on the set of hours, never on how they are said:
-hours 0 to 2 and 4 to 23 are restricted, so `0 0-2,4-23 * * *` is «todos
-os dias, a cada hora, em ponto, exceto às 03:00».
+So an edit to the hours that restricts them, or that makes them run round
+the clock, may change the calendar part between «todos os dias de junho»
+and «em junho»: it is the same choice as adding or removing «todos os
+dias», declared here.
+
+With every hour, or hours that tile the day, and every month and every
+year, the sentence is the time part alone: «a cada minuto», «a cada hora,
+em ponto», «no minuto 30 de cada hora», «de 6 em 6 horas». Such a
+schedule runs round the clock, and «todos os dias» would only repeat it.
+The condition is on the set of hours, never on how they are said: hours
+0 to 2 and 4 to 23 are restricted, so `0 0-2,4-23 * * *` is «todos os
+dias, a cada hora, em ponto, exceto às 03:00». A cadence that tiles the
+day with hours taken out is still that cadence, said bare with the
+exception after it, and the schedule still runs round the clock, so the
+even hours but 8 are «de 2 em 2 horas, exceto às 08:00», and under every
+minute «a cada minuto nas horas pares, exceto das 08:00 às 08:59», with
+no «todos os dias»; from a later start the same, «de 2 em 2 horas a
+partir da 01:00, exceto às 09:00». (Every hour with a hole keeps «todos
+os dias»: «a cada hora, em ponto» is not a step that could stand bare.)
+From a later start the hours count as tiling the day here only
+when there are more than four of them (every 2, 3 or 4 hours), which is
+when they are always said as a step: four or fewer are listed where the
+minutes allow it, `0 1/6 * * *` is «todos os dias à 01:00 e às 07:00,
+13:00 e 19:00», and a list of clock times does not say by itself that the
+schedule runs round the clock. So that an edit to the minutes never adds
+or removes «todos os dias», those four or fewer keep it even where many
+minutes make them a step (4.1): «todos os dias, nos minutos 15 e 45, de 6
+em 6 horas a partir da 01:00».
 
 So an edit to the hours may add or remove «todos os dias»; so may an edit
 to the month or the year, which belong to the same part. No edit to the
@@ -318,10 +405,18 @@ is the «º» of «1º» (1.2).
 
 The words for "every" are divided by scale, so that each does one job:
 
-* «a cada» is a cadence of seconds, minutes or hours: «a cada 15 minutos»;
+* «a cada» is a cadence of seconds or minutes, and a cadence of hours
+  said as clock times with its two ends: «a cada 15 minutos»; «a cada 2
+  horas das 05:00 às 23:00»;
 * «de N em N» is a cadence that chooses among larger things, inside
-  which the rest happens: days, years, and the hours of 4.1 («de 2 em 2
-  dias», «de 4 em 4 anos», «a cada minuto, de 2 em 2 horas (…)»);
+  which the rest happens: days, years, and hours said without clock
+  times, the minute said apart (4.1) («de 2 em 2 dias», «de 4 em 4
+  anos», «de 2 em 2 horas», «no minuto 30, de 2 em 2 horas», «a cada
+  minuto durante uma hora, de 6 em 6 horas»). «De 8 em 8 horas» is how
+  both countries say a step of hours in running text (usage notes 1.3,
+  3.2); and since the minute phrase before it often begins «a cada» («a
+  cada minuto durante os primeiros 30 minutos, de 2 em 2 horas»), two
+  «a cada» never meet across a comma (8.3);
 * «todos os», «todas as» is a recurring day: «todos os dias», «todas as
   segundas»;
 * «de cada» closes a position inside a larger unit: «de cada hora», «de
@@ -484,10 +579,14 @@ is two windows: «a cada minuto das 09:00 às 09:10 e das 09:50 às 09:59».
   value is 0) are «a cada 15 minutos», «a cada 15 segundos», with no
   bounds. Minutes 0 and 30 are «a cada 30 minutos»; seconds 0 and 30 are
   «a cada 30 segundos» when M is every minute (4.2).
-* **Hours** always name both ends, and carry the minute: «a cada 2 horas
-  das 00:00 às 22:00»; «a cada 2 horas da 01:00 às 23:00»; «a cada 3 horas
-  das 00:30 às 21:30». Seven clock times or fewer are listed instead (rule
-  3 of the opening): «às 00:00, 04:00, 08:00, 12:00, 16:00 e 20:00».
+* **Hours that tile the day** (rule 2 of the opening) are said bare, with
+  the minute apart: «de 2 em 2 horas»; «de 6 em 6 horas»; «de 2 em 2
+  horas a partir da 01:00»; «no minuto 30, de 3 em 3 horas». The details,
+  with the minutes, are in 4.1.
+* **Any other cadence of hours** names both ends, and carries the
+  minute: «a cada 2 horas das 05:00 às 23:00»; «a cada 3 horas das 05:30
+  às 20:30». Seven clock times or fewer are listed instead (rule 3 of the
+  opening): «às 05:00, 07:00, 09:00, 11:00, 13:00 e 15:00».
 * **Days of the month** name both ends inside the month: «de 3 em 3 dias
   do dia 1º ao dia 31 de cada mês». Seven days or fewer are listed. Every
   second day is said by its number being odd or even (5.1), with both ends
@@ -595,14 +694,14 @@ What follows «exceto»:
   dias de junho, exceto às quartas».
 * **An hour, where each hour has one moment**: the clock time of that
   moment, to the precision of the rest. «A cada hora, em ponto, exceto às
-  03:00»; «no minuto 30 de cada hora, exceto às 03:30»; «a cada 2 horas
-  das 00:00 às 22:00, exceto às 08:00»; «a cada 2 horas das 00:00:30 às
-  22:00:30, exceto às 08:00:30».
+  03:00»; «no minuto 30 de cada hora, exceto às 03:30»; «de 2 em 2 horas,
+  exceto às 08:00»; «de 2 em 2 horas, 30 segundos depois, exceto às
+  08:00:30».
 * **An hour, where each hour has more than one moment**: the whole hour,
   «das 03:00 às 03:59», whatever the minutes and seconds are. «A cada 10
   minutos, exceto das 03:00 às 03:59»; «nos minutos 5, 20 e 45 de cada
-  hora, exceto das 03:00 às 03:59»; «a cada minuto, de 2 em 2 horas (… das
-  22:00 às 22:59), exceto das 08:00 às 08:59». (The second reader asked whether 03:50
+  hora, exceto das 03:00 às 03:59»; «a cada minuto nas horas pares, exceto
+  das 08:00 às 08:59». (The second reader asked whether 03:50
   fires in «exceto das 03:00 às 03:50». Naming the whole hour leaves
   nothing to ask.) Where the windows of the time part are written to the
   second, so is this one: «exceto das 03:00:00 às 03:59:59».
@@ -620,7 +719,10 @@ What follows «exceto»:
 3.10 The limits are the judgments of the opening section: four moments,
 seven listed items, four items for an exception, four windows (4.1). They
 come from the blind readings, not from a fluent writer's own drafting, and
-a reviewer may move them.
+a reviewer may move them. (Those readings were by isolated model readers;
+where they favoured a window, a list or a bracket over a cadence of hours
+that tiles the day, they were overruled on 2026-11-14, as the note at the
+top says.)
 
 3.11 No ties are declared. `0 */12 * * *` and `0 0,12 * * *` are both
 «todos os dias às 00:00 e 12:00».
@@ -631,9 +733,56 @@ a reviewer may move them.
 cases in order. The first that applies is the rule; nothing in section 3
 overrides it.
 
+**First, hours that tile the day** (rule 2 of the opening) are said as a
+step, «de N em N horas», with « a partir da» and the start where it is
+not midnight («de 2 em 2 horas a partir da 01:00»; with `hour12`, «a
+partir da 1:00 da madrugada»), and with no end and no window. The start
+is written to the hour, whatever the minute, so that an edit to the
+minute changes only the minute's part. This holds from midnight when the
+step gives three hours or more (every 2, 3, 4, 6 or 8 hours), whatever
+the minutes; midnight and noon alone are two moments and go to case 1.
+From a later start it holds when the hours are more than could be listed:
+more than four of them, or more than the clock times allow (with a list
+of minutes, no more than seven clock times; so `15,45 1/6` is said as a
+step). Otherwise they go to the cases below. The minutes are said apart
+from the step:
+
+| M | Said |
+| --- | --- |
+| minute 0 | the step alone: «de 2 em 2 horas»; «de 6 em 6 horas»; «de 2 em 2 horas a partir da 01:00» |
+| one other minute | «no minuto 30», a comma, the step: «no minuto 30, de 2 em 2 horas»; «no minuto 23, de 2 em 2 horas a partir da 01:00» |
+| anchored (a list, a run, pieces, a cadence with ends; case 5) | the minute phrase without «de cada hora», a comma, the step: «nos minutos 15 e 45, de 2 em 2 horas»; «a cada minuto durante os primeiros 30 minutos, de 2 em 2 horas»; «a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas» |
+| continuous (case 3), step 2 | the lead, then «nas horas pares» or «nas horas ímpares»: «a cada minuto nas horas pares»; «a cada 15 minutos nas horas ímpares» |
+| continuous, any other step | the lead, «durante uma hora», a comma, the step: «a cada minuto durante uma hora, de 6 em 6 horas»; «a cada 15 minutos durante uma hora, de 3 em 3 horas a partir da 01:00» |
+| any of these with a hole | the same cadence, said bare with no «todos os dias» (2.5), and the hole as an exception (3.9): «de 2 em 2 horas, exceto às 08:00»; «de 2 em 2 horas a partir da 01:00, exceto às 09:00»; «a cada minuto nas horas pares, exceto das 08:00 às 08:59». A hole is only inside the cadence; hours missing at its end do not tile the day and keep both ends: «a cada 2 horas das 00:00 às 20:00» |
+
+Why these forms:
+
+* The minute is said apart, as against every hour (3.2), but without «de
+  cada hora», which would contradict the step. Changing minute 0 to 30
+  adds «no minuto 30, » and changes nothing else.
+* «Nas horas pares», «nas horas ímpares» are current and exact in both
+  countries (usage notes 3.3), as «nos dias ímpares» is for days (5.1),
+  and they say at once that the whole hour is meant, which «a cada minuto,
+  de 2 em 2 horas» does not.
+* For any other step, «durante uma hora» says how long each stretch
+  lasts; the step says how often it comes. The form that this rule book
+  once rejected, «a cada minuto durante uma hora, a cada 2 horas das 00:00
+  às 22:00», failed on its end, which was not the last moment; a cadence
+  that tiles has no end to name.
+* No bracket follows: the step already says what the bracket listed.
+
+**Hours on a cadence that does not tile**, under minutes that are not one
+minute, more than four hours, keep both ends as a window from the first
+moment to the last, after the step: «a cada minuto nas horas ímpares, das
+05:00 às 23:59»; «a cada 15 minutos durante uma hora, de 3 em 3 horas, das
+05:00 às 20:45»; «nos minutos 15 e 45, de 2 em 2 horas, das 05:15 às
+23:45». This replaces the bracket of windows or clock times that ended
+these forms before.
+
 **Case 1. At most four moments**: they are listed. «Às 09:30»; «às 09:00 e
-17:00»; «às 09:00, 09:15, 09:30 e 09:45»; «às 00:00, 06:00, 12:00 e
-18:00».
+17:00»; «às 09:00, 09:15, 09:30 e 09:45»; «à 01:00 e às 07:00, 13:00 e
+19:00».
 
 **Case 2. M is one minute.**
 
@@ -642,8 +791,9 @@ overrides it.
 | every hour | «a cada hora, em ponto» | «no minuto 30 de cada hora» |
 | a range | «a cada hora das 09:00 às 17:00» | «a cada hora das 09:30 às 17:30» |
 | pieces | «a cada hora das 09:00 às 17:00 e às 22:00» | «a cada hora das 09:30 às 17:30 e às 22:30» |
-| a cadence, more than seven hours | «a cada 2 horas das 00:00 às 22:00»; «a cada 2 horas da 01:00 às 23:00» | «a cada 3 horas das 00:30 às 21:30» |
-| a cadence with a hole | «a cada 2 horas das 00:00 às 22:00, exceto às 08:00» | «a cada 2 horas das 00:30 às 22:30, exceto às 08:30» |
+| a cadence that tiles the day | «de 2 em 2 horas»; «de 2 em 2 horas a partir da 01:00» | «no minuto 30, de 3 em 3 horas» |
+| any other cadence, more than seven hours | «a cada 2 horas das 05:00 às 23:00» | «a cada 2 horas das 05:30 às 23:30» |
+| a cadence that tiles, with a hole | «de 2 em 2 horas, exceto às 08:00» | «no minuto 30, de 2 em 2 horas, exceto às 08:30» |
 | every hour with a hole | «a cada hora, em ponto, exceto às 03:00» | «no minuto 30 de cada hora, exceto às 03:30» |
 | anything else | the times, listed | the times, listed |
 
@@ -658,23 +808,11 @@ hours are one window. Every window is closed on its last moment.
 | H | Confinement |
 | --- | --- |
 | every hour | none |
-| up to four windows | each window: «a cada minuto das 09:00 às 09:59»; «a cada 15 minutos das 09:00 às 17:45 e das 22:00 às 22:45»; «a cada 15 minutos das 00:00 às 00:45, das 06:00 às 06:45, das 12:00 às 12:45 e das 18:00 às 18:45» |
-| more than four windows of one hour each, the hours a cadence | the lead, a comma, «de N em N horas», and in brackets the first two windows, « … », and the last: «a cada minuto, de 2 em 2 horas (das 00:00 às 00:59, das 02:00 às 02:59 … das 22:00 às 22:59)»; «a cada 15 minutos, de 2 em 2 horas (da 01:00 à 01:45, das 03:00 às 03:45 … das 23:00 às 23:45)» |
-| the same with a hole | the same, and the hole as an exception after the bracket: «… das 22:00 às 22:59), exceto das 08:00 às 08:59» |
+| hours that tile the day | as at the head of 4.1: «a cada minuto nas horas pares»; «a cada 15 minutos durante uma hora, de 6 em 6 horas» |
+| up to four windows | each window: «a cada minuto das 09:00 às 09:59»; «a cada 15 minutos das 09:00 às 17:45 e das 22:00 às 22:45»; «a cada 15 minutos das 00:00 às 00:45 e das 12:00 às 12:45» |
+| more than four windows of one hour each, the hours a cadence that does not tile | as at the head of 4.1, with a window from the first moment to the last: «a cada 15 minutos nas horas pares, das 08:00 às 18:45» |
 | more than four windows otherwise | each window |
 | every hour with a hole | «a cada 10 minutos, exceto das 03:00 às 03:59» |
-
-**The bracket is part of the form, not a gloss that may be dropped.** The
-rule in words («de 2 em 2 horas») says the step; the bracket says where it
-starts, how long each stretch is, and where the last one ends. Two earlier
-forms failed on exactly those points: «a cada minuto durante uma hora, a
-cada 2 horas das 00:00 às 22:00» named an end that was not the last
-moment, and «das 00:00 às 00:59, das 02:00 às 02:59 e assim por diante até
-as 22:59» left the step to be guessed from two examples and could be read
-as every minute from 00:00 to 22:59. Inside the bracket the windows are
-written as anywhere else, each with its own «da», «das», «à», «às», and
-the mark between the second and the last is « … », an ellipsis with a
-space on each side.
 
 **Case 4. M is a run of minutes or a cadence with ends, and H is one hour
 or two.** A window of clock times for each hour: «a cada minuto das 09:00
@@ -695,8 +833,8 @@ or a cadence with ends. The minute phrase from section 3 is followed by H:
 | every hour | «de cada hora» |
 | a range or pieces | «de cada hora», a comma, and a window from the first moment to the last: «nos minutos 5, 20 e 45 de cada hora, das 09:05 às 17:45»; «a cada minuto durante os primeiros 30 minutos de cada hora, das 09:00 às 17:29»; «…, das 09:05 às 17:45 e das 22:05 às 22:45» |
 | separate hours, seven clock times or fewer | no minute phrase: the clock times, listed («às 09:05, 09:20, 09:45, 17:05, 17:20 e 17:45») |
-| separate hours that are a cadence, more than seven clock times, M a list of up to three minutes | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the clock times of the first two hours, « … », and the last clock time of all: «nos minutos 15 e 45, de 2 em 2 horas (00:15, 00:45, 02:15, 02:45 … 22:45)»; «nos minutos 15 e 45, de 4 em 4 horas (00:15, 00:45, 04:15, 04:45 … 20:45)». (Two cadences side by side, «a cada 4 horas das 00:15 às 20:15 e das 00:45 às 20:45», looked like a typing error to the third reader.) Three minutes is the limit because the bracket then shows seven clock times, the longest list (rule 3 of the opening); and since seven clock times or fewer are listed outright, the hours here are always three or more, so the « … » always stands for something. |
-| separate hours that are a cadence, more than four of them, M anything else (a run, pieces, a cadence with ends, or a list of four minutes or more) | the minute phrase without «de cada hora», a comma, «de N em N horas», and in brackets the windows of the first two hours, « … », and the window of the last, each from the hour's first moment to its last: «a cada minuto durante os primeiros 30 minutos, de 2 em 2 horas (das 00:00 às 00:29, das 02:00 às 02:29 … das 22:00 às 22:29)»; «a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas (das 00:05 às 00:55, das 02:05 às 02:55 … das 22:05 às 22:55)»; «nos minutos 5, 20, 35 e 50, de 2 em 2 horas (das 00:05 às 00:50, das 02:05 às 02:50 … das 22:05 às 22:50)». A hole in the cadence is an exception after the bracket. (One window for each of twelve hours is a sentence nobody can hold; four windows is the limit of case 3, and it is the limit here. A list of four minutes or more is said this way, and not with clock times in the bracket, because the bracket would hold nine clock times or more; and with the two hours 0 and 12 it would end «… 12:50» after 12:50 had been said.) |
+| hours that tile the day | as at the head of 4.1: the minute phrase without «de cada hora», a comma, «de N em N horas»: «nos minutos 15 e 45, de 2 em 2 horas»; «nos minutos 5, 20 e 45, de 8 em 8 horas» |
+| separate hours on a cadence that does not tile, more than seven clock times with M a list of up to three minutes, or more than four hours with any other M | the minute phrase without «de cada hora», a comma, «de N em N horas», a comma, and a window from the first moment to the last: «nos minutos 15 e 45, de 2 em 2 horas, das 05:15 às 23:45»; «a cada minuto durante os primeiros 30 minutos, de 2 em 2 horas, das 05:00 às 23:29». A hole in the cadence is an exception after it. (One window for each of ten hours is a sentence nobody can hold, and two cadences side by side, «a cada 4 horas das 00:15 às 20:15 e das 00:45 às 20:45», looked like a typing error to the third reader. The bracket of clock times or windows that ended this form before is gone: the step says what it listed.) |
 | separate hours otherwise | the minute phrase, «de cada hora», a comma, and one window for each hour, from its first moment to its last |
 | every hour with a hole | «de cada hora, exceto das 03:00 às 03:59» |
 
@@ -725,21 +863,22 @@ second were 0. Then, by these cases in order:
 
 **Case 1. S is 0**: nothing is added.
 
-**Case 2. At most four moments in all**: they are listed to the second.
-«Às 09:00:30»; «às 09:00:00 e 09:00:30»; «às 00:23:00, 00:23:30, 12:23:00
-e 12:23:30»; «às 00:00:30, 06:00:30, 12:00:30 e 18:00:30».
+**Case 2. At most four moments in all**, where the hours do not tile the
+day as at the head of 4.1: they are listed to the second. «Às 09:00:30»;
+«às 09:00:00 e 09:00:30»; «às 00:23:00, 00:23:30, 12:23:00 e 12:23:30».
 
 **Case 3. S is one second, and every moment of the time part is a named
 clock time or a step of a cadence between two named clock times** (4.1
-case 1, the range, pieces and cadence rows of case 2, case 3 with windows
-or brackets, and the listed and bracketed rows of case 5): the second
+case 1, the range, pieces and cadence rows of case 2, and case 3 with
+windows, the window of a cadence that does not tile included): the second
 rides in every time named. «A cada hora das 09:00:30 às 17:00:30»; «a cada
-15 minutos das 09:00:30 às 17:45:30»; «a cada 2 horas das 00:00:30 às
-22:00:30»; «nos minutos 5 e 30, de 2 em 2 horas (00:05:08, 00:30:08,
-02:05:08, 02:30:08 … 22:30:08)». It does not ride where a minute phrase
-stands before a window, alone or in brackets («nos minutos 5 e 20 de cada
-hora, das 09:05 às 17:20»; «a cada minuto durante os primeiros 30 minutos,
-de 2 em 2 horas (das 00:00 às 00:29 …)»): there case 6 applies.
+15 minutos das 09:00:30 às 17:45:30»; «a cada 2 horas das 05:00:30 às
+23:00:30». It does not ride where a minute phrase stands before a window
+(«nos minutos 5 e 20 de cada hora, das 09:05 às 17:20»), nor in hours
+that tile the day, which name no clock time but their start: there case
+7 applies, «de 2 em 2 horas, 30 segundos depois»; «de 6 em 6 horas, 30
+segundos depois»; «nos minutos 5 e 30, de 2 em 2 horas, sempre 8
+segundos depois».
 
 **Case 4. S is one second, M is minute 0 and H is every hour**: «30
 segundos depois de cada hora em ponto»; «1 segundo depois de cada hora em
@@ -762,9 +901,35 @@ minutes.** The seconds are said in place of «a cada minuto»:
   e 55 de cada minuto»; «a cada segundo durante os primeiros 10 segundos
   de cada minuto»; «nos segundos 5, 15, 25, 35, 45 e 55 de cada minuto,
   das 09:00 às 09:59». (One second under restricted hours has already
-  gone to case 3: «a cada minuto das 09:00:30 às 09:59:30».)
+  gone to case 3: «a cada minuto das 09:00:30 às 09:59:30»; but under
+  hours that tile the day there is no time for it to ride in, and it is
+  said here: «no segundo 30 de cada minuto, nas horas pares».) Under
+  hours that tile the day the hours are said as at the head of 4.1: «a
+  cada segundo nas horas pares»; «a cada 15 segundos durante uma hora, de
+  6 em 6 horas».
 
-**Case 6. Otherwise the seconds follow the time as a clause, after a
+**Case 6. Seconds that step inside named clock times, or inside one
+minute of every hour.** A stretch or a cadence of seconds (every second, a
+cadence, a run; not named seconds) is said in place of the time, as the
+step and a window to the second, where the time to the minute is four
+clock times or fewer (4.1 case 1): one window for each clock time, from
+its first second to its last. «A cada 10 segundos das 09:30:00 às
+09:30:50»; «a cada segundo das 09:00:00 às 09:00:09»; «a cada segundo das
+09:30:10 às 09:30:20»; «a cada 5 segundos das 09:00:05 às 09:00:55»; «a
+cada segundo das 09:00:00 às 09:00:59 e das 17:00:00 às 17:00:59»; with a
+hole, «…, exceto às 09:00:29». Where the time is one minute of every hour,
+or of hours that tile the day, every second or a cadence that tiles is
+said «durante» that minute: «a cada 10 segundos durante o minuto 30 de
+cada hora»; «a cada segundo durante o minuto 0 de cada hora»; «a cada 10
+segundos durante o minuto 24, de 3 em 3 horas». This replaced «às 09:30,
+repetindo a cada 10 segundos durante o minuto inteiro» on 2026-11-14: the
+window says the same in fewer words, is how a clock shows it, and is what
+the other languages say. A run under one minute of every hour keeps the
+clause («no minuto 0 de cada hora, repetindo a cada segundo durante os
+primeiros 10 segundos»), since «durante os primeiros 10 segundos do minuto
+0 de cada hora» stacks three positions.
+
+**Case 7. Otherwise the seconds follow the time as a clause, after a
 comma.** Minute 0 under every hour is then «no minuto 0 de cada hora», not
 «em ponto», which would promise second 0. The clause has two forms.
 
@@ -794,20 +959,22 @@ that what follows happens inside each of the moments already named:
 «sempre»**, which carries the seconds to every piece: «a cada hora das
 09:00 às 17:00 e às 22:00, sempre repetindo a cada segundo durante o
 minuto inteiro»; «a cada minuto das 09:00 às 09:29 e às 09:45, sempre 2
-vezes: 15 e 45 segundos depois»; «às 09:00 e 17:00, sempre repetindo a
-cada segundo durante o minuto inteiro»; «nos minutos 5 e 20 de cada hora,
+vezes: 15 e 45 segundos depois»; «às 09:00 e 17:00, sempre 2 vezes: no
+horário exato e 30 segundos depois»; «nos minutos 5 e 20 de cada hora,
 das 09:05 às 17:20, sempre 15 segundos depois». Without it the clause was
 read as belonging to the last piece only (22:00, 09:45). The test is the
 word «e», not what kind of time it is, so that two builders place it
 alike; after a day of the month and a weekday together the sentence then
 has «sempre» twice, once for each thing it distributes.
 
-«Todos os dias às 09:00, repetindo a cada segundo durante o minuto
-inteiro»; «a cada 15 minutos das 09:00 às 17:45, repetindo a cada segundo
+«A cada 15 minutos das 09:00 às 17:45, repetindo a cada segundo
 durante o minuto inteiro»; «a cada 15 minutos das 09:00 às 17:45, 2
 vezes: no horário exato e 30 segundos depois»; «a cada 15 minutos, 30
 segundos depois»; «no minuto 30 de cada hora, 15 segundos depois»; «no
-minuto 0 de cada hora, repetindo a cada segundo durante o minuto inteiro».
+minuto 0 de cada hora, repetindo a cada segundo durante os primeiros 10
+segundos»; «de 2 em 2 horas, 15 segundos depois». Under hours that
+tile the day minute 0 is the step alone, which promises no second, so it
+stays bare before the clause.
 
 The clause has been through three forms. A bare comma between two
 cadences («…, a cada segundo durante um minuto») was read as two rules. «E,
@@ -1044,9 +1211,13 @@ Where it does not run the length of the month (it starts after the 2nd,
 or stops before the last odd or even day there can be) it names both
 ends, and is listed while it has seven days or fewer: «nos dias pares do
 dia 8 ao dia 30 de cada mês»; «nos dias ímpares do dia 1º ao dia 29 de
-fevereiro». It is not extended to hours, because an hour cadence is
-already said with its two ends (rule 2 of the opening), nor to months,
-which are named.
+fevereiro». It is extended to hours only where they are stretches under
+a finer field: «a cada minuto nas horas pares», «a cada 15 minutos nas
+horas ímpares», and with both ends where the step does not tile the day,
+«a cada minuto nas horas ímpares, das 05:00 às 23:59» (4.1). A moment
+every second hour is «de 2 em 2 horas», the plain step (rule 2 of the
+opening), so that an edit to the minute changes only the minute's part.
+It is not extended to months, which are named.
 
 5.2 Monday to Friday is the range «de segunda a sexta». Saturday and
 Sunday are «todos os sábados e domingos».
@@ -1143,9 +1314,8 @@ than four years.
   with the other exceptions of the calendar part, after the days.
 * Runs and cadences together, each as it is said alone, joined as a list:
   «nos anos pares a partir de 2030 e em 2031»; «de 2030 a 2040 e de 5 em 5
-  anos a partir de 2045 (2045, 2050, 2055…)»; «de 4 em 4 anos a partir de
-  2030 (2030, 2034, 2038…) e de 4 em 4 anos a partir de 2031 (2031, 2035,
-  2039…)». These never fuse with «de».
+  anos a partir de 2045»; «de 4 em 4 anos a partir de 2030 e de 4 em 4
+  anos a partir de 2031». These never fuse with «de».
 * Where a long set still names more than two things, its first years (up
   to seven) are tried as a list before the rest, and the form that names
   fewest is said: «em 2039 e 2040 e nos anos ímpares a partir de 2077»;
@@ -1166,14 +1336,14 @@ than four years.
   dias de 2030, 2032 e 2034»): the list names as many things as «nos anos
   pares de 2030 a 2034», and wins the tie.
 * Any other cadence of years, longer or without end: «de 4 em 4 anos a
-  partir de 2028» and, in brackets, its first three years and «…»: «todos
-  os dias, de 4 em 4 anos a partir de 2028 (2028, 2032, 2036…), às 09:00».
-  If it stops: «de 4 em 4 anos de 2028 a 2060 (2028, 2032 … 2060)», the
-  first two years, « … », and the last. It is always set off by commas, or
-  leads (2.4). The bracket is part of the form, as in 4.1: «em 2028 e
-  depois de 4 em 4 anos» was read as every day of 2028 and then once every
-  four years, and as "after four years"; the years in the bracket leave
-  neither reading open.
+  partir de 2028»: «todos os dias, de 4 em 4 anos a partir de 2028, às
+  09:00». If it stops: «de 4 em 4 anos de 2028 a 2060». It is always set
+  off by commas, or leads (2.4). Before 2026-11-14 a bracket of the first
+  years followed («(2028, 2032, 2036…)»); it repeated what the step and
+  its start say, and is gone (the note at the top). What it was added
+  against was a different phrase, «em 2028 e depois de 4 em 4 anos», read
+  as every day of 2028 and then once every four years; «de 4 em 4 anos a
+  partir de 2028» has no such reading.
 
 ## 6. Words
 
@@ -1191,8 +1361,8 @@ not spoken.
 6.5 a cada, de … em …, à, às, da, das, de, do, dos, a, ao, aos, em, no,
 na, nos, nas, num, e, ou, e também, durante, exceto, todos os, todas as,
 todos os dias, de cada, sempre, repetindo, o minuto inteiro, vezes, no
-horário exato, primeiros, últimos, em ponto, depois de, antes do, que
-fica, mais próxima, do mesmo mês, do mês, se cair, que não seja, nem, a
+horário exato, primeiros, últimos, em ponto, uma hora, horas pares,
+horas ímpares, depois de, antes do, que fica, mais próxima, do mesmo mês, do mês, se cair, que não seja, nem, a
 partir de, bissextos, nunca, não tem, não têm, Nunca ocorre.
 
 ## 7. Agreement
@@ -1243,7 +1413,8 @@ inside it: «em junho, todas as sextas e também no dia 1º, sempre às
 00:00».
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window («das … às
-…»), or «de N em N horas» with its bracket. Seconds are bound to the time
+…»), «nas horas pares», «nas horas ímpares», or «durante uma hora, de N em
+N horas», which says how long each stretch lasts. Seconds are bound to the time
 by «repetindo», or counted from each moment. No two cadences are ever
 joined by a bare comma.
 
@@ -1253,8 +1424,8 @@ said. A field that takes every value is not said.
 
 8.5 `range-boundary` — Every window names the first and the last moment
 that fire, in the unit it is written in: to the minute, or to the second
-where 4.2 case 3 or case 5 writes the seconds into it. Where a seconds
-clause follows a window (4.2 case 6), the window's last moment is the last
+where 4.2 case 3, 5 or 6 writes the seconds into it. Where a seconds
+clause follows a window (4.2 case 7), the window's last moment is the last
 run, and the clause says which seconds of that run fire.
 
 8.6 `recurrence-marking` — «Todas as», «todos os» and the plural for
@@ -1278,9 +1449,11 @@ fallback is «um padrão cron não reconhecido», which is never wrapped.
 
 8.9 `cardinality-rendering` — `0 0 1 */3 *` is «no dia 1º de janeiro,
 abril, julho e outubro, às 00:00»; `0 0 1 */2 *` is «no dia 1º de janeiro,
-março, maio, julho, setembro e novembro, às 00:00»; `0 */6 * * *` is
-«todos os dias às 00:00, 06:00, 12:00 e 18:00»; `0 */2 * * *` is «todos os
-dias, a cada 2 horas das 00:00 às 22:00».
+março, maio, julho, setembro e novembro, às 00:00»; `0 */6 * * *` is «de
+6 em 6 horas»; `0 */2 * * *` is «de 2 em 2 horas»; `0 1/2 * * *` is «de 2
+em 2 horas a partir da 01:00»; `0 5/2 * * *` is «todos os dias, a cada 2
+horas das 05:00 às 23:00»; `0 */12 * * *` is «todos os dias às 00:00 e
+12:00».
 
 8.10 `calendar-reach` — A date no reached month has is never named: the
 months that lack it are left out, a schedule that cannot fire says
@@ -1308,6 +1481,9 @@ judgment, and much of what bears on these choices is the second kind.
   (notes 5; 3.3 here).
 * Every second day of the month is always «dias ímpares», «dias pares»,
   never «de 2 em 2 dias» (notes 3.3, 8; 5.1 here).
+* «De 8 em 8 horas» for a step of hours said without clock times, and
+  «horas pares», «horas ímpares» for stretches every second hour (notes
+  1.3, 3.2, 3.3; 4.1 here), since 2026-11-14.
 * No day cadence that the inclusive count would turn into "weekly" or
   "fortnightly" is ever said (notes 1.3; 3.7 here).
 * A date the month does not have is not named (notes 8, «no dia 31 de

@@ -84,7 +84,7 @@ function span(start: number, last: number, open: boolean): string {
 
 // A cadence of years. Every second year from the start of the calendar
 // with no end fuses like a year; any other names where it starts, or its
-// two ends, and one that is not every second year shows its first years.
+// two ends.
 // (A short cadence with an end never comes here: it names as many things
 // as its years listed, and the list wins.)
 function everyFewYears(said: CadenceDescription): Year {
@@ -107,14 +107,10 @@ function everyFewYears(said: CadenceDescription): Year {
     };
   }
 
-  const shown = open ?
-    `${start}, ${start + interval}, ${start + 2 * interval}…` :
-    `${start}, ${start + interval} … ${last}`;
-
   return {
     ...noYear,
     lead: `${words.from} ${interval} ${words.in} ` +
-      `${counted(interval, units.year)} ${reach} (${shown})`
+      `${counted(interval, units.year)} ${reach}`
   };
 }
 

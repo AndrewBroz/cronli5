@@ -154,6 +154,8 @@ interface Speech {
   clock(moment: Moment): string;
   // «giugno», «giu».
   month(month: number): string;
+  // «a partire dalle 2:00», «a partire dall'1:00».
+  since(moment: Moment): string;
   // «dalle 9:00 alle 17:45».
   span(from: Moment, to: Moment): string;
   // «fino alle 22:45».
@@ -199,6 +201,9 @@ function speechOf(style: ItalianStyle): Speech {
     clock,
     month(month) {
       return months[month][form];
+    },
+    since(moment) {
+      return `${words.startingAt} ${after(FROM, moment)}`;
     },
     span(from, to) {
       return `${after(FROM, from)} ${at(to)}`;

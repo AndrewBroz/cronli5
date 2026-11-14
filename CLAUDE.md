@@ -20,7 +20,9 @@ only shared dependency is the core. The *why* is in
 ## What all of this is for
 
 A person reads a description, perhaps aloud, and knows exactly when the
-schedule fires, with little effort and no second reading. Everything else
+schedule fires, with little effort and no second reading. The description
+is concise AND natural: what a native speaker would write, with nothing a
+person would leave out or would not say. Everything else
 here (the artifacts, the rows, the tools, the gates) exists to serve that,
 and none of it is the goal. Use it accordingly:
 
@@ -31,21 +33,25 @@ and none of it is the goal. Use it accordingly:
   target that way, and eight agents shortened thousands of sentences it
   had never flagged, many into forms readers misread.
 - **A tool's output is a list of places to look.** Counts and scores
-  (`npm run conciseness`, `npm run edit-diff`) find candidates; a person
-  or a blind reader decides whether each is a defect. Ask what a check was
-  written to catch before acting on it.
+  (`npm run conciseness`, `npm run edit-diff`) find candidates; a person,
+  or a reader checked against the true schedule, decides whether each is
+  a defect. Ask what a check was written to catch before acting on it.
 - **What a language's notes record is evidence, not law.** `answers.md`
   says what a language does and why, with the reader or source behind each
   choice and its date. A recorded reason can be tested again and can be
-  wrong. "The notes say so" and "the maintainer chose it" are never
-  reasons; the reason is what makes the choice right for a reader.
+  wrong. "The notes say so" is never a reason; the reason is what makes
+  the choice right for a reader, and a ruling is recorded with it. A
+  recorded "the readers preferred the longer form" is weak evidence (see
+  How quality is judged).
 - **When a device exists to repair a symptom, question what causes the
   symptom.** If one language needs a bracket, a gloss or a marker that
   the others do not, look first at the choice underneath it, and at how
   the native usage notes and the other languages avoid the problem.
-- **A change is better only if a reader finds it so.** Compare the new
-  sentence with the one it replaces, blind, before calling it an
-  improvement. Shorter is not better; neither is longer.
+- **A change is better only if it is more concise or more natural, and
+  no less exact.** Check exactness by comprehension scored against the
+  true schedule; judge concision and naturalness against how native
+  writers write, not by a model reader's preference. Shorter is not
+  better on its own, and longer is rarely better.
 
 ## The reader's mind
 
@@ -147,15 +153,24 @@ separate question, for a reader (next section).
 what is easy for the reader: you will find a long list, a product of
 three fields or a rule left to inference perfectly clear. Do not judge by
 your own ease. Ask what a person reading once, at speed, would take the
-sentence to mean, and test it with readers as the next section says. A
+sentence to mean, and check it as the next section says. Equally, do not
+mistake extra words for help: a person does not need a stated start, a
+window or a bracket of examples where the plain phrase is clear. A
 language meets each of these points with its own means; the point
 carries between languages, the wording never does.
 
-## How quality is judged: by an automated pipeline
+## How quality is judged
 
-There will be no native-speaker reviewers. That is not a blocker; it is
-the design problem, and the pipeline is the product. Agents judge, and
-how they are prompted decides whether their judgment is worth anything:
+There are few native-speaker reviewers. Model agents help, but only where
+their judgment is worth something, and they have a known bias.
+
+**Model readers favour verbose.** Isolated model readers reward stated
+starts and ends, windows, glosses, brackets of numbers and spelled-out
+units, which people find noise. On 2026-11-14 fifteen readers across five
+languages ranked "from 0:00 to 22:00, every 2 hours" above a bare "every
+2 hours", and preferred a German bracket «(1., 3., 5. … 31.)»; the
+maintainer overruled both. Many choices in the language notes were made
+on such readers' preferences, and can be reopened. So:
 
 - **Immersed.** A judging agent is briefed entirely in the target
   language, as a reader of text on a screen. Nothing in English; nothing
@@ -163,22 +178,34 @@ how they are prompted decides whether their judgment is worth anything:
 - **Context-isolated.** A fresh agent each time, shown only the sentences.
   It never sees the project, the notes, the author's hypothesis ("could
   this be read as continuous?" leaks it), or another judge's view.
-- **Asked whether a sentence has one reading.** Readers are for
-  correctness: a reader who finds a second plausible reading has found a
-  defect. Ease is the cost model's question, not theirs: a model works
-  things out a person reading once would not, so a model finding a
-  sentence clear says little about how hard it is to hold.
+- **Asked whether a sentence has one reading, not whether it is easy or
+  nice.** Readers are for correctness: a reader who finds a second
+  plausible reading has found a defect. Ease is the cost model's question,
+  not theirs: a model works things out a person reading once would not,
+  so a model finding a sentence clear says little about how hard it is to
+  hold.
 - **Scored by machine where possible.** An answer key that shares no code
   with the library (`tooling/scripts/reading/oracle.mjs`) knows when a
   pattern fires; `tooling/scripts/reading/run.mjs` asks readers about
-  chosen moments and scores them. On 2026-11-14 it read all 657 German
-  rows with 99.9% of answers right, which is why it checks correctness,
-  not ease. Readers of one model and prompt answer alike; vary them if
-  agreement is to mean anything.
-- **A reported second reading is a defect; a report of stiffness is a
-  note.**
-- **Corpus evidence.** Search the open web for a phrase fragment to see
-  how native writers use it.
+  chosen moments (true firings, and near-misses aimed at the misreadings
+  above) and scores them. A wrong answer is a defect, located. On
+  2026-11-14 it read all 657 German rows with 99.9% of answers right,
+  which is why it checks correctness, not ease. Readers of one model and
+  prompt answer alike; vary them if agreement is to mean anything.
+- **A reported second reading is a defect; a report of stiffness, a
+  ranking or a preference is a note.** Above all, a wish for more words
+  ("it doesn't say where it starts", "the bracket helps") decides
+  nothing, and an objection to a settled convention is not a second
+  reading.
+- **Project conventions are settled, and readers do not reopen them.** A
+  cadence that begins on the first second, minute or hour of its cycle is
+  said bare (README, "Description Accuracy"). No bracket shows a series of
+  numbers to illustrate what the words already say.
+- **Concision and naturalness are taste calls**, made by the orchestrating
+  frontier model or a fluent human, weighed with the cost model above and
+  against corpus evidence: search the open web for a phrase fragment to
+  see how native writers write it. Record each call in the answers with
+  its reason.
 
 What is left to do, and the state of every language, is in
 [tooling/docs/finishing-1.0.md](tooling/docs/finishing-1.0.md).
@@ -289,10 +316,11 @@ renderer change.
   which day a week starts on, what counts as one thing to hold in mind.
   Only the reader's task is universal, and how hard a phrase is to hold
   depends on how the language says it.
-- **Fluency is judged blind.** The judge is briefed in the target language,
-  sees the sentences as something people wrote for a screen, and is told
-  nothing of patterns, rules or generation. This is a separate read from
-  the one that checks a sentence against its schedule.
+- **Concise and natural is the bar.** A description is what a native
+  speaker would write for someone reading it once. A reader's sense of
+  fluency is a note; the call is made as How quality is judged says, and
+  a sentence is never lengthened to satisfy a reader who wanted to be
+  told more than the convention says.
 
 - **Green gates are not proof.** Held-out rows, regeneration, blind
   recovery and fuzzing all passed for English while it said the wrong

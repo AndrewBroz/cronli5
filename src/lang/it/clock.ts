@@ -10,7 +10,7 @@ import type {Cadence, Exception, Form, Part, Run} from './sets.js';
 import {choose, countOf, firstOf, runsIn, runsOf, tiles} from './sets.js';
 import type {Speech} from './words.js';
 import {every, list, phrase, sayPieces} from './words.js';
-import type {Voice} from './voices.js';
+import type {HourWords, Voice} from './voices.js';
 import {FIRST, LAST} from './voices.js';
 import lexicon from './lexicon.js';
 
@@ -19,10 +19,18 @@ const {units, words} = lexicon;
 // The fewest values a cadence has to be said as a cadence.
 const LONG_CADENCE = 5;
 
+// The fewest hours a cadence that tiles the day from midnight has to be
+// said bare; from a later start it needs a long cadence.
+const ROUND_THE_CLOCK = 3;
+
 // At most this many clock times are listed whatever the fields look like,
 // and this many when minutes are a list over a list of hours.
 const TIMES_AT_A_GLANCE = 4;
 const MOST_TIMES_LISTED = 8;
+
+// The hour seconds named at minute 0 are counted from.
+const EVERY_HOUR: HourWords = {at: words.atEveryHour, of: words.eachHour};
+const THE_HOUR: HourWords = {at: words.atTheHour, of: words.theHour};
 
 // Pieces inside one hour are clock windows up to this many items.
 const MOST_PIECE_WINDOWS = 3;
@@ -50,6 +58,8 @@ interface Hours {
   removed: number[];
   // The runs of hours, in the order they are read.
   runs: number[][];
+  // A cadence that tiles the day and is said as one, with no ends.
+  tiling: Cadence | null;
   values: number[];
 }
 
@@ -98,6 +108,33 @@ function hourNumbers(values: number[], hours: Hours): string {
     list(values.map(String));
 }
 
+// Whether a cadence of hours tiles the day and is said as one: from
+// midnight with a few values, from a later start with as many as any
+// cadence needs.
+function tilesTheDay(cadence: Cadence): boolean {
+  const fewest = cadence.start === HOURS.min ?
+    ROUND_THE_CLOCK :
+    LONG_CADENCE;
+
+  return tiles(cadence, HOURS) && countOf(cadence) >= fewest;
+}
+
+// The cadence of hours that tiles the day, if the hours are one, or are
+// one less the hours an exception leaves out.
+function tilingOf(set: FieldSet, form: Form): Cadence | null {
+  const named = set.candidates[set.candidates.length - 1];
+  const cadence = set.candidates.find(function isCadence(candidate) {
+    return candidate.kind === 'cadence';
+  }) as Cadence | undefined;
+  const base = form.kind === 'except' && form.base.kind === 'cadence' &&
+    form.base;
+
+  return firstOf<Cadence | undefined>([
+    named.kind === 'values' && cadence && tilesTheDay(cadence) && cadence,
+    base && tilesTheDay(base) && base
+  ]) || null;
+}
+
 /** The hours, from their candidates under the view they are read in. */
 function hoursOf(set: FieldSet): Hours {
   const form = choose(set.candidates, HOURS,
@@ -113,6 +150,7 @@ function hoursOf(set: FieldSet): Hours {
     open: form.kind === 'all',
     removed: (form as Exception).removed || [],
     runs,
+    tiling: tilingOf(set, form),
     values: set.values
   };
 }
@@ -258,7 +296,8 @@ function sayHourly(value: number, work: Clockwork): TimeSaid {
     });
   }
 
-  const eachHour = value === FIRST && voice.onTheHour ||
+  const eachHour = value === FIRST &&
+    (voice.onTheHour || voice.afterTheHour(EVERY_HOUR)) ||
     `${voice.listed([value])} ${voice.unit.ofEach}`;
   const sayers = {
     all() {
@@ -516,6 +555,108 @@ function smoothOf(form: Form, work: Clockwork): Rate | undefined {
   ]);
 }
 
+// Minute 0 alone, said plainly: what «a ogni ora in punto» says of every
+// hour.
+function atTheTop(work: Clockwork): boolean {
+  const {inner, voice} = work;
+
+  return inner.values.length === 1 && inner.values[0] === FIRST &&
+    voice.onTheHour !== '';
+}
+
+// Seconds named at minute 0, counted from the hour, if that is how the
+// voice says minute 0.
+function afterTheTop(work: Clockwork, hour: HourWords): string {
+  const {inner, voice} = work;
+
+  return phrase(inner.values.length === 1 && inner.values[0] === FIRST &&
+    voice.afterTheHour(hour));
+}
+
+// The rate the unit is over hours that tile the day, if it never breaks:
+// from the top of the hour at any length, off zero only when long.
+function rateOver(form: Form, work: Clockwork): Rate | undefined {
+  const rate = form.kind === 'except' ?
+    rateOf(form.base) :
+    smoothOf(form, work);
+
+  return firstOf<Rate | undefined>([
+    rate?.first === FIRST && rate,
+    work.inner.values.length >= LONG_CADENCE && rate
+  ]);
+}
+
+// The hours an exception leaves out of hours that tile the day: the times
+// that do not fire while they are few and the unit is not a stretch of
+// the hour, and the whole hours otherwise.
+function tilingOut(stretched: boolean, work: Clockwork): string[] {
+  const {hours, inner, voice} = work;
+  const {removed} = hours;
+  const few = !stretched &&
+    removed.length * inner.values.length <= TIMES_AT_A_GLANCE;
+
+  return firstOf<string[]>([
+    removed.length === 0 && [],
+    few && [list(removed.flatMap(function inHour(hour) {
+      return inner.values.map(function time(value) {
+        return voice.out(hour, value);
+      });
+    }))],
+    [hoursOut(removed, work)]
+  ]);
+}
+
+// Hours that tile the day, said bare or from their start, and the unit
+// said apart from them, before a comma. Minute 0 alone is the hours
+// alone; a unit that runs from the top of each hour, or through every
+// minute of it, is a stretch of one hour.
+function sayRoundTheClock(cadence: Cadence, work: Clockwork): TimeSaid {
+  const {speech, voice} = work;
+  const {unit} = voice;
+  const form = formOf(work);
+  const rate = rateOver(form, work);
+  const removed = (form as Exception).removed || [];
+  const unitOut = [
+    ...tilingOut(rate?.first === FIRST || voice.per > 1, work),
+    ...removed.length > 0 ? [voice.unitOut(removed)] : []
+  ];
+  const hours = phrase(every(cadence.interval, 'hour'),
+    cadence.start > HOURS.min &&
+      speech.since({hour: cadence.start, minute: FIRST}));
+  const parity = [words.evenHours, words.oddHours][cadence.start];
+  const during = cadence.interval === 2 ?
+    parity :
+    phrase(words.forAnHour, hours);
+  const text = phrase(voice.within(form), voice.kept) +
+    tailOf(form, voice);
+
+  // A rate from the top of the hour fills it; off zero it says its start.
+  function rated(found: Rate): string {
+    const single = found.interval === 1;
+    const rateWord = every(found.interval, unit.key);
+
+    return firstOf<string>([
+      found.first === FIRST && single &&
+        phrase(voice.alone(voice.each, true), during),
+      found.first === FIRST && voice.alone(phrase(rateWord, during), false),
+      `${voice.alone(phrase(rateWord, words.startingFromThe,
+        units[unit.key].one, String(found.first)), false)}, ${hours}`
+    ]);
+  }
+
+  return firstOf<TimeSaid>([
+    atTheTop(work) && said(hours, unitOut, 'named'),
+    afterTheTop(work, THE_HOUR) &&
+      said(`${afterTheTop(work, THE_HOUR)}, ${hours}`, unitOut, 'named'),
+    rate && said(rated(rate), unitOut),
+    {
+      ...said(voice.per > 1 ? phrase(text, during) : `${text}, ${hours}`,
+        unitOut),
+      kind: kindOf(form)
+    }
+  ]);
+}
+
 /** One unit inside the hour, said of the hours. */
 function sayWithin(work: Clockwork): TimeSaid {
   const {hours, inner, voice} = work;
@@ -538,6 +679,9 @@ function sayWithin(work: Clockwork): TimeSaid {
   }
 
   return lazily([
+    function roundTheClock() {
+      return hours.tiling !== null && sayRoundTheClock(hours.tiling, work);
+    },
     function fewTimes() {
       return times <= TIMES_AT_A_GLANCE && timesListed(work);
     },

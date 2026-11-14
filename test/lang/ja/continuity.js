@@ -39,11 +39,11 @@ const TIME_FIELDS = ['hour', 'minute', 'second'];
 
 // The second (answers 2.6): what joins a part to the next is の, 、 or
 // nothing; a day part with a range of dates, and a date and a weekday
-// together, end 、いずれも; and 終日 follows before a cadence of minutes or
-// seconds through every hour. The join belongs to neither part, so it is
-// set aside before two parts are compared; a time edit may change it and
-// nothing else.
-const JOIN = /(?:の|、|、いずれも)?(?:終日)?$/u;
+// together, end 、いずれも; and a month or a year with no day after it
+// ends 、 in place of の before a bare cadence. The join belongs to neither
+// part, so it is set aside before two parts are compared; a time edit may
+// change it and nothing else.
+const JOIN = /(?:の|、|、いずれも)?$/u;
 
 // The third (answers 3.5) is the one place the calendar reaches the time. A
 // stretch of hours that runs past midnight is only true when every day

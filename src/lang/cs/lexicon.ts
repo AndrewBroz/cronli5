@@ -88,6 +88,14 @@ const weekdaysAfterVe = [3, 4];
 // The hours, as written, before which «v» is «ve»: «ve 2:00», «ve 12:30».
 const hoursAfterVe = [2, 3, 4, 12, 13, 14, 20, 21, 22, 23];
 
+// The hours of a step of two that tiles the day, by its start: the even
+// hours from midnight, the odd ones from 1:00.
+const hourParity = {
+  after: ['po každé sudé hodině', 'po každé liché hodině'],
+  each: ['každé sudé hodiny', 'každé liché hodiny'],
+  within: ['v sudých hodinách', 'v lichých hodinách']
+};
+
 // The counted units.
 const units = {
   day: {few: 'dny', many: 'dní', one: 'den'},
@@ -234,11 +242,16 @@ const words = {
   until: 'až do',
   upTo: 'až',
   year: 'rok',
-  yearGenitive: 'roku'
+  yearGenitive: 'roku',
+
+  atTheHalf: 'v půl',
+  forOneHour: 'po dobu jedné hodiny',
+  ofTheHour: 'hodiny',
+  onTheFullHour: 'v celou hodinu'
 };
 
 const lexicon = {
-  dayPeriods, every, hoursAfterVe, months, nthWords, stepWords,
+  dayPeriods, every, hourParity, hoursAfterVe, months, nthWords, stepWords,
   twoDigits, units, weekdays, weekdaysAfterVe, words
 };
 

@@ -32,8 +32,8 @@ export interface Clock {
   at(moments: Moment[]): string;
   // «de 9:00 a 17:45».
   span(from: Moment, to: Moment): string;
-  // «hasta las 22:59».
-  until(moment: Moment): string;
+  // «desde la 1:00», «desde las 2:00».
+  since(moment: Moment): string;
 }
 
 /** The first option whose condition holds. The last one always does. */
@@ -142,8 +142,8 @@ function clockOf(style: SpanishStyle): Clock {
     ]);
   }
 
-  // Whether the hour, as it is written, is 1: «a la 1:00», «hasta la
-  // 1:45».
+  // Whether the hour, as it is written, is 1: «a la 1:00», «desde la
+  // 1:00».
   function isOne(moment: Moment): number {
     return Number(dial.hourOf(moment.hour) === 1);
   }
@@ -170,10 +170,10 @@ function clockOf(style: SpanishStyle): Clock {
     span(from, to) {
       return `${words.from} ${written(from)} ${words.to} ${written(to)}`;
     },
-    until(moment) {
+    since(moment) {
       const article = [words.theHours, words.theHour][isOne(moment)];
 
-      return `${words.until} ${article} ${written(moment)}`;
+      return `${words.since} ${article} ${written(moment)}`;
     }
   };
 }

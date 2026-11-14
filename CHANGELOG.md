@@ -69,7 +69,28 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   without the star (`0 0 1-31/2 * 1`) the days are still a union. Every
   language says the difference. See `docs/day-field-semantics.md`.
 
-- **Every language was rebuilt from its own rule book** and then repaired
+- **Fewer things to hold in several languages**, each checked by
+  isolated readers in the language:
+  - English says one day across several months once: "on the 1st of
+    January, April, July, and October", as several days already were.
+  - German says a place in the hour as timetables do, «stündlich zur
+    Minute 30», «zu den Minuten 5, 20 und 45», and separate hours once:
+    «täglich um 9, 13 und 17 Uhr, jeweils zu den Minuten 5, 20 und 45»,
+    in place of a window for each hour; one minute and one second every
+    hour are one count, «5 Minuten und 30 Sekunden nach jeder vollen
+    Stunde».
+  - Czech no longer lists up to fifteen clock times or windows for a
+    cadence of hours, and says a set that is two rhythms together as its
+    rhythms.
+  - Italian says a long cadence of hours by its first values and its
+    last («delle ore 0, 2, 4 e così via fino a 22»), not twelve hours.
+  - Japanese names shared months once (これらの月).
+  - Chinese marks a time after a date-or-weekday pair as belonging to both
+    (每月1日以及每周五，均在9:00); before, it could be read as Friday's
+    alone.
+  - Ukrainian drops a nearest-weekday date beside Monday to Friday, which
+    adds no day, and says one place in the hour as a count from its start.
+- **Every language was rebuilt from its own answers** and then repaired
   twice against independently computed fire times. A schedule that can
   never run says so (`0 0 31 6 *`); one that runs only in leap years says
   so; months that lack the day are not named; a set of years with a hole is
