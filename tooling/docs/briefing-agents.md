@@ -27,12 +27,15 @@ agent will optimise, so lead with the purpose.
 7. **The report.** Every changed sentence, old and new, with when it
    fires; and the agent's doubts, which are wanted.
 
-Then, before merging: a blind reader, briefed in the language and told
-nothing of patterns or generation, answers questions about when each new
-sentence fires, scored against the true schedule. A wrong answer, or a
-second reading of the words themselves, is a defect. A preference, a
-report of stiffness, or a wish to be told more (a stated start, a
-bracket of examples) is a note: model readers favour verbose wording that
-people do not. Whether the change is more concise and more natural is the
-orchestrator's call, against how native writers write (CLAUDE.md, "How
-quality is judged").
+Then, before merging: compare each changed sentence with the one it
+replaces using the cost model (`compare` in
+`tooling/scripts/reading/cost.mjs`): cheaper in every column, or mixed
+with the judgment recorded; never dearer without a reason. And check the
+new forms for one reading: an isolated reader, briefed in the language
+and told nothing of patterns or generation, lists every reading a fluent
+speaker would accept as a correct sentence and what in the sentence
+supports it. A reading that rests on an ungrammatical parse does not
+count; a plausible second reading is a defect. A preference, a report of
+stiffness, or a wish to be told more (a stated start, a bracket of
+examples) is a note, not a second reading: model readers favour verbose
+wording that people do not (CLAUDE.md, "How quality is judged").

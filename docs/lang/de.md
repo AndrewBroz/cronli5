@@ -65,5 +65,5 @@ Generated from live output of both libraries (`npm run docs`).
 | `0 12 * 11-2 *` | von November bis Februar täglich um 12:00 Uhr | Um 12:00, November bis Februar |
 | `0 0 * * 5L` | am letzten Freitag jedes Monats um 0:00 Uhr | Um 00:00, am letzten Freitag des Monats |
 | `5,10 30 9 * * MON` | montags um 9:30:05 und 9:30:10 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
-| `1/1 * * * *` | stündlich von Minute 1 bis 59 jede Minute | Alle 1 Minuten, beginnend bei Minute 1 |
+| `1/1 * * * *` | stündlich in den Minuten 1 bis 59 jede Minute | Alle 1 Minuten, beginnend bei Minute 1 |
 <!-- END GENERATED: comparison -->

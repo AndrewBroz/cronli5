@@ -11,6 +11,7 @@ const {dayParts, januaryAustrian, months, twoDigits, weekdays, words} =
 export interface Voice {
   // A clock time from its hour and its minute, with a second if one is
   // given: «9:00», «9:00:30», and in 12-hour style «9:00 Uhr morgens».
+  // With neither, the hour alone: «9», «9 Uhr morgens».
   clock(hour: number, rest: number[]): string;
   except: string;
   month(month: number): string;
@@ -23,7 +24,10 @@ export interface Voice {
   weekdayNoun(weekday: number): string;
 }
 
-// A time as a 24-hour clock shows it: «17:05».
+/**
+ * A time as a 24-hour clock shows it, in every style: «17:05»; with no
+ * minute, the hour alone: «17».
+ */
 function clock24(hour: number, rest: number[]): string {
   return [hour, ...rest.map(twoDigits)].join(':');
 }
@@ -66,4 +70,4 @@ function voiceOf(style: GermanStyle): Voice {
   };
 }
 
-export {voiceOf};
+export {clock24, voiceOf};

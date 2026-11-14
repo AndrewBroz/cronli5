@@ -1,7 +1,8 @@
 // The cost of a description to the person reading it, by the model in
 // CLAUDE.md ("The cost of a sentence to its reader"): how long it takes to
 // say, how many objects the reader must hold that habit does not supply,
-// and the operations needed to work out anything not read off directly.
+// what is said again, and the operations needed to work out anything not
+// read off directly.
 // It reads the sentence, as a person does, not the pattern: two wordings of
 // one schedule cost differently.
 //
@@ -21,11 +22,11 @@ import {pathToFileURL} from 'node:url';
 import cronli5 from '../../../src/all.js';
 import {patterns} from '../../../scripts/fuzz-lang.mjs';
 
-// The three costs are never added into one number: what one object held
+// The costs are never added into one number: what one object held
 // is worth against one operation, or against ten syllables, is a judgment,
 // not a constant. One wording is better than another only if it is no
 // worse in any column; where the columns disagree, someone decides.
-const COLUMNS = ['objects', 'operations', 'syllables'];
+const COLUMNS = ['objects', 'operations', 'repetitions', 'syllables'];
 
 const englishOnes = ['zero', 'one', 'two', 'three', 'four', 'five', 'six',
   'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
@@ -76,6 +77,9 @@ const languages = {
       'Samstag|Sonntag|Januar|Jänner|Februar|März|April|Mai|Juni|Juli|' +
       'August|September|Oktober|November|Dezember)\\w*', 'giu'),
     nearest: /am nächsten liegt|nächstgelegenen/giu,
+    // A place in the hour written «:05»: three of three blind readers
+    // called it not ordinary German (2026-11-13 and 14).
+    unfamiliar: /(?<![\d:]):\d{2}(?::\d{2})?(?!\d)/gu,
     chunks: [/montags bis freitags/giu, /werktags/giu, /täglich/giu,
       /stündlich/giu, /jede Minute/giu, /jede Sekunde/giu,
       /zur vollen Stunde/giu, /in den (?:un)?geraden Stunden/giu,
@@ -162,7 +166,9 @@ function objectsIn(spec, text) {
     ...rest.match(spec.names) || []].map((item) => item.toLowerCase());
   const values = new Set(said).size;
 
-  return {chunks, values};
+  // What is said again adds nothing to hold, but it is heard again, and a
+  // reader (and every copy editor) notices: its own cost.
+  return {chunks, repetitions: said.length - values, values};
 }
 
 // The operations: a rhythm whose first value is not where habit puts it
@@ -229,6 +235,12 @@ function operationsIn(spec, text, defects) {
     found.push('nearest weekday');
   }
 
+  // A notation the language's readers do not use in prose must be
+  // deciphered each time it is met.
+  (text.match(spec.unfamiliar || /$^/u) || []).forEach(function each() {
+    found.push('unfamiliar notation');
+  });
+
   (text.match(spec.product) || []).forEach(function each() {
     found.push('product');
   });
@@ -245,7 +257,7 @@ function operationsIn(spec, text, defects) {
 function costOf(code, text) {
   const spec = languages[code];
   const syllables = spec.syllables(spec.speak(text));
-  const {chunks, values} = objectsIn(spec, text);
+  const {chunks, repetitions, values} = objectsIn(spec, text);
   const defects = [];
   const operations = operationsIn(spec, text, defects);
   const phases = operations.filter((name) => name === 'offset').length;
@@ -255,6 +267,7 @@ function costOf(code, text) {
     defects,
     objects,
     operations,
+    repetitions,
     syllables
   };
 }
@@ -288,6 +301,7 @@ function columnsOf(cost) {
   return {
     objects: cost.objects,
     operations: cost.operations.length,
+    repetitions: cost.repetitions,
     syllables: cost.syllables
   };
 }
@@ -323,6 +337,7 @@ if (process.argv[1] &&
     process.stdout.write(`objects ${cost.objects}` +
       `, operations ${cost.operations.join('+') || 'none'}` +
       (cost.defects.length ? `, DEFECT ${cost.defects.join('+')}` : '') +
+      `, repetitions ${cost.repetitions}` +
       ', syllables ' +
       `${cost.syllables}  ${pattern}\n    ${text}\n`);
   });
