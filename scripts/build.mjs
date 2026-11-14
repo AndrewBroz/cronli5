@@ -65,16 +65,16 @@ await esbuild.build({
 // The stand-in for cRonstrue's `toString`, in both formats.
 await esbuild.build({
   ...shared,
-  entryPoints: ['src/cronstrue/index.ts'],
+  entryPoints: ['src/compat/index.ts'],
   format: 'esm',
-  outfile: 'dist/cronstrue.js'
+  outfile: 'dist/compat.js'
 });
 
 await esbuild.build({
   ...shared,
-  entryPoints: ['src/cronstrue/index.ts'],
+  entryPoints: ['src/compat/index.ts'],
   format: 'cjs',
-  outfile: 'dist/cronstrue.cjs',
+  outfile: 'dist/compat.cjs',
   footer: unwrapDefault
 });
 

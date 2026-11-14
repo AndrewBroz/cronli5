@@ -56,6 +56,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`create`**, which makes an instance from the languages you choose,
   with default options and a default style per language.
 - **`cronli5/all`**, an entry point that knows every language by code.
+- **`cronli5/compat`**, which takes cRonstrue's `toString(pattern,
+  options)` call and options, for switching from cRonstrue. The wording is
+  cronli5's; an option it cannot honour is an error.
+- **`llms.txt`**, the API on one page for coding agents.
 - **`form: 'label'`**, the description capitalised to stand alone.
 - The named English styles, exported as plain tables (`styles`).
 - `--form` and `--cron` on the command line.

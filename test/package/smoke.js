@@ -101,8 +101,8 @@ describe('Built package artifacts:', function() {
   });
 
   it('the cRonstrue stand-in builds take cRonstrue\'s call', async function() {
-    const cjs = require('../../dist/cronstrue.cjs');
-    const esm = await import('../../dist/cronstrue.js');
+    const cjs = require('../../dist/compat.cjs');
+    const esm = await import('../../dist/compat.js');
 
     expect(cjs.toString('0 9 * * 1')).to.equal('At 9 a.m. on Mondays');
     expect(esm.default.toString('30 17 * * *', {use24HourTimeFormat: true}))
@@ -114,7 +114,7 @@ describe('Built package artifacts:', function() {
     async function() {
       const main = await import('../../dist/cronli5.js');
       const all = await import('../../dist/all.js');
-      const adapter = await import('../../dist/cronstrue.js');
+      const adapter = await import('../../dist/compat.js');
       const en = (await import('../../dist/lang/en.js')).default;
       const cjs = require('../../dist/cronli5.cjs');
       const throwers = [
@@ -149,7 +149,7 @@ describe('Built package artifacts:', function() {
     function() {
       expect(function write() {
         JSON.stringify(require('../../dist/lang/en.cjs'));
-        JSON.stringify(require('../../dist/cronstrue.cjs'));
+        JSON.stringify(require('../../dist/compat.cjs'));
       }).to.not.throw();
       expect(require('../../dist/lang/en.cjs').describeParts)
         .to.be.an('undefined');
