@@ -109,11 +109,11 @@ const rows = [
     'dal lunedì al venerdì, ogni 15 minuti dalle 8:00 alle 8:45, dalle ' +
     '12:00 alle 12:45 e dalle 18:00 alle 18:45'],
   ['*/15 */2 * * 1-5',
-    'dal lunedì al venerdì, ogni 15 minuti per un\'ora ogni 2 ore'],
+    'dal lunedì al venerdì, ogni 15 minuti nelle ore pari'],
   ['*/15 */6 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti per un\'ora ogni 6 ore'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'dal lunedì al venerdì, ogni 15 minuti per un\'ora ogni 2 ore, tranne ' +
+    'dal lunedì al venerdì, ogni 15 minuti nelle ore pari, tranne ' +
     'dalle 8:00 alle 8:59'],
   ['*/15 22-2 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti dalle 0:00 alle 2:45 e dalle ' +
@@ -276,10 +276,10 @@ const rows = [
     'tutti i giorni, ogni minuto dalle 8:00 alle 8:59, dalle 12:00 alle ' +
     '12:59 e dalle 18:00 alle 18:59'],
   ['* 9-17 * * *', 'tutti i giorni, ogni minuto dalle 9:00 alle 17:59'],
-  ['* */2 * * *', 'ogni minuto per un\'ora ogni 2 ore'],
+  ['* */2 * * *', 'ogni minuto nelle ore pari'],
   ['* */6 * * *', 'ogni minuto per un\'ora ogni 6 ore'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'ogni minuto per un\'ora ogni 2 ore, tranne dalle 8:00 alle 8:59'],
+    'ogni minuto nelle ore pari, tranne dalle 8:00 alle 8:59'],
   ['* 22-2 * * *', 'tutti i giorni, ogni minuto dalle 22:00 alle 2:59'],
 
   // open / date

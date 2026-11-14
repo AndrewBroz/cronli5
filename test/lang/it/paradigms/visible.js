@@ -51,7 +51,7 @@ const rows = [
     'volta per un minuto intero, secondo per secondo'],
   ['*/6 */15 9-17 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni ' +
-    'volta dal secondo 0 al 54, a intervalli di 6 secondi'],
+    'volta per un minuto intero, a intervalli di 6 secondi'],
   ['5/10 */15 9-17 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni ' +
     'volta dal secondo 5 al 55, a intervalli di 10 secondi'],
@@ -77,8 +77,7 @@ const rows = [
     'dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45 e dalle ' +
     '22:00 alle 22:45'],
   ['*/15 1/2 * * 1-5',
-    'dal lunedì al venerdì, ogni 15 minuti per un\'ora ogni 2 ore a partire ' +
-    'dall\'1:00'],
+    'dal lunedì al venerdì, ogni 15 minuti nelle ore dispari'],
 
   // window / date
   ['*/15 9-17 1 * 1-5',
@@ -177,8 +176,7 @@ const rows = [
   ['* 9-17,22 * * *',
     'tutti i giorni, ogni minuto dalle 9:00 alle 17:59 e dalle 22:00 alle ' +
     '22:59'],
-  ['* 1/2 * * *',
-    'ogni minuto per un\'ora ogni 2 ore a partire dall\'1:00'],
+  ['* 1/2 * * *', 'ogni minuto nelle ore dispari'],
 
   // open / date
   ['* * 1 * *', 'il 1º di ogni mese, ogni minuto'],

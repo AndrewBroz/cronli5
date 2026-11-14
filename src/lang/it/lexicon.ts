@@ -170,6 +170,16 @@ const words = {
   ofMinute: 'del minuto',
   ofMinutes: 'dei minuti',
   onTheHour: 'a ogni ora in punto',
+  // The hour seconds named at minute 0 are counted from: every hour, or
+  // the hour before a cadence of hours, alone and after «a».
+  atEveryHour: 'a ogni ora',
+  atTheHour: 'all\'ora',
+  eachHour: 'ogni ora',
+  theHour: 'l\'ora',
+  sharp: 'in punto',
+  secondsAfter: 'dopo',
+  evenHours: 'nelle ore pari',
+  oddHours: 'nelle ore dispari',
   once: 'una volta',
   inThatMinute: 'e in quel minuto',
   only: 'solo',

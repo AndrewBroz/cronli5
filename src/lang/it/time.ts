@@ -6,7 +6,7 @@
 import type {ScheduleFacts} from '../../core/schedule.js';
 import {candidatesAs} from '../../core/set-views.js';
 import type {Cadence, Exception, Form, Part, Run} from './sets.js';
-import {choose, firstOf, readAs} from './sets.js';
+import {choose, firstOf, readAs, tiles} from './sets.js';
 import type {Clockwork, Rate, TimeSaid} from './clock.js';
 import {
   HOURS, MOST_PIECE_WINDOWS, MOST_TIMES_LISTED, SIXTY, TIMES_AT_A_GLANCE,
@@ -154,8 +154,12 @@ function secondsClause(seconds: Seconds): string {
         words.secondBySecond;
     },
     cadence() {
-      return `${extent(start, last)}, ${words.atIntervalsOf} ${interval} ` +
-        units.second.many;
+      const fills = start === FIRST && tiles(form as Cadence, SIXTY);
+      const span = fills ?
+        `${words.eachTime} ${words.forAWholeMinute}` :
+        extent(start, last);
+
+      return `${span}, ${words.atIntervalsOf} ${interval} ${units.second.many}`;
     },
     range() {
       return `${extent(from, to)}, ${words.secondBySecond}`;
@@ -177,7 +181,10 @@ function saySeveral(seconds: Seconds, plain: Clockwork): TimeSaid {
   const minutes = sayWithin(plain);
   const {values} = seconds;
   const ends = {first: values[0], last: values[values.length - 1]};
-  const whole = seconds.form.kind === 'all';
+  // A rate of seconds that tiles the minute from 0, long enough to be said
+  // as a rate, fills each minute it is in.
+  const filling = seconds.rate?.first === FIRST &&
+    values.length >= TIMES_AT_A_GLANCE && seconds.rate;
   const removed = (seconds.form as Exception).removed || [];
 
   function running(): TimeSaid {
@@ -188,9 +195,13 @@ function saySeveral(seconds: Seconds, plain: Clockwork): TimeSaid {
   }
 
   function inFront(): TimeSaid {
-    const text = whole ? second.each : second.within(seconds.form);
+    const text = filling ?
+      every(filling.interval, 'second') :
+      second.within(seconds.form);
+    const named = !filling && seconds.form.kind === 'values';
     const found = sayWithin({...plain, voice: frontVoice(speech,
-      {...ends, ranged: seconds.form.kind !== 'values', text}, whole)});
+      {...ends, ...named && {named: values}, ranged: !named, text},
+      Boolean(filling))});
 
     return {
       ...found,

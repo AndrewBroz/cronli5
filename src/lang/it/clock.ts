@@ -10,7 +10,7 @@ import type {Cadence, Exception, Form, Part, Run} from './sets.js';
 import {choose, countOf, firstOf, runsIn, runsOf, tiles} from './sets.js';
 import type {Speech} from './words.js';
 import {every, list, phrase, sayPieces} from './words.js';
-import type {Voice} from './voices.js';
+import type {HourWords, Voice} from './voices.js';
 import {FIRST, LAST} from './voices.js';
 import lexicon from './lexicon.js';
 
@@ -27,6 +27,10 @@ const ROUND_THE_CLOCK = 3;
 // and this many when minutes are a list over a list of hours.
 const TIMES_AT_A_GLANCE = 4;
 const MOST_TIMES_LISTED = 8;
+
+// The hour seconds named at minute 0 are counted from.
+const EVERY_HOUR: HourWords = {at: words.atEveryHour, of: words.eachHour};
+const THE_HOUR: HourWords = {at: words.atTheHour, of: words.theHour};
 
 // Pieces inside one hour are clock windows up to this many items.
 const MOST_PIECE_WINDOWS = 3;
@@ -292,7 +296,8 @@ function sayHourly(value: number, work: Clockwork): TimeSaid {
     });
   }
 
-  const eachHour = value === FIRST && voice.onTheHour ||
+  const eachHour = value === FIRST &&
+    (voice.onTheHour || voice.afterTheHour(EVERY_HOUR)) ||
     `${voice.listed([value])} ${voice.unit.ofEach}`;
   const sayers = {
     all() {
@@ -552,11 +557,20 @@ function smoothOf(form: Form, work: Clockwork): Rate | undefined {
 
 // Minute 0 alone, said plainly: what «a ogni ora in punto» says of every
 // hour.
-function onTheHour(work: Clockwork): boolean {
+function atTheTop(work: Clockwork): boolean {
   const {inner, voice} = work;
 
   return inner.values.length === 1 && inner.values[0] === FIRST &&
     voice.onTheHour !== '';
+}
+
+// Seconds named at minute 0, counted from the hour, if that is how the
+// voice says minute 0.
+function afterTheTop(work: Clockwork, hour: HourWords): string {
+  const {inner, voice} = work;
+
+  return phrase(inner.values.length === 1 && inner.values[0] === FIRST &&
+    voice.afterTheHour(hour));
 }
 
 // The rate the unit is over hours that tile the day, if it never breaks:
@@ -609,7 +623,10 @@ function sayRoundTheClock(cadence: Cadence, work: Clockwork): TimeSaid {
   const hours = phrase(every(cadence.interval, 'hour'),
     cadence.start > HOURS.min &&
       speech.since({hour: cadence.start, minute: FIRST}));
-  const during = phrase(words.forAnHour, hours);
+  const parity = [words.evenHours, words.oddHours][cadence.start];
+  const during = cadence.interval === 2 ?
+    parity :
+    phrase(words.forAnHour, hours);
   const text = phrase(voice.within(form), voice.kept) +
     tailOf(form, voice);
 
@@ -628,7 +645,9 @@ function sayRoundTheClock(cadence: Cadence, work: Clockwork): TimeSaid {
   }
 
   return firstOf<TimeSaid>([
-    onTheHour(work) && said(hours, unitOut, 'named'),
+    atTheTop(work) && said(hours, unitOut, 'named'),
+    afterTheTop(work, THE_HOUR) &&
+      said(`${afterTheTop(work, THE_HOUR)}, ${hours}`, unitOut, 'named'),
     rate && said(rated(rate), unitOut),
     {
       ...said(voice.per > 1 ? phrase(text, during) : `${text}, ${hours}`,

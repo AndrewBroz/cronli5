@@ -40,6 +40,25 @@ these answers shows a series of numbers; none needed removing. The same
 day the coordinator extended this to such a cadence less an hour or two,
 which is the same cadence: «ogni 2 ore, tranne alle 8:00», not «tutti i
 giorni, ogni 2 ore dalle 0:00 alle 22:00, tranne alle 8:00» (3.7, 4.1).
+Later the same day, two more, on the coordinator's direction. First,
+seconds named at minute 0 were said through the minute, «al secondo 15
+del minuto 0, ogni 2 ore» and «al secondo 30 del minuto 0 di ogni ora»:
+exact but clumsy, a count inside a count where Italian counts from the
+hour. They are now said from the hour, «15 secondi dopo l'ora in punto,
+ogni 2 ore», «30 secondi dopo ogni ora in punto» (4.2). Second, every
+other hour under a finer field stacked two «ogni», «ogni minuto per
+un'ora ogni 2 ore»; for interval 2 it is now the even or odd hours,
+«ogni minuto nelle ore pari», «ogni 15 minuti nelle ore dispari», as
+Portuguese and German say it, and «per un'ora ogni N ore» stays for the
+longer intervals (4.1, 5.1). The first draft's objection to «nelle ore
+pari», that a judge stopped to ask whether midnight is even, is
+overruled: it is a pause, not a misreading (0 is even), and it was
+weighed against a sentence with a range of its own beside it, not
+against two stacked «ogni».
+Last, on the same day: an exception no longer removes a cadence's first
+or last value (rule 6; `17/11` named second 6 only to take it back), and
+a cadence of seconds that tiles the minute from 0 is said by its rate,
+«ogni 10 secondi durante il minuto 0 di ogni ora», not by its ends (4.2).
 
 What Italian does its own way, and the rest of this file relies on:
 
@@ -96,7 +115,19 @@ facts, field, {linear: true})`), except in the three places 3.5 names.
    by then the pieces or the list are easier than subtracting. For
    weekdays also a Monday-first run with one day left out of its middle
    (four days in all). An exception is not used where it would make a
-   window name a time that does not fire (4.1 D).
+   window name a time that does not fire (4.1 D). **An exception never
+   removes a cadence's first or last value** (amended 2026-11-14): the
+   cadence would be named only for its end to be taken back, as in «ogni
+   11 secondi dal secondo 6 al 50 …, tranne al secondo 6» for `17/11`,
+   which names a second that never fires. The set is then said as it is,
+   by the rules after this one: `17/11 30 * * * *` — «ai secondi 17, 28,
+   39 e 50 del minuto 30 di ogni ora»; `17/11 * * * *` — «ai minuti 17,
+   28, 39 e 50 di ogni ora». It holds in every field: `0 0 1 4/2 *` had
+   been «ogni 2 mesi a partire da febbraio tranne a febbraio» and is «ad
+   aprile, giugno, agosto, ottobre e dicembre»; `0 0 2-25/4 * *` had been
+   «ogni 4 giorni a partire dal 2 … tranne il 26 e il 30» and is «il 2, il
+   6, il 10, il 14, il 18 e il 22 di ogni mese». (Every value less its
+   first, «tranne al minuto 0», stays: «ogni minuto» names no end.)
 7. **Pieces**: when some run has three or more values, the runs as ranges
    and the other values singly, in ascending order, joined as a list
    (7.4).
@@ -556,10 +587,13 @@ after another and from the reads of the rows:
   where minutes named inside the hour are said of them («di ciascuna ora
   dalle 9 alle 17», «delle ore 4, 8, 12, 16 e 20»): the first judge
   called it tabular and read it at once, and every clock-window wording
-  tried there was reread. They are never used after a rate («ogni minuto
-  nelle ore pari» made the first judge stop): a rate takes windows,
-  however many, or «e così via ogni 2 ore fino alle…», read rightly and
-  called stiff by two judges.
+  tried there was reread. They are never used after a rate: a rate
+  takes windows, however many, or «e così via ogni 2 ore fino alle…»,
+  read rightly and called stiff by two judges. The one named set of
+  hours after a rate is the even or odd hours of the whole day (4.1,
+  "Hours that tile the day", amended 2026-11-14); «ogni minuto nelle ore
+  pari» made the first judge stop, and that pause is overruled (the
+  dated note at the top).
 * The same schedule family may show a list in one row and a rate in the
   next (four times against five): the judge noticed and it stays, since
   each is the easier form at its length.
@@ -616,16 +650,25 @@ are said apart from them, never folded into clock times:
    «ogni 2 ore a partire dall'1:00».
 2. A unit that fires from the top of every hour and through it (every
    minute, or minutes that tile the hour from 0, the smooth rates of case
-   C that start at 0): **a stretch of one hour**, «per un'ora» between the
-   rate and the hours, no comma: `* */2` — «ogni minuto per un'ora ogni 2
-   ore»; `* */6` — «ogni minuto per un'ora ogni 6 ore»; `*/15 */2` — «ogni
-   15 minuti per un'ora ogni 2 ore»; `*/15 1/2` — «ogni 15 minuti per
-   un'ora ogni 2 ore a partire dall'1:00». A minute or two left out is
-   the usual «, tranne al minuto 29» at the end. «Per un'ora ogni 2 ore»
-   is how Italian says a burst that recurs, and it is the same words for
-   every interval; «un'ora sì e una no» is speech and fits only the
-   interval 2. The windows «dalle 0:00 alle 0:59, dalle 2:00 alle 2:59 e
-   così via» said the same thing in four times the words.
+   C that start at 0): **a stretch of the hours**. Every other hour is
+   **«nelle ore pari»** from midnight and **«nelle ore dispari»** from 1:00,
+   after the rate with no comma: `* */2` — «ogni minuto nelle ore pari»;
+   `*/15 */2` — «ogni 15 minuti nelle ore pari»; `* 1/2` — «ogni minuto
+   nelle ore dispari»; `*/15 1/2` — «ogni 15 minuti nelle ore dispari».
+   A longer interval is «per un'ora» between the rate and the hours, no
+   comma: `* */6` — «ogni minuto per un'ora ogni 6 ore»; `*/5 */4` —
+   «ogni 5 minuti per un'ora ogni 4 ore»; `* 1/3` — «ogni minuto per
+   un'ora ogni 3 ore a partire dall'1:00». A minute or two left out is
+   the usual «, tranne al minuto 29» at the end. The even and odd hours
+   are the shortest way to say every other hour and say which; «ogni
+   minuto per un'ora ogni 2 ore» stacked two «ogni», and «un'ora sì e una
+   no» is speech. «Per un'ora ogni N ore» is how Italian says a burst
+   that recurs when there is no such name. Only a stretch takes the even
+   or odd hours: a point in the hour keeps «, ogni 2 ore» («al minuto 30,
+   ogni 2 ore»), which says when it is and how often, and an edit to the
+   minute changes only the words before «nelle» or the comma. The windows
+   «dalle 0:00 alle 0:59, dalle 2:00 alle 2:59 e così via» said the same
+   thing in four times the words.
 3. Minutes that tile the hour off zero, five or more: the rate with its
    start, a comma, the hours: `5/10 */2` — «ogni 10 minuti a partire dal
    minuto 5, ogni 2 ore».
@@ -654,8 +697,8 @@ and they are four or fewer (`0 0,2,4,6,10,…,22` — «ogni 2 ore, tranne
 alle 8:00»; `30` over the same hours — «al minuto 30, ogni 2 ore,
 tranne alle 8:30»; `15,45 0,4,6,…,22` — «ai minuti 15 e 45, ogni 2 ore,
 tranne alle 2:15 e alle 2:45»), and otherwise as the whole hours, from
-`h:00` to `h:59` (`* 0,2,4,6,10,…,22` — «ogni minuto per un'ora ogni 2
-ore, tranne dalle 8:00 alle 8:59»; `0-29` over the same hours — «ogni
+`h:00` to `h:59` (`* 0,2,4,6,10,…,22` — «ogni minuto nelle ore pari,
+tranne dalle 8:00 alle 8:59»; `0-29` over the same hours — «ogni
 minuto dal minuto 0 al 29, ogni 2 ore, tranne dalle 8:00 alle 8:59»). A
 stretch that is left out is a stretch, so it is said as one.
 
@@ -906,16 +949,32 @@ The base:
   the bracket has second 0.) A single minute or a list (4.1 B.1, D.1,
   D.6a): the second goes in front with «del minuto» / «dei minuti»:
   `30 5,20,45 9-17` — «al secondo 30 dei minuti 5, 20 e 45 di ogni ora,
-  dalle 9:05:30 alle 17:45:30»; «al secondo 30 del minuto 0
-  di ogni ora» (minute 0 is then named: «in punto» is the minute and the
-  second together); «al secondo 15 del minuto 30 di ogni ora»; «al secondo
+  dalle 9:05:30 alle 17:45:30»; «al secondo 15 del minuto 30 di ogni
+  ora»; «al secondo
   8 dei minuti 5 e 30 delle ore 5, 7, 9 e così via fino a 23» (4.1 D.6:
   a long cadence of hours as numbers); over hours that tile the day the
   same phrase stands before the comma: `8 5,30 */2` — «al secondo 8 dei
-  minuti 5 e 30, ogni 2 ore»; `15 0 */2` — «al secondo 15 del minuto 0,
-  ogni 2 ore» (4.1, "Hours that tile the day"). (Every judge found «al secondo 30 del minuto 0 di ogni ora»
-  machine-like and understood it at once; nothing as exact is lighter,
-  and the schedule is rare.)
+  minuti 5 e 30, ogni 2 ore» (4.1, "Hours that tile the day").
+* **Minute 0 alone, with the second named** (amended 2026-11-14): the
+  second is counted from the hour, «N secondi dopo», and the hour is
+  «ogni ora in punto» when every hour fires and «l'ora in punto» before
+  a cadence of hours that tiles the day, which follows after a comma:
+  `30 0 * * * *` — «30 secondi dopo ogni ora in punto»; `15 0 */2` — «15
+  secondi dopo l'ora in punto, ogni 2 ore»; `1 0 */3` — «1 secondo dopo
+  l'ora in punto, ogni 3 ore». «In punto» is the word this rule book
+  already uses for minute 0 (5.4), so «a ogni ora in punto» and «30
+  secondi dopo ogni ora in punto» are the same hour. The first answer,
+  «al secondo 30 del minuto 0 di ogni ora», named a minute that a reader
+  hears as no minute at all, and every judge called it machine-like.
+  Other hours are said as clock times, as before («ogni ora dalle 9:00:30
+  alle 17:00:30»). Several seconds named at minute 0 (a list, case 4
+  below) are said the same way, «15 e 45 secondi dopo ogni ora in
+  punto»; when the list holds second 0 the hour itself fires, and is said
+  first: «a ogni ora in punto e 30 secondi dopo», «all'ora in punto e 20
+  e 40 secondi dopo, ogni 4 ore». A run of seconds at minute 0 keeps «del
+  minuto 0» («ogni secondo dal secondo 0 al 9 del minuto 0 di ogni ora»),
+  and a rate that fills the minute runs «durante» it (case 4 below):
+  «dopo» would count to their first second only.
 * Minutes in several pieces (a single minute beside a run, a run beside
   single minutes): the minutes as they are said without the second, then
   «, al secondo 30» after the whole phrase and its hours, so that the
@@ -942,7 +1001,7 @@ The exceptions, after the base:
 `30 * 0-2,4-23` — «tutti i giorni, al secondo 30 di ogni minuto, tranne
 dalle 3:00:00 alle 3:59:59»; `30 0-28,30-59 * * * *` — «al secondo 30 di ogni
 minuto, tranne durante il minuto 29 di ogni ora»; `30 0 0-2,4-23` —
-«tutti i giorni, al secondo 30 del minuto 0 di ogni ora, tranne alle
+«tutti i giorni, 30 secondi dopo ogni ora in punto, tranne alle
 3:00:30»; `30 0,5,…,25,35,…,55 9` — «ogni 5 minuti dalle 9:00:30 alle
 9:55:30, tranne alle 9:30:30».
 
@@ -982,7 +1041,16 @@ secondi».
    seconds go in front. Every second takes «durante il minuto» / «durante
    i minuti»: «ogni secondo durante il minuto 0 di ogni ora»; `* 30,42
    3-10` — «ogni secondo durante i minuti 30 e 42 di ciascuna ora dalle 3
-   alle 10 (prima volta alle 3:30:00, ultima alle 10:42:59)». A rate of
+   alle 10 (prima volta alle 3:30:00, ultima alle 10:42:59)». So does a
+   cadence of seconds that tiles the minute from 0 with four values or
+   more, said by its rate alone (amended 2026-11-14): `*/10 0 * * * *` —
+   «ogni 10 secondi durante il minuto 0 di ogni ora»; `*/15 0 * * * *` —
+   «ogni 15 secondi durante il minuto 0 di ogni ora»; `*/10 5,20` — «ogni
+   10 secondi durante i minuti 5 e 20 di ogni ora». The first answer gave
+   its ends, «ogni 10 secondi dal secondo 0 al 50 del minuto 0», which a
+   reader works out to the same thing in more words. Two or three such
+   seconds are named (`*/30` at minute 0 — «a ogni ora in punto e 30
+   secondi dopo»), as tiling minutes are in 4.1 C. A rate of
    seconds is a phrase with a range of its own, so restricted hours are
    said as in 4.1 D.6(b), never as a window. Anything else takes «del minuto» /
    «dei minuti»: «ai secondi 0 e 30 dei minuti 5 e 20 di ogni ora»; «ogni
@@ -992,10 +1060,10 @@ secondi».
    ore 5, 7, 9 e così via fino a 23». Hours that tile the day follow the
    phrase after a comma: `0-10 */25 */2` — «ogni secondo dal secondo 0 al
    10 dei minuti 0, 25 e 50, ogni 2 ore»; `*/10 24 */3` — «ogni 10 secondi
-   dal secondo 0 al 50 del minuto 24, ogni 3 ore». Seconds through every
+   durante il minuto 24, ogni 3 ore». Seconds through every
    minute of such hours fire all through each hour, so they are a stretch
-   of one hour as in 4.1: `5,30 * */2` — «ai secondi 5 e 30 di ogni
-   minuto per un'ora ogni 2 ore»; `0-10 * */4` — «ogni secondo dal
+   of the hours as in 4.1: `5,30 * */2` — «ai secondi 5 e 30 di ogni
+   minuto nelle ore pari»; `0-10 * */4` — «ogni secondo dal
    secondo 0 al 10 di ogni minuto per un'ora ogni 4 ore».
 5. **Any other D** (a rate of minutes, with or without windows; a long
    list of times): D's base, a comma, and the seconds clause; D's
@@ -1012,7 +1080,8 @@ secondi».
    | --- | --- |
    | every second | «ogni volta per un minuto intero, secondo per secondo» |
    | a run | «ogni volta dal secondo 0 al 9, secondo per secondo» |
-   | a cadence of five or more (tiling or not) | «ogni volta dal secondo 0 al 54, a intervalli di 6 secondi» |
+   | a cadence of five or more that tiles the minute from 0 | «ogni volta per un minuto intero, a intervalli di 6 secondi» (amended 2026-11-14: it fills the minute, as «secondo per secondo» does) |
+   | any other cadence of five or more | «ogni volta dal secondo 5 al 55, a intervalli di 10 secondi» |
    | anything else, as a list | «e in quel minuto ai secondi 0 e 30»; «e in quel minuto ai secondi 0, 15, 30 e 45» |
 
    `* */15 9-17 * * 1-5` — «dal lunedì al venerdì, ogni 15 minuti dalle
@@ -1319,8 +1388,12 @@ values:
   15». Usage §11 names «nei giorni pari/dispari» as the careful form, and
   the judge read it at once.
 * years: «negli anni pari», «negli anni dispari» (4.4).
-* hours, minutes, seconds, months: not used. («Nelle ore pari» was in the
-  first draft; the judge had to stop and ask whether midnight is even.)
+* hours: only for every other hour of the day under a finer field, as
+  the stretch of 4.1 («ogni minuto nelle ore pari», «ogni 15 minuti nelle
+  ore dispari»), amended 2026-11-14; nowhere else.
+* minutes, seconds, months: not used. («Nelle ore pari» was in the
+  first draft for hours; the judge had to stop and ask whether midnight
+  is even. That pause is overruled for the case above.)
 
 5.2 **The week.** It starts on Monday and ends on Sunday; days are listed
 in that order. No word groups days: «feriali» may or may not include
@@ -1520,7 +1593,9 @@ mese/mesi, anno/anni.
 (from…to, both ends firing), compreso (the last year of «fino al»), a
 partire da
 (a cadence that never breaks, and the start of hours that tile the day),
-per un'ora (a unit that fills each hour of such hours), e così via… fino alle (a long regular
+per un'ora (a unit that fills each hour of such hours), nelle ore pari,
+nelle ore dispari (every other hour, under such a unit), N secondi dopo
+l'ora in punto (seconds named at minute 0), e così via… fino alle (a long regular
 series of windows), ripartendo a ogni ora (a cadence that starts again),
 di ciascuna ora dalle… alle…, delle ore… (the hours a
 per-hour phrase holds in), prima volta… ultima… (their first and last
@@ -1709,7 +1784,7 @@ description ends in a full stop of its own (short names have none).
 11. **Digits in rates** (usage §6 and §13: «ogni due ore» in prose).
     These phrases sit beside digit times and are compared; one register
     for every number.
-12. **«Al minuto 30 di ogni ora», «al secondo 30 del minuto 0», «delle
+12. **«Al minuto 30 di ogni ora», «al secondo 15 del minuto 30», «delle
     ore 8, 12 e 18»** (usage §12 lists «al minuto 15 dell'ora 8» as
     translated, and §3 calls «ore» before a figure the official
     register). A minute of every hour has no clock time, so it is named.
