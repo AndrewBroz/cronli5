@@ -19,7 +19,7 @@ import {
   stretchOf
 } from './sets.js';
 import type {Tiling} from './tiled.js';
-import {minutesApart, removedHours, tiledHours, tilingOf} from './tiled.js';
+import {removedHours, tiledHead, tilingOf} from './tiled.js';
 import lexicon from './lexicon.js';
 
 const {units, words} = lexicon;
@@ -273,13 +273,11 @@ function tiledPart(tiling: Tiling, clocks: {
     ['all', 'range'].includes(minutes.form.kind);
   const rhythm = stretch && everyUnit(seconds.step, units.second) ||
     everyUnit(1, units.minute);
-  const minute = minutesApart(minutes, rhythm, second);
   const after = !joins.silent && !second.length && !stretch &&
     spaced(words.eachTime, secondsAfter(seconds, joins.throughout));
 
   return [
-    tiledHours(tiling, shown.style),
-    minute && spaced(words.always, minute),
+    tiledHead(tiling, minutes, {rhythm, second, style: shown.style}),
     after,
     removedHours(tiling, minutes, {second, style: shown.style})
   ].filter(Boolean).join(', ');

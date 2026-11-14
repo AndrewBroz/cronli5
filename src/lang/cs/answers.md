@@ -40,6 +40,29 @@ What was said before, and why it was wrong:
 * Found while doing so: minute 0 among pieces was said «0 minut po celé
   hodině», which no one writes; it is now «v každou celou hodinu» (4.1a)
   and, beside hours that tile the day, «v celou hodinu» (T0).
+* **Every other hour, as a stretch.** `* */2 * * *` was «každé 2
+  hodiny, vždy po dobu jedné hodiny každou minutu»: exact, but heavy for
+  what Czech says in three words. A step of two that tiles the day is
+  the even or the odd hours, and Czech has the words, as German («in
+  den geraden Stunden») and Portuguese («nas horas pares») do: «každou
+  minutu v sudých hodinách», «každých 15 minut v lichých hodinách»,
+  «každou minutu v prvních 30 minutách každé sudé hodiny» (T0). The
+  idiom 5.1 had refused hours because «v sudých hodinách» says nothing
+  of where the count starts; for a step of two over the whole day the
+  parity is the start. Longer steps keep «vždy po dobu jedné hodiny»:
+  «v každé šesté hodině» could be counted from 1, and nothing shorter is
+  natural.
+* **Minute 30 beside hours that tile the day is «v půl».** Until the
+  amendment above it was «každé 2 hodiny, vždy 30 minut po celé hodině»,
+  to keep minute 30 in the same form as minute 15. Under every hour
+  minute 30 is «každou hodinu v půl» (5.4), and the maintainer ruled
+  (2026-11-14) that the minute keeps its words when only the hours
+  change: `30 */2 * * *` → «každé 2 hodiny v půl», `30 1/2 * * *` →
+  «každé 2 hodiny od 1:00 v půl», and with hours removed «každé 2 hodiny
+  v půl, kromě 8:30». A list that contains 30 keeps the count form
+  («vždy 15 a 45 minut po celé hodině»), and a single second still joins
+  the place («vždy 30 minut a 15 sekund po celé hodině»), as under every
+  hour (S6).
 * The earlier reader evidence for these windows, lists and glosses
   (judge 4 counting «každý třetí den» two ways; the judges reading
   «každé 2 hodiny od 1:00 do 23:00» at once; «každých 12 hodin» lacking
@@ -593,7 +616,8 @@ and in the short forms below, where the hour is «celá hodina» without
 
 | M | Said after «každé 2 hodiny,» |
 | --- | --- |
-| one minute, a list without minute 0 | «vždy 30 minut po celé hodině», «vždy 15 a 45 minut po celé hodině» |
+| minute 30 | no comma and no «vždy»: «v půl» after the hours, «každé 2 hodiny v půl», «každé 2 hodiny od 1:00 v půl» (idiom, 5.4) |
+| one minute, a list without minute 0 | «vždy 20 minut po celé hodině», «vždy 15 a 45 minut po celé hodině» |
 | a list with minute 0 | «vždy v celou hodinu a 15 a 45 minut po ní» |
 | every minute | «vždy po dobu jedné hodiny každou minutu» |
 | tiles from zero | «vždy po dobu jedné hodiny každých 15 minut» |
@@ -603,7 +627,7 @@ and in the short forms below, where the hour is «celá hodina» without
 | a cadence from 0 | «vždy od celé hodiny do 56 minut po ní včetně, každých 7 minut» |
 | any other cadence | «vždy od 5 do 55 minut po celé hodině včetně, každých 10 minut» |
 | pieces, and runs and cadences together | the parts in these forms, joined as in 4.1b by «a pak» or «a také»; single minutes after the first part with «ještě», minute 0 as «v celou hodinu»: «vždy v prvních 30 minutách hodiny každou minutu a pak ještě 45 minut po celé hodině», «každé 3 hodiny od 1:00, vždy v celou hodinu a pak v posledních 25 minutách hodiny každou minutu» |
-| one or two minutes missing | «vždy po dobu jedné hodiny každou minutu, kromě okamžiku 29 minut po celé hodině»; minute 0 missing is «kromě celé hodiny» |
+| one or two minutes missing | «vždy po dobu jedné hodiny každou minutu, kromě okamžiku 29 minut po celé hodině»; minute 0 missing is «kromě každé celé hodiny» |
 | an exception with another base | the base, then «, kromě okamžiku …» in the same way |
 
 These are the short forms of the place in the minute (4.2, S7) said of
@@ -615,10 +639,11 @@ words say the places, and a cadence is said by its two ends.
 Removed hours (an exception whose base tiles) are the same cadence with
 hours taken out: the base is said bare, as above, and the removed hours
 close the part, at one minute as clock times, «každé 2 hodiny, kromě
-8:00», «každé 2 hodiny od 1:00, kromě 9:00», «každé 2 hodiny, vždy 30
-minut po celé hodině, kromě 8:30»; otherwise as whole hours, «každé 2
-hodiny, vždy po dobu jedné hodiny každou minutu, kromě doby od 8:00 do
-8:59». No window and no «denně» is said there either.
+8:00», «každé 2 hodiny od 1:00, kromě 9:00», «každé 2 hodiny v půl,
+kromě 8:30», «každé 4 hodiny, vždy 20 minut po celé hodině, kromě
+12:20»; otherwise as whole hours, «každých 6 hodin, vždy po dobu jedné
+hodiny každou minutu, kromě doby od 12:00 do 12:59», «každou minutu
+v sudých hodinách, kromě doby od 8:00 do 8:59». No window and no «denně» is said there either.
 
 Seconds, beside T0:
 
@@ -636,23 +661,48 @@ Seconds, beside T0:
   sekundu» (minute 0).
 
 * `0 */2 * * *` → «každé 2 hodiny»; `0 1/2 * * *` → «každé 2 hodiny od
-  1:00»; `30 */2 * * *` → «každé 2 hodiny, vždy 30 minut po celé
-  hodině»; `23 1/2 * * *` → «každé 2 hodiny od 1:00, vždy 23 minut po
+  1:00»; `30 */2 * * *` → «každé 2 hodiny v půl»; `23 1/2 * * *` → «každé 2 hodiny od 1:00, vždy 23 minut po
   celé hodině»; `* */6 * * *` → «každých 6 hodin, vždy po dobu jedné
   hodiny každou minutu»; `*/15 */2 * * 1-5` → «od pondělí do pátku každé
-  2 hodiny, vždy po dobu jedné hodiny každých 15 minut».
+  2 hodiny, vždy po dobu jedné hodiny každých 15 minut» was said until
+  the even and odd hours below.
+
+**Even and odd hours.** When the step is two (`*/2`, `1/2`, and the
+same with hours removed), and M is a stretch said with a rhythm (every
+minute, a rhythm that tiles the hour from zero, a run, or one of these
+with a minute or two removed), the rhythm leads and the hours are their
+parity; no «každé 2 hodiny», no «od 1:00»:
+
+| M | Said |
+| --- | --- |
+| a rhythm | «každou minutu v sudých hodinách», «každých 15 minut v lichých hodinách» |
+| a run from minute 0 | «každou minutu v prvních 30 minutách každé sudé hodiny» |
+| a run to minute 59 | «každou minutu v posledních 15 minutách každé liché hodiny» |
+| any other run | «každou minutu od 10 do 40 minut po každé sudé hodině včetně» |
+| a minute or two removed | the phrase, then «, kromě okamžiku 29 minut po celé hodině», «, kromě každé celé hodiny» |
+
+Removed hours close it as above («každou minutu v sudých hodinách, kromě
+doby od 8:00 do 8:59»); seconds as above: a rhythm of seconds takes the
+place of «každou minutu» («každou sekundu v sudých hodinách»), anything
+else follows after «pokaždé». Every other M keeps the form above
+(«každé 2 hodiny v půl», «každé 2 hodiny, vždy 20 minut po celé
+hodině», «každé 2 hodiny, vždy
+od celé hodiny do 56 minut po ní včetně, každých 7 minut»): a place is
+a moment, and «30 minut po každé sudé hodině» would be a second device
+for what «každé 2 hodiny» already says.
 
 Why the hours lead here, when elsewhere the minutes do: the order of
 usage §2 is from the large to the small, and the hours are the one
 part of this schedule that is a plain rhythm the reader takes at once.
 Said after the minutes, «vždy 30 minut po každé celé hodině, každé 2
 hodiny» first promises every hour and then takes it back. The minute
-idioms «každou celou hodinu» and «každou hodinu v půl» are T2's and are
-not said here: «každé 2 hodiny, vždy 30 minut po celé hodině» keeps
-minute 30 in the same form as minute 15. (Rejected: «každou minutu
-v každé druhé hodině», which serves only a step of two and reads «v
-každé šesté hodině» as possibly the sixth hour, 5:00; and the clock
-windows of T3, which listed what the cadence already says.)
+idiom «každou celou hodinu» is T2's and is not said here (minute 0 is
+the bare cadence); minute 30 keeps its «v půl», as it has under every
+hour (5.4). (Rejected: «v každé šesté
+hodině», which could be the sixth hour, 5:00; and the clock windows of
+T3, which listed what the cadence already says. A stretch over a step
+of two is the exception above: its rhythm leads, because «v sudých
+hodinách» is how Czech says it.)
 
 **T1. A list of times.** When M and H are both listable and together
 make **six times or fewer**; or one of them is a single value and the
@@ -1244,8 +1294,9 @@ range of months, where it sat on the last month only.)
 
 **5.1 Odd and even.** Days of the month only, and years (4.4): «každý
 lichý den v měsíci» is exactly 1, 3, …, 31 and «každý sudý den v měsíci»
-exactly 2, 4, …, 30 (usage §9: „v liché dny“, not «obden»). Not hours,
-minutes or months. `0 0 */2 * *` → «každý lichý den v měsíci v 0:00»;
+exactly 2, 4, …, 30 (usage §9: „v liché dny“, not «obden»). Hours
+only as the stretches under a finer rhythm in T0 («každou minutu
+v sudých hodinách», 2026-11-14). Not minutes or months. `0 0 */2 * *` → «každý lichý den v měsíci v 0:00»;
 `0 0 2/2 * *` → «každý sudý den v měsíci v 0:00».
 
 **5.2 The week.** Monday first, Sunday last; every list in that order.
@@ -1267,8 +1318,9 @@ naming noon alone would write two neighbouring moments in two notations.
 **5.4 On the hour and at the half.** «každou celou hodinu» is exactly
 minute 0 of every hour, and «každou hodinu v půl» exactly minute 30 of
 every hour, second 0 (usage §3.3; the judge's own rewrite). Both are
-said only in T2 and as the base of T4's exception; in a list or beside a
-second the minute is a place (4.1a, S6). Judges 2 and 3 found «každou
+said only in T2 and as the base of T4's exception, and «v půl» also
+after hours that tile the day («každé 2 hodiny v půl», T0, 2026-11-14);
+in a list or beside a second the minute is a place (4.1a, S6). Judges 2 and 3 found «každou
 hodinu v půl» natural. The folk quarters («čtvrt na osm», «půl osmé») are not
 written (usage §1.4). `0 * * * *` → «každou celou hodinu»;
 `30 * * * *` → «každou hodinu v půl»; `15,45 * * * *` → «vždy 15 a 45 minut
@@ -1378,7 +1430,8 @@ hodiny», which counts from midnight when no start is named (README
 **5.8** «a tak dále každé k hodiny až do» for a cadence of hours that
 does not tile the day, filled by an even rhythm (T3). «po dobu jedné
 hodiny» for every minute of each hour of a cadence that tiles the day
-(T0). «každou noc» for hours kept past midnight
+(T0), and «v sudých hodinách» / «v lichých hodinách» when its step is
+two. «každou noc» for hours kept past midnight
 (3.5: from 22 or later to 6 or earlier). «při startu systému» for `@reboot`.
 
 ## 6. Words
@@ -1429,8 +1482,9 @@ minuty», «kromě minuty, která začíná». hodina: hodinu, hodiny, hodin;
 «po každé celé hodině», «po celé hodině», «v každou celou hodinu»,
 «každé hodiny», «v každé hodině», «od celé hodiny», «kromě každé celé
 hodiny»; beside hours that tile the day (T0) «v celou hodinu», «v
-prvních 30 minutách hodiny», «po dobu jedné hodiny», «kromě celé
-hodiny». den: «den» («každý třetí den», «poslední den», «každý sudý
+prvních 30 minutách hodiny», «po dobu jedné hodiny», «v sudých
+hodinách», «v lichých hodinách», «každé sudé hodiny», «každé liché
+hodiny», «po každé sudé hodině», «po každé liché hodině». den: «den» («každý třetí den», «poslední den», «každý sudý
 den»), «dne» («dne v měsíci», «od 1. dne»), «dny» / «dní» («3 dny
 před», «s 31 dny»), «dnem» («před posledním dnem»). měsíc: «v měsíci»,
 «měsíce» («posledním dnem měsíce»), «těchto měsíců»,

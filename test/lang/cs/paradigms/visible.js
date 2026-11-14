@@ -72,8 +72,7 @@ const rows = [
     'od pondělí do pátku každých 15 minut od 9:00 do 17:45 a od 22:00 do ' +
     '22:45'],
   ['*/15 1/2 * * 1-5',
-    'od pondělí do pátku každé 2 hodiny od 1:00, vždy po dobu jedné ' +
-    'hodiny každých 15 minut'],
+    'od pondělí do pátku každých 15 minut v lichých hodinách'],
 
   // window / date
   ['*/15 9-17 1 * 1-5',
@@ -167,7 +166,7 @@ const rows = [
   ['* 9-17,22 * * *',
     'denně každou minutu od 9:00 do 17:59 a od 22:00 do 22:59'],
   ['* 1/2 * * *',
-    'každé 2 hodiny od 1:00, vždy po dobu jedné hodiny každou minutu'],
+    'každou minutu v lichých hodinách'],
 
   // open / date
   ['* * 1 * *', 'vždy 1. dne v měsíci každou minutu'],
