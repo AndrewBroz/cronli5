@@ -197,11 +197,7 @@ describe('French continuity:', function() {
       const {opts, schedule} = parse(pair[1]);
       const parts = french.describeParts(schedule, opts);
 
-      const order = french.unites(schedule, opts) ?
-        [parts.month, parts.time, parts.day, parts.year] :
-        [parts.day, parts.month, parts.time, parts.year];
-
-      expect(order.filter(Boolean).join(' '))
+      expect(Object.values(parts).filter(Boolean).join(' '))
         .to.equal(french.default.describe(schedule, opts));
     });
   });

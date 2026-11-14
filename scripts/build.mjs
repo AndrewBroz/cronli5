@@ -94,8 +94,16 @@ for (const code of readdirSync('src/lang')) {
   // Only build shipped languages — those with a status.json marker. This
   // skips stray/experiment dirs so they never enter the published build.
   if (existsSync(`src/lang/${code}/status.json`)) {
+    // The published module is the language and its named styles; what
+    // else the source exports is for the tests.
     const language = {
-      entryPoints: [`src/lang/${code}/index.ts`],
+      stdin: {
+        contents: 'export {default, styles} from ' +
+          `'./src/lang/${code}/index.ts';`,
+        loader: 'ts',
+        resolveDir: '.',
+        sourcefile: `lang-${code}.ts`
+      },
       bundle: true,
       logLevel: 'info'
     };

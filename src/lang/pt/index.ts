@@ -12,7 +12,10 @@ import {timePart} from './time.js';
 
 const {words} = lexicon;
 
-/** The parts of a description, which join in this order with spaces. */
+/**
+ * The parts of a description, which join in this order with spaces.
+ * @internal
+ */
 export interface Parts {
   day: string;
   month: string;
@@ -76,5 +79,8 @@ const portuguese: Language<PortugueseStyle> = {
 };
 
 export type {PortugueseStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default portuguese;

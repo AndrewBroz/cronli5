@@ -22,8 +22,13 @@ const {words: w} = lexicon;
 
 type PartName = 'day' | 'month' | 'time' | 'year';
 
-/** The four parts of a description, each with the comma that closes it. */
+/**
+ * The four parts of a description, each with the comma that closes it,
+ * in the order they are said.
+ */
 type Parts = Record<PartName, string>;
+
+const partNames: PartName[] = ['day', 'month', 'time', 'year'];
 
 /** A stretch of the sentence, and the commas it asks for. */
 interface Chunk {
@@ -126,21 +131,21 @@ function compose(schedule: Schedule, opts: FrenchOptions):
     return texts.filter((_, index) => chunks[index].part === name).join(' ');
   }
 
+  // The parts in the order the sentence says them (a union puts the month
+  // and the time before the day), then any it leaves empty.
+  const order = [...new Set([...chunks.map((chunk) => chunk.part),
+    ...partNames])];
+
   return {
-    parts: {
-      day: part('day'),
-      month: part('month'),
-      time: part('time'),
-      year: part('year')
-    },
+    parts: Object.fromEntries(order.map((name) => [name, part(name)])) as
+      Parts,
     text: texts.join(' ')
   };
 }
 
 /**
- * The parts of a description. Joined with spaces in the order of the
- * frame (day, month, time, year; for a union month, time, day, year),
- * those that are not empty are the description.
+ * The parts of a description, in the order they are said: those that are
+ * not empty, joined with spaces, are the description.
  */
 function describeParts(schedule: Schedule, opts: FrenchOptions): Parts {
   return compose(schedule, opts).parts;
@@ -148,14 +153,6 @@ function describeParts(schedule: Schedule, opts: FrenchOptions): Parts {
 
 function describe(schedule: Schedule, opts: FrenchOptions): string {
   return compose(schedule, opts).text;
-}
-
-/**
- * Whether a description is in the union's order: both a day of the month
- * and a weekday narrow the days, and both fire.
- */
-function unites(schedule: Schedule, opts: FrenchOptions): boolean {
-  return contextOf(schedule, opts.style).union;
 }
 
 // A label starts with a capital letter, which keeps its accent.
@@ -193,5 +190,8 @@ const french: Language<FrenchStyle> = {
 };
 
 export type {FrenchStyle};
-export {describeParts, styles, unites};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default french;

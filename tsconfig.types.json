@@ -5,6 +5,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "rootDir": "src",
-    "outDir": "types"
+    "outDir": "types",
+    "stripInternal": true
   }
 }

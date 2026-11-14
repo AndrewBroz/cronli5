@@ -13,7 +13,7 @@ import {wraps} from './sets.js';
 
 const {words} = lexicon;
 
-/** The parts of a description, in the order they are said. */
+/** The parts of a description, in the order they are said. @internal */
 export interface Parts {
   day: string;
   month: string;
@@ -130,5 +130,8 @@ const ukrainian: Language<UkrainianStyle> = {
 };
 
 export type {UkrainianStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default ukrainian;

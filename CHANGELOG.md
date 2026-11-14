@@ -11,6 +11,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **BREAKING: the English style field `sep` is now `separator`**, the name
   Czech and Italian already use. Passing `sep` is an error that names the
   new field.
+- **BREAKING: language modules export only the language and its
+  `styles`.** `describeParts` (and French's `unites`) took the core's
+  internal facts, which no public entry point produces, and the CommonJS
+  builds already lacked them; they are internal now, in ESM and in the
+  type declarations too.
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` warn.** Traditional Chinese is
   not yet written; these describe in Simplified Chinese and say so once on
   the console, where before they did so in silence.

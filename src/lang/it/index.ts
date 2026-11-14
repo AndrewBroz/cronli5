@@ -179,5 +179,8 @@ const italian: Language<ItalianStyle> = {
 };
 
 export type {ItalianStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default italian;

@@ -17,7 +17,10 @@ import {when} from './phrases.js';
 
 const {marks, words} = lexicon;
 
-/** The four parts of a description, each ending in what joins it on. */
+/**
+ * The four parts of a description, each ending in what joins it on.
+ * @internal
+ */
 export interface Parts {
   day: string;
   month: string;
@@ -111,5 +114,8 @@ const japanese: Language<JapaneseStyle> = {
 };
 
 export type {JapaneseStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default japanese;

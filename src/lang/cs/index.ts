@@ -21,7 +21,10 @@ const {words} = lexicon;
 /** The options a Czech description is rendered under. */
 export type CzechOptions = NormalizedOptions<CzechStyle>;
 
-/** A description as its three parts, each with what joins it to the next. */
+/**
+ * A description as its three parts, each with what joins it to the next.
+ * @internal
+ */
 export interface Parts {
   day: string;
   frame: string;
@@ -153,5 +156,8 @@ const czech: Language<CzechStyle> = {
 };
 
 export type {CzechStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default czech;

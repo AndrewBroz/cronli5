@@ -155,6 +155,22 @@ describe('Built package artifacts:', function() {
         .to.be.an('undefined');
     });
 
+  it('every language module carries only the language and its styles, ' +
+    'in both formats', async function() {
+    const {shipped} = await import('../../src/languages.js');
+
+    for (const code of shipped) {
+      const esm = await import(`../../dist/lang/${code}.js`);
+
+      expect(Object.keys(esm).sort(), code).to.deep.equal(['default',
+        'styles']);
+      expect(require(`../../dist/lang/${code}.cjs`).describeParts, code)
+        .to.be.an('undefined');
+      expect(readFileSync(`types/lang/${code}/index.d.ts`, 'utf8'), code)
+        .to.not.match(/export \{[^}]*describeParts/u);
+    }
+  });
+
   it('the browser global carries create, the errors and the styles',
     function() {
       const sandbox = {};

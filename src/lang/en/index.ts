@@ -11,7 +11,11 @@ import {regions, style, styles} from './options.js';
 
 const {words} = lexicon;
 
-/** The four parts of a description, before they are joined into one frame. */
+/**
+ * The four parts of a description, before they are joined into one
+ * frame, for the tests.
+ * @internal
+ */
 export function describeParts(schedule: ScheduleFacts, opts: EnglishOptions):
   Parts {
   return partsOf(schedule, opts);

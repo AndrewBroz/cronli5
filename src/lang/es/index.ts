@@ -14,7 +14,10 @@ import {timePart} from './time.js';
 
 const {words} = lexicon;
 
-/** The parts of a description, each with the comma that follows it. */
+/**
+ * The parts of a description, each with the comma that follows it.
+ * @internal
+ */
 export interface Parts {
   frame: string;
   day: string;
@@ -115,5 +118,8 @@ const spanish: Language<SpanishStyle> = {
 };
 
 export type {SpanishOptions, SpanishStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default spanish;

@@ -38,6 +38,9 @@ described. Everything used to exit 1.
   only for now. `lang: 'zh-Hant'` (and `zh-TW`, `zh-HK`, `zh-MO`) describes
   in Simplified Chinese and warns once, on the console, that Traditional
   Chinese is not yet written.
+* **`describeParts` and French's `unites`** from the language modules.
+  They needed the library's internal schedule facts, which nothing public
+  produces, so no caller could use them.
 * **The English style field `sep`**, renamed `separator`, as it is called
   in every language that has one. Passing `sep` is an error that says so.
 * **Spanish `hSuffix` and `workday`**, and the English `'uk'` dialect

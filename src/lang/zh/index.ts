@@ -18,7 +18,7 @@ import {timeOf} from './time.js';
 
 const {marks, words} = lexicon;
 
-/** The pieces of a description, which joined in this order are it. */
+/** The pieces of a description, which joined in this order are it. @internal */
 export interface ChineseParts {
   year: string;
   month: string;
@@ -115,5 +115,8 @@ const chinese: Language<ChineseStyle> = {
 };
 
 export type {ChineseStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default chinese;
