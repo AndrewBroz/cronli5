@@ -106,7 +106,7 @@ hold in every language.
 
 **The cost of a sentence to its reader.** "Simple and easy" is measured
 by a model of the person, not by asking a model whether it found the
-sentence easy. Three costs:
+sentence easy. Four costs:
 
 - **Spoken length**: how long the sentence takes to say, in that
   language's syllables, with numbers and times counted as spoken.
@@ -118,6 +118,10 @@ sentence easy. Three costs:
   four, with no operation. A window is its two ends; a range of days is
   two unless the language holds it whole ("weekdays"); an exception is
   its base and each thing removed.
+- **Repetition**: what is said again. It adds nothing to hold, but it is
+  heard again, and readers and copy editors notice it ("January 1, April
+  1, July 1, and October 1" against "the 1st of January, April, July, and
+  October").
 - **Operation tax**: the mental work for anything not read off directly:
   adding from an offset, converting an ordinal, inferring a step from a
   series, working out whether an end is included, multiplying fields
@@ -131,7 +135,7 @@ again ("every 7 minutes from 0 through 56 minutes past the hour"), or as
 its values.
 
 Each cost ranks a language's sentences on its own, and compares two
-wordings that each have one reading. The three are never added into one
+wordings that each have one reading. They are never added into one
 number: one wording is better than another only if it is no worse in
 any column. Where they disagree (four exact times against a rhythm with
 an offset: more objects, no operation), the choice is a judgment, made

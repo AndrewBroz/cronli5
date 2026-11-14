@@ -58,11 +58,16 @@ describe('the cost model:', function() {
       ':35')[1]).to.include('product');
   });
 
-  it('holds names as objects, and a value said again once', function() {
-    expect(held('en', 'on January 1, April 1, July 1, and October 1')[0])
-      .to.equal(5);
-    expect(held('en', 'on the 1st of January, April, July, and October')[0])
-      .to.equal(5);
+  it('holds names as objects, and a value said again once, counting the ' +
+    'repetition as a cost of its own', function() {
+    const repeated = costOf('en', 'on January 1, April 1, July 1, and ' +
+      'October 1');
+    const once = costOf('en', 'on the 1st of January, April, July, and ' +
+      'October');
+
+    expect([repeated.objects, repeated.repetitions]).to.deep.equal([5, 3]);
+    expect([once.objects, once.repetitions]).to.deep.equal([5, 0]);
+    expect(compare(once, repeated)).to.equal('cheaper');
   });
 
   it('taxes working out the nearest weekday', function() {
