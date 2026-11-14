@@ -90,6 +90,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     alone.
   - Ukrainian drops a nearest-weekday date beside Monday to Friday, which
     adds no day, and says one place in the hour as a count from its start.
+- **Wordings that could be read two ways, rewritten:**
+  - English says 0:00 beside a date as "12 a.m." ("at 12 a.m. on the 1st"),
+    since "midnight on the 1st" can be the end of the 1st; and every
+    stretch ends with "through" on its last firing ("from 9 a.m. through
+    9:29 a.m."), not "until", which can include its end or not.
+  - Czech says the nearest weekday briefly and with one reading: «a
+    připadne-li na víkend, místo toho ve všední den nejbližší tomuto dni»;
+    «poslední všední den v měsíci», «první všední den v měsíci».
+  - Chinese gives a stray minute after a run its own hour
+    («…，以及9:45、17:45»), which could otherwise be every hour's.
+  - Italian's working day no longer adds «festivi compresi».
 - **Every language was rebuilt from its own answers** and then repaired
   twice against independently computed fire times. A schedule that can
   never run says so (`0 0 31 6 *`); one that runs only in leap years says
