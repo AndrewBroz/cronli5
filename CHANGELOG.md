@@ -8,6 +8,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **BREAKING: the English style field `sep` is now `separator`**, the name
+  Czech and Italian already use. Passing `sep` is an error that names the
+  new field.
+- **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` warn.** Traditional Chinese is
+  not yet written; these describe in Simplified Chinese and say so once on
+  the console, where before they did so in silence.
+- **`short` means the same thing in every language**: the abbreviations
+  the language conventionally uses, where it uses them. Documented in
+  `docs/styles.md`; no output changed.
 - **The public API, for 1.0.** Languages are named by code, with a region
   (`lang: 'en-GB'`); a `style` table per language replaces `dialect`,
   `ampm` and `short`; one `form` option (`'fragment'`, `'label'`,

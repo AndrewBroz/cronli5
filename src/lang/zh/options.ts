@@ -26,6 +26,22 @@ Object.freeze({standard: Object.freeze(standard)});
 /** The region codes Chinese knows: none yet. */
 const regions: {[region: string]: string} = {};
 
+/**
+ * The variants Chinese does not yet write: Traditional Chinese, asked for
+ * by its script or by a region that writes it. They are described in
+ * Simplified Chinese, with a warning, until they are written.
+ */
+const traditional = {
+  instead: 'Simplified Chinese',
+  variant: 'Traditional Chinese'
+};
+const pending: {[region: string]: {instead: string; variant: string}} = {
+  HANT: traditional,
+  HK: traditional,
+  MO: traditional,
+  TW: traditional
+};
+
 const fields = Object.keys(standard).sort();
 
 // A named table with a caller's overrides applied. A field the table does
@@ -56,4 +72,4 @@ function style(base: string, overrides?: unknown): ChineseStyle {
   return table as unknown as ChineseStyle;
 }
 
-export {regions, style, styles};
+export {pending, regions, style, styles};

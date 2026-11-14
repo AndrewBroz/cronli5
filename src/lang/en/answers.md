@@ -166,7 +166,7 @@ caller to pass.
 | `hour12` | `true` | `true` | `true` | 12-hour times with a.m./p.m. and the words for 12:00 and 0:00; `false` gives 24-hour times, zero-padded, always with minutes (`09:00`, `17:30`, `00:00`) and no noon or midnight |
 | `am` / `pm` | `a.m.` / `p.m.` | `am` / `pm` | `AM` / `PM` | the words |
 | `closeUp` | `false` (`9 a.m.`) | `true` (`9am`) | `false` (`9 AM`) | whether they are joined to the time |
-| `sep` | `:` | `.` (`9.30am`) | `:` | the hour-minute separator |
+| `separator` | `:` | `.` (`9.30am`) | `:` | the hour-minute separator |
 | `midday` | noon | midday | noon | the word for 12:00 |
 | `midnight` | midnight | midnight | midnight | the word for 0:00 |
 | `through` | through | to | through | the inclusive range word |

@@ -86,7 +86,7 @@ function writeTime(moment: Moment, opts: EnglishOptions):
   if (!style.hour12) {
     return {
       meridiem: '',
-      text: [lexicon.twoDigits(moment.hour), ...parts].join(style.sep)
+      text: [lexicon.twoDigits(moment.hour), ...parts].join(style.separator)
     };
   }
 
@@ -104,7 +104,7 @@ function writeTime(moment: Moment, opts: EnglishOptions):
 
   return {
     meridiem: moment.hour < 12 ? style.am : style.pm,
-    text: [String(moment.hour % 12 || 12), ...shown].join(style.sep)
+    text: [String(moment.hour % 12 || 12), ...shown].join(style.separator)
   };
 }
 

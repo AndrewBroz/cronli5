@@ -35,7 +35,11 @@ described. Everything used to exit 1.
 * **Finnish** (`cronli5/lang/fi`). It is being rebuilt from native usage
   notes like the other languages and will return in a 1.x release.
 * **Traditional Chinese** (the `zh-Hant` dialect). Chinese is Simplified
-  only for now; `lang: 'zh-Hant'` does not select another script.
+  only for now. `lang: 'zh-Hant'` (and `zh-TW`, `zh-HK`, `zh-MO`) describes
+  in Simplified Chinese and warns once, on the console, that Traditional
+  Chinese is not yet written.
+* **The English style field `sep`**, renamed `separator`, as it is called
+  in every language that has one. Passing `sep` is an error that says so.
 * **Spanish `hSuffix` and `workday`**, and the English `'uk'` dialect
   alias (use `lang: 'en-GB'`). The Monday-to-Friday forms now name their
   days in every language, because no language's word for a working day

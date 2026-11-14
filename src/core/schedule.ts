@@ -352,6 +352,11 @@ export interface Language<Style = unknown> {
   // A description standing alone as a label, capitalised as the language
   // capitalises one.
   label(description: string, opts: NormalizedOptions<Style>): string;
+  // Region or script codes in upper case that name a variant the language
+  // does not yet write, each with the variant's name in English and the
+  // name of what is written instead. Asking for one warns once and
+  // describes in what is written.
+  pending?: {[region: string]: {instead: string; variant: string}};
   // Region codes in upper case, each naming a key of `styles`.
   regions: {[region: string]: string};
   reboot(opts: NormalizedOptions<Style>): string;

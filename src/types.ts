@@ -20,6 +20,7 @@ export interface Cronli5Language {
   describe(schedule: any, opts: any): string;
   fallback(opts: any): string;
   label(description: string, opts: any): string;
+  pending?: {[region: string]: {instead: string; variant: string}};
   reboot(opts: any): string;
   regions: {[region: string]: string};
   sentence(description: string, opts: any): string;

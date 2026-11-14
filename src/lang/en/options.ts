@@ -22,7 +22,7 @@ export interface EnglishStyle {
   ordinals: boolean;
   pm: string;
   // What separates hours, minutes and seconds.
-  sep: string;
+  separator: string;
   serialComma: boolean;
   // Whether weekday and month names are abbreviated.
   short: boolean;
@@ -43,8 +43,8 @@ const us: EnglishStyle = {
   midnight: 'midnight',
   ordinals: false,
   pm: 'p.m.',
+  separator: ':',
   serialComma: true,
-  sep: ':',
   short: false,
   through: 'through'
 };
@@ -63,7 +63,7 @@ Object.freeze({
     dayFirst: true,
     midday: 'midday',
     pm: 'pm',
-    sep: '.',
+    separator: '.',
     serialComma: false,
     through: 'to'
   }),
@@ -87,6 +87,12 @@ function style(base: string, overrides?: unknown): EnglishStyle {
 
   Object.entries({...overrides as object}).forEach(
     function apply([field, value]) {
+      if (field === 'sep') {
+        throw new Cronli5OptionError(
+          'The style field `sep` was renamed `separator` in 1.0, as it is ' +
+          'in every language that has one.');
+      }
+
       if (!Object.hasOwn(us, field)) {
         throw new Cronli5OptionError(
           `English has no style field \`${field}\`; its fields are ` +

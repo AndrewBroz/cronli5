@@ -12,7 +12,7 @@ import {domainOf} from '../../core/specs.js';
 import {dayOf, monthOf, monthsOf, neverOf, yearOf} from './days.js';
 import lexicon from './lexicon.js';
 import type {ChineseOptions, ChineseStyle} from './options.js';
-import {regions, style, styles} from './options.js';
+import {pending, regions, style, styles} from './options.js';
 import {when} from './sets.js';
 import {timeOf} from './time.js';
 
@@ -106,6 +106,7 @@ const chinese: Language<ChineseStyle> = {
   describe,
   fallback,
   label,
+  pending,
   reboot,
   regions,
   sentence,
