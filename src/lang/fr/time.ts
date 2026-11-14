@@ -101,8 +101,10 @@ const still = {
 const hourly: Closing = {edge: w.ofEachHour, hour: w.ofEachHour};
 const loose: Closing = {edge: w.ofTheHour, hour: ''};
 
-// What leads minutes named in the hour: one, or several.
+// What leads minutes named in the hour, or seconds named in the minute:
+// one, or several.
 const minuteLeads = [w.atTheMinute, w.atTheMinutes];
+const secondLeads = [w.atTheSecond, w.atTheSeconds];
 const wholeMinuteLeads =
   [phrase(w.during, w.theMinute), phrase(w.during, w.theMinutes)];
 
@@ -395,8 +397,7 @@ function secondsBeat(c: Context, ranges: RangeDescription[]): Beat {
 function beatOf(c: Context): Beat {
   const rest = choose(c.seconds, restCounts);
   const windowed = c.once && say(rest, {
-    pieces: (pieces) => pieces.parts.every(isRange),
-    range: (run) => run.from > 0
+    pieces: (pieces) => pieces.parts.every(isRange)
   }, false);
   const filling = tiling(c.minutes);
 
@@ -883,8 +884,29 @@ function allTimes(c: Context): Said {
   return {clock: true, count: when(sayable, count), text: clockList(c, times)};
 }
 
-// The time part of a pattern that names a minute or an hour.
-function clockPart(c: Context): Said {
+// Seconds named after the time rather than written into it, when the
+// first is not the top of the minute: a run, from one numbered second to
+// another, or two to six seconds that are no run. Anything else is
+// carried by the times, or said by an offset and a clause.
+function namedSeconds(c: Context): string {
+  const {values} = c.seconds;
+  const listed = given(values.length <= 6,
+    positions(values, '', secondLeads));
+
+  return given(c.offset > 0 && values.length > 1,
+    say(choose(c.seconds, restCounts), {
+      cadence: () => listed,
+      range: (run) => phrase(every(1, units.second), w.fromTheSecond,
+        String(run.from), w.atTheSecond, String(run.to)),
+      values: () => listed
+    }, ''));
+}
+
+// The time part of a pattern that names a minute or an hour. Seconds that
+// are named after it leave the times to the minute.
+function clockPart(read: Context): Said {
+  const seconds = namedSeconds(read);
+  const c = seconds ? {...read, offset: 0} : read;
   const beat = beatOf(c);
   const hours = choose(c.hours, hourCounts(c, {
     excepted: (description) => excepts(c, beat, description),
@@ -893,15 +915,17 @@ function clockPart(c: Context): Said {
   }));
   const said = minuteException(c, beat, say(hours, hourForms(c, beat)));
   const rest = choose(c.seconds, restCounts);
-  const more = !beat.consumed && c.seconds.values.length > 1;
+  const more = !beat.consumed && c.seconds.values.length > 1 && !seconds;
   const late = given(!beat.consumed && c.offset > 0 && roundDay(hours),
     phrase(w.with, counted(c.offset, units.second), w.late));
   const again = given(more,
     phrase(given(!c.once, w.andEachTime), say(rest, restSayers(c))));
   const full = {
     clock: said.clock,
-    count: said.count + Number(more) * countOf(rest, restCounts),
-    text: said.text + after(', ', late) + after(', ', again)
+    count: said.count + Number(more) * countOf(rest, restCounts) +
+      Number(seconds !== ''),
+    text: said.text + after(', ', late) + after(', ', seconds) +
+      after(', ', again)
   };
   const list = allTimes(c);
 

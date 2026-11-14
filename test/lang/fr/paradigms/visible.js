@@ -11,8 +11,7 @@ const rows = [
   ['*/6 0 9 * * *',
     'tous les jours à 9 h, toutes les 6 secondes pendant une minute'],
   ['5/10 0 9 * * *',
-    'tous les jours à 9 h 00 min 05 s, toutes les 10 secondes pendant une ' +
-    'minute'],
+    'tous les jours à 9 h, aux secondes 5, 15, 25, 35, 45 et 55'],
 
   // clock / minute
   ['* 9 * * *', 'tous les jours, toutes les minutes de 9 h à 9 h 59'],
@@ -56,9 +55,8 @@ const rows = [
     'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, et à ' +
     'chaque fois toutes les 6 secondes pendant une minute'],
   ['5/10 */15 9-17 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 9 h 00 min 05 s à 17 h ' +
-    '45 min 05 s, et à chaque fois toutes les 10 secondes pendant une ' +
-    'minute'],
+    'du lundi au vendredi, toutes les 15 minutes de 9 h à 17 h 45, aux ' +
+    'secondes 5, 15, 25, 35, 45 et 55'],
 
   // window / minute
   ['* 9-17 * * 1-5',
@@ -126,8 +124,7 @@ const rows = [
   ['*/6 0 0 1 * *',
     'le 1er de chaque mois à 0 h, toutes les 6 secondes pendant une minute'],
   ['5/10 0 0 1 * *',
-    'le 1er de chaque mois à 0 h 00 min 05 s, toutes les 10 secondes ' +
-    'pendant une minute'],
+    'le 1er de chaque mois à 0 h, aux secondes 5, 15, 25, 35, 45 et 55'],
 
   // monthly / minute
   ['* 0 1 * *', 'le 1er de chaque mois, toutes les minutes de 0 h à 0 h 59'],
