@@ -124,11 +124,11 @@ describe('The options:', function() {
   describe('how the pattern is read', function() {
     it('takes a flavour and separate flags', function() {
       expect(cronli5('0 0 ? * 2', {cron: 'quartz'}))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
       expect(cronli5('0 0 * * 2', {weekdaysFrom: 1}))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
       expect(cronli5('0 0 ? * 1', {questionMark: 'allow'}))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
       expect(cronli5('0 0 9 * * *', {seconds: true}))
         .to.equal('at 9 a.m. every day');
       expect(cronli5('0 9 * * * 2030', {years: true}))

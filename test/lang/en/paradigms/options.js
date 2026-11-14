@@ -9,8 +9,8 @@
 const defaultParts = {
   '*/15 9-17 * * 1-5': ['15 minutes', '9 a.m.', '5:45 p.m.', 'weekdays'],
   '0 0 * * *': ['midnight'],
-  '0 0 1 6 *': ['midnight at the start of the day', 'June 1'],
-  '0 0 1-7 6 *': ['midnight at the start of the day', 'June 1', '7'],
+  '0 0 1 6 *': ['12 a.m.', 'June 1'],
+  '0 0 1-7 6 *': ['12 a.m.', 'June 1', '7'],
   '0-29 9 * * *': ['9 a.m.', '9:29 a.m.'],
   '0 12 * 6 1': ['noon', 'Mondays', 'June'],
   '0 8,12,18 * * *': ['8 a.m.', 'noon', '6 p.m.'],
@@ -84,8 +84,8 @@ const sets = [
         pattern: '0 9 * 6-8 *'
       },
       {
-        expected: 'at midnight at the start of the day on Jun 1',
-        parts: ['midnight at the start of the day', 'Jun 1'],
+        expected: 'at 12 a.m. on Jun 1',
+        parts: ['12 a.m.', 'Jun 1'],
         pattern: '0 0 1 6 *'
       },
       {
@@ -140,13 +140,13 @@ const sets = [
         pattern: '0 9 * 6-8 *'
       },
       {
-        expected: 'at midnight at the start of the day on 1 June',
-        parts: ['midnight at the start of the day', '1 June'],
+        expected: 'at 12am on 1 June',
+        parts: ['12am', '1 June'],
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'at midnight at the start of the day on 1 to 7 June',
-        parts: ['midnight at the start of the day', '1', '7 June'],
+        expected: 'at 12am on 1 to 7 June',
+        parts: ['12am', '1', '7 June'],
         pattern: '0 0 1-7 6 *'
       }
     ]
@@ -161,13 +161,13 @@ const sets = [
         pattern: '0 9-17 * * *'
       },
       {
-        expected: 'at midnight at the start of the day on June 1st',
-        parts: ['midnight at the start of the day', 'June 1st'],
+        expected: 'at 12 AM on June 1st',
+        parts: ['12 AM', 'June 1st'],
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'at midnight at the start of the day on June 1st through 7th',
-        parts: ['midnight at the start of the day', 'June 1st', '7th'],
+        expected: 'at 12 AM on June 1st through 7th',
+        parts: ['12 AM', 'June 1st', '7th'],
         pattern: '0 0 1-7 6 *'
       }
     ]
@@ -196,8 +196,8 @@ const sets = [
     options: {lang: 'en-GB', style: {short: true}},
     rows: [
       {
-        expected: 'at midnight at the start of the day on 1 Jun',
-        parts: ['midnight at the start of the day', '1 Jun'],
+        expected: 'at 12am on 1 Jun',
+        parts: ['12am', '1 Jun'],
         pattern: '0 0 1 6 *'
       },
       {
@@ -231,8 +231,8 @@ const sets = [
         pattern: '0 0 * * *'
       },
       {
-        expected: 'at 12 midnight at the start of the day on June 1',
-        parts: ['12 midnight at the start of the day', 'June 1'],
+        expected: 'at 12 a.m. on June 1',
+        parts: ['12 a.m.', 'June 1'],
         pattern: '0 0 1 6 *'
       }
     ]

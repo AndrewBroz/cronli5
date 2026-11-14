@@ -318,7 +318,7 @@ describe('Built package artifacts:', function() {
 
     it('reads a Quartz pattern with --cron quartz', function() {
       expect(cli('--cron', 'quartz', '--fragment', '0 0 ? * 2'))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
     });
 
     it('prints usage with --help or -h', function() {
@@ -413,7 +413,7 @@ describe('Built package artifacts:', function() {
           expect(result.status).to.equal(0);
           expect(result.stdout).to.equal(
             'Runs every 5 minutes.\t/usr/bin/job --flag "a b"\n' +
-            'Runs at midnight on weekdays.\t/bin/backup\n' +
+            'Runs at 12 a.m. on weekdays.\t/bin/backup\n' +
             'Runs at midnight every day.\t/bin/rotate\n');
         });
 

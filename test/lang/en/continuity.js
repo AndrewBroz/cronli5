@@ -59,16 +59,15 @@ const WRAP_MAY_CHANGE = {
 const CLOSING_COMMA = /,$/u;
 
 // "Midnight" beside a restricted day, month or year is also said of the
-// end of that day, so there the moment says which: "at midnight at the
-// start of the day" (answers 4.1). An edit to a coarser field that
-// restricts the days, or frees them, may add or remove those words in
-// the time part, and nothing else: both wordings are reduced to one
-// before the parts are compared.
+// end of that day, so there 0:00 is "12 a.m." (answers 4.1). An edit to
+// a coarser field that restricts the days, or frees them, may change
+// that word in the time part, and nothing else: both wordings are
+// reduced to one before the parts are compared.
 const DAY_FIELDS = ['date', 'weekday', 'month', 'year'];
-const START_OF_DAY = / at the start of the day/gu;
+const START_OF_DAY = /\b12(?::00){0,2} a\.m\./gu;
 
 function startOfDay(part) {
-  return part.replace(START_OF_DAY, '');
+  return part.replace(START_OF_DAY, 'midnight');
 }
 
 // A schedule that can never run (June 31) says only that, and why, in
@@ -84,8 +83,8 @@ function neverRuns(pattern, options) {
 // The declared tie (answers 3.11): hours 0 and 12 on the hour are said as
 // the field was written. Both wordings are reduced to one before equal
 // schedules are compared, so any other difference still fails.
-const TIE = new RegExp('at midnight(?: at the start of the day)? and noon' +
-  '(?: every day)?|every 12 hours', 'u');
+const TIE =
+  /at (?:midnight|12 a\.m\.) and noon(?: every day)?|every 12 hours/u;
 
 const SETUP = {languages: [english.default], options: {}, styles: {}};
 
@@ -232,10 +231,10 @@ describe('English continuity:', function() {
         year: ''
       });
       expect(partsOf('0 0 30 6 *').time)
-        .to.equal('at midnight at the start of the day');
+        .to.equal('at 12 a.m.');
 
-      // Beside a restricted day, month or year, midnight says it starts
-      // the day, and nothing else changes.
+      // Beside a restricted day, month or year, 0:00 is "12 a.m.", and
+      // nothing else changes.
       expect(leaks([
         ['0 0 * * *', '0 0 1 * *'],
         ['0 0 * * *', '0 0 * * 1'],
@@ -244,7 +243,7 @@ describe('English continuity:', function() {
       ])).to.deep.equal([]);
       expect(partsOf('0 0 * * *').time).to.equal('at midnight');
       expect(partsOf('0 0 * 6 *').time)
-        .to.equal('at midnight at the start of the day');
+        .to.equal('at 12 a.m.');
 
       // An exception is closed with a comma when a part follows it.
       expect(leaks([

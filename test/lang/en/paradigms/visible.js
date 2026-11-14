@@ -132,7 +132,7 @@ const rows = [
   ['* 0 1 * *', 'every minute during the 12 a.m. hour on the 1st'],
   ['5,20,45 0 1 * *', 'at 12:05 a.m., 12:20 a.m., and 12:45 a.m. on the 1st'],
   ['*/15 0 1 * *', 'every 15 minutes during the 12 a.m. hour on the 1st'],
-  ['0,15,45 0 1 * *', 'at midnight at the start of the day, 12:15 a.m., and 12:45 a.m. on the 1st'],
+  ['0,15,45 0 1 * *', 'at 12 a.m., 12:15 a.m., and 12:45 a.m. on the 1st'],
 
   // monthly / hour
   ['0 * 1 * *', 'every hour on the 1st'],
@@ -143,27 +143,27 @@ const rows = [
 
   // monthly / date
   ['0 0 * * *', 'at midnight every day'],
-  ['0 0 1,10,20 * *', 'at midnight at the start of the day on the 1st, 10th, and 20th'],
-  ['0 0 */2 * *', 'at midnight at the start of the day on odd-numbered days'],
+  ['0 0 1,10,20 * *', 'at 12 a.m. on the 1st, 10th, and 20th'],
+  ['0 0 */2 * *', 'at 12 a.m. on odd-numbered days'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'at midnight at the start of the day on odd-numbered days except the 15th'],
+    'at 12 a.m. on odd-numbered days except the 15th'],
 
   // monthly / month
-  ['0 0 1 1 *', 'at midnight at the start of the day on January 1'],
+  ['0 0 1 1 *', 'at 12 a.m. on January 1'],
   // One day with several months says the day once, as several days do:
   // "on" marks a date, so the day reaches every month (maintainer,
   // 2026-11-14).
   ['0 0 1 3,6,9,12 *',
-    'at midnight at the start of the day on the 1st of March, June, September, and December'],
-  ['0 0 1 */2 *', 'at midnight at the start of the day on the 1st of every other month'],
+    'at 12 a.m. on the 1st of March, June, September, and December'],
+  ['0 0 1 */2 *', 'at 12 a.m. on the 1st of every other month'],
   ['0 0 1 11-2 *',
-    'at midnight at the start of the day on the 1st of each month from November through February'],
+    'at 12 a.m. on the 1st of each month from November through February'],
 
   // monthly / weekday
-  ['0 0 1 * 1', 'at midnight at the start of the day on the 1st as well as on Mondays'],
-  ['0 0 1 * 1-5', 'at midnight at the start of the day on the 1st as well as on weekdays'],
+  ['0 0 1 * 1', 'at 12 a.m. on the 1st as well as on Mondays'],
+  ['0 0 1 * 1-5', 'at 12 a.m. on the 1st as well as on weekdays'],
   ['0 0 1 * 2,4',
-    'at midnight at the start of the day on the 1st as well as on Tuesdays and Thursdays'],
+    'at 12 a.m. on the 1st as well as on Tuesdays and Thursdays'],
 
   // open / second — context `* * * * *`
   ['* * * * * *', 'every second'],

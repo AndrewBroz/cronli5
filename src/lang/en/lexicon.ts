@@ -72,7 +72,6 @@ const words = {
   anyYearNamed: 'in any of the years named',
   asWellAs: 'as well as',
   at: 'at',
-  atTheStartOfTheDay: 'at the start of the day',
   because: 'because',
   before: 'before',
   butOnly: 'but only',

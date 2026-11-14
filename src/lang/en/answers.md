@@ -168,7 +168,7 @@ caller to pass.
 | `closeUp` | `false` (`9 a.m.`) | `true` (`9am`) | `false` (`9 AM`) | whether they are joined to the time |
 | `separator` | `:` | `.` (`9.30am`) | `:` | the hour-minute separator |
 | `midday` | noon | midday | noon | the word for 12:00 |
-| `midnight` | midnight | midnight | midnight | the word for 0:00 as a moment, after "at" (4.1); empty, it is written as a time, "12 a.m." |
+| `midnight` | midnight | midnight | midnight | the word for 0:00 as a moment where no day, month or year is restricted (4.1); empty, 0:00 is always written as a time, "12 a.m." |
 | `through` | through | to | through | the inclusive range word |
 | `serialComma` | `true` | `false` | `true` | the comma before a list's "and" |
 | `dayFirst` | `false` (`June 1`) | `true` (`1 June`) | `false` | a single month with its dates |
@@ -194,7 +194,7 @@ reader comparing the two is looking at.
 
 * `0 9 * * *` — "at 9 a.m. every day"
 * `*/15 9-17 * * 1-5` — "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays"
-* `0 0 1 * *` — "at midnight at the start of the day on the 1st"
+* `0 0 1 * *` — "at 12 a.m. on the 1st"
 * `* * * * *` — "every minute"
 
 2.2 Each new part is added after the parts finer than it. Nothing moves.
@@ -267,7 +267,7 @@ else crosses.
 2.6 A schedule that never runs. When the day of the month is one that no
 month the pattern reaches has, and no weekday is named beside it, nothing
 ever fires. The description is then only that, and the reason, because a
-reader shown "at midnight at the start of the day on June 31" will look for a date that is not
+reader shown "at midnight on June 31" will look for a date that is not
 there:
 
 * `0 0 31 6 *` — "never, because there is no June 31"
@@ -287,7 +287,7 @@ restriction of the years is only pointed to, "in any of the years named"
 The time is not said: there is no time at which it runs. In the sentence
 form this is "Runs never, because there is no June 31."
 
-Rejected: "at midnight at the start of the day on June 31", which was said before and names a
+Rejected: "at midnight on June 31", which was said before and names a
 day that does not exist; and a bare "never", which leaves the reader to
 find the reason in the pattern.
 
@@ -345,7 +345,7 @@ Numbers are digits everywhere. The only interval word is "every other"
   onward".** "In 2030 through 9999" was said before; no reader holds
   9999, and the schedule simply does not stop. "Onward" is what keeps
   this "from" apart from the "from" of a time or a cadence: "every 5
-  minutes from 2030 onward"; "at midnight at the start of the day on January 1 from 2030 onward".
+  minutes from 2030 onward"; "at 12 a.m. on January 1 from 2030 onward".
 * **"From" belongs to times and cadences.** A range of days, months or
   years takes the word its list takes ("on the 1st and 7th", "in June and
   August"), never "from". After a time, "from" was doing two jobs: "every
@@ -425,9 +425,9 @@ fields are always described as if they did not wrap, in ascending order:
 * `50-10 * * * *` — "every minute from 0 through 10 and every minute from
   50 through 59 minutes past the hour"
 * `58-1 * * * *` — "at 0, 1, 58, and 59 minutes past the hour"
-* `0 0 20-10 * *` — "at midnight at the start of the day on the 1st through the 10th and on the
+* `0 0 20-10 * *` — "at 12 a.m. on the 1st through the 10th and on the
   20th through the 31st"
-* `0 0 29-2 * *` — "at midnight at the start of the day on the 1st and 2nd and on the 29th
+* `0 0 29-2 * *` — "at 12 a.m. on the 1st and 2nd and on the 29th
   through the 31st"
 
 (The first audit let minutes and seconds wrap when nothing coarser was
@@ -450,8 +450,8 @@ Where a wrap is not allowed, the set is described as if the field did not
 wrap, in ascending order: `0 22-2 1 * *` is "every hour from 12 a.m.
 through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st"; `*/15 22-2 * * 1-5`
 is "every 15 minutes from 12 a.m. through 2:45 a.m. and from 10 p.m.
-through 11:45 p.m. on weekdays"; `0 0 0 * 11-2 * 2030` is "at midnight
-at the start of the day every day in January, February, November, and December in 2030".
+through 11:45 p.m. on weekdays"; `0 0 0 * 11-2 * 2030` is "at 12
+a.m. every day in January, February, November, and December in 2030".
 
 A run of hours that covers more than half the day is still said as it
 runs: `0 0-5,17-23 * * *` is "every hour from 5 p.m. through 5 a.m. every
@@ -487,8 +487,8 @@ summers. The comma is the one that closes an exception (3.9), for the
 same reason, and it is used in the day part and the month part only:
 
 * "at 9 a.m. every day in June through August and in December, in 2030"
-* "at midnight at the start of the day on the 1st through the 5th and on the 10th, in 2030"
-* "at midnight at the start of the day on June 1 through 5 and on June 10, in 2030"
+* "at 12 a.m. on the 1st through the 5th and on the 10th, in 2030"
+* "at 12 a.m. on June 1 through 5 and on June 10, in 2030"
 * "at 9 a.m. Tuesday through Friday and on Sundays, in June"
 
 Several pieces of days are never followed by "of" and their months: "on
@@ -622,15 +622,15 @@ well as" and a weekday (which then says more: 4.3).
 * "every 2 hours except at 8 a.m., on the 1st"
 * "every minute except at 29 minutes past the hour, on Mondays"
 * "every hour from 3 a.m. through 11 p.m. except at 6 a.m., every day"
-* "at midnight at the start of the day on every day except the 15th, as well as on Mondays
+* "at 12 a.m. on every day except the 15th, as well as on Mondays
   whatever the date"
-* "at midnight at the start of the day Monday through Saturday except Thursday, in June"
-* "at midnight at the start of the day on the 1st of every month except June, in 2030"
+* "at 12 a.m. Monday through Saturday except Thursday, in June"
+* "at 12 a.m. on the 1st of every month except June, in 2030"
 
 **Whether a comma is enough was weighed again.** A comma is a small mark
 to carry a schedule, and the alternative is structural: say the coarser
 part first whenever an exception is present ("on the 1st, every 2 hours
-except at 8 a.m."; "in 2030, at midnight at the start of the day on the 1st of every month except
+except at 8 a.m."; "in 2030, at 12 a.m. on the 1st of every month except
 June"), or move every exception to the end ("every 2 hours on the 1st,
 except at 8 a.m."). Either leaves no doubt. Each was rejected, for these
 reasons:
@@ -738,7 +738,7 @@ is, each with its own lead:
   57 minutes past the hour"
 * "every 2 hours from 12 a.m. through noon and every 3 hours from 1 p.m.
   through 10 p.m. every day"
-* "at midnight at the start of the day every 2 days from the 1st through the 11th of the month
+* "at 12 a.m. every 2 days from the 1st through the 11th of the month
   and every 3 days from the 14th through the 29th of the month"
 * "in 2030 through 2040 and in every 5th year from 2045" (5.8)
 
@@ -869,34 +869,35 @@ not place. So:
 * As a moment after "at", 0:00 is "midnight" when every day of every
   month can fire: "at midnight every day". Both readings are the same
   schedule there.
-* As a moment beside a restricted day, weekday, month or year, it says
-  which midnight: "at midnight at the start of the day on the 1st", "at
-  midnight at the start of the day on Mondays", "at midnight at the start
-  of the day every day in June". Both readers took each of these one way
-  (2026-11-14). This is the one place
-  a coarser field changes the words of the time, and it is declared in
-  the continuity suite.
+* As a moment beside a restricted day, weekday, month or year, it is the
+  clock time that starts the day, in the style's own a.m. form: "at 12
+  a.m. on the 1st", "at 12 a.m. on Mondays", "at 12 a.m. every day in
+  June"; British "at 12am on 1 June". This is the one place a coarser
+  field changes the words of the time, and it is declared in the
+  continuity suite.
 * As the end of a stretch, and in the name of an hour, it is written as a
   time, whatever the days: "every hour from 12 a.m. through 3 a.m.", "the
   12 a.m. hour". A reader (Sonnet) took "from midnight through 3 a.m. on
   Mondays" as Monday night, and both took "the midnight hour" as the hour
-  before midnight as well; "the 12 a.m. hour" was read one way, and
-  "from 12 a.m. through 3 a.m. on Mondays" as Monday night only by one
-  reader, as the weaker reading.
+  before midnight as well; "the 12 a.m. hour" was read one way.
 
-Rejected: "12 a.m." and "12:00 a.m." as the moment (each of eight
-isolated reads of "at 12 a.m. on the 1st", "at 12:00 a.m. on the 1st",
-"at 12 a.m. on Mondays" and "at 12 a.m. every day in June" also gave the
-end of the day, if as the weaker reading; some also noted that "12 a.m."
-is confused with noon); "00:00" in a 12-hour sentence (a mixed style no
-copy editor would sign); and "at the start of the 1st" in the day part,
-which would have to rebuild every day phrase ("on Mondays", "on the 1st
-through the 7th") around it. The qualifier is long in a list ("at
-midnight at the start of the day, 6 a.m., and 6 p.m. on the 1st"), and
-that cost is accepted for one reading (by the cost model the same
-objects, six syllables more). A style may set `midnight` to its
-own word, which takes the same qualifier, or to empty, which writes 0:00
-as "12 a.m." everywhere.
+The evidence, and the decision. In eight isolated reads (Opus and
+Sonnet, 2026-11-14) of "at 12 a.m. on the 1st", "at 12:00 a.m. on the
+1st", "at 12 a.m. on Mondays" and "at 12 a.m. every day in June", every
+reader took the start of the day first and also gave the end of the
+day, as the weaker reading ("a.m." points to the morning side); some
+also noted that "12 a.m." is confused with noon, as a mistake about the
+convention. "At midnight at the start of the day on the 1st" (and on
+Mondays, and every day in June) was read one way by both, but it is
+long, above all in lists ("at 12 a.m., 6 a.m.,
+and 6 p.m. on the 1st"). The maintainer chose "12 a.m." (2026-11-14):
+the convention a reader of a schedule on a screen knows, as short as
+"midnight", with the end-of-day reading only the weaker one. Also
+rejected: "00:00" in a 12-hour sentence (a mixed style no copy editor
+would sign), and "at the start of the 1st" in the day part, which would
+have to rebuild every day phrase around it. A style's own `midnight`
+word is said only where no day is restricted; empty, 0:00 is "12 a.m."
+everywhere.
 
 After "past", every hour is "the hour", and a range of hours follows it
 directly: "at 30 minutes past the hour"; "at 5, 20, and 45 minutes past
@@ -1019,7 +1020,7 @@ second, the minutes and hours are clock times, and there are at most 24
 times in all. It names one thing per time and competes with the seconds
 lead or the anchored form; on a tie the list wins. A time that falls on
 the minute is written without seconds. So `0,30 0 9` is "at 9 a.m. and 9:00:30 a.m." (two things either way), `0,30 0 0` is "at midnight and 12:00:30
-a.m." ("at midnight at the start of the day and 12:00:30 a.m." beside a
+a.m." ("at 12 a.m. and 12:00:30 a.m." beside a
 named day), `15,45 30 9` is "at 9:30:15 a.m. and 9:30:45 a.m." (two against three),
 and `*/15 0 9` stays "every 15 seconds from 9:00:00 a.m. through 9:00:45 a.m." (two
 things against four times). This replaces the earlier limit that only a
@@ -1027,14 +1028,14 @@ single second could join a clock time.
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
 first, then "as well as", then the weekday phrase exactly as it would stand
-alone: "at midnight at the start of the day on the 1st as well as on Fridays"; "on the 1st as well
+alone: "at 12 a.m. on the 1st as well as on Fridays"; "on the 1st as well
 as on weekdays"; "on the 1st as well as Monday through Saturday"; "on
 the 1st through the 7th and on the 15th as well as on weekdays". "As well
 as" is heard as adding a second set of days. "Or" is heard as a choice, and
 a bare "and" runs together with the "and" inside a list.
 
 The pair is closed with a comma before a year, as several pieces are
-(3.6): "at midnight at the start of the day on the 1st as well as on Fridays, in 2030". Without
+(3.6): "at 12 a.m. on the 1st as well as on Fridays, in 2030". Without
 it the year is heard with the weekday alone.
 
 **An exception on either side must not be heard as covering the pair.**
@@ -1044,7 +1045,7 @@ fires on a Thursday the 15th, and "on the 15th as well as Monday through
 Saturday except Thursday" was read as if it did not.
 
 * The weekday side takes no exception. A week is short enough to name:
-  "at midnight at the start of the day on the 1st as well as Monday through Wednesday and on
+  "at 12 a.m. on the 1st as well as Monday through Wednesday and on
   Fridays and Saturdays". A run that wraps is no exception and stays: "on
   the 15th as well as Thursday through Tuesday".
 * The day-of-month side keeps its exception, because the alternatives
@@ -1065,7 +1066,7 @@ exception reach back.
 **The calendar can dissolve the pair** (the core says when):
 
 * A day of the month that no reached month has leaves the weekday alone:
-  `0 0 31 6 1` is "at midnight at the start of the day on Mondays in June".
+  `0 0 31 6 1` is "at 12 a.m. on Mondays in June".
 * Days that are every day of their months are every day, and the weekday
   is not said: `0 9 1-30 4 1` is "at 9 a.m. every day in April". So is a
   day field that names every value: `0 9 1-31 * 1` is "at 9 a.m. every
@@ -1073,7 +1074,7 @@ exception reach back.
 
 A single month applies to both sides, so each side carries it, in the
 form it would take alone (4.4 for the date, "in" and the month for the
-weekdays): "at midnight at the start of the day on June 1 as well as on Fridays in June".
+weekdays): "at 12 a.m. on June 1 as well as on Fridays in June".
 
 A month is said once wherever it can be. A single month is short enough to
 sit on each side, as above. Any longer month phrase (a list, a range, an
@@ -1093,15 +1094,14 @@ one it is alone, and the months go where they go in the pair (a single
 month on each side, any longer phrase once after both, set off by a
 comma). Nothing else changes, which is the whole of the rule: the
 reader sees the same two phrases and one connective, and "but only" is
-never heard as adding days. `0 0 */2 * 1` is "at midnight at the
-start of the day on odd-numbered days, but only on Mondays" (the Mondays that are odd days
+never heard as adding days. `0 0 */2 * 1` is "at 12 a.m. on odd-numbered days, but only on Mondays" (the Mondays that are odd days
 of the month); `0 9 */2 * 1,3,5` is "at 9 a.m. on odd-numbered days, but
 only on Mondays, Wednesdays, and Fridays"; `0 0 15 * */2` is "at
-midnight at the start of the day on the 15th, but only on Tuesdays, Thursdays, Saturdays, and
-Sundays"; `0 0 */5 * 1-5` is "at midnight at the start of the day on the 1st, 6th, 11th, 16th,
+12 a.m. on the 15th, but only on Tuesdays, Thursdays, Saturdays, and
+Sundays"; `0 0 */5 * 1-5` is "at 12 a.m. on the 1st, 6th, 11th, 16th,
 21st, 26th, and 31st, but only on weekdays"; `0 0 */3 6 1` is "at
-midnight at the start of the day every 3 days from the 1st of the month in June, but only on
-Mondays in June"; `0 0 */2 * 5L` is "at midnight at the start of the day on odd-numbered days,
+12 a.m. every 3 days from the 1st of the month in June, but only on
+Mondays in June"; `0 0 */2 * 5L` is "at 12 a.m. on odd-numbered days,
 but only on the last Friday of the month". Written without the star the
 same fields are a union and keep "as well as" (`0 0 1-31/2 * 1` is "on
 odd-numbered days as well as on Mondays").
@@ -1115,7 +1115,7 @@ exception taken out of them. A set of days that is every day of the
 months reached (`0 0 1-30 4 */2`) is no restriction, and the weekdays
 stand alone. The calendar narrows the days as it does for one arm: a
 day that comes only in leap years says so after the pair (`0 0 29 2 */2`
-is "at midnight at the start of the day on February 29, but only on Tuesdays, Thursdays,
+is "at 12 a.m. on February 29, but only on Tuesdays, Thursdays,
 Saturdays, and Sundays in February, in leap years"), and months the day
 never comes in are left out (`0 0 30 2-3 */2` is "on March 30, but only
 on Tuesdays, Thursdays, Saturdays, and Sundays in March").
@@ -1164,11 +1164,11 @@ core states which days the reached months have and which months a day
 can fire in.
 
 * Days no reached month has are left out: `0 0 1,31 4,6,9,11 *` is "at
-  midnight at the start of the day on April 1, June 1, September 1, and November 1";
+  12 a.m. on April 1, June 1, September 1, and November 1";
   `0 0 25-31 6 *` is "on June 25 through 30"; `0 0 30-2 6 *` is "on June
   1, 2, and 30". (A hard-case row said "June 1, 2, 30, and 31".)
 * Where the months are named, months the day never comes in are left
-  out: `0 0 30 2-3 *` is "at midnight at the start of the day on March 30". Where every month is
+  out: `0 0 30 2-3 *` is "at 12 a.m. on March 30". Where every month is
   reached the day alone is enough, since a reader knows which months
   have a 31st: "on the 31st".
 * Days that are every day of their months are "every day":
@@ -1181,7 +1181,7 @@ can fire in.
   that exist is said.
 * **A day that comes only in leap years says so.** When the whole day
   part fires in leap years alone, "in leap years" follows it, after any
-  years and a comma: "at midnight at the start of the day on February 29 in leap years"; "on
+  years and a comma: "at 12 a.m. on February 29 in leap years"; "on
   February 29 in 2030 through 2040, in leap years". "On February 29" was
   said before and left it to the reader. Where other months fire every
   year too ("on February 29 and March 29") nothing is added: the date
@@ -1201,7 +1201,7 @@ weekends".
 5.3 Noon and midnight name a moment; noon also names the hour that
 starts there ("the noon hour"), and 0:00 is "the 12 a.m. hour" (4.1).
 Neither is used for other minutes of that hour. Beside a restricted day,
-month or year, midnight says it starts the day (4.1).
+month or year, 0:00 is "12 a.m." (4.1).
 
 * `0 0 * * *` — "at midnight every day"
 * `0 12 * * *` — "at noon every day"
@@ -1287,7 +1287,7 @@ bare "every day every other year" runs two rhythms together.) The even
 and odd years above keep their own words.
 
 * "at 9 a.m. every day of every other year from 2030"
-* "at midnight at the start of the day on January 1 of every 4th year from 2028"
+* "at 12 a.m. on January 1 of every 4th year from 2028"
 * "at 9 a.m. every day in June of every other year from 2030"
 * "at 9 a.m. on Mondays of every other year from 2030"
 * "on the last day of the month of every 4th year from 2028"
@@ -1331,7 +1331,7 @@ day" the same way.
 **Nothing hangs across a comma.** Where the part before the year is
 closed with a comma (an exception, several pieces, a day of the month
 beside a weekday), the cadence takes "in", and the day before it needs
-no month spelled: "at midnight at the start of the day on every day except the 15th, in every
+no month spelled: "at 12 a.m. on every day except the 15th, in every
 other year from 2030"; "on the 1st as well as on weekdays, in every 4th
 year from 2030"; "every day in June through August and in December, in
 every other year from 2030". ("…on every day in every month except the
@@ -1355,7 +1355,7 @@ three letters; they are written forms, counted as the full word is spoken.
 6.4 second(s), minute(s), hour(s), day(s), month(s), year(s).
 
 6.5 at, on, in, of, every, other, from, through (to), past, during, and,
-except, for one minute, the, at the start of the day.
+except, for one minute, the.
 
 ## 7. Agreement
 
@@ -1388,7 +1388,7 @@ the 1st as well as on Fridays". See 4.3. Where a day has to match both,
 ", but only": "on odd-numbered days, but only on Mondays".
 
 8.2 `shared-qualifier-scope` — The time leads, so it covers both arms. A
-month is said on each arm: "at midnight at the start of the day on June 1 as well as on Fridays in
+month is said on each arm: "at 12 a.m. on June 1 as well as on Fridays in
 June".
 
 8.3 `confinement-vs-juxtaposition` — A confinement is introduced by
@@ -1421,8 +1421,8 @@ a.m." The description for `@reboot` is "at system startup". The lenient
 fallback is "an unrecognizable cron pattern", which is never wrapped.
 
 8.9 `cardinality-rendering` — Decided by the things named among the
-sayable forms. `0 0 1 */3 *` is "at midnight at the start of the day on January 1, April 1, July
-1, and October 1"; `0 0 1 */2 *` is "at midnight at the start of the day on the 1st of every other
+sayable forms. `0 0 1 */3 *` is "at 12 a.m. on January 1, April 1, July
+1, and October 1"; `0 0 1 */2 *` is "at 12 a.m. on the 1st of every other
 month"; `0 */6 * * *` is "every 6 hours"; `0 0,6,12,18 * * *` is "every 6
 hours" too, because the cadence is clearly easier than four times and the
 spelling only settles ties (3.11).

@@ -27,7 +27,7 @@ import {quartzDateIdioms, quartzWeekdayIdioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {unit} from './forms.js';
 import {
-  dayNames, either, join, list, monthNames, timeNames
+  asTime, dayNames, either, join, list, monthNames, timeNames
 } from './words.js';
 
 // The most clock times a list of them may hold.
@@ -177,18 +177,12 @@ function isLinear(facts: ScheduleFacts, field: Field): boolean {
 
 // The options a time is said under. "Midnight" beside a restricted day,
 // month or year is also said of the end of that day ("due by midnight
-// on Friday"), and so is "12 a.m.", if less often; so there the moment
-// says which: "at midnight at the start of the day on the 1st". Every
-// day of every month, both readings are the same schedule, and the word
-// stands alone.
+// on Friday"), so there 0:00 is written as the time that starts the
+// day, "12 a.m.", whatever the style's word. Every day of every month,
+// both readings are the same schedule, and the word stands.
 function timeOptions(facts: ScheduleFacts, opts: EnglishOptions):
   EnglishOptions {
-  const {midnight} = opts.style;
-  const starting = join(midnight, words.atTheStartOfTheDay);
-
-  return confined(facts, 'hour') && midnight ?
-    {...opts, style: {...opts.style, midnight: starting}} :
-    opts;
+  return confined(facts, 'hour') ? asTime(opts) : opts;
 }
 
 // Every way to describe a field's set: the core's candidates, laid out

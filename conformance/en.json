@@ -2,14 +2,14 @@
  "language": "en",
  "rows": [
   {
-   "expected": "every second from 9:00 a.m. until 9:01 a.m. every day",
+   "expected": "every second from 9:00:00 a.m. through 9:00:59 a.m. every day",
    "options": {
     "lang": "en"
    },
    "pattern": "* 0 9 * * *"
   },
   {
-   "expected": "every 6 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "expected": "every 6 seconds from 9:00:00 a.m. through 9:00:54 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -177,7 +177,7 @@
    "pattern": "5/10 */15 9-17 * * 1-5"
   },
   {
-   "expected": "every minute from 9 a.m. until 6 p.m. on weekdays",
+   "expected": "every minute from 9 a.m. through 5:59 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
@@ -310,14 +310,14 @@
    "pattern": "*/15 9-17 * * 2,4"
   },
   {
-   "expected": "every second from midnight until 12:01 a.m. on the 1st",
+   "expected": "every second from 12:00:00 a.m. through 12:00:59 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "* 0 0 1 * *"
   },
   {
-   "expected": "every 6 seconds from midnight until 12:01 a.m. on the 1st",
+   "expected": "every 6 seconds from 12:00:00 a.m. through 12:00:54 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
@@ -331,7 +331,7 @@
    "pattern": "5/10 0 0 1 * *"
   },
   {
-   "expected": "every minute during the midnight hour on the 1st",
+   "expected": "every minute during the 12 a.m. hour on the 1st",
    "options": {
     "lang": "en"
    },
@@ -345,14 +345,14 @@
    "pattern": "5,20,45 0 1 * *"
   },
   {
-   "expected": "every 15 minutes during the midnight hour on the 1st",
+   "expected": "every 15 minutes during the 12 a.m. hour on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "*/15 0 1 * *"
   },
   {
-   "expected": "at midnight, 12:15 a.m., and 12:45 a.m. on the 1st",
+   "expected": "at 12 a.m., 12:15 a.m., and 12:45 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
@@ -394,70 +394,70 @@
    "pattern": "0 0 * * *"
   },
   {
-   "expected": "at midnight on the 1st, 10th, and 20th",
+   "expected": "at 12 a.m. on the 1st, 10th, and 20th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,10,20 * *"
   },
   {
-   "expected": "at midnight on odd-numbered days",
+   "expected": "at 12 a.m. on odd-numbered days",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */2 * *"
   },
   {
-   "expected": "at midnight on odd-numbered days except the 15th",
+   "expected": "at 12 a.m. on odd-numbered days except the 15th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
   },
   {
-   "expected": "at midnight on January 1",
+   "expected": "at 12 a.m. on January 1",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 1 *"
   },
   {
-   "expected": "at midnight on the 1st of March, June, September, and December",
+   "expected": "at 12 a.m. on the 1st of March, June, September, and December",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 3,6,9,12 *"
   },
   {
-   "expected": "at midnight on the 1st of every other month",
+   "expected": "at 12 a.m. on the 1st of every other month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 */2 *"
   },
   {
-   "expected": "at midnight on the 1st of each month from November through February",
+   "expected": "at 12 a.m. on the 1st of each month from November through February",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 11-2 *"
   },
   {
-   "expected": "at midnight on the 1st as well as on Mondays",
+   "expected": "at 12 a.m. on the 1st as well as on Mondays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 1"
   },
   {
-   "expected": "at midnight on the 1st as well as on weekdays",
+   "expected": "at 12 a.m. on the 1st as well as on weekdays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 1-5"
   },
   {
-   "expected": "at midnight on the 1st as well as on Tuesdays and Thursdays",
+   "expected": "at 12 a.m. on the 1st as well as on Tuesdays and Thursdays",
    "options": {
     "lang": "en"
    },
@@ -506,7 +506,7 @@
    "pattern": "0,15,45 * * * *"
   },
   {
-   "expected": "every minute during the midnight hour every day",
+   "expected": "every minute during the 12 a.m. hour every day",
    "options": {
     "lang": "en"
    },
@@ -520,7 +520,7 @@
    "pattern": "* 9,17 * * *"
   },
   {
-   "expected": "every minute from 9 a.m. until 6 p.m. and during the 10 p.m. hour every day",
+   "expected": "every minute from 9 a.m. through 5:59 p.m. and during the 10 p.m. hour every day",
    "options": {
     "lang": "en"
    },
@@ -625,7 +625,7 @@
    "pattern": "0,30 0 9 * * *"
   },
   {
-   "expected": "every 15 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "expected": "every 15 seconds from 9:00:00 a.m. through 9:00:45 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -653,14 +653,14 @@
    "pattern": "0,30 9 * * *"
   },
   {
-   "expected": "every minute from 9 a.m. until 9:30 a.m. every day",
+   "expected": "every minute from 9 a.m. through 9:29 a.m. every day",
    "options": {
     "lang": "en"
    },
    "pattern": "0-29 9 * * *"
   },
   {
-   "expected": "every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m. every day",
+   "expected": "every minute from 9 a.m. through 9:29 a.m. and at 9:45 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -954,7 +954,7 @@
    "pattern": "10-40/10 9-17 * * 1-5"
   },
   {
-   "expected": "every 15 minutes during the midnight hour on weekdays",
+   "expected": "every 15 minutes during the 12 a.m. hour on weekdays",
    "options": {
     "lang": "en"
    },
@@ -1003,7 +1003,7 @@
    "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
   },
   {
-   "expected": "every 15 minutes from midnight through 2:45 a.m. and from 10 p.m. through 11:45 p.m. on weekdays",
+   "expected": "every 15 minutes from 12 a.m. through 2:45 a.m. and from 10 p.m. through 11:45 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
@@ -1157,21 +1157,21 @@
    "pattern": "30 0 0 1 * *"
   },
   {
-   "expected": "at midnight and 12:00:30 a.m. on the 1st",
+   "expected": "at 12 a.m. and 12:00:30 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "0,30 0 0 1 * *"
   },
   {
-   "expected": "every 15 seconds from midnight until 12:01 a.m. on the 1st",
+   "expected": "every 15 seconds from 12:00:00 a.m. through 12:00:45 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "*/15 0 0 1 * *"
   },
   {
-   "expected": "every second from midnight through 12:00:09 a.m. on the 1st",
+   "expected": "every second from 12:00:00 a.m. through 12:00:09 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
@@ -1185,28 +1185,28 @@
    "pattern": "30 0 1 * *"
   },
   {
-   "expected": "at midnight and 12:30 a.m. on the 1st",
+   "expected": "at 12 a.m. and 12:30 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "0,30 0 1 * *"
   },
   {
-   "expected": "every minute from midnight until 12:30 a.m. on the 1st",
+   "expected": "every minute from 12 a.m. through 12:29 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "0-29 0 1 * *"
   },
   {
-   "expected": "every minute from midnight until 12:30 a.m. and at 12:45 a.m. on the 1st",
+   "expected": "every minute from 12 a.m. through 12:29 a.m. and at 12:45 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "0-29,45 0 1 * *"
   },
   {
-   "expected": "every 7 minutes from 0 through 56 minutes past midnight on the 1st",
+   "expected": "every 7 minutes from 0 through 56 minutes past 12 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
@@ -1269,147 +1269,147 @@
    "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
   },
   {
-   "expected": "every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st",
+   "expected": "every hour from 12 a.m. through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "0 22-2 1 * *"
   },
   {
-   "expected": "at midnight on the 15th",
+   "expected": "at 12 a.m. on the 15th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 15 * *"
   },
   {
-   "expected": "at midnight on the 1st and 15th",
+   "expected": "at 12 a.m. on the 1st and 15th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,15 * *"
   },
   {
-   "expected": "at midnight on the 1st through the 7th",
+   "expected": "at 12 a.m. on the 1st through the 7th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-7 * *"
   },
   {
-   "expected": "at midnight on the 1st through the 7th and on the 15th",
+   "expected": "at 12 a.m. on the 1st through the 7th and on the 15th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-7,15 * *"
   },
   {
-   "expected": "at midnight on even-numbered days",
+   "expected": "at 12 a.m. on even-numbered days",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 2/2 * *"
   },
   {
-   "expected": "at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st",
+   "expected": "at 12 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */5 * *"
   },
   {
-   "expected": "at midnight on the last day of the month",
+   "expected": "at 12 a.m. on the last day of the month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 L * *"
   },
   {
-   "expected": "at midnight on the weekday nearest the 15th",
+   "expected": "at 12 a.m. on the weekday nearest the 15th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 15W * *"
   },
   {
-   "expected": "at midnight on June 1",
+   "expected": "at 12 a.m. on June 1",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 6 *"
   },
   {
-   "expected": "at midnight on the 1st of January and July",
+   "expected": "at 12 a.m. on the 1st of January and July",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 1,7 *"
   },
   {
-   "expected": "at midnight on the 1st of each month from June through August",
+   "expected": "at 12 a.m. on the 1st of each month from June through August",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 6-8 *"
   },
   {
-   "expected": "at midnight on the 1st of each month from June through August and on the 1st of December",
+   "expected": "at 12 a.m. on the 1st of each month from June through August and on the 1st of December",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 6-8,12 *"
   },
   {
-   "expected": "at midnight on the 1st of January, April, July, and October",
+   "expected": "at 12 a.m. on the 1st of January, April, July, and October",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 */3 *"
   },
   {
-   "expected": "at midnight on the 1st of every month except December",
+   "expected": "at 12 a.m. on the 1st of every month except December",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 1-11 *"
   },
   {
-   "expected": "at midnight on the 1st as well as on Sundays",
+   "expected": "at 12 a.m. on the 1st as well as on Sundays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 0"
   },
   {
-   "expected": "at midnight on the 1st as well as on Mondays, Wednesdays, and Fridays",
+   "expected": "at 12 a.m. on the 1st as well as on Mondays, Wednesdays, and Fridays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 1,3,5"
   },
   {
-   "expected": "at midnight on the 1st as well as on weekends",
+   "expected": "at 12 a.m. on the 1st as well as on weekends",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 0,6"
   },
   {
-   "expected": "at midnight on the 1st as well as Monday through Saturday",
+   "expected": "at 12 a.m. on the 1st as well as Monday through Saturday",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 1-6"
   },
   {
-   "expected": "at midnight on the 1st as well as on the last Friday of the month",
+   "expected": "at 12 a.m. on the 1st as well as on the last Friday of the month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 5L"
   },
   {
-   "expected": "at midnight on the 1st as well as on the second Monday of the month",
+   "expected": "at 12 a.m. on the 1st as well as on the second Monday of the month",
    "options": {
     "lang": "en"
    },
@@ -1507,7 +1507,7 @@
    "pattern": "* 8,12,18 * * *"
   },
   {
-   "expected": "every minute from 9 a.m. until 6 p.m. every day",
+   "expected": "every minute from 9 a.m. through 5:59 p.m. every day",
    "options": {
     "lang": "en"
    },
@@ -1535,7 +1535,7 @@
    "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
   },
   {
-   "expected": "every minute from 10 p.m. until 3 a.m. every day",
+   "expected": "every minute from 10 p.m. through 2:59 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -1682,7 +1682,7 @@
    "pattern": "* * * * 1#2"
   },
   {
-   "expected": "at midnight on January 1, 2030",
+   "expected": "at 12 a.m. on January 1, 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -1690,21 +1690,21 @@
    "pattern": "0 0 1 1 * 2030"
   },
   {
-   "expected": "at midnight on January 1 in 2030 and 2035",
+   "expected": "at 12 a.m. on January 1 in 2030 and 2035",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 0 1 1 * 2030,2035"
   },
   {
-   "expected": "at midnight on January 1 in 2030 through 2035",
+   "expected": "at 12 a.m. on January 1 in 2030 through 2035",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 0 1 1 * 2030-2035"
   },
   {
-   "expected": "at midnight on January 1 in even-numbered years",
+   "expected": "at 12 a.m. on January 1 in even-numbered years",
    "options": {
     "lang": "en",
     "years": true
@@ -1719,7 +1719,7 @@
    "pattern": "30 0 9 1 6 * 2030"
   },
   {
-   "expected": "at midnight on the 1st",
+   "expected": "at 12 a.m. on the 1st",
    "options": {
     "cron": "quartz",
     "lang": "en"
@@ -1727,56 +1727,56 @@
    "pattern": "0 0 1 * ?"
   },
   {
-   "expected": "at midnight on the last weekday of the month",
+   "expected": "at 12 a.m. on the last weekday of the month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 LW * *"
   },
   {
-   "expected": "at midnight on the first weekday of the month",
+   "expected": "at 12 a.m. on the first weekday of the month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1W * *"
   },
   {
-   "expected": "at midnight on the first weekday of June",
+   "expected": "at 12 a.m. on the first weekday of June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1W 6 *"
   },
   {
-   "expected": "at midnight 3 days before the last day of the month",
+   "expected": "at 12 a.m. 3 days before the last day of the month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 L-3 * *"
   },
   {
-   "expected": "at midnight on the last day of June",
+   "expected": "at 12 a.m. on the last day of June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 L 6 *"
   },
   {
-   "expected": "at midnight on the weekday nearest June 15",
+   "expected": "at 12 a.m. on the weekday nearest June 15",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 15W 6 *"
   },
   {
-   "expected": "at midnight on the second Monday of June",
+   "expected": "at 12 a.m. on the second Monday of June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 * 6 1#2"
   },
   {
-   "expected": "at midnight on the last Friday of January and July",
+   "expected": "at 12 a.m. on the last Friday of January and July",
    "options": {
     "lang": "en"
    },
@@ -1804,28 +1804,28 @@
    "pattern": "@midnight"
   },
   {
-   "expected": "at midnight on Sundays",
+   "expected": "at 12 a.m. on Sundays",
    "options": {
     "lang": "en"
    },
    "pattern": "@weekly"
   },
   {
-   "expected": "at midnight on the 1st",
+   "expected": "at 12 a.m. on the 1st",
    "options": {
     "lang": "en"
    },
    "pattern": "@monthly"
   },
   {
-   "expected": "at midnight on January 1",
+   "expected": "at 12 a.m. on January 1",
    "options": {
     "lang": "en"
    },
    "pattern": "@yearly"
   },
   {
-   "expected": "at midnight on January 1",
+   "expected": "at 12 a.m. on January 1",
    "options": {
     "lang": "en"
    },
@@ -1871,14 +1871,14 @@
    "pattern": "@reboot"
   },
   {
-   "expected": "at midnight on June 1 as well as on Fridays in June",
+   "expected": "at 12 a.m. on June 1 as well as on Fridays in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 6 5"
   },
   {
-   "expected": "at midnight on the 1st and 15th as well as on weekdays, in January and July",
+   "expected": "at 12 a.m. on the 1st and 15th as well as on weekdays, in January and July",
    "options": {
     "lang": "en"
    },
@@ -1892,7 +1892,7 @@
    "pattern": "52 7-16 1,19,23,28 5-7 3-4"
   },
   {
-   "expected": "every 30 minutes from midnight through 5:30 p.m. on Tuesdays",
+   "expected": "every 30 minutes from 12 a.m. through 5:30 p.m. on Tuesdays",
    "options": {
     "lang": "en"
    },
@@ -1920,56 +1920,56 @@
    "pattern": "9,14,47,56 * * * *"
   },
   {
-   "expected": "at midnight on June 1 and 15",
+   "expected": "at 12 a.m. on June 1 and 15",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,15 6 *"
   },
   {
-   "expected": "at midnight on June 1, 10, and 20",
+   "expected": "at 12 a.m. on June 1, 10, and 20",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,10,20 6 *"
   },
   {
-   "expected": "at midnight on June 1 through 7",
+   "expected": "at 12 a.m. on June 1 through 7",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-7 6 *"
   },
   {
-   "expected": "at midnight on June 1 through 7 and on June 15",
+   "expected": "at 12 a.m. on June 1 through 7 and on June 15",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-7,15 6 *"
   },
   {
-   "expected": "at midnight on odd-numbered days in June",
+   "expected": "at 12 a.m. on odd-numbered days in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */2 6 *"
   },
   {
-   "expected": "at midnight on June 1, 6, 11, 16, 21, and 26",
+   "expected": "at 12 a.m. on June 1, 6, 11, 16, 21, and 26",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */5 6 *"
   },
   {
-   "expected": "at midnight every 3 days from the 1st of the month in June",
+   "expected": "at 12 a.m. every 3 days from the 1st of the month in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */3 6 *"
   },
   {
-   "expected": "at midnight on the 1st of January and March",
+   "expected": "at 12 a.m. on the 1st of January and March",
    "options": {
     "lang": "en"
    },
@@ -2018,7 +2018,7 @@
    "pattern": "0 9 * 11-2 *"
   },
   {
-   "expected": "every minute from 10 p.m. until midnight every day",
+   "expected": "every minute from 10 p.m. through 11:59 p.m. every day",
    "options": {
     "lang": "en"
    },
@@ -2081,7 +2081,7 @@
    "pattern": "0 */5 * * *"
   },
   {
-   "expected": "every 2 hours from midnight through 8 p.m. every day",
+   "expected": "every 2 hours from 12 a.m. through 8 p.m. every day",
    "options": {
     "lang": "en"
    },
@@ -2158,14 +2158,14 @@
    "pattern": "* * 9 * * *"
   },
   {
-   "expected": "every second from 9 a.m. until 6 p.m. every day",
+   "expected": "every second from 9 a.m. through 5:59:59 p.m. every day",
    "options": {
     "lang": "en"
    },
    "pattern": "* * 9-17 * * *"
   },
   {
-   "expected": "at 23 minutes past the hour, every 2 hours from midnight through 8 p.m. every day",
+   "expected": "at 23 minutes past the hour, every 2 hours from 12 a.m. through 8 p.m. every day",
    "options": {
     "lang": "en"
    },
@@ -2277,7 +2277,7 @@
    "pattern": "15,45 */4 1-10 1,4,7,10 *"
   },
   {
-   "expected": "at midnight on Mondays, Wednesdays, Fridays, and Sundays",
+   "expected": "at 12 a.m. on Mondays, Wednesdays, Fridays, and Sundays",
    "options": {
     "lang": "en"
    },
@@ -2326,21 +2326,21 @@
    "pattern": "5-10/60 0 9 * * *"
   },
   {
-   "expected": "at midnight, 1 a.m., 10 p.m., and 11 p.m. on Mondays",
+   "expected": "at 12 a.m., 1 a.m., 10 p.m., and 11 p.m. on Mondays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0,1,22,23 * * 1"
   },
   {
-   "expected": "at midnight on June 1, 2, and 30",
+   "expected": "at 12 a.m. on June 1, 2, and 30",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 30-2 6 *"
   },
   {
-   "expected": "at midnight every day in January, February, November, and December in 2030",
+   "expected": "at 12 a.m. every day in January, February, November, and December in 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -2446,14 +2446,14 @@
    "pattern": "0,30 30 9 * * *"
   },
   {
-   "expected": "every 20 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "expected": "every 20 seconds from 9:00:00 a.m. through 9:00:40 a.m. every day",
    "options": {
     "lang": "en"
    },
    "pattern": "0,20,40 0 9 * * *"
   },
   {
-   "expected": "every 15 seconds from 9:00 a.m. until 9:01 a.m. every day",
+   "expected": "every 15 seconds from 9:00:00 a.m. through 9:00:45 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -2465,6 +2465,104 @@
     "lang": "en"
    },
    "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "every 7 seconds from 9:00:00 a.m. through 9:00:56 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/7 0 9 * * *"
+  },
+  {
+   "expected": "every second from 9 a.m. through 9:29:59 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0-29 9 * * *"
+  },
+  {
+   "expected": "every 10 seconds from 9 a.m. through 9:29:50 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/10 0-29 9 * * *"
+  },
+  {
+   "expected": "at 30 seconds past every minute from 9 a.m. through 9:29 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0-29 9 * * *"
+  },
+  {
+   "expected": "every 10 seconds from 9 a.m. through 5:59:50 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/10 * 9-17 * * *"
+  },
+  {
+   "expected": "every minute from 11:30 p.m. through 11:59 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30-59 23 * * *"
+  },
+  {
+   "expected": "at 12 a.m. every day in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 * 6 *"
+  },
+  {
+   "expected": "at 12 a.m. every day in 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 * * * 2030"
+  },
+  {
+   "expected": "at 12 a.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 * * 1-5"
+  },
+  {
+   "expected": "every hour except at 12 a.m., on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 1-23 * * 1"
+  },
+  {
+   "expected": "every hour from 12 a.m. through 3 a.m. on Mondays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0-3 * * 1"
+  },
+  {
+   "expected": "every hour from 12 a.m. through 3 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0-3 * * *"
+  },
+  {
+   "expected": "every minute during the 12 a.m. hour on Sundays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0 * * 0"
+  },
+  {
+   "expected": "every second from 12:00:00 a.m. through 12:00:59 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0 0 * * *"
   },
   {
    "expected": "at 23 minutes past the hour, every 6 hours",
@@ -2502,7 +2600,7 @@
    "pattern": "0 1/12 * * *"
   },
   {
-   "expected": "every 15 minutes during the midnight and noon hours every day",
+   "expected": "every 15 minutes during the 12 a.m. and noon hours every day",
    "options": {
     "lang": "en"
    },
@@ -2558,7 +2656,7 @@
    "pattern": "15 0 */12 * * *"
   },
   {
-   "expected": "at midnight and noon on the 1st",
+   "expected": "at 12 a.m. and noon on the 1st",
    "options": {
     "lang": "en"
    },
@@ -2720,7 +2818,7 @@
    "pattern": "0 0 9 * * * 2030-2050/2"
   },
   {
-   "expected": "at midnight on January 1 of every 4th year from 2028",
+   "expected": "at 12 a.m. on January 1 of every 4th year from 2028",
    "options": {
     "lang": "en"
    },
@@ -2895,14 +2993,14 @@
    "pattern": "0 3-5,7-23 * * *"
   },
   {
-   "expected": "at midnight on every day except the 15th, as well as on Mondays whatever the date",
+   "expected": "at 12 a.m. on every day except the 15th, as well as on Mondays whatever the date",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-14,16-31 * 1"
   },
   {
-   "expected": "at midnight on every day in June except the 15th, as well as on Mondays in June whatever the date",
+   "expected": "at 12 a.m. on every day in June except the 15th, as well as on Mondays in June whatever the date",
    "options": {
     "lang": "en"
    },
@@ -2916,14 +3014,14 @@
    "pattern": "0 9 5-9,11-25 * 1"
   },
   {
-   "expected": "at midnight Monday through Saturday except Thursday, in June",
+   "expected": "at 12 a.m. Monday through Saturday except Thursday, in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 * 6 1-3,5-6"
   },
   {
-   "expected": "at midnight on the 1st of every month except June, in 2030",
+   "expected": "at 12 a.m. on the 1st of every month except June, in 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -2931,7 +3029,7 @@
    "pattern": "0 0 1 1-5,7-12 * 2030"
   },
   {
-   "expected": "at midnight every day in every month except June, in 2030",
+   "expected": "at 12 a.m. every day in every month except June, in 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -2939,7 +3037,7 @@
    "pattern": "0 0 * 1-5,7-12 * 2030"
   },
   {
-   "expected": "at midnight on every day except the 15th, in 2030",
+   "expected": "at 12 a.m. on every day except the 15th, in 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -2954,21 +3052,21 @@
    "pattern": "0 0-7,9-23 1-14,16-31 * *"
   },
   {
-   "expected": "at midnight on the 1st as well as Monday through Wednesday and on Fridays and Saturdays",
+   "expected": "at 12 a.m. on the 1st as well as Monday through Wednesday and on Fridays and Saturdays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 * 1-3,5-6"
   },
   {
-   "expected": "at midnight on the 15th as well as Thursday through Tuesday",
+   "expected": "at 12 a.m. on the 15th as well as Thursday through Tuesday",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 15 * 0-2,4-6"
   },
   {
-   "expected": "at midnight on the 1st as well as on Mondays, in every month except December",
+   "expected": "at 12 a.m. on the 1st as well as on Mondays, in every month except December",
    "options": {
     "lang": "en"
    },
@@ -2982,7 +3080,7 @@
    "pattern": "0 9 1-14,16-31 1-5,7-12 *"
   },
   {
-   "expected": "every hour from midnight through 3 a.m. and every hour from 6 a.m. through 9 a.m. every day",
+   "expected": "every hour from 12 a.m. through 3 a.m. and every hour from 6 a.m. through 9 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -3017,14 +3115,14 @@
    "pattern": "50-10 * * * * *"
   },
   {
-   "expected": "at midnight on the 1st through the 10th and on the 20th through the 31st",
+   "expected": "at 12 a.m. on the 1st through the 10th and on the 20th through the 31st",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 20-10 * *"
   },
   {
-   "expected": "at midnight on the 1st and 2nd and on the 29th through the 31st",
+   "expected": "at 12 a.m. on the 1st and 2nd and on the 29th through the 31st",
    "options": {
     "lang": "en"
    },
@@ -3045,7 +3143,7 @@
    "pattern": "50-10 * 9 * * *"
   },
   {
-   "expected": "every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. every day in 2030",
+   "expected": "every hour from 12 a.m. through 2 a.m. and at 10 p.m. and 11 p.m. every day in 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3067,7 +3165,7 @@
    "pattern": "5,20,45 1,9-17 * * *"
   },
   {
-   "expected": "at 5, 20, and 45 minutes past the hour from midnight through 2 a.m. and during the 10 p.m. and 11 p.m. hours on Mondays",
+   "expected": "at 5, 20, and 45 minutes past the hour from 12 a.m. through 2 a.m. and during the 10 p.m. and 11 p.m. hours on Mondays",
    "options": {
     "lang": "en"
    },
@@ -3088,42 +3186,42 @@
    "pattern": "0-29 9-11,13-17 * * *"
   },
   {
-   "expected": "at midnight every 2 days from the 8th of the month in June",
+   "expected": "at 12 a.m. every 2 days from the 8th of the month in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 8/2 6 *"
   },
   {
-   "expected": "at midnight on June 5, 8, 11, 14, 17, and 20",
+   "expected": "at 12 a.m. on June 5, 8, 11, 14, 17, and 20",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 5-20/3 6 *"
   },
   {
-   "expected": "at midnight every 2 days from the 5th through the 23rd of the month in June",
+   "expected": "at 12 a.m. every 2 days from the 5th through the 23rd of the month in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 5-23/2 6 *"
   },
   {
-   "expected": "at midnight on June 1, 6, 11, 21, and 26",
+   "expected": "at 12 a.m. on June 1, 6, 11, 21, and 26",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,6,11,21,26,31 6 *"
   },
   {
-   "expected": "at midnight every 3 days from the 1st of the month in June except the 13th",
+   "expected": "at 12 a.m. every 3 days from the 1st of the month in June except the 13th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,4,7,10,16,19,22,25,28,31 6 *"
   },
   {
-   "expected": "at midnight on June 1, 6, 11, 16, 21, and 26 in 2030",
+   "expected": "at 12 a.m. on June 1, 6, 11, 16, 21, and 26 in 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3131,7 +3229,7 @@
    "pattern": "0 0 */5 6 * 2030"
   },
   {
-   "expected": "at midnight every 3 days from the 1st of the month in June 2030",
+   "expected": "at 12 a.m. every 3 days from the 1st of the month in June 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3139,35 +3237,35 @@
    "pattern": "0 0 */3 6 * 2030"
   },
   {
-   "expected": "at midnight on June 1, 6, 11, 16, 21, and 26 as well as on Mondays in June",
+   "expected": "at 12 a.m. on June 1, 6, 11, 16, 21, and 26 as well as on Mondays in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-31/5 6 1"
   },
   {
-   "expected": "at midnight every 3 days from the 1st of the month in June as well as on Mondays in June",
+   "expected": "at 12 a.m. every 3 days from the 1st of the month in June as well as on Mondays in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-31/3 6 1"
   },
   {
-   "expected": "at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of June and July",
+   "expected": "at 12 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of June and July",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */5 6,7 *"
   },
   {
-   "expected": "at midnight every 3 days from the 1st of the month in June and July",
+   "expected": "at 12 a.m. every 3 days from the 1st of the month in June and July",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */3 6,7 *"
   },
   {
-   "expected": "at midnight on the 1st of every month of every other year from 2030",
+   "expected": "at 12 a.m. on the 1st of every month of every other year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3175,7 +3273,7 @@
    "pattern": "0 0 1 * * 2030/2"
   },
   {
-   "expected": "at midnight on the 1st and 15th of every month of every 4th year from 2030",
+   "expected": "at 12 a.m. on the 1st and 15th of every month of every 4th year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3183,7 +3281,7 @@
    "pattern": "0 0 1,15 * * 2030/4"
   },
   {
-   "expected": "at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of every month of every other year from 2030",
+   "expected": "at 12 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of every month of every other year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3191,7 +3289,7 @@
    "pattern": "0 0 */5 * * 2030/2"
   },
   {
-   "expected": "at midnight every 3 days from the 1st of the month of every other year from 2030",
+   "expected": "at 12 a.m. every 3 days from the 1st of the month of every other year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3199,7 +3297,7 @@
    "pattern": "0 0 */3 * * 2030/2"
   },
   {
-   "expected": "at midnight on odd-numbered days in every month of every other year from 2030",
+   "expected": "at 12 a.m. on odd-numbered days in every month of every other year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3207,7 +3305,7 @@
    "pattern": "0 0 */2 * * 2030/2"
   },
   {
-   "expected": "at midnight on the weekday nearest the 15th of every month of every other year from 2030",
+   "expected": "at 12 a.m. on the weekday nearest the 15th of every month of every other year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3215,7 +3313,7 @@
    "pattern": "0 0 15W * * 2030/2"
   },
   {
-   "expected": "at midnight on the 1st as well as on weekdays, in every 4th year from 2030",
+   "expected": "at 12 a.m. on the 1st as well as on weekdays, in every 4th year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3223,7 +3321,7 @@
    "pattern": "0 0 1 * 1-5 2030/4"
   },
   {
-   "expected": "at midnight on every day except the 15th, in every other year from 2030",
+   "expected": "at 12 a.m. on every day except the 15th, in every other year from 2030",
    "options": {
     "lang": "en",
     "years": true
@@ -3231,7 +3329,7 @@
    "pattern": "0 0 1-14,16-31 * * 2030/2"
   },
   {
-   "expected": "at midnight on the 1st in 2030 and 2031",
+   "expected": "at 12 a.m. on the 1st in 2030 and 2031",
    "options": {
     "lang": "en",
     "years": true
@@ -3239,28 +3337,28 @@
    "pattern": "0 0 1 * * 2030,2031"
   },
   {
-   "expected": "at midnight on the weekday in the same month nearest the 31st",
+   "expected": "at 12 a.m. on the weekday in the same month nearest the 31st",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 31W * *"
   },
   {
-   "expected": "at midnight on the weekday in the same month nearest the 28th",
+   "expected": "at 12 a.m. on the weekday in the same month nearest the 28th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 28W * *"
   },
   {
-   "expected": "at midnight on the weekday nearest the 27th",
+   "expected": "at 12 a.m. on the weekday nearest the 27th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 27W * *"
   },
   {
-   "expected": "at midnight on the weekday in the same month nearest June 30",
+   "expected": "at 12 a.m. on the weekday in the same month nearest June 30",
    "options": {
     "lang": "en"
    },
@@ -3309,7 +3407,7 @@
    "pattern": "30 0-29,45 * * * *"
   },
   {
-   "expected": "at 15 and 45 seconds past the minute, every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m. every day",
+   "expected": "at 15 and 45 seconds past the minute, every minute from 9 a.m. through 9:29 a.m. and at 9:45 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -3417,21 +3515,21 @@
    "pattern": "0 0 31 6 *"
   },
   {
-   "expected": "at midnight on Mondays in June",
+   "expected": "at 12 a.m. on Mondays in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 31 6 1"
   },
   {
-   "expected": "at midnight on February 29 in leap years",
+   "expected": "at 12 a.m. on February 29 in leap years",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 29 2 *"
   },
   {
-   "expected": "at midnight on the weekday in the same month nearest February 29 in leap years",
+   "expected": "at 12 a.m. on the weekday in the same month nearest February 29 in leap years",
    "options": {
     "cron": "quartz",
     "lang": "en"
@@ -3439,7 +3537,7 @@
    "pattern": "0 0 29W 2 *"
   },
   {
-   "expected": "at midnight 28 days before the last day of February in leap years",
+   "expected": "at 12 a.m. 28 days before the last day of February in leap years",
    "options": {
     "cron": "quartz",
     "lang": "en"
@@ -3447,21 +3545,21 @@
    "pattern": "0 0 L-28 2 *"
   },
   {
-   "expected": "at midnight on February 29 in 2030 through 2040, in leap years",
+   "expected": "at 12 a.m. on February 29 in 2030 through 2040, in leap years",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 0 29 2 * 2030-2040"
   },
   {
-   "expected": "at midnight on February 29, 2032",
+   "expected": "at 12 a.m. on February 29, 2032",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 0 29 2 * 2032"
   },
   {
-   "expected": "at midnight on the weekday in the same month nearest the 31st of July and August",
+   "expected": "at 12 a.m. on the weekday in the same month nearest the 31st of July and August",
    "options": {
     "cron": "quartz",
     "lang": "en"
@@ -3469,7 +3567,7 @@
    "pattern": "0 0 31W 6-8 *"
   },
   {
-   "expected": "at midnight on the weekday in the same month nearest April 30",
+   "expected": "at 12 a.m. on the weekday in the same month nearest April 30",
    "options": {
     "cron": "quartz",
     "lang": "en"
@@ -3477,7 +3575,7 @@
    "pattern": "0 0 30W 2,4 *"
   },
   {
-   "expected": "at midnight 30 days before the last day of July and August",
+   "expected": "at 12 a.m. 30 days before the last day of July and August",
    "options": {
     "cron": "quartz",
     "lang": "en"
@@ -3485,35 +3583,35 @@
    "pattern": "0 0 L-30 6-8 *"
   },
   {
-   "expected": "at midnight on March 30",
+   "expected": "at 12 a.m. on March 30",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 30 2-3 *"
   },
   {
-   "expected": "at midnight on the 1st of April, June, September, and November",
+   "expected": "at 12 a.m. on the 1st of April, June, September, and November",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,31 4,6,9,11 *"
   },
   {
-   "expected": "at midnight on June 25 through 30",
+   "expected": "at 12 a.m. on June 25 through 30",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 25-31 6 *"
   },
   {
-   "expected": "at midnight on the 31st",
+   "expected": "at 12 a.m. on the 31st",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 31 * *"
   },
   {
-   "expected": "at midnight on June 1, 11, and 21",
+   "expected": "at 12 a.m. on June 1, 11, and 21",
    "options": {
     "lang": "en"
    },
@@ -3555,7 +3653,7 @@
    "pattern": "0 9 1-31 * 1"
   },
   {
-   "expected": "every minute from 9:01 a.m. until 10 a.m. every day",
+   "expected": "every minute from 9:01 a.m. through 9:59 a.m. every day",
    "options": {
     "lang": "en"
    },
@@ -3590,7 +3688,7 @@
    "pattern": "0 1-23 * * *"
   },
   {
-   "expected": "at midnight on every day except the 1st",
+   "expected": "at 12 a.m. on every day except the 1st",
    "options": {
     "lang": "en"
    },
@@ -3604,7 +3702,7 @@
    "pattern": "0 0 9 * * * 2030/1"
   },
   {
-   "expected": "at midnight on January 1 from 2030 onward",
+   "expected": "at 12 a.m. on January 1 from 2030 onward",
    "options": {
     "lang": "en"
    },
@@ -3661,63 +3759,63 @@
    "pattern": "0-20/2,21-59/3 * * * *"
   },
   {
-   "expected": "every 2 hours from midnight through noon and every 3 hours from 1 p.m. through 10 p.m. every day",
+   "expected": "every 2 hours from 12 a.m. through noon and every 3 hours from 1 p.m. through 10 p.m. every day",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0-12/2,13-23/3 * * *"
   },
   {
-   "expected": "at midnight every 2 days from the 1st through the 9th of the month and every 3 days from the 11th through the 29th of the month",
+   "expected": "at 12 a.m. every 2 days from the 1st through the 9th of the month and every 3 days from the 11th through the 29th of the month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-10/2,11-31/3 * *"
   },
   {
-   "expected": "at midnight on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, and 23rd",
+   "expected": "at 12 a.m. on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, and 23rd",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 2,3,5,7,11,13,17,19,23 * *"
   },
   {
-   "expected": "at midnight on the 1st, 5th, 10th, 15th, 20th, and 25th",
+   "expected": "at 12 a.m. on the 1st, 5th, 10th, 15th, 20th, and 25th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,5,10,15,20,25 * *"
   },
   {
-   "expected": "at midnight on the 1st, 4th, 8th, 12th, 16th, 20th, 24th, and 28th",
+   "expected": "at 12 a.m. on the 1st, 4th, 8th, 12th, 16th, 20th, 24th, and 28th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,4,8,12,16,20,24,28 * *"
   },
   {
-   "expected": "at midnight on the 5th, 10th, 15th, and 20th",
+   "expected": "at 12 a.m. on the 5th, 10th, 15th, and 20th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 5,10,15,20 * *"
   },
   {
-   "expected": "at midnight on the 4th, 7th, 10th, 13th, 16th, 19th, and 22nd",
+   "expected": "at 12 a.m. on the 4th, 7th, 10th, 13th, 16th, 19th, and 22nd",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 4-22/3 * *"
   },
   {
-   "expected": "at midnight on the 4th, 8th, 12th, 16th, 20th, 24th, and 28th",
+   "expected": "at 12 a.m. on the 4th, 8th, 12th, 16th, 20th, 24th, and 28th",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 4-28/4 * *"
   },
   {
-   "expected": "at midnight on the 1st, 5th, 9th, 13th, 17th, 21st, 25th, and 29th",
+   "expected": "at 12 a.m. on the 1st, 5th, 9th, 13th, 17th, 21st, 25th, and 29th",
    "options": {
     "lang": "en"
    },
@@ -3745,7 +3843,7 @@
    "pattern": "* 1/6 * * *"
   },
   {
-   "expected": "at midnight on the 1st of February, April, June, August, October, and December",
+   "expected": "at 12 a.m. on the 1st of February, April, June, August, October, and December",
    "options": {
     "lang": "en"
    },
@@ -3766,7 +3864,7 @@
    "pattern": "0 0,3,9,12,15,18 * * *"
   },
   {
-   "expected": "at midnight every 3 days from the 1st through the 25th of the month",
+   "expected": "at 12 a.m. every 3 days from the 1st through the 25th of the month",
    "options": {
     "lang": "en"
    },
@@ -3780,14 +3878,14 @@
    "pattern": "2-58/4 * * * *"
   },
   {
-   "expected": "at midnight on the 1st and every 3 days from the 3rd through the 30th of the month",
+   "expected": "at 12 a.m. on the 1st and every 3 days from the 3rd through the 30th of the month",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1,3,6,9,12,15,18,21,24,27,30 * *"
   },
   {
-   "expected": "at midnight on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, 23rd, 29th, and 31st",
+   "expected": "at 12 a.m. on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, 23rd, 29th, and 31st",
    "options": {
     "lang": "en"
    },
@@ -3801,21 +3899,21 @@
    "pattern": "* 2/2 * * *"
   },
   {
-   "expected": "every minute during the midnight, 3 a.m., 6 a.m., 9 a.m., and noon hours every day",
+   "expected": "every minute during the 12 a.m., 3 a.m., 6 a.m., 9 a.m., and noon hours every day",
    "options": {
     "lang": "en"
    },
    "pattern": "* 0-12/3 * * *"
   },
   {
-   "expected": "every minute during the midnight, 3 a.m., 6 a.m., and 9 a.m. hours every day",
+   "expected": "every minute during the 12 a.m., 3 a.m., 6 a.m., and 9 a.m. hours every day",
    "options": {
     "lang": "en"
    },
    "pattern": "* 0-9/3 * * *"
   },
   {
-   "expected": "every minute during the midnight, 3 a.m., and 6 a.m. hours every day",
+   "expected": "every minute during the 12 a.m., 3 a.m., and 6 a.m. hours every day",
    "options": {
     "lang": "en"
    },
@@ -3829,28 +3927,28 @@
    "pattern": "0 0 9 * 6-8,12 * 2030"
   },
   {
-   "expected": "at midnight on the 1st through the 5th and on the 10th, in 2030",
+   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th, in 2030",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 0 1-5,10 * * 2030"
   },
   {
-   "expected": "at midnight on June 1 through 5 and on June 10, in 2030",
+   "expected": "at 12 a.m. on June 1 through 5 and on June 10, in 2030",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 0 1-5,10 6 * 2030"
   },
   {
-   "expected": "at midnight on the 1st through the 5th and on the 10th, in June and July",
+   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th, in June and July",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-5,10 6,7 *"
   },
   {
-   "expected": "at midnight on the 1st as well as on Fridays, in 2030",
+   "expected": "at 12 a.m. on the 1st as well as on Fridays, in 2030",
    "options": {
     "lang": "en"
    },
@@ -3885,14 +3983,14 @@
    "pattern": "30 0-28,30-59 * * * *"
   },
   {
-   "expected": "at midnight on the 31st as well as on Mondays, in June through August",
+   "expected": "at 12 a.m. on the 31st as well as on Mondays, in June through August",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 31 6-8 1"
   },
   {
-   "expected": "at midnight on February 29 as well as on Mondays in February",
+   "expected": "at 12 a.m. on February 29 as well as on Mondays in February",
    "options": {
     "lang": "en"
    },
@@ -3920,28 +4018,28 @@
    "pattern": "0-20/2,21-59/3 0 9 * * *"
   },
   {
-   "expected": "every minute during the midnight, 2 a.m., 4 a.m., 6 a.m., 10 a.m., noon, 2 p.m., and 4 p.m. hours every day",
+   "expected": "every minute during the 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., noon, 2 p.m., and 4 p.m. hours every day",
    "options": {
     "lang": "en"
    },
    "pattern": "* 0,2,4,6,10,12,14,16 * * *"
   },
   {
-   "expected": "every minute during every other hour from the midnight hour through the 6 p.m. hour except the 8 a.m. hour, every day",
+   "expected": "every minute during every other hour from the 12 a.m. hour through the 6 p.m. hour except the 8 a.m. hour, every day",
    "options": {
     "lang": "en"
    },
    "pattern": "* 0,2,4,6,10,12,14,16,18 * * *"
   },
   {
-   "expected": "every minute during every other hour from the midnight hour through the noon hour and during every 3rd hour from the 1 p.m. hour through the 10 p.m. hour every day",
+   "expected": "every minute during every other hour from the 12 a.m. hour through the noon hour and during every 3rd hour from the 1 p.m. hour through the 10 p.m. hour every day",
    "options": {
     "lang": "en"
    },
    "pattern": "* 0-12/2,13-23/3 * * *"
   },
   {
-   "expected": "at midnight every day in 2030 through 2040 and from 2045 onward",
+   "expected": "at 12 a.m. every day in 2030 through 2040 and from 2045 onward",
    "options": {
     "lang": "en"
    },
@@ -3976,7 +4074,7 @@
    "pattern": "*/15 9-17 1-31/5 * 1-5"
   },
   {
-   "expected": "at midnight on odd-numbered days, but only on Mondays",
+   "expected": "at 12 a.m. on odd-numbered days, but only on Mondays",
    "options": {
     "lang": "en"
    },
@@ -3990,49 +4088,49 @@
    "pattern": "0 9 */2 * 1,3,5"
   },
   {
-   "expected": "at midnight on odd-numbered days, but only on weekends",
+   "expected": "at 12 a.m. on odd-numbered days, but only on weekends",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */2 * 6,0"
   },
   {
-   "expected": "at midnight on the 15th, but only on Tuesdays, Thursdays, Saturdays, and Sundays",
+   "expected": "at 12 a.m. on the 15th, but only on Tuesdays, Thursdays, Saturdays, and Sundays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 15 * */2"
   },
   {
-   "expected": "at midnight on the last day of the month, but only on Tuesdays, Thursdays, Saturdays, and Sundays",
+   "expected": "at 12 a.m. on the last day of the month, but only on Tuesdays, Thursdays, Saturdays, and Sundays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 L * */2"
   },
   {
-   "expected": "at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st, but only on weekdays",
+   "expected": "at 12 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st, but only on weekdays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */5 * 1-5"
   },
   {
-   "expected": "at midnight on every day except the 15th, but only on Tuesdays, Thursdays, Saturdays, and Sundays",
+   "expected": "at 12 a.m. on every day except the 15th, but only on Tuesdays, Thursdays, Saturdays, and Sundays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-14,16-31 * */2"
   },
   {
-   "expected": "at midnight on odd-numbered days, but only Monday through Wednesday and on Fridays and Saturdays",
+   "expected": "at 12 a.m. on odd-numbered days, but only Monday through Wednesday and on Fridays and Saturdays",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */2 * 1-3,5-6"
   },
   {
-   "expected": "at midnight on odd-numbered days, but only on the last Friday of the month",
+   "expected": "at 12 a.m. on odd-numbered days, but only on the last Friday of the month",
    "options": {
     "lang": "en"
    },
@@ -4046,56 +4144,56 @@
    "pattern": "0 9 */3 1,7 1-5"
   },
   {
-   "expected": "at midnight on odd-numbered days in June, but only on Mondays in June",
+   "expected": "at 12 a.m. on odd-numbered days in June, but only on Mondays in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */2 6 1"
   },
   {
-   "expected": "at midnight on June 1, 6, 11, 16, 21, and 26, but only on Mondays in June",
+   "expected": "at 12 a.m. on June 1, 6, 11, 16, 21, and 26, but only on Mondays in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */5 6 1"
   },
   {
-   "expected": "at midnight every 3 days from the 1st of the month in June, but only on Mondays in June",
+   "expected": "at 12 a.m. every 3 days from the 1st of the month in June, but only on Mondays in June",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */3 6 1"
   },
   {
-   "expected": "at midnight on odd-numbered days, but only on Mondays, in June through August",
+   "expected": "at 12 a.m. on odd-numbered days, but only on Mondays, in June through August",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */2 6-8 1"
   },
   {
-   "expected": "at midnight on odd-numbered days, but only on Mondays, in 2030",
+   "expected": "at 12 a.m. on odd-numbered days, but only on Mondays, in 2030",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 0 */2 * 1 2030"
   },
   {
-   "expected": "at midnight on February 29, but only on Tuesdays, Thursdays, Saturdays, and Sundays in February, in leap years",
+   "expected": "at 12 a.m. on February 29, but only on Tuesdays, Thursdays, Saturdays, and Sundays in February, in leap years",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 29 2 */2"
   },
   {
-   "expected": "at midnight on March 30, but only on Tuesdays, Thursdays, Saturdays, and Sundays in March",
+   "expected": "at 12 a.m. on March 30, but only on Tuesdays, Thursdays, Saturdays, and Sundays in March",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 30 2-3 */2"
   },
   {
-   "expected": "at midnight on Tuesdays, Thursdays, Saturdays, and Sundays in April",
+   "expected": "at 12 a.m. on Tuesdays, Thursdays, Saturdays, and Sundays in April",
    "options": {
     "lang": "en"
    },
@@ -4120,6 +4218,26 @@
     }
    },
    "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "at 00:00 on June 1",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "every minute from 09:00 through 09:29 every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0-29 9 * * *"
   },
   {
    "expected": "at 09:30 and 17:30 every day",
@@ -4202,7 +4320,7 @@
    "pattern": "0 9 * 6-8 *"
   },
   {
-   "expected": "at midnight on Jun 1",
+   "expected": "at 12 a.m. on Jun 1",
    "options": {
     "lang": "en",
     "style": {
@@ -4227,6 +4345,20 @@
     "lang": "en-GB"
    },
    "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "at midnight every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "every minute from 9am to 9.29am every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "0-29 9 * * *"
   },
   {
    "expected": "at 9.30am and 5.30pm every day",
@@ -4271,14 +4403,14 @@
    "pattern": "0 9 * 6-8 *"
   },
   {
-   "expected": "at midnight on 1 June",
+   "expected": "at 12am on 1 June",
    "options": {
     "lang": "en-GB"
    },
    "pattern": "0 0 1 6 *"
   },
   {
-   "expected": "at midnight on 1 to 7 June",
+   "expected": "at 12am on 1 to 7 June",
    "options": {
     "lang": "en-GB"
    },
@@ -4309,7 +4441,7 @@
    "pattern": "0 9-17 * * *"
   },
   {
-   "expected": "at midnight on June 1st",
+   "expected": "at 12 AM on June 1st",
    "options": {
     "lang": "en",
     "style": {
@@ -4321,7 +4453,7 @@
    "pattern": "0 0 1 6 *"
   },
   {
-   "expected": "at midnight on June 1st through 7th",
+   "expected": "at 12 AM on June 1st through 7th",
    "options": {
     "lang": "en",
     "style": {
@@ -4363,7 +4495,7 @@
    "pattern": "0 12 * 6 1"
   },
   {
-   "expected": "at midnight on 1 Jun",
+   "expected": "at 12am on 1 Jun",
    "options": {
     "lang": "en-GB",
     "style": {
@@ -4381,6 +4513,46 @@
     }
    },
    "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "at 12 a.m. every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "midnight": ""
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "at 12 a.m. on June 1",
+   "options": {
+    "lang": "en",
+    "style": {
+     "midnight": ""
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "at 12 midnight every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "midnight": "12 midnight"
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "at 12 a.m. on June 1",
+   "options": {
+    "lang": "en",
+    "style": {
+     "midnight": "12 midnight"
+    }
+   },
+   "pattern": "0 0 1 6 *"
   },
   {
    "expected": "at 09:00 on Mon in Jun",

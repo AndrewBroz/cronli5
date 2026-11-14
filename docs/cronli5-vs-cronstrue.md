@@ -86,10 +86,10 @@ a specific schedule, or an advanced operator.
 | `30 9 * * MON-FRI` | Runs at 9:30 a.m. on weekdays. | At 09:30 AM, Monday through Friday |
 | `0 9-17 * * *` | Runs every hour from 9 a.m. through 5 p.m. every day. | Every hour, between 09:00 AM and 05:00 PM |
 | `0 9,17 * * *` | Runs at 9 a.m. and 5 p.m. every day. | At 09:00 AM and 05:00 PM |
-| `0 0 1,15 * *` | Runs at midnight on the 1st and 15th. | At 12:00 AM, on day 1 and 15 of the month |
+| `0 0 1,15 * *` | Runs at 12 a.m. on the 1st and 15th. | At 12:00 AM, on day 1 and 15 of the month |
 | `0 9 * * 1` | Runs at 9 a.m. on Mondays. | At 09:00 AM, only on Monday |
 | `0 12 * * SAT` | Runs at noon on Saturdays. | At 12:00 PM, only on Saturday |
-| `0 0 1 1 *` | Runs at midnight on January 1. | At 12:00 AM, on day 1 of the month, only in January |
+| `0 0 1 1 *` | Runs at 12 a.m. on January 1. | At 12:00 AM, on day 1 of the month, only in January |
 | `0-29 * * * *` | Runs every minute for the first 30 minutes of every hour. | Minutes 0 through 29 past the hour |
 | `*/10 6-8,17-19 * * 1-5` | Runs every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. through 7:50 p.m. on weekdays. | Every 10 minutes, at 06:00 AM through 08:59 AM and 05:00 PM through 07:59 PM, Monday through Friday |
 | `0 0-6,22,23 * * *` | Runs every hour from 10 p.m. through 6 a.m. every day. | Every hour, at 12:00 AM through 06:00 AM, 10:00 PM, and 11:00 PM |
@@ -100,10 +100,10 @@ a specific schedule, or an advanced operator.
 
 | Pattern | cronli5 (sentence form) | cRonstrue 3.14.0 |
 | --- | --- | --- |
-| `0 0 1,15 * 3` | Runs at midnight on the 1st and 15th as well as on Wednesdays. | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday |
-| `0 0 9-17/2 * *` | Runs at midnight on the 9th, 11th, 13th, 15th, and 17th. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
-| `23 0-20/2 * * *` | Runs at 23 minutes past the hour, every 2 hours from midnight through 8 p.m. every day. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
-| `0 0 * * 5L` | Runs at midnight on the last Friday of the month. | At 12:00 AM, on the last Friday of the month |
+| `0 0 1,15 * 3` | Runs at 12 a.m. on the 1st and 15th as well as on Wednesdays. | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday |
+| `0 0 9-17/2 * *` | Runs at 12 a.m. on the 9th, 11th, 13th, 15th, and 17th. | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
+| `23 0-20/2 * * *` | Runs at 23 minutes past the hour, every 2 hours from 12 a.m. through 8 p.m. every day. | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
+| `0 0 * * 5L` | Runs at 12 a.m. on the last Friday of the month. | At 12:00 AM, on the last Friday of the month |
 | `5,10 30 9 * * MON` | Runs at 9:30:05 a.m. and 9:30:10 a.m. on Mondays. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | `59 23 31 12 5` | Runs at 11:59 p.m. on December 31 as well as on Fridays in December. | At 11:59 PM, on day 31 of the month, and on Friday, only in December |
 | `30 9 15W 6 *` | Runs at 9:30 a.m. on the weekday nearest June 15. | At 09:30 AM, on the weekday nearest day 15 of the month, only in June |
