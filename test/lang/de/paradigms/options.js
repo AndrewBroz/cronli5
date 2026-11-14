@@ -26,7 +26,8 @@ const defaultParts = {
   '0 8,12,18 * * *': ['8:00', '12:00', '18:00 Uhr'],
   '0 9 * * 0-2,4-6': ['außer', 'mittwochs', '9:00 Uhr'],
   '0 0-2,4-23 * * *': ['außer', '3:00 Uhr'],
-  '0 0 LW * *': ['Montag', 'Freitag', '0:00 Uhr']
+  '0 0 LW * *': ['Montag', 'Freitag', '0:00 Uhr'],
+  '5,20,45 9,13,17 * * *': ['9', '13', '17 Uhr', 'Minuten 5, 20 und 45']
 };
 
 const sets = [
@@ -91,6 +92,13 @@ const sets = [
         expected: 'jährlich am 1. Juni um 0:00 Uhr',
         parts: ['1. Juni', '0:00 Uhr'],
         pattern: '0 0 1 6 *'
+      },
+      {
+        expected: 'täglich um 9 Uhr morgens, 1 Uhr nachmittags und 5 Uhr ' +
+          'nachmittags, jeweils zu den Minuten 5, 20 und 45',
+        parts: ['9 Uhr morgens', '1 Uhr nachmittags', '5 Uhr nachmittags',
+          'Minuten 5, 20 und 45'],
+        pattern: '5,20,45 9,13,17 * * *'
       }
     ]
   },
