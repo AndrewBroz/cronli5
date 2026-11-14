@@ -37,15 +37,6 @@ function stepWord(step: number): string {
   return lexicon.stepWords[step - parityStep] || `${step}.`;
 }
 
-/** The first three members of a cadence, as the reader counts them. */
-function sample(cadence: CadenceDescription, mark = ''): string {
-  const shown = [0, 1, 2].map(function member(index) {
-    return `${cadence.start + index * cadence.interval}${mark}`;
-  });
-
-  return `(${shown.join(', ')} ${words.andSoOn})`;
-}
-
 // The removed years after a base.
 function exceptYears(removed: number[]): string {
   return removed.length > 1 ?
@@ -54,12 +45,10 @@ function exceptYears(removed: number[]): string {
 }
 
 // A cadence of years: listed when it ends and is short, by parity when
-// its step is two, and otherwise from its first year with its first
-// three members shown.
+// its step is two, and otherwise from its first year.
 function cadenceOfYears(form: CadenceDescription, domain: Domain): string {
   const parity = form.start % parityStep ? words.oddYears : words.evenYears;
-  const rhythm = spaced(words.everyNth, stepWord(form.interval), words.year,
-    sample(form));
+  const rhythm = spaced(words.everyNth, stepWord(form.interval), words.year);
   const ends = spaced(String(form.start), words.upTo, String(form.last));
   const fromFirst = form.start - domain.min < parityStep;
   const open = form.interval === parityStep ?
@@ -253,6 +242,6 @@ function oneMonth(month: number, year: string, style: CzechStyle): MonthRef {
 }
 
 export {
-  anyMonth, monthsSaid, oneMonth, parityStep, sample, stepWord, theseMonths,
+  anyMonth, monthsSaid, oneMonth, parityStep, stepWord, theseMonths,
   yearsOf
 };

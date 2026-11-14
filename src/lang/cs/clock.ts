@@ -191,22 +191,6 @@ function secondOf(shown: Shown, end = false): number[] {
   return (shown.sec || []).slice(Number(end), Number(end) + 1);
 }
 
-// A place of the minutes as the clock shows it: «:05», and «:05:00» with
-// a second.
-function mark(minute: number, ...second: number[]): string {
-  return [minute, ...second].map(function digits(value) {
-    return `:${twoDigits(value)}`;
-  }).join('');
-}
-
-// A stretch of places in brackets, to the second when the phrase runs to
-// it.
-function bracket(from: number, to: number, shown: Shown): string {
-  const ends = shown.span ? shown.sec || [] : [];
-
-  return `(${mark(from, ...ends.slice(0, 1))}–${mark(to, ...ends.slice(1))})`;
-}
-
 // Removed minutes as places in the hour: a moment, a moment with the one
 // second, or the minute that starts there.
 function removedPlaces(removed: number[], shown: Shown): string {
@@ -216,22 +200,14 @@ function removedPlaces(removed: number[], shown: Shown): string {
     [counted(removed, units.minute), words.and] :
     [];
 
-  const [first, last] = shown.sec || [0, lastOfUnit];
-
   if (shown.many) {
     return spaced(words.exceptTheMinuteThatStarts,
-      counted(removed, units.minute), words.afterEveryFullHour,
-      `(${listed(removed.map(function minuteOf(minute) {
-        return `${mark(minute, first)}–${mark(minute, last)}`;
-      }))})`);
+      counted(removed, units.minute), words.afterEveryFullHour);
   }
 
   if (shown.one) {
     return spaced(words.except, words.theMoment, ...withSecond,
-      counted([shown.one], units.second), words.afterEveryFullHour,
-      `(${listed(removed.map(function momentOf(minute) {
-        return mark(minute, shown.one as number);
-      }))})`);
+      counted([shown.one], units.second), words.afterEveryFullHour);
   }
 
   const moments = later.length ?
@@ -240,45 +216,50 @@ function removedPlaces(removed: number[], shown: Shown): string {
       fromZero ? words.afterIt : words.afterEveryFullHour) :
     '';
 
-  return spaced(
-    listed([...fromZero ? [words.exceptEveryFullHour] : [],
-      ...later.length ? [moments] : []]),
-    `(${listed(removed.map(function momentOf(minute) {
-      return mark(minute);
-    }))})`);
+  return listed([...fromZero ? [words.exceptEveryFullHour] : [],
+    ...later.length ? [moments] : []]);
 }
 
-// A run of minutes inside the hour, after its «každou minutu».
-function runPlace(run: RangeDescription, shown: Shown): string {
+// A run of minutes inside the hour, after its «každou minutu»; a from–to
+// that does not reach an edge of the hour says that its end fires.
+function runPlace(run: RangeDescription): string {
   const length = String(run.to - run.from + 1);
-  const where =
-    run.from === 0 && spaced(words.inTheFirst, length,
-      words.minutesLocative, words.ofEveryHour) ||
+
+  return run.from === 0 && spaced(words.inTheFirst, length,
+    words.minutesLocative, words.ofEveryHour) ||
     run.to === lastOfUnit && spaced(words.inTheLast, length,
       words.minutesLocative, words.ofEveryHour) ||
     spaced(words.from, String(run.from), words.to, String(run.to),
-      units.minute.many, words.afterEveryFullHour);
-
-  return spaced(where, bracket(run.from, run.to, shown));
+      units.minute.many, words.afterEveryFullHour, words.inclusive);
 }
 
 const noPlace: Said =
   {after: '', except: [], head: '', main: '', opening: ''};
 
-// A cadence of minutes from its first place to its last.
+// A cadence of minutes from its first place to its last, which fires.
 function cadenceSpan(form: Extract<Described, {kind: 'cadence'}>): string {
-  return form.start === 0 ?
+  return spaced(form.start === 0 ?
     spaced(words.fromTheFullHour, words.to, String(form.last),
       units.minute.many, words.afterIt) :
     spaced(words.from, String(form.start), words.to, String(form.last),
-      units.minute.many, words.afterTheFullHour);
+      units.minute.many, words.afterTheFullHour), words.inclusive);
+}
+
+// Single minutes among pieces: the full hour and the minutes after it,
+// or the minutes after the full hour.
+function singlePlaces(values: number[]): string {
+  const later = values.filter(Boolean);
+
+  return !values[0] && spaced(words.onEveryFullHour, later.length &&
+    spaced(words.and, counted(later, units.minute), words.afterIt) || '') ||
+    spaced(counted(values, units.minute), words.afterTheFullHour);
 }
 
 // Pieces of the minutes: runs, and single minutes after «ještě». Where
 // cadences sit among them (`own`) every part has its own rhythm and the
 // whole is said «v každé hodině».
 function piecePlaces(form: Extract<Described, {kind: 'pieces'}> |
-  CadencePieces, shown: Shown): Said {
+  CadencePieces): Said {
   const own = form.kind === 'cadencePieces';
   const firstRun = form.parts.findIndex(function isRun(part) {
     return part.kind === 'range';
@@ -291,19 +272,12 @@ function piecePlaces(form: Extract<Described, {kind: 'pieces'}> |
         const kinds = {
           cadence: () => spaced(
             everyUnit((part as {interval: number}).interval, units.minute),
-            cadenceSpan(part as Extract<Described, {kind: 'cadence'}>),
-            bracket((part as {start: number}).start,
-              (part as {last: number}).last, shown)),
+            cadenceSpan(part as Extract<Described, {kind: 'cadence'}>)),
           range: () => spaced(own || index === firstRun ?
             everyUnit(1, units.minute) : '',
-          runPlace(part as RangeDescription, shown)),
+          runPlace(part as RangeDescription)),
           values: () => spaced(index ? words.still : '',
-            counted((part as {values: number[]}).values, units.minute),
-            words.afterTheFullHour,
-            `(${listed((part as {values: number[]}).values.map(
-              function momentOf(minute) {
-                return mark(minute);
-              }))})`)
+            singlePlaces((part as {values: number[]}).values))
         };
 
         return kinds[part.kind]();
@@ -314,16 +288,15 @@ function piecePlaces(form: Extract<Described, {kind: 'pieces'}> |
 
 const places: {[kind: string]: (form: never, shown: Shown) => Said} = {
   cadencePieces: piecePlaces,
-  cadence(form: Extract<Described, {kind: 'cadence'}>, shown: Shown) {
+  cadence(form: Extract<Described, {kind: 'cadence'}>) {
     const whole = form.start === 0 && form.last + form.interval > lastOfUnit;
-    const where = whole ?
-      spaced(words.inEachHourAnew, words.fromTheFullHour) :
-      spaced(words.inEveryHour, cadenceSpan(form));
 
     return {
       ...noPlace,
       head: `${everyUnit(form.interval, units.minute)},`,
-      main: spaced(where, bracket(form.start, form.last, shown))
+      main: whole ?
+        spaced(words.inEachHourAnew, words.fromTheFullHour) :
+        spaced(words.inEveryHour, cadenceSpan(form))
     };
   },
   except(form: Extract<Described, {kind: 'except'}>, shown: Shown) {
@@ -336,7 +309,7 @@ const places: {[kind: string]: (form: never, shown: Shown) => Said} = {
     return {
       ...noPlace,
       head: shown.head ?? everyUnit(1, units.minute),
-      main: runPlace(form, shown)
+      main: runPlace(form)
     };
   },
   values(form: Extract<Described, {kind: 'values'}>) {
@@ -762,6 +735,6 @@ function minutesAndHours(minutes: Clock, hours: Clock): Told {
 }
 
 export {
-  apart, at, clock, clockField, minutesAndHours, noPlace, rhythmStep,
-  windowed
+  apart, at, between, clock, clockField, minutesAndHours, noPlace,
+  rhythmStep, windowed
 };

@@ -18,12 +18,18 @@ import {
   counted, everyUnit, longestListedCadence, ofKind, partsJoiner, spaced,
   stretchOf
 } from './sets.js';
+import type {Tiling} from './tiled.js';
+import {minutesApart, removedHours, tiledHours, tilingOf} from './tiled.js';
 import lexicon from './lexicon.js';
 
 const {units, words} = lexicon;
 
-/** The time part, what opens it, and whether its hours are a night. */
+/**
+ * The time part, what opens it, whether its hours are a night, and
+ * whether they are a bare cadence that runs round the clock.
+ */
 export interface TimePart {
+  bare: boolean;
   night: boolean;
   opening: Opening;
   text: string;
@@ -243,6 +249,42 @@ function joinsOf(seconds: Clock, told: Told, one: number | undefined) {
   };
 }
 
+// The seconds after «pokaždé»: a whole minute of a rhythm, or a place in
+// the minute.
+function secondsAfter(seconds: Clock, throughout: boolean): string {
+  return throughout &&
+    spaced(words.forOneMinute, everyUnit(seconds.step, units.second)) ||
+    minutePlace(seconds, words.ofTheMinute).text;
+}
+
+// Hours that tile the day, bare, then the minutes apart from them with
+// «vždy», then the seconds: a single second joins a single minute, a
+// rhythm of seconds takes the place of «každou minutu» in a stretch of
+// minutes, and anything else follows after «pokaždé»; removed hours last.
+function tiledPart(tiling: Tiling, clocks: {
+  joins: ReturnType<typeof joinsOf>;
+  minutes: Clock;
+  seconds: Clock;
+}, shown: Shown): string {
+  const {joins, minutes, seconds} = clocks;
+  const second = minutes.values.length === 1 && shown.one && [shown.one] ||
+    [];
+  const stretch = seconds.tiles &&
+    ['all', 'range'].includes(minutes.form.kind);
+  const rhythm = stretch && everyUnit(seconds.step, units.second) ||
+    everyUnit(1, units.minute);
+  const minute = minutesApart(minutes, rhythm, second);
+  const after = !joins.silent && !second.length && !stretch &&
+    spaced(words.eachTime, secondsAfter(seconds, joins.throughout));
+
+  return [
+    tiledHours(tiling, shown.style),
+    minute && spaced(words.always, minute),
+    after,
+    removedHours(tiling, minutes, {second, style: shown.style})
+  ].filter(Boolean).join(', ');
+}
+
 /**
  * The time part of a description. `free` says that no day, month or year
  * is restricted, which is when hours past midnight are a night.
@@ -256,6 +298,8 @@ function timePart(facts: ScheduleFacts, free: boolean, style: CzechStyle):
     candidatesAs(facts, 'minute', {linear: true}) as SetDescription[],
     'minute');
   const hours = hoursOf(facts, free, minutes.values.length === 1);
+  const tiling = tilingOf(hours,
+    candidatesAs(facts, 'hour', {linear: true}) as SetDescription[]);
   const told = minutesAndHours(minutes, hours);
   const one = facts.analyses.clockSecond;
   const shown: Shown = {many: seconds.values.length > 1, one, style};
@@ -265,6 +309,13 @@ function timePart(facts: ScheduleFacts, free: boolean, style: CzechStyle):
   const rhythm = everyUnit(seconds.step, units.second);
   const rules: Array<{when: unknown; say: () => ReturnType<typeof composed>}> =
   [
+    {
+      say: () => ({
+        opening: '',
+        text: tiledPart(tiling as Tiling, {joins, minutes, seconds}, shown)
+      }),
+      when: tiling
+    },
     {say: () => composed(told.say({style})), when: joins.silent},
     {
       say: () => ({
@@ -339,6 +390,7 @@ function timePart(facts: ScheduleFacts, free: boolean, style: CzechStyle):
 
   return {
     ...say(),
+    bare: Boolean(tiling),
     night: hours.form.kind === 'range' && hours.form.from > hours.form.to
   };
 }

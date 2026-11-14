@@ -234,7 +234,12 @@ const words = {
   until: 'až do',
   upTo: 'až',
   year: 'rok',
-  yearGenitive: 'roku'
+  yearGenitive: 'roku',
+
+  exceptTheFullHour: 'kromě celé hodiny',
+  forOneHour: 'po dobu jedné hodiny',
+  ofTheHour: 'hodiny',
+  onTheFullHour: 'v celou hodinu'
 };
 
 const lexicon = {
