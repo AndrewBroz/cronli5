@@ -4,21 +4,27 @@
 // See docs/i18n-design.md.
 
 import {applyQuartzAliases, normalizeCronPattern} from './normalize.js';
-import type {NormalizedOptions, Pattern} from './schedule.js';
-import {applyQuartz} from './quartz.js';
+import type {Pattern} from './schedule.js';
+import type {Reading} from './reading.js';
+import {applyReading} from './quartz.js';
 import {parseCronPattern} from './parse.js';
 import type {CronPattern} from '../types.js';
 import {validateCronPattern} from './validate.js';
 
-// Parse, apply Quartz semantics, alias, validate, and normalize cron input
-// into a canonical cron-like object of string fields, ready for semantic
-// analysis and rendering. Quartz handling runs first: it gates the `?` token
-// (rejected unless `quartz`) and re-indexes the Quartz day-of-week to the
-// canonical cron numbering the rest of the core expects.
-function prepare(cronPattern: CronPattern, opts: NormalizedOptions): Pattern {
+// Parse, apply the reading, alias, validate, and normalize cron input into
+// a canonical cron-like object of string fields, ready for semantic
+// analysis and rendering. The reading runs first: it settles the `?` token
+// and re-indexes the day-of-week to the canonical cron numbering the rest
+// of the core expects.
+function prepare(cronPattern: CronPattern, opts: Partial<Reading>): Pattern {
   const pattern = parseCronPattern(cronPattern, opts);
 
-  applyQuartz(pattern, opts.quartz);
+  // A macro is written in no scheduler's numbering: `@weekly` is Sunday
+  // whatever number the caller's patterns use for it.
+  const macro = typeof cronPattern === 'string' &&
+    cronPattern.trim().startsWith('@');
+
+  applyReading(pattern, macro ? {...opts, weekdaysFrom: 0} : opts);
   applyQuartzAliases(pattern);
   validateCronPattern(pattern);
 
@@ -27,9 +33,11 @@ function prepare(cronPattern: CronPattern, opts: NormalizedOptions): Pattern {
 
 export {prepare};
 export * from './errors.js';
+export * from './reading.js';
 export * from './specs.js';
 export * from './util.js';
-export * from './weekday.js';
-export * from './cadence.js';
-export * from './shapes.js';
 export * from './analyze.js';
+export * from './describe-set.js';
+export * from './select.js';
+export * from './fusions.js';
+export * from './set-views.js';

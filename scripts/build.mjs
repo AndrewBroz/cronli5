@@ -11,9 +11,19 @@ const shared = {
   logLevel: 'info'
 };
 
-// The footer unwraps the ESM default export so that `require()` returns
-// it directly rather than `{ default }`.
-const unwrapDefault = {js: 'module.exports = module.exports.default;'};
+// The footer makes `require()` return the default export directly rather
+// than `{ default }`, with the other named exports carried on it as
+// properties (`require('cronli5').create`).
+const unwrapDefault = {
+  js: '(function(){var all=module.exports,main=all.default;' +
+    'Object.keys(all).forEach(function(name){' +
+    'if(name!=="default"){main[name]=all[name];}});' +
+    'module.exports=main;}());'
+};
+
+// A language module's default export already holds everything a caller
+// needs (its `styles` among them), so `require()` returns it alone.
+const defaultOnly = {js: 'module.exports = module.exports.default;'};
 
 // Start from clean output dirs so artifacts from deleted or renamed language
 // dirs (removed experiments, say) never linger and ship via the package. tsc
@@ -36,6 +46,38 @@ await esbuild.build({
   footer: unwrapDefault
 });
 
+// The entry point that knows every language, in both formats.
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/all.ts'],
+  format: 'esm',
+  outfile: 'dist/all.js'
+});
+
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/all.ts'],
+  format: 'cjs',
+  outfile: 'dist/all.cjs',
+  footer: unwrapDefault
+});
+
+// The stand-in for cRonstrue's `toString`, in both formats.
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/compat/index.ts'],
+  format: 'esm',
+  outfile: 'dist/compat.js'
+});
+
+await esbuild.build({
+  ...shared,
+  entryPoints: ['src/compat/index.ts'],
+  format: 'cjs',
+  outfile: 'dist/compat.cjs',
+  footer: unwrapDefault
+});
+
 // Minified browser global (`<script>` usage exposes `window.cronli5`).
 await esbuild.build({
   entryPoints: ['src/browser.ts'],
@@ -52,8 +94,16 @@ for (const code of readdirSync('src/lang')) {
   // Only build shipped languages — those with a status.json marker. This
   // skips stray/experiment dirs so they never enter the published build.
   if (existsSync(`src/lang/${code}/status.json`)) {
+    // The published module is the language and its named styles; what
+    // else the source exports is for the tests.
     const language = {
-      entryPoints: [`src/lang/${code}/index.ts`],
+      stdin: {
+        contents: 'export {default, styles} from ' +
+          `'./src/lang/${code}/index.ts';`,
+        loader: 'ts',
+        resolveDir: '.',
+        sourcefile: `lang-${code}.ts`
+      },
       bundle: true,
       logLevel: 'info'
     };
@@ -68,7 +118,7 @@ for (const code of readdirSync('src/lang')) {
       ...language,
       format: 'cjs',
       outfile: `dist/lang/${code}.cjs`,
-      footer: unwrapDefault
+      footer: defaultOnly
     });
   }
 }

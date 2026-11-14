@@ -1,131 +1,132 @@
-// Public types: option flags, dialect overrides, and the
+// Public types: the options, a language module's public shape, and the
 // accepted pattern shapes. The shipped declaration files are generated from
 // this module plus the typed source (`npm run types`).
 
-/**
- * A custom style table for the `dialect` option. Omitted fields inherit
- * the US (Chicago) defaults.
- */
-export interface Cronli5Dialect {
+import type {EnglishStyle} from './lang/en/options.js';
 
-  /** Morning meridiem, e.g. `'a.m.'`, `'am'`, or `'AM'`. */
-  am?: string;
-
-  /** Join the meridiem to the time with no space (`'9.30am'`). */
-  closeUp?: boolean;
-
-  /** Day-first dates (`'1 January'`) instead of month-first. */
-  dayFirst?: boolean;
-
-  /**
-   * Spanish only: append an `h` after a 24-hour time (`'a las 14.30 h'`).
-   * Off by default; opt in for an Argentine/formal style.
-   */
-  hSuffix?: boolean;
-
-  /** The word for exactly 12:00 p.m., e.g. `'noon'` or `'midday'`. */
-  midday?: string;
-
-  /** The word for exactly 12:00 a.m. */
-  midnight?: string;
-
-  /** Ordinal days in month-day dates (`'January 1st'`) not cardinal. */
-  ordinals?: boolean;
-
-  /** Evening meridiem, e.g. `'p.m.'`, `'pm'`, or `'PM'`. */
-  pm?: string;
-
-  /** Separator between time parts, e.g. `':'` or `'.'`. */
-  sep?: string;
-
-  /** Use a serial comma in lists of three or more. */
-  serialComma?: boolean;
-
-  /** Range connective, e.g. `' through '`, `' to '`, or `' - '`. */
-  through?: string;
+/** A style table whose fields are not known to the type system. */
+export interface Cronli5AnyStyle {
+  [field: string]: unknown;
 }
 
 /**
- * A language module is a renderer over the semantic Schedule plus the
- * language-owned strings and option normalization. The `describe`/`options`
- * payloads are the module's internal `Schedule`/options shapes (see
- * `core/schedule.ts`). They are intentionally opaque at this public boundary,
- * which a caller passes to `cronli5` via the `lang` option but never invokes
- * directly.
+ * A language module, as imported from `cronli5/lang/<code>`. A caller
+ * passes one as the `lang` option or to `create`, and may read its `code`
+ * and its named `styles`; the rest is for the library. `Style` is the
+ * language's style table and `Code` its code, so that a call's `style` can
+ * be checked against the language it names.
  */
-export interface Cronli5Language {
+export interface Cronli5Language<Style = any, Code extends string = string> {
+  code: Code;
+  defaultStyle: string;
   describe(schedule: any, opts: any): string;
   fallback(opts: any): string;
-  options(options?: Cronli5Options): any;
+  label(description: string, opts: any): string;
+  pending?: {[region: string]: {instead: string; variant: string}};
   reboot(opts: any): string;
+  regions: {[region: string]: string};
   sentence(description: string, opts: any): string;
-  // Optional plan override (see `core/schedule.ts` `Language.plan`). Opaque
-  // at this public boundary, like `describe`/`options`.
-  plan?(facts: any, base: any): any;
+  style(base: string, overrides?: unknown): Style;
+  styles: {[name: string]: Readonly<Style>};
 }
 
+/** The style table of each language an instance knows, by code. */
+export type Cronli5Styles = {[code: string]: object};
+
+// A language code as a caller may spell it: lower or upper case, with an
+// optional region after `-` or `_`.
+type Spelled<Code extends string> = Code | Uppercase<Code>;
+
+/** A `lang` code naming a language an instance knows. */
+export type Cronli5Code<Styles> = {
+  [Code in keyof Styles & string]:
+    Spelled<Code> | `${Spelled<Code>}${'-' | '_'}${string}`
+}[keyof Styles & string];
+
+// The language a code names, without its region, in lower case.
+type LanguageOf<Code extends string> = Lowercase<
+  Code extends `${infer Language}-${string}` ? Language :
+    Code extends `${infer Language}_${string}` ? Language : Code>;
+
+/** The style table of the language a code names. */
+export type Cronli5StyleOf<Styles, Code extends string> =
+  LanguageOf<Code> extends keyof Styles ? Styles[LanguageOf<Code>] :
+    Cronli5AnyStyle;
+
+/** The style tables of a list of language modules, by their codes. */
+export type Cronli5StylesOf<Languages extends readonly Cronli5Language[]> = {
+  [Language in Languages[number] as Language['code']]:
+    Language extends Cronli5Language<infer Style, string> ? Style : never
+};
+
+/** The options other than the language and its style. */
+export type Cronli5CommonOptions = Omit<Cronli5Options<never>,
+  'lang' | 'style'>;
+
 /**
- * Option flags accepted as the second argument to `cronli5`.
+ * The options accepted as the second argument to `cronli5`. Every option
+ * is plain data except a `lang` given as a module. An option the library
+ * cannot honour throws `Cronli5OptionError`; nothing is ignored.
+ *
+ * `Style` is the style table of the languages in use. It is English's
+ * for the default export, so a misspelt field is a type error.
  */
-export interface Cronli5Options {
-
-  /** Use 12-hour clock. Defaults to `true`; `false` uses 24-hour time. */
-  ampm?: boolean;
+export interface Cronli5Options<Style = EnglishStyle> {
 
   /**
-   * Dialect, **scoped to the chosen language**. English: `'us'` (default,
-   * Chicago Manual of Style), `'gb'` (Guardian style guide), `'house'`
-   * (cronli5's legacy voice on a Chicago base); `'uk'` is a deprecated alias
-   * for `'gb'`. Spanish: `'es-ES'` (RAE/default), `'es-MX'` (12-hour),
-   * `'es-US'` (12-hour, English AM/PM). A `Cronli5Dialect` object defines a
-   * custom style. A name another language owns falls back to the current
-   * language's default.
+   * The flavour of cron the pattern is written in: `'standard'` (default)
+   * or `'quartz'`. Quartz numbers the day-of-week **1 = Sunday … 7 =
+   * Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday), including
+   * inside the day-of-week operators (`6L`, `2#2`), and writes `?` ("no
+   * specific value") in a day field. A flavour sets `weekdaysFrom` and
+   * `questionMark`; either can also be given alone.
    */
-  dialect?: 'es-ES' | 'es-MX' | 'es-US'
-    | 'gb' | 'house' | 'uk' | 'us' | Cronli5Dialect;
+  cron?: 'standard' | 'quartz';
 
   /**
-   * A language module (e.g. `import es from 'cronli5/lang/es'`). Defaults
-   * to the bundled English module. See docs/i18n-design.md.
+   * How the description is presented: `'fragment'` (default), a lowercase
+   * phrase to embed (`'at midnight every day'`); `'label'`, the same
+   * capitalised to stand alone; or `'sentence'`, a complete sentence
+   * (`'Runs at midnight every day.'`). The lenient fallback is never
+   * wrapped.
    */
-  lang?: Cronli5Language;
+  form?: 'fragment' | 'label' | 'sentence';
 
   /**
-   * Never throw: invalid input returns a fallback description instead.
-   * Defaults to `false`.
+   * The language: a code such as `'en'`, optionally with a region
+   * (`'en-GB'`), or a language module (`import uk from
+   * 'cronli5/lang/uk'`). A code must name a language this instance knows:
+   * the default export knows English, `create` takes a list, and
+   * `cronli5/all` knows every language. A region the language does not
+   * know is described in the language's default style.
+   */
+  lang?: string | Cronli5Language;
+
+  /**
+   * A bad pattern returns a fallback description instead of throwing.
+   * A bad option still throws. Defaults to `false`.
    */
   lenient?: boolean;
 
   /**
-   * Read the pattern with Quartz semantics. Quartz numbers the day-of-week
-   * **1 = Sunday, 2 = Monday, … 7 = Saturday** (standard cron uses
-   * 0/7 = Sunday, 1 = Monday), and **requires** exactly one of day-of-month or
-   * day-of-week to be `?` ("no specific value"). Off by default; with it off,
-   * `?` is rejected (rather than silently mis-read as standard cron), since a
-   * `?` is the unambiguous mark of a Quartz pattern. The Quartz numbering also
-   * applies inside the day-of-week operators (`6L`, `2#2`) and the weekday `L`
-   * alias (Saturday). Day names (`MON`, `SUN`) and the day-of-month, month,
-   * hour, and minute fields are unaffected. Composable with `seconds`/`years`.
-   * Defaults to `false`.
+   * Whether a day field may be `?`: `'reject'` (standard cron), `'allow'`
+   * (read it as `*`), or `'require'` (exactly one day field must be `?`).
    */
-  quartz?: boolean;
-
-  /**
-   * Return a complete standalone sentence (`'Runs every day at midnight.'`)
-   * instead of the embeddable fragment (`'every day at midnight'`). Each
-   * language supplies its own wrapping. Wraps a schedule and `@reboot`, but
-   * not the lenient `fallback`. Defaults to `false`.
-   */
-  sentence?: boolean;
-
-  /**
-   * Compact output: abbreviated month/weekday names and hyphenated ranges
-   * ("Mon-Fri", "9 a.m.-5:45 p.m."). Defaults to `false`.
-   */
-  short?: boolean;
+  questionMark?: 'reject' | 'allow' | 'require';
 
   /** Treat the first field of strings/arrays as seconds. Default `false`. */
   seconds?: boolean;
+
+  /**
+   * Overrides of the language's style table: its copy-editor choices,
+   * such as `{hour12: false}` for 24-hour times or `{short: true}` for
+   * abbreviated names in English. A language exports its named tables as
+   * `styles`, to pass whole or to spread and adjust.
+   */
+  style?: Partial<Style>;
+
+  /** The number that means Sunday in the day-of-week field: `0` or `1`. */
+  weekdaysFrom?: 0 | 1;
 
   /**
    * Read the trailing field of a six-field pattern as a year instead of
@@ -136,34 +137,45 @@ export interface Cronli5Options {
   years?: boolean;
 }
 
+/** What `create` is given: the languages an instance knows, and defaults. */
+export interface Cronli5Setup<
+  Languages extends readonly Cronli5Language[] = Cronli5Language[]> {
+
+  /** The language modules; codes resolve among them, the first is default. */
+  languages: Languages;
+
+  /** Default options for every call. A default style goes in `styles`. */
+  options?: Omit<Cronli5Options<Cronli5AnyStyle>, 'style'>;
+
+  /** A default style for each language, by language code. */
+  styles?: {
+    [Code in keyof Cronli5StylesOf<Languages>]?:
+      Partial<Cronli5StylesOf<Languages>[Code]>
+  };
+}
+
 /**
- * The callable default export: a function that turns a cron pattern into a
- * description, carrying two named convenience methods that are sugar over the
- * `sentence` option.
- *
- * There is deliberately **no** `toString` method: it would shadow
- * `Function.prototype.toString`, which the runtime calls arg-less for
- * `String(cronli5)`, template-literal coercion, and `console`/debug output.
- * The named methods avoid that collision.
+ * A describing function: a cron pattern in, a description out. The
+ * default export is one that knows English; `create` makes others.
+ * `Styles` is the style table of each language it knows, by code, and
+ * `Default` the code of the language it describes in when none is named;
+ * a call's `style` is checked against the language it names.
  */
-export interface Cronli5 {
-
-  /** Describe a cron pattern (lowercase embeddable fragment by default). */
-  (cronPattern: CronPattern, options?: Cronli5Options): string;
-
-  /**
-   * Describe a cron pattern as a capitalized standalone sentence
-   * (`'Runs every day at midnight.'`). Sugar for
-   * `{...options, sentence: true}`.
-   */
-  sentence(cronPattern: CronPattern, options?: Cronli5Options): string;
-
-  /**
-   * Describe a cron pattern as a lowercase embeddable fragment
-   * (`'every day at midnight'`) — the default form. Sugar for
-   * `{...options, sentence: false}`.
-   */
-  fragment(cronPattern: CronPattern, options?: Cronli5Options): string;
+export interface Cronli5<
+  Styles = {en: EnglishStyle},
+  Default extends string = keyof Styles & string> {
+  // A language passed as a module, with that language's style.
+  <Style>(cronPattern: CronPattern, options: Cronli5CommonOptions & {
+    lang: Cronli5Language<Style>;
+    style?: Partial<Style>;
+  }): string;
+  // A language named by code, or the default, with that language's style.
+  <Code extends string = Default>(
+    cronPattern: CronPattern,
+    options?: Cronli5CommonOptions & {
+      lang?: Code & Cronli5Code<Styles>;
+      style?: Partial<Cronli5StyleOf<Styles, Code>>;
+    }): string;
 }
 
 /**

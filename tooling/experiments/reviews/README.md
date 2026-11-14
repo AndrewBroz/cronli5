@@ -7,7 +7,8 @@ lived only in the gitignored `tmp/` scratch directory on the maintainer's
 machine; they are tracked here so the audit trail for every beta claim
 survives the machine.
 
-Layout: one directory per language (`en/`, `de/`, `es/`, `fi/`, `zh/`), plus
+Layout: one directory per language (`en/`; the `de/`, `es/`, `fi/`, `zh/`
+directories were removed with those renderers, pending their rebuild), plus
 `shared/` for cross-language passes (the blind rewrite-test tables, the
 dense-restructure and run-on re-panels, the diff-scoped round-trips, the
 Gemma cross-family dialect run that motivated the single-family panel

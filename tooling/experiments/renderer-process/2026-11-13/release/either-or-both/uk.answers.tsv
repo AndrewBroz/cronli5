@@ -1,0 +1,16 @@
+1	BOTH	runs: Monday the 3rd; not: Tuesday the 3rd
+2	EITHER	runs: Monday the 4th; not: Tuesday the 4th
+3	BOTH	runs: Wednesday the 3rd; not: Thursday the 3rd
+4	BOTH	runs: Thursday the 15th; not: Monday the 15th
+5	EITHER	runs: Monday the 15th; not: Monday the 2nd
+6	BOTH	runs: Monday the 3rd; not: Saturday the 3rd
+7	EITHER	runs: Tuesday the 4th; not: Saturday the 4th
+8	BOTH	runs: Monday the 1st; not: Saturday the 1st
+9	EITHER	runs: Wednesday the 2nd; not: Saturday the 2nd
+10	BOTH	runs: Monday June 3rd; not: Tuesday June 3rd
+11	EITHER	runs: Friday the 8th; not: Monday the 8th
+12	BOTH	runs: Saturday the 5th; not: Monday the 5th
+13	BOTH	runs: Thursday the 15th; not: Monday the 15th
+14	EITHER	runs: Friday the 5th; not: Monday the 5th
+15	BOTH	runs: Monday January 1st; not: Saturday January 1st
+16	EITHER	runs: Monday the 14th; not: Tuesday the 14th

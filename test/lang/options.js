@@ -1,13 +1,16 @@
 import chai from 'chai';
 import cronli5, {Cronli5InputError} from '../../src/cronli5.js';
-import de from '../../src/lang/de/index.js';
 import en from '../../src/lang/en/index.js';
+import cs from '../../src/lang/cs/index.js';
+import de from '../../src/lang/de/index.js';
 import es from '../../src/lang/es/index.js';
-import fi from '../../src/lang/fi/index.js';
 import fr from '../../src/lang/fr/index.js';
+import italian from '../../src/lang/it/index.js';
+import ja from '../../src/lang/ja/index.js';
 import pt from '../../src/lang/pt/index.js';
-import {spanningSet} from '../../scripts/patterns.mjs';
+import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
+import {spanningSet} from '../../scripts/patterns.mjs';
 
 const {expect} = chai;
 
@@ -18,19 +21,20 @@ const {expect} = chai;
 // job — this catches the option × language combinations the corpora don't
 // reach (only English has per-option expectation files).
 
-const languages = {de, en, es, fi, fr, pt, zh};
+const languages = {en, cs, de, es, fr, it: italian, ja, pt, uk, zh};
 
 // Every public option flag, alone and in the pairs most likely to interact.
 // `seconds`/`years` change field parsing, not just wording, so they run
 // against the same spanning set (still valid patterns, different reading).
 const optionSets = [
   {},
-  {ampm: false},
-  {ampm: true},
+  {style: {hour12: false}},
+  {style: {hour12: true}},
   {seconds: true},
-  {sentence: true},
-  {short: true},
-  {short: true, ampm: true},
+  {form: 'label'},
+  {form: 'sentence'},
+  {style: {short: true}},
+  {style: {hour12: false, short: true}},
   {years: true}
 ];
 
@@ -55,6 +59,8 @@ function degenerate(output) {
 describe('Options × languages smoke:', function() {
   Object.entries(languages).forEach(function eachLanguage([code, lang]) {
     describe(code, function() {
+      const defaults = {style: lang.style(lang.defaultStyle)};
+
       optionSets.forEach(function eachOptions(flags) {
         const label = JSON.stringify(flags);
 
@@ -89,12 +95,29 @@ describe('Options × languages smoke:', function() {
       });
 
       it('lenient invalid input returns exactly the fallback', function() {
-        const fallback = lang.fallback(lang.options());
+        const fallback = lang.fallback(defaults);
 
         expect(cronli5('not cron', {lang, lenient: true}))
           .to.equal(fallback);
         expect(cronli5('61 * * * *', {lang, lenient: true}))
           .to.equal(fallback);
+      });
+
+      // Lenient means "invalid input returns the fallback"; it must not
+      // also hide defects. A renderer that throws on a valid pattern is a
+      // bug, and masking it as the fallback would let it ship unseen.
+      it('lenient does not mask a failing renderer', function() {
+        const broken = {
+          ...lang,
+          describe: function describeBroken() {
+            throw new Error('renderer defect');
+          }
+        };
+
+        expect(cronli5.bind(null, '30 9 * * *',
+          {lang: broken, lenient: true})).to.throw('renderer defect');
+        expect(cronli5('not cron', {lang: broken, lenient: true}))
+          .to.equal(lang.fallback(defaults));
       });
     });
   });

@@ -1,8 +1,10 @@
-// Generate the fixed core pattern set every language corpus must cover.
-// Deterministically sweep a defined grid, bucket each pattern by its
-// language-neutral Schedule cell (the branch-tuple analyze() produces), and
-// keep one representative per cell. Saves test/core/core-set.json — the
-// committed contract. Run: node --import tsx scripts/core-set.mjs
+// RETIRED: this script can no longer run. It generated the fixed core
+// pattern set (test/core/core-set.json) by sweeping a defined grid and
+// bucketing each pattern by the rendering plan the core selected for it,
+// keeping one representative per cell. The core no longer selects a plan,
+// so the cells cannot be recomputed; the committed JSON is now a static
+// seed set, edited by hand. The sweep is kept as the record of how the set
+// was made.
 //
 // Coverage in Schedule cells is option-blind, so the set also carries
 // `variants` (cell-identical but render-distinct under an option — 12h, short,
@@ -17,7 +19,7 @@
 import {writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname, join} from 'node:path';
-import {analyze, prepare} from '../src/core/index.js';
+import {analyze, prepare, readingOf} from '../src/core/index.js';
 import {spanningSet} from './patterns.mjs';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..',
@@ -106,13 +108,17 @@ const VALUE_CLASSES = [
 // Cell-identical to a pattern already in the set, but rendered differently
 // under an option — so a corpus must test them explicitly.
 const VARIANTS = [
-  {pattern: '0 9 * * *', opts: {ampm: true}, why: '12-hour / day-period'},
-  {pattern: '30 14 * * *', opts: {ampm: true}, why: 'afternoon period'},
+  {pattern: '0 9 * * *', opts: {style: {hour12: true}},
+    why: '12-hour / day-period'},
+  {pattern: '30 14 * * *', opts: {style: {hour12: true}},
+    why: 'afternoon period'},
   {pattern: '15 9 * * *', opts: {}, why: 'quarter-past idiom'},
   {pattern: '45 9 * * *', opts: {}, why: 'three-quarter idiom'},
-  {pattern: '0 9-17 * * *', opts: {short: true}, why: 'short forms'},
+  {pattern: '0 9-17 * * *', opts: {style: {short: true}},
+    why: 'short forms'},
   {pattern: '0 0 1 1 * 2030', opts: {years: true}, why: 'explicit year'},
-  {pattern: '0 9 * * MON', opts: {dialect: 'gb'}, why: 'dialect'},
+  {pattern: '0 9 * * MON', opts: {lang: 'en-GB'},
+    why: 'regional style'},
   {pattern: '*/24 * * * *', opts: {}, why: 'fires-once step collapses'},
   {pattern: '0 0 * * 7', opts: {}, why: 'weekday 7 = Sunday'}
 ];
@@ -166,15 +172,25 @@ function qualKey(schedule) {
   });
 }
 
-function cellOf(pattern, opts) {
-  try {
-    const schedule = analyze(prepare(pattern, opts));
+const RETIRED = 'scripts/core-set.mjs is retired: its cell sweep bucketed ' +
+  'patterns by the core\'s rendering plan, which the core no longer ' +
+  'produces. test/core/core-set.json is a static seed set; edit it by hand.';
 
-    return planKey(schedule.plan) + '||' + qualKey(schedule);
+function cellOf(pattern, opts) {
+  let schedule = null;
+
+  try {
+    schedule = analyze(prepare(pattern, opts));
   }
   catch {
     return null;
   }
+
+  if (!schedule.plan) {
+    throw new Error(RETIRED);
+  }
+
+  return planKey(schedule.plan) + '||' + qualKey(schedule);
 }
 
 function corpusCell(pattern) {
@@ -189,7 +205,8 @@ function corpusCell(pattern) {
   // a pattern carrying one is read under Quartz semantics.
   const quartz = pattern.includes('?');
 
-  return cellOf(pattern, {quartz, seconds, years});
+  return cellOf(pattern,
+    readingOf({cron: quartz ? 'quartz' : 'standard', seconds, years}));
 }
 
 function coreCells(coreSet) {
@@ -228,12 +245,19 @@ export {cellOf, corpusCell, coreCells};
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const byCell = new Map();
+  const options = {};
 
   for (const [pattern, opts] of candidates()) {
     const cell = cellOf(pattern, opts);
 
     if (cell && !byCell.has(cell)) {
       byCell.set(cell, pattern);
+
+      // A trailing year that is not four digits (`*/2`) cannot be told from
+      // a weekday by looking at the pattern, so its options are recorded.
+      if (opts.years && !(/\d{4}/u).test(pattern.split(' ').pop())) {
+        options[pattern] = {seconds: opts.seconds, years: true};
+      }
     }
   }
 
@@ -247,6 +271,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     generated: 'scripts/core-set.mjs',
     cells: byCell.size,
     patterns,
+    options,
     spanning,
     valueClasses: VALUE_CLASSES,
     variants: VARIANTS,

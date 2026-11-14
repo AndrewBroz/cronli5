@@ -1,44 +1,45 @@
 import chai from 'chai';
-import de from '../../src/lang/de/index.js';
 import en from '../../src/lang/en/index.js';
+import cs from '../../src/lang/cs/index.js';
+import de from '../../src/lang/de/index.js';
 import es from '../../src/lang/es/index.js';
-import fi from '../../src/lang/fi/index.js';
 import fr from '../../src/lang/fr/index.js';
+import italian from '../../src/lang/it/index.js';
+import ja from '../../src/lang/ja/index.js';
 import pt from '../../src/lang/pt/index.js';
+import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
 
 const {expect} = chai;
 
-// The Language contract's non-describe members are options-aware: `reboot`,
-// `fallback`, and `sentence` receive the normalized options, so a dialect
-// that changes whole words (zh-Hant) flows through the arguments instead of
-// module state.
+// What every language module declares, so the entry point can find it by
+// code, pick a regional style, and present a description in each form.
 
-describe('Language contract: options-aware reboot/fallback/sentence', function() {
-  const languages = {de, en, es, fi, fr, pt, zh};
+describe('Language contract:', function() {
+  const languages = [en, cs, de, es, fr, italian, ja, pt, uk, zh];
 
-  Object.entries(languages).forEach(function each([code, lang]) {
-    it(code + ' serves them from the opts it is given', function() {
-      const opts = lang.options();
+  languages.forEach(function each(lang) {
+    describe(lang.code, function() {
+      const opts = {style: lang.style(lang.defaultStyle)};
 
-      expect(lang.reboot(opts)).to.be.a('string').that.is.not.empty;
-      expect(lang.fallback(opts)).to.be.a('string').that.is.not.empty;
-      expect(lang.sentence('x', opts)).to.be.a('string').that.is.not.empty;
+      it('has a lower-case code', function() {
+        expect(lang.code).to.match(/^[a-z]{2,3}$/u);
+      });
+
+      it('has a default style, and every region names a style', function() {
+        expect(lang.styles[lang.defaultStyle]).to.be.an('object');
+        Object.entries(lang.regions).forEach(function region([code, name]) {
+          expect(code, code).to.match(/^[A-Z]{2}$/u);
+          expect(lang.styles[name], name).to.be.an('object');
+        });
+      });
+
+      it('says each form, the startup text and the fallback', function() {
+        expect(lang.reboot(opts)).to.be.a('string').that.is.not.empty;
+        expect(lang.fallback(opts)).to.be.a('string').that.is.not.empty;
+        expect(lang.sentence('x', opts)).to.be.a('string').that.is.not.empty;
+        expect(lang.label('x', opts)).to.be.a('string').that.is.not.empty;
+      });
     });
   });
-
-  // The hazard the options-aware contract removes: with a module-private
-  // latch, the most recent options() call decided the variant, so opts
-  // resolved earlier could be served the wrong dialect.
-  it('zh honors the opts it is given, not the last options() call',
-    function() {
-      const hant = zh.options({dialect: 'zh-Hant'});
-
-      // An unrelated render resolving the default (Simplified) in between.
-      zh.options();
-
-      expect(zh.reboot(hant)).to.equal('系統啟動時');
-      expect(zh.fallback(hant)).to.equal('無法識別的 cron 表達式');
-      expect(zh.sentence('每分鐘', hant)).to.equal('運行時間：每分鐘。');
-    });
 });

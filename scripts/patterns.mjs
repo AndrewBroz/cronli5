@@ -26,7 +26,7 @@ const languagePatterns = [
   '0 12 * 11-2 *', '0 0 * * 5L', '5,10 30 9 * * MON', '1/1 * * * *'
 ];
 
-const dialectPatterns = [
+const stylePatterns = [
   '0 9,12,17 * * *', '30 9 * * MON-FRI', '0 12 1 1 *',
   '*/15 9-17 * * *', '0 0 12 25 12 * 2030'
 ];
@@ -47,27 +47,32 @@ const comparisonPatterns = {
   ],
   medium: [
     '30 9 * * MON-FRI', '0 9-17 * * *', '0 9,17 * * *', '0 0 1,15 * *',
-    '0 9 * * 1', '0 12 * * SAT', '0 0 1 1 *', '0-29 * * * *'
+    '0 9 * * 1', '0 12 * * SAT', '0 0 1 1 *', '0-29 * * * *',
+    '*/10 6-8,17-19 * * 1-5', '0 0-6,22,23 * * *', '*/20 */2 */2 */3 *',
+    '0 12 1-5,10,20-25 * *'
   ],
   complex: [
     '0 0 1,15 * 3', '0 0 9-17/2 * *', '23 0-20/2 * * *', '0 0 * * 5L',
-    '5,10 30 9 * * MON', '59 23 31 12 5', '30 9 15W 6 *', '15 30 9 * * MON'
+    '5,10 30 9 * * MON', '59 23 31 12 5', '30 9 15W 6 *', '15 30 9 * * MON',
+    '7 4-22/6 1 */2 *', '15,45 */4 1-10 1,4,7,10 *',
+    '0,30 8-18/2 1,15 * 1-5', '0 18 15W 3,6,9,12 *', '30 4 1-7 * 1',
+    '0 9-17/2 * 1-6 1-5', '30 */15 9-17 1,15 6-8 1-5'
   ]
 };
 
-// Breadth fillers that top up the PlanNode kinds the curated `basic`/`showcase`
-// sets don't reach (verified by spanning-set.mjs's coverage report).
+// Breadth fillers: shapes of time field the curated `basic`/`showcase` sets
+// don't reach.
 const coverageExtras = [
   '* * * * * *', '5 * * * * *', '5 * * * *', '5,10 * * * *',
   '0-30 9 * * *', '0-30 */2 * * *', '0 * * * *', '0 */3 * * *'
 ];
 
 // The spanning set: curated simple + compound patterns, simple-first, that
-// exercise every rendering plan. Folded into the core set's `spanning`
+// span the shapes a time can take. Folded into the core set's `spanning`
 // field and reviewed alongside the cell sweep.
 const spanningSet = [...tables.basic, ...tables.showcase, ...coverageExtras];
 
 export {
-  comparisonPatterns, coverageExtras, dialectPatterns, languagePatterns,
+  comparisonPatterns, coverageExtras, stylePatterns, languagePatterns,
   spanningSet, tables
 };

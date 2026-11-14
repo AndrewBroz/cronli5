@@ -9,8 +9,7 @@
 ## Overview
 
 Cron Like I'm Five (`cronli5`) generates plain-language, idiomatically
-rendered descriptions of schedules from cron patterns in
-[several languages](#languages).
+rendered descriptions of schedules from cron patterns.
 
 - **Zero runtime dependencies.** Tiny and safe to drop into any project.
 - **Runs anywhere.** Ships ESM, CommonJS, and a browser global.
@@ -19,7 +18,7 @@ rendered descriptions of schedules from cron patterns in
 - **Idiomatic output.** Composes lists, ranges, and steps into natural
   sentences, not comma-joined fragments.
 - **Multilingual.** Each language is a full renderer shipped as its own
-  module (`cronli5/lang/es`). You bundle only the languages you import.
+  module (`cronli5/lang/en`). You bundle only the languages you import.
 - **Input Formats.** Accepts classic (five-part) cron patterns, extended
   (six-part) cron patterns, where the first field is assumed to refer to seconds,
   and full seven-part (Quartz-style) patterns with a trailing year. See [Input Formats](#input-formats) for details.
@@ -29,9 +28,9 @@ interpretation of a cron pattern in a Node or in a browser environment. If you
 need to do other things with cron patterns, such as scheduling or computing
 future run times, consider a library like [`@breejs/later`][later].
 
-*Alternatives:* The main alternative for descriptions is [`cRonstrue`][cronstrue].
-See the [head-to-head comparison](#cronli5-vs-cronstrue) below for how the two
-differ and which to pick.
+*Alternatives:* The best-known library for descriptions is
+[`cRonstrue`][cronstrue]. See [Why not cRonstrue?](#why-not-cronstrue) below
+for how the two compare, and for switching.
 
 ## Contents
 
@@ -41,10 +40,11 @@ differ and which to pick.
 - [Options](#options)
 - [Languages](#languages)
 - [Output Examples](#output-examples)
-- [cronli5 vs. cRonstrue](#cronli5-vs-cronstrue)
+- [Why not cRonstrue?](#why-not-cronstrue)
 - [Description Accuracy](#description-accuracy)
 - [Note on Timezones](#note-on-timezones)
 - [Module Formats and Types](#module-formats-and-types)
+- [Porting to Another Programming Language](#porting-to-another-programming-language)
 - [Development](#development)
 - [About](#about)
 - [License](#license)
@@ -69,7 +69,9 @@ Browser (script tag) via a CDN:
 ```
 
 When included in a script tag, the `cronli5` function will be available as a
-global in the scripts that follow.
+global in the scripts that follow. What the module exports by name rides on
+it: `cronli5.create`, `cronli5.Cronli5OptionError`, and the built-in
+languages with their styles (`cronli5.languages.en.styles.house`).
 
 ## Usage
 
@@ -86,64 +88,59 @@ const cronli5 = require('cronli5');
 A cron pattern can be a string, an array of fields, or an object. All three
 forms below describe the same schedule:
 ```js
-cronli5('*/5 * * * *');                 // 'every five minutes'
-cronli5(['*/5', '*', '*', '*', '*']);   // 'every five minutes'
-cronli5({ minute: '*/5' });             // 'every five minutes'
+cronli5('*/5 * * * *');                 // 'every 5 minutes'
+cronli5(['*/5', '*', '*', '*', '*']);   // 'every 5 minutes'
+cronli5({ minute: '*/5' });             // 'every 5 minutes'
 ```
 
-By default `cronli5(...)` returns the lowercase, embeddable **fragment**. For
-the capitalized, standalone **sentence**, set [`sentence: true`](#options) — or
-call the matching convenience method. `cronli5.sentence(...)` and
-`cronli5.fragment(...)` are thin sugar over that option (each forwards all
-other options) and read a little better at the call site:
+By default `cronli5(...)` returns a lowercase **fragment** to embed in a
+sentence of your own. The [`form`](#options) option gives the same
+description capitalised as a standalone **label**, or as a complete
+**sentence**:
 ```js
-cronli5('0 0 * * *');                     // 'every day at midnight'  (fragment, default)
-cronli5.fragment('0 0 * * *');            // 'every day at midnight'  (same as above)
-cronli5.sentence('0 0 * * *');            // 'Runs every day at midnight.'
-cronli5.sentence('0 0 * * *', {lang: de}); // 'Läuft täglich um Mitternacht.'
+cronli5('0 0 * * *');                       // 'at midnight every day'
+cronli5('0 0 * * *', { form: 'label' });    // 'At midnight every day'
+cronli5('0 0 * * *', { form: 'sentence' }); // 'Runs at midnight every day.'
 ```
-
-(There is intentionally no `cronli5.toString(...)`: it would shadow
-`Function.prototype.toString`, which the runtime calls with no arguments for
-`String(cronli5)`, template literals, and console output — the named methods
-sidestep that collision.)
 
 TypeScript types are bundled, so usage is fully typed out of the box:
 ```ts
 import cronli5, { type Cronli5Options } from 'cronli5';
 
-const options: Cronli5Options = { ampm: false };
+const options: Cronli5Options = { style: { hour12: false } };
 const description: string = cronli5('30 13 * * MON-FRI', options);
-// 'every Monday through Friday at 13:30'
+// 'at 13:30 on weekdays'
 ```
 
 As a command line tool:
 ```bash
-$ cronli5 "*/5 * * * *"
-Runs every five minutes.
+$ cronli5 '*/15 9-17 * * 1-5'
+Runs every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays.
 
-# Other languages with --lang (de, es, fi, fr, pt, zh):
-$ cronli5 --lang de "0 0 * * *"
-Läuft täglich um Mitternacht.
-$ cronli5 --lang fr "0 0 * * *"
-S'exécute tous les jours à minuit.
+# In another language, and as a bare fragment to embed:
+$ cronli5 --lang cs --fragment '30 9 * * MON-FRI'
+od pondělí do pátku vždy v 9:30
 
-# --fragment prints the bare, embeddable fragment instead of a sentence:
-$ cronli5 --fragment "*/5 * * * *"
-every five minutes
+# A choice from the language's style table:
+$ cronli5 --style hour12=false '30 9 * * *'
+Runs at 09:30 every day.
+
+# A whole crontab: each job's schedule, a tab, and its command:
+$ crontab -l | cronli5 --crontab
+Runs every 5 minutes.	/usr/bin/job --flag
+Runs at midnight on weekdays.	/bin/backup
+
+# Or one pattern per line on standard input, each followed by a tab and
+# its description:
+$ cronli5 < patterns.txt
 ```
 
-Dialects and script variants — including Traditional Chinese (`zh-Hant`) — are
-selected through the library's [`dialect`](#options) option rather than the CLI;
-the CLI exposes only `--lang` and `--fragment`.
-
-```js
-import cronli5 from 'cronli5';
-import zh from 'cronli5/lang/zh';
-
-cronli5('0 0 * * *', {lang: zh});                       // '每天凌晨0点' (Simplified, default)
-cronli5('0 0 * * *', {lang: zh, dialect: 'zh-Hant'});   // '每天凌晨0點' (Traditional)
-```
+Quote the pattern, or the shell will expand its stars. The CLI takes
+`--lang <code>` (with an optional region, such as `en-GB`), `--form
+fragment|label|sentence` (and `--fragment` as a short form), `--cron
+standard|quartz`, `--style <key=value>` (repeatable; a bare key is `true`),
+`--crontab`, `--help` and `--version`. It exits 0 on success, 1 if a
+pattern could not be described, and 2 if the command itself was wrong.
 
 ## Input Formats
 
@@ -164,7 +161,7 @@ It accepts the standard allowed values and the following operators:
 ### Extended Format Support
 
 Ranges in cyclic fields may wrap around (`22-2` is an overnight window, and
-`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the date and weekday fields: `L` (last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`), and `#` (nth weekday, e.g. `1#2` for the second Monday). Quartz's `?` ("no specific value") and its day-of-week numbering (1 = Sunday) require the [`quartz` option](#options); see its note for why.
+`FRI-MON` is a long weekend). Quartz-style tokens are also supported in the date and weekday fields: `L` (last day, or `5L` for the last Friday), `W` (nearest weekday, e.g. `15W`), and `#` (nth weekday, e.g. `1#2` for the second Monday). Quartz's `?` ("no specific value") and its day-of-week numbering (1 = Sunday) are read with [`cron: 'quartz'`](#options); see its note for why.
 
 ## Options
 
@@ -172,24 +169,29 @@ The `cronli5` function takes an `options` object as its 2nd parameter:
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `ampm` | `true` (English) | Use a 12-hour clock. Set `false` for 24-hour time. The default is language-specific: English is 12-hour; Spanish and Finnish default to 24-hour (Finnish is 24-hour only). |
-| `dialect` | `'us'` | The English style. `'us'` follows the [Chicago Manual of Style][chicago]: serial commas, `through` ranges, `9 a.m.`/`5:30 p.m.` times, `noon`/`midnight`, and `January 1` dates. `'gb'` follows the [Guardian style guide][guardian]: no serial comma, `to` ranges, `9am`/`5.30pm` times, `midday`/`midnight`, and `1 January` dates. `'house'` is cronli5's legacy voice (`9:30 AM`, `Monday - Friday`). A custom object defines your own style. (`'uk'` is a deprecated alias for `'gb'`.) See [docs/dialects.md](./docs/dialects.md). |
-| `lang` | English | A language module, e.g. `import es from 'cronli5/lang/es'`. Each language owns its words, conventions, and dialects — see [Languages](#languages). |
-| `lenient` | `false` | Never throw: invalid input returns the language's fallback description (`'an unrecognizable cron pattern'`) instead. Useful when rendering arbitrary user crontabs. |
-| `quartz` | `false` | Read the pattern with [Quartz](https://www.quartz-scheduler.org/) semantics. Quartz numbers the day-of-week **1 = Sunday … 7 = Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday) and requires exactly one of day-of-month or day-of-week to be `?` ("no specific value"). With this off, `?` is rejected outright rather than silently mis-read — a `?` is the unambiguous mark of a Quartz pattern, so `'0 0 ? * 2'` would otherwise read as Tuesday when its author meant Monday. The Quartz numbering also applies inside the day-of-week operators (`6L`, `2#2`) and the weekday `L` alias. Day names (`MON`) and the other fields are unaffected. Composable with `seconds`/`years`. |
-| `sentence` | `false` | Return a complete standalone sentence (`'Runs every day at midnight.'`, `'Läuft täglich um Mitternacht.'`) instead of the embeddable fragment. Each language supplies its own wrapping. Wraps a schedule and `@reboot`, but not the lenient `fallback`. The methods `cronli5.sentence(...)` / `cronli5.fragment(...)` (see [Usage](#usage)) are sugar for this option set to `true` / `false`. |
-| `short` | `false` | Compact output: abbreviated month and weekday names, and hyphenated ranges everywhere `through`/`to` would appear (`Mon-Fri`, `Jan-Mar`, `1st-5th`, `9 a.m.-5:45 p.m.`). |
+| `lang` | `'en'` | The language: a code such as `'en'`, optionally with a region (`'en-GB'`), or an imported language module. See [Languages](#languages). |
+| `style` | `{}` | Overrides of the language's style table: its copy-editor choices. In English, `{hour12: false}` gives 24-hour times and `{short: true}` abbreviated names (`Mon`, `Jun`); there are ten more fields. See [docs/styles.md](./docs/styles.md). |
+| `form` | `'fragment'` | `'fragment'` is a lowercase phrase to embed (`'at midnight every day'`); `'label'` is the same capitalised to stand alone; `'sentence'` is a complete sentence (`'Runs at midnight every day.'`). Each language supplies its own wrapping. The lenient fallback is never wrapped. |
+| `cron` | `'standard'` | The flavour of cron the pattern is written in. `'quartz'` reads it as [Quartz](https://www.quartz-scheduler.org/) does: the day-of-week is numbered **1 = Sunday … 7 = Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday), including inside the day-of-week operators (`6L`, `2#2`), and `?` ("no specific value") is accepted in a day field. Under `'standard'`, `?` is rejected outright rather than silently mis-read: it is the unambiguous mark of a Quartz pattern, so `'0 0 ? * 2'` would otherwise read as Tuesday when its author meant Monday. |
+| `weekdaysFrom` | from `cron` | The number that means Sunday in the day-of-week field, `0` or `1`: one half of what a flavour sets, available alone. |
+| `questionMark` | from `cron` | `'reject'`, `'allow'` (read `?` as `*`) or `'require'` (exactly one day field must be `?`): the other half. |
 | `seconds` | `false` | Always treat the first field of strings and arrays as the `second` field. |
 | `years` | `false` | Treat the last field of a six-field string/array as the `year` field. Otherwise the first field of a six-field pattern is treated as the `second` field. Seven-field patterns are unambiguous (seconds first, year last) and need no option. |
+| `lenient` | `false` | A bad pattern returns the language's fallback description (`'an unrecognizable cron pattern'`) instead of throwing. Useful when rendering arbitrary user crontabs. A bad option still throws. |
+
+**An option `cronli5` cannot honour is an error** (`Cronli5OptionError`):
+an unknown option, a language it does not have, a style field the language
+lacks, a value outside what an option accepts. Nothing is quietly ignored.
+Coming from 0.x? See [docs/migrating-to-1.0.md](./docs/migrating-to-1.0.md).
 
 When a specific year is given — via a seven-field pattern, an object's
 `year` property, or a six-field pattern with `years: true` — it is
-folded into a specific calendar date (`'on January 1, 2030 at noon'`)
-or otherwise trails the description (`'every Friday at 1 p.m. in 2030'`).
+folded into a specific calendar date (`'at noon on January 1, 2030'`)
+or otherwise trails the description (`'at 1 p.m. on Fridays in 2030'`).
 
 ```js
-cronli5('0 0 12 1 1 * 2030');  // 'on January 1, 2030 at noon'
-cronli5({ hour: 9, year: 2030 }); // 'every day at 9 a.m. in 2030'
+cronli5('0 0 12 1 1 * 2030');  // 'at noon on January 1, 2030'
+cronli5({ hour: 9, year: 2030 }); // 'at 9 a.m. every day in 2030'
 ```
 
 ```js
@@ -197,71 +199,89 @@ import cronli5 from 'cronli5';
 
 const weekdaysAt1330 = '30 13 * * MON-FRI';
 
-cronli5(weekdaysAt1330, { ampm: true, short: false });
-// 'every Monday through Friday at 1:30 p.m.'
+cronli5(weekdaysAt1330);
+// 'at 1:30 p.m. on weekdays'
 
-cronli5(weekdaysAt1330, { ampm: false, short: true });
-// 'every Mon-Fri at 13:30'
+cronli5(weekdaysAt1330, { style: { hour12: false } });
+// 'at 13:30 on weekdays'
 
-cronli5(weekdaysAt1330, { dialect: 'gb' });
-// 'every Monday to Friday at 1.30pm'
+cronli5(weekdaysAt1330, { lang: 'en-GB' });
+// 'at 1.30pm on weekdays'
 ```
 
 ## Languages
 
-English is the default. Other languages are full renderers over the same
-language-independent core. A language ships as its own module and is selected
-per call with the `lang` option. If you never import it, it never reaches your
-bundle (each language adds about 3.3&nbsp;KB gzipped).
+English is the default. Ten languages ship, listed below; each is a full
+renderer over the same language-independent core, written from that
+language's own conventions, and each ships as its own module. You choose
+what reaches your bundle:
 
 ```js
-import cronli5 from 'cronli5';
-import es from 'cronli5/lang/es';
-import fi from 'cronli5/lang/fi';
+import cronli5, {create} from 'cronli5';
+import en from 'cronli5/lang/en';
 
-cronli5('30 9 * * MON-FRI');             // 'every Monday through Friday at 9:30 a.m.'
-cronli5('30 9 * * MON-FRI', {lang: es}); // 'de lunes a viernes a las 09:30'
-cronli5('30 9 * * MON-FRI', {lang: fi}); // 'maanantaista perjantaihin klo 9.30'
+// By code. The default export knows English.
+cronli5('30 9 * * MON-FRI', {lang: 'en-GB'}); // 'at 9.30am on weekdays'
+
+// By module. Only what you import is bundled.
+cronli5('30 9 * * MON-FRI', {lang: en});      // 'at 9:30 a.m. on weekdays'
+
+// An instance that knows the languages you choose, and resolves codes
+// among them. The first is its default; `options` and `styles` set
+// defaults for every call.
+const describe = create({languages: [en], options: {form: 'label'}});
+
+describe('30 9 * * MON-FRI', {lang: 'en'});   // 'At 9:30 a.m. on weekdays'
 ```
 
-Each language carries its own conventions and defaults — Spanish and
-Finnish default to the 24-hour clock, for instance (Spanish takes
-`{ampm: true}` for 12-hour times with day periods). See the per-language
+If you would sooner not choose, `cronli5/all` is the same function with
+every language built in. A code that names a language an instance does not
+have is an error that says which import provides it.
+
+Each language carries its own conventions and defaults. See the per-language
 docs below.
 
 | Language | Module | Anchors | Doc |
 | --- | --- | --- | --- |
-| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'gb'` dialect) | [docs/lang/en.md](./docs/lang/en.md) |
-| German | `cronli5/lang/de` | Duden (`de-AT`/`de-CH` dialects) | [docs/lang/de.md](./docs/lang/de.md) |
-| Spanish | `cronli5/lang/es` | RAE / FundéuRAE | [docs/lang/es.md](./docs/lang/es.md) |
-| Finnish | `cronli5/lang/fi` | Kielitoimiston ohjepankki; SFS 4175 | [docs/lang/fi.md](./docs/lang/fi.md) |
-| French | `cronli5/lang/fr` | Imprimerie nationale / Académie française (fr-FR; fr-CA is a future axis) | [docs/lang/fr.md](./docs/lang/fr.md) |
-| Portuguese | `cronli5/lang/pt` | VOLP / Academia Brasileira de Letras (pt-BR; pt-PT is a future axis) | [docs/lang/pt.md](./docs/lang/pt.md) |
-| Ukrainian | `cronli5/lang/uk` | Ukrainian National Commission on Spelling (2019) | [docs/lang/uk.md](./docs/lang/uk.md) |
-| Chinese (Mandarin) | `cronli5/lang/zh` | Simplified (`zh-Hans`) default; Traditional (`zh-Hant`) | [docs/lang/zh.md](./docs/lang/zh.md) |
+| English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
+| Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
+| Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
+| Czech | `cronli5/lang/cs` | Internetová jazyková příručka (ÚJČ); ČSN 01 6910 for dates and times; timetable practice | [docs/lang/cs.md](./docs/lang/cs.md) |
+| Italian | `cronli5/lang/it` | Accademia della Crusca and the dictionaries of use; Serianni's grammar; CLDR for clock times | [docs/lang/it.md](./docs/lang/it.md) |
+| French | `cronli5/lang/fr` | Lexique de l'Imprimerie nationale for « 9 h 30 »; interface practice | [docs/lang/fr.md](./docs/lang/fr.md) |
+| German | `cronli5/lang/de` | Interface practice for «9:00 Uhr» (DIN 5008 for the colon); Austria (`'de-AT'`) and Switzerland (`'de-CH'`) | [docs/lang/de.md](./docs/lang/de.md) |
+| Portuguese | `cronli5/lang/pt` | CLDR and interface practice; Brazil by default, Portugal (`'pt-PT'`) | [docs/lang/pt.md](./docs/lang/pt.md) |
+| Japanese | `cronli5/lang/ja` | Interface and timetable practice; 24-hour colon times | [docs/lang/ja.md](./docs/lang/ja.md) |
+| Spanish | `cronli5/lang/es` | RAE Ortografía (2010); interface practice; Mexico and the United States (`'es-MX'`, `'es-US'`) | [docs/lang/es.md](./docs/lang/es.md) |
 
 ### Language maturity
 
-Languages ship as **experimental** → **beta** → **stable** (model-drafted →
-model-validated → verified by a fluent human). A new language is usually built
-by **sibling-derivation** — deriving it from its nearest validated relative
-(porting that renderer and translating its reviewed corpus, then TDD to green) —
-and reaches **beta** once it passes the objective gates (round-trip, fuzz,
-OR-scope, the cRonstrue comparison) and review by a blind panel of Claude
-Sonnet instances. It graduates to **stable** only on review by a fluent human:
+Every language is built from its own notes on how it writes recurring
+times and from hand-written expected sentences, by an agent that sees no
+other language's code, and is judged by an automated pipeline: readers
+briefed only in that language check that each sentence has one reading,
+and a model of what a sentence costs its reader (how long it takes to say,
+how much it asks you to hold, what it makes you work out) compares
+wordings. **Stable** means every row of the language has passed those
+reads: each sentence read for when it fires, and any question most
+readers got wrong asked again alone, of readers of two models, until none
+is misread by both. **Beta** means a language ships and its sentences are
+still being read. There are no native-speaker reviewers, by design: the
+pipeline is the review.
 
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status |
 | --- | --- |
-| German | beta |
+| Czech | stable |
+| German | stable |
 | English | stable |
-| Spanish | beta |
-| Finnish | beta |
-| French | beta |
-| Portuguese | beta |
-| Ukrainian | beta |
-| Chinese (Mandarin, Simplified) | beta |
-| Chinese (Mandarin, Simplified) (`zh-Hant`) | experimental |
+| Spanish | stable |
+| French | stable |
+| Italian | stable |
+| Japanese | stable |
+| Portuguese | stable |
+| Ukrainian | stable |
+| Chinese (Simplified) | stable |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see
@@ -276,69 +296,97 @@ matching cRonstrue locale. The architecture is described in
 
 Output follows the Chicago Manual of Style by default (serial commas,
 `9 a.m.` times, `noon`/`midnight`, cardinal month-day dates). See the
-[`dialect`](#options) option for Guardian-style British English. Bare days
+[`lang`](#options) option (`'en-GB'`) for Guardian-style British English. Bare days
 of the month use suffixed ordinals (`on the 1st and 15th`).
 
 ```js
 // Single values and steps
-cronli5('*/5 * * * *');     // 'every five minutes'
-cronli5('0 9 * * MON');     // 'every Monday at 9 a.m.'
+cronli5('*/5 * * * *');     // 'every 5 minutes'
+cronli5('0 9 * * MON');     // 'at 9 a.m. on Mondays'
 
 // Lists
 cronli5('5,10,15 * * * * *'); // 'at 5, 10, and 15 seconds past the minute'
-cronli5('0 9,17 * * *');      // 'every day at 9 a.m. and 5 p.m.'
-cronli5('0 0 1,15 * *');      // 'on the 1st and 15th at midnight'
-cronli5('0 12 * 6,12 *');     // 'every day in June and December at noon'
+cronli5('0 9,17 * * *');      // 'at 9 a.m. and 5 p.m. every day'
+cronli5('0 0 1,15 * *');      // 'at 12 a.m. on the 1st and 15th'
+cronli5('0 12 * 6,12 *');     // 'at noon every day in June and December'
 
 // Ranges (wrap-around ranges describe overnight and weekend windows)
-cronli5('0-29 * * * *'); // 'every minute from 0 through 29 past the hour'
-cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m.'
-cronli5('0 0 1-15 * *');  // 'on the 1st through 15th at midnight'
-cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m.'
-cronli5('0 0 * * FRI-MON'); // 'every Friday through Monday at midnight'
+cronli5('0-29 * * * *'); // 'every minute for the first 30 minutes of every hour'
+cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m. every day'
+cronli5('0 0 1-15 * *');  // 'at 12 a.m. on the 1st through the 15th'
+cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m. every day'
+cronli5('0 0 * * FRI-MON'); // 'at 12 a.m. Friday through Monday'
 
 // Compound patterns
-cronli5('0,30 9 * * *');   // 'every day at 9 a.m. and 9:30 a.m.'
-cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5 p.m.'
+cronli5('0,30 9 * * *');   // 'at 9 a.m. and 9:30 a.m. every day'
+cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m. every day'
 cronli5('30 9-17 * * *');
-// 'at 30 minutes past the hour from 9 a.m. through 5 p.m.'
-cronli5('0 12 1 1 *');     // 'on January 1 at noon'
+// 'every hour from 9:30 a.m. through 5:30 p.m. every day'
+cronli5('0 12 1 1 *');     // 'at noon on January 1'
 cronli5('0 * 13 * *');     // 'every hour on the 13th'
 
 // Quartz tokens
-cronli5('0 0 L * *');      // 'on the last day of the month at midnight'
-cronli5('0 0 * * 5L');     // 'on the last Friday of the month at midnight'
-cronli5('0 0 * * 1#2');    // 'on the second Monday of the month at midnight'
-cronli5('0 0 15W * *');    // 'on the weekday nearest the 15th at midnight'
+cronli5('0 0 L * *');      // 'at 12 a.m. on the last day of the month'
+cronli5('0 0 * * 5L');     // 'at 12 a.m. on the last Friday of the month'
+cronli5('0 0 * * 1#2');    // 'at 12 a.m. on the second Monday of the month'
+cronli5('0 0 15W * *');    // 'at 12 a.m. on the weekday nearest the 15th'
 ```
 
-## cronli5 vs. cRonstrue
+## Why not cRonstrue?
 
-[`cRonstrue`][cronstrue] is the most widely used cron-description library, but
-it differs from `cronli5` in philosophy. `cronli5` writes one flowing sentence
-and does additional validation; its languages are full renderers
-([seven so far](#languages)). cRonstrue assembles per-field fragments from
-translated templates, which is how it covers 39 locales. The same compound
-pattern — `5,10 30 9 * * MON` — in every language:
+[`cRonstrue`][cronstrue] is the most widely used cron-description library.
+The two are built differently. cRonstrue assembles a description from one
+translated fragment per field, which is how it covers 39 locales. `cronli5`
+writes one sentence per schedule, and each of its languages is a full
+renderer in that language's own words. Patterns where cRonstrue's
+fragments go wrong, in English and in other languages:
+
+<!-- BEGIN GENERATED: cronstrue-side-by-side -->
+| Pattern | Language | cronli5 | cRonstrue 3.14.0 |
+| --- | --- | --- | --- |
+| `*/45 * * * *` | English | At 0 and 45 minutes past the hour | Every 45 minutes |
+| `0,30 8-10 * * 1-5` | English | Every 30 minutes from 8 a.m. through 10:30 a.m. on weekdays | At 0 and 30 minutes past the hour, between 08:00 AM and 10:59 AM, Monday through Friday |
+| `1 * * * *` | English | At 1 minute past the hour | At 1 minutes past the hour |
+| `0 0 1,15 * 3` | German | Mittwochs und zusätzlich am 1. und 15. jedes Monats, jeweils um 0:00 Uhr | Um 00:00, an Tag 1 und 15 des Monats, und jeden Mittwoch |
+| `0 12 1 1 *` | French | Le 1er janvier à 12 h | À 12:00, le 1 du mois, uniquement en janvier |
+| `*/2 * * * *` | Czech | Každé 2 minuty | Každých 2 minut |
+| `0 12 1 1 *` | Czech | Vždy 1. ledna ve 12:00 | V 12:00, 1. den v měsíci, pouze v Leden |
+| `1 * * * *` | Spanish | En el minuto 1 de cada hora | A los 1 minutos de la hora |
+| `0 12 1 1 *` | Chinese | 每年1月1日12:00 | 在下午 12:00, 限每月 1 号, 仅于一月份 |
+| `30 9 * * 1-5` | Japanese | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで |
+<!-- END GENERATED: cronstrue-side-by-side -->
+
+The same compound pattern, `5,10 30 9 * * MON`, in every language:
 
 <!-- BEGIN GENERATED: cronstrue-head-to-head -->
 | Language | cronli5 | cRonstrue 3.14.0 |
 | --- | --- | --- |
-| English | at 5 and 10 seconds past the minute, every Monday at 9:30 a.m. | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
-| German | in den Sekunden 5 und 10, montags um 9:30 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
-| Spanish | los lunes, en los segundos 5 y 10 de las 09:30 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
-| Finnish | 5 ja 10 sekunnin kohdalla, maanantaisin klo 9.30 | 5 ja 10 sekunnnin jälkeen, 30 minuuttia yli, klo 09:00, vain maanantai |
-| French | le lundi, aux secondes 5 et 10 de 9 h 30 | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
-| Portuguese | às segundas-feiras, nos segundos 5 e 10 das 09:30 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
-| Ukrainian | о 5-й і 10-й секунді, по понеділках о 9:30 | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
-| Chinese (Simplified) | 每周一，9点30分的第5、10秒 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
-| Chinese (Traditional) | 每週一，9點30分的第5、10秒 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
+| English | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
+| Ukrainian | щопонеділка о 9:30:05 та 9:30:10 | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
+| Chinese (Simplified) | 每周一9:30:05、9:30:10 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
+| Spanish | los lunes a las 9:30:05 y 9:30:10 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
+| Japanese | 毎週月曜日の9:30:05・9:30:10 | 毎分 5と 10 秒過ぎ 30 分過ぎ, 次において実施 09:00月曜日 にのみ |
+| Portuguese | todas as segundas às 09:30:05 e 09:30:10 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
+| German | montags um 9:30:05 und 9:30:10 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
+| French | tous les lundis à 9 h 30 min 05 s et à 9 h 30 min 10 s | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
+| Italian | il lunedì alle 9:30:05 e alle 9:30:10 | Al 5 e 10 secondo passato il minuto, al 30 minuto passata l'ora, alle 09:00, solo il lunedì |
+| Czech | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
-See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
-more generated side-by-side output tables, and
-[docs/migrating-from-cronstrue.md](./docs/migrating-from-cronstrue.md) if you
-are switching from cRonstrue.
+`cronli5/compat` takes the same `toString(pattern, options)` call that
+cRonstrue does, with the same options:
+
+```js
+import cronli5 from 'cronli5/compat';
+
+cronli5.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
+```
+
+If you need a language `cronli5` doesn't have yet, cRonstrue is the one to
+use. See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
+more side-by-side output, and
+[docs/migrating-from-cronstrue.md](./docs/migrating-from-cronstrue.md) for
+how options and output map.
 
 ## Description Accuracy
 
@@ -347,9 +395,9 @@ minutes" could reasonably refer to two _behaviorally distinct_ cron patterns
 with minute accuracy: `*/2 * * * *` and `1/2 * * * *` (and 120 behaviorally
 distinct cron patterns with second accuracy). As a tradeoff, this library does
 not qualify cases that begin on the first second, minute, or hour of the
-corresponding minute, hour, or day. So `*/3 * * * *` will be "every three
-minutes", while `2/3 * * * *` will be "every three minutes from two minutes
-past the hour".
+corresponding minute, hour, or day. So `*/3 * * * *` will be "every 3
+minutes", while `2/3 * * * *` will be "every 3 minutes from 2 through 59
+minutes past every hour".
 
 ## Note on Timezones
 
@@ -373,12 +421,56 @@ so it works everywhere:
 * **Browser** (`<script src="cronli5.min.js">`) exposes a global `cronli5`
 (English only).
 
-Language subpaths (`cronli5/lang/en`, `cronli5/lang/es`, `cronli5/lang/fi`)
+Language subpaths (`cronli5/lang/en`)
 ship the same dual ESM + CJS builds under `dist/lang/`.
 
-TypeScript type definitions ship in `cronli5.d.ts` (and `lang.d.ts` for the
-language subpaths) and are picked up automatically: no `@types` package
-required.
+TypeScript type definitions ship under `types/`, one declaration per entry
+point (the package's `exports` map points at each), and are picked up
+automatically: no `@types` package required. A call's `style` is checked
+against the language it names, whether by module or by code:
+
+```ts
+import cronli5 from 'cronli5/all';
+
+cronli5('30 9 * * *', { lang: 'cs-CZ', style: { separator: '.' } }); // ok
+cronli5('30 9 * * *', { lang: 'cs', style: { am: 'am' } });
+// error: Czech has no `am`
+```
+
+An instance made with `create` knows the codes and style tables of the
+modules it is given. A code known only at run time can be typed with
+`Cronli5<Cronli5Styles>`, which leaves the checks to the library.
+
+## Porting to Another Programming Language
+
+cRonstrue reached other ecosystems as ports to C#, Java, PHP and more,
+each checked by whatever tests its author wrote. `cronli5` ships the test
+a port must pass. [`conformance/<code>.json`](./conformance/) holds every
+expected description for a language, several hundred rows each, as plain
+JSON:
+
+```json
+{
+  "language": "en",
+  "rows": [
+    {
+      "expected": "at 9 a.m. and 5 p.m. every day",
+      "options": {"lang": "en"},
+      "pattern": "0 9,17 * * *"
+    }
+  ]
+}
+```
+
+A port that describes every `pattern` under its `options` as `expected`
+says what this library says, in that language, for every kind of pattern
+the language's rows cover. The rows are hand-written, never produced by
+running the library, and wording changes are recorded in the
+[changelog](./CHANGELOG.md). Pin a port to a tagged release's files.
+
+How the library is built, which is what a port has to reproduce, is in
+[docs/i18n-design.md](./docs/i18n-design.md). If you write a port, open an
+issue and it will be listed here.
 
 ## Development
 

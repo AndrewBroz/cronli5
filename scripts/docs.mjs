@@ -4,7 +4,7 @@
 //
 //   1. Marker-bounded tables (`<!-- BEGIN GENERATED: name -->`): the
 //      cronli5-vs-cRonstrue head-to-head, the per-language locale tables,
-//      and the dialect comparison.
+//      and the style comparison.
 //   2. Inline examples: every `cronli5(<args>); // 'output'` line in the
 //      docs has its `// 'output'` comment rewritten from live output.
 //      The author still chooses the example and its order (the call); the
@@ -18,24 +18,28 @@
 // agree on meaning and differ only in voice; `showcase` shows compound
 // patterns where folded output beats fragment assembly; the language set
 // shows the same schedules across languages plus a few grammar-specific
-// rows; the dialect set exercises the US/UK/house style axes.
+// rows; the style set exercises the US/UK/house style axes.
 
 import {readFileSync, writeFileSync} from 'node:fs';
 import cronli5 from '../src/cronli5.js';
 import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
-import de from '../src/lang/de/index.js';
-import en from '../src/lang/en/index.js';
+import en, {styles as englishStyles} from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
-import fi from '../src/lang/fi/index.js';
-import fr from '../src/lang/fr/index.js';
+import ja from '../src/lang/ja/index.js';
 import pt from '../src/lang/pt/index.js';
+import de from '../src/lang/de/index.js';
+import fr from '../src/lang/fr/index.js';
+import it from '../src/lang/it/index.js';
+import cs from '../src/lang/cs/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
-  comparisonPatterns, dialectPatterns, languagePatterns
+  comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
+import {table as cronstrueOptions} from '../src/compat/table.js';
+import cronstrueAdapter from '../src/compat/index.js';
 import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
@@ -43,15 +47,16 @@ const cronstrueVersion = JSON.parse(readFileSync(
   'utf8')).version;
 
 const languages = [
-  {code: 'de', extras: ['0 0 1 */3 *', '*/45 * * * *'], lang: de},
   {code: 'en', extras: [], lang: en},
-  {code: 'es', extras: ['0 1 * * *', '0 12 * * SAT'], lang: es},
-  {code: 'fi', extras: ['0 9 * * WED-FRI', '0 0 13 * FRI'], lang: fi},
-  {code: 'fr', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: fr},
-  {code: 'pt', extras: ['0 9 * * MON', '0 0 1 1 *'], lang: pt,
-    cronstrueLocale: 'pt_BR'},
-  {code: 'uk', extras: ['1 1 * * * *', '0 0 13 * FRI'], lang: uk},
-  {code: 'zh', extras: [], lang: zh, cronstrueLocale: 'zh_CN'}
+  {code: 'uk', extras: [], lang: uk},
+  {code: 'zh', cronstrueLocale: 'zh_CN', extras: [], lang: zh},
+  {code: 'es', cronstrueLocale: 'es', extras: [], lang: es},
+  {code: 'ja', cronstrueLocale: 'ja', extras: [], lang: ja},
+  {code: 'pt', cronstrueLocale: 'pt_BR', extras: [], lang: pt},
+  {code: 'de', cronstrueLocale: 'de', extras: [], lang: de},
+  {code: 'fr', cronstrueLocale: 'fr', extras: [], lang: fr},
+  {code: 'it', cronstrueLocale: 'it', extras: [], lang: it},
+  {code: 'cs', cronstrueLocale: 'cs', extras: [], lang: cs}
 ];
 
 function describe(fn, pattern) {
@@ -74,11 +79,11 @@ function tableFrom(header, rows) {
 }
 
 // The class-grouped head-to-head: cronli5 in SENTENCE form (the capitalized
-// standalone, `{sentence: true}`) vs. cRonstrue (English), which always returns
-// a capitalized sentence — a fair like-for-like. One markdown table per class,
-// each preceded by an H3 heading, in simple -> medium -> complex order. Every
-// pattern's group is asserted against the divergence engine's `classify`, so a
-// mis-bucketed row fails `npm run docs` instead of shipping.
+// standalone, `{form: 'sentence'}`) vs. cRonstrue (English), which always
+// returns a capitalized sentence — a fair like-for-like. One markdown table
+// per class, each preceded by an H3 heading, in simple -> medium -> complex
+// order. Every pattern's group is asserted against the divergence engine's
+// `classify`, so a mis-bucketed row fails `npm run docs` instead of shipping.
 const comparisonHeadings = {
   simple: '### Simple &mdash; everyday cadences',
   medium: '### Medium &mdash; a specific schedule',
@@ -88,7 +93,7 @@ const comparisonHeadings = {
 function comparisonTable(patterns) {
   const rows = patterns.map(function compare(pattern) {
     return '| `' + pattern + '` | ' +
-      describe((p) => cronli5(p, {sentence: true}), pattern) + ' | ' +
+      describe((p) => cronli5(p, {form: 'sentence'}), pattern) + ' | ' +
       describe((p) => cronstrue.toString(p), pattern) + ' |';
   });
 
@@ -141,30 +146,26 @@ function cronstrueFor(code, pattern) {
 
 // One compound pattern, every language side by side against its cRonstrue
 // locale — the head-to-head that shows folding vs. per-field assembly at a
-// glance. Each row names the cronli5 module, an optional `dialect`/variant
-// override, and the matching cRonstrue locale.
+// glance. Each row names the cronli5 module and the matching cRonstrue
+// locale.
 const headToHead = '5,10 30 9 * * MON';
 const headToHeadRows = [
   {name: 'English', code: 'en'},
-  {name: 'German', code: 'de'},
-  {name: 'Spanish', code: 'es'},
-  {name: 'Finnish', code: 'fi'},
-  {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
-  {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
   {name: 'Ukrainian', code: 'uk'},
   {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
-  {name: 'Chinese (Traditional)', code: 'zh', dialect: 'zh-Hant',
-    cronstrueLocale: 'zh_TW'}
+  {name: 'Spanish', code: 'es', cronstrueLocale: 'es'},
+  {name: 'Japanese', code: 'ja', cronstrueLocale: 'ja'},
+  {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
+  {name: 'German', code: 'de', cronstrueLocale: 'de'},
+  {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
+  {name: 'Italian', code: 'it', cronstrueLocale: 'it'},
+  {name: 'Czech', code: 'cs', cronstrueLocale: 'cs'}
 ];
 
 function renderHeadToHead() {
   const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
   const rows = headToHeadRows.map(function row(entry) {
     const opts = {lang: byCode[entry.code].lang};
-
-    if (entry.dialect) {
-      opts.dialect = entry.dialect;
-    }
 
     return '| ' + entry.name + ' | ' +
       describe((p) => cronli5(p, opts), headToHead) + ' | ' +
@@ -176,23 +177,102 @@ function renderHeadToHead() {
     ' |', rows);
 }
 
-// One cell of the dialect table; `'us'` is the default (no dialect option).
-function dialectCell(pattern, dialect) {
-  return describe(function render(p) {
-    return dialect === 'us' ? cronli5(p) : cronli5(p, {dialect});
-  }, pattern);
-}
+// The README's side-by-side rows: patterns where the two libraries'
+// descriptions are worth comparing. The author chooses the rows; both
+// outputs are live.
+const sideBySideRows = [
+  {
+    code: 'en',
+    pattern: '*/45 * * * *'
+  },
+  {
+    code: 'en',
+    pattern: '0,30 8-10 * * 1-5'
+  },
+  {
+    code: 'en',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'de',
+    pattern: '0 0 1,15 * 3'
+  },
+  {
+    code: 'fr',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'cs',
+    pattern: '*/2 * * * *'
+  },
+  {
+    code: 'cs',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'es',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'zh',
+    cronstrueLocale: 'zh_CN',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'ja',
+    pattern: '30 9 * * 1-5'
+  }
+];
 
-const dialectHeader = '| Pattern | `\'us\'` | `\'gb\'` | `\'house\'` |';
+const languageNames = {
+  cs: 'Czech', de: 'German', en: 'English', es: 'Spanish', fr: 'French',
+  ja: 'Japanese', zh: 'Chinese'
+};
 
-function renderDialectTable() {
-  const rows = dialectPatterns.map(function compare(pattern) {
-    return '| `' + pattern + '` | ' + dialectCell(pattern, 'us') + ' | ' +
-      dialectCell(pattern, 'gb') + ' | ' + dialectCell(pattern, 'house') +
-      ' |';
+function renderSideBySide() {
+  const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
+  const rows = sideBySideRows.map(function row(entry) {
+    const lang = entry.code === 'en' ? en : byCode[entry.code].lang;
+
+    return '| `' + entry.pattern + '` | ' + languageNames[entry.code] +
+      ' | ' +
+      describe((p) => cronli5(p, {form: 'label', lang}), entry.pattern) +
+      ' | ' + describe((p) => cronstrueFor(entry.cronstrueLocale ||
+        entry.code, p), entry.pattern) + ' |';
   });
 
-  return tableFrom(dialectHeader, rows);
+  return tableFrom('| Pattern | Language | cronli5 | cRonstrue ' +
+    cronstrueVersion + ' |', rows);
+}
+
+// The named English styles, each as the options that select it.
+const styleColumns = [
+  ['us', {}],
+  ['gb', {lang: 'en-GB'}],
+  ['house', {style: englishStyles.house}]
+];
+
+function renderStyleTable() {
+  const rows = stylePatterns.map(function compare(pattern) {
+    return '| `' + pattern + '` | ' +
+      styleColumns.map(function cell(column) {
+        return describe((p) => cronli5(p, column[1]), pattern);
+      }).join(' | ') + ' |';
+  });
+
+  return tableFrom('| Pattern | ' + styleColumns.map(function name(column) {
+    return '`' + column[0] + '`';
+  }).join(' | ') + ' |', rows);
+}
+
+// What the cRonstrue adapter does with each of cRonstrue's options, from
+// the table the adapter itself runs on.
+function renderCronstrueOptions() {
+  return tableFrom('| cRonstrue option | In cronli5 | Notes |',
+    cronstrueOptions.map(function row(entry) {
+      return '| `' + entry.option + '` | ' + entry.becomes + ' | ' +
+        entry.note + ' |';
+    }));
 }
 
 // Replace the body between a table's BEGIN/END markers.
@@ -229,40 +309,46 @@ function collectVars(text) {
   return vars;
 }
 
-// Evaluate a `cronli5(<args>)` example with the language modules and any
-// doc-local bindings in scope; returns the description string, or null if
-// the args reference something we cannot evaluate.
-function evaluateExample(args, vars) {
+// Evaluate a `cronli5(<args>)` or `cronli5.toString(<args>)` example (the
+// latter through cronli5's cRonstrue adapter, imported as `cronli5`) with
+// the language modules and any doc-local bindings in scope; returns the
+// description string, or null if the args reference something we cannot
+// evaluate.
+function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
   try {
+    const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh};
+    const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
-    const run = Function('cronli5', 'es', 'fi', 'uk', ...names,
-      'return cronli5(' + args + ');');
+    const run = Function('cronli5', ...codes, ...names,
+      'return ' + callee + '(' + args + ');');
+    const callable = callee === 'cronli5' ? cronli5 : cronstrueAdapter;
 
-    return run(cronli5, es, fi, uk, ...names.map(function value(n) {
-      return vars[n];
-    }));
+    return run(callable,
+      ...codes.map((code) => modules[code]),
+      ...names.map((n) => vars[n]));
   }
   catch {
     return null;
   }
 }
 
-// Rewrite the `// 'output'` comment after each `cronli5(<args>)` example
+// Rewrite the `// 'output'` comment after each `cronli5(<args>)` or
+// `cronli5.toString(<args>)` example
 // from live output. The author chooses the example; the machine owns the
 // result.
 function rewriteExamples(text) {
   const vars = collectVars(text);
-  const re =
-    /(cronli5\(([^)]*)\)[^\S\n]*;?[^\S\n]*(?:\n[^\S\n]*)?\/\/ ')([^']*)(')/g;
+  const re = new RegExp('((cronli5(?:\\.toString)?)\\(([^)]*)\\)' +
+    '[^\\S\\n]*;?[^\\S\\n]*(?:\\n[^\\S\\n]*)?\\/\\/ \')([^\']*)(\')', 'gu');
   let result = '';
   let last = 0;
 
   for (let m = re.exec(text); m; m = re.exec(text)) {
-    const got = evaluateExample(m[2], vars);
+    const got = evaluateExample(m[2], m[3], vars);
     const replacement = typeof got === 'string' && !got.includes('\'') ?
-      m[1] + got + m[4] :
+      m[1] + got + m[5] :
       m[0];
 
     result += text.slice(last, m.index) + replacement;
@@ -275,11 +361,15 @@ function rewriteExamples(text) {
 const tableJobs = {
   'README.md': {
     'cronstrue-head-to-head': renderHeadToHead(),
+    'cronstrue-side-by-side': renderSideBySide(),
     'language-status': statusSummary()
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},
   'docs/cronli5-vs-cronstrue.md': {comparison: renderComparison()},
-  'docs/dialects.md': {dialects: renderDialectTable()}
+  'docs/styles.md': {styles: renderStyleTable()},
+  'docs/migrating-from-cronstrue.md': {
+    'cronstrue-options': renderCronstrueOptions()
+  }
 };
 
 for (const language of languages) {
@@ -289,8 +379,9 @@ for (const language of languages) {
 }
 
 const docs = [
-  'README.md', 'docs/language-status.md', 'docs/cronli5-vs-cronstrue.md',
-  'docs/dialects.md',
+  'README.md', 'llms.txt', 'docs/language-status.md',
+  'docs/cronli5-vs-cronstrue.md', 'docs/styles.md',
+  'docs/migrating-from-cronstrue.md',
   ...languages.map((language) => 'docs/lang/' + language.code + '.md')
 ];
 
@@ -317,6 +408,34 @@ for (const doc of docs) {
     written += 1;
     console.log('Updated ' + doc + '.');
   }
+}
+
+// What the 1.0 API replaced. A user-facing page that still shows one of
+// these is teaching a call that now throws. The 0.x migration page and the
+// changelog name them on purpose and are not checked.
+const removedApi = [
+  [/\bdialect:/u, '`dialect:`'],
+  [/\bampm:/u, '`ampm:`'],
+  [/\bsentence: true/u, '`sentence: true`'],
+  [/\bquartz: true/u, '`quartz: true`'],
+  [/\.sentence\(/u, '`.sentence(`'],
+  [/\.fragment\(/u, '`.fragment(`']
+];
+const userFacing = docs;
+const outdated = userFacing.flatMap(function scan(doc) {
+  const text = readFileSync(new URL('../' + doc, import.meta.url), 'utf8');
+
+  return removedApi.filter(function shown(entry) {
+    return entry[0].test(text);
+  }).map(function report(entry) {
+    return doc + ' shows ' + entry[1];
+  });
+});
+
+if (outdated.length > 0) {
+  console.error('Docs show an API that 1.0 removed: ' + outdated.join('; ') +
+    '.');
+  process.exitCode = 1;
 }
 
 if (check && stale.length > 0) {

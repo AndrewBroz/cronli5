@@ -5,7 +5,9 @@
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
 import type {Field, Pattern} from './schedule.js';
-import {enumerateFires, includes, toFieldNumber, unique} from './util.js';
+import {
+  enumerateFires, getOccurrences, includes, toFieldNumber, unique
+} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
 // The fixed-cycle time fields: their step intervals are measured against a
@@ -39,8 +41,11 @@ function applyQuartzAliases(cronPattern: CronLike): void {
 // After this pass every field is a canonical string, so the interpreters
 // never need to coerce.
 function normalizeCronPattern(cronPattern: CronLike): Pattern {
+  const eitherDay = !isStarred(cronPattern.date) &&
+    !isStarred(cronPattern.weekday);
+
   fieldOrder.forEach(function normalize(field) {
-    const value = '' + cronPattern[field];
+    const value = withoutLeadingZeros('' + cronPattern[field]);
 
     // Quartz tokens are already canonical single values.
     if (field === 'date' && isQuartzDate(value) ||
@@ -53,8 +58,52 @@ function normalizeCronPattern(cronPattern: CronLike): Pattern {
     cronPattern[field] = normalizeField(value, field, fieldSpecs[field]);
   });
 
+  // With neither day field starred the pattern fires when either matches,
+  // so one that names every value makes every day match.
+  if (eitherDay && (namesEveryValue(cronPattern.date, 'date') ||
+      namesEveryValue(cronPattern.weekday, 'weekday'))) {
+    cronPattern.date = '*';
+    cronPattern.weekday = '*';
+  }
+
+  // With a day field starred, both must match. That matters only while
+  // both still narrow the days: `*/1` beside a weekday is the weekday.
+  if (!eitherDay && cronPattern.date !== '*' && cronPattern.weekday !== '*') {
+    (cronPattern as Pattern).bothDays = true;
+  }
+
   // Every field is now a canonical string.
   return cronPattern as Pattern;
+}
+
+// Whether a normalized day field holds every value of its field, in one
+// piece (`*`) or several (`1-15,16-31`). A Quartz form is not a set.
+function namesEveryValue(value: string | number, field: 'date' | 'weekday'):
+  boolean {
+  const spec = fieldSpecs[field];
+  const top = spec.top as number;
+
+  return value === '*' || (/^[\d,/-]+$/u).test('' + value) &&
+    enumerateFires('' + value, spec.min, top).length === top - spec.min + 1;
+}
+
+// Whether a day field is written with a leading `*`, which is what cron
+// takes for "unrestricted" (`*`, and `*/2` too). When either day field is,
+// both must match; when neither is, a day matching either one will do.
+// A range naming every value (`1-31`, `0-6`) is not starred. This is the
+// only place the core asks how a field was written and not what it holds.
+function isStarred(value: string | number): boolean {
+  return ('' + value).startsWith('*');
+}
+
+// A number means the same however many zeros lead it: `00` is `0` and
+// `*/015` is `*/15`. Every run of digits loses its leading zeros before
+// anything else looks at the field, so no later step, and no renderer,
+// can tell the two spellings apart.
+function withoutLeadingZeros(value: string): string {
+  return value.replace(/\d+/gu, function plain(digits) {
+    return '' + +digits;
+  });
 }
 
 // Canonicalize a single validated field value to a string.
@@ -66,7 +115,9 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
   }
 
   const cycle = timeFieldCycle[field];
-  const segments = stringValue.split(',').map(function canonical(segment) {
+  const segments = stringValue.split(',').flatMap(function unfold(segment) {
+    return strideFiresPastTop(segment, spec);
+  }).map(function canonical(segment) {
     return canonicalizeTokens(collapseFullSpanRange(
       enumerateIfNonUniform(
         collapseFullSpanStep(
@@ -219,6 +270,35 @@ function coverageRuns(
 
   return runs.map(function arm([from, to]) {
     return from === to ? '' + from : from + '-' + to;
+  });
+}
+
+// A stride over a range that runs past the top of the field (only the
+// weekday field has one: `3-7/2`, where 7 is Sunday again) reads as the
+// values it lands on, counted through to that bound: 3, 5 and 7. The bound
+// cannot be folded to the field minimum first, as it is for a plain range —
+// `3-0/2` strides over nothing, and `1-7/2` (Monday, Wednesday, Friday,
+// Sunday) is not `*/2`, which starts from Sunday. A stride from the field
+// minimum (`0-7/2`) lands only on values `*/N` also lands on, so it is left
+// to collapse to that cadence.
+function strideFiresPastTop(segment: string, spec: FieldSpec): string[] {
+  const parts = segment.split('/');
+
+  if (typeof spec.top !== 'number' || parts.length !== 2 ||
+      !includes(parts[0], '-')) {
+    return [segment];
+  }
+
+  const bounds = parts[0].split('-');
+  const low = toFieldNumber(bounds[0], spec.numbers);
+  const high = toFieldNumber(bounds[1], spec.numbers);
+
+  if (high <= spec.top || low === spec.min) {
+    return [segment];
+  }
+
+  return getOccurrences(low, +parts[1], high).map(function token(fire) {
+    return '' + fire;
   });
 }
 

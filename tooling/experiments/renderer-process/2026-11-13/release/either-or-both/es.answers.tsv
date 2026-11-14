@@ -1,0 +1,16 @@
+1	BOTH	runs: Monday Nov 9; not: Monday Nov 2 (even)
+2	EITHER	runs: Monday Nov 2, and Tuesday Nov 3 (odd); not: Tuesday Nov 10
+3	BOTH	runs: Friday Nov 13; not: Tuesday Nov 3
+4	BOTH	runs: Sunday Nov 15; not: Sunday Nov 8
+5	EITHER	runs: Sunday Nov 8, and Monday Nov 15; not: Monday Nov 16
+6	BOTH	runs: Wednesday Nov 11; not: Sunday Nov 15
+7	EITHER	runs: Monday Nov 2, and Tuesday Nov 3 (odd); not: Saturday Nov 14
+8	BOTH	runs: Friday Nov 6; not: Saturday Nov 21
+9	EITHER	runs: Monday Nov 2, and Sunday Nov 1 (day 1); not: Saturday Nov 7
+10	BOTH	runs: Monday June 1 2026; not: Monday June 8
+11	EITHER	runs: Friday Nov 6, and Sunday Nov 1; not: Saturday Nov 7
+12	BOTH	runs: Sunday Nov 1; not: Saturday Nov 14
+13	BOTH	runs: Sunday Nov 15 at 9:30; not: Sunday Nov 8
+14	EITHER	runs: Friday Nov 6, and Sunday Dec 13; not: Saturday Nov 7
+15	BOTH	runs: Friday Jan 1 2027 (days 1,4,7..31); not: Saturday Jan 16 2027
+16	EITHER	runs: Monday Nov 9, and Sunday Nov 1 (in 1-7); not: Saturday Nov 14

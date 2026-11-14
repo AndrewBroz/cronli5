@@ -3,17 +3,6 @@ import cronli5 from '../src/cronli5.js';
 
 const {expect} = chai;
 
-// Runner
-export function run(tests, defaultExpected) {
-  tests.forEach(function(values) {
-    const cronable = values[0];
-    const expected = values[1] || defaultExpected;
-    const options = values[2];
-
-    equal(cronable, expected, options);
-  });
-}
-
 export function error(tests, defaultErrorText) {
   tests.forEach(function(inputAndError) {
     if (!(inputAndError instanceof Array)) {
@@ -31,15 +20,6 @@ export function error(tests, defaultErrorText) {
 // Stable, always-string suite title (JSON.stringify(undefined) is undefined).
 function title(value) {
   return JSON.stringify(value) + '';
-}
-
-// Check that the output matches the input for a given cron pattern.
-function equal(cronable, expected, options) {
-  describe(title(cronable), function() {
-    it('should be "' + expected + '"', function() {
-      expect(cronli5(cronable, options)).to.equal(expected);
-    });
-  });
 }
 
 // Check that bad input throws the expected error.

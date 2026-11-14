@@ -56,42 +56,44 @@ Everything that is true about a cron pattern regardless of language:
 
 ### 2.2 The Schedule
 
-The `Schedule` carries information about the shape of
-a cron pattern (but not how to say it). A `Schedule` is an object that contains
-the `pattern` object and other generalizable analyses of the pattern including:
+The `Schedule` carries neutral facts about a cron pattern (but not how to
+say it, and no plan for describing it). A `Schedule` is an object that
+contains the `pattern` object and the generalizable analyses of it:
 
-* `shapes`: The shape of each field (e.g., `step`, `range`, `list`, `all`, `none`)
-* `analyses`: The results of semantic analysis (e.g., `hourFires`, `lastMinuteFire`, `foldsToClockTime`, `capExceeded`)
-* `plan`: The plan for describing the pattern (e.g., `kind`, `unit`, `interval`, `window`, `qualifier`)
+* `shapes`: The shape of each field (e.g., `step`, `range`, `list`, `wildcard`)
+* `analyses`: The results of semantic analysis: `candidates`, `day` and `clockSecond`
 
 ```js
 {
   pattern:  {second: '0', minute: '*/15', hour: '9-17', ...}, // canonical
   shapes:   {minute: 'step', hour: 'range', ...},
-  analyses: {hourFires: [...], lastMinuteFire: 45,
-             foldsToClockTime: false, capExceeded: false, ...},
-  plan:     {kind: 'frequency', unit: 'minute', interval: 15,
-             window: {startHour: 9, endHour: 17, lastMinute: 45},
-             qualifier: {weekday: {kind: 'range', from: 1, to: 5}}}
+  analyses: {
+    candidates: {
+      minute: [{kind: 'cadence', interval: 15, start: 0, last: 45}, ...],
+      hour:   [{kind: 'range', from: 9, to: 17}, ...],
+      ...
+    },
+    day: {union: false, date: null, weekday: null},
+    clockSecond: undefined
+  }
 }
 ```
 
-Strategy choice is language-dependent. Whether a window reads better enumerated
-or as a range depends on the grammar and style of a given language doing the
-work (§5). As such,  when writing a module, treat the `plan` as a *hint* based
-on heuristics from other languages. A language module may consume it
-directly (the common case) or re-plan from `pattern` + `analyses` when its
-grammar demands. The `Schedule` should not encode sentence shape like fragment
-order or connective slots.
+`analyses.candidates` holds, for each field, every compact description of
+its value set: the whole field, a range, a cadence, several pieces, a simpler
+set with a few values removed, or the values one by one. This is set
+arithmetic only. Which candidates a language can say, and which reads best,
+is the language's decision, so the core selects no strategy and the
+`Schedule` encodes no sentence shape such as fragment order or connective
+slots. A renderer reads the facts, never the `pattern` or its `shapes`.
 
 The `analyses.day` facts classify the day fields once for every language:
-whether both day fields are restricted (cron's DOM-or-DOW *union*), and each
-restricted arm's semantic kind — a Quartz form, an open-step cadence (with
-its odd/even parity when the interval-2 set has one), or plain segments.
-`analyses.hourStride` likewise precomputes the hour field's arithmetic stride
-(a step segment, or a list whose values form one) with its offset-clean flag.
-Renderers route on these facts instead of re-deriving them from raw field
-strings; the words and frames stay per-language.
+whether both day fields are restricted (cron's DOM-or-DOW *union*), and
+whether each restricted arm is a Quartz form (with which form, and its
+numbers) or a plain set of values. Fusions of two fields into one phrase,
+such as the clock times a minute and an hour make together, are likewise
+worked out by the core (`core/fusions.ts`); whether to say them is the
+language's call.
 
 Semantic fixes (a fold bug, a cap policy change, a new Quartz token) go
 in the core. Wording fixes are language-specific. Current test: If a change must
@@ -123,6 +125,13 @@ module, we expect:
   corpus they reviewed.
 4. **Notes**: the language's anchor style guide(s), dialect axes, and known
   trade-offs.
+
+The corpus is hand-written, never generated — and **itself under test**:
+oracle-directed gates (contradiction/metamorphic-equality checks, round-trip
+of the *expected strings*, frame consistency per §6, a-priori coverage)
+validate the oracle without consulting the renderer, so testing it never
+lets code grade itself. See
+[corpus-methodology.md](archive/corpus-methodology.md).
 
 ## 3. Project structure
 
@@ -197,6 +206,12 @@ Packaging status:
    at a shared `Cronli5Language` declaration (`lang.d.ts`).
 
 ## 4. The LLM review pass
+
+(2026-11-14: superseded where it says model review ships only beta. The
+project chose an automated pipeline as the review, with no native-speaker
+gate; a language is stable once every row passes the full reading check
+described in CLAUDE.md. This section is kept as the record of the first
+design.)
 
 The LLM review pass allows for beta builds without a native-speaker
 bottleneck. It is designed as distinct passes to address distinct
@@ -283,7 +298,101 @@ Conclusions:
    Hebrew corpora must assert bidi-safe output around LTR digit runs, and
    the review packet must render (not just diff) RTL strings.
 
-## 6. General language guidelines
+## 6. Continuity: the relational design constraint
+
+*(Adopted July 2026 as a hard constraint, ranked above point-wise
+naturalness. This section is the source of truth for what "continuity"
+means; each language's `test/lang/<code>/continuity.js` enforces it.)*
+
+Nobody reads a cron description in a vacuum. The tool exists for
+verification and comparison — two crontab lines, a before/after edit, "what
+did changing this field do?" — so a description has three quality axes, each
+with its own oracle:
+
+1. **Faithfulness** — the prose denotes exactly the fire-set
+   (round-trip and the objective gates).
+2. **Naturalness** — a native speaker would write it (the corpus and the
+   blind panels).
+3. **Continuity** — a small edit to the pattern produces a small diff **in
+   the mind of the reader** (the relational stability suite).
+
+The first two are point-wise; continuity is relational, and a corpus is
+structurally blind to it: two individually-perfect rows can be jointly
+discontinuous. The criterion is the reader's mental/subvocal diff, not the
+byte diff — morphological agreement may cascade freely (a Ukrainian hour
+list surfaces genitive after one lead and locative after another; the
+reader absorbs case endings without registering a change).
+
+### 6.1 The frame/slots model
+
+A rendering is a **frame** (the sentence architecture: clause order,
+nesting, which field is the topic) filled with **slots** (each field's
+phrase, in its chosen device — enumeration, cadence, window, clock fold).
+The constraint: perturbing a single field of the pattern
+
+* may rewrite **that field's slot** freely;
+* must leave the **frame** and **every other slot** invariant, up to
+  morphological agreement;
+* may switch the slot's **device** only at a *declared threshold* (§6.2).
+
+Continuity is cheapest when it holds **by construction**: German renders
+the seconds clause as an apposition lead bound onto the seconds-free
+sentence, so no seconds shape can move anything else; Chinese grammar
+mandates one coarse-to-fine order for all patterns. A renderer with one
+total architecture never needs a continuity bug fix. The failure mode is
+the **piecewise architecture**: a shape-gated overlay that re-architects
+the sentence for a subset of patterns. Every gate boundary is then a
+discontinuity, and moving the gate only relocates the seam. (The English
+dense restructure is the canonical example: `*`→`*/6` in the seconds field
+flips the whole sentence between little- and big-endian, and the dense form
+also flips against its own seconds-free sibling. Ukrainian inherited the
+fork by derivation.)
+
+### 6.2 Declared device thresholds — the mindful exceptions
+
+Some discontinuities are right, because the *reader* re-chunks at the same
+point: nobody holds "at 0, 6, 12, 18, 24, 30, 36, 42, 48, and 54 minutes"
+as a list — they hold "every six minutes". A device switch is legitimate
+only when it is:
+
+* **semantic-predicate-gated**, never shape-gated — `*`, `*/1`, and `0-59`
+  must classify identically (the core canonicalizes; a renderer testing
+  surface shape is re-deriving semantics with a lossy proxy);
+* **local** — it swaps one slot's device, never the frame;
+* **chunk-mirroring** — it tracks what a human holds visually and
+  subvocally (enumeration→cadence past a count, list→range, clock-time
+  folding — the one device switch every language already agrees on);
+* **declared** — registered per language as data: field, device pair, and
+  the semantic predicate that flips it.
+
+The declared registry is the **relational contract**, dual to the
+point-wise corpus and with the same epistemic status: hand-written and
+reviewed, never generated. It inverts the enforcement burden — the
+stability suite generates single-field neighbor pairs, extracts frame
+signatures and slots, and fails on any frame flip or non-local slot change
+that is *not* in the registry. Undeclared discontinuity is a bug by
+definition.
+
+### 6.3 Consequences
+
+* **Voice improvements land as total-policy changes or declared
+  thresholds, never shape-gated carve-outs.** A panel verdict that a form
+  "reads robotic" is a constraint to satisfy *inside* the language's one
+  architecture, not a license to add a second one.
+* **The constraint binds the pipeline, not just the renderers.** A
+  derived language inherits its donor's architecture *and* its donor's
+  fitness pressures; point-wise panel optimization without a relational
+  gate will re-carve the same seams into every descendant. Continuity
+  checks belong in the derivation gate set alongside round-trip and the
+  panels.
+* **Enforcement instrument**: the stability engine
+  (`tooling/scripts/stability-engine.mjs`) with per-language extractors —
+  extended to frame signatures and a neighbor generator that covers
+  stacked cadences, offsets, and the wildcard boundary (today's four
+  `TIMES` shapes cannot reach the seams that motivated this section).
+  Known violations are enumerated in [backlog.md](./backlog.md).
+
+## 7. General language guidelines
 
 Every `lang/<code>/notes.md` must answer these questions:
 
@@ -301,11 +410,15 @@ Every `lang/<code>/notes.md` must answer these questions:
   a universal).
 * **Traps**: the minimal pairs for `pairs.js`.
 
-## 7. Open questions
+## 8. Open questions
 
+* **Architecture ownership under the continuity constraint (§6)** —
+  settled: sentence architecture is a fact about the *language*. The core
+  gives neutral facts and candidate descriptions (§2.2) and selects no
+  plan; each language owns one frame and chooses among the candidates.
 * **Cap policy ownership** — settled: core default + optional language
   override, built when a language wants a different value (the design and
-  the threading constraint are recorded in docs/backlog.md).
+  the threading constraint are recorded in archive/backlog.md).
 * **`lenient` fallback string** must come from the language
   module, which makes even the error path part of the corpus.
 * **Review model recording**: how much provenance belongs in `REVIEW.md`
