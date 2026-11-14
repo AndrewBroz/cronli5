@@ -101,7 +101,8 @@ const words = {
   to: '至',
   unrecognizable: '无法识别的cron表达式',
   week: '周',
-  whenItIs: '时'
+  whenItIs: '时',
+  within: '其中'
 };
 
 // Punctuation, all full-width but the colon of a clock time.
