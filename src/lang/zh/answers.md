@@ -21,6 +21,27 @@ no bracket shows a series of hours or years (5.5, 5.8), and seconds that
 step evenly at one clock time are a window with the step (4.2). The
 passages changed are marked "(2026-11-14)".
 
+**Amended again the same day** (Claude Opus 5.5), because three of those
+forms have a second reading. Two isolated readers (Opus 5.5 and Sonnet
+5.5), briefed only in Chinese, each found that 每2小时一次 and 每2小时的5
+分、35分 can be counted from whenever the task was set up, which may be
+the odd hours; one read 自1点起每2小时的15分 as from 1 p.m.; both read 每
+天2点至22点的偶数小时的0分至29分 as able to end at 22:00, leaving out
+22:01 to 22:29. In Chinese 每N小时一次 times a dose or a check from when
+it starts (每2小时一次 on a medicine label); it is not a clock reading, and
+a reader who has not read the README is not told where it starts. Asked
+again, the same two readers read 每6小时一次 and 每3小时的15分 two ways as
+well. So no cadence of hours is said by its step alone. Every second hour
+is the even or the odd hours, with 每天: 每天偶数整点, 每天奇数小时的15分,
+每天偶数小时内，每分钟一次. Every third, fourth, sixth or eighth hour is
+eight hours or fewer, and is listed or named, as before the amendment
+above: 每天0:00、6:00、12:00、18:00. The even or odd hours between two
+ends close on their first and last firing in brackets, as one range of
+hours does: 每天2点至22点，偶数小时的0分至29分，每分钟一次（首次2:00，末
+次22:29）. Both readers read every new form one way. The ruling against
+brackets that show a series stands: none of these does. Passages changed
+are marked "(2026-11-14, second amendment)".
+
 Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, for
 Simplified Chinese as written in mainland software and timetables. Revised
 three times the same day: after a first fluent reader judged a sample
@@ -55,31 +76,34 @@ set of seconds.
 * **The aim is a sentence that is easy to understand.** Exact times need
   no working out. A stretch of consecutive values needs none either. A
   cadence with a step needs arithmetic, unless it starts where its cycle
-  starts: 每15分钟 is taken from the hour and 每2小时 from midnight, which
-  is what README "Description Accuracy" leaves unsaid. (The first judge
-  read 每12小时 as "does not say from when"; every twelfth hour is still
-  its two times, and the doubt is overruled for the rest, 2026-11-14.)
-  An exception needs subtraction. A list needs
-  nothing, but every item has to be held.
+  starts and the reader takes it so: 每15分钟 is taken from the hour,
+  which is what README "Description Accuracy" leaves unsaid. 每2小时 is
+  not taken from midnight: the first judge read 每12小时 as "does not say
+  from when", and two readers read 每2小时一次 and 每6小时一次 as counted
+  from when the task starts (2026-11-14, second amendment). Hours are
+  never said by a bare step; the even and odd hours are recognised, not
+  worked out. An exception needs subtraction. A list needs nothing, but
+  every item has to be held.
 * **Every stretch is closed and names its first and last moment, and both
   fire** (8.5). This one rule decides two contested forms: an hour is
   9:00至9:59, not 9点这一小时内; a minute is 9:00:00至9:00:59, not 9:00这一
   分钟内.
 * **An instant is a clock time with a colon (9:00); a whole hour is named
-  with 点 (9点).** 点 is used in exactly four places, each a whole hour
+  with 点 (9点).** 点 is used in exactly three places, each a whole hour
   and never an instant: before 的 and a minute (8点、12点的15分), in a
-  range of hours before 每小时的 (9点至17点，每小时的…), at the ends of
-  the even or odd hours that do not fill the day (2点至22点的偶数小时,
-  5.5), and at the start of an hour cadence (自1点起每2小时一次, 3.7).
-  Everywhere else an hour is its clock times. (2026-11-14: the third place
-  was a bracket of hours after 偶数小时, and the fourth is new.)
+  range of hours before 每小时的 (9点至17点，每小时的…), and at the ends
+  of the even or odd hours that do not fill the day (2点至22点，偶数小时,
+  5.5). Everywhere else an hour is its clock times. (2026-11-14: the third
+  place was a bracket of hours after 偶数小时; a fourth, the start of an
+  hour cadence, 自1点起每2小时一次, was added and withdrawn the same day,
+  when a reader took 1点 for 13:00.)
 * **What can be counted is listed** ("凡是数得过来的，细心的人会直接列出
   来"). The limits are stated here once, by kind of value, and hold
   everywhere.
 
 | Values | Listed | A run is a range from | More, on a step | An exception replaces |
 | --- | --- | --- | --- | --- |
-| clock times in a day; minutes named in the hour; seconds named in the minute | up to 8, except an hour cadence that tiles the day (3.7) and seconds that step at one clock time (4.2) | 5 consecutive (4 or fewer are listed) | an hour cadence that tiles the day: the step alone, 每2小时一次 (3.7); any other: both ends and the step, 5:00至23:00，每2小时一次 | a list of more than 8 |
+| clock times in a day; minutes named in the hour; seconds named in the minute | up to 8, except seconds that step at one clock time (4.2) | 5 consecutive (4 or fewer are listed) | every second hour of the day: the idiom, 每天偶数整点 (5.5); any other: both ends and the step, 5:00至23:00，每2小时一次 | a list of more than 8 |
 | dates of the month | up to 8 | 3 consecutive (two are listed) | the first three, ……, the last: 1日、4日、7日……31日 | a list of more than 8 |
 | months | always named | 3 consecutive (two are listed) | no cadence: named | more than 8 months that are not one run |
 | weekdays | always named | 3 consecutive (two are listed) | no cadence: named | exactly six days that are not one run |
@@ -99,9 +123,9 @@ set of seconds.
   fewer, a window counting two (4.2).
 * **A cadence of minutes or seconds that tiles from 0 is 每N分钟一次 / 每N
   秒一次 with no ends** when nothing confines it: 每15分钟一次. Neither
-  judge asked where it starts; everyone takes it from the hour. So is a
-  cadence of hours that tiles the day from 0:00 with three or more
-  values, 每2小时一次, 每6小时一次 (3.7; 2026-11-14).
+  judge asked where it starts; everyone takes it from the hour. A cadence
+  of hours is not (3.7; 2026-11-14, second amendment): 每2小时一次 is
+  counted from when the task starts.
 * **The choice never depends on which values are named**, only on how
   many there are and how they are arranged, except for the idioms of
   section 5 and what the calendar decides (4.4): a date its months do not
@@ -158,15 +182,15 @@ are restricted. Take the first row that applies:
 | --- | --- | --- |
 | any | nothing | none |
 | none: the schedule never fires (4.4) | nothing | none |
-| runs round the clock (H is every hour, or an hour cadence that tiles the day (3.7), with or without exceptions), so it says a rhythm and names no clock time first | a year part that ends in 当年 (5.8) | none: …，当年每5分钟一次 |
-| the same | anything else | a comma: 每周一至周五，每15分钟一次; 每月1日，每小时整点; 每年6月，每5分钟一次; 每月1日，每2小时一次; 每周一至周五，偶数小时内，每15分钟一次 |
+| runs round the clock (H is every hour, with or without exceptions), so it says a rhythm and names no clock time first | a year part that ends in 当年 (5.8) | none: …，当年每5分钟一次 |
+| the same | anything else | a comma: 每周一至周五，每15分钟一次; 每月1日，每小时整点; 每年6月，每5分钟一次 |
 | the same | a date and a weekday together (4.3) | ，均为: 每月1日以及每周五，均为每分钟一次 |
-| begins with a clock time or an hour name (H is restricted) | no day part (a month or a year only) | 每天 (2.5): 每天9:00; 每年6月每天9:00 |
-| the same | a date and a weekday together (4.3) | ，均在: 每月1日以及每周五，均在0:00 |
+| begins with a clock time, an hour name or the even or odd hours (H is restricted) | no day part (a month or a year only) | 每天 (2.5): 每天9:00; 每年6月每天9:00; 每天偶数整点 |
+| the same | a date and a weekday together (4.3) | ，均在: 每月1日以及每周五，均在0:00; 每月1日以及每周五，均在偶数整点 |
 | the same | a date and a weekday that must both match (4.3) | 的: 每逢单日为周一时的0:00 |
 | the same | a day part that is exactly one range of dates | 每天: 每月1日至7日每天9:00 |
 | the same | dates in several pieces, at least one a range | 的: 每月1日至7日、15日的9:00 |
-| the same | anything else: one date, a list of dates (with or without ……), 逢单日, a weekday phrase, a Quartz form, 除…外每天, and any of these closed by a bracket (4.4) | none: 每月1日、15日9:00; 每周一至周五9:00; 除周三外每天9:00; 每月31日（当月无此日则不执行）0:00 |
+| the same | anything else: one date, a list of dates (with or without ……), 逢单日, a weekday phrase, a Quartz form, 除…外每天, and any of these closed by a bracket (4.4) | none: 每月1日、15日9:00; 每周一至周五9:00; 除周三外每天9:00; 每月31日（当月无此日则不执行）0:00; 每月1日偶数整点; 每周一至周五偶数小时内，每15分钟一次 |
 
 Reasons. The first judge found strings of 每… with no pause "挤成一串" and
 asked for the comma before a frequency; the second graded those forms
@@ -219,18 +243,19 @@ nor the weekday is, the join is 每天 (每天9:00 was graded natural twice).
 * `0 9-17 * * *` — 每天9:00至17:00，每小时一次
 * `0 5/2 * * *` — 每天5:00至23:00，每2小时一次
 * `0 */12 * * *` — 每天0:00、12:00
+* `0 */2 * * *` — 每天偶数整点
+* `0 */6 * * *` — 每天0:00、6:00、12:00、18:00
+* `0 1/2 * * *` — 每天奇数整点
 
-It is not said when the hours are every hour, or an hour cadence that
-tiles the day (3.7), with or without exceptions: the time part then says
-the rhythm itself, which runs round the clock. (2026-11-14: a tiling
-cadence of hours took 每天 and its times until then.)
+It is not said when the hours are every hour, with or without
+exceptions: the time part then says the rhythm itself, which runs round
+the clock. (2026-11-14: a tiling cadence of hours was said by its step
+with no 每天; the second amendment of that day gave it back, with the
+even or odd hours and the lists.)
 
 * `*/5 * * 6 *` — 每年6月，每5分钟一次
 * `30 * * * *` — 每小时的30分
 * `*/10 0-2,4-23 * * *` — 每10分钟一次（3:00至3:59除外）
-* `0 */2 * * *` — 每2小时一次
-* `0 */6 * * *` — 每6小时一次
-* `0 1/2 * * *` — 自1点起每2小时一次
 
 An edit to the hours may therefore change the join; no other part depends
 on the time. The time depends on the rest of the sentence in one declared
@@ -369,26 +394,30 @@ A run of minutes that wraps inside one hour is two windows: 9:00至9:10、
 
 * Minutes under every hour, tiling from 0: 每15分钟一次; minutes 0 and 30
   are 每30分钟一次. Seconds: 每15秒一次.
-* **Hours that tile the day** (the step divides 24, the first hour lies
-  within the first step, so that the gap across midnight is the step
-  again, and three or more hours fire): the step alone, with no window,
-  no list and no 每天, because the schedule runs round the clock. From
-  0:00: 每2小时一次; 每3小时一次; 每4小时一次; 每6小时一次; 每8小时一次.
-  From a later hour, where the hours are more than can be listed: the
-  start and the step, 自1点起每2小时一次, with no end. A later start with
-  eight hours or fewer is listed, which names them at a glance: 每天1:00、
-  4:00、7:00、10:00、13:00、16:00、19:00、22:00. Two hours (every twelfth)
-  stay the two times, 每天0:00、12:00. A minute or a second with such
-  hours is said apart, as against every hour (4.1): 每2小时的30分; 每2小
-  时的15分、45分; 自1点起每2小时的23分. (2026-11-14. Until then the hours
-  were never said without their times: 每天0:00、6:00、12:00、18:00 and 每
-  天0:00至22:00，每2小时一次. Both judges had graded those natural and
-  ranked the bare cadence last; that preference of model readers for the
-  qualified form is overruled, and README "Description Accuracy" does not
-  qualify a cadence that begins on the first hour of its cycle.)
+* **Hours are never said by their step alone.** Every second hour of the
+  day, from 0 or from 1, is the even or the odd hours (5.5): 每天偶数整点;
+  每天奇数整点; 每天偶数小时的30分; 每天奇数小时的15分、45分. Every
+  third, fourth, sixth, eighth or twelfth hour is eight hours or fewer
+  from any start, and is listed by the table at the top: 每天0:00、3:00、
+  6:00、9:00、12:00、15:00、18:00、21:00; 每天0:00、6:00、12:00、18:00;
+  每天1:00、4:00、7:00、10:00、13:00、16:00、19:00、22:00; with minutes,
+  the times while there are eight or fewer, 每天0:23、6:23、12:23、18:23,
+  and past that the hours by name (4.1), 每天0点、3点、6点、9点、12点、15
+  点、18点、21点的5分、35分.
+  (2026-11-14, second amendment. That morning these were 每2小时一次, 每6
+  小时一次, 每2小时的30分 and 自1点起每2小时的15分. Two readers briefed in
+  Chinese read 每2小时一次, 每6小时一次 and 每3小时的15分 as able to count
+  from when the task was set up, where 每N小时一次 is how a dose is timed,
+  and one read 自1点起 as from 1 p.m. A stated start, 每天0点起每2小时一
+  次, read one way to both, and was rejected: it is two things to hold and
+  a count to carry on, where 偶数整点 is one word recognised at once; for
+  every third hour it would replace a list of eight times, which needs no
+  working out.)
 * **Any other cadence of hours keeps both ends**: hours 5 to 23, every
-  second, run 5:00至23:00 and leave six hours overnight, so 自5点起每2小时
-  一次 would promise 1:00 and 3:00. 每天5:00至23:00，每2小时一次.
+  second, run 5:00至23:00 and leave six hours overnight. At one minute:
+  每天5:00至23:00，每2小时一次; 每天0:00至20:00，每2小时一次. Under other
+  minutes the even or odd hours with their ends (5.5): 每天3点至23点，奇数
+  小时的5分、35分（首次3:05，末次23:35）.
 * Days of the month never tile. Up to eight dates are listed: `*/5` is 每
   月1日、6日、11日、16日、21日、26日、31日. Every second day is an idiom
   (5.1). Any other cadence of more than eight dates is the first three,
@@ -443,16 +472,16 @@ take one only when all of these hold; otherwise the set is its pieces or
 its list.
 
 * More than eight values fire; or, for hours, five or more fire and what
-  is left when the holes are filled is a cadence that tiles the day
-  (3.7). Hours taken out of such a cadence are the same cadence, so it is
-  said by its step and the hours follow in the bracket, with no window
-  and no 每天: 每3小时一次（12:00除外）; 每2小时一次（8:00除外）; 每4小时的
-  30分（8:30除外）; 自1点起每2小时一次（7:00除外）; under a finer rhythm,
-  偶数小时内，每分钟一次（8:00至8:59除外）; 每3小时的第1个小时内，每分钟
-  一次（12:00至12:59除外）. Fewer than five are listed: every sixth hour
-  less one is 每天0:00、6:00、18:00. (2026-11-14. Until then such a set was
-  the window of 3.8 with the bracket, 每天0:00至22:00，每2小时一次（8:00除
-  外）, or under eight values its list.)
+  is left when the holes are filled is the even or the odd hours of the
+  whole day. Those are said by their idiom, and the hours follow in the
+  bracket: 每天偶数整点（8:00除外）; 每天奇数整点（7:00除外）; 每天偶数小
+  时的30分（8:30除外）; under a finer rhythm, 每天偶数小时内，每分钟一次
+  （8:00至8:59除外）. Taken out of a longer step, eight hours or fewer are
+  left and are listed: 每天0:00、3:00、6:00、9:00、15:00、18:00、21:00.
+  (2026-11-14. Until then such a set was the window of 3.8 with the
+  bracket, 每天0:00至22:00，每2小时一次（8:00除外）, or under eight values
+  its list; that morning it was the bare step with the bracket, 每2小时一
+  次（8:00除外）, withdrawn with the bare step in the second amendment.)
 * What is left when the holes are filled is every value, or an even
   cadence (for whole hours under minutes that are not one minute: every
   hour, or the hours of 5.5). Never a mere range: 每小时的0分至44分 has
@@ -524,9 +553,9 @@ values before one stretched to the ends of the field.
 Exceptions in the time part close the time, in full-width brackets with
 除外:
 
-* To an hour cadence at one minute: 每2小时一次（8:00除外）; 每2小时的30
-  分（8:30除外）; one that does not tile, 每天5:00至23:00，每2小时一次
-  （9:00除外）.
+* To the even or odd hours at one minute: 每天偶数整点（8:00除外）; 每天
+  偶数小时的30分（8:30除外）; to an hour cadence with its ends, 每天5:00至
+  23:00，每2小时一次（9:00除外）.
 * To every hour at one minute, the clock time: 每小时整点（3:00除外）; 每小
   时的30分（3:30除外）. 
 * **Wherever several seconds fire in a minute, an excepted clock time or
@@ -541,12 +570,15 @@ Exceptions in the time part close the time, in full-width brackets with
   3:59:59除外）. (The audit let a bare 3:30
   stand for the whole minute. Beside 每秒一次 a bare 3:30 is one instant,
   and the reader is left to think the other 59 seconds fire.)
-* To the even or the odd hours (5.5), and to any hour cadence that tiles
-  the day, the hour as a window: 偶数小时内，每分钟一次（2:00至2:59除外）;
-  每2小时的15分、45分（8:00至8:59除外）. (2026-11-14: there was a gloss of
-  the hours that fire, 偶数小时（0点、4点、6点……22点）, so that the bracket
+* To the even or the odd hours (5.5), the hour as a window: 每天偶数小时
+  内，每分钟一次（2:00至2:59除外）; 每天偶数小时的15分、45分（8:00至8:59除
+  外）. Between two ends, the first and last firing come first in the same
+  bracket, parted by a comma: 每天0点至20点，偶数小时的15分、45分（首次
+  0:15，末次20:45，8:00至8:59除外）. (2026-11-14: there was a gloss of the
+  hours that fire, 偶数小时（0点、4点、6点……22点）, so that the bracket
   never took back an hour the gloss had named. With no gloss there is
-  nothing to contradict.)
+  nothing to contradict. Two brackets in a row were avoided in the second
+  amendment by the one bracket; both readers read it one way.)
 * To the hours under anything else, the hour as a window: 每10分钟一次
   （3:00至3:59除外）; 每小时的5分、20分、45分（3:00至3:59除外）; two
   consecutive, （3:00至4:59除外）; separate, （3:00至3:59、8:00至8:59除外）.
@@ -569,9 +601,11 @@ judge, who called a list of eight clock times "偏长，但毫不含糊，人也
 么列"; the second graded a list of seven dates and of four times natural.
 Not checked with a fluent human beyond that.
 
-`0 */6 * * *` against its four times: the step, 每6小时一次. `23 */6 * *
-*`: 每6小时的23分. (2026-11-14: both were the four times. A list repeats
-what the step says and has to be read through to see that it does.)
+`0 */6 * * *` against its four times: the four times, 每天0:00、6:00、
+12:00、18:00. `23 */6 * * *`: 每天0:23、6:23、12:23、18:23. (2026-11-14:
+both were the step, 每6小时一次 and 每6小时的23分, for a few hours; the
+step was read by two readers as counted from when the task starts, and
+the list returned in the second amendment.)
 
 3.11 None. `0 */12 * * *` and `0 0,12 * * *` are both 每天0:00、12:00.
 
@@ -579,8 +613,7 @@ what the step says and has to be read through to see that it does.)
 
 4.1 Clock times. The whole time part is built from M and H together. In
 every case, **eight exact times or fewer, not a run of five or more
-consecutive hours or minutes, are listed as clock times**, unless the
-hours tile the day (3.7): 9:00、17:00; 9:05、9:20、9:45; 9:00、9:15、9:30、
+consecutive hours or minutes, are listed as clock times**: 9:00、17:00; 9:05、9:20、9:45; 9:00、9:15、9:30、
 9:45; 9:00、9:30、17:00、17:30; 9:00、9:15、9:30、9:45、17:00、17:15、17:30、
 17:45; 1:00、4:00、7:00、10:00、13:00、16:00、19:00、22:00. Otherwise:
 
@@ -591,24 +624,22 @@ hours tile the day (3.7): 9:00、17:00; 9:05、9:20、9:45; 9:00、9:15、9:30�
 | every hour | 每小时整点 | 每小时的30分 |
 | a range | 9:00至17:00，每小时一次 | 9:30至17:30，每小时一次 |
 | pieces | 9:00至17:00，每小时一次，以及22:00 | 9:30至17:30，每小时一次，以及22:30 |
-| a cadence that tiles the day from 0:00 (3.7) | 每2小时一次; 每6小时一次 | 每2小时的30分; 每6小时的30分 |
-| one that tiles from a later hour, more than eight | 自1点起每2小时一次 | 自1点起每2小时的30分 |
-| such a cadence with exceptions | 每2小时一次（8:00除外） | 每2小时的30分（8:30除外） |
+| the even or odd hours of the day (5.5) | 偶数整点; 奇数整点 | 偶数小时的30分; 奇数小时的30分 |
+| those with exceptions | 偶数整点（8:00除外） | 偶数小时的30分（8:30除外） |
 | any other cadence of more than eight hours | 5:00至23:00，每2小时一次 | 5:30至23:30，每2小时一次 |
 | every hour with exceptions | 每小时整点（3:00除外） | 每小时的30分（3:30除外） |
 | anything else of more than eight hours | the times, however many | the times |
 
-**Hours that tile the day are said as every hour is** (2026-11-14). The
-step takes the place of 每小时, and everything after it is what would
-follow 每小时: 每2小时的30分 as 每小时的30分, 每2小时的15分、45分, 每2小时
-的0分至29分，每分钟一次, 每2小时的5分8秒、30分8秒. Minute 0 with no second
-is 每2小时一次, the plain cadence, where every hour has its idiom 每小时整
-点. So an edit of the minute from 0 to 30 changes 一次 into 的30分 and
-leaves 每2小时 as it stands. 的 makes the minute a position in each
-stretch of two hours, as it is in each hour; native explanations of cron
-write the same (每2小时的第30分钟), less the ordinal of 3.2. A later start
-comes first, 自1点起每2小时的23分, as 自2030年起 comes before what it
-starts.
+**The even or odd hours of the day are said as every hour is.** The
+idiom takes the place of 每小时, and everything after it is what would
+follow 每小时: 偶数小时的30分 as 每小时的30分, 偶数小时的15分、45分, 偶数
+小时的0分至29分，每分钟一次, 偶数小时的5分8秒、30分8秒. Minute 0 with no
+second is 偶数整点, as every hour has 每小时整点; 整点 after 偶数 or 奇数
+is how timetables and chimes say it (逢偶数整点). An edit of the minute
+from 0 to 30 changes 整点 into 小时的30分. (2026-11-14, second amendment.
+That morning the step took the place of 每小时, 每2小时的30分, and a
+later start came first, 自1点起每2小时的23分; both had a second reading,
+3.7.)
 
 **M is continuous** (every minute, or a cadence that tiles from 0). The
 hours come first, as windows that name the last firing, then a comma,
@@ -619,25 +650,21 @@ then 每分钟一次 or 每N分钟一次.
 | every hour | none: 每15分钟一次 |
 | a range (two consecutive hours count) | 9:00至17:59，每分钟一次; 9:00至17:45，每15分钟一次; 22:00至23:59，每分钟一次 |
 | one hour | 9:00至9:59，每分钟一次; 9:00至9:55，每5分钟一次 |
-| every second hour that tiles the day (3.7) | the idiom of 5.5, with 内: 偶数小时内，每分钟一次; 奇数小时内，每15分钟一次 |
-| any other cadence that tiles the day (3.7) | the first hour of each step, with 内: 每6小时的第1个小时内，每分钟一次; 每3小时的第1个小时内，每15分钟一次 |
-| every second hour, more than eight of them, that does not tile (5.5) | the idiom with its ends: 2点至22点的偶数小时内，每分钟一次; 3点至23点的奇数小时内，每15分钟一次 |
+| the even or odd hours of the day (5.5) | the idiom, with 内: 偶数小时内，每分钟一次; 奇数小时内，每15分钟一次 |
+| the even or odd hours between two ends, more than eight (5.5) | the ends, the idiom with 内, the rhythm, and the first and last firing: 2点至22点，偶数小时内，每分钟一次（首次2:00，末次22:59）; 3点至23点，奇数小时内，每15分钟一次（首次3:00，末次23:45） |
 | up to four separate hours, stretches of hours, or any separate hours under a cadence of more than eight minutes | each a window: 9:00至9:59、17:00至17:59，每分钟一次; 8:00至8:45、12:00至12:45、18:00至18:45，每15分钟一次; 0:00至0:59、5:00至5:59、12:00至12:59、18:00至18:59，每分钟一次; 9:00至17:59、20:00至20:59、22:00至22:59，每分钟一次 |
 | five or more separate hours, under every minute or a cadence of eight minutes or fewer | the hours by name, then 的 and the minutes as positions: 每一分钟 for every minute, 0点、5点、10点、15点、20点的每一分钟; a cadence's minutes, 8点、10点、12点、14点、16点、18点的0分、15分、30分、45分 |
 | every hour with exceptions | 每10分钟一次（3:00至3:59除外） |
-| a cadence that tiles the day, with exceptions | the phrase, then the bracket: 偶数小时内，每分钟一次（8:00至8:59除外） |
+| the even or odd hours with exceptions | the phrase, then the bracket: 偶数小时内，每分钟一次（8:00至8:59除外） |
 
-(2026-11-14.) Hours that tile the day under a finer rhythm are said as
-the stretches they are, in one short phrase: for every second hour the
-words for even and odd hours, which name the set exactly; for a longer
-step, the first hour of each step, 每6小时的第1个小时, which names both
-the rhythm of the hours and which hour of each step fires. Until then
-these were 偶数小时（0点、2点、4点……22点）内, with a gloss of the hours,
-and four windows for every sixth hour (0:00至0:59、6:00至6:59、12:00至
-12:59、18:00至18:59，每分钟一次), which a blind reader had found clearer
-than any shorter form; that reader's preference is overruled with the
-rest of the model readers' evidence for longer forms. Every twelfth hour
-has two hours, which stay two windows.
+(2026-11-14.) The even and odd hours under a finer rhythm are said as
+the stretches they are, in one short phrase, the words for even and odd
+hours, which name the set exactly. Until then they were 偶数小时（0点、2
+点、4点……22点）内, with a gloss of the hours. Longer steps are their
+hours: four windows or fewer (0:00至0:59、6:00至6:59、12:00至12:59、18:00
+至18:59，每分钟一次), and past four the hours by name, below. (That
+morning a longer step was 每6小时的第1个小时内, which carried the step's
+missing start; it went with the bare step in the second amendment.)
 
 Named hours with a count (8点、12点、18点这3个小时内; 0点、2点、4点……22点这
 12个小时内) were tried and dropped: two readers took 这3个小时内 and 这12
@@ -651,7 +678,7 @@ eight minutes or fewer, are not a window each.** A window for each
 hour is a list made by multiplying: every hour with the two ends of the
 minutes. It is written out while it is four windows or fewer, which are
 eight clock times, the most that are listed (the table at the top).
-Hours that tile the day are none of these: they have the phrase above.
+The even or odd hours are none of these: they have the phrase above.
 Past four, the hours are named
 once and the minutes once, as positions in the hour, the way anchored
 minutes are said below (8点、12点、18点的5分、20分、45分: N点的M分 is a
@@ -717,14 +744,15 @@ hour of its own:
   again before the strays: 9:00至9:09、13:00至13:09、17:00至17:09，每分钟一
   次，以及9点、13点、17点的20分、40分.
 * Under separate hours named before 的 (two windows or more), and under
-  hours said by their step or their idiom, the hours are said again
-  before the strays, as the lead says them: 9点、17点的0分至20分、30分至
-  50分，每分钟一次，以及9点、17点的25分; 每2小时的0分至29分，每分钟一次，以
-  及每2小时的45分; 自1点起每2小时的…，以及自1点起每2小时的45分; 2点至22
-  点的偶数小时的…，以及2点至22点的偶数小时的45分. (Checked 2026-11-14
-  with the same two readers after the step forms arrived: neither read
-  the restated stray any other way; both found that a bare 以及45分 after
-  每2小时的… can be minute 45 of every hour.)
+  the even or odd hours, the hours are said again before the strays: 9
+  点、17点的0分至20分、30分至50分，每分钟一次，以及9点、17点的25分; 每天偶
+  数小时的0分至29分，每分钟一次，以及偶数小时的45分. Between two ends only
+  the idiom is said again, inside the ends and the bracket: 每天2点至22
+  点，偶数小时的0分至29分，每分钟一次，以及偶数小时的45分（首次2:00，末次
+  22:45）. (Checked 2026-11-14 with two readers: both found that a bare 以
+  及45分 after 每2小时的… can be minute 45 of every hour, and in the second
+  amendment that a bare 以及45分 after 2点至22点，偶数小时的… can be minute
+  45 of every hour from 2 to 22; each read the restated idiom one way.)
 * Under windows of hours with a range among them, 其中每小时的: 8:00至
   10:45、14:00至14:45，每小时的0分至29分，每分钟一次，以及其中每小时的
   45分. 其中 points back to the windows.
@@ -756,11 +784,11 @@ first, then the minute phrase of section 3.
 | every hour | 每小时的: 每小时的5分、20分、45分 |
 | one range | the hours by name, a comma, 每小时的 and the minute phrase, then the first and last firing in brackets: 9点至17点，每小时的5分、20分、45分（首次9:05，末次17:45）; 9点至17点，每小时的0分至29分，每分钟一次（首次9:00，末次17:29） |
 | pieces with a range | a window from the first time that fires to the last for each stretch, a comma, then 每小时的: 9:05至17:45、22:05至22:45，每小时的5分、20分、45分 |
-| a cadence that tiles the day (3.7) | the step in place of 每小时, then 的: 每2小时的15分、45分; 每4小时的15分、45分; 自1点起每2小时的15分、45分 |
-| every second hour, more than eight of them, that does not tile (5.5) | the idiom with its ends, then 的: 0点至16点的偶数小时的15分、45分 |
+| the even or odd hours of the day (5.5) | the idiom in place of 每小时, then 的: 偶数小时的15分、45分; 奇数小时的15分、45分 |
+| the even or odd hours between two ends, more than eight (5.5) | the ends, a comma, the idiom, 的, and the first and last firing in brackets, as one range: 0点至16点，偶数小时的15分、45分（首次0:15，末次16:45） |
 | any other separate hours | the hours by name, however many, then 的: 8点、12点、18点的5分、20分、45分; 0点、5点、10点、15点、20点的15分、45分 |
 | every hour with exceptions | 每小时的5分、20分、45分（3:00至3:59除外） |
-| a cadence that tiles the day, with exceptions | 每2小时的15分、45分（8:00至8:59除外） |
+| the even or odd hours with exceptions | 偶数小时的15分、45分（8:00至8:59除外） |
 
 "One range" is two or more consecutive hours: 9点至10点，每小时的0分至29
 分，每分钟一次（首次9:00，末次10:29）. Among separate hours, two consecutive
@@ -848,7 +876,7 @@ seconds come back.)
 5. M is one minute, or a list of minutes, under every hour.
    * A second or a list of seconds joins each minute as a clock is read:
      每小时的30分15秒; 每小时的30分15秒、30分45秒; 每小时的5分30秒、20分30
-     秒. After hours that tile the day the same: 每2小时的5分8秒、30分8
+     秒. After the even or odd hours the same: 偶数小时的5分8秒、30分8
      秒.
       * Minute 0 is a minute like any other once a second is said: 每小时的0
      分30秒; 每小时的0分15秒、0分45秒. (It was 每小时整点过30秒. The notes
@@ -866,7 +894,7 @@ seconds come back.)
       * One second: the window carries it, 9:00:30至17:45:30，每15分钟一次.
      A cadence of minutes that would stand alone names its ends for the
      purpose, as positions in the hour: 每小时的0分30秒至45分30秒，每15分钟
-     一次; 每2小时的0分30秒至45分30秒，每15分钟一次.
+     一次; 每天偶数小时的0分30秒至45分30秒，每15分钟一次.
      (It was 每15分钟一次，每次在整分过30秒. 整分 is not a word in use, the
      notes say, and should not be coined after 整点.)
    * Several seconds: each firing of the rhythm becomes a round (轮). 一次
@@ -1095,29 +1123,39 @@ read as the end of the 1st.
 5.4 Minute 0 with every hour is 每小时整点. Once a second is said it is a
 minute like any other, 每小时的0分30秒 (4.2).
 
-5.5 Every second hour, more than eight of them, where the hours are
-whole hours under a finer rhythm (4.1): 偶数小时 for hours 0, 2 … 22 and 奇
-数小时 for 1, 3 … 23, followed by 内 and the rhythm: 偶数小时内，每分钟一
-次; 奇数小时内，每15分钟一次. Nine to eleven of them that start late or stop
-early name their ends before the word: 2点至22点的偶数小时内，每分钟一次; 0点
-至16点的偶数小时的15分、45分; 3点至23点的奇数小时内，每15分钟一次. Eight or
-fewer are named or are windows, by the limit at the top. Under named
-minutes, hours that tile the day are said by their step instead (每2小时的
-15分、45分, 4.1), so that the minute can change without the hours.
+5.5 Every second hour, more than eight of them: 偶数小时 for hours 0, 2 …
+22 and 奇数小时 for 1, 3 … 23, after 每天 or a day. At minute 0 with no
+second it is 偶数整点, 奇数整点: 每天偶数整点. Under other minutes it is
+followed by 的 and the minutes, 每天奇数小时的15分, and under a finer
+rhythm by 内 and the rhythm, 每天偶数小时内，每分钟一次. Nine to eleven of
+them that start late or stop early name their ends first, with a comma,
+and close on their first and last firing, as one range of hours does
+(4.1): 每天2点至22点，偶数小时内，每分钟一次（首次2:00，末次22:59）; 每天0
+点至16点，偶数小时的15分、45分（首次0:15，末次16:45）. At one minute they
+are the window of 3.7 instead, 每天2:00至22:00，每2小时一次, whose ends
+are themselves the first and last firing. Eight or fewer are named or
+are windows, by the limit at the top.
 
-(2026-11-14.) The word came with a gloss until then, 偶数小时（0点、2点、4
-点……22点）, the first three hours, ……, and the last, and nine to eleven
-that start late showed it inside the gloss, 偶数小时（2点、4点、6点……22
-点）. A bracket of numbers that repeats what the word says is noise, and
-the ends that only the gloss said are now said in words, 2点至22点的. The
-gloss answered the first judge, who called 偶数点 a coined word, and an
-older doubt that 偶数小时 alone can be "an even number of hours". Before 内
-and a rhythm, beside 每天 or a day, it is the hours of the clock, and no
-other reading fits the sentence; 偶数小时 is the word the second and third
-judges wrote themselves. No other set of hours has an idiom: every third,
-fourth, sixth or eighth hour is said by its step (3.7, 4.1). A hole
-between such hours is an exception to them (3.9): 偶数小时内，每分钟一次
-（8:00至8:59除外）.
+(2026-11-14, second amendment.) That morning the even and odd hours of
+the whole day were said by their step under named minutes and at one
+minute (每2小时的15分、45分, 每2小时一次, 自1点起每2小时的23分), and the
+ends came before 的 with no bracket (2点至22点的偶数小时的0分至29分). Two
+readers briefed in Chinese read the step as counted from when the task
+starts, 自1点起 as possibly 13:00, and 至22点 as able to end at 22:00. Put
+to the same two readers, 每天偶数整点, 每天偶数小时整点, 每天偶数小时的5
+分、35分, 每天奇数小时的15分 and the forms with ends and the bracket each
+had one reading; 偶数整点 is the shorter and the one timetables use. One
+reader, of 每天偶数小时内，每分钟一次, mentioned and set aside "the second
+and fourth hour" as far-fetched ("较牵强"); both took the hours of the
+clock first. Before the step, the word came with a gloss, 偶数小时（0点、2
+点、4点……22点）. A bracket of numbers that repeats what the word says is
+noise. The gloss answered the first judge, who called 偶数点 a coined
+word, and an older doubt that 偶数小时 alone can be "an even number of
+hours"; beside 每天 and before 的, 内 or 整点 no other reading fits the
+sentence, and 偶数小时 is the word the second and third judges wrote
+themselves. No other set of hours has an idiom: every third, fourth,
+sixth or eighth hour is listed (3.7). A hole between such hours is an
+exception to them (3.9): 每天偶数小时内，每分钟一次（8:00至8:59除外）.
 
 None for months. Every second month is its six months, by the limit at
 the top: 每年1月、3月、5月、7月、9月、11月. **Contested**: 奇数月 was "能懂，
@@ -1239,7 +1277,7 @@ the number of an hour before 的…分), 天, 日 (after a date's number), 月,
 
 6.5 每, 至, 以及, 及, 的, 内, 其中, 次, 当年, 各月, 除, 外, 除外, 整点, 所在分钟
 的, 一次, 一轮, 各一轮, 每轮, 间隔, 首次, 末次, 首轮, 末轮, 在, 逢, 每逢,
-自, 起, 中的第1年, 的第1个小时内, 偶数小时, 奇数小时, 遇, 改在, 当月最近的, 提前至, 顺延
+自, 起, 中的第1年, 偶数小时, 奇数小时, 偶数整点, 奇数整点, 遇, 改在, 当月最近的, 提前至, 顺延
 至, 永不执行, 没有, 当月无此日则不执行, 仅闰年.
 
 ## 7. Agreement
@@ -1299,8 +1337,9 @@ description for `@reboot` is 系统启动时. The lenient fallback is 无法识�
 
 8.9 `cardinality-rendering` — Decided by the table at the top. `0 0 1
 */3 *` is 每年1月、4月、7月、10月的1日0:00; `0 0 1 */6 *` is 每年1月、7月的1
-日0:00; `0 */6 * * *` and `0 0,6,12,18 * * *` are 每6小时一次; `0 */8 * *
-*` is 每8小时一次; `0 */12 * * *` is 每天0:00、12:00 (3.7; 2026-11-14).
+日0:00; `0 */6 * * *` and `0 0,6,12,18 * * *` are 每天0:00、6:00、12:00、
+18:00; `0 */8 * * *` is 每天0:00、8:00、16:00; `0 */12 * * *` is 每天0:00、
+12:00 (3.7; 2026-11-14, second amendment).
 
 ## 9. Where this rule book departs from the usage notes
 
