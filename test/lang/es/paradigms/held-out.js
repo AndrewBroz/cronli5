@@ -12,8 +12,7 @@ const rows = [
   ['*/15 0 9 * * *',
     'todos los días a las 9:00:00, 9:00:15, 9:00:30 y 9:00:45'],
   ['0-9 0 9 * * *',
-    'todos los días a las 9:00, una vez por segundo durante los primeros ' +
-    '10 segundos'],
+    'todos los días, cada segundo de 9:00:00 a 9:00:09'],
 
   // clock / minute
   ['30 9 * * *', 'todos los días a las 9:30'],
@@ -105,11 +104,11 @@ const rows = [
     'de lunes a viernes, cada 15 minutos de 8:00 a 8:45, de 12:00 a 12:45 ' +
     'y de 18:00 a 18:45'],
   ['*/15 */2 * * 1-5',
-    'de lunes a viernes, cada 15 minutos durante una hora cada 2 horas'],
+    'de lunes a viernes, cada 15 minutos en las horas pares'],
   ['*/15 */6 * * 1-5',
     'de lunes a viernes, cada 15 minutos durante una hora cada 6 horas'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'de lunes a viernes, cada 15 minutos durante una hora cada 2 horas, ' +
+    'de lunes a viernes, cada 15 minutos en las horas pares, ' +
     'excepto de 8:00 a 8:45'],
   ['*/15 22-2 * * 1-5',
     'de lunes a viernes, cada 15 minutos de 0:00 a 2:45 y de 22:00 a 23:45'],
@@ -174,8 +173,7 @@ const rows = [
   ['*/15 0 0 1 * *',
     'el día 1 de cada mes a las 0:00:00, 0:00:15, 0:00:30 y 0:00:45'],
   ['0-9 0 0 1 * *',
-    'el día 1 de cada mes a las 0:00, una vez por segundo durante los ' +
-    'primeros 10 segundos'],
+    'el día 1 de cada mes, cada segundo de 0:00:00 a 0:00:09'],
 
   // monthly / minute
   ['30 0 1 * *', 'el día 1 de cada mes a las 0:30'],
@@ -258,10 +256,10 @@ const rows = [
     'todos los días, cada minuto de 8:00 a 8:59, de 12:00 a 12:59 y de ' +
     '18:00 a 18:59'],
   ['* 9-17 * * *', 'todos los días, cada minuto de 9:00 a 17:59'],
-  ['* */2 * * *', 'cada minuto durante una hora cada 2 horas'],
+  ['* */2 * * *', 'cada minuto en las horas pares'],
   ['* */6 * * *', 'cada minuto durante una hora cada 6 horas'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'cada minuto durante una hora cada 2 horas, excepto de 8:00 a 8:59'],
+    'cada minuto en las horas pares, excepto de 8:00 a 8:59'],
   ['* 22-2 * * *', 'todos los días, cada minuto de 22:00 a 2:59'],
 
   // open / date

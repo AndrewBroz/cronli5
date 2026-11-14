@@ -449,8 +449,7 @@ const rows = [
   ['0 0-6/2,10-22/2 * * *', 'cada 2 horas, excepto a las 8:00'],
   ['0 1-7/2,11-23/2 * * *', 'cada 2 horas desde la 1:00, excepto a las 9:00'],
   ['* 1-7/2,11-23/2 * * *',
-    'cada minuto durante una hora cada 2 horas desde la 1:00, excepto de ' +
-    '9:00 a 9:59'],
+    'cada minuto en las horas impares, excepto de 9:00 a 9:59'],
   ['0 5-9/2,13-23/2 * * *',
     'todos los días, cada 2 horas de 5:00 a 23:00, excepto a las 11:00'],
   ['23 */12 * * *', 'todos los días a las 0:23 y 12:23'],
@@ -497,21 +496,23 @@ const rows = [
   ['0-28,30-59 * * * * *',
     'cada segundo, excepto en el segundo 29 de cada minuto'],
   ['0-28,30-59 0 9 * * *',
-    'todos los días a las 9:00, una vez por segundo durante todo ese ' +
-    'minuto, excepto en el segundo 29'],
+    'todos los días, cada segundo de 9:00:00 a 9:00:59, excepto a las ' +
+    '9:00:29'],
 
   // Hours as a confinement.
   ['*/15 8-18/2 * * *',
-    'todos los días, cada 15 minutos durante una hora cada 2 horas de 8:00 ' +
-    'a 18:45'],
+    'todos los días, cada 15 minutos en las horas pares de 8:00 a 18:45'],
   ['* 5/2 * * *',
-    'todos los días, cada minuto durante una hora cada 2 horas de 5:00 a ' +
-    '23:59'],
-  ['* 0-23/2 * * *', 'cada minuto durante una hora cada 2 horas'],
+    'todos los días, cada minuto en las horas impares de 5:00 a 23:59'],
+  ['* 0-23/2 * * *', 'cada minuto en las horas pares'],
+  ['*/15 2-20/3 * * *',
+    'todos los días, cada 15 minutos durante una hora cada 3 horas de 2:00 a ' +
+    '20:45'],
+  ['15 * */2 * * *', 'en el segundo 15 de cada minuto, en las horas pares'],
   ['* 0-23/6 * * *', 'cada minuto durante una hora cada 6 horas'],
   ['* */8 * * *', 'cada minuto durante una hora cada 8 horas'],
   ['*/15 1/2 * * *',
-    'cada 15 minutos durante una hora cada 2 horas desde la 1:00'],
+    'cada 15 minutos en las horas impares'],
   ['0 9-17,20,22 * * *',
     'todos los días, cada hora de 9:00 a 17:00 y a las 20:00 y 22:00'],
   ['* 9-17,20,22 * * *',
@@ -520,8 +521,8 @@ const rows = [
   ['*/10 6-8,17-19 * * 1-5',
     'de lunes a viernes, cada 10 minutos de 6:00 a 8:50 y de 17:00 a 19:50'],
   ['*/20 */2 */2 */3 *',
-    'los días impares de enero, abril, julio y octubre, cada 20 minutos ' +
-    'durante una hora cada 2 horas'],
+    'los días impares de enero, abril, julio y octubre, cada 20 minutos en ' +
+    'las horas pares'],
   ['5,20,45 9-17,22 * * *',
     'todos los días, en los minutos 5, 20 y 45 de cada hora, de 9:05 a ' +
     '17:45 y de 22:05 a 22:45'],
@@ -558,13 +559,22 @@ const rows = [
   ['0,20,40 0 9 * * *', 'todos los días a las 9:00:00, 9:00:20 y 9:00:40'],
   ['5-10/60 0 9 * * *', 'todos los días a las 9:00:05'],
   ['15 0 */12 * * *', 'todos los días a las 0:00:15 y 12:00:15'],
-  ['15 0 */6 * * *', 'en el segundo 15 del minuto 0, cada 6 horas'],
-  ['15 0 */2 * * *', 'en el segundo 15 del minuto 0, cada 2 horas'],
+  ['15 0 */6 * * *', 'a los 15 segundos de la hora en punto, cada 6 horas'],
+  ['15 0 */2 * * *', 'a los 15 segundos de la hora en punto, cada 2 horas'],
+  ['15,45 0 1/2 * * *',
+    'a los 15 y 45 segundos de la hora en punto, cada 2 horas desde la 1:00'],
   ['15 0 5/2 * * *', 'todos los días, cada 2 horas de 5:00:15 a 23:00:15'],
   ['*/10 0 */2 * * *', 'cada 10 segundos durante el minuto 0, cada 2 horas'],
-  ['* * */2 * * *', 'cada segundo durante una hora cada 2 horas'],
+  ['* * */2 * * *', 'cada segundo en las horas pares'],
+  ['* * 5/2 * * *',
+    'todos los días, cada segundo en las horas impares de 5:00:00 a 23:59:59'],
+  ['* * */3 * * *', 'cada segundo durante una hora cada 3 horas'],
   ['10-20 30 9 * * *',
-    'todos los días a las 9:30, una vez por segundo del segundo 10 al 20'],
+    'todos los días, cada segundo de 9:30:10 a 9:30:20'],
+  ['*/10 30 9 * * *', 'todos los días, cada 10 segundos de 9:30:00 a 9:30:50'],
+  ['0-56/7 30 9 * * *',
+    'todos los días, cada 7 segundos de 9:30:00 a 9:30:56'],
+  ['*/10 30 9 * * 1', 'los lunes, cada 10 segundos de 9:30:00 a 9:30:50'],
   ['* 0 9,17 * * *',
     'todos los días a las 9:00 y 17:00, una vez por segundo durante todo ' +
     'ese minuto'],
@@ -574,7 +584,9 @@ const rows = [
   ['* */3 * * *', 'cada minuto durante una hora cada 3 horas'],
   ['30 0 9-17 * * *', 'todos los días, cada hora de 9:00:30 a 17:00:30'],
   ['* 0 * * * *', 'cada segundo durante el minuto 0 de cada hora'],
-  ['30 0 * * * *', 'en el segundo 30 del minuto 0 de cada hora'],
+  ['30 0 * * * *', 'a los 30 segundos de cada hora en punto'],
+  ['15,45 0 * * * *', 'a los 15 y 45 segundos de cada hora en punto'],
+  ['1 0 * * * *', 'al segundo 1 de cada hora en punto'],
   ['0-9 0 * * * *',
     'cada segundo durante los primeros 10 segundos del minuto 0 de cada ' +
     'hora'],
@@ -738,8 +750,7 @@ const rows = [
     'hora, de 9:00 a 17:58'],
   ['1-59 * * * * *', 'cada segundo, excepto en el segundo 0 de cada minuto'],
   ['1-59 0 9 * * *',
-    'todos los días a las 9:00, una vez por segundo durante los últimos 59 ' +
-    'segundos'],
+    'todos los días, cada segundo de 9:00:01 a 9:00:59'],
 
   // Minutes inside a cadence of hours that tiles the day are said as
   // they are under every hour, without «de cada hora», and apart from the
@@ -757,16 +768,22 @@ const rows = [
   // listed up to seven, and a cadence of eight or more names its ends.
   ['0-29 5/2 * * *',
     'todos los días, cada minuto durante los primeros 30 minutos de las ' +
-    'horas que empiezan cada 2 horas de 5:00 a 23:00'],
+    'horas impares de 5:00 a 23:00'],
+  ['0-29 8-18/2 * * *',
+    'todos los días, cada minuto durante los primeros 30 minutos de las ' +
+    'horas pares de 8:00 a 18:00'],
+  ['0-29 2-20/3 * * *',
+    'todos los días, cada minuto durante los primeros 30 minutos de las ' +
+    'horas que empiezan a las 2:00, 5:00, 8:00, 11:00, 14:00, 17:00 y 20:00'],
   ['0-29,45 5/2 * * *',
     'todos los días, cada minuto durante los primeros 30 minutos y en el ' +
-    'minuto 45 de las horas que empiezan cada 2 horas de 5:00 a 23:00'],
+    'minuto 45 de las horas impares de 5:00 a 23:00'],
 
   // An excepted hour of a cadence that tiles the day.
   ['* 0,4-22/2 * * *',
-    'cada minuto durante una hora cada 2 horas, excepto de 2:00 a 2:59'],
+    'cada minuto en las horas pares, excepto de 2:00 a 2:59'],
   ['* 0-6/2,10-22/2 * * *',
-    'cada minuto durante una hora cada 2 horas, excepto de 8:00 a 8:59'],
+    'cada minuto en las horas pares, excepto de 8:00 a 8:59'],
 
   // Named seconds after a time part in several pieces cover all of it.
   ['15,45 0-29,45 9 * * *',
