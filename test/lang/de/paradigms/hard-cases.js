@@ -448,8 +448,8 @@ const rows = [
   // neither takes «täglich». A cadence that does not come round keeps
   // both ends. Minutes are said apart from the cadence, as against every
   // hour, and hours as stretches have a short phrase of their own.
-  ['0 */2 * * *', 'alle 2 Stunden'],
-  ['0 */6 * * *', 'alle 6 Stunden'],
+  ['0 0-22/2 * * *', 'alle 2 Stunden'],
+  ['0 0,6,12,18 * * *', 'alle 6 Stunden'],
   ['0 */2 * * 1-5', 'montags bis freitags alle 2 Stunden'],
   ['0 1/2 * * *', 'ab 1:00 Uhr alle 2 Stunden'],
   ['0 1/2 * * *', 'ab 1:00 Uhr morgens alle 2 Stunden',
@@ -458,8 +458,8 @@ const rows = [
   ['0 2/3 * * *', 'ab 2:00 Uhr alle 3 Stunden'],
   ['0 1/6 * * *', 'täglich um 1:00, 7:00, 13:00 und 19:00 Uhr'],
   ['0 5/2 * * *', 'täglich von 5:00 bis 23:00 Uhr alle 2 Stunden'],
-  ['* */2 * * *', 'in den geraden Stunden jede Minute'],
-  ['* */6 * * *', 'alle 6 Stunden eine Stunde lang jede Minute'],
+  ['* 0-23/2 * * *', 'in den geraden Stunden jede Minute'],
+  ['* 0-23/6 * * *', 'alle 6 Stunden eine Stunde lang jede Minute'],
   ['* 1/3 * * *', 'ab 1:00 Uhr alle 3 Stunden eine Stunde lang jede Minute'],
   ['*/15 */3 * * *', 'alle 3 Stunden eine Stunde lang alle 15 Minuten'],
   ['0-29 */2 * * *', 'alle 2 Stunden von Minute 0 bis 29 jede Minute'],
