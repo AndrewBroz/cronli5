@@ -267,12 +267,12 @@ describe('Ukrainian continuity:', function() {
   it('lets a time field move the note about the day, and not change it',
     function() {
       const moved = [
-        ['30 0 L-3 * *', '30 * L-3 * *'],
-        ['30 9 31W * *', '30 * 31W * *'],
-        ['30 * L-3 * 1-5', '0 * L-3 * 1-5'],
-        ['30 * L-3 * *', '30 9-17 L-3 * *']
+        ['30 0 L-3 * *', '0-29 * L-3 * *'],
+        ['30 9 31W * *', '0-29 * 31W * *'],
+        ['0-29 * L-3 * 1-5', '0 * L-3 * 1-5'],
+        ['0-29 * L-3 * *', '0-29 9-17 L-3 * *']
       ];
-      const beside = partsOf('30 * L-3 * *');
+      const beside = partsOf('0-29 * L-3 * *');
       const after = partsOf('30 0 L-3 * *');
 
       expect(beside.day).to.equal(
@@ -310,6 +310,6 @@ describe('Ukrainian continuity:', function() {
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
     expect(say('30 * * * *')).to.equal(say('30 0-23 * * *'));
     expect(say('30 * * * *'))
-      .to.equal('щогодини на 30-й хвилині (0:30, 1:30 … 23:30)');
+      .to.equal('щогодини через 30 хвилин після початку години');
   });
 });
