@@ -419,10 +419,10 @@ const rows = [
   // start; any other is listed up to seven, then names both ends. A
   // minute is said apart from a bare cadence. Midnight and noon alone
   // are listed.
-  ['0 */2 * * *', 'cada 2 horas'],
+  ['0 0-22/2 * * *', 'cada 2 horas'],
   ['0 */3 * * *', 'cada 3 horas'],
   ['0 */4 * * *', 'cada 4 horas'],
-  ['0 */6 * * *', 'cada 6 horas'],
+  ['0 0,6,12,18 * * *', 'cada 6 horas'],
   ['0 */8 * * *', 'cada 8 horas'],
   ['0 0,6,12,18 * * *', 'cada 6 horas'],
   ['0 */2 * * 1', 'los lunes, cada 2 horas'],
@@ -507,8 +507,8 @@ const rows = [
   ['* 5/2 * * *',
     'todos los días, cada minuto durante una hora cada 2 horas de 5:00 a ' +
     '23:59'],
-  ['* */2 * * *', 'cada minuto durante una hora cada 2 horas'],
-  ['* */6 * * *', 'cada minuto durante una hora cada 6 horas'],
+  ['* 0-23/2 * * *', 'cada minuto durante una hora cada 2 horas'],
+  ['* 0-23/6 * * *', 'cada minuto durante una hora cada 6 horas'],
   ['* */8 * * *', 'cada minuto durante una hora cada 8 horas'],
   ['*/15 1/2 * * *',
     'cada 15 minutos durante una hora cada 2 horas desde la 1:00'],
