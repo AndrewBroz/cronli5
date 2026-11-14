@@ -11,6 +11,36 @@ example is what a careful Italian writer would put on a screen. No
 sentence here was produced by a renderer, and no device was taken from
 another language's answers.
 
+**Amended 2026-11-14 on the maintainer's rulings, by Claude Opus 5.5.**
+Before, every cadence of hours of five or more values was said with its
+first and last time («tutti i giorni, ogni 2 ore dalle 0:00 alle 22:00»),
+four or fewer were listed («tutti i giorni alle 0:00, alle 6:00, alle
+12:00 e alle 18:00»), a minute over such hours was folded into the clock
+times («ogni 2 ore dalle 0:30 alle 22:30») or said of hours named as
+numbers («ai minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 22»), and
+a rate of minutes over them was its first two windows «e così via»
+(«ogni minuto dalle 0:00 alle 0:59, dalle 2:00 alle 2:59 e così via ogni
+2 ore fino alle 22:59»). That was wrong for hours that tile the day. A
+cadence that begins at midnight and comes round to it again («ogni 2
+ore», «ogni 6 ore») is exactly what a reader takes the bare words to
+mean: README, "Description Accuracy", does not qualify a cadence that
+begins on the first hour of the day, and the window, the list of times
+and the «tutti i giorni» added nothing a reader needed and a great deal
+to hold. The earlier reader evidence for windows («the judge read every
+such sentence rightly», 3.7, 3.10) is overruled: isolated model readers
+favour verbose, over-qualified wording that people do not, and being read
+rightly is not the same as being easy. Now (3.7, 4.1 "Hours that tile
+the day"): such hours are «ogni N ore», or «ogni N ore a partire dalle
+X:00» when the series starts later but still tiles; a minute or second
+over them is said apart, before a comma («al minuto 30, ogni 2 ore»); a
+unit that fires from the top of each hour is a stretch of one hour
+(«ogni minuto per un'ora ogni 2 ore»); and the day says no «tutti i
+giorni». A cadence that does not tile keeps both ends. No bracket in
+these answers shows a series of numbers; none needed removing. The same
+day the coordinator extended this to such a cadence less an hour or two,
+which is the same cadence: «ogni 2 ore, tranne alle 8:00», not «tutti i
+giorni, ogni 2 ore dalle 0:00 alle 22:00, tranne alle 8:00» (3.7, 4.1).
+
 What Italian does its own way, and the rest of this file relies on:
 
 * **The habitual article.** «Il lunedì» is every Monday; «lunedì» alone is
@@ -24,7 +54,9 @@ What Italian does its own way, and the rest of this file relies on:
   partenza… ultima partenza…» (usage §6, §7): «ogni 15 minuti dalle 9:00
   alle 17:45». Where a run of minutes inside the hour is confined to
   certain hours, the two times are said as such: «(prima volta alle 9:00,
-  ultima alle 17:29)».
+  ultima alle 17:29)». The one exception is a cadence of hours that tiles
+  the whole day: it has no first and last time a reader needs, and is
+  said bare, «ogni 2 ore» (3.7).
 * **The exception comes after what it excepts**, with «tranne» (usage §9).
 * **The period opens** (usage §5): years, then months, then the days, then
   the time.
@@ -50,7 +82,9 @@ facts, field, {linear: true})`), except in the three places 3.5 names.
    a few exact values at a glance, and a cadence asks for arithmetic.
    Minutes and seconds that tile the whole hour or minute from zero («ogni
    15 minuti») are a cadence at any length when nothing confines them,
-   because nothing has to be worked out.
+   because nothing has to be worked out. Hours that tile the day from
+   midnight are a cadence from three values («ogni 8 ore»), and from a
+   later start from five (3.7).
 5. **Odd and even** (interval 2, five or more values) for days of the
    month and years: 5.1.
 6. **An exception** («tranne»): every value, or a cadence said by rule 4
@@ -189,8 +223,9 @@ tranne a giugno»). All three are Italian's own places for a month (usage
 §4, §5 constants 1 to 3) and are declared fusions, not a second frame.
 
 2.5 «Tutti i giorni» is said when no day of the month and no weekday is
-restricted **and the hours are restricted**. A schedule that runs every
-hour has no daily rhythm and is not given one.
+restricted **and the hours are restricted**, other than by a cadence that
+tiles the day (3.7). A schedule that runs every hour, or every few hours
+round the clock, has no daily rhythm and is not given one.
 
 * `0 9 * * *` — «tutti i giorni alle 9:00»
 * `0 9 * 6 *` — «a giugno, tutti i giorni alle 9:00» (without it, «a giugno
@@ -198,8 +233,7 @@ hour has no daily rhythm and is not given one.
 * `0 0 9 * * * 2030` — «nel 2030, tutti i giorni alle 9:00»
 * `0 9-17 * * *` — «tutti i giorni, ogni ora dalle 9:00 alle 17:00»
 * `*/5 * * 6 *` — «a giugno, ogni 5 minuti»
-* `0 */6 * * *` — «tutti i giorni alle 0:00, alle 6:00, alle 12:00 e alle
-  18:00»
+* `0 */6 * * *` — «ogni 6 ore»; `0 */6 * 6 *` — «a giugno, ogni 6 ore»
 * `0 * * * *` — «a ogni ora in punto»
 
 The blind judge found this uneven («tutti i giorni» before one rate and
@@ -384,11 +418,37 @@ one firing.)
   minuti» does not say where it starts, and presumed the hour, rightly.
   Nothing shorter than «a partire dal minuto 0 di ogni ora» would say it,
   and no reader takes it otherwise.)
-* hours, five or more: `0 */2 * * *` — «tutti i giorni, ogni 2 ore dalle
-  0:00 alle 22:00»; `0 */6 * * *` has four times and lists them.
-  A bare «ogni 2 ore» does not say which hours; the first and last times
-  do, and they show that the count starts again each day. The judge read
-  every such sentence rightly.
+* hours that **tile the day** (the interval divides 24, the series starts
+  inside the first interval and runs to the last one, so the gap across
+  midnight is the interval itself):
+  * from midnight, with three or more values (every 2, 3, 4, 6 or 8
+    hours): bare, `0 */2 * * *` — «ogni 2 ore»; `0 */3 * * *` — «ogni 3
+    ore»; `0 */6 * * *` — «ogni 6 ore»; `0 */8 * * *` — «ogni 8 ore». A
+    bare «ogni N ore» is read from midnight (README, "Description
+    Accuracy"), and nothing else a reader needs is left to say: no
+    window, no list, and no «tutti i giorni» (2.5), since the schedule
+    runs round the clock. Midnight and noon alone are two times and stay
+    listed: «tutti i giorni alle 0:00 e alle 12:00».
+  * from a later start, with five or more values: the start alone, after
+    «a partire da», with no end: `0 1/2 * * *` — «ogni 2 ore a partire
+    dall'1:00»; `0 3/4 * * *` — «ogni 4 ore a partire dalle 3:00»; `0
+    1/3 * * *` — «ogni 3 ore a partire dall'1:00». The series runs to the
+    end of the day and starts again at the same hour, so the start is
+    all there is to say (usage §6, «ogni 20 minuti a partire dalle
+    7.10»). Four or fewer are listed (4.1 A): `0 1/6 * * *` — «tutti i
+    giorni all'1:00, alle 7:00, alle 13:00 e alle 19:00».
+* any other cadence of hours, five or more: both ends, `0 5/2 * * *` —
+  «tutti i giorni, ogni 2 ore dalle 5:00 alle 23:00»; `0 4/4 * * *` —
+  «tutti i giorni, ogni 4 ore dalle 4:00 alle 20:00». Here the night has
+  a longer gap than the interval, and «a partire dalle 5:00» would say a
+  firing at 1:00 that does not happen. Four or fewer are listed.
+* a cadence that tiles the day **less an hour or two** (said as an
+  exception by rule 6, so its cadence has five or more values) is the
+  same cadence: said bare or from its start, and the hours left out
+  follow: `0 0,2,4,6,10,…,22 * * *` — «ogni 2 ore, tranne alle 8:00»;
+  `0 1,3,5,9,…,23 * * *` — «ogni 2 ore a partire dall'1:00, tranne alle
+  7:00». The window it had before («ogni 2 ore dalle 0:00 alle 22:00,
+  tranne alle 8:00») said nothing the bare cadence does not.
 * days of the month, eight or more: «ogni 3 giorni a partire dal 1º di
   ogni mese» when the cadence runs to the end of the month (its start is
   what a reader needs: it begins again each month, and no last day is
@@ -430,14 +490,17 @@ one firing.)
 * inside a window of hours tiling minutes simply start at their first
   time, at any length: `5/15 9-17 * * 1-5` — «dal lunedì al venerdì, ogni
   15 minuti dalle 9:05 alle 17:50»
-* `0 1/2 * * *` — «tutti i giorni, ogni 2 ore dall'1:00 alle 23:00»
+* `0 1/2 * * *` — «ogni 2 ore a partire dall'1:00» (hours that tile the
+  day, 3.7); `0 5/2 * * *` — «tutti i giorni, ogni 2 ore dalle 5:00 alle
+  23:00» (they do not)
 
 3.9 **A set with values missing.** One or two missing are named
 («tranne»); three are not.
 
 * `0,15,45 * * * *` — a list: «ai minuti 0, 15 e 45 di ogni ora»
-* `0 0,2,4,6,10,…,22 * * *` — «tutti i giorni, ogni 2 ore dalle 0:00 alle
-  22:00, tranne alle 8:00»
+* `0 0,2,4,6,10,…,22 * * *` — «ogni 2 ore, tranne alle 8:00» (hours that
+  tile the day, 3.7); `0 0,2,4,6,10,…,20 * * *` — «tutti i giorni, ogni 2
+  ore dalle 0:00 alle 20:00, tranne alle 8:00» (they do not)
 * `0 0 1,3,…,13,17,…,31 * *` — «nei giorni dispari di ogni mese tranne il
   15, alle 0:00»
 * `0 0 1 1-11 *` — «il 1º di ogni mese alle 0:00, tranne a dicembre»
@@ -479,18 +542,19 @@ after another and from the reads of the rows:
   are said of the hours (D.6). The same eight bounds hours named as
   numbers: a longer cadence of them is its first three and the last
   (D.6).
-* `23 */6 * * *` — «tutti i giorni alle 0:23, alle 6:23, alle 12:23 e alle
-  18:23»: four exact times. Rejected «ogni 6 ore dalle 0:23 alle 18:23»
-  (arithmetic for nothing) and «al minuto 23, ogni 6 ore» (does not say
-  which hours).
-* A cadence of hours with both ends is read without error at any length
-  (both judges, every sentence); of days of the month and of years it is
-  not.
+* `23 */6 * * *` — «al minuto 23, ogni 6 ore» (amended 2026-11-14). The
+  first answer listed four exact times, «tutti i giorni alle 0:23, alle
+  6:23, alle 12:23 e alle 18:23», and rejected this form as not saying
+  which hours; but «ogni 6 ore» bare says them (from midnight), and the
+  minute said apart is the part that changes when the minute is edited.
+* A cadence of hours that does not tile the day is said with both ends
+  and read without error at any length; of days of the month and of
+  years it is not.
 * An exception asks for a subtraction: worth it for one or two, not three.
 * Windows after a rate are read without error even three in a row (all
   three judges). Hours named as numbers stand in one place only, D.6,
   where minutes named inside the hour are said of them («di ciascuna ora
-  dalle 9 alle 17», «delle ore 0, 4, 8, 12, 16 e 20»): the first judge
+  dalle 9 alle 17», «delle ore 4, 8, 12, 16 e 20»): the first judge
   called it tabular and read it at once, and every clock-window wording
   tried there was reread. They are never used after a rate («ogni minuto
   nelle ore pari» made the first judge stop): a rate takes windows,
@@ -542,6 +606,59 @@ there the cure is theirs too: «prima… ultima…».
 Let M be the minutes, H the hours, T the number of times in a day (minutes
 × hours). The hours are read by 3.5. Take the first case that applies.
 
+**Hours that tile the day** (3.7: from midnight with three or more
+values, from a later start with five or more) come before every case
+below, however few the times. The hours are «ogni N ore», with «a
+partire dalle X:00» after them when they start later, and the minutes
+are said apart from them, never folded into clock times:
+
+1. Minute 0 alone: the hours alone. `0 */2` — «ogni 2 ore»; `0 1/2` —
+   «ogni 2 ore a partire dall'1:00».
+2. A unit that fires from the top of every hour and through it (every
+   minute, or minutes that tile the hour from 0, the smooth rates of case
+   C that start at 0): **a stretch of one hour**, «per un'ora» between the
+   rate and the hours, no comma: `* */2` — «ogni minuto per un'ora ogni 2
+   ore»; `* */6` — «ogni minuto per un'ora ogni 6 ore»; `*/15 */2` — «ogni
+   15 minuti per un'ora ogni 2 ore»; `*/15 1/2` — «ogni 15 minuti per
+   un'ora ogni 2 ore a partire dall'1:00». A minute or two left out is
+   the usual «, tranne al minuto 29» at the end. «Per un'ora ogni 2 ore»
+   is how Italian says a burst that recurs, and it is the same words for
+   every interval; «un'ora sì e una no» is speech and fits only the
+   interval 2. The windows «dalle 0:00 alle 0:59, dalle 2:00 alle 2:59 e
+   così via» said the same thing in four times the words.
+3. Minutes that tile the hour off zero, five or more: the rate with its
+   start, a comma, the hours: `5/10 */2` — «ogni 10 minuti a partire dal
+   minuto 5, ogni 2 ore».
+4. Anything else: the minutes as they are said inside the hour (the table
+   of case D) without «di ogni ora», a comma, the hours: `30 */2` — «al
+   minuto 30, ogni 2 ore»; `15,45 */2` — «ai minuti 15 e 45, ogni 2 ore»;
+   `23 1/2` — «al minuto 23, ogni 2 ore a partire dall'1:00»; `0-29 */2`
+   — «ogni minuto dal minuto 0 al 29, ogni 2 ore»; `0-29,45 */2` — «ogni
+   minuto dal minuto 0 al 29 e una volta al minuto 45, ogni 2 ore»;
+   `*/20 */2` — «ai minuti 0, 20 e 40, ogni 2 ore» (two or three tiling
+   minutes are a list, as in case C).
+
+The minute part comes first and the hours close the time, as «ai minuti
+15 e 45 di ogni ora» puts the minute first; editing the minute changes
+only the words before the comma, and editing the hours only the words
+after it. The start is said as a clock time («dall'1:00») even when the
+minute is not 0: it names the hour the series starts in, as the hours of
+«dalle 9 alle 17» do in case D.6, and the minute before the comma says
+where in each hour. Seconds follow 4.2: `15 0 */2` — «al secondo 15 del
+minuto 0, ogni 2 ore».
+
+Such hours less an hour or two (3.7) are said the same way, and the
+hours left out come at the end, before any minute left out, after «,
+tranne»: as the times that do not fire when the unit is not a stretch
+and they are four or fewer (`0 0,2,4,6,10,…,22` — «ogni 2 ore, tranne
+alle 8:00»; `30` over the same hours — «al minuto 30, ogni 2 ore,
+tranne alle 8:30»; `15,45 0,4,6,…,22` — «ai minuti 15 e 45, ogni 2 ore,
+tranne alle 2:15 e alle 2:45»), and otherwise as the whole hours, from
+`h:00` to `h:59` (`* 0,2,4,6,10,…,22` — «ogni minuto per un'ora ogni 2
+ore, tranne dalle 8:00 alle 8:59»; `0-29` over the same hours — «ogni
+minuto dal minuto 0 al 29, ogni 2 ore, tranne dalle 8:00 alle 8:59»). A
+stretch that is left out is a stretch, so it is said as one.
+
 **A. T is four or fewer: the times are listed**, in clock order, whatever
 the fields look like: «alle 9:00 e alle 17:00»; `*/15 9 * * *` — «alle
 9:00, alle 9:15, alle 9:30 e alle 9:45»; `0 9-12 * * *` — «alle 9:00, alle
@@ -554,9 +671,9 @@ the fields look like: «alle 9:00 e alle 17:00»; `*/15 9 * * *` — «alle
 2. Every hour less one or two: case 1 and «, tranne alle 3:30» («, tranne
    alle 22:00 e alle 23:00»).
 3. The hours are one run: «ogni ora dalle 9:30 alle 17:30».
-4. The hours are a cadence of five or more: «ogni 2 ore dalle 0:30 alle
-   22:30».
-5. A cadence of case 4 less one or two: «ogni 2 ore dalle 0:00 alle 22:00, tranne alle 8:00».
+4. The hours are a cadence of five or more that does not tile the day:
+   «ogni 2 ore dalle 5:30 alle 23:30».
+5. A cadence of case 4 less one or two: «ogni 2 ore dalle 0:00 alle 20:00, tranne alle 8:00».
 6. Some run of three or more hours: pieces (3.6): «ogni ora dalle 9:00
    alle 17:00 e una volta alle 22:00»; «ogni ora dalle 9:00 alle
    17:00, poi alle 20:00 e alle 22:00»; «alle 5:00 e ogni ora
@@ -583,18 +700,21 @@ alle 9:50».
    17:45», «ogni minuto dalle 9:00 alle 17:59», «ogni 15
    minuti dalle 9:05 alle 17:50», «ogni 30 minuti dalle 9:15 alle
    17:45».
-4. The hours are a cadence of five or more, none consecutive: the first
-   two windows, then **«e così via ogni N ore fino alle»** and the last
-   time that fires: `*/15 */2` — «ogni 15 minuti dalle 0:00 alle 0:45,
-   dalle 2:00 alle 2:45 e così via ogni 2 ore fino alle 22:45»;
-   `* 1/2` — «ogni minuto dall'1:00 all'1:59, dalle 3:00 alle 3:59 e così
-   via ogni 2 ore fino alle 23:59». Such a cadence less one or
+4. The hours are a cadence of five or more, none consecutive, that does
+   not tile the day: the first two windows, then **«e così via ogni N
+   ore fino alle»** and the last time that fires: `*/15 5/2` — «ogni 15
+   minuti dalle 5:00 alle 5:45, dalle 7:00 alle 7:45 e così via ogni 2
+   ore fino alle 23:45»; `* 0-20/2` — «ogni minuto dalle 0:00 alle 0:59,
+   dalle 2:00 alle 2:59 e così via ogni 2 ore fino alle 20:59». Such a
+   cadence less one or
    two hours adds «, tranne dalle 8:00 alle 8:59». **The sentence never
    names a window that the exception removes**: if the hour left out is
    the cadence's second, only the first window is named before «e così
    via» (the step is said in words, so one window is enough): `*/15
-   0,4,6,8,…,22` — «ogni 15 minuti dalle 0:00 alle 0:45 e così via ogni 2
-   ore fino alle 22:45, tranne dalle 2:00 alle 2:59». (The first or last
+   0,4,6,8,…,20` — «ogni 15 minuti dalle 0:00 alle 0:45 e così via ogni 2
+   ore fino alle 20:45, tranne dalle 2:00 alle 2:59». (Hours that tile the
+   day less an hour or two do not come here: «ogni 15 minuti per un'ora
+   ogni 2 ore, tranne dalle 2:00 alle 2:59», above.) (The first or last
    hour of a cadence cannot be the one left out: the core then gives the
    shorter cadence.) Two wordings that left the gap silent («dalle 0:00…,
    dalle 4:00…, dalle 6:00… e così via», with and without «e poi») were
@@ -639,8 +759,8 @@ of the time. Then the hours:
    each hour is a clock window, as in case C.4 and C.5: `0-29 9 * * *` —
    «ogni minuto dalle 9:00 alle 9:29»; `*/7 9` — «ogni 7 minuti
    dalle 9:00 alle 9:56»; `0-29 8,12,18` — «ogni minuto dalle
-   8:00 alle 8:29, dalle 12:00 alle 12:29 e dalle 18:00 alle 18:29»; `0-29 */2` — «ogni minuto dalle 0:00 alle 0:29, dalle 2:00
-   alle 2:29 e così via ogni 2 ore fino alle 22:29». Pieces of
+   8:00 alle 8:29, dalle 12:00 alle 12:29 e dalle 18:00 alle 18:29»; `0-29 5/2` — «ogni minuto dalle 5:00 alle 5:29, dalle 7:00
+   alle 7:29 e così via ogni 2 ore fino alle 23:29». Pieces of
    minutes do the same when the items inside the hour times the hours come
    to three or fewer: `0-29,45 9` — «ogni minuto dalle 9:00 alle 9:29 e una volta alle 9:45»; `50-10 9` — «ogni minuto dalle 9:00
    alle 9:10 e dalle 9:50 alle 9:59».
@@ -650,22 +770,23 @@ of the time. Then the hours:
 
    **Hours named as numbers that are a cadence of more than eight** (in
    (a) and (b) alike, and wherever 4.2 names hours so) are said by their
-   first three, then «e così via fino a» and the last: `15,45 */2` — «ai
-   minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 22»; `0,25,50
-   1-23/2` — «ai minuti 0, 25 e 50 delle ore 1, 3, 5 e così via fino a
-   23»; `15,45 0-16/2` — «…delle ore 0, 2, 4 e così via fino a 16»;
-   `0-29,45 */2` — «ogni minuto dal minuto 0 al 29 e una volta al minuto
-   45 delle ore 0, 2, 4 e così via fino a 22». Eight is the most this
+   first three, then «e così via fino a» and the last: `15,45 0-16/2` —
+   «ai minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 16»; `0,25,50
+   5/2` — «ai minuti 0, 25 e 50 delle ore 5, 7, 9 e così via fino a 23»;
+   `0-29,45 0-16/2` — «ogni minuto dal minuto 0 al 29 e una volta al
+   minuto 45 delle ore 0, 2, 4 e così via fino a 16». (Hours that tile
+   the day never come here: «ai minuti 15 e 45, ogni 2 ore», above.)
+   Eight is the most this
    rule book lists (D.2), and twelve numbers ask a reader to hold what
    the pattern says in one step. Three numbers show the step, as in
    counting; «fino a» with a bare number counts up to it, and it
    included; the start is the first number. The hours stay numbers, so
    nothing reads as a stretch of time, and the sentence is the one it
    is with fewer hours: only the hours change. Eight or fewer are named
-   one by one («delle ore 0, 3, 6, 9, 12, 15, 18 e 21», read at a glance).
+   one by one («delle ore 4, 8, 12, 16 e 20», read at a glance).
    A cadence less an hour or two is named one by one too: its first
-   three need not show the step (`15,45 0,4,6,…,22` — «delle ore 0, 4, 6,
-   8, 10, 12, 14, 16, 18, 20 e 22»).
+   three need not show the step (`15,45 0,4,6,…,20` — «delle ore 0, 4, 6,
+   8, 10, 12, 14, 16, 18 e 20»).
 
    History: the first answer was the windows of a cadence, «ai minuti
    15 e 45, dalle 0:15 alle 0:45, dalle 2:15 alle 2:45 e così via ogni 2
@@ -680,9 +801,9 @@ of the time. Then the hours:
 
    **(a) A list of minutes.** If every hour is alone (no two
    consecutive), the hours replace «di ogni ora» as plain numbers, 0 to
-   23: «ai minuti 5, 20 e 45 delle ore 8, 12 e 18»; `15,45 */4` — «ai
-   minuti 15 e 45 delle ore 0, 4, 8, 12, 16 e 20»; `15,45 */2` — «ai
-   minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 22».
+   23: «ai minuti 5, 20 e 45 delle ore 8, 12 e 18»; `15,45 4/4` — «ai
+   minuti 15 e 45 delle ore 4, 8, 12, 16 e 20»; `15,45 0-16/2` — «ai
+   minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 16».
    Otherwise the phrase keeps «di ogni ora» and a comma and the windows
    of the hours follow (those of case C.3 to C.5: one for each run, an
    hour alone included, each from its first to its last firing):
@@ -788,8 +909,11 @@ The base:
   dalle 9:05:30 alle 17:45:30»; «al secondo 30 del minuto 0
   di ogni ora» (minute 0 is then named: «in punto» is the minute and the
   second together); «al secondo 15 del minuto 30 di ogni ora»; «al secondo
-  8 dei minuti 5 e 30 delle ore 0, 2, 4 e così via fino a 22» (4.1 D.6:
-  a long cadence of hours as numbers). (Every judge found «al secondo 30 del minuto 0 di ogni ora»
+  8 dei minuti 5 e 30 delle ore 5, 7, 9 e così via fino a 23» (4.1 D.6:
+  a long cadence of hours as numbers); over hours that tile the day the
+  same phrase stands before the comma: `8 5,30 */2` — «al secondo 8 dei
+  minuti 5 e 30, ogni 2 ore»; `15 0 */2` — «al secondo 15 del minuto 0,
+  ogni 2 ore» (4.1, "Hours that tile the day"). (Every judge found «al secondo 30 del minuto 0 di ogni ora»
   machine-like and understood it at once; nothing as exact is lighter,
   and the schedule is rare.)
 * Minutes in several pieces (a single minute beside a run, a run beside
@@ -863,10 +987,16 @@ secondi».
    said as in 4.1 D.6(b), never as a window. Anything else takes «del minuto» /
    «dei minuti»: «ai secondi 0 e 30 dei minuti 5 e 20 di ogni ora»; «ogni
    secondo dal secondo 0 al 9 del minuto 0 di ogni ora». Hours that are
-   a cadence of more than eight are named as in 4.1 D.6: `0-10 */25 */2`
-   — «ogni secondo dal secondo 0 al 10 dei minuti 0, 25 e 50 delle ore 0,
-   2, 4 e così via fino a 22»; `5,30 * */2` — «ai secondi 5 e 30 di ogni
-   minuto delle ore 0, 2, 4 e così via fino a 22».
+   a cadence of more than eight are named as in 4.1 D.6: `0-10 */25
+   5/2` — «ogni secondo dal secondo 0 al 10 dei minuti 0, 25 e 50 delle
+   ore 5, 7, 9 e così via fino a 23». Hours that tile the day follow the
+   phrase after a comma: `0-10 */25 */2` — «ogni secondo dal secondo 0 al
+   10 dei minuti 0, 25 e 50, ogni 2 ore»; `*/10 24 */3` — «ogni 10 secondi
+   dal secondo 0 al 50 del minuto 24, ogni 3 ore». Seconds through every
+   minute of such hours fire all through each hour, so they are a stretch
+   of one hour as in 4.1: `5,30 * */2` — «ai secondi 5 e 30 di ogni
+   minuto per un'ora ogni 2 ore»; `0-10 * */4` — «ogni secondo dal
+   secondo 0 al 10 di ogni minuto per un'ora ogni 4 ore».
 5. **Any other D** (a rate of minutes, with or without windows; a long
    list of times): D's base, a comma, and the seconds clause; D's
    exceptions come after the clause, so that it cannot be read of what
@@ -1233,8 +1363,7 @@ form.) Half and quarter
 hours are speech (usage §3): `30 * * * *` — «al minuto 30 di ogni ora»;
 `15,45 * * * *` — «ai minuti 15 e 45 di ogni ora».
 
-5.5 **Every other, every third**: `0 */2 * * *` — «tutti i giorni, ogni 2
-ore dalle 0:00 alle 22:00»; `0 0 * */2 *` — «ogni 2 mesi a
+5.5 **Every other, every third**: `0 */2 * * *` — «ogni 2 ore»; `0 0 * */2 *` — «ogni 2 mesi a
 partire da gennaio, tutti i giorni alle 0:00» (3.7).
 
 5.6 **Parts of the day** are used only by `hour12` (1.2).
@@ -1390,7 +1519,8 @@ mese/mesi, anno/anni.
 (on a day), nel (in a year), ogni (every), da…a, dal…al, dalle…alle
 (from…to, both ends firing), compreso (the last year of «fino al»), a
 partire da
-(a cadence that never breaks), e così via… fino alle (a long regular
+(a cadence that never breaks, and the start of hours that tile the day),
+per un'ora (a unit that fills each hour of such hours), e così via… fino alle (a long regular
 series of windows), ripartendo a ogni ora (a cadence that starts again),
 di ciascuna ora dalle… alle…, delle ore… (the hours a
 per-hour phrase holds in), prima volta… ultima… (their first and last
@@ -1504,9 +1634,10 @@ indicata non esiste.» No
 description ends in a full stop of its own (short names have none).
 
 8.9 `cardinality-rendering` — by rule 4 of the order of choice:
-`0 0 1 */3 *` and `0 0 1 */6 *` name their months; `0 */6 * * *` lists
-four times; `0 */8 * * *` lists three; `0 */4 * * *` is «ogni 4 ore dalle
-0:00 alle 20:00».
+`0 0 1 */3 *` and `0 0 1 */6 *` name their months; `0 */4 * * *`, `0 */6
+* * *` and `0 */8 * * *` tile the day and are «ogni 4 ore», «ogni 6 ore»,
+«ogni 8 ore» (3.7); `0 1/6 * * *` lists four times; `0 4/4 * * *` is
+«ogni 4 ore dalle 4:00 alle 20:00».
 
 ## Where this rule book departs from the usage notes
 
