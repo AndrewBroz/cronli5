@@ -11,9 +11,7 @@ const rows = [
   ['0,30 0 9 * * *', 'todos os dias às 09:00:00 e 09:00:30'],
   ['*/15 0 9 * * *',
     'todos os dias às 09:00:00, 09:00:15, 09:00:30 e 09:00:45'],
-  ['0-9 0 9 * * *',
-    'todos os dias às 09:00, repetindo a cada segundo durante os primeiros ' +
-    '10 segundos'],
+  ['0-9 0 9 * * *', 'todos os dias, a cada segundo das 09:00:00 às 09:00:09'],
 
   // clock / minute
   ['30 9 * * *', 'todos os dias às 09:30'],
@@ -182,8 +180,7 @@ const rows = [
   ['*/15 0 0 1 * *',
     'no dia 1º de cada mês às 00:00:00, 00:00:15, 00:00:30 e 00:00:45'],
   ['0-9 0 0 1 * *',
-    'no dia 1º de cada mês às 00:00, repetindo a cada segundo durante os ' +
-    'primeiros 10 segundos'],
+    'no dia 1º de cada mês, a cada segundo das 00:00:00 às 00:00:09'],
 
   // monthly / minute
   ['30 0 1 * *', 'no dia 1º de cada mês às 00:30'],
@@ -291,14 +288,12 @@ const rows = [
     'ou segunda mais próxima, a cada minuto'],
 
   // open / month
-  ['* * * 6 *', 'todos os dias de junho, a cada minuto'],
-  ['* * * 1,7 *', 'todos os dias de janeiro e julho, a cada minuto'],
-  ['* * * 6-8 *', 'todos os dias de junho a agosto, a cada minuto'],
-  ['* * * 6-8,12 *',
-    'todos os dias de junho a agosto e de dezembro, a cada minuto'],
-  ['* * * */3 *',
-    'todos os dias de janeiro, abril, julho e outubro, a cada minuto'],
-  ['* * * 1-11 *', 'todos os dias de janeiro a novembro, a cada minuto'],
+  ['* * * 6 *', 'em junho, a cada minuto'],
+  ['* * * 1,7 *', 'em janeiro e julho, a cada minuto'],
+  ['* * * 6-8 *', 'de junho a agosto, a cada minuto'],
+  ['* * * 6-8,12 *', 'de junho a agosto e em dezembro, a cada minuto'],
+  ['* * * */3 *', 'em janeiro, abril, julho e outubro, a cada minuto'],
+  ['* * * 1-11 *', 'de janeiro a novembro, a cada minuto'],
 
   // open / weekday
   ['* * * * 0', 'todos os domingos, a cada minuto'],

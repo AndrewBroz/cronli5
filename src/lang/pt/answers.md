@@ -54,7 +54,21 @@ with «a partir da 01:00» and no end; a minute beside them is said apart
 from the step; stretches under them are «nas horas pares», «nas horas
 ímpares» or «durante uma hora, de N em N horas»; the same cadence with
 hours taken out is said bare with its exception, also without «todos os
-dias»; and no bracket shows a series of numbers. A cadence of hours that does not tile keeps both its
+dias»; and no bracket shows a series of numbers.
+
+Two more rulings the same day. **Under a named month or year, a schedule
+that runs round the clock has no «todos os dias»**: the month or year
+leads, as it does before a run of weekdays (2.4), «em junho, de 3 em 3
+horas», «em junho, a cada 5 minutos», «em 2030, de 2 em 2 horas». Before,
+«todos os dias de junho» was said there; with no day named and the hours
+round the clock, «todos os dias» says nothing the reader does not have,
+and the other languages say «in June, every 3 hours». **Seconds that step
+inside one clock time are a window to the second with the step**: «todos
+os dias, a cada 10 segundos das 09:30:00 às 09:30:50», where «todos os
+dias às 09:30, repetindo a cada 10 segundos durante o minuto inteiro» was
+said; under one minute of every hour, or of hours on a step, «a cada 10
+segundos durante o minuto 30 de cada hora». The «repetindo» clause stays
+only where the time before it is a cadence or a window of minutes (4.2). A cadence of hours that does not tile keeps both its
 ends exactly as before.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
@@ -236,9 +250,10 @@ closes the `nW`, `LW` and `1W` phrases (5.7). A day of the month and a weekday t
 * A space: «todos os dias às 09:00»; «todas as segundas às 09:00»; «todas
   as segundas, quartas e sextas às 09:00»; «nos dias 1º, 10 e 20 de cada
   mês às 00:00»; «no dia 1º de junho, julho e agosto às 00:00»; «todos os
-  dias às 09:00, repetindo a cada segundo durante o minuto inteiro».
+  dias às 09:00, 6 vezes: 5, 15, 25, 35, 45 e 55 segundos depois».
 * A comma: «todos os dias, a cada minuto das 09:00 às 17:59»; «todas as
-  segundas, a cada hora, em ponto»; «nos dias ímpares de cada mês, exceto
+  segundas, a cada hora, em ponto»; «todos os dias, a cada segundo das
+  09:00:00 às 09:00:59»; «nos dias ímpares de cada mês, exceto
   no dia 15, às 09:00»; «em junho, de segunda a sexta, às 09:00»; «no dia
   1º de janeiro, de 2030 a 2035, às 00:00».
 
@@ -272,20 +287,25 @@ pattern's fields:
 2.3 Seconds close the time part (4.2).
 
 * `30 0 9 * * *` — «todos os dias às 09:00:30»
-* `*/6 0 9 * * *` — «todos os dias às 09:00, repetindo a cada 6 segundos
-  durante o minuto inteiro»
-* `* 0 9 * * *` — «todos os dias às 09:00, repetindo a cada segundo
-  durante o minuto inteiro»
+* `*/6 0 9 * * *` — «todos os dias, a cada 6 segundos das 09:00:00 às
+  09:00:54»
+* `* 0 9 * * *` — «todos os dias, a cada segundo das 09:00:00 às
+  09:00:59»
 
 2.4 One declared change of order inside the calendar part. A month or
 year that has no noun to attach to with «de» **leads the sentence**, with
-«em» or as a range, followed by a comma. That happens in two cases: the
-days are a run of weekdays or weekday pieces («de segunda a sexta»), or
-they are a day of the month and a weekday together (4.3).
+«em» or as a range, followed by a comma. That happens in three cases: the
+days are a run of weekdays or weekday pieces («de segunda a sexta»); they
+are a day of the month and a weekday together (4.3); or no day is named
+and the hours run round the clock, so that there are no days to name
+(2.5).
 
 * `0 9 * 6 1-5` — «em junho, de segunda a sexta, às 09:00»
 * `*/15 9-17 * 11-2 1-5` — «de novembro a fevereiro, de segunda a sexta, a
   cada 15 minutos das 09:00 às 17:45»
+* `0 */3 * 6 *` — «em junho, de 3 em 3 horas»; `*/5 * * 6-8 *` — «de junho
+  a agosto, a cada 5 minutos»; `0 0 */2 * * * 2030` — «em 2030, de 2 em 2
+  horas»
 
 The leading phrase is the month phrase as it stands alone: «em junho»; «em
 janeiro e julho»; «de junho a agosto»; «de junho a agosto e em dezembro».
@@ -299,14 +319,23 @@ segunda a sexta, às 09:00». A year alone leads as
 2.5 «Todos os dias». When neither the day of the month nor the weekday is
 restricted, the days are «todos os dias» if anything gives them work to
 do: the hours are restricted, other than to a cadence that tiles the day
-(rule 2 of the opening), or a month or a year is.
+(rule 2 of the opening). Where the hours run round the clock (every hour,
+or a cadence that tiles the day) and a month or a year is named, the month
+or year leads instead (2.4). The one exception is months or years taken
+out of every one («todos os dias, exceto em junho, a cada minuto»), which
+have nothing to lead with.
 
 * `0 9 * * *` — «todos os dias às 09:00»
 * `0 9-17 * * *` — «todos os dias, a cada hora das 09:00 às 17:00»
-* `*/5 * * 6 *` — «todos os dias de junho, a cada 5 minutos»
+* `*/5 * * 6 *` — «em junho, a cada 5 minutos»
 * `0 0 9 * * * 2030` — «todos os dias de 2030 às 09:00»
-* `0 */2 * * *` — «de 2 em 2 horas»; `0 */2 * 6 *` — «todos os dias de
-  junho, de 2 em 2 horas»
+* `0 */2 * * *` — «de 2 em 2 horas»; `0 */2 * 6 *` — «em junho, de 2 em 2
+  horas»
+
+So an edit to the hours that restricts them, or that makes them run round
+the clock, may change the calendar part between «todos os dias de junho»
+and «em junho»: it is the same choice as adding or removing «todos os
+dias», declared here.
 
 With every hour, or hours that tile the day, and every month and every
 year, the sentence is the time part alone: «a cada minuto», «a cada hora,
@@ -847,7 +876,7 @@ rides in every time named. «A cada hora das 09:00:30 às 17:00:30»; «a cada
 23:00:30». It does not ride where a minute phrase stands before a window
 («nos minutos 5 e 20 de cada hora, das 09:05 às 17:20»), nor in hours
 that tile the day, which name no clock time but their start: there case
-6 applies, «de 2 em 2 horas, 30 segundos depois»; «de 6 em 6 horas, 30
+7 applies, «de 2 em 2 horas, 30 segundos depois»; «de 6 em 6 horas, 30
 segundos depois»; «nos minutos 5 e 30, de 2 em 2 horas, sempre 8
 segundos depois».
 
@@ -879,7 +908,28 @@ minutes.** The seconds are said in place of «a cada minuto»:
   cada segundo nas horas pares»; «a cada 15 segundos durante uma hora, de
   6 em 6 horas».
 
-**Case 6. Otherwise the seconds follow the time as a clause, after a
+**Case 6. Seconds that step inside named clock times, or inside one
+minute of every hour.** A stretch or a cadence of seconds (every second, a
+cadence, a run; not named seconds) is said in place of the time, as the
+step and a window to the second, where the time to the minute is four
+clock times or fewer (4.1 case 1): one window for each clock time, from
+its first second to its last. «A cada 10 segundos das 09:30:00 às
+09:30:50»; «a cada segundo das 09:00:00 às 09:00:09»; «a cada segundo das
+09:30:10 às 09:30:20»; «a cada 5 segundos das 09:00:05 às 09:00:55»; «a
+cada segundo das 09:00:00 às 09:00:59 e das 17:00:00 às 17:00:59»; with a
+hole, «…, exceto às 09:00:29». Where the time is one minute of every hour,
+or of hours that tile the day, every second or a cadence that tiles is
+said «durante» that minute: «a cada 10 segundos durante o minuto 30 de
+cada hora»; «a cada segundo durante o minuto 0 de cada hora»; «a cada 10
+segundos durante o minuto 24, de 3 em 3 horas». This replaced «às 09:30,
+repetindo a cada 10 segundos durante o minuto inteiro» on 2026-11-14: the
+window says the same in fewer words, is how a clock shows it, and is what
+the other languages say. A run under one minute of every hour keeps the
+clause («no minuto 0 de cada hora, repetindo a cada segundo durante os
+primeiros 10 segundos»), since «durante os primeiros 10 segundos do minuto
+0 de cada hora» stacks three positions.
+
+**Case 7. Otherwise the seconds follow the time as a clause, after a
 comma.** Minute 0 under every hour is then «no minuto 0 de cada hora», not
 «em ponto», which would promise second 0. The clause has two forms.
 
@@ -909,22 +959,20 @@ that what follows happens inside each of the moments already named:
 «sempre»**, which carries the seconds to every piece: «a cada hora das
 09:00 às 17:00 e às 22:00, sempre repetindo a cada segundo durante o
 minuto inteiro»; «a cada minuto das 09:00 às 09:29 e às 09:45, sempre 2
-vezes: 15 e 45 segundos depois»; «às 09:00 e 17:00, sempre repetindo a
-cada segundo durante o minuto inteiro»; «nos minutos 5 e 20 de cada hora,
+vezes: 15 e 45 segundos depois»; «às 09:00 e 17:00, sempre 2 vezes: no
+horário exato e 30 segundos depois»; «nos minutos 5 e 20 de cada hora,
 das 09:05 às 17:20, sempre 15 segundos depois». Without it the clause was
 read as belonging to the last piece only (22:00, 09:45). The test is the
 word «e», not what kind of time it is, so that two builders place it
 alike; after a day of the month and a weekday together the sentence then
 has «sempre» twice, once for each thing it distributes.
 
-«Todos os dias às 09:00, repetindo a cada segundo durante o minuto
-inteiro»; «a cada 15 minutos das 09:00 às 17:45, repetindo a cada segundo
+«A cada 15 minutos das 09:00 às 17:45, repetindo a cada segundo
 durante o minuto inteiro»; «a cada 15 minutos das 09:00 às 17:45, 2
 vezes: no horário exato e 30 segundos depois»; «a cada 15 minutos, 30
 segundos depois»; «no minuto 30 de cada hora, 15 segundos depois»; «no
-minuto 0 de cada hora, repetindo a cada segundo durante o minuto inteiro»;
-«de 2 em 2 horas, 15 segundos depois»; «no minuto 24, de 3 em 3 horas,
-repetindo a cada 10 segundos durante o minuto inteiro». Under hours that
+minuto 0 de cada hora, repetindo a cada segundo durante os primeiros 10
+segundos»; «de 2 em 2 horas, 15 segundos depois». Under hours that
 tile the day minute 0 is the step alone, which promises no second, so it
 stays bare before the clause.
 
@@ -1376,8 +1424,8 @@ said. A field that takes every value is not said.
 
 8.5 `range-boundary` — Every window names the first and the last moment
 that fire, in the unit it is written in: to the minute, or to the second
-where 4.2 case 3 or case 5 writes the seconds into it. Where a seconds
-clause follows a window (4.2 case 6), the window's last moment is the last
+where 4.2 case 3, 5 or 6 writes the seconds into it. Where a seconds
+clause follows a window (4.2 case 7), the window's last moment is the last
 run, and the clause says which seconds of that run fire.
 
 8.6 `recurrence-marking` — «Todas as», «todos os» and the plural for

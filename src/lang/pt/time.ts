@@ -379,6 +379,44 @@ function clause(seconds: Chosen): string {
     (continuous(said) ? ` ${words.during} ${words.wholeMinute}` : '');
 }
 
+// Whether the seconds step through a stretch of the minute: every second,
+// a run or a cadence, and not seconds named one by one.
+function stepping(seconds: Chosen): boolean {
+  return seconds.said.kind !== 'values' && seconds.said.kind !== 'pieces' &&
+    seconds.values.length >= 3;
+}
+
+// The step of the seconds: «a cada segundo», «a cada 10 segundos».
+function secondStep(seconds: Chosen): string {
+  const {said} = seconds;
+
+  return said.kind === 'cadence' ?
+    `${words.each} ${counted(said.interval, units.second)}` :
+    eachSecond;
+}
+
+// Seconds stepping inside a few clock times: the step, and for each clock
+// time a window from its first second to its last.
+function secondWindows(c: Moments): Said {
+  const {first, last} = c.seconds;
+
+  return saying(c, `${secondStep(c.seconds)} ` + list(c.hours.values.flatMap(
+    (hour) => c.minutes.values.map((minute) => fromTo(
+      timeOf(hour, minute, first, c.style),
+      timeOf(hour, minute, last, c.style))))), false);
+}
+
+// Every second, or a cadence of seconds that needs no ends, during one
+// minute of every hour or of hours on a step.
+function duringMinute(c: Moments): Said {
+  const [minute] = c.minutes.values;
+  const hours = c.bare ? `, ${hourStep(c, true)}` : ` ${ofEachHour}`;
+
+  return saying(c, `${secondStep(c.seconds)} ${words.during} ` +
+    `${articles.singular.masculine} ${units.minute.one} ${minute}${hours}`,
+  false);
+}
+
 // The time with its seconds, by the first form that applies.
 const secondForms: Form[] = [
   {say: toTheMinute, when: (c) => c.seconds.values.join() === '0'},
@@ -417,6 +455,16 @@ const secondForms: Form[] = [
       confinement(c)
     ].filter(Boolean).join(', '), false),
     when: (c) => c.minutes.said.kind === 'all'
+  },
+  {
+    say: secondWindows,
+    when: (c) => stepping(c.seconds) && few(c)
+  },
+  {
+    say: duringMinute,
+    when: (c) => continuous(c.seconds.said) && stepping(c.seconds) &&
+      c.minutes.values.length === 1 &&
+      (c.bare || c.hours.said.kind === 'all')
   },
   {
     // A time said in more than one piece carries the seconds to every
