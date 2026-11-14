@@ -30,20 +30,25 @@ future run times, consider a library like [`@breejs/later`][later].
 
 ## Why not cRonstrue?
 
-[`cRonstrue`][cronstrue] is the most widely used library for this, and it
-is fine for simple cadences: both say "every 10 minutes". It builds a
-description from one translated fragment per field, which is how it covers
-39 locales. Where fields interact, or outside English, the fragments can
-say the wrong thing or no sentence at all:
+[`cRonstrue`][cronstrue] is the most widely used library for this. It
+builds each description from one translated fragment per field, which is
+how it covers 39 locales. The fragments know nothing of each other or of
+the clock, so even simple patterns come out false in English and
+ungrammatical in languages that inflect:
 
 <!-- BEGIN GENERATED: why-not-cronstrue -->
-| Pattern | cronli5 | cRonstrue 3.14.0 | The difference |
-| --- | --- | --- | --- |
-| `0 0 1,15 * 3` | At 12 a.m. on the 1st and 15th as well as on Wednesdays | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday | cRonstrue's "and on Wednesday" reads as days that are both. Cron fires on either. |
-| `*/15 9-17 * * 1-5` | Every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays | Every 15 minutes, between 09:00 AM and 05:59 PM, Monday through Friday | The last run is at 5:45 p.m., not 5:59. |
-| `0 0 1 */3 *` | At 12 a.m. on the 1st of January, April, July, and October | At 12:00 AM, on day 1 of the month, every 3 months | "Every 3 months" does not say which months. |
-| `30 9 * * 1-5` | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで | Japanese: cRonstrue's fragments do not make a sentence. |
-| `30 9 * * 1-5` | Od pondělí do pátku vždy v 9:30 | V 09:30, od Pondělí do Pátek | Czech: cRonstrue's weekdays are capitalised and in the wrong case. |
+| Pattern | Language | cronli5 | cRonstrue 3.14.0 | What is wrong |
+| --- | --- | --- | --- | --- |
+| `*/45 * * * *` | English | At 0 and 45 minutes past the hour | Every 45 minutes | It runs at :00 and :45, so every other gap is 15 minutes. |
+| `0,30 8-10 * * 1-5` | English | Every 30 minutes from 8 a.m. through 10:30 a.m. on weekdays | At 0 and 30 minutes past the hour, between 08:00 AM and 10:59 AM, Monday through Friday | The rhythm is left to work out from two minute values, and the window ends at 10:59; the last run is at 10:30. |
+| `1 * * * *` | English | At 1 minute past the hour | At 1 minutes past the hour | "1 minutes". |
+| `0 0 1,15 * 3` | German | Mittwochs und zusätzlich am 1. und 15. jedes Monats, jeweils um 0:00 Uhr | Um 00:00, an Tag 1 und 15 des Monats, und jeden Mittwoch | German does not write dates as "an Tag 1 und 15", and the comma before "und" is an error. |
+| `0 12 1 1 *` | French | Le 1er janvier à 12 h | À 12:00, le 1 du mois, uniquement en janvier | French writes the first of the month "le 1er", not "le 1". |
+| `*/2 * * * *` | Czech | Každé 2 minuty | Každých 2 minut | After 2, 3 and 4, Czech says "každé 2 minuty"; "každých 2 minut" is wrong even for the simplest cadence. |
+| `0 12 1 1 *` | Czech | Vždy 1. ledna ve 12:00 | V 12:00, 1. den v měsíci, pouze v Leden | "v Leden" is the wrong case, and Czech months are not capitalised: "v lednu". |
+| `1 * * * *` | Spanish | En el minuto 1 de cada hora | A los 1 minutos de la hora | "los 1 minutos" puts a plural article and noun on 1. |
+| `0 12 1 1 *` | Chinese | 每年1月1日12:00 | 在下午 12:00, 限每月 1 号, 仅于一月份 | "下午 12:00" ("12:00 in the afternoon") for noon, and the date split into "the 1st of every month, only in January". |
+| `30 9 * * 1-5` | Japanese | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで | The fragments do not make a Japanese sentence. |
 <!-- END GENERATED: why-not-cronstrue -->
 
 `cronli5` writes one sentence per schedule, in each language's own words,
@@ -59,7 +64,7 @@ import cronstrue from 'cronli5/cronstrue'; // was: from 'cronstrue'
 cronstrue.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
 ```
 
-Stay with cRonstrue if you need a language `cronli5` does not ship. See the
+Stay with cRonstrue if you need a language `cronli5` doesn't have yet. See the
 [migration guide](./docs/migrating-from-cronstrue.md) for how options and
 output map, and [more side-by-side output](#cronli5-vs-cronstrue) below.
 

@@ -14,7 +14,7 @@ The short version of the trade:
   its **39 locales** via per-locale string tables. `cronli5` takes the opposite
   trade: each of its ten languages is a **full renderer** (see
   [docs/lang/](./lang/)), so output reads like the language, but breadth grows
-  one language at a time. If you need a language `cronli5` doesn't ship, use
+  one language at a time. If you need a language `cronli5` doesn't have yet, use
   cRonstrue; each language doc carries a generated side-by-side table against
   the matching cRonstrue locale.
 * **Validation.** `cronli5` validates strictly and throws named errors (opt out
@@ -27,9 +27,17 @@ The short version of the trade:
 
 ## Where they differ most
 
-On simple cadences the two read alike, and cRonstrue is terser. The gap
-opens where fields interact:
+In English, the two read alike on cadences that divide their unit
+("every 15 minutes"). Beyond those, even simple patterns go wrong:
 
+* **A step that does not divide its unit.** `*/45 * * * *` runs at :00 and
+  :45. cRonstrue says "Every 45 minutes", which is false for every other
+  gap; `cronli5` says "at 0 and 45 minutes past the hour". The same goes
+  for `*/7`, `0 */5` and `0 0 */10`.
+* **Agreement.** cRonstrue's English says "At 1 minutes past the hour" for
+  `1 * * * *`. In languages that inflect, the fragments often do not agree: Czech
+  "Každých 2 minut" for `*/2 * * * *` (Czech says "každé 2 minuty"), and
+  "pouze v Leden" for January (Czech says "v lednu").
 * **A day of the month *or* a weekday.** cRonstrue joins them with "and"
   (`0 0 1,15 * 3` &rarr; "on day 1 and 15 of the month, and on Wednesday"),
   which reads as days that are both. Cron fires on either; `cronli5` says

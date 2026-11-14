@@ -177,55 +177,88 @@ function renderHeadToHead() {
     ' |', rows);
 }
 
-// The README's case for switching: a few rows where cRonstrue's description
-// is wrong or hard to read, each with a note on the difference. The author
+// The README's case for switching: rows where cRonstrue's description is
+// false or ungrammatical, each with a note on what is wrong. The author
 // chooses the rows and writes the notes; both outputs are live.
 const whyRows = [
   {
     code: 'en',
-    note: 'cRonstrue\'s "and on Wednesday" reads as days that are both. ' +
-      'Cron fires on either.',
+    note: 'It runs at :00 and :45, so every other gap is 15 minutes.',
+    pattern: '*/45 * * * *'
+  },
+  {
+    code: 'en',
+    note: 'The rhythm is left to work out from two minute values, and the ' +
+      'window ends at 10:59; the last run is at 10:30.',
+    pattern: '0,30 8-10 * * 1-5'
+  },
+  {
+    code: 'en',
+    note: '"1 minutes".',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'de',
+    note: 'German does not write dates as "an Tag 1 und 15", and the comma ' +
+      'before "und" is an error.',
     pattern: '0 0 1,15 * 3'
   },
   {
-    code: 'en',
-    note: 'The last run is at 5:45 p.m., not 5:59.',
-    pattern: '*/15 9-17 * * 1-5'
-  },
-  {
-    code: 'en',
-    note: '"Every 3 months" does not say which months.',
-    pattern: '0 0 1 */3 *'
-  },
-  {
-    code: 'ja',
-    cronstrueLocale: 'ja',
-    note: 'Japanese: cRonstrue\'s fragments do not make a sentence.',
-    pattern: '30 9 * * 1-5'
+    code: 'fr',
+    note: 'French writes the first of the month "le 1er", not "le 1".',
+    pattern: '0 12 1 1 *'
   },
   {
     code: 'cs',
-    cronstrueLocale: 'cs',
-    note: 'Czech: cRonstrue\'s weekdays are capitalised and in the wrong ' +
-      'case.',
+    note: 'After 2, 3 and 4, Czech says "každé 2 minuty"; "každých 2 ' +
+      'minut" is wrong even for the simplest cadence.',
+    pattern: '*/2 * * * *'
+  },
+  {
+    code: 'cs',
+    note: '"v Leden" is the wrong case, and Czech months are not ' +
+      'capitalised: "v lednu".',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'es',
+    note: '"los 1 minutos" puts a plural article and noun on 1.',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'zh',
+    cronstrueLocale: 'zh_CN',
+    note: '"下午 12:00" ("12:00 in the afternoon") for noon, and the date ' +
+      'split into "the 1st of every month, only in January".',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'ja',
+    note: 'The fragments do not make a Japanese sentence.',
     pattern: '30 9 * * 1-5'
   }
 ];
+
+const languageNames = {
+  cs: 'Czech', de: 'German', en: 'English', es: 'Spanish', fr: 'French',
+  ja: 'Japanese', zh: 'Chinese'
+};
 
 function renderWhy() {
   const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
   const rows = whyRows.map(function row(entry) {
     const lang = entry.code === 'en' ? en : byCode[entry.code].lang;
 
-    return '| `' + entry.pattern + '` | ' +
-      describe((p) => cronli5(p, {form: 'label', lang}), entry.pattern) +
+    return '| `' + entry.pattern + '` | ' + languageNames[entry.code] +
       ' | ' +
-      describe((p) => cronstrueFor(entry.cronstrueLocale || entry.code, p),
-        entry.pattern) + ' | ' + entry.note + ' |';
+      describe((p) => cronli5(p, {form: 'label', lang}), entry.pattern) +
+      ' | ' + describe((p) => cronstrueFor(entry.cronstrueLocale ||
+        entry.code, p), entry.pattern) +
+      ' | ' + entry.note + ' |';
   });
 
-  return tableFrom('| Pattern | cronli5 | cRonstrue ' + cronstrueVersion +
-    ' | The difference |', rows);
+  return tableFrom('| Pattern | Language | cronli5 | cRonstrue ' +
+    cronstrueVersion + ' | What is wrong |', rows);
 }
 
 // The named English styles, each as the options that select it.
