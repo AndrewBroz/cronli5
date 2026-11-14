@@ -1,7 +1,7 @@
 {
   "name": "cronli5",
   "version": "0.10.0",
-  "description": "Cron Like I'm Five: A Cron to English Utility",
+  "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and nine other languages. Includes a cRonstrue-compatible entry point.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrewbroz/cronli5.git"
@@ -89,6 +89,7 @@
     "cli.js",
     "cronli5.min.js",
     "README.md",
+    "llms.txt",
     "LICENSE.md",
     "CHANGELOG.md"
   ],
@@ -117,7 +118,16 @@
   },
   "keywords": [
     "cron",
-    "crontab"
+    "crontab",
+    "cron-expression",
+    "human-readable",
+    "cron-to-english",
+    "cron-description",
+    "describe",
+    "schedule",
+    "quartz",
+    "i18n",
+    "cronstrue"
   ],
   "author": {
     "name": "Andrew Brož",

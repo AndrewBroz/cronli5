@@ -12,11 +12,11 @@ The short version of the trade:
   other; cRonstrue assembles per-field fragments joined by commas.
 * **Languages.** The fragment style is what makes cRonstrue translatable into
   its **39 locales** via per-locale string tables. `cronli5` takes the opposite
-  trade: each language is a **full renderer** (English so far; the other languages are being rebuilt for the next major version
-  &mdash; see [docs/lang/](./lang/)), so output reads like the language, but
-  breadth grows one reviewed module at a time. If you need a language `cronli5`
-  doesn't ship, use cRonstrue; each language doc carries a generated
-  side-by-side table against the matching cRonstrue locale.
+  trade: each of its ten languages is a **full renderer** (see
+  [docs/lang/](./lang/)), so output reads like the language, but breadth grows
+  one language at a time. If you need a language `cronli5` doesn't ship, use
+  cRonstrue; each language doc carries a generated side-by-side table against
+  the matching cRonstrue locale.
 * **Validation.** `cronli5` validates strictly and throws named errors (opt out
   with the `lenient` option); cRonstrue describes whatever parses, including
   some malformed input.
@@ -25,35 +25,24 @@ The short version of the trade:
   or ~50&nbsp;KB+ with all locales, and its documented i18n entry bundles all
   39.
 
-## What a blind panel of Claude Sonnet instances found
+## Where they differ most
 
-To compare the two without grading our own homework, a blind panel of three
-Claude Sonnet instances — each running a distinct reviewer persona (an everyday
-user, a developer, and a copy-editor) and told nothing about which library
-produced which output — rated unlabeled renderings of both libraries over a
-36-pattern English sample, and a separate round-trip pass reverse-parsed each
-description back to the set of times it would fire and compared that to the
-original cron.
+On simple cadences the two read alike, and cRonstrue is terser. The gap
+opens where fields interact:
 
-* **Overall**, the Sonnet panel preferred `cronli5` on **81 of 108**
-  judgements (cRonstrue 12, 15 ties).
-* **By difficulty** the edge grows with complexity: on **simple** everyday
-  cadences the two were **even (10/10)** &mdash; cRonstrue is perfectly fine
-  here, and terser. On **medium** "specific schedule" patterns `cronli5` was
-  preferred **45 to 0**, and on **complex** patterns (steps, Quartz operators,
-  day-of-month *or* weekday unions) **26 to 2**.
-* **Round-trip precision** surfaced concrete cRonstrue ambiguities: it renders
-  the day-of-month *or* weekday union with "and" (`0 0 1,15 * 3` &rarr; "on day
-  1 and 15 of the month, and on Wednesday"), which reads as an *intersection*;
-  and its step-range time windows overstate the last tick (`23 0-20/2` &rarr;
-  "08:59 PM" when the schedule's last fire is 20:23). `cronli5` enumerates or
-  bounds these ("the 9th, 11th, 13th, 15th, and 17th"; "from midnight through 8
-  p.m."), so the description fires the same set as the cron.
-
-**Where each is stronger.** cRonstrue is terse and reads fine for simple
-cadences, and it ships 39 locales today. `cronli5` reads as natural language,
-is more precise on the medium and complex cases above, and renders each of its
-languages as a full native renderer rather than a string table.
+* **A day of the month *or* a weekday.** cRonstrue joins them with "and"
+  (`0 0 1,15 * 3` &rarr; "on day 1 and 15 of the month, and on Wednesday"),
+  which reads as days that are both. Cron fires on either; `cronli5` says
+  "as well as on Wednesdays".
+* **A window under a step.** cRonstrue ends the window at the end of the
+  last hour (`*/15 9-17 * * 1-5` &rarr; "between 09:00 AM and 05:59 PM");
+  `cronli5` names the last run, 5:45 p.m.
+* **A step in a field with names.** cRonstrue says "every 3 months"
+  (`0 0 1 */3 *`) without saying which; `cronli5` names January, April,
+  July and October.
+* **Outside English**, cRonstrue's fragments are translated one by one, and
+  in some locales they do not join into a sentence. The per-language docs
+  show each locale side by side.
 
 ## The comparison
 

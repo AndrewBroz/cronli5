@@ -19,10 +19,10 @@ guide links to it rather than duplicating its tables.
   for simple cadences (`* * * * *` &rarr; "Every minute"; `0 9 * * *` &rarr;
   "At 09:00 AM").
 * You need a **language `cronli5` does not ship**. cRonstrue carries **39
-  locales** (machine-/community-translated string tables); `cronli5` ships
-  English today; the other languages are being rebuilt for the next major version, one
-  reviewed module at a time. If your locale is not on cronli5's list, cRonstrue
-  is the pragmatic answer.
+  locales**, built from per-locale string tables; `cronli5` ships ten, each
+  a full renderer. If your locale is not on
+  [cronli5's list](../README.md#languages), cRonstrue is the pragmatic
+  answer.
 * You are happy with the clock-first, comma-joined house style and don't want
   to change any output strings.
 
@@ -62,8 +62,8 @@ import cronstrue from "cronstrue";
 // after
 import cronstrue from "cronli5/cronstrue";
 
-cronstrue.toString("0 9 * * 1");                               // "At 9 a.m. on Mondays"
-cronstrue.toString("30 17 * * *", { use24HourTimeFormat: true }); // "At 17:30 every day"
+cronstrue.toString("0 9 * * 1");                               // 'At 9 a.m. on Mondays'
+cronstrue.toString("30 17 * * *", { use24HourTimeFormat: true }); // 'At 17:30 every day'
 ```
 
 It translates the call and nothing else. The wording is `cronli5`'s, which

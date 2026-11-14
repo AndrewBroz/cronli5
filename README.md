@@ -28,13 +28,45 @@ interpretation of a cron pattern in a Node or in a browser environment. If you
 need to do other things with cron patterns, such as scheduling or computing
 future run times, consider a library like [`@breejs/later`][later].
 
-*Alternatives:* The main alternative for descriptions is [`cRonstrue`][cronstrue].
-See the [head-to-head comparison](#cronli5-vs-cronstrue) below for how the two
-differ and which to pick.
+## Why not cRonstrue?
+
+[`cRonstrue`][cronstrue] is the most widely used library for this, and it
+is fine for simple cadences: both say "every 10 minutes". It builds a
+description from one translated fragment per field, which is how it covers
+39 locales. Where fields interact, or outside English, the fragments can
+say the wrong thing or no sentence at all:
+
+<!-- BEGIN GENERATED: why-not-cronstrue -->
+| Pattern | cronli5 | cRonstrue 3.14.0 | The difference |
+| --- | --- | --- | --- |
+| `0 0 1,15 * 3` | At 12 a.m. on the 1st and 15th as well as on Wednesdays | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday | cRonstrue's "and on Wednesday" reads as days that are both. Cron fires on either. |
+| `*/15 9-17 * * 1-5` | Every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays | Every 15 minutes, between 09:00 AM and 05:59 PM, Monday through Friday | The last run is at 5:45 p.m., not 5:59. |
+| `0 0 1 */3 *` | At 12 a.m. on the 1st of January, April, July, and October | At 12:00 AM, on day 1 of the month, every 3 months | "Every 3 months" does not say which months. |
+| `30 9 * * 1-5` | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで | Japanese: cRonstrue's fragments do not make a sentence. |
+| `30 9 * * 1-5` | Od pondělí do pátku vždy v 9:30 | V 09:30, od Pondělí do Pátek | Czech: cRonstrue's weekdays are capitalised and in the wrong case. |
+<!-- END GENERATED: why-not-cronstrue -->
+
+`cronli5` writes one sentence per schedule, in each language's own words,
+and its expected sentences are checked against an independent answer key
+of when each pattern fires.
+
+Switching is one import. `cronli5/cronstrue` takes cRonstrue's
+`toString(pattern, options)` call as it is:
+
+```js
+import cronstrue from 'cronli5/cronstrue'; // was: from 'cronstrue'
+
+cronstrue.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
+```
+
+Stay with cRonstrue if you need a language `cronli5` does not ship. See the
+[migration guide](./docs/migrating-from-cronstrue.md) for how options and
+output map, and [more side-by-side output](#cronli5-vs-cronstrue) below.
 
 ## Contents
 
 - [Overview](#overview)
+- [Why not cRonstrue?](#why-not-cronstrue)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Options](#options)
@@ -44,6 +76,7 @@ differ and which to pick.
 - [Description Accuracy](#description-accuracy)
 - [Note on Timezones](#note-on-timezones)
 - [Module Formats and Types](#module-formats-and-types)
+- [Porting to Another Programming Language](#porting-to-another-programming-language)
 - [Development](#development)
 - [About](#about)
 - [License](#license)
@@ -410,6 +443,37 @@ cronli5('30 9 * * *', { lang: 'cs', style: { am: 'am' } });
 An instance made with `create` knows the codes and style tables of the
 modules it is given. A code known only at run time can be typed with
 `Cronli5<Cronli5Styles>`, which leaves the checks to the library.
+
+## Porting to Another Programming Language
+
+cRonstrue reached other ecosystems as ports to C#, Java, PHP and more,
+each checked by whatever tests its author wrote. `cronli5` ships the test
+a port must pass. [`conformance/<code>.json`](./conformance/) holds every
+expected description for a language, several hundred rows each, as plain
+JSON:
+
+```json
+{
+  "language": "en",
+  "rows": [
+    {
+      "expected": "at 9 a.m. and 5 p.m. every day",
+      "options": {"lang": "en"},
+      "pattern": "0 9,17 * * *"
+    }
+  ]
+}
+```
+
+A port that describes every `pattern` under its `options` as `expected`
+says what this library says, in that language, for every kind of pattern
+the language's rows cover. The rows are hand-written, never produced by
+running the library, and wording changes are recorded in the
+[changelog](./CHANGELOG.md). Pin a port to a tagged release's files.
+
+How the library is built, which is what a port has to reproduce, is in
+[docs/i18n-design.md](./docs/i18n-design.md). If you write a port, open an
+issue and it will be listed here.
 
 ## Development
 
