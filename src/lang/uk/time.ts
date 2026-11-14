@@ -11,7 +11,8 @@ import type {
   ValuesDescription
 } from '../../core/schedule.js';
 import type {
-  Describing, Part, Plain, Said as Described, Stepped, Table, Taste
+  Describing, Part, Plain, Said as Described, SomeValues, Stepped, Table,
+  Taste
 } from './sets.js';
 import {choose, partsOf, runsOf, say, walk, wraps} from './sets.js';
 import {list, pieces} from './spelling.js';
@@ -614,7 +615,8 @@ function inNamedSlots(
     return positioned(coarse, fine, level);
   }
 
-  const parts = partsOf(fine.description as Placed, cycle);
+  // Every minute in named slots is a lead, never said here.
+  const parts = partsOf(fine.description as SomeValues, cycle);
   const leads = leadsOf(fine, level);
 
   return said(pieces(slots.flatMap(function eachSlot(slot, nth) {
