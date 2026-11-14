@@ -1073,10 +1073,10 @@ connective.
   June". (A cadence was first said from a date, "every 3 days from June
   1", which reads as a run that starts on June 1 and carries on, when the
   schedule stops with June.)
-* One day with a list of months: each date in full. "On January 1 and July
-  1"; "on March 1, June 1, September 1, and December 1".
-* Otherwise, with several months: the day in its ordinal form, "of", then
-  the months. "On the 1st and 15th of January and July"; "on the 1st of
+* With several months: the days in their ordinal form, "of", then the
+  months, whether one day or several. "On the 1st of January and July";
+  "on the 1st of March, June, September, and December"; "on the 1st and
+  15th of January and July"; "on the 1st of
   each month from June through August"; "on the 1st of each month from
   June through August and on December 1"; "on the 1st of every other
   month"; "on the 1st of every month except December".

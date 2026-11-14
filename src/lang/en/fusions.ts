@@ -797,7 +797,7 @@ function ofTheMonth(
   return months[0].kind === 'all' ?
     {excepts: false, text: `${phrase} ${theMonth}`} :
     setOff(choose(months,
-      monthsOfDays({day: null, lead: '', phrase}, opts), opts));
+      monthsOfDays({phrase}, opts), opts));
 }
 
 // The kinds of description that name days of the month outright. They
@@ -967,8 +967,7 @@ function daysWithMonths(
 
   if (takesOf.includes(description.kind)) {
     return {dated: 0, takesOut, ...setOff(choose(months, monthsOfDays(
-      {day: onlyValue(description), lead: how.lead, phrase: date.text},
-      opts), opts))};
+      {phrase: date.text}, opts), opts))};
   }
 
   const inMonths = setOff(alone);

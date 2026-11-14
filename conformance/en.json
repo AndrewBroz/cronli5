@@ -422,7 +422,7 @@
    "pattern": "0 0 1 1 *"
   },
   {
-   "expected": "at midnight on March 1, June 1, September 1, and December 1",
+   "expected": "at midnight on the 1st of March, June, September, and December",
    "options": {
     "lang": "en"
    },
@@ -1339,7 +1339,7 @@
    "pattern": "0 0 1 6 *"
   },
   {
-   "expected": "at midnight on January 1 and July 1",
+   "expected": "at midnight on the 1st of January and July",
    "options": {
     "lang": "en"
    },
@@ -1353,14 +1353,14 @@
    "pattern": "0 0 1 6-8 *"
   },
   {
-   "expected": "at midnight on the 1st of each month from June through August and on December 1",
+   "expected": "at midnight on the 1st of each month from June through August and on the 1st of December",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1 6-8,12 *"
   },
   {
-   "expected": "at midnight on January 1, April 1, July 1, and October 1",
+   "expected": "at midnight on the 1st of January, April, July, and October",
    "options": {
     "lang": "en"
    },
@@ -1969,7 +1969,7 @@
    "pattern": "0 0 */3 6 *"
   },
   {
-   "expected": "at midnight on January 1 and March 1",
+   "expected": "at midnight on the 1st of January and March",
    "options": {
     "lang": "en"
    },
@@ -2249,7 +2249,7 @@
    "pattern": "0 9-17/2 * 1-6 1-5"
   },
   {
-   "expected": "at 6 p.m. on the weekday nearest March 15, June 15, September 15, and December 15",
+   "expected": "at 6 p.m. on the weekday nearest the 15th of March, June, September, and December",
    "options": {
     "lang": "en"
    },
@@ -3461,7 +3461,7 @@
    "pattern": "0 0 0 29 2 * 2032"
   },
   {
-   "expected": "at midnight on the weekday in the same month nearest July 31 and August 31",
+   "expected": "at midnight on the weekday in the same month nearest the 31st of July and August",
    "options": {
     "cron": "quartz",
     "lang": "en"
@@ -3492,7 +3492,7 @@
    "pattern": "0 0 30 2-3 *"
   },
   {
-   "expected": "at midnight on April 1, June 1, September 1, and November 1",
+   "expected": "at midnight on the 1st of April, June, September, and November",
    "options": {
     "lang": "en"
    },
@@ -3745,7 +3745,7 @@
    "pattern": "* 1/6 * * *"
   },
   {
-   "expected": "at midnight on February 1, April 1, June 1, August 1, October 1, and December 1",
+   "expected": "at midnight on the 1st of February, April, June, August, October, and December",
    "options": {
     "lang": "en"
    },

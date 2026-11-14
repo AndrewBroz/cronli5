@@ -923,17 +923,13 @@ function monthsAlone(opts: EnglishOptions): Voice {
 }
 
 /**
- * Months belonging to days that have already been phrased: "on the 1st
- * and 15th of January and July", "on the 1st of each month from June
- * through August", "on the 1st of every other month", "on the 1st of
- * every other month from February". Listed months under a single day
- * (`day`, with `lead` to introduce it) are said as dates in full: "on
- * January 1 and July 1".
+ * Months belonging to days that have already been phrased, one day or
+ * several: "on the 1st of January and July", "on the 1st and 15th of
+ * January and July", "on the 1st of each month from June through August",
+ * "on the 1st of every other month", "on the 1st of every other month
+ * from February".
  */
-function monthsOfDays(
-  days: {day: number | null; lead: string; phrase: string},
-  opts: EnglishOptions
-): Voice {
+function monthsOfDays(days: {phrase: string}, opts: EnglishOptions): Voice {
   const of = `${days.phrase} ${words.of}`;
   const monthWord = units.month.one;
   const months = listing({
@@ -961,15 +957,6 @@ function monthsOfDays(
           null;
       },
       tiles: true
-    },
-    values(values) {
-      const {day} = days;
-
-      return day === null ?
-        months.values(values) :
-        `${days.lead} ` + list(values.flatMap(function dateIn(month) {
-          return dayNames([day], month, false, opts);
-        }), opts);
     }
   };
 }
