@@ -233,7 +233,7 @@ function momentsListed(seconds: number[], work: Clockwork): TimeSaid {
  * restricted, so that hours past midnight may be said as one run.
  */
 function sayTime(facts: ScheduleFacts, speech: Speech, free: boolean):
-  {excepted: boolean; text: string} {
+  {excepted: boolean; roundTheClock: boolean; text: string} {
   const {cadencePieces, clockSecond} = facts.analyses;
   const linear = {linear: true};
   const hours = hoursOf(fieldSet(readAs(facts, 'hour', free), HOURS,
@@ -261,9 +261,10 @@ function sayTime(facts: ScheduleFacts, speech: Speech, free: boolean):
     count === 1 && second.values[0] === FIRST && function atZero() {
       return sayWithin(plain);
     },
-    moments <= TIMES_AT_A_GLANCE && function fewMoments() {
-      return momentsListed(second.values, plain);
-    },
+    moments <= TIMES_AT_A_GLANCE && hours.tiling === null &&
+      function fewMoments() {
+        return momentsListed(second.values, plain);
+      },
     count === 1 && function oneSecond() {
       return sayWithin(
         {...plain, voice: secondVoice(speech, clockSecond as number)});
@@ -281,6 +282,7 @@ function sayTime(facts: ScheduleFacts, speech: Speech, free: boolean):
 
   return {
     excepted,
+    roundTheClock: hours.tiling !== null,
     text: [
       found.base,
       ...excepted ?
