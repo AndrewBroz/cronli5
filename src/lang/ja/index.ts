@@ -76,9 +76,10 @@ function describeParts(schedule: Schedule, opts: JapaneseOptions): Parts {
     seconds: valuesOf(schedule, 'second'),
     wrap
   }, opts.style);
+  // Hours that tile the day run round the clock, as every hour does.
   const calendar: Calendar = calendarPart(schedule, {
-    allDay: time.kind === 'allDay',
-    restricted: !time.everyHour
+    allDay: time.kind === 'allDay' || time.tiles,
+    restricted: !time.everyHour && !time.tiles
   }, opts.style);
 
   // A schedule that never runs says only that.

@@ -261,19 +261,16 @@ function yearsListed(cadence: Cadence, leads: boolean): boolean {
 
 // A cadence of years that is not named year by year: every second year
 // by its word, with its start or its ends where it does not cover every
-// year; any other by its rule, with its first years in brackets. Among
+// year; any other by its rule, from its first year to its last. Among
 // other parts the word is said only of the part that leads them, since
 // after another part it would be read with both.
 function yearCadence(cadence: Cadence, leads: boolean): string {
   const {interval, last, start} = cadence;
   const open = cadence.open === true;
   const whole = open && start - yearSay.domain.min < interval;
-  const closed = when(!open, yearName(last));
   const rule = yearName(start) + words.from +
-    when(!open, closed + words.to) + interval + units.year +
-    words.yearsEvery + marks.open +
-    listOf([start, start + interval].map(yearName)) + marks.ellipsis +
-    closed + marks.close;
+    when(!open, yearName(last) + words.to) + interval + units.year +
+    words.yearsEvery;
   const parity = when(!whole,
     yearRange({...cadence, from: start, kind: 'range', to: last}) +
     words.of) + [words.evenYears, words.oddYears][start % 2];
