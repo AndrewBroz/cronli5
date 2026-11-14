@@ -39,6 +39,7 @@ import {
 } from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
 import {table as cronstrueOptions} from '../src/cronstrue/table.js';
+import cronstrueAdapter from '../src/cronstrue/index.js';
 import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
@@ -176,6 +177,74 @@ function renderHeadToHead() {
     ' |', rows);
 }
 
+// The README's case for switching: patterns where the two libraries'
+// descriptions are worth comparing side by side. The author chooses the
+// rows; both outputs are live.
+const whyRows = [
+  {
+    code: 'en',
+    pattern: '*/45 * * * *'
+  },
+  {
+    code: 'en',
+    pattern: '0,30 8-10 * * 1-5'
+  },
+  {
+    code: 'en',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'de',
+    pattern: '0 0 1,15 * 3'
+  },
+  {
+    code: 'fr',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'cs',
+    pattern: '*/2 * * * *'
+  },
+  {
+    code: 'cs',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'es',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'zh',
+    cronstrueLocale: 'zh_CN',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'ja',
+    pattern: '30 9 * * 1-5'
+  }
+];
+
+const languageNames = {
+  cs: 'Czech', de: 'German', en: 'English', es: 'Spanish', fr: 'French',
+  ja: 'Japanese', zh: 'Chinese'
+};
+
+function renderWhy() {
+  const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
+  const rows = whyRows.map(function row(entry) {
+    const lang = entry.code === 'en' ? en : byCode[entry.code].lang;
+
+    return '| `' + entry.pattern + '` | ' + languageNames[entry.code] +
+      ' | ' +
+      describe((p) => cronli5(p, {form: 'label', lang}), entry.pattern) +
+      ' | ' + describe((p) => cronstrueFor(entry.cronstrueLocale ||
+        entry.code, p), entry.pattern) + ' |';
+  });
+
+  return tableFrom('| Pattern | Language | cronli5 | cRonstrue ' +
+    cronstrueVersion + ' |', rows);
+}
+
 // The named English styles, each as the options that select it.
 const styleColumns = [
   ['us', {}],
@@ -240,40 +309,44 @@ function collectVars(text) {
   return vars;
 }
 
-// Evaluate a `cronli5(<args>)` example with the language modules and any
-// doc-local bindings in scope; returns the description string, or null if
-// the args reference something we cannot evaluate.
-function evaluateExample(args, vars) {
+// Evaluate a `cronli5(<args>)` or `cronstrue.toString(<args>)` example (the
+// latter through cronli5's cRonstrue adapter) with the language modules and
+// any doc-local bindings in scope; returns the description string, or null
+// if the args reference something we cannot evaluate.
+function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
   try {
+    const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh};
+    const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
-    const run = Function('cronli5', 'en', ...names,
-      'return cronli5(' + args + ');');
+    const run = Function('cronli5', 'cronstrue', ...codes, ...names,
+      'return ' + callee + '(' + args + ');');
 
-    return run(cronli5, en, ...names.map(function value(n) {
-      return vars[n];
-    }));
+    return run(cronli5, cronstrueAdapter,
+      ...codes.map((code) => modules[code]),
+      ...names.map((n) => vars[n]));
   }
   catch {
     return null;
   }
 }
 
-// Rewrite the `// 'output'` comment after each `cronli5(<args>)` example
+// Rewrite the `// 'output'` comment after each `cronli5(<args>)` or
+// `cronstrue.toString(<args>)` example
 // from live output. The author chooses the example; the machine owns the
 // result.
 function rewriteExamples(text) {
   const vars = collectVars(text);
-  const re =
-    /(cronli5\(([^)]*)\)[^\S\n]*;?[^\S\n]*(?:\n[^\S\n]*)?\/\/ ')([^']*)(')/g;
+  const re = new RegExp('((cronli5|cronstrue\\.toString)\\(([^)]*)\\)' +
+    '[^\\S\\n]*;?[^\\S\\n]*(?:\\n[^\\S\\n]*)?\\/\\/ \')([^\']*)(\')', 'gu');
   let result = '';
   let last = 0;
 
   for (let m = re.exec(text); m; m = re.exec(text)) {
-    const got = evaluateExample(m[2], vars);
+    const got = evaluateExample(m[2], m[3], vars);
     const replacement = typeof got === 'string' && !got.includes('\'') ?
-      m[1] + got + m[4] :
+      m[1] + got + m[5] :
       m[0];
 
     result += text.slice(last, m.index) + replacement;
@@ -286,6 +359,7 @@ function rewriteExamples(text) {
 const tableJobs = {
   'README.md': {
     'cronstrue-head-to-head': renderHeadToHead(),
+    'why-not-cronstrue': renderWhy(),
     'language-status': statusSummary()
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},
@@ -303,8 +377,9 @@ for (const language of languages) {
 }
 
 const docs = [
-  'README.md', 'docs/language-status.md', 'docs/cronli5-vs-cronstrue.md',
-  'docs/styles.md', 'docs/migrating-from-cronstrue.md',
+  'README.md', 'llms.txt', 'docs/language-status.md',
+  'docs/cronli5-vs-cronstrue.md', 'docs/styles.md',
+  'docs/migrating-from-cronstrue.md',
   ...languages.map((language) => 'docs/lang/' + language.code + '.md')
 ];
 
