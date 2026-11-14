@@ -109,7 +109,10 @@ function dayJoin(days: DaySaid, time: string, arms: Arms): string {
     ',');
 }
 
-/** The parts of a description, which joined by spaces are the whole. */
+/**
+ * The parts of a description, which joined by spaces are the whole.
+ * @internal
+ */
 function describeParts(facts: ScheduleFacts, opts: ItalianOptions): Parts {
   const {dateReach, day} = facts.analyses;
 
@@ -153,7 +156,7 @@ function describe(facts: ScheduleFacts, opts: ItalianOptions): string {
   return phrase(parts.frame, parts.day, parts.time, parts.closing);
 }
 
-const italian: Language<ItalianStyle> = {
+const italian: Language<ItalianStyle, 'it'> = {
   code: 'it',
   defaultStyle: 'it',
   describe,

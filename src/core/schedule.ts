@@ -339,9 +339,9 @@ export interface NormalizedOptions<Style = unknown> extends Reading {
 }
 
 /** The interface every language module's default export implements. */
-export interface Language<Style = unknown> {
+export interface Language<Style = unknown, Code extends string = string> {
   // The language's code, as callers name it: `en`, `uk`.
-  code: string;
+  code: Code;
   // The key of `styles` used when no region selects another.
   defaultStyle: string;
   describe(schedule: Schedule, opts: NormalizedOptions<Style>): string;

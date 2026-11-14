@@ -21,7 +21,7 @@ export function describeParts(schedule: ScheduleFacts, opts: EnglishOptions):
   return partsOf(schedule, opts);
 }
 
-const english: Language<EnglishStyle> = {
+const english: Language<EnglishStyle, 'en'> = {
   code: 'en',
   defaultStyle: 'us',
   describe(schedule, opts) {

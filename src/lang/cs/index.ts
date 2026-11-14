@@ -98,7 +98,10 @@ function frameOf(schedule: Schedule, day: DayPart, lead: Lead): string {
   return spaced(beside ? '' : years.text || leap, month);
 }
 
-/** The parts of a description: the years and months, the day, the time. */
+/**
+ * The parts of a description: the years and months, the day, the time.
+ * @internal
+ */
 function describeParts(schedule: Schedule, opts: CzechOptions): Parts {
   const {style: table} = opts;
   const arms = armsOf(schedule);
@@ -140,7 +143,7 @@ function describe(schedule: Schedule, opts: CzechOptions): string {
   return spaced(parts.frame, parts.day, parts.time);
 }
 
-const czech: Language<CzechStyle> = {
+const czech: Language<CzechStyle, 'cs'> = {
   code: 'cs',
   defaultStyle: 'cs',
   describe,

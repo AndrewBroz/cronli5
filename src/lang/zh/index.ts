@@ -41,6 +41,7 @@ function valuesOf(schedule: Schedule, field: Field): number[] {
  * Before a clock time it is whatever the day part asks for. A schedule
  * whose dates exist in none of its months has one piece, which says that
  * it never fires.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: ChineseOptions):
   ChineseParts {
@@ -100,7 +101,7 @@ function fallback(): string {
   return words.unrecognizable;
 }
 
-const chinese: Language<ChineseStyle> = {
+const chinese: Language<ChineseStyle, 'zh'> = {
   code: 'zh',
   defaultStyle: 'standard',
   describe,

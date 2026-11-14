@@ -11,7 +11,8 @@ import {Cronli5OptionError} from '../core/errors.js';
 
 export {Cronli5OptionError};
 import type {Translated} from './table.js';
-import cronli5 from '../all.js';
+import type {Cronli5, Cronli5Styles} from '../types.js';
+import every from '../all.js';
 import {table} from './table.js';
 
 /** cRonstrue's options, as `cronstrue.toString` takes them. */
@@ -52,6 +53,10 @@ function toString(expression: string, options?: CronstrueOptions): string {
   table.forEach(function each(row) {
     row.translate(given[row.option], translated, given);
   });
+
+  // cRonstrue's locale is known only at run time, so the call is typed
+  // for any language; the library checks the code and the style itself.
+  const cronli5 = every as Cronli5<Cronli5Styles>;
 
   return cronli5(expression, {
     ...translated,

@@ -45,7 +45,7 @@ function describe(schedule: Schedule, opts: GermanOptions): string {
   return join([year, month, day, time]);
 }
 
-const german: Language<GermanStyle> = {
+const german: Language<GermanStyle, 'de'> = {
   code: 'de',
   defaultStyle: 'de',
   describe,

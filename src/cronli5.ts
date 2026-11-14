@@ -23,8 +23,9 @@
 
 import {analyze, prepare} from './core/index.js';
 import {Cronli5InputError} from './core/errors.js';
-import type {Cronli5, Cronli5AnyStyle, CronPattern, Cronli5Setup}
-  from './types.js';
+import type {
+  Cronli5, Cronli5Language, Cronli5Setup, Cronli5StylesOf, CronPattern
+} from './types.js';
 import type {Resolved, Setup} from './options.js';
 import {resolve, setupOf} from './options.js';
 import en from './lang/en/index.js';
@@ -83,20 +84,28 @@ function describeWith(
  * as `lang` resolve among them, and the first is the default. `options`
  * and `styles` (by language code) are defaults a call can override.
  */
-function create(given: Cronli5Setup): Cronli5<Cronli5AnyStyle> {
+function create<const Languages extends readonly Cronli5Language[]>(
+  given: Cronli5Setup<Languages>
+): Cronli5<Cronli5StylesOf<Languages>, Languages[0]['code']> {
   const setup = setupOf(given);
 
-  return function describePattern(cronPattern, options) {
+  // One function answers every call signature: the types differ only in
+  // which style a call may pass, and the library checks that at run time.
+  return function describePattern(
+    cronPattern: CronPattern,
+    options?: unknown
+  ): string {
     return describeWith(setup, cronPattern, options);
-  };
+  } as Cronli5<Cronli5StylesOf<Languages>, Languages[0]['code']>;
 }
 
-const cronli5: Cronli5 = create({languages: [en]});
+const cronli5 = create({languages: [en]});
 
 export default cronli5;
 export {create};
 export {Cronli5InputError, Cronli5OptionError} from './core/errors.js';
 export type {
-  Cronli5, Cronli5AnyStyle, Cronli5Language, Cronli5Options, Cronli5Setup,
-  CronPattern, CronPatternObject
+  Cronli5, Cronli5AnyStyle, Cronli5Code, Cronli5CommonOptions,
+  Cronli5Language, Cronli5Options, Cronli5Setup, Cronli5StyleOf,
+  Cronli5Styles, Cronli5StylesOf, CronPattern, CronPatternObject
 } from './types.js';

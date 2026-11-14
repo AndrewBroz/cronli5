@@ -393,7 +393,20 @@ ship the same dual ESM + CJS builds under `dist/lang/`.
 
 TypeScript type definitions ship under `types/`, one declaration per entry
 point (the package's `exports` map points at each), and are picked up
-automatically: no `@types` package required.
+automatically: no `@types` package required. A call's `style` is checked
+against the language it names, whether by module or by code:
+
+```ts
+import cronli5 from 'cronli5/all';
+
+cronli5('30 9 * * *', { lang: 'cs-CZ', style: { separator: '.' } }); // ok
+cronli5('30 9 * * *', { lang: 'cs', style: { am: 'am' } });
+// error: Czech has no `am`
+```
+
+An instance made with `create` knows the codes and style tables of the
+modules it is given. A code known only at run time can be typed with
+`Cronli5<Cronli5Styles>`, which leaves the checks to the library.
 
 ## Development
 

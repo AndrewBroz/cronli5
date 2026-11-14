@@ -38,6 +38,7 @@ function closed(part: string): string {
  * The parts of a description, each spelled as it stands after the part
  * before it and closed by its mark; joined by spaces they are the
  * description.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: UkrainianOptions): Parts {
   const calendar = calendarOf(schedule, opts.style.short);
@@ -116,7 +117,7 @@ function fallback(): string {
   return words.unrecognizable;
 }
 
-const ukrainian: Language<UkrainianStyle> = {
+const ukrainian: Language<UkrainianStyle, 'uk'> = {
   code: 'uk',
   defaultStyle: 'standard',
   describe,

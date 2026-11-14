@@ -2,8 +2,11 @@ import {expectType, expectError, expectAssignable} from 'tsd';
 import cronli5, {
   create, Cronli5, Cronli5AnyStyle, Cronli5Options, CronPattern,
   CronPatternObject
-} from '..';
+} from '../types/cronli5.js';
 import en, {styles} from '../types/lang/en/index.js';
+import cs from '../types/lang/cs/index.js';
+import de from '../types/lang/de/index.js';
+import every from '../types/all.js';
 
 // The default export is a function returning a string.
 expectType<string>(cronli5('* * * * *'));
@@ -68,21 +71,43 @@ expectError(cronli5(42));
 expectAssignable<Cronli5Options>({lang: 'uk'});
 expectAssignable<Cronli5Options>({lang: en});
 expectType<string>(cronli5('* * * * *', {lang: en}));
-expectType<string>(en.code);
+expectType<'en'>(en.code);
 
 // The convenience methods are gone.
 expectError(cronli5.sentence('0 0 * * *'));
 expectError(cronli5.fragment('0 0 * * *'));
 
-// An instance knows the languages it is given; its style is open, since
-// the type cannot know which language a call will name.
+// A style is typed by the language a call names. A module carries its
+// own style table; a code names a language the instance knows, in any
+// common spelling of language and region.
+expectType<string>(cronli5('0 9 * * *', {lang: cs, style: {separator: '.'}}));
+expectError(cronli5('0 9 * * *', {lang: cs, style: {am: 'am'}}));
+expectError(cronli5('0 9 * * *', {lang: cs, style: {nope: true}}));
+expectError(cronli5('0 9 * * *', {lang: 'cs'}));
+
+expectType<string>(every('0 9 * * *', {lang: 'cs', style: {separator: '.'}}));
+expectType<string>(every('0 9 * * *', {lang: 'cs-CZ', style: {short: true}}));
+expectType<string>(every('0 9 * * *', {lang: 'de_AT', style: {jaenner: true}}));
+expectType<string>(every('0 9 * * *', {lang: 'EN-gb', style: {am: 'am'}}));
+expectType<string>(every('0 9 * * *', {style: {am: 'am'}}));
+expectError(every('0 9 * * *', {lang: 'cs', style: {am: 'am'}}));
+expectError(every('0 9 * * *', {lang: 'de', style: {separator: '.'}}));
+expectError(every('0 9 * * *', {lang: 'tlh'}));
+
+// An instance knows the languages it is given, the first being the
+// default, and types the style of each.
 const describe = create({
-  languages: [en],
+  languages: [en, de],
   options: {form: 'label'},
-  styles: {en: {hour12: false}}
+  styles: {de: {eszett: false}, en: {hour12: false}}
 });
 
-expectType<Cronli5<Cronli5AnyStyle>>(describe);
 expectType<string>(describe('0 9 * * *', {lang: 'en', style: {short: true}}));
+expectType<string>(describe('0 9 * * *', {style: {am: 'am'}}));
+expectType<string>(describe('0 9 * * *', {lang: 'de', style: {jaenner: true}}));
+expectError(describe('0 9 * * *', {lang: 'fr'}));
+expectError(describe('0 9 * * *', {lang: 'de', style: {am: 'am'}}));
+expectError(create({languages: [de], styles: {de: {nope: true}}}));
 expectError(create({}));
 expectError(create({languages: [en], options: {style: {hour12: false}}}));
+expectAssignable<Cronli5>(cronli5);

@@ -146,6 +146,7 @@ function compose(schedule: Schedule, opts: FrenchOptions):
 /**
  * The parts of a description, in the order they are said: those that are
  * not empty, joined with spaces, are the description.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: FrenchOptions): Parts {
   return compose(schedule, opts).parts;
@@ -176,7 +177,7 @@ function fallback(): string {
   return w.unrecognizable;
 }
 
-const french: Language<FrenchStyle> = {
+const french: Language<FrenchStyle, 'fr'> = {
   code: 'fr',
   defaultStyle: 'fr',
   describe,

@@ -62,6 +62,7 @@ function valuesOf(schedule: Schedule, field: 'hour' | 'minute' | 'second'):
 /**
  * The parts of a description: joined in the order year, month, day, time,
  * with nothing between, they are the description.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: JapaneseOptions): Parts {
   const {candidates} = schedule.analyses;
@@ -95,7 +96,7 @@ function describe(schedule: Schedule, opts: JapaneseOptions): string {
   return parts.year + parts.month + parts.day + parts.time;
 }
 
-const japanese: Language<JapaneseStyle> = {
+const japanese: Language<JapaneseStyle, 'ja'> = {
   code: 'ja',
   defaultStyle: 'standard',
   describe,

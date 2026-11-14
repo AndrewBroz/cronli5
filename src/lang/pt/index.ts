@@ -30,6 +30,7 @@ const calendarFields: Field[] = ['date', 'weekday', 'month', 'year'];
  * a date does, so the whole calendar is held in the day part, with the
  * mark that joins it to the time: a comma, nothing, or «, sempre» after a
  * day of the month and a weekday together.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: PortugueseOptions): Parts {
   const {analyses} = schedule;
@@ -60,7 +61,7 @@ function describe(schedule: Schedule, opts: PortugueseOptions): string {
   return [parts.day, parts.time].filter(Boolean).join(' ');
 }
 
-const portuguese: Language<PortugueseStyle> = {
+const portuguese: Language<PortugueseStyle, 'pt'> = {
   code: 'pt',
   defaultStyle: 'br',
   describe,

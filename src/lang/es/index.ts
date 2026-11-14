@@ -46,6 +46,7 @@ function closed(part: string, comma: boolean): string {
 /**
  * The four parts of a description. Their non-empty members, joined by
  * spaces, are the description.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: SpanishOptions): Parts {
   const {candidates} = schedule.analyses;
@@ -88,7 +89,7 @@ function describe(schedule: Schedule, opts: SpanishOptions): string {
     .filter(Boolean).join(' ');
 }
 
-const spanish: Language<SpanishStyle> = {
+const spanish: Language<SpanishStyle, 'es'> = {
   code: 'es',
   defaultStyle: 'es',
   describe,

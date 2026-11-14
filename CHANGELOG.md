@@ -16,6 +16,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   internal facts, which no public entry point produces, and the CommonJS
   builds already lacked them; they are internal now, in ESM and in the
   type declarations too.
+- **BREAKING (types): `style` is typed by the language a call names.** A
+  module carries its style table and a code (`'cs'`, `'cs-CZ'`, `'de_AT'`)
+  maps to its language's, so Czech fields pass and English ones do not
+  where Czech is named. `create` infers the codes and tables of the modules
+  it is given, and its `styles` are checked too. `Cronli5`'s type
+  parameters are now the tables by code and the default code; a language
+  module's `code` is its literal code. The type tests had not been running
+  (the file was not named as `tsd` looks for); they run now, for every
+  language.
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` warn.** Traditional Chinese is
   not yet written; these describe in Simplified Chinese and say so once on
   the console, where before they did so in silence.
