@@ -620,8 +620,19 @@ const rows = [
   ['30 0 9-17 * * *', 'täglich von 9:00:30 bis 17:00:30 Uhr stündlich'],
   ['30 0 * * * *', '30 Sekunden nach jeder vollen Stunde'],
   ['30 0 */2 * * *', 'täglich von 0:00:30 bis 22:00:30 Uhr alle 2 Stunden'],
-  ['15 30 * * * *',
-    'stündlich zur Minute 30, jeweils 15 Sekunden nach der vollen Minute'],
+  // One minute and one second under every hour are one count from the
+  // full hour, as one second alone is: two readers found one reading in
+  // it and called it the most natural; «zur Minute 5 und Sekunde 30» and
+  // «zur Minute 5, Sekunde 30» were each read as two moments (2026-11-14).
+  ['15 30 * * * *', '30 Minuten und 15 Sekunden nach jeder vollen Stunde'],
+  ['30 5 * * * *', '5 Minuten und 30 Sekunden nach jeder vollen Stunde'],
+  // After a day part, «jeweils» joins the count, as it does for one
+  // second alone («am 1. jedes Monats jeweils 30 Sekunden nach …»).
+  ['30 5 * 1 * *',
+    'am 1. jedes Monats jeweils 5 Minuten und 30 Sekunden nach jeder ' +
+    'vollen Stunde'],
+  ['30 1 * * * *', '1 Minute und 30 Sekunden nach jeder vollen Stunde'],
+  ['1 5 * * * *', '5 Minuten und 1 Sekunde nach jeder vollen Stunde'],
   ['30 5,20 * * * *',
     'stündlich zu den Minuten 5 und 20, jeweils 30 Sekunden nach der vollen ' +
     'Minute'],
