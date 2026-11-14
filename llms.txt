@@ -1,0 +1,76 @@
+# cronli5
+
+> Turns cron patterns into plain-language descriptions ("every 15 minutes
+> from 9 a.m. through 5:45 p.m. on weekdays") in ten languages: English,
+> Czech, German, Spanish, French, Italian, Japanese, Portuguese, Ukrainian
+> and Chinese (Simplified). Zero runtime dependencies, ESM and CommonJS,
+> TypeScript types bundled, Node 20+ or the browser. It describes
+> schedules; it does not run them or compute next run times.
+
+Install: `npm install cronli5`
+
+## API
+
+```js
+import cronli5 from 'cronli5';
+
+cronli5('*/5 * * * *');                     // 'every 5 minutes'
+cronli5('30 9 * * 1-5');                    // 'at 9:30 a.m. on weekdays'
+cronli5('0 0 * * *', { form: 'label' });    // 'At midnight every day'
+cronli5('0 0 * * *', { form: 'sentence' }); // 'Runs at midnight every day.'
+cronli5({ hour: 9, minute: 30 });           // 'at 9:30 a.m. every day'
+```
+
+The pattern is a string, an array of fields, or an object of named fields.
+Five fields are standard cron; six put seconds first; seven add a year
+last. `@daily` and the other aliases, wrap-around ranges (`22-2`) and the
+Quartz tokens `L`, `W` and `#` are accepted.
+
+Other languages are separate modules, so only what you import is bundled:
+
+```js
+import cronli5 from 'cronli5';
+import de from 'cronli5/lang/de';
+
+cronli5('30 9 * * 1-5', { lang: de });      // 'montags bis freitags um 9:30 Uhr'
+```
+
+`import cronli5 from 'cronli5/all'` knows every language by code
+(`{ lang: 'de' }`). `create({ languages: [de, ja] })` makes an instance
+that knows the languages you choose.
+
+Options (second argument): `lang` (code such as `'en-GB'`, or an imported
+module), `form` (`'fragment'` default, `'label'`, `'sentence'`), `style`
+(the language's style table, e.g. `{ hour12: false }` in English), `cron`
+(`'standard'` or `'quartz'`, which numbers weekdays from 1 = Sunday and
+accepts `?`), `seconds`, `years`, and `lenient` (return a fallback text
+instead of throwing on a bad pattern). A bad pattern throws
+`Cronli5InputError`; an option it cannot honour throws
+`Cronli5OptionError`, even when lenient.
+
+Command line: `npx cronli5 '*/15 9-17 * * 1-5'`, or
+`crontab -l | npx cronli5 --crontab`.
+
+## Replacing cRonstrue
+
+`cronli5/cronstrue` takes cRonstrue's call unchanged; only the import
+changes. Each cRonstrue option is mapped or refused with an error.
+
+```js
+import cronstrue from 'cronli5/cronstrue'; // was: from 'cronstrue'
+
+cronstrue.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
+```
+
+## Docs
+
+- [README](https://github.com/andrewbroz/cronli5#readme): usage, options, languages, examples
+- [Migrating from cRonstrue](https://github.com/andrewbroz/cronli5/blob/main/docs/migrating-from-cronstrue.md): option mapping and output differences
+- [cronli5 vs. cRonstrue](https://github.com/andrewbroz/cronli5/blob/main/docs/cronli5-vs-cronstrue.md): generated side-by-side output
+- [Style tables](https://github.com/andrewbroz/cronli5/blob/main/docs/styles.md): every style field per language
+- [Per-language docs](https://github.com/andrewbroz/cronli5/tree/main/docs/lang): each language's conventions
+
+## Optional
+
+- [Conformance suites](https://github.com/andrewbroz/cronli5/tree/main/conformance): every expected description per language as JSON, for ports to other programming languages
+- [Design](https://github.com/andrewbroz/cronli5/blob/main/docs/i18n-design.md): core and per-language renderers

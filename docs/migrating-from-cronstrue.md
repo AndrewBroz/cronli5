@@ -15,14 +15,16 @@ guide links to it rather than duplicating its tables.
 
 **cRonstrue is still a fine choice when:**
 
-* You want the **tersest possible** output. cRonstrue is compact and reads fine
-  for simple cadences (`* * * * *` &rarr; "Every minute"; `0 9 * * *` &rarr;
-  "At 09:00 AM").
-* You need a **language `cronli5` does not ship**. cRonstrue carries **39
-  locales** (machine-/community-translated string tables); `cronli5` ships
-  English today; the other languages are being rebuilt for the next major version, one
-  reviewed module at a time. If your locale is not on cronli5's list, cRonstrue
-  is the pragmatic answer.
+* You want the **tersest possible** output in English, and your patterns
+  are simple cadences that divide their unit (`* * * * *` &rarr; "Every
+  minute"; `*/15 * * * *` &rarr; "Every 15 minutes"). Outside English, and
+  for steps like `*/45` ("Every 45 minutes", though it runs at :00 and
+  :45), see the [README](../README.md#why-not-cronstrue).
+* You need a **language `cronli5` doesn't have yet**. cRonstrue carries **39
+  locales**, built from per-locale string tables; `cronli5` ships ten, each
+  a full renderer. If your locale is not on
+  [cronli5's list](../README.md#languages), cRonstrue is the pragmatic
+  answer.
 * You are happy with the clock-first, comma-joined house style and don't want
   to change any output strings.
 
@@ -62,8 +64,8 @@ import cronstrue from "cronstrue";
 // after
 import cronstrue from "cronli5/cronstrue";
 
-cronstrue.toString("0 9 * * 1");                               // "At 9 a.m. on Mondays"
-cronstrue.toString("30 17 * * *", { use24HourTimeFormat: true }); // "At 17:30 every day"
+cronstrue.toString("0 9 * * 1");                               // 'At 9 a.m. on Mondays'
+cronstrue.toString("30 17 * * *", { use24HourTimeFormat: true }); // 'At 17:30 every day'
 ```
 
 It translates the call and nothing else. The wording is `cronli5`'s, which
