@@ -177,64 +177,49 @@ function renderHeadToHead() {
     ' |', rows);
 }
 
-// The README's case for switching: rows where cRonstrue's description is
-// false or ungrammatical, each with a note on what is wrong. The author
-// chooses the rows and writes the notes; both outputs are live.
+// The README's case for switching: patterns where the two libraries'
+// descriptions are worth comparing side by side. The author chooses the
+// rows; both outputs are live.
 const whyRows = [
   {
     code: 'en',
-    note: 'It runs at :00 and :45, so every other gap is 15 minutes.',
     pattern: '*/45 * * * *'
   },
   {
     code: 'en',
-    note: 'The rhythm is left to work out from two minute values, and the ' +
-      'window ends at 10:59; the last run is at 10:30.',
     pattern: '0,30 8-10 * * 1-5'
   },
   {
     code: 'en',
-    note: '"1 minutes".',
     pattern: '1 * * * *'
   },
   {
     code: 'de',
-    note: 'German does not write dates as "an Tag 1 und 15", and the comma ' +
-      'before "und" is an error.',
     pattern: '0 0 1,15 * 3'
   },
   {
     code: 'fr',
-    note: 'French writes the first of the month "le 1er", not "le 1".',
     pattern: '0 12 1 1 *'
   },
   {
     code: 'cs',
-    note: 'After 2, 3 and 4, Czech says "každé 2 minuty"; "každých 2 ' +
-      'minut" is wrong even for the simplest cadence.',
     pattern: '*/2 * * * *'
   },
   {
     code: 'cs',
-    note: '"v Leden" is the wrong case, and Czech months are not ' +
-      'capitalised: "v lednu".',
     pattern: '0 12 1 1 *'
   },
   {
     code: 'es',
-    note: '"los 1 minutos" puts a plural article and noun on 1.',
     pattern: '1 * * * *'
   },
   {
     code: 'zh',
     cronstrueLocale: 'zh_CN',
-    note: '"下午 12:00" ("12:00 in the afternoon") for noon, and the date ' +
-      'split into "the 1st of every month, only in January".',
     pattern: '0 12 1 1 *'
   },
   {
     code: 'ja',
-    note: 'The fragments do not make a Japanese sentence.',
     pattern: '30 9 * * 1-5'
   }
 ];
@@ -253,12 +238,11 @@ function renderWhy() {
       ' | ' +
       describe((p) => cronli5(p, {form: 'label', lang}), entry.pattern) +
       ' | ' + describe((p) => cronstrueFor(entry.cronstrueLocale ||
-        entry.code, p), entry.pattern) +
-      ' | ' + entry.note + ' |';
+        entry.code, p), entry.pattern) + ' |';
   });
 
   return tableFrom('| Pattern | Language | cronli5 | cRonstrue ' +
-    cronstrueVersion + ' | What is wrong |', rows);
+    cronstrueVersion + ' |', rows);
 }
 
 // The named English styles, each as the options that select it.

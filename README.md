@@ -37,18 +37,18 @@ the clock, so even simple patterns come out false in English and
 ungrammatical in languages that inflect:
 
 <!-- BEGIN GENERATED: why-not-cronstrue -->
-| Pattern | Language | cronli5 | cRonstrue 3.14.0 | What is wrong |
-| --- | --- | --- | --- | --- |
-| `*/45 * * * *` | English | At 0 and 45 minutes past the hour | Every 45 minutes | It runs at :00 and :45, so every other gap is 15 minutes. |
-| `0,30 8-10 * * 1-5` | English | Every 30 minutes from 8 a.m. through 10:30 a.m. on weekdays | At 0 and 30 minutes past the hour, between 08:00 AM and 10:59 AM, Monday through Friday | The rhythm is left to work out from two minute values, and the window ends at 10:59; the last run is at 10:30. |
-| `1 * * * *` | English | At 1 minute past the hour | At 1 minutes past the hour | "1 minutes". |
-| `0 0 1,15 * 3` | German | Mittwochs und zusätzlich am 1. und 15. jedes Monats, jeweils um 0:00 Uhr | Um 00:00, an Tag 1 und 15 des Monats, und jeden Mittwoch | German does not write dates as "an Tag 1 und 15", and the comma before "und" is an error. |
-| `0 12 1 1 *` | French | Le 1er janvier à 12 h | À 12:00, le 1 du mois, uniquement en janvier | French writes the first of the month "le 1er", not "le 1". |
-| `*/2 * * * *` | Czech | Každé 2 minuty | Každých 2 minut | After 2, 3 and 4, Czech says "každé 2 minuty"; "každých 2 minut" is wrong even for the simplest cadence. |
-| `0 12 1 1 *` | Czech | Vždy 1. ledna ve 12:00 | V 12:00, 1. den v měsíci, pouze v Leden | "v Leden" is the wrong case, and Czech months are not capitalised: "v lednu". |
-| `1 * * * *` | Spanish | En el minuto 1 de cada hora | A los 1 minutos de la hora | "los 1 minutos" puts a plural article and noun on 1. |
-| `0 12 1 1 *` | Chinese | 每年1月1日12:00 | 在下午 12:00, 限每月 1 号, 仅于一月份 | "下午 12:00" ("12:00 in the afternoon") for noon, and the date split into "the 1st of every month, only in January". |
-| `30 9 * * 1-5` | Japanese | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで | The fragments do not make a Japanese sentence. |
+| Pattern | Language | cronli5 | cRonstrue 3.14.0 |
+| --- | --- | --- | --- |
+| `*/45 * * * *` | English | At 0 and 45 minutes past the hour | Every 45 minutes |
+| `0,30 8-10 * * 1-5` | English | Every 30 minutes from 8 a.m. through 10:30 a.m. on weekdays | At 0 and 30 minutes past the hour, between 08:00 AM and 10:59 AM, Monday through Friday |
+| `1 * * * *` | English | At 1 minute past the hour | At 1 minutes past the hour |
+| `0 0 1,15 * 3` | German | Mittwochs und zusätzlich am 1. und 15. jedes Monats, jeweils um 0:00 Uhr | Um 00:00, an Tag 1 und 15 des Monats, und jeden Mittwoch |
+| `0 12 1 1 *` | French | Le 1er janvier à 12 h | À 12:00, le 1 du mois, uniquement en janvier |
+| `*/2 * * * *` | Czech | Každé 2 minuty | Každých 2 minut |
+| `0 12 1 1 *` | Czech | Vždy 1. ledna ve 12:00 | V 12:00, 1. den v měsíci, pouze v Leden |
+| `1 * * * *` | Spanish | En el minuto 1 de cada hora | A los 1 minutos de la hora |
+| `0 12 1 1 *` | Chinese | 每年1月1日12:00 | 在下午 12:00, 限每月 1 号, 仅于一月份 |
+| `30 9 * * 1-5` | Japanese | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで |
 <!-- END GENERATED: why-not-cronstrue -->
 
 `cronli5` writes one sentence per schedule, in each language's own words,
