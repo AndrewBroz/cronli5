@@ -120,9 +120,15 @@ sentence easy. Three costs:
   its base and each thing removed.
 - **Operation tax**: the mental work for anything not read off directly:
   adding from an offset, converting an ordinal, inferring a step from a
-  series, working out whether an end is included, a step that does not
-  divide its unit evenly (does it restart each hour?), multiplying fields
+  series, working out whether an end is included, multiplying fields
   together.
+
+A step that does not divide its unit is not a rhythm to a reader, who
+knows nothing of cron. Said bare, "every 7 minutes" is wrong, not merely
+costly: the reader takes every gap to be 7 minutes, and the gap from :56
+to the next :00 is 4. Such a step is said with where it stops and starts
+again ("every 7 minutes from 0 through 56 minutes past the hour"), or as
+its values.
 
 These costs rank a language's sentences, worst first, and compare two
 wordings that each have one reading. They are evidence for a person to

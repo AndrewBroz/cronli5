@@ -25,9 +25,17 @@ describe('the cost model:', function() {
         'the hour')).to.deep.equal([4, ['offset']]);
     });
 
-  it('taxes a step that does not divide its unit', function() {
-    expect(held('en', 'every 7 minutes')).to.deep.equal([1, ['uneven step']]);
-  });
+  it('calls a step that does not divide its unit a defect when said bare',
+    function() {
+      expect(costOf('en', 'every 7 minutes').defects)
+        .to.deep.equal(['uneven step said bare']);
+      expect(costOf('en', 'every 7 minutes from 0 through 56 minutes past ' +
+        'the hour').defects).to.deep.equal([]);
+      expect(costOf('de', 'stündlich von :00 bis :56 alle 7 Minuten').defects)
+        .to.deep.equal([]);
+      expect(costOf('en', 'at midnight every 3 days from the 1st of the ' +
+        'month').defects).to.deep.equal(['uneven step said bare']);
+    });
 
   it('holds a list of four times as four, untaxed', function() {
     expect(held('en', 'at 5, 20, 35, and 50 minutes past the hour'))

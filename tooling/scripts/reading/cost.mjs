@@ -67,6 +67,8 @@ function vowelGroups(text, pattern) {
 const languages = {
   de: {
     // Phrases the reader holds whole: one object however many words.
+    // What says where a rhythm stops and starts again.
+    bounded: /\bbis\b|\bvon :?\d/iu,
     chunks: [/montags bis freitags/giu, /werktags/giu, /täglich/giu,
       /stündlich/giu, /jede Minute/giu, /jede Sekunde/giu,
       /zur vollen Stunde/giu, /in den (?:un)?geraden Stunden/giu,
@@ -76,7 +78,7 @@ const languages = {
     inferred: /…/gu,
     inferredRule: /(?:un)?geraden|alle \d+ Stunden/iu,
     // A step and the unit it steps.
-    rhythm: /alle (\d+) (Sekunden|Minuten|Stunden)/giu,
+    rhythm: /alle (\d+) (Sekunden|Minuten|Stunden|Tage)/giu,
     // Two of the language's units read one inside the other.
     product: /\bjeweils\b/giu,
     speak(text) {
@@ -94,6 +96,7 @@ const languages = {
     window: /von (\S+) bis (\S+)/giu
   },
   en: {
+    bounded: /\bthrough\b|\buntil\b|past the (?:hour|minute)/iu,
     chunks: [/\bweekdays\b/giu, /\bweekends\b/giu, /every day/giu,
       /every minute/giu, /every second/giu, /every hour/giu,
       /on the hour/giu, /\bnoon\b/giu, /\bmidnight\b/giu,
@@ -103,7 +106,7 @@ const languages = {
     inferredRule: /every other|even|odd|every \d+ hours/iu,
     product: new RegExp('past the hour (?:from|through|during|at)|' +
       '(?:minutes|seconds) past (?!the )', 'giu'),
-    rhythm: /every (\d+) (seconds|minutes|hours)/giu,
+    rhythm: /every (\d+) (seconds|minutes|hours|days)/giu,
     speak(text) {
       return text
         .replace(/(\d{1,2}):(\d{2})/gu, (_, h, m) =>
@@ -165,18 +168,22 @@ function phaseOf(after) {
   return clock ? Number(clock[2]) : 0;
 }
 
-// What each rhythm in a sentence costs: a step that does not divide its
-// unit (does it restart?), and a first value that is not where habit puts
-// it (it must be added from).
-function rhythmOperations(spec, text) {
+// What each rhythm in a sentence costs: a first value that is not where
+// habit puts it (it must be added from). A step that does not divide its
+// unit, with nothing to say where it stops and starts again, is not a cost
+// but a misreading, since the reader takes every gap to be the step.
+function rhythmOperations(spec, text, defects) {
   const found = [];
 
   for (const match of text.matchAll(spec.rhythm)) {
     const step = Number(match[1]);
-    const unit = (/Stund|hour/u).test(match[2]) ? 24 : 60;
+    // A month is never a whole number of steps of more than one day.
+    const units = [[/Stund|hour/u, 24], [/Tag|day/u, 31]];
+    const unit = (units.find(([pattern]) => pattern.test(match[2])) ||
+      [null, 60])[1];
 
-    if (unit % step !== 0) {
-      found.push('uneven step');
+    if (unit % step !== 0 && !spec.bounded.test(text)) {
+      defects.push('uneven step said bare');
     }
 
     if (unit === 60 &&
@@ -190,8 +197,8 @@ function rhythmOperations(spec, text) {
 
 // The operations: the rhythms' own, a series left to inference, an
 // exception to subtract, and a product of two lists to multiply.
-function operationsIn(spec, text) {
-  const found = rhythmOperations(spec, text);
+function operationsIn(spec, text, defects) {
+  const found = rhythmOperations(spec, text, defects);
   const inferred = (text.match(spec.inferred) || []).length > 0;
 
   if (inferred && !spec.inferredRule.test(text)) {
@@ -211,18 +218,21 @@ function operationsIn(spec, text) {
 
 /**
  * The cost of one description: {syllables, objects, operations: [names],
- * total}. The objects add a phase for every offset rhythm, which the
- * values named do not show.
+ * defects: [names], total}. A defect is not a cost: it is a wording a
+ * reader takes the wrong way. The objects add a phase for every offset
+ * rhythm, which the values named do not show.
  */
 function costOf(code, text) {
   const spec = languages[code];
   const syllables = spec.syllables(spec.speak(text));
   const {chunks, values} = objectsIn(spec, text);
-  const operations = operationsIn(spec, text);
+  const defects = [];
+  const operations = operationsIn(spec, text, defects);
   const phases = operations.filter((name) => name === 'offset').length;
   const objects = chunks + values + phases;
 
   return {
+    defects,
     objects,
     operations,
     syllables,
@@ -266,7 +276,9 @@ if (process.argv[1] &&
 
   ranked.slice(0, Number(count)).forEach(function show({cost, pattern, text}) {
     process.stdout.write(`${cost.total.toFixed(1)}  objects ${cost.objects}` +
-      `, operations ${cost.operations.join('+') || 'none'}, syllables ` +
+      `, operations ${cost.operations.join('+') || 'none'}` +
+      (cost.defects.length ? `, DEFECT ${cost.defects.join('+')}` : '') +
+      ', syllables ' +
       `${cost.syllables}  ${pattern}\n    ${text}\n`);
   });
 }
