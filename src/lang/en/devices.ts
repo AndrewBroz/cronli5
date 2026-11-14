@@ -18,8 +18,8 @@ import {unit} from './forms.js';
 import {idioms} from './idioms.js';
 import lexicon from './lexicon.js';
 import {
-  dayNames, hourNames, inCycleOrder, join, list, momentAt, monthNames, span,
-  through, timeNames, walkWeek, weekdayNames, weekRank
+  asTime, dayNames, hourNames, inCycleOrder, join, list, momentAt,
+  monthNames, span, through, timeNames, walkWeek, weekdayNames, weekRank
 } from './words.js';
 
 /**
@@ -579,27 +579,24 @@ function withinTheHour(
 // A voice for values that fall inside one stretch of clock time: a run
 // is a window, and stray values are clock times. (A run that crosses the
 // end of the hour or minute reaches here as two runs: numbers are never
-// said as wrapping.) `moment` is the moment a value starts
-// at, as an end of a window or as a stray. `close` is how a window
-// closes: with which word, and on the moment how many values after its
-// last.
+// said as wrapping.) `moment` is the moment a value starts at, as the
+// start of a window or as a stray. A window closes with "through" on its
+// last firing, `last` of its last value: "until" the moment after was
+// read both as stopping before that moment and as firing at it.
 function clockWindows(
   spec: {
-    close: {after: number; word: string};
     field: 'minute' | 'second';
+    last(value: number): Moment;
     lead: {every: string; stray: string};
     moment(value: number, stray: boolean): Moment;
   },
   opts: EnglishOptions
 ): Voice {
   function window(from: number, to: number): string {
-    const ends = [from, to + spec.close.after];
-    const [opens, closes] = timeNames(ends.map(function end(value) {
-      return spec.moment(value, false);
-    }), opts);
+    const ends = timeNames([spec.moment(from, false), spec.last(to)],
+      asTime(opts));
 
-    return `${spec.lead.every} ${words.from} ${opens} ${spec.close.word} ` +
-      closes;
+    return `${spec.lead.every} ${span(ends, opts)}`;
   }
 
   return {
@@ -622,23 +619,33 @@ function clockWindows(
 
 /**
  * Runs of minutes inside one named hour, as windows of clock times
- * closed with "until" at the moment they end: "every minute from 9 a.m.
- * until 9:30 a.m.", with any stray minute a clock time of its own,
- * carrying the single `second` if there is one. `lead`
- * is what "every minute" is said as, and what goes before a stray time,
- * once the seconds have had their say.
+ * closed with "through" on their last firing: "every minute from 9 a.m.
+ * through 9:29 a.m.", with any stray minute a clock time of its own,
+ * carrying the single `second` if there is one. `lead` is what "every
+ * minute" is said as, and what goes before a stray time, once the
+ * seconds have had their say; its `last` is the last second of each
+ * minute that seconds running through the minute fire on, which the
+ * window then closes on: "every second from 9 a.m. through 9:29:59 a.m."
  */
 function minutesOfOneHour(
   hour: number,
-  lead: {every: string; second?: number; stray: string},
+  lead: {every: string; last?: number; second?: number; stray: string},
   opts: EnglishOptions
 ): Voice {
+  function start(minute: number): number {
+    return hour * 3600 + minute * 60;
+  }
+
   return clockWindows({
-    close: {after: 1, word: words.until},
     field: 'minute',
+    last(minute) {
+      return typeof lead.last === 'number' ?
+        momentAt(start(minute) + lead.last, 'second') :
+        momentAt(start(minute), 'hour');
+    },
     lead,
     moment(minute, stray) {
-      const moment = momentAt(hour * 3600 + minute * 60, 'hour');
+      const moment = momentAt(start(minute), 'hour');
 
       return stray ? {...moment, second: lead.second} : moment;
     }
@@ -646,43 +653,44 @@ function minutesOfOneHour(
 }
 
 /**
- * Seconds inside one clock time, as a window: "every second from 9:00
- * a.m. until 9:01 a.m." for the whole minute, and to the second for a
- * run, which names its last second so that nobody counts the one after
- * ("from 9:00:00 a.m. through 9:00:09 a.m."). A cadence with both ends
- * names them likewise ("every 10 seconds from 9:00:05 a.m. through
- * 9:00:55 a.m.").
+ * Seconds inside one clock time, as a window to the second that names
+ * its first and last firing, so that nobody counts the one after: "every
+ * second from 9:00:00 a.m. through 9:00:59 a.m." for the whole minute,
+ * "from 9:00:00 a.m. through 9:00:09 a.m." for a run. A cadence names
+ * them likewise, whether or not it tiles the minute ("every 6 seconds
+ * from 9:00:00 a.m. through 9:00:54 a.m.", "every 10 seconds from
+ * 9:00:05 a.m. through 9:00:55 a.m.").
  */
 function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
   const start = time.hour * 3600 + time.minute * 60;
   const everySecond = `${every} ${units.second.one}`;
-  const [opens, closes] = timeNames(
-    [momentAt(start, 'minute'), momentAt(start + 60, 'minute')], opts);
-  const theMinute = `${words.from} ${opens} ${words.until} ${closes}`;
+  const {max, min} = domainOf('second');
 
   function toMoment(second: number): Moment {
     return momentAt(start + second, 'second');
   }
 
+  function fromThrough(first: number, last: number): string {
+    return span(timeNames([toMoment(first), toMoment(last)], asTime(opts)),
+      opts);
+  }
+
   return {
     ...clockWindows({
-      close: {after: 0, word: opts.style.through},
       field: 'second',
+      last: toMoment,
       lead: {every: everySecond, stray: ''},
       moment: toMoment
     }, opts),
-    all: `${everySecond} ${theMinute}`,
+    all: `${everySecond} ${fromThrough(min, max)}`,
     cadence: {
       anyLength: true,
       bare: true,
       open: false,
       pair: true,
-      say(cadence, ends) {
-        const lead = `${every} ${cadence.interval} ${units.second.many}`;
-
-        return ends.length === 0 ?
-          `${lead} ${theMinute}` :
-          `${lead} ${span(timeNames(ends.map(toMoment), opts), opts)}`;
+      say(cadence) {
+        return `${every} ${cadence.interval} ${units.second.many} ` +
+          fromThrough(cadence.start, cadence.last);
       },
       tiles: true
     }
@@ -692,9 +700,10 @@ function secondsOfOneMinute(time: Moment, opts: EnglishOptions): Voice {
 const everyHour = `${every} ${units.hour.one}`;
 
 // Hours named as times of day: as moments after "at", each carrying the
-// same minute and second, or bare as a noun phrase. A cadence of hours
-// stays round: moments that carry a minute or a second cannot be said as
-// one. `pair` is whether two hours that halve the day may be a cadence.
+// same minute and second, or bare as a noun phrase; the ends of a run or
+// a cadence are written as times. A cadence of hours stays round:
+// moments that carry a minute or a second cannot be said as one. `pair`
+// is whether two hours that halve the day may be a cadence.
 function hoursByName(
   at: Omit<Moment, 'hour'> & {pair: boolean},
   word: string,
@@ -709,8 +718,8 @@ function hoursByName(
     at: word,
     exceptAt: word,
     field: 'hour',
-    names(hours) {
-      return hourNames(hours, at, opts);
+    names(hours, role) {
+      return hourNames(hours, at, role === 'ends' ? asTime(opts) : opts);
     },
     run: `${everyHour} ${words.from}`,
     stride: carried ? null : round
@@ -731,11 +740,14 @@ function hoursAsMoments(
   return hoursByName(at, words.at, opts);
 }
 
+// The last minute of an hour, on which a stretch of whole hours closes.
+const lastMinute = {minute: domainOf('minute').max};
+
 // Hours named as the hours that start at them: "the 9 a.m. and 5 p.m.
-// hours", "the midnight hour".
+// hours", "the 12 a.m. hour".
 function theHours(hours: number[], opts: EnglishOptions): string {
   return join(words.the,
-    list(hourNames(hours, {minute: 0}, opts), opts),
+    list(hourNames(hours, {minute: 0}, asTime(opts)), opts),
     unit('hour', hours.length));
 }
 
@@ -756,7 +768,7 @@ function theHours(hours: number[], opts: EnglishOptions): string {
 function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
   const moments = hoursAsMoments({minute: 0, pair: false}, opts);
   const nouns = hoursByName({minute: 0, pair: false}, '', opts);
-  const stretches = hoursAsStretches(null, opts);
+  const stretches = hoursAsStretches(lastMinute, opts);
   const theHour = `${words.the} ${units.hour.one}`;
   // What an exception is said as, by what it is taken out of.
   const excepting: {[kind: string]: Voice | undefined} =
@@ -776,7 +788,7 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
   };
 
   function fromThrough(from: number, to: number): string {
-    return span(hourNames([from, to], {minute: 0}, opts), opts);
+    return span(hourNames([from, to], {minute: 0}, asTime(opts)), opts);
   }
 
   return asHours ?
@@ -798,19 +810,19 @@ function hoursAsNouns(asHours: boolean, opts: EnglishOptions): Voice {
 
 /**
  * Hours as stretches of time that a finer cadence fills: "during the 9
- * a.m. hour", "from 9 a.m. until 6 p.m.", "during every other hour". A
- * stretch under "every minute" closes with "until" at the moment it
- * ends, the hour after its last. Under a cadence of minutes that would
- * leave it open whether the closing moment fires, so the stretch closes
- * with "through" on the cadence's last run, which `close` gives within
- * the last hour: "from 9 a.m. through 5:45 p.m." Any cadence of hours
+ * a.m. hour", "from 9 a.m. through 5:59 p.m.", "during every other
+ * hour". A stretch closes with "through" on its last firing, which
+ * `close` gives within the last hour: "every minute from 9 a.m. through
+ * 5:59 p.m.", "every 15 minutes from 9 a.m. through 5:45 p.m.", "every
+ * second from 9 a.m. through 5:59:59 p.m." ("Until 6 p.m." was read both
+ * as stopping before 6 and as firing at it.) Any cadence of hours
  * but every other hour runs "for one hour" at each of the moments it
  * names: "for one hour every 6 hours". One with a named end names each
  * end as an hour, since "for one hour ... through 6 p.m." is heard as
  * stopping at 6: "during every other hour from the 8 a.m. hour through
  * the 6 p.m. hour".
  */
-function hoursAsStretches(close: {minute: number} | null,
+function hoursAsStretches(close: Omit<Moment, 'hour'>,
   opts: EnglishOptions): Voice {
   const strides = hoursAsMoments({minute: 0, pair: false}, opts).cadence;
   const {during} = words;
@@ -835,7 +847,8 @@ function hoursAsStretches(close: {minute: number} | null,
         }
 
         return cadence.interval === 2 ?
-          join(everyOther, span(hourNames(ends, onTheHour, opts), opts)) :
+          join(everyOther,
+            span(hourNames(ends, onTheHour, asTime(opts)), opts)) :
           `${words.forOneHour} ${strides.say(cadence, ends)}`;
       }
     },
@@ -846,14 +859,10 @@ function hoursAsStretches(close: {minute: number} | null,
     field: 'hour',
     pairs: true,
     range(from, to) {
-      const [opens] = hourNames([from], onTheHour, opts);
-      const [last] = hourNames([to], {...onTheHour, ...close}, opts);
-      const [after] = hourNames([(to + 1) % (domainOf('hour').max + 1)],
-        onTheHour, opts);
+      const [opens, last] = timeNames([{...onTheHour, hour: from},
+        {...close, hour: to}], asTime(opts));
 
-      return close ?
-        `${words.from} ${opens} ${opts.style.through} ${last}` :
-        `${words.from} ${opens} ${words.until} ${after}`;
+      return span([opens, last], opts);
     },
     values(values) {
       return `${during} ${theHours(values, opts)}`;
@@ -1039,7 +1048,7 @@ function yearsByNumber(hung: boolean, opts: EnglishOptions): Voice {
 
 export {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, inSpokenOrder, inTieOrder, minutesOfOneHour, monthsAlone,
-  monthsOfDays, opensWithEvery, say, secondsOfOneMinute, withinTheHour,
-  yearsByNumber
+  hoursAsStretches, inSpokenOrder, inTieOrder, lastMinute, minutesOfOneHour,
+  monthsAlone, monthsOfDays, opensWithEvery, say, secondsOfOneMinute,
+  withinTheHour, yearsByNumber
 };

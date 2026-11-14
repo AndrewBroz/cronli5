@@ -9,34 +9,34 @@
 const rows = [
   // Years.
   ['0 0 1 1 * 2030',
-    'at midnight on January 1, 2030',
+    'at midnight at the start of the day on January 1, 2030',
     {years: true}],
-  ['0 0 0 1 1 * 2030,2035', 'at midnight on January 1 in 2030 and 2035'],
+  ['0 0 0 1 1 * 2030,2035', 'at midnight at the start of the day on January 1 in 2030 and 2035'],
   ['0 0 0 1 1 * 2030-2035',
-    'at midnight on January 1 in 2030 through 2035'],
-  ['0 0 1 1 * */2', 'at midnight on January 1 in even-numbered years',
+    'at midnight at the start of the day on January 1 in 2030 through 2035'],
+  ['0 0 1 1 * */2', 'at midnight at the start of the day on January 1 in even-numbered years',
     {years: true}],
   ['30 0 9 1 6 * 2030', 'at 9:00:30 a.m. on June 1, 2030'],
 
   // Quartz forms.
-  ['0 0 1 * ?', 'at midnight on the 1st', {cron: 'quartz'}],
-  ['0 0 LW * *', 'at midnight on the last weekday of the month'],
-  ['0 0 1W * *', 'at midnight on the first weekday of the month'],
-  ['0 0 1W 6 *', 'at midnight on the first weekday of June'],
-  ['0 0 L-3 * *', 'at midnight 3 days before the last day of the month'],
-  ['0 0 L 6 *', 'at midnight on the last day of June'],
-  ['0 0 15W 6 *', 'at midnight on the weekday nearest June 15'],
-  ['0 0 * 6 1#2', 'at midnight on the second Monday of June'],
-  ['0 0 * 1,7 5L', 'at midnight on the last Friday of January and July'],
+  ['0 0 1 * ?', 'at midnight at the start of the day on the 1st', {cron: 'quartz'}],
+  ['0 0 LW * *', 'at midnight at the start of the day on the last weekday of the month'],
+  ['0 0 1W * *', 'at midnight at the start of the day on the first weekday of the month'],
+  ['0 0 1W 6 *', 'at midnight at the start of the day on the first weekday of June'],
+  ['0 0 L-3 * *', 'at midnight at the start of the day 3 days before the last day of the month'],
+  ['0 0 L 6 *', 'at midnight at the start of the day on the last day of June'],
+  ['0 0 15W 6 *', 'at midnight at the start of the day on the weekday nearest June 15'],
+  ['0 0 * 6 1#2', 'at midnight at the start of the day on the second Monday of June'],
+  ['0 0 * 1,7 5L', 'at midnight at the start of the day on the last Friday of January and July'],
 
   // Macros and startup.
   ['@hourly', 'every hour'],
   ['@daily', 'at midnight every day'],
   ['@midnight', 'at midnight every day'],
-  ['@weekly', 'at midnight on Sundays'],
-  ['@monthly', 'at midnight on the 1st'],
-  ['@yearly', 'at midnight on January 1'],
-  ['@annually', 'at midnight on January 1'],
+  ['@weekly', 'at midnight at the start of the day on Sundays'],
+  ['@monthly', 'at midnight at the start of the day on the 1st'],
+  ['@yearly', 'at midnight at the start of the day on January 1'],
+  ['@annually', 'at midnight at the start of the day on January 1'],
   ['@reboot', 'at system startup'],
 
   // The sentence wrapper: one full stop, however the description ends.
@@ -46,15 +46,15 @@ const rows = [
   ['@reboot', 'Runs at system startup.', {form: 'sentence'}],
 
   // A day of the month and a weekday, under a month.
-  ['0 0 1 6 5', 'at midnight on June 1 as well as on Fridays in June'],
+  ['0 0 1 6 5', 'at midnight at the start of the day on June 1 as well as on Fridays in June'],
   ['0 0 1,15 1,7 1-5',
-    'at midnight on the 1st and 15th as well as on weekdays, in January ' +
+    'at midnight at the start of the day on the 1st and 15th as well as on weekdays, in January ' +
     'and July'],
   ['52 7-16 1,19,23,28 5-7 3-4',
     'every hour from 7:52 a.m. through 4:52 p.m. on the 1st, 19th, 23rd, ' +
     'and 28th as well as on Wednesdays and Thursdays, in May through July'],
   ['*/30 0-17 * * 2',
-    'every 30 minutes from midnight through 5:30 p.m. on Tuesdays'],
+    'every 30 minutes from 12 a.m. through 5:30 p.m. on Tuesdays'],
   ['5,29,39 3-5 * 5 *',
     'at 5, 29, and 39 minutes past the hour from 3 a.m. through 5 a.m. ' +
     'every day in May'],
@@ -63,21 +63,21 @@ const rows = [
   ['9,14,47,56 * * * *', 'at 9, 14, 47, and 56 minutes past the hour'],
 
   // A single month with its dates.
-  ['0 0 1,15 6 *', 'at midnight on June 1 and 15'],
-  ['0 0 1,10,20 6 *', 'at midnight on June 1, 10, and 20'],
-  ['0 0 1-7 6 *', 'at midnight on June 1 through 7'],
-  ['0 0 1-7,15 6 *', 'at midnight on June 1 through 7 and on June 15'],
-  ['0 0 */2 6 *', 'at midnight on odd-numbered days in June'],
+  ['0 0 1,15 6 *', 'at midnight at the start of the day on June 1 and 15'],
+  ['0 0 1,10,20 6 *', 'at midnight at the start of the day on June 1, 10, and 20'],
+  ['0 0 1-7 6 *', 'at midnight at the start of the day on June 1 through 7'],
+  ['0 0 1-7,15 6 *', 'at midnight at the start of the day on June 1 through 7 and on June 15'],
+  ['0 0 */2 6 *', 'at midnight at the start of the day on odd-numbered days in June'],
   // "Every 5 days from June 1" was a row here: it reads as starting on
   // June 1 and carrying on, when the schedule stops with June. So did
   // "every 5 days from the 1st in June", less badly: a cadence of days
   // says that it starts again each month.
-  ['0 0 */5 6 *', 'at midnight on June 1, 6, 11, 16, 21, and 26'],
-  ['0 0 */3 6 *', 'at midnight every 3 days from the 1st of the month in June'],
+  ['0 0 */5 6 *', 'at midnight at the start of the day on June 1, 6, 11, 16, 21, and 26'],
+  ['0 0 */3 6 *', 'at midnight at the start of the day every 3 days from the 1st of the month in June'],
   // One day with several months says the day once, as several days do:
   // "on" marks a date, so the day reaches every month (maintainer,
   // 2026-11-14).
-  ['0 0 1 1,3 *', 'at midnight on the 1st of January and March'],
+  ['0 0 1 1,3 *', 'at midnight at the start of the day on the 1st of January and March'],
 
   // Weekday order and wrap-arounds.
   ['0 9 * * 5-1', 'at 9 a.m. Friday through Monday'],
@@ -86,7 +86,7 @@ const rows = [
   ['0 9 * * 0,5', 'at 9 a.m. on Fridays and Sundays'],
   ['0 9 * * */2', 'at 9 a.m. on Tuesdays, Thursdays, Saturdays, and Sundays'],
   ['0 9 * 11-2 *', 'at 9 a.m. every day in November through February'],
-  ['* 22-23 * * *', 'every minute from 10 p.m. until midnight every day'],
+  ['* 22-23 * * *', 'every minute from 10 p.m. through 11:59 p.m. every day'],
   ['* 23 * * *', 'every minute during the 11 p.m. hour every day'],
 
   // Where a list of clock times competes with another device.
@@ -103,7 +103,7 @@ const rows = [
   // only for more than eight values.
   ['0 */5 * * *',
     'at midnight, 5 a.m., 10 a.m., 3 p.m., and 8 p.m. every day'],
-  ['0 0-20/2 * * *', 'every 2 hours from midnight through 8 p.m. every day'],
+  ['0 0-20/2 * * *', 'every 2 hours from 12 a.m. through 8 p.m. every day'],
   ['30 */2 * * *', 'at 30 minutes past the hour, every 2 hours'],
   ['30 */5 * * *',
     'at 12:30 a.m., 5:30 a.m., 10:30 a.m., 3:30 p.m., and 8:30 p.m. every ' +
@@ -120,13 +120,13 @@ const rows = [
   ['15 30 9,17 * * *', 'at 9:30:15 a.m. and 5:30:15 p.m. every day'],
   ['15,45 30 9 * * *', 'at 9:30:15 a.m. and 9:30:45 a.m. every day'],
   ['* * 9 * * *', 'every second during the 9 a.m. hour every day'],
-  ['* * 9-17 * * *', 'every second from 9 a.m. until 6 p.m. every day'],
+  ['* * 9-17 * * *', 'every second from 9 a.m. through 5:59:59 p.m. every day'],
 
   // Complex patterns, where several fields are restricted at once. Each
   // was read against the most widely used library's wording and the
   // renderer this one replaced, and is the easiest of the three to parse.
   ['23 0-20/2 * * *',
-    'at 23 minutes past the hour, every 2 hours from midnight through 8 ' +
+    'at 23 minutes past the hour, every 2 hours from 12 a.m. through 8 ' +
     'p.m. every day'],
   ['15,45 */4 * * *', 'at 15 and 45 minutes past the hour, every 4 hours'],
   ['5,20 */2 * * *', 'at 5 and 20 minutes past the hour, every 2 hours'],
@@ -167,7 +167,7 @@ const rows = [
   ['15,45 */4 1-10 1,4,7,10 *',
     'at 15 and 45 minutes past the hour, every 4 hours on the 1st through ' +
     'the 10th of January, April, July, and October'],
-  ['0 0 * * 1-7/2', 'at midnight on Mondays, Wednesdays, Fridays, and Sundays'],
+  ['0 0 * * 1-7/2', 'at midnight at the start of the day on Mondays, Wednesdays, Fridays, and Sundays'],
   ['0 9 * * 0,2-4',
     'at 9 a.m. on Tuesdays, Wednesdays, Thursdays, and Sundays'],
   ['0 9 * * 0,2-5', 'at 9 a.m. Tuesday through Friday and on Sundays'],
@@ -180,11 +180,11 @@ const rows = [
   // Sentences that were well formed and said the wrong schedule, found by
   // an independent review.
   ['5-10/60 0 9 * * *', 'at 9:00:05 a.m. every day'],
-  ['0 0,1,22,23 * * 1', 'at midnight, 1 a.m., 10 p.m., and 11 p.m. on Mondays'],
+  ['0 0,1,22,23 * * 1', 'at midnight at the start of the day, 1 a.m., 10 p.m., and 11 p.m. on Mondays'],
   // This row named June 31, a day that does not exist.
-  ['0 0 30-2 6 *', 'at midnight on June 1, 2, and 30'],
+  ['0 0 30-2 6 *', 'at midnight at the start of the day on June 1, 2, and 30'],
   ['0 0 * 11-2 * 2030',
-    'at midnight every day in January, February, November, and December in ' +
+    'at midnight at the start of the day every day in January, February, November, and December in ' +
       '2030',
     {years: true}],
   ['0-28,30-59 9,17 * * *',
@@ -217,15 +217,52 @@ const rows = [
   // A few seconds inside named minutes are clock times, as a few minutes
   // inside named hours are.
   ['0,30 30 9 * * *', 'at 9:30 a.m. and 9:30:30 a.m. every day'],
-  ['0,20,40 0 9 * * *', 'every 20 seconds from 9:00 a.m. until 9:01 a.m. ' +
-    'every day'],
-  ['*/15 0 9 * * *', 'every 15 seconds from 9:00 a.m. until 9:01 a.m. ' +
-    'every day'],
+  ['0,20,40 0 9 * * *', 'every 20 seconds from 9:00:00 a.m. through ' +
+    '9:00:40 a.m. every day'],
+  ['*/15 0 9 * * *', 'every 15 seconds from 9:00:00 a.m. through ' +
+    '9:00:45 a.m. every day'],
 
   // A run of seconds names its last second: a blind reader took "until
   // 9:00:10" to include it.
   ['10-20 30 9 * * *', 'every second from 9:30:10 a.m. through 9:30:20 ' +
     'a.m. every day'],
+
+  // Every window names its last firing with "through": "until 9:30 a.m."
+  // was read both as stopping before 9:30 and as firing at it (two blind
+  // readers, 2026-11-14). Under continuous seconds the last firing is a
+  // second; under seconds counted past the minute, it is a minute.
+  ['*/7 0 9 * * *', 'every 7 seconds from 9:00:00 a.m. through ' +
+    '9:00:56 a.m. every day'],
+  ['* 0-29 9 * * *', 'every second from 9 a.m. through 9:29:59 a.m. ' +
+    'every day'],
+  ['*/10 0-29 9 * * *', 'every 10 seconds from 9 a.m. through 9:29:50 ' +
+    'a.m. every day'],
+  ['30 0-29 9 * * *', 'at 30 seconds past every minute from 9 a.m. ' +
+    'through 9:29 a.m. every day'],
+  ['*/10 * 9-17 * * *', 'every 10 seconds from 9 a.m. through 5:59:50 ' +
+    'p.m. every day'],
+  ['30-59 23 * * *', 'every minute from 11:30 p.m. through 11:59 p.m. ' +
+    'every day'],
+
+  // "Midnight" beside a restricted day, month or year is also said of the
+  // end of that day, and so, less often, is "12 a.m." (two blind readers
+  // each, 2026-11-14); "at midnight at the start of the day" was read one
+  // way. Every day of every month, the two readings are the same
+  // schedule, and "midnight" stands alone. An end of a stretch, and an
+  // hour, are written as times: "from midnight through 3 a.m. on Mondays"
+  // was read as Monday night, and "the midnight hour" as the hour before
+  // midnight.
+  ['0 0 * 6 *', 'at midnight at the start of the day every day in June'],
+  ['0 0 0 * * * 2030',
+    'at midnight at the start of the day every day in 2030'],
+  ['0 0 * * 1-5', 'at midnight at the start of the day on weekdays'],
+  ['0 1-23 * * 1',
+    'every hour except at midnight at the start of the day, on Mondays'],
+  ['0 0-3 * * 1', 'every hour from 12 a.m. through 3 a.m. on Mondays'],
+  ['0 0-3 * * *', 'every hour from 12 a.m. through 3 a.m. every day'],
+  ['* 0 * * 0', 'every minute during the 12 a.m. hour on Sundays'],
+  ['* 0 0 * * *', 'every second from 12:00:00 a.m. through 12:00:59 a.m. ' +
+    'every day'],
 
   // What has to be worked out, not only what has to be held. An hour
   // cadence stays round and the minute is said apart from it; two hours
@@ -236,7 +273,7 @@ const rows = [
   ['23 0,12 * * *', 'at 12:23 a.m. and 12:23 p.m. every day'],
   ['0 1/12 * * *', 'at 1 a.m. and 1 p.m. every day'],
   ['*/15 */12 * * *',
-    'every 15 minutes during the midnight and noon hours every day'],
+    'every 15 minutes during the 12 a.m. and noon hours every day'],
   ['0 0,6,18 * * *', 'at midnight, 6 a.m., and 6 p.m. every day'],
   ['0 9 * * 1,2,3,5',
     'at 9 a.m. on Mondays, Tuesdays, Wednesdays, and Fridays'],
@@ -247,7 +284,7 @@ const rows = [
   ['0 0,12 * * *', 'at midnight and noon every day'],
   ['0 */12 1 * *', 'every 12 hours on the 1st'],
   ['15 0 */12 * * *', 'at 12:00:15 a.m. and 12:00:15 p.m. every day'],
-  ['0 0,12 1 * *', 'at midnight and noon on the 1st'],
+  ['0 0,12 1 * *', 'at midnight at the start of the day and noon on the 1st'],
 
   // "Every day" fills the level a restricted hour would otherwise skip,
   // and is not said of a schedule that runs round the clock.
@@ -298,7 +335,7 @@ const rows = [
   ['0 0 9 * * * 2030-2050/2',
     'at 9 a.m. every day of every other year from 2030 through 2050'],
   ['0 0 0 1 1 * 2028/4',
-    'at midnight on January 1 of every 4th year from 2028'],
+    'at midnight at the start of the day on January 1 of every 4th year from 2028'],
   ['0 0 9 * 6 * 2030/2',
     'at 9 a.m. every day in June of every other year from 2030'],
   ['0 0 9 * * 1 2030/2', 'at 9 a.m. on Mondays of every other year from 2030'],
@@ -340,24 +377,24 @@ const rows = [
   // that they run whatever the date: "every day except the 15th, as well
   // as on Mondays" was read as losing a Monday the 15th.
   ['0 0 1-14,16-31 * 1',
-    'at midnight on every day except the 15th, as well as on Mondays ' +
+    'at midnight at the start of the day on every day except the 15th, as well as on Mondays ' +
     'whatever the date'],
   ['0 0 1-14,16-31 6 1',
-    'at midnight on every day in June except the 15th, as well as on ' +
+    'at midnight at the start of the day on every day in June except the 15th, as well as on ' +
     'Mondays in June whatever the date'],
   ['0 9 5-9,11-25 * 1',
     'at 9 a.m. on the 5th through the 25th except the 10th, as well as on ' +
     'Mondays whatever the date'],
   ['0 0 * 6 1-3,5-6',
-    'at midnight Monday through Saturday except Thursday, in June'],
+    'at midnight at the start of the day Monday through Saturday except Thursday, in June'],
   ['0 0 1 1-5,7-12 * 2030',
-    'at midnight on the 1st of every month except June, in 2030',
+    'at midnight at the start of the day on the 1st of every month except June, in 2030',
     {years: true}],
   ['0 0 * 1-5,7-12 * 2030',
-    'at midnight every day in every month except June, in 2030',
+    'at midnight at the start of the day every day in every month except June, in 2030',
     {years: true}],
   ['0 0 1-14,16-31 * * 2030',
-    'at midnight on every day except the 15th, in 2030',
+    'at midnight at the start of the day on every day except the 15th, in 2030',
     {years: true}],
   ['0 0-7,9-23 1-14,16-31 * *',
     'every hour except at 8 a.m., on every day except the 15th'],
@@ -365,12 +402,12 @@ const rows = [
   // 1st as well as Monday through Saturday except Thursday" was read as
   // losing a Thursday the 1st.
   ['0 0 1 * 1-3,5-6',
-    'at midnight on the 1st as well as Monday through Wednesday and on ' +
+    'at midnight at the start of the day on the 1st as well as Monday through Wednesday and on ' +
     'Fridays and Saturdays'],
   ['0 0 15 * 0-2,4-6',
-    'at midnight on the 15th as well as Thursday through Tuesday'],
+    'at midnight at the start of the day on the 15th as well as Thursday through Tuesday'],
   ['0 0 1 1-11 1',
-    'at midnight on the 1st as well as on Mondays, in every month except ' +
+    'at midnight at the start of the day on the 1st as well as on Mondays, in every month except ' +
     'December'],
   // A second exception in the day part is set off as one is in the time.
   ['0 9 1-14,16-31 1-5,7-12 *',
@@ -379,7 +416,7 @@ const rows = [
 
   // An exception yields a tie to every other phrasing, pieces included.
   ['0 0-3,6-9 * * *',
-    'every hour from midnight through 3 a.m. and every hour from 6 a.m. ' +
+    'every hour from 12 a.m. through 3 a.m. and every hour from 6 a.m. ' +
     'through 9 a.m. every day'],
 
   // Minutes, seconds and days of the month are numbers, and a run of
@@ -399,16 +436,16 @@ const rows = [
     'every second from 0 through 10 and every second from 50 through 59 ' +
     'seconds past the minute'],
   ['0 0 20-10 * *',
-    'at midnight on the 1st through the 10th and on the 20th through the ' +
+    'at midnight at the start of the day on the 1st through the 10th and on the 20th through the ' +
     '31st'],
   ['0 0 29-2 * *',
-    'at midnight on the 1st and 2nd and on the 29th through the 31st'],
+    'at midnight at the start of the day on the 1st and 2nd and on the 29th through the 31st'],
   ['0 0-5,17-23 * * *', 'every hour from 5 p.m. through 5 a.m. every day'],
   ['50-10 * 9 * * *',
     'every second from 0 through 10 and every second from 50 through 59 ' +
     'seconds past every minute during the 9 a.m. hour every day'],
   ['0 22-2 * * * 2030',
-    'every hour from midnight through 2 a.m. and at 10 p.m. and 11 p.m. ' +
+    'every hour from 12 a.m. through 2 a.m. and at 10 p.m. and 11 p.m. ' +
     'every day in 2030',
     {years: true}],
 
@@ -422,7 +459,7 @@ const rows = [
     'at 5, 20, and 45 minutes past the hour during the 1 a.m. hour and ' +
     'from 9 a.m. through 5 p.m. every day'],
   ['5,20,45 22-2 * * 1',
-    'at 5, 20, and 45 minutes past the hour from midnight through 2 a.m. ' +
+    'at 5, 20, and 45 minutes past the hour from 12 a.m. through 2 a.m. ' +
     'and during the 10 p.m. and 11 p.m. hours on Mondays'],
   ['5,20,45 9-11,13-17 * * *',
     'at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. ' +
@@ -434,88 +471,88 @@ const rows = [
   // A cadence of days keeps its own words beside one month, and takes
   // "in": as a date its start was read as the start of a run with no end.
   ['0 0 8/2 6 *',
-    'at midnight every 2 days from the 8th of the month in June'],
+    'at midnight at the start of the day every 2 days from the 8th of the month in June'],
   ['0 0 5-20/3 6 *',
-    'at midnight on June 5, 8, 11, 14, 17, and 20'],
+    'at midnight at the start of the day on June 5, 8, 11, 14, 17, and 20'],
   ['0 0 5-23/2 6 *',
-    'at midnight every 2 days from the 5th through the 23rd of the month ' +
+    'at midnight at the start of the day every 2 days from the 5th through the 23rd of the month ' +
     'in June'],
   // Every fifth day is seven days, which are named; every third is
   // eleven, and keeps the cadence in the same places.
-  ['0 0 1,6,11,21,26,31 6 *', 'at midnight on June 1, 6, 11, 21, and 26'],
+  ['0 0 1,6,11,21,26,31 6 *', 'at midnight at the start of the day on June 1, 6, 11, 21, and 26'],
   ['0 0 1,4,7,10,16,19,22,25,28,31 6 *',
-    'at midnight every 3 days from the 1st of the month in June except ' +
+    'at midnight at the start of the day every 3 days from the 1st of the month in June except ' +
     'the 13th'],
   ['0 0 */5 6 * 2030',
-    'at midnight on June 1, 6, 11, 16, 21, and 26 in 2030',
+    'at midnight at the start of the day on June 1, 6, 11, 16, 21, and 26 in 2030',
     {years: true}],
   ['0 0 */3 6 * 2030',
-    'at midnight every 3 days from the 1st of the month in June 2030',
+    'at midnight at the start of the day every 3 days from the 1st of the month in June 2030',
     {years: true}],
   // Written without the star, the days are a union: cron takes a day field
   // for unrestricted only when it begins with `*`. The explicit days of
   // `*/5` and `*/3` beside a weekday say either.
   ['0 0 1-31/5 6 1',
-    'at midnight on June 1, 6, 11, 16, 21, and 26 as well as on Mondays ' +
+    'at midnight at the start of the day on June 1, 6, 11, 16, 21, and 26 as well as on Mondays ' +
     'in June'],
   ['0 0 1-31/3 6 1',
-    'at midnight every 3 days from the 1st of the month in June as well ' +
+    'at midnight at the start of the day every 3 days from the 1st of the month in June as well ' +
     'as on Mondays in June'],
   ['0 0 */5 6,7 *',
-    'at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
+    'at midnight at the start of the day on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
     'June and July'],
   ['0 0 */3 6,7 *',
-    'at midnight every 3 days from the 1st of the month in June and July'],
+    'at midnight at the start of the day every 3 days from the 1st of the month in June and July'],
 
   // A cadence of years hangs on the day with "of"; a day of the month
   // with no month would be heard as a day of the year ("the 1st of every
   // other year"), so the month is said.
   ['0 0 1 * * 2030/2',
-    'at midnight on the 1st of every month of every other year from 2030',
+    'at midnight at the start of the day on the 1st of every month of every other year from 2030',
     {years: true}],
   ['0 0 1,15 * * 2030/4',
-    'at midnight on the 1st and 15th of every month of every 4th year ' +
+    'at midnight at the start of the day on the 1st and 15th of every month of every 4th year ' +
     'from 2030',
     {years: true}],
   ['0 0 */5 * * 2030/2',
-    'at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
+    'at midnight at the start of the day on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
     'every month of every other year from 2030',
     {years: true}],
   ['0 0 */3 * * 2030/2',
-    'at midnight every 3 days from the 1st of the month of every other ' +
+    'at midnight at the start of the day every 3 days from the 1st of the month of every other ' +
     'year from 2030',
     {years: true}],
   ['0 0 */2 * * 2030/2',
-    'at midnight on odd-numbered days in every month of every other year ' +
+    'at midnight at the start of the day on odd-numbered days in every month of every other year ' +
     'from 2030',
     {years: true}],
   ['0 0 15W * * 2030/2',
-    'at midnight on the weekday nearest the 15th of every month of every ' +
+    'at midnight at the start of the day on the weekday nearest the 15th of every month of every ' +
     'other year from 2030',
     {years: true}],
   // Across a comma nothing hangs: the cadence of years takes "in", and
   // the day before it needs no month.
   ['0 0 1 * 1-5 2030/4',
-    'at midnight on the 1st as well as on weekdays, in every 4th year ' +
+    'at midnight at the start of the day on the 1st as well as on weekdays, in every 4th year ' +
     'from 2030',
     {years: true}],
   ['0 0 1-14,16-31 * * 2030/2',
-    'at midnight on every day except the 15th, in every other year from ' +
+    'at midnight at the start of the day on every day except the 15th, in every other year from ' +
     '2030',
     {years: true}],
-  ['0 0 1 * * 2030,2031', 'at midnight on the 1st in 2030 and 2031',
+  ['0 0 1 * * 2030,2031', 'at midnight at the start of the day on the 1st in 2030 and 2031',
     {years: true}],
 
   // The weekday nearest a day never leaves its month. Near a day that can
   // be a month's last, "the weekday nearest the 31st" would be taken for
   // the Monday after a Sunday the 31st, when it is the Friday before.
   ['0 0 31W * *',
-    'at midnight on the weekday in the same month nearest the 31st'],
+    'at midnight at the start of the day on the weekday in the same month nearest the 31st'],
   ['0 0 28W * *',
-    'at midnight on the weekday in the same month nearest the 28th'],
-  ['0 0 27W * *', 'at midnight on the weekday nearest the 27th'],
+    'at midnight at the start of the day on the weekday in the same month nearest the 28th'],
+  ['0 0 27W * *', 'at midnight at the start of the day on the weekday nearest the 27th'],
   ['0 0 30W 6 *',
-    'at midnight on the weekday in the same month nearest June 30'],
+    'at midnight at the start of the day on the weekday in the same month nearest June 30'],
 
   // Under seconds, a stray minute beside a run of minutes says what the
   // seconds do in it: "and at 45 minutes past the hour" was read as one
@@ -546,8 +583,8 @@ const rows = [
     'at 30 seconds past the minute, every minute from 0 through 29 and at ' +
     '45 minutes past the hour'],
   ['15,45 0-29,45 9 * * *',
-    'at 15 and 45 seconds past the minute, every minute from 9 a.m. until ' +
-    '9:30 a.m. and at 9:45 a.m. every day'],
+    'at 15 and 45 seconds past the minute, every minute from 9 a.m. ' +
+    'through 9:29 a.m. and at 9:45 a.m. every day'],
 
   // Seconds beside hours named on the hour, with no clock time to ride
   // on, are counted past the hour: "past the minute" names no minute
@@ -581,40 +618,40 @@ const rows = [
     {form: 'sentence'}],
   // Beside a weekday, a day of the month that never comes leaves the
   // weekday alone.
-  ['0 0 31 6 1', 'at midnight on Mondays in June'],
+  ['0 0 31 6 1', 'at midnight at the start of the day on Mondays in June'],
 
   // A day that comes in leap years only.
-  ['0 0 29 2 *', 'at midnight on February 29 in leap years'],
+  ['0 0 29 2 *', 'at midnight at the start of the day on February 29 in leap years'],
   ['0 0 29W 2 *',
-    'at midnight on the weekday in the same month nearest February 29 in ' +
+    'at midnight at the start of the day on the weekday in the same month nearest February 29 in ' +
     'leap years',
     {cron: 'quartz'}],
   ['0 0 L-28 2 *',
-    'at midnight 28 days before the last day of February in leap years',
+    'at midnight at the start of the day 28 days before the last day of February in leap years',
     {cron: 'quartz'}],
   ['0 0 0 29 2 * 2030-2040',
-    'at midnight on February 29 in 2030 through 2040, in leap years'],
-  ['0 0 0 29 2 * 2032', 'at midnight on February 29, 2032'],
+    'at midnight at the start of the day on February 29 in 2030 through 2040, in leap years'],
+  ['0 0 0 29 2 * 2032', 'at midnight at the start of the day on February 29, 2032'],
 
   // Only the months a day can fire in are named, and only the days those
   // months have. Under every month the day alone is enough.
   // The day is said once, before the months (2026-11-14).
   ['0 0 31W 6-8 *',
-    'at midnight on the weekday in the same month nearest the 31st of ' +
+    'at midnight at the start of the day on the weekday in the same month nearest the 31st of ' +
     'July and August',
     {cron: 'quartz'}],
   ['0 0 30W 2,4 *',
-    'at midnight on the weekday in the same month nearest April 30',
+    'at midnight at the start of the day on the weekday in the same month nearest April 30',
     {cron: 'quartz'}],
   ['0 0 L-30 6-8 *',
-    'at midnight 30 days before the last day of July and August',
+    'at midnight at the start of the day 30 days before the last day of July and August',
     {cron: 'quartz'}],
-  ['0 0 30 2-3 *', 'at midnight on March 30'],
+  ['0 0 30 2-3 *', 'at midnight at the start of the day on March 30'],
   ['0 0 1,31 4,6,9,11 *',
-    'at midnight on the 1st of April, June, September, and November'],
-  ['0 0 25-31 6 *', 'at midnight on June 25 through 30'],
-  ['0 0 31 * *', 'at midnight on the 31st'],
-  ['0 0 */10 6 *', 'at midnight on June 1, 11, and 21'],
+    'at midnight at the start of the day on the 1st of April, June, September, and November'],
+  ['0 0 25-31 6 *', 'at midnight at the start of the day on June 25 through 30'],
+  ['0 0 31 * *', 'at midnight at the start of the day on the 31st'],
+  ['0 0 */10 6 *', 'at midnight at the start of the day on June 1, 11, and 21'],
 
   // Days that are every day of their months are no restriction, and no
   // union.
@@ -627,18 +664,18 @@ const rows = [
   // An exception is for a hole inside the hour or the minute. A run that
   // only starts late or stops early is a run: "during the 9 a.m. hour
   // except at 0 minutes past the hour" took back the moment it named.
-  ['1-59 9 * * *', 'every minute from 9:01 a.m. until 10 a.m. every day'],
+  ['1-59 9 * * *', 'every minute from 9:01 a.m. through 9:59 a.m. every day'],
   ['1-59 * * * *', 'every minute for the last 59 minutes of every hour'],
   ['0-58 9-17 * * *',
     'every minute for the first 59 minutes of every hour from 9 a.m. ' +
     'through 5 p.m. every day'],
   ['1-59 * * * * *', 'every second for the last 59 seconds of every minute'],
   ['0 1-23 * * *', 'every hour except at midnight'],
-  ['0 0 2-31 * *', 'at midnight on every day except the 1st'],
+  ['0 0 2-31 * *', 'at midnight at the start of the day on every day except the 1st'],
 
   // Years with no end, and years in several runs and cadences.
   ['0 0 9 * * * 2030/1', 'at 9 a.m. every day from 2030 onward'],
-  ['0 0 0 1 1 * 2030/1', 'at midnight on January 1 from 2030 onward'],
+  ['0 0 0 1 1 * 2030/1', 'at midnight at the start of the day on January 1 from 2030 onward'],
   ['*/5 * * * * 2030/1', 'every 5 minutes from 2030 onward', {years: true}],
   ['0 0 9 * * * 2030/2,2031',
     'at 9 a.m. every day in every other year from 2030 and in 2031'],
@@ -659,13 +696,13 @@ const rows = [
     'every 2 minutes from 0 through 20 and every 3 minutes from 21 ' +
     'through 57 minutes past the hour'],
   ['0 0-12/2,13-23/3 * * *',
-    'every 2 hours from midnight through noon and every 3 hours from 1 ' +
+    'every 2 hours from 12 a.m. through noon and every 3 hours from 1 ' +
     'p.m. through 10 p.m. every day'],
   // The 11th begins the every-third-day part, as the pattern writes it:
   // the row once ran the odd days through the 11th, which the core no
   // longer offers.
   ['0 0 1-10/2,11-31/3 * *',
-    'at midnight every 2 days from the 1st through the 9th of the month ' +
+    'at midnight at the start of the day every 2 days from the 1st through the 9th of the month ' +
     'and every 3 days from the 11th through the 29th of the month'],
   // Nine days with no pattern a listener would hear. They can be cut into
   // two days and two cadences of six that run through each other (the 5th
@@ -673,26 +710,26 @@ const rows = [
   // nine. That is not clearly shorter, and cadences that interleave have
   // to be worked out and then merged, so the days are listed.
   ['0 0 2,3,5,7,11,13,17,19,23 * *',
-    'at midnight on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, and ' +
+    'at midnight at the start of the day on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, and ' +
     '23rd'],
   // One stray day beside a cadence. The cadence has to be worked out and
   // the stray day kept apart from it while that is done; six dates, and
   // eight, are told outright and stay on the page to be read again.
   ['0 0 1,5,10,15,20,25 * *',
-    'at midnight on the 1st, 5th, 10th, 15th, 20th, and 25th'],
+    'at midnight at the start of the day on the 1st, 5th, 10th, 15th, 20th, and 25th'],
   ['0 0 1,4,8,12,16,20,24,28 * *',
-    'at midnight on the 1st, 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
+    'at midnight at the start of the day on the 1st, 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
   // The same holds for a cadence alone: up to eight values are listed,
   // and nine are a cadence.
-  ['0 0 5,10,15,20 * *', 'at midnight on the 5th, 10th, 15th, and 20th'],
+  ['0 0 5,10,15,20 * *', 'at midnight at the start of the day on the 5th, 10th, 15th, and 20th'],
   ['0 0 4-22/3 * *',
-    'at midnight on the 4th, 7th, 10th, 13th, 16th, 19th, and 22nd'],
+    'at midnight at the start of the day on the 4th, 7th, 10th, 13th, 16th, 19th, and 22nd'],
   // A cadence that names only its start is worked out in the same way,
   // and takes the same rule: up to eight values are listed.
   ['0 0 4-28/4 * *',
-    'at midnight on the 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
+    'at midnight at the start of the day on the 4th, 8th, 12th, 16th, 20th, 24th, and 28th'],
   ['0 0 */4 * *',
-    'at midnight on the 1st, 5th, 9th, 13th, 17th, 21st, 25th, and 29th'],
+    'at midnight at the start of the day on the 1st, 5th, 9th, 13th, 17th, 21st, 25th, and 29th'],
   ['0 1/6 * * *', 'at 1 a.m., 7 a.m., 1 p.m., and 7 p.m. every day'],
   ['0 1/3 * * *',
     'at 1 a.m., 4 a.m., 7 a.m., 10 a.m., 1 p.m., 4 p.m., 7 p.m., and 10 ' +
@@ -701,7 +738,7 @@ const rows = [
     'every minute during the 1 a.m., 7 a.m., 1 p.m., and 7 p.m. hours ' +
     'every day'],
   ['0 0 1 2/2 *',
-    'at midnight on the 1st of February, April, June, August, October, ' +
+    'at midnight at the start of the day on the 1st of February, April, June, August, October, ' +
     'and December'],
   // Beside a hole, a value missing at an end may be an exception too.
   // And an exception out of a cadence has to leave more than eight
@@ -711,17 +748,17 @@ const rows = [
   ['0 0,3,9,12,15,18 * * *',
     'at midnight, 3 a.m., 9 a.m., noon, 3 p.m., and 6 p.m. every day'],
   ['0 0 1-25/3 * *',
-    'at midnight every 3 days from the 1st through the 25th of the month'],
+    'at midnight at the start of the day every 3 days from the 1st through the 25th of the month'],
   ['2-58/4 * * * *',
     'every 4 minutes from 2 through 58 minutes past the hour'],
   // Eleven days are too many to hold, and a stray day beside one cadence
   // is said; but two cadences that run through each other are not, at
   // any length.
   ['0 0 1,3,6,9,12,15,18,21,24,27,30 * *',
-    'at midnight on the 1st and every 3 days from the 3rd through the 30th ' +
+    'at midnight at the start of the day on the 1st and every 3 days from the 3rd through the 30th ' +
     'of the month'],
   ['0 0 2,3,5,7,11,13,17,19,23,29,31 * *',
-    'at midnight on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, 23rd, ' +
+    'at midnight at the start of the day on the 2nd, 3rd, 5th, 7th, 11th, 13th, 17th, 19th, 23rd, ' +
     '29th, and 31st'],
 
   // A cadence of hours that stops early, under minutes: each end is
@@ -730,13 +767,13 @@ const rows = [
     'every minute during every other hour from the 2 a.m. hour through ' +
     'the 10 p.m. hour every day'],
   ['* 0-12/3 * * *',
-    'every minute during the midnight, 3 a.m., 6 a.m., 9 a.m., and noon ' +
+    'every minute during the 12 a.m., 3 a.m., 6 a.m., 9 a.m., and noon ' +
     'hours every day'],
   ['* 0-9/3 * * *',
-    'every minute during the midnight, 3 a.m., 6 a.m., and 9 a.m. hours ' +
+    'every minute during the 12 a.m., 3 a.m., 6 a.m., and 9 a.m. hours ' +
     'every day'],
   ['* 0,3,6 * * *',
-    'every minute during the midnight, 3 a.m., and 6 a.m. hours every day'],
+    'every minute during the 12 a.m., 3 a.m., and 6 a.m. hours every day'],
 
   // What follows several pieces, or a day of the month beside a weekday,
   // is set off by a comma: "in June through August and in December in
@@ -744,13 +781,13 @@ const rows = [
   ['0 0 9 * 6-8,12 * 2030',
     'at 9 a.m. every day in June through August and in December, in 2030'],
   ['0 0 0 1-5,10 * * 2030',
-    'at midnight on the 1st through the 5th and on the 10th, in 2030'],
+    'at midnight at the start of the day on the 1st through the 5th and on the 10th, in 2030'],
   ['0 0 0 1-5,10 6 * 2030',
-    'at midnight on June 1 through 5 and on June 10, in 2030'],
+    'at midnight at the start of the day on June 1 through 5 and on June 10, in 2030'],
   ['0 0 1-5,10 6,7 *',
-    'at midnight on the 1st through the 5th and on the 10th, in June and ' +
+    'at midnight at the start of the day on the 1st through the 5th and on the 10th, in June and ' +
     'July'],
-  ['0 0 0 1 * 5 2030', 'at midnight on the 1st as well as on Fridays, in 2030'],
+  ['0 0 0 1 * 5 2030', 'at midnight at the start of the day on the 1st as well as on Fridays, in 2030'],
   ['0 9 * 6 0,2-5', 'at 9 a.m. Tuesday through Friday and on Sundays, in June'],
   ['0 0 9 * 6-8,12 * 2030/2',
     'at 9 a.m. every day in June through August and in December, in every ' +
@@ -767,8 +804,8 @@ const rows = [
 
   // Rules the renderer followed before the answers said them (section 9).
   ['0 0 31 6-8 1',
-    'at midnight on the 31st as well as on Mondays, in June through August'],
-  ['0 0 29 2 1', 'at midnight on February 29 as well as on Mondays in February'],
+    'at midnight at the start of the day on the 31st as well as on Mondays, in June through August'],
+  ['0 0 29 2 1', 'at midnight at the start of the day on February 29 as well as on Mondays in February'],
   ['*/15,1 * * * *', 'at 0, 1, 15, 30, and 45 minutes past the hour'],
   ['*/5,1 * * * *',
     'every 5 minutes from 0 through 55 and at 1 minute past the hour'],
@@ -776,17 +813,17 @@ const rows = [
     'every 2 seconds from 9:00:00 a.m. through 9:00:20 a.m. and every 3 ' +
     'seconds from 9:00:21 a.m. through 9:00:57 a.m. every day'],
   ['* 0,2,4,6,10,12,14,16 * * *',
-    'every minute during the midnight, 2 a.m., 4 a.m., 6 a.m., 10 a.m., ' +
+    'every minute during the 12 a.m., 2 a.m., 4 a.m., 6 a.m., 10 a.m., ' +
     'noon, 2 p.m., and 4 p.m. hours every day'],
   ['* 0,2,4,6,10,12,14,16,18 * * *',
-    'every minute during every other hour from the midnight hour through ' +
+    'every minute during every other hour from the 12 a.m. hour through ' +
     'the 6 p.m. hour except the 8 a.m. hour, every day'],
   ['* 0-12/2,13-23/3 * * *',
-    'every minute during every other hour from the midnight hour through ' +
+    'every minute during every other hour from the 12 a.m. hour through ' +
     'the noon hour and during every 3rd hour from the 1 p.m. hour through ' +
     'the 10 p.m. hour every day'],
   ['0 0 0 * * * 2030-2040,2045/1',
-    'at midnight every day in 2030 through 2040 and from 2045 onward'],
+    'at midnight at the start of the day every day in 2030 through 2040 and from 2045 onward'],
   ['0 0 0 29 2 * 2031/4',
     'never, because there is no February 29 in any of the years named'],
   ['0-29,31-59 0-28,30-59 9,17 * * *',
@@ -810,40 +847,40 @@ const rows = [
   // as" becomes ", but only": the days of the month, then the weekdays
   // they are restricted to, each said as it is alone.
   // The odd-numbered days that are a Monday.
-  ['0 0 */2 * 1', 'at midnight on odd-numbered days, but only on Mondays'],
+  ['0 0 */2 * 1', 'at midnight at the start of the day on odd-numbered days, but only on Mondays'],
   // The odd-numbered days that are a Monday, Wednesday or Friday.
   ['0 9 */2 * 1,3,5',
     'at 9 a.m. on odd-numbered days, but only on Mondays, Wednesdays, and ' +
     'Fridays'],
   // The odd-numbered days that are a Saturday or a Sunday.
-  ['0 0 */2 * 6,0', 'at midnight on odd-numbered days, but only on weekends'],
+  ['0 0 */2 * 6,0', 'at midnight at the start of the day on odd-numbered days, but only on weekends'],
   // The 15th, when it is a Sunday, Tuesday, Thursday or Saturday.
   ['0 0 15 * */2',
-    'at midnight on the 15th, but only on Tuesdays, Thursdays, Saturdays, ' +
+    'at midnight at the start of the day on the 15th, but only on Tuesdays, Thursdays, Saturdays, ' +
     'and Sundays'],
   // The last day of the month, when it is a Sunday, Tuesday, Thursday or
   // Saturday.
   ['0 0 L * */2',
-    'at midnight on the last day of the month, but only on Tuesdays, ' +
+    'at midnight at the start of the day on the last day of the month, but only on Tuesdays, ' +
     'Thursdays, Saturdays, and Sundays'],
   // The 1st, 6th, 11th, 16th, 21st, 26th and 31st, when a weekday.
   ['0 0 */5 * 1-5',
-    'at midnight on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st, but ' +
+    'at midnight at the start of the day on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st, but ' +
     'only on weekdays'],
   // Every day but the 15th, when it is a Sunday, Tuesday, Thursday or
   // Saturday. Nothing is said to keep the exception from the weekdays:
   // the comma and "but only" part them.
   ['0 0 1-14,16-31 * */2',
-    'at midnight on every day except the 15th, but only on Tuesdays, ' +
+    'at midnight at the start of the day on every day except the 15th, but only on Tuesdays, ' +
     'Thursdays, Saturdays, and Sundays'],
   // The Mondays, Tuesdays and Wednesdays, and the Fridays and Saturdays
   // that are odd-numbered days.
   ['0 0 */2 * 1-3,5-6',
-    'at midnight on odd-numbered days, but only Monday through Wednesday ' +
+    'at midnight at the start of the day on odd-numbered days, but only Monday through Wednesday ' +
     'and on Fridays and Saturdays'],
   // The odd-numbered days that are the last Friday of the month.
   ['0 0 */2 * 5L',
-    'at midnight on odd-numbered days, but only on the last Friday of the ' +
+    'at midnight at the start of the day on odd-numbered days, but only on the last Friday of the ' +
     'month'],
   // Every third day from the 1st, in January and July, when a weekday:
   // the months are said once after the pair.
@@ -853,36 +890,36 @@ const rows = [
   // The odd-numbered days of June that are a Monday: one month goes on
   // each side, as in a union.
   ['0 0 */2 6 1',
-    'at midnight on odd-numbered days in June, but only on Mondays in June'],
+    'at midnight at the start of the day on odd-numbered days in June, but only on Mondays in June'],
   // The 1st, 6th, 11th, 16th, 21st and 26th of June, when a Monday.
   ['0 0 */5 6 1',
-    'at midnight on June 1, 6, 11, 16, 21, and 26, but only on Mondays in ' +
+    'at midnight at the start of the day on June 1, 6, 11, 16, 21, and 26, but only on Mondays in ' +
     'June'],
   // Every third day from the 1st of June (1, 4 ... 28), when a Monday.
   ['0 0 */3 6 1',
-    'at midnight every 3 days from the 1st of the month in June, but only ' +
+    'at midnight at the start of the day every 3 days from the 1st of the month in June, but only ' +
     'on Mondays in June'],
   // The odd-numbered days that are a Monday, from June to August.
   ['0 0 */2 6-8 1',
-    'at midnight on odd-numbered days, but only on Mondays, in June ' +
+    'at midnight at the start of the day on odd-numbered days, but only on Mondays, in June ' +
     'through August'],
   // The odd-numbered days that are a Monday, in 2030.
   ['0 0 0 */2 * 1 2030',
-    'at midnight on odd-numbered days, but only on Mondays, in 2030'],
+    'at midnight at the start of the day on odd-numbered days, but only on Mondays, in 2030'],
   // February 29, which comes only in leap years, when it is a Sunday,
   // Tuesday, Thursday or Saturday: the calendar still narrows the days.
   ['0 0 29 2 */2',
-    'at midnight on February 29, but only on Tuesdays, Thursdays, ' +
+    'at midnight at the start of the day on February 29, but only on Tuesdays, Thursdays, ' +
     'Saturdays, and Sundays in February, in leap years'],
   // March 30, when it is a Sunday, Tuesday, Thursday or Saturday: February
   // has no 30th, so only March is left of the months.
   ['0 0 30 2-3 */2',
-    'at midnight on March 30, but only on Tuesdays, Thursdays, ' +
+    'at midnight at the start of the day on March 30, but only on Tuesdays, Thursdays, ' +
     'Saturdays, and Sundays in March'],
   // April has 30 days, so `1-30` is every day of it and only the weekdays
   // are left: the Sundays, Tuesdays, Thursdays and Saturdays of April.
   ['0 0 1-30 4 */2',
-    'at midnight on Tuesdays, Thursdays, Saturdays, and Sundays in April']
+    'at midnight at the start of the day on Tuesdays, Thursdays, Saturdays, and Sundays in April']
 ];
 
 export {rows};

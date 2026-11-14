@@ -89,7 +89,7 @@ Notes on counting, and the corrections:
 
 * A run of exactly two values is not said as a range of points; the two
   are listed ("on Sundays and Mondays", "at 9 a.m. and 10 a.m."). Two hours can
-  still be a window ("from 10 p.m. until midnight").
+  still be a window ("from 10 p.m. through 11:59 p.m.").
 * An idiom wins a tie with any other candidate.
 * An exception, and a cadence with both ends named, must name strictly
   fewer things than every other sayable phrasing to be chosen. On a tie
@@ -97,8 +97,8 @@ Notes on counting, and the corrections:
   the 5th, 10th, and 15th", not "every 5 days from the 5th through the
   15th"; days 3, 5 … 31 are "every 2 days from the 3rd", not "on
   odd-numbered days except the 1st"; hours 0 to 3 and 6 to 9 are "every
-  hour from midnight through 3 a.m. and every hour from 6 a.m. through 9
-  a.m.", not "every hour from midnight through 9 a.m. except at 4 a.m.
+  hour from 12 a.m. through 3 a.m. and every hour from 6 a.m. through 9
+  a.m.", not "every hour from 12 a.m. through 9 a.m. except at 4 a.m.
   and 5 a.m." (four things either way, and the pieces need no
   subtraction).
 * Runs and cadences together (3.12) lose a tie in the same way: they
@@ -168,7 +168,7 @@ caller to pass.
 | `closeUp` | `false` (`9 a.m.`) | `true` (`9am`) | `false` (`9 AM`) | whether they are joined to the time |
 | `separator` | `:` | `.` (`9.30am`) | `:` | the hour-minute separator |
 | `midday` | noon | midday | noon | the word for 12:00 |
-| `midnight` | midnight | midnight | midnight | the word for 0:00 |
+| `midnight` | midnight | midnight | midnight | the word for 0:00 as a moment, after "at" (4.1); empty, it is written as a time, "12 a.m." |
 | `through` | through | to | through | the inclusive range word |
 | `serialComma` | `true` | `false` | `true` | the comma before a list's "and" |
 | `dayFirst` | `false` (`June 1`) | `true` (`1 June`) | `false` | a single month with its dates |
@@ -194,7 +194,7 @@ reader comparing the two is looking at.
 
 * `0 9 * * *` — "at 9 a.m. every day"
 * `*/15 9-17 * * 1-5` — "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays"
-* `0 0 1 * *` — "at midnight on the 1st"
+* `0 0 1 * *` — "at midnight at the start of the day on the 1st"
 * `* * * * *` — "every minute"
 
 2.2 Each new part is added after the parts finer than it. Nothing moves.
@@ -209,8 +209,8 @@ redundancy: after "every second" or "every N seconds", a following "every
 minute" is not said.
 
 * `30 0 9 * * *` — "at 9:00:30 a.m. every day"
-* `*/6 0 9 * * *` — "every 6 seconds from 9:00 a.m. until 9:01 a.m. every day"
-* `* 0 9 * * *` — "every second from 9:00 a.m. until 9:01 a.m. every day"
+* `*/6 0 9 * * *` — "every 6 seconds from 9:00:00 a.m. through 9:00:54 a.m. every day"
+* `* 0 9 * * *` — "every second from 9:00:00 a.m. through 9:00:59 a.m. every day"
 
 2.4 No second order was adopted. All 24 grid families were written under
 the single order and read acceptably. Two places were considered and
@@ -246,7 +246,7 @@ those with exceptions ("every 2 hours except at 8 a.m.").
 * `30 * * * *` — "at 30 minutes past the hour"
 
 Hours said any other way take it: named times, a range, a window, pieces,
-a cadence that stops before the day ends ("every 2 hours from midnight
+a cadence that stops before the day ends ("every 2 hours from 12 a.m.
 through 8 p.m. every day"), named hours as a confinement. A named day of
 either kind, or a Quartz form, replaces it.
 
@@ -267,7 +267,7 @@ else crosses.
 2.6 A schedule that never runs. When the day of the month is one that no
 month the pattern reaches has, and no weekday is named beside it, nothing
 ever fires. The description is then only that, and the reason, because a
-reader shown "at midnight on June 31" will look for a date that is not
+reader shown "at midnight at the start of the day on June 31" will look for a date that is not
 there:
 
 * `0 0 31 6 *` — "never, because there is no June 31"
@@ -287,7 +287,7 @@ restriction of the years is only pointed to, "in any of the years named"
 The time is not said: there is no time at which it runs. In the sentence
 form this is "Runs never, because there is no June 31."
 
-Rejected: "at midnight on June 31", which was said before and names a
+Rejected: "at midnight at the start of the day on June 31", which was said before and names a
 day that does not exist; and a bare "never", which leaves the reader to
 find the reason in the pattern.
 
@@ -345,7 +345,7 @@ Numbers are digits everywhere. The only interval word is "every other"
   onward".** "In 2030 through 9999" was said before; no reader holds
   9999, and the schedule simply does not stop. "Onward" is what keeps
   this "from" apart from the "from" of a time or a cadence: "every 5
-  minutes from 2030 onward"; "at midnight on January 1 from 2030 onward".
+  minutes from 2030 onward"; "at midnight at the start of the day on January 1 from 2030 onward".
 * **"From" belongs to times and cadences.** A range of days, months or
   years takes the word its list takes ("on the 1st and 7th", "in June and
   August"), never "from". After a time, "from" was doing two jobs: "every
@@ -354,12 +354,12 @@ Numbers are digits everywhere. The only interval word is "every other"
   one range that keeps it is "of each month from June through August"
   (4.4), where it can only belong to "each month".
 * **A stretch of time filled by a finer cadence is a window, closed with
-  "until" at the moment it ends.** "Every minute from 9 a.m. until 6 p.m."
-  for hours 9 to 17. The end is the hour after the last one; after hour 23
-  it is "until midnight".
+  "through" on its last firing.** "Every minute from 9 a.m. through 5:59
+  p.m." for hours 9 to 17; "every minute from 10 p.m. through 11:59 p.m."
+  for hours 22 and 23.
 * A run of minutes inside one named hour is a window of clock times:
-  minutes 0 to 29 of hour 9 are "every minute from 9 a.m. until 9:30 a.m."
-  (4.1).
+  minutes 0 to 29 of hour 9 are "every minute from 9 a.m. through 9:29
+  a.m." (4.1).
 * A run of minutes that starts at 0, under every hour or several hours, is
   "for the first 30 minutes of": "every minute for the first 30 minutes of
   every hour". A run that ends at 59 is "for the last N minutes of". Any
@@ -373,23 +373,45 @@ a.m. and 5 p.m. hours". "Every hour" and "every hour from 9 a.m. through 5
 p.m." follow it unchanged, and a stray hour beside a range is named as an
 hour too: "of every hour from 1 a.m. through 7 a.m. and the 9 a.m. hour".
 
-**A cadence of minutes inside a window closes on its last run.** "Every 30
-minutes from midnight until 6 p.m." leaves it open whether 6:00 itself
-fires, because 6:00 is on the half-hour grid. So a window under "every N
-minutes" names its last run with "through": "every 30 minutes from
-midnight through 5:30 p.m."; "every 15 minutes from 10 p.m. through 5:45
-a.m." Under "every minute" nothing is in doubt and the window keeps
-"until": "every minute from 9 a.m. until 6 p.m." A cadence of seconds keeps "until", because the plain form reads better
-and the doubt is a matter of one second: "every 6 seconds from 9:00 a.m.
-until 9:01 a.m." A run of seconds written to the second is different: it
-names its last second with "through", because a blind reader took "until
-9:00:10" to include it. "Every second from 9:00:00 a.m. through 9:00:09
-a.m."
+**Every window closes on its last firing, with "through".** "Until" can
+include its end or exclude it: "every 30 minutes from midnight until 6
+p.m." left it open whether 6:00 itself fires, a blind reader took "until
+9:00:10" to include it, and on 2026-11-14 a blind reader (Opus) read
+"every minute from 9 a.m. until 9:30 a.m." both ways. So every window
+names its last firing, as every other English range already does:
+
+* under a cadence of minutes, its last run: "every 30 minutes from 12
+  a.m. through 5:30 p.m."; "every 15 minutes from 10 p.m. through 5:45
+  a.m.";
+* under "every minute", its last minute: "every minute from 9 a.m.
+  through 5:59 p.m."; "every minute from 9 a.m. through 9:29 a.m.";
+* under seconds that run through the minute, its last second: "every
+  second from 9 a.m. through 5:59:59 p.m."; "every 10 seconds from 9 a.m.
+  through 5:59:50 p.m."; seconds counted past the minute leave it on the
+  minute: "at 30 seconds past every minute from 9 a.m. through 9:29
+  a.m.";
+* inside one clock time, to the second: "every second from 9:00:00 a.m.
+  through 9:00:59 a.m."; "every 6 seconds from 9:00:00 a.m. through
+  9:00:54 a.m."; "every second from 9:00:00 a.m. through 9:00:09 a.m."
+
+The last firing is a clock time read off directly; nothing is worked
+out. By the cost model the new forms hold the same objects with no
+operation, and are longer by up to six syllables ("5:59:59 p.m." against
+"6 p.m."); the length buys one reading. Two blind readers (Opus and Sonnet, 2026-11-14) each took every
+"through" form above one way. Rejected: "until" with the moment after
+(two readings), and "during the 9:00 a.m. minute" (not English a writer
+would sign). The earlier choice kept "until" under "every minute" and
+for seconds because the plain form read better and the doubt was a
+matter of one minute or one second; but a reader who cannot tell whether
+9:30 fires has not been told when the schedule runs. In British style
+the range word is "to" ("every minute from 9am to 9.29am"), which both
+readers also read as possibly excluding its end, as they did every "to"
+range; that is the style's range word, not this form's (1.2).
 
 3.5 A range that wraps is said from its start through its end, the same
 way: "every hour from 10 p.m. through 2 a.m.", "in November through
-February", "Friday through Monday". As a window: "from 10 p.m. until 3
-a.m."
+February", "Friday through Monday". As a window: "from 10 p.m. through
+2:59 a.m."
 
 **Only named things wrap.** Clock times, months and weekdays have an
 order a reader knows runs round: "from 10 p.m. through 2 a.m.", "November
@@ -403,9 +425,9 @@ fields are always described as if they did not wrap, in ascending order:
 * `50-10 * * * *` — "every minute from 0 through 10 and every minute from
   50 through 59 minutes past the hour"
 * `58-1 * * * *` — "at 0, 1, 58, and 59 minutes past the hour"
-* `0 0 20-10 * *` — "at midnight on the 1st through the 10th and on the
+* `0 0 20-10 * *` — "at midnight at the start of the day on the 1st through the 10th and on the
   20th through the 31st"
-* `0 0 29-2 * *` — "at midnight on the 1st and 2nd and on the 29th
+* `0 0 29-2 * *` — "at midnight at the start of the day on the 1st and 2nd and on the 29th
   through the 31st"
 
 (The first audit let minutes and seconds wrap when nothing coarser was
@@ -425,11 +447,11 @@ the pattern means Monday's first hours and Monday's last. So:
   time.
 
 Where a wrap is not allowed, the set is described as if the field did not
-wrap, in ascending order: `0 22-2 1 * *` is "every hour from midnight
+wrap, in ascending order: `0 22-2 1 * *` is "every hour from 12 a.m.
 through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st"; `*/15 22-2 * * 1-5`
-is "every 15 minutes from midnight through 2:45 a.m. and from 10 p.m.
+is "every 15 minutes from 12 a.m. through 2:45 a.m. and from 10 p.m.
 through 11:45 p.m. on weekdays"; `0 0 0 * 11-2 * 2030` is "at midnight
-every day in January, February, November, and December in 2030".
+at the start of the day every day in January, February, November, and December in 2030".
 
 A run of hours that covers more than half the day is still said as it
 runs: `0 0-5,17-23 * * *` is "every hour from 5 p.m. through 5 a.m. every
@@ -455,7 +477,7 @@ names are easy to hold: Tuesday to Thursday with Sunday is "on Tuesdays,
 Wednesdays, Thursdays, and Sundays"; Monday with Wednesday to Friday is
 "on Mondays, Wednesdays, Thursdays, and Fridays". Three or more parts are
 joined as a list is, with commas: "at 9 a.m., every hour from 11 a.m. through 1 p.m., and at 3 p.m., 7 p.m., and 9 p.m." A run of minutes that wraps inside
-one hour is two windows: "every minute from 9 a.m. until 9:11 a.m. and every minute from 9:50 a.m. until 10 a.m."
+one hour is two windows: "every minute from 9 a.m. through 9:10 a.m. and every minute from 9:50 a.m. through 9:59 a.m."
 
 **What follows several pieces is set off by a comma.** Each piece of days
 or months has its own "on" or "in", so a month or a year straight after
@@ -465,8 +487,8 @@ summers. The comma is the one that closes an exception (3.9), for the
 same reason, and it is used in the day part and the month part only:
 
 * "at 9 a.m. every day in June through August and in December, in 2030"
-* "at midnight on the 1st through the 5th and on the 10th, in 2030"
-* "at midnight on June 1 through 5 and on June 10, in 2030"
+* "at midnight at the start of the day on the 1st through the 5th and on the 10th, in 2030"
+* "at midnight at the start of the day on June 1 through 5 and on June 10, in 2030"
 * "at 9 a.m. Tuesday through Friday and on Sundays, in June"
 
 Several pieces of days are never followed by "of" and their months: "on
@@ -524,7 +546,7 @@ month from February" was said before.)
   not tile or stops early: name both ends, so nobody assumes it carries
   on. "Every 7 minutes from 0 through 56 minutes past the hour"; "every 4
   minutes from 2 through 58 minutes past the hour"; "every 2 hours from
-  midnight through 8 p.m." It is said only for more than eight values
+  12 a.m. through 8 p.m." It is said only for more than eight values
   (the notes on counting): minutes 5, 20, 35 and 50 are "at 5, 20, 35,
   and 50 minutes past the hour", and minutes 10, 20, 30 and 40 are listed
   too. A minute cadence named only by its start ("from 5 minutes
@@ -554,7 +576,7 @@ the 15th".
 An exception is for a hole in the middle. A cadence that is only missing
 values at its end or its start is said with its bounds, not as the full
 cadence with exceptions: hours 0, 2 … 20 are "every 2 hours through 8
-p.m." in the bounded form ("every 2 hours from midnight through 8 p.m."),
+p.m." in the bounded form ("every 2 hours from 12 a.m. through 8 p.m."),
 never "every 2 hours except at 10 p.m."
 
 Beside a hole, a value missing at an end may be an exception too, where
@@ -568,7 +590,7 @@ subtraction. Hours 0, 3, 9, 12, 15 and 18 are "at midnight, 3 a.m., 9
 a.m., noon, 3 p.m., and 6 p.m.", not "every 3 hours except at 6 a.m. and
 9 p.m."; minutes 0, 10, 20, 40 and 50 are listed, not "every 10 minutes
 except at 30"; and hours 0, 2, 4, 6, 10, 12, 14 and 16 under "every
-minute" are "during the midnight, 2 a.m., … and 4 p.m. hours", where the
+minute" are "during the 12 a.m., 2 a.m., … and 4 p.m. hours", where the
 exception would have been "during every other hour except the 8 a.m., 6
 p.m., 8 p.m., and 10 p.m. hours". (Five values were enough before.)
 
@@ -578,7 +600,7 @@ or last values is a run, and is said as one (3.4, 4.1). The exception was
 chosen before, because it names one thing, and it took back a moment the
 sentence had just named:
 
-* `1-59 9 * * *` — "every minute from 9:01 a.m. until 10 a.m. every day",
+* `1-59 9 * * *` — "every minute from 9:01 a.m. through 9:59 a.m. every day",
   not "every minute during the 9 a.m. hour except at 0 minutes past the
   hour"
 * `1-59 * * * *` — "every minute for the last 59 minutes of every hour"
@@ -600,15 +622,15 @@ well as" and a weekday (which then says more: 4.3).
 * "every 2 hours except at 8 a.m., on the 1st"
 * "every minute except at 29 minutes past the hour, on Mondays"
 * "every hour from 3 a.m. through 11 p.m. except at 6 a.m., every day"
-* "at midnight on every day except the 15th, as well as on Mondays
+* "at midnight at the start of the day on every day except the 15th, as well as on Mondays
   whatever the date"
-* "at midnight Monday through Saturday except Thursday, in June"
-* "at midnight on the 1st of every month except June, in 2030"
+* "at midnight at the start of the day Monday through Saturday except Thursday, in June"
+* "at midnight at the start of the day on the 1st of every month except June, in 2030"
 
 **Whether a comma is enough was weighed again.** A comma is a small mark
 to carry a schedule, and the alternative is structural: say the coarser
 part first whenever an exception is present ("on the 1st, every 2 hours
-except at 8 a.m."; "in 2030, at midnight on the 1st of every month except
+except at 8 a.m."; "in 2030, at midnight at the start of the day on the 1st of every month except
 June"), or move every exception to the end ("every 2 hours on the 1st,
 except at 8 a.m."). Either leaves no doubt. Each was rejected, for these
 reasons:
@@ -704,7 +726,7 @@ spelling is used, and only for the ties listed here.
 Everywhere else hours 0 and 12 are two named hours, however written: "at
 12:23 a.m. and 12:23 p.m. every day"; "at 12:00:15 a.m. and 12:00:15 p.m.
 every day"; "every 15 minutes during the
-midnight and noon hours every day".
+12 a.m. and noon hours every day".
 
 3.12 Runs and cadences together. Some sets are no single run, cadence or
 short list: years 2030 to 2040 and then every fifth year; minutes 0 to 20
@@ -714,9 +736,9 @@ is, each with its own lead:
 
 * "every 2 minutes from 0 through 20 and every 3 minutes from 21 through
   57 minutes past the hour"
-* "every 2 hours from midnight through noon and every 3 hours from 1 p.m.
+* "every 2 hours from 12 a.m. through noon and every 3 hours from 1 p.m.
   through 10 p.m. every day"
-* "at midnight every 2 days from the 1st through the 11th of the month
+* "at midnight at the start of the day every 2 days from the 1st through the 11th of the month
   and every 3 days from the 14th through the 29th of the month"
 * "in 2030 through 2040 and in every 5th year from 2045" (5.8)
 
@@ -732,7 +754,7 @@ only where the list is too long to hold, which is more than eight values
 5th through the 25th of the month". Its cadences must not run through
 each other, apart from cadences of years with no end. It
 is sayable for seconds, minutes, hours said as times on the hour, hours
-as stretches ("every minute during every other hour from the midnight
+as stretches ("every minute during every other hour from the 12 a.m.
 hour through the noon hour and during every 3rd hour from the 1 p.m. hour
 through the 10 p.m. hour"), days of the month and years. Hours that carry
 a minute and hours after "past" have no phrase for it, and take their
@@ -755,7 +777,7 @@ hour set said as points, each point carrying the minute.
 | pieces | "every hour from 9 a.m. through 5 p.m. and at 10 p.m." | "every hour from 9:30 a.m. through 5:30 p.m. and at 10:30 p.m." |
 | tiling cadence | "every 2 hours" | "at 30 minutes past the hour, every 2 hours" |
 | tiling, off the beat | "every 2 hours from 1 a.m." | "at 30 minutes past the hour, every 2 hours from 1 a.m." |
-| other cadence, of more than eight hours | "every 2 hours from midnight through 8 p.m." | "at 30 minutes past the hour, every 2 hours from midnight through 8 p.m." |
+| other cadence, of more than eight hours | "every 2 hours from 12 a.m. through 8 p.m." | "at 30 minutes past the hour, every 2 hours from 12 a.m. through 8 p.m." |
 | a cadence with exceptions | "every 2 hours except at 8 a.m." | "at 30 minutes past the hour, every 2 hours except at 8 a.m." |
 
 Under any cadence of hours a minute other than 0 is anchored, exactly as a
@@ -771,14 +793,16 @@ confinement:
 | --- | --- |
 | every hour | none |
 | values | "during the 9 a.m. hour"; "during the 9 a.m. and 5 p.m. hours" |
-| range, under "every minute" | "from 9 a.m. until 6 p.m." |
+| range, under "every minute" | closes on the last minute: "from 9 a.m. through 5:59 p.m." |
 | range, under a cadence | closes on the last run: "every 15 minutes from 9 a.m. through 5:45 p.m." |
-| pieces | "from 9 a.m. until 6 p.m. and during the 10 p.m. hour"; under a cadence, "from 9 a.m. through 5:45 p.m. and during the 10 p.m. hour" |
+| pieces | "from 9 a.m. through 5:59 p.m. and during the 10 p.m. hour"; under a cadence, "from 9 a.m. through 5:45 p.m. and during the 10 p.m. hour" |
 | every second hour | "during every other hour"; off the beat, "during every other hour from 1 a.m." |
 | any other cadence that runs through the day | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours". It names what that cadence names. Off the beat such a cadence has eight hours at most, and they are named: "during the 1 a.m., 7 a.m., 1 p.m., and 7 p.m. hours". ("For one hour every 3 hours from 1 a.m." was said before.) |
 | a cadence with a named end | each end named as an hour: "during every other hour from the 2 a.m. hour through the 10 p.m. hour"; for a longer interval, which comes only among other parts (3.12), "during every 3rd hour from the 1 p.m. hour through the 10 p.m. hour". "For one hour every 2 hours from 2 a.m. through 10 p.m." is misheard as stopping at 10; "through the 10 p.m. hour" takes the whole hour in. Like every cadence with both ends named it is said only for more than eight hours: six are "during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours". (The hours were all listed at first, up to eleven of them, which nobody holds; then every cadence of four or more was said as one, which asked the listener to work out what six names would have told.) |
 
-Hours 0 and 12 are "the midnight hour" and "the noon hour".
+Hours 0 and 12 are "the 12 a.m. hour" and "the noon hour". ("The
+midnight hour" was read by both blind readers on 2026-11-14 as the hour
+before midnight, too.)
 
 A single minute never changes which device the hours take: hours 0 to 2
 and 4 to 23 are "every hour except at 3 a.m." at minute 0 and "at 30
@@ -786,9 +810,11 @@ minutes past every hour except 3 a.m." at minute 30.
 | except | "except during the 3 a.m. hour"; over every second hour, "during every other hour except the 8 a.m. hour" |
 
 **M is a single run of minutes and H is one hour.** The time part is a
-window of clock times, closed with "until" at the minute after the last:
-"every minute from 9 a.m. until 9:30 a.m."; minutes 10 to 40 are "from 9:10 a.m. until 9:41 a.m."; a run to minute 59 ends "until 10 a.m." A run with a
-stray minute adds it as a clock time: "every minute from 9 a.m. until 9:30 a.m. and at 9:45 a.m."
+window of clock times, closed with "through" on its last minute (3.4):
+"every minute from 9 a.m. through 9:29 a.m."; minutes 10 to 40 are "from
+9:10 a.m. through 9:40 a.m."; a run to minute 59 ends "through 9:59 a.m."
+A run with a stray minute adds it as a clock time: "every minute from 9
+a.m. through 9:29 a.m. and at 9:45 a.m."
 
 **Otherwise M is anchored**: a list, a run, pieces, an exception, or a
 cadence that is bounded or off the beat. The minute phrase from section 3
@@ -801,7 +827,7 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 | values | "9 a.m."; "9 a.m. and 5 p.m." |
 | range | "the hour from 9 a.m. through 5 p.m." |
 | pieces | "the hour from 9 a.m. through 5 p.m. and during the 10 p.m. hour"; a stray hour first, "the hour during the 1 a.m. hour and from 9 a.m. through 5 p.m." |
-| any cadence | not a noun phrase. The minute phrase ends "past the hour" (or "of the hour"), then a comma and the cadence as it is said for points: "at 15 and 45 minutes past the hour, every 4 hours"; "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m."; "…past the hour, every 2 hours from midnight through 8 p.m." |
+| any cadence | not a noun phrase. The minute phrase ends "past the hour" (or "of the hour"), then a comma and the cadence as it is said for points: "at 15 and 45 minutes past the hour, every 4 hours"; "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m."; "…past the hour, every 2 hours from 12 a.m. through 8 p.m." |
 | except | "every hour except 3 a.m." (the one place "every hour" follows "past"); out of a range, "the hour from 9 a.m. through 5 p.m. except during the noon hour" |
 
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m."
@@ -824,11 +850,53 @@ and `*/15 8-20/2` are both "every 15 minutes during the 8 a.m., 10 a.m.,
 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours".
 
 Writing a time: the hour alone on the hour ("9 a.m."), otherwise hour and
-minutes ("9:30 a.m."). 0:00 is "midnight" and 12:00 is "noon"; 0:30 is
-"12:30 a.m." Noon and midnight never take a.m. or p.m. A window to
-the minute or the second shows that precision on its numbered ends: "from 9:00 a.m. until 9:01 a.m.", "from midnight until 12:01 a.m." An end that falls
-exactly on noon or midnight is still said as the word, whatever the
-precision of the other end: "from noon through 12:00:09 p.m."
+minutes ("9:30 a.m."). 12:00 is "noon"; 0:30 is "12:30 a.m." Noon never
+takes a.m. or p.m. A window to the second shows that precision on its
+ends: "from 9:00:00 a.m. through 9:00:59 a.m." An end that falls exactly
+on noon is still said as the word, whatever the precision of the other
+end: "from noon through 12:00:09 p.m."
+
+**0:00.** "Midnight" lies between two days, and "midnight on Friday" is
+said of the end of Friday as well as its start ("due by midnight on
+Friday"). On 2026-11-14 a blind reader (Opus) gave both readings for "at
+midnight on the 1st", and two (Opus and Sonnet) each gave both for "at
+midnight every day in June" (June 1 at 0:00, or July 1 at 0:00); on
+2026-11-13 three of three readers raised it unprompted. Chicago (9.38)
+prefers the words noon and midnight to "12:00 p.m." and "12:00 a.m.",
+and its Q&A suggests naming both days for a midnight the context does
+not place. So:
+
+* As a moment after "at", 0:00 is "midnight" when every day of every
+  month can fire: "at midnight every day". Both readings are the same
+  schedule there.
+* As a moment beside a restricted day, weekday, month or year, it says
+  which midnight: "at midnight at the start of the day on the 1st", "at
+  midnight at the start of the day on Mondays", "at midnight at the start
+  of the day every day in June". Both readers took each of these one way
+  (2026-11-14). This is the one place
+  a coarser field changes the words of the time, and it is declared in
+  the continuity suite.
+* As the end of a stretch, and in the name of an hour, it is written as a
+  time, whatever the days: "every hour from 12 a.m. through 3 a.m.", "the
+  12 a.m. hour". A reader (Sonnet) took "from midnight through 3 a.m. on
+  Mondays" as Monday night, and both took "the midnight hour" as the hour
+  before midnight as well; "the 12 a.m. hour" was read one way, and
+  "from 12 a.m. through 3 a.m. on Mondays" as Monday night only by one
+  reader, as the weaker reading.
+
+Rejected: "12 a.m." and "12:00 a.m." as the moment (each of eight
+isolated reads of "at 12 a.m. on the 1st", "at 12:00 a.m. on the 1st",
+"at 12 a.m. on Mondays" and "at 12 a.m. every day in June" also gave the
+end of the day, if as the weaker reading; some also noted that "12 a.m."
+is confused with noon); "00:00" in a 12-hour sentence (a mixed style no
+copy editor would sign); and "at the start of the 1st" in the day part,
+which would have to rebuild every day phrase ("on Mondays", "on the 1st
+through the 7th") around it. The qualifier is long in a list ("at
+midnight at the start of the day, 6 a.m., and 6 p.m. on the 1st"), and
+that cost is accepted for one reading (by the cost model the same
+objects, six syllables more). A style may set `midnight` to its
+own word, which takes the same qualifier, or to empty, which writes 0:00
+as "12 a.m." everywhere.
 
 After "past", every hour is "the hour", and a range of hours follows it
 directly: "at 30 minutes past the hour"; "at 5, 20, and 45 minutes past
@@ -843,7 +911,7 @@ Seconds likewise say "past the minute": "at 30 seconds past the minute".
 
 Every numbered time carries its own a.m. or p.m. It is never left to a
 later time to supply: "at 9 a.m. and 9:30 a.m."; "at 9:05 a.m., 9:20 a.m.,
-and 9:45 a.m."; "from 9 a.m. until 9:30 a.m."; "from 3 a.m. through 5
+and 9:45 a.m."; "from 9 a.m. through 9:29 a.m."; "from 3 a.m. through 5
 a.m."; "during the 4 a.m. and 7 a.m. hours". Sharing it was tried and
 read wrong: it is a special case, and the reader has to carry the a.m.
 back across the list.
@@ -855,14 +923,16 @@ back across the list.
   clock times to the second, on the terms given at the end of this answer.
   "At 9:30:15 a.m."; "at 9 a.m. and 9:00:30 a.m."
 * The time is one clock time, and S is continuous (every second, or a
-  tiling cadence from 0): a one-minute window. "Every second from 9:00 a.m. until 9:01 a.m."; "every 6 seconds from midnight until 12:01 a.m." If S
+  tiling cadence from 0): a one-minute window to the second, closed on
+  its last firing (3.4). "Every second from 9:00:00 a.m. through 9:00:59
+  a.m."; "every 6 seconds from 12:00:00 a.m. through 12:00:54 a.m." If S
   is a run, the window is to the second: "every second from 9:00:00 a.m. through 9:00:09 a.m." If S is a cadence that does not tile from 0, both
   its ends are named as ends of the window, however few seconds it has:
   "every 10 seconds from 9:00:05 a.m. through 9:00:55 a.m." (Six clock
   times to the second would be eighteen numbers.)"
 * Otherwise, when S is continuous the lead is "every second" or "every N
   seconds". If the rest of the time begins "every minute", those two words
-  are dropped: "every second from 9 a.m. until 6 p.m.", "every second
+  are dropped: "every second from 9 a.m. through 5:59:59 p.m.", "every second
   during the 9 a.m. hour". If there is no rest: "every second". Otherwise
   "for one minute" joins them: "every second for one minute at 9 a.m. and
   5 p.m.", "every 15 seconds for one minute every 15 minutes".
@@ -883,7 +953,7 @@ the minute, at 5 and 30 minutes past the hour, every 2 hours".
 
 Whenever the rest of the time begins "every minute", seconds take its
 place, in every form the rest can have: "every second for the first 30
-minutes of every hour"; "every second from 3 through 30 minutes past the hour"; "every second from 9 a.m. until 9:30 a.m. and for one minute at 9:45 a.m." Anchored seconds do the same, with "every minute" in place of "the
+minutes of every hour"; "every second from 3 through 30 minutes past the hour"; "every second from 9 a.m. through 9:29:59 a.m. and for one minute at 9:45 a.m." Anchored seconds do the same, with "every minute" in place of "the
 minute" and no comma: "at 1 second past every minute for the first 30
 minutes of every hour"; "at 5, 15, 25, 35, 45, and 55 seconds past every
 minute during the 9 a.m. hour".
@@ -898,10 +968,10 @@ are said without seconds:
 
 * "at 30 seconds past the minute, every minute from 0 through 29 and at
   45 minutes past the hour"
-* "at 15 and 45 seconds past the minute, every minute from 9 a.m. until
-  9:30 a.m. and at 9:45 a.m. every day"
-* "at 8 seconds past the minute, every minute from 9 a.m. until 9:30 a.m.
-  and at 9:45 a.m. every day" (a single second does not ride on the stray
+* "at 15 and 45 seconds past the minute, every minute from 9 a.m. through
+  9:29 a.m. and at 9:45 a.m. every day"
+* "at 8 seconds past the minute, every minute from 9 a.m. through 9:29
+  a.m. and at 9:45 a.m. every day" (a single second does not ride on the stray
   here: it has been said)
 
 Continuous seconds are not moved: "every second from 0 through 29 and for
@@ -949,21 +1019,22 @@ second, the minutes and hours are clock times, and there are at most 24
 times in all. It names one thing per time and competes with the seconds
 lead or the anchored form; on a tie the list wins. A time that falls on
 the minute is written without seconds. So `0,30 0 9` is "at 9 a.m. and 9:00:30 a.m." (two things either way), `0,30 0 0` is "at midnight and 12:00:30
-a.m.", `15,45 30 9` is "at 9:30:15 a.m. and 9:30:45 a.m." (two against three),
-and `*/15 0 9` stays "every 15 seconds from 9:00 a.m. until 9:01 a.m." (two
+a.m." ("at midnight at the start of the day and 12:00:30 a.m." beside a
+named day), `15,45 30 9` is "at 9:30:15 a.m. and 9:30:45 a.m." (two against three),
+and `*/15 0 9` stays "every 15 seconds from 9:00:00 a.m. through 9:00:45 a.m." (two
 things against four times). This replaces the earlier limit that only a
 single second could join a clock time.
 
 4.3 A day of the month and a weekday. The day-of-month phrase comes
 first, then "as well as", then the weekday phrase exactly as it would stand
-alone: "at midnight on the 1st as well as on Fridays"; "on the 1st as well
+alone: "at midnight at the start of the day on the 1st as well as on Fridays"; "on the 1st as well
 as on weekdays"; "on the 1st as well as Monday through Saturday"; "on
 the 1st through the 7th and on the 15th as well as on weekdays". "As well
 as" is heard as adding a second set of days. "Or" is heard as a choice, and
 a bare "and" runs together with the "and" inside a list.
 
 The pair is closed with a comma before a year, as several pieces are
-(3.6): "at midnight on the 1st as well as on Fridays, in 2030". Without
+(3.6): "at midnight at the start of the day on the 1st as well as on Fridays, in 2030". Without
 it the year is heard with the weekday alone.
 
 **An exception on either side must not be heard as covering the pair.**
@@ -973,7 +1044,7 @@ fires on a Thursday the 15th, and "on the 15th as well as Monday through
 Saturday except Thursday" was read as if it did not.
 
 * The weekday side takes no exception. A week is short enough to name:
-  "at midnight on the 1st as well as Monday through Wednesday and on
+  "at midnight at the start of the day on the 1st as well as Monday through Wednesday and on
   Fridays and Saturdays". A run that wraps is no exception and stays: "on
   the 15th as well as Thursday through Tuesday".
 * The day-of-month side keeps its exception, because the alternatives
@@ -994,7 +1065,7 @@ exception reach back.
 **The calendar can dissolve the pair** (the core says when):
 
 * A day of the month that no reached month has leaves the weekday alone:
-  `0 0 31 6 1` is "at midnight on Mondays in June".
+  `0 0 31 6 1` is "at midnight at the start of the day on Mondays in June".
 * Days that are every day of their months are every day, and the weekday
   is not said: `0 9 1-30 4 1` is "at 9 a.m. every day in April". So is a
   day field that names every value: `0 9 1-31 * 1` is "at 9 a.m. every
@@ -1002,7 +1073,7 @@ exception reach back.
 
 A single month applies to both sides, so each side carries it, in the
 form it would take alone (4.4 for the date, "in" and the month for the
-weekdays): "at midnight on June 1 as well as on Fridays in June".
+weekdays): "at midnight at the start of the day on June 1 as well as on Fridays in June".
 
 A month is said once wherever it can be. A single month is short enough to
 sit on each side, as above. Any longer month phrase (a list, a range, an
@@ -1022,15 +1093,15 @@ one it is alone, and the months go where they go in the pair (a single
 month on each side, any longer phrase once after both, set off by a
 comma). Nothing else changes, which is the whole of the rule: the
 reader sees the same two phrases and one connective, and "but only" is
-never heard as adding days. `0 0 */2 * 1` is "at midnight on
-odd-numbered days, but only on Mondays" (the Mondays that are odd days
+never heard as adding days. `0 0 */2 * 1` is "at midnight at the
+start of the day on odd-numbered days, but only on Mondays" (the Mondays that are odd days
 of the month); `0 9 */2 * 1,3,5` is "at 9 a.m. on odd-numbered days, but
 only on Mondays, Wednesdays, and Fridays"; `0 0 15 * */2` is "at
-midnight on the 15th, but only on Tuesdays, Thursdays, Saturdays, and
-Sundays"; `0 0 */5 * 1-5` is "at midnight on the 1st, 6th, 11th, 16th,
+midnight at the start of the day on the 15th, but only on Tuesdays, Thursdays, Saturdays, and
+Sundays"; `0 0 */5 * 1-5` is "at midnight at the start of the day on the 1st, 6th, 11th, 16th,
 21st, 26th, and 31st, but only on weekdays"; `0 0 */3 6 1` is "at
-midnight every 3 days from the 1st of the month in June, but only on
-Mondays in June"; `0 0 */2 * 5L` is "at midnight on odd-numbered days,
+midnight at the start of the day every 3 days from the 1st of the month in June, but only on
+Mondays in June"; `0 0 */2 * 5L` is "at midnight at the start of the day on odd-numbered days,
 but only on the last Friday of the month". Written without the star the
 same fields are a union and keep "as well as" (`0 0 1-31/2 * 1` is "on
 odd-numbered days as well as on Mondays").
@@ -1044,7 +1115,7 @@ exception taken out of them. A set of days that is every day of the
 months reached (`0 0 1-30 4 */2`) is no restriction, and the weekdays
 stand alone. The calendar narrows the days as it does for one arm: a
 day that comes only in leap years says so after the pair (`0 0 29 2 */2`
-is "at midnight on February 29, but only on Tuesdays, Thursdays,
+is "at midnight at the start of the day on February 29, but only on Tuesdays, Thursdays,
 Saturdays, and Sundays in February, in leap years"), and months the day
 never comes in are left out (`0 0 30 2-3 */2` is "on March 30, but only
 on Tuesdays, Thursdays, Saturdays, and Sundays in March").
@@ -1093,11 +1164,11 @@ core states which days the reached months have and which months a day
 can fire in.
 
 * Days no reached month has are left out: `0 0 1,31 4,6,9,11 *` is "at
-  midnight on April 1, June 1, September 1, and November 1";
+  midnight at the start of the day on April 1, June 1, September 1, and November 1";
   `0 0 25-31 6 *` is "on June 25 through 30"; `0 0 30-2 6 *` is "on June
   1, 2, and 30". (A hard-case row said "June 1, 2, 30, and 31".)
 * Where the months are named, months the day never comes in are left
-  out: `0 0 30 2-3 *` is "at midnight on March 30". Where every month is
+  out: `0 0 30 2-3 *` is "at midnight at the start of the day on March 30". Where every month is
   reached the day alone is enough, since a reader knows which months
   have a 31st: "on the 31st".
 * Days that are every day of their months are "every day":
@@ -1110,7 +1181,7 @@ can fire in.
   that exist is said.
 * **A day that comes only in leap years says so.** When the whole day
   part fires in leap years alone, "in leap years" follows it, after any
-  years and a comma: "at midnight on February 29 in leap years"; "on
+  years and a comma: "at midnight at the start of the day on February 29 in leap years"; "on
   February 29 in 2030 through 2040, in leap years". "On February 29" was
   said before and left it to the reader. Where other months fire every
   year too ("on February 29 and March 29") nothing is added: the date
@@ -1127,8 +1198,10 @@ can fire in.
 5.2 Weekdays Monday to Friday: "on weekdays". Saturday and Sunday: "on
 weekends".
 
-5.3 Noon and midnight name a moment, and the hour that starts there ("the
-midnight hour"). They are not used for other minutes of that hour.
+5.3 Noon and midnight name a moment; noon also names the hour that
+starts there ("the noon hour"), and 0:00 is "the 12 a.m. hour" (4.1).
+Neither is used for other minutes of that hour. Beside a restricted day,
+month or year, midnight says it starts the day (4.1).
 
 * `0 0 * * *` — "at midnight every day"
 * `0 12 * * *` — "at noon every day"
@@ -1214,7 +1287,7 @@ bare "every day every other year" runs two rhythms together.) The even
 and odd years above keep their own words.
 
 * "at 9 a.m. every day of every other year from 2030"
-* "at midnight on January 1 of every 4th year from 2028"
+* "at midnight at the start of the day on January 1 of every 4th year from 2028"
 * "at 9 a.m. every day in June of every other year from 2030"
 * "at 9 a.m. on Mondays of every other year from 2030"
 * "on the last day of the month of every 4th year from 2028"
@@ -1258,7 +1331,7 @@ day" the same way.
 **Nothing hangs across a comma.** Where the part before the year is
 closed with a comma (an exception, several pieces, a day of the month
 beside a weekday), the cadence takes "in", and the day before it needs
-no month spelled: "at midnight on every day except the 15th, in every
+no month spelled: "at midnight at the start of the day on every day except the 15th, in every
 other year from 2030"; "on the 1st as well as on weekdays, in every 4th
 year from 2030"; "every day in June through August and in December, in
 every other year from 2030". ("…on every day in every month except the
@@ -1281,8 +1354,8 @@ three letters; they are written forms, counted as the full word is spoken.
 
 6.4 second(s), minute(s), hour(s), day(s), month(s), year(s).
 
-6.5 at, on, in, of, every, other, from, through (to), until, past, during,
-and, except, for one minute, the.
+6.5 at, on, in, of, every, other, from, through (to), past, during, and,
+except, for one minute, the, at the start of the day.
 
 ## 7. Agreement
 
@@ -1315,11 +1388,11 @@ the 1st as well as on Fridays". See 4.3. Where a day has to match both,
 ", but only": "on odd-numbered days, but only on Mondays".
 
 8.2 `shared-qualifier-scope` — The time leads, so it covers both arms. A
-month is said on each arm: "at midnight on June 1 as well as on Fridays in
+month is said on each arm: "at midnight at the start of the day on June 1 as well as on Fridays in
 June".
 
 8.3 `confinement-vs-juxtaposition` — A confinement is introduced by
-"during", "from … until", or "for one minute", never by a bare comma:
+"during", "from … through", or "for one minute", never by a bare comma:
 "every minute during the 9 a.m. hour", "every second for one minute at 9
 a.m."
 
@@ -1328,12 +1401,12 @@ of days does say it, 3.7). "Every
 minute" is not said after "every second". A field that takes every value
 is not said.
 
-8.5 `range-boundary` — A window under "every minute" or "every second"
-closes with "until" at the moment it ends: "every minute from 9 a.m. until
-6 p.m." A window under a cadence of minutes closes with "through" on its
-last run: "every 15 minutes from 9 a.m. through 5:45 p.m." Seconds always
-keep "until". Named points close with
-"through" on the last one: "every hour from 9 a.m. through 5 p.m."
+8.5 `range-boundary` — Every range names its last value or firing with
+"through" (3.4). A window closes on its last firing: "every minute from
+9 a.m. through 5:59 p.m."; "every 15 minutes from 9 a.m. through 5:45
+p.m."; "every second from 9:00:00 a.m. through 9:00:59 a.m." Named points
+close on the last one: "every hour from 9 a.m. through 5 p.m." "Until" is
+not said: it was read both as including its end and as excluding it.
 
 8.6 `recurrence-marking` — Plural with "on" for single days and lists
 ("on Mondays", "on Mondays and Wednesdays"); singular with no "on" for a
@@ -1348,8 +1421,8 @@ a.m." The description for `@reboot` is "at system startup". The lenient
 fallback is "an unrecognizable cron pattern", which is never wrapped.
 
 8.9 `cardinality-rendering` — Decided by the things named among the
-sayable forms. `0 0 1 */3 *` is "at midnight on January 1, April 1, July
-1, and October 1"; `0 0 1 */2 *` is "at midnight on the 1st of every other
+sayable forms. `0 0 1 */3 *` is "at midnight at the start of the day on January 1, April 1, July
+1, and October 1"; `0 0 1 */2 *` is "at midnight at the start of the day on the 1st of every other
 month"; `0 */6 * * *` is "every 6 hours"; `0 0,6,12,18 * * *` is "every 6
 hours" too, because the cadence is clearly easier than four times and the
 spelling only settles ties (3.11).
@@ -1400,7 +1473,7 @@ window to the second: "every 2 seconds from 9:00:00 a.m. through 9:00:20
 a.m. and every 3 seconds from 9:00:21 a.m. through 9:00:57 a.m."
 
 9.8 **A cadence of hours with a named end keeps its exception form under
-minutes**: "every minute during every other hour from the midnight hour
+minutes**: "every minute during every other hour from the 12 a.m. hour
 through the 6 p.m. hour except the 8 a.m. hour", for hours 0, 2, 4, 6,
 10, 12, 14, 16 and 18. (With eight hours left or fewer they are listed.)
 
