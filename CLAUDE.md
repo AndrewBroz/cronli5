@@ -104,6 +104,31 @@ hold in every language.
 - has one first reading, which is the right one, even if that takes more
   words.
 
+**The cost of a sentence to its reader.** "Simple and easy" is measured
+by a model of the person, not by asking a model whether it found the
+sentence easy. Three costs:
+
+- **Spoken length**: how long the sentence takes to say, in that
+  language's syllables, with numbers and times counted as spoken.
+- **Objects held in mind**: every value the reader must hold that habit
+  does not supply. A compound counts its parts. "Every 15 minutes" is one
+  object (the step; on the hour and all day are habit). "Every 15 minutes
+  from 9:05 to 17:50" is four (the step, the phase it starts from, and two
+  ends) and carries an operation tax as well. "At :05, :20, :35 and :50" is
+  four, with no operation. A window is its two ends; a range of days is
+  two unless the language holds it whole ("weekdays"); an exception is
+  its base and each thing removed.
+- **Operation tax**: the mental work for anything not read off directly:
+  adding from an offset, converting an ordinal, inferring a step from a
+  series, working out whether an end is included, a step that does not
+  divide its unit evenly (does it restart each hour?), multiplying fields
+  together.
+
+These costs rank a language's sentences, worst first, and compare two
+wordings that each have one reading. They are evidence for a person to
+weigh, never a target. Whether a sentence has one reading at all is a
+separate question, for a reader (next section).
+
 **For the model doing the work.** What is easy for you is not evidence of
 what is easy for the reader: you will find a long list, a product of
 three fields or a rule left to inference perfectly clear. Do not judge by
@@ -124,16 +149,20 @@ how they are prompted decides whether their judgment is worth anything:
 - **Context-isolated.** A fresh agent each time, shown only the sentences.
   It never sees the project, the notes, the author's hypothesis ("could
   this be read as continuous?" leaks it), or another judge's view.
-- **Scored by machine where possible.** The core knows exactly when a
-  pattern fires. Ask the reader whether it fires at chosen moments (true
-  firings, and near-misses aimed at the misreadings above) and check the
-  answers against the true schedule. A wrong answer is a defect, located.
-- **Every change is compared blind with what it replaces**, by a reader
-  who does not know which is which. Merge only what reads at least as
-  clearly.
-- **Several independent readers**, so a repeatable misreading is told from
-  one reader's speculation. A reported second reading is a defect; a
-  report of stiffness is a note.
+- **Asked whether a sentence has one reading.** Readers are for
+  correctness: a reader who finds a second plausible reading has found a
+  defect. Ease is the cost model's question, not theirs: a model works
+  things out a person reading once would not, so a model finding a
+  sentence clear says little about how hard it is to hold.
+- **Scored by machine where possible.** An answer key that shares no code
+  with the library (`tooling/scripts/reading/oracle.mjs`) knows when a
+  pattern fires; `tooling/scripts/reading/run.mjs` asks readers about
+  chosen moments and scores them. On 2026-11-14 it read all 657 German
+  rows with 99.9% of answers right, which is why it checks correctness,
+  not ease. Readers of one model and prompt answer alike; vary them if
+  agreement is to mean anything.
+- **A reported second reading is a defect; a report of stiffness is a
+  note.**
 - **Corpus evidence.** Search the open web for a phrase fragment to see
   how native writers use it.
 
