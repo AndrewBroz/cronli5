@@ -338,7 +338,7 @@ function dateText(
 }
 
 // «Wochentag (Montag bis Freitag)»: the brackets say which days are
-// meant, and the word says nothing of public holidays.
+// meant.
 function workday(voice: Voice): string {
   const [monday, friday] = workWeek.map(voice.weekdayNoun);
 

@@ -42,8 +42,7 @@ reviewed it yet.**
 * **A day of the month together with a weekday** says the weekdays first
   and «sempre» before the time, so the time covers both: «todas as sextas
   e também no dia 1º de cada mês, sempre às 00:00».
-* **Quartz `W` is «dia de semana (segunda a sexta)»**; «dia útil» leaves
-  out public holidays, which the pattern does not know.
+* **Quartz `W` is «dia de semana (segunda a sexta)»**.
 
 ## cronli5 vs. cRonstrue (pt_BR locale)
 

@@ -110,7 +110,6 @@ const words = {
   oddDays: 'nei giorni dispari',
   penultimateDay: 'il penultimo giorno',
   workday: 'giorno lavorativo',
-  workdayGloss: 'festivi compresi',
 
   // Months and years.
   fromMonth: 'da',

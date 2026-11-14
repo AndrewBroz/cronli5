@@ -205,11 +205,9 @@ day the week starts on, the order days are listed in, any word for the
 days people work or rest), of hours in the day (named parts of the day,
 names for particular moments), of minutes in the hour, of days in the
 month, of months in the year, and anything else. For each give the
-phrase; the exact set it means; whether that set is the same in every
-region where the language is written; and anything it carries that a
-pattern does not know (public holidays, a Saturday that counts, a day
-that begins at sunset). A phrase that differs by region is either left
-unused or made a regional style.
+phrase; the exact set it means; and whether that set is the same in
+every region where the language is written. A phrase that differs by
+region is either left unused or made a regional style.
 
 5.2 Patterns often hold the sets below. For each, say whether the language
 has a phrase for exactly that set, or a phrase for a different set that

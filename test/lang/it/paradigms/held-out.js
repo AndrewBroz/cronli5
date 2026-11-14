@@ -46,7 +46,7 @@ const rows = [
   ['0 9 L * *', 'l\'ultimo giorno di ogni mese alle 9:00'],
   ['0 9 15W * *',
     'il giorno lavorativo più vicino al 15 di ogni mese (dal lunedì al ' +
-    'venerdì, festivi compresi) alle 9:00'],
+    'venerdì) alle 9:00'],
 
   // clock / month
   ['0 9 * 6 *', 'a giugno, tutti i giorni alle 9:00'],
@@ -226,7 +226,7 @@ const rows = [
   ['0 0 L * *', 'l\'ultimo giorno di ogni mese alle 0:00'],
   ['0 0 15W * *',
     'il giorno lavorativo più vicino al 15 di ogni mese (dal lunedì al ' +
-    'venerdì, festivi compresi) alle 0:00'],
+    'venerdì) alle 0:00'],
 
   // monthly / month
   ['0 0 1 6 *', 'il 1º giugno alle 0:00'],
@@ -295,7 +295,7 @@ const rows = [
   ['* * L * *', 'l\'ultimo giorno di ogni mese, ogni minuto'],
   ['* * 15W * *',
     'il giorno lavorativo più vicino al 15 di ogni mese (dal lunedì al ' +
-    'venerdì, festivi compresi), ogni minuto'],
+    'venerdì), ogni minuto'],
 
   // open / month
   ['* * * 6 *', 'a giugno, ogni minuto'],

@@ -201,7 +201,7 @@ const sets = [
       },
       {
         expected: 'il giorno lavorativo più vicino al 15 di ogni mese (dal ' +
-          'lun al ven, festivi compresi) alle 9:00',
+          'lun al ven) alle 9:00',
         parts: ['15', 'lun', 'ven', '9:00'],
         pattern: '0 9 15W * *'
       },

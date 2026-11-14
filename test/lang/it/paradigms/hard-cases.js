@@ -61,33 +61,32 @@ const rows = [
   // Quartz forms: no word for a Monday-to-Friday day, and no month promised that is skipped.
   ['0 0 1 * ?', 'il 1º di ogni mese alle 0:00', {cron: 'quartz'}],
   ['0 0 LW * *',
-    'l\'ultimo giorno lavorativo di ogni mese (dal lunedì al venerdì, ' +
-    'festivi compresi) alle 0:00'],
+    'l\'ultimo giorno lavorativo di ogni mese (dal lunedì al venerdì)' +
+    ' alle 0:00'],
   ['0 0 1W * *',
-    'il primo giorno lavorativo di ogni mese (dal lunedì al venerdì, ' +
-    'festivi compresi) alle 0:00'],
+    'il primo giorno lavorativo di ogni mese (dal lunedì al venerdì)' +
+    ' alle 0:00'],
   ['0 0 1W 6 *',
-    'il primo giorno lavorativo di giugno (dal lunedì al venerdì, festivi ' +
-    'compresi) alle 0:00'],
+    'il primo giorno lavorativo di giugno (dal lunedì al venerdì) alle 0:00'],
   ['0 0 15W 6 *',
-    'il giorno lavorativo più vicino al 15 giugno (dal lunedì al venerdì, ' +
-    'festivi compresi) alle 0:00'],
+    'il giorno lavorativo più vicino al 15 giugno (dal lunedì al venerdì)' +
+    ' alle 0:00'],
   ['0 0 8W * *',
     'il giorno lavorativo più vicino all\'8 di ogni mese (dal lunedì al ' +
-    'venerdì, festivi compresi) alle 0:00'],
+    'venerdì) alle 0:00'],
   ['0 0 31W * *',
     'l\'ultimo giorno lavorativo dei mesi di 31 giorni (dal lunedì al ' +
-    'venerdì, festivi compresi) alle 0:00'],
+    'venerdì) alle 0:00'],
   ['0 0 28W * *',
     'il giorno lavorativo più vicino al 28 di ogni mese, senza uscire dal ' +
-    'mese (dal lunedì al venerdì, festivi compresi) alle 0:00'],
+    'mese (dal lunedì al venerdì) alle 0:00'],
   ['0 0 30W * *',
     'il giorno lavorativo più vicino al 30 di ogni mese, senza uscire dal ' +
-    'mese (dal lunedì al venerdì, festivi compresi) alle 0:00, tranne a ' +
+    'mese (dal lunedì al venerdì) alle 0:00, tranne a ' +
     'febbraio'],
   ['0 0 30W 6 *',
     'il giorno lavorativo più vicino al 30 giugno, senza uscire dal mese ' +
-    '(dal lunedì al venerdì, festivi compresi) alle 0:00'],
+    '(dal lunedì al venerdì) alle 0:00'],
   ['0 0 L-3 * *',
     '3 giorni prima dell\'ultimo giorno di ogni mese (il 28 nei mesi di 31 ' +
     'giorni, il 27 in quelli di 30, il 25 o il 26 a febbraio) alle 0:00'],
@@ -113,10 +112,10 @@ const rows = [
   ['0 9 * * 1#5', 'il quinto lunedì dei mesi che ne hanno cinque, alle 9:00'],
   ['0 0 31W 6-8 *',
     'a luglio e agosto, l\'ultimo giorno lavorativo del mese (dal lunedì al ' +
-    'venerdì, festivi compresi) alle 0:00'],
+    'venerdì) alle 0:00'],
   ['0 0 29W * *',
     'il giorno lavorativo più vicino al 29 di ogni mese, senza uscire dal ' +
-    'mese (dal lunedì al venerdì, festivi compresi), a febbraio solo negli ' +
+    'mese (dal lunedì al venerdì), a febbraio solo negli ' +
     'anni bisestili, alle 0:00'],
   ['0 0 L-29 * *',
     '29 giorni prima dell\'ultimo giorno di ogni mese (il 2 nei mesi di 31 ' +
@@ -724,7 +723,7 @@ const rows = [
     'dalle 3 alle 10 (prima volta alle 3:30:00, ultima alle 10:42:59)'],
   ['0 18 15W 3,6,9,12 *',
     'a marzo, giugno, settembre e dicembre, il giorno lavorativo più ' +
-    'vicino al 15 del mese (dal lunedì al venerdì, festivi compresi) alle ' +
+    'vicino al 15 del mese (dal lunedì al venerdì) alle ' +
     '18:00'],
   ['7 4-22/6 1 */2 *',
     'ogni 2 mesi a partire da gennaio, il 1º del mese alle 4:07, alle ' +

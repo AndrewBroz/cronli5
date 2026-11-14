@@ -44,8 +44,7 @@ reviewed it yet.**
   ainsi que le 1er de chaque mois ».
 * **Midnight is « à 0 h »**: « le 1er à minuit » is often read as the night
   that ends the 1st.
-* **Quartz `W` is « jour ouvré »**, meaning Monday to Friday. The pattern
-  knows no public holidays.
+* **Quartz `W` is « jour ouvré »**, meaning Monday to Friday.
 
 ## cronli5 vs. cRonstrue (fr locale)
 
