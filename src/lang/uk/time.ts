@@ -34,6 +34,11 @@ interface Face {
 interface Level {
   // What follows counts from each slot named: «після кожної з цих годин».
   afterEach: string;
+  // What a count inside the slot is counted from: «після початку години».
+  afterStart: string;
+  // Whether one place inside the slot is counted from its start: not
+  // where the other field of the sentence is a list, said by ordinals.
+  counts: boolean;
   // The word for every slot: «щогодини».
   cycle: string;
   // What closes a phrase about a place inside the slot: «кожної години».
@@ -172,6 +177,17 @@ function bracket(slots: number[], fine: Placed, level: Level): string {
   const shown = [...itemsOf(slots[0]), itemsOf(slots[1])[0]].join(', ');
 
   return ` (${shown} … ${itemsOf(slots[slots.length - 1]).pop()})`;
+}
+
+// Whether a set is one place said as a count from the slot's start.
+function oneCount(fine: Described, level: Level): boolean {
+  return fine.kind === 'values' && fine.values.length === 1 && level.counts;
+}
+
+// The pin of words about places inside the slot. One place counted from
+// the slot's start needs none: a count cannot be read one off.
+function pinOf(slots: number[], fine: Placed, level: Level): string {
+  return oneCount(fine, level) ? '' : bracket(slots, fine, level);
 }
 
 // Whether a cadence runs on from one slot into the next.
@@ -327,7 +343,8 @@ const positions: Table<Placed, string, [Level]> = {
       return say(partPositions, part, level);
     }))}`,
   range: filled,
-  values: onList
+  values: (named, level) =>
+    (oneCount(named, level) ? countsFrom : onList)(named, level)
 };
 
 function positionsOf(fine: Fine, level: Level): string {
@@ -408,9 +425,9 @@ function timesIn(slots: number[], fine: Fine, level: Level): Said {
   }), level), true);
 }
 
-// Places inside the slot, said in words and pinned: by clock times in
-// brackets under every slot, and by a window under the rest. Six clock
-// times or fewer are listed instead.
+// Places inside the slot, said in words: counted from its start, or
+// pinned by clock times in brackets under every slot. Under the rest a
+// window says which slots. Six clock times or fewer are listed instead.
 function positioned(coarse: Plain, fine: Fine, level: Level): Said {
   const position = positionsOf(fine, level);
   const slots = walk(coarse, level.slots);
@@ -425,9 +442,10 @@ function positioned(coarse: Plain, fine: Fine, level: Level): Said {
     return timesIn(slots, fine, level);
   }
 
+  // One count carries a second as a clock time would.
   if (coarse.kind === 'all') {
-    return said(head, false,
-      bracket(slots, fine.description as Placed, level));
+    return said(head, oneCount(fine.description, level) && level.lo > 0,
+      pinOf(slots, fine.description as Placed, level));
   }
 
   return said(`${head}, ${windows(coarse, fine, level)}`, true);
@@ -441,7 +459,7 @@ function eachTime(coarse: Described, fine: Fine, level: Level): Said {
   return said(
     `${slots}, ${words.eachTime} ${positionsOf(fine, level)}`,
     true,
-    bracket(walk(coarse, level.slots), fine.description as Placed, level));
+    pinOf(walk(coarse, level.slots), fine.description as Placed, level));
 }
 
 // Slots that are not every slot.
@@ -522,6 +540,17 @@ function countsAfter(values: number[], level: Level): string {
     words.afterCount, list(values),
     level.unit[category(values[values.length - 1])]
   ].join(' ');
+}
+
+// One place counted from the start of the slot: «через 5 хвилин після
+// початку години». A second carried rides in the count: «через 5 хвилин
+// 8 секунд після початку години».
+function countsFrom(named: ValuesDescription, level: Level): string {
+  const carried = [level.lo, units.second[category(level.lo)]]
+    .slice(0, 2 * Math.sign(level.lo));
+
+  return [countsAfter(named.values, level), ...carried, level.afterStart]
+    .join(' ');
 }
 
 // A list of counts in named slots: in one slot, or as six clock times or
@@ -752,6 +781,7 @@ function build(fine: Fine, coarse: Described, level: Level): Said {
 function minuteLevel(lo: number, hi: number, every: string, face: Face) {
   return {
     afterEach: words.afterEachHour,
+    afterStart: words.afterHourStart,
     cycle: words.everyHour,
     each: words.eachHour,
     every,
@@ -767,9 +797,11 @@ function minuteLevel(lo: number, hi: number, every: string, face: Face) {
 }
 
 // Seconds inside the minutes of the day.
-function secondLevel(face: Face): Level {
+function secondLevel(face: Face, counts: boolean): Level {
   return {
     afterEach: words.afterEachMinute,
+    afterStart: words.afterMinuteStart,
+    counts,
     cycle: words.everyMinute,
     each: words.eachMinute,
     every: words.everySecond,
@@ -808,11 +840,15 @@ function eachMinute(
   const settled = seconds.description.kind === 'all' && rest.pin === '';
   const pin = settled ?
     '' :
-    bracket(slots, seconds.description as Placed, level);
+    pinOf(slots, seconds.description as Placed, level);
+
+  // Seconds counted from the minute need no pin, and the rest keeps its
+  // own; otherwise the one pin, to the second, settles both.
+  const restPin = pin === '' ? rest.pin : '';
 
   return counts ?
     finish({...rest, pin, words: rest.words + phrase}) :
-    finish({...rest, pin: ''}) + phrase + pin;
+    finish({...rest, pin: restPin}) + phrase + pin;
 }
 
 // Beside a run across midnight, four hours left out or fewer are an
@@ -861,7 +897,26 @@ function timeOf(
   const [first] = everySecond;
   const last = everySecond[everySecond.length - 1];
   const carried = first * Number(everySecond.length === 1);
-  const bySecond = secondLevel({hour12, seconds: last > 0});
+  // After a cadence of hours the minutes take no exception, and two of
+  // them are two places.
+  const beat = isBeat(hours);
+  const minutes = fineOf(facts, 'minute',
+    {except: !beat, lenient: true, pair: !beat});
+  const eachSeconds =
+    fineOf(facts, 'second', {except: false, lenient: false, pair: false});
+  // One place is counted from the slot's start only where neither field
+  // names places by ordinals (a list, or pieces holding single places):
+  // the places of one sentence are said alike.
+  const counts = ![minutes, eachSeconds].some(function byOrdinals(fine) {
+    const {description} = fine;
+    const parts = 'parts' in description ? description.parts : [];
+
+    return description.kind === 'values' && fine.values.length > 1 ||
+      parts.some(function isPlace(part) {
+        return part.kind === 'values';
+      });
+  });
+  const bySecond = secondLevel({hour12, seconds: last > 0}, counts);
   const everyMinute =
     denote((candidates.minute as SetDescription[])[0], cycle);
   const everyHour = walk(hours, hourDomain);
@@ -876,21 +931,28 @@ function timeOf(
       {description: everySeconds, values: everySecond}, bySecond));
   }
 
-  // After a cadence of hours the minutes take no exception, and two of
-  // them are two places.
-  const beat = isBeat(hours);
-  const minutes = fineOf(facts, 'minute',
-    {except: !beat, lenient: true, pair: !beat});
-  const byMinute = minuteLevel(carried, carried, words.everyMinute,
-    {hour12, seconds: carried > 0});
-  // Four clock times or fewer are listed, whatever follows them.
-  const rest = slots.length <= 4 ?
-    timesIn(everyHour, {...minutes, values: everyMinute}, byMinute) :
-    build(minutes, hours, byMinute);
+  // Four clock times or fewer are listed, whatever follows them. One
+  // second rides in the clock times the minutes name, if they name any.
+  function restAt(second: number): Said {
+    const byMinute = {
+      ...minuteLevel(second, second, words.everyMinute,
+        {hour12, seconds: second > 0}),
+      counts
+    };
 
-  if (last === 0 || carried > 0 && rest.clocked) {
-    return finish(rest);
+    return slots.length <= 4 ?
+      timesIn(everyHour, {...minutes, values: everyMinute}, byMinute) :
+      build(minutes, hours, byMinute);
   }
+
+  const carrying = restAt(carried);
+
+  if (last === 0 || carried > 0 && carrying.clocked) {
+    return finish(carrying);
+  }
+
+  // A second counted after the rest is not carried in it as well.
+  const rest = counts ? restAt(0) : carrying;
 
   const seconds = fineOf(facts, 'second',
     {except: true, lenient: true, pair: true});
@@ -908,16 +970,14 @@ function timeOf(
 
   const lead = opener(seconds, bySecond);
   const spanned = build(minutes, hours,
-    minuteLevel(first, last, lead, bySecond.face));
+    {...minuteLevel(first, last, lead, bySecond.face), counts});
 
   if (say(classes, seconds.description) === 'lead' &&
       spanned.words.startsWith(lead)) {
     return finish(spanned);
   }
 
-  return eachMinute(rest,
-    fineOf(facts, 'second', {except: false, lenient: false, pair: false}),
-    slots, bySecond);
+  return eachMinute(rest, eachSeconds, slots, bySecond);
 }
 
 export {hoursOf, timeOf};

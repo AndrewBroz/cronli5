@@ -198,6 +198,7 @@ const words = {
   afterEachHour: 'після кожної з цих годин',
   afterEachMinute: 'після кожної з цих хвилин',
   afterHourStart: 'після початку години',
+  afterMinuteStart: 'після початку хвилини',
   also: 'а також',
   and: 'та',
   andPiece: 'і',
