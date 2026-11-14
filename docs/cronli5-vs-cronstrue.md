@@ -28,7 +28,7 @@ The short version of the trade:
 ## Where they differ most
 
 In English, the two read alike on cadences that divide their unit
-("every 15 minutes"). Beyond those, even simple patterns go wrong:
+("every 15 minutes"). Beyond those, they differ even on simple patterns:
 
 * **A step that does not divide its unit.** `*/45 * * * *` runs at :00 and
   :45. cRonstrue says "Every 45 minutes", which is false for every other

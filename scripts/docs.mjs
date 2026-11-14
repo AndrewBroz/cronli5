@@ -38,8 +38,8 @@ import {
   comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
-import {table as cronstrueOptions} from '../src/cronstrue/table.js';
-import cronstrueAdapter from '../src/cronstrue/index.js';
+import {table as cronstrueOptions} from '../src/compat/table.js';
+import cronstrueAdapter from '../src/compat/index.js';
 import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
@@ -177,10 +177,10 @@ function renderHeadToHead() {
     ' |', rows);
 }
 
-// The README's case for switching: patterns where the two libraries'
-// descriptions are worth comparing side by side. The author chooses the
-// rows; both outputs are live.
-const whyRows = [
+// The README's side-by-side rows: patterns where the two libraries'
+// descriptions are worth comparing. The author chooses the rows; both
+// outputs are live.
+const sideBySideRows = [
   {
     code: 'en',
     pattern: '*/45 * * * *'
@@ -229,9 +229,9 @@ const languageNames = {
   ja: 'Japanese', zh: 'Chinese'
 };
 
-function renderWhy() {
+function renderSideBySide() {
   const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
-  const rows = whyRows.map(function row(entry) {
+  const rows = sideBySideRows.map(function row(entry) {
     const lang = entry.code === 'en' ? en : byCode[entry.code].lang;
 
     return '| `' + entry.pattern + '` | ' + languageNames[entry.code] +
@@ -309,10 +309,11 @@ function collectVars(text) {
   return vars;
 }
 
-// Evaluate a `cronli5(<args>)` or `cronstrue.toString(<args>)` example (the
-// latter through cronli5's cRonstrue adapter) with the language modules and
-// any doc-local bindings in scope; returns the description string, or null
-// if the args reference something we cannot evaluate.
+// Evaluate a `cronli5(<args>)` or `cronli5.toString(<args>)` example (the
+// latter through cronli5's cRonstrue adapter, imported as `cronli5`) with
+// the language modules and any doc-local bindings in scope; returns the
+// description string, or null if the args reference something we cannot
+// evaluate.
 function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
@@ -320,10 +321,11 @@ function evaluateExample(callee, args, vars) {
     const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh};
     const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
-    const run = Function('cronli5', 'cronstrue', ...codes, ...names,
+    const run = Function('cronli5', ...codes, ...names,
       'return ' + callee + '(' + args + ');');
+    const callable = callee === 'cronli5' ? cronli5 : cronstrueAdapter;
 
-    return run(cronli5, cronstrueAdapter,
+    return run(callable,
       ...codes.map((code) => modules[code]),
       ...names.map((n) => vars[n]));
   }
@@ -333,12 +335,12 @@ function evaluateExample(callee, args, vars) {
 }
 
 // Rewrite the `// 'output'` comment after each `cronli5(<args>)` or
-// `cronstrue.toString(<args>)` example
+// `cronli5.toString(<args>)` example
 // from live output. The author chooses the example; the machine owns the
 // result.
 function rewriteExamples(text) {
   const vars = collectVars(text);
-  const re = new RegExp('((cronli5|cronstrue\\.toString)\\(([^)]*)\\)' +
+  const re = new RegExp('((cronli5(?:\\.toString)?)\\(([^)]*)\\)' +
     '[^\\S\\n]*;?[^\\S\\n]*(?:\\n[^\\S\\n]*)?\\/\\/ \')([^\']*)(\')', 'gu');
   let result = '';
   let last = 0;
@@ -359,7 +361,7 @@ function rewriteExamples(text) {
 const tableJobs = {
   'README.md': {
     'cronstrue-head-to-head': renderHeadToHead(),
-    'why-not-cronstrue': renderWhy(),
+    'cronstrue-side-by-side': renderSideBySide(),
     'language-status': statusSummary()
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},

@@ -121,5 +121,5 @@ against how native writers actually write.
 ---
 
 cronli5 is MIT-licensed, has no dependencies, and ships ten languages.
-If you use cRonstrue, `import cronstrue from 'cronli5/cronstrue'` keeps
-your calls as they are. <https://github.com/andrewbroz/cronli5>
+If you use cRonstrue, `cronli5/compat` takes the same `toString` call
+and options. <https://github.com/andrewbroz/cronli5>

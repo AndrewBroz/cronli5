@@ -28,56 +28,19 @@ interpretation of a cron pattern in a Node or in a browser environment. If you
 need to do other things with cron patterns, such as scheduling or computing
 future run times, consider a library like [`@breejs/later`][later].
 
-## Why not cRonstrue?
-
-[`cRonstrue`][cronstrue] is the most widely used library for this. It
-builds each description from one translated fragment per field, which is
-how it covers 39 locales. The fragments know nothing of each other or of
-the clock, so even simple patterns come out false in English and
-ungrammatical in languages that inflect:
-
-<!-- BEGIN GENERATED: why-not-cronstrue -->
-| Pattern | Language | cronli5 | cRonstrue 3.14.0 |
-| --- | --- | --- | --- |
-| `*/45 * * * *` | English | At 0 and 45 minutes past the hour | Every 45 minutes |
-| `0,30 8-10 * * 1-5` | English | Every 30 minutes from 8 a.m. through 10:30 a.m. on weekdays | At 0 and 30 minutes past the hour, between 08:00 AM and 10:59 AM, Monday through Friday |
-| `1 * * * *` | English | At 1 minute past the hour | At 1 minutes past the hour |
-| `0 0 1,15 * 3` | German | Mittwochs und zusätzlich am 1. und 15. jedes Monats, jeweils um 0:00 Uhr | Um 00:00, an Tag 1 und 15 des Monats, und jeden Mittwoch |
-| `0 12 1 1 *` | French | Le 1er janvier à 12 h | À 12:00, le 1 du mois, uniquement en janvier |
-| `*/2 * * * *` | Czech | Každé 2 minuty | Každých 2 minut |
-| `0 12 1 1 *` | Czech | Vždy 1. ledna ve 12:00 | V 12:00, 1. den v měsíci, pouze v Leden |
-| `1 * * * *` | Spanish | En el minuto 1 de cada hora | A los 1 minutos de la hora |
-| `0 12 1 1 *` | Chinese | 每年1月1日12:00 | 在下午 12:00, 限每月 1 号, 仅于一月份 |
-| `30 9 * * 1-5` | Japanese | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで |
-<!-- END GENERATED: why-not-cronstrue -->
-
-`cronli5` writes one sentence per schedule, in each language's own words,
-and its expected sentences are checked against an independent answer key
-of when each pattern fires.
-
-Switching is one import. `cronli5/cronstrue` takes cRonstrue's
-`toString(pattern, options)` call as it is:
-
-```js
-import cronstrue from 'cronli5/cronstrue'; // was: from 'cronstrue'
-
-cronstrue.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
-```
-
-Stay with cRonstrue if you need a language `cronli5` doesn't have yet. See the
-[migration guide](./docs/migrating-from-cronstrue.md) for how options and
-output map, and [more side-by-side output](#cronli5-vs-cronstrue) below.
+*Alternatives:* The best-known library for descriptions is
+[`cRonstrue`][cronstrue]. See [cronli5 and cRonstrue](#cronli5-and-cronstrue)
+below for how the two compare, and for switching.
 
 ## Contents
 
 - [Overview](#overview)
-- [Why not cRonstrue?](#why-not-cronstrue)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Options](#options)
 - [Languages](#languages)
 - [Output Examples](#output-examples)
-- [cronli5 vs. cRonstrue](#cronli5-vs-cronstrue)
+- [cronli5 and cRonstrue](#cronli5-and-cronstrue)
 - [Description Accuracy](#description-accuracy)
 - [Note on Timezones](#note-on-timezones)
 - [Module Formats and Types](#module-formats-and-types)
@@ -369,14 +332,30 @@ cronli5('0 0 * * 1#2');    // 'at 12 a.m. on the second Monday of the month'
 cronli5('0 0 15W * *');    // 'at 12 a.m. on the weekday nearest the 15th'
 ```
 
-## cronli5 vs. cRonstrue
+## cronli5 and cRonstrue
 
-[`cRonstrue`][cronstrue] is the most widely used cron-description library, but
-it differs from `cronli5` in philosophy. `cronli5` writes one flowing sentence
-and does additional validation; its languages are full renderers.
-cRonstrue assembles per-field fragments from
-translated templates, which is how it covers 39 locales. The same compound
-pattern — `5,10 30 9 * * MON` — in every language:
+[`cRonstrue`][cronstrue] is the most widely used cron-description library.
+The two are built differently. cRonstrue assembles a description from one
+translated fragment per field, which is how it covers 39 locales. `cronli5`
+writes one sentence per schedule, and each of its languages is a full
+renderer in that language's own words. Some patterns side by side:
+
+<!-- BEGIN GENERATED: cronstrue-side-by-side -->
+| Pattern | Language | cronli5 | cRonstrue 3.14.0 |
+| --- | --- | --- | --- |
+| `*/45 * * * *` | English | At 0 and 45 minutes past the hour | Every 45 minutes |
+| `0,30 8-10 * * 1-5` | English | Every 30 minutes from 8 a.m. through 10:30 a.m. on weekdays | At 0 and 30 minutes past the hour, between 08:00 AM and 10:59 AM, Monday through Friday |
+| `1 * * * *` | English | At 1 minute past the hour | At 1 minutes past the hour |
+| `0 0 1,15 * 3` | German | Mittwochs und zusätzlich am 1. und 15. jedes Monats, jeweils um 0:00 Uhr | Um 00:00, an Tag 1 und 15 des Monats, und jeden Mittwoch |
+| `0 12 1 1 *` | French | Le 1er janvier à 12 h | À 12:00, le 1 du mois, uniquement en janvier |
+| `*/2 * * * *` | Czech | Každé 2 minuty | Každých 2 minut |
+| `0 12 1 1 *` | Czech | Vždy 1. ledna ve 12:00 | V 12:00, 1. den v měsíci, pouze v Leden |
+| `1 * * * *` | Spanish | En el minuto 1 de cada hora | A los 1 minutos de la hora |
+| `0 12 1 1 *` | Chinese | 每年1月1日12:00 | 在下午 12:00, 限每月 1 号, 仅于一月份 |
+| `30 9 * * 1-5` | Japanese | 毎週月曜日〜金曜日の9:30 | 次において実施09:30、月曜日 から 金曜日 まで |
+<!-- END GENERATED: cronstrue-side-by-side -->
+
+The same compound pattern, `5,10 30 9 * * MON`, in every language:
 
 <!-- BEGIN GENERATED: cronstrue-head-to-head -->
 | Language | cronli5 | cRonstrue 3.14.0 |
@@ -393,10 +372,20 @@ pattern — `5,10 30 9 * * MON` — in every language:
 | Czech | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
-See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
-more generated side-by-side output tables, and
-[docs/migrating-from-cronstrue.md](./docs/migrating-from-cronstrue.md) if you
-are switching from cRonstrue.
+`cronli5/compat` takes the same `toString(pattern, options)` call that
+cRonstrue does, with the same options:
+
+```js
+import cronli5 from 'cronli5/compat';
+
+cronli5.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
+```
+
+If you need a language `cronli5` doesn't have yet, cRonstrue is the one to
+use. See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
+more side-by-side output, and
+[docs/migrating-from-cronstrue.md](./docs/migrating-from-cronstrue.md) for
+how options and output map.
 
 ## Description Accuracy
 
