@@ -30,6 +30,18 @@ What this book said before, and why it was wrong:
   the word says what the number counts, so it needs no padding to look
   like a clock face. Every form that names a minute against the hour
   now does the same (3.2).
+* **A few seconds after a minute phrase were an offset and a cadence.**
+  `17/11 30 * * * *` was « à la minute 30 de chaque heure, avec 17
+  secondes de décalage, et à chaque fois toutes les 11 secondes pendant
+  44 secondes », four moments the reader had to work out from a start, a
+  step and a length. When the first second is not the top of the
+  minute, two to six seconds that are no run are now named after the
+  time, as minutes are, and a run is a stretch: « à la minute 30 de
+  chaque heure, aux secondes 17, 28, 39 et 50 »; « tous les jours à
+  9 h, aux secondes 17, 28, 39 et 50 » (it was « à 9 h 00 min 17 s,
+  toutes les 11 secondes pendant 44 secondes »); « à la minute 30 de
+  chaque heure, toutes les secondes de la seconde 17 à la seconde 20 »
+  (4.2).
 * The judges' and readers' preference for windows, glosses and stated
   starts, cited below (judge 1 on « toutes les 6 heures », judges 2 and 3
   on the windows of 4.1, judge 2 on « à la minute 30 »), is overruled
@@ -1057,7 +1069,32 @@ les secondes pendant les 30 premières minutes de chaque heure ».
 **4. Everything else.** Say the time part to the minute, as if S were 0.
 Then:
 
-* **Write the first second into every time it names**, if it is not 0:
+* **Name the seconds after the time, when the first is not 0 and they
+  are a run or two to six seconds that are no run** (amended
+  2026-11-14). The times are then said to the minute and carry no
+  second, and no offset or clause is said. A comma comes before them.
+  Several seconds are « aux secondes », as several minutes are « aux
+  minutes »: « tous les jours à 9 h, aux secondes 17, 28, 39 et 50 »;
+  « tous les jours à 9 h, aux secondes 5, 15, 25, 35, 45 et 55 »; « à la
+  minute 30 de chaque heure, aux secondes 17, 28, 39 et 50 »; « toutes
+  les 15 minutes de 9 h à 17 h 45, aux secondes 5, 15, 25, 35, 45 et
+  55 »; « à la minute 30, toutes les 2 heures, aux secondes 17, 28, 39
+  et 50 ». A run is a stretch, as a run of minutes is: « à la minute 30
+  de chaque heure, toutes les secondes de la seconde 17 à la seconde
+  20 »; « tous les jours à 9 h, toutes les secondes de la seconde 17 à la
+  seconde 20 ». The limit of six is the list of minutes' (3.8). (Before,
+  the first second was written into the times or said as an offset, and
+  the rest followed as a clause: « tous les jours à 9 h 00 min 17 s,
+  toutes les 11 secondes pendant 44 secondes »; « à la minute 30 de
+  chaque heure, avec 17 secondes de décalage, et à chaque fois toutes les
+  secondes pendant 4 secondes ». The reader had to work out each second
+  from a start, a step and a length; the moments are now named. Under
+  one clock time a run was a window to the second, « toutes les secondes
+  de 9 h 30 min 10 s à 9 h 30 min 20 s », which repeats the time.) A
+  single second, seven or more seconds, runs with a gap, and seconds
+  that start the minute are said as below.
+* **Otherwise write the first second into every time it names**, if it
+  is not 0:
   * clock times: « à 9 h 30 min 15 s »; « à 9 h 30 min 15 s et à 17 h 30
     min 15 s »;
   * both ends of a window: « toutes les 15 minutes de 9 h 00 min 30 s à
@@ -1090,9 +1127,8 @@ Then:
   * for seconds evenly spaced, three or more: « toutes les N secondes
     pendant » and the span they cover, which is the interval times their
     number: « toutes les secondes pendant une minute » (60 of them);
-    « toutes les 6 secondes pendant une minute »; « toutes les 10
-    secondes pendant une minute » (six, from the first second written
-    into the time); « toutes les secondes pendant 10 secondes » (ten);
+    « toutes les 6 secondes pendant une minute »; « toutes les
+    secondes pendant 10 secondes » (ten, from the top of the minute);
     « toutes les secondes pendant 11 secondes ». Sixty seconds are « une
     minute ». A cadence that does not divide the minute would last
     longer than the minute it lives in (« toutes les 7 secondes pendant
@@ -1144,11 +1180,11 @@ Then:
   toutes les secondes pendant 33 secondes ». (The second audit. Without
   « cette fois » the run could be heard as starting at the time named,
   or as a third thing after the two.)
-* **Under one clock time, two things are said without a clause**: a run
-  of seconds that does not start at 0, and runs with a gap and no single
-  second among them, are windows to the second: « toutes les secondes de 9 h 30 min 10 s à 9 h 30 min
-  20 s »; « toutes les secondes de 9 h à 9 h 00 min 28 s et de 9 h 00 min
-  30 s à 9 h 00 min 59 s ».
+* **Under one clock time, runs with a gap and no single second among
+  them are said without a clause**, as windows to the second: « toutes
+  les secondes de 9 h à 9 h 00 min 28 s et de 9 h 00 min 30 s à 9 h 00
+  min 59 s ». (A single run that does not start at 0 is named after the
+  time, above.)
 * **The list of clock times to the second competes** with all of case 4
   by the count of things named, and wins a tie: « à 9 h et à 9 h 00 min
   30 s » (two, against a time and an offset); « à 9 h 30 min 15 s et à
@@ -1156,7 +1192,11 @@ Then:
   `0,20,40 0 9` is « à 9 h, toutes les 20 secondes pendant une minute »
   (two things against three), and `*/30 23 */12` is « à 0 h 23 et à
   12 h 23, et à chaque fois de nouveau 30 secondes plus tard » (three
-  against four).
+  against four). Seconds named after the time count as one thing more
+  than the time, since they share it and their unit: `15,45 0 9` is
+  « à 9 h 00 min 15 s et à 9 h 00 min 45 s » (two against two, the list
+  winning the tie), and `10,20,45 0 9` « à 9 h, aux secondes 10, 20 et
+  45 » (two against three).
 
 A window before a clause is the window of the minutes: it names the
 first and the last time at which the clause applies.
@@ -1580,7 +1620,7 @@ h, min, s.
 
 6.5 à, de, du, au, d', le, la, les, l', un, et, ou, ainsi que, à la
 minute, aux minutes, de la minute, la minute, les minutes, de l'heure,
-une heure sur,
+une heure sur, à la seconde, aux secondes, de la seconde,
 en, pendant, sauf, puis, puis de nouveau, plus tard, après le début,
 cette fois,
 jusqu'à, jusqu'à la fin de la minute, et à chaque fois, de nouveau,

@@ -461,11 +461,11 @@ const rows = [
     'tous les jours à 9 h, toutes les 20 secondes pendant une minute'],
   ['0,20 0 9 * * *', 'tous les jours à 9 h et à 9 h 00 min 20 s'],
   ['10-20 30 9 * * *',
-    'tous les jours, toutes les secondes de 9 h 30 min 10 s à 9 h 30 min ' +
-    '20 s'],
+    'tous les jours à 9 h 30, toutes les secondes de la seconde 10 à la ' +
+    'seconde 20'],
   ['10-20 */15 * * * *',
-    'toutes les 15 minutes, avec 10 secondes de décalage, et à chaque fois ' +
-    'toutes les secondes pendant 11 secondes'],
+    'toutes les 15 minutes, toutes les secondes de la seconde 10 à la ' +
+    'seconde 20'],
   ['0,10,45 0 9 * * *',
     'tous les jours à 9 h, 9 h 00 min 10 s et 9 h 00 min 45 s'],
   ['* * 9 * * *',
@@ -521,8 +521,7 @@ const rows = [
     'tous les jours à 9 h 30 et à 17 h 30, et à chaque fois de nouveau 10 ' +
     'et 45 secondes plus tard'],
   ['5/10 */15 * * * *',
-    'toutes les 15 minutes, avec 5 secondes de décalage, et à chaque fois ' +
-    'toutes les 10 secondes pendant une minute'],
+    'toutes les 15 minutes, aux secondes 5, 15, 25, 35, 45 et 55'],
   ['8 5,30 */2 * * *',
     'aux minutes 5 et 30, toutes les 2 heures, avec 8 secondes de décalage'],
   ['30 5,20 9-17 * * *',
@@ -1037,7 +1036,38 @@ const rows = [
   ['*/15 1,3,5,9,11,13,15,17,19,21,23 * * *',
     'toutes les 15 minutes, une heure sur deux à partir de 1 h, sauf de 7 h ' +
     'à 7 h 45'],
-  ['0 0,3,6,9,15,18,21 * * *', 'toutes les 3 heures, sauf à 12 h']
+  ['0 0,3,6,9,15,18,21 * * *', 'toutes les 3 heures, sauf à 12 h'],
+
+  // A few seconds that do not start the minute, where no clock time is
+  // named, are listed as minutes are, not worked out from an offset, a
+  // step and a length.
+  ['17/11 30 * * * *',
+    'à la minute 30 de chaque heure, aux secondes 17, 28, 39 et 50'],
+  ['5/20 30 * * * *', 'à la minute 30 de chaque heure, aux secondes 5, 25 et 45'],
+  ['10,20,45 30 * * * *',
+    'à la minute 30 de chaque heure, aux secondes 10, 20 et 45'],
+  ['17/11 0 * * * *', 'toutes les heures, aux secondes 17, 28, 39 et 50'],
+  ['17/11 */15 * * * *',
+    'toutes les 15 minutes, aux secondes 17, 28, 39 et 50'],
+  ['17/11 30 */2 * * *',
+    'à la minute 30, toutes les 2 heures, aux secondes 17, 28, 39 et 50'],
+  ['15,45 30 * * * *', 'à la minute 30 de chaque heure, aux secondes 15 et 45'],
+  // A run of seconds is a stretch from one numbered second to another;
+  // the first second alone keeps its offset.
+  ['17-20 30 * * * *',
+    'à la minute 30 de chaque heure, toutes les secondes de la seconde 17 à ' +
+    'la seconde 20'],
+  // Beside a clock time too, which then says no second.
+  ['17/11 0 9 * * *', 'tous les jours à 9 h, aux secondes 17, 28, 39 et 50'],
+  ['17-20 0 9 * * *',
+    'tous les jours à 9 h, toutes les secondes de la seconde 17 à la ' +
+    'seconde 20'],
+  ['10,20,45 0 9 * * *', 'tous les jours à 9 h, aux secondes 10, 20 et 45'],
+  ['17/11 0 9,17 * * *',
+    'tous les jours à 9 h et à 17 h, aux secondes 17, 28, 39 et 50'],
+  // Two seconds under one clock time are two clock times, which win the
+  // tie.
+  ['15,45 0 9 * * *', 'tous les jours à 9 h 00 min 15 s et à 9 h 00 min 45 s']
 ];
 
 export {rows};
