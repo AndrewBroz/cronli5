@@ -27,8 +27,12 @@ agent will optimise, so lead with the purpose.
 7. **The report.** Every changed sentence, old and new, with when it
    fires; and the agent's doubts, which are wanted.
 
-Then, before merging: a blind reader, briefed in the language and told
-nothing of patterns or generation, answers questions about when each new
-sentence fires AND compares it with the sentence it replaces. Merge only
-what the reader finds at least as clear. A reader who reports a second
-reading has found a defect; one who reports stiffness has left a note.
+Then, before merging: compare each changed sentence with the one it
+replaces using the cost model (`compare` in
+`tooling/scripts/reading/cost.mjs`): cheaper in every column, or mixed
+with the judgment recorded; never dearer without a reason. And check the
+new forms for one reading: an isolated reader, briefed in the language
+and told nothing of patterns or generation, lists every reading a fluent
+speaker would accept as a correct sentence and what in the sentence
+supports it. A reading that rests on an ungrammatical parse does not
+count; a plausible second reading is a defect.
