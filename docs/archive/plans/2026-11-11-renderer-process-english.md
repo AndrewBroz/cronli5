@@ -389,7 +389,7 @@ Smoke: an invalid pattern throws `Cronli5InputError`; `{lenient: true}` returns 
 
 **Files:**
 - Create: `tooling/scripts/compare-baseline.mjs`, `tooling/experiments/renderer-process/en-acceptance.md`
-- Modify: `src/lang/en/status.json`, `CLAUDE.md`, `tooling/docs/language-pipeline.md`, `.claude/skills/add-language/SKILL.md`, `.claude/skills/improve-renderer/SKILL.md`
+- Modify: `src/lang/en/status.json`, `CLAUDE.md`, `../language-pipeline.md`, `.claude/skills/add-language/SKILL.md`, `.claude/skills/improve-renderer/SKILL.md`
 
 - [ ] **Step 1: Write `compare-baseline.mjs <code>`**, printing a table of baseline against current: lines, branches, grid median, p90 and max, single-character median and max, equal-but-different count.
 - [ ] **Step 2: Round-trip.** Render the held-out rows and hard cases; have a fresh agent on a cheaper model recover a cron pattern from each description alone; compare with `tooling/scripts/roundtrip.mjs`. Record verified, needs-review and day-union counts.

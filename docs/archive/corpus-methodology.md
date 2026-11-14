@@ -208,7 +208,7 @@ a-priori class. Three mechanisms:
    combination**; the input cross-product is the generator.
 3. **Branch coverage** — full branch coverage of `analyze.ts` + each renderer is
    the ground truth the lattice approximates. (This is why the parked
-   `tsx`-coverage artifact in [backlog.md](../../docs/backlog.md) must be fixed — it is
+   `tsx`-coverage artifact in [backlog.md](backlog.md) must be fixed — it is
    the floor's enforcement mechanism, not polish.)
 
 ### Calibration (stage-2 scan, current code)

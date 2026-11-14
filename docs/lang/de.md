@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'de'}); // 'montags bis freitags um 9:30 Uhr'
 
 ## Status
 
-Built from a written rule book
+Built from written answers to the language questionnaire
 ([answers.md](../../src/lang/de/answers.md)) and hand-written expected
 descriptions. Independent readers (models) checked every expected
 description against its schedule, and fluent judges briefed in the

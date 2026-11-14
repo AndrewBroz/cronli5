@@ -6,7 +6,7 @@
 into core `analyses` as additive facts — `analyses.day` (DOM∨DOW union +
 classified arms) and `analyses.hourStride` — computed once in `analyze`, with
 English consuming them byte-identically (sub-project C of
-`docs/superpowers/specs/2026-07-03-expansion-readiness-design.md`).
+`../specs/2026-07-03-expansion-readiness-design.md`).
 
 **Architecture:** Core-first TDD: new `test/core/analyze.js` cases drive a
 small `src/core/day.ts` classifier and a `hourStrideFact` in

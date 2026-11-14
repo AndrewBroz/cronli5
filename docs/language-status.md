@@ -4,12 +4,15 @@ How mature is each language module, and how was it reviewed? The README
 carries an at-a-glance status column for users; this document is the
 maintainer-facing detail — the review evidence behind each status.
 
-*Stable* languages are verified by a fluent human reviewer. *Beta* languages
-are model-validated by the blind Sonnet persona panel and shipped with a beta
-label until a human review cycle is completed. *Experimental* languages are
-model-drafted and not yet validated to beta by that panel. The pipeline that
-drafts and validates a language is described in
-[../tooling/docs/language-pipeline.md](../tooling/docs/language-pipeline.md).
+Every language is built and judged by an automated pipeline: hand-written
+expected descriptions, a renderer built from them by an agent that sees
+no other language, and readers (models briefed in the language, told
+nothing of how the text was made) who say when each description fires
+and compare a changed sentence with the one it replaces. `CLAUDE.md` says
+how quality is judged; `tooling/docs/finishing-1.0.md` says what is left.
+*Beta* means the language ships and is still being read. Each row below
+is that language's own record (`src/lang/<code>/status.json`), written
+at the time.
 
 <!-- BEGIN GENERATED: language-status-detail -->
 | Language | Status | Human review | Model review |

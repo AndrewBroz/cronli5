@@ -5,7 +5,7 @@
 **Goal:** Remove the three remaining phrase-surgery `.replace` calls from the
 English renderer by composing phrases from parts, then land the lint that
 keeps them out (sub-project B of
-`docs/superpowers/specs/2026-07-03-expansion-readiness-design.md`).
+`../specs/2026-07-03-expansion-readiness-design.md`).
 
 **Architecture:** Three byte-identical restructures, each with the full
 corpus as harness: (1) minute-lead builders accept a null anchor instead of

@@ -39,7 +39,7 @@ actively pursued. Current development is **automated-only** (see
     device-threshold registry (§6.2) so the suite can assert *no
     undeclared discontinuity* instead of enumerating known relations.
   - **Standing oracle-directed gates (the corpus is itself under test).**
-    The doctrine is tooling/docs/corpus-methodology.md (*The corpus is
+    The doctrine is corpus-methodology.md (*The corpus is
     itself under test*); the pipeline runs a detector pass only at corpus
     assembly, as an ephemeral agent instruction, and round-trip only ever
     reads renderer output. Implementation, cheapest first:
@@ -384,7 +384,7 @@ achieved floor rather than a forced 100. Two sub-items remain:
 
 The coverage theory, harness design, and the a-priori vs a-posteriori
 distinction behind this section are written up in
-[corpus-methodology.md](../tooling/docs/corpus-methodology.md); the calibrated cell counts
+[corpus-methodology.md](corpus-methodology.md); the calibrated cell counts
 (46 time-plan, ~30–40 qualifier, ~120–150 total) and the first concrete
 coverage debt (11 uncovered `composeSeconds.rest` cells) come from its stage-2
 scan.

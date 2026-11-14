@@ -131,7 +131,7 @@ protocol).
   semantics) and per-language token extractors; English's is the first.
   The en gate (`test/lang/en/stability.js`) runs the matrix across all
   three dialects.
-- `tooling/docs/language-pipeline.md` Verify stage gains: "port the
+- `../language-pipeline.md` Verify stage gains: "port the
   donor's stability extractor; run the engine; a relation the donor held
   must hold in the target."
 - `.claude/skills/add-language/playbook.md` gains the universal lesson

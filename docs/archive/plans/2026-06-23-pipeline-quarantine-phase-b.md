@@ -102,7 +102,7 @@ Create `tooling/scripts/archive/README.md`:
 
 These scripts are the pre-2026-06 cross-family review path, kept for history.
 The add-language pipeline replaced them with blind same-family Sonnet persona
-panels run inside the workflow (see `tooling/docs/language-pipeline.md`).
+panels run inside the workflow (see `../language-pipeline.md`).
 
 - `llm.mjs` — thin client for `gemma4:31b-cloud` via Ollama Cloud. The endpoint
   it targets is no longer used.
@@ -193,7 +193,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 **Files:**
 - Move: `docs/language-pipeline.md`, `docs/corpus-methodology.md` → `tooling/docs/`
-- Modify (link updates): `README.md:212`, `CLAUDE.md:60`, `.claude/skills/add-language/SKILL.md`, `docs/backlog.md`, `test/lang/zh/corpus.js`, `test/lang/de/corpus.js`
+- Modify (link updates): `README.md:212`, `CLAUDE.md:60`, `.claude/skills/add-language/SKILL.md`, `../backlog.md`, `test/lang/zh/corpus.js`, `test/lang/de/corpus.js`
 
 **Interfaces:**
 - The moved docs are referenced by relative links that must be repointed.
@@ -202,8 +202,8 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 ```bash
 mkdir -p tooling/docs
-git mv docs/language-pipeline.md tooling/docs/language-pipeline.md
-git mv docs/corpus-methodology.md tooling/docs/corpus-methodology.md
+git mv docs/language-pipeline.md ../language-pipeline.md
+git mv docs/corpus-methodology.md ../corpus-methodology.md
 ```
 
 - [ ] **Step 2: Find every reference to repoint**
@@ -211,16 +211,16 @@ git mv docs/corpus-methodology.md tooling/docs/corpus-methodology.md
 ```bash
 grep -rnE "language-pipeline\.md|corpus-methodology\.md" --include="*.md" --include="*.js" . | grep -v node_modules | grep -v docs/superpowers/
 ```
-This lists each link to update (the `docs/superpowers/` specs/plans are historical records — leave them). Expected hits: `README.md`, `CLAUDE.md`, `.claude/skills/add-language/SKILL.md`, `docs/backlog.md`, `test/lang/zh/corpus.js`, `test/lang/de/corpus.js`, and the moved docs themselves (any self/cross links).
+This lists each link to update (the `docs/superpowers/` specs/plans are historical records — leave them). Expected hits: `README.md`, `CLAUDE.md`, `.claude/skills/add-language/SKILL.md`, `../backlog.md`, `test/lang/zh/corpus.js`, `test/lang/de/corpus.js`, and the moved docs themselves (any self/cross links).
 
 - [ ] **Step 3: Repoint each link to the new path**
 
 Update each reference so it resolves to the new location, relative to the file it lives in:
-- `README.md:212` — `./docs/language-pipeline.md` → `./tooling/docs/language-pipeline.md`
-- `CLAUDE.md:60` — `docs/language-pipeline.md` → `tooling/docs/language-pipeline.md`
-- `.claude/skills/add-language/SKILL.md` — `../../../docs/language-pipeline.md` → `../../../tooling/docs/language-pipeline.md`
-- `docs/backlog.md` — `./corpus-methodology.md` (or `corpus-methodology.md`) → `../tooling/docs/corpus-methodology.md` (backlog.md is in `docs/`, target now in `tooling/docs/`)
-- `test/lang/zh/corpus.js` and `test/lang/de/corpus.js` — header-comment links to `corpus-methodology.md`: repoint to `../../../tooling/docs/corpus-methodology.md` (corpus.js is at `test/lang/<code>/`). Edit ONLY the comment link, nothing else in these files.
+- `README.md:212` — `./docs/language-pipeline.md` → `../language-pipeline.md`
+- `CLAUDE.md:60` — `docs/language-pipeline.md` → `../language-pipeline.md`
+- `.claude/skills/add-language/SKILL.md` — `../../../docs/language-pipeline.md` → `../language-pipeline.md`
+- `../backlog.md` — `./corpus-methodology.md` (or `corpus-methodology.md`) → `../corpus-methodology.md` (backlog.md is in `docs/`, target now in `tooling/docs/`)
+- `test/lang/zh/corpus.js` and `test/lang/de/corpus.js` — header-comment links to `corpus-methodology.md`: repoint to `../corpus-methodology.md` (corpus.js is at `test/lang/<code>/`). Edit ONLY the comment link, nothing else in these files.
 - In the two moved docs, fix any cross-link between them or back into `docs/` (e.g. a link to `i18n-design.md`, which stays in `docs/`, becomes `../../docs/i18n-design.md`).
 
 After editing, confirm no stale link remains and every target exists:

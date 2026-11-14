@@ -29,7 +29,7 @@ harmed. (Decided.)
 
 ## 2. What went wrong, and the lesson
 
-Two attempts at a process are recorded in tooling/docs/language-pipeline.md.
+Two attempts at a process are recorded in docs/archive/language-pipeline.md.
 
 * **Blind authoring** produced verbose, inconsistent renderers: each language
   re-invented every decision.

@@ -131,7 +131,7 @@ oracle-directed gates (contradiction/metamorphic-equality checks, round-trip
 of the *expected strings*, frame consistency per §6, a-priori coverage)
 validate the oracle without consulting the renderer, so testing it never
 lets code grade itself. See
-[corpus-methodology.md](../tooling/docs/corpus-methodology.md).
+[corpus-methodology.md](archive/corpus-methodology.md).
 
 ## 3. Project structure
 
@@ -412,7 +412,7 @@ Every `lang/<code>/notes.md` must answer these questions:
   plan; each language owns one frame and chooses among the candidates.
 * **Cap policy ownership** — settled: core default + optional language
   override, built when a language wants a different value (the design and
-  the threading constraint are recorded in docs/backlog.md).
+  the threading constraint are recorded in archive/backlog.md).
 * **`lenient` fallback string** must come from the language
   module, which makes even the error path part of the corpus.
 * **Review model recording**: how much provenance belongs in `REVIEW.md`

@@ -8,7 +8,7 @@ documentation gap, fix the `cronli5.min.js` tracking drift, and stop stray
 
 **Architecture:** Pure cleanup + small build/docs script edits in the cronli5
 repo. No new runtime code. This is Phase A of the in-repo quarantine design
-(`docs/superpowers/specs/2026-06-23-pipeline-extraction-design.md`); Phases B
+(`../specs/2026-06-23-pipeline-extraction-design.md`); Phases B
 (quarantine under `tooling/`) and C (`roundtrip` rewire) are separate plans.
 
 **Tech Stack:** Node ESM scripts (`scripts/*.mjs`), esbuild build, mocha tests,

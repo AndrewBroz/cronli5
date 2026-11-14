@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'it'}); // 'dal lunedì al venerdì alle 9:30
 
 ## Status
 
-Built from a written rule book
+Built from written answers to the language questionnaire
 ([answers.md](../../src/lang/it/answers.md)) and hand-written expected
 descriptions. Independent readers (models) checked every expected
 description against its schedule, and fluent judges briefed in the

@@ -421,7 +421,7 @@ confinement forms (the non-English mirrors added in 0.8.3–0.8.4).
   validated objectively (round-trip, fuzz, OR-scope, cRonstrue comparison) plus
   native review. The blind pipeline (which produced verbose, inconsistent
   renderers) is now the no-sibling fallback. See
-  [tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md).
+  [docs/archive/language-pipeline.md](docs/archive/language-pipeline.md).
 - Coverage enumeration keys off `status.json` so an in-progress language build
   stays green.
 

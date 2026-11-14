@@ -1,7 +1,7 @@
 # The language questionnaire
 
 A new language starts from itself: not from another language's renderer,
-corpus or rule book, and not from this questionnaire either.
+corpus or answers, and not from this questionnaire either.
 
 ## First, the usage notes
 
@@ -31,13 +31,13 @@ says a thing, so it is observed in the language, never assumed.
 Answer every question for the target language in
 `src/lang/<code>/answers.md`, repeating each question's number. The
 questions exist for coverage: a pattern can hold every kind of set they
-name, so the rule book must say what the language does with each. They
+name, so the answers must say what the language does with each. They
 are not a list of concepts the language is expected to have. The usage
 notes, the answers, the lexicon and the paradigms are the durable
 description of the language; its renderer is built from the last three
 and must be rebuildable from them.
 
-Rule books written before 2026-11-13 keep the earlier numbering of
+Answers written before 2026-11-13 keep the earlier numbering of
 section 5 and have no usage notes, until their native review.
 
 ## How to answer
@@ -59,7 +59,7 @@ section 5 and have no usage notes, until their native review.
   a question presupposes a notion the language does not have, say so and
   describe what its readers have instead. Where the language has a
   grouping, an order or a way of counting that no question asks about, add
-  it: the rule book is not limited to the questions.
+  it: the answers are not limited to the questions.
 
 The patterns in brackets are prompts: say each one aloud in the language.
 

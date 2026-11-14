@@ -80,7 +80,7 @@ diverged on almost all of them), but the QUESTION recurs everywhere.
 - **`cardinality-rendering`** — a stepped/listed field reads as a cadence
   ("every other month") or an enumeration ("January, April, July, October")
   depending on the field's cardinality and the language's idiom; lift the
-  cadence-vs-enumeration choice so renderers never diverge (see docs/backlog.md
+  cadence-vs-enumeration choice so renderers never diverge (see ../../docs/archive/backlog.md
   "cadence vs enumeration").
 
 ## Detectors (run mechanically; never trust a per-entry read)

@@ -6,7 +6,7 @@
 frames (condition frame, confinement, dense-cadence) in their own typography,
 the continuous-run close states the true window end everywhere, and the
 `untilWindow` grammar switch is deleted (sub-project A of
-`docs/superpowers/specs/2026-07-03-expansion-readiness-design.md`).
+`../specs/2026-07-03-expansion-readiness-design.md`).
 
 **Architecture:** Two-phase improve-renderer protocol. Phase A plumbs the
 `until` connective as a style field (byte-identical: us reads the same

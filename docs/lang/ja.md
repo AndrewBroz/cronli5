@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'ja'}); // '毎週月曜日〜金曜日の9:3
 
 ## Status
 
-Built from a written rule book
+Built from written answers to the language questionnaire
 ([answers.md](../../src/lang/ja/answers.md)) and hand-written expected
 descriptions. Independent readers (models) checked every expected
 description against its schedule, and fluent judges briefed in the

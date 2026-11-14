@@ -4,7 +4,7 @@
 
 **Goal:** Align the pipeline documentation and the status vocabulary with reality — the pipeline is Sonnet-only (cross-family/Gemma is retired) and **beta now means "validated by the blind Sonnet persona panel."**
 
-**Architecture:** Documentation + metadata only — no library or pipeline-code behavior change. Two strands: (1) **status model** — redefine beta, rename the now-mislabeled `crossFamilyReview` field/column, and move `zh` from experimental to beta; (2) **methodology docs** — rewrite `tooling/docs/language-pipeline.md` to describe the current Sonnet-only workflow, and update the residual cross-family mentions in `corpus-methodology.md` and `backlog.md`. The accurate, concise source of truth for the current pipeline is `.claude/skills/add-language/SKILL.md` and `.claude/workflows/add-language.js`.
+**Architecture:** Documentation + metadata only — no library or pipeline-code behavior change. Two strands: (1) **status model** — redefine beta, rename the now-mislabeled `crossFamilyReview` field/column, and move `zh` from experimental to beta; (2) **methodology docs** — rewrite `../language-pipeline.md` to describe the current Sonnet-only workflow, and update the residual cross-family mentions in `corpus-methodology.md` and `backlog.md`. The accurate, concise source of truth for the current pipeline is `.claude/skills/add-language/SKILL.md` and `.claude/workflows/add-language.js`.
 
 **Tech Stack:** Markdown docs, `status.json` metadata, `scripts/status.mjs` (status-table generator), `scripts/docs.mjs` (`npm run docs` regenerates the README status block).
 
@@ -169,14 +169,14 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 ### Task 3: Rewrite language-pipeline.md to the Sonnet-only pipeline
 
-`tooling/docs/language-pipeline.md` describes the retired cross-family/Gemma pipeline almost end to end (baseline panel, double-blind slate judge, `correctBar` 4-judge gate, `panel.mjs`/`panel-targeted.mjs` CLIs, two model families, Gemma cost notes). The CURRENT pipeline is the Sonnet-only workflow. Rewrite the doc to match it.
+`../language-pipeline.md` describes the retired cross-family/Gemma pipeline almost end to end (baseline panel, double-blind slate judge, `correctBar` 4-judge gate, `panel.mjs`/`panel-targeted.mjs` CLIs, two model families, Gemma cost notes). The CURRENT pipeline is the Sonnet-only workflow. Rewrite the doc to match it.
 
 **Source of truth (read these; the rewrite MUST match them, do not invent):**
 - `.claude/skills/add-language/SKILL.md` — the accurate, concise current description (phases: Conventions → Corpus → Renderer TDD → habit-critics → Trap panels → mechanical Verify → Playbook update; "blind Sonnet personas"; "critics find, detectors guarantee").
 - `.claude/workflows/add-language.js` — the orchestrator (phase names, the 3-variant corpus + reconcile, the held-out generalization probe, the pressured renderer build rounds/variants, the trap comprehension panels, the Verify checks incl. fuzz/OR-scope/roundtrip, the rewrite-test Judge mode).
 
 **Files:**
-- Modify (substantial rewrite): `tooling/docs/language-pipeline.md`
+- Modify (substantial rewrite): `../language-pipeline.md`
 
 - [ ] **Step 1: Replace the cross-family/Gemma model with the Sonnet-panel model**
 
@@ -199,7 +199,7 @@ Line 3-8 intro is largely accurate ("automated, no-human-in-the-loop pipeline to
 - [ ] **Step 4: Verify — no retired-tooling references, links resolve, docs/lint pass**
 
 ```bash
-grep -niE "gemma|cross-family|cross family|ollama|panel\.mjs|panel-targeted|correctBar|two model families|--wide" tooling/docs/language-pipeline.md || echo "NO RETIRED REFS"
+grep -niE "gemma|cross-family|cross family|ollama|panel\.mjs|panel-targeted|correctBar|two model families|--wide" ../language-pipeline.md || echo "NO RETIRED REFS"
 npm run docs -- --check && npm run lint && echo OK
 ```
 Expected: `NO RETIRED REFS` (the rewrite removed them all — except, if you intentionally mention "the retired Gemma panel" as a one-line historical note, that single mention is acceptable; otherwise none); docs check + lint pass.
@@ -207,7 +207,7 @@ Expected: `NO RETIRED REFS` (the rewrite removed them all — except, if you int
 - [ ] **Step 5: Commit**
 
 ```bash
-git add tooling/docs/language-pipeline.md
+git add ../language-pipeline.md
 git commit -m "Rewrite language-pipeline.md for the Sonnet-only pipeline
 
 The doc described the retired cross-family/Gemma panel (baseline panel,
@@ -225,25 +225,25 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ### Task 4: Update corpus-methodology.md and backlog.md residue
 
 **Files:**
-- Modify: `tooling/docs/corpus-methodology.md` (3 cross-family mentions)
-- Modify: `docs/backlog.md` (the present-tense `panel.mjs --wide`/Gemma tooling descriptions)
+- Modify: `../corpus-methodology.md` (3 cross-family mentions)
+- Modify: `../backlog.md` (the present-tense `panel.mjs --wide`/Gemma tooling descriptions)
 
 - [ ] **Step 1: corpus-methodology.md — relabel the subjective tier**
 
-In `tooling/docs/corpus-methodology.md`, change the "subjective tier" references (lines ~28, ~243, ~255) from "cross-family panel" to "blind Sonnet persona panel." Verify:
+In `../corpus-methodology.md`, change the "subjective tier" references (lines ~28, ~243, ~255) from "cross-family panel" to "blind Sonnet persona panel." Verify:
 ```bash
-grep -niE "cross-family|gemma" tooling/docs/corpus-methodology.md || echo "clean"
+grep -niE "cross-family|gemma" ../corpus-methodology.md || echo "clean"
 ```
 Expected: `clean` (no cross-family/Gemma left).
 
 - [ ] **Step 2: backlog.md — separate history from stale-current**
 
-In `docs/backlog.md`: PAST-TENSE historical records of what was done ("each fix was checked against the cross-family model", the es-AR/dialect validation log at lines ~19/28/125/153) are legitimate history — KEEP them (optionally add "(historical; the pipeline is now Sonnet-only)" where a present-tense reading is misleading). But the present-tense tooling description at lines ~238-261 (`panel.mjs <code> --wide`, "the Gemma half", "4-judge median", `scripts/roundtrip.mjs ... cross-family model") describes retired tooling as current — rewrite those to the current reality (Sonnet panels; round-trip is the in-workflow blind-Claude-agent check via `tooling/scripts/roundtrip.mjs`) or mark them clearly as superseded.
+In `../backlog.md`: PAST-TENSE historical records of what was done ("each fix was checked against the cross-family model", the es-AR/dialect validation log at lines ~19/28/125/153) are legitimate history — KEEP them (optionally add "(historical; the pipeline is now Sonnet-only)" where a present-tense reading is misleading). But the present-tense tooling description at lines ~238-261 (`panel.mjs <code> --wide`, "the Gemma half", "4-judge median", `scripts/roundtrip.mjs ... cross-family model") describes retired tooling as current — rewrite those to the current reality (Sonnet panels; round-trip is the in-workflow blind-Claude-agent check via `tooling/scripts/roundtrip.mjs`) or mark them clearly as superseded.
 
 - [ ] **Step 3: Verify**
 
 ```bash
-grep -niE "gemma|panel\.mjs|--wide|cross-family model" docs/backlog.md
+grep -niE "gemma|panel\.mjs|--wide|cross-family model" ../backlog.md
 npm run docs -- --check && echo OK
 ```
 Expected: remaining matches (if any) are unambiguously past-tense/historical, not present-tense tooling instructions; docs check passes.
@@ -251,7 +251,7 @@ Expected: remaining matches (if any) are unambiguously past-tense/historical, no
 - [ ] **Step 4: Commit**
 
 ```bash
-git add tooling/docs/corpus-methodology.md docs/backlog.md
+git add ../corpus-methodology.md ../backlog.md
 git commit -m "Align corpus-methodology + backlog with the Sonnet-only pipeline
 
 Relabel the corpus subjective tier to the blind Sonnet persona panel; rewrite
@@ -340,7 +340,7 @@ Expected: every stage passes.
 echo "no live-doc Gemma/cross-family/panel.mjs (history + archive excepted):" && \
   grep -rniE "gemma|cross-family|cross family|panel\.mjs|--wide|crossFamilyReview" \
     README.md CLAUDE.md docs/ tooling/docs/ src/lang/*/status.json scripts/status.mjs \
-    | grep -v "docs/superpowers/" | grep -v "docs/backlog.md" || echo "  none (outside backlog history)"
+    | grep -v "docs/superpowers/" | grep -v "../backlog.md" || echo "  none (outside backlog history)"
 echo "beta definition is Sonnet-panel everywhere:" && grep -rn "Sonnet persona panel\|blind model panel\|blind Sonnet" CLAUDE.md README.md docs/lang/zh.md docs/lang/de.md
 echo "zh is beta:" && grep -A1 -i "chinese" README.md | grep -i beta && echo "  zh beta OK"
 echo "status field renamed:" && grep -rc "modelReview" src/lang/*/status.json | head

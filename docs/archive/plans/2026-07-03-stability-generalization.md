@@ -5,7 +5,7 @@
 **Goal:** The relational stability suite becomes a portable instrument — a
 language-agnostic engine plus per-language token extractors — and the
 pipeline/playbook/skill docs teach the restructured donor shape (sub-project
-D, the last of `docs/superpowers/specs/2026-07-03-expansion-readiness-design.md`).
+D, the last of `../specs/2026-07-03-expansion-readiness-design.md`).
 
 **Architecture:** Pure extraction: `stability-engine.mjs` owns the pattern
 matrix, the three relations, the semantic normalization fold, and the report;
@@ -76,7 +76,7 @@ improve-renderer/CLAUDE.md pointers.
 // English entry for the relational stability suite: the language-agnostic
 // engine (tooling/scripts/stability-engine.mjs) parameterized by the en
 // extractor. A new language ports the donor's extractor and gets the same
-// relations; see tooling/docs/language-pipeline.md (Verify).
+// relations; see ../language-pipeline.md (Verify).
 import {pathToFileURL} from 'node:url';
 import {DATES, TIMES, WEEKDAYS, makeStability}
   from './stability-engine.mjs';
@@ -165,7 +165,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 2: Pipeline Verify step + playbook lesson
 
 **Files:**
-- Modify: `tooling/docs/language-pipeline.md` (Mechanical checks list, and
+- Modify: `../language-pipeline.md` (Mechanical checks list, and
   stage 8 Verify list)
 - Modify: `.claude/skills/add-language/playbook.md` (+ regenerate
   `playbook.json`)
@@ -220,7 +220,7 @@ the regenerated entry.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add tooling/docs/language-pipeline.md .claude/skills/add-language/
+git add ../language-pipeline.md .claude/skills/add-language/
 git commit -m "docs(pipeline): relational stability joins the Verify gates and the playbook
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"

@@ -190,9 +190,9 @@ A code that names a language the instance does not have is an error that
 tells you which import provides it.
 
 The honest trade: cRonstrue ships **far more locales** (39), built from
-per-locale string tables. `cronli5` ships English today, and its other
-languages are being rebuilt one at a time, each a full renderer with its
-own rule book. The [README](../README.md#languages) lists what currently
+per-locale string tables. `cronli5` ships ten languages, each a full
+renderer that says a schedule the way that language says it, not a table
+of translated strings. The [README](../README.md#languages) lists what currently
 ships.
 
 ## Behavior differences to expect
