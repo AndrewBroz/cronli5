@@ -103,7 +103,19 @@ variant of the Simplified renderer is open.
 
 ## A way to release
 
-Ship 1.0 with English stable and the other nine labelled preview, each
-with an honest status, and promote a language when it meets the bar in
-"What to build first". Fix the known second readings above before release
+Done 2026-11-14: all ten languages ship stable at 1.0. Every row of
+every language was read by three readers briefed only in its language
+(7,155 rows, 52,101 questions, about 99.9% answered right), and each of
+the 69 questions most readers got wrong was asked again alone of three
+Sonnet and three Opus readers (`tooling/scripts/reading/recheck.mjs`):
+none was still misread by most readers of both. The misreadings of the
+full read were the layout (the last question in a list, a moment on
+another date) and one answer-key bug (Quartz weekday numbers), fixed
+test-first. Sentences one model still misread alone, left as notes:
+English `5-10,20 9-17/2 * * *` (the hours read as reaching only "at 20
+minutes past"), Ukrainian «рівно й через 30 …» (the on-the-hour firing
+missed) and «з 2030 до 2032 року включно й у 2035 році 1 січня» (the date
+read as 2035's only), French «toutes les 2 secondes pendant 22 secondes,
+puis de nouveau …», Japanese «毎月末日の29日前». Previously: ship English
+stable and the other nine labelled preview. Fix the known second readings above before release
 all the same: those are sentences known to mislead.

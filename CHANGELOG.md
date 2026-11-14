@@ -8,6 +8,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **All ten languages are stable.** Every row of every language was read
+  for when it fires by readers briefed only in that language (7,155 rows,
+  52,101 questions), and every question most of them got wrong was asked
+  again alone of readers of two models; none was still misread by both.
+- **Chinese: every third or fourth hour is said from its first time**
+  (每天0:00起每3小时一次), where it was a list of eight or six times; under
+  a named date or weekday it keeps both ends.
+
 - **BREAKING: the English style field `sep` is now `separator`**, the name
   Czech and Italian already use. Passing `sep` is an error that names the
   new field.

@@ -207,6 +207,12 @@ Packaging status:
 
 ## 4. The LLM review pass
 
+(2026-11-14: superseded where it says model review ships only beta. The
+project chose an automated pipeline as the review, with no native-speaker
+gate; a language is stable once every row passes the full reading check
+described in CLAUDE.md. This section is kept as the record of the first
+design.)
+
 The LLM review pass allows for beta builds without a native-speaker
 bottleneck. It is designed as distinct passes to address distinct
 failure modes of LLM-based evaluation:
