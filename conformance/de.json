@@ -3928,11 +3928,39 @@
    "pattern": "30 0 */2 * * *"
   },
   {
-   "expected": "stündlich zur Minute 30, jeweils 15 Sekunden nach der vollen Minute",
+   "expected": "30 Minuten und 15 Sekunden nach jeder vollen Stunde",
    "options": {
     "lang": "de"
    },
    "pattern": "15 30 * * * *"
+  },
+  {
+   "expected": "5 Minuten und 30 Sekunden nach jeder vollen Stunde",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "30 5 * * * *"
+  },
+  {
+   "expected": "am 1. jedes Monats jeweils 5 Minuten und 30 Sekunden nach jeder vollen Stunde",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "30 5 * 1 * *"
+  },
+  {
+   "expected": "1 Minute und 30 Sekunden nach jeder vollen Stunde",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "30 1 * * * *"
+  },
+  {
+   "expected": "5 Minuten und 1 Sekunde nach jeder vollen Stunde",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "1 5 * * * *"
   },
   {
    "expected": "stündlich zu den Minuten 5 und 20, jeweils 30 Sekunden nach der vollen Minute",
