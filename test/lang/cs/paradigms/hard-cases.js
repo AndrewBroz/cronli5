@@ -847,8 +847,8 @@ const rows = [
   // their start when they start later, with no «denně»; the minutes and
   // seconds are said after them, apart; a cadence that does not tile
   // keeps both ends.
-  ['0 */2 * * *', 'každé 2 hodiny'],
-  ['0 */6 * * *', 'každých 6 hodin'],
+  ['0 0-22/2 * * *', 'každé 2 hodiny'],
+  ['0 0,6,12,18 * * *', 'každých 6 hodin'],
   ['0 1/2 * * *', 'každé 2 hodiny od 1:00'],
   ['0 1/3 * * *', 'každé 3 hodiny od 1:00'],
   ['0 1/4 * * *', 'každé 4 hodiny od 1:00'],
@@ -869,9 +869,9 @@ const rows = [
     'každé 2 hodiny, vždy 15 minut a 30 sekund po celé hodině, kromě 8:15:30'],
   ['30 0,4,8,16,20 * * *',
     'každé 4 hodiny, vždy 30 minut po celé hodině, kromě 12:30'],
-  ['* */2 * * *', 'každé 2 hodiny, vždy po dobu jedné hodiny každou minutu'],
-  ['* */6 * * *', 'každých 6 hodin, vždy po dobu jedné hodiny každou minutu'],
-  ['*/15 */2 * * 1-5',
+  ['* 0-23/2 * * *', 'každé 2 hodiny, vždy po dobu jedné hodiny každou minutu'],
+  ['* 0-23/6 * * *', 'každých 6 hodin, vždy po dobu jedné hodiny každou minutu'],
+  ['0,15,30,45 0-23/2 * * 1-5',
     'od pondělí do pátku každé 2 hodiny, vždy po dobu jedné hodiny ' +
     'každých 15 minut'],
   ['*/15 1/2 * * 1-5',
