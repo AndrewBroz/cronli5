@@ -90,8 +90,8 @@ blind way by another fluent editor **(judge 2, judge 3)**. What any of
 them understood wrongly, in two ways, or only on a second reading was
 changed by rule; what was understood and only called stiff was left
 unless something as exact was plainly easier. Rewrites were weighed as
-suggestions: the judges did not know that the schedule ignores public
-holidays or that every sentence must follow from general rules. A
+suggestions: the judges did not know that every sentence must follow
+from general rules. A
 second adversarial read of the fourth version, rows and rule book
 **(schedule reader 2)**, led to the fifth, and a fourth blind fluency
 read **(judge 4)** to the sixth, and a fifth **(judge 5)**, who
@@ -136,11 +136,10 @@ Seven things run through everything:
   hour is said as «v prvních 30 minutách každé hodiny». Clock digits
   of a place are not written at all (2026-11-14); a from–to of places
   ends in «včetně».
-* **No word of the calendar is used that promises more than the pattern
-  knows.** «pracovní den» and «všední den» promise that a public holiday
-  is skipped (usage §1.1), so Monday to Friday is always «od pondělí do
-  pátku»; «o půlnoci» beside a weekday is the wrong night for half the
-  readers (usage §9), so midnight is «v 0:00».
+* **Monday to Friday is «od pondělí do pátku»** in the weekday field
+  (2026-11-14: this choice rested on public holidays, which are no longer
+  a reason; it is open to revision). «o půlnoci» beside a weekday is the
+  wrong night for half the readers (usage §9), so midnight is «v 0:00».
 
 Czech declares **no tie** (3.11): no wording depends on how a field was
 written.
@@ -1301,8 +1300,9 @@ v sudých hodinách», 2026-11-14). Not minutes or months. `0 0 */2 * *` → «k
 
 **5.2 The week.** Monday first, Sunday last; every list in that order.
 No set of days has a word of its own here. Monday to Friday is «od
-pondělí do pátku», because «pracovní den» and «všední den» promise that
-a public holiday is skipped (usage §1.1); Saturday and Sunday are
+pondělí do pátku» (2026-11-14: chosen over «všední dny» for a reason
+that rested on public holidays, which are no longer a reason; it is open
+to revision); Saturday and Sunday are
 «každou sobotu a neděli» (3-weekday). `0 9 * * 1-5` → «od pondělí do
 pátku vždy v 9:00»; `0 9 * * 0,6` → «každou sobotu a neděli v 9:00»;
 `0 9 * * 0-4` → «denně kromě pátku a soboty vždy v 9:00»; `0 9 * * 5,6` →
