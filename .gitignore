@@ -16,3 +16,4 @@ types
 
 # Transient git worktrees created by the add-language workflow.
 .claude/worktrees
+tooling/readings/

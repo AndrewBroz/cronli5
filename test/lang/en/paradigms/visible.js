@@ -147,8 +147,11 @@ const rows = [
 
   // monthly / month
   ['0 0 1 1 *', 'at midnight on January 1'],
+  // One day with several months says the day once, as several days do:
+  // "on" marks a date, so the day reaches every month (maintainer,
+  // 2026-11-14).
   ['0 0 1 3,6,9,12 *',
-    'at midnight on March 1, June 1, September 1, and December 1'],
+    'at midnight on the 1st of March, June, September, and December'],
   ['0 0 1 */2 *', 'at midnight on the 1st of every other month'],
   ['0 0 1 11-2 *',
     'at midnight on the 1st of each month from November through February'],

@@ -74,7 +74,10 @@ const rows = [
   // says that it starts again each month.
   ['0 0 */5 6 *', 'at midnight on June 1, 6, 11, 16, 21, and 26'],
   ['0 0 */3 6 *', 'at midnight every 3 days from the 1st of the month in June'],
-  ['0 0 1 1,3 *', 'at midnight on January 1 and March 1'],
+  // One day with several months says the day once, as several days do:
+  // "on" marks a date, so the day reaches every month (maintainer,
+  // 2026-11-14).
+  ['0 0 1 1,3 *', 'at midnight on the 1st of January and March'],
 
   // Weekday order and wrap-arounds.
   ['0 9 * * 5-1', 'at 9 a.m. Friday through Monday'],
@@ -151,9 +154,10 @@ const rows = [
   ['0 9-17/2 * 1-6 1-5',
     'at 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. on weekdays in ' +
     'January through June'],
+  // The day is said once, before the months (2026-11-14).
   ['0 18 15W 3,6,9,12 *',
-    'at 6 p.m. on the weekday nearest March 15, June 15, September 15, ' +
-    'and December 15'],
+    'at 6 p.m. on the weekday nearest the 15th of March, June, September, ' +
+    'and December'],
   ['0,30 8-18/2 1,15 * 1-5',
     'every 30 minutes during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., ' +
     'and 6 p.m. hours on the 1st and 15th as well as on weekdays'],
@@ -594,9 +598,10 @@ const rows = [
 
   // Only the months a day can fire in are named, and only the days those
   // months have. Under every month the day alone is enough.
+  // The day is said once, before the months (2026-11-14).
   ['0 0 31W 6-8 *',
-    'at midnight on the weekday in the same month nearest July 31 and ' +
-    'August 31',
+    'at midnight on the weekday in the same month nearest the 31st of ' +
+    'July and August',
     {cron: 'quartz'}],
   ['0 0 30W 2,4 *',
     'at midnight on the weekday in the same month nearest April 30',
@@ -606,7 +611,7 @@ const rows = [
     {cron: 'quartz'}],
   ['0 0 30 2-3 *', 'at midnight on March 30'],
   ['0 0 1,31 4,6,9,11 *',
-    'at midnight on April 1, June 1, September 1, and November 1'],
+    'at midnight on the 1st of April, June, September, and November'],
   ['0 0 25-31 6 *', 'at midnight on June 25 through 30'],
   ['0 0 31 * *', 'at midnight on the 31st'],
   ['0 0 */10 6 *', 'at midnight on June 1, 11, and 21'],
@@ -696,8 +701,8 @@ const rows = [
     'every minute during the 1 a.m., 7 a.m., 1 p.m., and 7 p.m. hours ' +
     'every day'],
   ['0 0 1 2/2 *',
-    'at midnight on February 1, April 1, June 1, August 1, October 1, and ' +
-    'December 1'],
+    'at midnight on the 1st of February, April, June, August, October, ' +
+    'and December'],
   // Beside a hole, a value missing at an end may be an exception too.
   // And an exception out of a cadence has to leave more than eight
   // values, or they are listed.
