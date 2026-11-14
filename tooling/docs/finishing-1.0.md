@@ -1,8 +1,8 @@
 # Finishing 1.0
 
 Written 2026-11-13, at the end of a long session, for whoever picks this
-up. Read `CLAUDE.md` first: "What all of this is for", "How readers go
-wrong" and "How quality is judged" are the centre of the project.
+up. Read `CLAUDE.md` first: "What all of this is for", "The reader's
+mind" and "How quality is judged" are the centre of the project.
 
 ## Where things are
 
