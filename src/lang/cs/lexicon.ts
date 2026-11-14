@@ -136,16 +136,16 @@ const dayPeriods = [
 
 // The function words and fixed phrases.
 const words = {
-  butFromTheLastDayAlwaysTheFridayBefore:
-    'z posledního dne měsíce ale vždy v pátek před ním',
+  butIfItIs: 'je-li ale',
   ifItDoesNotFallOn: 'nepřipadne-li na',
   ifItFallsOn: 'připadne-li na',
-  ifItFallsOnAWeekend: 'a připadne-li na sobotu nebo neděli',
+  ifItFallsOnAWeekend: 'připadne-li na sobotu nebo neděli',
   inTheFirstMinuteOfEveryHour: 'v první minutě každé hodiny',
-  instead: 'místo toho',
+  itMovesTo: 'posouvá se na',
   nor: 'ani',
-  onTheFridayBeforeIt: 'v pátek před ním',
-  onTheNearestFridayOrMonday: 'v nejbližší pátek nebo pondělí',
+  onto: 'na',
+  theFridayBeforeIt: 'pátek před ním',
+  theLastDayOfTheMonth: 'posledním dnem měsíce',
   onlyThen: 'jen tehdy',
   secondsLocative: 'sekundách',
   theFollowingMonday: 'následující pondělí',
@@ -223,7 +223,7 @@ const words = {
   ofTheseMonths: 'těchto měsíců',
   onEveryFullHour: 'v každou celou hodinu',
   only: 'jen',
-  onlyInMonthsThatHaveIt: '(jen v měsících, které ho mají)',
+  onlyInMonthsThatHaveIt: 'jen v měsících, které ho mají',
   penultimateDay: 'předposlední den',
   runs: 'Spouští se',
   startup: 'při startu systému',

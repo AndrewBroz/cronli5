@@ -53,8 +53,6 @@ export interface Setting {
 
 // A phrase for one arm of the day.
 interface Phrase {
-  // Whether it ends in a clause closed by a comma.
-  clause?: boolean;
   close?: Close;
   consumed?: boolean;
   fused?: boolean;
@@ -280,15 +278,51 @@ function beforeLast(days: number, facts: ScheduleFacts, refs: Refs): Phrase {
   }) as (typeof rules)[number]).said();
 }
 
-// A date that moves off a weekend: the date, the condition, and the day
-// it moves to, closed by a comma.
-function moved(date: string, to: string): Phrase {
+// A date that moves off a weekend: the date, and after it in brackets
+// any note, then each weekend day with the day it moves to («posouvá se
+// na»). The brackets keep the time after them for every day.
+function moved(date: string, notes: string[]): Phrase {
   return {
-    clause: true,
     fused: true,
     opener: words.always,
-    text: `${date}, ${words.ifItFallsOnAWeekend}, ${words.instead} ${to},`
+    text: `${date} (${notes.join('; ')})`
   };
+}
+
+// The weekend days, each with the day it moves to; one day for both
+// when they move to the same one.
+function moves(saturday: string, sunday?: string): string[] {
+  if (!sunday) {
+    return [`${words.ifItFallsOnAWeekend}, ${spaced(words.itMovesTo,
+      saturday)}`];
+  }
+
+  return [
+    `${spaced(words.ifItFallsOn, weekdays[6].accusative)}, ${
+      spaced(words.itMovesTo, saturday)}`,
+    `${spaced(words.ifItFallsOn, weekdays[0].accusative)}, ${
+      spaced(words.onto, sunday)}`
+  ];
+}
+
+// The weekday nearest a day of the month, by dates: the Saturday moves
+// to the Friday before, the Sunday to the Monday after, or, where the
+// day is the month's last, to the Friday two days before.
+function nearestMoves(day: number, last: string): string[] {
+  function friday(shift: number): string {
+    return `${weekdays[5].accusative} ${day - shift}.`;
+  }
+
+  const monday = `${weekdays[1].accusative} ${day + 1}.`;
+  const sunday = {
+    always: friday(2),
+    never: monday,
+    sometimes: `${monday}, ${spaced(words.butIfItIs, `${day}.`,
+      words.theLastDayOfTheMonth)}, ${spaced(
+      words.onto, friday(2))}`
+  }[last];
+
+  return moves(friday(1), sunday);
 }
 
 // The Quartz forms of the day of the month.
@@ -297,26 +331,25 @@ function quartzDate(form: QuartzDate, facts: ScheduleFacts, refs: Refs):
   const {dateReach: reach, day} = facts.analyses;
   const lacking = facts.analyses.candidates.month?.[0].kind === 'all' &&
     reach && reach.never.length + reach.leapYears.length > 0;
-  const nearest = {
-    always: words.onTheFridayBeforeIt,
-    never: words.onTheNearestFridayOrMonday,
-    sometimes: `${words.onTheNearestFridayOrMonday}, ${
-      words.butFromTheLastDayAlwaysTheFridayBefore}`
-  }[day.nearestDayIsLast || 'never'];
   const forms: {[kind: string]: () => Phrase} = {
     beforeLast: () => beforeLast((form as {days: number}).days, facts, refs),
-    firstWeekday: () => moved(refs.own.date('1.'), words.theFollowingMonday),
+    firstWeekday: () => moved(refs.own.date('1.'),
+      moves(words.theFollowingMonday)),
     last: () => ({
       fused: true,
       opener: words.always,
       text: spaced(words.lastDay, refs.own.within)
     }),
     lastWeekday: () => moved(spaced(words.lastDay, refs.own.within),
-      words.onTheFridayBeforeIt),
-    nearestWeekday: () => moved(
-      spaced(refs.own.date(`${(form as {day: number}).day}.`),
-        lacking ? words.onlyInMonthsThatHaveIt : ''),
-      nearest)
+      moves(words.theFridayBeforeIt)),
+    nearestWeekday: () => {
+      const date = (form as {day: number}).day;
+
+      return moved(refs.own.date(`${date}.`), [
+        ...lacking ? [words.onlyInMonthsThatHaveIt] : [],
+        ...nearestMoves(date, day.nearestDayIsLast || 'never')
+      ]);
+    }
   };
 
   return forms[form.kind]();
@@ -554,8 +587,7 @@ function union(facts: ScheduleFacts, setting: Setting): DayPart {
         ...part,
         close: 'always',
         consumed: single && Boolean(week.fused),
-        text: `${spaced(week.text, words.andBesides, date.text)}${
-          date.clause ? '' : ','}`
+        text: `${spaced(week.text, words.andBesides, date.text)},`
       }),
       when: true
     }

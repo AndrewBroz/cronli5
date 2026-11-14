@@ -990,7 +990,7 @@ a second device for the same thing.)
 | one range | «od 1. do 7. dne v měsíci» | «od 1. do 7. června» |
 | odd, even | «každý lichý den v měsíci» | «každý lichý den v červnu» |
 | a cadence | «od 1. dne v měsíci každý třetí den» | not fused, the month leads: «v červnu od 1. dne v měsíci každý třetí den (1., 4., 7. a tak dále)» («od 1. června každý třetí den» reads as a start date: schedule reader 2) |
-| Quartz and nth weekdays | «… v měsíci» | «vždy poslední den v červnu», «vždy druhé pondělí v červnu», «vždy 15. června, a připadne-li na sobotu nebo neděli, …»; `L-n` by 5.7 («vždy 27. června») |
+| Quartz and nth weekdays | «… v měsíci» | «vždy poslední den v červnu», «vždy druhé pondělí v červnu», «vždy 15. června (připadne-li na sobotu, …)»; `L-n` by 5.7 («vždy 27. června») |
 | removed days | «denně kromě 15. dne v měsíci» | the month leads and the removed day is a date: «v červnu denně kromě 15. června» |
 
 With any other month part the month leads and the days keep «dne
@@ -1135,9 +1135,9 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
 | `L` | «vždy poslední den v měsíci» | «vždy poslední den v červnu» |
 | `L-1` | «vždy předposlední den v měsíci» | «… v červnu» |
 | `L-n`, n ≥ 2 | below | below |
-| `1W` (`firstWeekday`) | «vždy 1. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho následující pondělí,» | «vždy 1. června, a připadne-li …,» |
-| `LW` | «vždy poslední den v měsíci, a připadne-li na sobotu nebo neděli, místo toho v pátek před ním,» | «vždy poslední den v červnu, a připadne-li …,» |
-| `nW` | «vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho …,» (three endings, below) | «vždy 15. června, a připadne-li …,» |
+| `1W` (`firstWeekday`) | «vždy 1. dne v měsíci (připadne-li na sobotu nebo neděli, posouvá se na následující pondělí)» | «vždy 1. června (připadne-li …)» |
+| `LW` | «vždy poslední den v měsíci (připadne-li na sobotu nebo neděli, posouvá se na pátek před ním)» | «vždy poslední den v červnu (připadne-li …)» |
+| `nW` | «vždy 15. dne v měsíci (připadne-li na sobotu, posouvá se na pátek 14.; připadne-li na neděli, na pondělí 16.)» (three endings, below) | «vždy 15. června (připadne-li …)» |
 | `1#2` | «vždy druhé pondělí v měsíci» | «vždy druhé pondělí v červnu» |
 | `5L` | «vždy poslední pátek v měsíci» | «vždy poslední pátek v červnu» |
 
@@ -1148,33 +1148,67 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
   judge 2); «všední den (pondělí až pátek, i když je svátek)» (the
   gloss has to correct the word just used, „si protiřečí“: judge 4, and
   usage §1.1 had warned of exactly that promise). So the three forms
-  say what happens, in the days themselves: the date; the condition «a
-  připadne-li na sobotu nebo neděli»; «místo toho» and the day it moves
-  to.
-  * `LW`: the last day can only move back: «v pátek před ním».
-  * `1W`: the first day can only move forward: «následující pondělí».
-  * `nW`, by `analyses.day.nearestDayIsLast`:
-    * `'never'` (the Monday after always exists): «v nejbližší pátek
-      nebo pondělí». `15W` → «vždy 15. dne v měsíci, a připadne-li na
-      sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí,».
-    * `'always'` (n is the last day of every month it fires in; there
-      is never a Monday): only the Friday, «v pátek před ním». `31W` →
-      «vždy 31. dne v měsíci (jen v měsících, které ho mají),
-      a připadne-li na sobotu nebo neděli, místo toho v pátek před
-      ním,». The fifth-read form offered a Monday that never comes,
-      and the reader read «v pondělí» (judge 5).
-    * `'sometimes'`: both, and when it is the Friday: «v nejbližší
-      pátek nebo pondělí, z posledního dne měsíce ale vždy v pátek
-      před ním». `28W` → «vždy 28. dne v měsíci, a připadne-li na
-      sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí,
-      z posledního dne měsíce ale vždy v pátek před ním,».
-  * A comma closes the clause whenever anything follows.
-  * The condition verb is «připadne-li na», the one verb of 4.3. An
-    earlier judge could not tell whose «připadne» was; here it stands
-    straight after the date it is said of. «když je to» (sixth version)
-    was colloquial and, with a range or a date after it, not Czech
-    (judges 4 and 5, who both write «připadne-li na»). «v pondělí
-    potom» and «v pátek předtím» were not Czech either (judge 5).
+  say what happens, in the days themselves: the date, then in brackets
+  each weekend day and the day it moves to, «připadne-li na …, posouvá
+  se na …». The brackets close before the time, so the time is plainly
+  that of every day the task runs on.
+  * `LW`: the last day can only move back, and both weekend days move
+    to the same day: «připadne-li na sobotu nebo neděli, posouvá se na
+    pátek před ním».
+  * `1W`: the first day can only move forward, both to the same day:
+    «připadne-li na sobotu nebo neděli, posouvá se na následující
+    pondělí».
+  * `nW` names the days it moves to as dates, Saturday and Sunday
+    apart, the second with the verb left out: «připadne-li na sobotu,
+    posouvá se na pátek 14.; připadne-li na neděli, na pondělí 16.».
+    The Saturday always moves to the Friday n − 1. The Sunday, by
+    `analyses.day.nearestDayIsLast`:
+    * `'never'`: the Monday n + 1. `15W` → «vždy 15. dne v měsíci
+      (připadne-li na sobotu, posouvá se na pátek 14.; připadne-li na
+      neděli, na pondělí 16.)»; `2W` → «… na pátek 1.; … na pondělí
+      3.».
+    * `'always'` (n is the last day of every month it fires in): the
+      Friday n − 2. `30W 6` → «vždy 30. června (připadne-li na sobotu,
+      posouvá se na pátek 29.; připadne-li na neděli, na pátek 28.)».
+    * `'sometimes'`: the Monday, and the Friday where n is the last
+      day: `28W` → «vždy 28. dne v měsíci (připadne-li na sobotu,
+      posouvá se na pátek 27.; připadne-li na neděli, na pondělí 29.,
+      je-li ale 28. posledním dnem měsíce, na pátek 26.)».
+    * The note for months that lack the day comes first in the same
+      brackets, closed by a semicolon: «vždy 31. dne v měsíci (jen
+      v měsících, které ho mají; připadne-li na sobotu, posouvá se na
+      pátek 30.; připadne-li na neděli, na pátek 29.)».
+  * A union closes the brackets with a comma before «vždy» and the
+    time, as any union does: «v červnu každé pondělí a navíc 15. června
+    (připadne-li …), vždy v 9:00».
+  * **Why (2026-11-14).** The form before said «vždy 15. dne v měsíci, a
+    připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo
+    pondělí, v 9:00». Two isolated readers (Opus 5.5 and Sonnet 5.5,
+    briefed in Czech) took the right meaning first but found three more:
+    «nejbližší pátek» as the coming Friday („v běžné řeči znamená
+    ‚v nejbližší pátek‘ obvykle ‚v nadcházející pátek‘“), «pátek nebo
+    pondělí» as a free choice, since nothing paired Saturday with Friday,
+    and «v 9:00» as the time of the moved day only, being next to it
+    after a comma. The dates remove «nejbližší» and the choice; each
+    weekend day is paired with its own day; the brackets end the move
+    before the time. Two new isolated readers (the same two models) each
+    read 15W, 28W, LW, 1W, 31W and a union in this form and found one
+    reading in every sentence; one paused on whether «je-li ale 28.
+    posledním dnem měsíce» also covered the Saturday and settled it
+    from the sentence (it changes nothing: the Saturday goes to the
+    27th either way). «tak místo toho v pátek 14.; … tak v pondělí 16.»
+    also read one way with both, but leans on the parallel to carry
+    «místo toho» into the second branch; «posouvá se na» says "instead"
+    in its own verb and is shorter. The dates cost two numbers to hold
+    but no working out: «nejbližší pátek» asked the reader to find the
+    day.
+  * Earlier versions, with the reasons they went: «o víkendu místo toho»
+    (2026-11-13) was taken at first for something every weekend; «den,
+    který nepřipadá na víkend», «den od pondělí do pátku» and «všední
+    den» named a category the pattern does not know (above). The
+    condition verb is «připadne-li na», the one verb of 4.3; «když je
+    to» was colloquial (judges 4 and 5), «v pondělí potom» and «v pátek
+    předtím» were not Czech (judge 5).
 * **`L-n`** says a date wherever the form comes to one. The day it
   comes to is `length − n` for each group of `analyses.monthLengths`
   (the months the form fires in, by length; February of common and of
@@ -1204,18 +1238,18 @@ hodiny od 0:00 do 22:00»; `0 0 * */2 *` → six months listed.
 * **Months that lack the day**, for `nW` (`dateReach.never` or
   `dateReach.leapYears` is not empty, and the month field is
   unrestricted; `L-n` needs no note, its months are named or its day is
-  worked): «(jen v měsících, které ho mají)» straight after «dne
-  v měsíci»: «vždy 31. dne v měsíci (jen v měsících, které ho mají), a
-  připadne-li na sobotu nebo neděli, …». A plain day («vždy 31. dne
-  v měsíci») and a fifth weekday take no note: there the reader sees the
+  worked): «jen v měsících, které ho mají», first in the brackets of
+  the move: «vždy 31. dne v měsíci (jen v měsících, které ho mají;
+  připadne-li na sobotu, …)». A plain day («vždy 31. dne v měsíci») and
+  a fifth weekday take no note: there the reader sees the
   day itself. Under a restricted month field the months that never fire
   are simply not named (4.4).
 * The nth weekday is «vždy», the ordinal in the accusative agreeing with
   the day (7.2), the day, «v měsíci». Not «každé druhé pondělí
   v měsíci»: «každé druhé pondělí» is every other Monday.
   `0 0 L * *` → «vždy poslední den v měsíci v 0:00»; `0 0 15W * *` →
-  «vždy 15. dne v měsíci, a připadne-li na sobotu nebo neděli, místo
-  toho v nejbližší pátek nebo pondělí, v 0:00»; `0 0 * * 1#2` →
+  «vždy 15. dne v měsíci (připadne-li na sobotu, posouvá se na pátek
+  14.; připadne-li na neděli, na pondělí 16.) v 0:00»; `0 0 * * 1#2` →
   «vždy druhé pondělí v měsíci v 0:00»; `0 0 * * 5L` → «vždy poslední
   pátek v měsíci v 0:00».
 
@@ -1279,7 +1313,7 @@ roku», «kromě roku», «kromě let», «každý rok». noc: «každou noc».
 
 **6.5** v / ve 1; od 1; do 1; až 1; a 1; na 1; kromě 2; každý / každou
 / každé 2; každých 2; vždy 2; denně 2; pokaždé 3; a navíc 3; a to 2;
-ale 2; místo toho 3; jen 1; připadne-li na 4; ani 2; tedy nikdy 4.
+ale 2; posouvá se na 4; je-li ale 3; jen 1; připadne-li na 4; ani 2; tedy nikdy 4.
 
 ## 7. Agreement
 

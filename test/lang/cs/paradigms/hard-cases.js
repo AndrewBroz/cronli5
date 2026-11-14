@@ -70,27 +70,41 @@ const rows = [
   // Quartz forms.
   ['0 0 1 * ?', 'vždy 1. dne v měsíci v 0:00', {cron: 'quartz'}],
   ['0 0 LW * *',
-    'vždy poslední den v měsíci, a připadne-li na sobotu nebo neděli, ' +
-    'místo toho v pátek před ním, v 0:00'],
+    'vždy poslední den v měsíci (připadne-li na sobotu nebo neděli, posouvá ' +
+    'se na pátek před ním) v 0:00'],
   ['0 0 1W * *',
-    'vždy 1. dne v měsíci, a připadne-li na sobotu nebo neděli, místo toho ' +
-    'následující pondělí, v 0:00'],
+    'vždy 1. dne v měsíci (připadne-li na sobotu nebo neděli, posouvá se na ' +
+    'následující pondělí) v 0:00'],
   ['0 0 1W 6 *',
-    'vždy 1. června, a připadne-li na sobotu nebo neděli, místo toho ' +
-    'následující pondělí, v 0:00'],
+    'vždy 1. června (připadne-li na sobotu nebo neděli, posouvá se na ' +
+    'následující pondělí) v 0:00'],
   ['0 0 15W 6 *',
-    'vždy 15. června, a připadne-li na sobotu nebo neděli, místo toho v ' +
-    'nejbližší pátek nebo pondělí, v 0:00'],
+    'vždy 15. června (připadne-li na sobotu, posouvá se na pátek 14.; ' +
+    'připadne-li na neděli, na pondělí 16.) v 0:00'],
   ['0 0 31W * *',
-    'vždy 31. dne v měsíci (jen v měsících, které ho mají), a připadne-li ' +
-    'na sobotu nebo neděli, místo toho v pátek před ním, v 0:00'],
+    'vždy 31. dne v měsíci (jen v měsících, které ho mají; připadne-li na ' +
+    'sobotu, posouvá se na pátek 30.; připadne-li na neděli, na pátek 29.) ' +
+    'v 0:00'],
   ['0 0 28W * *',
-    'vždy 28. dne v měsíci, a připadne-li na sobotu nebo neděli, místo ' +
-    'toho v nejbližší pátek nebo pondělí, z posledního dne měsíce ale vždy ' +
-    'v pátek před ním, v 0:00'],
+    'vždy 28. dne v měsíci (připadne-li na sobotu, posouvá se na pátek 27.; ' +
+    'připadne-li na neděli, na pondělí 29., je-li ale 28. posledním dnem ' +
+    'měsíce, na pátek 26.) v 0:00'],
   ['0 0 30W 6 *',
-    'vždy 30. června, a připadne-li na sobotu nebo neděli, místo toho v ' +
-    'pátek před ním, v 0:00'],
+    'vždy 30. června (připadne-li na sobotu, posouvá se na pátek 29.; ' +
+    'připadne-li na neděli, na pátek 28.) v 0:00'],
+  // The Friday before the 2nd is the 1st.
+  ['0 0 2W * *',
+    'vždy 2. dne v měsíci (připadne-li na sobotu, posouvá se na pátek 1.; ' +
+    'připadne-li na neděli, na pondělí 3.) v 0:00'],
+  // The 27th is never the last day: February always has the 28th.
+  ['0 0 27W * *',
+    'vždy 27. dne v měsíci (připadne-li na sobotu, posouvá se na pátek 26.; ' +
+    'připadne-li na neděli, na pondělí 28.) v 0:00'],
+  // Missing in some months, and the last day in others.
+  ['0 0 30W * *',
+    'vždy 30. dne v měsíci (jen v měsících, které ho mají; připadne-li na ' +
+    'sobotu, posouvá se na pátek 29.; připadne-li na neděli, na pondělí ' +
+    '31., je-li ale 30. posledním dnem měsíce, na pátek 28.) v 0:00'],
   ['0 0 L-3 * *',
     'vždy 3 dny před posledním dnem měsíce (např. 28. v měsíci s 31 dny) v ' +
     '0:00'],
@@ -234,8 +248,9 @@ const rows = [
   // A date that no month has fires never, whatever the weekday.
   ['0 0 31 6 */2', 'jen 31. června, tedy nikdy'],
   ['0 9 15W 6 1',
-    'v červnu každé pondělí a navíc 15. června, a připadne-li na sobotu ' +
-    'nebo neděli, místo toho v nejbližší pátek nebo pondělí, vždy v 9:00'],
+    'v červnu každé pondělí a navíc 15. června (připadne-li na sobotu, ' +
+    'posouvá se na pátek 14.; připadne-li na neděli, na pondělí 16.), vždy ' +
+    'v 9:00'],
 
   // A month with its dates.
   ['0 0 1,15 6 *', 'vždy 1. a 15. června v 0:00'],
@@ -594,9 +609,9 @@ const rows = [
     'pátek vždy 30 a 42 minut po každé celé hodině, pokaždé po dobu jedné ' +
     'minuty každou sekundu, od 3:30:00 do 10:42:59'],
   ['0 18 15W 3,6,9,12 *',
-    'v březnu, červnu, září a prosinci vždy 15. dne v měsíci, a ' +
-    'připadne-li na sobotu nebo neděli, místo toho v nejbližší pátek nebo ' +
-    'pondělí, v 18:00'],
+    'v březnu, červnu, září a prosinci vždy 15. dne v měsíci (připadne-li ' +
+    'na sobotu, posouvá se na pátek 14.; připadne-li na neděli, na pondělí ' +
+    '16.) v 18:00'],
   ['7 4-22/6 1 */2 *',
     'v lednu, březnu, květnu, červenci, září a listopadu vždy 1. dne v ' +
     'měsíci ve 4:07, 10:07, 16:07 a 22:07'],
@@ -612,11 +627,11 @@ const rows = [
   ['0 0 30 2 *', 'Spouští se jen 30. února, tedy nikdy.', {form: 'sentence'}],
   ['0 0 31 6 1', 'v červnu každé pondělí v 0:00'],
   ['0 0 31W 6-8 *',
-    'v červenci a srpnu vždy 31. dne v měsíci, a připadne-li na sobotu ' +
-    'nebo neděli, místo toho v pátek před ním, v 0:00'],
+    'v červenci a srpnu vždy 31. dne v měsíci (připadne-li na sobotu, ' +
+    'posouvá se na pátek 30.; připadne-li na neděli, na pátek 29.) v 0:00'],
   ['0 0 29W 2 *',
-    'v přestupných letech vždy 29. února, a připadne-li na sobotu nebo ' +
-    'neděli, místo toho v pátek před ním, v 0:00'],
+    'v přestupných letech vždy 29. února (připadne-li na sobotu, posouvá se ' +
+    'na pátek 28.; připadne-li na neděli, na pátek 27.) v 0:00'],
   ['0 9 1-31 * 1', 'denně v 9:00'],
   ['0 9 15 * 0-6', 'denně v 9:00'],
   ['0 0 9 * * * 2030/1', 'od roku 2030 denně v 9:00'],
@@ -699,9 +714,9 @@ const rows = [
   ['0 0 L-28 2 *', 'v přestupných letech vždy 1. února v 0:00'],
   ['0 0 L-3 6-8 *', 'vždy 27. června, 28. července a 28. srpna v 0:00'],
   ['0 0 29W * *',
-    'vždy 29. dne v měsíci (jen v měsících, které ho mají), a připadne-li ' +
-    'na sobotu nebo neděli, místo toho v nejbližší pátek nebo pondělí, z ' +
-    'posledního dne měsíce ale vždy v pátek před ním, v 0:00'],
+    'vždy 29. dne v měsíci (jen v měsících, které ho mají; připadne-li na ' +
+    'sobotu, posouvá se na pátek 28.; připadne-li na neděli, na pondělí ' +
+    '30., je-li ale 29. posledním dnem měsíce, na pátek 27.) v 0:00'],
   ['0 0 0 29 2 * 2030-2040', 'v letech 2030 až 2040 vždy 29. února v 0:00'],
   ['0-29 9,10 * * *',
     'denně každou minutu v prvních 30 minutách každé hodiny (:00–:29), od ' +
@@ -717,8 +732,8 @@ const rows = [
     'v měsíci, v 9:00'],
   ['0 9 1-14,16-31 * 5L', 'denně kromě 15. dne v měsíci vždy v 9:00'],
   ['0 0 LW 6 *',
-    'vždy poslední den v červnu, a připadne-li na sobotu nebo neděli, ' +
-    'místo toho v pátek před ním, v 0:00'],
+    'vždy poslední den v červnu (připadne-li na sobotu nebo neděli, posouvá ' +
+    'se na pátek před ním) v 0:00'],
 
   // Year pieces of five values or more, with and without an end; an
   // exception inside the first minutes of the hour; pieces of dates after
