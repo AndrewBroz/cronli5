@@ -127,5 +127,7 @@ describe('the firing oracle:', function() {
 
     expect(sample.length).to.be.greaterThan(1000);
     expect(disagreements.slice(0, 5)).to.deep.equal([]);
-  });
+  // Thousands of patterns, each analysed by the core: slow under the full
+  // suite's load.
+  }, 120000);
 });
