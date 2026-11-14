@@ -381,10 +381,10 @@ const rows = [
   // Hours that tile the day from midnight are said bare, with no window,
   // no list of times and no «tutti i giorni» (answers 3.7, 4.1 "Hours
   // that tile the day"). Midnight and noon alone stay listed.
-  ['0 */2 * * *', 'ogni 2 ore'],
+  ['0 0-22/2 * * *', 'ogni 2 ore'],
   ['0 */3 * * *', 'ogni 3 ore'],
   ['0 */4 * * *', 'ogni 4 ore'],
-  ['0 */6 * * *', 'ogni 6 ore'],
+  ['0 0,6,12,18 * * *', 'ogni 6 ore'],
   ['0 */8 * * *', 'ogni 8 ore'],
   ['0 0-22/2 * * *', 'ogni 2 ore'],
   // From a later start inside the first interval they still tile, and
@@ -540,10 +540,10 @@ const rows = [
     'alle 20:59'],
   // A unit that fills each hour of hours that tile the day is a stretch
   // of one hour, with no windows (answers 4.1 "Hours that tile the day").
-  ['* */2 * * *', 'ogni minuto per un\'ora ogni 2 ore'],
+  ['* 0-23/2 * * *', 'ogni minuto per un\'ora ogni 2 ore'],
   ['* */3 * * *', 'ogni minuto per un\'ora ogni 3 ore'],
-  ['* */6 * * *', 'ogni minuto per un\'ora ogni 6 ore'],
-  ['*/15 */2 * * 1-5',
+  ['* 0-23/6 * * *', 'ogni minuto per un\'ora ogni 6 ore'],
+  ['0,15,30,45 0-23/2 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti per un\'ora ogni 2 ore'],
   ['*/5 */2 * * *', 'ogni 5 minuti per un\'ora ogni 2 ore'],
   ['0-28,30-59 */6 * * *',
