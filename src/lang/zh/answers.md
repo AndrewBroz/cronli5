@@ -348,7 +348,9 @@ Where a wrap is not allowed, the set is described in ascending order:
 * A window and stray points: the window with its rhythm, then 以及 and the
   points. 9:00至17:00，每小时一次，以及22:00; 9:00至17:00，每小时一次，以及
   20:00、22:00; 9:00至9:29，每分钟一次，以及9:45; 每小时的0分至29分，每分钟一
-  次，以及45分.
+  次，以及45分. **What follows 以及 carries its own hour wherever the hours
+  are restricted** (4.1): after the comma it no longer hangs on a 的
+  before it, so a bare 45分 there is minute 45 of every hour.
 
 Pieces are said in ascending order of their first value, with no
 exception. A run that wraps begins later than every other piece, so it
@@ -696,10 +698,54 @@ hours, a window of clock times for each, as above: 9:00至9:29，每分钟一次
 **Inside one named hour every minute phrase is clock times**, whatever
 the minutes are: a run with a stray minute, 9:00至9:29，每分钟一次，以及
 9:45; two runs, 9:00至9:09、9:20至9:29，每分钟一次; a cadence that names its
-ends, 9:03至9:58，每5分钟一次. Under several separate hours only the single
-run is: anything else there would multiply (two runs under two hours are
-four windows), so it is anchored, below: 9点、17点的0分至29分，每分钟一次，
-以及45分.
+ends, 9:03至9:58，每5分钟一次. Under several separate hours one window
+(a run, or a cadence that names its ends) is clock times too, with its
+stray minutes or without: anything more would multiply (two runs under
+two hours are four windows), so it is anchored, below.
+
+**Stray minutes after a window of minutes carry their hours.** After the
+window's rhythm they follow a comma and 以及, and there a bare 45分 has no
+hour of its own:
+
+* Under separate hours, one window: the window in each hour, then the
+  strays as clock times, 每天9:00至9:29、17:00至17:29，每分钟一次，以及
+  9:45、17:45; 9:00至9:58、17:00至17:58，每2分钟一次，以及9:45、17:45;
+  under five or more hours the same, 9:00至9:29、11:00至11:29……17:00至
+  17:29，每分钟一次，以及9:45、11:45、13:45、15:45、17:45. Where the clock
+  times would name more things than the hours and the minutes together
+  (three hours and two strays: six against five), the hours are said
+  again before the strays: 9:00至9:09、13:00至13:09、17:00至17:09，每分钟一
+  次，以及9点、13点、17点的20分、40分.
+* Under separate hours named before 的 (two windows or more), and under
+  hours said by their step or their idiom, the hours are said again
+  before the strays, as the lead says them: 9点、17点的0分至20分、30分至
+  50分，每分钟一次，以及9点、17点的25分; 每2小时的0分至29分，每分钟一次，以
+  及每2小时的45分; 自1点起每2小时的…，以及自1点起每2小时的45分; 2点至22
+  点的偶数小时的…，以及2点至22点的偶数小时的45分. (Checked 2026-11-14
+  with the same two readers after the step forms arrived: neither read
+  the restated stray any other way; both found that a bare 以及45分 after
+  每2小时的… can be minute 45 of every hour.)
+* Under windows of hours with a range among them, 其中每小时的: 8:00至
+  10:45、14:00至14:45，每小时的0分至29分，每分钟一次，以及其中每小时的
+  45分. 其中 points back to the windows.
+* Under one range of hours nothing is added: the bracket of first and
+  last firing keeps the strays inside, 9点至17点，每小时的0分至29分，每分
+  钟一次，以及45分（首次9:00，末次17:45）. Under every hour nothing is
+  needed: 每小时的0分至29分，每分钟一次，以及45分.
+
+On 2026-11-14 two isolated readers (Opus 5.5 and Sonnet 5.5) each found
+that 每天9点、17点的0分至29分，每分钟一次，以及45分 can be read as minute 45
+of every hour: 「"以及45分"前面有逗号，单独成一项，自身没有小时，所以可以只
+接最前面的"每天"」. One also read 9点 there as the single moment 9:00.
+The forms above were then put to the same two readers: each read the
+clock-time strays, the restated hours and the restated idiom one way
+only, and 其中每小时的 one way (the first found it a little stiff: 「略显
+别扭，但不影响理解」). Rejected on the same reading: 以及每小时的45分
+after windows of hours (both readers: a second 每小时 can be every hour
+of the day), and 以及8点至10点、14点的45分 (both: 8点至10点 can end at
+10:00, leaving out 10:45). The four clock times 8:45、9:45、10:45、14:45
+read one way too, but they grow with every hour of the windows, where
+其中每小时的 does not.
 
 **Otherwise M is anchored**: a list, a run under a stretch of hours,
 pieces, an exception, or a cadence that names its ends. The hours come
@@ -1191,7 +1237,7 @@ are two digits (9:05); a minute or second named by its number is not (5
 the number of an hour before 的…分), 天, 日 (after a date's number), 月,
 年, 轮. There are no plural forms.
 
-6.5 每, 至, 以及, 及, 的, 内, 次, 当年, 各月, 除, 外, 除外, 整点, 所在分钟
+6.5 每, 至, 以及, 及, 的, 内, 其中, 次, 当年, 各月, 除, 外, 除外, 整点, 所在分钟
 的, 一次, 一轮, 各一轮, 每轮, 间隔, 首次, 末次, 首轮, 末轮, 在, 逢, 每逢,
 自, 起, 中的第1年, 的第1个小时内, 偶数小时, 奇数小时, 遇, 改在, 当月最近的, 提前至, 顺延
 至, 永不执行, 没有, 当月无此日则不执行, 仅闰年.

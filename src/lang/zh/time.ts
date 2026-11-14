@@ -45,8 +45,10 @@ interface Shape {
 }
 
 // The windows and stray moments of a phrase, each window with its step,
-// and whether it has a rhythm.
+// and whether it has a rhythm. `of` is what the strays say again of the
+// hours before them.
 interface Grid {
+  of: string;
   paced: boolean;
   steps: number[];
   strays: Moment[];
@@ -322,10 +324,18 @@ function isCrowded(hours: Run[]): boolean {
     2 * hours.length > LISTED;
 }
 
+// Whether the minutes are one window, minute by minute or with stray
+// minutes beside it.
+function isOneWindow(shape: Shape): boolean {
+  return shape.windows.length === 1 &&
+    (shape.step === 1 || shape.strays.length > 0);
+}
+
 // Whether restricted hours are each a window of clock times: under
-// minutes that flow, any minutes inside one hour, or one run under
-// separate hours. Hours too many to be a window each are named instead,
-// where the minutes after them are every minute or few enough to list;
+// minutes that flow, any minutes inside one hour, or one window (with or
+// without strays) under separate hours. Hours too many to be a window
+// each are named instead, where the minutes after them are every minute
+// or few enough to list;
 // a run or a longer cadence after named hours reads as one stretch, so
 // those stay windows however many.
 function isClocked(H: Level, M: Level): boolean {
@@ -334,7 +344,7 @@ function isClocked(H: Level, M: Level): boolean {
     (M.every || M.values.length <= LISTED);
 
   return !named && (M.flows ||
-    lone && (H.values.length === 1 || isSteady(M.shape)));
+    lone && (H.values.length === 1 || isOneWindow(M.shape)));
 }
 
 // The first row that applies. Exact times that can be counted are points,
@@ -544,6 +554,7 @@ function point(moment: Moment, voice: Voice): string {
 // value written into the named part of the moment.
 function cross(anchors: Span[], shape: Shape, part: keyof Moment): Grid {
   return {
+    of: '',
     paced: shape.windows.length > 0,
     steps: anchors.flatMap(() => shape.steps),
     strays: anchors.flatMap((anchor) => shape.strays.map(
@@ -566,7 +577,8 @@ function rhythm(beat: Beat, voice: Voice): string {
 // directly by their own rhythm, and parted by commas. Under rounds a
 // list ends in 各一轮, and a single moment in 一轮.
 function phrase(grid: Grid, beat: Beat, voice: Voice): string {
-  const strays = series(grid.strays.map((moment) => say(moment, voice)));
+  const strays = when(grid.strays.length > 0, grid.of) +
+    series(grid.strays.map((moment) => say(moment, voice)));
   const each = [words.oneRound, words.eachOneRound][
     Number(grid.strays.length > 1)];
   const mixed = new Set(grid.steps).size > 1;
@@ -614,13 +626,18 @@ function stretchOf(scene: Scene, voice: Voice): string {
   ]);
 }
 
+// The hours by name, a stretch of them by its two ends.
+function namesOf(H: Level, voice: Voice): string {
+  return series(listed(H.runs, 2,
+    (hour) => hourNamed(hour, voice), words.nextDay));
+}
+
 // What stands before the body: the hours, where they are not clock times
 // inside it.
 function leadOf(scene: Scene, voice: Voice): string {
   const {H, M, cycle} = scene;
   const stretch = stretchOf(scene, voice);
-  const names = series(listed(H.runs, 2,
-    (hour) => hourNamed(hour, voice), words.nextDay));
+  const names = namesOf(H, voice);
   const firings = series(H.runs.map((run) => between([
     {h: run[0], m: M.values[0]},
     {h: lastOf(run), m: lastOf(M.values)}
@@ -662,6 +679,31 @@ function spelledBody(scene: Scene, voice: Voice): string {
     {step: S.shape.step, unit: units.second}, voice);
 }
 
+// What stray minutes after a rhythm say again of the hours, so that none
+// is left without its hour after 以及. After hours named one by one, by
+// their idiom or by their step, the hours again; after windows of hours,
+// 其中每小时的.
+// After windows of clock times the strays are clock times, unless those
+// would name more than the hours and the minutes do together, when the
+// hours are named. Under every hour or one range of hours, nothing.
+function hoursAgain(scene: Scene, voice: Voice): string {
+  const {H, M} = scene;
+  const lone = H.runs.every((run) => run.length === 1);
+  const {length} = M.shape.strays;
+  const crossed = H.values.length * length > H.values.length + length;
+  const named = scene.kind === 'named' && !H.every && !scene.ranged;
+
+  return first([
+    [scene.kind === 'clocked' && crossed, namesOf(H, voice) + words.of],
+    [named && typeof scene.cycle !== 'undefined',
+      cycleName(scene.cycle, voice) + words.of],
+    [named && scene.parity, stretchOf(scene, voice) + words.of],
+    [named && lone, namesOf(H, voice) + words.of],
+    [named, words.within + words.eachHourOf],
+    [true, '']
+  ]);
+}
+
 // A rhythm of hours at one minute, or of minutes: in windows of clock
 // times, after the hours, or alone. Clock times too many to carry their
 // seconds are each a moment, with no rhythm.
@@ -682,10 +724,16 @@ function pacedBody(scene: Scene, voice: Voice): string {
     {step: S.shape.step, unit: units.second} :
     {step: M.shape.step, unit: units.minute};
 
+  const grid = cross(anchors[scene.kind], minutes, 'm');
+  const again = hoursAgain(scene, voice);
+  const said = again === '' || !grid.paced ?
+    grid :
+    {...grid, of: again, strays: minutes.strays.map((value) => ({m: value}))};
+
   return scene.kind === 'hourly' ?
     phrase(cross(anchors.hourly, H.shape, 'h'),
       {step: H.shape.step, unit: units.hour}, voice) :
-    phrase(cross(anchors[scene.kind], minutes, 'm'), beat, voice);
+    phrase(said, beat, voice);
 }
 
 // What each round holds: how many firings, and either their rhythm from
