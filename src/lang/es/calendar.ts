@@ -843,7 +843,7 @@ function condition(days: Days, weekday: DayPhrase, style: SpanishStyle):
 /** The leading frame, the day, and what a union adds after the time. */
 function calendarOf(
   schedule: Schedule,
-  everyHour: boolean,
+  roundTheClock: boolean,
   style: SpanishStyle
 ): Calendar {
   const {analyses} = schedule;
@@ -861,7 +861,8 @@ function calendarOf(
       {closed: true}), days.both],
     [spoken.weekday, !days.everyWeekday],
     [spoken.date, !days.everyDate],
-    [phrase(pick([['', everyHour], [words.everyDay, true]]), {}), true]
+    [phrase(pick([['', roundTheClock], [words.everyDay, true]]),
+      {}), true]
   ]);
   const addedLead = days.lead || spoken.addedLead;
 

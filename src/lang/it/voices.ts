@@ -8,7 +8,14 @@ import type {Moment, Speech} from './words.js';
 import {every, list, phrase, sayPieces} from './words.js';
 import lexicon from './lexicon.js';
 
-const {words} = lexicon;
+const {units, words} = lexicon;
+
+/** The hour that seconds named at minute 0 are counted from. */
+interface HourWords {
+  // After «a»: «a ogni ora», «all'ora».
+  at: string;
+  of: string;
+}
 
 // The first and last minute of an hour, and second of a minute.
 const FIRST = 0;
@@ -41,6 +48,9 @@ const SECOND: UnitWords = {
 
 /** How the unit inside the hour is worded. */
 interface Voice {
+  // Seconds named at minute 0, counted from the hour, if the voice names
+  // seconds there: «15 secondi dopo l'ora in punto».
+  afterTheHour(hour: HourWords): string;
   // A rate said with no window after it.
   alone(rate: string, single: boolean): string;
   // The rate of one unit, before a window.
@@ -83,6 +93,23 @@ function named(unit: UnitWords, values: number[]): string {
 // «dal minuto 0 al 29»: the unit is said once.
 function spanIn(unit: UnitWords, from: number, to: number): string {
   return `${unit.from} ${from} ${words.to} ${to}`;
+}
+
+// Seconds named at minute 0, counted from the hour: «15 secondi dopo
+// l'ora in punto», «15 e 45 secondi dopo ogni ora in punto». When second
+// 0 is among them the hour itself fires and is said first: «all'ora in
+// punto e 30 secondi dopo».
+function secondsAfter(seconds: number[], hour: HourWords): string {
+  const later = seconds.filter(function afterZero(second) {
+    return second !== FIRST;
+  });
+  const one = later.length === 1 && later[0] === 1;
+  const count = `${list(later.map(String))} ` +
+    `${one ? units.second.one : units.second.many} ${words.secondsAfter}`;
+
+  return later.length < seconds.length ?
+    `${hour.at} ${words.sharp} ${words.and} ${count}` :
+    `${count} ${hour.of} ${words.sharp}`;
 }
 
 // The minutes a second, or seconds, run during or belong to.
@@ -168,6 +195,9 @@ function plainVoice(speech: Speech): Voice {
   const each = every(1, 'minute');
 
   return {
+    afterTheHour() {
+      return '';
+    },
     alone: String,
     each,
     first: moment,
@@ -234,6 +264,9 @@ function secondVoice(speech: Speech, second: number): Voice {
 
   return {
     ...wholeMinuteVoice(speech),
+    afterTheHour(hour) {
+      return secondsAfter([second], hour);
+    },
     alone(rate, single) {
       return single ? eachIn : `${rate}, ${atSecond}`;
     },
@@ -252,6 +285,8 @@ function secondVoice(speech: Speech, second: number): Voice {
 interface SecondsSaid {
   first: number;
   last: number;
+  // The seconds, when they are named one by one.
+  named?: number[];
   // Whether the phrase has a range of its own.
   ranged: boolean;
   text: string;
@@ -334,6 +369,9 @@ function frontVoice(speech: Speech, seconds: SecondsSaid, whole: boolean):
 
   return {
     ...runningVoice(speech, seconds),
+    afterTheHour(hour) {
+      return phrase(seconds.named && secondsAfter(seconds.named, hour));
+    },
     listed,
     within: withinOf(MINUTE, {eachIn: '', listed})
   };
@@ -371,7 +409,7 @@ function secondsVoice(speech: Speech): Voice {
   };
 }
 
-export type {SecondsSaid, Voice};
+export type {HourWords, SecondsSaid, Voice};
 export {
   FIRST, LAST, frontVoice, plainVoice, rateVoice, secondVoice, secondsVoice,
   wholeMinuteVoice

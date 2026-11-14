@@ -145,6 +145,19 @@ function cost(description: Chosen, say: Say): number {
   });
 }
 
+// The first and the last value of a cadence or a run: never taken back by
+// an exception, since what is left is then a shorter cadence or run. Every
+// value has no ends to take back.
+function endsOf(description: SetDescription): number[] {
+  if (description.kind === 'cadence') {
+    return [description.start, description.last];
+  }
+
+  return description.kind === 'range' ?
+    [description.from, description.to] :
+    [];
+}
+
 function sayable(description: SetDescription, say: Say): boolean {
   const removable = say.removable ?? (() => true);
 
@@ -152,7 +165,9 @@ function sayable(description: SetDescription, say: Say): boolean {
     all: () => true,
     cadence: (cadence) => say.cadence(cadence) < Infinity,
     except: (exception) => say.exceptions &&
-      exception.removed.every(removable) && sayable(exception.base, say),
+      exception.removed.every(removable) &&
+      !exception.removed.some((value) => endsOf(exception.base)
+        .includes(value)) && sayable(exception.base, say),
     pieces: () => say.shortestRange < Infinity,
     range: (range) => lengthOf(range, say.domain) >= say.shortestRange,
     values: () => true

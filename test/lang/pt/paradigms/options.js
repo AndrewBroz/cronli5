@@ -14,6 +14,7 @@ const defaultParts = {
   '0 0 1 6 *': ['dia 1º de junho', '00:00'],
   '0 0 LW * *': ['sábado', 'domingo', '00:00'],
   '0 0,12 * * *': ['00:00', '12:00'],
+  '0 1/2 * * *': ['2 horas', '01:00'],
   '0 12 * * *': ['12:00'],
   '0 13 * * *': ['13:00'],
   '0 5,6,18,19 * * *': ['05:00', '06:00', '18:00', '19:00'],
@@ -67,6 +68,11 @@ const sets = [
         expected: 'todos os dias às 0:30 da madrugada',
         parts: ['0:30 da madrugada'],
         pattern: '30 0 * * *'
+      },
+      {
+        expected: 'de 2 em 2 horas a partir da 1:00 da madrugada',
+        parts: ['2 horas', '1:00 da madrugada'],
+        pattern: '0 1/2 * * *'
       },
       {
         expected: 'todos os dias ao meio-dia',

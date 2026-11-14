@@ -24,7 +24,7 @@ const rows = [
   ['0 9,17 * * *', 'tutti i giorni alle 9:00 e alle 17:00'],
   ['0 9-17,22 * * *',
     'tutti i giorni, ogni ora dalle 9:00 alle 17:00 e una volta alle 22:00'],
-  ['0 1/2 * * *', 'tutti i giorni, ogni 2 ore dall\'1:00 alle 23:00'],
+  ['0 1/2 * * *', 'ogni 2 ore a partire dall\'1:00'],
 
   // clock / date
   ['0 9 1 * *', 'il 1º di ogni mese alle 9:00'],
@@ -51,7 +51,7 @@ const rows = [
     'volta per un minuto intero, secondo per secondo'],
   ['*/6 */15 9-17 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni ' +
-    'volta dal secondo 0 al 54, a intervalli di 6 secondi'],
+    'volta per un minuto intero, a intervalli di 6 secondi'],
   ['5/10 */15 9-17 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45, ogni ' +
     'volta dal secondo 5 al 55, a intervalli di 10 secondi'],
@@ -77,8 +77,7 @@ const rows = [
     'dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 17:45 e dalle ' +
     '22:00 alle 22:45'],
   ['*/15 1/2 * * 1-5',
-    'dal lunedì al venerdì, ogni 15 minuti dall\'1:00 all\'1:45, dalle 3:00 ' +
-    'alle 3:45 e così via ogni 2 ore fino alle 23:45'],
+    'dal lunedì al venerdì, ogni 15 minuti nelle ore dispari'],
 
   // window / date
   ['*/15 9-17 1 * 1-5',
@@ -136,7 +135,7 @@ const rows = [
   ['0 9-17,22 1 * *',
     'il 1º di ogni mese, ogni ora dalle 9:00 alle 17:00 e una volta alle ' +
     '22:00'],
-  ['0 1/2 1 * *', 'il 1º di ogni mese, ogni 2 ore dall\'1:00 alle 23:00'],
+  ['0 1/2 1 * *', 'il 1º di ogni mese, ogni 2 ore a partire dall\'1:00'],
 
   // monthly / date
   ['0 0 * * *', 'tutti i giorni alle 0:00'],
@@ -177,9 +176,7 @@ const rows = [
   ['* 9-17,22 * * *',
     'tutti i giorni, ogni minuto dalle 9:00 alle 17:59 e dalle 22:00 alle ' +
     '22:59'],
-  ['* 1/2 * * *',
-    'tutti i giorni, ogni minuto dall\'1:00 all\'1:59, dalle 3:00 alle 3:59 ' +
-    'e così via ogni 2 ore fino alle 23:59'],
+  ['* 1/2 * * *', 'ogni minuto nelle ore dispari'],
 
   // open / date
   ['* * 1 * *', 'il 1º di ogni mese, ogni minuto'],

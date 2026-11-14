@@ -117,7 +117,7 @@ function describeParts(schedule: Schedule, opts: CzechOptions): Parts {
   const [hours] = schedule.analyses.candidates.hour as SetDescription[];
   const restricted = time.night ? words.everyNight : words.daily;
   const day = dayPart(schedule, {
-    idle: hours.kind === 'all' ? '' : restricted,
+    idle: hours.kind === 'all' || time.bare ? '' : restricted,
     months,
     style: table,
     year: beside

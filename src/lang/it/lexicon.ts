@@ -141,6 +141,8 @@ const words = {
   startingFrom: 'a partire da',
   startingFromThe: 'a partire dal',
   startingFromTheElided: 'a partire dall\'',
+  // Said before «dalle» or «dall'» and a clock time.
+  startingAt: 'a partire',
   untilYear: 'fino al',
 
   // Times.
@@ -156,6 +158,7 @@ const words = {
   eachTime: 'ogni volta',
   every: 'ogni',
   forAWholeMinute: 'per un minuto intero',
+  forAnHour: 'per un\'ora',
   fromMinute: 'dal minuto',
   fromSecond: 'dal secondo',
   firstTime: 'prima volta',
@@ -167,6 +170,16 @@ const words = {
   ofMinute: 'del minuto',
   ofMinutes: 'dei minuti',
   onTheHour: 'a ogni ora in punto',
+  // The hour seconds named at minute 0 are counted from: every hour, or
+  // the hour before a cadence of hours, alone and after «a».
+  atEveryHour: 'a ogni ora',
+  atTheHour: 'all\'ora',
+  eachHour: 'ogni ora',
+  theHour: 'l\'ora',
+  sharp: 'in punto',
+  secondsAfter: 'dopo',
+  evenHours: 'nelle ore pari',
+  oddHours: 'nelle ore dispari',
   once: 'una volta',
   inThatMinute: 'e in quel minuto',
   only: 'solo',

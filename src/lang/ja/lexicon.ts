@@ -43,8 +43,10 @@ const units = {
 // The function words and fixed phrases.
 const words = {
   after: 'の場合は',
-  allDay: '終日',
   allTheWhile: 'その間は',
+  // The one minute just named, where その間は already ties the minutes to
+  // their hour.
+  allThatMinute: 'その1分間は',
   alsoBeing: 'で',
   also: 'および',
   am: '午前',
