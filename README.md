@@ -11,7 +11,7 @@
 Cron Like I'm Five (`cronli5`) generates plain-language, idiomatically
 rendered descriptions of schedules from cron patterns.
 
-- **Zero runtime dependencies.** Tiny and safe to drop into any project.
+- **Zero runtime dependencies.** Safe to drop into any project.
 - **Runs anywhere.** Ships ESM, CommonJS, and a browser global.
 - **Typed.** Bundled TypeScript definitions, no `@types` needed.
 - **Flexible input.** Accepts strings, arrays, or objects.
