@@ -92,7 +92,7 @@ function writeTime(moment: Moment, opts: EnglishOptions):
 
   // A style with no word for a moment writes it as a time.
   const idiom = momentIdioms.find(function fits(row) {
-    return row.applies(moment) && row.say(moment, opts) !== '';
+    return row.applies(moment, opts) && row.say(moment, opts) !== '';
   });
 
   if (idiom) {

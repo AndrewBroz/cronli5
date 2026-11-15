@@ -768,7 +768,7 @@ function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): TimePhrase {
 function sayForm<Form>(rows: Array<Idiom<Form>>, form: Form,
   opts: EnglishOptions): string {
   return (rows.find(function fits(row) {
-    return row.applies(form);
+    return row.applies(form, opts);
   }) as Idiom<Form>).say(form, opts);
 }
 

@@ -4555,6 +4555,90 @@
    "pattern": "0 0 1 6 *"
   },
   {
+   "expected": "at 9 a.m. Monday through Friday",
+   "options": {
+    "lang": "en",
+    "style": {
+     "weekWords": false
+    }
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "at 9 a.m. on Saturdays and Sundays",
+   "options": {
+    "lang": "en",
+    "style": {
+     "weekWords": false
+    }
+   },
+   "pattern": "0 9 * * 6,0"
+  },
+  {
+   "expected": "every 15 minutes from 9 a.m. through 5:45 p.m. Monday through Friday",
+   "options": {
+    "lang": "en",
+    "style": {
+     "weekWords": false
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 9 a.m. on the 1st as well as Monday through Friday",
+   "options": {
+    "lang": "en",
+    "style": {
+     "weekWords": false
+    }
+   },
+   "pattern": "0 9 1 * 1-5"
+  },
+  {
+   "expected": "at 12 a.m. and 12 p.m. Monday through Friday",
+   "options": {
+    "lang": "en",
+    "style": {
+     "midday": "",
+     "midnight": "",
+     "weekWords": false
+    }
+   },
+   "pattern": "0 0,12 * * 1-5"
+  },
+  {
+   "expected": "at 8 a.m., 12 p.m., and 6 p.m. every day",
+   "options": {
+    "lang": "en",
+    "style": {
+     "midday": "",
+     "midnight": "",
+     "weekWords": false
+    }
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "at 9am Monday to Friday",
+   "options": {
+    "lang": "en-GB",
+    "style": {
+     "weekWords": false
+    }
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "at 9am on Saturdays and Sundays",
+   "options": {
+    "lang": "en-GB",
+    "style": {
+     "weekWords": false
+    }
+   },
+   "pattern": "0 9 * * 6,0"
+  },
+  {
    "expected": "at 09:00 on Mon in Jun",
    "options": {
     "lang": "en",

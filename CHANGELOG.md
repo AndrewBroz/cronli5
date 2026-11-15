@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **English `weekWords` style field.** `false` names the days instead of
+  "weekdays" and "weekends": `cronli5('0 9 * * 1-5', {style: {weekWords:
+  false}})` is "at 9 a.m. Monday through Friday". With `midday: ''` and
+  `midnight: ''` (now documented), English says every clock time and day
+  as such: "at 12 a.m. and 12 p.m. Monday through Friday".
+
 ## [1.1.0]
 
 ### Fixed

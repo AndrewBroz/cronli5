@@ -167,13 +167,21 @@ caller to pass.
 | `am` / `pm` | `a.m.` / `p.m.` | `am` / `pm` | `AM` / `PM` | the words |
 | `closeUp` | `false` (`9 a.m.`) | `true` (`9am`) | `false` (`9 AM`) | whether they are joined to the time |
 | `separator` | `:` | `.` (`9.30am`) | `:` | the hour-minute separator |
-| `midday` | noon | midday | noon | the word for 12:00 |
+| `midday` | noon | midday | noon | the word for 12:00; empty, 12:00 is written as a time, "12 p.m." |
 | `midnight` | midnight | midnight | midnight | the word for 0:00 as a moment where no day, month or year is restricted (4.1); empty, 0:00 is always written as a time, "12 a.m." |
 | `through` | through | to | through | the inclusive range word |
 | `serialComma` | `true` | `false` | `true` | the comma before a list's "and" |
+| `weekWords` | `true` | `true` | `true` | whether Monday to Friday and Saturday and Sunday are "weekdays" and "weekends"; `false` names the days: "Monday through Friday", "on Saturdays and Sundays" |
 | `dayFirst` | `false` (`June 1`) | `true` (`1 June`) | `false` | a single month with its dates |
 | `ordinals` | `false` | `false` | `true` (`June 1st`) | whether a day beside its month keeps its suffix |
 | `short` | `false` | `false` | `false` | weekday and month names in their three-letter forms (`Mon`, `Jun`), with no full stop and no plural: "on Mon, Wed, and Fri" |
+
+`weekWords` is a switch, not a word, because English has no other word
+a house would put there that is still exact: "workdays" and "business
+days" leave out holidays, which a schedule does not, and "Mon–Fri" does
+not fit the slot ("on Mon–Fri"). It is for a house that prefers the
+literal register, often one that also empties `midday` and `midnight`.
+(Added 2026-11-15, on the maintainer's request.)
 
 Every field is a word-level choice. None switches numbers, hyphenates
 ranges or rearranges anything, and whether a range's end is included is

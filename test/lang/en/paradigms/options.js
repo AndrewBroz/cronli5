@@ -11,11 +11,15 @@ const defaultParts = {
   '0 0 * * *': ['midnight'],
   '0 0 1 6 *': ['12 a.m.', 'June 1'],
   '0 0 1-7 6 *': ['12 a.m.', 'June 1', '7'],
+  '0 0,12 * * 1-5': ['12 a.m.', 'noon', 'weekdays'],
   '0-29 9 * * *': ['9 a.m.', '9:29 a.m.'],
   '0 12 * 6 1': ['noon', 'Mondays', 'June'],
   '0 8,12,18 * * *': ['8 a.m.', 'noon', '6 p.m.'],
   '0 9 * * *': ['9 a.m.'],
   '0 9 * * 1,3,5': ['9 a.m.', 'Mondays', 'Wednesdays', 'Fridays'],
+  '0 9 * * 1-5': ['9 a.m.', 'weekdays'],
+  '0 9 * * 6,0': ['9 a.m.', 'weekends'],
+  '0 9 1 * 1-5': ['9 a.m.', 'the 1st', 'weekdays'],
   '0 9 * 6 1': ['9 a.m.', 'Mondays', 'June'],
   '0 9 * 6-8 *': ['9 a.m.', 'June', 'August'],
   '0 9-17 * * *': ['9 a.m.', '5 p.m.'],
@@ -234,6 +238,64 @@ const sets = [
         expected: 'at 12 a.m. on June 1',
         parts: ['12 a.m.', 'June 1'],
         pattern: '0 0 1 6 *'
+      }
+    ]
+  },
+  {
+    // A house that names the days instead.
+    options: {style: {weekWords: false}},
+    rows: [
+      {
+        expected: 'at 9 a.m. Monday through Friday',
+        parts: ['9 a.m.', 'Monday through Friday'],
+        pattern: '0 9 * * 1-5'
+      },
+      {
+        expected: 'at 9 a.m. on Saturdays and Sundays',
+        parts: ['9 a.m.', 'Saturdays and Sundays'],
+        pattern: '0 9 * * 6,0'
+      },
+      {
+        expected: 'every 15 minutes from 9 a.m. through 5:45 p.m. ' +
+          'Monday through Friday',
+        parts: ['15 minutes', '9 a.m.', '5:45 p.m.', 'Monday through Friday'],
+        pattern: '*/15 9-17 * * 1-5'
+      },
+      {
+        expected: 'at 9 a.m. on the 1st as well as Monday through Friday',
+        parts: ['9 a.m.', 'the 1st', 'Monday through Friday'],
+        pattern: '0 9 1 * 1-5'
+      }
+    ]
+  },
+  {
+    // A house that says every clock time and every day as such.
+    options: {style: {midday: '', midnight: '', weekWords: false}},
+    rows: [
+      {
+        expected: 'at 12 a.m. and 12 p.m. Monday through Friday',
+        parts: ['12 a.m.', '12 p.m.', 'Monday through Friday'],
+        pattern: '0 0,12 * * 1-5'
+      },
+      {
+        expected: 'at 8 a.m., 12 p.m., and 6 p.m. every day',
+        parts: ['8 a.m.', '12 p.m.', '6 p.m.'],
+        pattern: '0 8,12,18 * * *'
+      }
+    ]
+  },
+  {
+    options: {lang: 'en-GB', style: {weekWords: false}},
+    rows: [
+      {
+        expected: 'at 9am Monday to Friday',
+        parts: ['9am', 'Monday to Friday'],
+        pattern: '0 9 * * 1-5'
+      },
+      {
+        expected: 'at 9am on Saturdays and Sundays',
+        parts: ['9am', 'Saturdays and Sundays'],
+        pattern: '0 9 * * 6,0'
       }
     ]
   },

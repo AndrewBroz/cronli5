@@ -419,7 +419,7 @@ function sayException(
 function say(description: Described, voice: Voice, opts: EnglishOptions):
   Phrase | null {
   const idiom = idioms.find(function fits(row) {
-    return row.field === voice.field && row.applies(description);
+    return row.field === voice.field && row.applies(description, opts);
   });
 
   if (idiom) {

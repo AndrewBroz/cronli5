@@ -1,6 +1,7 @@
 // The copy-editor choices English offers, as a table of word-level
 // conventions: 12- or 24-hour times, short names, the words for a.m. and
-// noon, the range word. None of them moves a part of the sentence.
+// noon, the range word, whether the parts of the week have words. None of
+// them moves a part of the sentence.
 
 import {Cronli5OptionError} from '../../core/errors.js';
 import type {NormalizedOptions} from '../../core/schedule.js';
@@ -28,6 +29,9 @@ export interface EnglishStyle {
   short: boolean;
   // The word that joins the two ends of an inclusive range.
   through: string;
+  // Whether Monday to Friday and Saturday and Sunday are said as
+  // "weekdays" and "weekends", or by naming the days.
+  weekWords: boolean;
 }
 
 /** The options an English description is rendered under. */
@@ -46,7 +50,8 @@ const us: EnglishStyle = {
   separator: ':',
   serialComma: true,
   short: false,
-  through: 'through'
+  through: 'through',
+  weekWords: true
 };
 
 /**
