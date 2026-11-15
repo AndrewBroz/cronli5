@@ -202,7 +202,7 @@ reader comparing the two is looking at.
 
 * `0 9 * * *` — "at 9 a.m. every day"
 * `*/15 9-17 * * 1-5` — "every 15 minutes from 9 a.m. through 5:45 p.m. on weekdays"
-* `0 0 1 * *` — "at 12 a.m. on the 1st"
+* `0 0 1 * *` — "at 12 a.m. on the 1st of every month"
 * `* * * * *` — "every minute"
 
 2.2 Each new part is added after the parts finer than it. Nothing moves.
@@ -325,7 +325,7 @@ Numbers are digits everywhere. The only interval word is "every other"
   "at 1 minute past the hour". Minute 0 is 5.4.
 * Minute with one hour: a clock time, "at 9:30 a.m." (4.1).
 * Hour with minute 0: "at 9 a.m."
-* Day of the month: "on the 15th".
+* Day of the month: "on the 15th of every month" (8.4).
 * Month: "in June".
 * Weekday: "on Mondays".
 
@@ -333,7 +333,7 @@ Numbers are digits everywhere. The only interval word is "every other"
 
 * Minutes: "at 15 and 45 minutes past the hour", "at 5, 20, and 45 minutes past the hour".
 * Hours with minute 0: "at 8 a.m., noon, and 6 p.m."
-* Days of the month: "on the 1st, 10th, and 20th". One "the" for the list.
+* Days of the month: "on the 1st, 10th, and 20th of every month". One "the" for the list.
 * Months: "in January and July".
 * Weekdays: "on Mondays, Wednesdays, and Fridays". The list is in week
   order starting on Monday, with Sunday last: "on Mondays, Wednesdays,
@@ -456,7 +456,8 @@ the pattern means Monday's first hours and Monday's last. So:
 
 Where a wrap is not allowed, the set is described as if the field did not
 wrap, in ascending order: `0 22-2 1 * *` is "every hour from 12 a.m.
-through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st"; `*/15 22-2 * * 1-5`
+through 2 a.m. and at 10 p.m. and 11 p.m. on the 1st of every month";
+`*/15 22-2 * * 1-5`
 is "every 15 minutes from 12 a.m. through 2:45 a.m. and from 10 p.m.
 through 11:45 p.m. on weekdays"; `0 0 0 * 11-2 * 2030` is "at 12
 a.m. every day in January, February, November, and December in 2030".
@@ -468,7 +469,7 @@ day". Overnight is how a reader takes it.
 3.6 A range and a stray value: the range, then "and", then the stray value
 in its list form. "Every minute from 0 through 29 and at 45 minutes past
 the hour"; "every hour from 9 a.m. through 5 p.m. and at 10 p.m."; "on
-the 1st through the 7th and on the 15th". Every piece of days or months
+the 1st through the 7th and on the 15th of every month". Every piece of days or months
 leads with its own "on" or "in": "on the 1st through the 5th, on the 10th,
 and on the 20th through the 25th"; "in June through August and in
 December".
@@ -505,7 +506,8 @@ months to the 10th. The months follow the comma, with "in": "on the 1st
 through the 5th and on the 10th, in June and July". (One month is said
 inside each piece, 4.4.) The time part takes no such comma: a day after
 the time is the backbone of every sentence, and "every hour from 9 a.m.
-through 5 p.m. and at 10 p.m. on the 1st" is not heard as two schedules.
+through 5 p.m. and at 10 p.m. on the 1st of every month" is not heard as
+two schedules.
 
 3.7 An even cadence. A cadence may be called "every N" with no bounds only
 when it tiles its cycle: N divides the cycle (60 seconds, 60 minutes, 24
@@ -535,9 +537,8 @@ A date cadence that runs to the end of the month names only its start,
 wherever it starts: "every 2 days from the 8th of the month". One that
 stops earlier names both ends, where it has more than eight days to
 say: "every 2 days from the 5th through the 23rd of the month". (Six
-days, the 5th, 8th … 20th, are listed.) This is the one place "of the month" follows a plain
-day (8.4), and it is said after every cadence of days, whatever the
-months: "every 3 days from the 1st of the month in June".
+days, the 5th, 8th … 20th, are listed.) "Of the month" is said after
+every cadence of days (8.4), whatever the months: "every 3 days from the 1st of the month in June".
 
 A month cadence that starts in February has a start to add to and at
 most six months, so the months are named: "on February 1, April 1, June
@@ -627,7 +628,7 @@ skip Mondays too. So an exception is closed with a comma whenever
 anything follows it: the day, "every day", the month, the year, or "as
 well as" and a weekday (which then says more: 4.3).
 
-* "every 2 hours except at 8 a.m., on the 1st"
+* "every 2 hours except at 8 a.m., on the 1st of every month"
 * "every minute except at 29 minutes past the hour, on Mondays"
 * "every hour from 3 a.m. through 11 p.m. except at 6 a.m., every day"
 * "at 12 a.m. on every day except the 15th, as well as on Mondays
@@ -1404,8 +1405,19 @@ June".
 "every minute during the 9 a.m. hour", "every second for one minute at 9
 a.m."
 
-8.4 `redundancy` — "Of the month" is not said after a plain day (a cadence
-of days does say it, 3.7). "Every
+8.4 `redundancy` — Days of the month named outright, with no month
+named, say whose days they are: "on the 15th of every month", "on the
+9th, 11th, 13th, 15th, and 17th of every month", "on the 1st through the
+5th and on the 10th of every month". Where an exception or a weekday
+follows, it is "of the month", because "every month" seems to reach what
+follows: "on the 5th through the 25th of the month except the 10th"
+("of every month except" sets up a month), "on the 1st of the month as
+well as on weekdays". Days whose months are said after them say nothing
+here: "on the 1st as well as on Mondays, in June through August". (Until
+2026-11-15 a plain day said no month: "every minute on the 15th" was read
+as one 15th by three readers of three, and the maintainer found "of the
+month", as cRonstrue says it, better.) A cadence of days says "of the
+month" (3.7). "Every
 minute" is not said after "every second". A field that takes every value
 is not said.
 

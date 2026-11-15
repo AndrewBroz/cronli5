@@ -39,7 +39,7 @@ links to it rather than duplicating its tables.
 
   // A day of the month or a weekday: cRonstrue says "on day 1 and 15 of
   // the month, and on Wednesday", which reads as days that are both
-  cronli5('0 0 1,15 * 3');     // 'at 12 a.m. on the 1st and 15th as well as on Wednesdays'
+  cronli5('0 0 1,15 * 3');     // 'at 12 a.m. on the 1st and 15th of the month as well as on Wednesdays'
   ```
 
 * **One sentence, not one clause per field.** `cronli5` folds fields

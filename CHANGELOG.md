@@ -14,6 +14,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `midnight: ''` (now documented), English says every clock time and day
   as such: "at 12 a.m. and 12 p.m. Monday through Friday".
 
+### Changed
+
+- **English: a day of the month with no month named says whose days it
+  is.** `0 0 9-17/2 * *` is "at 12 a.m. on the 9th, 11th, 13th, 15th, and
+  17th of every month", where "every minute on the 15th" had been read as
+  one 15th. Before an exception or beside weekdays it is "of the month"
+  ("on the 1st of the month as well as on weekdays"), which "every month"
+  would seem to reach.
+
 ## [1.1.0]
 
 ### Fixed

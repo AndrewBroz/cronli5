@@ -262,7 +262,7 @@ const sets = [
         pattern: '*/15 9-17 * * 1-5'
       },
       {
-        expected: 'at 9 a.m. on the 1st as well as Monday through Friday',
+        expected: 'at 9 a.m. on the 1st of the month as well as Monday through Friday',
         parts: ['9 a.m.', 'the 1st', 'Monday through Friday'],
         pattern: '0 9 1 * 1-5'
       }

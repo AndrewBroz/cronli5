@@ -953,6 +953,46 @@ function dayFields(facts: ScheduleFacts): DayFields {
   };
 }
 
+// Days of the month named outright, in every month, said with whose days
+// they are: without a month they were taken for one date ("every minute on
+// the 15th" was read as one 15th). "Of every month" where they close the
+// day part; "of the month" where an exception or a weekday follows, which
+// "every month" would seem to reach ("of every month except the 10th"
+// sets up a month). Days in pieces say it once, after the last: "on the
+// 1st through the 5th and on the 10th of every month". Null for any other
+// days, and where a cadence of years spells every month or the months
+// are said after the days.
+function whoseDays(
+  days: Described[],
+  months: Described[],
+  how: {after: boolean; lead: string; pair: boolean; spelled: boolean},
+  opts: EnglishOptions
+): DatePhrase | null {
+  const voice = daysOfTheMonth(null, how.lead, opts);
+  const {description} = choose(days, voice, opts);
+  const {base, removed} = apart(description);
+  const takesOut = removed.length > 0;
+
+  if (days[0].kind === 'all' || months[0].kind !== 'all' || how.spelled ||
+    how.after || !namesDays.includes(base.kind)) {
+    return null;
+  }
+
+  const which = takesOut || how.pair ? words.the : words.every;
+  const month = `${words.of} ${which} ${unit('month', 1)}`;
+  const said = say(takesOut ? base : description, voice, opts) as Phrase;
+
+  return {
+    dated: 0,
+    excepts: takesOut || base.kind === 'pieces',
+    takesOut,
+    text: takesOut ?
+      closedBy(join(said.text, month), false,
+        [voice.exception(removed, base as SetDescription)]) :
+      join(said.text, month)
+  };
+}
+
 // Days of the month with the months they fall in. One month makes dates
 // of numbered days ("on June 1 and 15"); several months follow them after
 // "of" ("on the 1st and 15th of January and July"). Any other phrase for
@@ -1016,14 +1056,15 @@ function daysWithMonths(
 function dateWithMonths(
   fields: DayFields,
   months: Described[],
-  spelled: boolean,
+  how: {after: boolean; spelled: boolean},
   opts: EnglishOptions
 ): DatePhrase {
+  const said = {...how, pair: fields.pair};
   const {date} = fields;
 
   if (date?.kind !== 'quartz') {
-    return daysWithMonths(fields.dates, months, {lead: words.on, spelled},
-      opts);
+    return whoseDays(fields.dates, months, {...said, lead: words.on}, opts) ??
+      daysWithMonths(fields.dates, months, {...said, lead: words.on}, opts);
   }
 
   const {form} = date;
@@ -1031,8 +1072,10 @@ function dateWithMonths(
 
   return form.kind === 'nearestWeekday' ?
     {
-      ...daysWithMonths([{kind: 'values', values: [form.day]}], months,
-        {lead, spelled}, opts),
+      ...whoseDays([{kind: 'values', values: [form.day]}], months,
+        {...said, lead}, opts) ??
+        daysWithMonths([{kind: 'values', values: [form.day]}], months,
+          {...said, lead}, opts),
       dated: 2
     } :
     {dated: 0, takesOut: false, ...ofTheMonth(lead, months, opts)};
@@ -1074,10 +1117,10 @@ function weekdayWithMonths(
 function daysOf(
   fields: DayFields,
   months: Described[],
-  spelled: boolean,
+  how: {after: boolean; spelled: boolean},
   opts: EnglishOptions
 ): DatePhrase {
-  const date = dateWithMonths(fields, months, spelled, opts);
+  const date = dateWithMonths(fields, months, how, opts);
   const weekday = weekdayWithMonths(fields, months, opts);
   const joiner = fields.both ? words.butOnly : words.asWellAs;
   const days = inARow([{...date, excepts: date.takesOut || fields.both}, {
@@ -1180,7 +1223,8 @@ function partsThatRun(facts: ScheduleFacts, opts: EnglishOptions): Parts {
     choose(candidatesOf(facts, 'year'), yearsByNumber(true, opts), opts);
   const hangs = hangsOnTheDay(hung);
   // A day of the month before "of every other year" says its month.
-  const days = daysOf(fields, after ? whole : months, hangs && !pair, opts);
+  const days = daysOf(fields, after ? whole : months,
+    {after: after !== '', spelled: hangs && !pair}, opts);
   const time = timeOfDay(facts, timeOptions(facts, opts));
   // A time of day with no day named skips a level, unless it runs round
   // the clock; and a cadence of years needs a day to hang on.
