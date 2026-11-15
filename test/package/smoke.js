@@ -488,4 +488,27 @@ describe('Built package artifacts:', function() {
         expect(result.stderr).to.not.match(/minute field/u);
       });
   });
+
+  // Importing an entry point and using nothing from it costs nothing: a
+  // bundler drops every module. Only the browser global has an effect.
+  describe('Tree shaking:', function() {
+    const entries = ['cronli5', 'cronli5/all', 'cronli5/compat',
+      'cronli5/lang/de'];
+
+    entries.forEach(function each(entry) {
+      it(`drops ${entry} when nothing from it is used`, async function() {
+        const {build} = await import('esbuild');
+        const result = await build({
+          bundle: true,
+          format: 'esm',
+          logLevel: 'silent',
+          minify: true,
+          stdin: {contents: `import '${entry}';`, resolveDir: process.cwd()},
+          write: false
+        });
+
+        expect(result.outputFiles[0].text).to.equal('');
+      });
+    });
+  });
 });

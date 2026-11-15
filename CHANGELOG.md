@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **The package is declared free of side effects** (`"sideEffects"` in
+  `package.json`, all but the browser global), so a bundler drops what an
+  app imports and does not use.
+
 ## [1.0.0]
 
 ### Changed
