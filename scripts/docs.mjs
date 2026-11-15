@@ -78,12 +78,12 @@ function tableFrom(header, rows) {
   return [header, sep, ...rows].join('\n');
 }
 
-// The class-grouped head-to-head: cronli5 in SENTENCE form (the capitalized
-// standalone, `{form: 'sentence'}`) vs. cRonstrue (English), which always
-// returns a capitalized sentence — a fair like-for-like. One markdown table
-// per class, each preceded by an H3 heading, in simple -> medium -> complex
-// order. Every pattern's group is asserted against the divergence engine's
-// `classify`, so a mis-bucketed row fails `npm run docs` instead of shipping.
+// The class-grouped head-to-head: cronli5 in its default fragment form vs.
+// cRonstrue (English); the doc says how to get the capitalized forms. One
+// markdown table per class, each preceded by an H3 heading, in simple ->
+// medium -> complex order. Every pattern's group is asserted against the
+// divergence engine's `classify`, so a mis-bucketed row fails `npm run docs`
+// instead of shipping.
 const comparisonHeadings = {
   simple: '### Simple &mdash; everyday cadences',
   medium: '### Medium &mdash; a specific schedule',
@@ -93,12 +93,12 @@ const comparisonHeadings = {
 function comparisonTable(patterns) {
   const rows = patterns.map(function compare(pattern) {
     return '| `' + pattern + '` | ' +
-      describe((p) => cronli5(p, {form: 'sentence'}), pattern) + ' | ' +
+      describe((p) => cronli5(p), pattern) + ' | ' +
       describe((p) => cronstrue.toString(p), pattern) + ' |';
   });
 
   return tableFrom(
-    '| Pattern | cronli5 (sentence form) | cRonstrue ' + cronstrueVersion +
+    '| Pattern | cronli5 | cRonstrue ' + cronstrueVersion +
     ' |', rows);
 }
 
