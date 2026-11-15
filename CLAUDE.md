@@ -347,3 +347,8 @@ npm run verify
 
 (The step list lives once, in `package.json`'s `verify` script; the coverage
 run executes the full test suite, so there is no separate `npm test` step.)
+
+A push to `main` is a release. The pre-push hook refuses it unless the
+version is raised (in `package.json`, `package-lock.json` and a
+`## [x.y.z]` section of `CHANGELOG.md`) and the commit carries the tag
+`vx.y.z`, pushed with it (`git push --follow-tags`).

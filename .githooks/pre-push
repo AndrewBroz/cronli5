@@ -1,11 +1,16 @@
 #!/bin/sh
 #
-# Run the full CI gate before a push. Mirrors the "Before you finish" sequence
-# in CLAUDE.md and the checks in .github/workflows/ci.yml, so a green push is a
-# green CI. Wired via core.hooksPath = .githooks (see scripts/install-hooks.mjs,
-# run by `npm install`).
+# A push to main must be a release: a raised version, matching in
+# package-lock.json and CHANGELOG.md, with its tag on the same commit
+# (scripts/release-check.mjs). Then run the full CI gate. Mirrors the
+# "Before you finish" sequence in CLAUDE.md and the checks in
+# .github/workflows/ci.yml, so a green push is a green CI. Wired via
+# core.hooksPath = .githooks (see scripts/install-hooks.mjs, run by
+# `npm install`).
 #
 # Emergency bypass: git push --no-verify
+
+node scripts/release-check.mjs "$1" || exit 1
 
 echo "pre-push: running npm run verify (use --no-verify to skip)…"
 npm run verify
