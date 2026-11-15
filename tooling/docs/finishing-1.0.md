@@ -103,6 +103,12 @@ usual process (`add-language`), starting from usage notes.
   Finnish shipped once, as experimental, and left the tree with the other
   old renderers on 2026-11-11 (`11fa38e`); its old notes (the "tai" union,
   the seconds) are in `docs/archive/backlog.md`, as evidence only.
+- **Also wanted, for their developer communities:** Indonesian (`id`),
+  Vietnamese (`vi`), Persian (`fa`: right to left, its own digits and
+  calendar) and Danish (`da`, completing the Nordic set).
+- **Later:** Thai (`th`: no spaces between words, its own day parts, the
+  Buddhist-era year beside cron's year field), Romanian (`ro`), Hungarian
+  (`hu`), Slovak (`sk`), Bulgarian (`bg`) and Catalan (`ca`).
 - **Traditional Chinese** (`zh-Hant`, for `zh-TW`, `zh-HK`, `zh-MO`), which
   now warns and describes in Simplified. Whether it is a variant of the
   Simplified renderer or its own is open (see Decisions above); Taiwan
