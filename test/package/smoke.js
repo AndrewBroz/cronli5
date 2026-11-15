@@ -160,7 +160,11 @@ describe('Built package artifacts:', function() {
     const {shipped} = await import('../../src/languages.js');
 
     for (const code of shipped) {
-      const esm = await import(`../../dist/lang/${code}.js`);
+      // Resolved when it runs: Vite would otherwise fix the set of
+      // importable files when this test is loaded, before `before` builds
+      // them, and a clean checkout has none.
+      const url = new URL(`../../dist/lang/${code}.js`, import.meta.url);
+      const esm = await import(url.href);
 
       expect(Object.keys(esm).sort(), code).to.deep.equal(['default',
         'styles']);
