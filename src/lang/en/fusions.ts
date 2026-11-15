@@ -620,9 +620,17 @@ function timeWith(
     text: closedBy(phrase.text, excepts, clauses)
   };
 
-  return [moments || said].filter(function present(found) {
-    return found !== null;
-  }) as TimePhrase[];
+  // A count past the hour takes an exception to every hour as hours, as
+  // a minute does where there is no moment to carry it: "at 30 seconds
+  // past every hour except 8 a.m.", not "past the hour, every hour except
+  // at 8 a.m.", which says the hour twice and names 8:00:00.
+  const counted = excepts && minute.opens;
+
+  return [counted ? said || moments : moments || said].filter(
+    function present(found) {
+      return found !== null;
+    }
+  ) as TimePhrase[];
 }
 
 // A list of clock times, when there are any and few enough to list.
@@ -639,10 +647,13 @@ function clockList(moments: Moment[], before: string, opts: EnglishOptions):
 }
 
 // A single minute and a single second, counted together past hours that
-// have no moment to carry them: "at 30 minutes and 15 seconds past".
+// have no moment to carry them: "at 30 minutes and 15 seconds past". On
+// the hour the minute is silent: "at 30 seconds past".
 function withSecond(minute: Tick, riding: number | undefined): Tick {
-  const both = join(words.at, String(minute.only),
-    unit('minute', minute.only ?? 0), words.and, String(riding),
+  const minutes = minute.only ?
+    [String(minute.only), unit('minute', minute.only), words.and] :
+    [];
+  const both = join(words.at, ...minutes, String(riding),
     unit('second', riding ?? 0), words.past);
 
   return typeof riding === 'number' && minute.only !== null ?

@@ -596,8 +596,12 @@ const rows = [
   ['0-9 0 9-17 * * *',
     'every second for the first 10 seconds of the hour, every hour from 9 ' +
     'a.m. through 5 p.m. every day'],
-  ['30 0 0-7,9-23 * * *',
-    'at 30 seconds past the hour, every hour except at 8 a.m.'],
+  // A single second on the hour is counted past the hours as a minute
+  // is ("at 5 minutes past every hour except 8 a.m."). "Past the hour,
+  // every hour except at 8 a.m." said the hour twice, and its "at 8 a.m."
+  // named 8:00:00, which never fires.
+  ['30 0 0-7,9-23 * * *', 'at 30 seconds past every hour except 8 a.m.'],
+  ['30 0 1-23 * * *', 'at 30 seconds past every hour except midnight'],
   ['15,45 30 9-17 * * *',
     'at 15 and 45 seconds past the minute, every hour from 9:30 a.m. ' +
     'through 5:30 p.m. every day'],

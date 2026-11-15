@@ -628,6 +628,12 @@ sentence had just named:
 Hours, days and months keep the exception there, where it is the easier
 thing to hold and takes nothing back: "every hour except at midnight";
 "on every day except the 1st"; "in every month except January".
+After a count past the hour, of minutes or of a single second on the
+hour, the hours are named as hours, with no "at": "at 5 minutes past
+every hour except 8 a.m."; "at 30 seconds past every hour except 8
+a.m." ("At 30 seconds past the hour, every hour except at 8 a.m." was
+said until 2026-11-15: it said the hour twice, and its "at 8 a.m." named
+8:00:00, which never fires; the maintainer caught it.)
 
 **Nothing follows an exception without a comma.** Whatever comes straight
 after "except …" is heard as part of the exception: "every 2 hours except

@@ -3435,11 +3435,18 @@
    "pattern": "0-9 0 9-17 * * *"
   },
   {
-   "expected": "at 30 seconds past the hour, every hour except at 8 a.m.",
+   "expected": "at 30 seconds past every hour except 8 a.m.",
    "options": {
     "lang": "en"
    },
    "pattern": "30 0 0-7,9-23 * * *"
+  },
+  {
+   "expected": "at 30 seconds past every hour except midnight",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 0 1-23 * * *"
   },
   {
    "expected": "at 15 and 45 seconds past the minute, every hour from 9:30 a.m. through 5:30 p.m. every day",

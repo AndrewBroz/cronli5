@@ -32,6 +32,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   one 15th. Before an exception or beside weekdays it is "of the month"
   ("on the 1st of the month as well as on weekdays"), which "every month"
   would seem to reach.
+- **English: a single second on the hour is counted past the hours** as a
+  minute is: "at 30 seconds past every hour except 8 a.m.", where it was
+  "at 30 seconds past the hour, every hour except at 8 a.m.", which said
+  the hour twice and named 8:00:00, a moment that never fires.
 - **English: dates in pieces take their months after "of",** as a list
   does: "on the 1st through the 5th and on the 10th of June and July",
   where it was ", in June and July".
