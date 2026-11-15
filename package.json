@@ -11,6 +11,9 @@
   "module": "./dist/cronli5.js",
   "types": "./types/cronli5.d.ts",
   "browser": "./cronli5.min.js",
+  "sideEffects": [
+    "./cronli5.min.js"
+  ],
   "exports": {
     ".": {
       "types": "./types/cronli5.d.ts",
