@@ -1,10 +1,9 @@
 # Migrating from cRonstrue to cronli5
 
-[`cRonstrue`][cronstrue] is the most widely used cron-description library, and a
-good one. This guide is for someone already calling `cronstrue.toString(...)`
-who is considering `cronli5`: when it is worth switching, how the API and
-options map, and how the output will change so you are not surprised by
-different strings.
+[`cRonstrue`][cronstrue] is the most widely used cron-description library. This
+guide is for someone already calling `cronstrue.toString(...)` who is
+considering `cronli5`: when it is worth switching, how the API and options map,
+and how the output will change so you are not surprised by different strings.
 
 cRonstrue is the right choice for some projects, and this guide says
 where. For a side-by-side gallery of the actual output, see the generated

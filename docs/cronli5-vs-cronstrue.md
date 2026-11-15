@@ -1,8 +1,8 @@
 # cronli5 vs. cRonstrue
 
-[`cRonstrue`][cronstrue] is the most widely used cron-description library,
-and a good one. This page compares the two libraries' *output* side by side so
-you can pick by taste; the architectural and philosophical deep dive lives in
+[`cRonstrue`][cronstrue] is the most widely used cron-description library. This
+page compares the two libraries' *output* side by side so you can pick by
+taste; the architectural and philosophical deep dive lives in
 [i18n-design.md](./i18n-design.md), whose architecture is in large part a
 response to cRonstrue's template-per-locale design.
 
