@@ -36,10 +36,14 @@ The short version of the trade:
 * **Validation.** `cronli5` validates strictly and throws named errors (opt out
   with the `lenient` option); cRonstrue describes whatever parses, including
   some malformed input.
-* **Footprint.** `cronli5` is ~6.3&nbsp;KB gzipped with no dependencies, plus
-  ~3.3&nbsp;KB gzipped per imported language; cRonstrue is ~6&nbsp;KB (English)
-  or ~50&nbsp;KB+ with all locales, and its documented i18n entry bundles all
-  39.
+* **Size.** cRonstrue is the smaller library. Gzipped, it is ~6&nbsp;KB with
+  English, under 1&nbsp;KB more per locale, and ~30&nbsp;KB with all 39.
+  `cronli5` is ~18&nbsp;KB with English and ~10&ndash;14&nbsp;KB more per
+  language, ~100&nbsp;KB with all ten: a full renderer costs more than a
+  string table. Neither has dependencies.
+* **Speed.** cRonstrue is about five times faster: ~6&nbsp;&micro;s a pattern
+  against ~30&nbsp;&micro;s for `cronli5` (Node&nbsp;26, Apple M2 Pro). Both
+  are far below anything a person would notice.
 
 ## Where they differ most
 

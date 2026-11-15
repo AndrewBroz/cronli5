@@ -60,7 +60,10 @@ links to it rather than duplicating its tables.
 * **Control over style.** A style table per language, with every field
   adjustable ([docs/styles.md](./styles.md)). cRonstrue has no style
   switch.
-* **A small footprint** that ships one language at a time.
+
+It costs more to ship: ~18&nbsp;KB gzipped with English against
+cRonstrue's ~6&nbsp;KB, and ~10&ndash;14&nbsp;KB per further language
+([the comparison](./cronli5-vs-cronstrue.md) has the figures).
 
 ## The quickest way to switch
 
@@ -97,8 +100,9 @@ error** that says so. It never quietly ignores an option:
 it. A language `cronli5` does not ship is an error; cRonstrue would answer
 in English.
 
-When you have time, move to `cronli5`'s own API. It is smaller, and it is
-what the rest of this guide describes.
+When you have time, move to `cronli5`'s own API. `cronli5/compat` bundles
+all ten languages (~100&nbsp;KB gzipped); the main entry bundles only the
+languages you import, and it is what the rest of this guide describes.
 
 ## API mapping
 
