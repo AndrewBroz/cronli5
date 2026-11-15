@@ -6,49 +6,58 @@ who is considering `cronli5`: when it is worth switching, how the API and
 options map, and how the output will change so you are not surprised by
 different strings.
 
-It is meant to be honest. cRonstrue is the right choice for some projects, and
-this guide says where. For a side-by-side gallery of the actual output, see the
-generated [cronli5 vs. cRonstrue](./cronli5-vs-cronstrue.md) comparison; this
-guide links to it rather than duplicating its tables.
+cRonstrue is the right choice for some projects, and this guide says
+where. For a side-by-side gallery of the actual output, see the generated
+[cronli5 vs. cRonstrue](./cronli5-vs-cronstrue.md) comparison; this guide
+links to it rather than duplicating its tables.
 
 ## Why migrate (and why not)
 
 **cRonstrue is still a fine choice when:**
 
-* You want the **tersest possible** output in English, and your patterns
-  are simple cadences that divide their unit (`* * * * *` &rarr; "Every
-  minute"; `*/15 * * * *` &rarr; "Every 15 minutes"). Outside English, and
-  for steps like `*/45` ("Every 45 minutes", though it runs at :00 and
-  :45), see the [README](../README.md#why-not-cronstrue).
 * You need a **language `cronli5` doesn't have yet**. cRonstrue carries **39
   locales**, built from per-locale string tables; `cronli5` ships ten, each
   a full renderer. If your locale is not on
   [cronli5's list](../README.md#languages), cRonstrue is the pragmatic
   answer.
-* You are happy with the clock-first, comma-joined house style and don't want
-  to change any output strings.
+* Your patterns are **simple English cadences** that divide their unit,
+  where the two say the same thing (`*/15 * * * *` is "Every 15 minutes" in
+  both), and you don't want to change any output strings.
 
 **`cronli5` is worth switching to when you want:**
 
-* **A description that is easy to understand.** `cronli5` writes one
-  sentence and folds fields together ("at 9:30 a.m. on weekdays") where
-  cRonstrue joins one clause per field ("At 09:30 AM, Monday through
-  Friday"). It uses natural times (`9 a.m.`, `noon`, `midnight`).
-* **Precision on the tricky cases.** In two blind rankings by the
-  maintainer, 20 random patterns each, with the libraries unlabelled,
-  `cronli5` was best or tied-best on 16 and then 17 of 20, cRonstrue on 5
-  and then 1. Some concrete differences:
-  * A day of the month *or* a weekday is joined with "and" in cRonstrue
-    (`0 0 1,15 * 3` &rarr; "...on day 1 and 15 of the month, **and** on
-    Wednesday"), which reads as both at once. `cronli5` says "at midnight
-    on the 1st and 15th **as well as** on Wednesdays".
-  * A window of hours under a step overstates its last run
-    (`23 0-20/2 * * *` &rarr; "between 12:00 AM and **08:59 PM**", though
-    the last run is at 8:23 p.m.). `cronli5` names it: "at 23 minutes past
-    the hour, every 2 hours **from midnight through 8 p.m.** every day".
+* **Descriptions that say when the schedule fires.** cRonstrue describes
+  each field on its own, and some of its sentences are false. Each pair
+  below is cRonstrue's output, then `cronli5`'s:
 
-  See the [comparison doc](./cronli5-vs-cronstrue.md) for more, generated
-  from live output.
+  ```js
+  // */45 runs at :00 and :45: cRonstrue says "Every 45 minutes"
+  cronli5('*/45 * * * *');     // 'at 0 and 45 minutes past the hour'
+
+  // A window under a step: cRonstrue says "between 12:00 AM and 08:59 PM"
+  cronli5('23 0-20/2 * * *');
+  // 'at 23 minutes past the hour, every 2 hours from 12 a.m. through 8 p.m. every day'
+
+  // A day of the month or a weekday: cRonstrue says "on day 1 and 15 of
+  // the month, and on Wednesday", which reads as days that are both
+  cronli5('0 0 1,15 * 3');     // 'at 12 a.m. on the 1st and 15th as well as on Wednesdays'
+  ```
+
+* **One sentence, not one clause per field.** `cronli5` folds fields
+  together where cRonstrue joins them with commas ("At 09:30 AM, Monday
+  through Friday"):
+
+  ```js
+  cronli5('30 9 * * 1-5');     // 'at 9:30 a.m. on weekdays'
+  ```
+
+* **Grammatical output in other languages.** cRonstrue translates each
+  fragment on its own, so in languages that inflect the fragments often do
+  not agree (Czech "Každých 2 minut" for `*/2 * * * *`, and "pouze v Leden"
+  for January). Each of `cronli5`'s languages is written as that language
+  writes times. The [README](../README.md#why-not-cronstrue) shows both
+  libraries side by side, and each [language doc](./lang/) compares every
+  pattern with its cRonstrue locale.
 * **Control over style.** A style table per language, with every field
   adjustable ([docs/styles.md](./styles.md)). cRonstrue has no style
   switch.
@@ -101,7 +110,7 @@ cronstrue.toString("0 9 * * 1");          // "At 09:00 AM, only on Monday"
 
 // cronli5
 import cronli5 from "cronli5";
-cronli5("0 9 * * 1");                      // "at 9 a.m. on Mondays"
+cronli5("0 9 * * 1");                      // 'at 9 a.m. on Mondays'
 ```
 
 ### Three forms, not one
@@ -112,9 +121,9 @@ returns a lowercase **fragment** by default, so you can put it inside your
 own sentence, and offers two more forms:
 
 ```js
-cronli5("0 0 * * *");                        // "at midnight every day"
-cronli5("0 0 * * *", { form: "label" });     // "At midnight every day"
-cronli5("0 0 * * *", { form: "sentence" });  // "Runs at midnight every day."
+cronli5("0 0 * * *");                        // 'at midnight every day'
+cronli5("0 0 * * *", { form: "label" });     // 'At midnight every day'
+cronli5("0 0 * * *", { form: "sentence" });  // 'Runs at midnight every day.'
 ```
 
 `form: "label"` is the closest to what cRonstrue returns.
@@ -128,7 +137,7 @@ pattern written three ways, not a list of patterns):
 ```js
 cronli5("0 9 * * 1-5");                     // string
 cronli5(["0", "9", "*", "*", "1-5"]);      // array of fields, same result
-cronli5({ hour: 9, minute: 30 });          // object: "at 9:30 a.m. every day"
+cronli5({ hour: 9, minute: 30 });          // 'at 9:30 a.m. every day'
 ```
 
 ### Error handling
@@ -144,7 +153,7 @@ description instead:
 cronli5("not a cron");
 //=> throws Cronli5InputError
 cronli5("not a cron", { lenient: true });
-//=> "an unrecognizable cron pattern"
+//=> 'an unrecognizable cron pattern'
 ```
 
 Two differences in strictness. cRonstrue describes whatever parses,
@@ -174,7 +183,7 @@ cronstrue.toString("0 9 * * 1", { locale: "en" });
 
 // cronli5
 import cronli5 from "cronli5";
-cronli5("0 9 * * 1", { lang: "en" });      // "at 9 a.m. on Mondays"
+cronli5("0 9 * * 1", { lang: "en" });      // 'at 9 a.m. on Mondays'
 ```
 
 `cronli5` gives you three ways to decide what ships, where cRonstrue has
@@ -205,9 +214,10 @@ Even where both libraries are "correct", the strings differ. Expect:
   update those expectations.
 * **Default capitalization.** `cronli5(...)` is lowercase by default; use
   `{ form: "label" }` for cRonstrue's capitalised form.
-* **Precision improvements.** Day-of-month *or* weekday unions, bounded steps,
-  and step-range time windows render differently &mdash; and more accurately
-  &mdash; in `cronli5`. These are the cases in the
+* **Precision improvements.** Steps that do not divide their unit,
+  day-of-month *or* weekday unions, bounded steps and step-range time
+  windows render differently &mdash; and more accurately &mdash; in
+  `cronli5`. These are the cases in the
   [comparison doc](./cronli5-vs-cronstrue.md); review them so a changed string
   reads as an intentional improvement, not a regression.
 
