@@ -3,9 +3,9 @@
  */
 
 // A stand-in for cRonstrue's `toString`, for switching with one changed
-// import. It translates the call and adds no behaviour of its own: the
-// wording is cronli5's, and an option cronli5 cannot honour is refused,
-// never ignored.
+// import. It translates the call: the wording is cronli5's, and an option
+// cronli5 cannot honour is refused, never ignored. Its one addition is
+// English's style, set to write times and days as cRonstrue does.
 
 import {Cronli5OptionError} from '../core/errors.js';
 
@@ -14,6 +14,26 @@ import type {Translated} from './table.js';
 import type {Cronli5, Cronli5Styles} from '../types.js';
 import every from '../all.js';
 import {table} from './table.js';
+
+// English as cRonstrue writes it: "09:00 AM", "02:30 PM", 12:00 as
+// "12:00 PM" rather than "noon", and "Monday through Friday" rather than
+// "weekdays". cRonstrue has one English, so every English region takes
+// it; a region keeps its own dates and range word.
+const cronstrueEnglish = {
+  am: 'AM',
+  closeUp: false,
+  midday: '',
+  midnight: '',
+  minutes: true,
+  padHour: true,
+  pm: 'PM',
+  separator: ':',
+  weekWords: false
+};
+
+function isEnglish(lang: string | undefined): boolean {
+  return typeof lang === 'undefined' || (/^en(?:$|-)/iu).test(lang);
+}
 
 /** cRonstrue's options, as `cronstrue.toString` takes them. */
 export interface CronstrueOptions {
@@ -60,6 +80,9 @@ function toString(expression: string, options?: CronstrueOptions): string {
 
   return cronli5(expression, {
     ...translated,
+    style: isEnglish(translated.lang) ?
+      {...cronstrueEnglish, ...translated.style} :
+      translated.style,
     form: 'label',
     questionMark: 'allow'
   });

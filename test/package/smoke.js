@@ -104,10 +104,10 @@ describe('Built package artifacts:', function() {
     const cjs = require('../../dist/compat.cjs');
     const esm = await import('../../dist/compat.js');
 
-    expect(cjs.toString('0 9 * * 1')).to.equal('At 9 a.m. on Mondays');
+    expect(cjs.toString('0 9 * * 1')).to.equal('At 09:00 AM on Mondays');
     expect(esm.default.toString('30 17 * * *', {use24HourTimeFormat: true}))
       .to.equal('At 17:30 every day');
-    expect(esm.toString('0 9 ? * 1')).to.equal('At 9 a.m. on Mondays');
+    expect(esm.toString('0 9 ? * 1')).to.equal('At 09:00 AM on Mondays');
   });
 
   it('an option error is one class, whichever build threw it',

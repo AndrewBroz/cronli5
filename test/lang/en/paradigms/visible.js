@@ -29,8 +29,8 @@ const rows = [
   ['0 1/2 * * *', 'every 2 hours from 1 a.m.'],
 
   // clock / date
-  ['0 9 1 * *', 'at 9 a.m. on the 1st'],
-  ['0 9 1,10,20 * *', 'at 9 a.m. on the 1st, 10th, and 20th'],
+  ['0 9 1 * *', 'at 9 a.m. on the 1st of every month'],
+  ['0 9 1,10,20 * *', 'at 9 a.m. on the 1st, 10th, and 20th of every month'],
   ['0 9 */2 * *', 'at 9 a.m. on odd-numbered days'],
   ['0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
     'at 9 a.m. on odd-numbered days except the 15th'],
@@ -82,11 +82,11 @@ const rows = [
 
   // window / date
   ['*/15 9-17 1 * 1-5',
-    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st as well ' +
+    'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st of the month as well ' +
     'as on weekdays'],
   ['*/15 9-17 1,10,20 * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on the 1st, 10th, ' +
-    'and 20th as well as on weekdays'],
+    'and 20th of the month as well as on weekdays'],
   ['*/15 9-17 */2 * 1-5',
     'every 15 minutes from 9 a.m. through 5:45 p.m. on odd-numbered ' +
     'days, but only on weekdays'],
@@ -120,30 +120,30 @@ const rows = [
 
   // monthly / second — context `0 0 1 * *`
   ['* 0 0 1 * *', 'every second from 12:00:00 a.m. through 12:00:59 a.m. on ' +
-    'the 1st'],
+    'the 1st of every month'],
   ['*/6 0 0 1 * *',
     'every 6 seconds from 12:00:00 a.m. through 12:00:54 a.m. on ' +
-      'the 1st'],
+      'the 1st of every month'],
   ['5/10 0 0 1 * *',
     'every 10 seconds from 12:00:05 a.m. through 12:00:55 a.m. on the ' +
-    '1st'],
+    '1st of every month'],
 
   // monthly / minute
-  ['* 0 1 * *', 'every minute during the 12 a.m. hour on the 1st'],
-  ['5,20,45 0 1 * *', 'at 12:05 a.m., 12:20 a.m., and 12:45 a.m. on the 1st'],
-  ['*/15 0 1 * *', 'every 15 minutes during the 12 a.m. hour on the 1st'],
-  ['0,15,45 0 1 * *', 'at 12 a.m., 12:15 a.m., and 12:45 a.m. on the 1st'],
+  ['* 0 1 * *', 'every minute during the 12 a.m. hour on the 1st of every month'],
+  ['5,20,45 0 1 * *', 'at 12:05 a.m., 12:20 a.m., and 12:45 a.m. on the 1st of every month'],
+  ['*/15 0 1 * *', 'every 15 minutes during the 12 a.m. hour on the 1st of every month'],
+  ['0,15,45 0 1 * *', 'at 12 a.m., 12:15 a.m., and 12:45 a.m. on the 1st of every month'],
 
   // monthly / hour
-  ['0 * 1 * *', 'every hour on the 1st'],
-  ['0 9,17 1 * *', 'at 9 a.m. and 5 p.m. on the 1st'],
+  ['0 * 1 * *', 'every hour on the 1st of every month'],
+  ['0 9,17 1 * *', 'at 9 a.m. and 5 p.m. on the 1st of every month'],
   ['0 9-17,22 1 * *',
-    'every hour from 9 a.m. through 5 p.m. and at 10 p.m. on the 1st'],
-  ['0 1/2 1 * *', 'every 2 hours from 1 a.m. on the 1st'],
+    'every hour from 9 a.m. through 5 p.m. and at 10 p.m. on the 1st of every month'],
+  ['0 1/2 1 * *', 'every 2 hours from 1 a.m. on the 1st of every month'],
 
   // monthly / date
   ['0 0 * * *', 'at midnight every day'],
-  ['0 0 1,10,20 * *', 'at 12 a.m. on the 1st, 10th, and 20th'],
+  ['0 0 1,10,20 * *', 'at 12 a.m. on the 1st, 10th, and 20th of every month'],
   ['0 0 */2 * *', 'at 12 a.m. on odd-numbered days'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
     'at 12 a.m. on odd-numbered days except the 15th'],
@@ -160,10 +160,10 @@ const rows = [
     'at 12 a.m. on the 1st of each month from November through February'],
 
   // monthly / weekday
-  ['0 0 1 * 1', 'at 12 a.m. on the 1st as well as on Mondays'],
-  ['0 0 1 * 1-5', 'at 12 a.m. on the 1st as well as on weekdays'],
+  ['0 0 1 * 1', 'at 12 a.m. on the 1st of the month as well as on Mondays'],
+  ['0 0 1 * 1-5', 'at 12 a.m. on the 1st of the month as well as on weekdays'],
   ['0 0 1 * 2,4',
-    'at 12 a.m. on the 1st as well as on Tuesdays and Thursdays'],
+    'at 12 a.m. on the 1st of the month as well as on Tuesdays and Thursdays'],
 
   // open / second — context `* * * * *`
   ['* * * * * *', 'every second'],
@@ -188,8 +188,8 @@ const rows = [
   ['* 1/2 * * *', 'every minute during every other hour from 1 a.m.'],
 
   // open / date
-  ['* * 1 * *', 'every minute on the 1st'],
-  ['* * 1,10,20 * *', 'every minute on the 1st, 10th, and 20th'],
+  ['* * 1 * *', 'every minute on the 1st of every month'],
+  ['* * 1,10,20 * *', 'every minute on the 1st, 10th, and 20th of every month'],
   ['* * */2 * *', 'every minute on odd-numbered days'],
   ['* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
     'every minute on odd-numbered days except the 15th'],

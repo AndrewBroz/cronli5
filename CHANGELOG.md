@@ -4,6 +4,42 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0]
+
+### Added
+
+- **English `minutes` and `padHour` style fields:** a 12-hour time on the
+  hour with its minutes ("6:00 p.m."), and its hour in two digits ("06:30
+  p.m."). Together, with `am: 'AM'` and `pm: 'PM'`, they give cRonstrue's
+  "06:00 PM". 24-hour times are unchanged: always two digits and minutes.
+- **English `weekWords` style field.** `false` names the days instead of
+  "weekdays" and "weekends": `cronli5('0 9 * * 1-5', {style: {weekWords:
+  false}})` is "at 9 a.m. Monday through Friday". With `midday: ''` and
+  `midnight: ''` (now documented), English says every clock time and day
+  as such: "at 12 a.m. and 12 p.m. Monday through Friday".
+
+### Changed
+
+- **`cronli5/compat` writes English as cRonstrue does:** "09:00 AM",
+  "12:00 PM" rather than "noon", and "Monday through Friday" rather than
+  "weekdays", so switching changes what is said, not how times look.
+  `trimHoursLeadingZero` now writes "9:00 AM". Other languages keep their
+  own style. The comparison with cRonstrue now shows the adapter's
+  `toString` beside cRonstrue's.
+- **English: a day of the month with no month named says whose days it
+  is.** `0 0 9-17/2 * *` is "at 12 a.m. on the 9th, 11th, 13th, 15th, and
+  17th of every month", where "every minute on the 15th" had been read as
+  one 15th. Before an exception or beside weekdays it is "of the month"
+  ("on the 1st of the month as well as on weekdays"), which "every month"
+  would seem to reach.
+- **English: a single second on the hour is counted past the hours** as a
+  minute is: "at 30 seconds past every hour except 8 a.m.", where it was
+  "at 30 seconds past the hour, every hour except at 8 a.m.", which said
+  the hour twice and named 8:00:00, a moment that never fires.
+- **English: dates in pieces take their months after "of",** as a list
+  does: "on the 1st through the 5th and on the 10th of June and July",
+  where it was ", in June and July".
+
 ## [1.1.0]
 
 ### Fixed

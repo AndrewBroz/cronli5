@@ -13,7 +13,7 @@ import lexicon from './lexicon.js';
 
 /** A fixed phrasing and the condition under which it is said. */
 export interface Idiom<Subject> {
-  applies(subject: Subject): boolean;
+  applies(subject: Subject, opts: EnglishOptions): boolean;
   say(subject: Subject, opts: EnglishOptions): string;
 }
 
@@ -56,10 +56,13 @@ function alternate(field: Field, offset: number, phrase: string): SetIdiom {
   };
 }
 
+// A run of weekdays a single word names, said by that word unless the
+// style names the days instead.
 function running(from: number, to: number, phrase: string): SetIdiom {
   return {
-    applies(set) {
-      return set.kind === 'range' && set.from === from && set.to === to;
+    applies(set, opts) {
+      return opts.style.weekWords && set.kind === 'range' &&
+        set.from === from && set.to === to;
     },
     field: 'weekday',
     say() {

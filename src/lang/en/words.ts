@@ -92,20 +92,24 @@ function writeTime(moment: Moment, opts: EnglishOptions):
 
   // A style with no word for a moment writes it as a time.
   const idiom = momentIdioms.find(function fits(row) {
-    return row.applies(moment) && row.say(moment, opts) !== '';
+    return row.applies(moment, opts) && row.say(moment, opts) !== '';
   });
 
   if (idiom) {
     return {meridiem: '', text: idiom.say(moment, opts)};
   }
 
-  // On the hour, the hour stands alone unless the minute must show.
-  const alone = moment.minute === 0 && parts.length === 1 && !moment.exact;
+  // On the hour, the hour stands alone unless the minute must show or the
+  // style always shows it.
+  const alone = moment.minute === 0 && parts.length === 1 &&
+    !moment.exact && !style.minutes;
   const shown = alone ? [] : parts;
+  const hour = moment.hour % 12 || 12;
 
   return {
     meridiem: moment.hour < 12 ? style.am : style.pm,
-    text: [String(moment.hour % 12 || 12), ...shown].join(style.separator)
+    text: [style.padHour ? lexicon.twoDigits(hour) : String(hour), ...shown]
+      .join(style.separator)
   };
 }
 

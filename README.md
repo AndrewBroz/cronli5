@@ -307,13 +307,13 @@ cronli5('0 9 * * MON');     // 'at 9 a.m. on Mondays'
 // Lists
 cronli5('5,10,15 * * * * *'); // 'at 5, 10, and 15 seconds past the minute'
 cronli5('0 9,17 * * *');      // 'at 9 a.m. and 5 p.m. every day'
-cronli5('0 0 1,15 * *');      // 'at 12 a.m. on the 1st and 15th'
+cronli5('0 0 1,15 * *');      // 'at 12 a.m. on the 1st and 15th of every month'
 cronli5('0 12 * 6,12 *');     // 'at noon every day in June and December'
 
 // Ranges (wrap-around ranges describe overnight and weekend windows)
 cronli5('0-29 * * * *'); // 'every minute for the first 30 minutes of every hour'
 cronli5('0 9-17 * * *');  // 'every hour from 9 a.m. through 5 p.m. every day'
-cronli5('0 0 1-15 * *');  // 'at 12 a.m. on the 1st through the 15th'
+cronli5('0 0 1-15 * *');  // 'at 12 a.m. on the 1st through the 15th of every month'
 cronli5('0 22-2 * * *');  // 'every hour from 10 p.m. through 2 a.m. every day'
 cronli5('0 0 * * FRI-MON'); // 'at 12 a.m. Friday through Monday'
 
@@ -323,13 +323,13 @@ cronli5('*/15 9-17 * * *'); // 'every 15 minutes from 9 a.m. through 5:45 p.m. e
 cronli5('30 9-17 * * *');
 // 'every hour from 9:30 a.m. through 5:30 p.m. every day'
 cronli5('0 12 1 1 *');     // 'at noon on January 1'
-cronli5('0 * 13 * *');     // 'every hour on the 13th'
+cronli5('0 * 13 * *');     // 'every hour on the 13th of every month'
 
 // Quartz tokens
 cronli5('0 0 L * *');      // 'at 12 a.m. on the last day of the month'
 cronli5('0 0 * * 5L');     // 'at 12 a.m. on the last Friday of the month'
 cronli5('0 0 * * 1#2');    // 'at 12 a.m. on the second Monday of the month'
-cronli5('0 0 15W * *');    // 'at 12 a.m. on the weekday nearest the 15th'
+cronli5('0 0 15W * *');    // 'at 12 a.m. on the weekday nearest the 15th of every month'
 ```
 
 ## Why not cRonstrue?
@@ -379,7 +379,7 @@ cRonstrue does, with the same options:
 ```js
 import cronli5 from 'cronli5/compat';
 
-cronli5.toString('30 9 * * 1-5'); // 'At 9:30 a.m. on weekdays'
+cronli5.toString('30 9 * * 1-5'); // 'At 09:30 AM Monday through Friday'
 ```
 
 If you need a language `cronli5` doesn't have yet, cRonstrue is the one to
