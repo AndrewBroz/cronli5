@@ -3927,7 +3927,7 @@
    "pattern": "0 0 9 * 6-8,12 * 2030"
   },
   {
-   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th of every month, in 2030",
+   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th of every month in 2030",
    "options": {
     "lang": "en"
    },
@@ -3941,11 +3941,32 @@
    "pattern": "0 0 0 1-5,10 6 * 2030"
   },
   {
-   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th, in June and July",
+   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th of June and July",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 1-5,10 6,7 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th of each month from June through August",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-5,10 6-8 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th of every month except December",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-5,10 1-11 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 1st through the 5th and on the 10th of June and July in 2030",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 1-5,10 6,7 * 2030"
   },
   {
    "expected": "at 12 a.m. on the 1st of the month as well as on Fridays, in 2030",

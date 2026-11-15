@@ -781,12 +781,23 @@ const rows = [
   ['0 0 9 * 6-8,12 * 2030',
     'at 9 a.m. every day in June through August and in December, in 2030'],
   ['0 0 0 1-5,10 * * 2030',
-    'at 12 a.m. on the 1st through the 5th and on the 10th of every month, in 2030'],
+    'at 12 a.m. on the 1st through the 5th and on the 10th of every month in ' +
+    '2030'],
   ['0 0 0 1-5,10 6 * 2030',
     'at 12 a.m. on June 1 through 5 and on June 10, in 2030'],
+  // Days in pieces take their months after "of", as a list does: the
+  // months reach every piece.
   ['0 0 1-5,10 6,7 *',
-    'at 12 a.m. on the 1st through the 5th and on the 10th, in June and ' +
-    'July'],
+    'at 12 a.m. on the 1st through the 5th and on the 10th of June and July'],
+  ['0 0 1-5,10 6-8 *',
+    'at 12 a.m. on the 1st through the 5th and on the 10th of each month ' +
+    'from June through August'],
+  ['0 0 1-5,10 1-11 *',
+    'at 12 a.m. on the 1st through the 5th and on the 10th of every month ' +
+    'except December'],
+  ['0 0 0 1-5,10 6,7 * 2030',
+    'at 12 a.m. on the 1st through the 5th and on the 10th of June and July ' +
+    'in 2030'],
   ['0 0 0 1 * 5 2030', 'at 12 a.m. on the 1st of the month as well as on Fridays, in 2030'],
   ['0 9 * 6 0,2-5', 'at 9 a.m. Tuesday through Friday and on Sundays, in June'],
   ['0 0 9 * 6-8,12 * 2030/2',

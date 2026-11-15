@@ -267,8 +267,9 @@ hours may add or remove "every day". No other field's words depend on it.
 Three things reach the other way, from a coarser field to a finer part,
 all because the sentence would otherwise be untrue: a run of hours or
 months that wraps is unwrapped under a coarser restriction (3.5); a part
-that ends in an exception, or is several pieces, is closed with a comma
-when anything follows it (3.9, 3.6); and a schedule that never runs says
+that ends in an exception, or is several pieces each with its own lead
+(other than days of the month with their months after "of"), is closed
+with a comma when anything follows it (3.9, 3.6); and a schedule that never runs says
 only that (2.6). All are declared in the continuity suite, and nothing
 else crosses.
 
@@ -496,15 +497,21 @@ summers. The comma is the one that closes an exception (3.9), for the
 same reason, and it is used in the day part and the month part only:
 
 * "at 9 a.m. every day in June through August and in December, in 2030"
-* "at 12 a.m. on the 1st through the 5th and on the 10th, in 2030"
 * "at 12 a.m. on June 1 through 5 and on June 10, in 2030"
 * "at 9 a.m. Tuesday through Friday and on Sundays, in June"
 
-Several pieces of days are never followed by "of" and their months: "on
-the 1st through the 5th and on the 10th of June and July" gives the
-months to the 10th. The months follow the comma, with "in": "on the 1st
-through the 5th and on the 10th, in June and July". (One month is said
-inside each piece, 4.4.) The time part takes no such comma: a day after
+Several pieces of days of the month take their months after "of", as a
+list does, and the months reach every piece: "on the 1st through the 5th
+and on the 10th of June and July", "… of each month from June through
+August", "… of every month except December", "… of every month" (8.4).
+A year then follows the months with no comma, as after a list: "… of June
+and July in 2030". (Until 2026-11-15 the months followed a comma and
+"in", on the claim that "of" would be heard with the last piece alone.
+The maintainer rejected the claim, and six isolated readers, three Opus
+and three Sonnet, answered all 168 questions about these sentences and
+the old comma forms correctly, including moments in a month only the
+last piece could have been given.) One month is said inside each piece
+(4.4). The time part takes no such comma: a day after
 the time is the backbone of every sentence, and "every hour from 9 a.m.
 through 5 p.m. and at 10 p.m. on the 1st of every month" is not heard as
 two schedules.

@@ -832,9 +832,9 @@ function ofTheMonth(
 const namesDays = ['pieces', 'range', 'values'];
 
 // Those that several months can follow after "of": "on the 1st and 15th
-// of January and July". After several pieces "of" would be heard with the
-// last piece alone, so the months follow a comma and "in".
-const takesOf = ['range', 'values'];
+// of January and July", "on the 1st through the 5th and on the 10th of
+// June and July". The months reach every piece.
+const takesOf = ['pieces', 'range', 'values'];
 
 // The kinds whose phrase says that it starts again each month.
 const startsAgain = ['cadence', 'cadencePieces'];
@@ -985,7 +985,7 @@ function whoseDays(
 
   return {
     dated: 0,
-    excepts: takesOut || base.kind === 'pieces',
+    excepts: takesOut,
     takesOut,
     text: takesOut ?
       closedBy(join(said.text, month), false,
