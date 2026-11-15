@@ -1,6 +1,6 @@
 {
   "name": "cronli5",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and nine other languages. Includes a cRonstrue-compatible entry point.",
   "repository": {
     "type": "git",
@@ -11,6 +11,9 @@
   "module": "./dist/cronli5.js",
   "types": "./types/cronli5.d.ts",
   "browser": "./cronli5.min.js",
+  "sideEffects": [
+    "./cronli5.min.js"
+  ],
   "exports": {
     ".": {
       "types": "./types/cronli5.d.ts",
