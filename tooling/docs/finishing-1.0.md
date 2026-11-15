@@ -92,6 +92,30 @@ until Traditional is written; `describeParts` is internal; `style` is
 typed by the language a call names. Writing Traditional Chinese as a
 variant of the Simplified renderer is open.
 
+## Languages and regions to add
+
+Chosen on 2026-11-15 for coverage of the people who would read the
+descriptions, not as stress tests of the design. Each is built by the
+usual process (`add-language`), starting from usage notes.
+
+- **Languages:** Russian (`ru`), Turkish (`tr`), Swedish (`sv`), Finnish
+  (`fi`) and Norwegian (`nb`; whether to write Nynorsk too is open).
+  Finnish shipped once, as experimental, and left the tree with the other
+  old renderers on 2026-11-11 (`11fa38e`); its old notes (the "tai" union,
+  the seconds) are in `docs/archive/backlog.md`, as evidence only.
+- **Traditional Chinese** (`zh-Hant`, for `zh-TW`, `zh-HK`, `zh-MO`), which
+  now warns and describes in Simplified. Whether it is a variant of the
+  Simplified renderer or its own is open (see Decisions above); Taiwan
+  and Hong Kong may write times differently from each other.
+- **Common regions** of the languages that ship: English (`en-AU`,
+  `en-CA`, `en-IE`, `en-IN`, `en-NZ`), French (`fr-CA`, `fr-BE`, `fr-CH`),
+  Spanish (`es-AR`, `es-CO`, `es-419` for Latin America), Italian
+  (`it-CH`). A region gets its own style only where its writers write
+  times differently (`en-AU` may simply be `en-GB`); finding that out,
+  from the region's own style guides and press, is the work.
+- **Parked**, with artifacts on local branches: Dutch, Korean, Polish,
+  Arabic, Hebrew (see Where things are).
+
 ## Housekeeping
 
 - `CHANGELOG.md` and `docs/migrating-to-1.0.md` do not yet describe the
