@@ -173,6 +173,8 @@ caller to pass.
 | `serialComma` | `true` | `false` | `true` | the comma before a list's "and" |
 | `weekWords` | `true` | `true` | `true` | whether Monday to Friday and Saturday and Sunday are "weekdays" and "weekends"; `false` names the days: "Monday through Friday", "on Saturdays and Sundays" |
 | `dayFirst` | `false` (`June 1`) | `true` (`1 June`) | `false` | a single month with its dates |
+| `minutes` | `false` | `false` | `false` | whether a 12-hour time on the hour shows its minutes ("6:00 p.m."); 24-hour times always do |
+| `padHour` | `false` | `false` | `false` | whether a 12-hour time's hour has two digits ("06:30 p.m."); 24-hour times always do. With `minutes`, capital meridiems and no words for 12:00 and 0:00, this is cRonstrue's clock, which `cronli5/compat` writes (added 2026-11-15, on the maintainer's request) |
 | `ordinals` | `false` | `false` | `true` (`June 1st`) | whether a day beside its month keeps its suffix |
 | `short` | `false` | `false` | `false` | weekday and month names in their three-letter forms (`Mon`, `Jun`), with no full stop and no plural: "on Mon, Wed, and Fri" |
 

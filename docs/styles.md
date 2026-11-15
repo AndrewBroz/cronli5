@@ -103,6 +103,8 @@ The English fields (defaults shown are the `us` values):
 | `separator` | `':'` | The separator between hours, minutes, and seconds. |
 | `midday` | `'noon'` | The word for exactly 12:00 p.m.; `''` writes it as a time (`'12 p.m.'`). |
 | `midnight` | `'midnight'` | The word for exactly 12:00 a.m.; `''` writes it as a time (`'12 a.m.'`). Beside a date it is always `'12 a.m.'`, since "midnight on June 1" can be heard as the end of the 1st. |
+| `minutes` | `false` | Write a 12-hour time on the hour with its minutes (`'6:00 p.m.'`). 24-hour times always have them. |
+| `padHour` | `false` | Write a 12-hour time's hour in two digits (`'06:30 p.m.'`). 24-hour times always have two. |
 | `ordinals` | `false` | Ordinal days in month-day dates (`'January 1st'`) instead of cardinal. |
 | `through` | `'through'` | The word joining the two ends of an inclusive range (`'to'`); surrounding spaces are trimmed. |
 | `serialComma` | `true` | Use a serial comma in lists of three or more. |

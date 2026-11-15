@@ -99,13 +99,17 @@ function writeTime(moment: Moment, opts: EnglishOptions):
     return {meridiem: '', text: idiom.say(moment, opts)};
   }
 
-  // On the hour, the hour stands alone unless the minute must show.
-  const alone = moment.minute === 0 && parts.length === 1 && !moment.exact;
+  // On the hour, the hour stands alone unless the minute must show or the
+  // style always shows it.
+  const alone = moment.minute === 0 && parts.length === 1 &&
+    !moment.exact && !style.minutes;
   const shown = alone ? [] : parts;
+  const hour = moment.hour % 12 || 12;
 
   return {
     meridiem: moment.hour < 12 ? style.am : style.pm,
-    text: [String(moment.hour % 12 || 12), ...shown].join(style.separator)
+    text: [style.padHour ? lexicon.twoDigits(hour) : String(hour), ...shown]
+      .join(style.separator)
   };
 }
 

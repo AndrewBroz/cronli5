@@ -15,16 +15,17 @@ import type {Cronli5, Cronli5Styles} from '../types.js';
 import every from '../all.js';
 import {table} from './table.js';
 
-// English as cRonstrue writes it: "9 AM", "2:30 PM", 12:00 as "12 PM"
-// rather than "noon", and "Monday through Friday" rather than "weekdays".
-// cRonstrue has one English, so every English region takes it; a region
-// keeps its own dates and range word. (cronli5 does not pad the hour or
-// always write the minutes, as cRonstrue's "09:00 AM" does.)
+// English as cRonstrue writes it: "09:00 AM", "02:30 PM", 12:00 as
+// "12:00 PM" rather than "noon", and "Monday through Friday" rather than
+// "weekdays". cRonstrue has one English, so every English region takes
+// it; a region keeps its own dates and range word.
 const cronstrueEnglish = {
   am: 'AM',
   closeUp: false,
   midday: '',
   midnight: '',
+  minutes: true,
+  padHour: true,
   pm: 'PM',
   separator: ':',
   weekWords: false

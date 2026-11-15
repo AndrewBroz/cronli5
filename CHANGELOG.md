@@ -8,6 +8,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **English `minutes` and `padHour` style fields:** a 12-hour time on the
+  hour with its minutes ("6:00 p.m."), and its hour in two digits ("06:30
+  p.m."). Together, with `am: 'AM'` and `pm: 'PM'`, they give cRonstrue's
+  "06:00 PM". 24-hour times are unchanged: always two digits and minutes.
 - **English `weekWords` style field.** `false` names the days instead of
   "weekdays" and "weekends": `cronli5('0 9 * * 1-5', {style: {weekWords:
   false}})` is "at 9 a.m. Monday through Friday". With `midday: ''` and
@@ -16,11 +20,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- **`cronli5/compat` writes English as cRonstrue does:** "9 AM", "12 PM"
-  rather than "noon", and "Monday through Friday" rather than "weekdays",
-  so switching changes what is said, not how times look. Other languages
-  keep their own style. The comparison with cRonstrue now shows the
-  adapter's `toString` beside cRonstrue's.
+- **`cronli5/compat` writes English as cRonstrue does:** "09:00 AM",
+  "12:00 PM" rather than "noon", and "Monday through Friday" rather than
+  "weekdays", so switching changes what is said, not how times look.
+  `trimHoursLeadingZero` now writes "9:00 AM". Other languages keep their
+  own style. The comparison with cRonstrue now shows the adapter's
+  `toString` beside cRonstrue's.
 - **English: a day of the month with no month named says whose days it
   is.** `0 0 9-17/2 * *` is "at 12 a.m. on the 9th, 11th, 13th, 15th, and
   17th of every month", where "every minute on the 15th" had been read as

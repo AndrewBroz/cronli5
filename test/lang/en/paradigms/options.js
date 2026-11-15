@@ -15,6 +15,7 @@ const defaultParts = {
   '0-29 9 * * *': ['9 a.m.', '9:29 a.m.'],
   '0 12 * 6 1': ['noon', 'Mondays', 'June'],
   '0 8,12,18 * * *': ['8 a.m.', 'noon', '6 p.m.'],
+  '0 18 * * *': ['6 p.m.'],
   '0 9 * * *': ['9 a.m.'],
   '0 9 * * 1,3,5': ['9 a.m.', 'Mondays', 'Wednesdays', 'Fridays'],
   '0 9 * * 1-5': ['9 a.m.', 'weekdays'],
@@ -297,6 +298,63 @@ const sets = [
         parts: ['9am', 'Saturdays and Sundays'],
         pattern: '0 9 * * 6,0'
       }
+    ]
+  },
+  {
+    // A house that always writes the minutes.
+    options: {style: {minutes: true}},
+    rows: [
+      {expected: 'at 6:00 p.m. every day', parts: ['6:00 p.m.'],
+        pattern: '0 18 * * *'},
+      {
+        expected: 'every hour from 9:00 a.m. through 5:00 p.m. every day',
+        parts: ['9:00 a.m.', '5:00 p.m.'],
+        pattern: '0 9-17 * * *'
+      },
+      {expected: 'at 8:00 a.m., noon, and 6:00 p.m. every day',
+        parts: ['8:00 a.m.', 'noon', '6:00 p.m.'],
+        pattern: '0 8,12,18 * * *'}
+    ]
+  },
+  {
+    // A house that writes the hour in two digits.
+    options: {style: {padHour: true}},
+    rows: [
+      {expected: 'at 09:30 a.m. and 05:30 p.m. every day',
+        parts: ['09:30 a.m.', '05:30 p.m.'], pattern: '30 9,17 * * *'},
+      {expected: 'at 06 p.m. every day', parts: ['06 p.m.'],
+        pattern: '0 18 * * *'}
+    ]
+  },
+  {
+    // cRonstrue's clock, as cronli5/compat writes English.
+    options: {
+      style: {am: 'AM', midday: '', midnight: '', minutes: true,
+        padHour: true, pm: 'PM'}
+    },
+    rows: [
+      {expected: 'at 06:00 PM every day', parts: ['06:00 PM'],
+        pattern: '0 18 * * *'},
+      {expected: 'at 12:00 AM every day', parts: ['12:00 AM'],
+        pattern: '0 0 * * *'},
+      {
+        expected: 'every hour from 09:00 AM through 05:00 PM every day',
+        parts: ['09:00 AM', '05:00 PM'],
+        pattern: '0 9-17 * * *'
+      },
+      {expected: 'at 08:00 AM, 12:00 PM, and 06:00 PM every day',
+        parts: ['08:00 AM', '12:00 PM', '06:00 PM'],
+        pattern: '0 8,12,18 * * *'}
+    ]
+  },
+  {
+    // The 24-hour clock always writes both digits and the minutes.
+    options: {style: {hour12: false, minutes: true, padHour: false}},
+    rows: [
+      {expected: 'at 09:00 every day', parts: ['09:00'],
+        pattern: '0 9 * * *'},
+      {expected: 'at 18:00 every day', parts: ['18:00'],
+        pattern: '0 18 * * *'}
     ]
   },
   {

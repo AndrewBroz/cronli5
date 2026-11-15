@@ -73,16 +73,15 @@ cRonstrue does, with the same options:
 ```js
 import cronli5 from "cronli5/compat";
 
-cronli5.toString("0 9 * * 1");                               // 'At 9 AM on Mondays'
+cronli5.toString("0 9 * * 1");                               // 'At 09:00 AM on Mondays'
 cronli5.toString("30 17 * * *", { use24HourTimeFormat: true }); // 'At 17:30 every day'
 ```
 
 It translates the call. The wording is `cronli5`'s, which is the point of
 switching; in English it is written in cRonstrue's format, so the change is
-in what is said, not in how times look: "9 AM" and "2:30 PM" with capital
-meridiems, "12 PM" and "12 AM" rather than "noon" and "midnight", and
-"Monday through Friday" rather than "weekdays". (`cronli5` does not pad the
-hour or always write the minutes, as cRonstrue's "09:00 AM" does.) Each
+in what is said, not in how times look: "09:00 AM" and "02:30 PM", "12:00
+PM" and "12:00 AM" rather than "noon" and "midnight", and "Monday through
+Friday" rather than "weekdays". Each
 cRonstrue option is either mapped onto a
 `cronli5` option or, where `cronli5` has no equivalent, **refused with an
 error** that says so. It never quietly ignores an option:
@@ -94,7 +93,7 @@ error** that says so. It never quietly ignores an option:
 | `use24HourTimeFormat` | `style: {hour12: false}` | 24-hour times are zero-padded (`09:00`). |
 | `throwExceptionOnParseError` | `lenient: true` when off | cronli5 returns its fallback text, not the parser's message. |
 | `dayOfWeekStartIndexZero` | `weekdaysFrom: 1` when off | 1 is Sunday through 7 for Saturday. |
-| `trimHoursLeadingZero` | accepted | cronli5's 12-hour times never have a leading zero. Refused together with `use24HourTimeFormat`, whose times always do. |
+| `trimHoursLeadingZero` | `style: {padHour: false}` | A 12-hour time is written without its leading zero (`9:00 AM`). Refused together with `use24HourTimeFormat`: cronli5's 24-hour times always have one. |
 | `verbose` | refused | cronli5 says "every day" where it helps and is otherwise brief. |
 | `monthStartIndexZero` | refused | cronli5 always reads 1 as January. |
 | `logicalAndDayFields` | refused | cronli5 reads a day of the month and a weekday as "either", as classic cron does. |

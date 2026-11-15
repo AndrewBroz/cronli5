@@ -9,7 +9,7 @@ import {Cronli5OptionError} from '../core/errors.js';
 export interface Translated {
   lang?: string;
   lenient?: boolean;
-  style: {hour12?: boolean};
+  style: {hour12?: boolean; padHour?: boolean};
   weekdaysFrom?: 0 | 1;
 }
 
@@ -103,10 +103,15 @@ const table: Row[] = [
           'with `use24HourTimeFormat`: its 24-hour times are always ' +
           'zero-padded.');
       }
+
+      if (value) {
+        into.style.padHour = false;
+      }
     },
-    becomes: 'accepted',
-    note: 'cronli5\'s 12-hour times never have a leading zero. Refused ' +
-      'together with `use24HourTimeFormat`, whose times always do.',
+    becomes: '`style: {padHour: false}`',
+    note: 'A 12-hour time is written without its leading zero ' +
+      '(`9:00 AM`). Refused together with `use24HourTimeFormat`: ' +
+      'cronli5\'s 24-hour times always have one.',
     option: 'trimHoursLeadingZero'
   },
   refused('verbose',

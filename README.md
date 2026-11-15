@@ -379,7 +379,7 @@ cRonstrue does, with the same options:
 ```js
 import cronli5 from 'cronli5/compat';
 
-cronli5.toString('30 9 * * 1-5'); // 'At 9:30 AM Monday through Friday'
+cronli5.toString('30 9 * * 1-5'); // 'At 09:30 AM Monday through Friday'
 ```
 
 If you need a language `cronli5` doesn't have yet, cRonstrue is the one to

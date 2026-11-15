@@ -1,7 +1,7 @@
 // The copy-editor choices English offers, as a table of word-level
 // conventions: 12- or 24-hour times, short names, the words for a.m. and
-// noon, the range word, whether the parts of the week have words. None of
-// them moves a part of the sentence.
+// noon, the range word, whether the parts of the week have words, how a
+// 12-hour time is written. None of them moves a part of the sentence.
 
 import {Cronli5OptionError} from '../../core/errors.js';
 import type {NormalizedOptions} from '../../core/schedule.js';
@@ -19,8 +19,13 @@ export interface EnglishStyle {
   midday: string;
   // The word for 0:00.
   midnight: string;
+  // Whether a 12-hour time on the hour shows its minutes ("6:00 p.m.").
+  minutes: boolean;
   // Whether a day beside its month keeps its ordinal suffix.
   ordinals: boolean;
+  // Whether a 12-hour time writes its hour in two digits ("06:30 p.m.").
+  // A 24-hour time always does.
+  padHour: boolean;
   pm: string;
   // What separates hours, minutes and seconds.
   separator: string;
@@ -45,7 +50,9 @@ const us: EnglishStyle = {
   hour12: true,
   midday: 'noon',
   midnight: 'midnight',
+  minutes: false,
   ordinals: false,
+  padHour: false,
   pm: 'p.m.',
   separator: ':',
   serialComma: true,

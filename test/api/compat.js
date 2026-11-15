@@ -15,23 +15,24 @@ function refuses(options, pattern) {
 
 // The adapter takes cRonstrue's call and translates it: every option is
 // mapped onto one of ours or refused. Its one addition is English's style:
-// cRonstrue's clock ("9 AM", "12 PM") and its named days.
+// cRonstrue's clock ("09:00 AM", "12:00 PM") and its named days.
 describe('The cRonstrue adapter:', function() {
   it('describes a pattern as a label, in cronli5\'s words', function() {
-    expect(compat.toString('0 9 * * *')).to.equal('At 9 AM every day');
+    expect(compat.toString('0 9 * * *')).to.equal('At 09:00 AM every day');
     expect(compat.toString('*/5 * * * *')).to.equal('Every 5 minutes');
   });
 
-  it('writes English as cRonstrue does: capitals, no noon, named days',
+  it('writes English as cRonstrue does: two-digit hours with minutes, ' +
+    'capitals, no noon, named days',
     function() {
-      expect(compat.toString('0 12 * * *')).to.equal('At 12 PM every day');
-      expect(compat.toString('0 0 * * *')).to.equal('At 12 AM every day');
+      expect(compat.toString('0 12 * * *')).to.equal('At 12:00 PM every day');
+      expect(compat.toString('0 0 * * *')).to.equal('At 12:00 AM every day');
       expect(compat.toString('30 14 * * 1-5'))
-        .to.equal('At 2:30 PM Monday through Friday');
+        .to.equal('At 02:30 PM Monday through Friday');
       expect(compat.toString('0 9 * * 6,0'))
-        .to.equal('At 9 AM on Saturdays and Sundays');
+        .to.equal('At 09:00 AM on Saturdays and Sundays');
       expect(compat.toString('0 9 * * 1-5', {locale: 'en_GB'}))
-        .to.equal('At 9 AM Monday to Friday');
+        .to.equal('At 09:00 AM Monday to Friday');
     });
 
   it('leaves every other language in its own style', function() {
@@ -47,24 +48,24 @@ describe('The cRonstrue adapter:', function() {
     expect(compat.toString('30 17 * * *', {use24HourTimeFormat: true}))
       .to.equal('At 17:30 every day');
     expect(compat.toString('0 9 * * 2', {dayOfWeekStartIndexZero: false}))
-      .to.equal('At 9 AM on Mondays');
+      .to.equal('At 09:00 AM on Mondays');
     expect(compat.toString('0 9 * * 1', {dayOfWeekStartIndexZero: true}))
-      .to.equal('At 9 AM on Mondays');
+      .to.equal('At 09:00 AM on Mondays');
     expect(compat.toString('nonsense', {throwExceptionOnParseError: false}))
       .to.equal('an unrecognizable cron pattern');
     expect(compat.toString('0 9 * * *', {locale: 'en'}))
-      .to.equal('At 9 AM every day');
+      .to.equal('At 09:00 AM every day');
     expect(compat.toString('0 9 * * *', {locale: 'en_GB'}))
-      .to.equal('At 9 AM every day');
+      .to.equal('At 09:00 AM every day');
     expect(compat.toString('0 9 * * *', {locale: null}))
-      .to.equal('At 9 AM every day');
+      .to.equal('At 09:00 AM every day');
   });
 
   it('reads a switch as cRonstrue does: anything falsy is off', function() {
     expect(compat.toString('0 9 * * 2', {dayOfWeekStartIndexZero: 0}))
-      .to.equal('At 9 AM on Mondays');
+      .to.equal('At 09:00 AM on Mondays');
     expect(compat.toString('0 9 * * 2', {dayOfWeekStartIndexZero: null}))
-      .to.equal('At 9 AM on Mondays');
+      .to.equal('At 09:00 AM on Mondays');
     expect(compat.toString('nonsense', {throwExceptionOnParseError: 0}))
       .to.equal('an unrecognizable cron pattern');
     expect(compat.toString('30 17 * * *', {use24HourTimeFormat: 1}))
@@ -79,7 +80,7 @@ describe('The cRonstrue adapter:', function() {
 
   it('describes a macro under either weekday numbering', function() {
     expect(compat.toString('@weekly', {dayOfWeekStartIndexZero: false}))
-      .to.equal('At 12 AM on Sundays');
+      .to.equal('At 12:00 AM on Sundays');
   });
 
   it('throws on a bad pattern unless told not to, as cRonstrue does',
@@ -93,10 +94,10 @@ describe('The cRonstrue adapter:', function() {
     });
 
   it('reads a question mark as an asterisk under any settings', function() {
-    expect(compat.toString('0 9 ? * 1')).to.equal('At 9 AM on Mondays');
-    expect(compat.toString('0 9 1 * ?')).to.equal('At 9 AM on the 1st of every month');
+    expect(compat.toString('0 9 ? * 1')).to.equal('At 09:00 AM on Mondays');
+    expect(compat.toString('0 9 1 * ?')).to.equal('At 09:00 AM on the 1st of every month');
     expect(compat.toString('0 9 ? * 2', {dayOfWeekStartIndexZero: false}))
-      .to.equal('At 9 AM on Mondays');
+      .to.equal('At 09:00 AM on Mondays');
   });
 
   it('accepts an option it cannot honour when it is switched off',
@@ -107,9 +108,9 @@ describe('The cRonstrue adapter:', function() {
         trimHoursLeadingZero: false,
         tzOffset: 0,
         verbose: false
-      })).to.equal('At 9 AM every day');
+      })).to.equal('At 09:00 AM every day');
       expect(compat.toString('0 9 * * *', {trimHoursLeadingZero: true}))
-        .to.equal('At 9 AM every day');
+        .to.equal('At 9:00 AM every day');
     });
 
   it('refuses what it cannot honour, saying why', function() {
