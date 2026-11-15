@@ -73,12 +73,17 @@ cRonstrue does, with the same options:
 ```js
 import cronli5 from "cronli5/compat";
 
-cronli5.toString("0 9 * * 1");                               // 'At 9 a.m. on Mondays'
+cronli5.toString("0 9 * * 1");                               // 'At 9 AM on Mondays'
 cronli5.toString("30 17 * * *", { use24HourTimeFormat: true }); // 'At 17:30 every day'
 ```
 
-It translates the call and nothing else. The wording is `cronli5`'s, which
-is the point of switching. Each cRonstrue option is either mapped onto a
+It translates the call. The wording is `cronli5`'s, which is the point of
+switching; in English it is written in cRonstrue's format, so the change is
+in what is said, not in how times look: "9 AM" and "2:30 PM" with capital
+meridiems, "12 PM" and "12 AM" rather than "noon" and "midnight", and
+"Monday through Friday" rather than "weekdays". (`cronli5` does not pad the
+hour or always write the minutes, as cRonstrue's "09:00 AM" does.) Each
+cRonstrue option is either mapped onto a
 `cronli5` option or, where `cronli5` has no equivalent, **refused with an
 error** that says so. It never quietly ignores an option:
 
@@ -103,6 +108,53 @@ in English.
 When you have time, move to `cronli5`'s own API. `cronli5/compat` bundles
 all ten languages (~100&nbsp;KB gzipped); the main entry bundles only the
 languages you import, and it is what the rest of this guide describes.
+
+## Your own house style
+
+cRonstrue writes every description one way. `cronli5` keeps what is said
+fixed, since that is what makes a description exact, and leaves how it is
+written to you: each language has a table of copy-editor choices, the
+fields a house style guide decides. The adapter sets English's to look like
+cRonstrue. Your own style can match your guide instead, in every
+description your product shows.
+
+Start from a named table, then change the fields your guide differs on:
+
+```js
+import cronli5 from 'cronli5';
+
+const plain = { midday: '', midnight: '', weekWords: false };
+const ops = { hour12: false, short: true };
+
+cronli5('0 12 * * 1-5');                             // 'at noon on weekdays'
+cronli5('0 12 * * 1-5', { lang: 'en-GB' });          // 'at midday on weekdays'
+cronli5('0 12 * * 1-5', { style: plain });           // 'at 12 p.m. Monday through Friday'
+cronli5('30 17 * * 1,3', { style: ops });            // 'at 17:30 on Mon and Wed'
+cronli5('0 9 1,15 * *', { style: { ordinals: true, am: 'AM', pm: 'PM' } }); // 'at 9 AM on the 1st and 15th of every month'
+```
+
+Set it once, on an instance, and every call follows it; a call's own
+`style` still overrides a field:
+
+```js
+import { create } from 'cronli5';
+import en from 'cronli5/lang/en';
+
+const describe = create({
+  languages: [en],
+  options: { form: 'label' },
+  styles: { en: { am: 'AM', pm: 'PM', midday: '', midnight: '' } }
+});
+```
+
+The fields cover the choices style guides make: 12- or 24-hour times, the
+meridiem's spelling and spacing, the time separator, the words for 12:00
+and 0:00 (or none), "weekdays" and "weekends" or the days by name, the
+range word ("through" or "to"), the serial comma, day-first dates,
+ordinals, and short names. A field `cronli5` does not have, or a value of
+the wrong kind, is an error, not something quietly ignored. Other languages
+have their own tables, with the choices their style guides make. Every
+field is in [docs/styles.md](./styles.md).
 
 ## API mapping
 
@@ -211,10 +263,12 @@ ships.
 
 Even where both libraries are "correct", the strings differ. Expect:
 
-* **Style shift.** Clock-first, zero-padded 24-hour with uppercase meridiem
-  ("At 09:30 AM, Monday through Friday") becomes natural prose
-  ("at 9:30 a.m. on weekdays", with `noon`/`midnight` for the edges). If you rely on the exact output string anywhere (tests, stored copy),
-  update those expectations.
+* **Style shift.** Clock-first, zero-padded times with uppercase meridiems
+  ("At 09:30 AM, Monday through Friday") become prose: "At 9:30 AM Monday
+  through Friday" through `cronli5/compat`, and "at 9:30 a.m. on weekdays",
+  with `noon`/`midnight` for the edges, in `cronli5`'s own default style
+  ([docs/styles.md](./styles.md) has the fields). If you rely on the exact
+  output string anywhere (tests, stored copy), update those expectations.
 * **Default capitalization.** `cronli5(...)` is lowercase by default; use
   `{ form: "label" }` for cRonstrue's capitalised form.
 * **Precision improvements.** Steps that do not divide their unit,

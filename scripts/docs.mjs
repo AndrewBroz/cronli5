@@ -78,8 +78,8 @@ function tableFrom(header, rows) {
   return [header, sep, ...rows].join('\n');
 }
 
-// The class-grouped head-to-head: cronli5 in its default fragment form vs.
-// cRonstrue (English); the doc says how to get the capitalized forms. One
+// The class-grouped head-to-head: cronli5 through `cronli5/compat`'s
+// `toString`, the same call as cRonstrue's, vs. cRonstrue (English). One
 // markdown table per class, each preceded by an H3 heading, in simple ->
 // medium -> complex order. Every pattern's group is asserted against the
 // divergence engine's `classify`, so a mis-bucketed row fails `npm run docs`
@@ -93,13 +93,13 @@ const comparisonHeadings = {
 function comparisonTable(patterns) {
   const rows = patterns.map(function compare(pattern) {
     return '| `' + pattern + '` | ' +
-      describe((p) => cronli5(p), pattern) + ' | ' +
+      describe((p) => cronstrueAdapter.toString(p), pattern) + ' | ' +
       describe((p) => cronstrue.toString(p), pattern) + ' |';
   });
 
   return tableFrom(
-    '| Pattern | cronli5 | cRonstrue ' + cronstrueVersion +
-    ' |', rows);
+    '| Pattern | `cronli5/compat` `toString` | cRonstrue ' +
+    cronstrueVersion + ' `toString` |', rows);
 }
 
 function renderComparison() {

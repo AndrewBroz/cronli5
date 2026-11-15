@@ -16,6 +16,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **`cronli5/compat` writes English as cRonstrue does:** "9 AM", "12 PM"
+  rather than "noon", and "Monday through Friday" rather than "weekdays",
+  so switching changes what is said, not how times look. Other languages
+  keep their own style. The comparison with cRonstrue now shows the
+  adapter's `toString` beside cRonstrue's.
 - **English: a day of the month with no month named says whose days it
   is.** `0 0 9-17/2 * *` is "at 12 a.m. on the 9th, 11th, 13th, 15th, and
   17th of every month", where "every minute on the 15th" had been read as

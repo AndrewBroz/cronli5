@@ -980,7 +980,8 @@ function whoseDays(
 
   const which = takesOut || how.pair ? words.the : words.every;
   const month = `${words.of} ${which} ${unit('month', 1)}`;
-  const said = say(takesOut ? base : description, voice, opts) as Phrase;
+  // Without an exception the base is the description itself.
+  const said = say(base, voice, opts) as Phrase;
 
   return {
     dated: 0,
