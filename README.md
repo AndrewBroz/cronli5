@@ -332,14 +332,26 @@ cronli5('0 0 * * 1#2');    // 'at 12 a.m. on the second Monday of the month'
 cronli5('0 0 15W * *');    // 'at 12 a.m. on the weekday nearest the 15th of every month'
 ```
 
+## Why not just use an LLM?
+
+Because LLMs are not the right tool for the job. `cronli5` is deterministic.
+It produces the same output every time, and will reliably produce correct output
+even for complex patterns. It is also trivially cheap to run and uses far less compute.
+
 ## Why not cRonstrue?
 
 [`cRonstrue`][cronstrue] is the most widely used cron-description library.
-cronli5 and cRonstrue are built differently. cRonstrue assembles a description
+`cronli5` and `cRonstrue` are built differently. `cRonstrue` assembles a description
 using a template, with one translated fragment per field. `cronli5` writes one
-sentence per schedule, and each of its languages is a full renderer. This lets
-cronli5 handle language-specific patterns, exceptions, and inflections. Patterns
-where cRonstrue's fragments go wrong, in English and in other languages:
+sentence per schedule, and each of its languages has a full renderer. This would have
+been restrictive in the past, but I believe this is a better i18n architecture when
+coding agents are available – it lets `cronli5` handle language-specific
+patterns, exceptions, and inflections, even beyond plurals.
+
+### Examples
+
+Here are some patterns where `cRonstrue`'s fragments go wrong, in English and in other
+languages:
 
 <!-- BEGIN GENERATED: cronstrue-side-by-side -->
 | Pattern | Language | cronli5 | cRonstrue 3.14.0 |
@@ -373,8 +385,16 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 | Czech | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
-`cronli5/compat` takes the same `toString(pattern, options)` call that
-cRonstrue does, with the same options:
+### Formatting
+
+`cronli5` supports a wide range of formatting options so your copy can match the
+standards of the rest of your site. UK conventions? 24-hour time? More schedule-like,
+or more conversational? Oxford comma? `cronli5` supports adjusting these options.
+
+### Migration and Support
+
+If you want an easier migration, `cronli5/compat` takes the same
+`toString(pattern, options)` call that `cRonstrue` does, with the same options:
 
 ```js
 import cronli5 from 'cronli5/compat';
@@ -382,8 +402,10 @@ import cronli5 from 'cronli5/compat';
 cronli5.toString('30 9 * * 1-5'); // 'At 09:30 AM Monday through Friday'
 ```
 
-If you need a language `cronli5` doesn't have yet, cRonstrue is the one to
-use. See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
+If you need a language `cronli5` doesn't have yet and you are a Claude user, you can
+use the `add-language` skill and submit a PR. Contributions are welcome.
+
+See [docs/cronli5-vs-cronstrue.md](./docs/cronli5-vs-cronstrue.md) for
 more side-by-side output, and
 [docs/migrating-from-cronstrue.md](./docs/migrating-from-cronstrue.md) for
 how options and output map.
