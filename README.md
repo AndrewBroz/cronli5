@@ -40,6 +40,7 @@ for how the two compare, and for switching.
 - [Options](#options)
 - [Languages](#languages)
 - [Output Examples](#output-examples)
+- [Why not just use an LLM?](#why-not-just-use-an-llm)
 - [Why not cRonstrue?](#why-not-cronstrue)
 - [Description Accuracy](#description-accuracy)
 - [Note on Timezones](#note-on-timezones)
