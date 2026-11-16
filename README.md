@@ -335,11 +335,11 @@ cronli5('0 0 15W * *');    // 'at 12 a.m. on the weekday nearest the 15th of eve
 ## Why not cRonstrue?
 
 [`cRonstrue`][cronstrue] is the most widely used cron-description library.
-The two are built differently. cRonstrue assembles a description from one
-translated fragment per field, which is how it covers 39 locales. `cronli5`
-writes one sentence per schedule, and each of its languages is a full
-renderer in that language's own words. Patterns where cRonstrue's
-fragments go wrong, in English and in other languages:
+cronli5 and cRonstrue are built differently. cRonstrue assembles a description
+using a template, with one translated fragment per field. `cronli5` writes one
+sentence per schedule, and each of its languages is a full renderer. This lets
+cronli5 handle language-specific patterns, exceptions, and inflections. Patterns
+where cRonstrue's fragments go wrong, in English and in other languages:
 
 <!-- BEGIN GENERATED: cronstrue-side-by-side -->
 | Pattern | Language | cronli5 | cRonstrue 3.14.0 |
