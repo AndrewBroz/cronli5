@@ -20,12 +20,15 @@ function candidatesAs(
   opts: SetView
 ): SetDescription[] | null {
   const own = facts.analyses.candidates[field];
+  const domain = domainOf(field);
+  // The field's own layout: nothing moved, and a cyclic field free to
+  // wrap. Its candidates are the ones the analysis already has.
+  const asOwn = !domain.cyclic ||
+    !opts.linear && (opts.first ?? domain.min) === domain.min;
 
-  if (!own || own[0].kind === 'all') {
+  if (!own || own[0].kind === 'all' || asOwn) {
     return own;
   }
-
-  const domain = domainOf(field);
 
   return describeSet(denote(own[own.length - 1], domain), domain, opts);
 }

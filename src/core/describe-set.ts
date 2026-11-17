@@ -701,11 +701,26 @@ function aroundTheTop(cadence: Cadence, domain: Domain): number[] {
   return values.sort(ascending);
 }
 
+// Every value of a field, listed once: the year field alone holds
+// thousands, and many descriptions are of the whole field. Each caller
+// gets its own copy.
+const everyValue = new Map<number, number[]>();
+
+function wholeField(domain: Domain): number[] {
+  const key = domain.min * 100000 + domain.max;
+  const known = everyValue.get(key) ??
+    integersBetween(domain.min, domain.max);
+
+  everyValue.set(key, known);
+
+  return known.slice();
+}
+
 /** The sorted, distinct values a description stands for. */
 function denote(description: Described, domain: Domain): number[] {
   switch (description.kind) {
     case 'all':
-      return integersBetween(domain.min, domain.max);
+      return wholeField(domain);
     case 'range':
       return description.from <= description.to ?
         integersBetween(description.from, description.to) :
