@@ -1,10 +1,9 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as chinese from '../../../src/lang/zh/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -60,13 +59,7 @@ const OVERNIGHT = ['date', 'month', 'weekday', 'year'];
 // that makes or unmakes that case may change every part.
 const NEVER = ['date', 'month', 'year'];
 
-const SETUP = {languages: [chinese.default], options: {}, styles: {}};
-
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
-}
+const parse = parser(chinese.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);

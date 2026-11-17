@@ -1,10 +1,9 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as japanese from '../../../src/lang/ja/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -61,13 +60,7 @@ const NEXT_DAY = /翌日/u;
 // part.
 const NEVER = /^実行なし/u;
 
-const SETUP = {languages: [japanese.default], options: {}, styles: {}};
-
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
-}
+const parse = parser(japanese.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);

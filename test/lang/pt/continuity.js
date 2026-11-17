@@ -1,11 +1,10 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import {denote} from '../../../src/core/describe-set.js';
 import * as portuguese from '../../../src/lang/pt/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -67,13 +66,7 @@ const CALENDAR = ['date', 'month', 'weekday', 'year'];
 // part. An edit to a calendar field that makes a schedule never fire, or
 // fire again, therefore removes or restores the whole time part.
 
-const SETUP = {languages: [portuguese.default], options: {}, styles: {}};
-
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
-}
+const parse = parser(portuguese.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);

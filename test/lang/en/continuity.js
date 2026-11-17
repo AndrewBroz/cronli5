@@ -1,10 +1,9 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as english from '../../../src/lang/en/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -86,13 +85,7 @@ function neverRuns(pattern, options) {
 const TIE =
   /at (?:midnight|12 a\.m\.) and noon(?: every day)?|every 12 hours/u;
 
-const SETUP = {languages: [english.default], options: {}, styles: {}};
-
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
-}
+const parse = parser(english.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);

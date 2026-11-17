@@ -27,6 +27,7 @@ export default defineConfig({
     exclude: [
       '**/node_modules/**',
       'test/runner.js',
+      'test/lang/parsed.js',
       'test/paradigms/grid.js',
       'test/paradigms/check.js',
       'test/lang/*/paradigms/**',
