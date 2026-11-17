@@ -49,7 +49,7 @@ function canonical(pattern, options) {
 // pattern. Field text alone would miss `*/2` against `0/2`, or `1,2`
 // against `1-2`. Whether both day fields must match is part of it: `*/2`
 // beside a weekday is not `0/2` beside it.
-function firesOn(pattern, options) {
+function analysedFiring(pattern, options) {
   try {
     const schedule = analyze(prepare(pattern, readingOf({...options})));
 
@@ -61,6 +61,19 @@ function firesOn(pattern, options) {
   catch {
     return null;
   }
+}
+
+// A pattern sits in many pairs, so what it fires on is worked out once.
+const firings = new Map();
+
+function firesOn(pattern, options) {
+  const key = JSON.stringify([pattern, options]);
+
+  if (!firings.has(key)) {
+    firings.set(key, analysedFiring(pattern, options));
+  }
+
+  return firings.get(key);
 }
 
 // Every string one character away from `text`, never touching a space, so

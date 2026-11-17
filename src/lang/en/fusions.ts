@@ -125,11 +125,12 @@ interface Said {
   text: string;
 }
 
-// A way of saying the time. `carry` is the same phrase with the single
-// second riding on its clock times, or null if it names none. `excepts`
-// marks a phrase that already ends in an exception.
+// A way of saying the time. `carry` writes the same phrase with the single
+// second riding on its clock times, or null if it names none; it is only
+// written when there is a single second. `excepts` marks a phrase that
+// already ends in an exception.
 interface TimePhrase extends Spoken {
-  carry: string | null;
+  carry: (() => string | null) | null;
   excepts: boolean;
   // Whether the hours run round the clock, so that no daily rhythm is
   // there to name.
@@ -548,12 +549,13 @@ function momentsWith(
 
   const at = {minute: minute.only, pair: context.halves};
   const moments = say(hours, hoursAsMoments(at, opts), opts);
-  const carrying = say(hours, hoursAsMoments({...at, second: riding}, opts),
-    opts);
 
   return moments && {
     ...moments,
-    carry: carrying && carrying.text,
+    carry() {
+      return say(hours, hoursAsMoments({...at, second: riding}, opts),
+        opts)?.text ?? null;
+    },
     excepts: hours.kind === 'except',
     text: hours.kind === 'all' ?
       lead.everyHour :
@@ -607,18 +609,23 @@ function timeWith(
 ): TimePhrase[] {
   const {lead, minute} = context;
   const moments = momentsWith(hours, context, opts);
-  const phrase = minutePieces(hours, context, opts) ||
-    minuteWindow(hours, context, opts) ||
-    minutesWith(hours, context, opts);
-  const clauses = exceptions(minute.excepted, 'minute',
-    lead.exceptAt(minute.excepted.length), opts);
   const excepts = hours.kind === 'except';
-  const said = phrase && {
-    ...phrase,
-    carry: null,
-    excepts: excepts || clauses.length > 0,
-    text: closedBy(phrase.text, excepts, clauses)
-  };
+
+  // The minutes said with the hours, written only when they are said.
+  function said(): TimePhrase | null {
+    const phrase = minutePieces(hours, context, opts) ||
+      minuteWindow(hours, context, opts) ||
+      minutesWith(hours, context, opts);
+    const clauses = exceptions(minute.excepted, 'minute',
+      lead.exceptAt(minute.excepted.length), opts);
+
+    return phrase && {
+      ...phrase,
+      carry: null,
+      excepts: excepts || clauses.length > 0,
+      text: closedBy(phrase.text, excepts, clauses)
+    };
+  }
 
   // A count past the hour takes an exception to every hour as hours, as
   // a minute does where there is no moment to carry it: "at 30 seconds
@@ -626,7 +633,7 @@ function timeWith(
   // at 8 a.m.", which says the hour twice and names 8:00:00.
   const counted = excepts && minute.opens;
 
-  return [counted ? said || moments : moments || said].filter(
+  return [counted ? said() || moments : moments || said()].filter(
     function present(found) {
       return found !== null;
     }
@@ -637,13 +644,13 @@ function timeWith(
 // `before` is what the seconds say in front of it.
 function clockList(moments: Moment[], before: string, opts: EnglishOptions):
   TimePhrase[] {
-  const text = join(before, words.at,
-    list(timeNames(moments, opts), opts));
+  const listed = moments.length > 0 && moments.length <= mostClockTimes;
 
-  return moments.length === 0 || moments.length > mostClockTimes ?
-    [] :
+  return listed ?
     [{carry: null, excepts: false, fills: false, length: moments.length,
-      text, yields: false}];
+      text: join(before, words.at, list(timeNames(moments, opts), opts)),
+      yields: false}] :
+    [];
 }
 
 // A single minute and a single second, counted together past hours that
@@ -763,7 +770,7 @@ function timeOfDay(facts: ScheduleFacts, opts: EnglishOptions): TimePhrase {
   const others = timesWith(facts, second, times, opts).map(function whole(
     said
   ) {
-    const carried = typeof clockSecond === 'number' && said.carry;
+    const carried = typeof clockSecond === 'number' && said.carry?.();
 
     return {
       ...said,

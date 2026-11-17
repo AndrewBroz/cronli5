@@ -1,10 +1,9 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as italian from '../../../src/lang/it/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -70,13 +69,7 @@ function neverFires(schedule) {
   return dateReach !== null && !dateReach.fires && !day.union;
 }
 
-const SETUP = {languages: [italian.default], options: {}, styles: {}};
-
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
-}
+const parse = parser(italian.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);

@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1]
+
+### Changed
+
+- **Faster.** Describing a set of many years, such as `*/2` in the year
+  field (4,015 years), took 24 ms and now takes well under one; an evenly
+  spaced set is no longer searched for pieces it cannot have. Over a broad
+  corpus in all ten languages, describing is about a third faster; Spanish,
+  French and Ukrainian, which listed every year of an unrestricted year
+  field several times a pattern, by a third again. Every description is
+  unchanged.
+
 ## [1.2.0]
 
 ### Added
