@@ -1,6 +1,6 @@
 {
   "name": "cronli5",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and nine other languages. Includes a cRonstrue-compatible entry point.",
   "repository": {
     "type": "git",
