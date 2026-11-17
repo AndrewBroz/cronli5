@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2]
+
+### Fixed
+
+- **README corrections.** The crontab example showed "midnight on weekdays"
+  where the tool says "12 a.m. on weekdays"; English has thirteen style
+  fields beyond `hour12` and `short`, not ten; the `2/3 * * * *` example
+  now reads "past the hour", as the library says it; and cRonstrue is
+  itself a port of the C# cron-expression-descriptor, which is the library
+  with ports to other languages. No code changes.
+
 ## [1.2.1]
 
 ### Changed
