@@ -456,6 +456,18 @@ function costsLess(cost: number[], other: number[]): boolean {
 // wraps here: a wrapped run is kept whole by the plain pieces.
 function cadencePiecesOf(values: number[], domain: Domain, ends: boolean):
   CadencePieces | null {
+  // Evenly spaced values are one part, or loose values too few to be a
+  // cadence: never pieces. Searching them anyway takes milliseconds on a
+  // field of thousands of years.
+  const interval = values[1] - values[0];
+  const even = values.every(function spaced(value, index) {
+    return index === 0 || value - values[index - 1] === interval;
+  });
+
+  if (even) {
+    return null;
+  }
+
   const long = linearRuns(values).filter(function isLong(run) {
     return run.length >= minProgression;
   });
