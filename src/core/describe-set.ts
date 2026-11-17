@@ -381,7 +381,7 @@ function widestFirst(values: number[], domain: Domain, ends: boolean):
   const queued: number[][] = [];
 
   function queue(at: number, covers: number): void {
-    queued[covers] = [...queued[covers] || [], at];
+    (queued[covers] ||= []).push(at);
   }
 
   values.forEach(function measure(value, at) {

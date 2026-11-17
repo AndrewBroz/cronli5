@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Faster with large year sets.** Describing a set of many years, such as
+  `*/2` in the year field (4,015 years), no longer slows down with the
+  square of its size: 24 ms becomes under 3 ms. Every description is
+  unchanged.
+
 ## [1.2.0]
 
 ### Added
