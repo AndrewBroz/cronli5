@@ -24,7 +24,7 @@ rendered descriptions of schedules from cron patterns.
   and full seven-part (Quartz-style) patterns with a trailing year. See [Input Formats](#input-formats) for details.
 
 `cronli5` is a good library to use if you need to display a natural-language
-interpretation of a cron pattern in a Node or in a browser environment. If you
+interpretation of a cron pattern in Node or in a browser. If you
 need to do other things with cron patterns, such as scheduling or computing
 future run times, consider a library like [`@breejs/later`][later].
 
@@ -129,7 +129,7 @@ Runs at 09:30 every day.
 # A whole crontab: each job's schedule, a tab, and its command:
 $ crontab -l | cronli5 --crontab
 Runs every 5 minutes.	/usr/bin/job --flag
-Runs at midnight on weekdays.	/bin/backup
+Runs at 12 a.m. on weekdays.	/bin/backup
 
 # Or one pattern per line on standard input, each followed by a tab and
 # its description:
@@ -171,7 +171,7 @@ The `cronli5` function takes an `options` object as its 2nd parameter:
 | Option | Default | Description |
 | --- | --- | --- |
 | `lang` | `'en'` | The language: a code such as `'en'`, optionally with a region (`'en-GB'`), or an imported language module. See [Languages](#languages). |
-| `style` | `{}` | Overrides of the language's style table: its copy-editor choices. In English, `{hour12: false}` gives 24-hour times and `{short: true}` abbreviated names (`Mon`, `Jun`); there are ten more fields. See [docs/styles.md](./docs/styles.md). |
+| `style` | `{}` | Overrides of the language's style table: its copy-editor choices. In English, `{hour12: false}` gives 24-hour times and `{short: true}` abbreviated names (`Mon`, `Jun`); there are thirteen more fields. See [docs/styles.md](./docs/styles.md). |
 | `form` | `'fragment'` | `'fragment'` is a lowercase phrase to embed (`'at midnight every day'`); `'label'` is the same capitalised to stand alone; `'sentence'` is a complete sentence (`'Runs at midnight every day.'`). Each language supplies its own wrapping. The lenient fallback is never wrapped. |
 | `cron` | `'standard'` | The flavour of cron the pattern is written in. `'quartz'` reads it as [Quartz](https://www.quartz-scheduler.org/) does: the day-of-week is numbered **1 = Sunday … 7 = Saturday** (standard cron uses 0/7 = Sunday, 1 = Monday), including inside the day-of-week operators (`6L`, `2#2`), and `?` ("no specific value") is accepted in a day field. Under `'standard'`, `?` is rejected outright rather than silently mis-read: it is the unambiguous mark of a Quartz pattern, so `'0 0 ? * 2'` would otherwise read as Tuesday when its author meant Monday. |
 | `weekdaysFrom` | from `cron` | The number that means Sunday in the day-of-week field, `0` or `1`: one half of what a flavour sets, available alone. |
@@ -390,7 +390,10 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 
 `cronli5` supports a wide range of formatting options so your copy can match the
 standards of the rest of your site. UK conventions? 24-hour time? More schedule-like,
-or more conversational? Oxford comma? `cronli5` supports adjusting these options.
+or more conversational? Oxford comma? `cronli5` supports adjusting these options:
+every field is in [docs/styles.md](./docs/styles.md), and
+[setting a house style](./docs/migrating-from-cronstrue.md#your-own-house-style)
+shows how to set one for every call.
 
 ### Migration and Support
 
@@ -420,7 +423,7 @@ distinct cron patterns with second accuracy). As a tradeoff, this library does
 not qualify cases that begin on the first second, minute, or hour of the
 corresponding minute, hour, or day. So `*/3 * * * *` will be "every 3
 minutes", while `2/3 * * * *` will be "every 3 minutes from 2 through 59
-minutes past every hour".
+minutes past the hour".
 
 ## Note on Timezones
 
@@ -466,8 +469,9 @@ modules it is given. A code known only at run time can be typed with
 
 ## Porting to Another Programming Language
 
-cRonstrue reached other ecosystems as ports to C#, Java, PHP and more,
-each checked by whatever tests its author wrote. `cronli5` ships the test
+cRonstrue is itself a port of a C# library,
+[cron-expression-descriptor][ced], which reached other ecosystems as ports to Java, PHP and more, each
+checked by whatever tests its author wrote. `cronli5` ships the test
 a port must pass. [`conformance/<code>.json`](./conformance/) holds every
 expected description for a language, several hundred rows each, as plain
 JSON:
@@ -507,7 +511,8 @@ npm test          # run the Vitest suite (runs against src/, no build needed)
 npm run coverage  # run tests with Vitest V8 coverage and enforce thresholds
 npm run lint      # lint source and tests with ESLint
 npm run build     # emit dist/ (ESM + CJS) and the minified browser global
-npm run verify    # the full CI gate: lint, types, tests, coverage, docs, build
+npm run verify    # the full CI gate: lint, types, tests, coverage, docs,
+                  # conformance suites, build
 ```
 
 A `pre-push` git hook runs `npm run verify` so a push only lands when the full
@@ -534,18 +539,13 @@ greatly appreciated. Native speakers of target languages are the best.
 _Copyright &copy; 2026 [Andrew Brož][andrewbroz]_
 
 [andrewbroz]: https://github.com/andrewbroz
-[esbuild]: https://esbuild.github.io/
 [dunse]: https://gist.github.com/dunse/3714957
 [eli5]: https://www.reddit.com/r/explainlikeimfive/
-[chicago]: https://www.chicagomanualofstyle.org/
+[ced]: https://github.com/bradymholt/cron-expression-descriptor
 [cronstrue]: https://github.com/bradymholt/cRonstrue
-[guardian]: https://www.theguardian.com/guardian-observer-style-guide-a
 [later]: https://github.com/breejs/later
 [license]: ./LICENSE.md
 [moment]: http://momentjs.com/
 [moment-timezone]: http://momentjs.com/timezone/
 [prettycron]: https://github.com/azza-bazoo/prettycron
-[rollup]: http://rollupjs.org/
-[stackoverflow]: https://stackoverflow.com/
 [timezones]: https://www.w3.org/TR/timezone/
-[webpack]: https://webpack.github.io/
