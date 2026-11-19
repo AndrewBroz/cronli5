@@ -1,0 +1,7 @@
+{
+  "name": "Traditional Chinese",
+  "status": "pending",
+  "humanReview": null,
+  "modelReview": "artifacts only, 2026-11-19, by Claude Fable 5.2: a rule book (answers.md) derived from usage notes written in Traditional Chinese (Taiwan first, Hong Kong and Macau marked) by a writer told nothing of cron; a lexicon; and hand-written rows for the visible and held-out grids, hard cases and options. No renderer exists yet. The rows pass the oracle checks (coverage, no pattern twice, equal schedules worded alike); the author worked out the firing times of each row and re-read it once. Nothing has been read by a blind reader, no native speaker of Taiwan or Hong Kong has seen any of it, and the open-web searches for corpus evidence found almost nothing exact, so the taste calls rest on the usage notes and the author's own judgment. The Hong Kong style in particular (12-hour 時 times, 星期, 中午12時 and 凌晨12時 in place of the notes' 正午 and 午夜) is unreviewed.",
+  "branchBudget": 110
+}
