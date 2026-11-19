@@ -26,8 +26,8 @@ const FIELDS =
 // czerwcu 2030 r.»), the month tail of a day phrase follows the month
 // field («każdego miesiąca», «miesiąca», «tego miesiąca»), a wrapping run
 // of months is cut when a year is restricted, a single year stands in
-// front of a month frame that is an exception or pieces, and a union is
-// said from its larger side when one day field leaves out a day or two.
+// front of a month frame that is «poza …» or pieces, and a day field that
+// is an exception alone is said by the days that fire inside a union.
 // Those are the fusions answers 2.6 declares; all of them stay inside the
 // frame, the day and the closing part. Nothing else may cross, with the three exceptions
 // below.

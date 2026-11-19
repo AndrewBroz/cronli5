@@ -118,7 +118,7 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'co godzinę oprócz 3:00 w nocy',
+        expected: 'co godzinę, oprócz 3:00 w nocy',
         parts: ['3:00 w nocy'],
         pattern: '0 0-2,4-23 * * *'
       }
@@ -261,7 +261,7 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'co godzinę oprócz 3.00',
+        expected: 'co godzinę, oprócz 3.00',
         parts: ['3.00'],
         pattern: '0 0-2,4-23 * * *'
       }

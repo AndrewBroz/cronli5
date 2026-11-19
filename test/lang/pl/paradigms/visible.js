@@ -61,8 +61,7 @@ const rows = [
     'od poniedziałku do piątku co 30 minut od 9:00 do 17:30'],
   ['0-29,45 9-17 * * 1-5',
     'od poniedziałku do piątku, od 9:00 do 17:45: co minutę od każdej ' +
-    'pełnej godziny do 29 minut po niej, a potem jednorazowo 45 minut po ' +
-    'niej'],
+    'pełnej godziny do 29 minut po niej, a potem raz 45 minut po niej'],
   ['0,15,45 9-17 * * 1-5',
     'od poniedziałku do piątku, od 9:00 do 17:45: o każdej pełnej godzinie ' +
     'oraz 15 i 45 minut później'],
@@ -88,8 +87,8 @@ const rows = [
     'od poniedziałku do piątku, ale tylko w nieparzyste dni miesiąca, co ' +
     '15 minut od 9:00 do 17:45'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
-    'w nieparzyste dni każdego miesiąca oprócz piętnastego dnia, a także ' +
-    'od poniedziałku do piątku, co 15 minut od 9:00 do 17:45'],
+    'od poniedziałku do piątku, a także w nieparzyste dni od 1 do 13 oraz ' +
+    'od 17 do 31 każdego miesiąca, co 15 minut od 9:00 do 17:45'],
 
   // window / month — context `*/15 9-17 * * 1-5`
   ['*/15 9-17 * 1 1-5',

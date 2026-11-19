@@ -102,8 +102,8 @@ const rows = [
     '– dzień wcześniej, jeśli niedziela – dzień później'],
   ['0 0 28W * *',
     'dwudziestego ósmego dnia każdego miesiąca o 0:00, a jeśli to sobota – ' +
-    'dzień wcześniej, jeśli niedziela – dzień później, a gdy niedziela ' +
-    'jest ostatnim dniem miesiąca – dwa dni wcześniej'],
+    'dzień wcześniej, jeśli niedziela – dzień później, a jeśli niedziela i ' +
+    'zarazem ostatni dzień miesiąca – dwa dni wcześniej'],
   ['0 0 31W * *',
     'trzydziestego pierwszego dnia każdego miesiąca o 0:00, a jeśli to ' +
     'sobota lub niedziela – w poprzedzający go piątek'],
@@ -188,7 +188,7 @@ const rows = [
   ['0 0 31 6 1', 'w czerwcu w poniedziałki o 0:00'],
   ['0 9 1-31 * 1', 'codziennie o 9:00'],
 
-  // A day of the month and a weekday together: either fires.
+  // A day of the month and a weekday together: either fires. Neither half is ever said as an exception.
   ['0 0 1 6 5', 'w czerwcu: w piątki, a także 1 czerwca, o 0:00'],
   ['0 0 1,15 1,7 1-5',
     'w styczniu i lipcu: od poniedziałku do piątku, a także pierwszego i ' +
@@ -206,26 +206,26 @@ const rows = [
     'w czerwcu w poniedziałki, ale tylko w nieparzyste dni miesiąca, o ' +
     '0:00'],
   ['0 0 15 * 0-2,4-6',
-    'codziennie oprócz śród, chyba że wypadają piętnastego dnia miesiąca, ' +
-    'o 0:00'],
+    'od czwartku do wtorku, a także piętnastego dnia każdego miesiąca, o ' +
+    '0:00'],
   ['0 0 1 6 1#2',
     'w czerwcu: w drugi poniedziałek miesiąca, a także 1 czerwca, o 0:00'],
   ['* * 13 * 5',
     'w piątki, a także trzynastego dnia każdego miesiąca, co minutę'],
   ['0 0 1,15 * 1-6',
-    'codziennie oprócz niedziel, chyba że wypadają pierwszego lub ' +
-    'piętnastego dnia miesiąca, o 0:00'],
+    'od poniedziałku do soboty, a także pierwszego i piętnastego dnia ' +
+    'każdego miesiąca, o 0:00'],
   ['0 0 1-14,16-31 * 1-5',
-    'codziennie oprócz piętnastego dnia każdego miesiąca, jeśli wypada on ' +
-    'w sobotę lub niedzielę, o 0:00'],
+    'od poniedziałku do piątku, a także w dniach 1–14 i 16–31 każdego ' +
+    'miesiąca, o 0:00'],
   ['0 0 L * 1',
     'w poniedziałki, a także ostatniego dnia każdego miesiąca, o 0:00'],
   ['0 0 1 * 0,2-4',
     'od wtorku do czwartku oraz w niedziele, a także pierwszego dnia ' +
     'każdego miesiąca, o 0:00'],
   ['0 0 1 * 0,2-5',
-    'codziennie oprócz poniedziałków i sobót, chyba że wypadają pierwszego ' +
-    'dnia miesiąca, o 0:00'],
+    'od wtorku do piątku oraz w niedziele, a także pierwszego dnia każdego ' +
+    'miesiąca, o 0:00'],
   ['0 0 0 1 6 5 2030',
     'w czerwcu 2030 r.: w piątki, a także 1 czerwca, o 0:00'],
   ['0 0 0 1 * 5 2030',
@@ -234,11 +234,10 @@ const rows = [
     'w piątki, a także pierwszego dnia każdego miesiąca, co godzinę od ' +
     '0:00 do 2:00 oraz o 22:00 i 23:00'],
   ['0 0 1-14,16-31 * 1',
-    'codziennie oprócz piętnastego dnia każdego miesiąca, chyba że wypada ' +
-    'on w poniedziałek, o 0:00'],
+    'w poniedziałki, a także w dniach 1–14 i 16–31 każdego miesiąca, o ' +
+    '0:00'],
   ['0 9 1-14,16-31 * 5',
-    'codziennie oprócz piętnastego dnia każdego miesiąca, chyba że wypada ' +
-    'on w piątek, o 9:00'],
+    'w piątki, a także w dniach 1–14 i 16–31 każdego miesiąca, o 9:00'],
 
   // Days of the month: with one month, with several, runs that wrap, exceptions, cadences.
   ['0 0 1,15 6 *', 'co roku 1 i 15 czerwca o 0:00'],
@@ -303,7 +302,7 @@ const rows = [
   ['0 9 * 12,1 *', 'w styczniu i grudniu codziennie o 9:00'],
   ['0 9 * 7-5 *', 'poza czerwcem codziennie o 9:00'],
   ['0 9 * 1-5,7-10,12 *', 'poza czerwcem i listopadem codziennie o 9:00'],
-  ['0 0 1 7-5 *', 'poza czerwcem pierwszego dnia miesiąca o 0:00'],
+  ['0 0 1 7-5 *', 'poza czerwcem, pierwszego dnia miesiąca o 0:00'],
   ['0 9 * 7-5 1', 'poza czerwcem w poniedziałki o 9:00'],
   ['0 9 * 9,10 *', 'we wrześniu i październiku codziennie o 9:00'],
   ['0 9 * 6,9 *', 'w czerwcu i wrześniu codziennie o 9:00'],
@@ -414,7 +413,7 @@ const rows = [
   ['30 */3 * * *', 'codziennie co 3 godziny od 0:30 do 21:30'],
   ['30 */5 * * *', 'codziennie co 5 godzin od 0:30 do 20:30'],
   ['30 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'codziennie co 2 godziny od 0:30 do 22:30 oprócz 8:30'],
+    'codziennie co 2 godziny od 0:30 do 22:30, oprócz 8:30'],
   ['23 */6 * * *', 'codziennie o 0:23, 6:23, 12:23 i 18:23'],
   ['23 1/2 * * *', 'codziennie co 2 godziny od 1:23 do 23:23'],
   ['15,45 */2 * * *', '15 i 45 minut po każdej parzystej godzinie'],
@@ -426,7 +425,7 @@ const rows = [
   ['0,15,45 */2 * * *',
     'o każdej parzystej godzinie oraz 15 i 45 minut później'],
   ['5,20,45 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    '5, 20 i 45 minut po każdej parzystej godzinie oprócz godziny 8'],
+    '5, 20 i 45 minut po każdej parzystej godzinie, oprócz godziny 8'],
   ['0-29 */2 * * *',
     'co minutę od każdej parzystej godziny do 29 minut po niej'],
   ['*/5 */2 * * *', 'co 5 minut w godzinach parzystych'],
@@ -447,14 +446,14 @@ const rows = [
   ['0 */3 1 * *', 'pierwszego dnia każdego miesiąca co 3 godziny'],
 
   // One or two hours, minutes or seconds missing: among clock times the missing moment is a clock time after «oprócz»; inside the open hour or minute it is the moment that falls there, «chwili wypadającej …».
-  ['0 0-2,4-23 * * *', 'co godzinę oprócz 3:00'],
-  ['0 0-2,4-14,16-23 * * *', 'co godzinę oprócz 3:00 i 15:00'],
+  ['0 0-2,4-23 * * *', 'co godzinę, oprócz 3:00'],
+  ['0 0-2,4-14,16-23 * * *', 'co godzinę, oprócz 3:00 i 15:00'],
   ['0 0-22 * * *', 'codziennie co godzinę od 0:00 do 22:00'],
   ['0 0-21 * * *', 'codziennie co godzinę od 0:00 do 21:00'],
   ['* 0-22 * * *', 'codziennie co minutę od 0:00 do 22:59'],
-  ['30 0-2,4-23 * * *', '30 minut po każdej pełnej godzinie oprócz 3:30'],
+  ['30 0-2,4-23 * * *', '30 minut po każdej pełnej godzinie, oprócz 3:30'],
   ['5,20,45 0-2,4-23 * * *',
-    '5, 20 i 45 minut po każdej pełnej godzinie oprócz godziny 3'],
+    '5, 20 i 45 minut po każdej pełnej godzinie, oprócz godziny 3'],
   ['*/10 0-2,4-23 * * *',
     'codziennie co 10 minut od 0:00 do 2:50 oraz od 4:00 do 23:50'],
   ['* 0-2,4-23 * * *',
@@ -463,37 +462,37 @@ const rows = [
     'codziennie co minutę od 0:00 do 2:59, od 4:00 do 14:59 oraz od 16:00 ' +
     'do 23:59'],
   ['0-28,30-59 * * * *',
-    'co minutę oprócz chwili wypadającej 29 minut po każdej pełnej ' +
+    'co minutę, oprócz chwili wypadającej 29 minut po każdej pełnej ' +
     'godzinie'],
   ['1-29,31-59 * * * *',
-    'co minutę oprócz chwil wypadających o pełnej godzinie i 30 minut po ' +
-    'niej'],
+    'co minutę, oprócz chwili wypadającej o każdej pełnej godzinie i ' +
+    'chwili wypadającej 30 minut po niej'],
   ['0-58 * * * *', 'co minutę od każdej pełnej godziny do 58 minut po niej'],
-  ['0-28,30-59 9 * * *', 'codziennie co minutę od 9:00 do 9:59 oprócz 9:29'],
+  ['0-28,30-59 9 * * *', 'codziennie co minutę od 9:00 do 9:59, oprócz 9:29'],
   ['0-28,30-59 9,17 * * *',
-    'codziennie co minutę od 9:00 do 9:59 oraz od 17:00 do 17:59 oprócz ' +
+    'codziennie co minutę od 9:00 do 9:59 oraz od 17:00 do 17:59, oprócz ' +
     '9:29 i 17:29'],
   ['0-28,30-59 9-17 * * *',
-    'codziennie co minutę od 9:00 do 17:59 oprócz chwili wypadającej 29 ' +
+    'codziennie co minutę od 9:00 do 17:59, oprócz chwili wypadającej 29 ' +
     'minut po każdej pełnej godzinie'],
   ['0,5,10,15,20,25,35,40,45,50,55 * * * *',
-    'co 5 minut oprócz chwili wypadającej 30 minut po każdej pełnej ' +
+    'co 5 minut, oprócz chwili wypadającej 30 minut po każdej pełnej ' +
     'godzinie'],
   ['0,5,10,15,20,25,35,40,45,50,55 9-17 * * *',
-    'codziennie co 5 minut od 9:00 do 17:55 oprócz chwili wypadającej 30 ' +
+    'codziennie co 5 minut od 9:00 do 17:55, oprócz chwili wypadającej 30 ' +
     'minut po każdej pełnej godzinie'],
   ['0,5,10,15,20,25,35,40,45,50,55 9 * * *',
-    'codziennie co 5 minut od 9:00 do 9:55 oprócz 9:30'],
+    'codziennie co 5 minut od 9:00 do 9:55, oprócz 9:30'],
   ['0,5,10,15,20,25,35,40,45,50,55 0-2,4-23 * * *',
-    'codziennie co 5 minut od 0:00 do 2:55 oraz od 4:00 do 23:55 oprócz ' +
+    'codziennie co 5 minut od 0:00 do 2:55 oraz od 4:00 do 23:55, oprócz ' +
     'chwili wypadającej 30 minut po każdej pełnej godzinie'],
   ['0,10,20,40,50 9-17 * * *',
     'codziennie od 9:00 do 17:50: o każdej pełnej godzinie oraz 10, 20, 40 ' +
     'i 50 minut później'],
   ['0,10,20,40,50 9 * * *', 'codziennie o 9:00, 9:10, 9:20, 9:40 i 9:50'],
   ['0,7,14,21,35,42,49,56 * * * *',
-    'co 7 minut od każdej pełnej godziny do 56 minut po niej oprócz chwili ' +
-    'wypadającej 28 minut po niej'],
+    'co 7 minut od każdej pełnej godziny do 56 minut po niej, oprócz ' +
+    'chwili wypadającej 28 minut po niej'],
   ['* 0-28,30-59 * * * *',
     'co sekundę, ale nie przez minutę zaczynającą się 29 minut po każdej ' +
     'pełnej godzinie'],
@@ -501,14 +500,13 @@ const rows = [
     'codziennie co sekundę od 9:00:00 do 9:59:59, ale nie przez minutę ' +
     'zaczynającą się o 9:29'],
   ['0-28,30-59 * * * * *',
-    'co sekundę oprócz chwili wypadającej 29 sekund po każdej pełnej ' +
+    'co sekundę, oprócz chwili wypadającej 29 sekund po każdej pełnej ' +
     'minucie'],
   ['0-28,30-59 0 9 * * *',
-    'codziennie co sekundę od 9:00:00 do 9:00:59 oprócz 9:00:29'],
+    'codziennie co sekundę od 9:00:00 do 9:00:59, oprócz 9:00:29'],
   ['0-28,30-59 * 9 * * *',
-    'codziennie co minutę od 9:00 do 9:59, za każdym razem co sekundę ' +
-    'przez całą minutę oprócz chwili wypadającej 29 sekund po pełnej ' +
-    'minucie'],
+    'codziennie co sekundę od 9:00:00 do 9:59:59, oprócz chwili ' +
+    'wypadającej 29 sekund po każdej pełnej minucie'],
 
   // Several fields at once: windows, pieces of hours, lists of hours.
   ['0 9-17,20,22 * * *',
@@ -573,8 +571,8 @@ const rows = [
   ['10-40 9 * * *', 'codziennie co minutę od 9:10 do 9:40'],
   ['30-59 9 * * *', 'codziennie co minutę od 9:30 do 9:59'],
   ['5-10,20 * * * *',
-    'co minutę od 5 do 10 minut po każdej pełnej godzinie, a potem ' +
-    'jednorazowo 20 minut po niej'],
+    'co minutę od 5 do 10 minut po każdej pełnej godzinie, a potem raz 20 ' +
+    'minut po niej'],
   ['5,20-40,50,55 * * * *',
     '5 minut po każdej pełnej godzinie, co minutę od 20 do 40 minut po ' +
     'niej, a potem jeszcze 50 i 55 minut po niej'],
@@ -701,17 +699,17 @@ const rows = [
   ['0 0 30 * *', 'trzydziestego dnia każdego miesiąca o 0:00'],
   ['0 0 0 31 6 * 2030', 'nigdy (takiej daty nie ma w kalendarzu)'],
 
-  // A year stands in front of a month frame that is an exception or pieces.
+  // A year stands in front of a month frame that is «poza …» or pieces.
   ['0 0 9 * 7-5 * 2030', 'w 2030 r. poza czerwcem codziennie o 9:00'],
   ['0 0 9 * 6-8,12 * 2030',
     'w 2030 r. od czerwca do sierpnia oraz w grudniu, codziennie o 9:00'],
   ['0 9 * 1-10 *', 'poza listopadem i grudniem codziennie o 9:00'],
 
   // An exception never removes the first or last moment its base names.
-  ['1-29,31-59 9 * * *', 'codziennie co minutę od 9:01 do 9:59 oprócz 9:30'],
+  ['1-29,31-59 9 * * *', 'codziennie co minutę od 9:01 do 9:59, oprócz 9:30'],
   ['0-28,30-58 9-17 * * *',
-    'codziennie od 9:00 do 17:58: co minutę od każdej pełnej godziny do 58 ' +
-    'minut po niej oprócz chwili wypadającej 29 minut po niej'],
+    'codziennie co minutę od 9:00 do 17:58, oprócz chwil wypadających 29 i ' +
+    '59 minut po każdej pełnej godzinie'],
 
   // A rhythm that restarts in each hour of several hours: the window from
   // the first firing to the last, a colon, and the hour's own form.
@@ -733,22 +731,37 @@ const rows = [
     '8:00, 12:00, 16:00 i 20:00'],
   ['0 0,8,16 * * *', 'co 8 godzin'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1',
-    'w nieparzyste dni każdego miesiąca oprócz piętnastego dnia, a także w ' +
-    'poniedziałki, o 0:00'],
+    'w poniedziałki, a także w nieparzyste dni od 1 do 13 oraz od 17 do 31 ' +
+    'każdego miesiąca, o 0:00'],
   ['0 0 1-14,16-31 * 1-4',
-    'codziennie oprócz piętnastego dnia każdego miesiąca, jeśli wypada on ' +
-    'w piątek, sobotę lub niedzielę, o 0:00'],
+    'od poniedziałku do czwartku, a także w dniach 1–14 i 16–31 każdego ' +
+    'miesiąca, o 0:00'],
 
   // Seconds beside a missing hour; a lone minute before a run, in a run
   // of hours; a rhythm of days that runs to the month's end; a rhythm of
   // hours less one, with its real ends.
-  ['30 0 0-2,4-23 * * *', '30 sekund po każdej pełnej godzinie oprócz 3:00:30'],
+  ['30 0 0-2,4-23 * * *',
+    '30 sekund po każdej pełnej godzinie, oprócz 3:00:30'],
   ['5,20-40 9-17 * * *',
     'codziennie od 9:05 do 17:40: 5 minut po każdej pełnej godzinie oraz ' +
     'co minutę od 20 do 40 minut po niej'],
   ['0 0 */4 * *', 'co 4 dni od pierwszego dnia każdego miesiąca o 0:00'],
   ['0 2,4,6,10,12,14,16,18,20,22 * * *',
-    'codziennie co 2 godziny od 2:00 do 22:00 oprócz 8:00']
+    'codziennie co 2 godziny od 2:00 do 22:00, oprócz 8:00'],
+
+  // A union never says a half as an exception: both halves are said by the
+  // days that fire.
+  ['0 0 2-31 * 1',
+    'w poniedziałki, a także w dniach 2–31 każdego miesiąca, o 0:00'],
+  ['0 0 1,4,7,10,13,19,22,25,28,31 * 5',
+    'w piątki, a także w dniach 1, 4, 7, 10, 13, 19, 22, 25, 28 i 31 ' +
+    'każdego miesiąca, o 0:00'],
+
+  // Two minutes missing from every hour, one of them the last.
+  ['0-28,30-58 * * * *',
+    'co minutę, oprócz chwil wypadających 29 i 59 minut po każdej pełnej ' +
+    'godzinie'],
+  ['0-28,30-58 9 * * *', 'codziennie co minutę od 9:00 do 9:58, oprócz 9:29']
 ];
 
 export {rows};
