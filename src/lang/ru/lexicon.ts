@@ -184,21 +184,31 @@ const nthWords: Ordinal[] = [
   ordinal('четвёрт'), ordinal('пят')
 ];
 
+// A minute or a second named inside its unit by an ordinal: «на 5-й
+// минуте», «с 5-й минуты» and «кроме 5-й минуты», «по 55-ю минуту».
+const ordinalUnits = {
+  minute: {accusative: 'минуту', genitive: 'минуты', prepositional: 'минуте'},
+  second: {accusative: 'секунду', genitive: 'секунды', prepositional: 'секунде'}
+};
+
 // The function words and fixed phrases. A phrase with a slot is said with
 // the value after it unless a comment says otherwise.
 const words = {
   // Joins.
   and: 'и',
   andAlso: 'а также',
-  butNotAt: 'но не в',
+  andThen: 'и далее',
+  but: 'а',
   except: 'кроме',
-  exceptTheTime: 'кроме времени',
+  exceptTheStretch: 'кроме промежутка',
   ifItIs: 'если это',
   not: 'не',
+  only: 'только',
   or: 'или',
 
   // Prepositions. «Во» stands before «вторник» and «второй»; «со»
-  // before «вторника» and «среды».
+  // before «вторника», «среды» and the 2nd as an ordinal.
+  at: 'на',
   from: 'с',
   fromBeforeCluster: 'со',
   in: 'в',
@@ -207,23 +217,25 @@ const words = {
   until: 'до',
 
   // Rhythms.
-  andSoEvery: 'и так каждые',
   every: 'каждые',
   everyHour: 'каждый час',
   everyMinute: 'каждую минуту',
   everySecond: 'каждую секунду',
 
-  // Inside the hour and the minute.
+  // Inside the hour and the minute. The unit's first value is its start:
+  // «в начале», «с начала», «кроме начала».
+  duringEachSuchHour: 'в течение каждого такого часа',
   duringEachSuchMinute: 'в течение каждой такой минуты',
   duringTheFirstMinute: 'в течение первой минуты',
-  inEvenHours: 'по чётным часам',
-  inOddHours: 'по нечётным часам',
-  ofEachEvenHour: 'каждого чётного часа',
   ofEachHour: 'каждого часа',
   ofEachMinute: 'каждой минуты',
-  ofEachOddHour: 'каждого нечётного часа',
+  ofEachSuchHour: 'каждого такого часа',
   ofEachSuchMinute: 'каждой такой минуты',
   ofTheFirstMinute: 'первой минуты',
+  ofTheSameHour: 'того же часа',
+  ofTheSameMinute: 'той же минуты',
+  startGenitive: 'начала',
+  startPrepositional: 'начале',
 
   // The parts of the day the 12-hour clock names (`hour12`).
   afternoon: 'дня',
@@ -238,8 +250,6 @@ const words = {
   dateThrough: 'число',
   evenDates: 'по чётным числам',
   everyDay: 'ежедневно',
-  falling: 'выпадающего на',
-  fallingPlural: 'выпадающих на',
   firstWeekday: 'в первый будний день',
   last: {
     feminine: 'последняя',
@@ -257,11 +267,14 @@ const words = {
   weekday: 'будний день',
 
   // Months.
-  everyMonth: 'каждый месяц',
+  allYear: 'весь год',
+  inWhichThereAre: 'в котором',
   inWhichThereAreFive: 'в котором их пять',
   inWhichThereIs: 'в котором есть',
   ofEachMonth: 'каждого месяца',
+  ofEachOfTheseMonths: 'каждого из этих месяцев',
   ofTheMonth: 'месяца',
+  ofTheSameMonth: 'того же месяца',
 
   // Years.
   everyNthYear: 'каждый',
@@ -276,10 +289,11 @@ const words = {
   yearly: 'ежегодно',
   yearsPrepositional: 'годах',
 
-  // Never.
+  // Never: «никогда: такой даты не существует», «никогда: в 2031 году
+  // такой даты нет».
   never: 'никогда: такой даты не существует',
-  neverInTheseYears: 'никогда: в эти годы такой даты нет',
   neverPrefix: 'никогда',
+  noSuchDate: 'такой даты нет',
 
   // The three forms and the fixed texts.
   neverRuns: 'Не выполняется',
@@ -288,7 +302,8 @@ const words = {
   unrecognizable: 'нераспознанное выражение cron'
 };
 
-const lexicon = {months, nthWords, twoDigits, units, weekdays, words};
+const lexicon =
+  {months, nthWords, ordinalUnits, twoDigits, units, weekdays, words};
 
 export type {Gender, MonthName, Ordinal, Unit, WeekdayName};
 export default lexicon;

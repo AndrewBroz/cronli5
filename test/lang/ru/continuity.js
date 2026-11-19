@@ -13,17 +13,17 @@ const FIELDS =
 // A description is four parts in one order, from the calendar to the
 // clock (answers, "The sentence in one page"): the years («в 2030 году»,
 // «ежегодно», «в високосные годы»), the months that lead («в июне», «с
-// июня по август», «каждый месяц, кроме июня,»), the day («ежедневно»,
+// июня по август», «весь год, кроме июня,»), the day («ежедневно»,
 // «по будням», «1 июня», «по пятницам, а также 13-го числа каждого
 // месяца,») and the time. `describeParts` gives them as `{years, months,
 // day, time}`, each with the comma that closes it, if any.
 //
 // A time field changes the time. A day, month or year field changes the
-// years, the months and the day: a date takes its months («1 июня», «1-го
-// числа января и июля») and then no months lead; one year joins one
+// years, the months and the day: a date takes its months («1 июня», «1
+// января и 1 июля») and then no months lead; one year joins one
 // month's name («июня 2030 года») and then no years lead; a calendar date
-// with no year named takes «ежегодно», and 29 February «в високосные
-// годы»; days a named month lacks are not said and months that lack the
+// with no year named, or a run of years, takes «ежегодно», and 29
+// February «в високосные годы»; days a named month lacks are not said and months that lack the
 // day are not named; months past the year's end are one run only when the
 // year is free. Those are the fusions answers 2.6 declares; all of them
 // stay inside the years, the months and the day. Nothing else may cross,
@@ -39,9 +39,9 @@ const MAY_CHANGE = {
 };
 
 // The first place a time field reaches another part: when no day is
-// named, the day part says «ежедневно» exactly when the time part names
-// a clock time (answers 2.5), so an edit to the second, the minute or
-// the hour may add or remove exactly that word.
+// named, the day part says «ежедневно» exactly when the time part begins
+// with a clock time (answers 2.5), so an edit to the second, the minute
+// or the hour may add or remove exactly that word.
 const TIME_FIELDS = ['hour', 'minute', 'second'];
 const TIME_MAY_SET_DAY = ['', 'ежедневно'];
 

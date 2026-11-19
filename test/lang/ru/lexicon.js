@@ -86,6 +86,13 @@ describe('Russian lexicon:', function() {
       {few: 'дня', many: 'дней', one: 'день'});
   });
 
+  it('has a minute and a second as ordinals name them', function() {
+    expect(lexicon.ordinalUnits.minute).to.deep.equal(
+      {accusative: 'минуту', genitive: 'минуты', prepositional: 'минуте'});
+    expect(lexicon.ordinalUnits.second).to.deep.equal(
+      {accusative: 'секунду', genitive: 'секунды', prepositional: 'секунде'});
+  });
+
   it('has each ordinal for a weekday of each gender', function() {
     expect(lexicon.nthWords[0]).to.deep.equal({
       feminine: 'первая',
@@ -122,4 +129,11 @@ describe('Russian lexicon:', function() {
     expect(strings(lexicon)).to.not.include('нд');
     expect(lexicon.words.in).to.equal('в');
   });
+
+  it('has no word for a working day or for the parity of hours',
+    function() {
+      strings(lexicon).forEach(function plain(word) {
+        expect(word).to.not.match(/рабоч|чётн[а-я]+ час/u);
+      });
+    });
 });
