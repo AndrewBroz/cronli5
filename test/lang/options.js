@@ -5,6 +5,7 @@ import cs from '../../src/lang/cs/index.js';
 import de from '../../src/lang/de/index.js';
 import es from '../../src/lang/es/index.js';
 import fr from '../../src/lang/fr/index.js';
+import indonesian from '../../src/lang/id/index.js';
 import italian from '../../src/lang/it/index.js';
 import ja from '../../src/lang/ja/index.js';
 import ko from '../../src/lang/ko/index.js';
@@ -22,7 +23,9 @@ const {expect} = chai;
 // job — this catches the option × language combinations the corpora don't
 // reach (only English has per-option expectation files).
 
-const languages = {en, cs, de, es, fr, it: italian, ja, ko, pt, uk, zh};
+const languages = {
+  en, cs, de, es, fr, id: indonesian, it: italian, ja, ko, pt, uk, zh
+};
 
 // Every public option flag, alone and in the pairs most likely to interact.
 // `seconds`/`years` change field parsing, not just wording, so they run

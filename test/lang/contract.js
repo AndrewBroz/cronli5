@@ -4,6 +4,7 @@ import cs from '../../src/lang/cs/index.js';
 import de from '../../src/lang/de/index.js';
 import es from '../../src/lang/es/index.js';
 import fr from '../../src/lang/fr/index.js';
+import indonesian from '../../src/lang/id/index.js';
 import italian from '../../src/lang/it/index.js';
 import ja from '../../src/lang/ja/index.js';
 import ko from '../../src/lang/ko/index.js';
@@ -17,7 +18,9 @@ const {expect} = chai;
 // code, pick a regional style, and present a description in each form.
 
 describe('Language contract:', function() {
-  const languages = [en, cs, de, es, fr, italian, ja, ko, pt, uk, zh];
+  const languages = [
+    en, cs, de, es, fr, indonesian, italian, ja, ko, pt, uk, zh
+  ];
 
   languages.forEach(function each(lang) {
     describe(lang.code, function() {

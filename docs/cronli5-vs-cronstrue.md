@@ -12,7 +12,7 @@ The short version of the trade:
   other; cRonstrue assembles per-field fragments joined by commas.
 * **Languages.** The fragment style is what makes cRonstrue translatable into
   its **39 locales** via per-locale string tables. `cronli5` takes the opposite
-  trade: each of its ten languages is a **full renderer** (see
+  trade: each of its twelve languages is a **full renderer** (see
   [docs/lang/](./lang/)), so output reads like the language, but breadth grows
   one language at a time. If you need a language `cronli5` doesn't have yet, use
   cRonstrue; each language doc carries a generated side-by-side table against

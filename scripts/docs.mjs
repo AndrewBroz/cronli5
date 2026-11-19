@@ -31,6 +31,7 @@ import ko from '../src/lang/ko/index.js';
 import pt from '../src/lang/pt/index.js';
 import de from '../src/lang/de/index.js';
 import fr from '../src/lang/fr/index.js';
+import indonesian from '../src/lang/id/index.js';
 import it from '../src/lang/it/index.js';
 import cs from '../src/lang/cs/index.js';
 import uk from '../src/lang/uk/index.js';
@@ -57,6 +58,7 @@ const languages = [
   {code: 'pt', cronstrueLocale: 'pt_BR', extras: [], lang: pt},
   {code: 'de', cronstrueLocale: 'de', extras: [], lang: de},
   {code: 'fr', cronstrueLocale: 'fr', extras: [], lang: fr},
+  {code: 'id', cronstrueLocale: 'id', extras: [], lang: indonesian},
   {code: 'it', cronstrueLocale: 'it', extras: [], lang: it},
   {code: 'cs', cronstrueLocale: 'cs', extras: [], lang: cs}
 ];
@@ -161,6 +163,7 @@ const headToHeadRows = [
   {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
   {name: 'German', code: 'de', cronstrueLocale: 'de'},
   {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
+  {name: 'Indonesian', code: 'id', cronstrueLocale: 'id'},
   {name: 'Italian', code: 'it', cronstrueLocale: 'it'},
   {name: 'Czech', code: 'cs', cronstrueLocale: 'cs'}
 ];
@@ -321,7 +324,9 @@ function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
   try {
-    const modules = {cs, de, en, es, fr, it, ja, ko, pt, uk, zh};
+    const modules = {
+      cs, de, en, es, fr, id: indonesian, it, ja, ko, pt, uk, zh
+    };
     const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
     const run = Function('cronli5', ...codes, ...names,

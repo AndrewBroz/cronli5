@@ -2,7 +2,7 @@
 // language this instance was not given from one that does not exist. Only
 // the codes: importing the languages here would bundle them all.
 const shipped = [
-  'en', 'cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pt', 'uk', 'zh'
+  'en', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'pt', 'uk', 'zh'
 ];
 
 export {shipped};
