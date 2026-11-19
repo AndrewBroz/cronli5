@@ -1,0 +1,7 @@
+{
+  "name": "Russian",
+  "status": "pending",
+  "humanReview": null,
+  "modelReview": "artifacts written 2026-11-19 by Claude Fable 5.2: a rule book (answers.md), the lexicon and hand-written rows (87 visible, 153 held out, about 330 hard cases, option rows for every style field), derived from usage notes written in Russian by a writer who knew nothing of cron. The language is written to the standard of Russian as it is written in Ukraine (the maintainer's ruling of 2026-11-19); the notes found no difference in the language of schedules between Ukraine and the Russian Federation and none was invented. No renderer exists yet. The author worked out the fire times of every row and re-read each sentence once; nothing has been read by a blind reader, no schedule read or fluency read by another agent has been made, and no native speaker has seen any of it. Web searches made for the forms that are the rule book's own (minutes named inside the hour, «по чётным часам», «и так каждые N часов», the six months of a two-month step) found little or nothing either way; the answers record each as a judgment to be tested",
+  "branchBudget": 120
+}
