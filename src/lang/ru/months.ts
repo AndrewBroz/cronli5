@@ -134,17 +134,24 @@ function nothing(): string {
   return '';
 }
 
-/** The months after a date: «каждого месяца», «января и июля». */
-function monthScope(given: MonthSet): MonthsSaid {
+/**
+ * The months after a date: «каждого месяца», «января и июля». A month
+ * named that the date reaches in leap years only says so: «февраля (в
+ * високосные годы)».
+ */
+function monthScope(given: MonthSet, leapOnly: number[] = []): MonthsSaid {
   const found = described(given);
   const each = (eachMonth[found.kind] || nothing)(found as never, given);
+  const names = list(given.months.map(function name(month) {
+    return spaced(monthName(month, 'genitive', given.style),
+      when(leapOnly.includes(month), words.inLeapYearsOnly));
+  }));
 
   return {
     comma: found.kind === 'except',
     fused: !each && Boolean(yearAfter(given)),
     named: !each,
-    text: each || spaced(namesOf(given.months, 'genitive', given.style),
-      yearAfter(given))
+    text: each || spaced(names, yearAfter(given))
   };
 }
 

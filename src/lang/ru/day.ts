@@ -17,6 +17,7 @@ import type {Years} from './years.js';
 import {yearsGenitive, yearsOf} from './years.js';
 
 const {words} = lexicon;
+const fewYears = 4;
 
 /** The calendar parts, each with the comma or colon that closes it. */
 export interface CalendarParts {
@@ -94,12 +95,10 @@ function weekdayArm(context: Days): DaySaid {
 
   const said = quartzWeekdaySaid(arm.form, given.style);
   const scope = monthScope({...given, months: context.reached});
-  const fifth = said.fifth && !scope.named;
 
   return {
-    ...daySaid(clausal(spaced(said.phrase, scope.text),
-      when(fifth, words.inWhichThereAreFive))),
-    comma: scope.comma || fifth,
+    ...daySaid(clausal(spaced(said.phrase, scope.text), said.ifAny)),
+    comma: scope.comma || Boolean(said.ifAny),
     fused: scope.fused,
     named: scope.named
   };
@@ -184,11 +183,16 @@ function neverSaid(context: Days): string {
     [dateNeeded(day.date.form)] :
     valuesOf(candidates.date ?? [], domainOf('date'));
 
+  const inOtherYears = Boolean(dateReach?.firesInOtherYears);
+  const {named, text} = context.years;
+  // A few years follow the month's name; any other set of years leads,
+  // as the years part says it.
+  const few = inOtherYears && named.length > 0 && named.length <= fewYears;
+
   return `${words.never}: ${spaced(
+    when(inOtherYears && !few, text),
     monthsLacking(dateReach?.never ?? [], given.style),
-    dateReach?.firesInOtherYears ?
-      yearsGenitive(valuesOf(candidates.year ?? [], domainOf('year'))) :
-      '',
+    when(few, yearsGenitive(named)),
     words.thereIsNo, list(lacking.map(ordinals.genitive)), words.dateOf)}`;
 }
 
@@ -229,6 +233,15 @@ function daysOf(schedule: Schedule, style: RussianStyle,
   const years = yearsOf(schedule);
   const reached = valuesOf(candidates.month ?? [], domainOf('month'));
   const fired = dateReach ?? {everyYear: reached, leapYears: []};
+  const leap = fired.leapYears.length > 0 && fired.everyYear.length === 0;
+  // 29 February comes in leap years only, beside dates that come every
+  // year: the pattern reaches leap and common years, and the years part
+  // does not already say «в високосные годы».
+  const leapMonth = schedule.analyses.monthLengths.find(
+    function inLeapYears(group) {
+      return !leap && group.years === 'leap';
+    }
+  );
 
   return {
     clockStart,
@@ -236,6 +249,10 @@ function daysOf(schedule: Schedule, style: RussianStyle,
       everyMonth: candidates.month?.[0].kind === 'all',
       facts: schedule,
       lacking: dateReach !== null,
+      leapDate: leapMonth ?
+        {day: leapMonth.length, month: leapMonth.months[0]} :
+        null,
+      leapMonths: leapMonth ? fired.leapYears : [],
       months: [...fired.everyYear, ...fired.leapYears].sort(
         function ascending(a, b) {
           return a - b;
@@ -245,7 +262,7 @@ function daysOf(schedule: Schedule, style: RussianStyle,
       wraps: candidates.year?.[0].kind === 'all',
       yearSuffix: years.suffix
     },
-    leap: fired.leapYears.length > 0 && fired.everyYear.length === 0,
+    leap,
     reached,
     schedule,
     years

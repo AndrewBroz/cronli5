@@ -14,6 +14,8 @@ const {words, yearSteps} = lexicon;
 
 /** The years of a pattern as they are said. */
 export interface Years {
+  // The years named one by one, when they are.
+  named: number[];
   // Whether the years are unrestricted or one run, so that a calendar
   // date under them recurs «ежегодно».
   recurs: boolean;
@@ -127,6 +129,7 @@ function yearsOf(facts: ScheduleFacts): Years {
   const named = (found as Extract<Described, {kind: 'values'}>).values || [];
 
   return {
+    named,
     recurs: found.kind === 'all' || found.kind === 'range',
     suffix: when(named.length === 1, yearsGenitive(named)),
     text: phrase.text + when(phrase.attached, ',')

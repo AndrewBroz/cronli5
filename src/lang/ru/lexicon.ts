@@ -288,11 +288,18 @@ const words = {
   penultimateDay: 'в предпоследний день',
   weekday: 'будний день',
 
+  // A fifth weekday, which a month has or not: «если он есть», agreeing
+  // with the weekday's gender.
+  ifThereIsOne: {
+    feminine: 'если она есть',
+    masculine: 'если он есть',
+    neuter: 'если оно есть'
+  },
+
   // Months.
   ifItHas: 'если в нём есть',
   inAllMonths: 'во все месяцы',
   inMonthsOf: 'в месяцах из',
-  inWhichThereAreFive: 'в котором их пять',
   inWhichThereIs: 'в котором есть',
   ofEachMonth: 'каждого месяца',
   ofTheMonth: 'месяца',
@@ -303,6 +310,8 @@ const words = {
   everyYear: 'каждый год',
   inEvenYears: 'в чётные годы',
   inLeapYears: 'в високосные годы',
+  // After 29 February named beside dates that come every year.
+  inLeapYearsOnly: '(в високосные годы)',
   inOddYears: 'в нечётные годы',
   startingFrom: 'начиная с',
   year: 'год',

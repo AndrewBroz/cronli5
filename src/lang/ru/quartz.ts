@@ -102,25 +102,43 @@ const beforeLast: Array<Rule<Form, DaySaid>> = [
   }]
 ];
 
-// The weekday nearest a date. Where the date can be a month's last day,
-// under every month, the day is said to stay within the month, and the
-// months that lack the date are set aside.
+// The weekday nearest a date. A date that is always its month's last day
+// is the month's last weekday. Where it is the last day of some months
+// only, under every month, the day is said to stay within the month, and
+// the months that lack the date are set aside.
 function nearest(context: Form): DaySaid {
   const {form, given, scoped} = context;
   const {day} = form as {day: number};
   const phrase = spaced(words.nearestTo, ordinal(day, 'dateDative'),
     words.dateToward, words.weekday);
-  const atAnEnd = scoped && given.everyMonth &&
-    given.facts.analyses.day.nearestDayIsLast !== 'never';
+  const {nearestDayIsLast} = given.facts.analyses.day;
+  const bare = scoped && given.everyMonth;
+  const ways: Array<Rule<Form, DaySaid>> = [
+    // The date is always its month's last day: the month's last weekday,
+    // and under every month the months of that length.
+    [function alwaysLast() {
+      return nearestDayIsLast === 'always';
+    }, function lastWeekday() {
+      return bare ?
+        {...daySaid(spaced(words.lastWeekday, monthsOf(day))), scoped: true} :
+        within(words.lastWeekday, context);
+    }],
+    [function sometimesLast() {
+      return bare && nearestDayIsLast === 'sometimes';
+    }, function withinTheMonth() {
+      return {
+        ...daySaid(clausal(spaced(phrase, words.withinTheMonth),
+          when(given.lacking, spaced(words.ifItHas, theDate(day))))),
+        comma: given.lacking,
+        scoped: true
+      };
+    }],
+    [Boolean, function plain() {
+      return within(phrase, context);
+    }]
+  ];
 
-  return atAnEnd ?
-    {
-      ...daySaid(clausal(spaced(phrase, words.withinTheMonth),
-        when(given.lacking, spaced(words.ifItHas, theDate(day))))),
-      comma: given.lacking,
-      scoped: true
-    } :
-    within(phrase, context);
+  return firstRule(ways, context);
 }
 
 const forms: {[kind: string]: (context: Form) => DaySaid} = {
@@ -146,7 +164,7 @@ const forms: {[kind: string]: (context: Form) => DaySaid} = {
 function quartzDateSaid(form: QuartzDate, given: Calendar, scoped: boolean):
   DaySaid {
   const scope = scoped ?
-    monthScope(given) :
+    monthScope(given, given.leapMonths) :
     {comma: false, fused: false, named: false, text: words.ofTheMonth};
 
   return forms[form.kind]({form, given, scope, scoped});

@@ -39,14 +39,16 @@ export interface Choosing {
   // Whether a run that holds 3 or more values keeps the set from being
   // named value by value.
   runsFirst: boolean;
-  // The longest step whose values are named whatever their number.
-  stepNamed: number;
+  // The most values named one by one when they hold no run of 3 or more
+  // and are not every second value.
+  scattered: number;
   wraps: boolean;
 }
 
 const longRun = 3;
 const mostRemoved = 2;
 const boundsNamed = 2;
+const stepMargin = 2;
 
 /** What the first rule that holds says. */
 function firstRule<Context, Said>(
@@ -152,20 +154,24 @@ const finders: {
   },
   few(choosing) {
     const step = kindOf(choosing.linear, 'cadence');
+    const long = hasLongRun(choosing);
     const named = choosing.count <= choosing.few &&
-      !(choosing.runsFirst && hasLongRun(choosing)) ||
-      step && !isAlternate(step) && choosing.count <= choosing.stepNamed;
+      !(choosing.runsFirst && long) ||
+      choosing.count <= choosing.scattered && !long &&
+      !(step && isAlternate(step));
 
     return named && kindOf(choosing.linear, 'values');
   },
+  // Runs and single values, or runs and steps together. A step is worked
+  // out where a value is recognised, so the steps are said only where
+  // they name at least two things fewer than the other way.
   pieces(choosing) {
-    const [best] = [kindOf(choosing.linear, 'pieces'), choosing.pieces]
-      .filter(Boolean)
-      .sort(function fewerNamed(a, b) {
-        return namedBy(a as Described) - namedBy(b as Described);
-      });
+    const plain = kindOf(choosing.linear, 'pieces');
+    const otherwise = plain ? namedBy(plain) : choosing.count;
+    const stepped = choosing.pieces &&
+      namedBy(choosing.pieces) + stepMargin <= otherwise && choosing.pieces;
 
-    return best && namedBy(best) < choosing.count && best;
+    return stepped || plain && namedBy(plain) < choosing.count && plain;
   },
   run(choosing) {
     return choosing.count >= longRun && kindOf(choosing.linear, 'range');
@@ -205,7 +211,7 @@ function choosingOf(
     own: views.own ?? views.linear,
     pieces: null,
     runsFirst: false,
-    stepNamed: 0,
+    scattered: 0,
     wraps: false,
     ...opts
   };

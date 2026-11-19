@@ -6,7 +6,9 @@ import type {QuartzWeekday, ScheduleFacts} from '../../core/schedule.js';
 import {candidatesAs, domainOf} from '../../core/index.js';
 import lexicon from './lexicon.js';
 import type {WeekdayCase} from './names.js';
-import {clausal, fromWord, list, spaced, weekdayName} from './names.js';
+import {
+  clausal, fromWord, list, spaced, weekdayName, when
+} from './names.js';
 import type {RussianStyle} from './options.js';
 import type {Rule} from './sets.js';
 import {firstRule, kindOf, valuesOf} from './sets.js';
@@ -210,10 +212,11 @@ const accusativeOf = {
 
 /**
  * The last or the nth weekday of the month: «в последнюю пятницу», «во
- * второй понедельник»; and after «если это», «последняя пятница месяца».
+ * второй понедельник»; after «если это», «последняя пятница месяца»; and
+ * the condition a fifth weekday is said with.
  */
 function quartzWeekdaySaid(form: QuartzWeekday, style: RussianStyle):
-  {condition: string; fifth: boolean; phrase: string} {
+  {condition: string; ifAny: string; phrase: string} {
   const nth = (form as {nth?: number}).nth ?? 0;
   const word = nth ? nthWords[nth - 1] : words.last;
   const {gender} = weekdays[form.weekday];
@@ -221,7 +224,8 @@ function quartzWeekdaySaid(form: QuartzWeekday, style: RussianStyle):
   return {
     condition: spaced(word[gender],
       weekdayName(form.weekday, 'nominative', style), words.ofTheMonth),
-    fifth: nth === nthWords.length,
+    // A month has a fifth such weekday or not: «если он есть».
+    ifAny: when(nth === nthWords.length, words.ifThereIsOne[gender]),
     phrase: spaced(nth === 2 ? words.inBeforeCluster : words.in,
       word[accusativeOf[gender]],
       weekdayName(form.weekday, 'accusative', style))
