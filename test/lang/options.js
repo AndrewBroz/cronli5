@@ -9,6 +9,7 @@ import indonesian from '../../src/lang/id/index.js';
 import italian from '../../src/lang/it/index.js';
 import ja from '../../src/lang/ja/index.js';
 import ko from '../../src/lang/ko/index.js';
+import pl from '../../src/lang/pl/index.js';
 import pt from '../../src/lang/pt/index.js';
 import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
@@ -24,7 +25,7 @@ const {expect} = chai;
 // reach (only English has per-option expectation files).
 
 const languages = {
-  en, cs, de, es, fr, id: indonesian, it: italian, ja, ko, pt, uk, zh
+  en, cs, de, es, fr, id: indonesian, it: italian, ja, ko, pl, pt, uk, zh
 };
 
 // Every public option flag, alone and in the pairs most likely to interact.

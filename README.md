@@ -212,7 +212,7 @@ cronli5(weekdaysAt1330, { lang: 'en-GB' });
 
 ## Languages
 
-English is the default. Twelve languages ship, listed below; each is a full
+English is the default. Thirteen languages ship, listed below; each is a full
 renderer over the same language-independent core, written from that
 language's own conventions, and each ships as its own module. You choose
 what reaches your bundle:
@@ -256,6 +256,7 @@ docs below.
 | Japanese | `cronli5/lang/ja` | Interface and timetable practice; 24-hour colon times | [docs/lang/ja.md](./docs/lang/ja.md) |
 | Korean | `cronli5/lang/ko` | National Institute of Korean Language (한글 맞춤법); notice and interface practice; times in words | [docs/lang/ko.md](./docs/lang/ko.md) |
 | Spanish | `cronli5/lang/es` | RAE Ortografía (2010); interface practice; Mexico and the United States (`'es-MX'`, `'es-US'`) | [docs/lang/es.md](./docs/lang/es.md) |
+| Polish | `cronli5/lang/pl` | CLDR for clock times and dates; timetable practice (Dz.U. 2018 poz. 202) | [docs/lang/pl.md](./docs/lang/pl.md) |
 
 ### Language maturity
 
@@ -284,6 +285,7 @@ pipeline is the review.
 | Italian | stable |
 | Japanese | stable |
 | Korean | beta |
+| Polish | beta |
 | Portuguese | stable |
 | Ukrainian | stable |
 | Chinese (Simplified) | stable |
@@ -390,6 +392,7 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 | Indonesian | setiap Senin pukul 09.30.05 dan 09.30.10 | Pada 5 dan 10 detik lewat satu menit, pada 30 menit melewati jam, pada 09:00, hanya pada Senin |
 | Italian | il lunedì alle 9:30:05 e alle 9:30:10 | Al 5 e 10 secondo passato il minuto, al 30 minuto passata l'ora, alle 09:00, solo il lunedì |
 | Czech | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
+| Polish | w poniedziałki o 9:30:05 i 9:30:10 | W 5 i 10 sekundzie, w 30 minucie, o 09:00, tylko poniedziałek |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 ### Formatting

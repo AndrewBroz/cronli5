@@ -34,6 +34,7 @@ import fr from '../src/lang/fr/index.js';
 import indonesian from '../src/lang/id/index.js';
 import it from '../src/lang/it/index.js';
 import cs from '../src/lang/cs/index.js';
+import pl from '../src/lang/pl/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
@@ -60,7 +61,8 @@ const languages = [
   {code: 'fr', cronstrueLocale: 'fr', extras: [], lang: fr},
   {code: 'id', cronstrueLocale: 'id', extras: [], lang: indonesian},
   {code: 'it', cronstrueLocale: 'it', extras: [], lang: it},
-  {code: 'cs', cronstrueLocale: 'cs', extras: [], lang: cs}
+  {code: 'cs', cronstrueLocale: 'cs', extras: [], lang: cs},
+  {code: 'pl', cronstrueLocale: 'pl', extras: [], lang: pl}
 ];
 
 function describe(fn, pattern) {
@@ -165,7 +167,8 @@ const headToHeadRows = [
   {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
   {name: 'Indonesian', code: 'id', cronstrueLocale: 'id'},
   {name: 'Italian', code: 'it', cronstrueLocale: 'it'},
-  {name: 'Czech', code: 'cs', cronstrueLocale: 'cs'}
+  {name: 'Czech', code: 'cs', cronstrueLocale: 'cs'},
+  {name: 'Polish', code: 'pl', cronstrueLocale: 'pl'}
 ];
 
 function renderHeadToHead() {
@@ -325,7 +328,7 @@ function evaluateExample(callee, args, vars) {
 
   try {
     const modules = {
-      cs, de, en, es, fr, id: indonesian, it, ja, ko, pt, uk, zh
+      cs, de, en, es, fr, id: indonesian, it, ja, ko, pl, pt, uk, zh
     };
     const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func

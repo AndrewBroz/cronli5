@@ -128,6 +128,21 @@ const prompts = {
     task: (letter, text) => `작업 ${letter}: “${text}”`,
     yes: ['예', '네']
   },
+  pl: {
+    format: 'Odpowiedz jednym wierszem na każde pytanie, na przykład:\n' +
+      'A1: tak\nA2: nie',
+    intro: 'Aplikacja pokazuje przy każdym zadaniu, kiedy jest ono ' +
+      'uruchamiane. Dla każdej daty i godziny podanej pod zadaniem ' +
+      'powiedz, czy zadanie uruchamia się dokładnie w tej chwili. Każdy ' +
+      'opis przeczytaj raz, jak na ekranie, i odpowiadaj według tego, co ' +
+      'ci mówi.',
+    locale: 'pl-PL',
+    no: ['nie'],
+    system: 'Czytasz teksty na ekranie i odpowiadasz na pytania o nie. ' +
+      'Odpowiadaj tylko w podanym formacie.',
+    task: (letter, text) => `Zadanie ${letter}: „${text}”`,
+    yes: ['tak']
+  },
   pt: {
     format: 'Responda com uma linha por pergunta, assim:\nA1: sim\nA2: não',
     intro: 'Um aplicativo mostra, para cada tarefa, quando ela é executada. ' +

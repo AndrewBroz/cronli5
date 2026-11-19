@@ -33,6 +33,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   it; «jam genap» and «jam ganjil» for every second hour are the first
   thing a native reviewer should check
   ([docs/lang/id.md](./docs/lang/id.md)).
+- **Polish (`pl`)**, at beta: `import pl from 'cronli5/lang/pl'`, or
+  `{lang: 'pl'}` from `cronli5/all`. It was written from usage notes in
+  Polish by a writer told nothing of cron, then answers to the language
+  questionnaire, hand-written expected descriptions read by an
+  adversarial schedule reader and by blind readers briefed only in
+  Polish, and a renderer built without sight of any other and audited
+  independently. The calendar comes first and the clock last, in 24-hour
+  times: `0 9 * 6 1` is «w czerwcu w poniedziałki o 9:00», `*/15 9-17 * *
+  1-5` is «od poniedziałku do piątku co 15 minut od 9:00 do 17:45». Style
+  fields: `short` («od pon. do pt. co 15 min …», «1 VI»), `separator`
+  («9.30») and `hour12` (the colloquial «9:30 rano»); one region, `PL`.
+  No fluent human has reviewed it.
 
 ## [1.2.2]
 

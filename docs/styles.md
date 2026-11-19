@@ -129,7 +129,7 @@ all of them, and a third in every language that has it:
   form of its weekdays and months (周一 is already the short one), so
   `short` changes nothing there.
 * **`separator`**: what stands between hours, minutes and seconds, in the
-  languages that offer a choice (English, Czech, Indonesian, Italian).
+  languages that offer a choice (English, Czech, Indonesian, Italian, Polish).
 
 ## Styles and instances
 
