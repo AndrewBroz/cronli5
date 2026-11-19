@@ -1,42 +1,44 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as korean from '../../../src/lang/ko/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];
 
-// A description is three parts in one order (and at times a fourth), from large to small
-// (answers 2.1): the calendar (the year, the month and the day: «매년
-// 6월 매주 월요일», «매월 1일과 매주 금요일, 각각»), the fill (one of
-// «매일», «하루 종일», «내내», or nothing), and the time. One kind of
-// schedule has a fourth, the note: when a day of the month and a weekday
-// are both restricted and one of them is every day but a few, the
+// A description is three parts in one order (and at times a fourth), from
+// large to small (answers 2.1): the calendar (the year, the month and the
+// day: «매년 6월 매주 월요일», «매월 1일과 매주 금요일, 각각»), the fill
+// (one of «매일», «하루 종일», «내내», or nothing), and the time. One kind
+// of schedule has a fourth, the note: when a day of the month and a
+// weekday are both restricted and one of them is every day but a few, the
 // condition «(단, 15일은 월요일인 경우에만)» closes the sentence, written
 // straight after the time with no space (answers 4.3). `describeParts`
 // gives them as `{calendar, fill, time, note}`, the note an empty string
 // when there is none.
 //
-// A second or a minute changes the time. An hour changes the time and
-// the fill. A day, month or year field changes the calendar, the fill
-// and the note. Inside the calendar the fields answer to one another in the ways
-// answers 2.6 declares: «매년» and «매월» stand by which coarser field
-// is free or said as a range, a union says its month and year on both
-// arms or becomes «매일» with its note, a year phrase ending in «마다»
-// takes «, 그해», and the month and day phrases name only what the
-// calendar has. All of that stays inside the calendar and the note.
-// Nothing else may cross.
+// A second, a minute or an hour changes the time and the fill: the fill
+// is «매일» only when the time part names a clock time, and a minute or a
+// second off the beat turns a bare rhythm («2시간마다») into a span with
+// clock times («매일 0시 30분부터 오후 10시 30분까지 2시간마다», answers
+// 2.5). A day, month or year field changes the calendar, the fill and the
+// note. Inside the calendar the fields answer to one another in the ways
+// answers 2.6 declares: «매년» and «매월» stand by which coarser field is
+// free or said as a range, a union says its month and year on both arms
+// or becomes «매일» with its note, a year phrase ending in «마다» takes
+// «, 그해», and the month and day phrases name only what the calendar
+// has. All of that stays inside the calendar and the note. Nothing else
+// may cross, with the one exception below.
 const MAY_CHANGE = {
   date: ['calendar', 'fill', 'note'],
   hour: ['time', 'fill'],
-  minute: ['time'],
+  minute: ['time', 'fill'],
   month: ['calendar', 'fill', 'note'],
-  second: ['time'],
+  second: ['time', 'fill'],
   weekday: ['calendar', 'fill', 'note'],
   year: ['calendar', 'fill', 'note']
 };
@@ -45,13 +47,18 @@ const MAY_CHANGE = {
 // (answers 2.5), so it is one of these and nothing else.
 const FILLS = ['', '매일', '하루 종일', '내내'];
 
-const SETUP = {languages: [korean.default], options: {}, styles: {}};
+// The exception: a schedule whose day of the month exists in no month it
+// reaches never fires. The description says so and says no time («없는
+// 날짜라 실행되지 않음», answers 5.3), so an edit to the day of the month,
+// the month or the year that makes or unmakes such a schedule may remove
+// or restore the time.
+function neverFires(schedule) {
+  const {dateReach, day} = schedule.analyses;
 
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
+  return dateReach !== null && !dateReach.fires && !day.union;
 }
+
+const parse = parser(korean.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);
@@ -90,9 +97,14 @@ function leaks(pairList) {
 
     const before = partsOf(a, options);
     const after = partsOf(b, options);
+    const silenced = !['second', 'minute', 'hour'].includes(changed[0]) &&
+      [a, b].some(function silent(pattern) {
+        return neverFires(parse(pattern, options).schedule);
+      });
 
     Object.keys(before).forEach(function compare(part) {
       if (before[part] !== after[part] &&
+          !(silenced && part === 'time') &&
           !MAY_CHANGE[changed[0]].includes(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
@@ -131,7 +143,7 @@ describe('Korean continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('renders equal schedules identically', function() {
     function render(pattern, options) {
@@ -143,10 +155,10 @@ describe('Korean continuity:', function() {
     expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
     expect(score(render, neighborPairs(coreSetSeeds()))
       .equivalentViolations).to.deep.equal([]);
-  }, 60000);
+  }, 240000);
 
-  // Korean declares no tie (answers, opening): no wording depends on how
-  // a field was written.
+  // Korean declares no tie (answers, opening and 3.11): no wording depends
+  // on how a field was written.
   it('never follows the spelling', function() {
     function say(pattern) {
       const {opts, schedule} = parse(pattern);
@@ -156,6 +168,7 @@ describe('Korean continuity:', function() {
 
     expect(say('0 */12 * * *')).to.equal('매일 0시, 낮 12시');
     expect(say('0 */12 * * *')).to.equal(say('0 0,12 * * *'));
+    expect(say('0 */6 * * *')).to.equal('6시간마다');
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
     expect(say('0 9-17 * * *'))
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));

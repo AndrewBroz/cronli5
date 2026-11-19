@@ -10,6 +10,9 @@ function throwsOption(build, pattern) {
 
 // What the Korean module declares to the entry point: its code, its
 // region and named style, and how it presents a description in each form.
+// The table has `hour12` and `short` and no `separator`: a Korean time is
+// written in words («9시 30분»), so there is no sign to choose (answers
+// 1.2).
 describe('Korean styles:', function() {
   it('declares its code, its region and its named table', function() {
     expect(ko.code).to.equal('ko');
@@ -46,8 +49,8 @@ describe('Korean styles:', function() {
 
   // A label is the description unchanged: Hangul has no capitals. A
   // sentence ends in «실행됩니다», after «에» unless the last word ends in
-  // «마다», «에», «회» or «매초»; a bracket that ends the description is
-  // written after the verb (answers 8.8).
+  // «마다», «매분», «매초» or «간격으로»; a bracket that ends the
+  // description is written after the verb (answers 8.8).
   it('leaves a label alone, wraps a sentence, and has its fixed texts',
     function() {
       const opts = {style: styles.ko};
@@ -58,8 +61,12 @@ describe('Korean styles:', function() {
       expect(ko.sentence('매시 정각', opts))
         .to.equal('매시 정각에 실행됩니다.');
       expect(ko.sentence('15분마다', opts)).to.equal('15분마다 실행됩니다.');
-      expect(ko.sentence('매시 5·20분에 각각 2회(해당 시각과 30초 뒤)', opts))
-        .to.equal('매시 5·20분에 각각 2회 실행됩니다(해당 시각과 30초 뒤).');
+      expect(ko.sentence('2시간마다 1시간 동안 15분 간격으로', opts))
+        .to.equal('2시간마다 1시간 동안 15분 간격으로 실행됩니다.');
+      expect(ko.sentence('2시간마다 1시간 동안 매분(오전 8시대 제외)', opts))
+        .to.equal('2시간마다 1시간 동안 매분 실행됩니다(오전 8시대 제외).');
+      expect(ko.sentence('매월 홀수일 중 월요일인 날 0시', opts))
+        .to.equal('매월 홀수일 중 월요일인 날 0시에 실행됩니다.');
       expect(ko.sentence('매시 정각(오전 3시 제외)', opts))
         .to.equal('매시 정각에 실행됩니다(오전 3시 제외).');
       expect(ko.sentence('10분마다(오전 3시대 제외)', opts))
