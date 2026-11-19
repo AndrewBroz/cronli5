@@ -10,17 +10,18 @@ const {expect} = chai;
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];
 
-// A description is three parts in one order, from large to small
+// A description is four parts in one order, from large to small
 // (answers, "The sentence in one page"): a frame (the years and the
 // months: 「2030年」, 「每年6月」, 「每年6月期間，」), the day (「每天」,
 // 「每週一」, 「每月1日」, 「1日及每週五」, with any exception or
-// condition in brackets right after it), and the time. `describeParts`
-// gives them as `{frame, day, time}`, each ending with the join that
-// follows it (nothing, a half-width space, or 「，」), so that the three
+// condition in brackets right after it), the time, and a closing bracket
+// for months or years left out (「（6月除外）」). `describeParts` gives
+// them as `{frame, day, time, closing}`, each ending with the join that
+// follows it (nothing, a half-width space, or 「，」), so that the four
 // concatenated are the description.
 //
-// A time field changes the time. A day, month or year field changes the
-// frame and the day: a single month takes the date directly («每年6月1日»)
+// A time field changes the time. A date or weekday changes the frame and
+// the day; a month or year those and the closing bracket: a single month takes the date directly («每年6月1日»)
 // while several keep 「每月」 in the day, months that lack the date are not
 // named, a year takes the place of 「每年」, and a union closes the frame
 // with 「期間，」. Those are the fusions answers 4.3 and 4.4 declare; all
@@ -30,10 +31,10 @@ const MAY_CHANGE = {
   date: ['frame', 'day'],
   hour: ['time'],
   minute: ['time'],
-  month: ['frame', 'day'],
+  month: ['frame', 'day', 'closing'],
   second: ['time'],
   weekday: ['frame', 'day'],
-  year: ['frame', 'day']
+  year: ['frame', 'day', 'closing']
 };
 
 // The first place a time field reaches another part: 「每天」 closes the
@@ -150,19 +151,19 @@ function leaks(pairList) {
   return found;
 }
 
-// Continuity, measured directly. A description is three parts in one
-// order: frame, day, time. Editing one field of the pattern may rewrite
+// Continuity, measured directly. A description is four parts in one
+// order: frame, day, time, closing. Editing one field of the pattern may rewrite
 // that field's part and nothing else, apart from the declared fusions
 // above. This is the constraint itself, where a count of changed words is
 // only a rough sign of it: a longer sentence, or a wrong one, cannot make
 // this pass.
 describe('Traditional Chinese continuity:', function() {
-  it('says a description as its three parts, joined in order', function() {
+  it('says a description as its four parts, joined in order', function() {
     pairs().forEach(function joined(pair) {
       const {opts, schedule} = parse(pair[1]);
       const parts = zhHant.describeParts(schedule, opts);
 
-      expect([parts.frame, parts.day, parts.time].join(''))
+      expect([parts.frame, parts.day, parts.time, parts.closing].join(''))
         .to.equal(zhHant.default.describe(schedule, opts));
     });
   });

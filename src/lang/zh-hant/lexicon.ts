@@ -21,15 +21,18 @@ const weekdays: string[] = ['日', '一', '二', '三', '四', '五', '六'];
 const weekdayPrefixes: WeekdayPrefixes = {星期: '星期', 週: '週'};
 
 // The parts of the day a 12-hour time carries, each with the first hour
-// it covers (answers 1.2): 凌晨 0–5, 上午 6–11, 中午 12, 下午 13–17,
-// 晚上 18–23.
+// it covers (answers 1.2): 凌晨 0–5, 上午 6–11, 中午 12, 下午 13–18,
+// 晚上 19–23.
 const dayParts: Array<{from: number; word: string}> = [
   {from: 0, word: '凌晨'},
   {from: 6, word: '上午'},
   {from: 12, word: '中午'},
   {from: 13, word: '下午'},
-  {from: 18, word: '晚上'}
+  {from: 19, word: '晚上'}
 ];
+
+// The ordinal of a weekday in its month, from the first: 第二個週一.
+const nthNumerals: string[] = ['一', '二', '三', '四', '五'];
 
 // Each unit as a position (after a number that names a moment) and as a
 // length (after a number that counts).
@@ -73,14 +76,21 @@ const words = {
   of: '的',
   // 每小時整點; 每小時的整點至56分.
   onTheHour: '整點',
-  // 每逢雙數小時，整個小時內每分鐘一次.
+  // 每逢雙數時，整個小時內每分鐘一次.
   withinWholeHour: '整個小時內',
-  // 每小時的第1分鐘內，每秒一次.
-  withinFirstMinute: '第1分鐘內',
-  // Every second hour, from 0時 and from 1時: 每逢雙數小時的15、45分.
-  evenHours: '雙數小時',
-  oddHours: '單數小時',
-  // Before a single time or minute said after the rate: ，以及 22:00.
+  // 每逢整點起的1分鐘內，每秒一次.
+  minuteFromThen: '起的1分鐘內',
+  // 每5分鐘，該分鐘內每秒一次; 該分鐘的0、30秒.
+  thatMinute: '該分鐘',
+  within: '內',
+  // After hours each named with its part of the day: ，各在05、20、45分.
+  eachAt: '各在',
+  // Every second hour, from 0時 and from 1時: 每逢雙數時的15、45分.
+  evenHours: '雙數時',
+  oddHours: '單數時',
+  // Before single moments said after the rate: ，另加 22:00.
+  plus: '另加',
+  // Between runs and cadences of years: ，以及2045年起每5年.
   andAlso: '以及',
   // After a start: 01:00起, 2030年起, 每月1日起.
   onward: '起',
@@ -117,11 +127,14 @@ const words = {
   isLastDayThen: '是當月最後一天則',
 
   // Months and years.
-  oddMonths: '單月',
-  evenMonths: '雙月',
+  oddMonths: '單數月',
+  evenMonths: '雙數月',
   nextYear: '翌年',
-  evenYears: '雙數年',
-  oddYears: '單數年',
+  // Parity of years names its era: 每逢西元雙數年.
+  evenYears: '西元雙數年',
+  oddYears: '西元單數年',
+  // In one closing bracket with a month: 每年6月、2030年全年除外.
+  wholeYear: '全年',
   leapYears: '閏年',
   // Closes the frame before a union: 每年6月期間，.
   during: '期間',
@@ -141,7 +154,7 @@ const words = {
 };
 
 const lexicon = {
-  dayParts, twoDigits, units, weekdayPrefixes, weekdays, words
+  dayParts, nthNumerals, twoDigits, units, weekdayPrefixes, weekdays, words
 };
 
 export type {WeekdayPrefixes};

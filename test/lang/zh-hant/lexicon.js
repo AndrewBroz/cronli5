@@ -34,8 +34,12 @@ describe('Traditional Chinese lexicon:', function() {
       })).to.deep.equal(['凌晨', '上午', '中午', '下午', '晚上']);
       expect(lexicon.dayParts.map(function startOf(part) {
         return part.from;
-      })).to.deep.equal([0, 6, 12, 13, 18]);
+      })).to.deep.equal([0, 6, 12, 13, 19]);
     });
+
+  it('writes the ordinal of a weekday in Chinese numerals', function() {
+    expect(lexicon.nthNumerals).to.deep.equal(['一', '二', '三', '四', '五']);
+  });
 
   it('writes 週, never 周', function() {
     expect(JSON.stringify(lexicon)).to.not.include('周');
