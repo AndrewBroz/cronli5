@@ -177,9 +177,21 @@ function placePair(told: Extract<DayTold, {kind: 'pair'}>, setting: Setting):
   const {side} = fuses[setting.months.fuse];
   const [dates] = told.sides;
   const leads = [wheneverOr(side, dates, setting), side];
+  const yearly = setting.bare ? '' : words.everyYear;
+  // A date said with months of its own stands last, so that the days of
+  // the week before it are not heard as days of those months.
   const said = told.sides.map(function saySide(phrase, index) {
-    return (phrase.kind === 'weekly' ? words.every : leads[index]) +
+    const usual = (phrase.kind === 'weekly' ? words.every : leads[index]) +
       phrase.body;
+
+    return {
+      late: Number(Boolean(phrase.byMonth)),
+      text: phrase.byMonth ? yearly + monthsWithDays(phrase.byMonth) : usual
+    };
+  }).sort(function ownMonthsLast(a, b) {
+    return a.late - b.late;
+  }).map(function textOf(each) {
+    return each.text;
   });
 
   return {
@@ -332,7 +344,7 @@ function sayCalendar(
   const arms = armsOf(facts);
   const reach = reachOf(facts, arms);
   const months = monthsOf(facts, reach.narrowed);
-  const years = sayYears(facts);
+  const years = sayYears(facts, style);
   const opening = years.lead + years.pause +
     (reach.leap ? words.whenever + words.leapYears : years.month);
   const withMonths = months.text && opening + months.text;

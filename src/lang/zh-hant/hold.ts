@@ -5,7 +5,7 @@
 // (answers 4.1 and 4.2).
 
 import type {
-  CadenceForm, ExceptForm, Form, PiecesForm, RangeForm, Sayers
+  AddedForm, CadenceForm, ExceptForm, Form, PiecesForm, RangeForm, Sayers
 } from './forms.js';
 import {type RateUnit, excepting, list, rate, series} from './write.js';
 import lexicon from './lexicon.js';
@@ -36,6 +36,9 @@ export interface Namer {
 export interface Holding {
   // Whether a cadence is said as a bare rate.
   bare(cadence: CadenceForm): boolean;
+  // What closes a run before its rate: the word for "within" before a
+  // plain rate, a comma before anything longer.
+  closing: string;
   // The rate between the two ends of a run.
   each: string;
   // The rate when every position fires.
@@ -117,11 +120,13 @@ function holdList(form: Form, how: Holding): Held {
   return {rate: false, text: named(how.namer, form.values)};
 }
 
+// A window inside the unit closes on the word for "within" and takes its
+// rate directly, so that the rate is heard as the window's own.
 function holdRange(form: RangeForm, how: Holding): Held {
   return {
     rate: false,
     text: at(how.namer, form.from, 'first') + words.to +
-      at(how.namer, form.to, 'last') + words.comma + how.each
+      at(how.namer, form.to, 'last') + how.closing + how.each
   };
 }
 
@@ -138,7 +143,7 @@ function holdCadence(form: CadenceForm, how: Holding): Held {
     {
       rate: false,
       text: at(how.namer, form.start, 'first') + words.to +
-        at(how.namer, form.last, 'last') + words.comma + said
+        at(how.namer, form.last, 'last') + words.within + said
     } :
     holdList(form, how);
 }
@@ -167,26 +172,43 @@ function holdPieces(form: PiecesForm, how: Holding): Held {
   return {
     rate: false,
     text: [
-      series(runs, words.and),
-      how.each,
+      series(runs, words.and) + how.closing + how.each,
       ...[lone].filter(Boolean).map(function added(text) {
-        return words.plus + text;
+        return words.alsoAt + text;
       })
     ].join(words.comma)
   };
 }
 
-function holdExcept(form: ExceptForm, how: Holding): Held {
+// What names the holding unit before positions that follow a rate.
+function outsideOf(base: Held, how: Holding): string {
+  return base.rate ? how.prefix : '';
+}
+
+// A cadence, and then the one or two positions beside it: after a rate
+// they name the unit that holds them.
+function holdAdded(form: AddedForm, how: Holding): Held {
   const base = held(form.base, how);
-  const outside = base.rate ? how.prefix : '';
 
   return {
     ...base,
-    text: base.text + excepting(outside + named(how.gaps, form.removed))
+    text: base.text + words.comma + words.alsoAt + outsideOf(base, how) +
+      named(how.namer, form.added)
+  };
+}
+
+function holdExcept(form: ExceptForm, how: Holding): Held {
+  const base = held(form.base, how);
+
+  return {
+    ...base,
+    text: base.text +
+      excepting(outsideOf(base, how) + named(how.gaps, form.removed))
   };
 }
 
 const holders: Sayers<Holding, Held> = {
+  added: holdAdded,
   all: holdAll,
   cadence: holdCadence,
   except: holdExcept,

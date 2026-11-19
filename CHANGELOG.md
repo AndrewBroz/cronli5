@@ -65,6 +65,44 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   answer in Simplified Chinese with a warning on the console.
   `cronli5/lang/zh` is Simplified only (`zh`, `zh-Hans`, `zh-CN`,
   `zh-SG`).
+- **Traditional Chinese says ten kinds of schedule more plainly**, after
+  its sentences were set beside those of Simplified Chinese, which was
+  written independently. No schedule was said wrongly before; each form
+  is the language's own, and none has yet been read by a fluent human.
+  - A rhythm with a time or two beside it stays the rhythm:
+    `0 */2,13 * * *` is 「每2小時一次，另加 13:00」, where it was
+    「每天 12:00～14:00，每小時一次，另加」 and ten clock times;
+    `15,45 */2,13 * * *` is 「每逢雙數時的15、45分，13時亦同」.
+  - A step of years is followed by 該年: `0 0 9 * * * 2028/4` is
+    「2028年起每4年，該年每天 09:00」 (was 「2028年起每4年，每天 09:00」).
+  - Every second hour is the odd or the even hours, whatever they hold:
+    `0 1/2 * * *` is 「每逢單數時整點」 (was 「每天 01:00 起每2小時一次」)
+    and `30 */2 * * *` is 「每逢雙數時的30分」. The even hours on the hour
+    are still 「每2小時一次」. Between two hours they keep both ends:
+    `15,45 0-16/2 * * *` is 「每天 00:15～16:45，每逢雙數時的15、45分」,
+    where nine hours were named.
+  - A rhythm of four or more minutes that fills the hour is the rhythm
+    after named hours too: `*/15 */2 * * *` is
+    「每逢雙數時，整個小時內每15分鐘一次」 (was
+    「每逢雙數時的00、15、30、45分」).
+  - A window inside the hour or the minute closes on 內 and takes its
+    rate directly, so that the rate is not heard as that of a stretch
+    before it: `0-29 9-17 * * 1-5` is
+    「每週一至週五 09:00～17:29，每小時的整點至29分內每分鐘一次」 (was
+    「…每小時的整點至29分，每分鐘一次」).
+  - Alternate years but one or two: `1970-2028/2,2032/2` in the year
+    field is 「每逢西元雙數年每天 09:00（2030年除外）」.
+  - A whole minute is 該分鐘內: `* 30 * * * *` is
+    「每逢30分，該分鐘內每秒一次」 (was 「每逢30分起的1分鐘內，每秒一次」);
+    and a minute beside a window follows 另在: `0-29,45 * * * *` is
+    「每小時的整點至29分內每分鐘一次，另在45分」 (was 「…，另加45分」).
+  - A count from the month's end that is one date in every month that
+    has it is that date, beside days of the week: Quartz `0 0 L-30 * 2`
+    is 「每週一及每年1、3、5、7、8、10、12月的1日 00:00」 (was
+    「每月倒數第31天及每週一 00:00」).
+  - A fifth style field, `era`: the era named before the even or the odd
+    years. Taiwan's style says 「每逢西元雙數年」; Hong Kong's and Macau's
+    names none, 「每逢雙數年」, since they count years in one era.
 
 ### Removed
 

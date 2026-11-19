@@ -18,9 +18,10 @@ describe('Traditional Chinese styles:', function() {
     expect(zhHant.regions).to.deep.equal({HK: 'hk', MO: 'hk', TW: 'tw'});
     expect(zhHant.styles).to.equal(styles);
     expect(styles.tw).to.deep.equal(
-      {hour12: false, separator: ':', short: false, weekday: '週'});
+      {era: '西元', hour12: false, separator: ':', short: false,
+        weekday: '週'});
     expect(styles.hk).to.deep.equal(
-      {hour12: true, separator: '時', short: true, weekday: '星期'});
+      {era: '', hour12: true, separator: '時', short: true, weekday: '星期'});
     expect(Object.isFrozen(styles)).to.equal(true);
     expect(Object.isFrozen(styles.tw)).to.equal(true);
   });
@@ -28,7 +29,8 @@ describe('Traditional Chinese styles:', function() {
   it('applies overrides to a named table', function() {
     expect(zhHant.style('tw')).to.deep.equal(styles.tw);
     expect(zhHant.style('hk', {short: false})).to.deep.equal(
-      {hour12: true, separator: '時', short: false, weekday: '星期'});
+      {era: '', hour12: true, separator: '時', short: false,
+        weekday: '星期'});
   });
 
   it('rejects a field it does not have, naming the fields', function() {
@@ -47,6 +49,9 @@ describe('Traditional Chinese styles:', function() {
     throwsOption(function build() {
       zhHant.style('tw', {weekday: '周'});
     }, /weekday/u);
+    throwsOption(function build() {
+      zhHant.style('tw', {era: '民國'});
+    }, /era/u);
   });
 
   it('leaves a label as it is, wraps a sentence, and has its fixed texts',

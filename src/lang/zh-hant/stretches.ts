@@ -3,8 +3,8 @@
 // (answers 3.4, 3.6, 4.1 C and 4.2).
 
 import {
-  type CadenceForm, type Form, type Reading, type Span, coreOf, removedOf,
-  runsIn, spansOf
+  type AddedForm, type CadenceForm, type Form, type Reading, type Span, coreOf,
+  removedOf, runsIn, spansOf
 } from './forms.js';
 import {
   type Carried, type Edge, type Held, type Holding, held, minuteNamer, named,
@@ -38,6 +38,8 @@ export interface Seconds extends Carried {
   afterThat: string;
   // The rate between the two ends of a stretch of minutes.
   between: string;
+  // Whether that is a plain rate, with no positions of its own.
+  even: boolean;
   form: Form;
   // Several seconds fire in a minute.
   live: boolean;
@@ -83,9 +85,16 @@ function longFromFirst(cadence: CadenceForm): boolean {
   return fromFirst(cadence) && cadence.values.length > 4;
 }
 
+// After hours that are named, a rhythm of two or three minutes is those
+// minutes: they are shorter to say than the rhythm, and are read off.
+function fourFromFirst(cadence: CadenceForm): boolean {
+  return fromFirst(cadence) && cadence.values.length > 3;
+}
+
 function secondHow(bare: Holding['bare']): Holding {
   return {
     bare,
+    closing: words.within,
     each: rate('second', 1),
     every: rate('second', 1),
     gaps: secondNamer,
@@ -104,12 +113,14 @@ function secondsOf(form: Form): Seconds {
   const everyMinute = rate('minute', 1);
   const prefix = words.everyMinute + words.of;
   const inside = held(form, secondHow(longFromFirst));
+  const between = held(form, secondHow(tiling));
 
   return {
-    afterNamed: told(inside, words.minuteFromThen + words.comma, words.of),
+    afterNamed: told(inside, words.comma + words.thatMinute + words.within,
+      words.of),
     afterThat: words.thatMinute + told(inside, words.within, words.of),
-    between: live ? told(held(form, secondHow(tiling)), '', prefix) :
-      everyMinute,
+    between: live ? told(between, '', prefix) : everyMinute,
+    even: between.rate || !live,
     first: edges[0],
     form,
     last: edges[edges.length - 1],
@@ -126,7 +137,7 @@ function secondsOf(form: Form): Seconds {
 // hour twice.
 const places = {
   hours: {
-    bare: longFromFirst,
+    bare: fourFromFirst,
     every: 'open',
     prefix: '',
     zero: {text: lexicon.twoDigits(0), unit: units.minute.position}
@@ -160,6 +171,7 @@ function minuteHow(sec: Seconds, place: Place, carried: Carried = sec):
 
   return {
     bare,
+    closing: sec.even ? words.within : words.comma,
     each: sec.between,
     every: sec[every],
     gaps: minuteNamer(zero, sec.live ? plain : carried),
@@ -192,8 +204,35 @@ function minuteLevel(times: Moment[], style: ZhHantStyle): Level {
   };
 }
 
+// A cadence from its first value to its last, and each value beside it.
+function stepAndOthers(form: AddedForm): Span[] {
+  return [
+    {from: form.base.start, to: form.base.last},
+    ...form.added.map(function alone(value) {
+      return {from: value, to: value};
+    })
+  ];
+}
+
 // The forms whose runs become stretches of their own inside one unit.
-const cutInside = {pieces: true, range: true};
+const cutInside: {[kind: string]: (form: never) => Span[]} = {
+  added: stepAndOthers,
+  pieces: spansOf,
+  range: spansOf
+};
+
+// A form's runs inside one unit, where it has them.
+function cutsOf(form: Form): Span[] | false {
+  return Object.hasOwn(cutInside, form.kind) &&
+    cutInside[form.kind](form as never);
+}
+
+// The rate between the ends of a run inside one unit: a cadence's own,
+// or the rate of every position.
+function rateInside(form: Form, how: Holding): string {
+  return form.kind === 'added' && rate(how.unit, form.base.interval) ||
+    how.each;
+}
 
 // One run of units crossed with one run of what they hold: its first and
 // last moments.
@@ -263,7 +302,7 @@ function stretched(
     from: inner.values[0],
     to: inner.values[inner.values.length - 1]
   };
-  const cut = single && core.kind in cutInside && spansOf(core);
+  const cut = single && cutsOf(core);
   const cells = crossed(spans, cut || [extent], level);
   const runs = cells.filter(function isRun(cell) {
     return !isMoment(cell);
@@ -283,7 +322,8 @@ function stretched(
     }
   };
   const rest = held(core, how);
-  const ownRate = core.kind === 'one' && level.spanRate || cut && how.each;
+  const ownRate = core.kind === 'one' && level.spanRate ||
+    cut && rateInside(core, how);
   const dropped = removedOf(inner).filter(function between(value) {
     return value > extent.from && value < extent.to;
   });

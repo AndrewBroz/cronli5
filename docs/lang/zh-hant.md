@@ -93,29 +93,33 @@ Examples are in the default style (Taiwan) unless marked.
 
 * **A stretch names its first and last firing**, joined by ～ (至 between
   times written in 時), and the rhythm follows a comma. Hours that run past
-  midnight say 翌日.
+  midnight say 翌日. A time or two beside a rhythm follow it after 另加.
 
   ```js
   cronli5('*/15 9-17 * * 1-5', {lang: zhHant});
   // '每週一至週五 09:00～17:45，每15分鐘一次'
   cronli5('0 22-2 * * *', {lang: zhHant});      // '每天 22:00～翌日 02:00，每小時一次'
+  cronli5('0 */2,13 * * *', {lang: zhHant});    // '每2小時一次，另加 13:00'
   ```
 
 * **A cadence that starts off the beat says where it starts; one that
-  does not divide the hour says where it stops.**
+  does not divide the hour says where it stops**, and closes on 內 before
+  its rate.
 
   ```js
-  cronli5('30 */2 * * *', {lang: zhHant});      // '每天 00:30 起每2小時一次'
-  cronli5('*/7 * * * *', {lang: zhHant});       // '每小時的整點至56分，每7分鐘一次'
+  cronli5('30 */3 * * *', {lang: zhHant});      // '每天 00:30 起每3小時一次'
+  cronli5('*/7 * * * *', {lang: zhHant});       // '每小時的整點至56分內每7分鐘一次'
   ```
 
 * **Hours that hold minutes are named as hours (N時), and the minutes as
   positions in them**, never as a second rate. Every second hour is 雙數時
-  or 單數時.
+  or 單數時, whatever it holds; only the even hours on the hour are the
+  bare 每2小時一次.
 
   ```js
   cronli5('5,20,45 8,12,18 * * *', {lang: zhHant}); // '每天8、12、18時的05、20、45分'
-  cronli5('*/15 */2 * * *', {lang: zhHant});        // '每逢雙數時的00、15、30、45分'
+  cronli5('*/15 */2 * * *', {lang: zhHant});        // '每逢雙數時，整個小時內每15分鐘一次'
+  cronli5('0 1/2 * * *', {lang: zhHant});           // '每逢單數時整點'
   cronli5('5 * * * *', {lang: zhHant});             // '每小時的05分'
   ```
 
@@ -150,11 +154,15 @@ Examples are in the default style (Taiwan) unless marked.
   cronli5('0 0 31 2 *', {lang: zhHant});        // '永不執行（沒有這個日期）'
   ```
 
-* **Parity of years names the calendar**: a year that is even in the
-  common era is odd in the 民國 count.
+* **Parity of years names the calendar** in Taiwan: a year that is even
+  in the common era is odd in the 民國 count. Hong Kong and Macau count
+  years in one era, and their style names none. A step of years is
+  followed by 該年.
 
   ```js
   cronli5('0 0 0 1 1 * */2', {lang: zhHant});   // '每逢西元雙數年1月1日 00:00'
+  cronli5('0 0 0 1 1 * */2', {lang: 'zh-HK'});  // '每逢雙數年1月1日凌晨12時'
+  cronli5('0 0 9 * * * 2028/4', {lang: zhHant}); // '2028年起每4年，該年每天 09:00'
   ```
 
 * **`form: 'sentence'`** leads with 執行時間： and closes with a full
@@ -175,6 +183,7 @@ Two named styles, chosen by the region in the code or passed whole
 | `separator` | `':'` or `'時'` | `':'` | `'時'` | A clock time in digits with a colon, or in 時, 分 and 秒. The mark of a stretch goes with it: ～ between colon times, 至 between 時 times. |
 | `weekday` | `'週'` or `'星期'` | `'週'` | `'星期'` | The word a weekday begins with. |
 | `short` | boolean | `false` | `true` | The end of a weekday range drops the repeated 週 or 星期. A range that crosses from Sunday to Monday keeps both names whole. |
+| `era` | `'西元'`, `'公元'` or `''` | `'西元'` | `''` | The era named before the even or the odd years (每逢西元雙數年, 每逢雙數年). A year named is four digits in every style. |
 
 The Hong Kong style, which Macau's codes also select:
 
@@ -224,5 +233,5 @@ Generated from live output of both libraries (`npm run docs`).
 | `0 12 * 11-2 *` | 每年11月至翌年2月每天 12:00 | 在 12:00, 十一月 到 二月 |
 | `0 0 * * 5L` | 每月最後一個週五 00:00 | 在 00:00, 每月的最後一個 星期五  |
 | `5,10 30 9 * * MON` | 每週一 09:30:05、09:30:10 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
-| `1/1 * * * *` | 每小時的01分至59分，每分鐘一次 | 每 1 分鐘, 在整點後的 1 分 開始 |
+| `1/1 * * * *` | 每小時的01分至59分內每分鐘一次 | 每 1 分鐘, 在整點後的 1 分 開始 |
 <!-- END GENERATED: comparison -->

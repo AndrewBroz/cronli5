@@ -80,6 +80,7 @@ function monthsBut(form: ExceptForm): MonthsSaid {
 }
 
 const monthSayers: Sayers<null, MonthsSaid> = {
+  added: monthList,
   all: noMonths,
   cadence: monthParity,
   except: monthsBut,

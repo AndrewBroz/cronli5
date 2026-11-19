@@ -1,13 +1,16 @@
 // The copy-editor choices Traditional Chinese offers, as a table of
 // word-level conventions: 12- or 24-hour times, times in digits with a
-// colon or in the units of the clock, the word a weekday begins with, and
-// whether a weekday range repeats it. None of them moves a part of the
+// colon or in the units of the clock, the word a weekday begins with,
+// whether a weekday range repeats it, and the era the even and the odd
+// years are counted in. None of them moves a part of the
 // sentence.
 
 import {Cronli5OptionError} from '../../core/errors.js';
 
 /** The word-level conventions of one regional style. */
 export interface ZhHantStyle {
+  // The era named before the even or the odd years, or nothing.
+  era: '' | '公元' | '西元';
   // Whether times are 12-hour with the part of the day first, or 24-hour.
   hour12: boolean;
   // A clock time in digits with a colon, or in hours, minutes and seconds.
@@ -20,6 +23,7 @@ export interface ZhHantStyle {
 
 // Taiwan: the Executive Yuan's rules for numbers in official documents.
 const tw: ZhHantStyle = {
+  era: '西元',
   hour12: false,
   separator: ':',
   short: false,
@@ -34,6 +38,7 @@ const styles: Readonly<Record<'hk' | 'tw', Readonly<ZhHantStyle>>> =
 Object.freeze({
   // Hong Kong government usage, which Macau's public notices follow.
   hk: Object.freeze({
+    era: '',
     hour12: true,
     separator: '時',
     short: true,
@@ -47,6 +52,7 @@ const regions: {[region: string]: string} = {HK: 'hk', MO: 'hk', TW: 'tw'};
 
 // The values each field may take.
 const allowed: {[field: string]: unknown[]} = {
+  era: ['西元', '公元', ''],
   hour12: [true, false],
   separator: [':', '時'],
   short: [true, false],

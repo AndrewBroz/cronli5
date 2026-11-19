@@ -4,7 +4,7 @@
 // and how they are arranged, never by which values they are.
 
 import type {
-  CadenceDescription, Domain, SetDescription
+  CadenceDescription, CadencePieces, Domain, SetDescription
 } from '../../core/schedule.js';
 import {denote} from '../../core/index.js';
 
@@ -56,6 +56,13 @@ export interface PiecesForm extends Valued {
   spans: Span[];
 }
 
+/** A cadence with one or two values beside it. */
+export interface AddedForm extends Valued {
+  kind: 'added';
+  added: number[];
+  base: CadenceForm;
+}
+
 /** The form chosen for a set of values. */
 export type Form =
   | Valued & {kind: 'all'}
@@ -64,7 +71,8 @@ export type Form =
   | CadenceForm
   | RangeForm
   | ExceptForm
-  | PiecesForm;
+  | PiecesForm
+  | AddedForm;
 
 /** What a field lets a set of its values be said as. */
 export interface Reading {
@@ -256,6 +264,37 @@ function formOf(candidates: SetDescription[], reading: Reading): Form {
   }, null) as Form;
 }
 
+// The forms that are no single thing to say.
+const loose = {list: true, pieces: true};
+
+/**
+ * The form of a set of the clock. A cadence of more than four values with
+ * one or two values beside it is said as that, before the set is said in
+ * pieces or as a list.
+ */
+function clockFormOf(
+  candidates: SetDescription[],
+  mixed: CadencePieces | null,
+  reading: Reading
+): Form {
+  const form = formOf(candidates, reading);
+  const parts = mixed?.parts ?? [];
+  const [step] = parts.filter(function steps(part) {
+    return part.kind === 'cadence';
+  }).map(function asForm(part) {
+    return cadenceForm(part as CadenceDescription, reading);
+  });
+  const added = parts.filter(function others(part) {
+    return part.kind === 'values';
+  }).flatMap(function valuesOf(part) {
+    return (part as {values: number[]}).values;
+  });
+  const fits = form.kind in loose && parts.length === 2 &&
+    added.length > 0 && added.length <= 2 && step.values.length > 4;
+
+  return fits ? {added, base: step, kind: 'added', values: form.values} : form;
+}
+
 /** A form said in the way its kind is said. */
 function sayBy<Context, Result>(
   sayers: Sayers<Context, Result>,
@@ -288,6 +327,7 @@ function eachAlone(form: Form): Span[] {
 }
 
 const spanSayers: Sayers<null, Span[]> = {
+  added: eachAlone,
   all: eachAlone,
   cadence: eachAlone,
   except: eachAlone,
@@ -302,4 +342,4 @@ function spansOf(form: Form): Span[] {
   return sayBy(spanSayers, form, null);
 }
 
-export {coreOf, formOf, removedOf, runsIn, sayBy, spansOf};
+export {clockFormOf, coreOf, formOf, removedOf, runsIn, sayBy, spansOf};

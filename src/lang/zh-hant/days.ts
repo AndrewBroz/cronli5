@@ -30,6 +30,9 @@ export interface DayPhrase {
   body: string;
   // The dates as numbers, grouped by the months that have them.
   grouped?: MonthsDays[];
+  // Beside days of the week, a count from the month's end that is one
+  // date in every month that has it: the date, and those months.
+  byMonth?: MonthsDays | null;
   // A date in a month, every day but those named, or days of the week.
   kind: 'dated' | 'rest' | 'weekly';
   // Dates named one by one: a single month takes them after a particle.
@@ -155,6 +158,7 @@ function datesBut(form: ExceptForm, context: DateContext): DayPhrase {
 }
 
 const plainDates: Sayers<DateContext, DayPhrase> = {
+  added: datesListed,
   all: datesListed,
   cadence: dateParity,
   except: datesBut,
@@ -236,11 +240,14 @@ function beforeLast(
     return {days: [group.length - form.days], months: group.months};
   });
 
-  return lengths.length === 1 && !skips ?
+  const oneDate = lengths.length === 1 && !split;
+
+  return oneDate && !skips ?
     {body: grouped[0].days[0] + date, grouped, kind: 'dated'} :
     {
       body: words.countingBack + words.ordinal + (form.days + 1) +
         units.day.length,
+      byMonth: oneDate && reach?.leapYears.length === 0 && grouped[0] || null,
       grouped,
       kind: 'dated'
     };
@@ -301,6 +308,7 @@ function weekdaysBut(form: ExceptForm, style: ZhHantStyle): DayPhrase {
 }
 
 const plainWeekdays: Sayers<ZhHantStyle, DayPhrase> = {
+  added: weekdaysListed,
   all: weekdaysListed,
   cadence: weekdaysListed,
   except: weekdaysBut,
