@@ -71,14 +71,15 @@ const words = {
   once: '一次',
   // 每小時的30分, 9、17時的5、20、45分.
   of: '的',
-  // 8、12、18時各在5、20、45分.
-  eachAt: '各在',
   // 每小時整點; 每小時的整點至56分.
   onTheHour: '整點',
-  // 6、8、12時整個小時，每分鐘一次.
-  wholeHour: '整個小時',
-  // 每小時的前30分鐘, 每分鐘的前10秒, 每2小時的前1小時.
-  first: '前',
+  // 每逢雙數小時，整個小時內每分鐘一次.
+  withinWholeHour: '整個小時內',
+  // 每小時的第1分鐘內，每秒一次.
+  withinFirstMinute: '第1分鐘內',
+  // Every second hour, from 0時 and from 1時: 每逢雙數小時的15、45分.
+  evenHours: '雙數小時',
+  oddHours: '單數小時',
   // Before a single time or minute said after the rate: ，以及 22:00.
   andAlso: '以及',
   // After a start: 01:00起, 2030年起, 每月1日起.
@@ -114,8 +115,6 @@ const words = {
   // 若30日是當月最後一天則提前至週五, around the date.
   ifDate: '若',
   isLastDayThen: '是當月最後一天則',
-  // 每逢當月第5個週一.
-  thisMonth: '當月',
 
   // Months and years.
   oddMonths: '單月',

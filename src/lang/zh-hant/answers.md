@@ -2,9 +2,10 @@
 
 Written 2026-11-19 by Claude Fable 5.2 from `usage.md` (Traditional Chinese
 as written in Taiwan, with Hong Kong and Macau marked), before any
-renderer, and revised the same day after two independent reads (a blind
-judge briefed only in Chinese, and an adversarial schedule read of every
-row; see "What the two reads of 2026-11-19 changed"). Every choice below
+renderer, and revised twice the same day: after two independent reads (a
+blind judge briefed only in Chinese, and an adversarial schedule read of
+every row), and after a second blind judge read the changed forms (see the
+two "What … changed" sections). Every choice below
 is a record with its reason, to be tested again, not a ruling. No native
 speaker has reviewed it.
 
@@ -39,9 +40,9 @@ Three things hold everywhere:
   bare. (Project conventions.)
 - **A sentence has at most one 一次, on its finest rhythm.** 一次 closes a
   rate (每15分鐘一次). A coarser rhythm above it is joined to what it
-  holds by 的 (每2小時的15、45分; 每15分鐘的前1分鐘，每秒一次), and a
-  rhythm that only names days or years takes none (每月1日起每5天;
-  2028年起每4年). Two 一次 in one sentence mean two different things and
+  holds by 的 (每逢雙數小時的15、45分; 每15分鐘的第1分鐘內，每秒一次), and
+  a rhythm that only names years takes none (2028年起每4年). Two 一次 in
+  one sentence mean two different things and
   a blind reader could not reconcile them (2026-11-19).
 - **No more than six clock times are named in a sentence** before another
   device is used; a stretch is two of them.
@@ -60,21 +61,23 @@ join that follows it, so the three concatenated are the description.
   cadence of years ends 「，」 (2028年起每4年，1月1日), pieces of years end
   「，」 (2030年至2032年及2035年，每年1月1日), and the frame before a
   union ends 「期間，」 (4.3).
-- **day → time**: nothing, apart from the space below. A day part that
-  ends in a cadence of days (每N天) is followed by 「，」 before a rate
-  (每月1日起每3天，每分鐘一次).
-- **The space.** A time written in digits is set off by one half-width
-  space from a Chinese character on either side: a colon time at both
-  ends (每天 09:00; 01:00 起; 翌日 02:00; 以及 22:00; （08:00 除外）), a
-  時 time or hours named in digits at the front only, where the digit is
-  (每天 9時; 翌日 2時; 每天 8、12、18時各在…). No
-  space stands beside full-width punctuation (）09:00; 09:00～17:45，). A
-  12-hour time begins with its part of the day and takes no space before
-  it (每天上午9:00), but its digits still do after it (凌晨1:00 起).
-  Nowhere else is there a space: 每月5日, 每15分鐘, 各在5、20、45分.
-  The first draft spaced only the day → time join; the judge found
-  01:00起 beside 每天 09:00 uneven, and one rule for every edge of a
-  digit time is simpler to state.
+- **calendar → time** (the day part, or the frame when no day is said):
+  a half-width space when the time begins with a digit (每天 09:00;
+  每週一至週五 0、6、12、18時的15、45分); 「，」 when the time begins with
+  每 and a date, a weekday, a month or a year has been named
+  (每週一，每分鐘一次; 每月1日，每小時整點; 每年6月，每5分鐘一次;
+  每天（週三除外），每分鐘一次; 每週一至週五，每逢雙數小時的15、45分);
+  nothing otherwise (每天上午9:00; ）09:00). The second judge found a
+  weekday run straight into a rhythm (週五每2小時) hard to cut; the usage
+  notes' own lines put a comma before a rate.
+- **The space, in one sentence**: a clock time, or hours named in digits,
+  is set off by one half-width space wherever one of its digits would
+  touch a Chinese character (每天 09:00; 01:00 起; 翌日 02:00;
+  以及 22:00; （08:00 除外）; 每天 9時; 每天 8、12、18時的…;
+  凌晨1:00 起), and nothing else is spaced (每月5日, 每15分鐘, 上午9:00,
+  ）09:00). Both judges call the spacing uneven because counts and dates
+  are tight while clock times are not; that is the usage notes' own
+  practice (每月5日 beside 每天 08:00、12:00) and it is kept.
 
 Continuity: a time field (second, minute, hour) changes only `time`; a
 date, weekday, month or year changes only `frame` and `day`. The declared
@@ -117,7 +120,8 @@ core's candidates are taken under these views:
 1. **All** values: the field is not said.
 2. **One** value.
 3. **An idiom** of section 5 for exactly this set (單數日, 雙數日, 單月,
-   雙月, 單數年, 雙數年).
+   雙月, 單數年, 雙數年; and 單數小時, 雙數小時 where something finer
+   than the hour happens in them).
 4. **A tiling cadence** (time fields only): `cadence` with
    `start - min < interval`, and the unit's size (60, 60, 24) divisible
    by `interval`. From the unit's first value it is said bare; from a
@@ -127,14 +131,13 @@ core's candidates are taken under these views:
 6. **An exception**: `except` whose base is `all`, or a cadence (time
    fields, tiling or not), or the odd or even days (dates), with **one or
    two** values removed, and more than four values kept. The base is said
-   as it would be alone. Among years and months only one may be an
-   exception in a sentence: the year's; the months are then said as the
-   months that fire (4.4).
+   as it would be alone. A month exception and a year exception share one
+   bracket, month first (4.4).
 7. **One run that wraps** (hours, dates, months, weekdays, under the
    views above).
 8. **A cadence that does not tile**, of more than four values (time
-   fields and years), or of more than five values (dates): said with
-   both ends, or for dates from its start.
+   fields and years): said with both ends. Dates are never said as a
+   step: a cadence of dates is listed (3.7).
 9. **Pieces** (some run of three or more values beside other values).
 10. **A list** of the values, however many there are.
 
@@ -144,8 +147,8 @@ exception from a cadence: they are listed (每年1、4、7、10月).
 
 Evidence for the thresholds (2026-11-19): usage §五 says a list of more
 than four or five is not remembered and that a writer then says what is
-left out (週三、週日停收). So an exception names at most two things and
-dates from a cadence are listed to five. The blind judge listed six clock
+left out (週三、週日停收). So an exception names at most two things. The
+blind judge listed six clock
 times unasked where the first draft had crossed two hours with three
 minutes (只有六個時刻，直接列出), which is why six is the limit for clock
 times. These are judgments by the cost model, not measurements.
@@ -210,7 +213,13 @@ The schedule read says Hong Kong notices write 每日 and 逢星期一至五. Th
 usage notes give 逢 as commoner in Hong Kong and do not give 每日 as a
 regional word (they call it 書面 in Taiwan). Both would be one more field
 each; they are left for a Hong Kong reviewer, and 每天 and 每星期一 are
-not wrong in Hong Kong.
+not wrong in Hong Kong. The second judge adds that Hong Kong pads minutes
+below ten (9時05分) and writes 下午6時 where this table has 晚上6時. The
+usage notes give Taiwan's 9時5分 and no Hong Kong rule, and one table of
+day parts serves both regions; both are recorded for the same reviewer.
+The `hk` table itself is coherent (12-hour, 時, 星期, short range): the
+"mixed" Hong Kong lines the judge saw were rows of the other option sets
+(`hour12` alone, `separator` alone), shown without their options.
 
 ## 2. Frame
 
@@ -248,15 +257,15 @@ either
 - no date or weekday is restricted: 每天 09:00; 每年6月每天 09:00;
   2030年每天 09:00; or
 - the day part is a range of dates, or pieces that hold one, with
-  nothing after it (not a union, not a cadence of days said with both
-  ends, no bracket): 每月1日至7日每天 09:00; 每月25日至月底每天 00:00;
+  nothing after it (not a union, no bracket, no 的): 每月1日至7日每天 09:00; 每月25日至月底每天 00:00;
   每月1日至7日及15日每天 09:00; 每年6月1日至7日每天 00:00. So
-  每月5日至20日每3天 00:00 and 每月1日至7日及每週一 04:30 take none.
+  每月8日至30日的雙數日 00:00 and 每月1日至7日及每週一 04:30 take none.
 
 It is not said when the time runs round the clock: 每分鐘一次,
-每N分鐘一次, 每小時整點, 每小時的…, 每N小時一次 and 每N小時的… said bare,
-and the seconds forms that begin 每秒, 每N秒, 每分鐘的. So
-每月1日至7日每分鐘一次, 每年6月每5分鐘一次, 每6小時一次.
+每N分鐘一次, 每小時整點, 每小時的…, 每N小時一次 said bare,
+每逢雙數小時… and 每逢單數小時…, and the seconds forms that begin 每秒,
+每N秒, 每分鐘的. So 每月1日至7日，每分鐘一次; 每年6月，每5分鐘一次;
+每6小時一次.
 
 Why after a range of dates: 每月28日至次月3日 00:00 is how a period that
 ends at a moment is written (至次月3日 00:00 止), and 至月底 00:00 reads as
@@ -267,7 +276,8 @@ range makes each day carry the time. A range of weekdays does not need it
 it as each day).
 
 The condition on the hours: the time is anchored exactly when the hour
-set is not all hours and not a tiling cadence from 0. An exception whose
+set is not all hours, not a tiling cadence from 0, and not said as
+雙數小時 or 單數小時. An exception whose
 base is 每天 (每天（週三除外）) is a day part of its own.
 
 ## 3. Devices, field by field
@@ -297,11 +307,15 @@ Joined by 、 with the shared word said once, after the last item (usage
 §五: 共同的字只說一次):
 
 - `5,20,45 * * * *` 每小時的5、20、45分
+- `0,15,45 * * * *` 每小時的整點、15、45分 (minute 0 in a list is 整點,
+  first, with its own word: both judges, 「0分」不是中文說法)
 - `0 8,12,18 * * *` 每天 08:00、12:00、18:00
 - `0 0 1,10,20 * *` 每月1、10、20日 00:00
 - `0 0 * * 1,3,5` 每週一、三、五 00:00
 - `0 9 * 1,7 *` 每年1、7月每天 09:00
-- seconds: 每分鐘的第15、45秒; years: 2030、2035年
+- seconds: 每分鐘的15、45秒; 每15分鐘的0、30秒 (第 stands only before a
+  single second, where a bare 30秒 would be a length; the second judge
+  rejected 第0秒 and allowed 0秒); years: 2030、2035年
 
 No 及／和 before the last item of a plain list. Weekdays are listed from
 Monday (每週六、日; 每週二、四、六、日; 每週五、日), except two days that are
@@ -329,17 +343,23 @@ fires to the last moment that fires**, and always carries its rhythm.
 
 A range of minutes or seconds never stands without its rate.
 
-**From the start of the unit** a range of minutes or seconds is 前 and a
-count, the way people say it (the judge: 一般人不說「0分」，說…「前10秒」):
+**A stretch inside a unit is always written by its two ends**, and
+minute 0 at its start is 整點:
 
-- `0-29 * * * *` 每小時的前30分鐘，每分鐘一次
-- `0-58 * * * *` 每小時的前59分鐘，每分鐘一次
-- `0-9 * * * * *` 每分鐘的前10秒，每秒一次
-- `45-59 * * * *` 每小時的45分至59分，每分鐘一次 (not from the start)
+- `0-29 * * * *` 每小時的整點至29分，每分鐘一次
+- `0-58 * * * *` 每小時的整點至58分，每分鐘一次
+- `45-59 * * * *` 每小時的45分至59分，每分鐘一次
+- `*/7 * * * *` 每小時的整點至56分，每7分鐘一次
+- `0-9 * * * * *` 每分鐘的0秒至9秒，每秒一次
+- `5/10 * * * * *` 每分鐘的5秒至55秒，每10秒一次
 
-A cadence from minute 0 that needs both ends begins at 整點:
-每小時的整點至56分，每7分鐘一次. Lists keep the digit (每小時的0、15、45分):
-there it is one name among others.
+The second draft wrote a stretch from the start of the unit as 前 and a
+count (前30分鐘, 前10秒, 前1小時). The second judge: 前1＋unit is
+ordinarily "the one before" (起飛前1小時), so 每小時的前1分鐘 was xx:59 to
+some readers, and 前11分鐘 for minutes 0 to 10 had to be converted beside
+a stretch written by its ends. One way of writing a stretch remains. The
+whole first minute, where every second fires, is 第1分鐘內 (the judge's
+word): 每小時的第1分鐘內，每秒一次.
 
 A range of dates that reaches the last day the months have: 至月底 when
 the reached months differ in length (每月25日至月底每天 00:00), the number
@@ -371,14 +391,18 @@ when they are all one length (每年6月25日至30日每天 00:00).
   `0 9 * * 6-1` 每週六至週一 09:00; `0 9 * * 0,1` 每週日、一 09:00. An
   exception still comes first where it applies (`0-4` 每天（週五、六除外）).
 - Minutes and seconds never wrap: `50-10 * * * *`
-  每小時的前11分鐘及50分至59分，每分鐘一次.
+  每小時的整點至10分及50分至59分，每分鐘一次.
 
 ### 3.6 Pieces
 
-Pieces are ordered by their first value (weekdays: by where each piece
-starts in a week counted from Monday, so 每週二及週五至週日;
-每週四及週日至週二). A run of three or more is a range; a shorter run is
-single values.
+Pieces are ordered by their first value. Weekdays are the exception:
+their runs come first and their single days after (每週日至週二及週四;
+每週五至週日及週二; 每週三至週五及週一), each group from Monday. The second
+judge, reading 每週四及週日至週二 in order, first took 週四及週日 and had
+to rebuild; a run that opens the phrase cannot be misjoined. Dates and
+months keep ascending order (每月1日及10日至15日 was read without
+trouble). A run of three or more is a range; a shorter run is single
+values.
 
 - Days, dates, months, years: joined by 、 and the last by 及, each
   single value with its own unit: 每月1日至7日及15日;
@@ -392,30 +416,34 @@ single values.
   - `0 9-17,22 * * *` 每天 09:00～17:00，每小時一次，以及 22:00
   - `0 5,9-17 * * *` 每天 09:00～17:00，每小時一次，以及 05:00
   - `0-29,45 9 * * *` 每天 09:00～09:29，每分鐘一次，以及 09:45
-  - `0-29,45 * * * *` 每小時的前30分鐘，每分鐘一次，以及45分
+  - `0-29,45 * * * *` 每小時的整點至29分，每分鐘一次，以及45分
   - `5-10,20 * * * *` 每小時的5分至10分，每分鐘一次，以及20分
   Several stretches are joined by 、 before the one rate (where they are
   written with 至, the last by 及). On the hour, two consecutive hours
   are a stretch like any other (00:00～03:00、21:00～23:00，每小時一次).
-  This is the one place where the order is not ascending; the cost is
-  that 05:00 is read after 17:00.
+  The cost is that a single time may come out of clock order (…，以及
+  12:00, which the second judge would move back between the stretches;
+  the first judge and the schedule read both stumbled on a single time
+  under a rate, which is the worse fault, so it stays after the rate).
 
 ### 3.7 An even cadence
 
 - `*/15 * * * *` 每15分鐘一次
 - `0 */2 * * *` 每2小時一次
 - `*/6 * * * * *` 每6秒一次
-- `0 0 */5 * *` 每月1日起每5天 00:00
+- `0 0 */5 * *` 每月1、6、11、16、21、26、31日 00:00
 - `0 0 1 */3 *` 每年1、4、7、10月的1日 00:00 (months are listed)
 
-Days of the month: five or fewer are listed (`*/7` 每月1、8、15、22、29日).
-More are a cadence: from its start when it runs to the end of the month
-and the months are unrestricted or several (每月1日起每3天), with both
-ends otherwise (每月5日至20日每3天; 每年6月1日至26日每5天). A single named
-month always takes both ends: 每年6月1日起每5天 would be heard as going on
-past June. It takes no 一次: it names days, and the time after it is the
-sentence's rhythm (the judge asked for 每5天一次; with a rate after it the
-sentence would again have two).
+**Days of the month are never said as a step.** A cadence of dates is
+listed, however many (`*/7` 每月1、8、15、22、29日; `*/3`
+每月1、4、7、10、13、16、19、22、25、28、31日: eleven, the longest there
+is), because every second day is the idiom, also between two dates
+(`8/2` 每月8日至30日的雙數日). The second draft said 每月1日起每5天. The
+second judge: 每5天 and 每隔5天 are mixed in ordinary speech (1, 6, 11 or
+1, 7, 13), and seven dates listed read better than the rule. A date is
+checked against a calendar; a list of dates is recognised and a step is
+worked out. Eleven is more than a reader holds, and is accepted because
+the alternative has two readings. Still doubted for `*/3` and `*/4`.
 
 ### 3.8 A cadence that does not tile, or starts off the beat
 
@@ -448,7 +476,7 @@ fire, first～last when there are several:
 - `0 0-2,4-23 * * *` 每小時整點（03:00 除外）
 - `* 0-2,4-23 * * *` 每分鐘一次（03:00～03:59 除外）
 - `*/15 0,2,4,6,10,12,14,16,18,20,22 * * *`
-  每2小時的0、15、30、45分（08:00～08:45 除外）
+  每逢雙數小時的整點、15、30、45分（08:00～08:45 除外）
 - `0-28,30-59 * * * *` 每分鐘一次（每小時的29分除外）
 - `0,10,20,40,50 * * * *` 每10分鐘一次（每小時的30分除外）
 - `0-28,30-59 * * * * *` 每秒一次（每分鐘的第29秒除外）
@@ -466,7 +494,7 @@ doubted.
 | clock times listed | each time | nothing | six (four when one stretch with a plain rate says the same) |
 | stretches listed | two each | the moments between | three |
 | minutes or seconds named | each | nothing | four from a cadence; any number from an irregular set |
-| dates listed | each | nothing | five from a cadence |
+| dates listed | each | nothing | no limit (eleven at most from a cadence) |
 | weekdays, months listed | each | nothing | no limit |
 | a bare cadence | the step | the moments | — |
 | an exception | base and one or two things | subtraction | two removed |
@@ -485,17 +513,16 @@ None. `0 */12 * * *`, `0 0,12 * * *` and `0 0/12 * * *` are all
 
 ### 4.1 Clock times (seconds zero)
 
-**What a unit holds.** After 每小時的, 每N小時的 and 各在, a minute set is
-said in one of these forms (and a second set likewise after 每分鐘的 and
-每N分鐘的, 4.2):
+**What a unit holds.** After 每小時的, 每逢雙數小時的 and hours named
+(8、12、18時的), a minute set is said in one of these forms (and a second
+set likewise after 每分鐘的 and 每N分鐘的, 4.2):
 
 | Minutes | Form |
 | --- | --- |
-| one, or a list (any cadence of four or fewer) | 30分; 5、20、45分 |
-| every minute | under 每N小時的: 前1小時，每分鐘一次; under named hours: 整個小時，每分鐘一次 |
-| a tiling cadence from 0 of more than four | 前1小時，每5分鐘一次; 整個小時，每5分鐘一次 |
-| a range from 0 | 前30分鐘，每分鐘一次 |
-| another range | 5分至10分，每分鐘一次 |
+| one, or a list (any cadence of four or fewer) | 30分; 5、20、45分; 整點、15、30、45分 |
+| every minute | after a comma: ，整個小時內每分鐘一次 |
+| a tiling cadence from 0 of more than four | ，整個小時內每5分鐘一次 |
+| a range | 整點至29分，每分鐘一次; 5分至10分，每分鐘一次 |
 | another cadence of more than four | 整點至56分，每7分鐘一次; 5分至55分，每10分鐘一次 |
 | pieces | the stretches, the rate, then ，以及 the single minutes (3.6) |
 | an exception | the base's form, then （…除外） |
@@ -507,7 +534,7 @@ said in one of these forms (and a second set likewise after 每分鐘的 and
 | every | 每分鐘一次 |
 | 0 | 每小時整點 |
 | tiling from 0 | 每N分鐘一次 |
-| anything else | 每小時的 + form: 每小時的30分; 每小時的5、20、45分; 每小時的前30分鐘，每分鐘一次; 每小時的整點至56分，每7分鐘一次 |
+| anything else | 每小時的 + form: 每小時的30分; 每小時的5、20、45分; 每小時的整點至29分，每分鐘一次; 每小時的整點至56分，每7分鐘一次 |
 | an exception | the rate, then （每小時的N分除外） |
 
 **B. Listing.** Whatever the fields look like, **six clock times or fewer
@@ -553,7 +580,7 @@ from the first firing to the last:
   `*/7 9 * * *` 每天 09:00～09:56，每7分鐘一次.
 - otherwise with 每小時的 + form, so that the step is seen to restart
   each hour: `5,20,45 9-17 * * *` 每天 09:05～17:45，每小時的5、20、45分;
-  `0-29 9-17 * * *` 每天 09:00～17:29，每小時的前30分鐘，每分鐘一次;
+  `0-29 9-17 * * *` 每天 09:00～17:29，每小時的整點至29分，每分鐘一次;
   `*/7 9-17 * * *` 每天 09:00～17:56，每小時的整點至56分，每7分鐘一次.
   (The judge finds the stretch and 每小時的 say one thing twice and would
   write 9時至17時; that loses whether 17:45 fires. A note.)
@@ -563,75 +590,97 @@ from the first firing to the last:
 **D. Several stretches, and hours named.** For hours that are not one
 run and times that are more than six:
 
-1. **A tiling cadence of hours** (on the hour it would be 每N小時一次),
-   bare from 0 or offset, with or without an exception: the rhythm, then
-   what it holds, joined by 的. Nothing says "once" before the moments
-   are named.
-   - `15,45 */2 * * *` 每2小時的15、45分
-   - `*/15 */2 * * *` 每2小時的0、15、30、45分
-   - `* */2 * * *` 每2小時的前1小時，每分鐘一次
-   - `0-29 */2 * * *` 每2小時的前30分鐘，每分鐘一次
-   - `*/5 */2 * * *` 每2小時的前1小時，每5分鐘一次
-   - `*/15 1/2 * * *` 每天 01:00 起每2小時的0、15、30、45分
-   - `* 1/2 * * *` 每天 01:00 起每2小時的前1小時，每分鐘一次
+1. **Every second hour** (the hours are a tiling cadence of step 2: from
+   0時, 雙數小時; from 1時, 單數小時), with or without an exception:
+   每逢 and the idiom, then what those hours hold. No start is said and
+   no hour is named that does not fire.
+   - `15,45 */2 * * *` 每逢雙數小時的15、45分
+   - `*/15 */2 * * *` 每逢雙數小時的整點、15、30、45分
+   - `* */2 * * *` 每逢雙數小時，整個小時內每分鐘一次
+   - `*/5 */2 * * *` 每逢雙數小時，整個小時內每5分鐘一次
+   - `0-29 */2 * * *` 每逢雙數小時的整點至29分，每分鐘一次
+   - `*/15 1/2 * * *` 每逢單數小時的整點、15、30、45分
+   - `* 1/2 * * *` 每逢單數小時，整個小時內每分鐘一次
    - `* 0,2,4,6,10,12,14,16,18,20,22 * * *`
-     每2小時的前1小時，每分鐘一次（08:00～08:59 除外）
-   One minute is the form of B and C with that minute in every time
-   (`30 */2` 每天 00:30 起每2小時一次).
-   A cadence of hours that does not tile takes its stretch first:
-   `15,45 4/4 * * *` 每天 04:15～20:45，每4小時的15、45分.
+     每逢雙數小時，整個小時內每分鐘一次（08:00～08:59 除外）
+   - `15,45 0-20/2 * * *` 每逢雙數小時的15、45分（22:15～22:45 除外）
+   - beside a day: 每週一至週五，每逢雙數小時的整點、15、30、45分
+   The hours alone keep the cadence: `0 */2 * * *` 每2小時一次;
+   `0 1/2 * * *` 每天 01:00 起每2小時一次; one minute likewise
+   (`30 */2 * * *` 每天 00:30 起每2小時一次).
 2. **Up to three stretches** (pieces of hours, or two or three separate
    hours under minutes said with a rate), joined by 、, then the tail of
    C: `*/15 9-17,22 * * *` 每天 09:00～17:45、22:00～22:45，每15分鐘一次;
    `* 9,17 * * *` 每天 09:00～09:59、17:00～17:59，每分鐘一次;
-   `*/15 9,17 * * *` 每天 09:00～09:45、17:00～17:45，每15分鐘一次;
+   `*/15 */12 * * *` 每天 00:00～00:45、12:00～12:45，每15分鐘一次;
    `5,20,45 9-17,22 * * *` 每天 09:05～17:45、22:05～22:45，
    每小時的5、20、45分.
-3. **Otherwise the hours are named**, N時 in a list (or as pieces), and
-   各在 says what each holds; every minute is 整個小時:
-   `5,20,45 8,12,18 * * *` 每天 8、12、18時各在5、20、45分;
-   `0,30 8,12,16,20 * * *` 每天 8、12、16、20時各在0、30分;
-   `* 6,8,12,18,20 * * *` 每天 6、8、12、18、20時整個小時，每分鐘一次.
-   各 distributes over every hour named, which 的 did not: in the 12-hour
-   style 上午9時、下午5時的5、20、45分 left 上午9時 standing alone as nine
-   o'clock (the judge's second reading).
-   This form is the last resort and is rare: the judge finds N時 beside
-   09:00 elsewhere uneven, and that is why six times are listed first and
-   three stretches come before it.
+3. **Otherwise the hours are named**, N時 in a list (or as pieces),
+   however many, and 的 joins what each holds:
+   `5,20,45 8,12,18 * * *` 每天 8、12、18時的5、20、45分;
+   `15,45 */6 * * *` 每天 0、6、12、18時的15、45分;
+   `0,30 8,12,16,20 * * *` 每天 8、12、16、20時的整點、30分;
+   `* 6,8,12,18,20 * * *` 每天 6、8、12、18、20時，整個小時內每分鐘一次.
+   So the limits are two and both are counts of clock times: six times
+   listed (B), three stretches (D.2); past them hours are named, with no
+   further limit.
+   In the 12-hour styles each hour carries its own part of the day, and
+   the last is joined by 及 so that the list closes before 的:
+   每天上午8時、中午12時及晚上6時的5、20、45分. (The first judge read
+   上午9時、下午5時的5、20、45分 as nine o'clock sharp and then the
+   afternoon times; the second draft's 各在 cured that and the second
+   judge called it forced and wrote this form. Whether 及 is enough for
+   two hours is still doubted; two hours with three minutes or fewer are
+   six times and are listed, so the doubt is confined to longer sets.)
 4. **Hours all but one or two**: the form for all hours with what is
    removed after it: `5,20,45 0-2,4-23 * * *` 每小時的5、20、45分
    （03:05～03:45 除外）.
 
-**Why 的 and 前1小時.** The first draft said 每2小時一次，每次在15、45分
-and 每2小時一次，每次在0分至59分，每分鐘一次. Both readers: 一次 says
-once and several moments follow; the judge read the second as "every
-minute, always". The same two-rhythm trouble failed blind reads in other
-languages this week. Chinese already says what a unit holds with 的
-(每小時的15、45分), and the judge's own rewrite was 每2小時的15分、45分;
-the same phrase one level up needs no new device. 前1小時 is what the
-judge reached for (整個小時內) said so that it also serves 前30分鐘 and
-前10秒. Rejected: naming the hours (0、2、4…22時: twelve items, or an
-ellipsis); 雙數時 (the judge's 每逢偶數時: no corpus evidence for a word
-for alternate hours, and it serves only a step of two).
+**雙數小時 and 單數小時: the orchestrator's call (Claude Fable 5.2,
+2026-11-19).** The first draft said 每2小時一次，每次在15、45分 (two 一次;
+"every minute, always"). The second said 每2小時的15、45分,
+每2小時的前1小時 and 每天 01:00 起每2小時的15、45分: one reading each time,
+but the second judge said a Taiwan writer would not write them, that the
+reader must work out which hours, and that the last names 01:00, which
+does not fire. Twice, unprompted, that judge wrote 雙數小時 and 單數小時
+(每逢雙數小時，整個小時內每分鐘一次; 每天逢單數小時…), and the first judge
+had written 每逢偶數時. The rows already say 單數日, 雙數年, 單月.
 
-Which hours a bare 每2小時 starts from is the project's settled
-convention (the first hour of the day); the judge's remark on it is not a
-finding. That 01:00 in 每天 01:00 起每2小時的15、45分 does not itself fire
-is plain from the minutes named; the first draft's 1時 beside 09:00 was
-found uneven, and under `separator: 時` the two were the same words
-anyway.
+Evidence: three open-web searches on 2026-11-19 (雙數小時／單數小時 with
+發車, 班次, 報時; 逢單數小時／每逢雙數小時; 雙數整點／單數整點／偶數整點／
+奇數整點 with 接駁車, 時刻表) returned **nothing exact**: the search tool
+did not honour the quoted phrases and gave hospital shuttle and hotel
+timetables that list each departure (one writes 每小時整點及半點), and no
+page using any of these words. So the idiom is **not attested by this
+search**. It is adopted as plainly ordinary on other grounds: it is
+compositional (單數／雙數 + 小時, as 單數日 is), two blind readers produced
+it or its twin without being asked, and nothing better exists for a step
+of two.
+
+Which hours: 雙數小時 are the hours numbered 0, 2, 4 … 22, and 0時 is
+even; 單數小時 are 1, 3 … 23. Parity is the same on the 12-hour clock
+(12 is even as 0 is; 下午1時 is 13時, odd either way), so a reader who
+counts on either clock gets the same hours. The reading to watch for: a
+reader who doubts whether 0時 (凌晨12時) counts as 雙數; and a reader who
+takes 每逢雙數小時 as "every even number of hours from now". Neither is
+likelier than for 單數日. Not yet blind-read.
+
+雙數小時 is used only where something finer than the hour happens in the
+hours; the bare cadence stays 每2小時一次 by the project's convention.
+Rejected: 雙數時 (not a word a writer uses for an hour as a stretch);
+雙數整點 (a moment, not the hour that holds minutes).
 
 ### 4.2 Seconds
 
-Forms of a second set after 每分鐘的 and 每N分鐘的: 第30秒; 第15、45秒 (a
-cadence of four or fewer is a list: 第0、15、30、45秒); every second
-前1分鐘，每秒一次; tiling from 0 前1分鐘，每6秒一次; a range from 0
-前10秒，每秒一次; otherwise 第5秒至第55秒，每10秒一次.
+Forms of a second set after 每分鐘的 and 每N分鐘的: 第30秒; 15、45秒 and
+0、30秒 (a cadence of four or fewer is a list: 0、15、30、45秒); every
+second 第1分鐘內，每秒一次; tiling from 0 第1分鐘內，每6秒一次; a range
+0秒至9秒，每秒一次; another cadence 5秒至55秒，每10秒一次.
 
 **Every minute of every hour.** `* * * * * *` 每秒一次; tiling from 0:
 每6秒一次, 每30秒一次; anything else 每分鐘的 + form
-(`30 * * * * *` 每分鐘的第30秒; `0-9 * * * * *` 每分鐘的前10秒，每秒一次;
-`5/10 * * * * *` 每分鐘的第5秒至第55秒，每10秒一次).
+(`30 * * * * *` 每分鐘的第30秒; `0-9 * * * * *` 每分鐘的0秒至9秒，每秒一次;
+`5/10 * * * * *` 每分鐘的5秒至55秒，每10秒一次).
 
 **One second (not zero).** It is written into every named moment and the
 sentence is otherwise the one for second zero:
@@ -646,34 +695,43 @@ sentence is otherwise the one for second zero:
 
 Once a second is shown, every clock time in the sentence shows seconds.
 
-**Several seconds.** The first that applies:
+**Several seconds.** Every end of a stretch is a moment that fires,
+written to the second (the second judge could not tell whether 17:45:30
+or 17:45:59 fired after a stretch that ended 17:45). The first that
+applies:
 
 1. The minutes are stretches with 每分鐘一次, and the seconds are every
    second or a tiling cadence: the stretches are extended to the second
    and the rate becomes the seconds' rate.
    `* * 9 * * *` 每天 09:00:00～09:59:59，每秒一次;
    `*/10 * 9 * * *` 每天 09:00:00～09:59:50，每10秒一次;
-   `* 0-29 * * * *` 每小時的前30分鐘，每秒一次.
+   `* 0-29 * * * *` 每小時的0分0秒至29分59秒，每秒一次.
 2. Three clock times or fewer: each becomes its seconds, listed when
    there are six or fewer in all, otherwise each a stretch from its first
    second to its last, with the rate.
    `0,30 0 9 * * *` 每天 09:00:00、09:00:30;
    `* 0 9 * * *` 每天 09:00:00～09:00:59，每秒一次;
    `* 0 9,17 * * *` 每天 09:00:00～09:00:59、17:00:00～17:00:59，每秒一次.
-3. Minute 0 of every hour is the start of the hour, so the seconds are
-   said of the hour: `* 0 * * * *` 每小時的前1分鐘，每秒一次;
-   `*/10 0 * * * *` 每小時的前1分鐘，每10秒一次; `0-9 0 * * * *`
-   每小時的前10秒，每秒一次; `15,45 0 * * * *` 每小時的0分15秒、0分45秒.
-   Another single minute: `* 30 * * * *`
-   每小時的30分0秒至30分59秒，每秒一次.
-4. Otherwise the minutes are said as a rhythm (a rate, with its stretch
-   if it has one) and take 的 + form:
-   `* */15 9-17 * * 1-5` 每週一至週五 09:00～17:45，每15分鐘的前1分鐘，
-   每秒一次;
-   `0,30 */15 9-17 * * 1-5` …，每15分鐘的第0、30秒;
-   `0-9 */15 9-17 * * 1-5` …，每15分鐘的前10秒，每秒一次;
-   `*/15 */15 * * * *` 每15分鐘的第0、15、30、45秒;
-   `* */15 9 * * *` 每天 09:00～09:45，每15分鐘的前1分鐘，每秒一次.
+3. One minute of every hour: minute 0 with every second or a tiling
+   cadence is the hour's first minute (`* 0 * * * *`
+   每小時的第1分鐘內，每秒一次; `*/10 0 * * * *`
+   每小時的第1分鐘內，每10秒一次); anything else is written in 分 and 秒
+   (`0-9 0 * * * *` 每小時的0分0秒至0分9秒，每秒一次; `15,45 0 * * * *`
+   每小時的0分15秒、0分45秒; `* 30 * * * *`
+   每小時的30分0秒至30分59秒，每秒一次).
+4. Otherwise the minutes are said as a rhythm with 的 + form, and a
+   stretch before it runs from the first second that fires to the last:
+   `* */15 9-17 * * 1-5` 每週一至週五 09:00:00～17:45:59，
+   每15分鐘的第1分鐘內，每秒一次;
+   `0,30 */15 9-17 * * 1-5` 每週一至週五 09:00:00～17:45:30，
+   每15分鐘的0、30秒;
+   `0-9 */15 9-17 * * 1-5` 每週一至週五 09:00:00～17:45:09，
+   每15分鐘的0秒至9秒，每秒一次;
+   `*/15 */15 * * * *` 每15分鐘的0、15、30、45秒;
+   `* */15 9 * * *` 每天 09:00:00～09:45:59，每15分鐘的第1分鐘內，
+   每秒一次.
+   Three layers in one sentence; the second judge could not hold them in
+   one reading, and no shorter exact form was found.
 
 An exception of seconds follows the pattern of minutes:
 `0-28,30-59 0 9 * * *` 每天 09:00:00～09:00:59，每秒一次（09:00:29 除外）.
@@ -712,22 +770,24 @@ alone; when the dates are every day the months have (`everyDay`), 每天.
 
 **Both must match (`day.both`).** The date is the base, said as it is
 said alone, and the weekdays limit it with 限 in brackets (限 is how
-notices restrict: 限週一至週五):
+notices restrict: 限週一至週五). A weekday form that is one day a month
+(the nth or the last of a weekday) is the base instead, and the dates
+limit it:
 
 - `0 0 */2 * 1` 每月單數日（限週一）00:00
-- `*/15 9-17 */5 * 1-5` 每月1日起每5天（限週一至週五）09:00～17:45，
-  每15分鐘一次
+- `*/15 9-17 */5 * 1-5` 每月1、6、11、16、21、26、31日（限週一至週五）
+  09:00～17:45，每15分鐘一次
 - `0 0 15 * */2` 每月15日（限週二、四、六、日）00:00
-- `0 0 */2 * 5L` 每月單數日（限最後一個週五）00:00
+- `0 0 */2 * 5L` 每月最後一個週五（限單數日）00:00
 - a weekday side that is an exception: `0 0 */2 * 0-2,4-6`
   每月單數日（週三除外）00:00
 
-The first draft had the weekday as the base (每週二、四、六、日（限15日）).
-Both readers: it opens as four days a week for something that fires at
-most once a month, and in 每週一至週五（限每月1日起每5天） the dates
-allowed could not be seen. With the date first the sentence opens on a
-calendar the reader can look at. The date is always the base, so no rule
-has to weigh which side fires less often.
+The first draft had the weekday as the base throughout (每週二、四、六、日
+（限15日）): it opened as four days a week for something that fires at
+most once a month. The second had the date as the base throughout, and
+the second judge found 每月單數日（限最後一個週五） the wrong way round:
+the day that comes once a month is the thing, and the dates qualify it.
+The rule is by kind of form, not by counting which side fires less.
 
 For the option some schedulers have: Friday the 13th is 每月13日（限週五）;
 the first Monday is 每月第1個週一.
@@ -743,9 +803,17 @@ the first Monday is 每月第1個週一.
   每年6月1日至7日每天; 每年6月最後一天; 每年6月第2個週一; 每年6月單數日).
   單月 and 雙月 take the date the same way (每年單月1日; usage:
   每逢單月25日).
-- A list of months: 的, and the date without 每月 (usage §十一:
-  每年1、4、7、10月的1日): 每年1、7月的1日 00:00; 每年3、6、9、12月的15日;
-  每年1、7月的最後一個週五; 每年1、4、7、10月的單數日.
+- A list of months, and three dates or fewer in all: each date is
+  written whole, joined by 、: `0 0 1 1,7 *` 每年1月1日、7月1日 00:00;
+  `0 0 30,31 4,5 *` 每年4月30日、5月30日、5月31日 00:00;
+  `0 0 L-3 6,7 *` 每年6月27日、7月28日 00:00. (The second judge, four
+  times: with two or three days the dates themselves are shorter and
+  cannot be counted wrong; 每年6、7月的倒數第4天 was "easily counted
+  wrong".) This needs each month's day to be one number, so it does not
+  apply to a weekday of the month or to the nearest-weekday forms.
+- A list of months otherwise: 的, and the date without 每月 (usage §十一:
+  每年1、4、7、10月的1日): 每年3、6、9、12月的1日 00:00;
+  每年1、7月的1、15日; 每年1、7月的最後一個週五; 每年1、4、7、10月的單數日.
 - A range, pieces or an exception of months: the day part keeps 每月:
   每年6月至8月每月1日 00:00; 每年6月至8月及12月每月最後一天;
   每年（6、12月除外）每月1日. 每年6月至8月的1日 can be taken as a span that
@@ -761,18 +829,22 @@ usage notes' own form is the 的 one. The rule is still about arrangement
 - A date not every month has (29, 30, 31), with months unrestricted, is
   said with 每逢: `0 0 31 * *` 每逢31日 00:00; `0 0 30,31 * *`
   每逢30、31日 00:00. 逢 is "whenever one comes round" (usage §三.1); the
-  judge read it so. In a list with ordinary dates those dates are split
-  off, so that 每月 never promises a 31st: `0 0 1,31 * *`
-  每月1日及每逢31日 00:00; `0 0 */10 * *` 每月1、11、21日及每逢31日 00:00.
-  An idiom, a cadence or a range says nothing more (每月單數日;
-  每月25日至月底).
+  first judge read it so. In a list with ordinary dates 每月 stays and
+  nothing is split off: `0 0 1,31 * *` 每月1、31日 00:00; `0 0 */10 * *`
+  每月1、11、21、31日 00:00. The second draft split them
+  (每月1日及每逢31日) after the schedule read said 每月 promised a 31st;
+  the second judge found the two 每 lopsided and said a reader knows a
+  month without a 31st does not count. 每逢 is kept only where it is the
+  whole phrase, and there it is the difference between "the 31st when
+  there is one" and a writer who meant the end of the month (usage §十).
 - With months named, only the months that have the date are named, and
-  days no named month has are dropped: `0 0 31 1-6 *` 每年1、3、5月的31日
-  00:00; `0 0 1,31 4,6,9,11 *` 每年4、6、9、11月的1日 00:00.
+  days no named month has are dropped: `0 0 31 1-6 *`
+  每年1月31日、3月31日、5月31日 00:00; `0 0 1,31 4,6,9,11 *`
+  每年4、6、9、11月的1日 00:00.
 - Different days in different months (months restricted, dates said as
-  numbers, `daysByMonths` with more than one group): the first group as
-  usual, then 及 and each later group with its months:
-  `0 0 30,31 4,5 *` 每年4、5月的30日及5月31日 00:00.
+  numbers, `daysByMonths` with more than one group, more than three dates
+  in all): the first group as usual, then 及 and each later group with
+  its months: `0 0 15,31 4,5 *` 每年4、5月的15日及5月31日 00:00.
 - Leap years only (`leapYears`): 每逢閏年 takes the place of 每年:
   `0 0 29 2 *` 每逢閏年2月29日 00:00.
 - Never (`fires` false, no union): 永不執行（沒有這個日期）, and with
@@ -800,10 +872,14 @@ usage notes' own form is the 的 one. The rule is still about arrangement
   it (2030年至2040年及2045年起每5年 was read as every fifth year from
   2030). A run among cadences now says 每年, so each part carries its own
   rate.
-- **A year and a month never share a bracket.** 每年（2030年、6月除外） was
-  heard as June 2030 only. When the years are an exception the months are
-  said as the months that fire: `0 0 9 * 1-5,7-12 * 1970-2029,2031-9999`
-  每年（2030年除外）1月至5月及7月至12月每天 09:00.
+- **A year never stands before a month in one bracket.**
+  每年（2030年、6月除外） was heard as June 2030 only: a year and then a
+  month is the shape of one date. The second draft therefore said the
+  months that fire (每年（2030年除外）1月至5月及7月至12月每天), and the
+  second judge pointed out that this is 6月除外 said the long way. Now
+  the month comes first and 及 joins the year, which no reader can take
+  for a date: `0 0 9 * 1-5,7-12 * 1970-2029,2031-9999`
+  每年（6月及2030年除外）每天 09:00. Not yet blind-read.
 - A cadence of years takes no 一次 (2028年起每4年，): it names years, and
   the judge's 每4年一次 would put two 一次 in 每4年一次，…每5分鐘一次.
 - Never 9999 and never 9998: an open set is 起.
@@ -833,7 +909,8 @@ None beyond those above.
 | 翌日, 翌年 | the next day, year | yes | for wrapped runs |
 | 次月 | the next month | yes (翌月 is rare in Taiwan) | for a wrapped run of dates |
 | 隔, 每隔 | ambiguous by one | — | **never** (usage §三.4) |
-| 逢, 每逢 | whenever one comes round | yes | dates, a fifth weekday and years that do not come every time |
+| 逢, 每逢 | whenever one comes round | yes | a date not every month has, alternate years, alternate hours |
+| 單數小時, 雙數小時 | hours 1, 3 … 23; hours 0, 2 … 22 | yes (not attested by search; 4.1) | where something finer happens in every second hour |
 | 遇…順延／提前／照常 | a condition and what is done | yes | Quartz W forms; unions with an exception |
 | （含）, 除外, 限 | bracketed qualifiers | yes | exceptions, 2030年（含）以前, both-must-match |
 | 閏年 | leap year | yes | yes |
@@ -851,8 +928,10 @@ asked for one family; 雙數年 is current in Taiwan (雙數年出生).
 - Every second value. Dates: 每月單數日 (`*/2`), 每月雙數日 (`2/2`): a
   cadence of interval 2 from the 1st, or from the 2nd, that reaches the
   end of the days the months have (`daysReached`). Months: 每年單月,
-  每年雙月. Years: 每逢雙數年, 每逢單數年. Hours: 每2小時一次 bare from 0,
-  每天 01:00 起每2小時一次 from 1. Minutes and seconds: the cadence.
+  每年雙月. Years: 每逢雙數年, 每逢單數年. Hours on the hour:
+  每2小時一次 bare from 0, 每天 01:00 起每2小時一次 from 1; hours that
+  hold something finer: 每逢雙數小時, 每逢單數小時 (4.1 D.1). Minutes and
+  seconds: the cadence.
 - Days of the week. Monday to Friday is 每週一至週五. Saturday and Sunday:
   每週六、日. Sunday to Thursday (`0-4`): 每天（週五、六除外）. Friday to
   Monday: 每週五至週一. Sunday and Monday: 每週日、一.
@@ -868,7 +947,7 @@ asked for one family; 雙數年 is current in Taiwan (雙數年出生).
 - `L-3` 每月倒數第4天 (`L-n` is 倒數第(n+1)天; the judge read it rightly,
   with arithmetic). When the months it fires in are all one length the
   date itself is named: `0 0 L-3 6 *` 每年6月27日 00:00;
-  `0 0 L-3 4,6 *` 每年4、6月的27日 00:00;
+  `0 0 L-3 4,6 *` 每年4月27日、6月27日 00:00;
   `0 0 L-30 * *` 每年1、3、5、7、8、10、12月的1日 00:00;
   `0 0 L-28 2 *` 每逢閏年2月1日 00:00. When they are of several lengths
   only the months it fires in are named: `0 0 L-29 * *`
@@ -889,9 +968,11 @@ asked for one family; 雙數年 is current in Taiwan (雙數年出生).
   The date before the brackets follows the rules for any date
   (`0 0 31W 6-8 *` 每年7、8月的31日（遇週六、日提前至週五）00:00).
 - `1#2` 每月第2個週一 (digits for ordinals, consistently; both readers
-  note that 第二個 is commoner in print). A fifth is 每逢當月第5個週一: not
-  every month has one, and without 當月 the first draft's 每逢第5個週一
-  was read as every fifth Monday.
+  note that 第二個 is commoner in print). A fifth is 每月第5個週一, like
+  the others. The first draft's 每逢第5個週一 had no 月 and was read as
+  every fifth Monday; the second's 每逢當月第5個週一 the second judge
+  found 不通順. With 每月 the month is there, and a reader knows a month
+  with four Mondays has no fifth.
 - `5L` 每月最後一個週五.
 - Under a single month they drop 每月 (每年6月第2個週一); after a list of
   months they take 的 (每年1、7月的最後一個週五); after a range they keep
@@ -916,13 +997,16 @@ named and 小時 for a length; 日 for a date and 天 for a length; 月; 年.
 
 7.1–7.3 No plural, case, gender, article or contraction.
 
-7.4 A list is joined by 、 with no connective. 及 joins pieces that
-contain a 至 range, the two sides of a union, and pieces of years. 以及
-after a comma adds a single moment after a rate, and joins runs and
-cadences of years.
+7.4 Three joins, each with one job (the second judge asked why the last
+item is sometimes 、, sometimes 及, sometimes 以及). 、 joins the items of a
+plain list to the end, with no connective. 及 joins things of different
+shape or rank: pieces that contain a 至 range, the two sides of a union,
+pieces of years, a month and a year in one exception, and the last of
+several hours each named with its part of the day. ，以及 begins a new
+clause: a single moment after a rate, and runs and cadences of years.
 
 7.5 Units follow the numeral with no space. 第 precedes an ordinal
-(第2個, 倒數第4天, 第30秒); 前 precedes a count (前30分鐘, 前10秒).
+(第2個, 倒數第4天, 第30秒, 第1分鐘內).
 
 7.6 Left to right; half-width Arabic digits; full-width punctuation; the
 space of "Parts and joins" and no other.
@@ -935,8 +1019,8 @@ space of "Parts and joins" and no other.
 month or year closes with 期間， before it.
 
 8.3 `confinement-vs-juxtaposition`: the stretch first, the rate after a
-comma (`* 9 * * *` 每天 09:00～09:59，每分鐘一次); a rhythm that confines a
-finer one is joined to it by 的 (每2小時的前1小時，每分鐘一次).
+comma (`* 9 * * *` 每天 09:00～09:59，每分鐘一次); hours that confine a
+finer rhythm are named before it (每逢雙數小時，整個小時內每分鐘一次).
 
 8.4 `redundancy`: no 每月 inside one named month or after a list of
 months; no 每年 after a single year or a list of years; no 每天 on a
@@ -978,7 +1062,9 @@ unrecognised pattern, 無法辨識的排程.
 ## What the two reads of 2026-11-19 changed
 
 A blind judge (a Taiwan editor's brief, 110 sentences, asked for every
-reading) and a schedule read of all 624 rows with their patterns. Second
+reading) and a schedule read of all 624 rows with their patterns. (Some
+forms in the "Now" column were changed again in the third pass; the next
+section has them.) Second
 readings were cured by a general choice; grades and preferences were
 weighed and are recorded where they were declined.
 
@@ -1012,6 +1098,34 @@ exceptions at the end (3.9); 第二個 in Chinese numerals (5.3);
 午夜12:00 (5.2); 每日 and 逢星期一至五 for Hong Kong (1.3); a stated start
 for a bare cadence (the project's convention).
 
+## What the second blind read changed (third pass, 2026-11-19)
+
+A fresh blind judge read the 71 forms changed in the second pass.
+
+| Was | Now | Why |
+| --- | --- | --- |
+| 每小時的前1分鐘，每秒一次 | 每小時的第1分鐘內，每秒一次 | 前1分鐘 is "the minute before" |
+| 每小時的前30分鐘; 前11分鐘及50分至59分 | 每小時的整點至29分; 整點至10分及50分至59分 | one way to write a stretch |
+| 每分鐘的前10秒; 第5秒至第55秒 | 每分鐘的0秒至9秒; 5秒至55秒 | the same; 第0秒 is not said |
+| 09:00～17:45，每15分鐘的前1分鐘，每秒一次 | 09:00:00～17:45:59，每15分鐘的第1分鐘內，每秒一次 | an end written to the minute over firings in seconds |
+| 每月1日起每5天 | 每月1、6、11、16、21、26、31日 | 每5天 against 每隔5天 |
+| 每週四及週日至週二 | 每週日至週二及週四 | misjoined on first reading |
+| 每2小時的15、45分; 每2小時的前1小時; 每天 01:00 起每2小時的15、45分 | 每逢雙數小時的15、45分; 每逢雙數小時，整個小時內每分鐘一次; 每逢單數小時的15、45分 | the orchestrator's call (4.1) |
+| 每6小時的15、45分 | 每天 0、6、12、18時的15、45分 | other steps name their hours |
+| 8、12、18時各在5、20、45分 | 8、12、18時的5、20、45分 | 各在 forced |
+| 每小時的0、15、45分; 第0、30秒 | 每小時的整點、15、45分; 0、30秒 | 0分 is not said |
+| 每月1日及每逢31日; 每逢當月第5個週一 | 每月1、31日; 每月第5個週一 | 每逢 surplus where 每月 is clear |
+| 每週一每分鐘一次; 週五每2小時… | 每週一，每分鐘一次 | a pause between the day and a rhythm |
+| 每年1、7月的1日; 每年6、7月的倒數第4天 | 每年1月1日、7月1日; 每年6月27日、7月28日 | three dates or fewer are written whole |
+| 每年（2030年除外）1月至5月及7月至12月每天 | 每年（6月及2030年除外）每天 | June named once; month before year |
+| 每月單數日（限最後一個週五） | 每月最後一個週五（限單數日） | the once-a-month day is the base |
+
+Declined: a lone time moved back into clock order (3.6); spaces between
+every Chinese character and digit, or none (Parts and joins); padded
+minutes and 下午6時 for Hong Kong (1.3); 每逢 dropped before 雙數年 and
+30日 (it marks what does not come every time); units repeated on short
+lists (15分及45分: the shared unit is the usage notes' own rule, §五).
+
 ## Evidence searched on 2026-11-19
 
 Open-web searches for phrase fragments returned little that was exact:
@@ -1023,5 +1137,6 @@ Open-web searches for phrase fragments returned little that was exact:
 - 每月倒數第N天, 單數整點／偶數整點, 每逢31日: no exact hit.
 
 Everything else rests on the usage notes, the two reads above, and my own
-reading as a writer of Taiwan's written Chinese. None of the forms in the
-table above has had a blind read since it changed.
+reading as a writer of Taiwan's written Chinese. The searches for
+雙數小時 and its kin are recorded in 4.1. None of the forms changed in the
+third pass has had a blind read.
