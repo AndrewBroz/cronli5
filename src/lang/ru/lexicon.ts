@@ -198,6 +198,17 @@ const yearSteps = [
   'девятый', 'десятый'
 ];
 
+// The endings an ordinal written in digits takes after its hyphen: a date
+// («1-го», «7-е», «15-му») and a minute, a second or a step of years
+// («5-й», «55-ю»).
+const endings = {
+  dateAccusative: 'е',
+  dateDative: 'му',
+  dateGenitive: 'го',
+  feminine: 'й',
+  feminineAccusative: 'ю'
+};
+
 // The function words and fixed phrases. A phrase with a slot is said with
 // the value after it unless a comment says otherwise.
 const words = {
@@ -222,7 +233,6 @@ const words = {
   in: 'в',
   inBeforeCluster: 'во',
   through: 'по',
-  toward: 'к',
   until: 'до',
 
   // Rhythms.
@@ -259,6 +269,7 @@ const words = {
   beforeTheLastDay: 'до последнего дня',
   dateOf: 'числа',
   dateThrough: 'число',
+  dateToward: 'числу',
   evenDates: 'по чётным числам',
   everyDay: 'ежедневно',
   firstWeekday: 'в первый будний день',
@@ -313,7 +324,8 @@ const words = {
 };
 
 const lexicon = {
-  months, nthWords, ordinalUnits, twoDigits, units, weekdays, words, yearSteps
+  endings, months, nthWords, ordinalUnits, twoDigits, units, weekdays, words,
+  yearSteps
 };
 
 export type {Gender, MonthName, Ordinal, Unit, WeekdayName};
