@@ -65,6 +65,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   answer in Simplified Chinese with a warning on the console.
   `cronli5/lang/zh` is Simplified only (`zh`, `zh-Hans`, `zh-CN`,
   `zh-SG`).
+- **Faster.** A step of many years, such as `2030/2` in the year field
+  (3,985 years), took about 420 us to analyse in every language and now
+  takes about 200: a single step no longer goes through a Set to drop
+  repeats it cannot have, and values are taken out of a set by marking
+  them in an array. Over a broad corpus of 112,788 patterns the core is
+  about a fifth faster (27.6 to 21.7 us a pattern); Korean no longer
+  builds every moment of a schedule before counting them (its renderer
+  10.1 to 8.8 us), and Russian no longer lists the whole year field to
+  count it (12.2 to 9.8 us). `npm run speed` measures every language and
+  checks that a change leaves every description unchanged
+  (`tooling/docs/speed.md`). Every description is unchanged.
 
 ### Removed
 
