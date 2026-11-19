@@ -41,11 +41,22 @@ const MAY_CHANGE = {
   year: ['frame', 'day', 'closing']
 };
 
-// The first place a time field reaches another part: when no day is
-// named and the hours are restricted, the day part says «codziennie»,
-// unless the hours tile the day and are said bare («co 2 godziny»,
-// answers 2.5), so an hour edit may add or remove exactly that word.
+// The first place a time field reaches another part, the daily word:
+// when no day is named, the day part says «codziennie» exactly when the
+// time names a clock time outside an «oprócz» phrase (answers 2.5). A
+// time that is only rhythms and distances runs through midnight and has
+// no daily shape («co 2 godziny», «co minutę w godzinach parzystych»); a
+// time with a first and a last moment in the day has one («codziennie co
+// 2 godziny od 0:30 do 22:30»), and without the word it would read as
+// one stretch of today. Any of the three time fields can make the time
+// name a clock time or stop naming one (the hour: «co godzinę» against
+// «codziennie o 9:00»; the minute: «co 2 godziny» against «codziennie co
+// 2 godziny od 0:30 do 22:30»; the second: «co 2 godziny» against
+// «codziennie co 2 godziny od 0:00:15 do 22:00:15»), so an edit to any of
+// them may add or remove exactly that word, and nothing else of the day
+// part.
 const DAILY = /^codziennie$/u;
+const TIME_FIELDS = ['second', 'minute', 'hour'];
 
 // The second: hours that run past midnight are one run («co godzinę od
 // 22:00 do 2:00») only when no day, month or year is restricted (answers
@@ -132,13 +143,13 @@ function leaks(pairList) {
       return String(part).replace(/[,:]$/u, '');
     }
 
-    // The day part without the daily word an hour edit may set.
+    // The day part without the daily word a time edit may set.
     function undaily(part) {
       return words(part).replace(DAILY, '');
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const daily = changed[0] === 'hour' && part === 'day' &&
+      const daily = TIME_FIELDS.includes(changed[0]) && part === 'day' &&
         undaily(before[part]) === undaily(after[part]);
 
       if (words(before[part]) !== words(after[part]) && !daily &&
@@ -210,4 +221,21 @@ describe('Polish continuity:', function() {
     expect(say('0 9-17 * * *'))
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));
   });
+
+  // The declared fusion of the daily word, for each time field.
+  it('says the daily word exactly when the time names a clock time',
+    function() {
+      const daily = [
+        ['0 * * * *', '0 9 * * *'],
+        ['0 */2 * * *', '30 */2 * * *'],
+        ['0 0 */2 * * *', '15 0 */2 * * *']
+      ];
+
+      daily.forEach(function toggles([bare, clocked]) {
+        expect(partsOf(bare).day, bare).to.equal('');
+        expect(partsOf(clocked).day, clocked).to.equal('codziennie');
+      });
+      expect(partsOf('0 0-2,4-23 * * *').day).to.equal('');
+      expect(partsOf('*/15 */2 * * *').day).to.equal('');
+    });
 });

@@ -119,7 +119,8 @@ function yearRun(range: RangeDescription): string {
     `${range.from}${dash}${range.to}`;
 }
 
-// Runs and single years under one «w latach».
+// Runs and single years under one «w latach», as one series: each run
+// and each year is an item.
 function yearPieces(cands: SetDescription[]): Maybe<Years> {
   const found = pick(cands, 'pieces');
   const loose = found ? found.parts.flatMap(function single(part) {
@@ -127,10 +128,10 @@ function yearPieces(cands: SetDescription[]): Maybe<Years> {
   }) : [];
 
   return found && loose.length <= maxListed && years(
-    inYears(pieced(found.parts.map(function bare(part) {
+    inYears(pieced(found.parts.flatMap(function bare(part) {
       return part.kind === 'range' ?
-        yearRun(part) :
-        listed(part.values);
+        [yearRun(part)] :
+        part.values.map(String);
     }))), ',');
 }
 
@@ -141,12 +142,16 @@ function yearParts(found: CadencePieces | null, count: number):
   Maybe<Years> {
   const parts = found ? found.parts.map(yearPart) : [];
   const last = parts[parts.length - 1];
+  const lists = found ? found.parts.filter(function asList(part) {
+    return part.kind === 'values' || part.kind === 'cadence' &&
+      (part.last - part.start) / part.interval < few;
+  }) : [];
 
   const texts = parts.map(function text(part) {
     return part.text;
   });
 
-  return found && count > maxListed &&
+  return found && count > maxListed && lists.length <= 1 &&
     years(pieced(texts), last.mark === ':' && ':' || ',');
 }
 

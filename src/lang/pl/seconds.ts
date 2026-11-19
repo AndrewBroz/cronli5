@@ -3,7 +3,7 @@
 // confined to each minute after «za każdym razem».
 
 import {asFew} from './forms.js';
-import {counted, every, listed, units, words} from './text.js';
+import {every, listed, units, upTo, words} from './text.js';
 import type {Gap} from './within.js';
 import {butNot, eachMinute, except, momentsLacking, theMinute, within}
   from './within.js';
@@ -42,7 +42,7 @@ function finer(t: TimeFacts, gap: Gap): Grain {
 
   return {
     each: every(second.interval, units.second, t.short),
-    endTail: ` ${words.and} ${counted(second.to, units.second, t.short)}`,
+    endTail: ` ${words.and} ${upTo(second.to, units.second, t.short)}`,
     first: second.from,
     gap,
     last: second.to,
@@ -68,14 +68,16 @@ function oneSecond(t: TimeFacts): Maybe<Said> {
   return shown && shown.real && shown;
 }
 
-// Up to four seconds of one clock time are listed.
+// Up to four moments are listed, the seconds of each clock time in turn.
 function listedSeconds(t: TimeFacts, zero: Said): Maybe<Said> {
-  const [time] = zero.times;
+  const count = zero.times.length * t.second.values.length;
 
-  return zero.times.length === 1 && t.second.values.length <= listedAtMost &&
-    {...zero, text: `${words.at} ${listed(t.second.values.map(
-      function clock(second) {
-        return t.clock(time[0], time[1], second);
+  return count > 0 && count <= listedAtMost &&
+    {...zero, text: `${words.at} ${listed(zero.times.flatMap(
+      function seconds([hour, minute]) {
+        return t.second.values.map(function clock(second) {
+          return t.clock(hour, minute, second);
+        });
       }))}`};
 }
 
@@ -102,7 +104,8 @@ function secondStretches(t: TimeFacts, zero: Said): Maybe<Said> {
 // Seconds that fill the minute, where the time says «co minutę» between
 // named ends: the seconds' rhythm takes its place.
 function inPlaceOfMinutes(t: TimeFacts, zero: Said): Maybe<Said> {
-  const fine = t.second.steady && zero.spans &&
+  const fills = t.second.steady || t.second.unbroken && zero.real;
+  const fine = fills && zero.spans &&
     minutesAndHours(t, finer(t, except));
 
   return fine && {...fine, text: `${fine.text}` +

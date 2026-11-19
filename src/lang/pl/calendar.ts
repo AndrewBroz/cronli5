@@ -168,7 +168,7 @@ function monthsOf(facts: ScheduleFacts, dated: boolean) {
 function sceneOf(facts: ScheduleFacts, time: TimeSaid, short: boolean):
   Scene {
   const arms = armsOf(facts);
-  const form = arms.date && dayForm(facts, arms.union);
+  const form = arms.date && dayForm(facts, arms.union || arms.both);
   const named = monthsOf(facts, Boolean(form) && !arms.union);
   const nth = arms.weekday && arms.weekday.kind === 'quartz' ?
     arms.weekday.form :

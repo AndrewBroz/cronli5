@@ -40,6 +40,16 @@ function counted(count: number, unit: Unit, short: boolean): string {
   return `${count} ${unitFor(count, unit, short)}`;
 }
 
+/**
+ * A numeral and its unit after «do», in the genitive: «42 minut»,
+ * «1 minuty».
+ */
+function upTo(count: number, unit: Unit, short: boolean): string {
+  const full = [unit.ofMany, unit.ofOne][Number(count === 1)];
+
+  return `${count} ${[full, unit.short][Number(short)]}`;
+}
+
 /** Several numerals and the unit the last one takes: «5, 20 i 42 minuty». */
 function distances(values: number[], unit: Unit, short: boolean): string {
   return `${listed(values)} ` +
@@ -83,4 +93,4 @@ function clockFor(style: PolishStyle): Clock {
 }
 
 export {clockFor, counted, distances, every, listed, pieced, unitFor, units,
-  words};
+  upTo, words};

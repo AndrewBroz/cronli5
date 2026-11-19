@@ -4,7 +4,8 @@
 
 import type {Unit} from './lexicon.js';
 import type {Form, Kind} from './forms.js';
-import {counted, distances, every, listed, units, words} from './text.js';
+import {counted, distances, every, listed, units, upTo, words}
+  from './text.js';
 
 const maxClocks = 4;
 
@@ -108,7 +109,10 @@ function rhythm(form: Form, voice: Voice): string {
 
 // «5, 20 i 45 minut po każdej pełnej godzinie»; the full hour is never
 // «0 minut po»: «o każdej pełnej godzinie oraz 15 i 45 minut później».
-function moments(form: Form, voice: Voice): string {
+// Before further pieces the full hour and what follows it are items of
+// one series, parted by a comma.
+function moments(form: Form, voice: Voice, joint = ` ${words.andPieces} `):
+  string {
   const {anchor} = voice;
   const zero = form.values[0] === 0;
   const rest = form.values.slice(Number(zero));
@@ -120,20 +124,21 @@ function moments(form: Form, voice: Voice): string {
     head,
     rest.length > 0 &&
       `${distances(rest, anchor.unit, anchor.short)} ${after}`
-  ].filter(Boolean).join(` ${words.andPieces} `);
+  ].filter(Boolean).join(joint);
 }
 
 // «od każdej pełnej godziny do 29 minut po niej», «od 10 do 40 minut po
-// każdej pełnej godzinie».
+// każdej pełnej godzinie». Both ends are in the genitive.
 function between(form: Form, voice: Voice): string {
   const {anchor} = voice;
   const start = form.from === 0 ?
     named(voice, anchor.from) :
-    [String(form.from), numbered(form.from, voice)][
+    [String(form.from), upTo(form.from, anchor.unit, anchor.short)][
       Number(anchor.endTail !== '')];
 
   return `${words.from} ${start} ${words.to} ` +
-    `${numbered(form.to, voice)}${anchor.endTail} ${past(voice)}`;
+    `${upTo(form.to, anchor.unit, anchor.short)}${anchor.endTail} ` +
+    `${past(voice)}`;
 }
 
 function stretch(form: Form, voice: Voice): string {
@@ -171,6 +176,10 @@ function lacking(form: Form, voice: Voice): string {
   return `${base}, ${gaps(form.removed, voice)}`;
 }
 
+function listOf(form: Form, voice: Voice): string {
+  return moments(form, voice);
+}
+
 // What joins a piece to the one before it. A distance after a run would
 // be heard as a second end of the run, so it follows «a potem»; a clause
 // that ends in a participle is closed by a comma before «oraz».
@@ -191,7 +200,10 @@ function pieces(form: Form, voice: Voice): string {
   return form.parts.reduce(function add(text, part, at) {
     const before = form.parts[at - 1];
     const shared = at > 0 && before.kind === 'run' && part.kind === 'run';
-    const said = shared && between(part, voice) || say(part, voice);
+    const series = at === 0 && part.kind === 'list' &&
+      moments(part, voice, ', ');
+    const said = shared && between(part, voice) || series ||
+      say(part, voice);
 
     return at > 0 ?
       `${text}${link(part, before, at === form.parts.length - 1)}${said}` :
@@ -205,8 +217,8 @@ const sayers: Record<Kind, (form: Form, voice: Voice) => string> = {
   cadence,
   cadencePieces: pieces,
   less: lacking,
-  list: moments,
-  one: moments,
+  list: listOf,
+  one: listOf,
   pieces,
   run: stretch,
   tiling: rhythm,

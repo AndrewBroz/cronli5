@@ -29,6 +29,9 @@ export interface Form {
   interval: number;
   // A rhythm off the beat whose gaps are all equal.
   seamless: boolean;
+  // Two values or more whose gaps are all equal, the gap across the edge
+  // of the unit among them: between named ends they run on as one rhythm.
+  unbroken: boolean;
   // One rhythm through the whole unit: every value, a tiling rhythm, or
   // either less one or two.
   steady: boolean;
@@ -71,6 +74,7 @@ function make(kind: Kind, values: number[], extra: Partial<Form>): Form {
     seamless: false,
     steady: false,
     to: values[values.length - 1],
+    unbroken: false,
     values,
     ...extra
   };
@@ -134,8 +138,21 @@ function allBut(set: FieldSet): Maybe<Form> {
   });
 }
 
+// Whether a rhythm fills the unit from a start smaller than its step,
+// with a step that divides the unit.
+function fillsEvenly(set: FieldSet): Partial<Form> {
+  const found = pick(set.cands, 'cadence');
+  const {max, min} = set.domain;
+  const even = Boolean(found) && (max - min + 1) % found!.interval === 0 &&
+    found!.start - min < found!.interval &&
+    found!.last + found!.interval > max;
+
+  return even ? {interval: found!.interval, unbroken: true} : {};
+}
+
 function fewValues(set: FieldSet): Maybe<Form> {
-  return set.values.length <= few && make('list', set.values, {});
+  return set.values.length <= few &&
+    make('list', set.values, fillsEvenly(set));
 }
 
 function wrap(set: FieldSet): Maybe<Form> {
@@ -149,14 +166,12 @@ function wrap(set: FieldSet): Maybe<Form> {
 // and it fills the unit from a start smaller than the step.
 function cadence(set: FieldSet): Maybe<Form> {
   const found = pick(set.cands, 'cadence');
-  const {max, min} = set.domain;
 
   return found && set.values.length >= minRhythm &&
     make('cadence', set.values, {
       interval: found.interval,
-      seamless: (max - min + 1) % found.interval === 0 &&
-        found.start - min < found.interval &&
-        found.last + found.interval > max
+      seamless: Boolean(fillsEvenly(set).unbroken),
+      unbroken: Boolean(fillsEvenly(set).unbroken)
     });
 }
 
@@ -192,15 +207,20 @@ function less(set: FieldSet): Maybe<Form> {
   });
 }
 
+// Runs and rhythms together, when they are said as such: where more than
+// one part would itself be a list, the split shows no structure and the
+// values are one ascending list.
 function runsAndCadences(set: FieldSet): Maybe<Form> {
   const found = set.runsAndCadences;
+  const parts = found ? found.parts.map(function part(piece) {
+    return alone(denote(piece, set.domain), set);
+  }) : [];
+  const lists = parts.filter(function listed(part) {
+    return part.kind === 'list' || part.kind === 'one';
+  });
 
-  return found && set.values.length > maxListed &&
-    make('cadencePieces', set.values, {
-      parts: found.parts.map(function part(piece) {
-        return alone(denote(piece, set.domain), set);
-      })
-    });
+  return found && set.values.length > maxListed && lists.length <= 1 &&
+    make('cadencePieces', set.values, {parts});
 }
 
 function list(set: FieldSet): Form {

@@ -546,8 +546,7 @@ const rows = [
     'minutę'],
   ['*/30 23 */12 * 6-7 6#2 2030/4',
     'co 4 lata od 2030 r.: w czerwcu i lipcu w drugą sobotę miesiąca o ' +
-    '0:23 i 12:23, za każdym razem z początkiem minuty oraz 30 sekund ' +
-    'później'],
+    '0:23:00, 0:23:30, 12:23:00 i 12:23:30'],
   ['0 35 2,15 * * * 2028,2030',
     'w latach 2028 i 2030 codziennie o 2:35 i 15:35'],
   ['* 30,42 3-10 * 7,9,10,12 1,3,4,5',
@@ -761,7 +760,90 @@ const rows = [
   ['0-28,30-58 * * * *',
     'co minutę, oprócz chwil wypadających 29 i 59 minut po każdej pełnej ' +
     'godzinie'],
-  ['0-28,30-58 9 * * *', 'codziennie co minutę od 9:00 do 9:58, oprócz 9:29']
+  ['0-28,30-58 9 * * *', 'codziennie co minutę od 9:00 do 9:58, oprócz 9:29'],
+
+  // After «do» the unit is in the genitive whatever the numeral: «do 42
+  // minut», «do 22 minut i 59 sekund», and «od 21 minut» before such an
+  // end.
+  ['0-42/6 9-17 * * *',
+    'codziennie od 9:00 do 17:42: co 6 minut od każdej pełnej godziny do ' +
+    '42 minut po niej'],
+  ['0-22 * * * * *',
+    'co sekundę od początku każdej minuty do 22 sekund po nim'],
+  ['* 0-22 9-17 * * *',
+    'codziennie od 9:00:00 do 17:22:59: co sekundę od każdej pełnej ' +
+    'godziny do 22 minut i 59 sekund po niej'],
+  ['* 21-42 9-17 * * *',
+    'codziennie od 9:21:00 do 17:42:59: co sekundę od 21 minut do 42 ' +
+    'minut i 59 sekund po każdej pełnej godzinie'],
+
+  // Minutes whose step divides the hour and that fill it from a start
+  // smaller than the step run on unbroken from hour to hour: between
+  // named hours they are one rhythm from the first firing to the last,
+  // however few they are. In every hour, in hours that stand apart, and
+  // under a rhythm of hours, few of them are still their list. Seconds through named minutes likewise.
+  ['15,45 9-17 * * *', 'codziennie co 30 minut od 9:15 do 17:45'],
+  ['10/20 9-17 * * 1-5',
+    'od poniedziałku do piątku co 20 minut od 9:10 do 17:50'],
+  ['5/15 9-17,22 * * *',
+    'codziennie co 15 minut od 9:05 do 17:50 oraz od 22:05 do 22:50'],
+  ['5/15 9,17 * * *',
+    'codziennie 5, 20, 35 i 50 minut po każdej z godzin 9:00 i 17:00'],
+  ['5/15 0-2,4-23 * * *',
+    'codziennie co 15 minut od 0:05 do 2:50 oraz od 4:05 do 23:50'],
+  ['10/20 * * * *', '10, 30 i 50 minut po każdej pełnej godzinie'],
+  ['15,45 * 9 * * *', 'codziennie co 30 sekund od 9:00:15 do 9:59:45'],
+  ['5/10 * 9-17 * * *', 'codziennie co 10 sekund od 9:00:05 do 17:59:55'],
+  ['5/10 0-29 9 * * *', 'codziennie co 10 sekund od 9:00:05 do 9:29:55'],
+  ['15,45 0-29 9-17 * * *',
+    'codziennie od 9:00 do 17:29: co minutę od każdej pełnej godziny do 29 ' +
+    'minut po niej, za każdym razem 15 i 45 sekund po pełnej minucie'],
+
+  // Values that are neither runs nor rhythms are one list in ascending
+  // order, however the set could be split.
+  ['7,9,12,13,17,19,23,29,31,37,41,43,47,53 * * * *',
+    '7, 9, 12, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47 i 53 minuty po ' +
+    'każdej pełnej godzinie'],
+  ['0 0 9 * * * ' +
+    '2030,2033,2034,2037,2041,2042,2050,2051,2057,2060,2062,2066,2071,2090',
+  'w latach 2030, 2033, 2034, 2037, 2041, 2042, 2050, 2051, 2057, 2060, ' +
+    '2062, 2066, 2071 i 2090 codziennie o 9:00'],
+
+  // Runs and single years under one «w latach» are one series, each run
+  // and each year an item, «oraz» before the last.
+  ['0 0 9 * * * 2030,2040,2050-2055',
+    'w latach 2030, 2040 oraz 2050–2055, codziennie o 9:00'],
+
+  // Both day fields must match: after «ale tylko» the days of the month
+  // are said by the days that fire, never as an exception.
+  ['0 9 1-14,16-31 * */2',
+    'we wtorki, czwartki, soboty i niedziele, ale tylko w dniach 1–14 i ' +
+    '16–31 miesiąca, o 9:00'],
+  ['0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * */2',
+    'we wtorki, czwartki, soboty i niedziele, ale tylko w nieparzyste dni ' +
+    'od 1 do 13 oraz od 17 do 31 miesiąca, o 9:00'],
+  ['0 9 */2 * 1-6',
+    'codziennie oprócz niedziel, ale tylko w nieparzyste dni miesiąca, o ' +
+    '9:00'],
+
+  // The full hour and distances after it, before further pieces, are
+  // items of one series: no second «oraz».
+  ['0,5,20-40 * * * *',
+    'o każdej pełnej godzinie, 5 minut później oraz co minutę od 20 do 40 ' +
+    'minut po niej'],
+  ['0,5,20-40 9-17 * * *',
+    'codziennie od 9:00 do 17:40: o każdej pełnej godzinie, 5 minut ' +
+    'później oraz co minutę od 20 do 40 minut po niej'],
+  ['0,5,10,20-40 * * * *',
+    'o każdej pełnej godzinie, 5 i 10 minut później oraz co minutę od 20 ' +
+    'do 40 minut po niej'],
+
+  // Up to four moments with seconds are listed, in one clock time or
+  // several.
+  ['5,20 0 9,17 * * *',
+    'codziennie o 9:00:05, 9:00:20, 17:00:05 i 17:00:20'],
+  ['5 0,30 9,17 * * *',
+    'codziennie o 9:00:05, 9:30:05, 17:00:05 i 17:30:05']
 ];
 
 export {rows};

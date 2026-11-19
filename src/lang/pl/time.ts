@@ -367,8 +367,14 @@ const handlers: Record<string, Record<Shape, Handler>> = {
 function minutesAndHours(t: TimeFacts, g: Grain): Said {
   const listable = {...t, hour: asFew(t.hour)};
   const {minute} = t;
+  // Few minutes with equal gaps are one rhythm only where hours follow
+  // one another, so that it runs on across the full hour.
+  const runsOn = minute.unbroken &&
+    hourRuns(listable.hour).some(function several(run) {
+      return run.length > 1;
+    });
   const sort = minute.kind === 'one' && 'one' ||
-    (minute.steady || minute.seamless) && 'filling' || 'other';
+    (minute.steady || minute.seamless || runsOn) && 'filling' || 'other';
 
   return bare(t, g) || fewTimes(listable, g) ||
     handlers[sort][shapes[listable.hour.kind]](listable, g);

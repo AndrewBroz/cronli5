@@ -40,6 +40,10 @@ interface Unit {
   few: string;
   many: string;
   one: string;
+  // After «do», which takes the genitive whatever the numeral: «do
+  // 1 minuty», «do 42 minut».
+  ofMany: string;
+  ofOne: string;
   short: string;
 }
 
@@ -104,11 +108,16 @@ const weekOrder = [1, 2, 3, 4, 5, 6, 0];
 // 14); any other. «dni» serves every number from 2 up; a year is counted
 // only after «co», never singly.
 const units: Record<'day' | 'hour' | 'minute' | 'second' | 'year', Unit> = {
-  day: {few: 'dni', many: 'dni', one: 'dzień', short: 'dni'},
-  hour: {few: 'godziny', many: 'godzin', one: 'godzinę', short: 'godz.'},
-  minute: {few: 'minuty', many: 'minut', one: 'minutę', short: 'min'},
-  second: {few: 'sekundy', many: 'sekund', one: 'sekundę', short: 's'},
-  year: {few: 'lata', many: 'lat', one: 'rok', short: 'lat'}
+  day: {few: 'dni', many: 'dni', ofMany: 'dni', ofOne: 'dnia', one: 'dzień',
+    short: 'dni'},
+  hour: {few: 'godziny', many: 'godzin', ofMany: 'godzin', ofOne: 'godziny',
+    one: 'godzinę', short: 'godz.'},
+  minute: {few: 'minuty', many: 'minut', ofMany: 'minut', ofOne: 'minuty',
+    one: 'minutę', short: 'min'},
+  second: {few: 'sekundy', many: 'sekund', ofMany: 'sekund',
+    ofOne: 'sekundy', one: 'sekundę', short: 's'},
+  year: {few: 'lata', many: 'lat', ofMany: 'lat', ofOne: 'roku', one: 'rok',
+    short: 'lat'}
 };
 
 // The stems of the ordinals of the days of a month, indexed by the

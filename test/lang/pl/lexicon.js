@@ -49,7 +49,9 @@ describe('Polish lexicon:', function() {
 
   it('has each unit in its three forms and in short', function() {
     expect(lexicon.units.minute).to.deep.equal(
-      {few: 'minuty', many: 'minut', one: 'minutę', short: 'min'});
+      {few: 'minuty', many: 'minut', ofMany: 'minut', ofOne: 'minuty',
+        one: 'minutę', short: 'min'});
+    expect(lexicon.units.second.ofMany).to.equal('sekund');
     expect(lexicon.units.hour.short).to.equal('godz.');
     expect(lexicon.units.year.few).to.equal('lata');
   });
