@@ -212,7 +212,7 @@ cronli5(weekdaysAt1330, { lang: 'en-GB' });
 
 ## Languages
 
-English is the default. Ten languages ship, listed below; each is a full
+English is the default. Eleven languages ship, listed below; each is a full
 renderer over the same language-independent core, written from that
 language's own conventions, and each ships as its own module. You choose
 what reaches your bundle:
@@ -253,6 +253,7 @@ docs below.
 | German | `cronli5/lang/de` | Interface practice for «9:00 Uhr» (DIN 5008 for the colon); Austria (`'de-AT'`) and Switzerland (`'de-CH'`) | [docs/lang/de.md](./docs/lang/de.md) |
 | Portuguese | `cronli5/lang/pt` | CLDR and interface practice; Brazil by default, Portugal (`'pt-PT'`) | [docs/lang/pt.md](./docs/lang/pt.md) |
 | Japanese | `cronli5/lang/ja` | Interface and timetable practice; 24-hour colon times | [docs/lang/ja.md](./docs/lang/ja.md) |
+| Korean | `cronli5/lang/ko` | National Institute of Korean Language (한글 맞춤법); notice and interface practice; times in words | [docs/lang/ko.md](./docs/lang/ko.md) |
 | Spanish | `cronli5/lang/es` | RAE Ortografía (2010); interface practice; Mexico and the United States (`'es-MX'`, `'es-US'`) | [docs/lang/es.md](./docs/lang/es.md) |
 
 ### Language maturity
@@ -280,6 +281,7 @@ pipeline is the review.
 | French | stable |
 | Italian | stable |
 | Japanese | stable |
+| Korean | beta |
 | Portuguese | stable |
 | Ukrainian | stable |
 | Chinese (Simplified) | stable |
@@ -379,6 +381,7 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 | Chinese (Simplified) | 每周一9:30:05、9:30:10 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
 | Spanish | los lunes a las 9:30:05 y 9:30:10 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | Japanese | 毎週月曜日の9:30:05・9:30:10 | 毎分 5と 10 秒過ぎ 30 分過ぎ, 次において実施 09:00月曜日 にのみ |
+| Korean | 매주 월요일 오전 9시 30분 5초, 9시 30분 10초 | 5 및 10초, 30분, 오전 09:00에서, 월요일에만 |
 | Portuguese | todas as segundas às 09:30:05 e 09:30:10 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
 | German | montags um 9:30:05 und 9:30:10 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | French | tous les lundis à 9 h 30 min 05 s et à 9 h 30 min 10 s | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |

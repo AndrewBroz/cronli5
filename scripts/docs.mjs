@@ -27,6 +27,7 @@ import cronstrueI18n from 'cronstrue/i18n.js';
 import en, {styles as englishStyles} from '../src/lang/en/index.js';
 import es from '../src/lang/es/index.js';
 import ja from '../src/lang/ja/index.js';
+import ko from '../src/lang/ko/index.js';
 import pt from '../src/lang/pt/index.js';
 import de from '../src/lang/de/index.js';
 import fr from '../src/lang/fr/index.js';
@@ -52,6 +53,7 @@ const languages = [
   {code: 'zh', cronstrueLocale: 'zh_CN', extras: [], lang: zh},
   {code: 'es', cronstrueLocale: 'es', extras: [], lang: es},
   {code: 'ja', cronstrueLocale: 'ja', extras: [], lang: ja},
+  {code: 'ko', cronstrueLocale: 'ko', extras: [], lang: ko},
   {code: 'pt', cronstrueLocale: 'pt_BR', extras: [], lang: pt},
   {code: 'de', cronstrueLocale: 'de', extras: [], lang: de},
   {code: 'fr', cronstrueLocale: 'fr', extras: [], lang: fr},
@@ -155,6 +157,7 @@ const headToHeadRows = [
   {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
   {name: 'Spanish', code: 'es', cronstrueLocale: 'es'},
   {name: 'Japanese', code: 'ja', cronstrueLocale: 'ja'},
+  {name: 'Korean', code: 'ko', cronstrueLocale: 'ko'},
   {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
   {name: 'German', code: 'de', cronstrueLocale: 'de'},
   {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
@@ -318,7 +321,7 @@ function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
   try {
-    const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh};
+    const modules = {cs, de, en, es, fr, it, ja, ko, pt, uk, zh};
     const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
     const run = Function('cronli5', ...codes, ...names,

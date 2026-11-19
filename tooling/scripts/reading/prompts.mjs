@@ -101,6 +101,18 @@ const prompts = {
     task: (letter, text) => `タスク${letter}：「${text}」`,
     yes: ['はい']
   },
+  ko: {
+    format: '질문마다 한 줄씩, 다음과 같이 답하세요.\nA1: 예\nA2: 아니요',
+    intro: '어떤 앱은 작업마다 그 작업이 언제 실행되는지를 보여 줍니다. 각 작업 아래에 ' +
+      '적힌 날짜와 시각마다, 작업이 정확히 그 순간에 실행되는지 답하세요. 설명은 화면에서 ' +
+      '읽듯이 한 번만 읽고, 거기에 적힌 대로 답하세요.',
+    locale: 'ko-KR',
+    no: ['아니요', '아니오'],
+    system: '당신은 화면에 표시된 글을 읽고 그에 관한 질문에 답합니다. 요청한 형식으로만 ' +
+      '답하세요.',
+    task: (letter, text) => `작업 ${letter}: “${text}”`,
+    yes: ['예', '네']
+  },
   pt: {
     format: 'Responda com uma linha por pergunta, assim:\nA1: sim\nA2: não',
     intro: 'Um aplicativo mostra, para cada tarefa, quando ela é executada. ' +

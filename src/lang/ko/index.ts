@@ -112,5 +112,8 @@ const korean: Language<KoreanStyle, 'ko'> = {
 };
 
 export type {KoreanStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default korean;

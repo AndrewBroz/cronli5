@@ -65,6 +65,11 @@
       "import": "./dist/lang/ja.js",
       "require": "./dist/lang/ja.cjs"
     },
+    "./lang/ko": {
+      "types": "./types/lang/ko/index.d.ts",
+      "import": "./dist/lang/ko.js",
+      "require": "./dist/lang/ko.cjs"
+    },
     "./lang/pt": {
       "types": "./types/lang/pt/index.d.ts",
       "import": "./dist/lang/pt.js",

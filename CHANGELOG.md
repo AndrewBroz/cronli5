@@ -4,6 +4,22 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Korean (`ko`)**, at beta: `import ko from 'cronli5/lang/ko'`, or
+  `{lang: 'ko'}` from `cronli5/all`. Written from usage notes in Korean by
+  a writer told nothing of cron, then notes on each choice, hand-written
+  expected descriptions, independent schedule reads and blind reads, and
+  a renderer built without sight of any other. `30 9 * * 1-5` is «매주
+  월~금요일 오전 9시 30분» and `*/15 9-17 * * 1-5` is «매주 월~금요일 오전
+  9시부터 오후 5시 45분까지 15분마다». One style, `ko` (region `KR`), with
+  two fields: `hour12` (`false` gives «17시 30분») and `short` (`true`
+  gives «매주 월·수·금»). No fluent human has reviewed it; «짝수 시» and
+  «홀수 시» for every second hour are the first thing a native reviewer
+  should check. See `docs/lang/ko.md`.
+
 ## [1.2.2]
 
 ### Fixed
