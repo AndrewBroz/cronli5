@@ -42,6 +42,11 @@ interface Side {
   // The weekdays one by one, where they can be said after 或.
   items?: string[];
   kind: 'plain' | 'parity' | 'except' | 'week' | 'free';
+  // What leads the side in place of 每月: 每逢, before a date that not
+  // every month has.
+  lead?: string;
+  // The days excepted, where the side is every day but a few.
+  removed?: string;
   text: string;
   // What this side asks for before a clock time.
   tie: string;
@@ -145,11 +150,6 @@ function bracketed(notes: string[]): string {
   const said = notes.filter(Boolean).join(marks.comma);
 
   return when(said !== '', marks.open + said + marks.close);
-}
-
-// The first three values, ……, and where the cadence has an end, the last.
-function abbreviated(values: string[], last: string): string {
-  return series(values.slice(0, 3)) + marks.ellipsis + last;
 }
 
 // Years named one by one, a run of three as a range.
@@ -338,11 +338,15 @@ function yearOf(schedule: Schedule): YearPart {
  * The months the description names: none when every month fires, and
  * otherwise those in which the schedule can fire. A month that never has
  * the date is left out, except beside a weekday, which fires there, and
- * where no month has it, which is said another way.
+ * where no month has it, which is said another way. A day counted back
+ * from the month's end that comes to one date names its months even
+ * where every month was written.
  */
 function monthsOf(schedule: Schedule): number[] {
   const {candidates, dateReach, day} = schedule.analyses;
-  const named = isAll(candidates.month) ?
+  const unnamed = isAll(candidates.month) &&
+    countedBack(schedule).length === 0;
+  const named = unnamed ?
     [] :
     denote((candidates.month as SetDescription[])[0], domainOf('month'));
   const skipped = dateReach?.fires === true && !day.union ?
@@ -356,7 +360,8 @@ function monthsOf(schedule: Schedule): number[] {
  * The month part, and what joins the given year part to it:
  * nothing when no month is named. A run of months may cross the new year
  * only when every year fires. After years that are all but a few, no
- * exception is said of the months.
+ * exception is said of the months. Every second month of the year is the
+ * odd or the even months.
  */
 function monthOf(values: number[], years: YearPart): MonthPart {
   const domain = domainOf('month');
@@ -382,10 +387,13 @@ function monthOf(values: number[], years: YearPart): MonthPart {
       [true, 'list']
     ]),
     lead: when(!(excepted && year === 'several'), beforeMonth[year]),
-    text: excepted ?
-      words.except + series(picked.removed.map(monthName)) +
-        words.exceptedEnd :
-      series(listed(runs, RANGE, monthName, words.nextYear))
+    text: first([
+      [excepted, words.except + series(picked.removed.map(monthName)) +
+        words.exceptedEnd],
+      [everyOther(values, domain),
+        [words.evenMonths, words.oddMonths][values[0] % 2]],
+      [true, series(listed(runs, RANGE, monthName, words.nextYear))]
+    ])
   };
 }
 
@@ -407,16 +415,30 @@ function quartzHead(form: QuartzDate): string {
 // A Quartz day-of-month form, as it follows 每月 or a month: the date,
 // and in a bracket what the calendar says of it and which way it moves
 // off a Saturday or Sunday.
-function quartzDate(form: QuartzDate, note: string): string {
+function quartzDate(form: QuartzDate, note: string, nearest: string):
+  string {
   const moves: Record<QuartzDate['kind'], string> = {
     beforeLast: '',
     firstWeekday: words.movedOnToMonday,
     last: '',
     lastWeekday: words.movedBackToFriday,
-    nearestWeekday: words.nearestFridayOrMonday
+    nearestWeekday: nearest
   };
 
   return quartzHead(form) + bracketed([note, moves[form.kind]]);
+}
+
+// Which way the weekday nearest a date moves: back to Friday from a
+// Saturday and on to Monday from a Sunday; back from both where the date
+// always ends its month, and where it sometimes does, that is said.
+function nearestMove(day: Schedule['analyses']['day']): string {
+  const moves = {
+    always: words.movedBackToFriday,
+    never: words.movedEitherWay,
+    sometimes: words.movedEitherWayUnlessLast
+  };
+
+  return moves[day.nearestDayIsLast ?? 'never'];
 }
 
 // A Quartz day-of-week form, as it follows 每月 or a month.
@@ -435,24 +457,28 @@ function dateDomain(): Domain {
   return {...domainOf('date'), cyclic: false};
 }
 
-// An exception among dates: one or two missing from every day, or from
-// the odd or the even days, of more than eight.
+// An exception among dates: one or two missing from every day, or, between
+// dates that fire, from the odd or the even days, of more than eight.
 function dateException(exception: Exception, kept: number[]): boolean {
   const domain = dateDomain();
+  const {removed} = exception;
+  const inside = removed[0] > kept[0] && lastOf(removed) < lastOf(kept);
 
-  return kept.length > LISTED && exception.removed.length <= 2 &&
+  return kept.length > LISTED && removed.length <= 2 &&
     (exception.base.kind === 'all' ||
-      everyOther(denote(exception.base, domain), domain));
+      inside && everyOther(denote(exception.base, domain), domain));
 }
 
 // Dates as a list in which a run of three is a range. One range alone is
-// followed by 每天 before a time, and pieces with a range by 的.
-function dateList(days: number[]): Side {
-  const runs = linearRuns(days);
+// followed by 每天 before a time, and pieces with a range by 的. Where no
+// month is named (`wraps`), a run across the month's end is one range to
+// 次月.
+function dateList(days: number[], wraps: boolean): Side {
+  const runs = runsOf(days, dateDomain(), wraps, RANGE);
 
   return {
     kind: 'plain',
-    text: series(listed(runs, RANGE, dateName)),
+    text: series(listed(runs, RANGE, dateName, words.nextMonth)),
     tie: first([
       [runs.length === 1 && days.length >= RANGE, words.everyDay],
       [runs.some((run) => run.length >= RANGE), words.of],
@@ -461,39 +487,98 @@ function dateList(days: number[]): Side {
   };
 }
 
-// What the calendar says of the date where the months cannot say it:
-// that February fires in leap years only, or, where no month can be
-// left out, that a month without the date is skipped.
-function calendarNote(schedule: Schedule): string {
-  const {candidates, dateReach, day} = schedule.analyses;
-  const reach = dateReach ?? {everyYear: [], leapYears: [], never: []};
-  const narrowed = !isAll(candidates.month) && !day.union;
-  const skips = reach.never.length + reach.leapYears.length > 0;
+// The one date a day counted back from the month's end comes to, where
+// the months it fires in are all of one length and every month named is
+// one of them; else nothing.
+function countedBack(schedule: Schedule): number[] {
+  const {dateReach, day, monthLengths} = schedule.analyses;
+  const form = (day.date as {form?: QuartzDate} | null)?.form;
+  const settled = monthLengths.length === 1 &&
+    !(day.union && (dateReach?.never.length ?? 0) > 0);
 
-  return narrowed ?
+  return form?.kind === 'beforeLast' && settled ?
+    [monthLengths[0].length - form.days] :
+    [];
+}
+
+// Whether the months can say when the date fires: some are named, and no
+// weekday beside the date fires in the others.
+function isNarrowed(schedule: Schedule): boolean {
+  const {candidates, day} = schedule.analyses;
+  const named = !isAll(candidates.month) || countedBack(schedule).length > 0;
+
+  return named && !day.union;
+}
+
+/**
+ * Whether the schedule fires only in leap years, in a February that needs
+ * its 29th day, with no year named: 每逢闰年 then stands for 每年.
+ */
+function leapOnly(schedule: Schedule): boolean {
+  const {candidates, dateReach} = schedule.analyses;
+
+  return isNarrowed(schedule) && isAll(candidates.year) &&
+    (dateReach?.leapYears.length ?? 0) > 0 &&
+    dateReach?.everyYear.length === 0;
+}
+
+// What the calendar says of the date where the months cannot say it:
+// that February fires in leap years only (unless 每逢闰年 has said so),
+// or, where no month can be left out, that a month without the date is
+// skipped.
+function calendarNote(schedule: Schedule): string {
+  const {dateReach} = schedule.analyses;
+  const reach = dateReach ?? {everyYear: [], leapYears: [], never: []};
+  const skips = reach.never.length + reach.leapYears.length > 0;
+  const leap = reach.leapYears.length > 0 && !leapOnly(schedule);
+
+  return isNarrowed(schedule) ?
     when(reach.everyYear.length > 0,
       reach.leapYears.map(monthName).join('')) +
-      when(reach.leapYears.length > 0, words.leapYearsOnly) :
+      when(leap, words.leapYearsOnly) :
     when(skips, words.skippedWhereMissing);
+}
+
+// A Quartz day-of-month form. A day counted back from the month's end is
+// the date itself where it comes to one. A date that not every month has
+// is led by 每逢, which says that it fires where there is one; a day
+// counted back keeps the note that a month too short is skipped.
+function quartzSide(schedule: Schedule): Side {
+  const {day} = schedule.analyses;
+  const {form} = day.date as {form: QuartzDate};
+  const note = calendarNote(schedule);
+  const skipped = note === words.skippedWhereMissing;
+  const dated = form.kind !== 'beforeLast';
+  const [date] = countedBack(schedule);
+
+  return typeof date === 'undefined' ?
+    {
+      kind: 'plain',
+      lead: [words.everyMonth, words.eachOfDays][Number(skipped && dated)],
+      text: quartzDate(form, when(!(skipped && dated), note),
+        nearestMove(day)),
+      tie: ''
+    } :
+    {kind: 'plain', text: dateName(date) + bracketed([note]), tie: ''};
 }
 
 // The dates. They are those the months named have, as the core gives
 // them. The device is chosen from the dates as written, so that the odd
 // days of a short month are still the odd days; a date is excepted only
 // where it surely exists, which under a named month is before the last
-// date that fires. `plain` is where no exception is said.
-function dateSide(schedule: Schedule, context: Context, plain: boolean):
-  Side {
-  const {candidates, dateReach, day} = schedule.analyses;
-  const note = bracketed([calendarNote(schedule)]);
+// date that fires. Every second date between two ends, more than can be
+// listed, is the odd or the even days from the first to the last, after
+// 逢 (after 的 where 每逢 already leads the dates). Any
+// other dates are listed, however many. `plain` is where no exception is
+// said, and `monthly` where no month is named.
+function dateSide(schedule: Schedule, context: Context, traits:
+  {monthly: boolean; plain: boolean}): Side {
+  const {candidates, dateReach} = schedule.analyses;
+  const note = calendarNote(schedule);
+  const skipped = note === words.skippedWhereMissing;
 
   if (candidates.date === null) {
-    return {
-      kind: 'plain',
-      text: quartzDate((day.date as {form: QuartzDate}).form,
-        calendarNote(schedule)),
-      tie: ''
-    };
+    return quartzSide(schedule);
   }
 
   const domain = dateDomain();
@@ -501,10 +586,14 @@ function dateSide(schedule: Schedule, context: Context, plain: boolean):
   const days = dateReach?.days ?
     denote(dateReach.days.candidates[0], domain) :
     written;
-  const picked = chosen(written, domain, plain ? never : dateException);
+  const picked = chosen(written, domain,
+    traits.plain ? never : dateException);
   const sure = picked.removed.every(
     (date) => context === 'none' || date < lastOf(days));
   const removed = series(picked.removed.filter(() => sure).map(dateName));
+  const parity = context === 'both' ?
+    words.of + [words.evenDaysOfMonth, words.oddDaysOfMonth][days[0] % 2] :
+    [words.evenDays, words.oddDays][days[0] % 2];
   const side = first<() => Side>([
     [sure && everyOther(picked.values, domain), () => ({
       kind: 'parity',
@@ -514,24 +603,29 @@ function dateSide(schedule: Schedule, context: Context, plain: boolean):
     })],
     [removed !== '', () => ({
       kind: 'except',
+      removed,
       text: words.except + removed + words.exceptedEnd + words.everyDay,
       tie: ''
     })],
-    [days.length > LISTED && typeof cadenceOf(days, domain) !== 'undefined',
+    [days.length > LISTED && cadenceOf(days, domain)?.interval === 2,
       () => ({
         kind: 'plain',
-        text: abbreviated(days.map(dateName), dateName(lastOf(days))),
+        text: dateName(days[0]) + words.to + dateName(lastOf(days)) +
+          parity,
         tie: ''
       })],
-    [true, () => dateList(days)]
+    [true, () => dateList(days, traits.monthly)]
   ])();
 
-  return {...side, text: side.text + note};
+  return skipped ?
+    {...side, lead: words.eachOfDays} :
+    {...side, text: side.text + bracketed([note])};
 }
 
 // The weekdays, in the week that runs from Monday to Sunday. Exactly six
 // days that are not one run are every day but one, except where no
-// exception is said.
+// exception is said. A run of three days or more across the weekend is
+// one range to 次周.
 function weekSide(schedule: Schedule, plain: boolean): Side {
   const {candidates, day} = schedule.analyses;
 
@@ -551,11 +645,13 @@ function weekSide(schedule: Schedule, plain: boolean): Side {
       exception.removed.length === 1;
   });
 
-  const items = listed(linearRuns(days), RANGE, weekdayName);
+  const items = listed(runsOf(days, domain, true, RANGE), RANGE,
+    weekdayName, words.nextWeek);
 
   return picked.removed.length > 0 ?
     {
       kind: 'free',
+      removed: series(picked.removed.map(weekdayName)),
       text: words.except + series(picked.removed.map(weekdayName)) +
         words.exceptedEnd + words.everyDay,
       tie: ''
@@ -594,8 +690,51 @@ function dayContext(month: MonthPart, together: boolean, meet: boolean):
 function sidesText(sides: Side[], context: Context, meet: boolean): string {
   return meet ?
     meeting(sides[0], sides[1]) :
-    sides.map((side) => beforeDays[side.kind][context] + side.text)
-      .join(words.andDays);
+    sides.map((side) => [beforeDays[side.kind][context], side.lead][
+      Number(context === 'none' && typeof side.lead === 'string')] +
+      side.text).join(words.andDays);
+}
+
+// Which of the dates and the weekdays are said. Dates that are every day
+// the months have are not, nor the weekday beside them; nor a date no
+// month has, or one that only lands on weekdays that fire anyway.
+function saidOf(schedule: Schedule): {dated: boolean; weekly: boolean} {
+  const {candidates, dateReach, day} = schedule.analyses;
+  const everyDay = dateReach?.days?.everyDay === true;
+
+  return {
+    dated: !isAll(candidates.date) && !everyDay &&
+      dateReach?.fires !== false && !day.dateAddsNothing,
+    weekly: !isAll(candidates.weekday) && !everyDay
+  };
+}
+
+// A date and a weekday together where one of the two is every day but a
+// few and the other is plain: the rule with its exception, and in a
+// bracket that an excepted day fires all the same when it is one of the
+// other side's days, the last of which follows 或. Nothing where the pair
+// is not that.
+function nearlyEveryDay(schedule: Schedule, month: MonthPart): Side[] {
+  const monthly = month.kind === 'none';
+  const dates = dateSide(schedule, month.kind, {monthly, plain: false});
+  const week = weekSide(schedule, false);
+  const byDate = dates.kind === 'except';
+  const [rule, other] = byDate ?
+    [dates, weekSide(schedule, true)] :
+    [week, dateSide(schedule, month.kind, {monthly, plain: true})];
+  const simple = byDate !== (week.kind === 'free') && !month.excepted &&
+    ['plain', 'week'].includes(other.kind) &&
+    !other.text.includes(marks.open);
+
+  const items = other.items ?? other.text.split(marks.list);
+  const any = series(items.slice(0, -1)) +
+    when(items.length > 1, words.or) + lastOf(items);
+
+  return [rule].filter(() => simple).map((side) => ({
+    ...side,
+    text: side.text + bracketed([String(side.removed) + words.being + any +
+      words.whenItIs + words.asUsual])
+  }));
 }
 
 /**
@@ -605,28 +744,36 @@ function sidesText(sides: Side[], context: Context, meet: boolean): string {
  * each marked for itself, joined by 以及, and tied to the time by ，均在,
  * which says the time of both (where both must match, by 的), or by
  * ，均为 before a time that begins with 每;
- * under a month, 每逢 leads each after a comma. Where both must match,
+ * under a month, 每逢 leads each after a comma. Where one of the two is
+ * every day but a few, it is said with its exception and the other
+ * follows in a bracket as firing all the same. Where both must match,
  * the dates are said, then that they fall on the weekdays. Dates that are
  * every day the months have are not said, nor the weekday beside them; a
- * date no month has leaves the weekday alone.
+ * date no month has, or one that only lands on weekdays that fire anyway,
+ * leaves the weekday alone.
  */
 function dayOf(schedule: Schedule, month: MonthPart):
   {daily: boolean; joined: boolean; text: string; tie: string} {
-  const {candidates, dateReach, day} = schedule.analyses;
-  const everyDay = dateReach?.days?.everyDay === true;
-  const dated = !isAll(candidates.date) && !everyDay &&
-    dateReach?.fires !== false;
-  const weekly = !isAll(candidates.weekday) && !everyDay;
+  const {dated, weekly} = saidOf(schedule);
   const together = dated && weekly;
-  const meet = together && day.both;
-  const context = dayContext(month, together, meet);
-  const plain = together || month.excepted;
-  const sides = [
-    ...[dated].filter(Boolean).map(
-      () => dateSide(schedule, context, plain)),
-    ...[weekly].filter(Boolean).map(() => weekSide(schedule, plain))
-  ];
-  const lead = when(together && month.kind !== 'none', marks.comma);
+  const meet = together && schedule.analyses.day.both;
+  const merged = [together && !meet].filter(Boolean).flatMap(
+    () => nearlyEveryDay(schedule, month));
+  const paired = together && merged.length === 0;
+  const context = dayContext(month, paired, meet);
+  const traits = {
+    monthly: month.kind === 'none',
+    plain: together || month.excepted
+  };
+  const sides = merged.length > 0 ?
+    merged :
+    [
+      ...[dated].filter(Boolean).map(
+        () => dateSide(schedule, context, traits)),
+      ...[weekly].filter(Boolean).map(
+        () => weekSide(schedule, traits.plain))
+    ];
+  const lead = when(paired && month.kind !== 'none', marks.comma);
 
   return {
     daily: sides.length === 0,
@@ -654,4 +801,4 @@ function neverOf(schedule: Schedule, months: string): string {
   return words.neverRuns + bracketed([months + words.hasNo + dates]);
 }
 
-export {dayOf, monthOf, monthsOf, neverOf, yearOf};
+export {dayOf, leapOnly, monthOf, monthsOf, neverOf, yearOf};

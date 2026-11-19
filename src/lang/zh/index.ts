@@ -9,7 +9,8 @@ import type {
 } from '../../core/schedule.js';
 import {denote} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
-import {dayOf, monthOf, monthsOf, neverOf, yearOf} from './days.js';
+import {dayOf, leapOnly, monthOf, monthsOf, neverOf, yearOf}
+  from './days.js';
 import lexicon from './lexicon.js';
 import type {ChineseOptions, ChineseStyle} from './options.js';
 import {regions, style, styles} from './options.js';
@@ -40,7 +41,8 @@ function valuesOf(schedule: Schedule, field: Field): number[] {
  * after a date and a weekday together it is ，均为.
  * Before a clock time it is whatever the day part asks for. A schedule
  * whose dates exist in none of its months has one piece, which says that
- * it never fires.
+ * it never fires. One that needs 29 February, with no year named, opens
+ * with 每逢闰年 where 每年 would stand.
  * @internal
  */
 function describeParts(schedule: Schedule, opts: ChineseOptions):
@@ -49,7 +51,9 @@ function describeParts(schedule: Schedule, opts: ChineseOptions):
   const years = yearOf(schedule);
   const months = monthOf(monthsOf(schedule), years);
   const days = dayOf(schedule, months);
-  const year = years.text + months.lead;
+  const year = leapOnly(schedule) ?
+    words.everyLeapYear :
+    years.text + months.lead;
   const month = months.text;
   const time = timeOf({
     hour: valuesOf(schedule, 'hour'),

@@ -31,9 +31,9 @@ const JOINS = ['', '，', '每天', '的', '，均在', '，均为'];
 // 每年. So a day, month or year edit may move text among those
 // three parts. The join depends on what stands before the time and on
 // whether the hours are restricted, so an edit to the hours, or to a day,
-// month or year, may change it. Nothing else may cross, apart from the two
-// fusions declared below: no day, month or year edit touches the time, and
-// no time edit touches the day, the month or the year.
+// month or year, may change it. Nothing else may cross, apart from the
+// three fusions declared below: no day, month or year edit touches the
+// time, and no time edit touches the day, the month or the year.
 const MAY_CHANGE = {
   date: ['day', 'month', 'year', 'join'],
   hour: ['time', 'join'],
@@ -58,6 +58,14 @@ const OVERNIGHT = ['date', 'month', 'weekday', 'year'];
 // join or time to keep. So an edit to the date, the month or the year
 // that makes or unmakes that case may change every part.
 const NEVER = ['date', 'month', 'year'];
+
+// The rhythm of hours (answers 2.5, 3.7), the third declared fusion. A
+// cadence of hours that tiles the day from 0:00 is a rhythm where its
+// minutes are moments (每2小时一次, 每2小时的30分), and runs round the
+// clock as 每小时 does, with no 每天; where its minutes are stretches the
+// hours hold them (每天偶数小时内，每分钟一次) and 每天 fills the day. So
+// under such hours an edit to the minute may change the join.
+const RHYTHM = ['minute'];
 
 const parse = parser(chinese.default);
 
@@ -85,6 +93,19 @@ function neverFires(pattern, options) {
   return dateReach !== null && !dateReach.fires && !day.union;
 }
 
+// Whether the hours are a cadence that tiles the day from 0:00, with or
+// without a beat missing.
+function tilesTheDay(pattern, options) {
+  const found = parse(pattern, options).schedule.analyses.candidates.hour;
+
+  return found.some(function tiles(candidate) {
+    const cadence = candidate.kind === 'except' ? candidate.base : candidate;
+
+    return cadence.kind === 'cadence' && cadence.start === 0 &&
+      cadence.last + cadence.interval === 24;
+  });
+}
+
 // Whether a changed part is one the edited field may change, in a
 // pattern or between a pattern and its edit.
 function allowed(field, part, patterns, options) {
@@ -92,6 +113,8 @@ function allowed(field, part, patterns, options) {
 
   return MAY_CHANGE[field].includes(part) || part === 'time' &&
     OVERNIGHT.includes(field) && crossesMidnight(pair[0], options) ||
+    part === 'join' && RHYTHM.includes(field) &&
+    tilesTheDay(pair[0], options) ||
     NEVER.includes(field) && pair.some(function never(pattern) {
       return neverFires(pattern, options);
     });
@@ -228,6 +251,37 @@ describe('Chinese continuity:', function() {
     expect(partsOf('0 9 31 6 1').time).to.equal('9:00');
   });
 
+  it('says a rhythm of hours with no 每天, and changes nothing else by it',
+    function() {
+      const rhythm = [
+        ['0 */2 * * *', '* */2 * * *'],
+        ['30 */2 * * *', '*/15 */2 * * *'],
+        ['5,35 */6 * * *', '* */6 * * *'],
+        ['0 */2 * * 1', '* */2 * * 1']
+      ];
+
+      expect(leaks(rhythm)).to.deep.equal([]);
+      expect(partsOf('0 */2 * * *')).to.deep.equal(
+        {day: '', join: '', month: '', time: '每2小时一次', year: ''});
+      expect(partsOf('* */2 * * *')).to.deep.equal({
+        day: '', join: '每天', month: '', time: '偶数小时内，每分钟一次', year: ''
+      });
+      expect(partsOf('0 */2 * * 1').join).to.equal('，');
+      expect(partsOf('* */2 * * 1').join).to.equal('');
+
+      // Hours that are no such cadence are not covered: there a minute
+      // edit that changed the join would still be a leak.
+      expect(tilesTheDay('0 */2 * * *')).to.equal(true);
+      expect(tilesTheDay('0 0,2,4,6,10,12,14,16,18,20,22 * * *'))
+        .to.equal(true);
+      expect(tilesTheDay('0 1/2 * * *')).to.equal(false);
+      expect(tilesTheDay('0 9-17 * * *')).to.equal(false);
+      expect(allowed('minute', 'join', '0 */2 * * *')).to.equal(true);
+      expect(allowed('minute', 'join', '0 9-17 * * *')).to.equal(false);
+      expect(allowed('minute', 'day', '0 */2 * * *')).to.equal(false);
+      expect(allowed('second', 'join', '0 0 */2 * * *')).to.equal(false);
+    });
+
   it('renders equal schedules identically: no tie is declared',
     function() {
       function render(pattern, options) {
@@ -248,8 +302,8 @@ describe('Chinese continuity:', function() {
       return chinese.default.describe(schedule, opts);
     }
 
-    expect(say('0 */12 * * *')).to.equal('每天0:00、12:00');
-    expect(say('0 0,12 * * *')).to.equal('每天0:00、12:00');
+    expect(say('0 */12 * * *')).to.equal('每12小时一次');
+    expect(say('0 0,12 * * *')).to.equal('每12小时一次');
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
     expect(say('0 9-17 * * *'))
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));

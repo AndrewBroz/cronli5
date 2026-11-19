@@ -73,7 +73,7 @@ time.
   continuous.
 - **cs**: «v nejbližší pátek nebo pondělí» reads as a choice; the opening
   «vždy» struck two readers as official.
-- **zh**: «9点、17点的0分至29分，每分钟一次，以及45分» carries the "one stretch"
+- **zh**: (the «9点、17点的0分至29分，每分钟一次，以及45分» sentence is no longer produced, 2026-11-19) the "one stretch"
   risk; 「各一轮，每轮60次」 is read correctly but called awkward.
 
 ## On `develop` but never read

@@ -103,6 +103,41 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - A fifth style field, `era`: the era named before the even or the odd
     years. Taiwan's style says 「每逢西元雙數年」; Hong Kong's and Macau's
     names none, 「每逢雙數年」, since they count years in one era.
+- **Simplified Chinese: wording changes**, each from comparing it
+  pattern by pattern with Traditional Chinese, which was written
+  independently. No schedule was said wrongly before or after.
+  - A cadence of hours that tiles the day from 0:00 is its step, as in
+    every other language: `0 */2 * * *` is 「每2小时一次」 (was 「每天偶数整
+    点」), `0 */3 * * *` is 「每3小时一次」 (was 「每天0:00起每3小时一次」),
+    `0 */6 * * *` is 「每6小时一次」 (was 「每天0:00、6:00、12:00、18:00」),
+    `30 */2 * * *` is 「每2小时的30分」 (was 「每天偶数小时的30分」), `5,35
+    */3 * * *` is 「每3小时的5分、35分」 (was eight hours by name), and with
+    an hour missing `0 0,3,6,9,15,18,21 * * *` is 「每3小时一次（12:00除
+    外）」. The odd hours are still 「每天奇数整点」.
+  - A stretch of hours before named minutes is said once, by its first
+    and last firing: `5,20,45 9-17 * * 1-5` is 「每周一至周五9:05至17:45，
+    每小时的5分、20分、45分」 (was 「每周一至周五9点至17点，每小时的5分、20
+    分、45分（首次9:05，末次17:45）」); `* 2/2 * * *` is 「每天2:00至
+    22:59，偶数小时内，每分钟一次」.
+  - No series is abbreviated with ……: `0 0 8/2 * *` is 「每月8日至30日逢
+    双日0:00」 (was 「每月8日、10日、12日……30日0:00」) and `0 0 */3 * *`
+    lists its eleven dates.
+  - Three hours or more that hold minutes are named once: `* */6 * * *`
+    is 「每天0点、6点、12点、18点的每一分钟」 (was four windows), `0,30
+    8,12,16,20 * * *` is 「每天8点、12点、16点、20点的0分、30分」 (was eight
+    clock times).
+  - A rhythm with a beat missing: `0,10,20,40,50 * * * *` is 「每10分钟一
+    次（每小时的30分除外）」 (was the five minutes).
+  - Dates and days: `0 0 31 * *` is 「每逢31日0:00」 (was 「每月31日（当月
+    无此日则不执行）0:00」); `0 0 29 2 *` is 「每逢闰年2月29日0:00」; `0 0
+    L-3 6 *` is 「每年6月27日0:00」 (was 「每年6月倒数第4天0:00」); `0 9 15W
+    * *` is 「每月15日（遇周六提前至周五，遇周日顺延至周一）9:00」 (was 「…
+    （遇周六、周日改在当月最近的周五或周一）」); `0 9 * * 5-1` is 「每周五至次
+    周周一9:00」 (was 「每周一、周五至周日9:00」); `0 9 1-10,14-31 * *` is
+    「每月14日至次月10日每天9:00」; `0 0 1 * 0-2,4-6` is 「除周三外每天（周三
+    为1日时照常）0:00」 (was 「每月1日以及每周一、周二、周四至周日，均在0:00」);
+    `0 9 * */2 *` is 「每年奇数月每天9:00」 (was the six months); `0 0 15W
+    * 1-5` is 「每周一至周五0:00」, the date adding nothing.
 
 ### Removed
 
