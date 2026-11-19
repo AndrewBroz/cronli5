@@ -101,7 +101,7 @@ word's Chinese character (每天 09:00; 03:00 起; 翌日 02:00; 另加 22:00;
 每15分鐘, 8、12、18時, 上午9:00, ）09:00). The mark of a stretch (～, 至)
 and the 、 of a list stand close against both their times (9時至17時;
 9時30分、17時30分), and a time that ends in its own unit is followed
-close (9時起每2小時一次; 3時除外). Counts and dates are tight and clock times are not,
+close (3時起每4小時一次; 3時除外). Counts and dates are tight and clock times are not,
 as in the usage notes' own lines (每月5日 beside 每天 08:00、12:00).
 
 **Continuity.** A time field (second, minute, hour) changes only `time`;
@@ -388,7 +388,7 @@ after a date or weekday a comma stands before them (每週一，9時的03、07�
 lists and ranges alike (每小時的05、20、45分; 05分至55分). Minute zero is
 整點 after 每小時的 and 每逢 (每小時的整點、15、45分; 整點至29分;
 每逢整點、15、30、45分), and 00 after hours said as 時, where 整點 would
-say the hour twice (0、6、12、18時的00、15、30、45分; 雙數時的00分至29分).
+say the hour twice (0、6、12、18時的00、30分; 雙數時的00分至29分).
 A length is never padded (每5分鐘). The third judge found
 8時的5分 and a lone 1分 awkward and asked for 05分, 01分; the padded form
 is on Taiwan's bus stops, and two digits show a position where one digit
@@ -1301,7 +1301,7 @@ close the whole sentence.
 8.3 `confinement-vs-juxtaposition`: the stretch first, the rate after a
 comma (`* 9 * * *` 每天 09:00～09:59，每分鐘一次); hours or minutes that
 confine a finer rhythm are named before it (每逢雙數時，整個小時內
-每分鐘一次; 每逢整點起的1分鐘內，每秒一次).
+每分鐘一次; 每逢整點，該分鐘內每秒一次).
 
 8.4 `redundancy`: no 每月 inside one named month or after a list of
 months; no 每年 after a single year or a list of years; no 每天 on a
@@ -1353,6 +1353,10 @@ adversarial schedule read of all rows with their patterns, and three
 blind judges briefed only in Chinese as Taiwan editors who know Hong
 Kong usage, asked for every reading of each sentence. A second reading
 was cured by a general choice; a grade or a preference was weighed.
+("Now" in this section and in the audit's is what was said after that
+read. The comparison has since changed some of those forms: 起的1分鐘內
+is 該分鐘內, 另加 before a position is 另在, a window's rate follows 內,
+and Hong Kong's style says 雙數年 with no era.)
 
 **Wrong schedules and second readings cured** (first form → what is
 said now):

@@ -42,8 +42,8 @@ const MAY_CHANGE = {
 // or an hour) and either no date or weekday is restricted or the day
 // part holds a range of dates (「每月1日至7日每天 09:00」), and is absent
 // when the time runs round the clock. Any of the three time fields can
-// make the time name a clock time or stop naming one (「每2小時一次」
-// against 「每天 00:30 起每2小時一次」; 「每小時整點」 against 「每天
+// make the time name a clock time or stop naming one (「每3小時一次」
+// against 「每天 00:30 起每3小時一次」; 「每小時整點」 against 「每天
 // 09:00」), so an edit to the second, the minute or the hour may add or
 // remove exactly that word at the end of the day part (answers 2.5).
 const EVERY_DAY = '每天';
