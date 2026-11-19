@@ -48,6 +48,18 @@ function hourFixed(work: Clockwork): Time {
   return work.lone && {hour: work.hours.values[0]} || {};
 }
 
+// Each hour with each minute and each second, in order.
+function everyMoment(hours: Time[], minutes: number[], seconds: number[]):
+  Time[] {
+  return hours.flatMap(function eachHour(hour) {
+    return minutes.flatMap(function eachMinute(minute) {
+      return seconds.map(function eachSecond(second) {
+        return {...hour, minute, second};
+      });
+    });
+  });
+}
+
 // «매시» where the hours are every hour, or every hour but some.
 function everyHour(work: Clockwork): string {
   return isOpen(work.hourForm) && words.everyHour || '';
@@ -163,18 +175,15 @@ const rules: SecondsRule[] = [
     const hours = open && [{}] || work.hours.values.map(function fix(hour) {
       return {hour};
     });
-    const times: Time[] = hours.flatMap(function eachHour(hour: Time) {
-      return work.minutes.values.flatMap(function eachMinute(minute) {
-        return seconds.values.map(function eachSecond(second) {
-          return {...hour, minute, second};
-        });
-      });
-    });
+    const count =
+      hours.length * work.minutes.values.length * seconds.values.length;
     const plain = open && work.minuteForm.kind === 'values' || listable(work);
 
-    return clock.moments.kind === 'values' &&
-      times.length <= listedMoments && plain && {
-      body: join(everyHour(work), sayTimes(times, voice).join(', ')),
+    return clock.moments.kind === 'values' && count <= listedMoments &&
+      plain && {
+      body: join(everyHour(work), sayTimes(
+        everyMoment(hours, work.minutes.values, seconds.values), voice
+      ).join(', ')),
       bracket: hoursGone(work),
       names: !open
     };

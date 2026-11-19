@@ -138,6 +138,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     为1日时照常）0:00」 (was 「每月1日以及每周一、周二、周四至周日，均在0:00」);
     `0 9 * */2 *` is 「每年奇数月每天9:00」 (was the six months); `0 0 15W
     * 1-5` is 「每周一至周五0:00」, the date adding nothing.
+- **Faster.** A step of many years, such as `2030/2` in the year field
+  (3,985 years), took about 420 us to analyse in every language and now
+  takes about 200: a single step no longer goes through a Set to drop
+  repeats it cannot have, and values are taken out of a set by marking
+  them in an array. Over a broad corpus of 112,788 patterns the core is
+  about a fifth faster (27.6 to 21.7 us a pattern); Korean no longer
+  builds every moment of a schedule before counting them (its renderer
+  10.1 to 8.8 us), and Russian no longer lists the whole year field to
+  count it (12.2 to 9.8 us). `npm run speed` measures every language and
+  checks that a change leaves every description unchanged
+  (`tooling/docs/speed.md`). Every description is unchanged.
 
 ### Removed
 

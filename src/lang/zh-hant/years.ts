@@ -200,7 +200,15 @@ const loose = {list: true, pieces: true};
 /** The years of a pattern, as they lead its sentence. */
 function sayYears(facts: ScheduleFacts, style: ZhHantStyle): YearsSaid {
   const {cadencePieces, candidates} = facts.analyses;
-  const form = formOf(candidates.year as SetDescription[], yearReading);
+  const years = candidates.year as SetDescription[];
+
+  // An unrestricted year field says nothing; its eight thousand years are
+  // not listed to find that out.
+  if (years[0].kind === 'all') {
+    return noYears();
+  }
+
+  const form = formOf(years, yearReading);
   const mixed = cadencePieces.year;
 
   return mixed && form.kind in loose && hasLongStep(mixed) ?
