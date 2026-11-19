@@ -72,9 +72,14 @@ function kindOf<Kind extends SetDescription['kind']>(
   }) as Extract<SetDescription, {kind: Kind}> | undefined;
 }
 
-/** How many values a description stands for. */
+/**
+ * How many values a description stands for. The whole field is counted
+ * without listing it: the year field holds thousands.
+ */
 function sizeOf(description: Described, domain: Domain): number {
-  return denote(description, domain).length;
+  return description.kind === 'all' ?
+    domain.max - domain.min + 1 :
+    denote(description, domain).length;
 }
 
 /** The values of a set, from its candidates. */
