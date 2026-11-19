@@ -77,18 +77,18 @@ const rows = [
   ['0 9-17 * * 1-5', 'od poniedziałku do piątku co godzinę od 9:00 do 17:00'],
   ['30 9-17 * * 1-5', 'od poniedziałku do piątku co godzinę od 9:30 do 17:30'],
   ['5,20,45 9-17 * * 1-5',
-    'od poniedziałku do piątku od 9:05 do 17:45: 5, 20 i 45 minut po ' +
+    'od poniedziałku do piątku, od 9:05 do 17:45: 5, 20 i 45 minut po ' +
     'każdej pełnej godzinie'],
   ['0-29 9-17 * * 1-5',
-    'od poniedziałku do piątku od 9:00 do 17:29: co minutę od każdej ' +
+    'od poniedziałku do piątku, od 9:00 do 17:29: co minutę od każdej ' +
     'pełnej godziny do 29 minut po niej'],
   ['*/7 9-17 * * 1-5',
-    'od poniedziałku do piątku od 9:00 do 17:56: co 7 minut od każdej ' +
+    'od poniedziałku do piątku, od 9:00 do 17:56: co 7 minut od każdej ' +
     'pełnej godziny do 56 minut po niej'],
   ['5/15 9-17 * * 1-5',
     'od poniedziałku do piątku co 15 minut od 9:05 do 17:50'],
   ['10-40/10 9-17 * * 1-5',
-    'od poniedziałku do piątku od 9:10 do 17:40: 10, 20, 30 i 40 minut po ' +
+    'od poniedziałku do piątku, od 9:10 do 17:40: 10, 20, 30 i 40 minut po ' +
     'każdej pełnej godzinie'],
 
   // window / hour — context `*/15 9-17 * * 1-5`
@@ -222,7 +222,7 @@ const rows = [
   ['0 0 1 */3 *',
     'w styczniu, kwietniu, lipcu i październiku pierwszego dnia miesiąca o ' +
     '0:00'],
-  ['0 0 1 1-11 *', 'poza grudniem pierwszego dnia każdego miesiąca o 0:00'],
+  ['0 0 1 1-11 *', 'poza grudniem pierwszego dnia miesiąca o 0:00'],
 
   // monthly / weekday — context `0 0 1 * *`
   ['0 0 1 * 0',
@@ -254,7 +254,7 @@ const rows = [
   ['0-29 * * * *', 'co minutę od każdej pełnej godziny do 29 minut po niej'],
   ['0-29,45 * * * *',
     'co minutę od każdej pełnej godziny do 29 minut po niej, a potem ' +
-    'jeszcze raz 45 minut po niej'],
+    'jednorazowo 45 minut po niej'],
   ['*/7 * * * *', 'co 7 minut od każdej pełnej godziny do 56 minut po niej'],
   ['5/15 * * * *', '5, 20, 35 i 50 minut po każdej pełnej godzinie'],
   ['10-40/10 * * * *', '10, 20, 30 i 40 minut po każdej pełnej godzinie'],

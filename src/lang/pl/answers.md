@@ -12,7 +12,8 @@ recur. Revised that day after two schedule reads and three blind fluency
 reads of the rows, and twice on **2026-11-19**: once from the findings
 left open, and once from two fresh reads of the result, a blind judge
 briefed only in Polish («judge») and an adversarial schedule read
-(«schedule read 3»). The section "What changed on 2026-11-19" lists both
+(«schedule read 3»), and a third time from a second blind judge
+(«judge 2»). The section "What changed on 2026-11-19" lists all three
 passes. No human has reviewed any of this.
 
 `usage.md` is left exactly as its writer wrote it. Where these answers
@@ -71,21 +72,19 @@ Six habits hold everywhere.
 4. **Up to four clock times are listed; five or more look for a
    structure** (a run, a rhythm, a window). Exact times need no working
    out.
-5. **Something is taken away only where what is taken is a thing with a
-   name.** Among real times it is a clock time after «oprócz» («co
-   2 godziny oprócz 8:00», «od 9:00 do 9:59 oprócz 9:29»); an hour that
-   holds several firings is «oprócz godziny 8»; a day, a month, a year
-   have names. A distance from the full hour is not such a thing: «ale nie
-   29 minut po każdej pełnej godzinie» was read as one minute and as a
+5. **What is taken away is named as a thing, never as a distance.**
+   Among real times it is a clock time after «oprócz» («co 2 godziny
+   oprócz 8:00», «od 9:00 do 9:59 oprócz 9:29»); an hour that holds
+   several firings is «oprócz godziny 8»; a day, a month, a year have
+   names. A bare distance from the full hour is not a thing: «ale nie 29
+   minut po każdej pełnej godzinie» was read as one minute and as a
    half-hour gap (judge 32, 69; before it, «oprócz 30 minut po pełnej
-   godzinie», schedule read 1.1), so inside the open hour nothing is
-   subtracted and what is left is said («co minutę od każdej pełnej
-   godziny do 28 minut po niej oraz od 30 do 59 minut po niej»). An
-   exception never takes away the first or last moment of a base that
-   names them: the base is then the shorter run («co minutę od 9:01 do
-   9:59 oprócz 9:30»; schedule read 2, 1.5). No comma stands before
-   «oprócz» (schedule read 3, 8: it was there after a rhythm and absent
-   after «codziennie»; the short phrase takes none).
+   godzinie», schedule read 1.1). Inside the open hour the thing is the
+   moment that falls there: «co minutę oprócz chwili wypadającej 29 minut
+   po każdej pełnej godzinie» (3.9). An exception never takes away the
+   first or last moment of a base that names them: the base is then the
+   shorter run («co minutę od 9:01 do 9:59 oprócz 9:30»; schedule read 2,
+   1.5). No comma stands before «oprócz» (schedule read 3, 8).
 6. **Three connectives, three levels.** «i» ends a plain list of values;
    «oraz» ends a list of pieces (anything containing an «od … do …» or
    mixing kinds); «, a także» joins the weekday and the day of the month
@@ -109,8 +108,12 @@ Six habits hold everywhere.
   «w czerwcu» needless (53) and read the sentence rightly; it stays for
   the number.
 - A window over several hours stands before what happens inside each
-  hour, and a **colon** parts them: «od poniedziałku do piątku od 9:00 do
-  17:56: co 7 minut od każdej pełnej godziny do 56 minut po niej» (4.1).
+  hour, and a **colon** parts them: «od poniedziałku do piątku, od 9:00
+  do 17:56: co 7 minut od każdej pełnej godziny do 56 minut po niej»
+  (4.1). When the day part is itself «od … do …» a **comma** stands
+  between the two, so that two spans do not run together (judge 2: "two
+  «od–do» in a row with nothing between", 1, 21, 32, 52, 63); after
+  «codziennie» there is none.
 - The weekend clause of a working day nearest a date follows the time,
   after a comma (5.3).
 - A frame is followed by a **colon** before a union, so that it is heard
@@ -153,11 +156,10 @@ how they are arranged.
    day is two times, 3.11);
 4. a run of three or more that does not wrap (`range`, `from <= to`): a
    range;
-5. all but one or two values (`except` on `all`, at most two removed):
-   for hours, an exception from the whole; for minutes and seconds, an
-   exception only where the time is real clock times in one hour (or one
-   minute), and then never one that removes the first or last moment the
-   base names (habit 5): otherwise the runs that are left, as pieces (9);
+5. all but one or two values (`except` on `all`, at most two removed): an
+   exception from the whole (3.9), unless the whole would be said with a
+   first and last moment and a removed value is one of them (habit 5):
+   then the run or the range-less-one that is left (9);
 6. few values: a list (also when they are evenly spaced without tiling,
    or are a short run that wraps: hours 23, 0 and 1 are «o 0:00, 1:00
    i 23:00»);
@@ -170,11 +172,9 @@ how they are arranged.
    part by 2, 4, 6 and 8, in ascending order; a rhythm or a range with one
    or two values missing, **when at least seven values remain and neither
    removed value is the base's first or last** (`except` on a `cadence` or
-   `range` base): among real clock times the base, then the missing
-   points; in the open hour or minute the two stretches of the rhythm that
-   are left («co 5 minut od każdej pełnej godziny do 25 minut po niej oraz
-   od 35 do 55 minut po niej»). With fewer than seven left the values are
-   listed: «o 0:00, 4:00, 8:00, 16:00 i 20:00» needs no subtraction
+   `range` base): the base, then what is missing (3.9: a clock time among
+   real times, «chwili wypadającej …» in the open hour or minute). With
+   fewer than seven left the values are listed: «o 0:00, 4:00, 8:00, 16:00 i 20:00» needs no subtraction
    (schedule read 3.5);
 10. a set of more than twelve values that none of the above describes,
     when `analyses.cadencePieces` is not `null`: its parts, each in the
@@ -199,13 +199,15 @@ restricted (so that June's days are judged against 30):
 6. a rhythm of more than seven days that runs to the end of the month:
    «co 3 dni od pierwszego dnia każdego miesiąca» (3.7);
 7. anything else (three days or more, a run, pieces, a run that wraps, a
-   shorter rhythm, a rhythm less a day): **digits after «w dniach»**, runs
+   shorter rhythm): **digits after «w dniach»**, runs
    with an en dash, in ascending order: «w dniach 1, 10 i 20 każdego
    miesiąca», «w dniach 1–7 każdego miesiąca», «w dniach 1–5, 10 i 20–25
    każdego miesiąca», «w dniach 1, 6, 11, 16, 21, 26 i 31 każdego
    miesiąca» (3.2, 3.4);
-8. the parity idiom less one or two days: «w nieparzyste dni każdego
-   miesiąca inne niż piętnasty» (3.9).
+8. the parity idiom, or a rhythm of days that runs to the end of the
+   month, less one or two days: the base and «oprócz … dnia»: «w
+   nieparzyste dni każdego miesiąca oprócz piętnastego dnia», «co 3 dni
+   od pierwszego dnia każdego miesiąca oprócz szesnastego dnia» (3.9).
 
 **Month**: every; one; all but one or two months, whichever they are:
 «poza …» (3.9); a run of three or more, wrapping or not,
@@ -252,23 +254,49 @@ is not an authority's.
 | `short` | boolean | `false` | The abbreviations Polish conventionally writes, where it writes them: weekday names, the month of a date, units after a number |
 | `separator` | `':'` or `'.'` | `':'` | The mark between hours and minutes |
 
-`hour12`. Written Polish is 24-hour and has no a.m./p.m. (notes §2.1). The
-only 12-hour form the language has is the spoken one, an hour with its part
-of the day, and that is what `hour12: true` writes: «9:00 rano», «5:30 po
+`hour12`. Written Polish is 24-hour and has no a.m./p.m. (notes §2.1:
+«W piśmie zegar jest 24-godzinny. "O 17.30", nie "o 5.30 po południu"»).
+What the notes do record beside it is the colloquial register in which an
+hour carries its part of the day, «o 7 rano», «o 2 w nocy», allowed "in a
+text that is to be exact" only as company for the hour and called
+needless beside a 24-hour time. That is the only 12-hour form the
+language has, and it is what `hour12: true` writes: «9:00 rano», «5:30 po
 południu». The part is chosen by the hour and minute alone, seconds never
-change it: hours 0–3 «w nocy», 4–11 «rano», 12:00 «w południe»,
+change it: hours 1–3 «w nocy», 4–11 «rano», 12:00 «w południe»,
 12:01–17:59 «po południu», 18–23 «wieczorem». The boundaries are a call;
-Polish has no fixed ones (notes §2.1). The hour after midnight is twelve,
-as on any 12-hour clock: «12:00 w nocy», «12:30 w nocy». Until the second
-pass of 2026-11-19 it was «0:00 w nocy», a hybrid kept so that the digits
-could only be the first half hour of the day named. Two schedule reads
-called it not Polish (read 2, 3.15; read 3, 5), it was the one hour worded
-by which value it is, and the worry it answered is the one «o 0:00»
-already carries in the default style. Each time carries its own part of
-the day; nothing is shared across a list. The bare hour number after
-«oprócz godziny» (4.1) is the number of an hour, not a clock time, and
-stays on the 24-hour count in every style. Default `false`: a copy editor would strike the 12-hour
-form from a screen.
+Polish has no fixed ones (notes §2.1).
+
+**Whether the field should exist at all** was put to these notes on
+2026-11-19, after both judges met its rows unmarked: the first called
+«9:30 rano i 5:30 po południu» a calque on a screen, the second found
+«12:30 w nocy» dangerous. On the notes' evidence Polish has one written
+clock, and by that alone the field would go. It stays for two reasons,
+neither of them about Polish writing: every language's table has
+`hour12` and `short` with one meaning (`docs/styles.md`), so that a
+caller may pass `hour12: false` to any language and not be refused; and
+the form it writes when asked is one the notes attest, in its register.
+Its default is `false`, no region turns it on, and no description is in
+that register unless a caller asks. If the project decides that a field a
+language has no written use for should be refused, it goes, and its
+fifteen option rows with it; that is a decision about the contract, not
+about Polish, and I have left it to the project.
+
+**The hour after midnight keeps its digits and takes no part of the
+day**: «codziennie o 0:00», «o 0:30». This is the third form. «0:00 w
+nocy» (a hybrid) was called not Polish by two schedule reads. «12:00 w
+nocy», «12:30 w nocy», the true 12-hour form taken on the third schedule
+read's advice, was read two ways by the second judge (23, 54): in Polish
+writing 12:30 is half past noon, the words say night, and a reader
+glancing at the digits takes the day. The digits 0:30 can only be the
+first half hour of the day named, and with no words beside them nothing
+disagrees. It is one hour worded by which hour it is, and that is the
+price: every other form tried either is not Polish or names a time
+twelve hours away. «o północy» was not used, for the reason it is not
+used anywhere (5.2: which day does it belong to).
+
+Each time carries its own part of the day; nothing is shared across a
+list. The bare hour number after «oprócz godziny» (4.1) is the number of
+an hour, not a clock time, and stays on the 24-hour count in every style.
 
 `short`. The abbreviations the language conventionally uses, where it
 uses them, and nowhere else. Weekday names become «pon., wt., śr., czw.,
@@ -393,8 +421,9 @@ exceptions:
    «poza …» or pieces, and the day phrase's month tail follows the month
    field (4.4). All of this stays inside the frame and the day.
 5. *A union said from its larger side.* When one day field leaves out
-   only one or two days, the union is said from that side (4.3), so an
-   edit to the other day field may reshape the day part.
+   only one or two days, the union is said from that side, and when the
+   days of the month carry an exception they lead (4.3), so an edit to
+   one day field may reshape the day part.
 6. *A schedule that never fires* is one fixed phrase (4.4) in the day
    part, and no time.
 
@@ -467,8 +496,9 @@ One preposition serves the whole list.
 - `5,20,45 * * * *` — «5, 20 i 45 minut po każdej pełnej godzinie»
 - `0,15,45 * * * *` — «o każdej pełnej godzinie oraz 15 i 45 minut później»
 - `0 8,12,18 * * *` — «codziennie o 8:00, 12:00 i 18:00»
-- `0 0 1,10,20 * *` — «pierwszego, dziesiątego i dwudziestego dnia każdego
-  miesiąca o 0:00»
+- `0 0 1,10,20 * *` — «w dniach 1, 10 i 20 każdego miesiąca o 0:00» (three
+  days or more are digits, 3.2)
+- `0 0 1,15 * *` — «pierwszego i piętnastego dnia każdego miesiąca o 0:00»
 - `0 0 * * 1,3,5` — «w poniedziałki, środy i piątki o 0:00»
 - `0 0 * 1,7 *` — «w styczniu i lipcu codziennie o 0:00»
 
@@ -581,7 +611,7 @@ minut po niej»: true only while every hour of every day fires.)
 month after «w dniach» are joined like any list of digits, with «i».
 
 - `0-29,45 * * * *` — «co minutę od każdej pełnej godziny do 29 minut po
-  niej, a potem jeszcze raz 45 minut po niej»
+  niej, a potem jednorazowo 45 minut po niej»
 - `0 9-17,22 * * *` — «codziennie co godzinę od 9:00 do 17:00 oraz
   o 22:00»
 - `0 0 1-7,15 * *` — «w dniach 1–7 i 15 każdego miesiąca o 0:00»
@@ -599,12 +629,18 @@ it belongs to (schedule read 3.1).
 
 A lone distance that follows a run is not joined by «oraz»: after «do 29
 minut po niej», «oraz 45 minut po niej» is heard as a second end of the
-run (judge 40; schedule read 3, 14). It follows «, a potem jeszcze raz»
-(several: «, a potem jeszcze»), which can only be one more moment: «co
-minutę od każdej pełnej godziny do 29 minut po niej, a potem jeszcze raz
-45 minut po niej»; «5 minut po każdej pełnej godzinie, co minutę od 20 do
-40 minut po niej, a potem jeszcze 50 i 55 minut po niej». Among real
-clock times «oraz o 9:45» has its «o» and needs no help.
+run (judge 40; schedule read 3, 14). One such moment follows «, a potem
+jednorazowo»: «co minutę od każdej pełnej godziny do 29 minut po niej,
+a potem jednorazowo 45 minut po niej». Several follow «, a potem
+jeszcze»: «5 minut po każdej pełnej godzinie, co minutę od 20 do 40 minut
+po niej, a potem jeszcze 50 i 55 minut po niej». For one moment the
+second pass of 2026-11-19 wrote «a potem jeszcze raz 45 minut po niej»;
+«jeszcze raz» is also "the same again", and the second judge took it for
+a new every-minute run from :45 (21, 37), while «jeszcze 50 i 55» raised
+no doubt (68). «jeszcze» alone before one number («jeszcze 45 minut») is
+"another 45 minutes"; «jednorazowo» is the judge's own word, and says
+once. Among real clock times «oraz o 9:45» has its «o» and needs no
+help.
 
 **3.7 An even rhythm.** «co» and the accusative; the unit alone when the
 step is one, never «co 1 …».
@@ -651,8 +687,9 @@ the month's end, so a rhythm of days is never said bare.
   two long ordinals of which the second is false in five months (schedule
   read 2, 1.3, 3.11). The start alone says where the rhythm begins again,
   which is what makes it true (habit 2), and the end is the month's.
-- More than seven, stopping earlier, or any rhythm less a day: «w
-  dniach» and the list.
+- More than seven, stopping earlier: «w dniach» and the list.
+- One that runs to the month's end, less a day: the rhythm and «oprócz
+  szesnastego dnia» (3.9).
 
 *Months* are never a rhythm. Six month names are read at a glance and
 need no counting.
@@ -698,15 +735,15 @@ otherwise (notes §7).
 - `0,15,45 * * * *` — a list (three values; 3.3)
 - `0 0,2,4,6,10,12,14,16,18,20,22 * * *` — «co 2 godziny oprócz 8:00»
 - `0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *` — «w nieparzyste dni
-  każdego miesiąca inne niż piętnasty, o 0:00»
+  każdego miesiąca oprócz piętnastego dnia, o 0:00»
 - `0 0 * * 1-6` — «codziennie oprócz niedziel, o 0:00»
 - `0 9 * * 0,1,3,4,5` — «codziennie oprócz wtorków i sobót, o 9:00»
 - `0 0 1-14,16-31 * *` — «codziennie oprócz piętnastego dnia każdego
   miesiąca, o 0:00»
 - `0 9 * 7-5 *` — «poza czerwcem codziennie o 9:00»
 - `0 9 * 1-11 *` — «poza grudniem codziennie o 9:00»
-- `0-28,30-59 * * * *` — «co minutę od każdej pełnej godziny do 28 minut
-  po niej oraz od 30 do 59 minut po niej» (nothing is subtracted)
+- `0-28,30-59 * * * *` — «co minutę oprócz chwili wypadającej 29 minut po
+  każdej pełnej godzinie»
 - `0 0-2,4-23 * * *` — «co godzinę oprócz 3:00»
 
 Two missing: still an exception («codziennie oprócz piętnastego
@@ -729,15 +766,21 @@ and every other run of five stay a range.
 «codziennie oprócz piętnastego dnia każdego miesiąca», wherever the hole
 is (so `1-30` too; the third schedule read, 21, found «w dniach 1–30»
 shorter, and it is, but the choice may not turn on which day is out). One
-or two missing from the odd or even days: «w nieparzyste dni każdego
-miesiąca inne niż piętnasty». Until the second pass of 2026-11-19 this
-was «…każdego miesiąca oprócz piętnastego», where «oprócz piętnastego»
-attaches first to «miesiąca» (third fluency read 17: "for a moment,
-except the fifteenth month"; schedule read 3, 4) and, at the end of a
-union, reaches back over the weekdays (judge 18). «inne» is plural and
-can only agree with «dni», so it stays where it is put. A rhythm of days
-less a day has no plural noun to hang «inne» on and is listed after «w
-dniach».
+or two missing from the odd or even days, or from a rhythm that runs to
+the month's end: the base and «oprócz … dnia», after the month tail: «w
+nieparzyste dni każdego miesiąca oprócz piętnastego dnia», «co 3 dni od
+pierwszego dnia każdego miesiąca oprócz szesnastego dnia». This has been
+worded three ways. «…każdego miesiąca oprócz piętnastego» let the ordinal
+attach to «miesiąca» (third fluency read 17: "for a moment, except the
+fifteenth month"; schedule read 3, 4). «…inne niż piętnasty» cured that
+by agreement, was read one way alone (judge 2, 14, graded "an official
+lump"), and at the end of a union was heard over the weekdays too (judge
+2, 3 and 45: whether a Monday the 15th fires). The plain cure for the
+first trouble is the noun: «oprócz piętnastego dnia» cannot be a month.
+The union's trouble is one of order and is cured there (4.3). A rhythm
+of days less a day was listed in the second pass, ten dates in which the
+judge saw «co trzy dni» and did not see the 16th was missing (judge 2,
+34); the rhythm with its exception shows the hole.
 
 *Months.* Ten or eleven months are «poza» and the one or two left out,
 whichever they are: «poza czerwcem codziennie o 9:00», «poza listopadem
@@ -750,8 +793,14 @@ o 9:00, oprócz czerwca»: a second order of parts. «poza» is the notes'
 own word for what lies outside («poza sezonem», «poza niedzielami
 i świętami», §7); it needs no whole named before it, so nothing is said
 twice, and it stands in front where a month frame stands. Under it a day
-of the month keeps «każdego miesiąca» («poza czerwcem pierwszego dnia
-każdego miesiąca o 0:00»). Rejected again: «od stycznia do listopada»
+of the month has the tail «miesiąca», as under any frame that says which
+months («poza czerwcem pierwszego dnia miesiąca o 0:00»; «poza grudniem:
+w piątki, a także pierwszego dnia miesiąca, o 0:00»). The second pass
+wrote «każdego miesiąca» there, and «każdego» was heard against the
+frame: 1 December too? (judge 2, 18 and 71). The second judge would
+rather have the exception at the end («…, z wyjątkiem grudnia», 9, 29)
+and called the front form natural each time; the frame stays in front,
+where every other month frame stands. Rejected again: «od stycznia do listopada»
 for the one case where the missing month is the last (the judge's, 20):
 the same count and arrangement worded by which month is out.
 
@@ -769,19 +818,58 @@ parzystej godzinie oprócz godziny 8». The first pass wrote «oprócz 8:00»
 after the distances; nothing fires at 8:00 there, and the judge (72)
 could not tell what dropped out.
 
-*Minutes and seconds.* Among real clock times in one hour, a clock time:
-«codziennie co minutę od 9:00 do 9:59 oprócz 9:29». In the open hour,
-nothing is subtracted (habit 5): the runs that are left are said, «co
-minutę od 1 do 29 minut po każdej pełnej godzinie oraz od 31 do 59 minut
-po niej»; «co 7 minut od każdej pełnej godziny do 21 minut po niej oraz
-od 35 do 56 minut po niej»; seconds «co sekundę od początku każdej minuty
-do 28 sekund po nim oraz od 30 do 59 sekund po nim». This costs two more
-things to hold than «, ale nie 29 minut po każdej pełnej godzinie» did;
-that form had two readings, and no Polish phrase names "the moment 29
-minutes past" as a thing that cannot also be a stretch. Rejected: «oprócz
-29. minuty każdej godziny» (the judge's: an ordinal stop, and the «29.
-minuta» of a match ends at 29:00); «oprócz minuty 29» (a calque the notes
-list, §10).
+*Minutes and seconds.* Among real clock times, while at most four are
+missing, a clock time: «codziennie co minutę od 9:00 do 9:59 oprócz
+9:29»; «codziennie co minutę od 9:00 do 9:59 oraz od 17:00 do 17:59
+oprócz 9:29 i 17:29». In the open hour, or over more hours than that, the
+missing thing is **the moment that falls there**, «chwila wypadająca»:
+
+- `0-28,30-59 * * * *` — «co minutę oprócz chwili wypadającej 29 minut po
+  każdej pełnej godzinie»
+- `1-29,31-59 * * * *` — «co minutę oprócz chwil wypadających o pełnej
+  godzinie i 30 minut po niej»
+- `0,5,10,15,20,25,35,40,45,50,55 * * * *` — «co 5 minut oprócz chwili
+  wypadającej 30 minut po każdej pełnej godzinie»
+- `0-28,30-59 9-17 * * *` — «codziennie co minutę od 9:00 do 17:59 oprócz
+  chwili wypadającej 29 minut po każdej pełnej godzinie»
+- `0,7,14,21,35,42,49,56 * * * *` — «co 7 minut od każdej pełnej godziny
+  do 56 minut po niej oprócz chwili wypadającej 28 minut po niej»
+- `0-28,30-59 * * * * *` — «co sekundę oprócz chwili wypadającej 29 sekund
+  po każdej pełnej minucie»
+
+This is the fourth wording of one missing minute, and three readers
+between them refused the first three. «oprócz 30 minut po każdej pełnej
+godzinie» says a duration (schedule read 1.1). «ale nie 29 minut po
+każdej pełnej godzinie» was a minute or a half-hour gap (judge 32, 69).
+The second pass then subtracted nothing and said the two stretches left,
+«co minutę od każdej pełnej godziny do 28 minut po niej oraz od 30 do 59
+minut po niej»: one reading, reached by arithmetic, "nobody describes one
+missing minute as two intervals", the largest source of weight in the
+second judge's sample (6, 8, 17, 28, 39, 48, 59, 70). The trouble with
+the first two was never the exception; it was that «29 minut po pełnej
+godzinie» after «oprócz» or «nie» can be a length of time. «wypadać»
+takes a point (notes §2.3: «wypada w piątek», «wypada piętnastego»), so
+«chwila wypadająca 29 minut po pełnej godzinie» can only be a moment, the
+same turn that makes «w dniu wypadającym 3 dni przed ostatnim dniem» one
+day (5.3). It is counted one way: twenty-nine minutes after the hour.
+Rejected: «oprócz 29. minuty każdej godziny» (both judges' own; an
+ordinal, and ordinals of minutes are counted two ways: the 29th minute
+of a match is the one that ends at 29:00, as «czwartego dnia od końca»
+was the 28th or the 27th); «oprócz minuty 29» (the calque of §10; the
+same doubt). Not attested: no search was made for «chwili wypadającej»;
+my call, 2026-11-19, and the first thing I would have a blind reader
+check.
+
+When: an exception while one or two values are missing from every value
+or from a rhythm that keeps seven or more; the stretches or the list when
+more are (How a form is chosen).
+
+*An hour missing under a list of minutes* is an hour, as under parity:
+`5,20,45 0-2,4-23 * * *` — «5, 20 i 45 minut po każdej pełnej godzinie
+oprócz godziny 3» (the second pass: two windows before a colon; the
+judge, 61, pointed at the sister form). Under a rhythm that fills the
+hour the windows stay («co 10 minut od 0:00 do 2:50 oraz od 4:00 do
+23:50»): they are real times and nobody has stumbled on them.
 
 *Never an end the base names.* `1-29,31-59 9 * * *` is not «od 9:00 do
 9:59 oprócz 9:00 i 9:30»: the window would name 9:00 and take it back.
@@ -968,19 +1056,21 @@ With **every hour** the minutes are said in the hour left open:
 - a rhythm with a seam: «co 7 minut od każdej pełnej godziny do 56 minut
   po niej»
 - pieces: «co minutę od każdej pełnej godziny do 29 minut po niej, a
-  potem jeszcze raz 45 minut po niej» (3.6)
-- all but one or two, or a rhythm less one or two: the runs that are
-  left (3.9): «co minutę od każdej pełnej godziny do 28 minut po niej
-  oraz od 30 do 59 minut po niej»; «co 5 minut od każdej pełnej godziny
-  do 25 minut po niej oraz od 35 do 55 minut po niej»
+  potem jednorazowo 45 minut po niej» (3.6)
+- all but one or two, or a rhythm less one or two: the moment that falls
+  there (3.9): «co minutę oprócz chwili wypadającej 29 minut po każdej
+  pełnej godzinie»; «co 5 minut oprócz chwili wypadającej 30 minut po
+  każdej pełnej godzinie»
 
 With **several hours**:
 
 | Minutes | Hours | Said |
 | --- | --- | --- |
 | a list | a list (no run of 3+) | up to six clock times; beyond: «5, 20 i 45 minut po każdej z godzin 8:00, 12:00 i 18:00»; with minute 0: «o każdej z godzin 8:00, 12:00 i 18:00 oraz 15 i 45 minut później» |
-| a run, a rhythm with a seam, pieces, runs left by a hole | a list | real times for each hour, the hours joined by «oraz»: «co minutę od 8:00 do 8:29, od 12:00 do 12:29 oraz od 18:00 do 18:29»; «co 7 minut od 9:00 do 9:56 oraz od 17:00 do 17:56»; pieces inside an hour joined by «i»: «co minutę od 9:00 do 9:29 i o 9:45 oraz co minutę od 17:00 do 17:29 i o 17:45» |
-| any of these | runs, pieces, all but one or two (linear) | "Inside each hour of a run of hours", below |
+| a run, a rhythm with a seam, pieces | a list | real times for each hour, the hours joined by «oraz»: «co minutę od 8:00 do 8:29, od 12:00 do 12:29 oraz od 18:00 do 18:29»; «co 7 minut od 9:00 do 9:56 oraz od 17:00 do 17:56»; pieces inside an hour joined by «i»: «co minutę od 9:00 do 9:29 i o 9:45 oraz co minutę od 17:00 do 17:29 i o 17:45» |
+| a list | all but one or two | the every-hour form and the missing hour: «5, 20 i 45 minut po każdej pełnej godzinie oprócz godziny 3» (3.9) |
+| every minute or a seamless rhythm, less one or two | any but a rhythm | the base by (b) with its windows, then the exception: up to four clock times («…od 9:00 do 9:59 oraz od 17:00 do 17:59 oprócz 9:29 i 17:29»), otherwise «oprócz chwili wypadającej 29 minut po każdej pełnej godzinie» |
+| any other of these | runs, pieces, all but one or two (linear) | "Inside each hour of a run of hours", below |
 | any of these | a rhythm of 5+ | "A rhythm of hours under several minutes", above |
 
 **Inside each hour of a run of hours.** First the window: «od» the first
@@ -988,22 +1078,22 @@ moment that fires «do» the last, one window for each run of hours, joined
 by «oraz». Then a colon. Then what happens in each hour, in exactly the
 words it has when every hour fires:
 
-- `5,20,45 9-17 * * 1-5` — «od poniedziałku do piątku od 9:05 do 17:45:
+- `5,20,45 9-17 * * 1-5` — «od poniedziałku do piątku, od 9:05 do 17:45:
   5, 20 i 45 minut po każdej pełnej godzinie»
-- `0-29 9-17 * * 1-5` — «od poniedziałku do piątku od 9:00 do 17:29: co
+- `0-29 9-17 * * 1-5` — «od poniedziałku do piątku, od 9:00 do 17:29: co
   minutę od każdej pełnej godziny do 29 minut po niej»
-- `*/7 9-17 * * 1-5` — «od poniedziałku do piątku od 9:00 do 17:56: co
+- `*/7 9-17 * * 1-5` — «od poniedziałku do piątku, od 9:00 do 17:56: co
   7 minut od każdej pełnej godziny do 56 minut po niej»
 - `10-40 9-17 * * *` — «codziennie od 9:10 do 17:40: co minutę od 10 do
   40 minut po każdej pełnej godzinie»
-- `0-29,45 9-17 * * 1-5` — «od poniedziałku do piątku od 9:00 do 17:45:
-  co minutę od każdej pełnej godziny do 29 minut po niej, a potem jeszcze
-  raz 45 minut po niej»
+- `0-29,45 9-17 * * 1-5` — «od poniedziałku do piątku, od 9:00 do 17:45:
+  co minutę od każdej pełnej godziny do 29 minut po niej, a potem
+  jednorazowo 45 minut po niej»
 - `5,20-40 9-17 * * *` — «codziennie od 9:05 do 17:40: 5 minut po każdej
   pełnej godzinie oraz co minutę od 20 do 40 minut po niej»
-- `0-28,30-59 9-17 * * *` — «codziennie od 9:00 do 17:59: co minutę od
-  każdej pełnej godziny do 28 minut po niej oraz od 30 do 59 minut po
-  niej»
+- `0-28,30-58 9-17 * * *` — «codziennie od 9:00 do 17:58: co minutę od
+  każdej pełnej godziny do 58 minut po niej oprócz chwili wypadającej 29
+  minut po niej»
 - `*/7 9-17,22 * * *` — «codziennie od 9:00 do 17:56 oraz od 22:00 do
   22:56: co 7 minut od każdej pełnej godziny do 56 minut po niej»
 - `5,20,45 22-2 * * *` — «codziennie od 22:05 do 2:45: 5, 20 i 45 minut
@@ -1032,10 +1122,24 @@ things (kind of day, hours, then frequency, §3). The judge's «w godzinach
 
 What keeps (3) from the first form's second reading is order and the
 colon: read once, «od 9:00 do 17:56:» is a frame, and «od każdej pełnej
-godziny» then starts something inside it again each hour. This is the
-choice I am least sure of here; it has had no blind read. A list of
+godziny» then starts something inside it again each hour. A list of
 minutes takes the same shape, which also keeps a weekday from running
 into a numeral («od poniedziałku do piątku, 5, 20 i 45 …», judge 61).
+
+**Tested by the second judge, and kept.** It read eleven sentences of
+this shape and found one reading in every one (1, 10, 19, 21, 30, 32, 41,
+52, 63, 70, 72), noting that the window "sounds for a moment like one
+continuous span, and only the second half breaks it up", and that its
+ends repeat what the second half says (9:10 and 17:40 beside «od 10 do
+40»). Its own forms were «od 9 do 17, w każdej godzinie …» and «w
+godzinach 9–17». Those are the forms whose end is in doubt: «w godz.
+8–16» on a door is a window that closes at 16:00 (notes §5.2), and the
+first judge read «do 17:00» as the end of everything six times. The
+instant of hearing a span is the price of ends that fire; the ends are
+said twice in a sense (as the window, and as the hour's own bounds)
+because the window is exactly what the hour's form cannot say by itself.
+From the judge's smaller points: a comma now parts a range of weekdays
+from the window («od poniedziałku do piątku, od 9:00 do 17:56: …»).
 
 The colon is also the frame's mark before a union (above). Both can
 occur in one sentence («w czerwcu: w piątki, a także 1 czerwca, od 9:05
@@ -1115,7 +1219,8 @@ każdym razem» and the seconds inside one minute:
 | few, without 0 | «5, 20 i 45 sekund po pełnej minucie» |
 | a run | «co sekundę od początku minuty do 9 sekund po nim»; «co sekundę od 10 do 20 sekund po pełnej minucie» |
 | a seamless rhythm off the beat | «co 10 sekund, zaczynając 5 sekund po pełnej minucie» |
-| all but one or two; pieces | as for minutes in the open hour: «co sekundę od początku minuty do 28 sekund po nim oraz od 30 do 59 sekund po nim» |
+| all but one or two | «co sekundę przez całą minutę oprócz chwili wypadającej 29 sekund po pełnej minucie» |
+| pieces | as for minutes |
 
 - `* */15 9-17 * * 1-5` — «od poniedziałku do piątku co 15 minut od 9:00
   do 17:45, za każdym razem co sekundę przez całą minutę»
@@ -1158,7 +1263,8 @@ sum of two kinds of day, «w niedziele i święta» (notes §8); for a weekday
 and a date, which a reader also knows as a coincidence («piątek
 trzynastego»), the two are pulled apart: each keeps its own grammatical
 form, and «, a także» joins them. The weekday comes first, the days of
-the month second, and the time follows a comma so that it belongs to
+the month second (the other way round when the days of the month carry
+an exception, below), and the time follows a comma so that it belongs to
 both. Every reader took every such row as "either".
 
 - `0 0 1 * 5` — «w piątki, a także pierwszego dnia każdego miesiąca,
@@ -1204,13 +1310,15 @@ Inside a union:
     niedzielę, o 0:00». Two days: «wypadają one».
   - if both sides are nearly every day, the weekday side leads and the
     days of the month are said positively.
-- **a day left out on the day-of-month side** is said with «inne niż»,
-  which can only belong to the days beside it (3.9), so the union is the
-  plain one: `*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5` —
-  «od poniedziałku do piątku, a także w nieparzyste dni każdego miesiąca
-  inne niż piętnasty, co 15 minut od 9:00 do 17:45»; `… * 1` — «w
-  poniedziałki, a także w nieparzyste dni każdego miesiąca inne niż
-  piętnasty, o 0:00».
+- **when the days of the month carry an exception, they lead** and the
+  weekdays follow «, a także», so that the exception is closed before the
+  union's joint and cannot be heard over the weekdays:
+  `*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5` — «w
+  nieparzyste dni każdego miesiąca oprócz piętnastego dnia, a także od
+  poniedziałku do piątku, co 15 minut od 9:00 do 17:45»; `… * 1` — «w
+  nieparzyste dni każdego miesiąca oprócz piętnastego dnia, a także w
+  poniedziałki, o 0:00». A Wednesday the 15th fires, and the sentence
+  says so in its second half with nothing after it to take it back.
 
   History. The condition after a range of weekdays was «chyba że wypada
   on od poniedziałku do piątku», then, in the first pass of 2026-11-19,
@@ -1225,8 +1333,12 @@ Inside a union:
   piętnastego», in which the judge (18) could still hear «oprócz
   piętnastego» over Monday to Friday, and beside one weekday «…oprócz
   piętnastego, chyba że wypada on w poniedziałek», whose last clause
-  repeats its first words (schedule read 3, 13). All three were devices
-  mending the reach of «oprócz»; «inne niż» does not reach. Earlier
+  repeats its first words (schedule read 3, 13). The second pass put
+  «inne niż piętnasty» after the weekdays; the second judge still asked
+  whether a weekday 15th fires (3, 45: "in 45 this touches most months").
+  Every one of these kept the exception at the end of the day part, where
+  a reader hears it over all that came before. An exception reaches
+  back, not forward; so the half that has one goes first. Earlier
   still: «codziennie oprócz niedziel, a także pierwszego dnia» lets
   «oprócz» swallow what follows; six weekdays as a run inside a union hid
   "every day but Wednesday" (second fluency read 66).
@@ -1445,6 +1557,14 @@ touch (the judge, 41, and the schedule read, 19, both stumbled on «co
 4 lata: co 5 minut»). A start is the first occurrence (the notes' «co
 5 minut od 8.02», §4.5).
 
+Both judges would write «w co czwartym roku od 2028» (judge 49; judge 2,
+31, 42, 73: «co 4 lata … codziennie» "stops the reader", one reading
+each time). Not taken: an ordinal step has two counts, and the notes say
+so of this very form («co drugi tydzień»: part of the readers waver, "on
+a screen «co 2 tygodnie» is safer", §4.1). It was also this pass's
+lesson twice over («czwartego dnia od końca», «29. minuty»). The stumble
+is a note; the form has one reading.
+
 «do 2035 r. włącznie» is said of a run that begins at the field's first
 year: that is a fact about how the set lies in its field (it has no
 lower end to name), not about which year it ends on. It takes a comma
@@ -1618,10 +1738,18 @@ whether the date can be its month's last day
   «trzydziestego pierwszego dnia każdego miesiąca o 0:00, a jeśli to
   sobota lub niedziela – w poprzedzający go piątek»; «co roku 30 czerwca
   o 0:00, a jeśli to sobota lub niedziela – w poprzedzający go piątek»
-- `'sometimes'` (`28W`, `30W` over every month): one wording true of both
-  sorts of month: «dwudziestego ósmego dnia każdego miesiąca o 0:00,
-  a jeśli to sobota lub niedziela – w najbliższy dzień roboczy (od
-  poniedziałku do piątku) tego samego miesiąca»
+- `'sometimes'` (`28W`, `30W` over every month): the Monday after exists
+  unless the day is its month's last, and then it is the Friday, two days
+  before: «dwudziestego ósmego dnia każdego miesiąca o 0:00, a jeśli to
+  sobota – dzień wcześniej, jeśli niedziela – dzień później, a gdy
+  niedziela jest ostatnim dniem miesiąca – dwa dni wcześniej»
+
+The second pass said the last case as «w najbliższy dzień roboczy (od
+poniedziałku do piątku) tego samego miesiąca». «najbliższy» is very
+often "the next to come" («w najbliższy poniedziałek»), which sends a
+Saturday to Monday (judge 2, 69). The two plain forms had no doubt in
+either judge's reading, so the third is built of the same words: days
+earlier and later, counted, with no «najbliższy» and no noun.
 
 **The time stands beside the date and the weekend clause closes the
 sentence** (the closing part, 2.6): «piętnastego dnia każdego miesiąca co
@@ -1645,9 +1773,8 @@ w najbliższy dzień powszedni (piątek lub poniedziałek)». «dzień
 wcześniej», «dzień później» say the same with no group noun and no
 bracket (schedule read 2, 1.1), and each is recognised without working
 out which Friday. The renderer compares no day with 28: the fact is
-given. `28W` is thirty syllables for one February case and nobody reads
-it once (schedule read 3, 18); I have nothing shorter that is true of
-both sorts of month.
+given. `28W` is long for one February case (schedule read 3, 18); it is
+now at least made of counted days.
 
 The nth and the last weekday (accusative after «w»; the ordinal and
 «ostatni» agree with the weekday's gender):
@@ -1674,7 +1801,7 @@ every other union keep their tails.
 
 **Other fixed phrases.** «codziennie»; «co roku»; «poza»; «za każdym
 razem»; «przez całą minutę»; «z początkiem minuty»; «zaczynając»; «a
-potem jeszcze raz»; «inne niż»; «ale tylko»; «chyba że wypada on …»,
+potem jednorazowo»; «chwili wypadającej»; «ale tylko»; «chyba że wypada on …»,
 «jeśli wypada on …»; «w dniu wypadającym … przed ostatnim dniem»; «nigdy
 (takiej daty nie ma w kalendarzu)». `@reboot` is «po starcie systemu».
 
@@ -1694,7 +1821,7 @@ potem jeszcze raz»; «inne niż»; «ale tylko»; «chyba że wypada on …»,
 - a calendar date: digits («15 czerwca», «w dniach 1–7 czerwca»);
 - a count or a distance: digits («co 15 minut», «5 minut po»);
 - the other ordinals written as words are those of the nth weekday
-  (pierwszy … piąty), «piętnasty» after «inne niż», and «przedostatni».
+  (pierwszy … piąty) and «przedostatni».
 
 The ordinals of the days, genitive: pierwszego, drugiego, trzeciego,
 czwartego, piątego, szóstego, siódmego, ósmego, dziewiątego, dziesiątego,
@@ -1728,9 +1855,9 @@ lat («co 4 lata», «co 5 lat»). Short: s, min, godz.
 
 **6.5** Function words: o (1), w / we (0–1), co (1), od (1), do (1), po
 (1), i (1), oraz (2), a także (3), oprócz (2), codziennie (4), co roku
-(3), każdego miesiąca (6), poza (2), inne niż (3), ale tylko (4), chyba
-że (3), jeśli (2), zaczynając (4), za każdym razem (5), a potem jeszcze
-raz (6).
+(3), każdego miesiąca (6), poza (2), ale tylko (4), chyba że (3), jeśli
+(2), zaczynając (4), za każdym razem (5), a potem jednorazowo (8), chwili
+wypadającej (6).
 
 ## 7. Agreement
 
@@ -1899,6 +2026,32 @@ person reading once:
 New on that date: both day fields that must match (4.3), which the core
 did not say before.
 
+**Third pass, the same day**, from a second blind judge (`pl-judge-2`:
+the 73 forms of the second pass).
+
+| Finding | Now | Where |
+| --- | --- | --- |
+| «…, a także w nieparzyste dni każdego miesiąca inne niż piętnasty»: does a weekday 15th fire (3, 45) | the days of the month lead and close their exception: «w nieparzyste dni każdego miesiąca oprócz piętnastego dnia, a także od poniedziałku do piątku» | 4.3, 3.9 |
+| «a potem jeszcze raz 45 minut po niej»: once more, or the same again (21, 37) | «a potem jednorazowo 45 minut po niej» | 3.6 |
+| «w najbliższy dzień roboczy … tego samego miesiąca»: nearest, or next to come (69) | «…dzień wcześniej, … dzień później, a gdy niedziela jest ostatnim dniem miesiąca – dwa dni wcześniej» | 5.3 |
+| «o 12:00 w nocy», «o 12:30 w nocy»: digits say noon (23, 54) | the hour after midnight keeps «0:00», «0:30»; the field kept, with the question left to the project | 1.2 |
+| «poza grudniem: … pierwszego dnia każdego miesiąca» (18, 71) | «pierwszego dnia miesiąca» | 3.9 |
+| one missing minute said as two stretches (6, 8, 17, 28, 39, 48, 59, 61, 70): one reading, by arithmetic | an exception that names a moment: «co minutę oprócz chwili wypadającej 29 minut po każdej pełnej godzinie»; a missing hour: «oprócz godziny 3» | habit 5, 3.9 |
+| ten dates in which the missing 16th is not seen (34) | «co 3 dni od pierwszego dnia każdego miesiąca oprócz szesnastego dnia» | 3.9 |
+| two «od–do» in a row (1, 21, 32, 52, 63) | a comma after a range of weekdays before a window | punctuation |
+
+Kept, each with its reason where it is used: the window before the colon
+(4.1); the time last after an exception or a union (2.4; judge 2 again:
+3, 14, 18, 65); «poza» in front (3.9); ordinals in words for one day or
+two (3.2; the judge's «30 i 31 dnia» is right for those numbers and fails
+at «1 dnia», a count); «oprócz godziny 8» and «w godzinach
+rozpoczynających się o» (called officialese, read one way; 4.1); «co
+4 lata od 2028 r.:» (4.4); «każdego miesiąca» with a day not every month
+has (the judge: "does not mislead"; bare «miesiąca» belongs to a named
+frame, 4.4); the fallback as a noun phrase, the same in every form (8.8;
+the judge's «Nie rozpoznano wyrażenia cron» is a sentence and would be
+right for the sentence form only).
+
 **Second pass, the same day**, from a blind judge briefed only in Polish
 (`pl-judge-1`: 82 sentences, every reading of each) and a third
 adversarial schedule read (`pl-schedule-1`: all 705 rows).
@@ -1995,9 +2148,11 @@ do not say, or say otherwise, is listed here with its reason.
     writer meant cannot be known; a reader takes the 31st as the 31st
     and knows which months have one (4.4).
 13. **The 12-hour style writes a clock time with its part of the day**
-    («12:30 w nocy», «5:30 po południu»; notes §2.1 describe only speech,
-    «wpół do pierwszej», and say a screen writes 24 hours). It is an
-    option for a caller who wants it, and not the default.
+    («9:00 rano», «5:30 po południu»; the notes, §2.1, give «o 7 rano»,
+    «o 2 w nocy» as a colloquial register and say that writing is
+    24-hour). It exists because every language's table has the field; it
+    is never the default, and whether Polish should have it at all is
+    left open in 1.2.
 14. **«w dniach 1–7 …»** for every run, piece and long list of days of
     the month (notes §10 list «w dniach» among the office forms to trim,
     beside a month name). With no month name the label is what makes the
@@ -2013,8 +2168,8 @@ do not say, or say otherwise, is listed here with its reason.
     «miesiąca» is kept for a day under named months, so the full tail has
     to be what "every month" sounds like; harmless either way.
 17. **«w nieparzyste dni każdego miesiąca», «w godzinach parzystych»,
-    «w godzinach rozpoczynających się o …», «inne niż piętnasty», «, ale
-    tylko»** are not in the notes, which mention parity only for weeks
+    «w godzinach rozpoczynających się o …», «chwili wypadającej …», «,
+    ale tylko»** are not in the notes, which mention parity only for weeks
     and years and give the coincidence of a weekday and a date in other
     words (§8). Each is argued where it is used; only «w godzinach
     parzystych» was attested on 2026-11-19, and that from a search

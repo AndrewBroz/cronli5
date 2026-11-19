@@ -61,13 +61,13 @@ const sets = [
         pattern: '0 9-17 * * *'
       },
       {
-        expected: 'codziennie o 12:00 w nocy',
-        parts: ['12:00 w nocy'],
+        expected: 'codziennie o 0:00',
+        parts: ['0:00'],
         pattern: '0 0 * * *'
       },
       {
-        expected: 'codziennie o 12:30 w nocy',
-        parts: ['12:30 w nocy'],
+        expected: 'codziennie o 0:30',
+        parts: ['0:30'],
         pattern: '30 0 * * *'
       },
       {
