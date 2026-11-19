@@ -1,0 +1,53 @@
+0 9 * * 0,2-4		setiap Selasa, Rabu, Kamis, dan Minggu pukul 09.00
+0 9 * * 1-3,5		setiap Senin, Selasa, Rabu, dan Jumat pukul 09.00
+0 9 * * 1,3-5		setiap Senin, Rabu, Kamis, dan Jumat pukul 09.00
+0 0 1 * 1,3-5		setiap tanggal 1, dan juga setiap Senin, Rabu, Kamis, dan Jumat, pukul 00.00
+0 0 1 * 0,2-4		setiap tanggal 1, dan juga setiap Selasa, Rabu, Kamis, dan Minggu, pukul 00.00
+0 0 1 * 1,2,4,5,6		setiap tanggal 1, dan juga setiap Senin, Selasa, Kamis, Jumat, dan Sabtu, pukul 00.00
+0 9 */3 1,7 1-5		setiap 3 hari mulai tanggal 1, jika jatuh pada hari Senin sampai Jumat, pukul 09.00, pada bulan Januari dan Juli
+0 0 */2 6 1		setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada bulan Juni
+0 0 */2 6,7 1		setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada bulan Juni dan Juli
+0 0 */3 6 *		setiap 3 hari mulai tanggal 1, pukul 00.00, pada bulan Juni
+0 0 */3 6 1		setiap 3 hari mulai tanggal 1, jika jatuh pada hari Senin, pukul 00.00, pada bulan Juni
+*/15 9-17 */2 6 1-5		setiap tanggal ganjil yang jatuh pada hari Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, pada bulan Juni
+0 0 0 */2 * 1 2030		setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada tahun 2030
+0 0 0 ? * 2#5 2030	{"cron":"quartz"}	Senin kelima setiap bulan, jika ada, pukul 00.00, pada tahun 2030
+0 0 0 30,31 4,5 ? 2030	{"cron":"quartz"}	setiap tanggal 30 pada bulan April dan Mei dan tanggal 31 pada bulan Mei, pukul 00.00, pada tahun 2030
+0,2,10-20 * * * *		setiap jam tepat serta pada menit ke-2 dan setiap menit dari menit ke-10 sampai ke-20
+0,10-20 * * * *		setiap jam tepat dan setiap menit dari menit ke-10 sampai ke-20
+0,2,10-20 9-17 * * *		setiap hari, setiap jam tepat serta pada menit ke-2 dan setiap menit dari menit ke-10 sampai ke-20, dari pukul 09.00 sampai 17.20
+* */6 * * *		setiap 6 jam, tiap kali setiap menit selama 1 jam
+* */3 * * *		setiap 3 jam, tiap kali setiap menit selama 1 jam
+0-29 */3 * * *		setiap 3 jam, tiap kali setiap menit selama 30 menit
+10-40 */4 * * *		setiap 4 jam, tiap kali setiap menit dari menit ke-10 sampai ke-40
+5,15,25,35,45,55 */4 * * *		setiap 4 jam, tiap kali setiap 10 menit dari menit ke-5 sampai ke-55
+*/5 */4 * * *		setiap 4 jam, tiap kali setiap 5 menit sampai menit ke-55
+0,10,20,30,50 */4 * * *		setiap 4 jam, tiap kali setiap 10 menit sampai menit ke-50, kecuali pada menit ke-40
+0-29,45 */4 * * *		setiap 4 jam, tiap kali setiap menit selama 30 menit dan pada menit ke-45
+0-28,30-59 */6 * * *		setiap 6 jam, tiap kali setiap menit selama 1 jam, kecuali pada menit ke-29
+* * */6 * * *		setiap 6 jam, tiap kali setiap detik selama 1 jam
+* 0 */6 * * *		setiap 6 jam mulai pukul 00.00, tiap kali setiap detik selama 1 menit
+30 * */6 * * *		setiap 6 jam, tiap kali setiap menit selama 1 jam, masing-masing pada detik ke-30
+30 5,10,20,30,50 1/4 * * *		setiap 4 jam mulai pukul 01.00, tiap kali pada menit ke-5, ke-10, ke-20, ke-30, dan ke-50, masing-masing pada detik ke-30
+30 0-29 5/2 * * *		setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit selama 30 menit, masing-masing pada detik ke-30, terakhir pukul 23.29.30
+* */15 5/2 * * *		setiap hari, setiap 2 jam mulai pukul 05.00, 05.15, 05.30, dan 05.45, tiap kali setiap detik selama 1 menit, terakhir pukul 23.45.59
+30 */5 */5 * * *		setiap hari, setiap 5 jam mulai pukul 00.00, tiap kali setiap 5 menit sampai menit ke-55, masing-masing pada detik ke-30, terakhir pukul 20.55.30
+15,45 */15 */5 * * *		setiap hari, setiap 5 jam mulai pukul 00.00, 00.15, 00.30, dan 00.45, tiap kali pada detik ke-15 dan ke-45, terakhir pukul 20.45.45
+0 0-5,7-23/2 * * *		setiap hari, setiap jam dari pukul 00.00 sampai 05.00 dan setiap 2 jam dari pukul 07.00 sampai 23.00
+30 0-5,7-23/2 * * 1		setiap Senin, setiap jam dari pukul 00.30 sampai 05.30 dan setiap 2 jam dari pukul 07.30 sampai 23.30
+15 30 0-5,7-23/2 * * *		setiap hari, setiap jam dari pukul 00.30.15 sampai 05.30.15 dan setiap 2 jam dari pukul 07.30.15 sampai 23.30.15
+0 1-23/2,2 * * *		setiap hari, setiap 2 jam dari pukul 01.00 sampai 23.00 dan pukul 02.00
+0 0 31W * 5		setiap tanggal 31, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Jumat, pukul 00.00
+0 0 15W * 1		setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Senin, pukul 00.00
+0 0 15W 6 5		setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Jumat, pukul 00.00, keduanya pada bulan Juni
+0 0 LW * 1		hari terakhir setiap bulan, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Senin, pukul 00.00
+0 0 1W * 5		setiap tanggal 1, digeser ke hari Senin sesudahnya jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Jumat, pukul 00.00
+0 0 15W * 1#2		setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu, dan juga Senin kedua setiap bulan, pukul 00.00
+*/15 9-17 15W * 1		setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Senin, setiap 15 menit dari pukul 09.00 sampai 17.45
+0 0 */3 * 5L		Jumat terakhir setiap bulan, jika jatuh pada tanggal 22, 25, 28, atau 31, pukul 00.00
+0 0 */10 * 0L		hari Minggu terakhir setiap bulan, jika jatuh pada tanggal 31, pukul 00.00
+0 0 */7 * 1#2		Senin kedua setiap bulan, jika jatuh pada tanggal 8, pukul 00.00
+0 0 */5 * 1#1		Senin pertama setiap bulan, jika jatuh pada tanggal 1 atau 6, pukul 00.00
+0 0 */3 6 5L		Jumat terakhir bulan Juni, jika jatuh pada tanggal 22, 25, atau 28, pukul 00.00
+0 0 */2 * 1#5		Senin kelima setiap bulan, jika jatuh pada tanggal ganjil, pukul 00.00
+0 0 1,5,9-31/2 * 5		setiap tanggal 1, tanggal 5, dan setiap tanggal ganjil dari tanggal 9 sampai 31, dan juga setiap Jumat, pukul 00.00

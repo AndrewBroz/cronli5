@@ -26,6 +26,13 @@ mind" and "How quality is judged" are the centre of the project.
 - `npm run conciseness -- --all` reports enumeration in every language,
   worst first. It is a list of places to look, never a number to reach.
 
+## 2026-11-19: five languages added
+
+Korean, Polish, Indonesian, Russian and Traditional Chinese are on
+`develop` at beta. What was done, what is thin and what is open is in
+`tooling/experiments/renderer-process/2026-11-19/STATE.md`; the lessons
+are in the `add-language` skill.
+
 ## What to build first: the reading pipeline
 
 Everything else waits on this. Today it was done by hand, one prompt at a

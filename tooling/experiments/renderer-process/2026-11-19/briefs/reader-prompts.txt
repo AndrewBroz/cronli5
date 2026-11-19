@@ -1,0 +1,68 @@
+  id: {
+    format: 'Jawab dengan satu baris untuk setiap pertanyaan, seperti ' +
+      'ini:\nA1: ya\nA2: tidak',
+    intro: 'Sebuah aplikasi menampilkan, untuk setiap tugas, kapan tugas ' +
+      'itu dijalankan. Untuk setiap tanggal dan waktu yang tertera di bawah ' +
+      'sebuah tugas, katakan apakah tugas itu dijalankan tepat pada saat ' +
+      'itu. Baca setiap keterangan satu kali, seperti di layar, dan jawab ' +
+      'menurut apa yang dikatakannya.',
+    locale: 'id-ID',
+    no: ['tidak'],
+    system: 'Anda membaca teks di layar dan menjawab pertanyaan tentang ' +
+      'teks itu. Jawab hanya dalam format yang diminta.',
+    task: (letter, text) => `Tugas ${letter}: “${text}”`,
+    yes: ['ya']
+  },
+  ko: {
+    format: '질문마다 한 줄씩, 다음과 같이 답하세요.\nA1: 예\nA2: 아니요',
+    intro: '어떤 앱은 작업마다 그 작업이 언제 실행되는지를 보여 줍니다. 각 작업 아래에 ' +
+      '적힌 날짜와 시각마다, 작업이 정확히 그 순간에 실행되는지 답하세요. 설명은 화면에서 ' +
+      '읽듯이 한 번만 읽고, 거기에 적힌 대로 답하세요.',
+    locale: 'ko-KR',
+    no: ['아니요', '아니오'],
+    system: '당신은 화면에 표시된 글을 읽고 그에 관한 질문에 답합니다. 요청한 형식으로만 ' +
+      '답하세요.',
+    task: (letter, text) => `작업 ${letter}: “${text}”`,
+    yes: ['예', '네']
+  },
+  pl: {
+    format: 'Odpowiedz jednym wierszem na każde pytanie, na przykład:\n' +
+      'A1: tak\nA2: nie',
+    intro: 'Aplikacja pokazuje przy każdym zadaniu, kiedy jest ono ' +
+      'uruchamiane. Dla każdej daty i godziny podanej pod zadaniem ' +
+      'powiedz, czy zadanie uruchamia się dokładnie w tej chwili. Każdy ' +
+      'opis przeczytaj raz, jak na ekranie, i odpowiadaj według tego, co ' +
+      'ci mówi.',
+    locale: 'pl-PL',
+    no: ['nie'],
+    system: 'Czytasz teksty na ekranie i odpowiadasz na pytania o nie. ' +
+      'Odpowiadaj tylko w podanym formacie.',
+    task: (letter, text) => `Zadanie ${letter}: „${text}”`,
+    yes: ['tak']
+  },
+  ru: {
+    format: 'Отвечай одной строкой на каждый вопрос, например:\n' +
+      'A1: да\nA2: нет',
+    intro: 'Приложение показывает для каждой задачи, когда она ' +
+      'запускается. Для каждой даты и времени под задачей скажи, ' +
+      'запускается ли задача именно в этот момент. Прочитай каждое ' +
+      'описание один раз, как на экране, и отвечай по тому, что оно тебе ' +
+      'говорит.',
+    locale: 'ru-UA',
+    no: ['нет'],
+    system: 'Ты читаешь тексты на экране и отвечаешь на вопросы о них. ' +
+      'Отвечай только в указанном формате.',
+    task: (letter, text) => `Задача ${letter}: «${text}»`,
+    yes: ['да']
+  },
+  'zh-hant': {
+    format: '每個問題回答一行，例如：\nA1：是\nA2：否',
+    intro: '某個 App 會為每項工作顯示它在什麼時候執行。對於每項工作下面列出的日期和時間，' +
+      '請說明該工作是否恰好在那個時刻執行。每則說明像在螢幕上那樣讀一遍，根據它告訴你' +
+      '的內容作答。',
+    locale: 'zh-TW',
+    no: ['否'],
+    system: '你閱讀螢幕上的文字並回答相關問題。只按要求的格式回答。',
+    task: (letter, text) => `工作${letter}：「${text}」`,
+    yes: ['是']
+  },
