@@ -16,8 +16,12 @@ speaker), starting from `usage.md` in this directory: notes in Polish, by
 a writer who knew nothing of cron, on how Polish already writes times that
 recur. Revised that day after two schedule reads and three blind fluency
 reads, and four times on 2026-11-19, from the findings left open and from
-three blind judges and a third schedule read. No human has reviewed any of
-this.
+three blind judges and a third schedule read. A renderer was then built
+from these answers and the rows by an agent that saw neither another
+renderer nor the held-out rows, and the same day an independent audit read
+the answers against that renderer and every sentence against its firing
+times, and amended both (the fifth pass, in the closing history). No human
+has reviewed any of this.
 
 **The readers cited.** All were model readers, each fresh and told nothing
 of the project.
@@ -27,6 +31,7 @@ of the project.
 | schedule read 1, 2, 3 | adversarial reads of every row against its pattern | 11-13, 11-13, 11-19 |
 | fluency read 1, 2, 3 | blind editors briefed in Polish, grading and rewriting | 11-13 |
 | judge 1, 2, 3 | blind judges briefed only in Polish, asked for every reading of each sentence (82, 73 and 33 sentences) | 11-19 |
+| audit readers | four readers of three models, briefed only in Polish, asked concrete questions (does it ring at 9:28?) about nine sentences of the fifth pass; they ran inside this project's session, so their isolation from it is not certain | 11-19 |
 
 A reader who found a second reading found a defect. A grade («sztywne»,
 «dziwne»), a rewrite, or a wish for more words decided nothing by itself:
@@ -35,9 +40,14 @@ item numbers.
 
 **The evidence, and how far it goes.** The notes rest partly on sources
 nobody could open: the PWN language-advice pages they cite returned HTTP
-403 and are known from search snippets. Verified directly: CLDR 48 for
-`pl` (the data inside Node.js): `17:05`, `8:05`, `17:05:09`; `pon., wt.,
-śr., czw., pt., sob., niedz.`; week from Monday. On 2026-11-19 the open
+403 (again on 2026-11-19, with the PWN rules page on the full stop) and
+are known from search snippets. Verified directly: CLDR 48 for `pl` (the
+data inside Node.js): `17:05`, `8:05`, `17:05:09`; `pon., wt., śr., czw.,
+pt., sob., niedz.`; week from Monday; `3 czerwca 2030` (no stop after the
+day of a date); the ranges `1–7 czerwca 2030` and `2030–2035`, with an
+unspaced en dash. Opened and read on 2026-11-19 (1.1 says what each
+settles): the Polish Wikipedia articles «Skrót» and «Pauza i półpauza»,
+and the education ministry's lesson «Językowy świat liczb» (zpe.gov.pl). On 2026-11-19 the open
 web was searched for the phrases newly chosen; the search tool did not
 honour exact-phrase queries, and returned one attestation in all («w
 godzinach parzystych», 4.1). Every other taste call of that date rests on
@@ -125,6 +135,11 @@ which values they hold.
   chwili …»). No comma before «oprócz» in the day part or the frame
   («codziennie oprócz niedziel», «w nieparzyste dni każdego miesiąca
   oprócz piętnastego dnia»), where it belongs to the word beside it.
+- *Inside pieces.* A piece that ends in a «zaczynając …» clause is closed
+  by a comma before «oraz» («co 3 minuty, zaczynając 1 minutę po każdej
+  pełnej godzinie, oraz co 3 minuty, zaczynając 2 minuty po niej»): the
+  clause was opened by a comma, and without the second one «oraz» joins
+  the next rhythm to the start and not to the first rhythm.
 - *Time, then closing.* A comma.
 
 Why these, briefly. The comma before the time: without it the time
@@ -147,6 +162,10 @@ step divides the unit (`domainOf(field)`: `start` is the minimum and
 `last + interval` is one past the maximum). A rhythm is **seamless** when
 its step divides the unit and it fills it from a start smaller than the
 step (`5/10`): every gap is equal, but it does not begin with the unit.
+Two values or more with that property are **unbroken**, however few they
+are (`15,45`, `5/15`): the gap across the edge of the unit is the same as
+every other, so between named ends they run on as one rhythm (3.8). All
+of these are conditions on the set, never on which values it holds.
 
 The core's candidates are named in `code`. Cyclic fields are read through
 the core's views: `candidatesAs(facts, field, {linear: true})` wherever a
@@ -185,11 +204,19 @@ applies.
     the values are listed («o 0:00, 4:00, 8:00, 16:00 i 20:00» needs no
     subtraction; schedule read 1, 3.5);
 11. more than twelve values that none of the above describes, when
-    `analyses.cadencePieces` is not `null`: its parts, each in the form
+    `analyses.cadencePieces` is not `null` **and at most one of its parts
+    would, alone, be a list** (kind 2 or 6): its parts, each in the form
     it would have alone, joined as pieces («co 3 minuty, zaczynając
     1 minutę po każdej pełnej godzinie, oraz co 3 minuty, zaczynając
-    2 minuty po niej»);
-12. otherwise a *list*. (Unbounded, and known to be. No row reaches it.)
+    2 minuty po niej»). Where two parts or more are lists, the split
+    shows no run and no rhythm; said part by part it is several short
+    lists out of order, which a reader cannot see to be one ascending
+    set («7, 12 i 17 minut po …, 9, 19 i 29 minut po niej, 13 i 23
+    minuty po niej …», found by the audit of 2026-11-19);
+12. otherwise a *list*, ascending: «7, 9, 12, 13, 17, 19, 23, 29, 31, 37,
+    41, 43, 47 i 53 minuty po każdej pełnej godzinie». It is as long as
+    the set is irregular, and known to be: nobody can hold fourteen
+    values, and no exact form of such a set is shorter.
 
 How each kind is said depends on the fields around it and is in 4.1 (the
 time) and 4.2 (seconds).
@@ -228,12 +255,18 @@ listopada do lutego»), cut into its linear pieces when a year is
 restricted; several runs with one of three or more are pieces; otherwise
 a list, however the months are spaced.
 
-**Year**: one; a run of three or more is a range (`open`: «od 2030 r.»;
-from the field's first year: «do 2035 r. włącznie»); every year but one
-or two: «poza rokiem 2030»; few: a list; every second year: parity;
-another rhythm: «co N lat» and the span it runs over; pieces;
-`cadencePieces`. A list of more than twelve years is never said. All in
-4.4.
+**Year**, the first that applies: one; a run of three or more is a range
+(`open`: «od 2030 r.»; from the field's first year: «do 2035 r.
+włącznie»); every year but one or two: «poza rokiem 2030»; pieces
+(several runs, one of three or more, with at most twelve single years
+beside them): «w latach 2030–2032 oraz 2035»; few: a list; every second
+year: parity; another rhythm of five or more: «co N lat» and the span it
+runs over; `cadencePieces`, when at most one of its parts is a list (a
+`values` part, or a rhythm of fewer than five years); otherwise the
+years in one ascending list. All in 4.4. (Pieces come before the short
+list: «w latach 2030–2032 oraz 2035» names three things where «2030,
+2031, 2032 i 2035» names four. Until the audit of 2026-11-19 this
+paragraph had the list first, against its own row.)
 
 **Weekday**, through `candidatesAs(facts, 'weekday', {first: 1})`: every;
 one; one day missing, or two missing when the five left are not one run:
@@ -246,12 +279,29 @@ them; otherwise a list. Lists and pieces are in Monday-to-Sunday order.
 
 **1.1** For spelling and punctuation: Rada Języka Polskiego and the PWN
 dictionaries, with Poradnia Językowa PWN and Adam Wolański's *Edycja
-tekstów* as their commentary. None of these was opened in this work; the
-notes quote them from search snippets. For what screens and schedules
-actually write: CLDR (verified here) and the timetable regulation Dz.U.
-2018 poz. 202 (verified by the notes' writer). Where the two kinds
-disagree, as on the colon in a clock time, the default follows the screen
-and a style field gives the dictionary form (1.2); that choice is mine.
+tekstów* as their commentary. None of these was opened in this work (PWN
+refuses automated readers; the address tried for the Council's 2026 rules
+did not exist); the notes quote them from search snippets. For what
+screens and schedules actually write: CLDR (verified here) and the
+timetable regulation Dz.U. 2018 poz. 202 (verified by the notes' writer).
+Where the two kinds disagree, as on the colon in a clock time, the
+default follows the screen and a style field gives the dictionary form
+(1.2); that choice is mine.
+
+What the rows rely on, and what each rests on after the audit of
+2026-11-19:
+
+| Convention | In the rows | Verified against |
+| --- | --- | --- |
+| An abbreviation that does not end in the word's last letter takes a full stop | «r.», «godz.», «pon., wt., śr., czw., pt., sob., niedz.» | Wikipedia «Skrót» (opened): "z kropką na końcu, jeśli skrót nie zawiera ostatniej litery skracanego wyrazu", with «godz.» as its example; the weekday forms themselves from CLDR 48 |
+| Symbols of units take none | «min», «s» | Wikipedia «Skrót» (opened): international unit symbols are written without a stop. It does not list «min» or «s» by name |
+| A range of numbers: en dash, no spaces | «w dniach 1–7», «w latach 2030–2035» | Wikipedia «Pauza i półpauza» (opened), quoting PWN rule 93.12: "rozdzielać półpauzą bez odstępów po bokach, np. 1900–2000"; CLDR 48 writes `1–7 czerwca 2030`, `2030–2035` |
+| No stop after the day of a date; month in the genitive | «1 czerwca», «1 czerwca 2030 r.» | CLDR 48 (`3 czerwca 2030`); zpe.gov.pl «Językowy świat liczb» (opened): the month of a date is read in the genitive |
+| A Roman numeral for the month, no stops round it | «1 VI 2030 r.» | zpe.gov.pl (opened): "nie stawiamy kropek przed i po tej cyfrze, np. 12 VI 2021 r." |
+| A stop after an ordinal in digits | not written anywhere (7.5): one or two days are words, more are digits after «w dniach» | zpe.gov.pl (opened) states the rule ("po liczebnikach porządkowych pojawia się kropka"). «w dniach 1–7» without stops is the office form of the timetable regulation («w dniach 25 i 26.XII», notes §2.3); that the stop may be dropped there rests on the notes and is **not verified** against a normative source |
+| Hours and minutes: a full stop, or a colon | «9:00» by default, «9.00» by style | zpe.gov.pl (opened): both, "stosowanie dwukropka jest rzadsze"; CLDR 48: `17:05` |
+| No comma before «i» or «oraz» in a list; a comma before «a także», «ale tylko» | everywhere | **not verified** against an opened source; it is the notes' statement (§6, §11.5) and common schoolbook Polish |
+| A spaced en dash as the dash of a clause | the weekend clause (5.3) | Wikipedia «Pauza i półpauza» (opened) describes the dash between words as spaced, and says the en dash's standing in place of the em dash "nie został … ostatecznie uregulowany" |
 
 **1.2** The style table has three fields.
 
@@ -404,15 +454,21 @@ window, «każdej z godzin 0:00, …», «rozpoczynających się o …»). A tim
 made only of rhythms, distances and parity, with or without an exception,
 takes none.
 
-A calendar date with no year restricted takes «co roku» instead (4.4).
+Because the test is on the finished time, **any of the three time
+fields can add or remove the word**: the hour («co godzinę» against
+«codziennie o 9:00»), the minute («co 2 godziny» against «codziennie co
+2 godziny od 0:30 do 22:30») and the second («co 2 godziny» against
+«codziennie co 2 godziny od 0:00:15 do 22:00:15»). That is right for a
+reader laying two schedules side by side: a rhythm said bare runs through
+midnight and has no first moment, and one that names its first and last
+moment of the day would, without «codziennie», read as one stretch of
+today. The alternative, keeping the word tied to the hours alone, would
+mean either «codziennie co 2 godziny» (a second way to say the bare
+rhythm, which judge 1 could find no meaning in) or «co 2 godziny od 0:30
+do 22:30» with no day at all. The word is the whole of the leak: nothing
+else of the day part moves (2.6).
 
-History: the first pass of 2026-11-19 kept the word before an exception
-and before parity («codziennie co godzinę, oprócz 3:00» beside «co
-godzinę»); judge 1 (problem 9) saw the same content with and without it
-and could find no meaning in the difference. Earlier, a range of days of
-the month was followed by «codziennie» to block "one span that ends on
-the 7th at 9:00"; the range is now «w dniach 1–7», whose plural says each
-day (3.4).
+A calendar date with no year restricted takes «co roku» instead (4.4).
 
 **2.6 What the parts are, for continuity.** A description is four parts:
 the **frame** (years and months standing in front), the **day** (weekdays,
@@ -421,7 +477,13 @@ date), the **time**, and for one family a **closing** clause. A time
 field changes only the time. A date, month, weekday or year field changes
 the frame, the day and the closing. The declared exceptions:
 
-1. *The daily word.* An hour edit may add or remove «codziennie» (2.5).
+1. *The daily word.* An edit to the second, the minute or the hour may
+   add or remove «codziennie», and nothing else of the day part: the word
+   is said exactly when the time names a clock time outside an «oprócz»
+   phrase (2.5), and each of the three fields can make it name one or
+   stop naming one. (Until the audit of 2026-11-19 only the hour was
+   declared, here and in `test/lang/pl/continuity.js`, while the rows
+   already made the minute and the second do it; the suite failed.)
 2. *Hours that wrap.* Hours running past midnight are one run only when no
    date, weekday, month or year is restricted (3.5), so an edit to one of
    those may change the time of a schedule whose hours wrap.
@@ -622,7 +684,17 @@ jeszcze»:
 
 A distance or a list that comes *before* a run is the first piece and the
 run follows «oraz co minutę …»: «5 minut po każdej pełnej godzinie oraz
-co minutę od 20 do 40 minut po niej». Among real clock times «oraz
+co minutę od 20 do 40 minut po niej». When that first piece is the full
+hour with distances after it, the full hour, the distances and the
+pieces that follow are items of one series, parted by commas, and «oraz»
+stands once, before the last: `0,5,20-40 * * * *` — «o każdej pełnej
+godzinie, 5 minut później oraz co minutę od 20 do 40 minut po niej»;
+`0,5,10,20-40 * * * *` — «o każdej pełnej godzinie, 5 i 10 minut później
+oraz co minutę od 20 do 40 minut po niej». (As first built this was «o
+każdej pełnej godzinie oraz 5 minut później oraz co minutę …», two «oraz»
+at two levels with nothing to tell them apart. Four audit readers placed
+9:00, 9:05 and 9:20 to 9:40 from the new form; one noted that «po niej»
+could for a moment be the 9:05.) Among real clock times «oraz
 o 9:45» has its «o» and needs no help. The word for one has been «jeszcze
 raz» ("the same again": a new run from :45, judge 2: 21, 37) and
 «jednorazowo» (officialese, "once ever", judge 3: 8, 12, 32); «raz» is
@@ -693,8 +765,48 @@ start was shown by a bracket of positions with an ellipsis, «(5, 15, 25 …
 55 minut po każdej pełnej godzinie)»; the project shows no such
 brackets, and the spaced ellipsis is not a Polish mark. Rejected: «co 10
 minut od 5 minut po …» («od 5 minut» is heard as "for five minutes now").
-Inside a window of hours a seamless rhythm is said with real times:
-`5/15 9-17 * * *` — «codziennie co 15 minut od 9:05 do 17:50».
+**Between named hours an unbroken set is one rhythm from its first
+firing to its last, before any list of minutes is considered, however few
+its values** (the orchestrator's ruling of 2026-11-19, on the held-out
+row the first build failed):
+
+- `5/15 9-17 * * 1-5` — «od poniedziałku do piątku co 15 minut od 9:05
+  do 17:50»
+- `15,45 9-17 * * *` — «codziennie co 30 minut od 9:15 do 17:45»
+- `10/20 9-17 * * 1-5` — «od poniedziałku do piątku co 20 minut od 9:10
+  do 17:50»
+- `5/15 9-17,22 * * *` — «codziennie co 15 minut od 9:05 do 17:50 oraz od
+  22:05 do 22:50»
+- `5/15 0-2,4-23 * * *` — «codziennie co 15 minut od 0:05 do 2:50 oraz od
+  4:05 do 23:50»
+
+Minutes 5, 20, 35 and 50 are one rhythm across the hours: 10:05 is
+fifteen minutes after 9:50. One step and two ends that fire are three
+things to hold and nothing to work out; «od 9:05 do 17:50: 5, 20, 35 i 50
+minut po każdej pełnej godzinie» is six, and says the ends twice. The
+condition is on the set (the step divides sixty and the first value is
+smaller than the step), and on the hours: **at least two of the hours
+named follow one another**, so that the rhythm does cross a full hour.
+Where it does not, few values are still their list:
+
+- every hour: `5/15 * * * *` — «5, 20, 35 i 50 minut po każdej pełnej
+  godzinie» (four distances, nothing to add up; «co 15 minut, zaczynając
+  5 minut po każdej pełnej godzinie» makes the reader add);
+- hours that stand apart: `5/15 9,17 * * *` — «codziennie 5, 20, 35 i 50
+  minut po każdej z godzin 9:00 i 17:00»; `15,45 */6 * * *` — «codziennie
+  15 i 45 minut po każdej z godzin 0:00, 6:00, 12:00 i 18:00» (a window
+  for each hour would name eight clock times for two distances);
+- a rhythm of hours: `15,45 */2 * * *` — «15 i 45 minut po każdej
+  parzystej godzinie»;
+- and wherever the times are few enough to list (step 1 of 4.1): `15,45
+  9,17 * * *` — «codziennie o 9:15, 9:45, 17:15 i 17:45».
+
+The answers said this of `5/15 9-17` from the start, and said the
+opposite twice more: the kinds put a list of few values before any
+rhythm, and class (b) of 4.1 took its seamless rhythm from the kinds, so
+only five values or more reached it. The builder followed the kinds.
+Three audit readers gave 9:05, 9:20, 9:35 … 17:20, 17:35, 17:50 for the
+first row, no ring at 10:00 and one at 10:05.
 
 Hours off the beat (`1/2`, `30 */2`) keep both ends as real times. A
 start alone («co 2 godziny od 1:00») reads as a timestamp.
@@ -822,6 +934,17 @@ what the three judges wrote and read:
 Nothing as exact is lighter, so the form stays; it is stiff, and the
 schedule is rare.
 
+The blind read asked for above was made by the audit of 2026-11-19, as
+far as it could be: three readers of three models were given «co minutę,
+oprócz 29. minuty każdej godziny» and asked when between 9:25 and 9:35
+the alarm does not ring. All three answered 9:29 first. One of them
+added, unprompted, that «29. minuta» "can also be read as the minute
+9:28–9:29, counting from one", and listed the sentence among those with
+two readings. A fourth reader, given the present form alone, answered
+9:29 and reported one reading. So the ordinal is not shown to be counted
+one way: the second count was reported by a reader who was not asked
+about it. The present form stays.
+
 How it is said, exactly. One minute: «…, oprócz chwili wypadającej 29
 minut po każdej pełnej godzinie». Two: one plural and both distances,
 «…, oprócz chwil wypadających 29 i 59 minut po każdej pełnej godzinie».
@@ -901,13 +1024,16 @@ run of three or more) is listed up to six.
 
 Under more than one minute, a rhythm of hours with four values or fewer
 is treated as the list of its hours (`*/15 */6 * * *`, `15,45 */6 * *
-*`).
+*`). Hours «follow one another» when they are neighbours on the clock,
+23 and 0 among them where the run may stay whole (3.5).
 
 **Step 2.** Otherwise the minutes are one of four classes:
 
 - **(a) one minute**;
 - **(b) minutes that fill the hour evenly**: every minute, a tiling
-  rhythm, or a seamless rhythm off the beat;
+  rhythm, a seamless rhythm off the beat (five values or more), or an
+  unbroken set of fewer values when at least two of the hours named
+  follow one another (3.8);
 - **(c) (b) less one or two** (kind 5, or kind 10 on a tiling base);
 - **(d) anything else**: a list, a run, a rhythm with a seam, pieces, a
   run or a seam rhythm less an inner value, `cadencePieces`. In the open
@@ -1104,6 +1230,25 @@ The schedule is rare, and every shorter form tried has a second reading:
 «w co trzeciej godzinie» (which?), «co 3 godziny przez godzinę» (does the
 hour's last moment fire?), bare numbers.
 
+*Open, from the audit of 2026-11-19.* Three audit readers were given
+«codziennie co 15 minut w godzinach rozpoczynających się o 6:00, 8:00,
+12:00, 18:00 i 20:00» (hours that are not a rhythm; the audit was
+weighing this form for many separate hours). All three answered every
+question as one-hour blocks (first 6:00, last 20:45, none at 7:00 or
+9:00). Two of them also reported a second reading: stretches that each
+begin at a time named and run until the next. With unevenly spaced hours
+that reading has something to hold on to; with a rhythm of hours («o
+0:00, 3:00, 6:00 …») it would mean every hour, which the sentence plainly
+does not say, and the earlier judges did not report it. The form was
+therefore **not** extended to hours that are not a rhythm, and for a
+rhythm of hours it stays, with this doubt recorded against it.
+
+*Many separate hours* are therefore a window each, however many: `*/15
+1,3,6,8,11,13,16,18,20,22 * * *` is ten windows and twenty clock times.
+Nobody can hold that. The audit found no shorter form with one reading
+(the named-hours form above is the candidate, and has the doubt above),
+and left it.
+
 ### 4.2 Seconds
 
 The time is first found for second 0 (4.1). Then, by the kind of the
@@ -1149,10 +1294,20 @@ the open minute:
 - «co sekundę, oprócz chwili wypadającej 29 sekund po każdej pełnej
   minucie»
 
-*At most three clock times* (one minute in at most three hours, or up to
-three minutes in one hour, by step 1 of 4.1): real times with seconds, by
-the rules for minutes in one hour, one level down; at most four are
-listed, and several minutes are windows joined by «oraz»:
+*Up to four moments in all* (the clock times of step 1 of 4.1, times
+the seconds): every one is listed, the seconds of each clock time in
+turn: `0,30 0 9 * * *` — «codziennie o 9:00:00 i 9:00:30»; `5,20 0 9,17 *
+* *` — «codziennie o 9:00:05, 9:00:20, 17:00:05 i 17:00:20»; `0,30 23
+0,12 * * *` — «codziennie o 0:23:00, 0:23:30, 12:23:00 i 12:23:30». Four
+clock times are read at a glance (habit 4). As first built only the
+seconds of a single clock time were listed, and two times with two
+seconds were «o 9:00 i 17:00, za każdym razem 5 i 20 sekund po pełnej
+minucie»: the same four moments, with a multiplication.
+
+*More than four moments in at most three clock times* (one minute in at
+most three hours, or up to three minutes in one hour): real times with
+seconds, by the rules for minutes in one hour, one level down; several
+minutes are windows joined by «oraz»:
 
 - `* 0 9 * * *` — «codziennie co sekundę od 9:00:00 do 9:00:59»
 - `*/6 0 9 * * *` — «codziennie co 6 sekund od 9:00:00 do 9:00:54»
@@ -1162,9 +1317,9 @@ listed, and several minutes are windows joined by «oraz»:
   oprócz 9:00:29»
 - `* 0 9,17 * * *` — «codziennie co sekundę od 9:00:00 do 9:00:59 oraz od
   17:00:00 do 17:00:59»
-- `0,20,45 0 9,17 * * *` — six times, not listed (more than four): the
-  last rule below, «codziennie o 9:00 i 17:00, za każdym razem z
-  początkiem minuty oraz 20 i 45 sekund później»
+- `0,20,45 0 9,17 * * *` — six moments, not listed (more than four) and
+  not a stretch: the last rule below, «codziennie o 9:00 i 17:00, za
+  każdym razem z początkiem minuty oraz 20 i 45 sekund później»
 
 *Seconds that fill the minute evenly (every second or a tiling rhythm),
 or that less one or two, where the time for second 0 says «co minutę»*
@@ -1185,6 +1340,20 @@ exception follows as in the open minute:
 (For one pass the last was «co minutę od 9:00 do 9:59, za każdym razem co
 sekundę przez całą minutę oprócz …»: "it means simply every second, and
 the reader looks for something more", judge 3, 25.)
+
+*Unbroken seconds* (3.8, one level down: `15,45`, `5/10`) do the same
+where the time for second 0 says «co minutę» between clock times, with no
+colon window and nothing missing: the first end shows the first second
+that fires and the last end the last. `15,45 * 9 * * *` — «codziennie co
+30 sekund od 9:00:15 do 9:59:45»; `5/10 * 9-17 * * *` — «codziennie co 10
+sekund od 9:00:05 do 17:59:55»; `5/10 0-29 9 * * *` — «codziennie co 10
+sekund od 9:00:05 do 9:29:55». As first built these were «co minutę od
+9:00 do 9:59, za każdym razem co 10 sekund, zaczynając 5 sekund po pełnej
+minucie»: two rhythms and a start for what is one rhythm between two
+moments. After a colon window the start of each hour is the full hour,
+which unbroken seconds do not fire on, so there they stay «, za każdym
+razem …». An audit reader gave 9:00:15, 9:00:45, 9:01:15 … 9:59:15,
+9:59:45 for the first.
 
 *Every second or a tiling rhythm of seconds, in every minute but one or
 two*: the seconds are the rhythm and the missing minute is named as a
@@ -1309,6 +1478,13 @@ fire?
   «chyba że wypada on w poniedziałek» (repeats the sentence's first
   words; schedule read 3, 13).
 
+Three audit readers (2026-11-19) were asked of «od poniedziałku do
+piątku, a także w nieparzyste dni od 1 do 13 oraz od 17 do 31 każdego
+miesiąca, o 9:00» whether it rings on Saturday the 5th, Saturday the
+12th, Sunday the 15th and Wednesday the 15th, and at what time. All
+answered yes, no, no, yes, at 9:00; none took «od 1 do 13» for hours.
+One noted that «nieparzyste» might be heard over the first stretch only.
+
 An exception beside a union cannot be given one scope by word order, by
 the word chosen or by a clause that takes it back. Said positively there
 is nothing to scope: «w nieparzyste dni od 1 do 13 oraz od 17 do 31»
@@ -1387,9 +1563,22 @@ after a comma.
 
 The same days written without the star are the union: `0 0 1-31/2 * 1` —
 «w poniedziałki, a także w nieparzyste dni każdego miesiąca, o 0:00». The
-renderer does not look at the spelling; `day.both` is the fact. An
-exception is allowed in a both-must-match pair: narrowing has one scope
-whichever half it sits in.
+renderer does not look at the spelling; `day.both` is the fact.
+
+The weekday half may be an exception: it comes first and is closed
+before «ale tylko» («codziennie oprócz niedziel, ale tylko w nieparzyste
+dni miesiąca, o 9:00»). **The days of the month after «ale tylko» are
+said by the days that fire**, by the same kinds as in a union: every day
+but one or two is the runs that are left, the odd or even days less a day
+are their stretches. `0 9 1-14,16-31 * */2` — «we wtorki, czwartki,
+soboty i niedziele, ale tylko w dniach 1–14 i 16–31 miesiąca, o 9:00»;
+`0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * */2` — «…, ale tylko w
+nieparzyste dni od 1 do 13 oraz od 17 do 31 miesiąca, o 9:00». Until the
+audit of 2026-11-19 an exception was allowed there, and the renderer
+said «ale tylko codziennie oprócz piętnastego dnia miesiąca», which is
+not Polish («tylko codziennie»), and «ale tylko w nieparzyste dni
+miesiąca oprócz piętnastego dnia», a narrowing and a subtraction stacked.
+Three audit readers answered the first row's questions one way.
 
 Why «ale tylko»: the notes give the coincidence as «w piątek trzynastego»,
 «w piątki przypadające 13. dnia miesiąca», «13. dnia miesiąca, jeśli
@@ -1513,11 +1702,18 @@ month frame.
 | all but one or two | «poza rokiem 2030»; «poza latami 2030 i 2031» | in front |
 | every second year | «w latach parzystych» / «nieparzystych»; `open` from a start: «w latach parzystych od 2030 r.»; between two ends: «w latach parzystych od 2030 do 2040 r.» | in front |
 | another rhythm of five or more | the step, then its span, a colon: «co 4 lata od 2028 r.:»; «co 4 lata od 2028 do 2060 r.:» | in front |
-| pieces | «w latach 2030–2032 oraz 2035»; «w latach 2030–2034 oraz 2036–2040,» | in front |
-| `cadencePieces` | its parts as pieces, each in its own form: «w latach parzystych od 2030 r. oraz w 2031 r.,»; «w latach 2030–2040 oraz co 5 lat od 2045 r.:» | in front |
+| pieces | one series under «w latach», each run and each single year an item, «oraz» before the last: «w latach 2030–2032 oraz 2035,»; «w latach 2030–2034 oraz 2036–2040,»; «w latach 2030, 2040 oraz 2050–2055,» | in front |
+| `cadencePieces`, at most one part a list | its parts as pieces, each in its own form: «w latach parzystych od 2030 r. oraz w 2031 r.,»; «w latach 2030–2040 oraz co 5 lat od 2045 r.:» | in front |
+| anything else | one ascending list: «w latach 2030, 2033, 2034, 2037, 2041, 2042, 2050, 2051, 2057, 2060, 2062, 2066, 2071 i 2090» | in front |
 
 A frame of pieces of years takes a comma, unless its last part is a step,
-which takes the colon. Several years with months: years first, then the
+which takes the colon. (As first built a part of several single years
+kept its own «i» inside the pieces, «w latach 2030 i 2035, 2040–2042 oraz
+2050, 2060 …», two levels in one row of numbers; and fourteen irregular
+years were said by `cadencePieces` as three lists out of order, «w latach
+2030, 2037, 2041 … i 2090, w latach 2033, 2042, 2051 i 2060 oraz w latach
+2034, 2050 i 2066». Fourteen years in order are long and can at least be
+searched.) Several years with months: years first, then the
 month frame: «w latach 2030 i 2031 w czerwcu codziennie o 9:00». A year
 restricted means no «co roku».
 
@@ -1813,7 +2009,8 @@ only, read as the full word.
 
 **6.4** Units: sekundę / sekundy / sekund; minutę / minuty / minut;
 godzinę / godziny / godzin; dni (after any number: «co N dni», «N dni
-przed»); lata / lat («co 4 lata», «co 5 lat»). Short: s, min, godz.
+przed»); lata / lat («co 4 lata», «co 5 lat»). The genitive after «do»: minuty
+(one) / minut; sekundy (one) / sekund. Short: s, min, godz.
 
 **6.5** Function words: o (1), w / we (0–1), co (1), od (1), do (1), po
 (1), i (1), oraz (2), a także (3), oprócz (2), codziennie (4), co roku
@@ -1827,6 +2024,17 @@ każdym razem (5), a potem raz (4), chwili wypadającej (6).
 in 12, 13, 14 → «minuty, sekundy, godziny, lata»; everything else, 0
 included → «minut, sekund, godzin, lat». «dni» serves every number from 2
 up. In a list the unit agrees with the last numeral.
+
+That is the accusative, which a distance takes («5 minut po», «42 minuty
+po», «, zaczynając 2 minuty po») and «co» takes. **After «do» the unit is
+in the genitive, and the genitive has one plural form for every numeral
+above one**: «do 42 minut po niej», «do 22 sekund po nim», «do 22 minut
+i 59 sekund po niej», and for one «do 1 minuty»; so too «od 21 minut do
+42 minut i 59 sekund» where the first numeral carries its unit. («do
+czterdziestu dwóch minut», not «do czterdzieści dwie minuty».) The hard
+case `0-42/6 * * * *` — «… do 42 minut po niej» was right, and the first
+build, which took the accusative of the rows «21 i 42 minuty później»,
+was wrong.
 
 **7.2 Government.**
 
@@ -1982,10 +2190,56 @@ of the month; every second across an hour less one as «co sekundę … ,
 oprócz chwili …». The whole text was then rewritten in one voice for the
 builder, and what was left of forms that no longer exist was taken out.
 
-What no blind reader has yet seen: the fourth-pass forms; «w nieparzyste
-dni od 1 do 13 oraz od 17 do 31»; the positive forms of unions that used
-to be said from the larger side; the third weekend clause as it now
-stands.
+Fifth pass (the audit of the first build, 2026-11-19, by Claude Fable
+5.2: the answers read against the renderer, some 850 sentences read
+against their firing times from the independent oracle, every row read
+again, four readers asked concrete questions about nine sentences). No
+sentence was found to say a wrong schedule. What changed, each argued
+where it stands:
+
+- the unit after «do» is in the genitive («do 42 minut po niej»; the
+  first build said «do 42 minuty», «do 22 minuty i 59 sekund») (7.1);
+- few minutes with equal gaps are one rhythm between named hours that
+  follow one another («co 15 minut od 9:05 do 17:50»), and seconds
+  likewise between clock times («co 30 sekund od 9:00:15 do 9:59:45»)
+  (3.8, 4.2); the kinds and class (b) no longer contradict 3.8;
+- `cadencePieces` is said part by part only where at most one part is a
+  list; otherwise one ascending list, for minutes and for years ("How a
+  form is chosen", 4.4);
+- single years beside runs are items of one series («w latach 2030, 2040
+  oraz 2050–2055»); pieces of years come before the short list (4.4);
+- after «ale tylko» the days of the month are said by the days that fire
+  (4.3);
+- the full hour, distances after it and further pieces are one series
+  with one «oraz» (3.6);
+- up to four moments with seconds are listed, in one clock time or
+  several (4.2);
+- the daily word is declared for all three time fields (2.5, 2.6,
+  `continuity.js`);
+- the comma before «oraz» after a «zaczynając» clause is written down
+  (punctuation);
+- the orthography the rows rely on is set against sources that were
+  opened, and what is still unverified is named (1.1).
+
+Earlier wording these replaced is quoted beside each choice, marked "as
+first built" or "until the audit", so that it is not taken for a rule.
+The notes of rejected forms from the earlier passes are still inline,
+each beside the choice that replaced it; they were not moved here.
+
+Known to be weak, and left: a sentence with exceptions at three levels
+(«poza czerwcem codziennie oprócz niedziel, co godzinę, oprócz 3:00»:
+each «oprócz» stands beside what it takes from, and the pattern is
+rare); «w piątki, ale tylko co 3 dni od pierwszego dnia miesiąca» (one
+reading, and the reader has to count); a date before a time that begins
+with a numeral («co roku 1 czerwca, 5, 20 i 45 minut po każdej pełnej
+godzinie»: «minut» settles it, after a stumble); many separate hours
+under a rhythm of minutes (4.1); an irregular list as long as its set;
+«chwili wypadającej» (3.9); `hour12` (1.2).
+
+What no blind reader has yet seen: most fourth-pass forms; the positive
+forms of unions that used to be said from the larger side; the third
+weekend clause as it now stands; of the fifth pass, the lists that
+replaced `cadencePieces`, the series of years, and the genitive forms.
 
 ## Where the answers depart from the usage notes
 
