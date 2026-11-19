@@ -80,6 +80,11 @@
       "import": "./dist/lang/zh.js",
       "require": "./dist/lang/zh.cjs"
     },
+    "./lang/zh-hant": {
+      "types": "./types/lang/zh-hant/index.d.ts",
+      "import": "./dist/lang/zh-hant.js",
+      "require": "./dist/lang/zh-hant.cjs"
+    },
     "./package.json": "./package.json"
   },
   "bin": {

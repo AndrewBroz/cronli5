@@ -84,7 +84,10 @@ describe('Built package artifacts:', function() {
     async function() {
       const {shipped} = await import('../../src/languages.js');
 
-      expect([...shipped].sort()).to.deep.equal(
+      // A language's directory is its code in lower case.
+      expect(shipped.map(function directory(code) {
+        return code.toLowerCase();
+      }).sort()).to.deep.equal(
         readdirSync('src/lang').filter(function has(code) {
           return existsSync(`src/lang/${code}/status.json`);
         }).sort());
@@ -159,7 +162,7 @@ describe('Built package artifacts:', function() {
     'in both formats', async function() {
     const {shipped} = await import('../../src/languages.js');
 
-    for (const code of shipped) {
+    for (const code of shipped.map((name) => name.toLowerCase())) {
       // Resolved when it runs: Vite would otherwise fix the set of
       // importable files when this test is loaded, before `before` builds
       // them, and a clean checkout has none.

@@ -34,10 +34,14 @@ described. Everything used to exit 1.
 
 * **Finnish** (`cronli5/lang/fi`). It is being rebuilt from native usage
   notes like the other languages and will return in a 1.x release.
-* **Traditional Chinese** (the `zh-Hant` dialect). Chinese is Simplified
-  only for now. `lang: 'zh-Hant'` (and `zh-TW`, `zh-HK`, `zh-MO`) describes
-  in Simplified Chinese and warns once, on the console, that Traditional
-  Chinese is not yet written.
+* **Traditional Chinese as a dialect of Chinese** (the `zh-Hant` dialect).
+  It is now a language of its own, `cronli5/lang/zh-hant`, with the code
+  `zh-Hant`; `cronli5/lang/zh` is Simplified only. Its two named styles
+  are `tw` (Taiwan, the default) and `hk` (Hong Kong and Macau), chosen by
+  region: `lang: 'zh-Hant'`, `'zh-Hant-TW'` or `'zh-TW'` for the first,
+  `'zh-Hant-HK'`, `'zh-HK'` or `'zh-MO'` for the second. An instance that
+  was not given the language refuses these codes with an error that says
+  how to import it; it never answers in Simplified.
 * **`describeParts` and French's `unites`** from the language modules.
   They needed the library's internal schedule facts, which nothing public
   produces, so no caller could use them.

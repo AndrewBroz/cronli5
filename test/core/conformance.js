@@ -2,6 +2,7 @@ import chai from 'chai';
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import cronli5 from '../../src/all.js';
 import {conformance} from '../../scripts/conformance.mjs';
+import {shipped} from '../../src/languages.js';
 
 const {expect} = chai;
 
@@ -10,7 +11,9 @@ const {expect} = chai;
 // and set of options. It is generated, and checked here against this
 // implementation and against the rows it was generated from.
 describe('Conformance suites:', function() {
-  const codes = readdirSync('src/lang').filter(function shipped(code) {
+  // A language's directory, which names its suite, is its code in lower
+  // case; the suite names the language by its code.
+  const codes = readdirSync('src/lang').filter(function hasStatus(code) {
     return existsSync(`src/lang/${code}/status.json`);
   });
 
@@ -33,7 +36,8 @@ describe('Conformance suites:', function() {
       });
 
       it('holds every row whose pattern is a string', function() {
-        expect(suite.language).to.equal(code);
+        expect(suite.language.toLowerCase()).to.equal(code);
+        expect(shipped).to.include(suite.language);
         expect(suite.rows.length).to.be.greaterThan(350);
       });
 

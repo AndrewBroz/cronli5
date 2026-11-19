@@ -34,6 +34,7 @@ import it from '../src/lang/it/index.js';
 import cs from '../src/lang/cs/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
+import zhHant from '../src/lang/zh-hant/index.js';
 import {
   comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
@@ -318,7 +319,8 @@ function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
   try {
-    const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh};
+    // Each module under the name a reader would import it by.
+    const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh, zhHant};
     const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
     const run = Function('cronli5', ...codes, ...names,

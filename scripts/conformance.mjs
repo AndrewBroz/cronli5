@@ -1,8 +1,11 @@
 // Export a language's paradigm rows as its conformance suite: plain JSON
 // that an implementation in any programming language can run. Each row is
 // a pattern, the options to describe it under, and the description
-// expected. The rows are hand-written (test/lang/<code>/paradigms/); this
-// script only gathers them, so the file it writes is never edited by hand.
+// expected. The rows are hand-written (test/lang/<directory>/paradigms/);
+// this script only gathers them, so the file it writes is never edited by
+// hand. A language's directory is its code in lower case (`zh-hant` for
+// `zh-Hant`): files are named by the directory, and the rows name the
+// language by its code.
 //
 //   node --import tsx scripts/conformance.mjs           write the files
 //   node --import tsx scripts/conformance.mjs --check   fail if one is stale
@@ -49,21 +52,31 @@ function rowOf(code, pattern, expected, options) {
 
 // The rows of one paradigm file, or none where a checkout has no such file
 // (a renderer's builder never sees the held-out rows).
-async function rowsIn(code, file) {
-  const url = new URL(`test/lang/${code}/paradigms/${file}.js`, ROOT);
+async function rowsIn(directory, file) {
+  const url = new URL(`test/lang/${directory}/paradigms/${file}.js`, ROOT);
 
   return existsSync(url) ? (await import(url.href)).rows : [];
 }
 
-/** The conformance suite for one language, as the value written to disk. */
-async function conformance(code) {
+// The code of the language in a directory, as the language declares it.
+async function codeIn(directory) {
+  return (await import(
+    new URL(`src/lang/${directory}/index.ts`, ROOT).href)).default.code;
+}
+
+/**
+ * The conformance suite for the language in one directory, as the value
+ * written to disk.
+ */
+async function conformance(directory) {
+  const code = await codeIn(directory);
   const sources = await Promise.all(
     ['visible', 'held-out', 'hard-cases'].map(function load(file) {
-      return rowsIn(code, file);
+      return rowsIn(directory, file);
     })
   );
   const optionSets = (await import(
-    new URL(`test/lang/${code}/paradigms/options.js`, ROOT).href)).sets;
+    new URL(`test/lang/${directory}/paradigms/options.js`, ROOT).href)).sets;
   const rows = sources.flat().map(function plainRow(row) {
     return rowOf(code, row[0], row[1], row[2]);
   }).concat(optionSets.flatMap(function eachSet(set) {
@@ -78,9 +91,11 @@ async function conformance(code) {
 }
 
 function languages() {
-  return readdirSync(new URL('src/lang/', ROOT)).filter(function shipped(code) {
-    return existsSync(new URL(`src/lang/${code}/status.json`, ROOT));
-  });
+  return readdirSync(new URL('src/lang/', ROOT)).filter(
+    function shipped(directory) {
+      return existsSync(new URL(`src/lang/${directory}/status.json`, ROOT));
+    }
+  );
 }
 
 async function main() {
@@ -89,17 +104,17 @@ async function main() {
 
   mkdirSync(new URL('conformance/', ROOT), {recursive: true});
 
-  for (const code of languages()) {
-    const url = new URL(`conformance/${code}.json`, ROOT);
-    const text = JSON.stringify(await conformance(code), null, 1) + '\n';
+  for (const directory of languages()) {
+    const url = new URL(`conformance/${directory}.json`, ROOT);
+    const text = JSON.stringify(await conformance(directory), null, 1) + '\n';
     const current = existsSync(url) ? readFileSync(url, 'utf8') : '';
 
     if (text !== current && check) {
-      stale.push(`conformance/${code}.json`);
+      stale.push(`conformance/${directory}.json`);
     }
     else if (text !== current) {
       writeFileSync(url, text);
-      console.log(`Wrote conformance/${code}.json.`);
+      console.log(`Wrote conformance/${directory}.json.`);
     }
   }
 

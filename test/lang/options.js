@@ -10,6 +10,7 @@ import ja from '../../src/lang/ja/index.js';
 import pt from '../../src/lang/pt/index.js';
 import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
+import zhHant from '../../src/lang/zh-hant/index.js';
 import {spanningSet} from '../../scripts/patterns.mjs';
 
 const {expect} = chai;
@@ -21,7 +22,9 @@ const {expect} = chai;
 // job — this catches the option × language combinations the corpora don't
 // reach (only English has per-option expectation files).
 
-const languages = {en, cs, de, es, fr, it: italian, ja, pt, uk, zh};
+const languages = {
+  en, cs, de, es, fr, it: italian, ja, pt, uk, zh, 'zh-Hant': zhHant
+};
 
 // Every public option flag, alone and in the pairs most likely to interact.
 // `seconds`/`years` change field parsing, not just wording, so they run

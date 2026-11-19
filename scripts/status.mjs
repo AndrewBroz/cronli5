@@ -18,7 +18,7 @@ function languageStatuses() {
     .filter((entry) => entry.isDirectory() &&
       existsSync(new URL('./' + entry.name + '/status.json', LANG_DIR)))
     .map((entry) => ({
-      code: entry.name,
+      directory: entry.name,
       ...JSON.parse(readFileSync(
         new URL('./' + entry.name + '/status.json', LANG_DIR), 'utf8'))
     }));
