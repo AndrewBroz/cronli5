@@ -35,6 +35,8 @@ export interface ClockSets {
 
 // The fields of the clock as the forms chosen for them.
 interface Clockwork {
+  // The hours read as every second hour of the whole day, if they are.
+  alternate: Form;
   hours: Form;
   // The hours where they hold one moment each: a cadence of them may
   // have an hour or two beside it.
@@ -67,6 +69,19 @@ const withinTheUnit: Reading = {
   run: 3,
   steps: sayableStep
 };
+
+// Every second hour of the whole day, with or without an hour or two
+// missing, read from the same candidates.
+const everyOtherReading: Reading = {
+  ...hourReading,
+  steps(cadence: CadenceForm) {
+    return cadence.tiles && cadence.interval === 2;
+  }
+};
+
+function isEveryOther(form: Form): form is CadenceForm {
+  return form.kind === 'cadence' && form.interval === 2;
+}
 
 const everyHourOf = words.everyHour + words.of;
 // Every second hour, from the first hour of the day and from the next.
@@ -229,12 +244,14 @@ const anchorings: Sayers<Form, Anchor> = {
   range: asStretches
 };
 
-// Every second hour, with or without an hour or two missing, is the even
-// or the odd hours; where they do not fill the day, between their ends.
+// Every second hour is the even or the odd hours: all of them, with or
+// without an hour or two missing; or, where that cannot be said, those
+// between two ends.
 function anchorOf(work: Clockwork): Anchor {
-  const beat = coreOf(work.hours);
+  const {alternate} = work;
+  const [beat] = [coreOf(alternate), work.hours].filter(isEveryOther);
 
-  return beat.kind === 'cadence' && beat.interval === 2 ?
+  return beat ?
     {
       ends: [beat].filter(function bounded(step) {
         return !step.tiles;
@@ -243,7 +260,7 @@ function anchorOf(work: Clockwork): Anchor {
       }),
       kind: 'everyOther',
       odd: beat.start % 2,
-      removed: removedOf(work.hours)
+      removed: removedOf(alternate)
     } :
     sayBy(anchorings, work.hours, work.minutes);
 }
@@ -441,6 +458,19 @@ function general(work: Clockwork): Said {
     }), sec.form, minuteLevel(times, style), style);
   }
 
+  // A rhythm of hours with an hour or two beside it: the rhythm and what
+  // its hours hold, and then those hours, which hold the same.
+  if (work.hoursAlone.kind === 'added') {
+    const {added, base} = work.hoursAlone;
+    const usual = minutely({...work, alternate: base, hours: base});
+
+    return {
+      ...usual,
+      text: usual.text + words.comma + hoursNamed(added, style) +
+        words.likewise
+    };
+  }
+
   return minutely(work);
 }
 
@@ -455,6 +485,7 @@ function sayTime(sets: ClockSets, style: ZhHantStyle): Said {
   const minutes = clockFormOf(sets.minute, sec.shown ? null : mixed.minute,
     withinTheUnit);
   const work = {
+    alternate: formOf(sets.hour, everyOtherReading),
     hours: formOf(sets.hour, hourReading),
     hoursAlone: clockFormOf(sets.hour, mixed.hour, hourReading),
     minutes,

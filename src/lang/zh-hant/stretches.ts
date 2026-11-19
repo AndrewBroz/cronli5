@@ -38,6 +38,8 @@ export interface Seconds extends Carried {
   afterThat: string;
   // The rate between the two ends of a stretch of minutes.
   between: string;
+  // Whether that is a plain rate, with no positions of its own.
+  even: boolean;
   form: Form;
   // Several seconds fire in a minute.
   live: boolean;
@@ -83,9 +85,16 @@ function longFromFirst(cadence: CadenceForm): boolean {
   return fromFirst(cadence) && cadence.values.length > 4;
 }
 
+// After hours that are named, a rhythm of two or three minutes is those
+// minutes: they are shorter to say than the rhythm, and are read off.
+function fourFromFirst(cadence: CadenceForm): boolean {
+  return fromFirst(cadence) && cadence.values.length > 3;
+}
+
 function secondHow(bare: Holding['bare']): Holding {
   return {
     bare,
+    closing: words.within,
     each: rate('second', 1),
     every: rate('second', 1),
     gaps: secondNamer,
@@ -104,13 +113,14 @@ function secondsOf(form: Form): Seconds {
   const everyMinute = rate('minute', 1);
   const prefix = words.everyMinute + words.of;
   const inside = held(form, secondHow(longFromFirst));
+  const between = held(form, secondHow(tiling));
 
   return {
     afterNamed: told(inside, words.comma + words.thatMinute + words.within,
       words.of),
     afterThat: words.thatMinute + told(inside, words.within, words.of),
-    between: live ? told(held(form, secondHow(tiling)), '', prefix) :
-      everyMinute,
+    between: live ? told(between, '', prefix) : everyMinute,
+    even: between.rate || !live,
     first: edges[0],
     form,
     last: edges[edges.length - 1],
@@ -127,7 +137,7 @@ function secondsOf(form: Form): Seconds {
 // hour twice.
 const places = {
   hours: {
-    bare: fromFirst,
+    bare: fourFromFirst,
     every: 'open',
     prefix: '',
     zero: {text: lexicon.twoDigits(0), unit: units.minute.position}
@@ -161,6 +171,7 @@ function minuteHow(sec: Seconds, place: Place, carried: Carried = sec):
 
   return {
     bare,
+    closing: sec.even ? words.within : words.comma,
     each: sec.between,
     every: sec[every],
     gaps: minuteNamer(zero, sec.live ? plain : carried),

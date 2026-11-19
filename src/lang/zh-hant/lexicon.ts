@@ -90,6 +90,8 @@ const words = {
   oddHours: '單數時',
   // Before single clock times said after the rate: ，另加 22:00.
   plus: '另加',
+  // After an hour that holds what the hours before it hold: ，13時亦同.
+  likewise: '亦同',
   // Before single positions said after the rate: ，另在45分.
   alsoAt: '另在',
   // Between runs and cadences of years: ，以及2045年起每5年.

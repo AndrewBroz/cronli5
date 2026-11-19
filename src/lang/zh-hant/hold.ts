@@ -36,6 +36,9 @@ export interface Namer {
 export interface Holding {
   // Whether a cadence is said as a bare rate.
   bare(cadence: CadenceForm): boolean;
+  // What closes a run before its rate: the word for "within" before a
+  // plain rate, a comma before anything longer.
+  closing: string;
   // The rate between the two ends of a run.
   each: string;
   // The rate when every position fires.
@@ -123,7 +126,7 @@ function holdRange(form: RangeForm, how: Holding): Held {
   return {
     rate: false,
     text: at(how.namer, form.from, 'first') + words.to +
-      at(how.namer, form.to, 'last') + words.within + how.each
+      at(how.namer, form.to, 'last') + how.closing + how.each
   };
 }
 
@@ -169,7 +172,7 @@ function holdPieces(form: PiecesForm, how: Holding): Held {
   return {
     rate: false,
     text: [
-      series(runs, words.and) + words.within + how.each,
+      series(runs, words.and) + how.closing + how.each,
       ...[lone].filter(Boolean).map(function added(text) {
         return words.alsoAt + text;
       })
