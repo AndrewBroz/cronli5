@@ -1,0 +1,7 @@
+{
+  "name": "Indonesian",
+  "status": "pending",
+  "humanReview": null,
+  "modelReview": "artifacts only, no renderer yet: written 2026-11-19 by Claude Fable 5.2 from usage notes written in Indonesian with no knowledge of cron; a rule book (answers.md) derived from them, a lexicon, and hand-written rows (87 visible, 153 held out, 360 hard cases, 37 option rows), none produced by running a renderer. The rows pass the grid oracle (coverage, no duplicate, equal schedules worded alike). The author worked out the fire times of the rows and re-read them once; no row has had a blind schedule read, a blind fluency read or a native read. Devices built by the author with no corpus support found by web search on 2026-11-19: «berulang setiap N jam», «masing-masing … sepanjang menit itu», «pada jam yang dimulai pukul», «pada bulan/tahun X dan setiap N bulan/tahun sesudahnya», and the moved-date wording of the nearest Monday-to-Friday forms; the parts of the day of the 12-hour style have no official bounds and are the author's",
+  "branchBudget": 110
+}
