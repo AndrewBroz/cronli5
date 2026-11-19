@@ -48,11 +48,18 @@ function ascending(a: number, b: number): number {
   return a - b;
 }
 
+// The values less the removed ones, marked in an array over the span of
+// the removed values: a set of thousands of years takes long to build.
 function without(values: number[], removed: number[]): number[] {
-  const dropped = new Set(removed);
+  const low = Math.min(...removed);
+  const dropped = new Uint8Array(Math.max(Math.max(...removed) - low + 1, 0));
+
+  removed.forEach(function mark(value) {
+    dropped[value - low] = 1;
+  });
 
   return values.filter(function kept(value) {
-    return !dropped.has(value);
+    return dropped[value - low] !== 1;
   });
 }
 
