@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Russian (`ru`)**, at beta: `import ru from 'cronli5/lang/ru'`, or
+  `{lang: 'ru'}` from `cronli5/all`. It is Russian as it is written in
+  Ukraine; the usage notes found no difference in the language of
+  schedules itself, so there is one style, `ru`, and no region. Style
+  fields: `hour12` («в 9 часов утра»), `short` («в янв. по пн»),
+  `separator` («в 9.30») and `padHour` («в 09:30»). `30 9 * * 1-5` is «по
+  будням в 9:30»; `*/15 9-17 * * 1-5` is «по будням каждые 15 минут с 9:00
+  до 17:45»; `0 0 1 * 5` is «по пятницам, а также 1-го числа каждого
+  месяца, в 0:00». Written from usage notes in the language by a writer
+  told nothing of cron, then answers, hand-written expected descriptions,
+  an adversarial schedule read and blind readers, and a renderer built
+  without sight of any other. No fluent human has reviewed it.
+
 ## [1.2.2]
 
 ### Fixed

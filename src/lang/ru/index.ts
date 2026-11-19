@@ -79,5 +79,8 @@ const russian: Language<RussianStyle, 'ru'> = {
 };
 
 export type {RussianStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default russian;
