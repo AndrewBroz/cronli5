@@ -71,9 +71,16 @@ const words = {
   once: '一次',
   // 每小時的30分, 9、17時的5、20、45分.
   of: '的',
-  // 每2小時一次，每次在15、45分.
-  eachTimeAt: '每次在',
+  // 8、12、18時各在5、20、45分.
+  eachAt: '各在',
+  // 每小時整點; 每小時的整點至56分.
   onTheHour: '整點',
+  // 6、8、12時整個小時，每分鐘一次.
+  wholeHour: '整個小時',
+  // 每小時的前30分鐘, 每分鐘的前10秒, 每2小時的前1小時.
+  first: '前',
+  // Before a single time or minute said after the rate: ，以及 22:00.
+  andAlso: '以及',
   // After a start: 01:00起, 2030年起, 每月1日起.
   onward: '起',
 
@@ -96,7 +103,7 @@ const words = {
   // 倒數第4天.
   countingBack: '倒數',
   monthEnd: '月底',
-  nextMonth: '翌月',
+  nextMonth: '次月',
   // 最後一個週五, 第2個週一.
   lastOne: '最後一個',
   nthCounter: '個',
@@ -104,15 +111,18 @@ const words = {
   whenMeeting: '遇',
   movedEarlierTo: '提前至',
   movedLaterTo: '順延至',
-  ifAlreadyMonthEnd: '已是月底則',
+  // 若30日是當月最後一天則提前至週五, around the date.
+  ifDate: '若',
+  isLastDayThen: '是當月最後一天則',
+  // 每逢當月第5個週一.
+  thisMonth: '當月',
 
   // Months and years.
   oddMonths: '單月',
   evenMonths: '雙月',
-  longMonths: '大月',
   nextYear: '翌年',
-  evenYears: '偶數年',
-  oddYears: '奇數年',
+  evenYears: '雙數年',
+  oddYears: '單數年',
   leapYears: '閏年',
   // Closes the frame before a union: 每年6月期間，.
   during: '期間',
