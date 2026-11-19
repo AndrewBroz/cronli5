@@ -34,8 +34,9 @@ const months: Name[] = [
 
 // Indexed by cron's weekday number: 0 is Sunday. The week is said from
 // Monday to Sunday (answers 5.1). Always capitalised. Sunday standing
-// alone is «hari Minggu» (`words.dayOf` before it), because «Minggu» and
-// «minggu» (a week) differ only by the capital.
+// alone or first after «setiap» is «hari Minggu» (`words.dayOf` before
+// it), never shortened, because «Minggu» and «minggu» (a week) differ
+// only by the capital.
 const weekdays: Name[] = [
   name('Minggu', 'Min'), name('Senin', 'Sen'), name('Selasa', 'Sel'),
   name('Rabu', 'Rab'), name('Kamis', 'Kam'), name('Jumat', 'Jum'),
@@ -57,10 +58,10 @@ const units = {
 // after the weekday: «Senin kedua».
 const nthWords = ['pertama', 'kedua', 'ketiga', 'keempat', 'kelima'];
 
-// The parts of the day the 12-hour clock names (`hour12`), by hour from 1
-// to 23. Hour 0 is never said on the 12-hour clock (answers 1.2).
+// The parts of the day the 12-hour clock names (`hour12`), by hour
+// (answers 1.2).
 const dayParts = {
-  // 1 to 3.
+  // 0 to 3; hour 0 is said as 12.
   early: 'dini hari',
   // 4 to 10.
   morning: 'pagi',
@@ -79,9 +80,19 @@ const words = {
   and: 'dan',
   // Joins the last weekday after «jatuh pada»: Monday, Wednesday or Friday.
   or: 'atau',
-  // Joins a day of the month to a weekday when either fires (the union),
-  // and nothing else.
+  // Joins two groups of occasions: a day of the month and a weekday when
+  // either fires («setiap tanggal 1 serta setiap Jumat»), and the hour
+  // itself with minutes after it («tepat setiap jam serta pada menit
+  // ke-15»).
   aswell: 'serta',
+  // After a union with one exception inside it: «…, tetapi tanggal 15
+  // hanya jika jatuh pada hari Jumat».
+  but: 'tetapi',
+  onlyIfItFallsOn: 'hanya jika jatuh pada',
+  // After a union, before the months or years both arms are said of.
+  bothOfThem: 'keduanya',
+  // After months said in pieces, before the year all of them are in.
+  allOfThem: 'semuanya',
   except: 'kecuali',
   andExcept: 'dan kecuali',
   // A range: «Senin sampai Jumat», «dari pukul 09.00 sampai 17.45».
@@ -93,21 +104,19 @@ const words = {
 
   // Rhythm.
   every: 'setiap',
-  // After a block of times that returns through the day: «…, berulang
-  // setiap 2 jam».
-  repeatingEvery: 'berulang setiap',
-  // Distributes the seconds over every minute just named.
-  each: 'masing-masing',
-  throughThatMinute: 'sepanjang menit itu',
-  // The same for minute 0 of hours said as a rhythm: «setiap jam, setiap
-  // detik sepanjang menit pertama».
-  throughTheFirstMinute: 'sepanjang menit pertama',
-  // Before a position in the hour or minute, or a clock time after «dan».
+  // The seconds of every minute just said: «…, setiap kali pada detik
+  // ke-30».
+  eachTime: 'setiap kali',
+  // Before a position in the hour or minute: «pada menit ke-30».
   at: 'pada',
-  // After positions in the hour or the minute: «setiap jam», «setiap
-  // menit» are `every` and the unit.
-  // Names hours as stretches, before clock times on the hour.
-  inHoursStartingAt: 'pada jam yang dimulai',
+  // The start of the hour or minute as a position: «tepat setiap jam».
+  sharp: 'tepat',
+  // Positions counted from hours that are named: «pada menit ke-5 setelah
+  // pukul 09.00 dan 17.00».
+  afterTime: 'setelah',
+  // The last firing of a rhythm with several starts: «…, terakhir pukul
+  // 23.45».
+  lastAt: 'terakhir',
 
   // Clock.
   oClock: 'pukul',
@@ -125,16 +134,17 @@ const words = {
   beforeLastDay: 'sebelum hari terakhir',
   thatFallsOn: 'yang jatuh pada',
   ifItFallsOn: 'jika jatuh pada',
-  thatDoesNotFallOn: 'yang tidak jatuh pada',
   // The day from Monday to Friday nearest a date, said as the date and
-  // where it moves to: «atau Jumat atau Senin terdekat», «atau Jumat
-  // sebelumnya», «atau Senin sesudahnya», each closed by «jika tanggal itu
-  // jatuh pada Sabtu atau Minggu». The weekday names come from `weekdays`.
+  // where it moves to: «digeser ke hari Jumat atau Senin terdekat»,
+  // «digeser ke hari Jumat sebelumnya», «digeser ke hari Senin
+  // sesudahnya», each closed by «jika jatuh pada hari Sabtu atau Minggu».
+  // The weekday names come from `weekdays`.
+  movedTo: 'digeser ke',
   nearest: 'terdekat',
   before: 'sebelumnya',
   inTheSameMonth: 'pada bulan yang sama',
-  ifThatDateFallsOn: 'jika tanggal itu jatuh pada',
-  ifThatDayFallsOn: 'jika hari itu jatuh pada',
+  // One day before the last, where a count of days would be «1 hari».
+  oneDay: 'sehari',
   ifThereIsOne: 'jika ada',
 
   // Months and years.
@@ -142,25 +152,27 @@ const words = {
   monthOf: 'bulan',
   inYear: 'pada tahun',
   yearOf: 'tahun',
-  // After the first month or year of a cadence («dan setiap 2 bulan
-  // sesudahnya») and after a weekday a date moves on to («atau Senin
-  // sesudahnya»).
+  // After a weekday a date moves on to: «hari Senin sesudahnya».
   after: 'sesudahnya',
-  untilYear: 'sampai tahun',
+  // After the first year of a rhythm of years: «pada tahun 2028, lalu
+  // setiap 4 tahun».
+  then: 'lalu',
+  // Up to a year, that year included.
+  throughYear: 'sampai dengan tahun',
   evenYears: 'pada tahun genap',
   oddYears: 'pada tahun ganjil',
   leapYearsOnly: 'hanya pada tahun kabisat',
-  // After «setiap bulan»: months of one length.
+  // Months of one length: «pada bulan yang berjumlah 31 hari».
   thatHas: 'yang berjumlah',
 
   // A schedule that never fires.
   never: 'tidak pernah: tanggalnya tidak ada',
   neverInTheseYears:
-    'tidak pernah: tanggalnya tidak ada pada tahun yang ditentukan',
+    'tidak pernah: tanggalnya tidak ada pada tahun yang dipilih',
   neverSentence: 'Tidak pernah dijalankan: tanggalnya tidak ada.',
   neverInTheseYearsSentence:
     'Tidak pernah dijalankan: tanggalnya tidak ada pada tahun yang ' +
-    'ditentukan.',
+    'dipilih.',
 
   // The three forms and the fixed texts.
   runs: 'Dijalankan',

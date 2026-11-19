@@ -12,23 +12,27 @@ const FIELDS =
 
 // A description is three parts in one order, from the day to the clock
 // to what narrows or excepts them (answers 2.1): the day («setiap hari»,
-// «setiap Senin», «setiap tanggal 1 Juni», «tanggal 1 Januari 2030», a
-// day of the month «serta» a weekday), the time, and a closing part (the
-// months and years the rest is said of: «pada bulan Juni sampai
-// Agustus», «pada tahun 2030»; then the days, months and years left
-// out: «, kecuali hari Minggu», «, kecuali bulan Desember»).
+// «setiap Senin», «Senin sampai Jumat», «setiap tanggal 1 Juni»,
+// «tanggal 1 Januari 2030», a day of the month «serta» a weekday), the
+// time, and a closing part (the months and years the rest is said of:
+// «pada bulan Juni sampai Agustus», «pada tahun 2030», after a union
+// «keduanya pada bulan Juni»; then the days, months and years left out
+// or conditioned: «, kecuali hari Minggu», «, tetapi tanggal 15 hanya
+// jika jatuh pada hari Jumat»).
 // `describeParts` gives them as `{day, time, closing}`, each with the
 // comma that follows it, if any.
 //
 // A time field changes the time. A day, month or year field changes the
-// day and the closing part: one month joins a date («setiap tanggal 1
-// Juni») or stands for «setiap bulan» in a form counted inside the month
-// («hari terakhir bulan Juni»), and any other set of months closes; one
-// year joins a single date in one month («tanggal 1 Januari 2030», which
-// drops «setiap») or one month in the closing part («pada bulan Juni
-// 2030»); days a named month lacks are not said and months that lack the
-// day are not named; a set of days that is every day less one or two is
-// «setiap hari» with the exception in the closing part. Those are the
+// day and the closing part: one month joins a plain date («setiap
+// tanggal 1 Juni») and months stand for «setiap bulan» in a form counted
+// inside the month («hari terakhir bulan Juni»), and any other months
+// close; one year joins a single day in one month («tanggal 1 Januari
+// 2030», which drops «setiap») or the month phrase of the closing part
+// («pada bulan Juni 2030»); days a named month lacks are not said,
+// months that lack the day are not named, and a count back from the
+// month's end that comes to one date is that date; a set of days that is
+// every day less one or two is «setiap hari» with the exception in the
+// closing part. Those are the
 // fusions answers 2.6 declares; all of them stay inside the day and the
 // closing part. Nothing else may cross, with the exceptions below.
 const MAY_CHANGE = {
@@ -105,9 +109,9 @@ function fieldsChanged(a, b, options) {
 
 // The join between two parts belongs to neither. The comma after a part
 // is set aside: the day is followed by a space before «pukul» and by a
-// comma before anything else, and the closing part takes a comma
-// whenever one stands earlier in the sentence (answers 2.1), so an edit
-// to the time may add or remove either. So is the «dan» that links the
+// comma before anything else, and the closing part takes a comma when
+// the time ends in a clause of its own (answers 2.1), so an edit to the
+// time may add or remove either. So is the «dan» that links the
 // closing part's first «kecuali» to an exception already said in the
 // time («…, kecuali pukul 03.00 dan kecuali bulan Desember»).
 function words(part) {

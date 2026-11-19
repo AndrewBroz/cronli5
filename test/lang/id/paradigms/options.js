@@ -10,6 +10,7 @@ const defaultParts = {
   '0 0 * * *': ['00.00'],
   '0 12 * * *': ['12.00'],
   '0 13 * * *': ['13.00'],
+  '0 0,12 * * *': ['00.00', '12.00'],
   '0 4 * * *': ['04.00'],
   '0 3,20 * * *': ['03.00', '20.00'],
   '0 10,14,18 * * *': ['10.00', '14.00', '18.00'],
@@ -45,8 +46,8 @@ const sets = [
         pattern: '0 9 * * *'
       },
       {
-        expected: 'setiap hari pukul 00.00',
-        parts: ['00.00'],
+        expected: 'setiap hari pukul 12 dini hari',
+        parts: ['12 dini hari'],
         pattern: '0 0 * * *'
       },
       {
@@ -80,8 +81,8 @@ const sets = [
         pattern: '0 11,15,19 * * *'
       },
       {
-        expected: 'setiap Senin pukul 00.00',
-        parts: ['Senin', '00.00'],
+        expected: 'setiap Senin pukul 12 dini hari',
+        parts: ['Senin', '12 dini hari'],
         pattern: '0 0 * * 1'
       },
       {
@@ -90,8 +91,8 @@ const sets = [
         pattern: '0 16 * * 1'
       },
       {
-        expected: 'setiap hari pukul 00.30',
-        parts: ['00.30'],
+        expected: 'setiap hari pukul 12.30 dini hari',
+        parts: ['12.30 dini hari'],
         pattern: '30 0 * * *'
       },
       {
@@ -116,8 +117,8 @@ const sets = [
         pattern: '0 1/2 * * *'
       },
       {
-        expected: 'setiap Senin sampai Jumat, setiap 15 menit dari pukul 9 ' +
-          'pagi sampai 5.45 sore',
+        expected: 'Senin sampai Jumat, setiap 15 menit dari pukul 9 pagi ' +
+          'sampai 5.45 sore',
         parts: ['Senin', 'Jumat', '15 menit', '9 pagi', '5.45 sore'],
         pattern: '*/15 9-17 * * 1-5'
       },
@@ -126,6 +127,11 @@ const sets = [
           '11.59 malam',
         parts: ['10 malam', '11.59 malam'],
         pattern: '* 22-23 * * *'
+      },
+      {
+        expected: 'setiap hari pukul 12 dini hari dan 12 siang',
+        parts: ['12 dini hari', '12 siang'],
+        pattern: '0 0,12 * * *'
       },
       {
         expected: 'setiap hari pukul 9.30.15 pagi',
@@ -158,8 +164,8 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'setiap Senin sampai Jumat, setiap 15 menit dari pukul ' +
-          '09:00 sampai 17:45',
+        expected: 'Senin sampai Jumat, setiap 15 menit dari pukul 09:00 ' +
+          'sampai 17:45',
         parts: ['Senin', 'Jumat', '15 menit', '09:00', '17:45'],
         pattern: '*/15 9-17 * * 1-5'
       }
@@ -174,8 +180,8 @@ const sets = [
         pattern: '30 9,17 * * *'
       },
       {
-        expected: 'setiap hari pukul 00:30',
-        parts: ['00:30'],
+        expected: 'setiap hari pukul 12:30 dini hari',
+        parts: ['12:30 dini hari'],
         pattern: '30 0 * * *'
       }
     ]
@@ -204,13 +210,13 @@ const sets = [
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'setiap hari Min pukul 09.00',
-        parts: ['hari Min', '09.00'],
+        expected: 'setiap hari Minggu pukul 09.00',
+        parts: ['hari Minggu', '09.00'],
         pattern: '0 9 * * 0'
       },
       {
-        expected: 'setiap hari pukul 09.00, kecuali hari Min',
-        parts: ['09.00', 'hari Min'],
+        expected: 'setiap hari pukul 09.00, kecuali hari Minggu',
+        parts: ['09.00', 'hari Minggu'],
         pattern: '0 9 * * 1-6'
       },
       {
@@ -234,8 +240,8 @@ const sets = [
         pattern: '0 9 * * 5L'
       },
       {
-        expected: 'setiap tanggal 15, atau Jum atau Sen terdekat jika ' +
-          'tanggal itu jatuh pada Sab atau Min, pukul 09.00',
+        expected: 'setiap tanggal 15, digeser ke hari Jum atau Sen ' +
+          'terdekat jika jatuh pada hari Sab atau Min, pukul 09.00',
         parts: ['15', 'Jum', 'Sen', 'Sab', 'Min', '09.00'],
         pattern: '0 9 15W * *'
       },
@@ -245,8 +251,8 @@ const sets = [
         pattern: '0 9 * 1-7,9-12 *'
       },
       {
-        expected: 'setiap Sen sampai Jum, setiap 15 menit dari pukul 09.00 ' +
-          'sampai 17.45',
+        expected: 'Sen sampai Jum, setiap 15 menit dari pukul 09.00 sampai ' +
+          '17.45',
         parts: ['Sen', 'Jum', '15 menit', '09.00', '17.45'],
         pattern: '*/15 9-17 * * 1-5'
       }

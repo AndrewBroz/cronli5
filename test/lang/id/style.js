@@ -58,9 +58,9 @@ describe('Indonesian styles:', function() {
       expect(indonesian.sentence('tidak pernah: tanggalnya tidak ada', opts))
         .to.equal('Tidak pernah dijalankan: tanggalnya tidak ada.');
       expect(indonesian.sentence(
-        'tidak pernah: tanggalnya tidak ada pada tahun yang ditentukan', opts))
+        'tidak pernah: tanggalnya tidak ada pada tahun yang dipilih', opts))
         .to.equal('Tidak pernah dijalankan: tanggalnya tidak ada pada ' +
-          'tahun yang ditentukan.');
+          'tahun yang dipilih.');
       expect(indonesian.reboot(opts)).to.equal('saat sistem dinyalakan');
       expect(indonesian.fallback(opts))
         .to.equal('pola cron yang tidak dikenali');
