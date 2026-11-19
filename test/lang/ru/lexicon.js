@@ -130,10 +130,17 @@ describe('Russian lexicon:', function() {
     expect(lexicon.words.in).to.equal('в');
   });
 
-  it('has no word for a working day or for the parity of hours',
+  it('has no word for a working day', function() {
+    strings(lexicon).forEach(function plain(word) {
+      expect(word).to.not.match(/рабоч/u);
+    });
+  });
+
+  it('names the step of years in words from the second to the tenth',
     function() {
-      strings(lexicon).forEach(function plain(word) {
-        expect(word).to.not.match(/рабоч|чётн[а-я]+ час/u);
-      });
+      expect(lexicon.yearSteps).to.have.length(9);
+      expect(lexicon.yearSteps[0]).to.equal('второй');
+      expect(lexicon.yearSteps[2]).to.equal('четвёртый');
+      expect(lexicon.yearSteps[8]).to.equal('десятый');
     });
 });

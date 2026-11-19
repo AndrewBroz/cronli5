@@ -61,10 +61,10 @@ describe('Russian styles:', function() {
         .to.equal('1-го числа каждого месяца в 0:00');
       expect(russian.sentence('ежедневно в 9:00', opts))
         .to.equal('Выполняется ежедневно в 9:00.');
-      expect(russian.sentence('никогда: такой даты не существует', opts))
-        .to.equal('Не выполняется никогда: такой даты не существует.');
-      expect(russian.sentence('никогда: в эти годы такой даты нет', opts))
-        .to.equal('Не выполняется никогда: в эти годы такой даты нет.');
+      expect(russian.sentence('никогда: в июне нет 31-го числа', opts))
+        .to.equal('Не выполняется никогда: в июне нет 31-го числа.');
+      expect(russian.label('никогда: в июне нет 31-го числа', opts))
+        .to.equal('Никогда: в июне нет 31-го числа');
       expect(russian.reboot(opts)).to.equal('при запуске системы');
       expect(russian.fallback(opts))
         .to.equal('нераспознанное выражение cron');

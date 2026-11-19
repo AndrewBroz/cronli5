@@ -13,14 +13,14 @@ const FIELDS =
 // A description is four parts in one order, from the calendar to the
 // clock (answers, "The sentence in one page"): the years («в 2030 году»,
 // «ежегодно», «в високосные годы»), the months that lead («в июне», «с
-// июня по август», «весь год, кроме июня,»), the day («ежедневно»,
+// июня по август», «во все месяцы, кроме июня,»), the day («ежедневно»,
 // «по будням», «1 июня», «по пятницам, а также 13-го числа каждого
 // месяца,») and the time. `describeParts` gives them as `{years, months,
 // day, time}`, each with the comma that closes it, if any.
 //
 // A time field changes the time. A day, month or year field changes the
 // years, the months and the day: a date takes its months («1 июня», «1
-// января и 1 июля») and then no months lead; one year joins one
+// января и 1 июля», «1-го числа января, апреля, июля и октября») and then no months lead; one year joins one
 // month's name («июня 2030 года») and then no years lead; a calendar date
 // with no year named, or a run of years, takes «ежегодно», and 29
 // February «в високосные годы»; days a named month lacks are not said and months that lack the
@@ -63,7 +63,7 @@ function hoursWrap(schedule) {
 
 // The third: a schedule whose day of the month exists in no month it
 // reaches never fires. The day part says so and no time is said
-// («никогда: такой даты не существует», answers 4.4), so an edit to the
+// («никогда: в июне нет 31-го числа», answers 4.4), so an edit to the
 // day of the month, the month, the weekday or the year that makes or
 // unmakes such a schedule may remove or restore the time.
 function neverFires(schedule) {
@@ -120,9 +120,10 @@ function leaks(pairList) {
       schedules.some(neverFires);
 
     // The comma that closes a part (after an exception, an addition or
-    // a clause) is set aside before two parts are compared.
+    // a clause), and the colon that closes the months before a union
+    // (answers 4.3), are set aside before two parts are compared.
     function words(part) {
-      return String(part).replace(/,$/u, '');
+      return String(part).replace(/[,:]$/u, '');
     }
 
     Object.keys(before).forEach(function compare(part) {
