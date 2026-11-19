@@ -157,6 +157,26 @@ spoken length, objects held in mind, repetition, operation tax.
   reader ("ten clock-time pairs to hold"), never with a count to bring
   down. The length gate of 2026-11-13 is what happens otherwise.
 
+### Speed: measure every new renderer
+
+After the audit and before merging, run `npm run speed` (the method and
+the record are in `tooling/docs/speed.md`): microseconds per pattern for
+every language on one corpus, core and renderer time apart, and the
+language's slowest patterns.
+
+- Speed matters for the test suite, which renders millions of
+  descriptions, and a slow path usually marks a fault in the
+  implementation: a whole unrestricted field listed (all the years), the
+  same set described several times in one sentence, wordings built and
+  then not used.
+- Read a new renderer beside the others, and look at its slowest
+  patterns. Add its numbers to the record.
+- **Any change for speed keeps every output byte-identical**, checked
+  over a large corpus (the bar so far: about a million pattern-language
+  pairs). A renderer is never made to say something different, or
+  harder to read, for speed. The numbers are places to look and a record
+  to compare against, not a target.
+
 ### Mechanics
 
 - Write briefs to files with a quoted heredoc: an unquoted one executes
