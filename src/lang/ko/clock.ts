@@ -122,6 +122,16 @@ function paren(items: string[]): string {
 }
 
 /**
+ * A phrase with a note in its bracket: after what the bracket already
+ * holds, so that two brackets never stand side by side.
+ */
+function noted(phrase: string, note: string, mark = ', '): string {
+  return phrase.endsWith(')') ?
+    `${phrase.slice(0, -1)}${mark}${note})` :
+    `${phrase}(${note})`;
+}
+
+/**
  * Whole hours listed compactly: grouped by their marker in clock order,
  * the numbers of a group joined tightly and «시대» said once.
  */
@@ -145,5 +155,6 @@ function blocks(hours: number[], voice: Voice): string {
 }
 
 export {
-  after, blocks, isKnown, join, paren, rhythm, sayTime, sayTimes, span, tight
+  after, blocks, isKnown, join, noted, paren, rhythm, sayTime, sayTimes, span,
+  tight
 };

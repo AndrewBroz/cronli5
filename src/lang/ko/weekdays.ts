@@ -25,15 +25,18 @@ function namesOf(days: number[], mark: string): string {
   }).join(mark);
 }
 
-const quartzWeekdays: {[kind: string]: (form: QuartzWeekday) => string} = {
+const quartzWeekdays: {
+  [kind: string]: (form: QuartzWeekday, yearly: boolean) => string;
+} = {
   last(form) {
     return `${words.last} ${weekdays[form.weekday].full}`;
   },
-  // A fifth such weekday is missing from most months.
-  nth(form) {
+  // A fifth such weekday is missing from most months; under one named
+  // month it is a year that lacks it.
+  nth(form, yearly) {
     const {nth} = form as {nth: number};
-    const skipped = nth === nthWords.length &&
-      `(${words.skippedMonths})` || '';
+    const lacking = [words.skippedMonths, words.skippedYears][Number(yearly)];
+    const skipped = nth === nthWords.length && `(${lacking})` || '';
 
     return `${nthWords[nth - 1]} ${weekdays[form.weekday].full}${skipped}`;
   }
@@ -41,7 +44,7 @@ const quartzWeekdays: {[kind: string]: (form: QuartzWeekday) => string} = {
 
 function quartzWeek(facts: ScheduleFacts, months: number[] | null): Arm {
   const {form} = facts.analyses.day.weekday as {form: QuartzWeekday};
-  const bare = quartzWeekdays[form.kind](form);
+  const bare = quartzWeekdays[form.kind](form, months?.length === 1);
 
   return {
     bare,
@@ -50,6 +53,7 @@ function quartzWeek(facts: ScheduleFacts, months: number[] | null): Arm {
     left: '',
     months: Boolean(months),
     single: false,
+    stepped: false,
     text: dated(months, bare)
   };
 }
@@ -113,6 +117,7 @@ function plainWeek(
     left: [rest, ''][Number(!daily)],
     months: Boolean(months),
     single: false,
+    stepped: false,
     text: join(months && monthsSaid(months), text)
   };
 }

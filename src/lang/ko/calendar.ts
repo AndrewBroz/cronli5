@@ -3,7 +3,7 @@
 // joined as cron joins them.
 
 import type {ScheduleFacts, SetDescription} from '../../core/schedule.js';
-import {after, join, tight} from './clock.js';
+import {after, join, noted, tight} from './clock.js';
 import type {Arm} from './dates.js';
 import {dateArm, leapOnly} from './dates.js';
 import lexicon from './lexicon.js';
@@ -23,8 +23,6 @@ interface Years {
   // Whether the phrase is a span of years, so that «매년» follows it
   // before a month.
   ranged: boolean;
-  // Where nothing but «내내» follows.
-  short: string;
 }
 
 /**
@@ -64,7 +62,7 @@ const topic = [words.topicAfterConsonant, words.topicAfterVowel];
 const also = `, ${words.also} `;
 
 function plainYears(text: string, ranged: boolean): Years {
-  return {again: text, lead: text, ranged, short: text};
+  return {again: text, lead: text, ranged};
 }
 
 function tightYears(form: Described): string {
@@ -104,7 +102,7 @@ const yearSayers: {
     const text = parity && `${parity}${words.every}` || yearSteps(form, set);
     const lead = `${text}, ${words.thatYear}`;
 
-    return {again: words.thatYear, lead, ranged: false, short: lead};
+    return {again: words.thatYear, lead, ranged: false};
   },
   // Several runs and steps are plural: «이들 해에는».
   cadencePieces(form: {parts: Described[]}, set) {
@@ -113,12 +111,7 @@ const yearSayers: {
       return yearParts[part.kind](part, set);
     }).join(also);
 
-    return {
-      again: those,
-      lead: `${text}, ${those}`,
-      ranged: false,
-      short: `${text}, ${words.thoseYears}`
-    };
+    return {again: those, lead: `${text}, ${those}`, ranged: false};
   },
   except(form: Except) {
     return plainYears(`${words.everyYear}(${tight(form.removed, units.year)} ` +
@@ -136,7 +129,8 @@ const yearSayers: {
 };
 
 function yearForm(set: FieldSet): Described {
-  return choose(set, {allBut: true, ceiling: 12, few: 4, split: true});
+  return choose(set,
+    {allBut: true, ceiling: 12, few: 4, split: true, splitFreely: true});
 }
 
 // The year phrase. An unrestricted year says nothing, and its thousands
@@ -171,8 +165,11 @@ function fronted(days: Days, text: string, reach: Reach, note = ''):
 function either(days: Days, date: Arm, week: Arm): Calendar {
   const condition = date.left && [date.left, week.bare] ||
     [week.left, date.bare];
-  const note = `(${words.but}, ${after(condition[0], topic)} ` +
-    `${condition[1]}${words.onlyIf})`;
+  // A step of days is no noun to hang «인» on.
+  const only = [words.onlyIf, words.fallsUnder][
+    Number(!date.left && date.stepped)];
+  const note = `${words.but}, ${after(condition[0], topic)} ` +
+    `${condition[1]}${only}`;
   const too = [words.alsoAt, words.too][
     Number(date.text.endsWith(words.every))];
 
@@ -185,14 +182,15 @@ function either(days: Days, date: Arm, week: Arm): Calendar {
 }
 
 // Both day fields narrowed, and both must match: the days of the month
-// that fall on those weekdays.
+// that fall on those weekdays. Every day but a few leaves the weekdays,
+// less those dates.
 function both(days: Days, date: Arm, week: Arm): Calendar {
   const chosen = `${week.both}${words.isDay}`;
 
-  return fronted(days, date.single &&
-    `${date.text}(${week.both}${words.onlyIf})` ||
-    date.text.endsWith(words.every) &&
-    `${date.text}, ${words.amongThose} ${chosen}` ||
+  return fronted(days, date.left &&
+    `${week.text}(${date.left} ${words.except})` ||
+    date.single && noted(date.text, `${week.both}${words.onlyIf}`) ||
+    date.stepped && `${date.text}, ${words.amongThose} ${chosen}` ||
     `${date.text} ${words.among} ${chosen}`, 'day');
 }
 
@@ -244,36 +242,24 @@ function armsOf(facts: ScheduleFacts, style: KoreanStyle): Arms {
 // What opens the calendar: the year phrase, with «매년» after a span of
 // years before a month; or «매년» alone before a month, «윤년마다» when
 // the date comes in leap years only.
-function frontOf(
-  facts: ScheduleFacts,
-  arms: Arms,
-  years: Years,
-  names: boolean
-): string {
-  const {date, months, week} = arms;
+function frontOf(facts: ScheduleFacts, arms: Arms, years: Years): string {
+  const {date, months} = arms;
   const monthly = Boolean(months) || Boolean(date && date.months);
   const leap = Boolean(date) && leapOnly(facts, facts.analyses.day.union);
   const yearly = monthly &&
     [words.everyYear, words.everyLeapYear][Number(leap)] || '';
-  const bare = !names && !monthly && !date && !week;
-  const lead = [years.lead, years.short][Number(bare)];
 
-  return lead ?
-    join(lead, years.ranged && monthly && words.everyYear) :
+  return years.lead ?
+    join(years.lead, years.ranged && monthly && words.everyYear) :
     yearly;
 }
 
-/**
- * The calendar part of a description. `names` is whether the time part
- * names a clock time: the plural year phrase reads «이들 해 내내» when
- * nothing but that fill follows it.
- */
-function calendarOf(facts: ScheduleFacts, names: boolean, style: KoreanStyle):
-  Calendar {
+/** The calendar part of a description. */
+function calendarOf(facts: ScheduleFacts, style: KoreanStyle): Calendar {
   const {dateReach: reach, day} = facts.analyses;
   const arms = armsOf(facts, style);
   const years = yearsSaid(facts);
-  const days = {...arms, front: frontOf(facts, arms, years, names), years};
+  const days = {...arms, front: frontOf(facts, arms, years), years};
   const never = reach !== null && !reach.fires && !day.union;
 
   return never ?

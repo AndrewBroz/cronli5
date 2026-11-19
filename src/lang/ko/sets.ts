@@ -45,6 +45,10 @@ export interface Choice {
   lessCadence?: boolean;
   // Whether runs and cadences together may be said.
   split?: boolean;
+  // Whether they may be said however many parts they have. Elsewhere only
+  // two parts are said, with at most one value beside them: more are
+  // rhythms found by chance in scattered values, and the list is easier.
+  splitFreely?: boolean;
 }
 
 type Rule =
@@ -226,7 +230,13 @@ const rules: Rule[] = [
     return set.values.length <= how.ceiling && listOf(set.values);
   },
   function runsAndCadences(set, how) {
-    return how.split && set.split;
+    const parts = set.split?.parts ?? [];
+    const loose = parts.flatMap(function listed(part) {
+      return (part as Partial<ValuesDescription>).values ?? [];
+    });
+    const plain = parts.length <= 2 && loose.length <= 1;
+
+    return how.split && (how.splitFreely || plain) && set.split;
   },
   function allButSome(set, how) {
     const found = exceptAll(set, how);

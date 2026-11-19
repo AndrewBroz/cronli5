@@ -18,9 +18,12 @@ const FIELDS =
 // of schedule has a fourth, the note: when a day of the month and a
 // weekday are both restricted and one of them is every day but a few, the
 // condition «(단, 15일은 월요일인 경우에만)» closes the sentence, written
-// straight after the time with no space (answers 4.3). `describeParts`
-// gives them as `{calendar, fill, time, note}`, the note an empty string
-// when there is none.
+// in a bracket straight after the time with no space (answers 4.3).
+// Where the time part itself ends in a bracket the note joins it after a
+// full stop, so that two brackets never stand side by side: «…(오전 3시대
+// 제외. 단, 15일은 월요일인 경우에만)». `describeParts` gives them as
+// `{calendar, fill, time, note}`, the note without its bracket and an
+// empty string when there is none.
 //
 // A second, a minute or an hour changes the time and the fill: the fill
 // is «매일» only when the time part names a clock time, and a minute or a
@@ -124,6 +127,22 @@ function leaks(pairList) {
   return found;
 }
 
+// The parts joined as a description: the calendar, the fill and the time
+// with spaces, then the note in a bracket, inside the time's own closing
+// bracket when it has one.
+function joined(parts) {
+  const body = [parts.calendar, parts.fill, parts.time]
+    .filter(Boolean).join(' ');
+
+  if (!parts.note) {
+    return body;
+  }
+
+  return body.endsWith(')') ?
+    `${body.slice(0, -1)}. ${parts.note})` :
+    `${body}(${parts.note})`;
+}
+
 // Continuity, measured directly. A description is its parts in one
 // order: calendar, fill, time, note. Editing one field of the pattern may
 // rewrite that field's part and nothing else, apart from the declared
@@ -132,14 +151,30 @@ function leaks(pairList) {
 // cannot make this pass.
 describe('Korean continuity:', function() {
   it('says a description as its parts, joined in order', function() {
-    pairs().forEach(function joined(pair) {
+    pairs().forEach(function whole(pair) {
       const {opts, schedule} = parse(pair[1]);
       const parts = korean.describeParts(schedule, opts);
 
-      expect([parts.calendar, parts.fill, parts.time]
-        .filter(Boolean).join(' ') + parts.note)
+      expect(joined(parts))
         .to.equal(korean.default.describe(schedule, opts));
       expect(FILLS).to.include(parts.fill);
+    });
+  });
+
+  it('closes a description with its note, in one bracket', function() {
+    const withNote = [
+      ['0 0 1-14,16-31 * 1', '매일 0시(단, 15일은 월요일인 경우에만)'],
+      ['*/5 0-2,4-23 1-14,16-31 * 1',
+        '매일 5분마다(오전 3시대 제외. 단, 15일은 월요일인 경우에만)']
+    ];
+
+    withNote.forEach(function each([pattern, expected]) {
+      const {opts, schedule} = parse(pattern);
+      const parts = korean.describeParts(schedule, opts);
+
+      expect(parts.note).to.equal('단, 15일은 월요일인 경우에만');
+      expect(joined(parts)).to.equal(expected);
+      expect(korean.default.describe(schedule, opts)).to.equal(expected);
     });
   });
 

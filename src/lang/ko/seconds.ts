@@ -40,7 +40,8 @@ const exceptions: Choice =
   {allBut: true, ceiling: 12, few: 4, lessCadence: true, split: true};
 
 // What the seconds on one moment may be for the moment to open a span.
-const spanned = ['all', 'range', 'cadence', 'pieces', 'except'];
+const spanned =
+  ['all', 'range', 'cadence', 'pieces', 'cadencePieces', 'except'];
 
 // The hours fixed in a moment: the one hour, or none under every hour.
 function hourFixed(work: Clockwork): Time {
@@ -73,7 +74,7 @@ function fromOrThrough(form: Described, level: Level, clock: Seconds):
 
 // Whether the seconds are said under whole hours as a rhythm of their
 // own: every minute fires, and one riding second has no span to ride on;
-// or every minute but a few fires under a rhythm that fills the minute.
+// or several seconds are in every minute, or in every minute but a few.
 function ownRhythm(clock: Seconds): boolean {
   const {work} = clock;
   const everyMinute = work.minuteForm.kind === 'all';
@@ -82,8 +83,7 @@ function ownRhythm(clock: Seconds): boolean {
   const spans = work.lone || Boolean(inSpans(work));
 
   return riding && everyMinute && (isOpen(work.hourForm) || !spans) ||
-    !still && isOpen(work.minuteForm) &&
-    (everyMinute || stepOf(clock.rhythm, clock.seconds.domain) > 0);
+    !still && isOpen(work.minuteForm);
 }
 
 const rules: SecondsRule[] = [
@@ -215,8 +215,7 @@ function timeOf(facts: ScheduleFacts, style: KoreanStyle):
   const clock: Seconds = {
     inEach: choose(seconds, {...exceptions, edges: true}),
     moments: choose(seconds,
-      {...exceptions, ceiling: listedMoments, edges: true, few: 3,
-        split: false}),
+      {...exceptions, ceiling: listedMoments, edges: true, few: 3}),
     rhythm: choose(seconds, {...exceptions, bare: true}),
     seconds,
     voice,

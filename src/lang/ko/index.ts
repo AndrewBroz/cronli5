@@ -5,7 +5,7 @@
 import type {Language, Schedule} from '../../core/schedule.js';
 import type {Reach} from './calendar.js';
 import {calendarOf} from './calendar.js';
-import {join} from './clock.js';
+import {join, noted} from './clock.js';
 import lexicon from './lexicon.js';
 import type {KoreanOptions, KoreanStyle} from './options.js';
 import {regions, style, styles} from './options.js';
@@ -49,13 +49,13 @@ const closingBracket = /^(.*?)(\((?:[^()]|\([^()]*\))*\))?$/su;
 
 /**
  * The parts of a description: the calendar, the fill, the time, and the
- * note that closes a sentence whose days carry a condition. The non-empty
- * ones of the first three joined with spaces, and then the note, are the
- * description.
+ * note that closes a sentence whose days carry a condition, without its
+ * bracket. The non-empty ones of the first three joined with spaces, and
+ * then the note in a bracket, are the description.
  */
 function describeParts(schedule: Schedule, opts: KoreanOptions): Parts {
   const time = timeOf(schedule, opts.style);
-  const calendar = calendarOf(schedule, time.names, opts.style);
+  const calendar = calendarOf(schedule, opts.style);
 
   return {
     calendar: calendar.text,
@@ -65,10 +65,13 @@ function describeParts(schedule: Schedule, opts: KoreanOptions): Parts {
   };
 }
 
+// The note that closes a sentence is a bracket. After a time part that
+// ends in a bracket of its own it joins that bracket, after a full stop.
 function describe(schedule: Schedule, opts: KoreanOptions): string {
   const parts = describeParts(schedule, opts);
+  const body = join(parts.calendar, parts.fill, parts.time);
 
-  return join(parts.calendar, parts.fill, parts.time) + parts.note;
+  return parts.note && noted(body, parts.note, '. ') || body;
 }
 
 // A sentence ends in «실행됩니다», after «에» unless the last word is a

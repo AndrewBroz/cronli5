@@ -31,6 +31,8 @@ export interface Arm {
   months: boolean;
   // Whether the arm is one date.
   single: boolean;
+  // Whether the arm is a step of days.
+  stepped: boolean;
   // As the arm stands alone, with its months and without its year.
   text: string;
 }
@@ -172,38 +174,56 @@ function skipNote(set: FieldSet, groups: DaysInMonths[]): string {
   return lacking && `(${skipped})` || '';
 }
 
-// Days that only some of the named months have are said apart with those
-// months: «1월·4월의 30일과 1월 31일», «2월 28일과 윤년 2월 29일»; after a
-// step of days, «(윤년에는 29일에도)». Empty when the days are not said
-// so.
-function apartFrom(shared: string, more: DaysInMonths): string {
+// The months that have days the other named months lack: those that have
+// them every year, and February where it has them in leap years only.
+function monthsHaving(more: DaysInMonths) {
+  return {
+    leapToo: more.months.some(function leap(group) {
+      return group.years === 'leap';
+    }),
+    others: more.months.filter(function everyYear(group) {
+      return group.years !== 'leap';
+    }).flatMap(function monthsOf(group) {
+      return group.months;
+    }).sort(ascending)
+  };
+}
+
+// After a list of days, the days only some months have follow with their
+// months: «1월·4월의 30일과 1월 31일», «2월 28일과 윤년 2월 29일».
+function listedApart(shared: string, more: DaysInMonths): string {
   const days = tight(more.days, units.date);
-  const others = more.months.filter(function everyYear(group) {
-    return group.years !== 'leap';
-  }).flatMap(function monthsOf(group) {
-    return group.months;
-  }).sort(ascending);
-  const leapToo = more.months.some(function leap(group) {
-    return group.years === 'leap';
-  });
-  const dates = [
+  const {leapToo, others} = monthsHaving(more);
+
+  return ([
     shared,
     others.length > 0 && dated(others, days),
     leapToo && `${words.leapYearFebruary} ${days}`
-  ].filter(Boolean) as string[];
-  const stepped = shared.endsWith(words.every);
-
-  return [
-    dates.reduce(function joined(said, date) {
-      return `${after(said, and)} ${date}`;
-    }),
-    others.length === 0 &&
-      `${shared}(${words.leapYearsToo} ${days}${words.alsoAt})` || ''
-  ][Number(stepped)];
+  ].filter(Boolean) as string[]).reduce(function joined(said, date) {
+    return `${after(said, and)} ${date}`;
+  });
 }
 
-// The days that only some of the named months have, said apart, when
-// they are one group beside the days every month has. Empty otherwise.
+// After a step of days, which ends on a day every month has, each later
+// day follows in the bracket with the months that have it: «(1월에는
+// 31일에도)», «(1월과 윤년 2월에는 29일에도)»; under February alone,
+// «(윤년에는 29일에도)».
+function steppedApart(shared: string, rest: DaysInMonths[]): string {
+  return `${shared}(${rest.map(function later(more) {
+    const {leapToo, others} = monthsHaving(more);
+    const named = others.length > 0 && monthsSaid(others);
+    const where = named && leapToo &&
+      `${after(named, and)} ${words.leapYearFebruary}` || named ||
+      words.leapYear;
+
+    return `${where}${words.at}${words.topicAfterVowel} ` +
+      `${tight(more.days, units.date)}${words.alsoAt}`;
+  }).join(', ')})`;
+}
+
+// The days that only some of the named months have, said apart from the
+// days every month has: after a step of days however they group, after a
+// list when they are one group. Empty otherwise.
 function daysApart(facts: ScheduleFacts, set: FieldSet, plain: boolean):
   string {
   const groups = daysByMonths(facts) as DaysInMonths[];
@@ -216,7 +236,9 @@ function daysApart(facts: ScheduleFacts, set: FieldSet, plain: boolean):
   const shared = first && dated(fieldOf(facts, 'month').values,
     daysSaid(setOf(first.days, set.domain), {monthly: false, plain}).text);
 
-  return rest.length === 1 && apartFrom(shared || '', rest[0]) || '';
+  return shared && shared.endsWith(words.every) && rest.length > 0 &&
+    steppedApart(shared, rest) ||
+    rest.length === 1 && listedApart(shared || '', rest[0]) || '';
 }
 
 // A plain set of days of the month, against the days its months have.
@@ -240,6 +262,7 @@ function plainDates(facts: ScheduleFacts, plain: boolean): Arm {
     left: said.left,
     months: Boolean(months),
     single: set.values.length === 1,
+    stepped: said.text.endsWith(words.every),
     text: apart || (said.daily ?
       join(months && monthsSaid(months), bare) :
       dated(months, bare))
@@ -295,23 +318,11 @@ const groupLabels: {[years: string]: (group: MonthLengths) => string} = {
   }
 };
 
-const februaries: {[years: string]: string} =
-  {common: words.commonYearFebruary, leap: words.leapYearFebruary};
-
-// A group's date: under its months, or under February by the sort of
-// year.
-function groupDate(group: MonthLengths, day: string): string {
-  const february = februaries[group.years];
-
-  return february && `${february} ${day}` || dated(group.months, day);
-}
-
-const yearSorts: {[years: string]: string} =
-  {common: words.commonYear, leap: words.leapYear};
-
 // Three days or more before the last: the date itself where it is one;
-// each length's date under named months; under every month the form, with
-// the day it comes to in a bracket.
+// under named months each length's date in calendar order, February's
+// two as one («2월 25일(윤년에는 26일)») and a February that fires in leap
+// years only last; under every month the form, with the day it comes to
+// in a bracket.
 function countedBack(
   facts: ScheduleFacts,
   form: {days: number},
@@ -343,17 +354,27 @@ function countedBack(
     ].filter(Boolean).join(', ')})`;
   }
 
-  if (groups.every(function february(group) {
-    return group.years !== 'every';
-  })) {
-    return `${monthsSaid(months)} ${head}(${groups.map(function each(group) {
-      return `${yearSorts[group.years]} ${dayIn(group)}`;
-    }).join(', ')})`;
-  }
-
-  return groups.map(function each(group) {
-    return groupDate(group, dayIn(group));
+  const [common] = groups.filter(function inCommon(group) {
+    return group.years === 'common';
+  });
+  const [leap] = groups.filter(function inLeap(group) {
+    return group.years === 'leap';
+  });
+  const leapDay = leap && dayIn(leap);
+  const dates = groups.filter(function everyYear(group) {
+    return group.years !== 'leap';
+  }).sort(function calendarOrder(a, b) {
+    return a.months[0] - b.months[0];
+  }).map(function each(group) {
+    return group === common ?
+      `${dated(group.months, dayIn(group))}(${words.leapYear}${words.at}` +
+        `${words.topicAfterVowel} ${leapDay})` :
+      dated(group.months, dayIn(group));
   }).join(', ');
+
+  return common || !leap ?
+    dates :
+    `${after(dates, and)} ${words.leapYearFebruary} ${leapDay}`;
 }
 
 // A form of the day-of-month field that some schedulers add.
@@ -374,6 +395,7 @@ function quartzDates(facts: ScheduleFacts, plain: boolean): Arm {
     left: '',
     months: Boolean(months) || Boolean(counted) && monthLengths.length === 1,
     single: true,
+    stepped: false,
     text: counted || dated(months, bare)
   };
 }
