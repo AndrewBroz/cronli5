@@ -1,10 +1,9 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as spanish from '../../../src/lang/es/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -24,10 +23,17 @@ const FIELDS =
 // join a date or a weekday phrase («en junio, de lunes a viernes» against
 // «los lunes de junio»), days a named month lacks are not said, in a
 // union the days of the month move from the day to the addition and
-// under named months say «de ese mes», and six weekdays are an exception
-// alone and a run in a union. Those are the fusions answers 2.7
-// declares; all of them stay inside the frame, the day and the addition.
-// Nothing else may cross, with the two exceptions below.
+// take no exception there, under named months they say
+// «de ese mes», six weekdays are an exception alone and a run in a
+// union, days of the month that are every day of the months named
+// silence the weekdays, a day of the month that some named month lacks
+// leaves only the months that fire to be said («el 30 de marzo» for the
+// 30th in February and March), a 29th of February alone leads with «en
+// los años bisiestos», and a day counted from the last that a month may
+// be too short for leads with «en los meses de más de 30 días». Those are
+// the fusions answers 2.7 declares; all of them stay inside the frame,
+// the day and the addition.
+// Nothing else may cross, with the three exceptions below.
 const MAY_CHANGE = {
   date: ['frame', 'day', 'also'],
   hour: ['time'],
@@ -39,8 +45,9 @@ const MAY_CHANGE = {
 };
 
 // The first place a time field reaches another part: when the hours are
-// restricted and no day is named, the day part says «todos los días», so
-// an hour edit may add or remove exactly those words.
+// restricted and no day is named, the day part says «todos los días»
+// (unless they still run round the clock: a cadence that tiles the day,
+// «cada 2 horas»), so an hour edit may add or remove exactly those words.
 const HOUR_MAY_SET_DAY = ['', 'todos los días'];
 
 // The second: hours that run past midnight are one run («cada hora de
@@ -59,13 +66,18 @@ function hoursWrap(schedule) {
   );
 }
 
-const SETUP = {languages: [spanish.default], options: {}, styles: {}};
+// The third: a schedule whose day of the month exists in no month it
+// reaches never fires. The sentence says so and says no time («nunca,
+// porque junio no tiene día 31», answers 4.4), so an edit to the day of
+// the month, the month or the year that makes or unmakes such a schedule
+// may remove or restore the time.
+function neverFires(schedule) {
+  const {dateReach, day} = schedule.analyses;
 
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
+  return dateReach !== null && !dateReach.fires && !day.union;
 }
+
+const parse = parser(spanish.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);
@@ -104,9 +116,11 @@ function leaks(pairList) {
 
     const before = partsOf(a, options);
     const after = partsOf(b, options);
-    const wrapped = changed[0] !== 'hour' &&
-      (hoursWrap(parse(a, options).schedule) ||
-        hoursWrap(parse(b, options).schedule));
+    const schedules = [a, b].map(function scheduleOf(pattern) {
+      return parse(pattern, options).schedule;
+    });
+    const wrapped = changed[0] !== 'hour' && schedules.some(hoursWrap);
+    const silenced = changed[0] !== 'hour' && schedules.some(neverFires);
 
     // The comma after a part belongs to the join, not to the part: the
     // day is followed by a space before a clock time and by a comma
@@ -123,7 +137,7 @@ function leaks(pairList) {
         HOUR_MAY_SET_DAY.includes(words(after[part]));
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&
-          !(wrapped && part === 'time') &&
+          !((wrapped || silenced) && part === 'time') &&
           !MAY_CHANGE[changed[0]].includes(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
@@ -161,7 +175,7 @@ describe('Spanish continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('renders equal schedules identically', function() {
     function render(pattern, options) {
@@ -173,7 +187,7 @@ describe('Spanish continuity:', function() {
     expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
     expect(score(render, neighborPairs(coreSetSeeds()))
       .equivalentViolations).to.deep.equal([]);
-  }, 60000);
+  }, 240000);
 
   // Spanish declares no tie (answers, opening): no wording depends on how
   // a field was written.

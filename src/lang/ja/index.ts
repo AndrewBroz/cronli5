@@ -13,10 +13,14 @@ import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {JapaneseOptions, JapaneseStyle} from './options.js';
 import {regions, style, styles} from './options.js';
+import {when} from './phrases.js';
 
 const {marks, words} = lexicon;
 
-/** The four parts of a description, each ending in what joins it on. */
+/**
+ * The four parts of a description, each ending in what joins it on.
+ * @internal
+ */
 export interface Parts {
   day: string;
   month: string;
@@ -25,23 +29,30 @@ export interface Parts {
 }
 
 const shared = marks.comma + words.inEach;
-const allDay = marks.comma + words.allDay;
 
 // What stands between the day part and the time: by what the day part
 // ends in, then by how the time begins. Several days that share a time
 // close with いずれも; 毎日 runs straight into a clock time; the even or
-// odd hours follow a comma; and a cadence through every hour takes 終日.
+// odd hours and a bare cadence follow a comma.
 const joins: Record<Lead, Record<TimeKind, string>> = {
-  everyDay: {allDay, clock: '', hourly: words.of, rule: marks.comma},
+  everyDay: {
+    allDay: marks.comma, clock: '', hourly: words.of, rule: marks.comma
+  },
   none: {allDay: '', clock: '', hourly: '', rule: ''},
   other: {
-    allDay, clock: words.of, hourly: words.of, rule: marks.comma
+    allDay: marks.comma, clock: words.of, hourly: words.of,
+    rule: marks.comma
   },
-  shared: {
-    allDay: shared + words.allDay, clock: shared, hourly: shared,
-    rule: shared
-  }
+  shared: {allDay: shared, clock: shared, hourly: shared, rule: shared}
 };
+
+// A month or a year with no day after it, before a time that a comma
+// follows: the comma takes the place of its の.
+function closed(part: string, comma: boolean): string {
+  return comma && part.endsWith(words.of) ?
+    part.slice(0, -words.of.length) + marks.comma :
+    part;
+}
 
 // A field's values, when it does not take every one of them.
 function restricted(candidates: SetDescription[] | null): boolean {
@@ -58,6 +69,7 @@ function valuesOf(schedule: Schedule, field: 'hour' | 'minute' | 'second'):
 /**
  * The parts of a description: joined in the order year, month, day, time,
  * with nothing between, they are the description.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: JapaneseOptions): Parts {
   const {candidates} = schedule.analyses;
@@ -71,16 +83,21 @@ function describeParts(schedule: Schedule, opts: JapaneseOptions): Parts {
     seconds: valuesOf(schedule, 'second'),
     wrap
   }, opts.style);
-  const calendar: Calendar = calendarPart(schedule.analyses, {
-    allDay: time.kind === 'allDay',
-    restricted: !time.everyHour
+  // Hours that tile the day run round the clock, as every hour does; only
+  // a first time under a month or a year needs 毎日 to rest on.
+  const calendar: Calendar = calendarPart(schedule, {
+    allDay: time.tiles && time.kind === 'clock',
+    restricted: !time.everyHour && !time.tiles
   }, opts.style);
+  const comma = calendar.day === '' &&
+    (time.kind === 'allDay' || time.kind === 'rule');
 
+  // A schedule that never runs says only that.
   return {
-    day: calendar.day + joins[calendar.lead][time.kind],
-    month: calendar.month,
-    time: time.text,
-    year: calendar.year
+    day: calendar.day + when(calendar.runs, joins[calendar.lead][time.kind]),
+    month: closed(calendar.month, comma),
+    time: when(calendar.runs, time.text),
+    year: closed(calendar.year, comma && calendar.month === '')
   };
 }
 
@@ -90,7 +107,7 @@ function describe(schedule: Schedule, opts: JapaneseOptions): string {
   return parts.year + parts.month + parts.day + parts.time;
 }
 
-const japanese: Language<JapaneseStyle> = {
+const japanese: Language<JapaneseStyle, 'ja'> = {
   code: 'ja',
   defaultStyle: 'standard',
   describe,
@@ -99,12 +116,18 @@ const japanese: Language<JapaneseStyle> = {
   label: (description) => description,
   reboot: () => words.startup,
   regions,
-  sentence: (description) =>
-    description + words.runsAt + words.runs + marks.stop,
+  // A description is closed with に実行します。; one that says the schedule
+  // never runs is itself the statement, and says it as a sentence does.
+  sentence: (description) => (description.startsWith(words.never) ?
+    words.neverRuns + description.slice(words.never.length) :
+    description + words.runsAt + words.runs) + marks.stop,
   style,
   styles
 };
 
 export type {JapaneseStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default japanese;

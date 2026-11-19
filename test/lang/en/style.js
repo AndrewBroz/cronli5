@@ -42,6 +42,15 @@ describe('English styles:', function() {
     }, /hour24.*hour12/su);
   });
 
+  it('names the time separator `separator`, as other languages do',
+    function() {
+      expect(en.style('us', {separator: '.'}).separator).to.equal('.');
+      expect(styles.gb.separator).to.equal('.');
+      throwsOption(function build() {
+        en.style('us', {sep: '.'});
+      }, /`sep` was renamed `separator`/u);
+    });
+
   it('rejects a value of the wrong kind', function() {
     throwsOption(function build() {
       en.style('us', {through: 5});

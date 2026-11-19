@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'es'}); // 'de lunes a viernes a las 9:30'
 
 ## Status
 
-Built from a written rule book
+Built from written answers to the language questionnaire
 ([answers.md](../../src/lang/es/answers.md)) and hand-written expected
 descriptions. Independent readers (models) checked every expected
 description against its schedule, and fluent judges briefed in Spanish
@@ -43,7 +43,7 @@ before the renderer was built. **No fluent human has reviewed it yet.**
 * **Midnight is «a las 0:00»**: «a medianoche el día 1» is heard by many as
   the night that ends the 1st.
 * **Quartz `W` is «día laborable»** (`'es-MX'`: «día hábil»), meaning Monday
-  to Friday. The pattern knows no public holidays.
+  to Friday.
 
 ## cronli5 vs. cRonstrue (es locale)
 

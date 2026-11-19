@@ -13,7 +13,10 @@ import {voiceOf} from './voice.js';
 
 const {words} = lexicon;
 
-/** The four parts of a description, each empty where it has nothing. */
+/**
+ * The four parts of a description, each empty where it has nothing.
+ * @internal
+ */
 export interface GermanParts {
   day: string;
   month: string;
@@ -25,13 +28,15 @@ export interface GermanParts {
  * A description as its parts, in the order they are said. Joined by
  * single spaces they are the description. A closing comma and an opening
  * «jeweils» belong to the join between two parts.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: GermanOptions): GermanParts {
   const voice = voiceOf(opts.style);
   const time = timePart(schedule, voice);
-  const {day, lead, month, year} = calendar(schedule, time, voice);
+  const {day, lead, month, never, year} = calendar(schedule, time, voice);
 
-  return {day, month, time: lead + time.text, year};
+  // A schedule that never runs has no time to say.
+  return {day, month, time: never ? '' : lead + time.text, year};
 }
 
 function describe(schedule: Schedule, opts: GermanOptions): string {
@@ -40,7 +45,7 @@ function describe(schedule: Schedule, opts: GermanOptions): string {
   return join([year, month, day, time]);
 }
 
-const german: Language<GermanStyle> = {
+const german: Language<GermanStyle, 'de'> = {
   code: 'de',
   defaultStyle: 'de',
   describe,
@@ -63,5 +68,8 @@ const german: Language<GermanStyle> = {
 };
 
 export type {GermanStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default german;

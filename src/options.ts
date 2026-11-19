@@ -143,6 +143,27 @@ function codeOf(text: unknown): {code: string; region: string} | null {
     null;
 }
 
+// The console of a browser or of Node; the library targets neither's types.
+declare const console: {warn(message: string): void};
+
+// The variants a caller has already been warned about, so each is said
+// once in a process, not on every call.
+const warned = new Set<string>();
+
+// A variant the language does not yet write is described in the language
+// as written; the caller is told so, once.
+function warnPending(language: Language,
+  named: {code: string; region: string}): void {
+  const pending = language.pending?.[named.region];
+  const asked = `${named.code}-${named.region}`;
+
+  if (pending && !warned.has(asked)) {
+    warned.add(asked);
+    console.warn(`cronli5 does not yet write ${pending.variant} ` +
+      `(${asked}); until it does, it describes in ${pending.instead}.`);
+  }
+}
+
 // The language a `lang` option selects and the named style it starts
 // from. A code is a language and an optional region, joined by `-` or
 // `_`, in any case; a region the language does not know takes its default
@@ -176,6 +197,8 @@ function languageFor(setup: Setup, lang: unknown):
   if (!language) {
     throw unavailable(named.code, setup);
   }
+
+  warnPending(language, named);
 
   return {
     base: language.regions[named.region] ?? language.defaultStyle,

@@ -1,0 +1,57 @@
+1. 30 minuten na elk heel uur
+2. elke dag elke minuut van 09:00 t/m 17:59 uur
+3. elke dag om 08:00, 12:00 en 18:00 uur
+4. elke dag elke 2 uur van 01:00 t/m 23:00 uur
+5. op maandag t/m vrijdag om 08:00, 12:00 en 18:00 uur, telkens dat hele uur elk kwartier
+6. elke dag elke 2 uur van 00:00 t/m 22:00 uur, telkens dat hele uur elke minuut
+7. op maandag t/m vrijdag 5, 20 en 45 minuten na elk heel uur van 09:00 t/m 17:00 uur
+8. op de 1e van de maand elke 2 uur van 00:00 t/m 22:00 uur, behalve om 08:00 uur
+9. elke dag elke 10 minuten, behalve van 03:00 t/m 03:50 uur
+10. elke dag behalve woensdag, om 09:00 uur
+11. op maandag t/m zaterdag om 09:00 uur
+12. zowel op de 1e van de maand als elke vrijdag om 00:00 uur
+13. in januari en juli, zowel op de 1e en 15e van de maand als op maandag t/m vrijdag om 00:00 uur
+14. in juni, zowel op de 1e van de maand als elke vrijdag om 00:00 uur
+15. op de oneven dagen van de maand behalve de 15e, om 09:00 uur
+16. elke 5 dagen van de 1e t/m 31e van de maand om 00:00 uur
+17. van juni t/m augustus, op de 1e van de maand om 00:00 uur
+18. elke 2 maanden van januari t/m november, op de 1e van de maand om 00:00 uur
+19. van januari t/m november, elke dag om 09:00 uur
+20. op de laatste doordeweekse dag van de maand om 00:00 uur
+21. op de doordeweekse dag van de maand het dichtst bij de 15e, om 09:00 uur
+22. op de voorlaatste dag van de maand om 00:00 uur
+23. 3 dagen voor de laatste dag van de maand om 00:00 uur
+24. in juni, op de tweede maandag van de maand om 00:00 uur
+25. elke dag om 01:30 en 13:30 uur
+26. elke dag om 00:00 en 12:00 uur
+27. elke dag om 00:00, 06:00, 12:00 en 18:00 uur
+28. elke dag elke 2 uur van 00:00 t/m 22:00 uur
+29. elke dag elke seconde van 09:00:00 t/m 09:00:59 uur
+30. 30 seconden na elk heel uur
+31. op maandag t/m vrijdag elk kwartier van 09:00 t/m 17:45 uur, telkens die hele minuut elke seconde
+32. op maandag t/m vrijdag elk kwartier van 09:00 t/m 17:45 uur, telkens die hele minuut elke 30 seconden
+33. van 2030 t/m 2035, op 1 januari om 00:00 uur
+34. elke 4 jaar vanaf 2028, elke dag om 09:00 uur
+35. in de even jaren vanaf 2030, elke dag om 09:00 uur
+36. elke minuut van 0 t/m 29 minuten na elk heel uur
+37. elke 10 minuten van 5 t/m 55 minuten na elk heel uur
+38. in juni, elke maandag om 09:00 uur
+39. elke zaterdag en zondag elke minuut
+40. elke dag elk uur van 22:00 t/m 02:00 uur
+41. elke dag elke 3 uur van 00:30 t/m 21:30 uur
+42. op de eerste doordeweekse dag van de maand om 00:00 uur
+43. elke maandag, woensdag en vrijdag om 09:00 uur
+44. op de 1e t/m 7e van de maand om 09:00 uur
+45. van juni t/m augustus, elke dag om 09:00 uur
+46. elk heel uur
+47. elk kwartier
+48. op de 1e van de maand elke minuut
+49. elke maandag om 09:00 uur
+50. zowel op de 1e van de maand als op maandag t/m vrijdag om 00:00 uur
+51. in juni, elke dag om 09:00 uur
+52. in 2030, elke dag om 09:00 uur
+53. elk jaar op 1 januari om 00:00 uur
+54. elke dag 15 en 45 minuten na elk vierde hele uur van 00:00 t/m 20:00 uur
+55. elke dag elk uur van 09:00 t/m 17:00 uur
+56. elke dag om 09:00, 09:15, 09:30 en 09:45 uur
+57. op de 1e en 15e van de maand om 00:00 uur

@@ -23,6 +23,7 @@ describe('Ukrainian lexicon:', function() {
       every: 'щопонеділка',
       feminine: false,
       genitive: 'понеділка',
+      nominative: 'понеділок',
       short: 'пн'
     });
     expect(lexicon.weekdays[5].every).to.equal('щоп\'ятниці');

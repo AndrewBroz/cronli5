@@ -5,10 +5,12 @@
 
 import {domainOf, fieldOrder, fieldSpecs} from './specs.js';
 import type {
-  Analyses, Field, Pattern, Schedule, SetDescription, Shape, Shapes
+  Analyses, CadencePieces, Field, Pattern, Schedule, SetDescription, Shape,
+  Shapes
 } from './schedule.js';
-import {dayFacts} from './day.js';
-import {describeSet} from './describe-set.js';
+import {dateReach, monthLengths} from './date-reach.js';
+import {dayArms, dayFacts} from './day.js';
+import {describeCadencePieces, describeSet} from './describe-set.js';
 import {enumerateFires, includes} from './util.js';
 import {isQuartzDate, isQuartzWeekday} from './validate.js';
 
@@ -51,20 +53,21 @@ function fieldShape(value: string, field: Field): Shape {
   return 'single';
 }
 
-// Every compact description of a field's value set. A wildcard is the
-// whole field without enumerating it (the year domain is thousands of
-// values); a Quartz form is not a plain set of values and has none.
-function fieldCandidates(
+// Every compact description of a field's value set, and the set as runs
+// and cadences together. A wildcard is the whole field without
+// enumerating it (the year domain is thousands of values); a Quartz form
+// is not a plain set of values and has none.
+function fieldDescriptions(
   value: string,
   shape: Shape,
   field: Field
-): SetDescription[] | null {
+): {candidates: SetDescription[] | null; cadencePieces: CadencePieces | null} {
   if (shape === 'quartz') {
-    return null;
+    return {cadencePieces: null, candidates: null};
   }
 
   if (shape === 'wildcard') {
-    return [{kind: 'all'}];
+    return {cadencePieces: null, candidates: [{kind: 'all'}]};
   }
 
   const domain = domainOf(field);
@@ -73,7 +76,10 @@ function fieldCandidates(
       return a - b;
     });
 
-  return describeSet(fires, domain);
+  return {
+    cadencePieces: describeCadencePieces(fires, domain),
+    candidates: describeSet(fires, domain)
+  };
 }
 
 // The kind of description a field's spelling corresponds to. A list is
@@ -98,19 +104,31 @@ function fieldWritten(value: string, shape: Shape) {
 function analyze(pattern: Pattern): Schedule {
   const shapes = {} as Shapes;
   const candidates = {} as Analyses['candidates'];
+  const cadencePieces = {} as Analyses['cadencePieces'];
   const written = {} as Analyses['written'];
 
   fieldOrder.forEach(function classify(field) {
     shapes[field] = fieldShape(pattern[field], field);
-    candidates[field] = fieldCandidates(pattern[field], shapes[field], field);
+
+    const described = fieldDescriptions(pattern[field], shapes[field], field);
+
+    candidates[field] = described.candidates;
+    cadencePieces[field] = described.cadencePieces;
     written[field] = fieldWritten(pattern[field], shapes[field]);
   });
 
+  const arms = dayArms(pattern, shapes, candidates);
+  const reach = dateReach(arms.date, candidates);
+  const fired = monthLengths(arms.date, candidates);
+
   return {
     analyses: {
+      cadencePieces,
       candidates,
       clockSecond: clockSecond(candidates.second),
-      day: dayFacts(pattern, shapes, candidates),
+      dateReach: reach,
+      day: dayFacts(arms, {fired, reach}, candidates.weekday),
+      monthLengths: fired,
       written
     },
     pattern,

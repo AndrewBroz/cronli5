@@ -9,16 +9,16 @@ import type {
 } from '../../core/schedule.js';
 import {denote} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
-import {beforeMonth, dayOf, monthOf, yearOf} from './days.js';
+import {dayOf, monthOf, monthsOf, neverOf, yearOf} from './days.js';
 import lexicon from './lexicon.js';
 import type {ChineseOptions, ChineseStyle} from './options.js';
-import {regions, style, styles} from './options.js';
+import {pending, regions, style, styles} from './options.js';
 import {when} from './sets.js';
 import {timeOf} from './time.js';
 
 const {marks, words} = lexicon;
 
-/** The pieces of a description, which joined in this order are it. */
+/** The pieces of a description, which joined in this order are it. @internal */
 export interface ChineseParts {
   year: string;
   month: string;
@@ -36,34 +36,49 @@ function valuesOf(schedule: Schedule, field: Field): number[] {
 /**
  * The pieces of a description. The join stands between the day and the
  * time. Before a time that runs round the clock it is a comma, unless
- * nothing stands before it or only a cadence of years that ends in 当年.
- * Before a clock time it is whatever the day part asks for.
+ * nothing stands before it or only a cadence of years that ends in 当年;
+ * after a date and a weekday together it is ，均为.
+ * Before a clock time it is whatever the day part asks for. A schedule
+ * whose dates exist in none of its months has one piece, which says that
+ * it never fires.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: ChineseOptions):
   ChineseParts {
-  const {candidates} = schedule.analyses;
-  const years = yearOf(candidates.year as SetDescription[]);
-  const months = monthOf(candidates.month as SetDescription[],
-    years.kind === 'none');
+  const {dateReach, day} = schedule.analyses;
+  const years = yearOf(schedule);
+  const months = monthOf(monthsOf(schedule), years);
   const days = dayOf(schedule, months);
-  const year = years.text +
-    when(months.kind !== 'none', beforeMonth[years.kind]);
+  const year = years.text + months.lead;
   const month = months.text;
   const time = timeOf({
     hour: valuesOf(schedule, 'hour'),
     minute: valuesOf(schedule, 'minute'),
     second: valuesOf(schedule, 'second')
-  }, year + month + days.text === '', opts.style);
+  }, {
+    daily: days.daily,
+    wraps: year + month + days.text === ''
+  }, opts.style);
   const paused = year + month + days.text !== '' &&
     !(years.kind === 'cycle' && month + days.text === '');
 
-  return {
-    day: days.text,
-    join: time.allDay ? when(paused, marks.comma) : days.tie,
-    month,
-    time: time.text,
-    year
-  };
+  return dateReach?.fires === false && !day.union ?
+    {
+      day: neverOf(schedule, when(years.kind !== 'none', year) + month),
+      join: '',
+      month: '',
+      time: '',
+      year: ''
+    } :
+    {
+      day: days.text,
+      join: time.allDay ?
+        when(paused, marks.comma) + when(days.joined, words.bothAre) :
+        days.tie,
+      month,
+      time: time.text,
+      year
+    };
 }
 
 function describe(schedule: Schedule, opts: ChineseOptions): string {
@@ -89,12 +104,13 @@ function fallback(): string {
   return words.unrecognizable;
 }
 
-const chinese: Language<ChineseStyle> = {
+const chinese: Language<ChineseStyle, 'zh'> = {
   code: 'zh',
   defaultStyle: 'standard',
   describe,
   fallback,
   label,
+  pending,
   reboot,
   regions,
   sentence,
@@ -103,5 +119,8 @@ const chinese: Language<ChineseStyle> = {
 };
 
 export type {ChineseStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default chinese;

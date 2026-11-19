@@ -12,21 +12,32 @@ const {words} = lexicon;
 const secondsInDay = 86400;
 
 /** Words joined by single spaces, leaving out any part that is silent. */
-function join(...parts: string[]): string {
+function join(...parts: Array<string | false>): string {
   return parts.filter(Boolean).join(' ');
 }
 
-/** "A", "A and B", "A, B, and C". */
-function list(items: string[], opts: EnglishOptions): string {
-  const and = ` ${words.and} `;
+// Items joined by commas and one last word before the final item.
+function joined(items: string[], last: string, opts: EnglishOptions): string {
+  const word = ` ${last} `;
 
   if (items.length < 3) {
-    return items.join(and);
+    return items.join(word);
   }
 
   const comma = opts.style.serialComma ? ',' : '';
 
-  return items.slice(0, -1).join(', ') + comma + and + items[items.length - 1];
+  return items.slice(0, -1).join(', ') + comma + word +
+    items[items.length - 1];
+}
+
+/** "A", "A and B", "A, B, and C". */
+function list(items: string[], opts: EnglishOptions): string {
+  return joined(items, words.and, opts);
+}
+
+/** "A", "A or B", "A, B, or C": after "no", where "and" would be wrong. */
+function either(items: string[], opts: EnglishOptions): string {
+  return joined(items, words.or, opts);
 }
 
 /**
@@ -75,26 +86,41 @@ function writeTime(moment: Moment, opts: EnglishOptions):
   if (!style.hour12) {
     return {
       meridiem: '',
-      text: [lexicon.twoDigits(moment.hour), ...parts].join(style.sep)
+      text: [lexicon.twoDigits(moment.hour), ...parts].join(style.separator)
     };
   }
 
+  // A style with no word for a moment writes it as a time.
   const idiom = momentIdioms.find(function fits(row) {
-    return row.applies(moment);
+    return row.applies(moment, opts) && row.say(moment, opts) !== '';
   });
 
   if (idiom) {
     return {meridiem: '', text: idiom.say(moment, opts)};
   }
 
-  // On the hour, the hour stands alone unless the minute must show.
-  const alone = moment.minute === 0 && parts.length === 1 && !moment.exact;
+  // On the hour, the hour stands alone unless the minute must show or the
+  // style always shows it.
+  const alone = moment.minute === 0 && parts.length === 1 &&
+    !moment.exact && !style.minutes;
   const shown = alone ? [] : parts;
+  const hour = moment.hour % 12 || 12;
 
   return {
     meridiem: moment.hour < 12 ? style.am : style.pm,
-    text: [String(moment.hour % 12 || 12), ...shown].join(style.sep)
+    text: [style.padHour ? lexicon.twoDigits(hour) : String(hour), ...shown]
+      .join(style.separator)
   };
+}
+
+/**
+ * The options under which a time that bounds a stretch, or names an
+ * hour, is written: 0:00 as a time, "12 a.m.", never as a word. "From
+ * midnight" can open a stretch at the end of a day as well as at its
+ * start, and "the midnight hour" was read as the hour before midnight.
+ */
+function asTime(opts: EnglishOptions): EnglishOptions {
+  return {...opts, style: {...opts.style, midnight: ''}};
 }
 
 /** Times of day, each numbered one with its own a.m. or p.m. */
@@ -212,6 +238,6 @@ function weekdayNames(days: number[], form: 'full' | 'plural',
 }
 
 export {
-  dayNames, hourNames, inCycleOrder, join, list, momentAt, monthNames, span,
-  through, timeNames, walkWeek, weekdayNames, weekRank
+  asTime, dayNames, either, hourNames, inCycleOrder, join, list, momentAt,
+  monthNames, span, through, timeNames, walkWeek, weekdayNames, weekRank
 };

@@ -63,18 +63,23 @@ function linearRuns(values: number[]): Run[] {
 }
 
 /**
- * The runs in the order they are said: ascending, unless the field may
- * wrap and a run leaves the top of the domain and resumes at the bottom,
- * which is then one run and comes first.
+ * The runs in the order they are said: ascending by their first value.
+ * Where the field may wrap, a run that leaves the top of the domain and
+ * resumes at the bottom is one run of at least `least` values; it begins
+ * later than every other, so it comes last.
  */
-function runsOf(values: number[], domain: Domain, wraps: boolean): Run[] {
+function runsOf(
+  values: number[],
+  domain: Domain,
+  wraps: boolean,
+  least = 2
+): Run[] {
   const runs = linearRuns(values);
+  const across = [...lastOf(runs), ...runs[0]];
   const joins = wraps && runs.length > 1 && values[0] === domain.min &&
-    lastOf(values) === domain.max;
+    lastOf(values) === domain.max && across.length >= least;
 
-  return joins ?
-    [[...lastOf(runs), ...runs[0]], ...runs.slice(1, -1)] :
-    runs;
+  return joins ? [...runs.slice(1, -1), across] : runs;
 }
 
 /** The evenly spaced cadence a set forms, if the core finds one. */
@@ -88,6 +93,12 @@ function cadenceOf(values: number[], domain: Domain): Cadence | undefined {
 function everyOther(values: number[], domain: Domain): boolean {
   return values.length > 1 && values[0] <= domain.min + 1 &&
     lastOf(values) >= domain.max - 1 &&
+    values.every((value, at) => at === 0 || value - values[at - 1] === 2);
+}
+
+/** Whether the values are more than can be listed, each two apart. */
+function everySecond(values: number[]): boolean {
+  return values.length > LISTED &&
     values.every((value, at) => at === 0 || value - values[at - 1] === 2);
 }
 
@@ -135,6 +146,6 @@ function series(items: string[]): string {
 }
 
 export {
-  LISTED, RANGE, cadenceOf, chosen, everyOther, first, lastOf, linearRuns,
-  listed, never, runsOf, series, when
+  LISTED, RANGE, cadenceOf, chosen, everyOther, everySecond, first, lastOf,
+  linearRuns, listed, never, runsOf, series, when
 };

@@ -1,5 +1,6 @@
 // Check that the language questionnaire asks about every universal trap
-// the add-language playbook records. The playbook grows as languages are
+// the trap playbook
+// (tooling/docs/playbook.md) records. The playbook grows as languages are
 // added; this keeps the questionnaire from falling behind it.
 //
 // Usage: questionnaire-check.mjs  (exits non-zero and lists what is missing)
@@ -10,7 +11,7 @@ import {pathToFileURL} from 'node:url';
 const QUESTIONNAIRE =
   new URL('../docs/language-questionnaire.md', import.meta.url);
 const PLAYBOOK =
-  new URL('../../.claude/skills/add-language/playbook.json', import.meta.url);
+  new URL('../docs/playbook.json', import.meta.url);
 
 // The playbook trap identifiers the questionnaire never mentions.
 function missingTraps() {

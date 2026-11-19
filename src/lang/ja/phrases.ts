@@ -3,6 +3,7 @@
 
 import lexicon from './lexicon.js';
 import type {Spread} from './sets.js';
+import {even} from './sets.js';
 
 const {marks, words} = lexicon;
 
@@ -30,10 +31,19 @@ function bracketed(items: string[]): string {
   return when(said.length > 0, marks.open + said + marks.close);
 }
 
+/** Notes on what stands before them, in one pair of brackets. */
+function noted(notes: string[]): string {
+  const said = notes.filter(Boolean);
+
+  return when(said.length > 0,
+    marks.open + said.join(marks.comma) + marks.close);
+}
+
 /**
- * A spread in words. Each run names both ends; several runs share their
- * step after いずれも; values that stand alone follow および. `next` is the
- * word for an end that falls after the cycle turns.
+ * A spread in words. Each run names both ends. Runs of one step share it
+ * after それぞれ; runs that differ each say their own and are joined, like
+ * the values that stand alone after them, by および. `next` is the word
+ * for an end that falls after the cycle turns.
  */
 function saySpread(
   spread: Spread,
@@ -45,12 +55,14 @@ function saySpread(
     return say(from) + words.from + when(from > to, next) + say(to) +
       words.to;
   });
-  const shared = when(windows.length > 1, marks.comma + words.inEach);
-  const cadence = when(windows.length > 0,
-    windows.join(words.and) + shared + spread.step + unit + words.each);
+  const paces = spread.runs.map((run) => run[2] + unit + words.each);
+  const shared = when(windows.length > 1, marks.comma + words.eachOne);
+  const cadences = even(spread) ?
+    [when(windows.length > 0, windows.join(words.and) + shared + paces[0])] :
+    windows.map((window, index) => window + paces[index]);
   const strays = listOf(spread.strays.map((value) => say(value)));
 
-  return [cadence, strays].filter(Boolean).join(marks.comma + words.also);
+  return [...cadences, strays].filter(Boolean).join(marks.comma + words.also);
 }
 
-export {bracketed, leftOut, listOf, saySpread, when};
+export {bracketed, leftOut, listOf, noted, saySpread, when};

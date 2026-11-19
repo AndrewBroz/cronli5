@@ -6,7 +6,7 @@ import type {Language, Schedule, SetDescription} from '../../core/schedule.js';
 import type {SpanishOptions, SpanishStyle} from './options.js';
 import {regions, style, styles} from './options.js';
 import {calendarOf} from './calendar.js';
-import {clockOf} from './wording.js';
+import {clockOf, pick} from './wording.js';
 import {denote} from '../../core/describe-set.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
@@ -14,7 +14,10 @@ import {timePart} from './time.js';
 
 const {words} = lexicon;
 
-/** The parts of a description, each with the comma that follows it. */
+/**
+ * The parts of a description, each with the comma that follows it.
+ * @internal
+ */
 export interface Parts {
   frame: string;
   day: string;
@@ -43,6 +46,7 @@ function closed(part: string, comma: boolean): string {
 /**
  * The four parts of a description. Their non-empty members, joined by
  * spaces, are the description.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: SpanishOptions): Parts {
   const {candidates} = schedule.analyses;
@@ -55,21 +59,27 @@ function describeParts(schedule: Schedule, opts: SpanishOptions): Parts {
     minute: timeValues(schedule, 'minute'),
     second: timeValues(schedule, 'second')
   }, clockOf(opts.style));
-  const calendar = calendarOf(schedule, time.everyHour, opts.style);
+  const calendar = calendarOf(schedule, time.roundTheClock, opts.style);
 
   // A clock time follows the day with a space; anything else, and
   // anything after an inserted phrase, follows a comma. «A la» is also
   // how «a las» begins.
   const clockTime = time.text.startsWith(words.atOne);
 
-  return {
-    also: calendar.also,
-    day: closed(calendar.day, calendar.dayClosed || !clockTime),
-    frame: calendar.frame.map(function leading(phrase) {
-      return `${phrase},`;
-    }).join(' '),
-    time: closed(time.text, calendar.also !== '')
-  };
+  // A schedule that never fires says so in place of the day, and has no
+  // time to say (answers 4.4).
+  return pick([
+    [{also: '', day: calendar.day, frame: '', time: ''},
+      calendar.never],
+    [{
+      also: calendar.also,
+      day: closed(calendar.day, calendar.dayClosed || !clockTime),
+      frame: calendar.frame.map(function leading(phrase) {
+        return `${phrase},`;
+      }).join(' '),
+      time: closed(time.text, calendar.also !== '')
+    }, true]
+  ]);
 }
 
 function describe(schedule: Schedule, opts: SpanishOptions): string {
@@ -79,7 +89,7 @@ function describe(schedule: Schedule, opts: SpanishOptions): string {
     .filter(Boolean).join(' ');
 }
 
-const spanish: Language<SpanishStyle> = {
+const spanish: Language<SpanishStyle, 'es'> = {
   code: 'es',
   defaultStyle: 'es',
   describe,
@@ -94,16 +104,23 @@ const spanish: Language<SpanishStyle> = {
   },
   regions,
   // A description that already ends in a full stop, as «p. m.» does,
-  // takes no second one.
+  // takes no second one. A schedule that never fires takes the negative
+  // before the verb: «No se ejecuta nunca, porque …».
   sentence(description) {
     const stop = description.endsWith('.') ? '' : '.';
+    const verb = description.startsWith(words.never) ?
+      words.neverRuns :
+      words.runs;
 
-    return `${words.runs} ${description}${stop}`;
+    return `${verb} ${description}${stop}`;
   },
   style,
   styles
 };
 
 export type {SpanishOptions, SpanishStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default spanish;

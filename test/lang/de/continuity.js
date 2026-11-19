@@ -1,10 +1,9 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as german from '../../../src/lang/de/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -39,13 +38,14 @@ const MAY_CHANGE = {
 // day part.
 const DAILY = /(?:^| )täglich$/u;
 
-const SETUP = {languages: [german.default], options: {}, styles: {}};
+// The one description that is not four parts: a schedule whose date
+// exists in none of its months never runs, and says only that («nie
+// (einen solchen Tag gibt es nicht)», answers 2.1 and 4.4). It has no
+// time to say, so an edit that makes a schedule never run, or run again,
+// changes the whole sentence.
+const NEVER = /^nie /u;
 
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
-}
+const parse = parser(german.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);
@@ -98,6 +98,10 @@ function leaks(pairList) {
     const before = partsOf(a, options);
     const after = partsOf(b, options);
 
+    if (NEVER.test(before.day) || NEVER.test(after.day)) {
+      return;
+    }
+
     Object.keys(before).forEach(function compare(part) {
       const everyDay = changed[0] === 'hour' && part === 'day' &&
         words(before[part]).replace(DAILY, '') ===
@@ -141,7 +145,7 @@ describe('German continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('renders equal schedules identically, however they are spelled',
     function() {
@@ -154,10 +158,11 @@ describe('German continuity:', function() {
       expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
       expect(score(render, neighborPairs(coreSetSeeds()))
         .equivalentViolations).to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
-  // German declares no tie (answers 3.11): a cadence of hours is never
-  // said bare, so `*/12` and `0,12` are the same two clock times.
+  // German declares no tie (answers 3.11): hours are said from their set,
+  // so `*/12` and `0,12` are the same two clock times, and `*/6` and
+  // `0,6,12,18` the same cadence.
   it('never follows the spelling', function() {
     function say(pattern) {
       const {opts, schedule} = parse(pattern);

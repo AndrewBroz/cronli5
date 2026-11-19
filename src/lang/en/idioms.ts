@@ -4,7 +4,7 @@
 // it stands for.
 
 import type {
-  Field, QuartzDate, QuartzWeekday, SetDescription
+  CadencePieces, Field, QuartzDate, QuartzWeekday, SetDescription
 } from '../../core/schedule.js';
 import type {EnglishOptions} from './options.js';
 import {domainOf} from '../../core/specs.js';
@@ -13,12 +13,12 @@ import lexicon from './lexicon.js';
 
 /** A fixed phrasing and the condition under which it is said. */
 export interface Idiom<Subject> {
-  applies(subject: Subject): boolean;
+  applies(subject: Subject, opts: EnglishOptions): boolean;
   say(subject: Subject, opts: EnglishOptions): string;
 }
 
 /** An idiom for a set of one field's values. */
-export interface SetIdiom extends Idiom<SetDescription> {
+export interface SetIdiom extends Idiom<SetDescription | CadencePieces> {
   field: Field;
 }
 
@@ -56,10 +56,13 @@ function alternate(field: Field, offset: number, phrase: string): SetIdiom {
   };
 }
 
+// A run of weekdays a single word names, said by that word unless the
+// style names the days instead.
 function running(from: number, to: number, phrase: string): SetIdiom {
   return {
-    applies(set) {
-      return set.kind === 'range' && set.from === from && set.to === to;
+    applies(set, opts) {
+      return opts.style.weekWords && set.kind === 'range' &&
+        set.from === from && set.to === to;
     },
     field: 'weekday',
     say() {
@@ -112,11 +115,17 @@ function weekdayOf(day: number, opts: EnglishOptions): string {
   return named(lexicon.weekdays[day], 'full', opts);
 }
 
+// The earliest day that can be a month's last. The weekday nearest a day
+// never leaves the month, and from here on a reader could look for it in
+// the next one.
+const earliestLastDay = 28;
+
 const onTheLast = `${words.on} ${words.the} ${words.last}`;
 const lastDay = `${words.the} ${words.last} ${units.day.one}`;
 
 // Each is followed by "of the month" or "of" and the months, except the
-// nearest weekday, which is followed by the day it is nearest to.
+// nearest weekday, which is followed by the day it is nearest to. The
+// first row that applies is said.
 const quartzDateIdioms: Array<Idiom<QuartzDate>> = [
   quartzForm('last', function lastDayOfMonth() {
     return `${words.on} ${lastDay}`;
@@ -130,6 +139,15 @@ const quartzDateIdioms: Array<Idiom<QuartzDate>> = [
   quartzForm('beforeLast', function daysBeforeLast(form) {
     return `${form.days} ${unit('day', form.days)} ${words.before} ${lastDay}`;
   }),
+  {
+    applies(form) {
+      return form.kind === 'nearestWeekday' && form.day >= earliestLastDay;
+    },
+    say() {
+      return `${words.on} ${words.the} ${words.weekday} ${words.sameMonth} ` +
+        words.nearest;
+    }
+  },
   quartzForm('nearestWeekday', function weekdayNearest() {
     return `${words.on} ${words.the} ${words.weekday} ${words.nearest}`;
   })

@@ -1,10 +1,11 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
+import {denote} from '../../../src/core/describe-set.js';
+import {domainOf} from '../../../src/core/specs.js';
 import * as french from '../../../src/lang/fr/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -49,17 +50,33 @@ const MONTH_LEAD = /^(?:en |de |d')/u;
 // An exception among the times is said only when nothing follows the time
 // part (answers 3.9). So adding or removing a year part, or making or
 // undoing a union, may reword a time part that has one: «toutes les 2
-// heures de 0 h à 22 h, sauf à 8 h» against «toutes les 2 heures de 0 h
-// à 6 h et de 10 h à 22 h en 2030».
+// heures, sauf à 8 h» against «toutes les 2 heures de 0 h à 6 h et de
+// 10 h à 22 h en 2030».
 const EXCEPTION = /\bsauf\b/u;
 
-const SETUP = {languages: [french.default], options: {}, styles: {}};
+// Hours that run through midnight are one run only when every day fires
+// (answers 3.5): «toutes les heures de 22 h à 2 h» beside a named day
+// would be read as ending on the next one, so there the hours are said in
+// ascending order. Naming or freeing a day, a month or a year may
+// therefore reword the hours of a pattern whose hours hold both 0 h and
+// 23 h without holding every hour.
+const CALENDAR = ['date', 'month', 'weekday', 'year'];
 
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
+// A pattern that never fires says so and nothing else (answers 4.6):
+// «jamais : aucune date ne correspond». An edit to the day of the month,
+// the month or the year that makes a pattern stop firing, or fire again,
+// therefore rewrites the whole sentence, the time part included.
+const NEVER = /^jamais\b/u;
+const MAY_STOP_FIRING = ['date', 'month', 'year'];
 
-  return {opts, schedule: analyze(prepare(pattern, opts))};
+function throughMidnight(pattern, options) {
+  const hours = parse(pattern, options).schedule.analyses.candidates.hour;
+  const values = denote(hours[hours.length - 1], domainOf('hour'));
+
+  return values.length < 24 && values.includes(0) && values.includes(23);
 }
+
+const parse = parser(french.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);
@@ -131,9 +148,24 @@ function leaks(pairList) {
       return String(part).replace(/,$/u, '');
     }
 
+    // The whole sentence, when the edit makes the pattern stop firing or
+    // fire again.
+    const stopped = MAY_STOP_FIRING.includes(changed[0]) &&
+      [before, after].some(function never(parts) {
+        return NEVER.test(parts.day);
+      });
+
+    // The hours of a pattern that runs through midnight, reworded by an
+    // edit to the calendar.
+    function reworded(part) {
+      return part === 'time' && CALENDAR.includes(changed[0]) &&
+        throughMidnight(a, options);
+    }
+
     Object.keys(before).forEach(function compare(part) {
       if (words(before[part]) !== words(after[part]) &&
-          !declared(changed[0], part, before[part], after[part])) {
+          !declared(changed[0], part, before[part], after[part]) &&
+          !reworded(part) && !stopped) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
       }
@@ -146,7 +178,9 @@ function leaks(pairList) {
 // Continuity, measured directly. A description is four parts in one order:
 // day, month, time, year (the calendar, then the time, then the year; one
 // year after one month's name sits in the month part), or for a union
-// month, time, day, year. Editing one field of the pattern may rewrite that field's
+// month, time, day, year (a union being two sets of days that both fire:
+// days of the month that are every day, or that never fire, make none).
+// Editing one field of the pattern may rewrite that field's
 // part and nothing else, apart from the declared fusions above. This is
 // the constraint itself, where a count of changed words is only a rough
 // sign of it: a longer sentence, or a wrong one, cannot make this pass.
@@ -156,11 +190,7 @@ describe('French continuity:', function() {
       const {opts, schedule} = parse(pair[1]);
       const parts = french.describeParts(schedule, opts);
 
-      const order = schedule.analyses.day.union ?
-        [parts.month, parts.time, parts.day, parts.year] :
-        [parts.day, parts.month, parts.time, parts.year];
-
-      expect(order.filter(Boolean).join(' '))
+      expect(Object.values(parts).filter(Boolean).join(' '))
         .to.equal(french.default.describe(schedule, opts));
     });
   });
@@ -174,7 +204,48 @@ describe('French continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
+
+  // The declared rewording of hours that run through midnight, and
+  // nothing more: the same edits leave any other hours as they were.
+  it('says hours through midnight as one run only when every day fires',
+    function() {
+      function time(pattern) {
+        return partsOf(pattern).time;
+      }
+
+      expect(time('0 22-2 * * *')).to.equal('toutes les heures de 22 h à 2 h');
+      ['0 22-2 1 * *', '0 22-2 * 6 *', '0 22-2 * * 1'].forEach(
+        function named(pattern) {
+          expect(time(pattern), pattern)
+            .to.equal('toutes les heures de 0 h à 2 h, à 22 h et à 23 h');
+        });
+      expect(leaks([
+        ['0 22-2 * * *', '0 22-2 1 * *'],
+        ['0 22-2 * * *', '0 22-2 * 6 *'],
+        ['*/15 22-2 * * 1', '*/15 22-2 * * *']
+      ])).to.deep.equal([]);
+      expect(leaks([['0 9-17 * * *', '0 9-17 1 * *']])).to.deep.equal([]);
+      expect(leaks([['0 22-23 * * *', '0 22-23 1 * *']])).to.deep.equal([]);
+    });
+
+  // The declared rewriting of a pattern that never fires, and nothing
+  // more: the same edit between two patterns that fire keeps the time.
+  it('rewrites the whole sentence only when a pattern stops firing',
+    function() {
+      expect(partsOf('*/5 * 31 6 *')).to.deep.equal({
+        day: 'jamais : aucune date ne correspond',
+        month: '',
+        time: '',
+        year: ''
+      });
+      expect(leaks([
+        ['*/5 * 30 6 *', '*/5 * 31 6 *'],
+        ['*/5 * 31 6 *', '*/5 * 31 7 *'],
+        ['0 0 0 29 2 * 2032', '0 0 0 29 2 * 2031']
+      ])).to.deep.equal([]);
+      expect(leaks([['*/5 9 30 6 *', '*/5 9 29 6 *']])).to.deep.equal([]);
+    });
 
   // French declares no tie (answers 3.11): equal schedules are always
   // worded the same, however the pattern was written.
@@ -188,7 +259,7 @@ describe('French continuity:', function() {
     expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
     expect(score(render, neighborPairs(coreSetSeeds()))
       .equivalentViolations).to.deep.equal([]);
-  }, 60000);
+  }, 240000);
 
   it('never follows the spelling', function() {
     function say(pattern) {

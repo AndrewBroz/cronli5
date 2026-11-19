@@ -1,0 +1,16 @@
+1. los días impares de cada mes, cuando caen en lunes, a las 0:00
+2. los lunes a las 0:00, y además los días impares de cada mes
+3. los días impares de cada mes, cuando caen en lunes, miércoles o viernes, a las 9:00
+4. el día 15 de cada mes, cuando cae en martes, jueves, sábado o domingo, a las 0:00
+5. los martes, jueves, sábados y domingos a las 0:00, y además el día 15 de cada mes
+6. los días impares de cada mes, cuando caen de lunes a viernes, cada 15 minutos de 9:00 a 17:45
+7. de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los días impares de cada mes
+8. los días 1, 6, 11, 16, 21, 26 y 31 de cada mes, cuando caen de lunes a viernes, a las 0:00
+9. de lunes a viernes a las 0:00, y además los días 1 y 15 de cada mes
+10. los días impares de junio, cuando caen en lunes, a las 0:00
+11. los viernes a las 0:00, y además el día 1 de cada mes
+12. los días impares de cada mes, cuando caen en fin de semana, a las 0:00
+13. el día 15 de cada mes, cuando cae en martes, jueves, sábado o domingo, a las 9:30
+14. los viernes a las 0:00, y además el día 13 de cada mes
+15. cada 3 días del 1 al 31 de enero y julio, cuando caen de lunes a viernes, a las 9:00
+16. los lunes a las 0:00, y además del 1 al 7 de cada mes

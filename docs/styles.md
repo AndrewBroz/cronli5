@@ -100,17 +100,36 @@ The English fields (defaults shown are the `us` values):
 | `am` | `'a.m.'` | The morning meridiem. |
 | `pm` | `'p.m.'` | The evening meridiem. |
 | `closeUp` | `false` | Join the meridiem to the time with no space (`'9.30am'`). |
-| `sep` | `':'` | The separator between hours, minutes, and seconds. |
-| `midday` | `'noon'` | The word for exactly 12:00 p.m. |
-| `midnight` | `'midnight'` | The word for exactly 12:00 a.m. |
+| `separator` | `':'` | The separator between hours, minutes, and seconds. |
+| `midday` | `'noon'` | The word for exactly 12:00 p.m.; `''` writes it as a time (`'12 p.m.'`). |
+| `midnight` | `'midnight'` | The word for exactly 12:00 a.m.; `''` writes it as a time (`'12 a.m.'`). Beside a date it is always `'12 a.m.'`, since "midnight on June 1" can be heard as the end of the 1st. |
+| `minutes` | `false` | Write a 12-hour time on the hour with its minutes (`'6:00 p.m.'`). 24-hour times always have them. |
+| `padHour` | `false` | Write a 12-hour time's hour in two digits (`'06:30 p.m.'`). 24-hour times always have two. |
 | `ordinals` | `false` | Ordinal days in month-day dates (`'January 1st'`) instead of cardinal. |
 | `through` | `'through'` | The word joining the two ends of an inclusive range (`'to'`); surrounding spaces are trimmed. |
 | `serialComma` | `true` | Use a serial comma in lists of three or more. |
+| `weekWords` | `true` | Say Monday to Friday and Saturday and Sunday as `'weekdays'` and `'weekends'`; `false` names the days (`'Monday through Friday'`, `'on Saturdays and Sundays'`). |
 | `dayFirst` | `false` | Day-first dates (`'1 January'`) and no comma before the year of a full date (`'1 January 2030'`). |
 
 **A field the language does not have, or a value of the wrong kind, is an
 error** (`Cronli5OptionError`), not something quietly ignored: a misspelt
 `hour12` should not leave you with 12-hour times and no idea why.
+
+## Fields every language shares
+
+Each language has its own table, but two fields mean the same thing in
+all of them, and a third in every language that has it:
+
+* **`hour12`**: the 12-hour clock, written as that language writes it.
+* **`short`**: the abbreviations the language conventionally uses, where
+  it uses them, and nowhere else. English writes `Mon` and `Jun`; German
+  writes `Mo.` and `Jan.` but leaves `Juni` and `Juli` whole, as German
+  does; Czech writes the table forms `Po až Pá` and a date as `15. 6.`;
+  Japanese drops the final 日 of a weekday. Chinese has no shorter written
+  form of its weekdays and months (周一 is already the short one), so
+  `short` changes nothing there.
+* **`separator`**: what stands between hours, minutes and seconds, in the
+  languages that offer a choice (English, Czech, Italian).
 
 ## Styles and instances
 

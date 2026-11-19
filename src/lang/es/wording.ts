@@ -32,8 +32,8 @@ export interface Clock {
   at(moments: Moment[]): string;
   // «de 9:00 a 17:45».
   span(from: Moment, to: Moment): string;
-  // «hasta las 22:59».
-  until(moment: Moment): string;
+  // «desde la 1:00», «desde las 2:00».
+  since(moment: Moment): string;
 }
 
 /** The first option whose condition holds. The last one always does. */
@@ -48,12 +48,39 @@ function spaced(texts: string[]): string {
   return texts.filter(Boolean).join(' ');
 }
 
-/** «A», «A y B», «A, B y C». */
-function list(items: Array<number | string>): string {
+/** «A», «A y B», «A, B y C»; with «o», «A o B». */
+function list(
+  items: Array<number | string>,
+  joiner: string = words.and
+): string {
   const texts = items.map(String);
 
   return [texts.slice(0, -1).join(', '), ...texts.slice(-1)]
-    .filter(Boolean).join(` ${words.and} `);
+    .filter(Boolean).join(` ${joiner} `);
+}
+
+/** «30 ni 31», «29, 30 ni 31»: a list after a negation. */
+function norList(items: Array<number | string>): string {
+  const texts = items.map(String);
+
+  return [texts.slice(0, -1).join(', '), ...texts.slice(-1)]
+    .filter(Boolean).join(` ${words.nor} `);
+}
+
+/**
+ * Pieces joined as a list is. Where a piece before the last has an «y» of
+ * its own, a comma comes before the «y» that joins the last: «en 2030 y
+ * 2031, y desde 2033».
+ */
+function phrases(pieces: string[]): string {
+  const inner = pieces.slice(0, -1).some(function joined(piece) {
+    return piece.includes(` ${words.and} `);
+  });
+
+  return inner ?
+    `${pieces.slice(0, -1).join(', ')}, ${words.and} ` +
+      `${pieces[pieces.length - 1]}` :
+    list(pieces);
 }
 
 /** The singular or the plural of a pair, by how many there are. */
@@ -115,8 +142,8 @@ function clockOf(style: SpanishStyle): Clock {
     ]);
   }
 
-  // Whether the hour, as it is written, is 1: «a la 1:00», «hasta la
-  // 1:45».
+  // Whether the hour, as it is written, is 1: «a la 1:00», «desde la
+  // 1:00».
   function isOne(moment: Moment): number {
     return Number(dial.hourOf(moment.hour) === 1);
   }
@@ -143,12 +170,14 @@ function clockOf(style: SpanishStyle): Clock {
     span(from, to) {
       return `${words.from} ${written(from)} ${words.to} ${written(to)}`;
     },
-    until(moment) {
+    since(moment) {
       const article = [words.theHours, words.theHour][isOne(moment)];
 
-      return `${words.until} ${article} ${written(moment)}`;
+      return `${words.since} ${article} ${written(moment)}`;
     }
   };
 }
 
-export {byCount, clockOf, every, led, list, pick, spaced};
+export {
+  byCount, clockOf, every, led, list, norList, phrases, pick, spaced
+};

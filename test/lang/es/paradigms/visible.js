@@ -6,11 +6,8 @@
 
 const rows = [
   // clock / second — context `0 9 * * *`
-  ['* 0 9 * * *',
-    'todos los días a las 9:00, una vez por segundo durante todo ese minuto'],
-  ['*/6 0 9 * * *',
-    'todos los días a las 9:00, una vez cada 6 segundos durante todo ese ' +
-    'minuto'],
+  ['* 0 9 * * *', 'todos los días, cada segundo de 9:00:00 a 9:00:59'],
+  ['*/6 0 9 * * *', 'todos los días, cada 6 segundos de 9:00:00 a 9:00:54'],
   ['5/10 0 9 * * *',
     'todos los días a las 9:00, en los segundos 5, 15, 25, 35, 45 y 55'],
 
@@ -21,11 +18,11 @@ const rows = [
   ['0,15,45 9 * * *', 'todos los días a las 9:00, 9:15 y 9:45'],
 
   // clock / hour
-  ['0 * * * *', 'cada hora'],
+  ['0 * * * *', 'cada hora en punto'],
   ['0 9,17 * * *', 'todos los días a las 9:00 y 17:00'],
   ['0 9-17,22 * * *',
     'todos los días, cada hora de 9:00 a 17:00 y a las 22:00'],
-  ['0 1/2 * * *', 'todos los días, cada 2 horas de 1:00 a 23:00'],
+  ['0 1/2 * * *', 'cada 2 horas desde la 1:00'],
 
   // clock / date
   ['0 9 1 * *', 'el día 1 de cada mes a las 9:00'],
@@ -75,8 +72,7 @@ const rows = [
   ['*/15 9-17,22 * * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45 y de 22:00 a 22:45'],
   ['*/15 1/2 * * 1-5',
-    'de lunes a viernes, cada 15 minutos durante una hora cada 2 horas (de ' +
-    '1:00 a 1:45, de 3:00 a 3:45… hasta las 23:45)'],
+    'de lunes a viernes, cada 15 minutos en las horas impares'],
 
   // window / date
   ['*/15 9-17 1 * 1-5',
@@ -85,12 +81,19 @@ const rows = [
   ['*/15 9-17 1,10,20 * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
     'días 1, 10 y 20 de cada mes'],
+  // Written with the star, the two day fields must both match: the odd
+  // days of the month that fall from Monday to Friday. Written without
+  // it, `1-31/2`, they are a union (hard-cases.js).
   ['*/15 9-17 */2 * 1-5',
-    'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
-    'días impares de cada mes'],
+    'los días impares de cada mes, cuando caen de lunes a viernes, cada ' +
+    '15 minutos de 9:00 a 17:45'],
+  // Changed 2026-11-13: «…, y además los días impares de cada mes,
+  // excepto el día 15» was read as excepting the 15th from the weekdays
+  // too, and a weekday that falls on the 15th fires. In a union the days
+  // take no exception (answers 4.3).
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 17:45, y además los ' +
-    'días impares de cada mes, excepto el día 15'],
+    'días impares del 1 al 13 y del 17 al 31 de cada mes'],
 
   // window / month
   ['*/15 9-17 * 1 1-5',
@@ -113,11 +116,9 @@ const rows = [
 
   // monthly / second — context `0 0 1 * *`
   ['* 0 0 1 * *',
-    'el día 1 de cada mes a las 0:00, una vez por segundo durante todo ese ' +
-    'minuto'],
+    'el día 1 de cada mes, cada segundo de 0:00:00 a 0:00:59'],
   ['*/6 0 0 1 * *',
-    'el día 1 de cada mes a las 0:00, una vez cada 6 segundos durante todo ' +
-    'ese minuto'],
+    'el día 1 de cada mes, cada 6 segundos de 0:00:00 a 0:00:54'],
   ['5/10 0 0 1 * *',
     'el día 1 de cada mes a las 0:00, en los segundos 5, 15, 25, 35, 45 y ' +
     '55'],
@@ -129,11 +130,11 @@ const rows = [
   ['0,15,45 0 1 * *', 'el día 1 de cada mes a las 0:00, 0:15 y 0:45'],
 
   // monthly / hour
-  ['0 * 1 * *', 'el día 1 de cada mes, cada hora'],
+  ['0 * 1 * *', 'el día 1 de cada mes, cada hora en punto'],
   ['0 9,17 1 * *', 'el día 1 de cada mes a las 9:00 y 17:00'],
   ['0 9-17,22 1 * *',
     'el día 1 de cada mes, cada hora de 9:00 a 17:00 y a las 22:00'],
-  ['0 1/2 1 * *', 'el día 1 de cada mes, cada 2 horas de 1:00 a 23:00'],
+  ['0 1/2 1 * *', 'el día 1 de cada mes, cada 2 horas desde la 1:00'],
 
   // monthly / date
   ['0 0 * * *', 'todos los días a las 0:00'],
@@ -174,9 +175,7 @@ const rows = [
     'todos los días, cada minuto de 9:00 a 9:59 y de 17:00 a 17:59'],
   ['* 9-17,22 * * *',
     'todos los días, cada minuto de 9:00 a 17:59 y de 22:00 a 22:59'],
-  ['* 1/2 * * *',
-    'todos los días, cada minuto durante una hora cada 2 horas (de 1:00 a ' +
-    '1:59, de 3:00 a 3:59… hasta las 23:59)'],
+  ['* 1/2 * * *', 'cada minuto en las horas impares'],
 
   // open / date
   ['* * 1 * *', 'el día 1 de cada mes, cada minuto'],

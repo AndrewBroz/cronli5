@@ -22,10 +22,13 @@ function spaced(parts: Array<string | false>): string {
   return parts.filter(Boolean).join(' ');
 }
 
-/** Items joined with commas and «e» before the last, with no comma there. */
-function list(items: string[]): string {
+/**
+ * Items joined with commas and «e» before the last, or the word given,
+ * with no comma there.
+ */
+function list(items: string[], joiner: string = words.and): string {
   return [items.slice(0, -1).join(', '), ...items.slice(-1)]
-    .filter(Boolean).join(` ${words.and} `);
+    .filter(Boolean).join(` ${joiner} `);
 }
 
 /**

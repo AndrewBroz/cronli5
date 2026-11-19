@@ -85,6 +85,13 @@ const fromLastWords = [
   'siebtletzten', 'achtletzten', 'neuntletzten', 'zehntletzten'
 ];
 
+// The subject and verb of «wenn er auf einen Montag fällt», for several
+// dates and for one.
+const fallingOn = [
+  {subject: 'sie', verb: 'fallen'},
+  {subject: 'er', verb: 'fällt'}
+];
+
 // The parts of the day a 12-hour time is said with (`hour12`), in order:
 // each covers the hours after the one before it, up to `until`. They start
 // at hour 1: hour 0 is written «0:00 Uhr» and takes none.
@@ -102,6 +109,7 @@ const words = {
   afterEachHour: 'nach jeder vollen Stunde',
   afterEachMinute: 'nach jeder vollen Minute',
   afterThat: 'danach',
+  afterTheHour: 'nach der vollen Stunde',
   afterTheMinute: 'nach der vollen Minute',
   also: 'sowie',
   and: 'und',
@@ -110,8 +118,11 @@ const words = {
   at: 'um',
   atEachHour: 'zu jeder vollen Stunde',
   atEachMinute: 'zu jeder vollen Minute',
+  atTheHour: 'zur vollen Stunde',
   atTheMinute: 'zur vollen Minute',
   atLeast: 'mindestens',
+  atMinute: 'zur Minute',
+  atMinutes: 'zu den Minuten',
   beforeLast: 'vor dem letzten',
   beforeLastDay: 'vor dem letzten Tag',
   daily: 'täglich',
@@ -128,16 +139,25 @@ const words = {
   hourly: 'stündlich',
   in: 'im',
   inAllMonths: 'in allen Monaten',
+  inAllYears: 'in allen Jahren',
   inEvenHours: 'in den geraden Stunden',
   inEvenYears: 'in geraden Jahren',
+  inHour: 'in der Stunde',
+  inHours: 'in den Stunden',
+  inMinute: 'in der Minute',
+  inMinutes: 'in den Minuten',
   inMonthsWith: 'in Monaten mit',
   inOddHours: 'in den ungeraden Stunden',
   inOddYears: 'in ungeraden Jahren',
   inSameMonth: 'im selben Monat',
+  inSeconds: 'in den Sekunden',
   inYear: 'im Jahr',
   inYears: 'in den Jahren',
   lastDay: 'am letzten Tag',
+  lastOrdinal: 'letzten',
   nearest: 'am nächsten liegt',
+  never: 'nie (einen solchen Tag gibt es nicht)',
+  not: 'nicht',
   oClock: 'Uhr',
   ofTheseMonths: 'dieser Monate',
   ofEachMonth: 'jedes Monats',
@@ -146,7 +166,13 @@ const words = {
   onOddDays: 'an den ungeraden Tagen',
   onTheFirst: 'am ersten',
   onTheLast: 'am letzten',
+  oneHourLong: 'eine Stunde lang',
   oneMinuteLong: 'eine Minute lang',
+  oneOf: 'einen',
+  onto: 'auf',
+  ontoThe: 'auf den',
+  or: 'oder',
+  onlyLeapYears: 'nur in Schaltjahren',
   penultimateDay: 'am vorletzten Tag',
   runs: 'Läuft',
   since: 'ab',
@@ -156,12 +182,15 @@ const words = {
   unrecognizable: 'ein unbekanntes Cron-Muster',
   whichThe: 'der dem',
   withDays: 'Tagen',
-  workday: 'Werktag'
+  when: 'wenn',
+  without: 'ohne den',
+  workday: 'Wochentag',
+  yearly: 'jährlich'
 };
 
 const lexicon = {
-  dayParts, fromLastWords, januaryAustrian, months, nthWords, twoDigits,
-  units, weekdays, words
+  dayParts, fallingOn, fromLastWords, januaryAustrian, months, nthWords,
+  twoDigits, units, weekdays, words
 };
 
 export type {DayPart, Name, WeekdayName};
