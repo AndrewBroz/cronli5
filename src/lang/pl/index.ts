@@ -30,6 +30,7 @@ function hoursMayWrap(facts: ScheduleFacts): boolean {
 /**
  * The parts of a description, each with the comma or colon that follows
  * it; the non-empty ones, joined by spaces, are the description.
+ * @internal
  */
 function describeParts(facts: ScheduleFacts, opts: PolishOptions): Parts {
   const {short} = opts.style;
@@ -83,5 +84,8 @@ const polish: Language<PolishStyle, 'pl'> = {
 };
 
 export type {PolishStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default polish;
