@@ -78,18 +78,20 @@ const words = {
   onTheHour: '整點',
   // 每逢雙數時，整個小時內每分鐘一次.
   withinWholeHour: '整個小時內',
-  // 每逢整點起的1分鐘內，每秒一次.
-  minuteFromThen: '起的1分鐘內',
-  // 每5分鐘，該分鐘內每秒一次; 該分鐘的0、30秒.
+  // 每逢整點，該分鐘內每秒一次; 每5分鐘，該分鐘的0、30秒.
   thatMinute: '該分鐘',
+  // After a step of years: 2028年起每4年，該年每天 09:00.
+  thatYear: '該年',
   within: '內',
   // After hours each named with its part of the day: ，各在05、20、45分.
   eachAt: '各在',
   // Every second hour, from 0時 and from 1時: 每逢雙數時的15、45分.
   evenHours: '雙數時',
   oddHours: '單數時',
-  // Before single moments said after the rate: ，另加 22:00.
+  // Before single clock times said after the rate: ，另加 22:00.
   plus: '另加',
+  // Before single positions said after the rate: ，另在45分.
+  alsoAt: '另在',
   // Between runs and cadences of years: ，以及2045年起每5年.
   andAlso: '以及',
   // After a start: 01:00起, 2030年起, 每月1日起.
@@ -130,9 +132,9 @@ const words = {
   oddMonths: '單數月',
   evenMonths: '雙數月',
   nextYear: '翌年',
-  // Parity of years names its era: 每逢西元雙數年.
-  evenYears: '西元雙數年',
-  oddYears: '西元單數年',
+  // Parity of years, after the era the style names: 每逢西元雙數年.
+  evenYears: '雙數年',
+  oddYears: '單數年',
   // In one closing bracket with a month: 每年6月、2030年全年除外.
   wholeYear: '全年',
   leapYears: '閏年',

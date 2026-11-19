@@ -3,8 +3,8 @@
 // (answers 3.4, 3.6, 4.1 C and 4.2).
 
 import {
-  type CadenceForm, type Form, type Reading, type Span, coreOf, removedOf,
-  runsIn, spansOf
+  type AddedForm, type CadenceForm, type Form, type Reading, type Span, coreOf,
+  removedOf, runsIn, spansOf
 } from './forms.js';
 import {
   type Carried, type Edge, type Held, type Holding, held, minuteNamer, named,
@@ -106,7 +106,8 @@ function secondsOf(form: Form): Seconds {
   const inside = held(form, secondHow(longFromFirst));
 
   return {
-    afterNamed: told(inside, words.minuteFromThen + words.comma, words.of),
+    afterNamed: told(inside, words.comma + words.thatMinute + words.within,
+      words.of),
     afterThat: words.thatMinute + told(inside, words.within, words.of),
     between: live ? told(held(form, secondHow(tiling)), '', prefix) :
       everyMinute,
@@ -126,7 +127,7 @@ function secondsOf(form: Form): Seconds {
 // hour twice.
 const places = {
   hours: {
-    bare: longFromFirst,
+    bare: fromFirst,
     every: 'open',
     prefix: '',
     zero: {text: lexicon.twoDigits(0), unit: units.minute.position}
@@ -192,8 +193,35 @@ function minuteLevel(times: Moment[], style: ZhHantStyle): Level {
   };
 }
 
+// A cadence from its first value to its last, and each value beside it.
+function stepAndOthers(form: AddedForm): Span[] {
+  return [
+    {from: form.base.start, to: form.base.last},
+    ...form.added.map(function alone(value) {
+      return {from: value, to: value};
+    })
+  ];
+}
+
 // The forms whose runs become stretches of their own inside one unit.
-const cutInside = {pieces: true, range: true};
+const cutInside: {[kind: string]: (form: never) => Span[]} = {
+  added: stepAndOthers,
+  pieces: spansOf,
+  range: spansOf
+};
+
+// A form's runs inside one unit, where it has them.
+function cutsOf(form: Form): Span[] | false {
+  return Object.hasOwn(cutInside, form.kind) &&
+    cutInside[form.kind](form as never);
+}
+
+// The rate between the ends of a run inside one unit: a cadence's own,
+// or the rate of every position.
+function rateInside(form: Form, how: Holding): string {
+  return form.kind === 'added' && rate(how.unit, form.base.interval) ||
+    how.each;
+}
 
 // One run of units crossed with one run of what they hold: its first and
 // last moments.
@@ -263,7 +291,7 @@ function stretched(
     from: inner.values[0],
     to: inner.values[inner.values.length - 1]
   };
-  const cut = single && core.kind in cutInside && spansOf(core);
+  const cut = single && cutsOf(core);
   const cells = crossed(spans, cut || [extent], level);
   const runs = cells.filter(function isRun(cell) {
     return !isMoment(cell);
@@ -283,7 +311,8 @@ function stretched(
     }
   };
   const rest = held(core, how);
-  const ownRate = core.kind === 'one' && level.spanRate || cut && how.each;
+  const ownRate = core.kind === 'one' && level.spanRate ||
+    cut && rateInside(core, how);
   const dropped = removedOf(inner).filter(function between(value) {
     return value > extent.from && value < extent.to;
   });

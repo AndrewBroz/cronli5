@@ -9,6 +9,7 @@ import type {
   CadenceDescription, CadencePieces, ScheduleFacts, SetDescription
 } from '../../core/schedule.js';
 import {list, series} from './write.js';
+import type {ZhHantStyle} from './options.js';
 import {domainOf} from '../../core/index.js';
 import lexicon from './lexicon.js';
 
@@ -32,6 +33,7 @@ export interface YearsSaid {
 
 const yearReading: Reading = {
   domain: domainOf('year'),
+  exceptCadence: true,
   pieces: true,
   run: 3,
   steps(cadence: CadenceForm) {
@@ -60,14 +62,16 @@ function yearSpan(span: Span): string {
 // from its start or between its ends.
 function yearCadence(
   cadence: {fills: boolean; interval: number; last: number; open?: boolean;
-    start: number}
+    start: number},
+  style: ZhHantStyle
 ): string {
   const span = yearSpan({
     from: cadence.start,
     open: cadence.open,
     to: cadence.last
   });
-  const parity = [words.evenYears, words.oddYears][cadence.start % 2];
+  const parity = style.era +
+    [words.evenYears, words.oddYears][cadence.start % 2];
   const bound = cadence.interval === 2 && cadence.fills ? '' : span;
 
   return cadence.interval === 2 ?
@@ -115,25 +119,28 @@ function yearPieces(form: PiecesForm): YearsSaid {
   };
 }
 
-function yearsBut(form: ExceptForm): YearsSaid {
-  return {...noYears(), closing: list(form.removed.map(String)) + year};
-}
-
-// A cadence of years names years and takes no "once". Parity takes the
-// place of "every year"; any other step closes with a comma.
-function yearSteps(form: CadenceForm): YearsSaid {
-  const pause = form.interval === 2 ? '' : words.comma;
-
+// Every year, or a step of years, with a year or two left out.
+function yearsBut(form: ExceptForm, style: ZhHantStyle): YearsSaid {
   return {
-    closing: '',
-    lead: yearCadence(form),
-    month: '',
-    pause,
-    spanned: false
+    ...sayBy(yearSayers, form.base, style),
+    closing: list(form.removed.map(String)) + year
   };
 }
 
-const yearSayers: Sayers<null, YearsSaid> = {
+// A cadence of years names years and takes no "once". Parity takes the
+// place of "every year". Any other step is followed by the word for
+// "that year", which stands as a year named does, so that the step is
+// not heard as a second rate beside the time's.
+function yearSteps(form: CadenceForm, style: ZhHantStyle): YearsSaid {
+  const steps = yearCadence(form, style);
+
+  return form.interval === 2 ?
+    {closing: '', lead: steps, month: '', pause: '', spanned: false} :
+    {...oneYear(form), lead: steps + words.comma + words.thatYear};
+}
+
+const yearSayers: Sayers<ZhHantStyle, YearsSaid> = {
+  added: yearList,
   all: noYears,
   cadence: yearSteps,
   except: yearsBut,
@@ -152,8 +159,8 @@ function filling(cadence: CadenceDescription): boolean {
 // Runs and cadences together: each run says "every year", the parts are
 // joined, and a comma closes them.
 const mixedParts = {
-  cadence(part: CadenceDescription) {
-    return yearCadence({...part, fills: filling(part)});
+  cadence(part: CadenceDescription, style: ZhHantStyle) {
+    return yearCadence({...part, fills: filling(part)}, style);
   },
   range(part: Span) {
     return yearSpan(part) + words.everyYear;
@@ -163,13 +170,14 @@ const mixedParts = {
   }
 };
 
-function mixedYears(pieces: CadencePieces): YearsSaid {
+function mixedYears(pieces: CadencePieces, style: ZhHantStyle): YearsSaid {
   return {
     closing: '',
     lead: pieces.parts.map(function sayPart(part) {
-      const say = mixedParts[part.kind] as (part: unknown) => string;
+      const say = mixedParts[part.kind] as
+        (part: unknown, style: ZhHantStyle) => string;
 
-      return say(part);
+      return say(part, style);
     }).join(words.comma + words.andAlso),
     month: '',
     pause: words.comma,
@@ -190,14 +198,14 @@ function hasLongStep(pieces: CadencePieces): boolean {
 const loose = {list: true, pieces: true};
 
 /** The years of a pattern, as they lead its sentence. */
-function sayYears(facts: ScheduleFacts): YearsSaid {
+function sayYears(facts: ScheduleFacts, style: ZhHantStyle): YearsSaid {
   const {cadencePieces, candidates} = facts.analyses;
   const form = formOf(candidates.year as SetDescription[], yearReading);
   const mixed = cadencePieces.year;
 
   return mixed && form.kind in loose && hasLongStep(mixed) ?
-    mixedYears(mixed) :
-    sayBy(yearSayers, form, null);
+    mixedYears(mixed, style) :
+    sayBy(yearSayers, form, style);
 }
 
 export {sayYears};

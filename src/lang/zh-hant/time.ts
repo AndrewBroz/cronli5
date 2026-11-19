@@ -4,18 +4,20 @@
 // are named, and what they hold follows.
 
 import {
-  type CadenceForm, type ExceptForm, type Form, type Reading, type Sayers,
-  type Span, coreOf, formOf, removedOf, runsIn, sayBy, spansOf
+  type AddedForm, type CadenceForm, type ExceptForm, type Form, type Reading,
+  type Sayers, type Span, clockFormOf, coreOf, formOf, removedOf, runsIn,
+  sayBy, spansOf
 } from './forms.js';
 import {type Held, held, named, nothingCarried, told} from './hold.js';
 import {
   type Place, type Said, type Seconds, gaps, hourLevel, hourReading, minuteHow,
   minuteLevel, sayableStep, secondsOf, stretched
 } from './stretches.js';
+import type {CadencePieces, SetDescription} from '../../core/schedule.js';
 import {
-  clock, clockThenWord, excepting, hoursNamed, list, rate, stretch
+  clock, clockThenWord, excepting, hoursNamed, list, rate, stretch,
+  wordThenClock
 } from './write.js';
-import type {SetDescription} from '../../core/schedule.js';
 import type {ZhHantStyle} from './options.js';
 import {domainOf} from '../../core/index.js';
 import lexicon from './lexicon.js';
@@ -26,13 +28,17 @@ const {words} = lexicon;
 export interface ClockSets {
   hour: SetDescription[];
   minute: SetDescription[];
+  // Each field as runs and cadences together, where it is that.
+  mixed: Record<'hour' | 'minute' | 'second', CadencePieces | null>;
   second: SetDescription[];
 }
 
 // The fields of the clock as the forms chosen for them.
 interface Clockwork {
-  hourSets: SetDescription[];
   hours: Form;
+  // The hours where they hold one moment each: a cadence of them may
+  // have an hour or two beside it.
+  hoursAlone: Form;
   minutes: Form;
   sec: Seconds;
   style: ZhHantStyle;
@@ -42,7 +48,7 @@ interface Clockwork {
 type Anchor =
   | {kind: 'all'}
   | {kind: 'allBut'; removed: number[]}
-  | {kind: 'everyOther'; removed: number[]; start: number}
+  | {kind: 'everyOther'; ends: Span[]; odd: number; removed: number[]}
   | {kind: 'named'}
   | {kind: 'stretches'; spans: Span[]};
 
@@ -62,16 +68,9 @@ const withinTheUnit: Reading = {
   steps: sayableStep
 };
 
-// Every second hour, with or without an hour or two missing, read from
-// the same candidates.
-const everyOtherReading: Reading = {
-  ...hourReading,
-  steps(cadence: CadenceForm) {
-    return cadence.tiles && cadence.interval === 2;
-  }
-};
-
 const everyHourOf = words.everyHour + words.of;
+// Every second hour, from the first hour of the day and from the next.
+const parities = [words.evenHours, words.oddHours];
 const inTheWholeHour = words.comma + words.withinWholeHour;
 
 function at(hour: number, work: Clockwork): string {
@@ -107,15 +106,28 @@ function hourlyList(form: Form, work: Clockwork): Said {
 }
 
 // Hours that tile the day from its first hour, on the hour, are a bare
-// rate. Tiling from a later start or off the hour they are the first
-// time and the rate; a cadence that does not tile keeps both ends.
+// rate. Every second hour is otherwise the even or the odd hours and the
+// moment each holds. Any other step that tiles is its first time and the
+// rate; a cadence that does not tile keeps both ends.
 function hourlyCadence(form: CadenceForm, work: Clockwork): Said {
   const every = rate('hour', form.interval);
   const [minute] = work.minutes.values;
   const from = at(form.start, work);
+  const onTheHour = minute === 0 && !work.sec.shown;
+  const position = named(minuteHow(work.sec, 'hours').namer, [minute]);
 
-  if (form.tiles && form.fromFirst && minute === 0 && !work.sec.shown) {
+  if (form.tiles && form.fromFirst && onTheHour) {
     return {anchored: false, clock: false, text: every, whole: true};
+  }
+
+  if (form.tiles && form.interval === 2) {
+    return {
+      anchored: false,
+      clock: false,
+      text: words.whenever + parities[form.start] +
+        (onTheHour ? words.onTheHour : words.of + position),
+      whole: true
+    };
   }
 
   return {
@@ -140,8 +152,23 @@ function hourlyExcept(form: ExceptForm, work: Clockwork): Said {
   return {...base, text: base.text + excepting(gone)};
 }
 
+// A rhythm of hours, and then the one or two times beside it.
+function hourlyAdded(form: AddedForm, work: Clockwork): Said {
+  const base = sayBy(hourly, form.base, work);
+  const beside = list(form.added.map(function time(hour) {
+    return at(hour, work);
+  }));
+
+  return {
+    ...base,
+    text: base.text + words.comma + wordThenClock(words.plus, beside),
+    whole: false
+  };
+}
+
 // One minute and one second: the hours are all there is to say.
 const hourly: Sayers<Clockwork, Said> = {
+  added: hourlyAdded,
   all: hourlyAll,
   cadence: hourlyCadence,
   except: hourlyExcept,
@@ -152,7 +179,7 @@ const hourly: Sayers<Clockwork, Said> = {
 };
 
 // The forms of minutes that are said with a rate.
-const rated = {all: true, cadence: true, range: true};
+const rated = {added: true, all: true, cadence: true, range: true};
 
 // The forms of minutes that are not every minute of a stretch: with
 // several seconds they are named, and the seconds follow them.
@@ -192,6 +219,7 @@ function everyHour(): Anchor {
 }
 
 const anchorings: Sayers<Form, Anchor> = {
+  added: separate,
   all: everyHour,
   cadence: separate,
   except: allBut,
@@ -201,13 +229,39 @@ const anchorings: Sayers<Form, Anchor> = {
   range: asStretches
 };
 
+// Every second hour, with or without an hour or two missing, is the even
+// or the odd hours; where they do not fill the day, between their ends.
 function anchorOf(work: Clockwork): Anchor {
-  const alternate = formOf(work.hourSets, everyOtherReading);
-  const beat = coreOf(alternate);
+  const beat = coreOf(work.hours);
 
-  return beat.kind === 'cadence' ?
-    {kind: 'everyOther', removed: removedOf(alternate), start: beat.start} :
+  return beat.kind === 'cadence' && beat.interval === 2 ?
+    {
+      ends: [beat].filter(function bounded(step) {
+        return !step.tiles;
+      }).map(function endsOf(step) {
+        return {from: step.start, to: step.last};
+      }),
+      kind: 'everyOther',
+      odd: beat.start % 2,
+      removed: removedOf(work.hours)
+    } :
     sayBy(anchorings, work.hours, work.minutes);
+}
+
+// Runs of hours as stretches, from the first moment of each to its last.
+function between(spans: Span[], work: Clockwork): string {
+  const {minutes, sec, style} = work;
+  const level = hourLevel(sec, style);
+
+  return list(spans.map(function ends(span) {
+    return stretch(
+      level.moment(span.from, minutes.values[0], 'first'),
+      level.moment(span.to, minutes.values[minutes.values.length - 1],
+        'last'),
+      style,
+      span.from > span.to
+    );
+  }));
 }
 
 function placeAll(anchor: Anchor, placing: Placing): Said {
@@ -241,15 +295,17 @@ function placeEveryOther(
   anchor: Extract<Anchor, {kind: 'everyOther'}>,
   placing: Placing
 ): Said {
-  const parity = [words.evenHours, words.oddHours][anchor.start];
   const gone = anchor.removed.length > 0 ?
     hoursNamed(anchor.removed, placing.work.style) :
     '';
+  const bounded = anchor.ends.length > 0;
+  const window = between(anchor.ends, placing.work);
 
   return {
-    anchored: false,
-    clock: false,
-    text: words.whenever + parity +
+    anchored: bounded,
+    clock: bounded,
+    text: (window && window + words.comma) + words.whenever +
+      parities[anchor.odd] +
       told(placing.saying, inTheWholeHour, words.of) + excepting(gone)
   };
 }
@@ -277,24 +333,16 @@ function placeStretches(
   placing: Placing
 ): Said {
   const {minutes, sec, style} = placing.work;
-  const level = hourLevel(sec, style);
 
   if (!placing.named) {
-    return stretched(anchor.spans, minutes, level, style);
+    return stretched(anchor.spans, minutes, hourLevel(sec, style), style);
   }
 
   return {
     anchored: true,
     clock: true,
-    text: list(anchor.spans.map(function ends(span) {
-      return stretch(
-        level.moment(span.from, minutes.values[0], 'first'),
-        level.moment(span.to, minutes.values[minutes.values.length - 1],
-          'last'),
-        style,
-        span.from > span.to
-      );
-    })) + words.comma + placeAll(anchor, placing).text
+    text: between(anchor.spans, placing.work) + words.comma +
+      placeAll(anchor, placing).text
   };
 }
 
@@ -382,7 +430,7 @@ function general(work: Clockwork): Said {
   });
 
   if (!sec.live && minutes.kind === 'one') {
-    return sayBy(hourly, hours, work);
+    return sayBy(hourly, work.hoursAlone, work);
   }
 
   // Three clock times or fewer with several seconds: each is a stretch
@@ -401,11 +449,15 @@ function general(work: Clockwork): Said {
  * rate, or more than four that one stretch with a plain rate says.
  */
 function sayTime(sets: ClockSets, style: ZhHantStyle): Said {
-  const sec = secondsOf(formOf(sets.second, withinTheUnit));
+  const {mixed} = sets;
+  const sec = secondsOf(clockFormOf(sets.second, mixed.second, withinTheUnit));
+  // A bare rate of minutes names no moment that could carry a second.
+  const minutes = clockFormOf(sets.minute, sec.shown ? null : mixed.minute,
+    withinTheUnit);
   const work = {
-    hourSets: sets.hour,
     hours: formOf(sets.hour, hourReading),
-    minutes: formOf(sets.minute, withinTheUnit),
+    hoursAlone: clockFormOf(sets.hour, mixed.hour, hourReading),
+    minutes,
     sec,
     style
   };

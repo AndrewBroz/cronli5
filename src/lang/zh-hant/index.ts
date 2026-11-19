@@ -31,10 +31,13 @@ const neverTexts = [words.never, words.neverInTheseYears];
 // What stands between the calendar and the time: a half-width space
 // where a digit of a clock time would touch a Chinese character; a comma
 // before any other time, unless the calendar is nothing, ends in a comma
-// of its own, or is the bare word for "every day" before hours named.
+// of its own, or closes on the bare word for "every day" (before hours
+// named) or for "that year".
 function joinBefore(said: Said, calendar: string): string {
-  const open = calendar === '' || calendar.endsWith(words.comma) ||
-    calendar.endsWith(words.everyDay);
+  const open = calendar === '' ||
+    [words.comma, words.everyDay, words.thatYear].some(function closes(end) {
+      return calendar.endsWith(end);
+    });
   const touching = (/\p{Script=Han}$/u).test(calendar) &&
     (/^\d/u).test(said.text);
   const space = touching ? ' ' : '';
@@ -69,6 +72,7 @@ export function describeParts(schedule: Schedule, opts: ZhHantOptions):
     candidates.hour;
   const said = sayTime({
     hour: hour as SetDescription[],
+    mixed: schedule.analyses.cadencePieces,
     minute: candidatesAs(schedule, 'minute', {linear: true}) as
       SetDescription[],
     second: candidatesAs(schedule, 'second', {linear: true}) as
