@@ -73,17 +73,28 @@ Things that run through everything:
   «5시까지» as the moment things stop (usage 4.2), so the last firing is
   what is written, never the hour that contains it. A span is said only
   where firing goes on through it.
-* **A rhythm inside a rhythm is «A마다 D 동안 B».** «2시간마다 1시간
-  동안 15분 간격으로», «15분마다 1분 동안 매초». The outer rhythm is said
-  as it is alone, D is how long each burst lasts, and the inner rhythm
-  takes «매분», «매초» or «N분 간격으로» so that no clause holds two
-  «마다».
+* **A rhythm inside a coarser step is a frame and what happens in each
+  of its places.** The frame is a series of containers, said with
+  «간격으로» and both its ends, and never with «마다», so that it is not
+  itself heard as firing: whole hours, «0시대부터 오후 10시대까지 2시간
+  간격으로», or minutes, «오전 9시부터 오후 5시 45분까지 15분 간격으로».
+  Then «각각» and the finer field as positions inside the container:
+  «…각각 15분마다», «…각각 5·20·45분», «…각각 0초부터 54초까지
+  6초마다». No length («1시간 동안») is ever said: its end has to be
+  decided by the reader, and two readers of 2026-11-19 counted it as a
+  firing.
+* **«마다» is a rhythm of firings; «간격으로» is the spacing of things
+  that are not themselves the firing**: the hours or minutes of a frame,
+  and the days of a step («1일부터 28일까지 3일 간격으로»), which only
+  say where the time goes.
 * **An exception is a bracket naming concrete things**, each with its
   unit: «(15일 제외)», «(오전 3시 제외)», «(매시 30분 제외)», «(오전
   8시대 제외)». A rhythm or a span is never what is excepted: «3시간마다
-  제외» was read two ways **(judge 4)**. A bracket is for a value inside
-  what is said; a value missing at the edge of a span moves the span's
-  end instead.
+  제외» was read two ways **(judge 4)**. A bracket takes a value out of
+  a rhythm that would otherwise include it («매시 정각(오후 11시 제외)»,
+  «1분마다(매시 59분 제외)»). It is never used to take back a moment the
+  sentence has just named as the end of a span: there the span's end
+  moves («오전 9시 1분부터», not «오전 9시부터 …(오전 9시 제외)»).
 * **A run that crosses the edge of its unit is cut at the edge.** Hours
   22 to 2 are the hours 0, 1, 2, 22 and 23 of a day. Said across midnight
   («다음 날 오전 2시까지») the run is right only when every day fires,
@@ -156,24 +167,38 @@ The set is described by the first of these that applies.
 4. **One run** (a `range` candidate of the linear view). Two values are a
    **list**; three or more are a **range**.
 5. **A named set** (5.1): odd or even days, months, years.
-6. **A cadence** (a `cadence` candidate). With few values it is a
-   **list**: up to four bare numbers (days of the month, seconds and
-   minutes inside their unit, years), up to three clock times (four when
-   they differ only in the hour). With more it is a **cadence**, said in
-   one of three ways:
-   * from 0 and tiling its unit (seconds, minutes, hours): **bare**,
-     «15분마다», «2시간마다»;
+6. **A cadence** (a `cadence` candidate), by the first of these:
+   * seconds or minutes from 0 that tile their unit, where the unit
+     above is unrestricted or is a whole hour («N시대»): **bare**,
+     «15분마다», «30초마다», however few the values (`0,30` is
+     «30분마다»);
+   * hours from 0 that tile the day, four or more: **bare**,
+     «2시간마다», «6시간마다»;
+   * few values: a **list**. Up to four bare numbers (days of the
+     month, seconds and minutes inside their unit, years); up to three
+     hours;
    * days of the month, months unrestricted, running to the end of the
      month (`last + interval` is past the last day): **from its start**,
-     «매월 1일부터 3일 간격으로», «매월 8일부터 2일 간격으로». «매월»
-     says where it starts again, and the month's end is where it stops;
+     «매월 1일부터 시작해 3일 간격으로», «매월 8일부터 시작해 2일
+     간격으로». «매월» says where it starts again, and the month's end is
+     where it stops;
    * anything else: **both ends**, each a value that fires: «매시 5분부터
      55분까지 10분마다», «오전 1시부터 오후 11시까지 2시간마다», «6월
      1일부터 28일까지 3일 간격으로», «2일부터 20일까지 2일 간격으로».
-   A step of days is always «N일 간격으로», never «N일마다»: in «1일부터
-   5일마다» the reader's first fit for «1일부터 5일» is the stretch from
-   the 1st to the 5th. «5일 간격» can only be a length (usage 3.2 has
-   both words). A cadence of months is always a list.
+   Hours are a list or a rhythm by one count, three, whatever the
+   minutes are, so that a minute field cannot change how the hours are
+   said (`0 */6` «6시간마다», `23 */6` «0시 23분부터 오후 6시 23분까지
+   6시간마다», `*/15 */6` «0시대부터 오후 6시대까지 6시간 간격으로 각각
+   15분마다»). A step of days is «N일 간격으로», and where no end is
+   named, «1일부터 시작해»: in «1일부터 5일마다», and still in «1일부터
+   5일 간격으로», «1일부터 5일» is complete as "from the 1st to the 5th"
+   before the next word arrives **(schedule read, 2026-11-19;** the blind
+   judge read it rightly, but the same garden path was the reason
+   «5일마다» was dropped, so the reason holds against «5일 간격으로»
+   too**)**. «시작해» closes the "from" before a second day number can
+   pair with it; it is the wording of the source cited in 3.7. Where both
+   ends are named («1일부터 28일까지 3일 간격으로») the pair is already
+   made. A cadence of months is always a list.
 7. **An exception from a cadence** (an `except` candidate whose base is a
    `cadence`, with one or two values inside it removed; the first such
    candidate in the core's order). The base is said as above and the
@@ -238,9 +263,6 @@ Take seconds as zero first. N is counted when M and H are not `all`.
 **T1. A list of clock times**, in clock order, joined with «, »:
 * N ≤ 3; or
 * N ≤ 5 and the times are not evenly spaced; or
-* N = 4, evenly spaced, and the times differ only in the hour («매일 0시
-  23분, 오전 6시 23분, 낮 12시 23분, 오후 6시 23분»), unless T2's bare
-  rhythm applies; or
 * M is one value and H is a list by 4, 6 or 9 above; or
 * H is one value and M is a list.
 
@@ -256,7 +278,8 @@ still one run).
 * **A span**, «A부터 B까지 R마다», where A is the first firing, B the
   last, and R the step:
   * H one run, and M all (R «1분»), M a cadence that tiles the hour, at
-    any offset (R its interval), or M one value (R «1시간»);
+    any offset (R its interval), or M one value (R «1시간»). Four hours
+    on the hour are a span too («오전 9시부터 낮 12시까지 1시간마다»);
   * H any other cadence and M one value (R the interval in «시간»):
     «오전 1시부터 오후 11시까지 2시간마다», «0시부터 오후 8시까지
     5시간마다», «0시 30분부터 오후 10시 30분까지 2시간마다»;
@@ -269,19 +292,19 @@ right under «매일» and wrong under a day: «매월 1일 오전 1시부터
 since a day field may not change the time.
 
 When M is all, or a cadence from 0 that tiles the hour, and H is **two**
-runs, each run is its own span, joined with «, 그리고 »: «오전 9시부터
+runs of which at least one is longer than an hour, each run is its own
+span, joined with «, 그리고 » (two single hours are whole hours, T5): «오전 9시부터
 9시 45분까지 15분마다, 그리고 오후 5시부터 5시 45분까지 15분마다».
 
 A minute exception (3 or 7 above) follows the span it cuts, each span
 its own bracket: the clock time when the span is one hour («오전 9시부터
 9시 55분까지 5분마다(오전 9시 30분 제외)»), «매시 m분» when it is longer
-(«…오후 5시 55분까지 5분마다(매시 30분 제외)», «오전 9시부터 오후 5시
-58분까지 1분마다(매시 59분 제외)»: the end of the span is the last
-firing, and the bracket is for the value missing inside it); with two
-spans, «오전 9시부터 9시 59분까지 1분마다(오전 9시 29분 제외), 그리고
-오후 5시부터 5시 59분까지 1분마다(오후 5시 29분 제외)». A bracket after
-the second span alone is read with that span alone **(schedule reader
-2)**.
+(«…오후 5시 55분까지 5분마다(매시 30분 제외)»). When the missing minute
+is the first or the last of the hour, the hours are whole hours instead
+(T5), so that the span does not end on a minute whose reason comes only
+in the bracket **(blind judge, 2026-11-19)**. With two spans each has
+its own bracket; a bracket after the second span alone is read with that
+span alone **(schedule reader 2)**.
 
 **T3. Hours unrestricted.** The minutes are said inside the hour:
 
@@ -291,9 +314,9 @@ the second span alone is read with that span alone **(schedule reader
 | a cadence from 0 that tiles the hour (`*/15`, `0,30`) | «15분마다», «30분마다» |
 | one value | «매시 30분»; minute 0 is «매시 정각» |
 | a list | «매시 5·20·45분» |
-| a range | «매시 0분부터 29분까지 1분마다» |
+| a range | «매시 정각부터 29분까지 1분마다», «매시 10분부터 40분까지 1분마다» |
 | another cadence | «매시 5분부터 55분까지 10분마다», «매시 정각부터 56분까지 7분마다» |
-| pieces | «매시 0분부터 29분까지 1분마다, 그리고 45분» |
+| pieces | «매시 정각부터 29분까지 1분마다, 그리고 매시 45분» |
 | an exception | the base, then «(매시 30분 제외)» |
 
 The same when the hours are said as all but some (3 above, or the
@@ -326,7 +349,7 @@ are described:
 | a list (4, 6, 9 above) | «오전 9시대, 오후 5시대에» |
 | a range | «오전 9시대부터 오후 5시대까지» |
 | pieces | «오전 9시대부터 오후 5시대까지, 그리고 오후 10시대에» |
-| a cadence (five hours or more) | its rhythm as in T2, then a burst (below) |
+| a cadence (four hours or more) | «0시대부터 오후 10시대까지 2시간 간격으로» (below) |
 
 *Whole hours.* «N시대» is the hour from N:00 to N:59. A phrase of whole
 hours that does not end in «까지» ends in «에». The minutes follow as in
@@ -340,63 +363,89 @@ The bare rhythms take neither: «오전 8시대, 낮 12시대, 오후 6시대에
 15분마다», «…에 1분마다». A cadence that tiles the hour from another
 start than 0 is its marks or its span, not a bare rhythm.
 
-*Hours at a step.* The hours are said exactly as they are with minute 0
-(T2: bare «2시간마다», or the span «오전 8시부터 오후 6시까지
-2시간마다»), and then what happens in each of those hours, as a burst
-«D 동안 B»:
+A stray mark after «그리고» says its «매시» or «각각» again: «…매시
+정각부터 29분까지 1분마다, 그리고 매시 45분». A bare «45분» after a
+rhythm can be heard as a length **(schedule read, 2026-11-19)**.
 
-| M | the burst |
+*Separate single hours* are a list of whole hours even when there are
+only two, with every kind of minute set: «오전 9시대, 오후 5시대에
+1분마다», «0시대, 낮 12시대에 15분마다», and an exception once, at the
+end: «오전 9시대, 오후 5시대에 1분마다(매시 29분 제외)». Until
+2026-11-19 two hours were two spans («오전 9시부터 9시 59분까지 1분마다,
+그리고 오후 5시부터 5시 59분까지 1분마다»), which made the reader take
+the same frame twice and put two brackets in one sentence. One hour
+alone stays a span («오전 9시부터 9시 59분까지 1분마다»): it is one
+stretch, both judges read it at once, and «0시대», «낮 12시대» alone are
+the heavy cases of the band word.
+
+*A run of hours with a minute missing every hour* is a range of whole
+hours, so that the missing minute is not the named end of a span:
+«오전 9시대부터 오후 5시대까지 1분마다(매시 59분 제외)».
+
+*Hours at a step* (a cadence of four hours or more). The frame is the
+whole hours from the first to the last at their spacing, «A시대부터
+B시대까지 k시간 간격으로», then «각각» and the minutes as in T3:
+
+| M | after the frame |
 | --- | --- |
-| all | «1시간 동안 매분» |
-| a cadence from 0 that tiles the hour | «1시간 동안 15분 간격으로» |
-| a range from 0 | «30분 동안 매분» (0 to 29) |
-| a cadence from 0 that stops short | «57분 동안 7분 간격으로» (0 to 56) |
-| a range or cadence from another minute | the hour span names that minute on both its ends, then the burst: «0시 5분부터 오후 10시 5분까지 2시간마다 1시간 동안 10분 간격으로» |
-| a list of marks | each mark is its own T2 span, joined with «, 그리고 »: «0시 15분부터 오후 10시 15분까지 2시간마다, 그리고 0시 45분부터 오후 10시 45분까지 2시간마다» |
+| all | «각각 1분마다» |
+| a cadence from 0 that tiles the hour | «각각 15분마다» |
+| a list | «각각 15·45분» |
+| a range | «각각 정각부터 29분까지 1분마다» |
+| another cadence | «각각 5분부터 55분까지 10분마다», «각각 정각부터 56분까지 7분마다» |
 
-D is «1시간» when the minutes tile the hour, otherwise the minutes from
-the first to the last firing, counting both («30분», «57분»). B is «매분»
-for every minute and «N분 간격으로» for a step. An hour removed from the
-cadence (7 above) is said at the end, as a whole hour: «2시간마다 1시간
-동안 15분 간격으로(오전 8시대 제외)».
+An hour removed from the cadence (7 above) is said at the end, as a
+whole hour: «…각각 15분마다(오전 8시대 제외)». The frame names clock
+hours, so the fill is «매일».
 
-* `* */2 * * *`: «2시간마다 1시간 동안 매분».
-* `*/15 */2 * * 1-5`: «매주 월~금요일 하루 종일 2시간마다 1시간 동안
-  15분 간격으로».
-* `*/15 1/2 * * 1-5`: «매주 월~금요일 오전 1시부터 오후 11시까지
-  2시간마다 1시간 동안 15분 간격으로».
-* `15,45 */4 * * *`: «매일 0시 15분부터 오후 8시 15분까지 4시간마다,
-  그리고 0시 45분부터 오후 8시 45분까지 4시간마다».
+* `* */2 * * *`: «매일 0시대부터 오후 10시대까지 2시간 간격으로 각각
+  1분마다».
+* `*/15 */2 * * 1-5`: «매주 월~금요일 0시대부터 오후 10시대까지 2시간
+  간격으로 각각 15분마다».
+* `*/15 1/2 * * 1-5`: «매주 월~금요일 오전 1시대부터 오후 11시대까지
+  2시간 간격으로 각각 15분마다».
+* `15,45 */4 * * *`: «매일 0시대부터 오후 8시대까지 4시간 간격으로 각각
+  15·45분».
+* `5/10 */2 * * *`: «매일 0시대부터 오후 10시대까지 2시간 간격으로 각각
+  5분부터 55분까지 10분마다».
 
 How this came about. Two rhythms side by side («2시간 간격으로
 15분마다») could not be told apart **(judge 1)**. Versions three to five
-said «2시간마다, 그 시간의 0·15·30·45분» and added a bracket of sample
-clock times; judge 4 had to read «그 시간의» twice in ten sentences, and
-said the sentence did not stand without its bracket. The same judge read
-every «2시간마다 1시간 동안 1분마다(…)» sentence correctly and objected
-only to the three «마다» in a row. So the bracket, which the project no
-longer allows, was not what carried the meaning: «1시간 동안» was. The
-burst keeps it, and «매분» and «간격으로» remove the stacked «마다»
-(usage 3.2 has both words).
+said «2시간마다, 그 시간의 0·15·30·45분» with a bracket of sample clock
+times; judge 4 had to read «그 시간의» twice. The first pass of
+2026-11-19 said a length, «2시간마다 1시간 동안 15분 간격으로». Both
+readers of that pass, independently, counted the end of the length as a
+firing (1:00, 1:15, 1:30, 1:45, 2:00), took an offset start to run into
+the next hour (0:05 to 1:05), and one read «오후 11시까지» as the moment
+everything stops. A length whose end the reader must decide does not say
+a set of moments. «N시대» is a container with no end to decide: 2:00 is
+not in «1시대». The blind judge reached for the word unprompted in every
+rewrite, and read every existing «N시대» sentence at once. «각각» keeps
+the spacing of the hours and the rhythm inside them apart, which is what
+judge 1 could not do.
 
-Rejected on 2026-11-19: «짝수 시», «홀수 시간대» for every second hour
-(«매일 짝수 시 30분», «짝수 시간대에 15분마다»). They would be shorter
-and ask for no counting, but four web searches that day for «짝수 시
-정각», «홀수 시 정각», «짝수 시간대», «매 짝수 시» in timetables and
-notices found no use of them, so there is no evidence that readers hold
-the hours of the clock by parity the way they hold «홀수일». To test
-again with a native reviewer.
+The frame has ends even from 0 («0시대부터 오후 10시대까지»), where the
+rhythm of moments is bare («2시간마다»): «시대» needs a numeral, and
+there is no word for "each such hour". A window is a suspect device; it
+is the series' own first and last member here, as in «1일부터 28일까지
+3일 간격으로», which the judge read at once.
+
+Rejected again on 2026-11-19: «짝수 시대», the blind judge's own word
+for every second hour. It is shorter. Four searches earlier that day
+found no use of «짝수 시», «홀수 시간대» or the like in timetables or
+notices, it reaches only a step of two, and a model judge's coinage is
+not evidence that readers hold the clock's hours by parity. For a native
+reviewer.
+
+Rejected: the schedule reader's count, «15분 간격으로 4회씩». The reader
+multiplies, and a count with its interval was the device judge 4 read as
+a total. Rejected: «한 시간 걸러» (the judge's): right for a step of
+two only, and usage 3.3 records that «이틀 걸러» is counted both ways.
 
 Rejected: «오전 9시부터 오후 5시까지 매시 5·20·45분», the judges' own
 form for a range: it does not say whether 5:05 p.m. fires. «N시대» is
 uncommon for 0 and 12 and every judge called it heavy; every judge read
 it correctly.
-
-Least sure here: «1시간 동안 15분 간격으로» leaves a reader to decide
-that the firing at the end of the hour belongs to the next hour (four in
-the hour, not five). It was rejected once on that ground. It stays
-because the hour's end is not one of the hours named, and because every
-exact alternative needs either the bracket or a second «의».
 
 **Seconds.**
 
@@ -413,55 +462,70 @@ exact alternative needs either the bracket or a second «의».
   «매분 5초부터 55초까지 10초마다», «매분 5·20초», «매분 0초부터 9초까지
   1초마다», exception «(매분 29초 제외)»).
 * **S all, or a cadence from 0 that tiles the minute, where every minute
-  of a stretch fires** (M all with H one or two runs, or M a range with
-  H one value or unrestricted): the span or the rhythm moves down to
+  of a stretch fires** (M all with H one run, or two runs that are not
+  both single hours, or M a range with H one value or unrestricted): the span or the rhythm moves down to
   seconds and ends on the last second that fires: «오전 9시부터 오후
   5시 59분 59초까지 1초마다», «매시 정각부터 29분 59초까지 1초마다».
   Where M is all but a minute or two (3 above), that minute is taken out
-  whole, as its seconds: «1초마다(매시 29분 0~59초 제외)», «…1초마다(오전
-  9시 29분 0~59초 제외)». Where H is all but an hour, «1초마다(오전 3시대
-  제외)».
+  whole: «1초마다(매시 29분 제외)», «…1초마다(오전 9시 29분 제외)». Under
+  «1초마다» a minute named is the whole minute, as an hour is under
+  «1분마다»; «0~59초» beside it was machine speech **(both readers,
+  2026-11-19)**. Where H is all but an hour, «1초마다(오전 3시대 제외)».
 * **Any other S, where every minute of the named hours fires** (M all, H
   restricted): the hours as whole hours (T5) and the seconds as with
   everything unrestricted: «오전 9시대에 매분 0초부터 56초까지 7초마다»,
-  «오전 9시대부터 오후 5시대까지 매분 5·20초».
-* **S on one named moment** (one clock time, or «매시 m분»). All:
-  «…부터 1분 동안 매초» («매일 오전 9시부터 1분 동안 매초», «매시
-  정각부터 1분 동안 매초»). A list: the moments themselves («매일 오전
-  9시, 9시 0분 30초», «매시 5분, 5분 30초»). A progression: a span to
-  the last second («오전 9시부터 9시 0분 54초까지 6초마다», «오전 9시 0분
-  1초부터 9시 0분 59초까지 1초마다», «매시 정각부터 0분 9초까지
-  1초마다»), an exception as a clock time («…1분 동안 매초(오전 9시 0분
-  29초 제외)»).
-* **S on a list of moments.** A list of seconds: every moment is written
-  out, in clock order, while there are six or fewer («매시 5분, 5분
-  30초, 20분, 20분 30초», «매일 오전 9시 30분 15초, 9시 30분 45초, 오후
-  5시 30분 15초, 5시 30분 45초»). Otherwise «부터 각각» and a burst:
-  «매일 오전 9시, 오후 5시부터 각각 1분 동안 매초», «매시 5·20분부터
-  각각 1분 동안 매초».
-* **S on a rhythm of minutes** (a minute-level part that ends in
-  «마다»): a burst after it, by the table for hours at a step one unit
-  down:
+  «오전 9시대부터 오후 5시대까지 매분 5·20초». S all with separate single
+  hours: «오전 9시대, 오후 5시대에 1초마다».
+* **S on one named moment** (one clock time, or «매시 m분»). A list: the
+  moments themselves («매일 오전 9시, 9시 0분 30초», «매시 5분, 5분
+  30초»). Anything else, every second included: a span to the last
+  second that fires («오전 9시부터 9시 0분 59초까지 1초마다», «오전
+  9시부터 9시 0분 54초까지 6초마다», «오전 9시 0분 1초부터 9시 0분
+  59초까지 1초마다», «매시 정각부터 0분 59초까지 1초마다», «매시
+  30분부터 30분 59초까지 1초마다»), an exception as a clock time
+  («…9시 0분 59초까지 1초마다(오전 9시 0분 29초 제외)»).
+* **S on several moments or on a rhythm of minutes.** The minutes are a
+  frame and the seconds are positions in each, after «각각»; a minute
+  has no band word, so the positions are always named, never a bare
+  rhythm:
 
-| S | the burst |
+| the minutes | the frame |
 | --- | --- |
-| all | «1분 동안 매초» |
-| a cadence from 0 that tiles the minute | «1분 동안 6초 간격으로», «1분 동안 30초 간격으로» |
-| a range from 0 | «10초 동안 매초» (0 to 9) |
-| a cadence from 0 that stops short | «57초 동안 7초 간격으로» |
-| a range or cadence from another second | the minute-level part names that second on its ends, then the burst: «오전 9시 0분 5초부터 오후 5시 45분 5초까지 15분마다 1분 동안 10초 간격으로» |
-| a list | each second is its own progression, joined with «, 그리고 »: «매시 0분 5초부터 45분 5초까지 15분마다, 그리고 0분 20초부터 45분 20초까지 15분마다» |
+| a list of clock times or of marks | «오전 9시, 오후 5시에», «매시 5·20분에» |
+| a rhythm in a span | «오전 9시부터 오후 5시 45분까지 15분 간격으로» |
+| a rhythm with hours unrestricted | «매시 정각부터 45분까지 15분 간격으로» |
+| one minute at an hour step | «0시 24분부터 오후 9시 24분까지 3시간 간격으로» |
 
-  «매초» is said only inside a burst, so that no clause holds two
-  «마다»; everywhere else the rhythm is «1초마다».
+| S | after the frame |
+| --- | --- |
+| a list, or a cadence of up to four | «각각 5·20초», «각각 0·30초», «각각 0·15·30·45초» |
+| all | «각각 0초부터 59초까지 1초마다» |
+| a range or a longer cadence | «각각 0초부터 54초까지 6초마다», «각각 5초부터 55초까지 10초마다», «각각 0초부터 9초까지 1초마다» |
 
-  Versions two to five said the seconds as a count with a bracket,
-  «15분마다 2회(해당 시각과 30초 뒤)». After «1분마다» the count was read
-  as the total («1분마다 9회»), and after a list of moments with no
-  second 0 the reader could not tell whether the moment itself fires
-  («…에 각각 2회(15초, 45초 뒤)») **(judge 4)**. The count and its
-  bracket are gone: a clock time with its second is recognised, and
-  usage 7.5 says to give the seconds on a base time.
+  A list of seconds on a list of moments is written out as clock times
+  while there are six or fewer («매시 5분, 5분 30초, 20분, 20분 30초»,
+  «매일 오전 9시 30분 15초, 9시 30분 45초, 오후 5시 30분 15초, 5시 30분
+  45초»); past six it is the frame.
+
+  The frame says «간격으로» where the same minutes, firing on their own,
+  say «마다» («15분마다»): after «…15분마다, 각각 5·20초» a reader cannot
+  tell whether the minute itself fires, which is what judge 4 found in
+  «…에 각각 2회(15초, 45초 뒤)».
+
+  History. Versions two to five said the seconds as a count with a
+  bracket, «15분마다 2회(해당 시각과 30초 뒤)»; the count was read as a
+  total **(judge 4)**. The first pass of 2026-11-19 said a length, «15분
+  마다 1분 동안 30초 간격으로», and both readers counted the minute's end
+  as a firing (9:00:00, 9:00:30, 9:01:00). It also said a list of seconds
+  as one span for each («…5초부터 …까지 15분마다, 그리고 …20초부터 …»),
+  which the judge had to merge. The frame says what is shared once. With
+  it «매초», «매분» as rhythms and «동안» are gone: every rhythm is
+  «N마다», and «1분마다» has no second name.
+
+  Least sure here: the judge's own wording was «15분마다, 그 분의 5초와
+  20초». «그 분» was not taken because the same device for hours, «그
+  시간의», was read twice by judge 4, and «분» after «그» is the bound
+  noun schedule reader 2 objected to in «그 시의».
 
 ### 12-hour times
 
@@ -524,7 +588,7 @@ June. The judge found «매년 … 매주» mildly heavy and understood it;
 
 * `30 0 9 * * *`: «매일 오전 9시 0분 30초».
 * `*/6 0 9 * * *`: «매일 오전 9시부터 9시 0분 54초까지 6초마다».
-* `* 0 9 * * *`: «매일 오전 9시부터 1분 동안 매초».
+* `* 0 9 * * *`: «매일 오전 9시부터 9시 0분 59초까지 1초마다».
 
 2.4 No family needs a second order.
 
@@ -539,7 +603,7 @@ June. The judge found «매년 … 매주» mildly heavy and understood it;
 
 The condition is whether the time part **names a clock time**: it does
 when the hours are restricted, unless they are said as "all but" (T3) or
-as a bare rhythm (T2, T5). A clock time named, with no day named:
+as a bare rhythm (T2). Whole hours count as clock times. A clock time named, with no day named:
 «매일». None named, with a day named: «하루 종일» («매월 1일 하루 종일
 1분마다», «매주 월요일 하루 종일 2시간마다»). None named, with only a
 month or year named: «내내» («매년 1월 내내 1분마다», «2030년 내내
@@ -579,6 +643,8 @@ Each stays inside the calendar part and the fill.
 * **The month phrase names only months the date can fire in**, and the
   day phrase only days those months have; a day cadence is said from its
   start under «매월» and with both ends under named months (5.3).
+* **A union's date arm that ends in an exception is said second**
+  (4.3).
 * **A date that never comes** leaves no time to say: the whole
   description is «없는 날짜라 실행되지 않음» (5.3), so a day, month or
   year field that makes or unmakes such a date removes or restores the
@@ -640,7 +706,7 @@ exception is needed.
   it: a rhythm from the first hour of the day is said bare, and the one
   that starts elsewhere names its ends («오전 1시부터 오후 11시까지
   2시간마다»), so the bare form has one meaning.
-* `0 0 */5 * *`: «매월 1일부터 5일 간격으로 0시». A step of days does not
+* `0 0 */5 * *`: «매월 1일부터 시작해 5일 간격으로 0시». A step of days does not
   divide the month, so it is never bare: it is said from its start, and
   «매월» says where it starts again. Until 2026-11-19 up to seven days
   were listed («매월 1·6·11·16·21·26·31일(없는 날은 건너뜀)») and more
@@ -701,16 +767,19 @@ from the cost of each.
   «매일 0시, 오전 6시, 낮 12시, 오후 6시» are four and four times as
   long. The span «0시부터 오후 6시까지 6시간마다» made judge 1 work out
   why it ends at six; the bare rhythm has no end to explain.
-* `0 */8 * * *` and `0 */12 * * *` stay lists, «매일 0시, 오전 8시, 오후
+* `0 */8 * * *` and `0 */12 * * *` are lists, «매일 0시, 오전 8시, 오후
   4시» and «매일 0시, 낮 12시»: three times or two are recognised, where
   «8시간마다» leaves the reader to add twice. A judgment: three objects
   and no working out against one object and two additions.
-* `23 */6 * * *`: «매일 0시 23분, 오전 6시 23분, 낮 12시 23분, 오후 6시
-  23분». Heavy, and asks nothing. A start alone («0시 23분부터 6시간
-  마다») is wrong under a named day (T2); with both ends («0시 23분부터
-  오후 6시 23분까지 6시간마다») it names two of the four times and leaves
-  the other two to arithmetic; the minute said apart («6시간마다 23분에»)
-  is not Korean.
+* `23 */6 * * *`: «매일 0시 23분부터 오후 6시 23분까지 6시간마다».
+  Until the second pass of 2026-11-19 this was its four times, «매일 0시
+  23분, 오전 6시 23분, 낮 12시 23분, 오후 6시 23분», which ask for no
+  working out. But then the minute decides how the hours are said: a
+  rhythm at minute 0, a list at minute 23, whole hours under `*/15`. Four
+  hours are a rhythm in all three now. A judgment, and the cost is real:
+  the span names two of the four times and leaves two to be added. A
+  start alone («0시 23분부터 6시간마다») is wrong under a named day (T2);
+  the minute said apart («6시간마다 23분에») is not Korean.
 * An exception: one or two.
 
 3.11 None. `0 */12 * * *` and `0 0,12 * * *` are both «매일 0시, 낮
@@ -788,22 +857,32 @@ negative inside an exception that had to be decoded, and the condition
 set before the time, which was understood with effort; after the time it
 was understood at once **(judges 2 and 3, schedule reader 1)**.
 
-A known residue: «매월 홀수일(15일 제외)과 매주 월~금요일, 각각 …». A
-weekday 15th fires, by the second arm. Schedule reader 2 thought it
-possible, not likely, that «15일 제외» is carried over the whole. The
-bracket touches «홀수일» and nothing else, and no shorter true form was
-found; left, and to be asked of a reader.
+**When the date arm ends in an exception bracket, it is said second:**
+«매주 월~금요일과 매월 홀수일(15일 제외), 각각 오전 9시부터 …». Said
+first («매월 홀수일(15일 제외)과 매주 월~금요일, 각각 …») the exception
+arrives before the weekdays and can be carried over them, so that a
+weekday 15th seems not to fire **(schedule reader 2; blind judge,
+2026-11-19)**. Said second, «매주 월~금요일» is already taken whole when
+the bracket arrives beside «홀수일». This is weaker than a cure: the
+judge's own rewrite added «요일과 상관없이», which says more than any
+other union says. To be put to a reader again. (The same judge noted
+that «A과 B» can be heard as days that are both; «, 각각» and the second
+«매-» are what prevent it, and both stay.)
 
 **Both must match** (`day.both`; cron, when one of the two day fields is
 written from a star): the days of the month that fall on those weekdays.
-The date phrase, «중», the weekday without «매주», and «인 날»:
+A set of dates: the date phrase, «중», the weekday without «매주», and
+«인 날». One date: the date, and the condition in a bracket, in the
+words the union's note uses:
 
 * `0 0 */2 * 1`: «매월 홀수일 중 월요일인 날 0시».
 * `*/15 9-17 */2 * 1-5`: «매월 홀수일 중 월~금요일인 날 오전 9시부터
   오후 5시 45분까지 15분마다».
-* `0 0 15 * */2`: «매월 15일 중 화·목·토·일요일인 날 0시».
+* `0 0 15 * */2`: «매월 15일(화·목·토·일요일인 경우에만) 0시». «15일
+  중» chose from a set of one **(schedule read, 2026-11-19)**; usage 5.3
+  gives the condition form for a date and a weekday acting together.
 * after a date phrase ending in «간격으로», «, 그중»: `0 0 */5 * 1`
-  «매월 1일부터 5일 간격으로, 그중 월요일인 날 0시».
+  «매월 1일부터 시작해 5일 간격으로, 그중 월요일인 날 0시».
 
 «A 중 B인 날» is how Korean picks some days out of a set, and it cannot
 be heard as the union, which has «과» and «매주» on its second arm.
@@ -832,7 +911,7 @@ Years:
 | the same, of every second year from the field's first even or odd year | «짝수 해마다, 그해», «홀수 해마다, 그해» |
 | a cadence of five or more that ends | «2028년부터 2060년까지 4년마다, 그해» |
 | all but one or two | «매년(2030년 제외)» |
-| `cadencePieces`, when nothing above applies | its parts in the core's order, joined with «, 그리고 », then «, 해당 연도에는»: «2030년부터 2년마다, 그리고 2031년, 해당 연도에는», «2030~2040년, 그리고 2045년부터 5년마다, 해당 연도에는». The fill «내내» after it is «해당 연도 내내». |
+| `cadencePieces`, when nothing above applies | its parts in the core's order, joined with «, 그리고 », then «, 이들 해에는»: «2030년부터 2년마다, 그리고 2031년, 이들 해에는», «2030~2040년, 그리고 2045년부터 5년마다, 이들 해에는». The fill «내내» after it is «이들 해 내내». |
 
 * `0 0 0 1 1 * 2030`: «2030년 1월 1일 0시».
 * `0 0 9 * 6 * 2030`: «2030년 6월 매일 오전 9시».
@@ -843,7 +922,9 @@ Years:
 
 Years do not cycle, so a cadence of years is a count from a named year
 and never bare. After several parts «그해» could be taken for the last
-year alone **(judge 3)**; «해당 연도에는» points at all of them. «그해»
+year alone **(judge 3)**, and so could «해당 연도에는» **(both readers,
+2026-11-19)**: both are singular. «이들 해에는» is plural and can only
+point at all of them. «그해»
 ties what follows to the years just counted. Without it «4년마다, 매일»
 read as two rhythms in conflict, or as "from 2028 on, daily" **(judge 1,
 schedule reader 1)**. A year list is never the values of a cadence in
@@ -1026,11 +1107,13 @@ day is its `length` minus n; no table of month lengths is kept here):
 * **Months unrestricted, and every month fires:** the longest month is
   the example that fixes the count: «매월 말일 3일 전(31일까지 있는 달은
   28일) 0시».
-* **Months unrestricted, and some month is too short:** every group,
-  longest first, and then the months left out: «매월 말일 29일 전(31일까지
-  있는 달은 2일, 30일까지 있는 달은 1일, 2월은 건너뜀) 0시»; where
-  February fires only in leap years, «…윤년 2월은 1일, 평년 2월은
-  건너뜀)».
+* **Months unrestricted, and some month is too short:** the longest
+  months' date as a plain date, and the other groups and the months left
+  out in a bracket: `0 0 L-29 * *` «매월 2일(30일까지 있는 달은 1일,
+  2월은 건너뜀) 0시»; where February fires only in leap years, `0 0 L-28
+  * *` «매월 3일(30일까지 있는 달은 2일, 윤년 2월은 1일, 평년 2월은
+  건너뜀) 0시». Nobody writes «말일 29일 전», and the bracket was saying
+  everything **(blind judge, 2026-11-19)**.
 
 **Days a month lacks.** A date some months do not have is skipped by the
 scheduler, while billing habit reads «매월 31일» as "the last day when
@@ -1055,9 +1138,11 @@ there is no 31st". So:
   without the date cannot fire on it, and «윤년» is the word for the
   years that have it.
 * **One day or one Quartz form that some reached month lacks**, months
-  unrestricted, or named with a February that has it only in leap years:
-  «(없는 달은 건너뜀)»: «매월 31일(없는 달은 건너뜀) 0시», «매년
-  1월·2월의 29일(없는 달은 건너뜀) 0시». Inside the `nW` bracket the day
+  unrestricted: «(없는 달은 건너뜀)»: «매월 31일(없는 달은 건너뜀) 0시».
+  Under named months, a February that has the day only in leap years is
+  said apart, as below: `0 0 29 1,2 *` «매년 1월 29일과 윤년 2월 29일
+  0시» (it is a year that lacks it, not a month; **schedule read,
+  2026-11-19**). Inside the `nW` bracket the day
   is named, so that «없는 달» cannot be taken of the Monday: «매월
   30일(주말이면 같은 달 안에서 가장 가까운 금요일이나 월요일, 30일이
   없는 달은 건너뜀)». A fifth weekday always takes «(없는 달은
@@ -1069,7 +1154,10 @@ there is no 31st". So:
   them: `0 0 30,31 1,4 *` «매년 1월·4월의 30일과 1월 31일 0시»; `0 0
   15,31 1,4 *` «매년 1월·4월의 15일과 1월 31일 0시»; a group that
   February has in leap years only is «윤년 2월 29일»: `0 0 28-31 2 *`
-  «매년 2월 28일과 윤년 2월 29일 0시». Until 2026-11-19 these were
+  «매년 2월 28일과 윤년 2월 29일 0시»; after a step of days the join is
+  «, 그리고 »: `0 0 */4 2 *` «매년 2월 1일부터 25일까지 4일 간격으로,
+  그리고 윤년 2월 29일 0시», so that the end named is a day that fires
+  every year. Until 2026-11-19 these were
   «1월·4월의 30·31일(없는 날은 건너뜀)», which left three dates to be
   worked out from a calendar **(judge 4)**.
 * **Otherwise, several days:** «(없는 날은 건너뜀)» follows only when a
@@ -1081,8 +1169,8 @@ there is no 31st". So:
   Cadences, named sets («홀수일») and «매일(… 제외)» take none.
 
 5.4 (not a question) Fixed phrases the answers use: «하루 종일», «내내»,
-«그해», «해당 연도», «N시대», «1시간 동안», «1분 동안», «매분», «매초»,
-«N분 간격으로», «N일 간격으로», «부터 각각», «중 …인 날», «그중», «윤년마다».
+«그해», «이들 해», «N시대», «N시간 간격으로», «N분 간격으로», «N일
+간격으로», «부터 시작해», «각각», «중 …인 날», «그중», «윤년마다».
 
 ## 6. Words
 
@@ -1131,10 +1219,11 @@ space.
 8.2 `0 0 1 6 5`: «매년 6월 1일과 6월 매주 금요일, 각각 0시». The month
 is said on both arms; the time follows «각각».
 
-8.3 `* 0 9 * * *`: «매일 오전 9시부터 1분 동안 매초». `* 9 * * *`:
+8.3 `* 0 9 * * *`: «매일 오전 9시부터 9시 0분 59초까지 1초마다». `* 9 * * *`:
 «매일 오전 9시부터 9시 59분까지 1분마다». Where the hours are not one or
 two runs, whole hours do the confining («오전 8시대, 낮 12시대, 오후
-6시대에 1분마다»), or a burst does («2시간마다 1시간 동안 매분»).
+6시대에 1분마다»), or a frame of them does («0시대부터 오후 10시대까지 2시간 간격으로 각각
+1분마다»).
 
 8.4 Dropped: «0분» of a round time; the marker of a time that repeats the
 one before; the unit of every list item but the last; «매일» before a
@@ -1151,13 +1240,15 @@ sample times.
 
 8.8 A label is the description unchanged. A sentence adds «실행됩니다».
 If the description ends in a bracket, that bracket is set aside first.
-Then, if the last word ends in «마다», «매분», «매초» or «간격으로»,
+Then, if the last word ends in «마다»,
 « 실행됩니다» follows directly; after any other, «에 실행됩니다». The
 bracket set aside is written after the verb, and the full stop closes
 everything: «매일 오전 9시에 실행됩니다.», «15분마다 실행됩니다.», «매시
 정각에 실행됩니다(오전 3시 제외).», «10분마다 실행됩니다(오전 3시대
 제외).», «매일 0시에 실행됩니다(단, 15일은 월요일인 경우에만).»,
-«2시간마다 1시간 동안 15분 간격으로 실행됩니다.» A bracket inside the
+«매시 5·20분에 각각 0·30초에 실행됩니다.» Only a bracket that ends the
+description moves; one that closes an earlier span stays with its span.
+A bracket inside the
 description stays where it is («매월 31일(없는 달은 건너뜀) 0시에
 실행됩니다.»). This is where Korean notices put a «단,» clause and an
 exception (usage 5.3); a particle hung on a bracket was not Korean
@@ -1178,12 +1269,11 @@ the last reads found two readings in them:
 | --- | --- | --- |
 | «매일 0시부터 오후 10시까지 2시간마다» | «2시간마다» | the project's convention; a window round a rhythm that fills the day |
 | «매일 0시, 오전 6시, 낮 12시, 오후 6시» (`*/6`) | «6시간마다» | one thing to hold for four |
-| «…2시간마다, 그 시간의 0·15·30·45분(오전 1시, 1시 15분, …)» | «…2시간마다 1시간 동안 15분 간격으로» | no bracket of sample times; «그 시간의» read twice |
-| «…2시간마다 1시간 동안 1분마다(0시~0시 59분, …)» | «2시간마다 1시간 동안 매분» | the same; three «마다» in a row |
-| «15분마다 2회(해당 시각과 30초 뒤)», «1분마다 9회(…)», «…에 각각 2회(15초, 45초 뒤)» | a burst, the clock times themselves, or «N시대에 매분 …» | the count was read as a total; the moment itself seemed to fire |
+| «…2시간마다, 그 시간의 0·15·30·45분(오전 1시, 1시 15분, …)» | first «…2시간마다 1시간 동안 15분 간격으로», then (second pass) «…오전 1시대부터 오후 11시대까지 2시간 간격으로 각각 15분마다» | no bracket of sample times; «그 시간의» read twice; a length's end was counted as a firing |
+| «15분마다 2회(해당 시각과 30초 뒤)», «1분마다 9회(…)», «…에 각각 2회(15초, 45초 뒤)» | the clock times themselves, «N시대에 매분 …», or (second pass) «…15분 간격으로 각각 0·30초» | the count was read as a total; the moment itself seemed to fire |
 | «매시 정각(오전 2시부터 오후 11시까지 3시간마다 제외)», «매일(3일부터 30일까지 3일마다, 그리고 31일 제외)» | the set's `cadencePieces` | read two ways |
-| «1초마다(매시 29분부터 1분 동안 제외)» | «1초마다(매시 29분 0~59초 제외)» | what is excepted is a concrete thing |
-| «매월 1·6·11·16·21·26·31일(없는 날은 건너뜀)», «매월 1일부터 31일까지 3일마다(없는 날은 건너뜀)» | «매월 1일부터 5일 간격으로», «매월 1일부터 3일 간격으로» | seven numbers and a note; the start alone is true |
+| «1초마다(매시 29분부터 1분 동안 제외)» | «1초마다(매시 29분 제외)» | what is excepted is a concrete thing |
+| «매월 1·6·11·16·21·26·31일(없는 날은 건너뜀)», «매월 1일부터 31일까지 3일마다(없는 날은 건너뜀)» | «매월 1일부터 시작해 5일 간격으로» | seven numbers and a note; the start alone is true |
 | «6월 말일 3일 전(27일)» | «6월 27일» | the date where it is one |
 | «…(31일까지 있는 달은 28일)» under June and July | «6월 27일, 7월 28일» | the bracket answered for one month only |
 | the three-clause `nW` bracket | «주말이면 같은 달 안에서 가장 가까운 금요일이나 월요일» | forty syllables between the date and its time |
@@ -1191,7 +1281,6 @@ the last reads found two readings in them:
 | «1월·4월의 30·31일(없는 날은 건너뜀)» | «1월·4월의 30일과 1월 31일» | the dates are few; say them |
 | «매월 28~31일(없는 날은 건너뜀)» | «매월 28~31일» | a run cut short needs no note |
 | «매일 하루 종일 1분마다(단, …)» | «매일 1분마다(단, …)» | the day said twice |
-| «…에 각각 1분 동안 매초» | «…부터 각각 1분 동안 매초» | a minute begins at a moment, it is not at it |
 | the union for `*/2` beside a weekday | «매월 홀수일 중 월~금요일인 날» | the core now says both must match |
 
 Kept after being reopened, each with its reason where it is described:
@@ -1199,6 +1288,61 @@ Kept after being reopened, each with its reason where it is described:
 «매월 31일(없는 달은 건너뜀)»; «말일 3일 전(31일까지 있는 달은 28일)»;
 both ends of a rhythm that starts off the first hour or minute; «매년 …
 매주»; «1·15일» without a unit on each number.
+
+### The second pass, after two independent reads
+
+A blind judge briefed only in Korean read eighty-four sentences and gave
+every reading of each; a schedule reader worked all 696 rows against
+their patterns. No row named a wrong time; the defects were second
+readings. Each is described where its form is; in short:
+
+| Found | Now |
+| --- | --- |
+| «2시간마다 1시간 동안 15분 간격으로»: the end of the length fires; an offset runs into the next hour (both readers) | whole hours as a frame, «0시대부터 오후 10시대까지 2시간 간격으로 각각 15분마다»; minutes as a frame for seconds, «…15분 간격으로 각각 0·30초». No length is said anywhere |
+| «매월 1일부터 5일 간격으로»: "from the 1st to the 5th" (schedule read) | «매월 1일부터 시작해 5일 간격으로» |
+| «오전 9시, 오후 5시부터 각각 1분 동안 매초»: «부터» on the last time alone | «오전 9시, 오후 5시에 각각 0초부터 59초까지 1초마다» |
+| «…1분마다, 그리고 45분»: a bare «45분» heard as a length | «…, 그리고 매시 45분» |
+| «…, 그리고 2031년, 해당 연도에는»: 2031 alone | «…, 이들 해에는» |
+| «홀수일(15일 제외)과 매주 월~금요일»: is a weekday 15th left out | the arm with the exception second |
+| «15일 중 …인 날»: a set of one | «15일(…인 경우에만)» |
+| «말일 29일 전(…)»: nobody writes it | «매월 2일(30일까지 있는 달은 1일, 2월은 건너뜀)» |
+| «2월 1일부터 29일까지 4일 간격으로», «1월·2월의 29일(없는 달은 건너뜀)» | «…25일까지 4일 간격으로, 그리고 윤년 2월 29일», «1월 29일과 윤년 2월 29일» |
+| four hours a rhythm at minute 0, a list at minute 23, whole hours under `*/15` | a rhythm in all three |
+
+Taste calls of this pass, each a note from a reader, weighed:
+
+* **The same frame said twice** («A부터 B까지 …마다, 그리고 C부터
+  D까지 …마다»). Gone for marks on stepped hours, for seconds on a
+  rhythm and for two single hours, where a frame says the shared part
+  once. Kept for the two sets that are two interleaved rhythms (sixteen
+  hours, twenty days): the judge's «매시 정각(오전·오후 2시, 5시, 8시,
+  11시 제외)» is good Korean for that one set and no general choice
+  produces it; eight listed exceptions were what judge 4 could not hold.
+* **«마다» beside «간격으로».** Now a difference in meaning, stated
+  above: a rhythm of firings against the spacing of a frame or of days.
+  The judge found «3일마다» more spoken than «3일 간격으로»; the day
+  step keeps «간격으로» because of «1일부터 5일마다».
+* **«1분마다» beside «매분».** «매분» and «매초» as rhythms are gone.
+  «매분» remains only as «매-» before a second mark («매분 30초»).
+* **The middle dot between numbers.** Kept. Usage 5.1 shows «1·15일»;
+  two judges now have preferred «5분과 20분», which says «분» twice and
+  does not reach three items. A preference.
+* **«매년 6~8월 매월 1일».** Kept: «6·7·8월 1일» (the judge's) does not
+  reach `1-11`, and without «매월» the phrase is a span ending on 1
+  August.
+* **Three devices for a month and its date** («1월·7월의 1일», «6~8월
+  매월 1일», «홀수 달 1일»). Kept: each is what its month phrase needs
+  to stay closed before the day number, and none was misread.
+* **Mixed sentence style** (noun phrase, «실행됩니다», «않음») and
+  **«월·수·금» beside «토·일요일»**: these are the three forms and the
+  `short` style, which a caller chooses; one screen shows one.
+* **One hour as «오전 9시대에 1분마다»** in place of the span. Not taken
+  for one hour (2.5, T5); taken for separate single hours.
+* **The bracket of eight excepted hours.** Kept as the honest floor; the
+  pattern is sixteen scattered hours under a quarter-hour rhythm.
+* **«1월·4월의 30일과 1월 31일»** not in date order (the judge wanted
+  three dates). Kept: the form must also serve months of which there
+  are many.
 
 ## Where these answers depart from the usage notes
 
@@ -1244,8 +1388,7 @@ say another.
   one, and every other names its ends. Usage 9's own model is bare
   «5분마다».
 * **«1분마다» and «1초마다» for «매분», «매초»** (usage 3.1), so that
-  they sit in one series with «5분마다». «매분» and «매초» are said only
-  inside a burst, after «동안», where a second «마다» would stack.
+  they sit in one series with «5분마다».
 * **«말일» for «마지막 날»** (usage 6 notes «말일» is occasionally taken
   loosely). It is the notice word and takes «전날», «이틀 전».
 * **A second on a rhythm is carried on the span's ends**, as usage 7.5
@@ -1254,9 +1397,9 @@ say another.
   unit Korean has and uses it nowhere in its models). Nothing else names
   a whole hour, and a window «9시부터 5시까지 매시 5분» leaves the last
   hour open (usage 4.2 is about exactly that doubt).
-* **«2시간마다 1시간 동안 15분 간격으로»** is not in the notes. Its
-  parts are (usage 3.2: «N마다», «N 간격으로»; 8.4: «~ 동안»), and
-  «2시간마다 10분씩»-like bursts are everyday Korean.
+* **«0시대부터 오후 10시대까지 2시간 간격으로 각각 15분마다»** is not
+  in the notes. Its parts are: «N시대» (usage 1.4), «N 간격으로» (3.2),
+  and «각각» (5.4).
 * **«마지막 평일(월~금, 공휴일 무관)»** uses the word usage 1.1 warns
   about, with the days and the holiday note beside it (5.3).
 * **Month lists carry «월» on every item and «의» before a date**
@@ -1268,7 +1411,8 @@ say another.
 * **Tight sets «1~7·15일»** where usage 5.1 shows «월·화, 목~토» with a
   comma. A comma before a time lets the time be read with the last piece
   only.
-* **A step of days is said from its start, «매월 1일부터 3일 간격으로»**,
+* **A step of days is said from its start, «매월 1일부터 시작해 3일
+  간격으로»**,
   where usage 6 prefers a list or a stated base day. It is a stated base
   day; up to four days are still the list.
 * **«없는 달은 건너뜀», «없는 날은 건너뜀»** are not in the notes; usage

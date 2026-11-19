@@ -49,8 +49,8 @@ describe('Korean styles:', function() {
 
   // A label is the description unchanged: Hangul has no capitals. A
   // sentence ends in «실행됩니다», after «에» unless the last word ends in
-  // «마다», «매분», «매초» or «간격으로»; a bracket that ends the
-  // description is written after the verb (answers 8.8).
+  // «마다»; a bracket that ends the description is written after the verb
+  // (answers 8.8).
   it('leaves a label alone, wraps a sentence, and has its fixed texts',
     function() {
       const opts = {style: styles.ko};
@@ -61,10 +61,11 @@ describe('Korean styles:', function() {
       expect(ko.sentence('매시 정각', opts))
         .to.equal('매시 정각에 실행됩니다.');
       expect(ko.sentence('15분마다', opts)).to.equal('15분마다 실행됩니다.');
-      expect(ko.sentence('2시간마다 1시간 동안 15분 간격으로', opts))
-        .to.equal('2시간마다 1시간 동안 15분 간격으로 실행됩니다.');
-      expect(ko.sentence('2시간마다 1시간 동안 매분(오전 8시대 제외)', opts))
-        .to.equal('2시간마다 1시간 동안 매분 실행됩니다(오전 8시대 제외).');
+      expect(ko.sentence('매일 0시대, 낮 12시대에 15분마다(매시 30분 제외)', opts))
+        .to.equal(
+          '매일 0시대, 낮 12시대에 15분마다 실행됩니다(매시 30분 제외).');
+      expect(ko.sentence('매시 5·20분에 각각 0·30초', opts))
+        .to.equal('매시 5·20분에 각각 0·30초에 실행됩니다.');
       expect(ko.sentence('매월 홀수일 중 월요일인 날 0시', opts))
         .to.equal('매월 홀수일 중 월요일인 날 0시에 실행됩니다.');
       expect(ko.sentence('매시 정각(오전 3시 제외)', opts))
@@ -75,8 +76,8 @@ describe('Korean styles:', function() {
         .to.equal('매일 0시에 실행됩니다(단, 15일은 월요일인 경우에만).');
       expect(ko.sentence('매월 31일(없는 달은 건너뜀) 0시', opts))
         .to.equal('매월 31일(없는 달은 건너뜀) 0시에 실행됩니다.');
-      expect(ko.sentence('매일 오전 9시부터 1분 동안 매초', opts))
-        .to.equal('매일 오전 9시부터 1분 동안 매초 실행됩니다.');
+      expect(ko.sentence('매일 오전 9시부터 9시 0분 59초까지 1초마다', opts))
+        .to.equal('매일 오전 9시부터 9시 0분 59초까지 1초마다 실행됩니다.');
       expect(ko.sentence('없는 날짜라 실행되지 않음', opts))
         .to.equal('없는 날짜라 실행되지 않습니다.');
       expect(ko.reboot(opts)).to.equal('시스템 시작 시');
