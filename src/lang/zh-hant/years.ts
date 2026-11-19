@@ -25,6 +25,9 @@ export interface YearsSaid {
   month: string;
   // The comma that follows some forms, whatever comes next.
   pause: string;
+  // The years are named or have two ends, so that a word for "during"
+  // can close them.
+  spanned: boolean;
 }
 
 const yearReading: Reading = {
@@ -73,32 +76,42 @@ function yearCadence(
 }
 
 function noYears(): YearsSaid {
-  return {closing: '', lead: '', month: words.everyYear, pause: ''};
+  return {
+    closing: '',
+    lead: '',
+    month: words.everyYear,
+    pause: '',
+    spanned: true
+  };
 }
 
 function oneYear(form: Form): YearsSaid {
-  return {closing: '', lead: form.values[0] + year, month: '', pause: ''};
+  return {...noYears(), lead: form.values[0] + year, month: ''};
+}
+
+// A run with a first and a last year to name.
+function isClosed(span: Span): boolean {
+  return !span.open && span.from !== yearReading.domain.min;
 }
 
 function yearList(form: Form): YearsSaid {
   return {
-    closing: '',
+    ...noYears(),
     lead: list(form.values.map(String)) + year,
-    month: words.of,
-    pause: ''
+    month: words.of
   };
 }
 
 function yearRange(form: RangeForm): YearsSaid {
-  return {...noYears(), lead: yearSpan(form)};
+  return {...noYears(), lead: yearSpan(form), spanned: isClosed(form)};
 }
 
 function yearPieces(form: PiecesForm): YearsSaid {
   return {
-    closing: '',
+    ...noYears(),
     lead: series(form.spans.map(yearSpan), words.and),
-    month: words.everyYear,
-    pause: words.comma
+    pause: words.comma,
+    spanned: form.spans.every(isClosed)
   };
 }
 
@@ -111,7 +124,13 @@ function yearsBut(form: ExceptForm): YearsSaid {
 function yearSteps(form: CadenceForm): YearsSaid {
   const pause = form.interval === 2 ? '' : words.comma;
 
-  return {closing: '', lead: yearCadence(form), month: '', pause};
+  return {
+    closing: '',
+    lead: yearCadence(form),
+    month: '',
+    pause,
+    spanned: false
+  };
 }
 
 const yearSayers: Sayers<null, YearsSaid> = {
@@ -153,8 +172,18 @@ function mixedYears(pieces: CadencePieces): YearsSaid {
       return say(part);
     }).join(words.comma + words.andAlso),
     month: '',
-    pause: words.comma
+    pause: words.comma,
+    spanned: false
   };
+}
+
+// A step among other years is said as one when it goes on for good or
+// has more than four years; a shorter one is a list, as it is alone.
+function hasLongStep(pieces: CadencePieces): boolean {
+  return pieces.parts.some(function isLong(part) {
+    return part.kind === 'cadence' && (Boolean(part.open) ||
+      (part.last - part.start) / part.interval >= 4);
+  });
 }
 
 // The forms that are no single thing to say.
@@ -166,7 +195,7 @@ function sayYears(facts: ScheduleFacts): YearsSaid {
   const form = formOf(candidates.year as SetDescription[], yearReading);
   const mixed = cadencePieces.year;
 
-  return mixed && form.kind in loose ?
+  return mixed && form.kind in loose && hasLongStep(mixed) ?
     mixedYears(mixed) :
     sayBy(yearSayers, form, null);
 }

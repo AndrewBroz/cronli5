@@ -216,12 +216,17 @@ function nearestWeekday(
 
 // Days counted back from the last. Where every month the form fires in
 // has one length the date itself is named; where each month's day is one
-// number the days are kept by month.
+// number the days are kept by month. Beside days of the week the months
+// are not narrowed to those the count fires in, so a count that skips a
+// month stays a count: the date would promise the months skipped.
 function beforeLast(
   form: Extract<QuartzDate, {kind: 'beforeLast'}>,
   context: DateContext
 ): DayPhrase {
-  const lengths = context.facts.analyses.monthLengths;
+  const {dateReach: reach, day, monthLengths: lengths} =
+    context.facts.analyses;
+  const skips = day.union && reach !== null &&
+    reach.never.length + reach.leapYears.length > 0;
   const split = lengths.some(function byYear(group) {
     return group.years === 'common';
   });
@@ -231,7 +236,7 @@ function beforeLast(
     return {days: [group.length - form.days], months: group.months};
   });
 
-  return lengths.length === 1 ?
+  return lengths.length === 1 && !skips ?
     {body: grouped[0].days[0] + date, grouped, kind: 'dated'} :
     {
       body: words.countingBack + words.ordinal + (form.days + 1) +
@@ -278,9 +283,10 @@ function weekdaysListed(form: Form, style: ZhHantStyle): DayPhrase {
 }
 
 // A run of days of the week, in the order it happens. The short style
-// drops the word the second day begins with.
+// drops the word the second day begins with, unless the run crosses the
+// weekend: the short form is read as a count upward from Monday.
 function weekdayRange(form: RangeForm, style: ZhHantStyle): DayPhrase {
-  const end = style.short ?
+  const end = style.short && !form.wraps ?
     lexicon.weekdays[form.to] :
     weekdayName(form.to, style);
 

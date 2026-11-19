@@ -175,6 +175,12 @@ function separate(form: Form, minutes: Form): Anchor {
   return joined || few ? {kind: 'stretches', spans} : {kind: 'named'};
 }
 
+// One hour is a stretch, unless it holds a plain list of minutes: it is
+// then named, as several hours are.
+function oneHour(form: Form, minutes: Form): Anchor {
+  return minutes.kind === 'list' ? {kind: 'named'} : asStretches(form);
+}
+
 function allBut(form: ExceptForm, minutes: Form): Anchor {
   return form.base.kind === 'all' ?
     {kind: 'allBut', removed: form.removed} :
@@ -190,7 +196,7 @@ const anchorings: Sayers<Form, Anchor> = {
   cadence: separate,
   except: allBut,
   list: separate,
-  one: asStretches,
+  one: oneHour,
   pieces: asStretches,
   range: asStretches
 };
@@ -249,10 +255,11 @@ function placeEveryOther(
 }
 
 // Hours named one by one. Each 12-hour hour carries its part of the day,
-// so what they hold is set off from the last of them.
+// so what several of them hold is set off from the last of them.
 function placeNamed(anchor: Anchor, placing: Placing): Said {
   const {hours, style} = placing.work;
-  const join = style.hour12 ? words.comma + words.eachAt : words.of;
+  const apart = style.hour12 && hours.values.length > 1;
+  const join = apart ? words.comma + words.eachAt : words.of;
 
   return {
     anchored: true,

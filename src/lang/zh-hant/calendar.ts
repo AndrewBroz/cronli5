@@ -37,13 +37,15 @@ const fuses: Record<Fuse, {each: string; join?: string; side: string}> = {
 type DayTold =
   | {kind: 'dated'; phrase: DayPhrase}
   | {kind: 'free'; text: string}
-  | {kind: 'pair'; sides: DayPhrase[]};
+  | {kind: 'pair'; first: string; sides: DayPhrase[]};
 
 // What the months and years give the day part to join on to.
 interface Setting {
   anchored: boolean;
   // The years and months, without the comma some years end on.
   bare: string;
+  // What closes the frame before a pair, ahead of its comma.
+  during: string;
   // The years and months together.
   lead: string;
   months: MonthsSaid;
@@ -85,13 +87,23 @@ function eitherDay(dates: DayPhrase, weekdays: DayPhrase): DayTold {
     };
   }
 
-  return out.length === 1 ?
+  if (out.length === 0) {
+    return {first: '', kind: 'pair', sides};
+  }
+
+  // A side that carries brackets of its own is not set inside another
+  // pair: the days stand first, and the two are joined.
+  return kept.body.includes(words.bracketOpen) ?
+    {
+      first: everyDayBut(out[0].body + words.except),
+      kind: 'pair',
+      sides: [kept]
+    } :
     {
       kind: 'free',
       text: everyDayBut(out[0].body + words.except + words.comma +
         words.butWhenMeeting + kept.body + words.asUsual)
-    } :
-    {kind: 'pair', sides};
+    };
 }
 
 // The day part of one phrase, with any limit set on it after it.
@@ -112,10 +124,12 @@ const standing: Record<DayPhrase['kind'],
   };
 
 // A date and a weekday that must both match: the date is the base, said
-// as it is said alone, and the days of the week limit it, unless the
-// weekday form is itself one day a month, which the dates then limit.
+// as it is said alone, and the days of the week limit it. The days of
+// the week are the base instead when their form is itself one day a
+// month, which the dates then limit, and when the dates are every day
+// but one or two, which are then left out of them.
 function bothDays(dates: DayPhrase, weekdays: DayPhrase): DayTold {
-  const [base, other] = weekdays.kind === 'dated' ?
+  const [base, other] = weekdays.kind === 'dated' || dates.kind === 'rest' ?
     [weekdays, dates] :
     [dates, weekdays];
   const limit = other.kind === 'rest' ?
@@ -141,6 +155,15 @@ const tellers = {
   }
 };
 
+// What stands before a date: the word for "whenever one comes round"
+// where the date is one not every month has and no month is named, unless
+// the dates are a stretch, which is short or absent in a short month by
+// itself.
+function wheneverOr(usual: string, dates: DayPhrase, setting: Setting):
+  string {
+  return setting.whenever && !dates.span ? words.whenever : usual;
+}
+
 function placeFree(told: Extract<DayTold, {kind: 'free'}>, setting: Setting):
   Calendar {
   return {closing: '', day: told.text, frame: setting.lead};
@@ -151,14 +174,18 @@ function placeFree(told: Extract<DayTold, {kind: 'free'}>, setting: Setting):
 // "every month".
 function placePair(told: Extract<DayTold, {kind: 'pair'}>, setting: Setting):
   Calendar {
-  const [dates, weekdays] = told.sides;
   const {side} = fuses[setting.months.fuse];
+  const [dates] = told.sides;
+  const leads = [wheneverOr(side, dates, setting), side];
+  const said = told.sides.map(function saySide(phrase, index) {
+    return (phrase.kind === 'weekly' ? words.every : leads[index]) +
+      phrase.body;
+  });
 
   return {
     closing: '',
-    day: (setting.whenever ? words.whenever : side) + dates.body + words.and +
-      (weekdays.kind === 'weekly' ? words.every : side) + weekdays.body,
-    frame: setting.bare && setting.bare + words.during + words.comma
+    day: [told.first, ...said].filter(Boolean).join(words.and),
+    frame: setting.bare && setting.bare + setting.during + words.comma
   };
 }
 
@@ -213,8 +240,7 @@ function placeDated(told: Extract<DayTold, {kind: 'dated'}>, setting: Setting):
     {closing: '', day: spelled, frame: setting.opening} :
     {
       closing: '',
-      day: (setting.whenever ? words.whenever : fuse.each) + phrase.body +
-        everyDay,
+      day: wheneverOr(fuse.each, phrase, setting) + phrase.body + everyDay,
       frame: setting.lead + join
     };
 }
@@ -318,6 +344,7 @@ function sayCalendar(
     ...place(told, {
       anchored,
       bare: withMonths || years.lead,
+      during: months.text || years.spanned ? words.during : '',
       lead: withMonths || years.lead + years.pause,
       months,
       opening,

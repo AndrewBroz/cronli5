@@ -38,12 +38,16 @@ const MAY_CHANGE = {
 };
 
 // The first place a time field reaches another part: 「每天」 closes the
-// day part when the hours are anchored to the day and either no date or
-// weekday is restricted or the day part holds a range of dates
-// (「每月1日至7日每天 09:00」), and is absent when the time runs round the
-// clock, so an hour edit may add or remove exactly that word at the end
-// of the day part (answers 2.5).
+// day part when the time is anchored to the day (it names a clock time
+// or an hour) and either no date or weekday is restricted or the day
+// part holds a range of dates (「每月1日至7日每天 09:00」), and is absent
+// when the time runs round the clock. Any of the three time fields can
+// make the time name a clock time or stop naming one (「每2小時一次」
+// against 「每天 00:30 起每2小時一次」; 「每小時整點」 against 「每天
+// 09:00」), so an edit to the second, the minute or the hour may add or
+// remove exactly that word at the end of the day part (answers 2.5).
 const EVERY_DAY = '每天';
+const TIME_FIELDS = ['second', 'minute', 'hour'];
 
 // The second: hours that run past midnight are one stretch (「22:00～
 // 翌日02:00」) only when no date, weekday, month or year is restricted
@@ -136,7 +140,7 @@ function leaks(pairList) {
     }
 
     Object.keys(before).forEach(function compare(part) {
-      const everyDay = changed[0] === 'hour' && part === 'day' &&
+      const everyDay = TIME_FIELDS.includes(changed[0]) && part === 'day' &&
         withoutEveryDay(before[part]) === withoutEveryDay(after[part]);
 
       if (words(before[part]) !== words(after[part]) && !everyDay &&

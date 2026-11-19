@@ -46,8 +46,9 @@ function joinBefore(said: Said, calendar: string): string {
 /**
  * The parts of a description: the frame (years and months), the day, the
  * time, and the closing bracket for months or years left out.
+ * @internal
  */
-function describeParts(schedule: Schedule, opts: ZhHantOptions):
+export function describeParts(schedule: Schedule, opts: ZhHantOptions):
   ZhHantParts {
   const {candidates, dateReach: reach, day} = schedule.analyses;
 
@@ -118,5 +119,5 @@ const zhHant: Language<ZhHantStyle, 'zh-Hant'> = {
 };
 
 export type {ZhHantStyle};
-export {describeParts, styles};
+export {styles};
 export default zhHant;

@@ -54,6 +54,14 @@ const rows = [
     '2030年至2032年及2035年，每年1月1日 00:00'],
   ['0 0 0 1 1 * 2030-2040,2045/5',
     '2030年至2040年每年，以及2045年起每5年，1月1日 00:00'],
+  // A step of four years or fewer is a list, also beside other years:
+  // five years named are read off, and nothing is worked out.
+  ['0 0 9 * * * 2030,2032,2035,2040,2041',
+    '2030、2032、2035、2040、2041年每天 09:00'],
+  ['0 0 9 * * * 2030/2,2031',
+    '2030年起每逢西元雙數年，以及2031年，每天 09:00'],
+  ['0 0 9 * * * 2030-2050/5,2031',
+    '2030年至2050年每5年，以及2031年，每天 09:00'],
 
   // Years with no end, from the first year, and all but one.
   ['0 0 0 1 1 * 2030-9999', '2030年起每年1月1日 00:00'],
@@ -109,6 +117,11 @@ const rows = [
     '每月倒數第30天 00:00（2月除外）'],
   ['0 0 L-28 2 *', '每逢閏年2月1日 00:00'],
   ['0 0 L-30 6 *', '永不執行（沒有這個日期）'],
+  // Beside a weekday the months are not narrowed to those the count
+  // fires in, so the count stays: 每月1日 would promise the 1st of a
+  // month of 30 days, which has no 31st day from its end.
+  ['0 0 L-30 * 2', '每月倒數第31天及每週一 00:00', QUARTZ],
+  ['0 0 L-3 6 2', '每年6月期間，27日及每週一 00:00', QUARTZ],
 
   // Quartz day-of-week forms.
   ['0 9 * * 3#1', '每月第一個週三 09:00'],
@@ -159,6 +172,18 @@ const rows = [
   ['0 0 1 1-11 5', '每年1月至11月期間，每月1日及每週五 00:00'],
   ['0 0 L 6-8 5', '每年6月至8月期間，每月最後一天及每週五 00:00'],
   ['0 0 0 1 * 5 2030', '2030年期間，每月1日及每週五 00:00'],
+  // 期間 follows months and years that are a span with two ends or are
+  // named one by one; years with no such span close on the comma alone.
+  ['0 0 0 1 * 5 2030-2035', '2030年至2035年期間，每月1日及每週五 00:00'],
+  ['0 0 0 1 * 5 2030-9999', '2030年起，每月1日及每週五 00:00'],
+  ['0 0 0 1 * 5 1970-2030', '2030年（含）以前，每月1日及每週五 00:00'],
+  ['0 0 0 1 * 5 2030/2',
+    '2030年起每逢西元雙數年，每月1日及每週五 00:00'],
+  ['0 0 0 1 * 5 2028/4', '2028年起每4年，每月1日及每週五 00:00'],
+  ['0 0 0 1 * 5 2030-2040,2045/5',
+    '2030年至2040年每年，以及2045年起每5年，每月1日及每週五 00:00'],
+  ['0 0 0 1 6 5 2030/2',
+    '2030年起每逢西元雙數年6月期間，1日及每週五 00:00'],
   ['52 7-16 1,19,23,28 5-7 3-4',
     '每年5月至7月期間，每月1、19、23、28日及每週三、四 07:52～16:52，每小時一次'],
 
@@ -171,6 +196,9 @@ const rows = [
     '每年6月每天（15、16日除外，但遇週一至週五照常）09:00'],
   ['*/15 9-17 1-14,16-31 * 0-2,4-6',
     '每天（適逢週三的15日除外）09:00～17:45，每15分鐘一次'],
+  // A date that carries brackets of its own is not set inside another
+  // pair of brackets: the two sides are joined, the days first.
+  ['0 0 15W * 1-3,5-7', `每天（週三除外）及每月15日${NEAREST}00:00`, QUARTZ],
 
   // A union that is one side only, or every day.
   ['0 0 31 6 1', '每年6月每週一 00:00'],
@@ -196,6 +224,10 @@ const rows = [
   ['0 0 L * */2',
     '每月最後一天（限週二、四、六、日）00:00'],
   ['0 0 */2 * 0-2,4-6', '每月單數日（週三除外）00:00'],
+  // Dates that are every day but one, limited to days of the week: the
+  // days of the week are the base and the date is left out of them.
+  ['0 0 1-14,16-31 * */2', '每週二、四、六、日（15日除外）00:00'],
+  ['0 0 1-14,16-31 6 */2', '每年6月每週二、四、六、日（15日除外）00:00'],
   ['0 0 31 6 */2', '永不執行（沒有這個日期）'],
 
   // A month with its dates: one month takes the date directly, several
@@ -224,6 +256,9 @@ const rows = [
     '每年4月30日、6月30日 00:00'],
   ['0 0 30,31 4,5 *',
     '每年4月30日、5月30日、5月31日 00:00'],
+  // More than three dates, which the months have differently: the days
+  // every month has, then the day one month adds.
+  ['0 0 1,15,31 4,5 *', '每年4、5月的1、15日及5月31日 00:00'],
   ['0 0 31 1-6 *',
     '每年1月31日、3月31日、5月31日 00:00'],
   ['0 0 30 1-3 *',
@@ -254,7 +289,14 @@ const rows = [
   ['0 0 1-14,16-31 * *', '每天（15日除外）00:00'],
   ['0 0 1-14,17-31 * *', '每天（15、16日除外）00:00'],
   ['0 0 1-14,16-31 6 *', '每年6月每天（15日除外）00:00'],
-  ['0 0 1-30 * *', '每天（31日除外）00:00'],
+  // A stretch of dates is taken whole with its two ends before an
+  // exception is tried, as hours, minutes and months are: a reader who
+  // compares two schedules meets one order.
+  ['0 0 1-30 * *', '每月1日至30日每天 00:00'],
+  // Dates that not every month has, as a stretch: 每月, since a stretch
+  // to the month's end is short or absent in a short month by itself.
+  ['0 9 29-31 * *', '每月29日至月底每天 09:00'],
+  ['0 9 29-31 * 1', '每月29日至月底及每週一 09:00'],
   ['0 0 */7 * *', '每月1、8、15、22、29日 00:00'],
   ['0 0 */10 * *',
     '每月1、11、21、31日 00:00'],
@@ -378,6 +420,9 @@ const rows = [
   ['0-29 9,17 * * *', '每天 09:00～09:29、17:00～17:29，每分鐘一次'],
   ['* 6,8,12,18,20 * * *',
     '每天6、8、12、18、20時，整個小時內每分鐘一次'],
+  // One hour that holds more than six minutes of no pattern is named
+  // as several are.
+  ['3,7,11,19,23,31,43 9 * * *', '每天9時的03、07、11、19、23、31、43分'],
 
   // Hours past midnight are one stretch only when every day fires;
   // beside a day, a month or a year they are cut at midnight.
