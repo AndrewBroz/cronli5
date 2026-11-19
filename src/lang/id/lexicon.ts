@@ -123,6 +123,9 @@ const words = {
   // Positions counted from hours that are named: «pada menit ke-5 setelah
   // pukul 09.00 dan 17.00».
   afterTime: 'setelah',
+  // The same, after the hours themselves: «pukul 08.00 dan 12.00 serta
+  // pada menit ke-15 setelahnya».
+  afterThem: 'setelahnya',
   // The last firing of a rhythm with several starts: «…, terakhir pukul
   // 23.45».
   lastAt: 'terakhir',
@@ -156,19 +159,18 @@ const words = {
   oneDay: 'sehari',
   ifThereIsOne: 'jika ada',
 
-  // Months and years.
-  inMonth: 'pada bulan',
-  monthOf: 'bulan',
-  inYear: 'pada tahun',
-  yearOf: 'tahun',
+  // Months and years. «pada bulan Juni», «pada tahun 2030» are `at`
+  // before the unit.
+
   // After a weekday a date moves on to («hari Senin sesudahnya») and
   // after the first year of a rhythm of years («pada tahun 2028 dan
   // setiap tahun ke-4 sesudahnya»).
   after: 'sesudahnya',
   // Up to a year, that year included.
   throughYear: 'sampai dengan tahun',
-  evenYears: 'pada tahun genap',
-  oddYears: 'pada tahun ganjil',
+  // Every second year of all years: «pada tahun genap».
+  evenYears: 'tahun genap',
+  oddYears: 'tahun ganjil',
   leapYearsOnly: 'hanya pada tahun kabisat',
   // Months of one length: «pada bulan yang berumur 31 hari».
   thatHas: 'yang berumur',
