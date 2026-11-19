@@ -1,8 +1,10 @@
 # Russian: answers to the language questionnaire
 
 Written 2026-11-19 from `usage.md` (this directory), which was written in
-Russian by a writer who knew nothing of cron, and revised twice the same
-day after independent reads ("The record of 2026-11-19", at the end). The
+Russian by a writer who knew nothing of cron, revised twice the same day
+after independent reads, and once more after the audit of the renderer
+built from it ("The record of 2026-11-19" and "The audit of 2026-11-19",
+at the end). The
 Russian here is Russian as it is written in Ukraine ("The standard").
 Every choice is a record: what is said, why, and on what evidence, so
 that it can be tested again. Nothing here has had a native human review.
@@ -11,6 +13,8 @@ Evidence is marked: **[notes §n]** is the usage notes; **[judge 1]** and
 **[judge 2]** are two blind readers of 2026-11-19, each briefed only in
 Russian as an editor in Ukraine and shown sentences alone; **[schedule
 read]** is an adversarial read of all rows against their patterns;
+**[audit]** is the independent read of the built renderer on 2026-11-19
+(877 patterns beside their true fire times, and every row again);
 **[web]** is a search of the open web on 2026-11-19 (what was found, or
 that nothing was); **[judgment]** is the author's own, weighed with the
 cost model in CLAUDE.md.
@@ -67,14 +71,38 @@ candidates give each (`analyses.candidates`, `candidatesAs`,
 | 1 | all | the whole field |
 | 2 | idiom | a set section 5 names |
 | 3 | tiling cadence | seconds, minutes, hours only: `start < interval`, `last + interval > max`, the interval divides the cycle; 3 or more values for hours, 2 or more for minutes and seconds. Said bare when `start` is the field's first value |
-| 4 | few | 4 values or fewer of any other arrangement (dates: 7 or fewer that are no run): the values are named |
-| 5 | exception | `except` whose base is all or a cadence, with 1 or 2 values removed, **none of them the first value of a second or minute field** |
-| 6 | run | one range that does not wrap, of 3 or more values (a run of 2 is a list) |
+| 4 | few | 4 values or fewer of any other arrangement: the values are named. **Dates: up to 7**, when they hold no run of 3 or more and are not every second date. Dates and years that hold a run of 3 or more are never "few": the run is said (rules 6, 10) |
+| 5 | exception | `except` whose base is all or a cadence, with 1 or 2 values removed, **none of them the first value of a second or minute field**. Never for a set that is itself one cadence: that is rule 8 |
+| 6 | run | one range that does not wrap, of 3 or more values |
 | 7 | wrapped run | one range that wraps, 3 or more values: hours (only when every day fires, 3.5), months (only when the year is unrestricted), weekdays |
 | 8 | cadence | any other cadence: its step with its first and last value |
 | 9 | exception in a run | `except` whose base is a range, 1 or 2 removed, when it names fewer things than the pieces (a range names two, each value one) |
-| 10 | pieces | linear `pieces`, in ascending order, or `analyses.cadencePieces`: whichever names fewer things (the pieces on a tie), when that is fewer than the values |
+| 10 | pieces | linear `pieces`, in ascending order, when they name fewer things than the values; `analyses.cadencePieces` in their place only when that names **at least two things fewer** than the linear pieces do (than the values, where there are no linear pieces) |
 | 11 | values | each value named, in ascending order |
+
+Three notes on the table, each from the audit of the built renderer
+**[audit]**:
+
+* **A run is three values or more, in every field.** Two neighbouring
+  values are two values: two clock times, two dates, two months, two
+  years («в 22:00 и 23:00», «1-го и 2-го числа», «в январе и феврале»,
+  «в 2030 и 2031 годах»), also inside pieces: `0 22-2 * * 1` — «по
+  понедельникам каждый час с 0:00 до 2:00, а также в 22:00 и 23:00». A
+  stretch that fires twice is not a stretch to a reader; two moments are
+  recognised at a glance. (Under a finer field a window of two hours is a
+  real stretch, and stays one: «каждые 15 минут с 0:00 до 2:45 и с 22:00
+  до 23:45».)
+* **A cadence is said as itself.** `0 0-20/2 * * *` is «каждые 2 часа с
+  0:00 до 20:00», not «каждые 2 часа, кроме 22:00»: the exception would
+  name a time that is only the end of the rhythm. Rule 5 is for a hole
+  inside a set.
+* **A step is worked out; a value is recognised.** So a step beside
+  other parts must save two named things or more: `0 0 1,2,3,10,20,30 *
+  *` is «с 1-го по 3-е число, а также 10-го, 20-го и 30-го числа каждого
+  месяца» (five things, nothing to work out), not «ежедневно с 1-го по
+  3-е число и каждые 10 дней с 10-го по 30-е число» (four, and a step);
+  five scattered years are named, not «каждый пятый год с 2030 по 2040
+  год, а также в 2032 и 2050 годах».
 
 Differences by field, each set out where the field is described:
 weekdays have their own order (3.9); months have no cadence device
@@ -319,7 +347,8 @@ word is said once: one «в», one «числа», one «по», one «мину�
 * years: «с 2030 по 2035 год».
 
 A run of two values is a list («1-го и 2-го числа», «в январе и
-феврале»).
+феврале», «в 22:00 и 23:00»): a run is three or more, in every field
+("How a form is chosen").
 
 «До» with a clock time was read, weakly, as stopping short («каждый час с
 9:00 до 17:00»: 16:00 last) **[judge 2]**; «по 17:00» is not Russian for
@@ -334,7 +363,8 @@ notes write a run so **[notes §5]**. Kept. **[doubts]**
   §7]**. One run **only when every day fires** (no date, weekday, month
   or year restricted). Otherwise the hours are read linear and said in
   ascending order: `0 22-2 * * 1` — «по понедельникам каждый час с 0:00
-  до 2:00 и с 22:00 до 23:00». A wrapped run that lacks only one or two
+  до 2:00, а также в 22:00 и 23:00» (the pair is two clock times, not a
+  run). A wrapped run that lacks only one or two
   hours is the exception (rule 5): `0 4-2 * * *` — «каждый час, кроме
   3:00».
 * **Months.** `0 0 * 11-2 *` — «с ноября по февраль ежедневно в 0:00».
@@ -370,10 +400,13 @@ share the noun («с 1-го по 3-е и с 28-го по 31-е число»; «�
 * `0 0 * 6-8,12 *` — «с июня по август и в декабре ежедневно в 0:00».
 * years: «с 2030 по 2032 год и в 2035 году,».
 
-In cadence pieces **every part carries its own rate word** («ежедневно»
-for dates, «каждую минуту», «каждый год»): `0 0 1-9/2,12-14 * *` — «по
-нечётным числам с 1-го по 9-е и ежедневно с 12-го по 14-е число каждого
-месяца в 0:00».
+In cadence pieces of dates, minutes and seconds **every part carries its
+own rate word** («ежедневно» for a run of dates, «каждую минуту»), or the
+run reads as the step going on: `0 0 1-9/2,12-14 * *` — «по нечётным
+числам с 1-го по 9-е и ежедневно с 12-го по 14-е число каждого месяца в
+0:00». A run of years takes none: «с 2030 по 2040 год» already says every
+year of it (4.4: «с 2030 по 2040 год и каждый пятый год, начиная с 2045
+года,»).
 
 ### 3.7 An even cadence
 
@@ -386,7 +419,9 @@ for dates, «каждую минуту», «каждый год»): `0 0 1-9/2,1
   `0 0 2/2 * *` — «по чётным числам в 0:00»; a part of the month takes
   its ends, with no noun: `0 0 8/2 * *` — «по чётным числам с 8-го по
   30-е в 0:00». Any other step restarts every month: **seven dates or
-  fewer are named** (`0 0 */5 * *` — «1-го, 6-го, 11-го, 16-го, 21-го,
+  fewer are named**, as any seven dates or fewer with no run among them
+  are (`0 0 1,5,10,15,20,25 * *` — «1-го, 5-го, 10-го, 15-го, 20-го и
+  25-го числа каждого месяца в 0:00») (`0 0 */5 * *` — «1-го, 6-го, 11-го, 16-го, 21-го,
   26-го и 31-го числа каждого месяца в 0:00»), more are the step with
   both ends (`0 0 */3 * *` — «каждые 3 дня с 1-го по 31-е число каждого
   месяца в 0:00»).
@@ -419,7 +454,10 @@ sides **[notes §9, §11]**.
 * `0-28,30-59 * * * *` — «каждую минуту, кроме 29-й минуты каждого часа»;
   `0,10,20,40,50 * * * *` — «каждые 10 минут, кроме 30-й минуты каждого
   часа»; beside one hour it is a clock time: `0,10,20,40,50 9 * * *` —
-  «каждые 10 минут с 9:00 до 9:50, кроме 9:30».
+  «каждые 10 минут с 9:00 до 9:50, кроме 9:30». Beside one hour **a run
+  comes before an exception**, so that the window never names an end
+  that does not fire: `0-58 9 * * *` — «каждую минуту с 9:00 до 9:58»,
+  not «… до 9:59, кроме 9:59» **[audit]**.
 * `0 0 1-14,16-31 * *` — «ежедневно, кроме 15-го числа, в 0:00»; `0 0
   1-30 * *` — «ежедневно, кроме 31-го числа, в 0:00».
 * `0 0 * * 1-6` — «ежедневно, кроме воскресенья, в 0:00».
@@ -455,7 +493,8 @@ A union has its own order (4.3).
 
 **[notes §6, §8]**: two to four clock times are recognised at once; more
 than four or five values in a line are not held. So up to 4 clock times,
-minutes, seconds or years are named; up to 7 dates of a step; a list of
+minutes, seconds or years are named; up to 7 dates with no run among
+them; up to 3 calendar dates under several months (4.4); a list of
 weekdays never exceeds 4 outside a union; month names are listed to any
 length; up to 2 values are removed by an exception.
 
@@ -538,8 +577,10 @@ Then the hours, the first that applies:
    * Hours left out follow as a stretch: `*/15
      0,2,4,6,10,12,14,16,18,20,22 * * *` — «каждые 15 минут в чётные
      часы, кроме промежутка с 8:00 до 8:45».
-4. **Another cadence of hours** (3 or more hours) **under a label of 4
-   minutes or fewer** — one rhythm of hours for each minute, each with
+4. **Another cadence of hours** (3 or more hours) **under minutes that
+   are named one by one** (4 or fewer; or more that are no run, step or
+   pieces, which have no shorter form) — one rhythm of hours for each
+   minute, each with
    its first and last firing, joined as windows are: `15,45 */4 * * *` —
    «каждые 4 часа с 0:15 до 20:15 и с 0:45 до 20:45».
 5. **More than four hours, none next to another, under «каждую минуту»**
@@ -857,18 +898,55 @@ and shape 1 uses the judge's own «только если это». **[doubt]**
 
 **A date and its months are one phrase** (fusion 2). The dates are those
 the months have (`daysReached`, `dateReach`). Count the **calendar
-dates**: the number of dates times the number of months, when the dates
-are a plain list of values.
+dates**: each date in each month that has it (`daysByMonths`).
 
 | Case | Said | Example |
 | --- | --- | --- |
 | every month | the dates and «каждого месяца» | «1-го числа каждого месяца», «с 1-го по 7-е число каждого месяца» |
 | one month | the calendar date: cardinal day and the month's name, no ending on the numeral **[notes §11]** | «1 июня», «1 и 15 июня», «1, 10 и 20 июня», «с 1 по 7 июня», «с 1 по 7 июня и 15 июня», «с 1 по 3 и с 28 по 30 июня» |
-| several months, **3 calendar dates or fewer** | each calendar date named, in calendar order | «1 января и 1 июля», «1 июня, 1 июля и 1 августа», «31 января, 31 марта и 31 мая» |
+| several months, **3 calendar dates or fewer** | each calendar date named, in calendar order | «1 января и 1 июля», «1 июня, 1 июля и 1 августа», «31 января, 31 марта и 31 мая», «30 апреля, 30 мая и 31 мая» |
 | several months otherwise (4 or fewer months, or more that are neither one run nor all but one or two) | the dates as for every month, with the months' names in the genitive in place of «каждого месяца» | «1-го числа января, апреля, июля и октября», «1-го и 15-го числа января и июля», «с 1-го по 4-е число января и июля», «1-го числа января, марта, мая, июля, сентября и ноября» |
 | 5 or more months in one run | «каждого месяца» and the run | «1-го числа каждого месяца с января по ноябрь» |
 | all but one or two months, no run | «каждого месяца, кроме …,» | «1-го числа каждого месяца, кроме июня,», «30-го числа каждого месяца, кроме февраля и июня,» |
-| the days differ by month (`daysByMonths` has more than one group) | each calendar date named | «30 апреля, 30 мая и 31 мая» |
+
+**More than three calendar dates are never named one by one**, whether
+or not the months differ in length **[audit]**: `0 0 28-31 1-4 *` named
+thirteen dates, which nobody holds. The dates are said as for every month
+and a date a month lacks is skipped, as it is everywhere (below): `0 0
+28-31 1-4 *` — «ежегодно с 28-го по 31-е число января, февраля, марта и
+апреля в 0:00»; `0 0 30,31 1,3,4 *` — «ежегодно 30-го и 31-го числа
+января, марта и апреля в 0:00». (The first builder named every date
+whenever the months differed; the table's last row then said so. It is
+gone.)
+
+**29 February beside dates that come every year is marked «(в високосные
+годы)»** **[audit]**: «ежегодно 29 января и 29 февраля» says that 29
+February comes every year, which is false. The mark follows what comes in
+leap years only, when the pattern reaches leap and common years and the
+years part does not already say «в високосные годы»:
+
+* a calendar date: `0 0 29 1,2 *` — «ежегодно 29 января и 29 февраля (в
+  високосные годы) в 0:00»; `0 0 29 1-3 *` — «ежегодно 29 января, 29
+  февраля (в високосные годы) и 29 марта в 0:00»;
+* February among months named after shared dates, when the dates reach
+  it only on its 29th (`dateReach.leapYears`): `0 0 29-31 1-3 *` —
+  «ежегодно с 29-го по 31-е число января, февраля (в високосные годы) и
+  марта в 0:00»; so too after a Quartz form («… будний день января и
+  февраля (в високосные годы)»);
+* in February alone, the 29th in a list is said after the others, on its
+  own: `0 0 28,29 2 *` — «ежегодно 28 февраля и 29 февраля (в високосные
+  годы) в 0:00»; `0 0 1,10,20,29 2 *` — «ежегодно 1, 10 и 20 февраля, а
+  также 29 февраля (в високосные годы) в 0:00».
+
+Not marked: a run that ends on the 29th («с 25 по 29 февраля»: it is cut
+short where the month is, as «с 28-го по 31-е число … февраля» is); a
+date said with «каждого месяца» or bare; a year or years that are all
+leap («в 2032 году 29 января и 29 февраля»). The date is the core's (the
+month and length of the `leap` group of `monthLengths`), not a number
+written in the renderer. Alternatives weighed: «…, а в високосные годы и
+29 февраля» (natural, but breaks calendar order and needs the set cut
+again without the date); a mark in commas (ran into the list). The
+brackets are the only ones the language uses.
 
 The same date said again and again was accepted for two or three
 («1 января и 1 июля» natural **[judge 2]**) and heavy beyond («шесть раз
@@ -932,9 +1010,13 @@ it is kept there for the schedule read's finding.
   `L-30`: the 31st, one more than the number). When only the years named
   lack it (`firesInOtherYears`), the years follow the month in the
   genitive: `0 0 0 29 2 * 2031` — «никогда: в феврале 2031 года нет 29-го
-  числа»; «никогда: в феврале 2030 и 2031 годов нет 29-го числа». No time
-  is said. («Такой даты» pointed at nothing the reader could see **[judge
-  2]**.)
+  числа»; «никогда: в феврале 2030 и 2031 годов нет 29-го числа». That is
+  for years named one by one, four or fewer; **any other set of years
+  leads, as the years part says it** **[audit]**: `0 0 0 29 2 * 2031/2` —
+  «никогда: в нечётные годы, начиная с 2031 года, в феврале нет 29-го
+  числа» (the first build named every odd year to 9999); «никогда: с 2097
+  по 2103 год в феврале нет 29-го числа». No time is said. («Такой даты»
+  pointed at nothing the reader could see **[judge 2]**.)
 
 **Years.** The years part leads.
 
@@ -1049,28 +1131,47 @@ Friday and nothing more (5.1).
     `monthLengths[0].length`): `0 0 L-28 * *` — «за 28 дней до последнего
     дня каждого месяца, в котором есть 29-е число, в 0:00».
 * `nW`, the weekday nearest a date:
-  * `nearestDayIsLast` is `never` — «в ближайший к 15-му числу будний
-    день каждого месяца»;
-  * `always` or `sometimes`, every month — «в пределах месяца» in place
-    of «каждого месяца»: `0 0 28W * *` — «в ближайший к 28-му числу
-    будний день в пределах месяца в 0:00»; and when some month lacks the
-    date (`dateReach` is not null), «, если в нём есть N-е число,»: `0 0
-    31W * *` — «в ближайший к 31-му числу будний день в пределах месяца,
-    если в нём есть 31-е число, в 0:00». Without the first a 31st on a
+  * `nearestDayIsLast` is `always` — **the month's last weekday**, said
+    as `LW` is, because the scheduler never leaves the month: a last day
+    on a Saturday or a Sunday gives the Friday before, which is what
+    «последний будний день» means **[audit]**. Named months: `0 0 30W 6
+    *` — «ежегодно в последний будний день июня в 0:00»; `0 0 31W 6-8 *`
+    — «ежегодно в последний будний день июля и августа в 0:00» (only the
+    months it fires in are named); `0 0 29W 2 *` — «в високосные годы в
+    последний будний день февраля в 0:00». Every month (only `31W`): the
+    months of that length, as `L-30` names them: `0 0 31W * *` — «в
+    последний будний день в месяцах из 31 дня в 0:00». Under leading
+    months, «в последний будний день месяца»;
+  * `never` — «в ближайший к 15-му числу будний день каждого месяца»;
+  * `sometimes`, every month — «в пределах месяца» in place of «каждого
+    месяца»: `0 0 28W * *` — «в ближайший к 28-му числу будний день в
+    пределах месяца в 0:00»; and when some month lacks the date
+    (`dateReach` is not null), «, если в нём есть N-е число,»: `0 0 30W *
+    *` — «в ближайший к 30-му числу будний день в пределах месяца, если
+    в нём есть 30-е число, в 0:00». Without the first a last day on a
     Sunday was read as either the Friday before or the Monday of the next
     month **[judge 1]**; without the second it was unsaid what happens in
-    a month with no 31st, and «того же месяца» pointed at nothing said
-    **[judge 2]**;
-  * named months — the months' names keep the day inside the month:
-    «ежегодно в ближайший к 30-му числу будний день июня в 0:00»; only
-    the months it fires in are named («… будний день июля и августа»);
-    29 February takes «в високосные годы».
+    a month without the date, and «того же месяца» pointed at nothing
+    said **[judge 2]**;
+  * `sometimes` or `never`, named months — the months' names keep the day
+    inside the month: «ежегодно в ближайший к 30-му числу будний день
+    июля в 0:00»; February reached only in leap years is marked (4.4).
 * `1W` — «в первый будний день каждого месяца»; `LW` — «в последний
   будний день каждого месяца».
 * `1#2` — «во второй понедельник каждого месяца» **[notes §5]**; never
   «каждый второй понедельник» **[notes §13]**. `5L` — «в последнюю
-  пятницу каждого месяца». `1#5` — «в пятый понедельник каждого месяца, в
-  котором их пять,».
+  пятницу каждого месяца». **A fifth weekday** is said with «, если он есть,» (она,
+  оно: the pronoun agrees with the weekday), wherever it is the whole day
+  part: `1#5` — «в пятый понедельник каждого месяца, если он есть,»; `0 0
+  * 6 1#5` — «ежегодно в пятый понедельник июня, если он есть, в 0:00»;
+  «в пятый понедельник каждого месяца с января по ноябрь, если он есть,».
+  The first build dropped the condition under named months, so that
+  «ежегодно в пятый понедельник июня» claimed a day June has in some
+  years only; and the earlier «, в котором их пять,» attached to the last
+  month named («… по ноябрь, в котором их пять») and after one month's
+  name said that the month always has five **[audit]**. In a union the
+  condition is not said («в пятый понедельник, а также 1-го числа каждого
+  месяца,»): nothing there claims the day comes.
 
 ## 6. Words
 
@@ -1252,6 +1353,10 @@ where the two do differ, and what was done:
    dates or more, where the notes' first choice is the repeated date
    (kept for up to three).
 10. **The 12-hour clock keeps 0:00.**
+11. **«(в високосные годы)» after 29 February, «если он есть» after a
+    fifth weekday, «в месяцах из 31 дня».** Not in the notes; each says
+    a condition the calendar sets, which a line about plain dates never
+    meets.
 
 ## The record of 2026-11-19
 
@@ -1283,10 +1388,70 @@ described: «по будням» (5.1); double bounds (4.1); «со вторни
 (1.2); the time before a trailing condition (2.4); «ежегодно» after a
 run of years (4.4); the repeated noun in «с 10-й по 40-ю минуту».
 
+## The audit of 2026-11-19
+
+An independent read of the renderer as first built (152 of 153 held-out
+rows passed its first judged run): 877 patterns printed beside their fire
+times from the answer key (`tooling/scripts/reading/oracle.mjs`), read
+cold; every row read again; the renderer read against this file. The
+builder's own report was not available to the audit; the places where the
+renderer had decided what this file did not say were found from the code.
+
+Wrong or unholdable, and repaired (each has rows in `hard-cases.js`):
+
+| Found | Cure | Where |
+| --- | --- | --- |
+| «ежегодно 29 января и 29 февраля»: 29 February said as yearly | «(в високосные годы)» after what comes in leap years only | 4.4 |
+| «ежегодно в пятый понедельник июня»: a day June has in some years only; «… по ноябрь, в котором их пять» | «, если он есть,» wherever a fifth weekday is the day part | 5.3 |
+| «никогда: в феврале 2031, 2033, 2035 …» to the year 9999 | years that are no short list lead as the years part says them | 4.4 |
+| thirteen calendar dates named for `28-31 1-4` | more than three are never named; a date a month lacks is skipped | 4.4 |
+| «1-го числа и каждые 5 дней с 5-го по 25-е число» for six dates; a step of years beside two more years | up to 7 scattered dates named; a step must save two named things | "How a form is chosen" |
+| «в ближайший к 31-му числу будний день в пределах месяца, если в нём есть 31-е число» (one reading, two conditions) | the month's last weekday, where the date is always the last day | 5.3 |
+| three rows said hours 22 and 23 as a stretch, against 3.4 and their sibling rows | the rows corrected: a run is three or more | "How a form is chosen" |
+
+Rules this file left open, which the builder had settled and which are
+now written where they belong: a cadence is said as itself, never as a
+longer one less its end; a run before an exception beside one hour;
+"few" against runs for dates and years; no rate word on a run of years
+in cadence pieces; one rhythm of hours for each of any number of named
+minutes; the count of calendar dates from `daysByMonths`.
+
+One cut the renderer makes itself: odd or even dates less a date or two
+in a union, where no exception may be said (4.3), are the step's
+stretches between the dates left out. The core's `cadencePieces` splits
+such a set another way (1 to 29 by fours, 3 to 27 by eights, and three
+dates), and no view of `describeSet` gives the stretches; the renderer
+reads them off the `except` candidate (its base and what it removes) and
+nothing else.
+
+**[web, 2026-11-19, audit]** Three searches («в последний будний день
+месяца» with «график», «в чётные часы» with «подача воды», «пятый
+понедельник месяца» with «если он есть») found no page that uses or
+contradicts these forms; the hits were Ukrainian Russian-language news
+of water and working-day schedules that say none of them. The forms
+remain judgments.
+
+Left open by the audit, with the reason:
+
+* **Eight or nine windows** for a rhythm of minutes under scattered hours
+  (`*/15 */3 * * *`, `*/15 0-7,9-23/2 * * *`) and the chains of «а также»
+  for irregular minutes under such hours (`2,3,4,10,50 */4 * * *`). They
+  say their schedule and nobody holds them. «Каждые 3 часа, каждые 15
+  минут в течение часа» would be short, but leaves open whether the next
+  hour's :00 fires, one firing in five; no exact short form was found.
+* «В чётные часы», the ordinal minute and «по будням»: nothing new was
+  found for or against (see "Still doubted").
+* `L-28` under every month («за 28 дней до последнего дня каждого месяца,
+  в котором есть 29-е число») asks for a subtraction in three lengths of
+  month; rare, exact, not changed.
+* 29 February under a restricted year field that still reaches common
+  years («каждый четвёртый год, начиная с 2028 года, в високосные годы 29
+  февраля») is exact and says the leap years twice over.
+
 **Still doubted, with the alternative.** The parity of hours (windows;
 it has no corpus source). The ordinal minute (a clock-style mark). The
 forms of 4.2 rule 5 with «каждый раз», and «на N-й секунде первой
 минуты», which no reader has seen. «Ежедневно, а … только …» with the
-time last (the time first). «В пределах месяца, если в нём есть 31-е
-число». «Во все месяцы, кроме июня,». «По будням» and «будний день»
+time last (the time first). «В пределах месяца, если в нём есть 30-е
+число» (now only where the date is some months' last day). «Во все месяцы, кроме июня,». «По будням» and «будний день»
 (naming the days).
