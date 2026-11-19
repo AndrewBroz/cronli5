@@ -24,6 +24,8 @@ interface MonthName {
   genitive: string;
   // After «w»: «czerwcu».
   locative: string;
+  // After «poza»: «czerwcem».
+  instrumental: string;
   // The Roman numeral a short date uses: «1 VI».
   roman: string;
   // «we» before «wrześniu», «w» otherwise.
@@ -46,29 +48,31 @@ function twoDigits(value: number): string {
   return String(value).padStart(2, '0');
 }
 
-function month(genitive: string, locative: string, roman: string): MonthName {
-  return {genitive, locative, roman, w: locative === 'wrześniu' ? 'we' : 'w'};
+function month(
+  genitive: string, locative: string, instrumental: string, roman: string
+): MonthName {
+  return {
+    genitive, instrumental, locative, roman,
+    w: locative === 'wrześniu' ? 'we' : 'w'
+  };
 }
 
-// Indexed by month number; there is no month 0.
 const months: MonthName[] = [
-  month('', '', ''),
-  month('stycznia', 'styczniu', 'I'),
-  month('lutego', 'lutym', 'II'),
-  month('marca', 'marcu', 'III'),
-  month('kwietnia', 'kwietniu', 'IV'),
-  month('maja', 'maju', 'V'),
-  month('czerwca', 'czerwcu', 'VI'),
-  month('lipca', 'lipcu', 'VII'),
-  month('sierpnia', 'sierpniu', 'VIII'),
-  month('września', 'wrześniu', 'IX'),
-  month('października', 'październiku', 'X'),
-  month('listopada', 'listopadzie', 'XI'),
-  month('grudnia', 'grudniu', 'XII')
+  month('', '', '', ''),
+  month('stycznia', 'styczniu', 'styczniem', 'I'),
+  month('lutego', 'lutym', 'lutym', 'II'),
+  month('marca', 'marcu', 'marcem', 'III'),
+  month('kwietnia', 'kwietniu', 'kwietniem', 'IV'),
+  month('maja', 'maju', 'majem', 'V'),
+  month('czerwca', 'czerwcu', 'czerwcem', 'VI'),
+  month('lipca', 'lipcu', 'lipcem', 'VII'),
+  month('sierpnia', 'sierpniu', 'sierpniem', 'VIII'),
+  month('września', 'wrześniu', 'wrześniem', 'IX'),
+  month('października', 'październiku', 'październikiem', 'X'),
+  month('listopada', 'listopadzie', 'listopadem', 'XI'),
+  month('grudnia', 'grudniu', 'grudniem', 'XII')
 ];
 
-// Indexed by cron's weekday number: 0 is Sunday. Said in the order of the
-// Polish week, Monday to Sunday (`weekOrder`).
 const weekdays: WeekdayName[] = [
   {accusativePlural: 'niedziele', accusativeSingular: 'niedzielę',
     feminine: true, genitivePlural: 'niedziel', genitiveSingular: 'niedzieli',
@@ -152,14 +156,18 @@ const words = {
   also: 'a także',
   and: 'i',
   andPieces: 'oraz',
+  andThen: 'a potem jeszcze',
+  andThenOnce: 'a potem jeszcze raz',
   at: 'o',
   butNot: 'ale nie',
   butOnly: 'ale tylko',
   daily: 'codziennie',
   day: 'dnia',
   dayEarlier: 'dzień wcześniej',
+  dayFalling: 'w dniu wypadającym',
   dayLater: 'dzień później',
   days: 'dni',
+  daysBefore: 'dni przed',
   eachEvenHourGenitive: 'każdej parzystej godziny',
   eachEvenHourLocative: 'każdej parzystej godzinie',
   eachFullHour: 'każdej pełnej godzinie',
@@ -178,22 +186,18 @@ const words = {
   everyMinute: 'minutę',
   everySecond: 'sekundę',
   except: 'oprócz',
-  exceptFebruary: 'oprócz lutego',
   exceptHour: 'oprócz godziny',
   exceptHours: 'oprócz godzin',
-  februaryInLeapYearsOnly: 'w lutym tylko w latach przestępnych',
   first: 'pierwszy',
   five: 'pięć',
   from: 'od',
-  fromTheEnd: 'od końca',
   fullHour: 'pełnej godzinie',
   fullHourGenitive: 'pełnej godziny',
   fullMinute: 'pełnej minucie',
+  hoursBeginningAt: 'godzinach rozpoczynających się o',
   ifItFallsOn: 'jeśli wypada on',
-  ifMonthHasThatDay: 'o ile miesiąc ma dany dzień',
   ifSaturday: 'a jeśli to sobota –',
   ifSunday: 'jeśli niedziela –',
-  ifTheyFallOn: 'jeśli wypadają one',
   ifWeekend: 'a jeśli to sobota lub niedziela –',
   in: 'w',
   inDays: 'dniach',
@@ -204,6 +208,7 @@ const words = {
   inYears: 'latach',
   inclusive: 'włącznie',
   lastDayGenitive: 'ostatniego dnia',
+  lastDayInstrumental: 'ostatnim dniem',
   lastFeminine: 'ostatnią',
   lastMasculine: 'ostatni',
   later: 'później',
@@ -217,34 +222,32 @@ const words = {
   neverRuns: 'Nie uruchamia się',
   noSuchDate: 'takiej daty nie ma',
   noSuchDates: 'takich dat nie ma',
-  nor: 'ani',
   odd: 'nieparzyste',
   oddHours: 'godzinach nieparzystych',
   oddYears: 'latach nieparzystych',
   ofTheSameMonth: 'tego samego miesiąca',
-  onADayFrom: 'w dzień od',
   onFullHour: 'o pełnej godzinie',
   or: 'lub',
+  otherThan: 'inne niż',
+  outside: 'poza',
+  outsideYear: 'poza rokiem',
+  outsideYears: 'poza latami',
   penultimateDay: 'przedostatniego dnia',
   precedingFriday: 'w poprzedzający go piątek',
   runs: 'Uruchamia się',
   secondsPastIt: 'po nim',
   startOfEachMinute: 'początku każdej minuty',
-  startOfItsMinute: 'jej początku',
   startOfMinute: 'początku minuty',
   starting: 'zaczynając',
   startup: 'po starcie systemu',
-  thatHas: 'który ma',
   thatMonth: 'tego miesiąca',
   to: 'do',
   unlessItFalls: 'chyba że wypada on',
   unlessTheyFall: 'chyba że wypadają',
-  unlessTheyFallOn: 'chyba że wypadają one',
-  unrecognizable: 'nierozpoznany wzorzec cron',
+  unrecognizable: 'nierozpoznane wyrażenie cron',
   whenSaturday: 'gdy to sobota –',
   whenSunday: 'gdy niedziela –',
   wholeMinute: 'przez całą minutę',
-  wholeYear: 'przez cały rok',
   withStartOf: 'z początkiem',
   workingDay: 'dzień roboczy',
   year: 'r.',

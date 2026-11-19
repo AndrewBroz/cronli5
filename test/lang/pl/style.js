@@ -59,6 +59,6 @@ describe('Polish styles:', function() {
       expect(pl.sentence('codziennie co 2 godz.', opts))
         .to.equal('Uruchamia się codziennie co 2 godz.');
       expect(pl.reboot(opts)).to.equal('po starcie systemu');
-      expect(pl.fallback(opts)).to.equal('nierozpoznany wzorzec cron');
+      expect(pl.fallback(opts)).to.equal('nierozpoznane wyrażenie cron');
     });
 });

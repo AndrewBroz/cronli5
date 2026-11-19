@@ -5,12 +5,22 @@ const {expect} = chai;
 
 // The lexicon holds the words the renderer says and nothing else.
 describe('Polish lexicon:', function() {
-  it('names months in the genitive, the locative and as a numeral',
+  it('names months in three cases and as a numeral',
     function() {
-      expect(lexicon.months[6]).to.deep.equal(
-        {genitive: 'czerwca', locative: 'czerwcu', roman: 'VI', w: 'w'});
-      expect(lexicon.months[9]).to.deep.equal(
-        {genitive: 'września', locative: 'wrześniu', roman: 'IX', w: 'we'});
+      expect(lexicon.months[6]).to.deep.equal({
+        genitive: 'czerwca',
+        instrumental: 'czerwcem',
+        locative: 'czerwcu',
+        roman: 'VI',
+        w: 'w'
+      });
+      expect(lexicon.months[9]).to.deep.equal({
+        genitive: 'września',
+        instrumental: 'wrześniem',
+        locative: 'wrześniu',
+        roman: 'IX',
+        w: 'we'
+      });
       expect(lexicon.months).to.have.length(13);
     });
 

@@ -61,13 +61,13 @@ const sets = [
         pattern: '0 9-17 * * *'
       },
       {
-        expected: 'codziennie o 0:00 w nocy',
-        parts: ['0:00 w nocy'],
+        expected: 'codziennie o 12:00 w nocy',
+        parts: ['12:00 w nocy'],
         pattern: '0 0 * * *'
       },
       {
-        expected: 'codziennie o 0:30 w nocy',
-        parts: ['0:30 w nocy'],
+        expected: 'codziennie o 12:30 w nocy',
+        parts: ['12:30 w nocy'],
         pattern: '30 0 * * *'
       },
       {
@@ -118,7 +118,7 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'codziennie co godzinę, oprócz 3:00 w nocy',
+        expected: 'co godzinę oprócz 3:00 w nocy',
         parts: ['3:00 w nocy'],
         pattern: '0 0-2,4-23 * * *'
       }
@@ -261,7 +261,7 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'codziennie co godzinę, oprócz 3.00',
+        expected: 'co godzinę oprócz 3.00',
         parts: ['3.00'],
         pattern: '0 0-2,4-23 * * *'
       }

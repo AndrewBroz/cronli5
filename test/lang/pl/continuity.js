@@ -10,16 +10,18 @@ const {expect} = chai;
 const FIELDS =
   ['second', 'minute', 'hour', 'date', 'month', 'weekday', 'year'];
 
-// A description is three parts in one order, from the calendar to the
+// A description is four parts in one order, from the calendar to the
 // clock (answers 2.6): the frame (the years and months that stand in
-// front: «w 2030 r.», «od czerwca do sierpnia»), the day («codziennie»,
-// «w poniedziałki», «co roku 1 czerwca», and both halves of a union: «w
-// piątki, a także pierwszego dnia każdego miesiąca»), and the time.
-// `describeParts` gives them as `{frame, day, time}`, each with the comma
-// that follows it, if any.
+// front: «w 2030 r.», «od czerwca do sierpnia», «poza czerwcem»), the day
+// («codziennie», «w poniedziałki», «co roku 1 czerwca», and both halves
+// of a union: «w piątki, a także pierwszego dnia każdego miesiąca»), the
+// time, and a closing part: what the working day nearest a date does on
+// a weekend («, a jeśli to sobota – dzień wcześniej, jeśli niedziela –
+// dzień później»). `describeParts` gives them as `{frame, day, time,
+// closing}`, each with the comma or colon that follows it, if any.
 //
 // A time field changes the time. A day, month or year field changes the
-// frame and the day: one month and a day of the month are one calendar
+// frame, the day and the closing part: one month and a day of the month are one calendar
 // date («co roku 1 czerwca»), a single year joins a named month («w
 // czerwcu 2030 r.»), the month tail of a day phrase follows the month
 // field («każdego miesiąca», «miesiąca», «tego miesiąca»), a wrapping run
@@ -27,16 +29,16 @@ const FIELDS =
 // front of a month frame that is an exception or pieces, and a union is
 // said from its larger side when one day field leaves out a day or two.
 // Those are the fusions answers 2.6 declares; all of them stay inside the
-// frame and the day. Nothing else may cross, with the three exceptions
+// frame, the day and the closing part. Nothing else may cross, with the three exceptions
 // below.
 const MAY_CHANGE = {
-  date: ['frame', 'day'],
+  date: ['frame', 'day', 'closing'],
   hour: ['time'],
   minute: ['time'],
-  month: ['frame', 'day'],
+  month: ['frame', 'day', 'closing'],
   second: ['time'],
-  weekday: ['frame', 'day'],
-  year: ['frame', 'day']
+  weekday: ['frame', 'day', 'closing'],
+  year: ['frame', 'day', 'closing']
 };
 
 // The first place a time field reaches another part: when no day is
@@ -124,7 +126,8 @@ function leaks(pairList) {
     // "Punctuation between the parts"), so it is set aside before two
     // parts are compared. So is the comma that parts the day from a time
     // that begins with a numeral («w czerwcu, 30 minut po każdej pełnej
-    // godzinie»), which a time field may add or remove.
+    // godzinie»), which a time field may add or remove, and the comma
+    // after the time before a closing part.
     function words(part) {
       return String(part).replace(/[,:]$/u, '');
     }
@@ -150,19 +153,19 @@ function leaks(pairList) {
   return found;
 }
 
-// Continuity, measured directly. A description is three parts in one
-// order: frame, day, time. Editing one field of the pattern may rewrite
+// Continuity, measured directly. A description is four parts in one
+// order: frame, day, time, closing. Editing one field of the pattern may rewrite
 // that field's part and nothing else, apart from the declared fusions
 // above. This is the constraint itself, where a count of changed words is
 // only a rough sign of it: a longer sentence, or a wrong one, cannot make
 // this pass.
 describe('Polish continuity:', function() {
-  it('says a description as its three parts, joined in order', function() {
+  it('says a description as its four parts, joined in order', function() {
     pairs().forEach(function joined(pair) {
       const {opts, schedule} = parse(pair[1]);
       const parts = polish.describeParts(schedule, opts);
 
-      expect([parts.frame, parts.day, parts.time]
+      expect([parts.frame, parts.day, parts.time, parts.closing]
         .filter(Boolean).join(' '))
         .to.equal(polish.default.describe(schedule, opts));
     });

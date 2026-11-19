@@ -25,11 +25,10 @@ const rows = [
 
   // clock / date — context `0 9 * * *`
   ['0 9 1 * *', 'pierwszego dnia każdego miesiąca o 9:00'],
-  ['0 9 1,10,20 * *',
-    'pierwszego, dziesiątego i dwudziestego dnia każdego miesiąca o 9:00'],
+  ['0 9 1,10,20 * *', 'w dniach 1, 10 i 20 każdego miesiąca o 9:00'],
   ['0 9 */2 * *', 'w nieparzyste dni każdego miesiąca o 9:00'],
   ['0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'w nieparzyste dni każdego miesiąca oprócz piętnastego, o 9:00'],
+    'w nieparzyste dni każdego miesiąca inne niż piętnasty, o 9:00'],
 
   // clock / month — context `0 9 * * *`
   ['0 9 * 1 *', 'w styczniu codziennie o 9:00'],
@@ -61,11 +60,12 @@ const rows = [
   ['0,30 9-17 * * 1-5',
     'od poniedziałku do piątku co 30 minut od 9:00 do 17:30'],
   ['0-29,45 9-17 * * 1-5',
-    'od poniedziałku do piątku co godzinę od 9:00 do 17:00, za każdym ' +
-    'razem co minutę do 29 minut po pełnej godzinie oraz 45 minut po niej'],
+    'od poniedziałku do piątku od 9:00 do 17:45: co minutę od każdej ' +
+    'pełnej godziny do 29 minut po niej, a potem jeszcze raz 45 minut po ' +
+    'niej'],
   ['0,15,45 9-17 * * 1-5',
-    'od poniedziałku do piątku o każdej pełnej godzinie oraz 15 i 45 minut ' +
-    'później, od 9:00 do 17:45'],
+    'od poniedziałku do piątku od 9:00 do 17:45: o każdej pełnej godzinie ' +
+    'oraz 15 i 45 minut później'],
 
   // window / hour — context `*/15 9-17 * * 1-5`
   ['*/15 * * * 1-5', 'od poniedziałku do piątku co 15 minut'],
@@ -82,14 +82,14 @@ const rows = [
     'od poniedziałku do piątku, a także pierwszego dnia każdego miesiąca, ' +
     'co 15 minut od 9:00 do 17:45'],
   ['*/15 9-17 1,10,20 * 1-5',
-    'od poniedziałku do piątku, a także pierwszego, dziesiątego i ' +
-    'dwudziestego dnia każdego miesiąca, co 15 minut od 9:00 do 17:45'],
+    'od poniedziałku do piątku, a także w dniach 1, 10 i 20 każdego ' +
+    'miesiąca, co 15 minut od 9:00 do 17:45'],
   ['*/15 9-17 */2 * 1-5',
     'od poniedziałku do piątku, ale tylko w nieparzyste dni miesiąca, co ' +
     '15 minut od 9:00 do 17:45'],
   ['*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5',
-    'od poniedziałku do piątku, a w soboty i niedziele tylko w nieparzyste ' +
-    'dni miesiąca oprócz piętnastego, co 15 minut od 9:00 do 17:45'],
+    'od poniedziałku do piątku, a także w nieparzyste dni każdego miesiąca ' +
+    'inne niż piętnasty, co 15 minut od 9:00 do 17:45'],
 
   // window / month — context `*/15 9-17 * * 1-5`
   ['*/15 9-17 * 1 1-5',
@@ -135,11 +135,10 @@ const rows = [
     'pierwszego dnia każdego miesiąca co 2 godziny od 1:00 do 23:00'],
 
   // monthly / date — context `0 0 1 * *`
-  ['0 0 1,10,20 * *',
-    'pierwszego, dziesiątego i dwudziestego dnia każdego miesiąca o 0:00'],
+  ['0 0 1,10,20 * *', 'w dniach 1, 10 i 20 każdego miesiąca o 0:00'],
   ['0 0 */2 * *', 'w nieparzyste dni każdego miesiąca o 0:00'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'w nieparzyste dni każdego miesiąca oprócz piętnastego, o 0:00'],
+    'w nieparzyste dni każdego miesiąca inne niż piętnasty, o 0:00'],
 
   // monthly / month — context `0 0 1 * *`
   ['0 0 1 1 *', 'co roku 1 stycznia o 0:00'],
@@ -176,15 +175,14 @@ const rows = [
     'codziennie co minutę od 9:00 do 9:59 oraz od 17:00 do 17:59'],
   ['* 9-17,22 * * *',
     'codziennie co minutę od 9:00 do 17:59 oraz od 22:00 do 22:59'],
-  ['* 1/2 * * *', 'codziennie co minutę w godzinach nieparzystych'],
+  ['* 1/2 * * *', 'co minutę w godzinach nieparzystych'],
 
   // open / date — context `* * * * *`
   ['* * 1 * *', 'pierwszego dnia każdego miesiąca co minutę'],
-  ['* * 1,10,20 * *',
-    'pierwszego, dziesiątego i dwudziestego dnia każdego miesiąca co minutę'],
+  ['* * 1,10,20 * *', 'w dniach 1, 10 i 20 każdego miesiąca co minutę'],
   ['* * */2 * *', 'w nieparzyste dni każdego miesiąca co minutę'],
   ['* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *',
-    'w nieparzyste dni każdego miesiąca oprócz piętnastego, co minutę'],
+    'w nieparzyste dni każdego miesiąca inne niż piętnasty, co minutę'],
 
   // open / month — context `* * * * *`
   ['* * * 1 *', 'w styczniu co minutę'],
