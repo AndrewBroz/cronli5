@@ -43,13 +43,23 @@ function weekdaysSaid(part: Part, name: Names, joiner?: string): string {
   }), joiner);
 }
 
+// The nth of a weekday falls in the nth seven days of the month, and the
+// last of one in the last seven days of some month: the 22nd at the
+// earliest.
+const WEEK = 7;
+const LAST_WEEK_FROM = 22;
+const MONTH_END = 31;
+
 type WeekdayForm<Kind extends QuartzWeekday['kind']> =
   (form: Extract<QuartzWeekday, {kind: Kind}>, setting: Setting) => Side;
 
 const weekdayForms: {[Kind in QuartzWeekday['kind']]: WeekdayForm<Kind>} = {
   last(form, setting) {
-    return counted(phrase(weekdayName(form.weekday, true, setting.style),
-      words.last), setting);
+    return {
+      ...counted(phrase(weekdayName(form.weekday, true, setting.style),
+        words.last), setting),
+      window: [LAST_WEEK_FROM, MONTH_END]
+    };
   },
   // A fifth such weekday is not in every month.
   nth(form, setting) {
@@ -57,10 +67,15 @@ const weekdayForms: {[Kind in QuartzWeekday['kind']]: WeekdayForm<Kind>} = {
       weekdayName(form.weekday, true, setting.style),
       nthWords[form.nth - 1]), setting);
     const rare = form.nth === nthWords.length;
+    const window: [number, number] =
+      [WEEK * (form.nth - 1) + 1, WEEK * form.nth];
 
     return rare ?
-      {...found, comma: true, text: `${found.text}, ${words.ifThereIsOne}`} :
-      found;
+      {
+        ...found, comma: true,
+        text: `${found.text}, ${words.ifThereIsOne}`, window
+      } :
+      {...found, window};
   }
 };
 
@@ -128,9 +143,17 @@ export interface Days extends Pick<Scope, 'monthsAs' | 'saidMonths' |
 // weekdays, or the first as it stands and the second as a condition
 // between commas.
 function bothSaid(date: Side, week: Side): string {
+  // A weekday counted inside the month falls on seven dates only: of
+  // dates named one by one, those it cannot fall on are not said.
+  const [from, to] = week.window || [0, 0];
+  const possible = (date.listed || []).filter(function reachable(day) {
+    return day >= from && day <= to;
+  });
+  const named = possible.length > 0 ?
+    phrase(words.date, list(possible.map(String), words.or)) :
+    date.condition;
   const options = [
-    week.counted && `${week.text}, ${phrase(words.ifItFallsOn,
-      date.condition)}`,
+    week.counted && `${week.text}, ${phrase(words.ifItFallsOn, named)}`,
     date.dated && phrase(date.text, words.thatFallsOn, week.condition),
     `${date.text}, ${phrase(words.ifItFallsOn, week.condition)}`
   ];
@@ -139,9 +162,11 @@ function bothSaid(date: Side, week: Side): string {
 }
 
 // Two sides as one phrase: either firing, or both having to match.
+// In a union, where a date moves to is said with the date.
 function pairSaid(date: Side, week: Side, union: boolean): string {
   return union ?
-    `${date.text}, ${phrase(words.andAlso, week.text)}` :
+    `${[date.text, date.moved].filter(Boolean).join(', ')}, ${
+      phrase(words.andAlso, week.text)}` :
     bothSaid(date, week);
 }
 
@@ -183,7 +208,7 @@ function daysOf(setting: Setting): Days {
       return side.monthsAs;
     })),
     moved: phrase(...sides.map(function clause(side) {
-      return side.moved;
+      return !union && side.moved;
     })),
     saidMonths: any('saidMonths'),
     saidYear: any('saidYear'),

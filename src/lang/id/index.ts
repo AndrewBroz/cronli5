@@ -84,7 +84,9 @@ function calendarOf(schedule: Schedule, opts: IndonesianOptions) {
   return {days, scope: {...days, months, style: opts.style, years}};
 }
 
-// The closing part as its members, in order: the months and years, the
+// The closing part as its members, in order: the months and years (after
+// a comma when the day part always takes its own, so that they govern
+// the day and the time alike), the
 // leap years a date is confined to, where a date moves to, and what is
 // left out. An exception that follows another at once is joined to it by
 // «dan kecuali»; anything else that follows takes a comma.
@@ -94,7 +96,7 @@ function closingOf(calendar: ReturnType<typeof calendarOf>, time: Time):
   const governed = scopeOf(scope);
   const said: Clause[] = [
     {
-      comma: days.union || time.clause || time.left.length > 0,
+      comma: days.comma || time.clause || time.left.length > 0,
       text: phrase(days.union && governed && words.bothOfThem, governed)
     },
     {comma: true, text: phrase(days.leap && words.leapYearsOnly)},

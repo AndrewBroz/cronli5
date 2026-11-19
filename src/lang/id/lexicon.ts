@@ -105,6 +105,9 @@ const words = {
   // What happens at every time just said: «…, tiap kali pada detik
   // ke-30».
   eachTime: 'tiap kali',
+  // The same after a time that already holds «tiap kali»: «…, tiap kali
+  // setiap menit selama 1 jam, masing-masing pada detik ke-30».
+  eachOne: 'masing-masing',
   // Before a position in the hour or minute: «pada menit ke-30».
   at: 'pada',
   // The start of the hour as a position: «setiap jam tepat».

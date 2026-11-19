@@ -239,14 +239,14 @@ const rows = [
     'setiap tanggal 15 yang jatuh pada hari Selasa, Kamis, Sabtu, atau ' +
     'Minggu, pukul 00.00'],
   ['0 0 */2 6 1',
-    'setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00 pada ' +
+    'setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada ' +
     'bulan Juni'],
   ['0 9 */3 1,7 1-5',
     'setiap 3 hari mulai tanggal 1, jika jatuh pada hari Senin sampai ' +
     'Jumat, pukul 09.00, pada bulan Januari dan Juli'],
   ['0 0 */2 * 0-2,4-6', 'setiap tanggal ganjil pukul 00.00, kecuali Rabu'],
   ['0 0 0 */2 * 1 2030',
-    'setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00 pada ' +
+    'setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada ' +
     'tahun 2030'],
   ['0 0 */2 * 5L',
     'Jumat terakhir setiap bulan, jika jatuh pada tanggal ganjil, pukul ' +
@@ -508,8 +508,7 @@ const rows = [
     'pada jam genap, setiap 5 menit'],
   ['*/5 1/2 * * *',
     'pada jam ganjil, setiap 5 menit'],
-  ['* */3 * * *',
-    'setiap 3 jam mulai pukul 00.00, tiap kali setiap menit selama 1 jam'],
+  ['* */3 * * *', 'setiap 3 jam, tiap kali setiap menit selama 1 jam'],
   ['5/15 */2 * * *',
     'pada jam genap, pada menit ke-5, ke-20, ke-35, dan ke-50'],
   ['0-29 */2 * * *',
@@ -565,8 +564,8 @@ const rows = [
     'setiap hari, setiap menit dari pukul 09.00 sampai 09.59 dan dari ' +
     'pukul 17.00 sampai 17.59, kecuali pukul 09.29 dan 17.29'],
   ['0-28,30-59 */6 * * *',
-    'setiap 6 jam mulai pukul 00.00, tiap kali setiap menit selama 1 jam, ' +
-    'kecuali pada menit ke-29'],
+    'setiap 6 jam, tiap kali setiap menit selama 1 jam, kecuali pada ' +
+    'menit ke-29'],
   ['0,5,10,15,20,25,35,40,45,50,55 9-17 * * *',
     'setiap hari, setiap 5 menit dari pukul 09.00 sampai 17.55, kecuali ' +
     'pada menit ke-30 setiap jam'],
@@ -786,7 +785,90 @@ const rows = [
     'bulan Juni 2030', {years: true}],
   ['0 9 * 6-8,12 * 2030',
     'setiap hari pukul 09.00 pada bulan Juni sampai Agustus dan bulan ' +
-    'Desember, semuanya pada tahun 2030', {years: true}]
+    'Desember, semuanya pada tahun 2030', {years: true}],  // Weekdays are named up to four, even with three in a row among them,
+  // unless they are one run; a union's arm names up to five (answers,
+  // the order of choice for weekdays).
+  ['0 9 * * 1-3,5', 'setiap Senin, Selasa, Rabu, dan Jumat pukul 09.00'],
+  ['0 9 * * 1,3-5', 'setiap Senin, Rabu, Kamis, dan Jumat pukul 09.00'],
+  ['0 0 1 * 1,3-5',
+    'setiap tanggal 1, dan juga setiap Senin, Rabu, Kamis, dan Jumat, ' +
+    'pukul 00.00'],
+  ['0 0 1 * 1,2,4,5,6',
+    'setiap tanggal 1, dan juga setiap Senin, Selasa, Kamis, Jumat, dan ' +
+    'Sabtu, pukul 00.00'],
+  // After a day part that always takes its comma, the months and years
+  // take one too, so that they govern the day and the time alike
+  // (answers 2.1).
+  ['0 0 */3 6 *',
+    'setiap 3 hari mulai tanggal 1, pukul 00.00, pada bulan Juni'],
+  ['0 0 0 ? * 2#5 2030',
+    'Senin kelima setiap bulan, jika ada, pukul 00.00, pada tahun 2030',
+    {cron: 'quartz'}],
+  // Pieces that open with the start of the hour have said «setiap jam»
+  // and do not close with it (answers 4.1).
+  ['0,2,10-20 * * * *',
+    'setiap jam tepat serta pada menit ke-2 dan setiap menit dari menit ' +
+    'ke-10 sampai ke-20'],
+  ['0,2,10-20 9-17 * * *',
+    'setiap hari, setiap jam tepat serta pada menit ke-2 dan setiap menit ' +
+    'dari menit ke-10 sampai ke-20, dari pukul 09.00 sampai 17.20'],
+  // Hours that tile the day from 00.00 are bare before «tiap kali»
+  // (answers 4.1 C).
+  ['10-40 */4 * * *',
+    'setiap 4 jam, tiap kali setiap menit dari menit ke-10 sampai ke-40'],
+  ['5,15,25,35,45,55 */4 * * *',
+    'setiap 4 jam, tiap kali setiap 10 menit dari menit ke-5 sampai ke-55'],
+  ['0-29 */3 * * *',
+    'setiap 3 jam, tiap kali setiap menit selama 30 menit'],
+  ['10-40 2/4 * * *',
+    'setiap 4 jam mulai pukul 02.00, tiap kali setiap menit dari menit ' +
+    'ke-10 sampai ke-40'],
+  // Seconds after a time that already holds «tiap kali» follow
+  // «masing-masing»; a last firing is said after them, with its second
+  // (answers 4.2).
+  ['30 * */6 * * *',
+    'setiap 6 jam, tiap kali setiap menit selama 1 jam, masing-masing ' +
+    'pada detik ke-30'],
+  ['30 0-29 5/2 * * *',
+    'setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit ' +
+    'selama 30 menit, masing-masing pada detik ke-30, terakhir pukul ' +
+    '23.29.30'],
+  ['* */15 5/2 * * *',
+    'setiap hari, setiap 2 jam mulai pukul 05.00, 05.15, 05.30, dan ' +
+    '05.45, tiap kali setiap detik selama 1 menit, terakhir pukul ' +
+    '23.45.59'],
+  // Hours that are a run and a rhythm together, on one minute: each a
+  // stretch with its own rhythm word (answers 4.1 E).
+  ['0 0-5,7-23/2 * * *',
+    'setiap hari, setiap jam dari pukul 00.00 sampai 05.00 dan setiap 2 ' +
+    'jam dari pukul 07.00 sampai 23.00'],
+  ['30 0-5,7-23/2 * * 1',
+    'setiap Senin, setiap jam dari pukul 00.30 sampai 05.30 dan setiap 2 ' +
+    'jam dari pukul 07.30 sampai 23.30'],
+  // In a union the clause of a date that moves follows its date, not the
+  // whole (answers 5.3).
+  ['0 0 31W * 5',
+    'setiap tanggal 31, digeser ke hari Jumat sebelumnya jika jatuh pada ' +
+    'hari Sabtu atau Minggu, dan juga setiap Jumat, pukul 00.00'],
+  ['0 0 15W 6 5',
+    'setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika ' +
+    'jatuh pada hari Sabtu atau Minggu, dan juga setiap Jumat, pukul ' +
+    '00.00, keduanya pada bulan Juni'],
+  ['0 0 LW * 1',
+    'hari terakhir setiap bulan, digeser ke hari Jumat sebelumnya jika ' +
+    'jatuh pada hari Sabtu atau Minggu, dan juga setiap Senin, pukul ' +
+    '00.00'],
+  // A weekday counted inside the month falls only on seven dates; a date
+  // it cannot fall on is not named, and the dates are alternatives
+  // (answers 4.3).
+  ['0 0 */3 * 5L',
+    'Jumat terakhir setiap bulan, jika jatuh pada tanggal 22, 25, 28, ' +
+    'atau 31, pukul 00.00'],
+  ['0 0 */10 * 0L',
+    'hari Minggu terakhir setiap bulan, jika jatuh pada tanggal 31, pukul ' +
+    '00.00'],
+  ['0 0 */7 * 1#2',
+    'Senin kedua setiap bulan, jika jatuh pada tanggal 8, pukul 00.00']
 ];
 
 export {rows};

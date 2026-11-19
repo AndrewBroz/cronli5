@@ -3,6 +3,7 @@
 // in each hour with the first and last firing of every run.
 
 import type {CadenceDescription} from '../../core/schedule.js';
+import type {Member} from './forms.js';
 import {isCadence, isRange, isValues} from './forms.js';
 import lexicon from './lexicon.js';
 import {list, phrase, runsOf} from './say.js';
@@ -97,6 +98,33 @@ function hourAfterHour(work: Clockwork): Shaped {
   };
 }
 
+// Hours that are runs and rhythms together, on one minute: each a
+// stretch with its own rhythm, from its first to its last firing.
+function runsAndRhythms(work: Clockwork, parts: Member[]): Shaped {
+  const tick = tickFor(work, {one: true});
+  const [minute] = work.minutes.values;
+
+  function time(hour: number): string {
+    return at(work, hour, minute, firstSecond(tick));
+  }
+
+  return {
+    text: series(parts.flatMap(function each(part): Item[] {
+      const ends = {from: NaN, interval: 1, last: NaN, start: NaN, to: NaN,
+        values: [], ...part};
+
+      return isValues(part) ?
+        part.values.map(function single(hour) {
+          return moment(time(hour));
+        }) :
+        [stretch(everyUnit(units.hour, ends.interval),
+          time([ends.from, ends.start].find(isFinite) as number),
+          time([ends.to, ends.last].find(isFinite) as number))];
+    })),
+    tick
+  };
+}
+
 // Hours that are runs and single hours.
 function hoursNamed(work: Clockwork): Shaped {
   const {base, tiling, values} = work.minutes;
@@ -107,7 +135,10 @@ function hoursNamed(work: Clockwork): Shaped {
   const steady = base.kind === 'all' || values.length === 1 ||
     Boolean(tiling);
   const oneStretch = isRange(base) || isCadence(base);
+  const mixed = work.hours.base.kind === 'cadencePieces' &&
+    values.length === 1 && work.hours.base.parts;
   const options: Array<Shaped | false> = [
+    mixed && runsAndRhythms(work, mixed),
     (steady || lone && oneStretch) && stretches(work, runs),
     !lone && insideThenRuns(work, runs),
     isValues(base) && afterTheHours(work),

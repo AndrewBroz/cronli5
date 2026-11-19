@@ -29,6 +29,9 @@ export type Member =
 export interface Habits {
   // How many values are still named one by one.
   limit: number;
+  // Whether runs and single values are said together. The seven weekdays
+  // never are: a few are named, and more are every day less one or two.
+  pieces: boolean;
   // Whether a rhythm is said with nothing but its step.
   bare(cadence: CadenceDescription, domain: Domain): boolean;
   // Whether a rhythm is one a reader holds whole, so that a value or two
@@ -99,13 +102,23 @@ function never(): boolean {
 
 /** The habits of each field (answers 3.10 and the order of choice). */
 const habits = {
-  date: {bare: everySecondDay, beat: everySecondDay, limit: 7, rhythm: true},
-  hour: {bare: tilesTheDay, beat: tilesTheDay, limit: 4, rhythm: true},
-  minute: {bare: tilesFromTheTop, beat: tiles, limit: 4, rhythm: true},
-  month: {bare: never, beat: never, limit: 6, rhythm: false},
-  second: {bare: tilesFromTheTop, beat: tiles, limit: 4, rhythm: true},
-  weekday: {bare: never, beat: never, limit: 4, rhythm: false},
-  year: {bare: never, beat: never, limit: 5, rhythm: true}
+  date: {
+    bare: everySecondDay, beat: everySecondDay, limit: 7, pieces: true,
+    rhythm: true
+  },
+  hour: {
+    bare: tilesTheDay, beat: tilesTheDay, limit: 4, pieces: true,
+    rhythm: true
+  },
+  minute: {
+    bare: tilesFromTheTop, beat: tiles, limit: 4, pieces: true, rhythm: true
+  },
+  month: {bare: never, beat: never, limit: 6, pieces: true, rhythm: false},
+  second: {
+    bare: tilesFromTheTop, beat: tiles, limit: 4, pieces: true, rhythm: true
+  },
+  weekday: {bare: never, beat: never, limit: 4, pieces: false, rhythm: false},
+  year: {bare: never, beat: never, limit: 5, pieces: true, rhythm: true}
 };
 
 function isRange(form: Form): form is RangeDescription {
@@ -215,11 +228,13 @@ function withAnException(set: FieldSet, positive: boolean) {
 }
 
 // A list is short when it is within the field's limit and holds no three
-// values in a row.
+// values in a row. Weekdays are named even with three in a row among
+// them, unless they are one run.
 function shortList(set: FieldSet, listed: ValuesDescription) {
   const run = set.candidates.find(isRange);
   const count = listed.values.length;
-  const inARow = set.candidates.some(isPieces) || run && count > 2;
+  const inARow = set.habits.pieces && set.candidates.some(isPieces) ||
+    run && count > 2;
 
   return count <= set.habits.limit && !inARow && listed;
 }
@@ -227,7 +242,7 @@ function shortList(set: FieldSet, listed: ValuesDescription) {
 // Runs and single values, and the runs and rhythms together that are
 // tried before them when their single values are too many to name.
 function inParts(set: FieldSet, count: number) {
-  const pieces = set.candidates.find(isPieces);
+  const pieces = set.habits.pieces && set.candidates.find(isPieces);
   const few = pieces && singlesIn(pieces) <= set.habits.limit;
 
   return [

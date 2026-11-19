@@ -163,13 +163,23 @@ function body(form: Plain, tier: Tier, setting: Setting): string {
   return (bodies[form.kind] as Body<Plain['kind']>)(form, tier, setting);
 }
 
+// Whether several parts open with the start of the unit as a point,
+// which is said «setiap jam tepat» and so has said the unit.
+function opensAtTheStart(form: Plain, tier: Tier): boolean {
+  const [first] = {parts: [], ...form}.parts;
+
+  return Boolean(first) && isValues(first) &&
+    first.values[0] === tier.domain.min;
+}
+
 /**
  * Whether a phrase standing alone ends in «setiap jam»: every phrase but
- * the bare ones («setiap menit», «setiap 15 menit») and points, which
- * begin with it.
+ * the bare ones («setiap menit», «setiap 15 menit») and those that open
+ * with points, which begin with it.
  */
 function closesAfter(form: Plain, tier: Tier): boolean {
   return !(form.kind === 'all' || isValues(form) ||
+    opensAtTheStart(form, tier) ||
     isCadence(form) && tiles(form, tier.domain) &&
     form.start === tier.domain.min);
 }

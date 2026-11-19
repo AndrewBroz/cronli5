@@ -47,6 +47,9 @@ export interface Side {
   leap?: boolean;
   // The days left out, each said after «kecuali».
   left: string[];
+  // The dates, when the phrase names them one by one or counts them in
+  // days.
+  listed?: number[];
   // The months, when they are said by their length.
   monthsAs?: string;
   // Where the date moves to on a Saturday or Sunday.
@@ -55,6 +58,9 @@ export interface Side {
   saidYear?: boolean;
   // The phrase standing alone; empty when the side is every day.
   text: string;
+  // The first and last date a weekday counted inside the month can fall
+  // on.
+  window?: [number, number];
 }
 
 /** What a side is said under. */
@@ -194,6 +200,7 @@ function datesSide(part: Part, domain: Domain, setting: Setting): Side {
     dated: !counts,
     left: [part.removed.length > 0 && dated(...part.removed)]
       .filter(Boolean) as string[],
+    listed: counts || plain ? part.values : undefined,
     saidMonths: Boolean(month),
     saidYear: Boolean(year),
     text: phrase(body && !year && words.every, body)

@@ -36,7 +36,8 @@ export interface Tick {
   one: string;
   // The seconds clock times show; none when they show no seconds.
   seconds: number[];
-  // The seconds said after the minutes, when no clock time carries them.
+  // The seconds said after the minutes («tiap kali …»), when no clock
+  // time carries them.
   suffix: string;
 }
 
@@ -56,6 +57,10 @@ export interface Takes {
 export interface Shaped {
   // Whether it ends in a clause of its own.
   clause?: boolean;
+  // Whether it holds «tiap kali» already.
+  each?: boolean;
+  // «, terakhir pukul …», said after everything else.
+  last?: string;
   // Whether a position left out of the minutes still has to say «setiap
   // jam».
   closes?: boolean;
@@ -207,7 +212,7 @@ function tickFor(work: Clockwork, takes: Takes): Tick {
     left: secondsLeftOut(work, false),
     one: everyUnit(units.minute),
     seconds: [],
-    suffix: `, ${words.eachTime} ${inside(spoken, secondTier, eachTime)}`
+    suffix: inside(spoken, secondTier, eachTime)
   };
 }
 
