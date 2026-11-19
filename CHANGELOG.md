@@ -4,6 +4,25 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Indonesian (`id`)**, at beta: `import id from 'cronli5/lang/id'`, or
+  `{lang: 'id'}` from `cronli5/all`. Written from usage notes in Indonesian
+  by a writer told nothing of cron, then answers to the language
+  questionnaire, hand-written expected descriptions, an adversarial
+  schedule read and blind readers briefed only in Indonesian, and a
+  renderer built without sight of any other. Day first, then «pukul» and a
+  24-hour time with a full stop, as EYD writes it: `30 9 * * 1-5` is
+  «setiap Senin sampai Jumat pukul 09.30», and `*/15 9-17 * * 1-5` is
+  «setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai
+  17.45». Three style fields: `hour12` («pukul 5.30 sore»), `separator`
+  (`'.'` or `':'`) and `short` (Sen, Jun). No fluent human has reviewed
+  it; «jam genap» and «jam ganjil» for every second hour are the first
+  thing a native reviewer should check
+  ([docs/lang/id.md](./docs/lang/id.md)).
+
 ## [1.2.2]
 
 ### Fixed

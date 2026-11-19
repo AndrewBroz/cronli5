@@ -204,5 +204,8 @@ const indonesian: Language<IndonesianStyle, 'id'> = {
 };
 
 export type {IndonesianStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default indonesian;

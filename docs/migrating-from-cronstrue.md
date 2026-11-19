@@ -15,7 +15,7 @@ links to it rather than duplicating its tables.
 **cRonstrue is still a fine choice when:**
 
 * You need a **language `cronli5` doesn't have yet**. cRonstrue carries **39
-  locales**, built from per-locale string tables; `cronli5` ships ten, each
+  locales**, built from per-locale string tables; `cronli5` ships eleven, each
   a full renderer. If your locale is not on
   [cronli5's list](../README.md#languages), cRonstrue is the pragmatic
   answer.
@@ -253,7 +253,7 @@ A code that names a language the instance does not have is an error that
 tells you which import provides it.
 
 The honest trade: cRonstrue ships **far more locales** (39), built from
-per-locale string tables. `cronli5` ships ten languages, each a full
+per-locale string tables. `cronli5` ships eleven languages, each a full
 renderer that says a schedule the way that language says it, not a table
 of translated strings. The [README](../README.md#languages) lists what currently
 ships.

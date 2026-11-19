@@ -1,0 +1,4776 @@
+{
+ "language": "id",
+ "rows": [
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.00.00 sampai 09.00.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 6 detik dari pukul 09.00.00 sampai 09.00.54",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/6 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 10 detik dari pukul 09.00.05 sampai 09.00.55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/10 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.05, 09.20, dan 09.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, 09.15, 09.30, dan 09.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, 09.15, dan 09.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,15,45 9 * * *"
+  },
+  {
+   "expected": "setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 dan 17.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 09.00 sampai 17.00 dan pukul 22.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 01.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, 10, dan 20 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1,10,20 * *"
+  },
+  {
+   "expected": "setiap tanggal ganjil pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "setiap tanggal ganjil pukul 09.00, kecuali tanggal 15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Januari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 1 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Maret, Juni, September, dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 3,6,9,12 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Januari, Maret, Mei, Juli, September, dan November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * */2 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan November sampai Februari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "setiap Senin pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "setiap Selasa dan Kamis pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 2,4"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap kali setiap detik selama 1 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap kali setiap 6 detik sampai detik ke-54",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/6 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap kali setiap 10 detik dari detik ke-5 sampai ke-55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/10 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap menit dari pukul 09.00 sampai 17.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 30 menit dari pukul 09.00 sampai 17.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap menit selama 30 menit pertama dan pada menit ke-45 setiap jam, dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap jam tepat serta pada menit ke-15 dan ke-45, dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,15,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 * * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat pukul 12.00, 12.15, 12.30, dan 12.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 12 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 dan dari pukul 22.00 sampai 22.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17,22 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, pada jam ganjil, setiap 15 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 1/2 * * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 1 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1, 10, dan 20, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 1,10,20 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal ganjil yang jatuh pada hari Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 */2 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal ganjil dari tanggal 1 sampai 13 dan dari tanggal 17 sampai 31, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Januari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 1 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Maret, Juni, September, dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 3,6,9,12 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Januari, Maret, Mei, Juli, September, dan November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * */2 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan November sampai Februari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 11-2 1-5"
+  },
+  {
+   "expected": "setiap hari, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * *"
+  },
+  {
+   "expected": "setiap Senin, Rabu, dan Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 1,3,5"
+  },
+  {
+   "expected": "setiap Selasa dan Kamis, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 2,4"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap detik dari pukul 00.00.00 sampai 00.00.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 6 detik dari pukul 00.00.00 sampai 00.00.54",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/6 0 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 10 detik dari pukul 00.00.05 sampai 00.00.55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/10 0 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap menit dari pukul 00.00 sampai 00.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.05, 00.20, dan 00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00, 00.15, 00.30, dan 00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00, 00.15, dan 00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,15,45 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 * 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 09.00 dan 17.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9,17 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap jam dari pukul 09.00 sampai 17.00 dan pukul 22.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-17,22 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 2 jam mulai pukul 01.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 1/2 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, 10, dan 20 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,10,20 * *"
+  },
+  {
+   "expected": "setiap tanggal ganjil pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */2 * *"
+  },
+  {
+   "expected": "setiap tanggal ganjil pukul 00.00, kecuali tanggal 15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 1 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Maret, Juni, September, dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 3,6,9,12 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Januari, Maret, Mei, Juli, September, dan November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 */2 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan November sampai Februari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 11-2 *"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Senin, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 1"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Senin sampai Jumat, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Selasa dan Kamis, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 2,4"
+  },
+  {
+   "expected": "setiap detik",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "setiap 6 detik",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/6 * * * * *"
+  },
+  {
+   "expected": "setiap 10 detik mulai detik ke-5 setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/10 * * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-5, ke-20, dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 * * * *"
+  },
+  {
+   "expected": "setiap 15 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "setiap jam tepat serta pada menit ke-15 dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,15,45 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 00.00 sampai 00.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.59 dan dari pukul 17.00 sampai 17.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 17.59 dan dari pukul 22.00 sampai 22.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 9-17,22 * * *"
+  },
+  {
+   "expected": "pada jam ganjil, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 1/2 * * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, 10, dan 20, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 1,10,20 * *"
+  },
+  {
+   "expected": "setiap tanggal ganjil, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * */2 * *"
+  },
+  {
+   "expected": "setiap tanggal ganjil, setiap menit, kecuali tanggal 15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "setiap menit pada bulan Januari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 1 *"
+  },
+  {
+   "expected": "setiap menit pada bulan Maret, Juni, September, dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 3,6,9,12 *"
+  },
+  {
+   "expected": "setiap menit pada bulan Januari, Maret, Mei, Juli, September, dan November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * */2 *"
+  },
+  {
+   "expected": "setiap menit pada bulan November sampai Februari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 11-2 *"
+  },
+  {
+   "expected": "setiap Senin, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 1"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 1-5"
+  },
+  {
+   "expected": "setiap Selasa dan Kamis, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 2,4"
+  },
+  {
+   "expected": "setiap hari pukul 09.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00.00 dan 09.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00.00, 09.00.15, 09.00.30, dan 09.00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.00.00 sampai 09.00.09",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-9 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 dan 09.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.29 dan pukul 09.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29,45 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 7 menit dari pukul 09.00 sampai 09.56",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/7 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.05, 09.20, 09.35, dan 09.50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/15 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.10, 09.20, 09.30, dan 09.40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40/10 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 08.00, 12.00, dan 18.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 09.00 sampai 17.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "setiap 2 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "setiap 6 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */6 * * *"
+  },
+  {
+   "expected": "setiap 2 jam, kecuali pukul 08.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 22.00 sampai 02.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "setiap tanggal 15 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 15 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1,15 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1-7 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 dan tanggal 15 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1-7,15 * *"
+  },
+  {
+   "expected": "setiap tanggal genap pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 2/2 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 */5 * *"
+  },
+  {
+   "expected": "hari terakhir setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "setiap tanggal 15 pukul 09.00, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Januari dan Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 1,7 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni sampai Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni sampai Agustus dan bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6-8,12 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Januari, April, Juli, dan Oktober",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * */3 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "setiap hari Minggu pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "setiap Senin, Rabu, dan Jumat pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "setiap Sabtu dan Minggu pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali hari Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "Jumat terakhir setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "Senin kedua setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00.30 sampai 17.45.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap kali tepat pada menit itu serta pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap kali tepat pada menit itu serta pada detik ke-15, ke-30, dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap kali setiap detik selama 10 detik pertama",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-9 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap jam dari pukul 09.00 sampai 17.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap jam dari pukul 09.30 sampai 17.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap jam pada menit ke-5, ke-20, dan ke-45, dari pukul 09.05 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap menit selama 30 menit pertama setiap jam, dari pukul 09.00 sampai 17.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 7 menit sampai menit ke-56 setiap jam, dari pukul 09.00 sampai 17.56",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/7 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.05 sampai 17.50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap jam pada menit ke-10, ke-20, ke-30, dan ke-40, dari pukul 09.10 sampai 17.40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40/10 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat pukul 00.00, 00.15, 00.30, dan 00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 0 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat pukul 09.00, 09.15, 09.30, dan 09.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 09.45 dan dari pukul 17.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9,17 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 08.00 sampai 08.45, dari pukul 12.00 sampai 12.45, dan dari pukul 18.00 sampai 18.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 8,12,18 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, pada jam genap, setiap 15 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 */2 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 6 jam mulai pukul 00.00, 00.15, 00.30, dan 00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 */6 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, pada jam genap, setiap 15 menit, kecuali dari pukul 08.00 sampai 08.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 00.00 sampai 02.45 dan dari pukul 22.00 sampai 23.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 22-2 * * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 15, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 15 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 1,15 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 1-7 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 dan tanggal 15, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 1-7,15 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal genap, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 2/2 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 yang jatuh pada hari Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 */5 * 1-5"
+  },
+  {
+   "expected": "hari terakhir setiap bulan, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 L * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 15W * 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 6 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Januari dan Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 1,7 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Juni sampai Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 6-8 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Juni sampai Agustus dan bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 6-8,12 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Januari, April, Juli, dan Oktober",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * */3 1-5"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, kecuali bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * 1-11 1-5"
+  },
+  {
+   "expected": "setiap Senin, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 1"
+  },
+  {
+   "expected": "setiap hari Minggu, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 0"
+  },
+  {
+   "expected": "setiap Sabtu dan Minggu, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 0,6"
+  },
+  {
+   "expected": "setiap hari, setiap 15 menit dari pukul 09.00 sampai 17.45, kecuali hari Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 1-6"
+  },
+  {
+   "expected": "Jumat terakhir setiap bulan, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 5L"
+  },
+  {
+   "expected": "Senin kedua setiap bulan, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 1#2"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00.00 dan 00.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 0 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00.00, 00.00.15, 00.00.30, dan 00.00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 0 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap detik dari pukul 00.00.00 sampai 00.00.09",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-9 0 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 dan 00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap menit dari pukul 00.00 sampai 00.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap menit dari pukul 00.00 sampai 00.29 dan pukul 00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29,45 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 7 menit dari pukul 00.00 sampai 00.56",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/7 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.05, 00.20, 00.35, dan 00.50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/15 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.10, 00.20, 00.30, dan 00.40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40/10 0 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 12 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 08.00, 12.00, dan 18.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 8,12,18 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap jam dari pukul 09.00 sampai 17.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-17 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 2 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */2 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 6 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */6 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 2 jam, kecuali pukul 08.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap jam dari pukul 00.00 sampai 02.00 dan dari pukul 22.00 sampai 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 22-2 1 * *"
+  },
+  {
+   "expected": "setiap tanggal 15 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 15 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,15 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 dan tanggal 15 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-7,15 * *"
+  },
+  {
+   "expected": "setiap tanggal genap pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 2/2 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */5 * *"
+  },
+  {
+   "expected": "hari terakhir setiap bulan pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "setiap tanggal 15 pukul 00.00, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "setiap tanggal 1 Juni pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Januari dan Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 1,7 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Juni sampai Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 6-8 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Juni sampai Agustus dan bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 6-8,12 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Januari, April, Juli, dan Oktober",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 */3 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00, kecuali bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 1-11 *"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap hari Minggu, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 0"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Senin, Rabu, dan Jumat, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 1,3,5"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Sabtu dan Minggu, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Senin sampai Sabtu, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 1-6"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga Jumat terakhir setiap bulan, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 5L"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga Senin kedua setiap bulan, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 1#2"
+  },
+  {
+   "expected": "setiap menit pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 * * * * *"
+  },
+  {
+   "expected": "setiap 30 detik",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 * * * * *"
+  },
+  {
+   "expected": "setiap 15 detik",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 * * * * *"
+  },
+  {
+   "expected": "setiap detik selama 10 detik pertama setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-9 * * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "setiap 30 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 * * * *"
+  },
+  {
+   "expected": "setiap menit selama 30 menit pertama setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 * * * *"
+  },
+  {
+   "expected": "setiap menit selama 30 menit pertama dan pada menit ke-45 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "setiap 7 menit sampai menit ke-56 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/7 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-5, ke-20, ke-35, dan ke-50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/15 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-10, ke-20, ke-30, dan ke-40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40/10 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 12.00 sampai 12.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 12 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 08.00 sampai 08.59, dari pukul 12.00 sampai 12.59, dan dari pukul 18.00 sampai 18.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 17.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 9-17 * * *"
+  },
+  {
+   "expected": "pada jam genap, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "setiap 6 jam, tiap kali setiap menit selama 1 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* */6 * * *"
+  },
+  {
+   "expected": "pada jam genap, setiap menit, kecuali dari pukul 08.00 sampai 08.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 22.00 sampai 02.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "setiap tanggal 15, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 15 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 1,15 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 1-7 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 dan tanggal 15, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 1-7,15 * *"
+  },
+  {
+   "expected": "setiap tanggal genap, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 2/2 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, 6, 11, 16, 21, 26, dan 31, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * */5 * *"
+  },
+  {
+   "expected": "hari terakhir setiap bulan, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * L * *"
+  },
+  {
+   "expected": "setiap tanggal 15, setiap menit, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 15W * *"
+  },
+  {
+   "expected": "setiap menit pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 6 *"
+  },
+  {
+   "expected": "setiap menit pada bulan Januari dan Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 1,7 *"
+  },
+  {
+   "expected": "setiap menit pada bulan Juni sampai Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 6-8 *"
+  },
+  {
+   "expected": "setiap menit pada bulan Juni sampai Agustus dan bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 6-8,12 *"
+  },
+  {
+   "expected": "setiap menit pada bulan Januari, April, Juli, dan Oktober",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * */3 *"
+  },
+  {
+   "expected": "setiap menit, kecuali bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * 1-11 *"
+  },
+  {
+   "expected": "setiap hari Minggu, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 0"
+  },
+  {
+   "expected": "setiap Senin, Rabu, dan Jumat, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 1,3,5"
+  },
+  {
+   "expected": "setiap Sabtu dan Minggu, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 0,6"
+  },
+  {
+   "expected": "setiap menit, kecuali hari Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 1-6"
+  },
+  {
+   "expected": "Jumat terakhir setiap bulan, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 5L"
+  },
+  {
+   "expected": "Senin kedua setiap bulan, setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 1#2"
+  },
+  {
+   "expected": "tanggal 1 Januari 2030 pukul 00.00",
+   "options": {
+    "lang": "id",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 pada tahun 2030 dan 2035",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 1 * 2030,2035"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 pada tahun 2030 sampai 2035",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2035"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 pada tahun genap",
+   "options": {
+    "lang": "id",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * */2"
+  },
+  {
+   "expected": "tanggal 1 Juni 2030 pukul 09.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 9 1 6 * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2028 sampai 2031",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2028-2031"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * 6 * 2030"
+  },
+  {
+   "expected": "setiap Senin pukul 09.00 pada bulan Juni 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * 6 1 2030"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15 Juni pukul 09.00 pada tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 1,15 6 * 2030"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 pukul 09.00 pada bulan Juni 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 1-7 6 * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni dan Juli 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * 6,7 * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni tahun 2030 dan 2031",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * 6 * 2030,2031"
+  },
+  {
+   "expected": "hari terakhir bulan Juni 2030 pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 L 6 * 2030"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 09.00 pada tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 1 * * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2030 dan setiap tahun ke-2 sesudahnya",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2030/2"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2028 dan setiap tahun ke-4 sesudahnya",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2028/4"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 pada tahun 2028 dan setiap tahun ke-4 sesudahnya",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 1 * 2028/4"
+  },
+  {
+   "expected": "setiap 5 menit pada tahun 2028 dan setiap tahun ke-4 sesudahnya",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */5 * * * * 2028/4"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2028 dan setiap tahun ke-4 sesudahnya sampai 2060",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2028-2060/4"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2030 dan setiap tahun ke-2 sesudahnya sampai 2040",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2028, 2032, dan 2036",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2028-2036/4"
+  },
+  {
+   "expected": "setiap 5 menit pada tahun genap",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */5 * * * * */2"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun ganjil",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 1971/2"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 pada tahun 2030 sampai 2032 dan tahun 2035",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2032,2035"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada tahun 2030 sampai 2035",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 * * 2030-2035"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Juni sampai Agustus 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 6-8 * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2030, kecuali bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * 1-11 * 2030"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 mulai tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 1 * 2030-9999"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 sampai dengan tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 1 * 1970-2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 1970-2029,2031-9999"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali bulan Juni dan kecuali tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * 1-5,7-12 * 1970-2029,2031-9999"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00 pada tahun 2030 sampai 2040 dan tahun 2045 dan setiap tahun ke-5 sesudahnya",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2040,2045/5"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada tahun 2030, 2032, 2034, 2036, dan 2040",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 9 * * * 2030-2036/2,2040"
+  },
+  {
+   "expected": "tidak pernah: tanggalnya tidak ada pada tahun yang dipilih",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 29 2 * 2031"
+  },
+  {
+   "expected": "setiap 5 menit pada tahun 2030",
+   "options": {
+    "lang": "id",
+    "years": true
+   },
+   "pattern": "*/5 * * * * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 02.35 dan 15.35 pada tahun 2028 dan 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 35 2,15 * * * 2028,2030"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00",
+   "options": {
+    "cron": "quartz",
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * ?"
+  },
+  {
+   "expected": "hari terakhir setiap bulan pukul 00.00, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00, digeser ke hari Senin sesudahnya jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1W * *"
+  },
+  {
+   "expected": "setiap tanggal 1 Juni pukul 00.00, digeser ke hari Senin sesudahnya jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1W 6 *"
+  },
+  {
+   "expected": "setiap tanggal 15 Juni pukul 00.00, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 15W 6 *"
+  },
+  {
+   "expected": "setiap tanggal 8 pukul 00.00, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 8W * *"
+  },
+  {
+   "expected": "setiap tanggal 31 pukul 00.00, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31W * *"
+  },
+  {
+   "expected": "setiap tanggal 28 pukul 00.00, digeser ke hari Jumat atau Senin terdekat pada bulan yang sama jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 28W * *"
+  },
+  {
+   "expected": "setiap tanggal 30 pukul 00.00, digeser ke hari Jumat atau Senin terdekat pada bulan yang sama jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 30W * *"
+  },
+  {
+   "expected": "setiap tanggal 30 Juni pukul 00.00, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 30W 6 *"
+  },
+  {
+   "expected": "setiap tanggal 31 pukul 00.00 pada bulan Juli dan Agustus, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31W 6-8 *"
+  },
+  {
+   "expected": "setiap tanggal 29 pukul 00.00, digeser ke hari Jumat atau Senin terdekat pada bulan yang sama jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 29W * *"
+  },
+  {
+   "expected": "setiap tanggal 15 pukul 18.00 pada bulan Maret, Juni, September, dan Desember, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 18 15W 3,6,9,12 *"
+  },
+  {
+   "expected": "3 hari sebelum hari terakhir setiap bulan pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-3 * *"
+  },
+  {
+   "expected": "setiap tanggal 27 Juni pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-3 6 *"
+  },
+  {
+   "expected": "sehari sebelum hari terakhir setiap bulan pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-1 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan yang berumur 31 hari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-30 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pada bulan yang berumur 30 hari dan tanggal 2 pada bulan yang berumur 31 hari, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-29 * *"
+  },
+  {
+   "expected": "tidak pernah: tanggalnya tidak ada",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-30 6 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Juli dan Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-30 6-8 *"
+  },
+  {
+   "expected": "3 hari sebelum hari terakhir bulan Februari pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-3 2 *"
+  },
+  {
+   "expected": "setiap tanggal 27 pukul 00.00 pada bulan April dan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-3 4,6 *"
+  },
+  {
+   "expected": "setiap tanggal 1 Februari pukul 00.00, hanya pada tahun kabisat",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L-28 2 *"
+  },
+  {
+   "expected": "hari terakhir bulan Juni pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L 6 *"
+  },
+  {
+   "expected": "hari terakhir bulan Juni, Juli, Agustus, dan Desember pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L 6-8,12 *"
+  },
+  {
+   "expected": "hari terakhir setiap bulan, dan juga setiap Jumat, pukul 00.00, keduanya pada bulan Juni sampai Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L 6-8 5"
+  },
+  {
+   "expected": "Senin kedua bulan Juni pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 * 6 1#2"
+  },
+  {
+   "expected": "Jumat terakhir bulan Januari dan Juli pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 * 1,7 5L"
+  },
+  {
+   "expected": "Rabu pertama setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 3#1"
+  },
+  {
+   "expected": "Kamis ketiga setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 4#3"
+  },
+  {
+   "expected": "Sabtu terakhir setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 6L"
+  },
+  {
+   "expected": "hari Minggu keempat setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0#4"
+  },
+  {
+   "expected": "hari Minggu terakhir setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0L"
+  },
+  {
+   "expected": "Senin kelima setiap bulan, jika ada, pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1#5"
+  },
+  {
+   "expected": "setiap Senin pukul 09.00",
+   "options": {
+    "cron": "quartz",
+    "lang": "id"
+   },
+   "pattern": "0 0 9 ? * 2"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat pukul 09.00",
+   "options": {
+    "cron": "quartz",
+    "lang": "id"
+   },
+   "pattern": "0 0 9 ? * 2-6"
+  },
+  {
+   "expected": "setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "@hourly"
+  },
+  {
+   "expected": "setiap hari pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "@daily"
+  },
+  {
+   "expected": "setiap hari Minggu pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "@weekly"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "@monthly"
+  },
+  {
+   "expected": "setiap tanggal 1 Januari pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "@yearly"
+  },
+  {
+   "expected": "saat sistem dinyalakan",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "Dijalankan setiap hari pukul 09.00.",
+   "options": {
+    "form": "sentence",
+    "lang": "id"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "Setiap hari pukul 09.00",
+   "options": {
+    "form": "label",
+    "lang": "id"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "Setiap menit",
+   "options": {
+    "form": "label",
+    "lang": "id"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "Setiap tanggal 1 pukul 00.00",
+   "options": {
+    "form": "label",
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * *"
+  },
+  {
+   "expected": "Hari terakhir setiap bulan pukul 00.00",
+   "options": {
+    "form": "label",
+    "lang": "id"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "Setiap jam pada menit ke-30",
+   "options": {
+    "form": "label",
+    "lang": "id"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "Dijalankan saat sistem dinyalakan.",
+   "options": {
+    "form": "sentence",
+    "lang": "id"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "pola cron yang tidak dikenali",
+   "options": {
+    "lang": "id",
+    "lenient": true
+   },
+   "pattern": "not a pattern"
+  },
+  {
+   "expected": "tidak pernah: tanggalnya tidak ada",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "Tidak pernah dijalankan: tanggalnya tidak ada.",
+   "options": {
+    "form": "sentence",
+    "lang": "id"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "Tidak pernah: tanggalnya tidak ada",
+   "options": {
+    "form": "label",
+    "lang": "id"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "setiap tanggal 13, dan juga setiap Jumat, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 13 * 5"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Jumat, pukul 00.00, keduanya pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15, dan juga setiap Senin sampai Jumat, pukul 00.00, keduanya pada bulan Januari dan Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,15 1,7 1-5"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Jumat, pukul 00.00, kecuali bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 1-11 5"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7, dan juga setiap Senin, pukul 04.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 4 1-7 * 1"
+  },
+  {
+   "expected": "setiap tanggal 15, dan juga setiap Kamis sampai Selasa, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 15 * 0-2,4-6"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga Senin kedua setiap bulan, pukul 00.00, keduanya pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 6 1#2"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 14 dan tanggal 16 sampai 31, dan juga setiap Jumat, pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1-14,16-31 * 5"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 14 dan tanggal 16 sampai 31, dan juga setiap Senin dan Rabu, pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1-14,16-31 * 1,3"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 14 dan tanggal 17 sampai 30, dan juga setiap Senin sampai Jumat, pukul 09.00, keduanya pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1-14,17-31 6 1-5"
+  },
+  {
+   "expected": "setiap tanggal 30, dan juga setiap Senin, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 30 * 1"
+  },
+  {
+   "expected": "setiap Senin pukul 00.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31 6 1"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1-30 6 1"
+  },
+  {
+   "expected": "setiap hari pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 1-31 * 1"
+  },
+  {
+   "expected": "setiap tanggal 29, dan juga setiap Senin, pukul 00.00, keduanya pada bulan Februari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 29 2 1"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 15W * 1-5"
+  },
+  {
+   "expected": "setiap tanggal ganjil, dan juga setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 1-31/2 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */2 * 1"
+  },
+  {
+   "expected": "setiap tanggal ganjil yang jatuh pada hari Senin, Rabu, atau Jumat, pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 */2 * 1,3,5"
+  },
+  {
+   "expected": "setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 yang jatuh pada hari Senin sampai Jumat, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */5 * 1-5"
+  },
+  {
+   "expected": "setiap tanggal 15 yang jatuh pada hari Selasa, Kamis, Sabtu, atau Minggu, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 15 * */2"
+  },
+  {
+   "expected": "setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */2 6 1"
+  },
+  {
+   "expected": "setiap 3 hari mulai tanggal 1, jika jatuh pada hari Senin sampai Jumat, pukul 09.00, pada bulan Januari dan Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 */3 1,7 1-5"
+  },
+  {
+   "expected": "setiap tanggal ganjil pukul 00.00, kecuali Rabu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */2 * 0-2,4-6"
+  },
+  {
+   "expected": "setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 0 */2 * 1 2030"
+  },
+  {
+   "expected": "Jumat terakhir setiap bulan, jika jatuh pada tanggal ganjil, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */2 * 5L"
+  },
+  {
+   "expected": "hari terakhir setiap bulan, jika jatuh pada hari Selasa, Kamis, Sabtu, atau Minggu, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 L * */2"
+  },
+  {
+   "expected": "setiap Selasa, Kamis, Sabtu, dan Minggu pukul 00.00, kecuali tanggal 15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-14,16-31 * */2"
+  },
+  {
+   "expected": "tidak pernah: tanggalnya tidak ada",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31 6 */2"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15 Juni pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,15 6 *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 pukul 00.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 7 dan tanggal 15 pukul 00.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-7,15 6 *"
+  },
+  {
+   "expected": "setiap tanggal ganjil pukul 00.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 Juli pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */5 7 *"
+  },
+  {
+   "expected": "setiap tanggal 1, 6, 11, 16, 21, dan 26 Juni pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */5 6 *"
+  },
+  {
+   "expected": "setiap tanggal 25 sampai 30 pukul 00.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 25-31 6 *"
+  },
+  {
+   "expected": "setiap tanggal 30 pukul 00.00 pada bulan April dan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 30,31 4,6 *"
+  },
+  {
+   "expected": "setiap tanggal 31 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31 * *"
+  },
+  {
+   "expected": "setiap tanggal 30 dan 31 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 30,31 * *"
+  },
+  {
+   "expected": "setiap tanggal 29 Februari pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 29 2 *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 3 dan tanggal 28 sampai 31 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 28-3 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 3 dan tanggal 28 sampai 30 pukul 00.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 28-3 6 *"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 15 pukul 00.00 pada bulan Januari dan Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,15 1,7 *"
+  },
+  {
+   "expected": "setiap tanggal 31 Desember pukul 23.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "59 23 31 12 *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00, kecuali tanggal 15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-14,16-31 * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 pada bulan Juni, kecuali tanggal 15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-14,16-31 6 *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00, kecuali tanggal 15 dan 16",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-14,17-31 * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00, kecuali tanggal 31",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1-30 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 sampai 5, tanggal 10, dan tanggal 20 sampai 25 pukul 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 12 1-5,10,20-25 * *"
+  },
+  {
+   "expected": "setiap tanggal 1, 11, 21, dan 31 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */10 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 dan 22 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */21 * *"
+  },
+  {
+   "expected": "setiap tanggal 5, 8, 11, 14, 17, dan 20 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 5-20/3 * *"
+  },
+  {
+   "expected": "setiap 3 hari mulai tanggal 1 setiap bulan, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */3 * *"
+  },
+  {
+   "expected": "setiap tanggal genap dari tanggal 8 sampai 30 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 8/2 * *"
+  },
+  {
+   "expected": "setiap tanggal 1 dan tanggal 10 sampai 15 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,10-15 * *"
+  },
+  {
+   "expected": "setiap tanggal 31 pukul 00.00 pada bulan Januari, Maret, dan Mei",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31 1-6 *"
+  },
+  {
+   "expected": "setiap tanggal 30 pukul 00.00 pada bulan Januari dan Maret",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 30 1-3 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan April, Juni, September, dan November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,31 4,6,9,11 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Januari sampai Maret, bulan Juni, dan bulan September sampai November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 1-3,6,9-11 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Januari dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 12,1 *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 pada bulan Januari, Februari, November, dan Desember 2030",
+   "options": {
+    "lang": "id",
+    "years": true
+   },
+   "pattern": "0 0 * 11-2 * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 pada bulan April sampai Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 * 4-8 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 1-5,7-12 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali bulan Februari",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 3-1 *"
+  },
+  {
+   "expected": "setiap Senin pukul 09.00, kecuali bulan Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 1-7,9-12 1"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00, kecuali bulan Juni dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 1-5,7-11 *"
+  },
+  {
+   "expected": "setiap 5 menit, kecuali bulan Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/5 * * 1-7,9-12 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Februari, April, Juni, Agustus, Oktober, dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 2/2 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan April, Juni, Agustus, Oktober, dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 4/2 *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 pada bulan Januari, Maret, Juli, September, dan November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 1,3,7,9,11 *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Februari, April, Agustus, dan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 2,4,8,12 *"
+  },
+  {
+   "expected": "setiap 5 menit pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/5 * * 6 *"
+  },
+  {
+   "expected": "setiap 6 jam pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */6 * 6 *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-30 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 * * 6 *"
+  },
+  {
+   "expected": "setiap Jumat sampai Senin pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "setiap Sabtu sampai Senin pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 6-1"
+  },
+  {
+   "expected": "setiap Selasa sampai Kamis pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 2-4"
+  },
+  {
+   "expected": "setiap Jumat sampai Minggu pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 5-0"
+  },
+  {
+   "expected": "setiap hari Minggu dan Senin pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0,1"
+  },
+  {
+   "expected": "setiap Jumat dan Sabtu pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 5,6"
+  },
+  {
+   "expected": "setiap Selasa, Rabu, Kamis, dan Minggu pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0,2-4"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali Senin dan Sabtu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0,2-5"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali Rabu dan Minggu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1,2,4,5,6"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali Senin",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0,2-6"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali Sabtu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "setiap hari Minggu sampai Kamis pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 0-4"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni, kecuali Rabu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6 0-2,4-6"
+  },
+  {
+   "expected": "setiap menit, kecuali Rabu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * 0-2,4-6"
+  },
+  {
+   "expected": "setiap Senin, setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 * * * 1"
+  },
+  {
+   "expected": "setiap Senin pukul 09.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "setiap Senin, Rabu, dan Jumat pukul 09.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6 1,3,5"
+  },
+  {
+   "expected": "setiap Senin pukul 09.00 pada bulan Juni sampai Agustus",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6-8 1"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni, kecuali Senin dan Sabtu",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * 6 0,2-5"
+  },
+  {
+   "expected": "setiap hari pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * *"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, 09.30, 17.00, dan 17.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 01.30 dan 13.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 1,13 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 dan 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0,23 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 0 * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-1",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "1 * * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, 10.00, 11.00, dan 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-12 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 09.00 sampai 13.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-13 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 01.00, 05.00, 09.00, 14.00, dan 20.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 1,5,9,14,20 * * *"
+  },
+  {
+   "expected": "setiap Senin pukul 00.00, 01.00, 22.00, dan 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0,1,22,23 * * 1"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 dan 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */12 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 dan 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.23 dan 12.23",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "23 */12 * * *"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 00.00 dan 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */12 1 * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.23, 06.23, 12.23, dan 18.23",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "23 */6 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 01.00, 07.00, 13.00, dan 19.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 1/6 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 22.00 sampai 23.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "setiap Selasa, setiap 30 menit dari pukul 00.00 sampai 17.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/30 0-17 * * 2"
+  },
+  {
+   "expected": "setiap hari pukul 05.00 dan setiap jam dari pukul 09.00 sampai 17.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 5,9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 09.00 sampai 17.00, pukul 20.00, dan pukul 22.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-17,20,22 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 17.59, dari pukul 20.00 sampai 20.59, dan dari pukul 22.00 sampai 22.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 9-17,20,22 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 09.00 sampai 17.00, kecuali pukul 12.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9-11,13-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 10 menit dari pukul 09.05 sampai 09.55 dan dari pukul 17.05 sampai 17.55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/10 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 20 menit dari pukul 09.00 sampai 09.40 dan dari pukul 17.00 sampai 17.40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/20 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 30 menit dari pukul 09.00 sampai 11.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 9-11 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 30 menit dari pukul 09.15 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 menit dari pukul 09.01 sampai 17.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "1/2 9-17 * * *"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 10 menit dari pukul 06.00 sampai 08.50 dan dari pukul 17.00 sampai 19.50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/10 6-8,17-19 * * 1-5"
+  },
+  {
+   "expected": "setiap hari, setiap 15 menit dari pukul 00.00 sampai 00.45 dan dari pukul 12.00 sampai 12.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 */12 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 06.00 sampai 06.59, dari pukul 08.00 sampai 08.59, dari pukul 12.00 sampai 12.59, dari pukul 18.00 sampai 18.59, dan dari pukul 20.00 sampai 20.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 6,8,12,18,20 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 22.00 sampai 06.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-6,22,23 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 15 menit dari pukul 22.00 sampai 05.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 0-5,22-23 * * *"
+  },
+  {
+   "expected": "setiap Senin, setiap jam dari pukul 00.00 sampai 06.00 dan dari pukul 22.00 sampai 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-6,22,23 * * 1"
+  },
+  {
+   "expected": "setiap Jumat, setiap jam dari pukul 00.00 sampai 01.00 dan dari pukul 21.00 sampai 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 21-1 * * 5"
+  },
+  {
+   "expected": "setiap Jumat, setiap menit dari pukul 00.00 sampai 02.59 dan dari pukul 22.00 sampai 23.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 22-2 * * 5"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 00.00 sampai 02.00 dan dari pukul 22.00 sampai 23.00 pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 22-2 * 6 *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 00.00 sampai 02.00 dan dari pukul 22.00 sampai 23.00 pada tahun 2030",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 22-2 * * * 2030"
+  },
+  {
+   "expected": "setiap 2 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-22/2 * * *"
+  },
+  {
+   "expected": "setiap 3 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */3 * * *"
+  },
+  {
+   "expected": "setiap 4 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */4 * * *"
+  },
+  {
+   "expected": "setiap 6 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0,6,12,18 * * *"
+  },
+  {
+   "expected": "setiap 8 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */8 * * *"
+  },
+  {
+   "expected": "setiap 3 jam mulai pukul 02.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 2/3 * * *"
+  },
+  {
+   "expected": "setiap 4 jam mulai pukul 03.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 3/4 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 */2 * * *"
+  },
+  {
+   "expected": "setiap 3 jam mulai pukul 00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 */3 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 01.23",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "23 1/2 * * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap 3 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */3 1 * *"
+  },
+  {
+   "expected": "setiap Senin, setiap 2 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */2 * * 1"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 5/2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 4 jam dari pukul 04.00 sampai 20.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 4/4 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 5 jam dari pukul 00.00 sampai 20.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 */5 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam dari pukul 00.00 sampai 20.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-20/2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam dari pukul 05.30 sampai 23.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 5/2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 5 jam dari pukul 00.30 sampai 20.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 */5 * * *"
+  },
+  {
+   "expected": "pada jam genap, pada menit ke-15 dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 */2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 4 jam mulai pukul 04.15 dan 04.45, terakhir pukul 20.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 4/4 * * *"
+  },
+  {
+   "expected": "setiap 4 jam pada menit ke-5, ke-10, ke-20, ke-30, dan ke-50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,10,20,30,50 */4 * * *"
+  },
+  {
+   "expected": "pada jam genap, setiap 5 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/5 */2 * * *"
+  },
+  {
+   "expected": "pada jam ganjil, setiap 5 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/5 1/2 * * *"
+  },
+  {
+   "expected": "setiap 3 jam, tiap kali setiap menit selama 1 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* */3 * * *"
+  },
+  {
+   "expected": "pada jam genap, pada menit ke-5, ke-20, ke-35, dan ke-50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/15 */2 * * *"
+  },
+  {
+   "expected": "pada jam genap, setiap menit selama 30 menit pertama",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 */2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit selama 30 menit, terakhir pukul 23.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 5/2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, 05.15, 05.30, dan 05.45, terakhir pukul 23.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 5/2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam mulai pukul 08.00, 08.15, 08.30, dan 08.45, terakhir pukul 18.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "setiap tanggal ganjil, pada jam genap, setiap 20 menit pada bulan Januari, April, Juli, dan Oktober",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/20 */2 */2 */3 *"
+  },
+  {
+   "expected": "setiap jam, kecuali pukul 03.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap jam, kecuali pukul 03.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 4-2 * * *"
+  },
+  {
+   "expected": "setiap jam, kecuali pukul 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-22 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 00.00 sampai 21.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-21 * * *"
+  },
+  {
+   "expected": "setiap jam, kecuali pukul 03.00 dan 04.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-2,5-23 * * *"
+  },
+  {
+   "expected": "setiap menit, kecuali dari pukul 23.00 sampai 23.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0-22 * * *"
+  },
+  {
+   "expected": "setiap menit, kecuali dari pukul 03.00 sampai 04.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0-2,5-23 * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-30, kecuali pukul 03.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-5, ke-20, dan ke-45, kecuali dari pukul 03.05 sampai 03.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap 10 menit, kecuali dari pukul 03.00 sampai 03.50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 01.00, kecuali pukul 07.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 1,3,5,9,11,13,15,17,19,21,23 * * *"
+  },
+  {
+   "expected": "setiap 2 jam, kecuali pukul 04.00 dan 10.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0,2,6,8,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 00.30, kecuali pukul 08.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "pada jam genap, setiap menit selama 30 menit pertama, kecuali dari pukul 08.00 sampai 08.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "setiap menit, kecuali pada menit ke-29 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-28,30-59 * * * *"
+  },
+  {
+   "expected": "setiap menit, kecuali pada menit ke-59 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-58 * * * *"
+  },
+  {
+   "expected": "setiap menit, kecuali setiap jam tepat serta pada menit ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "1-29,31-59 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.01 sampai 17.59, kecuali setiap jam tepat serta pada menit ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "1-29,31-59 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.59 dan dari pukul 17.00 sampai 17.59, kecuali pukul 09.29 dan 17.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "setiap 6 jam, tiap kali setiap menit selama 1 jam, kecuali pada menit ke-29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-28,30-59 */6 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 5 menit dari pukul 09.00 sampai 17.55, kecuali pada menit ke-30 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 5 menit dari pukul 09.00 sampai 09.55, kecuali pukul 09.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9 * * *"
+  },
+  {
+   "expected": "setiap 5 menit, kecuali pada menit ke-30 setiap jam dan kecuali dari pukul 03.00 sampai 03.55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap 10 menit, kecuali pada menit ke-30 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,10,20,40,50 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 10 menit dari pukul 09.00 sampai 09.50, kecuali pukul 09.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,10,20,40,50 9 * * *"
+  },
+  {
+   "expected": "setiap 7 menit sampai menit ke-21 dan setiap 7 menit dari menit ke-35 sampai ke-56 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,7,14,21,35,42,49,56 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-15 dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 * * * *"
+  },
+  {
+   "expected": "setiap jam tepat serta pada menit ke-1",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-1 * * * *"
+  },
+  {
+   "expected": "setiap jam tepat serta pada menit ke-21 dan ke-42",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/21 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-9, ke-14, ke-47, dan ke-56",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "9,14,47,56 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-17, ke-28, ke-39, dan ke-50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "17/11 * * * *"
+  },
+  {
+   "expected": "setiap 10 menit mulai menit ke-5 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5/10 * * * *"
+  },
+  {
+   "expected": "setiap 2 menit mulai menit ke-1 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "1/2 * * * *"
+  },
+  {
+   "expected": "setiap 10 menit sampai menit ke-40 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-40/10 * * * *"
+  },
+  {
+   "expected": "setiap 6 menit sampai menit ke-42 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-42/6 * * * *"
+  },
+  {
+   "expected": "setiap menit dari menit ke-45 sampai ke-59 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "45-59 * * * *"
+  },
+  {
+   "expected": "setiap menit dari menit ke-5 sampai ke-10 dan pada menit ke-20 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5-10,20 * * * *"
+  },
+  {
+   "expected": "setiap menit selama 11 menit pertama dan setiap menit dari menit ke-50 sampai ke-59 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "50-10 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.10 dan dari pukul 09.50 sampai 09.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "50-10 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.30 sampai 09.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30-59 9 * * *"
+  },
+  {
+   "expected": "setiap 2 menit sampai menit ke-20 dan setiap 3 menit dari menit ke-21 sampai ke-57 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-20/2,21-59/3 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 menit dari pukul 09.00 sampai 09.20 dan setiap 3 menit dari pukul 09.21 sampai 09.57",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-20/2,21-59/3 9 * * *"
+  },
+  {
+   "expected": "setiap tanggal 1, setiap menit selama 30 menit pertama setiap jam, dari pukul 09.00 sampai 17.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 9-17 1 * *"
+  },
+  {
+   "expected": "setiap hari, pada menit ke-5, ke-20, dan ke-45 setelah pukul 09.00 dan 17.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari, pada menit ke-5, ke-20, dan ke-45 setelah pukul 08.00, 12.00, dan 18.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 8,12,18 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam pada menit ke-5, ke-20, dan ke-45, dari pukul 09.05 sampai 17.45 dan dari pukul 22.05 sampai 22.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 9-17,22 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam pada menit ke-5, ke-20, dan ke-45, dari pukul 08.05 sampai 10.45, dari pukul 14.05 sampai 14.45, dan dari pukul 20.05 sampai 20.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,20,45 8-10,14,20 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 08.00 sampai 08.29, dari pukul 12.00 sampai 12.29, dan dari pukul 18.00 sampai 18.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 8,12,18 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit selama 30 menit pertama setiap jam, dari pukul 09.00 sampai 17.29 dan dari pukul 22.00 sampai 22.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 9-17,22 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.30.15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.30.15 dan 17.30.15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 30 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.30.15 dan 09.30.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 30 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00.00, 09.00.20, dan 09.00.40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,20,40 0 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.30.10 sampai 09.30.20",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00.15 dan 12.00.15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 0 */12 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00.15, 06.00.15, 12.00.15, dan 18.00.15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 0 */6 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 00.00.15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 0 */2 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 01.00.15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 0 1/2 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 00.00.15, kecuali pukul 08.00.15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 09.00.30 sampai 17.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00.30 sampai 17.59.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 * 9-17 * * *"
+  },
+  {
+   "expected": "pada jam genap, pada menit ke-5 dan ke-30, tiap kali pada detik ke-8",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "8 5,30 */2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.00.00 sampai 09.59.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.00.00 sampai 17.59.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.00.00 sampai 09.29.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0-29 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 10 detik dari pukul 09.00.00 sampai 09.59.50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/10 * 9 * * *"
+  },
+  {
+   "expected": "pada jam genap, setiap detik",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * */2 * * *"
+  },
+  {
+   "expected": "pada jam genap, setiap menit pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 * */2 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 dan 17.00, tiap kali setiap detik selama 1 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 08.00, 12.00, 16.00, dan 20.00, tiap kali setiap detik selama 1 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0 8,12,16,20 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap kali pada detik ke-5, ke-15, dan ke-25",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,15,25 */15 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit selama 30 menit pertama setiap jam, dari pukul 09.00 sampai 17.29, tiap kali pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0-29 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.29 dan pukul 09.45, tiap kali pada detik ke-15 dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 0-29,45 9 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 09.00 sampai 09.59, tiap kali setiap detik selama 10 detik pertama",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-9 * 9 * * *"
+  },
+  {
+   "expected": "setiap jam pada detik ke-30 menit pertama",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-30 detik ke-15",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15 30 * * * *"
+  },
+  {
+   "expected": "setiap detik selama menit pertama setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0 * * * *"
+  },
+  {
+   "expected": "setiap 10 detik selama menit pertama setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/10 0 * * * *"
+  },
+  {
+   "expected": "setiap 30 detik selama menit pertama setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/30 0 * * * *"
+  },
+  {
+   "expected": "setiap detik selama 10 detik pertama setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-9 0 * * * *"
+  },
+  {
+   "expected": "setiap jam pada detik ke-15 dan ke-45 menit pertama",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 0 * * * *"
+  },
+  {
+   "expected": "setiap 4 jam mulai pukul 00.00.15 dan 00.00.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "15,45 0 */4 * * *"
+  },
+  {
+   "expected": "setiap 8 jam mulai pukul 00.00.00 dan 00.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 0 */8 * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-30, tiap kali setiap detik selama 1 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 30 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-5 dan ke-20, tiap kali tepat pada menit itu serta pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,30 5,20 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-5 dan ke-20, tiap kali pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 5,20 * * * *"
+  },
+  {
+   "expected": "setiap 15 menit, tiap kali tepat pada menit itu serta pada detik ke-15, ke-30, dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 */15 * * * *"
+  },
+  {
+   "expected": "setiap 15 menit, tiap kali pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 */15 * * * *"
+  },
+  {
+   "expected": "setiap detik selama 30 menit pertama setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0-29 * * * *"
+  },
+  {
+   "expected": "setiap jam pada menit ke-30, tiap kali pada detik ke-17, ke-28, ke-39, dan ke-50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "17/11 30 * * * *"
+  },
+  {
+   "expected": "setiap menit pada detik ke-17, ke-28, ke-39, dan ke-50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "17/11 * * * * *"
+  },
+  {
+   "expected": "setiap detik selama 16 detik pertama dan setiap detik dari detik ke-45 sampai ke-59 setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "45-15 * * * * *"
+  },
+  {
+   "expected": "setiap detik, kecuali selama 1 menit mulai menit ke-29 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.00.00 sampai 09.59.59, kecuali dari pukul 09.29.00 sampai 09.29.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 0-28,30-59 9 * * *"
+  },
+  {
+   "expected": "setiap detik, kecuali pada detik ke-29 setiap menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-28,30-59 * * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap detik dari pukul 09.00.00 sampai 09.00.59, kecuali pukul 09.00.29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-28,30-59 0 9 * * *"
+  },
+  {
+   "expected": "setiap detik, kecuali dari pukul 03.00.00 sampai 03.59.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* * 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap menit pada detik ke-30, kecuali dari pukul 03.00.30 sampai 03.59.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 * 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap menit pada detik ke-30, kecuali pada menit ke-29 setiap jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "setiap jam pada detik ke-30 menit pertama, kecuali pukul 03.00.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "setiap tanggal 23 sampai 25, dan juga setiap Senin dan Selasa, setiap 3 jam mulai pukul 00.24, tiap kali setiap 10 detik sampai detik ke-50",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/10 24 */3 23-25 * 1-2"
+  },
+  {
+   "expected": "setiap tanggal 1 pukul 04.07, 10.07, 16.07, dan 22.07 pada bulan Januari, Maret, Mei, Juli, September, dan November",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "setiap tanggal 1, 19, 23, dan 28, dan juga setiap Rabu dan Kamis, setiap jam dari pukul 07.52 sampai 16.52, keduanya pada bulan Mei sampai Juli",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "52 7-16 1,19,23,28 5-7 3-4"
+  },
+  {
+   "expected": "setiap 5 menit, kecuali dari pukul 03.00 sampai 03.55 dan kecuali bulan Desember",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/5 0-2,4-23 * 1-11 *"
+  },
+  {
+   "expected": "setiap hari, setiap 15 menit dari pukul 09.00 sampai 17.45 pada bulan Juni 2030",
+   "options": {
+    "lang": "id",
+    "years": true
+   },
+   "pattern": "*/15 9-17 * 6 * 2030"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Juni sampai Agustus dan bulan Desember, semuanya pada tahun 2030",
+   "options": {
+    "lang": "id",
+    "years": true
+   },
+   "pattern": "0 9 * 6-8,12 * 2030"
+  },
+  {
+   "expected": "setiap Senin, Selasa, Rabu, dan Jumat pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1-3,5"
+  },
+  {
+   "expected": "setiap Senin, Rabu, Kamis, dan Jumat pukul 09.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 9 * * 1,3-5"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Senin, Rabu, Kamis, dan Jumat, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 1,3-5"
+  },
+  {
+   "expected": "setiap tanggal 1, dan juga setiap Senin, Selasa, Kamis, Jumat, dan Sabtu, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1 * 1,2,4,5,6"
+  },
+  {
+   "expected": "setiap 3 hari mulai tanggal 1, pukul 00.00, pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */3 6 *"
+  },
+  {
+   "expected": "Senin kelima setiap bulan, jika ada, pukul 00.00, pada tahun 2030",
+   "options": {
+    "cron": "quartz",
+    "lang": "id"
+   },
+   "pattern": "0 0 0 ? * 2#5 2030"
+  },
+  {
+   "expected": "setiap jam tepat serta pada menit ke-2 dan setiap menit dari menit ke-10 sampai ke-20",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,2,10-20 * * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam tepat serta pada menit ke-2 dan setiap menit dari menit ke-10 sampai ke-20, dari pukul 09.00 sampai 17.20",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,2,10-20 9-17 * * *"
+  },
+  {
+   "expected": "setiap 4 jam, tiap kali setiap menit dari menit ke-10 sampai ke-40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40 */4 * * *"
+  },
+  {
+   "expected": "setiap 4 jam, tiap kali setiap 10 menit dari menit ke-5 sampai ke-55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,15,25,35,45,55 */4 * * *"
+  },
+  {
+   "expected": "setiap 3 jam, tiap kali setiap menit selama 30 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 */3 * * *"
+  },
+  {
+   "expected": "setiap 4 jam mulai pukul 02.00, tiap kali setiap menit dari menit ke-10 sampai ke-40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40 2/4 * * *"
+  },
+  {
+   "expected": "setiap 6 jam, tiap kali setiap menit selama 1 jam, masing-masing pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 * */6 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit selama 30 menit, masing-masing pada detik ke-30, terakhir pukul 23.29.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0-29 5/2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, 05.15, 05.30, dan 05.45, tiap kali setiap detik selama 1 menit, terakhir pukul 23.45.59",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* */15 5/2 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 00.00 sampai 05.00 dan setiap 2 jam dari pukul 07.00 sampai 23.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0-5,7-23/2 * * *"
+  },
+  {
+   "expected": "setiap Senin, setiap jam dari pukul 00.30 sampai 05.30 dan setiap 2 jam dari pukul 07.30 sampai 23.30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 0-5,7-23/2 * * 1"
+  },
+  {
+   "expected": "setiap tanggal 31, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Jumat, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 31W * 5"
+  },
+  {
+   "expected": "setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Jumat, pukul 00.00, keduanya pada bulan Juni",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 15W 6 5"
+  },
+  {
+   "expected": "hari terakhir setiap bulan, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu, dan juga setiap Senin, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 LW * 1"
+  },
+  {
+   "expected": "Jumat terakhir setiap bulan, jika jatuh pada tanggal 22, 25, 28, atau 31, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */3 * 5L"
+  },
+  {
+   "expected": "hari Minggu terakhir setiap bulan, jika jatuh pada tanggal 31, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */10 * 0L"
+  },
+  {
+   "expected": "Senin kedua setiap bulan, jika jatuh pada tanggal 8, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */7 * 1#2"
+  },
+  {
+   "expected": "Senin kelima setiap bulan, jika jatuh pada tanggal ganjil, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 */2 * 1#5"
+  },
+  {
+   "expected": "setiap tanggal 1, tanggal 5, dan setiap tanggal ganjil dari tanggal 9 sampai 31, dan juga setiap Jumat, pukul 00.00",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0 0 1,5,9-31/2 * 5"
+  },
+  {
+   "expected": "setiap hari pukul 9 pagi",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 dini hari",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 12 siang",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 1 siang",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 13 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 4 pagi",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 4 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 3 dini hari dan 8 malam",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 3,20 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 10 pagi, 2 siang, dan 6 sore",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 10,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 11 siang, 3 sore, dan 7 malam",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 11,15,19 * * *"
+  },
+  {
+   "expected": "setiap Senin pukul 00.00 dini hari",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0 * * 1"
+  },
+  {
+   "expected": "setiap Senin pukul 4 sore",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 16 * * 1"
+  },
+  {
+   "expected": "setiap hari pukul 00.30 dini hari",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 9.30 pagi dan 5.30 sore",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 9 pagi sampai 5 sore",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap jam dari pukul 9 pagi sampai 5 sore dan pukul 10 malam",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "setiap 2 jam mulai pukul 1 dini hari",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 9 pagi sampai 5.45 sore",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap hari, setiap menit dari pukul 10 malam sampai 11.59 malam",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00.00 dini hari dan 12 siang",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 9.30.15 pagi",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true
+    }
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09:00",
+   "options": {
+    "lang": "id",
+    "style": {
+     "separator": ":"
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09:30 dan 17:30",
+   "options": {
+    "lang": "id",
+    "style": {
+     "separator": ":"
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09:30:15",
+   "options": {
+    "lang": "id",
+    "style": {
+     "separator": ":"
+    }
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "setiap tanggal 1 Juni pukul 00:00",
+   "options": {
+    "lang": "id",
+    "style": {
+     "separator": ":"
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 09:00 sampai 17:45",
+   "options": {
+    "lang": "id",
+    "style": {
+     "separator": ":"
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "setiap hari pukul 9:30 pagi dan 5:30 sore",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true,
+     "separator": ":"
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 00:30 dini hari",
+   "options": {
+    "lang": "id",
+    "style": {
+     "hour12": true,
+     "separator": ":"
+    }
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.30 dan 17.30",
+   "options": {
+    "lang": "id-ID"
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "setiap Senin, Rabu, dan Jumat pukul 09.00",
+   "options": {
+    "lang": "id-ID"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "setiap Sen, Rab, dan Jum pukul 09.00",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "setiap hari Minggu pukul 09.00",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali hari Minggu",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "setiap Sen pukul 09.00 pada bulan Jun",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "setiap hari pukul 09.00 pada bulan Jun sampai Agu",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "setiap tanggal 1 Jun pukul 00.00",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "Jum terakhir setiap bulan pukul 09.00",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "setiap tanggal 15 pukul 09.00, digeser ke hari Jumat atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.00, kecuali bulan Agu",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 1-7,9-12 *"
+  },
+  {
+   "expected": "setiap Sen sampai Jum, setiap 15 menit dari pukul 09.00 sampai 17.45",
+   "options": {
+    "lang": "id",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  }
+ ]
+}

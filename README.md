@@ -212,7 +212,7 @@ cronli5(weekdaysAt1330, { lang: 'en-GB' });
 
 ## Languages
 
-English is the default. Ten languages ship, listed below; each is a full
+English is the default. Eleven languages ship, listed below; each is a full
 renderer over the same language-independent core, written from that
 language's own conventions, and each ships as its own module. You choose
 what reaches your bundle:
@@ -248,6 +248,7 @@ docs below.
 | Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
 | Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
 | Czech | `cronli5/lang/cs` | Internetová jazyková příručka (ÚJČ); ČSN 01 6910 for dates and times; timetable practice | [docs/lang/cs.md](./docs/lang/cs.md) |
+| Indonesian | `cronli5/lang/id` | Ejaan yang Disempurnakan (EYD) Edisi V and KBBI; timetable and notice practice for «pukul 09.00» | [docs/lang/id.md](./docs/lang/id.md) |
 | Italian | `cronli5/lang/it` | Accademia della Crusca and the dictionaries of use; Serianni's grammar; CLDR for clock times | [docs/lang/it.md](./docs/lang/it.md) |
 | French | `cronli5/lang/fr` | Lexique de l'Imprimerie nationale for « 9 h 30 »; interface practice | [docs/lang/fr.md](./docs/lang/fr.md) |
 | German | `cronli5/lang/de` | Interface practice for «9:00 Uhr» (DIN 5008 for the colon); Austria (`'de-AT'`) and Switzerland (`'de-CH'`) | [docs/lang/de.md](./docs/lang/de.md) |
@@ -278,6 +279,7 @@ pipeline is the review.
 | English | stable |
 | Spanish | stable |
 | French | stable |
+| Indonesian | beta |
 | Italian | stable |
 | Japanese | stable |
 | Portuguese | stable |
@@ -382,6 +384,7 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 | Portuguese | todas as segundas às 09:30:05 e 09:30:10 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
 | German | montags um 9:30:05 und 9:30:10 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | French | tous les lundis à 9 h 30 min 05 s et à 9 h 30 min 10 s | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
+| Indonesian | setiap Senin pukul 09.30.05 dan 09.30.10 | Pada 5 dan 10 detik lewat satu menit, pada 30 menit melewati jam, pada 09:00, hanya pada Senin |
 | Italian | il lunedì alle 9:30:05 e alle 9:30:10 | Al 5 e 10 secondo passato il minuto, al 30 minuto passata l'ora, alle 09:00, solo il lunedì |
 | Czech | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
 <!-- END GENERATED: cronstrue-head-to-head -->

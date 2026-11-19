@@ -74,6 +74,21 @@ const prompts = {
     task: (letter, text) => `Tâche ${letter} : « ${text} »`,
     yes: ['oui']
   },
+  id: {
+    format: 'Jawab dengan satu baris untuk setiap pertanyaan, seperti ' +
+      'ini:\nA1: ya\nA2: tidak',
+    intro: 'Sebuah aplikasi menampilkan, untuk setiap tugas, kapan tugas ' +
+      'itu dijalankan. Untuk setiap tanggal dan waktu yang tertera di bawah ' +
+      'sebuah tugas, katakan apakah tugas itu dijalankan tepat pada saat ' +
+      'itu. Baca setiap keterangan satu kali, seperti di layar, dan jawab ' +
+      'menurut apa yang dikatakannya.',
+    locale: 'id-ID',
+    no: ['tidak'],
+    system: 'Anda membaca teks di layar dan menjawab pertanyaan tentang ' +
+      'teks itu. Jawab hanya dalam format yang diminta.',
+    task: (letter, text) => `Tugas ${letter}: “${text}”`,
+    yes: ['ya']
+  },
   it: {
     format: 'Rispondi con una riga per domanda, così:\nA1: sì\nA2: no',
     intro: 'Un’applicazione mostra, per ogni attività, quando viene ' +
