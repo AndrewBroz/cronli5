@@ -45,8 +45,8 @@ const rows = [
     'setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 pukul 09.00'],
   ['0 9 L * *', 'hari terakhir setiap bulan pukul 09.00'],
   ['0 9 15W * *',
-    'setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika ' +
-    'jatuh pada hari Sabtu atau Minggu, pukul 09.00'],
+    'setiap tanggal 15 pukul 09.00, digeser ke hari Jumat atau Senin ' +
+    'terdekat jika jatuh pada hari Sabtu atau Minggu'],
 
   // clock / month
   ['0 9 * 6 *', 'setiap hari pukul 09.00 pada bulan Juni'],
@@ -69,106 +69,109 @@ const rows = [
 
   // window / second — context `*/15 9-17 * * 1-5`
   ['30 */15 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00.30 sampai ' +
-    '17.45.30'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00.30 ' +
+    'sampai 17.45.30'],
   ['0,30 */15 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, ' +
-    'setiap kali setiap 30 detik sampai detik ke-30'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45, tiap kali tepat pada menit itu serta pada detik ke-30'],
   ['*/15 */15 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, ' +
-    'setiap kali setiap 15 detik sampai detik ke-45'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45, tiap kali tepat pada menit itu serta pada detik ke-15, ke-30, ' +
+    'dan ke-45'],
   ['0-9 */15 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, ' +
-    'setiap kali setiap detik sampai detik ke-9'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45, tiap kali setiap detik selama 10 detik pertama'],
 
   // window / minute
   ['0 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap jam dari pukul 09.00 sampai 17.00'],
+    'setiap Senin sampai Jumat, setiap jam dari pukul 09.00 sampai 17.00'],
   ['30 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap jam dari pukul 09.30 sampai 17.30'],
+    'setiap Senin sampai Jumat, setiap jam dari pukul 09.30 sampai 17.30'],
   ['5,20,45 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap jam pada menit ke-5, ke-20, dan ke-45, ' +
-    'dari pukul 09.05 sampai 17.45'],
+    'setiap Senin sampai Jumat, setiap jam pada menit ke-5, ke-20, dan ' +
+    'ke-45, dari pukul 09.05 sampai 17.45'],
   ['0-29 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap jam, setiap menit sampai menit ke-29, ' +
-    'dari pukul 09.00 sampai 17.29'],
+    'setiap Senin sampai Jumat, setiap menit selama 30 menit pertama ' +
+    'setiap jam, dari pukul 09.00 sampai 17.29'],
   ['*/7 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap jam, setiap 7 menit sampai menit ke-56, ' +
-    'dari pukul 09.00 sampai 17.56'],
+    'setiap Senin sampai Jumat, setiap 7 menit sampai menit ke-56 setiap ' +
+    'jam, dari pukul 09.00 sampai 17.56'],
   ['5/15 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.05 sampai 17.50'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.05 sampai ' +
+    '17.50'],
   ['10-40/10 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap jam pada menit ke-10, ke-20, ke-30, dan ' +
-    'ke-40, dari pukul 09.10 sampai 17.40'],
+    'setiap Senin sampai Jumat, setiap jam pada menit ke-10, ke-20, ' +
+    'ke-30, dan ke-40, dari pukul 09.10 sampai 17.40'],
 
   // window / hour
   ['*/15 0 * * 1-5',
-    'Senin sampai Jumat pukul 00.00, 00.15, 00.30, dan 00.45'],
+    'setiap Senin sampai Jumat pukul 00.00, 00.15, 00.30, dan 00.45'],
   ['*/15 9 * * 1-5',
-    'Senin sampai Jumat pukul 09.00, 09.15, 09.30, dan 09.45'],
+    'setiap Senin sampai Jumat pukul 09.00, 09.15, 09.30, dan 09.45'],
   ['*/15 9,17 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 09.45 ' +
-    'dan dari pukul 17.00 sampai 17.45'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '09.45 dan dari pukul 17.00 sampai 17.45'],
   ['*/15 8,12,18 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 08.00 sampai 08.45, ' +
-    'dari pukul 12.00 sampai 12.45, dan dari pukul 18.00 sampai 18.45'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 08.00 sampai ' +
+    '08.45, dari pukul 12.00 sampai 12.45, dan dari pukul 18.00 sampai ' +
+    '18.45'],
   ['*/15 */2 * * 1-5',
-    'Senin sampai Jumat, setiap 2 jam mulai pukul 00.00, 00.15, 00.30, ' +
-    'dan 00.45'],
+    'setiap Senin sampai Jumat, pada jam genap, setiap 15 menit'],
   ['*/15 */6 * * 1-5',
-    'Senin sampai Jumat, setiap 6 jam mulai pukul 00.00, 00.15, 00.30, ' +
-    'dan 00.45'],
+    'setiap Senin sampai Jumat, setiap 6 jam mulai pukul 00.00, 00.15, ' +
+    '00.30, dan 00.45'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
-    'Senin sampai Jumat, setiap 2 jam mulai pukul 00.00, 00.15, 00.30, ' +
-    'dan 00.45, kecuali dari pukul 08.00 sampai 08.45'],
+    'setiap Senin sampai Jumat, pada jam genap, setiap 15 menit, kecuali ' +
+    'dari pukul 08.00 sampai 08.45'],
   ['*/15 22-2 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 00.00 sampai 02.45 ' +
-    'dan dari pukul 22.00 sampai 23.45'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 00.00 sampai ' +
+    '02.45 dan dari pukul 22.00 sampai 23.45'],
 
   // window / date
   ['*/15 9-17 15 * 1-5',
-    'setiap tanggal 15 serta setiap Senin sampai Jumat, setiap 15 menit ' +
-    'dari pukul 09.00 sampai 17.45'],
+    'setiap tanggal 15, dan juga setiap Senin sampai Jumat, setiap 15 ' +
+    'menit dari pukul 09.00 sampai 17.45'],
   ['*/15 9-17 1,15 * 1-5',
-    'setiap tanggal 1 dan 15 serta setiap Senin sampai Jumat, setiap 15 ' +
-    'menit dari pukul 09.00 sampai 17.45'],
+    'setiap tanggal 1 dan 15, dan juga setiap Senin sampai Jumat, setiap ' +
+    '15 menit dari pukul 09.00 sampai 17.45'],
   ['*/15 9-17 1-7 * 1-5',
-    'setiap tanggal 1 sampai 7 serta setiap Senin sampai Jumat, setiap 15 ' +
-    'menit dari pukul 09.00 sampai 17.45'],
+    'setiap tanggal 1 sampai 7, dan juga setiap Senin sampai Jumat, ' +
+    'setiap 15 menit dari pukul 09.00 sampai 17.45'],
   ['*/15 9-17 1-7,15 * 1-5',
-    'setiap tanggal 1 sampai 7 dan tanggal 15 serta setiap Senin sampai ' +
-    'Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45'],
+    'setiap tanggal 1 sampai 7 dan tanggal 15, dan juga setiap Senin ' +
+    'sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45'],
   ['*/15 9-17 2/2 * 1-5',
-    'setiap tanggal genap serta setiap Senin sampai Jumat, setiap 15 ' +
+    'setiap tanggal genap, dan juga setiap Senin sampai Jumat, setiap 15 ' +
     'menit dari pukul 09.00 sampai 17.45'],
   ['*/15 9-17 */5 * 1-5',
     'setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 yang jatuh pada hari ' +
     'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45'],
   ['*/15 9-17 L * 1-5',
-    'hari terakhir setiap bulan serta setiap Senin sampai Jumat, setiap ' +
-    '15 menit dari pukul 09.00 sampai 17.45'],
+    'hari terakhir setiap bulan, dan juga setiap Senin sampai Jumat, ' +
+    'setiap 15 menit dari pukul 09.00 sampai 17.45'],
   ['*/15 9-17 15W * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45'],
 
   // window / month
   ['*/15 9-17 * 6 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 ' +
-    'pada bulan Juni'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45 pada bulan Juni'],
   ['*/15 9-17 * 1,7 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 ' +
-    'pada bulan Januari dan Juli'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45 pada bulan Januari dan Juli'],
   ['*/15 9-17 * 6-8 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 ' +
-    'pada bulan Juni sampai Agustus'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45 pada bulan Juni sampai Agustus'],
   ['*/15 9-17 * 6-8,12 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 ' +
-    'pada bulan Juni sampai Agustus dan bulan Desember'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45 pada bulan Juni sampai Agustus dan bulan Desember'],
   ['*/15 9-17 * */3 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45 ' +
-    'pada bulan Januari, April, Juli, dan Oktober'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45 pada bulan Januari, April, Juli, dan Oktober'],
   ['*/15 9-17 * 1-11 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45, ' +
-    'kecuali bulan Desember'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45, kecuali bulan Desember'],
 
   // window / weekday
   ['*/15 9-17 * * 1',
@@ -233,8 +236,8 @@ const rows = [
     'setiap tanggal 1, 6, 11, 16, 21, 26, dan 31 pukul 00.00'],
   ['0 0 L * *', 'hari terakhir setiap bulan pukul 00.00'],
   ['0 0 15W * *',
-    'setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika ' +
-    'jatuh pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 15 pukul 00.00, digeser ke hari Jumat atau Senin ' +
+    'terdekat jika jatuh pada hari Sabtu atau Minggu'],
 
   // monthly / month
   ['0 0 1 6 *', 'setiap tanggal 1 Juni pukul 00.00'],
@@ -250,18 +253,19 @@ const rows = [
   ['0 0 1 1-11 *', 'setiap tanggal 1 pukul 00.00, kecuali bulan Desember'],
 
   // monthly / weekday
-  ['0 0 1 * 0', 'setiap tanggal 1 serta setiap hari Minggu, pukul 00.00'],
+  ['0 0 1 * 0',
+    'setiap tanggal 1, dan juga setiap hari Minggu, pukul 00.00'],
   ['0 0 1 * 1,3,5',
-    'setiap tanggal 1 serta setiap Senin, Rabu, dan Jumat, pukul 00.00'],
+    'setiap tanggal 1, dan juga setiap Senin, Rabu, dan Jumat, pukul ' +
+    '00.00'],
   ['0 0 1 * 0,6',
-    'setiap tanggal 1 serta setiap Sabtu dan Minggu, pukul 00.00'],
+    'setiap tanggal 1, dan juga setiap Sabtu dan Minggu, pukul 00.00'],
   ['0 0 1 * 1-6',
-    'setiap hari pukul 00.00, tetapi hari Minggu hanya jika jatuh pada ' +
-    'tanggal 1'],
+    'setiap tanggal 1, dan juga setiap Senin sampai Sabtu, pukul 00.00'],
   ['0 0 1 * 5L',
-    'setiap tanggal 1 serta Jumat terakhir setiap bulan, pukul 00.00'],
+    'setiap tanggal 1, dan juga Jumat terakhir setiap bulan, pukul 00.00'],
   ['0 0 1 * 1#2',
-    'setiap tanggal 1 serta Senin kedua setiap bulan, pukul 00.00'],
+    'setiap tanggal 1, dan juga Senin kedua setiap bulan, pukul 00.00'],
 
   // open / second — context `* * * * *`
   ['30 * * * * *',
@@ -269,18 +273,18 @@ const rows = [
   ['0,30 * * * * *', 'setiap 30 detik'],
   ['*/15 * * * * *', 'setiap 15 detik'],
   ['0-9 * * * * *',
-    'setiap menit, setiap detik sampai detik ke-9'],
+    'setiap detik selama 10 detik pertama setiap menit'],
 
   // open / minute
   ['30 * * * *',
     'setiap jam pada menit ke-30'],
   ['0,30 * * * *', 'setiap 30 menit'],
   ['0-29 * * * *',
-    'setiap jam, setiap menit sampai menit ke-29'],
+    'setiap menit selama 30 menit pertama setiap jam'],
   ['0-29,45 * * * *',
-    'setiap jam, setiap menit sampai menit ke-29 dan pada menit ke-45'],
+    'setiap menit selama 30 menit pertama dan pada menit ke-45 setiap jam'],
   ['*/7 * * * *',
-    'setiap jam, setiap 7 menit sampai menit ke-56'],
+    'setiap 7 menit sampai menit ke-56 setiap jam'],
   ['5/15 * * * *',
     'setiap jam pada menit ke-5, ke-20, ke-35, dan ke-50'],
   ['10-40/10 * * * *',
@@ -293,12 +297,11 @@ const rows = [
     '12.00 sampai 12.59, dan dari pukul 18.00 sampai 18.59'],
   ['* 9-17 * * *', 'setiap hari, setiap menit dari pukul 09.00 sampai 17.59'],
   ['* */2 * * *',
-    'setiap 2 jam, setiap menit sampai menit ke-59'],
+    'pada jam genap, setiap menit'],
   ['* */6 * * *',
-    'setiap 6 jam, setiap menit sampai menit ke-59'],
+    'setiap 6 jam mulai pukul 00.00, tiap kali setiap menit selama 1 jam'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'setiap 2 jam, setiap menit sampai menit ke-59, kecuali dari pukul ' +
-    '08.00 sampai 08.59'],
+    'pada jam genap, setiap menit, kecuali dari pukul 08.00 sampai 08.59'],
   ['* 22-2 * * *', 'setiap hari, setiap menit dari pukul 22.00 sampai 02.59'],
 
   // open / date
@@ -311,8 +314,8 @@ const rows = [
     'setiap tanggal 1, 6, 11, 16, 21, 26, dan 31, setiap menit'],
   ['* * L * *', 'hari terakhir setiap bulan, setiap menit'],
   ['* * 15W * *',
-    'setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika ' +
-    'jatuh pada hari Sabtu atau Minggu, setiap menit'],
+    'setiap tanggal 15, setiap menit, digeser ke hari Jumat atau Senin ' +
+    'terdekat jika jatuh pada hari Sabtu atau Minggu'],
 
   // open / month
   ['* * * 6 *', 'setiap menit pada bulan Juni'],

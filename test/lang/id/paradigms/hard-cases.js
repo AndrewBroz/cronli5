@@ -32,20 +32,22 @@ const rows = [
   ['0 0 9 L 6 * 2030', 'hari terakhir bulan Juni 2030 pukul 09.00'],
   ['0 0 9 1 * * 2030', 'setiap tanggal 1 pukul 09.00 pada tahun 2030'],
   ['0 0 9 * * * 2030/2',
-    'setiap hari pukul 09.00 pada tahun 2030, lalu setiap 2 tahun'],
+    'setiap hari pukul 09.00 pada tahun 2030 dan setiap tahun ke-2 ' +
+    'sesudahnya'],
   ['0 0 9 * * * 2028/4',
-    'setiap hari pukul 09.00 pada tahun 2028, lalu setiap 4 tahun'],
+    'setiap hari pukul 09.00 pada tahun 2028 dan setiap tahun ke-4 ' +
+    'sesudahnya'],
   ['0 0 0 1 1 * 2028/4',
-    'setiap tanggal 1 Januari pukul 00.00 pada tahun 2028, lalu setiap 4 ' +
-    'tahun'],
+    'setiap tanggal 1 Januari pukul 00.00 pada tahun 2028 dan setiap ' +
+    'tahun ke-4 sesudahnya'],
   ['0 */5 * * * * 2028/4',
-    'setiap 5 menit pada tahun 2028, lalu setiap 4 tahun'],
+    'setiap 5 menit pada tahun 2028 dan setiap tahun ke-4 sesudahnya'],
   ['0 0 9 * * * 2028-2060/4',
-    'setiap hari pukul 09.00 pada tahun 2028, lalu setiap 4 tahun sampai ' +
-    '2060'],
+    'setiap hari pukul 09.00 pada tahun 2028 dan setiap tahun ke-4 ' +
+    'sesudahnya sampai 2060'],
   ['0 0 9 * * * 2030-2040/2',
-    'setiap hari pukul 09.00 pada tahun 2030, lalu setiap 2 tahun sampai ' +
-    '2040'],
+    'setiap hari pukul 09.00 pada tahun 2030 dan setiap tahun ke-2 ' +
+    'sesudahnya sampai 2040'],
   ['0 0 9 * * * 2028-2036/4',
     'setiap hari pukul 09.00 pada tahun 2028, 2032, dan 2036'],
   ['0 */5 * * * * */2', 'setiap 5 menit pada tahun genap'],
@@ -69,7 +71,7 @@ const rows = [
     'setiap hari pukul 09.00, kecuali bulan Juni dan kecuali tahun 2030'],
   ['0 0 0 1 1 * 2030-2040,2045/5',
     'setiap tanggal 1 Januari pukul 00.00 pada tahun 2030 sampai 2040 dan ' +
-    'tahun 2045, lalu setiap 5 tahun'],
+    'tahun 2045 dan setiap tahun ke-5 sesudahnya'],
   ['0 0 9 * * * 2030-2036/2,2040',
     'setiap hari pukul 09.00 pada tahun 2030, 2032, 2034, 2036, dan 2040'],
   ['0 0 0 29 2 * 2031',
@@ -79,57 +81,57 @@ const rows = [
     'setiap hari pukul 02.35 dan 15.35 pada tahun 2028 dan 2030'],
 
   // Quartz forms. No word for a Monday-to-Friday day: the date is named,
-  // and where it moves to when it falls on a Saturday or Sunday. No month
+  // then the time, then where it moves to on a Saturday or Sunday. No month
   // is promised that is skipped, and a count back from the month's end
   // that comes to one date is that date (answers 5.3).
   ['0 0 1 * ?', 'setiap tanggal 1 pukul 00.00', {cron: 'quartz'}],
   ['0 0 LW * *',
-    'hari terakhir setiap bulan, digeser ke hari Jumat sebelumnya jika ' +
-    'jatuh pada hari Sabtu atau Minggu, pukul 00.00'],
+    'hari terakhir setiap bulan pukul 00.00, digeser ke hari Jumat ' +
+    'sebelumnya jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 1W * *',
-    'setiap tanggal 1, digeser ke hari Senin sesudahnya jika jatuh pada ' +
-    'hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 1 pukul 00.00, digeser ke hari Senin sesudahnya jika ' +
+    'jatuh pada hari Sabtu atau Minggu'],
   ['0 0 1W 6 *',
-    'setiap tanggal 1 Juni, digeser ke hari Senin sesudahnya jika jatuh ' +
-    'pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 1 Juni pukul 00.00, digeser ke hari Senin sesudahnya ' +
+    'jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 15W 6 *',
-    'setiap tanggal 15 Juni, digeser ke hari Jumat atau Senin terdekat ' +
-    'jika jatuh pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 15 Juni pukul 00.00, digeser ke hari Jumat atau Senin ' +
+    'terdekat jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 8W * *',
-    'setiap tanggal 8, digeser ke hari Jumat atau Senin terdekat jika ' +
-    'jatuh pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 8 pukul 00.00, digeser ke hari Jumat atau Senin ' +
+    'terdekat jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 31W * *',
-    'setiap tanggal 31, digeser ke hari Jumat sebelumnya jika jatuh pada ' +
-    'hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 31 pukul 00.00, digeser ke hari Jumat sebelumnya jika ' +
+    'jatuh pada hari Sabtu atau Minggu'],
   ['0 0 28W * *',
-    'setiap tanggal 28, digeser ke hari Jumat atau Senin terdekat pada ' +
-    'bulan yang sama jika jatuh pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 28 pukul 00.00, digeser ke hari Jumat atau Senin ' +
+    'terdekat pada bulan yang sama jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 30W * *',
-    'setiap tanggal 30, digeser ke hari Jumat atau Senin terdekat pada ' +
-    'bulan yang sama jika jatuh pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 30 pukul 00.00, digeser ke hari Jumat atau Senin ' +
+    'terdekat pada bulan yang sama jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 30W 6 *',
-    'setiap tanggal 30 Juni, digeser ke hari Jumat sebelumnya jika jatuh ' +
-    'pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 30 Juni pukul 00.00, digeser ke hari Jumat sebelumnya ' +
+    'jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 31W 6-8 *',
-    'setiap tanggal 31, digeser ke hari Jumat sebelumnya jika jatuh pada ' +
-    'hari Sabtu atau Minggu, pukul 00.00, pada bulan Juli dan Agustus'],
+    'setiap tanggal 31 pukul 00.00 pada bulan Juli dan Agustus, digeser ' +
+    'ke hari Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu'],
   ['0 0 29W * *',
-    'setiap tanggal 29, digeser ke hari Jumat atau Senin terdekat pada ' +
-    'bulan yang sama jika jatuh pada hari Sabtu atau Minggu, pukul 00.00'],
+    'setiap tanggal 29 pukul 00.00, digeser ke hari Jumat atau Senin ' +
+    'terdekat pada bulan yang sama jika jatuh pada hari Sabtu atau Minggu'],
   ['0 18 15W 3,6,9,12 *',
-    'setiap tanggal 15, digeser ke hari Jumat atau Senin terdekat jika ' +
-    'jatuh pada hari Sabtu atau Minggu, pukul 18.00, pada bulan Maret, ' +
-    'Juni, September, dan Desember'],
+    'setiap tanggal 15 pukul 18.00 pada bulan Maret, Juni, September, dan ' +
+    'Desember, digeser ke hari Jumat atau Senin terdekat jika jatuh pada ' +
+    'hari Sabtu atau Minggu'],
   ['0 0 L-3 * *', '3 hari sebelum hari terakhir setiap bulan pukul 00.00'],
   ['0 0 L-3 6 *',
     'setiap tanggal 27 Juni pukul 00.00'],
   ['0 0 L-1 * *',
     'sehari sebelum hari terakhir setiap bulan pukul 00.00'],
   ['0 0 L-30 * *',
-    'setiap tanggal 1 pukul 00.00 pada bulan yang berjumlah 31 hari'],
+    'setiap tanggal 1 pukul 00.00 pada bulan yang berumur 31 hari'],
   ['0 0 L-29 * *',
-    'setiap tanggal 1 pada bulan yang berjumlah 30 hari dan tanggal 2 ' +
-    'pada bulan yang berjumlah 31 hari, pukul 00.00'],
+    'setiap tanggal 1 pada bulan yang berumur 30 hari dan tanggal 2 pada ' +
+    'bulan yang berumur 31 hari, pukul 00.00'],
   ['0 0 L-30 6 *', 'tidak pernah: tanggalnya tidak ada'],
   ['0 0 L-30 6-8 *',
     'setiap tanggal 1 pukul 00.00 pada bulan Juli dan Agustus'],
@@ -142,8 +144,8 @@ const rows = [
   ['0 0 L 6-8,12 *',
     'hari terakhir bulan Juni, Juli, Agustus, dan Desember pukul 00.00'],
   ['0 0 L 6-8 5',
-    'hari terakhir bulan serta setiap Jumat, pukul 00.00, keduanya pada ' +
-    'bulan Juni sampai Agustus'],
+    'hari terakhir setiap bulan, dan juga setiap Jumat, pukul 00.00, ' +
+    'keduanya pada bulan Juni sampai Agustus'],
   ['0 0 * 6 1#2', 'Senin kedua bulan Juni pukul 00.00'],
   ['0 0 * 1,7 5L',
     'Jumat terakhir bulan Januari dan Juli pukul 00.00'],
@@ -155,7 +157,7 @@ const rows = [
   ['0 9 * * 1#5', 'Senin kelima setiap bulan, jika ada, pukul 09.00'],
   ['0 0 9 ? * 2', 'setiap Senin pukul 09.00', {cron: 'quartz'}],
   ['0 0 9 ? * 2-6',
-    'Senin sampai Jumat pukul 09.00', {cron: 'quartz'}],
+    'setiap Senin sampai Jumat pukul 09.00', {cron: 'quartz'}],
 
   // Macros, startup, and the three forms.
   ['@hourly', 'setiap jam'],
@@ -178,47 +180,49 @@ const rows = [
     {form: 'sentence'}],
   ['0 0 31 6 *', 'Tidak pernah: tanggalnya tidak ada', {form: 'label'}],
 
-  // A day of the month and a weekday, either one: «serta» and a second
-  // «setiap»; the time after a comma; a month of both after «keduanya».
-  // An exception on one side is a condition: «tetapi … hanya jika».
-  ['0 0 13 * 5', 'setiap tanggal 13 serta setiap Jumat, pukul 00.00'],
+  // A day of the month and a weekday, either one: «, dan juga» and a
+  // second «setiap»; the time after a comma; a month of both after
+  // «keduanya». Each side is said by the days that fire, never with an
+  // exception.
+  ['0 0 13 * 5',
+    'setiap tanggal 13, dan juga setiap Jumat, pukul 00.00'],
   ['0 0 1 6 5',
-    'setiap tanggal 1 serta setiap Jumat, pukul 00.00, keduanya pada ' +
+    'setiap tanggal 1, dan juga setiap Jumat, pukul 00.00, keduanya pada ' +
     'bulan Juni'],
   ['0 0 1,15 1,7 1-5',
-    'setiap tanggal 1 dan 15 serta setiap Senin sampai Jumat, pukul ' +
+    'setiap tanggal 1 dan 15, dan juga setiap Senin sampai Jumat, pukul ' +
     '00.00, keduanya pada bulan Januari dan Juli'],
   ['0 0 1 1-11 5',
-    'setiap tanggal 1 serta setiap Jumat, pukul 00.00, kecuali bulan ' +
+    'setiap tanggal 1, dan juga setiap Jumat, pukul 00.00, kecuali bulan ' +
     'Desember'],
   ['30 4 1-7 * 1',
-    'setiap tanggal 1 sampai 7 serta setiap Senin, pukul 04.30'],
+    'setiap tanggal 1 sampai 7, dan juga setiap Senin, pukul 04.30'],
   ['0 0 15 * 0-2,4-6',
-    'setiap hari pukul 00.00, tetapi hari Rabu hanya jika jatuh pada ' +
-    'tanggal 15'],
+    'setiap tanggal 15, dan juga setiap Kamis sampai Selasa, pukul 00.00'],
   ['0 0 1 6 1#2',
-    'setiap tanggal 1 serta Senin kedua, pukul 00.00, keduanya pada bulan ' +
-    'Juni'],
+    'setiap tanggal 1, dan juga Senin kedua setiap bulan, pukul 00.00, ' +
+    'keduanya pada bulan Juni'],
   ['0 9 1-14,16-31 * 5',
-    'setiap hari pukul 09.00, tetapi tanggal 15 hanya jika jatuh pada ' +
-    'hari Jumat'],
+    'setiap tanggal 1 sampai 14 dan tanggal 16 sampai 31, dan juga setiap ' +
+    'Jumat, pukul 09.00'],
   ['0 9 1-14,16-31 * 1,3',
-    'setiap hari pukul 09.00, tetapi tanggal 15 hanya jika jatuh pada ' +
-    'hari Senin atau Rabu'],
+    'setiap tanggal 1 sampai 14 dan tanggal 16 sampai 31, dan juga setiap ' +
+    'Senin dan Rabu, pukul 09.00'],
   ['0 9 1-14,17-31 6 1-5',
-    'setiap hari pukul 09.00 pada bulan Juni, tetapi tanggal 15 dan 16 ' +
-    'hanya jika jatuh pada hari Senin sampai Jumat'],
-  ['0 0 30 * 1', 'setiap tanggal 30 serta setiap Senin, pukul 00.00'],
+    'setiap tanggal 1 sampai 14 dan tanggal 17 sampai 30, dan juga setiap ' +
+    'Senin sampai Jumat, pukul 09.00, keduanya pada bulan Juni'],
+  ['0 0 30 * 1',
+    'setiap tanggal 30, dan juga setiap Senin, pukul 00.00'],
   ['0 0 31 6 1', 'setiap Senin pukul 00.00 pada bulan Juni'],
   ['0 9 1-30 6 1', 'setiap hari pukul 09.00 pada bulan Juni'],
   ['0 9 1-31 * 1', 'setiap hari pukul 09.00'],
   ['0 0 29 2 1',
-    'setiap tanggal 29 serta setiap Senin, pukul 00.00, keduanya pada ' +
+    'setiap tanggal 29, dan juga setiap Senin, pukul 00.00, keduanya pada ' +
     'bulan Februari'],
   ['0 9 15W * 1-5',
-    'Senin sampai Jumat pukul 09.00'],
+    'setiap Senin sampai Jumat pukul 09.00'],
   ['*/15 9-17 1-31/2 * 1-5',
-    'setiap tanggal ganjil serta setiap Senin sampai Jumat, setiap 15 ' +
+    'setiap tanggal ganjil, dan juga setiap Senin sampai Jumat, setiap 15 ' +
     'menit dari pukul 09.00 sampai 17.45'],
 
   // Both day fields must match (one was written from a star): the dates
@@ -299,7 +303,7 @@ const rows = [
   ['0 0 */3 * *',
     'setiap 3 hari mulai tanggal 1 setiap bulan, pukul 00.00'],
   ['0 0 8/2 * *',
-    'setiap tanggal genap dari tanggal 8 sampai 30, pukul 00.00'],
+    'setiap tanggal genap dari tanggal 8 sampai 30 pukul 00.00'],
   ['0 0 1,10-15 * *',
     'setiap tanggal 1 dan tanggal 10 sampai 15 pukul 00.00'],
   ['0 0 31 1-6 *',
@@ -343,17 +347,17 @@ const rows = [
   ['30 * * 6 *',
     'setiap jam pada menit ke-30 pada bulan Juni'],
 
-  // Weekdays: a run takes no «setiap» and is a run wherever it lies in
-  // the week; lists go from Monday; six days, or five that are no run,
-  // are every day less the others, said last.
+  // Weekdays: a run is a run wherever it lies in the week; lists go from
+  // Monday; six days, or five that are no run, are every day less the
+  // others, said last.
   ['0 9 * * 5-1',
-    'Jumat sampai Senin pukul 09.00'],
+    'setiap Jumat sampai Senin pukul 09.00'],
   ['0 9 * * 6-1',
-    'Sabtu sampai Senin pukul 09.00'],
+    'setiap Sabtu sampai Senin pukul 09.00'],
   ['0 9 * * 2-4',
-    'Selasa sampai Kamis pukul 09.00'],
+    'setiap Selasa sampai Kamis pukul 09.00'],
   ['0 9 * * 5-0',
-    'Jumat sampai Minggu pukul 09.00'],
+    'setiap Jumat sampai Minggu pukul 09.00'],
   ['0 9 * * 0,1',
     'setiap hari Minggu dan Senin pukul 09.00'],
   ['0 9 * * 5,6', 'setiap Jumat dan Sabtu pukul 09.00'],
@@ -363,7 +367,7 @@ const rows = [
   ['0 9 * * 0,2-6', 'setiap hari pukul 09.00, kecuali Senin'],
   ['0 9 * * 0-5', 'setiap hari pukul 09.00, kecuali Sabtu'],
   ['0 9 * * 0-4',
-    'Minggu sampai Kamis pukul 09.00'],
+    'setiap hari Minggu sampai Kamis pukul 09.00'],
   ['0 9 * 6 0-2,4-6', 'setiap hari pukul 09.00 pada bulan Juni, kecuali Rabu'],
   ['* * * * 0-2,4-6', 'setiap menit, kecuali Rabu'],
   ['0 * * * 1', 'setiap Senin, setiap jam'],
@@ -379,7 +383,8 @@ const rows = [
   ['* * * * *', 'setiap menit'],
   ['0 0 1 * *', 'setiap tanggal 1 pukul 00.00'],
   ['*/15 9-17 * * 1-5',
-    'Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai 17.45'],
+    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
+    '17.45'],
 
   // Clock times: up to four are listed whatever the fields look like.
   ['0,30 9,17 * * *', 'setiap hari pukul 09.00, 09.30, 17.00, dan 17.30'],
@@ -430,8 +435,8 @@ const rows = [
   ['1/2 9-17 * * *',
     'setiap hari, setiap 2 menit dari pukul 09.01 sampai 17.59'],
   ['*/10 6-8,17-19 * * 1-5',
-    'Senin sampai Jumat, setiap 10 menit dari pukul 06.00 sampai 08.50 ' +
-    'dan dari pukul 17.00 sampai 19.50'],
+    'setiap Senin sampai Jumat, setiap 10 menit dari pukul 06.00 sampai ' +
+    '08.50 dan dari pukul 17.00 sampai 19.50'],
   ['*/15 */12 * * *',
     'setiap hari, setiap 15 menit dari pukul 00.00 sampai 00.45 dan dari ' +
     'pukul 12.00 sampai 12.45'],
@@ -488,29 +493,30 @@ const rows = [
   ['30 5/2 * * *', 'setiap hari, setiap 2 jam dari pukul 05.30 sampai 23.30'],
   ['30 */5 * * *', 'setiap hari, setiap 5 jam dari pukul 00.30 sampai 20.30'],
 
-  // Minutes over hours that are a rhythm: one rhythm of hours with each
-  // of its first times («mulai pukul»), and the last firing when the step
-  // does not tile the day; a stretch of minutes is said inside the hour.
+  // Minutes over hours that are a rhythm: every second hour is «pada jam
+  // genap» or «pada jam ganjil»; other steps are one rhythm of hours with
+  // its first times («mulai pukul») or with «tiap kali» and what happens
+  // in the hour, and the last firing when the step does not tile the day.
   ['15,45 */2 * * *',
-    'setiap 2 jam mulai pukul 00.15 dan 00.45'],
+    'pada jam genap, pada menit ke-15 dan ke-45'],
   ['15,45 4/4 * * *',
     'setiap hari, setiap 4 jam mulai pukul 04.15 dan 04.45, terakhir ' +
     'pukul 20.45'],
   ['5,10,20,30,50 */4 * * *',
     'setiap 4 jam pada menit ke-5, ke-10, ke-20, ke-30, dan ke-50'],
   ['*/5 */2 * * *',
-    'setiap 2 jam, setiap 5 menit sampai menit ke-55'],
+    'pada jam genap, setiap 5 menit'],
   ['*/5 1/2 * * *',
-    'setiap 2 jam mulai pukul 01.00, setiap 5 menit sampai menit ke-55'],
+    'pada jam ganjil, setiap 5 menit'],
   ['* */3 * * *',
-    'setiap 3 jam, setiap menit sampai menit ke-59'],
+    'setiap 3 jam mulai pukul 00.00, tiap kali setiap menit selama 1 jam'],
   ['5/15 */2 * * *',
-    'setiap 2 jam mulai pukul 00.05, 00.20, 00.35, dan 00.50'],
+    'pada jam genap, pada menit ke-5, ke-20, ke-35, dan ke-50'],
   ['0-29 */2 * * *',
-    'setiap 2 jam, setiap menit sampai menit ke-29'],
+    'pada jam genap, setiap menit selama 30 menit pertama'],
   ['0-29 5/2 * * *',
-    'setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00, setiap ' +
-    'menit sampai menit ke-29'],
+    'setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit ' +
+    'selama 30 menit, terakhir pukul 23.29'],
   ['*/15 5/2 * * *',
     'setiap hari, setiap 2 jam mulai pukul 05.00, 05.15, 05.30, dan ' +
     '05.45, terakhir pukul 23.45'],
@@ -518,8 +524,8 @@ const rows = [
     'setiap hari, setiap 2 jam mulai pukul 08.00, 08.15, 08.30, dan ' +
     '08.45, terakhir pukul 18.45'],
   ['*/20 */2 */2 */3 *',
-    'setiap tanggal ganjil, setiap 2 jam mulai pukul 00.00, 00.20, dan ' +
-    '00.40 pada bulan Januari, April, Juli, dan Oktober'],
+    'setiap tanggal ganjil, pada jam genap, setiap 20 menit pada bulan ' +
+    'Januari, April, Juli, dan Oktober'],
 
   // Exceptions in the time: what is left out is said as the times that do
   // not fire, after «kecuali», and a stretch left out as a stretch.
@@ -544,23 +550,23 @@ const rows = [
   ['30 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'setiap 2 jam mulai pukul 00.30, kecuali pukul 08.30'],
   ['0-29 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'setiap 2 jam, setiap menit sampai menit ke-29, kecuali dari pukul ' +
-    '08.00 sampai 08.29'],
+    'pada jam genap, setiap menit selama 30 menit pertama, kecuali dari ' +
+    'pukul 08.00 sampai 08.29'],
   ['0-28,30-59 * * * *',
     'setiap menit, kecuali pada menit ke-29 setiap jam'],
   ['0-58 * * * *',
     'setiap menit, kecuali pada menit ke-59 setiap jam'],
   ['1-29,31-59 * * * *',
-    'setiap menit, kecuali tepat setiap jam serta pada menit ke-30'],
+    'setiap menit, kecuali setiap jam tepat serta pada menit ke-30'],
   ['1-29,31-59 9-17 * * *',
     'setiap hari, setiap menit dari pukul 09.01 sampai 17.59, kecuali ' +
-    'tepat setiap jam serta pada menit ke-30'],
+    'setiap jam tepat serta pada menit ke-30'],
   ['0-28,30-59 9,17 * * *',
     'setiap hari, setiap menit dari pukul 09.00 sampai 09.59 dan dari ' +
     'pukul 17.00 sampai 17.59, kecuali pukul 09.29 dan 17.29'],
   ['0-28,30-59 */6 * * *',
-    'setiap 6 jam, setiap menit sampai menit ke-59, kecuali pada menit ' +
-    'ke-29'],
+    'setiap 6 jam mulai pukul 00.00, tiap kali setiap menit selama 1 jam, ' +
+    'kecuali pada menit ke-29'],
   ['0,5,10,15,20,25,35,40,45,50,55 9-17 * * *',
     'setiap hari, setiap 5 menit dari pukul 09.00 sampai 17.55, kecuali ' +
     'pada menit ke-30 setiap jam'],
@@ -576,17 +582,18 @@ const rows = [
     'setiap hari, setiap 10 menit dari pukul 09.00 sampai 09.50, kecuali ' +
     'pukul 09.30'],
   ['0,7,14,21,35,42,49,56 * * * *',
-    'setiap jam, setiap 7 menit sampai menit ke-21 dan dari menit ke-35 ' +
-    'sampai ke-56'],
+    'setiap 7 menit sampai menit ke-21 dan setiap 7 menit dari menit ' +
+    'ke-35 sampai ke-56 setiap jam'],
 
   // Minutes inside the hour: «menit ke-N» is a point, from 1; the start
-  // of the hour is «tepat», or the unsaid start of a stretch.
+  // of the hour is «setiap jam tepat»; a stretch from the start in which
+  // every minute fires is a length («selama 30 menit pertama»).
   ['15,45 * * * *',
     'setiap jam pada menit ke-15 dan ke-45'],
   ['0-1 * * * *',
-    'tepat setiap jam serta pada menit ke-1'],
+    'setiap jam tepat serta pada menit ke-1'],
   ['*/21 * * * *',
-    'tepat setiap jam serta pada menit ke-21 dan ke-42'],
+    'setiap jam tepat serta pada menit ke-21 dan ke-42'],
   ['9,14,47,56 * * * *',
     'setiap jam pada menit ke-9, ke-14, ke-47, dan ke-56'],
   ['17/11 * * * *',
@@ -594,24 +601,24 @@ const rows = [
   ['5/10 * * * *', 'setiap 10 menit mulai menit ke-5 setiap jam'],
   ['1/2 * * * *', 'setiap 2 menit mulai menit ke-1 setiap jam'],
   ['0-40/10 * * * *',
-    'setiap jam, setiap 10 menit sampai menit ke-40'],
+    'setiap 10 menit sampai menit ke-40 setiap jam'],
   ['0-42/6 * * * *',
-    'setiap jam, setiap 6 menit sampai menit ke-42'],
+    'setiap 6 menit sampai menit ke-42 setiap jam'],
   ['45-59 * * * *',
-    'setiap jam, setiap menit dari menit ke-45 sampai ke-59'],
+    'setiap menit dari menit ke-45 sampai ke-59 setiap jam'],
   ['5-10,20 * * * *',
-    'setiap jam, setiap menit dari menit ke-5 sampai ke-10 dan pada menit ' +
-    'ke-20'],
+    'setiap menit dari menit ke-5 sampai ke-10 dan pada menit ke-20 ' +
+    'setiap jam'],
   ['50-10 * * * *',
-    'setiap jam, setiap menit sampai menit ke-10 dan dari menit ke-50 ' +
-    'sampai ke-59'],
+    'setiap menit selama 11 menit pertama dan setiap menit dari menit ' +
+    'ke-50 sampai ke-59 setiap jam'],
   ['50-10 9 * * *',
     'setiap hari, setiap menit dari pukul 09.00 sampai 09.10 dan dari ' +
     'pukul 09.50 sampai 09.59'],
   ['30-59 9 * * *', 'setiap hari, setiap menit dari pukul 09.30 sampai 09.59'],
   ['0-20/2,21-59/3 * * * *',
-    'setiap jam, setiap 2 menit sampai menit ke-20 dan setiap 3 menit ' +
-    'dari menit ke-21 sampai ke-57'],
+    'setiap 2 menit sampai menit ke-20 dan setiap 3 menit dari menit ' +
+    'ke-21 sampai ke-57 setiap jam'],
   ['0-20/2,21-59/3 9 * * *',
     'setiap hari, setiap 2 menit dari pukul 09.00 sampai 09.20 dan setiap ' +
     '3 menit dari pukul 09.21 sampai 09.57'],
@@ -620,8 +627,8 @@ const rows = [
   // hours, the minutes of each hour and every piece's first and last
   // time; over single hours, the minutes «setelah pukul» each.
   ['0-29 9-17 1 * *',
-    'setiap tanggal 1, setiap jam, setiap menit sampai menit ke-29, dari ' +
-    'pukul 09.00 sampai 17.29'],
+    'setiap tanggal 1, setiap menit selama 30 menit pertama setiap jam, ' +
+    'dari pukul 09.00 sampai 17.29'],
   ['5,20,45 9,17 * * *',
     'setiap hari, pada menit ke-5, ke-20, dan ke-45 setelah pukul 09.00 ' +
     'dan 17.00'],
@@ -639,12 +646,12 @@ const rows = [
     'setiap hari, setiap menit dari pukul 08.00 sampai 08.29, dari pukul ' +
     '12.00 sampai 12.29, dan dari pukul 18.00 sampai 18.29'],
   ['0-29 9-17,22 * * *',
-    'setiap hari, setiap jam, setiap menit sampai menit ke-29, dari pukul ' +
-    '09.00 sampai 17.29 dan dari pukul 22.00 sampai 22.29'],
+    'setiap hari, setiap menit selama 30 menit pertama setiap jam, dari ' +
+    'pukul 09.00 sampai 17.29 dan dari pukul 22.00 sampai 22.29'],
 
   // Seconds. One second rides on every clock time; a rhythm of seconds
   // through consecutive minutes runs between its first and last second;
-  // otherwise the seconds follow the minutes after «setiap kali».
+  // otherwise the seconds follow the minutes after «tiap kali».
   ['15 30 9 * * *', 'setiap hari pukul 09.30.15'],
   ['15 30 9,17 * * *', 'setiap hari pukul 09.30.15 dan 17.30.15'],
   ['15,45 30 9 * * *', 'setiap hari pukul 09.30.15 dan 09.30.45'],
@@ -663,7 +670,7 @@ const rows = [
   ['30 * 9-17 * * *',
     'setiap hari, setiap menit dari pukul 09.00.30 sampai 17.59.30'],
   ['8 5,30 */2 * * *',
-    'setiap 2 jam mulai pukul 00.05.08 dan 00.30.08'],
+    'pada jam genap, pada menit ke-5 dan ke-30, tiap kali pada detik ke-8'],
   ['* * 9 * * *',
     'setiap hari, setiap detik dari pukul 09.00.00 sampai 09.59.59'],
   ['* * 9-17 * * *',
@@ -673,77 +680,74 @@ const rows = [
   ['*/10 * 9 * * *',
     'setiap hari, setiap 10 detik dari pukul 09.00.00 sampai 09.59.50'],
   ['* * */2 * * *',
-    'setiap 2 jam, setiap detik sampai menit ke-59 detik ke-59'],
+    'pada jam genap, setiap detik'],
   ['30 * */2 * * *',
-    'setiap 2 jam, setiap menit sampai menit ke-59, setiap kali pada ' +
-    'detik ke-30'],
+    'pada jam genap, setiap menit pada detik ke-30'],
   ['* 0 9,17 * * *',
-    'setiap hari pukul 09.00 dan 17.00, setiap kali setiap detik sampai ' +
-    'detik ke-59'],
+    'setiap hari pukul 09.00 dan 17.00, tiap kali setiap detik selama 1 ' +
+    'menit'],
   ['* 0 8,12,16,20 * * *',
-    'setiap hari pukul 08.00, 12.00, 16.00, dan 20.00, setiap kali setiap ' +
-    'detik sampai detik ke-59'],
+    'setiap hari pukul 08.00, 12.00, 16.00, dan 20.00, tiap kali setiap ' +
+    'detik selama 1 menit'],
   ['5,15,25 */15 9-17 * * *',
-    'setiap hari, setiap 15 menit dari pukul 09.00 sampai 17.45, setiap ' +
+    'setiap hari, setiap 15 menit dari pukul 09.00 sampai 17.45, tiap ' +
     'kali pada detik ke-5, ke-15, dan ke-25'],
   ['30 0-29 9-17 * * *',
-    'setiap hari, setiap jam, setiap menit sampai menit ke-29, dari pukul ' +
-    '09.00 sampai 17.29, setiap kali pada detik ke-30'],
+    'setiap hari, setiap menit selama 30 menit pertama setiap jam, dari ' +
+    'pukul 09.00 sampai 17.29, tiap kali pada detik ke-30'],
   ['15,45 0-29,45 9 * * *',
     'setiap hari, setiap menit dari pukul 09.00 sampai 09.29 dan pukul ' +
-    '09.45, setiap kali pada detik ke-15 dan ke-45'],
+    '09.45, tiap kali pada detik ke-15 dan ke-45'],
   ['0-9 * 9 * * *',
-    'setiap hari, setiap menit dari pukul 09.00 sampai 09.59, setiap kali ' +
-    'setiap detik sampai detik ke-9'],
+    'setiap hari, setiap menit dari pukul 09.00 sampai 09.59, tiap kali ' +
+    'setiap detik selama 10 detik pertama'],
 
-  // Seconds where no clock time is said: positions in the hour and the
-  // minute; at minute 0 the hour itself is the unit.
+  // Seconds where no clock time is said: the minute is always named; at
+  // minute 0 of every hour it is «menit pertama».
   ['30 0 * * * *',
-    'setiap jam pada detik ke-30'],
+    'setiap jam pada detik ke-30 menit pertama'],
   ['15 30 * * * *',
     'setiap jam pada menit ke-30 detik ke-15'],
   ['* 0 * * * *',
-    'setiap jam, setiap detik sampai detik ke-59'],
+    'setiap detik selama menit pertama setiap jam'],
   ['*/10 0 * * * *',
-    'setiap jam, setiap 10 detik sampai detik ke-50'],
+    'setiap 10 detik selama menit pertama setiap jam'],
   ['*/30 0 * * * *',
-    'setiap jam, setiap 30 detik sampai detik ke-30'],
+    'setiap 30 detik selama menit pertama setiap jam'],
   ['0-9 0 * * * *',
-    'setiap jam, setiap detik sampai detik ke-9'],
+    'setiap detik selama 10 detik pertama setiap jam'],
   ['15,45 0 * * * *',
-    'setiap jam pada detik ke-15 dan ke-45'],
+    'setiap jam pada detik ke-15 dan ke-45 menit pertama'],
   ['15,45 0 */4 * * *',
     'setiap 4 jam mulai pukul 00.00.15 dan 00.00.45'],
   ['0,30 0 */8 * * *',
     'setiap 8 jam mulai pukul 00.00.00 dan 00.00.30'],
   ['* 30 * * * *',
-    'setiap jam pada menit ke-30, setiap kali setiap detik sampai detik ' +
-    'ke-59'],
+    'setiap jam pada menit ke-30, tiap kali setiap detik selama 1 menit'],
   ['0,30 5,20 * * * *',
-    'setiap jam pada menit ke-5 dan ke-20, setiap kali setiap 30 detik ' +
-    'sampai detik ke-30'],
+    'setiap jam pada menit ke-5 dan ke-20, tiap kali tepat pada menit itu ' +
+    'serta pada detik ke-30'],
   ['30 5,20 * * * *',
-    'setiap jam pada menit ke-5 dan ke-20, setiap kali pada detik ke-30'],
+    'setiap jam pada menit ke-5 dan ke-20, tiap kali pada detik ke-30'],
   ['*/15 */15 * * * *',
-    'setiap 15 menit, setiap kali setiap 15 detik sampai detik ke-45'],
+    'setiap 15 menit, tiap kali tepat pada menit itu serta pada detik ' +
+    'ke-15, ke-30, dan ke-45'],
   ['30 */15 * * * *',
-    'setiap 15 menit, setiap kali pada detik ke-30'],
+    'setiap 15 menit, tiap kali pada detik ke-30'],
   ['* 0-29 * * * *',
-    'setiap jam, setiap detik sampai menit ke-29 detik ke-59'],
+    'setiap detik selama 30 menit pertama setiap jam'],
   ['17/11 30 * * * *',
-    'setiap jam pada menit ke-30, setiap kali pada detik ke-17, ke-28, ' +
+    'setiap jam pada menit ke-30, tiap kali pada detik ke-17, ke-28, ' +
     'ke-39, dan ke-50'],
   ['17/11 * * * * *',
     'setiap menit pada detik ke-17, ke-28, ke-39, dan ke-50'],
   ['45-15 * * * * *',
-    'setiap menit, setiap detik sampai detik ke-15 dan dari detik ke-45 ' +
-    'sampai ke-59'],
+    'setiap detik selama 16 detik pertama dan setiap detik dari detik ' +
+    'ke-45 sampai ke-59 setiap menit'],
 
-  // Exceptions under seconds: a minute left out is a stretch between two
-  // points.
+  // Exceptions under seconds: a minute left out is a length from a point.
   ['* 0-28,30-59 * * * *',
-    'setiap detik, kecuali dari menit ke-29 sampai menit ke-29 detik ' +
-    'ke-59 setiap jam'],
+    'setiap detik, kecuali selama 1 menit mulai menit ke-29 setiap jam'],
   ['* 0-28,30-59 9 * * *',
     'setiap hari, setiap detik dari pukul 09.00.00 sampai 09.59.59, ' +
     'kecuali dari pukul 09.29.00 sampai 09.29.59'],
@@ -760,20 +764,20 @@ const rows = [
   ['30 0-28,30-59 * * * *',
     'setiap menit pada detik ke-30, kecuali pada menit ke-29 setiap jam'],
   ['30 0 0-2,4-23 * * *',
-    'setiap jam pada detik ke-30, kecuali pukul 03.00.30'],
+    'setiap jam pada detik ke-30 menit pertama, kecuali pukul 03.00.30'],
 
   // Several fields at once.
   ['*/10 24 */3 23-25 * 1-2',
-    'setiap tanggal 23 sampai 25 serta setiap Senin dan Selasa, setiap 3 ' +
-    'jam mulai pukul 00.24, setiap kali setiap 10 detik sampai detik ' +
-    'ke-50'],
+    'setiap tanggal 23 sampai 25, dan juga setiap Senin dan Selasa, ' +
+    'setiap 3 jam mulai pukul 00.24, tiap kali setiap 10 detik sampai ' +
+    'detik ke-50'],
   ['7 4-22/6 1 */2 *',
     'setiap tanggal 1 pukul 04.07, 10.07, 16.07, dan 22.07 pada bulan ' +
     'Januari, Maret, Mei, Juli, September, dan November'],
   ['52 7-16 1,19,23,28 5-7 3-4',
-    'setiap tanggal 1, 19, 23, dan 28 serta setiap Rabu dan Kamis, setiap ' +
-    'jam dari pukul 07.52 sampai 16.52, keduanya pada bulan Mei sampai ' +
-    'Juli'],
+    'setiap tanggal 1, 19, 23, dan 28, dan juga setiap Rabu dan Kamis, ' +
+    'setiap jam dari pukul 07.52 sampai 16.52, keduanya pada bulan Mei ' +
+    'sampai Juli'],
   ['*/5 0-2,4-23 * 1-11 *',
     'setiap 5 menit, kecuali dari pukul 03.00 sampai 03.55 dan kecuali ' +
     'bulan Desember'],

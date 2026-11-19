@@ -32,7 +32,7 @@ const defaultParts = {
   '0 9 * 6-8 *': ['09.00', 'Juni', 'Agustus'],
   '0 0 1 6 *': ['1 Juni', '00.00'],
   '0 9 * * 5L': ['Jumat', '09.00'],
-  '0 9 15W * *': ['15', 'Jumat', 'Senin', 'Sabtu', 'Minggu', '09.00'],
+  '0 9 15W * *': ['15', '09.00', 'Jumat', 'Senin', 'Sabtu', 'Minggu'],
   '0 9 * 1-7,9-12 *': ['09.00', 'Agustus']
 };
 
@@ -46,8 +46,8 @@ const sets = [
         pattern: '0 9 * * *'
       },
       {
-        expected: 'setiap hari pukul 12 dini hari',
-        parts: ['12 dini hari'],
+        expected: 'setiap hari pukul 00.00 dini hari',
+        parts: ['00.00 dini hari'],
         pattern: '0 0 * * *'
       },
       {
@@ -81,8 +81,8 @@ const sets = [
         pattern: '0 11,15,19 * * *'
       },
       {
-        expected: 'setiap Senin pukul 12 dini hari',
-        parts: ['Senin', '12 dini hari'],
+        expected: 'setiap Senin pukul 00.00 dini hari',
+        parts: ['Senin', '00.00 dini hari'],
         pattern: '0 0 * * 1'
       },
       {
@@ -91,8 +91,8 @@ const sets = [
         pattern: '0 16 * * 1'
       },
       {
-        expected: 'setiap hari pukul 12.30 dini hari',
-        parts: ['12.30 dini hari'],
+        expected: 'setiap hari pukul 00.30 dini hari',
+        parts: ['00.30 dini hari'],
         pattern: '30 0 * * *'
       },
       {
@@ -117,8 +117,8 @@ const sets = [
         pattern: '0 1/2 * * *'
       },
       {
-        expected: 'Senin sampai Jumat, setiap 15 menit dari pukul 9 pagi ' +
-          'sampai 5.45 sore',
+        expected: 'setiap Senin sampai Jumat, setiap 15 menit dari pukul 9 ' +
+          'pagi sampai 5.45 sore',
         parts: ['Senin', 'Jumat', '15 menit', '9 pagi', '5.45 sore'],
         pattern: '*/15 9-17 * * 1-5'
       },
@@ -129,8 +129,8 @@ const sets = [
         pattern: '* 22-23 * * *'
       },
       {
-        expected: 'setiap hari pukul 12 dini hari dan 12 siang',
-        parts: ['12 dini hari', '12 siang'],
+        expected: 'setiap hari pukul 00.00 dini hari dan 12 siang',
+        parts: ['00.00 dini hari', '12 siang'],
         pattern: '0 0,12 * * *'
       },
       {
@@ -164,8 +164,8 @@ const sets = [
         pattern: '0 0 1 6 *'
       },
       {
-        expected: 'Senin sampai Jumat, setiap 15 menit dari pukul 09:00 ' +
-          'sampai 17:45',
+        expected: 'setiap Senin sampai Jumat, setiap 15 menit dari pukul ' +
+          '09:00 sampai 17:45',
         parts: ['Senin', 'Jumat', '15 menit', '09:00', '17:45'],
         pattern: '*/15 9-17 * * 1-5'
       }
@@ -180,8 +180,8 @@ const sets = [
         pattern: '30 9,17 * * *'
       },
       {
-        expected: 'setiap hari pukul 12:30 dini hari',
-        parts: ['12:30 dini hari'],
+        expected: 'setiap hari pukul 00:30 dini hari',
+        parts: ['00:30 dini hari'],
         pattern: '30 0 * * *'
       }
     ]
@@ -240,9 +240,9 @@ const sets = [
         pattern: '0 9 * * 5L'
       },
       {
-        expected: 'setiap tanggal 15, digeser ke hari Jum atau Sen ' +
-          'terdekat jika jatuh pada hari Sab atau Min, pukul 09.00',
-        parts: ['15', 'Jum', 'Sen', 'Sab', 'Min', '09.00'],
+        expected: 'setiap tanggal 15 pukul 09.00, digeser ke hari Jumat ' +
+          'atau Senin terdekat jika jatuh pada hari Sabtu atau Minggu',
+        parts: ['15', '09.00', 'Jumat', 'Senin', 'Sabtu', 'Minggu'],
         pattern: '0 9 15W * *'
       },
       {
@@ -251,8 +251,8 @@ const sets = [
         pattern: '0 9 * 1-7,9-12 *'
       },
       {
-        expected: 'Sen sampai Jum, setiap 15 menit dari pukul 09.00 sampai ' +
-          '17.45',
+        expected: 'setiap Sen sampai Jum, setiap 15 menit dari pukul 09.00 ' +
+          'sampai 17.45',
         parts: ['Sen', 'Jum', '15 menit', '09.00', '17.45'],
         pattern: '*/15 9-17 * * 1-5'
       }

@@ -12,13 +12,13 @@ const FIELDS =
 
 // A description is three parts in one order, from the day to the clock
 // to what narrows or excepts them (answers 2.1): the day («setiap hari»,
-// «setiap Senin», «Senin sampai Jumat», «setiap tanggal 1 Juni»,
-// «tanggal 1 Januari 2030», a day of the month «serta» a weekday), the
-// time, and a closing part (the months and years the rest is said of:
-// «pada bulan Juni sampai Agustus», «pada tahun 2030», after a union
-// «keduanya pada bulan Juni»; then the days, months and years left out
-// or conditioned: «, kecuali hari Minggu», «, tetapi tanggal 15 hanya
-// jika jatuh pada hari Jumat»).
+// «setiap Senin», «setiap Senin sampai Jumat», «setiap tanggal 1 Juni»,
+// «tanggal 1 Januari 2030», a day of the month «, dan juga» a weekday),
+// the time, and a closing part (the months and years the rest is said
+// of: «pada bulan Juni sampai Agustus», «pada tahun 2030», after a union
+// «keduanya pada bulan Juni»; then where a date moves to: «, digeser ke
+// hari Jumat sebelumnya jika …»; then the days, months and years left
+// out: «, kecuali hari Minggu»).
 // `describeParts` gives them as `{day, time, closing}`, each with the
 // comma that follows it, if any.
 //

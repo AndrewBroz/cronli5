@@ -61,7 +61,8 @@ const nthWords = ['pertama', 'kedua', 'ketiga', 'keempat', 'kelima'];
 // The parts of the day the 12-hour clock names (`hour12`), by hour
 // (answers 1.2).
 const dayParts = {
-  // 0 to 3; hour 0 is said as 12.
+  // 0 to 3; hour 0 keeps its two digits and its minutes: «00.00 dini
+  // hari».
   early: 'dini hari',
   // 4 to 10.
   morning: 'pagi',
@@ -80,15 +81,12 @@ const words = {
   and: 'dan',
   // Joins the last weekday after «jatuh pada»: Monday, Wednesday or Friday.
   or: 'atau',
-  // Joins two groups of occasions: a day of the month and a weekday when
-  // either fires («setiap tanggal 1 serta setiap Jumat»), and the hour
-  // itself with minutes after it («tepat setiap jam serta pada menit
-  // ke-15»).
+  // Joins a day of the month and a weekday when either fires, after a
+  // comma: «setiap tanggal 1, dan juga setiap Jumat».
+  andAlso: 'dan juga',
+  // Joins the start of the hour or minute with positions after it:
+  // «setiap jam tepat serta pada menit ke-15».
   aswell: 'serta',
-  // After a union with one exception inside it: «…, tetapi tanggal 15
-  // hanya jika jatuh pada hari Jumat».
-  but: 'tetapi',
-  onlyIfItFallsOn: 'hanya jika jatuh pada',
   // After a union, before the months or years both arms are said of.
   bothOfThem: 'keduanya',
   // After months said in pieces, before the year all of them are in.
@@ -104,13 +102,24 @@ const words = {
 
   // Rhythm.
   every: 'setiap',
-  // The seconds of every minute just said: «…, setiap kali pada detik
+  // What happens at every time just said: «…, tiap kali pada detik
   // ke-30».
-  eachTime: 'setiap kali',
+  eachTime: 'tiap kali',
   // Before a position in the hour or minute: «pada menit ke-30».
   at: 'pada',
-  // The start of the hour or minute as a position: «tepat setiap jam».
+  // The start of the hour as a position: «setiap jam tepat».
   sharp: 'tepat',
+  // The same after «tiap kali» and after «pada jam genap».
+  atThatMinute: 'tepat pada menit itu',
+  atThatHour: 'tepat pada jam itu',
+  // A whole unit, or the first part of one, in which every finer unit
+  // fires: «selama 1 menit», «selama 30 menit pertama», «selama menit
+  // pertama».
+  during: 'selama',
+  first: 'pertama',
+  // Every second hour, with something finer inside it.
+  evenHours: 'pada jam genap',
+  oddHours: 'pada jam ganjil',
   // Positions counted from hours that are named: «pada menit ke-5 setelah
   // pukul 09.00 dan 17.00».
   afterTime: 'setelah',
@@ -152,18 +161,17 @@ const words = {
   monthOf: 'bulan',
   inYear: 'pada tahun',
   yearOf: 'tahun',
-  // After a weekday a date moves on to: «hari Senin sesudahnya».
+  // After a weekday a date moves on to («hari Senin sesudahnya») and
+  // after the first year of a rhythm of years («pada tahun 2028 dan
+  // setiap tahun ke-4 sesudahnya»).
   after: 'sesudahnya',
-  // After the first year of a rhythm of years: «pada tahun 2028, lalu
-  // setiap 4 tahun».
-  then: 'lalu',
   // Up to a year, that year included.
   throughYear: 'sampai dengan tahun',
   evenYears: 'pada tahun genap',
   oddYears: 'pada tahun ganjil',
   leapYearsOnly: 'hanya pada tahun kabisat',
-  // Months of one length: «pada bulan yang berjumlah 31 hari».
-  thatHas: 'yang berjumlah',
+  // Months of one length: «pada bulan yang berumur 31 hari».
+  thatHas: 'yang berumur',
 
   // A schedule that never fires.
   never: 'tidak pernah: tanggalnya tidak ada',
