@@ -1,7 +1,7 @@
 {
   "name": "cronli5",
   "version": "1.2.2",
-  "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and thirteen other languages. Includes a cRonstrue-compatible entry point.",
+  "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and fourteen other languages. Includes a cRonstrue-compatible entry point.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrewbroz/cronli5.git"
@@ -84,6 +84,11 @@
       "types": "./types/lang/pt/index.d.ts",
       "import": "./dist/lang/pt.js",
       "require": "./dist/lang/pt.cjs"
+    },
+    "./lang/ru": {
+      "types": "./types/lang/ru/index.d.ts",
+      "import": "./dist/lang/ru.js",
+      "require": "./dist/lang/ru.cjs"
     },
     "./lang/uk": {
       "types": "./types/lang/uk/index.d.ts",

@@ -212,7 +212,7 @@ cronli5(weekdaysAt1330, { lang: 'en-GB' });
 
 ## Languages
 
-English is the default. Fourteen languages ship, listed below; each is a full
+English is the default. Fifteen languages ship, listed below; each is a full
 renderer over the same language-independent core, written from that
 language's own conventions, and each ships as its own module. You choose
 what reaches your bundle:
@@ -246,6 +246,7 @@ docs below.
 | --- | --- | --- | --- |
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
 | Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
+| Russian | `cronli5/lang/ru` | Russian as written in Ukraine; the 1956 rules of spelling and punctuation; Milchin and Cheltsova for typography | [docs/lang/ru.md](./docs/lang/ru.md) |
 | Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
 | Chinese (Traditional) | `cronli5/lang/zh-hant` | Taiwan's Executive Yuan rules for numbers in official documents and Ministry of Education punctuation; Hong Kong government usage (`'zh-HK'`, also Macau) | [docs/lang/zh-hant.md](./docs/lang/zh-hant.md) |
 | Czech | `cronli5/lang/cs` | Internetová jazyková příručka (ÚJČ); ČSN 01 6910 for dates and times; timetable practice | [docs/lang/cs.md](./docs/lang/cs.md) |
@@ -288,6 +289,7 @@ pipeline is the review.
 | Korean | beta |
 | Polish | beta |
 | Portuguese | stable |
+| Russian | beta |
 | Ukrainian | stable |
 | Chinese (Simplified) | stable |
 | Chinese (Traditional) | beta |
@@ -396,6 +398,7 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 | Italian | il lunedì alle 9:30:05 e alle 9:30:10 | Al 5 e 10 secondo passato il minuto, al 30 minuto passata l'ora, alle 09:00, solo il lunedì |
 | Czech | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
 | Polish | w poniedziałki o 9:30:05 i 9:30:10 | W 5 i 10 sekundzie, w 30 minucie, o 09:00, tylko poniedziałek |
+| Russian | по понедельникам в 9:30:05 и 9:30:10 | В 5 и 10 секунд, в 30 минут, в 09:00, только в понедельник |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 ### Formatting

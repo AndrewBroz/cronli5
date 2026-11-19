@@ -2,8 +2,8 @@
 // language this instance was not given from one that does not exist. Only
 // the codes: importing the languages here would bundle them all.
 const shipped = [
-  'en', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'pl', 'pt', 'uk', 'zh',
-  'zh-Hant'
+  'en', 'cs', 'de', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'uk',
+  'zh', 'zh-Hant'
 ];
 
 // The scripts a shipped language is written in, each with the code of the

@@ -9,8 +9,8 @@ mind" and "How quality is judged" are the centre of the project.
 - Work branch `renderer-process`; `develop` is kept equal to it. Never
   commit on `main`; merging to `main`, the version bump and publishing are
   the maintainer's call.
-- Fourteen languages ship: en, cs, de, es, fr, id, it, ja, ko, pl, pt, uk, zh, zh-Hant
-  (id, ko, pl and zh-Hant at beta, registered 2026-11-19). The gate (`npm run verify`) is
+- Fifteen languages ship: en, cs, de, es, fr, id, it, ja, ko, pl, pt, ru, uk, zh, zh-Hant
+  (id, ko, pl, ru and zh-Hant at beta, registered 2026-11-19). The gate (`npm run verify`) is
   green.
 - Branch `length-gate-work` (pushed) holds the withdrawn length-gate work
   of 2026-11-13; its history and a before/after audit are in

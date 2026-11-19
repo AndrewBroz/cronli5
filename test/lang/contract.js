@@ -11,6 +11,7 @@ import ja from '../../src/lang/ja/index.js';
 import ko from '../../src/lang/ko/index.js';
 import pl from '../../src/lang/pl/index.js';
 import pt from '../../src/lang/pt/index.js';
+import ru from '../../src/lang/ru/index.js';
 import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
 import zhHant from '../../src/lang/zh-hant/index.js';
@@ -22,7 +23,7 @@ const {expect} = chai;
 
 describe('Language contract:', function() {
   const languages = [
-    en, cs, de, es, fr, indonesian, italian, ja, ko, pl, pt, uk, zh, zhHant
+    en, cs, de, es, fr, indonesian, italian, ja, ko, pl, pt, ru, uk, zh, zhHant
   ];
 
   languages.forEach(function each(lang) {
