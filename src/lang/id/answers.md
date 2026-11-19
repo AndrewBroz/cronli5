@@ -2,7 +2,11 @@
 
 Written 2026-11-19 by Claude Fable 5.2 from `usage.md` (native usage
 notes, written with no knowledge of cron), as the rule book a renderer is
-built from, and revised twice the same day after independent reads. Every
+built from, revised twice the same day after independent reads, and
+amended after an audit of the built renderer (**[audit]**, 2026-11-19: an
+adversarial read of some 600 rendered patterns against an independent
+answer key, by Claude Fable 5.2 as a fluent reader; no native speaker).
+Every
 choice below is a record: what Indonesian does, why, and on what
 evidence, so that it can be tested again. Evidence is named each time:
 
@@ -62,9 +66,15 @@ are and how they lie, never which. Take the first that applies:
    menit». For hours it needs three values or more. Only seconds,
    minutes and hours tile. Beside it stands one idiom: all the odd or
    all the even days of the month (3.7).
-4. **A short list** is named, unless it is three or more in a row (rule
-   6): up to **four** seconds, minutes, hours or weekdays; up to
-   **seven** dates; up to **six** months; up to **five** years (3.10).
+4. **A short list** is named: up to **four** seconds, minutes, hours or
+   weekdays; up to **seven** dates; up to **six** months; up to **five**
+   years (3.10). Not a short list: a set that is one run of three or
+   more (rule 6), and, for every field but weekdays, a set that holds
+   three or more in a row among other values (it is pieces, rule 9:
+   dates `1,10-15` are «tanggal 1 dan tanggal 10 sampai 15», years
+   `2030-2032,2035` «tahun 2030 sampai 2032 dan tahun 2035»).
+   **Weekdays** are named even then (`0,2-4` is «setiap Selasa, Rabu,
+   Kamis, dan Minggu»): see "Weekdays, in full" below.
 5. **Every value but one**: the whole, with the one left out after
    «kecuali».
 6. **A run** of three or more. Minutes, seconds and dates do not wrap (a
@@ -77,10 +87,45 @@ are and how they lie, never which. Take the first that applies:
    starts and, unless it tiles, where it stops. (Months are never said
    as a rhythm; six are named.)
 9. **Pieces**: runs and single values, ascending; a wrapped run of
-   minutes, seconds or dates is cut at the edge of its cycle.
+   minutes, seconds or dates is cut at the edge of its cycle. Pieces are
+   taken here only while the values they name one by one are within the
+   field's short-list limit; beyond it rule 10 is tried first, and
+   pieces after it. Weekdays are never pieces.
 10. **Runs and rhythms together** (the core's `cadencePieces`), for sets
     of more than six values.
 11. **The values**, however many.
+
+**Weekdays, in full** [orchestrator's ruling and audit, 2026-11-19]. A
+week has seven days, every reader knows their order, and up to four
+names are recognised at once; a run less a day makes the reader
+subtract. So, by how many days and how they lie:
+
+| Days | Said |
+| --- | --- |
+| all seven | nothing («setiap hari») |
+| one | its name |
+| two | both names; a pair in a row in the order it comes |
+| three to five that are one run (it may pass Sunday) | the run: «setiap Jumat sampai Senin» |
+| three or four that are not one run | the names, from Monday: «setiap Senin, Selasa, Rabu, dan Jumat» |
+| five that are not one run | «setiap hari …, kecuali» the two |
+| six | «setiap hari …, kecuali» the one |
+
+Never a run with single days beside it, and never a run less a day.
+In a union's arm, where no exception may stand, six days are the run
+(«setiap Senin sampai Sabtu») and five that are not a run are the five
+names. Rejected: «setiap hari Minggu sampai Kamis …, kecuali Senin» for
+`0,2-4` (the first build's reading of rule 4: five things to hold and a
+subtraction, for four days).
+
+**Rule 3 "from its first value"** means the first value of the cycle
+(minute or second 0). A tiling rhythm of minutes or seconds that starts
+later is a short list (rule 4) or rule 8, and may be the base of rule 7.
+Hours tile the day from any start (4.1 C). **Hours** are chosen on the
+view cut at midnight, so that every hour but one or two is rule 5 or 7
+and not a run past midnight; the run past midnight (3.5) is used only
+where the cut view gives pieces or a list. **Months**: the run past
+December is used only when the months are that one run and no year is
+named; otherwise the months are laid out from January.
 
 **Inside a union** (4.3) rules 5 and 7 are skipped: an arm is never said
 with an exception.
@@ -136,6 +181,14 @@ KBBI [notes 8]. One norm for the whole country.
   that ends Monday [notes 1.3], which is the wrong day. The part of the
   day follows every time, both ends of a range included. [judgment;
   least sure: «pukul 00.00 dini hari» against «pukul 12 malam»]
+  [audit, 2026-11-19: kept. The usage notes themselves give «Sabtu dini
+  hari pukul 00.00» as the careful writer's way to say which day a
+  midnight belongs to [notes 1.3], and news reports commonly write
+  «dini hari» with times from 00.00 on («Senin dini hari sekitar pukul
+  00.30 WIB»; the auditor's knowledge of the register, not a search
+  made for this). KBBI's "about 03.00 to 05.00" and judge 2's "01 to 04"
+  describe the core of the word, not its edge. «12 malam» stays out for
+  the reason given: it names the wrong day.]
 - **`short`** abbreviates names as calendars and tight tables do. Both
   judges found short names stiff inside a sentence, and a short name
   after «hari» unreadable («hari Min», «hari Jum»). So **a weekday name
@@ -178,11 +231,22 @@ language and is not written here.
   tanggal 1 setiap bulan,»); a day phrase with «jatuh pada» or «jika
   ada»; two groups of months by length (5.3).
 - **Before the months or years of the closing part**: a space. A comma
-  only when the time part ends in a clause of its own («kecuali …»,
-  «terakhir …», «tiap kali …»). List commas never count [schedule read].
-  After a union: «, keduanya» (4.3).
+  when the time part ends in a clause of its own («kecuali …»,
+  «terakhir …», «tiap kali …»), **and after every day part that always
+  takes its comma** (the list just above): the time then stands between
+  two commas, and months hung on it by a space would be heard with the
+  time alone, where they must govern the day too: `0 9 */3 1,7 1-5` →
+  «setiap 3 hari mulai tanggal 1, jika jatuh pada hari Senin sampai
+  Jumat, pukul 09.00, pada bulan Januari dan Juli»; `0 0 */2 6 1` →
+  «setiap tanggal ganjil yang jatuh pada hari Senin, pukul 00.00, pada
+  bulan Juni» [orchestrator's ruling; audit]. List commas never count
+  [schedule read]. After a union: «, keduanya» (4.3).
 - **Before «digeser», «kecuali»**: always a comma. A second exception is
-  joined by «dan kecuali», no comma.
+  joined by «dan kecuali», no comma, only when it follows the first at
+  once; with months, years or another clause between them it is «,
+  kecuali» again.
+- **Order at the end of the time**: the seconds after «tiap kali» (4.2),
+  then «, terakhir pukul …», then any «kecuali» of the time.
 
 ### 2.2 Adding a month, a weekday, both
 
@@ -210,7 +274,8 @@ the reach is cured where it arises (4.3, 4.4).
 
 Said when no day is named **and the time is not a rhythm that runs round
 the clock**. Round the clock, by form (no «setiap hari»): 4.1 A; «setiap
-N jam» bare or with «mulai pukul», with or without «tiap kali» after it,
+N jam» bare or with «mulai pukul», with or without «tiap kali» or
+positions («pada menit ke-…») after it,
 as long as it has no «terakhir» and no «dari … sampai»; «pada jam genap
 / ganjil» forms; and any of these with «kecuali» after it. Every other
 time (clock times, stretches, «setelah pukul», «terakhir») takes it.
@@ -402,6 +467,13 @@ Runs and single values in ascending order, each a member of one list.
   jam». (Without the second «setiap 7 menit» judge 2 read the second
   stretch as every minute.)
 
+Pieces of minutes (or seconds) that **open with the start of the hour as
+a point** begin «setiap jam tepat» and so have said the hour: they do not
+close with «setiap jam» again: `0,2,10-20 * * * *` → «setiap jam tepat
+serta pada menit ke-2 dan setiap menit dari menit ke-10 sampai ke-20»
+[audit; the first build said «setiap jam tepat … sampai ke-20 setiap
+jam»].
+
 Because each member is a complete phrase, **nothing is glued to the last
 member alone** (4.4). In the time a run is two hours or more in a row
 (the core gives two as values; the renderer joins them).
@@ -590,24 +662,25 @@ Except: H tiles the day from 00.00 and M is minute 0 → the bare «setiap
   times, all of which fire: `*/15 */6 * * *` → «setiap 6 jam mulai pukul
   00.00, 00.15, 00.30, dan 00.45»; `15,45 1/3 * * *` → «setiap 3 jam
   mulai pukul 01.15 dan 01.45».
-- **Otherwise**: «setiap N jam mulai pukul hh.00, tiap kali» and the
-  phrase inside the hour: `* */6 * * *` → «setiap 6 jam mulai pukul
-  00.00, tiap kali setiap menit selama 1 jam»; `*/5 1/3 * * *` → «setiap
-  3 jam mulai pukul 01.00, tiap kali setiap 5 menit sampai menit ke-55».
-  The start is named even at 00.00, because where a stretch fills the
-  hour a reader needs to know which hours [judge 2]. One case leaves it
-  out: H starts at 00.00 and M does not hold minute 0, so that 00.00
-  would not fire; then the hours are bare and the phrase follows without
-  «tiap kali»: `5,10,20,30,50 */4 * * *` → «setiap 4 jam pada menit ke-5,
-  ke-10, ke-20, ke-30, dan ke-50». (When H starts late and M does not
+- **Otherwise**: the hours, «, tiap kali» and the phrase inside the
+  hour. Hours from 00.00 are **bare**, as every rhythm that tiles its
+  cycle from its start is: `* */6 * * *` → «setiap 6 jam, tiap kali
+  setiap menit selama 1 jam»; `10-40 */4 * * *` → «setiap 4 jam, tiap
+  kali setiap menit dari menit ke-10 sampai ke-40». Hours from later
+  name their start: `*/5 1/3 * * *` → «setiap 3 jam mulai pukul 01.00,
+  tiap kali setiap 5 menit sampai menit ke-55». One case needs no «tiap
+  kali»: hours from 00.00 and M values none of which is minute 0; the
+  positions follow the hours directly, as they follow «setiap jam»:
+  `5,10,20,30,50 */4 * * *` → «setiap 4 jam pada menit ke-5, ke-10,
+  ke-20, ke-30, dan ke-50». [audit: the second revision named «mulai
+  pukul 00.00» here because judge 2 asked which hours; that is a wish
+  for a stated start, which the project's convention answers (a rhythm
+  from the first hour is said bare), and it named a 00.00 that need not
+  fire. The first build wrote «setiap 4 jam setiap menit dari …» with no
+  comma and two «setiap» colliding.] When H starts late and M does not
   hold minute 0, «mulai pukul 01.00» names an hour's start that does not
-  fire; no row has this.)
-
-History: the first draft said the first hour's times and «, berulang
-setiap 2 jam» (judge 1: must be added up; the schedule read: one hour
-said two ways). The first revision said «setiap 2 jam, setiap menit
-sampai menit ke-59» (judge 2: which hours is unsaid, and 0 to 59 is not
-seen as the whole hour, so it reads as every minute, always).
+  fire; «tiap kali pada menit ke-…» after it says what does. [least
+  sure; no reader has seen it]
 
 **D. H is, by the order of choice, every hour less one or two, or a
 rhythm that tiles the day less one or two hours**: as A or C, then
@@ -658,6 +731,19 @@ view, or the wrapped run of 3.5; two hours in a row are a run):
   «setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit
   selama 30 menit, terakhir pukul 23.29». (The first revision ended the
   hours at «sampai 23.00»; judge 2: 23.00 or 23.29?)
+
+**Hours that are runs and rhythms together** (order of choice, rule 10)
+**on one minute** are stretches, each with its own rhythm word: `0
+0-5,7-23/2 * * *` → «setiap hari, setiap jam dari pukul 00.00 sampai
+05.00 dan setiap 2 jam dari pukul 07.00 sampai 23.00» [audit: E as first
+written named nine single times here]. With any other minutes such
+hours fall back to E, hour run by hour run; that can be long (`*/15
+0-5,7-23/2` is ten stretches) and is left open.
+
+**M in pieces over single hours** (E, no run of hours): each hour's
+instance in one list: `0-29,45 8,12 * * *` → «setiap hari, setiap menit
+dari pukul 08.00 sampai 08.29, pukul 08.45, dari pukul 12.00 sampai
+12.29, dan pukul 12.45».
 
 An exception inside M over several hours follows everything else: as
 clock times when one or two moments are left out, else by position
@@ -717,16 +803,20 @@ and «setiap jam, setiap detik sampai detik ke-59»].
      ke-54»; from later, «…, tiap kali setiap 10 detik dari detik ke-5
      sampai ke-55».
 
+   **After a time that already holds «tiap kali»** (4.1 C, F) the
+   seconds follow **«, masing-masing»** instead: `30 * */6 * * *` →
+   «setiap 6 jam, tiap kali setiap menit selama 1 jam, masing-masing
+   pada detik ke-30» [audit: the first build said «tiap kali» twice].
+   **«, terakhir pukul» comes after the seconds and carries the last
+   second that fires**: `30 0-29 5/2 * * *` → «setiap hari, setiap 2 jam
+   mulai pukul 05.00, tiap kali setiap menit selama 30 menit,
+   masing-masing pada detik ke-30, terakhir pukul 23.29.30» [audit: the
+   first build ended «…, terakhir pukul 23.29, tiap kali pada detik
+   ke-30», where 23.29.00 does not fire].
+
    One second after minutes not said with clock times is the first
    bullet's form: «setiap 15 menit, tiap kali pada detik ke-30»; under
    «pada jam genap,» with every minute, «setiap menit pada detik ke-30».
-
-   History: «, masing-masing … sepanjang menit itu» (first draft: «menit
-   itu» after «15 menit» can be all fifteen [schedule read]); «, setiap
-   kali setiap detik sampai detik ke-59» (first revision: two «setiap»
-   collide and 0 to 59 is not seen as a whole minute [judge 2]). «tiap
-   kali» is judge 2's word; «tiap» is as standard as «setiap» [notes
-   3.1] and is used in this one phrase only.
 
 A minute left out under seconds: 3.9.
 
@@ -766,11 +856,6 @@ the week), pieces, the odd or even dates whole or in parts, or a rhythm.
   ganjil dari tanggal 1 sampai 13 dan dari tanggal 17 sampai 31, dan juga
   setiap Senin sampai Jumat, …»
 
-History: «…, kecuali tanggal 15 yang tidak jatuh pada hari Jumat» (first
-draft: a double negative both readers untangled); «…, tetapi tanggal 15
-hanya jika jatuh pada hari Jumat» (first revision: read rightly alone,
-but with a union before it "too many conditions" [judge 2]).
-
 **What governs both arms.** The time follows a comma. A closing month or
 year follows **«, keduanya»**: `0 0 1 6 5` → «setiap tanggal 1, dan juga
 setiap Jumat, pukul 00.00, keduanya pada bulan Juni»; «…, keduanya pada
@@ -798,6 +883,22 @@ where one arm is every day but one or two, the intersection is the other
 arm less those days: `0 0 1-14,16-31 * */2` → «setiap Selasa, Kamis,
 Sabtu, dan Minggu pukul 00.00, kecuali tanggal 15»; `0 0 */2 * 0-2,4-6`
 → «setiap tanggal ganjil pukul 00.00, kecuali Rabu».
+
+**A weekday counted inside the month and dates** [audit]. Such a
+weekday can fall on seven dates only (the nth on dates 7n−6 to 7n, the
+last on the 22nd to the 31st). Where the dates are named one by one, or
+are a rhythm counted in days (which cannot stand after «jatuh pada»),
+only the dates it can fall on are said, joined by **«atau»**, never
+with a month name (the weekday phrase has it): `0 0 */3 * 5L` → «Jumat
+terakhir setiap bulan, jika jatuh pada tanggal 22, 25, 28, atau 31,
+pukul 00.00»; `0 0 */10 * 0L` → «hari Minggu terakhir setiap bulan, jika
+jatuh pada tanggal 31, pukul 00.00». (The first build named all eleven
+dates of `*/3`, with «dan».) If none of the dates is possible the
+schedule never fires and the dates are said as they are. «, jika ada» of
+a fifth weekday is not said before «, jika jatuh pada» («Senin kelima
+setiap bulan, jika jatuh pada tanggal ganjil, pukul 00.00»). «yang jatuh
+pada» follows any phrase that begins «setiap tanggal» (runs and pieces
+too); one month joins a plain date there, a year never does.
 
 Friday the 13th: «setiap tanggal 13 yang jatuh pada hari Jumat». The
 first Monday: «Senin pertama setiap bulan».
@@ -939,6 +1040,13 @@ long clause read as an afterthought [judge 2]:
   Agustus, digeser ke hari Jumat sebelumnya jika jatuh pada hari Sabtu
   atau Minggu» (only months the form fires in are named, `dateReach`)
 
+**In a union** the clause follows its date at once, between commas,
+before «dan juga»: `0 0 31W * 5` → «setiap tanggal 31, digeser ke hari
+Jumat sebelumnya jika jatuh pada hari Sabtu atau Minggu, dan juga setiap
+Jumat, pukul 00.00» [audit: at the end of the sentence, after «dan juga
+setiap Jumat, pukul 00.00», the clause had nothing to say what moves;
+a reader joins it to what is near].
+
 Each is exactly the scheduler's rule: a Saturday goes to the Friday
 before, a Sunday to the Monday after, never out of the month. The date
 follows the rules of any date (one month joins it: «setiap tanggal 15
@@ -952,9 +1060,9 @@ Juni pukul 00.00, digeser …»).
 | `1#5` | «Senin kelima setiap bulan, jika ada,» |
 | `5L` | «Jumat terakhir setiap bulan»; Sunday «hari Minggu terakhir setiap bulan» |
 
-**Months with these forms.** One month, or a short list of them (up to
-six), takes the place of «setiap bulan», always as names, a run spelt
-out: «hari terakhir bulan Juni», «hari terakhir bulan Juni, Juli,
+**Months with these forms.** The months, when they are not every month
+and not every month but one or two, take the place of «setiap bulan»,
+always as names, a run spelt out, however many: «hari terakhir bulan Juni», «hari terakhir bulan Juni, Juli,
 Agustus, dan Desember», «Jumat terakhir bulan Januari dan Juli». Months
 left out by rule 5 or 7 are an exception («hari terakhir setiap bulan
 pukul 00.00, kecuali bulan Desember»). In a union the form keeps «setiap
@@ -996,8 +1104,8 @@ Jumat (2), Sabtu (2), Minggu (2). Short forms are written only.
 
 6.4 Units, one form each: detik, menit, jam, hari, bulan, tahun.
 
-6.5 Function words: setiap (3), tiap kali (4), pukul (2), tanggal (2),
-pada (2), dari (2), sampai (2), selama (3), pertama (3), dan (1), dan
+6.5 Function words: setiap (3), tiap kali (4), masing-masing (4), pukul
+(2), tanggal (2), pada (2), dari (2), sampai (2), selama (3), pertama (3), dan (1), dan
 juga (3), serta (2), atau (3), kecuali (3), mulai (3), terakhir (3),
 tepat (2), setelah (3), keduanya (4), semuanya (4), digeser ke (4), yang
 jatuh pada (5), jika (2). The full list is the lexicon.
@@ -1027,7 +1135,8 @@ are capitalised; «hari», «bulan», «tanggal», «pukul» are not.
 whole union; a month or year of both arms after «, keduanya»; a year of
 several month pieces after «, semuanya»; nothing glued to the last
 member of pieces; no exception or condition inside or after a union's
-arms; seconds of every minute after «, tiap kali».
+arms, but for where a date moves to, which follows its date at once
+(5.3); seconds of every minute after «, tiap kali».
 
 8.3 `confinement-vs-juxtaposition`: the confining part comes first and a
 comma follows, with no «dan»: «setiap tanggal 1, setiap menit»; «pada
@@ -1085,3 +1194,120 @@ saat sistem dinyalakan.» Unrecognised: «pola cron yang tidak dikenali».
     «selama menit pertama»); «setiap jam tepat»; «setelah pukul»; «, dan
     juga»; «, keduanya pada» and «, semuanya pada»; «setiap tahun ke-N
     sesudahnya»; the moved date as a closing clause.
+
+## What rests on judgment alone
+
+- **Apps.** The usage notes' writer could not open the text of any
+  Indonesian calendar or reminder app [notes, "Keterbatasan"]. Nothing
+  here is justified by "what apps do": the choice of the full stop over
+  the colon rests on EYD and on timetables and notices; the short names
+  of `short` rest on calendars and tight tables as the notes describe
+  them, not on any app text that was read. [audit]
+- **«jam genap», «jam ganjil»** have no corpus support for hours (3.7).
+  They are kept because the alternative for `*/15 */2` is four series of
+  clock times or a doubled rhythm, and the words cannot be read another
+  way on a 24-hour clock; a native reader should confirm. [audit]
+- **«menit pertama»** (the minute that begins at xx.00, a thing that
+  lasts) stands beside **«menit ke-1»** (the point xx.01). Inside one
+  sentence each has one reading, but a reader who meets both may take
+  them for the same minute. No form free of this was found that names
+  the first minute without «ke-0»; open. [audit]
+- **«keduanya», «semuanya»** close a scope exactly and read as
+  translated; kept for want of anything as exact. [audit]
+
+## Rules the first build had to guess, now stated
+
+The builder of the first renderer (2026-11-19) reported these as places
+this rule book was silent. Each is now a rule, as built unless marked
+**changed**.
+
+1. Seconds after «tiap kali» come before any «kecuali» of the time.
+2. Minutes in pieces over single hours: 4.1, "M in pieces over single
+   hours".
+3. Pieces holding minute 0: **changed**, 3.6.
+4. Weekday pieces in a union: **changed**; there are none ("Weekdays,
+   in full").
+5. Forms counted inside the month take the names of any number of
+   months (5.3); beside «kecuali bulan …» they keep «setiap bulan».
+6. Hours from 00.00 with minutes that do not hold minute 0 and are not
+   values: **changed**, 4.1 C («setiap 4 jam, tiap kali …»).
+7. First times: every moment of the first hour is named when minutes
+   times seconds are four or fewer («setiap 6 jam mulai pukul 00.00.15,
+   00.00.45, 00.30.15, dan 00.30.45»).
+8. Seconds in minute 0 of every hour, other shapes: «setiap 10 detik
+   mulai detik ke-5 selama menit pertama setiap jam»; values with second
+   0, «setiap jam tepat serta pada detik ke-20 dan ke-50 menit pertama».
+9. Times left out of a rhythm round the clock carry the seconds' first
+   and last value («kecuali dari pukul 03.00.15 sampai 03.59.45»);
+   elsewhere the seconds the sentence's own clock times carry.
+10. Minute 0 left out under every second: «kecuali selama menit pertama
+    serta selama 1 menit mulai menit ke-30 setiap jam».
+11. `L-n` with several month lengths and months restricted: dates with
+    month names («setiap tanggal 1 pada bulan April dan tanggal 2 pada
+    bulan Januari dan Maret,»). February in common years counts as
+    skipped, so `L-28` is three groups, the first «pada bulan yang
+    berumur 29 hari». In a union `L-n` always stays a count.
+12. A weekday form with a rhythm of dates as its condition: **changed**,
+    4.3 (only the dates it can fall on).
+13. «setiap bulan» is dropped from a rhythm of dates whenever months are
+    named in the closing part, in a union too.
+14. Years: an open run in pieces is «… dan mulai tahun 2040»; a month
+    phrase with a rhythm of years is «pada bulan Juni tahun 2030 dan
+    setiap tahun ke-2 sesudahnya».
+15. Hours that are runs and rhythms together: **changed** for one
+    minute, 4.1.
+16. A position left out of M says «setiap jam» unless the phrase it
+    follows already ends in it, or it stands under «tiap kali» or «pada
+    jam genap».
+17. Doubled «tiap kali»: **changed**, 4.2 («masing-masing»).
+18. Days by month length (4.4, `daysByMonths`) are said apart only when
+    the date phrase names its last day (not every day, not the whole odd
+    or even dates, not a rhythm to the month's end) and the groups'
+    months differ.
+19. In a union, the odd or even dates less one or two are the stretches
+    of them that are left («setiap tanggal ganjil dari tanggal 1 sampai
+    13 dan dari tanggal 17 sampai 31»); a stretch of one date is that
+    date («setiap tanggal 1, tanggal 5, dan setiap tanggal ganjil dari
+    tanggal 9 sampai 31»).
+
+## Left open by the audit
+
+- `*/15 0-5,7-23/2 * * *`: hours as a run and a rhythm with a rhythm of
+  minutes are ten stretches. Nobody can hold it; no form was found.
+- `2030/2,2031` → «pada tahun 2030 dan setiap tahun ke-2 sesudahnya dan
+  tahun 2031»: exact, and out of order.
+- Eight or more dates in pieces repeat «tanggal» before each single
+  date («tanggal 9, tanggal 10, tanggal 20, dan tanggal 22»).
+
+## History: forms that were tried and replaced
+
+None of the wording below is a rule. It is kept so that a rejected
+form is not proposed again without its reason. (Shorter notes of the
+same kind stand beside the rule they explain.)
+
+- **4.1 The time of day (seconds all zero).** the first draft said the
+  first hour's times and «, berulang setiap 2 jam» (judge 1: must be
+  added up; the schedule read: one hour said two ways). The first
+  revision said «setiap 2 jam, setiap menit sampai menit ke-59» (judge
+  2: which hours is unsaid, and 0 to 59 is not seen as the whole hour,
+  so it reads as every minute, always).
+
+- **4.2 Seconds.** «, masing-masing … sepanjang menit itu» (first draft:
+  «menit itu» after «15 menit» can be all fifteen [schedule read]); «,
+  setiap kali setiap detik sampai detik ke-59» (first revision: two
+  «setiap» collide and 0 to 59 is not seen as a whole minute [judge 2]).
+  «tiap kali» is judge 2's word; «tiap» is as standard as «setiap»
+  [notes 3.1] and is used in this one phrase only.
+
+- **4.3 A day of the month and a weekday together.** «…, kecuali tanggal
+  15 yang tidak jatuh pada hari Jumat» (first draft: a double negative
+  both readers untangled); «…, tetapi tanggal 15 hanya jika jatuh pada
+  hari Jumat» (first revision: read rightly alone, but with a union
+  before it "too many conditions" [judge 2]).
+
+- **4.2, «masing-masing».** The first draft's «, masing-masing …
+  sepanjang menit itu» was dropped for «menit itu», which after «15
+  menit» can be all fifteen. The audit brought «masing-masing» back
+  alone, with no «menit itu», and only after a time that already holds
+  «tiap kali»: it says "each of those", which is what the second «tiap
+  kali» meant.
