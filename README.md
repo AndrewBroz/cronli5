@@ -212,7 +212,7 @@ cronli5(weekdaysAt1330, { lang: 'en-GB' });
 
 ## Languages
 
-English is the default. Thirteen languages ship, listed below; each is a full
+English is the default. Fourteen languages ship, listed below; each is a full
 renderer over the same language-independent core, written from that
 language's own conventions, and each ships as its own module. You choose
 what reaches your bundle:
@@ -247,6 +247,7 @@ docs below.
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
 | Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
 | Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
+| Chinese (Traditional) | `cronli5/lang/zh-hant` | Taiwan's Executive Yuan rules for numbers in official documents and Ministry of Education punctuation; Hong Kong government usage (`'zh-HK'`, also Macau) | [docs/lang/zh-hant.md](./docs/lang/zh-hant.md) |
 | Czech | `cronli5/lang/cs` | Internetová jazyková příručka (ÚJČ); ČSN 01 6910 for dates and times; timetable practice | [docs/lang/cs.md](./docs/lang/cs.md) |
 | Indonesian | `cronli5/lang/id` | Ejaan yang Disempurnakan (EYD) Edisi V and KBBI; timetable and notice practice for «pukul 09.00» | [docs/lang/id.md](./docs/lang/id.md) |
 | Italian | `cronli5/lang/it` | Accademia della Crusca and the dictionaries of use; Serianni's grammar; CLDR for clock times | [docs/lang/it.md](./docs/lang/it.md) |
@@ -289,6 +290,7 @@ pipeline is the review.
 | Portuguese | stable |
 | Ukrainian | stable |
 | Chinese (Simplified) | stable |
+| Chinese (Traditional) | beta |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see
@@ -383,6 +385,7 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 | English | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | Ukrainian | щопонеділка о 9:30:05 та 9:30:10 | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
 | Chinese (Simplified) | 每周一9:30:05、9:30:10 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
+| Chinese (Traditional) | 每週一 09:30:05、09:30:10 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
 | Spanish | los lunes a las 9:30:05 y 9:30:10 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | Japanese | 毎週月曜日の9:30:05・9:30:10 | 毎分 5と 10 秒過ぎ 30 分過ぎ, 次において実施 09:00月曜日 にのみ |
 | Korean | 매주 월요일 오전 9시 30분 5초, 9시 30분 10초 | 5 및 10초, 30분, 오전 09:00에서, 월요일에만 |

@@ -3,6 +3,7 @@
 // this module plus the typed source (`npm run types`).
 
 import type {EnglishStyle} from './lang/en/options.js';
+import type {claimed} from './languages.js';
 
 /** A style table whose fields are not known to the type system. */
 export interface Cronli5AnyStyle {
@@ -22,7 +23,6 @@ export interface Cronli5Language<Style = any, Code extends string = string> {
   describe(schedule: any, opts: any): string;
   fallback(opts: any): string;
   label(description: string, opts: any): string;
-  pending?: {[region: string]: {instead: string; variant: string}};
   reboot(opts: any): string;
   regions: {[region: string]: string};
   sentence(description: string, opts: any): string;
@@ -33,25 +33,66 @@ export interface Cronli5Language<Style = any, Code extends string = string> {
 /** The style table of each language an instance knows, by code. */
 export type Cronli5Styles = {[code: string]: object};
 
-// A language code as a caller may spell it: lower or upper case, with an
-// optional region after `-` or `_`.
-type Spelled<Code extends string> = Code | Uppercase<Code>;
+// A language code as a caller may spell it: as written, or all in lower
+// or upper case.
+type Spelled<Code extends string> = Code | Lowercase<Code> | Uppercase<Code>;
 
-/** A `lang` code naming a language an instance knows. */
+type Joint = '-' | '_';
+
+/**
+ * A `lang` code naming a language an instance knows: its code, then an
+ * optional region (and whatever else) after `-` or `_`. A language in a
+ * script of its own (`zh-Hant`) is also named by its language and a region
+ * that writes that script (`zh-TW`).
+ */
 export type Cronli5Code<Styles> = {
   [Code in keyof Styles & string]:
-    Spelled<Code> | `${Spelled<Code>}${'-' | '_'}${string}`
+    Spelled<Code> | `${Spelled<Code>}${Joint}${string}` |
+    (Code extends `${infer Language}-${string}` ?
+      `${Spelled<Language>}${Joint}${string}` : never)
 }[keyof Styles & string];
 
-// The language a code names, without its region, in lower case.
-type LanguageOf<Code extends string> = Lowercase<
-  Code extends `${infer Language}-${string}` ? Language :
-    Code extends `${infer Language}_${string}` ? Language : Code>;
+// A code with `-` between its parts, however it was spelled.
+type Hyphened<Code extends string> =
+  Code extends `${infer Head}_${infer Rest}` ? `${Head}-${Hyphened<Rest>}` :
+    Code;
+
+// The language a code opens with and the part after it (a script or a
+// region), or nothing.
+type Parts<Code extends string> =
+  Code extends `${infer Language}-${infer Second}-${string}` ?
+    [Language, Second] :
+    Code extends `${infer Language}-${infer Second}` ? [Language, Second] :
+      [Code, ''];
+
+// The code among an instance's that a spelling names, in any case.
+type Known<Styles, Code extends string> = {
+  [Key in keyof Styles & string]:
+    Lowercase<Key> extends Lowercase<Code> ? Key : never
+}[keyof Styles & string];
+
+// The language in another script that writes a region, if the instance
+// knows it.
+type Claiming<Styles, Language extends string, Region extends string> =
+  Lowercase<Language> extends keyof typeof claimed ?
+    Uppercase<Region> extends keyof typeof claimed[Lowercase<Language>] ?
+      typeof claimed[Lowercase<Language>][Uppercase<Region>] & keyof Styles :
+      never :
+    never;
+
+type Or<First, Second> = [First] extends [never] ? Second : First;
+
+// The code of the language a spelling names: the one written in the
+// script named, or the one in another script that writes the region
+// named, or the plain language.
+type CodeOf<Styles, Named extends [string, string]> = Or<
+  Known<Styles, `${Named[0]}-${Named[1]}`>,
+  Or<Claiming<Styles, Named[0], Named[1]>, Known<Styles, Named[0]>>>;
 
 /** The style table of the language a code names. */
 export type Cronli5StyleOf<Styles, Code extends string> =
-  LanguageOf<Code> extends keyof Styles ? Styles[LanguageOf<Code>] :
-    Cronli5AnyStyle;
+  [CodeOf<Styles, Parts<Hyphened<Code>>>] extends [never] ? Cronli5AnyStyle :
+    Styles[CodeOf<Styles, Parts<Hyphened<Code>>> & keyof Styles];
 
 /** The style tables of a list of language modules, by their codes. */
 export type Cronli5StylesOf<Languages extends readonly Cronli5Language[]> = {
@@ -93,12 +134,13 @@ export interface Cronli5Options<Style = EnglishStyle> {
   form?: 'fragment' | 'label' | 'sentence';
 
   /**
-   * The language: a code such as `'en'`, optionally with a region
-   * (`'en-GB'`), or a language module (`import uk from
-   * 'cronli5/lang/uk'`). A code must name a language this instance knows:
-   * the default export knows English, `create` takes a list, and
-   * `cronli5/all` knows every language. A region the language does not
-   * know is described in the language's default style.
+   * The language: a code such as `'en'`, optionally with a script
+   * (`'zh-Hant'`) and a region (`'en-GB'`, `'zh-Hant-HK'`), or a language
+   * module (`import uk from 'cronli5/lang/uk'`). A code must name a
+   * language this instance knows: the default export knows English,
+   * `create` takes a list, and `cronli5/all` knows every language. A
+   * region the language does not know is described in the language's
+   * default style.
    */
   lang?: string | Cronli5Language;
 

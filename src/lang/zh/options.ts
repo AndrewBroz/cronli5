@@ -23,24 +23,11 @@ const standard: ChineseStyle = {hour12: false, short: false};
 const styles: Readonly<Record<'standard', Readonly<ChineseStyle>>> =
 Object.freeze({standard: Object.freeze(standard)});
 
-/** The region codes Chinese knows: none yet. */
-const regions: {[region: string]: string} = {};
-
 /**
- * The variants Chinese does not yet write: Traditional Chinese, asked for
- * by its script or by a region that writes it. They are described in
- * Simplified Chinese, with a warning, until they are written.
+ * The region codes Chinese knows: none. A region that writes Traditional
+ * Chinese belongs to that language (`zh-Hant`), not to this one.
  */
-const traditional = {
-  instead: 'Simplified Chinese',
-  variant: 'Traditional Chinese'
-};
-const pending: {[region: string]: {instead: string; variant: string}} = {
-  HANT: traditional,
-  HK: traditional,
-  MO: traditional,
-  TW: traditional
-};
+const regions: {[region: string]: string} = {};
 
 const fields = Object.keys(standard).sort();
 
@@ -72,4 +59,4 @@ function style(base: string, overrides?: unknown): ChineseStyle {
   return table as unknown as ChineseStyle;
 }
 
-export {pending, regions, style, styles};
+export {regions, style, styles};

@@ -105,7 +105,7 @@ it. A language `cronli5` does not ship is an error; cRonstrue would answer
 in English.
 
 When you have time, move to `cronli5`'s own API. `cronli5/compat` bundles
-all thirteen languages (~115&nbsp;KB gzipped); the main entry bundles only the
+all fourteen languages (~115&nbsp;KB gzipped); the main entry bundles only the
 languages you import, and it is what the rest of this guide describes.
 
 ## Your own house style
@@ -253,7 +253,7 @@ A code that names a language the instance does not have is an error that
 tells you which import provides it.
 
 The honest trade: cRonstrue ships **far more locales** (39), built from
-per-locale string tables. `cronli5` ships thirteen languages, each a full
+per-locale string tables. `cronli5` ships fourteen languages, each a full
 renderer that says a schedule the way that language says it, not a table
 of translated strings. The [README](../README.md#languages) lists what currently
 ships.

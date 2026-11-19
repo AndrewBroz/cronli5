@@ -1,4 +1,5 @@
 import chai from 'chai';
+import {create} from '../../src/cronli5.js';
 import en from '../../src/lang/en/index.js';
 import cs from '../../src/lang/cs/index.js';
 import de from '../../src/lang/de/index.js';
@@ -12,6 +13,7 @@ import pl from '../../src/lang/pl/index.js';
 import pt from '../../src/lang/pt/index.js';
 import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
+import zhHant from '../../src/lang/zh-hant/index.js';
 
 const {expect} = chai;
 
@@ -20,15 +22,23 @@ const {expect} = chai;
 
 describe('Language contract:', function() {
   const languages = [
-    en, cs, de, es, fr, indonesian, italian, ja, ko, pl, pt, uk, zh
+    en, cs, de, es, fr, indonesian, italian, ja, ko, pl, pt, uk, zh, zhHant
   ];
 
   languages.forEach(function each(lang) {
     describe(lang.code, function() {
       const opts = {style: lang.style(lang.defaultStyle)};
 
-      it('has a lower-case code', function() {
-        expect(lang.code).to.match(/^[a-z]{2,3}$/u);
+      it('has a lower-case code, with its script if it names one',
+        function() {
+          expect(lang.code).to.match(/^[a-z]{2,3}(?:-[A-Z][a-z]{3})?$/u);
+        });
+
+      it('is found by its code', function() {
+        const describeIt = create({languages: [lang]});
+
+        expect(describeIt('30 9 * * 1', {lang: lang.code}))
+          .to.equal(describeIt('30 9 * * 1'));
       });
 
       it('has a default style, and every region names a style', function() {

@@ -6,6 +6,8 @@ import cronli5, {
 import en, {styles} from '../types/lang/en/index.js';
 import cs from '../types/lang/cs/index.js';
 import de from '../types/lang/de/index.js';
+import zh from '../types/lang/zh/index.js';
+import zhHant from '../types/lang/zh-hant/index.js';
 import every from '../types/all.js';
 
 // The default export is a function returning a string.
@@ -111,3 +113,44 @@ expectError(create({languages: [de], styles: {de: {nope: true}}}));
 expectError(create({}));
 expectError(create({languages: [en], options: {style: {hour12: false}}}));
 expectAssignable<Cronli5>(cronli5);
+
+const at9 = '0 9 * * *';
+
+// A language in a script of its own is named by its code in any spelling,
+// with or without a region, or by its language and a region that writes
+// that script; the style is that language's.
+expectType<'zh-Hant'>(zhHant.code);
+expectType<string>(every(at9, {lang: 'zh-Hant', style: {weekday: '星期'}}));
+expectType<string>(every(at9, {lang: 'zh-hant', style: {separator: '時'}}));
+expectType<string>(every(at9, {lang: 'ZH-HANT', style: {separator: ':'}}));
+expectType<string>(every(at9, {lang: 'zh_Hant_HK', style: {weekday: '週'}}));
+expectType<string>(every(at9, {lang: 'zh-Hant-TW', style: {short: true}}));
+expectType<string>(every(at9, {lang: 'zh-TW', style: {weekday: '星期'}}));
+expectType<string>(every(at9, {lang: 'zh_hk', style: {separator: '時'}}));
+expectType<string>(every(at9, {lang: 'zh-MO', style: {hour12: true}}));
+expectError(every(at9, {lang: 'zh-Hant', style: {am: 'am'}}));
+expectError(every(at9, {lang: 'zh-TW', style: {weekday: 'Mon'}}));
+
+// The plain language keeps its own style, under its code, its default
+// script or a region no other script writes.
+expectType<string>(every(at9, {lang: 'zh', style: {hour12: true}}));
+expectType<string>(every(at9, {lang: 'zh-CN', style: {hour12: true}}));
+expectType<string>(every(at9, {lang: 'zh-Hans', style: {short: true}}));
+expectError(every(at9, {lang: 'zh', style: {weekday: '星期'}}));
+expectError(every(at9, {lang: 'zh-CN', style: {separator: ':'}}));
+expectError(every(at9, {lang: 'zh-Hans', style: {weekday: '週'}}));
+
+// An instance given only the language in a script of its own takes its
+// codes and regions, and types its default style by its code.
+const traditional = create({
+  languages: [zhHant],
+  styles: {'zh-Hant': {weekday: '星期'}}
+});
+
+expectType<string>(traditional(at9, {style: {separator: '時'}}));
+expectType<string>(traditional(at9, {lang: 'zh-Hant-HK'}));
+expectType<string>(traditional(at9, {lang: 'zh-TW', style: {short: true}}));
+expectError(traditional(at9, {lang: 'zh'}));
+expectError(traditional(at9, {lang: 'en'}));
+expectError(create({languages: [zh], styles: {'zh-Hant': {}}}));
+expectError(create({languages: [zh, zhHant], styles: {'zh-Hant': {am: 'am'}}}));

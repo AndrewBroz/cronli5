@@ -22,6 +22,7 @@
 
 import {readFileSync, writeFileSync} from 'node:fs';
 import cronli5 from '../src/cronli5.js';
+import everyLanguage from '../src/all.js';
 import cronstrue from 'cronstrue';
 import cronstrueI18n from 'cronstrue/i18n.js';
 import en, {styles as englishStyles} from '../src/lang/en/index.js';
@@ -37,6 +38,7 @@ import cs from '../src/lang/cs/index.js';
 import pl from '../src/lang/pl/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
+import zhHant from '../src/lang/zh-hant/index.js';
 import {
   comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
@@ -53,6 +55,13 @@ const languages = [
   {code: 'en', extras: [], lang: en},
   {code: 'uk', extras: [], lang: uk},
   {code: 'zh', cronstrueLocale: 'zh_CN', extras: [], lang: zh},
+  {
+    code: 'zh-Hant',
+    cronstrueLocale: 'zh_TW',
+    extras: [],
+    file: 'zh-hant',
+    lang: zhHant
+  },
   {code: 'es', cronstrueLocale: 'es', extras: [], lang: es},
   {code: 'ja', cronstrueLocale: 'ja', extras: [], lang: ja},
   {code: 'ko', cronstrueLocale: 'ko', extras: [], lang: ko},
@@ -64,6 +73,12 @@ const languages = [
   {code: 'cs', cronstrueLocale: 'cs', extras: [], lang: cs},
   {code: 'pl', cronstrueLocale: 'pl', extras: [], lang: pl}
 ];
+
+// A language's page: named by its directory, which is its code in lower
+// case and is given only where the code is not already that.
+function docPath(language) {
+  return 'docs/lang/' + (language.file || language.code) + '.md';
+}
 
 function describe(fn, pattern) {
   try {
@@ -159,6 +174,7 @@ const headToHeadRows = [
   {name: 'English', code: 'en'},
   {name: 'Ukrainian', code: 'uk'},
   {name: 'Chinese (Simplified)', code: 'zh', cronstrueLocale: 'zh_CN'},
+  {name: 'Chinese (Traditional)', code: 'zh-Hant', cronstrueLocale: 'zh_TW'},
   {name: 'Spanish', code: 'es', cronstrueLocale: 'es'},
   {name: 'Japanese', code: 'ja', cronstrueLocale: 'ja'},
   {name: 'Korean', code: 'ko', cronstrueLocale: 'ko'},
@@ -328,17 +344,30 @@ function evaluateExample(callee, args, vars) {
 
   try {
     const modules = {
-      cs, de, en, es, fr, id: indonesian, it, ja, ko, pl, pt, uk, zh
+      cs, de, en, es, fr, id: indonesian, it, ja, ko, pl, pt, uk, zh, zhHant
     };
     const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
     const run = Function('cronli5', ...codes, ...names,
       'return ' + callee + '(' + args + ');');
     const callable = callee === 'cronli5' ? cronli5 : cronstrueAdapter;
-
-    return run(callable,
+    const scope = [
       ...codes.map((code) => modules[code]),
-      ...names.map((n) => vars[n]));
+      ...names.map((n) => vars[n])
+    ];
+
+    try {
+      return run(callable, ...scope);
+    }
+    catch (error) {
+      // An example that names a language by code is written for
+      // `cronli5/all`, the instance that knows every language.
+      if (callee !== 'cronli5') {
+        throw error;
+      }
+
+      return run(everyLanguage, ...scope);
+    }
   }
   catch {
     return null;
@@ -384,7 +413,7 @@ const tableJobs = {
 };
 
 for (const language of languages) {
-  tableJobs['docs/lang/' + language.code + '.md'] = {
+  tableJobs[docPath(language)] = {
     comparison: renderLanguageTable(language)
   };
 }
@@ -393,7 +422,7 @@ const docs = [
   'README.md', 'llms.txt', 'docs/language-status.md',
   'docs/cronli5-vs-cronstrue.md', 'docs/styles.md',
   'docs/migrating-from-cronstrue.md',
-  ...languages.map((language) => 'docs/lang/' + language.code + '.md')
+  ...languages.map(docPath)
 ];
 
 const check = process.argv.includes('--check');

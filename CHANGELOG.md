@@ -45,6 +45,32 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   fields: `short` («od pon. do pt. co 15 min …», «1 VI»), `separator`
   («9.30») and `hour12` (the colloquial «9:30 rano»); one region, `PL`.
   No fluent human has reviewed it.
+- **Traditional Chinese (`zh-Hant`)**, at beta: a language of its own,
+  `import zhHant from 'cronli5/lang/zh-hant'`, written from usage notes in
+  Traditional Chinese by a writer told nothing of cron, then answers,
+  hand-written expected descriptions, an adversarial schedule read and
+  blind reads, and a renderer built without sight of any other, the
+  Simplified one included. Two styles: `tw` (Taiwan, the default), as in
+  「每週一至週五 09:00～17:45，每15分鐘一次」, and `hk` (Hong Kong, also
+  used for Macau), as in 「每星期一至五上午9時至下午5時45分，每15分鐘一次」.
+  No fluent human has reviewed it. See
+  [docs/lang/zh-hant.md](./docs/lang/zh-hant.md).
+
+### Changed
+
+- **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
+  Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
+  `cronli5/all` has it. An instance without it reports the language as
+  not available, with the import that provides it, where it used to
+  answer in Simplified Chinese with a warning on the console.
+  `cronli5/lang/zh` is Simplified only (`zh`, `zh-Hans`, `zh-CN`,
+  `zh-SG`).
+
+### Removed
+
+- **The optional `pending` field of the public `Language` type**, which
+  named script variants a language had not written yet. Nothing declares
+  one now.
 
 ## [1.2.2]
 

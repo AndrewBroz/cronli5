@@ -1,12 +1,12 @@
 # cronli5
 
 > Turns cron patterns into plain-language descriptions ("every 15 minutes
-> from 9 a.m. through 5:45 p.m. on weekdays") in thirteen languages: English,
+> from 9 a.m. through 5:45 p.m. on weekdays") in fourteen languages: English,
 > Czech, German, Spanish, French, Indonesian, Italian, Japanese, Korean,
-> Polish, Portuguese, Ukrainian and Chinese (Simplified). Zero runtime
-> dependencies, ESM and CommonJS, TypeScript types bundled, Node 20+ or the
-> browser. It describes schedules; it does not run them or compute next run
-> times.
+> Polish, Portuguese, Ukrainian, Chinese (Simplified) and Chinese
+> (Traditional). Zero runtime dependencies, ESM and CommonJS, TypeScript types
+> bundled, Node 20+ or the browser. It describes schedules; it does not run
+> them or compute next run times.
 
 Install: `npm install cronli5`
 

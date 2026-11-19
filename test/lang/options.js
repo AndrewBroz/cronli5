@@ -13,6 +13,7 @@ import pl from '../../src/lang/pl/index.js';
 import pt from '../../src/lang/pt/index.js';
 import uk from '../../src/lang/uk/index.js';
 import zh from '../../src/lang/zh/index.js';
+import zhHant from '../../src/lang/zh-hant/index.js';
 import {spanningSet} from '../../scripts/patterns.mjs';
 
 const {expect} = chai;
@@ -25,7 +26,8 @@ const {expect} = chai;
 // reach (only English has per-option expectation files).
 
 const languages = {
-  en, cs, de, es, fr, id: indonesian, it: italian, ja, ko, pl, pt, uk, zh
+  en, cs, de, es, fr, id: indonesian, it: italian, ja, ko, pl, pt, uk, zh,
+  'zh-Hant': zhHant
 };
 
 // Every public option flag, alone and in the pairs most likely to interact.

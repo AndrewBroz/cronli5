@@ -21,9 +21,10 @@ import pl from './lang/pl/index.js';
 import pt from './lang/pt/index.js';
 import uk from './lang/uk/index.js';
 import zh from './lang/zh/index.js';
+import zhHant from './lang/zh-hant/index.js';
 
 const cronli5 = create({
-  languages: [en, cs, de, es, fr, id, it, ja, ko, pl, pt, uk, zh]
+  languages: [en, cs, de, es, fr, id, it, ja, ko, pl, pt, uk, zh, zhHant]
 });
 
 export default cronli5;

@@ -89,20 +89,21 @@ await esbuild.build({
 });
 
 // Language modules: dual builds per language, served by the
-// `./lang/<code>` subpath exports.
-for (const code of readdirSync('src/lang')) {
+// `./lang/<directory>` subpath exports. A language's directory is its code
+// in lower case (`zh-hant` for `zh-Hant`), so nothing here reads the code.
+for (const directory of readdirSync('src/lang')) {
   // Only build shipped languages — those with a status.json marker. This
   // skips stray/experiment dirs so they never enter the published build.
-  if (existsSync(`src/lang/${code}/status.json`)) {
+  if (existsSync(`src/lang/${directory}/status.json`)) {
     // The published module is the language and its named styles; what
     // else the source exports is for the tests.
     const language = {
       stdin: {
         contents: 'export {default, styles} from ' +
-          `'./src/lang/${code}/index.ts';`,
+          `'./src/lang/${directory}/index.ts';`,
         loader: 'ts',
         resolveDir: '.',
-        sourcefile: `lang-${code}.ts`
+        sourcefile: `lang-${directory}.ts`
       },
       bundle: true,
       logLevel: 'info'
@@ -111,13 +112,13 @@ for (const code of readdirSync('src/lang')) {
     await esbuild.build({
       ...language,
       format: 'esm',
-      outfile: `dist/lang/${code}.js`
+      outfile: `dist/lang/${directory}.js`
     });
 
     await esbuild.build({
       ...language,
       format: 'cjs',
-      outfile: `dist/lang/${code}.cjs`,
+      outfile: `dist/lang/${directory}.cjs`,
       footer: defaultOnly
     });
   }
