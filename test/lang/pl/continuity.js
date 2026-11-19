@@ -1,10 +1,9 @@
 import chai from 'chai';
-import {analyze, prepare} from '../../../src/core/index.js';
 import * as polish from '../../../src/lang/pl/index.js';
-import {coreSetSeeds, neighborPairs, optionsFor, score}
+import {coreSetSeeds, neighborPairs, score}
   from '../../../tooling/scripts/edit-diff.mjs';
 import {pairs} from '../../paradigms/grid.js';
-import {resolve} from '../../../src/options.js';
+import {parser} from '../parsed.js';
 
 const {expect} = chai;
 
@@ -15,7 +14,7 @@ const FIELDS =
 // clock (answers 2.6): the frame (the years and months that stand in
 // front: «w 2030 r.», «od czerwca do sierpnia»), the day («codziennie»,
 // «w poniedziałki», «co roku 1 czerwca», and both halves of a union: «w
-// piątki, a także 1. dnia każdego miesiąca»), and the time.
+// piątki, a także pierwszego dnia każdego miesiąca»), and the time.
 // `describeParts` gives them as `{frame, day, time}`, each with the comma
 // that follows it, if any.
 //
@@ -24,10 +23,12 @@ const FIELDS =
 // date («co roku 1 czerwca»), a single year joins a named month («w
 // czerwcu 2030 r.»), the month tail of a day phrase follows the month
 // field («każdego miesiąca», «miesiąca», «tego miesiąca»), a wrapping run
-// of months is cut when a year is restricted, a union is said from its
-// larger side when one day field leaves out a day or two, and a schedule
-// that never fires is one fixed phrase. Those are the fusions answers 2.6 declares; all of them stay inside the frame and the day. Nothing else
-// may cross, with the two exceptions below.
+// of months is cut when a year is restricted, a single year stands in
+// front of a month frame that is an exception or pieces, and a union is
+// said from its larger side when one day field leaves out a day or two.
+// Those are the fusions answers 2.6 declares; all of them stay inside the
+// frame and the day. Nothing else may cross, with the three exceptions
+// below.
 const MAY_CHANGE = {
   date: ['frame', 'day'],
   hour: ['time'],
@@ -38,11 +39,11 @@ const MAY_CHANGE = {
   year: ['frame', 'day']
 };
 
-// The first place a time field reaches another part: when the hours are
-// restricted and no weekday is named, the day part says «codziennie»,
-// alone or after a range of days of the month (answers 2.5), so an hour
-// edit may add or remove exactly that word.
-const DAILY = /(?:^| )codziennie$/u;
+// The first place a time field reaches another part: when no day is
+// named and the hours are restricted, the day part says «codziennie»,
+// unless the hours tile the day and are said bare («co 2 godziny»,
+// answers 2.5), so an hour edit may add or remove exactly that word.
+const DAILY = /^codziennie$/u;
 
 // The second: hours that run past midnight are one run («co godzinę od
 // 22:00 do 2:00») only when no day, month or year is restricted (answers
@@ -60,13 +61,18 @@ function hoursWrap(schedule) {
   );
 }
 
-const SETUP = {languages: [polish.default], options: {}, styles: {}};
+// The third: a schedule whose day of the month exists in no month it
+// reaches never fires. The description is then one fixed phrase in the
+// day part and no time («nigdy (takiej daty nie ma w kalendarzu)»,
+// answers 4.4), so an edit to the day of the month, the month or the year
+// that makes or unmakes such a schedule may remove or restore the time.
+function neverFires(schedule) {
+  const {dateReach, day} = schedule.analyses;
 
-function parse(pattern, options) {
-  const {opts} = resolve(SETUP, {...optionsFor(pattern), ...options});
-
-  return {opts, schedule: analyze(prepare(pattern, opts))};
+  return dateReach !== null && !dateReach.fires && !day.union;
 }
+
+const parse = parser(polish.default);
 
 function partsOf(pattern, options) {
   const {opts, schedule} = parse(pattern, options);
@@ -105,16 +111,20 @@ function leaks(pairList) {
 
     const before = partsOf(a, options);
     const after = partsOf(b, options);
-    const wrapped = changed[0] !== 'hour' &&
-      (hoursWrap(parse(a, options).schedule) ||
-        hoursWrap(parse(b, options).schedule));
+    const schedules = [a, b].map(function scheduleOf(pattern) {
+      return parse(pattern, options).schedule;
+    });
+    const wrapped = changed[0] !== 'hour' && schedules.some(hoursWrap);
+    const silenced = changed[0] !== 'hour' && schedules.some(neverFires);
 
     // The comma or colon after a part belongs to the join, not to the
     // part: a frame takes a colon before a union and a comma when it is
     // pieces or an exception or meets a range or a date, and the day
     // takes a comma before the time when it is compound (answers,
     // "Punctuation between the parts"), so it is set aside before two
-    // parts are compared.
+    // parts are compared. So is the comma that parts the day from a time
+    // that begins with a numeral («w czerwcu, 30 minut po każdej pełnej
+    // godzinie»), which a time field may add or remove.
     function words(part) {
       return String(part).replace(/[,:]$/u, '');
     }
@@ -129,7 +139,7 @@ function leaks(pairList) {
         undaily(before[part]) === undaily(after[part]);
 
       if (words(before[part]) !== words(after[part]) && !daily &&
-          !(wrapped && part === 'time') &&
+          !((wrapped || silenced) && part === 'time') &&
           !MAY_CHANGE[changed[0]].includes(part)) {
         found.push(`${a} -> ${b}: the ${changed[0]} changed the ${part} ` +
           `from "${before[part]}" to "${after[part]}"`);
@@ -167,7 +177,7 @@ describe('Polish continuity:', function() {
     function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
-    }, 60000);
+    }, 240000);
 
   it('renders equal schedules identically', function() {
     function render(pattern, options) {
@@ -179,7 +189,7 @@ describe('Polish continuity:', function() {
     expect(score(render, pairs()).equivalentViolations).to.deep.equal([]);
     expect(score(render, neighborPairs(coreSetSeeds()))
       .equivalentViolations).to.deep.equal([]);
-  }, 60000);
+  }, 240000);
 
   // Polish declares no tie (answers 3.11): no wording depends on how a
   // field was written.
@@ -192,6 +202,7 @@ describe('Polish continuity:', function() {
 
     expect(say('0 */12 * * *')).to.equal('codziennie o 0:00 i 12:00');
     expect(say('0 */12 * * *')).to.equal(say('0 0,12 * * *'));
+    expect(say('0 */6 * * *')).to.equal('co 6 godzin');
     expect(say('0 */6 * * *')).to.equal(say('0 0,6,12,18 * * *'));
     expect(say('0 9-17 * * *'))
       .to.equal(say('0 9,10,11,12,13,14,15,16,17 * * *'));

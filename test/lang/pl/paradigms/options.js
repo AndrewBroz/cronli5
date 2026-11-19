@@ -30,12 +30,15 @@ const defaultParts = {
   '0 9 * * 5L': ['ostatni piątek', '9:00'],
   '0 9 * * 3#1': ['pierwszą środę', '9:00'],
   '0 0 1 * 0': ['niedziele', 'pierwszego dnia', '0:00'],
-  '0 0 LW * *': ['dzień powszedni', 'od poniedziałku do piątku', '0:00'],
-  '0 */2 * * *': ['2 godziny', '0:00', '22:00'],
+  '0 0 LW * *': ['dzień roboczy', 'od poniedziałku do piątku', '0:00'],
+  '0 */2 * * *': ['2 godziny'],
   '5,20,45 * * * *': ['45 minut', 'pełnej godzinie'],
   '*/6 * * * * *': ['6 sekund'],
   '* * * * *': ['minutę'],
-  '* */2 * * *': ['0:00–0:59', '2:00–2:59', '22:00–22:59']
+  '0 0-2,4-23 * * *': ['3:00'],
+  '*/15 */2 * * 1-5':
+    ['poniedziałku', 'piątku', '15 minut', 'godzinach parzystych'],
+  '0 0 1-7 6 *': ['1–7 czerwca', '0:00']
 };
 
 const sets = [
@@ -115,10 +118,9 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'codziennie co minutę w co drugiej godzinie: 0:00–0:59 w ' +
-          'nocy, 2:00–2:59 w nocy … 10:00–10:59 wieczorem',
-        parts: ['0:00–0:59 w nocy', '2:00–2:59 w nocy', '10:00–10:59 wieczorem'],
-        pattern: '* */2 * * *'
+        expected: 'codziennie co godzinę, oprócz 3:00 w nocy',
+        parts: ['3:00 w nocy'],
+        pattern: '0 0-2,4-23 * * *'
       }
     ]
   },
@@ -177,9 +179,9 @@ const sets = [
         pattern: '0 0 1 * 0'
       },
       {
-        expected: 'w ostatni dzień powszedni (od pon. do pt.) każdego ' +
+        expected: 'w ostatni dzień roboczy (od pon. do pt.) każdego ' +
           'miesiąca o 0:00',
-        parts: ['dzień powszedni', 'od pon. do pt.', '0:00'],
+        parts: ['dzień roboczy', 'od pon. do pt.', '0:00'],
         pattern: '0 0 LW * *'
       },
       {
@@ -188,9 +190,19 @@ const sets = [
         pattern: '*/15 9-17 * * 1-5'
       },
       {
-        expected: 'codziennie co 2 godz. od 0:00 do 22:00',
-        parts: ['2 godz.', '0:00', '22:00'],
+        expected: 'co 2 godz.',
+        parts: ['2 godz.'],
         pattern: '0 */2 * * *'
+      },
+      {
+        expected: 'od pon. do pt. co 15 min w godzinach parzystych',
+        parts: ['pon.', 'pt.', '15 min', 'godzinach parzystych'],
+        pattern: '*/15 */2 * * 1-5'
+      },
+      {
+        expected: 'co roku w dniach 1–7 VI o 0:00',
+        parts: ['1–7 VI', '0:00'],
+        pattern: '0 0 1-7 6 *'
       },
       {
         expected: '5, 20 i 45 min po każdej pełnej godzinie',
@@ -249,10 +261,9 @@ const sets = [
         pattern: '30 0 9 * * *'
       },
       {
-        expected: 'codziennie co minutę w co drugiej godzinie: 0.00–0.59, ' +
-          '2.00–2.59 … 22.00–22.59',
-        parts: ['0.00–0.59', '2.00–2.59', '22.00–22.59'],
-        pattern: '* */2 * * *'
+        expected: 'codziennie co godzinę, oprócz 3.00',
+        parts: ['3.00'],
+        pattern: '0 0-2,4-23 * * *'
       }
     ]
   },

@@ -47,7 +47,6 @@ describe('Polish lexicon:', function() {
   it('has the ordinals of an nth weekday', function() {
     expect(lexicon.ordinals.nthMasculine).to.have.length(5);
     expect(lexicon.ordinals.nthFeminine[1]).to.equal('drugą');
-    expect(lexicon.ordinals.everyHour[0]).to.equal('drugiej');
   });
 
   it('says the day of a month as an ordinal word', function() {
