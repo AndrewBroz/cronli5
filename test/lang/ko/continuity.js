@@ -12,7 +12,8 @@ const FIELDS =
 
 // A description is three parts in one order (and at times a fourth), from
 // large to small (answers 2.1): the calendar (the year, the month and the
-// day: «매년 6월 매주 월요일», «매월 1일과 매주 금요일, 각각»), the fill
+// day: «매년 6월 매주 월요일», «매주 금요일, 그리고 매월 1일에도,»), the
+// fill
 // (one of «매일», «하루 종일», «내내», or nothing), and the time. One kind
 // of schedule has a fourth, the note: when a day of the month and a
 // weekday are both restricted and one of them is every day but a few, the
@@ -28,13 +29,16 @@ const FIELDS =
 // part the minute field may change how the hours of a step are said, in
 // two declared ways and no other (answers 2.6): at one minute they are a
 // list of times, a bare rhythm or a span, and under several minutes they
-// are named whole hours, «짝수 시» or a frame; and minute 0 on the even
-// hours is the bare «2시간마다» where any other minute names «짝수 시».
-// Both are inside the time part, which a minute may change anyway. A day, month or year field changes the calendar, the fill and the
-// note. Inside the calendar the fields answer to one another in the ways
+// are named whole hours or «짝수 시»; and minute 0 on the even hours, or
+// on hours from 0 that tile the day, is the bare rhythm («2시간마다»,
+// «6시간마다») where any other minute names the hours.
+// Both are inside the time part, which a minute may change anyway. A
+// day, month or year field changes the calendar, the fill and the note.
+// Inside the calendar the fields answer to one another in the ways
 // answers 2.6 declares: «매년» and «매월» stand by which coarser field is
 // free or said as a range, a union says its month and year on both arms
-// or becomes «매일» with its note, a year phrase ending in «마다» takes
+// (the weekday arm first, the date arm added with «에도») or becomes
+// «매일» with its note, a year phrase ending in «마다» takes
 // «, 그해», and the month and day phrases name only what the calendar
 // has. All of that stays inside the calendar and the note. Nothing else
 // may cross, with the one exception below.

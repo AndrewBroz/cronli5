@@ -61,9 +61,10 @@ describe('Korean styles:', function() {
       expect(ko.sentence('매시 정각', opts))
         .to.equal('매시 정각에 실행됩니다.');
       expect(ko.sentence('15분마다', opts)).to.equal('15분마다 실행됩니다.');
-      expect(ko.sentence('매일 0시대, 낮 12시대에 15분마다(매시 30분 제외)', opts))
-        .to.equal(
-          '매일 0시대, 낮 12시대에 15분마다 실행됩니다(매시 30분 제외).');
+      expect(ko.sentence('매일 짝수 시에 15분마다(오전 8시대 제외)', opts))
+        .to.equal('매일 짝수 시에 15분마다 실행됩니다(오전 8시대 제외).');
+      expect(ko.sentence('매주 금요일, 그리고 매월 1일에도, 0시', opts))
+        .to.equal('매주 금요일, 그리고 매월 1일에도, 0시에 실행됩니다.');
       expect(ko.sentence('매시 5·20분에 각각 0·30초', opts))
         .to.equal('매시 5·20분에 각각 0·30초에 실행됩니다.');
       expect(ko.sentence('매월 홀수일 중 월요일인 날 0시', opts))

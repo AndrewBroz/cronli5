@@ -43,7 +43,6 @@ const nthWords = ['첫째', '둘째', '셋째', '넷째', '다섯째'];
 const words = {
   allDay: '하루 종일',
   also: '그리고',
-  allHour: '한 시간 내내',
   alsoAt: '에도',
   am: '오전',
   among: '중',
@@ -100,7 +99,6 @@ const words = {
   of: '의',
   onTheHour: '정각',
   onlyIf: '인 경우에만',
-  without: '을 뺀',
   pm: '오후',
   rangeMark: '~',
   runs: '실행됩니다',
