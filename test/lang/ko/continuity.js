@@ -23,9 +23,14 @@ const FIELDS =
 //
 // A second, a minute or an hour changes the time and the fill: the fill
 // is «매일» only when the time part names a clock time, and a minute or a
-// second off the beat turns a bare rhythm («2시간마다») into a span with
-// clock times («매일 0시 30분부터 오후 10시 30분까지 2시간마다», answers
-// 2.5). A day, month or year field changes the calendar, the fill and the
+// second off the beat turns a bare rhythm («2시간마다») into a phrase
+// with clock hours («매일 짝수 시 30분», answers 2.5). Inside the time
+// part the minute field may change how the hours of a step are said, in
+// two declared ways and no other (answers 2.6): at one minute they are a
+// list of times, a bare rhythm or a span, and under several minutes they
+// are named whole hours, «짝수 시» or a frame; and minute 0 on the even
+// hours is the bare «2시간마다» where any other minute names «짝수 시».
+// Both are inside the time part, which a minute may change anyway. A day, month or year field changes the calendar, the fill and the
 // note. Inside the calendar the fields answer to one another in the ways
 // answers 2.6 declares: «매년» and «매월» stand by which coarser field is
 // free or said as a range, a union says its month and year on both arms
