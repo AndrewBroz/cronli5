@@ -74,8 +74,9 @@ function enumerateStep(
 // "9,17/2").
 function enumerateFires(field: string, min: number, max: number): number[] {
   const fires: number[] = [];
+  const segments = field.split(',');
 
-  field.split(',').forEach(function expand(segment) {
+  segments.forEach(function expand(segment) {
     if (includes(segment, '/')) {
       fires.push(...enumerateStep(segment, min, max));
     }
@@ -97,7 +98,9 @@ function enumerateFires(field: string, min: number, max: number): number[] {
     }
   });
 
-  return unique(fires);
+  // A single segment never names a value twice; only a list can, and
+  // making a list's values distinct takes long over thousands of years.
+  return segments.length === 1 ? fires : unique(fires);
 }
 
 export {enumerateFires, enumerateStep, getOccurrences, includes,
