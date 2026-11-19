@@ -4,10 +4,108 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.2]
+
+### Fixed
+
+- **README corrections.** The crontab example showed "midnight on weekdays"
+  where the tool says "12 a.m. on weekdays"; English has thirteen style
+  fields beyond `hour12` and `short`, not ten; the `2/3 * * * *` example
+  now reads "past the hour", as the library says it; and cRonstrue is
+  itself a port of the C# cron-expression-descriptor, which is the library
+  with ports to other languages. No code changes.
+
+## [1.2.1]
 
 ### Changed
 
+- **Faster.** Describing a set of many years, such as `*/2` in the year
+  field (4,015 years), took 24 ms and now takes well under one; an evenly
+  spaced set is no longer searched for pieces it cannot have. Over a broad
+  corpus in all ten languages, describing is about a third faster; Spanish,
+  French and Ukrainian, which listed every year of an unrestricted year
+  field several times a pattern, by a third again. Every description is
+  unchanged.
+
+## [1.2.0]
+
+### Added
+
+- **English `minutes` and `padHour` style fields:** a 12-hour time on the
+  hour with its minutes ("6:00 p.m."), and its hour in two digits ("06:30
+  p.m."). Together, with `am: 'AM'` and `pm: 'PM'`, they give cRonstrue's
+  "06:00 PM". 24-hour times are unchanged: always two digits and minutes.
+- **English `weekWords` style field.** `false` names the days instead of
+  "weekdays" and "weekends": `cronli5('0 9 * * 1-5', {style: {weekWords:
+  false}})` is "at 9 a.m. Monday through Friday". With `midday: ''` and
+  `midnight: ''` (now documented), English says every clock time and day
+  as such: "at 12 a.m. and 12 p.m. Monday through Friday".
+
+### Changed
+
+- **`cronli5/compat` writes English as cRonstrue does:** "09:00 AM",
+  "12:00 PM" rather than "noon", and "Monday through Friday" rather than
+  "weekdays", so switching changes what is said, not how times look.
+  `trimHoursLeadingZero` now writes "9:00 AM". Other languages keep their
+  own style. The comparison with cRonstrue now shows the adapter's
+  `toString` beside cRonstrue's.
+- **English: a day of the month with no month named says whose days it
+  is.** `0 0 9-17/2 * *` is "at 12 a.m. on the 9th, 11th, 13th, 15th, and
+  17th of every month", where "every minute on the 15th" had been read as
+  one 15th. Before an exception or beside weekdays it is "of the month"
+  ("on the 1st of the month as well as on weekdays"), which "every month"
+  would seem to reach.
+- **English: a single second on the hour is counted past the hours** as a
+  minute is: "at 30 seconds past every hour except 8 a.m.", where it was
+  "at 30 seconds past the hour, every hour except at 8 a.m.", which said
+  the hour twice and named 8:00:00, a moment that never fires.
+- **English: dates in pieces take their months after "of",** as a list
+  does: "on the 1st through the 5th and on the 10th of June and July",
+  where it was ", in June and July".
+
+## [1.1.0]
+
+### Fixed
+
+- **The package is declared free of side effects** (`"sideEffects"` in
+  `package.json`, all but the browser global), so a bundler drops what an
+  app imports and does not use.
+
+## [1.0.0]
+
+### Changed
+
+- **All ten languages are stable.** Every row of every language was read
+  for when it fires by readers briefed only in that language (7,155 rows,
+  52,101 questions), and every question most of them got wrong was asked
+  again alone of readers of two models; none was still misread by both.
+- **Chinese: every third or fourth hour is said from its first time**
+  (每天0:00起每3小时一次), where it was a list of eight or six times; under
+  a named date or weekday it keeps both ends.
+
+- **BREAKING: the English style field `sep` is now `separator`**, the name
+  Czech and Italian already use. Passing `sep` is an error that names the
+  new field.
+- **BREAKING: language modules export only the language and its
+  `styles`.** `describeParts` (and French's `unites`) took the core's
+  internal facts, which no public entry point produces, and the CommonJS
+  builds already lacked them; they are internal now, in ESM and in the
+  type declarations too.
+- **BREAKING (types): `style` is typed by the language a call names.** A
+  module carries its style table and a code (`'cs'`, `'cs-CZ'`, `'de_AT'`)
+  maps to its language's, so Czech fields pass and English ones do not
+  where Czech is named. `create` infers the codes and tables of the modules
+  it is given, and its `styles` are checked too. `Cronli5`'s type
+  parameters are now the tables by code and the default code; a language
+  module's `code` is its literal code. The type tests had not been running
+  (the file was not named as `tsd` looks for); they run now, for every
+  language.
+- **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` warn.** Traditional Chinese is
+  not yet written; these describe in Simplified Chinese and say so once on
+  the console, where before they did so in silence.
+- **`short` means the same thing in every language**: the abbreviations
+  the language conventionally uses, where it uses them. Documented in
+  `docs/styles.md`; no output changed.
 - **The public API, for 1.0.** Languages are named by code, with a region
   (`lang: 'en-GB'`); a `style` table per language replaces `dialect`,
   `ampm` and `short`; one `form` option (`'fragment'`, `'label'`,
@@ -25,9 +123,81 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`create`**, which makes an instance from the languages you choose,
   with default options and a default style per language.
 - **`cronli5/all`**, an entry point that knows every language by code.
+- **`cronli5/compat`**, which takes cRonstrue's `toString(pattern,
+  options)` call and options, for switching from cRonstrue. The wording is
+  cronli5's; an option it cannot honour is an error.
+- **`llms.txt`**, the API on one page for coding agents.
 - **`form: 'label'`**, the description capitalised to stand alone.
 - The named English styles, exported as plain tables (`styles`).
 - `--form` and `--cron` on the command line.
+- **Italian (`it`) and Czech (`cs`)**, at beta. Each was written from usage
+  notes in the language by a writer told nothing of cron, then a rule book,
+  hand-written expected descriptions, independent schedule reads and blind
+  fluency reads, and a renderer built without sight of any other.
+- **Command line:** `--style key=value`, `--crontab`, `--help`,
+  `--version`, and patterns on standard input, one per line.
+- **Calendar facts in the core**, which every language now uses: whether a
+  date can ever fire, in which months, and whether only in leap years.
+
+### Changed (descriptions)
+
+- **BREAKING: a day field written from a star makes both day fields have
+  to match**, as in Vixie cron and cronie. `0 0 */2 * 1` is the Mondays
+  that are odd days of the month ("at midnight on odd-numbered days, but
+  only on Mondays"), no longer those days and also every Monday. Written
+  without the star (`0 0 1-31/2 * 1`) the days are still a union. Every
+  language says the difference. See `docs/day-field-semantics.md`.
+
+- **Fewer things to hold in several languages**, each checked by
+  isolated readers in the language:
+  - English says one day across several months once: "on the 1st of
+    January, April, July, and October", as several days already were.
+  - German says a place in the hour as timetables do, «stündlich zur
+    Minute 30», «zu den Minuten 5, 20 und 45», and separate hours once:
+    «täglich um 9, 13 und 17 Uhr, jeweils zu den Minuten 5, 20 und 45»,
+    in place of a window for each hour; one minute and one second every
+    hour are one count, «5 Minuten und 30 Sekunden nach jeder vollen
+    Stunde».
+  - Czech no longer lists up to fifteen clock times or windows for a
+    cadence of hours, and says a set that is two rhythms together as its
+    rhythms.
+  - Italian says a long cadence of hours by its first values and its
+    last («delle ore 0, 2, 4 e così via fino a 22»), not twelve hours.
+  - Japanese names shared months once (これらの月).
+  - Chinese marks a time after a date-or-weekday pair as belonging to both
+    (每月1日以及每周五，均在9:00); before, it could be read as Friday's
+    alone.
+  - Ukrainian drops a nearest-weekday date beside Monday to Friday, which
+    adds no day, and says one place in the hour as a count from its start.
+- **Wordings that could be read two ways, rewritten:**
+  - English says 0:00 beside a date as "12 a.m." ("at 12 a.m. on the 1st"),
+    since "midnight on the 1st" can be the end of the 1st; and every
+    stretch ends with "through" on its last firing ("from 9 a.m. through
+    9:29 a.m."), not "until", which can include its end or not.
+  - Czech says the nearest weekday briefly and with one reading: «a
+    připadne-li na víkend, místo toho ve všední den nejbližší tomuto dni»;
+    «poslední všední den v měsíci», «první všední den v měsíci».
+  - Chinese gives a stray minute after a run its own hour
+    («…，以及9:45、17:45»), which could otherwise be every hour's.
+  - Italian's working day no longer adds «festivi compresi».
+- **Every language was rebuilt from its own answers** and then repaired
+  twice against independently computed fire times. A schedule that can
+  never run says so (`0 0 31 6 *`); one that runs only in leap years says
+  so; months that lack the day are not named; a set of years with a hole is
+  no longer listed year by year; an exception beside a date-or-weekday pair
+  no longer reads over both.
+- **The Monday-to-Friday forms (`LW`, `1W`, `15W`) name their days** in
+  every language but English, because each language's usage notes showed
+  its "working day" word does not mean Monday to Friday.
+- **Command line exit codes:** 2 for a wrong command, 1 for a pattern that
+  cannot be described (everything used to exit 1).
+
+### Removed
+
+- **Finnish** (`cronli5/lang/fi`) and **Traditional Chinese** (`zh-Hant`),
+  until they are rebuilt by the same process.
+- Spanish `hSuffix` and `workday`; the English `'uk'` dialect alias; the
+  `Cronli5Dialect` type; the plan-based contract for custom languages.
 
 ## [0.10.0]
 
@@ -362,7 +532,7 @@ confinement forms (the non-English mirrors added in 0.8.3–0.8.4).
   validated objectively (round-trip, fuzz, OR-scope, cRonstrue comparison) plus
   native review. The blind pipeline (which produced verbose, inconsistent
   renderers) is now the no-sibling fallback. See
-  [tooling/docs/language-pipeline.md](tooling/docs/language-pipeline.md).
+  [docs/archive/language-pipeline.md](docs/archive/language-pipeline.md).
 - Coverage enumeration keys off `status.json` so an in-progress language build
   stays green.
 

@@ -44,8 +44,8 @@ describe('French styles:', function() {
     function() {
       const opts = {style: styles.fr};
 
-      expect(fr.label('à 30 de chaque heure', opts))
-        .to.equal('À 30 de chaque heure');
+      expect(fr.label('à la minute 30 de chaque heure', opts))
+        .to.equal('À la minute 30 de chaque heure');
       expect(fr.label('toutes les minutes', opts))
         .to.equal('Toutes les minutes');
       expect(fr.label('30 secondes après le début de chaque minute', opts))
@@ -54,6 +54,8 @@ describe('French styles:', function() {
         .to.equal('S\'exécute tous les jours à 9 h.');
       expect(fr.sentence('en déc.', opts))
         .to.equal('S\'exécute en déc.');
+      expect(fr.sentence('jamais : aucune date ne correspond', opts))
+        .to.equal('Ne s\'exécute jamais : aucune date ne correspond.');
       expect(fr.reboot(opts)).to.equal('au démarrage du système');
       expect(fr.fallback(opts)).to.equal('une expression cron non reconnue');
     });

@@ -6,7 +6,8 @@
 import type {Language, Schedule} from '../../core/schedule.js';
 import type {Joined, Months} from './calendar.js';
 import {
-  datePhrase, dayPhrase, join, monthsOf, weekdayPhrase, yearPart
+  datePhrase, datesOnWeekdays, dayPhrase, join, monthsOf, weekdayPhrase,
+  yearPart
 } from './calendar.js';
 import type {Context} from './context.js';
 import {contextOf} from './context.js';
@@ -21,8 +22,13 @@ const {words: w} = lexicon;
 
 type PartName = 'day' | 'month' | 'time' | 'year';
 
-/** The four parts of a description, each with the comma that closes it. */
+/**
+ * The four parts of a description, each with the comma that closes it,
+ * in the order they are said.
+ */
 type Parts = Record<PartName, string>;
+
+const partNames: PartName[] = ['day', 'month', 'time', 'year'];
 
 /** A stretch of the sentence, and the commas it asks for. */
 interface Chunk {
@@ -42,6 +48,9 @@ function setOff(part: PartName, texts: string[]): Chunk[] {
 // The year part. One year after one month's name is already written into
 // the name. Otherwise it follows a space when it begins with «en» and a
 // comma when it does not; in a union, always a comma.
+//
+// The union's own order, below, has the days of the month name the
+// months they can fire in when those are not all the months at its head.
 function yearChunk(c: Context, months: Months): Chunk {
   const text = given(!months.fused, yearPart(c));
 
@@ -55,15 +64,19 @@ function yearChunk(c: Context, months: Months): Chunk {
 // The frame: the day, the month, the time, the year. A comma comes
 // before the time unless it begins with a clock time.
 function framed(c: Context, time: Said): Chunk[] {
-  const months = monthsOf(c, c.dated || c.weekdayed || c.daily);
-  const days: Joined = join(dayPhrase(c, months), months, months.shape);
+  const months = monthsOf(c, c.dateMonths,
+    {excepting: !c.both && (c.dated || c.weekdayed || c.daily)});
+  const days: Joined = c.both ?
+    datesOnWeekdays(c, months) :
+    join(dayPhrase(c, months), months, months.shape);
 
   return [
     {part: 'day', text: days.head},
-    {part: 'month', text: days.tail},
+    {close: days.closes, part: 'month', text: days.tail},
     ...setOff('month', days.setOff),
     {open: !time.clock, part: 'time', text: time.text},
-    yearChunk(c, months)
+    yearChunk(c, months),
+    {open: true, part: 'year', text: given(c.leap, w.leapYears)}
   ];
 }
 
@@ -71,10 +84,13 @@ function framed(c: Context, time: Said): Chunk[] {
 // both sets of days; the weekdays are said as with every month, and the
 // days of the month without a month that has already been said.
 function united(c: Context, time: Said): Chunk[] {
-  const months = monthsOf(c, false);
+  const months = monthsOf(c, c.months, {excepting: false});
   const weekdays = join(weekdayPhrase(c, false), months, 'all');
-  const dates = join(datePhrase(c, months, false), months,
-    months.shape === 'all' ? 'all' : 'led');
+  const shared = c.dateMonths === c.months;
+  const theirs = monthsOf(c, c.dateMonths, {apart: true, excepting: false});
+  const led = months.shape === 'all' ? 'all' : 'led';
+  const dates = join(datePhrase(c, shared ? months : theirs, false),
+    theirs, shared ? led : theirs.shape);
 
   return [
     {close: true, part: 'month', text: months.alone},
@@ -99,7 +115,10 @@ function compose(schedule: Schedule, opts: FrenchOptions):
     daily: !read.dated && !read.weekdayed && !roundTheClock(read)
   };
   const time = timePart(c);
-  const chunks = (c.union ? united(c, time) : framed(c, time))
+  const never: Chunk[] =
+    [{part: 'day', text: `${w.never} : ${w.noDate}`}];
+  const said = c.union ? united(c, time) : framed(c, time);
+  const chunks = (c.never ? never : said)
     .filter((chunk) => chunk.text !== '');
   const texts = chunks.map(function closed(chunk, index) {
     const next: Chunk | undefined = chunks[index + 1];
@@ -112,21 +131,22 @@ function compose(schedule: Schedule, opts: FrenchOptions):
     return texts.filter((_, index) => chunks[index].part === name).join(' ');
   }
 
+  // The parts in the order the sentence says them (a union puts the month
+  // and the time before the day), then any it leaves empty.
+  const order = [...new Set([...chunks.map((chunk) => chunk.part),
+    ...partNames])];
+
   return {
-    parts: {
-      day: part('day'),
-      month: part('month'),
-      time: part('time'),
-      year: part('year')
-    },
+    parts: Object.fromEntries(order.map((name) => [name, part(name)])) as
+      Parts,
     text: texts.join(' ')
   };
 }
 
 /**
- * The parts of a description. Joined with spaces in the order of the
- * frame (day, month, time, year; for a union month, time, day, year),
- * those that are not empty are the description.
+ * The parts of a description, in the order they are said: those that are
+ * not empty, joined with spaces, are the description.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: FrenchOptions): Parts {
   return compose(schedule, opts).parts;
@@ -141,9 +161,12 @@ function label(description: string): string {
   return description.charAt(0).toUpperCase() + description.slice(1);
 }
 
-// A sentence leads with its verb and ends in one full stop.
+// A sentence leads with its verb and ends in one full stop. What never
+// fires takes the negative verb: «Ne s'exécute jamais».
 function sentence(description: string): string {
-  return `${w.runs} ${description}` + given(!description.endsWith('.'), '.');
+  const verb = description.startsWith(w.never) ? w.neverRuns : w.runs;
+
+  return `${verb} ${description}` + given(!description.endsWith('.'), '.');
 }
 
 function reboot(): string {
@@ -154,7 +177,7 @@ function fallback(): string {
   return w.unrecognizable;
 }
 
-const french: Language<FrenchStyle> = {
+const french: Language<FrenchStyle, 'fr'> = {
   code: 'fr',
   defaultStyle: 'fr',
   describe,
@@ -168,5 +191,8 @@ const french: Language<FrenchStyle> = {
 };
 
 export type {FrenchStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default french;

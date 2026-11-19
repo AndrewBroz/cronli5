@@ -131,7 +131,7 @@ oracle-directed gates (contradiction/metamorphic-equality checks, round-trip
 of the *expected strings*, frame consistency per §6, a-priori coverage)
 validate the oracle without consulting the renderer, so testing it never
 lets code grade itself. See
-[corpus-methodology.md](../tooling/docs/corpus-methodology.md).
+[corpus-methodology.md](archive/corpus-methodology.md).
 
 ## 3. Project structure
 
@@ -180,15 +180,18 @@ Encapsulation rules:
 * **Core API stays frozen-ish**: `cronli5(pattern, options)` with
   `options.lang` defaulting to the bundled English module.
 
-### 3.1 Distribution and size (measured, June 2026)
+### 3.1 Distribution and size (measured 2026-11-14)
 
-cronli5's sizes:
+cronli5's sizes, bundled and minified with esbuild:
 
-| Artifact                          | Minified | Gzipped |
-| --------------------------------- | -------- | ------- |
-| Main entry (core + English)       | 18.5 KB  | 6.3 KB  |
-| Core alone                        | 8.6 KB   | —       |
-| One language renderer (en or es)  | 10.0 KB  | 3.3 KB  |
+| Artifact                            | Minified      | Gzipped       |
+| ----------------------------------- | ------------- | ------------- |
+| Main entry (core + English)         | 50.7 KB       | 17.9 KB       |
+| Each further language               | +28 to +43 KB | +10 to +14 KB |
+| `cronli5/all` (all ten languages)   | 312.9 KB      | 102.5 KB      |
+
+For comparison, cRonstrue 3.14.0 is 6.3 KB gzipped with English, under
+1 KB more per locale, and 30.4 KB with all 39 locales.
 
 Consequences of the languages-as-values model:
 
@@ -206,6 +209,12 @@ Packaging status:
    at a shared `Cronli5Language` declaration (`lang.d.ts`).
 
 ## 4. The LLM review pass
+
+(2026-11-14: superseded where it says model review ships only beta. The
+project chose an automated pipeline as the review, with no native-speaker
+gate; a language is stable once every row passes the full reading check
+described in CLAUDE.md. This section is kept as the record of the first
+design.)
 
 The LLM review pass allows for beta builds without a native-speaker
 bottleneck. It is designed as distinct passes to address distinct
@@ -296,7 +305,7 @@ Conclusions:
 
 *(Adopted July 2026 as a hard constraint, ranked above point-wise
 naturalness. This section is the source of truth for what "continuity"
-means; the improve-renderer skill and the add-language pipeline enforce it.)*
+means; each language's `test/lang/<code>/continuity.js` enforces it.)*
 
 Nobody reads a cron description in a vacuum. The tool exists for
 verification and comparison — two crontab lines, a before/after edit, "what
@@ -412,7 +421,7 @@ Every `lang/<code>/notes.md` must answer these questions:
   plan; each language owns one frame and chooses among the candidates.
 * **Cap policy ownership** — settled: core default + optional language
   override, built when a language wants a different value (the design and
-  the threading constraint are recorded in docs/backlog.md).
+  the threading constraint are recorded in archive/backlog.md).
 * **`lenient` fallback string** must come from the language
   module, which makes even the error path part of the corpus.
 * **Review model recording**: how much provenance belongs in `REVIEW.md`

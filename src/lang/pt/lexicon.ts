@@ -131,11 +131,13 @@ const dayParts = [
 // The function words and fixed phrases.
 const words = {
   also: 'e também',
+  // How long each stretch lasts under hours on a step: «durante uma hora».
+  anHour: 'uma hora',
   always: 'sempre',
   and: 'e',
   after: 'depois',
   before: 'antes',
-  closest: 'mais próximo',
+  closest: 'mais próxima',
   during: 'durante',
   each: 'a cada',
   every: {feminine: 'todas as', masculine: 'todos os'},
@@ -145,14 +147,22 @@ const words = {
   first: 'primeiros',
   firstMark: 'º',
   from: 'de',
+  hasNo: {many: 'não têm', one: 'não tem'},
+  ifItFalls: 'se cair',
   ifItFallsOn: 'se cair num',
   in: 'em',
+  // «Num» and «numa» agree with the weekday after them.
+  inA: {feminine: 'numa', masculine: 'num'},
   last: 'últimos',
   lastOne: {feminine: 'última', masculine: 'último'},
+  leap: 'bissextos',
   // The two exact moments of a 12-hour clock: «a meia-noite» is feminine,
   // «o meio-dia» masculine.
   midnight: 'meia-noite',
+  never: 'nunca',
+  neverRuns: 'Nunca ocorre',
   noon: 'meio-dia',
+  nor: 'nem',
   ofEach: 'de cada',
   ofTheMonth: 'do mês',
   ofTheSameMonth: 'do mesmo mês',
@@ -162,14 +172,15 @@ const words = {
   repeating: 'repetindo',
   runs: 'Ocorre',
   startingFrom: 'a partir',
+  thatFall: 'que caem',
   thatFalls: 'que fica',
+  thatIsNot: 'que não seja',
   startup: 'ao iniciar o sistema',
   theEven: 'pares',
   theOdd: 'ímpares',
   times: 'vezes',
   to: 'a',
   unrecognizable: 'um padrão cron não reconhecido',
-  weekdayDay: 'dia de semana',
   wholeMinute: 'o minuto inteiro'
 };
 

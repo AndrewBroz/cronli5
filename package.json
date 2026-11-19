@@ -1,7 +1,7 @@
 {
   "name": "cronli5",
-  "version": "0.10.0",
-  "description": "Cron Like I'm Five: A Cron to English Utility",
+  "version": "1.2.2",
+  "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and nine other languages. Includes a cRonstrue-compatible entry point.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrewbroz/cronli5.git"
@@ -11,6 +11,9 @@
   "module": "./dist/cronli5.js",
   "types": "./types/cronli5.d.ts",
   "browser": "./cronli5.min.js",
+  "sideEffects": [
+    "./cronli5.min.js"
+  ],
   "exports": {
     ".": {
       "types": "./types/cronli5.d.ts",
@@ -22,15 +25,20 @@
       "import": "./dist/all.js",
       "require": "./dist/all.cjs"
     },
-    "./cronstrue": {
-      "types": "./types/cronstrue/index.d.ts",
-      "import": "./dist/cronstrue.js",
-      "require": "./dist/cronstrue.cjs"
+    "./compat": {
+      "types": "./types/compat/index.d.ts",
+      "import": "./dist/compat.js",
+      "require": "./dist/compat.cjs"
     },
     "./lang/en": {
       "types": "./types/lang/en/index.d.ts",
       "import": "./dist/lang/en.js",
       "require": "./dist/lang/en.cjs"
+    },
+    "./lang/cs": {
+      "types": "./types/lang/cs/index.d.ts",
+      "import": "./dist/lang/cs.js",
+      "require": "./dist/lang/cs.cjs"
     },
     "./lang/de": {
       "types": "./types/lang/de/index.d.ts",
@@ -46,6 +54,11 @@
       "types": "./types/lang/fr/index.d.ts",
       "import": "./dist/lang/fr.js",
       "require": "./dist/lang/fr.cjs"
+    },
+    "./lang/it": {
+      "types": "./types/lang/it/index.d.ts",
+      "import": "./dist/lang/it.js",
+      "require": "./dist/lang/it.cjs"
     },
     "./lang/ja": {
       "types": "./types/lang/ja/index.d.ts",
@@ -79,6 +92,7 @@
     "cli.js",
     "cronli5.min.js",
     "README.md",
+    "llms.txt",
     "LICENSE.md",
     "CHANGELOG.md"
   ],
@@ -107,7 +121,16 @@
   },
   "keywords": [
     "cron",
-    "crontab"
+    "crontab",
+    "cron-expression",
+    "human-readable",
+    "cron-to-english",
+    "cron-description",
+    "describe",
+    "schedule",
+    "quartz",
+    "i18n",
+    "cronstrue"
   ],
   "author": {
     "name": "Andrew Brož",

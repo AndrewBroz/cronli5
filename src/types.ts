@@ -12,20 +12,56 @@ export interface Cronli5AnyStyle {
 /**
  * A language module, as imported from `cronli5/lang/<code>`. A caller
  * passes one as the `lang` option or to `create`, and may read its `code`
- * and its named `styles`; the rest is for the library.
+ * and its named `styles`; the rest is for the library. `Style` is the
+ * language's style table and `Code` its code, so that a call's `style` can
+ * be checked against the language it names.
  */
-export interface Cronli5Language {
-  code: string;
+export interface Cronli5Language<Style = any, Code extends string = string> {
+  code: Code;
   defaultStyle: string;
   describe(schedule: any, opts: any): string;
   fallback(opts: any): string;
   label(description: string, opts: any): string;
+  pending?: {[region: string]: {instead: string; variant: string}};
   reboot(opts: any): string;
   regions: {[region: string]: string};
   sentence(description: string, opts: any): string;
-  style(base: string, overrides?: unknown): any;
-  styles: {[name: string]: any};
+  style(base: string, overrides?: unknown): Style;
+  styles: {[name: string]: Readonly<Style>};
 }
+
+/** The style table of each language an instance knows, by code. */
+export type Cronli5Styles = {[code: string]: object};
+
+// A language code as a caller may spell it: lower or upper case, with an
+// optional region after `-` or `_`.
+type Spelled<Code extends string> = Code | Uppercase<Code>;
+
+/** A `lang` code naming a language an instance knows. */
+export type Cronli5Code<Styles> = {
+  [Code in keyof Styles & string]:
+    Spelled<Code> | `${Spelled<Code>}${'-' | '_'}${string}`
+}[keyof Styles & string];
+
+// The language a code names, without its region, in lower case.
+type LanguageOf<Code extends string> = Lowercase<
+  Code extends `${infer Language}-${string}` ? Language :
+    Code extends `${infer Language}_${string}` ? Language : Code>;
+
+/** The style table of the language a code names. */
+export type Cronli5StyleOf<Styles, Code extends string> =
+  LanguageOf<Code> extends keyof Styles ? Styles[LanguageOf<Code>] :
+    Cronli5AnyStyle;
+
+/** The style tables of a list of language modules, by their codes. */
+export type Cronli5StylesOf<Languages extends readonly Cronli5Language[]> = {
+  [Language in Languages[number] as Language['code']]:
+    Language extends Cronli5Language<infer Style, string> ? Style : never
+};
+
+/** The options other than the language and its style. */
+export type Cronli5CommonOptions = Omit<Cronli5Options<never>,
+  'lang' | 'style'>;
 
 /**
  * The options accepted as the second argument to `cronli5`. Every option
@@ -102,24 +138,44 @@ export interface Cronli5Options<Style = EnglishStyle> {
 }
 
 /** What `create` is given: the languages an instance knows, and defaults. */
-export interface Cronli5Setup {
+export interface Cronli5Setup<
+  Languages extends readonly Cronli5Language[] = Cronli5Language[]> {
 
   /** The language modules; codes resolve among them, the first is default. */
-  languages: Cronli5Language[];
+  languages: Languages;
 
   /** Default options for every call. A default style goes in `styles`. */
   options?: Omit<Cronli5Options<Cronli5AnyStyle>, 'style'>;
 
   /** A default style for each language, by language code. */
-  styles?: {[code: string]: Cronli5AnyStyle};
+  styles?: {
+    [Code in keyof Cronli5StylesOf<Languages>]?:
+      Partial<Cronli5StylesOf<Languages>[Code]>
+  };
 }
 
 /**
  * A describing function: a cron pattern in, a description out. The
  * default export is one that knows English; `create` makes others.
+ * `Styles` is the style table of each language it knows, by code, and
+ * `Default` the code of the language it describes in when none is named;
+ * a call's `style` is checked against the language it names.
  */
-export interface Cronli5<Style = EnglishStyle> {
-  (cronPattern: CronPattern, options?: Cronli5Options<Style>): string;
+export interface Cronli5<
+  Styles = {en: EnglishStyle},
+  Default extends string = keyof Styles & string> {
+  // A language passed as a module, with that language's style.
+  <Style>(cronPattern: CronPattern, options: Cronli5CommonOptions & {
+    lang: Cronli5Language<Style>;
+    style?: Partial<Style>;
+  }): string;
+  // A language named by code, or the default, with that language's style.
+  <Code extends string = Default>(
+    cronPattern: CronPattern,
+    options?: Cronli5CommonOptions & {
+      lang?: Code & Cronli5Code<Styles>;
+      style?: Partial<Cronli5StyleOf<Styles, Code>>;
+    }): string;
 }
 
 /**

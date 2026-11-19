@@ -12,7 +12,10 @@ import {timePart} from './time.js';
 
 const {words} = lexicon;
 
-/** The parts of a description, which join in this order with spaces. */
+/**
+ * The parts of a description, which join in this order with spaces.
+ * @internal
+ */
 export interface Parts {
   day: string;
   month: string;
@@ -27,6 +30,7 @@ const calendarFields: Field[] = ['date', 'weekday', 'month', 'year'];
  * a date does, so the whole calendar is held in the day part, with the
  * mark that joins it to the time: a comma, nothing, or «, sempre» after a
  * day of the month and a weekday together.
+ * @internal
  */
 function describeParts(schedule: Schedule, opts: PortugueseOptions): Parts {
   const {analyses} = schedule;
@@ -34,17 +38,20 @@ function describeParts(schedule: Schedule, opts: PortugueseOptions): Parts {
   const open = calendarFields.every((field) => !restricts(candidates[field]));
   const time = timePart(analyses, open, opts.style);
   const calendar =
-    calendarPart(analyses, restricts(candidates.hour), opts.style);
+    calendarPart(analyses, restricts(candidates.hour) && !time.round,
+      opts.style);
   const marks = {
     comma: ',',
+    never: '',
     open: time.clock ? '' : ',',
     pair: `, ${words.always}`
   };
 
+  // A schedule that never fires has no time to say.
   return {
     day: calendar.text === '' ? '' : calendar.text + marks[calendar.join],
     month: '',
-    time: time.text,
+    time: calendar.join === 'never' ? '' : time.text,
     year: ''
   };
 }
@@ -55,7 +62,7 @@ function describe(schedule: Schedule, opts: PortugueseOptions): string {
   return [parts.day, parts.time].filter(Boolean).join(' ');
 }
 
-const portuguese: Language<PortugueseStyle> = {
+const portuguese: Language<PortugueseStyle, 'pt'> = {
   code: 'pt',
   defaultStyle: 'br',
   describe,
@@ -64,12 +71,18 @@ const portuguese: Language<PortugueseStyle> = {
     description.charAt(0).toLocaleUpperCase('pt') + description.slice(1),
   reboot: () => words.startup,
   regions,
-  sentence: (description) => `${words.runs} ${description}` +
+  // «Nunca» goes before the verb: «Nunca ocorre (…).»
+  sentence: (description) => (description.startsWith(`${words.never} `) ?
+    words.neverRuns + description.slice(words.never.length) :
+    `${words.runs} ${description}`) +
     (description.endsWith('.') ? '' : '.'),
   style,
   styles
 };
 
 export type {PortugueseStyle};
-export {describeParts, styles};
+export {styles};
+
+/** The parts of a description, for the tests. @internal */
+export {describeParts};
 export default portuguese;

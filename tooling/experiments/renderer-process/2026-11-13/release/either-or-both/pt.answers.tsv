@@ -1,0 +1,16 @@
+1	BOTH	runs: Monday the 3rd; not: Tuesday the 3rd (also not Monday the 4th)
+2	EITHER	runs: Monday the 4th (any Monday), also Tuesday the 3rd; not: Tuesday the 4th
+3	BOTH	runs: Wednesday the 5th; not: Thursday the 5th (also not Wednesday the 6th)
+4	BOTH	runs: Tuesday the 15th; not: Monday the 15th (also not Tuesday the 14th)
+5	EITHER	runs: Thursday the 3rd (any Tue/Thu/Sat/Sun), also Monday the 15th; not: Monday the 14th
+6	BOTH	runs: Wednesday the 5th, every 15 min 09:00-17:45; not: Saturday the 5th (also not Wednesday the 6th)
+7	EITHER	runs: Wednesday the 6th (any Mon-Fri), also Saturday the 5th; not: Saturday the 6th
+8	BOTH	runs: Monday the 6th; not: Saturday the 6th (also not Monday the 7th)
+9	EITHER	runs: Tuesday the 8th (any Mon-Fri), also Sunday the 15th and Sunday the 1st; not: Sunday the 8th
+10	BOTH	runs: Monday June 7th; not: Tuesday June 7th (also not Monday in July the 5th)
+11	EITHER	runs: Friday the 8th (any Friday), also Wednesday the 1st; not: Thursday the 8th
+12	BOTH	runs: Saturday the 5th; not: Monday the 5th (also not Saturday the 6th)
+13	BOTH	runs: Thursday the 15th at 09:30; not: Friday the 15th (also not Thursday the 14th)
+14	EITHER	runs: Friday the 7th (any Friday), also Wednesday the 13th; not: Thursday the 7th
+15	BOTH	runs: Monday January 1st (days 1,4,7,...,31 of Jan and Jul, only on Mon-Fri) at 09:00; not: Saturday January 4th (also not Monday January 2nd)
+16	EITHER	runs: Monday the 20th (any Monday), also Thursday the 3rd (days 1-7); not: Thursday the 20th

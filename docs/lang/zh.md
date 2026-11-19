@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'zh'}); // '每周一至周五9:30'
 
 ## Status
 
-Built from a written rule book
+Built from written answers to the language questionnaire
 ([answers.md](../../src/lang/zh/answers.md)) and hand-written expected
 descriptions. Independent readers (models) checked every expected
 description against its schedule, and fluent judges briefed in the
@@ -42,8 +42,7 @@ reviewed it yet.**
 * **A minute in the hour is 每小时的30分**, not an ordinal: 第1分钟 reads as
   the minute that starts at :00.
 * **A day of the month together with a weekday**: 每月1日和每周五的0:00.
-* **Monday to Friday is 每周一至周五**, not 工作日, because working days are
-  moved around public holidays; Quartz `W` is 工作日（周一至周五）.
+* **Monday to Friday is 每周一至周五**; Quartz `W` is 工作日（周一至周五）.
 
 ## cronli5 vs. cRonstrue (zh_CN locale)
 

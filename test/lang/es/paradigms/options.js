@@ -10,6 +10,7 @@ const defaultParts = {
   '* 22-23 * * *': ['22:00', '23:59'],
   '0 0 * * *': ['0:00'],
   '0 0 1 6 *': ['1 de junio', '0:00'],
+  '0 1/2 * * *': ['2 horas', '1:00'],
   '0 13 * * *': ['13:00'],
   '0 9 * * *': ['9:00'],
   '0 9 * * 1,3,5': ['lunes', 'miércoles', 'viernes', '9:00'],
@@ -57,6 +58,11 @@ const sets = [
         pattern: '*/15 9-17 * * 1-5'
       },
       {
+        expected: 'cada 2 horas desde la 1:00 a. m.',
+        parts: ['2 horas', '1:00 a. m.'],
+        pattern: '0 1/2 * * *'
+      },
+      {
         expected: 'todos los días, cada minuto de 10:00 p. m. a 11:59 p. m.',
         parts: ['10:00 p. m.', '11:59 p. m.'],
         pattern: '* 22-23 * * *'
@@ -77,7 +83,8 @@ const sets = [
         pattern: '0 9 * * 1,3,5'
       },
       {
-        expected: 'el último día hábil de cada mes a las 9:00 a. m.',
+        expected: 'el último día de cada mes o, si cae en sábado o ' +
+          'domingo, el viernes anterior, a las 9:00 a. m.',
         parts: ['último día', '9:00 a. m.'],
         pattern: '0 9 LW * *'
       }

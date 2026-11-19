@@ -30,13 +30,16 @@ import ja from '../src/lang/ja/index.js';
 import pt from '../src/lang/pt/index.js';
 import de from '../src/lang/de/index.js';
 import fr from '../src/lang/fr/index.js';
+import it from '../src/lang/it/index.js';
+import cs from '../src/lang/cs/index.js';
 import uk from '../src/lang/uk/index.js';
 import zh from '../src/lang/zh/index.js';
 import {
   comparisonPatterns, languagePatterns, stylePatterns
 } from './patterns.mjs';
 import {statusSummary, statusTable} from './status.mjs';
-import {table as cronstrueOptions} from '../src/cronstrue/table.js';
+import {table as cronstrueOptions} from '../src/compat/table.js';
+import cronstrueAdapter from '../src/compat/index.js';
 import {classify} from '../tooling/scripts/cronstrue-divergence.mjs';
 
 const cronstrueVersion = JSON.parse(readFileSync(
@@ -51,7 +54,9 @@ const languages = [
   {code: 'ja', cronstrueLocale: 'ja', extras: [], lang: ja},
   {code: 'pt', cronstrueLocale: 'pt_BR', extras: [], lang: pt},
   {code: 'de', cronstrueLocale: 'de', extras: [], lang: de},
-  {code: 'fr', cronstrueLocale: 'fr', extras: [], lang: fr}
+  {code: 'fr', cronstrueLocale: 'fr', extras: [], lang: fr},
+  {code: 'it', cronstrueLocale: 'it', extras: [], lang: it},
+  {code: 'cs', cronstrueLocale: 'cs', extras: [], lang: cs}
 ];
 
 function describe(fn, pattern) {
@@ -73,12 +78,12 @@ function tableFrom(header, rows) {
   return [header, sep, ...rows].join('\n');
 }
 
-// The class-grouped head-to-head: cronli5 in SENTENCE form (the capitalized
-// standalone, `{form: 'sentence'}`) vs. cRonstrue (English), which always
-// returns a capitalized sentence — a fair like-for-like. One markdown table
-// per class, each preceded by an H3 heading, in simple -> medium -> complex
-// order. Every pattern's group is asserted against the divergence engine's
-// `classify`, so a mis-bucketed row fails `npm run docs` instead of shipping.
+// The class-grouped head-to-head: cronli5 through `cronli5/compat`'s
+// `toString`, the same call as cRonstrue's, vs. cRonstrue (English). One
+// markdown table per class, each preceded by an H3 heading, in simple ->
+// medium -> complex order. Every pattern's group is asserted against the
+// divergence engine's `classify`, so a mis-bucketed row fails `npm run docs`
+// instead of shipping.
 const comparisonHeadings = {
   simple: '### Simple &mdash; everyday cadences',
   medium: '### Medium &mdash; a specific schedule',
@@ -88,13 +93,13 @@ const comparisonHeadings = {
 function comparisonTable(patterns) {
   const rows = patterns.map(function compare(pattern) {
     return '| `' + pattern + '` | ' +
-      describe((p) => cronli5(p, {form: 'sentence'}), pattern) + ' | ' +
+      describe((p) => cronstrueAdapter.toString(p), pattern) + ' | ' +
       describe((p) => cronstrue.toString(p), pattern) + ' |';
   });
 
   return tableFrom(
-    '| Pattern | cronli5 (sentence form) | cRonstrue ' + cronstrueVersion +
-    ' |', rows);
+    '| Pattern | `cronli5/compat` `toString` | cRonstrue ' +
+    cronstrueVersion + ' `toString` |', rows);
 }
 
 function renderComparison() {
@@ -152,7 +157,9 @@ const headToHeadRows = [
   {name: 'Japanese', code: 'ja', cronstrueLocale: 'ja'},
   {name: 'Portuguese', code: 'pt', cronstrueLocale: 'pt_BR'},
   {name: 'German', code: 'de', cronstrueLocale: 'de'},
-  {name: 'French', code: 'fr', cronstrueLocale: 'fr'}
+  {name: 'French', code: 'fr', cronstrueLocale: 'fr'},
+  {name: 'Italian', code: 'it', cronstrueLocale: 'it'},
+  {name: 'Czech', code: 'cs', cronstrueLocale: 'cs'}
 ];
 
 function renderHeadToHead() {
@@ -168,6 +175,74 @@ function renderHeadToHead() {
 
   return tableFrom('| Language | cronli5 | cRonstrue ' + cronstrueVersion +
     ' |', rows);
+}
+
+// The README's side-by-side rows: patterns where the two libraries'
+// descriptions are worth comparing. The author chooses the rows; both
+// outputs are live.
+const sideBySideRows = [
+  {
+    code: 'en',
+    pattern: '*/45 * * * *'
+  },
+  {
+    code: 'en',
+    pattern: '0,30 8-10 * * 1-5'
+  },
+  {
+    code: 'en',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'de',
+    pattern: '0 0 1,15 * 3'
+  },
+  {
+    code: 'fr',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'cs',
+    pattern: '*/2 * * * *'
+  },
+  {
+    code: 'cs',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'es',
+    pattern: '1 * * * *'
+  },
+  {
+    code: 'zh',
+    cronstrueLocale: 'zh_CN',
+    pattern: '0 12 1 1 *'
+  },
+  {
+    code: 'ja',
+    pattern: '30 9 * * 1-5'
+  }
+];
+
+const languageNames = {
+  cs: 'Czech', de: 'German', en: 'English', es: 'Spanish', fr: 'French',
+  ja: 'Japanese', zh: 'Chinese'
+};
+
+function renderSideBySide() {
+  const byCode = Object.fromEntries(languages.map((l) => [l.code, l]));
+  const rows = sideBySideRows.map(function row(entry) {
+    const lang = entry.code === 'en' ? en : byCode[entry.code].lang;
+
+    return '| `' + entry.pattern + '` | ' + languageNames[entry.code] +
+      ' | ' +
+      describe((p) => cronli5(p, {form: 'label', lang}), entry.pattern) +
+      ' | ' + describe((p) => cronstrueFor(entry.cronstrueLocale ||
+        entry.code, p), entry.pattern) + ' |';
+  });
+
+  return tableFrom('| Pattern | Language | cronli5 | cRonstrue ' +
+    cronstrueVersion + ' |', rows);
 }
 
 // The named English styles, each as the options that select it.
@@ -234,40 +309,46 @@ function collectVars(text) {
   return vars;
 }
 
-// Evaluate a `cronli5(<args>)` example with the language modules and any
-// doc-local bindings in scope; returns the description string, or null if
-// the args reference something we cannot evaluate.
-function evaluateExample(args, vars) {
+// Evaluate a `cronli5(<args>)` or `cronli5.toString(<args>)` example (the
+// latter through cronli5's cRonstrue adapter, imported as `cronli5`) with
+// the language modules and any doc-local bindings in scope; returns the
+// description string, or null if the args reference something we cannot
+// evaluate.
+function evaluateExample(callee, args, vars) {
   const names = Object.keys(vars);
 
   try {
+    const modules = {cs, de, en, es, fr, it, ja, pt, uk, zh};
+    const codes = Object.keys(modules).filter((code) => !(code in vars));
     // eslint-disable-next-line no-new-func
-    const run = Function('cronli5', 'en', ...names,
-      'return cronli5(' + args + ');');
+    const run = Function('cronli5', ...codes, ...names,
+      'return ' + callee + '(' + args + ');');
+    const callable = callee === 'cronli5' ? cronli5 : cronstrueAdapter;
 
-    return run(cronli5, en, ...names.map(function value(n) {
-      return vars[n];
-    }));
+    return run(callable,
+      ...codes.map((code) => modules[code]),
+      ...names.map((n) => vars[n]));
   }
   catch {
     return null;
   }
 }
 
-// Rewrite the `// 'output'` comment after each `cronli5(<args>)` example
+// Rewrite the `// 'output'` comment after each `cronli5(<args>)` or
+// `cronli5.toString(<args>)` example
 // from live output. The author chooses the example; the machine owns the
 // result.
 function rewriteExamples(text) {
   const vars = collectVars(text);
-  const re =
-    /(cronli5\(([^)]*)\)[^\S\n]*;?[^\S\n]*(?:\n[^\S\n]*)?\/\/ ')([^']*)(')/g;
+  const re = new RegExp('((cronli5(?:\\.toString)?)\\(([^)]*)\\)' +
+    '[^\\S\\n]*;?[^\\S\\n]*(?:\\n[^\\S\\n]*)?\\/\\/ \')([^\']*)(\')', 'gu');
   let result = '';
   let last = 0;
 
   for (let m = re.exec(text); m; m = re.exec(text)) {
-    const got = evaluateExample(m[2], vars);
+    const got = evaluateExample(m[2], m[3], vars);
     const replacement = typeof got === 'string' && !got.includes('\'') ?
-      m[1] + got + m[4] :
+      m[1] + got + m[5] :
       m[0];
 
     result += text.slice(last, m.index) + replacement;
@@ -280,6 +361,7 @@ function rewriteExamples(text) {
 const tableJobs = {
   'README.md': {
     'cronstrue-head-to-head': renderHeadToHead(),
+    'cronstrue-side-by-side': renderSideBySide(),
     'language-status': statusSummary()
   },
   'docs/language-status.md': {'language-status-detail': statusTable()},
@@ -297,8 +379,9 @@ for (const language of languages) {
 }
 
 const docs = [
-  'README.md', 'docs/language-status.md', 'docs/cronli5-vs-cronstrue.md',
-  'docs/styles.md', 'docs/migrating-from-cronstrue.md',
+  'README.md', 'llms.txt', 'docs/language-status.md',
+  'docs/cronli5-vs-cronstrue.md', 'docs/styles.md',
+  'docs/migrating-from-cronstrue.md',
   ...languages.map((language) => 'docs/lang/' + language.code + '.md')
 ];
 

@@ -34,10 +34,13 @@ function after(lead: string, text: string): string {
   return text && lead + text;
 }
 
-/** Items in a row: commas, then «et» before the last, with no comma. */
-function conjoin(items: string[]): string {
+/**
+ * Items in a row: commas, then «et» (or the word given) before the last,
+ * with no comma.
+ */
+function conjoin(items: string[], link: string = w.and): string {
   return [items.slice(0, -1).join(', '), ...items.slice(-1)]
-    .filter(Boolean).join(` ${w.and} `);
+    .filter(Boolean).join(` ${link} `);
 }
 
 /** A word that leads whatever follows it. */

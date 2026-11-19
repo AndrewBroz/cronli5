@@ -24,8 +24,8 @@ describe('Core known defects:', function() {
   it('a weekday stride that ends on 7 keeps every day it lands on',
     function() {
       expect(cronli5('0 0 * * 3-7/2'))
-        .to.equal('at midnight on Wednesdays, Fridays, and Sundays');
+        .to.equal('at 12 a.m. on Wednesdays, Fridays, and Sundays');
       expect(cronli5('0 0 * * 1-7/2'))
-        .to.equal('at midnight on Mondays, Wednesdays, Fridays, and Sundays');
+        .to.equal('at 12 a.m. on Mondays, Wednesdays, Fridays, and Sundays');
     });
 });

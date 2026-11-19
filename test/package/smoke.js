@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {execFileSync} from 'node:child_process';
+import {execFileSync, spawnSync} from 'node:child_process';
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {createRequire} from 'node:module';
 
@@ -101,20 +101,20 @@ describe('Built package artifacts:', function() {
   });
 
   it('the cRonstrue stand-in builds take cRonstrue\'s call', async function() {
-    const cjs = require('../../dist/cronstrue.cjs');
-    const esm = await import('../../dist/cronstrue.js');
+    const cjs = require('../../dist/compat.cjs');
+    const esm = await import('../../dist/compat.js');
 
-    expect(cjs.toString('0 9 * * 1')).to.equal('At 9 a.m. on Mondays');
+    expect(cjs.toString('0 9 * * 1')).to.equal('At 09:00 AM on Mondays');
     expect(esm.default.toString('30 17 * * *', {use24HourTimeFormat: true}))
       .to.equal('At 17:30 every day');
-    expect(esm.toString('0 9 ? * 1')).to.equal('At 9 a.m. on Mondays');
+    expect(esm.toString('0 9 ? * 1')).to.equal('At 09:00 AM on Mondays');
   });
 
   it('an option error is one class, whichever build threw it',
     async function() {
       const main = await import('../../dist/cronli5.js');
       const all = await import('../../dist/all.js');
-      const adapter = await import('../../dist/cronstrue.js');
+      const adapter = await import('../../dist/compat.js');
       const en = (await import('../../dist/lang/en.js')).default;
       const cjs = require('../../dist/cronli5.cjs');
       const throwers = [
@@ -149,11 +149,31 @@ describe('Built package artifacts:', function() {
     function() {
       expect(function write() {
         JSON.stringify(require('../../dist/lang/en.cjs'));
-        JSON.stringify(require('../../dist/cronstrue.cjs'));
+        JSON.stringify(require('../../dist/compat.cjs'));
       }).to.not.throw();
       expect(require('../../dist/lang/en.cjs').describeParts)
         .to.be.an('undefined');
     });
+
+  it('every language module carries only the language and its styles, ' +
+    'in both formats', async function() {
+    const {shipped} = await import('../../src/languages.js');
+
+    for (const code of shipped) {
+      // Resolved when it runs: Vite would otherwise fix the set of
+      // importable files when this test is loaded, before `before` builds
+      // them, and a clean checkout has none.
+      const url = new URL(`../../dist/lang/${code}.js`, import.meta.url);
+      const esm = await import(url.href);
+
+      expect(Object.keys(esm).sort(), code).to.deep.equal(['default',
+        'styles']);
+      expect(require(`../../dist/lang/${code}.cjs`).describeParts, code)
+        .to.be.an('undefined');
+      expect(readFileSync(`types/lang/${code}/index.d.ts`, 'utf8'), code)
+        .to.not.match(/export \{[^}]*describeParts/u);
+    }
+  });
 
   it('the browser global carries create, the errors and the styles',
     function() {
@@ -302,7 +322,120 @@ describe('Built package artifacts:', function() {
 
     it('reads a Quartz pattern with --cron quartz', function() {
       expect(cli('--cron', 'quartz', '--fragment', '0 0 ? * 2'))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
+    });
+
+    it('prints usage with --help or -h', function() {
+      for (const flag of ['--help', '-h']) {
+        const usage = cli(flag);
+
+        expect(usage).to.match(/^Usage: cronli5 /u);
+        expect(usage).to.include('--lang').and.include('--style')
+          .and.include('--crontab');
+      }
+    });
+
+    it('prints the package version with --version or -v', function() {
+      const {version} = JSON.parse(readFileSync('package.json', 'utf8'));
+
+      expect(cli('--version')).to.equal(version);
+      expect(cli('-v')).to.equal(version);
+    });
+
+    it('passes --style key=value to the language\'s style table',
+      function() {
+        expect(cli('--style', 'hour12=false', '--fragment', '30 9 * * *'))
+          .to.equal('at 09:30 every day');
+        // A bare key is `true`; the flag may be repeated.
+        expect(cli('--lang', 'cs', '--style', 'short', '--style',
+          'separator=.', '--fragment', '0 9 * * 1-5'))
+          .to.equal('Po až Pá vždy v 9.00');
+      });
+
+    it('reports a bad style with the library\'s own message', function() {
+      const result = cliFail('--style', 'hour12=maybe', '0 0 * * *');
+
+      expect(result.status).to.not.equal(0);
+      expect(result.stderr).to.match(/hour12/u);
+      expect(result.stderr).to.not.match(/Problem parsing/u);
+    });
+
+    it('suggests quoting when the shell has expanded the pattern',
+      function() {
+        const result = cliFail('cli.js', 'README.md', 'src', 'test',
+          'docs', 'dist', 'scripts', 'package.json');
+
+        expect(result.status).to.not.equal(0);
+        expect(result.stderr).to.match(/quote/iu);
+      });
+
+    describe('reading standard input:', function() {
+      function piped(input, ...args) {
+        const result = spawnSync('node', ['cli.js', ...args],
+          {encoding: 'utf8', input});
+
+        return {
+          status: result.status,
+          stderr: result.stderr,
+          stdout: result.stdout
+        };
+      }
+
+      it('describes one pattern per line, beside the pattern', function() {
+        const result = piped('*/5 * * * *\n\n# nightly\n0 0 * * *\n');
+
+        expect(result.status).to.equal(0);
+        expect(result.stdout).to.equal(
+          '*/5 * * * *\tRuns every 5 minutes.\n' +
+          '0 0 * * *\tRuns at midnight every day.\n');
+      });
+
+      it('reports a bad line by number, goes on, and exits non-zero',
+        function() {
+          const result = piped('0 0 * * *\n61 * * * *\n*/5 * * * *\n',
+            '--fragment');
+
+          expect(result.status).to.equal(1);
+          expect(result.stdout).to.equal(
+            '0 0 * * *\tat midnight every day\n' +
+            '*/5 * * * *\tevery 5 minutes\n');
+          expect(result.stderr).to.match(/^line 2: /mu);
+        });
+
+      it('reads a crontab with --crontab: the schedule, then the command',
+        function() {
+          const result = piped([
+            '# m h dom mon dow command',
+            'MAILTO=ops@example.com',
+            '',
+            '*/5 * * * * /usr/bin/job --flag "a b"',
+            '  0 0 * * 1-5\t/bin/backup',
+            '@daily /bin/rotate',
+            ''
+          ].join('\n'), '--crontab');
+
+          expect(result.status).to.equal(0);
+          expect(result.stdout).to.equal(
+            'Runs every 5 minutes.\t/usr/bin/job --flag "a b"\n' +
+            'Runs at 12 a.m. on weekdays.\t/bin/backup\n' +
+            'Runs at midnight every day.\t/bin/rotate\n');
+        });
+
+      it('gives a crontab line with no command an empty command', function() {
+        const result = piped('0 0 * * *\n', '--crontab');
+
+        expect(result.status).to.equal(0);
+        expect(result.stdout).to.equal('Runs at midnight every day.\t\n');
+      });
+
+      it('refuses a pattern argument beside --crontab, which reads standard ' +
+        'input', function() {
+        const result = piped('0 0 * * * /bin/x\n', '--crontab', '*/5 * * * *');
+
+        expect(result.status).to.equal(2);
+        expect(result.stderr).to.match(/--crontab/u);
+        expect(result.stdout).to.equal('');
+      });
     });
 
     it('reports a bad flag value with the library\'s own message',
@@ -321,9 +454,21 @@ describe('Built package artifacts:', function() {
       expect(result.stderr).to.match(/Problem parsing/u);
     });
 
-    it('exits non-zero when given no pattern', function() {
-      expect(cliFail().status).to.not.equal(0);
-    });
+    it('prints usage and exits 2 when given nothing to describe',
+      function() {
+        const result = cliFail();
+
+        expect(result.status).to.equal(2);
+        expect(result.stderr).to.match(/^Usage: cronli5 /u);
+      });
+
+    it('exits 2 for a wrong command and 1 for a pattern it cannot read',
+      function() {
+        expect(cliFail('--land', 'en', '0 0 * * *').status).to.equal(2);
+        expect(cliFail('--lang', 'xx', '0 0 * * *').status).to.equal(2);
+        expect(cliFail('--form', 'title', '0 0 * * *').status).to.equal(2);
+        expect(cliFail('61 * * * *').status).to.equal(1);
+      });
 
     it('errors when --lang is given without a value', function() {
       const result = cliFail('0 0 * * *', '--lang');
@@ -339,8 +484,31 @@ describe('Built package artifacts:', function() {
         expect(result.status).to.not.equal(0);
         // It names the offending flag and does not mistake it for a field.
         expect(result.stderr).to.match(/[Uu]nknown option: --land/u);
-        expect(result.stderr).to.match(/--lang, --form, --cron, --fragment/u);
+        expect(result.stderr).to.match(/--lang, --form, --fragment, --cron, --style/u);
         expect(result.stderr).to.not.match(/minute field/u);
       });
+  });
+
+  // Importing an entry point and using nothing from it costs nothing: a
+  // bundler drops every module. Only the browser global has an effect.
+  describe('Tree shaking:', function() {
+    const entries = ['cronli5', 'cronli5/all', 'cronli5/compat',
+      'cronli5/lang/de'];
+
+    entries.forEach(function each(entry) {
+      it(`drops ${entry} when nothing from it is used`, async function() {
+        const {build} = await import('esbuild');
+        const result = await build({
+          bundle: true,
+          format: 'esm',
+          logLevel: 'silent',
+          minify: true,
+          stdin: {contents: `import '${entry}';`, resolveDir: process.cwd()},
+          write: false
+        });
+
+        expect(result.outputFiles[0].text).to.equal('');
+      });
+    });
   });
 });

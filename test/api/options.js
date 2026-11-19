@@ -2,6 +2,8 @@ import chai from 'chai';
 import cronli5, {Cronli5InputError, Cronli5OptionError}
   from '../../src/cronli5.js';
 import en, {styles} from '../../src/lang/en/index.js';
+import everyLanguage from '../../src/all.js';
+import {vi} from 'vitest';
 
 const {expect} = chai;
 
@@ -52,6 +54,34 @@ describe('The options:', function() {
           .to.equal('at 9:30 a.m. every day');
       });
 
+    it('warns, once, when a variant the language does not yet write is ' +
+      'asked for, and describes in the language as written', function() {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => null);
+
+      try {
+        const simplified = everyLanguage('30 9 * * 1', {lang: 'zh'});
+
+        expect(everyLanguage('30 9 * * 1', {lang: 'zh-Hant'}))
+          .to.equal(simplified);
+        everyLanguage('0 9 * * *', {lang: 'zh-Hant-TW'});
+        expect(everyLanguage('30 9 * * 1', {lang: 'zh-TW'}))
+          .to.equal(simplified);
+        everyLanguage('30 9 * * 1', {lang: 'zh-CN'});
+
+        const said = warn.mock.calls.map((call) => String(call[0]));
+
+        expect(said.filter((text) => (/zh-HANT/u).test(text))).to.have
+          .length(1);
+        expect(said.filter((text) => (/zh-TW/u).test(text))).to.have
+          .length(1);
+        expect(said.join('\n')).to.match(/Traditional Chinese/u)
+          .and.not.match(/zh-CN/u);
+      }
+      finally {
+        warn.mockRestore();
+      }
+    });
+
     it('takes a module, as before', function() {
       expect(cronli5('30 9 * * *', {lang: en}))
         .to.equal('at 9:30 a.m. every day');
@@ -94,11 +124,11 @@ describe('The options:', function() {
   describe('how the pattern is read', function() {
     it('takes a flavour and separate flags', function() {
       expect(cronli5('0 0 ? * 2', {cron: 'quartz'}))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
       expect(cronli5('0 0 * * 2', {weekdaysFrom: 1}))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
       expect(cronli5('0 0 ? * 1', {questionMark: 'allow'}))
-        .to.equal('at midnight on Mondays');
+        .to.equal('at 12 a.m. on Mondays');
       expect(cronli5('0 0 9 * * *', {seconds: true}))
         .to.equal('at 9 a.m. every day');
       expect(cronli5('0 9 * * * 2030', {years: true}))

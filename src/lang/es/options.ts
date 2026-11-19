@@ -1,6 +1,6 @@
 // The copy-editor choices Spanish offers, as a table of word-level
-// conventions: 12- or 24-hour times, short names, and the word for a
-// Monday-to-Friday day. None of them moves a part of the sentence.
+// conventions: 12- or 24-hour times and short names. Neither moves a part
+// of the sentence.
 
 import {Cronli5OptionError} from '../../core/errors.js';
 import type {NormalizedOptions} from '../../core/schedule.js';
@@ -11,15 +11,13 @@ export interface SpanishStyle {
   hour12: boolean;
   // Whether weekday and month names are in their three-letter forms.
   short: boolean;
-  // The word for a Monday-to-Friday day: «día laborable» or «día hábil».
-  workday: 'hábil' | 'laborable';
 }
 
 /** The options a Spanish description is rendered under. */
 export type SpanishOptions = NormalizedOptions<SpanishStyle>;
 
 // Spain: the 24-hour clock of timetables and interfaces.
-const es: SpanishStyle = {hour12: false, short: false, workday: 'laborable'};
+const es: SpanishStyle = {hour12: false, short: false};
 
 /**
  * The named Spanish styles, each a whole table: pass one as `style`, or
@@ -28,8 +26,8 @@ const es: SpanishStyle = {hour12: false, short: false, workday: 'laborable'};
 const styles: Readonly<Record<'es' | 'mx', Readonly<SpanishStyle>>> =
 Object.freeze({
   es: Object.freeze(es),
-  // Mexico and the United States: the 12-hour clock and «día hábil».
-  mx: Object.freeze({...es, hour12: true, workday: 'hábil' as const})
+  // Mexico and the United States: the 12-hour clock.
+  mx: Object.freeze({...es, hour12: true})
 });
 
 /** The region codes Spanish knows, and the style each one selects. */
@@ -38,8 +36,7 @@ const regions: {[region: string]: string} = {ES: 'es', MX: 'mx', US: 'mx'};
 // The values each field may take.
 const allowed: {[field: string]: unknown[]} = {
   hour12: [true, false],
-  short: [true, false],
-  workday: ['laborable', 'hábil']
+  short: [true, false]
 };
 
 function quoted(values: unknown[]): string {

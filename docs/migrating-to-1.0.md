@@ -1,8 +1,9 @@
 # Moving from 0.x to 1.0
 
 1.0 changes two things: what the descriptions say, and how you ask for
-them. This page is about the second. Every change below is a rename or a
-regrouping; nothing you could do in 0.10 has been taken away.
+them. This page is about the second. Most changes below are a rename or
+a regrouping; the few things that were taken away are listed under
+"What was removed".
 
 ## The options
 
@@ -21,9 +22,46 @@ regrouping; nothing you could do in 0.10 has been taken away.
 | `seconds`, `years`, `lenient` | unchanged |
 | string, array and object patterns | unchanged |
 
-On the command line, `--fragment` and `--lang` are unchanged, and there are
-two new flags: `--form fragment|label|sentence` and `--cron
-standard|quartz`.
+On the command line, `--fragment` and `--lang` are unchanged. New:
+`--form fragment|label|sentence`, `--cron standard|quartz`, `--style
+key=value`, `--crontab`, `--help` and `--version`; with no pattern, the
+patterns are read from standard input, one per line. **Exit codes changed:**
+a wrong command (an unknown option or language, a bad option value, nothing
+to describe) now exits 2, and 1 is kept for a pattern that cannot be
+described. Everything used to exit 1.
+
+## What was removed
+
+* **Finnish** (`cronli5/lang/fi`). It is being rebuilt from native usage
+  notes like the other languages and will return in a 1.x release.
+* **Traditional Chinese** (the `zh-Hant` dialect). Chinese is Simplified
+  only for now. `lang: 'zh-Hant'` (and `zh-TW`, `zh-HK`, `zh-MO`) describes
+  in Simplified Chinese and warns once, on the console, that Traditional
+  Chinese is not yet written.
+* **`describeParts` and French's `unites`** from the language modules.
+  They needed the library's internal schedule facts, which nothing public
+  produces, so no caller could use them.
+* **The English style field `sep`**, renamed `separator`, as it is called
+  in every language that has one. Passing `sep` is an error that says so.
+* **Spanish `hSuffix` and `workday`**, and the English `'uk'` dialect
+  alias (use `lang: 'en-GB'`). The Monday-to-Friday forms now name their
+  days in every language, because no language's word for a working day
+  means exactly Monday to Friday.
+* **The `Cronli5Dialect` type**, and for authors of custom language
+  modules the plan-based contract: a language now receives facts about the
+  schedule and renders them (see `src/core/schedule.ts`).
+
+The descriptions themselves changed in every language, so tests that
+compare whole sentences will need new expectations. Two changes of meaning
+are worth knowing: a schedule whose date never exists (`0 0 31 6 *`) now
+says that it never runs, and one that exists only in leap years says so.
+
+One pattern family changed what it **means**. A day-of-month or weekday
+field that begins with `*` and is not every day (`*/2`, `*/5`), beside
+another restricted day field, now needs both to match, as cron itself
+does: `0 0 */2 * 1` is the Mondays that are odd days of the month. It used
+to be read as those days and also every Monday. Written without the star
+(`0 0 1-31/2 * 1`) the two are still added together.
 
 ## What will stop you, on purpose
 

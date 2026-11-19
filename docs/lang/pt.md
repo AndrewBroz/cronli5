@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'pt'}); // 'de segunda a sexta às 09:30'
 
 ## Status
 
-Built from a written rule book
+Built from written answers to the language questionnaire
 ([answers.md](../../src/lang/pt/answers.md)) and hand-written expected
 descriptions. Independent readers (models) checked every expected
 description against its schedule, and fluent judges briefed in the
@@ -42,8 +42,7 @@ reviewed it yet.**
 * **A day of the month together with a weekday** says the weekdays first
   and «sempre» before the time, so the time covers both: «todas as sextas
   e também no dia 1º de cada mês, sempre às 00:00».
-* **Quartz `W` is «dia de semana (segunda a sexta)»**; «dia útil» leaves
-  out public holidays, which the pattern does not know.
+* **Quartz `W` is «dia de semana (segunda a sexta)»**.
 
 ## cronli5 vs. cRonstrue (pt_BR locale)
 
