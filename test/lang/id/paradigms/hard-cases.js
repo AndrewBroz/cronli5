@@ -785,7 +785,8 @@ const rows = [
     'bulan Juni 2030', {years: true}],
   ['0 9 * 6-8,12 * 2030',
     'setiap hari pukul 09.00 pada bulan Juni sampai Agustus dan bulan ' +
-    'Desember, semuanya pada tahun 2030', {years: true}],  // Weekdays are named up to four, even with three in a row among them,
+    'Desember, semuanya pada tahun 2030', {years: true}],
+  // Weekdays are named up to four, even with three in a row among them,
   // unless they are one run; a union's arm names up to five (answers,
   // the order of choice for weekdays).
   ['0 9 * * 1-3,5', 'setiap Senin, Selasa, Rabu, dan Jumat pukul 09.00'],
@@ -868,7 +869,15 @@ const rows = [
     'hari Minggu terakhir setiap bulan, jika jatuh pada tanggal 31, pukul ' +
     '00.00'],
   ['0 0 */7 * 1#2',
-    'Senin kedua setiap bulan, jika jatuh pada tanggal 8, pukul 00.00']
+    'Senin kedua setiap bulan, jika jatuh pada tanggal 8, pukul 00.00'],
+  ['0 0 */2 * 1#5',
+    'Senin kelima setiap bulan, jika jatuh pada tanggal ganjil, pukul ' +
+    '00.00'],
+  // An arm of a union takes no exception: the odd dates less two are
+  // the stretches that are left, a single date among them by itself.
+  ['0 0 1,5,9-31/2 * 5',
+    'setiap tanggal 1, tanggal 5, dan setiap tanggal ganjil dari tanggal ' +
+    '9 sampai 31, dan juga setiap Jumat, pukul 00.00']
 ];
 
 export {rows};

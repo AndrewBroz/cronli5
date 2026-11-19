@@ -45,6 +45,9 @@ export interface Side {
   dated?: boolean;
   // Fires only in leap years, which the date itself does not show.
   leap?: boolean;
+  // A form counted inside the month, before any «jika ada»: what a
+  // condition on its date follows.
+  head?: string;
   // The days left out, each said after «kecuali».
   left: string[];
   // The dates, when the phrase names them one by one or counts them in
@@ -200,7 +203,7 @@ function datesSide(part: Part, domain: Domain, setting: Setting): Side {
     dated: !counts,
     left: [part.removed.length > 0 && dated(...part.removed)]
       .filter(Boolean) as string[],
-    listed: counts || plain ? part.values : undefined,
+    listed: counts || plain ? part.values : [],
     saidMonths: Boolean(month),
     saidYear: Boolean(year),
     text: phrase(body && !year && words.every, body)
@@ -223,6 +226,7 @@ function counted(head: string, setting: Setting): Side {
   return {
     condition: text,
     counted: true,
+    head: text,
     left: [],
     saidMonths: Boolean(host.months),
     saidYear: Boolean(host.year),

@@ -19,28 +19,16 @@ const {nthWords, words} = lexicon;
 
 type Names = (weekday: number, first: boolean) => string;
 
-// Weekdays in the form chosen: names, a run, or both together. Sunday is
-// «hari Minggu» only where it comes first.
+// Weekdays in the form chosen: names or one run, never both together.
+// Sunday is «hari Minggu» only where it comes first.
 function weekdaysSaid(part: Part, name: Names, joiner?: string): string {
   const {base} = part;
-  const runs = base.kind === 'pieces' ?
-    base.parts :
-    [base].filter(function named(form) {
-      return isRange(form) || isValues(form);
-    });
-  let first = true;
 
-  return list(runs.flatMap(function each(found) {
-    const said = isRange(found) ?
-      [phrase(name(found.from, first), words.to, name(found.to, false))] :
-      (found as {values: number[]}).values.map(function named(day, index) {
-        return name(day, first && index === 0);
-      });
-
-    first = false;
-
-    return said;
-  }), joiner);
+  return isRange(base) ?
+    phrase(name(base.from, true), words.to, name(base.to, false)) :
+    list({values: [], ...base}.values.map(function named(day, index) {
+      return name(day, index === 0);
+    }), joiner);
 }
 
 // The nth of a weekday falls in the nth seven days of the month, and the
@@ -72,7 +60,7 @@ const weekdayForms: {[Kind in QuartzWeekday['kind']]: WeekdayForm<Kind>} = {
 
     return rare ?
       {
-        ...found, comma: true,
+        ...found, comma: true, head: found.text,
         text: `${found.text}, ${words.ifThereIsOne}`, window
       } :
       {...found, window};
@@ -146,14 +134,18 @@ function bothSaid(date: Side, week: Side): string {
   // A weekday counted inside the month falls on seven dates only: of
   // dates named one by one, those it cannot fall on are not said.
   const [from, to] = week.window || [0, 0];
-  const possible = (date.listed || []).filter(function reachable(day) {
+  const listed = date.listed || [];
+  const possible = listed.filter(function reachable(day) {
     return day >= from && day <= to;
   });
-  const named = possible.length > 0 ?
-    phrase(words.date, list(possible.map(String), words.or)) :
+  const dates = [possible, listed].find(function some(found) {
+    return found.length > 0;
+  });
+  const named = dates ?
+    phrase(words.date, list(dates.map(String), words.or)) :
     date.condition;
   const options = [
-    week.counted && `${week.text}, ${phrase(words.ifItFallsOn, named)}`,
+    week.counted && `${week.head}, ${phrase(words.ifItFallsOn, named)}`,
     date.dated && phrase(date.text, words.thatFallsOn, week.condition),
     `${date.text}, ${phrase(words.ifItFallsOn, week.condition)}`
   ];

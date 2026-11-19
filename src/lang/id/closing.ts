@@ -17,7 +17,8 @@ const {ordinal, units, words} = lexicon;
 
 /** How the values of a field are named, each member under its head word. */
 interface Naming {
-  cadence(found: CadenceDescription): string;
+  // Only years are said as a rhythm; months are always named.
+  cadence?(found: CadenceDescription): string;
   head: string;
   name(value: number): string;
   range(found: RangeDescription): string;
@@ -46,7 +47,7 @@ const members: {[Kind in Plain['kind']]: Members<Kind>} = {
     return [];
   },
   cadence(form, say) {
-    return [say.cadence(form)];
+    return [(say.cadence as (found: CadenceDescription) => string)(form)];
   },
   cadencePieces: several,
   pieces: several,
@@ -122,11 +123,6 @@ function monthNaming(style: IndonesianStyle): Naming {
   }
 
   return {
-    // Months are never said as a rhythm: they are named.
-    cadence(found) {
-      return phrase(units.month,
-        monthNames(denote(found, domainOf('month')), style));
-    },
     head: units.month,
     name,
     range(found) {
