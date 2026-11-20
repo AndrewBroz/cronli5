@@ -89,6 +89,8 @@ const words = {
   listMark: '·',
   neverRuns: '없는 날짜라 실행되지 않음',
   neverRunsSentence: '없는 날짜라 실행되지 않습니다',
+  // Before the clock time that ends a run of hours through midnight.
+  nextDay: '다음 날',
   noon: '낮',
   oddDates: '홀수일',
   oddHours: '홀수 시',

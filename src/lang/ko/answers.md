@@ -98,12 +98,16 @@ Things that run through everything:
   «1분마다(매시 59분 제외)»). It is never used to take back a moment the
   sentence has just named as the end of a span: there the span's end
   moves («오전 9시 1분부터», not «오전 9시부터 …(오전 9시 제외)»).
-* **A run that crosses the edge of its unit is cut at the edge.** Hours
-  22 to 2 are the hours 0, 1, 2, 22 and 23 of a day. Said across midnight
-  («다음 날 오전 2시까지») the run is right only when every day fires,
-  and «11~2월» under a year is read as running into the next year. Cut
-  at the edge it is right whatever else is restricted, so no other field
-  can change it. The week's edge is between Sunday and Monday (5.1).
+* **A run that crosses the edge of its unit is cut at the edge, with
+  one exception.** Hours 22 to 2 are the hours 0, 1, 2, 22 and 23 of a
+  day. Said across midnight («다음 날 오전 2시까지») the run is right
+  only when every day fires, and «11~2월» under a year is read as
+  running into the next year. Cut at the edge it is right whatever else
+  is restricted. The exception: **hours that run through midnight when
+  every day fires** are said as the one stretch they are, «매일 오후
+  10시부터 다음 날 오전 2시까지 1시간마다» (The time part, "Hours that
+  run through midnight", 2026-11-19). The week's edge is between Sunday
+  and Monday (5.1).
 
 Korean declares **no tie**: no wording depends on how a field was written.
 
@@ -274,6 +278,72 @@ Take seconds as zero first. N is how many times a day the schedule
 fires, counted when M and H are not `all`. A **run** of hours is one
 hour or any number of adjacent hours. The hours are **every second
 hour** when H is exactly 0, 2, …, 22 or exactly 1, 3, …, 23.
+
+**Hours that run through midnight** (2026-11-19, from the cost pass).
+When no day of the month, weekday, month or year is restricted, and the
+hours, read round the clock, are **one run that crosses midnight** and
+are not every hour but one or two, the run is one stretch: the hours
+after midnight are counted on as the next day's, and every form below
+that takes a run of hours takes this one, its last moment after «다음
+날». The run is then a run like any other:
+
+* at one minute (C): «매일 오후 10시부터 다음 날 오전 2시까지
+  1시간마다» (`0 22-2`), «매일 오후 10시 30분부터 다음 날 오전 2시
+  30분까지 1시간마다» (`30 22-2`);
+* under a rhythm that fills the hour (D): «매일 오후 10시부터 다음 날
+  오전 2시 59분까지 1분마다» (`* 22-2`), «…다음 날 오전 2시 45분까지
+  15분마다» (`*/15`), «매일 오후 10시 5분부터 다음 날 오전 2시
+  50분까지 15분마다» (`5/15`);
+* with marks or a span inside each hour (E): «매일 오후 10시대부터 다음
+  날 오전 2시대까지 매시 5·20·45분»; and seconds under whole hours,
+  «매일 오후 10시대부터 다음 날 오전 2시대까지 1초마다».
+
+Why. Every day fires, so nothing is lost by saying the run across
+midnight, and the usage notes' own model for it is «매일 밤 10시부터
+다음 날 오전 6시까지» (usage 4.3, 9). Cut at midnight, `0 22-2` was five
+clock times in an order that hides that they are one run («매일 0시,
+오전 1시, 2시, 오후 10시, 11시»: five things to hold, the evening ones
+last), and `* 22-2` two spans, the later one first. The stretch is two
+ends and a step, read as one thing. Cost columns, old against new: `0
+22-2` six objects and 17 syllables against four and 22; `* 22-2` seven
+objects and 42 syllables against four and 25. The first is mixed (two
+fewer things to hold, five more syllables); the call is the stretch,
+because the run is the schedule's shape and the list makes the reader
+assemble it. One case is dearer by the columns: `* 23-0`, two whole
+hours, was «매일 0시대, 오후 11시대에 1분마다» (four objects, 16
+syllables) and is «매일 오후 11시부터 다음 날 0시 59분까지 1분마다»
+(four, 24). Taken for continuity of form: `* 22-23` is already «매일
+오후 10시부터 11시 59분까지 1분마다», and moving the run by an hour
+should change its numbers, not its device. Rejected: keeping the cut everywhere (the record before
+this, which held that a list or two spans are true in every case and so
+no other field can change the time). That was right for its reason and
+is kept where its reason holds: beside a named day, month or year
+(«매주 월요일 오후 10시부터 다음 날 오전 2시까지» promises Tuesday's
+small hours, and under June the 30th's run would end on 1 July), and
+it costs a declared fusion here (2.6).
+
+At the edges, what stays as it was:
+
+* **Few times are still a list** (B), in clock order on one day: three
+  times or fewer at one minute, `0 23-1` «매일 0시, 오전 1시, 오후
+  11시», `0 23,0` «매일 0시, 오후 11시». Read round the clock four or
+  five hours at one minute are evenly spaced, so B's "five uneven times"
+  no longer takes them: `0 22-1` is «매일 오후 10시부터 다음 날 오전
+  1시까지 1시간마다», as `0 9-12` is «매일 오전 9시부터 낮 12시까지
+  1시간마다».
+* **Every hour but one or two** is still A: `0 3-1` «매시 정각(오전 2시
+  제외)». With three or more missing the run is a stretch: `0 5-1`
+  «매일 오전 5시부터 다음 날 오전 1시까지 1시간마다».
+* **Anything restricted in the calendar** cuts the run at midnight as
+  before: `0 22-2 1 * *` «매월 1일 0시, 오전 1시, 2시, 오후 10시,
+  11시», `*/15 22-2 * * 1-5` two spans.
+* **Hours that are not one run** (`0 22-2,10`, a run and a stray) are
+  laid out from midnight as before.
+
+After «다음 날» the marker is always said, even where it repeats the
+one before («오전 5시부터 다음 날 오전 1시까지»): the next day starts
+afresh. In the 24-hour style: «매일 22시부터 다음 날 2시까지
+1시간마다».
 
 The time part is decided by the first of **A** to **E** that applies.
 
@@ -573,7 +643,8 @@ Inside one list of times, and inside one span, a marker is said on the
 first time and again only when it differs from the time before it: «오전
 9시, 9시 30분, 오후 5시, 5시 30분», «오전 9시부터 9시 45분까지», «0시,
 오전 1시, 2시, 오후 10시, 11시». Every new span, every piece after
-«그리고» and every bracket starts afresh. Minutes are said when not zero,
+«그리고» and every bracket starts afresh, and so does the next day:
+after «다음 날» the marker is said («오전 5시부터 다음 날 오전 1시까지»). Minutes are said when not zero,
 or when a second follows; seconds when not zero.
 
 ## 1. Anchors
@@ -698,6 +769,13 @@ Each stays inside the calendar part and the fill.
   23분까지 6시간마다»). These are the only places where editing the
   minute rewrites how the hours are said, and both are inside the time
   part.
+* **Hours that run through midnight** (2026-11-19). While no day,
+  month or year is restricted they are one stretch ending on «다음 날»;
+  once one is, they are cut at midnight (The time part). So an edit to
+  the day of the month, the weekday, the month or the year may rewrite
+  the time part when the hours are such a run. It is the one place a
+  calendar field changes the time, and it does so for the reason the
+  cut exists: «다음 날» is true only when every day fires.
 * **A date that never comes** leaves no time to say: the whole
   description is «없는 날짜라 실행되지 않음» (5.3), so a day, month or
   year field that makes or unmakes such a date removes or restores the
@@ -733,14 +811,17 @@ firing.
 
 3.5 **A range that wraps.** Cut at the edge of the unit.
 
-* `0 22-2 * * *`: «매일 0시, 오전 1시, 2시, 오후 10시, 11시» (five
-  uneven times: a list).
-* `* 22-2 * * *`: «매일 0시부터 오전 2시 59분까지 1분마다, 그리고 오후
-  10시부터 11시 59분까지 1분마다».
+* `0 22-2 1 * *`: «매월 1일 0시, 오전 1시, 2시, 오후 10시, 11시».
+* `* 22-2 * * 1-5`: «매주 월~금요일 0시부터 오전 2시 59분까지 1분마다,
+  그리고 오후 10시부터 11시 59분까지 1분마다».
 * `0 0 * 11-2 *`: «매년 1월·2월·11월·12월 매일 0시».
 
-A day field beside wrapping hours changes nothing, and no continuity
-exception is needed.
+Hours, when every day fires, are the exception: one stretch ending on
+the next day, `0 22-2 * * *` «매일 오후 10시부터 다음 날 오전 2시까지
+1시간마다», `* 22-2 * * *` «매일 오후 10시부터 다음 날 오전 2시
+59분까지 1분마다» (The time part, "Hours that run through midnight").
+So a day, month or year field beside hours that run through midnight
+may change the time part: a declared fusion (2.6).
 
 3.6 **A range and a stray value.**
 
@@ -1603,6 +1684,33 @@ Left open, with the reason:
   months, «(1월·3월·5월·7월·8월·10월에는 31일에도)»: true; the pattern
   is rare.
 
+## The cost pass (2026-11-19)
+
+Each sentence's cost to a reader was measured in four columns (spoken
+length, things to hold, repetition, working out), never added, as a
+list of places to look. Two leads were taken up here:
+
+* **Hours that run through midnight**, every day firing: changed (The
+  time part, "Hours that run through midnight"). `0 22-2 * * *` «매일
+  0시, 오전 1시, 2시, 오후 10시, 11시» → «매일 오후 10시부터 다음 날
+  오전 2시까지 1시간마다»; `* 22-2 * * *` two spans → «매일 오후
+  10시부터 다음 날 오전 2시 59분까지 1분마다».
+* **«매월 말일 3일 전(31일까지 있는 달은 28일)»**: left (5.3, "So many
+  days before the last"). The bracket gives the date for 31-day months
+  only, and one reader in three of the reading check got 27 September
+  wrong in a list of questions; the same rate was noted on plain «매년
+  6월 1일», and judge 1 of 2026-11-19 worked every month length out of
+  the bracket. The bracket's job is to fix how the count is made (the
+  phrase alone was counted two ways), and one example does that. Two
+  alternatives were weighed and rejected. Every length in the bracket
+  («31일까지 있는 달은 28일, 30일까지 있는 달은 27일, 윤년 2월은 26일,
+  평년 2월은 25일») is a table of four dates for one rule, about twice
+  the syllables, to be read past for the one month the reader wants.
+  An ordinal from the end, «매월 끝에서 넷째 날», gives every month
+  without a table, but still makes the reader count, breaks the series
+  «말일», «말일 전날», «말일 이틀 전» that readers understood, and
+  would need ordinals up to «스물여덟째», which no notice writes.
+
 ## Forms tried and replaced
 
 Moved here from the sections above, in their own words, so that the
@@ -1767,11 +1875,12 @@ say another.
   the bare form would be the only day phrases without «매주».
 * **«0시» always, never «자정» or «밤 12시»; «오전/오후», never
   «새벽/밤»** (usage 1.3). The notes call both safe choices.
-* **A run across midnight is cut within the day** (usage 4.3, 9: «밤
-  10시부터 다음 날 오전 6시까지»). That phrase is true only when every
-  day fires; under «매주 월요일» it promises Tuesday's small hours. Both
-  first readers would have preferred it for the daily case; a list or
-  two spans are true in every case.
+* **A run across midnight is cut within the day, beside a named day,
+  month or year** (usage 4.3, 9: «밤 10시부터 다음 날 오전 6시까지»).
+  That phrase is true only when every day fires; under «매주 월요일» it
+  promises Tuesday's small hours. When every day fires it is said, as
+  the notes say it (since 2026-11-19; The time part, "Hours that run
+  through midnight"). «오후» stays where the notes write «밤».
 * **Months 11 to 2 are «1월·2월·11월·12월»**, not «11~2월» (usage 1.6): under
   a year the range reads into the next year.
 * **A union is always «매주 금요일, 그리고 매월 1일에도, 0시»**, one of
