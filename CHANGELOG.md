@@ -138,6 +138,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     为1日时照常）0:00」 (was 「每月1日以及每周一、周二、周四至周日，均在0:00」);
     `0 9 * */2 *` is 「每年奇数月每天9:00」 (was the six months); `0 0 15W
     * 1-5` is 「每周一至周五0:00」, the date adding nothing.
+- **Simplified Chinese says the same days the same way, however the
+  pattern is spelled.** Odd or even days that reach the last such day of
+  the months named are those months' odd or even days: `0 9 1-29/2 6 *`
+  is 「每年6月的单日9:00」, as `0 9 */2 6 *` is (was 「每年6月1日至29日逢
+  单日9:00」).
 - **Faster.** A step of many years, such as `2030/2` in the year field
   (3,985 years), took about 420 us to analyse in every language and now
   takes about 200: a single step no longer goes through a Set to drop

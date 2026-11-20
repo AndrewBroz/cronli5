@@ -486,8 +486,58 @@ const rows = [
   ['0 0 25-31 6 *', '每年6月25日至30日每天0:00'],
   ['0 0 */3 6 *', '每年6月1日、4日、7日、10日、13日、16日、19日、22日、25日、28日0:00'],
   ['0 0 */2 6 *', '每年6月的单日0:00'],
-  ['0 9 1-29/2 6 *', '每年6月1日至29日逢单日9:00'],
   ['0 9 1-14,16-31 6 *', '每年6月除15日外每天9:00'],
+
+  // The same days are said the same way, however the field is written.
+  // Where the dates a step between two ends reaches in the months named
+  // are all the odd or all the even days those months have, they are the
+  // odd or the even days of the months, as for a step over the whole
+  // month: the month supplies its own end. (`1-29/2` in June was 每年6月
+  // 1日至29日逢单日, a second way of saying 6月的单日: June has no 31st.)
+  // Odd and even days in June, a month of 30 days.
+  ['0 9 1-29/2 6 *', '每年6月的单日9:00'],
+  ['0 9 2-30/2 6 *', '每年6月的双日9:00'],
+  ['0 9 2/2 6 *', '每年6月的双日9:00'],
+  // In February: 28 days, and 29 in leap years.
+  ['0 9 */2 2 *', '每年2月的单日9:00'],
+  ['0 9 1-29/2 2 *', '每年2月的单日9:00'],
+  ['0 9 2-28/2 2 *', '每年2月的双日9:00'],
+  ['0 9 2/2 2 *', '每年2月的双日9:00'],
+  // A February of a common year ends on the 28th, so the 27th is its last
+  // odd day; a leap year's February has the 29th, which `1-27/2` leaves.
+  ['0 0 9 1-27/2 2 * 2031', '2031年2月的单日9:00'],
+  ['0 0 9 */2 2 * 2031', '2031年2月的单日9:00'],
+  ['0 0 9 1-29/2 2 * 2032', '2032年2月的单日9:00'],
+  ['0 0 9 1-27/2 2 * 2032', '2032年2月1日至27日逢单日9:00'],
+  ['0 9 1-27/2 2 *', '每年2月1日至27日逢单日9:00'],
+  // In July, a month of 31 days: the 31st is an odd day it has.
+  ['0 9 1-31/2 7 *', '每年7月的单日9:00'],
+  ['0 9 1-29/2 7 *', '每年7月1日至29日逢单日9:00'],
+  // Months of different lengths together: the same where every month
+  // named ends its odd days on the 29th (February in a leap year, April,
+  // June); where one of them has a 31st, or a 30th, the ends stay.
+  ['0 9 1-29/2 4,6 *', '每年4月、6月的单日9:00'],
+  ['0 9 1-29/2 2,4 *', '每年2月、4月的单日9:00'],
+  ['0 9 1-29/2 6,7 *', '每年6月、7月的1日至29日逢单日9:00'],
+  ['0 9 1-29/2 6-8 *', '每年6月至8月每月1日至29日逢单日9:00'],
+  ['0 9 2-28/2 2,4 *', '每年2月、4月的2日至28日逢双日9:00'],
+  // Odd days that stop before the month's last are other days, and keep
+  // their ends; so do those that start late, however written.
+  ['0 9 1-27/2 6 *', '每年6月1日至27日逢单日9:00'],
+  ['0 9 3-29/2 6 *', '每年6月3日至29日逢单日9:00'],
+  ['0 9 3/2 6 *', '每年6月3日至29日逢单日9:00'],
+  // Every month: already one way.
+  ['0 9 1-31/2 * *', '每月逢单日9:00'],
+  // A step of three is listed however it is written.
+  ['0 9 1-28/3 6 *',
+    '每年6月1日、4日、7日、10日、13日、16日、19日、22日、25日、28日9:00'],
+  ['0 9 1-28/3 2 *',
+    '每年2月1日、4日、7日、10日、13日、16日、19日、22日、25日、28日9:00'],
+  ['0 9 */3 2 *',
+    '每年2月1日、4日、7日、10日、13日、16日、19日、22日、25日、28日9:00'],
+  // Beside a weekday under a month, the same.
+  ['0 9 1-29/2 6 1', '每年6月，每逢单日以及每逢周一，均在9:00'],
+  ['0 9 1-31/2 6 1', '每年6月，每逢单日以及每逢周一，均在9:00'],
 
   // Where no month can be named, a date some months lack is led by 每逢:
   // it fires where there is one. (It was 每月31日（当月无此日则不执行）.)

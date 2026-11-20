@@ -552,7 +552,10 @@ A run of minutes that wraps inside one hour is two windows: 9:00至9:10、
   month is an idiom (5.1). **Every second date between two ends, more
   than eight, is the odd or the even days from its first date to its
   last**: `8/2` is 每月8日至30日逢双日; `1-17/2` is 每月1日至17日逢单日;
-  `5/2` is 每月5日至31日逢单日; in June `1-29/2` is 6月1日至29日逢单日.
+  `5/2` is 每月5日至31日逢单日; in June `1-27/2` is 6月1日至27日逢单日.
+  Where the dates reach the last odd or even day of the months named, the
+  month is their end, and they are the idiom (3.11): in June `1-29/2` is
+  6月的单日.
   **Any other cadence is listed, however many**: `*/3` is 每月1日、4日、7
   日、10日、13日、16日、19日、22日、25日、28日、31日 (eleven dates, the
   most there can be).
@@ -715,10 +718,10 @@ values before one stretched to the ends of the field.
   two 除…外 in a row; a reader has to stop to see which 外 closes what.)
 * **Under named months a date is excepted only if it comes before the
   last date that fires**: 每年6月除15日外每天9:00, but `1-29/2` in June is
-  每年6月1日至29日逢单日, not 6月的单日（31日除外）: whether the month
-  has the excepted date is the calendar's affair, and a date that may not
-  exist is not named. Under every month the date may fall anywhere, as
-  above.
+  never 6月的单日（31日除外）: whether the month has the excepted date is
+  the calendar's affair, and a date that may not exist is not named. (It
+  is 每年6月的单日, the odd days June has: 3.11.) Under every month the
+  date may fall anywhere, as above.
 * Years: see 5.8.
 * Weekdays, exactly six that are not one run of the Monday-to-Sunday
   week: 除周三外每天; 除周六外每天. Five days or fewer are always pieces
@@ -791,13 +794,43 @@ Not checked with a fluent human beyond that.
 
 3.11 None. `0 */12 * * *` and `0 0,12 * * *` are both 每12小时一次.
 
-**Doubted, and not hidden** (2026-11-19): one schedule is said two ways.
-The odd days of June are 每年6月的单日 where the set fills the month's
-odd days as the core describes it for `*/2` (4.4, case 4; 5.1), and 每年
-6月1日至29日逢单日 for `1-29/2` (3.7, 3.9), which is the same days: June
-has no 31st. Both rows stand. No tie is declared, so this is a
-difference the rule above does not allow; 6月的单日 is the shorter and
-names nothing to check, and the two should be made alike.
+**The same days, however written** (2026-11-19). The odd days of June
+were said two ways: 每年6月的单日 for `*/2` and 每年6月1日至29日逢单日
+for `1-29/2`, which is the same days, since June has no 31st. No tie is
+declared, so that was a difference this rule does not allow. It is now
+one form, chosen by the days reached: **when the dates a pattern reaches
+in the months it fires in are all the odd or all the even days those
+months have, as the core measures them against the longest of the months
+(`daysReached`), they are the idiom of 5.1, 6月的单日 or 每月逢单日,
+however the field was written.** The renderer holds no table of month
+lengths. 6月的单日 is the form kept: the month supplies its own end, so
+the ends 1日 and 29日 are two things to hold that tell the reader
+nothing, and 至29日 makes a reader stop to ask whether June has a 30th
+or a 31st that is left out. Costs: 6 syllables against 11 for the day
+part; one thing against three, with no end to check. The edges:
+
+* Months of different lengths together: the longest decides. `1-29/2` in
+  April and June is 4月、6月的单日, and in February and April 2月、4月的单
+  日 (a leap February's last odd day is the 29th); in June and July, or
+  June to August, the 31st of July does not fire, so the ends stay: 6月、7
+  月的1日至29日逢单日. `2-28/2` in February and April leaves April's
+  30th and keeps its ends too.
+* February is judged by the years reached: in 2031 alone `1-27/2` is
+  2031年2月的单日; in every year, or in 2032, the 29th of a leap year
+  does not fire, and it stays 2月1日至27日逢单日.
+* Dates that stop before the month's last odd or even day, or start
+  after its first, are other days and keep their ends: `1-27/2` in June
+  is 6月1日至27日逢单日; `3-29/2` and `3/2` in June are both 6月3日至29日
+  逢单日.
+* Every month: `1-31/2` and `*/2` were already alike, 每月逢单日.
+* A step that is not every second day is listed however it is written
+  (3.7), and so is said alike already: `1-28/3` and `*/3` in June or in
+  February are the same ten dates.
+* Beside a weekday under a month the same holds: `1-29/2` in June with
+  Mondays is 每年6月，每逢单日以及每逢周一 (it was 每逢1日至29日的单日).
+* Hours, minutes and months have no months of different lengths beneath
+  them; a check of every language found them said alike already, and they
+  are not changed.
 
 ## 4. Fusions
 
@@ -1344,7 +1377,8 @@ counts the days of a month for itself. Take the first case that applies.
    4,6,9,11 *` is 每年4月、6月、9月、11月的1日0:00; `0 0 */5 6 *` is 每年6月1
    日、6日、11日、16日、21日、26日0:00; `0 0 */3 6 *` is 每年6月1日、4日、7
    日、10日、13日、16日、19日、22日、25日、28日0:00; `0 0 25-31 6 *` is 每
-   年6月25日至30日每天0:00; `0 0 */2 6 *` is 每年6月的单日0:00.
+   年6月25日至30日每天0:00; `0 0 */2 6 *` is 每年6月的单日0:00, and so is
+   `0 0 1-29/2 6 *`, the same days (3.11).
 5. **A day counted back from the month's end is the date it comes to,
    where that is one date** (2026-11-19, from the comparison): the months
    it fires in are all of one length (the core's `monthLengths` has one

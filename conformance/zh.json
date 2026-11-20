@@ -3974,18 +3974,207 @@
    "pattern": "0 0 */2 6 *"
   },
   {
-   "expected": "每年6月1日至29日逢单日9:00",
+   "expected": "每年6月除15日外每天9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-14,16-31 6 *"
+  },
+  {
+   "expected": "每年6月的单日9:00",
    "options": {
     "lang": "zh"
    },
    "pattern": "0 9 1-29/2 6 *"
   },
   {
-   "expected": "每年6月除15日外每天9:00",
+   "expected": "每年6月的双日9:00",
    "options": {
     "lang": "zh"
    },
-   "pattern": "0 9 1-14,16-31 6 *"
+   "pattern": "0 9 2-30/2 6 *"
+  },
+  {
+   "expected": "每年6月的双日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 2/2 6 *"
+  },
+  {
+   "expected": "每年2月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 */2 2 *"
+  },
+  {
+   "expected": "每年2月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-29/2 2 *"
+  },
+  {
+   "expected": "每年2月的双日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 2-28/2 2 *"
+  },
+  {
+   "expected": "每年2月的双日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 2/2 2 *"
+  },
+  {
+   "expected": "2031年2月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 1-27/2 2 * 2031"
+  },
+  {
+   "expected": "2031年2月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 */2 2 * 2031"
+  },
+  {
+   "expected": "2032年2月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 1-29/2 2 * 2032"
+  },
+  {
+   "expected": "2032年2月1日至27日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 0 9 1-27/2 2 * 2032"
+  },
+  {
+   "expected": "每年2月1日至27日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-27/2 2 *"
+  },
+  {
+   "expected": "每年7月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-31/2 7 *"
+  },
+  {
+   "expected": "每年7月1日至29日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-29/2 7 *"
+  },
+  {
+   "expected": "每年4月、6月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-29/2 4,6 *"
+  },
+  {
+   "expected": "每年2月、4月的单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-29/2 2,4 *"
+  },
+  {
+   "expected": "每年6月、7月的1日至29日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-29/2 6,7 *"
+  },
+  {
+   "expected": "每年6月至8月每月1日至29日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-29/2 6-8 *"
+  },
+  {
+   "expected": "每年2月、4月的2日至28日逢双日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 2-28/2 2,4 *"
+  },
+  {
+   "expected": "每年6月1日至27日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-27/2 6 *"
+  },
+  {
+   "expected": "每年6月3日至29日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 3-29/2 6 *"
+  },
+  {
+   "expected": "每年6月3日至29日逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 3/2 6 *"
+  },
+  {
+   "expected": "每月逢单日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-31/2 * *"
+  },
+  {
+   "expected": "每年6月1日、4日、7日、10日、13日、16日、19日、22日、25日、28日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-28/3 6 *"
+  },
+  {
+   "expected": "每年2月1日、4日、7日、10日、13日、16日、19日、22日、25日、28日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-28/3 2 *"
+  },
+  {
+   "expected": "每年2月1日、4日、7日、10日、13日、16日、19日、22日、25日、28日9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 */3 2 *"
+  },
+  {
+   "expected": "每年6月，每逢单日以及每逢周一，均在9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-29/2 6 1"
+  },
+  {
+   "expected": "每年6月，每逢单日以及每逢周一，均在9:00",
+   "options": {
+    "lang": "zh"
+   },
+   "pattern": "0 9 1-31/2 6 1"
   },
   {
    "expected": "每逢30日0:00",

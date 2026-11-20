@@ -6,6 +6,7 @@ import type {
   Schedule, SetDescription, ValuesDescription
 } from '../../core/schedule.js';
 import {denote, describeSet} from '../../core/describe-set.js';
+import {daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {Cadence, Exception} from './sets.js';
@@ -562,13 +563,25 @@ function quartzSide(schedule: Schedule): Side {
     {kind: 'plain', text: dateName(date) + bracketed([note]), tie: ''};
 }
 
+// Whether the dates are all the odd or all the even days the months they
+// fire in have, as the core measures them against the longest of those
+// months: then the months supply the ends, however the field was written.
+function fillsMonths(schedule: Schedule): boolean {
+  const reached = daysReached(schedule);
+  const found = reached?.candidates[0];
+
+  return reached !== null && typeof found !== 'undefined' &&
+    everyOther(denote(found, reached.domain), reached.domain);
+}
+
 // The dates. They are those the months named have, as the core gives
 // them. The device is chosen from the dates as written, so that the odd
-// days of a short month are still the odd days; a date is excepted only
-// where it surely exists, which under a named month is before the last
-// date that fires. Every second date between two ends, more than can be
-// listed, is the odd or the even days from the first to the last, after
-// 逢 (after 的 where 每逢 already leads the dates). Any
+// days of a short month are still the odd days, or from the days they
+// reach, so that the odd days to the 29th of June are too; a date is
+// excepted only where it surely exists, which under a named month is
+// before the last date that fires. Every second date between two ends,
+// more than can be listed, is the odd or the even days from the first to
+// the last, after 逢 (after 的 where 每逢 already leads the dates). Any
 // other dates are listed, however many. `plain` is where no exception is
 // said, and `monthly` where no month is named.
 function dateSide(schedule: Schedule, context: Context, traits:
@@ -595,7 +608,8 @@ function dateSide(schedule: Schedule, context: Context, traits:
     words.of + [words.evenDaysOfMonth, words.oddDaysOfMonth][days[0] % 2] :
     [words.evenDays, words.oddDays][days[0] % 2];
   const side = first<() => Side>([
-    [sure && everyOther(picked.values, domain), () => ({
+    [sure && everyOther(picked.values, domain) ||
+      removed === '' && fillsMonths(schedule), () => ({
       kind: 'parity',
       text: everyOtherDay[context][picked.values[0] % 2] +
         bracketed([when(removed !== '', removed + words.excepted)]),
