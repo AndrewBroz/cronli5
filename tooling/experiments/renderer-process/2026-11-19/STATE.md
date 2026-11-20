@@ -55,9 +55,14 @@ models). The reading check found no defect in any of the five.
    mulai tanggal 1 setiap bulan») while zh, zh-Hant and ru list the dates
    (eleven for every third day). A step of days does not tile the month.
    A project-wide question, not one language's.
-3. **Simplified Chinese: 126 rows were applied by script** from sentences
-   the renderer produced, each reviewed, in the repair of 2026-11-19.
-   They should be re-derived by hand from the answers. The full reading
+3. **Simplified Chinese rows of the 2026-11-19 repair.** 126 rows had been
+   applied by script from sentences the renderer produced. All 160 rows
+   that repair changed or added were then written again by a writer who
+   saw only the patterns, the answers and the lexicon: 160 of 160 equal
+   the rows. The eight places where the answers contradicted themselves
+   or were silent are amended. Still open: `0 9 1-29/2 6 *` says
+   每年6月1日至29日逢单日 while the same days written `*/2` say
+   每年6月的单日, with no tie declared (answers 3.11); and the full reading
    run was not repeated after that repair's last two cures.
 4. **`0-29,45 9 * * *` at 9:37**: Sonnet readers say it fires, in every
    language's reading check and under six rewordings in Traditional
