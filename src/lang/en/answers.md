@@ -894,6 +894,21 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m."
 
+**Minutes in pieces before hours named one by one** (2026-11-19) count
+past "the hour", and the hours follow as hours: `5-10,20 9-17/2 * * *` is
+"every minute from 5 through 10 and at 20 minutes past the hour during the
+9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours". In pieces the unit
+comes only after the last piece, so the numbers of the first stand bare;
+followed straight by clock times ("every minute from 5 through 10 and at
+20 minutes past 9 a.m., 11 a.m., …"), "from 5 through 10" was heard as 5
+to 10 o'clock: readers asked alone, of two models, said it fired at 6:05
+p.m. After "past the hour" every number is a minute, and "during the … hours"
+says that each piece belongs to every hour named. Against the old form it
+costs six syllables and says "hour" twice, with the same eight things to
+hold and nothing to work out; the old form's second reading decides it. A
+list or a single run of minutes names its unit beside its numbers and keeps
+the hours as moments: "at 5 and 20 minutes past 9 a.m., 11 a.m., …".
+
 **A list of clock times is also sayable** whenever neither M nor H is
 every value and there are at most 24 times: "at 9:05 a.m., 9:20 a.m., and 9:45 a.m."
 It names one thing per time and competes with the continuous or anchored

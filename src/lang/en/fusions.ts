@@ -526,7 +526,8 @@ function minutesWith(
   const rest = say(hours,
     minute.continuous ?
       hoursAsStretches(close, opts) :
-      hoursAsNouns(minute.portion, opts),
+      hoursAsNouns({asHours: minute.portion,
+        pieced: minute.description.kind === 'pieces'}, opts),
     opts);
 
   return rest && {

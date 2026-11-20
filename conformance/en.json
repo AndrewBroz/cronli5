@@ -2186,11 +2186,39 @@
    "pattern": "5,20 */2 * * *"
   },
   {
-   "expected": "every minute from 5 through 10 and at 20 minutes past 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. every day",
+   "expected": "every minute from 5 through 10 and at 20 minutes past the hour during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours every day",
    "options": {
     "lang": "en"
    },
    "pattern": "5-10,20 9-17/2 * * *"
+  },
+  {
+   "expected": "every minute from 5 through 10 and at 20 minutes past the hour during the 9 a.m. and 1 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5-10,20 9,13 * * *"
+  },
+  {
+   "expected": "at 5 and every minute from 50 through 59 minutes past the hour during the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "50-59,5 9-17/2 * * *"
+  },
+  {
+   "expected": "at 5 and 20 minutes past 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20 9-17/2 * * *"
+  },
+  {
+   "expected": "every minute from 5 through 10 minutes past 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5-10 9-17/2 * * *"
   },
   {
    "expected": "every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. through 7:50 p.m. on weekdays",
@@ -3384,11 +3412,193 @@
    "pattern": "0 0 1-31/3 6 1"
   },
   {
-   "expected": "at 12 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of June and July",
+   "expected": "at 12 a.m. every 5 days from the 1st of the month in June and July",
    "options": {
     "lang": "en"
    },
    "pattern": "0 0 */5 6,7 *"
+  },
+  {
+   "expected": "at 12 a.m. every 4 days from the 3rd of the month in June and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 3/4 6,7 *"
+  },
+  {
+   "expected": "at 12 a.m. every 4 days from the 2nd of the month in February and March",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 2-30/4 2,3 *"
+  },
+  {
+   "expected": "at 12 a.m. every 7 days from the 2nd of the month in February and April",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 2/7 2,4 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in June except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-14,16-30 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in June except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-14,16-31 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in June except the 10th and 20th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-9,11-19,21-30 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in April and June except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-14,16-30 4,6 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in February except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-14,16-29 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in February except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-14,16-31 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in February except the 28th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-27,29 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in February except the 28th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-27,29-31 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in February except the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 2-29 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in February except the 1st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 2-31 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in February except the 29th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-28 2 *"
+  },
+  {
+   "expected": "at 12 a.m. every day in February 2031",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 1-28 2 * 2031"
+  },
+  {
+   "expected": "at 12 a.m. every day in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-31 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on April 30",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 30,31 4 *"
+  },
+  {
+   "expected": "at 12 a.m. on February 29 in leap years",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 29,30,31 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on every day in April and July except the 15th and 31st",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-14,16-30 4,7 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 20th through the last day of April and May",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 20-31 4,5 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 25th through the last day of February and March",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 25-31 2,3 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 20th through the 30th of April and May",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 20-30 4,5 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 30th of April and May and on May 31",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 30,31 4,5 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 15th of January and April and on January 31",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 15,31 1,4 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 29th of February and April and on April 30",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 29,30 2,4 *"
+  },
+  {
+   "expected": "at 12 a.m. on the 20th through the 29th of February and July and on July 30",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 20-30 2,7 *"
   },
   {
    "expected": "at 12 a.m. every 3 days from the 1st of the month in June and July",
@@ -3779,7 +3989,7 @@
    "pattern": "0 9 1-29 2 *"
   },
   {
-   "expected": "at 9 a.m. on February 1 through 28",
+   "expected": "at 9 a.m. on every day in February except the 29th",
    "options": {
     "lang": "en"
    },

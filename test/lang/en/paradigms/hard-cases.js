@@ -130,9 +130,28 @@ const rows = [
     'p.m. every day'],
   ['15,45 */4 * * *', 'at 15 and 45 minutes past the hour, every 4 hours'],
   ['5,20 */2 * * *', 'at 5 and 20 minutes past the hour, every 2 hours'],
+  // Minutes in pieces before hours named one by one count past "the
+  // hour", and the hours follow as hours. This row said "every minute from
+  // 5 through 10 and at 20 minutes past 9 a.m., 11 a.m., 1 p.m., 3 p.m.,
+  // and 5 p.m.", and readers asked alone took "from 5 through 10" for 5 to
+  // 10 o'clock and said it fired at 6:05 p.m. (2026-11-19).
   ['5-10,20 9-17/2 * * *',
-    'every minute from 5 through 10 and at 20 minutes past 9 a.m., 11 ' +
-    'a.m., 1 p.m., 3 p.m., and 5 p.m. every day'],
+    'every minute from 5 through 10 and at 20 minutes past the hour during ' +
+    'the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours every day'],
+  ['5-10,20 9,13 * * *',
+    'every minute from 5 through 10 and at 20 minutes past the hour during ' +
+    'the 9 a.m. and 1 p.m. hours every day'],
+  ['50-59,5 9-17/2 * * *',
+    'at 5 and every minute from 50 through 59 minutes past the hour during ' +
+    'the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours every day'],
+  // A list or a single run names its unit next to its numbers, and keeps
+  // the hours as moments.
+  ['5,20 9-17/2 * * *',
+    'at 5 and 20 minutes past 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. ' +
+    'every day'],
+  ['5-10 9-17/2 * * *',
+    'every minute from 5 through 10 minutes past 9 a.m., 11 a.m., 1 p.m., ' +
+    '3 p.m., and 5 p.m. every day'],
   ['*/10 6-8,17-19 * * 1-5',
     'every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. ' +
     'through 7:50 p.m. on weekdays'],
