@@ -2,7 +2,9 @@
 // attached the way a date has them, or led by a month or year that has no
 // noun to attach to.
 
-import type {Analyses, DateReach} from '../../core/schedule.js';
+import type {
+  Analyses, DateReach, Domain, Schedule
+} from '../../core/schedule.js';
 import type {MonthFacts, Side} from './days.js';
 import type {PortugueseStyle} from './options.js';
 import type {Chosen, Rules} from './sets.js';
@@ -13,6 +15,7 @@ import {
 } from './days.js';
 import {ifAny, list, spaced} from './phrases.js';
 import {monthName, runsAs} from './names.js';
+import {daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import {yearOf} from './years.js';
@@ -92,7 +95,8 @@ function fused(side: Side, facts: Facts): Laid {
   const dated = side.month !== 'none';
   const depth = 1 + Number(!unnamed) + Number(!unnamed && !single);
   const fits = year.fuses >= depth && !leap;
-  const month = unnamed ? dated && eachMonth : attached(facts, dated);
+  const month = side.month !== 'own' &&
+    (unnamed ? dated && eachMonth : attached(facts, dated));
 
   return {
     leads: [],
@@ -110,8 +114,8 @@ function ledByMonth(sides: Side[], facts: Facts): Laid {
   const each = single ? words.ofTheMonth : eachMonth;
   const inLeap = leap ? leapYears : '';
   const under = unnamed ?
-    {date: eachMonth, none: '', quartz: eachMonth} :
-    {date: inLeap, none: '', quartz: spaced([each, inLeap])};
+    {date: eachMonth, none: '', own: '', quartz: eachMonth} :
+    {date: inLeap, none: '', own: '', quartz: spaced([each, inLeap])};
   const named = runsAs(months.said, words.in,
     (month) => monthName(month, style));
 
@@ -186,6 +190,36 @@ function sidesOf(analyses: Analyses, facts: Facts, needed: boolean): Side[] {
     .find((found) => found.length > 0) as Side[];
 }
 
+// The days the months the day of the month fires in have, from the 1st
+// to the last day of the longest; every day of the field for a Quartz form.
+function monthDaysOf(schedule: Schedule): Domain {
+  const reached = daysReached(schedule);
+
+  return reached ? reached.domain : domainOf('date');
+}
+
+// The named months the day of the month fires in, grouped by their last
+// day, in the order of their first month, none where no month is named;
+// and whether a named month has none of the days. February's last day is
+// its 29th, as a date in it is read (answers 4.4).
+function lengthsOf(analyses: Analyses, named: Chosen, unnamed: boolean):
+  Pick<Facts, 'lacking' | 'lengths'> {
+  const lastDays = new Map<number, number>();
+  const groups = new Map<number, number[]>();
+
+  analyses.monthLengths.forEach(({length, months}) =>
+    months.forEach((month) => lastDays.set(month, length)));
+  [...lastDays].sort(([a], [b]) => a - b).forEach(([month, last]) =>
+    groups.set(last, [...groups.get(last) || [], month]));
+
+  return {
+    lacking: !unnamed && lastDays.size < named.values.length,
+    lengths: unnamed ?
+      [] :
+      [...groups].map(([last, months]) => ({last, months}))
+  };
+}
+
 // Whether a month or a year is named.
 function monthOrYearNamed(months: Chosen, dated: boolean): boolean {
   return months.values.length < 12 || dated;
@@ -214,10 +248,11 @@ function leadsAlone(
  * and a month or year is named, the month or year leads instead.
  */
 function calendarPart(
-  analyses: Analyses,
+  schedule: Schedule,
   busy: boolean,
   style: PortugueseStyle
 ): Calendar {
+  const {analyses} = schedule;
   const {candidates, dateReach: reach} = analyses;
   const year = yearOf(analyses);
   const dated = restricts(candidates.year);
@@ -227,7 +262,11 @@ function calendarPart(
   const facts: Facts = {
     leap: Boolean(reach) && comes &&
       (reach as DateReach).everyYear.length === 0,
+    ...lengthsOf(analyses, months, unnamed),
+    monthDays: monthDaysOf(schedule),
     months,
+    monthsAfter: (named, after) => attached(
+      {...facts, months: choose(named, monthRules(!dated))}, after),
     single: months.values.length === 1,
     style,
     unnamed,

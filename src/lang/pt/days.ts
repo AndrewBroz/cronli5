@@ -2,7 +2,8 @@
 // days of the month, each as a set of values or as a Quartz form.
 
 import type {
-  Analyses, DateArm, QuartzDate, QuartzWeekday, RangeDescription, WeekdayArm
+  Analyses, DateArm, Domain, QuartzDate, QuartzWeekday, RangeDescription,
+  WeekdayArm
 } from '../../core/schedule.js';
 import type {Cadence, Chosen, Part, Pieces, Plain, Rules} from './sets.js';
 import type {Led} from './phrases.js';
@@ -30,8 +31,10 @@ export interface Side {
   several: boolean;
   // How the side stands to its month. A date says «de cada mês» when no
   // month is named and nothing under a leading month; a Quartz form
-  // cannot stand without its month; anything else takes a named month only.
-  month: 'date' | 'none' | 'quartz';
+  // cannot stand without its month; days that name their own months (a
+  // day only the longer of the months have, said with them) take none;
+  // anything else takes a named month only.
+  month: 'date' | 'none' | 'own' | 'quartz';
   // What closes the side after its month and year.
   tail: string;
   text: string;
@@ -39,7 +42,19 @@ export interface Side {
 
 /** What a side needs to know of the month it stands in. */
 export interface MonthFacts {
+  // The named months the day of the month fires in, grouped by their last
+  // day (February's is the 29th), in the order of their first month; none
+  // where no month is named.
+  lengths: Array<{last: number; months: number[]}>;
+  // Whether a month is named, beside weekdays, that has none of the days.
+  lacking: boolean;
+  // The days the months the day of the month fires in have: 1 to the last
+  // day of the longest of them.
+  monthDays: Domain;
   months: Chosen;
+  // Named months as they follow a day phrase: after a date (`dated`) or
+  // after «todos os dias».
+  monthsAfter(months: number[], dated: boolean): string;
   // Whether exactly one month is named.
   single: boolean;
   style: PortugueseStyle;
@@ -68,9 +83,6 @@ const mostDaysListed = 4;
 // A day that can be a month's last, from which the nearest Friday or
 // Monday might be looked for in the next month.
 const firstClosingDay = 28;
-
-// The days every month has.
-const shortestMonth = 28;
 
 // The week Portuguese lists starts on Monday, with Sunday last.
 const monday = 1;
@@ -191,33 +203,54 @@ function onDays(said: {values: number[]}, style: PortugueseStyle): string {
     said.values.map((day) => dayNumber(day, style)), units.day);
 }
 
-function dayRun(said: {from: number; to: number}, style: PortugueseStyle):
-  string {
+// How the days are said: in what style, and against what months: the
+// days the longest has, and the last day of the shortest.
+interface DayContext {
+  month: Domain;
+  shortest: number;
+  style: PortugueseStyle;
+}
+
+// Whether a run or a step goes on to the end of every month and ends on a
+// day only the longer months have: it then runs to «o último dia».
+function toLastDay(end: number, interval: number, context: DayContext):
+  boolean {
+  return end + interval > context.month.max && end > context.shortest;
+}
+
+// A run or a step from one day to another, or to the last day of each
+// month.
+function dayRun(from: number, to: number, interval: number,
+  context: DayContext): string {
   const {a, de} = contractions;
+  const end = toLastDay(to, interval, context) ?
+    `${words.lastOne.masculine} ${units.day.one}` :
+    `${units.day.one} ${dayNumber(to, context.style)}`;
 
   return `${de.singular.masculine} ${units.day.one} ` +
-    `${dayNumber(said.from, style)} ${a.singular.masculine} ` +
-    `${units.day.one} ${dayNumber(said.to, style)}`;
+    `${dayNumber(from, context.style)} ${a.singular.masculine} ${end}`;
 }
 
 // Whether every second day runs the length of the month, from its 1st or
-// its 2nd to the last odd or even day there can be.
-function spansMonth(cadence: Cadence): boolean {
-  return cadence.interval === 2 && cadence.start <= 2 &&
-    cadence.last + 2 > domainOf('date').max;
+// its 2nd to the last odd or even day the month has. The month is the
+// longest the days fire in, so that a step spelled to stop there and one
+// spelled to run on fire on the same days and are said alike.
+function spansMonth(cadence: Cadence, month: Domain): boolean {
+  return cadence.interval === 2 && cadence.start - month.min < 2 &&
+    cadence.last + 2 > month.max;
 }
 
 // Every second day by its number being odd or even, with both its ends
 // where it does not run the length of the month; any other cadence by its
 // interval and both its ends.
-function everyFewDays(said: Cadence, style: PortugueseStyle): Led {
-  const ends = dayRun({from: said.start, to: said.last}, style);
+function everyFewDays(said: Cadence, context: DayContext): Led {
+  const ends = dayRun(said.start, said.last, said.interval, context);
 
   if (said.interval === 2) {
     return {
       lead: `${contractions.em.plural.masculine} ${units.day.many} ` +
         (said.start % 2 === 1 ? words.theOdd : words.theEven),
-      text: spansMonth(said) ? '' : ends
+      text: spansMonth(said, context.month) ? '' : ends
     };
   }
 
@@ -231,28 +264,33 @@ function everyFewDays(said: Cadence, style: PortugueseStyle): Led {
 // A piece of the days, with what leads it kept apart so that neighbours
 // which share a lead say it once.
 const datePieces: {[Kind in Part['kind']]:
-  (part: never, style: PortugueseStyle) => Led} = {
+  (part: never, context: DayContext) => Led} = {
   cadence: everyFewDays,
-  range: (part: RangeDescription, style) =>
-    ({lead: '', text: dayRun(part, style)}),
-  values: (part: {values: number[]}, style) =>
+  range: (part: RangeDescription, context) =>
+    ({lead: '', text: dayRun(part.from, part.to, 1, context)}),
+  values: (part: {values: number[]}, {style}) =>
     ({lead: '', text: onDays(part, style)})
 };
 
-function dateParts(parts: Part[], style: PortugueseStyle): string {
-  return led(parts.map((part) => datePieces[part.kind](part as never, style)));
+function dateParts(parts: Part[], context: DayContext): string {
+  return led(parts.map((part) =>
+    datePieces[part.kind](part as never, context)));
 }
 
 // Every second day that runs the length of the month is one thing; any
 // other cadence names both its ends, and is listed while it is short.
 // Beside weekdays the days take no exception, where it would be taken for
-// the whole pair.
-function dateRules(paired: boolean, anyLength: boolean): Rules {
+// the whole pair. The days are those of the months they fire in. Under
+// named months every day but some never leaves out the last day the
+// months have: a run that stops before it is said as a run.
+function dateRules(paired: boolean, unnamed: boolean, month: Domain):
+  Rules {
   return {
-    cadence: (cadence) => Number(spansMonth(cadence)) ||
+    cadence: (cadence) => Number(spansMonth(cadence, month)) ||
       withEnds(longestList)(cadence),
-    domain: domainOf('date'),
-    excepts: (base) => !paired && (anyLength || base.kind !== 'all'),
+    domain: month,
+    excepts: (base, removed) => !paired && (unnamed ||
+      base.kind !== 'all' || removed.every((day) => day < month.max)),
     longestWrap: 0,
     piecesOver: 0,
     steps: true,
@@ -319,41 +357,65 @@ const quartzSayers: {[Kind in QuartzDate['kind']]: QuartzSayer} = {
   nearestWeekday
 };
 
-// Whether what is said of the days as written holds in a month of any
-// length: every second day the length of the month, and every day but
-// some that every month has.
-function holdsAnywhere(written: Chosen): boolean {
-  const {removed, said} = written;
+// The days a part names as days that occur: a list's values and the ends
+// of a run or a step, but no end said as «o último dia» and none of every
+// second day that runs the length of the month.
+const namedBy: {[Kind in Part['kind']]:
+  (part: never, context: DayContext) => number[]} = {
+  cadence: (part: Cadence, context) => [part.start, part.last].filter(
+    (day, index) => !spansMonth(part, context.month) &&
+      (index === 0 || !toLastDay(day, part.interval, context))),
+  range: (part: RangeDescription, context) => [part.from, part.to].filter(
+    (day, index) => index === 0 || !toLastDay(day, 1, context)),
+  values: (part: {values: number[]}) => part.values
+};
 
-  return said.kind === 'cadence' && spansMonth(said) ||
-    said.kind === 'all' && removed.every((day) => day <= shortestMonth);
+// Whether the days as said name one that some of the months lack.
+function namesMissingDay(said: Plain, context: DayContext): boolean {
+  return said.kind !== 'all' && partsOf(said).some((part) =>
+    namedBy[part.kind](part as never, context)
+      .some((day) => day > context.shortest));
 }
 
-// The days of a plain set as they are said. With every month, or where
-// it holds in a month of any length, that is the set as written. Under
-// named months it is otherwise the days those months have, and never
-// «todos os dias, exceto», which counts to the 31st.
-function daysSaid(analyses: Analyses, unnamed: boolean): Chosen {
-  const reach = analyses.dateReach;
-  const domain = domainOf('date');
-  const days = firesOn(analyses.candidates.date, domain);
-  const written = choose(days, dateRules(pairedDays(analyses), true));
+// The days the months fire on, said against the days those months have,
+// never against 31: every day, every day but a few, every second day and
+// a run to the end are judged there, so that the same days are said alike
+// however they are spelled.
+function daysSaid(days: number[], rules: Rules): Chosen {
+  return choose(days.filter((day) => day <= rules.domain.max), rules);
+}
 
-  if (reach && reach.days && reach.days.everyDay) {
-    return {...written, removed: [], said: {kind: 'all'}};
-  }
+// The text of the days as said.
+function dateText(chosen: Chosen, context: DayContext): string {
+  return chosen.said.kind === 'all' ?
+    words.everyDay :
+    dateParts(partsOf(chosen.said), context);
+}
 
-  return unnamed || holdsAnywhere(written) ?
-    written :
-    choose(reach && reach.days ?
-      firesOn(reach.days.candidates, domain) :
-      days, dateRules(pairedDays(analyses), false));
+// Months of different lengths, where the days name one the shorter lack:
+// the days every month has, said of all of them, and then the days only
+// the longer have, each with the months that have them.
+function byDays(days: number[], facts: MonthFacts): string {
+  const {lengths, monthDays: month, style} = facts;
+  const context = {month, shortest: Infinity, style};
+  const lasts = [0, ...lengths.map(({last}) => last).sort((a, b) => a - b)];
+
+  return list(lasts.slice(1).map(function part(last, index) {
+    const had = days.filter((day) => day > lasts[index] && day <= last);
+    const months = lengths.filter((group) => group.last >= last)
+      .flatMap((group) => group.months).sort((a, b) => a - b);
+
+    return had.length === 0 ?
+      '' :
+      `${dateText(daysSaid(had, dateRules(true, false, month)), context)} ` +
+        facts.monthsAfter(months, true);
+  }).filter(Boolean));
 }
 
 /** The day-of-month side of the calendar part. */
 function dateSide(analyses: Analyses, facts: MonthFacts): Side {
   const date = analyses.day.date as DateArm;
-  const {style, unnamed} = facts;
+  const {monthDays: month, style, unnamed} = facts;
 
   if (date.kind === 'quartz') {
     return {
@@ -363,18 +425,24 @@ function dateSide(analyses: Analyses, facts: MonthFacts): Side {
     };
   }
 
-  const {removed, said} = daysSaid(analyses, unnamed);
-  const whole = said.kind === 'all';
+  const days = firesOn(analyses.candidates.date, domainOf('date'));
+  const context = {
+    month,
+    shortest: Math.min(...facts.lengths.map(({last}) => last)),
+    style
+  };
+  const chosen =
+    daysSaid(days, dateRules(pairedDays(analyses), unnamed, month));
+  const whole = chosen.said.kind === 'all';
+  const apart = facts.lacking || namesMissingDay(chosen.said, context);
 
   return {
     ...bare,
-    excepted: ifAny(removed, (values) => spaced(
+    excepted: ifAny(apart ? [] : chosen.removed, (values) => spaced(
       [onDays({values}, style), whole && unnamed && eachMonth])),
-    month: whole ? 'none' : 'date',
-    several: firesOn(analyses.candidates.date, domainOf('date')).length > 1,
-    text: whole ?
-      words.everyDay :
-      dateParts(partsOf(said), style)
+    month: apart && 'own' || (whole ? 'none' : 'date'),
+    several: days.length > 1,
+    text: apart ? byDays(days, facts) : dateText(chosen, context)
   };
 }
 
