@@ -3207,6 +3207,139 @@
    "pattern": "0 0 5-23/2 6 *"
   },
   {
+   "expected": "at 12 a.m. on odd-numbered days in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-29/2 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on even-numbered days in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 2-30/2 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on odd-numbered days in February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-29/2 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on even-numbered days in February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 2-28/2 2 *"
+  },
+  {
+   "expected": "at 12 a.m. on odd-numbered days in July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-31/2 7 *"
+  },
+  {
+   "expected": "at 12 a.m. on odd-numbered days in April and June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-29/2 4,6 *"
+  },
+  {
+   "expected": "at 12 a.m. every 3 days from the 1st of the month in February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-28/3 2 *"
+  },
+  {
+   "expected": "at 12 a.m. every 2 days from the 3rd of the month in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 3-29/2 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on odd-numbered days in June except the 15th",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-13/2,17-29/2 6 *"
+  },
+  {
+   "expected": "at 12 a.m. on odd-numbered days in June as well as on Mondays in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-29/2 6 1"
+  },
+  {
+   "expected": "at 12 a.m. on odd-numbered days in February 2031",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 1-27/2 2 * 2031"
+  },
+  {
+   "expected": "at 12 a.m. every 2 days from the 1st through the 27th of the month in February 2032",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 0 1-27/2 2 * 2032"
+  },
+  {
+   "expected": "at 12 a.m. every 2 days from the 1st through the 27th of the month in February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-27/2 2 *"
+  },
+  {
+   "expected": "at 12 a.m. every 2 days from the 1st through the 29th of the month in July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-29/2 7 *"
+  },
+  {
+   "expected": "at 12 a.m. every 2 days from the 1st through the 29th of the month in June and July",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-29/2 6,7 *"
+  },
+  {
+   "expected": "at 12 a.m. every 2 days from the 1st through the 25th of the month in June",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-25/2 6 *"
+  },
+  {
+   "expected": "at 12 a.m. every 3 days from the 1st through the 25th of the month in February",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-25/3 2 *"
+  },
+  {
+   "expected": "at 12 a.m. every 2 days from the 1st through the 29th of the month",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-29/2 * *"
+  },
+  {
+   "expected": "at 12 a.m. on odd-numbered days",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0 0 1-31/2 * *"
+  },
+  {
    "expected": "at 12 a.m. on June 1, 6, 11, 21, and 26",
    "options": {
     "lang": "en"

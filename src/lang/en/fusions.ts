@@ -15,7 +15,7 @@ import {
 } from '../../core/describe-set.js';
 import {clockTimes} from '../../core/fusions.js';
 import {shortestSpoken} from '../../core/select.js';
-import {candidatesAs} from '../../core/set-views.js';
+import {candidatesAs, daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
@@ -897,12 +897,45 @@ function weekdaysBeside(candidates: Described[], pair: boolean): Described[] {
   });
 }
 
+// A cadence of days that runs on to the last day the months have, said
+// as the cadence from the same start that runs to the end of any month:
+// in those months it reaches the same days. An exception keeps its hole
+// in the middle; one that takes off an end is a cadence that stops
+// earlier (3.9). Nothing for anything else.
+function runOn(description: SetDescription, end: number): SetDescription[] {
+  const {base, removed} = apart(description);
+  const {max} = domainOf('date');
+
+  if (base.kind !== 'cadence' || base.last + base.interval <= end ||
+    removed.includes(base.start) || removed.includes(base.last)) {
+    return [];
+  }
+
+  const cadence: SetDescription =
+    {...base, last: max - (max - base.start) % base.interval};
+
+  return [removed.length ? {base: cadence, kind: 'except', removed} : cadence];
+}
+
+// The days the months reach, where a cadence that stops with the months
+// is said as the one that does not stop: 1-29/2 in June is "on
+// odd-numbered days in June", as */2 is (3.7). Where every month can
+// have a 31st this gives the field's own cadences again.
+function carriedOn(facts: ScheduleFacts): SetDescription[] {
+  const reached = daysReached(facts);
+  const end = reached?.domain.max ?? domainOf('date').max;
+
+  return (reached?.candidates ?? []).flatMap(function each(description) {
+    return runOn(description, end);
+  });
+}
+
 // The days of the month as they can be described. The days the months
 // really have come first, so that on a tie nothing names a day that does
 // not exist. The field's own set is still on offer: "odd-numbered days
 // in June" names no 31st.
 function datesOf(facts: ScheduleFacts, date: DateArm | null): Described[] {
-  const own = candidatesOf(facts, 'date');
+  const own = [...carriedOn(facts), ...candidatesOf(facts, 'date')];
   const real = facts.analyses.dateReach?.days?.candidates[0];
 
   if (date === null) {

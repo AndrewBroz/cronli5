@@ -549,6 +549,44 @@ say: "every 2 days from the 5th through the 23rd of the month". (Six
 days, the 5th, 8th … 20th, are listed.) "Of the month" is said after
 every cadence of days (8.4), whatever the months: "every 3 days from the 1st of the month in June".
 
+**The end is judged by the days the months named have** (2026-11-19).
+When the days a pattern reaches in the months it fires in are exactly
+the days a step from the same start reaches there, the two are said
+alike, as the step that runs to the end of the month: `0 9 1-29/2 6 *`
+is "at 9 a.m. on odd-numbered days in June", as `0 9 */2 6 *` is, and
+`0 9 1-28/3 2 *` is "every 3 days from the 1st of the month in February",
+as `0 9 */3 2 *` is. June has no 31st and February no day after the
+29th, so "from the 1st through the 29th of the month in June" restated an
+end the month supplies, and said one schedule two ways according to how
+the field was spelled. A reader is served by the shorter form: the month
+already tells where the days stop, and "through the 29th" makes a reader
+look for a day it leaves out. The test is the last day of the longest
+month the days fire in (the core's `daysReached`), and no table of month
+lengths is held.
+
+* Months of different lengths together: the longest decides. `1-29/2` in
+  April and June is "on odd-numbered days in April and June"; in June and
+  July it keeps its end, "every 2 days from the 1st through the 29th of
+  the month in June and July", since July 31 is left out.
+* February is judged by the years reached: `1-27/2` in February keeps its
+  end (the 29th of a leap year is left out), and in February 2031 alone
+  it is "on odd-numbered days in February 2031". `1-29/2` and `2-28/2` in
+  February are odd and even-numbered days.
+* A range that stops before the month does is different days and keeps
+  both ends: `1-25/2` in June is "every 2 days from the 1st through the
+  25th of the month in June".
+* With every month nothing changes: `1-31/2` and `*/2` are "on
+  odd-numbered days", and `1-29/2` keeps its end, since most months go
+  on to the 31st.
+* Any step, any start: `3-29/2` in June is "every 2 days from the 3rd of
+  the month in June"; a step of eight days or fewer is still listed.
+* An exception keeps its hole in the middle: `1-13/2,17-29/2` in June is
+  "on odd-numbered days in June except the 15th" (it said "except the
+  15th and 31st", naming a day June does not have). A set missing days at
+  its end is a cadence that stops early (3.9), not an exception.
+* Seconds, minutes, hours and months fill the same cycle every time, so
+  no such question arises for them.
+
 A month cadence that starts in February has a start to add to and at
 most six months, so the months are named: "on February 1, April 1, June
 1, August 1, October 1, and December 1". ("On the 1st of every other

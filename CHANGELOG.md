@@ -58,6 +58,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **English says the same days the same way, however the day field is
+  spelled.** A step of days that stops where the months named stop is
+  said as the step that reaches those same days: `0 9 1-29/2 6 *` is "at
+  9 a.m. on odd-numbered days in June", as `0 9 */2 6 *` is, where it was
+  "at 9 a.m. every 2 days from the 1st through the 29th of the month in
+  June".
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
   Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
   `cronli5/all` has it. An instance without it reports the language as

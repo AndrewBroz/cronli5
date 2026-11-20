@@ -477,6 +477,56 @@ const rows = [
   ['0 0 5-23/2 6 *',
     'at 12 a.m. every 2 days from the 5th through the 23rd of the month ' +
     'in June'],
+  // A step of days that stops where the months named stop reaches the
+  // same days as the step from the same start, and is said the same way:
+  // June has no 31st, so 1-29/2 is its odd-numbered days, and the 29th
+  // ends February in leap years (3.7, 2026-11-19). These said "every 2
+  // days from the 1st through the 29th of the month in June", restating
+  // an end the month supplies, while */2 said "on odd-numbered days".
+  ['0 0 1-29/2 6 *', 'at 12 a.m. on odd-numbered days in June'],
+  ['0 0 2-30/2 6 *', 'at 12 a.m. on even-numbered days in June'],
+  ['0 0 1-29/2 2 *', 'at 12 a.m. on odd-numbered days in February'],
+  ['0 0 2-28/2 2 *', 'at 12 a.m. on even-numbered days in February'],
+  ['0 0 1-31/2 7 *', 'at 12 a.m. on odd-numbered days in July'],
+  ['0 0 1-29/2 4,6 *',
+    'at 12 a.m. on odd-numbered days in April and June'],
+  ['0 0 1-28/3 2 *',
+    'at 12 a.m. every 3 days from the 1st of the month in February'],
+  ['0 0 3-29/2 6 *',
+    'at 12 a.m. every 2 days from the 3rd of the month in June'],
+  ['0 0 1-13/2,17-29/2 6 *',
+    'at 12 a.m. on odd-numbered days in June except the 15th'],
+  ['0 0 1-29/2 6 1',
+    'at 12 a.m. on odd-numbered days in June as well as on Mondays in ' +
+    'June'],
+  // In 2031 February has 28 days, so 1-27/2 is all its odd days; in 2032
+  // it has a 29th, which the range leaves out.
+  ['0 0 0 1-27/2 2 * 2031',
+    'at 12 a.m. on odd-numbered days in February 2031'],
+  ['0 0 0 1-27/2 2 * 2032',
+    'at 12 a.m. every 2 days from the 1st through the 27th of the month ' +
+    'in February 2032'],
+  // Where a month named goes on past the range, the days are different
+  // and the range keeps its end: the 29th of a leap February, the 31st of
+  // July, the days after the 25th of June or of February.
+  ['0 0 1-27/2 2 *',
+    'at 12 a.m. every 2 days from the 1st through the 27th of the month ' +
+    'in February'],
+  ['0 0 1-29/2 7 *',
+    'at 12 a.m. every 2 days from the 1st through the 29th of the month ' +
+    'in July'],
+  ['0 0 1-29/2 6,7 *',
+    'at 12 a.m. every 2 days from the 1st through the 29th of the month ' +
+    'in June and July'],
+  ['0 0 1-25/2 6 *',
+    'at 12 a.m. every 2 days from the 1st through the 25th of the month ' +
+    'in June'],
+  ['0 0 1-25/3 2 *',
+    'at 12 a.m. every 3 days from the 1st through the 25th of the month ' +
+    'in February'],
+  ['0 0 1-29/2 * *',
+    'at 12 a.m. every 2 days from the 1st through the 29th of the month'],
+  ['0 0 1-31/2 * *', 'at 12 a.m. on odd-numbered days'],
   // Every fifth day is seven days, which are named; every third is
   // eleven, and keeps the cadence in the same places.
   ['0 0 1,6,11,21,26,31 6 *', 'at 12 a.m. on June 1, 6, 11, 21, and 26'],
