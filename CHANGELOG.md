@@ -149,6 +149,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   count it (12.2 to 9.8 us). `npm run speed` measures every language and
   checks that a change leaves every description unchanged
   (`tooling/docs/speed.md`). Every description is unchanged.
+- **German says the same days the same way, however the step is
+  spelled.** `0 9 1-29/2 6 *` fires on the same days as `0 9 */2 6 *`
+  and is now «jährlich an den ungeraden Tagen im Juni um 9:00 Uhr», as
+  that one is (was «jährlich am 1., 3., 5. … und 29. Juni um 9:00 Uhr»).
 
 ### Removed
 

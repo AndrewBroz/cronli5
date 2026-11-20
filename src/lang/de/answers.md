@@ -1221,11 +1221,37 @@ rules, for plain dates and Quartz forms alike:
   Tagen am Werktag …», which is true and makes the reader find out that
   June is not one of them; and for `L-30` it promised June.) So a date
   or month edit may change the month part, as the fusions already allow.
-  Odd or even days keep their word when the months only cut the last
-  days off what the pattern writes (`*/2` in June); a cadence the
-  pattern itself stops early (`1-29/2` in June) is a series, «jährlich am
-  1., 3., 5. … und 29. Juni», because the core does not say that the
-  29th is June's last odd day.
+  **The same days are said the same way, however the step is spelled**
+  (2026-11-19). Odd or even days are said by their word whenever the
+  days the pattern reaches in the months it fires in are every second
+  day of those months: from the 1st or the 2nd to the last odd or even
+  day of the longest of them (the core's `daysReached` and its domain;
+  the renderer holds no month lengths). So `1-29/2` in June is
+  «jährlich an den ungeraden Tagen im Juni», exactly as `*/2` is: June's
+  odd days end at the 29th, and «am 1., 3., 5. … und 29. Juni» restated
+  an end the month already supplies and left the step to be inferred
+  from three dates. (Until this date it was that series, because the
+  core did not then say that the 29th is June's last odd day; the
+  sentence said one schedule two ways.) The edges:
+  * February: `1-29/2` is its odd days (the 29th in leap years), and
+    `2-28/2` its even days, in every year. In a year that is not a leap
+    year (`… 2 * 2031`), `1-27/2` is its odd days too.
+  * Months of different lengths are judged by the longest: `1-29/2` in
+    April and June, or in February and April, is the odd days; in April
+    and May it is a series to the 29th, since May has a 31st it does not
+    reach. Beside weekdays the same holds («… und zusätzlich an den
+    ungeraden Tagen im Juni»).
+  * A step that stops before the last odd or even day the months have is
+    other days and keeps its ends: `1-29/2` in July, `1-27/2` in
+    February, `2-28/2` in June, `1-15/2` in June stay series.
+  * Every month: `1-31/2` and `*/2` are both «an den ungeraden Tagen
+    jedes Monats», as before.
+  * A step that is not two follows the same rule: the same days are the
+    same series (`1-28/3` and `*/3` in June are both «am 1., 4., 7. …
+    und 28. Juni»); they already agreed, because a series names the
+    days reached.
+  * Hours, minutes and months are not affected: their units do not vary
+    in length, and a check of all languages found them already alike.
 * **A date that exists only in leap years says so in a gloss at the end
   of the date phrase**, after any other gloss: «am 29. Februar (nur in
   Schaltjahren) um 0:00 Uhr»; «28 Tage vor dem letzten Tag im Februar
@@ -1283,7 +1309,9 @@ rules, for plain dates and Quartz forms alike:
 
 * Days 1, 3, 5 … 31: «an den ungeraden Tagen jedes Monats». Days 2, 4 …
   30: «an den geraden Tagen jedes Monats». With one month, «an den
-  ungeraden Tagen im Juni». The usage notes give the phrase for every
+  ungeraden Tagen im Juni», for every second day the month has, however
+  far the field runs (`1-29/2` and `*/2` alike; 4.4, «Dates a month does
+  not have»). The usage notes give the phrase for every
   second day that starts anew each month («an den ungeraden Tagen des
   Monats», 7.3 there). The form tried before it, «alle 2 Tage vom 1. bis
   31. jedes Monats», was read by the second judge as a true two-day

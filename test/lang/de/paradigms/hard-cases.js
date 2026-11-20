@@ -308,8 +308,50 @@ const rows = [
     'von Juni bis August jeweils vom 1. bis 7. täglich um 0:00 Uhr'],
   ['0 0 */2 6 *',
     'jährlich an den ungeraden Tagen im Juni um 0:00 Uhr'],
-  // A cadence the pattern itself stops early is a series.
-  ['0 0 1-29/2 6 *', 'jährlich am 1., 3., 5. … und 29. Juni um 0:00 Uhr'],
+  // The same days, however the step is spelled: 1-29/2 reaches every odd
+  // day June has, as */2 does. (Until 2026-11-19 this row was a series,
+  // «am 1., 3., 5. … und 29. Juni», because the field's values stop at
+  // 29 while */2's run to 31; the days that occur are the same.)
+  ['0 0 1-29/2 6 *', 'jährlich an den ungeraden Tagen im Juni um 0:00 Uhr'],
+  ['0 9 1-29/2 6 *', 'jährlich an den ungeraden Tagen im Juni um 9:00 Uhr'],
+  ['0 9 */2 6 *', 'jährlich an den ungeraden Tagen im Juni um 9:00 Uhr'],
+  ['0 0 2-30/2 4 *', 'jährlich an den geraden Tagen im April um 0:00 Uhr'],
+  // February: the odd days reach the 29th in leap years, the even days
+  // stop at the 28th in every year.
+  ['0 0 1-29/2 2 *', 'jährlich an den ungeraden Tagen im Februar um 0:00 Uhr'],
+  ['0 0 2-28/2 2 *', 'jährlich an den geraden Tagen im Februar um 0:00 Uhr'],
+  ['0 0 0 1-27/2 2 * 2031',
+    'an den ungeraden Tagen im Februar 2031 um 0:00 Uhr'],
+  ['0 0 0 2-28/2 2 * 2031',
+    'an den geraden Tagen im Februar 2031 um 0:00 Uhr'],
+  // A 31-day month has a 31st.
+  ['0 0 1-31/2 7 *', 'jährlich an den ungeraden Tagen im Juli um 0:00 Uhr'],
+  ['0 0 2-30/2 7 *', 'jährlich an den geraden Tagen im Juli um 0:00 Uhr'],
+  // Months of different lengths: the longest decides.
+  ['0 0 1-29/2 4,6 *',
+    'im April und Juni jeweils an den ungeraden Tagen um 0:00 Uhr'],
+  ['0 0 1-29/2 2,4 *',
+    'im Februar und April jeweils an den ungeraden Tagen um 0:00 Uhr'],
+  ['0 0 1-29/2 */2 *',
+    'im Januar, März, Mai, Juli, September und November jeweils am 1., ' +
+    '3., 5. … und 29. um 0:00 Uhr'],
+  // Beside weekdays, the same.
+  ['0 0 1-29/2 6 1',
+    'im Juni montags und zusätzlich an den ungeraden Tagen im Juni, ' +
+    'jeweils um 0:00 Uhr'],
+  // A step of three: the same days, said alike, as a series.
+  ['0 0 1-28/3 6 *', 'jährlich am 1., 4., 7. … und 28. Juni um 0:00 Uhr'],
+  ['0 0 */3 6 *', 'jährlich am 1., 4., 7. … und 28. Juni um 0:00 Uhr'],
+  // A cadence that stops before the month's last odd or even day is other
+  // days, and keeps its ends.
+  ['0 0 1-29/2 7 *', 'jährlich am 1., 3., 5. … und 29. Juli um 0:00 Uhr'],
+  ['0 0 1-29/2 4,5 *',
+    'im April und Mai jeweils am 1., 3., 5. … und 29. um 0:00 Uhr'],
+  ['0 0 1-27/2 2 *', 'jährlich am 1., 3., 5. … und 27. Februar um 0:00 Uhr'],
+  ['0 0 2-28/2 6 *', 'jährlich am 2., 4., 6. … und 28. Juni um 0:00 Uhr'],
+  ['0 0 1-15/2 6 *', 'jährlich am 1., 3., 5. … und 15. Juni um 0:00 Uhr'],
+  // Every month: written either way, the odd days.
+  ['0 9 1-31/2 * *', 'an den ungeraden Tagen jedes Monats um 9:00 Uhr'],
   ['0 0 */2 1,7 *',
     'im Januar und Juli jeweils an den ungeraden Tagen um 0:00 Uhr'],
   ['0 0 */5 6 *',

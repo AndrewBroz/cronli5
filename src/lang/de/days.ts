@@ -8,7 +8,7 @@ import type {
   CadencePieces, DateReach, QuartzDate, QuartzWeekday, Schedule,
   SetDescription
 } from '../../core/schedule.js';
-import {candidatesAs} from '../../core/set-views.js';
+import {candidatesAs, daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {Counting, Described, Piece, Sayable} from './sets.js';
@@ -528,12 +528,13 @@ function monthsOf(schedule: Schedule, linear: boolean, union: boolean): Months {
   };
 }
 
-// Whether a set is every second day of the whole month.
-function isAlternate(description: Sayable): boolean {
+// Whether a set is every second day of the whole month: of the longest
+// month the date arm fires in, whose last day is the domain's end.
+function isAlternate(description: Sayable, end: number): boolean {
   const {interval, last = 0, start = 0} =
     description as Partial<Described<'cadence'>>;
 
-  return interval === 2 && start <= 2 && last + 2 > dateDomain.max;
+  return interval === 2 && start <= 2 && last + 2 > end;
 }
 
 // The dates the reached months have. Beside weekdays an exception is said
@@ -550,12 +551,13 @@ function datesOf(schedule: Schedule, there: boolean, frame: {
   const clipped = reach?.days?.candidates || [];
   const round = clipped.length > 0 ? clipped : written;
   const values = denote(round[round.length - 1], dateDomain);
-  // Every second day of the whole month is what the pattern writes; the
-  // months may have cut its last days off.
-  const cut = clipped.length > 0 && isAlternate(restOf(written[0]).base);
+  // The months the date arm fires in end at the longest one's last day:
+  // a step that reaches the last odd or even day there is every second
+  // day, however far the field's own values run.
+  const {max: end} = (daysReached(schedule) || {domain: dateDomain}).domain;
 
   function alternate(description: Sayable): boolean {
-    return isAlternate(description) || cut && description.kind === 'cadence';
+    return isAlternate(description, end);
   }
 
   const linear = describeSet(values, dateDomain, {linear: true}).filter(
