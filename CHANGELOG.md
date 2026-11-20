@@ -168,6 +168,20 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   an adversarial schedule read and blind readers, and a renderer built
   without sight of any other. No fluent human has reviewed it.
 
+### Fixed
+
+- **A weekday step from a start runs through Sunday.** A step written from
+  a weekday with no end (`1/2`, `MON/2`, `1/3`, `3/2`, `5/2`, `1/6`, and
+  every `n/1`) runs to the top of the field, 7, which is Sunday, as `1-7/2`
+  always did and as a step from a start runs to the top of every other
+  field. Each such step that lands on 7 left Sunday out: `0 9 * * 1/2` was
+  "at 9 a.m. on Mondays, Wednesdays, and Fridays" and is now "at 9 a.m. on
+  Mondays, Wednesdays, Fridays, and Sundays", in every language; `1/1` was
+  Monday to Saturday and is now every day. A step that stops short of 7
+  (`2/2`, Tuesday, Thursday and Saturday) is unchanged, and so is Quartz,
+  whose weekday 7 is Saturday. The answer key used to check readers read a
+  Quartz step from a start through Sunday too, and now stops at Saturday.
+
 ## [1.2.2]
 
 ### Fixed

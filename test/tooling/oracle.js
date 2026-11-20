@@ -50,6 +50,9 @@ describe('the firing oracle:', function() {
     expect(firesAt('0 9 * * 7', at(2030, 6, 2, 9, 0))).to.equal(true);
     expect(firesAt('5/20 * * * *', at(2030, 6, 3, 4, 45))).to.equal(true);
     expect(firesAt('5/20 * * * *', at(2030, 6, 3, 4, 46))).to.equal(false);
+    // A weekday step from a start runs to 7, Sunday (2030-06-02).
+    expect(firesAt('0 9 * * 1/2', at(2030, 6, 2, 9, 0))).to.equal(true);
+    expect(firesAt('0 9 * * 1/2', at(2030, 6, 4, 9, 0))).to.equal(false);
   });
 
   it('numbers Quartz weekdays from 1 for Sunday', function() {
@@ -66,6 +69,14 @@ describe('the firing oracle:', function() {
       .to.equal(false);
     expect(firesAt('0 0 9 ? * 1/2', at(2030, 6, 2, 9, 0), quartz))
       .to.equal(true);
+    // A step from a start runs to Quartz's 7, which is Saturday: 2/3 is
+    // Monday and Thursday, and never Sunday.
+    expect(firesAt('0 0 9 ? * 2/3', at(2030, 6, 6, 9, 0), quartz))
+      .to.equal(true);
+    expect(firesAt('0 0 9 ? * 2/3', at(2030, 6, 2, 9, 0), quartz))
+      .to.equal(false);
+    expect(firesAt('0 0 9 ? * 2/2', at(2030, 6, 2, 9, 0), quartz))
+      .to.equal(false);
     expect(firesAt('0 0 9 ? * 6L', at(2030, 6, 28, 9, 0), quartz))
       .to.equal(true);
     expect(firesAt('0 0 9 ? * 2#1', at(2030, 6, 3, 9, 0), quartz))

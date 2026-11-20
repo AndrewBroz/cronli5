@@ -5,6 +5,7 @@
 import {fieldOrder, fieldSpecs} from './specs.js';
 import type {CronLike, FieldSpec} from './specs.js';
 import type {Field, Pattern} from './schedule.js';
+import type {Reading} from './reading.js';
 import {
   enumerateFires, getOccurrences, includes, toFieldNumber, unique
 } from './util.js';
@@ -40,12 +41,19 @@ function applyQuartzAliases(cronPattern: CronLike): void {
 // described schedule is identical; only the English reads better.
 // After this pass every field is a canonical string, so the interpreters
 // never need to coerce.
-function normalizeCronPattern(cronPattern: CronLike): Pattern {
+function normalizeCronPattern(
+  cronPattern: CronLike,
+  opts: Partial<Reading>
+): Pattern {
   const eitherDay = !isStarred(cronPattern.date) &&
     !isStarred(cronPattern.weekday);
+  const sundayIsSeven = opts.weekdaysFrom !== 1;
 
   fieldOrder.forEach(function normalize(field) {
-    const value = withoutLeadingZeros('' + cronPattern[field]);
+    const plain = withoutLeadingZeros('' + cronPattern[field]);
+    const value = field === 'weekday' && sundayIsSeven ?
+      stepsFromStartToSeven(plain, fieldSpecs.weekday) :
+      plain;
 
     // Quartz tokens are already canonical single values.
     if (field === 'date' && isQuartzDate(value) ||
@@ -94,6 +102,46 @@ function namesEveryValue(value: string | number, field: 'date' | 'weekday'):
 // only place the core asks how a field was written and not what it holds.
 function isStarred(value: string | number): boolean {
   return ('' + value).startsWith('*');
+}
+
+// A step from a start with no end runs to the top of the field as written,
+// in every field: `5/20` minutes is `5-59/20`, `10/5` days is `10-31/5`. The
+// weekday field is written from 0 to 7, both Sunday, so in cron's own
+// numbering `1/2` is `1-7/2`: Monday, Wednesday, Friday and Sunday.
+//
+// The evidence, read 2026-11-19: crontab(5) and cronie's macros.h give the
+// field as 0 to 7 ("0 or 7 is Sunday"), and cronie folds 7 into 0 after
+// parsing. Neither Vixie cron nor cronie accepts a step after a single
+// number (their get_range takes a step only after `*` or a range), so they
+// settle nothing about `1/2` beyond the field's top. The parsers that do
+// accept it run it to the field's highest number: cron-parser rewrites
+// `n/s` as `n-7/s` in the weekday field, and Quartz's addToSet stops a
+// weekday step at its 7, which in Quartz's numbering is Saturday. So under
+// Quartz numbering (weekdays from 1) the top is Saturday, the field's own
+// top here, and nothing is rewritten.
+//
+// Only a step that lands on 7 is rewritten, and only from Monday on: one
+// that stops short (`2/2`: 2, 4, 6) lands where it did with a top of 6,
+// and one from Sunday reaches 7 only to repeat Sunday. The rewritten
+// stride is then counted through to 7 by `strideFiresPastTop`.
+function stepsFromStartToSeven(value: string, spec: FieldSpec): string {
+  return value.split(',').map(function toSeven(segment) {
+    const parts = segment.split('/');
+
+    if (parts.length !== 2 || parts[0] === '*' || includes(parts[0], '-')) {
+      return segment;
+    }
+
+    const start = toFieldNumber(parts[0], spec.numbers);
+    const top = spec.top as number;
+
+    if (start <= spec.min || start > top ||
+        (spec.max - start) % +parts[1] !== 0) {
+      return segment;
+    }
+
+    return start + '-' + spec.max + '/' + parts[1];
+  }).join(',');
 }
 
 // A number means the same however many zeros lead it: `00` is `0` and

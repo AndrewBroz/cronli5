@@ -181,10 +181,19 @@ function isEvery(text) {
 }
 
 // A Quartz weekday field in standard numbers: each weekday number (not a
-// step, and not the k of n#k) is one less.
+// step, and not the k of n#k) is one less. A step from a start with no end
+// runs to Quartz's 7, Saturday (CronExpression.addToSet sets stopAt to 7),
+// which is 6 in standard numbers, not the standard top of 7 (Sunday): so
+// it is given that end before it is renumbered.
 function fromQuartz(weekday) {
-  return weekday.replace(/(^|[,-])(\d+)/gu,
-    (_, before, number) => before + String(Number(number) - 1));
+  function toSaturday(whole, before, start, step) {
+    return start === '*' ? whole : `${before}${start}-7/${step}`;
+  }
+
+  return weekday
+    .replace(/(^|,)(\w+)\/(\d+)/gu, toSaturday)
+    .replace(/(^|[,-])(\d+)/gu,
+      (_, before, number) => before + String(Number(number) - 1));
 }
 
 // The pattern's fields by name.

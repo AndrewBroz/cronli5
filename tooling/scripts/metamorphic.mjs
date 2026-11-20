@@ -62,6 +62,26 @@ const EQUIVALENT = [
     '0 0 * * 0,1,3,5'],
   ['weekday stride 0-7/2 is every other day', '0 0 * * 0-7/2',
     '0 0 * * */2'],
+  // A step from a start with no end runs to the top of the field as
+  // written, which for the weekday is 7, Sunday: 1/2 is 1-7/2.
+  ['weekday step from a start: 1/2 = 1-7/2', '0 0 * * 1/2',
+    '0 0 * * 1-7/2'],
+  ['weekday step from a start: 1/2 = 0,1,3,5', '0 0 * * 1/2',
+    '0 0 * * 0,1,3,5'],
+  ['weekday step from a start: MON/2 = 0,1,3,5', '0 0 * * MON/2',
+    '0 0 * * 0,1,3,5'],
+  ['weekday step from a start: 1/3 = 0,1,4', '0 0 * * 1/3',
+    '0 0 * * 0,1,4'],
+  ['weekday step from a start: 3/2 = 0,3,5', '0 0 * * 3/2',
+    '0 0 * * 0,3,5'],
+  ['weekday step from a start: 1/6 = 0,1', '0 0 * * 1/6', '0 0 * * 0,1'],
+  ['weekday step from a start inside a list: 1/2,4 = 0,1,3,4,5',
+    '0 0 * * 1/2,4', '0 0 * * 0,1,3,4,5'],
+  // One that misses 7 lands where it always did, and so does one from
+  // Sunday, which 7 only repeats.
+  ['weekday step from a start that misses 7: 2/2 = TUE/2', '0 0 * * 2/2',
+    '0 0 * * TUE/2'],
+  ['weekday step from Sunday: 0/2 = SUN/2', '0 0 * * 0/2', '0 0 * * SUN/2'],
   ['month JAN = 1', '0 0 1 JAN *', '0 0 1 1 *'],
   ['month MAR-MAY = 3-5', '0 0 1 MAR-MAY *', '0 0 1 3-5 *'],
   ['list order 17,9 = 9,17', '0 17,9 * * *', '0 9,17 * * *'],
@@ -74,7 +94,7 @@ const EQUIVALENT = [
   ['overlap range+single 5-10,7 = 5-10', '5-10,7 * * * *', '5-10 * * * *'],
   ['overlap absorbed by step 9,*/3 = */3', '0 9,*/3 * * *', '0 */3 * * *'],
   ['overlap weekday 1-5,3 = 1-5', '0 0 * * 1-5,3', '0 0 * * 1-5'],
-  ['overlap union 1/2,2-4 = 1-5', '0 0 * * 1/2,2-4', '0 0 * * 1-5']
+  ['overlap union 1-5/2,2-4 = 1-5', '0 0 * * 1-5/2,2-4', '0 0 * * 1-5']
 ];
 
 // [label, cronA, cronB] — DIFFERENT schedules; the Schedule must differ.
@@ -82,6 +102,7 @@ const DISTINCT = [
   ['minute-0 vs every-minute', '* 0 * * *', '* * * * *'],
   ['weekday 1-5 vs every', '0 0 * * 1-5', '0 0 * * *'],
   ['weekday 1-7/2 vs */2', '0 0 * * 1-7/2', '0 0 * * */2'],
+  ['weekday 1/2 vs 1,3,5', '0 0 * * 1/2', '0 0 * * 1,3,5'],
   ['hour 9 vs hour 0', '0 9 * * *', '0 0 * * *'],
   ['*/7 vs */6', '*/7 * * * *', '*/6 * * * *'],
   ['minute 0-30 vs full', '0-30 * * * *', '* * * * *']
