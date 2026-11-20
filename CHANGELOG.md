@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0]
 
 ### Added
 
@@ -55,6 +55,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   used for Macau), as in 「每星期一至五上午9時至下午5時45分，每15分鐘一次」.
   No fluent human has reviewed it. See
   [docs/lang/zh-hant.md](./docs/lang/zh-hant.md).
+- **Russian (`ru`)**, at beta: `import ru from 'cronli5/lang/ru'`, or
+  `{lang: 'ru'}` from `cronli5/all`. It is Russian as it is written in
+  Ukraine; the usage notes found no difference in the language of
+  schedules itself, so there is one style, `ru`, and no region. Style
+  fields: `hour12` («в 9 часов утра»), `short` («в янв. по пн»),
+  `separator` («в 9.30») and `padHour` («в 09:30»). `30 9 * * 1-5` is «по
+  будням в 9:30»; `*/15 9-17 * * 1-5` is «по будням каждые 15 минут с 9:00
+  до 17:45»; `0 0 1 * 5` is «по пятницам, а также 1-го числа каждого
+  месяца, в 0:00». Written from usage notes in the language by a writer
+  told nothing of cron, then answers, hand-written expected descriptions,
+  an adversarial schedule read and blind readers, and a renderer built
+  without sight of any other. No fluent human has reviewed it.
 
 ### Changed
 
@@ -250,18 +262,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **The optional `pending` field of the public `Language` type**, which
   named script variants a language had not written yet. Nothing declares
   one now.
-- **Russian (`ru`)**, at beta: `import ru from 'cronli5/lang/ru'`, or
-  `{lang: 'ru'}` from `cronli5/all`. It is Russian as it is written in
-  Ukraine; the usage notes found no difference in the language of
-  schedules itself, so there is one style, `ru`, and no region. Style
-  fields: `hour12` («в 9 часов утра»), `short` («в янв. по пн»),
-  `separator` («в 9.30») and `padHour` («в 09:30»). `30 9 * * 1-5` is «по
-  будням в 9:30»; `*/15 9-17 * * 1-5` is «по будням каждые 15 минут с 9:00
-  до 17:45»; `0 0 1 * 5` is «по пятницам, а также 1-го числа каждого
-  месяца, в 0:00». Written from usage notes in the language by a writer
-  told nothing of cron, then answers, hand-written expected descriptions,
-  an adversarial schedule read and blind readers, and a renderer built
-  without sight of any other. No fluent human has reviewed it.
 
 ### Fixed
 
