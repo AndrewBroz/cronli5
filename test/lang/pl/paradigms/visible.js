@@ -21,7 +21,7 @@ const rows = [
   ['0 0 * * *', 'codziennie o 0:00'],
   ['0 9,17 * * *', 'codziennie o 9:00 i 17:00'],
   ['0 9-17,22 * * *', 'codziennie co godzinę od 9:00 do 17:00 oraz o 22:00'],
-  ['0 1/2 * * *', 'codziennie co 2 godziny od 1:00 do 23:00'],
+  ['0 1/2 * * *', 'o każdej nieparzystej godzinie'],
 
   // clock / date — context `0 9 * * *`
   ['0 9 1 * *', 'pierwszego dnia każdego miesiąca o 9:00'],
@@ -131,7 +131,7 @@ const rows = [
     'pierwszego dnia każdego miesiąca co godzinę od 9:00 do 17:00 oraz o ' +
     '22:00'],
   ['0 1/2 1 * *',
-    'pierwszego dnia każdego miesiąca co 2 godziny od 1:00 do 23:00'],
+    'pierwszego dnia każdego miesiąca o każdej nieparzystej godzinie'],
 
   // monthly / date — context `0 0 1 * *`
   ['0 0 1,10,20 * *', 'w dniach 1, 10 i 20 każdego miesiąca o 0:00'],

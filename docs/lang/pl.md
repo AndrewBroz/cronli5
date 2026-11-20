@@ -32,7 +32,9 @@ What a native reviewer should check first:
 * **One missing moment inside the hour** is said exactly, and heavily:
   `cronli5('0-28,30-59 * * * *', {lang: pl}) // 'co minutę, oprócz chwili wypadającej 29 minut po każdej pełnej godzinie'`
   Each shorter form tried had a second reading for a blind reader.
-* **«godziny parzyste»** for every other hour under a finer field:
+* **«godziny parzyste»** for every other hour of the whole day (but the
+  even hours on the hour, which are «co 2 godziny»); «o każdej
+  nieparzystej godzinie» on the hour:
   `cronli5('*/15 */2 * * *', {lang: pl}) // 'co 15 minut w godzinach parzystych'`
   The phrase rests on one attestation.
 * **The colon frame**: a window over several hours, then what happens in

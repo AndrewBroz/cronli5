@@ -153,21 +153,39 @@ function fewTimes(t: TimeFacts, g: Grain): Maybe<Said> {
   };
 }
 
-// One minute in every hour is a distance from the full hour; minute 0 is
-// «co godzinę». Hours left out are clock times.
-function onEveryHour(t: TimeFacts, g: Grain): Said {
+// Every other hour of the whole day, or that less one or two: 0 for the
+// even hours, 1 for the odd; null for any other set of hours.
+function parityOf(hour: Form): number | null {
+  const base = hour.base || hour;
+
+  return base.interval === 2 && base.values.length === everyOtherHour ?
+    base.values[0] % 2 :
+    null;
+}
+
+// One minute in each of the hours named: a distance from the start of
+// each («30 minut po każdej pełnej godzinie»), or, on the hour, the
+// phrase given for it. Hours left out are clock times.
+function oneMinuteIn(t: TimeFacts, g: Grain, each: string[]): Said {
   const [minute] = t.minute.values;
+  const [locative, onTheHour] = each;
   const past = [
     minute > 0 && counted(minute, units.minute, t.short),
     g.moment !== null && counted(g.moment, units.second, t.short)
   ].filter(Boolean).join(` ${words.and} `);
-  const base = past && `${past} ${words.minutesPast} ${words.eachFullHour}` ||
-    every(1, units.hour, t.short);
+  const base = past && `${past} ${words.minutesPast} ${locative}` ||
+    onTheHour;
   const gone = t.hour.removed.map(function time(hour) {
     return t.clock(hour, minute, g.moment);
   });
 
   return said(`${base}${lacks(gone, [], fullHour(t, g))}`, false, true);
+}
+
+// One minute in every hour; minute 0 is «co godzinę».
+function onEveryHour(t: TimeFacts, g: Grain): Said {
+  return oneMinuteIn(t, g,
+    [words.eachFullHour, every(1, units.hour, t.short)]);
 }
 
 // One minute in some hours: the hours carry the form, as real times.
@@ -183,6 +201,19 @@ function hourMoments(t: TimeFacts, g: Grain): Said {
   }], fullHour(t, g));
 
   return said(found.text, true, true);
+}
+
+// One minute in a rhythm of hours: every other hour of the whole day by
+// parity, «o każdej nieparzystej godzinie», «30 minut po każdej parzystej
+// godzinie»; any other rhythm as real times.
+function rhythmMoments(t: TimeFacts, g: Grain): Said {
+  const odd = parityOf(t.hour);
+  const locative = odd !== null &&
+    [words.eachEvenHourLocative, words.eachOddHourLocative][odd];
+
+  return locative ?
+    oneMinuteIn(t, g, [locative, `${words.at} ${locative}`]) :
+    hourMoments(t, g);
 }
 
 // Every hour: the minutes in their own form inside the hour.
@@ -232,9 +263,8 @@ function windowed(t: TimeFacts, g: Grain): Said {
 function underRhythm(t: TimeFacts, g: Grain): Said {
   const {hour, minute} = t;
   const tone = toneOf(t, g);
-  const base = hour.base || hour;
-  const parity = base.interval === 2 && base.values.length === everyOtherHour;
-  const odd = base.values[0] % 2;
+  const parity = parityOf(hour) !== null;
+  const odd = (hour.base || hour).values[0] % 2;
   const starts = listed(hour.values.map(function start(value) {
     return t.clock(value, 0, null);
   }));
@@ -357,7 +387,7 @@ const shapes: Record<Kind, Shape> = {
 const handlers: Record<string, Record<Shape, Handler>> = {
   filling: {allBut: windowed, every: open, rhythm: underRhythm,
     runs: windowed},
-  one: {allBut: onEveryHour, every: onEveryHour, rhythm: hourMoments,
+  one: {allBut: onEveryHour, every: onEveryHour, rhythm: rhythmMoments,
     runs: hourMoments},
   other: {allBut: someHours, every: open, rhythm: underRhythm,
     runs: someHours}

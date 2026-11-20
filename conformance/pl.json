@@ -79,7 +79,7 @@
    "pattern": "0 9-17,22 * * *"
   },
   {
-   "expected": "codziennie co 2 godziny od 1:00 do 23:00",
+   "expected": "o każdej nieparzystej godzinie",
    "options": {
     "lang": "pl"
    },
@@ -387,7 +387,7 @@
    "pattern": "0 9-17,22 1 * *"
   },
   {
-   "expected": "pierwszego dnia każdego miesiąca co 2 godziny od 1:00 do 23:00",
+   "expected": "pierwszego dnia każdego miesiąca o każdej nieparzystej godzinie",
    "options": {
     "lang": "pl"
    },
@@ -3503,7 +3503,7 @@
    "pattern": "0 0,4,8,16,20 * * *"
   },
   {
-   "expected": "codziennie co 2 godziny od 0:30 do 22:30",
+   "expected": "30 minut po każdej parzystej godzinie",
    "options": {
     "lang": "pl"
    },
@@ -3524,11 +3524,18 @@
    "pattern": "30 */5 * * *"
   },
   {
-   "expected": "codziennie co 2 godziny od 0:30 do 22:30, oprócz 8:30",
+   "expected": "30 minut po każdej parzystej godzinie, oprócz 8:30",
    "options": {
     "lang": "pl"
    },
    "pattern": "30 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "codziennie co 3 godziny od 0:30 do 21:30, oprócz 9:30",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "30 0,3,6,12,15,18,21 * * *"
   },
   {
    "expected": "codziennie o 0:23, 6:23, 12:23 i 18:23",
@@ -3538,7 +3545,7 @@
    "pattern": "23 */6 * * *"
   },
   {
-   "expected": "codziennie co 2 godziny od 1:23 do 23:23",
+   "expected": "23 minuty po każdej nieparzystej godzinie",
    "options": {
     "lang": "pl"
    },
@@ -4189,7 +4196,7 @@
    "pattern": "15 0 */6 * * *"
   },
   {
-   "expected": "codziennie co 2 godziny od 0:00:15 do 22:00:15",
+   "expected": "15 sekund po każdej parzystej godzinie",
    "options": {
     "lang": "pl"
    },
@@ -4551,6 +4558,62 @@
     "lang": "pl"
    },
    "pattern": "* 0-29 9-17 * * *"
+  },
+  {
+   "expected": "o każdej nieparzystej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0 0 1/2 * * *"
+  },
+  {
+   "expected": "o każdej nieparzystej godzinie, oprócz 13:00",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0 1,3,5,7,9,11,15,17,19,21,23 * * *"
+  },
+  {
+   "expected": "codziennie co 2 godziny od 1:00 do 21:00",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0 1,3,5,7,9,11,13,15,17,19,21 * * *"
+  },
+  {
+   "expected": "codziennie co 2 godziny od 2:00 do 22:00",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0 2-22/2 * * *"
+  },
+  {
+   "expected": "od poniedziałku do piątku o każdej nieparzystej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0 1/2 * * 1-5"
+  },
+  {
+   "expected": "w poniedziałki, 30 minut po każdej parzystej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "30 */2 * * 1"
+  },
+  {
+   "expected": "15 minut i 30 sekund po każdej nieparzystej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "30 15 1/2 * * *"
+  },
+  {
+   "expected": "o każdej nieparzystej godzinie, za każdym razem co sekundę przez całą minutę",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "* 0 1/2 * * *"
   },
   {
    "expected": "15 i 45 minut po każdej nieparzystej godzinie",
