@@ -549,6 +549,44 @@ say: "every 2 days from the 5th through the 23rd of the month". (Six
 days, the 5th, 8th … 20th, are listed.) "Of the month" is said after
 every cadence of days (8.4), whatever the months: "every 3 days from the 1st of the month in June".
 
+**The end is judged by the days the months named have** (2026-11-19).
+When the days a pattern reaches in the months it fires in are exactly
+the days a step from the same start reaches there, the two are said
+alike, as the step that runs to the end of the month: `0 9 1-29/2 6 *`
+is "at 9 a.m. on odd-numbered days in June", as `0 9 */2 6 *` is, and
+`0 9 1-28/3 2 *` is "every 3 days from the 1st of the month in February",
+as `0 9 */3 2 *` is. June has no 31st and February no day after the
+29th, so "from the 1st through the 29th of the month in June" restated an
+end the month supplies, and said one schedule two ways according to how
+the field was spelled. A reader is served by the shorter form: the month
+already tells where the days stop, and "through the 29th" makes a reader
+look for a day it leaves out. The test is the last day of the longest
+month the days fire in (the core's `daysReached`), and no table of month
+lengths is held.
+
+* Months of different lengths together: the longest decides. `1-29/2` in
+  April and June is "on odd-numbered days in April and June"; in June and
+  July it keeps its end, "every 2 days from the 1st through the 29th of
+  the month in June and July", since July 31 is left out.
+* February is judged by the years reached: `1-27/2` in February keeps its
+  end (the 29th of a leap year is left out), and in February 2031 alone
+  it is "on odd-numbered days in February 2031". `1-29/2` and `2-28/2` in
+  February are odd and even-numbered days.
+* A range that stops before the month does is different days and keeps
+  both ends: `1-25/2` in June is "every 2 days from the 1st through the
+  25th of the month in June".
+* With every month nothing changes: `1-31/2` and `*/2` are "on
+  odd-numbered days", and `1-29/2` keeps its end, since most months go
+  on to the 31st.
+* Any step, any start: `3-29/2` in June is "every 2 days from the 3rd of
+  the month in June"; a step of eight days or fewer is still listed.
+* An exception keeps its hole in the middle: `1-13/2,17-29/2` in June is
+  "on odd-numbered days in June except the 15th" (it said "except the
+  15th and 31st", naming a day June does not have). A set missing days at
+  its end is a cadence that stops early (3.9), not an exception.
+* Seconds, minutes, hours and months fill the same cycle every time, so
+  no such question arises for them.
+
 A month cadence that starts in February has a start to add to and at
 most six months, so the months are named: "on February 1, April 1, June
 1, August 1, October 1, and December 1". ("On the 1st of every other
@@ -855,6 +893,21 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 | except | "every hour except 3 a.m." (the one place "every hour" follows "past"); out of a range, "the hour from 9 a.m. through 5 p.m. except during the noon hour" |
 
 So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m."
+
+**Minutes in pieces before hours named one by one** (2026-11-19) count
+past "the hour", and the hours follow as hours: `5-10,20 9-17/2 * * *` is
+"every minute from 5 through 10 and at 20 minutes past the hour during the
+9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours". In pieces the unit
+comes only after the last piece, so the numbers of the first stand bare;
+followed straight by clock times ("every minute from 5 through 10 and at
+20 minutes past 9 a.m., 11 a.m., …"), "from 5 through 10" was heard as 5
+to 10 o'clock: readers asked alone, of two models, said it fired at 6:05
+p.m. After "past the hour" every number is a minute, and "during the … hours"
+says that each piece belongs to every hour named. Against the old form it
+costs six syllables and says "hour" twice, with the same eight things to
+hold and nothing to work out; the old form's second reading decides it. A
+list or a single run of minutes names its unit beside its numbers and keeps
+the hours as moments: "at 5 and 20 minutes past 9 a.m., 11 a.m., …".
 
 **A list of clock times is also sayable** whenever neither M nor H is
 every value and there are at most 24 times: "at 9:05 a.m., 9:20 a.m., and 9:45 a.m."
@@ -1211,6 +1264,54 @@ can fire in.
   year too ("on February 29 and March 29") nothing is added: the date
   names itself.
 * If nothing is left, the schedule never runs (2.6).
+
+**The days are judged against the days the named months have**
+(2026-11-19). Whether a set is every day, every day but a few, a run or
+a list is decided on the days the months it fires in really have (the
+core's `daysReached`), never on how the field was written, so the same
+days are one sentence:
+
+* `1-14,16-30` and `1-14,16-31` in June are "on every day in June except
+  the 15th". (The first said "except the 15th and 31st", naming a day
+  June does not have.) In February `1-14,16-29`, `-30` and `-31` are the
+  same days, and so are `1-27,29` and `1-27,29-31`: "on every day in
+  February except the 28th".
+* Every day but the first or the last of the month is said as every day
+  but that one, as it always was with one month ("on every day in June
+  except the 1st" for `2-31`), now judged by the month's own last day:
+  `2-29` and `2-31` in February are "on every day in February except the
+  1st".
+* `1-28` in February is not every day of it, because a leap year has a
+  29th: "on every day in February except the 29th" (it said "February 1
+  through 28", a run that names as many things, and the exception is the
+  form a day missing at the end of a month already takes). In February
+  2031 alone it is every day, "every day in February 2031", as `*` is. `1-30`, `1-31` and `*`
+  in June are "every day in June"; `30,31` in April is "on April 30";
+  `29,30,31` in February is "on February 29 in leap years".
+
+**Months of different lengths together** (2026-11-19). No sentence gives
+a month a day it does not have. February is taken to have a 29th when a
+leap year is reached. Where the days include one that a shorter month
+named lacks:
+
+* A run to the end of every month named ends on "the last day":
+  `20-31` in April and May is "on the 20th through the last day of April
+  and May" ("through the 31st of April and May" named April 31);
+  `25-31` in February and March, "on the 25th through the last day of
+  February and March".
+* A cadence that runs to the end of the months names only its start,
+  however few its days: `*/5` in June and July is "every 5 days from the
+  1st of the month in June and July". (It listed "the 1st, 6th … 31st of
+  June and July", naming June 31. The list kept correct would be split
+  in two, seven days and a date, against a step and a start.)
+* Days named one by one, or a run that stops inside the longer months,
+  are said first with every month that has them all, then with the
+  months that alone have the rest: `30,31` in April and May is "on the
+  30th of April and May and on May 31"; `15,31` in January and April,
+  "on the 15th of January and April and on January 31".
+* An exception may name a day only some of the months have, since it
+  takes that day out of the months that do: `1-14,16-30` in April and
+  July is "on every day in April and July except the 15th and 31st".
 
 4.5 None.
 

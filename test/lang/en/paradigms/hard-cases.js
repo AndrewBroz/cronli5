@@ -130,9 +130,28 @@ const rows = [
     'p.m. every day'],
   ['15,45 */4 * * *', 'at 15 and 45 minutes past the hour, every 4 hours'],
   ['5,20 */2 * * *', 'at 5 and 20 minutes past the hour, every 2 hours'],
+  // Minutes in pieces before hours named one by one count past "the
+  // hour", and the hours follow as hours. This row said "every minute from
+  // 5 through 10 and at 20 minutes past 9 a.m., 11 a.m., 1 p.m., 3 p.m.,
+  // and 5 p.m.", and readers asked alone took "from 5 through 10" for 5 to
+  // 10 o'clock and said it fired at 6:05 p.m. (2026-11-19).
   ['5-10,20 9-17/2 * * *',
-    'every minute from 5 through 10 and at 20 minutes past 9 a.m., 11 ' +
-    'a.m., 1 p.m., 3 p.m., and 5 p.m. every day'],
+    'every minute from 5 through 10 and at 20 minutes past the hour during ' +
+    'the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours every day'],
+  ['5-10,20 9,13 * * *',
+    'every minute from 5 through 10 and at 20 minutes past the hour during ' +
+    'the 9 a.m. and 1 p.m. hours every day'],
+  ['50-59,5 9-17/2 * * *',
+    'at 5 and every minute from 50 through 59 minutes past the hour during ' +
+    'the 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours every day'],
+  // A list or a single run names its unit next to its numbers, and keeps
+  // the hours as moments.
+  ['5,20 9-17/2 * * *',
+    'at 5 and 20 minutes past 9 a.m., 11 a.m., 1 p.m., 3 p.m., and 5 p.m. ' +
+    'every day'],
+  ['5-10 9-17/2 * * *',
+    'every minute from 5 through 10 minutes past 9 a.m., 11 a.m., 1 p.m., ' +
+    '3 p.m., and 5 p.m. every day'],
   ['*/10 6-8,17-19 * * 1-5',
     'every 10 minutes from 6 a.m. through 8:50 a.m. and from 5 p.m. ' +
     'through 7:50 p.m. on weekdays'],
@@ -477,6 +496,56 @@ const rows = [
   ['0 0 5-23/2 6 *',
     'at 12 a.m. every 2 days from the 5th through the 23rd of the month ' +
     'in June'],
+  // A step of days that stops where the months named stop reaches the
+  // same days as the step from the same start, and is said the same way:
+  // June has no 31st, so 1-29/2 is its odd-numbered days, and the 29th
+  // ends February in leap years (3.7, 2026-11-19). These said "every 2
+  // days from the 1st through the 29th of the month in June", restating
+  // an end the month supplies, while */2 said "on odd-numbered days".
+  ['0 0 1-29/2 6 *', 'at 12 a.m. on odd-numbered days in June'],
+  ['0 0 2-30/2 6 *', 'at 12 a.m. on even-numbered days in June'],
+  ['0 0 1-29/2 2 *', 'at 12 a.m. on odd-numbered days in February'],
+  ['0 0 2-28/2 2 *', 'at 12 a.m. on even-numbered days in February'],
+  ['0 0 1-31/2 7 *', 'at 12 a.m. on odd-numbered days in July'],
+  ['0 0 1-29/2 4,6 *',
+    'at 12 a.m. on odd-numbered days in April and June'],
+  ['0 0 1-28/3 2 *',
+    'at 12 a.m. every 3 days from the 1st of the month in February'],
+  ['0 0 3-29/2 6 *',
+    'at 12 a.m. every 2 days from the 3rd of the month in June'],
+  ['0 0 1-13/2,17-29/2 6 *',
+    'at 12 a.m. on odd-numbered days in June except the 15th'],
+  ['0 0 1-29/2 6 1',
+    'at 12 a.m. on odd-numbered days in June as well as on Mondays in ' +
+    'June'],
+  // In 2031 February has 28 days, so 1-27/2 is all its odd days; in 2032
+  // it has a 29th, which the range leaves out.
+  ['0 0 0 1-27/2 2 * 2031',
+    'at 12 a.m. on odd-numbered days in February 2031'],
+  ['0 0 0 1-27/2 2 * 2032',
+    'at 12 a.m. every 2 days from the 1st through the 27th of the month ' +
+    'in February 2032'],
+  // Where a month named goes on past the range, the days are different
+  // and the range keeps its end: the 29th of a leap February, the 31st of
+  // July, the days after the 25th of June or of February.
+  ['0 0 1-27/2 2 *',
+    'at 12 a.m. every 2 days from the 1st through the 27th of the month ' +
+    'in February'],
+  ['0 0 1-29/2 7 *',
+    'at 12 a.m. every 2 days from the 1st through the 29th of the month ' +
+    'in July'],
+  ['0 0 1-29/2 6,7 *',
+    'at 12 a.m. every 2 days from the 1st through the 29th of the month ' +
+    'in June and July'],
+  ['0 0 1-25/2 6 *',
+    'at 12 a.m. every 2 days from the 1st through the 25th of the month ' +
+    'in June'],
+  ['0 0 1-25/3 2 *',
+    'at 12 a.m. every 3 days from the 1st through the 25th of the month ' +
+    'in February'],
+  ['0 0 1-29/2 * *',
+    'at 12 a.m. every 2 days from the 1st through the 29th of the month'],
+  ['0 0 1-31/2 * *', 'at 12 a.m. on odd-numbered days'],
   // Every fifth day is seven days, which are named; every third is
   // eleven, and keeps the cadence in the same places.
   ['0 0 1,6,11,21,26,31 6 *', 'at 12 a.m. on June 1, 6, 11, 21, and 26'],
@@ -498,9 +567,64 @@ const rows = [
   ['0 0 1-31/3 6 1',
     'at 12 a.m. every 3 days from the 1st of the month in June as well ' +
     'as on Mondays in June'],
+  // June has no 31st, so the seven days cannot all be "of June and
+  // July"; this row said "the 1st, 6th, 11th, 16th, 21st, 26th, and 31st
+  // of June and July". A cadence that runs to the end of months of
+  // different lengths names only its start (4.4, 2026-11-19).
   ['0 0 */5 6,7 *',
-    'at 12 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
-    'June and July'],
+    'at 12 a.m. every 5 days from the 1st of the month in June and July'],
+  ['0 0 3/4 6,7 *',
+    'at 12 a.m. every 4 days from the 3rd of the month in June and July'],
+  ['0 0 2-30/4 2,3 *',
+    'at 12 a.m. every 4 days from the 2nd of the month in February and ' +
+    'March'],
+  ['0 0 2/7 2,4 *',
+    'at 12 a.m. every 7 days from the 2nd of the month in February and ' +
+    'April'],
+  // Fewer days than a month has, said the same whatever their spelling,
+  // and judged against the days the months named have (4.4, 2026-11-19).
+  ['0 0 1-14,16-30 6 *', 'at 12 a.m. on every day in June except the 15th'],
+  ['0 0 1-14,16-31 6 *', 'at 12 a.m. on every day in June except the 15th'],
+  ['0 0 1-9,11-19,21-30 6 *',
+    'at 12 a.m. on every day in June except the 10th and 20th'],
+  ['0 0 1-14,16-30 4,6 *',
+    'at 12 a.m. on every day in April and June except the 15th'],
+  ['0 0 1-14,16-29 2 *',
+    'at 12 a.m. on every day in February except the 15th'],
+  ['0 0 1-14,16-31 2 *',
+    'at 12 a.m. on every day in February except the 15th'],
+  ['0 0 1-27,29 2 *', 'at 12 a.m. on every day in February except the 28th'],
+  ['0 0 1-27,29-31 2 *',
+    'at 12 a.m. on every day in February except the 28th'],
+  ['0 0 2-29 2 *', 'at 12 a.m. on every day in February except the 1st'],
+  ['0 0 2-31 2 *', 'at 12 a.m. on every day in February except the 1st'],
+  // A leap year's February has a 29th, so 1-28 is not all of it.
+  ['0 0 1-28 2 *', 'at 12 a.m. on every day in February except the 29th'],
+  ['0 0 0 1-28 2 * 2031', 'at 12 a.m. every day in February 2031'],
+  ['0 0 1-31 6 *', 'at 12 a.m. every day in June'],
+  ['0 0 30,31 4 *', 'at 12 a.m. on April 30'],
+  ['0 0 29,30,31 2 *', 'at 12 a.m. on February 29 in leap years'],
+  // An exception may name a day only the longer month has: it takes the
+  // day out of July.
+  ['0 0 1-14,16-30 4,7 *',
+    'at 12 a.m. on every day in April and July except the 15th and 31st'],
+  // Months of different lengths: no month is given a day it lacks. A run
+  // to the end of all of them ends on "the last day"; days named one by
+  // one are said with the months that have them.
+  ['0 0 20-31 4,5 *',
+    'at 12 a.m. on the 20th through the last day of April and May'],
+  ['0 0 25-31 2,3 *',
+    'at 12 a.m. on the 25th through the last day of February and March'],
+  ['0 0 20-30 4,5 *',
+    'at 12 a.m. on the 20th through the 30th of April and May'],
+  ['0 0 30,31 4,5 *', 'at 12 a.m. on the 30th of April and May and on May 31'],
+  ['0 0 15,31 1,4 *',
+    'at 12 a.m. on the 15th of January and April and on January 31'],
+  ['0 0 29,30 2,4 *',
+    'at 12 a.m. on the 29th of February and April and on April 30'],
+  ['0 0 20-30 2,7 *',
+    'at 12 a.m. on the 20th through the 29th of February and July and on ' +
+    'July 30'],
   ['0 0 */3 6,7 *',
     'at 12 a.m. every 3 days from the 1st of the month in June and July'],
 
@@ -662,7 +786,11 @@ const rows = [
   ['0 9 1-30 6 *', 'at 9 a.m. every day in June'],
   ['0 9 1-30 4 1', 'at 9 a.m. every day in April'],
   ['0 9 1-29 2 *', 'at 9 a.m. every day in February'],
-  ['0 9 1-28 2 *', 'at 9 a.m. on February 1 through 28'],
+  // Not every day of February, which has a 29th in leap years; this row
+  // said "on February 1 through 28", and a day missing at the end of a
+  // month is said as every day but that one, judged by the month's own
+  // last day (4.4, 2026-11-19).
+  ['0 9 1-28 2 *', 'at 9 a.m. on every day in February except the 29th'],
   ['0 9 1-31 * 1', 'at 9 a.m. every day'],
 
   // An exception is for a hole inside the hour or the minute. A run that

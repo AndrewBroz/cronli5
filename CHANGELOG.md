@@ -86,6 +86,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `1-14,16-31` was (it was 毎年6月1日〜30日（15日を除く）); `0 0 L 6 *` is
   毎年6月30日 (was 毎年6月末日); and no month is given a day it lacks:
   `0 0 */3 4,7 *` is 毎年4月・7月の1日・4日・7日…31日（31日は7月のみ）.
+- **English says the same days the same way, however the day field is
+  spelled.** A step of days that stops where the months named stop is
+  said as the step that reaches those same days: `0 9 1-29/2 6 *` is "at
+  9 a.m. on odd-numbered days in June", as `0 9 */2 6 *` is, where it was
+  "at 9 a.m. every 2 days from the 1st through the 29th of the month in
+  June". Every day but a few is judged by the month's own days:
+  `0 9 1-14,16-30 6 *` is "on every day in June except the 15th" (was
+  "except the 15th and 31st"). Beside months of different lengths no
+  month is given a day it lacks: `0 9 30,31 4,5 *` is "on the 30th of
+  April and May and on May 31" (was "on the 30th and 31st of April and
+  May").
+- **English counts minutes in pieces past "the hour" before hours named
+  one by one**: `5-10,20 9-17/2 * * *` is "every minute from 5 through 10
+  and at 20 minutes past the hour during the 9 a.m., 11 a.m., 1 p.m., 3
+  p.m., and 5 p.m. hours", where "from 5 through 10" was read as 5 to 10
+  o'clock.
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
   Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
   `cronli5/all` has it. An instance without it reports the language as
