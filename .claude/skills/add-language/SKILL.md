@@ -157,6 +157,20 @@ spoken length, objects held in mind, repetition, operation tax.
   reader ("ten clock-time pairs to hold"), never with a count to bring
   down. The length gate of 2026-11-13 is what happens otherwise.
 
+### The same schedule is said the same way
+
+`npm run same-schedule` (gated by `test/core/same-schedule.js`) generates
+pairs of patterns that fire at exactly the same moments, and pairs that
+do not, by the answer key, and compares the sentences in every language.
+A new language must pass it before it is merged: equal schedules are one
+sentence, however the pattern was spelled, unless the answers declare the
+tie by form (3.11); different schedules are different sentences. Describe
+the days a pattern reaches in the months it fires in (`daysReached`,
+`daysByMonths`), not the field as written: a month shorter than 31 days
+makes two spellings the same days. When a hand-written row holds the
+accidental form, every gate defends it, so the check has to compare
+sentences mechanically; do not rely on rows for this.
+
 ### Speed: measure every new renderer
 
 After the audit and before merging, run `npm run speed` (the method and

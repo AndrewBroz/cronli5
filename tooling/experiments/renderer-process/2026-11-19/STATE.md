@@ -67,10 +67,8 @@ models). The reading check found no defect in any of the five.
    that repair changed or added were then written again by a writer who
    saw only the patterns, the answers and the lexicon: 160 of 160 equal
    the rows. The eight places where the answers contradicted themselves
-   or were silent are amended. Still open: `0 9 1-29/2 6 *` says
-   每年6月1日至29日逢单日 while the same days written `*/2` say
-   每年6月的单日, with no tie declared (answers 3.11); and the full reading
-   run was not repeated after that repair's last two cures.
+   or were silent are amended. The one row found wrong then
+   (`0 9 1-29/2 6 *`) is fixed, with its whole family (see below).
 4. **`0-29,45 9 * * *` at 9:37**: Sonnet readers say it fires, in every
    language's reading check and under six rewordings in Traditional
    Chinese; Opus readers do not. Treated as a reader-model slip, not a
@@ -89,6 +87,52 @@ models). The reading check found no defect in any of the five.
 9. README says there are no native-speaker reviewers "by design", while
    each new language's page names what a native reviewer should check
    first.
+
+## Later the same day: the same schedule, said the same way
+
+A blind rewrite of the Simplified rows turned up one row that said a set of
+days two ways depending on how the pattern was spelled (`1-29/2` in June
+against `*/2` in June). A check across all fifteen languages found the
+same fault in en, de, fr, ja, pt and zh, and then a wider family: every day
+but a few written to the 30th against the 31st; sentences naming a day a
+named month lacks; and, in the core, two wrong schedules (a weekday step
+from a start left Sunday out, `0 9 * * 1/2`; a whole-range day field beside
+one written from a star was said as every day). All are fixed, test-first,
+each with the reading check.
+
+`tooling/scripts/same-schedule.mjs` (`npm run same-schedule`, gated by
+`test/core/same-schedule.js`) now generates 8,562 pairs of patterns that
+fire at the same moments, or do not, by the independent answer key, and
+compares sentences in every language: no violations. The older
+`metamorphic.mjs` compared the core's facts and rendered English only, and
+had no pair that depends on a month's length; that is why it missed this.
+
+German no longer leaves a series for the reader to continue: no «…» (it was
+in about 7% of German sentences) and no «usw.».
+
+Decisions recorded with these fixes:
+
+- **The last day written as `L` against the same date** is a declared tie
+  in each language's answers (3.11), said differently on purpose, except
+  in Japanese, which says the date wherever a last day, a count from the
+  month's end or a nearest weekday comes to one date. The orchestrator's
+  call; the alternative is to say the date everywhere.
+- **A day some named months lack**, under "every month" or a form a reader
+  takes as skipping months without it, stands (about 1,350 sentences in
+  the check's report, not gated). Under named months of different
+  lengths, en, de, fr, ja, pt and zh now give no month a day it lacks.
+- **A never-firing schedule's explanation** names the days the pattern
+  asked for, so it follows the spelling; that is the reason, not a
+  description of when it fires.
+
+Still to look at, none known to be wrong: German «vom 1. bis 30. jedes
+Monats (im Februar bis zum Monatsende)», a gloss other languages judged
+unnecessary; English `5-10,20 9-17/2 * * *`, now "…during the 9 a.m.,
+11 a.m., 1 p.m., 3 p.m., and 5 p.m. hours", read rightly by 14 of 16
+readers asked alone; English `5,20,45 9-17,22 * * *`, misread by 2 of 3
+in a full run and not on the last recheck; `L-1` and `L-2` said with a
+word against their dates (outside the generator); Portuguese
+`1-30 1-6`, which names the months twice.
 
 ## Branches left
 
