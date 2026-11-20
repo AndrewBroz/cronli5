@@ -99,4 +99,17 @@ describe('Reading a pattern:', function() {
     same('0 0 ? * 2', {cron: 'quartz'}, '0 0 * * 1', {});
     same('0 0 * * 2', {cron: 'quartz'}, '0 0 * * 1', {});
   });
+
+  // A step from a start with no end runs to the field's highest number as
+  // written: 7, which is Sunday in cron and Saturday in Quartz.
+  it('runs a weekday step from a start to the top of its numbering',
+    function() {
+      same('0 0 * * 1/2', {}, '0 0 * * 0,1,3,5', {});
+      same('0 0 * * 1/3', {}, '0 0 * * 0,1,4', {});
+      expect(prepare('0 0 ? * 2/2', readingOf({cron: 'quartz'})).weekday)
+        .to.equal('1/2');
+      expect(prepare('0 0 ? * 2/3', readingOf({cron: 'quartz'})).weekday)
+        .to.equal('1/3');
+      same('0 0 ? * 1/2', {cron: 'quartz'}, '0 0 * * 0/2', {});
+    });
 });

@@ -24,11 +24,13 @@ function prepare(cronPattern: CronPattern, opts: Partial<Reading>): Pattern {
   const macro = typeof cronPattern === 'string' &&
     cronPattern.trim().startsWith('@');
 
-  applyReading(pattern, macro ? {...opts, weekdaysFrom: 0} : opts);
+  const reading: Partial<Reading> = macro ? {...opts, weekdaysFrom: 0} : opts;
+
+  applyReading(pattern, reading);
   applyQuartzAliases(pattern);
   validateCronPattern(pattern);
 
-  return normalizeCronPattern(pattern);
+  return normalizeCronPattern(pattern, reading);
 }
 
 export {prepare};
