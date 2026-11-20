@@ -765,8 +765,19 @@ where they favoured a window, a list or a bracket over a cadence of hours
 that tiles the day, they were overruled on 2026-11-14, as the note at the
 top says.)
 
-3.11 No ties are declared. `0 */12 * * *` and `0 0,12 * * *` are both
-«todos os dias às 00:00 e 12:00».
+3.11 One tie is declared, the last day of the month (below). Hours are
+no tie: `0 */12 * * *` and `0 0,12 * * *` are both «todos os dias às
+00:00 e 12:00».
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
+is «no último dia de junho às 09:00» and
+`0 9 30 6 *` is «no dia 30 de junho às 09:00», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ## 4. Fusions
 

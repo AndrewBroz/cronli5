@@ -144,8 +144,9 @@ Other general choices:
   2026-11-14 a bare 2時間ごと was judged to have no starting point; that
   judgment is overruled, as the note at the top says.) Any other cadence
   of hours names its times when they are four or fewer (毎日0:00・12:00)
-  and both ends otherwise (毎日5:00から23:00まで2時間ごと). There is no
-  declared tie.
+  and both ends otherwise (毎日5:00から23:00まで2時間ごと). The one
+  declared tie is the last day of the month written `L` or as the date
+  (3.11).
 * **Every range of times is closed: it names its first and its last
   moment, to the precision of what fires, and both fire.** から…まで is
   read as including its end. There is no form in which a time that is

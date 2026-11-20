@@ -131,6 +131,7 @@
     "fuzz": "node --import tsx scripts/fuzz-lang.mjs",
     "lint": "eslint src test cli.js eslint.config.js scripts tooling/scripts",
     "metamorphic": "node --import tsx tooling/scripts/metamorphic.mjs",
+    "same-schedule": "node --import tsx tooling/scripts/same-schedule.mjs",
     "speed": "node --import tsx tooling/scripts/speed.mjs",
     "lint:fix": "eslint src test cli.js eslint.config.js scripts tooling/scripts --fix",
     "test": "vitest run",
