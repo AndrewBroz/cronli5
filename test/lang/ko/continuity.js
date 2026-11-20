@@ -44,7 +44,7 @@ const FIELDS =
 // «매일» with its note, a year phrase ending in «마다» takes
 // «, 그해», and the month and day phrases name only what the calendar
 // has. All of that stays inside the calendar and the note. Nothing else
-// may cross, with the one exception below.
+// may cross, with the two exceptions below.
 const MAY_CHANGE = {
   date: ['calendar', 'fill', 'note'],
   hour: ['time', 'fill'],
@@ -68,6 +68,18 @@ function neverFires(schedule) {
   const {dateReach, day} = schedule.analyses;
 
   return dateReach !== null && !dateReach.fires && !day.union;
+}
+
+// The second exception: hours that run through midnight are one stretch
+// ending on «다음 날» only while every day fires, and are cut at midnight
+// once a day, month or year is named (answers 2.6, "Hours that run
+// through midnight"). So an edit to the day of the month, the weekday,
+// the month or the year may rewrite the time when the hours are such a
+// run.
+function throughMidnight(schedule) {
+  const [hours] = schedule.analyses.candidates.hour || [];
+
+  return Boolean(hours) && hours.kind === 'range' && hours.from > hours.to;
 }
 
 const parse = parser(korean.default);
@@ -109,10 +121,12 @@ function leaks(pairList) {
 
     const before = partsOf(a, options);
     const after = partsOf(b, options);
-    const silenced = !['second', 'minute', 'hour'].includes(changed[0]) &&
-      [a, b].some(function silent(pattern) {
-        return neverFires(parse(pattern, options).schedule);
-      });
+    const calendar = !['second', 'minute', 'hour'].includes(changed[0]);
+    const silenced = calendar && [a, b].some(function silent(pattern) {
+      const {schedule} = parse(pattern, options);
+
+      return neverFires(schedule) || throughMidnight(schedule);
+    });
 
     Object.keys(before).forEach(function compare(part) {
       if (before[part] !== after[part] &&
@@ -188,6 +202,24 @@ describe('Korean continuity:', function() {
       expect(leaks(neighborPairs(coreSetSeeds())).slice(0, 20))
         .to.deep.equal([]);
     }, 240000);
+
+  it('cuts hours through midnight once a day is named, and only then',
+    function() {
+      const cases = [
+        ['0 22-2 * * *', '매일 오후 10시부터 다음 날 오전 2시까지 1시간마다'],
+        ['0 22-2 1 * *', '0시, 오전 1시, 2시, 오후 10시, 11시'],
+        ['0 22-2 * * 1', '0시, 오전 1시, 2시, 오후 10시, 11시'],
+        ['0 22-2 * 6 *', '0시, 오전 1시, 2시, 오후 10시, 11시']
+      ];
+
+      cases.forEach(function each([pattern, time]) {
+        const parts = partsOf(pattern);
+
+        expect(joined(parts).endsWith(time), pattern).to.equal(true);
+      });
+      expect(leaks([['0 22-2 * * *', '0 22-2 1 * *']])).to.deep.equal([]);
+      expect(leaks([['0 9-17 * * *', '0 9-17 1 * *']])).to.deep.equal([]);
+    });
 
   it('renders equal schedules identically', function() {
     function render(pattern, options) {

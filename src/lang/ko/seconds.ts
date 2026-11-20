@@ -11,8 +11,9 @@ import type {KoreanStyle} from './options.js';
 import type {Level} from './phrases.js';
 import {inside, levelOf, progress, taken} from './phrases.js';
 import type {Choice, Described, FieldSet} from './sets.js';
-import {baseOf, choose, endsOf, fieldOf, isOpen, removedOf, stepOf}
-  from './sets.js';
+import {
+  baseOf, choose, endsOf, fieldOf, hoursOf, isOpen, removedOf, stepOf
+} from './sets.js';
 import type {Clockwork, Spoken} from './time.js';
 import {clockworkOf, hoursAndMinutes, inSpans, listable, wholeHours}
   from './time.js';
@@ -172,7 +173,13 @@ const rules: SecondsRule[] = [
   function writtenOut(clock) {
     const {seconds, voice, work} = clock;
     const open = isOpen(work.hourForm);
+    // In clock order on one day, an hour counted past midnight brought
+    // back into the day.
     const hours = open && [{}] || work.hours.values.map(function fix(hour) {
+      return hour % 24;
+    }).sort(function ascending(a, b) {
+      return a - b;
+    }).map(function fix(hour) {
       return {hour};
     });
     const count =
@@ -228,7 +235,7 @@ function timeOf(facts: ScheduleFacts, style: KoreanStyle):
     rhythm: choose(seconds, {...exceptions, bare: true}),
     seconds,
     voice,
-    work: clockworkOf(fieldOf(facts, 'hour'), fieldOf(facts, 'minute'),
+    work: clockworkOf(hoursOf(facts), fieldOf(facts, 'minute'),
       {bare: still && !ride, frame: !still, style}, ride)
   };
   const said = rules.reduce<Spoken | false>(function first(found, rule) {

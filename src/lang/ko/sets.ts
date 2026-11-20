@@ -89,6 +89,37 @@ function fieldOf(facts: ScheduleFacts, field: Field): FieldSet {
   );
 }
 
+// The fields that, all unrestricted, make every day fire.
+const calendarFields: Field[] = ['date', 'weekday', 'month', 'year'];
+
+/**
+ * The hours. When every day fires and the hours are one run through
+ * midnight that is not every hour but one or two, the hours after
+ * midnight are counted on from 24, so that the run is one stretch and its
+ * end falls on the next day (answers, "Hours that run through midnight").
+ * Otherwise the hours cut at midnight.
+ */
+function hoursOf(facts: ScheduleFacts): FieldSet {
+  const cut = fieldOf(facts, 'hour');
+  const {candidates} = facts.analyses;
+  const [own] = candidates.hour ?? [];
+  const {domain, values} = cut;
+  const size = domain.max - domain.min + 1;
+  const daily = calendarFields.every(function free(field) {
+    return candidates[field]?.[0].kind === 'all';
+  });
+  const through = daily && own?.kind === 'range' && own.from > own.to &&
+    size - values.length > 2;
+
+  return through ?
+    setOf(values.map(function onward(hour) {
+      return hour < own.from ? hour + size : hour;
+    }).sort(function ascending(a, b) {
+      return a - b;
+    }), {cyclic: false, max: domain.max + size, min: domain.min}) :
+    cut;
+}
+
 /** A set of a field's values from its candidates over any domain. */
 function setFrom(candidates: SetDescription[], domain: Domain): FieldSet {
   return asSet(candidates, domain, function found(values) {
@@ -257,6 +288,6 @@ function choose(set: FieldSet, how: Choice): Described {
 }
 
 export {
-  baseOf, choose, endsOf, fieldOf, isOpen, listOf, ofKind, parityOf,
+  baseOf, choose, endsOf, fieldOf, hoursOf, isOpen, listOf, ofKind, parityOf,
   removedOf, runsOf, setFrom, setOf, stepOf, tiles, touchesEdge
 };

@@ -36,6 +36,7 @@ const finals = 28;
 // The markers of the 12-hour clock: none for hour 0, then the morning,
 // hour 12 and the afternoon.
 const markers = ['', words.am, words.noon, words.pm];
+const hoursInDay = 24;
 
 function isKnown(value?: number): value is number {
   return typeof value === 'number';
@@ -52,15 +53,24 @@ function after(word: string, particles: string[]): string {
   return `${word}${particles[Number(final === 0)]}`;
 }
 
+// An hour counted on past the end of the day (24 and up) is on the next
+// day: a run of hours through midnight is laid out that way (answers,
+// "Hours that run through midnight"). Its marker starts with «다음 날», so
+// that the marker after it is always said again.
 function markerOf(time: Time, voice: Voice): string {
-  const hour = time.hour ?? 0;
+  const hour = (time.hour ?? 0) % hoursInDay;
 
-  return voice.style.hour12 &&
-    markers[Number(hour > 0) + Number(hour > 11) + Number(hour > 12)] || '';
+  return join(
+    (time.hour ?? 0) >= hoursInDay && words.nextDay,
+    voice.style.hour12 &&
+      markers[Number(hour > 0) + Number(hour > 11) + Number(hour > 12)]
+  );
 }
 
 function hourOf(hour: number, voice: Voice): number {
-  return hour - 12 * Number(voice.style.hour12 && hour > 12);
+  const clock = hour % hoursInDay;
+
+  return clock - 12 * Number(voice.style.hour12 && clock > 12);
 }
 
 // One moment. The minute is said when it is not zero or a second follows;

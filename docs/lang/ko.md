@@ -90,11 +90,14 @@ even hour.
   cronli5('15,45 */4 * * *', {lang: ko}); // '매일 0시대, 오전 4·8시대, 낮 12시대, 오후 4·8시대에 각각 15·45분'
   ```
 
-* **A run that crosses midnight or the year's end is cut at the edge**,
-  so that no other field can change what it means.
+* **Hours that run through midnight are one stretch when every day
+  fires**, ending on «다음 날». Beside a named day, month or year, and
+  for months across the year's end, the run is cut at the edge, where
+  «다음 날» would no longer be true.
 
   ```js
-  cronli5('0 22-2 * * *', {lang: ko});  // '매일 0시, 오전 1시, 2시, 오후 10시, 11시'
+  cronli5('0 22-2 * * *', {lang: ko});  // '매일 오후 10시부터 다음 날 오전 2시까지 1시간마다'
+  cronli5('0 22-2 * * 1', {lang: ko});  // '매주 월요일 0시, 오전 1시, 2시, 오후 10시, 11시'
   cronli5('0 12 * 11-2 *', {lang: ko}); // '매년 1월·2월·11월·12월 매일 낮 12시'
   ```
 
@@ -174,7 +177,7 @@ Generated from live output of both libraries (`npm run docs`).
 | `0 0 * * *` | 매일 0시 | 시간 오전 12:00 |
 | `30 9 * * MON-FRI` | 매주 월~금요일 오전 9시 30분 | 시간 오전 09:30, 월요일에서 금요일까지 |
 | `0 9,17 * * *` | 매일 오전 9시, 오후 5시 | 시간 오전 09:00 및 오후 05:00 |
-| `0 22-2 * * *` | 매일 0시, 오전 1시, 2시, 오후 10시, 11시 | 1시간마다, 오후 10:00에서 오전 02:00 사이 |
+| `0 22-2 * * *` | 매일 오후 10시부터 다음 날 오전 2시까지 1시간마다 | 1시간마다, 오후 10:00에서 오전 02:00 사이 |
 | `*/15 9-17 * * *` | 매일 오전 9시부터 오후 5시 45분까지 15분마다 | 15분마다, 오전 09:00에서 오후 05:59 사이 |
 | `0 0 1,15 * *` | 매월 1·15일 0시 | 시간 오전 12:00, 매월 1 및 15일 |
 | `0 12 1 1 *` | 매년 1월 1일 낮 12시 | 시간 오후 12:00, 매월 1일, 1월에만 |

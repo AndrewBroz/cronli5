@@ -229,6 +229,18 @@ function minutesOfDay(time: Time): number {
 }
 
 /**
+ * Moments as a list says them: in clock order on one day, an hour counted
+ * on past midnight brought back into the day.
+ */
+function inClockOrder(times: Time[]): Time[] {
+  return times.map(function within(time) {
+    return {...time, hour: (time.hour as number) % 24};
+  }).sort(function ascending(a, b) {
+    return minutesOfDay(a) - minutesOfDay(b);
+  });
+}
+
+/**
  * The clock times of the day, when they are few enough to be listed one
  * by one; false otherwise.
  */
@@ -250,7 +262,7 @@ function listable(work: Clockwork): Time[] | false {
     count <= listedTimes && (work.lone && work.minuteForm.kind === 'values' ||
       work.one && work.hourForm.kind === 'values');
 
-  return fits && times;
+  return fits && inClockOrder(times);
 }
 
 // The rhythm the minutes keep when they fill the hour, at any offset:
