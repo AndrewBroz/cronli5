@@ -5,10 +5,12 @@
 import type {ScheduleFacts} from '../../core/schedule.js';
 import {candidatesAs, domainOf} from '../../core/index.js';
 import lexicon from './lexicon.js';
-import {minutesOf, scopedInside} from './inside.js';
+import {minutesOf, minutesOfTheHour, scopedInside} from './inside.js';
 import {amount, between, clausal, list, spaced} from './names.js';
 import type {Choosing, Described, Exception, Rule} from './sets.js';
-import {choose, choosingOf, firstRule, isBare, valuesOf} from './sets.js';
+import {
+  choose, choosingOf, firstRule, isAlternate, isBare, valuesOf
+} from './sets.js';
 import type {Time} from './spans.js';
 import {hoursAt, spanOf, spanTime, timeOf} from './spans.js';
 
@@ -56,6 +58,22 @@ function hoursOf(facts: ScheduleFacts, wraps: boolean): Hours {
   };
 }
 
+// Every second hour across the whole day that does not start on its
+// first hour: all the odd hours.
+function isOddHours(description: Described): boolean {
+  const domain = domainOf('hour');
+  const step = description as Extract<Described, {kind: 'cadence'}>;
+
+  return isAlternate(description) && !isBare(description, domain) &&
+    step.start < step.interval && step.last + step.interval > domain.max;
+}
+
+// The minute named inside the hour, with its scope.
+function minuteLabel(minute: number, scope: string): string {
+  return scopedInside({kind: 'values', values: [minute]},
+    minutesOf(scope)).text;
+}
+
 /** The hours beside one minute, in clock times that carry it. */
 function hoursAtMinute(given: Hours, minute: number): Time {
   const found = choose(hourOrder, given.choosing);
@@ -72,12 +90,20 @@ function hoursAtMinute(given: Hours, minute: number): Time {
         clause: span.clause
       };
     }],
+    [function oddHours() {
+      return isOddHours(base);
+    }, function byParity() {
+      return {
+        ...timeOf(minuteLabel(minute, words.ofEachOddHour), 'label'),
+        bare: found === base,
+        clause: span.clause
+      };
+    }],
     [function everyHour() {
       return base.kind === 'all';
     }, function label() {
       return {
-        ...timeOf(scopedInside({kind: 'values', values: [minute]},
-          minutesOf(words.ofEachHour)).text, 'label'),
+        ...timeOf(minuteLabel(minute, words.ofEachHour), 'label'),
         bare: found.kind === 'all',
         clause: span.clause
       };
@@ -107,21 +133,27 @@ function hoursForEachMinute(step: Described, given: Hours): Time {
   };
 }
 
-// Scattered hours, every minute of each: the hours as they are said on
-// the hour, and «каждую минуту в течение часа».
-function wholeHours(given: Hours): Time {
+// Scattered hours under a rhythm of minutes: the hours as they are said on
+// the hour, and what happens in each of them, «каждую минуту в течение
+// часа», «каждые 15 минут с начала часа по 45-ю минуту»; a step that
+// lands twice is its two minutes.
+function rhythmInScatteredHours(given: Hours): Time {
   const hours = hoursAtMinute(given, 0);
+  const {minuteSet, minutes} = given;
+  const twice = minutes.length === 2;
+  const inEach = scopedInside(
+    twice ? {kind: 'values', values: minutes} : minuteSet,
+    minutesOfTheHour).text;
 
   return {
     ...hours,
     bare: true,
     clause(clock) {
-      return clausal(hours.clause(clock),
-        spaced(words.everyMinute, words.forAnHour));
+      return clausal(hours.clause(clock), inEach);
     },
     mode: 'minutes',
     windows: false
   };
 }
 
-export {hoursAtMinute, hoursForEachMinute, hoursOf, wholeHours};
+export {hoursAtMinute, hoursForEachMinute, hoursOf, rhythmInScatteredHours};

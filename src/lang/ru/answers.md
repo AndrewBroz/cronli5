@@ -438,8 +438,10 @@ Never bare **[notes §13]**.
 * `5/15 * * * *` — «на 5-й, 20-й, 35-й и 50-й минуте каждого часа».
 * `5/10 * * * * *` — «каждые 10 секунд с 5-й по 55-ю секунду каждой
   минуты».
-* `0 1/2 * * *` — «каждые 2 часа с 1:00 до 23:00» (it tiles the day but
-  does not start on its first hour).
+* `0 1/2 * * *` — «в начале каждого нечётного часа»: every odd hour is
+  the odd hours, said by parity under one minute as under several (4.1,
+  case C). A stepped run that is not all the odd hours keeps its ends:
+  `0 1-21/2 * * *` — «каждые 2 часа с 1:00 до 21:00».
 * `0 */5 * * *` — «каждые 5 часов с 0:00 до 20:00».
 
 ### 3.9 A set with one value missing
@@ -526,11 +528,17 @@ from 0, H all — «каждые 15 минут». M = {0}, H all — «кажд�
 **C. One minute (M has one value).** The hours are described by "How a
 form is chosen", in clock times that carry the minute:
 
+* **all twelve odd hours** (a cadence of step 2 from 1:00 to 23:00), or
+  those less one or two — the minute as "Minutes inside the hour" names
+  it, with the scope «каждого нечётного часа», as under several minutes
+  (D.3): `0 1/2 * * *` — «в начале каждого нечётного часа»; `23 1/2 * *
+  *` — «на 23-й минуте каждого нечётного часа»; less an hour, the clock
+  time after «кроме»: «в начале каждого нечётного часа, кроме 7:00»;
 * a cadence — «каждые 2 часа с 0:30 до 22:30», «каждые 2 часа с 1:00 до
-  23:00», «каждые 5 часов с 0:00 до 20:00»;
+  21:00», «каждые 5 часов с 0:00 до 20:00»;
 * an exception — the base, then «, кроме» and the clock times: «каждые 2
-  часа, кроме 8:00»; «каждый час, кроме 3:00»; «каждые 2 часа с 1:00 до
-  23:00, кроме 7:00»; with every hour as the base and a minute other
+  часа, кроме 8:00»; «каждый час, кроме 3:00»; «каждые 2 часа с 0:30 до
+  22:30, кроме 8:30»; with every hour as the base and a minute other
   than 0, the base is the minute's own phrase: «на 30-й минуте каждого
   часа, кроме 3:30»;
 * a run — «каждый час с 9:30 до 17:30»; an exception in a run — «каждый
@@ -583,12 +591,29 @@ Then the hours, the first that applies:
    minute, each with
    its first and last firing, joined as windows are: `15,45 */4 * * *` —
    «каждые 4 часа с 0:15 до 20:15 и с 0:45 до 20:45».
-5. **More than four hours, none next to another, under «каждую минуту»**
-   — the hours as case C says them for minute 0, a comma, and «каждую
-   минуту в течение часа»: `* */3 * * *` — «каждые 3 часа, каждую минуту
-   в течение часа»; `* 1,5,9,14,20 * * *` — «ежедневно в 1:00, 5:00,
-   9:00, 14:00 и 20:00, каждую минуту в течение часа». Every minute of
-   the hour fires, so the length cannot be off by one.
+5. **More than four hours, none next to another, under a rhythm R**
+   («каждую минуту», or a cadence that tiles the hour from 0; not such a
+   rhythm less a minute or two) — the hours as case C says them for
+   minute 0, a comma, and what happens in each of those hours, with the
+   scope «часа»:
+   * every minute — «каждую минуту в течение часа»: `* */3 * * *` —
+     «каждые 3 часа, каждую минуту в течение часа»; `* 1,5,9,14,20 * *
+     *` — «ежедневно в 1:00, 5:00, 9:00, 14:00 и 20:00, каждую минуту в
+     течение часа». Every minute of the hour fires, so the length cannot
+     be off by one;
+   * a cadence of three values or more — its step from the start of the
+     hour to its last minute: `*/15 */3 * * *` — «каждые 3 часа, каждые
+     15 минут с начала часа по 45-ю минуту»; `*/5 */4 * * *` — «каждые 4
+     часа, каждые 5 минут с начала часа по 55-ю минуту»; `*/15
+     1,5,9,14,20 * * *` — «ежедневно в 1:00, 5:00, 9:00, 14:00 и 20:00,
+     каждые 15 минут с начала часа по 45-ю минуту»;
+   * a cadence of two values — the two minutes: `*/30 */3 * * *` —
+     «каждые 3 часа, в начале и на 30-й минуте часа» (a step that lands
+     twice is two moments, as a run of two is two values).
+
+   Four hours or fewer stay windows (rule 6): `*/15 */6 * * *` — «каждые
+   15 минут с 0:00 до 0:45, с 6:00 до 6:45, с 12:00 до 12:45 и с 18:00 до
+   18:45»; so do hours that hold a run.
 6. **Windows**, for everything else: H as its stretches of consecutive
    hours (linear, unless 3.5 lets one wrap; an exception in a run by
    rule 9), in ascending order, however many. A window is «с {first
@@ -688,7 +713,7 @@ of the minute («на 30-й секунде») everywhere else.
      C with clock times, D.6 with a rhythm) — every clock time carries
      the second: «в 9:00:30», «в 9:30:15 и 17:30:15», «каждые 15 минут с
      9:00:30 до 17:45:30», «каждый час с 9:00:30 до 17:00:30», «каждые 2
-     часа с 1:00:15 до 23:00:15», «каждую минуту с 9:00:30 до 17:59:30».
+     часа с 0:30:15 до 22:30:15», «каждую минуту с 9:00:30 до 17:59:30».
    * *«Каждую минуту»* (with or without parity) — «на 30-й секунде каждой
      минуты», «на 30-й секунде каждой минуты в чётные часы».
    * *A bare rhythm of hours* («каждый час», «каждые 2 часа», and these
@@ -702,6 +727,8 @@ of the minute («на 30-й секунде») everywhere else.
    * *A label* — the label with its scope, «, на 30-й секунде», and then
      any windows after a comma, their clock times carrying the second:
      `15 30 * * * *` — «на 30-й минуте каждого часа, на 15-й секунде»;
+     `15 0 1/2 * * *` — «в начале каждого нечётного часа, на 15-й
+     секунде»;
      `30 5,20,45 9-17 * * *` — «на 5-й, 20-й и 45-й минуте каждого часа,
      на 30-й секунде, с 9:05:30 до 17:45:30».
 
@@ -1068,7 +1095,7 @@ None beyond those of 2.6.
 | «по выходным» | Saturday and Sunday | Yes |
 | the week | Monday first, Sunday last | Yes |
 | «по нечётным числам», «по чётным числам» | the odd, the even days of the month | Yes **[notes §4]** |
-| «в чётные часы», «в нечётные часы», «каждого чётного часа» | the hours numbered 0, 2 … 22; 1, 3 … 23 | No source found; see 4.1 |
+| «в чётные часы», «в нечётные часы», «каждого чётного часа», «в начале каждого нечётного часа» | the hours numbered 0, 2 … 22; 1, 3 … 23 | No source found; see 4.1 |
 | «в чётные годы», «в нечётные годы» | years by parity | Yes |
 | «ежедневно», «ежегодно» | every day, every year | Yes |
 | «сутки», «круглосуточно», «в ночь на …», «декада», «квартал», «24:00», «полдень», «полночь», parity of months | — | Not used |
@@ -1092,7 +1119,9 @@ holiday. One thing held against two ends. «Рабочие дни» is never sai
 5.2
 
 * **Every second value.** Dates: parity (3.7). Hours: «каждые 2 часа»
-  alone; «в чётные часы», «в нечётные часы» under a finer field (4.1).
+  alone for the even hours on the hour; the odd hours by parity under any
+  minute («в начале каждого нечётного часа»); «в чётные часы», «в
+  нечётные часы» under a finer field (4.1).
   Months: the six names. Years: parity (4.4). «Через день» is never said:
   no set of dates is every other day across a month's end **[notes §4]**.
 * **Runs and pairs of weekdays.** `1-5` — «по будням»; `0-4` —
@@ -1439,6 +1468,8 @@ Left open by the audit, with the reason:
   say their schedule and nobody holds them. «Каждые 3 часа, каждые 15
   минут в течение часа» would be short, but leaves open whether the next
   hour's :00 fires, one firing in five; no exact short form was found.
+  (The first is settled by the cost pass below; hours that hold a run,
+  as in the second, and irregular minutes stay open.)
 * «В чётные часы», the ordinal minute and «по будням»: nothing new was
   found for or against (see "Still doubted").
 * `L-28` under every month («за 28 дней до последнего дня каждого месяца,
@@ -1455,3 +1486,70 @@ forms of 4.2 rule 5 with «каждый раз», and «на N-й секунде
 time last (the time first). «В пределах месяца, если в нём есть 30-е
 число» (now only where the date is some months' last day). «Во все месяцы, кроме июня,». «По будням» and «будний день»
 (naming the days).
+
+## The cost pass of 2026-11-19
+
+A measuring pass over the rows (the four costs in CLAUDE.md, kept apart;
+`tooling/experiments/renderer-process/2026-11-19/cost-report.md`) pointed
+at two places where Russian said a kind of set more heavily than it says
+the same kind elsewhere. Both leads came from that pass; the choices
+below are the author's (Claude Opus 5.5, 2026-11-19), with two blind
+readers briefed only in Russian as editors in Ukraine, shown the
+candidates side by side **[judges 3, 4]**.
+
+**The odd hours under one minute** (4.1, case C; 3.8). `0 1/2 * * *` was
+«каждые 2 часа с 1:00 до 23:00»: a step, a start to add to and two ends,
+for the twelve odd hours that the same file calls «нечётные часы» as
+soon as anything finer happens in them. Now all twelve odd hours (or
+those less one or two) are said by parity under one minute as under
+several: the minute as it is named inside the hour, with the scope
+«каждого нечётного часа». Minute 0 is «в начале», as in every list of
+minutes: «в начале каждого нечётного часа». Cost: four objects and an
+offset become two objects and no operation, about 16 syllables 12.
+
+* Rejected: «каждый нечётный час», the twin of «каждый час». One judge
+  read it as the whole hour (1:00 to 1:59, about one reader in four): an
+  odd hour in Russian is first a stretch of the day, the sense «в
+  нечётные часы» relies on. «В начале» removes that reading for both
+  judges. Bare «в нечётные часы» is the stretch outright.
+* Unchanged at the edges: the even hours on the hour stay «каждые 2
+  часа», bare by the project convention; a stepped run that is neither
+  all the odd nor all the even hours keeps its ends («каждые 2 часа с
+  1:00 до 21:00», «каждые 2 часа с 5:00 до 23:00»); the even hours under
+  one minute other than 0 stay a cadence with clock times («каждые 2 часа
+  с 0:30 до 22:30»), which starts on the day's first hour and is the
+  rhythm read off the clock. **[doubt: whether «на 30-й минуте каждого
+  чётного часа» would be better there too; not tested]**
+* **[web]** «каждый нечётный час» and «в начале каждого нечётного часа»:
+  no use found in timetables either way; the hits were cron questions.
+
+**A rhythm of minutes under scattered hours** (4.1, D.5). `*/15 */3 * *
+*` was eight windows (16 clock times, about 95 syllables), while
+`* */3 * * *` was already «каждые 3 часа, каждую минуту в течение
+часа». The length «в течение часа» is kept to every minute, because with
+a coarser step it leaves open whether the next hour's :00 fires (one
+judge read «каждые 15 минут в течение часа» so, about two in five). The
+form found names the hours once and then what happens in each, ending on
+the last firing as an ordinal of the hour, the way "Minutes inside the
+hour" already ends a step: «каждые 3 часа, каждые 15 минут с начала часа
+по 45-ю минуту». Both judges gave it one reading; one called it the
+plainest of the candidates. Cost: about 28 syllables and three objects
+against 95 and seventeen, with one product (each hour, each quarter)
+where the windows had none. Mixed by the columns; taken, because a
+reader cannot hold sixteen clock times and can hold this.
+
+* Rejected: «…, каждый раз каждые 15 минут по 45-ю минуту» (both judges:
+  the doubled «каждый раз каждые» grates); «…, каждый раз в начале часа,
+  на 15-й, на 30-й и на 45-й минуте» (one reading, long, and «каждый
+  раз» added nothing); «…, каждый раз четыре раза с интервалом 15
+  минут» (a count to work out, and the start inside the hour unsaid);
+  «каждые 15 минут в каждый третий час» (in Russian «третий час» is 2:00
+  to 2:59); «каждого такого часа» (officialese, rejected before). Both
+  judges' own rewrite, «каждые 3 часа в :00, :15, :30 и :45», uses a mark
+  the usage notes say Russian text does not accept (§6).
+* A step that lands only twice («каждые 30 минут с начала часа по 30-ю
+  минуту» was called absurd by both judges) is its two minutes: «в начале
+  и на 30-й минуте часа».
+* Unchanged at the edges: four hours or fewer stay windows, as do hours
+  that hold a run, minutes that are a rhythm less a minute or two, and
+  minutes named one by one (D.4, D.6).

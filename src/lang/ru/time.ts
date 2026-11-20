@@ -4,7 +4,9 @@
 
 import {domainOf} from '../../core/index.js';
 import type {Hours} from './hours.js';
-import {hoursAtMinute, hoursForEachMinute, wholeHours} from './hours.js';
+import {
+  hoursAtMinute, hoursForEachMinute, rhythmInScatteredHours
+} from './hours.js';
 import lexicon from './lexicon.js';
 import type {Scoped} from './inside.js';
 import {insideOf, leftOut, minutesOf, scopedInside} from './inside.js';
@@ -290,6 +292,7 @@ function minutesOverHours(given: Hours): Time {
   const base = (found as Exception).base || found;
   const rhythm = isBare((minuteSet as Exception).base || minuteSet,
     domainOf('minute'));
+  const wholeRhythm = isBare(minuteSet, domainOf('minute'));
   const scattered = runsOf(hours).length === hours.length;
 
   function over(shape: Shape): Time {
@@ -317,10 +320,10 @@ function minutesOverHours(given: Hours): Time {
     }, function eachMinute() {
       return hoursForEachMinute(found, given);
     }],
-    [function everyMinuteOfScatteredHours() {
-      return minuteSet.kind === 'all' && hours.length > 4 && scattered;
-    }, function whole() {
-      return wholeHours(given);
+    [function rhythmOfScatteredHours() {
+      return wholeRhythm && hours.length > 4 && scattered;
+    }, function inEachHour() {
+      return rhythmInScatteredHours(given);
     }],
     [Boolean, function stretches() {
       return over(stretchesOf(given));
