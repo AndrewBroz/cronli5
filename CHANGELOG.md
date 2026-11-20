@@ -161,6 +161,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   count it (12.2 to 9.8 us). `npm run speed` measures every language and
   checks that a change leaves every description unchanged
   (`tooling/docs/speed.md`). Every description is unchanged.
+- **French says the same days the same way, however the day field is
+  written.** `0 9 1-29/2 6 *` was « les jours impairs du 1er au 29 juin
+  à 9 h » and is now « les jours impairs de juin à 9 h », as `*/2` in
+  June always was: June has no 31st. A step that stops short of the
+  month's end keeps its ends. Likewise `1-14,16-30` in June, which was
+  « du 1er au 30 juin, sauf le 15 », is « tous les jours de juin, sauf le
+  15 », as `1-14,16-31` was. With months of different lengths no month
+  is given a day it lacks: `15-31` in April and May was « du 15 au 31 du
+  mois, en avril et en mai » and is « du 15 à la fin du mois, en avril
+  et en mai »; `30,31` there is « le 30 avril, le 30 mai et le 31 mai ».
 
 ### Removed
 
