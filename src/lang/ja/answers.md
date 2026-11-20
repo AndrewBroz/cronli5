@@ -145,7 +145,7 @@ Other general choices:
   judgment is overruled, as the note at the top says.) Any other cadence
   of hours names its times when they are four or fewer (毎日0:00・12:00)
   and both ends otherwise (毎日5:00から23:00まで2時間ごと). The one
-  declared tie is the last day of the month written `L` or as a number
+  declared tie is the last day of the month written `L` or as the date
   (3.11).
 * **Every range of times is closed: it names its first and its last
   moment, to the precision of what fires, and both fire.** から…まで is
@@ -940,7 +940,7 @@ tie: `0 */12 * * *` and `0 0,12 * * *` are both 毎日0:00・12:00. The
 core's report of how a field was written is not used.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is 毎年6月末日の9:00 and
 `0 9 30 6 *` is 毎年6月30日の9:00, though both fire on 30 June.
 The phrase for the last day is held whole and the date is

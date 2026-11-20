@@ -143,7 +143,7 @@ fewer are listed whatever the sets look like, except that rule 3 for
 hours («setiap 6 jam») wins over a list of three or four.
 
 **One tie is declared** (3.11): the last day of the month written `L` or
-as a number. Nothing else depends on how a field was written.
+as the date. Nothing else depends on how a field was written.
 
 ## 1. Anchors
 
@@ -590,7 +590,7 @@ One, the last day of the month. Hours are no tie: `0 */12 * * *` and
 `0 0,12 * * *` are both «setiap hari pukul 00.00 dan 12.00».
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «hari terakhir bulan Juni pukul 09.00» and
 `0 9 30 6 *` is «setiap tanggal 30 Juni pukul 09.00», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

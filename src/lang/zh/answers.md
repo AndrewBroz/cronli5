@@ -175,7 +175,7 @@ set of seconds.
   section 5 and what the calendar decides (4.4): a date its months do not
   have, and a 29 February.
 * **One tie is declared** (3.11): the last day of the month written `L`
-  or as a number. Otherwise equal schedules are said alike however the
+  or as the date. Otherwise equal schedules are said alike however the
   pattern was written.
 
 ## 1. Anchors
@@ -794,7 +794,7 @@ Not checked with a fluent human beyond that.
 and `0 0,12 * * *` are both 每12小时一次.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is 每年6月最后一天9:00 and
 `0 9 30 6 *` is 每年6月30日9:00, though both fire on 30 June.
 The phrase for the last day is held whole and the date is

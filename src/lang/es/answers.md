@@ -188,7 +188,7 @@ named, only on how many there are and how they are arranged.
   `*/12`; the reader could only guess when it fires.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «el último día de junio a las 9:00» and
 `0 9 30 6 *` is «el 30 de junio a las 9:00», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

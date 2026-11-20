@@ -138,7 +138,7 @@ Six rules run through everything:
   about the calendar (5.7).
 
 There is one declared tie (3.11), the last day of the month written `L`
-or as a number; otherwise, however a pattern is written, equal schedules
+or as the date; otherwise, however a pattern is written, equal schedules
 are said alike.
 
 Where several of the core's descriptions of a set are sayable, the choice
@@ -857,7 +857,7 @@ both judges' grades:
 the two are not a tie.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «щороку в останній день червня о 9:00» and
 `0 9 30 6 *` is «щороку 30 червня о 9:00», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

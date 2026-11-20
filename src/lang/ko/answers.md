@@ -110,7 +110,7 @@ Things that run through everything:
   and Monday (5.1).
 
 Korean declares **one tie** (3.11): the last day of the month written `L`
-or as a number. No other wording depends on how a field was written.
+or as the date. No other wording depends on how a field was written.
 
 ## How a form is chosen
 
@@ -915,7 +915,7 @@ from the cost of each.
 and `0 0,12 * * *` are both «매일 0시, 낮 12시».
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «매년 6월 말일 오전 9시» and
 `0 9 30 6 *` is «매년 6월 30일 오전 9시», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

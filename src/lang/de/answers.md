@@ -742,7 +742,7 @@ is written: the set comes round the day, whether it was spelled `*/6`
 or `0,6,12,18`.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «jährlich am letzten Tag im Juni um 9:00 Uhr» and
 `0 9 30 6 *` is «jährlich am 30. Juni um 9:00 Uhr», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

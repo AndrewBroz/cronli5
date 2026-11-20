@@ -57,7 +57,7 @@ the usage notes and on my judgment, and says so.
 depart from it, the departure and its reason are in the last section.
 
 Polish declares **one tie** (3.11): the last day of the month written `L`
-or as a number. No other wording depends on how a field was written.
+or as the date. No other wording depends on how a field was written.
 
 ## The shape of a Polish description
 
@@ -1022,7 +1022,7 @@ asymmetry is a judgment of 2026-11-19 and no reader has been asked about
 it.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «co roku ostatniego dnia czerwca o 9:00» and
 `0 9 30 6 *` is «co roku 30 czerwca o 9:00», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

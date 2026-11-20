@@ -59,7 +59,7 @@ everywhere:
   每小時的, 每逢, N時的 or 每分鐘的.
 
 Traditional Chinese declares **one tie** (3.11): the last day of the
-month written `L` or as a number. No other wording depends on how a field
+month written `L` or as the date. No other wording depends on how a field
 was written.
 
 ## Parts and joins
@@ -674,7 +674,7 @@ One, the last day of the month. Hours are no tie: `0 */12 * * *`,
 `0 0,12 * * *` and `0 0/12 * * *` are all 每12小時一次.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is 每年6月最後一天 09:00 and
 `0 9 30 6 *` is 每年6月30日 09:00, though both fire on 30 June.
 The phrase for the last day is held whole and the date is

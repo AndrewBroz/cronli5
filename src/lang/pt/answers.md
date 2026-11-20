@@ -729,7 +729,7 @@ no tie: `0 */12 * * *` and `0 0,12 * * *` are both «todos os dias às
 00:00 e 12:00».
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «no último dia de junho às 09:00» and
 `0 9 30 6 *` is «no dia 30 de junho às 09:00», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

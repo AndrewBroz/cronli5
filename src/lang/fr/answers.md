@@ -869,7 +869,7 @@ corrections; what they rest on is cited where each is stated.
 written.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «le dernier jour de juin à 9 h» and
 `0 9 30 6 *` is «le 30 juin à 9 h», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

@@ -60,7 +60,7 @@ Conventions that hold everywhere:
 Every rule is about how many values a field's set has and how they are
 arranged, never which values, apart from the idioms of section 5. Russian
 declares **one tie** (3.11): the last day of the month written `L` or
-as a number. No other wording depends on how a field was written.
+as the date. No other wording depends on how a field was written.
 
 A field's set is described by the first of these that applies. The core's
 candidates give each (`analyses.candidates`, `candidatesAs`,
@@ -513,7 +513,7 @@ keeps both ends and the minute rides in the clock times: `30 */2 * * *`
 One.
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «ежегодно в последний день июня в 9:00» and
 `0 9 30 6 *` is «ежегодно 30 июня в 9:00», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

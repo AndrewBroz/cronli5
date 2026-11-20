@@ -753,7 +753,7 @@ every day"; "every 15 minutes during the
 12 a.m. and noon hours every day".
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is "at 9 a.m. on the last day of June" and
 `0 9 30 6 *` is "at 9 a.m. on June 30", though both fire on 30 June.
 The phrase for the last day is held whole and the date is

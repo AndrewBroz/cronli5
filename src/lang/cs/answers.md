@@ -142,7 +142,7 @@ Seven things run through everything:
   wrong night for half the readers (usage §9), so midnight is «v 0:00».
 
 Czech declares **one tie** (3.11): the last day of the month written `L`
-or as a number. No other wording depends on how a field was written.
+or as the date. No other wording depends on how a field was written.
 
 ## How a form is chosen
 
@@ -475,7 +475,7 @@ in the table aloud, and against the judge's readings.
 and `0 0,12 * * *` are both «denně v 0:00 a 12:00».
 
 **The last day of the month** (declared 2026-11-19). A day field
-written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
 is «vždy poslední den v červnu v 9:00» and
 `0 9 30 6 *` is «vždy 30. června v 9:00», though both fire on 30 June.
 The phrase for the last day is held whole and the date is

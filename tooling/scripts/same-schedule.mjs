@@ -28,6 +28,13 @@
 // a reader takes as skipping the month that lacks the day, as with "the
 // 31st of every month": a place to look, not a defect.
 //
+// Not covered by the generator, and places to look: weekday and date fields
+// restricted together across all fourteen calendar years (2027 to 2032
+// hold six); `W`, `#` and counts back from the month's end (`L-1` and
+// `L-2` said with a word, «penultimo giorno», against their dates, which
+// are not part of the tie of `L`); and years that differ only outside the
+// span, which are set aside.
+//
 // Usage:
 //   node --import tsx tooling/scripts/same-schedule.mjs
 //     [--cap N] [--json out.json] [--md out.md]
@@ -119,12 +126,15 @@ const DECLARED_TIES = [
     code: language.code,
     declaration: `src/lang/${language.code.toLowerCase()}/answers.md ` +
       '3.11, "The last day of the month" (2026-11-19): "A day field ' +
-      'written `L` and the same day written as a number are a tie"',
+      'written `L` and the same date, however spelled, are a tie"',
+    // Only pairs the answer key has found to fire alike are asked, so a
+    // day field of `L` beside any other reaches exactly the same single
+    // day in each month it fires in, whatever the other's spelling.
     applies(pair) {
       const dates = [pair.a, pair.b].map((pattern) =>
-        fieldsOf(pattern, pair.options).date).sort();
+        fieldsOf(pattern, pair.options).date.toUpperCase());
 
-      return (/^\d+$/u).test(dates[0]) && dates[1].toUpperCase() === 'L';
+      return dates.includes('L') && dates[0] !== dates[1];
     }
   }))
 ];
