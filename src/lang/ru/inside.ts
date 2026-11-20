@@ -219,6 +219,16 @@ function minutesOf(scope: string): Inside {
   };
 }
 
+/**
+ * Minutes of each hour a coarser rhythm of hours lands on, said after it:
+ * every rhythm with its ends, every minute as a length.
+ */
+const minutesOfTheHour: Inside = {
+  ...minutesOf(words.ofTheHour),
+  bareRhythm: false,
+  wholeRest: words.forAnHour
+};
+
 /** Seconds of every minute. */
 const secondsOfEachMinute: Inside =
   {...minutesOf(words.ofEachMinute), unit: 'second'};
@@ -242,6 +252,6 @@ const secondsOfFirstMinute: Inside = {
 };
 
 export {
-  insideOf, leftOut, minutesOf, scopedInside, secondsEachTime,
-  secondsOfEachMinute, secondsOfFirstMinute
+  insideOf, leftOut, minutesOf, minutesOfTheHour, scopedInside,
+  secondsEachTime, secondsOfEachMinute, secondsOfFirstMinute
 };

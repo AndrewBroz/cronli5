@@ -253,6 +253,8 @@ const words = {
   ofEachMinute: 'каждой минуты',
   ofEachOddHour: 'каждого нечётного часа',
   ofTheFirstMinute: 'первой минуты',
+  // The hour a step of hours lands on: «с начала часа по 45-ю минуту».
+  ofTheHour: 'часа',
   ofTheMinute: 'минуты',
   startGenitive: 'начала',
   startPrepositional: 'начале',
