@@ -87,7 +87,7 @@ even hour.
 
   ```js
   cronli5('* 9,17 * * *', {lang: ko});    // '매일 오전 9시대, 오후 5시대에 1분마다'
-  cronli5('15,45 */4 * * *', {lang: ko}); // '매일 0시대, 오전 4·8시대, 낮 12시대, 오후 4·8시대에 각각 15·45분'
+  cronli5('15,45 */4 * * *', {lang: ko}); // '4시간마다 15·45분에'
   ```
 
 * **Hours that run through midnight are one stretch when every day
