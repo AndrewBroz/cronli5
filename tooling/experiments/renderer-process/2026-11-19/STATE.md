@@ -42,14 +42,21 @@ models). The reading check found no defect in any of the five.
 
 ## Open, in order
 
-1. **The cost-pass candidates in ko, pl, ru, id** (`cost-report.md`): odd
-   hours on the hour said as a step with an offset where pl and ru have a
-   parity word; Korean `0 22-2 * * *` as five clock times where it is one
-   run through midnight; seven to ten stretches for minutes under
-   scattered hours (pl, ru, id); Indonesian «setiap 6 jam mulai pukul
-   00.00, 00.15, 00.30, dan 00.45»; Polish «chwili wypadającej …»;
-   Korean «매월 말일 3일 전(31일까지 있는 달은 28일)». Each is a place to
-   look, with its four columns apart; none is to be changed on a number.
+1. **The cost-pass candidates in ko, pl, ru, id** (`cost-report.md`).
+   Repaired the same day, test-first, each with the reading check and a
+   capture of every output before and after: Korean hours through
+   midnight as one stretch; Polish and Russian odd hours by parity;
+   Russian minutes under more than four scattered hours with the hours
+   named once; Indonesian three or four first times under a step of
+   hours with the hours named once. **Left, with the reason in each
+   language's answers:** Polish «chwili wypadającej …» (the shorter form
+   reads as a length); Korean «매월 말일 3일 전(31일까지 있는 달은 28일)»;
+   Indonesian's eight-to-ten-stretch sentences (sixteen hours in eight
+   runs); Russian `0-29 */4` and its like (twelve clock times); Russian
+   even hours under one minute other than 0, still a step with ends;
+   Korean `0 23-1`, still a list that hides the run; Indonesian
+   «mulai pukul 02.00, tiap kali pada menit ke-5…», which names an hour
+   start that does not fire and is now reached more often.
 2. **A step of days said with only its start** (ko «매월 1일부터 5일마다»,
    pl «co 3 dni od pierwszego dnia każdego miesiąca», id «setiap 3 hari
    mulai tanggal 1 setiap bulan») while zh, zh-Hant and ru list the dates
