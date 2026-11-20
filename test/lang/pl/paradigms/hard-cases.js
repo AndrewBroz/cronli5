@@ -400,6 +400,7 @@ const rows = [
   ['* 23-1 * * 6', 'w soboty co minutę od 0:00 do 1:59 oraz od 23:00 do 23:59'],
 
   // Cadences of hours: one that tiles the day from 0:00 is said bare, every other hour of the whole day by parity, any other takes its first and last; several minutes under every other hour, and under other cadences of hours; twice a day is two times.
+  // Rewritten 2026-11-20: an hour field that tiles the day (*/3, */4) tiles it whatever the minutes, so it keeps its bare step and the minutes follow once, «za każdym razem … po pełnej godzinie»; the old rows judged tiling by the clock time and named a first and last time, or every hour.
   ['0 0,6,12,18 * * *', 'co 6 godzin'],
   ['0 0,6,18 * * *', 'codziennie o 0:00, 6:00 i 18:00'],
   ['0 */8 * * *', 'co 8 godzin'],
@@ -410,18 +411,46 @@ const rows = [
   ['0 0-20/2 * * *', 'codziennie co 2 godziny od 0:00 do 20:00'],
   ['0 0,4,8,16,20 * * *', 'codziennie o 0:00, 4:00, 8:00, 16:00 i 20:00'],
   ['30 */2 * * *', '30 minut po każdej parzystej godzinie'],
-  ['30 */3 * * *', 'codziennie co 3 godziny od 0:30 do 21:30'],
+  ['30 */3 * * *', 'co 3 godziny, za każdym razem 30 minut po pełnej godzinie'],
+  ['45 */4 * * *', 'co 4 godziny, za każdym razem 45 minut po pełnej godzinie'],
+  ['15 0 */3 * * *',
+    'co 3 godziny, za każdym razem 15 sekund po pełnej godzinie'],
   ['30 */5 * * *', 'codziennie co 5 godzin od 0:30 do 20:30'],
   ['30 0,2,4,6,10,12,14,16,18,20,22 * * *',
     '30 minut po każdej parzystej godzinie, oprócz 8:30'],
   ['30 0,3,6,12,15,18,21 * * *',
-    'codziennie co 3 godziny od 0:30 do 21:30, oprócz 9:30'],
+    'co 3 godziny, za każdym razem 30 minut po pełnej godzinie, oprócz 9:30'],
   ['23 */6 * * *', 'codziennie o 0:23, 6:23, 12:23 i 18:23'],
   ['23 1/2 * * *', '23 minuty po każdej nieparzystej godzinie'],
   ['15,45 */2 * * *', '15 i 45 minut po każdej parzystej godzinie'],
   ['15,45 */4 * * *',
-    'codziennie 15 i 45 minut po każdej z godzin 0:00, 4:00, 8:00, 12:00, ' +
-    '16:00 i 20:00'],
+    'co 4 godziny, za każdym razem 15 i 45 minut po pełnej godzinie'],
+  ['5,35 */3 * * *',
+    'co 3 godziny, za każdym razem 5 i 35 minut po pełnej godzinie'],
+  ['0,15,45 */3 * * *',
+    'co 3 godziny, za każdym razem o pełnej godzinie oraz 15 i 45 minut ' +
+    'później'],
+  ['5,35 0,3,6,12,15,18,21 * * *',
+    'co 3 godziny, za każdym razem 5 i 35 minut po pełnej godzinie, oprócz ' +
+    'godziny 9'],
+  ['10-20 */3 * * *',
+    'co 3 godziny, za każdym razem co minutę od 10 do 20 minut po pełnej ' +
+    'godzinie'],
+  ['0-29 */4 * * *',
+    'co 4 godziny, za każdym razem co minutę od pełnej godziny do 29 minut ' +
+    'po niej'],
+  ['10-50/10 */3 * * *',
+    'co 3 godziny, za każdym razem co 10 minut od 10 do 50 minut po pełnej ' +
+    'godzinie'],
+  ['0-30/5 */4 * * *',
+    'co 4 godziny, za każdym razem co 5 minut od pełnej godziny do 30 minut ' +
+    'po niej'],
+  ['5/10 */3 * * *',
+    'co 3 godziny, za każdym razem co 10 minut, zaczynając 5 minut po ' +
+    'pełnej godzinie'],
+  ['30 */3 * * 1',
+    'w poniedziałki co 3 godziny, za każdym razem 30 minut po pełnej ' +
+    'godzinie'],
   ['15,45 */6 * * *',
     'codziennie 15 i 45 minut po każdej z godzin 0:00, 6:00, 12:00 i 18:00'],
   ['0,15,45 */2 * * *',
@@ -439,8 +468,14 @@ const rows = [
     'codziennie co 15 minut w godzinach rozpoczynających się o 8:00, ' +
     '10:00, 12:00, 14:00, 16:00 i 18:00'],
   ['*/20 */3 * * *',
-    'codziennie co 20 minut w godzinach rozpoczynających się o 0:00, 3:00, ' +
-    '6:00, 9:00, 12:00, 15:00, 18:00 i 21:00'],
+    'co 3 godziny, za każdym razem co 20 minut przez całą godzinę'],
+  ['*/15 */3 * * *',
+    'co 3 godziny, za każdym razem co 15 minut przez całą godzinę'],
+  ['*/10 */4 * * *',
+    'co 4 godziny, za każdym razem co 10 minut przez całą godzinę'],
+  ['* */3 * * *', 'co 3 godziny, za każdym razem co minutę przez całą godzinę'],
+  ['* * */3 * * *',
+    'co 3 godziny, za każdym razem co sekundę przez całą godzinę'],
   ['0 */12 * * *', 'codziennie o 0:00 i 12:00'],
   ['0 0/12 * * *', 'codziennie o 0:00 i 12:00'],
   ['0 0,12 * * *', 'codziennie o 0:00 i 12:00'],
@@ -510,7 +545,7 @@ const rows = [
     'codziennie co sekundę od 9:00:00 do 9:59:59, oprócz chwili ' +
     'wypadającej 29 sekund po każdej pełnej minucie'],
 
-  // Several fields at once: windows, pieces of hours, lists of hours.
+  // Several fields at once: windows, pieces of hours, lists of hours. (2026-11-20: hours «*/3» under minute 24 keep their bare step, the minute after it; they named a first and last time.)
   ['0 9-17,20,22 * * *',
     'codziennie co godzinę od 9:00 do 17:00 oraz o 20:00 i 22:00'],
   ['* 9-17,20,22 * * *',
@@ -544,8 +579,8 @@ const rows = [
   ['0 * * * 1', 'w poniedziałki co godzinę'],
   ['*/10 24 */3 23-25 * 1-2',
     'w poniedziałki i wtorki, a także w dniach 23–25 każdego miesiąca, co ' +
-    '3 godziny od 0:24 do 21:24, za każdym razem co 10 sekund przez całą ' +
-    'minutę'],
+    '3 godziny, za każdym razem 24 minuty po pełnej godzinie, za każdym ' +
+    'razem co 10 sekund przez całą minutę'],
   ['*/30 23 */12 * 6-7 6#2 2030/4',
     'co 4 lata od 2030 r.: w czerwcu i lipcu w drugą sobotę miesiąca o ' +
     '0:23:00, 0:23:30, 12:23:00 i 12:23:30'],
@@ -740,12 +775,10 @@ const rows = [
     'o każdej nieparzystej godzinie, za każdym razem co sekundę przez całą ' +
     'minutę'],
 
-  // Every other hour, and other cadences of hours, under several minutes.
+  // Every other hour, and other cadences of hours, under several minutes. (2026-11-20: «* */4» keeps its step bare, the minutes after it, as above.)
   ['15,45 1/2 * * *', '15 i 45 minut po każdej nieparzystej godzinie'],
   ['0,30 */2 * * *', 'co 30 minut w godzinach parzystych'],
-  ['* */4 * * *',
-    'codziennie co minutę w godzinach rozpoczynających się o 0:00, 4:00, ' +
-    '8:00, 12:00, 16:00 i 20:00'],
+  ['* */4 * * *', 'co 4 godziny, za każdym razem co minutę przez całą godzinę'],
   ['0 0,8,16 * * *', 'co 8 godzin'],
   ['0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1',
     'w poniedziałki, a także w nieparzyste dni od 1 do 13 oraz od 17 do 31 ' +

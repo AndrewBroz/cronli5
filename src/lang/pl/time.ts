@@ -7,7 +7,8 @@ import {asFew} from './forms.js';
 import type {Clock} from './text.js';
 import {counted, every, listed, units, words} from './text.js';
 import type {Anchor, Gap, Tone} from './within.js';
-import {fullHours, hours, lacks, momentsLacking, within} from './within.js';
+import {fullHours, hours, lacks, momentsLacking, theHour, within}
+  from './within.js';
 import {inEach, windows} from './spans.js';
 
 /**
@@ -163,6 +164,22 @@ function parityOf(hour: Form): number | null {
     null;
 }
 
+// A rhythm of hours that tiles the day in five hours or more, other than
+// every other hour (said by parity): its step; 0 for any other hours.
+function tilingStep(hour: Form): number {
+  const base = hour.base || hour;
+
+  return base.kind === 'tiling' && base.values.length > listedAtMost &&
+    parityOf(hour) === null && base.interval || 0;
+}
+
+// The step of such hours said bare, and what follows it inside each of
+// them: «co 3 godziny, za każdym razem 30 minut po pełnej godzinie».
+function eachTimeIn(t: TimeFacts, inside: Said): Said {
+  return {...inside, text: `${every(tilingStep(t.hour), units.hour,
+    t.short)}, ${words.eachTime} ${inside.text}`};
+}
+
 // One minute in each of the hours named: a distance from the start of
 // each («30 minut po każdej pełnej godzinie»), or, on the hour, the
 // phrase given for it. Hours left out are clock times.
@@ -205,14 +222,17 @@ function hourMoments(t: TimeFacts, g: Grain): Said {
 
 // One minute in a rhythm of hours: every other hour of the whole day by
 // parity, «o każdej nieparzystej godzinie», «30 minut po każdej parzystej
-// godzinie»; any other rhythm as real times.
+// godzinie»; a rhythm that tiles the day by its step and the minute after
+// it; any other rhythm as real times.
 function rhythmMoments(t: TimeFacts, g: Grain): Said {
   const odd = parityOf(t.hour);
   const locative = odd !== null &&
     [words.eachEvenHourLocative, words.eachOddHourLocative][odd];
 
-  return locative ?
-    oneMinuteIn(t, g, [locative, `${words.at} ${locative}`]) :
+  return locative &&
+      oneMinuteIn(t, g, [locative, `${words.at} ${locative}`]) ||
+    tilingStep(t.hour) > 0 &&
+      eachTimeIn(t, oneMinuteIn(t, g, [words.fullHour, ''])) ||
     hourMoments(t, g);
 }
 
@@ -256,11 +276,39 @@ function windowed(t: TimeFacts, g: Grain): Said {
   };
 }
 
+function runsOnly(minute: Form): boolean {
+  return (minute.kind === 'run' || minute.kind === 'pieces') &&
+    minute.parts.every(function isRun(part) {
+      return part.kind === 'run';
+    });
+}
+
+// Several minutes in a rhythm of hours that tiles the day: the step, and
+// the minutes in their own form inside one hour; a missing hour by its
+// number. Every minute, or runs of them, give way to a finer rhythm of
+// seconds.
+function underTiling(t: TimeFacts, g: Grain): Said {
+  return eachTimeIn(t, {
+    clock: false,
+    real: false,
+    spans: t.minute.kind === 'all' || runsOnly(t.minute),
+    text: `${within(t.minute, theHour(toneOf(t, g)))}` +
+      `${withoutHours(t.hour.removed)}`,
+    times: []
+  });
+}
+
 // A rhythm of hours under several minutes: the hours are not moments but
-// hours that each hold several firings. Every other hour of the whole day
-// is said by parity; any other rhythm names its hours by the moment each
-// begins.
+// hours that each hold several firings. A rhythm that tiles the day is
+// said by its step; every other hour of the whole day by parity; any
+// other rhythm names its hours by the moment each begins.
 function underRhythm(t: TimeFacts, g: Grain): Said {
+  return tilingStep(t.hour) > 0 ? underTiling(t, g) : namedRhythm(t, g);
+}
+
+// Every other hour of the whole day by parity, any other rhythm by the
+// moment each of its hours begins.
+function namedRhythm(t: TimeFacts, g: Grain): Said {
   const {hour, minute} = t;
   const tone = toneOf(t, g);
   const parity = parityOf(hour) !== null;
@@ -303,13 +351,6 @@ function butHours(t: TimeFacts, g: Grain): Said {
   return said(
     `${within(t.minute, fullHour(t, g))}${withoutHours(t.hour.removed)}`,
     false, false);
-}
-
-function runsOnly(minute: Form): boolean {
-  return (minute.kind === 'run' || minute.kind === 'pieces') &&
-    minute.parts.every(function isRun(part) {
-      return part.kind === 'run';
-    });
 }
 
 // Inside each hour of several hours: the window of the first and last
