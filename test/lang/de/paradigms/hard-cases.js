@@ -30,17 +30,25 @@ const rows = [
   ['0 0 9 1 * * 2030', 'im Jahr 2030 am 1. jedes Monats um 9:00 Uhr'],
   ['0 0 9 * * * 2030/2', 'in geraden Jahren ab 2030 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2028/4',
-    'in den Jahren 2028, 2032, 2036 usw. täglich um 9:00 Uhr'],
+    'in jedem vierten Jahr ab 2028 täglich um 9:00 Uhr'],
   ['0 0 0 1 1 * 2028/4',
-    'in den Jahren 2028, 2032, 2036 usw. jeweils am 1. Januar um 0:00 Uhr'],
+    'in jedem vierten Jahr ab 2028 jeweils am 1. Januar um 0:00 Uhr'],
   ['0 */5 * * * * 2028/4',
-    'in den Jahren 2028, 2032, 2036 usw. alle 5 Minuten'],
+    'in jedem vierten Jahr ab 2028 alle 5 Minuten'],
+  // No series of years is left to continue (2026-11-19): the step is a
+  // word with its start, and its end where it has one.
+  ['0 */5 * * * * */4', 'in jedem vierten Jahr ab 1970 alle 5 Minuten'],
+  ['0 0 9 * * * 2030/25', 'in jedem 25. Jahr ab 2030 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2030-2060/3',
+    'in jedem dritten Jahr von 2030 bis 2060 täglich um 9:00 Uhr'],
+  ['0 0 9 * * * 2028/4,2028',
+    'in jedem vierten Jahr ab 2028 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030-2040/2',
     'in geraden Jahren von 2030 bis 2040 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2028-2040/4',
     'in den Jahren 2028, 2032, 2036 und 2040 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2028-2060/4',
-    'in den Jahren 2028, 2032, 2036 usw. bis 2060 täglich um 9:00 Uhr'],
+    'in jedem vierten Jahr von 2028 bis 2060 täglich um 9:00 Uhr'],
   ['0 */5 * * * * */2', 'in geraden Jahren alle 5 Minuten'],
   ['0 0 9 * * * 1971/2', 'in ungeraden Jahren täglich um 9:00 Uhr'],
   ['0 0 0 1 1 * 2030-2032,2035',
@@ -74,27 +82,31 @@ const rows = [
     'Januar um 0:00 Uhr'],
 
   // Years that are neither one run nor one series are the core's runs
-  // and cadences together, and each series stands apart after «sowie».
+  // and cadences together, and each years in step stands apart after
+  // «sowie», with its own start, so that it reaches back over nothing.
   ['0 0 9 * * * 2030/2,2031',
-    'in den Jahren 2030, 2032, 2034 usw. sowie 2031 täglich um 9:00 Uhr'],
+    'in geraden Jahren ab 2030 sowie im Jahr 2031 täglich um 9:00 Uhr'],
   ['0 0 0 1 1 * 2030/2,2031',
-    'in den Jahren 2030, 2032, 2034 usw. sowie 2031 jeweils am 1. Januar ' +
+    'in geraden Jahren ab 2030 sowie im Jahr 2031 jeweils am 1. Januar ' +
     'um 0:00 Uhr'],
   ['0 0 9 * * * 2030/4,2031',
-    'in den Jahren 2030, 2034, 2038 usw. sowie 2031 täglich um 9:00 Uhr'],
+    'in jedem vierten Jahr ab 2030 sowie im Jahr 2031 täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030/3,2031/3',
-    'in den Jahren 2030, 2033, 2036 usw. sowie 2031, 2034, 2037 usw. ' +
+    'in jedem dritten Jahr ab 2030 sowie in jedem dritten Jahr ab 2031 ' +
     'täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030-2060/2,2071',
-    'in den Jahren 2030, 2032, 2034 usw. bis 2060 sowie 2071 täglich um ' +
+    'in geraden Jahren von 2030 bis 2060 sowie im Jahr 2071 täglich um ' +
     '9:00 Uhr'],
   ['0 0 9 * * * 2030-2040,2045/5',
-    'in den Jahren 2030 bis 2040 sowie 2045, 2050, 2055 usw. täglich um ' +
-    '9:00 Uhr'],
+    'in den Jahren 2030 bis 2040 sowie in jedem fünften Jahr ab 2045 ' +
+    'täglich um 9:00 Uhr'],
+  ['0 */5 * * * * 2030-2040,2045/5',
+    'in den Jahren 2030 bis 2040 sowie in jedem fünften Jahr ab 2045 alle ' +
+    '5 Minuten'],
   ['0 0 9 * * * 2030,2032,2034,2036,2038,2042,2044,2046,2048,2050',
     'in geraden Jahren von 2030 bis 2050, außer 2040, täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030/2,2031/4',
-    'in den Jahren 2030, 2032, 2034 usw. sowie 2031, 2035, 2039 usw. ' +
+    'in geraden Jahren ab 2030 sowie in jedem vierten Jahr ab 2031 ' +
     'täglich um 9:00 Uhr'],
   ['0 0 9 * * * 2030,2040,2050,2045-2060',
     'in den Jahren 2030, 2040 und 2045 bis 2060 täglich um 9:00 Uhr'],
@@ -860,7 +872,7 @@ const rows = [
     'montags und dienstags und zusätzlich vom 23. bis 25. jedes Monats, ' +
     'jeweils alle 3 Stunden in der Minute 24 alle 10 Sekunden'],
   ['*/30 23 */12 * 6-7 6#2 2030/4',
-    'in den Jahren 2030, 2034, 2038 usw. jeweils im Juni und Juli am ' +
+    'in jedem vierten Jahr ab 2030 jeweils im Juni und Juli am ' +
     'zweiten Samstag um 0:23:00, 0:23:30, 12:23:00 und 12:23:30 Uhr'],
   ['0 35 2,15 * * * 2028,2030',
     'in den Jahren 2028 und 2030 täglich um 2:35 und 15:35 Uhr'],

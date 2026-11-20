@@ -19,7 +19,7 @@ import {
 import type {TimeSaid} from './time.js';
 import type {Voice} from './voice.js';
 
-const {fallingOn, fromLastWords, nthWords, units, words} = lexicon;
+const {fallingOn, fromLastWords, nthWords, stepWords, units, words} = lexicon;
 
 /** The parts before the time, and what opens the time after them. */
 export interface CalendarSaid {
@@ -412,21 +412,11 @@ function quartzWeekday(
   return join([`${which} ${voice.weekdayNoun(form.weekday)}`, tail.noun]);
 }
 
-// Whether years in step are said as a series: they never stop, or are
+// Whether years in step are said by their step: they never stop, or are
 // more than a list holds.
 function inSeries(cadence: Described<'cadence'>): boolean {
   return cadence.open === true ||
     (cadence.last - cadence.start) / cadence.interval >= heldYears;
-}
-
-// A series of years: three of them and «usw.», and its end if it has one.
-function yearSeries(cadence: Described<'cadence'>): string {
-  const opening = [0, 1, 2].map(function at(place) {
-    return cadence.start + place * cadence.interval;
-  }).join(', ');
-
-  return join([opening, words.andSoOn,
-    !cadence.open && `${words.to} ${cadence.last}`]);
 }
 
 // A run of years by its ends; one that has no end, by its start.
@@ -437,40 +427,55 @@ function yearRun(run: Described<'range'>): string {
 }
 
 // Years in step: every second year has a word, said from its start
-// unless that is the first such year, to its end if it has one; any
-// other step is a series.
+// unless that is the first such year; any other step is «in jedem
+// vierten Jahr», always from its start. Each runs to its end if it has
+// one.
 function yearsInStep(cadence: Described<'cadence'>): string {
   const late = cadence.start - yearDomain.min >= cadence.interval;
+  const nth = stepWords[cadence.interval - 3] || `${cadence.interval}.`;
+  const paired = Number(cadence.interval === 2);
 
-  return cadence.interval === 2 ?
-    join([[words.inEvenYears, words.inOddYears][cadence.start % 2],
-      cadence.open === true && late && `${words.since} ${cadence.start}`,
-      !cadence.open &&
-        `${words.from} ${cadence.start} ${words.to} ${cadence.last}`]) :
-    `${words.inYears} ${yearSeries(cadence)}`;
+  return join([[`${words.inEvery} ${nth} ${units.year.one}`,
+    [words.inEvenYears, words.inOddYears][cadence.start % 2]][paired],
+  cadence.open === true && (late || paired === 0) &&
+    `${words.since} ${cadence.start}`,
+  !cadence.open &&
+    `${words.from} ${cadence.start} ${words.to} ${cadence.last}`]);
+}
+
+// Single years and runs side by side: «im Jahr 2031», «in den Jahren
+// 2030 bis 2040 und 2045».
+function yearList(items: string[]): string {
+  const several = items.length > 1 || items[0].includes(words.to);
+
+  return `${[words.inYear, words.inYears][Number(several)]} ` +
+    list(items.sort());
 }
 
 const yearSaid: {[kind: string]: (
   description: never, except: string) => string} = {
   cadence: yearsInStep,
-  // Years and runs side by side are one list; a series stands apart.
+  // Years and runs side by side are one list; years in step stand apart,
+  // each with its own start.
   cadencePieces(pieces: CadencePieces) {
-    const said: string[][] = [[]];
+    const said: string[] = [];
+    let listed: string[] = [];
 
     pieces.parts.forEach(function place(part) {
       if (part.kind === 'cadence' && inSeries(part)) {
-        said.push([yearSeries(part)], []);
+        said.push(...listed.length > 0 ? [yearList(listed)] : [],
+          yearsInStep(part));
+        listed = [];
       }
       else {
-        said[said.length - 1].push(...part.kind === 'range' ?
+        listed.push(...part.kind === 'range' ?
           [yearRun(part)] :
           denote(part, yearDomain).map(String));
       }
     });
 
-    return `${words.inYears} ${said.map(function inOrder(group) {
-      return list(group.sort());
-    }).filter(Boolean).join(` ${words.also} `)}`;
+    return [...said, ...listed.length > 0 ? [yearList(listed)] : []]
+      .join(` ${words.also} `);
   },
   except(exception: Described<'except'>, except) {
     const {base, removed} = exception;

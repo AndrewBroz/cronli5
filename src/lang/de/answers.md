@@ -71,8 +71,9 @@ convention: no bracket illustrates what the words say); «jeden dritten
 Tag» (usage notes 7.3: heard as a rhythm that runs across the month);
 the step before the stretch of dates («alle 3 Tage vom 1. bis 28. Juni
 um 0:00 Uhr»), where a bare time after the end of the stretch would
-seem to end it (the reason «täglich» follows a run of dates). Years keep their series with «usw.» (5.8): it was not
-part of this change, and is the next place to look.
+seem to end it (the reason «täglich» follows a run of dates). Years
+followed the same day (5.8): «in jedem vierten Jahr ab 2028», where
+«in den Jahren 2028, 2032, 2036 usw.» stood.
 
 **Amended 2026-11-14 on the maintainer's rulings** (by Claude Opus 5.5,
 on top of the revision for places in the hour of the same day). Three
@@ -518,7 +519,7 @@ things named before it. The cases, complete:
    den Jahren 2030 und 2031 jeweils im Juni täglich um 9:00 Uhr». Before
    a date it stands where «jedes Monats» would. Not before «täglich» or a
    weekday. It is said once in a sentence, at the first place it is due:
-   «in den Jahren 2030, 2034, 2038 usw. jeweils im Juni und Juli am
+   «in jedem vierten Jahr ab 2030 jeweils im Juni und Juli am
    zweiten Samstag».
 3. **Before a clock time («um»), after a date phrase that is pieces
    holding a range** (or runs and cadences together that hold one):
@@ -1534,12 +1535,21 @@ brackets are «(Mo. bis Fr.)».
   (graded natural); with both ends, «in geraden Jahren von 2030 bis
   2040». Three such years are the list, «in den Jahren 2030, 2032 und
   2034»: the word with its two ends names as much.
-* Any other cadence of years is a series, the first three years and
-  «usw.»: «in den Jahren 2028, 2032, 2036 usw.»; one that stops, with
-  four years or fewer, is the list («in den Jahren 2028, 2032, 2036 und
-  2040»), and with more, «in den Jahren 2028, 2032, 2036 usw. bis 2060».
-  (The first judge's first choice; the second graded it acceptable and
-  would open with «ab 2028 alle vier Jahre» and gloss the series.)
+* **Any other cadence of years is «in jedem N-ten Jahr» with its start**,
+  and its end where it has one: «in jedem vierten Jahr ab 2028»; «in
+  jedem vierten Jahr von 2028 bis 2060»; «in jedem dritten Jahr ab
+  2030». The step is a word up to the twelfth, then a number: «in jedem
+  25. Jahr ab 2030». The start is always said, as the phase of the step;
+  «ab» includes its first year, as everywhere in German. One that stops
+  with four years or fewer is still the list («in den Jahren 2028, 2032,
+  2036 und 2040»). (2026-11-19, by Claude Opus 5.5. Until then a series,
+  «in den Jahren 2028, 2032, 2036 usw.», which left the step to be
+  inferred from three years: the amendment at the top. «Alle 4 Jahre ab
+  2028», the second judge's choice of 2026-11-12 and the usual German
+  rate, was rejected because beside a rate of the time it is a second
+  rate of one kind: «alle 4 Jahre ab 2028 alle 5 Minuten». «In jedem
+  vierten Jahr» says which years, as «in geraden Jahren» does, and the
+  time keeps the only rate.)
 * A run of years is «in den Jahren 2030 bis 2035», however long it is,
   and two years in a row are the two years («in den Jahren 2030 und
   2031»). **A run that has no end** (the core marks it `open`: it
@@ -1563,16 +1573,20 @@ brackets are «(Mo. bis Fr.)».
   * **pieces**, runs and single years in one list: «in den Jahren 2030
     bis 2032 und 2035»; «in den Jahren 2030 bis 2034 und ab 2036»;
   * **runs and cadences together**: years and runs side by side are one
-    list, joined as a list is, and **a series stands apart, after
-    «sowie» and before «sowie»**, so that its «usw.» or its «bis» cannot
-    take in a neighbour: «in den Jahren 2030, 2032, 2034 usw. sowie 2031»
-    (`2030/2,2031`); «in den Jahren 2030 bis 2040 sowie 2045, 2050, 2055
-    usw.»; «in den Jahren 2030, 2033, 2036 usw. sowie 2031, 2034, 2037
-    usw.»; «in den Jahren 2030, 2032, 2034 usw. bis 2060 sowie 2071». A
-    cadence among them is a series if it never stops or has more than
-    four years, and otherwise its years, which join the list beside
-    them in ascending order. The words «gerade» and «ungerade» are for
-    years that are nothing else, or the base of an exception. The parts
+    list, joined as a list is, and **years in step stand apart, after
+    «sowie» and before «sowie», each with its own start**, so that no
+    step reaches back over a run or a year beside it: «in geraden Jahren
+    ab 2030 sowie im Jahr 2031» (`2030/2,2031`); «in den Jahren 2030 bis
+    2040 sowie in jedem fünften Jahr ab 2045» (`2030-2040,2045/5`: the
+    step begins at 2045, after the run); «in jedem dritten Jahr ab 2030
+    sowie in jedem dritten Jahr ab 2031»; «in geraden Jahren von 2030
+    bis 2060 sowie im Jahr 2071». A cadence among them is said so if it
+    never stops or has more than four years, and otherwise its years,
+    which join the list beside them in ascending order. A list of one
+    year alone is «im Jahr 2031». (Until 2026-11-19 each was a series,
+    «2030, 2032, 2034 usw.», and «gerade» and «ungerade» were kept for
+    years that are nothing else; with no series, the word is the step.)
+    The parts
     are the core's and are said as it gives them, however many: two
     series that meet (`2030/7,2031/11`) come apart into fifteen parts
     and a sentence nobody holds, and nothing shorter that is true can be
@@ -1583,12 +1597,11 @@ brackets are «(Mo. bis Fr.)».
   exception is the shortest true thing to say of years with one hole.
   None of these forms has been judged by a fluent reader.)
 
-Series, by field: since 2026-11-19 only years are said as a series
-(three years, and its end only if it has one, with «usw.», because the
-series has no end to show). Windows of hours, hours named as hours,
-dates and seconds say their step in words (the amendment at the top);
-until then each showed its first values, «…» and its last («um 2, 5, 8
-… und 20 Uhr»). (Until 2026-11-14 a series of clock times
+Series, by field: since 2026-11-19 nothing is said as a series.
+Windows of hours, hours named as hours, dates, seconds and years say
+their step in words (the amendment at the top, and 5.8); until then each
+showed its first values, «…» and its last («um 2, 5, 8 … und 20 Uhr»),
+and years three years and «usw.». (Until 2026-11-14 a series of clock times
 showed every time of the first two hours and of the last: «um 0:15,
 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr».)
 
@@ -1608,7 +1621,7 @@ forms are written, and read aloud as the full word.
 6.4 Sekunde(n), Minute(n), Stunde(n), Tag(e); Monat and Jahr only inside
 fixed phrases.
 
-6.5 um, Uhr, am, vom, im, von, bis, ab, nach, danach, erstmals, usw., in
+6.5 um, Uhr, am, vom, im, von, bis, ab, nach, danach, erstmals, in jedem, in
 den Sekunden, eine Stunde lang, und, sowie, und zusätzlich, außer, ohne den, jeweils,
 jede, alle, täglich, stündlich, jährlich, nie, nur in Schaltjahren,
 -mal, im Abstand von, and the fixed phrases of the lexicon.

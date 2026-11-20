@@ -166,6 +166,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   Minute, jeweils in den Sekunden 0 bis 20 alle 2 Sekunden sowie in den
   Sekunden 21 bis 57 alle 3 Sekunden» (was «… 0, 2, 4 … 20 sowie 21, 24,
   27 … 57»).
+  Years follow: `0 0 9 * * * 2028/4` is «in jedem vierten Jahr ab 2028
+  täglich um 9:00 Uhr» (was «in den Jahren 2028, 2032, 2036 usw. …»), and
+  `2030-2040,2045/5` is «in den Jahren 2030 bis 2040 sowie in jedem
+  fünften Jahr ab 2045».
 
 ### Removed
 
