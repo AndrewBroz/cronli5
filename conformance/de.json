@@ -2667,7 +2667,7 @@
    "pattern": "0 0 0 1 * 5 2030"
   },
   {
-   "expected": "montags und zusätzlich vom 1. bis 14. und vom 16. bis 31. jedes Monats, jeweils um 9:00 Uhr",
+   "expected": "montags und zusätzlich vom 1. bis 14. und vom 16. bis zum Ende jedes Monats, jeweils um 9:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -2968,7 +2968,7 @@
    "pattern": "0 0 1-14,16-31 6 *"
   },
   {
-   "expected": "im Juni und Juli vom 1. bis 14. und vom 16. bis 31., jeweils um 0:00 Uhr",
+   "expected": "im Juni und Juli vom 1. bis 14. und vom 16. bis zum Monatsende, jeweils um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -2982,7 +2982,7 @@
    "pattern": "0 0 1-14,17-31 * *"
   },
   {
-   "expected": "vom 2. bis 31. jedes Monats täglich um 0:00 Uhr",
+   "expected": "vom 2. bis zum Ende jedes Monats täglich um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -2996,7 +2996,7 @@
    "pattern": "0 12 1-5,10,20-25 * *"
   },
   {
-   "expected": "vom 1. bis 3. und vom 28. bis 31. jedes Monats jeweils um 0:00 Uhr",
+   "expected": "vom 1. bis 3. und vom 28. bis zum Ende jedes Monats jeweils um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -3010,32 +3010,214 @@
    "pattern": "0 0 5-20/3 * *"
   },
   {
-   "expected": "vom 8. bis 30. jedes Monats an den geraden Tagen um 0:00 Uhr",
+   "expected": "vom 8. bis zum Ende jedes Monats an den geraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 8/2 * *"
   },
   {
-   "expected": "vom 3. bis 31. jedes Monats an den ungeraden Tagen um 0:00 Uhr",
+   "expected": "vom 3. bis zum Ende jedes Monats an den ungeraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 3-31/2 * *"
   },
   {
-   "expected": "vom 1. bis 31. jedes Monats alle 3 Tage um 0:00 Uhr",
+   "expected": "vom 1. bis zum Ende jedes Monats alle 3 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 */3 * *"
   },
   {
-   "expected": "vom 2. bis 30. jedes Monats alle 4 Tage um 0:00 Uhr",
+   "expected": "vom 2. bis zum Ende jedes Monats alle 4 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 2/4 * *"
+  },
+  {
+   "expected": "im April und Juli jeweils vom 1. bis zum Monatsende alle 3 Tage um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 */3 4,7 *"
+  },
+  {
+   "expected": "im April und Juli jeweils vom 1. bis zum Monatsende alle 3 Tage um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-31/3 4,7 *"
+  },
+  {
+   "expected": "im April und Mai jeweils vom 20. bis zum Monatsende täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 20-31 4,5 *"
+  },
+  {
+   "expected": "im April und Mai jeweils vom 20. bis 30. täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 20-30 4,5 *"
+  },
+  {
+   "expected": "jährlich vom 20. bis Ende Februar täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 20-29 2 *"
+  },
+  {
+   "expected": "jährlich vom 20. bis 28. Februar täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 20-28 2 *"
+  },
+  {
+   "expected": "vom 20. bis 28. Februar 2031 täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 0 20-29 2 * 2031"
+  },
+  {
+   "expected": "von Januar bis März jeweils vom 29. bis zum Monatsende (im Februar nur in Schaltjahren) täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 29-31 1-3 *"
+  },
+  {
+   "expected": "vom 15. bis zum Ende jedes Monats täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 15-31 * *"
+  },
+  {
+   "expected": "vom 1. bis 30. jedes Monats (im Februar bis zum Monatsende) täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-30 * *"
+  },
+  {
+   "expected": "im Februar und März jeweils vom 1. bis 29. (im Februar bis zum Monatsende) täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-29 2,3 *"
+  },
+  {
+   "expected": "von Januar bis März jeweils vom 3. bis 29. an den ungeraden Tagen (im Februar bis zum Monatsende) um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 3-29/2 1-3 *"
+  },
+  {
+   "expected": "vom 1. bis 10. und vom 20. bis 30. jedes Monats (im Februar bis zum Monatsende) jeweils um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-10,20-30 * *"
+  },
+  {
+   "expected": "im April und Juni täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-30 4,6 *"
+  },
+  {
+   "expected": "vom 1. bis 28. Februar alle 3 Tage, wenn sie auf einen Donnerstag fallen, jeweils um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 */3 2 4"
+  },
+  {
+   "expected": "im April und Mai jeweils am 30. sowie am 31. Mai um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 30,31 4,5 *"
+  },
+  {
+   "expected": "im April und Mai jeweils am 1. sowie am 31. Mai um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1,31 4,5 *"
+  },
+  {
+   "expected": "im Januar und April jeweils am 15. sowie am 31. Januar um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 15,31 1,4 *"
+  },
+  {
+   "expected": "jährlich am 28. Februar sowie am 29. Februar (nur in Schaltjahren) um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 28,29 2 *"
+  },
+  {
+   "expected": "am 29. Februar (nur in Schaltjahren) um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 29,30,31 2 *"
+  },
+  {
+   "expected": "jährlich am 30. April um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 30,31 4 *"
+  },
+  {
+   "expected": "im Juni täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-31 6 *"
+  },
+  {
+   "expected": "im Juni täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-30 6 *"
+  },
+  {
+   "expected": "jährlich vom 1. bis 14. und vom 16. bis 30. Juni jeweils um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-14,16-30 6 *"
+  },
+  {
+   "expected": "im Februar 2031 täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 0 1-28 2 * 2031"
+  },
+  {
+   "expected": "jährlich vom 1. bis 28. Februar täglich um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 1-28 2 *"
   },
   {
    "expected": "im April und Juni jeweils vom 1. bis 28. alle 3 Tage um 0:00 Uhr",
@@ -4801,7 +4983,7 @@
    "pattern": "* 0-10/2,11-23/3 * * *"
   },
   {
-   "expected": "vom 1. bis 9. an den ungeraden Tagen sowie vom 11. bis 29. alle 3 Tage jedes Monats um 0:00 Uhr",
+   "expected": "vom 1. bis 9. an den ungeraden Tagen sowie vom 11. bis zum Ende jedes Monats alle 3 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -4815,7 +4997,7 @@
    "pattern": "0 0 1-20/2,24-30/3 * *"
   },
   {
-   "expected": "vom 1. bis 10. sowie vom 12. bis 30. an den geraden Tagen jedes Monats jeweils um 0:00 Uhr",
+   "expected": "vom 1. bis 10. sowie vom 12. bis zum Ende jedes Monats an den geraden Tagen jeweils um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -4857,7 +5039,7 @@
    "pattern": "0 0 15 * 0-2,4-6"
   },
   {
-   "expected": "freitags und zusätzlich vom 1. bis 14. und vom 16. bis 31. jedes Monats, jeweils um 9:00 Uhr",
+   "expected": "freitags und zusätzlich vom 1. bis 14. und vom 16. bis zum Ende jedes Monats, jeweils um 9:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -4920,7 +5102,7 @@
    "pattern": "45-15 * * * * *"
   },
   {
-   "expected": "vom 1. bis 10. und vom 20. bis 31. jedes Monats jeweils um 0:00 Uhr",
+   "expected": "vom 1. bis 10. und vom 20. bis zum Ende jedes Monats jeweils um 0:00 Uhr",
    "options": {
     "lang": "de"
    },

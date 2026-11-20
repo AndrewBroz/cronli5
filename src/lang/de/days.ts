@@ -5,10 +5,11 @@ import {
   denote, describeCadencePieces, describeSet
 } from '../../core/describe-set.js';
 import type {
-  CadencePieces, DateReach, QuartzDate, QuartzWeekday, Schedule,
+  CadencePieces, DateReach, MonthLengths, QuartzDate, QuartzWeekday, Schedule,
   SetDescription
 } from '../../core/schedule.js';
-import {candidatesAs, daysReached} from '../../core/set-views.js';
+import {candidatesAs, daysByMonths, daysReached}
+  from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import type {Counting, Described, Piece, Sayable} from './sets.js';
@@ -39,6 +40,8 @@ interface Naming {
   except: string;
   // What opens a run: «von», «vom».
   from: string;
+  // The last value of a run or a step, by that value and the step.
+  last(value: number, step: number): string;
   name(value: number): string;
   // What opens single values: «im», «am».
   one: string;
@@ -83,11 +86,27 @@ interface Months {
 // The days of the month a schedule names: a Quartz form or a set.
 interface Dates {
   alternate: boolean;
+  // Listed days that only some of the months have, with those months.
+  apart: Apart[];
+  // The last day a run or a step may name, and the longest month's: a
+  // run or a step that has a day past the first, and goes on to the
+  // second, ends at each month's end.
+  ends: number[];
   form?: QuartzDate;
+  // The months the date arm fires in, by length.
+  lengths: MonthLengths[];
   said: Sayable;
   // Whether the dates are one day, in each month they name.
   single: boolean;
   there: boolean;
+}
+
+// Days that only some of the months have, and those months.
+interface Apart {
+  days: number[];
+  // Whether February has them only in leap years.
+  leap: boolean;
+  months: number[];
 }
 
 interface Weekdays {
@@ -260,8 +279,11 @@ const named: {[kind: string]: (
   range(run: Described<'range'>, naming: Naming): string {
     const ends = [run.from, run.to].map(naming.name);
 
-    return (run.to - run.from + naming.size) % naming.size > 1 ?
-      `${naming.from}${ends[0]} ${words.to} ${ends[1]}` :
+    const last = naming.last(run.to, 1);
+
+    return (run.to - run.from + naming.size) % naming.size > 1 ||
+      last !== ends[1] ?
+      `${naming.from}${ends[0]} ${words.to} ${last}` :
       naming.one + list(ends, naming.and);
   },
   values(values: Described<'values'>, naming: Naming): string {
@@ -289,7 +311,8 @@ function series(
     Number(cadence.interval === 2) * (cadence.start % 2 + 1)];
 
   return days.length > boundedCadence + 1 ?
-    join([`${naming.from}${days[0]} ${words.to} ${days[days.length - 1]}`,
+    join([`${naming.from}${days[0]} ${words.to} ` +
+      naming.last(cadence.last, cadence.interval),
       after, step]) :
     join([naming.one + list(days), after]);
 }
@@ -575,22 +598,68 @@ function datesOf(schedule: Schedule, there: boolean, frame: {
     return isAlternate(description, end);
   }
 
-  const linear = describeSet(values, dateDomain, {linear: true}).filter(
-    function sayable(description) {
-      const {base = everyValue} = description as Partial<Described<'except'>>;
+  // Dates a set says, as the field says them.
+  function sayOf(days: number[], ground: SetDescription[]): Sayable {
+    return settleUnwrapped(ground, linearOf(days), dateCounting,
+      inSuccession(describeCadencePieces(days, dateDomain), false));
+  }
 
-      return description.kind !== 'except' ||
-        (frame.union ? alternate(base) :
-          base.kind !== 'all' || frame.everyMonth);
+  function linearOf(days: number[]): SetDescription[] {
+    return describeSet(days, dateDomain, {linear: true}).filter(
+      function sayable(description) {
+        const {base = everyValue} =
+          description as Partial<Described<'except'>>;
+
+        return description.kind !== 'except' ||
+          (frame.union ? alternate(base) :
+            base.kind !== 'all' || frame.everyMonth);
+      });
+  }
+
+  // Under named months, the listed days that only some of them have are
+  // taken out, to be said with those months.
+  const groups = (daysByMonths(schedule) || []).slice(1).filter(
+    function lacking(group) {
+      return !group.everyMonth && !frame.everyMonth;
     });
-  const said = there && !form ?
-    settleUnwrapped(round, linear, dateCounting,
-      inSuccession(describeCadencePieces(values, dateDomain), false)) :
-    everyValue;
+  const first = there && !form ? sayOf(values, round) : everyValue;
+  const {parts = [first]} = first as Partial<CadencePieces>;
+  const strays = parts.flatMap(function straysOf(part) {
+    return (part as Partial<Described<'values'>>).values ?? [];
+  });
+  const apart = groups.map(function withMonths(group): Apart {
+    return {
+      days: group.days.filter(function listed(date) {
+        return strays.includes(date);
+      }),
+      leap: group.months.some(function leapOnly(length) {
+        return length.years === 'leap';
+      }),
+      months: group.months.flatMap(function monthsOfLength(length) {
+        return length.months;
+      }).sort(ascending)
+    };
+  }).filter(function hasDays(group) {
+    return group.days.length > 0;
+  });
+  const taken = apart.flatMap(function daysOf(group) {
+    return group.days;
+  });
+  const kept = values.filter(function stays(date) {
+    return !taken.includes(date);
+  });
+  const said = [first, sayOf(kept, describeSet(kept, dateDomain))][
+    Number(taken.length > 0)];
+  const lengths = schedule.analyses.monthLengths;
 
   return {
     alternate: alternate(restOf(said).base),
+    apart,
+    ends: [lengths[0], lengths[lengths.length - 1]].map(function last(group) {
+      return (group || {length: Infinity}).length;
+    }),
     form,
+    lengths,
     said,
     single: Boolean(form) || values.length === 1,
     there
@@ -734,14 +803,95 @@ function monthsWith(frame: Frame): string {
   ]);
 }
 
+// The end of a run or a step that goes on to each month's end: «zum
+// Monatsende» where the months lead, «Ende Februar» after one month's
+// name, «zum Ende jedes Monats».
+function monthEnd(tail: DateTail): string {
+  const ofMonths = [words.ofEachMonth, words.ofTheseMonths].includes(
+    tail.ord);
+
+  return [words.toMonthEnd, `${words.end} ${tail.ord}`,
+    `${words.toTheEnd} ${tail.ord}`][
+    Number(tail.ord !== '') * (1 + Number(ofMonths))];
+}
+
+// The furthest a run, or a step too long to list, goes: its last day
+// and the day its step would come to next.
+function furthest(said: Sayable): number[] {
+  const {base} = restOf(said);
+  const {parts = [base]} = base as Partial<CadencePieces>;
+
+  return parts.map(function reach(part) {
+    const {from = 0, start = from, to = 0, last = to, interval = 1} =
+      part as Partial<Described<'cadence'> & Described<'range'>>;
+    const stated = interval === 1 || (last - start) / interval > boundedCadence;
+
+    return [last, last + interval].map(function counted(day) {
+      return day * Number(stated);
+    });
+  }).reduce(function later(best, next) {
+    return [best, next][Number(next[0] > best[0])];
+  });
+}
+
+// Whether a set goes on to each month's end: it has a day the shortest
+// month lacks, and its step comes past the longest month's last day.
+function toMonthEnd(said: Sayable, ends: number[]): boolean {
+  const [last, next] = furthest(said);
+
+  return last > ends[0] && next > ends[1];
+}
+
+// Where a run or a step ends past the last day of shorter months, but
+// before the longest month's end: «(im Februar bis zum Monatsende)».
+function shorterGloss(frame: Frame, voice: Voice): string {
+  const {dates} = frame;
+  const [last, next] = furthest(dates.said);
+  const shorter = dates.lengths.filter(function lacks(group) {
+    return group.length < last && next <= dates.ends[1] &&
+      !dates.alternate;
+  }).flatMap(function monthsOfGroup(group) {
+    return group.months;
+  });
+
+  const cut = [...new Set(shorter)].map(voice.month);
+
+  return cut.slice(0, 1).map(function say() {
+    return `(${words.in} ${list(cut)} ${words.to} ${words.toMonthEnd})`;
+  }).join('');
+}
+
+// The dates a set names, where only some months have them: «sowie am
+// 31. Mai», «sowie am 29. Februar (nur in Schaltjahren)».
+function apartSaid(frame: Frame, voice: Voice): string {
+  return frame.dates.apart.map(function say(group) {
+    return join([`${words.also} ${words.on}` +
+      ` ${list(group.days.map(ordinal))}`,
+    list(group.months.map(voice.month)),
+    group.leap && `(${join([group.months.length > 1 &&
+      `${words.in} ${voice.month(2)}`, words.onlyLeapYears])})`]);
+  }).join(' ');
+}
+
 // The date phrase: the days, with the months they fire in where those
 // are fewer than the months said before, and what is true of leap years.
+// A run or a step that has a day the shortest month lacks and goes on to
+// the longest month's last day ends at each month's end.
 function dateSide(frame: Frame, namings: Namings, voice: Voice): string {
   const {dates, months, union} = frame;
   const tail = tailOf(frame, union, voice);
   const having = monthsWith(frame);
   const fewer = union && !months.every && months.firing.length > 1 &&
     months.firing.length < months.values.length;
+  const end = monthEnd(tail);
+  const [shortest, longest] = dates.ends;
+  const naming = {
+    ...namings.date,
+    last(value: number, step: number) {
+      return [ordinal(value), end][
+        Number(value > shortest && value + step > longest)];
+    }
+  };
 
   return join([
     fewer && names(months.firingSaid, namings.month),
@@ -749,8 +899,11 @@ function dateSide(frame: Frame, namings: Namings, voice: Voice): string {
     dates.form ?
       quartzDates[dates.form.kind](dates.form as never,
         having ? {...tail, noun: '', ord: ''} : tail, voice) :
-      dateText(dates.said, tail, namings.date),
-    leapGloss(frame, voice)
+      dateText(dates.said, [tail, {...tail, ord: ''}][
+        Number(toMonthEnd(dates.said, dates.ends))], naming),
+    leapGloss(frame, voice),
+    shorterGloss(frame, voice),
+    apartSaid(frame, voice)
   ]);
 }
 
@@ -764,7 +917,8 @@ function fallsOn(frame: Frame, namings: Namings, voice: Voice): string {
   const negated = weekdays.said.kind === 'except';
   const {subject, verb} = fallingOn[Number(dates.single)];
   const naming: Naming = {...namings.date, and: words.or,
-    from: `${words.oneOf} ${words.day} ${words.from} `, name: voice.weekdayNoun,
+    from: `${words.oneOf} ${words.day} ${words.from} `,
+    last: voice.weekdayNoun, name: voice.weekdayNoun,
     one: `${words.oneOf} `, place: weekCounting.place as Naming['place'],
     size: 7};
   const said = weekdays.form ?
@@ -784,7 +938,8 @@ function daysSaid(frame: Frame, namings: Namings, voice: Voice): string {
   const {both, dates, union, weekdays} = frame;
   const weekNames = weekdays.form ?
     quartzWeekday(weekdays.form, tailOf(frame, false, voice), voice) :
-    names(weekdays.said, {...namings.date, from: '', name: voice.weekday,
+    names(weekdays.said, {...namings.date, from: '', last: voice.weekday,
+      name: voice.weekday,
       one: '', place: weekCounting.place as Naming['place'], size: 7});
 
   return join([
@@ -852,8 +1007,8 @@ function dayPart(
   const {dates, joint} = frame;
   const due = sharing(frame, time);
   const said = daysSaid(frame, namings, voice);
-  const filler = time.daily &&
-    (said === '' || !joint && dates.said.kind === 'range') && words.daily;
+  const filler = time.daily && (said === '' || !joint &&
+    dates.said.kind === 'range' && dates.apart.length === 0) && words.daily;
 
   return join([due.day && !due.pieces && words.eachTime, said, filler]) +
     (closes(frame, due.pieces && (due.month || due.day)) ? ',' : '');
@@ -888,10 +1043,11 @@ function calendar(
   const frame = frameOf(schedule);
   const base = {except: voice.except, place: asItIs};
   const namings: Namings = {
-    date: {...base, from: `${words.fromDate} `, name: ordinal,
+    date: {...base, from: `${words.fromDate} `, last: ordinal, name: ordinal,
       one: `${words.on} `, size: dateDomain.max, whole: words.daily},
-    month: {...base, from: `${words.from} `, name: voice.month,
-      one: `${words.in} `, size: monthDomain.max, whole: words.inAllMonths}
+    month: {...base, from: `${words.from} `, last: voice.month,
+      name: voice.month, one: `${words.in} `, size: monthDomain.max,
+      whole: words.inAllMonths}
   };
   const due = sharing(frame, time);
   const day = dayPart(frame, time, namings, voice);

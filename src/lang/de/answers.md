@@ -1337,6 +1337,45 @@ rules, for plain dates and Quartz forms alike:
     already agreed, because the stretch names the days reached.
   * Hours, minutes and months are not affected: their units do not vary
     in length, and a check of all languages found them already alike.
+* **No day a firing month lacks is named** (2026-11-19, by Claude Opus
+  5.5). Where the months the date arm fires in have different lengths
+  (the core's `monthLengths` has more than one group: every month,
+  February across leap and common years, April beside May):
+  * **a run or a step that goes on to the last day of the longest of
+    them, and has a day the shortest lacks, ends at each month's end**:
+    «im April und Mai jeweils vom 20. bis zum Monatsende täglich»; «im
+    April und Juli jeweils vom 1. bis zum Monatsende alle 3 Tage»;
+    «jährlich vom 20. bis Ende Februar täglich» (`20-29`: the 28th in
+    common years, the 29th in leap years); «vom 15. bis zum Ende jedes
+    Monats täglich»; «vom 1. bis zum Ende jedes Monats alle 3 Tage». «Bis
+    31.» named a 31 April, and «bis 31. jedes Monats» a 30 June. The end
+    says, too, that the step stops there and begins again with the next
+    month, which a reader of «vom 1. bis 31. jedes Monats alle 3 Tage»
+    could doubt. A step whose last day every month has keeps it: `*/3`
+    in February is «vom 1. bis 28. Februar alle 3 Tage» (no February
+    has a 31st for it to reach); `20-30` in April and May is «vom 20.
+    bis 30.» (other days: May's 31st is not among them). Months of one
+    length keep their numbers: «vom 20. bis 30. Juni»;
+  * **a run or a step that ends past the shortest month's last day but
+    stops before the longest month's end names the shorter months in a
+    gloss**, as the leap gloss does: «vom 1. bis 30. jedes Monats (im
+    Februar bis zum Monatsende) täglich»; «im Februar und März jeweils
+    vom 1. bis 29. (im Februar bis zum Monatsende) täglich». Only
+    February can be such a month, and the months are the core's, never
+    a table of the renderer's. «Bis zum Monatsende» for the whole would
+    be false (`1-30` does not fire on 31 March), and the bare «bis 30.»
+    named a 30 February;
+  * **listed days that only some of the months have are said with
+    those months**, after the days they all have, with «sowie» and the
+    date with its month: «im April und Mai jeweils am 30. sowie am 31.
+    Mai»; «im Januar und April jeweils am 15. sowie am 31. Januar»;
+    «jährlich am 28. Februar sowie am 29. Februar (nur in
+    Schaltjahren)» (the core's `daysByMonths`). Until this date these
+    were «am 30. und 31.» of both months, and «am 28. und 29. Februar»
+    every year.
+  Under every month a single date is still said as written («am 31.
+  jedes Monats», above). A run or a step is not a date said as written:
+  its end is a promise about every month it covers.
 * **A date that exists only in leap years says so in a gloss at the end
   of the date phrase**, after any other gloss: «am 29. Februar (nur in
   Schaltjahren) um 0:00 Uhr»; «28 Tage vor dem letzten Tag im Februar

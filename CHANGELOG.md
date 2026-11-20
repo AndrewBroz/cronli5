@@ -170,6 +170,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   täglich um 9:00 Uhr» (was «in den Jahren 2028, 2032, 2036 usw. …»), and
   `2030-2040,2045/5` is «in den Jahren 2030 bis 2040 sowie in jedem
   fünften Jahr ab 2045».
+- **German names no day a month lacks.** Where the months that fire have
+  different lengths, a run or step that goes on to the longest month's
+  end ends at each month's end: `0 0 */3 4,7 *` is «im April und Juli
+  jeweils vom 1. bis zum Monatsende alle 3 Tage um 0:00 Uhr» (was «… vom
+  1. bis 31. …», a 31 April), `0 0 */3 * *` «vom 1. bis zum Ende jedes
+  Monats alle 3 Tage …», `0 0 20-29 2 *` «jährlich vom 20. bis Ende
+  Februar täglich …»; listed days only some months have are said with
+  them: `0 0 30,31 4,5 *` is «im April und Mai jeweils am 30. sowie am
+  31. Mai …» (was «am 30. und 31.»), `0 0 28,29 2 *` «jährlich am 28.
+  Februar sowie am 29. Februar (nur in Schaltjahren) …»; and `0 0 1-30 *
+  *` is «vom 1. bis 30. jedes Monats (im Februar bis zum Monatsende) …».
 
 ### Removed
 
