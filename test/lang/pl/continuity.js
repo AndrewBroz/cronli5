@@ -47,12 +47,12 @@ const MAY_CHANGE = {
 // time that is only rhythms and distances runs through midnight and has
 // no daily shape («co 2 godziny», «co minutę w godzinach parzystych»); a
 // time with a first and a last moment in the day has one («codziennie co
-// 2 godziny od 0:30 do 22:30»), and without the word it would read as
+// 3 godziny od 0:30 do 21:30»), and without the word it would read as
 // one stretch of today. Any of the three time fields can make the time
 // name a clock time or stop naming one (the hour: «co godzinę» against
-// «codziennie o 9:00»; the minute: «co 2 godziny» against «codziennie co
-// 2 godziny od 0:30 do 22:30»; the second: «co 2 godziny» against
-// «codziennie co 2 godziny od 0:00:15 do 22:00:15»), so an edit to any of
+// «codziennie o 9:00»; the minute: «co 6 godzin» against «codziennie
+// o 0:30, 6:30, 12:30 i 18:30»; the second: «co 6 godzin» against
+// «codziennie o 0:00:15, 6:00:15, 12:00:15 i 18:00:15»), so an edit to any of
 // them may add or remove exactly that word, and nothing else of the day
 // part.
 const DAILY = /^codziennie$/u;
@@ -227,8 +227,8 @@ describe('Polish continuity:', function() {
     function() {
       const daily = [
         ['0 * * * *', '0 9 * * *'],
-        ['0 */2 * * *', '30 */2 * * *'],
-        ['0 0 */2 * * *', '15 0 */2 * * *']
+        ['0 */6 * * *', '30 */6 * * *'],
+        ['0 0 */6 * * *', '15 0 */6 * * *']
       ];
 
       daily.forEach(function toggles([bare, clocked]) {
@@ -237,5 +237,9 @@ describe('Polish continuity:', function() {
       });
       expect(partsOf('0 0-2,4-23 * * *').day).to.equal('');
       expect(partsOf('*/15 */2 * * *').day).to.equal('');
+      // Every other hour of the whole day is said by parity at any minute
+      // (answers 4.1), and parity names no clock time.
+      expect(partsOf('0 1/2 * * *').day).to.equal('');
+      expect(partsOf('30 */2 * * *').day).to.equal('');
     });
 });

@@ -442,8 +442,9 @@ through midnight.
 - `0 0,2,4,6,10,12,14,16,18,20,22 * * *` — «co 2 godziny, oprócz 8:00»
 - `0 0-2,4-23 * * *` — «co godzinę, oprócz 3:00»
 - `* */2 * * *` — «co minutę w godzinach parzystych»
-- `0 1/2 * * *` — «codziennie co 2 godziny od 1:00 do 23:00» (a first and
-  a last moment in the day)
+- `0 1/2 * * *` — «o każdej nieparzystej godzinie» (parity, 4.1)
+- `0 2-22/2 * * *` — «codziennie co 2 godziny od 2:00 do 22:00» (a first
+  and a last moment in the day)
 - `15,45 */4 * * *` — «codziennie 15 i 45 minut po każdej z godzin 0:00,
   4:00, …» (hours named one by one are heard as restricted)
 
@@ -456,16 +457,19 @@ takes none.
 
 Because the test is on the finished time, **any of the three time
 fields can add or remove the word**: the hour («co godzinę» against
-«codziennie o 9:00»), the minute («co 2 godziny» against «codziennie co
-2 godziny od 0:30 do 22:30») and the second («co 2 godziny» against
-«codziennie co 2 godziny od 0:00:15 do 22:00:15»). That is right for a
+«codziennie o 9:00»), the minute («co 6 godzin» against «codziennie
+o 0:30, 6:30, 12:30 i 18:30») and the second («co 6 godzin» against
+«codziennie o 0:00:15, 6:00:15, 12:00:15 i 18:00:15»). That is right for a
 reader laying two schedules side by side: a rhythm said bare runs through
 midnight and has no first moment, and one that names its first and last
 moment of the day would, without «codziennie», read as one stretch of
 today. The alternative, keeping the word tied to the hours alone, would
-mean either «codziennie co 2 godziny» (a second way to say the bare
-rhythm, which judge 1 could find no meaning in) or «co 2 godziny od 0:30
-do 22:30» with no day at all. The word is the whole of the leak: nothing
+mean either «codziennie co 6 godzin» (a second way to say the bare
+rhythm, which judge 1 could find no meaning in) or «o 0:30, 6:30, 12:30
+i 18:30» with no day at all, which reads as today.
+(Until 2026-11-19 the examples were `30 */2` and `15 0 */2`, «codziennie co
+2 godziny od 0:30 do 22:30»; those are now said by parity, 4.1, and take
+no daily word.) The word is the whole of the leak: nothing
 else of the day part moves (2.6).
 
 A calendar date with no year restricted takes «co roku» instead (4.4).
@@ -751,7 +755,7 @@ family with «co 5 minut» and «co 20 minut».
 - `5/15 * * * *` — «5, 20, 35 i 50 minut po każdej pełnej godzinie» (few)
 - `5/10 * * * *` — «co 10 minut, zaczynając 5 minut po każdej pełnej
   godzinie»
-- `0 1/2 * * *` — «codziennie co 2 godziny od 1:00 do 23:00»
+- `0 1/2 * * *` — «o każdej nieparzystej godzinie» (parity, 4.1)
 - `0 */5 * * *` — «codziennie co 5 godzin od 0:00 do 20:00»
 
 A rhythm with a seam (`*/7`, `0-40/10`, hours `*/5`) says its first and
@@ -808,8 +812,13 @@ only five values or more reached it. The builder followed the kinds.
 Three audit readers gave 9:05, 9:20, 9:35 … 17:20, 17:35, 17:50 for the
 first row, no ring at 10:00 and one at 10:05.
 
-Hours off the beat (`1/2`, `30 */2`) keep both ends as real times. A
-start alone («co 2 godziny od 1:00») reads as a timestamp.
+Hours off the beat keep both ends as real times («codziennie co 3 godziny
+od 0:30 do 21:30»). A start alone («co 3 godziny od 0:30») reads as a
+timestamp. Every other hour of the whole day is the exception: the odd
+hours, and the even hours at any minute but 0, are said by parity, which
+needs neither end (4.1, from 2026-11-19; until then `1/2` and `30 */2`
+were «codziennie co 2 godziny od 1:00 do 23:00» and «… od 0:30 do
+22:30»).
 
 **3.9 A set with one value missing.** Polish names what is missing when one
 or two values drop out of an obvious whole, and says what is there
@@ -945,6 +954,18 @@ two readings. A fourth reader, given the present form alone, answered
 one way: the second count was reported by a reader who was not asked
 about it. The present form stays.
 
+Looked at again after the cost pass of 2026-11-19, which counted sixteen
+syllables carrying one number and proposed «co minutę, ale nie 29 minut
+po pełnej godzinie» (wording 2 above, a half-hour gap to judge 1) or the
+same without «wypadającej». Left. Without the participle «chwili 29 minut
+po każdej pełnej godzinie» is not a Polish noun phrase: a noun takes a
+distance only through a word that places it («chwila wypadająca …»,
+«chwila, która przypada …»), and bare it is read as «chwila» of 29
+minutes, a while, the gap again. «momentu» in its place has both faults.
+«przypadającej» is the same length. Most of the weight is «po każdej
+pełnej godzinie», which every distance in the open hour carries, and the
+form stays with them.
+
 How it is said, exactly. One minute: «…, oprócz chwili wypadającej 29
 minut po każdej pełnej godzinie». Two: one plural and both distances,
 «…, oprócz chwil wypadających 29 i 59 minut po każdej pełnej godzinie».
@@ -1059,8 +1080,9 @@ minute:
 | a run; a run that wraps and may stay one | «co godzinę od … do …» | «codziennie co godzinę od 9:30 do 17:30»; «codziennie co godzinę od 22:00 do 2:00» |
 | a tiling rhythm, minute 0 | bare (step 1) | «co 2 godziny» |
 | a tiling rhythm less one or two (kind 10), minute 0 | bare, «, oprócz» the clock times | «co 2 godziny, oprócz 8:00» |
-| any other rhythm of five or more: one that does not tile, or a tiling one with another minute | «co N godzin od … do …» | «codziennie co 2 godziny od 0:30 do 22:30»; «codziennie co 5 godzin od 0:00 do 20:00» |
-| that, less one or two (kind 10) | the same, «, oprócz» the clock times | «codziennie co 2 godziny od 0:30 do 22:30, oprócz 8:30» |
+| every other hour of the whole day (the twelve odd hours; the twelve even hours with a minute or a second other than 0), and either less one or two | by parity, "Every other hour of the whole day" below: minute 0 «o każdej nieparzystej godzinie»; otherwise the distance after «każdej parzystej / nieparzystej godzinie»; «, oprócz» the clock times | «o każdej nieparzystej godzinie»; «30 minut po każdej parzystej godzinie»; «o każdej nieparzystej godzinie, oprócz 13:00» |
+| any other rhythm of five or more: one that does not tile, or a tiling one with another minute | «co N godzin od … do …» | «codziennie co 3 godziny od 0:30 do 21:30»; «codziennie co 5 godzin od 0:00 do 20:00»; «codziennie co 2 godziny od 2:00 do 22:00» |
+| that, less one or two (kind 10) | the same, «, oprócz» the clock times | «codziennie co 3 godziny od 0:30 do 21:30, oprócz 9:30» |
 | pieces | each piece by this table, «oraz» | «codziennie co godzinę od 9:00 do 17:00 oraz o 22:00»; «codziennie o 5:00 oraz co godzinę od 9:00 do 17:00» |
 | a list | the times | «codziennie o 6:00, 8:00, 12:00, 18:00 i 20:00» |
 
@@ -1172,12 +1194,54 @@ sentence («w czerwcu: w piątki, a także 1 czerwca, od 9:05 do 17:45: 5,
 20 i 45 minut po każdej pełnej godzinie»); rare, and each colon opens
 what its frame governs.
 
+**Every other hour of the whole day** (0, 2 … 22, or 1, 3 … 23: a rhythm
+of step 2 with twelve values, or that less one or two) is said by
+parity, whatever the minutes: «parzyste» and «nieparzyste» answer the
+question a bare «co 2 godziny» leaves open («od której?», notes §9)
+without a start to add from. The one exception is the even hours on the
+hour, which tile the day and are the bare «co 2 godziny» (habit 1).
+
+*One minute* (and at most one second; class (a)):
+
+| Hours | Said | Example |
+| --- | --- | --- |
+| the odd hours, minute 0, second 0 | «o każdej nieparzystej godzinie» | `0 1/2 * * *` — «o każdej nieparzystej godzinie» |
+| the even hours, minute 0, second 0 | bare (step 1) | `0 */2 * * *` — «co 2 godziny» |
+| either, any other minute or second | the distance, as for every hour, after «każdej parzystej / nieparzystej godzinie» | `30 */2 * * *` — «30 minut po każdej parzystej godzinie»; `23 1/2 * * *` — «23 minuty po każdej nieparzystej godzinie»; `15 0 */2 * * *` — «15 sekund po każdej parzystej godzinie» |
+| either, less one or two hours | the same, «, oprócz» the clock times that do not fire (an hour holds one moment here) | «o każdej nieparzystej godzinie, oprócz 13:00»; «30 minut po każdej parzystej godzinie, oprócz 8:30» |
+
+No «codziennie» (2.5): the time names no clock time outside «oprócz».
+Anything else stepped by two keeps its ends: hours from 2:00 to 22:00
+(eleven of the even hours, the first missing) are «codziennie co
+2 godziny od 2:00 do 22:00», and «parzyste» is never narrowed to part of
+the day (below).
+
+Why, from the cost pass of 2026-11-19 (the lead came from it; the call is
+mine). Until then `0 1/2 * * *` was «codziennie co 2 godziny od 1:00 do
+23:00»: a step, an offset and two ends, five things to hold, and to know
+whether 15:00 fires the reader adds two hours from 1:00, seven times. «o
+każdej nieparzystej godzinie» is one thing, and whether 15 is odd is seen,
+not worked out; ten syllables against seventeen. The same sentence
+already said «co minutę w godzinach nieparzystych» and «15 i 45 minut po
+każdej nieparzystej godzinie» when the minute was not one, so the odd
+hours were two kinds depending on the minute: an edit from `15,45` to `30`
+re-cast the whole time. Now they are one kind, said one way. «o każdej
+… godzinie» is the notes' own frame for a moment on the hour («o każdej
+pełnej godzinie», §4.5, §12); with «nieparzystej» in place of «pełnej» it
+is still a moment, as «o godzinie 13» is. Kept for the even hours on the
+hour: the bare rhythm, the settled convention, and the shorter (four
+syllables). Rejected: «o nieparzystych godzinach» (a plural «o» is not a
+time, and it reads as a topic, "about odd hours"); «w godzinach
+nieparzystych» for a single minute (it names stretches, and the reader
+would ask which minute of them); «co 2 godziny od 1:00» (a start alone
+reads as a timestamp, 3.8).
+
 **A rhythm of hours under several minutes.** When the hours are a rhythm
 of five or more (kind 3 or 8, or either less one or two) and the minutes
 are more than one value, the hours are not moments but hours that hold
 several firings each.
 
-*Every other hour of the whole day* (0, 2 … 22, or 1, 3 … 23):
+*Every other hour of the whole day*, under several minutes:
 
 | Minutes | Said | Example |
 | --- | --- | --- |
@@ -1783,7 +1847,7 @@ None beyond those above: minute with hour (4.1), second with a clock time
 | «w pierwszy poniedziałek miesiąca», «w ostatni piątek miesiąca» | nth and last weekday | yes | yes (5.3) |
 | «w nieparzyste / parzyste dni» | odd and even days of the month | yes | yes (5.2) |
 | «w latach parzystych / przestępnych», «co roku» | years | yes | yes |
-| «w godzinach parzystych / nieparzystych» | hours 0, 2 … 22; 1, 3 … 23 | yes | yes, under several minutes only (4.1) |
+| «w godzinach parzystych / nieparzystych», «o każdej nieparzystej godzinie», «… po każdej parzystej godzinie» | hours 0, 2 … 22; 1, 3 … 23 | yes | yes, of the whole day only; the even hours on the hour are «co 2 godziny» (4.1) |
 | Roman numeral for the month of a date (notes §2.3) | the month | yes | under `short` |
 | «święta», «w dni nauki szkolnej», «niedziele handlowe», «tydzień parzysty» (notes §2.2) | kinds of day the calendar of a country decides | — | no: a pattern cannot hold them |
 
@@ -1797,9 +1861,10 @@ każdego miesiąca o 0:00»; `0 0 2/2 * *` — «w parzyste dni każdego
 miesiąca o 0:00». "Every odd day" is judged against the days the reached
 months have (`daysReached`): `0 0 */2 6 *` and `0 0 1-29/2 6 *` are both
 «w czerwcu w nieparzyste dni miesiąca o 0:00» (schedule read 2, rule 8).
-Hours: `0 */2 * * *` is the bare rhythm «co 2 godziny»; `0 1/2 * * *`
-«codziennie co 2 godziny od 1:00 do 23:00»; under several minutes, parity
-(4.1). Months: named, `0 0 1 */2 *` — «w styczniu, marcu, maju, lipcu,
+Hours: `0 */2 * * *` is the bare rhythm «co 2 godziny»; every other
+case of every other hour of the day is parity: `0 1/2 * * *` «o każdej
+nieparzystej godzinie», `30 */2 * * *` «30 minut po każdej parzystej
+godzinie», `*/15 */2 * * *` «co 15 minut w godzinach parzystych» (4.1). Months: named, `0 0 1 */2 *` — «w styczniu, marcu, maju, lipcu,
 wrześniu i listopadzie pierwszego dnia miesiąca o 0:00»; nobody knows
 offhand whether a month "is even". Years: parity (4.4).
 
@@ -2221,6 +2286,15 @@ where it stands:
 - the orthography the rows rely on is set against sources that were
   opened, and what is still unverified is named (1.1).
 
+Sixth pass (2026-11-19, from the cost pass: each sentence's spoken
+length, objects held, repetition and operations): every other hour of
+the whole day is said by parity whatever the minutes, so the odd hours
+on the hour are «o każdej nieparzystej godzinie» (was «codziennie co
+2 godziny od 1:00 do 23:00») and one minute in the even hours is «30
+minut po każdej parzystej godzinie» (was «codziennie co 2 godziny od 0:30
+do 22:30»); the even hours on the hour stay «co 2 godziny» (4.1, 3.8,
+2.5). The missing minute in the open hour was looked at and left (3.9).
+
 Earlier wording these replaced is quoted beside each choice, marked "as
 first built" or "until the audit", so that it is not taken for a rule.
 The notes of rejected forms from the earlier passes are still inline,
@@ -2275,7 +2349,9 @@ do not say, or say otherwise, is listed here with its reason.
    «od której?»; §12: «co 2 godziny od 6.00 do 22.00»). The notes' cure is
    for a rhythm whose start the reader cannot know. Here the convention is
    that a bare rhythm starts with its unit; a rhythm that starts anywhere
-   else still names its start, as the notes ask. Likewise **«co godzinę»**
+   else still names its start, as the notes ask, except every other hour
+   of the whole day, where parity («o każdej nieparzystej godzinie»)
+   answers «od której?» with no start at all (4.1). Likewise **«co godzinę»**
    for `0 * * * *` where the notes' pattern is «o każdej pełnej godzinie»
    (§12).
 9. **A rhythm inside a window says its last firing**, as the notes ask

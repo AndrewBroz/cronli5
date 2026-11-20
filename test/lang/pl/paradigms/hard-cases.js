@@ -399,7 +399,7 @@ const rows = [
   ['0 0,1,22,23 * * 1', 'w poniedziałki o 0:00, 1:00, 22:00 i 23:00'],
   ['* 23-1 * * 6', 'w soboty co minutę od 0:00 do 1:59 oraz od 23:00 do 23:59'],
 
-  // Cadences of hours: one that tiles the day from 0:00 is said bare, any other takes its first and last; several minutes under every other hour, and under other cadences of hours; twice a day is two times.
+  // Cadences of hours: one that tiles the day from 0:00 is said bare, every other hour of the whole day by parity, any other takes its first and last; several minutes under every other hour, and under other cadences of hours; twice a day is two times.
   ['0 0,6,12,18 * * *', 'co 6 godzin'],
   ['0 0,6,18 * * *', 'codziennie o 0:00, 6:00 i 18:00'],
   ['0 */8 * * *', 'co 8 godzin'],
@@ -409,13 +409,15 @@ const rows = [
   ['0 */5 * * *', 'codziennie co 5 godzin od 0:00 do 20:00'],
   ['0 0-20/2 * * *', 'codziennie co 2 godziny od 0:00 do 20:00'],
   ['0 0,4,8,16,20 * * *', 'codziennie o 0:00, 4:00, 8:00, 16:00 i 20:00'],
-  ['30 */2 * * *', 'codziennie co 2 godziny od 0:30 do 22:30'],
+  ['30 */2 * * *', '30 minut po każdej parzystej godzinie'],
   ['30 */3 * * *', 'codziennie co 3 godziny od 0:30 do 21:30'],
   ['30 */5 * * *', 'codziennie co 5 godzin od 0:30 do 20:30'],
   ['30 0,2,4,6,10,12,14,16,18,20,22 * * *',
-    'codziennie co 2 godziny od 0:30 do 22:30, oprócz 8:30'],
+    '30 minut po każdej parzystej godzinie, oprócz 8:30'],
+  ['30 0,3,6,12,15,18,21 * * *',
+    'codziennie co 3 godziny od 0:30 do 21:30, oprócz 9:30'],
   ['23 */6 * * *', 'codziennie o 0:23, 6:23, 12:23 i 18:23'],
-  ['23 1/2 * * *', 'codziennie co 2 godziny od 1:23 do 23:23'],
+  ['23 1/2 * * *', '23 minuty po każdej nieparzystej godzinie'],
   ['15,45 */2 * * *', '15 i 45 minut po każdej parzystej godzinie'],
   ['15,45 */4 * * *',
     'codziennie 15 i 45 minut po każdej z godzin 0:00, 4:00, 8:00, 12:00, ' +
@@ -601,7 +603,7 @@ const rows = [
   ['5-10/60 0 9 * * *', 'codziennie o 9:00:05'],
   ['15 0 */12 * * *', 'codziennie o 0:00:15 i 12:00:15'],
   ['15 0 */6 * * *', 'codziennie o 0:00:15, 6:00:15, 12:00:15 i 18:00:15'],
-  ['15 0 */2 * * *', 'codziennie co 2 godziny od 0:00:15 do 22:00:15'],
+  ['15 0 */2 * * *', '15 sekund po każdej parzystej godzinie'],
   ['10-20 30 9 * * *', 'codziennie co sekundę od 9:30:10 do 9:30:20'],
   ['* 0 9,17 * * *',
     'codziennie co sekundę od 9:00:00 do 9:00:59 oraz od 17:00:00 do ' +
@@ -721,6 +723,22 @@ const rows = [
   ['* 0-29 9-17 * * *',
     'codziennie od 9:00:00 do 17:29:59: co sekundę od każdej pełnej ' +
     'godziny do 29 minut i 59 sekund po niej'],
+
+  // Every other hour of the whole day at one minute: by parity, as under
+  // several minutes; the even hours on the hour stay the bare rhythm, and
+  // a run stepped by two that is not the whole day keeps its ends.
+  ['0 0 1/2 * * *', 'o każdej nieparzystej godzinie'],
+  ['0 1,3,5,7,9,11,15,17,19,21,23 * * *',
+    'o każdej nieparzystej godzinie, oprócz 13:00'],
+  ['0 1,3,5,7,9,11,13,15,17,19,21 * * *',
+    'codziennie co 2 godziny od 1:00 do 21:00'],
+  ['0 2-22/2 * * *', 'codziennie co 2 godziny od 2:00 do 22:00'],
+  ['0 1/2 * * 1-5', 'od poniedziałku do piątku o każdej nieparzystej godzinie'],
+  ['30 */2 * * 1', 'w poniedziałki, 30 minut po każdej parzystej godzinie'],
+  ['30 15 1/2 * * *', '15 minut i 30 sekund po każdej nieparzystej godzinie'],
+  ['* 0 1/2 * * *',
+    'o każdej nieparzystej godzinie, za każdym razem co sekundę przez całą ' +
+    'minutę'],
 
   // Every other hour, and other cadences of hours, under several minutes.
   ['15,45 1/2 * * *', '15 i 45 minut po każdej nieparzystej godzinie'],
