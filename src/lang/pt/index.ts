@@ -38,7 +38,7 @@ function describeParts(schedule: Schedule, opts: PortugueseOptions): Parts {
   const open = calendarFields.every((field) => !restricts(candidates[field]));
   const time = timePart(analyses, open, opts.style);
   const calendar =
-    calendarPart(analyses, restricts(candidates.hour) && !time.round,
+    calendarPart(schedule, restricts(candidates.hour) && !time.round,
       opts.style);
   const marks = {
     comma: ',',

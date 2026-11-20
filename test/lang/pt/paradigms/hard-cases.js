@@ -762,10 +762,49 @@ const rows = [
 
   // Every second day is said by its number being odd or even, with both
   // ends where it does not run the length of the month.
-  ['0 0 1-29/2 2 *',
-    'nos dias ímpares do dia 1º ao dia 29 de fevereiro às 00:00'],
+  // The row for `1-29/2` in February once kept its ends: February's last
+  // odd day is the 29th, in leap years only, as for `*/2`, so the two fire
+  // on the same days and are said alike (answers 5.1, 2026-11-19).
+  ['0 0 1-29/2 2 *', 'nos dias ímpares de fevereiro às 00:00'],
   ['0 0 3-31/2 6 *', 'nos dias ímpares do dia 3 ao dia 29 de junho às 00:00'],
   ['0 0 2/2 6 *', 'nos dias pares de junho às 00:00'],
+
+  // The same days are said the same way however the step is spelled: a
+  // step that stops at the last day of its kind the months have runs the
+  // length of the month, as the plain step does.
+  ['0 9 1-29/2 6 *', 'nos dias ímpares de junho às 09:00'],
+  ['0 9 */2 6 *', 'nos dias ímpares de junho às 09:00'],
+  ['0 9 2-30/2 6 *', 'nos dias pares de junho às 09:00'],
+  ['0 9 */2 2 *', 'nos dias ímpares de fevereiro às 09:00'],
+  ['0 9 2-28/2 2 *', 'nos dias pares de fevereiro às 09:00'],
+  ['0 9 2/2 2 *', 'nos dias pares de fevereiro às 09:00'],
+  ['0 0 0 1-27/2 2 * 2031', 'nos dias ímpares de fevereiro de 2031 às 00:00'],
+  ['0 0 0 */2 2 * 2031', 'nos dias ímpares de fevereiro de 2031 às 00:00'],
+  ['0 9 1-31/2 7 *', 'nos dias ímpares de julho às 09:00'],
+  ['0 9 */2 7 *', 'nos dias ímpares de julho às 09:00'],
+  ['0 9 1-29/2 4,6 *', 'nos dias ímpares de abril e de junho às 09:00'],
+  ['0 9 1-29/2 2,4 *', 'nos dias ímpares de fevereiro e de abril às 09:00'],
+  ['0 9 1-29/2 6 1',
+    'em junho, todas as segundas e também nos dias ímpares, sempre às 09:00'],
+  ['0 9 1-31/2 * *', 'nos dias ímpares de cada mês às 09:00'],
+  ['0 9 */2 * *', 'nos dias ímpares de cada mês às 09:00'],
+  ['0 9 1-29/3 4,6 *',
+    'de 3 em 3 dias do dia 1º ao dia 28 de abril e de junho às 09:00'],
+  ['0 9 */3 4,6 *',
+    'de 3 em 3 dias do dia 1º ao dia 28 de abril e de junho às 09:00'],
+  // A step that stops before the last such day some month has names
+  // other days, and keeps its ends: the 29th of February in leap years,
+  // the 31st of July, the 27th and 29th of June.
+  ['0 9 1-27/2 2 *',
+    'nos dias ímpares do dia 1º ao dia 27 de fevereiro às 09:00'],
+  ['0 0 0 1-27/2 2 * 2032',
+    'nos dias ímpares do dia 1º ao dia 27 de fevereiro de 2032 às 00:00'],
+  ['0 9 1-29/2 7 *', 'nos dias ímpares do dia 1º ao dia 29 de julho às 09:00'],
+  ['0 9 1-29/2 4,7 *',
+    'nos dias ímpares do dia 1º ao dia 29 de abril e de julho às 09:00'],
+  ['0 9 1-25/2 6 *', 'nos dias ímpares do dia 1º ao dia 25 de junho às 09:00'],
+  ['0 9 1-29/2 * *',
+    'nos dias ímpares do dia 1º ao dia 29 de cada mês às 09:00'],
 
   // A long list that is runs and cadences together is said in those.
   // The 11th begins the every-third-day part, as the pattern writes it:

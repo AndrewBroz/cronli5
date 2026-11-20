@@ -2,7 +2,8 @@
 // days of the month, each as a set of values or as a Quartz form.
 
 import type {
-  Analyses, DateArm, QuartzDate, QuartzWeekday, RangeDescription, WeekdayArm
+  Analyses, DateArm, Domain, QuartzDate, QuartzWeekday, RangeDescription,
+  WeekdayArm
 } from '../../core/schedule.js';
 import type {Cadence, Chosen, Part, Pieces, Plain, Rules} from './sets.js';
 import type {Led} from './phrases.js';
@@ -39,6 +40,9 @@ export interface Side {
 
 /** What a side needs to know of the month it stands in. */
 export interface MonthFacts {
+  // The days the months the day of the month fires in have: 1 to the last
+  // day of the longest of them.
+  monthDays: Domain;
   months: Chosen;
   // Whether exactly one month is named.
   single: boolean;
@@ -201,23 +205,31 @@ function dayRun(said: {from: number; to: number}, style: PortugueseStyle):
 }
 
 // Whether every second day runs the length of the month, from its 1st or
-// its 2nd to the last odd or even day there can be.
-function spansMonth(cadence: Cadence): boolean {
-  return cadence.interval === 2 && cadence.start <= 2 &&
-    cadence.last + 2 > domainOf('date').max;
+// its 2nd to the last odd or even day the month has. The month is the
+// longest the days fire in, so that a step spelled to stop there and one
+// spelled to run on fire on the same days and are said alike.
+function spansMonth(cadence: Cadence, month: Domain): boolean {
+  return cadence.interval === 2 && cadence.start - month.min < 2 &&
+    cadence.last + 2 > month.max;
+}
+
+// How the days are said: in what style, and against what month.
+interface DayContext {
+  month: Domain;
+  style: PortugueseStyle;
 }
 
 // Every second day by its number being odd or even, with both its ends
 // where it does not run the length of the month; any other cadence by its
 // interval and both its ends.
-function everyFewDays(said: Cadence, style: PortugueseStyle): Led {
+function everyFewDays(said: Cadence, {month, style}: DayContext): Led {
   const ends = dayRun({from: said.start, to: said.last}, style);
 
   if (said.interval === 2) {
     return {
       lead: `${contractions.em.plural.masculine} ${units.day.many} ` +
         (said.start % 2 === 1 ? words.theOdd : words.theEven),
-      text: spansMonth(said) ? '' : ends
+      text: spansMonth(said, month) ? '' : ends
     };
   }
 
@@ -231,25 +243,27 @@ function everyFewDays(said: Cadence, style: PortugueseStyle): Led {
 // A piece of the days, with what leads it kept apart so that neighbours
 // which share a lead say it once.
 const datePieces: {[Kind in Part['kind']]:
-  (part: never, style: PortugueseStyle) => Led} = {
+  (part: never, context: DayContext) => Led} = {
   cadence: everyFewDays,
-  range: (part: RangeDescription, style) =>
+  range: (part: RangeDescription, {style}) =>
     ({lead: '', text: dayRun(part, style)}),
-  values: (part: {values: number[]}, style) =>
+  values: (part: {values: number[]}, {style}) =>
     ({lead: '', text: onDays(part, style)})
 };
 
-function dateParts(parts: Part[], style: PortugueseStyle): string {
-  return led(parts.map((part) => datePieces[part.kind](part as never, style)));
+function dateParts(parts: Part[], context: DayContext): string {
+  return led(parts.map((part) =>
+    datePieces[part.kind](part as never, context)));
 }
 
 // Every second day that runs the length of the month is one thing; any
 // other cadence names both its ends, and is listed while it is short.
 // Beside weekdays the days take no exception, where it would be taken for
 // the whole pair.
-function dateRules(paired: boolean, anyLength: boolean): Rules {
+function dateRules(paired: boolean, anyLength: boolean, month: Domain):
+  Rules {
   return {
-    cadence: (cadence) => Number(spansMonth(cadence)) ||
+    cadence: (cadence) => Number(spansMonth(cadence, month)) ||
       withEnds(longestList)(cadence),
     domain: domainOf('date'),
     excepts: (base) => !paired && (anyLength || base.kind !== 'all'),
@@ -325,7 +339,7 @@ const quartzSayers: {[Kind in QuartzDate['kind']]: QuartzSayer} = {
 function holdsAnywhere(written: Chosen): boolean {
   const {removed, said} = written;
 
-  return said.kind === 'cadence' && spansMonth(said) ||
+  return said.kind === 'cadence' && spansMonth(said, domainOf('date')) ||
     said.kind === 'all' && removed.every((day) => day <= shortestMonth);
 }
 
@@ -333,11 +347,13 @@ function holdsAnywhere(written: Chosen): boolean {
 // it holds in a month of any length, that is the set as written. Under
 // named months it is otherwise the days those months have, and never
 // «todos os dias, exceto», which counts to the 31st.
-function daysSaid(analyses: Analyses, unnamed: boolean): Chosen {
+function daysSaid(analyses: Analyses, facts: MonthFacts): Chosen {
+  const {monthDays, unnamed} = facts;
   const reach = analyses.dateReach;
   const domain = domainOf('date');
   const days = firesOn(analyses.candidates.date, domain);
-  const written = choose(days, dateRules(pairedDays(analyses), true));
+  const written =
+    choose(days, dateRules(pairedDays(analyses), true, monthDays));
 
   if (reach && reach.days && reach.days.everyDay) {
     return {...written, removed: [], said: {kind: 'all'}};
@@ -347,7 +363,7 @@ function daysSaid(analyses: Analyses, unnamed: boolean): Chosen {
     written :
     choose(reach && reach.days ?
       firesOn(reach.days.candidates, domain) :
-      days, dateRules(pairedDays(analyses), false));
+      days, dateRules(pairedDays(analyses), false, monthDays));
 }
 
 /** The day-of-month side of the calendar part. */
@@ -363,7 +379,7 @@ function dateSide(analyses: Analyses, facts: MonthFacts): Side {
     };
   }
 
-  const {removed, said} = daysSaid(analyses, unnamed);
+  const {removed, said} = daysSaid(analyses, facts);
   const whole = said.kind === 'all';
 
   return {
@@ -374,7 +390,7 @@ function dateSide(analyses: Analyses, facts: MonthFacts): Side {
     several: firesOn(analyses.candidates.date, domainOf('date')).length > 1,
     text: whole ?
       words.everyDay :
-      dateParts(partsOf(said), style)
+      dateParts(partsOf(said), {month: facts.monthDays, style})
   };
 }
 

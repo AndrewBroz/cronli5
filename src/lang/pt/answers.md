@@ -605,9 +605,12 @@ is two windows: «a cada minuto das 09:00 às 09:10 e das 09:50 às 09:59».
   days as written hold in a month of any length and are kept as they are:
   every second day the length of the month («nos dias ímpares de junho»),
   and every day but some that every month has, the 28th or earlier («todos
-  os dias de junho, exceto no dia 15»). «Todos os dias, exceto» counts to
-  the 31st, so under named months it is said of nothing else: days 1 to 14
-  and 16 to 30 of June are «do dia 1º ao dia 30 de junho, exceto no dia
+  os dias de junho, exceto no dia 15»). Every second day runs the length
+  of the month when it reaches the last odd or even day of the longest
+  month it fires in, whatever the field's last value (5.1): `1-29/2` and
+  `*/2` in June are both «nos dias ímpares de junho». «Todos os dias,
+  exceto» counts to the 31st, so under named months it is said of
+  nothing else: days 1 to 14 and 16 to 30 of June are «do dia 1º ao dia 30 de junho, exceto no dia
   15». With every month the days are said as written, and read as a date
   is: «no dia 31 de cada mês» fires in the months that have a 31st. A
   month that has none of the days, and a schedule that therefore never
@@ -1210,14 +1213,49 @@ again on the 1st (3.3, 8). So every second day is always said this way.
 Where it does not run the length of the month (it starts after the 2nd,
 or stops before the last odd or even day there can be) it names both
 ends, and is listed while it has seven days or fewer: «nos dias pares do
-dia 8 ao dia 30 de cada mês»; «nos dias ímpares do dia 1º ao dia 29 de
-fevereiro». It is extended to hours only where they are stretches under
+dia 8 ao dia 30 de cada mês»; «nos dias ímpares do dia 1º ao dia 25 de
+junho». It is extended to hours only where they are stretches under
 a finer field: «a cada minuto nas horas pares», «a cada 15 minutos nas
 horas ímpares», and with both ends where the step does not tile the day,
 «a cada minuto nas horas ímpares, das 05:00 às 23:59» (4.1). A moment
 every second hour is «de 2 em 2 horas», the plain step (rule 2 of the
 opening), so that an edit to the minute changes only the minute's part.
 It is not extended to months, which are named.
+
+**The same days, said alike (2026-11-19).** "The length of the month" is
+judged by the days the pattern reaches in the months it fires in (the
+core's `daysReached`), not by the field's values against 31. When those
+days are exactly the days a plain step from the same start reaches there,
+the two are said alike, by the plain step's form: `1-29/2` and `*/2` in
+June fire on the same fifteen days and are both «nos dias ímpares de
+junho»; `2-28/2` and `2/2` in February are both «nos dias pares de
+fevereiro». Before, the first of each pair kept its ends («do dia 1º ao dia
+29 de junho»), which restates an end the month itself supplies and, beside
+the bare form for the same days, tells the reader the two differ. The
+edges:
+
+* Months of different lengths named together are judged by the longest:
+  `1-29/2` in April and June is «nos dias ímpares de abril e de junho»,
+  in February and April «nos dias ímpares de fevereiro e de abril»
+  (February's 29th comes in leap years only, as for `*/2`).
+* A range that stops before the last such day of the longest month names
+  other days and keeps its ends: `1-29/2` in July or in April and July
+  leaves out the 31st («nos dias ímpares do dia 1º ao dia 29 de julho»);
+  `1-27/2` in February leaves out the 29th of leap years («do dia 1º ao
+  dia 27 de fevereiro»), but in February of 2031 alone, which has 28 days,
+  it is every odd day («nos dias ímpares de fevereiro de 2031»).
+* With every month the longest month has 31 days, so `1-31/2` and `*/2`
+  agree, as before («nos dias ímpares de cada mês»), and `1-29/2` keeps its
+  ends.
+* A step other than two is the same rule, and already said alike, since a
+  cadence of days names both ends inside the months reached: `1-29/3` and
+  `*/3` in April and June are both «de 3 em 3 dias do dia 1º ao dia 28 de
+  abril e de junho».
+* Beside weekdays, in a union, the days of the month follow the same rule:
+  `1-29/2` in June with Mondays is «em junho, todas as segundas e também
+  nos dias ímpares».
+* Minutes, hours and months are not cut short by the calendar, and
+  their spellings already agree; they are unchanged.
 
 5.2 Monday to Friday is the range «de segunda a sexta». Saturday and
 Sunday are «todos os sábados e domingos».

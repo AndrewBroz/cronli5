@@ -58,6 +58,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Portuguese says the same days the same way, however the step is
+  spelled.** A step of days that stops at the last odd or even day the
+  named months have is said like the plain step: `0 9 1-29/2 6 *` was
+  «nos dias ímpares do dia 1º ao dia 29 de junho às 09:00» and is now
+  «nos dias ímpares de junho às 09:00», as `0 9 */2 6 *` already was.
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
   Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
   `cronli5/all` has it. An instance without it reports the language as

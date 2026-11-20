@@ -2,7 +2,9 @@
 // attached the way a date has them, or led by a month or year that has no
 // noun to attach to.
 
-import type {Analyses, DateReach} from '../../core/schedule.js';
+import type {
+  Analyses, DateReach, Domain, Schedule
+} from '../../core/schedule.js';
 import type {MonthFacts, Side} from './days.js';
 import type {PortugueseStyle} from './options.js';
 import type {Chosen, Rules} from './sets.js';
@@ -13,6 +15,7 @@ import {
 } from './days.js';
 import {ifAny, list, spaced} from './phrases.js';
 import {monthName, runsAs} from './names.js';
+import {daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
 import {yearOf} from './years.js';
@@ -186,6 +189,14 @@ function sidesOf(analyses: Analyses, facts: Facts, needed: boolean): Side[] {
     .find((found) => found.length > 0) as Side[];
 }
 
+// The days the months the day of the month fires in have, from the 1st
+// to the last day of the longest; every day of the field for a Quartz form.
+function monthDaysOf(schedule: Schedule): Domain {
+  const reached = daysReached(schedule);
+
+  return reached ? reached.domain : domainOf('date');
+}
+
 // Whether a month or a year is named.
 function monthOrYearNamed(months: Chosen, dated: boolean): boolean {
   return months.values.length < 12 || dated;
@@ -214,10 +225,11 @@ function leadsAlone(
  * and a month or year is named, the month or year leads instead.
  */
 function calendarPart(
-  analyses: Analyses,
+  schedule: Schedule,
   busy: boolean,
   style: PortugueseStyle
 ): Calendar {
+  const {analyses} = schedule;
   const {candidates, dateReach: reach} = analyses;
   const year = yearOf(analyses);
   const dated = restricts(candidates.year);
@@ -227,6 +239,7 @@ function calendarPart(
   const facts: Facts = {
     leap: Boolean(reach) && comes &&
       (reach as DateReach).everyYear.length === 0,
+    monthDays: monthDaysOf(schedule),
     months,
     single: months.values.length === 1,
     style,
