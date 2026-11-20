@@ -863,9 +863,20 @@ at an end is not limited this way: every day of the month but the 1st is
 3.10 The limits are the counts of the opening section, with its
 corrections; what they rest on is cited where each is stated.
 
-3.11 Declared ties: none. `*/12` and `0,12` are the same hours and are
-said the same way, « à 0 h et à 12 h » (judge 2: natural). A renderer for
-French never asks how a field was written.
+3.11 Declared ties: one, the last day of the month (below). `*/12` and
+`0,12` are the same hours and are said the same way, « à 0 h et à 12 h »
+(judge 2: natural). A renderer for French never asks how a field was
+written.
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is «le dernier jour de juin à 9 h» and
+`0 9 30 6 *` is «le 30 juin à 9 h», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ## 4. Fusions
 

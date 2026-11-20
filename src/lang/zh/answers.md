@@ -174,8 +174,9 @@ set of seconds.
   many there are and how they are arranged, except for the idioms of
   section 5 and what the calendar decides (4.4): a date its months do not
   have, and a 29 February.
-* **No ties are declared** (3.11). Equal schedules are said alike however
-  the pattern was written.
+* **One tie is declared** (3.11): the last day of the month written `L`
+  or as a number. Otherwise equal schedules are said alike however the
+  pattern was written.
 
 ## 1. Anchors
 
@@ -789,7 +790,18 @@ Not checked with a fluent human beyond that.
 *`: 每6小时的23分 (3.7; 2026-11-19. From the second amendment of
 2026-11-14 until then they were the four times.)
 
-3.11 None. `0 */12 * * *` and `0 0,12 * * *` are both 每12小时一次.
+3.11 One, the last day of the month. Hours are no tie: `0 */12 * * *`
+and `0 0,12 * * *` are both 每12小时一次.
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is 每年6月最后一天9:00 and
+`0 9 30 6 *` is 每年6月30日9:00, though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 **Doubted, and not hidden** (2026-11-19): one schedule is said two ways.
 The odd days of June are 每年6月的单日 where the set fills the month's

@@ -56,8 +56,8 @@ the usage notes and on my judgment, and says so.
 `usage.md` is left exactly as its writer wrote it. Where these answers
 depart from it, the departure and its reason are in the last section.
 
-Polish declares **no ties** (3.11): no wording depends on how a field was
-written.
+Polish declares **one tie** (3.11): the last day of the month written `L`
+or as a number. No other wording depends on how a field was written.
 
 ## The shape of a Polish description
 
@@ -1011,14 +1011,25 @@ it says twice, and what has to be worked out.
 - *Exceptions* cost a subtraction: worth it for one or two out of a whole,
   or out of a base that leaves seven or more; not to save a list of five.
 
-**3.11 Ties.** None. `0 */12 * * *` and `0 0,12 * * *` are both «codziennie
-o 0:00 i 12:00». Two moments a day are recognised as two times of day and
+**3.11 Ties.** One, the last day of the month (at the end of this
+section). Hours are no tie: `0 */12 * * *` and `0 0,12 * * *` are both
+«codziennie o 0:00 i 12:00». Two moments a day are recognised as two times of day and
 nothing has to be counted; «co 12 godzin» is no shorter aloud. With three
 steps or more the rhythm wins («co 8 godzin» against three times). Minutes
 differ on purpose: «co 30 minut» is said for the two values 0 and 30,
 because two points in every hour are a rhythm and not two events. That
 asymmetry is a judgment of 2026-11-19 and no reader has been asked about
 it.
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is «co roku ostatniego dnia czerwca o 9:00» and
+`0 9 30 6 *` is «co roku 30 czerwca o 9:00», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ## 4. Fusions
 

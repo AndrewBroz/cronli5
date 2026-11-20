@@ -137,8 +137,9 @@ Six rules run through everything:
   never about which values, apart from the idioms of section 5 and facts
   about the calendar (5.7).
 
-There are no declared ties (3.11): however a pattern is written, equal
-schedules are said alike.
+There is one declared tie (3.11), the last day of the month written `L`
+or as a number; otherwise, however a pattern is written, equal schedules
+are said alike.
 
 Where several of the core's descriptions of a set are sayable, the choice
 is made in this order:
@@ -851,9 +852,19 @@ both judges' grades:
 * **An exception is worth its subtraction only above four items.**
 * **Six names of months are easy; they are words, not numbers.**
 
-3.11 None. Hours 0 and 12 are «щодня о 0:00 та 12:00» whether written
+3.11 One, the last day of the month (below). Hours 0 and 12 are «щодня о 0:00 та 12:00» whether written
 `*/12`, `0/12` or `0,12`. «Кожні 12 годин» does not say at which hours, so
 the two are not a tie.
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is «щороку в останній день червня о 9:00» and
+`0 9 30 6 *` is «щороку 30 червня о 9:00», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 3.12 Runs and cadences together. Some sets are no single run, cadence or
 short list, and their list is too long to hold: minutes `0-20/2,21-59/3`

@@ -59,7 +59,7 @@ Three rules run through everything:
   item has to be held.
 * **The description should show how it answers to the pattern.** Where two
   phrasings are equally easy, the one that mirrors how the field was
-  written wins. The ties are listed in 3.11; there is one.
+  written wins. The ties are listed in 3.11; there are two.
 
 What is held is counted as things named: a value, a clock time, an end of
 a range, an interval, or an idiom such as "weekdays". Where several
@@ -751,6 +751,16 @@ Everywhere else hours 0 and 12 are two named hours, however written: "at
 12:23 a.m. and 12:23 p.m. every day"; "at 12:00:15 a.m. and 12:00:15 p.m.
 every day"; "every 15 minutes during the
 12 a.m. and noon hours every day".
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is "at 9 a.m. on the last day of June" and
+`0 9 30 6 *` is "at 9 a.m. on June 30", though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 3.12 Runs and cadences together. Some sets are no single run, cadence or
 short list: years 2030 to 2040 and then every fifth year; minutes 0 to 20

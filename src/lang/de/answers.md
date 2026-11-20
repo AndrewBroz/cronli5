@@ -735,11 +735,21 @@ weekday together (4.3), except «täglich, außer» on the date side.
 3.10 The limits are those of the opening section. They rest on a few
 choices by two judges and have not been checked with a fluent human.
 
-3.11 Declared ties: none. Hours 0 and 12 are «täglich um 0:00 und 12:00
+3.11 Declared ties: one, the last day of the month (below). Hours 0 and 12 are «täglich um 0:00 und 12:00
 Uhr» however the field is written (graded natural; two hours are never
 a cadence). Hours 0, 6, 12 and 18 are «alle 6 Stunden» however the field
 is written: the set comes round the day, whether it was spelled `*/6`
 or `0,6,12,18`.
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is «jährlich am letzten Tag im Juni um 9:00 Uhr» and
+`0 9 30 6 *` is «jährlich am 30. Juni um 9:00 Uhr», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ## 4. Fusions
 

@@ -154,8 +154,8 @@ The time of day is chosen as one thing from the second, minute and hour
 together (4.1, 4.2), because Italian says a clock time, not a minute and
 an hour.
 
-**No tie is declared.** No wording depends on how a field was written
-(3.11).
+**One tie is declared** (3.11): the last day of the month written `L` or
+as a number. No other wording depends on how a field was written.
 
 ## 1. Anchors
 
@@ -611,8 +611,19 @@ after another and from the reads of the rows:
   next (four times against five): the judge noticed and it stays, since
   each is the easier form at its length.
 
-3.11 No pair is a tie. `0 */12 * * *`, `0 0/12 * * *` and `0 0,12 * * *`
-are all «tutti i giorni alle 0:00 e alle 12:00».
+3.11 One pair is a tie, the last day of the month (below). `0 */12 * * *`,
+`0 0/12 * * *` and `0 0,12 * * *` are all «tutti i giorni alle 0:00 e
+alle 12:00».
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is «l'ultimo giorno di giugno alle 9:00» and
+`0 9 30 6 *` is «il 30 giugno alle 9:00», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ## 4. Fusions
 

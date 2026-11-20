@@ -183,9 +183,19 @@ named, only on how many there are and how they are arranged.
   is no form in which a time that is named does not fire. **(Reader 1**
   understood every such window exactly, and noted that 17:59 "huele a
   máquina, pero es exacto"**.)**
-* **There is no declared tie.** Hours 0 and 12 are «a las 0:00 y 12:00»
+* **There is one declared tie.** Hours 0 and 12 are «a las 0:00 y 12:00»
   however they were written. The first version said «cada 12 horas» for
   `*/12`; the reader could only guess when it fires.
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is «el último día de junio a las 9:00» and
+`0 9 30 6 *` is «el 30 de junio a las 9:00», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ## 1. Anchors
 

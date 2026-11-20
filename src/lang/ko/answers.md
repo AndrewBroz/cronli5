@@ -109,7 +109,8 @@ Things that run through everything:
   run through midnight", 2026-11-19). The week's edge is between Sunday
   and Monday (5.1).
 
-Korean declares **no tie**: no wording depends on how a field was written.
+Korean declares **one tie** (3.11): the last day of the month written `L`
+or as a number. No other wording depends on how a field was written.
 
 ## How a form is chosen
 
@@ -910,8 +911,18 @@ from the cost of each.
   the minute said apart («6시간마다 23분에») is not Korean.
 * An exception: one or two.
 
-3.11 None. `0 */12 * * *` and `0 0,12 * * *` are both «매일 0시, 낮
-12시».
+3.11 One, the last day of the month. Hours are no tie: `0 */12 * * *`
+and `0 0,12 * * *` are both «매일 0시, 낮 12시».
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same day written as a number are a tie: `0 9 L 6 *`
+is «매년 6월 말일 오전 9시» and
+`0 9 30 6 *` is «매년 6월 30일 오전 9시», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ## 4. Fusions
 

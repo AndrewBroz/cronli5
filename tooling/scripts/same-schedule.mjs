@@ -21,7 +21,12 @@
 //
 // A second check lists sentences that name a day number some named month
 // never has (`*/3 4,7` said as running to the 31st of April and July).
-// It is a heuristic: candidates to read, not verdicts.
+// It is a heuristic and a report only, never a gate, in two tiers. The
+// strong tier (no named month has the day: "every day in June except the
+// 15th and 31st") is a sentence naming a date that never occurs. The weak
+// tier (some named months lack it: "the 31st of June and July") is a form
+// a reader takes as skipping the month that lacks the day, as with "the
+// 31st of every month": a place to look, not a defect.
 //
 // Usage:
 //   node --import tsx tooling/scripts/same-schedule.mjs
@@ -109,7 +114,19 @@ const DECLARED_TIES = [
       return times === '0,0,0 12,0,0' &&
         hourA.includes('/') !== hourB.includes('/');
     }
-  }
+  },
+  ...LANGUAGES.map((language) => ({
+    code: language.code,
+    declaration: `src/lang/${language.code.toLowerCase()}/answers.md ` +
+      '3.11, "The last day of the month" (2026-11-19): "A day field ' +
+      'written `L` and the same day written as a number are a tie"',
+    applies(pair) {
+      const dates = [pair.a, pair.b].map((pattern) =>
+        fieldsOf(pattern, pair.options).date).sort();
+
+      return (/^\d+$/u).test(dates[0]) && dates[1].toUpperCase() === 'L';
+    }
+  }))
 ];
 
 // ---------------------------------------------------------------------
@@ -794,16 +811,23 @@ function toMarkdown(result, dates) {
   ties.forEach((found) => out.push(`${line(found)} — ${found.declaration}`));
   out.push('', '## Sentences naming a day a named month lacks ' +
     '(candidates)', '');
-  ['no named month has it', 'some named months lack it'].forEach(
-    function perTier(tier) {
-      const mine = dates.filter((found) => found.tier === tier);
+  out.push('A report only, not gated. Digits 29 to 31 in a sentence that ' +
+    'some month the pattern names never has.', '');
+  [
+    ['no named month has it', 'A sentence naming a date that never ' +
+      'occurs.'],
+    ['some named months lack it', 'A form a reader takes as skipping the ' +
+      'month that lacks the day, as with "the 31st of every month": a ' +
+      'place to look, not a defect.']
+  ].forEach(function perTier([tier, meaning]) {
+    const mine = dates.filter((found) => found.tier === tier);
 
-      out.push(`### ${tier}: ${mine.length}`, '');
-      mine.forEach((found) => out.push(`- ${found.code}/` +
-        `${found.styles.join(',')} \`${found.pattern}\` names ` +
-        `${found.days.join(', ')}: «${found.sentence}»`));
-      out.push('');
-    });
+    out.push(`### ${tier}: ${mine.length}`, '', meaning, '');
+    mine.forEach((found) => out.push(`- ${found.code}/` +
+      `${found.styles.join(',')} \`${found.pattern}\` names ` +
+      `${found.days.join(', ')}: «${found.sentence}»`));
+    out.push('');
+  });
 
   return out.join('\n') + '\n';
 }
@@ -839,8 +863,15 @@ function main() {
     Object.fromEntries(byCode))}`);
   console.log(`violations by family: ${JSON.stringify(
     Object.fromEntries(byFamily))}`);
-  console.log(`declared ties: ${result.ties.length}; missing-date ` +
-    `candidates: ${dates.length}`);
+  const strong = dates.filter((found) =>
+    found.tier === 'no named month has it').length;
+
+  console.log(`declared ties: ${result.ties.length}`);
+  console.log('dates that do not occur (a report, not gated): ' +
+    `${strong} name a date that never occurs (no named month has the ` +
+    `day); ${dates.length - strong} name a day only some named months ` +
+    'lack, which a reader takes as skipping those months (a place to ' +
+    'look, not a defect)');
 
   return result.violations;
 }
