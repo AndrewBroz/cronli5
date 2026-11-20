@@ -58,6 +58,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **A field that names every value of its range is said as unrestricted**,
+  however it is spelled (`6,5,4,3,2,1,0`, `0-3,4,5-6`, `MON-FRI,SAT,SUN`,
+  `1-15,16-31`, `*/2,1/2`), in every field and every language. Only the
+  whole week written as a list or a mix changed: Spanish, Russian and
+  Traditional Chinese now say `0 9 * * 6,5,4,3,2,1,0` as they say
+  `0 9 * * *` («todos los días a las 9:00», «ежедневно в 9:00», «每天
+  09:00»), where Russian and Traditional Chinese named all seven days.
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
   Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
   `cronli5/all` has it. An instance without it reports the language as
@@ -181,6 +188,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   (`2/2`, Tuesday, Thursday and Saturday) is unchanged, and so is Quartz,
   whose weekday 7 is Saturday. The answer key used to check readers read a
   Quartz step from a start through Sunday too, and now stops at Saturday.
+- **A whole-range day field beside a day field written from a star.** In
+  cron, when either day field is written from a star (`*/2`), a day must
+  match both; a date field naming every day (`1-15,16-31`, `*/2,2/2`, the
+  list 1 to 31) then leaves the days to the weekday, and a weekday field
+  naming every day leaves them to the date. English, German, French,
+  Italian, Spanish, Japanese, Russian, Ukrainian, Indonesian and
+  Simplified Chinese said "every day" instead: `0 9 1-15,16-31 * */2` was "at 9 a.m. every day" and is
+  now "at 9 a.m. on Tuesdays, Thursdays, Saturdays, and Sundays", and
+  `0 9 */2,2/2 * 1` is now "at 9 a.m. on Mondays". Written without a star
+  (`1-15,16-31` beside `1`), it is every day, as before.
 
 ## [1.2.2]
 

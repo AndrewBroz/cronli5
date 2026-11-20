@@ -67,7 +67,11 @@ function normalizeCronPattern(
   });
 
   // With neither day field starred the pattern fires when either matches,
-  // so one that names every value makes every day match.
+  // so one that names every value makes every day match. Whether a field
+  // is starred was read from the text before normalizing: `1-31` and
+  // `1-15,16-31` are the star now, but were not written as one, and beside
+  // a weekday they make every day; `*` and `*/1` were, and leave the days
+  // to the weekday.
   if (eitherDay && (namesEveryValue(cronPattern.date, 'date') ||
       namesEveryValue(cronPattern.weekday, 'weekday'))) {
     cronPattern.date = '*';
@@ -188,7 +192,7 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
       return collapseFullSpanRange(segment, spec);
     });
 
-  if (merged.indexOf('*') !== -1) {
+  if (merged.indexOf('*') !== -1 || namesWholeField(merged, spec)) {
     return '*';
   }
 
@@ -196,6 +200,21 @@ function normalizeField(value: string, field: Field, spec: FieldSpec): string {
     .sort(function ascending(a, b) {
       return firstFire(a, spec) - firstFire(b, spec);
     }).join(',');
+}
+
+// Whether a field's arms together name every value it can take, however
+// they are spelled (`0-3,4,5-6`, `0,1,2,3,4,5,6,7`, `*/2,1/2`): such a field
+// restricts nothing, so it is the star, and every language says it alike.
+// For the two day fields that is a statement about the values only. Cron
+// asks how a day field was written as well (a field written from a star
+// leaves the days to the other one), and that question is settled before
+// this, from the field as written (`isStarred`), so `1-15,16-31` beside a
+// restricted weekday still means every day, as `1-31` does.
+function namesWholeField(arms: string[], spec: FieldSpec): boolean {
+  const top = typeof spec.top === 'number' ? spec.top : spec.max;
+
+  return new Set(enumerateFires(arms.join(','), spec.min, top)).size ===
+    top - spec.min + 1;
 }
 
 // A step is a cadence only when it is the whole field. Inside a list it
