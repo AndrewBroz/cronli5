@@ -274,14 +274,24 @@ function names(description: Sayable, naming: Naming): string {
   return named[description.kind](description as never, naming);
 }
 
-// A series of dates: the first three and the last, or all of a few.
-function series(cadence: Described<'cadence'>, naming: Naming): string {
+// Dates in step: all of a few, with what follows them; or the stretch
+// they hold, what follows it, and the step in the place of «täglich»:
+// every second day by its word, any other in words («vom 8. bis 30.
+// Juni an den geraden Tagen», «vom 1. bis 28. Juni alle 3 Tage»).
+function series(
+  cadence: Described<'cadence'>,
+  naming: Naming,
+  after: string
+): string {
   const days = denote(cadence, dateDomain).map(ordinal);
+  const step = [`${words.every} ${cadence.interval} ${units.day.many}`,
+    words.onEvenDays, words.onOddDays][
+    Number(cadence.interval === 2) * (cadence.start % 2 + 1)];
 
   return days.length > boundedCadence + 1 ?
-    `${naming.one}${days.slice(0, boundedCadence).join(', ')} ` +
-      `${words.ellipsis} ${words.and} ${days[days.length - 1]}` :
-    naming.one + list(days);
+    join([`${naming.from}${days[0]} ${words.to} ${days[days.length - 1]}`,
+      after, step]) :
+    join([naming.one + list(days), after]);
 }
 
 const datesSaid: {[kind: string]: (
@@ -292,13 +302,13 @@ const datesSaid: {[kind: string]: (
     return tail.alternate ?
       join([[words.onOddDays, words.onEvenDays][cadence.start - 1],
         tail.noun, tail.less]) :
-      join([series(cadence, naming), tail.ord]);
+      series(cadence, naming, tail.ord);
   },
   // Runs and series side by side, each with what opens it.
   cadencePieces(pieces: CadencePieces, tail, naming) {
     return join([pieces.parts.map(function say(part) {
       return part.kind === 'cadence' ?
-        series(part, naming) :
+        series(part, naming, '') :
         names(part, naming);
     }).join(` ${words.also} `), tail.ord]);
   },

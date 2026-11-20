@@ -2793,7 +2793,7 @@
    "pattern": "0 0 1-29/2 2,4 *"
   },
   {
-   "expected": "im Januar, März, Mai, Juli, September und November jeweils am 1., 3., 5. … und 29. um 0:00 Uhr",
+   "expected": "im Januar, März, Mai, Juli, September und November jeweils vom 1. bis 29. an den ungeraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -2807,49 +2807,49 @@
    "pattern": "0 0 1-29/2 6 1"
   },
   {
-   "expected": "jährlich am 1., 4., 7. … und 28. Juni um 0:00 Uhr",
+   "expected": "jährlich vom 1. bis 28. Juni alle 3 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 1-28/3 6 *"
   },
   {
-   "expected": "jährlich am 1., 4., 7. … und 28. Juni um 0:00 Uhr",
+   "expected": "jährlich vom 1. bis 28. Juni alle 3 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 */3 6 *"
   },
   {
-   "expected": "jährlich am 1., 3., 5. … und 29. Juli um 0:00 Uhr",
+   "expected": "jährlich vom 1. bis 29. Juli an den ungeraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 1-29/2 7 *"
   },
   {
-   "expected": "im April und Mai jeweils am 1., 3., 5. … und 29. um 0:00 Uhr",
+   "expected": "im April und Mai jeweils vom 1. bis 29. an den ungeraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 1-29/2 4,5 *"
   },
   {
-   "expected": "jährlich am 1., 3., 5. … und 27. Februar um 0:00 Uhr",
+   "expected": "jährlich vom 1. bis 27. Februar an den ungeraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 1-27/2 2 *"
   },
   {
-   "expected": "jährlich am 2., 4., 6. … und 28. Juni um 0:00 Uhr",
+   "expected": "jährlich vom 2. bis 28. Juni an den geraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 2-28/2 6 *"
   },
   {
-   "expected": "jährlich am 1., 3., 5. … und 15. Juni um 0:00 Uhr",
+   "expected": "jährlich vom 1. bis 15. Juni an den ungeraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -2877,14 +2877,14 @@
    "pattern": "0 0 */5 6 *"
   },
   {
-   "expected": "jährlich am 1., 4., 7. … und 28. Februar um 0:00 Uhr",
+   "expected": "jährlich vom 1. bis 28. Februar alle 3 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 */3 2 *"
   },
   {
-   "expected": "jährlich am 8., 10., 12. … und 30. Juni um 0:00 Uhr",
+   "expected": "jährlich vom 8. bis 30. Juni an den geraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
@@ -2975,25 +2975,53 @@
    "pattern": "0 0 5-20/3 * *"
   },
   {
-   "expected": "am 8., 10., 12. … und 30. jedes Monats um 0:00 Uhr",
+   "expected": "vom 8. bis 30. jedes Monats an den geraden Tagen um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 8/2 * *"
   },
   {
-   "expected": "am 1., 4., 7. … und 31. jedes Monats um 0:00 Uhr",
+   "expected": "vom 3. bis 31. jedes Monats an den ungeraden Tagen um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 3-31/2 * *"
+  },
+  {
+   "expected": "vom 1. bis 31. jedes Monats alle 3 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 */3 * *"
   },
   {
-   "expected": "im April und Juni jeweils am 1., 4., 7. … und 28. um 0:00 Uhr",
+   "expected": "vom 2. bis 30. jedes Monats alle 4 Tage um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 2/4 * *"
+  },
+  {
+   "expected": "im April und Juni jeweils vom 1. bis 28. alle 3 Tage um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 */3 4,6 *"
+  },
+  {
+   "expected": "im Januar und Juli montags bis freitags und zusätzlich vom 1. bis 31. dieser Monate alle 3 Tage, jeweils um 9:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 9 1-31/3 1,7 1-5"
+  },
+  {
+   "expected": "vom 1. bis 28. Juni alle 3 Tage, wenn sie auf einen Montag fallen, jeweils um 0:00 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0 0 */3 6 1"
   },
   {
    "expected": "im Januar und Juli vom 1. bis 5., am 10. und vom 20. bis 25., jeweils um 12:00 Uhr",
@@ -3973,11 +4001,67 @@
    "pattern": "0-28,30-59 0 9 * * *"
   },
   {
-   "expected": "täglich von 8:00 bis 8:45, von 10:00 bis 10:45 … und von 18:00 bis 18:45 Uhr alle 15 Minuten",
+   "expected": "täglich von 8:00 bis 18:45 Uhr in den geraden Stunden alle 15 Minuten",
    "options": {
     "lang": "de"
    },
    "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "täglich von 9:00 bis 17:45 Uhr in den ungeraden Stunden alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 9-17/2 * * *"
+  },
+  {
+   "expected": "täglich von 0:00 bis 20:45 Uhr alle 5 Stunden eine Stunde lang alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 */5 * * *"
+  },
+  {
+   "expected": "täglich von 9:00 bis 17:30 Uhr alle 2 Stunden in den Minuten 0 bis 30 jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0-30 9-17/2 * * *"
+  },
+  {
+   "expected": "täglich von 9:00:00 bis 17:30:59 Uhr alle 2 Stunden in den Minuten 0 bis 30 jede Sekunde",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "* 0-30 9-17/2 * * *"
+  },
+  {
+   "expected": "täglich von 8:00 bis 20:45 Uhr in den geraden Stunden alle 15 Minuten, außer von 10:00 bis 10:45 Uhr",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 8,12-20/2 * * *"
+  },
+  {
+   "expected": "täglich von 8:00 bis 8:45, von 12:00 bis 12:45, von 16:00 bis 16:45 und von 20:00 bis 20:45 Uhr alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 8-20/4 * * *"
+  },
+  {
+   "expected": "täglich von 2:05 bis 20:45 Uhr alle 3 Stunden zu den Minuten 5, 20 und 45",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,20,45 2-20/3 * * *"
+  },
+  {
+   "expected": "täglich von 0:15 bis 20:45 Uhr alle 2 Stunden zu den Minuten 15 und 45",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "15,45 0-20/2 * * *"
   },
   {
    "expected": "täglich von 9:00 bis 17:00 Uhr stündlich sowie um 20:00 und 22:00 Uhr",
@@ -4675,42 +4759,42 @@
    "pattern": "0 0-10/2,11-23/3 * * *"
   },
   {
-   "expected": "täglich von 0:00 bis 0:59, von 2:00 bis 2:59 … und von 10:00 bis 10:59 sowie von 11:00 bis 11:59, von 14:00 bis 14:59 … und von 23:00 bis 23:59 Uhr jede Minute",
+   "expected": "täglich von 0:00 bis 10:59 Uhr in den geraden Stunden sowie von 11:00 bis 23:59 Uhr alle 3 Stunden eine Stunde lang, jeweils jede Minute",
    "options": {
     "lang": "de"
    },
    "pattern": "* 0-10/2,11-23/3 * * *"
   },
   {
-   "expected": "am 1., 3., 5. … und 9. sowie am 11., 14., 17. … und 29. jedes Monats um 0:00 Uhr",
+   "expected": "vom 1. bis 9. an den ungeraden Tagen sowie vom 11. bis 29. alle 3 Tage jedes Monats um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 1-10/2,11-31/3 * *"
   },
   {
-   "expected": "am 1., 3., 5. … und 19. sowie am 24., 27. und 30. jedes Monats um 0:00 Uhr",
+   "expected": "vom 1. bis 19. an den ungeraden Tagen sowie am 24., 27. und 30. jedes Monats um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 1-20/2,24-30/3 * *"
   },
   {
-   "expected": "vom 1. bis 10. sowie am 12., 14., 16. … und 30. jedes Monats jeweils um 0:00 Uhr",
+   "expected": "vom 1. bis 10. sowie vom 12. bis 30. an den geraden Tagen jedes Monats jeweils um 0:00 Uhr",
    "options": {
     "lang": "de"
    },
    "pattern": "0 0 1-10,12-30/2 * *"
   },
   {
-   "expected": "jede Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57",
+   "expected": "jede Minute, jeweils in den Sekunden 0 bis 20 alle 2 Sekunden sowie in den Sekunden 21 bis 57 alle 3 Sekunden",
    "options": {
     "lang": "de"
    },
    "pattern": "0-20/2,21-59/3 * * * * *"
   },
   {
-   "expected": "jede Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 30, 35, 40 und 45",
+   "expected": "jede Minute, jeweils in den Sekunden 0 bis 20 alle 2 Sekunden sowie in den Sekunden 30, 35, 40 und 45",
    "options": {
     "lang": "de"
    },
@@ -4920,7 +5004,7 @@
    "pattern": "0 0 */2 * 1#2"
   },
   {
-   "expected": "im Januar und Juli am 1., 4., 7. … und 31., wenn sie auf einen Tag von Montag bis Freitag fallen, jeweils um 9:00 Uhr",
+   "expected": "im Januar und Juli vom 1. bis 31. alle 3 Tage, wenn sie auf einen Tag von Montag bis Freitag fallen, jeweils um 9:00 Uhr",
    "options": {
     "lang": "de"
    },

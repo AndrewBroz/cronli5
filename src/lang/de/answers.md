@@ -1,5 +1,79 @@
 # German: answers to the language questionnaire
 
+**Amended 2026-11-19: no series is left for the reader to continue**
+(by Claude Opus 5.5). Until this date German said a cadence it could not
+name by a word as its first values, «…», and its last: «am 8., 10., 12.
+… und 30. jedes Monats»; «um 2, 5, 8 … und 20 Uhr, jeweils zu den
+Minuten 5, 20 und 45»; «von 8:00 bis 8:45, von 10:00 bis 10:45 … und von
+18:00 bis 18:45 Uhr alle 15 Minuten»; «in den Sekunden 0, 2, 4 … 20». A
+series makes the reader infer the step from three numbers and continue
+it, and a reader completes a pattern in the simplest way and is sure of
+it; three hour windows and «…» were recorded as readable as every hour
+(`tooling/docs/finishing-1.0.md`, 2026-11-14). The step is now said in
+words, with the ends the cadence has, and the ends are always moments
+the schedule fires at:
+
+* **Days.** A cadence of more than seven dates is said by the stretch
+  it holds, and its step after the stretch, in the place where
+  «täglich» follows a run of dates («vom 1. bis 7. Juni täglich»): a
+  bare time after «bis 28. Juni» would seem to end the stretch. Every
+  second day keeps its word: «vom 8. bis 30. jedes Monats an den
+  geraden Tagen»; «jährlich vom 1. bis 15. Juni an den ungeraden
+  Tagen». Any other step is «alle N Tage»: «vom 1. bis 31. jedes Monats
+  alle 3 Tage»; «jährlich vom 1. bis 28. Juni alle 3 Tage». The stretch
+  belongs to each month and begins again on its first day, so the step
+  is not heard as running on across the end of a month (the risk
+  recorded for «alle 2 Tage vom 1. bis 31. jedes Monats», 5.1, which is
+  why every second day keeps its word). Beside weekdays the condition
+  follows the step: «im Januar und Juli vom 1. bis 31. alle 3 Tage, wenn
+  sie auf einen Tag von Montag bis Freitag fallen». Seven dates or fewer
+  are still listed, and a cadence of four or fewer among runs and
+  cadences together («am 24., 27. und 30.»).
+* **Hours under listed minutes** (more than six hours in step that do
+  not come round the day): the window from the first time that fires to
+  the last, then the cadence in the place of «stündlich», as a cadence
+  that comes round the day is said: «von 2:05 bis 20:45 Uhr alle 3
+  Stunden zu den Minuten 5, 20 und 45». The window ends on the last
+  time, 20:45; the form given up in 2026-11-14, «von 2 bis 20 Uhr alle 3
+  Stunden, jeweils …», ended on the hour and was read as a window that
+  closes at 20:00.
+* **Hours as stretches** (minutes that run through each hour, under a
+  cadence of more than four hours that does not come round the day):
+  the window from the first moment to the last, then what a cadence that
+  comes round the day says: «von 8:00 bis 18:45 Uhr in den geraden
+  Stunden alle 15 Minuten»; «von 0:00 bis 20:45 Uhr alle 5 Stunden eine
+  Stunde lang alle 15 Minuten»; «von 9:00 bis 17:30 Uhr alle 2 Stunden in
+  den Minuten 0 bis 30 jede Minute». A window alone would be heard as
+  firing all through it; the cadence after it says which hours, in the
+  words already settled for them. Cadences of four hours or fewer still
+  name each window.
+* **Seconds in several parts**: each cadence as a stretch with its step,
+  as minutes are: «jeweils in den Sekunden 0 bis 20 alle 2 Sekunden
+  sowie in den Sekunden 21 bis 57 alle 3 Sekunden».
+
+What was weighed, by the four costs (`tooling/scripts/reading/cost.mjs
+de`, old against new, the columns kept apart). Hours as stretches are
+cheaper in every column: `*/15 8-18/2 * * *` from 43 syllables, 8
+objects and one inferred series to 28, 5 and none; `* 0-10/2,11-23/3`
+from 80 and 14 to 53 and 8. For dates and seconds the columns disagree:
+every new form drops the inferred series and holds one object fewer,
+and is longer to say (`0 0 */3 * *` 18 to 20 syllables, `0 0 8/2 * *` 15
+to 20, `0-20/2,21-59/3` seconds 37 to 45). Hours under listed minutes
+drop the inferred series, a product and two repetitions, and hold one
+object more and take 8 syllables more (`5,20,45 2-20/3`: 25 syllables,
+6 objects against 33 and 7). Where they disagreed, the step said once in
+words and no pattern to continue decided it: a reader who continues
+«1., 4., 7. …» or «2, 5, 8 …» does it the simplest way and is sure of
+it, and the longer sentences say nothing a reader does not need.
+Rejected: the full list (a cadence of days is up to sixteen dates, more
+than a reader holds); a bracket of examples after the words (project
+convention: no bracket illustrates what the words say); «jeden dritten
+Tag» (usage notes 7.3: heard as a rhythm that runs across the month);
+the step before the stretch of dates («alle 3 Tage vom 1. bis 28. Juni
+um 0:00 Uhr»), where a bare time after the end of the stretch would
+seem to end it (the reason «täglich» follows a run of dates). Years keep their series with «usw.» (5.8): it was not
+part of this change, and is the next place to look.
+
 **Amended 2026-11-14 on the maintainer's rulings** (by Claude Opus 5.5,
 on top of the revision for places in the hour of the same day). Three
 things said before were wrong, and every passage and example below has
@@ -160,7 +234,8 @@ Corrections, for what has to be worked out:
     or fewer are still listed («täglich um 1:00, 7:00, 13:00 und 19:00
     Uhr»);
   * hours named as hours, with the minutes said once after them (4.1):
-    **more than six**, and then only a cadence, said as a series;
+    **more than six**, and then only a cadence, said as the window from
+    its first time to its last and its step (4.1);
   * minutes inside the hour, and seconds inside the minute: **more than
     six**;
   * dates: **more than seven**;
@@ -189,16 +264,19 @@ Corrections, for what has to be worked out:
     11:00 bis 23:00 Uhr alle 3 Stunden»; a run among them is «…
     stündlich»;
   * hours as windows: each part's windows, a cadence of more than four
-    as its first two and its last, the parts joined by «sowie» and «Uhr»
-    once at the end: «von 0:00 bis 0:59, von 2:00 bis 2:59 … und von
-    10:00 bis 10:59 sowie von 11:00 bis 11:59, von 14:00 bis 14:59 … und
-    von 23:00 bis 23:59 Uhr jede Minute»;
-  * dates: each cadence as a series (the first three, «…», «und» and the
-    last; four or fewer in full), each run as a run, joined by «sowie»,
-    each with its own «am» or «vom»: «am 1., 3., 5. … und 11. sowie am
-    14., 17., 20. … und 29. jedes Monats»;
-  * seconds that trail: by their number in the minute (4.2): «jeweils in
-    den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57»;
+    as one window and its step (4.1), the parts joined by «sowie», and
+    the minutes once after all of them, after «jeweils»: «von 0:00 bis
+    10:59 Uhr in den geraden Stunden sowie von 11:00 bis 23:59 Uhr alle
+    3 Stunden eine Stunde lang, jeweils jede Minute»;
+  * dates: each cadence by its stretch and its step (four or fewer in
+    full), each run as a run, joined by «sowie», each with its own «am»
+    or «vom»: «vom 1. bis 9. an den ungeraden Tagen sowie vom 11. bis
+    29. alle 3 Tage jedes Monats»; «vom 1. bis 10. sowie vom 12. bis 30.
+    an den geraden Tagen jedes Monats»;
+  * seconds that trail: by their number in the minute (4.2), each
+    cadence of more than four as its stretch and its step: «jeweils in
+    den Sekunden 0 bis 20 alle 2 Sekunden sowie in den Sekunden 21 bis
+    57 alle 3 Sekunden»;
   * years: 5.8.
   Before this rule such a set was a list of up to fifty-nine values.
   **The parts must follow one another**: each begins after the one
@@ -796,8 +874,8 @@ it.
 | one hour | «von 9:00 bis 9:59 Uhr jede Minute»; «von 9:00 bis 9:45 Uhr alle 15 Minuten» |
 | a range (two hours or more) | «von 9:00 bis 17:59 Uhr jede Minute»; «von 9:00 bis 17:45 Uhr alle 15 Minuten» |
 | any other set of hours that is not a cadence of more than four | each window named: «von 9:00 bis 9:45 und von 17:00 bis 17:45 Uhr alle 15 Minuten»; «von 8:00 bis 8:45, von 12:00 bis 12:45 und von 18:00 bis 18:45 Uhr alle 15 Minuten»; «von 0:00 bis 2:59 und von 22:00 bis 23:59 Uhr jede Minute» |
-| any other cadence of more than four hours | the first two windows, «…», «und» and the last window: «von 8:00 bis 8:45, von 10:00 bis 10:45 … und von 18:00 bis 18:45 Uhr alle 15 Minuten». This is a series in the text, not a bracket: it is the only statement of where the stretches lie |
-| a cadence of hours with exceptions | the same, the lead, then the excepted window: «von 8:00 bis 8:45, von 12:00 bis 12:45 … und von 20:00 bis 20:45 Uhr alle 15 Minuten, außer von 10:00 bis 10:45 Uhr» |
+| any other cadence of more than four hours | one window, from its first moment to its last, then what a cadence that comes round the day says (above), with no «ab»: «von 8:00 bis 18:45 Uhr in den geraden Stunden alle 15 Minuten»; «von 0:00 bis 20:45 Uhr alle 5 Stunden eine Stunde lang alle 15 Minuten». (Until 2026-11-19 the first two windows, «…», «und» and the last: «von 8:00 bis 8:45, von 10:00 bis 10:45 … und von 18:00 bis 18:45 Uhr alle 15 Minuten», which can be read as every hour.) |
+| a cadence of hours with exceptions | the same, then the excepted window: «von 8:00 bis 20:45 Uhr in den geraden Stunden alle 15 Minuten, außer von 10:00 bis 10:45 Uhr» |
 | every hour with exceptions | «alle 10 Minuten, außer von 3:00 bis 3:50 Uhr» |
 
 Separate hours as plain windows are settled (the first judge's first
@@ -827,7 +905,7 @@ opens with «stündlich».
 | one hour | a list or a window of clock times: «um 9:05, 9:20 und 9:45 Uhr» |
 | a range, or pieces | windows from the first time that fires to the last, then the minute phrase: «von 9:05 bis 17:45 Uhr stündlich zu den Minuten 5, 20 und 45»; «von 9:00 bis 17:29 Uhr stündlich in den Minuten 0 bis 29 jede Minute»; «von 9:00 bis 17:45 Uhr stündlich in den Minuten 0 bis 29 und 45 jede Minute»; «von 9:00 bis 17:56 Uhr stündlich in den Minuten 0 bis 56 alle 7 Minuten»; «von 9:05 bis 17:45 und von 22:05 bis 22:45 Uhr stündlich zu den Minuten 5, 20 und 45» |
 | separate hours (no two side by side), six clock times or fewer | the clock times: «um 9:05, 9:20, 9:45, 17:05, 17:20 und 17:45 Uhr» |
-| separate hours, more than six clock times, M places or several parts | **the hours once, as hours, then «jeweils» and the minutes once**: «um 9, 13 und 17 Uhr, jeweils zu den Minuten 5, 20 und 45»; «um 9 und 17 Uhr, jeweils in den Minuten 0 bis 29 und 45 jede Minute». The hours are listed up to six: «um 0, 4, 8, 12, 16 und 20 Uhr, jeweils …»; more than six in step that do not come round the day are a series, the first three, «…», «und» and the last: «um 2, 5, 8 … und 20 Uhr, jeweils zu den Minuten 5, 20 und 45»; hours that come round the day are their cadence (above). More than six hours with no step are all listed, which is still shorter than anything else: «um 1, 3, 9, 13, 17, 20 und 22 Uhr, jeweils …». An hour taken away is «außer in der Stunde 13» (3.9) |
+| separate hours, more than six clock times, M places or several parts | **the hours once, as hours, then «jeweils» and the minutes once**: «um 9, 13 und 17 Uhr, jeweils zu den Minuten 5, 20 und 45»; «um 9 und 17 Uhr, jeweils in den Minuten 0 bis 29 und 45 jede Minute». The hours are listed up to six: «um 0, 4, 8, 12, 16 und 20 Uhr, jeweils …»; more than six in step that do not come round the day are the window from the first time that fires to the last, then the step in the place of «stündlich»: «von 2:05 bis 20:45 Uhr alle 3 Stunden zu den Minuten 5, 20 und 45» (until 2026-11-19 a series, «um 2, 5, 8 … und 20 Uhr, jeweils …»); hours that come round the day are their cadence (above). More than six hours with no step are all listed, which is still shorter than anything else: «um 1, 3, 9, 13, 17, 20 und 22 Uhr, jeweils …». An hour taken away is «außer in der Stunde 13» (3.9) |
 | separate hours, M a run or a cadence | each hour's window, from its first run to its last, then the lead, since firing goes on through each window: «von 9:00 bis 9:29 und von 17:00 bis 17:29 Uhr jede Minute»; «von 9:00 bis 9:56 und von 17:00 bis 17:56 Uhr alle 7 Minuten»; a cadence of hours as in the table for continuous minutes |
 | every hour with exceptions | «stündlich zu den Minuten 5, 20 und 45, außer in der Stunde 3» |
 
@@ -879,9 +957,12 @@ writers say it (notes 1.4, 7.9, 8.3). What was weighed:
 * **A cadence of hours with its ends** («von 0 bis 20 Uhr alle 4
   Stunden, jeweils zu den Minuten 15 und 45») was read by one reader as
   a window that closes at 20:00, so that 20:15 and 20:45 drop out. A
-  list of up to six hours, and a series beyond, were read one way (the
-  opening corrections). The series continues the step shown, as the
-  series of dates does («am 1., 4., 7. … und 31.»).
+  list of up to six hours was read one way. Beyond six, until
+  2026-11-19, a series («um 2, 5, 8 … und 20 Uhr, jeweils …») left the
+  step to be inferred; now the window runs from the first time that
+  fires to the last, which no reader can take to close before 20:45:
+  «von 2:05 bis 20:45 Uhr alle 3 Stunden zu den Minuten 5, 20 und 45»
+  (the amendment at the top).
 * **The series of clock times** for a cadence of hours with three
   minutes or fewer («um 0:15, 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr»,
   from 2026-11-12) is given up for the same form: it showed up to nine
@@ -1028,10 +1109,13 @@ Midnight is «0:00», never «24:00».
     in den Sekunden 0 bis 10 und 50 bis 59»; «…, jeweils in den Sekunden
     0 bis 10, 30 und 50 bis 59»; «jede Minute, jeweils in den Sekunden 1
     bis 3, 5, 8, 13 und 21». Runs and cadences together (the opening
-    corrections) are said the same way, each cadence as the first three
-    seconds, «…» and the last (four or fewer in full, with «und»), and
-    the parts joined by «sowie»: «jede
-    Minute, jeweils in den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57».
+    corrections) are said the same way, each cadence of more than four
+    seconds as its stretch and its step with «in den Sekunden» of its
+    own (four or fewer are listed among the rest), and the parts joined
+    by «sowie»: «jede Minute, jeweils in den Sekunden 0 bis 20 alle 2
+    Sekunden sowie in den Sekunden 21 bis 57 alle 3 Sekunden». (Until
+    2026-11-19 each cadence was the first three seconds, «…» and the
+    last: «in den Sekunden 0, 2, 4 … 20 sowie 21, 24, 27 … 57».)
     This form is used under every rest,
     one clock time included («täglich um 9:00 Uhr, jeweils in den
     Sekunden 0 bis 10 und 30»): the windows to the second above are for
@@ -1192,7 +1276,7 @@ the month:
 | Months | The date phrase | Example |
 | --- | --- | --- |
 | every month | carries «jedes Monats» | «am 1. jedes Monats»; «vom 1. bis 7. jedes Monats»; «an den ungeraden Tagen jedes Monats»; «am letzten Tag jedes Monats»; «am zweiten Montag jedes Monats» |
-| one month | fuses with it, and the month does not lead: the bare name after an ordinal number, «im» and the name after a noun. With every year the year part is «jährlich» (2.5) | «am 1. Juni»; «am 1. und 15. Juni»; «vom 1. bis 7. Juni»; «am 8., 10., 12. … und 30. Juni»; «an den ungeraden Tagen im Juni»; «am letzten Tag im Juni»; «am zweiten Montag im Juni»; «am ersten Wochentag (Montag bis Freitag) im Juni»; «am viertletzten Tag im Juni (3 Tage vor dem letzten)» |
+| one month | fuses with it, and the month does not lead: the bare name after an ordinal number, «im» and the name after a noun. With every year the year part is «jährlich» (2.5) | «am 1. Juni»; «am 1. und 15. Juni»; «vom 1. bis 7. Juni»; «vom 8. bis 30. Juni an den geraden Tagen»; «an den ungeraden Tagen im Juni»; «am letzten Tag im Juni»; «am zweiten Montag im Juni»; «am ersten Wochentag (Montag bis Freitag) im Juni»; «am viertletzten Tag im Juni (3 Tage vor dem letzten)» |
 | any other month part | follows it after «jeweils» (2.6), with nothing in place of «jedes Monats» | «im Januar und Juli jeweils am 1.»; «von Juni bis August jeweils am 1.»; «im Januar und Juli jeweils am letzten Freitag»; «im Januar und Juli jeweils an den ungeraden Tagen»; «von Juni bis August jeweils vom 1. bis 7.»; «in allen Monaten, außer im April und September, jeweils am 1.» |
 
 Odd or even days are said by their word alone, with no gloss of numbers
@@ -1209,7 +1293,7 @@ rules, for plain dates and Quartz forms alike:
   months lack says which months have it (5.7).
 * **Under named months only what runs is named.** The dates are those
   that at least one of the months has: «jährlich am 1., 6., 11., 16.,
-  21. und 26. Juni»; «jährlich an den ungeraden Tagen im Juni»; «im April und Juni jeweils am 1., 4., 7. … und 28.»; `0 0 1,31
+  21. und 26. Juni»; «jährlich an den ungeraden Tagen im Juni»; «im April und Juni jeweils vom 1. bis 28. alle 3 Tage»; `0 0 1,31
   4,6,9,11 *` is «im April, Juni, September und November jeweils am 1.».
   And **the months are those in which the date arm runs at all**: `0 0
   30 2-3 *` is «jährlich am 30. März um 0:00 Uhr»; `0 0 31 1,6 *` is
@@ -1238,18 +1322,18 @@ rules, for plain dates and Quartz forms alike:
     year (`… 2 * 2031`), `1-27/2` is its odd days too.
   * Months of different lengths are judged by the longest: `1-29/2` in
     April and June, or in February and April, is the odd days; in April
-    and May it is a series to the 29th, since May has a 31st it does not
+    and May it ends at the 29th, since May has a 31st it does not
     reach. Beside weekdays the same holds («… und zusätzlich an den
     ungeraden Tagen im Juni»).
   * A step that stops before the last odd or even day the months have is
-    other days and keeps its ends: `1-29/2` in July, `1-27/2` in
-    February, `2-28/2` in June, `1-15/2` in June stay series.
+    other days and keeps its ends: `1-29/2` in July is «jährlich vom 1.
+    bis 29. Juli an den ungeraden Tagen»; so `1-27/2` in February,
+    `2-28/2` in June, `1-15/2` in June.
   * Every month: `1-31/2` and `*/2` are both «an den ungeraden Tagen
     jedes Monats», as before.
-  * A step that is not two follows the same rule: the same days are the
-    same series (`1-28/3` and `*/3` in June are both «am 1., 4., 7. …
-    und 28. Juni»); they already agreed, because a series names the
-    days reached.
+  * A step that is not two follows the same rule: `1-28/3` and `*/3` in
+    June are both «jährlich vom 1. bis 28. Juni alle 3 Tage»; they
+    already agreed, because the stretch names the days reached.
   * Hours, minutes and months are not affected: their units do not vary
     in length, and a check of all languages found them already alike.
 * **A date that exists only in leap years says so in a gloss at the end
@@ -1322,11 +1406,15 @@ rules, for plain dates and Quartz forms alike:
   It repeats the word in numbers the reader must read through; the
   maintainer called it "a horrible call", and it is gone everywhere: in
   exceptions, after months and beside weekdays.)
-* Any other cadence of more than seven dates is the gloss without a
-  word, as a series: the first three dates, «…», «und» and the last:
-  «am 1., 4., 7. … und 31. jedes Monats»; «am 8., 10., 12. … und 30.
-  jedes Monats». It claims no rhythm beyond the month, and three dates
-  show the step.
+* Any other cadence of more than seven dates is its stretch, and its
+  step after it where «täglich» follows a run: «vom 1. bis 31. jedes
+  Monats alle 3 Tage»; every second day that does not fill the month
+  keeps its word, «vom 8. bis 30. jedes Monats an den geraden Tagen».
+  The stretch is each month's, from its first day, so it claims no
+  rhythm beyond the month. (Until 2026-11-19 this was a series, the
+  first three dates, «…», «und» and the last, «am 1., 4., 7. … und 31.
+  jedes Monats», which left the step to be inferred: the amendment at
+  the top.)
 * Seven dates or fewer are listed (3.3).
 
 5.2 No idiom is used for either. Saturday and Sunday are the list
@@ -1495,12 +1583,12 @@ brackets are «(Mo. bis Fr.)».
   exception is the shortest true thing to say of years with one hole.
   None of these forms has been judged by a fluent reader.)
 
-Series, by field: a series of windows of hours shows two windows and
-the last; a series of hours named as hours shows three hours, «und» and
-the last («um 2, 5, 8 … und 20 Uhr»); a series of dates shows three dates and the
-last; a series of years shows three years, and its end only if it has
-one. Dates, windows and hours use «…»; years use «usw.», because their
-series has no end to show. (Until 2026-11-14 a series of clock times
+Series, by field: since 2026-11-19 only years are said as a series
+(three years, and its end only if it has one, with «usw.», because the
+series has no end to show). Windows of hours, hours named as hours,
+dates and seconds say their step in words (the amendment at the top);
+until then each showed its first values, «…» and its last («um 2, 5, 8
+… und 20 Uhr»). (Until 2026-11-14 a series of clock times
 showed every time of the first two hours and of the last: «um 0:15,
 0:45, 4:15, 4:45 … 20:15 und 20:45 Uhr».)
 

@@ -54,7 +54,14 @@ time.
 
 ## Known defects, still in (a reader can get the schedule wrong)
 
-- **de**: «…» between hour windows («von 7:05 bis 7:50 … und von 22:05
+- **de**, cured 2026-11-19: German no longer says any series with «…».
+  A cadence of hours under a finer rhythm is one window and its step
+  («von 8:00 bis 18:45 Uhr in den geraden Stunden alle 15 Minuten»),
+  hours under listed minutes the window from the first time to the last
+  and the step («von 2:05 bis 20:45 Uhr alle 3 Stunden zu den Minuten
+  5, 20 und 45»), dates and seconds their stretch and step (answers, the
+  amendment at the top). The record that follows is the defect as it
+  stood: «…» between hour windows («von 7:05 bis 7:50 … und von 22:05
   bis 22:50») can be read as every hour. The candidate on
   `length-gate-work` («täglich alle 6 Stunden (2, 8, 14 und 20 Uhr),
   jeweils um :05, :20, :35 und :50») was recovered correctly by three

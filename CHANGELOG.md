@@ -153,6 +153,19 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   spelled.** `0 9 1-29/2 6 *` fires on the same days as `0 9 */2 6 *`
   and is now «jährlich an den ungeraden Tagen im Juni um 9:00 Uhr», as
   that one is (was «jährlich am 1., 3., 5. … und 29. Juni um 9:00 Uhr»).
+- **German leaves no series for the reader to continue.** A cadence said
+  as its first values, «…» and its last now says its step in words, with
+  the ends it has: `0 0 */3 * *` is «vom 1. bis 31. jedes Monats alle 3
+  Tage um 0:00 Uhr» (was «am 1., 4., 7. … und 31. jedes Monats …»);
+  `*/15 8-18/2 * * *` is «täglich von 8:00 bis 18:45 Uhr in den geraden
+  Stunden alle 15 Minuten» (was «täglich von 8:00 bis 8:45, von 10:00 bis
+  10:45 … und von 18:00 bis 18:45 Uhr alle 15 Minuten», which can be read
+  as every hour); `5,20,45 2-20/3 * * *` is «täglich von 2:05 bis 20:45
+  Uhr alle 3 Stunden zu den Minuten 5, 20 und 45» (was «täglich um 2, 5,
+  8 … und 20 Uhr, jeweils …»); `0-20/2,21-59/3 * * * * *` is «jede
+  Minute, jeweils in den Sekunden 0 bis 20 alle 2 Sekunden sowie in den
+  Sekunden 21 bis 57 alle 3 Sekunden» (was «… 0, 2, 4 … 20 sowie 21, 24,
+  27 … 57»).
 
 ### Removed
 
