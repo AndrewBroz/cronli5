@@ -77,6 +77,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   Traditional Chinese now say `0 9 * * 6,5,4,3,2,1,0` as they say
   `0 9 * * *` («todos los días a las 9:00», «ежедневно в 9:00», «每天
   09:00»), where Russian and Traditional Chinese named all seven days.
+- **Japanese says the same days the same way, however the day field is
+  spelled.** Every second day that ends where the months named end is the
+  word alone: `0 9 1-29/2 6 *` is 毎年6月の奇数日の9:00, as `0 9 */2 6 *`
+  already was (it was 毎年6月1日〜29日の奇数日の9:00). A run that stops
+  earlier keeps its ends. The same holds for every set of days under named
+  months: `0 0 1-14,16-30 6 *` is 15日を除く毎年6月の毎日0:00, as
+  `1-14,16-31` was (it was 毎年6月1日〜30日（15日を除く）); `0 0 L 6 *` is
+  毎年6月30日 (was 毎年6月末日); and no month is given a day it lacks:
+  `0 0 */3 4,7 *` is 毎年4月・7月の1日・4日・7日…31日（31日は7月のみ）.
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
   Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
   `cronli5/all` has it. An instance without it reports the language as
