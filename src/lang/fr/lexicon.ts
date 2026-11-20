@@ -165,6 +165,7 @@ const words = {
   then: 'puis',
   thisTime: 'cette fois',
   to: 'à',
+  toMonthEnd: 'à la fin du mois',
   toThe: 'au',
   unrecognizable: 'une expression cron non reconnue',
   until: 'jusqu\'à',

@@ -3,7 +3,6 @@
 // number, after a noun, after a recurring day); the month says what shape
 // it has; a table joins the two.
 
-import {denote} from '../../core/describe-set.js';
 import type {
   QuartzDate, QuartzWeekday, RangeDescription
 } from '../../core/schedule.js';
@@ -24,7 +23,8 @@ import {
 const {countWords, dayNumber, nthWords, units, words: w} = lexicon;
 
 /** How a day phrase takes a month. */
-type Link = 'idiom' | 'noun' | 'number' | 'plain' | 'recurring';
+type Link =
+  'dated' | 'ended' | 'idiom' | 'noun' | 'number' | 'plain' | 'recurring';
 
 /**
  * What the months are to a day phrase: every month, one, a list, a range
@@ -295,6 +295,20 @@ const noun: Record<Shape, Attach> = {
 
 // How each kind of day phrase takes each shape of months.
 const attachments: Record<Link, Record<Shape, Attach>> = {
+  // Every date in full, each with its month.
+  dated: {
+    all: unsaid, except: unsaid, led: unsaid, list: unsaid, one: unsaid,
+    span: unsaid
+  },
+  // To the end of the month: the months follow, set off.
+  ended: {
+    all: () => inline(w.ofEachMonth),
+    except: (months) => aside('', months),
+    led: unsaid,
+    list: (months) => aside('', months),
+    one: (months) => aside('', months),
+    span: (months) => aside('', months)
+  },
   idiom: {
     ...noun,
     all: () => inline(w.ofEachMonth),
@@ -341,13 +355,15 @@ function theDays(days: number[]): string {
 
 /** The days of the month as a schedule fires on them. */
 interface Dates {
-  // Days the pattern holds and no reached month has.
-  absent: number[];
-  // The last day of the longest month the days fire in.
-  longest: number;
-  // Whether months are named: an exception from every day then names no
-  // day after the 28th.
+  // The last day each month the days fire in has, in some year.
+  lengths: Map<number, number>;
+  // Whether months are named: an exception from every day then never
+  // names the month's last day.
   named: boolean;
+  // The last day every month the days fire in has, in some year: a day
+  // after it is one some of the months lack.
+  shared: number;
+  // The days, described over those of the longest month they fire in.
   view: View;
 }
 
@@ -357,17 +373,32 @@ interface Dates {
 // June are the same days.
 function wholeParity(cadence: Cadence, dates: Dates): boolean {
   return cadence.interval === 2 && cadence.start <= 2 &&
-    cadence.last + 2 > dates.longest;
+    cadence.last + 2 > dates.view.domain.max;
+}
+
+// Whether a run that steps by `step` and stops at `last` goes on to the
+// end of every month while naming a day some of the months lack: it is
+// then said to the end of the month, which each month has.
+function toMonthEnd(last: number, step: number, dates: Dates): boolean {
+  return last > dates.shared && last + step > dates.view.domain.max;
+}
+
+// A run of days by its ends, or to the end of the month.
+function daySpan(run: RangeDescription, step: number, dates: Dates): string {
+  return toMonthEnd(run.to, step, dates) ?
+    phrase(w.fromThe, dayNumber(run.from), w.toMonthEnd) :
+    fromTo(run);
 }
 
 // A cadence of days with both its ends: every second day by parity.
-function boundedDays(cadence: Cadence): string {
+function boundedDays(cadence: Cadence, dates: Dates): string {
   const lead = cadence.interval === 2 ?
     [w.evenDays, w.oddDays][cadence.start % 2] :
     every(cadence.interval, units.day);
 
-  return phrase(lead, fromTo(
-    {from: cadence.start, kind: 'range', to: cadence.last}));
+  return phrase(lead, daySpan(
+    {from: cadence.start, kind: 'range', to: cadence.last},
+    cadence.interval, dates));
 }
 
 // Days on a cadence: every second day by parity, the whole month's as the
@@ -379,38 +410,41 @@ function cadenceDays(cadence: Cadence, dates: Dates): DayPhrase {
       head: [w.evenDays, w.oddDays][cadence.start % 2],
       link: 'idiom'
     } :
-    {...numbered, head: boundedDays(cadence)};
+    {...numbered, head: boundedDays(cadence, dates)};
 }
 
-// The days of the month the reached months have, as the core states
-// them, with the days the pattern holds beyond those.
+// The days of the month the months they fire in have, as the core states
+// them: described over the days of the longest such month, so that what
+// is every day, a run or a list is judged against the months themselves.
+// With every month the longest has a 31st, and «de chaque mois» is read
+// as skipping the days a month lacks.
 function datesOf(c: Context): Dates {
   const round = c.months.all && c.years.all;
   const own = viewOf(c.schedule, 'date', {round});
-  const had = c.schedule.analyses.dateReach?.days?.candidates.slice(-1)
-    .flatMap((listed) => denote(listed, own.domain)) ?? own.values;
+  const groups = c.schedule.analyses.monthLengths;
+  const domain = daysReached(c.schedule)?.domain ?? own.domain;
+  const days = own.values.filter((day) => day <= domain.max);
+  const lengths = new Map<number, number>();
+
+  groups.forEach((group) => group.months.forEach((month) => lengths.set(
+    month, Math.max(group.length, lengths.get(month) ?? 0))));
 
   return {
-    absent: own.values.filter((day) => !had.includes(day)),
-    longest: daysReached(c.schedule)?.domain.max ?? own.domain.max,
+    lengths,
     named: !c.months.all,
-    view: had.length === own.values.length ?
+    shared: c.months.all ? domain.max : Math.min(...lengths.values()),
+    view: domain.max === own.domain.max && days.length === own.values.length ?
       own :
-      described(had, own.domain, {round})
+      described(days, domain, {round})
   };
-}
-
-// The days an exception names: not those known to exist in no reached
-// month.
-function missing(excepted: Excepted, dates: Dates): number[] {
-  return excepted.removed.filter((day) => !dates.absent.includes(day));
 }
 
 // The things each description of the days names. A cadence with both
 // ends, and an exception, must replace more than seven days. Beside
-// named months an exception from every day never names a day after the
-// 28th, which the months may lack. Where no exception may be said, a
-// cadence with a hole is the stretches each side of it, each said whole.
+// named months an exception from every day never names the last day of
+// the month: a set without it is the run to its own last day. Where no
+// exception may be said, a cadence with a hole is the stretches each
+// side of it, each said whole.
 function dateCounts(dates: Dates, excepting: boolean): Counts {
   const {view} = dates;
   const long = view.values.length > 7;
@@ -424,7 +458,7 @@ function dateCounts(dates: Dates, excepting: boolean): Counts {
 
   function sayable(excepted: Excepted): boolean {
     const known = !dates.named || excepted.base.kind !== 'all' ||
-      missing(excepted, dates).every((day) => day < 29);
+      !excepted.removed.includes(view.domain.max);
 
     return excepting && long && interior(excepted) && known;
   }
@@ -437,7 +471,7 @@ function dateCounts(dates: Dates, excepting: boolean): Counts {
     cadencePieces: partsCount,
     except: (excepted) => Math.min(
       when(sayable(excepted),
-        countOf(excepted.base, counts) + missing(excepted, dates).length),
+        countOf(excepted.base, counts) + excepted.removed.length),
       when(!excepting && long && excepted.base.kind === 'cadence' &&
         interior(excepted), split(excepted))),
     pieces: partsCount,
@@ -448,44 +482,94 @@ function dateCounts(dates: Dates, excepting: boolean): Counts {
   return counts;
 }
 
-function plainDate(c: Context, excepting: boolean): DayPhrase {
-  const dates = datesOf(c);
+// The days a description names that some of the months lack, other than
+// a run said to the end of the month.
+function lacking(description: Described, dates: Dates): boolean {
+  function past(day: number): boolean {
+    return day > dates.shared;
+  }
+
+  function stretch(run: RangeDescription, step: number): boolean {
+    return past(run.to) && !toMonthEnd(run.to, step, dates);
+  }
+
+  function cadence(spaced: Cadence): boolean {
+    return !wholeParity(spaced, dates) && stretch(
+      {from: spaced.start, kind: 'range', to: spaced.last}, spaced.interval);
+  }
+
+  function parts(pieces: {parts: Stretch[]}): boolean {
+    return pieces.parts.some((part) => lacking(part, dates));
+  }
+
+  // A cadence with a hole, said as the stretches each side of it.
+  function holed(excepted: Excepted): boolean {
+    const step = (excepted.base as Cadence).interval;
+
+    return excepted.base.kind === 'cadence' &&
+      around(excepted, dates.view.domain).some(function names(run) {
+        return isRun(run) ? stretch(run, step) : past(run.from);
+      });
+  }
+
+  return say(description, {
+    cadence,
+    cadencePieces: parts,
+    except: holed,
+    pieces: parts,
+    range: (run) => stretch(run, 1),
+    values: (listed) => listed.values.some(past)
+  }, false);
+}
+
+// The days as one description chooses them.
+function chosenDays(dates: Dates, excepting: boolean): DayPhrase {
   const {view} = dates;
+  const ended = view.values.some((day) => day > dates.shared);
 
   // A cadence with a hole, each stretch said whole and no word shared.
   function stretches(excepted: Excepted): string {
+    const base = excepted.base as Cadence;
+
     return conjoin(around(excepted, view.domain).map(function whole(run) {
       return isRun(run) ?
-        boundedDays({...excepted.base as Cadence, last: run.to,
-          start: run.from}) :
+        boundedDays({...base, last: run.to, start: run.from}, dates) :
         theDay(run.from);
     }));
+  }
+
+  // Said to the end of the month, the months follow set off.
+  function closing(said: DayPhrase): DayPhrase {
+    return ended && said.link === 'number' ? {...said, link: 'ended'} : said;
   }
 
   function except(excepted: Excepted): DayPhrase {
     return excepting ?
       {
         ...say(excepted.base, sayers),
-        setOff: [phrase(w.except, theDays(missing(excepted, dates)))]
+        setOff: [phrase(w.except, theDays(excepted.removed))]
       } :
-      {...numbered, head: stretches(excepted)};
+      closing({...numbered, head: stretches(excepted)});
   }
 
   function pieced(pieces: {parts: Stretch[]}): DayPhrase {
-    return {
+    return closing({
       ...numbered,
-      head: inPieces(pieces.parts,
-        {cadence: boundedDays, range: fromTo, value: theDay})
-    };
+      head: inPieces(pieces.parts, {
+        cadence: (cadence) => boundedDays(cadence, dates),
+        range: (run) => daySpan(run, 1, dates),
+        value: theDay
+      })
+    });
   }
 
   const sayers: Sayers<DayPhrase> = {
     all: () => ({...afterNoun, head: w.everyDay}),
-    cadence: (cadence) => cadenceDays(cadence, dates),
+    cadence: (cadence) => closing(cadenceDays(cadence, dates)),
     cadencePieces: pieced,
     except,
     pieces: pieced,
-    range: (run) => ({...numbered, head: fromTo(run)}),
+    range: (run) => closing({...numbered, head: daySpan(run, 1, dates)}),
     values: (listed) => ({
       ...numbered,
       head: theDays(listed.values),
@@ -494,6 +578,47 @@ function plainDate(c: Context, excepting: boolean): DayPhrase {
   };
 
   return say(choose(view, dateCounts(dates, excepting)), sayers);
+}
+
+// Each date in full, in the order the months are said, each month with
+// the days it has, from those after `after`.
+function datesInFull(dates: Dates, months: Months, after: number): string[] {
+  return months.values.flatMap((month, at) => dates.view.values
+    .filter((day) => day > after &&
+      day <= (dates.lengths.get(month) ?? 0))
+    .map((day) => phrase(theDay(day), months.names[at])));
+}
+
+/**
+ * The days of the month. Where the description chosen would name a day
+ * some of the named months lack, the dates are each said in full while
+ * there are six or fewer; past that, the days every month has are said
+ * of all the months, and the others follow in full, each with its month.
+ */
+function plainDate(c: Context, months: Months, excepting: boolean):
+  DayPhrase {
+  const dates = datesOf(c);
+  const {view} = dates;
+
+  if (!lacking(choose(view, dateCounts(dates, excepting)), dates)) {
+    return chosenDays(dates, excepting);
+  }
+
+  const each = datesInFull(dates, months, 0);
+
+  if (each.length <= 6) {
+    return {...numbered, head: conjoin(each), link: 'dated'};
+  }
+
+  const shared = view.values.filter((day) => day <= dates.shared);
+  const base = chosenDays({...dates, view: described(shared, view.domain,
+    {round: false})}, excepting);
+
+  return {
+    ...base,
+    setOff: [...base.setOff,
+      phrase(w.and, conjoin(datesInFull(dates, months, dates.shared)))]
+  };
 }
 
 // The lengths one month can have: February's depend on the years named.
@@ -589,7 +714,7 @@ function datePhrase(c: Context, months: Months, excepting: boolean): DayPhrase {
 
   return arm.kind === 'quartz' ?
     quartzDate(c, arm.form, months) :
-    plainDate(c, excepting);
+    plainDate(c, months, excepting);
 }
 
 // How a set of weekdays is said, counted from Monday. A run of two is
