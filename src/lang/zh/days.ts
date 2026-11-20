@@ -6,10 +6,10 @@ import type {
   Schedule, SetDescription, ValuesDescription
 } from '../../core/schedule.js';
 import {denote, describeSet} from '../../core/describe-set.js';
-import {daysReached} from '../../core/set-views.js';
+import {daysByMonths, daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import lexicon from './lexicon.js';
-import type {Cadence, Exception} from './sets.js';
+import type {Allowed, Cadence, Exception} from './sets.js';
 import {
   LISTED, RANGE, cadenceOf, chosen, everyOther, first, lastOf, linearRuns,
   listed, never, runsOf, series, when
@@ -46,6 +46,9 @@ interface Side {
   // What leads the side in place of 每月: 每逢, before a date that not
   // every month has.
   lead?: string;
+  // Whether the side holds two phrases joined by 以及, so that the time is
+  // said of both.
+  joined?: boolean;
   // The days excepted, where the side is every day but a few.
   removed?: string;
   text: string;
@@ -459,27 +462,34 @@ function dateDomain(): Domain {
 }
 
 // An exception among dates: one or two missing from every day, or, between
-// dates that fire, from the odd or the even days, of more than eight.
-function dateException(exception: Exception, kept: number[]): boolean {
-  const domain = dateDomain();
-  const {removed} = exception;
-  const inside = removed[0] > kept[0] && lastOf(removed) < lastOf(kept);
+// dates that fire, from the odd or the even days, of more than eight;
+// judged over the days the months have.
+function dateException(domain: Domain): Allowed {
+  return function fewMissing(exception: Exception, kept: number[]): boolean {
+    const {removed} = exception;
+    const inside = removed[0] > kept[0] && lastOf(removed) < lastOf(kept);
 
-  return kept.length > LISTED && removed.length <= 2 &&
-    (exception.base.kind === 'all' ||
-      inside && everyOther(denote(exception.base, domain), domain));
+    return kept.length > LISTED && removed.length <= 2 &&
+      (exception.base.kind === 'all' ||
+        inside && everyOther(denote(exception.base, domain), domain));
+  };
 }
 
 // Dates as a list in which a run of three is a range. One range alone is
 // followed by 每天 before a time, and pieces with a range by 的. Where no
 // month is named (`wraps`), a run across the month's end is one range to
-// 次月.
-function dateList(days: number[], wraps: boolean): Side {
+// 次月. A run that goes on to the end of every month named ends on 最后
+// 一天 (`toEnd`, the last day of the longest).
+function dateList(days: number[], wraps: boolean, toEnd = 0): Side {
   const runs = runsOf(days, dateDomain(), wraps, RANGE);
+
+  function name(date: number): string {
+    return [dateName(date), words.lastDay][Number(date === toEnd)];
+  }
 
   return {
     kind: 'plain',
-    text: series(listed(runs, RANGE, dateName, words.nextMonth)),
+    text: series(listed(runs, RANGE, name, words.nextMonth)),
     tie: first([
       [runs.length === 1 && days.length >= RANGE, words.everyDay],
       [runs.some((run) => run.length >= RANGE), words.of],
@@ -563,53 +573,133 @@ function quartzSide(schedule: Schedule): Side {
     {kind: 'plain', text: dateName(date) + bracketed([note]), tie: ''};
 }
 
-// Whether the dates are all the odd or all the even days the months they
-// fire in have, as the core measures them against the longest of those
-// months: then the months supply the ends, however the field was written.
-function fillsMonths(schedule: Schedule): boolean {
-  const reached = daysReached(schedule);
-  const found = reached?.candidates[0];
+// The dates some of the months named never have, each with the months
+// that have it, as the core groups them; and the dates they all have.
+// February has a 29th: a leap year's February counts.
+function datesApart(schedule: Schedule):
+  {common: number[]; lacking: Array<{days: number[]; months: number[]}>} {
+  const groups = daysByMonths(schedule) ?? [];
+  const monthsOfGroup = groups.map((group) => [
+    ...new Set(group.months.flatMap((length) => length.months))
+  ].sort((one, other) => one - other));
+  const named = new Set(monthsOfGroup.flat()).size;
+  const short = groups.map((group, at) => monthsOfGroup[at].length < named);
 
-  return reached !== null && typeof found !== 'undefined' &&
-    everyOther(denote(found, reached.domain), reached.domain);
+  return {
+    common: groups.filter((group, at) => !short[at])
+      .flatMap((group) => group.days),
+    lacking: groups.filter((group, at) => short[at])
+      .map((group, at) => ({
+        days: group.days,
+        months: monthsOfGroup.filter((months, index) => short[index])[at]
+      }))
+  };
 }
 
-// The dates. They are those the months named have, as the core gives
-// them. The device is chosen from the dates as written, so that the odd
-// days of a short month are still the odd days, or from the days they
-// reach, so that the odd days to the 29th of June are too; a date is
+type Apart = ReturnType<typeof datesApart>;
+
+// Whether the dates, where some months named lack some of them, end in a
+// run or are odd or even days that go on to the end of every month: they
+// start on a day all the months have and reach the last of the longest.
+function throughEnd(days: number[], domain: Domain, apart: Apart): boolean {
+  const lastRun = lastOf(linearRuns(days));
+  const runEnds = lastRun.length >= RANGE &&
+    lastOf(lastRun) === domain.max && apart.common.includes(lastRun[0]);
+  const cadenceEnds = cadenceOf(days, domain)?.interval === 2 &&
+    lastOf(days) >= domain.max - 1 && apart.common.includes(days[0]);
+
+  return apart.lacking.length > 0 && (runEnds || cadenceEnds);
+}
+
+// Every second date between two ends, more than can be listed, as the odd
+// or the even days from the first to the last (`end` names the last);
+// else the dates as a list.
+function datesBetween(days: number[], domain: Domain, parity: string,
+  end: string): Side {
+  return days.length > LISTED && cadenceOf(days, domain)?.interval === 2 ?
+    {
+      kind: 'plain',
+      text: dateName(days[0]) + words.to + end + parity,
+      tie: ''
+    } :
+    dateList(days, false);
+}
+
+// The dates every month named has, said of them all, then after 以及 each
+// date some of them lack with the months that have it; the time is said
+// of both.
+function splitSide(apart: Apart, domain: Domain, parity: string,
+  note: string): Side {
+  const common = datesBetween(apart.common, domain, parity,
+    dateName(lastOf(apart.common)));
+
+  return {
+    joined: true,
+    kind: 'plain',
+    text: common.text + when(common.tie === words.everyDay, common.tie) +
+      bracketed([note]) + apart.lacking.map((group) => words.andDays +
+        series(group.months.map(monthName)) +
+        when(group.months.length > 1, words.of) +
+        dateList(group.days, false).text).join(''),
+    tie: marks.comma + words.bothAt
+  };
+}
+
+// Whether the days excepted surely exist: under a named month, before the
+// last date that fires, and on a day every month it fires in has (the
+// shortest of the core's `monthLengths`, a leap year's February counted
+// where there is one).
+function surelyThere(schedule: Schedule, removed: number[], days: number[],
+  context: Context): boolean {
+  const lengths = schedule.analyses.monthLengths
+    .filter((group) => group.years !== 'common')
+    .map((group) => group.length);
+
+  return removed.every((date) => context === 'none' ||
+    date < lastOf(days) && date <= Math.min(...lengths));
+}
+
+// The dates. They are judged over the days the months they fire in have,
+// from the 1st to the last day of the longest (the core's
+// `daysReached`), so that equal days are said alike however written: the
+// odd days to the 29th of June are the odd days of June, and every day of
+// June but the 15th is that whether or not a 31st was written. A date is
 // excepted only where it surely exists, which under a named month is
-// before the last date that fires. Every second date between two ends,
-// more than can be listed, is the odd or the even days from the first to
-// the last, after 逢 (after 的 where 每逢 already leads the dates). Any
-// other dates are listed, however many. `plain` is where no exception is
-// said, and `monthly` where no month is named.
+// before the last date that fires, on a day every month named has. Every
+// second date between two ends, more than can be listed, is the odd or
+// the even days from the first to the last, after 逢 (after 的 where 每逢
+// already leads the dates). Any other dates are listed, however many.
+// Under months named, a run or the odd or even days that go on to the end
+// of every month end on 最后一天; other dates some of the months lack
+// follow after 以及 with the months that have them. `plain` is where no
+// exception is said, and `monthly` where no month is named.
 function dateSide(schedule: Schedule, context: Context, traits:
   {monthly: boolean; plain: boolean}): Side {
-  const {candidates, dateReach} = schedule.analyses;
+  const {candidates} = schedule.analyses;
   const note = calendarNote(schedule);
   const skipped = note === words.skippedWhereMissing;
+  const reached = daysReached(schedule);
 
-  if (candidates.date === null) {
+  if (candidates.date === null || reached === null) {
     return quartzSide(schedule);
   }
 
-  const domain = dateDomain();
-  const written = denote(candidates.date[0], domain);
-  const days = dateReach?.days ?
-    denote(dateReach.days.candidates[0], domain) :
-    written;
-  const picked = chosen(written, domain,
-    traits.plain ? never : dateException);
-  const sure = picked.removed.every(
-    (date) => context === 'none' || date < lastOf(days));
+  const domain = {...reached.domain, cyclic: false};
+  const days = denote(reached.candidates[0], domain);
+  const apart = ['one', 'list', 'ranged'].includes(context) ?
+    datesApart(schedule) :
+    {common: days, lacking: []};
+  const toEnd = throughEnd(days, domain, apart);
+  const split = apart.lacking.length > 0 && !toEnd;
+  const picked = chosen(days, domain,
+    traits.plain ? never : dateException(domain));
+  const sure = surelyThere(schedule, picked.removed, days, context);
   const removed = series(picked.removed.filter(() => sure).map(dateName));
   const parity = context === 'both' ?
     words.of + [words.evenDaysOfMonth, words.oddDaysOfMonth][days[0] % 2] :
     [words.evenDays, words.oddDays][days[0] % 2];
   const side = first<() => Side>([
-    [sure && everyOther(picked.values, domain) ||
-      removed === '' && fillsMonths(schedule), () => ({
+    [sure && everyOther(picked.values, domain), () => ({
       kind: 'parity',
       text: everyOtherDay[context][picked.values[0] % 2] +
         bracketed([when(removed !== '', removed + words.excepted)]),
@@ -621,19 +711,18 @@ function dateSide(schedule: Schedule, context: Context, traits:
       text: words.except + removed + words.exceptedEnd + words.everyDay,
       tie: ''
     })],
+    [split, () => splitSide(apart, domain, parity, note)],
     [days.length > LISTED && cadenceOf(days, domain)?.interval === 2,
-      () => ({
-        kind: 'plain',
-        text: dateName(days[0]) + words.to + dateName(lastOf(days)) +
-          parity,
-        tie: ''
-      })],
-    [true, () => dateList(days, traits.monthly)]
+      () => datesBetween(days, domain, parity,
+        [dateName(lastOf(days)), words.lastDay][Number(toEnd)])],
+    [true, () => dateList(days, traits.monthly, domain.max * Number(toEnd))]
   ])();
 
-  return skipped ?
-    {...side, lead: words.eachOfDays} :
-    {...side, text: side.text + bracketed([note])};
+  return first<Side>([
+    [skipped, {...side, lead: words.eachOfDays}],
+    [side.joined === true, side],
+    [true, {...side, text: side.text + bracketed([note])}]
+  ]);
 }
 
 // The weekdays, in the week that runs from Monday to Sunday. Exactly six
@@ -791,7 +880,8 @@ function dayOf(schedule: Schedule, month: MonthPart):
 
   return {
     daily: sides.length === 0,
-    joined: sides.length === 2 && !meet,
+    joined: sides.length === 2 && !meet ||
+      sides.some((side) => side.joined === true),
     text: lead + sidesText(sides, context, meet),
     tie: [
       words.everyDay,

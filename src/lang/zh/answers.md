@@ -712,7 +712,7 @@ values before one stretched to the ends of the field.
   月、7月至12月每天9:00.
 * **After months excepted, neither the dates nor the weekdays take an
   exception**: 每年除6月外每周四至次周周二9:00; 每年除6月外每月1日
-  至14日、16日至31日的9:00. (2026-11-19: the weekdays were 每周一、周
+  至14日、16日至最后一天的9:00 (the run goes on to every month's end, 4.4). (2026-11-19: the weekdays were 每周一、周
   二、周四至周日 here; six days that cross the weekend are one run, and
   wrap as 3.5 says. The dates do not wrap: months are named.) (The audit left 每年除6月外除周三外每天9:00,
   two 除…外 in a row; a reader has to stop to see which 外 closes what.)
@@ -794,7 +794,10 @@ Not checked with a fluent human beyond that.
 
 3.11 None. `0 */12 * * *` and `0 0,12 * * *` are both 每12小时一次.
 
-**The same days, however written** (2026-11-19). The odd days of June
+**The same days, however written** (2026-11-19). The same holds for
+every device, not only the odd and even days: what the dates are is
+judged against the days the months have (4.4, after case 4), so every
+day but a few, a run and a list are said alike however written. The odd days of June
 were said two ways: 每年6月的单日 for `*/2` and 每年6月1日至29日逢单日
 for `1-29/2`, which is the same days, since June has no 31st. No tie is
 declared, so that was a difference this rule does not allow. It is now
@@ -1379,6 +1382,63 @@ counts the days of a month for itself. Take the first case that applies.
    日、10日、13日、16日、19日、22日、25日、28日0:00; `0 0 25-31 6 *` is 每
    年6月25日至30日每天0:00; `0 0 */2 6 *` is 每年6月的单日0:00, and so is
    `0 0 1-29/2 6 *`, the same days (3.11).
+
+   **The dates are judged against the days the months have**, never
+   against 31 (2026-11-19): whether they are every day (case 2), every
+   day but a few (3.9), a run, the odd or even days, or a list is
+   decided over the days from the 1st to the last day of the longest
+   month they fire in (the core's `daysReached`). So equal days are said
+   alike however written: `1-14,16-30` and `1-14,16-31` in June are both
+   每年6月除15日外每天; `1-30`, `1-31` and `*` in June are 每年6月每天;
+   `1-13/2,17-29/2` in June is 每年6月的单日（15日除外）, as
+   `1-13/2,17-31/2` is; `1-14,16-30` in April and June is 每年4月、6月各月
+   除15日外每天; `30,31` in April is 每年4月30日; `29,30,31` in February
+   is 每逢闰年2月29日. February's 29th is a day February has: `1-28` in
+   February is 每年2月1日至28日每天, since the 29th of a leap year does
+   not fire, and `1-14,16-29` is 每年2月除15日外每天; in 2031 alone `1-28`
+   is 2031年2月每天, and `1-14,16-28` is 2031年2月除15日外每天. Where the
+   days differ the sentences do: `1-14,16-30` in April and May leaves 31
+   May, and stays 每年4月、5月的1日至14日、16日至30日的. (Until then the
+   device was chosen over 31 days, and the same days in June were 6月除15
+   日外每天 or 6月1日至14日、16日至30日 by how the field was written.)
+
+   **No month named is given a day it lacks** (2026-11-19). Where the
+   months named differ in length and a date said is one that some of
+   them never have:
+   * A run, or odd or even days, that go on to the end of every month
+     named end on 最后一天: `25-31` in April and May is 每年4月、5月的25日
+     至最后一天每天; `15-30` in February and April 每年2月、4月的15日至最后
+     一天每天; `3/2` in April and July 每年4月、7月的3日至最后一天逢单日;
+     `1-10,20-31` in April and July 每年4月、7月的1日至10日、20日至最后一
+     天的.
+   * Otherwise the dates every month named has are said of all of them,
+     and the rest follow after 以及 with the months that have them; the
+     time is then said of both by ，均在 (，均为 before a time that begins
+     with 每), as for a date and a weekday (4.3): `*/3` in April and July
+     is 每年4月、7月的1日、4日、7日、10日、13日、16日、19日、22日、25日、28
+     日以及7月31日，均在9:00; `30,31` in April and May 每年4月、5月的30日以
+     及5月31日，均在9:00; `*/3` in June to August 每年6月至8月每月1日、
+     4日……28日以及7月、8月的31日，均在9:00. The dates all the months
+     have keep their own form: odd days to the 29th in February of 2031
+     and March are 2031年2月、3月的1日至27日逢单日以及3月29日，均在9:00.
+     A day excepted (3.9) is one every month named has: `1-14,16-29,31`
+     in April and May is 每年4月、5月各月除15日、30日外每天.
+   * A date only some leap Februaries have is not such a date: February
+     has a 29th, and `1-29` in February and April is 每年2月、4月的1日至29
+     日每天.
+   * Where 每逢 leads the dates (no month named, case 7; or a date beside
+     a weekday under a month, 4.3) it already says that a date fires where
+     there is one, and nothing changes: 每年4月、5月，每逢30日、31日以及每
+     逢周一. Under 每月 no month is named, so no month is paired with a
+     day it lacks, and case 7 stands: 每月1日、6日、11日、16日、21日、26
+     日、31日; 每月25日至31日每天.
+   (These were 每年4月、7月的1日、4日……28日、31日 and 每年4月、5月的25日至
+   31日每天: a sentence that pairs April with a 31st names a day that does
+   not exist, and leaves the reader to mend it. 最后一天 is the notes' word
+   for the end of a month: 月底 is a few days, the notes say, and 每月最后
+   一天 is what is exact. The end each month really has is read off, with
+   nothing to work out; the dates some months lack are named once, with
+   their months, which is one thing more to hold and no operation.)
 5. **A day counted back from the month's end is the date it comes to,
    where that is one date** (2026-11-19, from the comparison): the months
    it fires in are all of one length (the core's `monthLengths` has one

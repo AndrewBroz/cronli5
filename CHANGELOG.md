@@ -142,7 +142,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   pattern is spelled.** Odd or even days that reach the last such day of
   the months named are those months' odd or even days: `0 9 1-29/2 6 *`
   is 「每年6月的单日9:00」, as `0 9 */2 6 *` is (was 「每年6月1日至29日逢
-  单日9:00」).
+  单日9:00」). Every day but a few is judged the same way: `0 9 1-14,16-30
+  6 *` is 「每年6月除15日外每天9:00」 (was 「每年6月1日至14日、16日至30日
+  的9:00」). Under months of different lengths no month is given a day it
+  lacks: `0 9 25-31 4,5 *` is 「每年4月、5月的25日至最后一天每天9:00」, and
+  `0 9 */3 4,7 *` ends 「…28日以及7月31日，均在9:00」 (was 「…28日、31日9:00」).
 - **Faster.** A step of many years, such as `2030/2` in the year field
   (3,985 years), took about 420 us to analyse in every language and now
   takes about 200: a single step no longer goes through a Set to drop
