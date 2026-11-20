@@ -58,6 +58,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **Japanese says the same days the same way, however the day field is
+  spelled.** Every second day that ends where the months named end is the
+  word alone: `0 9 1-29/2 6 *` is 毎年6月の奇数日の9:00, as `0 9 */2 6 *`
+  already was (it was 毎年6月1日〜29日の奇数日の9:00). A run that stops
+  earlier keeps its ends.
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
   Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
   `cronli5/all` has it. An instance without it reports the language as

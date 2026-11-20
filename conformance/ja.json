@@ -4804,6 +4804,181 @@
    "pattern": "0 0 8/2 2 *"
   },
   {
+   "expected": "毎年6月の奇数日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1-29/2 6 *"
+  },
+  {
+   "expected": "毎年6月の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2 6 *"
+  },
+  {
+   "expected": "毎年6月の偶数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 2-30/2 6 *"
+  },
+  {
+   "expected": "毎年6月1日〜25日の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-25/2 6 *"
+  },
+  {
+   "expected": "毎年6月3日〜29日の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 3-29/2 6 *"
+  },
+  {
+   "expected": "毎年2月の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2 2 *"
+  },
+  {
+   "expected": "毎年2月の偶数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 2-28/2 2 *"
+  },
+  {
+   "expected": "毎年2月1日〜27日の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-27/2 2 *"
+  },
+  {
+   "expected": "2031年2月の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1-27/2 2 * 2031"
+  },
+  {
+   "expected": "2032年2月1日〜27日の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 0 1-27/2 2 * 2032"
+  },
+  {
+   "expected": "毎年7月の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-31/2 7 *"
+  },
+  {
+   "expected": "毎年7月1日〜29日の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2 7 *"
+  },
+  {
+   "expected": "毎年7月の偶数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 2-30/2 7 *"
+  },
+  {
+   "expected": "毎年4月・6月の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2 4,6 *"
+  },
+  {
+   "expected": "毎年2月・4月の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2 2,4 *"
+  },
+  {
+   "expected": "毎年2月・4月の2日〜28日の偶数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 2-28/2 2,4 *"
+  },
+  {
+   "expected": "毎年4月・5月の1日〜29日の奇数日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2 4,5 *"
+  },
+  {
+   "expected": "毎年6月1日・4日・7日…28日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-28/3 6 *"
+  },
+  {
+   "expected": "毎年6月1日・4日・7日…28日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */3 6 *"
+  },
+  {
+   "expected": "毎年6月1日・4日・7日…25日の0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-25/3 6 *"
+  },
+  {
+   "expected": "毎月奇数日の9:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 9 1-31/2 * *"
+  },
+  {
+   "expected": "毎年6月の奇数日と30日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2,30 6 *"
+  },
+  {
+   "expected": "毎年6月の奇数日と30日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-31/2,30 6 *"
+  },
+  {
+   "expected": "毎年7月の奇数日と30日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 */2,30 7 *"
+  },
+  {
+   "expected": "毎年6月の奇数日および6月の毎週月曜日、いずれも0:00",
+   "options": {
+    "lang": "ja"
+   },
+   "pattern": "0 0 1-29/2 6 1"
+  },
+  {
    "expected": "毎年2月・6月の25日〜30日、いずれも0:00",
    "options": {
     "lang": "ja"

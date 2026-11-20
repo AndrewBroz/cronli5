@@ -114,11 +114,12 @@ type Quartz<Form extends {kind: string}> = {
   ) => DayPhrase
 };
 
-// How far the days named run, as the months reached let them: the days the
-// field names that none of those months has, the last day the longest of
-// them is known to have, and whether there is only one month.
+// How far the days named run, as the months reached let them: the last day
+// of the longest month the days fire in, the last day the longest of them
+// is shown by the days themselves to have, and whether there is only one
+// month.
 interface Reach {
-  lacking: number[];
+  end: number;
   single: boolean;
   top: number;
 }
@@ -439,11 +440,11 @@ function dayRange(range: RangeDescription, reach: Reach): string {
 
 // Every second day: the word alone when it covers the month, and inside
 // the run it covers otherwise. It covers the month when it starts with it
-// and no later day of its kind exists in the months reached.
+// and its next day would fall after the end of every month it fires in:
+// the days reached decide, not where the range written stops.
 function dayParity(cadence: Cadence, reach: Reach): DayPhrase {
-  const next = cadence.last + cadence.interval;
   const whole = cadence.start <= cadence.interval &&
-    (next > reach.top || reach.lacking.includes(next));
+    cadence.last + cadence.interval > reach.end;
   const run = cadence.start + units.day + marks.range + cadence.last +
     units.day + words.of;
 
@@ -479,17 +480,30 @@ function dayPhrase(days: Days, reach: Reach): DayPhrase {
   }
 
   // Several pieces share the time; dates that all came to one list do
-  // not.
+  // not. Every second day that leads them follows its month as it does
+  // alone.
   function pieces(parts: Part[]): DayPhrase {
+    const said: DayPhrase[] = [];
     const text = sayParts(parts, {
-      cadence: (cadence, leads) => (cadence.interval === 2 && leads ?
-        dayParity(cadence, reach) :
-        dayList(valuesOf(cadence), true)).text,
+      cadence: (cadence, leads) => {
+        const phrase = cadence.interval === 2 && leads ?
+          dayParity(cadence, reach) :
+          dayList(valuesOf(cadence), true);
+
+        said.push(phrase);
+
+        return phrase.text;
+      },
       listed: daysListed,
       range: sayRange
     }, units.day);
 
-    return {...noPhrase, shared: text.includes(words.and), text};
+    return {
+      ...noPhrase,
+      direct: said.every((phrase) => phrase.direct),
+      shared: text.includes(words.and),
+      text
+    };
   }
 
   return match(days, {
@@ -677,8 +691,10 @@ function quartzDateSide(context: Context): DaySide {
 
 // The days of the month that exist in a month reached, and how far they
 // run. Where the field names the day after the last of them, and no month
-// reached has it, that last day is the end of the longest month.
+// reached has it, that last day is the end of the longest month. The end
+// of the longest month the days fire in is the core's to say.
 function daysReached(context: Context): {days: number[]; reach: Reach} {
+  const {monthLengths} = context.facts.analyses;
   const own = context.facts.analyses.candidates.date as SetDescription[];
   const named = denote(own[0], dates);
   const days = denote((context.reach.days?.candidates ?? own)[0], dates);
@@ -688,7 +704,7 @@ function daysReached(context: Context): {days: number[]; reach: Reach} {
   return {
     days,
     reach: {
-      lacking,
+      end: monthLengths.at(-1)?.length ?? dates.max,
       single: context.months.length === 1,
       top: lacking.includes(last + 1) ? last : dates.max
     }

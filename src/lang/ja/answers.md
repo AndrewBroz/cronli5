@@ -1334,6 +1334,49 @@ keeps the idiom inside the run it covers: 毎月8日〜30日の偶数日; 毎月
 inside a pair (毎月1日〜13日の奇数日と17日〜31日の奇数日). 奇数日 and 偶数日
 are everyday words.
 
+**The days reached decide, not the range written** (2026-11-19). The word
+alone is said when the days the pattern reaches in the months it fires in
+are exactly the days every second day from the 1st (or the 2nd) reaches
+there: the run then ends where the months end, and its ends say nothing
+the months do not. `1-29/2` and `*/2` in June are both 毎年6月の奇数日 (June
+has no 31st, so both reach the 1st to the 29th by twos); `2-28/2` and
+`2/2` in February are both 毎年2月の偶数日 (no February has a 30th); `1-29/2`
+in February is 毎年2月の奇数日, the 29th coming in leap years as it does for
+`*/2`. Until this date a run that stopped on the month's own last odd or
+even day kept its ends (毎年6月1日〜29日の奇数日), which named an end June
+already supplies, made the reader check whether the 29th is June's last odd
+day, and said one schedule in two ways depending on how it was spelled.
+What decides is the last day of the longest month the days fire in, which
+the core states; the renderer holds no table of month lengths.
+
+* **Months of different lengths named together** are judged by the
+  longest: `1-29/2` in April and June is 毎年4月・6月の奇数日, and in
+  February and April 毎年2月・4月の奇数日 (a leap February has a 29th, April
+  a 29th, neither a 31st); in April and May it is 毎年4月・5月の1日〜29日の
+  奇数日, since May's 31st is left out. `2-28/2` in February and April is
+  毎年2月・4月の2日〜28日の偶数日: April's 30th is left out.
+* **A run that stops before the end keeps its ends**, because those are
+  other days: `1-25/2` in June is 毎年6月1日〜25日の奇数日; `1-29/2` in July
+  is 毎年7月1日〜29日の奇数日; `1-27/2` in February is 毎年2月1日〜27日の奇数
+  日, since a leap February's 29th is missed. In a common year alone the
+  29th does not exist: `1-27/2` in February of 2031 is 2031年2月の奇数日,
+  and of 2032 2032年2月1日〜27日の奇数日.
+* **Every month** is unchanged: the longest month has 31 days, so `1-31/2`
+  and `*/2` are 毎月奇数日, and `1-29/2` is 毎月1日〜29日の奇数日.
+* **A step other than two** is its dates (3.7), and the list already ends
+  on the last day reached, however the range was written: `1-28/3`,
+  `1-30/3` and `*/3` in June are all 毎年6月1日・4日・7日…28日; `1-25/3` is
+  毎年6月1日・4日・7日…25日.
+* **Leading runs and cadences together** (3.7), the word is judged the
+  same way and follows a single month with の, as it does alone: `1-29/2,30`
+  and `1-31/2,30` in June are both 毎年6月の奇数日と30日、いずれも0:00.
+  (Until this date the second came out 毎年6月奇数日と30日, without the の.)
+* **Beside a weekday** the same: `1-29/2` in June with Mondays is 毎年6月の
+  奇数日および6月の毎週月曜日.
+* **Hours, minutes, seconds and months** have one length each, so no
+  spelling of theirs reaches the same values by a different range; nothing
+  changes for them.
+
 5.2 None. Monday to Friday is the range 毎週月曜日〜金曜日 and the weekend
 is the list 毎週土曜日・日曜日. 平日 is not used anywhere, for a set of
 weekdays or for a single day (5.7): by the usage notes, for some readers
