@@ -1406,14 +1406,17 @@ none of this out for itself.
 * **Days that are every day the months have are « tous les jours »**:
   `0 9 1-30 6 *` is « tous les jours de juin à 9 h »; `1-29` in February
   likewise. In a union: 4.3.
-* **What the facts do not say is how long a named month is**, when the
-  set of days stays inside it. So beside a named month an exception
-  from every day never names the 29th, 30th or 31st (3.9), and « les
-  jours impairs de juin » is said only of a set that ran to the 31st as
-  written (`*/2`); `1-29/2` in June is « les jours impairs du 1er au 29
-  juin ». Both are exact. The one table of month lengths the renderer
-  keeps is for the bracket of `L-3` (5.7), a day the core does not
-  state.
+* **Every second day that runs to the end of the longest month the days
+  fire in is the idiom alone**, however it was written (5.1, amended
+  2026-11-19): `1-29/2` and `*/2` in June are both « les jours impairs
+  de juin ». The core states that last day (`daysReached`); the renderer
+  compares no day with a month length of its own. (Before: « les jours
+  impairs du 1er au 29 juin » for `1-29/2`, when the facts did not yet
+  say how long the month was.)
+* Beside a named month an exception from every day still never names
+  the 29th, 30th or 31st (3.9). The one table of month lengths the
+  renderer keeps is for the bracket of `L-3` (5.7), a day the core does
+  not state.
 
 
 ## 5. Idioms
@@ -1425,6 +1428,40 @@ mois, sauf le 15 » right (judge 2: natural). Each can take exceptions
 the idiom and names both ends: `8/2` is « les jours pairs du 8 au 30 de
 chaque mois »; `9/2` is « les jours impairs du 9 au 31 de chaque mois »;
 with June, « les jours pairs du 8 au 30 juin ».
+
+**The same days are said the same way, however the field is written**
+(2026-11-19). The idiom alone means every odd (or even) day the month
+has, and is said by the days the pattern reaches in the months it fires
+in, not by the field as written: when those days are exactly the days a
+plain step from the same start reaches there, the two are said alike.
+Every second day from the 1st or the 2nd is the idiom alone when the
+next day of the step would fall past the last day of the longest month
+the days fire in (the core's `daysReached`). So `1-29/2` in June is
+« les jours impairs de juin », as `*/2` is; `2-28/2` in February is
+« les jours pairs de février », as `2/2` is. Before, `1-29/2` in June
+was « les jours impairs du 1er au 29 juin »: exact, but it restated an
+end June supplies, and said one set of days two ways. The edges:
+
+* **Months of different lengths together**: the longest decides.
+  `1-29/2` in April and June is « les jours impairs d'avril et de
+  juin »; in April and May it lacks 31 May and keeps its ends, « les
+  jours impairs du 1er au 29 du mois, en avril et en mai, ».
+* **February**: its longest is the 29th of leap years, so `1-27/2`
+  keeps its ends (« du 1er au 27 février »: it skips 29 February) and
+  `1-29/2` is the idiom; with common years only (`2031`) `1-27/2` is
+  the idiom.
+* **A step that stops before the month's end** is other days and keeps
+  both ends: `1-27/2` and `2-28/2` in June; `1-29/2` in January, or
+  with every month (« du 1er au 29 de chaque mois »).
+* **Every month**: the longest has a 31st, so `1-31/2` and `*/2` were
+  and stay « les jours impairs de chaque mois ».
+* **A hole**: the base is judged the same way, so `1-13/2,17-29/2` in
+  June is « les jours impairs de juin, sauf le 15 ».
+* **A step that is not parity** follows the same rule: it is said with
+  both ends or as its dates (3.7), and those are already the days the
+  months have, so `1-28/3` and `*/3` in June are both « tous les 3 jours
+  du 1er au 28 juin ». Hours, minutes and months have fixed lengths and
+  were already said alike.
 
 5.2 Saturday and Sunday are listed: « le samedi et le dimanche à 9 h ».
 « Le week-end à 9 h » can be heard as once per weekend (the reader), and

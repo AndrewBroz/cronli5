@@ -7,6 +7,7 @@ import {denote} from '../../core/describe-set.js';
 import type {
   QuartzDate, QuartzWeekday, RangeDescription
 } from '../../core/schedule.js';
+import {daysReached} from '../../core/set-views.js';
 import type {Context} from './context.js';
 import {weekdayView} from './context.js';
 import lexicon from './lexicon.js';
@@ -342,18 +343,21 @@ function theDays(days: number[]): string {
 interface Dates {
   // Days the pattern holds and no reached month has.
   absent: number[];
-  // Whether months are named: how long they are is then not known.
+  // The last day of the longest month the days fire in.
+  longest: number;
+  // Whether months are named: an exception from every day then names no
+  // day after the 28th.
   named: boolean;
   view: View;
 }
 
-// Every second day that runs the length of the month: to the 30th or the
-// 31st, or to a day whose next the pattern held and no reached month has.
+// Every second day that runs the length of the month: to a day whose next
+// is past the last day of the longest month the days fire in. The days
+// reached decide, not how the field was written: `1-29/2` and `*/2` in
+// June are the same days.
 function wholeParity(cadence: Cadence, dates: Dates): boolean {
-  const next = cadence.last + 2;
-
   return cadence.interval === 2 && cadence.start <= 2 &&
-    (next > dates.view.domain.max || dates.absent.includes(next));
+    cadence.last + 2 > dates.longest;
 }
 
 // A cadence of days with both its ends: every second day by parity.
@@ -388,6 +392,7 @@ function datesOf(c: Context): Dates {
 
   return {
     absent: own.values.filter((day) => !had.includes(day)),
+    longest: daysReached(c.schedule)?.domain.max ?? own.domain.max,
     named: !c.months.all,
     view: had.length === own.values.length ?
       own :
