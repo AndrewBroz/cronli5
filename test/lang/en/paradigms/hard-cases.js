@@ -548,9 +548,64 @@ const rows = [
   ['0 0 1-31/3 6 1',
     'at 12 a.m. every 3 days from the 1st of the month in June as well ' +
     'as on Mondays in June'],
+  // June has no 31st, so the seven days cannot all be "of June and
+  // July"; this row said "the 1st, 6th, 11th, 16th, 21st, 26th, and 31st
+  // of June and July". A cadence that runs to the end of months of
+  // different lengths names only its start (4.4, 2026-11-19).
   ['0 0 */5 6,7 *',
-    'at 12 a.m. on the 1st, 6th, 11th, 16th, 21st, 26th, and 31st of ' +
-    'June and July'],
+    'at 12 a.m. every 5 days from the 1st of the month in June and July'],
+  ['0 0 3/4 6,7 *',
+    'at 12 a.m. every 4 days from the 3rd of the month in June and July'],
+  ['0 0 2-30/4 2,3 *',
+    'at 12 a.m. every 4 days from the 2nd of the month in February and ' +
+    'March'],
+  ['0 0 2/7 2,4 *',
+    'at 12 a.m. every 7 days from the 2nd of the month in February and ' +
+    'April'],
+  // Fewer days than a month has, said the same whatever their spelling,
+  // and judged against the days the months named have (4.4, 2026-11-19).
+  ['0 0 1-14,16-30 6 *', 'at 12 a.m. on every day in June except the 15th'],
+  ['0 0 1-14,16-31 6 *', 'at 12 a.m. on every day in June except the 15th'],
+  ['0 0 1-9,11-19,21-30 6 *',
+    'at 12 a.m. on every day in June except the 10th and 20th'],
+  ['0 0 1-14,16-30 4,6 *',
+    'at 12 a.m. on every day in April and June except the 15th'],
+  ['0 0 1-14,16-29 2 *',
+    'at 12 a.m. on every day in February except the 15th'],
+  ['0 0 1-14,16-31 2 *',
+    'at 12 a.m. on every day in February except the 15th'],
+  ['0 0 1-27,29 2 *', 'at 12 a.m. on every day in February except the 28th'],
+  ['0 0 1-27,29-31 2 *',
+    'at 12 a.m. on every day in February except the 28th'],
+  ['0 0 2-29 2 *', 'at 12 a.m. on every day in February except the 1st'],
+  ['0 0 2-31 2 *', 'at 12 a.m. on every day in February except the 1st'],
+  // A leap year's February has a 29th, so 1-28 is not all of it.
+  ['0 0 1-28 2 *', 'at 12 a.m. on every day in February except the 29th'],
+  ['0 0 0 1-28 2 * 2031', 'at 12 a.m. every day in February 2031'],
+  ['0 0 1-31 6 *', 'at 12 a.m. every day in June'],
+  ['0 0 30,31 4 *', 'at 12 a.m. on April 30'],
+  ['0 0 29,30,31 2 *', 'at 12 a.m. on February 29 in leap years'],
+  // An exception may name a day only the longer month has: it takes the
+  // day out of July.
+  ['0 0 1-14,16-30 4,7 *',
+    'at 12 a.m. on every day in April and July except the 15th and 31st'],
+  // Months of different lengths: no month is given a day it lacks. A run
+  // to the end of all of them ends on "the last day"; days named one by
+  // one are said with the months that have them.
+  ['0 0 20-31 4,5 *',
+    'at 12 a.m. on the 20th through the last day of April and May'],
+  ['0 0 25-31 2,3 *',
+    'at 12 a.m. on the 25th through the last day of February and March'],
+  ['0 0 20-30 4,5 *',
+    'at 12 a.m. on the 20th through the 30th of April and May'],
+  ['0 0 30,31 4,5 *', 'at 12 a.m. on the 30th of April and May and on May 31'],
+  ['0 0 15,31 1,4 *',
+    'at 12 a.m. on the 15th of January and April and on January 31'],
+  ['0 0 29,30 2,4 *',
+    'at 12 a.m. on the 29th of February and April and on April 30'],
+  ['0 0 20-30 2,7 *',
+    'at 12 a.m. on the 20th through the 29th of February and July and on ' +
+    'July 30'],
   ['0 0 */3 6,7 *',
     'at 12 a.m. every 3 days from the 1st of the month in June and July'],
 
@@ -712,7 +767,11 @@ const rows = [
   ['0 9 1-30 6 *', 'at 9 a.m. every day in June'],
   ['0 9 1-30 4 1', 'at 9 a.m. every day in April'],
   ['0 9 1-29 2 *', 'at 9 a.m. every day in February'],
-  ['0 9 1-28 2 *', 'at 9 a.m. on February 1 through 28'],
+  // Not every day of February, which has a 29th in leap years; this row
+  // said "on February 1 through 28", and a day missing at the end of a
+  // month is said as every day but that one, judged by the month's own
+  // last day (4.4, 2026-11-19).
+  ['0 9 1-28 2 *', 'at 9 a.m. on every day in February except the 29th'],
   ['0 9 1-31 * 1', 'at 9 a.m. every day'],
 
   // An exception is for a hole inside the hour or the minute. A run that

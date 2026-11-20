@@ -1250,6 +1250,54 @@ can fire in.
   names itself.
 * If nothing is left, the schedule never runs (2.6).
 
+**The days are judged against the days the named months have**
+(2026-11-19). Whether a set is every day, every day but a few, a run or
+a list is decided on the days the months it fires in really have (the
+core's `daysReached`), never on how the field was written, so the same
+days are one sentence:
+
+* `1-14,16-30` and `1-14,16-31` in June are "on every day in June except
+  the 15th". (The first said "except the 15th and 31st", naming a day
+  June does not have.) In February `1-14,16-29`, `-30` and `-31` are the
+  same days, and so are `1-27,29` and `1-27,29-31`: "on every day in
+  February except the 28th".
+* Every day but the first or the last of the month is said as every day
+  but that one, as it always was with one month ("on every day in June
+  except the 1st" for `2-31`), now judged by the month's own last day:
+  `2-29` and `2-31` in February are "on every day in February except the
+  1st".
+* `1-28` in February is not every day of it, because a leap year has a
+  29th: "on every day in February except the 29th" (it said "February 1
+  through 28", a run that names as many things, and the exception is the
+  form a day missing at the end of a month already takes). In February
+  2031 alone it is every day, "every day in February 2031", as `*` is. `1-30`, `1-31` and `*`
+  in June are "every day in June"; `30,31` in April is "on April 30";
+  `29,30,31` in February is "on February 29 in leap years".
+
+**Months of different lengths together** (2026-11-19). No sentence gives
+a month a day it does not have. February is taken to have a 29th when a
+leap year is reached. Where the days include one that a shorter month
+named lacks:
+
+* A run to the end of every month named ends on "the last day":
+  `20-31` in April and May is "on the 20th through the last day of April
+  and May" ("through the 31st of April and May" named April 31);
+  `25-31` in February and March, "on the 25th through the last day of
+  February and March".
+* A cadence that runs to the end of the months names only its start,
+  however few its days: `*/5` in June and July is "every 5 days from the
+  1st of the month in June and July". (It listed "the 1st, 6th … 31st of
+  June and July", naming June 31. The list kept correct would be split
+  in two, seven days and a date, against a step and a start.)
+* Days named one by one, or a run that stops inside the longer months,
+  are said first with every month that has them all, then with the
+  months that alone have the rest: `30,31` in April and May is "on the
+  30th of April and May and on May 31"; `15,31` in January and April,
+  "on the 15th of January and April and on January 31".
+* An exception may name a day only some of the months have, since it
+  takes that day out of the months that do: `1-14,16-30` in April and
+  July is "on every day in April and July except the 15th and 31st".
+
 4.5 None.
 
 ## 5. Idioms

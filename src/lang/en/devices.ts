@@ -875,11 +875,17 @@ function hoursAsStretches(close: Omit<Moment, 'hour'>,
  * 7th", "every 5 days from the 1st". With a month given, the days are
  * said as dates in it: "on June 1 and 15"; the days an exception takes
  * out stay plain ("except the 15th"). `lead` is the word that introduces
- * a day or a list of them, ordinarily "on".
+ * a day or a list of them, ordinarily "on". `last` is set beside months
+ * of different lengths whose days include one a shorter month lacks: it
+ * is the last day of the longest, and a run that reaches it ends on "the
+ * last day", which every month has ("on the 20th through the last day of
+ * April and May"); a cadence is then said by its rule however few its
+ * days, since a list would give some month a day it lacks.
  */
 function daysOfTheMonth(
   month: number | null,
   lead: string,
+  last: number | null,
   opts: EnglishOptions
 ): Voice {
   // For each role, the month the days are dates in, and whether each
@@ -889,6 +895,7 @@ function daysOfTheMonth(
     excepted: [null, false],
     list: [month, false]
   };
+  const lastDay = `${words.the} ${words.last} ${units.day.one}`;
 
   return listing({
     all: `${words.on} ${every} ${units.day.one}`,
@@ -896,12 +903,17 @@ function daysOfTheMonth(
     exceptAt: '',
     field: 'date',
     names(days, role) {
-      return dayNames(days, ...forms[role], opts);
+      return dayNames(days, ...forms[role], opts).map(function named(name, at) {
+        return role === 'ends' && at > 0 && days[at] >= (last ?? Infinity) ?
+          lastDay :
+          name;
+      });
     },
     run: lead,
     // A cadence of days starts again each month, and says so: "every 5
     // days from the 1st" alone is heard as running on past the month's end.
     stride: {
+      anyLength: last !== null,
       bare: false,
       close: `${words.of} ${words.the} ${units.month.one}`,
       open: true,
