@@ -1,7 +1,7 @@
 {
   "name": "cronli5",
-  "version": "1.2.2",
-  "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and nine other languages. Includes a cRonstrue-compatible entry point.",
+  "version": "1.3.0",
+  "description": "Cron patterns in plain language: natural descriptions of cron schedules in English and fourteen other languages. Includes a cRonstrue-compatible entry point.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrewbroz/cronli5.git"
@@ -55,6 +55,11 @@
       "import": "./dist/lang/fr.js",
       "require": "./dist/lang/fr.cjs"
     },
+    "./lang/id": {
+      "types": "./types/lang/id/index.d.ts",
+      "import": "./dist/lang/id.js",
+      "require": "./dist/lang/id.cjs"
+    },
     "./lang/it": {
       "types": "./types/lang/it/index.d.ts",
       "import": "./dist/lang/it.js",
@@ -65,10 +70,25 @@
       "import": "./dist/lang/ja.js",
       "require": "./dist/lang/ja.cjs"
     },
+    "./lang/ko": {
+      "types": "./types/lang/ko/index.d.ts",
+      "import": "./dist/lang/ko.js",
+      "require": "./dist/lang/ko.cjs"
+    },
+    "./lang/pl": {
+      "types": "./types/lang/pl/index.d.ts",
+      "import": "./dist/lang/pl.js",
+      "require": "./dist/lang/pl.cjs"
+    },
     "./lang/pt": {
       "types": "./types/lang/pt/index.d.ts",
       "import": "./dist/lang/pt.js",
       "require": "./dist/lang/pt.cjs"
+    },
+    "./lang/ru": {
+      "types": "./types/lang/ru/index.d.ts",
+      "import": "./dist/lang/ru.js",
+      "require": "./dist/lang/ru.cjs"
     },
     "./lang/uk": {
       "types": "./types/lang/uk/index.d.ts",
@@ -79,6 +99,11 @@
       "types": "./types/lang/zh/index.d.ts",
       "import": "./dist/lang/zh.js",
       "require": "./dist/lang/zh.cjs"
+    },
+    "./lang/zh-hant": {
+      "types": "./types/lang/zh-hant/index.d.ts",
+      "import": "./dist/lang/zh-hant.js",
+      "require": "./dist/lang/zh-hant.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -106,6 +131,8 @@
     "fuzz": "node --import tsx scripts/fuzz-lang.mjs",
     "lint": "eslint src test cli.js eslint.config.js scripts tooling/scripts",
     "metamorphic": "node --import tsx tooling/scripts/metamorphic.mjs",
+    "same-schedule": "node --import tsx tooling/scripts/same-schedule.mjs",
+    "speed": "node --import tsx tooling/scripts/speed.mjs",
     "lint:fix": "eslint src test cli.js eslint.config.js scripts tooling/scripts --fix",
     "test": "vitest run",
     "types": "tsc -p tsconfig.types.json",

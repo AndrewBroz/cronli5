@@ -12,7 +12,7 @@ The short version of the trade:
   other; cRonstrue assembles per-field fragments joined by commas.
 * **Languages.** The fragment style is what makes cRonstrue translatable into
   its **39 locales** via per-locale string tables. `cronli5` takes the opposite
-  trade: each of its ten languages is a **full renderer** (see
+  trade: each of its fifteen languages is a **full renderer** (see
   [docs/lang/](./lang/)), so output reads like the language, but breadth grows
   one language at a time. If you need a language `cronli5` doesn't have yet, use
   cRonstrue; each language doc carries a generated side-by-side table against
@@ -39,7 +39,7 @@ The short version of the trade:
 * **Size.** cRonstrue is the smaller library. Gzipped, it is ~6&nbsp;KB with
   English, under 1&nbsp;KB more per locale, and ~30&nbsp;KB with all 39.
   `cronli5` is ~18&nbsp;KB with English and ~10&ndash;14&nbsp;KB more per
-  language, ~100&nbsp;KB with all ten: a full renderer costs more than a
+  language, ~154&nbsp;KB with all fifteen: a full renderer costs more than a
   string table. Neither has dependencies.
 * **Speed.** cRonstrue is about five times faster: ~6&nbsp;&micro;s a pattern
   against ~30&nbsp;&micro;s for `cronli5` (Node&nbsp;26, Apple M2 Pro). Both

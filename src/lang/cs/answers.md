@@ -141,8 +141,8 @@ Seven things run through everything:
   a reason; it is open to revision). «o půlnoci» beside a weekday is the
   wrong night for half the readers (usage §9), so midnight is «v 0:00».
 
-Czech declares **no tie** (3.11): no wording depends on how a field was
-written.
+Czech declares **one tie** (3.11): the last day of the month written `L`
+or as the date. No other wording depends on how a field was written.
 
 ## How a form is chosen
 
@@ -471,8 +471,18 @@ whole, whatever its length: `*/15 1,2,5,7,11,13,17,19,23 * * *` lists
 its windows, and no rule could shorten it. Checked by saying each pair
 in the table aloud, and against the judge's readings.
 
-**3.11** None. `0 */12 * * *` and `0 0,12 * * *` are both «denně v 0:00
-a 12:00».
+**3.11** One, the last day of the month. Hours are no tie: `0 */12 * * *`
+and `0 0,12 * * *` are both «denně v 0:00 a 12:00».
+
+**The last day of the month** (declared 2026-11-19). A day field
+written `L` and the same date, however spelled, are a tie: `0 9 L 6 *`
+is «vždy poslední den v červnu v 9:00» and
+`0 9 30 6 *` is «vždy 30. června v 9:00», though both fire on 30 June.
+The phrase for the last day is held whole and the date is
+recognised at a glance; neither needs working out, so the phrasing that
+mirrors the spelling is said. The core reports `L` as a fact of its own
+kind (`analyses.day`), not as a set of values, so nothing reads the
+spelling. A count back from the end (`L-3`) is not part of this tie.
 
 ### 3-date. Days of the month
 

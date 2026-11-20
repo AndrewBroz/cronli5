@@ -180,7 +180,7 @@ Encapsulation rules:
 * **Core API stays frozen-ish**: `cronli5(pattern, options)` with
   `options.lang` defaulting to the bundled English module.
 
-### 3.1 Distribution and size (measured 2026-11-14)
+### 3.1 Distribution and size (measured 2026-11-14; `cronli5/all` again 2026-11-19, with fifteen languages)
 
 cronli5's sizes, bundled and minified with esbuild:
 
@@ -188,7 +188,7 @@ cronli5's sizes, bundled and minified with esbuild:
 | ----------------------------------- | ------------- | ------------- |
 | Main entry (core + English)         | 50.7 KB       | 17.9 KB       |
 | Each further language               | +28 to +43 KB | +10 to +14 KB |
-| `cronli5/all` (all ten languages)   | 312.9 KB      | 102.5 KB      |
+| `cronli5/all` (all fifteen languages) | 478.4 KB    | 153.9 KB      |
 
 For comparison, cRonstrue 3.14.0 is 6.3 KB gzipped with English, under
 1 KB more per locale, and 30.4 KB with all 39 locales.

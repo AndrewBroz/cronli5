@@ -1,0 +1,47 @@
+# Brief: repair Traditional Chinese (`zh-hant`) where a comparison with its sister language showed a weaker form
+
+cronli5 turns cron patterns into plain-language descriptions, in the words a native speaker would write for someone reading once on a screen. Two Chinese languages ship, written independently on purpose: Simplified (`zh`, Mainland usage) and Traditional (`zh-Hant`, Taiwan by default, with a Hong Kong style). Today they were compared pattern by pattern (887 patterns). Where they differ for a reason that is not regional convention, one of them has usually found a form that serves a reader better, or one has a defect. No wrong schedule was found in either. You repair **Traditional Chinese**.
+
+Work ONLY in the git worktree `REPO/.superpowers/worktrees/zh-hant-repair` (branch `zh-hant-repair`); use that path explicitly for every command; never `cd` to or edit any other checkout. Never use `git stash`, `git reset`, `git checkout -- .` or switch branches; do not push, tag or change the version. Scratch: `SCRATCH/zh-hant-repair`. Edit only `src/lang/zh-hant/`, `test/lang/zh-hant/`, and, at the end, the generated files and the two hand-kept ones named below.
+
+## Read first
+
+1. `CLAUDE.md`, in full. Above all: "What all of this is for"; "The reader's mind" (a person reads once, at the pace of speech, holds about four things; recognises clock times and dates at a glance; works out sums with effort; the four costs of a sentence: spoken length, objects held, repetition, operation tax, which are separate columns and are **never added into one number or used as a target**); "How quality is judged" (model readers favour verbose forms; a wish for more words decides nothing; **a cadence that begins on the first second, minute or hour of its cycle and tiles it is said bare, and readers asking "from when?" do not reopen that**; no bracket shows a series of numbers to illustrate what the words already say); "A language is its artifacts" (a failing row has three allowed responses; rows are hand-written, never produced by running a renderer; bug fixes are test-first); "What a renderer must hold to" (continuity; conditions are about how many values and how arranged, never which; what carries between languages is the concern, never the device).
+2. The comparison: `SCRATCH/zh-compare/report.md` (full report; `pairs.json` and `diff.txt` beside it hold every pair). It names each kind of structural difference, gives examples with both sentences and the true schedule, and a verdict.
+3. `src/lang/zh-hant/usage.md` (how Traditional Chinese writers really write such things), then `answers.md` (what was chosen, why, on whose reading and when: evidence to weigh and test again, not law; a recorded "readers preferred the longer form" is weak evidence), then the renderer and `test/lang/zh-hant/`.
+
+**The sister language's sentences are evidence of a concern met, not wording to copy.** You may read the Simplified sentences in the report and in `pairs.json`; do not read `src/lang/zh/` (its answers and renderer) at all. A Mainland form is not evidence for Taiwan or Hong Kong usage. For each item, name the concern, then find how Traditional Chinese's own usage notes and writers meet it. If the only cure you can find is the sister's form in other characters, say so and justify it from Traditional Chinese's usage notes or a source, or leave the item and report it.
+
+## What to repair
+
+Every kind in the report whose verdict is "(b) T" or "(a) S" is in scope, with the report's second readings for Traditional and three things the build's readers and the orchestrator flagged. In order of weight:
+
+1. **Runs and steps in one field** (`0 */2,13 * * *` → 每天 12:00～14:00，每小時一次，另加 ten more times): up to 28 items, in a misleading order. A defect. The sister says the cadence and adds the one stray time. The core offers such a set as a cadence with loose values and as pieces; state by how many and how arranged which is said, so that a cadence with one or two extra values is never dissolved into a list.
+2. **Two rates side by side** (`… 2028/4` → 2028年起每4年，每5分鐘一次): a reader may stall or drop 每4年. The report rates it the strongest doubt. The year rate and the time rate must not read as two rates of one thing; your answers already say something of the year frame (期間, a comma): find the form with one reading.
+3. **Odd hours** (`0 1/2 * * *` → 每天 01:00 起每2小時一次): you already have 單數時 for hours that hold something finer; the report prefers a parity word here to a stated start. Make "every second hour from 1" one kind, said one way whether at minute 0 or with something finer.
+4. **A tiling rhythm listed** (`*/15 */2 * * *` → 每逢雙數時的00、15、30、45分): the project says a rhythm that tiles its unit from its start bare (每15分鐘一次). Under 雙數時 / 單數時 and under named hours, a tiling rhythm of minutes is the rhythm; only minutes that are not a tiling rhythm are listed.
+5. **The minute window said twice** (`0-29 9-17 * * 1-5` → 每週一至週五 09:00～17:29，每小時的整點至29分，每分鐘一次): one reader of three took 9:44 as firing. The stretch 09:00～17:29 followed by 每分鐘一次 invites "every minute throughout". Find the form in which what happens in each hour cannot be taken for the whole stretch.
+6. **Hours that hold named minutes over a stepped range** (`15,45 0-16/2`): nine hours listed where the sister is shorter.
+7. **Years**: the sister's 每逢偶数年（2030年除外） against your two pieces.
+8. **Hong Kong says 西元雙數年**: your own usage notes give 公元 for Hong Kong, and Hong Kong has no second era to guard against (民國 is Taiwan's). Decide what the `hk` style says for parity of years (the era word, or none), from the usage notes.
+9. **Weak second readings in the report**: 每逢30分起的1分鐘內 (its end left open); 另加45分 (heard as "plus 45 minutes").
+10. A count back from the month's end where the date differs by month length (每月倒數第31天及每週一, introduced by today's audit): the reader must subtract. If the dates can be named by month length in a form a Taiwan writer would sign, do so; if not, keep it and say why.
+
+Where Traditional's form is the better one by the report, leave it.
+
+For every item: decide as a native editor whether the report is right (say so where it is not, with the fire times or the usage evidence); then amend `answers.md` first (the choice, the reason, the evidence, the rejected alternative, today's date 2026-11-19, and that the lead came from the comparison); then write the intended sentences BY HAND into rows (correct existing rows, with the reason; add hard-case rows for forms not yet pinned), work their fire times by hand, run the suite and watch them fail; then change the renderer by a general rule over the form of the sets. No code path for one example. Keep `lexicon.ts` and `continuity.js` in step; if a fusion changes, declare it by name. Stay within the branch budget.
+
+Before calling a new sentence better than the one it replaces, compare the two: with the four cost columns side by side (by hand, or with `compare` in `tooling/scripts/reading/cost.mjs` if this language has an entry there; if it has none, do it by hand and say so), and by reading both cold. Better means no worse in every column, or a mixed result with the judgment stated. Shorter is not better on its own. Record each comparison in `SCRATCH/zh-hant-repair/old-new.md` (pattern, old, new, columns, verdict).
+
+## Then
+
+1. `npx tsc -p tsconfig.json`; `npx eslint src/lang/zh-hant test/lang/zh-hant`; `npx vitest run test/lang/zh-hant test/lang/renderer-rules.js test/lang/contract.js test/lang/options.js`; a sweep of a few thousand varied patterns (zero throws, no `undefined`, `NaN`, doubled spaces or punctuation) with every named clock time checked against `tooling/scripts/reading/oracle.mjs`.
+2. `npm run docs`, `npm run conformance`, then `npm run verify` green (do not run it while another vitest is running in this worktree).
+3. **The reading check** on the result: `node --import tsx tooling/scripts/reading/run.mjs zh-hant` (run in the background and wait; it makes model calls), then `node --import tsx tooling/scripts/reading/recheck.mjs zh-hant`. A question still misread alone by most readers of both models is a defect: cure it test-first, or stop on it and report candidates. Questions misread by one model or only in a list are notes. Copy `tooling/readings/zh-hant/report.md` and `recheck.md` to `SCRATCH/zh-hant-repair/`.
+4. `src/lang/zh-hant/status.json`: add one or two sentences to the review text saying what changed today, on what evidence, what the reading check found, and which new forms no independent human or blind reader has read. Keep it honest and short.
+5. `CHANGELOG.md`, section `## [Unreleased]`: under `### Changed`, one entry for Traditional Chinese listing the wording changes with before and after examples as the library says them, in the style of earlier wording-change entries in that file.
+6. Commit on `zh-hant-repair` (`git add` the files you changed or generated, by path). Message: `fix(zh-hant): forms the comparison of the two Chinese languages showed weaker`, with a short body.
+
+## Report (under 600 words)
+
+The commit hash and `npm run verify` result; per item: changed, kept (why) or left open (why), with one before → after example and the fire times where it matters; the old/new comparisons where the columns disagreed and what you decided; the reading-check numbers and anything it found; every new form nobody independent has read; what you still doubt.

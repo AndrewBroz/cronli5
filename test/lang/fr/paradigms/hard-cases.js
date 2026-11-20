@@ -228,15 +228,21 @@ const rows = [
   ['0 0 */2 6-8 *', 'les jours impairs du mois, de juin à août, à 0 h'],
   ['0 0 */2 1,7 *', 'les jours impairs de janvier et de juillet à 0 h'],
   ['0 0 */5 6 *', 'les 1er, 6, 11, 16, 21 et 26 juin à 0 h'],
+  // June has no 31st: the days every month has are said of all three,
+  // the 31st with the months that have it. (The row was «les 1er, 6, 11,
+  // 16, 21, 26 et 31 du mois, de juin à août», which gave June a 31st.)
   ['0 0 */5 6-8 *',
-    'les 1er, 6, 11, 16, 21, 26 et 31 du mois, de juin à août, à 0 h'],
+    'les 1er, 6, 11, 16, 21 et 26 du mois, de juin à août, et le 31 ' +
+    'juillet et le 31 août, à 0 h'],
   ['0 0 */3 * *', 'tous les 3 jours du 1er au 31 de chaque mois à 0 h'],
   ['0 0 */3 6 *', 'tous les 3 jours du 1er au 28 juin à 0 h'],
   ['0 0 */3 2 *', 'tous les 3 jours du 1er au 28 février à 0 h'],
   ['0 0 */3 1,7 *',
     'tous les 3 jours du 1er au 31 du mois, en janvier et en juillet, à 0 h'],
+  // To the end of the month, which each month has. (The row was «tous les
+  // 3 jours du 1er au 31 du mois, de juin à août», a 31 June.)
   ['0 0 */3 6-8 *',
-    'tous les 3 jours du 1er au 31 du mois, de juin à août, à 0 h'],
+    'tous les 3 jours du 1er à la fin du mois, de juin à août, à 0 h'],
   ['0 0 5-20/3 * *', 'les 5, 8, 11, 14, 17 et 20 de chaque mois à 0 h'],
   ['0 0 8/2 * *', 'les jours pairs du 8 au 30 de chaque mois à 0 h'],
   ['0 0 8/2 6 *', 'les jours pairs du 8 au 30 juin à 0 h'],
@@ -797,14 +803,116 @@ const rows = [
     'de juin à août, à 0 h, tous les lundis ainsi que le 31 juillet et le ' +
     '31 août'],
 
-  // How long a named month is, the facts do not say: an exception there
-  // never names the 29th, 30th or 31st. (The first row was «tous les
-  // jours de février, sauf le 29», from a table of month lengths.)
+  // The days are judged against those the named months have: every day,
+  // every day but a few, a run or a list. The same days are the same
+  // sentence however they are written. (The rows for `1-14,16-30` and
+  // `2-30` in June were «du 1er au 30 juin, sauf le 15» and «du 2 au 30
+  // juin», while `1-14,16-31` and `2-31` said what they say now.)
+  // Beside a named month an exception from every day never names the
+  // month's last day: a set without it is the run to its own last day,
+  // so `1-28` in February, which leap years extend to the 29th, is the
+  // run. (The first row was once «tous les jours de février, sauf le
+  // 29».)
   ['0 0 1-28 2 *', 'du 1er au 28 février à 0 h'],
-  ['0 0 1-14,16-30 6 *', 'du 1er au 30 juin, sauf le 15, à 0 h'],
-  ['0 0 2-30 6 *', 'du 2 au 30 juin à 0 h'],
-  ['0 0 1-29/2 6 *', 'les jours impairs du 1er au 29 juin à 0 h'],
+  ['0 0 0 1-28 2 * 2032', 'du 1er au 28 février 2032 à 0 h'],
+  ['0 0 0 1-28 2 * 2031', 'tous les jours de février 2031 à 0 h'],
+  ['0 0 1-14,16-30 6 *', 'tous les jours de juin, sauf le 15, à 0 h'],
+  ['0 9 1-14,16-31 6 *', 'tous les jours de juin, sauf le 15, à 9 h'],
+  ['0 9 1-14,16-30 6 *', 'tous les jours de juin, sauf le 15, à 9 h'],
+  ['0 9 1-14,16-29 2 *', 'tous les jours de février, sauf le 15, à 9 h'],
+  ['0 9 1-14,16-31 2 *', 'tous les jours de février, sauf le 15, à 9 h'],
+  ['0 9 1-27,29 2 *', 'tous les jours de février, sauf le 28, à 9 h'],
+  ['0 0 2-30 6 *', 'tous les jours de juin, sauf le 1er, à 0 h'],
+  ['0 9 2-31 6 *', 'tous les jours de juin, sauf le 1er, à 9 h'],
+  ['0 9 1-29 6 *', 'du 1er au 29 juin à 9 h'],
+  ['0 9 1-14,16-28 6 *', 'du 1er au 28 juin, sauf le 15, à 9 h'],
+  ['0 9 1-30 6 *', 'tous les jours de juin à 9 h'],
+  ['0 9 1-31 6 *', 'tous les jours de juin à 9 h'],
+  ['0 9 30,31 4 *', 'le 30 avril à 9 h'],
+  ['0 9 30 4 *', 'le 30 avril à 9 h'],
+  ['0 9 29,30,31 2 *', 'le 29 février à 9 h, les années bissextiles'],
+  ['0 9 29 2 *', 'le 29 février à 9 h, les années bissextiles'],
+
+  // Months of different lengths: no month is given a day it lacks. A
+  // run or a cadence that goes on to the end of every month is said to
+  // the end of the month; six dates or fewer are each said in full; any
+  // other set is the days every month has, said of all the months, and
+  // the others in full with the months that have them. February's 29th
+  // is a day February has. With every month nothing changes: «de chaque
+  // mois» is read as skipping the days a month lacks.
+  ['0 9 */3 4,7 *',
+    'tous les 3 jours du 1er à la fin du mois, en avril et en juillet, ' +
+    'à 9 h'],
+  ['0 9 15-31 4,5 *', 'du 15 à la fin du mois, en avril et en mai, à 9 h'],
+  ['0 9 15-30 4,5 *', 'du 15 au 30 du mois, en avril et en mai, à 9 h'],
+  ['0 9 1-30 4,5 *', 'du 1er au 30 du mois, en avril et en mai, à 9 h'],
+  ['0 9 1-30 2,4 *', 'tous les jours en février et en avril à 9 h'],
+  ['0 9 9/2 4,5 *',
+    'les jours impairs du 9 à la fin du mois, en avril et en mai, à 9 h'],
+  ['0 9 1-5,20-31 4,5 *',
+    'du 1er au 5 et du 20 à la fin du mois, en avril et en mai, à 9 h'],
+  ['0 9 30,31 4,5 *', 'le 30 avril, le 30 mai et le 31 mai à 9 h'],
+  ['0 9 15-30 2,5 *',
+    'du 15 au 29 du mois, en février et en mai, et le 30 mai, à 9 h'],
+  ['0 9 1-29,31 2,5 *',
+    'du 1er au 29 du mois, en février et en mai, et le 31 mai, à 9 h'],
+  ['0 9 1,15,31 1-6 *',
+    'le 1er et le 15 du mois, de janvier à juin, et le 31 janvier, le 31 ' +
+    'mars et le 31 mai, à 9 h'],
+  ['0 9 15-31 4,5 1',
+    'en avril et en mai, à 9 h, tous les lundis ainsi que du 15 à la fin ' +
+    'du mois'],
+  ['0 9 28-31 * *', 'du 28 au 31 de chaque mois à 9 h'],
+
+  // The same days are said the same way, however the field is written.
+  // Every second day that runs to the last day of the longest month it
+  // fires in is the idiom alone: `1-29/2` in June is every odd day June
+  // has, as `*/2` is. (The first row was «les jours impairs du 1er au 29
+  // juin», which restated an end the month itself supplies.) A cadence
+  // that stops before that day is other days and keeps its ends.
+  ['0 0 1-29/2 6 *', 'les jours impairs de juin à 0 h'],
   ['0 0 */2 6 *', 'les jours impairs de juin à 0 h'],
+  ['0 9 2-30/2 6 *', 'les jours pairs de juin à 9 h'],
+  ['0 9 2/2 6 *', 'les jours pairs de juin à 9 h'],
+  ['0 9 1-27/2 6 *', 'les jours impairs du 1er au 27 juin à 9 h'],
+  ['0 9 2-28/2 6 *', 'les jours pairs du 2 au 28 juin à 9 h'],
+  // February: its longest is the 29th, in leap years.
+  ['0 9 1-29/2 2 *', 'les jours impairs de février à 9 h'],
+  ['0 9 */2 2 *', 'les jours impairs de février à 9 h'],
+  ['0 9 2-28/2 2 *', 'les jours pairs de février à 9 h'],
+  ['0 9 2/2 2 *', 'les jours pairs de février à 9 h'],
+  ['0 9 1-27/2 2 *', 'les jours impairs du 1er au 27 février à 9 h'],
+  ['0 0 0 1-27/2 2 * 2031', 'les jours impairs de février 2031 à 0 h'],
+  ['0 0 0 */2 2 * 2031', 'les jours impairs de février 2031 à 0 h'],
+  ['0 0 0 1-29/2 2 * 2032', 'les jours impairs de février 2032 à 0 h'],
+  ['0 0 0 1-27/2 2 * 2032',
+    'les jours impairs du 1er au 27 février 2032 à 0 h'],
+  // A month of 31 days.
+  ['0 9 1-31/2 1 *', 'les jours impairs de janvier à 9 h'],
+  ['0 9 2-30/2 1 *', 'les jours pairs de janvier à 9 h'],
+  ['0 9 1-29/2 1 *', 'les jours impairs du 1er au 29 janvier à 9 h'],
+  // Months of different lengths: the longest decides.
+  ['0 9 1-29/2 4,6 *', 'les jours impairs d\'avril et de juin à 9 h'],
+  ['0 9 */2 4,6 *', 'les jours impairs d\'avril et de juin à 9 h'],
+  ['0 9 1-29/2 2,4 *', 'les jours impairs de février et d\'avril à 9 h'],
+  ['0 9 2-30/2 4,5 *', 'les jours pairs d\'avril et de mai à 9 h'],
+  ['0 9 1-29/2 4,5 *',
+    'les jours impairs du 1er au 29 du mois, en avril et en mai, à 9 h'],
+  ['0 9 1-29/2 6-8 *',
+    'les jours impairs du 1er au 29 du mois, de juin à août, à 9 h'],
+  ['0 9 */2 6-8 *', 'les jours impairs du mois, de juin à août, à 9 h'],
+  ['0 9 1-27/2 2,4 *',
+    'les jours impairs du 1er au 27 du mois, en février et en avril, à 9 h'],
+  // Every month: the longest has a 31st.
+  ['0 9 1-31/2 * *', 'les jours impairs de chaque mois à 9 h'],
+  ['0 9 */2 * *', 'les jours impairs de chaque mois à 9 h'],
+  ['0 9 1-29/2 * *', 'les jours impairs du 1er au 29 de chaque mois à 9 h'],
+  // With a hole: the base is said as it would stand alone.
+  ['0 9 1-13/2,17-29/2 6 *', 'les jours impairs de juin, sauf le 15, à 9 h'],
+  ['0 9 1-13/2,17-31/2 6 *', 'les jours impairs de juin, sauf le 15, à 9 h'],
+  // A step of three keeps both ends, and they are the days the month has.
+  ['0 9 1-28/3 6 *', 'tous les 3 jours du 1er au 28 juin à 9 h'],
+  ['0 9 */3 6 *', 'tous les 3 jours du 1er au 28 juin à 9 h'],
 
   // Neither side of a union takes an exception, which would be read as
   // covering the whole: a Friday the 15th fires.

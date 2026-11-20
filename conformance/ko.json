@@ -1,0 +1,5453 @@
+{
+ "language": "ko",
+ "rows": [
+  {
+   "expected": "매일 오전 9시부터 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 0분 54초까지 6초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/6 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 0분 5초부터 9시 0분 55초까지 10초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 5분, 9시 20분, 9시 45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 9시 15분, 9시 45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,15,45 9 * * *"
+  },
+  {
+   "expected": "매시 정각",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "매일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 오후 5시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시까지 1시간마다, 그리고 오후 10시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-17,22 * * *"
+  },
+  {
+   "expected": "매일 홀수 시 정각",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 1/2 * * *"
+  },
+  {
+   "expected": "매월 1일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1 * *"
+  },
+  {
+   "expected": "매월 1·10·20일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1,10,20 * *"
+  },
+  {
+   "expected": "매월 홀수일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "매월 홀수일(15일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "매년 1월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 1 *"
+  },
+  {
+   "expected": "매년 3월·6월·9월·12월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 3,6,9,12 *"
+  },
+  {
+   "expected": "매년 홀수 달 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * */2 *"
+  },
+  {
+   "expected": "매년 1월·2월·11월·12월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 11-2 *"
+  },
+  {
+   "expected": "매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1-5"
+  },
+  {
+   "expected": "매주 화·목요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 2,4"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분 간격으로 각각 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분 간격으로 각각 0초부터 54초까지 6초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/6 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분 간격으로 각각 5초부터 55초까지 10초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 30분까지 30분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시대부터 오후 5시대까지 매시 정각부터 29분까지 1분마다, 그리고 45분에도",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시대부터 오후 5시대까지 매시 정각·15·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,15,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 하루 종일 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 * * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 낮 12시부터 12시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 12 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다, 그리고 오후 10시부터 10시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17,22 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 홀수 시에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 1/2 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 1 * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1·10·20일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 1,10,20 * 1-5"
+  },
+  {
+   "expected": "매월 홀수일 중 월~금요일인 날 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 */2 * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1~14·16~31일의 홀수일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * 1-5"
+  },
+  {
+   "expected": "매년 1월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 1 1-5"
+  },
+  {
+   "expected": "매년 3월·6월·9월·12월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 3,6,9,12 1-5"
+  },
+  {
+   "expected": "매년 홀수 달 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * */2 1-5"
+  },
+  {
+   "expected": "매년 1월·2월·11월·12월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 11-2 1-5"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * *"
+  },
+  {
+   "expected": "매주 월·수·금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 1,3,5"
+  },
+  {
+   "expected": "매주 화·목요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 2,4"
+  },
+  {
+   "expected": "매월 1일 0시부터 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 0분 54초까지 6초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/6 0 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시 0분 5초부터 0시 0분 55초까지 10초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 0 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시 5분, 0시 20분, 0시 45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시, 0시 15분, 0시 45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,15,45 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 하루 종일 매시 정각",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 * 1 * *"
+  },
+  {
+   "expected": "매월 1일 오전 9시, 오후 5시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9,17 1 * *"
+  },
+  {
+   "expected": "매월 1일 오전 9시부터 오후 5시까지 1시간마다, 그리고 오후 10시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-17,22 1 * *"
+  },
+  {
+   "expected": "매월 1일 홀수 시 정각",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 1/2 1 * *"
+  },
+  {
+   "expected": "매월 1·10·20일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,10,20 * *"
+  },
+  {
+   "expected": "매월 홀수일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */2 * *"
+  },
+  {
+   "expected": "매월 홀수일(15일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "매년 1월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 1 *"
+  },
+  {
+   "expected": "매년 3월·6월·9월·12월의 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 3,6,9,12 *"
+  },
+  {
+   "expected": "매년 홀수 달 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 */2 *"
+  },
+  {
+   "expected": "매년 1월·2월·11월·12월의 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 11-2 *"
+  },
+  {
+   "expected": "매주 월요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 1"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 1-5"
+  },
+  {
+   "expected": "매주 화·목요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 2,4"
+  },
+  {
+   "expected": "1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * * *"
+  },
+  {
+   "expected": "6초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/6 * * * * *"
+  },
+  {
+   "expected": "매분 5초부터 55초까지 10초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 * * * * *"
+  },
+  {
+   "expected": "매시 5·20·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 * * * *"
+  },
+  {
+   "expected": "15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,15,45 * * * *"
+  },
+  {
+   "expected": "매일 0시부터 0시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시 59분까지 1분마다, 그리고 오후 10시부터 10시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 9-17,22 * * *"
+  },
+  {
+   "expected": "매일 홀수 시에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 1/2 * * *"
+  },
+  {
+   "expected": "매월 1일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1 * *"
+  },
+  {
+   "expected": "매월 1·10·20일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1,10,20 * *"
+  },
+  {
+   "expected": "매월 홀수일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * */2 * *"
+  },
+  {
+   "expected": "매월 홀수일(15일 제외) 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1,3,5,7,9,11,13,17,19,21,23,25,27,29,31 * *"
+  },
+  {
+   "expected": "매년 1월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 1 *"
+  },
+  {
+   "expected": "매년 3월·6월·9월·12월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 3,6,9,12 *"
+  },
+  {
+   "expected": "매년 홀수 달 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * */2 *"
+  },
+  {
+   "expected": "매년 1월·2월·11월·12월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 11-2 *"
+  },
+  {
+   "expected": "매주 월요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 1"
+  },
+  {
+   "expected": "매주 월~금요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 1-5"
+  },
+  {
+   "expected": "매주 화·목요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 2,4"
+  },
+  {
+   "expected": "매일 오전 9시 0분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 9시 0분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 0분 45초까지 15초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 0분 9초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-9 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 9시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 29분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 29분까지 1분마다, 그리고 오전 9시 45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29,45 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 56분까지 7분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/7 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 5분부터 9시 50분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/15 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 10분부터 9시 40분까지 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "10-40/10 9 * * *"
+  },
+  {
+   "expected": "매일 낮 12시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "매일 오전 8시, 낮 12시, 오후 6시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 8,12,18 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "2시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */6 * * *"
+  },
+  {
+   "expected": "2시간마다(오전 8시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "매일 오후 10시부터 다음 날 오전 2시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "매월 15일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 15 * *"
+  },
+  {
+   "expected": "매월 1·15일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1,15 * *"
+  },
+  {
+   "expected": "매월 1~7일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1-7 * *"
+  },
+  {
+   "expected": "매월 1~7·15일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1-7,15 * *"
+  },
+  {
+   "expected": "매월 짝수일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 2/2 * *"
+  },
+  {
+   "expected": "매월 1일부터 5일마다 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 */5 * *"
+  },
+  {
+   "expected": "매월 말일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 L * *"
+  },
+  {
+   "expected": "매월 15일(토요일이면 전날 금요일, 일요일이면 다음 날 월요일) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 15W * *"
+  },
+  {
+   "expected": "매년 6월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 *"
+  },
+  {
+   "expected": "매년 1월·7월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 1,7 *"
+  },
+  {
+   "expected": "매년 6~8월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6-8 *"
+  },
+  {
+   "expected": "매년 6~8월·12월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6-8,12 *"
+  },
+  {
+   "expected": "매년 1월·4월·7월·10월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * */3 *"
+  },
+  {
+   "expected": "매년 1~11월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 1-11 *"
+  },
+  {
+   "expected": "매주 일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0"
+  },
+  {
+   "expected": "매주 월·수·금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "매주 토·일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0,6"
+  },
+  {
+   "expected": "매주 월~토요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1-6"
+  },
+  {
+   "expected": "매월 마지막 금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "매월 둘째 월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1#2"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시 0분 30초부터 오후 5시 45분 30초까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분 간격으로 각각 0·30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분 간격으로 각각 0·15·30·45초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분 간격으로 각각 0초부터 9초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-9 */15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시 30분부터 오후 5시 30분까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시대부터 오후 5시대까지 매시 5·20·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시대부터 오후 5시대까지 매시 정각부터 29분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시대부터 오후 5시대까지 매시 정각부터 56분까지 7분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/7 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시 5분부터 오후 5시 50분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시대부터 오후 5시대까지 매시 10·20·30·40분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "10-40/10 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 0시부터 0시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 9시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시대, 오후 5시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9,17 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 8시대, 낮 12시대, 오후 6시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 8,12,18 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 짝수 시에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 */2 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 0시대, 오전 6시대, 낮 12시대, 오후 6시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 */6 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 짝수 시에 15분마다(오전 8시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 0시부터 오전 2시 45분까지 15분마다, 그리고 오후 10시부터 11시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 22-2 * * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 15일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 15 * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1·15일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 1,15 * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1~7일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 1-7 * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1~7·15일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 1-7,15 * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 짝수일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 2/2 * 1-5"
+  },
+  {
+   "expected": "매월 1일부터 5일마다, 그중 월~금요일인 날 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 */5 * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 말일에도, 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 L * 1-5"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 15W * 1-5"
+  },
+  {
+   "expected": "매년 6월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 6 1-5"
+  },
+  {
+   "expected": "매년 1월·7월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 1,7 1-5"
+  },
+  {
+   "expected": "매년 6~8월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 6-8 1-5"
+  },
+  {
+   "expected": "매년 6~8월·12월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 6-8,12 1-5"
+  },
+  {
+   "expected": "매년 1월·4월·7월·10월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * */3 1-5"
+  },
+  {
+   "expected": "매년 1~11월 매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * 1-11 1-5"
+  },
+  {
+   "expected": "매주 월요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 1"
+  },
+  {
+   "expected": "매주 일요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 0"
+  },
+  {
+   "expected": "매주 토·일요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 0,6"
+  },
+  {
+   "expected": "매주 월~토요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 1-6"
+  },
+  {
+   "expected": "매월 마지막 금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 5L"
+  },
+  {
+   "expected": "매월 둘째 월요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-17 * * 1#2"
+  },
+  {
+   "expected": "매월 1일 0시 0분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시, 0시 0분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 0 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 0분 45초까지 15초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 0분 9초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-9 0 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시, 0시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 29분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 29분까지 1분마다, 그리고 0시 45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29,45 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시부터 0시 56분까지 7분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/7 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시 5분부터 0시 50분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/15 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시 10분부터 0시 40분까지 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "10-40/10 0 1 * *"
+  },
+  {
+   "expected": "매월 1일 낮 12시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 12 1 * *"
+  },
+  {
+   "expected": "매월 1일 오전 8시, 낮 12시, 오후 6시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 8,12,18 1 * *"
+  },
+  {
+   "expected": "매월 1일 오전 9시부터 오후 5시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-17 1 * *"
+  },
+  {
+   "expected": "매월 1일 하루 종일 2시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */2 1 * *"
+  },
+  {
+   "expected": "매월 1일 하루 종일 6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */6 1 * *"
+  },
+  {
+   "expected": "매월 1일 하루 종일 2시간마다(오전 8시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,2,4,6,10,12,14,16,18,20,22 1 * *"
+  },
+  {
+   "expected": "매월 1일 0시, 오전 1시, 2시, 오후 10시, 11시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 22-2 1 * *"
+  },
+  {
+   "expected": "매월 15일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 15 * *"
+  },
+  {
+   "expected": "매월 1·15일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,15 * *"
+  },
+  {
+   "expected": "매월 1~7일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-7 * *"
+  },
+  {
+   "expected": "매월 1~7·15일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-7,15 * *"
+  },
+  {
+   "expected": "매월 짝수일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 2/2 * *"
+  },
+  {
+   "expected": "매월 1일부터 5일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 * *"
+  },
+  {
+   "expected": "매월 말일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L * *"
+  },
+  {
+   "expected": "매월 15일(토요일이면 전날 금요일, 일요일이면 다음 날 월요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "매년 6월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 6 *"
+  },
+  {
+   "expected": "매년 1월·7월의 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 1,7 *"
+  },
+  {
+   "expected": "매년 6~8월 매월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 6-8 *"
+  },
+  {
+   "expected": "매년 6~8월·12월 매월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 6-8,12 *"
+  },
+  {
+   "expected": "매년 1월·4월·7월·10월의 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 */3 *"
+  },
+  {
+   "expected": "매년 1~11월 매월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 1-11 *"
+  },
+  {
+   "expected": "매주 일요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 0"
+  },
+  {
+   "expected": "매주 월·수·금요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 1,3,5"
+  },
+  {
+   "expected": "매주 토·일요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "매주 월~토요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 1-6"
+  },
+  {
+   "expected": "매월 마지막 금요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 5L"
+  },
+  {
+   "expected": "매월 둘째 월요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 1#2"
+  },
+  {
+   "expected": "매분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 * * * * *"
+  },
+  {
+   "expected": "30초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 * * * * *"
+  },
+  {
+   "expected": "15초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 * * * * *"
+  },
+  {
+   "expected": "매분 0초부터 9초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-9 * * * * *"
+  },
+  {
+   "expected": "매시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 * * * *"
+  },
+  {
+   "expected": "30분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 29분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 29분까지 1분마다, 그리고 45분에도",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 56분까지 7분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/7 * * * *"
+  },
+  {
+   "expected": "매시 5·20·35·50분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/15 * * * *"
+  },
+  {
+   "expected": "매시 10·20·30·40분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "10-40/10 * * * *"
+  },
+  {
+   "expected": "매일 낮 12시부터 12시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 12 * * *"
+  },
+  {
+   "expected": "매일 오전 8시대, 낮 12시대, 오후 6시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 8,12,18 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 9-17 * * *"
+  },
+  {
+   "expected": "매일 짝수 시에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "매일 0시대, 오전 6시대, 낮 12시대, 오후 6시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* */6 * * *"
+  },
+  {
+   "expected": "매일 짝수 시에 1분마다(오전 8시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "매일 오후 10시부터 다음 날 오전 2시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 22-2 * * *"
+  },
+  {
+   "expected": "매월 15일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 15 * *"
+  },
+  {
+   "expected": "매월 1·15일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1,15 * *"
+  },
+  {
+   "expected": "매월 1~7일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1-7 * *"
+  },
+  {
+   "expected": "매월 1~7·15일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1-7,15 * *"
+  },
+  {
+   "expected": "매월 짝수일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 2/2 * *"
+  },
+  {
+   "expected": "매월 1일부터 5일마다 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * */5 * *"
+  },
+  {
+   "expected": "매월 말일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * L * *"
+  },
+  {
+   "expected": "매월 15일(토요일이면 전날 금요일, 일요일이면 다음 날 월요일) 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 15W * *"
+  },
+  {
+   "expected": "매년 6월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 6 *"
+  },
+  {
+   "expected": "매년 1월·7월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 1,7 *"
+  },
+  {
+   "expected": "매년 6~8월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 6-8 *"
+  },
+  {
+   "expected": "매년 6~8월·12월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 6-8,12 *"
+  },
+  {
+   "expected": "매년 1월·4월·7월·10월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * */3 *"
+  },
+  {
+   "expected": "매년 1~11월 내내 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * 1-11 *"
+  },
+  {
+   "expected": "매주 일요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 0"
+  },
+  {
+   "expected": "매주 월·수·금요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 1,3,5"
+  },
+  {
+   "expected": "매주 토·일요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 0,6"
+  },
+  {
+   "expected": "매주 월~토요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 1-6"
+  },
+  {
+   "expected": "매월 마지막 금요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 5L"
+  },
+  {
+   "expected": "매월 둘째 월요일 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 1#2"
+  },
+  {
+   "expected": "2030년 1월 1일 0시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * 2030"
+  },
+  {
+   "expected": "2030·2035년 1월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 1 1 * 2030,2035"
+  },
+  {
+   "expected": "2030~2035년 매년 1월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2035"
+  },
+  {
+   "expected": "짝수 해마다, 그해 1월 1일 0시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 0 1 1 * */2"
+  },
+  {
+   "expected": "2030년 6월 1일 오전 9시 0분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 9 1 6 * 2030"
+  },
+  {
+   "expected": "2030년 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2030"
+  },
+  {
+   "expected": "2028~2031년 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2028-2031"
+  },
+  {
+   "expected": "2030년 6월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * 6 * 2030"
+  },
+  {
+   "expected": "2030년 6월 매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * 6 1 2030"
+  },
+  {
+   "expected": "2030년 6월 1·15일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 1,15 6 * 2030"
+  },
+  {
+   "expected": "2030년 6월·7월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * 6,7 * 2030"
+  },
+  {
+   "expected": "2030·2031년 6월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * 6 * 2030,2031"
+  },
+  {
+   "expected": "2030~2035년 매년 6월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * 6 * 2030-2035"
+  },
+  {
+   "expected": "2030년 6월 말일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 L 6 * 2030"
+  },
+  {
+   "expected": "2030년 매월 1일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 1 * * 2030"
+  },
+  {
+   "expected": "2030년부터 2년마다, 그해 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2030/2"
+  },
+  {
+   "expected": "2028년부터 4년마다, 그해 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2028/4"
+  },
+  {
+   "expected": "2028년부터 4년마다, 그해 1월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 1 1 * 2028/4"
+  },
+  {
+   "expected": "2028년부터 4년마다, 그해 내내 5분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */5 * * * * 2028/4"
+  },
+  {
+   "expected": "2028년부터 2060년까지 4년마다, 그해 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2028-2060/4"
+  },
+  {
+   "expected": "2028년부터 2048년까지 4년마다, 그해 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2028-2048/4"
+  },
+  {
+   "expected": "2028·2032·2036·2040년 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2028-2040/4"
+  },
+  {
+   "expected": "2030년부터 2040년까지 2년마다, 그해 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2030-2040/2"
+  },
+  {
+   "expected": "짝수 해마다, 그해 내내 5분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */5 * * * * */2"
+  },
+  {
+   "expected": "홀수 해마다, 그해 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 1971/2"
+  },
+  {
+   "expected": "2030년부터 2년마다, 그해 6월 매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * 6 1 2030/2"
+  },
+  {
+   "expected": "2030~2032·2035년 매년 1월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 1 1 * 2030-2032,2035"
+  },
+  {
+   "expected": "2030~2035년 매월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 1 * * 2030-2035"
+  },
+  {
+   "expected": "2030년 6~8월 매월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 1 6-8 * 2030"
+  },
+  {
+   "expected": "2030년 1~11월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * 1-11 * 2030"
+  },
+  {
+   "expected": "매년(2030년 제외) 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 1970-2029,2031-9999"
+  },
+  {
+   "expected": "2030년부터 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2030/1"
+  },
+  {
+   "expected": "2030년부터 매년 1월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 1 1 * 2030/1"
+  },
+  {
+   "expected": "2030년부터 2년마다, 그리고 2031년, 이들 해에는 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2030/2,2031"
+  },
+  {
+   "expected": "2030~2040년, 그리고 2045년부터 5년마다, 이들 해에는 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2030-2040,2045/5"
+  },
+  {
+   "expected": "2030~2035년 매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 9 * * 1 2030-2035"
+  },
+  {
+   "expected": "2030년 내내 1분마다",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "* * * * * 2030"
+  },
+  {
+   "expected": "매월 1일 0시",
+   "options": {
+    "cron": "quartz",
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * ?"
+  },
+  {
+   "expected": "매주 월요일 오전 9시",
+   "options": {
+    "cron": "quartz",
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 ? * 2"
+  },
+  {
+   "expected": "매월 마지막 금요일 오전 9시",
+   "options": {
+    "cron": "quartz",
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 ? * 6L"
+  },
+  {
+   "expected": "매월 첫째 월요일 오전 9시",
+   "options": {
+    "cron": "quartz",
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 ? * 2#1"
+  },
+  {
+   "expected": "매월 마지막 평일(월~금, 공휴일 무관) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 LW * *"
+  },
+  {
+   "expected": "매년 6월 마지막 평일(월~금, 공휴일 무관) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 LW 6 *"
+  },
+  {
+   "expected": "매월 첫 평일(월~금, 공휴일 무관) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1W * *"
+  },
+  {
+   "expected": "매년 6월 첫 평일(월~금, 공휴일 무관) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1W 6 *"
+  },
+  {
+   "expected": "매년 6월 15일(토요일이면 전날 금요일, 일요일이면 다음 날 월요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 15W 6 *"
+  },
+  {
+   "expected": "매월 28일(주말이면 같은 달 안에서 가장 가까운 금요일이나 월요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 28W * *"
+  },
+  {
+   "expected": "매년 6월 30일(토요일이면 전날 금요일, 일요일이면 이틀 전 금요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30W 6 *"
+  },
+  {
+   "expected": "매년 4월·6월의 30일(토요일이면 전날 금요일, 일요일이면 이틀 전 금요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30W 4,6 *"
+  },
+  {
+   "expected": "매년 2월 28일(주말이면 같은 달 안에서 가장 가까운 금요일이나 월요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 28W 2 *"
+  },
+  {
+   "expected": "매월 말일 3일 전(31일까지 있는 달은 28일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 * *"
+  },
+  {
+   "expected": "매년 6월 27일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 6 *"
+  },
+  {
+   "expected": "매년 2월 25일(윤년에는 26일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 2 *"
+  },
+  {
+   "expected": "매년 6월 27일, 7월 28일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 6,7 *"
+  },
+  {
+   "expected": "매월 말일 전날 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-1 * *"
+  },
+  {
+   "expected": "매월 말일 이틀 전 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-2 * *"
+  },
+  {
+   "expected": "매년 6월 말일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L 6 *"
+  },
+  {
+   "expected": "매년 6~8월·12월 매월 말일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L 6-8,12 *"
+  },
+  {
+   "expected": "매년 6월 둘째 월요일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 * 6 1#2"
+  },
+  {
+   "expected": "매년 1월·7월의 마지막 금요일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 * 1,7 5L"
+  },
+  {
+   "expected": "매년 6~8월 매월 마지막 금요일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 * 6-8 5L"
+  },
+  {
+   "expected": "매월 첫째 수요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 3#1"
+  },
+  {
+   "expected": "매월 셋째 목요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 4#3"
+  },
+  {
+   "expected": "매월 마지막 토요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 6L"
+  },
+  {
+   "expected": "매월 넷째 일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0#4"
+  },
+  {
+   "expected": "매월 31일(없는 달은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 * *"
+  },
+  {
+   "expected": "매월 30일(없는 달은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30 * *"
+  },
+  {
+   "expected": "매월 29~31일(없는 날은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 29-31 * *"
+  },
+  {
+   "expected": "매월 30·31일(없는 날은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30,31 * *"
+  },
+  {
+   "expected": "매월 28~31일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 28-31 * *"
+  },
+  {
+   "expected": "매일(31일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-30 * *"
+  },
+  {
+   "expected": "매일(30·31일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-29 * *"
+  },
+  {
+   "expected": "매일(1일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 2-31 * *"
+  },
+  {
+   "expected": "매월 1·11·21·31일(없는 날은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */10 * *"
+  },
+  {
+   "expected": "매월 1~3·28~31일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 28-3 * *"
+  },
+  {
+   "expected": "매월 1~13·17~31일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-13,17-31 * *"
+  },
+  {
+   "expected": "매월 1~28일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-28 * *"
+  },
+  {
+   "expected": "매월 31일(토요일이면 전날 금요일, 일요일이면 이틀 전 금요일, 31일이 없는 달은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31W * *"
+  },
+  {
+   "expected": "매월 30일(주말이면 같은 달 안에서 가장 가까운 금요일이나 월요일, 30일이 없는 달은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30W * *"
+  },
+  {
+   "expected": "매월 29일(주말이면 같은 달 안에서 가장 가까운 금요일이나 월요일, 29일이 없는 달은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 29W * *"
+  },
+  {
+   "expected": "매년 1월·3월·5월·7월·8월·10월·12월의 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-30 * *"
+  },
+  {
+   "expected": "매월 말일 29일 전(31일까지 있는 달은 2일, 30일까지 있는 달은 1일, 2월은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-29 * *"
+  },
+  {
+   "expected": "매월 다섯째 월요일(없는 달은 건너뜀) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1#5"
+  },
+  {
+   "expected": "윤년마다 2월 29일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 29 2 *"
+  },
+  {
+   "expected": "매년 1월 29일과 윤년 2월 29일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 29 1,2 *"
+  },
+  {
+   "expected": "매년 1월 30일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30 1,2 *"
+  },
+  {
+   "expected": "매년 1월 31일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 1,4 *"
+  },
+  {
+   "expected": "매년 1월·4월의 30일과 1월 31일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30,31 1,4 *"
+  },
+  {
+   "expected": "매년 1월·4월의 15일과 1월 31일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 15,31 1,4 *"
+  },
+  {
+   "expected": "매년 2월 28일과 윤년 2월 29일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 28-31 2 *"
+  },
+  {
+   "expected": "매년 6월 매일(1일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 2-30 6 *"
+  },
+  {
+   "expected": "2028년부터 4년마다, 그해 2월 29일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 29 2 * 2028/4"
+  },
+  {
+   "expected": "매년 7월·8월의 31일(토요일이면 전날 금요일, 일요일이면 이틀 전 금요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31W 6-8 *"
+  },
+  {
+   "expected": "매년 7월·8월의 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-30 6-8 *"
+  },
+  {
+   "expected": "매년 6월 매일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-30 6 *"
+  },
+  {
+   "expected": "매년 6월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1-30 6 1"
+  },
+  {
+   "expected": "매년 6월 매주 월요일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 6 1"
+  },
+  {
+   "expected": "2032년 2월 29일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 29 2 * 2032"
+  },
+  {
+   "expected": "없는 날짜라 실행되지 않음",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 0 29 2 * 2031"
+  },
+  {
+   "expected": "매년 4월·6월의 30일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30,31 4,6 *"
+  },
+  {
+   "expected": "매년 6월 25~30일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 25-31 6 *"
+  },
+  {
+   "expected": "매년 6월 1~3·28~30일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 28-3 6 *"
+  },
+  {
+   "expected": "매년 6월 1·11·21일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */10 6 *"
+  },
+  {
+   "expected": "없는 날짜라 실행되지 않음",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "없는 날짜라 실행되지 않음",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30 2 *"
+  },
+  {
+   "expected": "없는 날짜라 실행되지 않음",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 4,6 *"
+  },
+  {
+   "expected": "없는 날짜라 실행되지 않음",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31W 6 *"
+  },
+  {
+   "expected": "없는 날짜라 실행되지 않습니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 6 *"
+  },
+  {
+   "expected": "매시 정각",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "@hourly"
+  },
+  {
+   "expected": "매일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "@daily"
+  },
+  {
+   "expected": "매주 일요일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "@weekly"
+  },
+  {
+   "expected": "매월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "@monthly"
+  },
+  {
+   "expected": "매년 1월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "@yearly"
+  },
+  {
+   "expected": "시스템 시작 시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "매일 오전 9시에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "15분마다 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "*/15 * * * *"
+  },
+  {
+   "expected": "매시 정각에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 * * * *"
+  },
+  {
+   "expected": "매시 정각에 실행됩니다(오전 3시 제외).",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "10분마다 실행됩니다(오전 3시대 제외).",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "매시 5분, 5분 30초, 20분, 20분 30초에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0,30 5,20 * * * *"
+  },
+  {
+   "expected": "매주 금요일, 그리고 매월 1일에도, 0시에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 5"
+  },
+  {
+   "expected": "매월 31일(없는 달은 건너뜀) 0시에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 * *"
+  },
+  {
+   "expected": "매일 0시에 실행됩니다(단, 15일은 월요일인 경우에만).",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 * 1"
+  },
+  {
+   "expected": "매일 0시대, 오전 4·8시대, 낮 12시대, 오후 4·8시대에 각각 15·45분에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "매일 오전 9시",
+   "options": {
+    "form": "label",
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "1분마다",
+   "options": {
+    "form": "label",
+    "lang": "ko"
+   },
+   "pattern": "* * * * *"
+  },
+  {
+   "expected": "시스템 시작 시에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "@reboot"
+  },
+  {
+   "expected": "올바르지 않은 cron 패턴",
+   "options": {
+    "lang": "ko",
+    "lenient": true
+   },
+   "pattern": "not a pattern"
+  },
+  {
+   "expected": "매주 금요일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 * 5"
+  },
+  {
+   "expected": "매주 월~금요일, 그리고 매월 1·15일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,15 * 1-5"
+  },
+  {
+   "expected": "매년 6월 매주 금요일, 그리고 6월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 6 5"
+  },
+  {
+   "expected": "매년 1월·7월 매주 월~금요일, 그리고 1월·7월의 1·15일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,15 1,7 1-5"
+  },
+  {
+   "expected": "매년 1~11월 매주 금요일, 그리고 1~11월 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 1-11 5"
+  },
+  {
+   "expected": "매년 5~7월 매주 수·목요일, 그리고 5~7월 매월 1·19·23·28일에도, 오전 7시 52분부터 오후 4시 52분까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "52 7-16 1,19,23,28 5-7 3-4"
+  },
+  {
+   "expected": "매주 월요일, 그리고 매월 1~7일에도, 오전 4시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 4 1-7 * 1"
+  },
+  {
+   "expected": "매년 6월 둘째 월요일, 그리고 6월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 6 1#2"
+  },
+  {
+   "expected": "매년 6~8월 매월 둘째 월요일, 그리고 6~8월 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 6-8 1#2"
+  },
+  {
+   "expected": "매년 6~8월 매주 금요일, 그리고 6~8월 매월 말일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L 6-8 5"
+  },
+  {
+   "expected": "매주 월요일, 그리고 매월 말일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L * 1"
+  },
+  {
+   "expected": "매주 월요일, 그리고 매월 마지막 평일(월~금, 공휴일 무관)에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 LW * 1"
+  },
+  {
+   "expected": "매주 월요일, 그리고 매월 31일(없는 달은 건너뜀)에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 * 1"
+  },
+  {
+   "expected": "매주 월요일, 그리고 매월 1일에도, 하루 종일 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1 * 1"
+  },
+  {
+   "expected": "매일 1분마다(단, 15일은 월요일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 1-14,16-31 * 1"
+  },
+  {
+   "expected": "2030년 매주 금요일, 그리고 2030년 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 0 1 * 5 2030"
+  },
+  {
+   "expected": "2030년 6월 매주 금요일, 그리고 2030년 6월 1일에도, 0시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 0 1 6 5 2030"
+  },
+  {
+   "expected": "짝수 해마다, 그해 매주 금요일, 그리고 그해 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 0 1 * 5 */2"
+  },
+  {
+   "expected": "매일 0시(단, 15일은 월요일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 * 1"
+  },
+  {
+   "expected": "매일 0시(단, 15·16일은 월~금요일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,17-31 * 1-5"
+  },
+  {
+   "expected": "매일 0시(단, 수요일은 15일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 15 * 0-2,4-6"
+  },
+  {
+   "expected": "매일 0시(단, 금·토요일은 1·15일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,15 * 0-4"
+  },
+  {
+   "expected": "매일 0시(단, 수요일은 말일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L * 0-2,4-6"
+  },
+  {
+   "expected": "매일(수요일인 15일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 * 0-2,4-6"
+  },
+  {
+   "expected": "매년 6월 매일 0시(단, 15일은 월요일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 6 1"
+  },
+  {
+   "expected": "매년 6월 1·15일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,15 6 *"
+  },
+  {
+   "expected": "매년 6월 1·10·20일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,10,20 6 *"
+  },
+  {
+   "expected": "매년 6월 1~7일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-7 6 *"
+  },
+  {
+   "expected": "매년 6월 1~7·15일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-7,15 6 *"
+  },
+  {
+   "expected": "매년 6월 홀수일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "매년 7월 1일부터 31일까지 5일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 7 *"
+  },
+  {
+   "expected": "매년 6월 1일부터 26일까지 5일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 6 *"
+  },
+  {
+   "expected": "매년 1월·7월의 1·15일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,15 1,7 *"
+  },
+  {
+   "expected": "매년 12월 31일 오후 11시 59분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "59 23 31 12 *"
+  },
+  {
+   "expected": "매일(15일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 * *"
+  },
+  {
+   "expected": "매년 6월 매일(15일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 6 *"
+  },
+  {
+   "expected": "매일(15·16일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,17-31 * *"
+  },
+  {
+   "expected": "매년 짝수 달 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1 2/2 *"
+  },
+  {
+   "expected": "매월 1~5·10·20~25일 낮 12시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 12 1-5,10,20-25 * *"
+  },
+  {
+   "expected": "매월 1·22일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */21 * *"
+  },
+  {
+   "expected": "매월 5일부터 20일까지 3일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 5-20/3 * *"
+  },
+  {
+   "expected": "매월 1일부터 4일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */4 * *"
+  },
+  {
+   "expected": "매월 1일부터 3일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */3 * *"
+  },
+  {
+   "expected": "매년 6월 1일부터 28일까지 3일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */3 6 *"
+  },
+  {
+   "expected": "매년 2월 1일부터 25일까지 4일마다(윤년에는 29일에도) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */4 2 *"
+  },
+  {
+   "expected": "매월 8일부터 2일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 8/2 * *"
+  },
+  {
+   "expected": "매월 2일부터 20일까지 2일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 2-20/2 * *"
+  },
+  {
+   "expected": "매년 6~8월 매월 짝수일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 2-30/2 6-8 *"
+  },
+  {
+   "expected": "매월 1일부터 28일까지 3일마다, 그리고 2일부터 29일까지 3일마다 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23,25,26,28,29 * *"
+  },
+  {
+   "expected": "매년 1~3월·6월·9~11월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 1-3,6,9-11 *"
+  },
+  {
+   "expected": "매년 1월·12월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 12,1 *"
+  },
+  {
+   "expected": "매년 1~3월·10~12월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 10-3 *"
+  },
+  {
+   "expected": "매년 짝수 달 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 2/2 *"
+  },
+  {
+   "expected": "매년 1월·3월·5월·7월·9월 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 1-9/2 *"
+  },
+  {
+   "expected": "2030년 1월·2월·11월·12월 매일 0시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 0 * 11-2 * 2030"
+  },
+  {
+   "expected": "매주 화~목요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 2-4"
+  },
+  {
+   "expected": "매주 월~목요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1-4"
+  },
+  {
+   "expected": "매주 화~토요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 2-6"
+  },
+  {
+   "expected": "매주 화~일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0,2-6"
+  },
+  {
+   "expected": "매주 일·월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0,1"
+  },
+  {
+   "expected": "매주 금·토요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 5,6"
+  },
+  {
+   "expected": "매주 토·일·월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 6-1"
+  },
+  {
+   "expected": "매주 일·월·화요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0-2"
+  },
+  {
+   "expected": "매주 금·토·일·월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "매주 금·일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0,5"
+  },
+  {
+   "expected": "매주 수·일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0,3"
+  },
+  {
+   "expected": "매주 화·수·목·일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0,2-4"
+  },
+  {
+   "expected": "매주 월·화·수·금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1,2,3,5"
+  },
+  {
+   "expected": "매주 월·수·목·금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1,3,4,5"
+  },
+  {
+   "expected": "매일(월·토요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0,2-5"
+  },
+  {
+   "expected": "매일(수·일요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 1,2,4,5,6"
+  },
+  {
+   "expected": "매일(금·토요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0-4"
+  },
+  {
+   "expected": "매일(화·수요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 4-1"
+  },
+  {
+   "expected": "매일(수요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0-2,4-6"
+  },
+  {
+   "expected": "매일(토요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * * 0-5"
+  },
+  {
+   "expected": "매년 6월 매일(수요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 0-2,4-6"
+  },
+  {
+   "expected": "매일(수요일 제외) 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * 0-2,4-6"
+  },
+  {
+   "expected": "매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1-31 * 1"
+  },
+  {
+   "expected": "매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 15 * 0-6"
+  },
+  {
+   "expected": "매주 월요일 0시, 오전 1시, 오후 10시, 11시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,1,22,23 * * 1"
+  },
+  {
+   "expected": "매주 월요일 0시, 오전 1시, 2시, 오후 10시, 11시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 22-2 * * 1"
+  },
+  {
+   "expected": "매년 6월 매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "매년 6월 매주 월·수·금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 1,3,5"
+  },
+  {
+   "expected": "매년 6월 매주 토·일요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 0,6"
+  },
+  {
+   "expected": "매년 1월·7월 매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 1,7 1"
+  },
+  {
+   "expected": "매년 6~8월 매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6-8 1"
+  },
+  {
+   "expected": "매년 6월 매주 월~금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 1-5"
+  },
+  {
+   "expected": "매년 6월 매일(월·토요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 0,2-5"
+  },
+  {
+   "expected": "매일 오전 9시, 9시 30분, 오후 5시, 5시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 5분, 9시 20분, 오후 5시 5분, 5시 20분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 각각 5·20·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 1시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 1 * * *"
+  },
+  {
+   "expected": "매일 오전 1시 30분, 오후 1시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 1,13 * * *"
+  },
+  {
+   "expected": "매일 오전 1시, 5시, 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 1,5,9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 오후 1시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9,13 * * *"
+  },
+  {
+   "expected": "매일 0시, 오후 11시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,23 * * *"
+  },
+  {
+   "expected": "매일 오전 11시, 낮 12시, 오후 1시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 11-13 * * *"
+  },
+  {
+   "expected": "매일 낮 12시 30분, 오후 1시 30분, 2시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 12-14 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 낮 12시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-12 * * *"
+  },
+  {
+   "expected": "매일 오후 1시부터 4시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 13-16 * * *"
+  },
+  {
+   "expected": "매일 오후 1시부터 5시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 13-17 * * *"
+  },
+  {
+   "expected": "매일 0시부터 낮 12시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-12 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 10시, 11시, 오후 10시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-11,22 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 10시, 11시, 낮 12시, 오후 10시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-12,22 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 10시 30분까지 30분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 9-10 * * *"
+  },
+  {
+   "expected": "매일 0시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 * * *"
+  },
+  {
+   "expected": "매일 0시 0분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 0 * * *"
+  },
+  {
+   "expected": "매일 낮 12시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 12 * * *"
+  },
+  {
+   "expected": "매일 낮 12시, 12시 20분, 12시 40분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/20 12 * * *"
+  },
+  {
+   "expected": "매시 1분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "1 * * * *"
+  },
+  {
+   "expected": "매일 오후 10시부터 11시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "매주 화요일 0시부터 오후 5시 30분까지 30분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/30 0-17 * * 2"
+  },
+  {
+   "expected": "매일 오후 10시부터 다음 날 오전 6시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-6,22,23 * * *"
+  },
+  {
+   "expected": "매일 오후 10시부터 다음 날 오전 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0-5,22-23 * * *"
+  },
+  {
+   "expected": "매일 오후 10시부터 다음 날 오전 2시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 22-2 * * *"
+  },
+  {
+   "expected": "매일 오후 10시 5분부터 다음 날 오전 2시 50분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/15 22-2 * * *"
+  },
+  {
+   "expected": "매일 오후 11시부터 다음 날 0시 30분까지 30분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 23-0 * * *"
+  },
+  {
+   "expected": "매일 오후 10시 30분부터 다음 날 오전 2시 30분까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 22-2 * * *"
+  },
+  {
+   "expected": "매일 오후 10시부터 다음 날 오전 1시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 22-1 * * *"
+  },
+  {
+   "expected": "매일 오전 5시부터 다음 날 오전 1시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 5-1 * * *"
+  },
+  {
+   "expected": "매일 오후 11시부터 다음 날 0시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 23-0 * * *"
+  },
+  {
+   "expected": "매일 오후 10시대부터 다음 날 오전 2시대까지 매시 5·20·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 22-2 * * *"
+  },
+  {
+   "expected": "매일 오후 10시대부터 다음 날 오전 2시대까지 매시 정각부터 56분까지 7분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/7 22-2 * * *"
+  },
+  {
+   "expected": "매일 오후 10시대부터 다음 날 오전 2시대까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 22-2 * * *"
+  },
+  {
+   "expected": "매일 오후 10시 0분 30초부터 다음 날 오전 2시 0분 30초까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 22-2 * * *"
+  },
+  {
+   "expected": "매일 오후 10시부터 다음 날 오전 2시까지 1시간 간격으로 각각 0초부터 50초까지 10초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/10 0 22-2 * * *"
+  },
+  {
+   "expected": "매일 0시, 오전 1시, 오후 11시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 23-1 * * *"
+  },
+  {
+   "expected": "매시 정각(오전 2시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 3-1 * * *"
+  },
+  {
+   "expected": "매년 6월 매일 0시, 오전 1시, 2시, 오후 10시, 11시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 22-2 * 6 *"
+  },
+  {
+   "expected": "2030년 매일 0시, 오전 1시, 2시, 오후 10시, 11시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 22-2 * * * 2030"
+  },
+  {
+   "expected": "매월 1일 0시부터 오전 2시 45분까지 15분마다, 그리고 오후 10시부터 11시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 22-2 1 * *"
+  },
+  {
+   "expected": "매일 오전 5시, 그리고 오전 9시부터 오후 5시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 5,9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 각각 5분부터 55분까지 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 9시 20분, 9시 40분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,20,40 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9·10시대에 각각 5·20·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 9-10 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 9분, 9시 14분, 9시 47분, 9시 56분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "9,14,47,56 9 * * *"
+  },
+  {
+   "expected": "6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,6,12,18 * * *"
+  },
+  {
+   "expected": "매일 0시, 오전 6시, 오후 6시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,6,18 * * *"
+  },
+  {
+   "expected": "매일 0시, 오전 8시, 오후 4시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */8 * * *"
+  },
+  {
+   "expected": "4시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */4 * * *"
+  },
+  {
+   "expected": "3시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */3 * * *"
+  },
+  {
+   "expected": "매일 0시부터 오후 8시까지 5시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */5 * * *"
+  },
+  {
+   "expected": "매일 0시부터 오후 8시까지 2시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-20/2 * * *"
+  },
+  {
+   "expected": "매일 짝수 시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 */2 * * *"
+  },
+  {
+   "expected": "매일 0시 30분부터 오후 9시 30분까지 3시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 */3 * * *"
+  },
+  {
+   "expected": "매일 0시 30분부터 오후 8시 30분까지 5시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 */5 * * *"
+  },
+  {
+   "expected": "매일 0시 30분부터 오후 6시 30분까지 6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 */6 * * *"
+  },
+  {
+   "expected": "매일 0시 23분부터 오후 6시 23분까지 6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "23 */6 * * *"
+  },
+  {
+   "expected": "매일 홀수 시 23분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "23 1/2 * * *"
+  },
+  {
+   "expected": "매일 짝수 시 15·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15,45 */2 * * *"
+  },
+  {
+   "expected": "매일 0시대, 오전 4·8시대, 낮 12시대, 오후 4·8시대에 각각 15·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "매일 0시대, 오전 6시대, 낮 12시대, 오후 6시대에 각각 15·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15,45 */6 * * *"
+  },
+  {
+   "expected": "매일 0시 23분, 낮 12시 23분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "23 */12 * * *"
+  },
+  {
+   "expected": "매일 오전 1시, 오후 1시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 1/12 * * *"
+  },
+  {
+   "expected": "매일 0시대, 낮 12시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 */12 * * *"
+  },
+  {
+   "expected": "매일 0시, 낮 12시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */12 * * *"
+  },
+  {
+   "expected": "매일 0시, 낮 12시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0/12 * * *"
+  },
+  {
+   "expected": "매일 0시, 낮 12시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,12 * * *"
+  },
+  {
+   "expected": "매월 1일 0시, 낮 12시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */12 1 * *"
+  },
+  {
+   "expected": "매월 1일 하루 종일 3시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */3 1 * *"
+  },
+  {
+   "expected": "매시 정각(오전 3시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "매시 정각(오전 3시, 오후 1시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-2,4-12,14-23 * * *"
+  },
+  {
+   "expected": "매주 월요일 하루 종일 매시 정각(오전 3시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-2,4-23 * * 1"
+  },
+  {
+   "expected": "매시 정각(오후 11시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-22 * * *"
+  },
+  {
+   "expected": "매시 정각(오후 10시, 11시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-21 * * *"
+  },
+  {
+   "expected": "매일 0시부터 오후 8시까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-20 * * *"
+  },
+  {
+   "expected": "1분마다(오후 11시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0-22 * * *"
+  },
+  {
+   "expected": "매시 30분(오전 3시 30분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "매시 5·20·45분(오전 3시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 0-2,4-23 * * *"
+  },
+  {
+   "expected": "10분마다(오전 3시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "1분마다(오전 3시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0-2,4-23 * * *"
+  },
+  {
+   "expected": "1초마다(오전 3시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 0-2,4-23 * * *"
+  },
+  {
+   "expected": "1분마다(매시 29분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 * * * *"
+  },
+  {
+   "expected": "1분마다(매시 29·59분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-58 * * * *"
+  },
+  {
+   "expected": "1분마다(매시 59분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-58 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 56분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-56 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시 1분부터 9시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "1-59 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 58분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-58 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대부터 오후 5시대까지 1분마다(매시 59분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-58 9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 0분 1초부터 9시 0분 59초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "1-59 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대에 매분 0초부터 56초까지 7초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/7 * 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 1분마다(오전 9시 29분, 오후 5시 29분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "5분마다(매시 30분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시 55분까지 5분마다(매시 30분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 55분까지 5분마다(오전 9시 30분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 9 * * *"
+  },
+  {
+   "expected": "5분마다(매시 30분, 오전 3시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,5,10,15,20,25,35,40,45,50,55 0-2,4-23 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시 50분까지 10분마다(매시 30분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,10,20,40,50 9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 9시 10분, 9시 20분, 9시 40분, 9시 50분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,10,20,40,50 9 * * *"
+  },
+  {
+   "expected": "1초마다(매시 29분부터 1분간 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시대에 1초마다(오전 9시 29분부터 1분간 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0-28,30-59 9 * * *"
+  },
+  {
+   "expected": "1초마다(매분 29초 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 * * * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 1분간 1초마다(오전 9시 0분 29초 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 0 9 * * *"
+  },
+  {
+   "expected": "매일 0시부터 오후 9시까지 3시간마다, 그리고 오전 1시부터 오후 10시까지 3시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22 * * *"
+  },
+  {
+   "expected": "15분마다(오전 2·5·8·11시대, 오후 2·5·8·11시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22 * * *"
+  },
+  {
+   "expected": "매일 오전 8·10시대, 낮 12시대, 오후 2·4·6시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 8-18/2 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 오후 5시까지 1시간마다, 그리고 오후 8시, 10시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9-17,20,22 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대부터 오후 5시대까지, 그리고 오후 8·10시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 9-17,20,22 * * *"
+  },
+  {
+   "expected": "매주 월~금요일 오전 6시부터 8시 50분까지 10분마다, 그리고 오후 5시부터 7시 50분까지 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/10 6-8,17-19 * * 1-5"
+  },
+  {
+   "expected": "매년 1월·4월·7월·10월의 홀수일 짝수 시에 20분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/20 */2 */2 */3 *"
+  },
+  {
+   "expected": "매일 짝수 시에 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/10 */2 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대부터 오후 5시대까지, 그리고 오후 10시대에 각각 5·20·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20,45 9-17,22 * * *"
+  },
+  {
+   "expected": "매일 오전 8시대, 낮 12시대, 오후 6시대에 각각 정각부터 29분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29 8,12,18 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 각각 정각부터 29분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 6·8시대, 낮 12시대, 오후 6·8시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 6,8,12,18,20 * * *"
+  },
+  {
+   "expected": "매일 0시대, 오전 3·6·9시대, 낮 12시대, 오후 3·6·9시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* */3 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 10시 45분까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 9-10 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 각각 5·20·35·50분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/15 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 10분까지 1분마다, 그리고 오전 9시 50분부터 9시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "50-10 9 * * *"
+  },
+  {
+   "expected": "매시 정각부터 10분까지 1분마다, 그리고 50분부터 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "50-10 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시 10분부터 9시 40분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "10-40 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분부터 9시 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30-59 9 * * *"
+  },
+  {
+   "expected": "매시 5분부터 10분까지 1분마다, 그리고 20분에도",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5-10,20 * * * *"
+  },
+  {
+   "expected": "매시 45분부터 59분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "45-59 * * * *"
+  },
+  {
+   "expected": "매시 10분부터 40분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "10-40 * * * *"
+  },
+  {
+   "expected": "매시 정각·1분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-1 * * * *"
+  },
+  {
+   "expected": "매시 15·45분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15,45 * * * *"
+  },
+  {
+   "expected": "매시 정각·21·42분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/21 * * * *"
+  },
+  {
+   "expected": "매시 9·14·47·56분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "9,14,47,56 * * * *"
+  },
+  {
+   "expected": "매시 5분부터 55분까지 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 40분까지 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-40/10 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 42분까지 6분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-42/6 * * * *"
+  },
+  {
+   "expected": "매시 1분부터 59분까지 2분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "1/2 * * * *"
+  },
+  {
+   "expected": "20분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,20,40 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 20분까지 2분마다, 그리고 21분부터 57분까지 3분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-20/2,21-59/3 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분 15초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15 30 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분 15초, 오후 5시 30분 15초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15 30 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분 15초, 9시 30분 45초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15,45 30 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 9시 0분 20초, 9시 0분 40초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,20,40 0 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 0분 5초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5-10/60 0 9 * * *"
+  },
+  {
+   "expected": "매일 0시 0분 15초, 낮 12시 0분 15초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15 0 */12 * * *"
+  },
+  {
+   "expected": "매일 0시 0분 15초부터 오후 6시 0분 15초까지 6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15 0 */6 * * *"
+  },
+  {
+   "expected": "매일 짝수 시 0분 15초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15 0 */2 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분 10초부터 9시 30분 20초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "10-20 30 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분부터 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 30 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시, 오후 5시에 각각 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 30분 15초, 9시 30분 45초, 오후 5시 30분 15초, 5시 30분 45초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15,45 30 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대에 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대에 15초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 * 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대부터 오후 5시대까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 29분 59초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0-29 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 0분 30초부터 오후 5시 0분 30초까지 1시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 0분 30초부터 오후 5시 59분 30초까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 * 9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시 0분 30초부터 9시 59분 30초까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 * 9 * * *"
+  },
+  {
+   "expected": "매시 정각부터 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0 * * * *"
+  },
+  {
+   "expected": "매시 30분부터 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 30 * * * *"
+  },
+  {
+   "expected": "매시 0분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0 * * * *"
+  },
+  {
+   "expected": "매시 30분 15초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15 30 * * * *"
+  },
+  {
+   "expected": "매시 5분 30초, 20분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 5,20 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 0분 9초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-9 0 * * * *"
+  },
+  {
+   "expected": "매시 5분, 5분 30초, 20분, 20분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 5,20 * * * *"
+  },
+  {
+   "expected": "매시 5·20분에 각각 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 5,20 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·30·45분에 각각 0·15·30·45초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 */15 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·30·45분에 각각 0초부터 54초까지 6초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/6 */15 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·30·45분에 각각 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* */15 * * * *"
+  },
+  {
+   "expected": "매시 0분 30초부터 45분 30초까지 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 */15 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·30·45분에 각각 5·20초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20 */15 * * * *"
+  },
+  {
+   "expected": "매일 짝수 시 5분 8초, 30분 8초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "8 5,30 */2 * * *"
+  },
+  {
+   "expected": "매시 정각부터 29분 59초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0-29 * * * *"
+  },
+  {
+   "expected": "매분 5·20초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20 * * * * *"
+  },
+  {
+   "expected": "20초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,20,40 * * * * *"
+  },
+  {
+   "expected": "매년 6월 내내 5분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/5 * * 6 *"
+  },
+  {
+   "expected": "매년 6월 내내 6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */6 * 6 *"
+  },
+  {
+   "expected": "매년 6월 내내 매시 30분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 * * 6 *"
+  },
+  {
+   "expected": "매년 6월 내내 매시 정각",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 * * 6 *"
+  },
+  {
+   "expected": "매년 6월 내내 매시 정각(오전 3시 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0-2,4-23 * 6 *"
+  },
+  {
+   "expected": "매주 월요일 하루 종일 매시 정각",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 * * * 1"
+  },
+  {
+   "expected": "매년 6월 1일 하루 종일 5분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/5 * 1 6 *"
+  },
+  {
+   "expected": "2030년 내내 5분마다",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "*/5 * * * * 2030"
+  },
+  {
+   "expected": "2030년 6월 내내 5분마다",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "*/5 * * 6 * 2030"
+  },
+  {
+   "expected": "2030년 내내 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* * * * * * 2030"
+  },
+  {
+   "expected": "매월 홀수일 중 월요일인 날 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */2 * 1"
+  },
+  {
+   "expected": "매월 1일부터 5일마다, 그중 월요일인 날 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 * 1"
+  },
+  {
+   "expected": "매월 15일(화·목·토·일요일인 경우에만) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 15 * */2"
+  },
+  {
+   "expected": "매년 6월 홀수일 중 월~금요일인 날 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 */2 6 1-5"
+  },
+  {
+   "expected": "매월 홀수일 중 월요일인 날 0시에 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 0 */2 * 1"
+  },
+  {
+   "expected": "매월 홀수일 중 월·수·금요일인 날 0시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 */2 * 1,3,5"
+  },
+  {
+   "expected": "매주 월요일, 그리고 매월 홀수일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-31/2 * 1"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 LW * 1-5"
+  },
+  {
+   "expected": "매주 월~토요일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1W * 1-6"
+  },
+  {
+   "expected": "매주 월·수·금요일, 그리고 매월 15일(토요일이면 전날 금요일, 일요일이면 다음 날 월요일)에도, 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 15W * 1,3,5"
+  },
+  {
+   "expected": "윤년마다 2월 29일(토요일이면 전날 금요일, 일요일이면 이틀 전 금요일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 29W 2 *"
+  },
+  {
+   "expected": "윤년마다 2월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-28 2 *"
+  },
+  {
+   "expected": "매월 말일 28일 전(31일까지 있는 달은 3일, 30일까지 있는 달은 2일, 윤년 2월은 1일, 평년 2월은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-28 * *"
+  },
+  {
+   "expected": "매년 4월·6월의 27일, 7월 28일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 4,6,7 *"
+  },
+  {
+   "expected": "매년 3월 30일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30 2-3 *"
+  },
+  {
+   "expected": "매년 4월·6월·9월·11월의 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,31 4,6,9,11 *"
+  },
+  {
+   "expected": "매년 1월·3~6월 매월 30·31일(없는 날은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 30,31 1-6 *"
+  },
+  {
+   "expected": "매년 6월 매일(15일 제외) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 1-14,16-30 6 *"
+  },
+  {
+   "expected": "매년 6월 홀수일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-29/2 6 *"
+  },
+  {
+   "expected": "2030년부터 7년마다, 그리고 2031년부터 11년마다, 이들 해에는 매일 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 9 * * * 2030/7,2031/11"
+  },
+  {
+   "expected": "매주 월요일 하루 종일 2시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */2 * * 1"
+  },
+  {
+   "expected": "매주 월~금요일 하루 종일 4시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */4 * * 1-5"
+  },
+  {
+   "expected": "매일 0시대, 오전 4·8시대, 낮 12시대, 오후 4·8시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 */4 * * *"
+  },
+  {
+   "expected": "매년 6월 매일 0시대, 오전 4·8시대, 낮 12시대, 오후 4·8시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* */4 * 6 *"
+  },
+  {
+   "expected": "매일 짝수 시 정각부터 29분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29 */2 * * *"
+  },
+  {
+   "expected": "매일 짝수 시 정각부터 56분까지 7분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/7 */2 * * *"
+  },
+  {
+   "expected": "매일 짝수 시 5분부터 55분까지 10분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 */2 * * *"
+  },
+  {
+   "expected": "매일 짝수 시 30분(오전 8시 30분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "매일 짝수 시에 15분마다 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "*/15 */2 * * *"
+  },
+  {
+   "expected": "매일 짝수 시에 1분마다 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "* */2 * * *"
+  },
+  {
+   "expected": "매일 짝수 시에 1분마다 실행됩니다(오전 8시대 제외).",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "* 0,2,4,6,10,12,14,16,18,20,22 * * *"
+  },
+  {
+   "expected": "2시간마다 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0 */2 * * *"
+  },
+  {
+   "expected": "2분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */2 * * * *"
+  },
+  {
+   "expected": "매시 0분 30초부터 58분 30초까지 2분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 */2 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·30·45분에 각각 0·30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 */15 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·30·45분에 각각 0초부터 9초까지 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-9 */15 * * * *"
+  },
+  {
+   "expected": "매시 정각·15·30·45분에 각각 5초부터 55초까지 10초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5/10 */15 * * * *"
+  },
+  {
+   "expected": "매시 정각부터 0분 54초까지 6초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/6 0 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시대에 매분 5·20초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20 * 9 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대부터 오후 5시대까지 매분 5·20초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20 * 9-17 * * *"
+  },
+  {
+   "expected": "매일 오전 1시부터 오후 10시까지 3시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 1/3 * * *"
+  },
+  {
+   "expected": "매일 오전 1·4·7·10시대, 오후 1·4·7·10시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 1/3 * * *"
+  },
+  {
+   "expected": "매일 오전 1·4·7·10시대, 오후 1·4·7·10시대에 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 1/3 * * *"
+  },
+  {
+   "expected": "매일 0시대, 오전 5·10시대, 오후 3·8시대에 15분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 */5 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 각각 정각부터 29분까지 1분마다, 그리고 45분에도",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-29,45 9,17 * * *"
+  },
+  {
+   "expected": "매시 정각부터 29분까지 1분마다, 그리고 45분에도 실행됩니다.",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "0-29,45 * * * *"
+  },
+  {
+   "expected": "매주 월·화요일, 그리고 매월 23~25일에도, 0시 24분부터 오후 9시 24분까지 3시간 간격으로 각각 0초부터 50초까지 10초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/10 24 */3 23-25 * 1-2"
+  },
+  {
+   "expected": "2030년부터 4년마다, 그해 6월·7월의 둘째 토요일 0시 23분, 0시 23분 30초, 낮 12시 23분, 12시 23분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/30 23 */12 * 6-7 6#2 2030/4"
+  },
+  {
+   "expected": "2028·2030년 매일 오전 2시 35분, 오후 3시 35분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 35 2,15 * * * 2028,2030"
+  },
+  {
+   "expected": "매년 7월·9월·10월·12월 매주 월·수·목·금요일 오전 3시대부터 10시대까지 매시 30·42분에 각각 1분간 1초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 30,42 3-10 * 7,9,10,12 1,3,4,5"
+  },
+  {
+   "expected": "매년 3월·6월·9월·12월의 15일(토요일이면 전날 금요일, 일요일이면 다음 날 월요일) 오후 6시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 18 15W 3,6,9,12 *"
+  },
+  {
+   "expected": "매년 홀수 달 1일 오전 4시 7분부터 오후 10시 7분까지 6시간마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "2030년 6월 15일 오전 9시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 9 15 6 * 2030"
+  },
+  {
+   "expected": "매년 1월·7월의 28일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 1,7 *"
+  },
+  {
+   "expected": "매년 1월·4월의 1일부터 26일까지 5일마다(1월에는 31일에도) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 1,4 *"
+  },
+  {
+   "expected": "매년 6~8월 매월 1일부터 28일까지 3일마다(7월·8월에는 31일에도) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */3 6-8 *"
+  },
+  {
+   "expected": "매년 1월·2월의 1일부터 25일까지 4일마다(1월과 윤년 2월에는 29일에도) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */4 1,2 *"
+  },
+  {
+   "expected": "매년 1월·2월의 8일부터 28일까지 2일마다(1월에는 30일에도) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 8/2 1,2 *"
+  },
+  {
+   "expected": "매년 1월·2월·4월의 3일부터 27일까지 2일마다(1월·4월과 윤년 2월에는 29일에도, 1월에는 31일에도) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 3/2 1,2,4 *"
+  },
+  {
+   "expected": "매년 홀수 달 1일부터 26일까지 5일마다(1월·3월·5월·7월에는 31일에도) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 */2 *"
+  },
+  {
+   "expected": "매년 1월·4월의 1일부터 26일까지 5일마다(1월에는 31일에도), 그중 월요일인 날 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 1,4 1"
+  },
+  {
+   "expected": "매년 1월·4월의 1일부터 26일까지 5일마다(1월에는 31일에도), 그중 월~금요일인 날 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 */5 1,4 1-5"
+  },
+  {
+   "expected": "2030년부터 2년마다, 그리고 2031년, 이들 해에는 내내 5분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 */5 * * * * 2030/2,2031"
+  },
+  {
+   "expected": "2030년부터 2년마다, 그리고 2031년, 이들 해에는 매주 금요일, 그리고 이들 해에는 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko",
+    "years": true
+   },
+   "pattern": "0 0 1 * 5 2030/2,2031"
+  },
+  {
+   "expected": "매일 30분마다(오전 3시대 제외. 단, 15일은 월요일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0,30 0-2,4-23 1-14,16-31 * 1"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 59분까지 1분마다(오전 9시 29분 제외. 단, 15일은 월요일인 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 9 1-14,16-31 * 1"
+  },
+  {
+   "expected": "매일 5분마다 실행됩니다(오전 3시대 제외. 단, 15일은 월요일인 경우에만).",
+   "options": {
+    "form": "sentence",
+    "lang": "ko"
+   },
+   "pattern": "*/5 0-2,4-23 1-14,16-31 * 1"
+  },
+  {
+   "expected": "매월 31일(없는 달은 건너뜀, 화·목·토·일요일인 경우에만) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 31 * */2"
+  },
+  {
+   "expected": "매월 말일(화·목·토·일요일인 경우에만) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L * */2"
+  },
+  {
+   "expected": "매주 화·목·토·일요일(15일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 * */2"
+  },
+  {
+   "expected": "매년 6월 매주 화·목·토·일요일(15일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-14,16-31 6 */2"
+  },
+  {
+   "expected": "매일 0시(단, 수요일은 2일부터 20일까지 2일마다에 해당하는 경우에만)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 2-20/2 * 0-2,4-6"
+  },
+  {
+   "expected": "매분 0초부터 9초까지 1초마다(매시 29분부터 1분간 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-9 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시대에 매분 15·45초(오전 9시 29분부터 1분간 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "15,45 0-28,30-59 9 * * *"
+  },
+  {
+   "expected": "1초마다(매분 29초, 매시 29분부터 1분간 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 0-28,30-59 * * * *"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 1초마다(오전 9시 29분부터 1분간, 오후 5시 29분부터 1분간 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 0-28,30-59 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 0분 20초까지 2초마다, 그리고 오전 9시 0분 21초부터 9시 0분 57초까지 3초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-20/2,21-59/3 0 9 * * *"
+  },
+  {
+   "expected": "매년 2월 25일(윤년에는 26일), 4월 27일, 7월 28일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 2,4,7 *"
+  },
+  {
+   "expected": "매년 1월 28일, 2월 25일(윤년에는 26일) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 1,2 *"
+  },
+  {
+   "expected": "매년 1월 28일, 6월 27일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-3 1,6 *"
+  },
+  {
+   "expected": "매년 4월 2일, 7월 3일과 윤년 2월 1일 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 L-28 2,4,7 *"
+  },
+  {
+   "expected": "매년 6월 다섯째 월요일(없는 해는 건너뜀) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6 1#5"
+  },
+  {
+   "expected": "매년 6~8월 매월 다섯째 월요일(없는 달은 건너뜀) 오전 9시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 9 * 6-8 1#5"
+  },
+  {
+   "expected": "매일 오전 9시대, 오후 5시대에 매분 30초",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 * 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시부터 9시 0분 45초까지 15초마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "*/15 0 9 * * *"
+  },
+  {
+   "expected": "매시 0분 30초부터 58분 30초까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "30 0-58 * * * *"
+  },
+  {
+   "expected": "매시 5분, 그리고 20분부터 30분까지 1분마다",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "5,20-30 * * * *"
+  },
+  {
+   "expected": "매년 2월 매주 월요일, 그리고 윤년 2월 29일에도, 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 29 2 1"
+  },
+  {
+   "expected": "매년 2월 매일(29일 제외) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1-28 2 *"
+  },
+  {
+   "expected": "매일 오전 9시, 오후 5시에 각각 1분간 1초마다(각각 29초 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 0 9,17 * * *"
+  },
+  {
+   "expected": "매일 오전 9시대부터 오후 5시대까지, 그리고 오후 8·10시대에 1분마다(각각 29분 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0-28,30-59 9-17,20,22 * * *"
+  },
+  {
+   "expected": "매시 30분부터 1분간 1초마다(오전 3시대 제외)",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "* 30 0-2,4-23 * * *"
+  },
+  {
+   "expected": "매년 1월·2월의 29일(주말이면 같은 달 안에서 가장 가까운 금요일이나 월요일, 29일이 없는 달은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 29W 1,2 *"
+  },
+  {
+   "expected": "매시 1·2·5·8·13·21·25·34·37·44·48·55·58분",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "1,2,5,8,13,21,25,34,37,44,48,55,58 * * * *"
+  },
+  {
+   "expected": "매일 오전 1시, 2시, 4시, 7시, 11시, 오후 4시, 10시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 1,2,4,7,11,16,22 * * *"
+  },
+  {
+   "expected": "매월 1·4·5·8·10·13·14·17·19·22·24·26·29일(없는 날은 건너뜀) 0시",
+   "options": {
+    "lang": "ko"
+   },
+   "pattern": "0 0 1,4,5,8,10,13,14,17,19,22,24,26,29 * *"
+  },
+  {
+   "expected": "매일 9시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "매일 9시 30분, 17시 30분",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "30 9,17 * * *"
+  },
+  {
+   "expected": "매일 9시부터 17시까지 1시간마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 9-17 * * *"
+  },
+  {
+   "expected": "매일 0시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 0 * * *"
+  },
+  {
+   "expected": "매일 12시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 12 * * *"
+  },
+  {
+   "expected": "매일 1시부터 22시까지 3시간마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 1/3 * * *"
+  },
+  {
+   "expected": "매일 9·17시대에 1분마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "* 9,17 * * *"
+  },
+  {
+   "expected": "매일 13시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 13 * * *"
+  },
+  {
+   "expected": "매주 월~금요일 9시부터 17시 45분까지 15분마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매일 22시부터 23시 59분까지 1분마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "* 22-23 * * *"
+  },
+  {
+   "expected": "매일 22시부터 다음 날 2시까지 1시간마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 22-2 * * *"
+  },
+  {
+   "expected": "매시 정각(3시 제외)",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "0 0-2,4-23 * * *"
+  },
+  {
+   "expected": "10분마다(3시대 제외)",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false
+    }
+   },
+   "pattern": "*/10 0-2,4-23 * * *"
+  },
+  {
+   "expected": "매주 월·수·금 오전 9시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1,3,5"
+  },
+  {
+   "expected": "매주 금·토·일·월 오전 9시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 5-1"
+  },
+  {
+   "expected": "매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 1"
+  },
+  {
+   "expected": "매년 6월 매주 월요일 오전 9시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * 6 1"
+  },
+  {
+   "expected": "매월 마지막 금요일 오전 9시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 5L"
+  },
+  {
+   "expected": "매주 월~금 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매일(수요일 제외) 오전 9시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 9 * * 0-2,4-6"
+  },
+  {
+   "expected": "매월 홀수일 중 월·수·금요일인 날 0시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 */2 * 1,3,5"
+  },
+  {
+   "expected": "매월 15일(토요일이면 전날 금요일, 일요일이면 다음 날 월요일) 0시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 15W * *"
+  },
+  {
+   "expected": "매주 토·일, 그리고 매월 1일에도, 0시",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "short": true
+    }
+   },
+   "pattern": "0 0 1 * 0,6"
+  },
+  {
+   "expected": "매주 월~금 9시부터 17시 45분까지 15분마다",
+   "options": {
+    "lang": "ko",
+    "style": {
+     "hour12": false,
+     "short": true
+    }
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매일 오전 9시",
+   "options": {
+    "lang": "ko-KR"
+   },
+   "pattern": "0 9 * * *"
+  },
+  {
+   "expected": "매주 월~금요일 오전 9시부터 오후 5시 45분까지 15분마다",
+   "options": {
+    "lang": "ko-KR"
+   },
+   "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "매주 월·수·금요일 오전 9시",
+   "options": {
+    "lang": "ko-KR"
+   },
+   "pattern": "0 9 * * 1,3,5"
+  }
+ ]
+}

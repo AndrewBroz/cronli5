@@ -212,7 +212,7 @@ cronli5(weekdaysAt1330, { lang: 'en-GB' });
 
 ## Languages
 
-English is the default. Ten languages ship, listed below; each is a full
+English is the default. Fifteen languages ship, listed below; each is a full
 renderer over the same language-independent core, written from that
 language's own conventions, and each ships as its own module. You choose
 what reaches your bundle:
@@ -246,14 +246,19 @@ docs below.
 | --- | --- | --- | --- |
 | English | built in (also `cronli5/lang/en`) | Chicago Manual of Style; Guardian (`'en-GB'`) | [docs/lang/en.md](./docs/lang/en.md) |
 | Ukrainian | `cronli5/lang/uk` | Ukrainian orthography of 2019; timetable practice | [docs/lang/uk.md](./docs/lang/uk.md) |
+| Russian | `cronli5/lang/ru` | Russian as written in Ukraine; the 1956 rules of spelling and punctuation; Milchin and Cheltsova for typography | [docs/lang/ru.md](./docs/lang/ru.md) |
 | Chinese (Simplified) | `cronli5/lang/zh` | Mainland interface and timetable practice | [docs/lang/zh.md](./docs/lang/zh.md) |
+| Chinese (Traditional) | `cronli5/lang/zh-hant` | Taiwan's Executive Yuan rules for numbers in official documents and Ministry of Education punctuation; Hong Kong government usage (`'zh-HK'`, also Macau) | [docs/lang/zh-hant.md](./docs/lang/zh-hant.md) |
 | Czech | `cronli5/lang/cs` | Internetová jazyková příručka (ÚJČ); ČSN 01 6910 for dates and times; timetable practice | [docs/lang/cs.md](./docs/lang/cs.md) |
+| Indonesian | `cronli5/lang/id` | Ejaan yang Disempurnakan (EYD) Edisi V and KBBI; timetable and notice practice for «pukul 09.00» | [docs/lang/id.md](./docs/lang/id.md) |
 | Italian | `cronli5/lang/it` | Accademia della Crusca and the dictionaries of use; Serianni's grammar; CLDR for clock times | [docs/lang/it.md](./docs/lang/it.md) |
 | French | `cronli5/lang/fr` | Lexique de l'Imprimerie nationale for « 9 h 30 »; interface practice | [docs/lang/fr.md](./docs/lang/fr.md) |
 | German | `cronli5/lang/de` | Interface practice for «9:00 Uhr» (DIN 5008 for the colon); Austria (`'de-AT'`) and Switzerland (`'de-CH'`) | [docs/lang/de.md](./docs/lang/de.md) |
 | Portuguese | `cronli5/lang/pt` | CLDR and interface practice; Brazil by default, Portugal (`'pt-PT'`) | [docs/lang/pt.md](./docs/lang/pt.md) |
 | Japanese | `cronli5/lang/ja` | Interface and timetable practice; 24-hour colon times | [docs/lang/ja.md](./docs/lang/ja.md) |
+| Korean | `cronli5/lang/ko` | National Institute of Korean Language (한글 맞춤법); notice and interface practice; times in words | [docs/lang/ko.md](./docs/lang/ko.md) |
 | Spanish | `cronli5/lang/es` | RAE Ortografía (2010); interface practice; Mexico and the United States (`'es-MX'`, `'es-US'`) | [docs/lang/es.md](./docs/lang/es.md) |
+| Polish | `cronli5/lang/pl` | CLDR for clock times and dates; timetable practice (Dz.U. 2018 poz. 202) | [docs/lang/pl.md](./docs/lang/pl.md) |
 
 ### Language maturity
 
@@ -278,11 +283,16 @@ pipeline is the review.
 | English | stable |
 | Spanish | stable |
 | French | stable |
+| Indonesian | beta |
 | Italian | stable |
 | Japanese | stable |
+| Korean | beta |
+| Polish | beta |
 | Portuguese | stable |
+| Russian | beta |
 | Ukrainian | stable |
 | Chinese (Simplified) | stable |
+| Chinese (Traditional) | beta |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see
@@ -377,13 +387,18 @@ The same compound pattern, `5,10 30 9 * * MON`, in every language:
 | English | at 9:30:05 a.m. and 9:30:10 a.m. on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | Ukrainian | щопонеділка о 9:30:05 та 9:30:10 | О 5 та 10 секунді, о 30 хвилині, о 09:00, тільки в понеділок |
 | Chinese (Simplified) | 每周一9:30:05、9:30:10 | 在一分钟后的第 5 和 10 秒, 在整点后的第 30 分钟, 在上午 09:00, 仅星期一 |
+| Chinese (Traditional) | 每週一 09:30:05、09:30:10 | 在一分鐘後的 5 和 10 秒, 在整點後的 30 分, 在 09:00, 僅在 星期一 |
 | Spanish | los lunes a las 9:30:05 y 9:30:10 | A los 5 y 10 segundos del minuto, a los 30 minutos de la hora, a las 09:00, sólo el lunes |
 | Japanese | 毎週月曜日の9:30:05・9:30:10 | 毎分 5と 10 秒過ぎ 30 分過ぎ, 次において実施 09:00月曜日 にのみ |
+| Korean | 매주 월요일 오전 9시 30분 5초, 9시 30분 10초 | 5 및 10초, 30분, 오전 09:00에서, 월요일에만 |
 | Portuguese | todas as segundas às 09:30:05 e 09:30:10 | Aos 5 e 10 segundos do minuto, aos 30 minutos da hora, Às 09:00, somente de segunda-feira |
 | German | montags um 9:30:05 und 9:30:10 Uhr | Bei Sekunde 5 und 10, bei Minute 30, um 09:00, nur jeden Montag |
 | French | tous les lundis à 9 h 30 min 05 s et à 9 h 30 min 10 s | 5 et 10 secondes après la minute, 30 minutes après l'heure, 09:00, uniquement le lundi |
+| Indonesian | setiap Senin pukul 09.30.05 dan 09.30.10 | Pada 5 dan 10 detik lewat satu menit, pada 30 menit melewati jam, pada 09:00, hanya pada Senin |
 | Italian | il lunedì alle 9:30:05 e alle 9:30:10 | Al 5 e 10 secondo passato il minuto, al 30 minuto passata l'ora, alle 09:00, solo il lunedì |
 | Czech | každé pondělí v 9:30:05 a 9:30:10 | V 5 a 10 sekund, v 30 minut, v 09:00, pouze v Pondělí |
+| Polish | w poniedziałki o 9:30:05 i 9:30:10 | W 5 i 10 sekundzie, w 30 minucie, o 09:00, tylko poniedziałek |
+| Russian | по понедельникам в 9:30:05 и 9:30:10 | В 5 и 10 секунд, в 30 минут, в 09:00, только в понедельник |
 <!-- END GENERATED: cronstrue-head-to-head -->
 
 ### Formatting

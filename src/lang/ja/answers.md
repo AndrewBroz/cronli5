@@ -144,8 +144,9 @@ Other general choices:
   2026-11-14 a bare 2時間ごと was judged to have no starting point; that
   judgment is overruled, as the note at the top says.) Any other cadence
   of hours names its times when they are four or fewer (毎日0:00・12:00)
-  and both ends otherwise (毎日5:00から23:00まで2時間ごと). There is no
-  declared tie.
+  and both ends otherwise (毎日5:00から23:00まで2時間ごと). The one
+  declared tie is the last day of the month written `L` or as the date
+  (3.11).
 * **Every range of times is closed: it names its first and its last
   moment, to the precision of what fires, and both fire.** から…まで is
   read as including its end. There is no form in which a time that is
@@ -533,16 +534,49 @@ list in the next.
     under a single month a range ends on its real last day (毎年6月25日〜30
     日、いずれも0:00), and under several a range that the months cut short
     ends 末日 (毎年4月・6月・9月・11月の25日〜末日; 毎年2月・6月の25日〜末日).
-  * **Where the months' end is not shown by the days themselves**, the
-    days are said as the pattern has them, and no day from the 29th on is
-    named as left out: `1-14,16-30` in June is 毎年6月1日〜30日（15日を除
-    く）、いずれも0:00, not an exception to every day (whether June has a
-    31st is not among the facts; that it has no day the pattern names
-    beyond the 30th is). `25-30` under February and June is 毎年2月・6月の
-    25日〜30日. Several dates of which one is the 29th or later are not
-    written out month by month, since which month has which is not known:
-    毎年2月・4月の1日・30日; 毎年4月・5月の30日・31日. One such date is, since
-    the months named are then exactly those that have it.
+  * **The days are judged against the days the months fired in have**
+    (amended 2026-11-19). The core states the last day of the longest
+    month the days fire in, and the days a pattern reaches decide what is
+    said, never how far the field was written. So the same days are one
+    sentence however they were spelled:
+    * Every day but a few is the exception to every day: `1-14,16-30` and
+      `1-14,16-31` in June are both 15日を除く毎年6月の毎日0:00;
+      `1-14,16-29` in February 15日を除く毎年2月の毎日0:00 (the 29th of a
+      leap year is not left out). `1-14,16-28` in February also misses the
+      29th of a leap year, and says so: 15日・29日を除く毎年2月の毎日0:00
+      (two days left out of every day name fewer things than 1日〜28日（15日
+      を除く）); in 2031 alone it is 15日を除く2031年2月の毎日0:00. In April
+      and May `1-14,16-30` leaves out May's 31st: 15日・31日を除く毎年4月・5
+      月の毎日0:00, the 31st read, as everywhere, of the month that has
+      one.
+    * A run to the end of the longest month, under several months, ends
+      末日 whatever end was written: `25-30` and `25-31` under February
+      and June are both 毎年2月・6月の25日〜末日; under April and June
+      both 毎年4月・6月の25日〜末日. A run that stops before it keeps its
+      end: `25-30` in April and May is 毎年4月・5月の25日〜30日.
+    * A list names only the dates that exist, each in the months that
+      have it. Written in full where seven dates or fewer (4.4): `30,31`
+      in April and May is 毎年4月30日・5月30日・5月31日; `1,30` in February
+      and April is 毎年2月1日・4月1日・4月30日; `30,31` in January and July
+      毎年1月30日・1月31日・7月30日・7月31日. Where they are more, the list is
+      said of all the months and the days only some have follow in
+      brackets with those months and のみ, the device 毎月31日（31日のある
+      月のみ） already uses: `*/3` in April and July is 毎年4月・7月の1日・4
+      日・7日…31日（31日は7月のみ）. A day every month named has, February
+      in leap years included, needs no bracket (毎年2月・4月の1日・8日・15日・
+      22日・29日 is not glossed: the 29th of February is read as "where
+      there is one", as 毎年2月28日・29日 always was). The end of a run
+      that only some of the months reach, short of the longest month's
+      end, takes the same bracket: `1-30` under February and July is 毎年
+      2月・7月の1日〜30日（30日は7月のみ）. Under 毎月, and under most months
+      said as Xを除く毎月, the months are not listed and a day reads as
+      "where there is one", as 毎月1日・31日 does: 12月を除く毎月1日・4日・7
+      日…31日 takes no bracket.
+    The last version said the days as the pattern had them where the
+    days did not show the month's end, because the month lengths were not
+    among the facts; they now are, and that rule made one schedule two
+    sentences (`1-14,16-30` against `1-14,16-31` in June) and let a list
+    under months of different lengths name an April 31st.
   * **Days that only leap years have** (the 29th of February alone): うる
     う年 takes the place of 毎年, or follows the years named: うるう年の2
     月29日の0:00; 2030年〜2040年のうるう年の2月29日の0:00. (The notes: う
@@ -807,10 +841,11 @@ middle is still an exception: 毎年奇数月（3月を除く）の1日; 2時間
 除く）. An exception taken from every value is not affected (水曜日を除く毎
 日; 12月を除く毎月1日): every value has no first or last to take back.
 
-Under named months a day from the 29th on is named as left out only
-where the days themselves show where the months end (3.4): `1-14,16-31`
-in June is 15日を除く毎年6月の毎日0:00, and `1-14,16-30` in June is 毎年6月
-1日〜30日（15日を除く）、いずれも0:00.
+Under named months the set is weighed against the days the months fired
+in have (3.4, amended 2026-11-19): `1-14,16-31` and `1-14,16-30` in June
+are both 15日を除く毎年6月の毎日0:00. (Until that date a day from the 29th
+on was named as left out only where the days themselves showed where the
+months end, and the second was 毎年6月1日〜30日（15日を除く）.)
 
 A list that is no range, cadence, exception or runs and cadences together
 (3.6, 3.7) is named in full, however long: 毎月1日・2日・4日・8日・13日・19
@@ -937,7 +972,12 @@ the alternative; it is longer and has no counterpart for minutes.)
 3.11 Declared ties: none. Japanese has no pair of phrasings for the same
 schedule that are equally easy; `0 */12 * * *` and `0 0,12 * * *` are
 both 毎日0:00・12:00. The core's report of how a field was written is not
-used.
+used. One thing follows the pattern's spelling by design and is not a
+tie: a schedule that never runs is 実行なし whatever the field holds, and
+its bracket names the days the pattern asked for and the months lack (実行
+なし（2月に30日はありません）, 実行なし（2月に30日・31日はありません）),
+since that is the reason, and the reason is about what was written
+(2026-11-19).
 
 ## 4. Fusions
 
@@ -1166,7 +1206,7 @@ date side names the months as 4.4 writes them and the weekday side says
   台・5時台・10時台・15時台・20時台の0分・15分・30分・45分
 * 毎年6月1日・6月15日・7月1日・7月15日・8月1日・8月15日およびこれらの月の第2月
   曜日、いずれも0:00
-* 毎年1月・7月の末日およびこれらの月の毎週金曜日、いずれも0:00
+* 毎年1月31日・7月31日およびこれらの月の毎週金曜日、いずれも0:00
 
 The last version named the months again (毎年1月・4月・7月・10月の1日・15日
 および1月・4月・7月・10月の毎週月曜日): eight month names where there are
@@ -1270,17 +1310,21 @@ month, day, they join as a date does.
   dates, a run of dates before 偶数日 or 奇数日, 末日 (with or without 前
   日 or 日前 after it) and a day with its notes follow the month with
   nothing between, as a date is written: 6月1日; 6月1日・15日; 6月1日〜7日;
-  6月1日〜7日と15日; 6月8日〜30日の偶数日; 6月末日; 6月末日の3日前; 6月15日
-  （土曜日の場合は前日の金曜日、日曜日の場合は翌日の月曜日）; 6月末日（土曜
-  日・日曜日の場合は直前の金曜日）. Anything else takes の: 6月の奇数日; 6月
+  6月1日〜7日と15日; 6月8日〜30日の偶数日; 2月末日; 2月末日の3日前; 6月15日
+  （土曜日の場合は前日の金曜日、日曜日の場合は翌日の月曜日）; 2月末日（土曜
+  日・日曜日の場合は直前の金曜日）. (In a month of one length, June, the
+  last day is its date, 6月30日: 5.7.) Anything else takes の: 6月の奇数日; 6月
   の奇数日（15日を除く）; 6月の第2月曜日.
 * **Several months before a list of dates**: the dates are written in
   full, each with its month, while there are seven or fewer of them. 3月1
   日・6月1日・9月1日・12月1日; 6月1日・7月1日・8月1日; 1月1日・2月1日・11月1日・
   12月1日; 1月1日・1月15日・7月1日・7月15日. A fluent reader asked for this
   (6月・7月・8月の1日 showed 1日 as いちにち for a moment), and it is how a
-  date is written. Dates of which the second or a later one is the 29th,
-  30th or 31st are not written this way (3.4): 1月・7月の30日・31日.
+  date is written. Each month takes only the dates it has, and the seven
+  are counted after that (3.4, amended 2026-11-19): 1月30日・1月31日・7月30
+  日・7月31日; 4月30日・5月30日・5月31日. (Until that date a list that held
+  the 29th or later after its first date was not written this way, since
+  which month had which was not known: 1月・7月の30日・31日.)
 * **Several months before anything else of the days** (more than seven
   dates, a range, an idiom, a Quartz form): the months are **listed**,
   whether the pattern gives them as a list, a range or pieces, then の,
@@ -1333,6 +1377,57 @@ keeps the idiom inside the run it covers: 毎月8日〜30日の偶数日; 毎月
 19日の奇数日; and so do the runs left when days are taken out of them
 inside a pair (毎月1日〜13日の奇数日と17日〜31日の奇数日). 奇数日 and 偶数日
 are everyday words.
+
+**The days reached decide, not the range written** (2026-11-19). The word
+alone is said when the days the pattern reaches in the months it fires in
+are exactly the days every second day from the 1st (or the 2nd) reaches
+there: the run then ends where the months end, and its ends say nothing
+the months do not. `1-29/2` and `*/2` in June are both 毎年6月の奇数日 (June
+has no 31st, so both reach the 1st to the 29th by twos); `2-28/2` and
+`2/2` in February are both 毎年2月の偶数日 (no February has a 30th); `1-29/2`
+in February is 毎年2月の奇数日, the 29th coming in leap years as it does for
+`*/2`. Until this date a run that stopped on the month's own last odd or
+even day kept its ends (毎年6月1日〜29日の奇数日), which named an end June
+already supplies, made the reader check whether the 29th is June's last odd
+day, and said one schedule in two ways depending on how it was spelled.
+What decides is the last day of the longest month the days fire in, which
+the core states; the renderer holds no table of month lengths.
+
+* **Months of different lengths named together** are judged by the
+  longest: `1-29/2` in April and June is 毎年4月・6月の奇数日, and in
+  February and April 毎年2月・4月の奇数日 (a leap February has a 29th, April
+  a 29th, neither a 31st); in April and May it is 毎年4月・5月の1日〜29日の
+  奇数日, since May's 31st is left out. `2-28/2` in February and April is
+  毎年2月・4月の2日〜28日の偶数日: April's 30th is left out. A run that
+  goes on to the end of the longest month, where a shorter month named
+  lacks its last day, ends 末日, as a run of days does (3.4), so that no
+  April 31st is named: `21-31/2` in April and May is 毎年4月・5月の21日〜末
+  日の奇数日 (April's run stops at the 29th, May's at the 31st). Where every
+  month named has that last day it is named: `21-31/2` and `21-29/2` in
+  April and June are both 毎年4月・6月の21日〜29日の奇数日. Under 毎月 the
+  number stays (毎月3日〜31日の奇数日), read like 毎月1日・31日 as "where
+  there is one" (3.4).
+* **A run that stops before the end keeps its ends**, because those are
+  other days: `1-25/2` in June is 毎年6月1日〜25日の奇数日; `1-29/2` in July
+  is 毎年7月1日〜29日の奇数日; `1-27/2` in February is 毎年2月1日〜27日の奇数
+  日, since a leap February's 29th is missed. In a common year alone the
+  29th does not exist: `1-27/2` in February of 2031 is 2031年2月の奇数日,
+  and of 2032 2032年2月1日〜27日の奇数日.
+* **Every month** is unchanged: the longest month has 31 days, so `1-31/2`
+  and `*/2` are 毎月奇数日, and `1-29/2` is 毎月1日〜29日の奇数日.
+* **A step other than two** is its dates (3.7), and the list already ends
+  on the last day reached, however the range was written: `1-28/3`,
+  `1-30/3` and `*/3` in June are all 毎年6月1日・4日・7日…28日; `1-25/3` is
+  毎年6月1日・4日・7日…25日.
+* **Leading runs and cadences together** (3.7), the word is judged the
+  same way and follows a single month with の, as it does alone: `1-29/2,30`
+  and `1-31/2,30` in June are both 毎年6月の奇数日と30日、いずれも0:00.
+  (Until this date the second came out 毎年6月奇数日と30日, without the の.)
+* **Beside a weekday** the same: `1-29/2` in June with Mondays is 毎年6月の
+  奇数日および6月の毎週月曜日.
+* **Hours, minutes, seconds and months** have one length each, so no
+  spelling of theirs reaches the same values by a different range; nothing
+  changes for them.
 
 5.2 None. Monday to Friday is the range 毎週月曜日〜金曜日 and the weekend
 is the list 毎週土曜日・日曜日. 平日 is not used anywhere, for a set of
@@ -1430,15 +1525,36 @@ glossed (毎月31日（31日のある月のみ、…）; 毎月末日の30日前
 毎月末日の29日前（30日のある月のみ）; 毎月末日の28日前（29日のある月のみ）);
 under named months only those that have it are named (`31W` under the odd
 months is 毎年1月・3月・5月・7月の31日（土曜日・日曜日の場合は直前の金曜
-日）; `L-30` under June to August is 毎年7月・8月の末日の30日前; `30W`
+日）; `L-30` under June to August fires in July and August only, and is
+毎年7月1日・8月1日 (below); `30W`
 under January to November is 2月・12月を除く毎月30日（…）); February alone,
 for a day only leap years give it, is うるう年の2月29日（…） and うるう年の2
-月末日の28日前; and where no month named has the day the schedule never
+月1日 (`L-28`, below); and where no month named has the day the schedule never
 runs: 実行なし（6月に31日はありません）; 実行なし（6月に末日の30日前はありま
 せん）. Up to `L-27` and the 28th every month has the day, and nothing is
 said. (The last version put the months in front, 31日のある月の、31日に…:
 it took the place of 毎月, which every other date leads with, and gave
 the same concern a second device.)
+
+**Months of one length: the day itself** (2026-11-19). Where every month
+the form fires in has the same number of days in every year reached
+(the core's `monthLengths` is one group), the last day and a count back
+from it are one date, and the date is said, as the same days written as
+a number are: `L` in June is 毎年6月30日 (as `30` in June), `L` in
+January and July 毎年1月31日・7月31日, `L-3` in June 毎年6月27日 (末日の3日
+前 asked the reader to count back from a day they had to know), `L-30`
+under June to August 毎年7月1日・8月1日, `L-28` in February うるう年の2月1
+日, `L` in February 2031 2031年2月28日. `LW` there is the day and its move
+back, as `30W` is in June: both are 毎年6月30日（土曜日・日曜日の場合は直前
+の金曜日）. Where the lengths differ, 末日 stays (`L` in June to August,
+in February, under 毎月). The same fact settles the nearest weekday to a
+day that is the last of every month it fires in (the core's
+`nearestDayIsLast` is `always`): it can only move back, and says so as
+`31W` does: `30W` in June, and `30W` under February and April (April
+alone fires); `29W` in February is うるう年の2月29日（土曜日・日曜日の場合
+は直前の金曜日）. Until this date these said 末日 or the three clauses of a
+day in mid-month, so that `L` and `30` in June, or `LW` and `30W`, were
+one schedule in two sentences.
 
 **The fifth of a weekday** is in some months and not in others (the
 notes: 第5金曜日 needs （ある月のみ）, and the last one is 最終金曜日). It is

@@ -13,14 +13,19 @@ import cs from './lang/cs/index.js';
 import de from './lang/de/index.js';
 import es from './lang/es/index.js';
 import fr from './lang/fr/index.js';
+import id from './lang/id/index.js';
 import it from './lang/it/index.js';
 import ja from './lang/ja/index.js';
+import ko from './lang/ko/index.js';
+import pl from './lang/pl/index.js';
 import pt from './lang/pt/index.js';
+import ru from './lang/ru/index.js';
 import uk from './lang/uk/index.js';
 import zh from './lang/zh/index.js';
+import zhHant from './lang/zh-hant/index.js';
 
 const cronli5 = create({
-  languages: [en, cs, de, es, fr, it, ja, pt, uk, zh]
+  languages: [en, cs, de, es, fr, id, it, ja, ko, pl, pt, ru, uk, zh, zhHant]
 });
 
 export default cronli5;

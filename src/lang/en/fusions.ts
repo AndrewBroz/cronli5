@@ -15,7 +15,7 @@ import {
 } from '../../core/describe-set.js';
 import {clockTimes} from '../../core/fusions.js';
 import {shortestSpoken} from '../../core/select.js';
-import {candidatesAs} from '../../core/set-views.js';
+import {candidatesAs, daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
@@ -36,6 +36,8 @@ const mostClockTimes = 24;
 const {words} = lexicon;
 
 type Pieces = Extract<SetDescription, {kind: 'pieces'}>;
+type Cadence = Extract<SetDescription, {kind: 'cadence'}>;
+type CadencePieces = Extract<Described, {kind: 'cadencePieces'}>;
 
 // The fields whose restriction makes a wrap-around in a field untrue:
 // hours from 10 p.m. through 2 a.m. run through the night, but "on
@@ -201,9 +203,12 @@ function candidatesOf(facts: ScheduleFacts, field: Field): Described[] {
 
 // The same for a set that is not the field's own: the days the reached
 // months really have, the months a day can fire in.
-function waysToSay(values: number[], field: Field, facts: ScheduleFacts):
-  Described[] {
-  const domain = domainOf(field);
+function waysToSay(
+  values: number[],
+  field: Field,
+  facts: ScheduleFacts,
+  domain = domainOf(field)
+): Described[] {
   const mixed = describeCadencePieces(values, domain);
 
   return [
@@ -521,7 +526,8 @@ function minutesWith(
   const rest = say(hours,
     minute.continuous ?
       hoursAsStretches(close, opts) :
-      hoursAsNouns(minute.portion, opts),
+      hoursAsNouns({asHours: minute.portion,
+        pieced: minute.description.kind === 'pieces'}, opts),
     opts);
 
   return rest && {
@@ -881,6 +887,15 @@ interface DayFields {
   months: Described[];
   // Whether both arms are said, however they combine.
   pair: boolean;
+  // Beside months of different lengths whose days include one a shorter
+  // month lacks: the last day of the longest, the greatest day every
+  // month has, and the days with the months that have them, the days all
+  // of them have first.
+  uneven: {
+    groups: Array<{days: Described[]; months: Described[]}>;
+    last: number;
+    short: number;
+  } | null;
   weekday: WeekdayArm | null;
   weekdays: Described[];
 }
@@ -897,21 +912,67 @@ function weekdaysBeside(candidates: Described[], pair: boolean): Described[] {
   });
 }
 
-// The days of the month as they can be described. The days the months
-// really have come first, so that on a tie nothing names a day that does
-// not exist. The field's own set is still on offer: "odd-numbered days
-// in June" names no 31st.
+// A cadence of days that runs on to the last day the months have, said
+// as the cadence from the same start that runs to the end of any month:
+// in those months it reaches the same days. An exception keeps its hole
+// in the middle; one that takes off an end is a cadence that stops
+// earlier (3.9). Nothing for anything else.
+function runOn(description: SetDescription, end: number): SetDescription[] {
+  const {base, removed} = apart(description);
+  const {max} = domainOf('date');
+
+  if (base.kind !== 'cadence' || base.last + base.interval <= end ||
+    removed.includes(base.start) || removed.includes(base.last)) {
+    return [];
+  }
+
+  const cadence: SetDescription =
+    {...base, last: max - (max - base.start) % base.interval};
+
+  return [removed.length ? {base: cadence, kind: 'except', removed} : cadence];
+}
+
+// The days the months reach, where a cadence that stops with the months
+// is said as the one that does not stop: 1-29/2 in June is "on
+// odd-numbered days in June", as */2 is (3.7). Where every month can
+// have a 31st this gives the field's own cadences again.
+function carriedOn(facts: ScheduleFacts): SetDescription[] {
+  const reached = daysReached(facts);
+  const end = reached?.domain.max ?? domainOf('date').max;
+
+  return (reached?.candidates ?? []).flatMap(function each(description) {
+    return runOn(description, end);
+  });
+}
+
+// The days of the month as they can be described. Where the months are
+// named, the days are those the months really have, described against
+// the longest of them, so that the same days are one sentence however
+// they were written ("on every day in June except the 15th" for 1-14,16-30
+// and for 1-14,16-31) and nothing names a day that does not exist (4.4).
+// With every month the field's own set is described, and the days the
+// months really have come first.
 function datesOf(facts: ScheduleFacts, date: DateArm | null): Described[] {
-  const own = candidatesOf(facts, 'date');
+  const reached = daysReached(facts);
+  const named = facts.analyses.candidates.month![0].kind !== 'all';
   const real = facts.analyses.dateReach?.days?.candidates[0];
 
   if (date === null) {
     return whole;
   }
 
-  return real ?
-    [...waysToSay(denote(real, domainOf('date')), 'date', facts), ...own] :
-    own;
+  if (named && reached) {
+    const days = denote(reached.candidates[0], reached.domain);
+
+    return [...carriedOn(facts),
+      ...waysToSay(days, 'date', facts),
+      ...waysToSay(days, 'date', facts, reached.domain)];
+  }
+
+  return [
+    ...real ? waysToSay(denote(real, domainOf('date')), 'date', facts) : [],
+    ...carriedOn(facts), ...candidatesOf(facts, 'date')
+  ];
 }
 
 // The months as they can be described: where they are named and the day
@@ -948,6 +1009,110 @@ function armsOf(facts: ScheduleFacts):
   };
 }
 
+// The months the day of the month fires in, grouped by the last day each
+// can have (February its 29th where a leap year is reached), shortest
+// first.
+function monthEnds(facts: ScheduleFacts):
+  Array<{end: number; months: number[]}> {
+  const ends = new Map<number, number>();
+
+  facts.analyses.monthLengths.forEach(function each(group) {
+    group.months.forEach(function longest(month) {
+      ends.set(month, Math.max(ends.get(month) ?? 0, group.length));
+    });
+  });
+
+  return [...new Set(ends.values())].sort(inOrder).map(function group(end) {
+    return {end, months: [...ends.keys()].filter(function hasIt(month) {
+      return ends.get(month) === end;
+    }).sort(inOrder)};
+  });
+}
+
+function inOrder(a: number, b: number): number {
+  return a - b;
+}
+
+// Where the named months differ in length and the days include one the
+// shortest lacks, the days with the months that have them: first the days
+// every month has, with all of them, then each further stretch of days
+// with the longer months alone (4.4).
+function unevenDays(facts: ScheduleFacts): DayFields['uneven'] {
+  const reached = daysReached(facts);
+  const ends = monthEnds(facts);
+  const days = reached ? denote(reached.candidates[0], reached.domain) : [];
+  const short = ends[0]?.end ?? domainOf('date').max;
+  const named = facts.analyses.candidates.month![0].kind !== 'all';
+
+  if (!named || !days.some(function lacking(day) {
+    return day > short;
+  })) {
+    return null;
+  }
+
+  return {
+    groups: ends.map(function group({end}, at) {
+      const after = ends[at - 1]?.end ?? 0;
+
+      return {
+        days: days.filter(function inStretch(day) {
+          return day > after && day <= end;
+        }),
+        months: ends.slice(at).flatMap(function months(longer) {
+          return longer.months;
+        }).sort(inOrder)
+      };
+    }).filter(function said(group) {
+      return group.days.length > 0;
+    }).map(function described(group) {
+      return {
+        days: waysToSay(group.days, 'date', facts),
+        months: waysToSay(group.months, 'month', facts)
+      };
+    }),
+    last: ends[ends.length - 1].end,
+    short
+  };
+}
+
+// The days a description says by number where they could be days a
+// month lacks: every value of a list, the start of a run and its end
+// unless the end is the last day, a cadence's end where it names one.
+const spokenDays: {[kind: string]: (description: never, last: number) =>
+  number[]} = {
+  cadence(cadence: Cadence, last: number) {
+    return [cadence.last].filter(function named(day) {
+      return day + cadence.interval <= last;
+    });
+  },
+  cadencePieces(mixed: CadencePieces, last: number) {
+    return mixed.parts.flatMap(function each(part) {
+      return byNumber(part, last);
+    });
+  },
+  except(exception: Extract<SetDescription, {kind: 'except'}>,
+    last: number) {
+    return byNumber(exception.base, last);
+  },
+  pieces(pieces: Pieces, last: number) {
+    return pieces.parts.flatMap(function each(part) {
+      return byNumber(part, last);
+    });
+  },
+  range(range: Extract<SetDescription, {kind: 'range'}>, last: number) {
+    return [range.from, range.to].filter(function named(day) {
+      return day < last;
+    });
+  },
+  values(named: Extract<SetDescription, {kind: 'values'}>) {
+    return named.values;
+  }
+};
+
+function byNumber(description: Described, last: number): number[] {
+  return spokenDays[description.kind]?.(description as never, last) ?? [];
+}
+
 function dayFields(facts: ScheduleFacts): DayFields {
   const {candidates, dateReach, day} = facts.analyses;
   const {date, weekday} = armsOf(facts);
@@ -964,6 +1129,7 @@ function dayFields(facts: ScheduleFacts): DayFields {
     leap: leapWords(reach),
     months: monthsOf(facts, reach),
     pair,
+    uneven: date === null ? null : unevenDays(facts),
     weekday,
     weekdays: weekday ?
       weekdaysBeside(candidates.weekday || whole, pair) :
@@ -986,7 +1152,7 @@ function whoseDays(
   how: {after: boolean; lead: string; pair: boolean; spelled: boolean},
   opts: EnglishOptions
 ): DatePhrase | null {
-  const voice = daysOfTheMonth(null, how.lead, opts);
+  const voice = daysOfTheMonth(null, how.lead, null, opts);
   const {description} = choose(days, voice, opts);
   const {base, removed} = apart(description);
   const takesOut = removed.length > 0;
@@ -1022,7 +1188,7 @@ function whoseDays(
 function daysWithMonths(
   days: Described[],
   months: Described[],
-  how: {lead: string; spelled: boolean},
+  how: {last: number | null; lead: string; spelled: boolean},
   opts: EnglishOptions
 ): DatePhrase {
   if (days[0].kind === 'all') {
@@ -1032,10 +1198,11 @@ function daysWithMonths(
   const alone = choose(months, monthsAlone(opts), opts);
   const month = onlyValue(alone.description);
   const {description} =
-    choose(days, daysOfTheMonth(null, how.lead, opts), opts);
+    choose(days, daysOfTheMonth(null, how.lead, how.last, opts), opts);
   const {base, removed} = apart(description);
   const outright = namesDays.includes(base.kind);
-  const voice = daysOfTheMonth(outright ? month : null, how.lead, opts);
+  const voice =
+    daysOfTheMonth(outright ? month : null, how.lead, how.last, opts);
   const date = say(description, voice, opts) as Phrase;
   const count = denote(description, domainOf('date')).length;
   const takesOut = removed.length > 0;
@@ -1078,12 +1245,12 @@ function dateWithMonths(
   how: {after: boolean; spelled: boolean},
   opts: EnglishOptions
 ): DatePhrase {
-  const said = {...how, pair: fields.pair};
-  const {date} = fields;
+  const {date, uneven} = fields;
+  const said = {...how, last: uneven?.last ?? null, pair: fields.pair};
 
   if (date?.kind !== 'quartz') {
     return whoseDays(fields.dates, months, {...said, lead: words.on}, opts) ??
-      daysWithMonths(fields.dates, months, {...said, lead: words.on}, opts);
+      byMonths(fields, months, {...said, lead: words.on}, opts);
   }
 
   const {form} = date;
@@ -1094,10 +1261,36 @@ function dateWithMonths(
       ...whoseDays([{kind: 'values', values: [form.day]}], months,
         {...said, lead}, opts) ??
         daysWithMonths([{kind: 'values', values: [form.day]}], months,
-          {...said, lead}, opts),
+          {...said, last: null, lead}, opts),
       dated: 2
     } :
     {dated: 0, takesOut: false, ...ofTheMonth(lead, months, opts)};
+}
+
+// Days with their months. Beside months of different lengths, days said
+// by number that a shorter month lacks are said with the months that
+// have them: "on the 30th of April and May and on May 31" (4.4).
+function byMonths(
+  fields: DayFields,
+  months: Described[],
+  how: {last: number | null; lead: string; spelled: boolean},
+  opts: EnglishOptions
+): DatePhrase {
+  const {uneven} = fields;
+  const chosen = choose(fields.dates,
+    daysOfTheMonth(null, how.lead, how.last, opts), opts).description;
+  const lacks = uneven !== null &&
+    byNumber(chosen, uneven.last).some(function lacking(day) {
+      return day > uneven.short;
+    });
+
+  return lacks ?
+    {dated: 2, excepts: true, takesOut: false,
+      text: list(uneven.groups.map(function each(group) {
+        return daysWithMonths(group.days, group.months,
+          {...how, last: null}, opts).text;
+      }), opts)} :
+    daysWithMonths(fields.dates, months, how, opts);
 }
 
 // The day-of-week part with its months: "on Fridays in June", "on the

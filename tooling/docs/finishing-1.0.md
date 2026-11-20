@@ -9,8 +9,9 @@ mind" and "How quality is judged" are the centre of the project.
 - Work branch `renderer-process`; `develop` is kept equal to it. Never
   commit on `main`; merging to `main`, the version bump and publishing are
   the maintainer's call.
-- Ten languages ship: en, cs, de, es, fr, it, ja, pt, uk, zh. The gate
-  (`npm run verify`) is green.
+- Fifteen languages ship: en, cs, de, es, fr, id, it, ja, ko, pl, pt, ru, uk, zh, zh-Hant
+  (id, ko, pl, ru and zh-Hant at beta, registered 2026-11-19). The gate (`npm run verify`) is
+  green.
 - Branch `length-gate-work` (pushed) holds the withdrawn length-gate work
   of 2026-11-13; its history and a before/after audit are in
   `tooling/experiments/renderer-process/2026-11-13/`. Its genuine fixes
@@ -24,6 +25,13 @@ mind" and "How quality is judged" are the centre of the project.
   were not removed.
 - `npm run conciseness -- --all` reports enumeration in every language,
   worst first. It is a list of places to look, never a number to reach.
+
+## 2026-11-19: five languages added
+
+Korean, Polish, Indonesian, Russian and Traditional Chinese are on
+`develop` at beta. What was done, what is thin and what is open is in
+`tooling/experiments/renderer-process/2026-11-19/STATE.md`; the lessons
+are in the `add-language` skill.
 
 ## What to build first: the reading pipeline
 
@@ -46,7 +54,14 @@ time.
 
 ## Known defects, still in (a reader can get the schedule wrong)
 
-- **de**: «…» between hour windows («von 7:05 bis 7:50 … und von 22:05
+- **de**, cured 2026-11-19: German no longer says any series with «…».
+  A cadence of hours under a finer rhythm is one window and its step
+  («von 8:00 bis 18:45 Uhr in den geraden Stunden alle 15 Minuten»),
+  hours under listed minutes the window from the first time to the last
+  and the step («von 2:05 bis 20:45 Uhr alle 3 Stunden zu den Minuten
+  5, 20 und 45»), dates and seconds their stretch and step (answers, the
+  amendment at the top). The record that follows is the defect as it
+  stood: «…» between hour windows («von 7:05 bis 7:50 … und von 22:05
   bis 22:50») can be read as every hour. The candidate on
   `length-gate-work` («täglich alle 6 Stunden (2, 8, 14 und 20 Uhr),
   jeweils um :05, :20, :35 und :50») was recovered correctly by three
@@ -72,7 +87,7 @@ time.
   continuous.
 - **cs**: «v nejbližší pátek nebo pondělí» reads as a choice; the opening
   «vždy» struck two readers as official.
-- **zh**: «9点、17点的0分至29分，每分钟一次，以及45分» carries the "one stretch"
+- **zh**: (the «9点、17点的0分至29分，每分钟一次，以及45分» sentence is no longer produced, 2026-11-19) the "one stretch"
   risk; 「各一轮，每轮60次」 is read correctly but called awkward.
 
 ## On `develop` but never read

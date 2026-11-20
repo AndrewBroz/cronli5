@@ -3,7 +3,6 @@ import cronli5, {Cronli5InputError, Cronli5OptionError}
   from '../../src/cronli5.js';
 import en, {styles} from '../../src/lang/en/index.js';
 import everyLanguage from '../../src/all.js';
-import {vi} from 'vitest';
 
 const {expect} = chai;
 
@@ -54,32 +53,15 @@ describe('The options:', function() {
           .to.equal('at 9:30 a.m. every day');
       });
 
-    it('warns, once, when a variant the language does not yet write is ' +
-      'asked for, and describes in the language as written', function() {
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => null);
+    it('takes a script, which names a language of its own', function() {
+      const traditional = everyLanguage('30 9 * * 1', {lang: 'zh-Hant'});
 
-      try {
-        const simplified = everyLanguage('30 9 * * 1', {lang: 'zh'});
-
-        expect(everyLanguage('30 9 * * 1', {lang: 'zh-Hant'}))
-          .to.equal(simplified);
-        everyLanguage('0 9 * * *', {lang: 'zh-Hant-TW'});
-        expect(everyLanguage('30 9 * * 1', {lang: 'zh-TW'}))
-          .to.equal(simplified);
-        everyLanguage('30 9 * * 1', {lang: 'zh-CN'});
-
-        const said = warn.mock.calls.map((call) => String(call[0]));
-
-        expect(said.filter((text) => (/zh-HANT/u).test(text))).to.have
-          .length(1);
-        expect(said.filter((text) => (/zh-TW/u).test(text))).to.have
-          .length(1);
-        expect(said.join('\n')).to.match(/Traditional Chinese/u)
-          .and.not.match(/zh-CN/u);
-      }
-      finally {
-        warn.mockRestore();
-      }
+      expect(traditional)
+        .to.not.equal(everyLanguage('30 9 * * 1', {lang: 'zh'}));
+      expect(everyLanguage('30 9 * * 1', {lang: 'zh-TW'}))
+        .to.equal(traditional);
+      expect(everyLanguage('30 9 * * 1', {lang: 'zh-CN'}))
+        .to.equal(everyLanguage('30 9 * * 1', {lang: 'zh'}));
     });
 
     it('takes a module, as before', function() {

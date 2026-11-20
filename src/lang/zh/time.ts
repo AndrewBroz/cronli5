@@ -19,8 +19,17 @@ const {marks, units, words} = lexicon;
 const WINDOW = 5;
 
 // How many clock times a reader takes in at a glance. A cadence of hours
-// that tiles the day with more than this is said from its first time.
+// off the start of the day with more than this is said from its first
+// time, and a rhythm with a beat or two missing is said as that while
+// more than this still fire.
 const GLANCED = 4;
+
+// How many separate hours are each a window of clock times; more are
+// named once, before their minutes.
+const WINDOWED = 2;
+
+// How many beats may be missing from a rhythm said with an exception.
+const MISSED = 2;
 
 // How many things clock times or minutes each with their seconds may
 // name. A window to the second counts two, for the two times it names.
@@ -94,6 +103,8 @@ interface Traits {
   allowed: Allowed;
   // Any cadence of three or more values is one window.
   paced?: boolean;
+  // A tiling cadence may have a beat or two excepted from it.
+  beats?: boolean;
   // A tiling cadence is one window however few values it has.
   tiled?: boolean;
   wraps?: boolean;
@@ -136,6 +147,9 @@ interface Scene extends Seconds {
   kind: Kind;
   // Every minute of separate hours too many to be a window each.
   hoursWhole: boolean;
+  // The hours are a cadence that tiles the day from 0:00 and hold only
+  // moments: the step stands where 每小时 would.
+  rhythm: boolean;
   // Minute 0 of every hour, or of the even or odd hours, with no second
   // said.
   onTheHour: boolean;
@@ -143,9 +157,6 @@ interface Scene extends Seconds {
   daily: boolean;
   // Every second hour, said by its idiom.
   parity: boolean;
-  // One stretch of hours before named minutes, or the even or odd hours
-  // between two ends: the first and last firing close the time.
-  ranged: boolean;
 }
 
 /**
@@ -162,6 +173,17 @@ export interface TimeSets {
   hour: number[];
   minute: number[];
   second: number[];
+}
+
+// The hours and the minutes under them, and how the hours are said.
+interface Hours {
+  H: Level;
+  M: Level;
+  // Separate hours, too many to be a window each.
+  crowded: boolean;
+  filled: boolean;
+  parity: boolean;
+  rhythm: boolean;
 }
 
 function isWindow(run: Run): boolean {
@@ -186,6 +208,19 @@ function isShorter(exception: Exception, kept: number[]): boolean {
 // from every value or from a cadence, never from a mere range.
 function stretchException(exception: Exception, kept: number[]): boolean {
   return exception.base.kind !== 'range' && isShorter(exception, kept);
+}
+
+// Whether a set is a cadence that tiles its field from the first value,
+// with one or two beats missing between values that fire and more left
+// than a reader takes in at a glance.
+function missesBeats(exception: Exception, kept: number[], domain: Domain):
+  boolean {
+  const {base, removed} = exception;
+
+  return base.kind === 'cadence' && base.start === domain.min &&
+    base.last + base.interval === domain.max + 1 &&
+    removed.length <= MISSED && kept.length > GLANCED &&
+    removed[0] > kept[0] && lastOf(removed) < lastOf(kept);
 }
 
 // An exception among whole hours: from every hour, or from every second
@@ -261,7 +296,8 @@ function beatsStretches(exception: Exception, kept: number[], domain: Domain):
 function levelOf(values: number[], field: Field, traits: Traits): Level {
   const domain = domainOf(field);
   const picked = chosen(values, domain, function allowed(exception, kept) {
-    return traits.allowed(exception, kept) &&
+    return traits.beats === true && missesBeats(exception, kept, domain) ||
+      traits.allowed(exception, kept) &&
       beatsStretches(exception, kept, domain);
   });
   const base = picked.values;
@@ -303,11 +339,10 @@ function isLone(S: Level): boolean {
   return S.values.length === 1 && !isSilent(S);
 }
 
-// Whether the hours are separate and too many to be a window each: a
-// window names two clock times, and no more than can be listed are.
+// Whether the hours are separate and too many to be a window each.
 function isCrowded(hours: Run[]): boolean {
   return hours.every((run) => run.length === 1) &&
-    2 * hours.length > LISTED;
+    hours.length > WINDOWED;
 }
 
 // Whether the minutes are one window, minute by minute or with stray
@@ -343,30 +378,43 @@ function tilesFromStart(cadence: Cadence | undefined, domain: Domain):
     cadence.last + cadence.interval === domain.max + 1 + cadence.start;
 }
 
-// Whether hours at one minute are a cadence that tiles the day with
-// nothing excepted, more than a reader takes in at a glance.
+// Whether hours at one minute are a cadence that starts again each day
+// where it started, with nothing excepted, more than a reader takes in at
+// a glance. (One that starts at 0:00 is a rhythm, and never comes here.)
 function isAnchored(H: Level): boolean {
   return H.removed.length === 0 && H.base.length > GLANCED &&
     tilesFromStart(H.cadence, domainOf('hour'));
 }
 
-// The first row that applies. A cadence of hours too long to take in at
-// a glance is a rhythm of hours. Exact times that can be counted are
-// points.
-// One minute under restricted hours is a rhythm of hours, unless they are
-// all the even or all the odd hours. Then windows of clock times, where
+// Whether the clock times can be counted: eight or fewer, with no run of
+// five hours or minutes, and either one minute or no more hours than are
+// each a window (more hours with several minutes are named once).
+function isCounted(H: Level, M: Level): boolean {
+  const few = H.values.length <= WINDOWED || M.values.length === 1;
+
+  return H.values.length * M.values.length <= LISTED && few &&
+    H.shape.windows.length === 0 && !M.runs.some(isWindow);
+}
+
+// The first row that applies. A rhythm of hours (a cadence that tiles the
+// day from 0:00, over minutes that are moments) names its minutes after
+// its step. A cadence of hours off 0:00 too long to take in at a glance is
+// paced by the hour. Exact times that can be counted are points.
+// One minute under restricted hours is paced by the hour, unless they are
+// all the odd hours. Then windows of clock times, where
 // the hours are clocked. Under every hour or the even or odd hours a
 // flowing minute is its rhythm alone, unless a single second has to be
 // carried by a window of minutes. Anything else names its minutes after
 // its hours.
-function kindOf(levels: Level[], parity: boolean, filled: boolean): Kind {
+function kindOf(levels: Level[], hours: Hours): Kind {
   const [H, M, S] = levels;
+  const {filled, parity} = hours;
   const plain = H.every || parity;
   const carried = M.every || !isLone(S);
-  const counted = H.values.length * M.values.length <= LISTED &&
-    H.shape.windows.length === 0 && !M.runs.some(isWindow);
+  const counted = isCounted(H, M);
 
   return first<Kind>([
+    [hours.rhythm, 'named'],
     [M.values.length === 1 && !filled && isAnchored(H), 'hourly'],
     [counted, 'points'],
     [M.values.length === 1 && !H.every && !filled, 'hourly'],
@@ -436,40 +484,65 @@ function secondsOf(kind: Kind, levels: Level[], whole: boolean): Seconds {
   };
 }
 
-// The hours, and how they are said: every hour, the even or odd hours
-// (all of them in the day, or those between two ends), or one by one
-// where they are too many to be a window each.
-function hoursOf(sets: TimeSets, wraps: boolean) {
+// The hours, the minutes under them, and how the hours are said: every
+// hour; a rhythm, where they are a cadence that tiles the day from 0:00
+// and the minutes are moments, not stretches; the even or odd hours (all
+// of them in the day, or those between two ends); or one by one where
+// they are too many to be a window each. `beats` is whether a tiling
+// cadence of hours may have a beat or two excepted.
+// Under hours named one by one, and under a rhythm of hours longer than
+// two, a cadence of minutes is its minutes, as any other minutes there
+// are, unless it is more than can be listed. Elsewhere a cadence of
+// minutes may have a beat or two excepted, unless the clock times can be
+// counted.
+function hoursOf(sets: TimeSets, wraps: boolean, beats: boolean): Hours {
   const H = levelOf(sets.hour, 'hour', {
     allowed: [hourException, stretchException][
       Number(sets.minute.length === 1)],
+    beats,
     wraps
   });
-  const parity = everySecond(H.base);
+  const stepped = H.flows && !H.every;
+  const even = everySecond(H.base);
+  const crowded = !H.every && !even && isCrowded(H.runs);
+  const tiled = !(crowded || stepped && !even);
+  const counted = H.values.length * sets.minute.length <= LISTED;
+  const M = levelOf(sets.minute, 'minute',
+    {allowed: stretchException, beats: tiled && !counted, tiled});
+  const rhythm = stepped && M.shape.windows.length === 0;
+  const parity = even && !rhythm;
 
   return {
     H,
-    crowded: !H.every && !parity && isCrowded(H.runs),
+    M,
+    crowded,
     filled: parity && 2 * H.base.length > domainOf('hour').max,
-    parity
+    parity,
+    rhythm
   };
 }
 
-// Under hours named one by one a cadence of minutes is its minutes, as
-// any other minutes there are, unless it is more than can be listed.
-// Seconds that step evenly at one clock time, or at one minute of every
-// hour or of the even or odd hours, are a window with their step.
+// A beat or two missing from a cadence of hours is an exception only
+// where the hours are then a rhythm; otherwise the hours are as they
+// stand. Seconds that step evenly at one clock time, or at one minute of
+// every hour, of a rhythm of hours or of the even or odd hours, are a
+// window with their step; at one clock time the step may have a beat or
+// two excepted.
 function sceneOf(sets: TimeSets, around: Around): Scene {
   const single = sets.minute.length === 1;
-  const {H, crowded, filled, parity} = hoursOf(sets, around.wraps);
-  const round = H.every || filled;
-  const M = levelOf(sets.minute, 'minute',
-    {allowed: stretchException, tiled: !crowded});
+  const stepped = hoursOf(sets, around.wraps, true);
+  const hours = stepped.rhythm ?
+    stepped :
+    hoursOf(sets, around.wraps, false);
+  const {H, M, crowded, filled, parity, rhythm} = hours;
+  const round = H.every || filled || rhythm;
+  const paced = single && (round || sets.hour.length === 1);
   const S = levelOf(sets.second, 'second', {
     allowed: stretchException,
-    paced: single && (round || sets.hour.length === 1)
+    beats: single && sets.hour.length === 1,
+    paced
   });
-  const kind = kindOf([H, M, S], parity, filled);
+  const kind = kindOf([H, M, S], hours);
   const hoursWhole = crowded && kind === 'named' && M.every;
 
   return {
@@ -483,9 +556,7 @@ function sceneOf(sets: TimeSets, around: Around): Scene {
     kind,
     onTheHour: round && sets.minute.join() === '0' && isSilent(S),
     parity,
-    ranged: parity ?
-      !filled && kind !== 'hourly' :
-      kind === 'named' && !H.every && H.runs.length === 1
+    rhythm
   };
 }
 
@@ -571,7 +642,7 @@ function cross(anchors: Span[], shape: Shape, part: keyof Moment): Grid {
   };
 }
 
-function rhythm(beat: Beat, voice: Voice): string {
+function rhythmOf(beat: Beat, voice: Voice): string {
   return words.every + when(beat.step > 1, String(beat.step)) + beat.unit +
     [words.once, words.oneRound][Number(voice.round)];
 }
@@ -587,11 +658,11 @@ function phrase(grid: Grid, beat: Beat, voice: Voice): string {
     Number(grid.strays.length > 1)];
   const mixed = new Set(grid.steps).size > 1;
   const windows = grid.windows.map((span, at) => between(span, voice) +
-    when(mixed, rhythm({...beat, step: grid.steps[at]}, voice)));
+    when(mixed, rhythmOf({...beat, step: grid.steps[at]}, voice)));
 
   return [
     windows.join(mixed ? marks.comma : marks.list),
-    when(grid.paced && !mixed, rhythm(beat, voice)),
+    when(grid.paced && !mixed, rhythmOf(beat, voice)),
     when(strays !== '', when(grid.paced, words.alsoPoints) + strays +
       when(voice.round, each))
   ].filter(Boolean).join(marks.comma);
@@ -607,13 +678,26 @@ function parityOf(hours: number[]): string {
   return [words.evenHours, words.oddHours][hours[0] % 2];
 }
 
-// The even or odd hours, after their two ends and a comma where they do
-// not fill the day.
-function stretchOf(scene: Scene, voice: Voice): string {
-  const {H} = scene;
+// The stretch from the first firing in a run of hours to the last.
+function firings(run: Run, M: Level, voice: Voice): string {
+  return between([
+    {h: run[0], m: M.values[0]},
+    {h: lastOf(run), m: lastOf(M.values)}
+  ], voice);
+}
 
-  return when(!scene.filled, hourNamed(H.base[0], voice) + words.to +
-    hourNamed(lastOf(H.base), voice) + marks.comma) + parityOf(H.base);
+// The even or odd hours, after their first and last firing and a comma
+// where they do not fill the day.
+function stretchOf(scene: Scene, voice: Voice): string {
+  const {H, M} = scene;
+
+  return when(!scene.filled, firings(H.base, M, voice) + marks.comma) +
+    parityOf(H.base);
+}
+
+// A rhythm of hours, in the place of 每小时.
+function stepOf(H: Level): string {
+  return words.every + String(H.cadence?.interval) + units.hour;
 }
 
 // The hours by name, a stretch of them by its two ends.
@@ -628,26 +712,23 @@ function leadOf(scene: Scene, voice: Voice): string {
   const {H, M} = scene;
   const stretch = stretchOf(scene, voice);
   const names = namesOf(H, voice);
-  const firings = series(H.runs.map((run) => between([
-    {h: run[0], m: M.values[0]},
-    {h: lastOf(run), m: lastOf(M.values)}
-  ], voice)));
+  const stretches = series(H.runs.map((run) => firings(run, M, voice)));
 
   return first([
     [scene.kind === 'bare',
       when(scene.parity, stretch + words.inside + marks.comma) +
       when(scene.spelled, words.eachMinuteOf)],
     [scene.kind !== 'named', ''],
-    [scene.onTheHour && scene.parity,
-      [words.evenOnTheHour, words.oddOnTheHour][H.base[0] % 2]],
+    [scene.onTheHour && scene.rhythm, stepOf(H) + words.once],
+    [scene.rhythm, stepOf(H) + words.of],
+    [scene.onTheHour && scene.parity, words.oddOnTheHour],
     [scene.onTheHour, words.everyHourOnTheHour],
     [H.every, words.eachHourOf],
     [scene.parity, stretch + words.of],
-    [scene.ranged, names + marks.comma + words.eachHourOf],
     [scene.hoursWhole, names + words.of + when(scene.spelled,
       words.eachMinuteOfThem + words.of)],
     [H.runs.every((run) => run.length === 1), names + words.of],
-    [true, firings + marks.comma + words.eachHourOf]
+    [true, stretches + marks.comma + words.eachHourOf]
   ]);
 }
 
@@ -670,16 +751,16 @@ function spelledBody(scene: Scene, voice: Voice): string {
 // What stray minutes after a rhythm say again of the hours, so that none
 // is left without its hour after 以及. After the even or odd hours, the
 // idiom again, which the ends before it still bound; after hours named one
-// by one, the hours again; after windows of hours, 其中每小时的.
-// After windows of clock times the strays are clock times, unless those
-// would name more than the hours and the minutes do together, when the
-// hours are named. Under every hour or one range of hours, nothing.
+// by one, the hours again; after a window or windows of hours, 其中每小时
+// 的. After windows of clock times the strays are clock times, unless
+// those would name more than the hours and the minutes do together, when
+// the hours are named. Under every hour, nothing.
 function hoursAgain(scene: Scene, voice: Voice): string {
   const {H, M} = scene;
   const lone = H.runs.every((run) => run.length === 1);
   const {length} = M.shape.strays;
   const crossed = H.values.length * length > H.values.length + length;
-  const named = scene.kind === 'named' && !H.every && !scene.ranged;
+  const named = scene.kind === 'named' && !H.every && !scene.rhythm;
 
   return first([
     [scene.kind === 'clocked' && crossed, namesOf(H, voice) + words.of],
@@ -728,7 +809,7 @@ function pacedBody(scene: Scene, voice: Voice): string {
   return first([
     [anchored && scene.daily,
       () => say({h: H.base[0], m}, voice) + words.onwards +
-        rhythm(hourly, voice)],
+        rhythmOf(hourly, voice)],
     [scene.kind === 'hourly',
       () => phrase(cross(anchors.hourly, hours, 'h'), hourly, voice)],
     [true, () => phrase(said, beat, voice)]
@@ -799,32 +880,15 @@ function exceptionsOf(scene: Scene, windowed: Voice, voice: Voice): string {
   return when(said !== '', said + words.excepted);
 }
 
-// The first and last firing over one stretch of hours, or over the even
-// or odd hours between two ends, which the hour names alone leave open.
-function firingsOf(scene: Scene, voice: Voice): string {
-  const {H, M} = scene;
-  const firing = [words.times, units.round][Number(scene.rounds)];
-  const [stretch] = scene.parity ? [H.base] : H.runs;
-  const ends = endsOf([
-    {h: stretch[0], m: M.values[0]},
-    {h: lastOf(stretch), m: lastOf(M.values)}
-  ], voice);
-
-  return when(scene.ranged, words.first + firing + ends[0] + marks.comma +
-    words.last + firing + ends[1]);
-}
-
-// The bracket that closes the time: the first and last firing, then what
-// is excepted, in one bracket where there are both.
-function bracketOf(notes: string[]): string {
-  const said = notes.filter(Boolean).join(marks.comma);
-
+// The bracket that closes the time: what is excepted.
+function bracketOf(said: string): string {
   return when(said !== '', marks.open + said + marks.close);
 }
 
 /**
- * The time part, and whether it runs round the clock (every hour, with or
- * without exceptions), which decides what joins it to the day.
+ * The time part, and whether it runs round the clock (every hour, or a
+ * rhythm of hours, with or without exceptions), which decides what joins
+ * it to the day.
  */
 function timeOf(sets: TimeSets, around: Around, style: ChineseStyle):
   {allDay: boolean; text: string} {
@@ -840,11 +904,9 @@ function timeOf(sets: TimeSets, around: Around, style: ChineseStyle):
   ])();
 
   return {
-    allDay: scene.H.every,
-    text: leadOf(scene, exact) + body + suffixOf(scene) + bracketOf([
-      firingsOf(scene, exact),
-      exceptionsOf(scene, voice, voiceOf(scene, !scene.silent, style))
-    ])
+    allDay: scene.H.every || scene.rhythm,
+    text: leadOf(scene, exact) + body + suffixOf(scene) + bracketOf(
+      exceptionsOf(scene, voice, voiceOf(scene, !scene.silent, style)))
   };
 }
 

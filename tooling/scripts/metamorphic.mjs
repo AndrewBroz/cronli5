@@ -62,6 +62,61 @@ const EQUIVALENT = [
     '0 0 * * 0,1,3,5'],
   ['weekday stride 0-7/2 is every other day', '0 0 * * 0-7/2',
     '0 0 * * */2'],
+  // A step from a start with no end runs to the top of the field as
+  // written, which for the weekday is 7, Sunday: 1/2 is 1-7/2.
+  ['weekday step from a start: 1/2 = 1-7/2', '0 0 * * 1/2',
+    '0 0 * * 1-7/2'],
+  ['weekday step from a start: 1/2 = 0,1,3,5', '0 0 * * 1/2',
+    '0 0 * * 0,1,3,5'],
+  ['weekday step from a start: MON/2 = 0,1,3,5', '0 0 * * MON/2',
+    '0 0 * * 0,1,3,5'],
+  ['weekday step from a start: 1/3 = 0,1,4', '0 0 * * 1/3',
+    '0 0 * * 0,1,4'],
+  ['weekday step from a start: 3/2 = 0,3,5', '0 0 * * 3/2',
+    '0 0 * * 0,3,5'],
+  ['weekday step from a start: 1/6 = 0,1', '0 0 * * 1/6', '0 0 * * 0,1'],
+  ['weekday step from a start inside a list: 1/2,4 = 0,1,3,4,5',
+    '0 0 * * 1/2,4', '0 0 * * 0,1,3,4,5'],
+  // One that misses 7 lands where it always did, and so does one from
+  // Sunday, which 7 only repeats.
+  ['weekday step from a start that misses 7: 2/2 = TUE/2', '0 0 * * 2/2',
+    '0 0 * * TUE/2'],
+  ['weekday step from Sunday: 0/2 = SUN/2', '0 0 * * 0/2', '0 0 * * SUN/2'],
+  // A field whose values are the whole of its range is unrestricted,
+  // however it is spelled.
+  ['whole-range list second', '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,' +
+    '18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,' +
+    '41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59 0 9 * * *',
+  '* 0 9 * * *'],
+  ['whole-range mix minute', '0-29,30,31-59 9 * * *', '* 9 * * *'],
+  ['whole-range steps minute', '*/2,1/2 9 * * *', '* 9 * * *'],
+  ['whole-range list hour', '0 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,' +
+    '18,19,20,21,22,23 * * *', '0 * * * *'],
+  ['whole-range mix hour', '0 0-11,12-23 * * *', '0 * * * *'],
+  ['whole-range list date', '0 9 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,' +
+    '18,19,20,21,22,23,24,25,26,27,28,29,30,31 * *', '0 9 * * *'],
+  ['whole-range mix date', '0 9 1-15,16-31 * *', '0 9 * * *'],
+  ['whole-range list month', '0 9 1 1,2,3,4,5,6,7,8,9,10,11,12 *',
+    '0 9 1 * *'],
+  ['whole-range mix month', '0 9 1 JAN-JUN,7-12 *', '0 9 1 * *'],
+  ['whole-range unit step month', '0 9 1 */1 *', '0 9 1 * *'],
+  ['whole-range list weekday', '0 9 * * 6,5,4,3,2,1,0', '0 9 * * *'],
+  ['whole-range list weekday with 7', '0 9 * * 0,1,2,3,4,5,6,7',
+    '0 9 * * *'],
+  ['whole-range list weekday 1 to 7', '0 9 * * 1,2,3,4,5,6,7', '0 9 * * *'],
+  ['whole-range mix weekday', '0 9 * * 0-3,4,5-6', '0 9 * * *'],
+  ['whole-range weekday steps', '0 9 * * */2,1-5/2', '0 9 * * *'],
+  ['whole-range list year', '0 0 9 * * * 1970-5000,5001-9999',
+    '0 0 9 * * * *'],
+  // Beside a day field that is written from a star, a whole-range day
+  // field is the star: the days come from the other field alone.
+  ['whole-range weekday beside a stepped date', '0 9 */2 * 0-3,4-6',
+    '0 9 */2 * *'],
+  ['whole-range date beside a stepped weekday', '0 9 1-15,16-31 * */2',
+    '0 9 * * */2'],
+  ['whole-range date list beside a weekday is every day',
+    '0 9 1-15,16-31 * 1', '0 9 * * *'],
+  ['date */1 beside a weekday is the weekday', '0 9 */1 * 1', '0 9 * * 1'],
   ['month JAN = 1', '0 0 1 JAN *', '0 0 1 1 *'],
   ['month MAR-MAY = 3-5', '0 0 1 MAR-MAY *', '0 0 1 3-5 *'],
   ['list order 17,9 = 9,17', '0 17,9 * * *', '0 9,17 * * *'],
@@ -74,7 +129,7 @@ const EQUIVALENT = [
   ['overlap range+single 5-10,7 = 5-10', '5-10,7 * * * *', '5-10 * * * *'],
   ['overlap absorbed by step 9,*/3 = */3', '0 9,*/3 * * *', '0 */3 * * *'],
   ['overlap weekday 1-5,3 = 1-5', '0 0 * * 1-5,3', '0 0 * * 1-5'],
-  ['overlap union 1/2,2-4 = 1-5', '0 0 * * 1/2,2-4', '0 0 * * 1-5']
+  ['overlap union 1-5/2,2-4 = 1-5', '0 0 * * 1-5/2,2-4', '0 0 * * 1-5']
 ];
 
 // [label, cronA, cronB] — DIFFERENT schedules; the Schedule must differ.
@@ -82,6 +137,11 @@ const DISTINCT = [
   ['minute-0 vs every-minute', '* 0 * * *', '* * * * *'],
   ['weekday 1-5 vs every', '0 0 * * 1-5', '0 0 * * *'],
   ['weekday 1-7/2 vs */2', '0 0 * * 1-7/2', '0 0 * * */2'],
+  ['weekday 1/2 vs 1,3,5', '0 0 * * 1/2', '0 0 * * 1,3,5'],
+  // Two day fields neither written from a star fire on either, so a
+  // whole-range date beside a weekday is every day, not the weekday.
+  ['whole-range date list beside weekday vs star date', '0 9 1-15,16-31 * 1',
+    '0 9 * * 1'],
   ['hour 9 vs hour 0', '0 9 * * *', '0 0 * * *'],
   ['*/7 vs */6', '*/7 * * * *', '*/6 * * * *'],
   ['minute 0-30 vs full', '0-30 * * * *', '* * * * *']

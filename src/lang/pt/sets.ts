@@ -35,8 +35,9 @@ export interface Rules {
   // the field cannot say it as a cadence at all.
   cadence(cadence: Cadence): number;
   domain: Domain;
-  // Whether a set may be said as this simpler one with values excepted.
-  excepts(base: SetDescription): boolean;
+  // Whether a set may be said as this simpler one with these values
+  // excepted.
+  excepts(base: SetDescription, removed: number[]): boolean;
   // The value the field is walked from, where that is not its lowest: the
   // day the week starts on.
   first?: number;
@@ -183,7 +184,8 @@ function isHole(
 ): offered is Except {
   return offered.kind === 'except' && values.length > longestListKept &&
     offered.removed.length <= longestListHeld &&
-    rules.excepts(offered.base) && thingsIn(offered.base, rules) > 0 &&
+    rules.excepts(offered.base, offered.removed) &&
+    thingsIn(offered.base, rules) > 0 &&
     thingsIn(offered, rules) < limit &&
     (offered.base.kind !== 'range' ||
       runLength(offered.base, rules.domain) <= rules.longestWrap ||

@@ -70,12 +70,20 @@ const units = {
   day: {many: 'Tage', one: 'Tag'},
   hour: {many: 'Stunden', one: 'Stunde'},
   minute: {many: 'Minuten', one: 'Minute'},
-  second: {many: 'Sekunden', one: 'Sekunde'}
+  second: {many: 'Sekunden', one: 'Sekunde'},
+  year: {many: 'Jahre', one: 'Jahr'}
 };
 
 // The ordinal words a Quartz "nth weekday" uses, from the first, in the
 // dative that «am» takes.
 const nthWords = ['ersten', 'zweiten', 'dritten', 'vierten', 'fünften'];
+
+// The ordinal words a step of years uses after «in jedem», from the
+// third to the twelfth; a longer step is a number with its point.
+const stepWords = [
+  'dritten', 'vierten', 'fünften', 'sechsten', 'siebten', 'achten',
+  'neunten', 'zehnten', 'elften', 'zwölften'
+];
 
 // The words for a day counted from the end of the month, in the same
 // dative, from two days before the last (`L-2`) to nine before it. One
@@ -113,7 +121,6 @@ const words = {
   afterTheMinute: 'nach der vollen Minute',
   also: 'sowie',
   and: 'und',
-  andSoOn: 'usw.',
   apart: 'im Abstand von',
   at: 'um',
   atEachHour: 'zu jeder vollen Stunde',
@@ -128,6 +135,7 @@ const words = {
   daily: 'täglich',
   day: 'Tag',
   each: 'jede',
+  end: 'Ende',
   eachTime: 'jeweils',
   ellipsis: '…',
   every: 'alle',
@@ -142,6 +150,7 @@ const words = {
   inAllYears: 'in allen Jahren',
   inEvenHours: 'in den geraden Stunden',
   inEvenYears: 'in geraden Jahren',
+  inEvery: 'in jedem',
   inHour: 'in der Stunde',
   inHours: 'in den Stunden',
   inMinute: 'in der Minute',
@@ -179,6 +188,8 @@ const words = {
   startup: 'beim Systemstart',
   times: '-mal',
   to: 'bis',
+  toMonthEnd: 'zum Monatsende',
+  toTheEnd: 'zum Ende',
   unrecognizable: 'ein unbekanntes Cron-Muster',
   whichThe: 'der dem',
   withDays: 'Tagen',
@@ -190,7 +201,7 @@ const words = {
 
 const lexicon = {
   dayParts, fallingOn, fromLastWords, januaryAustrian, months, nthWords,
-  twoDigits, units, weekdays, words
+  stepWords, twoDigits, units, weekdays, words
 };
 
 export type {DayPart, Name, WeekdayName};

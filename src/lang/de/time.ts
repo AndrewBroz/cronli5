@@ -485,53 +485,85 @@ function isListed(
     times <= windowed;
 }
 
-// The windows of a set of hours, without «Uhr»: every one, or for a
-// cadence of more than four the first two and the last.
+// The windows of a set of hours, without «Uhr»: one for each run.
 function windowsOf(part: Sayable, spans: Spans): string {
-  const hours = denote(part, hoursOfDay);
-  const [first, second, last] =
-    [hours[0], hours[1], hours[hours.length - 1]].map(function toSpan(hour) {
-      return span([hour, hour], spans);
-    });
-
-  return part.kind === 'cadence' && hours.length > heldBeforeCadence ?
-    `${first}, ${second} ${words.ellipsis} ${words.and} ${last}` :
-    list(runsOf(hours).map(function toSpan(run) {
-      return span(run, spans);
-    }));
+  return list(runsOf(denote(part, hoursOfDay)).map(function toSpan(run) {
+    return span(run, spans);
+  }));
 }
 
-// The hours as stretches, each from its first moment to its last. Runs
-// and cadences together are said one after another.
-function hourStretches(base: Sayable, spans: Spans): string {
+// Whether a part of the hours is a cadence too long to name each window
+// of: it is said as one window and its step.
+function stepped(part: Sayable): part is Described<'cadence'> {
+  return part.kind === 'cadence' &&
+    denote(part, hoursOfDay).length > heldBeforeCadence;
+}
+
+// The step of a cadence of hours whose minutes run through each hour:
+// every second hour has a name, any other step is held for one hour;
+// under other minutes the step alone.
+function hourStep(cadence: Round, steadily: boolean): string {
+  const step = every(cadence.interval, units.hour);
+
+  return [step, `${step} ${words.oneHourLong}`, words.inEvenHours,
+    words.inOddHours][Number(steadily) *
+    (1 + Number(cadence.interval === 2) * (cadence.start % 2 + 1))];
+}
+
+// The minutes as said after the hours that hold them, with what leads
+// them.
+function minutesAfter(work: Clockwork, each: string, lead: string): string {
+  return spread(work.minutes,
+    {...minuteLevel(work, each), absorbed: false, lead}).text;
+}
+
+// The hours as stretches, each from its first moment to its last, with
+// the minutes after them. A cadence of more than four hours is one window
+// and its step, said as a cadence that comes round the day is: «von 8:00
+// bis 18:45 Uhr in den geraden Stunden alle 15 Minuten». Runs and
+// cadences together are said one after another, and where one of them
+// is such a window the minutes follow all of them after «jeweils».
+function hourStretches(
+  work: Clockwork,
+  base: Sayable,
+  spans: Spans,
+  each: string
+): string {
   const parts = base.kind === 'cadencePieces' ? base.parts : [base];
+  const steadily = steady(work.minutes);
+  const stepping = Number(parts.some(stepped));
+  const absorbed = spread(work.minutes, minuteLevel(work, each)).text;
 
   if (base.kind === 'all') {
-    return '';
+    return absorbed;
   }
 
-  return parts.map(function say(part) {
-    return windowsOf(part, spans);
-  }).join(` ${words.also} `) + spans.oClock;
+  const said = parts.map(function say(part) {
+    return stepped(part) ?
+      `${span([part.start, part.last], spans)}${spans.oClock} ` +
+        hourStep(part, steadily) :
+      windowsOf(part, spans) + ['', spans.oClock][stepping];
+  }).join(` ${words.also} `) + [spans.oClock, ''][stepping];
+  const glue = [' ', `, ${words.eachTime} `][
+    stepping * Number(parts.length > 1)];
+
+  return said + glue + [absorbed, minutesAfter(work, each, '')][stepping];
 }
 
-// The hours named as hours, with no minute of their own: a cadence as a
-// series (the first three, «…», «und» and the last), or their list.
-function hoursAlone(work: Clockwork): string {
-  const {voice} = work;
+// The hours named as hours, with no minute of their own: their list; or,
+// for a cadence too long to list, the window from the first time that
+// fires to the last and the step in the place of «stündlich»: «von 2:05
+// bis 20:45 Uhr alle 3 Stunden zu den Minuten 5, 20 und 45».
+function hoursAlone(work: Clockwork, each: string, spans: Spans): string {
   const {base} = restOf(work.hourPoints);
   const hours = denote(base, hoursOfDay);
-  const level = hourLevel(work, []);
-
-  function at(hour: number): string {
-    return voice.clock(hour, []);
-  }
 
   return base.kind === 'cadence' ?
-    `${words.at} ${hours.slice(0, boundedCadence).map(at).join(', ')} ` +
-      `${words.ellipsis} ${words.and} ${at(hours[hours.length - 1])}` +
-      voice.oClock :
-    level.points(hours);
+    `${span([base.start, base.last], spans)}${spans.oClock} ` +
+      minutesAfter(work, each,
+        `${every(base.interval, units.hour)} `) :
+    `${hourLevel(work, []).points(hours)}, ` +
+      spread(work.minutes, minuteLevel(work, each)).text;
 }
 
 // Whether the minutes are points or several parts, which windows round
@@ -671,8 +703,8 @@ function minutesAndHours(work: Clockwork, each: string): Said {
   return {
     excepts: [...gone, ...said.excepts],
     text: scattered(work) ?
-      `${hoursAlone(work)}, ${said.text}` :
-      join([hourStretches(base, spans), said.text])
+      hoursAlone(work, each, spans) :
+      hourStretches(work, base, spans, each)
   };
 }
 
@@ -736,39 +768,43 @@ function burst(base: Sayable, wording: Wording): string {
     `${amount([stepOf(base)], units.second)}${start.join('')}`;
 }
 
-// Seconds in step, by number: the first three and the last, or all of a
-// few.
-function secondSeries(seconds: number[]): string {
-  return seconds.length > boundedCadence + 1 ?
-    `${seconds.slice(0, boundedCadence).join(', ')} ${words.ellipsis} ` +
-      `${seconds[seconds.length - 1]}` :
-    list(seconds.map(String));
-}
-
-// Seconds by their number in the minute: each run by its ends, each
-// cadence as a series and each second between them, in ascending order.
-// A series stands apart from its neighbours.
+// Seconds by their number in the minute: each run by its ends and each
+// second between them, in ascending order. Runs and cadences together
+// give each cadence of more than four seconds its own stretch and step,
+// «in den Sekunden 0 bis 20 alle 2 Sekunden», and list the rest between.
 function numbered(base: Sayable): string {
   const {parts = [base]} = base as Partial<CadencePieces>;
-  const items = parts.flatMap(function split(part): Array<[number, string]> {
+  const items = parts.flatMap(function split(part):
+    Array<[number, string, boolean]> {
     const seconds = denote(part, sixty);
 
-    return part.kind === 'values' ?
-      seconds.map(function single(second) {
-        return [second, String(second)];
-      }) :
-      [[seconds[0], part.kind === 'range' ?
-        `${part.from} ${words.to} ${part.to}` :
-        secondSeries(seconds)]];
+    if (part.kind === 'cadence' && seconds.length > boundedCadence + 1) {
+      return [[part.start, `${part.start} ${words.to} ${part.last} ` +
+        every(part.interval, units.second), true]];
+    }
+
+    return part.kind === 'range' ?
+      [[part.from, `${part.from} ${words.to} ${part.to}`, false]] :
+      seconds.map(function single(second): [number, string, boolean] {
+        return [second, String(second), false];
+      });
   }).sort(function ascending(a, b) {
     return a[0] - b[0];
-  }).map(function text(item) {
-    return item[1];
+  });
+  const groups: string[][] = [[]];
+
+  items.forEach(function place(item) {
+    if (item[2]) {
+      groups.push([item[1]], []);
+    }
+    else {
+      groups[groups.length - 1].push(item[1]);
+    }
   });
 
-  return `${words.inSeconds} ` + (base.kind === 'cadencePieces' ?
-    items.join(` ${words.also} `) :
-    list(items));
+  return groups.filter(nonEmpty).map(function inSeconds(group) {
+    return `${words.inSeconds} ${list(group)}`;
+  }).join(` ${words.also} `);
 }
 
 const bursts: {

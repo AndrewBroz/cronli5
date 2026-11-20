@@ -6,7 +6,7 @@
 import {Cronli5OptionError} from './core/errors.js';
 import type {Language, NormalizedOptions} from './core/schedule.js';
 import {readingOf} from './core/reading.js';
-import {shipped} from './languages.js';
+import {claimed, scripts, shipped} from './languages.js';
 
 /** How a description is presented. */
 export type Form = 'fragment' | 'label' | 'sentence';
@@ -108,17 +108,20 @@ function notACode(what: string): Cronli5OptionError {
 
 // A language the instance cannot describe in: one it was not given, or
 // one cronli5 does not have at all. Only the first can be fixed by an
-// import.
+// import, from the code in lower case, under a name without its hyphen.
 function unavailable(code: string, setup: Setup): Cronli5OptionError {
   const here = setup.languages.map(function named(language) {
     return language.code;
   }).join(', ');
+  const name = code.replace(/-(.)/gu, function joined(_match, letter: string) {
+    return letter.toUpperCase();
+  });
 
   return new Cronli5OptionError(shipped.includes(code) ?
     `This instance does not have the language '${code}' (it has: ${here}). ` +
-    `Import it (import ${code} from 'cronli5/lang/${code}') and pass it as ` +
-    '`lang`, give it to create({languages}), or import from ' +
-    '\'cronli5/all\'.' :
+    `Import it (import ${name} from 'cronli5/lang/${code.toLowerCase()}') ` +
+    'and pass it as `lang`, give it to create({languages}), or import ' +
+    'from \'cronli5/all\'.' :
     `cronli5 does not ship '${code}'. It ships: ${shipped.join(', ')}. ` +
     `This instance has: ${here}.`);
 }
@@ -132,42 +135,81 @@ function isLanguage(value: unknown): value is Language {
     typeof candidate.describe === 'function';
 }
 
-// A language code and its region, or nothing if the text is not shaped
-// like a code.
-function codeOf(text: unknown): {code: string; region: string} | null {
-  const parts = typeof text === 'string' &&
-    (/^([a-z]{2,3})(?:[-_]([a-z0-9]+))?(?:[-_][a-z0-9]+)*$/iu).exec(text);
-
-  return parts ?
-    {code: parts[1].toLowerCase(), region: (parts[2] ?? '').toUpperCase()} :
-    null;
+/** What a code names: a language, and perhaps a script and a region. */
+interface Named {
+  language: string;
+  region: string;
+  script: string;
 }
 
-// The console of a browser or of Node; the library targets neither's types.
-declare const console: {warn(message: string): void};
+type Table = {[language: string]: {[subtag: string]: string} | undefined};
 
-// The variants a caller has already been warned about, so each is said
-// once in a process, not on every call.
-const warned = new Set<string>();
+const codeShape = new RegExp('^(?<language>[a-z]{2,3})' +
+  '(?:[-_](?<script>[a-z]{4}))?(?:[-_](?<region>[a-z]{2}|[0-9]{3}))?' +
+  '(?:[-_][a-z0-9]+)*$', 'iu');
 
-// A variant the language does not yet write is described in the language
-// as written; the caller is told so, once.
-function warnPending(language: Language,
-  named: {code: string; region: string}): void {
-  const pending = language.pending?.[named.region];
-  const asked = `${named.code}-${named.region}`;
+// The parts of a code, each in its usual case (`zh`, `Hant`, `TW`), or
+// nothing if the text is not shaped like a code. A code is a language,
+// then an optional script of four letters, then an optional region of two
+// letters or three digits, joined by `-` or `_`; what follows is ignored.
+function codeOf(text: unknown): Named | null {
+  const parts = typeof text === 'string' && codeShape.exec(text)?.groups;
 
-  if (pending && !warned.has(asked)) {
-    warned.add(asked);
-    console.warn(`cronli5 does not yet write ${pending.variant} ` +
-      `(${asked}); until it does, it describes in ${pending.instead}.`);
+  if (!parts) {
+    return null;
   }
+
+  const {language, region = '', script = ''} = parts;
+
+  return {
+    language: language.toLowerCase(),
+    region: region.toUpperCase(),
+    script: script.charAt(0).toUpperCase() + script.slice(1).toLowerCase()
+  };
+}
+
+// The language of the instance that a code names.
+//
+// A script names the language whose code has it. A script cronli5 knows
+// (see `scripts`) names that script's language and no other, so one the
+// instance was not given is an error, never the same language in another
+// script; the script a language is written in by default names the plain
+// language. Any other script is passed over.
+//
+// Without a script, a region goes to the language in another script that
+// declares the region, or that cronli5 knows to write it (see `claimed`),
+// before the plain language.
+function languageNamed(setup: Setup, code: Named): Language {
+  const {language, region, script} = code;
+  const {languages} = setup;
+  const byScript: Table = scripts;
+  const byRegion: Table = claimed;
+  const scripted = `${language}-${script}`.toLowerCase();
+  const shippedAs = byScript[language]?.[script];
+  const claiming = shippedAs || !region ? null : languages.find(
+    function claims(candidate) {
+      return candidate.code.toLowerCase().startsWith(`${language}-`) &&
+        Object.hasOwn(candidate.regions, region);
+    }
+  );
+  const expected = shippedAs ?? claiming?.code ??
+    byRegion[language]?.[region] ?? language;
+  const found = languages.find(function inScript(candidate) {
+    return script !== '' && candidate.code.toLowerCase() === scripted;
+  }) ?? languages.find(function expectedOne(candidate) {
+    return candidate.code === expected;
+  });
+
+  if (!found) {
+    throw unavailable(expected, setup);
+  }
+
+  return found;
 }
 
 // The language a `lang` option selects and the named style it starts
-// from. A code is a language and an optional region, joined by `-` or
-// `_`, in any case; a region the language does not know takes its default
-// style. A module is used as it is.
+// from. A region the language does not know takes its default style. A
+// module is used as it is.
 function languageFor(setup: Setup, lang: unknown):
   {base: string; language: Language} {
   if (typeof lang === 'undefined') {
@@ -184,24 +226,16 @@ function languageFor(setup: Setup, lang: unknown):
     return {base: lang.defaultStyle, language: lang};
   }
 
-  const named = codeOf(lang);
+  const code = codeOf(lang);
 
-  if (!named) {
+  if (!code) {
     throw notACode('`lang`');
   }
 
-  const language = setup.languages.find(function match(candidate) {
-    return candidate.code === named.code;
-  });
-
-  if (!language) {
-    throw unavailable(named.code, setup);
-  }
-
-  warnPending(language, named);
+  const language = languageNamed(setup, code);
 
   return {
-    base: language.regions[named.region] ?? language.defaultStyle,
+    base: language.regions[code.region] ?? language.defaultStyle,
     language
   };
 }

@@ -4,6 +4,289 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0]
+
+### Added
+
+- **Korean (`ko`)**, at beta: `import ko from 'cronli5/lang/ko'`, or
+  `{lang: 'ko'}` from `cronli5/all`. Written from usage notes in Korean by
+  a writer told nothing of cron, then notes on each choice, hand-written
+  expected descriptions, independent schedule reads and blind reads, and
+  a renderer built without sight of any other. `30 9 * * 1-5` is «매주
+  월~금요일 오전 9시 30분» and `*/15 9-17 * * 1-5` is «매주 월~금요일 오전
+  9시부터 오후 5시 45분까지 15분마다». One style, `ko` (region `KR`), with
+  two fields: `hour12` (`false` gives «17시 30분») and `short` (`true`
+  gives «매주 월·수·금»). No fluent human has reviewed it; «짝수 시» and
+  «홀수 시» for every second hour are the first thing a native reviewer
+  should check. See `docs/lang/ko.md`.
+- **Indonesian (`id`)**, at beta: `import id from 'cronli5/lang/id'`, or
+  `{lang: 'id'}` from `cronli5/all`. Written from usage notes in Indonesian
+  by a writer told nothing of cron, then answers to the language
+  questionnaire, hand-written expected descriptions, an adversarial
+  schedule read and blind readers briefed only in Indonesian, and a
+  renderer built without sight of any other. Day first, then «pukul» and a
+  24-hour time with a full stop, as EYD writes it: `30 9 * * 1-5` is
+  «setiap Senin sampai Jumat pukul 09.30», and `*/15 9-17 * * 1-5` is
+  «setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai
+  17.45». Three style fields: `hour12` («pukul 5.30 sore»), `separator`
+  (`'.'` or `':'`) and `short` (Sen, Jun). No fluent human has reviewed
+  it; «jam genap» and «jam ganjil» for every second hour are the first
+  thing a native reviewer should check
+  ([docs/lang/id.md](./docs/lang/id.md)).
+- **Polish (`pl`)**, at beta: `import pl from 'cronli5/lang/pl'`, or
+  `{lang: 'pl'}` from `cronli5/all`. It was written from usage notes in
+  Polish by a writer told nothing of cron, then answers to the language
+  questionnaire, hand-written expected descriptions read by an
+  adversarial schedule reader and by blind readers briefed only in
+  Polish, and a renderer built without sight of any other and audited
+  independently. The calendar comes first and the clock last, in 24-hour
+  times: `0 9 * 6 1` is «w czerwcu w poniedziałki o 9:00», `*/15 9-17 * *
+  1-5` is «od poniedziałku do piątku co 15 minut od 9:00 do 17:45». Style
+  fields: `short` («od pon. do pt. co 15 min …», «1 VI»), `separator`
+  («9.30») and `hour12` (the colloquial «9:30 rano»); one region, `PL`.
+  No fluent human has reviewed it.
+- **Traditional Chinese (`zh-Hant`)**, at beta: a language of its own,
+  `import zhHant from 'cronli5/lang/zh-hant'`, written from usage notes in
+  Traditional Chinese by a writer told nothing of cron, then answers,
+  hand-written expected descriptions, an adversarial schedule read and
+  blind reads, and a renderer built without sight of any other, the
+  Simplified one included. Two styles: `tw` (Taiwan, the default), as in
+  「每週一至週五 09:00～17:45，每15分鐘一次」, and `hk` (Hong Kong, also
+  used for Macau), as in 「每星期一至五上午9時至下午5時45分，每15分鐘一次」.
+  No fluent human has reviewed it. See
+  [docs/lang/zh-hant.md](./docs/lang/zh-hant.md).
+- **Russian (`ru`)**, at beta: `import ru from 'cronli5/lang/ru'`, or
+  `{lang: 'ru'}` from `cronli5/all`. It is Russian as it is written in
+  Ukraine; the usage notes found no difference in the language of
+  schedules itself, so there is one style, `ru`, and no region. Style
+  fields: `hour12` («в 9 часов утра»), `short` («в янв. по пн»),
+  `separator` («в 9.30») and `padHour` («в 09:30»). `30 9 * * 1-5` is «по
+  будням в 9:30»; `*/15 9-17 * * 1-5` is «по будням каждые 15 минут с 9:00
+  до 17:45»; `0 0 1 * 5` is «по пятницам, а также 1-го числа каждого
+  месяца, в 0:00». Written from usage notes in the language by a writer
+  told nothing of cron, then answers, hand-written expected descriptions,
+  an adversarial schedule read and blind readers, and a renderer built
+  without sight of any other. No fluent human has reviewed it.
+
+### Changed
+
+- **Portuguese says the same days the same way, however the step is
+  spelled.** A step of days that stops at the last odd or even day the
+  named months have is said like the plain step: `0 9 1-29/2 6 *` was
+  «nos dias ímpares do dia 1º ao dia 29 de junho às 09:00» and is now
+  «nos dias ímpares de junho às 09:00», as `0 9 */2 6 *` already was.
+  Every day but a few is judged the same way (`0 9 1-14,16-30 6 *` is
+  «todos os dias de junho, exceto no dia 15», like `1-14,16-31`), and
+  months of different lengths named together no longer get a day the
+  shorter lack: `0 9 */3 4,7 *` was «de 3 em 3 dias do dia 1º ao dia 31
+  de abril e de julho» and is «de 3 em 3 dias do dia 1º ao último dia de
+  abril e de julho»; `0 9 30,31 4,5 *` is «no dia 30 de abril e de maio e
+  no dia 31 de maio».
+- **A field that names every value of its range is said as unrestricted**,
+  however it is spelled (`6,5,4,3,2,1,0`, `0-3,4,5-6`, `MON-FRI,SAT,SUN`,
+  `1-15,16-31`, `*/2,1/2`), in every field and every language. Only the
+  whole week written as a list or a mix changed: Spanish, Russian and
+  Traditional Chinese now say `0 9 * * 6,5,4,3,2,1,0` as they say
+  `0 9 * * *` («todos los días a las 9:00», «ежедневно в 9:00», «每天
+  09:00»), where Russian and Traditional Chinese named all seven days.
+- **Japanese says the same days the same way, however the day field is
+  spelled.** Every second day that ends where the months named end is the
+  word alone: `0 9 1-29/2 6 *` is 毎年6月の奇数日の9:00, as `0 9 */2 6 *`
+  already was (it was 毎年6月1日〜29日の奇数日の9:00). A run that stops
+  earlier keeps its ends. The same holds for every set of days under named
+  months: `0 0 1-14,16-30 6 *` is 15日を除く毎年6月の毎日0:00, as
+  `1-14,16-31` was (it was 毎年6月1日〜30日（15日を除く）); `0 0 L 6 *` is
+  毎年6月30日 (was 毎年6月末日); and no month is given a day it lacks:
+  `0 0 */3 4,7 *` is 毎年4月・7月の1日・4日・7日…31日（31日は7月のみ）.
+- **English says the same days the same way, however the day field is
+  spelled.** A step of days that stops where the months named stop is
+  said as the step that reaches those same days: `0 9 1-29/2 6 *` is "at
+  9 a.m. on odd-numbered days in June", as `0 9 */2 6 *` is, where it was
+  "at 9 a.m. every 2 days from the 1st through the 29th of the month in
+  June". Every day but a few is judged by the month's own days:
+  `0 9 1-14,16-30 6 *` is "on every day in June except the 15th" (was
+  "except the 15th and 31st"). Beside months of different lengths no
+  month is given a day it lacks: `0 9 30,31 4,5 *` is "on the 30th of
+  April and May and on May 31" (was "on the 30th and 31st of April and
+  May").
+- **English counts minutes in pieces past "the hour" before hours named
+  one by one**: `5-10,20 9-17/2 * * *` is "every minute from 5 through 10
+  and at 20 minutes past the hour during the 9 a.m., 11 a.m., 1 p.m., 3
+  p.m., and 5 p.m. hours", where "from 5 through 10" was read as 5 to 10
+  o'clock.
+- **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
+  Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
+  `cronli5/all` has it. An instance without it reports the language as
+  not available, with the import that provides it, where it used to
+  answer in Simplified Chinese with a warning on the console.
+  `cronli5/lang/zh` is Simplified only (`zh`, `zh-Hans`, `zh-CN`,
+  `zh-SG`).
+- **Traditional Chinese says ten kinds of schedule more plainly**, after
+  its sentences were set beside those of Simplified Chinese, which was
+  written independently. No schedule was said wrongly before; each form
+  is the language's own, and none has yet been read by a fluent human.
+  - A rhythm with a time or two beside it stays the rhythm:
+    `0 */2,13 * * *` is 「每2小時一次，另加 13:00」, where it was
+    「每天 12:00～14:00，每小時一次，另加」 and ten clock times;
+    `15,45 */2,13 * * *` is 「每逢雙數時的15、45分，13時亦同」.
+  - A step of years is followed by 該年: `0 0 9 * * * 2028/4` is
+    「2028年起每4年，該年每天 09:00」 (was 「2028年起每4年，每天 09:00」).
+  - Every second hour is the odd or the even hours, whatever they hold:
+    `0 1/2 * * *` is 「每逢單數時整點」 (was 「每天 01:00 起每2小時一次」)
+    and `30 */2 * * *` is 「每逢雙數時的30分」. The even hours on the hour
+    are still 「每2小時一次」. Between two hours they keep both ends:
+    `15,45 0-16/2 * * *` is 「每天 00:15～16:45，每逢雙數時的15、45分」,
+    where nine hours were named.
+  - A rhythm of four or more minutes that fills the hour is the rhythm
+    after named hours too: `*/15 */2 * * *` is
+    「每逢雙數時，整個小時內每15分鐘一次」 (was
+    「每逢雙數時的00、15、30、45分」).
+  - A window inside the hour or the minute closes on 內 and takes its
+    rate directly, so that the rate is not heard as that of a stretch
+    before it: `0-29 9-17 * * 1-5` is
+    「每週一至週五 09:00～17:29，每小時的整點至29分內每分鐘一次」 (was
+    「…每小時的整點至29分，每分鐘一次」).
+  - Alternate years but one or two: `1970-2028/2,2032/2` in the year
+    field is 「每逢西元雙數年每天 09:00（2030年除外）」.
+  - A whole minute is 該分鐘內: `* 30 * * * *` is
+    「每逢30分，該分鐘內每秒一次」 (was 「每逢30分起的1分鐘內，每秒一次」);
+    and a minute beside a window follows 另在: `0-29,45 * * * *` is
+    「每小時的整點至29分內每分鐘一次，另在45分」 (was 「…，另加45分」).
+  - A count from the month's end that is one date in every month that
+    has it is that date, beside days of the week: Quartz `0 0 L-30 * 2`
+    is 「每週一及每年1、3、5、7、8、10、12月的1日 00:00」 (was
+    「每月倒數第31天及每週一 00:00」).
+  - A fifth style field, `era`: the era named before the even or the odd
+    years. Taiwan's style says 「每逢西元雙數年」; Hong Kong's and Macau's
+    names none, 「每逢雙數年」, since they count years in one era.
+- **Simplified Chinese: wording changes**, each from comparing it
+  pattern by pattern with Traditional Chinese, which was written
+  independently. No schedule was said wrongly before or after.
+  - A cadence of hours that tiles the day from 0:00 is its step, as in
+    every other language: `0 */2 * * *` is 「每2小时一次」 (was 「每天偶数整
+    点」), `0 */3 * * *` is 「每3小时一次」 (was 「每天0:00起每3小时一次」),
+    `0 */6 * * *` is 「每6小时一次」 (was 「每天0:00、6:00、12:00、18:00」),
+    `30 */2 * * *` is 「每2小时的30分」 (was 「每天偶数小时的30分」), `5,35
+    */3 * * *` is 「每3小时的5分、35分」 (was eight hours by name), and with
+    an hour missing `0 0,3,6,9,15,18,21 * * *` is 「每3小时一次（12:00除
+    外）」. The odd hours are still 「每天奇数整点」.
+  - A stretch of hours before named minutes is said once, by its first
+    and last firing: `5,20,45 9-17 * * 1-5` is 「每周一至周五9:05至17:45，
+    每小时的5分、20分、45分」 (was 「每周一至周五9点至17点，每小时的5分、20
+    分、45分（首次9:05，末次17:45）」); `* 2/2 * * *` is 「每天2:00至
+    22:59，偶数小时内，每分钟一次」.
+  - No series is abbreviated with ……: `0 0 8/2 * *` is 「每月8日至30日逢
+    双日0:00」 (was 「每月8日、10日、12日……30日0:00」) and `0 0 */3 * *`
+    lists its eleven dates.
+  - Three hours or more that hold minutes are named once: `* */6 * * *`
+    is 「每天0点、6点、12点、18点的每一分钟」 (was four windows), `0,30
+    8,12,16,20 * * *` is 「每天8点、12点、16点、20点的0分、30分」 (was eight
+    clock times).
+  - A rhythm with a beat missing: `0,10,20,40,50 * * * *` is 「每10分钟一
+    次（每小时的30分除外）」 (was the five minutes).
+  - Dates and days: `0 0 31 * *` is 「每逢31日0:00」 (was 「每月31日（当月
+    无此日则不执行）0:00」); `0 0 29 2 *` is 「每逢闰年2月29日0:00」; `0 0
+    L-3 6 *` is 「每年6月27日0:00」 (was 「每年6月倒数第4天0:00」); `0 9 15W
+    * *` is 「每月15日（遇周六提前至周五，遇周日顺延至周一）9:00」 (was 「…
+    （遇周六、周日改在当月最近的周五或周一）」); `0 9 * * 5-1` is 「每周五至次
+    周周一9:00」 (was 「每周一、周五至周日9:00」); `0 9 1-10,14-31 * *` is
+    「每月14日至次月10日每天9:00」; `0 0 1 * 0-2,4-6` is 「除周三外每天（周三
+    为1日时照常）0:00」 (was 「每月1日以及每周一、周二、周四至周日，均在0:00」);
+    `0 9 * */2 *` is 「每年奇数月每天9:00」 (was the six months); `0 0 15W
+    * 1-5` is 「每周一至周五0:00」, the date adding nothing.
+- **Simplified Chinese says the same days the same way, however the
+  pattern is spelled.** Odd or even days that reach the last such day of
+  the months named are those months' odd or even days: `0 9 1-29/2 6 *`
+  is 「每年6月的单日9:00」, as `0 9 */2 6 *` is (was 「每年6月1日至29日逢
+  单日9:00」). Every day but a few is judged the same way: `0 9 1-14,16-30
+  6 *` is 「每年6月除15日外每天9:00」 (was 「每年6月1日至14日、16日至30日
+  的9:00」). Under months of different lengths no month is given a day it
+  lacks: `0 9 25-31 4,5 *` is 「每年4月、5月的25日至最后一天每天9:00」, and
+  `0 9 */3 4,7 *` ends 「…28日以及7月31日，均在9:00」 (was 「…28日、31日9:00」).
+- **Faster.** A step of many years, such as `2030/2` in the year field
+  (3,985 years), took about 420 us to analyse in every language and now
+  takes about 200: a single step no longer goes through a Set to drop
+  repeats it cannot have, and values are taken out of a set by marking
+  them in an array. Over a broad corpus of 112,788 patterns the core is
+  about a fifth faster (27.6 to 21.7 us a pattern); Korean no longer
+  builds every moment of a schedule before counting them (its renderer
+  10.1 to 8.8 us), and Russian no longer lists the whole year field to
+  count it (12.2 to 9.8 us). `npm run speed` measures every language and
+  checks that a change leaves every description unchanged
+  (`tooling/docs/speed.md`). Every description is unchanged.
+- **French says the same days the same way, however the day field is
+  written.** `0 9 1-29/2 6 *` was « les jours impairs du 1er au 29 juin
+  à 9 h » and is now « les jours impairs de juin à 9 h », as `*/2` in
+  June always was: June has no 31st. A step that stops short of the
+  month's end keeps its ends. Likewise `1-14,16-30` in June, which was
+  « du 1er au 30 juin, sauf le 15 », is « tous les jours de juin, sauf le
+  15 », as `1-14,16-31` was. With months of different lengths no month
+  is given a day it lacks: `15-31` in April and May was « du 15 au 31 du
+  mois, en avril et en mai » and is « du 15 à la fin du mois, en avril
+  et en mai »; `30,31` there is « le 30 avril, le 30 mai et le 31 mai ».
+- **German says the same days the same way, however the step is
+  spelled.** `0 9 1-29/2 6 *` fires on the same days as `0 9 */2 6 *`
+  and is now «jährlich an den ungeraden Tagen im Juni um 9:00 Uhr», as
+  that one is (was «jährlich am 1., 3., 5. … und 29. Juni um 9:00 Uhr»).
+- **German leaves no series for the reader to continue.** A cadence said
+  as its first values, «…» and its last now says its step in words, with
+  the ends it has: `0 0 */3 * *` is «vom 1. bis 31. jedes Monats alle 3
+  Tage um 0:00 Uhr» (was «am 1., 4., 7. … und 31. jedes Monats …»);
+  `*/15 8-18/2 * * *` is «täglich von 8:00 bis 18:45 Uhr in den geraden
+  Stunden alle 15 Minuten» (was «täglich von 8:00 bis 8:45, von 10:00 bis
+  10:45 … und von 18:00 bis 18:45 Uhr alle 15 Minuten», which can be read
+  as every hour); `5,20,45 2-20/3 * * *` is «täglich von 2:05 bis 20:45
+  Uhr alle 3 Stunden zu den Minuten 5, 20 und 45» (was «täglich um 2, 5,
+  8 … und 20 Uhr, jeweils …»); `0-20/2,21-59/3 * * * * *` is «jede
+  Minute, jeweils in den Sekunden 0 bis 20 alle 2 Sekunden sowie in den
+  Sekunden 21 bis 57 alle 3 Sekunden» (was «… 0, 2, 4 … 20 sowie 21, 24,
+  27 … 57»).
+  Years follow: `0 0 9 * * * 2028/4` is «in jedem vierten Jahr ab 2028
+  täglich um 9:00 Uhr» (was «in den Jahren 2028, 2032, 2036 usw. …»), and
+  `2030-2040,2045/5` is «in den Jahren 2030 bis 2040 sowie in jedem
+  fünften Jahr ab 2045».
+- **German names no day a month lacks.** Where the months that fire have
+  different lengths, a run or step that goes on to the longest month's
+  end ends at each month's end: `0 0 */3 4,7 *` is «im April und Juli
+  jeweils vom 1. bis zum Monatsende alle 3 Tage um 0:00 Uhr» (was «… vom
+  1. bis 31. …», a 31 April), `0 0 */3 * *` «vom 1. bis zum Ende jedes
+  Monats alle 3 Tage …», `0 0 20-29 2 *` «jährlich vom 20. bis Ende
+  Februar täglich …»; listed days only some months have are said with
+  them: `0 0 30,31 4,5 *` is «im April und Mai jeweils am 30. sowie am
+  31. Mai …» (was «am 30. und 31.»), `0 0 28,29 2 *` «jährlich am 28.
+  Februar sowie am 29. Februar (nur in Schaltjahren) …»; and `0 0 1-30 *
+  *` is «vom 1. bis 30. jedes Monats (im Februar bis zum Monatsende) …».
+
+### Removed
+
+- **The optional `pending` field of the public `Language` type**, which
+  named script variants a language had not written yet. Nothing declares
+  one now.
+
+### Fixed
+
+- **A weekday step from a start runs through Sunday.** A step written from
+  a weekday with no end (`1/2`, `MON/2`, `1/3`, `3/2`, `5/2`, `1/6`, and
+  every `n/1`) runs to the top of the field, 7, which is Sunday, as `1-7/2`
+  always did and as a step from a start runs to the top of every other
+  field. Each such step that lands on 7 left Sunday out: `0 9 * * 1/2` was
+  "at 9 a.m. on Mondays, Wednesdays, and Fridays" and is now "at 9 a.m. on
+  Mondays, Wednesdays, Fridays, and Sundays", in every language; `1/1` was
+  Monday to Saturday and is now every day. A step that stops short of 7
+  (`2/2`, Tuesday, Thursday and Saturday) is unchanged, and so is Quartz,
+  whose weekday 7 is Saturday. The answer key used to check readers read a
+  Quartz step from a start through Sunday too, and now stops at Saturday.
+- **A whole-range day field beside a day field written from a star.** In
+  cron, when either day field is written from a star (`*/2`), a day must
+  match both; a date field naming every day (`1-15,16-31`, `*/2,2/2`, the
+  list 1 to 31) then leaves the days to the weekday, and a weekday field
+  naming every day leaves them to the date. English, German, French,
+  Italian, Spanish, Japanese, Russian, Ukrainian, Indonesian and
+  Simplified Chinese said "every day" instead: `0 9 1-15,16-31 * */2` was "at 9 a.m. every day" and is
+  now "at 9 a.m. on Tuesdays, Thursdays, Saturdays, and Sundays", and
+  `0 9 */2,2/2 * 1` is now "at 9 a.m. on Mondays". Written without a star
+  (`1-15,16-31` beside `1`), it is every day, as before.
+
 ## [1.2.2]
 
 ### Fixed

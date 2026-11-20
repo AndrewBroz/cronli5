@@ -2577,7 +2577,7 @@
    "pattern": "0 0 */5 6 *"
   },
   {
-   "expected": "les 1er, 6, 11, 16, 21, 26 et 31 du mois, de juin à août, à 0 h",
+   "expected": "les 1er, 6, 11, 16, 21 et 26 du mois, de juin à août, et le 31 juillet et le 31 août, à 0 h",
    "options": {
     "lang": "fr"
    },
@@ -2612,7 +2612,7 @@
    "pattern": "0 0 */3 1,7 *"
   },
   {
-   "expected": "tous les 3 jours du 1er au 31 du mois, de juin à août, à 0 h",
+   "expected": "tous les 3 jours du 1er à la fin du mois, de juin à août, à 0 h",
    "options": {
     "lang": "fr"
    },
@@ -4539,21 +4539,224 @@
    "pattern": "0 0 1-28 2 *"
   },
   {
-   "expected": "du 1er au 30 juin, sauf le 15, à 0 h",
+   "expected": "du 1er au 28 février 2032 à 0 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 0 0 1-28 2 * 2032"
+  },
+  {
+   "expected": "tous les jours de février 2031 à 0 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 0 0 1-28 2 * 2031"
+  },
+  {
+   "expected": "tous les jours de juin, sauf le 15, à 0 h",
    "options": {
     "lang": "fr"
    },
    "pattern": "0 0 1-14,16-30 6 *"
   },
   {
-   "expected": "du 2 au 30 juin à 0 h",
+   "expected": "tous les jours de juin, sauf le 15, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-14,16-31 6 *"
+  },
+  {
+   "expected": "tous les jours de juin, sauf le 15, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-14,16-30 6 *"
+  },
+  {
+   "expected": "tous les jours de février, sauf le 15, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-14,16-29 2 *"
+  },
+  {
+   "expected": "tous les jours de février, sauf le 15, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-14,16-31 2 *"
+  },
+  {
+   "expected": "tous les jours de février, sauf le 28, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-27,29 2 *"
+  },
+  {
+   "expected": "tous les jours de juin, sauf le 1er, à 0 h",
    "options": {
     "lang": "fr"
    },
    "pattern": "0 0 2-30 6 *"
   },
   {
-   "expected": "les jours impairs du 1er au 29 juin à 0 h",
+   "expected": "tous les jours de juin, sauf le 1er, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2-31 6 *"
+  },
+  {
+   "expected": "du 1er au 29 juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29 6 *"
+  },
+  {
+   "expected": "du 1er au 28 juin, sauf le 15, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-14,16-28 6 *"
+  },
+  {
+   "expected": "tous les jours de juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-30 6 *"
+  },
+  {
+   "expected": "tous les jours de juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-31 6 *"
+  },
+  {
+   "expected": "le 30 avril à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 30,31 4 *"
+  },
+  {
+   "expected": "le 30 avril à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 30 4 *"
+  },
+  {
+   "expected": "le 29 février à 9 h, les années bissextiles",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 29,30,31 2 *"
+  },
+  {
+   "expected": "le 29 février à 9 h, les années bissextiles",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 29 2 *"
+  },
+  {
+   "expected": "tous les 3 jours du 1er à la fin du mois, en avril et en juillet, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 */3 4,7 *"
+  },
+  {
+   "expected": "du 15 à la fin du mois, en avril et en mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 15-31 4,5 *"
+  },
+  {
+   "expected": "du 15 au 30 du mois, en avril et en mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 15-30 4,5 *"
+  },
+  {
+   "expected": "du 1er au 30 du mois, en avril et en mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-30 4,5 *"
+  },
+  {
+   "expected": "tous les jours en février et en avril à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-30 2,4 *"
+  },
+  {
+   "expected": "les jours impairs du 9 à la fin du mois, en avril et en mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 9/2 4,5 *"
+  },
+  {
+   "expected": "du 1er au 5 et du 20 à la fin du mois, en avril et en mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-5,20-31 4,5 *"
+  },
+  {
+   "expected": "le 30 avril, le 30 mai et le 31 mai à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 30,31 4,5 *"
+  },
+  {
+   "expected": "du 15 au 29 du mois, en février et en mai, et le 30 mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 15-30 2,5 *"
+  },
+  {
+   "expected": "du 1er au 29 du mois, en février et en mai, et le 31 mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29,31 2,5 *"
+  },
+  {
+   "expected": "le 1er et le 15 du mois, de janvier à juin, et le 31 janvier, le 31 mars et le 31 mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1,15,31 1-6 *"
+  },
+  {
+   "expected": "en avril et en mai, à 9 h, tous les lundis ainsi que du 15 à la fin du mois",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 15-31 4,5 1"
+  },
+  {
+   "expected": "du 28 au 31 de chaque mois à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 28-31 * *"
+  },
+  {
+   "expected": "les jours impairs de juin à 0 h",
    "options": {
     "lang": "fr"
    },
@@ -4565,6 +4768,223 @@
     "lang": "fr"
    },
    "pattern": "0 0 */2 6 *"
+  },
+  {
+   "expected": "les jours pairs de juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2-30/2 6 *"
+  },
+  {
+   "expected": "les jours pairs de juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2/2 6 *"
+  },
+  {
+   "expected": "les jours impairs du 1er au 27 juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-27/2 6 *"
+  },
+  {
+   "expected": "les jours pairs du 2 au 28 juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2-28/2 6 *"
+  },
+  {
+   "expected": "les jours impairs de février à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29/2 2 *"
+  },
+  {
+   "expected": "les jours impairs de février à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 */2 2 *"
+  },
+  {
+   "expected": "les jours pairs de février à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2-28/2 2 *"
+  },
+  {
+   "expected": "les jours pairs de février à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2/2 2 *"
+  },
+  {
+   "expected": "les jours impairs du 1er au 27 février à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-27/2 2 *"
+  },
+  {
+   "expected": "les jours impairs de février 2031 à 0 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 0 0 1-27/2 2 * 2031"
+  },
+  {
+   "expected": "les jours impairs de février 2031 à 0 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 0 0 */2 2 * 2031"
+  },
+  {
+   "expected": "les jours impairs de février 2032 à 0 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 0 0 1-29/2 2 * 2032"
+  },
+  {
+   "expected": "les jours impairs du 1er au 27 février 2032 à 0 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 0 0 1-27/2 2 * 2032"
+  },
+  {
+   "expected": "les jours impairs de janvier à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-31/2 1 *"
+  },
+  {
+   "expected": "les jours pairs de janvier à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2-30/2 1 *"
+  },
+  {
+   "expected": "les jours impairs du 1er au 29 janvier à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29/2 1 *"
+  },
+  {
+   "expected": "les jours impairs d'avril et de juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29/2 4,6 *"
+  },
+  {
+   "expected": "les jours impairs d'avril et de juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 */2 4,6 *"
+  },
+  {
+   "expected": "les jours impairs de février et d'avril à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29/2 2,4 *"
+  },
+  {
+   "expected": "les jours pairs d'avril et de mai à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 2-30/2 4,5 *"
+  },
+  {
+   "expected": "les jours impairs du 1er au 29 du mois, en avril et en mai, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29/2 4,5 *"
+  },
+  {
+   "expected": "les jours impairs du 1er au 29 du mois, de juin à août, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29/2 6-8 *"
+  },
+  {
+   "expected": "les jours impairs du mois, de juin à août, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 */2 6-8 *"
+  },
+  {
+   "expected": "les jours impairs du 1er au 27 du mois, en février et en avril, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-27/2 2,4 *"
+  },
+  {
+   "expected": "les jours impairs de chaque mois à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-31/2 * *"
+  },
+  {
+   "expected": "les jours impairs de chaque mois à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 */2 * *"
+  },
+  {
+   "expected": "les jours impairs du 1er au 29 de chaque mois à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-29/2 * *"
+  },
+  {
+   "expected": "les jours impairs de juin, sauf le 15, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-13/2,17-29/2 6 *"
+  },
+  {
+   "expected": "les jours impairs de juin, sauf le 15, à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-13/2,17-31/2 6 *"
+  },
+  {
+   "expected": "tous les 3 jours du 1er au 28 juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 1-28/3 6 *"
+  },
+  {
+   "expected": "tous les 3 jours du 1er au 28 juin à 9 h",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "0 9 */3 6 *"
   },
   {
    "expected": "à 9 h, tous les vendredis ainsi que du 1er au 14 et du 16 au 31 de chaque mois",
