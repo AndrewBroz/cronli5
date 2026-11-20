@@ -196,6 +196,38 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   is given a day it lacks: `15-31` in April and May was « du 15 au 31 du
   mois, en avril et en mai » and is « du 15 à la fin du mois, en avril
   et en mai »; `30,31` there is « le 30 avril, le 30 mai et le 31 mai ».
+- **German says the same days the same way, however the step is
+  spelled.** `0 9 1-29/2 6 *` fires on the same days as `0 9 */2 6 *`
+  and is now «jährlich an den ungeraden Tagen im Juni um 9:00 Uhr», as
+  that one is (was «jährlich am 1., 3., 5. … und 29. Juni um 9:00 Uhr»).
+- **German leaves no series for the reader to continue.** A cadence said
+  as its first values, «…» and its last now says its step in words, with
+  the ends it has: `0 0 */3 * *` is «vom 1. bis 31. jedes Monats alle 3
+  Tage um 0:00 Uhr» (was «am 1., 4., 7. … und 31. jedes Monats …»);
+  `*/15 8-18/2 * * *` is «täglich von 8:00 bis 18:45 Uhr in den geraden
+  Stunden alle 15 Minuten» (was «täglich von 8:00 bis 8:45, von 10:00 bis
+  10:45 … und von 18:00 bis 18:45 Uhr alle 15 Minuten», which can be read
+  as every hour); `5,20,45 2-20/3 * * *` is «täglich von 2:05 bis 20:45
+  Uhr alle 3 Stunden zu den Minuten 5, 20 und 45» (was «täglich um 2, 5,
+  8 … und 20 Uhr, jeweils …»); `0-20/2,21-59/3 * * * * *` is «jede
+  Minute, jeweils in den Sekunden 0 bis 20 alle 2 Sekunden sowie in den
+  Sekunden 21 bis 57 alle 3 Sekunden» (was «… 0, 2, 4 … 20 sowie 21, 24,
+  27 … 57»).
+  Years follow: `0 0 9 * * * 2028/4` is «in jedem vierten Jahr ab 2028
+  täglich um 9:00 Uhr» (was «in den Jahren 2028, 2032, 2036 usw. …»), and
+  `2030-2040,2045/5` is «in den Jahren 2030 bis 2040 sowie in jedem
+  fünften Jahr ab 2045».
+- **German names no day a month lacks.** Where the months that fire have
+  different lengths, a run or step that goes on to the longest month's
+  end ends at each month's end: `0 0 */3 4,7 *` is «im April und Juli
+  jeweils vom 1. bis zum Monatsende alle 3 Tage um 0:00 Uhr» (was «… vom
+  1. bis 31. …», a 31 April), `0 0 */3 * *` «vom 1. bis zum Ende jedes
+  Monats alle 3 Tage …», `0 0 20-29 2 *` «jährlich vom 20. bis Ende
+  Februar täglich …»; listed days only some months have are said with
+  them: `0 0 30,31 4,5 *` is «im April und Mai jeweils am 30. sowie am
+  31. Mai …» (was «am 30. und 31.»), `0 0 28,29 2 *` «jährlich am 28.
+  Februar sowie am 29. Februar (nur in Schaltjahren) …»; and `0 0 1-30 *
+  *` is «vom 1. bis 30. jedes Monats (im Februar bis zum Monatsende) …».
 
 ### Removed
 
