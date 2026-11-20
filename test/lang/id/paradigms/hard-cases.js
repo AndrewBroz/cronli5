@@ -495,8 +495,11 @@ const rows = [
 
   // Minutes over hours that are a rhythm: every second hour is «pada jam
   // genap» or «pada jam ganjil»; other steps are one rhythm of hours with
-  // its first times («mulai pukul») or with «tiap kali» and what happens
-  // in the hour, and the last firing when the step does not tile the day.
+  // its first times («mulai pukul») while they are one or two, and
+  // otherwise the hours once and «tiap kali» what happens in each, with
+  // the last firing when the step does not tile the day (answers 4.1 C and
+  // F; three or four first times, «mulai pukul 05.00, 05.15, 05.30, dan
+  // 05.45», were replaced on 2026-11-19 after the cost pass).
   ['15,45 */2 * * *',
     'pada jam genap, pada menit ke-15 dan ke-45'],
   ['15,45 4/4 * * *',
@@ -517,11 +520,52 @@ const rows = [
     'setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit ' +
     'selama 30 menit, terakhir pukul 23.29'],
   ['*/15 5/2 * * *',
-    'setiap hari, setiap 2 jam mulai pukul 05.00, 05.15, 05.30, dan ' +
-    '05.45, terakhir pukul 23.45'],
+    'setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap 15 ' +
+    'menit sampai menit ke-45, terakhir pukul 23.45'],
   ['*/15 8-18/2 * * *',
-    'setiap hari, setiap 2 jam mulai pukul 08.00, 08.15, 08.30, dan ' +
-    '08.45, terakhir pukul 18.45'],
+    'setiap hari, setiap 2 jam mulai pukul 08.00, tiap kali setiap 15 ' +
+    'menit sampai menit ke-45, terakhir pukul 18.45'],
+  ['0,30 5/2 * * *',
+    'setiap hari, setiap 2 jam mulai pukul 05.00 dan 05.30, terakhir ' +
+    'pukul 23.30'],
+  ['5,10,30 */5 * * *',
+    'setiap hari, setiap 5 jam mulai pukul 00.00, tiap kali pada menit ' +
+    'ke-5, ke-10, dan ke-30, terakhir pukul 20.30'],
+  // The same over hours that tile the day: bare from 00.00, «mulai pukul»
+  // the first hour from later. A rhythm of three or four minutes is said
+  // as the rhythm; two first times are still named; positions none of
+  // which is minute 0 follow bare hours directly; four first times made of
+  // two minutes and two seconds are the hours once, and a rhythm of two
+  // minutes after «tiap kali» is named (answers 4.1 C).
+  ['*/15 */6 * * *',
+    'setiap 6 jam, tiap kali setiap 15 menit sampai menit ke-45'],
+  ['0,15,30,45 */6 * * *',
+    'setiap 6 jam, tiap kali setiap 15 menit sampai menit ke-45'],
+  ['*/20 */4 * * *',
+    'setiap 4 jam, tiap kali setiap 20 menit sampai menit ke-40'],
+  ['0,30 */6 * * *',
+    'setiap 6 jam mulai pukul 00.00 dan 00.30'],
+  ['15,45 */6 * * *', 'setiap 6 jam pada menit ke-15 dan ke-45'],
+  ['15,45 1/3 * * *',
+    'setiap 3 jam mulai pukul 01.15 dan 01.45'],
+  ['5/15 2/6 * * *',
+    'setiap 6 jam mulai pukul 02.00, tiap kali pada menit ke-5, ke-20, ' +
+    'ke-35, dan ke-50'],
+  ['0,20 1/3 * * *',
+    'setiap 3 jam mulai pukul 01.00 dan 01.20'],
+  ['0,20,45 1/3 * * *',
+    'setiap 3 jam mulai pukul 01.00, tiap kali tepat pada jam itu serta ' +
+    'pada menit ke-20 dan ke-45'],
+  ['*/15 1/3 * * *',
+    'setiap 3 jam mulai pukul 01.00, tiap kali setiap 15 menit sampai ' +
+    'menit ke-45'],
+  ['0-2 */6 * * *', 'setiap 6 jam, tiap kali setiap menit selama 3 menit'],
+  ['30 */15 */6 * * *',
+    'setiap 6 jam, tiap kali setiap 15 menit sampai menit ke-45, ' +
+    'masing-masing pada detik ke-30'],
+  ['15,45 0,30 */6 * * *',
+    'setiap 6 jam, tiap kali tepat pada jam itu serta pada menit ke-30, ' +
+    'masing-masing pada detik ke-15 dan ke-45'],
   ['*/20 */2 */2 */3 *',
     'setiap tanggal ganjil, pada jam genap, setiap 20 menit pada bulan ' +
     'Januari, April, Juli, dan Oktober'],
@@ -835,9 +879,9 @@ const rows = [
     'selama 30 menit, masing-masing pada detik ke-30, terakhir pukul ' +
     '23.29.30'],
   ['* */15 5/2 * * *',
-    'setiap hari, setiap 2 jam mulai pukul 05.00, 05.15, 05.30, dan ' +
-    '05.45, tiap kali setiap detik selama 1 menit, terakhir pukul ' +
-    '23.45.59'],
+    'setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap 15 ' +
+    'menit sampai menit ke-45, masing-masing setiap detik selama 1 menit, ' +
+    'terakhir pukul 23.45.59'],
   // Hours that are a run and a rhythm together, on one minute: each a
   // stretch with its own rhythm word (answers 4.1 E).
   ['0 0-5,7-23/2 * * *',

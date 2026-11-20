@@ -117,9 +117,13 @@ const rows = [
     '18.45'],
   ['*/15 */2 * * 1-5',
     'setiap Senin sampai Jumat, pada jam genap, setiap 15 menit'],
+  // A step of hours with several minutes names the hours once and then
+  // the minutes in each (answers 4.1 C, changed 2026-11-19 after the cost
+  // pass; it was the four first times «mulai pukul 00.00, 00.15, 00.30,
+  // dan 00.45», four series to add six hours to).
   ['*/15 */6 * * 1-5',
-    'setiap Senin sampai Jumat, setiap 6 jam mulai pukul 00.00, 00.15, ' +
-    '00.30, dan 00.45'],
+    'setiap Senin sampai Jumat, setiap 6 jam, tiap kali setiap 15 menit ' +
+    'sampai menit ke-45'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
     'setiap Senin sampai Jumat, pada jam genap, setiap 15 menit, kecuali ' +
     'dari pukul 08.00 sampai 08.45'],

@@ -14,7 +14,8 @@ import {phrase} from './say.js';
 import type {Clockwork, Shaped, Tick} from './ticks.js';
 import {
   at, between, clockworkOf, firstSecond, isLength, lastSecond,
-  minutesInside, moments, secondsLeftOut, series, spans, tickFor, times
+  minutesInside, moments, perMinute, secondsLeftOut, series, spans, tickFor,
+  times
 } from './ticks.js';
 import {
   alone, closesAfter, eachTime, everyHour, everyUnit, inside, minuteTier,
@@ -158,11 +159,24 @@ function lastTime(work: Clockwork, hour: number, tick: Tick): string {
     at(work, hour, values[values.length - 1], second))}`;
 }
 
+// Whether a rhythm of hours is said by its first times: while they are
+// two or fewer, two series a reader can follow; more are four series to
+// add the step to, and the hours are said once instead.
+function fewFirstTimes(work: Clockwork, first: Shaped): boolean {
+  return work.minutes.values.length * perMinute(first.tick) <= 2;
+}
+
 // A rhythm of hours and what happens in each of them, after «tiap kali».
-// Hours that tile the day from its first hour are said bare.
+// Hours that tile the day from its first hour are said bare. A rhythm of
+// two minutes is named («tepat pada jam itu serta pada menit ke-30»), not
+// said as a rhythm with its end.
 function hourByHour(work: Clockwork, beat: CadenceDescription, bare = false):
   Shaped {
-  const found = minutesInside(work, eachTime);
+  const {minutes} = work;
+  const found = minutesInside(minutes.values.length > 2 ? work : {
+    ...work,
+    minutes: {...minutes, base: {kind: 'values', values: minutes.values}}
+  }, eachTime);
   const start = !bare &&
     phrase(words.startingAt, words.oClock, at(work, beat.start, 0));
 
@@ -194,19 +208,20 @@ function hoursRoundTheClock(work: Clockwork): Shaped {
   const every = everyUnit(units.hour, beat.interval);
   const count = minutes.values.length;
   const first = firstTimes(work, beat.start);
+  const fromFirst = {...first, text: phrase(every, first.text)};
   // From midnight on the hour, with no seconds to say: the step alone.
   const bare = beat.start + minutes.values[0] === 0 && count === 1 &&
     first.tick.seconds.length === 0 && first.tick.suffix === '';
   const within = minutesInside(work, under);
   const options: Array<Shaped | false> = [
     bare && {text: every, tick: first.tick},
-    count <= 4 && (count === 1 || beat.interval > 2) &&
-      {...first, text: phrase(every, first.text)},
+    count === 1 && fromFirst,
     beat.interval === 2 && evenOrOddHours(work, beat),
     // Positions in every such hour, none of them its start, follow the
     // bare hours directly: «setiap 4 jam pada menit ke-5 dan ke-50».
     beat.start === 0 && isValues(minutes.base) && minutes.values[0] > 0 &&
       {...within, text: phrase(every, within.text)},
+    fewFirstTimes(work, first) && fromFirst,
     hourByHour(work, beat, beat.start === 0)
   ];
 
@@ -233,7 +248,7 @@ function hoursInSteps(work: Clockwork): Shaped {
         at(work, beat.last, minutes.values[0], lastSecond(one)))),
       tick: one
     },
-    count <= 4 && {
+    fewFirstTimes(work, first) && {
       clause: true,
       last: lastTime(work, beat.last, first.tick),
       text: phrase(every, first.text),
