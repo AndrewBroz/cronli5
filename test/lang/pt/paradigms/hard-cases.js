@@ -217,8 +217,12 @@ const rows = [
     'nos dias ímpares de janeiro, março, maio, julho, setembro e novembro ' +
     'às 00:00'],
   ['0 0 */5 6 *', 'nos dias 1º, 6, 11, 16, 21 e 26 de junho às 00:00'],
+  // This row once named the 31st of June: «nos dias 1º, 6, 11, 16, 21, 26
+  // e 31 de junho, julho e agosto». The 31st is said only of the months
+  // that have it (answers 3.7, 2026-11-19).
   ['0 0 */5 6-8 *',
-    'nos dias 1º, 6, 11, 16, 21, 26 e 31 de junho, julho e agosto às 00:00'],
+    'nos dias 1º, 6, 11, 16, 21 e 26 de junho, julho e agosto e no dia 31 ' +
+    'de julho e de agosto às 00:00'],
   ['0 0 */5 1,7 *',
     'nos dias 1º, 6, 11, 16, 21, 26 e 31 de janeiro e de julho às 00:00'],
   ['0 0 1,15 1,7 *', 'nos dias 1º e 15 de janeiro e de julho às 00:00'],
@@ -692,8 +696,11 @@ const rows = [
   ['0 9 1-30 4 *', 'todos os dias de abril às 09:00'],
   ['0 9 2-31 4 *', 'do dia 2 ao dia 30 de abril às 09:00'],
   ['0 9 29-31 2 *', 'no dia 29 de fevereiro dos anos bissextos às 09:00'],
-  ['0 0 1-14,16-30 6 *',
-    'do dia 1º ao dia 30 de junho, exceto no dia 15, às 00:00'],
+  // This row once said «do dia 1º ao dia 30 de junho, exceto no dia 15»,
+  // while `1-14,16-31` in June, the same days, was «todos os dias de
+  // junho, exceto no dia 15». An exception counts against the days the
+  // named months have, so both are said alike (answers 3.7, 2026-11-19).
+  ['0 0 1-14,16-30 6 *', 'todos os dias de junho, exceto no dia 15, às 00:00'],
   ['0 0 1-14,16-30 * *',
     'todos os dias, exceto nos dias 15 e 31 de cada mês, às 00:00'],
   ['0 9 31 2 *', 'nunca (fevereiro não tem dia 31)'],
@@ -704,6 +711,66 @@ const rows = [
   ['0 0 30,31 4,6 1',
     'em abril e junho, todas as segundas e também no dia 30, sempre às ' +
     '00:00'],
+
+  // The same days said alike, whatever the spelling: a whole month, every
+  // day but a few, a list.
+  ['0 9 1-14,16-29 2 *',
+    'todos os dias de fevereiro, exceto no dia 15, às 09:00'],
+  ['0 9 1-31 6 *', 'todos os dias de junho às 09:00'],
+  ['0 9 1-29 2 *', 'todos os dias de fevereiro às 09:00'],
+  ['0 0 0 1-28 2 * 2031', 'todos os dias de fevereiro de 2031 às 00:00'],
+  ['0 9 1,15,30,31 6 *', 'nos dias 1º, 15 e 30 de junho às 09:00'],
+  ['0 9 2-31 6 *', 'do dia 2 ao dia 30 de junho às 09:00'],
+  // A run that stops before the last day some month has is other days,
+  // and a hole in it is a run with a hole.
+  ['0 9 1-14,16-30 7 *',
+    'do dia 1º ao dia 30 de julho, exceto no dia 15, às 09:00'],
+  ['0 9 1-14,16-28 2 *',
+    'do dia 1º ao dia 28 de fevereiro, exceto no dia 15, às 09:00'],
+  ['0 9 1-28 2 *', 'do dia 1º ao dia 28 de fevereiro às 09:00'],
+
+  // Months of different lengths: no day is named of a month that lacks
+  // it. A run or a step that goes on to the end of every month runs to
+  // «o último dia»; a day only the longer months have is named with them.
+  ['0 9 */3 4,7 *',
+    'de 3 em 3 dias do dia 1º ao último dia de abril e de julho às 09:00'],
+  ['0 9 */3 2,3 *',
+    'de 3 em 3 dias do dia 1º ao último dia de fevereiro e de março às ' +
+    '09:00'],
+  ['0 9 */4 4,5 *',
+    'de 4 em 4 dias do dia 1º ao dia 29 de abril e de maio às 09:00'],
+  ['0 9 20-31 4,5 *', 'do dia 20 ao último dia de abril e de maio às 09:00'],
+  ['0 9 2-31 4,7 *', 'do dia 2 ao último dia de abril e de julho às 09:00'],
+  ['0 9 1-5,20-31 4,5 *',
+    'do dia 1º ao dia 5 e do dia 20 ao último dia de abril e de maio às ' +
+    '09:00'],
+  ['0 9 3-31/2 4,7 *',
+    'nos dias ímpares do dia 3 ao último dia de abril e de julho às 09:00'],
+  ['0 9 20-31 4,5 1',
+    'em abril e maio, todas as segundas e também do dia 20 ao último dia, ' +
+    'sempre às 09:00'],
+  ['0 9 30,31 4,5 *', 'no dia 30 de abril e de maio e no dia 31 de maio às 09:00'],
+  ['0 9 15,30 1-3 *',
+    'no dia 15 de janeiro, fevereiro e março e no dia 30 de janeiro e de ' +
+    'março às 09:00'],
+  ['0 9 29,30 2,3 *',
+    'no dia 29 de fevereiro e de março e no dia 30 de março às 09:00'],
+  ['0 9 1-30 2,3 *',
+    'do dia 1º ao dia 29 de fevereiro e de março e no dia 30 de março às ' +
+    '09:00'],
+  ['0 9 30,31 4,5 1',
+    'em abril e maio, todas as segundas e também no dia 30 de abril e de ' +
+    'maio e no dia 31 de maio, sempre às 09:00'],
+  // Beside weekdays every named month leads, and a day one of them lacks
+  // is said with the months that have it.
+  ['0 9 30,31 2,4 1',
+    'em fevereiro e abril, todas as segundas e também no dia 30 de abril, ' +
+    'sempre às 09:00'],
+  ['0 0 0 1-29 2,4 * 2031',
+    'do dia 1º ao dia 28 de fevereiro e de abril e no dia 29 de abril, em ' +
+    '2031, às 00:00'],
+  ['0 9 1-14,16-31 4,7 *',
+    'todos os dias de abril e julho, exceto no dia 15, às 09:00'],
 
   // A day no named month has is not named, and a month that lacks the
   // day is not named either. With every month the day is said as a date

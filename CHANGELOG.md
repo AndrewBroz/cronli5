@@ -63,6 +63,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   named months have is said like the plain step: `0 9 1-29/2 6 *` was
   «nos dias ímpares do dia 1º ao dia 29 de junho às 09:00» and is now
   «nos dias ímpares de junho às 09:00», as `0 9 */2 6 *` already was.
+  Every day but a few is judged the same way (`0 9 1-14,16-30 6 *` is
+  «todos os dias de junho, exceto no dia 15», like `1-14,16-31`), and
+  months of different lengths named together no longer get a day the
+  shorter lack: `0 9 */3 4,7 *` was «de 3 em 3 dias do dia 1º ao dia 31
+  de abril e de julho» and is «de 3 em 3 dias do dia 1º ao último dia de
+  abril e de julho»; `0 9 30,31 4,5 *` is «no dia 30 de abril e de maio e
+  no dia 31 de maio».
 - **`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` now reach the Traditional
   Chinese module** (and `zh-Hant-TW`, `zh-Hant-HK`, `zh-Hant-MO`).
   `cronli5/all` has it. An instance without it reports the language as
