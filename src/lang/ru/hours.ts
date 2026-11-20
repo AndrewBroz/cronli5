@@ -74,6 +74,15 @@ function minuteLabel(minute: number, scope: string): string {
     minutesOf(scope)).text;
 }
 
+// A step of hours that fills the day from midnight, five firings or
+// more: «каждые 3 часа», and what happens in each of those hours.
+function fillsTheDay(given: Hours): boolean {
+  const found = choose(hourOrder, given.choosing);
+
+  return found?.kind === 'cadence' && given.hours.length > 4 &&
+    isBare(found, domainOf('hour'));
+}
+
 /** The hours beside one minute, in clock times that carry it. */
 function hoursAtMinute(given: Hours, minute: number): Time {
   const found = choose(hourOrder, given.choosing);
@@ -90,14 +99,23 @@ function hoursAtMinute(given: Hours, minute: number): Time {
         clause: span.clause
       };
     }],
-    [function oddHours() {
-      return isOddHours(base);
+    [function everySecondHour() {
+      return isOddHours(base) || bare && isAlternate(base);
     }, function byParity() {
+      const scope = isOddHours(base) ? words.ofEachOddHour :
+        words.ofEachEvenHour;
+
       return {
-        ...timeOf(minuteLabel(minute, words.ofEachOddHour), 'label'),
+        ...timeOf(minuteLabel(minute, scope), 'label'),
         bare: found === base,
         clause: span.clause
       };
+    }],
+    [function onAStep() {
+      return fillsTheDay(given);
+    }, function inEachHour() {
+      return minutesInEachHour(given, {kind: 'values', values: [minute]},
+        [minute]);
     }],
     [function everyHour() {
       return base.kind === 'all';
@@ -133,16 +151,15 @@ function hoursForEachMinute(step: Described, given: Hours): Time {
   };
 }
 
-// Scattered hours under a rhythm of minutes: the hours as they are said on
-// the hour, and what happens in each of them, «каждую минуту в течение
-// часа», «каждые 15 минут с начала часа по 45-ю минуту»; a step that
-// lands twice is its two minutes.
-function rhythmInScatteredHours(given: Hours): Time {
+// The hours as they are said on the hour, and what happens in each of
+// them: «каждую минуту в течение часа», «каждые 15 минут с начала часа по
+// 45-ю минуту», «на 5-й и 35-й минуте часа»; a step that lands twice is
+// its two minutes.
+function minutesInEachHour(given: Hours, minuteSet: Described,
+  minutes: number[]): Time {
   const hours = hoursAtMinute(given, 0);
-  const {minuteSet, minutes} = given;
-  const twice = minutes.length === 2;
   const inEach = scopedInside(
-    twice ? {kind: 'values', values: minutes} : minuteSet,
+    minutes.length === 2 ? {kind: 'values', values: minutes} : minuteSet,
     minutesOfTheHour).text;
 
   return {
@@ -156,4 +173,13 @@ function rhythmInScatteredHours(given: Hours): Time {
   };
 }
 
-export {hoursAtMinute, hoursForEachMinute, hoursOf, rhythmInScatteredHours};
+// Scattered hours under a rhythm of minutes, or hours that fill the day
+// from midnight under any minutes.
+function rhythmInScatteredHours(given: Hours): Time {
+  return minutesInEachHour(given, given.minuteSet, given.minutes);
+}
+
+export {
+  fillsTheDay, hoursAtMinute, hoursForEachMinute, hoursOf,
+  rhythmInScatteredHours
+};

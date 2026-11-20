@@ -5,7 +5,7 @@
 import {domainOf} from '../../core/index.js';
 import type {Hours} from './hours.js';
 import {
-  hoursAtMinute, hoursForEachMinute, rhythmInScatteredHours
+  fillsTheDay, hoursAtMinute, hoursForEachMinute, rhythmInScatteredHours
 } from './hours.js';
 import lexicon from './lexicon.js';
 import type {Scoped} from './inside.js';
@@ -313,6 +313,11 @@ function minutesOverHours(given: Hours): Time {
       return isAlternate(base) && hours.length >= 3;
     }, function parity() {
       return over(parityOf(found));
+    }],
+    [function stepFillsTheDay() {
+      return fillsTheDay(given);
+    }, function inEachHour() {
+      return rhythmInScatteredHours(given);
     }],
     [function fewMinutesOnAStep() {
       return found.kind === 'cadence' && hours.length >= 3 &&
