@@ -200,7 +200,7 @@ const rows = [
   // the minutes after them; one stretch of hours before named minutes is
   // said once, by its first and last firing.
   ['*/15 8-18/2 * * *', '每天8点、10点、12点、14点、16点、18点的0分、15分、30分、45分'],
-  ['* */4 * * *', '每天0点、4点、8点、12点、16点、20点的每一分钟'],
+  // (`* */4`, a rhythm of hours, is with the rhythm of hours below.)
   ['30,45 9-17 1 * 5', '每月1日以及每周五，均在9:30至17:45，每小时的30分、45分'],
   ['0 9-17,20,22 * * *', '每天9:00至17:00，每小时一次，以及20:00、22:00'],
   ['* 9-17,20,22 * * *',
@@ -787,8 +787,11 @@ const rows = [
   // 分. (README, "Description Accuracy": a cadence that begins on the first
   // hour of the day is not qualified. Until 2026-11-19 these were 每天偶数
   // 整点, 每天0:00起每3小时一次, a window and a list of four times.) Under
-  // minutes that are stretches the hours hold them: the even hours by
-  // their idiom, a longer step by its hours. The odd hours keep their
+  // minutes that are stretches the even hours hold them, by their idiom;
+  // under every third or fourth hour the minutes follow the step as
+  // moments do (2026-11-20: they were the hours named one by one, or a
+  // window for each, eight things where the step is one); every sixth,
+  // eighth or twelfth hour, four times or fewer, is its hours. The odd hours keep their
   // idiom; any other cadence off 0:00 is said from its first time, or
   // between its ends under a named day.
   ['0 0-22/2 * * *', '每2小时一次'],
@@ -818,7 +821,9 @@ const rows = [
   // hours, are an exception to it while more than four still fire.
   ['0 0,3,6,9,15,18,21 * * *', '每3小时一次（12:00除外）'],
   ['* 0,3,6,9,15,18,21 * * *',
-    '每天0点、3点、6点、9点、15点、18点、21点的每一分钟'],
+    '每3小时的首个小时内，每分钟一次（12:00至12:59除外）'],
+  ['10-20 0,3,6,9,15,18,21 * * *',
+    '每3小时的10分至20分，每分钟一次（12:00至12:59除外）'],
   ['30 0,4,12,16,20 * * *', '每4小时的30分（8:30除外）'],
   ['0 0,2,4,6,10,12,14,16,18,20,22 * * 1', '每周一，每2小时一次（8:00除外）'],
   ['0 1,3,5,9,11,13,15,17,19,21,23 * * *', '每天奇数整点（7:00除外）'],
@@ -844,7 +849,40 @@ const rows = [
   // Such hours as stretches under a finer rhythm.
   ['* 0-23/2 * * *', '每天偶数小时内，每分钟一次'],
   ['* 0-23/6 * * *', '每天0点、6点、12点、18点的每一分钟'],
-  ['* */3 * * *', '每天0点、3点、6点、9点、12点、15点、18点、21点的每一分钟'],
+  // 2026-11-20: every third or fourth hour holds its minutes after the
+  // step, as moments are held: a window, a stepped window, a cadence by
+  // its ends follow 每3小时的 as they follow 每小时的; every minute, or a
+  // cadence that fills the hour, is 每3小时的首个小时内 and the rhythm, as
+  // the even hours have 偶数小时内. (Until then the hours were named one by
+  // one, 每天0点、3点……21点的每一分钟, or each held a window, 0:10至0:20、
+  // 3:10至3:20……, eight hours or windows to hold where one step does.
+  // 每3小时的每一分钟 is not said: 每一个小时的每一分钟 is every minute,
+  // usage notes.)
+  ['* */3 * * *', '每3小时的首个小时内，每分钟一次'],
+  ['* */4 * * *', '每4小时的首个小时内，每分钟一次'],
+  ['*/5 */3 * * *', '每3小时的首个小时内，每5分钟一次'],
+  ['*/5 */4 * * *', '每4小时的首个小时内，每5分钟一次'],
+  ['30 * */3 * * *', '每3小时的首个小时内，每分钟的30秒'],
+  ['* */4 * * 1', '每周一，每4小时的首个小时内，每分钟一次'],
+  ['10-20 */3 * * *', '每3小时的10分至20分，每分钟一次'],
+  ['10-20 */4 * * *', '每4小时的10分至20分，每分钟一次'],
+  ['10-20 */3 1 * *', '每月1日，每3小时的10分至20分，每分钟一次'],
+  ['0-29,45 */3 * * *', '每3小时的0分至29分，每分钟一次，以及45分'],
+  ['0-28,30-59 */3 * * *', '每3小时的首个小时内，每分钟一次（每小时的29分除外）'],
+  ['10-30/5 */3 * * *', '每3小时的10分、15分、20分、25分、30分'],
+  ['10-30/5 */4 * * *', '每4小时的10分、15分、20分、25分、30分'],
+  ['10-50/4 */3 * * *', '每3小时的10分至50分，每4分钟一次'],
+  ['10-50/4 */4 * * *', '每4小时的10分至50分，每4分钟一次'],
+  ['*/7 */3 * * *', '每3小时的0分至56分，每7分钟一次'],
+  ['*/7 */4 * * *', '每4小时的0分至56分，每7分钟一次'],
+  ['*/15 */3 * * *', '每3小时的0分、15分、30分、45分'],
+  ['*/15 */4 * * *', '每4小时的0分、15分、30分、45分'],
+  ['30 */4 * * *', '每4小时的30分'],
+  ['5,20,35 */4 * * *', '每4小时的5分、20分、35分'],
+  // Every second hour keeps its idiom; every sixth hour, four of them, is
+  // named.
+  ['10-20 */2 * * *', '每天偶数小时的10分至20分，每分钟一次'],
+  ['10-20 */6 * * *', '每天0:10至0:20、6:10至6:20、12:10至12:20、18:10至18:20，每分钟一次'],
 
   // Seconds that step evenly at one clock time or one minute are a window
   // with the step; two values, and uneven sets, stay listed.

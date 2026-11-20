@@ -66,6 +66,8 @@ const words = {
   excepted: '除外',
   exceptedEnd: '外',
   firstAt: '首次在',
+  // Inside the first hour of each round of a rhythm of hours.
+  firstHourInside: '的首个小时内',
   since: '自',
   hasNo: '没有',
   inItsMinute: '所在分钟的',
